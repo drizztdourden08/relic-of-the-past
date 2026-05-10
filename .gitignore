@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+out/
+build/
+*.tsbuildinfo
+
+# WASM build artifacts
+core/wasm-build/output/
+*.wasm
+*.wasm.map
+
+# Electron
+release/
+
+# Assets (user-provided)
+assets/assets.dat
+assets/*.sfc
+assets/*.smc
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Saves (user data)
+saves/
+seeds/
+config/

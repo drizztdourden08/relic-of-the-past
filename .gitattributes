@@ -1,0 +1,20 @@
+# Binary files
+*.wasm binary
+*.dat binary
+*.sfc binary
+*.smc binary
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+
+# Ensure consistent line endings
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf

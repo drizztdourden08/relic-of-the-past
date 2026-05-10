@@ -1,0 +1,3 @@
+[submodule "core/zelda3"]
+	path = core/zelda3
+	url = https://github.com/snesrev/zelda3.git
