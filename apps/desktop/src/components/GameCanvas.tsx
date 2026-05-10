@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
+import { log } from '../lib/log-bus';
 
 type GameState = 'idle' | 'loading' | 'running' | 'error';
 
@@ -19,22 +20,27 @@ export function GameCanvas({ assetData, status }: GameCanvasProps): JSX.Element 
     if (!canvas) return;
 
     setGameState('loading');
+    log.wasm('Initializing WASM module...');
 
     try {
       const module = await Zelda3({
         canvas,
         preRun: [(mod: { FS: { writeFile: (path: string, data: Uint8Array) => void; mkdir: (path: string) => void } }) => {
+          log.wasm(`Writing assets to virtual FS (${(data.byteLength / 1024).toFixed(0)} KB)`);
           mod.FS.writeFile('/zelda3_assets.dat', data);
           try { mod.FS.mkdir('/saves'); } catch { /* may exist */ }
         }],
-        print: (text: string) => console.log('[zelda3]', text),
-        printErr: (text: string) => console.error('[zelda3]', text),
+        print: (text: string) => log.core(text),
+        printErr: (text: string) => log.core(text, 'error'),
       });
       moduleRef.current = module;
       setGameState('running');
+      log.wasm('WASM module running');
       canvas.focus();
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      const msg = err instanceof Error ? err.message : String(err);
+      log.error(`WASM failed: ${msg}`);
+      setError(msg);
       setGameState('error');
     }
   }, []);

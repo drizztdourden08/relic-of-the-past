@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react';
 import { TitleBar } from './components/TitleBar';
 import { GameCanvas } from './components/GameCanvas';
+import { LogOverlay } from './components/LogOverlay';
+import { log } from './lib/log-bus';
 
 export function App(): JSX.Element {
   const [assetData, setAssetData] = useState<Uint8Array | null>(null);
@@ -9,11 +11,14 @@ export function App(): JSX.Element {
   const handleLoadRom = useCallback(async () => {
     try {
       // First check if we already have extracted assets
+      log.app('Checking for cached assets...');
       const hasAssets = await window.api.checkAssets();
       if (hasAssets) {
         setStatus('Loading cached assets...');
+        log.app('Found cached assets, loading...');
         const buffer = await window.api.loadAssets();
         if (buffer) {
+          log.app(`Loaded cached assets (${(buffer.byteLength / 1024).toFixed(0)} KB)`);
           setAssetData(new Uint8Array(buffer));
           setStatus('');
           return;
@@ -21,9 +26,14 @@ export function App(): JSX.Element {
       }
 
       // Open ROM file picker
+      log.app('Opening ROM file dialog...');
       const romPath = await window.api.openRomDialog();
-      if (!romPath) return;
+      if (!romPath) {
+        log.app('ROM dialog cancelled');
+        return;
+      }
 
+      log.app(`Selected: ${romPath}`);
       setStatus('Reading ROM...');
       const romBuffer = await window.api.readFile(romPath);
       const romData = new Uint8Array(romBuffer);
@@ -34,9 +44,10 @@ export function App(): JSX.Element {
       // We'll check for a .dat file next to the ROM.
       const assetsPath = romPath.replace(/\.(sfc|smc)$/i, '_assets.dat');
       try {
+        log.app(`Looking for assets at: ${assetsPath}`);
         const assetsBuffer = await window.api.readFile(assetsPath);
         const data = new Uint8Array(assetsBuffer);
-        // Cache it for future launches
+        log.app(`Found assets file (${(data.byteLength / 1024).toFixed(0)} KB), caching...`);
         await window.api.saveAssets(data.buffer);
         setAssetData(data);
         // Save ROM path to settings
@@ -46,7 +57,7 @@ export function App(): JSX.Element {
         setStatus('');
         return;
       } catch {
-        // No assets file found next to ROM — try using ROM directly as assets
+        log.app('No _assets.dat found next to ROM, trying ROM as assets...');
       }
 
       // Try loading the file as-is (it might be zelda3_assets.dat renamed)
@@ -63,7 +74,9 @@ export function App(): JSX.Element {
         setStatus('Could not load assets. Run restool.py to extract zelda3_assets.dat from your ROM.');
       }
     } catch (err) {
-      setStatus('Error: ' + (err instanceof Error ? err.message : String(err)));
+      const msg = err instanceof Error ? err.message : String(err);
+      log.error(`ROM loading failed: ${msg}`);
+      setStatus('Error: ' + msg);
     }
   }, []);
 
@@ -73,6 +86,7 @@ export function App(): JSX.Element {
       <main className="app-main">
         <GameCanvas assetData={assetData} status={status} />
       </main>
+      <LogOverlay />
     </div>
   );
 }
