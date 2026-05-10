@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>zelda3 WASM Test</title>
+  <style>
+    body {
+      margin: 0;
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: monospace;
+      color: #e0e0e0;
+    }
+    h1 { color: #e94560; font-size: 18px; }
+    #status { margin: 10px; color: #4a9; }
+    #drop-zone {
+      border: 2px dashed #0f3460;
+      border-radius: 8px;
+      padding: 40px;
+      margin: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    #drop-zone.active { border-color: #e94560; }
+    #drop-zone.hidden { display: none; }
+    canvas { border: 2px solid #0f3460; image-rendering: pixelated; outline: none; }
+    canvas:focus { border-color: #e94560; }
+    .controls {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <h1>ALttP WASM Test Harness</h1>
+  <div id="status">Waiting for zelda3_assets.dat...</div>
+
+  <div id="drop-zone">
+    <p>Drag & drop <strong>zelda3_assets.dat</strong> here</p>
+    <p style="font-size: 12px; color: #888;">or click to select file</p>
+    <input type="file" id="file-input" accept=".dat" style="display:none" />
+  </div>
+
+  <canvas id="canvas" tabindex="0" style="display:none;"></canvas>
+
+  <div class="controls" id="controls" style="display:none;">
+    <p>Arrow keys = D-pad | Z = Y | X = B | S = A | A = X | Enter = Start | RShift = Select | D = L | C = R</p>
+  </div>
+
+  <script src="output/zelda3.js"></script>
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const status = document.getElementById('status');
+    const canvas = document.getElementById('canvas');
+    const controls = document.getElementById('controls');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('active'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('active'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('active');
+      if (e.dataTransfer.files.length > 0) loadAssetFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) loadAssetFile(e.target.files[0]);
+    });
+
+    function loadAssetFile(file) {
+      status.textContent = 'Loading ' + file.name + '...';
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const data = new Uint8Array(e.target.result);
+        startGame(data);
+      };
+      reader.onerror = () => { status.textContent = 'Failed to read file'; };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function startGame(assetData) {
+      status.textContent = 'Initializing WASM...';
+      dropZone.classList.add('hidden');
+
+      canvas.style.display = 'block';
+      controls.style.display = 'block';
+
+      Zelda3({
+        canvas: canvas,
+        preRun: [(module) => {
+          // Write the assets file to the virtual filesystem
+          module.FS.writeFile('/zelda3_assets.dat', assetData);
+          // Create saves directory
+          module.FS.mkdir('/saves');
+        }],
+        print: (text) => console.log('[zelda3]', text),
+        printErr: (text) => console.error('[zelda3]', text),
+        onRuntimeInitialized: () => {
+          status.textContent = 'Running!';
+          canvas.focus();
+        },
+      }).catch((err) => {
+        status.textContent = 'Error: ' + err.message;
+        console.error(err);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,34 +1,102 @@
-# WASM Build — zelda3 via Emscripten
+# Emscripten WASM Build for zelda3
 #
 # Prerequisites:
-#   - Emscripten SDK installed and activated (source emsdk_env.sh / emsdk_env.bat)
-#   - SDL2 (provided by Emscripten ports)
+#   - Emscripten SDK installed and activated
+#   - On Windows: run from cmd.exe with emsdk_env.bat sourced
+#     cmd /c "E:\GameProjects\emsdk\emsdk_env.bat && cd /d E:\GameProjects\alttp_port\core\wasm-build && emmake make"
 #
 # Usage:
 #   cd core/wasm-build
-#   make
+#   emmake make
 #
-# Output goes to output/
+# Output: output/zelda3.js, output/zelda3.wasm, output/zelda3.data
 
-ZELDA3_SRC := ../zelda3
+ZELDA3 := ../zelda3
 
-CC       := emcc
-CFLAGS   := -O2 -s USE_SDL=2 -s WASM=1
-LDFLAGS  := -s ALLOW_MEMORY_GROWTH=1 \
-            -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap"]' \
-            -s MODULARIZE=1 \
-            -s EXPORT_NAME='Zelda3' \
-            --preload-file $(ZELDA3_SRC)/tables@/tables
+# Source files — game logic + SNES emulation + Opus decoder
+# Excludes: main.c (replaced by emscripten_main.c), opengl.c, glsl_shader.c,
+#           gl_core_3_1.c, volume_control.c (Win32-only)
+GAME_SRCS := \
+	$(ZELDA3)/src/ancilla.c \
+	$(ZELDA3)/src/attract.c \
+	$(ZELDA3)/src/audio.c \
+	$(ZELDA3)/src/config.c \
+	$(ZELDA3)/src/dungeon.c \
+	$(ZELDA3)/src/ending.c \
+	$(ZELDA3)/src/hud.c \
+	$(ZELDA3)/src/load_gfx.c \
+	$(ZELDA3)/src/messaging.c \
+	$(ZELDA3)/src/misc.c \
+	$(ZELDA3)/src/nmi.c \
+	$(ZELDA3)/src/overlord.c \
+	$(ZELDA3)/src/overworld.c \
+	$(ZELDA3)/src/player.c \
+	$(ZELDA3)/src/player_oam.c \
+	$(ZELDA3)/src/poly.c \
+	$(ZELDA3)/src/select_file.c \
+	$(ZELDA3)/src/spc_player.c \
+	$(ZELDA3)/src/sprite.c \
+	$(ZELDA3)/src/sprite_main.c \
+	$(ZELDA3)/src/tagalong.c \
+	$(ZELDA3)/src/tile_detect.c \
+	$(ZELDA3)/src/util.c \
+	$(ZELDA3)/src/zelda_cpu_infra.c \
+	$(ZELDA3)/src/zelda_rtl.c
+
+SNES_SRCS := \
+	$(ZELDA3)/snes/apu.c \
+	$(ZELDA3)/snes/cart.c \
+	$(ZELDA3)/snes/cpu.c \
+	$(ZELDA3)/snes/dma.c \
+	$(ZELDA3)/snes/dsp.c \
+	$(ZELDA3)/snes/input.c \
+	$(ZELDA3)/snes/ppu.c \
+	$(ZELDA3)/snes/snes.c \
+	$(ZELDA3)/snes/snes_other.c \
+	$(ZELDA3)/snes/spc.c \
+	$(ZELDA3)/snes/tracing.c
+
+OPUS_SRC := $(ZELDA3)/third_party/opus-1.3.1-stripped/opus_decoder_amalgam.c
+
+# Our Emscripten-specific main
+EM_MAIN := emscripten_main.c
+
+ALL_SRCS := $(EM_MAIN) $(GAME_SRCS) $(SNES_SRCS) $(OPUS_SRC)
 
 OUTPUT_DIR := output
+TARGET := $(OUTPUT_DIR)/zelda3.js
+
+CC := emcc
+
+CFLAGS := -O2 \
+	-I $(ZELDA3) \
+	-DSYSTEM_VOLUME_MIXER_AVAILABLE=0 \
+	-Wno-unused-function \
+	-Wno-unused-variable
+
+EMFLAGS := -sUSE_SDL=2 \
+	-sWASM=1 \
+	-sALLOW_MEMORY_GROWTH=1 \
+	-sINITIAL_MEMORY=67108864 \
+	-sFORCE_FILESYSTEM=1 \
+	-sMODULARIZE=1 \
+	-sEXPORT_NAME='Zelda3' \
+	-sEXPORTED_FUNCTIONS='["_main"]' \
+	-sEXPORTED_RUNTIME_METHODS='["ccall","cwrap","FS"]' \
+	-sASYNCIFY
+
+LDFLAGS := $(EMFLAGS)
 
 .PHONY: all clean dirs
 
-all: dirs
-	@echo "WASM build not yet configured — see docs/wasm-build.md"
+all: dirs $(TARGET)
+
+$(TARGET): $(ALL_SRCS)
+	$(CC) $(CFLAGS) $(ALL_SRCS) -o $(TARGET) $(LDFLAGS)
 
 dirs:
 	@mkdir -p $(OUTPUT_DIR)
+	@mkdir -p assets
 
 clean:
 	rm -rf $(OUTPUT_DIR)

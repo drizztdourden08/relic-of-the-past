@@ -10,6 +10,7 @@
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "preview": "electron-vite preview",
+    "copy-wasm": "node -e \"const fs=require('fs');const p=require('path');const src='core/wasm-build/output';const dst='apps/desktop/public/wasm';fs.mkdirSync(dst,{recursive:true});['zelda3.js','zelda3.wasm'].forEach(f=>fs.copyFileSync(p.join(src,f),p.join(dst,f)));console.log('WASM files copied')\"",
     "lint": "tsc --noEmit && eslint .",
     "clean": "rimraf dist out release"
   },

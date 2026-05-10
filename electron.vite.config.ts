@@ -23,6 +23,7 @@ export default defineConfig({
   },
   renderer: {
     root: resolve(__dirname, 'apps/desktop/src'),
+    publicDir: resolve(__dirname, 'apps/desktop/public'),
     plugins: [react()],
     resolve: {
       alias: {

@@ -37,6 +37,12 @@ html, body, #root {
   padding: 20px;
 }
 
+.game-canvas-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .game-canvas {
   border: 2px solid #0f3460;
   border-radius: 4px;

@@ -9,8 +9,7 @@ build/
 
 # WASM build artifacts
 core/wasm-build/output/
-*.wasm
-*.wasm.map
+apps/desktop/public/wasm/
 
 # Electron
 release/
