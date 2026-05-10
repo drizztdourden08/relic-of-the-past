@@ -6,10 +6,14 @@
 
 html, body, #root {
   height: 100%;
-  background: #1a1a2e;
+  background: #121212;
   color: #e0e0e0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow: hidden;
+  user-select: none;
 }
+
+/* ─── App Layout ─── */
 
 .app {
   display: flex;
@@ -17,39 +21,176 @@ html, body, #root {
   height: 100%;
 }
 
-.app-header {
-  padding: 12px 20px;
-  background: #16213e;
-  border-bottom: 1px solid #0f3460;
-}
-
-.app-header h1 {
-  font-size: 18px;
-  font-weight: 600;
-  color: #e94560;
-}
-
 .app-main {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  background: #0d1117;
 }
+
+/* ─── Title Bar ─── */
+
+.titlebar {
+  display: flex;
+  align-items: center;
+  height: 38px;
+  background: #181818;
+  border-bottom: 1px solid #282828;
+  -webkit-app-region: drag;
+  position: relative;
+  z-index: 100;
+}
+
+.titlebar-left {
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  -webkit-app-region: no-drag;
+  position: relative;
+}
+
+.titlebar-center {
+  flex: 1;
+  text-align: center;
+}
+
+.titlebar-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: #a0a0a0;
+  letter-spacing: 0.5px;
+}
+
+.titlebar-right {
+  display: flex;
+  align-items: center;
+  -webkit-app-region: no-drag;
+}
+
+/* ─── Title Bar Buttons ─── */
+
+.titlebar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #b0b0b0;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.titlebar-menu-btn {
+  width: 36px;
+  height: 38px;
+  border-radius: 4px;
+}
+
+.titlebar-menu-btn:hover {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+.titlebar-control {
+  width: 46px;
+  height: 38px;
+}
+
+.titlebar-control:hover {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+.titlebar-close:hover {
+  background: #e81123;
+  color: #fff;
+}
+
+/* ─── Dropdown Menu ─── */
+
+.dropdown-menu {
+  position: absolute;
+  top: 38px;
+  left: 4px;
+  min-width: 200px;
+  background: #242424;
+  border: 1px solid #383838;
+  border-radius: 6px;
+  padding: 4px 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  z-index: 200;
+  animation: dropdown-in 0.12s ease-out;
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 14px;
+  background: none;
+  border: none;
+  color: #d0d0d0;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+}
+
+.dropdown-item:hover:not(:disabled) {
+  background: #3a3a3a;
+  color: #fff;
+}
+
+.dropdown-item:disabled {
+  color: #555;
+  cursor: default;
+}
+
+.dropdown-icon {
+  width: 18px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.dropdown-separator {
+  height: 1px;
+  background: #383838;
+  margin: 4px 10px;
+}
+
+/* ─── Game Canvas ─── */
 
 .game-canvas-container {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
 .game-canvas {
-  border: 2px solid #0f3460;
-  border-radius: 4px;
+  border: 1px solid #1e1e2e;
+  border-radius: 2px;
   image-rendering: pixelated;
   outline: none;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .game-canvas:focus {
-  border-color: #e94560;
+  border-color: #4a9;
 }
