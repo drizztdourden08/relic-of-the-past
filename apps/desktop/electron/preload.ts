@@ -14,6 +14,15 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.on('window:maximized', handler);
     return () => ipcRenderer.removeListener('window:maximized', handler);
   },
+  toggleFullscreen: () => ipcRenderer.send('window:toggleFullscreen'),
+  setFullscreen: (value: boolean) => ipcRenderer.send('window:setFullscreen', value),
+  setAspectRatioLock: (ratio: number, extraHeight: number) => ipcRenderer.send('window:setAspectRatioLock', ratio, extraHeight),
+  isFullscreen: () => ipcRenderer.invoke('window:isFullscreen'),
+  onFullscreenChange: (callback: (fullscreen: boolean) => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, fullscreen: boolean) => callback(fullscreen);
+    ipcRenderer.on('window:fullscreen', handler);
+    return () => ipcRenderer.removeListener('window:fullscreen', handler);
+  },
 
   // File dialog
   openRomDialog: () => ipcRenderer.invoke('dialog:openRom'),
@@ -57,6 +66,10 @@ contextBridge.exposeInMainWorld('api', {
   // Config (per-profile settings)
   readConfig: (profileId: string) => ipcRenderer.invoke('config:read', profileId),
   writeConfig: (profileId: string, settings: unknown) => ipcRenderer.invoke('config:write', profileId, settings),
+
+  // MSU import
+  importMsu: (profileId: string, url: string) => ipcRenderer.invoke('msu:import', profileId, url) as Promise<{ success: boolean; fileCount?: number; error?: string }>,
+  importMsuFile: (profileId: string, filePath: string) => ipcRenderer.invoke('msu:importFile', profileId, filePath) as Promise<{ success: boolean; fileCount?: number; error?: string }>,
 
   // Play sessions
   listSessions: (profileId: string) => ipcRenderer.invoke('sessions:list', profileId),

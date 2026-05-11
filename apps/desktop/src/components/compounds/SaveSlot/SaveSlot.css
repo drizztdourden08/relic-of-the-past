@@ -1,0 +1,135 @@
+/* ─── Save Slot ─── */
+
+.save-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.save-slot--busy {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ─── Card (screenshot + overlaid controls) ─── */
+
+.save-slot__card {
+  position: relative;
+  width: 96px;
+  height: 84px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: default;
+}
+
+.save-slot__card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.save-slot__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.save-slot__empty {
+  width: 100%;
+  height: 100%;
+}
+
+/* Overlaid slot number — top left */
+.save-slot__num {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  font-size: 10px;
+  font-weight: var(--weight-semi);
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Overlaid shortcut key — top right */
+.save-slot__key {
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  font-size: 8px;
+  font-family: var(--font-mono);
+  color: rgba(255, 255, 255, 0.55);
+  background: rgba(0, 0, 0, 0.45);
+  padding: 0 4px;
+  border-radius: 2px;
+  line-height: 1.6;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Overlaid action buttons — bottom center */
+.save-slot__btns {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 3px;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.save-slot__card:hover .save-slot__btns {
+  opacity: 1;
+}
+
+.save-slot__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.55);
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  backdrop-filter: blur(4px);
+}
+
+.save-slot__btn:hover:not(:disabled) {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.save-slot__btn--save:hover:not(:disabled) {
+  background: rgba(200, 168, 78, 0.5);
+  border-color: var(--color-gold-base);
+  color: var(--color-gold-bright);
+}
+
+.save-slot__btn--load:hover:not(:disabled) {
+  background: rgba(74, 153, 102, 0.5);
+  border-color: var(--color-green-base);
+  color: var(--color-green-bright);
+}
+
+.save-slot__btn:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+/* Timestamp below card */
+.save-slot__time {
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  white-space: nowrap;
+}

@@ -1,29 +1,47 @@
 .fullscreen-layer {
   position: absolute;
   inset: 0;
-  top: var(--titlebar-height);
-  background: rgba(10, 10, 15, 0.92);
   z-index: 50;
   animation: fsl-in 0.2s ease-out;
-  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+}
+
+.fullscreen-layer__card {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: rgba(14, 14, 20, 0.88);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
 }
 
 .fullscreen-layer__close {
   position: absolute;
   top: var(--space-sm);
   right: var(--space-sm);
-  z-index: 51;
+  z-index: 1;
 }
 
 .fullscreen-layer__content {
+  flex: 1;
+  min-height: 0;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  min-height: 100%;
-  padding: var(--space-xl);
+  flex-direction: column;
+  overflow: hidden;
+  padding: var(--space-xl) var(--space-xl) var(--space-lg);
+  padding-right: 48px; /* room for close button */
 }
 
 @keyframes fsl-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
 }

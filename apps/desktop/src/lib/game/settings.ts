@@ -22,10 +22,14 @@ export const DEFAULT_SETTINGS: GameSettings = {
   newRenderer: true,
   enhancedMode7: true,
   noSpriteLimits: true,
-  ignoreAspectRatio: false,
   linearFiltering: false,
   dimFlashes: false,
   outputMethod: 'SDL',
+
+  // Window (Electron-managed)
+  windowMode: 'default',
+  startFullscreen: false,
+  viewportConstraint: 'none',
 
   // Gameplay
   itemSwitchLR: false,
@@ -45,6 +49,7 @@ export const DEFAULT_SETTINGS: GameSettings = {
 
   // Audio
   enableAudio: true,
+  masterVolume: 100,
   audioFreq: 44100,
   audioChannels: 2,
   audioSamples: 2048,
@@ -79,7 +84,6 @@ Fullscreen = ${settings.fullscreen}
 WindowScale = ${settings.windowScale}
 NewRenderer = ${boolToIni(settings.newRenderer)}
 EnhancedMode7 = ${boolToIni(settings.enhancedMode7)}
-IgnoreAspectRatio = ${boolToIni(settings.ignoreAspectRatio)}
 NoSpriteLimits = ${boolToIni(settings.noSpriteLimits)}
 LinearFiltering = ${boolToIni(settings.linearFiltering)}
 OutputMethod = ${settings.outputMethod}
@@ -114,5 +118,41 @@ CancelBirdTravel = ${boolToIni(settings.cancelBirdTravel)}
 
 /** Merge partial settings over defaults, producing a complete GameSettings. */
 export function mergeSettings(partial: Partial<GameSettings>): GameSettings {
-  return { ...DEFAULT_SETTINGS, ...partial };
+  const merged = { ...DEFAULT_SETTINGS, ...partial };
+
+  // Migrate old windowMode values from previous schema
+  const rawMode = (partial as Record<string, unknown>).windowMode;
+  if (rawMode === 'normal') {
+    merged.windowMode = 'default';
+  } else if (rawMode === 'fullscreen') {
+    merged.windowMode = 'default';
+    merged.startFullscreen = true;
+  }
+
+  // Migrate old ignoreAspectRatio / lockToGameRatio / stretch to viewportConstraint
+  const raw = partial as Record<string, unknown>;
+  if (!('viewportConstraint' in raw)) {
+    if (raw.lockToGameRatio === true) {
+      merged.viewportConstraint = 'fit';
+    } else if (raw.ignoreAspectRatio === true || raw.aspectRatio === 'stretch') {
+      merged.viewportConstraint = 'fill';
+    }
+  }
+  // Fix aspectRatio if it was set to the removed 'stretch' value
+  if ((merged.aspectRatio as string) === 'stretch') {
+    merged.aspectRatio = '16:9';
+  }
+  // Strip removed fields so they don't persist
+  delete (merged as Record<string, unknown>).ignoreAspectRatio;
+  delete (merged as Record<string, unknown>).lockToGameRatio;
+
+  // Ensure masterVolume has a valid value (old configs won't have it)
+  if (merged.masterVolume == null || typeof merged.masterVolume !== 'number') {
+    merged.masterVolume = 100;
+  }
+
+  // enableAudio is no longer exposed in UI; always keep enabled
+  merged.enableAudio = true;
+
+  return merged;
 }

@@ -7,6 +7,31 @@
   -webkit-app-region: drag;
   position: relative;
   z-index: 100;
+  flex-shrink: 0;
+  transition: height 0.25s ease, opacity 0.25s ease;
+}
+
+.titlebar--hidden {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  opacity: 0;
+  border-bottom: none;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.titlebar--peek {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--titlebar-height);
+  opacity: 1;
+  border-bottom: 1px solid var(--color-border-subtle);
+  pointer-events: auto;
 }
 
 .titlebar__left {
@@ -20,6 +45,10 @@
 .titlebar__center {
   flex: 1;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
 }
 
 .titlebar__title {
@@ -27,6 +56,15 @@
   font-weight: var(--weight-medium);
   color: var(--color-text-secondary);
   letter-spacing: 0.5px;
+}
+
+.titlebar__fps {
+  font-size: var(--text-xs, 11px);
+  font-family: var(--font-mono);
+  color: var(--color-gold-base);
+  opacity: 0.7;
+  margin-left: var(--space-xs, 4px);
+  -webkit-app-region: no-drag;
 }
 
 .titlebar__right {

@@ -36,5 +36,5 @@ export function useLogOverlay(bottomRef: RefObject<HTMLDivElement | null>) {
     if (visible) bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [entries, visible, bottomRef]);
 
-  return { visible, entries };
+  return { visible, setVisible, entries };
 }

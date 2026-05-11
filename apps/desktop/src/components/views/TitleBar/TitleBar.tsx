@@ -1,8 +1,10 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
+import type { GameSettings } from '@shared/types/settings';
 import { DropdownMenu } from '../../composites/DropdownMenu';
 import { IconButton } from '../../primitives/IconButton';
 import { useTitleBar } from './behavior/useTitleBar';
 import { WindowControls } from './sub-components/WindowControls';
+import { getFps } from '../../../lib/game';
 import './TitleBar.css';
 
 interface TitleBarProps {
@@ -13,6 +15,10 @@ interface TitleBarProps {
   onToggleSaveStates: () => void;
   activeProfile: Profile | null;
   gameRunning: boolean;
+  windowMode?: GameSettings['windowMode'];
+  isMuted?: boolean;
+  onToggleMute?: () => void;
+  showFps?: boolean;
 }
 
 export function TitleBar({
@@ -23,24 +29,64 @@ export function TitleBar({
   onToggleSaveStates,
   activeProfile,
   gameRunning,
+  windowMode = 'default',
+  isMuted = false,
+  onToggleMute,
+  showFps = false,
 }: TitleBarProps): JSX.Element {
   const menuRef = useRef<HTMLDivElement>(null);
   const { isMaximized, menuOpen, toggleMenu, closeMenu } = useTitleBar(menuRef);
   const [pinned, setPinned] = useState(false);
-  const [muted, setMuted] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fps, setFps] = useState(0);
+  const titlebarRef = useRef<HTMLDivElement>(null);
+
+  // Track fullscreen state independently of windowMode
+  useEffect(() => {
+    window.api.isFullscreen().then(setIsFullscreen);
+    return window.api.onFullscreenChange(setIsFullscreen);
+  }, []);
+
+  const hidden = windowMode === 'borderless' || isFullscreen;
+
+  // For borderless/fullscreen: show titlebar when mouse enters the top zone, hide when it leaves
+  useEffect(() => {
+    if (!hidden) return;
+
+    const ZONE_HEIGHT = 38; // matches --titlebar-height
+    const onMove = (e: MouseEvent) => {
+      // If the mouse is over the titlebar element itself, keep it shown
+      if (titlebarRef.current?.contains(e.target as Node)) return;
+      setHovered(e.clientY <= ZONE_HEIGHT);
+    };
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
+  }, [hidden]);
+
+  // Hide when mouse leaves the titlebar element (not just the zone)
+  const handleMouseLeave = () => {
+    if (hidden) setHovered(false);
+  };
 
   useEffect(() => {
-    window.api.isAudioMuted().then(setMuted);
-  }, []);
+    if (!showFps || !gameRunning) {
+      setFps(0);
+      return;
+    }
+    const id = setInterval(() => {
+      setFps(getFps());
+    }, 500);
+    return () => clearInterval(id);
+  }, [showFps, gameRunning]);
 
   const togglePin = async () => {
     const result = await window.api.setAlwaysOnTop(!pinned);
     setPinned(result);
   };
 
-  const toggleMute = async () => {
-    const result = await window.api.setAudioMuted(!muted);
-    setMuted(result);
+  const toggleMute = () => {
+    onToggleMute?.();
   };
 
   const menuItems: (Parameters<typeof DropdownMenu>[0]['items'][number])[] = [
@@ -82,8 +128,18 @@ export function TitleBar({
     { key: 'quit', icon: '✕', label: 'Quit', onClick: () => window.api.close() },
   ];
 
+  const titlebarClass = [
+    'titlebar',
+    hidden && !menuOpen && 'titlebar--hidden',
+    hidden && !menuOpen && hovered && 'titlebar--peek',
+  ].filter(Boolean).join(' ');
+
   return (
-    <div className="titlebar">
+    <div
+      ref={titlebarRef}
+      className={titlebarClass}
+      onMouseLeave={handleMouseLeave}
+    >
       <div className="titlebar__left" ref={menuRef}>
         <IconButton
           variant="ghost"
@@ -110,10 +166,10 @@ export function TitleBar({
         <IconButton
           variant="ghost"
           size="md"
-          label={muted ? 'Unmute' : 'Mute'}
+          label={isMuted ? 'Unmute' : 'Mute'}
           onClick={toggleMute}
         >
-          {muted ? (
+          {isMuted ? (
             <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style={{ opacity: 1 }}>
               <path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06M14.354 4.646a.5.5 0 0 1 0 .708L12.707 7l1.647 1.646a.5.5 0 0 1-.708.708L12 7.707l-1.646 1.647a.5.5 0 0 1-.708-.708L11.293 7 9.646 5.354a.5.5 0 1 1 .708-.708L12 6.293l1.646-1.647a.5.5 0 0 1 .708 0" />
             </svg>
@@ -137,7 +193,10 @@ export function TitleBar({
             </svg>
           </IconButton>
         )}
-        {menuOpen && <DropdownMenu items={menuItems} />}
+        {menuOpen && <DropdownMenu items={menuItems} anchorRef={menuRef} />}
+        {showFps && fps > 0 && (
+          <span className="titlebar__fps">{fps} FPS</span>
+        )}
       </div>
 
       <div className="titlebar__center">

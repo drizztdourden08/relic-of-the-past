@@ -7,9 +7,11 @@ interface ToggleProps {
   description?: string;
   disabled?: boolean;
   id?: string;
+  /** Optional external link shown next to the description */
+  link?: string;
 }
 
-export function Toggle({ checked, onChange, label, description, disabled = false, id }: ToggleProps) {
+export function Toggle({ checked, onChange, label, description, disabled = false, id, link }: ToggleProps) {
   const toggleId = id ?? `toggle-${label?.replace(/\s+/g, '-').toLowerCase() ?? 'unnamed'}`;
 
   return (
@@ -17,7 +19,23 @@ export function Toggle({ checked, onChange, label, description, disabled = false
       {(label || description) && (
         <span className="toggle__text">
           {label && <span className="toggle__label">{label}</span>}
-          {description && <span className="toggle__description">{description}</span>}
+          {description && (
+            <span className="toggle__description">
+              {description}
+              {link && (
+                <a
+                  className="toggle__link"
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  title="Learn more"
+                >
+                  ↗
+                </a>
+              )}
+            </span>
+          )}
         </span>
       )}
       <input

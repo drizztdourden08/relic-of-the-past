@@ -6,3 +6,6 @@ export { getProfileId as getActiveProfileId } from './wasm-bridge';
 export { startGame, resetGame } from './lifecycle';
 export { saveState, loadState } from './save-states';
 export { setItemOverride, clearItemOverrides } from './randomizer';
+export { pushLiveSettings, requiresRestart, LIVE_SETTINGS } from './live-settings';
+export { initMasterVolume, setMasterVolume } from './audio-volume';
+export { getFps } from './fps';

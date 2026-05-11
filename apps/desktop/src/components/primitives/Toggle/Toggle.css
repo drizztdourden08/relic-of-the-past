@@ -33,6 +33,21 @@
   line-height: var(--leading-normal);
 }
 
+.toggle__link {
+  display: inline-flex;
+  margin-left: var(--space-xs);
+  color: var(--color-gold-base);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  opacity: 0.6;
+  transition: opacity var(--transition-fast);
+}
+
+.toggle__link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
 .toggle__input {
   position: absolute;
   opacity: 0;

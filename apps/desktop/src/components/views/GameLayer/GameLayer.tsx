@@ -8,9 +8,10 @@ interface GameLayerProps {
   assetData: Uint8Array | null;
   configIni?: string;
   profileId?: string;
+  stretch?: boolean;
 }
 
-export function GameLayer({ assetData, configIni, profileId }: GameLayerProps): JSX.Element {
+export function GameLayer({ assetData, configIni, profileId, stretch }: GameLayerProps): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { status, error, start } = useGameState();
@@ -25,13 +26,19 @@ export function GameLayer({ assetData, configIni, profileId }: GameLayerProps): 
     const container = containerRef.current;
     if (!canvas || !container) return;
 
-    const bufW = canvas.width;
-    const bufH = canvas.height;
-    if (!bufW || !bufH) return;
-
     const containerW = container.clientWidth;
     const containerH = container.clientHeight;
     if (!containerW || !containerH) return;
+
+    if (stretch) {
+      canvas.style.width = `${containerW}px`;
+      canvas.style.height = `${containerH}px`;
+      return;
+    }
+
+    const bufW = canvas.width;
+    const bufH = canvas.height;
+    if (!bufW || !bufH) return;
 
     const scale = Math.min(containerW / bufW, containerH / bufH);
     const cssW = Math.floor(bufW * scale);
@@ -39,7 +46,7 @@ export function GameLayer({ assetData, configIni, profileId }: GameLayerProps): 
 
     canvas.style.width = `${cssW}px`;
     canvas.style.height = `${cssH}px`;
-  }, []);
+  }, [stretch]);
 
   // Observe container size changes and re-fit
   useEffect(() => {

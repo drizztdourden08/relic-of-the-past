@@ -1,3 +1,4 @@
+import { useRef, useState, useEffect, useCallback } from 'react';
 import './SegmentedControl.css';
 
 export interface SegmentOption<T extends string = string> {
@@ -22,7 +23,30 @@ export function SegmentedControl<T extends string = string>({
   description,
   disabled = false,
 }: SegmentedControlProps<T>) {
-  const activeIdx = options.findIndex((o) => o.value === value);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [indicatorStyle, setIndicatorStyle] = useState<React.CSSProperties>({});
+
+  const updateIndicator = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const activeBtn = track.querySelector<HTMLButtonElement>('[aria-checked="true"]');
+    if (!activeBtn) return;
+    setIndicatorStyle({
+      width: activeBtn.offsetWidth,
+      transform: `translateX(${activeBtn.offsetLeft - 2}px)`,
+    });
+  }, []);
+
+  useEffect(() => {
+    updateIndicator();
+  }, [value, options, updateIndicator]);
+
+  // Re-measure on resize
+  useEffect(() => {
+    const observer = new ResizeObserver(updateIndicator);
+    if (trackRef.current) observer.observe(trackRef.current);
+    return () => observer.disconnect();
+  }, [updateIndicator]);
 
   return (
     <div className={`segmented ${disabled ? 'segmented--disabled' : ''}`}>
@@ -32,13 +56,10 @@ export function SegmentedControl<T extends string = string>({
           {description && <span className="segmented__description">{description}</span>}
         </div>
       )}
-      <div className="segmented__track" role="radiogroup" aria-label={label}>
+      <div className="segmented__track" role="radiogroup" aria-label={label} ref={trackRef}>
         <span
           className="segmented__indicator"
-          style={{
-            width: `${100 / options.length}%`,
-            transform: `translateX(${activeIdx * 100}%)`,
-          }}
+          style={indicatorStyle}
         />
         {options.map((opt) => (
           <button

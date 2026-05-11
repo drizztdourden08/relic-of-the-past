@@ -1,7 +1,5 @@
 .dropdown-menu {
-  position: absolute;
-  top: var(--titlebar-height);
-  left: var(--space-xs);
+  position: fixed;
   min-width: 200px;
   background: var(--color-bg-elevated);
   border: 1px solid var(--color-border-default);
@@ -10,6 +8,7 @@
   box-shadow: var(--shadow-dropdown);
   z-index: 200;
   animation: dropdown-in 0.12s ease-out;
+  pointer-events: auto;
 }
 
 @keyframes dropdown-in {

@@ -1,4 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import type { GameSettings } from '@shared/types/settings';
 import { TitleBar } from './components/views/TitleBar';
 import { GameLayer } from './components/views/GameLayer';
 import { SaveStateOverlay } from './components/views/SaveStateOverlay/SaveStateOverlay';
@@ -9,8 +10,37 @@ import { FullScreenLayer } from './components/composites/FullScreenLayer';
 import { Dialog } from './components/composites/Dialog';
 import { log } from './lib/log-bus';
 import type { LogChannel, LogLevel } from './lib/log-bus';
-import { subscribeGameState, resetGame } from './lib/game';
+import { subscribeGameState, resetGame, setMasterVolume } from './lib/game';
 import { serializeToIni, mergeSettings } from './lib/game/settings';
+import './App.css';
+
+const TITLEBAR_HEIGHT = 38;
+
+/** Get the game ratio from canvas buffer or fall back to setting value. */
+function getGameRatio(aspectRatio: GameSettings['aspectRatio']): number {
+  const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
+  if (canvas && canvas.width > 0 && canvas.height > 0) {
+    return canvas.width / canvas.height;
+  }
+  switch (aspectRatio) {
+    case '16:9':  return 16 / 9;
+    case '16:10': return 16 / 10;
+    case '18:9':  return 18 / 9;
+    case '4:3':
+    default:      return 4 / 3;
+  }
+}
+
+/** Send the aspect-ratio lock command to the main process. */
+function syncAspectRatioLock(constraint: GameSettings['viewportConstraint'], aspectRatio: GameSettings['aspectRatio'], wMode: GameSettings['windowMode'], fullscreen: boolean): void {
+  if (constraint !== 'fit') {
+    window.api.setAspectRatioLock(0, 0);
+    return;
+  }
+  const ratio = getGameRatio(aspectRatio);
+  const extra = (wMode === 'default' && !fullscreen) ? TITLEBAR_HEIGHT : 0;
+  window.api.setAspectRatioLock(ratio, extra);
+}
 
 type PageId = 'none' | 'picker' | 'profile';
 
@@ -36,6 +66,58 @@ export function App(): JSX.Element {
   const [dialog, setDialog] = useState<ConfirmDialog | null>(null);
   const [gameCrashed, setGameCrashed] = useState(false);
   const [configIni, setConfigIni] = useState<string | undefined>(undefined);
+  const [windowMode, setWindowMode] = useState<GameSettings['windowMode']>('default');
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [viewportConstraint, setViewportConstraint] = useState<GameSettings['viewportConstraint']>('none');
+  const [aspectRatio, setAspectRatio] = useState<GameSettings['aspectRatio']>('4:3');
+  const [masterVolume, setMasterVolumeState] = useState(100);
+  const [showFps, setShowFps] = useState(false);
+  const prevVolumeRef = useRef(100);
+  const [muteOverride, setMuteOverride] = useState<{ volume: number; version: number } | null>(null);
+  const muteVersionRef = useRef(0);
+
+  // When windowMode changes, sync Electron (borderless = no frame, default = framed)
+  const handleWindowModeChange = useCallback((mode: GameSettings['windowMode']) => {
+    setWindowMode(mode);
+  }, []);
+
+  // Callback for ProfileHub to notify us when constraint-relevant settings change
+  const handleConstraintSettingsChange = useCallback((constraint: GameSettings['viewportConstraint'], ar: GameSettings['aspectRatio']) => {
+    setViewportConstraint(constraint);
+    setAspectRatio(ar);
+  }, []);
+
+  // Callbacks for ProfileHub to notify us of volume/FPS display changes (titlebar sync)
+  const handleMasterVolumeChange = useCallback((volume: number) => {
+    setMasterVolumeState(volume);
+    if (volume > 0) prevVolumeRef.current = volume;
+  }, []);
+
+  const handleDisplayPerfChange = useCallback((enabled: boolean) => {
+    setShowFps(enabled);
+  }, []);
+
+  // Titlebar mute toggle: switch between 0 and previous volume
+  const handleToggleMute = useCallback(() => {
+    const v = ++muteVersionRef.current;
+    if (masterVolume > 0) {
+      prevVolumeRef.current = masterVolume;
+      setMasterVolumeState(0);
+      setMuteOverride({ volume: 0, version: v });
+      setMasterVolume(0);
+    } else {
+      const restored = prevVolumeRef.current || 100;
+      setMasterVolumeState(restored);
+      setMuteOverride({ volume: restored, version: v });
+      setMasterVolume(restored);
+    }
+  }, [masterVolume]);
+
+  // Track fullscreen state for aspect ratio lock
+  useEffect(() => {
+    window.api.isFullscreen().then(setIsFullscreen);
+    return window.api.onFullscreenChange(setIsFullscreen);
+  }, []);
 
   // Compute display info combining server state + local extraction tracking
   const romDisplayInfos: RomDisplayInfo[] = romStatuses.map((rom) => ({
@@ -44,6 +126,46 @@ export function App(): JSX.Element {
   }));
 
   const isGameRunning = assetData != null && !gameCrashed;
+
+  // ─── Aspect ratio lock ───
+  // Sync lock when settings change (constraint, aspect ratio, window mode, fullscreen)
+  // Only apply when a game is running — no lock while browsing settings.
+  useEffect(() => {
+    if (!isGameRunning) return;
+    syncAspectRatioLock(viewportConstraint, aspectRatio, windowMode, isFullscreen);
+  }, [isGameRunning, viewportConstraint, aspectRatio, windowMode, isFullscreen]);
+
+  // Re-sync when game starts (canvas buffer dimensions become available)
+  const vcRef = useRef(viewportConstraint);
+  const arRef = useRef(aspectRatio);
+  const wmRef = useRef(windowMode);
+  const fsRef = useRef(isFullscreen);
+  vcRef.current = viewportConstraint;
+  arRef.current = aspectRatio;
+  wmRef.current = windowMode;
+  fsRef.current = isFullscreen;
+
+  useEffect(() => {
+    if (!isGameRunning) {
+      // Game stopped — unlock
+      if (vcRef.current === 'fit') {
+        window.api.setAspectRatioLock(0, 0);
+      }
+      return;
+    }
+    if (vcRef.current !== 'fit') return;
+    // Poll until canvas has valid buffer dimensions (game needs time to render first frame)
+    let attempts = 0;
+    const poll = setInterval(() => {
+      attempts++;
+      const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
+      if ((canvas && canvas.width > 0 && canvas.height > 0) || attempts >= 30) {
+        clearInterval(poll);
+        syncAspectRatioLock(vcRef.current, arRef.current, wmRef.current, fsRef.current);
+      }
+    }, 100);
+    return () => clearInterval(poll);
+  }, [isGameRunning]);
 
   // Subscribe to game state for crash detection
   useEffect(() => {
@@ -65,6 +187,50 @@ export function App(): JSX.Element {
     });
   }, []);
 
+  // ─── ESC key: toggle profile page open/close ───
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      // Alt+Enter: toggle fullscreen
+      if (e.altKey && e.key === 'Enter') {
+        e.preventDefault();
+        window.api.toggleFullscreen();
+        return;
+      }
+
+      if (e.key !== 'Escape') return;
+
+      // If dialog is open, close it
+      if (dialog) {
+        e.preventDefault();
+        setDialog(null);
+        return;
+      }
+
+      // If picker is open and we have a profile to go back to, close it
+      if (activePage === 'picker' && activeProfile) {
+        e.preventDefault();
+        setActivePage('none');
+        return;
+      }
+
+      // If profile page is open, close it
+      if (activePage === 'profile') {
+        e.preventDefault();
+        setActivePage('none');
+        return;
+      }
+
+      // If nothing is open and we have a profile, open profile page
+      if (activePage === 'none' && activeProfile) {
+        e.preventDefault();
+        setActivePage('profile');
+        return;
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [activePage, activeProfile, dialog]);
+
   // ─── Close current fullscreen page ───
   const closePage = useCallback(() => setActivePage('none'), []);
 
@@ -85,7 +251,16 @@ export function App(): JSX.Element {
     const settings = mergeSettings((savedSettings ?? {}) as any);
     const ini = serializeToIni(settings);
     setConfigIni(ini);
-    log.app(`Loaded profile settings (aspect: ${settings.aspectRatio}, renderer: ${settings.newRenderer ? 'new' : 'old'})`);
+    setWindowMode(settings.windowMode);
+    setViewportConstraint(settings.viewportConstraint);
+    setAspectRatio(settings.aspectRatio);
+    setMasterVolumeState(settings.masterVolume);
+    setShowFps(settings.displayPerfInTitle);
+    if (settings.masterVolume > 0) prevVolumeRef.current = settings.masterVolume;
+    if (settings.startFullscreen) {
+      window.api.setFullscreen(true);
+    }
+    log.app(`Loaded profile settings (aspect: ${settings.aspectRatio}, viewport: ${settings.viewportConstraint}, renderer: ${settings.newRenderer ? 'new' : 'old'})`);
 
     const hasAssets = await window.api.checkAssets(profile.romFile);
     if (!hasAssets) {
@@ -338,48 +513,59 @@ export function App(): JSX.Element {
         onToggleSaveStates={() => setShowSaveStates((v) => !v)}
         activeProfile={activeProfile}
         gameRunning={isGameRunning}
+        windowMode={windowMode}
+        isMuted={masterVolume === 0}
+        onToggleMute={handleToggleMute}
+        showFps={showFps}
       />
 
-      {/* Game canvas — always present as background layer */}
-      <GameLayer assetData={assetData} configIni={configIni} profileId={activeProfile?.id} />
+      <div className="app__content">
+        {/* Game canvas — always present as background layer */}
+        <GameLayer assetData={assetData} configIni={configIni} profileId={activeProfile?.id} stretch={viewportConstraint === 'fill'} />
 
-      {/* Save State Overlay */}
-      <SaveStateOverlay
-        open={showSaveStates && isGameRunning}
-        onClose={() => setShowSaveStates(false)}
-      />
+        {/* Save State Overlay */}
+        <SaveStateOverlay
+          open={showSaveStates && isGameRunning}
+          onClose={() => setShowSaveStates(false)}
+        />
 
-      {/* Full-screen pages (one at a time) */}
-      {activePage === 'picker' && (
-        <FullScreenLayer onClose={closePage}>
-          <ProfilePicker
-            profiles={profiles}
-            romStatuses={romDisplayInfos}
-            onSelectProfile={handleSelectProfile}
-            onCreateProfile={handleCreateProfile}
-            onDeleteProfile={handleDeleteProfile}
-            onImportRom={handleImportRom}
-            onExtractAssets={handleExtractAssets}
-            onDeleteRom={handleDeleteRom}
-            importingRom={importingRom}
-            loadingProfile={loadingProfile}
-          />
-        </FullScreenLayer>
-      )}
+        {/* Full-screen pages (one at a time) */}
+        {activePage === 'picker' && (
+          <FullScreenLayer onClose={closePage}>
+            <ProfilePicker
+              profiles={profiles}
+              romStatuses={romDisplayInfos}
+              onSelectProfile={handleSelectProfile}
+              onCreateProfile={handleCreateProfile}
+              onDeleteProfile={handleDeleteProfile}
+              onImportRom={handleImportRom}
+              onExtractAssets={handleExtractAssets}
+              onDeleteRom={handleDeleteRom}
+              importingRom={importingRom}
+              loadingProfile={loadingProfile}
+            />
+          </FullScreenLayer>
+        )}
 
-      {activePage === 'profile' && activeProfile && (
-        <FullScreenLayer onClose={closePage}>
-          <ProfileHub
-            profile={activeProfile}
-            isGameRunning={isGameRunning}
-            onStartGame={handleStartGame}
-            onStopGame={handleStopGame}
-            onResetGame={handleResetGame}
-          />
-        </FullScreenLayer>
-      )}
+        {activePage === 'profile' && activeProfile && (
+          <FullScreenLayer onClose={closePage}>
+            <ProfileHub
+              profile={activeProfile}
+              isGameRunning={isGameRunning}
+              onStartGame={handleStartGame}
+              onStopGame={handleStopGame}
+              onResetGame={handleResetGame}
+              onWindowModeChange={handleWindowModeChange}
+              onConstraintSettingsChange={handleConstraintSettingsChange}
+              onMasterVolumeChange={handleMasterVolumeChange}
+              onDisplayPerfChange={handleDisplayPerfChange}
+              masterVolumeOverride={muteOverride}
+            />
+          </FullScreenLayer>
+        )}
 
-      <LogOverlay visible={showLogs} onClose={() => setShowLogs(false)} />
+        <LogOverlay visible={showLogs} onClose={() => setShowLogs(false)} />
+      </div>
 
       <Dialog
         open={dialog != null}

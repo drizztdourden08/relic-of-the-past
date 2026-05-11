@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react';
+import { useRef, useLayoutEffect, useState, type RefObject } from 'react';
+import { Portal } from '../../primitives/Portal';
 import './DropdownMenu.css';
 
 interface MenuItem {
@@ -12,11 +13,23 @@ interface MenuItem {
 
 interface DropdownMenuProps {
   items: (MenuItem | 'separator')[];
+  anchorRef?: RefObject<HTMLElement | null>;
 }
 
-export function DropdownMenu({ items }: DropdownMenuProps): JSX.Element {
-  return (
-    <div className="dropdown-menu">
+export function DropdownMenu({ items, anchorRef }: DropdownMenuProps): JSX.Element {
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+
+  useLayoutEffect(() => {
+    if (!anchorRef?.current) return;
+    const rect = anchorRef.current.getBoundingClientRect();
+    setPos({ top: rect.bottom, left: rect.left });
+  }, [anchorRef]);
+
+  const menu = (
+    <div
+      className="dropdown-menu"
+      style={pos ? { position: 'fixed', top: pos.top, left: pos.left } : undefined}
+    >
       {items.map((item, i) => {
         if (item === 'separator') {
           return <div key={`sep-${i}`} className="dropdown__separator" />;
@@ -40,4 +53,6 @@ export function DropdownMenu({ items }: DropdownMenuProps): JSX.Element {
       })}
     </div>
   );
+
+  return <Portal layer="overlay">{menu}</Portal>;
 }

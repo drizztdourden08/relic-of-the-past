@@ -54,8 +54,8 @@ export function subscribe(listener: LogListener): () => void {
   return () => listeners.delete(listener);
 }
 
-export function getEntries(): readonly LogEntry[] {
-  return entries;
+export function getEntries(): LogEntry[] {
+  return [...entries];
 }
 
 export const CHANNEL_COLORS: Record<LogChannel, string> = {

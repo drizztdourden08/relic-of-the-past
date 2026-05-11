@@ -13,9 +13,12 @@ export function useTitleBar(menuRef: RefObject<HTMLDivElement | null>) {
   useEffect(() => {
     if (!menuOpen) return;
     const handler = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
+      const target = e.target as Node;
+      // Don't close if clicking inside the menu trigger area
+      if (menuRef.current && menuRef.current.contains(target)) return;
+      // Don't close if clicking inside the portal-rendered dropdown
+      if ((target as Element).closest?.('.dropdown-menu')) return;
+      setMenuOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);

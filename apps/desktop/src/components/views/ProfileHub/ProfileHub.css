@@ -1,46 +1,129 @@
 .profile-hub {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
+}
+
+/* ─── Profile Header ─── */
+
+.profile-hub__header {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: 0 var(--space-sm) var(--space-lg);
+}
+
+.profile-hub__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profile-hub__name {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semi);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.profile-hub__actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.profile-hub__info-cards {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.profile-hub__info-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+}
+
+.profile-hub__info-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.profile-hub__info-value {
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  font-weight: var(--weight-medium);
+}
+
+/* ─── Tab cards ─── */
+
+.profile-hub__tabs {
+  display: flex;
+  gap: var(--space-sm);
+  padding: 0 var(--space-sm) var(--space-md);
+  flex-shrink: 0;
+}
+
+.profile-hub__tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-md) var(--space-xl);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-width: 100px;
+}
+
+.profile-hub__tab:hover {
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.profile-hub__tab--active {
+  color: var(--color-gold-base);
+  border-color: var(--color-gold-base);
+  background: rgba(200, 168, 78, 0.08);
+}
+
+.profile-hub__tab-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.profile-hub__tab-label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
 }
 
 .profile-hub__content {
   flex: 1;
-  overflow-y: auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
+/* ─── Generic settings tab (used by Audio, Gameplay, Controls tabs) ─── */
 .settings-tab {
   display: flex;
   flex-direction: column;
   gap: var(--space-xl);
-  padding: var(--space-xl);
-}
-
-.controls-placeholder {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  padding: var(--space-sm) 0;
-}
-
-.controls-placeholder__text {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  margin: 0;
-}
-
-.controls-placeholder__table {
-  border-collapse: collapse;
-  font-size: var(--text-sm);
-}
-
-.controls-placeholder__table td {
-  padding: var(--space-xs) var(--space-lg) var(--space-xs) 0;
-  color: var(--color-text-secondary);
-}
-
-.controls-placeholder__table td:first-child {
-  color: var(--color-text-primary);
-  font-weight: var(--weight-medium);
+  padding: var(--space-lg);
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }

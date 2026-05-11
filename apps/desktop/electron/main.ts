@@ -1,7 +1,9 @@
-import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
-import { join, basename } from 'path';
-import { readFile, mkdir, writeFile, access, copyFile, rm, stat } from 'fs/promises';
+import { app, BrowserWindow, shell, ipcMain, dialog, net } from 'electron';
+import { join, basename, extname } from 'path';
+import { readFile, mkdir, writeFile, access, copyFile, rm, stat, readdir } from 'fs/promises';
+import { createWriteStream } from 'fs';
 import { spawn } from 'child_process';
+import { pipeline } from 'stream/promises';
 import { is } from '@electron-toolkit/utils';
 import {
   initProfileManager,
@@ -51,8 +53,8 @@ function createWindow(): void {
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 720,
-    minWidth: 800,
-    minHeight: 600,
+    minWidth: 360,
+    minHeight: 280,
     frame: false,
     titleBarStyle: 'hidden',
     title: 'ALttP Randomizer',
@@ -116,6 +118,132 @@ function registerIpcHandlers(): void {
     return mainWindow?.webContents.isAudioMuted() ?? false;
   });
   ipcMain.handle('window:isAudioMuted', () => mainWindow?.webContents.isAudioMuted() ?? false);
+
+  ipcMain.on('window:toggleFullscreen', () => {
+    if (mainWindow) {
+      mainWindow.setFullScreen(!mainWindow.isFullScreen());
+    }
+  });
+  ipcMain.on('window:setFullscreen', (_e, value: boolean) => {
+    if (mainWindow) {
+      mainWindow.setFullScreen(value);
+    }
+  });
+  ipcMain.handle('window:isFullscreen', () => mainWindow?.isFullScreen() ?? false);
+
+  // Aspect ratio lock — snap window to correct size and enforce on user resize
+  // Note: Electron's extraSize parameter for setAspectRatio is broken on Windows,
+  // so we use will-resize to manually enforce the correct content ratio.
+  let lockedRatio = 0;
+  let lockedExtraHeight = 0;
+
+  ipcMain.on('window:setAspectRatioLock', (_e, ratio: number, extraHeight: number) => {
+    if (!mainWindow) return;
+    lockedRatio = ratio;
+    lockedExtraHeight = extraHeight;
+
+    if (ratio <= 0) {
+      mainWindow.setAspectRatio(0);
+      return;
+    }
+
+    // Snap: shrink the window to fit the ratio. Never grow.
+    const [w, h] = mainWindow.getSize();
+    const contentH = h - extraHeight;
+    const wForH = Math.round(contentH * ratio);   // width that fits current height
+    const hForW = Math.round(w / ratio) + extraHeight; // height that fits current width
+
+    // Pick whichever dimension needs shrinking. Never increase either dimension.
+    if (wForH <= w) {
+      mainWindow.setSize(wForH, h);
+      // Verify we didn't grow (minWidth clamp)
+      const [aw] = mainWindow.getSize();
+      if (aw > w) mainWindow.setSize(w, h); // revert
+    } else if (hForW <= h) {
+      mainWindow.setSize(w, hForW);
+      // Verify we didn't grow (minHeight clamp)
+      const [, ah] = mainWindow.getSize();
+      if (ah > h) mainWindow.setSize(w, h); // revert
+    }
+    // else: both would grow — leave window unchanged, accept some black bars
+
+    // Don't call setAspectRatio — it's broken with extraSize on Windows.
+    // We enforce entirely via will-resize below.
+  });
+
+  // Manual enforcement with will-resize to correctly handle the titlebar offset.
+  // Uses the drag edge to decide behavior:
+  //   - Side drags (left/right/bottom): the dragged axis is the user's intent,
+  //     compute the other axis freely (it may grow or shrink).
+  //   - Corner drags: fit within proposed bounds, never exceed either dimension.
+  app.on('browser-window-created', (_event, win) => {
+    win.on('will-resize', (e, newBounds, details) => {
+      if (lockedRatio <= 0) return;
+
+      const edge = details?.edge ?? '';
+      const isSideH = edge === 'left' || edge === 'right';
+      const isSideV = edge === 'bottom' || edge === 'top';
+
+      let targetW: number;
+      let targetH: number;
+
+      if (isSideH) {
+        // User is changing width — compute height to match
+        targetW = newBounds.width;
+        targetH = Math.round(newBounds.width / lockedRatio) + lockedExtraHeight;
+      } else if (isSideV) {
+        // User is changing height — compute width to match
+        const contentH = newBounds.height - lockedExtraHeight;
+        targetW = Math.round(contentH * lockedRatio);
+        targetH = newBounds.height;
+      } else {
+        // Corner drag — fit within proposed bounds, never exceed either dimension
+        const contentH = newBounds.height - lockedExtraHeight;
+        const wForH = Math.round(contentH * lockedRatio);
+        const hForW = Math.round(newBounds.width / lockedRatio) + lockedExtraHeight;
+
+        if (wForH <= newBounds.width && hForW <= newBounds.height) {
+          // Both directions can shrink — pick larger area
+          const areaW = wForH * newBounds.height;
+          const areaH = newBounds.width * hForW;
+          if (areaW >= areaH) {
+            targetW = wForH;
+            targetH = newBounds.height;
+          } else {
+            targetW = newBounds.width;
+            targetH = hForW;
+          }
+        } else if (wForH <= newBounds.width) {
+          targetW = wForH;
+          targetH = newBounds.height;
+        } else if (hForW <= newBounds.height) {
+          targetW = newBounds.width;
+          targetH = hForW;
+        } else {
+          e.preventDefault();
+          return;
+        }
+      }
+
+      if (targetW !== newBounds.width || targetH !== newBounds.height) {
+        e.preventDefault();
+        // Anchor the edge opposite to the drag so the window doesn't jump.
+        // Use the CURRENT window bounds to find the fixed anchor point.
+        const cur = win.getBounds();
+        let x = newBounds.x;
+        let y = newBounds.y;
+        if (edge.includes('left')) {
+          // Right edge is the anchor: currentRight = cur.x + cur.width
+          x = (cur.x + cur.width) - targetW;
+        }
+        if (edge.includes('top')) {
+          // Bottom edge is the anchor: currentBottom = cur.y + cur.height
+          y = (cur.y + cur.height) - targetH;
+        }
+        win.setBounds({ x, y, width: targetW, height: targetH });
+      }
+    });
+  });
 
   // File dialog — open ROM
   ipcMain.handle('dialog:openRom', async () => {
@@ -388,6 +516,112 @@ function registerIpcHandlers(): void {
     await writeConfig(profileId, settings as any);
   });
 
+  // ─── MSU import ───
+
+  function getMsuDir(profileId: string): string {
+    return getUserDataPath('profiles', profileId, 'msu');
+  }
+
+  const MSU_EXTENSIONS = new Set(['.pcm', '.opuz']);
+
+  async function extractZipToMsu(zipPath: string, msuDir: string): Promise<number> {
+    // Extract to a temp directory first, then move MSU files
+    const tempDir = join(app.getPath('temp'), `msu-extract-${Date.now()}`);
+    await mkdir(tempDir, { recursive: true });
+
+    try {
+      // Use PowerShell Expand-Archive on Windows
+      await new Promise<void>((resolve, reject) => {
+        const ps = spawn('powershell', [
+          '-NoProfile', '-Command',
+          `Expand-Archive -Path '${zipPath}' -DestinationPath '${tempDir}' -Force`,
+        ]);
+        ps.on('close', (code) => code === 0 ? resolve() : reject(new Error(`Expand-Archive exited with code ${code}`)));
+        ps.on('error', reject);
+      });
+
+      // Find all MSU files recursively and copy to msuDir
+      await mkdir(msuDir, { recursive: true });
+      let count = 0;
+
+      async function walkAndCopy(dir: string): Promise<void> {
+        const entries = await readdir(dir, { withFileTypes: true });
+        for (const entry of entries) {
+          const fullPath = join(dir, entry.name);
+          if (entry.isDirectory()) {
+            await walkAndCopy(fullPath);
+          } else if (MSU_EXTENSIONS.has(extname(entry.name).toLowerCase())) {
+            await copyFile(fullPath, join(msuDir, entry.name));
+            count++;
+          }
+        }
+      }
+
+      await walkAndCopy(tempDir);
+      return count;
+    } finally {
+      await rm(tempDir, { recursive: true, force: true }).catch(() => {});
+    }
+  }
+
+  ipcMain.handle('msu:import', async (_event, profileId: string, url: string) => {
+    try {
+      // Validate URL
+      const parsed = new URL(url);
+      if (!['http:', 'https:'].includes(parsed.protocol)) {
+        return { success: false, error: 'Only HTTP/HTTPS URLs are supported' };
+      }
+
+      const msuDir = getMsuDir(profileId);
+      const tempFile = join(app.getPath('temp'), `msu-download-${Date.now()}.zip`);
+
+      // Download using Electron's net module (follows redirects)
+      const response = await net.fetch(url);
+      if (!response.ok) {
+        return { success: false, error: `Download failed: HTTP ${response.status}` };
+      }
+
+      // Stream response body to temp file
+      const body = response.body;
+      if (!body) {
+        return { success: false, error: 'Empty response body' };
+      }
+      const fileStream = createWriteStream(tempFile);
+      // @ts-expect-error - Node/Electron stream compatibility
+      await pipeline(body, fileStream);
+
+      try {
+        const fileCount = await extractZipToMsu(tempFile, msuDir);
+        return { success: true, fileCount };
+      } finally {
+        await rm(tempFile, { force: true }).catch(() => {});
+      }
+    } catch (e) {
+      return { success: false, error: `${e instanceof Error ? e.message : e}` };
+    }
+  });
+
+  ipcMain.handle('msu:importFile', async (_event, profileId: string, filePath: string) => {
+    try {
+      const msuDir = getMsuDir(profileId);
+      const ext = extname(filePath).toLowerCase();
+
+      if (ext === '.zip') {
+        const fileCount = await extractZipToMsu(filePath, msuDir);
+        return { success: true, fileCount };
+      } else if (MSU_EXTENSIONS.has(ext)) {
+        // Single MSU file — copy directly
+        await mkdir(msuDir, { recursive: true });
+        await copyFile(filePath, join(msuDir, basename(filePath)));
+        return { success: true, fileCount: 1 };
+      } else {
+        return { success: false, error: 'Unsupported file type. Use .zip, .pcm, or .opuz files.' };
+      }
+    } catch (e) {
+      return { success: false, error: `${e instanceof Error ? e.message : e}` };
+    }
+  });
+
   // Play sessions
   ipcMain.handle('sessions:list', async (_event, profileId: string) => {
     return listSessions(profileId);
@@ -410,6 +644,10 @@ app.whenReady().then(async () => {
   // Forward maximize/unmaximize events to renderer
   mainWindow!.on('maximize', () => mainWindow?.webContents.send('window:maximized', true));
   mainWindow!.on('unmaximize', () => mainWindow?.webContents.send('window:maximized', false));
+
+  // Forward fullscreen events to renderer
+  mainWindow!.on('enter-full-screen', () => mainWindow?.webContents.send('window:fullscreen', true));
+  mainWindow!.on('leave-full-screen', () => mainWindow?.webContents.send('window:fullscreen', false));
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

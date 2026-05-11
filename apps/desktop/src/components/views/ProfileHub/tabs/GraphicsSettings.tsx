@@ -47,12 +47,6 @@ export function GraphicsSettings({ settings, onChange }: GraphicsSettingsProps) 
           onChange={(v) => onChange({ extendY: v })}
         />
         <Toggle
-          label="Stretch to Fill"
-          description="Ignore aspect ratio, stretch to window size"
-          checked={settings.ignoreAspectRatio}
-          onChange={(v) => onChange({ ignoreAspectRatio: v })}
-        />
-        <Toggle
           label="Unchanged Sprites"
           description="Don't change sprite spawn/despawn for widescreen"
           checked={settings.unchangedSprites}
@@ -66,12 +60,13 @@ export function GraphicsSettings({ settings, onChange }: GraphicsSettingsProps) 
         />
       </SettingsSection>
 
-      <SettingsSection title="Window">
+      <SettingsSection title="Window" description="Not available — Electron controls the window">
         <SegmentedControl
           label="Fullscreen Mode"
           value={String(settings.fullscreen)}
           options={FULLSCREEN_OPTIONS}
           onChange={(v) => onChange({ fullscreen: Number(v) as 0 | 1 | 2 })}
+          disabled
         />
         <Slider
           label="Window Scale"
@@ -81,6 +76,7 @@ export function GraphicsSettings({ settings, onChange }: GraphicsSettingsProps) 
           step={1}
           formatValue={(v) => `${v}x`}
           onChange={(v) => onChange({ windowScale: v })}
+          disabled
         />
       </SettingsSection>
 
@@ -90,6 +86,7 @@ export function GraphicsSettings({ settings, onChange }: GraphicsSettingsProps) 
           value={settings.outputMethod}
           options={OUTPUT_OPTIONS}
           onChange={(v) => onChange({ outputMethod: v as GameSettings['outputMethod'] })}
+          disabled
         />
         <Toggle
           label="Optimized SNES PPU"

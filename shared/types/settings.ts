@@ -12,15 +12,19 @@ export interface GameSettings {
   noVisualFixes: boolean;
 
   // ─── Graphics ───
-  windowScale: number; // 1-5
-  fullscreen: 0 | 1 | 2; // 0=windowed, 1=borderless, 2=exclusive
+  windowScale: number; // 1-5 (legacy, unused in Electron)
+  fullscreen: 0 | 1 | 2; // legacy INI field
   newRenderer: boolean;
   enhancedMode7: boolean;
   noSpriteLimits: boolean;
-  ignoreAspectRatio: boolean;
   linearFiltering: boolean;
   dimFlashes: boolean;
-  outputMethod: 'SDL' | 'SDL-Software' | 'OpenGL' | 'OpenGL ES';
+  outputMethod: 'SDL' | 'SDL-Software' | 'OpenGL' | 'OpenGL ES'; // legacy, unused in Electron
+
+  // ─── Window (Electron-managed) ───
+  windowMode: 'default' | 'borderless';
+  startFullscreen: boolean;
+  viewportConstraint: 'none' | 'fit' | 'fill';
 
   // ─── Gameplay features ───
   itemSwitchLR: boolean;
@@ -40,6 +44,7 @@ export interface GameSettings {
 
   // ─── Audio ───
   enableAudio: boolean;
+  masterVolume: number; // 0-100
   audioFreq: number;
   audioChannels: 1 | 2;
   audioSamples: number;

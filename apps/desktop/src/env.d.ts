@@ -41,6 +41,11 @@ interface ElectronAPI {
   setAudioMuted(value: boolean): Promise<boolean>;
   isAudioMuted(): Promise<boolean>;
   onMaximizedChange(callback: (maximized: boolean) => void): () => void;
+  toggleFullscreen(): void;
+  setFullscreen(value: boolean): void;
+  setAspectRatioLock(ratio: number, extraHeight: number): void;
+  isFullscreen(): Promise<boolean>;
+  onFullscreenChange(callback: (fullscreen: boolean) => void): () => void;
 
   // File dialog
   openRomDialog(): Promise<string | null>;
@@ -80,6 +85,10 @@ interface ElectronAPI {
   // Config (per-profile settings)
   readConfig(profileId: string): Promise<Record<string, unknown> | null>;
   writeConfig(profileId: string, settings: Record<string, unknown>): Promise<void>;
+
+  // MSU import
+  importMsu(profileId: string, url: string): Promise<{ success: boolean; fileCount?: number; error?: string }>;
+  importMsuFile(profileId: string, filePath: string): Promise<{ success: boolean; fileCount?: number; error?: string }>;
 
   // Play sessions
   listSessions(profileId: string): Promise<Array<{ id: string; profileId: string; startedAt: number; endedAt: number | null; durationMs: number; stats: Record<string, unknown> }>>;

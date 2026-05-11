@@ -9,6 +9,7 @@ import { DEFAULT_ZELDA3_INI } from './config';
 import { getModule, setModule, setProfileId, getProfileId, setState } from './wasm-bridge';
 import { startSramSync, stopSramSync } from './sram-sync';
 import { setItemOverride } from './randomizer';
+import { resetMasterVolume } from './audio-volume';
 
 declare function Zelda3(config: Record<string, unknown>): Promise<EmscriptenModule>;
 
@@ -17,6 +18,7 @@ let startGeneration = 0;
 
 export function resetGame(): void {
   stopSramSync();
+  resetMasterVolume();
   if (activeCrashHandler) {
     window.removeEventListener('error', activeCrashHandler);
     activeCrashHandler = null;

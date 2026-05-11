@@ -24,6 +24,7 @@
 #include "src/util.h"
 #include "src/audio.h"
 #include "src/spc_player.h"
+#include "src/features.h"
 
 // ---------------------------------------------------------------------------
 // WASM-safe ZeldaInitialize — workaround for ppu_init() signature mismatch.
@@ -58,6 +59,9 @@ static int g_ppu_render_flags = 0;
 static int g_input1_state;
 static uint8 g_paused;
 static bool g_running = true;
+
+// FPS measurement
+static int g_curr_fps;
 
 // Audio
 static SDL_AudioDeviceID g_audio_device;
@@ -259,6 +263,39 @@ void WasmLoadSram(void) {
 }
 
 // ---------------------------------------------------------------------------
+// Live settings — callable from JS while game is running
+// ---------------------------------------------------------------------------
+EMSCRIPTEN_KEEPALIVE
+void WasmSetFeatures(uint32_t features) {
+  g_wanted_zelda_features = features;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t WasmGetFeatures(void) {
+  return g_wanted_zelda_features;
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmSetPpuRenderFlags(int flags) {
+  g_ppu_render_flags = flags;
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetPpuRenderFlags(void) {
+  return g_ppu_render_flags;
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetFps(void) {
+  return g_curr_fps;
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmSetDisplayPerf(int enable) {
+  g_config.display_perf_title = enable;
+}
+
+// ---------------------------------------------------------------------------
 // Command handling (cheats, pause, etc.)
 // F-key save/load states are handled from JavaScript via ccall to
 // WasmSaveState/WasmLoadState so disk persistence can be coordinated.
@@ -304,6 +341,28 @@ static void MainFrameCallback(void) {
   }
 
   if (g_paused) return;
+
+  // FPS measurement: count frames per wall-clock second using emscripten_get_now()
+  // (SDL_GetPerformanceCounter returns uint64 ms, losing sub-ms precision which
+  //  causes division-by-zero in per-frame timing on fast draws)
+  if (g_config.display_perf_title) {
+    static double fps_last_time;
+    static int fps_frame_count;
+    double now = emscripten_get_now(); // milliseconds, sub-ms precision
+    if (fps_last_time == 0.0) {
+      fps_last_time = now;
+      fps_frame_count = 0;
+    }
+    fps_frame_count++;
+    double elapsed = now - fps_last_time;
+    if (elapsed >= 1000.0) {
+      g_curr_fps = (int)(fps_frame_count * 1000.0 / elapsed + 0.5);
+      fps_frame_count = 0;
+      fps_last_time = now;
+    }
+  } else {
+    g_curr_fps = 0;
+  }
 
   int inputs = g_input1_state;
   ZeldaRunFrame(inputs);

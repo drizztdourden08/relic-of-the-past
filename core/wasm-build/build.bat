@@ -80,7 +80,7 @@ emcc -O2 -g2 ^
   -sFORCE_FILESYSTEM=1 ^
   -sMODULARIZE=1 ^
   -sEXPORT_NAME="Zelda3" ^
-  -sEXPORTED_FUNCTIONS="['_main','_WasmSaveState','_WasmLoadState','_WasmSaveSram','_WasmLoadSram','_WasmSetItemOverride','_WasmClearItemOverrides']" ^
+  -sEXPORTED_FUNCTIONS="['_main','_WasmSaveState','_WasmLoadState','_WasmSaveSram','_WasmLoadSram','_WasmSetItemOverride','_WasmClearItemOverrides','_WasmSetFeatures','_WasmGetFeatures','_WasmSetPpuRenderFlags','_WasmGetPpuRenderFlags','_WasmGetFps','_WasmSetDisplayPerf']" ^
   -sEXPORTED_RUNTIME_METHODS="['ccall','cwrap','FS']" ^
   -sASYNCIFY
 

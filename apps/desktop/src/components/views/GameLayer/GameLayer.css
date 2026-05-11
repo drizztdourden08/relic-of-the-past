@@ -1,7 +1,6 @@
 .game-layer {
   position: absolute;
   inset: 0;
-  top: var(--titlebar-height);
   display: flex;
   align-items: center;
   justify-content: center;

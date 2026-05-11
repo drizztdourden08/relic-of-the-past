@@ -177,7 +177,7 @@ export interface SaveSlotInfo {
 export async function getStateSlotInfos(profileId: string): Promise<SaveSlotInfo[]> {
   const savesDir = getProfileSavesDir(profileId);
   const results: SaveSlotInfo[] = [];
-  for (let slot = 0; slot < 4; slot++) {
+  for (let slot = 0; slot < 10; slot++) {
     const savPath = join(savesDir, `save${slot}.sav`);
     try {
       const s = await stat(savPath);

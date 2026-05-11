@@ -41,7 +41,6 @@ test.describe('Canvas Rendering', () => {
         newRenderer: true,
         enhancedMode7: true,
         noSpriteLimits: true,
-        ignoreAspectRatio: false,
         linearFiltering: false,
         dimFlashes: false,
         outputMethod: 'SDL',

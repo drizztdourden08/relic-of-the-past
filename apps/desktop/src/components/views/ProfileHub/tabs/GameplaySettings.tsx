@@ -1,135 +1,113 @@
 import type { GameSettings } from '@shared/types/settings';
-import { Toggle } from '../../../primitives/Toggle';
-import { SettingsSection } from '../../../composites/SettingsSection';
+import { SettingsLayout, type Section } from '../../../composites/SettingsLayout/SettingsLayout';
 
 interface GameplaySettingsProps {
   settings: GameSettings;
   onChange: (patch: Partial<GameSettings>) => void;
 }
 
+const SECTIONS: Section[] = [
+  {
+    id: 'general',
+    title: 'General',
+    subsections: [
+      {
+        id: 'general-system',
+        title: 'System',
+        items: [
+          { key: 'autosave', label: 'Autosave', description: 'Automatically save your progress when quitting and restore it on next launch', keywords: 'auto save restore quit' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'items',
+    title: 'Items',
+    subsections: [
+      {
+        id: 'items-management',
+        title: 'Item Management',
+        items: [
+          { key: 'itemSwitchLR', label: 'Advanced Item Selection', description: 'Use L and R shoulder buttons to cycle through your equipped items', keywords: 'item cycle lr bumper' },
+          { key: 'itemSwitchLRLimit', label: 'Limit to First 4 Items', description: 'When cycling with L/R, only rotate through the first 4 item slots', keywords: 'item limit slots' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'movement',
+    title: 'Movement',
+    subsections: [
+      {
+        id: 'movement-options',
+        title: 'Options',
+        items: [
+          { key: 'turnWhileDashing', label: 'Turn While Dashing', description: 'Change direction while using the Pegasus Boots dash', keywords: 'dash turn pegasus boots direction' },
+          { key: 'mirrorToDarkworld', label: 'Mirror to Dark World', description: 'The Magic Mirror can warp you to the Dark World from the Light World', keywords: 'mirror warp dark world light world' },
+          { key: 'cancelBirdTravel', label: 'Cancel Bird Travel', description: 'Cancel duck flight in progress by pressing the X button', keywords: 'bird duck cancel fly' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'combat',
+    title: 'Combat',
+    subsections: [
+      {
+        id: 'combat-options',
+        title: 'Options',
+        items: [
+          { key: 'collectItemsWithSword', label: 'Collect Items with Sword', description: 'Pick up hearts, rupees, and other items by slashing them with your sword', keywords: 'sword collect slash hearts items' },
+          { key: 'breakPotsWithSword', label: 'Break Pots with Sword', description: 'Level 2 or higher swords can break pots by slashing them', keywords: 'pots sword break level' },
+          { key: 'moreActiveBombs', label: 'More Active Bombs', description: 'Place up to 4 active bombs at once instead of the original limit of 2', keywords: 'bombs active limit' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'qol',
+    title: 'Quality of Life',
+    subsections: [
+      {
+        id: 'qol-options',
+        title: 'Options',
+        items: [
+          { key: 'disableLowHealthBeep', label: 'Disable Low Heart Beep', description: 'Silence the repeating warning beep when your health is low', keywords: 'beep heart health warning annoying' },
+          { key: 'skipIntroOnKeypress', label: 'Skip Intro on Keypress', description: 'Press any key to skip the intro and title screen sequence', keywords: 'intro skip key press' },
+          { key: 'showMaxItemsInYellow', label: 'Indicate Max Resources', description: 'Highlight rupees, bombs, and arrows in yellow when you\'re carrying the maximum amount', keywords: 'max yellow rupees bombs arrows' },
+          { key: 'carryMoreRupees', label: 'Larger Wallet', description: 'Increase the maximum rupee capacity from 999 to 9999', keywords: 'rupees wallet money' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'bugfixes',
+    title: 'Bug Fixes',
+    subsections: [
+      {
+        id: 'bugfixes-options',
+        title: 'Options',
+        items: [
+          { key: 'miscBugFixes', label: 'Miscellaneous Minor Fixes', description: 'Apply various minor corrections for original game glitches — fixes follower behavior, music transitions, death counting, and tile rendering issues', keywords: 'bug fix glitch minor misc', link: 'https://github.com/snesrev/zelda3/wiki' },
+          { key: 'gameChangingBugFixes', label: 'Game-Changing Bug Fixes', description: 'Apply fixes that noticeably affect gameplay behavior — changes enemy patterns, chest drops, and boss mechanics to match intended design', keywords: 'bug fix game changing major', link: 'https://github.com/snesrev/zelda3/wiki' },
+        ],
+      },
+    ],
+  },
+];
+
+function isDisabled(key: string, settings: GameSettings): boolean {
+  if (key === 'itemSwitchLRLimit') return !settings.itemSwitchLR;
+  return false;
+}
+
 export function GameplaySettings({ settings, onChange }: GameplaySettingsProps) {
   return (
-    <div className="settings-tab">
-      <SettingsSection title="General">
-        <Toggle
-          label="Autosave"
-          description="Auto-save state on quit, restore on start"
-          checked={settings.autosave}
-          onChange={(v) => onChange({ autosave: v })}
-        />
-        <Toggle
-          label="Show FPS in Title"
-          description="Display performance info in window title"
-          checked={settings.displayPerfInTitle}
-          onChange={(v) => onChange({ displayPerfInTitle: v })}
-        />
-        <Toggle
-          label="Disable Frame Delay"
-          description="Skip SDL_Delay each frame (best at 60Hz)"
-          checked={settings.disableFrameDelay}
-          onChange={(v) => onChange({ disableFrameDelay: v })}
-        />
-      </SettingsSection>
-
-      <SettingsSection title="Item Management">
-        <Toggle
-          label="Advanced Item Selection"
-          description="L/R buttons cycle through items"
-          checked={settings.itemSwitchLR}
-          onChange={(v) => onChange({ itemSwitchLR: v })}
-        />
-        <Toggle
-          label="Limit to First 4 Items"
-          description="Only cycle through first 4 item slots"
-          checked={settings.itemSwitchLRLimit}
-          onChange={(v) => onChange({ itemSwitchLRLimit: v })}
-          disabled={!settings.itemSwitchLR}
-        />
-      </SettingsSection>
-
-      <SettingsSection title="Movement">
-        <Toggle
-          label="Turn While Dashing"
-          description="Change direction while Pegasus Boots dash"
-          checked={settings.turnWhileDashing}
-          onChange={(v) => onChange({ turnWhileDashing: v })}
-        />
-        <Toggle
-          label="Mirror to Dark World"
-          description="Mirror can warp to Dark World from Light World"
-          checked={settings.mirrorToDarkworld}
-          onChange={(v) => onChange({ mirrorToDarkworld: v })}
-        />
-        <Toggle
-          label="Cancel Bird Travel"
-          description="Cancel duck flight with X button"
-          checked={settings.cancelBirdTravel}
-          onChange={(v) => onChange({ cancelBirdTravel: v })}
-        />
-      </SettingsSection>
-
-      <SettingsSection title="Combat">
-        <Toggle
-          label="Collect Items with Sword"
-          description="Collect hearts and items by slashing them"
-          checked={settings.collectItemsWithSword}
-          onChange={(v) => onChange({ collectItemsWithSword: v })}
-        />
-        <Toggle
-          label="Break Pots with Sword"
-          description="Level 2+ sword can break pots"
-          checked={settings.breakPotsWithSword}
-          onChange={(v) => onChange({ breakPotsWithSword: v })}
-        />
-        <Toggle
-          label="More Active Bombs"
-          description="Up to 4 active bombs instead of 2"
-          checked={settings.moreActiveBombs}
-          onChange={(v) => onChange({ moreActiveBombs: v })}
-        />
-      </SettingsSection>
-
-      <SettingsSection title="Quality of Life">
-        <Toggle
-          label="Disable Low Heart Beep"
-          description="Silence the low health warning sound"
-          checked={settings.disableLowHealthBeep}
-          onChange={(v) => onChange({ disableLowHealthBeep: v })}
-        />
-        <Toggle
-          label="Skip Intro on Keypress"
-          description="Skip the intro sequence with any key"
-          checked={settings.skipIntroOnKeypress}
-          onChange={(v) => onChange({ skipIntroOnKeypress: v })}
-        />
-        <Toggle
-          label="Indicate Max Resources"
-          description="Show max rupees/bombs/arrows in yellow"
-          checked={settings.showMaxItemsInYellow}
-          onChange={(v) => onChange({ showMaxItemsInYellow: v })}
-        />
-        <Toggle
-          label="Larger Wallet"
-          description="Carry 9999 rupees instead of 999"
-          checked={settings.carryMoreRupees}
-          onChange={(v) => onChange({ carryMoreRupees: v })}
-        />
-      </SettingsSection>
-
-      <SettingsSection title="Bug Fixes">
-        <Toggle
-          label="Miscellaneous Minor Fixes"
-          description="Various minor glitch corrections"
-          checked={settings.miscBugFixes}
-          onChange={(v) => onChange({ miscBugFixes: v })}
-        />
-        <Toggle
-          label="Game-Changing Bug Fixes"
-          description="Fixes that affect gameplay behavior"
-          checked={settings.gameChangingBugFixes}
-          onChange={(v) => onChange({ gameChangingBugFixes: v })}
-        />
-      </SettingsSection>
-    </div>
+    <SettingsLayout
+      sections={SECTIONS}
+      settings={settings}
+      onChange={onChange}
+      isDisabled={isDisabled}
+    />
   );
 }

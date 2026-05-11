@@ -1,19 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { PlaySession } from '@shared/types/session';
-import { Button } from '../../../primitives/Button';
-import { SaveStateCard } from '../../../compounds/SaveStateCard';
+import { SaveSlot } from '../../../compounds/SaveSlot';
 import { PlaySessionCard } from '../../../compounds/PlaySessionCard';
 import { listSessions } from '../../../../lib/game/session-tracker';
+import { saveState, loadState, subscribeGameState } from '../../../../lib/game';
+import { log } from '../../../../lib/log-bus';
 import './HomeTab.css';
 
 interface HomeTabProps {
   profileId: string;
-  profileName: string;
   romFile: string;
   isGameRunning: boolean;
   onStartGame: () => void;
-  onStopGame: () => void;
-  onResetGame: () => void;
 }
 
 interface SlotInfo {
@@ -24,17 +22,15 @@ interface SlotInfo {
 
 export function HomeTab({
   profileId,
-  profileName,
   romFile,
   isGameRunning,
   onStartGame,
-  onStopGame,
-  onResetGame,
 }: HomeTabProps) {
   const [slots, setSlots] = useState<SlotInfo[]>(() =>
     Array.from({ length: 10 }, (_, i) => ({ slot: i, timestamp: null, screenshot: null }))
   );
   const [sessions, setSessions] = useState<PlaySession[]>([]);
+  const [busySlot, setBusySlot] = useState<number | null>(null);
 
   useEffect(() => {
     loadSlots();
@@ -46,14 +42,13 @@ export function HomeTab({
       const infos = await window.api.getSlotInfos(profileId);
       const loaded: SlotInfo[] = [];
       for (let i = 0; i < 10; i++) {
-        const info = infos?.[i];
+        const info = infos?.find((s: { slot: number }) => s.slot === i);
         let screenshot: string | null = null;
         if (info?.hasScreenshot) {
           try {
-            const buf = await window.api.readScreenshot(profileId, i);
-            if (buf) {
-              const blob = new Blob([buf], { type: 'image/png' });
-              screenshot = URL.createObjectURL(blob);
+            const b64 = await window.api.readScreenshot(profileId, i);
+            if (b64) {
+              screenshot = `data:image/png;base64,${b64}`;
             }
           } catch { /* ignore */ }
         }
@@ -72,30 +67,55 @@ export function HomeTab({
     setSessions(list.slice(0, 20));
   }
 
+  const handleSave = useCallback(async (slot: number) => {
+    setBusySlot(slot);
+    log.app(`Saving state to slot ${slot + 1}`);
+    await saveState(slot);
+    await loadSlots();
+    setBusySlot(null);
+  }, [profileId]);
+
+  const handleLoad = useCallback(async (slot: number) => {
+    setBusySlot(slot);
+    log.app(`Loading state from slot ${slot + 1}`);
+
+    if (!isGameRunning) {
+      // Start the game first, then load once it's running
+      onStartGame();
+      await new Promise<void>((resolve) => {
+        const unsub = subscribeGameState((state) => {
+          if (state.status === 'running') {
+            unsub();
+            resolve();
+          } else if (state.status === 'error' || state.status === 'idle') {
+            unsub();
+            resolve();
+          }
+        });
+      });
+    }
+
+    await loadState(slot);
+    setBusySlot(null);
+  }, [profileId, isGameRunning, onStartGame]);
+
   return (
     <div className="home-tab">
-      <div className="home-tab__header">
-        <div className="home-tab__profile-info">
-          <span className="home-tab__name">{profileName}</span>
-          <span className="home-tab__rom">{romFile.replace(/\.(sfc|smc)$/i, '')}</span>
-        </div>
-        <div className="home-tab__actions">
-          {!isGameRunning ? (
-            <Button variant="primary" size="md" onClick={onStartGame}>▶ Play</Button>
-          ) : (
-            <>
-              <Button variant="danger" size="md" onClick={onStopGame}>■ Stop</Button>
-              <Button variant="secondary" size="md" onClick={onResetGame}>↻ Reset</Button>
-            </>
-          )}
-        </div>
-      </div>
-
       <section className="home-tab__section">
         <h3 className="home-tab__section-title">Save States</h3>
         <div className="home-tab__save-grid">
           {slots.map((s) => (
-            <SaveStateCard key={s.slot} slot={s.slot} screenshot={s.screenshot} timestamp={s.timestamp} />
+            <SaveSlot
+              key={s.slot}
+              slot={s.slot}
+              screenshotUrl={s.screenshot}
+              timestamp={s.timestamp ?? 0}
+              isEmpty={!s.timestamp}
+              busy={busySlot === s.slot}
+              disableSave={!isGameRunning}
+              onSave={handleSave}
+              onLoad={handleLoad}
+            />
           ))}
         </div>
       </section>
