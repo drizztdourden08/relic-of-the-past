@@ -10,7 +10,9 @@ interface TitleBarProps {
   onSwitchProfile: () => void;
   onShowProfile: () => void;
   onShowLogs: () => void;
+  onToggleSaveStates: () => void;
   activeProfile: Profile | null;
+  gameRunning: boolean;
 }
 
 export function TitleBar({
@@ -18,7 +20,9 @@ export function TitleBar({
   onSwitchProfile,
   onShowProfile,
   onShowLogs,
+  onToggleSaveStates,
   activeProfile,
+  gameRunning,
 }: TitleBarProps): JSX.Element {
   const menuRef = useRef<HTMLDivElement>(null);
   const { isMaximized, menuOpen, toggleMenu, closeMenu } = useTitleBar(menuRef);
@@ -121,6 +125,18 @@ export function TitleBar({
             </svg>
           )}
         </IconButton>
+        {gameRunning && (
+          <IconButton
+            variant="ghost"
+            size="md"
+            label="Save States"
+            onClick={onToggleSaveStates}
+          >
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style={{ opacity: 0.7 }}>
+              <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4.414A1 1 0 0 0 14.707 4L12 1.293A1 1 0 0 0 11.293 1H2zm0 1h1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2.414L14 5.414V14H2V2zm3 0v3h4V2H5z" />
+            </svg>
+          </IconButton>
+        )}
         {menuOpen && <DropdownMenu items={menuItems} />}
       </div>
 

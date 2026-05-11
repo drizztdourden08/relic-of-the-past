@@ -15,6 +15,14 @@ import {
   listRoms,
   hasAssetForRom,
   getAssetFileName,
+  writeSramFile,
+  readSramFile,
+  writeStateFile,
+  readStateFile,
+  listStateFiles,
+  writeStateScreenshot,
+  readStateScreenshot,
+  getStateSlotInfos,
 } from './profile-manager';
 
 // Ensure consistent userData path across dev and production
@@ -57,6 +65,14 @@ function createWindow(): void {
   if (noFocus) {
     mainWindow.showInactive();
   }
+
+  // Prevent Electron from capturing F1-F4 keys so they pass through to the
+  // game canvas for save/load states. F5+ and F12 are left alone.
+  mainWindow.webContents.on('before-input-event', (_event, input) => {
+    if (input.type === 'keyDown' && /^F[1-4]$/.test(input.key)) {
+      _event.preventDefault();
+    }
+  });
 
   if (process.argv.includes('--muted')) {
     mainWindow.webContents.setAudioMuted(true);
@@ -320,6 +336,43 @@ function registerIpcHandlers(): void {
         }
       });
     });
+  });
+
+  // ─── Save file management ───
+
+  ipcMain.handle('saves:writeSram', async (_event, profileId: string, data: ArrayBuffer) => {
+    await writeSramFile(profileId, Buffer.from(data));
+  });
+
+  ipcMain.handle('saves:readSram', async (_event, profileId: string) => {
+    const data = await readSramFile(profileId);
+    return data ? data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength) : null;
+  });
+
+  ipcMain.handle('saves:writeState', async (_event, profileId: string, slot: number, data: ArrayBuffer) => {
+    await writeStateFile(profileId, slot, Buffer.from(data));
+  });
+
+  ipcMain.handle('saves:readState', async (_event, profileId: string, slot: number) => {
+    const data = await readStateFile(profileId, slot);
+    return data ? data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength) : null;
+  });
+
+  ipcMain.handle('saves:listStates', async (_event, profileId: string) => {
+    return listStateFiles(profileId);
+  });
+
+  ipcMain.handle('saves:writeScreenshot', async (_event, profileId: string, slot: number, data: ArrayBuffer) => {
+    await writeStateScreenshot(profileId, slot, Buffer.from(data));
+  });
+
+  ipcMain.handle('saves:readScreenshot', async (_event, profileId: string, slot: number) => {
+    const data = await readStateScreenshot(profileId, slot);
+    return data ? data.toString('base64') : null;
+  });
+
+  ipcMain.handle('saves:getSlotInfos', async (_event, profileId: string) => {
+    return getStateSlotInfos(profileId);
   });
 
   // Get userData path

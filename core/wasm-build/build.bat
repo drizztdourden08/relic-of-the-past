@@ -76,7 +76,7 @@ emcc -O2 -g2 ^
   -sFORCE_FILESYSTEM=1 ^
   -sMODULARIZE=1 ^
   -sEXPORT_NAME="Zelda3" ^
-  -sEXPORTED_FUNCTIONS="['_main']" ^
+  -sEXPORTED_FUNCTIONS="['_main','_WasmSaveState','_WasmLoadState','_WasmSaveSram','_WasmLoadSram']" ^
   -sEXPORTED_RUNTIME_METHODS="['ccall','cwrap','FS']" ^
   -sASYNCIFY
 

@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { TitleBar } from './components/views/TitleBar';
 import { GameLayer } from './components/views/GameLayer';
+import { SaveStateOverlay } from './components/views/SaveStateOverlay/SaveStateOverlay';
 import { ProfilePicker } from './components/views/ProfilePicker';
 import { ProfilePage } from './components/views/ProfilePage';
 import { LogOverlay } from './components/views/LogOverlay';
@@ -30,6 +31,7 @@ export function App(): JSX.Element {
   const [importingRom, setImportingRom] = useState(false);
   const [loadingProfile, setLoadingProfile] = useState<string | null>(null);
   const [showLogs, setShowLogs] = useState(false);
+  const [showSaveStates, setShowSaveStates] = useState(false);
   const [dialog, setDialog] = useState<ConfirmDialog | null>(null);
   const [gameCrashed, setGameCrashed] = useState(false);
 
@@ -311,11 +313,19 @@ export function App(): JSX.Element {
         onSwitchProfile={handleShowPicker}
         onShowProfile={handleShowProfile}
         onShowLogs={() => setShowLogs((v) => !v)}
+        onToggleSaveStates={() => setShowSaveStates((v) => !v)}
         activeProfile={activeProfile}
+        gameRunning={isGameRunning}
       />
 
       {/* Game canvas — always present as background layer */}
-      <GameLayer assetData={assetData} />
+      <GameLayer assetData={assetData} profileId={activeProfile?.id} />
+
+      {/* Save State Overlay */}
+      <SaveStateOverlay
+        open={showSaveStates && isGameRunning}
+        onClose={() => setShowSaveStates(false)}
+      />
 
       {/* Full-screen pages (one at a time) */}
       {activePage === 'picker' && (

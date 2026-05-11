@@ -67,6 +67,16 @@ interface ElectronAPI {
   // IPC log bridge
   onLogEntry(callback: (entry: { channel: string; level: string; message: string }) => void): () => void;
 
+  // Saves
+  writeSram(profileId: string, data: ArrayBuffer): Promise<void>;
+  readSram(profileId: string): Promise<ArrayBuffer | null>;
+  writeState(profileId: string, slot: number, data: ArrayBuffer): Promise<void>;
+  readState(profileId: string, slot: number): Promise<ArrayBuffer | null>;
+  listStates(profileId: string): Promise<number[]>;
+  writeScreenshot(profileId: string, slot: number, data: ArrayBuffer): Promise<void>;
+  readScreenshot(profileId: string, slot: number): Promise<string | null>;
+  getSlotInfos(profileId: string): Promise<Array<{ slot: number; timestamp: number; size: number; hasScreenshot: boolean }>>;
+
   // App info
   getUserDataPath(): Promise<string>;
 }

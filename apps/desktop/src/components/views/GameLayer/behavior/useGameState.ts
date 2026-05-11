@@ -25,10 +25,10 @@ export function useGameState() {
   }, [status]);
 
   const start = useCallback(
-    async (canvas: HTMLCanvasElement, data: Uint8Array, configIni?: string) => {
+    async (canvas: HTMLCanvasElement, data: Uint8Array, configIni?: string, profileId?: string) => {
       if (startedRef.current) return;
       startedRef.current = true;
-      await startGame(canvas, data, configIni);
+      await startGame(canvas, data, configIni, profileId);
     },
     [],
   );

@@ -234,6 +234,54 @@ MemBlk FindInAssetArray(int asset, int idx) {
 }
 
 // ---------------------------------------------------------------------------
+// WASM-exported save/load state functions (called from JS via ccall)
+// ---------------------------------------------------------------------------
+EMSCRIPTEN_KEEPALIVE
+void WasmSaveState(int slot) {
+  SaveLoadSlot(kSaveLoad_Save, slot);
+  printf("*** Save state: slot %d\n", slot);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmLoadState(int slot) {
+  SaveLoadSlot(kSaveLoad_Load, slot);
+  printf("*** Load state: slot %d\n", slot);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmSaveSram(void) {
+  ZeldaWriteSram();
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmLoadSram(void) {
+  ZeldaReadSram();
+}
+
+// ---------------------------------------------------------------------------
+// Command handling (cheats, pause, etc.)
+// F-key save/load states are handled from JavaScript via ccall to
+// WasmSaveState/WasmLoadState so disk persistence can be coordinated.
+// ---------------------------------------------------------------------------
+static void HandleCommand(int keyCode) {
+  switch (keyCode) {
+    case SDLK_w:
+      if (SDL_GetModState() & KMOD_SHIFT)
+        PatchCommand('W');
+      else
+        PatchCommand('w');
+      break;
+    case SDLK_p:
+      g_paused = !g_paused;
+      break;
+    case SDLK_e:
+      if (SDL_GetModState() & KMOD_CTRL)
+        ZeldaReset(true);
+      break;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Frame callback for emscripten_set_main_loop
 // ---------------------------------------------------------------------------
 static void MainFrameCallback(void) {
@@ -242,6 +290,8 @@ static void MainFrameCallback(void) {
     switch (event.type) {
       case SDL_KEYDOWN:
         HandleInput(event.key.keysym.sym, true);
+        // Handle command keys (F-keys, cheats) on keydown only
+        HandleCommand(event.key.keysym.sym);
         break;
       case SDL_KEYUP:
         HandleInput(event.key.keysym.sym, false);

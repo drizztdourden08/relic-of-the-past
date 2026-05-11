@@ -44,6 +44,16 @@ contextBridge.exposeInMainWorld('api', {
     return () => ipcRenderer.removeListener('log:entry', handler);
   },
 
+  // Saves
+  writeSram: (profileId: string, data: ArrayBuffer) => ipcRenderer.invoke('saves:writeSram', profileId, data),
+  readSram: (profileId: string) => ipcRenderer.invoke('saves:readSram', profileId),
+  writeState: (profileId: string, slot: number, data: ArrayBuffer) => ipcRenderer.invoke('saves:writeState', profileId, slot, data),
+  readState: (profileId: string, slot: number) => ipcRenderer.invoke('saves:readState', profileId, slot),
+  listStates: (profileId: string) => ipcRenderer.invoke('saves:listStates', profileId),
+  writeScreenshot: (profileId: string, slot: number, data: ArrayBuffer) => ipcRenderer.invoke('saves:writeScreenshot', profileId, slot, data),
+  readScreenshot: (profileId: string, slot: number) => ipcRenderer.invoke('saves:readScreenshot', profileId, slot) as Promise<string | null>,
+  getSlotInfos: (profileId: string) => ipcRenderer.invoke('saves:getSlotInfos', profileId),
+
   // App info
   getUserDataPath: () => ipcRenderer.invoke('app:getUserDataPath'),
 });

@@ -45,6 +45,7 @@ export interface EmscriptenFS {
 
 export interface EmscriptenModule {
   FS: EmscriptenFS;
+  ccall(ident: string, returnType: string | null, argTypes: string[], args: unknown[]): unknown;
 }
 
 export type GameStatus = 'idle' | 'loading' | 'running' | 'error';
@@ -60,6 +61,9 @@ let currentModule: EmscriptenModule | null = null;
 let currentState: GameState = { status: 'idle', error: null };
 let activeCrashHandler: ((e: ErrorEvent) => void) | null = null;
 let startGeneration = 0;
+let currentProfileId: string | null = null;
+let sramSyncInterval: ReturnType<typeof setInterval> | null = null;
+let lastSramHash: string | null = null;
 const listeners = new Set<GameStateListener>();
 
 function setState(next: GameState): void {
@@ -84,6 +88,7 @@ export function subscribeGameState(fn: GameStateListener): () => void {
 
 /** Reset from error/running state back to idle so a new game can start. */
 export function resetGame(): void {
+  stopSramSync();
   if (activeCrashHandler) {
     window.removeEventListener('error', activeCrashHandler);
     activeCrashHandler = null;
@@ -106,14 +111,165 @@ export function resetGame(): void {
     }
   }
   currentModule = null;
+  currentProfileId = null;
   (window as any).__zelda3Module = null;
   setState({ status: 'idle', error: null });
+}
+
+// ─── SRAM sync ───
+
+function simpleHash(data: Uint8Array): string {
+  let h = 0;
+  for (let i = 0; i < data.length; i++) {
+    h = ((h << 5) - h + data[i]) | 0;
+  }
+  return h.toString(36);
+}
+
+/** Read SRAM from MEMFS and persist to disk if changed. */
+async function syncSramToDisk(): Promise<void> {
+  if (!currentModule || !currentProfileId) return;
+  try {
+    currentModule.ccall('WasmSaveSram', null, [], []);
+    const { exists } = currentModule.FS.analyzePath('/saves/sram.dat');
+    if (!exists) {
+      log.app('[SRAM] /saves/sram.dat does not exist in MEMFS — skipping sync');
+      return;
+    }
+    const data = currentModule.FS.readFile('/saves/sram.dat');
+    const hash = simpleHash(data);
+    if (hash === lastSramHash) return; // unchanged
+    lastSramHash = hash;
+    await window.api.writeSram(currentProfileId, data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength));
+    log.app(`[SRAM] Synced ${data.byteLength} bytes to disk (hash=${hash})`);
+  } catch {
+    // Silently ignore — may happen during shutdown
+  }
+}
+
+function startSramSync(): void {
+  stopSramSync();
+  sramSyncInterval = setInterval(syncSramToDisk, 5000);
+}
+
+function stopSramSync(): void {
+  if (sramSyncInterval) {
+    clearInterval(sramSyncInterval);
+    sramSyncInterval = null;
+  }
+  // Final sync
+  syncSramToDisk();
+}
+
+// ─── Save States ───
+
+/** Capture the game canvas as a PNG blob. */
+function captureScreenshot(): Promise<Blob | null> {
+  const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
+  if (!canvas) return Promise.resolve(null);
+
+  // SDL2 in Emscripten uses a 2D canvas context with putImageData, so
+  // toBlob works directly. For WebGL canvases we'd need readPixels, but
+  // our build uses the software SDL2 renderer.
+  return new Promise((resolve) => {
+    try {
+      canvas.toBlob((blob) => resolve(blob), 'image/png');
+    } catch {
+      resolve(null);
+    }
+  });
+}
+
+export async function saveState(slot: number): Promise<boolean> {
+  log.app(`[SaveState] saveState(${slot}) called — module=${!!currentModule}, profileId=${currentProfileId}`);
+  if (!currentModule || !currentProfileId) {
+    log.app('[SaveState] ABORT: no module or no profileId');
+    return false;
+  }
+  try {
+    log.app(`[SaveState] Calling ccall('WasmSaveState', slot=${slot})...`);
+    currentModule.ccall('WasmSaveState', null, ['number'], [slot]);
+    log.app('[SaveState] ccall returned');
+
+    const savePath = `/saves/save${slot}.sav`;
+    const { exists } = currentModule.FS.analyzePath(savePath);
+    log.app(`[SaveState] MEMFS ${savePath} exists=${exists}`);
+    if (!exists) {
+      log.app('[SaveState] ABORT: file not found in MEMFS after ccall');
+      return false;
+    }
+
+    const data = currentModule.FS.readFile(savePath);
+    log.app(`[SaveState] Read ${data.byteLength} bytes from MEMFS`);
+
+    const ab = data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
+    log.app(`[SaveState] Sending ${ab.byteLength} bytes to main process (profileId=${currentProfileId}, slot=${slot})...`);
+    await window.api.writeState(currentProfileId, slot, ab);
+    log.app(`[SaveState] Slot ${slot} persisted to disk ✓`);
+
+    // Capture and persist screenshot
+    try {
+      const blob = await captureScreenshot();
+      if (blob) {
+        const screenshotAb = await blob.arrayBuffer();
+        await window.api.writeScreenshot(currentProfileId, slot, screenshotAb);
+        log.app(`[SaveState] Screenshot saved (${(screenshotAb.byteLength / 1024).toFixed(0)} KB)`);
+      }
+    } catch {
+      // Screenshot is best-effort
+    }
+
+    return true;
+  } catch (err) {
+    log.error(`[SaveState] EXCEPTION: ${err instanceof Error ? err.message : String(err)}`);
+    if (err instanceof Error && err.stack) log.error(`[SaveState] ${err.stack}`);
+    return false;
+  }
+}
+
+export async function loadState(slot: number): Promise<boolean> {
+  log.app(`[LoadState] loadState(${slot}) called — module=${!!currentModule}, profileId=${currentProfileId}`);
+  if (!currentModule || !currentProfileId) {
+    log.app('[LoadState] ABORT: no module or no profileId');
+    return false;
+  }
+  try {
+    log.app(`[LoadState] Reading slot ${slot} from disk (profileId=${currentProfileId})...`);
+    const buffer = await window.api.readState(currentProfileId, slot);
+    if (!buffer) {
+      log.app(`[LoadState] No save state file on disk for slot ${slot}`);
+      return false;
+    }
+    log.app(`[LoadState] Got ${buffer.byteLength} bytes from disk`);
+
+    const savePath = `/saves/save${slot}.sav`;
+    const arr = new Uint8Array(buffer);
+    log.app(`[LoadState] Writing ${arr.byteLength} bytes to MEMFS ${savePath}`);
+    currentModule.FS.writeFile(savePath, arr);
+
+    const { exists } = currentModule.FS.analyzePath(savePath);
+    log.app(`[LoadState] MEMFS verify: ${savePath} exists=${exists}`);
+
+    log.app(`[LoadState] Calling ccall('WasmLoadState', slot=${slot})...`);
+    currentModule.ccall('WasmLoadState', null, ['number'], [slot]);
+    log.app(`[LoadState] ccall returned — state loaded ✓`);
+    return true;
+  } catch (err) {
+    log.error(`[LoadState] EXCEPTION: ${err instanceof Error ? err.message : String(err)}`);
+    if (err instanceof Error && err.stack) log.error(`[LoadState] ${err.stack}`);
+    return false;
+  }
+}
+
+export function getActiveProfileId(): string | null {
+  return currentProfileId;
 }
 
 export async function startGame(
   canvas: HTMLCanvasElement,
   assetData: Uint8Array,
   configIni?: string,
+  profileId?: string,
 ): Promise<void> {
   // Prevent multiple simultaneous instances
   if (currentState.status === 'loading' || currentState.status === 'running') {
@@ -164,6 +320,16 @@ export async function startGame(
     activeCrashHandler = onWasmCrash;
     window.addEventListener('error', onWasmCrash);
 
+    // Pre-load SRAM from disk if we have a profile
+    let sramData: Uint8Array | null = null;
+    if (profileId) {
+      const buffer = await window.api.readSram(profileId);
+      if (buffer) {
+        sramData = new Uint8Array(buffer);
+        log.app(`Loaded SRAM from profile (${sramData.byteLength} bytes)`);
+      }
+    }
+
     const module: EmscriptenModule = await Zelda3({
       canvas,
       preRun: [(mod: EmscriptenModule) => {
@@ -171,16 +337,26 @@ export async function startGame(
         mod.FS.writeFile('/zelda3_assets.dat', assetData);
         mod.FS.writeFile('/zelda3.ini', configIni ?? DEFAULT_ZELDA3_INI);
         try { mod.FS.mkdir('/saves'); } catch { /* may exist */ }
+        // Write pre-loaded SRAM to virtual FS so ZeldaReadSram() finds it
+        if (sramData) {
+          mod.FS.writeFile('/saves/sram.dat', sramData);
+        }
       }],
       print: (text: string) => log.core(text),
       printErr: (text: string) => log.core(text, 'error'),
     });
 
     currentModule = module;
+    currentProfileId = profileId ?? null;
     (window as any).__zelda3Module = module;
     setState({ status: 'running', error: null });
     log.wasm('WASM module running');
     canvas.focus();
+
+    // Start periodic SRAM sync if we have a profile
+    if (currentProfileId) {
+      startSramSync();
+    }
 
     // Delay arming briefly to let any residual callbacks from the old WASM
     // instance fire and be silently suppressed. The generation guard ensures

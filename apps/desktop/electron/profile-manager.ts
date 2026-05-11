@@ -116,3 +116,99 @@ export async function hasAssetForRom(romFile: string): Promise<boolean> {
 export function getAssetFileName(romFile: string): string {
   return romFile.replace(/\.(sfc|smc)$/i, '.dat');
 }
+
+// ─── Save file management ───
+
+export function getProfileSavesDir(profileId: string): string {
+  return path('profiles', profileId, 'saves');
+}
+
+export async function writeSramFile(profileId: string, data: Buffer): Promise<void> {
+  const savesDir = getProfileSavesDir(profileId);
+  await mkdir(savesDir, { recursive: true });
+  const sramPath = join(savesDir, 'sram.dat');
+  const bakPath = join(savesDir, 'sram.bak');
+  // Backup existing
+  try {
+    await stat(sramPath);
+    const { rename: fsRename } = await import('fs/promises');
+    await fsRename(sramPath, bakPath);
+  } catch { /* no existing file */ }
+  await writeFile(sramPath, data);
+}
+
+export async function readSramFile(profileId: string): Promise<Buffer | null> {
+  try {
+    return await readFile(join(getProfileSavesDir(profileId), 'sram.dat'));
+  } catch {
+    return null;
+  }
+}
+
+export async function writeStateFile(profileId: string, slot: number, data: Buffer): Promise<void> {
+  const savesDir = getProfileSavesDir(profileId);
+  await mkdir(savesDir, { recursive: true });
+  await writeFile(join(savesDir, `save${slot}.sav`), data);
+}
+
+export async function writeStateScreenshot(profileId: string, slot: number, pngData: Buffer): Promise<void> {
+  const savesDir = getProfileSavesDir(profileId);
+  await mkdir(savesDir, { recursive: true });
+  await writeFile(join(savesDir, `save${slot}.png`), pngData);
+}
+
+export async function readStateScreenshot(profileId: string, slot: number): Promise<Buffer | null> {
+  try {
+    return await readFile(join(getProfileSavesDir(profileId), `save${slot}.png`));
+  } catch {
+    return null;
+  }
+}
+
+export interface SaveSlotInfo {
+  slot: number;
+  timestamp: number;
+  size: number;
+  hasScreenshot: boolean;
+}
+
+export async function getStateSlotInfos(profileId: string): Promise<SaveSlotInfo[]> {
+  const savesDir = getProfileSavesDir(profileId);
+  const results: SaveSlotInfo[] = [];
+  for (let slot = 0; slot < 4; slot++) {
+    const savPath = join(savesDir, `save${slot}.sav`);
+    try {
+      const s = await stat(savPath);
+      let hasScreenshot = false;
+      try {
+        await stat(join(savesDir, `save${slot}.png`));
+        hasScreenshot = true;
+      } catch { /* no screenshot */ }
+      results.push({ slot, timestamp: s.mtimeMs, size: s.size, hasScreenshot });
+    } catch {
+      // Slot doesn't exist — skip
+    }
+  }
+  return results;
+}
+
+export async function readStateFile(profileId: string, slot: number): Promise<Buffer | null> {
+  try {
+    return await readFile(join(getProfileSavesDir(profileId), `save${slot}.sav`));
+  } catch {
+    return null;
+  }
+}
+
+export async function listStateFiles(profileId: string): Promise<number[]> {
+  const savesDir = getProfileSavesDir(profileId);
+  try {
+    const files = await readdir(savesDir);
+    return files
+      .filter((f) => /^save\d+\.sav$/.test(f))
+      .map((f) => parseInt(f.match(/^save(\d+)\.sav$/)![1], 10))
+      .sort((a, b) => a - b);
+  } catch {
+    return [];
+  }
+}
