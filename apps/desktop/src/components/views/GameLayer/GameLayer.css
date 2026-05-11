@@ -1,0 +1,17 @@
+.game-layer {
+  position: absolute;
+  inset: 0;
+  top: var(--titlebar-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-deep);
+  z-index: 0;
+}
+
+.game-layer__canvas {
+  image-rendering: pixelated;
+  outline: none;
+  max-width: 100%;
+  max-height: 100%;
+}

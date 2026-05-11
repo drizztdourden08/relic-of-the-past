@@ -3,6 +3,19 @@ import { join, basename } from 'path';
 import { readFile, mkdir, writeFile, access, copyFile, rm, stat } from 'fs/promises';
 import { spawn } from 'child_process';
 import { is } from '@electron-toolkit/utils';
+import {
+  initProfileManager,
+  loadAppState,
+  saveAppState,
+  listProfiles,
+  createProfile,
+  loadProfile,
+  updateProfile,
+  deleteProfile,
+  listRoms,
+  hasAssetForRom,
+  getAssetFileName,
+} from './profile-manager';
 
 // Ensure consistent userData path across dev and production
 app.setName('alttp-pc');
@@ -14,30 +27,15 @@ function getUserDataPath(...segments: string[]): string {
 }
 
 async function ensureDirectories(): Promise<void> {
-  const dirs = ['assets', 'roms', 'saves', 'config', 'seeds'];
+  const dirs = ['assets', 'roms', 'profiles', 'config'];
   for (const dir of dirs) {
     await mkdir(getUserDataPath(dir), { recursive: true });
   }
 }
 
-async function loadSettings(): Promise<Record<string, unknown>> {
-  try {
-    const data = await readFile(getUserDataPath('config', 'settings.json'), 'utf-8');
-    return JSON.parse(data);
-  } catch {
-    return {};
-  }
-}
-
-async function saveSettings(settings: Record<string, unknown>): Promise<void> {
-  await writeFile(
-    getUserDataPath('config', 'settings.json'),
-    JSON.stringify(settings, null, 2),
-    'utf-8',
-  );
-}
-
 function createWindow(): void {
+  const noFocus = process.argv.includes('--no-focus');
+
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 720,
@@ -47,6 +45,7 @@ function createWindow(): void {
     titleBarStyle: 'hidden',
     title: 'ALttP Randomizer',
     backgroundColor: '#16213e',
+    show: !noFocus,
     webPreferences: {
       preload: join(__dirname, '../preload/preload.js'),
       sandbox: false,
@@ -54,6 +53,14 @@ function createWindow(): void {
       nodeIntegration: false,
     },
   });
+
+  if (noFocus) {
+    mainWindow.showInactive();
+  }
+
+  if (process.argv.includes('--muted')) {
+    mainWindow.webContents.setAudioMuted(true);
+  }
 
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
@@ -80,6 +87,15 @@ function registerIpcHandlers(): void {
   ipcMain.on('window:close', () => mainWindow?.close());
 
   ipcMain.handle('window:isMaximized', () => mainWindow?.isMaximized() ?? false);
+  ipcMain.handle('window:setAlwaysOnTop', (_event, value: boolean) => {
+    mainWindow?.setAlwaysOnTop(value);
+    return mainWindow?.isAlwaysOnTop() ?? false;
+  });
+  ipcMain.handle('window:setAudioMuted', (_event, value: boolean) => {
+    mainWindow?.webContents.setAudioMuted(value);
+    return mainWindow?.webContents.isAudioMuted() ?? false;
+  });
+  ipcMain.handle('window:isAudioMuted', () => mainWindow?.webContents.isAudioMuted() ?? false);
 
   // File dialog — open ROM
   ipcMain.handle('dialog:openRom', async () => {
@@ -95,107 +111,159 @@ function registerIpcHandlers(): void {
     return result.filePaths[0];
   });
 
-  // Read a file as binary
-  ipcMain.handle('fs:readFile', async (_event, filePath: string) => {
-    const data = await readFile(filePath);
-    return data.buffer;
+  // ─── Profile management ───
+
+  ipcMain.handle('profiles:list', () => listProfiles());
+
+  ipcMain.handle('profiles:create', async (_event, name: string, romFile: string) => {
+    const profile = await createProfile(name, romFile);
+    const appState = await loadAppState();
+    appState.lastProfileId = profile.id;
+    await saveAppState(appState);
+    return profile;
   });
 
-  // Check if assets exist
-  ipcMain.handle('assets:check', async () => {
-    try {
-      await access(getUserDataPath('assets', 'zelda3_assets.dat'));
-      return true;
-    } catch {
-      return false;
+  ipcMain.handle('profiles:delete', async (_event, id: string) => {
+    await deleteProfile(id);
+    const appState = await loadAppState();
+    if (appState.lastProfileId === id) {
+      appState.lastProfileId = null;
+      await saveAppState(appState);
     }
   });
 
-  // Read assets file
-  ipcMain.handle('assets:load', async () => {
+  ipcMain.handle('profiles:setLast', async (_event, id: string) => {
+    const appState = await loadAppState();
+    appState.lastProfileId = id;
+    await saveAppState(appState);
+  });
+
+  ipcMain.handle('profiles:getAppState', () => loadAppState());
+
+  ipcMain.handle('profiles:updateLastPlayed', async (_event, id: string) => {
+    const profile = await loadProfile(id);
+    if (profile) {
+      profile.lastPlayed = Date.now();
+      await updateProfile(profile);
+    }
+  });
+
+  // ─── ROM management ───
+
+  ipcMain.handle('roms:list', () => listRoms());
+
+  ipcMain.handle('roms:listWithStatus', async () => {
+    const romFiles = await listRoms();
+    const results = [];
+    for (const romFile of romFiles) {
+      const hasAssets = await hasAssetForRom(romFile);
+      let assetSize: number | null = null;
+      if (hasAssets) {
+        try {
+          const assetFile = getAssetFileName(romFile);
+          const s = await stat(getUserDataPath('assets', assetFile));
+          assetSize = s.size;
+        } catch { /* ignore */ }
+      }
+      results.push({ romFile, hasAssets, assetSize });
+    }
+    return results;
+  });
+
+  ipcMain.handle('roms:import', async (_event, romPath: string) => {
+    const romFileName = basename(romPath);
+    const localRomPath = getUserDataPath('roms', romFileName);
+
+    // Check if already imported
     try {
-      const data = await readFile(getUserDataPath('assets', 'zelda3_assets.dat'));
+      await access(localRomPath);
+      return { success: true, romFile: romFileName, alreadyExists: true };
+    } catch {
+      // Not imported yet
+    }
+
+    try {
+      await copyFile(romPath, localRomPath);
+      return { success: true, romFile: romFileName, alreadyExists: false };
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      return { success: false, error: msg, romFile: romFileName };
+    }
+  });
+
+  ipcMain.handle('roms:delete', async (_event, romFile: string) => {
+    const romPath = getUserDataPath('roms', romFile);
+    const assetFile = getAssetFileName(romFile);
+    const assetPath = getUserDataPath('assets', assetFile);
+
+    // Delete ROM file
+    await rm(romPath, { force: true });
+    // Delete cached assets if they exist
+    await rm(assetPath, { force: true });
+
+    // Delete any profiles that reference this ROM
+    const profiles = await listProfiles();
+    for (const p of profiles) {
+      if (p.romFile === romFile) {
+        await deleteProfile(p.id);
+      }
+    }
+
+    // Clear lastProfileId if it pointed to a deleted profile
+    const appState = await loadAppState();
+    const remaining = await listProfiles();
+    if (appState.lastProfileId && !remaining.find((p) => p.id === appState.lastProfileId)) {
+      appState.lastProfileId = null;
+      await saveAppState(appState);
+    }
+  });
+
+  // ─── Asset extraction (per-ROM) ───
+
+  ipcMain.handle('assets:check', async (_event, romFile: string) => {
+    return hasAssetForRom(romFile);
+  });
+
+  ipcMain.handle('assets:load', async (_event, romFile: string) => {
+    const assetFile = getAssetFileName(romFile);
+    try {
+      const data = await readFile(getUserDataPath('assets', assetFile));
       return data.buffer;
     } catch {
       return null;
     }
   });
 
-  // Save assets file
-  ipcMain.handle('assets:save', async (_event, buffer: ArrayBuffer) => {
-    await writeFile(getUserDataPath('assets', 'zelda3_assets.dat'), Buffer.from(buffer));
-    return true;
-  });
-
-  // Settings
-  ipcMain.handle('settings:load', () => loadSettings());
-  ipcMain.handle('settings:save', (_event, settings: Record<string, unknown>) =>
-    saveSettings(settings),
-  );
-
-  // Get userData path
-  ipcMain.handle('app:getUserDataPath', () => app.getPath('userData'));
-
-  // Check if a ROM is stored in userData (returns filename or null)
-  ipcMain.handle('rom:check', async () => {
-    try {
-      const settings = await loadSettings();
-      const romFile = settings.romFile as string | undefined;
-      if (!romFile) return null;
-      const s = await stat(getUserDataPath('roms', romFile));
-      return s.size > 0 ? romFile : null;
-    } catch {
-      return null;
-    }
-  });
-
-  // Extract assets from ROM using restool.py
-  // Copies ROM to userData, runs extraction, stores result in userData,
-  // cleans up any temp files written to the zelda3 submodule.
-  ipcMain.handle('assets:extract', async (_event, romPath: string) => {
-    // __dirname = dist/electron/ in both dev and prod (electron-vite)
+  ipcMain.handle('assets:extract', async (_event, romFile: string) => {
     const projectRoot = join(__dirname, '..', '..');
     const zelda3Root = join(projectRoot, 'core', 'zelda3');
     const restoolPath = join(zelda3Root, 'assets', 'restool.py');
-    const romFileName = basename(romPath);
-    const localRomPath = getUserDataPath('roms', romFileName);
-    const cachedAssetsPath = getUserDataPath('assets', 'zelda3_assets.dat');
+    const localRomPath = getUserDataPath('roms', romFile);
+    const assetFile = getAssetFileName(romFile);
+    const cachedAssetsPath = getUserDataPath('assets', assetFile);
 
-    // restool writes output relative to zelda3 submodule (hardcoded paths)
     const submoduleOutputPath = join(zelda3Root, 'zelda3_assets.dat');
     const submoduleTablesPath = join(zelda3Root, 'tables');
 
-    // Check restool.py exists
     try {
       await access(restoolPath);
     } catch {
       return { success: false, error: 'restool.py not found. zelda3 submodule may be missing.' };
     }
 
+    try {
+      await access(localRomPath);
+    } catch {
+      return { success: false, error: `ROM file not found: ${romFile}` };
+    }
+
     const sendLog = (channel: string, level: string, message: string) => {
       mainWindow?.webContents.send('log:entry', { channel, level, message });
     };
 
-    // Copy ROM to userData
-    try {
-      sendLog('app', 'info', 'Copying ROM to app data...');
-      await copyFile(romPath, localRomPath);
-      const romStat = await stat(localRomPath);
-      sendLog('app', 'info', `ROM stored as ${romFileName} (${(romStat.size / 1024).toFixed(0)} KB)`);
-
-      // Save the ROM filename in settings for future reference
-      const settings = await loadSettings();
-      settings.romFile = romFileName;
-      await saveSettings(settings);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      sendLog('error', 'error', `Failed to copy ROM: ${msg}`);
-      return { success: false, error: msg };
-    }
+    sendLog('app', 'info', `Extracting assets from ${romFile}...`);
 
     return new Promise<{ success: boolean; error?: string }>((resolve) => {
-      sendLog('app', 'info', 'Extracting assets from ROM...');
-
       const proc = spawn('python', ['-u', restoolPath, '--extract-from-rom', '-r', localRomPath], {
         cwd: join(zelda3Root, 'assets'),
         env: process.env,
@@ -235,14 +303,12 @@ function registerIpcHandlers(): void {
           return;
         }
 
-        // Move output from zelda3 submodule to userData, then clean up
         try {
           await access(submoduleOutputPath);
           await copyFile(submoduleOutputPath, cachedAssetsPath);
           const assetsStat = await stat(cachedAssetsPath);
-          sendLog('app', 'info', `Assets cached (${(assetsStat.size / 1024).toFixed(0)} KB)`);
+          sendLog('app', 'info', `Assets cached as ${assetFile} (${(assetsStat.size / 1024).toFixed(0)} KB)`);
 
-          // Clean up: remove generated files from zelda3 submodule
           await rm(submoduleOutputPath, { force: true });
           await rm(submoduleTablesPath, { recursive: true, force: true });
           sendLog('app', 'info', 'Cleaned up temporary extraction files');
@@ -255,9 +321,13 @@ function registerIpcHandlers(): void {
       });
     });
   });
+
+  // Get userData path
+  ipcMain.handle('app:getUserDataPath', () => app.getPath('userData'));
 }
 
 app.whenReady().then(async () => {
+  initProfileManager(app.getPath('userData'));
   await ensureDirectories();
   registerIpcHandlers();
   createWindow();

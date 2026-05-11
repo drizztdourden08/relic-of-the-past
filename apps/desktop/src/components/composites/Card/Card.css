@@ -1,0 +1,22 @@
+.card {
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  transition: background var(--transition-normal),
+              border-color var(--transition-normal);
+}
+
+.card--interactive {
+  cursor: pointer;
+}
+
+.card--interactive:hover {
+  background: var(--color-bg-elevated);
+  border-color: var(--color-gold-base);
+}
+
+.card--danger {
+  border-color: #5a2020;
+  background: #1e1618;
+}

@@ -1,0 +1,93 @@
+/*
+ * Design Tokens — ALttP-inspired dark palette
+ *
+ * Black base with gold accents and green hints,
+ * evoking the Triforce and the forests of Hyrule.
+ */
+
+:root {
+  /* ─── Surface Colors ─── */
+  --color-bg-deep:        #0a0a0f;
+  --color-bg-base:        #111116;
+  --color-bg-raised:      #1a1a20;
+  --color-bg-elevated:    #222228;
+  --color-bg-overlay:     rgba(10, 10, 15, 0.88);
+
+  /* ─── Border Colors ─── */
+  --color-border-subtle:  #2a2a30;
+  --color-border-default: #333340;
+  --color-border-strong:  #444450;
+
+  /* ─── Text Colors ─── */
+  --color-text-primary:   #e8e8ec;
+  --color-text-secondary: #a0a0a8;
+  --color-text-muted:     #666670;
+  --color-text-faint:     #44444c;
+
+  /* ─── Accent: Gold (Triforce) ─── */
+  --color-gold-dim:       #2a2418;
+  --color-gold-base:      #c8a84e;
+  --color-gold-bright:    #e4c65a;
+  --color-gold-glow:      rgba(200, 168, 78, 0.15);
+
+  /* ─── Accent: Green (Hyrule) ─── */
+  --color-green-dim:      #1a2a1e;
+  --color-green-base:     #4a9966;
+  --color-green-bright:   #5cb87a;
+  --color-green-glow:     rgba(74, 153, 102, 0.12);
+
+  /* ─── Semantic: Danger ─── */
+  --color-danger-dim:     #2a1a1a;
+  --color-danger-base:    #e94560;
+  --color-danger-bright:  #ff5577;
+
+  /* ─── Semantic: Warning ─── */
+  --color-warning-base:   #ffd54f;
+  --color-warning-dim:    #2a2618;
+
+  /* ─── Semantic: Info ─── */
+  --color-info-base:      #5b9bd5;
+
+  /* ─── Spacing ─── */
+  --space-xs:   4px;
+  --space-sm:   8px;
+  --space-md:   12px;
+  --space-lg:   16px;
+  --space-xl:   24px;
+  --space-2xl:  32px;
+
+  /* ─── Radii ─── */
+  --radius-sm:  4px;
+  --radius-md:  6px;
+  --radius-lg:  8px;
+
+  /* ─── Typography ─── */
+  --font-sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:  'Consolas', 'Courier New', monospace;
+
+  --text-xs:    10px;
+  --text-sm:    11px;
+  --text-base:  13px;
+  --text-lg:    16px;
+  --text-xl:    20px;
+
+  --weight-normal:  400;
+  --weight-medium:  500;
+  --weight-semi:    600;
+
+  --leading-tight:  1.3;
+  --leading-normal: 1.5;
+
+  /* ─── Shadows ─── */
+  --shadow-dropdown: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-overlay:  0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg:       0 12px 32px rgba(0, 0, 0, 0.6);
+
+  /* ─── Transitions ─── */
+  --transition-fast:   0.1s ease;
+  --transition-normal: 0.15s ease;
+
+  /* ─── Layout ─── */
+  --titlebar-height: 38px;
+  --titlebar-btn-width: 46px;
+}

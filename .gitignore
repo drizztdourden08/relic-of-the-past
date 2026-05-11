@@ -40,6 +40,15 @@ test-roms/
 *.log
 npm-debug.log*
 
+# Playwright test artifacts
+playwright-report/
+test-results/
+tests/test-results/
+tests/screenshots/
+
+# Dev scripts (utility, not part of the build)
+scripts/
+
 # Saves (user data)
 saves/
 seeds/

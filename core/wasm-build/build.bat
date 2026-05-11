@@ -59,7 +59,7 @@ echo ============================================
 echo Building zelda3 WASM...
 echo ============================================
 
-emcc -O2 ^
+emcc -O2 -g2 ^
   -I %ZELDA3% ^
   -DSYSTEM_VOLUME_MIXER_AVAILABLE=0 ^
   -Wno-unused-function ^

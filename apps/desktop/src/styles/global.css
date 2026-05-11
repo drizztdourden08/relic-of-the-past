@@ -137,7 +137,7 @@ html, body, #root {
 
 .dropdown-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   width: 100%;
   padding: 8px 14px;
@@ -164,6 +164,20 @@ html, body, #root {
   width: 18px;
   text-align: center;
   font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.dropdown-label {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.dropdown-desc {
+  font-size: 11px;
+  color: #666;
+  font-weight: 400;
 }
 
 .dropdown-separator {
@@ -286,4 +300,373 @@ html, body, #root {
 
 .log-level-warn .log-message {
   color: #ffd54f;
+}
+
+/* ─── Profile Picker ─── */
+
+.profile-picker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 32px 24px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.profile-picker-header {
+  text-align: center;
+}
+
+.profile-picker-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #e0e0e0;
+  margin-bottom: 6px;
+}
+
+.profile-picker-subtitle {
+  font-size: 12px;
+  color: #666;
+}
+
+.profile-picker-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  width: 100%;
+}
+
+.profile-picker-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-col-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #2a2a2e;
+}
+
+.profile-empty {
+  font-size: 12px;
+  color: #555;
+  padding: 16px;
+  text-align: center;
+  background: #1a1a1e;
+  border: 1px dashed #2a2a2e;
+  border-radius: 8px;
+}
+
+.profile-list,
+.rom-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 14px;
+  background: #1a1a1e;
+  border: 1px solid #2a2a2e;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+}
+
+.profile-card:hover {
+  background: #222226;
+  border-color: #4a9;
+}
+
+.profile-card-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.profile-card-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.profile-card-rom {
+  font-size: 11px;
+  color: #666;
+}
+
+.profile-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-card-date {
+  font-size: 11px;
+  color: #555;
+}
+
+.profile-card-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  color: #555;
+  cursor: pointer;
+  font-size: 11px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.profile-card-delete:hover {
+  background: #e81123;
+  color: #fff;
+}
+
+/* ─── ROM Cards ─── */
+
+.rom-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #1a1a1e;
+  border: 1px solid #2a2a2e;
+  border-radius: 8px;
+  transition: border-color 0.15s;
+}
+
+.rom-card-failed {
+  border-color: #5a2020;
+  background: #1e1618;
+}
+
+.rom-card-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  color: #555;
+  cursor: pointer;
+  font-size: 11px;
+  flex-shrink: 0;
+  margin-left: 8px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.rom-card-delete:hover {
+  background: #e81123;
+  color: #fff;
+}
+
+.rom-card-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rom-card-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e0e0e0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rom-card-file {
+  font-size: 10px;
+  color: #555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rom-card-status {
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+.rom-status {
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.rom-status-ready {
+  color: #4a9;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rom-status-size {
+  font-size: 10px;
+  color: #555;
+}
+
+.rom-status-extracting {
+  color: #ffd54f;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  animation: rom-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes rom-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.rom-status-failed-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.rom-status-failed-label {
+  color: #e94560;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.rom-status-extract {
+  padding: 4px 10px;
+  background: #1a2a1e;
+  border: 1px solid #2a4a2e;
+  color: #4a9;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  border-radius: 4px;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.rom-status-extract:hover {
+  background: #223a26;
+  border-color: #4a9;
+}
+
+.rom-status-retry {
+  background: #2a1a1a;
+  border-color: #4a2a2a;
+  color: #e0a0a0;
+}
+
+.rom-status-retry:hover {
+  background: #3a2020;
+  border-color: #e94560;
+  color: #fff;
+}
+
+/* ─── Shared Buttons ─── */
+
+.profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid #2a2a2e;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.profile-btn-full {
+  width: 100%;
+}
+
+.profile-btn-primary {
+  background: #1a2a1e;
+  border-color: #2a4a2e;
+  color: #4a9;
+}
+
+.profile-btn-primary:hover {
+  background: #223a26;
+  border-color: #4a9;
+}
+
+.profile-btn-secondary {
+  background: #1a1a1e;
+  color: #b0b0b0;
+}
+
+.profile-btn-secondary:hover {
+  background: #222226;
+  border-color: #555;
+}
+
+.profile-btn-icon {
+  flex-shrink: 0;
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.profile-create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-create-input,
+.profile-create-select {
+  width: 100%;
+  padding: 8px 12px;
+  background: #1a1a1e;
+  border: 1px solid #2a2a2e;
+  border-radius: 6px;
+  color: #e0e0e0;
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.profile-create-input:focus,
+.profile-create-select:focus {
+  border-color: #4a9;
+}
+
+.profile-create-select option {
+  background: #1a1a1e;
+  color: #e0e0e0;
+}
+
+.profile-create-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.profile-create-actions .profile-btn {
+  flex: 1;
+  justify-content: center;
+  padding: 8px;
 }

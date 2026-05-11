@@ -6,6 +6,9 @@ contextBridge.exposeInMainWorld('api', {
   maximize: () => ipcRenderer.send('window:maximize'),
   close: () => ipcRenderer.send('window:close'),
   isMaximized: () => ipcRenderer.invoke('window:isMaximized'),
+  setAlwaysOnTop: (value: boolean) => ipcRenderer.invoke('window:setAlwaysOnTop', value),
+  setAudioMuted: (value: boolean) => ipcRenderer.invoke('window:setAudioMuted', value),
+  isAudioMuted: () => ipcRenderer.invoke('window:isAudioMuted'),
   onMaximizedChange: (callback: (maximized: boolean) => void) => {
     const handler = (_event: Electron.IpcRendererEvent, maximized: boolean) => callback(maximized);
     ipcRenderer.on('window:maximized', handler);
@@ -14,21 +17,27 @@ contextBridge.exposeInMainWorld('api', {
 
   // File dialog
   openRomDialog: () => ipcRenderer.invoke('dialog:openRom'),
-  readFile: (filePath: string) => ipcRenderer.invoke('fs:readFile', filePath),
 
-  // Assets
-  checkAssets: () => ipcRenderer.invoke('assets:check'),
-  loadAssets: () => ipcRenderer.invoke('assets:load'),
-  saveAssets: (buffer: ArrayBuffer) => ipcRenderer.invoke('assets:save', buffer),
-  checkRom: () => ipcRenderer.invoke('rom:check'),
+  // Profiles
+  listProfiles: () => ipcRenderer.invoke('profiles:list'),
+  createProfile: (name: string, romFile: string) => ipcRenderer.invoke('profiles:create', name, romFile),
+  deleteProfile: (id: string) => ipcRenderer.invoke('profiles:delete', id),
+  setLastProfile: (id: string) => ipcRenderer.invoke('profiles:setLast', id),
+  getAppState: () => ipcRenderer.invoke('profiles:getAppState'),
+  updateLastPlayed: (id: string) => ipcRenderer.invoke('profiles:updateLastPlayed', id),
 
-  // Settings
-  loadSettings: () => ipcRenderer.invoke('settings:load'),
-  saveSettings: (settings: Record<string, unknown>) =>
-    ipcRenderer.invoke('settings:save', settings),
+  // ROMs
+  listRoms: () => ipcRenderer.invoke('roms:list'),
+  listRomsWithStatus: () => ipcRenderer.invoke('roms:listWithStatus'),
+  importRom: (romPath: string) => ipcRenderer.invoke('roms:import', romPath),
+  deleteRom: (romFile: string) => ipcRenderer.invoke('roms:delete', romFile),
 
-  // Asset extraction
-  extractAssets: (romPath: string) => ipcRenderer.invoke('assets:extract', romPath),
+  // Assets (per-ROM)
+  checkAssets: (romFile: string) => ipcRenderer.invoke('assets:check', romFile),
+  loadAssets: (romFile: string) => ipcRenderer.invoke('assets:load', romFile),
+  extractAssets: (romFile: string) => ipcRenderer.invoke('assets:extract', romFile),
+
+  // IPC log bridge
   onLogEntry: (callback: (entry: { channel: string; level: string; message: string }) => void) => {
     const handler = (_event: Electron.IpcRendererEvent, entry: { channel: string; level: string; message: string }) => callback(entry);
     ipcRenderer.on('log:entry', handler);

@@ -1,0 +1,16 @@
+.create-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.create-profile-form__actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.create-profile-form__actions .btn {
+  flex: 1;
+  justify-content: center;
+  padding: var(--space-sm);
+}

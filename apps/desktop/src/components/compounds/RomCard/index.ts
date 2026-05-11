@@ -1,0 +1,1 @@
+export { RomCard } from './RomCard';

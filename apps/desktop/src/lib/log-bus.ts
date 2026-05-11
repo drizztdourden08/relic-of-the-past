@@ -70,6 +70,12 @@ export const CHANNEL_COLORS: Record<LogChannel, string> = {
 // Intercept global errors and unhandled rejections
 function installGlobalHandlers(): void {
   window.addEventListener('error', (e) => {
+    // WASM RuntimeErrors are handled exclusively by game-instance's crash handler.
+    // Never log them here — they would flood during the game loop.
+    if (e.error instanceof WebAssembly.RuntimeError) {
+      e.preventDefault();
+      return;
+    }
     log.error(`${e.message} (${e.filename}:${e.lineno})`);
   });
   window.addEventListener('unhandledrejection', (e) => {

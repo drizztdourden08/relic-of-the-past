@@ -1,0 +1,61 @@
+.titlebar {
+  display: flex;
+  align-items: center;
+  height: var(--titlebar-height);
+  background: var(--color-bg-base);
+  border-bottom: 1px solid var(--color-border-subtle);
+  -webkit-app-region: drag;
+  position: relative;
+  z-index: 100;
+}
+
+.titlebar__left {
+  display: flex;
+  align-items: center;
+  padding-left: var(--space-sm);
+  -webkit-app-region: no-drag;
+  position: relative;
+}
+
+.titlebar__center {
+  flex: 1;
+  text-align: center;
+}
+
+.titlebar__title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.titlebar__right {
+  display: flex;
+  align-items: center;
+  -webkit-app-region: no-drag;
+}
+
+/* ─── Window control buttons ─── */
+.titlebar__control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--titlebar-btn-width);
+  height: var(--titlebar-height);
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background var(--transition-normal),
+              color var(--transition-normal);
+}
+
+.titlebar__control:hover {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+}
+
+.titlebar__control--close:hover {
+  background: var(--color-danger-base);
+  color: var(--color-text-primary);
+}

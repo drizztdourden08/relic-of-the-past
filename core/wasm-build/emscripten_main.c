@@ -12,6 +12,7 @@
 #include <emscripten/html5.h>
 
 #include "snes/ppu.h"
+#include "snes/dma.h"
 
 #include "src/types.h"
 #include "src/variables.h"
@@ -22,6 +23,25 @@
 #include "src/load_gfx.h"
 #include "src/util.h"
 #include "src/audio.h"
+#include "src/spc_player.h"
+
+// ---------------------------------------------------------------------------
+// WASM-safe ZeldaInitialize — workaround for ppu_init() signature mismatch.
+// zelda_rtl.c calls ppu_init(NULL) but ppu.c declares ppu_init() with no args.
+// In native C this is harmless; in WASM, mismatched call signatures trap.
+// We provide our own ZeldaInitialize that calls ppu_init() correctly.
+// ---------------------------------------------------------------------------
+static void WasmZeldaInitialize(void) {
+  g_zenv.dma = dma_init(NULL);
+  g_zenv.ppu = ppu_init();  // no args — matches ppu.c definition
+  g_zenv.ram = g_ram;
+  g_zenv.sram = (uint8*)calloc(8192, 1);
+  g_zenv.vram = g_zenv.ppu->vram;
+  g_zenv.player = SpcPlayer_Create();
+  SpcPlayer_Initialize(g_zenv.player);
+  dma_reset(g_zenv.dma);
+  ppu_reset(g_zenv.ppu);
+}
 
 // ---------------------------------------------------------------------------
 // Globals (mirrors from original main.c that other modules reference)
@@ -91,7 +111,10 @@ static void SDLCALL AudioCallback(void *userdata, Uint8 *stream, int len) {
 // Renderer (SDL2 software path only)
 // ---------------------------------------------------------------------------
 static bool SdlRenderer_Init(SDL_Window *window) {
-  SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+  // Match native: use PRESENTVSYNC to synchronize rendering with display refresh.
+  // Without this, SDL_RenderPresent returns instantly and the game runs uncapped.
+  SDL_Renderer *renderer = SDL_CreateRenderer(window, -1,
+    SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
   if (!renderer) {
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
   }
@@ -100,11 +123,16 @@ static bool SdlRenderer_Init(SDL_Window *window) {
     return false;
   }
   g_renderer = renderer;
-  SDL_RenderSetLogicalSize(renderer, g_snes_width, g_snes_height);
+  if (!g_config.ignore_aspect_ratio)
+    SDL_RenderSetLogicalSize(renderer, g_snes_width, g_snes_height);
+  if (g_config.linear_filtering)
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
 
+  // Match native: scale texture for 4x Mode7 rendering
+  int tex_mult = (g_ppu_render_flags & kPpuRenderFlags_4x4Mode7) ? 4 : 1;
   g_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
                                 SDL_TEXTUREACCESS_STREAMING,
-                                g_snes_width, g_snes_height);
+                                g_snes_width * tex_mult, g_snes_height * tex_mult);
   if (!g_texture) {
     fprintf(stderr, "Failed to create texture: %s\n", SDL_GetError());
     return false;
@@ -260,8 +288,8 @@ int main(int argc, char **argv) {
   // Load game assets
   LoadAssets();
 
-  // Initialize game core
-  ZeldaInitialize();
+  // Initialize game core (use WASM-safe version to avoid ppu_init signature mismatch)
+  WasmZeldaInitialize();
 
   // Configure PPU
   g_zenv.ppu->extraLeftRight = UintMin(g_config.extended_aspect_ratio, kPpuExtraLeftRight);
@@ -332,8 +360,11 @@ int main(int argc, char **argv) {
 
   printf("zelda3 WASM initialized. Starting main loop.\n");
 
-  // 0 = use requestAnimationFrame, 1 = simulate_infinite_loop
-  emscripten_set_main_loop(MainFrameCallback, 0, 1);
+  // Run at 60 FPS. Using fps=0 (rAF) can cause timing issues because the
+  // browser may call the callback at the display's refresh rate which can
+  // exceed 60Hz on high-refresh displays, making the game run too fast.
+  // The SNES runs at ~60.098 FPS (NTSC); 60 is close enough.
+  emscripten_set_main_loop(MainFrameCallback, 60, 1);
 
   // Cleanup (unreachable with simulate_infinite_loop=1, but good practice)
   if (g_audio_device) {

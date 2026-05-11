@@ -1,0 +1,19 @@
+.text-input {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--text-base);
+  outline: none;
+  transition: border-color var(--transition-normal);
+}
+
+.text-input:focus {
+  border-color: var(--color-gold-base);
+}
+
+.text-input::placeholder {
+  color: var(--color-text-faint);
+}

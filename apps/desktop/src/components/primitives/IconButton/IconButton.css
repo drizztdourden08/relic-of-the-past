@@ -1,0 +1,35 @@
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background var(--transition-normal),
+              color var(--transition-normal);
+}
+
+.icon-btn--sm {
+  width: 22px;
+  height: 22px;
+  font-size: var(--text-sm);
+}
+
+.icon-btn--md {
+  width: 36px;
+  height: 38px;
+}
+
+/* ─── Ghost ─── */
+.icon-btn--ghost:hover {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+}
+
+/* ─── Danger ─── */
+.icon-btn--danger:hover {
+  background: var(--color-danger-base);
+  color: var(--color-text-primary);
+}

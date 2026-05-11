@@ -1,0 +1,77 @@
+import { Badge } from '../../primitives/Badge';
+import { Button } from '../../primitives/Button';
+import { IconButton } from '../../primitives/IconButton';
+import './RomCard.css';
+
+interface RomCardProps {
+  rom: RomDisplayInfo;
+  onExtract: (romFile: string) => void;
+  onDelete: (romFile: string) => void;
+}
+
+function formatRomName(romFile: string): string {
+  return romFile.replace(/\.(sfc|smc)$/i, '');
+}
+
+function formatSize(bytes: number | null): string {
+  if (bytes == null) return '';
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+export function RomCard({ rom, onExtract, onDelete }: RomCardProps): JSX.Element {
+  const isFailed = rom.extractionStatus === 'failed';
+
+  return (
+    <div className={`rom-card ${isFailed ? 'rom-card--failed' : ''}`}>
+      <div className="rom-card__main">
+        <span className="rom-card__name">{formatRomName(rom.romFile)}</span>
+        <span className="rom-card__file">{rom.romFile}</span>
+      </div>
+
+      <div className="rom-card__status">
+        {rom.extractionStatus === 'ready' && (
+          <Badge variant="success">
+            ✓ Ready
+            {rom.assetSize != null && (
+              <span className="rom-card__size">{formatSize(rom.assetSize)}</span>
+            )}
+          </Badge>
+        )}
+        {rom.extractionStatus === 'extracting' && (
+          <Badge variant="warning">⟳ Extracting…</Badge>
+        )}
+        {rom.extractionStatus === 'failed' && (
+          <div className="rom-card__failed-group">
+            <Badge variant="danger">✗ Incompatible ROM</Badge>
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={() => onExtract(rom.romFile)}
+            >
+              Retry Extract
+            </Button>
+          </div>
+        )}
+        {rom.extractionStatus === 'idle' && (
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => onExtract(rom.romFile)}
+          >
+            Extract Assets
+          </Button>
+        )}
+      </div>
+
+      <IconButton
+        variant="danger"
+        label={`Remove ${rom.romFile}`}
+        onClick={() => onDelete(rom.romFile)}
+      >
+        ✕
+      </IconButton>
+    </div>
+  );
+}

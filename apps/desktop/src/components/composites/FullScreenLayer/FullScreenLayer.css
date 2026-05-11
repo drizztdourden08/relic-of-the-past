@@ -1,0 +1,29 @@
+.fullscreen-layer {
+  position: absolute;
+  inset: 0;
+  top: var(--titlebar-height);
+  background: rgba(10, 10, 15, 0.92);
+  z-index: 50;
+  animation: fsl-in 0.2s ease-out;
+  overflow-y: auto;
+}
+
+.fullscreen-layer__close {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  z-index: 51;
+}
+
+.fullscreen-layer__content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 100%;
+  padding: var(--space-xl);
+}
+
+@keyframes fsl-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
