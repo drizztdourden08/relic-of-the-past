@@ -28,6 +28,9 @@ Desktop.ini
 .vscode/settings.json
 .idea/
 
+# Test ROMs (user-provided, never committed)
+test-roms/
+
 # Environment
 .env
 .env.local

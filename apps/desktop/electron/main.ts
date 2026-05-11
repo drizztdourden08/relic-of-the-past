@@ -150,9 +150,9 @@ function registerIpcHandlers(): void {
   // Copies ROM to userData, runs extraction, stores result in userData,
   // cleans up any temp files written to the zelda3 submodule.
   ipcMain.handle('assets:extract', async (_event, romPath: string) => {
-    const zelda3Root = is.dev
-      ? join(__dirname, '..', '..', '..', 'core', 'zelda3')
-      : join(process.resourcesPath, 'core', 'zelda3');
+    // __dirname = dist/electron/ in both dev and prod (electron-vite)
+    const projectRoot = join(__dirname, '..', '..');
+    const zelda3Root = join(projectRoot, 'core', 'zelda3');
     const restoolPath = join(zelda3Root, 'assets', 'restool.py');
     const localRomPath = getUserDataPath('assets', 'zelda3.sfc');
     const cachedAssetsPath = getUserDataPath('assets', 'zelda3_assets.dat');
@@ -187,9 +187,9 @@ function registerIpcHandlers(): void {
     return new Promise<{ success: boolean; error?: string }>((resolve) => {
       sendLog('app', 'info', 'Extracting assets from ROM...');
 
-      const proc = spawn('python', [restoolPath, '--extract-from-rom', '-r', localRomPath], {
+      const proc = spawn('python', ['-u', restoolPath, '--extract-from-rom', '-r', localRomPath], {
         cwd: join(zelda3Root, 'assets'),
-        env: { ...process.env },
+        env: process.env,
         stdio: ['ignore', 'pipe', 'pipe'],
       });
 
