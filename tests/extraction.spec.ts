@@ -6,7 +6,7 @@ import { _electron as electron } from 'playwright';
 import { join } from 'path';
 import { existsSync } from 'fs';
 
-const ROM_PATH = join(__dirname, '..', 'test-roms', 'zelda3.sfc');
+const ROM_PATH = join(__dirname, '..', 'test-roms', 'Legend of Zelda, The - A Link to the Past (USA).sfc');
 const PROJECT_ROOT = join(__dirname, '..');
 
 test('extract assets from ROM and launch game', async () => {
