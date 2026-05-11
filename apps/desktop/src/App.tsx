@@ -39,9 +39,9 @@ export function App(): JSX.Element {
 
       // No cached assets — need a ROM to extract from
       // Check if ROM is already stored in userData
-      let needRomPick = !(await window.api.checkRom());
+      const storedRom = await window.api.checkRom();
 
-      if (needRomPick) {
+      if (!storedRom) {
         log.app('No cached ROM, opening file dialog...');
         const romPath = await window.api.openRomDialog();
         if (!romPath) {
@@ -59,11 +59,10 @@ export function App(): JSX.Element {
         }
       } else {
         // ROM exists in userData but assets don't — re-extract
-        log.app('ROM cached but assets missing, re-extracting...');
+        log.app(`ROM cached (${storedRom}), re-extracting assets...`);
         setStatus('Re-extracting assets...');
-        // Pass empty string to signal "use stored ROM"
-        const storedRomPath = await window.api.getUserDataPath() + '/assets/zelda3.sfc';
-        const result = await window.api.extractAssets(storedRomPath);
+        const userDataPath = await window.api.getUserDataPath();
+        const result = await window.api.extractAssets(`${userDataPath}/roms/${storedRom}`);
         if (!result.success) {
           setStatus(`Extraction failed: ${result.error}`);
           return;

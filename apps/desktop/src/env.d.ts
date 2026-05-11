@@ -16,7 +16,7 @@ interface ElectronAPI {
   checkAssets(): Promise<boolean>;
   loadAssets(): Promise<ArrayBuffer | null>;
   saveAssets(buffer: ArrayBuffer): Promise<boolean>;
-  checkRom(): Promise<boolean>;
+  checkRom(): Promise<string | null>;
 
   // Settings
   loadSettings(): Promise<Record<string, unknown>>;

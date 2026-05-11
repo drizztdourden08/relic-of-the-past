@@ -1,11 +1,11 @@
 import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
-import { join } from 'path';
+import { join, basename } from 'path';
 import { readFile, mkdir, writeFile, access, copyFile, rm, stat } from 'fs/promises';
 import { spawn } from 'child_process';
 import { is } from '@electron-toolkit/utils';
 
 // Ensure consistent userData path across dev and production
-app.setName('alttp-port');
+app.setName('alttp-pc');
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -14,7 +14,7 @@ function getUserDataPath(...segments: string[]): string {
 }
 
 async function ensureDirectories(): Promise<void> {
-  const dirs = ['assets', 'saves', 'config', 'seeds'];
+  const dirs = ['assets', 'roms', 'saves', 'config', 'seeds'];
   for (const dir of dirs) {
     await mkdir(getUserDataPath(dir), { recursive: true });
   }
@@ -136,13 +136,16 @@ function registerIpcHandlers(): void {
   // Get userData path
   ipcMain.handle('app:getUserDataPath', () => app.getPath('userData'));
 
-  // Check if a ROM is stored in userData
+  // Check if a ROM is stored in userData (returns filename or null)
   ipcMain.handle('rom:check', async () => {
     try {
-      const s = await stat(getUserDataPath('assets', 'zelda3.sfc'));
-      return s.size > 0;
+      const settings = await loadSettings();
+      const romFile = settings.romFile as string | undefined;
+      if (!romFile) return null;
+      const s = await stat(getUserDataPath('roms', romFile));
+      return s.size > 0 ? romFile : null;
     } catch {
-      return false;
+      return null;
     }
   });
 
@@ -154,7 +157,8 @@ function registerIpcHandlers(): void {
     const projectRoot = join(__dirname, '..', '..');
     const zelda3Root = join(projectRoot, 'core', 'zelda3');
     const restoolPath = join(zelda3Root, 'assets', 'restool.py');
-    const localRomPath = getUserDataPath('assets', 'zelda3.sfc');
+    const romFileName = basename(romPath);
+    const localRomPath = getUserDataPath('roms', romFileName);
     const cachedAssetsPath = getUserDataPath('assets', 'zelda3_assets.dat');
 
     // restool writes output relative to zelda3 submodule (hardcoded paths)
@@ -177,7 +181,12 @@ function registerIpcHandlers(): void {
       sendLog('app', 'info', 'Copying ROM to app data...');
       await copyFile(romPath, localRomPath);
       const romStat = await stat(localRomPath);
-      sendLog('app', 'info', `ROM stored (${(romStat.size / 1024).toFixed(0)} KB)`);
+      sendLog('app', 'info', `ROM stored as ${romFileName} (${(romStat.size / 1024).toFixed(0)} KB)`);
+
+      // Save the ROM filename in settings for future reference
+      const settings = await loadSettings();
+      settings.romFile = romFileName;
+      await saveSettings(settings);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       sendLog('error', 'error', `Failed to copy ROM: ${msg}`);
