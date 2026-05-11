@@ -54,6 +54,14 @@ contextBridge.exposeInMainWorld('api', {
   readScreenshot: (profileId: string, slot: number) => ipcRenderer.invoke('saves:readScreenshot', profileId, slot) as Promise<string | null>,
   getSlotInfos: (profileId: string) => ipcRenderer.invoke('saves:getSlotInfos', profileId),
 
+  // Config (per-profile settings)
+  readConfig: (profileId: string) => ipcRenderer.invoke('config:read', profileId),
+  writeConfig: (profileId: string, settings: unknown) => ipcRenderer.invoke('config:write', profileId, settings),
+
+  // Play sessions
+  listSessions: (profileId: string) => ipcRenderer.invoke('sessions:list', profileId),
+  saveSession: (profileId: string, session: unknown) => ipcRenderer.invoke('sessions:save', profileId, session),
+
   // App info
   getUserDataPath: () => ipcRenderer.invoke('app:getUserDataPath'),
 });

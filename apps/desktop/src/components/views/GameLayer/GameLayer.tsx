@@ -1,6 +1,6 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import { useGameState } from './behavior/useGameState';
-import { saveState, loadState } from '../../../lib/game-instance';
+import { saveState, loadState } from '../../../lib/game';
 import { log } from '../../../lib/log-bus';
 import './GameLayer.css';
 
@@ -11,12 +11,53 @@ interface GameLayerProps {
 }
 
 export function GameLayer({ assetData, configIni, profileId }: GameLayerProps): JSX.Element {
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { status, error, start } = useGameState();
   // Increment to force React to create a fresh <canvas> DOM element on restart,
   // ensuring the new WASM instance gets a clean WebGL context.
   const [canvasKey, setCanvasKey] = useState(0);
   const hasStartedRef = useRef(false);
+
+  // Scale canvas to fill the container while maintaining aspect ratio
+  const fitCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+
+    const bufW = canvas.width;
+    const bufH = canvas.height;
+    if (!bufW || !bufH) return;
+
+    const containerW = container.clientWidth;
+    const containerH = container.clientHeight;
+    if (!containerW || !containerH) return;
+
+    const scale = Math.min(containerW / bufW, containerH / bufH);
+    const cssW = Math.floor(bufW * scale);
+    const cssH = Math.floor(bufH * scale);
+
+    canvas.style.width = `${cssW}px`;
+    canvas.style.height = `${cssH}px`;
+  }, []);
+
+  // Observe container size changes and re-fit
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const ro = new ResizeObserver(() => fitCanvas());
+    ro.observe(container);
+    return () => ro.disconnect();
+  }, [fitCanvas, canvasKey]);
+
+  // Re-fit after WASM starts (SDL may change canvas.width/height)
+  useEffect(() => {
+    if (status !== 'running') return;
+    // SDL_CreateWindow sets canvas.width/height; fit after a tick
+    const id = requestAnimationFrame(() => fitCanvas());
+    return () => cancelAnimationFrame(id);
+  }, [status, fitCanvas]);
 
   // Start game when assets arrive
   useEffect(() => {
@@ -90,10 +131,11 @@ export function GameLayer({ assetData, configIni, profileId }: GameLayerProps): 
   }, [status, error]);
 
   return (
-    <div className="game-layer">
+    <div className="game-layer" ref={containerRef}>
       <canvas
         key={canvasKey}
         ref={canvasRef}
+        id="canvas"
         className="game-layer__canvas"
         width={512}
         height={448}

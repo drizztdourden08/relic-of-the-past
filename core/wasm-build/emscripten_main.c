@@ -362,6 +362,10 @@ int main(int argc, char **argv) {
   }
 
   // Create window (Emscripten maps this to a canvas)
+  // Explicitly set canvas element size — SDL2's emscripten port uses "#canvas"
+  // selector which requires id="canvas" on the HTML element.
+  emscripten_set_canvas_element_size("#canvas", g_snes_width * 2, g_snes_height * 2);
+
   g_window = SDL_CreateWindow(kWindowTitle,
     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
     g_snes_width * 2, g_snes_height * 2,

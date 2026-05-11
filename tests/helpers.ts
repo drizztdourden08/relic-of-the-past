@@ -80,7 +80,7 @@ export async function getScreen(window: Page): Promise<ScreenName> {
   return window.evaluate(() => {
     // Full-screen pages take priority (canvas is always present underneath)
     if (document.querySelector('.fullscreen-layer .picker')) return 'picker';
-    if (document.querySelector('.fullscreen-layer .profile-page')) return 'profile';
+    if (document.querySelector('.fullscreen-layer .profile-hub')) return 'profile';
     if (document.querySelector('.game-layer__canvas')) return 'game';
     return 'loading';
   }) as Promise<ScreenName>;
@@ -90,7 +90,7 @@ export async function waitForScreen(window: Page, screen: ScreenName, timeoutMs 
   if (screen === 'picker') {
     await window.waitForSelector('.fullscreen-layer .picker', { timeout: timeoutMs });
   } else if (screen === 'profile') {
-    await window.waitForSelector('.fullscreen-layer .profile-page', { timeout: timeoutMs });
+    await window.waitForSelector('.fullscreen-layer .profile-hub', { timeout: timeoutMs });
   } else if (screen === 'game') {
     // Wait for any fullscreen layer to disappear (canvas is always present)
     await window.waitForFunction(
@@ -244,7 +244,7 @@ export async function openMenu(window: Page): Promise<void> {
 /** From the profile page, click "Start Game" and wait for game screen. */
 export async function startGameFromProfile(window: Page, timeoutMs = 15_000): Promise<void> {
   await waitForScreen(window, 'profile', timeoutMs);
-  const startBtn = window.locator('.profile-page .btn--primary', { hasText: /Start Game/ });
+  const startBtn = window.locator('.profile-hub .btn--primary', { hasText: /Play/ });
   await startBtn.click();
   await waitForScreen(window, 'game', timeoutMs);
 }

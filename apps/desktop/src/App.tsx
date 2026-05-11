@@ -3,13 +3,14 @@ import { TitleBar } from './components/views/TitleBar';
 import { GameLayer } from './components/views/GameLayer';
 import { SaveStateOverlay } from './components/views/SaveStateOverlay/SaveStateOverlay';
 import { ProfilePicker } from './components/views/ProfilePicker';
-import { ProfilePage } from './components/views/ProfilePage';
+import { ProfileHub } from './components/views/ProfileHub';
 import { LogOverlay } from './components/views/LogOverlay';
 import { FullScreenLayer } from './components/composites/FullScreenLayer';
 import { Dialog } from './components/composites/Dialog';
 import { log } from './lib/log-bus';
 import type { LogChannel, LogLevel } from './lib/log-bus';
-import { subscribeGameState, resetGame } from './lib/game-instance';
+import { subscribeGameState, resetGame } from './lib/game';
+import { serializeToIni, mergeSettings } from './lib/game/settings';
 
 type PageId = 'none' | 'picker' | 'profile';
 
@@ -34,6 +35,7 @@ export function App(): JSX.Element {
   const [showSaveStates, setShowSaveStates] = useState(false);
   const [dialog, setDialog] = useState<ConfirmDialog | null>(null);
   const [gameCrashed, setGameCrashed] = useState(false);
+  const [configIni, setConfigIni] = useState<string | undefined>(undefined);
 
   // Compute display info combining server state + local extraction tracking
   const romDisplayInfos: RomDisplayInfo[] = romStatuses.map((rom) => ({
@@ -77,6 +79,13 @@ export function App(): JSX.Element {
     setLoadingProfile(profile.name);
     setActivePage('none');
     log.app(`Loading profile: ${profile.name} (${profile.romFile})`);
+
+    // Load profile settings and serialize to INI for WASM
+    const savedSettings = await window.api.readConfig(profile.id);
+    const settings = mergeSettings((savedSettings ?? {}) as any);
+    const ini = serializeToIni(settings);
+    setConfigIni(ini);
+    log.app(`Loaded profile settings (aspect: ${settings.aspectRatio}, renderer: ${settings.newRenderer ? 'new' : 'old'})`);
 
     const hasAssets = await window.api.checkAssets(profile.romFile);
     if (!hasAssets) {
@@ -301,10 +310,23 @@ export function App(): JSX.Element {
     }
   }, [activeProfile, loadProfileForGame]);
 
-  // Active ROM status for profile page
-  const activeRomStatus = activeProfile
-    ? romDisplayInfos.find((r) => r.romFile === activeProfile.romFile) ?? null
-    : null;
+  // ─── Stop game ───
+  const handleStopGame = useCallback(() => {
+    resetGame();
+    setAssetData(null);
+    setGameCrashed(false);
+  }, []);
+
+  // ─── Reset game (stop + restart) ───
+  const handleResetGame = useCallback(() => {
+    if (activeProfile) {
+      resetGame();
+      setAssetData(null);
+      setGameCrashed(false);
+      // Restart immediately
+      loadProfileForGame(activeProfile);
+    }
+  }, [activeProfile, loadProfileForGame]);
 
   return (
     <div className="app">
@@ -319,7 +341,7 @@ export function App(): JSX.Element {
       />
 
       {/* Game canvas — always present as background layer */}
-      <GameLayer assetData={assetData} profileId={activeProfile?.id} />
+      <GameLayer assetData={assetData} configIni={configIni} profileId={activeProfile?.id} />
 
       {/* Save State Overlay */}
       <SaveStateOverlay
@@ -347,13 +369,12 @@ export function App(): JSX.Element {
 
       {activePage === 'profile' && activeProfile && (
         <FullScreenLayer onClose={closePage}>
-          <ProfilePage
+          <ProfileHub
             profile={activeProfile}
-            romStatus={activeRomStatus}
             isGameRunning={isGameRunning}
             onStartGame={handleStartGame}
-            onDeleteProfile={() => handleDeleteProfile(activeProfile.id)}
-            onSwitchProfile={handleShowPicker}
+            onStopGame={handleStopGame}
+            onResetGame={handleResetGame}
           />
         </FullScreenLayer>
       )}

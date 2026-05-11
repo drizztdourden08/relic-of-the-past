@@ -2,6 +2,8 @@ import { join } from 'path';
 import { readFile, mkdir, writeFile, readdir, rm, stat } from 'fs/promises';
 import { randomUUID } from 'crypto';
 import type { Profile, AppState } from '../../../shared/types/profile';
+import type { GameSettings } from '../../../shared/types/settings';
+import type { PlaySession } from '../../../shared/types/session';
 
 let userDataPath = '';
 
@@ -211,4 +213,48 @@ export async function listStateFiles(profileId: string): Promise<number[]> {
   } catch {
     return [];
   }
+}
+
+// ─── Per-profile config (settings) ───
+
+export async function readConfig(profileId: string): Promise<Partial<GameSettings> | null> {
+  try {
+    const data = await readFile(path('profiles', profileId, 'config.json'), 'utf-8');
+    return JSON.parse(data);
+  } catch {
+    return null;
+  }
+}
+
+export async function writeConfig(profileId: string, settings: GameSettings): Promise<void> {
+  const profileDir = path('profiles', profileId);
+  await mkdir(profileDir, { recursive: true });
+  await writeFile(join(profileDir, 'config.json'), JSON.stringify(settings, null, 2), 'utf-8');
+}
+
+// ─── Play sessions ───
+
+export async function listSessions(profileId: string): Promise<PlaySession[]> {
+  try {
+    const data = await readFile(path('profiles', profileId, 'sessions.json'), 'utf-8');
+    const sessions: PlaySession[] = JSON.parse(data);
+    return sessions.sort((a, b) => b.startedAt - a.startedAt);
+  } catch {
+    return [];
+  }
+}
+
+export async function saveSession(profileId: string, session: PlaySession): Promise<void> {
+  const profileDir = path('profiles', profileId);
+  await mkdir(profileDir, { recursive: true });
+  const filePath = join(profileDir, 'sessions.json');
+  let sessions: PlaySession[] = [];
+  try {
+    const data = await readFile(filePath, 'utf-8');
+    sessions = JSON.parse(data);
+  } catch { /* new file */ }
+  sessions.push(session);
+  // Keep last 100 sessions
+  if (sessions.length > 100) sessions = sessions.slice(-100);
+  await writeFile(filePath, JSON.stringify(sessions, null, 2), 'utf-8');
 }

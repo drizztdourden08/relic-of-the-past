@@ -58,10 +58,13 @@ SNES_SRCS := \
 
 OPUS_SRC := $(ZELDA3)/third_party/opus-1.3.1-stripped/opus_decoder_amalgam.c
 
+# Randomizer hooks
+HOOK_SRCS := ../randomizer-hooks/randomizer_hooks.c
+
 # Our Emscripten-specific main
 EM_MAIN := emscripten_main.c
 
-ALL_SRCS := $(EM_MAIN) $(GAME_SRCS) $(SNES_SRCS) $(OPUS_SRC)
+ALL_SRCS := $(EM_MAIN) $(GAME_SRCS) $(SNES_SRCS) $(OPUS_SRC) $(HOOK_SRCS)
 
 OUTPUT_DIR := output
 TARGET := $(OUTPUT_DIR)/zelda3.js
@@ -70,6 +73,7 @@ CC := emcc
 
 CFLAGS := -O2 \
 	-I $(ZELDA3) \
+	-I ../randomizer-hooks \
 	-DSYSTEM_VOLUME_MIXER_AVAILABLE=0 \
 	-Wno-unused-function \
 	-Wno-unused-variable
@@ -81,7 +85,7 @@ EMFLAGS := -sUSE_SDL=2 \
 	-sFORCE_FILESYSTEM=1 \
 	-sMODULARIZE=1 \
 	-sEXPORT_NAME='Zelda3' \
-	-sEXPORTED_FUNCTIONS='["_main"]' \
+	-sEXPORTED_FUNCTIONS='["_main","_WasmSetItemOverride","_WasmClearItemOverrides"]' \
 	-sEXPORTED_RUNTIME_METHODS='["ccall","cwrap","FS"]' \
 	-sASYNCIFY
 

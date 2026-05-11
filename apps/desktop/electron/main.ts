@@ -23,6 +23,10 @@ import {
   writeStateScreenshot,
   readStateScreenshot,
   getStateSlotInfos,
+  readConfig,
+  writeConfig,
+  listSessions,
+  saveSession,
 } from './profile-manager';
 
 // Ensure consistent userData path across dev and production
@@ -373,6 +377,24 @@ function registerIpcHandlers(): void {
 
   ipcMain.handle('saves:getSlotInfos', async (_event, profileId: string) => {
     return getStateSlotInfos(profileId);
+  });
+
+  // Config (per-profile settings)
+  ipcMain.handle('config:read', async (_event, profileId: string) => {
+    return readConfig(profileId);
+  });
+
+  ipcMain.handle('config:write', async (_event, profileId: string, settings: unknown) => {
+    await writeConfig(profileId, settings as any);
+  });
+
+  // Play sessions
+  ipcMain.handle('sessions:list', async (_event, profileId: string) => {
+    return listSessions(profileId);
+  });
+
+  ipcMain.handle('sessions:save', async (_event, profileId: string, session: unknown) => {
+    await saveSession(profileId, session as any);
   });
 
   // Get userData path

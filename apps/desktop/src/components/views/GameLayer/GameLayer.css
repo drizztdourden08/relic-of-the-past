@@ -7,6 +7,7 @@
   justify-content: center;
   background: var(--color-bg-deep);
   z-index: 0;
+  overflow: hidden;
 }
 
 .game-layer__canvas {

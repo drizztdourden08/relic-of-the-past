@@ -4,7 +4,7 @@ import {
   getGameState,
   subscribeGameState,
   type GameStatus,
-} from '../../../../lib/game-instance';
+} from '../../../../lib/game';
 import { useEffect } from 'react';
 
 export function useGameState() {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { saveState, loadState, getActiveProfileId } from '../../../lib/game-instance';
+import { saveState, loadState, getActiveProfileId } from '../../../lib/game';
 import { log } from '../../../lib/log-bus';
 import './SaveStateOverlay.css';
 

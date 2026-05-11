@@ -77,6 +77,14 @@ interface ElectronAPI {
   readScreenshot(profileId: string, slot: number): Promise<string | null>;
   getSlotInfos(profileId: string): Promise<Array<{ slot: number; timestamp: number; size: number; hasScreenshot: boolean }>>;
 
+  // Config (per-profile settings)
+  readConfig(profileId: string): Promise<Record<string, unknown> | null>;
+  writeConfig(profileId: string, settings: Record<string, unknown>): Promise<void>;
+
+  // Play sessions
+  listSessions(profileId: string): Promise<Array<{ id: string; profileId: string; startedAt: number; endedAt: number | null; durationMs: number; stats: Record<string, unknown> }>>;
+  saveSession(profileId: string, session: { id: string; profileId: string; startedAt: number; endedAt: number | null; durationMs: number; stats: Record<string, unknown> }): Promise<void>;
+
   // App info
   getUserDataPath(): Promise<string>;
 }

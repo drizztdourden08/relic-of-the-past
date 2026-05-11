@@ -1,0 +1,31 @@
+.session-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.session-card__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-gold-base);
+  flex-shrink: 0;
+}
+
+.session-card__date {
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+}
+
+.session-card__end {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.session-card__duration {
+  margin-left: auto;
+  font-size: var(--text-sm);
+  font-family: var(--font-mono);
+  color: var(--color-text-secondary);
+}

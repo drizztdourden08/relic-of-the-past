@@ -1,0 +1,75 @@
+.home-tab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  padding: var(--space-xl);
+}
+
+.home-tab__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+}
+
+.home-tab__profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.home-tab__name {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semi);
+  color: var(--color-text-primary);
+}
+
+.home-tab__rom {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.home-tab__actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.home-tab__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.home-tab__section-title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.home-tab__save-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-sm);
+}
+
+.home-tab__sessions {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.home-tab__sessions > * + * {
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.home-tab__empty {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin: 0;
+}
