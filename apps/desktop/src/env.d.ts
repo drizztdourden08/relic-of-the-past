@@ -16,10 +16,15 @@ interface ElectronAPI {
   checkAssets(): Promise<boolean>;
   loadAssets(): Promise<ArrayBuffer | null>;
   saveAssets(buffer: ArrayBuffer): Promise<boolean>;
+  checkRom(): Promise<boolean>;
 
   // Settings
   loadSettings(): Promise<Record<string, unknown>>;
   saveSettings(settings: Record<string, unknown>): Promise<void>;
+
+  // Asset extraction
+  extractAssets(romPath: string): Promise<{ success: boolean; error?: string }>;
+  onLogEntry(callback: (entry: { channel: string; level: string; message: string }) => void): () => void;
 
   // App info
   getUserDataPath(): Promise<string>;

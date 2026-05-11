@@ -1,12 +1,11 @@
-// Playwright script to launch Electron app and take a screenshot for debugging.
+// Playwright script to launch Electron app, trigger ROM load, capture all LogBus entries.
 // Usage: npx playwright test tests/screenshot.spec.ts
-// Or:    node -e "require('./tests/screenshot')" (not directly, use playwright runner)
 
 import { test } from '@playwright/test';
 import { _electron as electron } from 'playwright';
 import { join } from 'path';
 
-test('capture electron window screenshot', async () => {
+test('capture logs and screenshot', async () => {
   const app = await electron.launch({
     args: [join(__dirname, '..', 'dist', 'electron', 'main.js')],
     env: { ...process.env, NODE_ENV: 'production' },
@@ -14,47 +13,77 @@ test('capture electron window screenshot', async () => {
 
   const window = await app.firstWindow();
 
-  // Collect console messages
-  const logs: string[] = [];
+  // Collect browser console output
+  const consoleLogs: string[] = [];
   window.on('console', (msg) => {
-    const line = `[${msg.type()}] ${msg.text()}`;
-    logs.push(line);
-    console.log(line);
+    consoleLogs.push(`[console.${msg.type()}] ${msg.text()}`);
   });
-
-  // Collect page errors
-  const errors: string[] = [];
   window.on('pageerror', (err) => {
-    errors.push(err.message);
-    console.log('[PAGE ERROR]', err.message);
+    consoleLogs.push(`[PAGE ERROR] ${err.message}`);
   });
 
   await window.waitForLoadState('domcontentloaded');
-  await window.waitForTimeout(3000);
+  await window.waitForTimeout(1000);
+
+  // Check the userData path and whether cached assets exist
+  const userDataPath = await window.evaluate(() => window.api.getUserDataPath());
+  console.log(`\n=== userData: ${userDataPath} ===`);
+
+  const hasAssets = await window.evaluate(() => window.api.checkAssets());
+  console.log(`=== Cached assets: ${hasAssets} ===`);
+
+  if (hasAssets) {
+    // Trigger Load ROM from menu — it will find cached assets and skip the dialog
+    await window.click('[aria-label="Menu"]');
+    await window.waitForTimeout(300);
+    await window.locator('.dropdown-item', { hasText: 'Load ROM' }).click();
+    await window.waitForTimeout(5000);
+  } else {
+    console.log('No cached assets found — skipping ROM load (would open native dialog)');
+    await window.waitForTimeout(1000);
+  }
 
   // Take screenshot
   await window.screenshot({ path: 'tests/screenshots/window.png' });
 
-  // Inspect DOM
-  const rootHtml = await window.evaluate(() => {
-    const root = document.getElementById('root');
-    return root ? root.innerHTML : 'NO #root FOUND';
+  // Pull all LogBus entries
+  const logEntries = await window.evaluate(() => {
+    return (window as any).__logEntries?.() ?? [];
   });
-  console.log('--- #root innerHTML ---');
-  console.log(rootHtml || '(empty)');
 
-  // Check for failed resource loads
-  const failedResources = await window.evaluate(() => {
-    return performance.getEntriesByType('resource')
-      .filter((r: any) => r.responseStatus >= 400 || r.responseStatus === 0)
-      .map((r: any) => `${r.name} (status: ${r.responseStatus})`);
+  // Scrape overlay DOM as fallback
+  const overlayText = await window.evaluate(() => {
+    const entries = document.querySelectorAll('.log-entry');
+    return Array.from(entries).map((el) => {
+      const channel = el.querySelector('.log-channel')?.textContent ?? '';
+      const msg = el.querySelector('.log-message')?.textContent ?? '';
+      const time = el.querySelector('.log-time')?.textContent ?? '';
+      return `${time} ${channel} ${msg}`;
+    });
   });
-  if (failedResources.length > 0) {
-    console.log('--- Failed resources ---');
-    failedResources.forEach((r: string) => console.log(r));
+
+  console.log('\n=== LogBus Entries ===');
+  if (logEntries.length > 0) {
+    for (const e of logEntries) {
+      console.log(`[${e.channel}/${e.level}] ${e.message}`);
+    }
+  } else {
+    console.log('(no entries via __logEntries)');
   }
 
-  console.log(`\nLogs: ${logs.length}, Errors: ${errors.length}`);
+  if (overlayText.length > 0) {
+    console.log('\n=== Overlay DOM ===');
+    for (const line of overlayText) {
+      console.log(line);
+    }
+  }
+
+  if (consoleLogs.length > 0) {
+    console.log('\n=== Browser Console ===');
+    for (const line of consoleLogs) {
+      console.log(line);
+    }
+  }
 
   await app.close();
 });

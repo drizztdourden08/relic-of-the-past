@@ -1,7 +1,11 @@
 import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
 import { join } from 'path';
-import { readFile, mkdir, writeFile, access } from 'fs/promises';
+import { readFile, mkdir, writeFile, access, copyFile, rm, stat } from 'fs/promises';
+import { spawn } from 'child_process';
 import { is } from '@electron-toolkit/utils';
+
+// Ensure consistent userData path across dev and production
+app.setName('alttp-port');
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -131,6 +135,117 @@ function registerIpcHandlers(): void {
 
   // Get userData path
   ipcMain.handle('app:getUserDataPath', () => app.getPath('userData'));
+
+  // Check if a ROM is stored in userData
+  ipcMain.handle('rom:check', async () => {
+    try {
+      const s = await stat(getUserDataPath('assets', 'zelda3.sfc'));
+      return s.size > 0;
+    } catch {
+      return false;
+    }
+  });
+
+  // Extract assets from ROM using restool.py
+  // Copies ROM to userData, runs extraction, stores result in userData,
+  // cleans up any temp files written to the zelda3 submodule.
+  ipcMain.handle('assets:extract', async (_event, romPath: string) => {
+    const zelda3Root = is.dev
+      ? join(__dirname, '..', '..', '..', 'core', 'zelda3')
+      : join(process.resourcesPath, 'core', 'zelda3');
+    const restoolPath = join(zelda3Root, 'assets', 'restool.py');
+    const localRomPath = getUserDataPath('assets', 'zelda3.sfc');
+    const cachedAssetsPath = getUserDataPath('assets', 'zelda3_assets.dat');
+
+    // restool writes output relative to zelda3 submodule (hardcoded paths)
+    const submoduleOutputPath = join(zelda3Root, 'zelda3_assets.dat');
+    const submoduleTablesPath = join(zelda3Root, 'tables');
+
+    // Check restool.py exists
+    try {
+      await access(restoolPath);
+    } catch {
+      return { success: false, error: 'restool.py not found. zelda3 submodule may be missing.' };
+    }
+
+    const sendLog = (channel: string, level: string, message: string) => {
+      mainWindow?.webContents.send('log:entry', { channel, level, message });
+    };
+
+    // Copy ROM to userData
+    try {
+      sendLog('app', 'info', 'Copying ROM to app data...');
+      await copyFile(romPath, localRomPath);
+      const romStat = await stat(localRomPath);
+      sendLog('app', 'info', `ROM stored (${(romStat.size / 1024).toFixed(0)} KB)`);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      sendLog('error', 'error', `Failed to copy ROM: ${msg}`);
+      return { success: false, error: msg };
+    }
+
+    return new Promise<{ success: boolean; error?: string }>((resolve) => {
+      sendLog('app', 'info', 'Extracting assets from ROM...');
+
+      const proc = spawn('python', [restoolPath, '--extract-from-rom', '-r', localRomPath], {
+        cwd: join(zelda3Root, 'assets'),
+        env: { ...process.env },
+        stdio: ['ignore', 'pipe', 'pipe'],
+      });
+
+      let stderr = '';
+
+      proc.stdout.on('data', (data: Buffer) => {
+        for (const line of data.toString().split('\n')) {
+          if (line.trim()) sendLog('core', 'info', line.trim());
+        }
+      });
+
+      proc.stderr.on('data', (data: Buffer) => {
+        const text = data.toString();
+        stderr += text;
+        for (const line of text.split('\n')) {
+          if (line.trim()) sendLog('core', 'error', line.trim());
+        }
+      });
+
+      proc.on('error', (err) => {
+        if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
+          sendLog('error', 'error', 'Python not found. Install Python 3.11+ and ensure it is on PATH.');
+          resolve({ success: false, error: 'Python not found on PATH' });
+        } else {
+          sendLog('error', 'error', `Failed to start extraction: ${err.message}`);
+          resolve({ success: false, error: err.message });
+        }
+      });
+
+      proc.on('close', async (code) => {
+        if (code !== 0) {
+          sendLog('error', 'error', `Extraction failed (exit code ${code})`);
+          resolve({ success: false, error: stderr || `Exit code ${code}` });
+          return;
+        }
+
+        // Move output from zelda3 submodule to userData, then clean up
+        try {
+          await access(submoduleOutputPath);
+          await copyFile(submoduleOutputPath, cachedAssetsPath);
+          const assetsStat = await stat(cachedAssetsPath);
+          sendLog('app', 'info', `Assets cached (${(assetsStat.size / 1024).toFixed(0)} KB)`);
+
+          // Clean up: remove generated files from zelda3 submodule
+          await rm(submoduleOutputPath, { force: true });
+          await rm(submoduleTablesPath, { recursive: true, force: true });
+          sendLog('app', 'info', 'Cleaned up temporary extraction files');
+
+          resolve({ success: true });
+        } catch {
+          sendLog('error', 'error', 'Extraction completed but zelda3_assets.dat not found');
+          resolve({ success: false, error: 'Output file not found after extraction' });
+        }
+      });
+    });
+  });
 }
 
 app.whenReady().then(async () => {

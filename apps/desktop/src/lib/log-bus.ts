@@ -78,3 +78,6 @@ function installGlobalHandlers(): void {
 }
 
 installGlobalHandlers();
+
+// Expose getEntries for Playwright / devtools access
+(window as any).__logEntries = getEntries;

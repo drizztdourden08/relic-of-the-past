@@ -20,11 +20,20 @@ contextBridge.exposeInMainWorld('api', {
   checkAssets: () => ipcRenderer.invoke('assets:check'),
   loadAssets: () => ipcRenderer.invoke('assets:load'),
   saveAssets: (buffer: ArrayBuffer) => ipcRenderer.invoke('assets:save', buffer),
+  checkRom: () => ipcRenderer.invoke('rom:check'),
 
   // Settings
   loadSettings: () => ipcRenderer.invoke('settings:load'),
   saveSettings: (settings: Record<string, unknown>) =>
     ipcRenderer.invoke('settings:save', settings),
+
+  // Asset extraction
+  extractAssets: (romPath: string) => ipcRenderer.invoke('assets:extract', romPath),
+  onLogEntry: (callback: (entry: { channel: string; level: string; message: string }) => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, entry: { channel: string; level: string; message: string }) => callback(entry);
+    ipcRenderer.on('log:entry', handler);
+    return () => ipcRenderer.removeListener('log:entry', handler);
+  },
 
   // App info
   getUserDataPath: () => ipcRenderer.invoke('app:getUserDataPath'),
