@@ -13,7 +13,16 @@ export interface WebHidInputState {
   timestamp: number;
 }
 
+/** Raw report emitted for calibration — unprocessed bytes */
+export interface WebHidRawReport {
+  deviceKey: string;
+  reportId: number;
+  bytes: Uint8Array;
+  timestamp: number;
+}
+
 export type WebHidStateListener = (state: WebHidInputState) => void;
+export type WebHidRawListener = (report: WebHidRawReport) => void;
 export type WebHidDiagListener = (msg: string) => void;
 
 // Nintendo VID and known PIDs
@@ -149,6 +158,7 @@ class WebHidInputReader {
   private devices: HIDDevice[] = [];
   private states = new Map<string, WebHidInputState>();
   private listeners = new Set<WebHidStateListener>();
+  private rawListeners = new Set<WebHidRawListener>();
   private diagListeners = new Set<WebHidDiagListener>();
   private diagLog: string[] = [];
   private connected = false;
@@ -164,6 +174,12 @@ class WebHidInputReader {
   onInput(listener: WebHidStateListener): () => void {
     this.listeners.add(listener);
     return () => { this.listeners.delete(listener); };
+  }
+
+  /** Subscribe to raw HID reports (for calibration) */
+  onRawReport(listener: WebHidRawListener): () => void {
+    this.rawListeners.add(listener);
+    return () => { this.rawListeners.delete(listener); };
   }
 
   /** Subscribe to diagnostic messages */
@@ -259,6 +275,13 @@ class WebHidInputReader {
   private handleInputReport(device: HIDDevice, event: HIDInputReportEvent): void {
     const { reportId, data } = event;
     const deviceKey = `${device.vendorId.toString(16)}:${device.productId.toString(16)}`;
+
+    // Emit raw report for calibration listeners
+    if (this.rawListeners.size > 0) {
+      const bytes = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+      const raw: WebHidRawReport = { deviceKey, reportId, bytes: new Uint8Array(bytes), timestamp: performance.now() };
+      for (const cb of this.rawListeners) cb(raw);
+    }
 
     let parsed: { buttons: boolean[]; axes: number[] } | null = null;
 

@@ -9,6 +9,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { webHidReader } from '../../../lib/game/webhid-input-reader';
 import type { WebHidInputState } from '../../../lib/game/webhid-input-reader';
+import { HidCalibrationWizard } from './HidCalibrationWizard';
+import type { HidControllerMap } from './HidCalibrationWizard';
 import './InputTester.css';
 
 interface GamepadSnapshot {
@@ -145,6 +147,15 @@ export function InputTester(): JSX.Element {
     setWebHidDiag([...webHidReader.getDiagLog()]);
   };
 
+  // Calibration wizard state
+  const [calibrating, setCalibrating] = useState(false);
+  const [lastCalibration, setLastCalibration] = useState<HidControllerMap | null>(null);
+
+  const handleCalibrationComplete = (map: HidControllerMap) => {
+    setLastCalibration(map);
+    setCalibrating(false);
+  };
+
   const anyInput = gamepads.some(gp =>
     gp.buttons.some(b => b.pressed || b.value > 0.1) ||
     gp.axes.some(a => Math.abs(a) > 0.1)
@@ -243,12 +254,53 @@ export function InputTester(): JSX.Element {
         </div>
       ))}
 
+      {/* Calibration Wizard (shown when active) */}
+      {calibrating && (
+        <HidCalibrationWizard
+          onComplete={handleCalibrationComplete}
+          onCancel={() => setCalibrating(false)}
+        />
+      )}
+
+      {/* Last calibration result */}
+      {lastCalibration && !calibrating && (
+        <div className="input-tester__hid-section" style={{ border: '2px solid #4ade80' }}>
+          <h3 style={{ color: '#4ade80' }}>Calibration Result</h3>
+          <div style={{ fontSize: 11, color: '#888', marginBottom: 8 }}>
+            {lastCalibration.name} — {Object.keys(lastCalibration.buttons).length} buttons, {Object.keys(lastCalibration.axes).length} axes
+          </div>
+          <pre style={{ fontSize: 10, background: '#1e1e2e', padding: 8, borderRadius: 4, maxHeight: 300, overflow: 'auto', color: '#e2e8f0' }}>
+            {JSON.stringify(lastCalibration, null, 2)}
+          </pre>
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText(JSON.stringify(lastCalibration, null, 2));
+            }}
+            style={{ padding: '4px 12px', fontSize: 11, marginTop: 8, background: '#4ade80', color: '#000', border: 'none', borderRadius: 4, cursor: 'pointer' }}
+          >
+            Copy JSON
+          </button>
+        </div>
+      )}
+
       {/* WebHID Controller Input (Switch Pro, etc.) */}
       <div className="input-tester__hid-section">
         <h3>WebHID Controller Input</h3>
         <div style={{ marginBottom: 8, display: 'flex', gap: 8, alignItems: 'center' }}>
           <button onClick={handleWebHidConnect} style={{ padding: '4px 12px', fontSize: 12 }}>
             Connect HID Controller
+          </button>
+          <button
+            onClick={() => setCalibrating(true)}
+            disabled={!webHidConnected}
+            style={{
+              padding: '4px 12px', fontSize: 12,
+              background: webHidConnected ? '#818cf8' : '#4a4a5a',
+              color: '#fff', border: 'none', borderRadius: 4,
+              cursor: webHidConnected ? 'pointer' : 'not-allowed',
+            }}
+          >
+            Calibrate Controller
           </button>
           <span style={{ fontSize: 11, color: webHidConnected ? '#4ade80' : '#f87171' }}>
             {webHidConnected ? '● Connected' : '○ Not connected'}

@@ -1,0 +1,34 @@
+{
+  "id": "xbox-one",
+  "name": "Xbox One / Series Controller",
+  "vendorId": "045e",
+  "productId": "028e",
+  "family": "xbox",
+  "inputApi": "xinput",
+  "buttons": [
+    { "id": "a",       "label": "A",         "icon": "xbox-a",      "category": "face" },
+    { "id": "b",       "label": "B",         "icon": "xbox-b",      "category": "face" },
+    { "id": "x",       "label": "X",         "icon": "xbox-x",      "category": "face" },
+    { "id": "y",       "label": "Y",         "icon": "xbox-y",      "category": "face" },
+    { "id": "l",       "label": "LB",        "icon": "xbox-lb",     "category": "shoulder" },
+    { "id": "r",       "label": "RB",        "icon": "xbox-rb",     "category": "shoulder" },
+    { "id": "zl",      "label": "LT",        "icon": "xbox-lt",     "category": "trigger" },
+    { "id": "zr",      "label": "RT",        "icon": "xbox-rt",     "category": "trigger" },
+    { "id": "plus",    "label": "Menu",      "icon": "xbox-menu",   "category": "system" },
+    { "id": "minus",   "label": "View",      "icon": "xbox-view",   "category": "system" },
+    { "id": "lstick",  "label": "L Stick",   "icon": "xbox-ls",     "category": "stick" },
+    { "id": "rstick",  "label": "R Stick",   "icon": "xbox-rs",     "category": "stick" },
+    { "id": "dpUp",    "label": "D-Up",      "icon": "xbox-dup",    "category": "dpad" },
+    { "id": "dpDown",  "label": "D-Down",    "icon": "xbox-ddown",  "category": "dpad" },
+    { "id": "dpLeft",  "label": "D-Left",    "icon": "xbox-dleft",  "category": "dpad" },
+    { "id": "dpRight", "label": "D-Right",   "icon": "xbox-dright", "category": "dpad" },
+    { "id": "home",    "label": "Xbox",      "icon": "xbox-home",   "category": "system" },
+    { "id": "share",   "label": "Share",     "icon": "xbox-share",  "category": "system" }
+  ],
+  "axes": [
+    { "id": "leftX",  "label": "Left Stick X",  "category": "stick" },
+    { "id": "leftY",  "label": "Left Stick Y",  "category": "stick" },
+    { "id": "rightX", "label": "Right Stick X",  "category": "stick" },
+    { "id": "rightY", "label": "Right Stick Y",  "category": "stick" }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "switch-pro-2",
+  "name": "Nintendo Switch Pro Controller 2",
+  "vendorId": "057e",
+  "productId": "2069",
+  "family": "nintendo",
+  "inputApi": "hid",
+  "buttons": [
+    { "id": "a",       "label": "A",       "icon": "switch-a",      "category": "face" },
+    { "id": "b",       "label": "B",       "icon": "switch-b",      "category": "face" },
+    { "id": "x",       "label": "X",       "icon": "switch-x",      "category": "face" },
+    { "id": "y",       "label": "Y",       "icon": "switch-y",      "category": "face" },
+    { "id": "l",       "label": "L",       "icon": "switch-l",      "category": "shoulder" },
+    { "id": "r",       "label": "R",       "icon": "switch-r",      "category": "shoulder" },
+    { "id": "zl",      "label": "ZL",      "icon": "switch-zl",     "category": "trigger" },
+    { "id": "zr",      "label": "ZR",      "icon": "switch-zr",     "category": "trigger" },
+    { "id": "plus",    "label": "+",       "icon": "switch-plus",   "category": "system" },
+    { "id": "minus",   "label": "−",       "icon": "switch-minus",  "category": "system" },
+    { "id": "lstick",  "label": "L Stick", "icon": "switch-ls",     "category": "stick" },
+    { "id": "rstick",  "label": "R Stick", "icon": "switch-rs",     "category": "stick" },
+    { "id": "dpUp",    "label": "D-Up",    "icon": "switch-dup",    "category": "dpad" },
+    { "id": "dpDown",  "label": "D-Down",  "icon": "switch-ddown",  "category": "dpad" },
+    { "id": "dpLeft",  "label": "D-Left",  "icon": "switch-dleft",  "category": "dpad" },
+    { "id": "dpRight", "label": "D-Right", "icon": "switch-dright", "category": "dpad" },
+    { "id": "home",    "label": "Home",    "icon": "switch-home",   "category": "system" },
+    { "id": "capture", "label": "Capture", "icon": "switch-capture","category": "system" }
+  ],
+  "axes": [
+    { "id": "leftX",  "label": "Left Stick X",  "category": "stick" },
+    { "id": "leftY",  "label": "Left Stick Y",  "category": "stick" },
+    { "id": "rightX", "label": "Right Stick X",  "category": "stick" },
+    { "id": "rightY", "label": "Right Stick Y",  "category": "stick" }
+  ]
+}

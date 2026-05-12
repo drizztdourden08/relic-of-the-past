@@ -1,0 +1,33 @@
+{
+  "id": "generic",
+  "name": "Generic Controller",
+  "vendorId": null,
+  "productId": null,
+  "family": "generic",
+  "inputApi": "webapi",
+  "buttons": [
+    { "id": "a",       "label": "Button 1 (South)", "icon": "generic-a",     "category": "face" },
+    { "id": "b",       "label": "Button 2 (East)",  "icon": "generic-b",     "category": "face" },
+    { "id": "x",       "label": "Button 3 (West)",  "icon": "generic-x",     "category": "face" },
+    { "id": "y",       "label": "Button 4 (North)", "icon": "generic-y",     "category": "face" },
+    { "id": "l",       "label": "Left Bumper",      "icon": "generic-l",     "category": "shoulder" },
+    { "id": "r",       "label": "Right Bumper",     "icon": "generic-r",     "category": "shoulder" },
+    { "id": "zl",      "label": "Left Trigger",     "icon": "generic-zl",    "category": "trigger" },
+    { "id": "zr",      "label": "Right Trigger",    "icon": "generic-zr",    "category": "trigger" },
+    { "id": "plus",    "label": "Start / Menu",     "icon": "generic-start", "category": "system" },
+    { "id": "minus",   "label": "Select / Back",    "icon": "generic-select","category": "system" },
+    { "id": "lstick",  "label": "Left Stick Click", "icon": "generic-ls",    "category": "stick" },
+    { "id": "rstick",  "label": "Right Stick Click","icon": "generic-rs",    "category": "stick" },
+    { "id": "dpUp",    "label": "D-Pad Up",         "icon": "generic-dup",   "category": "dpad" },
+    { "id": "dpDown",  "label": "D-Pad Down",       "icon": "generic-ddown", "category": "dpad" },
+    { "id": "dpLeft",  "label": "D-Pad Left",       "icon": "generic-dleft", "category": "dpad" },
+    { "id": "dpRight", "label": "D-Pad Right",      "icon": "generic-dright","category": "dpad" },
+    { "id": "home",    "label": "Home / Guide",     "icon": "generic-home",  "category": "system" }
+  ],
+  "axes": [
+    { "id": "leftX",  "label": "Left Stick X",  "category": "stick" },
+    { "id": "leftY",  "label": "Left Stick Y",  "category": "stick" },
+    { "id": "rightX", "label": "Right Stick X",  "category": "stick" },
+    { "id": "rightY", "label": "Right Stick Y",  "category": "stick" }
+  ]
+}
