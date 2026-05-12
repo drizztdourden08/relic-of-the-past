@@ -1,0 +1,247 @@
+.input-tester {
+  padding: 24px;
+  height: 100%;
+  overflow-y: auto;
+  color: #e0e0e0;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 13px;
+}
+
+.input-tester__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.input-tester__title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.input-tester__status {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: #1a1a2e;
+}
+
+.input-tester__status--polling {
+  color: #4cff4c;
+  border: 1px solid #4cff4c44;
+}
+
+.input-tester__status--idle {
+  color: #ffcc00;
+  border: 1px solid #ffcc0044;
+}
+
+.input-tester__event-log {
+  margin-bottom: 20px;
+  padding: 12px;
+  background: #0d0d1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.input-tester__event-log h3 {
+  margin: 0 0 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #888;
+  letter-spacing: 0.5px;
+}
+
+.input-tester__event-entry {
+  font-size: 11px;
+  line-height: 1.6;
+  color: #aaa;
+}
+
+.input-tester__event-entry--connect {
+  color: #4cff4c;
+}
+
+.input-tester__event-entry--disconnect {
+  color: #ff4c4c;
+}
+
+.input-tester__no-gamepads {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+  font-size: 14px;
+}
+
+.input-tester__no-gamepads p {
+  margin: 8px 0;
+}
+
+.input-tester__gamepad {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #111122;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+.input-tester__gamepad-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.input-tester__gamepad-index {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: #2a2a4a;
+  color: #aaa;
+}
+
+.input-tester__gamepad-id {
+  font-size: 12px;
+  color: #ccc;
+  word-break: break-all;
+}
+
+.input-tester__gamepad-mapping {
+  font-size: 11px;
+  color: #666;
+  margin-left: auto;
+}
+
+.input-tester__section-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.input-tester__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.input-tester__button {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  transition: background 0.05s, color 0.05s;
+}
+
+.input-tester__button--idle {
+  background: #1a1a2e;
+  color: #555;
+  border: 1px solid #333;
+}
+
+.input-tester__button--pressed {
+  background: #4cff4c;
+  color: #000;
+  border: 1px solid #4cff4c;
+  box-shadow: 0 0 8px #4cff4c88;
+}
+
+.input-tester__button--touched {
+  background: #2a4a2a;
+  color: #4cff4c;
+  border: 1px solid #4cff4c66;
+}
+
+.input-tester__axes {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.input-tester__axis {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-tester__axis-label {
+  font-size: 10px;
+  color: #666;
+  width: 20px;
+}
+
+.input-tester__axis-bar {
+  width: 100px;
+  height: 12px;
+  background: #1a1a2e;
+  border: 1px solid #333;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.input-tester__axis-fill {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: #6c6cff;
+  border-radius: 6px;
+  transition: width 0.02s, left 0.02s;
+}
+
+.input-tester__axis-value {
+  font-size: 10px;
+  color: #888;
+  width: 50px;
+  text-align: right;
+}
+
+.input-tester__raw {
+  margin-top: 8px;
+  padding: 8px;
+  background: #0d0d1a;
+  border: 1px solid #222;
+  border-radius: 4px;
+  font-size: 10px;
+  color: #666;
+  max-height: 60px;
+  overflow-y: auto;
+  word-break: break-all;
+}
+
+.input-tester__hid-section {
+  margin-top: 20px;
+  padding: 16px;
+  background: #111122;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+.input-tester__hid-section h3 {
+  margin: 0 0 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.input-tester__hid-device {
+  padding: 6px 0;
+  border-bottom: 1px solid #222;
+  font-size: 11px;
+}
+
+.input-tester__hid-device:last-child {
+  border-bottom: none;
+}

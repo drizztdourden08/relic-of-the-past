@@ -37,7 +37,7 @@ Electron App
 │  ├─ Audio
 │  ├─ Input
 │  ├─ Save System
-│  └─ Randomizer Hooks
+│  └─ Game Hooks
 │
 └─ Local Filesystem
    ├─ assets.dat
@@ -83,7 +83,7 @@ project-root/
 ├─ core/
 │  ├─ zelda3/
 │  ├─ wasm-build/
-│  └─ randomizer-hooks/
+│  └─ game-hooks/
 │
 ├─ shared/
 │  ├─ types/

@@ -1,0 +1,83 @@
+.binding-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  transition: background 0.1s;
+}
+
+.binding-row:last-child {
+  border-bottom: none;
+}
+
+.binding-row:hover {
+  background: var(--color-bg-elevated);
+}
+
+/* Icon slot — fixed width so layout doesn't shift when icons are null */
+.binding-row__icon-slot {
+  width: 32px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.binding-row__icon-img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.binding-row__icon-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-deep);
+  padding: 1px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.binding-row__snes-label {
+  width: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  flex-shrink: 0;
+}
+
+.binding-row__binding-label {
+  flex: 1;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-family: monospace;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.binding-row__rebind-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md, 6px);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: color 0.12s, border-color 0.12s, background 0.12s;
+}
+
+.binding-row__rebind-btn:hover {
+  color: var(--color-gold-base);
+  border-color: var(--color-gold-base);
+  background: var(--color-gold-glow);
+}

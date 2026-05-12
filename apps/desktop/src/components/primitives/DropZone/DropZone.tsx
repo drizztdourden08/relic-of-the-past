@@ -83,6 +83,7 @@ export function DropZone({
       <span className="dropzone__icon">📦</span>
       <span className="dropzone__label">{label}</span>
       {hint && <span className="dropzone__hint">{hint}</span>}
+      <span className="dropzone__hint" style={{ marginTop: '2px', opacity: 0.6 }}>or click to browse files</span>
       <input
         ref={inputRef}
         type="file"

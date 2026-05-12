@@ -255,7 +255,7 @@ export function ProfileHub({
           <GameplaySettings settings={settings} onChange={handleSettingsChange} />
         )}
         {activeTab === 'controls' && (
-          <ControlsSettings settings={settings} onChange={handleSettingsChange} />
+          <ControlsSettings settings={settings} onChange={handleSettingsChange} profileId={profile.id} />
         )}
       </div>
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />

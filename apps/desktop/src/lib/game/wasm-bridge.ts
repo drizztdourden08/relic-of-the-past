@@ -43,3 +43,13 @@ export function subscribeGameState(fn: GameStateListener): () => void {
   listeners.add(fn);
   return () => listeners.delete(fn);
 }
+
+/**
+ * Push a SNES input bitmask to the running WASM module.
+ * Called by InputManager each frame.
+ */
+export function setInput(mask: number): void {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return;
+  mod.ccall('WasmSetInput', null, ['number'], [mask]);
+}

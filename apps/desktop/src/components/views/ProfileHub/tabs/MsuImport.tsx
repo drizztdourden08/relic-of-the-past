@@ -48,7 +48,7 @@ export function MsuImport({ profileId }: MsuImportProps) {
 
     try {
       // Use the file path from Electron's File object
-      const filePath = (files[0] as any).path as string;
+      const filePath = window.api.getFilePath(files[0]);
       if (!filePath) {
         setStatus({ message: 'Could not read file path', variant: 'error' });
         return;

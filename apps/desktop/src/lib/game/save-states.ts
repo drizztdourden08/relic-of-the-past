@@ -4,6 +4,7 @@
 
 import { log } from '../log-bus';
 import { getModule, getProfileId } from './wasm-bridge';
+import { pollInventoryState } from './tracker';
 
 function captureScreenshot(): Promise<Blob | null> {
   const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
@@ -93,6 +94,10 @@ export async function loadState(slot: number): Promise<boolean> {
     log.app(`[LoadState] Calling ccall('WasmLoadState', slot=${slot})...`);
     mod.ccall('WasmLoadState', null, ['number'], [slot]);
     log.app(`[LoadState] ccall returned — state loaded ✓`);
+
+    // Force inventory poll so tracker reflects the loaded state
+    pollInventoryState(true);
+
     return true;
   } catch (err) {
     log.error(`[LoadState] EXCEPTION: ${err instanceof Error ? err.message : String(err)}`);

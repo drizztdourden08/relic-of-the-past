@@ -56,6 +56,9 @@ export const DEFAULT_SETTINGS: GameSettings = {
   enableMSU: 'false',
   resumeMSU: true,
   msuVolume: 100,
+
+  // Controls
+  activeInputProfileId: null,
 };
 
 function boolToIni(v: boolean): string {
@@ -63,7 +66,7 @@ function boolToIni(v: boolean): string {
 }
 
 /** Serialize GameSettings to a zelda3.ini string for WASM consumption. */
-export function serializeToIni(settings: GameSettings): string {
+export function serializeToIni(settings: GameSettings, msuPath?: string): string {
   // Build ExtendedAspectRatio value with modifiers
   const parts: string[] = [];
   if (settings.extendY) parts.push('extend_y');
@@ -97,7 +100,8 @@ AudioSamples = ${settings.audioSamples}
 EnableMSU = ${settings.enableMSU}
 ResumeMSU = ${boolToIni(settings.resumeMSU)}
 MSUVolume = ${settings.msuVolume}
-
+${msuPath ? `MSUPath = ${msuPath}
+` : ''}
 [Features]
 ItemSwitchLR = ${boolToIni(settings.itemSwitchLR)}
 ItemSwitchLRLimit = ${boolToIni(settings.itemSwitchLRLimit)}

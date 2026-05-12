@@ -1,0 +1,42 @@
+.binding-listener-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.binding-listener {
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-gold-base);
+  border-radius: var(--radius-lg, 8px);
+  padding: 32px 48px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(200, 168, 78, 0.15);
+  animation: binding-listener-pulse 1.5s ease-in-out infinite;
+}
+
+.binding-listener__prompt {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: 8px;
+}
+
+.binding-listener__label {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--color-gold-bright);
+  margin-bottom: 16px;
+}
+
+.binding-listener__hint {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+@keyframes binding-listener-pulse {
+  0%, 100% { border-color: var(--color-gold-base); }
+  50% { border-color: var(--color-gold-dim); }
+}

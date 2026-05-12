@@ -6,19 +6,36 @@
 import { log } from '../log-bus';
 import type { EmscriptenModule } from './types';
 import { DEFAULT_ZELDA3_INI } from './config';
-import { getModule, setModule, setProfileId, getProfileId, setState } from './wasm-bridge';
+import { getModule, setModule, setProfileId, getProfileId, setState, setInput } from './wasm-bridge';
 import { startSramSync, stopSramSync } from './sram-sync';
-import { setItemOverride } from './randomizer';
 import { resetMasterVolume } from './audio-volume';
+import { initTrackerBridge, destroyTrackerBridge } from './tracker';
+import { getInputManager } from './input-manager';
 
 declare function Zelda3(config: Record<string, unknown>): Promise<EmscriptenModule>;
+
+// ─── MSU data staging ───
+export interface MsuTrackData {
+  num: number;
+  ext: string;
+  data: Uint8Array;
+}
+
+let pendingMsuData: MsuTrackData[] | null = null;
+
+/** Stage MSU track data to be written to MEMFS during game start. */
+export function setMsuData(data: MsuTrackData[] | null): void {
+  pendingMsuData = data;
+}
 
 let activeCrashHandler: ((e: ErrorEvent) => void) | null = null;
 let startGeneration = 0;
 
 export function resetGame(): void {
   stopSramSync();
+  destroyTrackerBridge();
   resetMasterVolume();
+  getInputManager().stop();
   if (activeCrashHandler) {
     window.removeEventListener('error', activeCrashHandler);
     activeCrashHandler = null;
@@ -112,6 +129,16 @@ export async function startGame(
         if (sramData) {
           mod.FS.writeFile('/saves/sram.dat', sramData);
         }
+        // Write MSU pack files to MEMFS
+        if (pendingMsuData && pendingMsuData.length > 0) {
+          try { mod.FS.mkdir('/msu'); } catch { /* may exist */ }
+          log.app(`[MSU] Writing ${pendingMsuData.length} tracks to MEMFS...`);
+          for (const track of pendingMsuData) {
+            mod.FS.writeFile(`/msu/${track.num}.${track.ext}`, track.data);
+          }
+          log.app(`[MSU] All tracks written to MEMFS`);
+          pendingMsuData = null; // Free staging memory
+        }
       }],
       print: (text: string) => log.core(text),
       printErr: (text: string) => log.core(text, 'error'),
@@ -124,8 +151,13 @@ export async function startGame(
     log.wasm('WASM module running');
     canvas.focus();
 
-    // ─── Randomizer POC: override Link's house chest (lamp → heart piece) ───
-    setItemOverride(260, 0x12, 0x17);
+    // ─── Input manager: wire JS-driven input to WASM ───
+    const inputMgr = getInputManager();
+    inputMgr.setWasmBridge(setInput);
+    inputMgr.start();
+
+    // ─── Tracker bridge: wire up item/inventory notifications ───
+    initTrackerBridge();
 
     if (getProfileId()) {
       startSramSync();

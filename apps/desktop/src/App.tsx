@@ -5,12 +5,15 @@ import { GameLayer } from './components/views/GameLayer';
 import { SaveStateOverlay } from './components/views/SaveStateOverlay/SaveStateOverlay';
 import { ProfilePicker } from './components/views/ProfilePicker';
 import { ProfileHub } from './components/views/ProfileHub';
+import { DataManager } from './components/views/DataManager';
 import { LogOverlay } from './components/views/LogOverlay';
+import { TrackerView } from './components/views/TrackerView/TrackerView';
+import { InputTester } from './components/views/InputTester';
 import { FullScreenLayer } from './components/composites/FullScreenLayer';
 import { Dialog } from './components/composites/Dialog';
 import { log } from './lib/log-bus';
 import type { LogChannel, LogLevel } from './lib/log-bus';
-import { subscribeGameState, resetGame, setMasterVolume } from './lib/game';
+import { subscribeGameState, resetGame, setMasterVolume, setMsuData } from './lib/game';
 import { serializeToIni, mergeSettings } from './lib/game/settings';
 import './App.css';
 
@@ -42,7 +45,7 @@ function syncAspectRatioLock(constraint: GameSettings['viewportConstraint'], asp
   window.api.setAspectRatioLock(ratio, extra);
 }
 
-type PageId = 'none' | 'picker' | 'profile';
+type PageId = 'none' | 'picker' | 'profile' | 'data' | 'input-tester';
 
 interface ConfirmDialog {
   title: string;
@@ -63,6 +66,7 @@ export function App(): JSX.Element {
   const [loadingProfile, setLoadingProfile] = useState<string | null>(null);
   const [showLogs, setShowLogs] = useState(false);
   const [showSaveStates, setShowSaveStates] = useState(false);
+  const [showTracker, setShowTracker] = useState(false);
   const [dialog, setDialog] = useState<ConfirmDialog | null>(null);
   const [gameCrashed, setGameCrashed] = useState(false);
   const [configIni, setConfigIni] = useState<string | undefined>(undefined);
@@ -75,6 +79,7 @@ export function App(): JSX.Element {
   const prevVolumeRef = useRef(100);
   const [muteOverride, setMuteOverride] = useState<{ volume: number; version: number } | null>(null);
   const muteVersionRef = useRef(0);
+  const [dataTab, setDataTab] = useState<string>('profiles');
 
   // When windowMode changes, sync Electron (borderless = no frame, default = framed)
   const handleWindowModeChange = useCallback((mode: GameSettings['windowMode']) => {
@@ -213,6 +218,13 @@ export function App(): JSX.Element {
         return;
       }
 
+      // If data page is open, close it
+      if (activePage === 'data') {
+        e.preventDefault();
+        setActivePage(activeProfile ? 'none' : 'picker');
+        return;
+      }
+
       // If profile page is open, close it
       if (activePage === 'profile') {
         e.preventDefault();
@@ -249,7 +261,43 @@ export function App(): JSX.Element {
     // Load profile settings and serialize to INI for WASM
     const savedSettings = await window.api.readConfig(profile.id);
     const settings = mergeSettings((savedSettings ?? {}) as any);
-    const ini = serializeToIni(settings);
+
+    // Load MSU pack into staging memory if enabled
+    if (profile.msuPack && settings.enableMSU !== 'false') {
+      log.app(`[MSU] Loading pack "${profile.msuPack}"...`);
+      try {
+        const trackList = await window.api.getMsuTrackList(profile.msuPack);
+        if (trackList.length > 0) {
+          const tracks: { num: number; ext: string; data: Uint8Array }[] = [];
+          // Load files in batches of 5 for efficiency
+          for (let i = 0; i < trackList.length; i += 5) {
+            const batch = trackList.slice(i, i + 5);
+            const results = await Promise.all(
+              batch.map((t) => window.api.readMsuTrackFile(profile.msuPack!, t.fileName)),
+            );
+            for (let j = 0; j < batch.length; j++) {
+              tracks.push({ num: batch[j].trackNum, ext: batch[j].ext, data: new Uint8Array(results[j]) });
+            }
+          }
+          setMsuData(tracks);
+          // Auto-detect deluxe packs (tracks >= 37)
+          const hasDeluxe = tracks.some((t) => t.num >= 37);
+          if (hasDeluxe && settings.enableMSU === 'true') {
+            settings.enableMSU = 'deluxe';
+            log.app(`[MSU] Deluxe pack detected — upgraded EnableMSU to 'deluxe'`);
+          }
+          log.app(`[MSU] Loaded ${tracks.length} tracks (${(tracks.reduce((s, t) => s + t.data.byteLength, 0) / (1024 * 1024)).toFixed(0)} MB)`);
+        }
+      } catch (err) {
+        log.error(`[MSU] Failed to load pack: ${err instanceof Error ? err.message : err}`);
+        setMsuData(null);
+      }
+    } else {
+      setMsuData(null);
+    }
+
+    const msuPath = (profile.msuPack && settings.enableMSU !== 'false') ? '/msu/' : undefined;
+    const ini = serializeToIni(settings, msuPath);
     setConfigIni(ini);
     setWindowMode(settings.windowMode);
     setViewportConstraint(settings.viewportConstraint);
@@ -418,8 +466,8 @@ export function App(): JSX.Element {
   }, []);
 
   // ─── Create profile (no auto-start) ───
-  const handleCreateProfile = useCallback(async (name: string, romFile: string) => {
-    const profile = await window.api.createProfile(name, romFile);
+  const handleCreateProfile = useCallback(async (name: string, romFile: string, language?: string, msuPack?: string) => {
+    const profile = await window.api.createProfile(name, romFile, language, msuPack);
     log.app(`Created profile: ${profile.name}`);
     await refreshLists();
     setActiveProfile(profile);
@@ -478,6 +526,24 @@ export function App(): JSX.Element {
     }
   }, [activeProfile, refreshLists]);
 
+  // ─── Show data manager ───
+  const handleShowDataManager = useCallback(async (tab?: string) => {
+    if (tab) setDataTab(tab);
+    await refreshLists();
+    setActivePage('data');
+  }, [refreshLists]);
+
+  // ─── Delete confirm helper for sub-components ───
+  const handleDeleteConfirm = useCallback((title: string, message: string, onConfirm: () => void) => {
+    setDialog({
+      title,
+      message,
+      confirmLabel: 'Delete',
+      variant: 'danger',
+      onConfirm: () => { setDialog(null); onConfirm(); },
+    });
+  }, []);
+
   // ─── Start game from profile page ───
   const handleStartGame = useCallback(() => {
     if (activeProfile) {
@@ -511,6 +577,9 @@ export function App(): JSX.Element {
         onShowProfile={handleShowProfile}
         onShowLogs={() => setShowLogs((v) => !v)}
         onToggleSaveStates={() => setShowSaveStates((v) => !v)}
+        onToggleTracker={() => setShowTracker((v) => !v)}
+        onShowDataManager={handleShowDataManager}
+        onShowInputTester={() => setActivePage('input-tester')}
         activeProfile={activeProfile}
         gameRunning={isGameRunning}
         windowMode={windowMode}
@@ -521,7 +590,7 @@ export function App(): JSX.Element {
 
       <div className="app__content">
         {/* Game canvas — always present as background layer */}
-        <GameLayer assetData={assetData} configIni={configIni} profileId={activeProfile?.id} stretch={viewportConstraint === 'fill'} />
+        <GameLayer assetData={assetData} configIni={configIni} profileId={activeProfile?.id} stretch={viewportConstraint !== 'none'} />
 
         {/* Save State Overlay */}
         <SaveStateOverlay
@@ -564,7 +633,35 @@ export function App(): JSX.Element {
           </FullScreenLayer>
         )}
 
+        {activePage === 'data' && (
+          <FullScreenLayer onClose={closePage}>
+            <DataManager
+              profiles={profiles}
+              romStatuses={romDisplayInfos}
+              onSelectProfile={handleSelectProfile}
+              onCreateProfile={handleCreateProfile}
+              onDeleteProfile={handleDeleteProfile}
+              onImportRom={handleImportRom}
+              onExtractAssets={handleExtractAssets}
+              onDeleteRom={handleDeleteRom}
+              onRefresh={refreshLists}
+              onDeleteConfirm={handleDeleteConfirm}
+              loadingProfile={loadingProfile}
+              initialTab={dataTab as any}
+              isGameRunning={isGameRunning}
+              onSwitchProfile={handleShowPicker}
+            />
+          </FullScreenLayer>
+        )}
+
+        {activePage === 'input-tester' && (
+          <FullScreenLayer onClose={closePage}>
+            <InputTester />
+          </FullScreenLayer>
+        )}
+
         <LogOverlay visible={showLogs} onClose={() => setShowLogs(false)} />
+        <TrackerView visible={showTracker} onClose={() => setShowTracker(false)} />
       </div>
 
       <Dialog

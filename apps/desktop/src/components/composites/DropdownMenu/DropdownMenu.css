@@ -66,3 +66,14 @@
   background: var(--color-border-default);
   margin: var(--space-xs) var(--space-sm);
 }
+
+.dropdown__category {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  pointer-events: none;
+  margin-top: var(--space-xxs);
+}

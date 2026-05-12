@@ -1,0 +1,108 @@
+.assigned-controller {
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md, 6px);
+  background: var(--color-bg-raised);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.assigned-controller--disconnected {
+  border-color: var(--color-danger-base, #e94560);
+  opacity: 0.7;
+}
+
+.assigned-controller__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: var(--color-bg-elevated);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.assigned-controller__label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-secondary);
+}
+
+.assigned-controller__unassign {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: color 0.12s;
+}
+
+.assigned-controller__unassign:hover {
+  color: var(--color-danger-base, #e94560);
+}
+
+.assigned-controller__body {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+}
+
+.assigned-controller__status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.assigned-controller__status--connected {
+  background: #4ade80;
+  box-shadow: 0 0 6px rgba(74, 222, 128, 0.6);
+}
+
+.assigned-controller__status--detected {
+  background: #facc15;
+  box-shadow: 0 0 6px rgba(250, 204, 21, 0.4);
+  animation: pulse-assigned 2s ease-in-out infinite;
+}
+
+.assigned-controller__status--disconnected {
+  background: #ef4444;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+}
+
+@keyframes pulse-assigned {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.assigned-controller__icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  width: 28px;
+  text-align: center;
+}
+
+.assigned-controller__info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.assigned-controller__name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.assigned-controller__detail {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-family: monospace;
+}

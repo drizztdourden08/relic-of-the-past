@@ -11,8 +11,15 @@ interface MenuItem {
   onClick?: () => void;
 }
 
+interface CategoryHeader {
+  key: string;
+  category: string;
+}
+
+type MenuEntry = MenuItem | CategoryHeader | 'separator';
+
 interface DropdownMenuProps {
-  items: (MenuItem | 'separator')[];
+  items: MenuEntry[];
   anchorRef?: RefObject<HTMLElement | null>;
 }
 
@@ -33,6 +40,9 @@ export function DropdownMenu({ items, anchorRef }: DropdownMenuProps): JSX.Eleme
       {items.map((item, i) => {
         if (item === 'separator') {
           return <div key={`sep-${i}`} className="dropdown__separator" />;
+        }
+        if ('category' in item) {
+          return <div key={item.key} className="dropdown__category">{item.category}</div>;
         }
         return (
           <button

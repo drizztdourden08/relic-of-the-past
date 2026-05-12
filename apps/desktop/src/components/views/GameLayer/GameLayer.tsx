@@ -1,7 +1,8 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useGameState } from './behavior/useGameState';
-import { saveState, loadState } from '../../../lib/game';
+import { saveState, loadState, getInputManager } from '../../../lib/game';
 import { log } from '../../../lib/log-bus';
+import { ControllerDisconnectOverlay } from './ControllerDisconnectOverlay';
 import './GameLayer.css';
 
 interface GameLayerProps {
@@ -19,6 +20,8 @@ export function GameLayer({ assetData, configIni, profileId, stretch }: GameLaye
   // ensuring the new WASM instance gets a clean WebGL context.
   const [canvasKey, setCanvasKey] = useState(0);
   const hasStartedRef = useRef(false);
+  const [controllerPaused, setControllerPaused] = useState(false);
+  const [disconnectedName, setDisconnectedName] = useState('');
 
   // Scale canvas to fill the container while maintaining aspect ratio
   const fitCanvas = useCallback(() => {
@@ -114,6 +117,50 @@ export function GameLayer({ assetData, configIni, profileId, stretch }: GameLaye
     return () => window.removeEventListener('keydown', handleFKey, true);
   }, [status]);
 
+  // ─── Controller disconnect pause/resume ───
+  useEffect(() => {
+    if (status !== 'running') return;
+    const inputMgr = getInputManager();
+    const unsub = inputMgr.onPauseChange((paused, name) => {
+      setControllerPaused(paused);
+      setDisconnectedName(name);
+    });
+    return unsub;
+  }, [status]);
+
+  // F10 to toggle pause, double-click canvas to resume
+  useEffect(() => {
+    if (status !== 'running') return;
+
+    const handleF10 = (e: KeyboardEvent) => {
+      if (e.key === 'F10') {
+        e.preventDefault();
+        const inputMgr = getInputManager();
+        if (inputMgr.isPaused()) {
+          inputMgr.resume();
+        } else {
+          inputMgr.togglePause();
+        }
+      }
+    };
+
+    const handleDblClick = () => {
+      const inputMgr = getInputManager();
+      if (inputMgr.isPaused()) {
+        inputMgr.resume();
+      }
+    };
+
+    window.addEventListener('keydown', handleF10, true);
+    const canvas = canvasRef.current;
+    canvas?.addEventListener('dblclick', handleDblClick);
+
+    return () => {
+      window.removeEventListener('keydown', handleF10, true);
+      canvas?.removeEventListener('dblclick', handleDblClick);
+    };
+  }, [status, canvasKey]);
+
   // Draw placeholder when not running
   useEffect(() => {
     if (status === 'running') return;
@@ -148,6 +195,9 @@ export function GameLayer({ assetData, configIni, profileId, stretch }: GameLaye
         height={448}
         tabIndex={0}
       />
+      {controllerPaused && status === 'running' && disconnectedName !== 'Manual pause' && (
+        <ControllerDisconnectOverlay controllerName={disconnectedName} />
+      )}
     </div>
   );
 }

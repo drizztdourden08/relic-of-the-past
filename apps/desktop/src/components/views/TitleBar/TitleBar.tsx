@@ -13,6 +13,9 @@ interface TitleBarProps {
   onShowProfile: () => void;
   onShowLogs: () => void;
   onToggleSaveStates: () => void;
+  onToggleTracker: () => void;
+  onShowDataManager: (tab?: string) => void;
+  onShowInputTester: () => void;
   activeProfile: Profile | null;
   gameRunning: boolean;
   windowMode?: GameSettings['windowMode'];
@@ -27,6 +30,9 @@ export function TitleBar({
   onShowProfile,
   onShowLogs,
   onToggleSaveStates,
+  onToggleTracker,
+  onShowDataManager,
+  onShowInputTester,
   activeProfile,
   gameRunning,
   windowMode = 'default',
@@ -90,6 +96,7 @@ export function TitleBar({
   };
 
   const menuItems: (Parameters<typeof DropdownMenu>[0]['items'][number])[] = [
+    { key: 'cat-game', category: 'Game' },
     {
       key: 'home',
       icon: '🏠',
@@ -99,31 +106,66 @@ export function TitleBar({
       onClick: () => { closeMenu(); onShowProfile(); },
     },
     {
-      key: 'import',
-      icon: '📁',
-      label: 'Import ROM',
-      description: 'Add a new ROM file to the library',
-      onClick: () => { closeMenu(); onImportRom(); },
-    },
-    {
-      key: 'switch',
-      icon: '🎮',
-      label: activeProfile ? 'Switch Profile' : 'New Profile',
-      description: activeProfile
-        ? 'Choose a different profile or create a new one'
-        : 'Create a new save profile for a ROM',
-      onClick: () => { closeMenu(); onSwitchProfile(); },
+      key: 'save-states',
+      icon: '💾',
+      label: 'Save States',
+      description: 'Manage save states',
+      disabled: !gameRunning,
+      onClick: () => { closeMenu(); onToggleSaveStates(); },
     },
     'separator',
+    { key: 'cat-data', category: 'Data' },
+    {
+      key: 'profiles',
+      icon: '👤',
+      label: 'Profiles',
+      description: 'Manage game profiles',
+      onClick: () => { closeMenu(); onShowDataManager('profiles'); },
+    },
+    {
+      key: 'roms',
+      icon: '🎮',
+      label: 'ROMs',
+      description: 'Import and manage ROM files',
+      onClick: () => { closeMenu(); onShowDataManager('roms'); },
+    },
+    {
+      key: 'languages',
+      icon: '🌐',
+      label: 'Languages',
+      description: 'Extract and manage language packs',
+      onClick: () => { closeMenu(); onShowDataManager('languages'); },
+    },
+    {
+      key: 'msu',
+      icon: '🎵',
+      label: 'MSU',
+      description: 'Import MSU audio packs',
+      onClick: () => { closeMenu(); onShowDataManager('msu'); },
+    },
+    'separator',
+    { key: 'cat-tools', category: 'Tools' },
     {
       key: 'logs',
       icon: '📋',
-      label: 'Show Logs',
+      label: 'Logs',
       description: 'Toggle the log overlay',
       onClick: () => { closeMenu(); onShowLogs(); },
     },
-    { key: 'settings', icon: '⚙️', label: 'Settings', description: 'Configure game and app settings', disabled: true },
-    { key: 'about', icon: 'ℹ️', label: 'About', description: 'Version info and credits', disabled: true },
+    {
+      key: 'tracker',
+      icon: '🗺️',
+      label: 'Tracker',
+      description: 'Toggle the progress tracker',
+      onClick: () => { closeMenu(); onToggleTracker(); },
+    },
+    {
+      key: 'input-tester',
+      icon: '🕹️',
+      label: 'Input Tester',
+      description: 'Raw gamepad input diagnostics',
+      onClick: () => { closeMenu(); onShowInputTester(); },
+    },
     'separator',
     { key: 'quit', icon: '✕', label: 'Quit', onClick: () => window.api.close() },
   ];

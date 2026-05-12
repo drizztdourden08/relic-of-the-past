@@ -353,9 +353,6 @@ export async function startGame(
     log.wasm('WASM module running');
     canvas.focus();
 
-    // ─── Randomizer POC: override Link's house chest (lamp → heart piece) ───
-    setItemOverride(260, 0x12, 0x17);
-
     // Start periodic SRAM sync if we have a profile
     if (currentProfileId) {
       startSramSync();

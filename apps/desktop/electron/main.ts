@@ -1,9 +1,10 @@
-import { app, BrowserWindow, shell, ipcMain, dialog, net } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, dialog, net, Menu, session } from 'electron';
 import { join, basename, extname } from 'path';
-import { readFile, mkdir, writeFile, access, copyFile, rm, stat, readdir } from 'fs/promises';
+import { readFile, mkdir, writeFile, access, copyFile, rm, stat, readdir, rename } from 'fs/promises';
 import { createWriteStream } from 'fs';
 import { spawn } from 'child_process';
 import { pipeline } from 'stream/promises';
+import StreamZip from 'node-stream-zip';
 import { is } from '@electron-toolkit/utils';
 import {
   initProfileManager,
@@ -29,23 +30,29 @@ import {
   writeConfig,
   listSessions,
   saveSession,
+  saveTrackerState,
+  loadTrackerState,
+  readInputProfiles,
+  writeInputProfiles,
+  ensureDataDirectories,
+  migrateDataFolder,
 } from './profile-manager';
+import { enumerateControllers } from './hid-devices';
+import { hidInputReader } from './hid-input-reader';
 
 // Ensure consistent userData path across dev and production
 app.setName('alttp-pc');
 
+// Allow gamepad enumeration without requiring a button press first
+app.commandLine.appendSwitch('disable-features', 'RestrictGamepadAccess');
+
 let mainWindow: BrowserWindow | null = null;
 
 function getUserDataPath(...segments: string[]): string {
-  return join(app.getPath('userData'), ...segments);
+  return join(app.getPath('userData'), 'Data', ...segments);
 }
 
-async function ensureDirectories(): Promise<void> {
-  const dirs = ['assets', 'roms', 'profiles', 'config'];
-  for (const dir of dirs) {
-    await mkdir(getUserDataPath(dir), { recursive: true });
-  }
-}
+// ensureDirectories is now handled by profile-manager's ensureDataDirectories
 
 function createWindow(): void {
   const noFocus = process.argv.includes('--no-focus');
@@ -78,6 +85,42 @@ function createWindow(): void {
     if (input.type === 'keyDown' && /^F[1-4]$/.test(input.key)) {
       _event.preventDefault();
     }
+  });
+
+  // Allow gamepad and other device permissions for the renderer
+  mainWindow.webContents.session.setPermissionCheckHandler((_webContents, permission) => {
+    return true;
+  });
+  mainWindow.webContents.session.setPermissionRequestHandler((_webContents, permission, callback) => {
+    callback(true);
+  });
+
+  // WebHID: auto-select Nintendo controllers without showing the device picker
+  const NINTENDO_VID = 0x057E;
+  const ALLOWED_PIDS = new Set([0x2009, 0x2069, 0x2006, 0x2007, 0x2066, 0x2067, 0x2073]);
+  mainWindow.webContents.session.on('select-hid-device', (event, details, callback) => {
+    event.preventDefault();
+    const device = details.deviceList.find(
+      (d) => d.vendorId === NINTENDO_VID && ALLOWED_PIDS.has(d.productId)
+    );
+    if (device) {
+      callback(device.deviceId);
+    } else if (details.deviceList.length > 0) {
+      callback(details.deviceList[0].deviceId);
+    } else {
+      callback('');
+    }
+  });
+
+  // Persist device permissions so getDevices() works on subsequent launches
+  mainWindow.webContents.session.setDevicePermissionHandler((details) => {
+    if (details.deviceType === 'hid' && details.device) {
+      const d = details.device as { vendorId?: number; productId?: number };
+      if (d.vendorId === NINTENDO_VID && ALLOWED_PIDS.has(d.productId ?? 0)) {
+        return true;
+      }
+    }
+    return true;
   });
 
   if (process.argv.includes('--muted')) {
@@ -259,12 +302,61 @@ function registerIpcHandlers(): void {
     return result.filePaths[0];
   });
 
+  // ─── Shared archive / download helpers ───
+
+  const ROM_EXTENSIONS = new Set(['.sfc', '.smc']);
+
+  /** Extract a zip/archive to a temp directory using node-stream-zip and return the temp path. */
+  async function extractArchiveToTemp(archivePath: string): Promise<string> {
+    const tempDir = join(app.getPath('temp'), `archive-extract-${Date.now()}`);
+    await mkdir(tempDir, { recursive: true });
+    const zip = new StreamZip.async({ file: archivePath });
+    try {
+      await zip.extract(null, tempDir);
+    } finally {
+      await zip.close();
+    }
+    return tempDir;
+  }
+
+  /** Walk a directory recursively and return all files matching a set of extensions. */
+  async function walkFiles(dir: string, extensions?: Set<string>): Promise<string[]> {
+    const found: string[] = [];
+    const entries = await readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        found.push(...await walkFiles(full, extensions));
+      } else if (!extensions || extensions.has(extname(entry.name).toLowerCase())) {
+        found.push(full);
+      }
+    }
+    return found;
+  }
+
+  /** Download a URL to a temp file and return its path. */
+  async function downloadToTemp(url: string, suffix = '.zip'): Promise<string> {
+    const parsed = new URL(url);
+    if (!['http:', 'https:'].includes(parsed.protocol)) {
+      throw new Error('Only HTTP/HTTPS URLs are supported');
+    }
+    const tempFile = join(app.getPath('temp'), `dl-${Date.now()}${suffix}`);
+    const response = await net.fetch(url);
+    if (!response.ok) throw new Error(`Download failed: HTTP ${response.status}`);
+    const body = response.body;
+    if (!body) throw new Error('Empty response body');
+    const fileStream = createWriteStream(tempFile);
+    // @ts-expect-error - Node/Electron stream compatibility
+    await pipeline(body, fileStream);
+    return tempFile;
+  }
+
   // ─── Profile management ───
 
   ipcMain.handle('profiles:list', () => listProfiles());
 
-  ipcMain.handle('profiles:create', async (_event, name: string, romFile: string) => {
-    const profile = await createProfile(name, romFile);
+  ipcMain.handle('profiles:create', async (_event, name: string, romFile: string, language?: string, msuPack?: string) => {
+    const profile = await createProfile(name, romFile, language, msuPack);
     const appState = await loadAppState();
     appState.lastProfileId = profile.id;
     await saveAppState(appState);
@@ -319,23 +411,99 @@ function registerIpcHandlers(): void {
   });
 
   ipcMain.handle('roms:import', async (_event, romPath: string) => {
-    const romFileName = basename(romPath);
-    const localRomPath = getUserDataPath('roms', romFileName);
-
-    // Check if already imported
     try {
-      await access(localRomPath);
-      return { success: true, romFile: romFileName, alreadyExists: true };
-    } catch {
-      // Not imported yet
-    }
+      const ext = extname(romPath).toLowerCase();
 
-    try {
-      await copyFile(romPath, localRomPath);
-      return { success: true, romFile: romFileName, alreadyExists: false };
+      // If it's a direct ROM file, copy it
+      if (ROM_EXTENSIONS.has(ext)) {
+        const romFileName = basename(romPath);
+        const localRomPath = getUserDataPath('roms', romFileName);
+        try {
+          await access(localRomPath);
+          return { success: true, romFile: romFileName, alreadyExists: true };
+        } catch { /* not imported yet */ }
+        await copyFile(romPath, localRomPath);
+        return { success: true, romFile: romFileName, alreadyExists: false };
+      }
+
+      // Archive — extract and find ROM inside
+      if (ext === '.zip' || ext === '.7z' || ext === '.rar') {
+        const tempDir = await extractArchiveToTemp(romPath);
+        try {
+          const romFiles = await walkFiles(tempDir, ROM_EXTENSIONS);
+          if (romFiles.length === 0) {
+            return { success: false, error: 'No ROM file (.sfc/.smc) found inside the archive', romFile: '' };
+          }
+          if (romFiles.length > 1) {
+            return { success: false, error: `Multiple ROM files found inside the archive (${romFiles.length}). Archives must contain exactly one ROM.`, romFile: '' };
+          }
+          const foundRom = romFiles[0];
+          const romFileName = basename(foundRom);
+          const localRomPath = getUserDataPath('roms', romFileName);
+          try {
+            await access(localRomPath);
+            return { success: true, romFile: romFileName, alreadyExists: true };
+          } catch { /* not imported yet */ }
+          await copyFile(foundRom, localRomPath);
+          return { success: true, romFile: romFileName, alreadyExists: false };
+        } finally {
+          await rm(tempDir, { recursive: true, force: true }).catch(() => {});
+        }
+      }
+
+      return { success: false, error: 'Unsupported file type. Use .sfc, .smc, .zip, .7z, or .rar files.', romFile: '' };
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      return { success: false, error: msg, romFile: romFileName };
+      return { success: false, error: msg, romFile: '' };
+    }
+  });
+
+  ipcMain.handle('roms:importUrl', async (_event, url: string) => {
+    try {
+      const tempFile = await downloadToTemp(url, '.zip');
+      try {
+        // Try to extract as archive first
+        const tempDir = await extractArchiveToTemp(tempFile);
+        try {
+          const romFiles = await walkFiles(tempDir, ROM_EXTENSIONS);
+          if (romFiles.length === 0) {
+            return { success: false, error: 'No ROM file (.sfc/.smc) found in the downloaded archive', romFile: '' };
+          }
+          if (romFiles.length > 1) {
+            return { success: false, error: `Multiple ROM files found (${romFiles.length}). Archives must contain exactly one ROM.`, romFile: '' };
+          }
+          const foundRom = romFiles[0];
+          const romFileName = basename(foundRom);
+          const localRomPath = getUserDataPath('roms', romFileName);
+          try {
+            await access(localRomPath);
+            return { success: true, romFile: romFileName, alreadyExists: true };
+          } catch { /* not imported yet */ }
+          await copyFile(foundRom, localRomPath);
+          return { success: true, romFile: romFileName, alreadyExists: false };
+        } finally {
+          await rm(tempDir, { recursive: true, force: true }).catch(() => {});
+        }
+      } catch {
+        // Not a valid archive — check if it's a raw ROM
+        const s = await stat(tempFile);
+        if (s.size > 0 && s.size <= 8 * 1024 * 1024) {
+          // Guess filename from URL
+          const urlPath = new URL(url).pathname;
+          let romFileName = basename(urlPath);
+          if (!ROM_EXTENSIONS.has(extname(romFileName).toLowerCase())) {
+            romFileName = `rom-${Date.now()}.sfc`;
+          }
+          const localRomPath = getUserDataPath('roms', romFileName);
+          await copyFile(tempFile, localRomPath);
+          return { success: true, romFile: romFileName, alreadyExists: false };
+        }
+        return { success: false, error: 'Downloaded file is not a valid ROM or archive', romFile: '' };
+      } finally {
+        await rm(tempFile, { force: true }).catch(() => {});
+      }
+    } catch (err) {
+      return { success: false, error: `${err instanceof Error ? err.message : err}`, romFile: '' };
     }
   });
 
@@ -518,108 +686,300 @@ function registerIpcHandlers(): void {
 
   // ─── MSU import ───
 
-  function getMsuDir(profileId: string): string {
-    return getUserDataPath('profiles', profileId, 'msu');
+  function getMsuDir(packName: string): string {
+    return getUserDataPath('msu', packName);
   }
 
-  const MSU_EXTENSIONS = new Set(['.pcm', '.opuz']);
+  const MSU_EXTENSIONS = new Set(['.pcm', '.opuz', '.msu']);
 
-  async function extractZipToMsu(zipPath: string, msuDir: string): Promise<number> {
-    // Extract to a temp directory first, then move MSU files
-    const tempDir = join(app.getPath('temp'), `msu-extract-${Date.now()}`);
-    await mkdir(tempDir, { recursive: true });
-
+  async function extractArchiveToMsu(archivePath: string, msuDir: string): Promise<number> {
+    const tempDir = await extractArchiveToTemp(archivePath);
     try {
-      // Use PowerShell Expand-Archive on Windows
-      await new Promise<void>((resolve, reject) => {
-        const ps = spawn('powershell', [
-          '-NoProfile', '-Command',
-          `Expand-Archive -Path '${zipPath}' -DestinationPath '${tempDir}' -Force`,
-        ]);
-        ps.on('close', (code) => code === 0 ? resolve() : reject(new Error(`Expand-Archive exited with code ${code}`)));
-        ps.on('error', reject);
-      });
-
-      // Find all MSU files recursively and copy to msuDir
       await mkdir(msuDir, { recursive: true });
-      let count = 0;
-
-      async function walkAndCopy(dir: string): Promise<void> {
-        const entries = await readdir(dir, { withFileTypes: true });
-        for (const entry of entries) {
-          const fullPath = join(dir, entry.name);
-          if (entry.isDirectory()) {
-            await walkAndCopy(fullPath);
-          } else if (MSU_EXTENSIONS.has(extname(entry.name).toLowerCase())) {
-            await copyFile(fullPath, join(msuDir, entry.name));
-            count++;
-          }
-        }
+      const msuFiles = await walkFiles(tempDir, MSU_EXTENSIONS);
+      for (const f of msuFiles) {
+        await copyFile(f, join(msuDir, basename(f)));
       }
-
-      await walkAndCopy(tempDir);
-      return count;
+      return msuFiles.length;
     } finally {
       await rm(tempDir, { recursive: true, force: true }).catch(() => {});
     }
   }
 
-  ipcMain.handle('msu:import', async (_event, profileId: string, url: string) => {
+  ipcMain.handle('msu:import', async (_event, packName: string, url: string) => {
+    let tempFile: string | undefined;
     try {
-      // Validate URL
-      const parsed = new URL(url);
-      if (!['http:', 'https:'].includes(parsed.protocol)) {
-        return { success: false, error: 'Only HTTP/HTTPS URLs are supported' };
+      tempFile = await downloadToTemp(url, '.zip');
+      const msuDir = getMsuDir(packName);
+      const fileCount = await extractArchiveToMsu(tempFile, msuDir);
+      if (fileCount === 0) {
+        await rm(msuDir, { recursive: true, force: true }).catch(() => {});
+        return { success: false, error: 'No audio tracks (.pcm/.opuz/.msu) found in the archive. This may be a patch file, not an MSU audio pack.' };
       }
+      return { success: true, fileCount };
+    } catch (e) {
+      return { success: false, error: `${e instanceof Error ? e.message : e}` };
+    } finally {
+      if (tempFile) await rm(tempFile, { force: true }).catch(() => {});
+    }
+  });
 
-      const msuDir = getMsuDir(profileId);
-      const tempFile = join(app.getPath('temp'), `msu-download-${Date.now()}.zip`);
+  ipcMain.handle('msu:importFile', async (_event, packName: string, filePath: string) => {
+    try {
+      const msuDir = getMsuDir(packName);
+      const ext = extname(filePath).toLowerCase();
 
-      // Download using Electron's net module (follows redirects)
-      const response = await net.fetch(url);
-      if (!response.ok) {
-        return { success: false, error: `Download failed: HTTP ${response.status}` };
-      }
-
-      // Stream response body to temp file
-      const body = response.body;
-      if (!body) {
-        return { success: false, error: 'Empty response body' };
-      }
-      const fileStream = createWriteStream(tempFile);
-      // @ts-expect-error - Node/Electron stream compatibility
-      await pipeline(body, fileStream);
-
-      try {
-        const fileCount = await extractZipToMsu(tempFile, msuDir);
+      if (ext === '.zip' || ext === '.7z' || ext === '.rar') {
+        const fileCount = await extractArchiveToMsu(filePath, msuDir);
+        if (fileCount === 0) {
+          await rm(msuDir, { recursive: true, force: true }).catch(() => {});
+          return { success: false, error: 'No audio tracks (.pcm/.opuz/.msu) found in the archive. This may be a patch file, not an MSU audio pack.' };
+        }
         return { success: true, fileCount };
-      } finally {
-        await rm(tempFile, { force: true }).catch(() => {});
+      } else if (MSU_EXTENSIONS.has(ext)) {
+        await mkdir(msuDir, { recursive: true });
+        await copyFile(filePath, join(msuDir, basename(filePath)));
+        return { success: true, fileCount: 1 };
+      } else {
+        return { success: false, error: 'Unsupported file type. Use .zip, .7z, .rar, .pcm, or .opuz files.' };
       }
     } catch (e) {
       return { success: false, error: `${e instanceof Error ? e.message : e}` };
     }
   });
 
-  ipcMain.handle('msu:importFile', async (_event, profileId: string, filePath: string) => {
-    try {
-      const msuDir = getMsuDir(profileId);
-      const ext = extname(filePath).toLowerCase();
+  // ─── MSU pack management ───
 
-      if (ext === '.zip') {
-        const fileCount = await extractZipToMsu(filePath, msuDir);
-        return { success: true, fileCount };
-      } else if (MSU_EXTENSIONS.has(ext)) {
-        // Single MSU file — copy directly
-        await mkdir(msuDir, { recursive: true });
-        await copyFile(filePath, join(msuDir, basename(filePath)));
-        return { success: true, fileCount: 1 };
-      } else {
-        return { success: false, error: 'Unsupported file type. Use .zip, .pcm, or .opuz files.' };
+  ipcMain.handle('msu:listPacks', async () => {
+    const msuDir = getUserDataPath('msu');
+    try {
+      const entries = await readdir(msuDir, { withFileTypes: true });
+      const packs: { name: string; fileCount: number; totalSize: number }[] = [];
+      for (const entry of entries) {
+        if (!entry.isDirectory()) continue;
+        const packDir = join(msuDir, entry.name);
+        const files = await readdir(packDir);
+        const msuFiles = files.filter((f) => /\.(pcm|opuz|msu)$/i.test(f));
+        let totalSize = 0;
+        for (const f of msuFiles) {
+          try { totalSize += (await stat(join(packDir, f))).size; } catch { /* skip */ }
+        }
+        packs.push({ name: entry.name, fileCount: msuFiles.length, totalSize });
       }
-    } catch (e) {
-      return { success: false, error: `${e instanceof Error ? e.message : e}` };
+      return packs;
+    } catch { return []; }
+  });
+
+  ipcMain.handle('msu:getPackFiles', async (_event, packName: string) => {
+    const packDir = getUserDataPath('msu', packName);
+    try {
+      const files = await readdir(packDir);
+      const results: { name: string; size: number }[] = [];
+      for (const f of files) {
+        if (/\.(pcm|opuz|msu)$/i.test(f)) {
+          try {
+            const s = await stat(join(packDir, f));
+            results.push({ name: f, size: s.size });
+          } catch { /* skip */ }
+        }
+      }
+      return results;
+    } catch { return []; }
+  });
+
+  ipcMain.handle('msu:deletePack', async (_event, packName: string) => {
+    await rm(getUserDataPath('msu', packName), { recursive: true, force: true });
+  });
+
+  // ─── MSU game loading ───
+
+  ipcMain.handle('msu:getTrackList', async (_event, packName: string) => {
+    const packDir = getUserDataPath('msu', packName);
+    try {
+      const files = await readdir(packDir);
+      const tracks: { fileName: string; trackNum: number; ext: string }[] = [];
+      for (const f of files) {
+        const match = f.match(/(\d+)\.(pcm|opuz)$/i);
+        if (!match) continue;
+        tracks.push({ fileName: f, trackNum: parseInt(match[1]), ext: match[2].toLowerCase() });
+      }
+      return tracks;
+    } catch { return []; }
+  });
+
+  ipcMain.handle('msu:readTrackFile', async (_event, packName: string, fileName: string) => {
+    // Security: prevent path traversal
+    if (fileName.includes('..') || fileName.includes('/') || fileName.includes('\\')) {
+      throw new Error('Invalid filename');
     }
+    const filePath = join(getUserDataPath('msu', packName), fileName);
+    const buf = await readFile(filePath);
+    return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
+  });
+
+  // ─── Language pack management ───
+
+  ipcMain.handle('languages:list', async () => {
+    const langDir = getUserDataPath('languages');
+    try {
+      const entries = await readdir(langDir, { withFileTypes: true });
+      const langs: { code: string; fileCount: number }[] = [];
+      for (const entry of entries) {
+        if (!entry.isDirectory()) continue;
+        const dir = join(langDir, entry.name);
+        const files = await readdir(dir);
+        langs.push({ code: entry.name, fileCount: files.length });
+      }
+      return langs;
+    } catch { return []; }
+  });
+
+  /** Helper: resolve a ROM file to a usable local path. Handles archives, returns temp path if needed. */
+  async function resolveRomFile(filePath: string): Promise<{ romPath: string; tempDir?: string }> {
+    const ext = extname(filePath).toLowerCase();
+    if (ROM_EXTENSIONS.has(ext)) {
+      return { romPath: filePath };
+    }
+    if (ext === '.zip' || ext === '.7z' || ext === '.rar') {
+      const tempDir = await extractArchiveToTemp(filePath);
+      const roms = await walkFiles(tempDir, ROM_EXTENSIONS);
+      if (roms.length === 0) throw new Error('No ROM file (.sfc/.smc) found inside the archive');
+      if (roms.length > 1) throw new Error(`Multiple ROM files found (${roms.length}). Use an archive with exactly one ROM.`);
+      return { romPath: roms[0], tempDir };
+    }
+    throw new Error('Unsupported file type');
+  }
+
+  /** Helper: run restool on a ROM path and save dialogue to langDir */
+  function runRestoolExtract(romAbsPath: string, langDir: string, langCode: string): Promise<{ success: boolean; error?: string }> {
+    const projectRoot = join(__dirname, '..', '..');
+    const zelda3Root = join(projectRoot, 'core', 'zelda3');
+    const restoolPath = join(zelda3Root, 'assets', 'restool.py');
+
+    const sendLog = (channel: string, level: string, message: string) => {
+      mainWindow?.webContents.send('log:entry', { channel, level, message });
+    };
+    sendLog('app', 'info', `Extracting language '${langCode}'...`);
+
+    return new Promise<{ success: boolean; error?: string }>((resolve) => {
+      let restoolExists = true;
+      try { require('fs').accessSync(restoolPath); } catch { restoolExists = false; }
+      if (!restoolExists) { resolve({ success: false, error: 'restool.py not found' }); return; }
+
+      const proc = spawn('python', [
+        '-u', restoolPath, '--extract-dialogue', '-r', romAbsPath,
+      ], {
+        cwd: join(zelda3Root, 'assets'),
+        env: process.env,
+        stdio: ['ignore', 'pipe', 'pipe'],
+      });
+
+      let stderr = '';
+      proc.stdout.on('data', (data: Buffer) => {
+        for (const line of data.toString().split('\n')) {
+          if (line.trim()) sendLog('core', 'info', line.trim());
+        }
+      });
+      proc.stderr.on('data', (data: Buffer) => { stderr += data.toString(); });
+      proc.on('error', (err) => resolve({ success: false, error: err.message }));
+      proc.on('close', async (code) => {
+        if (code !== 0) { resolve({ success: false, error: stderr || `Exit code ${code}` }); return; }
+        const dialogueFile = join(zelda3Root, 'assets', 'dialogue.txt');
+        try {
+          await access(dialogueFile);
+          await mkdir(langDir, { recursive: true });
+          await copyFile(dialogueFile, join(langDir, 'dialogue.txt'));
+          await rm(dialogueFile, { force: true });
+          sendLog('app', 'info', `Language '${langCode}' extracted successfully`);
+          resolve({ success: true });
+        } catch {
+          resolve({ success: false, error: 'Dialogue file not found after extraction' });
+        }
+      });
+    });
+  }
+
+  ipcMain.handle('languages:extract', async (_event, romFile: string, langCode: string) => {
+    const localRomPath = getUserDataPath('roms', romFile);
+    try { await access(localRomPath); } catch {
+      return { success: false, error: `ROM not found: ${romFile}` };
+    }
+    const langDir = getUserDataPath('languages', langCode);
+    return runRestoolExtract(localRomPath, langDir, langCode);
+  });
+
+  ipcMain.handle('languages:extractFromFile', async (_event, filePath: string, langCode: string) => {
+    try {
+      const { romPath, tempDir } = await resolveRomFile(filePath);
+      try {
+        const langDir = getUserDataPath('languages', langCode);
+        return await runRestoolExtract(romPath, langDir, langCode);
+      } finally {
+        if (tempDir) await rm(tempDir, { recursive: true, force: true }).catch(() => {});
+      }
+    } catch (err) {
+      return { success: false, error: `${err instanceof Error ? err.message : err}` };
+    }
+  });
+
+  ipcMain.handle('languages:extractFromUrl', async (_event, url: string, langCode: string) => {
+    let tempFile: string | undefined;
+    try {
+      tempFile = await downloadToTemp(url, '.zip');
+      const { romPath, tempDir } = await resolveRomFile(tempFile);
+      try {
+        const langDir = getUserDataPath('languages', langCode);
+        return await runRestoolExtract(romPath, langDir, langCode);
+      } finally {
+        if (tempDir) await rm(tempDir, { recursive: true, force: true }).catch(() => {});
+      }
+    } catch (err) {
+      return { success: false, error: `${err instanceof Error ? err.message : err}` };
+    } finally {
+      if (tempFile) await rm(tempFile, { force: true }).catch(() => {});
+    }
+  });
+
+  ipcMain.handle('languages:delete', async (_event, langCode: string) => {
+    await rm(getUserDataPath('languages', langCode), { recursive: true, force: true });
+  });
+
+  ipcMain.handle('languages:getDialogue', async (_event, langCode: string) => {
+    try {
+      return await readFile(getUserDataPath('languages', langCode, 'dialogue.txt'), 'utf-8');
+    } catch { return null; }
+  });
+
+  // ─── ROM info ───
+
+  ipcMain.handle('roms:getInfo', async (_event, romFile: string) => {
+    const romPath = getUserDataPath('roms', romFile);
+    try {
+      const s = await stat(romPath);
+      const data = await readFile(romPath);
+      // Compute simple hash (first 1KB + size)
+      const crypto = await import('crypto');
+      const hash = crypto.createHash('sha256').update(data).digest('hex').slice(0, 16);
+      return {
+        name: romFile,
+        size: s.size,
+        hash,
+        created: s.birthtime.toISOString(),
+        modified: s.mtime.toISOString(),
+      };
+    } catch { return null; }
+  });
+
+  // ─── Profile updates (rename, set language/msu) ───
+
+  ipcMain.handle('profiles:update', async (_event, id: string, patch: Partial<Profile>) => {
+    const profile = await loadProfile(id);
+    if (!profile) return null;
+    if (patch.name !== undefined) profile.name = patch.name;
+    if (patch.language !== undefined) profile.language = patch.language;
+    if (patch.msuPack !== undefined) profile.msuPack = patch.msuPack;
+    await updateProfile(profile);
+    return profile;
   });
 
   // Play sessions
@@ -631,15 +991,70 @@ function registerIpcHandlers(): void {
     await saveSession(profileId, session as any);
   });
 
+  // Tracker state
+  ipcMain.handle('tracker:save', async (_event, profileId: string, state: unknown) => {
+    await saveTrackerState(profileId, state);
+  });
+
+  ipcMain.handle('tracker:load', async (_event, profileId: string) => {
+    return loadTrackerState(profileId);
+  });
+
+  // Input profiles
+  ipcMain.handle('inputProfiles:read', async (_event, profileId: string) => {
+    return readInputProfiles(profileId);
+  });
+
+  ipcMain.handle('inputProfiles:write', async (_event, profileId: string, profiles: unknown[]) => {
+    await writeInputProfiles(profileId, profiles);
+  });
+
+  // HID device enumeration
+  ipcMain.handle('hid:enumerate', () => {
+    return enumerateControllers();
+  });
+
+  // HID input: get latest button/axis state for all HID-read controllers
+  ipcMain.handle('hid:getInputStates', () => {
+    return hidInputReader.getAllStates();
+  });
+
+  // HID diagnostics log
+  ipcMain.handle('hid:getDiagLog', () => {
+    return hidInputReader.getDiagLog();
+  });
+
   // Get userData path
   ipcMain.handle('app:getUserDataPath', () => app.getPath('userData'));
 }
 
 app.whenReady().then(async () => {
   initProfileManager(app.getPath('userData'));
-  await ensureDirectories();
+  await migrateDataFolder();
+  await ensureDataDirectories();
   registerIpcHandlers();
   createWindow();
+
+  // Start HID input reader for controllers that need direct HID access
+  if (mainWindow) {
+    hidInputReader.start(mainWindow);
+  }
+
+  // Set up a minimal application menu so clipboard shortcuts (Ctrl+C/V/X/A) work
+  Menu.setApplicationMenu(Menu.buildFromTemplate([
+    {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { type: 'separator' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+        { role: 'selectAll' },
+      ],
+    },
+  ]));
 
   // Forward maximize/unmaximize events to renderer
   mainWindow!.on('maximize', () => mainWindow?.webContents.send('window:maximized', true));

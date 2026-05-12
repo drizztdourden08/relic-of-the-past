@@ -1,0 +1,106 @@
+.controls-settings {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ─── Left sidebar ─── */
+.controls-settings__sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+
+/* ─── Center: binding editor ─── */
+.controls-settings__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 16px;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* ─── Right sidebar: detected devices ─── */
+.controls-settings__devices-column {
+  width: 240px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  border-left: 1px solid var(--color-border-subtle);
+  padding: 16px;
+}
+
+/* ─── Section headers ─── */
+.controls-settings__section-header {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-secondary);
+  padding: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.controls-settings__profile-badge {
+  font-size: 11px;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--color-gold-base);
+  background: var(--color-gold-glow);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* ─── Detected devices ─── */
+.controls-settings__device-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.controls-settings__no-devices {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  padding: 8px 0;
+}
+
+.controls-settings__device-hint {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: 12px;
+  line-height: 1.4;
+}
+
+/* ─── Binding editor ─── */
+.controls-settings__bindings {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg, 8px);
+  background: var(--color-bg-raised);
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-height: 0;
+}
+
+.controls-settings__bindings .controls-settings__section-header {
+  padding: 12px 12px 8px;
+}
+
+.controls-settings__bindings--drag-over {
+  border-color: var(--color-gold-base);
+  box-shadow: 0 0 12px var(--color-gold-glow), inset 0 0 12px var(--color-gold-glow);
+}
+
+.controls-settings__binding-list {
+  flex: 1;
+  overflow-y: auto;
+}

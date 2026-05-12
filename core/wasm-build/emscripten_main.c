@@ -172,9 +172,14 @@ static const struct RendererFuncs kSdlRendererFuncs = {
 };
 
 // ---------------------------------------------------------------------------
-// Input mapping (simplified for WASM — keyboard only for now)
+// Input mapping
+// When js_input_mode is true, JavaScript drives g_input1_state via WasmSetInput.
+// When false, SDL keyboard events are used (legacy/fallback).
 // ---------------------------------------------------------------------------
+static bool g_js_input_mode = false;
+
 static void HandleInput(int keyCode, bool pressed) {
+  if (g_js_input_mode) return;  // JS is driving input — ignore SDL keys
   int bit = -1;
   switch (keyCode) {
     case SDLK_UP:     bit = 4; break;  // Up
@@ -197,6 +202,21 @@ static void HandleInput(int keyCode, bool pressed) {
     else
       g_input1_state &= ~(1 << bit);
   }
+}
+
+// ---------------------------------------------------------------------------
+// JS-driven input — called from JavaScript via ccall each frame
+// ---------------------------------------------------------------------------
+EMSCRIPTEN_KEEPALIVE
+void WasmSetInput(int mask) {
+  g_js_input_mode = true;
+  g_input1_state = mask;
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmSetInputMode(int jsMode) {
+  g_js_input_mode = jsMode ? true : false;
+  if (!jsMode) g_input1_state = 0;
 }
 
 // ---------------------------------------------------------------------------

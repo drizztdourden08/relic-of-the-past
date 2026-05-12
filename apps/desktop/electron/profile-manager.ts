@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { readFile, mkdir, writeFile, readdir, rm, stat } from 'fs/promises';
+import { readFile, mkdir, writeFile, readdir, rm, stat, rename, access, cp } from 'fs/promises';
 import { randomUUID } from 'crypto';
 import type { Profile, AppState } from '../../../shared/types/profile';
 import type { GameSettings } from '../../../shared/types/settings';
@@ -11,8 +11,132 @@ export function initProfileManager(dataPath: string): void {
   userDataPath = dataPath;
 }
 
+/** All app data lives under userData/Data/ */
 function path(...segments: string[]): string {
+  return join(userDataPath, 'Data', ...segments);
+}
+
+/** Legacy path (pre-migration, directly under userData/) */
+function legacyPath(...segments: string[]): string {
   return join(userDataPath, ...segments);
+}
+
+/** Ensure all Data/ subdirectories exist */
+export async function ensureDataDirectories(): Promise<void> {
+  const dirs = ['assets', 'roms', 'profiles', 'config', 'msu', 'languages'];
+  for (const dir of dirs) {
+    await mkdir(path(dir), { recursive: true });
+  }
+}
+
+async function exists(p: string): Promise<boolean> {
+  try { await access(p); return true; } catch { return false; }
+}
+
+/**
+ * Migrate data from old flat structure (userData/{roms,profiles,...}) to
+ * new structure (userData/Data/{roms,profiles,...}). Safe to call multiple
+ * times — skips if Data/ already has content or old dirs don't exist.
+ */
+export async function migrateDataFolder(): Promise<void> {
+  const dataDir = path();
+  const migrationDirs = ['roms', 'profiles', 'assets', 'config'];
+
+  // Check if migration is needed: any old dirs exist AND Data/ doesn't have them yet
+  let needsMigration = false;
+  for (const dir of migrationDirs) {
+    const oldDir = legacyPath(dir);
+    const newDir = path(dir);
+    if (await exists(oldDir) && !(await exists(newDir))) {
+      needsMigration = true;
+      break;
+    }
+  }
+
+  // Also check for app.json
+  const oldAppJson = legacyPath('app.json');
+  const newAppJson = path('app.json');
+  if (await exists(oldAppJson) && !(await exists(newAppJson))) {
+    needsMigration = true;
+  }
+
+  if (!needsMigration) return;
+
+  await mkdir(dataDir, { recursive: true });
+
+  // Move directories
+  for (const dir of migrationDirs) {
+    const oldDir = legacyPath(dir);
+    const newDir = path(dir);
+    if (await exists(oldDir) && !(await exists(newDir))) {
+      try {
+        await rename(oldDir, newDir);
+      } catch {
+        // rename across drives fails — fall back to copy + delete
+        await cp(oldDir, newDir, { recursive: true });
+        await rm(oldDir, { recursive: true, force: true });
+      }
+    }
+  }
+
+  // Move app.json
+  if (await exists(oldAppJson) && !(await exists(newAppJson))) {
+    try {
+      await rename(oldAppJson, newAppJson);
+    } catch {
+      const data = await readFile(oldAppJson, 'utf-8');
+      await writeFile(newAppJson, data, 'utf-8');
+      await rm(oldAppJson, { force: true });
+    }
+  }
+
+  // Migrate MSU files from per-profile to shared Data/msu/
+  await migrateMsuPacks();
+}
+
+/** Move MSU files out of profiles/{id}/msu/ into shared Data/msu/{profileName}/ */
+async function migrateMsuPacks(): Promise<void> {
+  const profilesDir = path('profiles');
+  let entries: string[];
+  try { entries = await readdir(profilesDir); } catch { return; }
+
+  for (const entry of entries) {
+    const profileMsuDir = join(profilesDir, entry, 'msu');
+    if (!(await exists(profileMsuDir))) continue;
+
+    let files: string[];
+    try { files = await readdir(profileMsuDir); } catch { continue; }
+    if (files.length === 0) continue;
+
+    // Load profile to get name for the pack
+    let profileName = entry;
+    try {
+      const data = await readFile(join(profilesDir, entry, 'profile.json'), 'utf-8');
+      const p = JSON.parse(data) as Profile;
+      profileName = p.name.replace(/[^a-zA-Z0-9_-]/g, '_');
+      // Update profile to reference the MSU pack
+      p.msuPack = profileName;
+      await writeFile(join(profilesDir, entry, 'profile.json'), JSON.stringify(p, null, 2), 'utf-8');
+    } catch { /* use id */ }
+
+    const sharedMsuDir = path('msu', profileName);
+    await mkdir(sharedMsuDir, { recursive: true });
+
+    for (const file of files) {
+      const src = join(profileMsuDir, file);
+      const dst = join(sharedMsuDir, file);
+      if (!(await exists(dst))) {
+        try { await rename(src, dst); } catch {
+          const data = await readFile(src);
+          await writeFile(dst, data);
+          await rm(src, { force: true });
+        }
+      }
+    }
+
+    // Remove old msu dir
+    await rm(profileMsuDir, { recursive: true, force: true });
+  }
 }
 
 // ─── App State ───
@@ -57,10 +181,12 @@ export async function listProfiles(): Promise<Profile[]> {
   return profiles.sort((a, b) => b.lastPlayed - a.lastPlayed);
 }
 
-export async function createProfile(name: string, romFile: string): Promise<Profile> {
+export async function createProfile(name: string, romFile: string, language?: string, msuPack?: string): Promise<Profile> {
   const id = randomUUID().slice(0, 8);
   const now = Date.now();
   const profile: Profile = { id, name, romFile, created: now, lastPlayed: now };
+  if (language) profile.language = language;
+  if (msuPack) profile.msuPack = msuPack;
 
   const profileDir = path('profiles', id);
   await mkdir(join(profileDir, 'saves'), { recursive: true });
@@ -257,4 +383,38 @@ export async function saveSession(profileId: string, session: PlaySession): Prom
   // Keep last 100 sessions
   if (sessions.length > 100) sessions = sessions.slice(-100);
   await writeFile(filePath, JSON.stringify(sessions, null, 2), 'utf-8');
+}
+
+// ─── Tracker state ───
+
+export async function saveTrackerState(profileId: string, state: unknown): Promise<void> {
+  const profileDir = path('profiles', profileId);
+  await mkdir(profileDir, { recursive: true });
+  await writeFile(join(profileDir, 'tracker.json'), JSON.stringify(state, null, 2), 'utf-8');
+}
+
+export async function loadTrackerState(profileId: string): Promise<unknown | null> {
+  try {
+    const data = await readFile(path('profiles', profileId, 'tracker.json'), 'utf-8');
+    return JSON.parse(data);
+  } catch {
+    return null;
+  }
+}
+
+// ─── Input profiles ───
+
+export async function readInputProfiles(profileId: string): Promise<unknown[]> {
+  try {
+    const data = await readFile(path('profiles', profileId, 'input-profiles.json'), 'utf-8');
+    return JSON.parse(data);
+  } catch {
+    return [];
+  }
+}
+
+export async function writeInputProfiles(profileId: string, profiles: unknown[]): Promise<void> {
+  const profileDir = path('profiles', profileId);
+  await mkdir(profileDir, { recursive: true });
+  await writeFile(join(profileDir, 'input-profiles.json'), JSON.stringify(profiles, null, 2), 'utf-8');
 }

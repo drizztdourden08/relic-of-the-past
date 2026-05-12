@@ -51,4 +51,7 @@ export interface GameSettings {
   enableMSU: 'false' | 'true' | 'deluxe' | 'opuz' | 'deluxe-opuz';
   resumeMSU: boolean;
   msuVolume: number; // 0-100
+
+  // ─── Controls ───
+  activeInputProfileId: string | null;
 }

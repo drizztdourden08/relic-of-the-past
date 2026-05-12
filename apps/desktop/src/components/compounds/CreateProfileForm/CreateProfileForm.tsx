@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '../../primitives/Button';
 import { TextInput } from '../../primitives/TextInput';
-import { Select } from '../../primitives/Select';
+import { NativeSelect } from '../../primitives/Select';
 import './CreateProfileForm.css';
 
 interface CreateProfileFormProps {
@@ -37,13 +37,13 @@ export function CreateProfileForm({
         autoFocus
       />
       {readyRoms.length > 0 && (
-        <Select value={rom} onChange={(e) => setRom(e.target.value)}>
+        <NativeSelect value={rom} onChange={(e) => setRom(e.target.value)}>
           {readyRoms.map((r) => (
             <option key={r.romFile} value={r.romFile}>
               {formatRomName(r.romFile)}
             </option>
           ))}
-        </Select>
+        </NativeSelect>
       )}
       <div className="create-profile-form__actions">
         <Button variant="primary" onClick={handleSubmit}>Create</Button>

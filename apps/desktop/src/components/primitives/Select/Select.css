@@ -1,3 +1,4 @@
+/* ─── Legacy native select (kept for backward compat) ─── */
 .select {
   width: 100%;
   padding: var(--space-sm) var(--space-md);
@@ -17,4 +18,190 @@
 .select option {
   background: var(--color-bg-raised);
   color: var(--color-text-primary);
+}
+
+/* ─── Custom Select trigger button ─── */
+.select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: border-color var(--transition-normal);
+  text-align: left;
+  min-height: 34px;
+  gap: var(--space-sm);
+}
+
+.select-trigger:hover {
+  border-color: var(--color-border-strong);
+}
+
+.select-trigger:focus {
+  outline: none;
+  border-color: var(--color-gold-base);
+}
+
+.select-trigger--open {
+  border-color: var(--color-gold-base);
+}
+
+.select-trigger--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.select-trigger__text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.select-trigger__placeholder {
+  color: var(--color-text-faint);
+}
+
+.select-trigger__chevron {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  transition: transform var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.select-trigger--open .select-trigger__chevron {
+  transform: rotate(180deg);
+}
+
+/* ─── Dropdown content (rendered in portal) ─── */
+.select-content {
+  position: fixed;
+  z-index: 9999;
+  min-width: 180px;
+  max-height: 280px;
+  overflow-y: auto;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  padding: var(--space-xs) 0;
+  pointer-events: auto;
+}
+
+.select-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.select-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.select-content::-webkit-scrollbar-thumb {
+  background: var(--color-border-subtle);
+  border-radius: 3px;
+}
+
+/* ─── Search input inside dropdown ─── */
+.select-search {
+  padding: var(--space-xs) var(--space-sm);
+  position: sticky;
+  top: 0;
+  background: var(--color-bg-elevated);
+  z-index: 1;
+}
+
+.select-search__input {
+  width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-size: var(--text-sm);
+  outline: none;
+}
+
+.select-search__input:focus {
+  border-color: var(--color-gold-base);
+}
+
+/* ─── Option items ─── */
+.select-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.select-item:hover,
+.select-item--highlighted {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text-primary);
+}
+
+.select-item--selected {
+  color: var(--color-gold-base);
+}
+
+.select-item__check {
+  width: 14px;
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--color-gold-base);
+}
+
+.select-item__label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.select-item__description {
+  color: var(--color-text-faint);
+  font-size: var(--text-xs);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ─── Group separator ─── */
+.select-separator {
+  height: 1px;
+  margin: var(--space-xs) 0;
+  background: var(--color-border-subtle);
+}
+
+.select-group-label {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--weight-medium);
+}
+
+/* ─── Empty state ─── */
+.select-empty {
+  padding: var(--space-md);
+  text-align: center;
+  color: var(--color-text-faint);
+  font-size: var(--text-sm);
+}
+
+/* ─── Size variants ─── */
+.select-trigger--sm {
+  padding: 2px var(--space-sm);
+  font-size: var(--text-xs);
+  min-height: 26px;
+  border-radius: var(--radius-sm);
 }
