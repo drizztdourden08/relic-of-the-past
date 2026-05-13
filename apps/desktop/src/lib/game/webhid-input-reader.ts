@@ -25,6 +25,63 @@ export type WebHidStateListener = (state: WebHidInputState) => void;
 export type WebHidRawListener = (report: WebHidRawReport) => void;
 export type WebHidDiagListener = (msg: string) => void;
 
+// ── Stick calibration types ──
+
+export interface StickCalibrationData {
+  centerX: number;
+  centerY: number;
+  minX: number;
+  maxX: number;
+  minY: number;
+  maxY: number;
+  innerDeadzone: number;
+  outerDeadzone: number;
+}
+
+export interface DeviceStickCalibration {
+  left: StickCalibrationData;
+  right: StickCalibrationData;
+  updatedAt: string;
+}
+
+/** Apply stick calibration: asymmetric normalize → circular clamp → deadzone rescaling */
+function applySticksCalibration(
+  lxRaw: number, lyRaw: number, rxRaw: number, ryRaw: number,
+  cal: DeviceStickCalibration,
+): number[] {
+  const applyOne = (rawX: number, rawY: number, s: StickCalibrationData) => {
+    const rnx = s.centerX - s.minX || 1;
+    const rpx = s.maxX - s.centerX || 1;
+    const rny = s.centerY - s.minY || 1;
+    const rpy = s.maxY - s.centerY || 1;
+
+    const nx = rawX < s.centerX
+      ? -(s.centerX - rawX) / rnx
+      : (rawX - s.centerX) / rpx;
+    // Y inverted (raw Y increases downward, game Y increases upward)
+    const ny = rawY < s.centerY
+      ? (s.centerY - rawY) / rny
+      : -(rawY - s.centerY) / rpy;
+
+    let mag = Math.sqrt(nx * nx + ny * ny);
+    let cx = nx, cy = ny;
+    if (mag > 1) { cx /= mag; cy /= mag; mag = 1; }
+
+    if (mag < s.innerDeadzone) return { x: 0, y: 0 };
+
+    const rescaled = Math.min(
+      (mag - s.innerDeadzone) / (s.outerDeadzone - s.innerDeadzone),
+      1,
+    );
+    const scale = mag > 0 ? rescaled / mag : 0;
+    return { x: cx * scale, y: cy * scale };
+  };
+
+  const l = applyOne(lxRaw, lyRaw, cal.left);
+  const r = applyOne(rxRaw, ryRaw, cal.right);
+  return [l.x, l.y, r.x, r.y];
+}
+
 // Nintendo VID and known PIDs
 const NINTENDO_VID = 0x057E;
 const KNOWN_PIDS: Record<number, string> = {
@@ -90,6 +147,138 @@ function parseSwitchSimple(data: DataView): { buttons: boolean[]; axes: number[]
     (ly - 128) / 128,
     (rx - 128) / 128,
     (ry - 128) / 128,
+  ];
+
+  return { buttons, axes };
+}
+
+/**
+ * Parse Switch Pro Controller 2 input report (report ID 0x05, USB HID mode).
+ * Byte layout confirmed by real hardware hex dumps:
+ *   Byte 0:     Timer/counter (increments by 4)
+ *   Byte 1:     Status/battery
+ *   Byte 2:     Connection status (varies — NOT button data)
+ *   Byte 3:     Padding (0x00)
+ *   Byte 4:     Right-side buttons: Y(0x01) X(0x02) B(0x04) A(0x08) ??(0x10) ??(0x20) R(0x40) ZR(0x80)
+ *   Byte 5:     Shared buttons:     Minus(0x01) Plus(0x02) RStick(0x04) LStick(0x08) Home(0x10) Capture(0x20) C(0x40)
+ *   Byte 6:     Left-side + dpad:   GL(0x01) GR(0x02) DpRight(0x04) DpLeft(0x08) DpDown(0x10) DpUp(0x20) L(0x40) ZL(0x80)
+ *   Bytes 7-9:  Padding (0x00)
+ *   Bytes 10-12: Left stick  (12-bit X, 12-bit Y packed)
+ *   Bytes 13-15: Right stick (12-bit X, 12-bit Y packed)
+ */
+function parseSwitchPro2Report05(data: DataView): { buttons: boolean[]; axes: number[]; rawSticks: [number, number, number, number] } {
+  const b0 = data.getUint8(4);    // right-side face buttons + R/ZR
+  const b1 = data.getUint8(5);    // shared (start/select/sticks/home/capture/chat)
+  const b2 = data.getUint8(6);    // left-side (L/ZL) + dpad
+  const b3 = data.getUint8(7);    // grip buttons (GL/GR)
+
+  // Left stick: 12-bit values packed in 3 bytes (bytes 10-12)
+  const lxRaw = data.getUint8(10) | ((data.getUint8(11) & 0x0F) << 8);
+  const lyRaw = (data.getUint8(11) >> 4) | (data.getUint8(12) << 4);
+
+  // Right stick: 12-bit values packed in 3 bytes (bytes 13-15)
+  const rxRaw = data.getUint8(13) | ((data.getUint8(14) & 0x0F) << 8);
+  const ryRaw = (data.getUint8(14) >> 4) | (data.getUint8(15) << 4);
+
+  // Button order matches profile: A, B, X, Y, L, R, ZL, ZR, +, -, LStick, RStick, DUp, DDn, DLt, DRt, Home, Capture, C, GL, GR
+  const buttons: boolean[] = [
+    !!(b0 & 0x08),       //  0: A
+    !!(b0 & 0x04),       //  1: B
+    !!(b0 & 0x02),       //  2: X
+    !!(b0 & 0x01),       //  3: Y
+    !!(b2 & 0x40),       //  4: L
+    !!(b0 & 0x40),       //  5: R
+    !!(b2 & 0x80),       //  6: ZL
+    !!(b0 & 0x80),       //  7: ZR
+    !!(b1 & 0x02),       //  8: Plus/Start
+    !!(b1 & 0x01),       //  9: Minus/Select
+    !!(b1 & 0x08),       // 10: L Stick
+    !!(b1 & 0x04),       // 11: R Stick
+    !!(b2 & 0x02),       // 12: DPad Up
+    !!(b2 & 0x01),       // 13: DPad Down
+    !!(b2 & 0x08),       // 14: DPad Left
+    !!(b2 & 0x04),       // 15: DPad Right
+    !!(b1 & 0x10),       // 16: Home
+    !!(b1 & 0x20),       // 17: Capture
+    !!(b1 & 0x40),       // 18: C (Chat)
+    !!(b3 & 0x02),       // 19: GL  — byte[7]
+    !!(b3 & 0x01),       // 20: GR  — byte[7]
+  ];
+
+  // Fallback normalization (used when no calibration is loaded).
+  // Calibrated normalization is applied in handleInputReport when available.
+  let lx = (lxRaw - 2048) / 1000;
+  let ly = -(lyRaw - 2048) / 1000;
+  let rx = (rxRaw - 2048) / 1000;
+  let ry = -(ryRaw - 2048) / 1000;
+  const lMag = Math.sqrt(lx * lx + ly * ly);
+  if (lMag > 1) { lx /= lMag; ly /= lMag; }
+  const rMag = Math.sqrt(rx * rx + ry * ry);
+  if (rMag > 1) { rx /= rMag; ry /= rMag; }
+  const axes: number[] = [lx, ly, rx, ry];
+
+  return { buttons, axes, rawSticks: [lxRaw, lyRaw, rxRaw, ryRaw] };
+}
+
+/**
+ * Parse Switch Pro Controller 2 input report (report ID 0x09, alternate USB HID mode).
+ * Button layout confirmed via HID calibration — different from 0x30 and 0x3F.
+ * Sticks are 12-bit packed (same byte layout as full mode).
+ *
+ * Report layout (63 bytes after report ID):
+ *   Byte 0:   Timer/counter
+ *   Byte 1:   Battery/connection
+ *   Byte 2:   Right-side buttons: B(0x01) A(0x02) Y(0x04) X(0x08) R(0x10) ZR(0x20) Plus(0x40) RStick(0x80)
+ *   Byte 3:   Left-side + dpad:   DpDn(0x01) DpRt(0x02) DpLt(0x04) DpUp(0x08) L(0x10) ZL(0x20) Minus(0x40) LStick(0x80)
+ *   Byte 4:   Extra:              Home(0x01) Capture(0x02) GR(0x04) GL(0x08) C/Chat(0x10)
+ *   Byte 5-7: Left stick  (12-bit X, 12-bit Y packed)
+ *   Byte 8-10: Right stick (12-bit X, 12-bit Y packed)
+ *   Byte 11+: IMU/gyro data
+ */
+function parseSwitchPro2(data: DataView): { buttons: boolean[]; axes: number[] } {
+  const b0 = data.getUint8(2); // right-side buttons
+  const b1 = data.getUint8(3); // left-side + dpad
+  const b2 = data.getUint8(4); // home, capture, gr, gl, c
+
+  // Left stick: 12-bit values packed in 3 bytes (bytes 5-7)
+  const lxRaw = data.getUint8(5) | ((data.getUint8(6) & 0x0F) << 8);
+  const lyRaw = (data.getUint8(6) >> 4) | (data.getUint8(7) << 4);
+
+  // Right stick: 12-bit values packed in 3 bytes (bytes 8-10)
+  const rxRaw = data.getUint8(8) | ((data.getUint8(9) & 0x0F) << 8);
+  const ryRaw = (data.getUint8(9) >> 4) | (data.getUint8(10) << 4);
+
+  // Button order matches profile: A, B, X, Y, L, R, ZL, ZR, +, -, LStick, RStick, DUp, DDn, DLt, DRt, Home, Capture, C, GL, GR
+  const buttons: boolean[] = [
+    !!(b0 & 0x02),       //  0: A
+    !!(b0 & 0x01),       //  1: B
+    !!(b0 & 0x08),       //  2: X
+    !!(b0 & 0x04),       //  3: Y
+    !!(b1 & 0x10),       //  4: L
+    !!(b0 & 0x10),       //  5: R
+    !!(b1 & 0x20),       //  6: ZL
+    !!(b0 & 0x20),       //  7: ZR
+    !!(b0 & 0x40),       //  8: Plus/Start
+    !!(b1 & 0x40),       //  9: Minus/Select
+    !!(b1 & 0x80),       // 10: L Stick
+    !!(b0 & 0x80),       // 11: R Stick
+    !!(b1 & 0x08),       // 12: DPad Up
+    !!(b1 & 0x01),       // 13: DPad Down
+    !!(b1 & 0x04),       // 14: DPad Left
+    !!(b1 & 0x02),       // 15: DPad Right
+    !!(b2 & 0x01),       // 16: Home
+    !!(b2 & 0x02),       // 17: Capture
+    !!(b2 & 0x10),       // 18: C (Chat)
+    !!(b2 & 0x08),       // 19: GL
+    !!(b2 & 0x04),       // 20: GR
+  ];
+
+  // Normalize 12-bit sticks (center ~2048, range 0-4095) → -1 to +1
+  const axes: number[] = [
+    (lxRaw - 2048) / 2048,
+    -(lyRaw - 2048) / 2048, // Y inverted
+    (rxRaw - 2048) / 2048,
+    -(ryRaw - 2048) / 2048, // Y inverted
   ];
 
   return { buttons, axes };
@@ -162,6 +351,29 @@ class WebHidInputReader {
   private diagListeners = new Set<WebHidDiagListener>();
   private diagLog: string[] = [];
   private connected = false;
+  /** Per-device stick calibration, keyed by "vid:pid" */
+  private stickCalibrations = new Map<string, DeviceStickCalibration>();
+
+  /** Load stick calibration for a device (keyed by "vid:pid") */
+  setStickCalibration(deviceKey: string, cal: DeviceStickCalibration): void {
+    this.stickCalibrations.set(deviceKey, cal);
+    this.log(`Stick calibration loaded for ${deviceKey}`);
+  }
+
+  /** Get current stick calibration for a device */
+  getStickCalibration(deviceKey: string): DeviceStickCalibration | undefined {
+    return this.stickCalibrations.get(deviceKey);
+  }
+
+  /** Load all calibrations from a store object */
+  loadStickCalibrations(store: Record<string, DeviceStickCalibration>): void {
+    for (const [key, cal] of Object.entries(store)) {
+      this.stickCalibrations.set(key, cal);
+    }
+    if (Object.keys(store).length > 0) {
+      this.log(`Loaded stick calibrations for ${Object.keys(store).length} device(s)`);
+    }
+  }
 
   private log(msg: string): void {
     const entry = `[${new Date().toLocaleTimeString()}] ${msg}`;
@@ -211,8 +423,23 @@ class WebHidInputReader {
         this.log('No previously-granted Nintendo HID devices found');
         return false;
       }
+
+      this.log(`Found ${nintendo.length} Nintendo HID interface(s)`);
+
+      // Group by VID:PID and try to open one from each group
+      const groups = new Map<string, HIDDevice[]>();
       for (const device of nintendo) {
-        await this.openDevice(device);
+        const key = `${device.vendorId}:${device.productId}`;
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key)!.push(device);
+      }
+
+      for (const [, deviceRefs] of groups) {
+        let opened = false;
+        for (const device of deviceRefs) {
+          if (opened) break;
+          opened = await this.openDevice(device);
+        }
       }
       return this.connected;
     } catch (err) {
@@ -251,7 +478,7 @@ class WebHidInputReader {
     }
   }
 
-  private async openDevice(device: HIDDevice): Promise<void> {
+  private async openDevice(device: HIDDevice): Promise<boolean> {
     const name = KNOWN_PIDS[device.productId] ?? `Unknown (${device.productId.toString(16)})`;
     this.log(`Opening: ${name} (VID:${device.vendorId.toString(16)} PID:${device.productId.toString(16)})`);
 
@@ -267,14 +494,27 @@ class WebHidInputReader {
 
       this.devices.push(device);
       this.connected = true;
+      return true;
     } catch (err) {
       this.log(`Failed to open ${name}: ${err}`);
+      return false;
     }
   }
+
+  private reportIdCounts = new Map<number, number>();
 
   private handleInputReport(device: HIDDevice, event: HIDInputReportEvent): void {
     const { reportId, data } = event;
     const deviceKey = `${device.vendorId.toString(16)}:${device.productId.toString(16)}`;
+
+    // Log first few reports for diagnostics
+    const count = (this.reportIdCounts.get(reportId) ?? 0) + 1;
+    this.reportIdCounts.set(reportId, count);
+    if (count <= 3) {
+      const hex = Array.from(new Uint8Array(data.buffer, data.byteOffset, Math.min(data.byteLength, 20)))
+        .map(b => b.toString(16).padStart(2, '0')).join(' ');
+      this.log(`Report: id=0x${reportId.toString(16)} len=${data.byteLength} [${hex}]`);
+    }
 
     // Emit raw report for calibration listeners
     if (this.rawListeners.size > 0) {
@@ -288,6 +528,19 @@ class WebHidInputReader {
     if (reportId === 0x3F) {
       // Simple mode (USB default)
       parsed = parseSwitchSimple(data);
+    } else if (reportId === 0x05) {
+      // Switch Pro Controller 2 USB HID mode (report 0x05)
+      if (data.byteLength >= 16) {
+        const result = parseSwitchPro2Report05(data);
+        // Apply stored stick calibration if available
+        const cal = this.stickCalibrations.get(deviceKey);
+        if (cal) {
+          const [lxR, lyR, rxR, ryR] = result.rawSticks;
+          result.axes = applySticksCalibration(lxR, lyR, rxR, ryR, cal);
+        }
+        parsed = result;
+      }
+    } else if (reportId === 0x09) {
     } else if (reportId === 0x30) {
       // Full mode (Bluetooth / after init)
       parsed = parseSwitchFull(data);
@@ -307,6 +560,11 @@ class WebHidInputReader {
       };
       this.states.set(deviceKey, state);
       for (const cb of this.listeners) cb(state);
+      if (count <= 3) {
+        this.log(`Parsed OK: ${parsed.buttons.length} buttons, ${parsed.axes.length} axes, pressed=${parsed.buttons.filter(Boolean).length}`);
+      }
+    } else if (count <= 3) {
+      this.log(`No parser matched for reportId=0x${reportId.toString(16)} len=${data.byteLength}`);
     }
   }
 
@@ -322,7 +580,31 @@ class WebHidInputReader {
     this.connected = false;
     this.log('Disconnected all devices');
   }
+
+  /**
+   * Simulate a connected HID device and inject input state.
+   * Used for testing — no real device needed.
+   */
+  simulateDevice(vid: number, pid: number): void {
+    this.connected = true;
+    const key = `${vid.toString(16)}:${pid.toString(16)}`;
+    this.log(`[SIM] Simulated device connected: ${key}`);
+  }
+
+  /**
+   * Inject a parsed input state as if a real HID report was received.
+   * Used for testing — no real device needed.
+   */
+  simulateInput(state: WebHidInputState): void {
+    this.states.set(state.deviceKey, state);
+    for (const cb of this.listeners) cb(state);
+  }
 }
 
 /** Singleton instance */
 export const webHidReader = new WebHidInputReader();
+
+// Expose for Playwright testing
+if (typeof window !== 'undefined') {
+  (window as any).__webHidReader = webHidReader;
+}

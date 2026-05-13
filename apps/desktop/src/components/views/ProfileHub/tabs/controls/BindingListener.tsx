@@ -3,7 +3,7 @@
  * Shows "Press a key or button for [SNES Label]..." and captures the first input.
  */
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import type { InputBinding, SnesButton } from '@shared/types/controls';
 import { SNES_BUTTON_LABELS } from '@shared/types/controls';
 import './BindingListener.css';
@@ -16,6 +16,13 @@ interface BindingListenerProps {
 
 export function BindingListener({ snesButton, onCapture, onCancel }: BindingListenerProps): JSX.Element {
   const label = SNES_BUTTON_LABELS[snesButton];
+  // Delay enabling cancel-on-click to prevent the opening click from immediately cancelling
+  const [canCancel, setCanCancel] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setCanCancel(true), 150);
+    return () => clearTimeout(timeout);
+  }, []);
 
   const handleKey = useCallback((e: KeyboardEvent) => {
     e.preventDefault();
@@ -90,7 +97,7 @@ export function BindingListener({ snesButton, onCapture, onCancel }: BindingList
   }, [onCapture]);
 
   return (
-    <div className="binding-listener-backdrop" onClick={onCancel}>
+    <div className="binding-listener-backdrop" onClick={() => canCancel && onCancel()}>
       <div className="binding-listener" onClick={(e) => e.stopPropagation()}>
         <div className="binding-listener__prompt">
           Press a key or button for

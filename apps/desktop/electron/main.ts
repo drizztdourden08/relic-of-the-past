@@ -34,6 +34,8 @@ import {
   loadTrackerState,
   readInputProfiles,
   writeInputProfiles,
+  readStickCalibration,
+  writeStickCalibration,
   ensureDataDirectories,
   migrateDataFolder,
 } from './profile-manager';
@@ -1009,6 +1011,15 @@ function registerIpcHandlers(): void {
     await writeInputProfiles(profileId, profiles);
   });
 
+  // Stick calibration (global per-device)
+  ipcMain.handle('stickCalibration:read', async () => {
+    return readStickCalibration();
+  });
+
+  ipcMain.handle('stickCalibration:write', async (_event, store: Record<string, unknown>) => {
+    await writeStickCalibration(store as any);
+  });
+
   // HID device enumeration
   ipcMain.handle('hid:enumerate', () => {
     return enumerateControllers();
@@ -1026,6 +1037,28 @@ function registerIpcHandlers(): void {
 
   // Get userData path
   ipcMain.handle('app:getUserDataPath', () => app.getPath('userData'));
+
+  // Sprite debug data (saved to userData/Data/sprite-debug.json)
+  ipcMain.handle('spriteDebug:load', async () => {
+    try {
+      const data = await readFile(getUserDataPath('sprite-debug.json'), 'utf-8');
+      return JSON.parse(data);
+    } catch { return {}; }
+  });
+  ipcMain.handle('spriteDebug:save', async (_e, data: unknown) => {
+    await writeFile(getUserDataPath('sprite-debug.json'), JSON.stringify(data, null, 2), 'utf-8');
+  });
+
+  // Sprite review data (per-sprite image review, saved to userData/Data/sprite-review.json)
+  ipcMain.handle('spriteReview:load', async () => {
+    try {
+      const data = await readFile(getUserDataPath('sprite-review.json'), 'utf-8');
+      return JSON.parse(data);
+    } catch { return {}; }
+  });
+  ipcMain.handle('spriteReview:save', async (_e, data: unknown) => {
+    await writeFile(getUserDataPath('sprite-review.json'), JSON.stringify(data, null, 2), 'utf-8');
+  });
 }
 
 app.whenReady().then(async () => {

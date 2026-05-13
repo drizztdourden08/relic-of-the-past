@@ -135,7 +135,11 @@ export function detectAllDevices(hidDevices?: HidDeviceInfo[]): DetectedDevice[]
   if (hidDevices && hidDevices.length > 0) {
     // Primary: use HID for detection, merge activation status from Web API
     for (let i = 0; i < hidDevices.length; i++) {
-      devices.push(detectFromHid(hidDevices[i], i, activated));
+      const hid = hidDevices[i];
+      // Filter out mice and other non-controller HID devices
+      const name = (hid.product || '').toLowerCase();
+      if (name.includes('mouse') || name.includes('trackpad') || name.includes('touchpad')) continue;
+      devices.push(detectFromHid(hid, i, activated));
     }
   } else {
     // Fallback: Web Gamepad API only (requires button press)

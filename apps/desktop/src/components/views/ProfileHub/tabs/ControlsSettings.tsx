@@ -3,11 +3,11 @@
  *
  * Layout:
  *  Left column:  InputProfileList (saved input profiles)
- *  Center column: Assigned controller card + binding editor
+ *  Center column: Binding editor + used inputs summary
  *  Right column: Detected devices (draggable)
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import type {
   InputProfile,
@@ -15,7 +15,6 @@ import type {
   ButtonMapping,
   InputBinding,
   SnesButton,
-  AssignedController,
 } from '@shared/types/controls';
 import { SNES_BUTTONS } from '@shared/types/controls';
 import { findPresetById, KEYBOARD_DEFAULT } from '@shared/data/controllers';
@@ -25,7 +24,6 @@ import { InputProfileList } from './controls/InputProfileList';
 import { DeviceCard } from './controls/DeviceCard';
 import { BindingRow } from './controls/BindingRow';
 import { BindingListener } from './controls/BindingListener';
-import { AssignedControllerCard } from './controls/AssignedControllerCard';
 import { Dialog } from '../../../composites/Dialog/Dialog';
 import './ControlsSettings.css';
 
@@ -209,11 +207,13 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
     if (!listeningFor || !activeProfile) return;
     setListeningFor(null);
 
-    const updatedMappings = activeProfile.mappings.map(m =>
-      m.snesButton === listeningFor
-        ? { ...m, binding, icon: m.icon } // preserve icon, update binding
-        : m
-    );
+    const updatedMappings = activeProfile.mappings.map(m => {
+      if (m.snesButton !== listeningFor) return m;
+      // When the binding type changes (e.g. gamepad → keyboard), clear the old icon
+      // so BindingRow can derive the correct one from the new binding
+      const newIcon = m.icon && m.binding.type === binding.type ? m.icon : null;
+      return { ...m, binding, icon: newIcon };
+    });
 
     const updatedProfile: InputProfile = {
       ...activeProfile,
@@ -271,24 +271,19 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
       return;
     }
 
-    const assignedController: AssignedController | null =
-      confirmPreset.vid && confirmPreset.pid
-        ? {
-            vendorId: confirmPreset.vid,
-            productId: confirmPreset.pid,
-            displayName: confirmPreset.deviceName,
-            controllerFamily: preset.family,
-            presetId: preset.id,
-          }
-        : null;
-
     const updatedProfile: InputProfile = {
       ...activeProfile,
       name: preset.name,
       deviceType: preset.family === 'keyboard' ? 'keyboard' : 'gamepad',
       controllerFamily: preset.family,
       mappings: [...preset.defaultMappings],
-      assignedController,
+      assignedController: preset.family !== 'keyboard' ? {
+        vendorId: confirmPreset.vid,
+        productId: confirmPreset.pid,
+        displayName: confirmPreset.deviceName,
+        controllerFamily: preset.family,
+        presetId: preset.id,
+      } : null,
       modifiedAt: Date.now(),
     };
 
@@ -302,28 +297,57 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
     setConfirmPreset(null);
   }, [confirmPreset, activeProfile, profiles, persistProfiles]);
 
-  // ─── Unassign controller from profile ───
-  const handleUnassign = useCallback(() => {
-    if (!activeProfile) return;
-    const updatedProfile: InputProfile = {
-      ...activeProfile,
-      assignedController: null,
-      modifiedAt: Date.now(),
-    };
-    const updatedProfiles = profiles.map(p =>
-      p.id === updatedProfile.id ? updatedProfile : p
-    );
-    setActiveProfile(updatedProfile);
-    persistProfiles(updatedProfiles);
-  }, [activeProfile, profiles, persistProfiles]);
+  // ─── Determine which input devices are used by this profile ───
+  const requiredInputs = useMemo(() => {
+    if (!activeProfile) return [];
+    const inputs: Array<{ type: 'keyboard' | 'gamepad'; label: string; iconSrc: string; connected: boolean }> = [];
+    const hasKeyboard = activeProfile.mappings.some(m => m.binding.type === 'keyboard');
+    const hasGamepad = activeProfile.mappings.some(m => m.binding.type !== 'keyboard');
 
-  // ─── Find live device matching assigned controller ───
-  const assignedLiveDevice = activeProfile?.assignedController
-    ? devices.find(d =>
-        d.vendorId === activeProfile.assignedController!.vendorId &&
-        d.productId === activeProfile.assignedController!.productId
-      ) ?? null
-    : null;
+    if (hasKeyboard) {
+      inputs.push({
+        type: 'keyboard',
+        label: 'Keyboard',
+        iconSrc: '/buttons/keyboard/keyboard.svg',
+        connected: devices.some(d => d.type === 'keyboard' && d.connected),
+      });
+    }
+    if (hasGamepad) {
+      // Find the best matching connected gamepad for this profile's family
+      const familyIconMap: Record<string, string> = {
+        xbox: '/buttons/xbox/controller_xboxseries.svg',
+        nintendo: '/buttons/switch/controller_switch_pro.svg',
+        playstation: '/buttons/generic/generic_joystick.svg',
+        generic: '/buttons/generic/generic_joystick.svg',
+      };
+      const family = activeProfile.controllerFamily;
+      const assigned = activeProfile.assignedController;
+      const matchedDevice = devices.find(d => d.type === 'gamepad' && d.controllerFamily === family && d.connected);
+      const anyGamepad = devices.find(d => d.type === 'gamepad' && d.connected);
+      const liveDevice = matchedDevice ?? anyGamepad;
+
+      // Build label: prefer assigned controller info, then live device, then profile name
+      let deviceLabel: string;
+      if (assigned) {
+        const vid = assigned.vendorId;
+        const pid = assigned.productId;
+        deviceLabel = vid && pid ? `${assigned.displayName} (${vid}:${pid})` : assigned.displayName;
+      } else if (liveDevice) {
+        deviceLabel = liveDevice.vendorId && liveDevice.productId
+          ? `${liveDevice.displayName} (${liveDevice.vendorId}:${liveDevice.productId})`
+          : liveDevice.displayName;
+      } else {
+        deviceLabel = activeProfile.name;
+      }
+      inputs.push({
+        type: 'gamepad',
+        label: deviceLabel,
+        iconSrc: familyIconMap[family] ?? familyIconMap.generic,
+        connected: !!liveDevice,
+      });
+    }
+    return inputs;
+  }, [activeProfile, devices]);
 
   // ─── Ensure all SNES buttons have a mapping ───
   const displayMappings = SNES_BUTTONS.map(btn => {
@@ -350,16 +374,8 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
         />
       </div>
 
-      {/* Center column: assigned controller + binding editor */}
+      {/* Center column: binding editor */}
       <div className="controls-settings__main">
-        {activeProfile?.assignedController && (
-          <AssignedControllerCard
-            assigned={activeProfile.assignedController}
-            liveDevice={assignedLiveDevice}
-            onUnassign={handleUnassign}
-          />
-        )}
-
         <div
           className={`controls-settings__bindings ${dragOverBindings ? 'controls-settings__bindings--drag-over' : ''}`}
           onDragOver={handleDragOver}
@@ -384,21 +400,37 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
             ))}
           </div>
         </div>
+
+        {/* Used inputs summary — shows which devices this profile depends on */}
+        <div className="controls-settings__used-inputs">
+          <div className="controls-settings__used-inputs-header">Required Inputs</div>
+          <div className="controls-settings__used-inputs-list">
+            {requiredInputs.map(input => (
+              <div key={input.type} className={`controls-settings__used-input ${input.connected ? '' : 'controls-settings__used-input--missing'}`}>
+                <img src={input.iconSrc} alt={input.label} className="controls-settings__used-input-icon" />
+                <span>{input.label}</span>
+                {!input.connected && (
+                  <span className="controls-settings__used-input-warning">Disconnected</span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Right column: detected devices */}
       <div className="controls-settings__devices-column">
         <div className="controls-settings__section-header">Detected Devices</div>
         <div className="controls-settings__device-list">
-          {devices.map(device => (
+          {devices.filter(d => !d.displayName.toLowerCase().includes('mouse')).map(device => (
             <DeviceCard key={device.id} device={device} />
           ))}
-          {devices.length === 0 && (
+          {devices.filter(d => !d.displayName.toLowerCase().includes('mouse')).length === 0 && (
             <p className="controls-settings__no-devices">No devices detected</p>
           )}
         </div>
         <p className="controls-settings__device-hint">
-          Drag a device onto the bindings to assign it and apply its preset.
+          Drag a device onto the bindings to apply its preset.
         </p>
       </div>
 

@@ -418,3 +418,40 @@ export async function writeInputProfiles(profileId: string, profiles: unknown[])
   await mkdir(profileDir, { recursive: true });
   await writeFile(join(profileDir, 'input-profiles.json'), JSON.stringify(profiles, null, 2), 'utf-8');
 }
+
+// ─── Stick calibration (per-device, keyed by "vid:pid") ───
+
+export interface StickCalibrationData {
+  centerX: number;
+  centerY: number;
+  minX: number;
+  maxX: number;
+  minY: number;
+  maxY: number;
+  innerDeadzone: number;
+  outerDeadzone: number;
+}
+
+export interface DeviceStickCalibration {
+  left: StickCalibrationData;
+  right: StickCalibrationData;
+  updatedAt: string;
+}
+
+/** All stick calibrations keyed by "vid:pid" */
+export type StickCalibrationStore = Record<string, DeviceStickCalibration>;
+
+const STICK_CAL_FILE = 'stick-calibration.json';
+
+export async function readStickCalibration(): Promise<StickCalibrationStore> {
+  try {
+    const data = await readFile(path(STICK_CAL_FILE), 'utf-8');
+    return JSON.parse(data);
+  } catch {
+    return {};
+  }
+}
+
+export async function writeStickCalibration(store: StickCalibrationStore): Promise<void> {
+  await writeFile(path(STICK_CAL_FILE), JSON.stringify(store, null, 2), 'utf-8');
+}

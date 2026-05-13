@@ -8,7 +8,8 @@ import { ProfileHub } from './components/views/ProfileHub';
 import { DataManager } from './components/views/DataManager';
 import { LogOverlay } from './components/views/LogOverlay';
 import { TrackerView } from './components/views/TrackerView/TrackerView';
-import { InputTester } from './components/views/InputTester';
+import { InputCalibration } from './components/views/InputTester';
+import { SpriteDebug } from './components/views/SpriteDebug';
 import { FullScreenLayer } from './components/composites/FullScreenLayer';
 import { Dialog } from './components/composites/Dialog';
 import { log } from './lib/log-bus';
@@ -29,6 +30,7 @@ function getGameRatio(aspectRatio: GameSettings['aspectRatio']): number {
     case '16:9':  return 16 / 9;
     case '16:10': return 16 / 10;
     case '18:9':  return 18 / 9;
+    case '3:2':   return 3 / 2;
     case '4:3':
     default:      return 4 / 3;
   }
@@ -67,6 +69,7 @@ export function App(): JSX.Element {
   const [showLogs, setShowLogs] = useState(false);
   const [showSaveStates, setShowSaveStates] = useState(false);
   const [showTracker, setShowTracker] = useState(false);
+  const [showSpriteDebug, setShowSpriteDebug] = useState(false);
   const [dialog, setDialog] = useState<ConfirmDialog | null>(null);
   const [gameCrashed, setGameCrashed] = useState(false);
   const [configIni, setConfigIni] = useState<string | undefined>(undefined);
@@ -199,6 +202,13 @@ export function App(): JSX.Element {
       if (e.altKey && e.key === 'Enter') {
         e.preventDefault();
         window.api.toggleFullscreen();
+        return;
+      }
+
+      // Ctrl+Shift+D: toggle sprite debug
+      if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+        e.preventDefault();
+        setShowSpriteDebug(v => !v);
         return;
       }
 
@@ -580,6 +590,7 @@ export function App(): JSX.Element {
         onToggleTracker={() => setShowTracker((v) => !v)}
         onShowDataManager={handleShowDataManager}
         onShowInputTester={() => setActivePage('input-tester')}
+        onShowSpriteDebug={() => setShowSpriteDebug(v => !v)}
         activeProfile={activeProfile}
         gameRunning={isGameRunning}
         windowMode={windowMode}
@@ -656,12 +667,13 @@ export function App(): JSX.Element {
 
         {activePage === 'input-tester' && (
           <FullScreenLayer onClose={closePage}>
-            <InputTester />
+            <InputCalibration />
           </FullScreenLayer>
         )}
 
         <LogOverlay visible={showLogs} onClose={() => setShowLogs(false)} />
         <TrackerView visible={showTracker} onClose={() => setShowTracker(false)} />
+        {showSpriteDebug && <SpriteDebug onClose={() => setShowSpriteDebug(false)} />}
       </div>
 
       <Dialog

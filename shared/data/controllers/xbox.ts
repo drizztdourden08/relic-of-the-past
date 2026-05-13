@@ -24,22 +24,22 @@ function btn(snesButton: ButtonMapping['snesButton'], index: number, iconData: B
 }
 
 const XBOX_ICONS: Record<string, ButtonIcon> = {
-  'xbox-a':     icon('xbox-a', 'A'),
-  'xbox-b':     icon('xbox-b', 'B'),
-  'xbox-x':     icon('xbox-x', 'X'),
-  'xbox-y':     icon('xbox-y', 'Y'),
-  'xbox-lb':    icon('xbox-lb', 'LB'),
-  'xbox-rb':    icon('xbox-rb', 'RB'),
-  'xbox-lt':    icon('xbox-lt', 'LT'),
-  'xbox-rt':    icon('xbox-rt', 'RT'),
+  'xbox-a':     icon('xbox-a', 'A Button'),
+  'xbox-b':     icon('xbox-b', 'B Button'),
+  'xbox-x':     icon('xbox-x', 'X Button'),
+  'xbox-y':     icon('xbox-y', 'Y Button'),
+  'xbox-lb':    icon('xbox-lb', 'Left Bumper'),
+  'xbox-rb':    icon('xbox-rb', 'Right Bumper'),
+  'xbox-lt':    icon('xbox-lt', 'Left Trigger'),
+  'xbox-rt':    icon('xbox-rt', 'Right Trigger'),
   'xbox-view':  icon('xbox-view', 'View'),
   'xbox-menu':  icon('xbox-menu', 'Menu'),
-  'xbox-ls':    icon('xbox-ls', 'LS'),
-  'xbox-rs':    icon('xbox-rs', 'RS'),
-  'xbox-dup':   icon('xbox-dup', '↑'),
-  'xbox-ddown': icon('xbox-ddown', '↓'),
-  'xbox-dleft': icon('xbox-dleft', '←'),
-  'xbox-dright':icon('xbox-dright', '→'),
+  'xbox-ls':    icon('xbox-ls', 'Left Stick'),
+  'xbox-rs':    icon('xbox-rs', 'Right Stick'),
+  'xbox-dup':   icon('xbox-dup', 'D-Pad Up'),
+  'xbox-ddown': icon('xbox-ddown', 'D-Pad Down'),
+  'xbox-dleft': icon('xbox-dleft', 'D-Pad Left'),
+  'xbox-dright':icon('xbox-dright', 'D-Pad Right'),
 };
 
 const XBOX_MAPPINGS: ButtonMapping[] = [
@@ -73,16 +73,18 @@ function xboxPreset(id: string, name: string, pids: string[]): ControllerPreset 
 
 export const XBOX_360_WIRED       = xboxPreset('xbox-360-wired',       'Xbox Controller',               ['028e']);
 export const XBOX_360_WIRELESS    = xboxPreset('xbox-360-wireless',    'Xbox 360 Wireless Controller',  ['028f', '0719']);
+export const XBOX_WIRELESS_ADAPTER = xboxPreset('xbox-wireless-adapter', 'Xbox Wireless Controller',    ['02ff']);
 export const XBOX_ONE             = xboxPreset('xbox-one',             'Xbox One Controller',           ['02d1', '02dd', '02e3']);
 export const XBOX_ONE_S_BT       = xboxPreset('xbox-one-s-bt',        'Xbox One S Controller (BT)',    ['02e0', '02fd']);
 export const XBOX_ONE_ELITE      = xboxPreset('xbox-one-elite',       'Xbox One Elite Controller',     ['02e3']);
 export const XBOX_ONE_ELITE_2    = xboxPreset('xbox-one-elite-2',     'Xbox Elite Series 2',           ['0b00', '0b05']);
-export const XBOX_SERIES_XS      = xboxPreset('xbox-series-xs',       'Xbox Series X|S Controller',    ['0b12', '0b13']);
+export const XBOX_SERIES_XS      = xboxPreset('xbox-series-xs',       'Xbox Series X|S Controller',    ['0b12', '0b13', '0b20', '0b21', '0b22']);
 export const XBOX_ADAPTIVE       = xboxPreset('xbox-adaptive',        'Xbox Adaptive Controller',      ['0b0a']);
 
 export const XBOX_PRESETS: ControllerPreset[] = [
   XBOX_360_WIRED,
   XBOX_360_WIRELESS,
+  XBOX_WIRELESS_ADAPTER,
   XBOX_ONE,
   XBOX_ONE_S_BT,
   XBOX_ONE_ELITE,

@@ -26,6 +26,7 @@ export function TrackerSummary({ completed, reachable, blocked, total }: Tracker
         <span className="tracker-summary__stat tracker-summary__stat--completed">{completed} done</span>
         <span className="tracker-summary__stat tracker-summary__stat--reachable">{reachable} available</span>
         <span className="tracker-summary__stat tracker-summary__stat--blocked">{blocked} blocked</span>
+        <span className="tracker-summary__stat tracker-summary__stat--total">{total} total</span>
         <span className="tracker-summary__stat">{pct}%</span>
       </div>
     </div>

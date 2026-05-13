@@ -23,7 +23,10 @@
     { "id": "dpLeft",  "label": "D-Left",  "icon": "switch-dleft",  "category": "dpad" },
     { "id": "dpRight", "label": "D-Right", "icon": "switch-dright", "category": "dpad" },
     { "id": "home",    "label": "Home",    "icon": "switch-home",   "category": "system" },
-    { "id": "capture", "label": "Capture", "icon": "switch-capture","category": "system" }
+    { "id": "capture", "label": "Capture", "icon": "switch-capture","category": "system" },
+    { "id": "c",       "label": "C",       "icon": "switch-c",      "category": "system" },
+    { "id": "gl",      "label": "GL",      "icon": "switch-gl",     "category": "shoulder" },
+    { "id": "gr",      "label": "GR",      "icon": "switch-gr",     "category": "shoulder" }
   ],
   "axes": [
     { "id": "leftX",  "label": "Left Stick X",  "category": "stick" },

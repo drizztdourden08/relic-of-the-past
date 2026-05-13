@@ -54,10 +54,10 @@
 }
 
 .device-card__icon {
-  font-size: 20px;
+  width: 24px;
+  height: 24px;
   flex-shrink: 0;
-  width: 28px;
-  text-align: center;
+  object-fit: contain;
 }
 
 .device-card__info {

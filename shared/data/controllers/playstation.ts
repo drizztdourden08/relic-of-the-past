@@ -25,22 +25,22 @@ function btn(snesButton: ButtonMapping['snesButton'], index: number, iconData: B
 }
 
 const PS_ICONS: Record<string, ButtonIcon> = {
-  'ps-cross':    icon('ps-cross', '✕'),
-  'ps-circle':   icon('ps-circle', '○'),
-  'ps-square':   icon('ps-square', '□'),
-  'ps-triangle': icon('ps-triangle', '△'),
-  'ps-l1':       icon('ps-l1', 'L1'),
-  'ps-r1':       icon('ps-r1', 'R1'),
-  'ps-l2':       icon('ps-l2', 'L2'),
-  'ps-r2':       icon('ps-r2', 'R2'),
+  'ps-cross':    icon('ps-cross', 'Cross Button'),
+  'ps-circle':   icon('ps-circle', 'Circle Button'),
+  'ps-square':   icon('ps-square', 'Square Button'),
+  'ps-triangle': icon('ps-triangle', 'Triangle Button'),
+  'ps-l1':       icon('ps-l1', 'L1 Bumper'),
+  'ps-r1':       icon('ps-r1', 'R1 Bumper'),
+  'ps-l2':       icon('ps-l2', 'L2 Trigger'),
+  'ps-r2':       icon('ps-r2', 'R2 Trigger'),
   'ps-share':    icon('ps-share', 'Share'),
   'ps-options':  icon('ps-options', 'Options'),
-  'ps-l3':       icon('ps-l3', 'L3'),
-  'ps-r3':       icon('ps-r3', 'R3'),
-  'ps-dup':      icon('ps-dup', '↑'),
-  'ps-ddown':    icon('ps-ddown', '↓'),
-  'ps-dleft':    icon('ps-dleft', '←'),
-  'ps-dright':   icon('ps-dright', '→'),
+  'ps-l3':       icon('ps-l3', 'Left Stick'),
+  'ps-r3':       icon('ps-r3', 'Right Stick'),
+  'ps-dup':      icon('ps-dup', 'D-Pad Up'),
+  'ps-ddown':    icon('ps-ddown', 'D-Pad Down'),
+  'ps-dleft':    icon('ps-dleft', 'D-Pad Left'),
+  'ps-dright':   icon('ps-dright', 'D-Pad Right'),
 };
 
 // DualSense uses "Create" instead of "Share"

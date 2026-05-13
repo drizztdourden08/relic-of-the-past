@@ -6,7 +6,7 @@ export interface GameSettings {
   disableFrameDelay: boolean;
 
   // ─── Aspect Ratio & Display ───
-  aspectRatio: '4:3' | '16:9' | '16:10' | '18:9';
+  aspectRatio: '4:3' | '3:2' | '16:9' | '16:10' | '18:9';
   extendY: boolean;
   unchangedSprites: boolean;
   noVisualFixes: boolean;

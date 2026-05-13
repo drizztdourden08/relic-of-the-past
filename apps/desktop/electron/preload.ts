@@ -106,6 +106,10 @@ contextBridge.exposeInMainWorld('api', {
   readInputProfiles: (profileId: string) => ipcRenderer.invoke('inputProfiles:read', profileId),
   writeInputProfiles: (profileId: string, profiles: unknown[]) => ipcRenderer.invoke('inputProfiles:write', profileId, profiles),
 
+  // Stick calibration (global per-device VID:PID)
+  readStickCalibration: () => ipcRenderer.invoke('stickCalibration:read'),
+  writeStickCalibration: (store: Record<string, unknown>) => ipcRenderer.invoke('stickCalibration:write', store),
+
   // HID device enumeration
   enumerateHidDevices: () => ipcRenderer.invoke('hid:enumerate'),
 
@@ -125,4 +129,12 @@ contextBridge.exposeInMainWorld('api', {
 
   // App info
   getUserDataPath: () => ipcRenderer.invoke('app:getUserDataPath'),
+
+  // Sprite debug (item→sprite mapping review)
+  loadSpriteDebug: () => ipcRenderer.invoke('spriteDebug:load'),
+  saveSpriteDebug: (data: unknown) => ipcRenderer.invoke('spriteDebug:save', data),
+
+  // Sprite review (per-sprite image review)
+  loadSpriteReview: () => ipcRenderer.invoke('spriteReview:load'),
+  saveSpriteReview: (data: unknown) => ipcRenderer.invoke('spriteReview:save', data),
 });

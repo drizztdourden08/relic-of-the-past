@@ -16,6 +16,7 @@ interface TitleBarProps {
   onToggleTracker: () => void;
   onShowDataManager: (tab?: string) => void;
   onShowInputTester: () => void;
+  onShowSpriteDebug: () => void;
   activeProfile: Profile | null;
   gameRunning: boolean;
   windowMode?: GameSettings['windowMode'];
@@ -33,6 +34,7 @@ export function TitleBar({
   onToggleTracker,
   onShowDataManager,
   onShowInputTester,
+  onShowSpriteDebug,
   activeProfile,
   gameRunning,
   windowMode = 'default',
@@ -161,10 +163,17 @@ export function TitleBar({
     },
     {
       key: 'input-tester',
-      icon: '🕹️',
-      label: 'Input Tester',
-      description: 'Raw gamepad input diagnostics',
+      icon: '🎮',
+      label: 'Input Calibration',
+      description: 'Controller setup & button mapping',
       onClick: () => { closeMenu(); onShowInputTester(); },
+    },
+    {
+      key: 'sprite-debug',
+      icon: '🖼️',
+      label: 'Sprite Debug',
+      description: 'Review all item sprites',
+      onClick: () => { closeMenu(); onShowSpriteDebug(); },
     },
     'separator',
     { key: 'quit', icon: '✕', label: 'Quit', onClick: () => window.api.close() },

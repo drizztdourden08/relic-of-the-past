@@ -12,13 +12,14 @@ interface DeviceCardProps {
   onDragStart?: (device: DetectedDevice) => void;
 }
 
-const FAMILY_EMOJI: Record<string, string> = {
-  xbox: '🎮',
-  playstation: '🎮',
-  nintendo: '🎮',
-  '8bitdo': '🎮',
-  keyboard: '⌨️',
-  generic: '🎮',
+/** Map controller family → silhouette icon path */
+const FAMILY_ICON: Record<string, string> = {
+  xbox: '/buttons/xbox/controller_xboxseries.svg',
+  playstation: '/buttons/generic/generic_joystick.svg',
+  nintendo: '/buttons/switch/controller_switch_pro.svg',
+  '8bitdo': '/buttons/generic/generic_joystick.svg',
+  keyboard: '/buttons/keyboard/keyboard.svg',
+  generic: '/buttons/generic/generic_joystick.svg',
 };
 
 export function DeviceCard({ device, onDragStart }: DeviceCardProps): JSX.Element {
@@ -31,7 +32,7 @@ export function DeviceCard({ device, onDragStart }: DeviceCardProps): JSX.Elemen
     onDragStart?.(device);
   };
 
-  const emoji = FAMILY_EMOJI[device.controllerFamily] ?? '🎮';
+  const iconSrc = FAMILY_ICON[device.controllerFamily] ?? FAMILY_ICON.generic;
 
   const statusClass = !device.connected
     ? 'device-card__status--disconnected'
@@ -57,7 +58,7 @@ export function DeviceCard({ device, onDragStart }: DeviceCardProps): JSX.Elemen
       onDragStart={handleDragStart}
     >
       <span className={`device-card__status ${statusClass}`} title={statusTitle} />
-      <span className="device-card__icon">{emoji}</span>
+      <img src={iconSrc} alt={device.controllerFamily} className="device-card__icon" />
       <div className="device-card__info">
         <span className="device-card__name">{device.displayName}</span>
         {apiLabel && <span className={`device-card__api device-card__api--${device.inputApi}`}>{apiLabel}</span>}

@@ -200,6 +200,10 @@ interface ElectronAPI {
   readInputProfiles(profileId: string): Promise<unknown[]>;
   writeInputProfiles(profileId: string, profiles: unknown[]): Promise<void>;
 
+  // Stick calibration (global per-device VID:PID)
+  readStickCalibration(): Promise<Record<string, unknown>>;
+  writeStickCalibration(store: Record<string, unknown>): Promise<void>;
+
   // HID device enumeration
   enumerateHidDevices(): Promise<Array<{ vendorId: string; productId: string; product: string; manufacturer: string; path: string; serialNumber: string | null }>>;
 
@@ -210,6 +214,14 @@ interface ElectronAPI {
   onHidDiag(callback: (entry: { time: number; level: string; message: string }) => void): () => void;
   // App info
   getUserDataPath(): Promise<string>;
+
+  // Sprite debug (item→sprite mapping review)
+  loadSpriteDebug(): Promise<Record<string, { status: string; comment?: string }>>;
+  saveSpriteDebug(data: Record<string, { status: string; comment?: string }>): Promise<void>;
+
+  // Sprite review (per-sprite image review)
+  loadSpriteReview(): Promise<Record<string, { status: string; comment?: string }>>;
+  saveSpriteReview(data: Record<string, { status: string; comment?: string }>): Promise<void>;
 }
 
 declare function Zelda3(config: Record<string, unknown>): Promise<unknown>;

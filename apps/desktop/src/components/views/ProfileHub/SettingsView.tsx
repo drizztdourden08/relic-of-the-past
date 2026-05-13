@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
-import { RadioGroup } from '../../primitives/RadioGroup';
 import { SegmentedControl } from '../../primitives/SegmentedControl';
 import { SettingsLayout, type Section } from '../../composites/SettingsLayout/SettingsLayout';
 
@@ -87,10 +86,11 @@ const SECTIONS: Section[] = [
 ];
 
 const ASPECT_OPTIONS = [
-  { value: '4:3' as const, label: '4:3', description: 'Original' },
-  { value: '16:9' as const, label: '16:9', description: 'Widescreen' },
-  { value: '16:10' as const, label: '16:10', description: 'Steam Deck' },
-  { value: '18:9' as const, label: '18:9', description: 'Ultrawide' },
+  { value: '4:3', label: '4:3' },
+  { value: '3:2', label: '3:2' },
+  { value: '16:9', label: '16:9' },
+  { value: '16:10', label: '16:10' },
+  { value: '18:9', label: '18:9' },
 ];
 
 const VIEWPORT_OPTIONS = [
@@ -108,11 +108,11 @@ function renderControl(key: string, settings: GameSettings, onChange: (patch: Pa
   switch (key) {
     case 'aspectRatio':
       return (
-        <RadioGroup
+        <SegmentedControl
           label="Aspect Ratio"
           value={settings.aspectRatio}
           options={ASPECT_OPTIONS}
-          onChange={(v) => onChange({ aspectRatio: v })}
+          onChange={(v) => onChange({ aspectRatio: v as GameSettings['aspectRatio'] })}
         />
       );
     case 'viewportConstraint':

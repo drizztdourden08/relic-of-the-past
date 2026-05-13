@@ -1,10 +1,13 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import type { CheckDefinition } from '@shared/types/tracker';
 import type { CheckStatus } from '@shared/lib/logic-eval';
 import { computeTrackerSnapshot } from '@shared/lib/logic-eval';
 import { ALL_CHECKS } from '@shared/data/checks';
 import { ALL_CONNECTIONS } from '@shared/data/regions';
 import { REGION_RULES, CHECK_RULES } from '@shared/data/logic';
+import { getCheckTags } from '@shared/data/checks/tags';
+import type { GroupDimension, FilterState } from '@shared/data/checks/grouping';
+import { buildGroupTree, filterChecks } from '@shared/data/checks/grouping';
 import {
   onInventoryChanged, onUnknownItem, onCompletedChecksChanged,
   getCurrentInventory, getCompletedChecks, getUnknownItems, loadUnknownItems,
@@ -12,7 +15,9 @@ import {
 } from '../../../lib/game';
 import type { UnknownItemEntry } from '../../../lib/game';
 import { TrackerSummary } from './TrackerSummary';
-import { TrackerRegionSection } from './TrackerRegionSection';
+import { TrackerInventory } from './TrackerInventory';
+import { TrackerFilters, type ViewMode } from './TrackerFilters';
+import { TrackerGroupTree } from './TrackerGroupTree';
 import './TrackerView.css';
 
 interface TrackerViewProps {
@@ -20,10 +25,13 @@ interface TrackerViewProps {
   onClose: () => void;
 }
 
-export function TrackerView({ visible, onClose }: TrackerViewProps): JSX.Element | null {
+export function TrackerView({ visible, onClose }: TrackerViewProps) {
   const [inventory, setInventory] = useState<Set<string>>(() => getCurrentInventory());
   const [completedChecks, setCompletedChecks] = useState<Set<string>>(() => getCompletedChecks());
   const [unknownItems, setUnknownItems] = useState<UnknownItemEntry[]>(() => getUnknownItems());
+  const [viewMode, setViewMode] = useState<ViewMode>('compact');
+  const [grouping, setGrouping] = useState<GroupDimension[]>(['world', 'dungeon']);
+  const [filter, setFilter] = useState<FilterState>({ searchQuery: '', activeTags: [], tagMode: 'any' });
 
   // Load persisted unknown items on mount
   useEffect(() => {
@@ -45,7 +53,6 @@ export function TrackerView({ visible, onClose }: TrackerViewProps): JSX.Element
     return onCompletedChecksChanged((checks) => setCompletedChecks(new Set(checks)));
   }, []);
 
-  // Track unknown items and persist
   useEffect(() => {
     return onUnknownItem((items) => {
       setUnknownItems([...items]);
@@ -56,27 +63,27 @@ export function TrackerView({ visible, onClose }: TrackerViewProps): JSX.Element
     });
   }, []);
 
+  // Pre-compute tag map
+  const tagMap = useMemo(() => getCheckTags(ALL_CHECKS), []);
+
   const snapshot = useMemo(
     () => computeTrackerSnapshot(inventory, completedChecks, ALL_CHECKS, ALL_CONNECTIONS, REGION_RULES, CHECK_RULES),
     [inventory, completedChecks],
   );
 
-  // Group checks by region
-  const regionGroups = useMemo(() => {
-    const groups = new Map<string, { checks: CheckDefinition[]; statuses: Map<string, CheckStatus> }>();
-    for (const check of ALL_CHECKS) {
-      const region = check.dungeon ?? check.region;
-      if (!groups.has(region)) {
-        groups.set(region, { checks: [], statuses: new Map() });
-      }
-      const group = groups.get(region)!;
-      group.checks.push(check);
-      group.statuses.set(check.id, snapshot.get(check.id) ?? 'blocked');
-    }
-    return groups;
-  }, [snapshot]);
+  // Filter checks
+  const filteredChecks = useMemo(
+    () => filterChecks(ALL_CHECKS, filter, tagMap),
+    [filter, tagMap],
+  );
 
-  // Summary stats
+  // Build group tree from filtered checks
+  const groupTree = useMemo(
+    () => buildGroupTree(filteredChecks, snapshot, grouping, tagMap),
+    [filteredChecks, snapshot, grouping, tagMap],
+  );
+
+  // Summary stats (from all checks, not filtered)
   const stats = useMemo(() => {
     let completed = 0, reachable = 0, blocked = 0;
     for (const status of snapshot.values()) {
@@ -89,23 +96,6 @@ export function TrackerView({ visible, onClose }: TrackerViewProps): JSX.Element
 
   if (!visible) return null;
 
-  // Sort regions: dungeons first (by dungeon order), then overworld
-  const dungeonOrder = [
-    'Hyrule Castle', 'Castle Tower', 'Eastern Palace', 'Desert Palace',
-    'Tower of Hera', 'Palace of Darkness', 'Swamp Palace',
-    "Skull Woods", "Thieves' Town", 'Ice Palace',
-    'Misery Mire', 'Turtle Rock', "Ganon's Tower",
-  ];
-
-  const sortedRegions = [...regionGroups.entries()].sort(([a], [b]) => {
-    const ai = dungeonOrder.indexOf(a);
-    const bi = dungeonOrder.indexOf(b);
-    if (ai !== -1 && bi !== -1) return ai - bi;
-    if (ai !== -1) return -1;
-    if (bi !== -1) return 1;
-    return a.localeCompare(b);
-  });
-
   return (
     <div className="tracker-view">
       <div className="tracker-view__header">
@@ -113,32 +103,35 @@ export function TrackerView({ visible, onClose }: TrackerViewProps): JSX.Element
         <button className="tracker-view__close" onClick={onClose} aria-label="Close tracker">×</button>
       </div>
 
+      {/* 1. Visual Inventory */}
+      <TrackerInventory inventory={inventory} />
+
+      {/* 2. Global goal / summary */}
       <TrackerSummary {...stats} />
 
-      {unknownItems.length > 0 && (
-        <div className="tracker-view__unknown">
-          <span className="tracker-view__unknown-label">Unmapped Items ({unknownItems.length})</span>
-          <div className="tracker-view__unknown-list">
-            {unknownItems.map((item, i) => (
-              <span key={i} className="tracker-view__unknown-item">
-                0x{item.id.toString(16).toUpperCase()} (method={item.method})
-              </span>
-            ))}
-          </div>
+      {/* 3. Filters, search, grouping, view modes */}
+      <TrackerFilters
+        filter={filter}
+        onFilterChange={setFilter}
+        grouping={grouping}
+        onGroupingChange={setGrouping}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+      />
+
+      {/* Filtered stats (only shown when filtering is active) */}
+      {(filter.searchQuery || filter.activeTags.length > 0) && (
+        <div className="tracker-view__filtered-stats">
+          Showing {groupTree.stats.total} checks:
+          <span className="tracker-summary__stat--completed"> {groupTree.stats.completed} done</span>,
+          <span className="tracker-summary__stat--reachable"> {groupTree.stats.reachable} available</span>,
+          <span className="tracker-summary__stat--blocked"> {groupTree.stats.blocked} blocked</span>
         </div>
       )}
 
-      <div className="tracker-view__inventory">
-        <span className="tracker-view__inventory-label">Inventory:</span>
-        <span className="tracker-view__inventory-items">
-          {inventory.size === 0 ? 'None' : [...inventory].sort().join(', ')}
-        </span>
-      </div>
-
-      <div className="tracker-view__regions">
-        {sortedRegions.map(([region, { checks, statuses }]) => (
-          <TrackerRegionSection key={region} region={region} checks={checks} statuses={statuses} />
-        ))}
+      {/* 4. Grouped check tree */}
+      <div className="tracker-view__checks">
+        <TrackerGroupTree node={groupTree} statuses={snapshot} viewMode={viewMode} />
       </div>
     </div>
   );
