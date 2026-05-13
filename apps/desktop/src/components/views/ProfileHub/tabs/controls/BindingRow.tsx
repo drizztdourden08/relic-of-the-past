@@ -5,7 +5,7 @@
  */
 
 import type { ButtonMapping } from '@shared/types/controls';
-import { SNES_BUTTON_LABELS } from '@shared/types/controls';
+import { SNES_BUTTON_LABELS, SNES_ACTION_LABELS } from '@shared/types/controls';
 import { getSnesIconUrl, getButtonIconUrl, keyCodeToIconId } from '../../../InputTester/button-icons';
 import './BindingRow.css';
 
@@ -32,7 +32,7 @@ function formatKeyCode(code: string): string {
   if (code.startsWith('Key')) return code.slice(3);
   if (code.startsWith('Digit')) return code.slice(5);
   const map: Record<string, string> = {
-    ArrowUp: '↑', ArrowDown: '↓', ArrowLeft: '←', ArrowRight: '→',
+    ArrowUp: 'Arrow Up', ArrowDown: 'Arrow Down', ArrowLeft: 'Arrow Left', ArrowRight: 'Arrow Right',
     ShiftLeft: 'L.Shift', ShiftRight: 'R.Shift',
     ControlLeft: 'L.Ctrl', ControlRight: 'R.Ctrl',
     AltLeft: 'L.Alt', AltRight: 'R.Alt',
@@ -60,6 +60,7 @@ function getBindingIconUrl(mapping: ButtonMapping): string | null {
 }
 
 export function BindingRow({ mapping, onRebind }: BindingRowProps): JSX.Element {
+  const actionLabel = SNES_ACTION_LABELS[mapping.snesButton];
   const snesLabel = SNES_BUTTON_LABELS[mapping.snesButton];
   const snesIconUrl = getSnesIconUrl(mapping.snesButton);
   const bindingLabel = getBindingLabel(mapping);
@@ -70,12 +71,12 @@ export function BindingRow({ mapping, onRebind }: BindingRowProps): JSX.Element 
       className="binding-row"
       role="button"
       tabIndex={0}
-      title={`Click to rebind ${snesLabel}`}
+      title={`Click to rebind ${actionLabel}`}
       onClick={() => onRebind(mapping)}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRebind(mapping); } }}
     >
-      {/* SNES button name */}
-      <span className="binding-row__snes-label">{snesLabel}</span>
+      {/* Game action name */}
+      <span className="binding-row__action-label">{actionLabel}</span>
 
       {/* SNES button icon */}
       <div className="binding-row__icon-slot">
@@ -83,6 +84,9 @@ export function BindingRow({ mapping, onRebind }: BindingRowProps): JSX.Element 
           <img src={snesIconUrl} alt={snesLabel} className="binding-row__icon-img" />
         ) : null}
       </div>
+
+      {/* SNES button name */}
+      <span className="binding-row__snes-label">{snesLabel}</span>
 
       {/* Bound controller/keyboard icon */}
       <div className="binding-row__icon-slot">

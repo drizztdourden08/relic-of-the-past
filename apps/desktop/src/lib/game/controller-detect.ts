@@ -23,8 +23,13 @@ interface HidDeviceInfo {
  * Build a DetectedDevice from HID info (main process).
  * No button press needed — always detects connected devices.
  */
-function detectFromHid(hid: HidDeviceInfo, index: number, activated: boolean): DetectedDevice {
+function detectFromHid(hid: HidDeviceInfo, index: number, webApiActivated: boolean): DetectedDevice {
   const preset = findPresetByVidPid(hid.vendorId, hid.productId);
+  const api = preset?.inputApi ?? 'webapi';
+
+  // HID-api controllers are always activated (direct HID reading, no button press needed).
+  // XInput/WebAPI controllers need a button press to appear in navigator.getGamepads().
+  const activated = api === 'hid' ? true : webApiActivated;
 
   return {
     id: `hid-${hid.vendorId}-${hid.productId}`,
@@ -38,7 +43,7 @@ function detectFromHid(hid: HidDeviceInfo, index: number, activated: boolean): D
     connected: true,
     activated,
     brandLogoKey: preset?.brandLogoKey ?? null,
-    inputApi: preset?.inputApi ?? 'webapi',
+    inputApi: api,
   };
 }
 

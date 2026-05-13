@@ -1,22 +1,23 @@
 /**
  * BindingListener — modal overlay that captures the next key or gamepad button press.
- * Shows "Press a key or button for [SNES Label]..." and captures the first input.
+ * Uses the shared InputManager's raw input events so every input source
+ * (keyboard, Web Gamepad API, WebHID) works identically everywhere.
  */
 
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { InputBinding, SnesButton } from '@shared/types/controls';
 import { SNES_BUTTON_LABELS } from '@shared/types/controls';
+import { getInputManager } from '../../../../../lib/game/input-manager';
 import './BindingListener.css';
 
 interface BindingListenerProps {
   snesButton: SnesButton;
-  onCapture: (binding: InputBinding) => void;
+  onCapture: (binding: InputBinding, sourceDeviceKey?: string, vendorId?: string | null, productId?: string | null) => void;
   onCancel: () => void;
 }
 
 export function BindingListener({ snesButton, onCapture, onCancel }: BindingListenerProps): JSX.Element {
   const label = SNES_BUTTON_LABELS[snesButton];
-  // Delay enabling cancel-on-click to prevent the opening click from immediately cancelling
   const [canCancel, setCanCancel] = useState(false);
 
   useEffect(() => {
@@ -24,77 +25,41 @@ export function BindingListener({ snesButton, onCapture, onCancel }: BindingList
     return () => clearTimeout(timeout);
   }, []);
 
-  const handleKey = useCallback((e: KeyboardEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (e.code === 'Escape') {
-      onCancel();
-      return;
-    }
-
-    onCapture({
-      type: 'keyboard',
-      code: e.code,
-    });
-  }, [onCapture, onCancel]);
-
+  // Single unified listener — uses InputManager's raw input events for ALL sources
   useEffect(() => {
-    window.addEventListener('keydown', handleKey, true);
-    return () => window.removeEventListener('keydown', handleKey, true);
-  }, [handleKey]);
+    let cancelled = false;
+    let unsub: (() => void) | null = null;
 
-  // Poll gamepads for button press
-  useEffect(() => {
-    let running = true;
-
-    const poll = () => {
-      if (!running) return;
-
-      const gamepads = navigator.getGamepads();
-      for (const gp of gamepads) {
-        if (!gp || !gp.connected) continue;
-
-        // Check buttons
-        for (let i = 0; i < gp.buttons.length; i++) {
-          if (gp.buttons[i].pressed) {
-            onCapture({
-              type: 'gamepad-button',
-              index: i,
-            });
-            running = false;
-            return;
-          }
-        }
-
-        // Check axes (dead zone threshold)
-        for (let i = 0; i < gp.axes.length; i++) {
-          const val = gp.axes[i];
-          if (Math.abs(val) > 0.7) {
-            onCapture({
-              type: 'gamepad-axis',
-              axisIndex: i,
-              direction: val > 0 ? '+' : '-',
-            });
-            running = false;
-            return;
-          }
-        }
+    // Keyboard: capture-phase handler for Escape + key capture (active immediately after delay)
+    const handleKey = (e: KeyboardEvent) => {
+      if (cancelled) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.code === 'Escape') {
+        onCancel();
+        return;
       }
-
-      requestAnimationFrame(poll);
+      onCapture({ type: 'keyboard', code: e.code }, 'keyboard');
     };
 
-    // Small delay to avoid capturing the button press that opened this
+    // Wait 200ms before subscribing to avoid capturing stale input
     const timeout = setTimeout(() => {
-      if (running) requestAnimationFrame(poll);
+      if (cancelled) return;
+      window.addEventListener('keydown', handleKey, true);
+      // Gamepad + HID: subscribe to InputManager's raw input stream
+      unsub = getInputManager().onRawInput((event) => {
+        if (cancelled) return;
+        onCapture(event.binding, event.sourceDeviceKey, event.vendorId, event.productId);
+      });
     }, 200);
 
     return () => {
-      running = false;
+      cancelled = true;
       clearTimeout(timeout);
+      window.removeEventListener('keydown', handleKey, true);
+      if (unsub) unsub();
     };
-  }, [onCapture]);
+  }, [onCapture, onCancel]);
 
   return (
     <div className="binding-listener-backdrop" onClick={() => canCancel && onCancel()}>

@@ -30,9 +30,11 @@ for (const preset of ALL_PRESETS) {
   }
 }
 
-/** Find a preset by VID:PID pair (lowercase hex) */
+/** Find a preset by VID:PID pair (lowercase hex, auto-pads to 4 chars) */
 export function findPresetByVidPid(vid: string, pid: string): ControllerPreset | null {
-  return vidPidIndex.get(`${vid.toLowerCase()}:${pid.toLowerCase()}`) ?? null;
+  const v = vid.toLowerCase().padStart(4, '0');
+  const p = pid.toLowerCase().padStart(4, '0');
+  return vidPidIndex.get(`${v}:${p}`) ?? null;
 }
 
 /** Find a preset by its unique ID */

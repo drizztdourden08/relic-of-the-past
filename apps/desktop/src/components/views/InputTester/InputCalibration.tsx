@@ -3,11 +3,16 @@
  *
  * Shows detected controllers with real-time button/axis state using
  * proper SVG icons, joystick circle testers, and vibration testing.
+ *
+ * All input state comes from InputManager (the single source of truth).
+ * Only the calibration wizard uses webHidReader.onRawReport() directly for raw bytes.
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { webHidReader } from '../../../lib/game/webhid-input-reader';
 import type { WebHidInputState, DeviceStickCalibration } from '../../../lib/game/webhid-input-reader';
+import { getInputManager } from '../../../lib/game/input-manager';
+import type { GamepadSnapshot } from '../../../lib/game/input-manager';
 import { HidCalibrationWizard } from './HidCalibrationWizard';
 import type { HidControllerMap } from './HidCalibrationWizard';
 import { StickCalibrationWizard } from './StickCalibrationWizard';
@@ -24,15 +29,6 @@ interface HidDeviceInfo {
 }
 
 // ── Types ──
-
-interface GamepadSnapshot {
-  index: number;
-  id: string;
-  connected: boolean;
-  mapping: string;
-  buttons: { pressed: boolean; value: number }[];
-  axes: number[];
-}
 
 interface EventEntry {
   time: number;
@@ -83,8 +79,6 @@ function StickCircle({ x, y, label }: { x: number; y: number; label: string }) {
 export function InputCalibration(): JSX.Element {
   const [gamepads, setGamepads] = useState<GamepadSnapshot[]>([]);
   const [events, setEvents] = useState<EventEntry[]>([]);
-  const [polling, setPolling] = useState(true);
-  const rafRef = useRef<number>(0);
   const logRef = useRef<HTMLDivElement>(null);
 
   // WebHID
@@ -107,59 +101,29 @@ export function InputCalibration(): JSX.Element {
       .catch(() => {});
   }, [webHidConnected]);
 
-  // Load stick calibrations on mount
+  // Load stick calibration store for display (InputManager already loaded them into webHidReader)
   useEffect(() => {
     window.api.readStickCalibration()
       .then((store) => {
-        const typed = store as Record<string, DeviceStickCalibration>;
-        setStickCalibrationStore(typed);
-        webHidReader.loadStickCalibrations(typed);
+        setStickCalibrationStore(store as Record<string, DeviceStickCalibration>);
       })
       .catch(() => {});
   }, []);
 
-  // ── Gamepad polling (filter out devices already on WebHID) ──
-  const poll = useCallback(() => {
-    const raw = navigator.getGamepads();
-    const snaps: GamepadSnapshot[] = [];
-    // Get WebHID device VID:PID strings to filter duplicates
-    const hidDevices = webHidReader.getDevices();
-    const hidIds = new Set(hidDevices.map(d =>
-      `${d.vendorId.toString(16).padStart(4, '0')}:${d.productId.toString(16).padStart(4, '0')}`
-    ));
-    for (const gp of raw) {
-      if (!gp) continue;
-      // Skip gamepad if its ID contains BOTH the VID and PID already claimed by WebHID
-      const gpIdLower = gp.id.toLowerCase();
-      let isDuplicate = false;
-      for (const hidId of hidIds) {
-        const [vid, pid] = hidId.split(':');
-        // Only filter if the ID contains vendor:product in Chromium format
-        if (gpIdLower.includes(`vendor: ${vid}`) && gpIdLower.includes(`product: ${pid}`)) {
-          isDuplicate = true;
-          break;
-        }
-      }
-      if (isDuplicate) continue;
-      snaps.push({
-        index: gp.index,
-        id: gp.id,
-        connected: gp.connected,
-        mapping: gp.mapping,
-        buttons: gp.buttons.map(b => ({ pressed: b.pressed, value: b.value })),
-        axes: [...gp.axes],
-      });
-    }
-    setGamepads(snaps);
-    if (polling) rafRef.current = requestAnimationFrame(poll);
-  }, [polling]);
-
+  // ── Subscribe to InputManager for all input state ──
   useEffect(() => {
-    if (polling) rafRef.current = requestAnimationFrame(poll);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [polling, poll]);
+    const inputMgr = getInputManager();
+    const unsub = inputMgr.onInputState((hidStates, gamepadSnaps, _pressedKeys) => {
+      // Update WebHID states
+      setWebHidStates(hidStates);
+      setWebHidConnected(hidStates.size > 0 || webHidReader.isConnected());
+      // Update gamepad states
+      setGamepads(gamepadSnaps);
+    });
+    return unsub;
+  }, []);
 
-  // ── Gamepad events ──
+  // ── Gamepad connect/disconnect events (for log only) ──
   useEffect(() => {
     const onConnect = (e: GamepadEvent) => {
       setEvents(prev => [...prev.slice(-49), { time: Date.now(), type: 'connect', id: e.gamepad.id }]);
@@ -175,24 +139,12 @@ export function InputCalibration(): JSX.Element {
     };
   }, []);
 
-  // ── WebHID ──
+  // ── WebHID diagnostics (lightweight listener — no input polling) ──
   useEffect(() => {
-    const unsubInput = webHidReader.onInput((state) => {
-      setWebHidStates(prev => {
-        const next = new Map(prev);
-        next.set(state.deviceKey, state);
-        return next;
-      });
-      setWebHidConnected(true);
-    });
     const unsubDiag = webHidReader.onDiag(() => {
       setWebHidDiag([...webHidReader.getDiagLog()]);
     });
-    webHidReader.autoConnect().then((ok) => {
-      setWebHidConnected(ok);
-      setWebHidDiag([...webHidReader.getDiagLog()]);
-    });
-    return () => { unsubInput(); unsubDiag(); };
+    return unsubDiag;
   }, []);
 
   const handleWebHidConnect = async () => {
@@ -261,12 +213,6 @@ export function InputCalibration(): JSX.Element {
           disabled={!webHidConnected}
         >
           Calibrate
-        </button>
-        <button
-          className="input-cal__btn"
-          onClick={() => setPolling(p => !p)}
-        >
-          {polling ? 'Pause' : 'Resume'}
         </button>
       </div>
 

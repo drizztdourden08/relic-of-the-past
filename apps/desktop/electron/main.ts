@@ -40,7 +40,6 @@ import {
   migrateDataFolder,
 } from './profile-manager';
 import { enumerateControllers } from './hid-devices';
-import { hidInputReader } from './hid-input-reader';
 
 // Ensure consistent userData path across dev and production
 app.setName('alttp-pc');
@@ -1025,15 +1024,7 @@ function registerIpcHandlers(): void {
     return enumerateControllers();
   });
 
-  // HID input: get latest button/axis state for all HID-read controllers
-  ipcMain.handle('hid:getInputStates', () => {
-    return hidInputReader.getAllStates();
-  });
 
-  // HID diagnostics log
-  ipcMain.handle('hid:getDiagLog', () => {
-    return hidInputReader.getDiagLog();
-  });
 
   // Get userData path
   ipcMain.handle('app:getUserDataPath', () => app.getPath('userData'));
@@ -1068,10 +1059,7 @@ app.whenReady().then(async () => {
   registerIpcHandlers();
   createWindow();
 
-  // Start HID input reader for controllers that need direct HID access
-  if (mainWindow) {
-    hidInputReader.start(mainWindow);
-  }
+
 
   // Set up a minimal application menu so clipboard shortcuts (Ctrl+C/V/X/A) work
   Menu.setApplicationMenu(Menu.buildFromTemplate([

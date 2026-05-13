@@ -11,7 +11,7 @@ import {
 
 // ─── Shared types ───
 
-type ReviewStatus = 'neutral' | 'good' | 'bad';
+type ReviewStatus = 'neutral' | 'good' | 'bad' | 'yellow';
 type ReviewMode = 'sprites' | 'items';
 
 interface ReviewEntry {
@@ -81,7 +81,8 @@ function SpriteReviewPanel() {
   const setStatus = (key: string, status: ReviewStatus) => {
     setData(prev => {
       const entry = prev[key] ?? { status: 'neutral' };
-      const next = { ...prev, [key]: { ...entry, status, comment: status === 'bad' ? (entry.comment ?? '') : undefined } };
+      const keepComment = status === 'bad' || status === 'yellow';
+      const next = { ...prev, [key]: { ...entry, status, comment: keepComment ? (entry.comment ?? '') : undefined } };
       persist(next);
       return next;
     });
@@ -97,7 +98,7 @@ function SpriteReviewPanel() {
   };
 
   const counts = useMemo(() => {
-    const c = { good: 0, bad: 0, neutral: 0 };
+    const c = { good: 0, bad: 0, neutral: 0, yellow: 0 };
     SPRITE_MANIFEST.forEach(s => { c[data[s.file]?.status ?? 'neutral']++; });
     return c;
   }, [data]);
@@ -175,7 +176,8 @@ function ItemReviewPanel() {
   const setStatus = (key: string, status: ReviewStatus) => {
     setData(prev => {
       const entry = prev[key] ?? { status: 'neutral' };
-      const next = { ...prev, [key]: { ...entry, status, comment: status === 'bad' ? (entry.comment ?? '') : undefined } };
+      const keepComment = status === 'bad' || status === 'yellow';
+      const next = { ...prev, [key]: { ...entry, status, comment: keepComment ? (entry.comment ?? '') : undefined } };
       persist(next);
       return next;
     });
@@ -191,7 +193,7 @@ function ItemReviewPanel() {
   };
 
   const counts = useMemo(() => {
-    const c = { good: 0, bad: 0, neutral: 0 };
+    const c = { good: 0, bad: 0, neutral: 0, yellow: 0 };
     ALL_ITEMS.forEach(i => { c[data[i.name]?.status ?? 'neutral']++; });
     return c;
   }, [data]);
@@ -229,10 +231,11 @@ function ItemReviewPanel() {
 
 // ─── Shared sub-components ───
 
-function Stats({ counts, total }: { counts: { good: number; neutral: number; bad: number }; total: number }) {
+function Stats({ counts, total }: { counts: { good: number; neutral: number; bad: number; yellow: number }; total: number }) {
   return (
     <div style={S.stats}>
       <span style={{ color: '#4caf50' }}>{counts.good} good</span>
+      <span style={{ color: '#f5c542' }}>{counts.yellow} re-review</span>
       <span style={{ color: '#999' }}>{counts.neutral} unchecked</span>
       <span style={{ color: '#f44336' }}>{counts.bad} bad</span>
       <span style={{ color: '#666' }}>/ {total}</span>
@@ -243,8 +246,8 @@ function Stats({ counts, total }: { counts: { good: number; neutral: number; bad
 function FilterBtns({ filter, setFilter }: { filter: 'all' | ReviewStatus; setFilter: (v: 'all' | ReviewStatus) => void }) {
   return (
     <>
-      {(['all', 'neutral', 'good', 'bad'] as const).map(v => {
-        const label = v === 'all' ? 'All' : v === 'neutral' ? 'Unchecked' : v === 'good' ? 'Good' : 'Bad';
+      {(['all', 'neutral', 'good', 'yellow', 'bad'] as const).map(v => {
+        const label = v === 'all' ? 'All' : v === 'neutral' ? 'Unchecked' : v === 'good' ? 'Good' : v === 'yellow' ? 'Re-review' : 'Bad';
         const active = filter === v;
         return (
           <button key={v} onClick={() => setFilter(v)} style={{ ...S.filterBtn, ...(active ? S.filterBtnActive : {}) }}>
@@ -270,7 +273,7 @@ function CatBtn({ label, value, current, onClick, count }: {
 function StatusBtns({ current, onClick }: { current: ReviewStatus; onClick: (s: ReviewStatus) => void }) {
   return (
     <div style={S.statusBtns}>
-      {([['✓', 'good', '#4caf50'], ['—', 'neutral', '#888'], ['✗', 'bad', '#f44336']] as const).map(([icon, st, color]) => {
+      {([['✓', 'good', '#4caf50'], ['●', 'yellow', '#f5c542'], ['—', 'neutral', '#888'], ['✗', 'bad', '#f44336']] as const).map(([icon, st, color]) => {
         const active = current === st;
         return (
           <button key={st} onClick={() => onClick(st)} style={{
@@ -293,8 +296,8 @@ function SpriteImageCard({ sprite, entry, onSetStatus, onSetComment }: {
   sprite: SpriteManifestEntry; entry: ReviewEntry;
   onSetStatus: (s: ReviewStatus) => void; onSetComment: (c: string) => void;
 }) {
-  const border = entry.status === 'good' ? '#4caf50' : entry.status === 'bad' ? '#f44336' : 'rgba(255,255,255,0.08)';
-  const bg = entry.status === 'good' ? 'rgba(76,175,80,0.06)' : entry.status === 'bad' ? 'rgba(244,67,54,0.06)' : 'rgba(255,255,255,0.02)';
+  const border = entry.status === 'good' ? '#4caf50' : entry.status === 'bad' ? '#f44336' : entry.status === 'yellow' ? '#f5c542' : 'rgba(255,255,255,0.08)';
+  const bg = entry.status === 'good' ? 'rgba(76,175,80,0.06)' : entry.status === 'bad' ? 'rgba(244,67,54,0.06)' : entry.status === 'yellow' ? 'rgba(245,197,66,0.06)' : 'rgba(255,255,255,0.02)';
   const catColor = sprite.category === 'hud' ? '#8bb4e0' : sprite.category === 'receipt' ? '#c4a862' : '#82c487';
 
   return (
@@ -311,7 +314,7 @@ function SpriteImageCard({ sprite, entry, onSetStatus, onSetComment }: {
         </div>
         <StatusBtns current={entry.status} onClick={onSetStatus} />
       </div>
-      {entry.status === 'bad' && (
+      {(entry.status === 'bad' || entry.status === 'yellow') && (
         <input style={S.commentInput} placeholder="What's wrong with this sprite?"
           value={entry.comment ?? ''} onChange={e => onSetComment(e.target.value)}
           onClick={e => e.stopPropagation()} />
@@ -326,8 +329,8 @@ function ItemAssocCard({ item, entry, onSetStatus, onSetComment }: {
   item: { name: string; file: string; src: string }; entry: ReviewEntry;
   onSetStatus: (s: ReviewStatus) => void; onSetComment: (c: string) => void;
 }) {
-  const border = entry.status === 'good' ? '#4caf50' : entry.status === 'bad' ? '#f44336' : 'rgba(255,255,255,0.08)';
-  const bg = entry.status === 'good' ? 'rgba(76,175,80,0.06)' : entry.status === 'bad' ? 'rgba(244,67,54,0.06)' : 'rgba(255,255,255,0.02)';
+  const border = entry.status === 'good' ? '#4caf50' : entry.status === 'bad' ? '#f44336' : entry.status === 'yellow' ? '#f5c542' : 'rgba(255,255,255,0.08)';
+  const bg = entry.status === 'good' ? 'rgba(76,175,80,0.06)' : entry.status === 'bad' ? 'rgba(244,67,54,0.06)' : entry.status === 'yellow' ? 'rgba(245,197,66,0.06)' : 'rgba(255,255,255,0.02)';
 
   return (
     <div style={{ ...S.card, borderColor: border, background: bg }}>
@@ -346,7 +349,7 @@ function ItemAssocCard({ item, entry, onSetStatus, onSetComment }: {
         </div>
         <StatusBtns current={entry.status} onClick={onSetStatus} />
       </div>
-      {entry.status === 'bad' && (
+      {(entry.status === 'bad' || entry.status === 'yellow') && (
         <input style={S.commentInput} placeholder="Which sprite should this item use?"
           value={entry.comment ?? ''} onChange={e => onSetComment(e.target.value)}
           onClick={e => e.stopPropagation()} />

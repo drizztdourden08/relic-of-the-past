@@ -113,19 +113,7 @@ contextBridge.exposeInMainWorld('api', {
   // HID device enumeration
   enumerateHidDevices: () => ipcRenderer.invoke('hid:enumerate'),
 
-  // HID input reading (for controllers that use direct HID: Switch, PlayStation, 8BitDo)
-  getHidInputStates: () => ipcRenderer.invoke('hid:getInputStates'),
-  getHidDiagLog: () => ipcRenderer.invoke('hid:getDiagLog'),
-  onHidInput: (callback: (state: any) => void) => {
-    const handler = (_event: Electron.IpcRendererEvent, state: any) => callback(state);
-    ipcRenderer.on('hid:input', handler);
-    return () => ipcRenderer.removeListener('hid:input', handler);
-  },
-  onHidDiag: (callback: (entry: any) => void) => {
-    const handler = (_event: Electron.IpcRendererEvent, entry: any) => callback(entry);
-    ipcRenderer.on('hid:diag', handler);
-    return () => ipcRenderer.removeListener('hid:diag', handler);
-  },
+
 
   // App info
   getUserDataPath: () => ipcRenderer.invoke('app:getUserDataPath'),

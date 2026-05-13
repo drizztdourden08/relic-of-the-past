@@ -44,7 +44,9 @@ export function DeviceCard({ device, onDragStart }: DeviceCardProps): JSX.Elemen
     ? 'Disconnected'
     : device.activated
       ? 'Ready'
-      : 'Press a button to activate';
+      : device.inputApi === 'hid'
+        ? 'Connecting via HID…'
+        : 'Press a button to activate';
 
   const apiLabel = device.type === 'keyboard' ? null
     : device.inputApi === 'xinput' ? 'XInput'

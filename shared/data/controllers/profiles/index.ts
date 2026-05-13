@@ -46,13 +46,21 @@ export const CONTROLLER_PROFILES: ControllerProfile[] = [
   generic as ControllerProfile,
 ];
 
-/** Find profile by VID/PID (hex strings, lowercase) */
+/** Find profile by VID/PID (hex strings, auto-pads to 4 chars).
+ * Falls back to matching by vendor family (e.g. any Xbox PID → Xbox profile). */
 export function findProfileByVidPid(vid: string, pid: string): ControllerProfile | null {
-  const v = vid.toLowerCase();
-  const p = pid.toLowerCase();
-  return CONTROLLER_PROFILES.find(
-    (pr) => pr.vendorId?.toLowerCase() === v && pr.productId?.toLowerCase() === p
-  ) ?? null;
+  const v = vid.toLowerCase().padStart(4, '0');
+  const p = pid.toLowerCase().padStart(4, '0');
+  // Exact match first
+  const exact = CONTROLLER_PROFILES.find(
+    (pr) => pr.vendorId?.toLowerCase().padStart(4, '0') === v && pr.productId?.toLowerCase().padStart(4, '0') === p
+  );
+  if (exact) return exact;
+  // Family match: find profile whose vendor matches (all Xbox controllers share VID 045e)
+  const familyMatch = CONTROLLER_PROFILES.find(
+    (pr) => pr.vendorId?.toLowerCase().padStart(4, '0') === v
+  );
+  return familyMatch ?? null;
 }
 
 /** Find profile by id */

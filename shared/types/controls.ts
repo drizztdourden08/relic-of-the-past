@@ -24,12 +24,12 @@ export const SNES_BUTTON_BITS: Record<SnesButton, number> = {
   R:      11,
 };
 
-/** Human-readable labels for display */
+/** Human-readable SNES button names (Nintendo layout) */
 export const SNES_BUTTON_LABELS: Record<SnesButton, string> = {
-  A: 'A (Action)',
-  B: 'B (Sword)',
-  X: 'X (Map)',
-  Y: 'Y (Item)',
+  A: 'A Button',
+  B: 'B Button',
+  X: 'X Button',
+  Y: 'Y Button',
   L: 'L Bumper',
   R: 'R Bumper',
   Start: 'Start',
@@ -38,6 +38,22 @@ export const SNES_BUTTON_LABELS: Record<SnesButton, string> = {
   Down: 'D-Pad Down',
   Left: 'D-Pad Left',
   Right: 'D-Pad Right',
+};
+
+/** Game action labels — what each SNES button does in ALttP */
+export const SNES_ACTION_LABELS: Record<SnesButton, string> = {
+  A: 'Interact',
+  B: 'Sword',
+  X: 'Map',
+  Y: 'Item Use',
+  L: 'Prev Item',
+  R: 'Next Item',
+  Start: 'Pause',
+  Select: 'Select',
+  Up: 'Move Up',
+  Down: 'Move Down',
+  Left: 'Move Left',
+  Right: 'Move Right',
 };
 
 // ── Controller families (for icon sets) ──
@@ -95,6 +111,10 @@ export interface ButtonMapping {
   snesButton: SnesButton;
   binding: InputBinding;
   icon: ButtonIcon | null; // null = no icon shown, layout unchanged
+  /** VID of the device that created this binding (for icon resolution) */
+  sourceVid?: string | null;
+  /** PID of the device that created this binding (for icon resolution) */
+  sourcePid?: string | null;
 }
 
 // ── Input profile (persisted per-profile) ──

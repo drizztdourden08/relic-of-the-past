@@ -48,8 +48,8 @@ test.describe('Binding Remap', () => {
     await controlsTab.click();
     await window.waitForTimeout(500);
 
-    // Find the first binding row and read its label
-    const firstRow = window.locator('.binding-row').first();
+    // Find the first data binding row (skip header) and read its label
+    const firstRow = window.locator('.binding-row:not(.binding-row--header)').first();
     await firstRow.waitFor({ state: 'visible', timeout: 3000 });
     const originalLabel = await firstRow.locator('.binding-row__binding-label').textContent();
 
@@ -75,8 +75,8 @@ test.describe('Binding Remap', () => {
   });
 
   test('pressing Escape cancels the remap', async () => {
-    // Find the second binding row
-    const row = window.locator('.binding-row').nth(1);
+    // Find the second data binding row (skip header)
+    const row = window.locator('.binding-row:not(.binding-row--header)').nth(1);
     await row.waitFor({ state: 'visible', timeout: 3000 });
     const originalLabel = await row.locator('.binding-row__binding-label').textContent();
 

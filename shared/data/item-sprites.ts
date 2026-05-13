@@ -79,9 +79,9 @@ export const ITEM_SPRITE_MAP: Record<string, string> = {
   'Bottle (Good Bee)':     'hud-bottle-good-bee',
 
   // Collectibles
-  'Heart Piece':       'hud-heart-piece',
-  'Heart Container':   'hud-heart-container',
-  'Small Key':         'hud-small-key',
+  'Heart Piece':       'receipt-heart-piece',
+  'Heart Container':   'receipt-heart-container',
+  'Small Key':         'receipt-small-key',
 
   // Pendants & crystals
   'Green Pendant':     'hud-green-pendant',
@@ -102,16 +102,16 @@ export const ITEM_SPRITE_MAP: Record<string, string> = {
 
   // Consumables & pickups
   'Bomb':              'hud-bombs',
-  '3 Bombs':           'receipt-3-bombs',
-  '10 Bombs':          'receipt-bomb-refill',
-  '1 Rupee':           'receipt-1-rupee',
-  '5 Rupees':          'receipt-5-rupees',
-  '20 Rupees':         'receipt-20-rupees',
-  '50 Rupees':         'receipt-50-rupees',
-  '100 Rupees':        'receipt-100-rupees',
-  '300 Rupees':        'receipt-300-rupees',
+  '3 Bombs':           'receipt-bomb-3',
+  '10 Bombs':          'receipt-bomb-10',
+  '1 Rupee':           'receipt-rupee-1',
+  '5 Rupees':          'receipt-rupee-5',
+  '20 Rupees':         'receipt-rupee-20',
+  '50 Rupees':         'receipt-rupee-50',
+  '100 Rupees':        'receipt-rupee-100',
+  '300 Rupees':        'receipt-rupee-300',
   'Arrow':             'receipt-arrows',
-  '10 Arrows':         'receipt-10-arrows',
+  '10 Arrows':         'receipt-arrow-10',
   'Heart Refill':      'receipt-arrow-refill',
   'Small Magic Refill':'drop-small-magic',
   'Large Magic Refill':'drop-full-magic',

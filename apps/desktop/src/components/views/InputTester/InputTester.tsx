@@ -4,24 +4,18 @@
  * Shows every connected gamepad with real-time button/axis state,
  * event log, and HID enumeration results. Useful for diagnosing
  * whether the browser/Electron actually receives input.
+ *
+ * All input state comes from InputManager (single source of truth).
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { webHidReader } from '../../../lib/game/webhid-input-reader';
 import type { WebHidInputState } from '../../../lib/game/webhid-input-reader';
+import { getInputManager } from '../../../lib/game/input-manager';
+import type { GamepadSnapshot } from '../../../lib/game/input-manager';
 import { HidCalibrationWizard } from './HidCalibrationWizard';
 import type { HidControllerMap } from './HidCalibrationWizard';
 import './InputTester.css';
-
-interface GamepadSnapshot {
-  index: number;
-  id: string;
-  connected: boolean;
-  mapping: string;
-  timestamp: number;
-  buttons: { pressed: boolean; touched: boolean; value: number }[];
-  axes: number[];
-}
 
 interface EventEntry {
   time: number;
@@ -43,40 +37,25 @@ export function InputTester(): JSX.Element {
   const [gamepads, setGamepads] = useState<GamepadSnapshot[]>([]);
   const [events, setEvents] = useState<EventEntry[]>([]);
   const [hidDevices, setHidDevices] = useState<HidDevice[]>([]);
-  const [polling, setPolling] = useState(true);
-  const rafRef = useRef<number>(0);
   const eventLogRef = useRef<HTMLDivElement>(null);
 
-  // Poll gamepad state at 60fps
-  const poll = useCallback(() => {
-    const raw = navigator.getGamepads();
-    const snaps: GamepadSnapshot[] = [];
-    for (const gp of raw) {
-      if (!gp) continue;
-      snaps.push({
-        index: gp.index,
-        id: gp.id,
-        connected: gp.connected,
-        mapping: gp.mapping,
-        timestamp: gp.timestamp,
-        buttons: gp.buttons.map(b => ({ pressed: b.pressed, touched: b.touched, value: b.value })),
-        axes: [...gp.axes],
-      });
-    }
-    setGamepads(snaps);
-    if (polling) {
-      rafRef.current = requestAnimationFrame(poll);
-    }
-  }, [polling]);
+  // WebHID state
+  const [webHidConnected, setWebHidConnected] = useState(webHidReader.isConnected());
+  const [webHidStates, setWebHidStates] = useState<Map<string, WebHidInputState>>(new Map());
+  const [webHidDiag, setWebHidDiag] = useState<string[]>(webHidReader.getDiagLog());
 
+  // ── Subscribe to InputManager for all input state ──
   useEffect(() => {
-    if (polling) {
-      rafRef.current = requestAnimationFrame(poll);
-    }
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [polling, poll]);
+    const inputMgr = getInputManager();
+    const unsub = inputMgr.onInputState((hidStates, gamepadSnaps, _pressedKeys) => {
+      setWebHidStates(hidStates);
+      setWebHidConnected(hidStates.size > 0 || webHidReader.isConnected());
+      setGamepads(gamepadSnaps);
+    });
+    return unsub;
+  }, []);
 
-  // Listen for gamepad events
+  // Listen for gamepad events (for log only)
   useEffect(() => {
     const onConnect = (e: GamepadEvent) => {
       setEvents(prev => [...prev.slice(-49), {
@@ -114,31 +93,12 @@ export function InputTester(): JSX.Element {
     window.api.enumerateHidDevices().then(setHidDevices).catch(() => {});
   }, []);
 
-  // WebHID state
-  const [webHidConnected, setWebHidConnected] = useState(webHidReader.isConnected());
-  const [webHidStates, setWebHidStates] = useState<Map<string, WebHidInputState>>(new Map());
-  const [webHidDiag, setWebHidDiag] = useState<string[]>(webHidReader.getDiagLog());
-
+  // WebHID diagnostics
   useEffect(() => {
-    // Subscribe to input
-    const unsubInput = webHidReader.onInput((state) => {
-      setWebHidStates(prev => {
-        const next = new Map(prev);
-        next.set(state.deviceKey, state);
-        return next;
-      });
-      setWebHidConnected(true);
-    });
-    // Subscribe to diagnostics
     const unsubDiag = webHidReader.onDiag(() => {
       setWebHidDiag([...webHidReader.getDiagLog()]);
     });
-    // Auto-connect on mount
-    webHidReader.autoConnect().then((ok) => {
-      setWebHidConnected(ok);
-      setWebHidDiag([...webHidReader.getDiagLog()]);
-    });
-    return () => { unsubInput(); unsubDiag(); };
+    return unsubDiag;
   }, []);
 
   const handleWebHidConnect = async () => {
@@ -165,8 +125,8 @@ export function InputTester(): JSX.Element {
     <div className="input-tester">
       <div className="input-tester__header">
         <span className="input-tester__title">Input Tester</span>
-        <span className={`input-tester__status ${polling ? 'input-tester__status--polling' : 'input-tester__status--idle'}`}>
-          {polling ? `Polling @ 60fps • ${gamepads.length} gamepad(s)` : 'Paused'}
+        <span className="input-tester__status input-tester__status--polling">
+          Polling @ 60fps • {gamepads.length} gamepad(s)
         </span>
       </div>
 

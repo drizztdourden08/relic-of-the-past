@@ -207,11 +207,7 @@ interface ElectronAPI {
   // HID device enumeration
   enumerateHidDevices(): Promise<Array<{ vendorId: string; productId: string; product: string; manufacturer: string; path: string; serialNumber: string | null }>>;
 
-  // HID input reading (for controllers that use direct HID)
-  getHidInputStates(): Promise<Array<{ deviceKey: string; buttons: boolean[]; axes: number[]; timestamp: number }>>;
-  getHidDiagLog(): Promise<Array<{ time: number; level: string; message: string }>>;
-  onHidInput(callback: (state: { deviceKey: string; buttons: boolean[]; axes: number[]; timestamp: number }) => void): () => void;
-  onHidDiag(callback: (entry: { time: number; level: string; message: string }) => void): () => void;
+
   // App info
   getUserDataPath(): Promise<string>;
 
