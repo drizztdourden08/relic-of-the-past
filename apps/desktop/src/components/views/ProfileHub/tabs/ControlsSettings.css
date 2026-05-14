@@ -136,8 +136,21 @@
   color: var(--color-text-primary);
 }
 
-.controls-settings__used-input--missing {
-  color: var(--color-text-muted);
+.controls-settings__used-input-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.controls-settings__used-input-dot--active {
+  background: #22c55e;
+  box-shadow: 0 0 4px #22c55e80;
+}
+
+.controls-settings__used-input-dot--disconnected {
+  background: #ef4444;
+  box-shadow: 0 0 4px #ef444480;
 }
 
 .controls-settings__used-input-icon {
@@ -147,9 +160,6 @@
   opacity: 0.8;
 }
 
-.controls-settings__used-input-warning {
-  font-size: 10px;
-  font-weight: 600;
-  color: #ef4444;
-  margin-left: 4px;
+.controls-settings__used-input-label--dim {
+  color: var(--color-text-muted);
 }

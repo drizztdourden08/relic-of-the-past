@@ -17,8 +17,8 @@ import type {
   SnesButton,
 } from '@shared/types/controls';
 import { SNES_BUTTONS } from '@shared/types/controls';
-import { findPresetById, findPresetByVidPid, KEYBOARD_DEFAULT } from '@shared/data/controllers';
-import { CONTROLLER_PROFILES, findProfileByVidPid } from '@shared/data/controllers/profiles';
+import { findPresetById, KEYBOARD_DEFAULT } from '@shared/data/controllers';
+import { findProfileByVidPid } from '@shared/data/controllers/profiles';
 import { getInputManager, profileFromPreset } from '../../../../lib/game/input-manager';
 import { InputProfileList } from './controls/InputProfileList';
 import { DeviceCard } from './controls/DeviceCard';
@@ -33,6 +33,11 @@ interface ControlsSettingsProps {
   profileId: string;
 }
 
+/** Pad a hex VID/PID to 4 chars lowercase, e.g. "57e" → "057e" */
+function padHex(v: string): string {
+  return v.toLowerCase().padStart(4, '0');
+}
+
 export function ControlsSettings({ settings, onChange, profileId }: ControlsSettingsProps): JSX.Element {
   const [profiles, setProfiles] = useState<InputProfile[]>([]);
   const [activeProfile, setActiveProfile] = useState<InputProfile | null>(null);
@@ -43,7 +48,6 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
   const [newlyCreatedId, setNewlyCreatedId] = useState<string | null>(null);
   const [confirmPreset, setConfirmPreset] = useState<{ presetId: string; deviceName: string; vid: string; pid: string } | null>(null);
   const loadedRef = useRef(false);
-  const hidCacheRef = useRef<Array<{ vendorId: string; productId: string; product: string; manufacturer: string; path: string; serialNumber: string | null }>>([]);
 
   // ─── Load profiles from disk ───
   useEffect(() => {
@@ -61,42 +65,6 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
         await window.api.writeInputProfiles(profileId, loaded);
       }
 
-      // Reconcile icons: if a profile has a preset but its mappings are missing
-      // icons (from before icons were added), fill them in from the preset.
-      let needsPersist = false;
-      loaded = loaded.map(profile => {
-        const presetId = profile.assignedController?.presetId;
-        if (!presetId) return profile;
-        const preset = findPresetById(presetId);
-        if (!preset) return profile;
-
-        let changed = false;
-        const mappings = profile.mappings.map(m => {
-          if (m.icon) return m; // already has icon
-          // Find matching icon from preset by binding index
-          const presetMapping = preset.defaultMappings.find(pm =>
-            pm.binding.type === m.binding.type &&
-            ((m.binding.type === 'gamepad-button' && pm.binding.type === 'gamepad-button' && pm.binding.index === m.binding.index) ||
-             (m.binding.type === 'gamepad-axis' && pm.binding.type === 'gamepad-axis' && pm.binding.axisIndex === m.binding.axisIndex && pm.binding.direction === m.binding.direction)),
-          );
-          if (presetMapping?.icon) {
-            changed = true;
-            return { ...m, icon: presetMapping.icon };
-          }
-          return m;
-        });
-
-        if (changed) {
-          needsPersist = true;
-          return { ...profile, mappings };
-        }
-        return profile;
-      });
-
-      if (needsPersist) {
-        await window.api.writeInputProfiles(profileId, loaded);
-      }
-
       setProfiles(loaded);
 
       // Set active profile
@@ -110,15 +78,7 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
   // ─── Detect devices via InputManager (single source of truth) ───
   useEffect(() => {
     const inputMgr = getInputManager();
-    // Get initial devices
     setDevices(inputMgr.getDevices());
-
-    // Also do HID enum for accurate model names (InputManager handles activation)
-    window.api.enumerateHidDevices()
-      .then(hid => { hidCacheRef.current = hid; })
-      .catch(() => {});
-
-    // Subscribe to device changes
     const unsub = inputMgr.onDeviceChange((newDevices) => {
       setDevices(newDevices);
     });
@@ -195,46 +155,25 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
     setListeningFor(mapping.snesButton);
   }, []);
 
+  /**
+   * Handle a captured input from BindingListener.
+   * Stores ONLY the binding + padded sourceVid/sourcePid. Never stores icons.
+   * Icons are always derived at render time in displayMappings via CONTROLLER_PROFILES.
+   */
   const handleCapture = useCallback((binding: InputBinding, sourceDeviceKey?: string, vendorId?: string | null, productId?: string | null) => {
     if (!listeningFor || !activeProfile) return;
     setListeningFor(null);
 
-    // Resolve VID/PID: event → assigned controller fallback
-    const vid = vendorId ?? activeProfile.assignedController?.vendorId ?? null;
-    const pid = productId ?? activeProfile.assignedController?.productId ?? null;
-
-    // Resolve icon from the source device's controller profile
-    const resolveIcon = (): ButtonMapping['icon'] => {
-      if (binding.type === 'keyboard') return null;
-      if (!vid || !pid) return null;
-
-      if (binding.type === 'gamepad-button') {
-        const profile = findProfileByVidPid(vid, pid);
-        if (profile) {
-          const btn = profile.buttons[binding.index];
-          if (btn) return { key: btn.icon, label: btn.label };
-        }
-      }
-      if (binding.type === 'gamepad-axis') {
-        const preset = findPresetByVidPid(vid, pid);
-        if (preset) {
-          const pm = preset.defaultMappings.find(m =>
-            m.binding.type === 'gamepad-axis' &&
-            m.binding.axisIndex === binding.axisIndex &&
-            m.binding.direction === binding.direction
-          );
-          if (pm?.icon) return pm.icon;
-        }
-      }
-      return null;
-    };
+    // Pad VID/PID for consistent storage
+    const vid = vendorId ? padHex(vendorId) : null;
+    const pid = productId ? padHex(productId) : null;
 
     const updatedMappings = activeProfile.mappings.map(m => {
       if (m.snesButton !== listeningFor) return m;
       return {
         ...m,
         binding,
-        icon: resolveIcon(),
+        icon: null, // Never stored — resolved at render time from CONTROLLER_PROFILES
         sourceVid: binding.type !== 'keyboard' ? vid : null,
         sourcePid: binding.type !== 'keyboard' ? pid : null,
       };
@@ -287,6 +226,10 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
     });
   }, [devices]);
 
+  /**
+   * Apply a controller preset via drag-drop.
+   * Strips all preset icons — icons are ALWAYS resolved at render time from CONTROLLER_PROFILES.
+   */
   const handleApplyPreset = useCallback(() => {
     if (!confirmPreset || !activeProfile) return;
 
@@ -296,15 +239,26 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
       return;
     }
 
+    const vid = confirmPreset.vid ? padHex(confirmPreset.vid) : '';
+    const pid = confirmPreset.pid ? padHex(confirmPreset.pid) : '';
+
+    // Strip preset icons — store only sourceVid/sourcePid for render-time resolution
+    const mappingsWithSource = preset.defaultMappings.map(m => ({
+      ...m,
+      icon: null,
+      sourceVid: m.binding.type !== 'keyboard' ? vid : null,
+      sourcePid: m.binding.type !== 'keyboard' ? pid : null,
+    }));
+
     const updatedProfile: InputProfile = {
       ...activeProfile,
       name: preset.name,
       deviceType: preset.family === 'keyboard' ? 'keyboard' : 'gamepad',
       controllerFamily: preset.family,
-      mappings: [...preset.defaultMappings],
+      mappings: mappingsWithSource,
       assignedController: preset.family !== 'keyboard' ? {
-        vendorId: confirmPreset.vid,
-        productId: confirmPreset.pid,
+        vendorId: vid,
+        productId: pid,
         displayName: confirmPreset.deviceName,
         controllerFamily: preset.family,
         presetId: preset.id,
@@ -346,73 +300,86 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
       });
     }
     if (hasGamepad) {
-      // Show ALL connected gamepads as required inputs (profile may use bindings from multiple controllers)
-      const connectedGamepads = devices.filter(d => d.type === 'gamepad' && d.connected);
-      if (connectedGamepads.length > 0) {
-        for (const dev of connectedGamepads) {
-          const icon = familyIconMap[dev.controllerFamily] ?? familyIconMap.generic;
-          const label = dev.vendorId && dev.productId
-            ? `${dev.displayName} (${dev.vendorId}:${dev.productId})`
-            : dev.displayName;
+      // Collect unique devices referenced in bindings (padded for dedup)
+      const usedDeviceKeys = new Set<string>();
+      for (const m of activeProfile.mappings) {
+        if (m.binding.type !== 'keyboard' && m.sourceVid && m.sourcePid) {
+          usedDeviceKeys.add(`${padHex(m.sourceVid)}:${padHex(m.sourcePid)}`);
+        }
+      }
+      // Also include assigned controller if set
+      const assigned = activeProfile.assignedController;
+      if (assigned?.vendorId && assigned?.productId) {
+        usedDeviceKeys.add(`${padHex(assigned.vendorId)}:${padHex(assigned.productId)}`);
+      }
+
+      if (usedDeviceKeys.size > 0) {
+        for (const key of usedDeviceKeys) {
+          const [vid, pid] = key.split(':');
+          // Find this device in connected list (pad device VIDs for comparison)
+          const liveDevice = devices.find(d =>
+            d.type === 'gamepad' && d.connected &&
+            d.vendorId && d.productId &&
+            padHex(d.vendorId) === vid && padHex(d.productId) === pid
+          );
+          const profile = findProfileByVidPid(vid, pid);
+          const family = profile?.family ?? liveDevice?.controllerFamily ?? 'generic';
+          const icon = familyIconMap[family] ?? familyIconMap.generic;
+          const displayName = profile?.name ?? liveDevice?.displayName ?? 'Controller';
           inputs.push({
             type: 'gamepad',
-            label,
+            label: `${displayName} (${vid}:${pid})`,
             iconSrc: icon,
-            connected: true,
+            connected: !!liveDevice,
           });
         }
       } else {
-        // No connected gamepads — show assigned controller as disconnected
-        const assigned = activeProfile.assignedController;
-        const family = assigned?.controllerFamily ?? activeProfile.controllerFamily;
+        // No sourceVid/Pid on any mapping — show generic based on profile family
+        const family = activeProfile.controllerFamily;
         const icon = familyIconMap[family] ?? familyIconMap.generic;
-        const label = assigned
-          ? `${assigned.displayName} (${assigned.vendorId}:${assigned.productId})`
-          : activeProfile.name;
         inputs.push({
           type: 'gamepad',
-          label,
+          label: activeProfile.name,
           iconSrc: icon,
-          connected: false,
+          connected: devices.some(d => d.type === 'gamepad' && d.connected),
         });
       }
     }
     return inputs;
   }, [activeProfile, devices]);
 
-  // ─── Ensure all SNES buttons have a mapping, resolve missing icons from persisted sourceVid/Pid ───
+  // ─── Resolve ALL gamepad icons at render time from CONTROLLER_PROFILES ───
+  // This is the SINGLE source of truth for button icons and labels.
+  // Gamepad icons are NEVER stored — always derived from sourceVid:sourcePid + button index.
   const displayMappings = useMemo(() => {
     return SNES_BUTTONS.map(btn => {
       const existing = activeProfile?.mappings.find(m => m.snesButton === btn);
       if (!existing) {
         return { snesButton: btn, binding: { type: 'keyboard' as const, code: '', label: '—' }, icon: null };
       }
-      // If already has an icon, use as-is
-      if (existing.icon) return existing;
-      // Resolve missing icon using the binding's own sourceVid/Pid (or profile's assigned controller)
-      const vid = existing.sourceVid ?? activeProfile?.assignedController?.vendorId ?? null;
-      const pid = existing.sourcePid ?? activeProfile?.assignedController?.productId ?? null;
-      if (!vid || !pid) return existing;
+      // Keyboard bindings: no controller icon needed (BindingRow derives key icon)
+      if (existing.binding.type === 'keyboard') return { ...existing, icon: null };
+
+      // Gamepad bindings: ALWAYS resolve from CONTROLLER_PROFILES via sourceVid:sourcePid
+      const vid = existing.sourceVid ? padHex(existing.sourceVid) : null;
+      const pid = existing.sourcePid ? padHex(existing.sourcePid) : null;
+      if (!vid || !pid) return { ...existing, icon: null };
+
+      const profile = findProfileByVidPid(vid, pid);
+      if (!profile) return { ...existing, icon: null };
 
       if (existing.binding.type === 'gamepad-button') {
-        const profile = findProfileByVidPid(vid, pid);
-        if (profile) {
-          const b = profile.buttons[existing.binding.index];
-          if (b) return { ...existing, icon: { key: b.icon, label: b.label } };
-        }
+        const b = profile.buttons[existing.binding.index];
+        if (b) return { ...existing, icon: { key: b.icon, label: b.label } };
       }
       if (existing.binding.type === 'gamepad-axis') {
-        const preset = findPresetByVidPid(vid, pid);
-        if (preset) {
-          const pm = preset.defaultMappings.find(m =>
-            m.binding.type === 'gamepad-axis' &&
-            m.binding.axisIndex === existing.binding.axisIndex &&
-            m.binding.direction === existing.binding.direction
-          );
-          if (pm?.icon) return { ...existing, icon: pm.icon };
+        const ax = profile.axes?.[existing.binding.axisIndex];
+        if (ax) {
+          const dir = existing.binding.direction === '+' ? '+' : '−';
+          return { ...existing, icon: { key: `${profile.id}-axis`, label: `${ax.label} ${dir}` } };
         }
       }
-      return existing;
+      return { ...existing, icon: null };
     });
   }, [activeProfile]);
 
@@ -470,12 +437,10 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
           <div className="controls-settings__used-inputs-header">Required Inputs</div>
           <div className="controls-settings__used-inputs-list">
             {requiredInputs.map((input, idx) => (
-              <div key={`${input.type}-${idx}`} className={`controls-settings__used-input ${input.connected ? '' : 'controls-settings__used-input--missing'}`}>
+              <div key={`${input.type}-${idx}`} className="controls-settings__used-input">
+                <span className={`controls-settings__used-input-dot ${input.connected ? 'controls-settings__used-input-dot--active' : 'controls-settings__used-input-dot--disconnected'}`} />
                 <img src={input.iconSrc} alt={input.label} className="controls-settings__used-input-icon" />
-                <span>{input.label}</span>
-                {!input.connected && (
-                  <span className="controls-settings__used-input-warning">Disconnected</span>
-                )}
+                <span className={input.connected ? '' : 'controls-settings__used-input-label--dim'}>{input.label}</span>
               </div>
             ))}
           </div>

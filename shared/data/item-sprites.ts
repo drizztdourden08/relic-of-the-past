@@ -112,9 +112,11 @@ export const ITEM_SPRITE_MAP: Record<string, string> = {
   '300 Rupees':        'receipt-rupee-300',
   'Arrow':             'receipt-arrows',
   '10 Arrows':         'receipt-arrow-10',
-  'Heart Refill':      'receipt-arrow-refill',
+  'Heart Refill':      'receipt-heart-refill',
   'Small Magic Refill':'drop-small-magic',
   'Large Magic Refill':'drop-full-magic',
+  'Bomb Capacity':     '',
+  'Arrow Capacity':    '',
   'Crystal':           'hud-crystal',
   'Magic Upgrade (1/2)': '',
 };

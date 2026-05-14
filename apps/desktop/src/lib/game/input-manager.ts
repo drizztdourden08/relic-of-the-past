@@ -92,6 +92,9 @@ export class InputManager {
   private prevGamepadButtons = new Map<number, boolean[]>(); // gamepad index → buttons
   private prevHidButtons = new Map<string, boolean[]>(); // device key → buttons
 
+  // Gamepad index → resolved VID/PID (populated from parseGamepadId or HID cache fallback)
+  private gamepadVidPid = new Map<number, { vid: string; pid: string }>();
+
   // Cached per-frame state for getters
   private currentHidStates = new Map<string, WebHidInputState>();
   private currentGamepads: GamepadSnapshot[] = [];
@@ -241,6 +244,13 @@ export class InputManager {
           this.devices = updated;
           for (const fn of this.deviceListeners) {
             try { fn(this.devices); } catch { /* ignore */ }
+          }
+        }
+        // Re-resolve any gamepads that are missing VID/PID (HID cache may now have data)
+        const gamepads = navigator.getGamepads();
+        for (const gp of gamepads) {
+          if (gp && gp.connected && !this.gamepadVidPid.has(gp.index)) {
+            this.resolveGamepadVidPid(gp);
           }
         }
       })
@@ -398,6 +408,7 @@ export class InputManager {
   private onGamepadConnected = (e: GamepadEvent): void => {
     markActivated(e.gamepad.index);
     updateActivationState();
+    this.resolveGamepadVidPid(e.gamepad);
     this.refreshDevices();
     // If paused due to disconnect, auto-resume when any gamepad reconnects
     if (this.paused && this.pausedControllerName !== 'Manual pause') {
@@ -424,6 +435,60 @@ export class InputManager {
       }
     }
   };
+
+  /**
+   * Resolve and cache VID/PID for a gamepad index.
+   * First tries parseGamepadId. If that fails (XInput often omits VID/PID),
+   * searches HID device cache to match by name keywords.
+   */
+  private resolveGamepadVidPid(gp: Gamepad): void {
+    const parsed = parseGamepadId(gp.id);
+    if (parsed && parsed.vid !== '0000') {
+      this.gamepadVidPid.set(gp.index, {
+        vid: parsed.vid.toLowerCase().padStart(4, '0'),
+        pid: parsed.pid.toLowerCase().padStart(4, '0'),
+      });
+      return;
+    }
+    // XInput fallback: match gamepad.id keywords to HID device cache
+    const idLower = gp.id.toLowerCase();
+    for (const hid of this.hidDeviceCache) {
+      const hidName = (hid.product || '').toLowerCase();
+      const hidMfg = (hid.manufacturer || '').toLowerCase();
+      // Match Xbox controllers
+      if ((idLower.includes('xbox') || idLower.includes('xinput')) &&
+          (hidName.includes('xbox') || hidMfg.includes('microsoft') || hid.vendorId.toLowerCase().padStart(4, '0') === '045e')) {
+        this.gamepadVidPid.set(gp.index, {
+          vid: hid.vendorId.toLowerCase().padStart(4, '0'),
+          pid: hid.productId.toLowerCase().padStart(4, '0'),
+        });
+        return;
+      }
+      // Match PlayStation controllers
+      if ((idLower.includes('dualshock') || idLower.includes('dualsense') || idLower.includes('playstation')) &&
+          (hidName.includes('dual') || hidMfg.includes('sony') || hid.vendorId.toLowerCase().padStart(4, '0') === '054c')) {
+        this.gamepadVidPid.set(gp.index, {
+          vid: hid.vendorId.toLowerCase().padStart(4, '0'),
+          pid: hid.productId.toLowerCase().padStart(4, '0'),
+        });
+        return;
+      }
+    }
+    // Last resort: if there's exactly one unmatched gamepad-type HID device, use it
+    const alreadyMapped = new Set([...this.gamepadVidPid.values()].map(v => `${v.vid}:${v.pid}`));
+    const unmatchedHid = this.hidDeviceCache.filter(h => {
+      const key = `${h.vendorId.toLowerCase().padStart(4, '0')}:${h.productId.toLowerCase().padStart(4, '0')}`;
+      if (alreadyMapped.has(key)) return false;
+      const name = (h.product || '').toLowerCase();
+      return !name.includes('mouse') && !name.includes('keyboard') && !name.includes('trackpad');
+    });
+    if (unmatchedHid.length === 1) {
+      this.gamepadVidPid.set(gp.index, {
+        vid: unmatchedHid[0].vendorId.toLowerCase().padStart(4, '0'),
+        pid: unmatchedHid[0].productId.toLowerCase().padStart(4, '0'),
+      });
+    }
+  }
 
   private pollLoop = (): void => {
     if (!this.running) return;
@@ -492,10 +557,10 @@ export class InputManager {
       if (!gp || !gp.connected) continue;
       const prev = this.prevGamepadButtons.get(gp.index) ?? [];
       const curr = gp.buttons.map(b => b.pressed);
-      // Resolve VID/PID once per gamepad
-      const parsed = parseGamepadId(gp.id);
-      const vid = parsed?.vid ?? null;
-      const pid = parsed?.pid ?? null;
+      // Resolve VID/PID from cache (populated on gamepadconnected)
+      const cached = this.gamepadVidPid.get(gp.index);
+      const vid = cached?.vid ?? null;
+      const pid = cached?.pid ?? null;
       for (let i = 0; i < curr.length; i++) {
         if (curr[i] && !prev[i]) {
           this.emitRawInput({ type: 'gamepad-button', index: i }, `gamepad-${gp.index}`, vid, pid);
@@ -519,10 +584,10 @@ export class InputManager {
   private emitRawHidEvents(): void {
     for (const [deviceKey, state] of this.hidStates) {
       const prev = this.prevHidButtons.get(deviceKey) ?? [];
-      // deviceKey is "057e:2069" format
+      // deviceKey is "57e:2069" or "057e:2069" format — pad to 4 chars
       const parts = deviceKey.split(':');
-      const vid = parts[0] ?? null;
-      const pid = parts[1] ?? null;
+      const vid = parts[0] ? parts[0].toLowerCase().padStart(4, '0') : null;
+      const pid = parts[1] ? parts[1].toLowerCase().padStart(4, '0') : null;
       for (let i = 0; i < state.buttons.length; i++) {
         if (state.buttons[i] && !prev[i]) {
           this.emitRawInput({ type: 'gamepad-button', index: i }, deviceKey, vid, pid);

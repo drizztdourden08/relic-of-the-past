@@ -60,7 +60,6 @@ export const ITEMS: ItemDefinition[] = [
 
   // Upgrades
   { id: 0x4e, name: 'Magic Upgrade (1/2)', category: 'upgrade' },
-  { id: 0x4f, name: 'Magic Upgrade (1/4)', category: 'upgrade' },
   { id: 0x17, name: 'Piece of Heart', category: 'upgrade' },
   { id: 0x3e, name: 'Boss Heart Container', category: 'upgrade' },
   { id: 0x3f, name: 'Sanctuary Heart Container', category: 'upgrade' },
