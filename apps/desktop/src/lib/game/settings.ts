@@ -59,6 +59,8 @@ export const DEFAULT_SETTINGS: GameSettings = {
 
   // Controls
   activeInputProfileId: null,
+  enhancedSaveSlotShortcut: true,
+  saveHoldDuration: 2,
 };
 
 function boolToIni(v: boolean): string {

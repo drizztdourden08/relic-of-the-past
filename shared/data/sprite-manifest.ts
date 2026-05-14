@@ -196,10 +196,10 @@ const RECEIPT_SPRITES: SpriteManifestEntry[] = [
 // ─── Droppable / Absorbable Sprites (3bpp from common sheets) ───
 
 const DROP_SPRITES: SpriteManifestEntry[] = [
-  { file: 'drop-green-rupee',  label: 'Green Rupee',   category: 'drop' },
-  { file: 'drop-blue-rupee',   label: 'Blue Rupee',    category: 'drop' },
-  { file: 'drop-red-rupee',    label: 'Red Rupee',     category: 'drop' },
-  { file: 'drop-heart',        label: 'Heart',         category: 'drop' },
+  { file: 'drop-heart-refill', label: 'Heart Refill',  category: 'drop' },
+  { file: 'drop-rupee-green',  label: 'Rupee Green',   category: 'drop' },
+  { file: 'drop-rupee-blue',   label: 'Rupee Blue',    category: 'drop' },
+  { file: 'drop-rupee-red',    label: 'Rupee Red',     category: 'drop' },
   { file: 'drop-bomb-1',       label: '1 Bomb',        category: 'drop' },
   { file: 'drop-bomb-4',       label: '4 Bombs',       category: 'drop' },
   { file: 'drop-bomb-8',       label: '8 Bombs',       category: 'drop' },
@@ -210,7 +210,8 @@ const DROP_SPRITES: SpriteManifestEntry[] = [
   { file: 'drop-fairy',        label: 'Fairy',         category: 'drop' },
   { file: 'drop-small-key',    label: 'Small Key',     category: 'drop' },
   { file: 'drop-big-key',      label: 'Big Key',       category: 'drop' },
-  { file: 'drop-shield',       label: 'Shield',        category: 'drop' },
+  { file: 'drop-shield-fighters', label: 'Fighters Shield', category: 'drop' },
+  { file: 'drop-shield-fire',     label: 'Fire Shield',     category: 'drop' },
 ];
 
 // ─── Full manifest ───

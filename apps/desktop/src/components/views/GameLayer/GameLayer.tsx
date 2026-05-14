@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useGameState } from './behavior/useGameState';
-import { saveState, loadState, getInputManager } from '../../../lib/game';
-import { log } from '../../../lib/log-bus';
+import { getInputManager } from '../../../lib/game';
 import { ControllerDisconnectOverlay } from './ControllerDisconnectOverlay';
 import './GameLayer.css';
 
@@ -85,38 +84,6 @@ export function GameLayer({ assetData, configIni, profileId, stretch }: GameLaye
     }
   }, [status]);
 
-  // Intercept F-key presses for disk-backed save/load states.
-  // The C code handles the MEMFS side; we handle disk persistence.
-  // We must run BEFORE SDL's handler to write state files to MEMFS for loads,
-  // and AFTER for saves we read the file from MEMFS.
-  useEffect(() => {
-    if (status !== 'running') return;
-
-    const handleFKey = async (e: KeyboardEvent) => {
-      const match = e.key.match(/^F([1-4])$/);
-      if (!match) return;
-      const slot = parseInt(match[1], 10) - 1; // F1=slot 0 ... F4=slot 3
-
-      e.preventDefault();
-      e.stopPropagation();
-
-      if (e.shiftKey) {
-        console.log(`[SaveState] Shift+F${slot + 1} → saving slot ${slot}`);
-        log.app(`[SaveState] Shift+F${slot + 1} pressed → saving slot ${slot}`);
-        const ok = await saveState(slot);
-        log.app(`[SaveState] Slot ${slot} save ${ok ? 'succeeded' : 'FAILED'}`);
-      } else if (!e.ctrlKey) {
-        console.log(`[LoadState] F${slot + 1} → loading slot ${slot}`);
-        log.app(`[LoadState] F${slot + 1} pressed → loading slot ${slot}`);
-        const ok = await loadState(slot);
-        log.app(`[LoadState] Slot ${slot} load ${ok ? 'succeeded' : 'FAILED'}`);
-      }
-    };
-
-    window.addEventListener('keydown', handleFKey, true);
-    return () => window.removeEventListener('keydown', handleFKey, true);
-  }, [status]);
-
   // ─── Controller disconnect pause/resume ───
   useEffect(() => {
     if (status !== 'running') return;
@@ -128,21 +95,9 @@ export function GameLayer({ assetData, configIni, profileId, stretch }: GameLaye
     return unsub;
   }, [status]);
 
-  // F10 to toggle pause, double-click canvas to resume
+  // Double-click canvas to resume from pause
   useEffect(() => {
     if (status !== 'running') return;
-
-    const handleF10 = (e: KeyboardEvent) => {
-      if (e.key === 'F10') {
-        e.preventDefault();
-        const inputMgr = getInputManager();
-        if (inputMgr.isPaused()) {
-          inputMgr.resume();
-        } else {
-          inputMgr.togglePause();
-        }
-      }
-    };
 
     const handleDblClick = () => {
       const inputMgr = getInputManager();
@@ -151,12 +106,10 @@ export function GameLayer({ assetData, configIni, profileId, stretch }: GameLaye
       }
     };
 
-    window.addEventListener('keydown', handleF10, true);
     const canvas = canvasRef.current;
     canvas?.addEventListener('dblclick', handleDblClick);
 
     return () => {
-      window.removeEventListener('keydown', handleF10, true);
       canvas?.removeEventListener('dblclick', handleDblClick);
     };
   }, [status, canvasKey]);
@@ -195,8 +148,16 @@ export function GameLayer({ assetData, configIni, profileId, stretch }: GameLaye
         height={448}
         tabIndex={0}
       />
-      {controllerPaused && status === 'running' && disconnectedName !== 'Manual pause' && (
+      {controllerPaused && status === 'running' && disconnectedName && disconnectedName !== 'Manual pause' && (
         <ControllerDisconnectOverlay controllerName={disconnectedName} />
+      )}
+      {controllerPaused && status === 'running' && (!disconnectedName || disconnectedName === 'Manual pause') && (
+        <div className="game-layer__pause-overlay">
+          <div className="game-layer__pause-icon">
+            <div className="game-layer__pause-bar" />
+            <div className="game-layer__pause-bar" />
+          </div>
+        </div>
       )}
     </div>
   );

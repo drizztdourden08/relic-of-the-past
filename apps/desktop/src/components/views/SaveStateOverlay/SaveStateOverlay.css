@@ -35,3 +35,19 @@
   from { transform: translateX(-50%) translateY(0);     opacity: 1; }
   to   { transform: translateX(-50%) translateY(-100%); opacity: 0; }
 }
+
+.save-overlay__status {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(0, 0, 0, 0.55);
+  padding: 4px 14px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+}

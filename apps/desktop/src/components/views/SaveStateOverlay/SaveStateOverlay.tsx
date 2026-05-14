@@ -4,8 +4,8 @@ import { SaveSlot } from '../../compounds/SaveSlot';
 import { log } from '../../../lib/log-bus';
 import './SaveStateOverlay.css';
 
-const SLOT_COUNT = 4;
-const SHORTCUT_KEYS = ['F1', 'F2', 'F3', 'F4'];
+const SLOT_COUNT = 12;
+const SHORTCUT_KEYS = ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12'];
 const ANIM_MS = 180;
 
 interface SlotInfo {
@@ -19,9 +19,12 @@ interface SlotInfo {
 interface SaveStateOverlayProps {
   open: boolean;
   onClose: () => void;
+  highlightedSlot?: number | null;
+  holdProgress?: number; // 0-1 for the highlighted slot
+  statusMessage?: string | null;
 }
 
-export function SaveStateOverlay({ open, onClose }: SaveStateOverlayProps): JSX.Element | null {
+export function SaveStateOverlay({ open, onClose, highlightedSlot, holdProgress, statusMessage }: SaveStateOverlayProps): JSX.Element | null {
   const [slots, setSlots] = useState<SlotInfo[]>([]);
   const [busy, setBusy] = useState<number | null>(null);
   const [visible, setVisible] = useState(false);
@@ -114,12 +117,17 @@ export function SaveStateOverlay({ open, onClose }: SaveStateOverlayProps): JSX.
               isEmpty={isEmpty}
               busy={isBusy}
               shortcutKey={SHORTCUT_KEYS[i]}
+              highlighted={highlightedSlot === i}
+              holdProgress={highlightedSlot === i ? holdProgress : undefined}
               onSave={handleSave}
               onLoad={handleLoad}
             />
           );
         })}
       </div>
+      {statusMessage && (
+        <div className="save-overlay__status">{statusMessage}</div>
+      )}
     </div>
   );
 }

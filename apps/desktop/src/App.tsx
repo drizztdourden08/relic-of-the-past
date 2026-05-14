@@ -3,6 +3,7 @@ import type { GameSettings } from '@shared/types/settings';
 import { TitleBar } from './components/views/TitleBar';
 import { GameLayer } from './components/views/GameLayer';
 import { SaveStateOverlay } from './components/views/SaveStateOverlay/SaveStateOverlay';
+import { useEnhancedSaveSlot } from './components/views/SaveStateOverlay/useEnhancedSaveSlot';
 import { ProfilePicker } from './components/views/ProfilePicker';
 import { ProfileHub } from './components/views/ProfileHub';
 import { DataManager } from './components/views/DataManager';
@@ -70,6 +71,8 @@ export function App(): JSX.Element {
   const [showSaveStates, setShowSaveStates] = useState(false);
   const [showTracker, setShowTracker] = useState(false);
   const [showSpriteDebug, setShowSpriteDebug] = useState(false);
+  const [enhancedSaveSlot, setEnhancedSaveSlot] = useState(true);
+  const [saveHoldDuration, setSaveHoldDuration] = useState(2);
   const [dialog, setDialog] = useState<ConfirmDialog | null>(null);
   const [gameCrashed, setGameCrashed] = useState(false);
   const [configIni, setConfigIni] = useState<string | undefined>(undefined);
@@ -134,6 +137,21 @@ export function App(): JSX.Element {
   }));
 
   const isGameRunning = assetData != null && !gameCrashed;
+
+  // ─── Enhanced save slot shortcut flow ───
+  const enhancedSave = useEnhancedSaveSlot(enhancedSaveSlot, saveHoldDuration, isGameRunning);
+
+  // Merge: overlay is open if either the titlebar toggle or the enhanced shortcut opened it
+  const saveOverlayOpen = (showSaveStates && isGameRunning) || enhancedSave.open;
+  const handleSaveOverlayClose = useCallback(() => {
+    setShowSaveStates(false);
+    enhancedSave.close();
+  }, [enhancedSave]);
+
+  const handleSaveSlotSettingsChange = useCallback((enhanced: boolean, holdDuration: number) => {
+    setEnhancedSaveSlot(enhanced);
+    setSaveHoldDuration(holdDuration);
+  }, []);
 
   // ─── Aspect ratio lock ───
   // Sync lock when settings change (constraint, aspect ratio, window mode, fullscreen)
@@ -271,6 +289,10 @@ export function App(): JSX.Element {
     // Load profile settings and serialize to INI for WASM
     const savedSettings = await window.api.readConfig(profile.id);
     const settings = mergeSettings((savedSettings ?? {}) as any);
+
+    // Store enhanced save slot settings for the hook
+    setEnhancedSaveSlot(settings.enhancedSaveSlotShortcut);
+    setSaveHoldDuration(settings.saveHoldDuration);
 
     // Load MSU pack into staging memory if enabled
     if (profile.msuPack && settings.enableMSU !== 'false') {
@@ -605,8 +627,11 @@ export function App(): JSX.Element {
 
         {/* Save State Overlay */}
         <SaveStateOverlay
-          open={showSaveStates && isGameRunning}
-          onClose={() => setShowSaveStates(false)}
+          open={saveOverlayOpen}
+          onClose={handleSaveOverlayClose}
+          highlightedSlot={enhancedSave.highlightedSlot}
+          holdProgress={enhancedSave.holdProgress}
+          statusMessage={enhancedSave.statusMessage}
         />
 
         {/* Full-screen pages (one at a time) */}
@@ -639,6 +664,7 @@ export function App(): JSX.Element {
               onConstraintSettingsChange={handleConstraintSettingsChange}
               onMasterVolumeChange={handleMasterVolumeChange}
               onDisplayPerfChange={handleDisplayPerfChange}
+              onSaveSlotSettingsChange={handleSaveSlotSettingsChange}
               masterVolumeOverride={muteOverride}
             />
           </FullScreenLayer>

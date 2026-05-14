@@ -15,3 +15,33 @@
   max-width: 100%;
   max-height: 100%;
 }
+
+/* ─── Pause overlay ─── */
+.game-layer__pause-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(2px);
+  z-index: 100;
+  animation: pause-fade-in 0.25s ease-out;
+}
+
+@keyframes pause-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.game-layer__pause-icon {
+  display: flex;
+  gap: 28px;
+}
+
+.game-layer__pause-bar {
+  width: 36px;
+  height: 120px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.25);
+}

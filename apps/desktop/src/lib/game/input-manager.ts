@@ -9,13 +9,15 @@
  * Auto-starts on app boot (not just game launch) so Controls/Calibration pages work.
  */
 
-import type { InputProfile, InputBinding, SnesButton } from '@shared/types/controls';
-import { SNES_BUTTON_BITS } from '@shared/types/controls';
+import type { InputProfile, InputBinding, SnesButton, FunctionMapping, FunctionAction } from '@shared/types/controls';
+import { SNES_BUTTON_BITS, DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { KEYBOARD_DEFAULT, parseGamepadId } from '@shared/data/controllers';
 import type { DetectedDevice } from '@shared/types/controls';
 import { detectAllDevices, markActivated, updateActivationState } from './controller-detect';
 import { webHidReader } from './webhid-input-reader';
 import type { WebHidInputState } from './webhid-input-reader';
+import { wasmSetPaused } from './wasm-bridge';
+import { suspendAudio, resumeAudio } from './audio-volume';
 
 export type DeviceChangeListener = (devices: DetectedDevice[]) => void;
 export type PauseListener = (paused: boolean, controllerName: string) => void;
@@ -81,6 +83,7 @@ export class InputManager {
   // HID input state (from WebHID reader for Switch/PS/8BitDo)
   private hidStates = new Map<string, { buttons: boolean[]; axes: number[] }>();
   private hidUnsubscribe: (() => void) | null = null;
+  private hidDisconnectUnsub: (() => void) | null = null;
 
   // Raw input listeners — for rebinding UI, input tester, etc.
   private rawInputListeners = new Set<RawInputListener>();
@@ -91,6 +94,9 @@ export class InputManager {
   // Previous frame state for rising-edge detection (raw input events)
   private prevGamepadButtons = new Map<number, boolean[]>(); // gamepad index → buttons
   private prevHidButtons = new Map<string, boolean[]>(); // device key → buttons
+  // Axis rising-edge: track which axes are "active" (past threshold) and in which direction
+  private prevGamepadAxes = new Map<number, ('+' | '-' | null)[]>(); // gamepad index → per-axis direction
+  private prevHidAxes = new Map<string, ('+' | '-' | null)[]>(); // device key → per-axis direction
 
   // Gamepad index → resolved VID/PID (populated from parseGamepadId or HID cache fallback)
   private gamepadVidPid = new Map<number, { vid: string; pid: string }>();
@@ -104,6 +110,19 @@ export class InputManager {
 
   // Periodic device re-enumeration
   private devicePollId: ReturnType<typeof setInterval> | null = null;
+
+  // Function mapping runtime: shortcut key → action
+  private functionMappings: FunctionMapping[] = DEFAULT_FUNCTION_MAPPINGS;
+  private functionKeyMap = new Map<string, FunctionAction>(); // "code:s:c:a" → action
+  private functionActionCallbacks = new Map<FunctionAction, () => void>();
+  private functionKeyUpListeners = new Set<(action: FunctionAction) => void>();
+  // Reverse lookup: code → funcKeyIds (for keyup matching without modifiers)
+  private functionCodeToKeyIds = new Map<string, string[]>();
+
+  constructor() {
+    // Build the default function key map immediately
+    this.rebuildFunctionKeyMap();
+  }
 
   /**
    * Set the function that pushes the bitmask to WASM.
@@ -123,6 +142,51 @@ export class InputManager {
 
   getProfile(): InputProfile | null {
     return this.activeProfile;
+  }
+
+  /**
+   * Set the function mappings (shortcuts, cheats) and rebuild the key lookup.
+   * Called when settings load or change.
+   */
+  setFunctionMappings(mappings: FunctionMapping[]): void {
+    this.functionMappings = mappings;
+    this.rebuildFunctionKeyMap();
+  }
+
+  /**
+   * Register a callback for a function action.
+   * Built-in actions (pause) are handled internally; others need callbacks.
+   */
+  onFunctionAction(action: FunctionAction, callback: () => void): () => void {
+    this.functionActionCallbacks.set(action, callback);
+    return () => this.functionActionCallbacks.delete(action);
+  }
+
+  /**
+   * Subscribe to function key release events — fires when a function-mapped key is released.
+   * Used by the enhanced save slot flow to detect hold duration.
+   */
+  onFunctionKeyUp(listener: (action: FunctionAction) => void): () => void {
+    this.functionKeyUpListeners.add(listener);
+    return () => this.functionKeyUpListeners.delete(listener);
+  }
+
+  private rebuildFunctionKeyMap(): void {
+    this.functionKeyMap.clear();
+    this.functionCodeToKeyIds.clear();
+    for (const m of this.functionMappings) {
+      if (m.binding.type === 'keyboard') {
+        const key = this.makeFunctionKeyId(m.binding.code, m.binding.modifiers);
+        this.functionKeyMap.set(key, m.action);
+        const list = this.functionCodeToKeyIds.get(m.binding.code) ?? [];
+        list.push(key);
+        this.functionCodeToKeyIds.set(m.binding.code, list);
+      }
+    }
+  }
+
+  private makeFunctionKeyId(code: string, modifiers?: { shift?: boolean; ctrl?: boolean; alt?: boolean }): string {
+    return `${code}:${modifiers?.shift ? 1 : 0}:${modifiers?.ctrl ? 1 : 0}:${modifiers?.alt ? 1 : 0}`;
   }
 
   /**
@@ -156,6 +220,20 @@ export class InputManager {
     this.hidUnsubscribe = webHidReader.onInput((state: WebHidInputState) => {
       this.hidStates.set(state.deviceKey, { buttons: state.buttons, axes: state.axes });
       this.currentHidStates.set(state.deviceKey, state);
+      // Auto-resume if paused due to controller disconnect and this device reconnected
+      if (this.paused && this.pausedControllerName !== 'Manual pause') {
+        this.resume();
+      }
+    });
+    // Subscribe to WebHID disconnect events — triggers same pause check as gamepad disconnect
+    this.hidDisconnectUnsub = webHidReader.onDisconnect((_deviceKey, _deviceName) => {
+      // Clean up stale state for this device
+      this.hidStates.delete(_deviceKey);
+      this.currentHidStates.delete(_deviceKey);
+      this.prevHidButtons.delete(_deviceKey);
+      this.prevHidAxes.delete(_deviceKey);
+      this.refreshDevices();
+      this.checkControllerDisconnectPause();
     });
     // Auto-connect to previously granted devices
     webHidReader.autoConnect();
@@ -184,6 +262,10 @@ export class InputManager {
     if (this.hidUnsubscribe) {
       this.hidUnsubscribe();
       this.hidUnsubscribe = null;
+    }
+    if (this.hidDisconnectUnsub) {
+      this.hidDisconnectUnsub();
+      this.hidDisconnectUnsub = null;
     }
     this.hidStates.clear();
     this.currentHidStates.clear();
@@ -334,6 +416,8 @@ export class InputManager {
     if (!this.paused) return;
     this.paused = false;
     this.pausedControllerName = '';
+    wasmSetPaused(false);
+    resumeAudio();
     for (const fn of this.pauseListeners) {
       try { fn(false, ''); } catch { /* ignore */ }
     }
@@ -349,6 +433,8 @@ export class InputManager {
       this.paused = true;
       this.pausedControllerName = 'Manual pause';
       this.setInputFn?.(0);
+      wasmSetPaused(true);
+      suspendAudio();
       for (const fn of this.pauseListeners) {
         try { fn(true, 'Manual pause'); } catch { /* ignore */ }
       }
@@ -387,6 +473,30 @@ export class InputManager {
     // Track ALL pressed keys for visualization
     this.allPressedKeys.add(e.code);
 
+    // Check function mappings first (shortcuts, cheats, pause, etc.)
+    // Ignore key repeat — function actions fire once on initial press only.
+    // Hold-to-save uses requestAnimationFrame timing, not key repeat.
+    if (!e.repeat) {
+      const funcKeyId = this.makeFunctionKeyId(e.code, {
+        shift: e.shiftKey,
+        ctrl: e.ctrlKey,
+        alt: e.altKey,
+      });
+      const funcAction = this.functionKeyMap.get(funcKeyId);
+      if (funcAction) {
+        e.preventDefault();
+        // Built-in: pause
+        if (funcAction === 'pause') {
+          this.togglePause();
+          return;
+        }
+        // Fire registered callback for other actions
+        const cb = this.functionActionCallbacks.get(funcAction);
+        if (cb) cb();
+        return;
+      }
+    }
+
     if (this.keyboardMap.has(e.code)) {
       e.preventDefault();
       this.keyStates.set(e.code, true);
@@ -398,6 +508,20 @@ export class InputManager {
 
   private onKeyUp = (e: KeyboardEvent): void => {
     this.allPressedKeys.delete(e.code);
+
+    // Fire function key-up listeners (for hold detection in enhanced save flow)
+    // A single code may have multiple bindings (e.g. F1 for load, Shift+F1 for save)
+    const funcKeyIds = this.functionCodeToKeyIds.get(e.code);
+    if (funcKeyIds && this.functionKeyUpListeners.size > 0) {
+      for (const fkid of funcKeyIds) {
+        const funcAction = this.functionKeyMap.get(fkid);
+        if (funcAction) {
+          for (const fn of this.functionKeyUpListeners) {
+            try { fn(funcAction); } catch { /* ignore */ }
+          }
+        }
+      }
+    }
 
     if (this.keyboardMap.has(e.code)) {
       e.preventDefault();
@@ -419,22 +543,32 @@ export class InputManager {
   private onGamepadDisconnected = (): void => {
     updateActivationState();
     this.refreshDevices();
-    // If the active profile has an assigned gamepad controller, check if it's still connected
+    this.checkControllerDisconnectPause();
+  };
+
+  /**
+   * Shared pause-on-disconnect check — used by both Gamepad API and WebHID disconnect paths.
+   * Checks if the assigned controller is still connected; if not, pauses the game.
+   */
+  private checkControllerDisconnectPause(): void {
+    if (this.paused) return;
     const assigned = this.activeProfile?.assignedController;
     if (assigned && assigned.controllerFamily !== 'keyboard') {
       const stillConnected = this.devices.some(
         d => d.vendorId === assigned.vendorId && d.productId === assigned.productId && d.connected
       );
-      if (!stillConnected && !this.paused) {
+      if (!stillConnected) {
         this.paused = true;
         this.pausedControllerName = assigned.displayName;
         this.setInputFn?.(0);
+        wasmSetPaused(true);
+        suspendAudio();
         for (const fn of this.pauseListeners) {
           try { fn(true, assigned.displayName); } catch { /* ignore */ }
         }
       }
     }
-  };
+  }
 
   /**
    * Resolve and cache VID/PID for a gamepad index.
@@ -566,18 +700,23 @@ export class InputManager {
           this.emitRawInput({ type: 'gamepad-button', index: i }, `gamepad-${gp.index}`, vid, pid);
         }
       }
-      // Axes
+      // Axes — rising-edge: only emit when crossing threshold into a new direction
+      const prevAxes = this.prevGamepadAxes.get(gp.index) ?? [];
+      const currAxes: ('+' | '-' | null)[] = [];
       for (let i = 0; i < gp.axes.length; i++) {
         const val = gp.axes[i];
-        if (Math.abs(val) > 0.7) {
+        const dir: '+' | '-' | null = Math.abs(val) > 0.5 ? (val > 0 ? '+' : '-') : null;
+        currAxes[i] = dir;
+        if (dir !== null && dir !== prevAxes[i]) {
           this.emitRawInput(
-            { type: 'gamepad-axis', axisIndex: i, direction: val > 0 ? '+' : '-' },
+            { type: 'gamepad-axis', axisIndex: i, direction: dir },
             `gamepad-${gp.index}`,
             vid, pid,
           );
         }
       }
       this.prevGamepadButtons.set(gp.index, curr);
+      this.prevGamepadAxes.set(gp.index, currAxes);
     }
   }
 
@@ -593,16 +732,22 @@ export class InputManager {
           this.emitRawInput({ type: 'gamepad-button', index: i }, deviceKey, vid, pid);
         }
       }
-      // Axes
+      // Axes — rising-edge: only emit when crossing threshold into a new direction
+      const prevAxes = this.prevHidAxes.get(deviceKey) ?? [];
+      const currAxes: ('+' | '-' | null)[] = [];
       for (let i = 0; i < state.axes.length; i++) {
-        if (Math.abs(state.axes[i]) > 0.7) {
+        const val = state.axes[i];
+        const dir: '+' | '-' | null = Math.abs(val) > 0.5 ? (val > 0 ? '+' : '-') : null;
+        currAxes[i] = dir;
+        if (dir !== null && dir !== prevAxes[i]) {
           this.emitRawInput(
-            { type: 'gamepad-axis', axisIndex: i, direction: state.axes[i] > 0 ? '+' : '-' },
+            { type: 'gamepad-axis', axisIndex: i, direction: dir },
             deviceKey, vid, pid,
           );
         }
       }
       this.prevHidButtons.set(deviceKey, [...state.buttons]);
+      this.prevHidAxes.set(deviceKey, currAxes);
     }
   }
 

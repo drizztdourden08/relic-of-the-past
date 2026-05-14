@@ -53,3 +53,40 @@ export function setInput(mask: number): void {
   if (!mod || currentState.status !== 'running') return;
   mod.ccall('WasmSetInput', null, ['number'], [mask]);
 }
+
+// ─── Game commands (pause, reset, cheats) ───
+
+/** Pause or unpause the game at the WASM/C level. */
+export function wasmSetPaused(paused: boolean): void {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return;
+  mod.ccall('WasmSetPaused', null, ['number'], [paused ? 1 : 0]);
+}
+
+/** Query whether the game is paused at the WASM/C level. */
+export function wasmGetPaused(): boolean {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return false;
+  return mod.ccall('WasmGetPaused', 'number', [], []) !== 0;
+}
+
+/** Toggle game pause at the WASM/C level. */
+export function wasmTogglePause(): void {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return;
+  mod.ccall('WasmTogglePause', null, [], []);
+}
+
+/** Reset the game. warm=true preserves SRAM, warm=false is a cold reset. */
+export function wasmReset(warm: boolean): void {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return;
+  mod.ccall('WasmReset', null, ['number'], [warm ? 1 : 0]);
+}
+
+/** Execute a cheat command. 'w' = health, 'W' = equipment, 'o' = keys. */
+export function wasmCheat(cmd: string): void {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return;
+  mod.ccall('WasmCheat', null, ['number'], [cmd.charCodeAt(0)]);
+}

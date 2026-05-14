@@ -107,6 +107,12 @@ export const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'masterVolume',
   // FPS display (toggled via WasmSetDisplayPerf)
   'displayPerfInTitle',
+  // Enhanced save slot settings (JS-only, no WASM restart needed)
+  'enhancedSaveSlotShortcut',
+  'saveHoldDuration',
+  // Controls (JS-only)
+  'functionMappings',
+  'activeInputProfileId',
 ]);
 
 /** Push live-updatable settings to the running WASM module. Returns true if successful. */

@@ -87,3 +87,35 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.binding-row__binding-label--none {
+  color: var(--color-text-muted, #555);
+  font-style: italic;
+}
+
+/* Clear button */
+.binding-row__clear {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid var(--color-border-subtle, #333);
+  border-radius: 4px;
+  color: var(--color-text-muted, #666);
+  font-size: 11px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.12s, color 0.12s, border-color 0.12s;
+}
+
+.binding-row:hover .binding-row__clear {
+  opacity: 1;
+}
+
+.binding-row__clear:hover {
+  color: var(--color-danger-base, #e94560);
+  border-color: var(--color-danger-base, #e94560);
+}

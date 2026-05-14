@@ -8,7 +8,8 @@ import { AudioSettings } from './tabs/AudioSettings';
 import { GameplaySettings } from './tabs/GameplaySettings';
 import { ControlsSettings } from './tabs/ControlsSettings';
 import { DEFAULT_SETTINGS, mergeSettings } from '../../../lib/game/settings';
-import { pushLiveSettings, LIVE_SETTINGS } from '../../../lib/game';
+import { pushLiveSettings, LIVE_SETTINGS, getInputManager } from '../../../lib/game';
+import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { log } from '../../../lib/log-bus';
 import './ProfileHub.css';
 
@@ -35,6 +36,7 @@ interface ProfileHubProps {
   onConstraintSettingsChange?: (constraint: GameSettings['viewportConstraint'], aspectRatio: GameSettings['aspectRatio']) => void;
   onMasterVolumeChange?: (volume: number) => void;
   onDisplayPerfChange?: (enabled: boolean) => void;
+  onSaveSlotSettingsChange?: (enhanced: boolean, holdDuration: number) => void;
   masterVolumeOverride?: { volume: number; version: number } | null;
 }
 
@@ -50,6 +52,7 @@ export function ProfileHub({
   onConstraintSettingsChange,
   onMasterVolumeChange,
   onDisplayPerfChange,
+  onSaveSlotSettingsChange,
   masterVolumeOverride,
 }: ProfileHubProps) {
   const [activeTab, setActiveTab] = useState<TopTab>('home');
@@ -57,6 +60,28 @@ export function ProfileHub({
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const restartToastShownRef = useRef(false);
   const wasRunningRef = useRef(isGameRunning);
+  const [gamePaused, setGamePaused] = useState(false);
+
+  // Track pause state from InputManager
+  useEffect(() => {
+    if (!isGameRunning) {
+      setGamePaused(false);
+      return;
+    }
+    const inputMgr = getInputManager();
+    setGamePaused(inputMgr.isPaused());
+    const unsub = inputMgr.onPauseChange((paused) => setGamePaused(paused));
+    return unsub;
+  }, [isGameRunning]);
+
+  const handleTogglePause = useCallback(() => {
+    const inputMgr = getInputManager();
+    if (inputMgr.isPaused()) {
+      inputMgr.resume();
+    } else {
+      inputMgr.togglePause();
+    }
+  }, []);
 
   // Clear restart toast when game stops (settings will apply on next start)
   useEffect(() => {
@@ -86,6 +111,7 @@ export function ProfileHub({
           onConstraintSettingsChange?.(merged.viewportConstraint, merged.aspectRatio);
           onMasterVolumeChange?.(merged.masterVolume);
           onDisplayPerfChange?.(merged.displayPerfInTitle);
+          getInputManager().setFunctionMappings(merged.functionMappings ?? DEFAULT_FUNCTION_MAPPINGS);
         }
       } catch { /* use defaults */ }
     })();
@@ -134,6 +160,16 @@ export function ProfileHub({
         onDisplayPerfChange?.(next.displayPerfInTitle);
       }
 
+      // Push function mappings to InputManager when changed
+      if ('functionMappings' in patch) {
+        getInputManager().setFunctionMappings(next.functionMappings ?? DEFAULT_FUNCTION_MAPPINGS);
+      }
+
+      // Notify parent of save slot settings changes
+      if ('enhancedSaveSlotShortcut' in patch || 'saveHoldDuration' in patch) {
+        onSaveSlotSettingsChange?.(next.enhancedSaveSlotShortcut, next.saveHoldDuration);
+      }
+
       // If game is running, push live settings and maybe show restart toast
       if (isGameRunning) {
         pushLiveSettings(next);
@@ -170,6 +206,9 @@ export function ProfileHub({
               <Button variant="primary" size="md" onClick={onStartGame}>▶ Play</Button>
             ) : (
               <>
+                <Button variant="secondary" size="md" onClick={handleTogglePause}>
+                  {gamePaused ? '▶ Resume' : '⏸ Pause'}
+                </Button>
                 <Button variant="danger" size="md" onClick={onStopGame}>■ Stop</Button>
                 <Button variant="secondary" size="md" onClick={onResetGame}>↻ Reset</Button>
               </>

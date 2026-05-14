@@ -22,6 +22,48 @@
   min-width: 0;
 }
 
+/* ─── Tab bar ─── */
+.controls-settings__tabs {
+  display: flex;
+  gap: 0;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.controls-settings__tab {
+  all: unset;
+  cursor: pointer;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.controls-settings__tab:hover {
+  color: var(--color-text-primary);
+}
+
+.controls-settings__tab--active {
+  color: var(--color-gold-base);
+  border-bottom-color: var(--color-gold-base);
+}
+
+/* ─── Placeholder tab ─── */
+.controls-settings__placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.controls-settings__placeholder-text {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
 /* ─── Right sidebar: detected devices ─── */
 .controls-settings__devices-column {
   width: 240px;
@@ -93,6 +135,13 @@
 
 .controls-settings__bindings .controls-settings__section-header {
   padding: 12px 12px 8px;
+}
+
+.controls-settings__shortcut-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: 8px 12px 12px;
 }
 
 .controls-settings__bindings--drag-over {

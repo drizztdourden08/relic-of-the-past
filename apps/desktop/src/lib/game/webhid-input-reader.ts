@@ -25,6 +25,9 @@ export type WebHidStateListener = (state: WebHidInputState) => void;
 export type WebHidRawListener = (report: WebHidRawReport) => void;
 export type WebHidDiagListener = (msg: string) => void;
 
+/** Fired when a WebHID device physically disconnects. deviceKey = "vid:pid" */
+export type WebHidDisconnectListener = (deviceKey: string, deviceName: string) => void;
+
 // ── Stick calibration types ──
 
 export interface StickCalibrationData {
@@ -351,6 +354,8 @@ class WebHidInputReader {
   private diagListeners = new Set<WebHidDiagListener>();
   private diagLog: string[] = [];
   private connected = false;
+  private disconnectListeners = new Set<WebHidDisconnectListener>();
+  private hidDisconnectHandler: ((event: HIDConnectionEvent) => void) | null = null;
   /** Per-device stick calibration, keyed by "vid:pid" */
   private stickCalibrations = new Map<string, DeviceStickCalibration>();
 
@@ -400,6 +405,12 @@ class WebHidInputReader {
     return () => { this.diagListeners.delete(listener); };
   }
 
+  /** Subscribe to device disconnect events */
+  onDisconnect(listener: WebHidDisconnectListener): () => void {
+    this.disconnectListeners.add(listener);
+    return () => { this.disconnectListeners.delete(listener); };
+  }
+
   getDiagLog(): string[] { return [...this.diagLog]; }
   getStates(): Map<string, WebHidInputState> { return this.states; }
   isConnected(): boolean { return this.connected; }
@@ -425,6 +436,9 @@ class WebHidInputReader {
       }
 
       this.log(`Found ${nintendo.length} Nintendo HID interface(s)`);
+
+      // Install global disconnect handler (once)
+      this.installDisconnectHandler();
 
       // Group by VID:PID and try to open one from each group
       const groups = new Map<string, HIDDevice[]>();
@@ -478,6 +492,40 @@ class WebHidInputReader {
     }
   }
 
+  private installDisconnectHandler(): void {
+    if (this.hidDisconnectHandler || !('hid' in navigator)) return;
+    this.hidDisconnectHandler = (event: HIDConnectionEvent) => {
+      const device = event.device;
+      const deviceKey = `${device.vendorId.toString(16)}:${device.productId.toString(16)}`;
+      const name = KNOWN_PIDS[device.productId] ?? `Unknown (${device.productId.toString(16)})`;
+      this.log(`HID disconnect event: ${name} (${deviceKey})`);
+
+      // Remove from tracked devices
+      this.devices = this.devices.filter(d =>
+        !(d.vendorId === device.vendorId && d.productId === device.productId)
+      );
+      this.states.delete(deviceKey);
+      this.connected = this.devices.length > 0;
+
+      // Notify listeners
+      for (const cb of this.disconnectListeners) {
+        try { cb(deviceKey, name); } catch { /* ignore */ }
+      }
+    };
+    navigator.hid.addEventListener('disconnect', this.hidDisconnectHandler);
+
+    // Also listen for reconnect — auto-reopen previously granted devices
+    navigator.hid.addEventListener('connect', (event: HIDConnectionEvent) => {
+      const device = event.device;
+      const pid = device.productId;
+      if (device.vendorId === NINTENDO_VID && pid in KNOWN_PIDS) {
+        const name = KNOWN_PIDS[pid] ?? 'Unknown';
+        this.log(`HID reconnect event: ${name} — attempting to reopen`);
+        this.openDevice(device).catch(() => { /* ignore */ });
+      }
+    });
+  }
+
   private async openDevice(device: HIDDevice): Promise<boolean> {
     const name = KNOWN_PIDS[device.productId] ?? `Unknown (${device.productId.toString(16)})`;
     this.log(`Opening: ${name} (VID:${device.vendorId.toString(16)} PID:${device.productId.toString(16)})`);
@@ -487,6 +535,9 @@ class WebHidInputReader {
         await device.open();
       }
       this.log(`Opened: ${name}`);
+
+      // Install global disconnect handler if not already
+      this.installDisconnectHandler();
 
       device.addEventListener('inputreport', (event) => {
         this.handleInputReport(device, event);

@@ -29,6 +29,27 @@
   border-color: rgba(255, 255, 255, 0.18);
 }
 
+.save-slot__card--highlighted {
+  border-color: rgba(220, 50, 50, 0.85);
+  box-shadow: 0 0 8px rgba(220, 50, 50, 0.5), inset 0 0 6px rgba(220, 50, 50, 0.15);
+}
+
+.save-slot__card--highlighted:hover {
+  border-color: rgba(220, 50, 50, 0.95);
+}
+
+/* Hold-to-save fill overlay — rises from bottom */
+.save-slot__fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(200, 168, 78, 0.45);
+  z-index: 1;
+  pointer-events: none;
+  transition: height 60ms linear;
+}
+
 .save-slot__img {
   position: absolute;
   inset: 0;

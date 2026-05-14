@@ -65,6 +65,7 @@ function createWindow(): void {
     minHeight: 280,
     frame: false,
     titleBarStyle: 'hidden',
+    autoHideMenuBar: true,
     title: 'ALttP Randomizer',
     backgroundColor: '#16213e',
     show: !noFocus,
@@ -80,11 +81,18 @@ function createWindow(): void {
     mainWindow.showInactive();
   }
 
-  // Prevent Electron from capturing F1-F4 keys so they pass through to the
-  // game canvas for save/load states. F5+ and F12 are left alone.
+  // Let F1-F12 (and Tab) pass through to the renderer instead of being
+  // consumed by Electron menu accelerators.  setIgnoreMenuShortcuts
+  // bypasses menu handling for the current keystroke while still
+  // dispatching the DOM keydown event to the page.
   mainWindow.webContents.on('before-input-event', (_event, input) => {
-    if (input.type === 'keyDown' && /^F[1-4]$/.test(input.key)) {
-      _event.preventDefault();
+    if (input.type === 'keyDown' && (
+      /^F([1-9]|1[0-2])$/.test(input.key) ||
+      input.key === 'Tab'
+    )) {
+      mainWindow!.webContents.setIgnoreMenuShortcuts(true);
+    } else {
+      mainWindow!.webContents.setIgnoreMenuShortcuts(false);
     }
   });
 

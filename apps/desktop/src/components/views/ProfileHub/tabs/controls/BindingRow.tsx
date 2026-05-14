@@ -1,31 +1,21 @@
 /**
- * BindingRow — a single SNES button mapping row.
- * Shows: SNES button name | SNES icon | controller icon | controller button name
+ * BindingRow — a single input mapping row (SNES buttons, shortcuts, cheats).
+ * Shows: action label | optional middle icon | optional middle label | binding icon | binding label
  * Entire row is clickable to initiate rebinding.
  */
 
-import type { ButtonMapping } from '@shared/types/controls';
-import { SNES_BUTTON_LABELS, SNES_ACTION_LABELS } from '@shared/types/controls';
-import { getSnesIconUrl, getButtonIconUrl, keyCodeToIconId } from '../../../InputTester/button-icons';
+import type { InputBinding, ButtonIcon, KeyboardBinding } from '@shared/types/controls';
+import { getButtonIconUrl, keyCodeToIconId } from '../../../InputTester/button-icons';
 import './BindingRow.css';
 
 interface BindingRowProps {
-  mapping: ButtonMapping;
-  onRebind: (mapping: ButtonMapping) => void;
-}
-
-function getBindingLabel(mapping: ButtonMapping): string {
-  // Prefer the icon label (e.g. "A", "LB", "Menu") which comes from the preset
-  if (mapping.icon?.label) return mapping.icon.label;
-  const b = mapping.binding;
-  switch (b.type) {
-    case 'keyboard':
-      return b.label ?? formatKeyCode(b.code);
-    case 'gamepad-button':
-      return b.label ?? `Button ${b.index}`;
-    case 'gamepad-axis':
-      return b.label ?? `Axis ${b.axisIndex}${b.direction}`;
-  }
+  actionLabel: string;
+  middleLabel?: string;
+  middleIconUrl?: string | null;
+  binding: InputBinding;
+  bindingIcon?: ButtonIcon | null;
+  onRebind: () => void;
+  onClear?: () => void;
 }
 
 function formatKeyCode(code: string): string {
@@ -42,29 +32,46 @@ function formatKeyCode(code: string): string {
   return map[code] ?? code;
 }
 
-/** Resolve the binding-side icon path from the mapping's icon or keyboard code */
-function getBindingIconUrl(mapping: ButtonMapping): string | null {
-  // If the mapping already has an icon with a path, use it
-  if (mapping.icon?.path) return mapping.icon.path;
-  // If the mapping has an icon key, look it up
-  if (mapping.icon?.key) {
-    const url = getButtonIconUrl(mapping.icon.key);
+function formatKeyBinding(b: KeyboardBinding): string {
+  const parts: string[] = [];
+  if (b.modifiers?.ctrl) parts.push('Ctrl');
+  if (b.modifiers?.shift) parts.push('Shift');
+  if (b.modifiers?.alt) parts.push('Alt');
+  parts.push(b.label ?? formatKeyCode(b.code));
+  return parts.join(' + ');
+}
+
+export function getBindingLabel(binding: InputBinding, icon?: ButtonIcon | null): string {
+  if (binding.type === 'none') return '—';
+  if (icon?.label) return icon.label;
+  switch (binding.type) {
+    case 'keyboard':
+      return formatKeyBinding(binding);
+    case 'gamepad-button':
+      return binding.label ?? `Button ${binding.index}`;
+    case 'gamepad-axis':
+      return binding.label ?? `Axis ${binding.axisIndex}${binding.direction}`;
+  }
+}
+
+export function getBindingIconUrl(binding: InputBinding, icon?: ButtonIcon | null): string | null {
+  if (binding.type === 'none') return null;
+  if (icon?.path) return icon.path;
+  if (icon?.key) {
+    const url = getButtonIconUrl(icon.key);
     if (url) return url;
   }
-  // For keyboard bindings, derive from the key code
-  if (mapping.binding.type === 'keyboard') {
-    const iconId = keyCodeToIconId(mapping.binding.code);
+  if (binding.type === 'keyboard') {
+    const iconId = keyCodeToIconId(binding.code);
     if (iconId) return getButtonIconUrl(iconId);
   }
   return null;
 }
 
-export function BindingRow({ mapping, onRebind }: BindingRowProps): JSX.Element {
-  const actionLabel = SNES_ACTION_LABELS[mapping.snesButton];
-  const snesLabel = SNES_BUTTON_LABELS[mapping.snesButton];
-  const snesIconUrl = getSnesIconUrl(mapping.snesButton);
-  const bindingLabel = getBindingLabel(mapping);
-  const bindingIconUrl = getBindingIconUrl(mapping);
+export function BindingRow({ actionLabel, middleLabel, middleIconUrl, binding, bindingIcon, onRebind, onClear }: BindingRowProps): JSX.Element {
+  const bindingLabel = getBindingLabel(binding, bindingIcon);
+  const bindingIconSrc = getBindingIconUrl(binding, bindingIcon);
+  const isNone = binding.type === 'none';
 
   return (
     <div
@@ -72,31 +79,42 @@ export function BindingRow({ mapping, onRebind }: BindingRowProps): JSX.Element 
       role="button"
       tabIndex={0}
       title={`Click to rebind ${actionLabel}`}
-      onClick={() => onRebind(mapping)}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRebind(mapping); } }}
+      onClick={onRebind}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRebind(); } }}
     >
-      {/* Game action name */}
+      {/* Action name */}
       <span className="binding-row__action-label">{actionLabel}</span>
 
-      {/* SNES button icon */}
+      {/* Middle icon (e.g. SNES button icon) */}
       <div className="binding-row__icon-slot">
-        {snesIconUrl ? (
-          <img src={snesIconUrl} alt={snesLabel} className="binding-row__icon-img" />
+        {middleIconUrl ? (
+          <img src={middleIconUrl} alt={middleLabel ?? ''} className="binding-row__icon-img" />
         ) : null}
       </div>
 
-      {/* SNES button name */}
-      <span className="binding-row__snes-label">{snesLabel}</span>
+      {/* Middle label (e.g. SNES button name) */}
+      <span className="binding-row__snes-label">{middleLabel ?? ''}</span>
 
-      {/* Bound controller/keyboard icon */}
+      {/* Bound input icon */}
       <div className="binding-row__icon-slot">
-        {bindingIconUrl ? (
-          <img src={bindingIconUrl} alt={bindingLabel} className="binding-row__icon-img" />
+        {bindingIconSrc ? (
+          <img src={bindingIconSrc} alt={bindingLabel} className="binding-row__icon-img" />
         ) : null}
       </div>
 
-      {/* Bound button name */}
-      <span className="binding-row__binding-label">{bindingLabel}</span>
+      {/* Bound input label */}
+      <span className={`binding-row__binding-label ${isNone ? 'binding-row__binding-label--none' : ''}`}>{bindingLabel}</span>
+
+      {/* Clear button */}
+      {onClear && !isNone && (
+        <button
+          className="binding-row__clear"
+          title="Clear binding"
+          onClick={(e) => { e.stopPropagation(); onClear(); }}
+        >
+          ✕
+        </button>
+      )}
     </div>
   );
 }

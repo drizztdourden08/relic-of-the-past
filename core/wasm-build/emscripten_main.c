@@ -316,11 +316,40 @@ void WasmSetDisplayPerf(int enable) {
 }
 
 // ---------------------------------------------------------------------------
+// Game commands — callable from JavaScript for pause, reset, cheats
+// ---------------------------------------------------------------------------
+EMSCRIPTEN_KEEPALIVE
+void WasmSetPaused(int paused) {
+  g_paused = paused ? 1 : 0;
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetPaused(void) {
+  return g_paused;
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmTogglePause(void) {
+  g_paused = !g_paused;
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmReset(int warm) {
+  ZeldaReset(warm ? true : false);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmCheat(int cmd) {
+  PatchCommand((char)cmd);
+}
+
+// ---------------------------------------------------------------------------
 // Command handling (cheats, pause, etc.)
 // F-key save/load states are handled from JavaScript via ccall to
 // WasmSaveState/WasmLoadState so disk persistence can be coordinated.
 // ---------------------------------------------------------------------------
 static void HandleCommand(int keyCode) {
+  if (g_js_input_mode) return;  // JS drives commands via Wasm* exports
   switch (keyCode) {
     case SDLK_w:
       if (SDL_GetModState() & KMOD_SHIFT)

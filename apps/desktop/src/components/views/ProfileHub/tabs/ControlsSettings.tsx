@@ -15,8 +15,18 @@ import type {
   ButtonMapping,
   InputBinding,
   SnesButton,
+  FunctionAction,
+  FunctionMapping,
 } from '@shared/types/controls';
-import { SNES_BUTTONS } from '@shared/types/controls';
+import {
+  SNES_BUTTONS,
+  SNES_BUTTON_LABELS,
+  SNES_ACTION_LABELS,
+  SHORTCUT_ACTIONS,
+  CHEAT_ACTIONS,
+  FUNCTION_ACTION_LABELS,
+  DEFAULT_FUNCTION_MAPPINGS,
+} from '@shared/types/controls';
 import { findPresetById, KEYBOARD_DEFAULT } from '@shared/data/controllers';
 import { findProfileByVidPid } from '@shared/data/controllers/profiles';
 import { getInputManager, profileFromPreset } from '../../../../lib/game/input-manager';
@@ -24,6 +34,9 @@ import { InputProfileList } from './controls/InputProfileList';
 import { DeviceCard } from './controls/DeviceCard';
 import { BindingRow } from './controls/BindingRow';
 import { BindingListener } from './controls/BindingListener';
+import { Toggle } from '../../../primitives/Toggle';
+import { Slider } from '../../../primitives/Slider';
+import { getSnesIconUrl } from '../../InputTester/button-icons';
 import { Dialog } from '../../../composites/Dialog/Dialog';
 import './ControlsSettings.css';
 
@@ -42,11 +55,16 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
   const [profiles, setProfiles] = useState<InputProfile[]>([]);
   const [activeProfile, setActiveProfile] = useState<InputProfile | null>(null);
   const [devices, setDevices] = useState<DetectedDevice[]>([]);
-  const [listeningFor, setListeningFor] = useState<SnesButton | null>(null);
+  const [listeningFor, setListeningFor] = useState<
+    | { type: 'snes'; button: SnesButton }
+    | { type: 'function'; action: FunctionAction }
+    | null
+  >(null);
   const [dragOverBindings, setDragOverBindings] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<InputProfile | null>(null);
   const [newlyCreatedId, setNewlyCreatedId] = useState<string | null>(null);
   const [confirmPreset, setConfirmPreset] = useState<{ presetId: string; deviceName: string; vid: string; pid: string } | null>(null);
+  const [activeTab, setActiveTab] = useState<'controls' | 'enhanced' | 'shortcuts' | 'cheats'>('controls');
   const loadedRef = useRef(false);
 
   // ─── Load profiles from disk ───
@@ -150,10 +168,52 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
     setDeleteTarget(null);
   }, [deleteTarget, profiles, activeProfile, persistProfiles, selectProfile]);
 
-  // ─── Rebind a button ───
-  const handleRebind = useCallback((mapping: ButtonMapping) => {
-    setListeningFor(mapping.snesButton);
+  // ─── Rebind a SNES button ───
+  const handleSnesRebind = useCallback((snesButton: SnesButton) => {
+    setListeningFor({ type: 'snes', button: snesButton });
   }, []);
+
+  // ─── Rebind a function action (shortcut / cheat) ───
+  const handleFunctionRebind = useCallback((action: FunctionAction) => {
+    setListeningFor({ type: 'function', action });
+  }, []);
+
+  // ─── Clear a SNES button binding ───
+  const handleSnesClear = useCallback((snesButton: SnesButton) => {
+    if (!activeProfile) return;
+    const updatedMappings = activeProfile.mappings.map(m => {
+      if (m.snesButton !== snesButton) return m;
+      return { ...m, binding: { type: 'none' as const }, icon: null, sourceVid: null, sourcePid: null };
+    });
+    const updatedProfile: InputProfile = { ...activeProfile, mappings: updatedMappings, modifiedAt: Date.now() };
+    const updatedProfiles = profiles.map(p => p.id === updatedProfile.id ? updatedProfile : p);
+    setActiveProfile(updatedProfile);
+    getInputManager().setProfile(updatedProfile);
+    persistProfiles(updatedProfiles);
+  }, [activeProfile, profiles, persistProfiles]);
+
+  // ─── Resolve current function mappings from settings (or defaults) ───
+  const functionMappings: FunctionMapping[] = useMemo(() => {
+    if (settings.functionMappings && settings.functionMappings.length > 0) {
+      // Ensure all actions are present (merge with defaults for any missing)
+      const existing = new Set(settings.functionMappings.map(m => m.action));
+      const merged = [...settings.functionMappings];
+      for (const def of DEFAULT_FUNCTION_MAPPINGS) {
+        if (!existing.has(def.action)) merged.push(def);
+      }
+      return merged;
+    }
+    return DEFAULT_FUNCTION_MAPPINGS;
+  }, [settings.functionMappings]);
+
+  // ─── Clear a function action binding ───
+  const handleFunctionClear = useCallback((action: FunctionAction) => {
+    const updatedFn = functionMappings.map(m => {
+      if (m.action !== action) return m;
+      return { ...m, binding: { type: 'none' as const }, icon: null, sourceVid: null, sourcePid: null };
+    });
+    onChange({ functionMappings: updatedFn });
+  }, [functionMappings, onChange]);
 
   /**
    * Handle a captured input from BindingListener.
@@ -161,38 +221,53 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
    * Icons are always derived at render time in displayMappings via CONTROLLER_PROFILES.
    */
   const handleCapture = useCallback((binding: InputBinding, sourceDeviceKey?: string, vendorId?: string | null, productId?: string | null) => {
-    if (!listeningFor || !activeProfile) return;
+    if (!listeningFor) return;
     setListeningFor(null);
 
-    // Pad VID/PID for consistent storage
     const vid = vendorId ? padHex(vendorId) : null;
     const pid = productId ? padHex(productId) : null;
 
-    const updatedMappings = activeProfile.mappings.map(m => {
-      if (m.snesButton !== listeningFor) return m;
-      return {
-        ...m,
-        binding,
-        icon: null, // Never stored — resolved at render time from CONTROLLER_PROFILES
-        sourceVid: binding.type !== 'keyboard' ? vid : null,
-        sourcePid: binding.type !== 'keyboard' ? pid : null,
+    if (listeningFor.type === 'snes') {
+      if (!activeProfile) return;
+      const updatedMappings = activeProfile.mappings.map(m => {
+        if (m.snesButton !== listeningFor.button) return m;
+        return {
+          ...m,
+          binding,
+          icon: null,
+          sourceVid: binding.type !== 'keyboard' ? vid : null,
+          sourcePid: binding.type !== 'keyboard' ? pid : null,
+        };
+      });
+
+      const updatedProfile: InputProfile = {
+        ...activeProfile,
+        mappings: updatedMappings,
+        modifiedAt: Date.now(),
       };
-    });
 
-    const updatedProfile: InputProfile = {
-      ...activeProfile,
-      mappings: updatedMappings,
-      modifiedAt: Date.now(),
-    };
+      const updatedProfiles = profiles.map(p =>
+        p.id === updatedProfile.id ? updatedProfile : p
+      );
 
-    const updatedProfiles = profiles.map(p =>
-      p.id === updatedProfile.id ? updatedProfile : p
-    );
-
-    setActiveProfile(updatedProfile);
-    getInputManager().setProfile(updatedProfile);
-    persistProfiles(updatedProfiles);
-  }, [listeningFor, activeProfile, profiles, persistProfiles]);
+      setActiveProfile(updatedProfile);
+      getInputManager().setProfile(updatedProfile);
+      persistProfiles(updatedProfiles);
+    } else {
+      // Function action (shortcut / cheat)
+      const updatedFn = functionMappings.map(m => {
+        if (m.action !== listeningFor.action) return m;
+        return {
+          ...m,
+          binding,
+          icon: null,
+          sourceVid: binding.type !== 'keyboard' ? vid : null,
+          sourcePid: binding.type !== 'keyboard' ? pid : null,
+        };
+      });
+      onChange({ functionMappings: updatedFn });
+    }
+  }, [listeningFor, activeProfile, profiles, persistProfiles, functionMappings, onChange]);
 
   // ─── Drag & drop preset application ───
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -355,10 +430,10 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
     return SNES_BUTTONS.map(btn => {
       const existing = activeProfile?.mappings.find(m => m.snesButton === btn);
       if (!existing) {
-        return { snesButton: btn, binding: { type: 'keyboard' as const, code: '', label: '—' }, icon: null };
+        return { snesButton: btn, binding: { type: 'none' as const }, icon: null };
       }
-      // Keyboard bindings: no controller icon needed (BindingRow derives key icon)
-      if (existing.binding.type === 'keyboard') return { ...existing, icon: null };
+      // None or keyboard bindings: no controller icon needed
+      if (existing.binding.type === 'none' || existing.binding.type === 'keyboard') return { ...existing, icon: null };
 
       // Gamepad bindings: ALWAYS resolve from CONTROLLER_PROFILES via sourceVid:sourcePid
       const vid = existing.sourceVid ? padHex(existing.sourceVid) : null;
@@ -370,13 +445,13 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
 
       if (existing.binding.type === 'gamepad-button') {
         const b = profile.buttons[existing.binding.index];
-        if (b) return { ...existing, icon: { key: b.icon, label: b.label } };
+        if (b) return { ...existing, icon: { key: b.icon, label: b.label, path: null } };
       }
       if (existing.binding.type === 'gamepad-axis') {
         const ax = profile.axes?.[existing.binding.axisIndex];
         if (ax) {
           const dir = existing.binding.direction === '+' ? '+' : '−';
-          return { ...existing, icon: { key: `${profile.id}-axis`, label: `${ax.label} ${dir}` } };
+          return { ...existing, icon: { key: `${profile.id}-axis`, label: `${ax.label} ${dir}`, path: null } };
         }
       }
       return { ...existing, icon: null };
@@ -398,53 +473,165 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
         />
       </div>
 
-      {/* Center column: binding editor */}
+      {/* Center column: tabbed content */}
       <div className="controls-settings__main">
-        <div
-          className={`controls-settings__bindings ${dragOverBindings ? 'controls-settings__bindings--drag-over' : ''}`}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-        >
-          <div className="controls-settings__section-header">
-            Button Mappings
-            {activeProfile && (
-              <span className="controls-settings__profile-badge">
-                {activeProfile.name}
-              </span>
-            )}
-          </div>
-          <div className="controls-settings__binding-list">
-            <div className="binding-row binding-row--header">
-              <span className="binding-row__action-label">Action</span>
-              <div className="binding-row__icon-slot" />
-              <span className="binding-row__snes-label">SNES</span>
-              <div className="binding-row__icon-slot" />
-              <span className="binding-row__binding-label">Binding</span>
-            </div>
-            {displayMappings.map(mapping => (
-              <BindingRow
-                key={mapping.snesButton}
-                mapping={mapping}
-                onRebind={handleRebind}
-              />
-            ))}
-          </div>
+        {/* Tab bar */}
+        <div className="controls-settings__tabs">
+          <button
+            className={`controls-settings__tab ${activeTab === 'controls' ? 'controls-settings__tab--active' : ''}`}
+            onClick={() => setActiveTab('controls')}
+          >Game Controls</button>
+          <button
+            className={`controls-settings__tab ${activeTab === 'enhanced' ? 'controls-settings__tab--active' : ''}`}
+            onClick={() => setActiveTab('enhanced')}
+          >Enhanced Controls</button>
+          <button
+            className={`controls-settings__tab ${activeTab === 'shortcuts' ? 'controls-settings__tab--active' : ''}`}
+            onClick={() => setActiveTab('shortcuts')}
+          >Shortcuts &amp; Functions</button>
+          <button
+            className={`controls-settings__tab ${activeTab === 'cheats' ? 'controls-settings__tab--active' : ''}`}
+            onClick={() => setActiveTab('cheats')}
+          >Cheats</button>
         </div>
 
-        {/* Used inputs summary — shows which devices this profile depends on */}
-        <div className="controls-settings__used-inputs">
-          <div className="controls-settings__used-inputs-header">Required Inputs</div>
-          <div className="controls-settings__used-inputs-list">
-            {requiredInputs.map((input, idx) => (
-              <div key={`${input.type}-${idx}`} className="controls-settings__used-input">
-                <span className={`controls-settings__used-input-dot ${input.connected ? 'controls-settings__used-input-dot--active' : 'controls-settings__used-input-dot--disconnected'}`} />
-                <img src={input.iconSrc} alt={input.label} className="controls-settings__used-input-icon" />
-                <span className={input.connected ? '' : 'controls-settings__used-input-label--dim'}>{input.label}</span>
+        {/* Tab content */}
+        {activeTab === 'controls' && (
+          <>
+            <div
+              className={`controls-settings__bindings ${dragOverBindings ? 'controls-settings__bindings--drag-over' : ''}`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
+              <div className="controls-settings__section-header">
+                Button Mappings
+                {activeProfile && (
+                  <span className="controls-settings__profile-badge">
+                    {activeProfile.name}
+                  </span>
+                )}
               </div>
-            ))}
+              <div className="controls-settings__binding-list">
+                <div className="binding-row binding-row--header">
+                  <span className="binding-row__action-label">Action</span>
+                  <div className="binding-row__icon-slot" />
+                  <span className="binding-row__snes-label">SNES</span>
+                  <div className="binding-row__icon-slot" />
+                  <span className="binding-row__binding-label">Binding</span>
+                </div>
+                {displayMappings.map(mapping => (
+                  <BindingRow
+                    key={mapping.snesButton}
+                    actionLabel={SNES_ACTION_LABELS[mapping.snesButton]}
+                    middleLabel={SNES_BUTTON_LABELS[mapping.snesButton]}
+                    middleIconUrl={getSnesIconUrl(mapping.snesButton)}
+                    binding={mapping.binding}
+                    bindingIcon={mapping.icon}
+                    onRebind={() => handleSnesRebind(mapping.snesButton)}
+                    onClear={() => handleSnesClear(mapping.snesButton)}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Used inputs summary */}
+            <div className="controls-settings__used-inputs">
+              <div className="controls-settings__used-inputs-header">Required Inputs</div>
+              <div className="controls-settings__used-inputs-list">
+                {requiredInputs.map((input, idx) => (
+                  <div key={`${input.type}-${idx}`} className="controls-settings__used-input">
+                    <span className={`controls-settings__used-input-dot ${input.connected ? 'controls-settings__used-input-dot--active' : 'controls-settings__used-input-dot--disconnected'}`} />
+                    <img src={input.iconSrc} alt={input.label} className="controls-settings__used-input-icon" />
+                    <span className={input.connected ? '' : 'controls-settings__used-input-label--dim'}>{input.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+
+        {activeTab === 'enhanced' && (
+          <div className="controls-settings__placeholder">
+            <p className="controls-settings__placeholder-text">Enhanced controls coming soon.</p>
           </div>
-        </div>
+        )}
+
+        {activeTab === 'shortcuts' && (
+          <div className="controls-settings__bindings">
+            <div className="controls-settings__section-header">Save Slot Shortcuts</div>
+            <div className="controls-settings__shortcut-options">
+              <Toggle
+                label="Enhanced Save Slot Shortcut"
+                description="Opens the save slot menu on shortcut press instead of immediately saving/loading"
+                checked={settings.enhancedSaveSlotShortcut}
+                onChange={(v) => onChange({ enhancedSaveSlotShortcut: v })}
+              />
+              {settings.enhancedSaveSlotShortcut && (
+                <Slider
+                  label="Hold to Save Duration"
+                  description="How long to hold the key to save (seconds)"
+                  value={settings.saveHoldDuration}
+                  min={1}
+                  max={5}
+                  step={0.5}
+                  formatValue={(v) => `${v}s`}
+                  onChange={(v) => onChange({ saveHoldDuration: v })}
+                />
+              )}
+            </div>
+
+            <div className="controls-settings__section-header">Keyboard Shortcuts</div>
+            <div className="controls-settings__binding-list">
+              <div className="binding-row binding-row--header">
+                <span className="binding-row__action-label">Action</span>
+                <div className="binding-row__icon-slot" />
+                <span className="binding-row__snes-label" />
+                <div className="binding-row__icon-slot" />
+                <span className="binding-row__binding-label">Binding</span>
+              </div>
+              {functionMappings
+                .filter(m => (SHORTCUT_ACTIONS as readonly string[]).includes(m.action))
+                .map(mapping => (
+                  <BindingRow
+                    key={mapping.action}
+                    actionLabel={FUNCTION_ACTION_LABELS[mapping.action]}
+                    binding={mapping.binding}
+                    bindingIcon={mapping.icon}
+                    onRebind={() => handleFunctionRebind(mapping.action)}
+                    onClear={() => handleFunctionClear(mapping.action)}
+                  />
+                ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'cheats' && (
+          <div className="controls-settings__bindings">
+            <div className="controls-settings__section-header">Cheat Bindings</div>
+            <div className="controls-settings__binding-list">
+              <div className="binding-row binding-row--header">
+                <span className="binding-row__action-label">Action</span>
+                <div className="binding-row__icon-slot" />
+                <span className="binding-row__snes-label" />
+                <div className="binding-row__icon-slot" />
+                <span className="binding-row__binding-label">Binding</span>
+              </div>
+              {functionMappings
+                .filter(m => (CHEAT_ACTIONS as readonly string[]).includes(m.action))
+                .map(mapping => (
+                  <BindingRow
+                    key={mapping.action}
+                    actionLabel={FUNCTION_ACTION_LABELS[mapping.action]}
+                    binding={mapping.binding}
+                    bindingIcon={mapping.icon}
+                    onRebind={() => handleFunctionRebind(mapping.action)}
+                    onClear={() => handleFunctionClear(mapping.action)}
+                  />
+                ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Right column: detected devices */}
@@ -466,7 +653,11 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
       {/* Rebind listener modal */}
       {listeningFor && (
         <BindingListener
-          snesButton={listeningFor}
+          actionLabel={
+            listeningFor.type === 'snes'
+              ? SNES_BUTTON_LABELS[listeningFor.button]
+              : FUNCTION_ACTION_LABELS[listeningFor.action]
+          }
           onCapture={handleCapture}
           onCancel={() => setListeningFor(null)}
         />

@@ -5,19 +5,22 @@
  */
 
 import { useEffect, useState } from 'react';
-import type { InputBinding, SnesButton } from '@shared/types/controls';
-import { SNES_BUTTON_LABELS } from '@shared/types/controls';
+import type { InputBinding } from '@shared/types/controls';
 import { getInputManager } from '../../../../../lib/game/input-manager';
 import './BindingListener.css';
 
+const MODIFIER_CODES = new Set([
+  'ShiftLeft', 'ShiftRight', 'ControlLeft', 'ControlRight',
+  'AltLeft', 'AltRight', 'MetaLeft', 'MetaRight',
+]);
+
 interface BindingListenerProps {
-  snesButton: SnesButton;
+  actionLabel: string;
   onCapture: (binding: InputBinding, sourceDeviceKey?: string, vendorId?: string | null, productId?: string | null) => void;
   onCancel: () => void;
 }
 
-export function BindingListener({ snesButton, onCapture, onCancel }: BindingListenerProps): JSX.Element {
-  const label = SNES_BUTTON_LABELS[snesButton];
+export function BindingListener({ actionLabel, onCapture, onCancel }: BindingListenerProps): JSX.Element {
   const [canCancel, setCanCancel] = useState(false);
 
   useEffect(() => {
@@ -39,7 +42,25 @@ export function BindingListener({ snesButton, onCapture, onCancel }: BindingList
         onCancel();
         return;
       }
-      onCapture({ type: 'keyboard', code: e.code }, 'keyboard');
+      // Delete/Backspace clears the binding
+      if (e.code === 'Delete' || e.code === 'Backspace') {
+        onCapture({ type: 'none' }, 'keyboard');
+        return;
+      }
+      // Ignore bare modifier presses — wait for the actual key
+      if (MODIFIER_CODES.has(e.code)) return;
+
+      const modifiers: { shift?: boolean; ctrl?: boolean; alt?: boolean } = {};
+      if (e.shiftKey) modifiers.shift = true;
+      if (e.ctrlKey) modifiers.ctrl = true;
+      if (e.altKey) modifiers.alt = true;
+
+      const binding: InputBinding = {
+        type: 'keyboard',
+        code: e.code,
+        ...(Object.keys(modifiers).length > 0 ? { modifiers } : {}),
+      };
+      onCapture(binding, 'keyboard');
     };
 
     // Wait 200ms before subscribing to avoid capturing stale input
@@ -65,11 +86,11 @@ export function BindingListener({ snesButton, onCapture, onCancel }: BindingList
     <div className="binding-listener-backdrop" onClick={() => canCancel && onCancel()}>
       <div className="binding-listener" onClick={(e) => e.stopPropagation()}>
         <div className="binding-listener__prompt">
-          Press a key or button for
+          Press a key, button, or move a stick for
         </div>
-        <div className="binding-listener__label">{label}</div>
+        <div className="binding-listener__label">{actionLabel}</div>
         <div className="binding-listener__hint">
-          Press Escape to cancel
+          Press Escape to cancel · Delete to clear
         </div>
       </div>
     </div>

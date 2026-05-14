@@ -9,6 +9,8 @@ interface SaveSlotProps {
   shortcutKey?: string;
   disableSave?: boolean;
   disableLoad?: boolean;
+  highlighted?: boolean;
+  holdProgress?: number; // 0-1, fill overlay for save confirmation
   onSave: (slot: number) => void;
   onLoad: (slot: number) => void;
 }
@@ -22,16 +24,30 @@ export function SaveSlot({
   shortcutKey,
   disableSave,
   disableLoad,
+  highlighted,
+  holdProgress,
   onSave,
   onLoad,
 }: SaveSlotProps) {
+  const cardClass = [
+    'save-slot__card',
+    highlighted ? 'save-slot__card--highlighted' : '',
+  ].filter(Boolean).join(' ');
+
   return (
     <div className={`save-slot ${busy ? 'save-slot--busy' : ''}`}>
-      <div className="save-slot__card">
+      <div className={cardClass}>
         {screenshotUrl ? (
           <img src={screenshotUrl} alt={`Slot ${slot + 1}`} className="save-slot__img" />
         ) : (
           <div className="save-slot__empty" />
+        )}
+        {/* Hold-to-save fill overlay */}
+        {holdProgress != null && holdProgress > 0 && (
+          <div
+            className="save-slot__fill"
+            style={{ height: `${holdProgress * 100}%` }}
+          />
         )}
         <span className="save-slot__num">{slot + 1}</span>
         {shortcutKey && <span className="save-slot__key">{shortcutKey}</span>}

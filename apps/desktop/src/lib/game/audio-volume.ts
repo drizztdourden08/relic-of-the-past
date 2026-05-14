@@ -8,24 +8,27 @@ import { getModule } from './wasm-bridge';
 let gainNode: GainNode | null = null;
 let pendingVolume: number | null = null;
 
+function getSDL2Audio(): { audioContext: AudioContext; scriptProcessorNode: AudioNode } | null {
+  const mod = getModule();
+  const sdl2 = (mod as any)?.SDL2 as
+    | { audioContext?: AudioContext; audio?: { scriptProcessorNode?: AudioNode } }
+    | undefined;
+  if (!sdl2?.audioContext || !sdl2?.audio?.scriptProcessorNode) return null;
+  return { audioContext: sdl2.audioContext, scriptProcessorNode: sdl2.audio.scriptProcessorNode };
+}
+
 /**
  * Hook into the SDL2 audio pipeline to insert a master gain node.
  * Must be called after the WASM module is running and audio is initialized.
  */
 export function initMasterVolume(volume: number): void {
-  const mod = getModule();
-  const sdl2 = (mod as any)?.SDL2 as
-    | { audioContext?: AudioContext; audio?: { scriptProcessorNode?: AudioNode } }
-    | undefined;
-
-  if (!sdl2?.audioContext || !sdl2?.audio?.scriptProcessorNode) {
-    // Audio not initialized yet — store for later
+  const sdl2 = getSDL2Audio();
+  if (!sdl2) {
     pendingVolume = volume;
     return;
   }
 
-  const ctx = sdl2.audioContext;
-  const source = sdl2.audio.scriptProcessorNode;
+  const { audioContext: ctx, scriptProcessorNode: source } = sdl2;
 
   // Already hooked
   if (gainNode) {
@@ -65,4 +68,25 @@ export function getPendingVolume(): number | null {
 export function resetMasterVolume(): void {
   gainNode = null;
   pendingVolume = null;
+}
+
+/**
+ * Suspend audio output (mute by suspending AudioContext).
+ * Used when game is paused to silence music.
+ */
+export function suspendAudio(): void {
+  const sdl2 = getSDL2Audio();
+  if (sdl2?.audioContext.state === 'running') {
+    sdl2.audioContext.suspend();
+  }
+}
+
+/**
+ * Resume audio output after pause.
+ */
+export function resumeAudio(): void {
+  const sdl2 = getSDL2Audio();
+  if (sdl2?.audioContext.state === 'suspended') {
+    sdl2.audioContext.resume();
+  }
 }
