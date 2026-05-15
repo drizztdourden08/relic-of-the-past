@@ -12,6 +12,7 @@ contextBridge.exposeInMainWorld('api', {
   setAlwaysOnTop: (value: boolean) => ipcRenderer.invoke('window:setAlwaysOnTop', value),
   setAudioMuted: (value: boolean) => ipcRenderer.invoke('window:setAudioMuted', value),
   isAudioMuted: () => ipcRenderer.invoke('window:isAudioMuted'),
+  openDevTools: () => ipcRenderer.send('window:openDevTools'),
   onMaximizedChange: (callback: (maximized: boolean) => void) => {
     const handler = (_event: Electron.IpcRendererEvent, maximized: boolean) => callback(maximized);
     ipcRenderer.on('window:maximized', handler);

@@ -245,7 +245,7 @@
     },
     {
       "file": "hud-bottle-mushroom",
-      "label": "Bottle (mushroom)",
+      "label": "Mushroom (bottle slot)",
       "category": "hud",
       "extract": { "method": "hud-tiles", "tiles": [8260, 8261, 8262, 8263] }
     },
@@ -440,7 +440,7 @@
       "file": "receipt-bow",
       "label": "Bow",
       "category": "receipt",
-      "extract": { "method": "receipt", "receiptId": 11 }
+      "extract": { "method": "receipt", "receiptId": 58 }
     },
     {
       "file": "receipt-blue-boomerang",
@@ -453,12 +453,6 @@
       "label": "Magic Powder",
       "category": "receipt",
       "extract": { "method": "receipt", "receiptId": 13 }
-    },
-    {
-      "file": "receipt-bottle-empty",
-      "label": "Bottle (empty)",
-      "category": "receipt",
-      "extract": { "method": "receipt", "receiptId": 14 }
     },
     {
       "file": "receipt-bombos",
@@ -503,8 +497,8 @@
       "extract": { "method": "receipt", "receiptId": 21 }
     },
     {
-      "file": "receipt-bottle-2",
-      "label": "Bottle (variant 2)",
+      "file": "receipt-bottle-empty",
+      "label": "Bottle (empty)",
       "category": "receipt",
       "extract": { "method": "receipt", "receiptId": 22 }
     },
@@ -629,20 +623,20 @@
       "extract": { "method": "receipt", "receiptId": 42 }
     },
     {
-      "file": "receipt-red-potion",
-      "label": "Red Potion",
+      "file": "receipt-bottle-red-potion",
+      "label": "Bottle (red potion)",
       "category": "receipt",
       "extract": { "method": "receipt", "receiptId": 43 }
     },
     {
-      "file": "receipt-green-potion",
-      "label": "Green Potion",
+      "file": "receipt-bottle-green-potion",
+      "label": "Bottle (green potion)",
       "category": "receipt",
       "extract": { "method": "receipt", "receiptId": 44 }
     },
     {
-      "file": "receipt-blue-potion",
-      "label": "Blue Potion",
+      "file": "receipt-bottle-blue-potion",
+      "label": "Bottle (blue potion)",
       "category": "receipt",
       "extract": { "method": "receipt", "receiptId": 45 }
     },
@@ -680,19 +674,19 @@
       "file": "receipt-blue-pendant",
       "label": "Blue Pendant",
       "category": "receipt",
-      "extract": { "method": "receipt", "receiptId": 56 }
+      "extract": { "method": "receipt", "receiptId": 57 }
     },
     {
       "file": "receipt-red-pendant",
       "label": "Red Pendant",
       "category": "receipt",
-      "extract": { "method": "receipt", "receiptId": 57 }
+      "extract": { "method": "receipt", "receiptId": 56 }
     },
     {
       "file": "receipt-bow-no-arrows",
       "label": "Bow (no arrows)",
       "category": "receipt",
-      "extract": { "method": "receipt", "receiptId": 58 }
+      "extract": { "method": "receipt", "receiptId": 11 }
     },
     {
       "file": "receipt-silver-bow",
@@ -701,14 +695,14 @@
       "extract": { "method": "receipt", "receiptId": 59 }
     },
     {
-      "file": "receipt-bottle-red-potion",
-      "label": "Bottle (red potion)",
+      "file": "receipt-bottle-bee",
+      "label": "Bottle (bee)",
       "category": "receipt",
       "extract": { "method": "receipt", "receiptId": 60 }
     },
     {
-      "file": "receipt-bottle-green-potion",
-      "label": "Bottle (green potion)",
+      "file": "receipt-bottle-fairy",
+      "label": "Bottle (fairy)",
       "category": "receipt",
       "extract": { "method": "receipt", "receiptId": 61 }
     },
@@ -761,8 +755,8 @@
       "extract": { "method": "receipt", "receiptId": 71 }
     },
     {
-      "file": "receipt-bottle-3",
-      "label": "Bottle (variant 3)",
+      "file": "receipt-bottle-good-bee",
+      "label": "Bottle (good bee)",
       "category": "receipt",
       "extract": { "method": "receipt", "receiptId": 72 }
     },

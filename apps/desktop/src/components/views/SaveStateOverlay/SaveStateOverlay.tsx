@@ -128,17 +128,37 @@ export function SaveStateOverlay({ open, onClose, highlightedSlot, holdProgress,
                 <div className="save-overlay__hints">
                   {hints.map((hint) => (
                     <div key={hint.action} className={`save-overlay__hint save-overlay__hint--${hint.action}`}>
-                      <span className="save-overlay__hint-key">
-                        {hint.action === 'hold-save' || hint.action === 'holding-save' ? (
-                          <span className="save-overlay__hint-hold-ring">{hint.keyLabel}</span>
+                      <span className="save-overlay__hint-icon-wrap">
+                        {hint.iconUrl ? (
+                          <img src={hint.iconUrl} alt={hint.keyLabel} className="save-overlay__hint-icon" />
                         ) : (
-                          hint.keyLabel
+                          <span className="save-overlay__hint-key-text">{hint.keyLabel}</span>
+                        )}
+                        {(hint.action === 'hold-save' || hint.action === 'holding-save') && (
+                          <svg className="save-overlay__hint-ring" viewBox="0 0 36 36">
+                            <circle
+                              className="save-overlay__hint-ring-bg"
+                              cx="18" cy="18" r="15"
+                              fill="none"
+                              strokeWidth="2.5"
+                            />
+                            {hint.action === 'holding-save' && (
+                              <circle
+                                className="save-overlay__hint-ring-progress"
+                                cx="18" cy="18" r="15"
+                                fill="none"
+                                strokeWidth="2.5"
+                                strokeDasharray={`${15 * 2 * Math.PI}`}
+                                strokeDashoffset={`${15 * 2 * Math.PI * (1 - (holdProgress ?? 0))}`}
+                              />
+                            )}
+                          </svg>
                         )}
                       </span>
                       <span className="save-overlay__hint-label">
                         {hint.action === 'tap-load' && 'Tap to load'}
                         {hint.action === 'hold-save' && 'Hold to save'}
-                        {hint.action === 'holding-save' && 'Saving...'}
+                        {hint.action === 'holding-save' && 'Saving…'}
                         {hint.action === 'esc-cancel' && 'Cancel'}
                       </span>
                     </div>

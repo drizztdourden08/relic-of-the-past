@@ -15,8 +15,10 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { getInputManager, saveState, loadState } from '../../../lib/game';
-import type { FunctionAction } from '@shared/types/controls';
+import { getInputManager, saveState, loadState, resolveFunctionMappingIcon } from '../../../lib/game';
+import type { FunctionAction, FunctionMapping } from '@shared/types/controls';
+import { getBindingLabel, getBindingIconUrl } from '../../views/ProfileHub/tabs/controls/BindingRow';
+import { keyCodeToIconId, getButtonIconUrl } from '../../views/InputTester/button-icons';
 import { log } from '../../../lib/log-bus';
 
 /** Time in ms below which a second press is considered a "tap" → LOAD */
@@ -26,14 +28,14 @@ export type HintAction = 'tap-load' | 'hold-save' | 'esc-cancel' | 'holding-save
 
 export interface SlotHint {
   action: HintAction;
-  keyLabel: string; // e.g. "F1", "Esc"
+  keyLabel: string;        // text fallback (e.g. "F1", "Shift+F1", "Esc")
+  iconUrl: string | null;  // SVG icon URL from button-icons system
 }
 
 interface EnhancedSaveSlotState {
   open: boolean;
   highlightedSlot: number | null;
   holdProgress: number;
-  /** Contextual hints positioned under the active slot */
   hints: SlotHint[];
   close: () => void;
 }
@@ -47,7 +49,6 @@ async function withPauseGuard(action: () => Promise<boolean>): Promise<boolean> 
   const wasPaused = inputMgr.isPaused();
   if (wasPaused) {
     inputMgr.resume();
-    // Give one frame for WASM to unpause
     await new Promise(r => requestAnimationFrame(r));
   }
   const result = await action();
@@ -57,8 +58,39 @@ async function withPauseGuard(action: () => Promise<boolean>): Promise<boolean> 
   return result;
 }
 
-/** Slot index (0-11) → display key label */
-const SLOT_KEY_LABELS = ['F1','F2','F3','F4','F5','F6','F7','F8','F9','F10','F11','F12'];
+/** Look up the binding for a slot's load action from function mappings */
+function getSlotBinding(mappings: FunctionMapping[], slot: number): { label: string; iconUrl: string | null } {
+  // Prefer load binding (that's what you press first)
+  const loadAction = `load-state-${slot + 1}` as FunctionAction;
+  const loadMapping = mappings.find(m => m.action === loadAction && m.binding.type !== 'none');
+  if (loadMapping) {
+    const icon = loadMapping.icon ?? resolveFunctionMappingIcon(loadMapping);
+    return {
+      label: getBindingLabel(loadMapping.binding, icon),
+      iconUrl: getBindingIconUrl(loadMapping.binding, icon),
+    };
+  }
+  // Fallback to save binding
+  const saveAction = `save-state-${slot + 1}` as FunctionAction;
+  const saveMapping = mappings.find(m => m.action === saveAction && m.binding.type !== 'none');
+  if (saveMapping) {
+    const icon = saveMapping.icon ?? resolveFunctionMappingIcon(saveMapping);
+    return {
+      label: getBindingLabel(saveMapping.binding, icon),
+      iconUrl: getBindingIconUrl(saveMapping.binding, icon),
+    };
+  }
+  return { label: `Slot ${slot + 1}`, iconUrl: null };
+}
+
+/** Get ESC key icon */
+function getEscBinding(): { label: string; iconUrl: string | null } {
+  const iconId = keyCodeToIconId('Escape');
+  return {
+    label: 'Esc',
+    iconUrl: iconId ? getButtonIconUrl(iconId) : null,
+  };
+}
 
 export function useEnhancedSaveSlot(
   enabled: boolean,
@@ -70,12 +102,11 @@ export function useEnhancedSaveSlot(
   const [holdProgress, setHoldProgress] = useState(0);
   const [hints, setHints] = useState<SlotHint[]>([]);
 
-  // Refs for the state machine
   const pendingSlotRef = useRef<number | null>(null);
   const holdStartRef = useRef<number | null>(null);
   const holdAnimRef = useRef<number | null>(null);
   const holdSlotRef = useRef<number | null>(null);
-  const holdCompleteRef = useRef(false); // bar reached 100%
+  const holdCompleteRef = useRef(false);
   const openRef = useRef(false);
   const awaitingHoldRef = useRef(false);
 
@@ -122,20 +153,27 @@ export function useEnhancedSaveSlot(
 
     const inputMgr = getInputManager();
     const unsubs: (() => void)[] = [];
+    const mappings = inputMgr.getFunctionMappings();
+    const escInfo = getEscBinding();
 
-    /** Build idle hints (overlay open, waiting for second press) */
-    const idleHints = (slot: number): SlotHint[] => [
-      { action: 'tap-load', keyLabel: SLOT_KEY_LABELS[slot] },
-      { action: 'hold-save', keyLabel: SLOT_KEY_LABELS[slot] },
-      { action: 'esc-cancel', keyLabel: 'Esc' },
-    ];
+    /** Build idle hints from actual bindings */
+    const idleHints = (slot: number): SlotHint[] => {
+      const slotInfo = getSlotBinding(mappings, slot);
+      return [
+        { action: 'tap-load', keyLabel: slotInfo.label, iconUrl: slotInfo.iconUrl },
+        { action: 'hold-save', keyLabel: slotInfo.label, iconUrl: slotInfo.iconUrl },
+        { action: 'esc-cancel', keyLabel: escInfo.label, iconUrl: escInfo.iconUrl },
+      ];
+    };
 
     /** Hints while holding */
-    const holdingHints = (slot: number): SlotHint[] => [
-      { action: 'holding-save', keyLabel: SLOT_KEY_LABELS[slot] },
-    ];
+    const holdingHints = (slot: number): SlotHint[] => {
+      const slotInfo = getSlotBinding(mappings, slot);
+      return [
+        { action: 'holding-save', keyLabel: slotInfo.label, iconUrl: slotInfo.iconUrl },
+      ];
+    };
 
-    // --- Helper: start hold-to-save animation on second press ---
     const startHold = (slot: number) => {
       holdStartRef.current = performance.now();
       holdSlotRef.current = slot;
@@ -150,7 +188,6 @@ export function useEnhancedSaveSlot(
         setHoldProgress(progress);
 
         if (progress >= 1) {
-          // Bar full — DON'T save yet, wait for release
           holdCompleteRef.current = true;
           holdAnimRef.current = null;
           return;
@@ -160,7 +197,6 @@ export function useEnhancedSaveSlot(
       holdAnimRef.current = requestAnimationFrame(tick);
     };
 
-    // --- Helper: cancel hold animation ---
     const cancelHold = () => {
       holdStartRef.current = null;
       holdSlotRef.current = null;
@@ -173,12 +209,10 @@ export function useEnhancedSaveSlot(
       setHoldProgress(0);
     };
 
-    // --- Slot action handler (shared by load and save keys) ---
     const handleSlotAction = (slot: number) => {
       if (!enabled) return false;
 
       if (!openRef.current) {
-        // FIRST PRESS: open overlay, highlight slot
         cancelHold();
         pendingSlotRef.current = slot;
         setHighlightedSlot(slot);
@@ -188,9 +222,7 @@ export function useEnhancedSaveSlot(
         return true;
       }
 
-      // Overlay is open
       if (pendingSlotRef.current !== slot) {
-        // DIFFERENT SLOT: switch highlight
         cancelHold();
         pendingSlotRef.current = slot;
         setHighlightedSlot(slot);
@@ -199,16 +231,13 @@ export function useEnhancedSaveSlot(
         return true;
       }
 
-      // SAME SLOT, SECOND PRESS: start hold detection
       startHold(slot);
       return true;
     };
 
-    // --- Register function action callbacks ---
     for (let i = 1; i <= 12; i++) {
       const slot = i - 1;
 
-      // LOAD action (e.g. F1-F4)
       unsubs.push(inputMgr.onFunctionAction(`load-state-${i}` as FunctionAction, () => {
         if (!enabled) {
           log.app(`[LoadState] Loading slot ${slot}`);
@@ -218,7 +247,6 @@ export function useEnhancedSaveSlot(
         handleSlotAction(slot);
       }));
 
-      // SAVE action (e.g. Shift+F1-F4) — in enhanced mode, behaves identically
       unsubs.push(inputMgr.onFunctionAction(`save-state-${i}` as FunctionAction, () => {
         if (!enabled) {
           log.app(`[SaveState] Saving slot ${slot}`);
@@ -229,12 +257,10 @@ export function useEnhancedSaveSlot(
       }));
     }
 
-    // --- Key-up handler: determines action based on hold duration ---
     unsubs.push(inputMgr.onFunctionKeyUp((action: FunctionAction) => {
       if (!enabled || !openRef.current) return;
       if (!awaitingHoldRef.current) return;
 
-      // Match both load-state-N and save-state-N
       const loadMatch = action.match(/^load-state-(\d+)$/);
       const saveMatch = action.match(/^save-state-(\d+)$/);
       const match = loadMatch || saveMatch;
@@ -248,17 +274,14 @@ export function useEnhancedSaveSlot(
         : holdCompleteRef.current ? holdDurationMs : 0;
 
       if (holdCompleteRef.current || elapsed >= holdDurationMs) {
-        // HELD LONG ENOUGH → SAVE on release
         cancelHold();
         log.app(`[Enhanced] Save to slot ${slot}`);
         withPauseGuard(() => saveState(slot)).then(() => close());
       } else if (elapsed < TAP_THRESHOLD_MS) {
-        // QUICK TAP → LOAD
         cancelHold();
         log.app(`[Enhanced] Load from slot ${slot}`);
         withPauseGuard(() => loadState(slot)).then(() => close());
       } else {
-        // RELEASED MIDWAY → cancel, stay on overlay
         cancelHold();
         setHints(idleHints(slot));
       }

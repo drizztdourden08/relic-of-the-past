@@ -159,6 +159,7 @@ function registerIpcHandlers(): void {
     }
   });
   ipcMain.on('window:close', () => mainWindow?.close());
+  ipcMain.on('window:openDevTools', () => mainWindow?.webContents.openDevTools());
 
   ipcMain.handle('window:isMaximized', () => mainWindow?.isMaximized() ?? false);
   ipcMain.handle('window:setAlwaysOnTop', (_event, value: boolean) => {
@@ -1081,6 +1082,14 @@ app.whenReady().then(async () => {
         { role: 'copy' },
         { role: 'paste' },
         { role: 'selectAll' },
+      ],
+    },
+    {
+      label: 'View',
+      submenu: [
+        { role: 'toggleDevTools', label: 'Developer Console', accelerator: 'F12' },
+        { role: 'reload' },
+        { role: 'forceReload' },
       ],
     },
   ]));

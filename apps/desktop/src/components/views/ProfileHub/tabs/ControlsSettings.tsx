@@ -29,7 +29,7 @@ import {
 } from '@shared/types/controls';
 import { findPresetById, KEYBOARD_DEFAULT } from '@shared/data/controllers';
 import { findProfileByVidPid } from '@shared/data/controllers/profiles';
-import { getInputManager, profileFromPreset } from '../../../../lib/game/input-manager';
+import { getInputManager, profileFromPreset, resolveFunctionMappingIcon } from '../../../../lib/game/input-manager';
 import { InputProfileList } from './controls/InputProfileList';
 import { DeviceCard } from './controls/DeviceCard';
 import { BindingRow } from './controls/BindingRow';
@@ -205,6 +205,15 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
     }
     return DEFAULT_FUNCTION_MAPPINGS;
   }, [settings.functionMappings]);
+
+  // ─── Resolve gamepad icons for function mappings at render time ───
+  // Icons are NEVER stored — always derived from sourceVid:sourcePid + button index.
+  const displayFunctionMappings: FunctionMapping[] = useMemo(() => {
+    return functionMappings.map(m => {
+      const icon = resolveFunctionMappingIcon(m);
+      return icon ? { ...m, icon } : m;
+    });
+  }, [functionMappings]);
 
   // ─── Clear a function action binding ───
   const handleFunctionClear = useCallback((action: FunctionAction) => {
@@ -590,7 +599,7 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
                 <div className="binding-row__icon-slot" />
                 <span className="binding-row__binding-label">Binding</span>
               </div>
-              {functionMappings
+              {displayFunctionMappings
                 .filter(m => (SHORTCUT_ACTIONS as readonly string[]).includes(m.action))
                 .map(mapping => (
                   <BindingRow
@@ -617,7 +626,7 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
                 <div className="binding-row__icon-slot" />
                 <span className="binding-row__binding-label">Binding</span>
               </div>
-              {functionMappings
+              {displayFunctionMappings
                 .filter(m => (CHEAT_ACTIONS as readonly string[]).includes(m.action))
                 .map(mapping => (
                   <BindingRow

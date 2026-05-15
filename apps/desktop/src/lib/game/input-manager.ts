@@ -9,10 +9,11 @@
  * Auto-starts on app boot (not just game launch) so Controls/Calibration pages work.
  */
 
-import type { InputProfile, InputBinding, SnesButton, FunctionMapping, FunctionAction } from '@shared/types/controls';
+import type { InputProfile, InputBinding, SnesButton, FunctionMapping, FunctionAction, ButtonIcon } from '@shared/types/controls';
 import { SNES_BUTTON_BITS, DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { KEYBOARD_DEFAULT, parseGamepadId } from '@shared/data/controllers';
 import type { DetectedDevice } from '@shared/types/controls';
+import { findProfileByVidPid } from '@shared/data/controllers/profiles';
 import { detectAllDevices, markActivated, updateActivationState } from './controller-detect';
 import { webHidReader } from './webhid-input-reader';
 import type { WebHidInputState } from './webhid-input-reader';
@@ -114,10 +115,14 @@ export class InputManager {
   // Function mapping runtime: shortcut key → action
   private functionMappings: FunctionMapping[] = DEFAULT_FUNCTION_MAPPINGS;
   private functionKeyMap = new Map<string, FunctionAction>(); // "code:s:c:a" → action
+  private functionGamepadButtonMap = new Map<number, FunctionAction>(); // button index → action
+  private functionGamepadAxisMap = new Map<string, FunctionAction>(); // "axisIndex:direction" → action
   private functionActionCallbacks = new Map<FunctionAction, () => void>();
   private functionKeyUpListeners = new Set<(action: FunctionAction) => void>();
   // Reverse lookup: code → funcKeyIds (for keyup matching without modifiers)
   private functionCodeToKeyIds = new Map<string, string[]>();
+  // Track which function-mapped gamepad buttons are currently held (for key-up detection)
+  private heldFunctionGamepadButtons = new Set<string>(); // "deviceKey:index" or "deviceKey:axis:idx:dir"
 
   constructor() {
     // Build the default function key map immediately
@@ -154,6 +159,13 @@ export class InputManager {
   }
 
   /**
+   * Get the current function mappings (for reading bindings at runtime).
+   */
+  getFunctionMappings(): FunctionMapping[] {
+    return this.functionMappings;
+  }
+
+  /**
    * Register a callback for a function action.
    * Built-in actions (pause) are handled internally; others need callbacks.
    */
@@ -174,6 +186,8 @@ export class InputManager {
   private rebuildFunctionKeyMap(): void {
     this.functionKeyMap.clear();
     this.functionCodeToKeyIds.clear();
+    this.functionGamepadButtonMap.clear();
+    this.functionGamepadAxisMap.clear();
     for (const m of this.functionMappings) {
       if (m.binding.type === 'keyboard') {
         const key = this.makeFunctionKeyId(m.binding.code, m.binding.modifiers);
@@ -181,8 +195,13 @@ export class InputManager {
         const list = this.functionCodeToKeyIds.get(m.binding.code) ?? [];
         list.push(key);
         this.functionCodeToKeyIds.set(m.binding.code, list);
+      } else if (m.binding.type === 'gamepad-button') {
+        this.functionGamepadButtonMap.set(m.binding.index, m.action);
+      } else if (m.binding.type === 'gamepad-axis') {
+        this.functionGamepadAxisMap.set(`${m.binding.axisIndex}:${m.binding.direction}`, m.action);
       }
     }
+    console.log('[InputMgr] rebuildFunctionKeyMap: gamepadButtons=', Object.fromEntries(this.functionGamepadButtonMap), 'gamepadAxes=', Object.fromEntries(this.functionGamepadAxisMap));
   }
 
   private makeFunctionKeyId(code: string, modifiers?: { shift?: boolean; ctrl?: boolean; alt?: boolean }): string {
@@ -641,6 +660,12 @@ export class InputManager {
       }
     }
 
+    // Check function-mapped gamepad buttons (always, even when paused)
+    // This enables shortcuts like load/save state to work from controllers.
+    if (this.functionGamepadButtonMap.size > 0 || this.functionGamepadAxisMap.size > 0) {
+      this.checkGamepadFunctionActions();
+    }
+
     // Emit per-frame state to all visualization listeners
     if (this.stateListeners.size > 0) {
       for (const fn of this.stateListeners) {
@@ -687,8 +712,25 @@ export class InputManager {
 
   private emitRawGamepadEvents(): void {
     const gamepads = navigator.getGamepads();
+    // Skip gamepads already handled by WebHID (prevents duplicate events with wrong indices)
+    const hidDevs = webHidReader.getDevices();
+    const hidIdSet = new Set(hidDevs.map(d =>
+      `${d.vendorId.toString(16).padStart(4, '0')}:${d.productId.toString(16).padStart(4, '0')}`
+    ));
     for (const gp of gamepads) {
       if (!gp || !gp.connected) continue;
+      // Skip if this gamepad is a duplicate of a WebHID device
+      const gpIdLower = gp.id.toLowerCase();
+      let isDuplicate = false;
+      for (const hidId of hidIdSet) {
+        const [vid, pid] = hidId.split(':');
+        if (gpIdLower.includes(`vendor: ${vid}`) && gpIdLower.includes(`product: ${pid}`)) {
+          isDuplicate = true;
+          break;
+        }
+      }
+      if (isDuplicate) continue;
+
       const prev = this.prevGamepadButtons.get(gp.index) ?? [];
       const curr = gp.buttons.map(b => b.pressed);
       // Resolve VID/PID from cache (populated on gamepadconnected)
@@ -748,6 +790,133 @@ export class InputManager {
       }
       this.prevHidButtons.set(deviceKey, [...state.buttons]);
       this.prevHidAxes.set(deviceKey, currAxes);
+    }
+  }
+
+  /**
+   * Check gamepad/HID buttons against function mappings (shortcuts, cheats, save/load).
+   * Fires callbacks on rising edge, fires keyUp listeners on falling edge.
+   * Runs every frame regardless of pause state.
+   */
+  private _dbgCounter = 0;
+  private checkGamepadFunctionActions(): void {
+    // Debug: log state every 180 frames (~3 sec at 60fps)
+    this._dbgCounter++;
+    if (this._dbgCounter % 180 === 1) {
+      const hidDevices = webHidReader.getDevices();
+      const hidKeys = [...this.hidStates.keys()];
+      const gamepads = navigator.getGamepads();
+      const gpIds = Array.from(gamepads).filter(Boolean).map(g => g!.id);
+      console.log('[FuncCheck] hidDevices:', hidDevices.length, 'hidStates:', hidKeys, 'gamepads:', gpIds, 'btnMap:', Object.fromEntries(this.functionGamepadButtonMap), 'callbacks:', [...this.functionActionCallbacks.keys()]);
+    }
+
+    // --- Web Gamepad API controllers (skip those handled by WebHID) ---
+    const gamepads = navigator.getGamepads();
+    const hidDevices = webHidReader.getDevices();
+    const hidIds = new Set(hidDevices.map(d =>
+      `${d.vendorId.toString(16).padStart(4, '0')}:${d.productId.toString(16).padStart(4, '0')}`
+    ));
+
+    for (const gp of gamepads) {
+      if (!gp || !gp.connected) continue;
+      // Skip gamepads already handled by WebHID (same duplicate filter as snapshotGamepads)
+      const gpIdLower = gp.id.toLowerCase();
+      let isDuplicate = false;
+      for (const hidId of hidIds) {
+        const [vid, pid] = hidId.split(':');
+        if (gpIdLower.includes(`vendor: ${vid}`) && gpIdLower.includes(`product: ${pid}`)) {
+          isDuplicate = true;
+          break;
+        }
+      }
+      if (isDuplicate) continue;
+
+      const deviceKey = `gamepad-${gp.index}`;
+
+      // Buttons
+      for (const [btnIndex, action] of this.functionGamepadButtonMap) {
+        if (btnIndex >= gp.buttons.length) continue;
+        const pressed = gp.buttons[btnIndex].pressed;
+        const holdKey = `${deviceKey}:btn:${btnIndex}`;
+        if (pressed && !this.heldFunctionGamepadButtons.has(holdKey)) {
+          // Rising edge — fire action
+          this.heldFunctionGamepadButtons.add(holdKey);
+          this.fireFunctionAction(action);
+        } else if (!pressed && this.heldFunctionGamepadButtons.has(holdKey)) {
+          // Falling edge — fire key-up
+          this.heldFunctionGamepadButtons.delete(holdKey);
+          this.fireFunctionKeyUp(action);
+        }
+      }
+
+      // Axes
+      for (const [axisKey, action] of this.functionGamepadAxisMap) {
+        const [axisStr, dir] = axisKey.split(':');
+        const axisIndex = parseInt(axisStr, 10);
+        if (axisIndex >= gp.axes.length) continue;
+        const val = gp.axes[axisIndex];
+        const active = (dir === '+' && val > 0.5) || (dir === '-' && val < -0.5);
+        const holdKey = `${deviceKey}:axis:${axisKey}`;
+        if (active && !this.heldFunctionGamepadButtons.has(holdKey)) {
+          this.heldFunctionGamepadButtons.add(holdKey);
+          this.fireFunctionAction(action);
+        } else if (!active && this.heldFunctionGamepadButtons.has(holdKey)) {
+          this.heldFunctionGamepadButtons.delete(holdKey);
+          this.fireFunctionKeyUp(action);
+        }
+      }
+    }
+
+    // --- WebHID controllers (Switch Pro, PlayStation, 8BitDo) ---
+    for (const [deviceKey, state] of this.hidStates) {
+      // Buttons
+      for (const [btnIndex, action] of this.functionGamepadButtonMap) {
+        if (btnIndex >= state.buttons.length) continue;
+        const pressed = state.buttons[btnIndex];
+        const holdKey = `${deviceKey}:btn:${btnIndex}`;
+        if (pressed && !this.heldFunctionGamepadButtons.has(holdKey)) {
+          console.log('[FuncCheck] HID RISING EDGE:', holdKey, '→', action);
+          this.heldFunctionGamepadButtons.add(holdKey);
+          this.fireFunctionAction(action);
+        } else if (!pressed && this.heldFunctionGamepadButtons.has(holdKey)) {
+          console.log('[FuncCheck] HID FALLING EDGE:', holdKey, '→', action);
+          this.heldFunctionGamepadButtons.delete(holdKey);
+          this.fireFunctionKeyUp(action);
+        }
+      }
+
+      // Axes
+      for (const [axisKey, action] of this.functionGamepadAxisMap) {
+        const [axisStr, dir] = axisKey.split(':');
+        const axisIndex = parseInt(axisStr, 10);
+        if (axisIndex >= state.axes.length) continue;
+        const val = state.axes[axisIndex];
+        const active = (dir === '+' && val > 0.5) || (dir === '-' && val < -0.5);
+        const holdKey = `${deviceKey}:axis:${axisKey}`;
+        if (active && !this.heldFunctionGamepadButtons.has(holdKey)) {
+          this.heldFunctionGamepadButtons.add(holdKey);
+          this.fireFunctionAction(action);
+        } else if (!active && this.heldFunctionGamepadButtons.has(holdKey)) {
+          this.heldFunctionGamepadButtons.delete(holdKey);
+          this.fireFunctionKeyUp(action);
+        }
+      }
+    }
+  }
+
+  private fireFunctionAction(action: FunctionAction): void {
+    console.log('[FuncAction] FIRE:', action, 'hasCallback:', this.functionActionCallbacks.has(action));
+    if (action === 'pause') {
+      this.togglePause();
+      return;
+    }
+    const cb = this.functionActionCallbacks.get(action);
+    if (cb) cb();
+  }
+
+  private fireFunctionKeyUp(action: FunctionAction): void {
+    for (const fn of this.functionKeyUpListeners) {
+      try { fn(action); } catch { /* ignore */ }
     }
   }
 
@@ -858,3 +1027,31 @@ export function getInputManager(): InputManager {
 }
 
 export { profileFromPreset };
+
+/**
+ * Resolve the display icon for a FunctionMapping's gamepad binding.
+ * Icons are never stored — always derived from sourceVid:sourcePid + button/axis index
+ * via the controller profile database.
+ * For keyboard bindings, icon resolution is handled by getBindingIconUrl (no profile needed).
+ */
+export function resolveFunctionMappingIcon(m: FunctionMapping): ButtonIcon | null {
+  if (m.icon) return m.icon; // already resolved (shouldn't happen for stored, but be safe)
+  if (m.binding.type === 'none' || m.binding.type === 'keyboard') return null;
+  const vid = m.sourceVid?.toLowerCase().padStart(4, '0');
+  const pid = m.sourcePid?.toLowerCase().padStart(4, '0');
+  if (!vid || !pid) return null;
+  const profile = findProfileByVidPid(vid, pid);
+  if (!profile) return null;
+  if (m.binding.type === 'gamepad-button') {
+    const b = profile.buttons[m.binding.index];
+    if (b) return { key: b.icon, label: b.label, path: null };
+  }
+  if (m.binding.type === 'gamepad-axis') {
+    const ax = profile.axes?.[m.binding.axisIndex];
+    if (ax) {
+      const dir = m.binding.direction === '+' ? '+' : '−';
+      return { key: `${profile.id}-axis`, label: `${ax.label} ${dir}`, path: null };
+    }
+  }
+  return null;
+}
