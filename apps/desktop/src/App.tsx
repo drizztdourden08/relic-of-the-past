@@ -631,7 +631,7 @@ export function App(): JSX.Element {
           onClose={handleSaveOverlayClose}
           highlightedSlot={enhancedSave.highlightedSlot}
           holdProgress={enhancedSave.holdProgress}
-          statusMessage={enhancedSave.statusMessage}
+          hints={enhancedSave.hints}
         />
 
         {/* Full-screen pages (one at a time) */}

@@ -36,18 +36,81 @@
   to   { transform: translateX(-50%) translateY(-100%); opacity: 0; }
 }
 
-.save-overlay__status {
+/* ─── Slot wrapper (for hints positioning) ─── */
+
+.save-overlay__slot-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ─── Floating Hints (under the active slot) ─── */
+
+.save-overlay__hints {
   position: absolute;
-  top: 100px;
+  top: calc(100% + 6px);
   left: 50%;
   transform: translateX(-50%);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  color: rgba(255, 255, 255, 0.75);
-  background: rgba(0, 0, 0, 0.55);
-  padding: 4px 14px;
-  border-radius: var(--radius-sm);
-  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  z-index: 100;
   pointer-events: none;
+  white-space: nowrap;
+}
+
+.save-overlay__hint {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.7);
+  padding: 2px 8px;
+  border-radius: 3px;
   backdrop-filter: blur(4px);
+}
+
+.save-overlay__hint--holding-save {
+  color: rgba(255, 210, 80, 0.95);
+}
+
+/* Key badge */
+.save-overlay__hint-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 16px;
+  padding: 0 3px;
+  font-size: 9px;
+  font-family: var(--font-mono);
+  font-weight: var(--weight-semi);
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 3px;
+}
+
+/* Hold ring — circle around the key to indicate "hold" */
+.save-overlay__hint-hold-ring {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 16px;
+  padding: 0 3px;
+  font-size: 9px;
+  font-family: var(--font-mono);
+  font-weight: var(--weight-semi);
+  border-radius: 10px;
+  border: 2px solid rgba(200, 168, 78, 0.8);
+  color: rgba(255, 210, 80, 0.95);
+  background: rgba(200, 168, 78, 0.1);
+  box-shadow: 0 0 4px rgba(200, 168, 78, 0.35);
+}
+
+.save-overlay__hint-label {
+  font-weight: var(--weight-medium);
 }

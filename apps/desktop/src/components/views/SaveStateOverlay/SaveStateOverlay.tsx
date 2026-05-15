@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { saveState, loadState, getActiveProfileId } from '../../../lib/game';
 import { SaveSlot } from '../../compounds/SaveSlot';
 import { log } from '../../../lib/log-bus';
+import type { SlotHint } from './useEnhancedSaveSlot';
 import './SaveStateOverlay.css';
 
 const SLOT_COUNT = 12;
@@ -21,10 +22,10 @@ interface SaveStateOverlayProps {
   onClose: () => void;
   highlightedSlot?: number | null;
   holdProgress?: number; // 0-1 for the highlighted slot
-  statusMessage?: string | null;
+  hints?: SlotHint[];
 }
 
-export function SaveStateOverlay({ open, onClose, highlightedSlot, holdProgress, statusMessage }: SaveStateOverlayProps): JSX.Element | null {
+export function SaveStateOverlay({ open, onClose, highlightedSlot, holdProgress, hints }: SaveStateOverlayProps): JSX.Element | null {
   const [slots, setSlots] = useState<SlotInfo[]>([]);
   const [busy, setBusy] = useState<number | null>(null);
   const [visible, setVisible] = useState(false);
@@ -107,27 +108,47 @@ export function SaveStateOverlay({ open, onClose, highlightedSlot, holdProgress,
           const slot = slots.find((s) => s.slot === i);
           const isEmpty = !slot || slot.timestamp === 0;
           const isBusy = busy === i;
+          const isHighlighted = highlightedSlot === i;
 
           return (
-            <SaveSlot
-              key={i}
-              slot={i}
-              screenshotUrl={slot?.screenshotUrl ?? null}
-              timestamp={slot?.timestamp ?? 0}
-              isEmpty={isEmpty}
-              busy={isBusy}
-              shortcutKey={SHORTCUT_KEYS[i]}
-              highlighted={highlightedSlot === i}
-              holdProgress={highlightedSlot === i ? holdProgress : undefined}
-              onSave={handleSave}
-              onLoad={handleLoad}
-            />
+            <div key={i} className="save-overlay__slot-wrapper">
+              <SaveSlot
+                slot={i}
+                screenshotUrl={slot?.screenshotUrl ?? null}
+                timestamp={slot?.timestamp ?? 0}
+                isEmpty={isEmpty}
+                busy={isBusy}
+                shortcutKey={SHORTCUT_KEYS[i]}
+                highlighted={isHighlighted}
+                holdProgress={isHighlighted ? holdProgress : undefined}
+                onSave={handleSave}
+                onLoad={handleLoad}
+              />
+              {isHighlighted && hints && hints.length > 0 && (
+                <div className="save-overlay__hints">
+                  {hints.map((hint) => (
+                    <div key={hint.action} className={`save-overlay__hint save-overlay__hint--${hint.action}`}>
+                      <span className="save-overlay__hint-key">
+                        {hint.action === 'hold-save' || hint.action === 'holding-save' ? (
+                          <span className="save-overlay__hint-hold-ring">{hint.keyLabel}</span>
+                        ) : (
+                          hint.keyLabel
+                        )}
+                      </span>
+                      <span className="save-overlay__hint-label">
+                        {hint.action === 'tap-load' && 'Tap to load'}
+                        {hint.action === 'hold-save' && 'Hold to save'}
+                        {hint.action === 'holding-save' && 'Saving...'}
+                        {hint.action === 'esc-cancel' && 'Cancel'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           );
         })}
       </div>
-      {statusMessage && (
-        <div className="save-overlay__status">{statusMessage}</div>
-      )}
     </div>
   );
 }

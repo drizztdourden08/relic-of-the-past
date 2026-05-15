@@ -1,0 +1,885 @@
+{
+  "$schema": "./sprite-definitions.schema.json",
+  "version": 1,
+  "description": "Unified sprite extraction definitions. Used by both the extraction script (Python) and the UI (TypeScript). Sprites are extracted from the user's own ROM at runtime — never distributed with the code.",
+  "sprites": [
+    {
+      "file": "hud-fighter-sword",
+      "label": "Fighter Sword",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [11364, 11470, 11381, 15653] }
+    },
+    {
+      "file": "hud-master-sword",
+      "label": "Master Sword",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [11402, 11365, 9332, 15654] }
+    },
+    {
+      "file": "hud-tempered-sword",
+      "label": "Tempered Sword",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9354, 9317, 15476, 11592] }
+    },
+    {
+      "file": "hud-golden-sword",
+      "label": "Golden Sword",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [10378, 10341, 11380, 11577] }
+    },
+    {
+      "file": "hud-fighters-shield",
+      "label": "Fighter's Shield",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [11517, 27901, 11518, 27902] }
+    },
+    {
+      "file": "hud-fire-shield",
+      "label": "Fire Shield",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [13567, 29951, 13471, 29855] }
+    },
+    {
+      "file": "hud-mirror-shield",
+      "label": "Mirror Shield",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [10368, 10369, 10381, 10382] }
+    },
+    {
+      "file": "hud-green-mail",
+      "label": "Green Mail",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [15464, 31848, 15480, 31864] }
+    },
+    {
+      "file": "hud-blue-mail",
+      "label": "Blue Mail",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [11368, 27752, 11384, 27768] }
+    },
+    {
+      "file": "hud-red-mail",
+      "label": "Red Mail",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9320, 25704, 9336, 25720] }
+    },
+    {
+      "file": "hud-bow-no-arrows",
+      "label": "Bow (no arrows)",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [10426, 10473, 10472, 10443] }
+    },
+    {
+      "file": "hud-bow",
+      "label": "Bow",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [10426, 10314, 10313, 10443] }
+    },
+    {
+      "file": "hud-silver-bow",
+      "label": "Silver Bow",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [10426, 10427, 9418, 10443] }
+    },
+    {
+      "file": "hud-blue-boomerang",
+      "label": "Blue Boomerang",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [11448, 11449, 11509, 11465] }
+    },
+    {
+      "file": "hud-red-boomerang",
+      "label": "Red Boomerang",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9400, 9401, 9461, 9417] }
+    },
+    {
+      "file": "hud-hookshot",
+      "label": "Hookshot",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9461, 9462, 9408, 9461] }
+    },
+    {
+      "file": "hud-bombs",
+      "label": "Bombs",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [11442, 11443, 11458, 27842] }
+    },
+    {
+      "file": "hud-mushroom",
+      "label": "Mushroom",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9284, 9285, 9286, 9287] }
+    },
+    {
+      "file": "hud-magic-powder",
+      "label": "Magic Powder",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [8251, 8252, 8253, 8254] }
+    },
+    {
+      "file": "hud-fire-rod",
+      "label": "Fire Rod",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9392, 9393, 9408, 9409] }
+    },
+    {
+      "file": "hud-ice-rod",
+      "label": "Ice Rod",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [11440, 11454, 11456, 11457] }
+    },
+    {
+      "file": "hud-bombos",
+      "label": "Bombos",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [10365, 10366, 59518, 59517] }
+    },
+    {
+      "file": "hud-ether",
+      "label": "Ether",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [10358, 10359, 59511, 59510] }
+    },
+    {
+      "file": "hud-quake",
+      "label": "Quake",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [10342, 10343, 59495, 59494] }
+    },
+    {
+      "file": "hud-lamp",
+      "label": "Lamp",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9404, 9405, 9420, 9421] }
+    },
+    {
+      "file": "hud-hammer",
+      "label": "Hammer",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [8374, 8375, 8390, 8391] }
+    },
+    {
+      "file": "hud-shovel",
+      "label": "Shovel",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [8400, 8401, 8416, 8417] }
+    },
+    {
+      "file": "hud-flute",
+      "label": "Flute",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [11476, 11477, 11492, 11493] }
+    },
+    {
+      "file": "hud-bug-net",
+      "label": "Bug Net",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [15424, 15425, 10306, 15427] }
+    },
+    {
+      "file": "hud-book-of-mudora",
+      "label": "Book of Mudora",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [15525, 15526, 15576, 15577] }
+    },
+    {
+      "file": "hud-cane-of-somaria",
+      "label": "Cane of Somaria",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9436, 9437, 9452, 9453] }
+    },
+    {
+      "file": "hud-cane-of-byrna",
+      "label": "Cane of Byrna",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [11484, 11485, 11500, 11501] }
+    },
+    {
+      "file": "hud-cape",
+      "label": "Cape",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9396, 9397, 9412, 9413] }
+    },
+    {
+      "file": "hud-magic-mirror",
+      "label": "Magic Mirror",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [11362, 11363, 11378, 11379] }
+    },
+    {
+      "file": "hud-power-glove",
+      "label": "Power Glove",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [8496, 8497, 8512, 8513] }
+    },
+    {
+      "file": "hud-titans-mitts",
+      "label": "Titan's Mitts",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [10458, 10459, 10474, 10475] }
+    },
+    {
+      "file": "hud-pegasus-boots",
+      "label": "Pegasus Boots",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [13353, 13354, 13355, 13356] }
+    },
+    {
+      "file": "hud-flippers",
+      "label": "Flippers",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [11418, 11419, 11421, 11422] }
+    },
+    {
+      "file": "hud-moon-pearl",
+      "label": "Moon Pearl",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9267, 9268, 9269, 9270] }
+    },
+    {
+      "file": "hud-bottle",
+      "label": "Bottle (empty)",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [10295, 10296, 11459, 11475] }
+    },
+    {
+      "file": "hud-bottle-mushroom",
+      "label": "Bottle (mushroom)",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [8260, 8261, 8262, 8263] }
+    },
+    {
+      "file": "hud-bottle-red",
+      "label": "Bottle (red potion)",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9426, 25810, 9442, 9443] }
+    },
+    {
+      "file": "hud-bottle-green",
+      "label": "Bottle (green potion)",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [15570, 31954, 15586, 15587] }
+    },
+    {
+      "file": "hud-bottle-blue",
+      "label": "Bottle (blue potion)",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [11474, 27858, 11490, 11491] }
+    },
+    {
+      "file": "hud-bottle-fairy",
+      "label": "Bottle (fairy)",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [10325, 26709, 11351, 11354] }
+    },
+    {
+      "file": "hud-bottle-bee",
+      "label": "Bottle (bee)",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [10295, 10296, 10297, 10298] }
+    },
+    {
+      "file": "hud-bottle-good-bee",
+      "label": "Bottle (good bee)",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [10295, 10296, 10297, 10298] }
+    },
+    {
+      "file": "hud-big-key",
+      "label": "Big Key",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [10454, 26838, 10470, 10471] }
+    },
+    {
+      "file": "hud-compass",
+      "label": "Compass",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9407, 25791, 11471, 27855] }
+    },
+    {
+      "file": "hud-map",
+      "label": "Map",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [10462, 10463, 10478, 10479] }
+    },
+    {
+      "file": "hud-red-pendant",
+      "label": "Red Pendant",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9515, 9516, 9517, 9518] }
+    },
+    {
+      "file": "hud-blue-pendant",
+      "label": "Blue Pendant",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [11563, 11564, 11565, 11566] }
+    },
+    {
+      "file": "hud-green-pendant",
+      "label": "Green Pendant",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [15659, 15660, 15661, 15662] }
+    },
+    {
+      "file": "hud-crystal",
+      "label": "Crystal",
+      "category": "hud",
+      "extract": { "method": "hud-special", "tiles": [11588, 11589], "layout": "8x16-centered" }
+    },
+    {
+      "file": "hud-big-key-chest",
+      "label": "Big Key (chest)",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [13643, 13644, 13645, 13646] }
+    },
+    {
+      "file": "hud-heart-piece-0",
+      "label": "Heart Piece (0/4)",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9348, 25732, 9349, 25733] }
+    },
+    {
+      "file": "hud-heart-piece-1",
+      "label": "Heart Piece (1/4)",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9389, 25732, 9349, 25733] }
+    },
+    {
+      "file": "hud-heart-piece-2",
+      "label": "Heart Piece (2/4)",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9389, 25732, 9390, 25733] }
+    },
+    {
+      "file": "hud-heart-piece-3",
+      "label": "Heart Piece (3/4)",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9389, 25773, 9390, 25733] }
+    },
+    {
+      "file": "hud-heart-piece-4",
+      "label": "Heart Piece (4/4)",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9389, 25773, 9390, 25774] }
+    },
+    {
+      "file": "hud-small-key",
+      "label": "Small Key",
+      "category": "hud",
+      "extract": { "method": "hud-tiles", "tiles": [9383, 9384, 9385, 9386] }
+    },
+
+    {
+      "file": "receipt-fighter-sword",
+      "label": "Fighter Sword",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 0 }
+    },
+    {
+      "file": "receipt-master-sword",
+      "label": "Master Sword",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 1 }
+    },
+    {
+      "file": "receipt-tempered-sword",
+      "label": "Tempered Sword",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 2 }
+    },
+    {
+      "file": "receipt-golden-sword",
+      "label": "Golden Sword",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 3 }
+    },
+    {
+      "file": "receipt-fighters-shield",
+      "label": "Fighter's Shield",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 4 }
+    },
+    {
+      "file": "receipt-fire-shield",
+      "label": "Fire Shield",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 5 }
+    },
+    {
+      "file": "receipt-mirror-shield",
+      "label": "Mirror Shield",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 6 }
+    },
+    {
+      "file": "receipt-fire-rod",
+      "label": "Fire Rod",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 7 }
+    },
+    {
+      "file": "receipt-ice-rod",
+      "label": "Ice Rod",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 8 }
+    },
+    {
+      "file": "receipt-hammer",
+      "label": "Hammer",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 9 }
+    },
+    {
+      "file": "receipt-hookshot",
+      "label": "Hookshot",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 10 }
+    },
+    {
+      "file": "receipt-bow",
+      "label": "Bow",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 11 }
+    },
+    {
+      "file": "receipt-blue-boomerang",
+      "label": "Blue Boomerang",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 12 }
+    },
+    {
+      "file": "receipt-magic-powder",
+      "label": "Magic Powder",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 13 }
+    },
+    {
+      "file": "receipt-bottle-empty",
+      "label": "Bottle (empty)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 14 }
+    },
+    {
+      "file": "receipt-bombos",
+      "label": "Bombos",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 15 }
+    },
+    {
+      "file": "receipt-ether",
+      "label": "Ether",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 16 }
+    },
+    {
+      "file": "receipt-quake",
+      "label": "Quake",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 17 }
+    },
+    {
+      "file": "receipt-lamp",
+      "label": "Lamp",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 18 }
+    },
+    {
+      "file": "receipt-shovel",
+      "label": "Shovel",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 19 }
+    },
+    {
+      "file": "receipt-flute",
+      "label": "Flute",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 20 }
+    },
+    {
+      "file": "receipt-cane-of-somaria",
+      "label": "Cane of Somaria",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 21 }
+    },
+    {
+      "file": "receipt-bottle-2",
+      "label": "Bottle (variant 2)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 22 }
+    },
+    {
+      "file": "receipt-heart-piece",
+      "label": "Heart Piece",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 23 }
+    },
+    {
+      "file": "receipt-cane-of-byrna",
+      "label": "Cane of Byrna",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 24 }
+    },
+    {
+      "file": "receipt-magic-cape",
+      "label": "Magic Cape",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 25 }
+    },
+    {
+      "file": "receipt-magic-mirror",
+      "label": "Magic Mirror",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 26 }
+    },
+    {
+      "file": "receipt-power-glove",
+      "label": "Power Glove",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 27 }
+    },
+    {
+      "file": "receipt-titans-mitt",
+      "label": "Titan's Mitt",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 28 }
+    },
+    {
+      "file": "receipt-book-of-mudora",
+      "label": "Book of Mudora",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 29 }
+    },
+    {
+      "file": "receipt-flippers",
+      "label": "Flippers",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 30 }
+    },
+    {
+      "file": "receipt-moon-pearl",
+      "label": "Moon Pearl",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 31 }
+    },
+    {
+      "file": "receipt-crystal",
+      "label": "Crystal",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 32 }
+    },
+    {
+      "file": "receipt-bug-net",
+      "label": "Bug Net",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 33 }
+    },
+    {
+      "file": "receipt-blue-mail",
+      "label": "Blue Mail",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 34 }
+    },
+    {
+      "file": "receipt-red-mail",
+      "label": "Red Mail",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 35 }
+    },
+    {
+      "file": "receipt-small-key",
+      "label": "Small Key",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 36 }
+    },
+    {
+      "file": "receipt-compass",
+      "label": "Compass",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 37 }
+    },
+    {
+      "file": "receipt-heart-container",
+      "label": "Heart Container",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 38 }
+    },
+    {
+      "file": "receipt-bomb-1",
+      "label": "1 Bomb",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 39 }
+    },
+    {
+      "file": "receipt-bomb-3",
+      "label": "3 Bombs",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 40 }
+    },
+    {
+      "file": "receipt-mushroom",
+      "label": "Mushroom",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 41 }
+    },
+    {
+      "file": "receipt-red-boomerang",
+      "label": "Red Boomerang",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 42 }
+    },
+    {
+      "file": "receipt-red-potion",
+      "label": "Red Potion",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 43 }
+    },
+    {
+      "file": "receipt-green-potion",
+      "label": "Green Potion",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 44 }
+    },
+    {
+      "file": "receipt-blue-potion",
+      "label": "Blue Potion",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 45 }
+    },
+    {
+      "file": "receipt-bomb-10",
+      "label": "10 Bombs",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 49 }
+    },
+    {
+      "file": "receipt-rupee-1",
+      "label": "Rupee (1)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 52 }
+    },
+    {
+      "file": "receipt-rupee-5",
+      "label": "Rupee (5)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 53 }
+    },
+    {
+      "file": "receipt-rupee-20",
+      "label": "Rupee (20)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 54 }
+    },
+    {
+      "file": "receipt-green-pendant",
+      "label": "Green Pendant",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 55 }
+    },
+    {
+      "file": "receipt-blue-pendant",
+      "label": "Blue Pendant",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 56 }
+    },
+    {
+      "file": "receipt-red-pendant",
+      "label": "Red Pendant",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 57 }
+    },
+    {
+      "file": "receipt-bow-no-arrows",
+      "label": "Bow (no arrows)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 58 }
+    },
+    {
+      "file": "receipt-silver-bow",
+      "label": "Silver Bow",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 59 }
+    },
+    {
+      "file": "receipt-bottle-red-potion",
+      "label": "Bottle (red potion)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 60 }
+    },
+    {
+      "file": "receipt-bottle-green-potion",
+      "label": "Bottle (green potion)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 61 }
+    },
+    {
+      "file": "receipt-rupee-100",
+      "label": "Rupee (100)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 64 }
+    },
+    {
+      "file": "receipt-rupee-50",
+      "label": "Rupee (50)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 65 }
+    },
+    {
+      "file": "receipt-heart-refill",
+      "label": "Heart Refill",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 66 }
+    },
+    {
+      "file": "receipt-arrows",
+      "label": "Arrows",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 67 }
+    },
+    {
+      "file": "receipt-arrow-10",
+      "label": "10 Arrows",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 68 }
+    },
+    {
+      "file": "receipt-magic-small",
+      "label": "Small Magic",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 69 }
+    },
+    {
+      "file": "receipt-rupee-300",
+      "label": "Rupee (300)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 70 }
+    },
+    {
+      "file": "receipt-rupee-20-alt",
+      "label": "Rupee (20 alt)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 71 }
+    },
+    {
+      "file": "receipt-bottle-3",
+      "label": "Bottle (variant 3)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 72 }
+    },
+    {
+      "file": "receipt-fighter-sword-uncle",
+      "label": "Fighter Sword (uncle)",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 73 }
+    },
+    {
+      "file": "receipt-activated-flute",
+      "label": "Activated Flute",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 74 }
+    },
+    {
+      "file": "receipt-pegasus-boots",
+      "label": "Pegasus Boots",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 75 }
+    },
+
+    {
+      "file": "drop-heart-refill",
+      "label": "Heart Refill",
+      "category": "drop",
+      "extract": { "method": "drop-standard", "spriteType": 216, "palette": 1 }
+    },
+    {
+      "file": "drop-rupee-1",
+      "label": "Rupee (1)",
+      "category": "drop",
+      "extract": { "method": "drop-rupee", "palette": 4 }
+    },
+    {
+      "file": "drop-rupee-5",
+      "label": "Rupee (5)",
+      "category": "drop",
+      "extract": { "method": "drop-rupee", "palette": 2 }
+    },
+    {
+      "file": "drop-rupee-20",
+      "label": "Rupee (20)",
+      "category": "drop",
+      "extract": { "method": "drop-rupee", "palette": 1 }
+    },
+    {
+      "file": "drop-bomb-1",
+      "label": "Bomb (1)",
+      "category": "drop",
+      "extract": { "method": "drop-numbered", "spriteType": 220, "palette": 2, "group": 1 }
+    },
+    {
+      "file": "drop-bomb-4",
+      "label": "Bomb (4)",
+      "category": "drop",
+      "extract": { "method": "drop-numbered", "spriteType": 221, "palette": 2, "group": 2 }
+    },
+    {
+      "file": "drop-bomb-8",
+      "label": "Bomb (8)",
+      "category": "drop",
+      "extract": { "method": "drop-numbered", "spriteType": 222, "palette": 2, "group": 3 }
+    },
+    {
+      "file": "drop-small-magic",
+      "label": "Small Magic",
+      "category": "drop",
+      "extract": { "method": "drop-standard", "spriteType": 223, "palette": 4 }
+    },
+    {
+      "file": "drop-full-magic",
+      "label": "Full Magic",
+      "category": "drop",
+      "extract": { "method": "drop-standard", "spriteType": 224, "palette": 4 }
+    },
+    {
+      "file": "drop-arrow-5",
+      "label": "Arrow (5)",
+      "category": "drop",
+      "extract": { "method": "drop-numbered", "spriteType": 225, "palette": 2, "group": 4 }
+    },
+    {
+      "file": "drop-arrow-10",
+      "label": "Arrow (10)",
+      "category": "drop",
+      "extract": { "method": "drop-numbered", "spriteType": 226, "palette": 2, "group": 5 }
+    },
+    {
+      "file": "drop-fairy",
+      "label": "Fairy",
+      "category": "drop",
+      "extract": { "method": "drop-standard", "spriteType": 227, "palette": 4 }
+    },
+    {
+      "file": "drop-small-key",
+      "label": "Small Key",
+      "category": "drop",
+      "extract": { "method": "drop-standard", "spriteType": 228, "palette": 4 }
+    },
+    {
+      "file": "drop-big-key",
+      "label": "Big Key",
+      "category": "drop",
+      "extract": { "method": "drop-bigkey", "palette": 4 }
+    },
+    {
+      "file": "drop-shield-fighters",
+      "label": "Fighter's Shield",
+      "category": "drop",
+      "extract": { "method": "drop-shield-fighters", "sheet": 27, "tiles": [44, 60], "palette": 4 }
+    },
+    {
+      "file": "drop-shield-fire",
+      "label": "Fire Shield",
+      "category": "drop",
+      "extract": { "method": "drop-shield-fire", "sheet": 27, "tiles": [42, 43, 58, 59], "palette": 7 }
+    }
+  ]
+}
