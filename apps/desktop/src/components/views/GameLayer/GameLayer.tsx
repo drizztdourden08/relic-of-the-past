@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useGameState } from './behavior/useGameState';
-import { getInputManager } from '../../../lib/game';
+import { getInputManager, wasmGetViewportInfo } from '../../../lib/game';
+import { createEdgeGlowRenderer, type EdgeGlowRenderer } from '../../../lib/game/edge-glow-shader';
 import { ControllerDisconnectOverlay } from './ControllerDisconnectOverlay';
 import './GameLayer.css';
 
@@ -14,6 +15,9 @@ interface GameLayerProps {
 export function GameLayer({ assetData, configIni, profileId, stretch }: GameLayerProps): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const fxCanvasRef = useRef<HTMLCanvasElement>(null);
+  const glowRendererRef = useRef<EdgeGlowRenderer | null>(null);
+  const rafIdRef = useRef<number>(0);
   const { status, error, start } = useGameState();
   // Increment to force React to create a fresh <canvas> DOM element on restart,
   // ensuring the new WASM instance gets a clean WebGL context.
@@ -25,6 +29,7 @@ export function GameLayer({ assetData, configIni, profileId, stretch }: GameLaye
   // Scale canvas to fill the container while maintaining aspect ratio
   const fitCanvas = useCallback(() => {
     const canvas = canvasRef.current;
+    const fxCanvas = fxCanvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
 
@@ -35,6 +40,10 @@ export function GameLayer({ assetData, configIni, profileId, stretch }: GameLaye
     if (stretch) {
       canvas.style.width = `${containerW}px`;
       canvas.style.height = `${containerH}px`;
+      if (fxCanvas) {
+        fxCanvas.style.width = `${containerW}px`;
+        fxCanvas.style.height = `${containerH}px`;
+      }
       return;
     }
 
@@ -48,6 +57,10 @@ export function GameLayer({ assetData, configIni, profileId, stretch }: GameLaye
 
     canvas.style.width = `${cssW}px`;
     canvas.style.height = `${cssH}px`;
+    if (fxCanvas) {
+      fxCanvas.style.width = `${cssW}px`;
+      fxCanvas.style.height = `${cssH}px`;
+    }
   }, [stretch]);
 
   // Observe container size changes and re-fit
@@ -67,6 +80,57 @@ export function GameLayer({ assetData, configIni, profileId, stretch }: GameLaye
     const id = requestAnimationFrame(() => fitCanvas());
     return () => cancelAnimationFrame(id);
   }, [status, fitCanvas]);
+
+  // ─── Edge glow shader render loop ───
+  useEffect(() => {
+    if (status !== 'running') return;
+    const gameCanvas = canvasRef.current;
+    const fxCanvas = fxCanvasRef.current;
+    if (!gameCanvas || !fxCanvas) return;
+
+    // Wait a frame for SDL to set canvas dimensions
+    const initId = requestAnimationFrame(() => {
+      // Match FX canvas buffer to game canvas buffer
+      fxCanvas.width = gameCanvas.width;
+      fxCanvas.height = gameCanvas.height;
+
+      const renderer = createEdgeGlowRenderer(fxCanvas);
+      if (!renderer) return;
+      glowRendererRef.current = renderer;
+
+      const loop = (time: number) => {
+        // Sync buffer size if game canvas changed (e.g. aspect ratio switch)
+        if (gameCanvas.width !== fxCanvas.width || gameCanvas.height !== fxCanvas.height) {
+          fxCanvas.width = gameCanvas.width;
+          fxCanvas.height = gameCanvas.height;
+        }
+
+        // Query WASM for precise viewport info
+        const vp = wasmGetViewportInfo();
+        if (vp) {
+          // Only enable during active gameplay (dungeon/overworld) with black edges
+          const shouldEnable = vp.isGameplay && (vp.blackLeft > 0 || vp.blackRight > 0 || vp.blackBottom > 0);
+          renderer.setEnabled(shouldEnable);
+          renderer.setBlackBounds(vp.blackLeft, vp.blackRight, vp.blackBottom);
+        } else {
+          renderer.setEnabled(false);
+        }
+
+        renderer.render(gameCanvas, time);
+        rafIdRef.current = requestAnimationFrame(loop);
+      };
+      rafIdRef.current = requestAnimationFrame(loop);
+    });
+
+    return () => {
+      cancelAnimationFrame(initId);
+      cancelAnimationFrame(rafIdRef.current);
+      if (glowRendererRef.current) {
+        glowRendererRef.current.dispose();
+        glowRendererRef.current = null;
+      }
+    };
+  }, [status, canvasKey]);
 
   // Start game when assets arrive
   useEffect(() => {
@@ -143,10 +207,17 @@ export function GameLayer({ assetData, configIni, profileId, stretch }: GameLaye
         key={canvasKey}
         ref={canvasRef}
         id="canvas"
-        className="game-layer__canvas"
+        className={`game-layer__canvas${status === 'running' ? ' game-layer__canvas--hidden' : ''}`}
         width={512}
         height={448}
         tabIndex={0}
+      />
+      <canvas
+        key={`fx-${canvasKey}`}
+        ref={fxCanvasRef}
+        className="game-layer__fx-canvas"
+        width={512}
+        height={448}
       />
       {controllerPaused && status === 'running' && disconnectedName && disconnectedName !== 'Manual pause' && (
         <ControllerDisconnectOverlay controllerName={disconnectedName} />

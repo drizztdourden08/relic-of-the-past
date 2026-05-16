@@ -3,7 +3,8 @@
 export type { EmscriptenFS, EmscriptenModule, GameStatus, GameState } from './types';
 export { getGameState, getModule, subscribeGameState } from './wasm-bridge';
 export { getProfileId as getActiveProfileId } from './wasm-bridge';
-export { wasmSetPaused, wasmTogglePause, wasmReset, wasmCheat } from './wasm-bridge';
+export { wasmSetPaused, wasmTogglePause, wasmReset, wasmCheat, wasmGetViewportInfo } from './wasm-bridge';
+export type { ViewportInfo } from './wasm-bridge';
 export { startGame, resetGame } from './lifecycle';
 export { setMsuData } from './lifecycle';
 export type { MsuTrackData } from './lifecycle';

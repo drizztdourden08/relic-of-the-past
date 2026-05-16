@@ -3,6 +3,9 @@
 #include <emscripten.h>
 #include "src/variables.h"
 #include "src/assets.h"
+#include "src/zelda_rtl.h"
+#include "src/config.h"
+#include "snes/ppu.h"
 
 #define MAX_OVERRIDES 256
 
@@ -374,4 +377,33 @@ void WasmTriggerNpcCheck(int flag_type, int flag_mask, int item_id,
                          int sprite_type_id, int post_gfx) {
   GameHook_TriggerNpcCheck((uint8)flag_type, (uint8)flag_mask, (uint8)item_id,
                            (uint8)sprite_type_id, (uint8)post_gfx);
+}
+
+// ─── Viewport Info for Edge Glow Shader ───
+// Returns a pointer to a static buffer with viewport/game-state info:
+//   [0]  main_module_index (uint8) — game state (7=dungeon, 9=overworld, etc.)
+//   [1]  submodule_index (uint8)
+//   [2]  extraLeftRight (uint8) — max extra pixels per side (from config)
+//   [3]  extraLeftCur (uint8) — actual valid content pixels on left edge
+//   [4]  extraRightCur (uint8) — actual valid content pixels on right edge
+//   [5]  extraBottomCur (uint8) — actual valid content pixels below 224
+//   [6-7] snes_width (uint16 LE) — total render width in pixels
+//   [8-9] snes_height (uint16 LE) — total render height in pixels
+static uint8 g_viewport_buf[10];
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetViewportInfo(void) {
+  g_viewport_buf[0] = main_module_index;
+  g_viewport_buf[1] = submodule_index;
+  g_viewport_buf[2] = g_zenv.ppu->extraLeftRight;
+  g_viewport_buf[3] = g_zenv.ppu->extraLeftCur;
+  g_viewport_buf[4] = g_zenv.ppu->extraRightCur;
+  g_viewport_buf[5] = g_zenv.ppu->extraBottomCur;
+  uint16 w = (uint16)(g_config.extended_aspect_ratio * 2 + 256);
+  uint16 h = g_config.extend_y ? 240 : 224;
+  g_viewport_buf[6] = w & 0xFF;
+  g_viewport_buf[7] = (w >> 8) & 0xFF;
+  g_viewport_buf[8] = h & 0xFF;
+  g_viewport_buf[9] = (h >> 8) & 0xFF;
+  return (int)g_viewport_buf;
 }

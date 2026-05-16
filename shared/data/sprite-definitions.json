@@ -641,6 +641,18 @@
       "extract": { "method": "receipt", "receiptId": 49 }
     },
     {
+      "file": "receipt-big-key",
+      "label": "Big Key",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 50 }
+    },
+    {
+      "file": "receipt-dungeon-map",
+      "label": "Dungeon Map",
+      "category": "receipt",
+      "extract": { "method": "receipt", "receiptId": 51 }
+    },
+    {
       "file": "receipt-rupee-1",
       "label": "Rupee (1)",
       "category": "receipt",
@@ -868,6 +880,12 @@
       "label": "Fire Shield",
       "category": "drop",
       "extract": { "method": "drop-shield-fire", "sheet": 27, "tiles": [42, 43, 58, 59], "palette": 7 }
+    },
+    {
+      "file": "drop-super-bomb",
+      "label": "Super Bomb",
+      "category": "drop",
+      "extract": { "method": "follower-bomb", "palette": 4 }
     }
   ]
 }

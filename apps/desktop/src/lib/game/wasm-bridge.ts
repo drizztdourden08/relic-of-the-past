@@ -90,3 +90,69 @@ export function wasmCheat(cmd: string): void {
   if (!mod || currentState.status !== 'running') return;
   mod.ccall('WasmCheat', null, ['number'], [cmd.charCodeAt(0)]);
 }
+
+// ─── Viewport Info (for edge glow shader) ───
+
+export interface ViewportInfo {
+  /** Game module: 7=dungeon, 9=overworld, 14=menu, 0/1=intro/title */
+  mainModule: number;
+  submodule: number;
+  /** Max extra pixels per side allowed by config */
+  extraLeftRight: number;
+  /** Actual valid map content pixels on left beyond base 256 */
+  extraLeftCur: number;
+  /** Actual valid map content pixels on right beyond base 256 */
+  extraRightCur: number;
+  /** Actual valid map content pixels below base 224 */
+  extraBottomCur: number;
+  /** Total render width */
+  snesWidth: number;
+  /** Total render height */
+  snesHeight: number;
+  /** Pixels of black on the left edge (no map content) */
+  blackLeft: number;
+  /** Pixels of black on the right edge (no map content) */
+  blackRight: number;
+  /** Pixels of black on the bottom edge (no map content) */
+  blackBottom: number;
+  /** Whether the game is in active gameplay (dungeon or overworld) */
+  isGameplay: boolean;
+}
+
+/**
+ * Read viewport/game-state info from WASM for shader edge detection.
+ * Returns null if the module isn't running or the export doesn't exist yet.
+ */
+export function wasmGetViewportInfo(): ViewportInfo | null {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return null;
+  try {
+    const ptr = mod.ccall('WasmGetViewportInfo', 'number', [], []) as number;
+    if (!ptr) return null;
+    const heap = mod.HEAPU8;
+    const mainModule = heap[ptr];
+    const submodule = heap[ptr + 1];
+    const extraLeftRight = heap[ptr + 2];
+    const extraLeftCur = heap[ptr + 3];
+    const extraRightCur = heap[ptr + 4];
+    const extraBottomCur = heap[ptr + 5];
+    const snesWidth = heap[ptr + 6] | (heap[ptr + 7] << 8);
+    const snesHeight = heap[ptr + 8] | (heap[ptr + 9] << 8);
+
+    // Black pixels = max extra - actual rendered extra
+    const blackLeft = extraLeftRight - extraLeftCur;
+    const blackRight = extraLeftRight - extraRightCur;
+    // Bottom: extend_y adds 16 rows (240-224), extraBottomCur = how many have content
+    const blackBottom = snesHeight === 240 ? (16 - extraBottomCur) : 0;
+
+    // Active gameplay = module 7 (dungeon) or 9 (overworld)
+    const isGameplay = (mainModule === 7 || mainModule === 9);
+
+    return {
+      mainModule, submodule, extraLeftRight, extraLeftCur, extraRightCur,
+      extraBottomCur, snesWidth, snesHeight, blackLeft, blackRight, blackBottom, isGameplay,
+    };
+  } catch {
+    return null;
+  }
+}

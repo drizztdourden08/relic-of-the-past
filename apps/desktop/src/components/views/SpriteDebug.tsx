@@ -26,23 +26,8 @@ type ReviewData = Record<string, ReviewEntry>;
 export function SpriteDebug({ onClose }: { onClose: () => void }) {
   const [mode, setMode] = useState<ReviewMode>('sprites');
 
-  // Prevent keyboard events from reaching the game's window-level listener
-  const overlayRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = overlayRef.current;
-    if (!el) return;
-    el.focus();
-    const stop = (e: KeyboardEvent) => e.stopPropagation();
-    el.addEventListener('keydown', stop);
-    el.addEventListener('keyup', stop);
-    return () => {
-      el.removeEventListener('keydown', stop);
-      el.removeEventListener('keyup', stop);
-    };
-  }, []);
-
   return (
-    <div ref={overlayRef} style={S.overlay} tabIndex={-1}>
+    <div style={S.overlay}>
       {/* Top bar with mode toggle + close */}
       <div style={S.topBar}>
         <div style={S.modeToggle}>
@@ -385,7 +370,6 @@ const S: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     overflow: 'hidden',
     fontFamily: "'JetBrains Mono', monospace",
-    outline: 'none',
     WebkitAppRegion: 'no-drag' as unknown as string,
   },
   topBar: {

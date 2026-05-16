@@ -16,6 +16,20 @@
   max-height: 100%;
 }
 
+/* ─── Edge glow FX overlay canvas ─── */
+.game-layer__canvas--hidden {
+  position: absolute;
+  visibility: hidden;
+}
+
+.game-layer__fx-canvas {
+  image-rendering: pixelated;
+  outline: none;
+  max-width: 100%;
+  max-height: 100%;
+  pointer-events: none;
+}
+
 /* ─── Pause overlay ─── */
 .game-layer__pause-overlay {
   position: absolute;

@@ -263,6 +263,14 @@ export class InputManager {
     window.addEventListener('gamepadconnected', this.onGamepadConnected);
     window.addEventListener('gamepaddisconnected', this.onGamepadDisconnected);
 
+    // Prevent Emscripten's SDL keypress handler from calling preventDefault() on key
+    // events when the user is typing in an input or when game input is suppressed.
+    // SDL registers its handler on `document` (bubble phase). We register on
+    // `document.documentElement` (<html>) which is below `document` in the bubble
+    // chain — stopPropagation here prevents the event from reaching SDL on document.
+    document.documentElement.addEventListener('keydown', this.guardEmscriptenKeys);
+    document.documentElement.addEventListener('keypress', this.guardEmscriptenKeys);
+
     // Subscribe to WebHID input (Switch, PS, 8BitDo)
     this.hidUnsubscribe = webHidReader.onInput((state: WebHidInputState) => {
       this.hidStates.set(state.deviceKey, { buttons: state.buttons, axes: state.axes });
@@ -304,6 +312,8 @@ export class InputManager {
     window.removeEventListener('keyup', this.onKeyUp);
     window.removeEventListener('gamepadconnected', this.onGamepadConnected);
     window.removeEventListener('gamepaddisconnected', this.onGamepadDisconnected);
+    document.documentElement.removeEventListener('keydown', this.guardEmscriptenKeys);
+    document.documentElement.removeEventListener('keypress', this.guardEmscriptenKeys);
 
     // Unsubscribe from HID input
     if (this.hidUnsubscribe) {
@@ -512,6 +522,18 @@ export class InputManager {
       }
     }
   }
+
+  /**
+   * Bubble-phase guard on <html>: stop keyboard events from reaching Emscripten's
+   * SDL handler (registered on `document`) when the user is typing in a text input
+   * or when input is suppressed. Without this, SDL's keypress handler calls
+   * preventDefault() which blocks character insertion into input fields.
+   */
+  private guardEmscriptenKeys = (e: KeyboardEvent): void => {
+    if (isTextInput(e.target) || this.inputSuppressed) {
+      e.stopPropagation();
+    }
+  };
 
   private onKeyDown = (e: KeyboardEvent): void => {
     // Don't capture when typing in inputs
