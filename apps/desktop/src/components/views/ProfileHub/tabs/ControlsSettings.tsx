@@ -34,8 +34,6 @@ import { InputProfileList } from './controls/InputProfileList';
 import { DeviceCard } from './controls/DeviceCard';
 import { BindingRow } from './controls/BindingRow';
 import { BindingListener } from './controls/BindingListener';
-import { Toggle } from '../../../primitives/Toggle';
-import { Slider } from '../../../primitives/Slider';
 import { getSnesIconUrl } from '../../InputTester/button-icons';
 import { Dialog } from '../../../composites/Dialog/Dialog';
 import './ControlsSettings.css';
@@ -264,15 +262,27 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
       persistProfiles(updatedProfiles);
     } else {
       // Function action (shortcut / cheat)
+      // Clear this binding from any OTHER action that uses the same gamepad button/axis
+      // (prevents conflicts where two actions share the same physical button)
       const updatedFn = functionMappings.map(m => {
-        if (m.action !== listeningFor.action) return m;
-        return {
-          ...m,
-          binding,
-          icon: null,
-          sourceVid: binding.type !== 'keyboard' ? vid : null,
-          sourcePid: binding.type !== 'keyboard' ? pid : null,
-        };
+        if (m.action === listeningFor.action) {
+          return {
+            ...m,
+            binding,
+            icon: null,
+            sourceVid: binding.type !== 'keyboard' ? vid : null,
+            sourcePid: binding.type !== 'keyboard' ? pid : null,
+          };
+        }
+        // Steal: clear conflicting gamepad bindings from other actions
+        if (binding.type === 'gamepad-button' && m.binding.type === 'gamepad-button' && m.binding.index === binding.index) {
+          return { ...m, binding: { type: 'none' as const }, icon: null, sourceVid: null, sourcePid: null };
+        }
+        if (binding.type === 'gamepad-axis' && m.binding.type === 'gamepad-axis' &&
+            m.binding.axisIndex === binding.axisIndex && m.binding.direction === binding.direction) {
+          return { ...m, binding: { type: 'none' as const }, icon: null, sourceVid: null, sourcePid: null };
+        }
+        return m;
       });
       onChange({ functionMappings: updatedFn });
     }
@@ -568,28 +578,6 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
 
         {activeTab === 'shortcuts' && (
           <div className="controls-settings__bindings">
-            <div className="controls-settings__section-header">Save Slot Shortcuts</div>
-            <div className="controls-settings__shortcut-options">
-              <Toggle
-                label="Enhanced Save Slot Shortcut"
-                description="Opens the save slot menu on shortcut press instead of immediately saving/loading"
-                checked={settings.enhancedSaveSlotShortcut}
-                onChange={(v) => onChange({ enhancedSaveSlotShortcut: v })}
-              />
-              {settings.enhancedSaveSlotShortcut && (
-                <Slider
-                  label="Hold to Save Duration"
-                  description="How long to hold the key to save (seconds)"
-                  value={settings.saveHoldDuration}
-                  min={1}
-                  max={5}
-                  step={0.5}
-                  formatValue={(v) => `${v}s`}
-                  onChange={(v) => onChange({ saveHoldDuration: v })}
-                />
-              )}
-            </div>
-
             <div className="controls-settings__section-header">Keyboard Shortcuts</div>
             <div className="controls-settings__binding-list">
               <div className="binding-row binding-row--header">

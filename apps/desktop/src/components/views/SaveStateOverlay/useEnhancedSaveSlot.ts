@@ -49,10 +49,14 @@ async function withPauseGuard(action: () => Promise<boolean>): Promise<boolean> 
   const wasPaused = inputMgr.isPaused();
   if (wasPaused) {
     inputMgr.resume();
+    // Let one frame run so WASM is unpaused before the action
     await new Promise(r => requestAnimationFrame(r));
   }
   const result = await action();
   if (wasPaused) {
+    // Let at least one frame render so the screen updates after a load,
+    // then re-pause. Two rAFs: one for WASM to process, one to paint.
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
     inputMgr.togglePause();
   }
   return result;
@@ -135,17 +139,72 @@ export function useEnhancedSaveSlot(
     if (!gameRunning) close();
   }, [gameRunning, close]);
 
-  // ESC key handler
+  // ESC key handler + any non-slot gamepad button cancels
   useEffect(() => {
     if (!open) return;
-    const onEsc = (e: KeyboardEvent) => {
+    const inputMgr = getInputManager();
+
+    // Keyboard: ESC or any non-slot-mapped key cancels
+    const onKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Escape') {
         e.preventDefault();
         close();
+        return;
+      }
+      // Check if this key is mapped to a save/load slot — if not, cancel
+      const mappings = inputMgr.getFunctionMappings();
+      const isSlotKey = mappings.some(m =>
+        m.binding.type === 'keyboard' &&
+        m.binding.code === e.code &&
+        (m.action.startsWith('load-state-') || m.action.startsWith('save-state-'))
+      );
+      if (!isSlotKey) {
+        close();
       }
     };
-    window.addEventListener('keydown', onEsc);
-    return () => window.removeEventListener('keydown', onEsc);
+    window.addEventListener('keydown', onKeyDown);
+
+    // Gamepad: any button NOT mapped to a save/load slot cancels
+    const mappings = inputMgr.getFunctionMappings();
+    const slotButtonIndices = new Set<number>();
+    for (const m of mappings) {
+      if (m.binding.type === 'gamepad-button' && (m.action.startsWith('load-state-') || m.action.startsWith('save-state-'))) {
+        slotButtonIndices.add(m.binding.index);
+      }
+    }
+
+    // Track previous button states to detect rising edges
+    const prevButtons = new Map<string, boolean[]>();
+    const unsub = inputMgr.onInputState((hidStates, gamepads) => {
+      // Check WebHID controllers
+      for (const [key, state] of hidStates) {
+        const prev = prevButtons.get(key) ?? [];
+        for (let i = 0; i < state.buttons.length; i++) {
+          if (state.buttons[i] && !prev[i] && !slotButtonIndices.has(i)) {
+            close();
+            return;
+          }
+        }
+        prevButtons.set(key, [...state.buttons]);
+      }
+      // Check standard gamepads
+      for (const gp of gamepads) {
+        const gpKey = `gp-${gp.index}`;
+        const prev = prevButtons.get(gpKey) ?? [];
+        for (let i = 0; i < gp.buttons.length; i++) {
+          if (gp.buttons[i].pressed && !prev[i] && !slotButtonIndices.has(i)) {
+            close();
+            return;
+          }
+        }
+        prevButtons.set(gpKey, gp.buttons.map(b => b.pressed));
+      }
+    });
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      unsub();
+    };
   }, [open, close]);
 
   useEffect(() => {

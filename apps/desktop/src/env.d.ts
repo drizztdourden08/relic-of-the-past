@@ -118,6 +118,7 @@ interface ElectronAPI {
   setAlwaysOnTop(value: boolean): Promise<boolean>;
   setAudioMuted(value: boolean): Promise<boolean>;
   isAudioMuted(): Promise<boolean>;
+  openDevTools(): void;
   onMaximizedChange(callback: (maximized: boolean) => void): () => void;
   toggleFullscreen(): void;
   setFullscreen(value: boolean): void;
