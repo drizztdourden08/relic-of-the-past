@@ -177,11 +177,15 @@ function computeStats(
 
 // ─── Filter checks by tags and search query ───
 
+export type ItemFilter = 'all' | 'rewards' | 'non-rewards';
+
 export interface FilterState {
   searchQuery: string;
   activeTags: CheckTag[];
   /** If true, check must have ALL active tags. If false, ANY. */
   tagMode: 'all' | 'any';
+  /** Filter checks by whether they have an item reward */
+  itemFilter?: ItemFilter;
 }
 
 export function filterChecks(
@@ -213,6 +217,13 @@ export function filterChecks(
         return filter.activeTags.some(t => checkTags.includes(t));
       }
     });
+  }
+
+  // Filter by item reward
+  if (filter.itemFilter === 'rewards') {
+    result = result.filter(c => !!c.vanillaItem);
+  } else if (filter.itemFilter === 'non-rewards') {
+    result = result.filter(c => !c.vanillaItem);
   }
 
   return result;

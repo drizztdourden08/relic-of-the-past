@@ -30,6 +30,7 @@ uniform vec2 u_resolution;
 uniform float u_blackLeft;
 uniform float u_blackRight;
 uniform float u_blackBottom;
+uniform float u_swizzleBR;  // 1.0 = swap B/R channels (BGRA source)
 
 void main() {
   float pixelX = v_uv.x * u_resolution.x;
@@ -45,35 +46,32 @@ void main() {
   bool inBottom = pixelY > bottomBound && u_blackBottom > 0.0;
 
   if (!inLeft && !inRight && !inBottom) {
-    // Inside map: pass through
-    gl_FragColor = texture2D(u_gameTexture, v_uv);
+    vec4 c = texture2D(u_gameTexture, v_uv);
+    if (u_swizzleBR > 0.5) c = vec4(c.b, c.g, c.r, c.a);
+    gl_FragColor = c;
     return;
   }
 
-  // Compute reflected UV
-  vec2 reflectedUV = v_uv;
+  // True mirror reflection: flip across the edge boundary
+  vec2 mirrorUV = v_uv;
 
   if (inLeft) {
-    // Distance into left black region (pixels from game edge)
-    float dist = leftBound - pixelX;
-    // Mirror: sample from leftBound + dist
-    float mirrorX = leftBound + dist;
-    reflectedUV.x = mirrorX / u_resolution.x;
+    float mirrorX = 2.0 * leftBound - pixelX;
+    mirrorUV.x = mirrorX / u_resolution.x;
   } else if (inRight) {
-    float dist = pixelX - rightBound;
-    float mirrorX = rightBound - dist;
-    reflectedUV.x = mirrorX / u_resolution.x;
+    float mirrorX = 2.0 * rightBound - pixelX;
+    mirrorUV.x = mirrorX / u_resolution.x;
   }
 
   if (inBottom) {
-    float dist = pixelY - bottomBound;
-    float mirrorY = bottomBound - dist;
-    reflectedUV.y = mirrorY / u_resolution.y;
+    float mirrorY = 2.0 * bottomBound - pixelY;
+    mirrorUV.y = mirrorY / u_resolution.y;
   }
 
-  // Clamp to valid range
-  reflectedUV = clamp(reflectedUV, 0.0, 1.0);
-  gl_FragColor = texture2D(u_gameTexture, reflectedUV);
+  mirrorUV = clamp(mirrorUV, 0.0, 1.0);
+  vec4 c = texture2D(u_gameTexture, mirrorUV);
+  if (u_swizzleBR > 0.5) c = vec4(c.b, c.g, c.r, c.a);
+  gl_FragColor = c;
 }
 `;
 
@@ -123,7 +121,7 @@ void main() {
 }
 `;
 
-// Composite: show mirror in black regions, game elsewhere (debug: no blur/noise)
+// Composite: game in active area, mirror+blur+voronoi decay in black regions
 const COMPOSITE_FRAG = /* glsl */ `
 precision mediump float;
 varying vec2 v_uv;
@@ -135,41 +133,131 @@ uniform vec2 u_resolution;
 uniform float u_glowIntensity;
 uniform float u_noiseSpeed;
 uniform float u_noiseScale;
-uniform float u_blackLeft;
+uniform float u_blackLeft;   // max bounds (for normalization)
 uniform float u_blackRight;
 uniform float u_blackBottom;
+uniform float u_dynLeft;     // dynamic bounds (actual game edge)
+uniform float u_dynRight;
+uniform float u_dynBottom;
+uniform float u_effectOpacity;  // 0=show game only, 1=full effect
+
+// ─── Voronoi noise ───
+vec2 hash2(vec2 p) {
+  p = vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)));
+  return fract(sin(p) * 43758.5453);
+}
+
+float voronoi(vec2 uv, float time) {
+  vec2 cell = floor(uv);
+  vec2 frac = fract(uv);
+  float minDist = 1.0;
+  for (int y = -1; y <= 1; y++) {
+    for (int x = -1; x <= 1; x++) {
+      vec2 neighbor = vec2(float(x), float(y));
+      vec2 point = hash2(cell + neighbor);
+      point = 0.5 + 0.5 * sin(time * 0.3 + 6.2831 * point);
+      vec2 diff = neighbor + point - frac;
+      minDist = min(minDist, length(diff));
+    }
+  }
+  return minDist;
+}
+
+// ─── Desaturation ───
+vec3 desaturate(vec3 color, float amount) {
+  float lum = dot(color, vec3(0.299, 0.587, 0.114));
+  return mix(color, vec3(lum), amount);
+}
 
 void main() {
-  float pixelX = v_uv.x * u_resolution.x;
-  float pixelY = v_uv.y * u_resolution.y;
-
-  float leftBound = u_blackLeft * 2.0;
-  float rightBound = u_resolution.x - u_blackRight * 2.0;
-  float bottomBound = u_resolution.y - u_blackBottom * 2.0;
-
-  float dLeft = (u_blackLeft > 0.0) ? (leftBound - pixelX) : -9999.0;
-  float dRight = (u_blackRight > 0.0) ? (pixelX - rightBound) : -9999.0;
-  float dBottom = (u_blackBottom > 0.0) ? (pixelY - bottomBound) : -9999.0;
-
-  float maxDist = max(max(dLeft, dRight), dBottom);
-
-  if (maxDist <= 0.0) {
-    gl_FragColor = texture2D(u_gameTexture, v_uv);
+  // Sample the game pixel
+  vec4 game = texture2D(u_gameTexture, v_uv);
+  float brightness = dot(game.rgb, vec3(0.299, 0.587, 0.114));
+  // Soft blend zone: fully game above 0.02, fully effect below 0.004
+  float gameAlpha = smoothstep(0.004, 0.02, brightness);
+  if (gameAlpha > 0.99) {
+    gl_FragColor = game;
     return;
   }
 
-  // Pure mirror - no blur, no noise, no falloff
-  gl_FragColor = texture2D(u_mirrorTexture, v_uv);
+  // Sample mirror (sharp) and blur FBOs
+  vec2 fboUV = vec2(v_uv.x, 1.0 - v_uv.y);
+  vec4 mirror = texture2D(u_mirrorTexture, fboUV);
+  vec4 blur = texture2D(u_blurTexture, fboUV);
+
+  // Check if mirror has content — if nothing reflected, show black
+  float mirrorBrightness = dot(mirror.rgb, vec3(0.299, 0.587, 0.114));
+  if (mirrorBrightness < 0.002 && gameAlpha < 0.01) {
+    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+    return;
+  }
+
+  // Compute distance from DYNAMIC boundary (actual game edge) normalized over MAX extent
+  float pixelX = v_uv.x * u_resolution.x;
+  float pixelY = v_uv.y * u_resolution.y;
+
+  // Dynamic boundaries (where game content actually ends)
+  float dynLeftBound = u_dynLeft * 2.0;
+  float dynRightBound = u_resolution.x - u_dynRight * 2.0;
+  float dynBottomBound = u_resolution.y - u_dynBottom * 2.0;
+
+  // Max extents (for normalizing distance to 0-1)
+  float maxLeftExtent = u_blackLeft * 2.0;
+  float maxRightExtent = u_blackRight * 2.0;
+  float maxBottomExtent = u_blackBottom * 2.0;
+
+  // Distance from actual game edge, normalized over max possible extent
+  float dist = 0.0;
+  if (pixelX < dynLeftBound && maxLeftExtent > 0.0)
+    dist = max(dist, (dynLeftBound - pixelX) / maxLeftExtent);
+  if (pixelX > dynRightBound && maxRightExtent > 0.0)
+    dist = max(dist, (pixelX - dynRightBound) / maxRightExtent);
+  if (pixelY > dynBottomBound && maxBottomExtent > 0.0)
+    dist = max(dist, (pixelY - dynBottomBound) / maxBottomExtent);
+  dist = clamp(dist, 0.0, 1.0);
+
+  // Blur blend: 0% at edge, linear ramp to 100% over 50 pixels, then stays 100%
+  // effectOpacity scales the blur/effects but keeps mirror visible during transitions
+  float edgePixelDist = 0.0;
+  if (pixelX < dynLeftBound)
+    edgePixelDist = max(edgePixelDist, dynLeftBound - pixelX);
+  if (pixelX > dynRightBound)
+    edgePixelDist = max(edgePixelDist, pixelX - dynRightBound);
+  if (pixelY > dynBottomBound)
+    edgePixelDist = max(edgePixelDist, pixelY - dynBottomBound);
+  float blurMix = clamp(edgePixelDist / 50.0, 0.0, 1.0) * u_effectOpacity;
+  vec4 color = mix(mirror, blur, blurMix);
+
+  // ─── Voronoi-driven patchy desaturation (pixel-distance based) ───
+  vec2 voronoiUV = v_uv * u_noiseScale;
+  float v = voronoi(voronoiUV, u_time * u_noiseSpeed);
+
+  // Voronoi kicks in after 30px, full effect at 200px
+  float distFactor = smoothstep(30.0, 200.0, edgePixelDist) * u_effectOpacity;
+  float cellDesat = smoothstep(0.1, 0.5, v);
+  float totalDesat = distFactor * cellDesat;
+  color.rgb = desaturate(color.rgb, totalDesat);
+
+  // Darken cells further out
+  float cellDarken = smoothstep(0.2, 0.6, v) * distFactor;
+  color.rgb *= 1.0 - cellDarken * 0.6;
+
+  // Overall fade to black: starts at 50px, fully black at 200px (scaled by effectOpacity)
+  float fade = 1.0 - smoothstep(50.0, 200.0, edgePixelDist) * u_effectOpacity;
+  vec4 effectColor = vec4(color.rgb * fade * u_glowIntensity, 1.0);
+  gl_FragColor = mix(effectColor, game, gameAlpha);
 }
 `;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface EdgeGlowRenderer {
-  render(gameCanvas: HTMLCanvasElement, time: number): void;
+  render(gameCanvas: HTMLCanvasElement, time: number, cleanFrame?: { data: Uint8Array; width: number; height: number } | null): void;
   resize(width: number, height: number): void;
   setEnabled(enabled: boolean): void;
   setBlackBounds(left: number, right: number, bottom: number): void;
+  setMaxBounds(left: number, right: number, bottom: number): void;
+  setEffectOpacity(opacity: number): void;
   dispose(): void;
 }
 
@@ -203,7 +291,7 @@ export function createEdgeGlowRenderer(
     blurRadius = 16.0,
     glowIntensity = 1.0,
     noiseSpeed = 0.8,
-    noiseScale = 4.0,
+    noiseScale = 6.0,
     blurPasses = 3,
   } = options;
 
@@ -227,6 +315,7 @@ export function createEdgeGlowRenderer(
     blackLeft: gl.getUniformLocation(mirrorProg, 'u_blackLeft'),
     blackRight: gl.getUniformLocation(mirrorProg, 'u_blackRight'),
     blackBottom: gl.getUniformLocation(mirrorProg, 'u_blackBottom'),
+    swizzleBR: gl.getUniformLocation(mirrorProg, 'u_swizzleBR'),
   };
 
   const blurHUniforms = {
@@ -253,6 +342,10 @@ export function createEdgeGlowRenderer(
     blackLeft: gl.getUniformLocation(compositeProg, 'u_blackLeft'),
     blackRight: gl.getUniformLocation(compositeProg, 'u_blackRight'),
     blackBottom: gl.getUniformLocation(compositeProg, 'u_blackBottom'),
+    dynLeft: gl.getUniformLocation(compositeProg, 'u_dynLeft'),
+    dynRight: gl.getUniformLocation(compositeProg, 'u_dynRight'),
+    dynBottom: gl.getUniformLocation(compositeProg, 'u_dynBottom'),
+    effectOpacity: gl.getUniformLocation(compositeProg, 'u_effectOpacity'),
   };
 
   // ─── Fullscreen quad geometry ───
@@ -272,23 +365,37 @@ export function createEdgeGlowRenderer(
   let blackLeft = 0;
   let blackRight = 0;
   let blackBottom = 0;
+  // Max bounds = fixed extent for distance gradient (no folding)
+  let maxLeft = 0;
+  let maxRight = 0;
+  let maxBottom = 0;
+  let effectOpacity = 1.0;
 
   const gameTexture = createTextureNearest(gl);
-  // 3 FBOs: mirror (persistent sharp reflection), A & B for blur ping-pong
-  let fboMirror = createFBO(gl, width, height);
+  // Clean frame texture (no HUD) — uploaded from WASM memory each frame
+  const cleanTexture = createTextureNearest(gl);
+  // Mirror FBO uses NEAREST to preserve pixel-perfect edges
+  let fboMirror = createFBONearest(gl, width, height);
   let fboA = createFBO(gl, width, height);
   let fboB = createFBO(gl, width, height);
 
   // ─── Public API ───
 
-  function render(gameCanvas: HTMLCanvasElement, time: number): void {
+  function render(gameCanvas: HTMLCanvasElement, time: number, cleanFrame?: { data: Uint8Array; width: number; height: number } | null): void {
     if (gameCanvas.width !== width || gameCanvas.height !== height) {
       resize(gameCanvas.width, gameCanvas.height);
     }
 
-    // Upload game canvas as texture
+    // Upload game canvas as texture (full frame with HUD)
     gl.bindTexture(gl.TEXTURE_2D, gameTexture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, gameCanvas);
+
+    // Upload clean frame (no HUD) if available — used for mirror
+    const mirrorSrcTexture = cleanFrame ? cleanTexture : gameTexture;
+    if (cleanFrame) {
+      gl.bindTexture(gl.TEXTURE_2D, cleanTexture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, cleanFrame.width, cleanFrame.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, cleanFrame.data);
+    }
 
     if (!enabled) {
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -305,7 +412,7 @@ export function createEdgeGlowRenderer(
 
     const timeSeconds = time / 1000.0;
 
-    // ─── Pass 1: Mirror reflection ───
+    // ─── Pass 1: Mirror reflection (uses clean frame without HUD if available) ───
     gl.bindFramebuffer(gl.FRAMEBUFFER, fboMirror.framebuffer);
     gl.viewport(0, 0, width, height);
     gl.useProgram(mirrorProg);
@@ -314,8 +421,9 @@ export function createEdgeGlowRenderer(
     gl.uniform1f(mirrorUniforms.blackLeft, blackLeft);
     gl.uniform1f(mirrorUniforms.blackRight, blackRight);
     gl.uniform1f(mirrorUniforms.blackBottom, blackBottom);
+    gl.uniform1f(mirrorUniforms.swizzleBR, cleanFrame ? 1.0 : 0.0);
     gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, gameTexture);
+    gl.bindTexture(gl.TEXTURE_2D, mirrorSrcTexture);
     drawQuad(gl, mirrorProg, quadBuffer);
 
     // ─── Pass 2-N: Progressive blur on mirrored texture ───
@@ -371,9 +479,13 @@ export function createEdgeGlowRenderer(
     gl.uniform1f(compositeUniforms.glowIntensity, glowIntensity);
     gl.uniform1f(compositeUniforms.noiseSpeed, noiseSpeed);
     gl.uniform1f(compositeUniforms.noiseScale, noiseScale);
-    gl.uniform1f(compositeUniforms.blackLeft, blackLeft);
-    gl.uniform1f(compositeUniforms.blackRight, blackRight);
-    gl.uniform1f(compositeUniforms.blackBottom, blackBottom);
+    gl.uniform1f(compositeUniforms.blackLeft, maxLeft);
+    gl.uniform1f(compositeUniforms.blackRight, maxRight);
+    gl.uniform1f(compositeUniforms.blackBottom, maxBottom);
+    gl.uniform1f(compositeUniforms.dynLeft, blackLeft);
+    gl.uniform1f(compositeUniforms.dynRight, blackRight);
+    gl.uniform1f(compositeUniforms.dynBottom, blackBottom);
+    gl.uniform1f(compositeUniforms.effectOpacity, effectOpacity);
 
     drawQuad(gl, compositeProg, quadBuffer);
   }
@@ -387,7 +499,7 @@ export function createEdgeGlowRenderer(
     destroyFBO(gl, fboMirror);
     destroyFBO(gl, fboA);
     destroyFBO(gl, fboB);
-    fboMirror = createFBO(gl, width, height);
+    fboMirror = createFBONearest(gl, width, height);
     fboA = createFBO(gl, width, height);
     fboB = createFBO(gl, width, height);
   }
@@ -402,6 +514,16 @@ export function createEdgeGlowRenderer(
     blackBottom = bottom;
   }
 
+  function setMaxBounds(left: number, right: number, bottom: number): void {
+    maxLeft = left;
+    maxRight = right;
+    maxBottom = bottom;
+  }
+
+  function setEffectOpacity(opacity: number): void {
+    effectOpacity = opacity;
+  }
+
   function dispose(): void {
     gl.deleteProgram(mirrorProg);
     gl.deleteProgram(blurHProg);
@@ -409,12 +531,13 @@ export function createEdgeGlowRenderer(
     gl.deleteProgram(compositeProg);
     gl.deleteBuffer(quadBuffer);
     gl.deleteTexture(gameTexture);
+    gl.deleteTexture(cleanTexture);
     destroyFBO(gl, fboMirror);
     destroyFBO(gl, fboA);
     destroyFBO(gl, fboB);
   }
 
-  return { render, resize, setEnabled, setBlackBounds, dispose };
+  return { render, resize, setEnabled, setBlackBounds, setMaxBounds, setEffectOpacity, dispose };
 }
 
 // ─── GL Helpers ───────────────────────────────────────────────────────────────
@@ -484,6 +607,19 @@ interface FBO {
 
 function createFBO(gl: WebGLRenderingContext, width: number, height: number): FBO {
   const texture = createTexture(gl);
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+
+  const framebuffer = gl.createFramebuffer()!;
+  gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  return { framebuffer, texture };
+}
+
+function createFBONearest(gl: WebGLRenderingContext, width: number, height: number): FBO {
+  const texture = createTextureNearest(gl);
   gl.bindTexture(gl.TEXTURE_2D, texture);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 

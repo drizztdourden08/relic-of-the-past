@@ -13,7 +13,8 @@ interface TitleBarProps {
   onShowProfile: () => void;
   onShowLogs: () => void;
   onToggleSaveStates: () => void;
-  onToggleTracker: () => void;
+  onToggleInventory: () => void;
+  onToggleChecks: () => void;
   onShowDataManager: (tab?: string) => void;
   onShowInputTester: () => void;
   onShowSpriteDebug: () => void;
@@ -31,7 +32,8 @@ export function TitleBar({
   onShowProfile,
   onShowLogs,
   onToggleSaveStates,
-  onToggleTracker,
+  onToggleInventory,
+  onToggleChecks,
   onShowDataManager,
   onShowInputTester,
   onShowSpriteDebug,
@@ -43,7 +45,9 @@ export function TitleBar({
   showFps = false,
 }: TitleBarProps): JSX.Element {
   const menuRef = useRef<HTMLDivElement>(null);
+  const debugMenuRef = useRef<HTMLDivElement>(null);
   const { isMaximized, menuOpen, toggleMenu, closeMenu } = useTitleBar(menuRef);
+  const [debugMenuOpen, setDebugMenuOpen] = useState(false);
   const [pinned, setPinned] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -97,13 +101,24 @@ export function TitleBar({
     onToggleMute?.();
   };
 
+  // Close debug menu on outside click
+  useEffect(() => {
+    if (!debugMenuOpen) return;
+    const handler = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (debugMenuRef.current?.contains(target)) return;
+      if ((target as Element).closest?.('.dropdown-menu')) return;
+      setDebugMenuOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [debugMenuOpen]);
+
   const menuItems: (Parameters<typeof DropdownMenu>[0]['items'][number])[] = [
-    { key: 'cat-game', category: 'Game' },
     {
       key: 'home',
       icon: '🏠',
       label: 'Home',
-      description: 'View active profile',
       disabled: !activeProfile,
       onClick: () => { closeMenu(); onShowProfile(); },
     },
@@ -111,73 +126,47 @@ export function TitleBar({
       key: 'save-states',
       icon: '💾',
       label: 'Save States',
-      description: 'Manage save states',
       disabled: !gameRunning,
       onClick: () => { closeMenu(); onToggleSaveStates(); },
     },
     'separator',
-    { key: 'cat-data', category: 'Data' },
     {
-      key: 'profiles',
-      icon: '👤',
-      label: 'Profiles',
-      description: 'Manage game profiles',
-      onClick: () => { closeMenu(); onShowDataManager('profiles'); },
+      key: 'data',
+      icon: '📦',
+      label: 'Data',
+      children: [
+        { key: 'profiles', icon: '👤', label: 'Profiles', onClick: () => { closeMenu(); onShowDataManager('profiles'); } },
+        { key: 'roms', icon: '🎮', label: 'ROMs', onClick: () => { closeMenu(); onShowDataManager('roms'); } },
+        { key: 'languages', icon: '🌐', label: 'Languages', onClick: () => { closeMenu(); onShowDataManager('languages'); } },
+        { key: 'msu', icon: '🎵', label: 'MSU', onClick: () => { closeMenu(); onShowDataManager('msu'); } },
+        { key: 'sprites', icon: '🖼️', label: 'Sprites', onClick: () => { closeMenu(); onShowDataManager('sprites'); } },
+      ],
     },
     {
-      key: 'roms',
-      icon: '🎮',
-      label: 'ROMs',
-      description: 'Import and manage ROM files',
-      onClick: () => { closeMenu(); onShowDataManager('roms'); },
-    },
-    {
-      key: 'languages',
-      icon: '🌐',
-      label: 'Languages',
-      description: 'Extract and manage language packs',
-      onClick: () => { closeMenu(); onShowDataManager('languages'); },
-    },
-    {
-      key: 'msu',
-      icon: '🎵',
-      label: 'MSU',
-      description: 'Import MSU audio packs',
-      onClick: () => { closeMenu(); onShowDataManager('msu'); },
+      key: 'tools',
+      icon: '🔧',
+      label: 'Tools',
+      children: [
+        { key: 'inventory', icon: '🎒', label: 'Inventory Tracker', onClick: () => { closeMenu(); onToggleInventory(); } },
+        { key: 'checks', icon: '🗺️', label: 'Checks Tracker', onClick: () => { closeMenu(); onToggleChecks(); } },
+        { key: 'logs', icon: '📋', label: 'Logs', onClick: () => { closeMenu(); onShowLogs(); } },
+        { key: 'input-tester', icon: '🎮', label: 'Input Calibration', onClick: () => { closeMenu(); onShowInputTester(); } },
+      ],
     },
     'separator',
-    { key: 'cat-tools', category: 'Tools' },
-    {
-      key: 'logs',
-      icon: '📋',
-      label: 'Logs',
-      description: 'Toggle the log overlay',
-      onClick: () => { closeMenu(); onShowLogs(); },
-    },
-    {
-      key: 'tracker',
-      icon: '🗺️',
-      label: 'Tracker',
-      description: 'Toggle the progress tracker',
-      onClick: () => { closeMenu(); onToggleTracker(); },
-    },
-    {
-      key: 'input-tester',
-      icon: '🎮',
-      label: 'Input Calibration',
-      description: 'Controller setup & button mapping',
-      onClick: () => { closeMenu(); onShowInputTester(); },
-    },
+    { key: 'quit', icon: '✕', label: 'Quit', onClick: () => window.api.close() },
+  ];
+
+  // Dev-only debug menu (separate dropdown)
+  const debugMenuItems: typeof menuItems = window.api.isDev ? [
     {
       key: 'sprite-debug',
       icon: '🖼️',
       label: 'Sprite Debug',
       description: 'Review all item sprites',
-      onClick: () => { closeMenu(); onShowSpriteDebug(); },
+      onClick: () => { setDebugMenuOpen(false); onShowSpriteDebug(); },
     },
-    'separator',
-    { key: 'quit', icon: '✕', label: 'Quit', onClick: () => window.api.close() },
-  ];
+  ] : [];
 
   const titlebarClass = [
     'titlebar',
@@ -245,6 +234,21 @@ export function TitleBar({
           </IconButton>
         )}
         {menuOpen && <DropdownMenu items={menuItems} anchorRef={menuRef} />}
+        {window.api.isDev && (
+          <div ref={debugMenuRef} style={{ position: 'relative', display: 'inline-flex' }}>
+            <IconButton
+              variant="ghost"
+              size="md"
+              label="Debug"
+              onClick={() => setDebugMenuOpen(v => !v)}
+            >
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style={{ opacity: 0.6 }}>
+                <path d="M4.355.522a.5.5 0 0 1 .623.333l.291.956A5 5 0 0 1 8 1c1.007 0 1.946.298 2.731.811l.29-.956a.5.5 0 1 1 .957.29l-.41 1.352A5 5 0 0 1 13 6h.5a.5.5 0 0 1 0 1H13v1h.5a.5.5 0 0 1 0 1H13a5 5 0 0 1-10 0h-.5a.5.5 0 0 1 0-1H3V7h-.5a.5.5 0 0 1 0-1H3a5 5 0 0 1 1.432-3.503l-.41-1.352a.5.5 0 0 1 .333-.623M6 7v1h4V7zm0 2v1h4V9z" />
+              </svg>
+            </IconButton>
+            {debugMenuOpen && <DropdownMenu items={debugMenuItems} anchorRef={debugMenuRef} />}
+          </div>
+        )}
         {showFps && fps > 0 && (
           <span className="titlebar__fps">{fps} FPS</span>
         )}

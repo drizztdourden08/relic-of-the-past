@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useGameState } from './behavior/useGameState';
-import { getInputManager, wasmGetViewportInfo } from '../../../lib/game';
+import { getInputManager, wasmGetViewportInfo, wasmRenderCleanFrame } from '../../../lib/game';
 import { createEdgeGlowRenderer, type EdgeGlowRenderer } from '../../../lib/game/edge-glow-shader';
 import { ControllerDisconnectOverlay } from './ControllerDisconnectOverlay';
 import './GameLayer.css';
@@ -98,7 +98,17 @@ export function GameLayer({ assetData, configIni, profileId, stretch }: GameLaye
       if (!renderer) return;
       glowRendererRef.current = renderer;
 
+      // Screen transition fade state
+      let prevBlackLeft = -1;
+      let prevBlackRight = -1;
+      let fadeOpacity = 1.0;
+      let fadeTarget = 1.0;
+      const FADE_SPEED = 4.0; // per second (0→1 in 250ms)
+      let lastTime = 0;
+
       const loop = (time: number) => {
+        const dt = lastTime > 0 ? (time - lastTime) / 1000 : 0;
+        lastTime = time;
         // Sync buffer size if game canvas changed (e.g. aspect ratio switch)
         if (gameCanvas.width !== fxCanvas.width || gameCanvas.height !== fxCanvas.height) {
           fxCanvas.width = gameCanvas.width;
@@ -108,15 +118,48 @@ export function GameLayer({ assetData, configIni, profileId, stretch }: GameLaye
         // Query WASM for precise viewport info
         const vp = wasmGetViewportInfo();
         if (vp) {
-          // Only enable during active gameplay (dungeon/overworld) with black edges
-          const shouldEnable = vp.isGameplay && (vp.blackLeft > 0 || vp.blackRight > 0 || vp.blackBottom > 0);
+          // Enable only on overworld (module 9) with extended aspect ratio
+          const hasExtended = vp.extraLeftRight > 0 || (vp.snesHeight === 240);
+          const isOverworld = vp.mainModule === 9;
+          const shouldEnable = isOverworld && hasExtended;
           renderer.setEnabled(shouldEnable);
+          // Dynamic bounds: where black actually is NOW (for mirror reflection point)
           renderer.setBlackBounds(vp.blackLeft, vp.blackRight, vp.blackBottom);
+          // Max bounds: fixed extent for distance gradient (stable, no folding)
+          const maxBottom = vp.snesHeight === 240 ? 16 : 0;
+          renderer.setMaxBounds(vp.extraLeftRight, vp.extraLeftRight, maxBottom);
+
+          // Detect screen transition: bounds jump by >10px
+          if (prevBlackLeft >= 0) {
+            const leftDelta = Math.abs(vp.blackLeft - prevBlackLeft);
+            const rightDelta = Math.abs(vp.blackRight - prevBlackRight);
+            if (leftDelta > 10 || rightDelta > 10) {
+              fadeTarget = 0;
+              fadeOpacity = 0; // instant hide on transition
+            }
+          }
+          prevBlackLeft = vp.blackLeft;
+          prevBlackRight = vp.blackRight;
+
+          // If just came back and stable, fade in
+          if (shouldEnable && fadeTarget === 0 && fadeOpacity <= 0) {
+            fadeTarget = 1.0;
+          }
         } else {
           renderer.setEnabled(false);
         }
 
-        renderer.render(gameCanvas, time);
+        // Animate fade
+        if (fadeOpacity < fadeTarget) {
+          fadeOpacity = Math.min(fadeOpacity + dt * FADE_SPEED, fadeTarget);
+        } else if (fadeOpacity > fadeTarget) {
+          fadeOpacity = Math.max(fadeOpacity - dt * FADE_SPEED, fadeTarget);
+        }
+        renderer.setEffectOpacity(fadeOpacity);
+
+        // Get clean frame (no HUD) for the mirror pass
+        const cleanResult = vp?.isGameplay ? wasmRenderCleanFrame() : null;
+        renderer.render(gameCanvas, time, cleanResult ?? null);
         rafIdRef.current = requestAnimationFrame(loop);
       };
       rafIdRef.current = requestAnimationFrame(loop);

@@ -107,6 +107,12 @@ interface RomDisplayInfo extends RomInfo {
 }
 
 interface ElectronAPI {
+  // Dev mode flag
+  isDev: boolean;
+
+  // Sprites base URL (file:// path to userData/Data/sprites/)
+  spritesBaseUrl: string;
+
   // File path helper
   getFilePath(file: File): string;
 
@@ -219,6 +225,11 @@ interface ElectronAPI {
   // Sprite review (per-sprite image review)
   loadSpriteReview(): Promise<Record<string, { status: string; comment?: string }>>;
   saveSpriteReview(data: Record<string, { status: string; comment?: string }>): Promise<void>;
+
+  // Sprite extraction
+  extractSprites(romFile: string): Promise<{ success: boolean; count?: number; error?: string }>;
+  checkSpritesExtracted(): Promise<{ extracted: boolean; count: number }>;
+  getSpritePath(file: string): Promise<string>;
 }
 
 declare function Zelda3(config: Record<string, unknown>): Promise<unknown>;

@@ -1,6 +1,21 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
+import { join } from 'path';
+
+// Compute sprites base path synchronously (available immediately in renderer)
+const userDataPath = process.env.APPDATA
+  ? join(process.env.APPDATA, 'alttp-pc', 'Data', 'sprites')
+  : join(process.env.HOME || '', '.config', 'alttp-pc', 'Data', 'sprites');
+
+const spritesBasePath = userDataPath.replace(/\\/g, '/');
+const isDev = process.env.NODE_ENV !== 'production';
 
 contextBridge.exposeInMainWorld('api', {
+  // Dev mode flag
+  isDev,
+
+  // Sprites base URL: dev mode uses Vite public folder, production uses file:// to userData
+  spritesBaseUrl: isDev ? '/sprites/items/' : `file:///${spritesBasePath}/`,
+
   // File path helper (Electron 35+ removed File.path from renderer)
   getFilePath: (file: File) => webUtils.getPathForFile(file),
 
@@ -126,4 +141,9 @@ contextBridge.exposeInMainWorld('api', {
   // Sprite review (per-sprite image review)
   loadSpriteReview: () => ipcRenderer.invoke('spriteReview:load'),
   saveSpriteReview: (data: unknown) => ipcRenderer.invoke('spriteReview:save', data),
+
+  // Sprite extraction
+  extractSprites: (romFile: string) => ipcRenderer.invoke('sprites:extract', romFile),
+  checkSpritesExtracted: () => ipcRenderer.invoke('sprites:check'),
+  getSpritePath: (file: string) => ipcRenderer.invoke('sprites:getPath', file),
 });

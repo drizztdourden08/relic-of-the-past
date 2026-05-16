@@ -1,0 +1,215 @@
+/* ═══════════════════════════════════════════════════════════════
+   Widget Window System — Styles
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Widget Manager (container, no visual) ─── */
+.widget-manager {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* ─── Widget Shell ─── */
+
+.widget {
+  --widget-frame-opacity: 1;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: var(--text-sm, 13px);
+  color: var(--color-text-primary, #e0e0e0);
+  overflow: hidden;
+  /* Frame uses variable opacity */
+  background: rgba(20, 20, 30, calc(0.96 * var(--widget-frame-opacity)));
+  border: 1px solid rgba(255, 255, 255, calc(0.08 * var(--widget-frame-opacity)));
+  box-shadow: 0 4px 20px rgba(0, 0, 0, calc(0.4 * var(--widget-frame-opacity)));
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+/* Floating */
+.widget--floating {
+  border-radius: 8px;
+  z-index: 110;
+}
+
+/* Docked — remove rounded corners on the docked edge */
+.widget--docked {
+  border-radius: 0;
+}
+
+.widget--left {
+  border-left: none;
+}
+
+.widget--right {
+  border-right: none;
+}
+
+.widget--top {
+  border-top: none;
+}
+
+.widget--bottom {
+  border-bottom: none;
+}
+
+/* ─── Titlebar ─── */
+
+.widget__titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, calc(0.06 * var(--widget-frame-opacity)));
+  flex-shrink: 0;
+  user-select: none;
+  min-height: 26px;
+}
+
+.widget--floating .widget__titlebar {
+  cursor: grab;
+}
+
+.widget--floating .widget__titlebar:active {
+  cursor: grabbing;
+}
+
+.widget__title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+.widget__titlebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.widget__btn {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--color-text-secondary, #888);
+  font-size: 12px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.widget__btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text-primary, #e0e0e0);
+}
+
+/* ─── Content (always full opacity) ─── */
+
+.widget__content {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  /* Content is NOT affected by frame opacity */
+}
+
+/* ─── Resize handles ─── */
+
+.widget__resize {
+  position: absolute;
+  z-index: 10;
+}
+
+.widget__resize--n {
+  top: -3px; left: 6px; right: 6px; height: 6px;
+  cursor: n-resize;
+}
+
+.widget__resize--s {
+  bottom: -3px; left: 6px; right: 6px; height: 6px;
+  cursor: s-resize;
+}
+
+.widget__resize--e {
+  top: 6px; bottom: 6px; right: -3px; width: 6px;
+  cursor: e-resize;
+}
+
+.widget__resize--w {
+  top: 6px; bottom: 6px; left: -3px; width: 6px;
+  cursor: w-resize;
+}
+
+.widget__resize--ne {
+  top: -3px; right: -3px; width: 10px; height: 10px;
+  cursor: ne-resize;
+}
+
+.widget__resize--nw {
+  top: -3px; left: -3px; width: 10px; height: 10px;
+  cursor: nw-resize;
+}
+
+.widget__resize--se {
+  bottom: -3px; right: -3px; width: 10px; height: 10px;
+  cursor: se-resize;
+}
+
+.widget__resize--sw {
+  bottom: -3px; left: -3px; width: 10px; height: 10px;
+  cursor: sw-resize;
+}
+
+/* ─── Widget Settings Popover ─── */
+
+.widget-settings {
+  background: rgba(30, 30, 45, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  min-width: 200px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.widget-settings__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.widget-settings__label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-secondary, #999);
+  min-width: 52px;
+  flex-shrink: 0;
+}
+
+.widget-settings__separator {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 2px 0;
+}
+
+/* Compact overrides for controls inside widget settings */
+.widget-settings .segmented__btn {
+  padding: 3px 7px;
+  font-size: 12px;
+}
+
+.widget-settings .slider {
+  flex: 1;
+  min-width: 80px;
+}

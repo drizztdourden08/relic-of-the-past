@@ -814,7 +814,7 @@ static void PpuDrawBackgrounds(Ppu *ppu, int y, bool sub) {
 //  0: backdrop
 
   if (ppu->mode == 1) {
-    if (ppu->lineHasSprites)
+    if (ppu->lineHasSprites && !(ppu->renderFlags & kPpuRenderFlags_NoSprites))
       PpuDrawSprites(ppu, y, sub, true);
 
     if (IS_MOSAIC_ENABLED(ppu, 0))
@@ -827,14 +827,17 @@ static void PpuDrawBackgrounds(Ppu *ppu, int y, bool sub) {
     else
       PpuDrawBackground_4bpp(ppu, y, sub, 1, 0xb100, 0x7100);
 
-    if (IS_MOSAIC_ENABLED(ppu, 2))
-      PpuDrawBackground_2bpp_mosaic(ppu, y, sub, 2, 0xf200, 0x1200);
-    else
-      PpuDrawBackground_2bpp(ppu, y, sub, 2, 0xf200, 0x1200);
+    // Skip BG3 (HUD) when NoBG3 flag is set
+    if (!(ppu->renderFlags & kPpuRenderFlags_NoBG3)) {
+      if (IS_MOSAIC_ENABLED(ppu, 2))
+        PpuDrawBackground_2bpp_mosaic(ppu, y, sub, 2, 0xf200, 0x1200);
+      else
+        PpuDrawBackground_2bpp(ppu, y, sub, 2, 0xf200, 0x1200);
+    }
   } else {
     // mode 7
     PpuDrawBackground_mode7(ppu, y, sub, 0xc000);
-    if (ppu->lineHasSprites)
+    if (ppu->lineHasSprites && !(ppu->renderFlags & kPpuRenderFlags_NoSprites))
       PpuDrawSprites(ppu, y, sub, false);
   }
 }
@@ -1075,6 +1078,12 @@ static int ppu_getPixel(Ppu *ppu, int x, int y, bool sub, int *r, int *g, int *b
         !IS_SCREEN_WINDOWED(ppu, 1, curLayer) || !ppu_getWindowState(ppu, curLayer, x)
         );
     }
+    // Skip BG3 when NoBG3 flag is set (new renderer path)
+    if (curLayer == 2 && (ppu->renderFlags & kPpuRenderFlags_NoBG3))
+      layerActive = false;
+    // Skip sprites when NoSprites flag is set (new renderer path)
+    if (curLayer == 4 && (ppu->renderFlags & kPpuRenderFlags_NoSprites))
+      layerActive = false;
     if (layerActive) {
       if (curLayer < 4) {
         // bg layer

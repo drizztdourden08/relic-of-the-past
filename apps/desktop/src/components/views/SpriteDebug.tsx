@@ -4,10 +4,14 @@ import {
   SPRITE_MANIFEST,
   CATEGORY_LABELS,
   CATEGORY_ORDER,
-  getSpritePath,
   type SpriteCategory,
   type SpriteManifestEntry,
 } from '@shared/data/sprite-manifest';
+
+// Dev debug page uses static public path (these sprites are in /public/sprites/items/)
+function devSpritePath(file: string): string {
+  return `/sprites/items/${file}.png`;
+}
 
 // ─── Shared types ───
 
@@ -155,7 +159,7 @@ function SpriteReviewPanel() {
 const ALL_ITEMS = Object.entries(ITEM_SPRITE_MAP).map(([name, file]) => ({
   name,
   file,
-  src: file ? `/sprites/items/${file}.png` : '',
+  src: file ? devSpritePath(file) : '',
 }));
 
 function ItemReviewPanel() {
@@ -304,7 +308,7 @@ function SpriteImageCard({ sprite, entry, onSetStatus, onSetComment }: {
     <div style={{ ...S.card, borderColor: border, background: bg }}>
       <div style={S.cardTop}>
         <div style={S.spriteWrap}>
-          <img src={getSpritePath(sprite.file)} alt={sprite.label} style={S.sprite} draggable={false}
+          <img src={devSpritePath(sprite.file)} alt={sprite.label} style={S.sprite} draggable={false}
             onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
         </div>
         <div style={S.cardInfo}>

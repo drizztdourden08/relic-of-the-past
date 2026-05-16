@@ -23,7 +23,7 @@ function legacyPath(...segments: string[]): string {
 
 /** Ensure all Data/ subdirectories exist */
 export async function ensureDataDirectories(): Promise<void> {
-  const dirs = ['assets', 'roms', 'profiles', 'config', 'msu', 'languages'];
+  const dirs = ['assets', 'roms', 'profiles', 'config', 'msu', 'languages', 'sprites'];
   for (const dir of dirs) {
     await mkdir(path(dir), { recursive: true });
   }

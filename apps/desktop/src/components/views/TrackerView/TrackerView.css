@@ -1,49 +1,133 @@
 /* ─── TrackerView (overlay panel) ─── */
 
-.tracker-view {
+.tracker-panel {
+  --tracker-frame-opacity: 1;
   position: fixed;
   top: 38px; /* below titlebar */
-  right: 0;
   bottom: 0;
   width: 380px;
-  background: var(--color-bg-overlay, rgba(20, 20, 30, 0.96));
   color: var(--color-text-primary, #e0e0e0);
   display: flex;
   flex-direction: column;
   z-index: 100;
-  border-left: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
   font-family: var(--font-mono, 'JetBrains Mono', monospace);
   font-size: var(--text-sm, 13px);
   overflow: hidden;
+  background: rgba(20, 20, 30, calc(0.96 * var(--tracker-frame-opacity)));
+  border-color: rgba(255, 255, 255, calc(0.08 * var(--tracker-frame-opacity)));
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
-.tracker-view__header {
+/* Docked sides */
+.tracker-panel--docked.tracker-panel--right {
+  right: 0;
+  border-left: 1px solid rgba(255, 255, 255, calc(0.08 * var(--tracker-frame-opacity)));
+}
+
+.tracker-panel--docked.tracker-panel--left {
+  left: 0;
+  border-right: 1px solid rgba(255, 255, 255, calc(0.08 * var(--tracker-frame-opacity)));
+}
+
+/* Floating mode */
+.tracker-panel--floating {
+  top: auto;
+  bottom: auto;
+  right: auto;
+  border: 1px solid rgba(255, 255, 255, calc(0.12 * var(--tracker-frame-opacity)));
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, calc(0.6 * var(--tracker-frame-opacity)));
+  resize: both;
+  min-width: 280px;
+  min-height: 200px;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+/* Compact variant (inventory-only panel when split) */
+.tracker-panel--compact {
+  width: auto;
+  min-width: 200px;
+  max-width: 420px;
+  bottom: auto;
+}
+
+/* ─── Panel Header ─── */
+
+.tracker-panel__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-sm, 8px) var(--space-md, 12px);
-  border-bottom: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, calc(0.08 * var(--tracker-frame-opacity)));
+  flex-shrink: 0;
+  gap: 8px;
+  user-select: none;
+}
+
+.tracker-panel--floating .tracker-panel__header {
+  cursor: grab;
+}
+
+.tracker-panel--floating .tracker-panel__header:active {
+  cursor: grabbing;
+}
+
+.tracker-panel__title {
+  font-size: var(--text-sm, 13px);
+  font-weight: var(--weight-semi, 600);
+  white-space: nowrap;
   flex-shrink: 0;
 }
 
-.tracker-view__title {
-  margin: 0;
-  font-size: var(--text-md, 15px);
-  font-weight: var(--weight-semi, 600);
+.tracker-panel__controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  justify-content: flex-end;
 }
 
-.tracker-view__close {
-  background: none;
-  border: none;
-  color: var(--color-text-secondary, #999);
-  font-size: 20px;
-  cursor: pointer;
+/* Compact SegmentedControl in tracker header */
+.tracker-panel__controls .segmented {
+  gap: 0;
+}
+
+.tracker-panel__controls .segmented__track {
+  padding: 1px;
+}
+
+.tracker-panel__controls .segmented__btn {
   padding: 2px 6px;
-  border-radius: var(--radius-sm, 4px);
-  line-height: 1;
+  font-size: 11px;
 }
 
-.tracker-view__close:hover {
+/* Compact Slider in tracker header */
+.tracker-panel__controls .slider {
+  max-width: 60px;
+  gap: 0;
+}
+
+.tracker-panel__controls .slider__input {
+  height: 4px;
+}
+
+.tracker-panel__icon-btn {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--color-text-secondary, #888);
+  font-size: 14px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.tracker-panel__icon-btn:hover {
   background: rgba(255, 255, 255, 0.08);
   color: var(--color-text-primary, #e0e0e0);
 }
@@ -133,6 +217,75 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* ─── In-game layout ─── */
+
+.tracker-inventory--ingame {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 6px;
+  max-height: none;
+}
+
+.tracker-inventory__ingame-main {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tracker-inventory__ingame-row {
+  display: flex;
+  gap: 4px;
+}
+
+.tracker-inventory__ingame-side {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 6px;
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tracker-inventory__ingame-bottom {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  gap: 4px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ─── Compact layout ─── */
+
+.tracker-inventory--compact {
+  max-height: none;
+}
+
+.tracker-inventory__grid--compact {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 36px);
+  gap: 2px;
+}
+
+.tracker-inventory--compact .tracker-inventory__slot {
+  width: 36px;
+  padding: 2px 1px;
+}
+
+.tracker-inventory--compact .tracker-inventory__sprite {
+  width: 20px;
+  height: 20px;
+}
+
+.tracker-inventory--compact .tracker-inventory__name {
+  font-size: 6px;
+  max-width: 36px;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -242,6 +395,24 @@
 }
 
 .tracker-filters__btn--active {
+  background: rgba(100, 160, 255, 0.15);
+  border-color: rgba(100, 160, 255, 0.4);
+  color: #b8d4ff;
+}
+
+.tracker-filters__select {
+  padding: 3px 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  color: var(--color-text-secondary, #999);
+  font-size: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  appearance: auto;
+}
+
+.tracker-filters__select--active {
   background: rgba(100, 160, 255, 0.15);
   border-color: rgba(100, 160, 255, 0.4);
   color: #b8d4ff;

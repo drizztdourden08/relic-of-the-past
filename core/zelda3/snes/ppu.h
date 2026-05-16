@@ -42,6 +42,10 @@ enum {
   kPpuRenderFlags_Height240 = 4,
   // Disable sprite render limits
   kPpuRenderFlags_NoSpriteLimits = 8,
+  // Skip BG3 (HUD layer) rendering
+  kPpuRenderFlags_NoBG3 = 16,
+  // Skip OBJ/sprite rendering
+  kPpuRenderFlags_NoSprites = 32,
 };
 
 

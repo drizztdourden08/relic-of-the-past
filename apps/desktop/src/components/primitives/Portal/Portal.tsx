@@ -17,6 +17,7 @@ import { createPortal } from 'react-dom';
 const LAYERS = {
   overlay: 100,
   modal: 200,
+  popover: 250,
   toast: 300,
   tooltip: 400,
 } as const;

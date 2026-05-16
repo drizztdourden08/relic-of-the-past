@@ -22,10 +22,12 @@ export interface SpriteManifestEntry {
   category: SpriteCategory;
 }
 
-const SPRITE_BASE = '/sprites/items/';
+function getSpritesBase(): string {
+  return (typeof window !== 'undefined' && window.api?.spritesBaseUrl) || '/sprites/items/';
+}
 
 export function getSpritePath(file: string): string {
-  return `${SPRITE_BASE}${file}.png`;
+  return `${getSpritesBase()}${file}.png`;
 }
 
 export const SPRITE_MANIFEST: SpriteManifestEntry[] = definitions.sprites.map(s => ({

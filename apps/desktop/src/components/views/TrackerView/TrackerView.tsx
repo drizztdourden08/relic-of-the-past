@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import type { CheckDefinition } from '@shared/types/tracker';
 import type { CheckStatus } from '@shared/lib/logic-eval';
 import { computeTrackerSnapshot } from '@shared/lib/logic-eval';
@@ -14,26 +14,97 @@ import {
   getActiveProfileId,
 } from '../../../lib/game';
 import type { UnknownItemEntry } from '../../../lib/game';
+import { SegmentedControl, Slider } from '../../primitives';
 import { TrackerSummary } from './TrackerSummary';
 import { TrackerInventory } from './TrackerInventory';
 import { TrackerFilters, type ViewMode } from './TrackerFilters';
 import { TrackerGroupTree } from './TrackerGroupTree';
 import './TrackerView.css';
 
-interface TrackerViewProps {
-  visible: boolean;
-  onClose: () => void;
+// ─── Panel Settings ───
+
+type PanelSide = 'left' | 'right';
+type PanelMode = 'docked' | 'floating';
+
+interface PanelSettings {
+  mode: PanelMode;
+  side: PanelSide;
+  opacity: number; // 0.2 - 1.0 (frame only)
+  x: number;
+  y: number;
 }
 
-export function TrackerView({ visible, onClose }: TrackerViewProps) {
+interface TrackerLayoutSettings {
+  /** Are inventory and checks in the same panel? */
+  combined: boolean;
+  /** Settings for the combined panel, or inventory panel when split */
+  inventory: PanelSettings;
+  /** Settings for the checks panel when split */
+  checks: PanelSettings;
+}
+
+const STORAGE_KEY = 'tracker-layout';
+
+function defaultPanel(side: PanelSide = 'right', x = 100, y = 100): PanelSettings {
+  return { mode: 'docked', side, opacity: 1.0, x, y };
+}
+
+function defaultLayout(): TrackerLayoutSettings {
+  return { combined: true, inventory: defaultPanel('right'), checks: defaultPanel('right', 150, 150) };
+}
+
+function loadLayout(): TrackerLayoutSettings {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return {
+        ...defaultLayout(),
+        ...parsed,
+        inventory: { ...defaultPanel('right'), ...parsed.inventory },
+        checks: { ...defaultPanel('right', 150, 150), ...parsed.checks },
+      };
+    }
+  } catch {}
+  return defaultLayout();
+}
+
+function saveLayout(s: TrackerLayoutSettings): void {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+}
+
+// ─── Draggable panel hook ───
+
+function useDrag(pos: { x: number; y: number }, onMove: (x: number, y: number) => void) {
+  const dragging = useRef(false);
+  const offset = useRef({ x: 0, y: 0 });
+
+  const startDrag = useCallback((e: React.MouseEvent) => {
+    dragging.current = true;
+    offset.current = { x: e.clientX - pos.x, y: e.clientY - pos.y };
+    const onMouseMove = (ev: MouseEvent) => {
+      if (!dragging.current) return;
+      onMove(ev.clientX - offset.current.x, ev.clientY - offset.current.y);
+    };
+    const onMouseUp = () => {
+      dragging.current = false;
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  }, [pos.x, pos.y, onMove]);
+
+  return startDrag;
+}
+
+// ─── Shared data hook ───
+
+function useTrackerData() {
   const [inventory, setInventory] = useState<Set<string>>(() => getCurrentInventory());
   const [completedChecks, setCompletedChecks] = useState<Set<string>>(() => getCompletedChecks());
   const [unknownItems, setUnknownItems] = useState<UnknownItemEntry[]>(() => getUnknownItems());
-  const [viewMode, setViewMode] = useState<ViewMode>('compact');
-  const [grouping, setGrouping] = useState<GroupDimension[]>(['world', 'dungeon']);
-  const [filter, setFilter] = useState<FilterState>({ searchQuery: '', activeTags: [], tagMode: 'any' });
 
-  // Load persisted unknown items on mount
   useEffect(() => {
     const profileId = getActiveProfileId();
     if (!profileId) return;
@@ -45,14 +116,8 @@ export function TrackerView({ visible, onClose }: TrackerViewProps) {
     });
   }, []);
 
-  useEffect(() => {
-    return onInventoryChanged((inv) => setInventory(new Set(inv)));
-  }, []);
-
-  useEffect(() => {
-    return onCompletedChecksChanged((checks) => setCompletedChecks(new Set(checks)));
-  }, []);
-
+  useEffect(() => onInventoryChanged((inv) => setInventory(new Set(inv))), []);
+  useEffect(() => onCompletedChecksChanged((checks) => setCompletedChecks(new Set(checks))), []);
   useEffect(() => {
     return onUnknownItem((items) => {
       setUnknownItems([...items]);
@@ -63,27 +128,12 @@ export function TrackerView({ visible, onClose }: TrackerViewProps) {
     });
   }, []);
 
-  // Pre-compute tag map
   const tagMap = useMemo(() => getCheckTags(ALL_CHECKS), []);
-
   const snapshot = useMemo(
     () => computeTrackerSnapshot(inventory, completedChecks, ALL_CHECKS, ALL_CONNECTIONS, REGION_RULES, CHECK_RULES),
     [inventory, completedChecks],
   );
 
-  // Filter checks
-  const filteredChecks = useMemo(
-    () => filterChecks(ALL_CHECKS, filter, tagMap),
-    [filter, tagMap],
-  );
-
-  // Build group tree from filtered checks
-  const groupTree = useMemo(
-    () => buildGroupTree(filteredChecks, snapshot, grouping, tagMap),
-    [filteredChecks, snapshot, grouping, tagMap],
-  );
-
-  // Summary stats (from all checks, not filtered)
   const stats = useMemo(() => {
     let completed = 0, reachable = 0, blocked = 0;
     for (const status of snapshot.values()) {
@@ -94,45 +144,245 @@ export function TrackerView({ visible, onClose }: TrackerViewProps) {
     return { completed, reachable, blocked, total: snapshot.size };
   }, [snapshot]);
 
-  if (!visible) return null;
+  return { inventory, completedChecks, snapshot, tagMap, stats };
+}
+
+// ─── Panel Header (toolbar) ───
+
+interface PanelHeaderProps {
+  title: string;
+  panelSettings: PanelSettings;
+  onSettingsChange: (updater: (p: PanelSettings) => PanelSettings) => void;
+  onClose: () => void;
+  onPopOut?: () => void;
+  onDock?: () => void;
+  showPopOut?: boolean;
+  onMouseDown?: (e: React.MouseEvent) => void;
+}
+
+const MODE_OPTIONS = [
+  { value: 'left' as const, label: '◧' },
+  { value: 'right' as const, label: '◨' },
+  { value: 'float' as const, label: '⊡' },
+];
+
+function PanelHeader({ title, panelSettings, onSettingsChange, onClose, onPopOut, onDock, showPopOut, onMouseDown }: PanelHeaderProps) {
+  const modeValue = panelSettings.mode === 'floating' ? 'float' : panelSettings.side;
 
   return (
-    <div className="tracker-view">
-      <div className="tracker-view__header">
-        <h2 className="tracker-view__title">Tracker</h2>
-        <button className="tracker-view__close" onClick={onClose} aria-label="Close tracker">×</button>
-      </div>
-
-      {/* 1. Visual Inventory */}
-      <TrackerInventory inventory={inventory} />
-
-      {/* 2. Global goal / summary */}
-      <TrackerSummary {...stats} />
-
-      {/* 3. Filters, search, grouping, view modes */}
-      <TrackerFilters
-        filter={filter}
-        onFilterChange={setFilter}
-        grouping={grouping}
-        onGroupingChange={setGrouping}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
-      />
-
-      {/* Filtered stats (only shown when filtering is active) */}
-      {(filter.searchQuery || filter.activeTags.length > 0) && (
-        <div className="tracker-view__filtered-stats">
-          Showing {groupTree.stats.total} checks:
-          <span className="tracker-summary__stat--completed"> {groupTree.stats.completed} done</span>,
-          <span className="tracker-summary__stat--reachable"> {groupTree.stats.reachable} available</span>,
-          <span className="tracker-summary__stat--blocked"> {groupTree.stats.blocked} blocked</span>
-        </div>
-      )}
-
-      {/* 4. Grouped check tree */}
-      <div className="tracker-view__checks">
-        <TrackerGroupTree node={groupTree} statuses={snapshot} viewMode={viewMode} />
+    <div className="tracker-panel__header" onMouseDown={onMouseDown}>
+      <span className="tracker-panel__title">{title}</span>
+      <div className="tracker-panel__controls">
+        <SegmentedControl
+          value={modeValue}
+          options={MODE_OPTIONS}
+          onChange={(v) => {
+            if (v === 'float') onSettingsChange(s => ({ ...s, mode: 'floating' }));
+            else onSettingsChange(s => ({ ...s, mode: 'docked', side: v }));
+          }}
+        />
+        <Slider
+          value={Math.round(panelSettings.opacity * 100)}
+          min={20}
+          max={100}
+          step={5}
+          onChange={(v) => onSettingsChange(s => ({ ...s, opacity: v / 100 }))}
+          showValue={false}
+        />
+        {showPopOut && onPopOut && (
+          <button className="tracker-panel__icon-btn" onClick={onPopOut} title="Pop out">⎋</button>
+        )}
+        {onDock && (
+          <button className="tracker-panel__icon-btn" onClick={onDock} title="Dock back">⎌</button>
+        )}
+        <button className="tracker-panel__icon-btn" onClick={onClose} title="Close">×</button>
       </div>
     </div>
+  );
+}
+
+// ─── Single Panel Shell ───
+
+interface TrackerPanelProps {
+  panelSettings: PanelSettings;
+  children: React.ReactNode;
+  className?: string;
+  onDragStart?: (e: React.MouseEvent) => void;
+}
+
+function TrackerPanel({ panelSettings, children, className = '', onDragStart }: TrackerPanelProps) {
+  const [hovered, setHovered] = useState(false);
+  const { mode, side, opacity } = panelSettings;
+
+  const frameOpacity = hovered ? 1 : opacity;
+
+  const cls = [
+    'tracker-panel',
+    `tracker-panel--${mode}`,
+    mode === 'docked' && `tracker-panel--${side}`,
+    className,
+  ].filter(Boolean).join(' ');
+
+  const style: React.CSSProperties = {
+    '--tracker-frame-opacity': frameOpacity,
+    ...(mode === 'floating' ? { left: panelSettings.x, top: panelSettings.y } : {}),
+  } as React.CSSProperties;
+
+  return (
+    <div
+      className={cls}
+      style={style}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {children}
+    </div>
+  );
+}
+
+// ─── Main TrackerView ───
+
+interface TrackerViewProps {
+  visible: boolean;
+  onClose: () => void;
+}
+
+export function TrackerView({ visible, onClose }: TrackerViewProps) {
+  const [layout, setLayoutRaw] = useState<TrackerLayoutSettings>(loadLayout);
+  const [viewMode, setViewMode] = useState<ViewMode>('compact');
+  const [grouping, setGrouping] = useState<GroupDimension[]>(['world', 'dungeon']);
+  const [filter, setFilter] = useState<FilterState>({ searchQuery: '', activeTags: [], tagMode: 'any' });
+
+  const { inventory, snapshot, tagMap, stats } = useTrackerData();
+
+  const setLayout = useCallback((updater: (prev: TrackerLayoutSettings) => TrackerLayoutSettings) => {
+    setLayoutRaw(prev => {
+      const next = updater(prev);
+      saveLayout(next);
+      return next;
+    });
+  }, []);
+
+  const setInventoryPanel = useCallback((updater: (p: PanelSettings) => PanelSettings) => {
+    setLayout(l => ({ ...l, inventory: updater(l.inventory) }));
+  }, [setLayout]);
+
+  const setChecksPanel = useCallback((updater: (p: PanelSettings) => PanelSettings) => {
+    setLayout(l => ({ ...l, checks: updater(l.checks) }));
+  }, [setLayout]);
+
+  // Drag handlers for floating panels
+  const inventoryDrag = useDrag(
+    { x: layout.inventory.x, y: layout.inventory.y },
+    useCallback((x, y) => setInventoryPanel(s => ({ ...s, x, y })), [setInventoryPanel]),
+  );
+  const checksDrag = useDrag(
+    { x: layout.checks.x, y: layout.checks.y },
+    useCallback((x, y) => setChecksPanel(s => ({ ...s, x, y })), [setChecksPanel]),
+  );
+
+  // Filter & group tree
+  const filteredChecks = useMemo(() => filterChecks(ALL_CHECKS, filter, tagMap), [filter, tagMap]);
+  const groupTree = useMemo(() => buildGroupTree(filteredChecks, snapshot, grouping, tagMap), [filteredChecks, snapshot, grouping, tagMap]);
+
+  if (!visible) return null;
+
+  const { combined } = layout;
+
+  // ─── Combined mode: both in one panel ───
+  if (combined) {
+    const ps = layout.inventory; // Use inventory panel settings for combined
+
+    return (
+      <TrackerPanel panelSettings={ps} onDragStart={ps.mode === 'floating' ? inventoryDrag : undefined}>
+        <PanelHeader
+          title="Tracker"
+          panelSettings={ps}
+          onSettingsChange={setInventoryPanel}
+          onClose={onClose}
+          showPopOut
+          onPopOut={() => setLayout(l => ({ ...l, combined: false }))}
+          onMouseDown={ps.mode === 'floating' ? inventoryDrag : undefined}
+        />
+
+        <TrackerInventory inventory={inventory} />
+        <TrackerSummary {...stats} />
+
+        <TrackerFilters
+          filter={filter}
+          onFilterChange={setFilter}
+          grouping={grouping}
+          onGroupingChange={setGrouping}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+        />
+
+        {(filter.searchQuery || filter.activeTags.length > 0) && (
+          <div className="tracker-view__filtered-stats">
+            Showing {groupTree.stats.total} checks:
+            <span className="tracker-summary__stat--completed"> {groupTree.stats.completed} done</span>,
+            <span className="tracker-summary__stat--reachable"> {groupTree.stats.reachable} available</span>,
+            <span className="tracker-summary__stat--blocked"> {groupTree.stats.blocked} blocked</span>
+          </div>
+        )}
+
+        <div className="tracker-view__checks">
+          <TrackerGroupTree node={groupTree} statuses={snapshot} viewMode={viewMode} />
+        </div>
+      </TrackerPanel>
+    );
+  }
+
+  // ─── Split mode: two independent panels ───
+  return (
+    <>
+      {/* Inventory panel */}
+      <TrackerPanel panelSettings={layout.inventory} className="tracker-panel--compact">
+        <PanelHeader
+          title="Inventory"
+          panelSettings={layout.inventory}
+          onSettingsChange={setInventoryPanel}
+          onClose={onClose}
+          onDock={() => setLayout(l => ({ ...l, combined: true }))}
+          onMouseDown={layout.inventory.mode === 'floating' ? inventoryDrag : undefined}
+        />
+        <TrackerInventory inventory={inventory} />
+      </TrackerPanel>
+
+      {/* Checks panel */}
+      <TrackerPanel panelSettings={layout.checks}>
+        <PanelHeader
+          title="Checks"
+          panelSettings={layout.checks}
+          onSettingsChange={setChecksPanel}
+          onClose={onClose}
+          onDock={() => setLayout(l => ({ ...l, combined: true }))}
+          onMouseDown={layout.checks.mode === 'floating' ? checksDrag : undefined}
+        />
+        <TrackerSummary {...stats} />
+
+        <TrackerFilters
+          filter={filter}
+          onFilterChange={setFilter}
+          grouping={grouping}
+          onGroupingChange={setGrouping}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+        />
+
+        {(filter.searchQuery || filter.activeTags.length > 0) && (
+          <div className="tracker-view__filtered-stats">
+            Showing {groupTree.stats.total} checks:
+            <span className="tracker-summary__stat--completed"> {groupTree.stats.completed} done</span>,
+            <span className="tracker-summary__stat--reachable"> {groupTree.stats.reachable} available</span>,
+            <span className="tracker-summary__stat--blocked"> {groupTree.stats.blocked} blocked</span>
+          </div>
+        )}
+
+        <div className="tracker-view__checks">
+          <TrackerGroupTree node={groupTree} statuses={snapshot} viewMode={viewMode} />
+        </div>
+      </TrackerPanel>
+    </>
   );
 }

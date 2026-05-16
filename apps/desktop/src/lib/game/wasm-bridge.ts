@@ -156,3 +156,24 @@ export function wasmGetViewportInfo(): ViewportInfo | null {
     return null;
   }
 }
+
+/**
+ * Render a clean frame (no HUD/BG3) into WASM memory and return the pixel data.
+ * Returns null if the module isn't running or the export doesn't exist.
+ */
+export function wasmRenderCleanFrame(): { data: Uint8Array; width: number; height: number } | null {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return null;
+  try {
+    const ptr = mod.ccall('WasmRenderCleanFrame', 'number', [], []) as number;
+    if (!ptr) return null;
+    const width = mod.ccall('WasmGetCleanFrameWidth', 'number', [], []) as number;
+    const height = mod.ccall('WasmGetCleanFrameHeight', 'number', [], []) as number;
+    if (!width || !height) return null;
+    const byteLength = width * height * 4;
+    const data = mod.HEAPU8.subarray(ptr, ptr + byteLength);
+    return { data, width, height };
+  } catch {
+    return null;
+  }
+}

@@ -68,6 +68,17 @@ export function TrackerFilters({
           ))}
         </div>
 
+        {/* Item reward filter */}
+        <select
+          className={`tracker-filters__select ${filter.itemFilter && filter.itemFilter !== 'all' ? 'tracker-filters__select--active' : ''}`}
+          value={filter.itemFilter ?? 'all'}
+          onChange={(e) => onFilterChange({ ...filter, itemFilter: e.target.value as 'all' | 'rewards' | 'non-rewards' })}
+        >
+          <option value="all">All checks</option>
+          <option value="rewards">Rewards</option>
+          <option value="non-rewards">Non-rewards</option>
+        </select>
+
         {/* Tag filter toggle */}
         <button
           className={`tracker-filters__btn ${filter.activeTags.length > 0 ? 'tracker-filters__btn--active' : ''}`}

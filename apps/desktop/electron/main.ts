@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell, ipcMain, dialog, net, Menu, session } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, dialog, net, Menu } from 'electron';
 import { join, basename, extname } from 'path';
 import { readFile, mkdir, writeFile, access, copyFile, rm, stat, readdir, rename } from 'fs/promises';
 import { createWriteStream } from 'fs';
@@ -1059,12 +1059,113 @@ function registerIpcHandlers(): void {
   ipcMain.handle('spriteReview:save', async (_e, data: unknown) => {
     await writeFile(getUserDataPath('sprite-review.json'), JSON.stringify(data, null, 2), 'utf-8');
   });
+
+  // ─── Sprite extraction ───
+
+  ipcMain.handle('sprites:extract', async (_event, romFile: string) => {
+    const projectRoot = join(__dirname, '..', '..');
+    const scriptPath = join(projectRoot, 'scripts', 'extract-item-sprites.py');
+    const localRomPath = getUserDataPath('roms', romFile);
+    const spritesDir = getUserDataPath('sprites');
+
+    try {
+      await access(scriptPath);
+    } catch {
+      return { success: false, error: 'extract-item-sprites.py not found.' };
+    }
+
+    try {
+      await access(localRomPath);
+    } catch {
+      return { success: false, error: `ROM file not found: ${romFile}` };
+    }
+
+    await mkdir(spritesDir, { recursive: true });
+
+    const sendLog = (channel: string, level: string, message: string) => {
+      mainWindow?.webContents.send('log:entry', { channel, level, message });
+    };
+
+    sendLog('app', 'info', `Extracting sprites from ${romFile}...`);
+
+    return new Promise<{ success: boolean; count?: number; error?: string }>((resolve) => {
+      const proc = spawn('python', ['-u', scriptPath, '-r', localRomPath, '-o', spritesDir], {
+        cwd: projectRoot,
+        env: process.env,
+        stdio: ['ignore', 'pipe', 'pipe'],
+      });
+
+      let stderr = '';
+      let lastLine = '';
+
+      proc.stdout.on('data', (data: Buffer) => {
+        for (const line of data.toString().split('\n')) {
+          if (line.trim()) {
+            sendLog('core', 'info', line.trim());
+            lastLine = line.trim();
+          }
+        }
+      });
+
+      proc.stderr.on('data', (data: Buffer) => {
+        const text = data.toString();
+        stderr += text;
+        for (const line of text.split('\n')) {
+          if (line.trim()) sendLog('core', 'error', line.trim());
+        }
+      });
+
+      proc.on('error', (err) => {
+        if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
+          sendLog('error', 'error', 'Python not found. Install Python 3.11+ and ensure it is on PATH.');
+          resolve({ success: false, error: 'Python not found on PATH' });
+        } else {
+          sendLog('error', 'error', `Failed to start sprite extraction: ${err.message}`);
+          resolve({ success: false, error: err.message });
+        }
+      });
+
+      proc.on('close', async (code) => {
+        if (code !== 0) {
+          sendLog('error', 'error', `Sprite extraction failed (exit code ${code})`);
+          resolve({ success: false, error: stderr || `Exit code ${code}` });
+          return;
+        }
+
+        // Count extracted files
+        try {
+          const files = await readdir(spritesDir);
+          const pngCount = files.filter(f => f.endsWith('.png')).length;
+          sendLog('app', 'info', `Sprites extracted: ${pngCount} files`);
+          resolve({ success: true, count: pngCount });
+        } catch {
+          resolve({ success: true });
+        }
+      });
+    });
+  });
+
+  ipcMain.handle('sprites:check', async () => {
+    const spritesDir = getUserDataPath('sprites');
+    try {
+      const files = await readdir(spritesDir);
+      const pngCount = files.filter(f => f.endsWith('.png')).length;
+      return { extracted: pngCount > 0, count: pngCount };
+    } catch {
+      return { extracted: false, count: 0 };
+    }
+  });
+
+  ipcMain.handle('sprites:getPath', async (_e, file: string) => {
+    return getUserDataPath('sprites', `${file}.png`);
+  });
 }
 
 app.whenReady().then(async () => {
   initProfileManager(app.getPath('userData'));
   await migrateDataFolder();
   await ensureDataDirectories();
+
   registerIpcHandlers();
   createWindow();
 

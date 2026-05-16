@@ -1,0 +1,147 @@
+/* ─── Sprite Manager (inside data-columns layout) ─── */
+
+.sprite-manager__extract-btn {
+  width: 100%;
+  padding: var(--space-sm) var(--space-lg);
+  border: 1px solid var(--color-gold-dim);
+  border-radius: var(--radius-md);
+  background: rgba(200, 168, 78, 0.12);
+  color: var(--color-gold-bright);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.sprite-manager__extract-btn:hover:not(:disabled) {
+  background: rgba(200, 168, 78, 0.2);
+  border-color: var(--color-gold-base);
+}
+
+.sprite-manager__extract-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sprite-manager__message {
+  font-size: var(--text-sm);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+}
+
+.sprite-manager__message--success {
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.08);
+}
+
+.sprite-manager__message--error {
+  color: #f44336;
+  background: rgba(244, 67, 54, 0.08);
+}
+
+/* ─── Right panel ─── */
+
+.sprite-manager__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  height: 100%;
+  min-height: 0;
+}
+
+/* ─── Category filter ─── */
+
+.sprite-manager__filters {
+  display: flex;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.sprite-manager__cat-btn {
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.sprite-manager__cat-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text-primary);
+}
+
+.sprite-manager__cat-btn--active {
+  border-color: var(--color-gold-base);
+  background: rgba(200, 168, 78, 0.12);
+  color: var(--color-gold-bright);
+}
+
+.sprite-manager__cat-count {
+  opacity: 0.6;
+  margin-left: var(--space-xs);
+}
+
+/* ─── Sprite grid ─── */
+
+.sprite-manager__grid {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: var(--space-sm);
+  align-content: start;
+}
+
+/* ─── Sprite card ─── */
+
+.sprite-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.sprite-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.sprite-card__img {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+.sprite-card__info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  width: 100%;
+}
+
+.sprite-card__label {
+  font-size: var(--text-xs);
+  color: var(--color-text-primary);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.sprite-card__category {
+  font-size: 10px;
+  color: var(--color-text-faint);
+}

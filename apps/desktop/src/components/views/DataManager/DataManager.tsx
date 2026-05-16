@@ -3,9 +3,10 @@ import { ProfileManager } from './ProfileManager';
 import { RomManager } from './RomManager';
 import { LanguageManager } from './LanguageManager';
 import { MsuManager } from './MsuManager';
+import { SpriteManager } from './SpriteManager';
 import './DataManager.css';
 
-type DataTab = 'profiles' | 'roms' | 'languages' | 'msu';
+type DataTab = 'profiles' | 'roms' | 'languages' | 'msu' | 'sprites';
 
 interface DataManagerProps {
   profiles: Profile[];
@@ -43,6 +44,7 @@ export function DataManager({
   const [activeTab, setActiveTab] = useState<DataTab>(initialTab ?? 'profiles');
   const [msuCount, setMsuCount] = useState(0);
   const [langCount, setLangCount] = useState(0);
+  const [spriteCount, setSpriteCount] = useState(0);
 
   // Sync tab when navigating from TitleBar
   useEffect(() => {
@@ -51,12 +53,14 @@ export function DataManager({
 
   // Load counts for tab badges
   const refreshCounts = useCallback(async () => {
-    const [msuPacks, langs] = await Promise.all([
+    const [msuPacks, langs, sprites] = await Promise.all([
       window.api.listMsuPacks(),
       window.api.listLanguages(),
+      window.api.checkSpritesExtracted(),
     ]);
     setMsuCount(msuPacks.length);
     setLangCount(langs.length);
+    setSpriteCount(sprites.count);
   }, []);
 
   useEffect(() => { refreshCounts(); }, [refreshCounts]);
@@ -69,6 +73,7 @@ export function DataManager({
   const tabs: { id: DataTab; icon: string; label: string; count: number }[] = [
     { id: 'profiles', icon: '👤', label: 'Profiles', count: profiles.length },
     { id: 'roms', icon: '🎮', label: 'ROMs', count: romStatuses.length },
+    { id: 'sprites', icon: '🖼️', label: 'Sprites', count: spriteCount },
     { id: 'languages', icon: '🌐', label: 'Languages', count: langCount },
     { id: 'msu', icon: '🎵', label: 'MSU', count: msuCount },
   ];
@@ -78,7 +83,7 @@ export function DataManager({
       <div className="data-manager__header">
         <h2 className="data-manager__title">Data Manager</h2>
         <p className="data-manager__subtitle">
-          Manage profiles, ROMs, language packs, and MSU audio
+          Manage profiles, ROMs, sprites, language packs, and MSU audio
         </p>
       </div>
 
@@ -137,6 +142,11 @@ export function DataManager({
           <MsuManager
             onDeleteConfirm={onDeleteConfirm}
             onRefresh={handleRefresh}
+          />
+        )}
+        {activeTab === 'sprites' && (
+          <SpriteManager
+            romStatuses={romStatuses}
           />
         )}
       </div>

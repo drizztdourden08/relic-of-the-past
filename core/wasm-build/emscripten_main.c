@@ -428,6 +428,39 @@ static void MainFrameCallback(void) {
 }
 
 // ---------------------------------------------------------------------------
+// Clean frame buffer (no HUD) for edge glow shader
+// ---------------------------------------------------------------------------
+// Max buffer: 852 * 480 * 4 = 1,635,840 bytes (RGBA at 2x scale for 426x240)
+#define CLEAN_FRAME_MAX_SIZE (856 * 484 * 4)
+static uint8 g_clean_frame_buf[CLEAN_FRAME_MAX_SIZE];
+static int g_clean_frame_width = 0;
+static int g_clean_frame_height = 0;
+
+EMSCRIPTEN_KEEPALIVE
+int WasmRenderCleanFrame(void) {
+  int render_scale = PpuGetCurrentRenderScale(g_zenv.ppu, g_ppu_render_flags);
+  int w = g_snes_width * render_scale;
+  int h = g_snes_height * render_scale;
+  int pitch = w * 4;
+
+  if (w * h * 4 > CLEAN_FRAME_MAX_SIZE) return 0;
+
+  g_clean_frame_width = w;
+  g_clean_frame_height = h;
+
+  // Render with NoBG3 + NoSprites flags (suppresses HUD and character sprites)
+  ZeldaDrawPpuFrame(g_clean_frame_buf, pitch, g_ppu_render_flags | kPpuRenderFlags_NoBG3 | kPpuRenderFlags_NoSprites);
+
+  return (int)g_clean_frame_buf;
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetCleanFrameWidth(void) { return g_clean_frame_width; }
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetCleanFrameHeight(void) { return g_clean_frame_height; }
+
+// ---------------------------------------------------------------------------
 // Window scale helper (referenced by config.c / HandleCommand but we no-op it)
 // ---------------------------------------------------------------------------
 void ChangeWindowScale(int scale_step) {

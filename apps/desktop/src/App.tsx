@@ -7,8 +7,7 @@ import { useEnhancedSaveSlot } from './components/views/SaveStateOverlay/useEnha
 import { ProfilePicker } from './components/views/ProfilePicker';
 import { ProfileHub } from './components/views/ProfileHub';
 import { DataManager } from './components/views/DataManager';
-import { LogOverlay } from './components/views/LogOverlay';
-import { TrackerView } from './components/views/TrackerView/TrackerView';
+import { WidgetManager, useWidgetLayout, InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent } from './components/widgets';
 import { InputCalibration } from './components/views/InputTester';
 import { SpriteDebug } from './components/views/SpriteDebug';
 import { FullScreenLayer } from './components/composites/FullScreenLayer';
@@ -67,10 +66,9 @@ export function App(): JSX.Element {
   const [assetData, setAssetData] = useState<Uint8Array | null>(null);
   const [importingRom, setImportingRom] = useState(false);
   const [loadingProfile, setLoadingProfile] = useState<string | null>(null);
-  const [showLogs, setShowLogs] = useState(false);
   const [showSaveStates, setShowSaveStates] = useState(false);
-  const [showTracker, setShowTracker] = useState(false);
   const [showSpriteDebug, setShowSpriteDebug] = useState(false);
+  const widgets = useWidgetLayout(activeProfile?.id ?? null);
   const [enhancedSaveSlot, setEnhancedSaveSlot] = useState(true);
   const [saveHoldDuration, setSaveHoldDuration] = useState(2);
   const [dialog, setDialog] = useState<ConfirmDialog | null>(null);
@@ -230,8 +228,8 @@ export function App(): JSX.Element {
         return;
       }
 
-      // Ctrl+Shift+D: toggle sprite debug
-      if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+      // Ctrl+Shift+D: toggle sprite debug (dev only)
+      if (e.ctrlKey && e.shiftKey && e.key === 'D' && window.api.isDev) {
         e.preventDefault();
         setShowSpriteDebug(v => !v);
         return;
@@ -614,9 +612,10 @@ export function App(): JSX.Element {
         onImportRom={handleImportRom}
         onSwitchProfile={handleShowPicker}
         onShowProfile={handleShowProfile}
-        onShowLogs={() => setShowLogs((v) => !v)}
+        onShowLogs={() => widgets.toggle('logs')}
         onToggleSaveStates={() => setShowSaveStates((v) => !v)}
-        onToggleTracker={() => setShowTracker((v) => !v)}
+        onToggleInventory={() => widgets.toggle('inventory')}
+        onToggleChecks={() => widgets.toggle('checks')}
         onShowDataManager={handleShowDataManager}
         onShowInputTester={() => setActivePage('input-tester')}
         onShowSpriteDebug={() => setShowSpriteDebug(v => !v)}
@@ -704,8 +703,21 @@ export function App(): JSX.Element {
           </FullScreenLayer>
         )}
 
-        <LogOverlay visible={showLogs} onClose={() => setShowLogs(false)} />
-        <TrackerView visible={showTracker} onClose={() => setShowTracker(false)} />
+        <WidgetManager
+          layout={widgets.layout}
+          gameRunning={isGameRunning}
+          onUpdate={widgets.update}
+          onClose={widgets.close}
+          settingsContent={{
+            inventory: <InventoryWidgetSettings />,
+          }}
+        >
+          {{
+            inventory: <InventoryWidgetContent />,
+            checks: <ChecksWidgetContent />,
+            logs: <LogsWidgetContent />,
+          }}
+        </WidgetManager>
         {showSpriteDebug && <SpriteDebug onClose={() => setShowSpriteDebug(false)} />}
       </div>
 
