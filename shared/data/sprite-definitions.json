@@ -244,8 +244,8 @@
       "extract": { "method": "hud-tiles", "tiles": [10295, 10296, 11459, 11475] }
     },
     {
-      "file": "hud-bottle-mushroom",
-      "label": "Mushroom (bottle slot)",
+      "file": "hud-mushroom-2",
+      "label": "Mushroom",
       "category": "hud",
       "extract": { "method": "hud-tiles", "tiles": [8260, 8261, 8262, 8263] }
     },
@@ -362,12 +362,6 @@
       "label": "Heart Piece (4/4)",
       "category": "hud",
       "extract": { "method": "hud-tiles", "tiles": [9389, 25773, 9390, 25774] }
-    },
-    {
-      "file": "hud-small-key",
-      "label": "Small Key",
-      "category": "hud",
-      "extract": { "method": "hud-tiles", "tiles": [9383, 9384, 9385, 9386] }
     },
 
     {

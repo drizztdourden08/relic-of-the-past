@@ -15,7 +15,7 @@ import { FullScreenLayer } from './components/composites/FullScreenLayer';
 import { Dialog } from './components/composites/Dialog';
 import { log } from './lib/log-bus';
 import type { LogChannel, LogLevel } from './lib/log-bus';
-import { subscribeGameState, resetGame, setMasterVolume, setMsuData } from './lib/game';
+import { subscribeGameState, resetGame, setMasterVolume, setMsuData, getInputManager } from './lib/game';
 import { serializeToIni, mergeSettings } from './lib/game/settings';
 import './App.css';
 
@@ -137,6 +137,13 @@ export function App(): JSX.Element {
   }));
 
   const isGameRunning = assetData != null && !gameCrashed;
+
+  // ─── Input suppression: disable game input when menus/settings/overlays are open ───
+  useEffect(() => {
+    // Input is active only when the game is running and no page/overlay is covering it.
+    const gameActive = isGameRunning && activePage === 'none' && !showSpriteDebug;
+    getInputManager().setInputSuppressed(!gameActive);
+  }, [activePage, isGameRunning, showSpriteDebug]);
 
   // ─── Enhanced save slot shortcut flow ───
   const enhancedSave = useEnhancedSaveSlot(enhancedSaveSlot, saveHoldDuration, isGameRunning);

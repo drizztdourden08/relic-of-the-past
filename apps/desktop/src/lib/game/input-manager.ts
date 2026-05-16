@@ -124,9 +124,37 @@ export class InputManager {
   // Track which function-mapped gamepad buttons are currently held (for key-up detection)
   private heldFunctionGamepadButtons = new Set<string>(); // "deviceKey:index" or "deviceKey:axis:idx:dir"
 
+  // When true, game controls and function actions are suppressed (menu/UI is open).
+  // Raw input (for rebinding) and input state (for visualization) still flow.
+  private inputSuppressed = false;
+
   constructor() {
     // Build the default function key map immediately
     this.rebuildFunctionKeyMap();
+  }
+
+  /**
+   * Suppress or unsuppress game input processing.
+   * When suppressed: keyboard game controls, function actions (shortcuts/cheats),
+   * and gamepad function checks are all disabled.
+   * Raw input listeners and input state listeners remain active (for rebinding & input tester).
+   */
+  setInputSuppressed(suppressed: boolean): void {
+    this.inputSuppressed = suppressed;
+    // Release any held keys/buttons to avoid stuck state
+    if (suppressed) {
+      this.heldFunctionGamepadButtons.clear();
+      // Clear keyboard key states so held keys don't persist into next unsuppressed frame
+      for (const key of this.keyStates.keys()) {
+        this.keyStates.set(key, false);
+      }
+      // Send zero input to WASM so game character stops moving immediately
+      this.setInputFn?.(0);
+    }
+  }
+
+  isInputSuppressed(): boolean {
+    return this.inputSuppressed;
   }
 
   /**
@@ -489,8 +517,14 @@ export class InputManager {
     // Don't capture when typing in inputs
     if (isTextInput(e.target)) return;
 
-    // Track ALL pressed keys for visualization
+    // Track ALL pressed keys for visualization (always, even when suppressed)
     this.allPressedKeys.add(e.code);
+
+    // Emit raw input for any key press (for rebinding UI — always active)
+    this.emitRawInput({ type: 'keyboard', code: e.code }, 'keyboard');
+
+    // Skip game controls and function actions when input is suppressed (menu open)
+    if (this.inputSuppressed) return;
 
     // Check function mappings first (shortcuts, cheats, pause, etc.)
     // Ignore key repeat — function actions fire once on initial press only.
@@ -520,13 +554,18 @@ export class InputManager {
       e.preventDefault();
       this.keyStates.set(e.code, true);
     }
-
-    // Emit raw input for any key press (not just mapped ones)
-    this.emitRawInput({ type: 'keyboard', code: e.code }, 'keyboard');
   };
 
   private onKeyUp = (e: KeyboardEvent): void => {
     this.allPressedKeys.delete(e.code);
+
+    // Always release key state (prevent stuck keys when suppression changes mid-press)
+    if (this.keyboardMap.has(e.code)) {
+      this.keyStates.set(e.code, false);
+    }
+
+    // Skip function key-up dispatch when suppressed
+    if (this.inputSuppressed) return;
 
     // Fire function key-up listeners (for hold detection in enhanced save flow)
     // A single code may have multiple bindings (e.g. F1 for load, Shift+F1 for save)
@@ -540,11 +579,6 @@ export class InputManager {
           }
         }
       }
-    }
-
-    if (this.keyboardMap.has(e.code)) {
-      e.preventDefault();
-      this.keyStates.set(e.code, false);
     }
   };
 
@@ -649,20 +683,20 @@ export class InputManager {
     // Snapshot gamepads (filter duplicates with WebHID)
     this.currentGamepads = this.snapshotGamepads();
 
-    if (!this.paused) {
+    if (!this.paused && !this.inputSuppressed) {
       const mask = this.computeBitmask();
       this.setInputFn?.(mask);
-
-      // Emit raw input events for newly pressed buttons (rising edge)
-      if (this.rawInputListeners.size > 0) {
-        this.emitRawGamepadEvents();
-        this.emitRawHidEvents();
-      }
     }
 
-    // Check function-mapped gamepad buttons (always, even when paused)
+    // Emit raw input events for newly pressed buttons (for rebinding — always active)
+    if (this.rawInputListeners.size > 0) {
+      this.emitRawGamepadEvents();
+      this.emitRawHidEvents();
+    }
+
+    // Check function-mapped gamepad buttons (always, even when paused — but not when suppressed)
     // This enables shortcuts like load/save state to work from controllers.
-    if (this.functionGamepadButtonMap.size > 0 || this.functionGamepadAxisMap.size > 0) {
+    if (!this.inputSuppressed && (this.functionGamepadButtonMap.size > 0 || this.functionGamepadAxisMap.size > 0)) {
       this.checkGamepadFunctionActions();
     }
 
