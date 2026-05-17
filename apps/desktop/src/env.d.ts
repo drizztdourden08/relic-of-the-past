@@ -305,10 +305,11 @@ interface ElectronAPI {
   testVibration(deviceKey: string): Promise<boolean>;
 
   // HID input reports from main process (node-hid reader)
-  onHidReport(callback: (report: { deviceKey: string; vendorId: number; productId: number; data: number[] }) => void): () => void;
+  onHidReport(callback: (deviceKey: string, vendorId: number, productId: number, data: Buffer) => void): () => void;
   onHidDeviceOpened(callback: (info: { deviceKey: string; vendorId: string; productId: string; product: string }) => void): () => void;
   onHidDisconnect(callback: (info: { deviceKey: string; product: string; error?: string }) => void): () => void;
   onHidError(callback: (info: { deviceKey: string; error: string }) => void): () => void;
+  onHidMainPerf(callback: (msg: string) => void): () => void;
 
   // App info
   getUserDataPath(): Promise<string>;

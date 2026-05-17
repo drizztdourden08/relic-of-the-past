@@ -54,9 +54,11 @@ function toHex4(n: number): string {
 /**
  * Enumerate all connected HID devices that look like game controllers.
  * De-duplicates by VID:PID (multiple HID interfaces per physical device).
+ * Accepts an optional pre-fetched device list (e.g. from a worker thread)
+ * to avoid blocking the main thread with HID.devices().
  */
-export function enumerateControllers(): HidDeviceInfo[] {
-  const raw = HID.devices();
+export function enumerateControllers(rawDevices?: HID.Device[]): HidDeviceInfo[] {
+  const raw = rawDevices ?? HID.devices();
   const seen = new Map<string, HidDeviceInfo>();
 
   for (const d of raw) {

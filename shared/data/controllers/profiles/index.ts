@@ -1,16 +1,10 @@
 /**
- * Controller profiles — static JSON definitions for known controllers.
- * Each profile defines the buttons and axes a controller has, with labels and icons.
- * Used by the calibration wizard to know what to ask the user to press.
+ * Controller profiles — adapted from the registry's impl classes.
+ * Provides backward-compatible ControllerProfile interface for UI consumers.
  */
 
-import switchPro2 from './switch-pro-2.json';
-import switchPro from './switch-pro.json';
-import xboxOne from './xbox-one.json';
-import dualsense from './dualsense.json';
-import dualshock4 from './dualshock4.json';
-import eightBitDoPro2 from './8bitdo-pro2.json';
-import generic from './generic.json';
+import { findController, getAllControllers } from '../register-all';
+import type { BaseController, ControllerButton, ControllerAxis } from '../base';
 
 export interface ControllerProfileButton {
   id: string;
@@ -36,34 +30,39 @@ export interface ControllerProfile {
   axes: ControllerProfileAxis[];
 }
 
-export const CONTROLLER_PROFILES: ControllerProfile[] = [
-  switchPro2 as ControllerProfile,
-  switchPro as ControllerProfile,
-  xboxOne as ControllerProfile,
-  dualsense as ControllerProfile,
-  dualshock4 as ControllerProfile,
-  eightBitDoPro2 as ControllerProfile,
-  generic as ControllerProfile,
-];
+/** Adapt a BaseController to the legacy ControllerProfile interface. */
+function toProfile(ctrl: BaseController): ControllerProfile {
+  return {
+    id: ctrl.id,
+    name: ctrl.name,
+    vendorId: ctrl.vendorIds[0] ?? null,
+    productId: ctrl.productIds[0] ?? null,
+    family: ctrl.family,
+    inputApi: ctrl.inputApi,
+    buttons: ctrl.buttons.map((b: ControllerButton) => ({
+      id: b.id,
+      label: b.label,
+      icon: b.icon,
+      category: b.category,
+    })),
+    axes: ctrl.axes.map((a: ControllerAxis) => ({
+      id: a.id,
+      label: a.label,
+      category: a.category,
+    })),
+  };
+}
 
-/** Find profile by VID/PID (hex strings, auto-pads to 4 chars).
- * Falls back to matching by vendor family (e.g. any Xbox PID → Xbox profile). */
+export const CONTROLLER_PROFILES: ControllerProfile[] = getAllControllers().map(toProfile);
+
+/** Find profile by VID/PID (hex strings, auto-pads to 4 chars). */
 export function findProfileByVidPid(vid: string, pid: string): ControllerProfile | null {
-  const v = vid.toLowerCase().padStart(4, '0');
-  const p = pid.toLowerCase().padStart(4, '0');
-  // Exact match first
-  const exact = CONTROLLER_PROFILES.find(
-    (pr) => pr.vendorId?.toLowerCase().padStart(4, '0') === v && pr.productId?.toLowerCase().padStart(4, '0') === p
-  );
-  if (exact) return exact;
-  // Family match: find profile whose vendor matches (all Xbox controllers share VID 045e)
-  const familyMatch = CONTROLLER_PROFILES.find(
-    (pr) => pr.vendorId?.toLowerCase().padStart(4, '0') === v
-  );
-  return familyMatch ?? null;
+  const ctrl = findController(vid, pid);
+  return ctrl ? toProfile(ctrl) : null;
 }
 
 /** Find profile by id */
 export function findProfileById(id: string): ControllerProfile | null {
-  return CONTROLLER_PROFILES.find((pr) => pr.id === id) ?? null;
+  const ctrl = getAllControllers().find(c => c.id === id);
+  return ctrl ? toProfile(ctrl) : null;
 }

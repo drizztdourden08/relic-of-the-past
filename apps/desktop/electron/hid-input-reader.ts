@@ -14,21 +14,14 @@
 
 import HID from 'node-hid';
 import { BrowserWindow } from 'electron';
+import { Worker } from 'worker_threads';
+import path from 'path';
 
 // Xbox VID — excluded because Windows XInput driver claims exclusive access
 const XBOX_VID = 0x045e;
 
 // Nintendo VID
 const NINTENDO_VID = 0x057e;
-
-// Original Nintendo controllers that need the legacy USB init sequence
-// (report IDs 0x80/0x01 via HID). The Switch Pro Controller 2 (0x2069)
-// uses a different init via WebUSB bulk transfers in the renderer.
-const NINTENDO_LEGACY_INIT_PIDS = new Set([
-  0x2009, // Switch Pro Controller (original)
-  0x2006, // Joy-Con L
-  0x2007, // Joy-Con R
-]);
 
 // All known Nintendo controller PIDs (for general identification)
 const NINTENDO_PIDS = new Set([
@@ -66,13 +59,52 @@ export class HidInputReader {
   private devices: OpenDevice[] = [];
   private scanInterval: ReturnType<typeof setInterval> | null = null;
   private window: BrowserWindow | null = null;
+  private worker: Worker | null = null;
+  private workerReqId = 0;
+  private workerCallbacks = new Map<number, (result: any) => void>();
+
+  /** Lazy-start the persistent HID worker thread. */
+  private ensureWorker(): Worker {
+    if (!this.worker) {
+      const workerPath = path.join(__dirname, 'hid-worker.js');
+      this.worker = new Worker(workerPath);
+      this.worker.on('message', (msg: { id: number; [k: string]: any }) => {
+        const cb = this.workerCallbacks.get(msg.id);
+        if (cb) {
+          this.workerCallbacks.delete(msg.id);
+          cb(msg);
+        }
+      });
+      this.worker.on('error', (err) => {
+        this.log(`HID worker error: ${err.message}`);
+      });
+    }
+    return this.worker;
+  }
+
+  /** Send a message to the worker and get a Promise for the response. */
+  private workerRequest<T = any>(msg: Record<string, any>): Promise<T> {
+    const id = ++this.workerReqId;
+    const w = this.ensureWorker();
+    return new Promise<T>((resolve) => {
+      this.workerCallbacks.set(id, resolve);
+      w.postMessage({ ...msg, id });
+    });
+  }
+
+  /** Non-blocking device enumeration via worker thread. */
+  async enumerateDevicesAsync(): Promise<HID.Device[]> {
+    const result = await this.workerRequest<{ ok: boolean; devices?: HID.Device[]; error?: string }>({ type: 'enumerate' });
+    if (result.ok && result.devices) return result.devices;
+    throw new Error(result.error ?? 'enumerate failed');
+  }
 
   /** Start scanning for controllers and reading input. */
   start(win: BrowserWindow): void {
     this.window = win;
     this.log(`HID input reader starting...`);
     this.scanAndOpen();
-    // Re-scan every 3s for hot-plug
+    // Re-scan every 3s for hot-plug — async, never blocks main thread
     this.scanInterval = setInterval(() => this.scanAndOpen(), 3000);
   }
 
@@ -81,6 +113,12 @@ export class HidInputReader {
     if (this.scanInterval) {
       clearInterval(this.scanInterval);
       this.scanInterval = null;
+    }
+    // Terminate the worker thread
+    if (this.worker) {
+      this.worker.terminate().catch(() => {});
+      this.worker = null;
+      this.workerCallbacks.clear();
     }
     for (const dev of this.devices) {
       // Send SILENT haptic frame to stop any running vibration before closing
@@ -113,8 +151,13 @@ export class HidInputReader {
     console.log(`[HID] ${msg}`);
   }
 
-  private scanAndOpen(): void {
-    const allDevices = HID.devices();
+  private async scanAndOpen(): Promise<void> {
+    let allDevices: HID.Device[];
+    try {
+      allDevices = await this.enumerateDevicesAsync();
+    } catch {
+      return; // worker error — skip this scan
+    }
 
     // Find all gamepad-like HID interfaces (excluding Xbox)
     // Require gamepad usage (page=0x01, usage=0x04/0x05/0x08) to avoid
@@ -178,16 +221,18 @@ export class HidInputReader {
           productId: toHex4(target.productId),
           product: dev.product,
         });
-
-        // Send USB init sequence for original Nintendo controllers only.
-        if (target.vendorId === NINTENDO_VID && NINTENDO_LEGACY_INIT_PIDS.has(target.productId)) {
-          this.initNintendoController(dev);
-        }
       } catch (err) {
         this.log(`Failed to open ${key}: ${(err as Error).message}`);
       }
     }
   }
+
+  // ── Main-process send timing ──
+  private _fwdLastTime = 0;
+  private _fwdGapMax = 0;
+  private _fwdBursts = 0;
+  private _fwdCount = 0;
+  private _fwdLogTime = 0;
 
   /**
    * Forward raw HID report to the renderer.
@@ -195,51 +240,29 @@ export class HidInputReader {
    */
   private forwardReport(dev: OpenDevice, data: Buffer): void {
     if (!this.window || this.window.isDestroyed()) return;
-    // Convert to a plain array for IPC serialization
-    this.window.webContents.send('hid:report', {
-      deviceKey: dev.key,
-      vendorId: dev.vid,
-      productId: dev.pid,
-      data: Array.from(data),
-    });
-  }
 
-  /**
-   * Send USB init commands for Nintendo Switch controllers via node-hid write().
-   * Sequence: MAC request → handshake → USB mode → set full report mode.
-   */
-  private async initNintendoController(dev: OpenDevice): Promise<void> {
-    this.log(`[Init] Sending USB init for ${dev.key} (${dev.product})...`);
-
-    // node-hid write(): first byte = report ID, rest = payload.
-    // Buffer padded to 64 bytes (Switch Pro Controller output report size).
-    const cmds: { data: number[]; label: string }[] = [
-      { data: [0x80, 0x01], label: 'MAC req' },
-      { data: [0x80, 0x02], label: 'Handshake' },
-      { data: [0x80, 0x04], label: 'USB mode' },
-      // Output report 0x01: subcmd 0x03 (set input report mode), mode=0x30 (full)
-      { data: [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x30], label: 'SubCmd: mode=full' },
-    ];
-
-    for (const cmd of cmds) {
-      try {
-        const buf = new Array(64).fill(0);
-        for (let i = 0; i < cmd.data.length; i++) buf[i] = cmd.data[i];
-        dev.hid.pause();
-        dev.hid.write(buf);
-        dev.hid.resume();
-        this.log(`[Init] ✓ ${cmd.label}`);
-        await this.delay(50);
-      } catch (err) {
-        dev.hid.resume();
-        this.log(`[Init] ✗ ${cmd.label}: ${(err as Error).message}`);
-      }
+    // Measure main-process send timing
+    const now = performance.now();
+    if (this._fwdLastTime > 0) {
+      const gap = now - this._fwdLastTime;
+      if (gap > this._fwdGapMax) this._fwdGapMax = gap;
+      if (gap < 1) this._fwdBursts++;
     }
-    this.log(`[Init] USB init done for ${dev.key}`);
-  }
+    this._fwdLastTime = now;
+    this._fwdCount++;
+    if (now - this._fwdLogTime > 2000 && this._fwdCount > 0) {
+      const msg = `[HID-MAIN] sent=${this._fwdCount} maxGap=${this._fwdGapMax.toFixed(1)}ms bursts=${this._fwdBursts}`;
+      console.log(msg);
+      // Also send to renderer so it appears in the diag UI
+      this.send('hid:main-perf', msg);
+      this._fwdCount = 0;
+      this._fwdGapMax = 0;
+      this._fwdBursts = 0;
+      this._fwdLogTime = now;
+    }
 
-  private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    // Send buffer directly — Electron serializes Buffer/Uint8Array efficiently
+    this.window.webContents.send('hid:report', dev.key, dev.vid, dev.pid, data);
   }
 
   private removeDevice(dev: OpenDevice): void {
@@ -327,8 +350,8 @@ export class HidInputReader {
   }
 
   /**
-   * Flat vibrate: constant intensity for a duration, no envelope shaping.
-   * Pattern support: array of {durationMs, intensity} segments with gaps between.
+   * Vibrate with a pattern: array of {durationMs, intensity} segments with gaps between.
+   * Writes happen in a Worker thread so the main process is never blocked.
    */
   vibratePattern(deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number = 0): { ok: boolean; error?: string } {
     const dev = this.devices.find(d => d.key === deviceKey);
@@ -339,76 +362,31 @@ export class HidInputReader {
       return { ok: false, error: msg };
     }
 
-    const segments: { haptic: number[]; frames: number }[] = [];
-    for (const seg of pattern) {
+    // Build all frames up front
+    const frames: number[][] = [];
+    const gapFrames = Math.max(0, Math.ceil(gapMs / 4));
+
+    for (let s = 0; s < pattern.length; s++) {
+      const seg = pattern[s];
       const clamped = Math.max(0, Math.min(1, seg.intensity));
       const haptic = clamped >= 0.7 ? HidInputReader.HAPTIC_STRONG
         : clamped >= 0.3 ? HidInputReader.HAPTIC_MEDIUM
         : HidInputReader.HAPTIC_LIGHT;
-      segments.push({ haptic, frames: Math.max(1, Math.ceil(seg.durationMs / 4)) });
-    }
-
-    const gapFrames = Math.max(0, Math.ceil(gapMs / 4));
-
-    dev.hid.pause();
-    let counter = 0;
-    let errors = 0;
-
-    for (let s = 0; s < segments.length; s++) {
-      const { haptic, frames } = segments[s];
-      for (let i = 0; i < frames; i++) {
-        const buf = new Array(64).fill(0);
-        buf[0] = 0x02;
-        buf[1] = 0x50 | (counter & 0x0F);
-        buf[17] = buf[1];
-        for (let j = 0; j < haptic.length; j++) {
-          buf[2 + j] = haptic[j];
-          buf[18 + j] = haptic[j];
-        }
-        try { dev.hid.write(buf); } catch { errors++; }
-        counter = (counter + 1) & 0x0F;
-      }
-      // Gap between segments (silence frames)
-      if (gapFrames > 0 && s < segments.length - 1) {
-        for (let i = 0; i < gapFrames; i++) {
-          const buf = new Array(64).fill(0);
-          buf[0] = 0x02;
-          buf[1] = 0x50 | (counter & 0x0F);
-          buf[17] = buf[1];
-          for (let j = 0; j < HidInputReader.HAPTIC_SILENT.length; j++) {
-            buf[2 + j] = HidInputReader.HAPTIC_SILENT[j];
-            buf[18 + j] = HidInputReader.HAPTIC_SILENT[j];
-          }
-          try { dev.hid.write(buf); } catch { errors++; }
-          counter = (counter + 1) & 0x0F;
-        }
+      const count = Math.max(1, Math.ceil(seg.durationMs / 4));
+      for (let i = 0; i < count; i++) frames.push(haptic);
+      // Gap between segments
+      if (gapFrames > 0 && s < pattern.length - 1) {
+        for (let i = 0; i < gapFrames; i++) frames.push(HidInputReader.HAPTIC_SILENT);
       }
     }
-    // End with silence
-    const buf = new Array(64).fill(0);
-    buf[0] = 0x02;
-    buf[1] = 0x50 | (counter & 0x0F);
-    buf[17] = buf[1];
-    for (let j = 0; j < HidInputReader.HAPTIC_SILENT.length; j++) {
-      buf[2 + j] = HidInputReader.HAPTIC_SILENT[j];
-      buf[18 + j] = HidInputReader.HAPTIC_SILENT[j];
-    }
-    try { dev.hid.write(buf); } catch { errors++; }
-    dev.hid.resume();
+    frames.push(HidInputReader.HAPTIC_SILENT); // end with silence
 
-    if (errors > 0) {
-      const msg = `Vibration write errors: ${errors} frames failed`;
-      this.log(msg);
-      this.send('hid:error', { deviceKey, error: msg });
-      return { ok: false, error: msg };
-    }
+    this.writeFramesInWorker(dev, frames);
     return { ok: true };
   }
 
   /**
-   * Test vibration: pause reader, write the full procon2tool pattern, resume reader.
-   * node-hid write() fails when a read listener is active on the same device,
-   * so we must pause reads during haptic output.
+   * Test vibration: sends the full procon2tool haptic pattern in a Worker thread.
    */
   testVibration(deviceKey: string): { ok: boolean; frames: number; errors: number; writeMs: number; error?: string } {
     const dev = this.devices.find(d => d.key === deviceKey);
@@ -451,36 +429,21 @@ export class HidInputReader {
       [0x3f, 0x01, 0xf0, 0x19, 0x00],
     ];
 
-    // Pause the read listener so writes can succeed
-    dev.hid.pause();
+    this.writeFramesInWorker(dev, pattern);
+    return { ok: true, frames: pattern.length, errors: 0, writeMs: 0 };
+  }
 
-    const start = performance.now();
-    let errors = 0;
-    let counter = 0;
-
-    for (const hapticData of pattern) {
-      const buf = new Array(64).fill(0);
-      buf[0] = 0x02;
-      buf[1] = 0x50 | (counter & 0x0F);
-      buf[17] = buf[1];
-      for (let i = 0; i < hapticData.length; i++) {
-        buf[2 + i] = hapticData[i];
-        buf[18 + i] = hapticData[i];
-      }
-      try {
-        dev.hid.write(buf);
-      } catch {
-        errors++;
-      }
-      counter = (counter + 1) & 0x0F;
-    }
-
-    const elapsed = Math.round(performance.now() - start);
-
-    // Resume reading
-    dev.hid.resume();
-
-    return { ok: errors === 0, frames: pattern.length, errors, writeMs: elapsed };
+  /** Send haptic frames via the persistent worker — never blocks the main process. */
+  private writeFramesInWorker(dev: OpenDevice, frames: number[][]): void {
+    this.workerRequest({ type: 'vibrate', devicePath: dev.path, frames })
+      .then((result: any) => {
+        if (!result.ok) {
+          this.log(`Vibrate worker error: ${result.error}`);
+        }
+      })
+      .catch((err: Error) => {
+        this.log(`Vibrate worker error: ${err.message}`);
+      });
   }
 
   private send(channel: string, data: unknown): void {

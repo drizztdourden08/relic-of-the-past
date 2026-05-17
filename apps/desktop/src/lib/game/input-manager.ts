@@ -90,6 +90,7 @@ export class InputManager {
   private ipcReportUnsub: (() => void) | null = null;
   private ipcDisconnectUnsub: (() => void) | null = null;
   private ipcErrorUnsub: (() => void) | null = null;
+  private ipcMainPerfUnsub: (() => void) | null = null;
   private ipcDeviceOpenedUnsub: (() => void) | null = null;
 
   // Active controller instances, keyed by deviceKey
@@ -113,6 +114,7 @@ export class InputManager {
 
   // Cached per-frame state for getters
   private currentHidStates = new Map<string, WebHidInputState>();
+  private hidStatesDirty = false;
   private currentGamepads: GamepadSnapshot[] = [];
 
   // Calibration loaded flag
@@ -283,6 +285,7 @@ export class InputManager {
     // Subscribe to WebHID input (Switch, PS, 8BitDo)
     this.hidUnsubscribe = webHidReader.onInput((state: WebHidInputState) => {
       this.hidStates.set(state.deviceKey, { buttons: state.buttons, axes: state.axes });
+      if (!this.currentHidStates.has(state.deviceKey)) this.hidStatesDirty = true;
       this.currentHidStates.set(state.deviceKey, state);
       // Auto-resume if paused due to controller disconnect and this device reconnected
       if (this.paused && this.pausedControllerName !== 'Manual pause') {
@@ -294,6 +297,7 @@ export class InputManager {
       // Clean up stale state for this device
       this.hidStates.delete(_deviceKey);
       this.currentHidStates.delete(_deviceKey);
+      this.hidStatesDirty = true;
       this.prevHidButtons.delete(_deviceKey);
       this.prevHidAxes.delete(_deviceKey);
       this.refreshDevices();
@@ -301,8 +305,8 @@ export class InputManager {
     });
 
     // Subscribe to main process node-hid reports (forwarded via IPC)
-    this.ipcReportUnsub = window.api.onHidReport((report) => {
-      webHidReader.handleIpcReport(report.deviceKey, report.vendorId, report.productId, report.data);
+    this.ipcReportUnsub = window.api.onHidReport((deviceKey, vendorId, productId, data) => {
+      webHidReader.handleIpcReport(deviceKey, vendorId, productId, data);
     });
     this.ipcDisconnectUnsub = window.api.onHidDisconnect((info) => {
       webHidReader.handleIpcDisconnect(info.deviceKey, info.error);
@@ -316,6 +320,11 @@ export class InputManager {
       this.resetController(info.deviceKey);
     });
 
+    // Subscribe to main-process perf stats and route into diag log
+    this.ipcMainPerfUnsub = window.api.onHidMainPerf((msg) => {
+      webHidReader.addDiag(`🖥 ${msg}`);
+    });
+
     // Auto-init controllers when a new HID device is opened by the main process
     this.ipcDeviceOpenedUnsub = window.api.onHidDeviceOpened((info) => {
       this.initController(info.deviceKey, info.vendorId, info.productId);
@@ -324,7 +333,8 @@ export class InputManager {
     // Initial device scan
     this.refreshDevices();
 
-    // Periodic re-enumeration (HID devices may connect/disconnect)
+    // Periodic re-enumeration for hot-plug detection.
+    // Now safe at 2s — HID.devices() runs in a worker thread, never blocks main.
     this.devicePollId = setInterval(() => this.refreshDevices(), 2000);
 
     // Start frame loop
@@ -363,6 +373,10 @@ export class InputManager {
     if (this.ipcErrorUnsub) {
       this.ipcErrorUnsub();
       this.ipcErrorUnsub = null;
+    }
+    if (this.ipcMainPerfUnsub) {
+      this.ipcMainPerfUnsub();
+      this.ipcMainPerfUnsub = null;
     }
     if (this.ipcDeviceOpenedUnsub) {
       this.ipcDeviceOpenedUnsub();
@@ -453,6 +467,16 @@ export class InputManager {
     } catch (e: any) {
       webHidReader.addDiag(`⚠ Controller reset failed (${deviceKey}): ${e.message}`);
     }
+  }
+
+  /**
+   * Vibrate a controller via the registry. Returns false if controller doesn't support vibration.
+   */
+  async vibrateController(deviceKey: string, durationMs: number, intensity = 0.7): Promise<boolean> {
+    const entry = this.activeControllers.get(deviceKey);
+    if (!entry || !entry.controller.supportsVibration()) return false;
+    const result = await entry.controller.vibrate(entry.ctx, [{ durationMs, intensity }]);
+    return result.ok;
   }
 
   /**
@@ -801,15 +825,12 @@ export class InputManager {
 
     // DEBUG: log pipeline state every 120 frames (~2s)
     this._pollDbg++;
-    if (this._pollDbg % 120 === 1) {
+    if (this._pollDbg % 600 === 1) {
       console.log(`[INPUT-POLL] suppressed=${this.inputSuppressed} paused=${this.paused} hidStates=${this.hidStates.size} gamepadBtnMap=${this.gamepadButtonMap.size} axisMap=${this.gamepadAxisMap.size} profile=${this.activeProfile?.name ?? 'NONE'} setInputFn=${!!this.setInputFn}`);
     }
 
     if (!this.paused && !this.inputSuppressed) {
       const mask = this.computeBitmask();
-      if (mask !== 0 || this._pollDbg % 120 === 1) {
-        console.log(`[INPUT-MASK] mask=0x${mask.toString(16)} (${mask})`);
-      }
       this.setInputFn?.(mask);
     }
 
@@ -826,7 +847,12 @@ export class InputManager {
     }
 
     // Emit per-frame state to all visualization listeners
+    // Create a new Map reference when devices connect/disconnect so React detects the change
     if (this.stateListeners.size > 0) {
+      if (this.hidStatesDirty) {
+        this.currentHidStates = new Map(this.currentHidStates);
+        this.hidStatesDirty = false;
+      }
       for (const fn of this.stateListeners) {
         try { fn(this.currentHidStates, this.currentGamepads, this.allPressedKeys); } catch { /* ignore */ }
       }
@@ -953,14 +979,7 @@ export class InputManager {
    */
   private _dbgCounter = 0;
   private checkGamepadFunctionActions(): void {
-    // Debug: log state every 180 frames (~3 sec at 60fps)
     this._dbgCounter++;
-    if (this._dbgCounter % 180 === 1) {
-      const hidKeys = [...this.hidStates.keys()];
-      const gamepads = navigator.getGamepads();
-      const gpIds = Array.from(gamepads).filter(Boolean).map(g => g!.id);
-      console.log('[FuncCheck] hidStates:', hidKeys, 'gamepads:', gpIds, 'btnMap:', Object.fromEntries(this.functionGamepadButtonMap), 'callbacks:', [...this.functionActionCallbacks.keys()]);
-    }
 
     // --- Web Gamepad API controllers (skip those handled by node-hid) ---
     const gamepads = navigator.getGamepads();

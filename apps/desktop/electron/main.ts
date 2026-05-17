@@ -959,9 +959,14 @@ function registerIpcHandlers(): void {
     await writeStickCalibration(store as any);
   });
 
-  // HID device enumeration
-  ipcMain.handle('hid:enumerate', () => {
-    return enumerateControllers();
+  // HID device enumeration (async — uses worker thread to avoid blocking main)
+  ipcMain.handle('hid:enumerate', async () => {
+    try {
+      const rawDevices = await hidInputReader.enumerateDevicesAsync();
+      return enumerateControllers(rawDevices);
+    } catch {
+      return enumerateControllers(); // fallback to sync if worker fails
+    }
   });
 
   // HID write (haptics, LED control) — forwards to node-hid in main process

@@ -143,8 +143,8 @@ contextBridge.exposeInMainWorld('api', {
   testVibration: (deviceKey: string) => ipcRenderer.invoke('hid:test-vibration', deviceKey),
 
   // HID input reports from main process (node-hid reader)
-  onHidReport: (callback: (report: { deviceKey: string; vendorId: number; productId: number; data: number[] }) => void) => {
-    const handler = (_event: Electron.IpcRendererEvent, report: { deviceKey: string; vendorId: number; productId: number; data: number[] }) => callback(report);
+  onHidReport: (callback: (deviceKey: string, vendorId: number, productId: number, data: Buffer) => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, deviceKey: string, vendorId: number, productId: number, data: Buffer) => callback(deviceKey, vendorId, productId, data);
     ipcRenderer.on('hid:report', handler);
     return () => ipcRenderer.removeListener('hid:report', handler);
   },
@@ -162,6 +162,11 @@ contextBridge.exposeInMainWorld('api', {
     const handler = (_event: Electron.IpcRendererEvent, info: { deviceKey: string; error: string }) => callback(info);
     ipcRenderer.on('hid:error', handler);
     return () => ipcRenderer.removeListener('hid:error', handler);
+  },
+  onHidMainPerf: (callback: (msg: string) => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, msg: string) => callback(msg);
+    ipcRenderer.on('hid:main-perf', handler);
+    return () => ipcRenderer.removeListener('hid:main-perf', handler);
   },
 
 

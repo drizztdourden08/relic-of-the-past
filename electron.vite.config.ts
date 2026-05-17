@@ -8,7 +8,10 @@ export default defineConfig({
     build: {
       outDir: 'dist/electron',
       lib: {
-        entry: resolve(__dirname, 'apps/desktop/electron/main.ts'),
+        entry: {
+          main: resolve(__dirname, 'apps/desktop/electron/main.ts'),
+          'hid-worker': resolve(__dirname, 'apps/desktop/electron/hid-worker.ts'),
+        },
       },
     },
   },

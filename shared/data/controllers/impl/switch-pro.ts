@@ -181,7 +181,7 @@ class SwitchProController extends BaseController {
       (ry - 128) / 128,
     ];
 
-    return { buttons, axes };
+    return { buttons, axes, rawSticks: [lx, ly, rx, ry] };
   }
 
   /**
@@ -226,7 +226,7 @@ class SwitchProController extends BaseController {
       -(ryRaw - 2048) / 2048,
     ];
 
-    return { buttons, axes };
+    return { buttons, axes, rawSticks: [lxRaw, lyRaw, rxRaw, ryRaw] };
   }
 
   // ── Lifecycle ──

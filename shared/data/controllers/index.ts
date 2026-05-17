@@ -1,55 +1,45 @@
 /**
  * Controller preset registry — lookup by VID/PID, list all, find by ID.
+ *
+ * This module delegates to the new registry system (register-all.ts + impl/ classes)
+ * while maintaining the ControllerPreset interface for backward compatibility.
  */
 
 import type { ControllerPreset } from '../../types/controls';
-import { XBOX_PRESETS } from './xbox';
-import { PLAYSTATION_PRESETS } from './playstation';
-import { NINTENDO_PRESETS } from './nintendo';
-import { GENERIC_PRESETS, GENERIC_STANDARD, GENERIC_UNKNOWN } from './generic';
+import { findController, findControllerById, getAllControllers } from './register-all';
+import type { BaseController } from './base';
 import { KEYBOARD_DEFAULT } from './keyboard';
 
-/** All registered presets (order matters — first match wins for VID/PID) */
-export const ALL_PRESETS: ControllerPreset[] = [
-  ...XBOX_PRESETS,
-  ...PLAYSTATION_PRESETS,
-  ...NINTENDO_PRESETS,
-  ...GENERIC_PRESETS,
-];
-
-/** VID/PID → preset index for O(1) lookups */
-const vidPidIndex = new Map<string, ControllerPreset>();
-for (const preset of ALL_PRESETS) {
-  for (const vid of preset.vendorIds) {
-    for (const pid of preset.productIds) {
-      const key = `${vid}:${pid}`;
-      if (!vidPidIndex.has(key)) {
-        vidPidIndex.set(key, preset);
-      }
-    }
-  }
+/** Adapt a BaseController to the legacy ControllerPreset interface. */
+function toPreset(ctrl: BaseController): ControllerPreset {
+  return {
+    id: ctrl.id,
+    name: ctrl.name,
+    family: ctrl.family,
+    inputApi: ctrl.inputApi,
+    vendorIds: ctrl.vendorIds,
+    productIds: ctrl.productIds,
+    defaultMappings: ctrl.defaultMappings,
+    brandLogoKey: ctrl.brandLogoKey,
+    buttonIcons: ctrl.buttonIcons,
+  };
 }
+
+/** All registered presets (order = registry order) */
+export const ALL_PRESETS: ControllerPreset[] = getAllControllers().map(toPreset);
 
 /** Find a preset by VID:PID pair (lowercase hex, auto-pads to 4 chars) */
 export function findPresetByVidPid(vid: string, pid: string): ControllerPreset | null {
-  const v = vid.toLowerCase().padStart(4, '0');
-  const p = pid.toLowerCase().padStart(4, '0');
-  return vidPidIndex.get(`${v}:${p}`) ?? null;
+  const ctrl = findController(vid, pid);
+  return ctrl ? toPreset(ctrl) : null;
 }
 
 /** Find a preset by its unique ID */
 export function findPresetById(id: string): ControllerPreset | null {
   if (id === 'keyboard-default') return KEYBOARD_DEFAULT;
-  return ALL_PRESETS.find(p => p.id === id) ?? null;
+  const ctrl = findControllerById(id);
+  return ctrl ? toPreset(ctrl) : null;
 }
-
-/** Name patterns for family detection when VID/PID lookup fails */
-const NAME_PATTERNS: [RegExp, ControllerPreset[]][] = [
-  [/xbox|xinput/i, XBOX_PRESETS],
-  [/playstation|dualshock|dualsense|ps[345]/i, PLAYSTATION_PRESETS],
-  [/switch|joy-?con|nintendo|pro controller/i, NINTENDO_PRESETS],
-  [/8bitdo|8bit/i, GENERIC_PRESETS],
-];
 
 /** Get the best-matching preset for a Gamepad.id string + mapping field */
 export function resolvePreset(gamepadId: string, mapping: string): ControllerPreset {
@@ -57,21 +47,26 @@ export function resolvePreset(gamepadId: string, mapping: string): ControllerPre
   if (parsed) {
     const match = findPresetByVidPid(parsed.vid, parsed.pid);
     if (match) return match;
-
-    // VID-only fallback: use the first preset matching this vendor
-    const vidMatch = ALL_PRESETS.find(p => p.vendorIds.includes(parsed.vid));
-    if (vidMatch) return vidMatch;
   }
 
-  // Name-based fallback: match controller name patterns
-  for (const [pattern, presets] of NAME_PATTERNS) {
-    if (pattern.test(gamepadId) && presets.length > 0) {
-      return presets[0];
+  // Name-based fallback
+  const NAME_PATTERNS: [RegExp, string][] = [
+    [/xbox|xinput/i, 'xbox'],
+    [/playstation|dualshock|dualsense|ps[345]/i, 'playstation'],
+    [/switch|joy-?con|nintendo|pro controller/i, 'nintendo'],
+    [/8bitdo|8bit/i, '8bitdo'],
+  ];
+
+  for (const [pattern, family] of NAME_PATTERNS) {
+    if (pattern.test(gamepadId)) {
+      const ctrl = getAllControllers().find(c => c.family === family);
+      if (ctrl) return toPreset(ctrl);
     }
   }
 
-  // Fallback based on whether Chromium applied standard mapping
-  return mapping === 'standard' ? GENERIC_STANDARD : GENERIC_UNKNOWN;
+  // Fallback: generic controller (always last in registry)
+  const generic = findControllerById('generic');
+  return generic ? toPreset(generic) : toPreset(getAllControllers()[getAllControllers().length - 1]);
 }
 
 /** Parse vendor/product IDs from Gamepad.id string.
@@ -97,4 +92,3 @@ export function parseGamepadId(id: string): { vid: string; pid: string } | null 
 }
 
 export { KEYBOARD_DEFAULT } from './keyboard';
-export { GENERIC_STANDARD, GENERIC_UNKNOWN } from './generic';

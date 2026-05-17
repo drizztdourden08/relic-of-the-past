@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import { installTrackerDebug } from './lib/game/tracker/debug-mock';
 import { pollInventoryState, getCompletedChecks, getCurrentInventory } from './lib/game/tracker';
-import './lib/game/procon2-vibrate'; // registers window.__procon2Vibrate
 import './design-system/reset.css';
 import './design-system/tokens.css';
 

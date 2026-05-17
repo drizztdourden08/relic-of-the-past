@@ -8,7 +8,7 @@
  * Only the calibration wizard uses webHidReader.onRawReport() directly for raw bytes.
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useReducer } from 'react';
 import { webHidReader } from '../../../lib/game/webhid-input-reader';
 import type { WebHidInputState, DeviceStickCalibration } from '../../../lib/game/webhid-input-reader';
 import { getInputManager } from '../../../lib/game/input-manager';
@@ -20,8 +20,7 @@ import { StickCalibrationWizard } from './StickCalibrationWizard';
 import { CONTROLLER_PROFILES } from '@shared/data/controllers/profiles';
 import { findPresetByVidPid, parseGamepadId } from '@shared/data/controllers';
 import { getButtonIconUrl } from './button-icons';
-import { vibrate, vibrateGamepad } from '../../../lib/game/vibration';
-import { procon2Vibrate } from '../../../lib/game/procon2-vibrate';
+import { vibrateGamepad } from '../../../lib/game/vibration';
 import './InputCalibration.css';
 
 interface HidDeviceInfo {
@@ -96,13 +95,17 @@ export function InputCalibration(): JSX.Element {
   // Stick calibration
   const [stickCalibrationStore, setStickCalibrationStore] = useState<Record<string, DeviceStickCalibration>>({});
 
+  // Force re-render on device connect/disconnect
+  const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
+
   // Node-HID enumeration for accurate model detection
   const [hidDeviceInfo, setHidDeviceInfo] = useState<HidDeviceInfo[]>([]);
-  useEffect(() => {
+  const refreshHidDevices = useCallback(() => {
     window.api.enumerateHidDevices()
       .then(devices => setHidDeviceInfo(devices))
       .catch(() => {});
-  }, [webHidConnected]);
+  }, []);
+  useEffect(() => { refreshHidDevices(); }, [webHidConnected, refreshHidDevices]);
 
   // Load stick calibration store for display (InputManager already loaded them into webHidReader)
   useEffect(() => {
@@ -114,17 +117,40 @@ export function InputCalibration(): JSX.Element {
   }, []);
 
   // ── Subscribe to InputManager for all input state ──
+  const hidStatesRef = useRef<Map<string, WebHidInputState>>(new Map());
   useEffect(() => {
     const inputMgr = getInputManager();
     const unsub = inputMgr.onInputState((hidStates, gamepadSnaps, _pressedKeys) => {
-      // Update WebHID states
-      setWebHidStates(hidStates);
+      // Only create a new Map reference when the device set changes,
+      // not on every frame (avoids 60 Map copies/sec for just stick updates).
+      if (hidStates.size !== hidStatesRef.current.size ||
+          [...hidStates.keys()].some(k => !hidStatesRef.current.has(k))) {
+        const copy = new Map(hidStates);
+        hidStatesRef.current = copy;
+        setWebHidStates(copy);
+      }
       setWebHidConnected(hidStates.size > 0 || webHidReader.isConnected());
       // Update gamepad states
       setGamepads(gamepadSnaps);
     });
     return unsub;
   }, []);
+
+  // ── Direct HID connect/disconnect subscriptions for immediate UI updates ──
+  useEffect(() => {
+    const unsubConnect = window.api.onHidDeviceOpened(() => {
+      forceUpdate();
+      refreshHidDevices();
+    });
+    const unsubDisconnect = webHidReader.onDisconnect(() => {
+      forceUpdate();
+      refreshHidDevices();
+    });
+    return () => {
+      unsubConnect();
+      unsubDisconnect();
+    };
+  }, [refreshHidDevices]);
 
   // ── Gamepad connect/disconnect events (for log only) ──
   useEffect(() => {
@@ -242,45 +268,7 @@ export function InputCalibration(): JSX.Element {
         >
           {diagState === 'done' ? '✓ Copied to Clipboard' : diagState === 'running' ? 'Collecting...' : 'Dump Diagnostics'}
         </button>
-        <button
-          data-testid="procon2-vibrate"
-          onClick={async () => {
-            try { await procon2Vibrate(); } catch (e: any) { console.error('procon2Vibrate:', e); }
-          }}
-          style={{
-            padding: '6px 16px',
-            fontWeight: 700,
-            fontSize: 13,
-            border: 'none',
-            borderRadius: 6,
-            cursor: 'pointer',
-            color: '#fff',
-            background: '#7c3aed',
-          }}
-        >
-          SPC2 Vibrate
-        </button>
-        <button
-          data-testid="procon2-nodehid"
-          onClick={async () => {
-            try {
-              const result = await window.api.vibrateHid('057e:2069', 500, 1.0);
-              console.log('node-hid vibrate result:', result);
-            } catch (e: any) { console.error('node-hid vibrate:', e); }
-          }}
-          style={{
-            padding: '6px 16px',
-            fontWeight: 700,
-            fontSize: 13,
-            border: 'none',
-            borderRadius: 6,
-            cursor: 'pointer',
-            color: '#000',
-            background: '#facc15',
-          }}
-        >
-          SPC2 node-hid
-        </button>
+
       </div>
 
       {/* Calibration Wizard */}
@@ -386,10 +374,10 @@ export function InputCalibration(): JSX.Element {
                 if (d.vendorId === '045e' && /xbox|xinput/i.test(gp.id)) return true;
                 return false;
               })) return false;
-              // Skip mice, keyboards, and non-controller devices
-              const isKnownController = findPresetByVidPid(d.vendorId, d.productId);
-              const isGamepadName = /controller|gamepad|joystick|xbox|playstation|switch|nintendo|pro con/i.test(d.product);
-              return isKnownController || isGamepadName;
+              // Skip known non-controller devices (mice with no usage page filtering)
+              if (d.vendorId === '046d') return false; // Logitech mice
+              // Show ALL other HID devices — even unknown ones can be calibrated
+              return true;
             })
             .map(d => {
               const key = `${d.vendorId}:${d.productId}`;
@@ -397,18 +385,23 @@ export function InputCalibration(): JSX.Element {
               const family = preset?.family;
               const icon = family ? CONTROLLER_ICON_MAP[family] : null;
               const name = preset?.name ?? d.product ?? `HID ${key}`;
+              const isUnmapped = !preset;
               return (
                 <div key={`inactive-${key}`} className="input-cal__card" style={{ opacity: 0.5 }}>
                   <div className="input-cal__card-header">
                     {icon && (
                       <img src={icon} alt="" draggable={false} style={{ width: 28, height: 28, opacity: 0.5, flexShrink: 0 }} />
                     )}
-                    <span className="input-cal__card-badge" style={{ background: 'var(--color-bg-tertiary, #333)' }}>Inactive</span>
+                    <span className="input-cal__card-badge" style={{ background: isUnmapped ? '#7c3aed' : 'var(--color-bg-tertiary, #333)' }}>
+                      {isUnmapped ? 'Unmapped' : 'Inactive'}
+                    </span>
                     <span className="input-cal__card-name">{name}</span>
                     <span className="input-cal__card-meta">{key}</span>
                   </div>
                   <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', margin: 'var(--space-sm) 0 0' }}>
-                    Press a button to activate this controller.
+                    {isUnmapped
+                      ? 'Press a button to activate, then use Calibrate to map this controller.'
+                      : 'Press a button to activate this controller.'}
                   </p>
                 </div>
               );
@@ -470,16 +463,6 @@ function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, 
   const name = profile?.name ?? `HID ${deviceKey}`;
   const buttons = profile?.buttons ?? [];
   const [stickCalibrating, setStickCalibrating] = useState(false);
-
-  const doVibrate = async (label: string, fn: () => Promise<any>) => {
-    webHidReader.addDiag(`Vibrate ${label} key=${deviceKey}...`);
-    try {
-      const result = await fn();
-      webHidReader.addDiag(`Vibrate ${label} → ${JSON.stringify(result)}`);
-    } catch (e: any) {
-      webHidReader.addDiag(`Vibrate ${label} ERROR: ${e.message}`);
-    }
-  };
 
   const controllerIcon = profile ? CONTROLLER_ICON_MAP[profile.family] : null;
 

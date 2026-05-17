@@ -3,14 +3,14 @@
  *
  * Provides a single `vibrate(target, durationMs, intensity?)` function that
  * works across controller types:
- *   - HID controllers (SPC2 etc.): uses WebHID sendReport() in the renderer
+ *   - HID controllers (SPC2 etc.): uses registry controller.vibrate() via InputManager
  *   - Gamepad API controllers (Xbox etc.): uses vibrationActuator.playEffect()
  *
  * Any code (game hooks, UI, etc.) can call vibrate() without caring about
  * the underlying transport.
  */
 
-import { webHidReader } from './webhid-input-reader';
+import { getInputManager } from './input-manager';
 
 // ── Public API ────────────────────────────────────────────────────────────
 
@@ -42,13 +42,11 @@ export function vibrateGamepad(gamepadIndex: number, durationMs: number, opts?: 
 }
 
 /**
- * Vibrate an HID controller (SPC2 etc.) using WebHID sendReport().
- * node-hid write() can't write to the SPC2 (no output endpoint),
- * but WebHID sendReport() uses SET_REPORT control transfer which works.
+ * Vibrate an HID controller via the registry's controller.vibrate() method.
  */
 export function vibrateHid(deviceKey: string, durationMs: number, opts?: VibrateOptions): void {
   const intensity = opts?.intensity ?? 0.7;
-  webHidReader.vibrate(deviceKey, durationMs, intensity).catch(() => {});
+  getInputManager().vibrateController(deviceKey, durationMs, intensity).catch(() => {});
 }
 
 /**

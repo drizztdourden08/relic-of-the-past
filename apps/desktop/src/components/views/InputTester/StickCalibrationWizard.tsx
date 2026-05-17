@@ -81,16 +81,6 @@ function applyCalibration(
   return { x: cx * scale, y: cy * scale };
 }
 
-/** Extract raw 12-bit stick values from a report 0x05 byte array */
-function extractRawSticks(bytes: Uint8Array): { lx: number; ly: number; rx: number; ry: number } | null {
-  if (bytes.length < 16) return null;
-  const lx = bytes[10] | ((bytes[11] & 0x0F) << 8);
-  const ly = (bytes[11] >> 4) | (bytes[12] << 4);
-  const rx = bytes[13] | ((bytes[14] & 0x0F) << 8);
-  const ry = (bytes[14] >> 4) | (bytes[15] << 4);
-  return { lx, ly, rx, ry };
-}
-
 // ── Component ──
 
 export function StickCalibrationWizard({ onComplete, onCancel, existingCalibration }: Props) {
@@ -126,16 +116,15 @@ export function StickCalibrationWizard({ onComplete, onCancel, existingCalibrati
     existingCalibration?.left.outerDeadzone ?? DEFAULT_OUTER_DEADZONE,
   );
 
-  // ── Subscribe to raw reports ──
+  // ── Subscribe to input state for rawSticks (controller-agnostic) ──
   useEffect(() => {
-    const unsub = webHidReader.onRawReport((report) => {
-      if (report.reportId !== 0x05) return;
-      const raw = extractRawSticks(report.bytes);
-      if (!raw) return;
-      setRawLX(raw.lx);
-      setRawLY(raw.ly);
-      setRawRX(raw.rx);
-      setRawRY(raw.ry);
+    const unsub = webHidReader.onInput((state) => {
+      if (!state.rawSticks) return;
+      const [lx, ly, rx, ry] = state.rawSticks;
+      setRawLX(lx);
+      setRawLY(ly);
+      setRawRX(rx);
+      setRawRY(ry);
     });
     return unsub;
   }, []);
