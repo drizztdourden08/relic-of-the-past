@@ -7,11 +7,27 @@ import { saveState, loadState, subscribeGameState } from '../../../../lib/game';
 import { log } from '../../../../lib/log-bus';
 import './HomeTab.css';
 
+function formatRelativeTime(ts: number | undefined): string {
+  if (!ts) return 'Never';
+  const diffMs = Date.now() - ts;
+  const diffMins = Math.floor(diffMs / 60000);
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) return `${diffHours}h ago`;
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays < 30) return `${diffDays}d ago`;
+  return new Date(ts).toLocaleDateString();
+}
+
 interface HomeTabProps {
   profileId: string;
   romFile: string;
   isGameRunning: boolean;
   onStartGame: () => void;
+  lastPlayed?: number;
+  created?: number;
+  windowMode?: string;
 }
 
 interface SlotInfo {
@@ -25,6 +41,9 @@ export function HomeTab({
   romFile,
   isGameRunning,
   onStartGame,
+  lastPlayed,
+  created,
+  windowMode,
 }: HomeTabProps) {
   const [slots, setSlots] = useState<SlotInfo[]>(() =>
     Array.from({ length: 10 }, (_, i) => ({ slot: i, timestamp: null, screenshot: null }))
@@ -101,6 +120,27 @@ export function HomeTab({
 
   return (
     <div className="home-tab">
+      <div className="home-tab__info-cards">
+        <div className="home-tab__info-card">
+          <span className="home-tab__info-label">ROM</span>
+          <span className="home-tab__info-value">{romFile.replace(/\.(sfc|smc)$/i, '')}</span>
+        </div>
+        <div className="home-tab__info-card">
+          <span className="home-tab__info-label">Last Played</span>
+          <span className="home-tab__info-value">{formatRelativeTime(lastPlayed)}</span>
+        </div>
+        <div className="home-tab__info-card">
+          <span className="home-tab__info-label">Created</span>
+          <span className="home-tab__info-value">{formatRelativeTime(created)}</span>
+        </div>
+        {windowMode && (
+          <div className="home-tab__info-card">
+            <span className="home-tab__info-label">Window</span>
+            <span className="home-tab__info-value" style={{ textTransform: 'capitalize' }}>{windowMode}</span>
+          </div>
+        )}
+      </div>
+
       <section className="home-tab__section">
         <h3 className="home-tab__section-title">Save States</h3>
         <div className="home-tab__save-grid">

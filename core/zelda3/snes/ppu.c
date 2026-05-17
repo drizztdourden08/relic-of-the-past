@@ -898,12 +898,27 @@ static NOINLINE void PpuDrawWholeLine(Ppu *ppu, uint y) {
     if (math_enabled_cur == 0 || fixed_color == 0 && !ppu->halfColor && !rendered_subscreen) {
       // Math is disabled (or has no effect), so can avoid the per-pixel maths check
       uint32 i = left;
-      do {
-        uint32 color = ppu->cgram[ppu->bgBuffers[0].data[i] & 0xff];
-        dst[0] = ppu->brightnessMult[color & clip_color_mask] << 16 |
-                 ppu->brightnessMult[(color >> 5) & clip_color_mask] << 8 |
-                 ppu->brightnessMult[(color >> 10) & clip_color_mask];
-      } while (dst++, ++i < right);
+      if (ppu->renderFlags & kPpuRenderFlags_BlackBG2) {
+        do {
+          uint8 layer = (ppu->bgBuffers[0].data[i] >> 8) & 0xf;
+          uint8 cidx = ppu->bgBuffers[0].data[i] & 0xff;
+          if (layer == 5 || (layer == 1 && cidx >= 112)) {
+            dst[0] = 0;
+          } else {
+            uint32 color = ppu->cgram[ppu->bgBuffers[0].data[i] & 0xff];
+            dst[0] = ppu->brightnessMult[color & clip_color_mask] << 16 |
+                     ppu->brightnessMult[(color >> 5) & clip_color_mask] << 8 |
+                     ppu->brightnessMult[(color >> 10) & clip_color_mask];
+          }
+        } while (dst++, ++i < right);
+      } else {
+        do {
+          uint32 color = ppu->cgram[ppu->bgBuffers[0].data[i] & 0xff];
+          dst[0] = ppu->brightnessMult[color & clip_color_mask] << 16 |
+                   ppu->brightnessMult[(color >> 5) & clip_color_mask] << 8 |
+                   ppu->brightnessMult[(color >> 10) & clip_color_mask];
+        } while (dst++, ++i < right);
+      }
     } else {
       uint8 *half_color_map = ppu->halfColor ? ppu->brightnessMultHalf : ppu->brightnessMult;
       // Store this in locals
@@ -911,33 +926,38 @@ static NOINLINE void PpuDrawWholeLine(Ppu *ppu, uint y) {
       // Need to check for each pixel whether to use math or not based on the main screen layer.
       uint32 i = left;
       do {
-        uint32 color = ppu->cgram[ppu->bgBuffers[0].data[i] & 0xff], color2;
         uint8 main_layer = (ppu->bgBuffers[0].data[i] >> 8) & 0xf;
-        uint32 r = color & clip_color_mask;
-        uint32 g = (color >> 5) & clip_color_mask;
-        uint32 b = (color >> 10) & clip_color_mask;
-        uint8 *color_map = ppu->brightnessMult;
-        if (math_enabled_cur & (1 << main_layer)) {
-          if (math_enabled_cur & 0x100) {  // addSubscreen ?
-            if ((ppu->bgBuffers[1].data[i] & 0xff) != 0)
-              color2 = ppu->cgram[ppu->bgBuffers[1].data[i] & 0xff], color_map = half_color_map;
-            else  // Don't halve if ppu->addSubscreen && backdrop
-              color2 = fixed_color;
-          } else {
-            color2 = fixed_color, color_map = half_color_map;
+        uint8 cidx2 = ppu->bgBuffers[0].data[i] & 0xff;
+        if ((ppu->renderFlags & kPpuRenderFlags_BlackBG2) && (main_layer == 5 || (main_layer == 1 && cidx2 >= 112))) {
+          dst[0] = 0;
+        } else {
+          uint32 color = ppu->cgram[ppu->bgBuffers[0].data[i] & 0xff], color2;
+          uint32 r = color & clip_color_mask;
+          uint32 g = (color >> 5) & clip_color_mask;
+          uint32 b = (color >> 10) & clip_color_mask;
+          uint8 *color_map = ppu->brightnessMult;
+          if (math_enabled_cur & (1 << main_layer)) {
+            if (math_enabled_cur & 0x100) {  // addSubscreen ?
+              if ((ppu->bgBuffers[1].data[i] & 0xff) != 0)
+                color2 = ppu->cgram[ppu->bgBuffers[1].data[i] & 0xff], color_map = half_color_map;
+              else  // Don't halve if ppu->addSubscreen && backdrop
+                color2 = fixed_color;
+            } else {
+              color2 = fixed_color, color_map = half_color_map;
+            }
+            uint32 r2 = (color2 & 0x1f), g2 = ((color2 >> 5) & 0x1f), b2 = ((color2 >> 10) & 0x1f);
+            if (math_enabled_cur & 0x200) {  // subtractColor?
+              r = (r >= r2) ? r - r2 : 0;
+              g = (g >= g2) ? g - g2 : 0;
+              b = (b >= b2) ? b - b2 : 0;
+            } else {
+              r += r2;
+              g += g2;
+              b += b2;
+            }
           }
-          uint32 r2 = (color2 & 0x1f), g2 = ((color2 >> 5) & 0x1f), b2 = ((color2 >> 10) & 0x1f);
-          if (math_enabled_cur & 0x200) {  // subtractColor?
-            r = (r >= r2) ? r - r2 : 0;
-            g = (g >= g2) ? g - g2 : 0;
-            b = (b >= b2) ? b - b2 : 0;
-          } else {
-            r += r2;
-            g += g2;
-            b += b2;
-          }
+          dst[0] = color_map[b] | color_map[g] << 8 | color_map[r] << 16;
         }
-        dst[0] = color_map[b] | color_map[g] << 8 | color_map[r] << 16;
       } while (dst++, ++i < right);
     }
   } while (cw_clip_math >>= 1, ++windex < cwin.nr);

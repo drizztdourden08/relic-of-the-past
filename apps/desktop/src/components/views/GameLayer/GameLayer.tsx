@@ -10,14 +10,17 @@ interface GameLayerProps {
   configIni?: string;
   profileId?: string;
   stretch?: boolean;
+  edgeEffect?: boolean;
 }
 
-export function GameLayer({ assetData, configIni, profileId, stretch }: GameLayerProps): JSX.Element {
+export function GameLayer({ assetData, configIni, profileId, stretch, edgeEffect = true }: GameLayerProps): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fxCanvasRef = useRef<HTMLCanvasElement>(null);
   const glowRendererRef = useRef<EdgeGlowRenderer | null>(null);
   const rafIdRef = useRef<number>(0);
+  const edgeEffectRef = useRef(edgeEffect);
+  edgeEffectRef.current = edgeEffect;
   const { status, error, start } = useGameState();
   // Increment to force React to create a fresh <canvas> DOM element on restart,
   // ensuring the new WASM instance gets a clean WebGL context.
@@ -118,19 +121,24 @@ export function GameLayer({ assetData, configIni, profileId, stretch }: GameLaye
         // Query WASM for precise viewport info
         const vp = wasmGetViewportInfo();
         if (vp) {
-          // Enable only on overworld (module 9) with extended aspect ratio
+          // Enable on overworld (module 9) with extended aspect ratio
+          // Keep effect visible during text/events if we were on overworld
           const hasExtended = vp.extraLeftRight > 0 || (vp.snesHeight === 240);
           const isOverworld = vp.mainModule === 9;
-          const shouldEnable = isOverworld && hasExtended;
-          renderer.setEnabled(shouldEnable);
-          // Dynamic bounds: where black actually is NOW (for mirror reflection point)
-          renderer.setBlackBounds(vp.blackLeft, vp.blackRight, vp.blackBottom);
-          // Max bounds: fixed extent for distance gradient (stable, no folding)
-          const maxBottom = vp.snesHeight === 240 ? 16 : 0;
-          renderer.setMaxBounds(vp.extraLeftRight, vp.extraLeftRight, maxBottom);
+          if (isOverworld && hasExtended && edgeEffectRef.current) {
+            renderer.setEnabled(true);
+          } else if (!edgeEffectRef.current || (!vp.isGameplay && !isOverworld)) {
+            renderer.setEnabled(false);
+          }
+          // Only update bounds when on overworld — freeze during text/events
+          if (isOverworld) {
+            renderer.setBlackBounds(vp.blackLeft, vp.blackRight, vp.blackBottom);
+            const maxBottom = vp.snesHeight === 240 ? 16 : 0;
+            renderer.setMaxBounds(vp.extraLeftRight, vp.extraLeftRight, maxBottom);
+          }
 
-          // Detect screen transition: bounds jump by >10px
-          if (prevBlackLeft >= 0) {
+          // Detect screen transition: bounds jump by >10px ONLY during overworld movement
+          if (prevBlackLeft >= 0 && isOverworld) {
             const leftDelta = Math.abs(vp.blackLeft - prevBlackLeft);
             const rightDelta = Math.abs(vp.blackRight - prevBlackRight);
             if (leftDelta > 10 || rightDelta > 10) {
@@ -138,11 +146,13 @@ export function GameLayer({ assetData, configIni, profileId, stretch }: GameLaye
               fadeOpacity = 0; // instant hide on transition
             }
           }
-          prevBlackLeft = vp.blackLeft;
-          prevBlackRight = vp.blackRight;
+          if (isOverworld) {
+            prevBlackLeft = vp.blackLeft;
+            prevBlackRight = vp.blackRight;
+          }
 
           // If just came back and stable, fade in
-          if (shouldEnable && fadeTarget === 0 && fadeOpacity <= 0) {
+          if (isOverworld && hasExtended && fadeTarget === 0 && fadeOpacity <= 0) {
             fadeTarget = 1.0;
           }
         } else {

@@ -54,6 +54,10 @@ export interface GameSettings {
   resumeMSU: boolean;
   msuVolume: number; // 0-100
 
+  // ─── Enhancements ───
+  overworldEdgeEffect: boolean;
+  forceBackdropBlack: boolean;
+
   // ─── Controls ───
   activeInputProfileId: string | null;
   functionMappings?: FunctionMapping[];

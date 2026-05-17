@@ -8,6 +8,35 @@
   overflow-y: auto;
 }
 
+.home-tab__info-cards {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.home-tab__info-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+}
+
+.home-tab__info-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.home-tab__info-value {
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  font-weight: var(--weight-medium);
+}
+
 .home-tab__section {
   display: flex;
   flex-direction: column;

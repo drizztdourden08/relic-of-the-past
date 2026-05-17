@@ -80,6 +80,7 @@ export function App(): JSX.Element {
   const [aspectRatio, setAspectRatio] = useState<GameSettings['aspectRatio']>('4:3');
   const [masterVolume, setMasterVolumeState] = useState(100);
   const [showFps, setShowFps] = useState(false);
+  const [overworldEdgeEffect, setOverworldEdgeEffect] = useState(true);
   const prevVolumeRef = useRef(100);
   const [muteOverride, setMuteOverride] = useState<{ volume: number; version: number } | null>(null);
   const muteVersionRef = useRef(0);
@@ -104,6 +105,10 @@ export function App(): JSX.Element {
 
   const handleDisplayPerfChange = useCallback((enabled: boolean) => {
     setShowFps(enabled);
+  }, []);
+
+  const handleEdgeEffectChange = useCallback((enabled: boolean) => {
+    setOverworldEdgeEffect(enabled);
   }, []);
 
   // Titlebar mute toggle: switch between 0 and previous volume
@@ -341,6 +346,7 @@ export function App(): JSX.Element {
     setAspectRatio(settings.aspectRatio);
     setMasterVolumeState(settings.masterVolume);
     setShowFps(settings.displayPerfInTitle);
+    setOverworldEdgeEffect(settings.overworldEdgeEffect);
     if (settings.masterVolume > 0) prevVolumeRef.current = settings.masterVolume;
     if (settings.startFullscreen) {
       window.api.setFullscreen(true);
@@ -629,7 +635,7 @@ export function App(): JSX.Element {
 
       <div className="app__content">
         {/* Game canvas — always present as background layer */}
-        <GameLayer assetData={assetData} configIni={configIni} profileId={activeProfile?.id} stretch={viewportConstraint !== 'none'} />
+        <GameLayer assetData={assetData} configIni={configIni} profileId={activeProfile?.id} stretch={viewportConstraint !== 'none'} edgeEffect={overworldEdgeEffect} />
 
         {/* Save State Overlay */}
         <SaveStateOverlay
@@ -670,6 +676,7 @@ export function App(): JSX.Element {
               onConstraintSettingsChange={handleConstraintSettingsChange}
               onMasterVolumeChange={handleMasterVolumeChange}
               onDisplayPerfChange={handleDisplayPerfChange}
+              onEdgeEffectChange={handleEdgeEffectChange}
               onSaveSlotSettingsChange={handleSaveSlotSettingsChange}
               masterVolumeOverride={muteOverride}
             />

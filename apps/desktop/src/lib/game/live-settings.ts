@@ -113,6 +113,10 @@ export const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   // Controls (JS-only)
   'functionMappings',
   'activeInputProfileId',
+  // Edge effect (React prop, no WASM restart needed)
+  'overworldEdgeEffect',
+  // Backdrop color (WASM flag, pushed live)
+  'forceBackdropBlack',
 ]);
 
 /** Push live-updatable settings to the running WASM module. Returns true if successful. */
@@ -136,6 +140,11 @@ export function pushLiveSettings(settings: GameSettings): boolean {
     // FPS display toggle (guard: function may not exist in older WASM builds)
     try {
       mod.ccall('WasmSetDisplayPerf', null, ['number'], [settings.displayPerfInTitle ? 1 : 0]);
+    } catch { /* WASM not rebuilt yet */ }
+
+    // Force backdrop to black (guard: function may not exist in older WASM builds)
+    try {
+      mod.ccall('WasmSetForceBackdropBlack', null, ['number'], [settings.forceBackdropBlack ? 1 : 0]);
     } catch { /* WASM not rebuilt yet */ }
 
     log.app(`Live settings pushed — features: 0x${features.toString(16)}, ppu: 0x${ppuFlags.toString(16)}`);

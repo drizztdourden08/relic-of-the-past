@@ -91,6 +91,13 @@ export function wasmCheat(cmd: string): void {
   mod.ccall('WasmCheat', null, ['number'], [cmd.charCodeAt(0)]);
 }
 
+/** Force the PPU backdrop color (CGRAM[0]) to black every frame. */
+export function wasmSetForceBackdropBlack(enabled: boolean): void {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return;
+  mod.ccall('WasmSetForceBackdropBlack', null, ['number'], [enabled ? 1 : 0]);
+}
+
 // ─── Viewport Info (for edge glow shader) ───
 
 export interface ViewportInfo {

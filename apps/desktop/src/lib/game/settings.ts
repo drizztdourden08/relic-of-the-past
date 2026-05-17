@@ -57,6 +57,10 @@ export const DEFAULT_SETTINGS: GameSettings = {
   resumeMSU: true,
   msuVolume: 100,
 
+  // Enhancements
+  overworldEdgeEffect: true,
+  forceBackdropBlack: false,
+
   // Controls
   activeInputProfileId: null,
   enhancedSaveSlotShortcut: true,

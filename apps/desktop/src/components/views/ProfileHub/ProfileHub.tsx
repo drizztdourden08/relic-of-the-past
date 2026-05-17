@@ -13,19 +13,6 @@ import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { log } from '../../../lib/log-bus';
 import './ProfileHub.css';
 
-function formatRelativeTime(ts: number): string {
-  if (!ts) return 'Never';
-  const diffMs = Date.now() - ts;
-  const diffMins = Math.floor(diffMs / 60000);
-  if (diffMins < 1) return 'Just now';
-  if (diffMins < 60) return `${diffMins}m ago`;
-  const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) return `${diffHours}h ago`;
-  const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 30) return `${diffDays}d ago`;
-  return new Date(ts).toLocaleDateString();
-}
-
 interface ProfileHubProps {
   profile: Profile;
   isGameRunning: boolean;
@@ -37,6 +24,7 @@ interface ProfileHubProps {
   onMasterVolumeChange?: (volume: number) => void;
   onDisplayPerfChange?: (enabled: boolean) => void;
   onSaveSlotSettingsChange?: (enhanced: boolean, holdDuration: number) => void;
+  onEdgeEffectChange?: (enabled: boolean) => void;
   masterVolumeOverride?: { volume: number; version: number } | null;
 }
 
@@ -53,6 +41,7 @@ export function ProfileHub({
   onMasterVolumeChange,
   onDisplayPerfChange,
   onSaveSlotSettingsChange,
+  onEdgeEffectChange,
   masterVolumeOverride,
 }: ProfileHubProps) {
   const [activeTab, setActiveTab] = useState<TopTab>('home');
@@ -84,7 +73,11 @@ export function ProfileHub({
   }, []);
 
   // Clear restart toast when game stops (settings will apply on next start)
+  // Push live settings when game starts (for flags not in INI like forceBackdropBlack)
   useEffect(() => {
+    if (!wasRunningRef.current && isGameRunning) {
+      pushLiveSettings(settings);
+    }
     if (wasRunningRef.current && !isGameRunning) {
       restartToastShownRef.current = false;
       setToasts((prev) => prev.filter((t) => t.id !== 'restart-required'));
@@ -111,7 +104,9 @@ export function ProfileHub({
           onConstraintSettingsChange?.(merged.viewportConstraint, merged.aspectRatio);
           onMasterVolumeChange?.(merged.masterVolume);
           onDisplayPerfChange?.(merged.displayPerfInTitle);
+          onEdgeEffectChange?.(merged.overworldEdgeEffect);
           getInputManager().setFunctionMappings(merged.functionMappings ?? DEFAULT_FUNCTION_MAPPINGS);
+          if (isGameRunning) pushLiveSettings(merged);
         }
       } catch { /* use defaults */ }
     })();
@@ -170,6 +165,11 @@ export function ProfileHub({
         onSaveSlotSettingsChange?.(next.enhancedSaveSlotShortcut, next.saveHoldDuration);
       }
 
+      // Notify parent of edge effect toggle
+      if ('overworldEdgeEffect' in patch) {
+        onEdgeEffectChange?.(next.overworldEdgeEffect);
+      }
+
       // If game is running, push live settings and maybe show restart toast
       if (isGameRunning) {
         pushLiveSettings(next);
@@ -215,87 +215,73 @@ export function ProfileHub({
             )}
           </div>
         </div>
-        <div className="profile-hub__info-cards">
-          <div className="profile-hub__info-card">
-            <span className="profile-hub__info-label">ROM</span>
-            <span className="profile-hub__info-value">{profile.romFile.replace(/\.(sfc|smc)$/i, '')}</span>
-          </div>
-          <div className="profile-hub__info-card">
-            <span className="profile-hub__info-label">Last Played</span>
-            <span className="profile-hub__info-value">{formatRelativeTime(profile.lastPlayed)}</span>
-          </div>
-          <div className="profile-hub__info-card">
-            <span className="profile-hub__info-label">Created</span>
-            <span className="profile-hub__info-value">{formatRelativeTime(profile.created)}</span>
-          </div>
-          <div className="profile-hub__info-card">
-            <span className="profile-hub__info-label">Window</span>
-            <span className="profile-hub__info-value" style={{ textTransform: 'capitalize' }}>{settings.windowMode}</span>
-          </div>
+      </div>
+
+      {/* Body: left tabs + content */}
+      <div className="profile-hub__body">
+        <div className="profile-hub__tabs">
+          <button
+            className={`profile-hub__tab ${activeTab === 'home' ? 'profile-hub__tab--active' : ''}`}
+            onClick={() => setActiveTab('home')}
+          >
+            <span className="profile-hub__tab-icon">🏠</span>
+            <span className="profile-hub__tab-label">Home</span>
+          </button>
+          <button
+            className={`profile-hub__tab ${activeTab === 'settings' ? 'profile-hub__tab--active' : ''}`}
+            onClick={() => setActiveTab('settings')}
+          >
+            <span className="profile-hub__tab-icon">⚙️</span>
+            <span className="profile-hub__tab-label">Settings</span>
+          </button>
+          <button
+            className={`profile-hub__tab ${activeTab === 'audio' ? 'profile-hub__tab--active' : ''}`}
+            onClick={() => setActiveTab('audio')}
+          >
+            <span className="profile-hub__tab-icon">🔊</span>
+            <span className="profile-hub__tab-label">Audio</span>
+          </button>
+          <button
+            className={`profile-hub__tab ${activeTab === 'gameplay' ? 'profile-hub__tab--active' : ''}`}
+            onClick={() => setActiveTab('gameplay')}
+          >
+            <span className="profile-hub__tab-icon">🎮</span>
+            <span className="profile-hub__tab-label">Gameplay</span>
+          </button>
+          <button
+            className={`profile-hub__tab ${activeTab === 'controls' ? 'profile-hub__tab--active' : ''}`}
+            onClick={() => setActiveTab('controls')}
+          >
+            <span className="profile-hub__tab-icon">⌨️</span>
+            <span className="profile-hub__tab-label">Controls</span>
+          </button>
         </div>
-      </div>
 
-      {/* Tab cards */}
-      <div className="profile-hub__tabs">
-        <button
-          className={`profile-hub__tab ${activeTab === 'home' ? 'profile-hub__tab--active' : ''}`}
-          onClick={() => setActiveTab('home')}
-        >
-          <span className="profile-hub__tab-icon">🏠</span>
-          <span className="profile-hub__tab-label">Home</span>
-        </button>
-        <button
-          className={`profile-hub__tab ${activeTab === 'settings' ? 'profile-hub__tab--active' : ''}`}
-          onClick={() => setActiveTab('settings')}
-        >
-          <span className="profile-hub__tab-icon">⚙️</span>
-          <span className="profile-hub__tab-label">Settings</span>
-        </button>
-        <button
-          className={`profile-hub__tab ${activeTab === 'audio' ? 'profile-hub__tab--active' : ''}`}
-          onClick={() => setActiveTab('audio')}
-        >
-          <span className="profile-hub__tab-icon">🔊</span>
-          <span className="profile-hub__tab-label">Audio</span>
-        </button>
-        <button
-          className={`profile-hub__tab ${activeTab === 'gameplay' ? 'profile-hub__tab--active' : ''}`}
-          onClick={() => setActiveTab('gameplay')}
-        >
-          <span className="profile-hub__tab-icon">🎮</span>
-          <span className="profile-hub__tab-label">Gameplay</span>
-        </button>
-        <button
-          className={`profile-hub__tab ${activeTab === 'controls' ? 'profile-hub__tab--active' : ''}`}
-          onClick={() => setActiveTab('controls')}
-        >
-          <span className="profile-hub__tab-icon">⌨️</span>
-          <span className="profile-hub__tab-label">Controls</span>
-        </button>
-      </div>
-
-      {/* Content */}
-      <div className="profile-hub__content">
-        {activeTab === 'home' && (
-          <HomeTab
-            profileId={profile.id}
-            romFile={profile.romFile}
-            isGameRunning={isGameRunning}
-            onStartGame={onStartGame}
-          />
-        )}
-        {activeTab === 'settings' && (
-          <SettingsView settings={settings} onChange={handleSettingsChange} />
-        )}
-        {activeTab === 'audio' && (
-          <AudioSettings profileId={profile.id} settings={settings} onChange={handleSettingsChange} />
-        )}
-        {activeTab === 'gameplay' && (
-          <GameplaySettings settings={settings} onChange={handleSettingsChange} />
-        )}
-        {activeTab === 'controls' && (
-          <ControlsSettings settings={settings} onChange={handleSettingsChange} profileId={profile.id} />
-        )}
+        <div className="profile-hub__content">
+          {activeTab === 'home' && (
+            <HomeTab
+              profileId={profile.id}
+              romFile={profile.romFile}
+              isGameRunning={isGameRunning}
+              onStartGame={onStartGame}
+              lastPlayed={profile.lastPlayed}
+              created={profile.created}
+              windowMode={settings.windowMode}
+            />
+          )}
+          {activeTab === 'settings' && (
+            <SettingsView settings={settings} onChange={handleSettingsChange} />
+          )}
+          {activeTab === 'audio' && (
+            <AudioSettings profileId={profile.id} settings={settings} onChange={handleSettingsChange} />
+          )}
+          {activeTab === 'gameplay' && (
+            <GameplaySettings settings={settings} onChange={handleSettingsChange} />
+          )}
+          {activeTab === 'controls' && (
+            <ControlsSettings settings={settings} onChange={handleSettingsChange} profileId={profile.id} />
+          )}
+        </div>
       </div>
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </div>

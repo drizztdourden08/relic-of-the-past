@@ -10,45 +10,47 @@
 
 .data-manager__header {
   flex-shrink: 0;
-  padding: 0 var(--space-sm) var(--space-lg);
+  padding: 0 var(--space-sm) var(--space-md);
 }
 
 .data-manager__title {
   font-size: var(--text-xl);
   font-weight: var(--weight-semi);
   color: var(--color-gold-bright);
-  margin: 0 0 var(--space-xs);
-}
-
-.data-manager__subtitle {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
   margin: 0;
 }
 
-/* ─── Tab cards ─── */
+/* ─── Body: left tabs + content ─── */
+
+.data-manager__body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ─── Tab cards (left side) ─── */
 
 .data-manager__tabs {
   display: flex;
-  gap: var(--space-sm);
-  padding: 0 var(--space-sm) var(--space-md);
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: 0 var(--space-sm);
   flex-shrink: 0;
+  width: 120px;
 }
 
 .data-manager__tab {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-md) var(--space-xl);
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.04);
   color: var(--color-text-secondary);
   cursor: pointer;
   transition: all var(--transition-fast);
-  min-width: 100px;
-  flex: 1;
 }
 
 .data-manager__tab:hover {
@@ -64,13 +66,14 @@
 }
 
 .data-manager__tab-icon {
-  font-size: 24px;
+  font-size: 16px;
   line-height: 1;
 }
 
 .data-manager__tab-label {
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
+  flex: 1;
 }
 
 .data-manager__tab-count {

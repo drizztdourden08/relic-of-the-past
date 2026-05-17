@@ -173,7 +173,25 @@ void main() {
   // Sample the game pixel
   vec4 game = texture2D(u_gameTexture, v_uv);
   float brightness = dot(game.rgb, vec3(0.299, 0.587, 0.114));
-  // Soft blend zone: fully game above 0.02, fully effect below 0.004
+
+  // Determine if this pixel is in the black bar zone (outside game bounds)
+  float pixelX = v_uv.x * u_resolution.x;
+  float pixelY = v_uv.y * u_resolution.y;
+  float dynLeftBound = u_dynLeft * 2.0;
+  float dynRightBound = u_resolution.x - u_dynRight * 2.0;
+  float dynBottomBound = u_resolution.y - u_dynBottom * 2.0;
+
+  bool inEffectZone = (pixelX < dynLeftBound && u_dynLeft > 0.0)
+                   || (pixelX > dynRightBound && u_dynRight > 0.0)
+                   || (pixelY > dynBottomBound && u_dynBottom > 0.0);
+
+  // If pixel is in the game area, always show the game pixel (including HUD black)
+  if (!inEffectZone) {
+    gl_FragColor = game;
+    return;
+  }
+
+  // We're in the effect zone — soft blend near the boundary
   float gameAlpha = smoothstep(0.004, 0.02, brightness);
   if (gameAlpha > 0.99) {
     gl_FragColor = game;
@@ -191,15 +209,6 @@ void main() {
     gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
     return;
   }
-
-  // Compute distance from DYNAMIC boundary (actual game edge) normalized over MAX extent
-  float pixelX = v_uv.x * u_resolution.x;
-  float pixelY = v_uv.y * u_resolution.y;
-
-  // Dynamic boundaries (where game content actually ends)
-  float dynLeftBound = u_dynLeft * 2.0;
-  float dynRightBound = u_resolution.x - u_dynRight * 2.0;
-  float dynBottomBound = u_resolution.y - u_dynBottom * 2.0;
 
   // Max extents (for normalizing distance to 0-1)
   float maxLeftExtent = u_blackLeft * 2.0;

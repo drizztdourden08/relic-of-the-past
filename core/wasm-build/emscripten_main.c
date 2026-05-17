@@ -59,6 +59,7 @@ static int g_ppu_render_flags = 0;
 static int g_input1_state;
 static uint8 g_paused;
 static bool g_running = true;
+static bool g_force_backdrop_black = false;
 
 // FPS measurement
 static int g_curr_fps;
@@ -297,7 +298,8 @@ uint32_t WasmGetFeatures(void) {
 
 EMSCRIPTEN_KEEPALIVE
 void WasmSetPpuRenderFlags(int flags) {
-  g_ppu_render_flags = flags;
+  // Preserve BlackBG2 flag (managed separately by WasmSetForceBackdropBlack)
+  g_ppu_render_flags = flags | (g_force_backdrop_black ? kPpuRenderFlags_BlackBG2 : 0);
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -341,6 +343,15 @@ void WasmReset(int warm) {
 EMSCRIPTEN_KEEPALIVE
 void WasmCheat(int cmd) {
   PatchCommand((char)cmd);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmSetForceBackdropBlack(int enable) {
+  g_force_backdrop_black = enable != 0;
+  if (g_force_backdrop_black)
+    g_ppu_render_flags |= kPpuRenderFlags_BlackBG2;
+  else
+    g_ppu_render_flags &= ~kPpuRenderFlags_BlackBG2;
 }
 
 // ---------------------------------------------------------------------------

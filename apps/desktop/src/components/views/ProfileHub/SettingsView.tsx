@@ -83,6 +83,26 @@ const SECTIONS: Section[] = [
       },
     ],
   },
+  {
+    id: 'enhancements',
+    title: 'Enhancements',
+    subsections: [
+      {
+        id: 'enhancements-overworld',
+        title: 'Overworld',
+        items: [
+          { key: 'overworldEdgeEffect', label: 'Edge Effect', description: 'Fill black borders with a blurred mirror reflection and animated decay effect instead of solid black', keywords: 'edge glow mirror blur voronoi overworld widescreen border' },
+        ],
+      },
+      {
+        id: 'enhancements-indoor',
+        title: 'Indoor / Dungeons',
+        items: [
+          { key: 'forceBackdropBlack', label: 'Black Background', description: 'Replace the colored backdrop behind rooms with pure black', keywords: 'backdrop background color indoor dungeon house black' },
+        ],
+      },
+    ],
+  },
 ];
 
 const ASPECT_OPTIONS = [

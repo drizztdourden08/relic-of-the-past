@@ -46,6 +46,8 @@ enum {
   kPpuRenderFlags_NoBG3 = 16,
   // Skip OBJ/sprite rendering
   kPpuRenderFlags_NoSprites = 32,
+  // Force BG1 + backdrop pixels to black (for indoor scenes)
+  kPpuRenderFlags_BlackBG2 = 64,
 };
 
 

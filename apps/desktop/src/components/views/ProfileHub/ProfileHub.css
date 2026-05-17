@@ -34,57 +34,35 @@
   gap: var(--space-sm);
 }
 
-.profile-hub__info-cards {
-  display: flex;
-  gap: var(--space-sm);
-  flex-wrap: wrap;
-}
-
-.profile-hub__info-card {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: var(--space-sm) var(--space-md);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-md);
-}
-
-.profile-hub__info-label {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.profile-hub__info-value {
-  font-size: var(--text-sm);
-  color: var(--color-text-primary);
-  font-weight: var(--weight-medium);
-}
-
 /* ─── Tab cards ─── */
+
+.profile-hub__body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
 
 .profile-hub__tabs {
   display: flex;
-  gap: var(--space-sm);
-  padding: 0 var(--space-sm) var(--space-md);
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: 0 var(--space-sm);
   flex-shrink: 0;
+  width: 120px;
 }
 
 .profile-hub__tab {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: var(--space-xs);
-  padding: var(--space-md) var(--space-xl);
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.04);
   color: var(--color-text-secondary);
   cursor: pointer;
   transition: all var(--transition-fast);
-  min-width: 100px;
 }
 
 .profile-hub__tab:hover {
@@ -100,7 +78,7 @@
 }
 
 .profile-hub__tab-icon {
-  font-size: 24px;
+  font-size: 16px;
   line-height: 1;
 }
 

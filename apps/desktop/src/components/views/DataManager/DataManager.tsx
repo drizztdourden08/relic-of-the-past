@@ -82,9 +82,6 @@ export function DataManager({
     <div className="data-manager">
       <div className="data-manager__header">
         <h2 className="data-manager__title">Data Manager</h2>
-        <p className="data-manager__subtitle">
-          Manage profiles, ROMs, sprites, language packs, and MSU audio
-        </p>
       </div>
 
       {loadingProfile && (
@@ -96,59 +93,61 @@ export function DataManager({
         </div>
       )}
 
-      <div className="data-manager__tabs">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            className={`data-manager__tab ${activeTab === tab.id ? 'data-manager__tab--active' : ''}`}
-            onClick={() => setActiveTab(tab.id)}
-          >
-            <span className="data-manager__tab-icon">{tab.icon}</span>
-            <span className="data-manager__tab-label">{tab.label}</span>
-            <span className="data-manager__tab-count">{tab.count}</span>
-          </button>
-        ))}
-      </div>
+      <div className="data-manager__body">
+        <div className="data-manager__tabs">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              className={`data-manager__tab ${activeTab === tab.id ? 'data-manager__tab--active' : ''}`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              <span className="data-manager__tab-icon">{tab.icon}</span>
+              <span className="data-manager__tab-label">{tab.label}</span>
+              <span className="data-manager__tab-count">{tab.count}</span>
+            </button>
+          ))}
+        </div>
 
-      <div className="data-manager__content">
-        {activeTab === 'profiles' && (
-          <ProfileManager
-            profiles={profiles}
-            romStatuses={romStatuses}
-            onSelectProfile={onSelectProfile}
-            onCreateProfile={onCreateProfile}
-            onDeleteProfile={onDeleteProfile}
-            onRefresh={handleRefresh}
-            isGameRunning={isGameRunning}
-            onSwitchProfile={onSwitchProfile}
-          />
-        )}
-        {activeTab === 'roms' && (
-          <RomManager
-            romStatuses={romStatuses}
-            onImportRom={onImportRom}
-            onExtractAssets={onExtractAssets}
-            onDeleteRom={onDeleteRom}
-            onRefresh={handleRefresh}
-          />
-        )}
-        {activeTab === 'languages' && (
-          <LanguageManager
-            romStatuses={romStatuses}
-            onDeleteConfirm={onDeleteConfirm}
-          />
-        )}
-        {activeTab === 'msu' && (
-          <MsuManager
-            onDeleteConfirm={onDeleteConfirm}
-            onRefresh={handleRefresh}
-          />
-        )}
-        {activeTab === 'sprites' && (
-          <SpriteManager
-            romStatuses={romStatuses}
-          />
-        )}
+        <div className="data-manager__content">
+          {activeTab === 'profiles' && (
+            <ProfileManager
+              profiles={profiles}
+              romStatuses={romStatuses}
+              onSelectProfile={onSelectProfile}
+              onCreateProfile={onCreateProfile}
+              onDeleteProfile={onDeleteProfile}
+              onRefresh={handleRefresh}
+              isGameRunning={isGameRunning}
+              onSwitchProfile={onSwitchProfile}
+            />
+          )}
+          {activeTab === 'roms' && (
+            <RomManager
+              romStatuses={romStatuses}
+              onImportRom={onImportRom}
+              onExtractAssets={onExtractAssets}
+              onDeleteRom={onDeleteRom}
+              onRefresh={handleRefresh}
+            />
+          )}
+          {activeTab === 'languages' && (
+            <LanguageManager
+              romStatuses={romStatuses}
+              onDeleteConfirm={onDeleteConfirm}
+            />
+          )}
+          {activeTab === 'msu' && (
+            <MsuManager
+              onDeleteConfirm={onDeleteConfirm}
+              onRefresh={handleRefresh}
+            />
+          )}
+          {activeTab === 'sprites' && (
+            <SpriteManager
+              romStatuses={romStatuses}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
