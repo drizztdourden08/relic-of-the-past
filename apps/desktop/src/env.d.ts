@@ -301,13 +301,14 @@ interface ElectronAPI {
   // HID write (haptics, LED control via node-hid)
   writeHidDevice(deviceKey: string, data: number[]): Promise<boolean>;
   vibrateHid(deviceKey: string, durationMs: number, intensity: number): Promise<boolean>;
-  vibratePattern(deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number): Promise<boolean>;
+  vibratePattern(deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number): Promise<{ ok: boolean; error?: string }>;
   testVibration(deviceKey: string): Promise<boolean>;
 
   // HID input reports from main process (node-hid reader)
   onHidReport(callback: (report: { deviceKey: string; vendorId: number; productId: number; data: number[] }) => void): () => void;
   onHidDeviceOpened(callback: (info: { deviceKey: string; vendorId: string; productId: string; product: string }) => void): () => void;
-  onHidDisconnect(callback: (info: { deviceKey: string; product: string }) => void): () => void;
+  onHidDisconnect(callback: (info: { deviceKey: string; product: string; error?: string }) => void): () => void;
+  onHidError(callback: (info: { deviceKey: string; error: string }) => void): () => void;
 
   // App info
   getUserDataPath(): Promise<string>;

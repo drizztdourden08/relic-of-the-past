@@ -6,6 +6,8 @@
  * in the Electron main process. This module is purely a parser + state store.
  */
 
+import { findController } from '@shared/data/controllers/register-all';
+
 export interface WebHidInputState {
   deviceKey: string;
   buttons: boolean[];
@@ -83,255 +85,6 @@ function applySticksCalibration(
   const l = applyOne(lxRaw, lyRaw, cal.left);
   const r = applyOne(rxRaw, ryRaw, cal.right);
   return [l.x, l.y, r.x, r.y];
-}
-
-/**
- * Parse Switch Pro simple input report (report ID 0x3F, 11 bytes of data).
- * This is the default USB HID mode before initialization.
- */
-function parseSwitchSimple(data: DataView): { buttons: boolean[]; axes: number[] } {
-  // Simple mode report layout (after report ID):
-  // Byte 0-1: buttons
-  // Byte 2: hat/dpad
-  // Byte 3-6: sticks (uint8 centered at 128)
-  const b0 = data.getUint8(0);
-  const b1 = data.getUint8(1);
-  const hat = data.getUint8(2);
-
-  const lx = data.byteLength > 3 ? data.getUint8(3) : 128;
-  const ly = data.byteLength > 4 ? data.getUint8(4) : 128;
-  const rx = data.byteLength > 5 ? data.getUint8(5) : 128;
-  const ry = data.byteLength > 6 ? data.getUint8(6) : 128;
-
-  // Map hat to dpad buttons
-  const dUp = hat === 0 || hat === 1 || hat === 7;
-  const dRight = hat === 1 || hat === 2 || hat === 3;
-  const dDown = hat === 3 || hat === 4 || hat === 5;
-  const dLeft = hat === 5 || hat === 6 || hat === 7;
-
-  // Standard gamepad button layout (17 buttons):
-  // 0:B, 1:A, 2:Y, 3:X, 4:L, 5:R, 6:ZL, 7:ZR,
-  // 8:Minus, 9:Plus, 10:LStick, 11:RStick, 12:Up, 13:Down, 14:Left, 15:Right, 16:Home
-  const buttons: boolean[] = [
-    !!(b0 & 0x01),       // 0: B (Y on Switch)
-    !!(b0 & 0x02),       // 1: A (B on Switch)
-    !!(b0 & 0x04),       // 2: Y (X on Switch)
-    !!(b0 & 0x08),       // 3: X (A on Switch)
-    !!(b0 & 0x10),       // 4: L
-    !!(b0 & 0x20),       // 5: R
-    !!(b0 & 0x40),       // 6: ZL
-    !!(b0 & 0x80),       // 7: ZR
-    !!(b1 & 0x01),       // 8: Minus
-    !!(b1 & 0x02),       // 9: Plus
-    !!(b1 & 0x04),       // 10: L Stick
-    !!(b1 & 0x08),       // 11: R Stick
-    dUp,                 // 12: DPad Up
-    dDown,               // 13: DPad Down
-    dLeft,               // 14: DPad Left
-    dRight,              // 15: DPad Right
-    !!(b1 & 0x10),       // 16: Home
-  ];
-
-  // Normalize sticks: 0-255 → -1 to +1
-  const axes: number[] = [
-    (lx - 128) / 128,
-    (ly - 128) / 128,
-    (rx - 128) / 128,
-    (ry - 128) / 128,
-  ];
-
-  return { buttons, axes };
-}
-
-/**
- * Parse Switch Pro Controller 2 input report (report ID 0x05, USB HID mode).
- * Byte layout confirmed by real hardware hex dumps:
- *   Byte 0:     Timer/counter (increments by 4)
- *   Byte 1:     Status/battery
- *   Byte 2:     Connection status (varies — NOT button data)
- *   Byte 3:     Padding (0x00)
- *   Byte 4:     Right-side buttons: Y(0x01) X(0x02) B(0x04) A(0x08) ??(0x10) ??(0x20) R(0x40) ZR(0x80)
- *   Byte 5:     Shared buttons:     Minus(0x01) Plus(0x02) RStick(0x04) LStick(0x08) Home(0x10) Capture(0x20) C(0x40)
- *   Byte 6:     Left-side + dpad:   GL(0x01) GR(0x02) DpRight(0x04) DpLeft(0x08) DpDown(0x10) DpUp(0x20) L(0x40) ZL(0x80)
- *   Bytes 7-9:  Padding (0x00)
- *   Bytes 10-12: Left stick  (12-bit X, 12-bit Y packed)
- *   Bytes 13-15: Right stick (12-bit X, 12-bit Y packed)
- */
-function parseSwitchPro2Report05(data: DataView): { buttons: boolean[]; axes: number[]; rawSticks: [number, number, number, number] } {
-  const b0 = data.getUint8(4);    // right-side face buttons + R/ZR
-  const b1 = data.getUint8(5);    // shared (start/select/sticks/home/capture/chat)
-  const b2 = data.getUint8(6);    // left-side (L/ZL) + dpad
-  const b3 = data.getUint8(7);    // grip buttons (GL/GR)
-
-  // Left stick: 12-bit values packed in 3 bytes (bytes 10-12)
-  const lxRaw = data.getUint8(10) | ((data.getUint8(11) & 0x0F) << 8);
-  const lyRaw = (data.getUint8(11) >> 4) | (data.getUint8(12) << 4);
-
-  // Right stick: 12-bit values packed in 3 bytes (bytes 13-15)
-  const rxRaw = data.getUint8(13) | ((data.getUint8(14) & 0x0F) << 8);
-  const ryRaw = (data.getUint8(14) >> 4) | (data.getUint8(15) << 4);
-
-  // Button order matches profile: A, B, X, Y, L, R, ZL, ZR, +, -, LStick, RStick, DUp, DDn, DLt, DRt, Home, Capture, C, GL, GR
-  const buttons: boolean[] = [
-    !!(b0 & 0x08),       //  0: A
-    !!(b0 & 0x04),       //  1: B
-    !!(b0 & 0x02),       //  2: X
-    !!(b0 & 0x01),       //  3: Y
-    !!(b2 & 0x40),       //  4: L
-    !!(b0 & 0x40),       //  5: R
-    !!(b2 & 0x80),       //  6: ZL
-    !!(b0 & 0x80),       //  7: ZR
-    !!(b1 & 0x02),       //  8: Plus/Start
-    !!(b1 & 0x01),       //  9: Minus/Select
-    !!(b1 & 0x08),       // 10: L Stick
-    !!(b1 & 0x04),       // 11: R Stick
-    !!(b2 & 0x02),       // 12: DPad Up
-    !!(b2 & 0x01),       // 13: DPad Down
-    !!(b2 & 0x08),       // 14: DPad Left
-    !!(b2 & 0x04),       // 15: DPad Right
-    !!(b1 & 0x10),       // 16: Home
-    !!(b1 & 0x20),       // 17: Capture
-    !!(b1 & 0x40),       // 18: C (Chat)
-    !!(b3 & 0x02),       // 19: GL  — byte[7]
-    !!(b3 & 0x01),       // 20: GR  — byte[7]
-  ];
-
-  // Fallback normalization (used when no calibration is loaded).
-  // Calibrated normalization is applied in handleInputReport when available.
-  let lx = (lxRaw - 2048) / 1000;
-  let ly = -(lyRaw - 2048) / 1000;
-  let rx = (rxRaw - 2048) / 1000;
-  let ry = -(ryRaw - 2048) / 1000;
-  const lMag = Math.sqrt(lx * lx + ly * ly);
-  if (lMag > 1) { lx /= lMag; ly /= lMag; }
-  const rMag = Math.sqrt(rx * rx + ry * ry);
-  if (rMag > 1) { rx /= rMag; ry /= rMag; }
-  const axes: number[] = [lx, ly, rx, ry];
-
-  return { buttons, axes, rawSticks: [lxRaw, lyRaw, rxRaw, ryRaw] };
-}
-
-/**
- * Parse Switch Pro Controller 2 input report (report ID 0x09, alternate USB HID mode).
- * Button layout confirmed via HID calibration — different from 0x30 and 0x3F.
- * Sticks are 12-bit packed (same byte layout as full mode).
- *
- * Report layout (63 bytes after report ID):
- *   Byte 0:   Timer/counter
- *   Byte 1:   Battery/connection
- *   Byte 2:   Right-side buttons: B(0x01) A(0x02) Y(0x04) X(0x08) R(0x10) ZR(0x20) Plus(0x40) RStick(0x80)
- *   Byte 3:   Left-side + dpad:   DpDn(0x01) DpRt(0x02) DpLt(0x04) DpUp(0x08) L(0x10) ZL(0x20) Minus(0x40) LStick(0x80)
- *   Byte 4:   Extra:              Home(0x01) Capture(0x02) GR(0x04) GL(0x08) C/Chat(0x10)
- *   Byte 5-7: Left stick  (12-bit X, 12-bit Y packed)
- *   Byte 8-10: Right stick (12-bit X, 12-bit Y packed)
- *   Byte 11+: IMU/gyro data
- */
-function parseSwitchPro2(data: DataView): { buttons: boolean[]; axes: number[] } {
-  const b0 = data.getUint8(2); // right-side buttons
-  const b1 = data.getUint8(3); // left-side + dpad
-  const b2 = data.getUint8(4); // home, capture, gr, gl, c
-
-  // Left stick: 12-bit values packed in 3 bytes (bytes 5-7)
-  const lxRaw = data.getUint8(5) | ((data.getUint8(6) & 0x0F) << 8);
-  const lyRaw = (data.getUint8(6) >> 4) | (data.getUint8(7) << 4);
-
-  // Right stick: 12-bit values packed in 3 bytes (bytes 8-10)
-  const rxRaw = data.getUint8(8) | ((data.getUint8(9) & 0x0F) << 8);
-  const ryRaw = (data.getUint8(9) >> 4) | (data.getUint8(10) << 4);
-
-  // Button order matches profile: A, B, X, Y, L, R, ZL, ZR, +, -, LStick, RStick, DUp, DDn, DLt, DRt, Home, Capture, C, GL, GR
-  const buttons: boolean[] = [
-    !!(b0 & 0x02),       //  0: A
-    !!(b0 & 0x01),       //  1: B
-    !!(b0 & 0x08),       //  2: X
-    !!(b0 & 0x04),       //  3: Y
-    !!(b1 & 0x10),       //  4: L
-    !!(b0 & 0x10),       //  5: R
-    !!(b1 & 0x20),       //  6: ZL
-    !!(b0 & 0x20),       //  7: ZR
-    !!(b0 & 0x40),       //  8: Plus/Start
-    !!(b1 & 0x40),       //  9: Minus/Select
-    !!(b1 & 0x80),       // 10: L Stick
-    !!(b0 & 0x80),       // 11: R Stick
-    !!(b1 & 0x08),       // 12: DPad Up
-    !!(b1 & 0x01),       // 13: DPad Down
-    !!(b1 & 0x04),       // 14: DPad Left
-    !!(b1 & 0x02),       // 15: DPad Right
-    !!(b2 & 0x01),       // 16: Home
-    !!(b2 & 0x02),       // 17: Capture
-    !!(b2 & 0x10),       // 18: C (Chat)
-    !!(b2 & 0x08),       // 19: GL
-    !!(b2 & 0x04),       // 20: GR
-  ];
-
-  // Normalize 12-bit sticks (center ~2048, range 0-4095) → -1 to +1
-  const axes: number[] = [
-    (lxRaw - 2048) / 2048,
-    -(lyRaw - 2048) / 2048, // Y inverted
-    (rxRaw - 2048) / 2048,
-    -(ryRaw - 2048) / 2048, // Y inverted
-  ];
-
-  return { buttons, axes };
-}
-
-/**
- * Parse Switch Pro full input report (report ID 0x30, used in Bluetooth/full mode).
- * 12 bytes of button/stick data followed by IMU data.
- */
-function parseSwitchFull(data: DataView): { buttons: boolean[]; axes: number[] } {
-  // Full report layout (after report ID + timer + battery/conn):
-  // Byte 0: timer
-  // Byte 1: battery + connection
-  // Byte 2-4: buttons (3 bytes)
-  // Byte 5-7: left stick (3 bytes, 12-bit each)
-  // Byte 8-10: right stick (3 bytes, 12-bit each)
-  const offset = 2; // skip timer and battery byte
-  const b0 = data.getUint8(offset);
-  const b1 = data.getUint8(offset + 1);
-  const b2 = data.getUint8(offset + 2);
-
-  // Left stick: 12-bit values packed in 3 bytes
-  const lxRaw = data.getUint8(offset + 3) | ((data.getUint8(offset + 4) & 0x0F) << 8);
-  const lyRaw = (data.getUint8(offset + 4) >> 4) | (data.getUint8(offset + 5) << 4);
-
-  // Right stick: 12-bit values packed in 3 bytes
-  const rxRaw = data.getUint8(offset + 6) | ((data.getUint8(offset + 7) & 0x0F) << 8);
-  const ryRaw = (data.getUint8(offset + 7) >> 4) | (data.getUint8(offset + 8) << 4);
-
-  // Buttons (full mode uses different bit layout)
-  // b0: Y B A X (right buttons) in bits 0-3, L R in bits 6-7
-  // b1: Minus Plus LStick RStick Home Capture ZL ZR
-  // b2: Down Up Right Left (dpad)
-  const buttons: boolean[] = [
-    !!(b0 & 0x04),       // 0: B
-    !!(b0 & 0x08),       // 1: A
-    !!(b0 & 0x01),       // 2: Y
-    !!(b0 & 0x02),       // 3: X
-    !!(b0 & 0x40),       // 4: L
-    !!(b0 & 0x80),       // 5: R
-    !!(b1 & 0x40),       // 6: ZL
-    !!(b1 & 0x80),       // 7: ZR
-    !!(b1 & 0x01),       // 8: Minus
-    !!(b1 & 0x02),       // 9: Plus
-    !!(b1 & 0x04),       // 10: L Stick
-    !!(b1 & 0x08),       // 11: R Stick
-    !!(b2 & 0x02),       // 12: DPad Up
-    !!(b2 & 0x01),       // 13: DPad Down
-    !!(b2 & 0x08),       // 14: DPad Left
-    !!(b2 & 0x04),       // 15: DPad Right
-    !!(b1 & 0x10),       // 16: Home
-  ];
-
-  // Normalize 12-bit sticks (center ~2048, range 0-4095) → -1 to +1
-  const axes: number[] = [
-    (lxRaw - 2048) / 2048,
-    -(lyRaw - 2048) / 2048, // Y inverted
-    (rxRaw - 2048) / 2048,
-    -(ryRaw - 2048) / 2048, // Y inverted
-  ];
-
-  return { buttons, axes };
 }
 
 class WebHidInputReader {
@@ -475,30 +228,21 @@ class WebHidInputReader {
       for (const cb of this.rawListeners) cb(raw);
     }
 
-    // Parse using the same logic as handleInputReport
-    let parsed: { buttons: boolean[]; axes: number[] } | null = null;
+    // Parse via controller registry (single source of truth)
+    const vid = vendorId.toString(16).padStart(4, '0');
+    const pid = productId.toString(16).padStart(4, '0');
+    const controller = findController(vid, pid);
+    let parsed: { buttons: boolean[]; axes: number[]; rawSticks?: [number, number, number, number] } | null = null;
 
-    if (reportId === 0x3F) {
-      parsed = parseSwitchSimple(dataView);
-    } else if (reportId === 0x05) {
-      if (dataView.byteLength >= 16) {
-        const result = parseSwitchPro2Report05(dataView);
+    if (controller) {
+      parsed = controller.parseReport(reportId, dataView);
+      // Apply user stick calibration if available and raw sticks were provided
+      if (parsed?.rawSticks) {
         const cal = this.stickCalibrations.get(deviceKey);
         if (cal) {
-          const [lxR, lyR, rxR, ryR] = result.rawSticks;
-          result.axes = applySticksCalibration(lxR, lyR, rxR, ryR, cal);
+          const [lxR, lyR, rxR, ryR] = parsed.rawSticks;
+          parsed.axes = applySticksCalibration(lxR, lyR, rxR, ryR, cal);
         }
-        parsed = result;
-      }
-    } else if (reportId === 0x09) {
-      if (dataView.byteLength >= 11) {
-        parsed = parseSwitchPro2(dataView);
-      }
-    } else if (reportId === 0x30) {
-      parsed = parseSwitchFull(dataView);
-    } else if (reportId === 0x21 || reportId === 0x31) {
-      if (dataView.byteLength >= 11) {
-        parsed = parseSwitchFull(dataView);
       }
     }
 
@@ -525,10 +269,16 @@ class WebHidInputReader {
   /**
    * Handle device disconnect notification from main process IPC.
    */
-  handleIpcDisconnect(deviceKey: string): void {
+  handleIpcDisconnect(deviceKey: string, error?: string): void {
     this.states.delete(deviceKey);
     this.connected = this.states.size > 0;
-    this.log(`IPC device disconnected: ${deviceKey}`);
+    if (error) {
+      this.log(`IPC device ERROR: ${deviceKey} — ${error}`);
+      this.addDiag(`⚠ Device error (${deviceKey}): ${error}. Try unplugging and replugging.`);
+    } else {
+      this.log(`IPC device disconnected: ${deviceKey}`);
+      this.addDiag(`Device disconnected: ${deviceKey}`);
+    }
     // Close WebHID write handle if we had one
     const writeHandle = this.writeDevices.get(deviceKey);
     if (writeHandle) {

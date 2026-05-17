@@ -54,8 +54,7 @@ function toHex4(n: number): string {
 }
 
 interface OpenDevice {
-  hid: HID.HID;        // read handle (has data listener)
-  hidWrite: HID.HID;   // write-only handle (no listeners — avoids write blocking)
+  hid: HID.HID;
   vid: number;
   pid: number;
   key: string; // "vid:pid" (hex, 4-char padded — matches WebHID deviceKey format)
@@ -77,13 +76,29 @@ export class HidInputReader {
     this.scanInterval = setInterval(() => this.scanAndOpen(), 3000);
   }
 
-  /** Stop all readers and close devices. */
+  /** Stop all readers and close devices. Sends SILENT haptic frame before closing. */
   stop(): void {
     if (this.scanInterval) {
       clearInterval(this.scanInterval);
       this.scanInterval = null;
     }
     for (const dev of this.devices) {
+      // Send SILENT haptic frame to stop any running vibration before closing
+      try {
+        const buf = new Array(64).fill(0);
+        buf[0] = 0x02;
+        buf[1] = 0x50;
+        buf[17] = 0x50;
+        // HAPTIC_SILENT pattern
+        const silent = [0x3f, 0x01, 0xf0, 0x19, 0x00];
+        for (let i = 0; i < silent.length; i++) {
+          buf[2 + i] = silent[i];
+          buf[18 + i] = silent[i];
+        }
+        dev.hid.pause();
+        dev.hid.write(buf);
+        dev.hid.resume();
+      } catch { /* ignore — best effort cleanup */ }
       try { dev.hid.close(); } catch { /* ignore */ }
     }
     this.devices = [];
@@ -135,17 +150,8 @@ export class HidInputReader {
 
       try {
         const hid = new HID.HID(target.path);
-        // Open a second handle to the same path for writes only.
-        // node-hid's write() blocks when a read listener is active on the same handle.
-        let hidWrite: HID.HID;
-        try {
-          hidWrite = new HID.HID(target.path);
-        } catch {
-          hidWrite = hid; // fallback to shared handle
-        }
         const dev: OpenDevice = {
           hid,
-          hidWrite,
           vid: target.vendorId,
           pid: target.productId,
           key,
@@ -161,8 +167,7 @@ export class HidInputReader {
         hid.on('error', (err: Error) => {
           this.log(`Device error ${key}: ${err.message}`);
           this.removeDevice(dev);
-          // Notify renderer of disconnect
-          this.send('hid:disconnect', { deviceKey: key, product: dev.product });
+          this.send('hid:disconnect', { deviceKey: key, product: dev.product, error: err.message });
         });
 
         this.log(`Opened ${key} (${dev.product})`);
@@ -220,10 +225,13 @@ export class HidInputReader {
       try {
         const buf = new Array(64).fill(0);
         for (let i = 0; i < cmd.data.length; i++) buf[i] = cmd.data[i];
-        dev.hidWrite.write(buf);
+        dev.hid.pause();
+        dev.hid.write(buf);
+        dev.hid.resume();
         this.log(`[Init] ✓ ${cmd.label}`);
         await this.delay(50);
       } catch (err) {
+        dev.hid.resume();
         this.log(`[Init] ✗ ${cmd.label}: ${(err as Error).message}`);
       }
     }
@@ -236,9 +244,6 @@ export class HidInputReader {
 
   private removeDevice(dev: OpenDevice): void {
     try { dev.hid.close(); } catch { /* ignore */ }
-    if (dev.hidWrite !== dev.hid) {
-      try { dev.hidWrite.close(); } catch { /* ignore */ }
-    }
     this.devices = this.devices.filter(d => d !== dev);
   }
 
@@ -249,12 +254,14 @@ export class HidInputReader {
     const dev = this.devices.find(d => d.key === deviceKey);
     if (!dev) return false;
     try {
-      // Pad to 64 bytes (Switch Pro Controller output report size)
       const buf = new Array(64).fill(0);
       for (let i = 0; i < Math.min(data.length, 64); i++) buf[i] = data[i];
-      dev.hidWrite.write(buf);
+      dev.hid.pause();
+      dev.hid.write(buf);
+      dev.hid.resume();
       return true;
     } catch (err) {
+      dev.hid.resume();
       this.log(`Write error ${deviceKey}: ${(err as Error).message}`);
       return false;
     }
@@ -323,13 +330,14 @@ export class HidInputReader {
    * Flat vibrate: constant intensity for a duration, no envelope shaping.
    * Pattern support: array of {durationMs, intensity} segments with gaps between.
    */
-  vibratePattern(deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number = 0): boolean {
+  vibratePattern(deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number = 0): { ok: boolean; error?: string } {
     const dev = this.devices.find(d => d.key === deviceKey);
     if (!dev) {
-      console.log(`[vibratePattern] no device for key="${deviceKey}", have: [${this.devices.map(d => d.key).join(', ')}]`);
-      return false;
+      const msg = `Device not found: "${deviceKey}" (available: ${this.devices.map(d => d.key).join(', ') || 'none'})`;
+      this.log(msg);
+      this.send('hid:error', { deviceKey, error: msg });
+      return { ok: false, error: msg };
     }
-    console.log(`[vibratePattern] key="${deviceKey}" pattern=${pattern.length} segments, gap=${gapMs}ms`);
 
     const segments: { haptic: number[]; frames: number }[] = [];
     for (const seg of pattern) {
@@ -388,7 +396,13 @@ export class HidInputReader {
     try { dev.hid.write(buf); } catch { errors++; }
     dev.hid.resume();
 
-    return errors === 0;
+    if (errors > 0) {
+      const msg = `Vibration write errors: ${errors} frames failed`;
+      this.log(msg);
+      this.send('hid:error', { deviceKey, error: msg });
+      return { ok: false, error: msg };
+    }
+    return { ok: true };
   }
 
   /**

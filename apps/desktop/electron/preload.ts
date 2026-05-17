@@ -153,10 +153,15 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.on('hid:device-opened', handler);
     return () => ipcRenderer.removeListener('hid:device-opened', handler);
   },
-  onHidDisconnect: (callback: (info: { deviceKey: string; product: string }) => void) => {
-    const handler = (_event: Electron.IpcRendererEvent, info: { deviceKey: string; product: string }) => callback(info);
+  onHidDisconnect: (callback: (info: { deviceKey: string; product: string; error?: string }) => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, info: { deviceKey: string; product: string; error?: string }) => callback(info);
     ipcRenderer.on('hid:disconnect', handler);
     return () => ipcRenderer.removeListener('hid:disconnect', handler);
+  },
+  onHidError: (callback: (info: { deviceKey: string; error: string }) => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, info: { deviceKey: string; error: string }) => callback(info);
+    ipcRenderer.on('hid:error', handler);
+    return () => ipcRenderer.removeListener('hid:error', handler);
   },
 
 

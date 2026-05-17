@@ -1134,6 +1134,10 @@ app.whenReady().then(async () => {
   });
 });
 
+app.on('will-quit', () => {
+  hidInputReader.stop();
+});
+
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();

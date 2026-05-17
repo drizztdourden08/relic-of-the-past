@@ -14,6 +14,8 @@ import { SNES_BUTTON_BITS, DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/contr
 import { KEYBOARD_DEFAULT, parseGamepadId } from '@shared/data/controllers';
 import type { DetectedDevice } from '@shared/types/controls';
 import { findProfileByVidPid } from '@shared/data/controllers/profiles';
+import { findController } from '@shared/data/controllers/register-all';
+import type { ControllerContext } from '@shared/data/controllers/base';
 import { detectAllDevices, markActivated, updateActivationState } from './controller-detect';
 import { webHidReader } from './webhid-input-reader';
 import type { WebHidInputState } from './webhid-input-reader';
@@ -87,6 +89,11 @@ export class InputManager {
   private hidDisconnectUnsub: (() => void) | null = null;
   private ipcReportUnsub: (() => void) | null = null;
   private ipcDisconnectUnsub: (() => void) | null = null;
+  private ipcErrorUnsub: (() => void) | null = null;
+  private ipcDeviceOpenedUnsub: (() => void) | null = null;
+
+  // Active controller instances, keyed by deviceKey
+  private activeControllers = new Map<string, { controller: ReturnType<typeof findController>; ctx: ControllerContext }>();
 
   // Raw input listeners — for rebinding UI, input tester, etc.
   private rawInputListeners = new Set<RawInputListener>();
@@ -298,7 +305,20 @@ export class InputManager {
       webHidReader.handleIpcReport(report.deviceKey, report.vendorId, report.productId, report.data);
     });
     this.ipcDisconnectUnsub = window.api.onHidDisconnect((info) => {
-      webHidReader.handleIpcDisconnect(info.deviceKey);
+      webHidReader.handleIpcDisconnect(info.deviceKey, info.error);
+      this.activeControllers.delete(info.deviceKey);
+    });
+
+    // Subscribe to HID error events (vibration failures, device issues)
+    // Attempt controller reset on error (device still connected but in bad state)
+    this.ipcErrorUnsub = window.api.onHidError((info) => {
+      webHidReader.addDiag(`⚠ HID error (${info.deviceKey}): ${info.error}`);
+      this.resetController(info.deviceKey);
+    });
+
+    // Auto-init controllers when a new HID device is opened by the main process
+    this.ipcDeviceOpenedUnsub = window.api.onHidDeviceOpened((info) => {
+      this.initController(info.deviceKey, info.vendorId, info.productId);
     });
 
     // Initial device scan
@@ -340,6 +360,14 @@ export class InputManager {
       this.ipcDisconnectUnsub();
       this.ipcDisconnectUnsub = null;
     }
+    if (this.ipcErrorUnsub) {
+      this.ipcErrorUnsub();
+      this.ipcErrorUnsub = null;
+    }
+    if (this.ipcDeviceOpenedUnsub) {
+      this.ipcDeviceOpenedUnsub();
+      this.ipcDeviceOpenedUnsub = null;
+    }
     this.hidStates.clear();
     this.currentHidStates.clear();
     this.currentGamepads = [];
@@ -377,6 +405,55 @@ export class InputManager {
 
   // Cached HID device list (from main process node-hid enumeration)
   private hidDeviceCache: Array<{ vendorId: string; productId: string; product: string; manufacturer: string; path: string; serialNumber: string | null }> = [];
+
+  /**
+   * Initialize a controller via the registry when it's first opened.
+   * Creates a ControllerContext and calls controller.init() for devices that need it.
+   */
+  private async initController(deviceKey: string, vendorId: string, productId: string): Promise<void> {
+    const controller = findController(vendorId, productId);
+    if (!controller) return;
+
+    const ctx: ControllerContext = {
+      deviceKey,
+      hidWrite: (data: number[]) => window.api.writeHidDevice(deviceKey, data),
+      usbOpen: async (vid: number, pid: number) => {
+        if (!navigator.usb) return null;
+        try {
+          return await navigator.usb.requestDevice({
+            filters: [{ vendorId: vid, productId: pid }]
+          });
+        } catch { return null; }
+      },
+      usbClose: async (device: USBDevice) => {
+        try { await device.close(); } catch { /* ignore */ }
+      },
+      log: (msg: string) => webHidReader.addDiag(msg),
+      delay: (ms: number) => new Promise(r => setTimeout(r, ms)),
+    };
+
+    this.activeControllers.set(deviceKey, { controller, ctx });
+
+    try {
+      await controller.init(ctx);
+    } catch (e: any) {
+      webHidReader.addDiag(`⚠ Controller init failed (${deviceKey}): ${e.message}`);
+    }
+  }
+
+  /**
+   * Attempt to reset a controller after an error (device still connected but in bad state).
+   */
+  private async resetController(deviceKey: string): Promise<void> {
+    const entry = this.activeControllers.get(deviceKey);
+    if (!entry) return;
+    try {
+      await entry.controller.reset(entry.ctx);
+      webHidReader.addDiag(`Controller reset successful (${deviceKey})`);
+    } catch (e: any) {
+      webHidReader.addDiag(`⚠ Controller reset failed (${deviceKey}): ${e.message}`);
+    }
+  }
 
   /**
    * Force a device rescan and notify listeners.
