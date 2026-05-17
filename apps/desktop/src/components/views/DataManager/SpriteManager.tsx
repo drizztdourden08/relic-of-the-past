@@ -15,14 +15,19 @@ interface SpriteManagerProps {
 export function SpriteManager({ romStatuses }: SpriteManagerProps) {
   const [selectedRom, setSelectedRom] = useState('');
   const [extracting, setExtracting] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [status, setStatus] = useState<{ extracted: boolean; count: number }>({ extracted: false, count: 0 });
   const [catFilter, setCatFilter] = useState<'all' | SpriteCategory>('all');
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const refresh = useCallback(async () => {
-    const s = await window.api.checkSpritesExtracted();
+    if (!selectedRom) {
+      setStatus({ extracted: false, count: 0 });
+      return;
+    }
+    const s = await window.api.checkSpritesExtracted(selectedRom);
     setStatus(s);
-  }, []);
+  }, [selectedRom]);
 
   useEffect(() => { refresh(); }, [refresh]);
 
@@ -40,9 +45,28 @@ export function SpriteManager({ romStatuses }: SpriteManagerProps) {
     }
   }, [selectedRom, refresh]);
 
+  const handleDelete = useCallback(async () => {
+    if (!selectedRom) return;
+    setDeleting(true);
+    setMessage(null);
+    const result = await window.api.deleteSprites(selectedRom);
+    setDeleting(false);
+    if (result.success) {
+      setMessage({ type: 'success', text: 'Sprites deleted' });
+      await refresh();
+    } else {
+      setMessage({ type: 'error', text: result.error ?? 'Delete failed' });
+    }
+  }, [selectedRom, refresh]);
+
   const romsWithAssets = useMemo(
     () => romStatuses.filter(r => r.hasAssets),
     [romStatuses]
+  );
+
+  const spriteBaseUrl = useMemo(
+    () => selectedRom ? window.api.getSpritesBaseUrl(selectedRom) : '',
+    [selectedRom]
   );
 
   const filtered = useMemo(
@@ -73,13 +97,24 @@ export function SpriteManager({ romStatuses }: SpriteManagerProps) {
               placeholder="Select a ROM…"
             />
           </div>
-          <button
-            className="sprite-manager__extract-btn"
-            onClick={handleExtract}
-            disabled={!selectedRom || extracting}
-          >
-            {extracting ? '⟳ Extracting…' : '🖼️ Extract Sprites'}
-          </button>
+          <div className="sprite-manager__actions">
+            <button
+              className="sprite-manager__extract-btn"
+              onClick={handleExtract}
+              disabled={!selectedRom || extracting || deleting}
+            >
+              {extracting ? '⟳ Extracting…' : '🖼️ Extract Sprites'}
+            </button>
+            {status.extracted && (
+              <button
+                className="sprite-manager__delete-btn"
+                onClick={handleDelete}
+                disabled={!selectedRom || extracting || deleting}
+              >
+                {deleting ? '⟳ Deleting…' : '🗑️ Delete Sprites'}
+              </button>
+            )}
+          </div>
           {message && (
             <div className={`sprite-manager__message sprite-manager__message--${message.type}`}>
               {message.text}
@@ -96,7 +131,11 @@ export function SpriteManager({ romStatuses }: SpriteManagerProps) {
                 {status.extracted ? 'Sprites Extracted' : 'No Sprites'}
               </div>
               <div className="data-list-item__meta">
-                {status.extracted ? `${status.count} sprite images` : 'Extract from a ROM to use in tracker'}
+                {status.extracted
+                  ? `${status.count} sprite images for ${selectedRom}`
+                  : selectedRom
+                    ? 'Extract from this ROM to use in tracker'
+                    : 'Select a ROM first'}
               </div>
             </div>
           </div>
@@ -105,7 +144,7 @@ export function SpriteManager({ romStatuses }: SpriteManagerProps) {
 
       <div className={`data-columns__right ${!status.extracted ? 'data-columns__right--empty' : ''}`}>
         {!status.extracted ? (
-          <span>Extract sprites from a ROM to view them here</span>
+          <span>{selectedRom ? 'Extract sprites from this ROM to view them here' : 'Select a ROM first'}</span>
         ) : (
           <div className="sprite-manager__panel">
             {/* Category filter */}
@@ -119,7 +158,7 @@ export function SpriteManager({ romStatuses }: SpriteManagerProps) {
             {/* Sprite grid */}
             <div className="sprite-manager__grid">
               {filtered.map(sprite => (
-                <SpriteCard key={sprite.file} file={sprite.file} label={sprite.label} category={sprite.category} />
+                <SpriteCard key={sprite.file} file={sprite.file} label={sprite.label} category={sprite.category} baseUrl={spriteBaseUrl} />
               ))}
             </div>
           </div>
@@ -146,12 +185,12 @@ function CatButton({ label, value, current, onClick, count }: {
   );
 }
 
-function SpriteCard({ file, label, category }: { file: string; label: string; category: SpriteCategory }) {
+function SpriteCard({ file, label, category, baseUrl }: { file: string; label: string; category: SpriteCategory; baseUrl: string }) {
   return (
     <div className="sprite-card">
       <img
         className="sprite-card__img"
-        src={`${window.api.spritesBaseUrl}${file}.png`}
+        src={`${baseUrl}${file}.png`}
         alt={label}
         draggable={false}
       />

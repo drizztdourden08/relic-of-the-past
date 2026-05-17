@@ -1,20 +1,25 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
-import { join } from 'path';
+import { join, parse } from 'path';
 
 // Compute sprites base path synchronously (available immediately in renderer)
-const userDataPath = process.env.APPDATA
+const spritesRootPath = process.env.APPDATA
   ? join(process.env.APPDATA, 'alttp-pc', 'Data', 'sprites')
   : join(process.env.HOME || '', '.config', 'alttp-pc', 'Data', 'sprites');
 
-const spritesBasePath = userDataPath.replace(/\\/g, '/');
+const spritesRootUrl = spritesRootPath.replace(/\\/g, '/');
 const isDev = process.env.NODE_ENV !== 'production';
+
+function romStem(romFile: string): string {
+  return parse(romFile).name;
+}
 
 contextBridge.exposeInMainWorld('api', {
   // Dev mode flag
   isDev,
 
-  // Sprites base URL: dev mode uses Vite public folder, production uses file:// to userData
-  spritesBaseUrl: isDev ? '/sprites/items/' : `file:///${spritesBasePath}/`,
+  // Sprites base URL — per-ROM: dev mode uses Vite public folder, production uses file:// to userData
+  getSpritesBaseUrl: (romFile: string) =>
+    isDev ? '/sprites/items/' : `file:///${spritesRootUrl}/${romStem(romFile)}/`,
 
   // File path helper (Electron 35+ removed File.path from renderer)
   getFilePath: (file: File) => webUtils.getPathForFile(file),
@@ -131,6 +136,8 @@ contextBridge.exposeInMainWorld('api', {
 
 
 
+
+
   // App info
   getUserDataPath: () => ipcRenderer.invoke('app:getUserDataPath'),
 
@@ -142,8 +149,9 @@ contextBridge.exposeInMainWorld('api', {
   loadSpriteReview: () => ipcRenderer.invoke('spriteReview:load'),
   saveSpriteReview: (data: unknown) => ipcRenderer.invoke('spriteReview:save', data),
 
-  // Sprite extraction
+  // Sprite extraction (per-ROM)
   extractSprites: (romFile: string) => ipcRenderer.invoke('sprites:extract', romFile),
-  checkSpritesExtracted: () => ipcRenderer.invoke('sprites:check'),
-  getSpritePath: (file: string) => ipcRenderer.invoke('sprites:getPath', file),
+  checkSpritesExtracted: (romFile: string) => ipcRenderer.invoke('sprites:check', romFile),
+  deleteSprites: (romFile: string) => ipcRenderer.invoke('sprites:delete', romFile),
+  getSpritePath: (romFile: string, file: string) => ipcRenderer.invoke('sprites:getPath', romFile, file),
 });

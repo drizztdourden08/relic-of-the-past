@@ -169,6 +169,33 @@ export function inventoryToItemSet(raw: RawInventoryState): Set<string> {
   return items;
 }
 
+/**
+ * Derive progression events from the WASM progress flags buffer.
+ * These events are injected into the inventory set to gate vanilla logic.
+ *
+ * Progress buffer layout (from WasmGetProgressFlags):
+ *   [0]  = sram_progress_indicator (0xF3C5): 0=intro, 1=post-uncle, 2=rescued-zelda, 3=post-escape
+ *   [1]  = sram_progress_flags (0xF3C6): bit 0x01 = uncle passage done
+ *   [12] = player_sleep_in_bed_state: 0=asleep, 1=uncle woke Link, 2=Link out of bed
+ */
+export function progressToEvents(heapU8: Uint8Array, progPtr: number): string[] {
+  const events: string[] = [];
+  const progressIndicator = heapU8[progPtr];       // index 0
+  const sleepState = heapU8[progPtr + 12];         // index 12
+
+  // Link wakes up: either got out of bed this session (sleepState >= 2)
+  // or already past uncle in a loaded save (progressIndicator >= 1)
+  if (sleepState >= 2 || progressIndicator >= 1) events.push('Link Wakes Up');
+  // progress_indicator >= 1 means Uncle gave sword, you're in the castle
+  if (progressIndicator >= 1) events.push('Zelda Rescue Started');
+  // progress_indicator >= 2 means Zelda reached Sanctuary, rain stops
+  if (progressIndicator >= 2) events.push('Rescued Zelda');
+  // progress_indicator >= 3 means escaped dungeon, full game
+  if (progressIndicator >= 3) events.push('Rescued Old Man');
+
+  return events;
+}
+
 export function setsEqual(a: Set<string>, b: Set<string>): boolean {
   if (a.size !== b.size) return false;
   for (const item of a) {

@@ -16,6 +16,7 @@ import { log } from './lib/log-bus';
 import type { LogChannel, LogLevel } from './lib/log-bus';
 import { subscribeGameState, resetGame, setMasterVolume, setMsuData, getInputManager } from './lib/game';
 import { serializeToIni, mergeSettings } from './lib/game/settings';
+import { setSpritesBase } from '@shared/data/item-sprites';
 import './App.css';
 
 const TITLEBAR_HEIGHT = 38;
@@ -58,7 +59,7 @@ interface ConfirmDialog {
 }
 
 export function App(): JSX.Element {
-  const [activePage, setActivePage] = useState<PageId>('picker');
+  const [activePage, setActivePage] = useState<PageId>('input-tester');
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [romStatuses, setRomStatuses] = useState<RomInfo[]>([]);
   const [extractionStates, setExtractionStates] = useState<Record<string, RomExtractionStatus>>({});
@@ -294,6 +295,7 @@ export function App(): JSX.Element {
     setActiveProfile(profile);
     setLoadingProfile(profile.name);
     setActivePage('none');
+    setSpritesBase(window.api.getSpritesBaseUrl(profile.romFile));
     log.app(`Loading profile: ${profile.name} (${profile.romFile})`);
 
     // Load profile settings and serialize to INI for WASM
@@ -303,6 +305,20 @@ export function App(): JSX.Element {
     // Store enhanced save slot settings for the hook
     setEnhancedSaveSlot(settings.enhancedSaveSlotShortcut);
     setSaveHoldDuration(settings.saveHoldDuration);
+
+    // Load saved input profile (controller bindings) into InputManager
+    try {
+      const rawProfiles = await window.api.readInputProfiles(profile.id);
+      const inputProfiles = rawProfiles as import('@shared/types/controls').InputProfile[];
+      if (inputProfiles.length > 0) {
+        const activeId = settings.activeInputProfileId;
+        const active = inputProfiles.find(p => p.id === activeId) ?? inputProfiles[0];
+        getInputManager().setProfile(active);
+        log.app(`Loaded input profile: ${active.name}`);
+      }
+    } catch {
+      /* no saved profiles — InputManager stays on keyboard default */
+    }
 
     // Load MSU pack into staging memory if enabled
     if (profile.msuPack && settings.enableMSU !== 'false') {
@@ -389,12 +405,16 @@ export function App(): JSX.Element {
         setProfiles(profileList);
         setRomStatuses(romStatusList);
 
+        // DEBUG: skip page override when forcing input-tester
+        if (activePage === 'input-tester') return;
+
         if (profileList.length === 0) {
           log.app('No profiles found, showing setup screen');
           setActivePage('picker');
         } else if (profileList.length === 1) {
           log.app('Single profile found, showing profile page...');
           setActiveProfile(profileList[0]);
+          setSpritesBase(window.api.getSpritesBaseUrl(profileList[0].romFile));
           setActivePage('profile');
         } else {
           const lastProfile = appState.lastProfileId
@@ -403,6 +423,7 @@ export function App(): JSX.Element {
           if (lastProfile) {
             log.app(`Resuming last profile: ${lastProfile.name}`);
             setActiveProfile(lastProfile);
+            setSpritesBase(window.api.getSpritesBaseUrl(lastProfile.romFile));
             setActivePage('profile');
           } else {
             setActivePage('picker');
@@ -504,6 +525,7 @@ export function App(): JSX.Element {
   // ─── Select profile from picker (no auto-start) ───
   const handleSelectProfile = useCallback(async (profile: Profile) => {
     setActiveProfile(profile);
+    setSpritesBase(window.api.getSpritesBaseUrl(profile.romFile));
     await window.api.setLastProfile(profile.id);
     setActivePage('profile');
   }, []);
@@ -514,6 +536,7 @@ export function App(): JSX.Element {
     log.app(`Created profile: ${profile.name}`);
     await refreshLists();
     setActiveProfile(profile);
+    setSpritesBase(window.api.getSpritesBaseUrl(profile.romFile));
     await window.api.setLastProfile(profile.id);
     setActivePage('profile');
   }, [refreshLists]);

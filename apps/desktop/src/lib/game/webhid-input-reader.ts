@@ -431,8 +431,9 @@ class WebHidInputReader {
         (d) => d.vendorId === NINTENDO_VID && d.productId in KNOWN_PIDS
       );
       if (nintendo.length === 0) {
-        this.log('No previously-granted Nintendo HID devices found');
-        return false;
+        this.log('No previously-granted Nintendo HID devices found, requesting...');
+        // In Electron, requestDevice() is auto-handled by select-hid-device session handler
+        return this.requestDevice();
       }
 
       this.log(`Found ${nintendo.length} Nintendo HID interface(s)`);
@@ -545,11 +546,101 @@ class WebHidInputReader {
 
       this.devices.push(device);
       this.connected = true;
+
+      // Send USB initialization for Switch Pro Controllers
+      // Without this, many Switch controllers (especially Pro Controller 2)
+      // remain silent over USB until they receive the handshake sequence.
+      if (device.vendorId === NINTENDO_VID) {
+        await this.initSwitchController(device);
+      }
+
       return true;
     } catch (err) {
       this.log(`Failed to open ${name}: ${err}`);
       return false;
     }
+  }
+
+  /**
+   * Send USB initialization sequence for Nintendo Switch controllers.
+   * The controller won't send input reports until this handshake completes.
+   */
+  private async initSwitchController(device: HIDDevice): Promise<void> {
+    const name = KNOWN_PIDS[device.productId] ?? 'Switch Controller';
+    this.log(`[Init] Starting USB handshake for ${name}...`);
+
+    // Log available collections for diagnostics
+    let outputReportId = 0x80; // default for original Pro Controller
+    if (device.collections) {
+      for (let i = 0; i < device.collections.length; i++) {
+        const col = device.collections[i];
+        const inputIds = col.inputReports?.map(r => `0x${r.reportId.toString(16)}`) ?? [];
+        const outputIds = col.outputReports?.map(r => `0x${r.reportId.toString(16)}`) ?? [];
+        const featureIds = col.featureReports?.map(r => `0x${r.reportId.toString(16)}`) ?? [];
+        this.log(`[Init] Collection[${i}]: usage=0x${(col.usage ?? 0).toString(16)} page=0x${(col.usagePage ?? 0).toString(16)} input=[${inputIds}] output=[${outputIds}] feature=[${featureIds}]`);
+        // Use the first available output report ID
+        if (col.outputReports && col.outputReports.length > 0 && outputReportId === 0x80) {
+          outputReportId = col.outputReports[0].reportId;
+        }
+      }
+    }
+    this.log(`[Init] Using output report ID: 0x${outputReportId.toString(16)}`);
+
+    // Try various init payloads on the device's actual output report ID
+    const attempts: { data: Uint8Array; label: string }[] = [
+      // USB handshake: MAC address request
+      { data: new Uint8Array([0x80, 0x01]), label: 'MAC req (0x80 0x01)' },
+      // USB handshake: handshake
+      { data: new Uint8Array([0x80, 0x02]), label: 'Handshake (0x80 0x02)' },
+      // USB handshake: USB HID mode
+      { data: new Uint8Array([0x80, 0x04]), label: 'USB mode (0x80 0x04)' },
+      // Sub-command format: set input mode to full (0x30)
+      { data: new Uint8Array([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x30]), label: 'SubCmd: mode=full' },
+      // Sub-command format: set input mode to simple (0x3F)
+      { data: new Uint8Array([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x3F]), label: 'SubCmd: mode=simple' },
+      // Just zeros — wake up
+      { data: new Uint8Array([0x00]), label: 'Wake (0x00)' },
+      // Minimal handshake bytes
+      { data: new Uint8Array([0x01]), label: 'Byte 0x01' },
+      { data: new Uint8Array([0x02]), label: 'Byte 0x02' },
+      { data: new Uint8Array([0x04]), label: 'Byte 0x04' },
+      // Pro Controller 2 specific: enable reports
+      { data: new Uint8Array([0x80, 0x05]), label: 'Enable (0x80 0x05)' },
+      // Try padded handshake (64-byte packet like HID expects)
+      { data: (() => { const d = new Uint8Array(64); d[0] = 0x80; d[1] = 0x02; return d; })(), label: 'Padded handshake (64B)' },
+      { data: (() => { const d = new Uint8Array(64); d[0] = 0x80; d[1] = 0x04; return d; })(), label: 'Padded USB mode (64B)' },
+    ];
+
+    let anySuccess = false;
+    for (const attempt of attempts) {
+      try {
+        await device.sendReport(outputReportId, attempt.data);
+        this.log(`[Init] ✓ ${attempt.label} succeeded`);
+        anySuccess = true;
+        await this.delay(50);
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        this.log(`[Init] ✗ ${attempt.label}: ${msg}`);
+      }
+    }
+
+    // Also try the legacy report IDs in case collection info is wrong
+    if (!anySuccess) {
+      this.log(`[Init] All attempts on report 0x${outputReportId.toString(16)} failed, trying legacy IDs...`);
+      for (const rid of [0x80, 0x01, 0x00]) {
+        try {
+          await device.sendReport(rid, new Uint8Array([0x02]));
+          this.log(`[Init] ✓ Legacy report 0x${rid.toString(16)} succeeded`);
+          break;
+        } catch { /* skip */ }
+      }
+    }
+
+    this.log(`[Init] Handshake sequence done for ${name}`);
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   private reportIdCounts = new Map<number, number>();
@@ -566,6 +657,9 @@ class WebHidInputReader {
         .map(b => b.toString(16).padStart(2, '0')).join(' ');
       this.log(`Report: id=0x${reportId.toString(16)} len=${data.byteLength} [${hex}]`);
     }
+
+    // DEBUG: Log ALL reports with button state
+    console.log(`[HID-RAW] device=${deviceKey} reportId=0x${reportId.toString(16)} len=${data.byteLength}`);
 
     // Emit raw report for calibration listeners
     if (this.rawListeners.size > 0) {
@@ -592,6 +686,10 @@ class WebHidInputReader {
         parsed = result;
       }
     } else if (reportId === 0x09) {
+      // Switch Pro Controller 2 alternate USB HID mode
+      if (data.byteLength >= 11) {
+        parsed = parseSwitchPro2(data);
+      }
     } else if (reportId === 0x30) {
       // Full mode (Bluetooth / after init)
       parsed = parseSwitchFull(data);
@@ -602,8 +700,10 @@ class WebHidInputReader {
       }
     }
 
-    if (parsed) {
-      const state: WebHidInputState = {
+    if (parsed) {      const pressed = parsed.buttons.map((b, i) => b ? i : -1).filter(i => i >= 0);
+      if (pressed.length > 0) {
+        console.log(`[HID-PARSED] device=${deviceKey} BUTTONS PRESSED: [${pressed.join(',')}] axes=[${parsed.axes.map(a => a.toFixed(2)).join(',')}]`);
+      }      const state: WebHidInputState = {
         deviceKey,
         buttons: parsed.buttons,
         axes: parsed.axes,

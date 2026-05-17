@@ -1,7 +1,7 @@
 import type { InventoryCategory, InventorySlot, InventoryViewMode } from '@shared/data/item-sprites';
 import {
   INVENTORY_LAYOUT, INGAME_ITEMS_GRID, INGAME_EQUIPMENT, INGAME_PASSIVES, COMPACT_LAYOUT,
-  resolveItemSprite,
+  resolveItemSprite, getSpritesBase,
 } from '@shared/data/item-sprites';
 import './TrackerView.css';
 
@@ -9,8 +9,6 @@ interface TrackerInventoryProps {
   inventory: Set<string>;
   viewMode?: InventoryViewMode;
 }
-
-const SPRITE_BASE = window.api.spritesBaseUrl;
 
 export function TrackerInventory({ inventory, viewMode = 'default' }: TrackerInventoryProps) {
   if (viewMode === 'ingame') return <IngameInventory inventory={inventory} />;
@@ -93,7 +91,7 @@ function TrackerInventorySlot({ slot, inventory }: { slot: InventorySlot; invent
     <div className={`tracker-inventory__slot ${obtained ? 'tracker-inventory__slot--obtained' : 'tracker-inventory__slot--missing'}`}>
       <img
         className="tracker-inventory__sprite"
-        src={`${SPRITE_BASE}${sprite}.png`}
+        src={`${getSpritesBase()}${sprite}.png`}
         alt={slot.displayName}
         draggable={false}
       />

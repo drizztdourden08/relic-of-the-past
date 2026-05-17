@@ -160,6 +160,7 @@ int WasmGetOverworldFlags(void) {
 // [9]  = save_dung_info[0x109] lo byte (Potion Shop — bit 0x80)
 // [10] = save_dung_info[0x123] lo byte (Mini Moldorm Cave — bit 0x40)
 // [11] = save_dung_info[0x11E] lo byte (Hype Cave — bit 0x40)
+// [12] = player_sleep_in_bed_state (0=asleep, 1=uncle woke, 2=out of bed)
 static uint8 g_progress_buf[16];
 
 EMSCRIPTEN_KEEPALIVE
@@ -176,6 +177,7 @@ int WasmGetProgressFlags(void) {
   g_progress_buf[9] = (uint8)(save_dung_info[0x109]);
   g_progress_buf[10] = (uint8)(save_dung_info[0x123]);
   g_progress_buf[11] = (uint8)(save_dung_info[0x11E]);
+  g_progress_buf[12] = player_sleep_in_bed_state;
   return (int)g_progress_buf;
 }
 

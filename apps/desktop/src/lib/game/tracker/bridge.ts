@@ -7,10 +7,11 @@
 import { getModule } from '../wasm-bridge';
 import { log } from '../../log-bus';
 import { ITEM_ID_TO_NAME } from './constants';
-import { parseInventoryBuffer, inventoryToItemSet, setsEqual } from './inventory';
+import { parseInventoryBuffer, inventoryToItemSet, progressToEvents, setsEqual } from './inventory';
 import { CHECK_ROOM_FLAGS, CHEST_OPEN_MASKS, DIRECT_ROOM_FLAGS } from '@shared/data/checks/room-flags';
 import { CHECK_NPC_FLAGS } from '@shared/data/checks/npc-flags';
 import { CHECK_OVERWORLD_FLAGS } from '@shared/data/checks/overworld-flags';
+import { CHECK_EVENT_FLAGS } from '@shared/data/checks/event-flags';
 
 // ─── Listener types ───
 
@@ -143,6 +144,29 @@ export function pollRoomFlags(force = false): void {
           newCompleted.add(checkId);
         }
       }
+
+      // ── Event checks via progress flags (threshold/equality comparisons) ──
+      for (const checkId of Object.keys(CHECK_EVENT_FLAGS)) {
+        const entry = CHECK_EVENT_FLAGS[checkId];
+        const val = heap[progPtr + entry.bufferIndex];
+        let completed = false;
+        if (entry.compare === 'gte') {
+          completed = val >= (entry.value as number);
+        } else if (entry.compare === 'eq') {
+          completed = val === (entry.value as number);
+        } else if (entry.compare === 'any-of') {
+          completed = (entry.value as number[]).includes(val);
+        }
+        if (completed) newCompleted.add(checkId);
+      }
+      // Fallback: if progress_indicator >= 1, Link has definitely woken up
+      if (heap[progPtr] >= 1) newCompleted.add('event-link-wakes-up');
+      // Direct memory read fallback: player_sleep_in_bed_state >= 2
+      const roomFlagsPtr = mod.ccall('WasmGetRoomFlags', 'number', [], []) as number;
+      if (roomFlagsPtr) {
+        const gramBase = roomFlagsPtr - 0xF000;
+        if (heap[gramBase + 0x37C] >= 2) newCompleted.add('event-link-wakes-up');
+      }
     }
 
     if (force || !setsEqual(currentCompletedChecks, newCompleted)) {
@@ -174,6 +198,24 @@ export function pollInventoryState(force = false): void {
 
     const raw = parseInventoryBuffer(heap, ptr);
     const newInventory = inventoryToItemSet(raw);
+
+    // Merge progression events from progress flags
+    try {
+      const progPtr = mod.ccall('WasmGetProgressFlags', 'number', [], []) as number;
+      if (progPtr) {
+        for (const event of progressToEvents(heap, progPtr)) {
+          newInventory.add(event);
+        }
+      }
+      // Direct memory read: player_sleep_in_bed_state = g_ram[0x37C]
+      // Derive g_ram base from WasmGetRoomFlags (save_dung_info = g_ram + 0xF000)
+      const roomFlagsPtr = mod.ccall('WasmGetRoomFlags', 'number', [], []) as number;
+      if (roomFlagsPtr) {
+        const gramBase = roomFlagsPtr - 0xF000;
+        const sleepState = heap[gramBase + 0x37C];
+        if (sleepState >= 2) newInventory.add('Link Wakes Up');
+      }
+    } catch { /* module may not be ready */ }
 
     if (force || !setsEqual(currentInventory, newInventory)) {
       log.app(`[Tracker] Inventory changed: ${[...newInventory].join(', ') || '(empty)'}`);

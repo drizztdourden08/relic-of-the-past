@@ -242,15 +242,18 @@ export function computeCheckTags(check: CheckDefinition): CheckTag[] {
   // ── Content tags ──
   if (check.type === 'keyDrop') {
     tags.add('key');
-    if (check.vanillaItem?.startsWith('Big Key')) tags.add('big_key');
+    const items = Array.isArray(check.vanillaItem) ? check.vanillaItem : check.vanillaItem ? [check.vanillaItem] : [];
+    if (items.some(i => i.startsWith('Big Key'))) tags.add('big_key');
   }
   if (check.type === 'boss') tags.add('boss_item');
   if (check.type === 'prize') tags.add('boss_item');
   if (check.vanillaItem) {
-    const vi = check.vanillaItem;
-    if (vi.startsWith('Small Key')) tags.add('key');
-    if (vi.startsWith('Big Key')) tags.add('big_key');
-    if (vi === 'Compass' || vi === 'Map' || vi.startsWith('Compass') || vi.startsWith('Map')) tags.add('map_compass');
+    const items = Array.isArray(check.vanillaItem) ? check.vanillaItem : [check.vanillaItem];
+    for (const vi of items) {
+      if (vi.startsWith('Small Key')) tags.add('key');
+      if (vi.startsWith('Big Key')) tags.add('big_key');
+      if (vi === 'Compass' || vi === 'Map' || vi.startsWith('Compass') || vi.startsWith('Map')) tags.add('map_compass');
+    }
   }
 
   // Name-based content hints

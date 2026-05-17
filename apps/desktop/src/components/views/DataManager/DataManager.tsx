@@ -53,14 +53,12 @@ export function DataManager({
 
   // Load counts for tab badges
   const refreshCounts = useCallback(async () => {
-    const [msuPacks, langs, sprites] = await Promise.all([
+    const [msuPacks, langs] = await Promise.all([
       window.api.listMsuPacks(),
       window.api.listLanguages(),
-      window.api.checkSpritesExtracted(),
     ]);
     setMsuCount(msuPacks.length);
     setLangCount(langs.length);
-    setSpriteCount(sprites.count);
   }, []);
 
   useEffect(() => { refreshCounts(); }, [refreshCounts]);

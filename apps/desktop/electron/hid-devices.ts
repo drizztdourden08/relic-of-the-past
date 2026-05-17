@@ -1,6 +1,6 @@
 /**
  * HID Device Enumeration — uses node-hid in the main process to get
- * accurate VID/PID/product name for all connected USB/BT controllers.
+ * accurate VID/PID/product name.
  *
  * This bypasses XInput virtualisation and Chromium's limited Gamepad.id.
  */

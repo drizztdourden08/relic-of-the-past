@@ -50,8 +50,8 @@ export function getReachableRegions(
   regionRules: Record<string, Requirement>,
 ): Set<string> {
   const reachable = new Set<string>();
-  const queue: string[] = ['Menu'];
-  reachable.add('Menu');
+  const queue: string[] = ['menu'];
+  reachable.add('menu');
 
   // Build adjacency list once
   const adj = new Map<string, { to: string; entrance: string }[]>();

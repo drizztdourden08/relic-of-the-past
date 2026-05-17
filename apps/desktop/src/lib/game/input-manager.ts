@@ -699,14 +699,24 @@ export class InputManager {
     }
   }
 
+  private _pollDbg = 0;
   private pollLoop = (): void => {
     if (!this.running) return;
 
     // Snapshot gamepads (filter duplicates with WebHID)
     this.currentGamepads = this.snapshotGamepads();
 
+    // DEBUG: log pipeline state every 120 frames (~2s)
+    this._pollDbg++;
+    if (this._pollDbg % 120 === 1) {
+      console.log(`[INPUT-POLL] suppressed=${this.inputSuppressed} paused=${this.paused} hidStates=${this.hidStates.size} gamepadBtnMap=${this.gamepadButtonMap.size} axisMap=${this.gamepadAxisMap.size} profile=${this.activeProfile?.name ?? 'NONE'} setInputFn=${!!this.setInputFn}`);
+    }
+
     if (!this.paused && !this.inputSuppressed) {
       const mask = this.computeBitmask();
+      if (mask !== 0 || this._pollDbg % 120 === 1) {
+        console.log(`[INPUT-MASK] mask=0x${mask.toString(16)} (${mask})`);
+      }
       this.setInputFn?.(mask);
     }
 

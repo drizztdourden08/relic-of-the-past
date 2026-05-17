@@ -73,38 +73,59 @@ function CheckList({ checks, statuses, viewMode }: { checks: CheckDefinition[]; 
   if (viewMode === 'visual') {
     return (
       <div className="tracker-checks--visual">
-        {checks.map(check => (
-          <CheckCard key={check.id} check={check} status={statuses.get(check.id) ?? 'blocked'} />
-        ))}
+        {checks.flatMap(check => {
+          const status = statuses.get(check.id) ?? 'blocked';
+          if (Array.isArray(check.vanillaItem)) {
+            return check.vanillaItem.map((item, i) => (
+              <CheckCard key={`${check.id}__${i}`} check={check} status={status} itemOverride={item} />
+            ));
+          }
+          return [<CheckCard key={check.id} check={check} status={status} />];
+        })}
       </div>
     );
   }
 
   return (
     <div className="tracker-checks--list">
-      {checks.map(check => (
-        <TrackerCheckRow
-          key={check.id}
-          check={check}
-          status={statuses.get(check.id) ?? 'blocked'}
-          detailed={viewMode === 'detailed'}
-        />
-      ))}
+      {checks.flatMap(check => {
+        const status = statuses.get(check.id) ?? 'blocked';
+        if (Array.isArray(check.vanillaItem) && viewMode === 'detailed') {
+          return check.vanillaItem.map((item, i) => (
+            <TrackerCheckRow
+              key={`${check.id}__${i}`}
+              check={check}
+              status={status}
+              detailed
+              itemOverride={item}
+            />
+          ));
+        }
+        return [(
+          <TrackerCheckRow
+            key={check.id}
+            check={check}
+            status={status}
+            detailed={viewMode === 'detailed'}
+          />
+        )];
+      })}
     </div>
   );
 }
 
-function CheckCard({ check, status }: { check: CheckDefinition; status: CheckStatus }) {
-  const sprite = check.vanillaItem ? getItemSprite(check.vanillaItem) : undefined;
+function CheckCard({ check, status, itemOverride }: { check: CheckDefinition; status: CheckStatus; itemOverride?: string }) {
+  const displayItem = itemOverride ?? (Array.isArray(check.vanillaItem) ? check.vanillaItem.join(', ') : check.vanillaItem);
+  const sprite = displayItem ? getItemSprite(displayItem) : undefined;
 
   return (
     <div className={`tracker-card tracker-card--${status}`}>
       {sprite && (
-        <img className="tracker-card__sprite" src={sprite} alt={check.vanillaItem} draggable={false} />
+        <img className="tracker-card__sprite" src={sprite} alt={displayItem} draggable={false} />
       )}
       {!sprite && <div className="tracker-card__sprite-placeholder" />}
       <div className="tracker-card__text">
-        <span className="tracker-card__item-name">{check.vanillaItem ?? '???'}</span>
+        <span className="tracker-card__item-name">{displayItem ?? '???'}</span>
         <span className="tracker-card__check-name">{check.name}</span>
       </div>
     </div>

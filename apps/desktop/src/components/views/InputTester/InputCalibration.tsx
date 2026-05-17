@@ -8,11 +8,12 @@
  * Only the calibration wizard uses webHidReader.onRawReport() directly for raw bytes.
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { webHidReader } from '../../../lib/game/webhid-input-reader';
 import type { WebHidInputState, DeviceStickCalibration } from '../../../lib/game/webhid-input-reader';
 import { getInputManager } from '../../../lib/game/input-manager';
 import type { GamepadSnapshot } from '../../../lib/game/input-manager';
+import { collectInputDiagnostics } from '../../../lib/game/input-diagnostics';
 import { HidCalibrationWizard } from './HidCalibrationWizard';
 import type { HidControllerMap } from './HidCalibrationWizard';
 import { StickCalibrationWizard } from './StickCalibrationWizard';
@@ -189,6 +190,23 @@ export function InputCalibration(): JSX.Element {
     return CONTROLLER_PROFILES.find(p => p.vendorId === vid && p.productId === pid) ?? null;
   })();
 
+  // ── Diagnostic dump ──
+  const [diagState, setDiagState] = useState<'idle' | 'running' | 'done'>('idle');
+  const runDiagnostics = useCallback(async () => {
+    setDiagState('running');
+    try {
+      const result = await collectInputDiagnostics();
+      const json = JSON.stringify(result, null, 2);
+      await navigator.clipboard.writeText(json);
+      console.log('[DIAG] Full diagnostics:', result);
+      setDiagState('done');
+      setTimeout(() => setDiagState('idle'), 5000);
+    } catch (e) {
+      console.error('[DIAG] Failed:', e);
+      setDiagState('idle');
+    }
+  }, []);
+
   // ── Render ──
   return (
     <div className="input-cal">
@@ -213,6 +231,23 @@ export function InputCalibration(): JSX.Element {
           disabled={!webHidConnected}
         >
           Calibrate
+        </button>
+        <button
+          onClick={runDiagnostics}
+          disabled={diagState === 'running'}
+          style={{
+            padding: '6px 16px',
+            fontWeight: 700,
+            fontSize: 13,
+            border: 'none',
+            borderRadius: 6,
+            cursor: diagState === 'running' ? 'wait' : 'pointer',
+            color: '#000',
+            background: diagState === 'done' ? '#4ade80' : diagState === 'running' ? '#facc15' : '#f87171',
+            transition: 'background 0.2s',
+          }}
+        >
+          {diagState === 'done' ? '✓ Copied to Clipboard' : diagState === 'running' ? 'Collecting...' : 'Dump Diagnostics'}
         </button>
       </div>
 

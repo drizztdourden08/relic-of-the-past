@@ -18,6 +18,7 @@
  *   [9]  = save_dung_info[0x109] lo (Potion Shop room flag)
  *   [10] = save_dung_info[0x123] lo (Mini Moldorm Cave room flag)
  *   [11] = save_dung_info[0x11E] lo (Hype Cave room flag)
+ *   [12] = player_sleep_in_bed_state (0=asleep, 1=uncle woke, 2=out of bed)
  *
  * Source: core/zelda3/src/sprite_main.c (NPC handlers)
  */

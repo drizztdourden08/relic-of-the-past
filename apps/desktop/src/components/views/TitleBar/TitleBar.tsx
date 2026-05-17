@@ -166,6 +166,13 @@ export function TitleBar({
       description: 'Review all item sprites',
       onClick: () => { setDebugMenuOpen(false); onShowSpriteDebug(); },
     },
+    {
+      key: 'dev-console',
+      icon: '🛠️',
+      label: 'Dev Console',
+      description: 'Open Chrome DevTools',
+      onClick: () => { setDebugMenuOpen(false); window.api.openDevTools(); },
+    },
   ] : [];
 
   const titlebarClass = [

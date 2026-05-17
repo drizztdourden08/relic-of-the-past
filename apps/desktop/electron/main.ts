@@ -2,7 +2,6 @@ import { app, BrowserWindow, shell, ipcMain, dialog, net, Menu } from 'electron'
 import { join, basename, extname } from 'path';
 import { readFile, mkdir, writeFile, access, copyFile, rm, stat, readdir, rename } from 'fs/promises';
 import { createWriteStream } from 'fs';
-import { spawn } from 'child_process';
 import { pipeline } from 'stream/promises';
 import StreamZip from 'node-stream-zip';
 import { is } from '@electron-toolkit/utils';
@@ -40,6 +39,11 @@ import {
   migrateDataFolder,
 } from './profile-manager';
 import { enumerateControllers } from './hid-devices';
+import { extractAllItemSprites } from '../../../shared/asset-extraction/item-sprites/extract-items';
+import spriteDefinitions from '../../../shared/data/sprite-definitions.json';
+import { loadRom } from '../../../shared/asset-extraction/rom/rom-loader';
+import { compileResources } from '../../../shared/asset-extraction/compile-resources';
+import { decodeStrings, formatDialogueText } from '../../../shared/asset-extraction/text/dialogue-decoder';
 
 // Ensure consistent userData path across dev and production
 app.setName('alttp-pc');
@@ -93,6 +97,13 @@ function createWindow(): void {
       mainWindow!.webContents.setIgnoreMenuShortcuts(true);
     } else {
       mainWindow!.webContents.setIgnoreMenuShortcuts(false);
+    }
+  });
+
+  // DEBUG: Pipe renderer console.log to main process stdout
+  mainWindow.webContents.on('console-message', (_event, _level, message) => {
+    if (message.startsWith('[HID-') || message.startsWith('[INPUT-')) {
+      console.log(message);
     }
   });
 
@@ -561,21 +572,9 @@ function registerIpcHandlers(): void {
   });
 
   ipcMain.handle('assets:extract', async (_event, romFile: string) => {
-    const projectRoot = join(__dirname, '..', '..');
-    const zelda3Root = join(projectRoot, 'core', 'zelda3');
-    const restoolPath = join(zelda3Root, 'assets', 'restool.py');
     const localRomPath = getUserDataPath('roms', romFile);
     const assetFile = getAssetFileName(romFile);
     const cachedAssetsPath = getUserDataPath('assets', assetFile);
-
-    const submoduleOutputPath = join(zelda3Root, 'zelda3_assets.dat');
-    const submoduleTablesPath = join(zelda3Root, 'tables');
-
-    try {
-      await access(restoolPath);
-    } catch {
-      return { success: false, error: 'restool.py not found. zelda3 submodule may be missing.' };
-    }
 
     try {
       await access(localRomPath);
@@ -587,65 +586,20 @@ function registerIpcHandlers(): void {
       mainWindow?.webContents.send('log:entry', { channel, level, message });
     };
 
-    sendLog('app', 'info', `Extracting assets from ${romFile}...`);
+    sendLog('app', 'info', `Compiling assets from ${romFile}...`);
 
-    return new Promise<{ success: boolean; error?: string }>((resolve) => {
-      const proc = spawn('python', ['-u', restoolPath, '--extract-from-rom', '-r', localRomPath], {
-        cwd: join(zelda3Root, 'assets'),
-        env: process.env,
-        stdio: ['ignore', 'pipe', 'pipe'],
-      });
-
-      let stderr = '';
-
-      proc.stdout.on('data', (data: Buffer) => {
-        for (const line of data.toString().split('\n')) {
-          if (line.trim()) sendLog('core', 'info', line.trim());
-        }
-      });
-
-      proc.stderr.on('data', (data: Buffer) => {
-        const text = data.toString();
-        stderr += text;
-        for (const line of text.split('\n')) {
-          if (line.trim()) sendLog('core', 'error', line.trim());
-        }
-      });
-
-      proc.on('error', (err) => {
-        if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
-          sendLog('error', 'error', 'Python not found. Install Python 3.11+ and ensure it is on PATH.');
-          resolve({ success: false, error: 'Python not found on PATH' });
-        } else {
-          sendLog('error', 'error', `Failed to start extraction: ${err.message}`);
-          resolve({ success: false, error: err.message });
-        }
-      });
-
-      proc.on('close', async (code) => {
-        if (code !== 0) {
-          sendLog('error', 'error', `Extraction failed (exit code ${code})`);
-          resolve({ success: false, error: stderr || `Exit code ${code}` });
-          return;
-        }
-
-        try {
-          await access(submoduleOutputPath);
-          await copyFile(submoduleOutputPath, cachedAssetsPath);
-          const assetsStat = await stat(cachedAssetsPath);
-          sendLog('app', 'info', `Assets cached as ${assetFile} (${(assetsStat.size / 1024).toFixed(0)} KB)`);
-
-          await rm(submoduleOutputPath, { force: true });
-          await rm(submoduleTablesPath, { recursive: true, force: true });
-          sendLog('app', 'info', 'Cleaned up temporary extraction files');
-
-          resolve({ success: true });
-        } catch {
-          sendLog('error', 'error', 'Extraction completed but zelda3_assets.dat not found');
-          resolve({ success: false, error: 'Output file not found after extraction' });
-        }
-      });
-    });
+    try {
+      const rom = loadRom(localRomPath);
+      sendLog('core', 'info', `ROM loaded: ${rom.language} (${rom.description})`);
+      const dat = compileResources(rom);
+      await writeFile(cachedAssetsPath, dat);
+      sendLog('app', 'info', `Assets cached as ${assetFile} (${(dat.length / 1024).toFixed(0)} KB)`);
+      return { success: true };
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      sendLog('error', 'error', `Asset compilation failed: ${msg}`);
+      return { success: false, error: msg };
+    }
   });
 
   // ─── Save file management ───
@@ -860,53 +814,26 @@ function registerIpcHandlers(): void {
     throw new Error('Unsupported file type');
   }
 
-  /** Helper: run restool on a ROM path and save dialogue to langDir */
-  function runRestoolExtract(romAbsPath: string, langDir: string, langCode: string): Promise<{ success: boolean; error?: string }> {
-    const projectRoot = join(__dirname, '..', '..');
-    const zelda3Root = join(projectRoot, 'core', 'zelda3');
-    const restoolPath = join(zelda3Root, 'assets', 'restool.py');
-
+  /** Helper: extract dialogue from a ROM path and save to langDir */
+  async function extractDialogueFromRom(romAbsPath: string, langDir: string, langCode: string): Promise<{ success: boolean; error?: string }> {
     const sendLog = (channel: string, level: string, message: string) => {
       mainWindow?.webContents.send('log:entry', { channel, level, message });
     };
     sendLog('app', 'info', `Extracting language '${langCode}'...`);
 
-    return new Promise<{ success: boolean; error?: string }>((resolve) => {
-      let restoolExists = true;
-      try { require('fs').accessSync(restoolPath); } catch { restoolExists = false; }
-      if (!restoolExists) { resolve({ success: false, error: 'restool.py not found' }); return; }
-
-      const proc = spawn('python', [
-        '-u', restoolPath, '--extract-dialogue', '-r', romAbsPath,
-      ], {
-        cwd: join(zelda3Root, 'assets'),
-        env: process.env,
-        stdio: ['ignore', 'pipe', 'pipe'],
-      });
-
-      let stderr = '';
-      proc.stdout.on('data', (data: Buffer) => {
-        for (const line of data.toString().split('\n')) {
-          if (line.trim()) sendLog('core', 'info', line.trim());
-        }
-      });
-      proc.stderr.on('data', (data: Buffer) => { stderr += data.toString(); });
-      proc.on('error', (err) => resolve({ success: false, error: err.message }));
-      proc.on('close', async (code) => {
-        if (code !== 0) { resolve({ success: false, error: stderr || `Exit code ${code}` }); return; }
-        const dialogueFile = join(zelda3Root, 'assets', 'dialogue.txt');
-        try {
-          await access(dialogueFile);
-          await mkdir(langDir, { recursive: true });
-          await copyFile(dialogueFile, join(langDir, 'dialogue.txt'));
-          await rm(dialogueFile, { force: true });
-          sendLog('app', 'info', `Language '${langCode}' extracted successfully`);
-          resolve({ success: true });
-        } catch {
-          resolve({ success: false, error: 'Dialogue file not found after extraction' });
-        }
-      });
-    });
+    try {
+      const rom = loadRom(romAbsPath, true);
+      const strings = decodeStrings((addr) => rom.getByte(addr), rom.language);
+      const text = formatDialogueText(strings);
+      await mkdir(langDir, { recursive: true });
+      await writeFile(join(langDir, 'dialogue.txt'), text, 'utf-8');
+      sendLog('app', 'info', `Language '${langCode}' extracted successfully (${strings.length} strings)`);
+      return { success: true };
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      sendLog('error', 'error', `Language extraction failed: ${msg}`);
+      return { success: false, error: msg };
+    }
   }
 
   ipcMain.handle('languages:extract', async (_event, romFile: string, langCode: string) => {
@@ -915,7 +842,7 @@ function registerIpcHandlers(): void {
       return { success: false, error: `ROM not found: ${romFile}` };
     }
     const langDir = getUserDataPath('languages', langCode);
-    return runRestoolExtract(localRomPath, langDir, langCode);
+    return extractDialogueFromRom(localRomPath, langDir, langCode);
   });
 
   ipcMain.handle('languages:extractFromFile', async (_event, filePath: string, langCode: string) => {
@@ -923,7 +850,7 @@ function registerIpcHandlers(): void {
       const { romPath, tempDir } = await resolveRomFile(filePath);
       try {
         const langDir = getUserDataPath('languages', langCode);
-        return await runRestoolExtract(romPath, langDir, langCode);
+        return await extractDialogueFromRom(romPath, langDir, langCode);
       } finally {
         if (tempDir) await rm(tempDir, { recursive: true, force: true }).catch(() => {});
       }
@@ -939,7 +866,7 @@ function registerIpcHandlers(): void {
       const { romPath, tempDir } = await resolveRomFile(tempFile);
       try {
         const langDir = getUserDataPath('languages', langCode);
-        return await runRestoolExtract(romPath, langDir, langCode);
+        return await extractDialogueFromRom(romPath, langDir, langCode);
       } finally {
         if (tempDir) await rm(tempDir, { recursive: true, force: true }).catch(() => {});
       }
@@ -1034,7 +961,6 @@ function registerIpcHandlers(): void {
   });
 
 
-
   // Get userData path
   ipcMain.handle('app:getUserDataPath', () => app.getPath('userData'));
 
@@ -1060,19 +986,16 @@ function registerIpcHandlers(): void {
     await writeFile(getUserDataPath('sprite-review.json'), JSON.stringify(data, null, 2), 'utf-8');
   });
 
-  // ─── Sprite extraction ───
+  // ─── Sprite extraction (per-ROM) ───
+
+  function spriteDir(romFile: string): string {
+    const stem = basename(romFile, extname(romFile));
+    return getUserDataPath('sprites', stem);
+  }
 
   ipcMain.handle('sprites:extract', async (_event, romFile: string) => {
-    const projectRoot = join(__dirname, '..', '..');
-    const scriptPath = join(projectRoot, 'scripts', 'extract-item-sprites.py');
     const localRomPath = getUserDataPath('roms', romFile);
-    const spritesDir = getUserDataPath('sprites');
-
-    try {
-      await access(scriptPath);
-    } catch {
-      return { success: false, error: 'extract-item-sprites.py not found.' };
-    }
+    const outDir = spriteDir(romFile);
 
     try {
       await access(localRomPath);
@@ -1080,7 +1003,7 @@ function registerIpcHandlers(): void {
       return { success: false, error: `ROM file not found: ${romFile}` };
     }
 
-    await mkdir(spritesDir, { recursive: true });
+    await mkdir(outDir, { recursive: true });
 
     const sendLog = (channel: string, level: string, message: string) => {
       mainWindow?.webContents.send('log:entry', { channel, level, message });
@@ -1088,67 +1011,29 @@ function registerIpcHandlers(): void {
 
     sendLog('app', 'info', `Extracting sprites from ${romFile}...`);
 
-    return new Promise<{ success: boolean; count?: number; error?: string }>((resolve) => {
-      const proc = spawn('python', ['-u', scriptPath, '-r', localRomPath, '-o', spritesDir], {
-        cwd: projectRoot,
-        env: process.env,
-        stdio: ['ignore', 'pipe', 'pipe'],
-      });
-
-      let stderr = '';
-      let lastLine = '';
-
-      proc.stdout.on('data', (data: Buffer) => {
-        for (const line of data.toString().split('\n')) {
-          if (line.trim()) {
-            sendLog('core', 'info', line.trim());
-            lastLine = line.trim();
-          }
+    try {
+      const result = extractAllItemSprites(localRomPath, outDir, spriteDefinitions.sprites as never);
+      if (result.errors.length > 0) {
+        for (const err of result.errors) {
+          sendLog('core', 'error', err);
         }
-      });
-
-      proc.stderr.on('data', (data: Buffer) => {
-        const text = data.toString();
-        stderr += text;
-        for (const line of text.split('\n')) {
-          if (line.trim()) sendLog('core', 'error', line.trim());
-        }
-      });
-
-      proc.on('error', (err) => {
-        if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
-          sendLog('error', 'error', 'Python not found. Install Python 3.11+ and ensure it is on PATH.');
-          resolve({ success: false, error: 'Python not found on PATH' });
-        } else {
-          sendLog('error', 'error', `Failed to start sprite extraction: ${err.message}`);
-          resolve({ success: false, error: err.message });
-        }
-      });
-
-      proc.on('close', async (code) => {
-        if (code !== 0) {
-          sendLog('error', 'error', `Sprite extraction failed (exit code ${code})`);
-          resolve({ success: false, error: stderr || `Exit code ${code}` });
-          return;
-        }
-
-        // Count extracted files
-        try {
-          const files = await readdir(spritesDir);
-          const pngCount = files.filter(f => f.endsWith('.png')).length;
-          sendLog('app', 'info', `Sprites extracted: ${pngCount} files`);
-          resolve({ success: true, count: pngCount });
-        } catch {
-          resolve({ success: true });
-        }
-      });
-    });
+      }
+      sendLog('app', 'info', `Sprites extracted: ${result.total} files (${result.counts.hud} HUD, ${result.counts.receipt} receipt, ${result.counts.drop} drop)`);
+      if (result.removedStale > 0) {
+        sendLog('app', 'info', `Removed ${result.removedStale} stale sprite files`);
+      }
+      return { success: true, count: result.total };
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      sendLog('error', 'error', `Sprite extraction failed: ${msg}`);
+      return { success: false, error: msg };
+    }
   });
 
-  ipcMain.handle('sprites:check', async () => {
-    const spritesDir = getUserDataPath('sprites');
+  ipcMain.handle('sprites:check', async (_e, romFile: string) => {
+    const outDir = spriteDir(romFile);
     try {
-      const files = await readdir(spritesDir);
+      const files = await readdir(outDir);
       const pngCount = files.filter(f => f.endsWith('.png')).length;
       return { extracted: pngCount > 0, count: pngCount };
     } catch {
@@ -1156,8 +1041,18 @@ function registerIpcHandlers(): void {
     }
   });
 
-  ipcMain.handle('sprites:getPath', async (_e, file: string) => {
-    return getUserDataPath('sprites', `${file}.png`);
+  ipcMain.handle('sprites:delete', async (_e, romFile: string) => {
+    const outDir = spriteDir(romFile);
+    try {
+      await rm(outDir, { recursive: true, force: true });
+      return { success: true };
+    } catch (e) {
+      return { success: false, error: e instanceof Error ? e.message : String(e) };
+    }
+  });
+
+  ipcMain.handle('sprites:getPath', async (_e, romFile: string, file: string) => {
+    return join(spriteDir(romFile), `${file}.png`);
   });
 }
 

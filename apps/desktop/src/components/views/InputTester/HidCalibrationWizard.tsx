@@ -14,7 +14,7 @@
  *  - Copy to JSON always available (partial or full).
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { webHidReader } from '../../../lib/game/webhid-input-reader';
 import type { WebHidRawReport } from '../../../lib/game/webhid-input-reader';
 import {
@@ -22,6 +22,10 @@ import {
   findProfileByVidPid,
 } from '@shared/data/controllers/profiles';
 import type { ControllerProfile } from '@shared/data/controllers/profiles';
+import { SDL_CONTROLLER_DB } from '@shared/data/controllers/sdl-controller-list';
+import type { SdlControllerEntry } from '@shared/data/controllers/sdl-controller-list';
+import { Select } from '../../primitives';
+import type { SelectOption } from '../../primitives';
 
 // ── Exported types ─────────────────────────────────────────────────────────────
 
@@ -135,6 +139,8 @@ interface Props {
 
 export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Element {
   const [selectedProfileId, setSelectedProfileId] = useState('');
+  const [selectedSdlVidPid, setSelectedSdlVidPid] = useState('');
+  const [hasGyro, setHasGyro] = useState(true); // default true until proven otherwise
   const [profile, setProfile] = useState<ControllerProfile | null>(null);
   const [phase, setPhase] = useState<Phase>('select-profile');
 
@@ -237,6 +243,43 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
       else addLog(`Unknown device ${vid}:${pid} — select a profile or use Generic`);
     }
   }, [addLog]);
+
+  // ── SDL controller options for searchable picker ──
+  const sdlOptions: SelectOption[] = useMemo(() =>
+    SDL_CONTROLLER_DB
+      .filter(e => e.vidPid)
+      .map(e => ({
+        value: e.vidPid!,
+        label: `${e.name} (${e.vidPid})${e.hasGyro ? ' 🔄' : ''}`,
+      })),
+    []
+  );
+
+  // ── Auto-detect SDL controller via node-hid enumeration ──
+  useEffect(() => {
+    window.api.enumerateHidDevices().then(devices => {
+      if (devices.length === 0) return;
+      const dev = devices[0];
+      const vid = dev.vendorId.toLowerCase().padStart(4, '0');
+      const pid = dev.productId.toLowerCase().padStart(4, '0');
+      const vidPid = `${vid}:${pid}`;
+      const match = SDL_CONTROLLER_DB.find(e => e.vidPid === vidPid);
+      if (match) {
+        setSelectedSdlVidPid(vidPid);
+        setHasGyro(match.hasGyro);
+        addLog(`SDL match: ${match.name} (${vidPid})${match.hasGyro ? ' [gyro]' : ''}`);
+      } else {
+        addLog(`No SDL match for ${vidPid} — pick manually or use Generic`);
+      }
+    }).catch(() => { /* node-hid not available */ });
+  }, [addLog]);
+
+  // ── Update hasGyro when SDL selection changes ──
+  const handleSdlSelect = useCallback((vidPid: string) => {
+    setSelectedSdlVidPid(vidPid);
+    const entry = SDL_CONTROLLER_DB.find(e => e.vidPid === vidPid);
+    if (entry) setHasGyro(entry.hasGyro);
+  }, []);
 
   // ── Update byte statuses ──
   const updateByteStatuses = useCallback((len: number) => {
@@ -608,7 +651,7 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
     addLog('Idle baseline cleared.');
   }, [addLog]);
 
-  const prereqsDone = gyroState === 'done' && idleState === 'done';
+  const prereqsDone = (hasGyro ? gyroState === 'done' : true) && idleState === 'done';
 
   // ── Finalize stick ──
   const finalizeStick = useCallback((c1: StickCandidate, c2: StickCandidate | null) => {
@@ -943,12 +986,34 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
           <button onClick={onCancel} className="input-cal__btn input-cal__btn--danger">Cancel</button>
         </div>
         <p className="hid-cal__desc">
-          Choose which controller you're calibrating. If auto-detected, it's pre-selected.
+          Identify your controller from the SDL database (893+ controllers), then choose a calibration profile.
+          {selectedSdlVidPid && !hasGyro && ' Gyro step will be skipped (no gyro detected).'}
+          {selectedSdlVidPid && hasGyro && ' 🔄 Gyro detected — gyro profiling will be available.'}
         </p>
-        <select value={selectedProfileId} onChange={e => setSelectedProfileId(e.target.value)} className="hid-cal__select">
-          <option value="">— Select a controller —</option>
-          {CONTROLLER_PROFILES.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-        </select>
+
+        <div style={{ marginBottom: 12 }}>
+          <label style={{ fontSize: 12, color: '#9ca3af', display: 'block', marginBottom: 4 }}>
+            Controller (SDL Database)
+          </label>
+          <Select
+            value={selectedSdlVidPid}
+            onChange={handleSdlSelect}
+            options={sdlOptions}
+            placeholder="Search controllers..."
+            searchable
+          />
+        </div>
+
+        <div style={{ marginBottom: 12 }}>
+          <label style={{ fontSize: 12, color: '#9ca3af', display: 'block', marginBottom: 4 }}>
+            Calibration Profile
+          </label>
+          <select value={selectedProfileId} onChange={e => setSelectedProfileId(e.target.value)} className="hid-cal__select">
+            <option value="">— Select a profile —</option>
+            {CONTROLLER_PROFILES.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+          </select>
+        </div>
+
         <button onClick={handleProfileConfirm} disabled={!selectedProfileId}
           className="input-cal__btn input-cal__btn--primary">
           Start Calibration
@@ -979,6 +1044,7 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
 
       {/* ── Prereqs: Gyro + Idle side by side ── */}
       <div className="hid-cal__prereqs">
+        {hasGyro && (
         <div className={`hid-cal__prereq-card${gyroState === 'done' ? ' hid-cal__prereq-card--done' : ''}`}>
           <div className="hid-cal__prereq-title">
             <span>{gyroState === 'done' ? '✓' : '1.'} Gyro Profiling</span>
@@ -1002,6 +1068,7 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
             )}
           </div>
         </div>
+        )}
 
         <div className={`hid-cal__prereq-card${idleState === 'done' ? ' hid-cal__prereq-card--done' : ''}`}>
           <div className="hid-cal__prereq-title">

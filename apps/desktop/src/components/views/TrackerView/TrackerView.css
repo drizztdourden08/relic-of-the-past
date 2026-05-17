@@ -418,6 +418,53 @@
   color: #b8d4ff;
 }
 
+/* Status filter buttons */
+.tracker-filters__status-group {
+  display: flex;
+  gap: 2px;
+}
+
+.tracker-filters__status-btn {
+  padding: 3px 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  color: var(--color-text-secondary, #999);
+  font-size: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  min-width: 20px;
+  text-align: center;
+}
+
+.tracker-filters__status-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.tracker-filters__status-btn--active {
+  border-color: rgba(100, 160, 255, 0.5);
+  color: #e0e0e0;
+  background: rgba(100, 160, 255, 0.15);
+}
+
+.tracker-filters__status-btn--reachable.tracker-filters__status-btn--active {
+  color: #ffc107;
+  border-color: rgba(255, 193, 7, 0.5);
+  background: rgba(255, 193, 7, 0.15);
+}
+
+.tracker-filters__status-btn--completed.tracker-filters__status-btn--active {
+  color: #4caf50;
+  border-color: rgba(76, 175, 80, 0.5);
+  background: rgba(76, 175, 80, 0.15);
+}
+
+.tracker-filters__status-btn--blocked.tracker-filters__status-btn--active {
+  color: #999;
+  border-color: rgba(153, 153, 153, 0.5);
+  background: rgba(153, 153, 153, 0.15);
+}
+
 /* Tag filter panel */
 .tracker-filters__tags-panel {
   margin-top: 6px;

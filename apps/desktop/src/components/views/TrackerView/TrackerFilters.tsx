@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import type { CheckTag } from '@shared/data/checks/tags';
 import { TAG_DEFINITIONS } from '@shared/data/checks/tags';
-import type { GroupDimension } from '@shared/data/checks/grouping';
+import type { GroupDimension, StatusFilter } from '@shared/data/checks/grouping';
 import { GROUP_DIMENSIONS } from '@shared/data/checks/grouping';
 import type { FilterState } from '@shared/data/checks/grouping';
 import './TrackerView.css';
@@ -78,6 +78,25 @@ export function TrackerFilters({
           <option value="rewards">Rewards</option>
           <option value="non-rewards">Non-rewards</option>
         </select>
+
+        {/* Status filter */}
+        <div className="tracker-filters__status-group">
+          {([
+            { value: 'all', label: 'All', cls: '' },
+            { value: 'reachable', label: '●', cls: 'tracker-filters__status-btn--reachable' },
+            { value: 'completed', label: '✓', cls: 'tracker-filters__status-btn--completed' },
+            { value: 'blocked', label: '✕', cls: 'tracker-filters__status-btn--blocked' },
+          ] as const).map(opt => (
+            <button
+              key={opt.value}
+              className={`tracker-filters__status-btn ${opt.cls} ${(filter.statusFilter ?? 'all') === opt.value ? 'tracker-filters__status-btn--active' : ''}`}
+              onClick={() => onFilterChange({ ...filter, statusFilter: opt.value as StatusFilter })}
+              title={opt.value.charAt(0).toUpperCase() + opt.value.slice(1)}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
 
         {/* Tag filter toggle */}
         <button

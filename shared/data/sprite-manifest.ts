@@ -22,8 +22,14 @@ export interface SpriteManifestEntry {
   category: SpriteCategory;
 }
 
+let _spritesBase = '/sprites/items/';
+
+export function setSpritesBase(base: string): void {
+  _spritesBase = base;
+}
+
 function getSpritesBase(): string {
-  return (typeof window !== 'undefined' && window.api?.spritesBaseUrl) || '/sprites/items/';
+  return _spritesBase;
 }
 
 export function getSpritePath(file: string): string {

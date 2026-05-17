@@ -76,7 +76,6 @@ export const REGION_RULES: Record<string, Requirement> = {
   'Village of Outcasts Heavy Rock': canLiftHeavyRocks,
   'Village of Outcasts Eastern Rocks': canLiftHeavyRocks,
   'Village of Outcasts Pegs': { and: ['Moon Pearl', 'Hammer'] },
-  'Grassy Lawn Pegs': { and: ['Moon Pearl', 'Hammer'] },
   'Peg Area Rocks': { and: ['Moon Pearl', canLiftHeavyRocks] },
   'Bumper Cave Entrance Rock': canLiftRocks,
   'Bumper Cave Exit (Top)': 'Cape',
@@ -99,6 +98,40 @@ export const REGION_RULES: Record<string, Requirement> = {
   'Desert Palace Stairs Mirror Spot': 'Magic Mirror',
   'Desert Palace Entrance (North) Mirror Spot': 'Magic Mirror',
   'Floating Island Mirror Spot': 'Magic Mirror',
+
+  // ─── Missing Overworld Entrance Rules ───
+
+  // Death Mountain teleporters (LW → DW)
+  'Death Mountain (Top) Teleporter': 'Moon Pearl',
+  'East Death Mountain Teleporter': 'Moon Pearl',
+
+  // Mirror spots requiring Magic Mirror
+  'Mimic Cave Mirror Spot': 'Magic Mirror',
+  'East Dark World Mirror Spot': 'Magic Mirror',
+  'South Dark World Mirror Spot': 'Magic Mirror',
+  'West Dark World Mirror Spot': 'Magic Mirror',
+  'Dark Lake Hylia Mirror Spot': 'Magic Mirror',
+  'Northeast Dark World Mirror Spot': 'Magic Mirror',
+  'Skull Woods Mirror Spot': 'Magic Mirror',
+  'Skull Woods Forest Mirror Spot': 'Magic Mirror',
+  'Dark Desert Mirror Spot': 'Magic Mirror',
+  'Dark Desert North Mirror Spot': 'Magic Mirror',
+  'Dark Desert Lone Stairs Mirror Spot': 'Magic Mirror',
+  'Bumper Cave Ledge Mirror Spot': 'Magic Mirror',
+  'Dark Death Mountain (West Bottom) Mirror Spot': 'Magic Mirror',
+  'Dark Death Mountain (East Bottom) Mirror Spot': 'Magic Mirror',
+  'Dark Death Mountain Ledge Mirror Spot': 'Magic Mirror',
+  'Dark Death Mountain Isolated Ledge Mirror Spot': 'Magic Mirror',
+  'Death Mountain Floating Island Mirror Spot': 'Magic Mirror',
+  'Dark Lake Hylia Central Island Mirror Spot': 'Magic Mirror',
+
+  // Dark World connections requiring Moon Pearl or items
+  'Northeast Dark World Hammer Bridge': 'Hammer',
+  'Dark Grassy Lawn Pegs': { and: ['Moon Pearl', 'Hammer'] },
+
+  // Castle Tower entrance (vanilla: needs sword to enter)
+  'Agahnims Tower': hasSword,
+
   'Paradox Cave Bomb Jump': canUseBombs,
   'Skull Woods First Section Bomb Jump': canUseBombs,
 

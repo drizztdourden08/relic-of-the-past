@@ -28,6 +28,8 @@ export const CHECK_RULES: Record<string, Requirement> = {
   'Potion Shop': 'Mushroom',
   'Sunken Treasure': 'Open Floodgate',
   'Flute Spot': 'Shovel',
+  'Flute Activation Spot': 'Flute',
+  'Missing Smith': canLiftHeavyRocks,
   "Zora's Ledge": 'Flippers',
 
   // ── Dark World Overworld ───────────────────────────────────────────
@@ -37,10 +39,13 @@ export const CHECK_RULES: Record<string, Requirement> = {
 
   // ── Hyrule Castle / Sewers ─────────────────────────────────────────
   'Sewers - Dark Cross': 'Lamp',
+  'Sewers - Key Rat Key Drop': 'Lamp',
 
   // ── Eastern Palace ─────────────────────────────────────────────────
   'Eastern Palace - Big Chest': 'Big Key (Eastern Palace)',
   'Eastern Palace - Big Key Chest': 'Lamp',
+  'Eastern Palace - Dark Square Pot Key': 'Lamp',
+  'Eastern Palace - Dark Eyegore Key Drop': 'Lamp',
   'Eastern Palace - Boss': { and: ['Big Key (Eastern Palace)', 'Lamp', canShootArrows] },
   'Eastern Palace - Prize': { and: ['Big Key (Eastern Palace)', 'Lamp', canShootArrows] },
 
@@ -115,4 +120,7 @@ export const CHECK_RULES: Record<string, Requirement> = {
   'Ganons Tower - Mini Helmasaur Room - Left': canShootArrows,
   'Ganons Tower - Mini Helmasaur Room - Right': canShootArrows,
   'Ganons Tower - Mini Helmasaur Key Drop': canShootArrows,
+
+  // ── Ganon (final boss) ─────────────────────────────────────────────
+  'Ganon': { and: [hasBeamSword, 'Lamp', 'Silver Arrows'] },
 };

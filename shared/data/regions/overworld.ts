@@ -10,6 +10,7 @@ const LIGHT_WORLD_REGIONS: RegionDefinition[] = [
   { id: 'zoras-river', name: 'Zoras River', type: 'lightWorld' },
   { id: 'kings-grave-area', name: 'Kings Grave Area', type: 'lightWorld' },
   { id: 'hyrule-castle-courtyard', name: 'Hyrule Castle Courtyard', type: 'lightWorld' },
+  { id: 'light-world-rain', name: 'Light World (Rain)', type: 'lightWorld' },
   { id: 'hyrule-castle-ledge', name: 'Hyrule Castle Ledge', type: 'lightWorld' },
   { id: 'master-sword-meadow', name: 'Master Sword Meadow', type: 'lightWorld' },
   { id: 'death-mountain', name: 'Death Mountain', type: 'lightWorld' },
@@ -36,7 +37,7 @@ const LIGHT_WORLD_REGIONS: RegionDefinition[] = [
   { id: 'desert-northern-cliffs', name: 'Desert Northern Cliffs', type: 'lightWorld' },
   { id: 'mimic-cave-ledge', name: 'Mimic Cave Ledge', type: 'lightWorld' },
   { id: 'death-mountain-floating-island-lw', name: 'Death Mountain Floating Island (Light World)', type: 'lightWorld' },
-  { id: 'pyramid-ledge-lw', name: 'Pyramid Ledge', type: 'lightWorld' },
+  { id: 'pyramid-ledge-lw', name: 'Pyramid Ledge (Light World)', type: 'lightWorld' },
 ];
 
 // ─── Dark World Regions ───
@@ -206,431 +207,430 @@ export const OVERWORLD_CONNECTIONS: RegionConnection[] = [
   // ══════════════════════════════════════════════════
   // Menu (Save & Quit destinations)
   // ══════════════════════════════════════════════════
-  { from: 'Menu', to: 'Light World', entrance: 'Links House S&Q' },
-  { from: 'Menu', to: 'Sanctuary', entrance: 'Sanctuary S&Q' },
-  { from: 'Menu', to: 'Old Man Cave', entrance: 'Old Man S&Q' },
+  { from: 'menu', to: 'light-world', entrance: 'Links House S&Q' },
+  { from: 'menu', to: 'sanctuary', entrance: 'Sanctuary S&Q' },
+  { from: 'menu', to: 'old-man-cave', entrance: 'Old Man S&Q' },
 
   // ══════════════════════════════════════════════════
   // Light World — Main Overworld Exits
   // ══════════════════════════════════════════════════
 
   // --- Kakariko / West Light World ---
-  { from: 'Light World', to: 'Blinds Hideout', entrance: 'Blinds Hideout' },
-  { from: 'Light World', to: 'Elder House', entrance: 'Elder House (East)' },
-  { from: 'Light World', to: 'Elder House', entrance: 'Elder House (West)' },
-  { from: 'Light World', to: 'Snitch Lady (East)', entrance: 'Snitch Lady (East)' },
-  { from: 'Light World', to: 'Snitch Lady (West)', entrance: 'Snitch Lady (West)' },
-  { from: 'Light World', to: 'Bush Covered House', entrance: 'Bush Covered House' },
-  { from: 'Light World', to: 'Tavern (Front)', entrance: 'Tavern (Front)' },
-  { from: 'Light World', to: 'Light World Bomb Hut', entrance: 'Light World Bomb Hut' },
-  { from: 'Light World', to: 'Kakariko Shop', entrance: 'Kakariko Shop' },
-  { from: 'Light World', to: 'Tavern', entrance: 'Tavern North' },
-  { from: 'Light World', to: 'Chicken House', entrance: 'Chicken House' },
-  { from: 'Light World', to: 'Sick Kids House', entrance: 'Sick Kids House' },
-  { from: 'Light World', to: 'Blacksmiths Hut', entrance: 'Blacksmiths Hut' },
-  { from: 'Light World', to: 'Kakariko Well (top)', entrance: 'Kakariko Well Drop' },
-  { from: 'Light World', to: 'Kakariko Well (bottom)', entrance: 'Kakariko Well Cave' },
-  { from: 'Light World', to: 'Library', entrance: 'Library' },
-  { from: 'Light World', to: 'Kakariko Gamble Game', entrance: 'Kakariko Gamble Game' },
+  { from: 'light-world', to: 'blinds-hideout', entrance: 'Blinds Hideout' },
+  { from: 'light-world', to: 'elder-house', entrance: 'Elder House (East)' },
+  { from: 'light-world', to: 'elder-house', entrance: 'Elder House (West)' },
+  { from: 'light-world', to: 'snitch-lady-east', entrance: 'Snitch Lady (East)' },
+  { from: 'light-world', to: 'snitch-lady-west', entrance: 'Snitch Lady (West)' },
+  { from: 'light-world', to: 'bush-covered-house', entrance: 'Bush Covered House' },
+  { from: 'light-world', to: 'tavern-front', entrance: 'Tavern (Front)' },
+  { from: 'light-world', to: 'light-world-bomb-hut', entrance: 'Light World Bomb Hut' },
+  { from: 'light-world', to: 'kakariko-shop', entrance: 'Kakariko Shop' },
+  { from: 'light-world', to: 'tavern', entrance: 'Tavern North' },
+  { from: 'light-world', to: 'chicken-house', entrance: 'Chicken House' },
+  { from: 'light-world', to: 'sick-kids-house', entrance: 'Sick Kids House' },
+  { from: 'light-world', to: 'blacksmiths-hut', entrance: 'Blacksmiths Hut' },
+  { from: 'light-world', to: 'kakariko-well-top', entrance: 'Kakariko Well Drop' },
+  { from: 'light-world', to: 'kakariko-well-bottom', entrance: 'Kakariko Well Cave' },
+  { from: 'light-world', to: 'library', entrance: 'Library' },
+  { from: 'light-world', to: 'kakariko-gamble-game', entrance: 'Kakariko Gamble Game' },
 
   // --- Central Light World ---
-  { from: 'Light World', to: 'Links House', entrance: 'Links House' },
-  { from: 'Light World', to: 'Hyrule Castle Secret Entrance', entrance: 'Hyrule Castle Secret Entrance Drop' },
-  { from: 'Light World', to: 'Hyrule Castle Courtyard', entrance: 'Hyrule Castle Main Gate' },
-  { from: 'Light World', to: 'Sanctuary', entrance: 'Sanctuary' },
-  { from: 'Light World', to: 'Kings Grave Area', entrance: 'Sanctuary Grave' },
-  { from: 'Light World', to: 'Dam', entrance: 'Dam' },
-  { from: 'Light World', to: 'Sahasrahlas Hut', entrance: 'Sahasrahlas Hut' },
-  { from: 'Light World', to: 'Aginahs Cave', entrance: 'Aginahs Cave' },
-  { from: 'Light World', to: 'Bat Cave Drop Ledge', entrance: 'Bat Cave Drop Ledge' },
-  { from: 'Light World', to: 'Bat Cave (right)', entrance: 'Bat Cave Cave' },
-  { from: 'Light World', to: 'Bonk Rock Cave', entrance: 'Bonk Rock Cave' },
-  { from: 'Light World', to: 'Potion Shop', entrance: 'Potion Shop' },
-  { from: 'Light World', to: 'Two Brothers House', entrance: 'Two Brothers House (East)' },
-  { from: 'Light World', to: 'Fortune Teller (Light)', entrance: 'Fortune Teller (Light)' },
-  { from: 'Light World', to: 'Lumberjack House', entrance: 'Lumberjack House' },
-  { from: 'Light World', to: 'Lake Hylia Fortune Teller', entrance: 'Lake Hylia Fortune Teller' },
-  { from: 'Light World', to: 'North Fairy Cave', entrance: 'North Fairy Cave Drop' },
+  { from: 'light-world', to: 'links-house', entrance: 'Links House' },
+  { from: 'links-house', to: 'light-world', entrance: 'Links House Exit' },
+  { from: 'links-house', to: 'light-world-rain', entrance: 'Links House Exit (Rain)' },
+  { from: 'light-world-rain', to: 'hyrule-castle-secret-entrance', entrance: 'HC Secret Entrance Drop (Rain)' },
+  { from: 'light-world-rain', to: 'hyrule-castle-courtyard', entrance: 'HC Main Gate (Rain)' },
+  { from: 'light-world', to: 'hyrule-castle-secret-entrance', entrance: 'Hyrule Castle Secret Entrance Drop' },
+  { from: 'hyrule-castle-secret-entrance', to: 'hyrule-castle', entrance: 'Secret Passage to Castle' },
+  { from: 'light-world', to: 'hyrule-castle-courtyard', entrance: 'Hyrule Castle Main Gate' },
+  { from: 'light-world', to: 'sanctuary', entrance: 'Sanctuary' },
+  { from: 'light-world', to: 'kings-grave-area', entrance: 'Sanctuary Grave' },
+  { from: 'light-world', to: 'dam', entrance: 'Dam' },
+  { from: 'light-world', to: 'sahasrahlas-hut', entrance: 'Sahasrahlas Hut' },
+  { from: 'light-world', to: 'aginahs-cave', entrance: 'Aginahs Cave' },
+  { from: 'light-world', to: 'bat-cave-drop-ledge', entrance: 'Bat Cave Drop Ledge' },
+  { from: 'light-world', to: 'bat-cave-right', entrance: 'Bat Cave Cave' },
+  { from: 'light-world', to: 'bonk-rock-cave', entrance: 'Bonk Rock Cave' },
+  { from: 'light-world', to: 'potion-shop', entrance: 'Potion Shop' },
+  { from: 'light-world', to: 'two-brothers-house', entrance: 'Two Brothers House Exit (East)' },
+  { from: 'light-world', to: 'fortune-teller-light', entrance: 'Fortune Teller (Light)' },
+  { from: 'light-world', to: 'lumberjack-house', entrance: 'Lumberjack House' },
+  { from: 'light-world', to: 'lake-hylia-fortune-teller', entrance: 'Lake Hylia Fortune Teller' },
+  { from: 'light-world', to: 'north-fairy-cave', entrance: 'North Fairy Cave Drop' },
 
   // --- Lost Woods ---
-  { from: 'Light World', to: 'Lost Woods Hideout (top)', entrance: 'Lost Woods Hideout Drop' },
-  { from: 'Light World', to: 'Lost Woods Hideout (bottom)', entrance: 'Lost Woods Hideout Stump' },
-  { from: 'Light World', to: 'Lumberjack Tree (top)', entrance: 'Lumberjack Tree Tree' },
-  { from: 'Light World', to: 'Lumberjack Tree (bottom)', entrance: 'Lumberjack Tree Cave' },
-  { from: 'Light World', to: 'Master Sword Meadow', entrance: 'Master Sword Meadow' },
-  { from: 'Light World', to: 'Lost Woods Gamble', entrance: 'Lost Woods Gamble' },
+  { from: 'light-world', to: 'lost-woods-hideout-top', entrance: 'Lost Woods Hideout Drop' },
+  { from: 'light-world', to: 'lost-woods-hideout-bottom', entrance: 'Lost Woods Hideout Stump' },
+  { from: 'light-world', to: 'lumberjack-tree-top', entrance: 'Lumberjack Tree Tree' },
+  { from: 'light-world', to: 'lumberjack-tree-bottom', entrance: 'Lumberjack Tree Cave' },
+  { from: 'light-world', to: 'master-sword-meadow', entrance: 'Master Sword Meadow' },
+  { from: 'light-world', to: 'lost-woods-gamble', entrance: 'Lost Woods Gamble' },
 
   // --- Lake Hylia / South ---
-  { from: 'Light World', to: 'Lake Hylia Central Island', entrance: 'Lake Hylia Central Island Pier' },
-  { from: 'Light World', to: 'Mini Moldorm Cave', entrance: 'Mini Moldorm Cave' },
-  { from: 'Light World', to: 'Ice Rod Cave', entrance: 'Ice Rod Cave' },
-  { from: 'Light World', to: 'Good Bee Cave', entrance: 'Good Bee Cave' },
-  { from: 'Light World', to: '20 Rupee Cave', entrance: '20 Rupee Cave' },
-  { from: 'Light World', to: 'Cave Shop (Lake Hylia)', entrance: 'Cave Shop (Lake Hylia)' },
-  { from: 'Light World', to: 'Long Fairy Cave', entrance: 'Long Fairy Cave' },
-  { from: 'Light World', to: '50 Rupee Cave', entrance: '50 Rupee Cave' },
-  { from: 'Light World', to: 'Bonk Fairy (Light)', entrance: 'Bonk Fairy (Light)' },
-  { from: 'Light World', to: 'Hobo Bridge', entrance: 'Hobo Bridge' },
-  { from: 'Light World', to: 'Waterfall of Wishing', entrance: 'Waterfall of Wishing' },
-  { from: 'Light World', to: 'Lake Hylia Healer Fairy', entrance: 'Lake Hylia Fairy' },
-  { from: 'Light World', to: 'Swamp Healer Fairy', entrance: 'Light Hype Fairy' },
-  { from: 'Light World', to: 'Desert Healer Fairy', entrance: 'Desert Fairy' },
+  { from: 'light-world', to: 'lake-hylia-central-island', entrance: 'Lake Hylia Central Island Pier' },
+  { from: 'light-world', to: 'mini-moldorm-cave', entrance: 'Mini Moldorm Cave' },
+  { from: 'light-world', to: 'ice-rod-cave', entrance: 'Ice Rod Cave' },
+  { from: 'light-world', to: 'good-bee-cave', entrance: 'Good Bee Cave' },
+  { from: 'light-world', to: '20-rupee-cave', entrance: '20 Rupee Cave' },
+  { from: 'light-world', to: 'cave-shop-lake-hylia', entrance: 'Cave Shop (Lake Hylia)' },
+  { from: 'light-world', to: 'long-fairy-cave', entrance: 'Long Fairy Cave' },
+  { from: 'light-world', to: '50-rupee-cave', entrance: '50 Rupee Cave' },
+  { from: 'light-world', to: 'bonk-fairy-light', entrance: 'Bonk Fairy (Light)' },
+  { from: 'light-world', to: 'hobo-bridge', entrance: 'Hobo Bridge' },
+  { from: 'light-world', to: 'waterfall-of-wishing', entrance: 'Waterfall of Wishing' },
+  { from: 'light-world', to: 'lake-hylia-healer-fairy', entrance: 'Lake Hylia Fairy' },
+  { from: 'light-world', to: 'swamp-healer-fairy', entrance: 'Light Hype Fairy' },
+  { from: 'light-world', to: 'desert-healer-fairy', entrance: 'Desert Fairy' },
 
   // --- Desert ---
-  { from: 'Light World', to: 'Desert Palace Stairs', entrance: 'Desert Palace Stairs' },
+  { from: 'light-world', to: 'desert-palace-stairs', entrance: 'Desert Palace Stairs' },
 
   // --- Flute / Teleporter exits ---
-  { from: 'Light World', to: 'Death Mountain Entrance', entrance: 'Flute Spot 1' },
-  { from: 'Light World', to: 'Dark Desert', entrance: 'Dark Desert Teleporter' },
-  { from: 'Light World', to: 'East Dark World', entrance: 'East Hyrule Teleporter' },
-  { from: 'Light World', to: 'South Dark World', entrance: 'South Hyrule Teleporter' },
-  { from: 'Light World', to: 'West Dark World', entrance: 'Kakariko Teleporter' },
+  { from: 'light-world', to: 'death-mountain-entrance', entrance: 'Flute Spot 1' },
+  { from: 'light-world', to: 'dark-desert', entrance: 'Dark Desert Teleporter' },
+  { from: 'light-world', to: 'east-dark-world', entrance: 'East Hyrule Teleporter' },
+  { from: 'light-world', to: 'south-dark-world', entrance: 'South Hyrule Teleporter' },
+  { from: 'light-world', to: 'west-dark-world', entrance: 'Kakariko Teleporter' },
 
   // --- Death Mountain entrance ---
-  { from: 'Light World', to: 'Death Mountain Entrance', entrance: 'Death Mountain Entrance Rock' },
+  { from: 'light-world', to: 'death-mountain-entrance', entrance: 'Death Mountain Entrance Rock' },
 
   // --- Dungeon entrances from Light World ---
-  { from: 'Light World', to: 'Eastern Palace', entrance: 'Eastern Palace' },
+  { from: 'light-world', to: 'eastern-palace', entrance: 'Eastern Palace' },
 
   // --- Zora's River ---
-  { from: 'Light World', to: 'Zoras River', entrance: 'Zoras River' },
+  { from: 'light-world', to: 'zoras-river', entrance: 'Zoras River' },
 
   // --- Pyramid top ---
-  { from: 'Light World', to: 'Pyramid Ledge', entrance: 'Top of Pyramid' },
+  { from: 'light-world', to: 'pyramid-ledge-lw', entrance: 'Top of Pyramid' },
 
   // ══════════════════════════════════════════════════
   // Hyrule Castle Courtyard
   // ══════════════════════════════════════════════════
-  { from: 'Hyrule Castle Courtyard', to: 'Hyrule Castle', entrance: 'Hyrule Castle Entrance (South)' },
-  { from: 'Hyrule Castle Courtyard', to: 'Hyrule Castle', entrance: 'Hyrule Castle Entrance (East)' },
-  { from: 'Hyrule Castle Courtyard', to: 'Hyrule Castle', entrance: 'Hyrule Castle Entrance (West)' },
-  { from: 'Hyrule Castle Courtyard', to: 'Agahnims Tower', entrance: 'Agahnims Tower' },
-  { from: 'Hyrule Castle Courtyard', to: 'Hyrule Castle Secret Entrance', entrance: 'Hyrule Castle Secret Entrance Stairs' },
+  { from: 'hyrule-castle-courtyard', to: 'hyrule-castle', entrance: 'Hyrule Castle Entrance (South)' },
+  { from: 'hyrule-castle-courtyard', to: 'hyrule-castle', entrance: 'Hyrule Castle Entrance (East)' },
+  { from: 'hyrule-castle-courtyard', to: 'hyrule-castle', entrance: 'Hyrule Castle Entrance (West)' },
+  { from: 'hyrule-castle-courtyard', to: 'agahnims-tower', entrance: 'Agahnims Tower' },
+  { from: 'hyrule-castle-courtyard', to: 'hyrule-castle-secret-entrance', entrance: 'Hyrule Castle Secret Entrance Stairs' },
 
   // ══════════════════════════════════════════════════
   // Hyrule Castle Ledge
   // ══════════════════════════════════════════════════
-  { from: 'Hyrule Castle Ledge', to: 'Hyrule Castle Courtyard', entrance: 'Hyrule Castle Ledge Courtyard Drop' },
-  { from: 'Hyrule Castle Ledge', to: 'Light World', entrance: 'Hyrule Castle Ledge Mirror Spot' },
+  { from: 'hyrule-castle-ledge', to: 'hyrule-castle-courtyard', entrance: 'Hyrule Castle Ledge Courtyard Drop' },
+  { from: 'hyrule-castle-ledge', to: 'light-world', entrance: 'Hyrule Castle Ledge Mirror Spot' },
 
   // ══════════════════════════════════════════════════
   // Death Mountain — West Side
   // ══════════════════════════════════════════════════
-  { from: 'Death Mountain Entrance', to: 'Old Man Cave', entrance: 'Old Man Cave (West)' },
-  { from: 'Death Mountain Entrance', to: 'Death Mountain', entrance: 'Death Mountain Entrance Drop' },
+  { from: 'death-mountain-entrance', to: 'old-man-cave', entrance: 'Old Man Cave (West)' },
+  { from: 'death-mountain-entrance', to: 'death-mountain', entrance: 'Death Mountain Entrance Drop' },
 
-  { from: 'Death Mountain', to: 'Old Man Cave', entrance: 'Old Man Cave (East)' },
-  { from: 'Death Mountain', to: 'Old Man House', entrance: 'Old Man House (Bottom)' },
-  { from: 'Death Mountain', to: 'Death Mountain Return Ledge', entrance: 'Death Mountain Return Ledge Drop' },
-  { from: 'Death Mountain', to: 'Spectacle Rock Cave (Bottom)', entrance: 'Spectacle Rock Cave' },
-  { from: 'Death Mountain', to: 'Spectacle Rock Cave (Top)', entrance: 'Spectacle Rock Cave (Top)' },
-  { from: 'Death Mountain', to: 'Death Mountain (Top)', entrance: 'Death Mountain Climb' },
-  { from: 'Death Mountain', to: 'Light World Death Mountain Shop', entrance: 'Light World Death Mountain Shop' },
+  { from: 'death-mountain', to: 'old-man-cave', entrance: 'Old Man Cave (East)' },
+  { from: 'death-mountain', to: 'old-man-house', entrance: 'Old Man House (Bottom)' },
+  { from: 'death-mountain', to: 'death-mountain-return-ledge', entrance: 'Death Mountain Return Ledge Drop' },
+  { from: 'death-mountain', to: 'spectacle-rock-cave-bottom', entrance: 'Spectacle Rock Cave' },
+  { from: 'death-mountain', to: 'spectacle-rock-cave-top', entrance: 'Spectacle Rock Cave (Top)' },
+  { from: 'death-mountain', to: 'death-mountain-top', entrance: 'Death Mountain Climb' },
+  { from: 'death-mountain', to: 'light-world-death-mountain-shop', entrance: 'Light World Death Mountain Shop' },
 
-  { from: 'Death Mountain Return Ledge', to: 'Death Mountain Return Cave', entrance: 'Death Mountain Return Cave (East)' },
-  { from: 'Death Mountain Return Ledge', to: 'Death Mountain', entrance: 'Death Mountain Return Ledge Drop' },
+  { from: 'death-mountain-return-ledge', to: 'death-mountain-return-cave', entrance: 'Death Mountain Return Cave (East)' },
+  { from: 'death-mountain-return-ledge', to: 'death-mountain', entrance: 'Death Mountain Return Ledge Drop' },
 
-  { from: 'Death Mountain (Top)', to: 'Spectacle Rock', entrance: 'Spectacle Rock Drop' },
-  { from: 'Death Mountain (Top)', to: 'Death Mountain', entrance: 'Death Mountain Drop' },
-  { from: 'Death Mountain (Top)', to: 'East Death Mountain (Top)', entrance: 'Death Mountain (Top) to East' },
-  { from: 'Death Mountain (Top)', to: 'Tower of Hera', entrance: 'Tower of Hera' },
-  { from: 'Death Mountain (Top)', to: 'Spectacle Rock Cave (Peak)', entrance: 'Spectacle Rock Cave Peak' },
-  { from: 'Death Mountain (Top)', to: 'Dark Death Mountain (Top)', entrance: 'Death Mountain (Top) Teleporter' },
+  { from: 'death-mountain-top', to: 'spectacle-rock', entrance: 'Spectacle Rock Drop' },
+  { from: 'death-mountain-top', to: 'death-mountain', entrance: 'Death Mountain Drop' },
+  { from: 'death-mountain-top', to: 'east-death-mountain-top', entrance: 'Death Mountain (Top) to East' },
+  { from: 'death-mountain-top', to: 'tower-of-hera-bottom', entrance: 'Tower of Hera' },
+  { from: 'death-mountain-top', to: 'spectacle-rock-cave-peak', entrance: 'Spectacle Rock Cave Peak' },
+  { from: 'death-mountain-top', to: 'dark-death-mountain-top', entrance: 'Death Mountain (Top) Teleporter' },
 
-  { from: 'Spectacle Rock', to: 'Death Mountain (Top)', entrance: 'Spectacle Rock Drop' },
+  { from: 'spectacle-rock', to: 'death-mountain-top', entrance: 'Spectacle Rock Drop' },
 
   // ══════════════════════════════════════════════════
   // Death Mountain — East Side
   // ══════════════════════════════════════════════════
-  { from: 'East Death Mountain (Bottom)', to: 'Spiral Cave (Bottom)', entrance: 'Spiral Cave' },
-  { from: 'East Death Mountain (Bottom)', to: 'Fairy Ascension Plateau', entrance: 'Fairy Ascension Plateau' },
-  { from: 'East Death Mountain (Bottom)', to: 'East Death Mountain (Top)', entrance: 'East Death Mountain Climb' },
-  { from: 'East Death Mountain (Bottom)', to: 'Paradox Cave Front', entrance: 'Paradox Cave (Bottom)' },
-  { from: 'East Death Mountain (Bottom)', to: 'Hookshot Fairy', entrance: 'Hookshot Fairy' },
+  { from: 'east-death-mountain-bottom', to: 'spiral-cave-bottom', entrance: 'Spiral Cave' },
+  { from: 'east-death-mountain-bottom', to: 'fairy-ascension-plateau', entrance: 'Fairy Ascension Plateau' },
+  { from: 'east-death-mountain-bottom', to: 'east-death-mountain-top', entrance: 'East Death Mountain Climb' },
+  { from: 'east-death-mountain-bottom', to: 'paradox-cave-front', entrance: 'Paradox Cave (Bottom)' },
+  { from: 'east-death-mountain-bottom', to: 'hookshot-fairy', entrance: 'Hookshot Fairy' },
 
-  { from: 'East Death Mountain (Top)', to: 'Paradox Cave', entrance: 'Paradox Cave (Top)' },
-  { from: 'East Death Mountain (Top)', to: 'Spiral Cave Ledge', entrance: 'Spiral Cave Ledge Drop' },
-  { from: 'East Death Mountain (Top)', to: 'Mimic Cave Ledge', entrance: 'Mimic Cave Mirror Spot' },
-  { from: 'East Death Mountain (Top)', to: 'East Death Mountain (Bottom)', entrance: 'East Death Mountain Drop' },
-  { from: 'East Death Mountain (Top)', to: 'Superbunny Cave (Top)', entrance: 'Superbunny Cave (Top)' },
-  { from: 'East Death Mountain (Top)', to: 'Dark Death Mountain (East Bottom)', entrance: 'East Death Mountain Teleporter' },
+  { from: 'east-death-mountain-top', to: 'paradox-cave', entrance: 'Paradox Cave (Top)' },
+  { from: 'east-death-mountain-top', to: 'spiral-cave-ledge', entrance: 'Spiral Cave Ledge Drop' },
+  { from: 'east-death-mountain-top', to: 'mimic-cave-ledge', entrance: 'Mimic Cave Mirror Spot' },
+  { from: 'east-death-mountain-top', to: 'east-death-mountain-bottom', entrance: 'East Death Mountain Drop' },
+  { from: 'east-death-mountain-top', to: 'superbunny-cave-top', entrance: 'Superbunny Cave (Top)' },
+  { from: 'east-death-mountain-top', to: 'dark-death-mountain-east-bottom', entrance: 'East Death Mountain Teleporter' },
 
-  { from: 'Spiral Cave Ledge', to: 'Spiral Cave (Top)', entrance: 'Spiral Cave (Top)' },
-  { from: 'Spiral Cave Ledge', to: 'East Death Mountain (Bottom)', entrance: 'Spiral Cave Ledge Drop' },
+  { from: 'spiral-cave-ledge', to: 'spiral-cave-top', entrance: 'Spiral Cave (Top)' },
+  { from: 'spiral-cave-ledge', to: 'east-death-mountain-bottom', entrance: 'Spiral Cave Ledge Drop' },
 
-  { from: 'Fairy Ascension Plateau', to: 'Fairy Ascension Cave (Bottom)', entrance: 'Fairy Ascension Cave (Bottom)' },
-  { from: 'Fairy Ascension Plateau', to: 'East Death Mountain (Bottom)', entrance: 'Fairy Ascension Plateau Drop' },
+  { from: 'fairy-ascension-plateau', to: 'fairy-ascension-cave-bottom', entrance: 'Fairy Ascension Cave (Bottom)' },
+  { from: 'fairy-ascension-plateau', to: 'east-death-mountain-bottom', entrance: 'Fairy Ascension Plateau Drop' },
 
-  { from: 'Fairy Ascension Ledge', to: 'Fairy Ascension Cave (Top)', entrance: 'Fairy Ascension Cave (Top)' },
-  { from: 'Fairy Ascension Ledge', to: 'Fairy Ascension Plateau', entrance: 'Fairy Ascension Ledge Drop' },
+  { from: 'fairy-ascension-ledge', to: 'fairy-ascension-cave-top', entrance: 'Fairy Ascension Cave (Top)' },
+  { from: 'fairy-ascension-ledge', to: 'fairy-ascension-plateau', entrance: 'Fairy Ascension Ledge Drop' },
 
-  { from: 'Mimic Cave Ledge', to: 'Mimic Cave', entrance: 'Mimic Cave' },
+  { from: 'mimic-cave-ledge', to: 'mimic-cave', entrance: 'Mimic Cave' },
 
   // ══════════════════════════════════════════════════
   // Death Mountain Floating Island
   // ══════════════════════════════════════════════════
-  { from: 'Death Mountain Floating Island (Light World)', to: 'East Death Mountain (Top)', entrance: 'Death Mountain Floating Island Drop' },
+  { from: 'death-mountain-floating-island-lw', to: 'east-death-mountain-top', entrance: 'Death Mountain Floating Island Drop' },
 
   // ══════════════════════════════════════════════════
   // Death Mountain Cave Connections (internal)
   // ══════════════════════════════════════════════════
-  { from: 'Old Man Cave', to: 'Death Mountain', entrance: 'Old Man Cave Exit (East)' },
-  { from: 'Old Man Cave', to: 'Death Mountain Entrance', entrance: 'Old Man Cave Exit (West)' },
-  { from: 'Old Man House', to: 'Old Man House Back', entrance: 'Old Man House Front to Back' },
-  { from: 'Old Man House Back', to: 'Death Mountain Return Ledge', entrance: 'Old Man House Back to Ledge' },
-  { from: 'Death Mountain Return Cave', to: 'Light World', entrance: 'Death Mountain Return Cave Exit (West)' },
+  { from: 'old-man-cave', to: 'death-mountain', entrance: 'Old Man Cave Exit (East)' },
+  { from: 'old-man-cave', to: 'death-mountain-entrance', entrance: 'Old Man Cave Exit (West)' },
+  { from: 'old-man-house', to: 'old-man-house-back', entrance: 'Old Man House Front to Back' },
+  { from: 'old-man-house-back', to: 'death-mountain-return-ledge', entrance: 'Old Man House Back to Ledge' },
+  { from: 'death-mountain-return-cave', to: 'light-world', entrance: 'Death Mountain Return Cave Exit (West)' },
 
-  { from: 'Paradox Cave Front', to: 'Paradox Cave Chest Area', entrance: 'Paradox Cave Push Block' },
-  { from: 'Paradox Cave Chest Area', to: 'Paradox Cave Front', entrance: 'Paradox Cave Push Block Reverse' },
-  { from: 'Paradox Cave', to: 'East Death Mountain (Top)', entrance: 'Paradox Cave Exit (Top)' },
-  { from: 'Paradox Cave', to: 'Paradox Cave Chest Area', entrance: 'Paradox Cave Inner' },
+  { from: 'paradox-cave-front', to: 'paradox-cave-chest-area', entrance: 'Paradox Cave Push Block' },
+  { from: 'paradox-cave-chest-area', to: 'paradox-cave-front', entrance: 'Paradox Cave Push Block Reverse' },
+  { from: 'paradox-cave', to: 'east-death-mountain-top', entrance: 'Paradox Cave Exit (Top)' },
+  { from: 'paradox-cave', to: 'paradox-cave-chest-area', entrance: 'Paradox Cave Inner' },
 
-  { from: 'Spiral Cave (Top)', to: 'Spiral Cave (Bottom)', entrance: 'Spiral Cave' },
-  { from: 'Spiral Cave (Bottom)', to: 'East Death Mountain (Bottom)', entrance: 'Spiral Cave Exit' },
+  { from: 'spiral-cave-top', to: 'spiral-cave-bottom', entrance: 'Spiral Cave' },
+  { from: 'spiral-cave-bottom', to: 'east-death-mountain-bottom', entrance: 'Spiral Cave Exit' },
 
-  { from: 'Fairy Ascension Cave (Bottom)', to: 'Fairy Ascension Cave (Drop)', entrance: 'Fairy Ascension Cave Climb' },
-  { from: 'Fairy Ascension Cave (Top)', to: 'Fairy Ascension Cave (Drop)', entrance: 'Fairy Ascension Cave Drop' },
+  { from: 'fairy-ascension-cave-bottom', to: 'fairy-ascension-cave-drop', entrance: 'Fairy Ascension Cave Climb' },
+  { from: 'fairy-ascension-cave-top', to: 'fairy-ascension-cave-drop', entrance: 'Fairy Ascension Cave Drop' },
 
-  { from: 'Superbunny Cave (Top)', to: 'Superbunny Cave (Bottom)', entrance: 'Superbunny Cave Descent' },
-  { from: 'Superbunny Cave (Bottom)', to: 'East Death Mountain (Bottom)', entrance: 'Superbunny Cave Exit (Bottom)' },
+  { from: 'superbunny-cave-top', to: 'superbunny-cave-bottom', entrance: 'Superbunny Cave Descent' },
+  { from: 'superbunny-cave-bottom', to: 'east-death-mountain-bottom', entrance: 'Superbunny Cave Exit (Bottom)' },
 
-  { from: 'Hookshot Cave', to: 'Hookshot Cave (Upper)', entrance: 'Hookshot Cave Bonk Path' },
-  { from: 'Hookshot Cave (Upper)', to: 'Hookshot Cave', entrance: 'Hookshot Cave Hook Path' },
-  { from: 'Hookshot Cave (Upper)', to: 'Death Mountain Floating Island (Dark World)', entrance: 'Hookshot Cave Back Exit' },
+  { from: 'hookshot-cave', to: 'hookshot-cave-upper', entrance: 'Hookshot Cave Bonk Path' },
+  { from: 'hookshot-cave-upper', to: 'hookshot-cave', entrance: 'Hookshot Cave Hook Path' },
+  { from: 'hookshot-cave-upper', to: 'death-mountain-floating-island-dw', entrance: 'Hookshot Cave Back Exit' },
 
   // ══════════════════════════════════════════════════
   // Desert connections
   // ══════════════════════════════════════════════════
-  { from: 'Desert Palace Stairs', to: 'Desert Palace Entrance (North) Spot', entrance: 'Desert Palace Stairs Ascent' },
-  { from: 'Desert Palace Stairs', to: 'Light World', entrance: 'Desert Palace Stairs Drop' },
-  { from: 'Desert Palace Entrance (North) Spot', to: 'Desert Palace', entrance: 'Desert Palace Entrance (North)' },
-  { from: 'Desert Ledge', to: 'Desert Palace', entrance: 'Desert Palace Entrance (South)' },
-  { from: 'Desert Ledge', to: 'Light World', entrance: 'Desert Ledge Drop' },
-  { from: 'Desert Ledge (Northeast)', to: 'Desert Ledge', entrance: 'Desert Ledge (Northeast) Drop' },
-  { from: 'Desert Palace Lone Stairs', to: 'Desert Palace', entrance: 'Desert Palace Entrance (East)' },
-  { from: 'Desert Palace Lone Stairs', to: 'Desert Ledge', entrance: 'Desert Palace Lone Stairs Drop' },
-  { from: 'Desert Northern Cliffs', to: 'Desert Ledge (Northeast)', entrance: 'Desert Northern Cliffs Drop' },
+  { from: 'desert-palace-stairs', to: 'desert-palace-entrance-north-spot', entrance: 'Desert Palace Stairs Ascent' },
+  { from: 'desert-palace-stairs', to: 'light-world', entrance: 'Desert Palace Stairs Drop' },
+  { from: 'desert-palace-entrance-north-spot', to: 'desert-palace-north', entrance: 'Desert Palace Entrance (North)' },
+  { from: 'desert-ledge', to: 'desert-palace-main-outer', entrance: 'Desert Palace Entrance (South)' },
+  { from: 'desert-ledge', to: 'light-world', entrance: 'Desert Ledge Drop' },
+  { from: 'desert-ledge-northeast', to: 'desert-ledge', entrance: 'Desert Ledge (Northeast) Drop' },
+  { from: 'desert-palace-lone-stairs', to: 'desert-palace-main-outer', entrance: 'Desert Palace Entrance (East)' },
+  { from: 'desert-palace-lone-stairs', to: 'desert-ledge', entrance: 'Desert Palace Lone Stairs Drop' },
+  { from: 'desert-northern-cliffs', to: 'desert-ledge-northeast', entrance: 'Desert Northern Cliffs Drop' },
 
   // ══════════════════════════════════════════════════
   // Cave 45 / Graveyard / Bombos Ledge
   // ══════════════════════════════════════════════════
-  { from: 'Bat Cave Drop Ledge', to: 'Bat Cave (right)', entrance: 'Bat Cave Drop' },
-  { from: 'Cave 45 Ledge', to: 'Cave 45', entrance: 'Cave 45' },
-  { from: 'Cave 45 Ledge', to: 'Light World', entrance: 'Cave 45 Ledge Drop' },
-  { from: 'Graveyard Ledge', to: 'Graveyard Cave', entrance: 'Graveyard Cave' },
-  { from: 'Graveyard Ledge', to: 'Light World', entrance: 'Graveyard Ledge Drop' },
-  { from: 'Bombos Tablet Ledge', to: 'Light World', entrance: 'Bombos Tablet Ledge Drop' },
-  { from: 'Maze Race Ledge', to: 'Light World', entrance: 'Maze Race Ledge Drop' },
+  { from: 'bat-cave-drop-ledge', to: 'bat-cave-right', entrance: 'Bat Cave Drop' },
+  { from: 'cave-45-ledge', to: 'cave-45', entrance: 'Cave 45' },
+  { from: 'cave-45-ledge', to: 'light-world', entrance: 'Cave 45 Ledge Drop' },
+  { from: 'graveyard-ledge', to: 'graveyard-cave', entrance: 'Graveyard Cave' },
+  { from: 'graveyard-ledge', to: 'light-world', entrance: 'Graveyard Ledge Drop' },
+  { from: 'bombos-tablet-ledge', to: 'light-world', entrance: 'Bombos Tablet Ledge Drop' },
+  { from: 'maze-race-ledge', to: 'light-world', entrance: 'Maze Race Ledge Drop' },
 
   // ══════════════════════════════════════════════════
   // Kings Grave / Graveyard Area
   // ══════════════════════════════════════════════════
-  { from: 'Light World', to: 'Kings Grave Area', entrance: 'Kings Grave Outer Rocks' },
-  { from: 'Kings Grave Area', to: 'Kings Grave', entrance: 'Kings Grave' },
-  { from: 'Kings Grave Area', to: 'Light World', entrance: 'Kings Grave Exit' },
+  { from: 'light-world', to: 'kings-grave-area', entrance: 'Kings Grave Outer Rocks' },
+  { from: 'kings-grave-area', to: 'kings-grave', entrance: 'Kings Grave' },
+  { from: 'kings-grave-area', to: 'light-world', entrance: 'Kings Grave Exit' },
 
   // ══════════════════════════════════════════════════
   // Lake Hylia Islands / Special Spots
   // ══════════════════════════════════════════════════
-  { from: 'Lake Hylia Central Island', to: 'Capacity Upgrade', entrance: 'Capacity Upgrade' },
-  { from: 'Lake Hylia Central Island', to: 'Light World', entrance: 'Lake Hylia Central Island Teleporter' },
-  { from: 'Lake Hylia Island', to: 'Light World', entrance: 'Lake Hylia Island Drop' },
+  { from: 'lake-hylia-central-island', to: 'capacity-upgrade', entrance: 'Capacity Upgrade' },
+  { from: 'lake-hylia-central-island', to: 'light-world', entrance: 'Lake Hylia Central Island Teleporter' },
+  { from: 'lake-hylia-island', to: 'light-world', entrance: 'Lake Hylia Island Drop' },
 
   // ══════════════════════════════════════════════════
   // Bat Cave / Two Brothers internal
   // ══════════════════════════════════════════════════
-  { from: 'Bat Cave (right)', to: 'Bat Cave (left)', entrance: 'Bat Cave Door' },
-  { from: 'Bat Cave (left)', to: 'Light World', entrance: 'Bat Cave Exit' },
-  { from: 'Two Brothers House', to: 'Maze Race Ledge', entrance: 'Two Brothers House (West)' },
+  { from: 'bat-cave-right', to: 'bat-cave-left', entrance: 'Bat Cave Door' },
+  { from: 'bat-cave-left', to: 'light-world', entrance: 'Bat Cave Exit' },
+  { from: 'two-brothers-house', to: 'maze-race-ledge', entrance: 'Two Brothers House Exit (West)' },
 
   // ══════════════════════════════════════════════════
   // Zora's River
   // ══════════════════════════════════════════════════
-  { from: 'Zoras River', to: 'Waterfall of Wishing', entrance: 'Waterfall of Wishing' },
+  { from: 'zoras-river', to: 'waterfall-of-wishing', entrance: 'Waterfall of Wishing' },
 
   // ══════════════════════════════════════════════════
   // East Dark World
   // ══════════════════════════════════════════════════
-  { from: 'East Dark World', to: 'Pyramid Fairy', entrance: 'Pyramid Fairy' },
-  { from: 'East Dark World', to: 'South Dark World', entrance: 'South Dark World Bridge' },
-  { from: 'East Dark World', to: 'Palace of Darkness', entrance: 'Palace of Darkness' },
-  { from: 'East Dark World', to: 'Dark Lake Hylia', entrance: 'Dark Lake Hylia Drop (East)' },
-  { from: 'East Dark World', to: 'Hyrule Castle Ledge', entrance: 'Hyrule Castle Ledge Mirror Spot' },
-  { from: 'East Dark World', to: 'Dark Lake Hylia Healer Fairy', entrance: 'Dark Lake Hylia Fairy' },
-  { from: 'East Dark World', to: 'Palace of Darkness Hint', entrance: 'Palace of Darkness Hint' },
-  { from: 'East Dark World', to: 'East Dark World Hint', entrance: 'East Dark World Hint' },
-  { from: 'East Dark World', to: 'Northeast Dark World', entrance: 'Northeast Dark World Hammer Bridge' },
-  { from: 'East Dark World', to: 'West Dark World', entrance: 'West Dark World Gap' },
-  { from: 'East Dark World', to: 'Pyramid', entrance: 'Pyramid' },
-  { from: 'East Dark World', to: 'Pyramid Ledge', entrance: 'Pyramid Drop' },
+  { from: 'east-dark-world', to: 'pyramid-fairy', entrance: 'Pyramid Fairy' },
+  { from: 'east-dark-world', to: 'south-dark-world', entrance: 'South Dark World Bridge' },
+  { from: 'east-dark-world', to: 'palace-of-darkness-entrance', entrance: 'Palace of Darkness' },
+  { from: 'east-dark-world', to: 'dark-lake-hylia', entrance: 'Dark Lake Hylia Drop (East)' },
+  { from: 'east-dark-world', to: 'hyrule-castle-ledge', entrance: 'Hyrule Castle Ledge Mirror Spot' },
+  { from: 'east-dark-world', to: 'dark-lake-hylia-healer-fairy', entrance: 'Dark Lake Hylia Fairy' },
+  { from: 'east-dark-world', to: 'palace-of-darkness-hint', entrance: 'Palace of Darkness Hint' },
+  { from: 'east-dark-world', to: 'east-dark-world-hint', entrance: 'East Dark World Hint' },
+  { from: 'east-dark-world', to: 'northeast-dark-world', entrance: 'Northeast Dark World Hammer Bridge' },
+  { from: 'east-dark-world', to: 'west-dark-world', entrance: 'West Dark World Gap' },
+  { from: 'east-dark-world', to: 'pyramid', entrance: 'Pyramid' },
+  { from: 'east-dark-world', to: 'pyramid-ledge', entrance: 'Pyramid Drop' },
 
   // ══════════════════════════════════════════════════
   // Northeast Dark World / Catfish
   // ══════════════════════════════════════════════════
-  { from: 'Northeast Dark World', to: 'Catfish', entrance: 'Catfish' },
-  { from: 'Northeast Dark World', to: 'East Dark World', entrance: 'Northeast Dark World South' },
-  { from: 'Catfish', to: 'Northeast Dark World', entrance: 'Catfish Exit' },
+  { from: 'northeast-dark-world', to: 'catfish', entrance: 'Catfish Entrance Rock' },
+  { from: 'northeast-dark-world', to: 'east-dark-world', entrance: 'Northeast Dark World South' },
+  { from: 'catfish', to: 'northeast-dark-world', entrance: 'Catfish Exit' },
 
   // ══════════════════════════════════════════════════
   // South Dark World
   // ══════════════════════════════════════════════════
-  { from: 'South Dark World', to: 'Dark Lake Hylia', entrance: 'Dark Lake Hylia Drop (South)' },
-  { from: 'South Dark World', to: 'Hype Cave', entrance: 'Hype Cave' },
-  { from: 'South Dark World', to: 'Swamp Palace', entrance: 'Swamp Palace' },
-  { from: 'South Dark World', to: 'Big Bomb Shop', entrance: 'Big Bomb Shop' },
-  { from: 'South Dark World', to: 'East Dark World', entrance: 'East Dark World Bridge' },
-  { from: 'South Dark World', to: 'Maze Race Ledge', entrance: 'Maze Race Mirror Spot' },
-  { from: 'South Dark World', to: 'Cave 45 Ledge', entrance: 'Cave 45 Mirror Spot' },
-  { from: 'South Dark World', to: 'Bombos Tablet Ledge', entrance: 'Bombos Tablet Mirror Spot' },
-  { from: 'South Dark World', to: 'Bonk Fairy (Dark)', entrance: 'Bonk Fairy (Dark)' },
-  { from: 'South Dark World', to: 'Archery Game', entrance: 'Archery Game' },
-  { from: 'South Dark World', to: 'Dark Grassy Lawn', entrance: 'Dark Grassy Lawn Pegs' },
-  { from: 'South Dark World', to: 'Dark Lake Hylia Shop', entrance: 'Dark Lake Hylia Shop' },
+  { from: 'south-dark-world', to: 'dark-lake-hylia', entrance: 'Dark Lake Hylia Drop (South)' },
+  { from: 'south-dark-world', to: 'hype-cave', entrance: 'Hype Cave' },
+  { from: 'south-dark-world', to: 'swamp-palace-entrance', entrance: 'Swamp Palace' },
+  { from: 'south-dark-world', to: 'big-bomb-shop', entrance: 'Big Bomb Shop' },
+  { from: 'south-dark-world', to: 'east-dark-world', entrance: 'East Dark World Bridge' },
+  { from: 'south-dark-world', to: 'maze-race-ledge', entrance: 'Maze Race Mirror Spot' },
+  { from: 'south-dark-world', to: 'cave-45-ledge', entrance: 'Cave 45 Mirror Spot' },
+  { from: 'south-dark-world', to: 'bombos-tablet-ledge', entrance: 'Bombos Tablet Mirror Spot' },
+  { from: 'south-dark-world', to: 'bonk-fairy-dark', entrance: 'Bonk Fairy (Dark)' },
+  { from: 'south-dark-world', to: 'archery-game', entrance: 'Archery Game' },
+  { from: 'south-dark-world', to: 'dark-grassy-lawn', entrance: 'Dark Grassy Lawn Pegs' },
+  { from: 'south-dark-world', to: 'dark-lake-hylia-shop', entrance: 'Dark Lake Hylia Shop' },
 
   // ══════════════════════════════════════════════════
   // West Dark World
   // ══════════════════════════════════════════════════
-  { from: 'West Dark World', to: 'East Dark World', entrance: 'East Dark World River Pier' },
-  { from: 'West Dark World', to: 'Brewery', entrance: 'Brewery' },
-  { from: 'West Dark World', to: 'C-Shaped House', entrance: 'C-Shaped House' },
-  { from: 'West Dark World', to: 'Chest Game', entrance: 'Chest Game' },
-  { from: 'West Dark World', to: 'Thieves Town', entrance: 'Thieves Town' },
-  { from: 'West Dark World', to: 'Graveyard Ledge', entrance: 'Graveyard Ledge Mirror Spot' },
-  { from: 'West Dark World', to: 'Kings Grave Area', entrance: 'Kings Grave Mirror Spot' },
-  { from: 'West Dark World', to: 'Bumper Cave Entrance', entrance: 'Bumper Cave Entrance Rock' },
-  { from: 'West Dark World', to: 'Skull Woods Forest', entrance: 'Skull Woods Forest' },
-  { from: 'West Dark World', to: 'Hammer Peg Area', entrance: 'Village of Outcasts Pegs' },
-  { from: 'West Dark World', to: 'South Dark World', entrance: 'Village of Outcasts Drop' },
-  { from: 'West Dark World', to: 'Fortune Teller (Dark)', entrance: 'Fortune Teller (Dark)' },
-  { from: 'West Dark World', to: 'Village of Outcasts Shop', entrance: 'Village of Outcasts Shop' },
-  { from: 'West Dark World', to: 'Red Shield Shop', entrance: 'Red Shield Shop' },
-  { from: 'West Dark World', to: 'Dark Sanctuary Hint', entrance: 'Dark Sanctuary Hint' },
-  { from: 'West Dark World', to: 'Dark World Lumberjack Shop', entrance: 'Dark World Lumberjack Shop' },
-  { from: 'West Dark World', to: 'Dark World Potion Shop', entrance: 'Dark World Potion Shop' },
+  { from: 'west-dark-world', to: 'east-dark-world', entrance: 'East Dark World River Pier' },
+  { from: 'west-dark-world', to: 'brewery', entrance: 'Brewery' },
+  { from: 'west-dark-world', to: 'c-shaped-house', entrance: 'C-Shaped House' },
+  { from: 'west-dark-world', to: 'chest-game', entrance: 'Chest Game' },
+  { from: 'west-dark-world', to: 'thieves-town-entrance', entrance: 'Thieves Town' },
+  { from: 'west-dark-world', to: 'graveyard-ledge', entrance: 'Graveyard Ledge Mirror Spot' },
+  { from: 'west-dark-world', to: 'kings-grave-area', entrance: 'Kings Grave Mirror Spot' },
+  { from: 'west-dark-world', to: 'bumper-cave-entrance', entrance: 'Bumper Cave Entrance Rock' },
+  { from: 'west-dark-world', to: 'skull-woods-forest', entrance: 'Skull Woods Forest' },
+  { from: 'west-dark-world', to: 'hammer-peg-area', entrance: 'Village of Outcasts Pegs' },
+  { from: 'west-dark-world', to: 'south-dark-world', entrance: 'Village of Outcasts Drop' },
+  { from: 'west-dark-world', to: 'fortune-teller-dark', entrance: 'Fortune Teller (Dark)' },
+  { from: 'west-dark-world', to: 'village-of-outcasts-shop', entrance: 'Village of Outcasts Shop' },
+  { from: 'west-dark-world', to: 'red-shield-shop', entrance: 'Red Shield Shop' },
+  { from: 'west-dark-world', to: 'dark-sanctuary-hint', entrance: 'Dark Sanctuary Hint' },
+  { from: 'west-dark-world', to: 'dark-world-lumberjack-shop', entrance: 'Dark World Lumberjack Shop' },
+  { from: 'west-dark-world', to: 'dark-world-potion-shop', entrance: 'Dark World Potion Shop' },
 
   // ══════════════════════════════════════════════════
   // Dark Grassy Lawn / Hammer Peg Area
   // ══════════════════════════════════════════════════
-  { from: 'Dark Grassy Lawn', to: 'South Dark World', entrance: 'Dark Grassy Lawn Drop' },
-  { from: 'Hammer Peg Area', to: 'Dark World Hammer Peg Cave', entrance: 'Dark World Hammer Peg Cave' },
-  { from: 'Hammer Peg Area', to: 'West Dark World', entrance: 'Hammer Peg Area Drop' },
+  { from: 'dark-grassy-lawn', to: 'south-dark-world', entrance: 'Dark Grassy Lawn Drop' },
+  { from: 'hammer-peg-area', to: 'dark-world-hammer-peg-cave', entrance: 'Dark World Hammer Peg Cave' },
+  { from: 'hammer-peg-area', to: 'west-dark-world', entrance: 'Hammer Peg Area Drop' },
 
   // ══════════════════════════════════════════════════
   // Bumper Cave
   // ══════════════════════════════════════════════════
-  { from: 'Bumper Cave Entrance', to: 'Bumper Cave', entrance: 'Bumper Cave (Bottom)' },
-  { from: 'Bumper Cave Entrance', to: 'West Dark World', entrance: 'Bumper Cave Entrance Drop' },
-  { from: 'Bumper Cave Ledge', to: 'Bumper Cave', entrance: 'Bumper Cave (Top)' },
-  { from: 'Bumper Cave Ledge', to: 'Bumper Cave Entrance', entrance: 'Bumper Cave Ledge Drop' },
-  { from: 'Bumper Cave Ledge', to: 'Death Mountain Return Ledge', entrance: 'Bumper Cave Ledge Mirror Spot' },
+  { from: 'bumper-cave-entrance', to: 'bumper-cave', entrance: 'Bumper Cave (Bottom)' },
+  { from: 'bumper-cave-entrance', to: 'west-dark-world', entrance: 'Bumper Cave Entrance Drop' },
+  { from: 'bumper-cave-ledge', to: 'bumper-cave', entrance: 'Bumper Cave (Top)' },
+  { from: 'bumper-cave-ledge', to: 'bumper-cave-entrance', entrance: 'Bumper Cave Ledge Drop' },
+  { from: 'bumper-cave-ledge', to: 'death-mountain-return-ledge', entrance: 'Bumper Cave Ledge Mirror Spot' },
 
   // ══════════════════════════════════════════════════
   // Skull Woods Forest
   // ══════════════════════════════════════════════════
-  { from: 'Skull Woods Forest', to: 'Skull Woods Forest (West)', entrance: 'Skull Woods Forest (West)' },
-  { from: 'Skull Woods Forest', to: 'Skull Woods', entrance: 'Skull Woods First Section Door' },
-  { from: 'Skull Woods Forest', to: 'Skull Woods', entrance: 'Skull Woods Second Section Door (East)' },
-  { from: 'Skull Woods Forest', to: 'Skull Woods', entrance: 'Skull Woods Second Section Door (West)' },
-  { from: 'Skull Woods Forest (West)', to: 'Skull Woods', entrance: 'Skull Woods Final Section' },
-  { from: 'Skull Woods Forest', to: 'Master Sword Meadow', entrance: 'Skull Woods Forest Mirror Spot' },
+  { from: 'skull-woods-forest', to: 'skull-woods-forest-west', entrance: 'Skull Woods Forest (West)' },
+  { from: 'skull-woods-forest', to: 'skull-woods-first-section', entrance: 'Skull Woods First Section Door' },
+  { from: 'skull-woods-forest', to: 'skull-woods-second-section-drop', entrance: 'Skull Woods Second Section Door (East)' },
+  { from: 'skull-woods-forest', to: 'skull-woods-second-section-drop', entrance: 'Skull Woods Second Section Door (West)' },
+  { from: 'skull-woods-forest-west', to: 'skull-woods-final-section-entrance', entrance: 'Skull Woods Final Section' },
+  { from: 'skull-woods-forest', to: 'master-sword-meadow', entrance: 'Skull Woods Forest Mirror Spot' },
 
   // ══════════════════════════════════════════════════
   // Dark Desert
   // ══════════════════════════════════════════════════
-  { from: 'Dark Desert', to: 'Misery Mire', entrance: 'Misery Mire' },
-  { from: 'Dark Desert', to: 'Mire Shed', entrance: 'Mire Shed' },
-  { from: 'Dark Desert', to: 'Dark Desert Hint', entrance: 'Dark Desert Hint' },
-  { from: 'Dark Desert', to: 'Dark Desert Healer Fairy', entrance: 'Dark Desert Fairy' },
-  { from: 'Dark Desert', to: 'Desert Ledge', entrance: 'Dark Desert Mirror Spot' },
-  { from: 'Dark Desert', to: 'Desert Northern Cliffs', entrance: 'Dark Desert North Mirror Spot' },
-  { from: 'Dark Desert', to: 'Desert Palace Lone Stairs', entrance: 'Dark Desert Lone Stairs Mirror Spot' },
+  { from: 'dark-desert', to: 'misery-mire-entrance', entrance: 'Misery Mire' },
+  { from: 'dark-desert', to: 'mire-shed', entrance: 'Mire Shed' },
+  { from: 'dark-desert', to: 'dark-desert-hint', entrance: 'Dark Desert Hint' },
+  { from: 'dark-desert', to: 'dark-desert-healer-fairy', entrance: 'Dark Desert Fairy' },
+  { from: 'dark-desert', to: 'desert-ledge', entrance: 'Dark Desert Mirror Spot' },
+  { from: 'dark-desert', to: 'desert-northern-cliffs', entrance: 'Dark Desert North Mirror Spot' },
+  { from: 'dark-desert', to: 'desert-palace-lone-stairs', entrance: 'Dark Desert Lone Stairs Mirror Spot' },
 
   // ══════════════════════════════════════════════════
   // Dark Lake Hylia
   // ══════════════════════════════════════════════════
-  { from: 'Dark Lake Hylia', to: 'Dark Lake Hylia Central Island', entrance: 'Dark Lake Hylia Teleporter' },
-  { from: 'Dark Lake Hylia', to: 'Lake Hylia Island', entrance: 'Dark Lake Hylia Mirror Spot' },
-  { from: 'Dark Lake Hylia', to: 'Dark Lake Hylia Ledge', entrance: 'Dark Lake Hylia Ledge Pier' },
-  { from: 'Dark Lake Hylia', to: 'Dark Lake Hylia Shop', entrance: 'Dark Lake Hylia Shop' },
+  { from: 'dark-lake-hylia', to: 'dark-lake-hylia-central-island', entrance: 'Dark Lake Hylia Teleporter' },
+  { from: 'dark-lake-hylia', to: 'lake-hylia-island', entrance: 'Dark Lake Hylia Mirror Spot' },
+  { from: 'dark-lake-hylia', to: 'dark-lake-hylia-ledge', entrance: 'Dark Lake Hylia Ledge Pier' },
+  { from: 'dark-lake-hylia', to: 'dark-lake-hylia-shop', entrance: 'Dark Lake Hylia Shop' },
 
-  { from: 'Dark Lake Hylia Central Island', to: 'Lake Hylia Central Island', entrance: 'Dark Lake Hylia Central Island Mirror Spot' },
-  { from: 'Dark Lake Hylia Central Island', to: 'Ice Palace', entrance: 'Ice Palace' },
+  { from: 'dark-lake-hylia-central-island', to: 'lake-hylia-central-island', entrance: 'Dark Lake Hylia Central Island Mirror Spot' },
+  { from: 'dark-lake-hylia-central-island', to: 'ice-palace-entrance', entrance: 'Ice Palace' },
 
-  { from: 'Dark Lake Hylia Ledge', to: 'Dark Lake Hylia', entrance: 'Dark Lake Hylia Ledge Drop' },
-  { from: 'Dark Lake Hylia Ledge', to: 'Dark Lake Hylia Ledge Hint', entrance: 'Dark Lake Hylia Ledge Hint' },
-  { from: 'Dark Lake Hylia Ledge', to: 'Dark Lake Hylia Ledge Spike Cave', entrance: 'Dark Lake Hylia Ledge Spike Cave' },
-  { from: 'Dark Lake Hylia Ledge', to: 'Dark Lake Hylia Ledge Healer Fairy', entrance: 'Dark Lake Hylia Ledge Fairy' },
+  { from: 'dark-lake-hylia-ledge', to: 'dark-lake-hylia', entrance: 'Dark Lake Hylia Ledge Drop' },
+  { from: 'dark-lake-hylia-ledge', to: 'dark-lake-hylia-ledge-hint', entrance: 'Dark Lake Hylia Ledge Hint' },
+  { from: 'dark-lake-hylia-ledge', to: 'dark-lake-hylia-ledge-spike-cave', entrance: 'Dark Lake Hylia Ledge Spike Cave' },
+  { from: 'dark-lake-hylia-ledge', to: 'dark-lake-hylia-ledge-healer-fairy', entrance: 'Dark Lake Hylia Ledge Fairy' },
 
   // ══════════════════════════════════════════════════
   // Dark Death Mountain — West
   // ══════════════════════════════════════════════════
-  { from: 'Dark Death Mountain (West Bottom)', to: 'Dark Death Mountain (Top)', entrance: 'Dark Death Mountain Climb (West)' },
-  { from: 'Dark Death Mountain (West Bottom)', to: 'Death Mountain Entrance', entrance: 'Dark Death Mountain (West Bottom) Mirror Spot' },
-  { from: 'Dark Death Mountain (West Bottom)', to: 'Spike Cave', entrance: 'Spike Cave' },
-  { from: 'Dark Death Mountain (West Bottom)', to: 'Dark Death Mountain Healer Fairy', entrance: 'Dark Death Mountain Fairy' },
+  { from: 'dark-death-mountain-west-bottom', to: 'dark-death-mountain-top', entrance: 'Dark Death Mountain Climb (West)' },
+  { from: 'dark-death-mountain-west-bottom', to: 'death-mountain-entrance', entrance: 'Dark Death Mountain (West Bottom) Mirror Spot' },
+  { from: 'dark-death-mountain-west-bottom', to: 'spike-cave', entrance: 'Spike Cave' },
+  { from: 'dark-death-mountain-west-bottom', to: 'dark-death-mountain-healer-fairy', entrance: 'Dark Death Mountain Fairy' },
 
   // ══════════════════════════════════════════════════
   // Dark Death Mountain — Top
   // ══════════════════════════════════════════════════
-  { from: 'Dark Death Mountain (Top)', to: 'Dark Death Mountain (West Bottom)', entrance: 'Dark Death Mountain Drop (West)' },
-  { from: 'Dark Death Mountain (Top)', to: 'Dark Death Mountain (East Bottom)', entrance: 'Dark Death Mountain Drop (East)' },
-  { from: 'Dark Death Mountain (Top)', to: 'Ganons Tower', entrance: 'Ganons Tower' },
-  { from: 'Dark Death Mountain (Top)', to: 'Superbunny Cave (Top)', entrance: 'Superbunny Cave (Top)' },
-  { from: 'Dark Death Mountain (Top)', to: 'Hookshot Cave', entrance: 'Hookshot Cave' },
-  { from: 'Dark Death Mountain (Top)', to: 'East Death Mountain (Top)', entrance: 'East Death Mountain (Top) Mirror Spot' },
-  { from: 'Dark Death Mountain (Top)', to: 'Turtle Rock (Top)', entrance: 'Turtle Rock' },
-  { from: 'Dark Death Mountain (Top)', to: 'Dark Death Mountain Ledge', entrance: 'Dark Death Mountain Ledge' },
-  { from: 'Dark Death Mountain (Top)', to: 'Cave Shop (Dark Death Mountain)', entrance: 'Cave Shop (Dark Death Mountain)' },
+  { from: 'dark-death-mountain-top', to: 'dark-death-mountain-west-bottom', entrance: 'Dark Death Mountain Drop (West)' },
+  { from: 'dark-death-mountain-top', to: 'dark-death-mountain-east-bottom', entrance: 'Dark Death Mountain Drop (East)' },
+  { from: 'dark-death-mountain-top', to: 'ganons-tower-entrance', entrance: 'Ganons Tower' },
+  { from: 'dark-death-mountain-top', to: 'superbunny-cave-top', entrance: 'Superbunny Cave (Top)' },
+  { from: 'dark-death-mountain-top', to: 'hookshot-cave', entrance: 'Hookshot Cave' },
+  { from: 'dark-death-mountain-top', to: 'east-death-mountain-top', entrance: 'East Death Mountain (Top) Mirror Spot' },
+  { from: 'dark-death-mountain-top', to: 'turtle-rock-top', entrance: 'Turtle Rock' },
+  { from: 'dark-death-mountain-top', to: 'dark-death-mountain-ledge', entrance: 'Dark Death Mountain Ledge' },
+  { from: 'dark-death-mountain-top', to: 'cave-shop-dark-death-mountain', entrance: 'Cave Shop (Dark Death Mountain)' },
 
   // ══════════════════════════════════════════════════
   // Dark Death Mountain — East
   // ══════════════════════════════════════════════════
-  { from: 'Dark Death Mountain (East Bottom)', to: 'East Death Mountain (Bottom)', entrance: 'Dark Death Mountain (East Bottom) Mirror Spot' },
-  { from: 'Dark Death Mountain (East Bottom)', to: 'Dark Death Mountain (Top)', entrance: 'Dark Death Mountain Climb (East)' },
-  { from: 'Dark Death Mountain (East Bottom)', to: 'Superbunny Cave (Bottom)', entrance: 'Superbunny Cave (Bottom)' },
+  { from: 'dark-death-mountain-east-bottom', to: 'east-death-mountain-bottom', entrance: 'Dark Death Mountain (East Bottom) Mirror Spot' },
+  { from: 'dark-death-mountain-east-bottom', to: 'dark-death-mountain-top', entrance: 'Dark Death Mountain Climb (East)' },
+  { from: 'dark-death-mountain-east-bottom', to: 'superbunny-cave-bottom', entrance: 'Superbunny Cave (Bottom)' },
 
-  { from: 'Dark Death Mountain Ledge', to: 'Dark Death Mountain (West Bottom)', entrance: 'Dark Death Mountain Ledge Drop (West)' },
-  { from: 'Dark Death Mountain Ledge', to: 'Dark Death Mountain (Top)', entrance: 'Dark Death Mountain Ledge Drop (Top)' },
-  { from: 'Dark Death Mountain Ledge', to: 'Death Mountain (Top)', entrance: 'Dark Death Mountain Ledge Mirror Spot' },
+  { from: 'dark-death-mountain-ledge', to: 'dark-death-mountain-west-bottom', entrance: 'Dark Death Mountain Ledge Drop (West)' },
+  { from: 'dark-death-mountain-ledge', to: 'dark-death-mountain-top', entrance: 'Dark Death Mountain Ledge Drop (Top)' },
+  { from: 'dark-death-mountain-ledge', to: 'death-mountain-top', entrance: 'Dark Death Mountain Ledge Mirror Spot' },
 
-  { from: 'Dark Death Mountain Isolated Ledge', to: 'Dark Death Mountain (Top)', entrance: 'Dark Death Mountain Isolated Ledge Drop' },
-  { from: 'Dark Death Mountain Isolated Ledge', to: 'Fairy Ascension Ledge', entrance: 'Dark Death Mountain Isolated Ledge Mirror Spot' },
+  { from: 'dark-death-mountain-isolated-ledge', to: 'dark-death-mountain-top', entrance: 'Dark Death Mountain Isolated Ledge Drop' },
+  { from: 'dark-death-mountain-isolated-ledge', to: 'fairy-ascension-ledge', entrance: 'Dark Death Mountain Isolated Ledge Mirror Spot' },
 
   // ══════════════════════════════════════════════════
   // Dark Death Mountain Floating Island
   // ══════════════════════════════════════════════════
-  { from: 'Death Mountain Floating Island (Dark World)', to: 'Death Mountain Floating Island (Light World)', entrance: 'Death Mountain Floating Island Mirror Spot' },
-  { from: 'Death Mountain Floating Island (Dark World)', to: 'Dark Death Mountain (Top)', entrance: 'Death Mountain Floating Island Drop' },
+  { from: 'death-mountain-floating-island-dw', to: 'death-mountain-floating-island-lw', entrance: 'Death Mountain Floating Island Mirror Spot' },
+  { from: 'death-mountain-floating-island-dw', to: 'dark-death-mountain-top', entrance: 'Death Mountain Floating Island Drop' },
 
   // ══════════════════════════════════════════════════
   // Dark Death Mountain Bunny Descent
   // ══════════════════════════════════════════════════
-  { from: 'Dark Death Mountain Bunny Descent Area', to: 'Dark Death Mountain (East Bottom)', entrance: 'Dark Death Mountain Bunny Descent' },
+  { from: 'dark-death-mountain-bunny-descent', to: 'dark-death-mountain-east-bottom', entrance: 'Dark Death Mountain Bunny Descent' },
 
   // ══════════════════════════════════════════════════
   // Turtle Rock (Top)
   // ══════════════════════════════════════════════════
-  { from: 'Turtle Rock (Top)', to: 'Turtle Rock', entrance: 'Turtle Rock' },
+  { from: 'turtle-rock-top', to: 'turtle-rock-entrance', entrance: 'Turtle Rock' },
 
   // ══════════════════════════════════════════════════
   // Pyramid / Bottom of Pyramid
   // ══════════════════════════════════════════════════
-  { from: 'Pyramid', to: 'Bottom of Pyramid', entrance: 'Pyramid Exit' },
-  { from: 'Pyramid Ledge', to: 'East Dark World', entrance: 'Pyramid Ledge Drop' },
-  { from: 'Pyramid Ledge', to: 'Pyramid', entrance: 'Pyramid Entrance' },
-  { from: 'Bottom of Pyramid', to: 'East Dark World', entrance: 'Bottom of Pyramid Exit' },
+  { from: 'pyramid', to: 'bottom-of-pyramid', entrance: 'Pyramid Exit' },
+  { from: 'pyramid-ledge', to: 'east-dark-world', entrance: 'Pyramid Ledge Drop' },
+  { from: 'pyramid-ledge', to: 'pyramid', entrance: 'Pyramid Entrance' },
+  { from: 'bottom-of-pyramid', to: 'east-dark-world', entrance: 'Bottom of Pyramid Exit' },
 
   // ══════════════════════════════════════════════════
   // Dungeon Entrance Connections (from overworld)
   // ══════════════════════════════════════════════════
-  // Eastern Palace
-  { from: 'Light World', to: 'Eastern Palace', entrance: 'Eastern Palace' },
-
-  // Tower of Hera (from Death Mountain Top)
-  // (already listed above)
-
-  // Hyrule Castle / Sewers (from Courtyard)
-  // (already listed above)
+  // (All dungeon entrance connections are listed inline above in their
+  // respective overworld sections — no duplicates here.)
 
   // Agahnim's Tower (from Courtyard)
   // (already listed above)
@@ -665,48 +665,48 @@ export const OVERWORLD_CONNECTIONS: RegionConnection[] = [
   // ══════════════════════════════════════════════════
   // Mirror Spot Connections (Light ↔ Dark transitions)
   // ══════════════════════════════════════════════════
-  { from: 'East Dark World', to: 'Light World', entrance: 'East Dark World Mirror Spot' },
-  { from: 'South Dark World', to: 'Light World', entrance: 'South Dark World Mirror Spot' },
-  { from: 'West Dark World', to: 'Light World', entrance: 'West Dark World Mirror Spot' },
-  { from: 'Dark Lake Hylia', to: 'Light World', entrance: 'Dark Lake Hylia Mirror Spot' },
-  { from: 'Northeast Dark World', to: 'Light World', entrance: 'Northeast Dark World Mirror Spot' },
-  { from: 'Skull Woods Forest', to: 'Light World', entrance: 'Skull Woods Mirror Spot' },
+  { from: 'east-dark-world', to: 'light-world', entrance: 'East Dark World Mirror Spot' },
+  { from: 'south-dark-world', to: 'light-world', entrance: 'South Dark World Mirror Spot' },
+  { from: 'west-dark-world', to: 'light-world', entrance: 'West Dark World Mirror Spot' },
+  { from: 'dark-lake-hylia', to: 'light-world', entrance: 'Dark Lake Hylia Mirror Spot' },
+  { from: 'northeast-dark-world', to: 'light-world', entrance: 'Northeast Dark World Mirror Spot' },
+  { from: 'skull-woods-forest', to: 'light-world', entrance: 'Skull Woods Mirror Spot' },
 
   // ══════════════════════════════════════════════════
   // Hobo Bridge
   // ══════════════════════════════════════════════════
-  { from: 'Hobo Bridge', to: 'Light World', entrance: 'Hobo Bridge Exit' },
+  { from: 'hobo-bridge', to: 'light-world', entrance: 'Hobo Bridge Exit' },
 
   // ══════════════════════════════════════════════════
   // Checkerboard Cave
   // ══════════════════════════════════════════════════
-  { from: 'Desert Northern Cliffs', to: 'Checkerboard Cave', entrance: 'Checkerboard Cave' },
+  { from: 'desert-northern-cliffs', to: 'checkerboard-cave', entrance: 'Checkerboard Cave' },
 
   // ══════════════════════════════════════════════════
   // Chris Houlihan Room
   // ══════════════════════════════════════════════════
-  { from: 'Chris Houlihan Room', to: 'Light World', entrance: 'Chris Houlihan Room Exit' },
+  { from: 'chris-houlihan-room', to: 'light-world', entrance: 'Chris Houlihan Room Exit' },
 
   // ══════════════════════════════════════════════════
   // Lost Woods Hideout / Lumberjack internal
   // ══════════════════════════════════════════════════
-  { from: 'Lost Woods Hideout (top)', to: 'Lost Woods Hideout (bottom)', entrance: 'Lost Woods Hideout Drop' },
-  { from: 'Lost Woods Hideout (bottom)', to: 'Light World', entrance: 'Lost Woods Hideout Exit' },
-  { from: 'Lumberjack Tree (top)', to: 'Lumberjack Tree (bottom)', entrance: 'Lumberjack Tree Drop' },
-  { from: 'Lumberjack Tree (bottom)', to: 'Light World', entrance: 'Lumberjack Tree Exit' },
+  { from: 'lost-woods-hideout-top', to: 'lost-woods-hideout-bottom', entrance: 'Lost Woods Hideout Drop' },
+  { from: 'lost-woods-hideout-bottom', to: 'light-world', entrance: 'Lost Woods Hideout Exit' },
+  { from: 'lumberjack-tree-top', to: 'lumberjack-tree-bottom', entrance: 'Lumberjack Tree Drop' },
+  { from: 'lumberjack-tree-bottom', to: 'light-world', entrance: 'Lumberjack Tree Exit' },
 
   // ══════════════════════════════════════════════════
   // Kakariko Well internal
   // ══════════════════════════════════════════════════
-  { from: 'Kakariko Well (top)', to: 'Kakariko Well (bottom)', entrance: 'Kakariko Well Drop' },
-  { from: 'Kakariko Well (bottom)', to: 'Light World', entrance: 'Kakariko Well Exit' },
+  { from: 'kakariko-well-top', to: 'kakariko-well-bottom', entrance: 'Kakariko Well Drop' },
+  { from: 'kakariko-well-bottom', to: 'light-world', entrance: 'Kakariko Well Exit' },
 
   // ══════════════════════════════════════════════════
   // Spectacle Rock Cave internal
   // ══════════════════════════════════════════════════
-  { from: 'Spectacle Rock Cave (Bottom)', to: 'Spectacle Rock Cave (Top)', entrance: 'Spectacle Rock Cave Ascent' },
-  { from: 'Spectacle Rock Cave (Top)', to: 'Death Mountain (Top)', entrance: 'Spectacle Rock Cave Exit (Top)' },
-  { from: 'Spectacle Rock Cave (Peak)', to: 'Spectacle Rock', entrance: 'Spectacle Rock Cave Exit (Peak)' },
+  { from: 'spectacle-rock-cave-bottom', to: 'spectacle-rock-cave-top', entrance: 'Spectacle Rock Cave Ascent' },
+  { from: 'spectacle-rock-cave-top', to: 'death-mountain-top', entrance: 'Spectacle Rock Cave Exit (Top)' },
+  { from: 'spectacle-rock-cave-peak', to: 'spectacle-rock', entrance: 'Spectacle Rock Cave Exit (Peak)' },
 
   // ══════════════════════════════════════════════════
   // Hookshot Cave internal
@@ -716,5 +716,5 @@ export const OVERWORLD_CONNECTIONS: RegionConnection[] = [
   // ══════════════════════════════════════════════════
   // Village of Outcasts Heavy Rock
   // ══════════════════════════════════════════════════
-  { from: 'South Dark World', to: 'West Dark World', entrance: 'Village of Outcasts Heavy Rock' },
+  { from: 'south-dark-world', to: 'west-dark-world', entrance: 'Village of Outcasts Heavy Rock' },
 ];

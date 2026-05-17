@@ -39,9 +39,9 @@ test('sprites tab loads and displays images', async () => {
   // Screenshot
   await window.screenshot({ path: 'tests/screenshots/sprites-tab.png' });
 
-  // Check the spritesBaseUrl
-  const baseUrl = await window.evaluate(() => (window as any).api?.spritesBaseUrl);
-  console.log('spritesBaseUrl =', baseUrl);
+  // Check the getSpritesBaseUrl
+  const baseUrl = await window.evaluate(() => (window as any).api?.getSpritesBaseUrl?.('test.sfc'));
+  console.log('getSpritesBaseUrl =', baseUrl);
 
   // Check if sprite card images loaded
   const imgInfo = await window.evaluate(() => {

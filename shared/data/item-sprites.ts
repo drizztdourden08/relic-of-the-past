@@ -6,8 +6,14 @@
  * Use getItemSprite() to resolve the correct sprite for an item name.
  */
 
-function getSpritesBase(): string {
-  return (typeof window !== 'undefined' && window.api?.spritesBaseUrl) || '/sprites/items/';
+let _spritesBase = '/sprites/items/';
+
+export function setSpritesBase(base: string): void {
+  _spritesBase = base;
+}
+
+export function getSpritesBase(): string {
+  return _spritesBase;
 }
 
 /** Direct item name → sprite filename mapping */

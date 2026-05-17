@@ -178,6 +178,7 @@ function computeStats(
 // ─── Filter checks by tags and search query ───
 
 export type ItemFilter = 'all' | 'rewards' | 'non-rewards';
+export type StatusFilter = 'all' | 'completed' | 'reachable' | 'blocked';
 
 export interface FilterState {
   searchQuery: string;
@@ -186,12 +187,15 @@ export interface FilterState {
   tagMode: 'all' | 'any';
   /** Filter checks by whether they have an item reward */
   itemFilter?: ItemFilter;
+  /** Filter checks by their tracker status */
+  statusFilter?: StatusFilter;
 }
 
 export function filterChecks(
   checks: CheckDefinition[],
   filter: FilterState,
   tagMap: Map<string, CheckTag[]>,
+  statuses?: Map<string, CheckStatus>,
 ): CheckDefinition[] {
   let result = checks;
 
@@ -203,7 +207,9 @@ export function filterChecks(
       c.name.toLowerCase().includes(q) ||
       c.region.toLowerCase().includes(q) ||
       (c.dungeon?.toLowerCase().includes(q) ?? false) ||
-      (c.vanillaItem?.toLowerCase().includes(q) ?? false)
+      (Array.isArray(c.vanillaItem)
+        ? c.vanillaItem.some(i => i.toLowerCase().includes(q))
+        : (c.vanillaItem?.toLowerCase().includes(q) ?? false))
     );
   }
 
@@ -224,6 +230,14 @@ export function filterChecks(
     result = result.filter(c => !!c.vanillaItem);
   } else if (filter.itemFilter === 'non-rewards') {
     result = result.filter(c => !c.vanillaItem);
+  }
+
+  // Filter by status
+  if (filter.statusFilter && filter.statusFilter !== 'all' && statuses) {
+    result = result.filter(c => {
+      const status = statuses.get(c.id) ?? 'blocked';
+      return status === filter.statusFilter;
+    });
   }
 
   return result;

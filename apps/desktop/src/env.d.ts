@@ -110,8 +110,8 @@ interface ElectronAPI {
   // Dev mode flag
   isDev: boolean;
 
-  // Sprites base URL (file:// path to userData/Data/sprites/)
-  spritesBaseUrl: string;
+  // Sprites base URL (per-ROM: file:// path to userData/Data/sprites/{romStem}/)
+  getSpritesBaseUrl(romFile: string): string;
 
   // File path helper
   getFilePath(file: File): string;
@@ -226,10 +226,11 @@ interface ElectronAPI {
   loadSpriteReview(): Promise<Record<string, { status: string; comment?: string }>>;
   saveSpriteReview(data: Record<string, { status: string; comment?: string }>): Promise<void>;
 
-  // Sprite extraction
+  // Sprite extraction (per-ROM)
   extractSprites(romFile: string): Promise<{ success: boolean; count?: number; error?: string }>;
-  checkSpritesExtracted(): Promise<{ extracted: boolean; count: number }>;
-  getSpritePath(file: string): Promise<string>;
+  checkSpritesExtracted(romFile: string): Promise<{ extracted: boolean; count: number }>;
+  deleteSprites(romFile: string): Promise<{ success: boolean; error?: string }>;
+  getSpritePath(romFile: string, file: string): Promise<string>;
 }
 
 declare function Zelda3(config: Record<string, unknown>): Promise<unknown>;

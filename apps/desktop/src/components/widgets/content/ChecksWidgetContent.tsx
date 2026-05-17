@@ -4,9 +4,8 @@
  */
 import { useState, useEffect, useMemo } from 'react';
 import { computeTrackerSnapshot } from '@shared/lib/logic-eval';
+import { resolveRules, VANILLA_CONFIG } from '@shared/lib/resolve-rules';
 import { ALL_CHECKS } from '@shared/data/checks';
-import { ALL_CONNECTIONS } from '@shared/data/regions';
-import { REGION_RULES, CHECK_RULES } from '@shared/data/logic';
 import { getCheckTags } from '@shared/data/checks/tags';
 import type { GroupDimension, FilterState } from '@shared/data/checks/grouping';
 import { buildGroupTree, filterChecks } from '@shared/data/checks/grouping';
@@ -29,9 +28,15 @@ export function ChecksWidgetContent() {
   useEffect(() => onCompletedChecksChanged((checks) => setCompletedChecks(new Set(checks))), []);
 
   const tagMap = useMemo(() => getCheckTags(ALL_CHECKS), []);
+  const resolvedLogic = useMemo(() => resolveRules(VANILLA_CONFIG), []);
+  const effectiveInventory = useMemo(() => {
+    const merged = new Set(resolvedLogic.startInventory);
+    for (const item of inventory) merged.add(item);
+    return merged;
+  }, [inventory, resolvedLogic]);
   const snapshot = useMemo(
-    () => computeTrackerSnapshot(inventory, completedChecks, ALL_CHECKS, ALL_CONNECTIONS, REGION_RULES, CHECK_RULES),
-    [inventory, completedChecks],
+    () => computeTrackerSnapshot(effectiveInventory, completedChecks, ALL_CHECKS, resolvedLogic.connections, resolvedLogic.regionRules, resolvedLogic.checkRules),
+    [effectiveInventory, completedChecks, resolvedLogic],
   );
 
   const stats = useMemo(() => {
@@ -44,7 +49,7 @@ export function ChecksWidgetContent() {
     return { completed, reachable, blocked, total: snapshot.size };
   }, [snapshot]);
 
-  const filteredChecks = useMemo(() => filterChecks(ALL_CHECKS, filter, tagMap), [filter, tagMap]);
+  const filteredChecks = useMemo(() => filterChecks(ALL_CHECKS, filter, tagMap, snapshot), [filter, tagMap, snapshot]);
   const groupTree = useMemo(() => buildGroupTree(filteredChecks, snapshot, grouping, tagMap), [filteredChecks, snapshot, grouping, tagMap]);
 
   return (
@@ -58,7 +63,7 @@ export function ChecksWidgetContent() {
         viewMode={viewMode}
         onViewModeChange={setViewMode}
       />
-      {(filter.searchQuery || filter.activeTags.length > 0 || (filter.itemFilter && filter.itemFilter !== 'all')) && (
+      {(filter.searchQuery || filter.activeTags.length > 0 || (filter.itemFilter && filter.itemFilter !== 'all') || (filter.statusFilter && filter.statusFilter !== 'all')) && (
         <div className="tracker-view__filtered-stats">
           Showing {groupTree.stats.total} checks:
           <span className="tracker-summary__stat--completed"> {groupTree.stats.completed} done</span>,
