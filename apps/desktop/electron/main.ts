@@ -39,6 +39,7 @@ import {
   migrateDataFolder,
 } from './profile-manager';
 import { enumerateControllers } from './hid-devices';
+import { hidInputReader } from './hid-input-reader';
 import { extractAllItemSprites } from '../../../shared/asset-extraction/item-sprites/extract-items';
 import spriteDefinitions from '../../../shared/data/sprite-definitions.json';
 import { loadRom } from '../../../shared/asset-extraction/rom/rom-loader';
@@ -115,31 +116,34 @@ function createWindow(): void {
     callback(true);
   });
 
-  // WebHID: auto-select Nintendo controllers without showing the device picker
-  const NINTENDO_VID = 0x057E;
-  const ALLOWED_PIDS = new Set([0x2009, 0x2069, 0x2006, 0x2007, 0x2066, 0x2067, 0x2073]);
+  // Auto-select HID devices (bypass the picker dialog for WebHID)
   mainWindow.webContents.session.on('select-hid-device', (event, details, callback) => {
     event.preventDefault();
-    const device = details.deviceList.find(
-      (d) => d.vendorId === NINTENDO_VID && ALLOWED_PIDS.has(d.productId)
-    );
-    if (device) {
-      callback(device.deviceId);
-    } else if (details.deviceList.length > 0) {
+    // Auto-select the first matching device
+    if (details.deviceList.length > 0) {
       callback(details.deviceList[0].deviceId);
     } else {
       callback('');
     }
   });
 
-  // Persist device permissions so getDevices() works on subsequent launches
-  mainWindow.webContents.session.setDevicePermissionHandler((details) => {
-    if (details.deviceType === 'hid' && details.device) {
-      const d = details.device as { vendorId?: number; productId?: number };
-      if (d.vendorId === NINTENDO_VID && ALLOWED_PIDS.has(d.productId ?? 0)) {
-        return true;
-      }
+  // Auto-select USB devices (bypass the picker dialog for WebUSB)
+  mainWindow.webContents.session.on('select-usb-device', (event, details, callback) => {
+    event.preventDefault();
+    const device = details.deviceList.find(
+      (d) => d.vendorId === 0x057E
+    );
+    if (device) {
+      callback(device.deviceId);
+    } else if (details.deviceList.length > 0) {
+      callback(details.deviceList[0].deviceId);
+    } else {
+      callback();
     }
+  });
+
+  // Grant permission to any HID/USB device
+  mainWindow.webContents.session.setDevicePermissionHandler((_details) => {
     return true;
   });
 
@@ -960,6 +964,26 @@ function registerIpcHandlers(): void {
     return enumerateControllers();
   });
 
+  // HID write (haptics, LED control) — forwards to node-hid in main process
+  ipcMain.handle('hid:write', (_event, deviceKey: string, data: number[]) => {
+    return hidInputReader.write(deviceKey, data);
+  });
+
+  // HID test vibration — plays a short haptic pattern on SPC2
+  ipcMain.handle('hid:vibrate', (_event, deviceKey: string, durationMs: number, intensity: number) => {
+    return hidInputReader.vibrate(deviceKey, durationMs, intensity);
+  });
+
+  // HID test vibration — original hardcoded procon2tool pattern (known-good baseline)
+  ipcMain.handle('hid:test-vibration', (_event, deviceKey: string) => {
+    return hidInputReader.testVibration(deviceKey);
+  });
+
+  // HID pattern vibration — flat segments with optional gaps
+  ipcMain.handle('hid:vibrate-pattern', (_event, deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number) => {
+    return hidInputReader.vibratePattern(deviceKey, pattern, gapMs);
+  });
+
 
   // Get userData path
   ipcMain.handle('app:getUserDataPath', () => app.getPath('userData'));
@@ -1063,6 +1087,11 @@ app.whenReady().then(async () => {
 
   registerIpcHandlers();
   createWindow();
+
+  // Start reading HID controllers in the main process (node-hid)
+  if (mainWindow) {
+    hidInputReader.start(mainWindow);
+  }
 
 
 

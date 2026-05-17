@@ -233,11 +233,9 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
 
   // ── Auto-detect profile ──
   useEffect(() => {
-    const devices = webHidReader.getDevices();
-    if (devices.length > 0) {
-      const dev = devices[0];
-      const vid = dev.vendorId.toString(16).padStart(4, '0');
-      const pid = dev.productId.toString(16).padStart(4, '0');
+    const keys = webHidReader.getConnectedDeviceKeys();
+    if (keys.length > 0) {
+      const [vid, pid] = keys[0].split(':');
       const found = findProfileByVidPid(vid, pid);
       if (found) { setSelectedProfileId(found.id); addLog(`Auto-detected: ${found.name} (${vid}:${pid})`); }
       else addLog(`Unknown device ${vid}:${pid} — select a profile or use Generic`);
@@ -339,10 +337,11 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
         updateByteStatuses(bytes.length);
       }
 
-      const devices = webHidReader.getDevices();
-      if (devices.length > 0 && deviceInfoRef.current.vendorId === 0) {
-        deviceInfoRef.current.vendorId = devices[0].vendorId;
-        deviceInfoRef.current.productId = devices[0].productId;
+      const keys = webHidReader.getConnectedDeviceKeys();
+      if (keys.length > 0 && deviceInfoRef.current.vendorId === 0) {
+        const [vidH, pidH] = keys[0].split(':');
+        deviceInfoRef.current.vendorId = parseInt(vidH, 16);
+        deviceInfoRef.current.productId = parseInt(pidH, 16);
       }
       deviceInfoRef.current.reportId = report.reportId;
       deviceInfoRef.current.reportLength = bytes.length;

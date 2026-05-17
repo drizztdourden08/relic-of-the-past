@@ -134,6 +134,31 @@ contextBridge.exposeInMainWorld('api', {
   // HID device enumeration
   enumerateHidDevices: () => ipcRenderer.invoke('hid:enumerate'),
 
+  // HID write (haptics, LED control via node-hid in main process)
+  writeHidDevice: (deviceKey: string, data: number[]) => ipcRenderer.invoke('hid:write', deviceKey, data),
+  vibrateHid: (deviceKey: string, durationMs: number, intensity: number) =>
+    ipcRenderer.invoke('hid:vibrate', deviceKey, durationMs, intensity),
+  vibratePattern: (deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number) =>
+    ipcRenderer.invoke('hid:vibrate-pattern', deviceKey, pattern, gapMs),
+  testVibration: (deviceKey: string) => ipcRenderer.invoke('hid:test-vibration', deviceKey),
+
+  // HID input reports from main process (node-hid reader)
+  onHidReport: (callback: (report: { deviceKey: string; vendorId: number; productId: number; data: number[] }) => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, report: { deviceKey: string; vendorId: number; productId: number; data: number[] }) => callback(report);
+    ipcRenderer.on('hid:report', handler);
+    return () => ipcRenderer.removeListener('hid:report', handler);
+  },
+  onHidDeviceOpened: (callback: (info: { deviceKey: string; vendorId: string; productId: string; product: string }) => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, info: { deviceKey: string; vendorId: string; productId: string; product: string }) => callback(info);
+    ipcRenderer.on('hid:device-opened', handler);
+    return () => ipcRenderer.removeListener('hid:device-opened', handler);
+  },
+  onHidDisconnect: (callback: (info: { deviceKey: string; product: string }) => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, info: { deviceKey: string; product: string }) => callback(info);
+    ipcRenderer.on('hid:disconnect', handler);
+    return () => ipcRenderer.removeListener('hid:disconnect', handler);
+  },
+
 
 
 

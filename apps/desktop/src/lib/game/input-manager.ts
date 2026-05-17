@@ -81,10 +81,12 @@ export class InputManager {
   // Gamepad axis lookup: "axisIndex:direction" → SnesButton
   private gamepadAxisMap = new Map<string, SnesButton>();
 
-  // HID input state (from WebHID reader for Switch/PS/8BitDo)
+  // HID input state (from WebHID reader and/or main process node-hid)
   private hidStates = new Map<string, { buttons: boolean[]; axes: number[] }>();
   private hidUnsubscribe: (() => void) | null = null;
   private hidDisconnectUnsub: (() => void) | null = null;
+  private ipcReportUnsub: (() => void) | null = null;
+  private ipcDisconnectUnsub: (() => void) | null = null;
 
   // Raw input listeners — for rebinding UI, input tester, etc.
   private rawInputListeners = new Set<RawInputListener>();
@@ -280,7 +282,7 @@ export class InputManager {
         this.resume();
       }
     });
-    // Subscribe to WebHID disconnect events — triggers same pause check as gamepad disconnect
+    // Subscribe to HID disconnect events — triggers same pause check as gamepad disconnect
     this.hidDisconnectUnsub = webHidReader.onDisconnect((_deviceKey, _deviceName) => {
       // Clean up stale state for this device
       this.hidStates.delete(_deviceKey);
@@ -290,8 +292,14 @@ export class InputManager {
       this.refreshDevices();
       this.checkControllerDisconnectPause();
     });
-    // Auto-connect to previously granted devices
-    webHidReader.autoConnect();
+
+    // Subscribe to main process node-hid reports (forwarded via IPC)
+    this.ipcReportUnsub = window.api.onHidReport((report) => {
+      webHidReader.handleIpcReport(report.deviceKey, report.vendorId, report.productId, report.data);
+    });
+    this.ipcDisconnectUnsub = window.api.onHidDisconnect((info) => {
+      webHidReader.handleIpcDisconnect(info.deviceKey);
+    });
 
     // Initial device scan
     this.refreshDevices();
@@ -323,6 +331,14 @@ export class InputManager {
     if (this.hidDisconnectUnsub) {
       this.hidDisconnectUnsub();
       this.hidDisconnectUnsub = null;
+    }
+    if (this.ipcReportUnsub) {
+      this.ipcReportUnsub();
+      this.ipcReportUnsub = null;
+    }
+    if (this.ipcDisconnectUnsub) {
+      this.ipcDisconnectUnsub();
+      this.ipcDisconnectUnsub = null;
     }
     this.hidStates.clear();
     this.currentHidStates.clear();
@@ -745,11 +761,8 @@ export class InputManager {
   private snapshotGamepads(): GamepadSnapshot[] {
     const raw = navigator.getGamepads();
     const snaps: GamepadSnapshot[] = [];
-    // Get WebHID device VID:PID strings to filter duplicates
-    const hidDevices = webHidReader.getDevices();
-    const hidIds = new Set(hidDevices.map(d =>
-      `${d.vendorId.toString(16).padStart(4, '0')}:${d.productId.toString(16).padStart(4, '0')}`
-    ));
+    // Get HID device VID:PID strings to filter duplicates from Gamepad API
+    const hidIds = new Set(webHidReader.getConnectedDeviceKeys());
     for (const gp of raw) {
       if (!gp || !gp.connected) continue;
       // Skip gamepad if its ID contains both VID and PID already claimed by WebHID
@@ -778,11 +791,8 @@ export class InputManager {
 
   private emitRawGamepadEvents(): void {
     const gamepads = navigator.getGamepads();
-    // Skip gamepads already handled by WebHID (prevents duplicate events with wrong indices)
-    const hidDevs = webHidReader.getDevices();
-    const hidIdSet = new Set(hidDevs.map(d =>
-      `${d.vendorId.toString(16).padStart(4, '0')}:${d.productId.toString(16).padStart(4, '0')}`
-    ));
+    // Skip gamepads already handled by node-hid (prevents duplicate events with wrong indices)
+    const hidIdSet = new Set(webHidReader.getConnectedDeviceKeys());
     for (const gp of gamepads) {
       if (!gp || !gp.connected) continue;
       // Skip if this gamepad is a duplicate of a WebHID device
@@ -869,19 +879,15 @@ export class InputManager {
     // Debug: log state every 180 frames (~3 sec at 60fps)
     this._dbgCounter++;
     if (this._dbgCounter % 180 === 1) {
-      const hidDevices = webHidReader.getDevices();
       const hidKeys = [...this.hidStates.keys()];
       const gamepads = navigator.getGamepads();
       const gpIds = Array.from(gamepads).filter(Boolean).map(g => g!.id);
-      console.log('[FuncCheck] hidDevices:', hidDevices.length, 'hidStates:', hidKeys, 'gamepads:', gpIds, 'btnMap:', Object.fromEntries(this.functionGamepadButtonMap), 'callbacks:', [...this.functionActionCallbacks.keys()]);
+      console.log('[FuncCheck] hidStates:', hidKeys, 'gamepads:', gpIds, 'btnMap:', Object.fromEntries(this.functionGamepadButtonMap), 'callbacks:', [...this.functionActionCallbacks.keys()]);
     }
 
-    // --- Web Gamepad API controllers (skip those handled by WebHID) ---
+    // --- Web Gamepad API controllers (skip those handled by node-hid) ---
     const gamepads = navigator.getGamepads();
-    const hidDevices = webHidReader.getDevices();
-    const hidIds = new Set(hidDevices.map(d =>
-      `${d.vendorId.toString(16).padStart(4, '0')}:${d.productId.toString(16).padStart(4, '0')}`
-    ));
+    const hidIds = new Set(webHidReader.getConnectedDeviceKeys());
 
     for (const gp of gamepads) {
       if (!gp || !gp.connected) continue;
@@ -1001,8 +1007,21 @@ export class InputManager {
 
     // Web Gamepad API (XInput controllers like Xbox)
     const gamepads = navigator.getGamepads();
+    const hidIds = new Set(webHidReader.getConnectedDeviceKeys());
     for (const gp of gamepads) {
       if (!gp || !gp.connected) continue;
+
+      // Skip gamepad if already handled by node-hid (prevents double-read with wrong button order)
+      const gpIdLower = gp.id.toLowerCase();
+      let isDuplicate = false;
+      for (const hidId of hidIds) {
+        const [vid, pid] = hidId.split(':');
+        if (gpIdLower.includes(`vendor: ${vid}`) && gpIdLower.includes(`product: ${pid}`)) {
+          isDuplicate = true;
+          break;
+        }
+      }
+      if (isDuplicate) continue;
 
       // Buttons
       for (const [index, snesBtn] of this.gamepadButtonMap) {

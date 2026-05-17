@@ -8,21 +8,33 @@ import { getInputManager } from './input-manager';
 
 export interface InputDiagnostics {
   timestamp: string;
-  // WebHID state
-  webHid: {
-    apiAvailable: boolean;
-    readerConnected: boolean;
-    devicesOpen: { vendorId: string; productId: string; productName: string; opened: boolean; collections: number }[];
+  // All connected controllers (merged from all sources)
+  controllers: {
+    deviceKey: string;
+    name: string;
+    source: string; // 'node-hid' | 'gamepad-api'
+    vid: string;
+    pid: string;
+    connected: boolean;
+    opened: boolean;
+    mapping?: string;
+    hasHidState: boolean;
+    lastButtons?: boolean[];
+    lastAxes?: number[];
+  }[];
+  // Raw HID report log (last 100 from IPC)
+  rawReportLog: string[];
+  // HID reader state
+  hidReader: {
+    connected: boolean;
     statesMap: Record<string, { buttons: boolean[]; axes: number[]; timestamp: number }>;
     diagLog: string[];
-    grantedDevices: { vendorId: string; productId: string; productName: string; opened: boolean }[];
-    autoConnectResult?: string;
   };
   // Electron node-hid enumeration (OS-level)
   nodeHid: { vendorId: string; productId: string; product: string; manufacturer: string }[];
   // Gamepad API
   gamepadApi: {
-    gamepads: { index: number; id: string; connected: boolean; mapping: string; buttons: number; axes: number; anyPressed: boolean }[];
+    gamepads: { index: number; id: string; connected: boolean; mapping: string; buttons: number; axes: number; anyPressed: boolean; buttonValues: number[] }[];
   };
   // InputManager state
   inputManager: {
@@ -54,13 +66,12 @@ export async function collectInputDiagnostics(): Promise<InputDiagnostics> {
   const errors: string[] = [];
   const diag: InputDiagnostics = {
     timestamp: new Date().toISOString(),
-    webHid: {
-      apiAvailable: false,
-      readerConnected: false,
-      devicesOpen: [],
+    controllers: [],
+    rawReportLog: [],
+    hidReader: {
+      connected: false,
       statesMap: {},
       diagLog: [],
-      grantedDevices: [],
     },
     nodeHid: [],
     gamepadApi: { gamepads: [] },
@@ -85,46 +96,21 @@ export async function collectInputDiagnostics(): Promise<InputDiagnostics> {
     errors: [],
   };
 
-  // ─── WebHID API ───
+  // ─── HID Reader state ───
   try {
-    diag.webHid.apiAvailable = 'hid' in navigator;
-    diag.webHid.readerConnected = webHidReader.isConnected();
-    diag.webHid.diagLog = webHidReader.getDiagLog();
-
-    const devices = webHidReader.getDevices();
-    diag.webHid.devicesOpen = devices.map(d => ({
-      vendorId: `0x${d.vendorId.toString(16).padStart(4, '0')}`,
-      productId: `0x${d.productId.toString(16).padStart(4, '0')}`,
-      productName: d.productName || '(no name)',
-      opened: d.opened,
-      collections: d.collections?.length ?? 0,
-    }));
+    diag.hidReader.connected = webHidReader.isConnected();
+    diag.hidReader.diagLog = webHidReader.getDiagLog();
 
     const states = webHidReader.getStates();
     for (const [key, state] of states) {
-      diag.webHid.statesMap[key] = {
+      diag.hidReader.statesMap[key] = {
         buttons: state.buttons,
         axes: state.axes,
         timestamp: state.timestamp,
       };
     }
-
-    // Check granted devices from navigator.hid.getDevices()
-    if ('hid' in navigator) {
-      try {
-        const granted = await (navigator as any).hid.getDevices();
-        diag.webHid.grantedDevices = granted.map((d: any) => ({
-          vendorId: `0x${d.vendorId.toString(16).padStart(4, '0')}`,
-          productId: `0x${d.productId.toString(16).padStart(4, '0')}`,
-          productName: d.productName || '(no name)',
-          opened: d.opened,
-        }));
-      } catch (e) {
-        errors.push(`navigator.hid.getDevices() failed: ${e}`);
-      }
-    }
   } catch (e) {
-    errors.push(`WebHID section error: ${e}`);
+    errors.push(`HID reader section error: ${e}`);
   }
 
   // ─── Node-HID (Electron main process enumeration) ───
@@ -157,6 +143,7 @@ export async function collectInputDiagnostics(): Promise<InputDiagnostics> {
         buttons: gp.buttons.length,
         axes: gp.axes.length,
         anyPressed: gp.buttons.some(b => b.pressed),
+        buttonValues: gp.buttons.map(b => b.value),
       });
     }
   } catch (e) {
@@ -214,16 +201,50 @@ export async function collectInputDiagnostics(): Promise<InputDiagnostics> {
     errors.push(`Electron paths error: ${e}`);
   }
 
-  // ─── Attempt autoConnect and capture result ───
-  try {
-    const before = webHidReader.isConnected();
-    const result = await webHidReader.autoConnect();
-    const after = webHidReader.isConnected();
-    diag.webHid.autoConnectResult = `before=${before} result=${result} after=${after}`;
-  } catch (e) {
-    diag.webHid.autoConnectResult = `ERROR: ${e}`;
+  diag.errors = errors;
+
+  // ─── Merged controllers list ───
+  const seen = new Set<string>();
+  const hidStates = webHidReader.getStates();
+
+  // From node-hid enumeration
+  for (const d of diag.nodeHid) {
+    const key = `${d.vendorId}:${d.productId}`;
+    const st = hidStates.get(key);
+    seen.add(key);
+    diag.controllers.push({
+      deviceKey: key,
+      name: d.product || 'Unknown',
+      source: 'node-hid',
+      vid: d.vendorId,
+      pid: d.productId,
+      connected: true,
+      opened: !!st,
+      hasHidState: !!st,
+      lastButtons: st?.buttons,
+      lastAxes: st?.axes,
+    });
   }
 
-  diag.errors = errors;
+  // From Gamepad API
+  for (const gp of diag.gamepadApi.gamepads) {
+    diag.controllers.push({
+      deviceKey: `gamepad-${gp.index}`,
+      name: gp.id,
+      source: 'gamepad-api',
+      vid: '',
+      pid: '',
+      connected: gp.connected,
+      opened: true,
+      mapping: gp.mapping,
+      hasHidState: false,
+      lastButtons: undefined,
+      lastAxes: undefined,
+    });
+  }
+
+  // ─── Raw report log (last 100) ───
+  diag.rawReportLog = webHidReader.getRawReportLog();
+
   return diag;
 }

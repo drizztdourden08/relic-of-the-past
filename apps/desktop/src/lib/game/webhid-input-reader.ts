@@ -1,9 +1,9 @@
 /**
- * WebHID Input Reader — reads input from Switch Pro Controller (and similar)
- * using the browser-native WebHID API available in Electron/Chromium.
+ * HID Input Reader — parses raw HID reports received from the main process
+ * (node-hid via IPC) into structured button/axis state.
  *
- * This replaces the node-hid approach (which fails on Windows due to driver conflicts).
- * Proven to work by: https://handheldlegend.github.io/procon2tool/
+ * All device I/O (opening, reading, init commands) is handled by node-hid
+ * in the Electron main process. This module is purely a parser + state store.
  */
 
 export interface WebHidInputState {
@@ -84,18 +84,6 @@ function applySticksCalibration(
   const r = applyOne(rxRaw, ryRaw, cal.right);
   return [l.x, l.y, r.x, r.y];
 }
-
-// Nintendo VID and known PIDs
-const NINTENDO_VID = 0x057E;
-const KNOWN_PIDS: Record<number, string> = {
-  0x2009: 'Switch Pro Controller',
-  0x2069: 'Switch Pro Controller 2',
-  0x2006: 'Joy-Con L',
-  0x2007: 'Joy-Con R',
-  0x2066: 'Joy-Con 2 L',
-  0x2067: 'Joy-Con 2 R',
-  0x2073: 'GC Controller',
-};
 
 /**
  * Parse Switch Pro simple input report (report ID 0x3F, 11 bytes of data).
@@ -347,7 +335,6 @@ function parseSwitchFull(data: DataView): { buttons: boolean[]; axes: number[] }
 }
 
 class WebHidInputReader {
-  private devices: HIDDevice[] = [];
   private states = new Map<string, WebHidInputState>();
   private listeners = new Set<WebHidStateListener>();
   private rawListeners = new Set<WebHidRawListener>();
@@ -355,9 +342,11 @@ class WebHidInputReader {
   private diagLog: string[] = [];
   private connected = false;
   private disconnectListeners = new Set<WebHidDisconnectListener>();
-  private hidDisconnectHandler: ((event: HIDConnectionEvent) => void) | null = null;
   /** Per-device stick calibration, keyed by "vid:pid" */
   private stickCalibrations = new Map<string, DeviceStickCalibration>();
+  /** Ring buffer of raw HID report hex strings for diagnostics */
+  private rawReportLog: string[] = [];
+  private static readonly RAW_LOG_MAX = 100;
 
   /** Load stick calibration for a device (keyed by "vid:pid") */
   setStickCalibration(deviceKey: string, cal: DeviceStickCalibration): void {
@@ -412,325 +401,24 @@ class WebHidInputReader {
   }
 
   getDiagLog(): string[] { return [...this.diagLog]; }
+
+  /** Add an external diagnostic entry to the log (e.g. vibration results) */
+  addDiag(msg: string): void { this.log(msg); }
   getStates(): Map<string, WebHidInputState> { return this.states; }
   isConnected(): boolean { return this.connected; }
-  getDevices(): HIDDevice[] { return [...this.devices]; }
+  getRawReportLog(): string[] { return [...this.rawReportLog]; }
 
-  /**
-   * Try to reconnect to previously-granted devices (no user gesture needed).
-   * Call this on app startup.
-   */
-  async autoConnect(): Promise<boolean> {
-    if (!('hid' in navigator)) {
-      this.log('WebHID not available');
-      return false;
+  /** Get VID:PID keys of all devices with active HID state (for duplicate filtering) */
+  getConnectedDeviceKeys(): string[] { return [...this.states.keys()]; }
+
+  private pushRawLog(entry: string): void {
+    this.rawReportLog.push(entry);
+    if (this.rawReportLog.length > WebHidInputReader.RAW_LOG_MAX) {
+      this.rawReportLog.shift();
     }
-    try {
-      const devices = await navigator.hid.getDevices();
-      const nintendo = devices.filter(
-        (d) => d.vendorId === NINTENDO_VID && d.productId in KNOWN_PIDS
-      );
-      if (nintendo.length === 0) {
-        this.log('No previously-granted Nintendo HID devices found, requesting...');
-        // In Electron, requestDevice() is auto-handled by select-hid-device session handler
-        return this.requestDevice();
-      }
-
-      this.log(`Found ${nintendo.length} Nintendo HID interface(s)`);
-
-      // Install global disconnect handler (once)
-      this.installDisconnectHandler();
-
-      // Group by VID:PID and try to open one from each group
-      const groups = new Map<string, HIDDevice[]>();
-      for (const device of nintendo) {
-        const key = `${device.vendorId}:${device.productId}`;
-        if (!groups.has(key)) groups.set(key, []);
-        groups.get(key)!.push(device);
-      }
-
-      for (const [, deviceRefs] of groups) {
-        let opened = false;
-        for (const device of deviceRefs) {
-          if (opened) break;
-          opened = await this.openDevice(device);
-        }
-      }
-      return this.connected;
-    } catch (err) {
-      this.log(`autoConnect error: ${err}`);
-      return false;
-    }
-  }
-
-  /**
-   * Request a new device (requires user gesture — button click).
-   * Shows the system device picker filtered to Nintendo controllers.
-   */
-  async requestDevice(): Promise<boolean> {
-    if (!('hid' in navigator)) {
-      this.log('WebHID not available');
-      return false;
-    }
-    try {
-      const filters = Object.keys(KNOWN_PIDS).map((pid) => ({
-        vendorId: NINTENDO_VID,
-        productId: parseInt(pid),
-      }));
-      this.log('Requesting HID device...');
-      const devices = await navigator.hid.requestDevice({ filters });
-      if (devices.length === 0) {
-        this.log('No device selected');
-        return false;
-      }
-      for (const device of devices) {
-        await this.openDevice(device);
-      }
-      return this.connected;
-    } catch (err) {
-      this.log(`requestDevice error: ${err}`);
-      return false;
-    }
-  }
-
-  private installDisconnectHandler(): void {
-    if (this.hidDisconnectHandler || !('hid' in navigator)) return;
-    this.hidDisconnectHandler = (event: HIDConnectionEvent) => {
-      const device = event.device;
-      const deviceKey = `${device.vendorId.toString(16)}:${device.productId.toString(16)}`;
-      const name = KNOWN_PIDS[device.productId] ?? `Unknown (${device.productId.toString(16)})`;
-      this.log(`HID disconnect event: ${name} (${deviceKey})`);
-
-      // Remove from tracked devices
-      this.devices = this.devices.filter(d =>
-        !(d.vendorId === device.vendorId && d.productId === device.productId)
-      );
-      this.states.delete(deviceKey);
-      this.connected = this.devices.length > 0;
-
-      // Notify listeners
-      for (const cb of this.disconnectListeners) {
-        try { cb(deviceKey, name); } catch { /* ignore */ }
-      }
-    };
-    navigator.hid.addEventListener('disconnect', this.hidDisconnectHandler);
-
-    // Also listen for reconnect — auto-reopen previously granted devices
-    navigator.hid.addEventListener('connect', (event: HIDConnectionEvent) => {
-      const device = event.device;
-      const pid = device.productId;
-      if (device.vendorId === NINTENDO_VID && pid in KNOWN_PIDS) {
-        const name = KNOWN_PIDS[pid] ?? 'Unknown';
-        this.log(`HID reconnect event: ${name} — attempting to reopen`);
-        this.openDevice(device).catch(() => { /* ignore */ });
-      }
-    });
-  }
-
-  private async openDevice(device: HIDDevice): Promise<boolean> {
-    const name = KNOWN_PIDS[device.productId] ?? `Unknown (${device.productId.toString(16)})`;
-    this.log(`Opening: ${name} (VID:${device.vendorId.toString(16)} PID:${device.productId.toString(16)})`);
-
-    try {
-      if (!device.opened) {
-        await device.open();
-      }
-      this.log(`Opened: ${name}`);
-
-      // Install global disconnect handler if not already
-      this.installDisconnectHandler();
-
-      device.addEventListener('inputreport', (event) => {
-        this.handleInputReport(device, event);
-      });
-
-      this.devices.push(device);
-      this.connected = true;
-
-      // Send USB initialization for Switch Pro Controllers
-      // Without this, many Switch controllers (especially Pro Controller 2)
-      // remain silent over USB until they receive the handshake sequence.
-      if (device.vendorId === NINTENDO_VID) {
-        await this.initSwitchController(device);
-      }
-
-      return true;
-    } catch (err) {
-      this.log(`Failed to open ${name}: ${err}`);
-      return false;
-    }
-  }
-
-  /**
-   * Send USB initialization sequence for Nintendo Switch controllers.
-   * The controller won't send input reports until this handshake completes.
-   */
-  private async initSwitchController(device: HIDDevice): Promise<void> {
-    const name = KNOWN_PIDS[device.productId] ?? 'Switch Controller';
-    this.log(`[Init] Starting USB handshake for ${name}...`);
-
-    // Log available collections for diagnostics
-    let outputReportId = 0x80; // default for original Pro Controller
-    if (device.collections) {
-      for (let i = 0; i < device.collections.length; i++) {
-        const col = device.collections[i];
-        const inputIds = col.inputReports?.map(r => `0x${r.reportId.toString(16)}`) ?? [];
-        const outputIds = col.outputReports?.map(r => `0x${r.reportId.toString(16)}`) ?? [];
-        const featureIds = col.featureReports?.map(r => `0x${r.reportId.toString(16)}`) ?? [];
-        this.log(`[Init] Collection[${i}]: usage=0x${(col.usage ?? 0).toString(16)} page=0x${(col.usagePage ?? 0).toString(16)} input=[${inputIds}] output=[${outputIds}] feature=[${featureIds}]`);
-        // Use the first available output report ID
-        if (col.outputReports && col.outputReports.length > 0 && outputReportId === 0x80) {
-          outputReportId = col.outputReports[0].reportId;
-        }
-      }
-    }
-    this.log(`[Init] Using output report ID: 0x${outputReportId.toString(16)}`);
-
-    // Try various init payloads on the device's actual output report ID
-    const attempts: { data: Uint8Array; label: string }[] = [
-      // USB handshake: MAC address request
-      { data: new Uint8Array([0x80, 0x01]), label: 'MAC req (0x80 0x01)' },
-      // USB handshake: handshake
-      { data: new Uint8Array([0x80, 0x02]), label: 'Handshake (0x80 0x02)' },
-      // USB handshake: USB HID mode
-      { data: new Uint8Array([0x80, 0x04]), label: 'USB mode (0x80 0x04)' },
-      // Sub-command format: set input mode to full (0x30)
-      { data: new Uint8Array([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x30]), label: 'SubCmd: mode=full' },
-      // Sub-command format: set input mode to simple (0x3F)
-      { data: new Uint8Array([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x3F]), label: 'SubCmd: mode=simple' },
-      // Just zeros — wake up
-      { data: new Uint8Array([0x00]), label: 'Wake (0x00)' },
-      // Minimal handshake bytes
-      { data: new Uint8Array([0x01]), label: 'Byte 0x01' },
-      { data: new Uint8Array([0x02]), label: 'Byte 0x02' },
-      { data: new Uint8Array([0x04]), label: 'Byte 0x04' },
-      // Pro Controller 2 specific: enable reports
-      { data: new Uint8Array([0x80, 0x05]), label: 'Enable (0x80 0x05)' },
-      // Try padded handshake (64-byte packet like HID expects)
-      { data: (() => { const d = new Uint8Array(64); d[0] = 0x80; d[1] = 0x02; return d; })(), label: 'Padded handshake (64B)' },
-      { data: (() => { const d = new Uint8Array(64); d[0] = 0x80; d[1] = 0x04; return d; })(), label: 'Padded USB mode (64B)' },
-    ];
-
-    let anySuccess = false;
-    for (const attempt of attempts) {
-      try {
-        await device.sendReport(outputReportId, attempt.data);
-        this.log(`[Init] ✓ ${attempt.label} succeeded`);
-        anySuccess = true;
-        await this.delay(50);
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : String(err);
-        this.log(`[Init] ✗ ${attempt.label}: ${msg}`);
-      }
-    }
-
-    // Also try the legacy report IDs in case collection info is wrong
-    if (!anySuccess) {
-      this.log(`[Init] All attempts on report 0x${outputReportId.toString(16)} failed, trying legacy IDs...`);
-      for (const rid of [0x80, 0x01, 0x00]) {
-        try {
-          await device.sendReport(rid, new Uint8Array([0x02]));
-          this.log(`[Init] ✓ Legacy report 0x${rid.toString(16)} succeeded`);
-          break;
-        } catch { /* skip */ }
-      }
-    }
-
-    this.log(`[Init] Handshake sequence done for ${name}`);
-  }
-
-  private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   private reportIdCounts = new Map<number, number>();
-
-  private handleInputReport(device: HIDDevice, event: HIDInputReportEvent): void {
-    const { reportId, data } = event;
-    const deviceKey = `${device.vendorId.toString(16)}:${device.productId.toString(16)}`;
-
-    // Log first few reports for diagnostics
-    const count = (this.reportIdCounts.get(reportId) ?? 0) + 1;
-    this.reportIdCounts.set(reportId, count);
-    if (count <= 3) {
-      const hex = Array.from(new Uint8Array(data.buffer, data.byteOffset, Math.min(data.byteLength, 20)))
-        .map(b => b.toString(16).padStart(2, '0')).join(' ');
-      this.log(`Report: id=0x${reportId.toString(16)} len=${data.byteLength} [${hex}]`);
-    }
-
-    // DEBUG: Log ALL reports with button state
-    console.log(`[HID-RAW] device=${deviceKey} reportId=0x${reportId.toString(16)} len=${data.byteLength}`);
-
-    // Emit raw report for calibration listeners
-    if (this.rawListeners.size > 0) {
-      const bytes = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
-      const raw: WebHidRawReport = { deviceKey, reportId, bytes: new Uint8Array(bytes), timestamp: performance.now() };
-      for (const cb of this.rawListeners) cb(raw);
-    }
-
-    let parsed: { buttons: boolean[]; axes: number[] } | null = null;
-
-    if (reportId === 0x3F) {
-      // Simple mode (USB default)
-      parsed = parseSwitchSimple(data);
-    } else if (reportId === 0x05) {
-      // Switch Pro Controller 2 USB HID mode (report 0x05)
-      if (data.byteLength >= 16) {
-        const result = parseSwitchPro2Report05(data);
-        // Apply stored stick calibration if available
-        const cal = this.stickCalibrations.get(deviceKey);
-        if (cal) {
-          const [lxR, lyR, rxR, ryR] = result.rawSticks;
-          result.axes = applySticksCalibration(lxR, lyR, rxR, ryR, cal);
-        }
-        parsed = result;
-      }
-    } else if (reportId === 0x09) {
-      // Switch Pro Controller 2 alternate USB HID mode
-      if (data.byteLength >= 11) {
-        parsed = parseSwitchPro2(data);
-      }
-    } else if (reportId === 0x30) {
-      // Full mode (Bluetooth / after init)
-      parsed = parseSwitchFull(data);
-    } else if (reportId === 0x21 || reportId === 0x31) {
-      // Sub-command reply (0x21) or NFC/IR (0x31) — also contain input in same format as 0x30
-      if (data.byteLength >= 11) {
-        parsed = parseSwitchFull(data);
-      }
-    }
-
-    if (parsed) {      const pressed = parsed.buttons.map((b, i) => b ? i : -1).filter(i => i >= 0);
-      if (pressed.length > 0) {
-        console.log(`[HID-PARSED] device=${deviceKey} BUTTONS PRESSED: [${pressed.join(',')}] axes=[${parsed.axes.map(a => a.toFixed(2)).join(',')}]`);
-      }      const state: WebHidInputState = {
-        deviceKey,
-        buttons: parsed.buttons,
-        axes: parsed.axes,
-        timestamp: performance.now(),
-      };
-      this.states.set(deviceKey, state);
-      for (const cb of this.listeners) cb(state);
-      if (count <= 3) {
-        this.log(`Parsed OK: ${parsed.buttons.length} buttons, ${parsed.axes.length} axes, pressed=${parsed.buttons.filter(Boolean).length}`);
-      }
-    } else if (count <= 3) {
-      this.log(`No parser matched for reportId=0x${reportId.toString(16)} len=${data.byteLength}`);
-    }
-  }
-
-  /** Disconnect all devices */
-  async disconnect(): Promise<void> {
-    for (const device of this.devices) {
-      try {
-        await device.close();
-      } catch { /* ignore */ }
-    }
-    this.devices = [];
-    this.states.clear();
-    this.connected = false;
-    this.log('Disconnected all devices');
-  }
 
   /**
    * Simulate a connected HID device and inject input state.
@@ -749,6 +437,323 @@ class WebHidInputReader {
   simulateInput(state: WebHidInputState): void {
     this.states.set(state.deviceKey, state);
     for (const cb of this.listeners) cb(state);
+  }
+
+  /**
+   * Process a raw HID report received from the main process (node-hid via IPC).
+   * The data array includes the report ID as the first byte.
+   * Routes through the same parsers as WebHID inputreport events.
+   */
+  handleIpcReport(deviceKey: string, vendorId: number, productId: number, data: number[]): void {
+    if (data.length === 0) return;
+
+    const reportId = data[0];
+    // Create a DataView over the payload (after report ID), matching WebHID convention
+    const payload = new Uint8Array(data.slice(1));
+    const dataView = new DataView(payload.buffer, payload.byteOffset, payload.byteLength);
+
+    // Track report counts for diagnostics
+    const count = (this.reportIdCounts.get(reportId) ?? 0) + 1;
+    this.reportIdCounts.set(reportId, count);
+    if (count <= 3) {
+      const hex = data.slice(0, Math.min(data.length, 20)).map(b => b.toString(16).padStart(2, '0')).join(' ');
+      this.log(`IPC Report: id=0x${reportId.toString(16)} len=${payload.byteLength} [${hex}]`);
+    }
+
+    // Raw report log for diagnostics (last 100)
+    const hex = data.slice(0, Math.min(data.length, 24)).map(b => b.toString(16).padStart(2, '0')).join(' ');
+    this.pushRawLog(`[IPC] ${deviceKey} id=0x${reportId.toString(16)} len=${payload.byteLength} ${hex}`);
+
+    // Emit raw report for calibration listeners
+    if (this.rawListeners.size > 0) {
+      const raw: WebHidRawReport = {
+        deviceKey,
+        reportId,
+        bytes: new Uint8Array(data),
+        timestamp: performance.now(),
+      };
+      for (const cb of this.rawListeners) cb(raw);
+    }
+
+    // Parse using the same logic as handleInputReport
+    let parsed: { buttons: boolean[]; axes: number[] } | null = null;
+
+    if (reportId === 0x3F) {
+      parsed = parseSwitchSimple(dataView);
+    } else if (reportId === 0x05) {
+      if (dataView.byteLength >= 16) {
+        const result = parseSwitchPro2Report05(dataView);
+        const cal = this.stickCalibrations.get(deviceKey);
+        if (cal) {
+          const [lxR, lyR, rxR, ryR] = result.rawSticks;
+          result.axes = applySticksCalibration(lxR, lyR, rxR, ryR, cal);
+        }
+        parsed = result;
+      }
+    } else if (reportId === 0x09) {
+      if (dataView.byteLength >= 11) {
+        parsed = parseSwitchPro2(dataView);
+      }
+    } else if (reportId === 0x30) {
+      parsed = parseSwitchFull(dataView);
+    } else if (reportId === 0x21 || reportId === 0x31) {
+      if (dataView.byteLength >= 11) {
+        parsed = parseSwitchFull(dataView);
+      }
+    }
+
+    if (parsed) {
+      // Mark as connected if not already
+      if (!this.connected) {
+        this.connected = true;
+        this.log(`IPC device connected: ${deviceKey}`);
+      }
+
+      const state: WebHidInputState = {
+        deviceKey,
+        buttons: parsed.buttons,
+        axes: parsed.axes,
+        timestamp: performance.now(),
+      };
+      this.states.set(deviceKey, state);
+      for (const cb of this.listeners) cb(state);
+    } else if (count <= 3) {
+      this.log(`No parser matched IPC reportId=0x${reportId.toString(16)} len=${payload.byteLength}`);
+    }
+  }
+
+  /**
+   * Handle device disconnect notification from main process IPC.
+   */
+  handleIpcDisconnect(deviceKey: string): void {
+    this.states.delete(deviceKey);
+    this.connected = this.states.size > 0;
+    this.log(`IPC device disconnected: ${deviceKey}`);
+    // Close WebHID write handle if we had one
+    const writeHandle = this.writeDevices.get(deviceKey);
+    if (writeHandle) {
+      try { writeHandle.close(); } catch { /* ignore */ }
+      this.writeDevices.delete(deviceKey);
+    }
+    this.usbInitDone.delete(deviceKey);
+    for (const cb of this.disconnectListeners) {
+      try { cb(deviceKey, deviceKey); } catch { /* ignore */ }
+    }
+  }
+
+  // ── WebHID write support (for haptics) ──────────────────────────────────
+  // node-hid write() can't send output reports to the SPC2 (no output endpoint
+  // in the HID descriptor). WebHID sendReport() uses SET_REPORT control transfer
+  // which DOES work — same approach as procon2tool.
+  //
+  // IMPORTANT: The controller's haptic engine must be enabled via USB bulk
+  // initialization (WebUSB) BEFORE HID haptic frames will produce vibration.
+  // procon2tool does: USB bulk init → then HID haptic frames.
+
+  /** Cached WebHID device handles used for sendReport, keyed by "vid:pid" */
+  private writeDevices = new Map<string, HIDDevice>();
+
+  /** Whether the USB bulk init has been performed for a device key */
+  private usbInitDone = new Set<string>();
+
+  /**
+   * Get or open a WebHID device handle for writing.
+   * Returns null if WebHID is unavailable or device can't be opened.
+   */
+  private async getWriteDevice(deviceKey: string): Promise<HIDDevice | null> {
+    // Return cached handle if still open
+    const existing = this.writeDevices.get(deviceKey);
+    if (existing?.opened) return existing;
+
+    if (!navigator.hid) {
+      this.log('WebHID not available');
+      return null;
+    }
+
+    const [vidStr, pidStr] = deviceKey.split(':');
+    const vid = parseInt(vidStr, 16);
+    const pid = parseInt(pidStr, 16);
+
+    try {
+      // Request device — Electron auto-selects via select-hid-device handler
+      const devices = await navigator.hid.requestDevice({
+        filters: [{ vendorId: vid, productId: pid }]
+      });
+      if (devices.length === 0) {
+        this.log(`WebHID: no device returned for ${deviceKey}`);
+        return null;
+      }
+      const device = devices[0];
+      if (!device.opened) {
+        await device.open();
+      }
+      this.writeDevices.set(deviceKey, device);
+      this.log(`WebHID: opened write handle for ${deviceKey}`);
+      return device;
+    } catch (e: any) {
+      this.log(`WebHID open error: ${e.message}`);
+      return null;
+    }
+  }
+
+  /**
+   * Initialize the Switch Pro Controller 2 via WebUSB bulk transfers.
+   * This sends the init sequence (INIT_COMMAND_0x03 + ENABLE_HAPTICS)
+   * over the USB bulk interface, which is REQUIRED before HID haptic
+   * frames will produce vibration. Matches procon2tool's connectUsb().
+   */
+  private async initUsbBulk(deviceKey: string): Promise<boolean> {
+    if (this.usbInitDone.has(deviceKey)) return true;
+
+    if (!navigator.usb) {
+      this.log('WebUSB not available');
+      return false;
+    }
+
+    const [vidStr, pidStr] = deviceKey.split(':');
+    const vid = parseInt(vidStr, 16);
+    const pid = parseInt(pidStr, 16);
+
+    try {
+      const device = await navigator.usb.requestDevice({
+        filters: [{ vendorId: vid, productId: pid }]
+      });
+
+      await device.open();
+      this.log('USB device opened');
+
+      if (!device.configuration) {
+        await device.selectConfiguration(1);
+      }
+
+      // Interface 1 is the USB bulk interface (same as procon2tool)
+      const USB_INTERFACE = 1;
+      await device.claimInterface(USB_INTERFACE);
+      this.log('USB interface claimed');
+
+      const iface = device.configuration!.interfaces[USB_INTERFACE];
+      const endpointOut = iface.alternate.endpoints.find(
+        ep => ep.direction === 'out' && ep.type === 'bulk'
+      );
+      const endpointIn = iface.alternate.endpoints.find(
+        ep => ep.direction === 'in' && ep.type === 'bulk'
+      );
+      if (!endpointOut) {
+        this.log('No bulk OUT endpoint found');
+        await device.close();
+        return false;
+      }
+      this.log(`Found USB endpoint OUT=0x${endpointOut.endpointNumber.toString(16)}${endpointIn ? ` IN=0x${endpointIn.endpointNumber.toString(16)}` : ''}`);
+
+      const sendCmd = async (data: Uint8Array, label: string) => {
+        await device.transferOut(endpointOut.endpointNumber, data);
+        await new Promise(r => setTimeout(r, 10));
+        // Try to read response (may fail, that's ok)
+        if (endpointIn) {
+          try {
+            await device.transferIn(endpointIn.endpointNumber, 32);
+          } catch { /* some commands have no response */ }
+        }
+        this.log(`Sent ${label}`);
+      };
+
+      // Key init commands from procon2tool (minimal set for haptics)
+      // 1. INIT_COMMAND_0x03 - starts HID output at 4ms intervals
+      await sendCmd(new Uint8Array([
+        0x03, 0x91, 0x00, 0x0d, 0x00, 0x08,
+        0x00, 0x00, 0x01, 0x00,
+        0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
+      ]), 'INIT_COMMAND_0x03');
+
+      // 2. ENABLE_HAPTICS
+      await sendCmd(new Uint8Array([
+        0x03, 0x91, 0x00, 0x0a, 0x00, 0x04,
+        0x00, 0x00, 0x09,
+        0x00, 0x00, 0x00
+      ]), 'ENABLE_HAPTICS');
+
+      this.log('USB bulk init complete — haptics enabled');
+      this.usbInitDone.add(deviceKey);
+
+      // Don't close — keep the USB connection alive so the haptic engine stays enabled
+      return true;
+    } catch (e: any) {
+      this.log(`USB bulk init error: ${e.message}`);
+      return false;
+    }
+  }
+
+  /**
+   * Send a single haptic report via WebHID sendReport().
+   * reportId is the HID report ID (0x02 for SPC2 haptics).
+   * data is the report payload (63 bytes, excluding report ID).
+   */
+  async sendReport(deviceKey: string, reportId: number, data: Uint8Array): Promise<boolean> {
+    const device = await this.getWriteDevice(deviceKey);
+    if (!device) return false;
+    try {
+      await device.sendReport(reportId, data);
+      return true;
+    } catch (e: any) {
+      this.log(`sendReport error: ${e.message}`);
+      return false;
+    }
+  }
+
+  /**
+   * Play haptic vibration using WebHID sendReport.
+   * Builds and sends frames at ~4ms intervals matching procon2tool format.
+   * First performs USB bulk init if not already done.
+   */
+  async vibrate(deviceKey: string, durationMs: number, intensity: number): Promise<{ ok: boolean; frames: number; errors: number }> {
+    // Ensure USB bulk init has been performed (enables haptic engine)
+    await this.initUsbBulk(deviceKey);
+
+    const device = await this.getWriteDevice(deviceKey);
+    if (!device) return { ok: false, frames: 0, errors: 0 };
+
+    const clamped = Math.max(0, Math.min(1, intensity));
+    const STRONG = [0x93, 0x35, 0x36, 0x1c, 0x0d];
+    const MEDIUM = [0x75, 0x19, 0x41, 0x9b, 0x03];
+    const LIGHT  = [0x48, 0x71, 0x20, 0x5a, 0x02];
+    const SILENT = [0x3f, 0x01, 0xf0, 0x19, 0x00];
+
+    const sustain = clamped >= 0.7 ? STRONG : clamped >= 0.3 ? MEDIUM : LIGHT;
+    const frameCount = Math.max(1, Math.ceil(durationMs / 4));
+
+    // Build frames: attack, sustain, release, silence
+    const frames: number[][] = [];
+    if (frameCount > 6) {
+      frames.push(LIGHT);
+      if (clamped >= 0.3) frames.push(MEDIUM);
+    }
+    const releaseCount = Math.min(2, Math.max(1, Math.floor(frameCount * 0.1)));
+    const sustainCount = Math.max(1, frameCount - frames.length - releaseCount);
+    for (let i = 0; i < sustainCount; i++) frames.push(sustain);
+    if (releaseCount >= 2 && clamped >= 0.3) frames.push(LIGHT);
+    frames.push(SILENT);
+
+    let counter = 0;
+    let errors = 0;
+    for (const hapticData of frames) {
+      const buf = new Uint8Array(63); // 64 - 1 (reportId sent separately)
+      buf[0] = 0x50 | (counter & 0x0F); // byte[1] of full report
+      buf[16] = buf[0];                  // byte[17] mirror
+      for (let i = 0; i < hapticData.length; i++) {
+        buf[1 + i] = hapticData[i];      // bytes[2-6] → buf[1-5]
+        buf[17 + i] = hapticData[i];     // bytes[18-22] → buf[17-21]
+      }
+      try {
+        await device.sendReport(0x02, buf);
+      } catch {
+        errors++;
+      }
+      counter = (counter + 1) & 0x0F;
+      // 4ms delay between frames
+      await new Promise(r => setTimeout(r, 4));
+    }
+
+    return { ok: errors === 0, frames: frames.length, errors };
   }
 }
 

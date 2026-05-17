@@ -93,19 +93,13 @@ export function InputTester(): JSX.Element {
     window.api.enumerateHidDevices().then(setHidDevices).catch(() => {});
   }, []);
 
-  // WebHID diagnostics
+  // HID diagnostics
   useEffect(() => {
     const unsubDiag = webHidReader.onDiag(() => {
       setWebHidDiag([...webHidReader.getDiagLog()]);
     });
     return unsubDiag;
   }, []);
-
-  const handleWebHidConnect = async () => {
-    const ok = await webHidReader.requestDevice();
-    setWebHidConnected(ok);
-    setWebHidDiag([...webHidReader.getDiagLog()]);
-  };
 
   // Calibration wizard state
   const [calibrating, setCalibrating] = useState(false);
@@ -243,13 +237,13 @@ export function InputTester(): JSX.Element {
         </div>
       )}
 
-      {/* WebHID Controller Input (Switch Pro, etc.) */}
+      {/* HID Controller Input (Switch Pro, etc.) */}
       <div className="input-tester__hid-section">
-        <h3>WebHID Controller Input</h3>
+        <h3>HID Controller Input</h3>
         <div style={{ marginBottom: 8, display: 'flex', gap: 8, alignItems: 'center' }}>
-          <button onClick={handleWebHidConnect} style={{ padding: '4px 12px', fontSize: 12 }}>
-            Connect HID Controller
-          </button>
+          <span style={{ fontSize: 12, opacity: 0.7 }}>
+            Controllers auto-connect via node-hid
+          </span>
           <button
             onClick={() => setCalibrating(true)}
             disabled={!webHidConnected}
