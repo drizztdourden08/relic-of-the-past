@@ -10,7 +10,8 @@ interface TrackerInventoryProps {
   viewMode?: InventoryViewMode;
 }
 
-export function TrackerInventory({ inventory, viewMode = 'default' }: TrackerInventoryProps) {
+export const TrackerInventory = (props: TrackerInventoryProps) => {
+  const { inventory, viewMode = 'default' } = props;
   if (viewMode === 'ingame') return <IngameInventory inventory={inventory} />;
   if (viewMode === 'compact') return <CompactInventory inventory={inventory} />;
   return <DefaultInventory inventory={inventory} />;

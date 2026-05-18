@@ -27,7 +27,12 @@ type ReviewData = Record<string, ReviewEntry>;
 
 // ─── Root component ───
 
-export function SpriteDebug({ onClose }: { onClose: () => void }) {
+export interface SpriteDebugProps {
+  onClose: () => void;
+}
+
+export const SpriteDebug = (props: SpriteDebugProps) => {
+  const { onClose } = props;
   const [mode, setMode] = useState<ReviewMode>('sprites');
 
   return (
@@ -59,7 +64,7 @@ export function SpriteDebug({ onClose }: { onClose: () => void }) {
       {mode === 'sprites' ? <SpriteReviewPanel /> : <ItemReviewPanel />}
     </div>
   );
-}
+};
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // PANEL 1: Sprite Review — all extracted images by category

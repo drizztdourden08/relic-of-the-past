@@ -20,7 +20,8 @@ interface BindingListenerProps {
   onCancel: () => void;
 }
 
-export function BindingListener({ actionLabel, onCapture, onCancel }: BindingListenerProps): JSX.Element {
+export const BindingListener = (props: BindingListenerProps) => {
+  const { actionLabel, onCapture, onCancel } = props;
   const [canCancel, setCanCancel] = useState(false);
 
   useEffect(() => {

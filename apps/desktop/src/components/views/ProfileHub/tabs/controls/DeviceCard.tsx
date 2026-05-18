@@ -29,7 +29,8 @@ const PRESET_ICON: Record<string, string> = {
   'gamecube-wireless': '/buttons/gc/controller_gamecube.svg',
 };
 
-export function DeviceCard({ device, onDragStart, onAssign }: DeviceCardProps): JSX.Element {
+export const DeviceCard = (props: DeviceCardProps) => {
+  const { device, onDragStart, onAssign } = props;
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData('application/x-device-id', device.id);
     e.dataTransfer.setData('application/x-preset-id', device.presetId ?? '');

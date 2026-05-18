@@ -10,7 +10,8 @@ interface TrackerRegionSectionProps {
   statuses: Map<string, CheckStatus>;
 }
 
-export function TrackerRegionSection({ region, checks, statuses }: TrackerRegionSectionProps): JSX.Element {
+export const TrackerRegionSection = (props: TrackerRegionSectionProps) => {
+  const { region, checks, statuses } = props;
   const [expanded, setExpanded] = useState(false);
 
   const completed = checks.filter(c => statuses.get(c.id) === 'completed').length;

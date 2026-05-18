@@ -4,7 +4,8 @@ interface WindowControlsProps {
   isMaximized: boolean;
 }
 
-export function WindowControls({ isMaximized }: WindowControlsProps): JSX.Element {
+export const WindowControls = (props: WindowControlsProps) => {
+  const { isMaximized } = props;
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {

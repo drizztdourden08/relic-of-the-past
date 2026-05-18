@@ -22,7 +22,8 @@ const FAMILY_EMOJI: Record<string, string> = {
   generic: '🎮',
 };
 
-export function AssignedDeviceCard({ assigned, liveDevice, onUnassign }: AssignedDeviceCardProps): JSX.Element {
+export const AssignedDeviceCard = (props: AssignedDeviceCardProps) => {
+  const { assigned, liveDevice, onUnassign } = props;
   const isConnected = liveDevice?.connected ?? false;
   const isActivated = liveDevice?.activated ?? false;
   const emoji = FAMILY_EMOJI[assigned.deviceFamily] ?? '🎮';

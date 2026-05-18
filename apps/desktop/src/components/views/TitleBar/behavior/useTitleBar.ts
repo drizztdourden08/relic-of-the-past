@@ -1,6 +1,6 @@
 import { useState, useEffect, type RefObject } from 'react';
 
-export function useTitleBar(menuRef: RefObject<HTMLDivElement | null>) {
+export const useTitleBar = (menuRef: RefObject<HTMLDivElement | null>) => {
   const [isMaximized, setIsMaximized] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 

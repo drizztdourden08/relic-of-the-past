@@ -6,9 +6,9 @@ import { MsuManager } from './MsuManager';
 import { SpriteManager } from './SpriteManager';
 import './DataManager.css';
 
-type DataTab = 'profiles' | 'roms' | 'languages' | 'msu' | 'sprites';
+export type DataTab = 'profiles' | 'roms' | 'languages' | 'msu' | 'sprites';
 
-interface DataManagerProps {
+export interface DataManagerProps {
   profiles: Profile[];
   romStatuses: RomDisplayInfo[];
   onSelectProfile: (profile: Profile) => void;
@@ -25,22 +25,23 @@ interface DataManagerProps {
   onSwitchProfile: () => void;
 }
 
-export function DataManager({
-  profiles,
-  romStatuses,
-  onSelectProfile,
-  onCreateProfile,
-  onDeleteProfile,
-  onImportRom,
-  onExtractAssets,
-  onDeleteRom,
-  onRefresh,
-  onDeleteConfirm,
-  loadingProfile = null,
-  initialTab,
-  isGameRunning = false,
-  onSwitchProfile,
-}: DataManagerProps) {
+export const DataManager = (props: DataManagerProps) => {
+  const {
+    profiles,
+    romStatuses,
+    onSelectProfile,
+    onCreateProfile,
+    onDeleteProfile,
+    onImportRom,
+    onExtractAssets,
+    onDeleteRom,
+    onRefresh,
+    onDeleteConfirm,
+    loadingProfile = null,
+    initialTab,
+    isGameRunning = false,
+    onSwitchProfile,
+  } = props;
   const [activeTab, setActiveTab] = useState<DataTab>(initialTab ?? 'profiles');
   const [msuCount, setMsuCount] = useState(0);
   const [langCount, setLangCount] = useState(0);
@@ -149,4 +150,4 @@ export function DataManager({
       </div>
     </div>
   );
-}
+};

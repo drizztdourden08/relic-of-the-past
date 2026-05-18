@@ -174,7 +174,8 @@ interface Props {
   deviceKey?: string;
 }
 
-export function HidCalibrationWizard({ onComplete, onCancel, deviceKey }: Props): JSX.Element {
+export const HidCalibrationWizard = (props: Props) => {
+  const { onComplete, onCancel, deviceKey } = props;
   const [selectedProfileId, setSelectedProfileId] = useState('');
   const [selectedSdlVidPid, setSelectedSdlVidPid] = useState('');
   const [hasGyro, setHasGyro] = useState(true); // default true until proven otherwise

@@ -87,7 +87,8 @@ function applyCalibration(
 
 // ── Component ──
 
-export function StickCalibrationWizard({ onComplete, onCancel, existingCalibration, target, deviceKey }: Props) {
+export const StickCalibrationWizard = (props: Props) => {
+  const { onComplete, onCancel, existingCalibration, target, deviceKey } = props;
   const [step, setStep] = useState<Step>('center');
   const calibrateLeft = target !== 'right';
   const calibrateRight = target !== 'left';

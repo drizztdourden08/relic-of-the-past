@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Button } from '../../primitives/Button';
 import { IconButton } from '../../primitives/IconButton';
 import { Select } from '../../primitives/Select';
+import { formatRelativeTime } from '../../../utils';
 
 /** Human-readable labels for all GameSettings keys, grouped by category */
 const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label: string; format?: (v: unknown) => string }> }> = [
@@ -75,7 +76,7 @@ function formatSettingValue(value: unknown, format?: (v: unknown) => string): st
   return String(value);
 }
 
-interface ProfileManagerProps {
+export interface ProfileManagerProps {
   profiles: Profile[];
   romStatuses: RomDisplayInfo[];
   onSelectProfile: (profile: Profile) => void;
@@ -86,29 +87,17 @@ interface ProfileManagerProps {
   onSwitchProfile: () => void;
 }
 
-function formatRelativeTime(ts: number): string {
-  if (!ts) return 'Never';
-  const diffMs = Date.now() - ts;
-  const diffMins = Math.floor(diffMs / 60000);
-  if (diffMins < 1) return 'Just now';
-  if (diffMins < 60) return `${diffMins}m ago`;
-  const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) return `${diffHours}h ago`;
-  const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 30) return `${diffDays}d ago`;
-  return new Date(ts).toLocaleDateString();
-}
-
-export function ProfileManager({
-  profiles,
-  romStatuses,
-  onSelectProfile,
-  onCreateProfile,
-  onDeleteProfile,
-  onRefresh,
-  isGameRunning,
-  onSwitchProfile,
-}: ProfileManagerProps) {
+export const ProfileManager = (props: ProfileManagerProps) => {
+  const {
+    profiles,
+    romStatuses,
+    onSelectProfile,
+    onCreateProfile,
+    onDeleteProfile,
+    onRefresh,
+    isGameRunning,
+    onSwitchProfile,
+  } = props;
   const [selected, setSelected] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [formName, setFormName] = useState('');
@@ -335,4 +324,4 @@ export function ProfileManager({
       </div>
     </div>
   );
-}
+};

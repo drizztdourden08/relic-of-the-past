@@ -17,15 +17,16 @@ interface SlotInfo {
   screenshotUrl: string | null;
 }
 
-interface SaveStateOverlayProps {
+export interface SaveStateOverlayProps {
   open: boolean;
   onClose: () => void;
   highlightedSlot?: number | null;
-  holdProgress?: number; // 0-1 for the highlighted slot
+  holdProgress?: number;
   hints?: SlotHint[];
 }
 
-export function SaveStateOverlay({ open, onClose, highlightedSlot, holdProgress, hints }: SaveStateOverlayProps): JSX.Element | null {
+export const SaveStateOverlay = (props: SaveStateOverlayProps) => {
+  const { open, onClose, highlightedSlot, holdProgress, hints } = props;
   const [slots, setSlots] = useState<SlotInfo[]>([]);
   const [busy, setBusy] = useState<number | null>(null);
   const [visible, setVisible] = useState(false);
@@ -171,4 +172,4 @@ export function SaveStateOverlay({ open, onClose, highlightedSlot, holdProgress,
       </div>
     </div>
   );
-}
+};

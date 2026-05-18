@@ -13,7 +13,7 @@ import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { log } from '../../../lib/log-bus';
 import './ProfileHub.css';
 
-interface ProfileHubProps {
+export interface ProfileHubProps {
   profile: Profile;
   isGameRunning: boolean;
   onStartGame: () => void;
@@ -30,20 +30,21 @@ interface ProfileHubProps {
 
 type TopTab = 'home' | 'settings' | 'audio' | 'gameplay' | 'controls';
 
-export function ProfileHub({
-  profile,
-  isGameRunning,
-  onStartGame,
-  onStopGame,
-  onResetGame,
-  onWindowModeChange,
-  onConstraintSettingsChange,
-  onMasterVolumeChange,
-  onDisplayPerfChange,
-  onSaveSlotSettingsChange,
-  onEdgeEffectChange,
-  masterVolumeOverride,
-}: ProfileHubProps) {
+export const ProfileHub = (props: ProfileHubProps) => {
+  const {
+    profile,
+    isGameRunning,
+    onStartGame,
+    onStopGame,
+    onResetGame,
+    onWindowModeChange,
+    onConstraintSettingsChange,
+    onMasterVolumeChange,
+    onDisplayPerfChange,
+    onSaveSlotSettingsChange,
+    onEdgeEffectChange,
+    masterVolumeOverride,
+  } = props;
   const [activeTab, setActiveTab] = useState<TopTab>('home');
   const [settings, setSettings] = useState<GameSettings>(DEFAULT_SETTINGS);
   const [toasts, setToasts] = useState<ToastItem[]>([]);
@@ -286,4 +287,4 @@ export function ProfileHub({
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </div>
   );
-}
+};

@@ -9,7 +9,8 @@ interface ControllerDisconnectOverlayProps {
   controllerName: string;
 }
 
-export function ControllerDisconnectOverlay({ controllerName }: ControllerDisconnectOverlayProps): JSX.Element {
+export const ControllerDisconnectOverlay = (props: ControllerDisconnectOverlayProps) => {
+  const { controllerName } = props;
   return (
     <div className="controller-disconnect-overlay">
       <div className="controller-disconnect-overlay__card">

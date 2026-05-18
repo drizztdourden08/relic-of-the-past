@@ -3,6 +3,7 @@ import { ImportForm } from './ImportForm';
 import { IconButton } from '../../primitives/IconButton';
 import { Select } from '../../primitives/Select';
 import type { SelectOption } from '../../primitives/Select';
+import { formatBytes } from '../../../utils/formatBytes';
 
 interface MsuPack {
   name: string;
@@ -140,23 +141,18 @@ const MSU_TRACK_DESCRIPTIONS: Record<number, string> = {
   114: 'Bomb Shop',
 };
 
-function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
 function getTrackNumber(filename: string): number | null {
   const match = filename.match(/(\d+)\.(pcm|opuz)$/i);
   return match ? parseInt(match[1], 10) : null;
 }
 
-interface MsuManagerProps {
+export interface MsuManagerProps {
   onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
   onRefresh: () => void;
 }
 
-export function MsuManager({ onDeleteConfirm, onRefresh }: MsuManagerProps) {
+export const MsuManager = (props: MsuManagerProps) => {
+  const { onDeleteConfirm, onRefresh } = props;
   const [packs, setPacks] = useState<MsuPack[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [files, setFiles] = useState<MsuFile[]>([]);
@@ -432,10 +428,10 @@ export function MsuManager({ onDeleteConfirm, onRefresh }: MsuManagerProps) {
       </div>
     </div>
   );
-}
+};
 
 // ─── Individual track row with editable mapping ───
-function TrackRow({
+const TrackRow = ({
   trackNum,
   description,
   fileName,
@@ -449,7 +445,7 @@ function TrackRow({
   fileSize?: number;
   options: SelectOption[];
   onAssign: (trackNum: number, fileName: string) => void;
-}) {
+}) => {
   const [editing, setEditing] = useState(false);
 
   return (
@@ -493,4 +489,4 @@ function TrackRow({
       )}
     </div>
   );
-}
+};

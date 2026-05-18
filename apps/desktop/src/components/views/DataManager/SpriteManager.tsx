@@ -8,11 +8,12 @@ import {
 } from '@shared/game/sprites';
 import './SpriteManager.css';
 
-interface SpriteManagerProps {
+export interface SpriteManagerProps {
   romStatuses: RomDisplayInfo[];
 }
 
-export function SpriteManager({ romStatuses }: SpriteManagerProps) {
+export const SpriteManager = (props: SpriteManagerProps) => {
+  const { romStatuses } = props;
   const [selectedRom, setSelectedRom] = useState('');
   const [extracting, setExtracting] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -166,15 +167,15 @@ export function SpriteManager({ romStatuses }: SpriteManagerProps) {
       </div>
     </div>
   );
-}
+};
 
-function CatButton({ label, value, current, onClick, count }: {
+const CatButton = ({ label, value, current, onClick, count }: {
   label: string;
   value: string;
   current: string;
   onClick: (v: any) => void;
   count: number;
-}) {
+}) => {
   return (
     <button
       className={`sprite-manager__cat-btn ${current === value ? 'sprite-manager__cat-btn--active' : ''}`}
@@ -183,9 +184,9 @@ function CatButton({ label, value, current, onClick, count }: {
       {label} <span className="sprite-manager__cat-count">{count}</span>
     </button>
   );
-}
+};
 
-function SpriteCard({ file, label, category, baseUrl }: { file: string; label: string; category: SpriteCategory; baseUrl: string }) {
+const SpriteCard = ({ file, label, category, baseUrl }: { file: string; label: string; category: SpriteCategory; baseUrl: string }) => {
   return (
     <div className="sprite-card">
       <img
@@ -200,4 +201,4 @@ function SpriteCard({ file, label, category, baseUrl }: { file: string; label: s
       </div>
     </div>
   );
-}
+};

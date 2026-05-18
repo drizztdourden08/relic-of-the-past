@@ -16,7 +16,8 @@ const STATUS_ICONS: Record<CheckStatus, string> = {
   blocked: '○',
 };
 
-export function TrackerCheckRow({ check, status, detailed, itemOverride }: TrackerCheckRowProps) {
+export const TrackerCheckRow = (props: TrackerCheckRowProps) => {
+  const { check, status, detailed, itemOverride } = props;
   const displayItem = itemOverride ?? (Array.isArray(check.vanillaItem) ? check.vanillaItem.join(', ') : check.vanillaItem);
   return (
     <div className={`tracker-check tracker-check--${status}`}>

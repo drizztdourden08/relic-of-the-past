@@ -1,8 +1,9 @@
 import { Button } from '../../primitives/Button';
 import { Badge } from '../../primitives/Badge';
+import { formatDate, formatRomName } from './behavior/formatters';
 import './ProfilePage.css';
 
-interface ProfilePageProps {
+export interface ProfilePageProps {
   profile: Profile;
   romStatus: RomDisplayInfo | null;
   isGameRunning: boolean;
@@ -11,26 +12,15 @@ interface ProfilePageProps {
   onSwitchProfile: () => void;
 }
 
-function formatDate(ts: number): string {
-  if (!ts) return 'Never';
-  return new Date(ts).toLocaleDateString(undefined, {
-    month: 'long', day: 'numeric', year: 'numeric',
-    hour: '2-digit', minute: '2-digit',
-  });
-}
-
-function formatRomName(romFile: string): string {
-  return romFile.replace(/\.(sfc|smc)$/i, '');
-}
-
-export function ProfilePage({
-  profile,
-  romStatus,
-  isGameRunning,
-  onStartGame,
-  onDeleteProfile,
-  onSwitchProfile,
-}: ProfilePageProps): JSX.Element {
+export const ProfilePage = (props: ProfilePageProps) => {
+  const {
+    profile,
+    romStatus,
+    isGameRunning,
+    onStartGame,
+    onDeleteProfile,
+    onSwitchProfile,
+  } = props;
   const assetsReady = romStatus?.extractionStatus === 'ready';
 
   return (
@@ -83,4 +73,4 @@ export function ProfilePage({
       </div>
     </div>
   );
-}
+};

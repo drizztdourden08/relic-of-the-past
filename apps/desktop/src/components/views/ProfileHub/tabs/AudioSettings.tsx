@@ -180,7 +180,8 @@ function isDisabled(key: string, settings: GameSettings): boolean {
   return false;
 }
 
-export function AudioSettings({ profileId, settings, onChange }: AudioSettingsProps) {
+export const AudioSettings = (props: AudioSettingsProps) => {
+  const { profileId, settings, onChange } = props;
   const renderControlWithProfile = (key: string, s: GameSettings, cb: (patch: Partial<GameSettings>) => void): ReactNode | null => {
     if (key === 'msuImport') {
       return <MsuImport profileId={profileId} />;

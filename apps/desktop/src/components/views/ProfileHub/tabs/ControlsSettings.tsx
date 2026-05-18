@@ -49,7 +49,8 @@ function padHex(v: string): string {
   return v.toLowerCase().padStart(4, '0');
 }
 
-export function ControlsSettings({ settings, onChange, profileId }: ControlsSettingsProps): JSX.Element {
+export const ControlsSettings = (props: ControlsSettingsProps) => {
+  const { settings, onChange, profileId } = props;
   const [profiles, setProfiles] = useState<InputProfile[]>([]);
   const [activeProfile, setActiveProfile] = useState<InputProfile | null>(null);
   const [devices, setDevices] = useState<DetectedDevice[]>([]);

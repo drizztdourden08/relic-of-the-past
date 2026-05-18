@@ -14,7 +14,8 @@ interface TrackerGroupTreeProps {
   depth?: number;
 }
 
-export function TrackerGroupTree({ node, statuses, viewMode, depth = 0 }: TrackerGroupTreeProps) {
+export const TrackerGroupTree = (props: TrackerGroupTreeProps) => {
+  const { node, statuses, viewMode, depth = 0 } = props;
   // Root node renders children directly
   if (depth === 0 && node.children.length > 0) {
     return (

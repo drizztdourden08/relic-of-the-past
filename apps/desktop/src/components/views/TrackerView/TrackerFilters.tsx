@@ -17,9 +17,8 @@ interface TrackerFiltersProps {
   onViewModeChange: (mode: ViewMode) => void;
 }
 
-export function TrackerFilters({
-  filter, onFilterChange, grouping, onGroupingChange, viewMode, onViewModeChange,
-}: TrackerFiltersProps) {
+export const TrackerFilters = (props: TrackerFiltersProps) => {
+  const { filter, onFilterChange, grouping, onGroupingChange, viewMode, onViewModeChange } = props;
   const [showGroupConfig, setShowGroupConfig] = useState(false);
   const [showTagFilter, setShowTagFilter] = useState(false);
 

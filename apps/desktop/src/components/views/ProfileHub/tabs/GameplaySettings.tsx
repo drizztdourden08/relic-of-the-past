@@ -142,7 +142,8 @@ function renderControl(key: string, settings: GameSettings, onChange: (patch: Pa
   return null;
 }
 
-export function GameplaySettings({ settings, onChange }: GameplaySettingsProps) {
+export const GameplaySettings = (props: GameplaySettingsProps) => {
+  const { settings, onChange } = props;
   return (
     <SettingsLayout
       sections={SECTIONS}

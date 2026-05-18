@@ -247,12 +247,13 @@ function TrackerPanel({ panelSettings, children, className = '', onDragStart }: 
 
 // ─── Main TrackerView ───
 
-interface TrackerViewProps {
+export interface TrackerViewProps {
   visible: boolean;
   onClose: () => void;
 }
 
-export function TrackerView({ visible, onClose }: TrackerViewProps) {
+export const TrackerView = (props: TrackerViewProps) => {
+  const { visible, onClose } = props;
   const [layout, setLayoutRaw] = useState<TrackerLayoutSettings>(loadLayout);
   const [viewMode, setViewMode] = useState<ViewMode>('compact');
   const [grouping, setGrouping] = useState<GroupDimension[]>(['world', 'dungeon']);
@@ -390,4 +391,4 @@ export function TrackerView({ visible, onClose }: TrackerViewProps) {
       </TrackerPanel>
     </>
   );
-}
+};

@@ -96,11 +96,11 @@ function getEscBinding(): { label: string; iconUrl: string | null } {
   };
 }
 
-export function useEnhancedSaveSlot(
+export const useEnhancedSaveSlot = (
   enabled: boolean,
   holdDurationSec: number,
   gameRunning: boolean,
-): EnhancedSaveSlotState {
+): EnhancedSaveSlotState => {
   const [open, setOpen] = useState(false);
   const [highlightedSlot, setHighlightedSlot] = useState<number | null>(null);
   const [holdProgress, setHoldProgress] = useState(0);

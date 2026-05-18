@@ -192,7 +192,7 @@ function resolveDeviceName(vid: string, pid: string, hidProduct?: string): strin
 
 // ── Main Component ──
 
-export function InputCalibration(): JSX.Element {
+export const InputCalibration = () => {
   const [gamepads, setGamepads] = useState<GamepadSnapshot[]>([]);
   const [events, setEvents] = useState<EventEntry[]>([]);
   const logRef = useRef<HTMLDivElement>(null);
@@ -532,7 +532,7 @@ export function InputCalibration(): JSX.Element {
       </div>
     </div>
   );
-}
+};
 
 // ── WebHID Controller Card ──
 

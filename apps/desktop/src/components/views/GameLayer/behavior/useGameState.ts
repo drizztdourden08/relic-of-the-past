@@ -7,7 +7,7 @@ import {
 } from '../../../../lib/game';
 import { useEffect } from 'react';
 
-export function useGameState() {
+export const useGameState = () => {
   const [status, setStatus] = useState<GameStatus>(() => getGameState().status);
   const [error, setError] = useState<string | null>(() => getGameState().error);
   const startedRef = useRef(false);

@@ -39,7 +39,8 @@ const DEFAULT_DEADZONE = 0.05;
 
 // ── Component ──
 
-export function TriggerCalibrationWizard({ axisIndex, label, onComplete, onCancel, existingCalibration, deviceKey }: Props) {
+export const TriggerCalibrationWizard = (props: Props) => {
+  const { axisIndex, label, onComplete, onCancel, existingCalibration, deviceKey } = props;
   const [step, setStep] = useState<Step>('rest');
 
   // Live raw trigger value (0..1 from parser)

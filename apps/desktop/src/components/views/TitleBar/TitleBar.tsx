@@ -7,7 +7,7 @@ import { WindowControls } from './sub-components/WindowControls';
 import { getFps } from '../../../lib/game';
 import './TitleBar.css';
 
-interface TitleBarProps {
+export interface TitleBarProps {
   onImportRom: () => void;
   onSwitchProfile: () => void;
   onShowProfile: () => void;
@@ -27,25 +27,26 @@ interface TitleBarProps {
   showFps?: boolean;
 }
 
-export function TitleBar({
-  onImportRom,
-  onSwitchProfile,
-  onShowProfile,
-  onShowLogs,
-  onToggleSaveStates,
-  onToggleInventory,
-  onToggleChecks,
-  onShowDataManager,
-  onShowInputTester,
-  onShowCredits,
-  onShowSpriteDebug,
-  activeProfile,
-  gameRunning,
-  windowMode = 'default',
-  isMuted = false,
-  onToggleMute,
-  showFps = false,
-}: TitleBarProps): JSX.Element {
+export const TitleBar = (props: TitleBarProps) => {
+  const {
+    onImportRom,
+    onSwitchProfile,
+    onShowProfile,
+    onShowLogs,
+    onToggleSaveStates,
+    onToggleInventory,
+    onToggleChecks,
+    onShowDataManager,
+    onShowInputTester,
+    onShowCredits,
+    onShowSpriteDebug,
+    activeProfile,
+    gameRunning,
+    windowMode = 'default',
+    isMuted = false,
+    onToggleMute,
+    showFps = false,
+  } = props;
   const menuRef = useRef<HTMLDivElement>(null);
   const debugMenuRef = useRef<HTMLDivElement>(null);
   const { isMaximized, menuOpen, toggleMenu, closeMenu } = useTitleBar(menuRef);
@@ -278,4 +279,4 @@ export function TitleBar({
       <WindowControls isMaximized={isMaximized} />
     </div>
   );
-}
+};

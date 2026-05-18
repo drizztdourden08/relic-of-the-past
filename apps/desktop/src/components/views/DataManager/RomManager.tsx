@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ImportForm } from './ImportForm';
 import { IconButton } from '../../primitives/IconButton';
+import { formatBytes } from '../../../utils/formatBytes';
 
-interface RomManagerProps {
+export interface RomManagerProps {
   romStatuses: RomDisplayInfo[];
   onImportRom: () => void;
   onExtractAssets: (romFile: string) => void;
@@ -18,13 +19,8 @@ interface RomDetail {
   modified: string;
 }
 
-function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
-export function RomManager({ romStatuses, onImportRom, onExtractAssets, onDeleteRom, onRefresh }: RomManagerProps) {
+export const RomManager = (props: RomManagerProps) => {
+  const { romStatuses, onImportRom, onExtractAssets, onDeleteRom, onRefresh } = props;
   const [selected, setSelected] = useState<string | null>(null);
   const [detail, setDetail] = useState<RomDetail | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
@@ -157,4 +153,4 @@ export function RomManager({ romStatuses, onImportRom, onExtractAssets, onDelete
       </div>
     </div>
   );
-}
+};

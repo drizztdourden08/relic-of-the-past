@@ -1,7 +1,7 @@
 import { CREDITS, getUsageLabel } from '@shared/credits';
 import './CreditsTab.css';
 
-export function CreditsPage() {
+export const CreditsPage = () => {
   return (
     <div className="credits-tab">
       <div className="credits-tab__header">

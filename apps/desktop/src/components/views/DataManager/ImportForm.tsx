@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { DropZone } from '../../primitives/DropZone/DropZone';
 
-interface ImportFormProps {
+export interface ImportFormProps {
   placeholder?: string;
   accept?: string[];
   dropLabel?: string;
@@ -11,15 +11,16 @@ interface ImportFormProps {
   onFileImport: (files: File[]) => Promise<{ success: boolean; message: string }>;
 }
 
-export function ImportForm({
-  placeholder = 'Paste download URL…',
-  accept = ['.zip'],
-  dropLabel = 'Drop files here',
-  dropHint,
-  disabled = false,
-  onUrlImport,
-  onFileImport,
-}: ImportFormProps) {
+export const ImportForm = (props: ImportFormProps) => {
+  const {
+    placeholder = 'Paste download URL…',
+    accept = ['.zip'],
+    dropLabel = 'Drop files here',
+    dropHint,
+    disabled = false,
+    onUrlImport,
+    onFileImport,
+  } = props;
   const [url, setUrl] = useState('');
   const [status, setStatus] = useState<{ message: string; variant: '' | 'error' | 'success' }>({ message: '', variant: '' });
   const [busy, setBusy] = useState(false);
@@ -97,4 +98,4 @@ export function ImportForm({
       {status.message && <div className={statusClass}>{status.message}</div>}
     </div>
   );
-}
+};

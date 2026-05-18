@@ -5,7 +5,7 @@ import { CreateProfileForm } from '../../compounds/CreateProfileForm';
 import { Button } from '../../primitives/Button';
 import './ProfilePicker.css';
 
-interface ProfilePickerProps {
+export interface ProfilePickerProps {
   profiles: Profile[];
   romStatuses: RomDisplayInfo[];
   onSelectProfile: (profile: Profile) => void;
@@ -18,18 +18,19 @@ interface ProfilePickerProps {
   loadingProfile?: string | null;
 }
 
-export function ProfilePicker({
-  profiles,
-  romStatuses,
-  onSelectProfile,
-  onCreateProfile,
-  onDeleteProfile,
-  onImportRom,
-  onExtractAssets,
-  onDeleteRom,
-  importingRom = false,
-  loadingProfile = null,
-}: ProfilePickerProps): JSX.Element {
+export const ProfilePicker = (props: ProfilePickerProps) => {
+  const {
+    profiles,
+    romStatuses,
+    onSelectProfile,
+    onCreateProfile,
+    onDeleteProfile,
+    onImportRom,
+    onExtractAssets,
+    onDeleteRom,
+    importingRom = false,
+    loadingProfile = null,
+  } = props;
   const [creating, setCreating] = useState(false);
   const readyRoms = romStatuses.filter((r) => r.hasAssets);
 
@@ -124,4 +125,4 @@ export function ProfilePicker({
       </div>
     </div>
   );
-}
+};

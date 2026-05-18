@@ -33,7 +33,7 @@ interface HidDevice {
   serialNumber: string | null;
 }
 
-export function InputTester(): JSX.Element {
+export const InputTester = () => {
   const [gamepads, setGamepads] = useState<GamepadSnapshot[]>([]);
   const [events, setEvents] = useState<EventEntry[]>([]);
   const [hidDevices, setHidDevices] = useState<HidDevice[]>([]);
@@ -360,4 +360,4 @@ export function InputTester(): JSX.Element {
       </div>
     </div>
   );
-}
+};

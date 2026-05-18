@@ -5,7 +5,7 @@ import { createEdgeGlowRenderer, type EdgeGlowRenderer } from '../../../lib/game
 import { ControllerDisconnectOverlay } from './ControllerDisconnectOverlay';
 import './GameLayer.css';
 
-interface GameLayerProps {
+export interface GameLayerProps {
   assetData: Uint8Array | null;
   configIni?: string;
   profileId?: string;
@@ -13,7 +13,8 @@ interface GameLayerProps {
   edgeEffect?: boolean;
 }
 
-export function GameLayer({ assetData, configIni, profileId, stretch, edgeEffect = true }: GameLayerProps): JSX.Element {
+export const GameLayer = (props: GameLayerProps) => {
+  const { assetData, configIni, profileId, stretch, edgeEffect = true } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fxCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -285,4 +286,4 @@ export function GameLayer({ assetData, configIni, profileId, stretch, edgeEffect
       )}
     </div>
   );
-}
+};

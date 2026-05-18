@@ -226,12 +226,12 @@ export const BUTTON_ICON_MAP: Record<string, string> = {
 };
 
 /** Get icon URL for a profile button icon ID. Returns null if not mapped. */
-export function getButtonIconUrl(iconId: string): string | null {
+export const getButtonIconUrl = (iconId: string): string | null => {
   return BUTTON_ICON_MAP[iconId] ?? null;
 }
 
 /** Map KeyboardEvent.code → icon ID (e.g. "KeyZ" → "kb-z", "ArrowUp" → "kb-arrow-up") */
-export function keyCodeToIconId(code: string): string | null {
+export const keyCodeToIconId = (code: string): string | null => {
   if (code.startsWith('Key')) return `kb-${code.slice(3).toLowerCase()}`;
   if (code.startsWith('Digit')) return `kb-${code.slice(5)}`;
   const map: Record<string, string> = {
@@ -263,7 +263,7 @@ const SNES_ICON_MAP: Record<string, string> = {
   Up: 'snes-dup', Down: 'snes-ddown', Left: 'snes-dleft', Right: 'snes-dright',
 };
 
-export function getSnesIconUrl(snesButton: string): string | null {
+export const getSnesIconUrl = (snesButton: string): string | null => {
   const iconId = SNES_ICON_MAP[snesButton];
   return iconId ? getButtonIconUrl(iconId) : null;
 }
