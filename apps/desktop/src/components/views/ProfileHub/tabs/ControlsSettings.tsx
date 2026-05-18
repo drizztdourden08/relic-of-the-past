@@ -29,7 +29,7 @@ import {
 } from '@shared/types/controls';
 import { findPresetById, KEYBOARD_DEFAULT } from '@shared/input';
 import { findDeviceProfileByVidPid } from '@shared/input';
-import { getInputManager, profileFromPreset, resolveFunctionMappingIcon } from '../../../../lib/game/input-manager';
+import { getInputManager, profileFromPreset, resolveFunctionMappingIcon } from '../../../../lib/input/input-manager';
 import { InputProfileList } from './controls/InputProfileList';
 import { DeviceCard } from './controls/DeviceCard';
 import { BindingRow } from './controls/BindingRow';

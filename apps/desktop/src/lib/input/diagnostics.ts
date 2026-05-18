@@ -3,7 +3,7 @@
  * Used by the diagnostic button on InputCalibration page.
  */
 
-import { webHidReader } from './webhid-input-reader';
+import { webHidReader } from './hid-reader';
 import { getInputManager } from './input-manager';
 
 export interface InputDiagnostics {

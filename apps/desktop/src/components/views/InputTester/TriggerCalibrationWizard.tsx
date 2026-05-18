@@ -9,7 +9,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { webHidReader } from '../../../lib/game/webhid-input-reader';
+import { webHidReader } from '../../../lib/input/hid-reader';
 
 // ── Types ──
 

@@ -6,7 +6,7 @@
 
 import { useEffect, useState } from 'react';
 import type { InputBinding } from '@shared/types/controls';
-import { getInputManager } from '../../../../../lib/game/input-manager';
+import { getInputManager } from '../../../../../lib/input/input-manager';
 import './BindingListener.css';
 
 const MODIFIER_CODES = new Set([

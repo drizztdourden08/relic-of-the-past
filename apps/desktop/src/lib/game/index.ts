@@ -13,7 +13,7 @@ export { setItemOverride, clearItemOverrides } from './randomizer';
 export { pushLiveSettings, requiresRestart, LIVE_SETTINGS } from './live-settings';
 export { initMasterVolume, setMasterVolume, suspendAudio, resumeAudio } from './audio-volume';
 export { getFps } from './fps';
-export { getInputManager, resolveFunctionMappingIcon } from './input-manager';
+export { getInputManager, resolveFunctionMappingIcon } from '../input/input-manager';
 export type { UnknownItemEntry } from './tracker';
 export {
   initTrackerBridge, destroyTrackerBridge,
