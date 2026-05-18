@@ -6,7 +6,7 @@ export interface RadioOption<T extends string = string> {
   description?: string;
 }
 
-interface RadioGroupProps<T extends string = string> {
+export interface RadioGroupProps<T extends string = string> {
   value: T;
   options: RadioOption<T>[];
   onChange: (value: T) => void;
@@ -17,16 +17,18 @@ interface RadioGroupProps<T extends string = string> {
   name?: string;
 }
 
-export function RadioGroup<T extends string = string>({
-  value,
-  options,
-  onChange,
-  label,
-  description,
-  direction = 'horizontal',
-  disabled = false,
-  name,
-}: RadioGroupProps<T>) {
+export const RadioGroup = <T extends string = string>(props: RadioGroupProps<T>) => {
+  const {
+    value,
+    options,
+    onChange,
+    label,
+    description,
+    direction = 'horizontal',
+    disabled = false,
+    name,
+  } = props;
+
   const groupName = name ?? `radio-${label?.replace(/\s+/g, '-').toLowerCase() ?? 'group'}`;
 
   return (
@@ -64,4 +66,4 @@ export function RadioGroup<T extends string = string>({
       </div>
     </fieldset>
   );
-}
+};

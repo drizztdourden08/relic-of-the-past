@@ -1,8 +1,7 @@
 import { useState, useRef, useCallback, type DragEvent } from 'react';
 import './DropZone.css';
 
-interface DropZoneProps {
-  /** Accepted file extensions (e.g. ['.zip', '.7z']) */
+export interface DropZoneProps {
   accept?: string[];
   label?: string;
   hint?: string;
@@ -10,13 +9,14 @@ interface DropZoneProps {
   onDrop: (files: File[]) => void;
 }
 
-export function DropZone({
-  accept,
-  label = 'Drop files here',
-  hint,
-  disabled = false,
-  onDrop,
-}: DropZoneProps) {
+export const DropZone = (props: DropZoneProps) => {
+  const {
+    accept,
+    label = 'Drop files here',
+    hint,
+    disabled = false,
+    onDrop,
+  } = props;
   const [active, setActive] = useState(false);
   const dragCounter = useRef(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -93,4 +93,4 @@ export function DropZone({
       />
     </div>
   );
-}
+};

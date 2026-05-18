@@ -6,13 +6,15 @@ export interface TabItem {
   icon?: string;
 }
 
-interface TabBarProps {
+export interface TabBarProps {
   tabs: TabItem[];
   activeTab: string;
   onTabChange: (tabId: string) => void;
 }
 
-export function TabBar({ tabs, activeTab, onTabChange }: TabBarProps) {
+export const TabBar = (props: TabBarProps) => {
+  const { tabs, activeTab, onTabChange } = props;
+
   return (
     <nav className="tab-bar" role="tablist">
       {tabs.map((tab) => (
@@ -30,4 +32,4 @@ export function TabBar({ tabs, activeTab, onTabChange }: TabBarProps) {
       ))}
     </nav>
   );
-}
+};

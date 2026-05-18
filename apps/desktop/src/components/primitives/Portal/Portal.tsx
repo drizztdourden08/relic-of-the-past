@@ -1,19 +1,6 @@
-/**
- * Portal — renders children into a named layer in the portal root.
- *
- * Layers are z-ordered DOM containers managed by a single #portal-root.
- * Higher-priority layers render on top. Each layer is created on first use.
- *
- * Usage:
- *   <Portal layer="toast">
- *     <MyToast />
- *   </Portal>
- */
-
 import { useLayoutEffect, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
-/** Layer definitions — name → z-index. Add new layers here. */
 const LAYERS = {
   overlay: 100,
   modal: 200,
@@ -24,13 +11,12 @@ const LAYERS = {
 
 export type PortalLayer = keyof typeof LAYERS;
 
-interface PortalProps {
+export interface PortalProps {
   layer: PortalLayer;
   children: ReactNode;
 }
 
-/** Lazily ensures #portal-root exists in the DOM. */
-function getPortalRoot(): HTMLElement {
+const getPortalRoot = (): HTMLElement => {
   let root = document.getElementById('portal-root');
   if (!root) {
     root = document.createElement('div');
@@ -42,10 +28,9 @@ function getPortalRoot(): HTMLElement {
     document.body.appendChild(root);
   }
   return root;
-}
+};
 
-/** Gets or creates a layer container inside the portal root. */
-function getLayerContainer(layer: PortalLayer): HTMLElement {
+const getLayerContainer = (layer: PortalLayer): HTMLElement => {
   const root = getPortalRoot();
   const id = `portal-layer-${layer}`;
   let el = document.getElementById(id);
@@ -59,9 +44,10 @@ function getLayerContainer(layer: PortalLayer): HTMLElement {
     root.appendChild(el);
   }
   return el;
-}
+};
 
-export function Portal({ layer, children }: PortalProps): React.ReactPortal | null {
+export const Portal = (props: PortalProps): React.ReactPortal | null => {
+  const { layer, children } = props;
   const containerRef = useRef<HTMLElement | null>(null);
 
   useLayoutEffect(() => {
@@ -69,9 +55,8 @@ export function Portal({ layer, children }: PortalProps): React.ReactPortal | nu
   }, [layer]);
 
   if (!containerRef.current) {
-    // First render — get synchronously (safe because getLayerContainer is idempotent)
     containerRef.current = getLayerContainer(layer);
   }
 
   return createPortal(children, containerRef.current);
-}
+};
