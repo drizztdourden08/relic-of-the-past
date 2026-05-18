@@ -1,42 +1,13 @@
-import type { Requirement } from '../types';
+import type { Requirement } from '../../types';
 import {
-  hasSword, hasBeamSword, hasMeleeWeapon,
-  canLiftRocks, canLiftHeavyRocks,
-  canShootArrows, canUseBombs, canBombOrBonk,
-  hasFireSource, canMeltThings, canRetrieveTablet,
+  hasSword, hasBeamSword,
+  canLiftRocks, canShootArrows, canUseBombs,
+  hasFireSource, canMeltThings,
   canActivateCrystalSwitch, canKillMostThings,
-  hasCrystals,
-} from './helpers';
+} from '../helpers';
 
-/**
- * Per-check local access rules. Keys are check IDs matching the check
- * definition files. Values are the Requirement needed to access the check
- * WITHIN its region. Checks with no local rule are omitted.
- */
-export const CHECK_RULES: Record<string, Requirement> = {
-  // ── Light World Overworld ──────────────────────────────────────────
-  'Ether Tablet': canRetrieveTablet,
-  'Bombos Tablet': canRetrieveTablet,
-  'Old Man': 'Lamp',
-  'Spectacle Rock': 'Magic Mirror',
-  'Sahasrahla': 'Green Pendant',
-  'Master Sword Pedestal': { count: ['Pendants', 3] },
-  'Hobo': 'Flippers',
-  'Sick Kid': { count: ['Bottles', 1] },
-  'Library': 'Pegasus Boots',
-  'Magic Bat': 'Magic Powder',
-  'Potion Shop': 'Mushroom',
-  'Sunken Treasure': 'Open Floodgate',
-  'Flute Spot': 'Shovel',
-  'Flute Activation Spot': 'Flute',
-  'Missing Smith': canLiftHeavyRocks,
-  "Zora's Ledge": 'Flippers',
-
-  // ── Dark World Overworld ───────────────────────────────────────────
-  'Digging Game': 'Shovel',
-  'Purple Chest': canLiftHeavyRocks,
-  'Blacksmith': canLiftHeavyRocks,
-
+/** Check rules for dungeon-internal locations. */
+export const DUNGEON_CHECK_RULES: Record<string, Requirement> = {
   // ── Hyrule Castle / Sewers ─────────────────────────────────────────
   'Sewers - Dark Cross': 'Lamp',
   'Sewers - Key Rat Key Drop': 'Lamp',

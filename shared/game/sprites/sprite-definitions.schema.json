@@ -1,0 +1,173 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Sprite Extraction Definitions",
+  "description": "Defines sprites to extract from the user's ROM at runtime.",
+  "type": "object",
+  "required": ["version", "sprites"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "integer", "const": 1 },
+    "description": { "type": "string" },
+    "sprites": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/SpriteEntry" }
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SpriteEntry": {
+      "type": "object",
+      "required": ["file", "label", "category", "extract"],
+      "properties": {
+        "file": {
+          "type": "string",
+          "description": "Output filename (without extension)."
+        },
+        "label": {
+          "type": "string",
+          "description": "Human-readable display name."
+        },
+        "category": {
+          "type": "string",
+          "enum": ["hud", "drop", "receipt"],
+          "description": "Sprite category determining extraction pipeline."
+        },
+        "extract": { "$ref": "#/definitions/ExtractConfig" }
+      },
+      "additionalProperties": false
+    },
+    "ExtractConfig": {
+      "oneOf": [
+        { "$ref": "#/definitions/HudTilesExtract" },
+        { "$ref": "#/definitions/HudSpecialExtract" },
+        { "$ref": "#/definitions/DropStandardExtract" },
+        { "$ref": "#/definitions/DropNumberedExtract" },
+        { "$ref": "#/definitions/DropRupeeExtract" },
+        { "$ref": "#/definitions/DropBigkeyExtract" },
+        { "$ref": "#/definitions/DropShieldFightersExtract" },
+        { "$ref": "#/definitions/DropShieldFireExtract" },
+        { "$ref": "#/definitions/FollowerBombExtract" },
+        { "$ref": "#/definitions/ReceiptExtract" }
+      ]
+    },
+    "HudTilesExtract": {
+      "type": "object",
+      "required": ["method", "tiles"],
+      "properties": {
+        "method": { "type": "string", "const": "hud-tiles" },
+        "tiles": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "minItems": 1,
+          "description": "VRAM tile indices to compose the sprite."
+        }
+      },
+      "additionalProperties": false
+    },
+    "HudSpecialExtract": {
+      "type": "object",
+      "required": ["method", "tiles", "layout"],
+      "properties": {
+        "method": { "type": "string", "const": "hud-special" },
+        "tiles": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "minItems": 1
+        },
+        "layout": {
+          "type": "string",
+          "enum": ["8x16-centered"],
+          "description": "Tile layout strategy."
+        }
+      },
+      "additionalProperties": false
+    },
+    "DropStandardExtract": {
+      "type": "object",
+      "required": ["method", "spriteType", "palette"],
+      "properties": {
+        "method": { "type": "string", "const": "drop-standard" },
+        "spriteType": { "type": "integer", "description": "OAM sprite type ID." },
+        "palette": { "type": "integer", "description": "Palette row index." }
+      },
+      "additionalProperties": false
+    },
+    "DropNumberedExtract": {
+      "type": "object",
+      "required": ["method", "spriteType", "palette", "group"],
+      "properties": {
+        "method": { "type": "string", "const": "drop-numbered" },
+        "spriteType": { "type": "integer" },
+        "palette": { "type": "integer" },
+        "group": { "type": "integer", "description": "Number group variant." }
+      },
+      "additionalProperties": false
+    },
+    "DropRupeeExtract": {
+      "type": "object",
+      "required": ["method", "palette"],
+      "properties": {
+        "method": { "type": "string", "const": "drop-rupee" },
+        "palette": { "type": "integer", "description": "Rupee color palette." }
+      },
+      "additionalProperties": false
+    },
+    "DropBigkeyExtract": {
+      "type": "object",
+      "required": ["method", "palette"],
+      "properties": {
+        "method": { "type": "string", "const": "drop-bigkey" },
+        "palette": { "type": "integer" }
+      },
+      "additionalProperties": false
+    },
+    "DropShieldFightersExtract": {
+      "type": "object",
+      "required": ["method", "sheet", "tiles", "palette"],
+      "properties": {
+        "method": { "type": "string", "const": "drop-shield-fighters" },
+        "sheet": { "type": "integer", "description": "Sprite sheet index." },
+        "tiles": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "minItems": 1
+        },
+        "palette": { "type": "integer" }
+      },
+      "additionalProperties": false
+    },
+    "DropShieldFireExtract": {
+      "type": "object",
+      "required": ["method", "sheet", "tiles", "palette"],
+      "properties": {
+        "method": { "type": "string", "const": "drop-shield-fire" },
+        "sheet": { "type": "integer" },
+        "tiles": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "minItems": 1
+        },
+        "palette": { "type": "integer" }
+      },
+      "additionalProperties": false
+    },
+    "FollowerBombExtract": {
+      "type": "object",
+      "required": ["method", "palette"],
+      "properties": {
+        "method": { "type": "string", "const": "follower-bomb" },
+        "palette": { "type": "integer" }
+      },
+      "additionalProperties": false
+    },
+    "ReceiptExtract": {
+      "type": "object",
+      "required": ["method", "receiptId"],
+      "properties": {
+        "method": { "type": "string", "const": "receipt" },
+        "receiptId": { "type": "integer", "description": "Receipt animation ID." }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -10,44 +10,6 @@ import {
 const VANILLA_INTRO_CONNECTION: RegionConnection =
   { from: 'menu', to: 'links-house', entrance: 'Vanilla Intro' };
 
-// ─── Preset Configs ───
-
-export const VANILLA_CONFIG: LogicConfig = {
-  mode: 'vanilla',
-  startingRegion: 'menu',
-  startingItems: [],
-  saveQuitDestinations: [],
-  moonPearlRequired: true,
-  medallionRequirements: { miseryMire: 'Ether', turtleRock: 'Quake' },
-  crystalsForGT: 7,
-  crystalsForGanon: 7,
-  pendantsForPedestal: 3,
-  swordMode: 'normal',
-  goal: 'ganon',
-  overworldShuffle: false,
-  dungeonShuffle: false,
-  keysanity: false,
-  bigKeyShuffle: false,
-};
-
-export const OPEN_CONFIG: LogicConfig = {
-  mode: 'open',
-  startingRegion: 'menu',
-  startingItems: [],
-  saveQuitDestinations: ['light-world', 'sanctuary', 'old-man-cave'],
-  moonPearlRequired: true,
-  medallionRequirements: { miseryMire: 'Ether', turtleRock: 'Quake' },
-  crystalsForGT: 7,
-  crystalsForGanon: 7,
-  pendantsForPedestal: 3,
-  swordMode: 'normal',
-  goal: 'ganon',
-  overworldShuffle: false,
-  dungeonShuffle: false,
-  keysanity: false,
-  bigKeyShuffle: false,
-};
-
 // ─── Rule Resolution ───
 
 export interface ResolvedRules {

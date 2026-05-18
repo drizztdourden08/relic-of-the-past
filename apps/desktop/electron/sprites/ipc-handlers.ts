@@ -4,7 +4,7 @@ import { readFile, readdir, mkdir, writeFile, access, rm } from 'fs/promises';
 import { getUserDataPath } from '../lib/paths';
 import { getMainWindow } from '../window';
 import { extractAllItemSprites } from '../../../../shared/asset-extraction/item-sprites/extract-items';
-import spriteDefinitions from '../../../../shared/data/sprite-definitions.json';
+import spriteDefinitions from '../../../../shared/game/sprites/definitions.json';
 
 function spriteDir(romFile: string): string {
   const stem = basename(romFile, extname(romFile));

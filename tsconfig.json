@@ -13,10 +13,9 @@
     "isolatedModules": true,
     "noEmit": true,
     "sourceMap": true,
-    "baseUrl": ".",
     "paths": {
-      "@shared/*": ["shared/*"],
-      "@app/*": ["apps/desktop/src/*"]
+      "@shared/*": ["./shared/*"],
+      "@app/*": ["./apps/desktop/src/*"]
     }
   },
   "include": [
