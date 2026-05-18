@@ -67,12 +67,6 @@ export function DeviceCard({ device, onDragStart, onAssign }: DeviceCardProps): 
       onDragStart={handleDragStart}
       data-device-id={device.id}
     >
-      {device.stale && (
-        <div className="device-card__stale-overlay">
-          <span className="device-card__stale-label">STALE</span>
-          <span className="device-card__stale-sub">No HID data</span>
-        </div>
-      )}
       <div className="device-card__left">
         <button
           className={`device-card__icon-btn ${statusClass}`}
@@ -83,6 +77,7 @@ export function DeviceCard({ device, onDragStart, onAssign }: DeviceCardProps): 
           <img src={iconSrc} alt={device.controllerFamily} className="device-card__icon" />
         </button>
         {apiLabel && <span className={`device-card__api device-card__api--${device.inputApi}`}>{apiLabel}</span>}
+        {device.stale && <span className="device-card__api device-card__api--stale">STALE</span>}
       </div>
       <div className="device-card__info">
         <span className="device-card__name">{device.displayName}</span>

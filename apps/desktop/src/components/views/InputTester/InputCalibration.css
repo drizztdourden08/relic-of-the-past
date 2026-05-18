@@ -159,6 +159,44 @@
   border-color: var(--color-border-default);
 }
 
+/* ─── Stale device overlay ─── */
+.input-cal__card--stale {
+  border-color: #dc2626;
+  animation: stale-card-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes stale-card-pulse {
+  0%, 100% { border-color: #dc2626; }
+  50% { border-color: #991b1b; }
+}
+
+.input-cal__stale-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(127, 29, 29, 0.85);
+  z-index: 10;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.input-cal__stale-label {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: #fca5a5;
+  text-shadow: 0 0 8px rgba(220, 38, 38, 0.8);
+}
+
+.input-cal__stale-sub {
+  font-size: 11px;
+  color: #fecaca;
+  margin-top: 4px;
+}
+
 .input-cal__card-header {
   display: flex;
   align-items: center;

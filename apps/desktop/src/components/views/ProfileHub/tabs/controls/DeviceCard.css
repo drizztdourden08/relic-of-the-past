@@ -16,39 +16,18 @@
 /* ─── Stale state ─── */
 .device-card--stale {
   border-color: #dc2626;
-  animation: stale-pulse 1.5s ease-in-out infinite;
 }
 
-@keyframes stale-pulse {
-  0%, 100% { border-color: #dc2626; }
-  50% { border-color: #991b1b; }
+.device-card__api--stale {
+  background: rgba(220, 38, 38, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(220, 38, 38, 0.4);
+  animation: stale-badge-pulse 1.5s ease-in-out infinite;
 }
 
-.device-card__stale-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: rgba(127, 29, 29, 0.85);
-  z-index: 10;
-  border-radius: inherit;
-  pointer-events: none;
-}
-
-.device-card__stale-label {
-  font-size: 16px;
-  font-weight: 900;
-  letter-spacing: 2px;
-  color: #fca5a5;
-  text-shadow: 0 0 8px rgba(220, 38, 38, 0.8);
-}
-
-.device-card__stale-sub {
-  font-size: 10px;
-  color: #fecaca;
-  margin-top: 2px;
+@keyframes stale-badge-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 .device-card:hover {

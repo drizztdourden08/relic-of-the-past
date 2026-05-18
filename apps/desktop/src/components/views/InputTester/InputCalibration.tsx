@@ -747,9 +747,16 @@ function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, 
   const [calibrationTarget, setCalibrationTarget] = useState<CalibrationTarget>(null);
 
   const controllerIcon = profile ? CONTROLLER_ICON_MAP[profile.family] : null;
+  const isStale = webHidReader.isDeviceStale(deviceKey);
 
   return (
-    <div className="input-cal__card">
+    <div className={`input-cal__card ${isStale ? 'input-cal__card--stale' : ''}`}>
+      {isStale && (
+        <div className="input-cal__stale-overlay">
+          <span className="input-cal__stale-label">STALE</span>
+          <span className="input-cal__stale-sub">No HID data</span>
+        </div>
+      )}
       <div className="input-cal__card-header">
         {controllerIcon && (
           <img src={controllerIcon} alt="" draggable={false} style={{ width: 28, height: 28, opacity: 0.7, flexShrink: 0 }} />
