@@ -4,20 +4,13 @@
  * Rendered as a portal popover anchored below the gear button.
  */
 import { useRef, useLayoutEffect, useState, useEffect, type ReactNode } from 'react';
-import { Portal } from '../../primitives/Portal';
-import { SegmentedControl } from '../../primitives/SegmentedControl';
-import { Slider } from '../../primitives/Slider';
-import type { WidgetState, SnapSide, WidgetMode } from './types';
+import { Portal } from '../../../primitives/Portal';
+import { SegmentedControl } from '../../../primitives/SegmentedControl';
+import { Slider } from '../../../primitives/Slider';
+import type { WidgetState, SnapSide, WidgetMode } from '../types';
+import { POSITION_OPTIONS } from '../constants';
 
 type PositionValue = 'left' | 'right' | 'top' | 'bottom' | 'float';
-
-const POSITION_OPTIONS: { value: PositionValue; label: string }[] = [
-  { value: 'left', label: '◧' },
-  { value: 'right', label: '◨' },
-  { value: 'top', label: '▽' },
-  { value: 'bottom', label: '△' },
-  { value: 'float', label: '⊡' },
-];
 
 interface WidgetSettingsProps {
   widget: WidgetState;

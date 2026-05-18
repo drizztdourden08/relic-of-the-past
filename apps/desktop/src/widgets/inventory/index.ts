@@ -1,1 +1,2 @@
-export { InventoryWidgetContent, InventoryWidgetSettings } from './InventoryWidget';
+export { InventoryWidgetContent } from './InventoryWidget';
+export { InventoryWidgetSettings } from './sub-components/InventoryWidgetSettings';

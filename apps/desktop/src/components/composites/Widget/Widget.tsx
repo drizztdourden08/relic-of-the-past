@@ -5,10 +5,10 @@
  */
 import { useState, useCallback, useRef, useMemo } from 'react';
 import type { WidgetState, SnapSide } from './types';
-import { getWidgetDefinition } from './types';
+import { getWidgetDefinition } from './behavior/createWidgetState';
 import { useWidgetDrag } from './behavior/useWidgetDrag';
 import { useWidgetResize, getDockedResizeEdge } from './behavior/useWidgetResize';
-import { WidgetSettings } from './WidgetSettings';
+import { WidgetSettings } from './sub-components/WidgetSettings';
 
 interface WidgetProps {
   state: WidgetState;

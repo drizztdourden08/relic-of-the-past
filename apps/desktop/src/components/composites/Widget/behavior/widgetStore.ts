@@ -7,7 +7,8 @@
  */
 
 import type { WidgetLayout, WidgetState } from '../types';
-import { createDefaultLayout, WIDGET_DEFINITIONS, createDefaultWidgetState } from '../types';
+import { WIDGET_DEFINITIONS } from '../constants';
+import { createDefaultLayout, createDefaultWidgetState } from './createWidgetState';
 
 const STORAGE_KEY = 'widget-layout';
 

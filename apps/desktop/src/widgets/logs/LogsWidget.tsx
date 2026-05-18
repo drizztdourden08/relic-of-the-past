@@ -4,13 +4,8 @@
  */
 import { useState, useEffect, useRef } from 'react';
 import { subscribe, getEntries, CHANNEL_COLORS, type LogEntry } from '../../lib/log-bus';
-
-const MAX_ENTRIES = 200;
-
-const formatTime = (ts: number): string => {
-  const d = new Date(ts);
-  return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;
-}
+import { MAX_ENTRIES } from './constants';
+import { formatTime } from './behavior/formatTime';
 
 export const LogsWidgetContent = () => {
   const [entries, setEntries] = useState<LogEntry[]>(() => getEntries());
