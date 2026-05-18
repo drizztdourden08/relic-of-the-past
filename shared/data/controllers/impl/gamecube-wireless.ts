@@ -63,6 +63,10 @@ const ICONS: Record<string, ButtonIcon> = {
   'gc-dright': icon('gc-dright', 'D-Pad Right'),
   'gc-home':   icon('gc-home', 'Home'),
   'gc-capture':icon('gc-capture', 'Capture'),
+  'gc-stick-l-up':    icon('gc-stick-l-up', 'Stick Up'),
+  'gc-stick-l-down':  icon('gc-stick-l-down', 'Stick Down'),
+  'gc-stick-l-left':  icon('gc-stick-l-left', 'Stick Left'),
+  'gc-stick-l-right': icon('gc-stick-l-right', 'Stick Right'),
 };
 
 // ── Haptic Patterns ──
@@ -78,6 +82,10 @@ function btn(snesButton: ButtonMapping['snesButton'], index: number, iconData: B
   return { snesButton, binding: { type: 'gamepad-button', index }, icon: iconData };
 }
 
+function axis(snesButton: ButtonMapping['snesButton'], axisIndex: number, direction: '+' | '-', iconData: ButtonIcon | null): ButtonMapping {
+  return { snesButton, binding: { type: 'gamepad-axis', axisIndex, direction }, icon: iconData };
+}
+
 const DEFAULT_MAPPINGS: ButtonMapping[] = [
   btn('B',      1,  ICONS['gc-b']),
   btn('A',      0,  ICONS['gc-a']),
@@ -87,10 +95,11 @@ const DEFAULT_MAPPINGS: ButtonMapping[] = [
   btn('R',      5,  ICONS['gc-r']),
   btn('Select', 9,  ICONS['gc-chat']),
   btn('Start',  8,  ICONS['gc-start']),
-  btn('Up',     10, ICONS['gc-dup']),
-  btn('Down',   11, ICONS['gc-ddown']),
-  btn('Left',   12, ICONS['gc-dleft']),
-  btn('Right',  13, ICONS['gc-dright']),
+  // Left stick for movement
+  axis('Up',    1, '-', ICONS['gc-stick-l-up']),
+  axis('Down',  1, '+', ICONS['gc-stick-l-down']),
+  axis('Left',  0, '-', ICONS['gc-stick-l-left']),
+  axis('Right', 0, '+', ICONS['gc-stick-l-right']),
 ];
 
 // ── Implementation ──

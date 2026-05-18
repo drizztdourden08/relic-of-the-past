@@ -280,7 +280,21 @@ function TriggerBar({ value, label }: { value: number; label: string }) {
 
 // ── Joystick Circle Component ──
 
-function StickCircle({ x, y, label }: { x: number; y: number; label: string }) {
+function getStickDirectionIcon(x: number, y: number, prefix: string): string | null {
+  const threshold = 0.4;
+  const ax = Math.abs(x);
+  const ay = Math.abs(y);
+  if (ax < threshold && ay < threshold) return getButtonIconUrl(prefix);
+  if (ax > ay) {
+    if (ax > threshold && ay > threshold) return getButtonIconUrl(`${prefix}-horizontal`);
+    return getButtonIconUrl(x > 0 ? `${prefix}-right` : `${prefix}-left`);
+  } else {
+    if (ax > threshold && ay > threshold) return getButtonIconUrl(`${prefix}-vertical`);
+    return getButtonIconUrl(y > 0 ? `${prefix}-down` : `${prefix}-up`);
+  }
+}
+
+function StickCircle({ x, y, label, iconPrefix }: { x: number; y: number; label: string; iconPrefix?: string }) {
   // x, y are -1..+1, clamped
   const clampX = Math.max(-1, Math.min(1, x));
   const clampY = Math.max(-1, Math.min(1, y));
@@ -305,6 +319,12 @@ function StickCircle({ x, y, label }: { x: number; y: number; label: string }) {
       <span className="input-cal__stick-values">
         {clampX.toFixed(2)}, {clampY.toFixed(2)}
       </span>
+      {iconPrefix && (() => {
+        const iconUrl = getStickDirectionIcon(clampX, clampY, iconPrefix);
+        return iconUrl ? (
+          <img src={iconUrl} alt="" draggable={false} style={{ width: 32, height: 32, marginTop: 2, opacity: 0.85 }} />
+        ) : null;
+      })()}
     </div>
   );
 }
@@ -793,6 +813,11 @@ function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, 
           }
         }
         if (stickPairs.length === 0 && triggerAxes.length === 0) return null;
+        const stickIconPrefixes = profile?.id === 'gamecube-wireless'
+          ? ['gc-stick-l', 'gc-stick-c']
+          : profile?.id === 'switch-pro-2'
+            ? ['switch-stick-l', 'switch-stick-r']
+            : [];
         return (
           <div className="input-cal__sticks">
             {stickPairs.map((s, pairIdx) => (
@@ -801,6 +826,7 @@ function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, 
                   x={state.axes[s.xIdx] ?? 0}
                   y={state.axes[s.yIdx] ?? 0}
                   label={s.label}
+                  iconPrefix={stickIconPrefixes[pairIdx]}
                 />
                 <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
                   <AxisRecordButton

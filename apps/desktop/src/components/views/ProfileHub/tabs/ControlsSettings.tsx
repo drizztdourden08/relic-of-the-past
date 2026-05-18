@@ -336,10 +336,10 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
     const vid = confirmPreset.vid ? padHex(confirmPreset.vid) : '';
     const pid = confirmPreset.pid ? padHex(confirmPreset.pid) : '';
 
-    // Strip preset icons — store only sourceVid/sourcePid for render-time resolution
+    // Strip button icons (re-derived at render time) but keep axis icons (direction-specific)
     const mappingsWithSource = preset.defaultMappings.map(m => ({
       ...m,
-      icon: null,
+      icon: m.binding.type === 'gamepad-axis' ? m.icon : null,
       sourceVid: m.binding.type !== 'keyboard' ? vid : null,
       sourcePid: m.binding.type !== 'keyboard' ? pid : null,
     }));
@@ -457,7 +457,10 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
       // Gamepad bindings: ALWAYS resolve from CONTROLLER_PROFILES via sourceVid:sourcePid
       const vid = existing.sourceVid ? padHex(existing.sourceVid) : null;
       const pid = existing.sourcePid ? padHex(existing.sourcePid) : null;
-      if (!vid || !pid) return { ...existing, icon: null };
+      if (!vid || !pid) {
+        // No source device — use the stored icon if present (e.g. default mappings with stick icons)
+        return existing.icon?.key ? existing : { ...existing, icon: null };
+      }
 
       const profile = findProfileByVidPid(vid, pid);
       if (!profile) return { ...existing, icon: null };
@@ -467,6 +470,10 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
         if (b) return { ...existing, icon: { key: b.icon, label: b.label, path: null } };
       }
       if (existing.binding.type === 'gamepad-axis') {
+        // Use the stored icon if it has a valid key (e.g. stick direction icons)
+        if (existing.icon?.key) {
+          return existing;
+        }
         const ax = profile.axes?.[existing.binding.axisIndex];
         if (ax) {
           const dir = existing.binding.direction === '+' ? '+' : '−';
@@ -636,14 +643,26 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
         <div className="controls-settings__section-header">Detected Devices</div>
         <div className="controls-settings__device-list">
           {devices.filter(d => !d.displayName.toLowerCase().includes('mouse')).map(device => (
-            <DeviceCard key={device.id} device={device} />
+            <DeviceCard
+              key={device.id}
+              device={device}
+              onAssign={(d) => {
+                if (!d.presetId) return;
+                setConfirmPreset({
+                  presetId: d.presetId,
+                  deviceName: d.displayName,
+                  vid: d.vendorId ?? '',
+                  pid: d.productId ?? '',
+                });
+              }}
+            />
           ))}
           {devices.filter(d => !d.displayName.toLowerCase().includes('mouse')).length === 0 && (
             <p className="controls-settings__no-devices">No devices detected</p>
           )}
         </div>
         <p className="controls-settings__device-hint">
-          Drag a device onto the bindings to apply its preset.
+          Click controller icon or drag onto bindings to assign.
         </p>
       </div>
 

@@ -24,7 +24,7 @@ export const BUTTON_ICON_MAP: Record<string, string> = {
   'switch-plus':    `${SWITCH_BASE}/switch_button_plus.svg`,
   'switch-minus':   `${SWITCH_BASE}/switch_button_minus.svg`,
   'switch-home':    `${SWITCH_BASE}/switch_button_home.svg`,
-  'switch-capture': `${SWITCH_BASE}/switch_button_minus.svg`, // no dedicated capture icon
+  'switch-capture': `${SWITCH_BASE}/switch_button_capture.svg`,
   'switch-c':       `${SWITCH_BASE}/switch_button_c.svg`,
   'switch-gl':      `${SWITCH_BASE}/switch_button_gl.svg`,
   'switch-gr':      `${SWITCH_BASE}/switch_button_gr.svg`,
@@ -34,6 +34,22 @@ export const BUTTON_ICON_MAP: Record<string, string> = {
   'switch-ddown':   `${SWITCH_BASE}/switch_dpad_down.svg`,
   'switch-dleft':   `${SWITCH_BASE}/switch_dpad_left.svg`,
   'switch-dright':  `${SWITCH_BASE}/switch_dpad_right.svg`,
+
+  // Switch stick directions
+  'switch-stick-l':            `${SWITCH_BASE}/switch_stick_l.svg`,
+  'switch-stick-l-up':         `${SWITCH_BASE}/switch_stick_l_up.svg`,
+  'switch-stick-l-down':       `${SWITCH_BASE}/switch_stick_l_down.svg`,
+  'switch-stick-l-left':       `${SWITCH_BASE}/switch_stick_l_left.svg`,
+  'switch-stick-l-right':      `${SWITCH_BASE}/switch_stick_l_right.svg`,
+  'switch-stick-l-horizontal': `${SWITCH_BASE}/switch_stick_l_horizontal.svg`,
+  'switch-stick-l-vertical':   `${SWITCH_BASE}/switch_stick_l_vertical.svg`,
+  'switch-stick-r':            `${SWITCH_BASE}/switch_stick_r.svg`,
+  'switch-stick-r-up':         `${SWITCH_BASE}/switch_stick_r_up.svg`,
+  'switch-stick-r-down':       `${SWITCH_BASE}/switch_stick_r_down.svg`,
+  'switch-stick-r-left':       `${SWITCH_BASE}/switch_stick_r_left.svg`,
+  'switch-stick-r-right':      `${SWITCH_BASE}/switch_stick_r_right.svg`,
+  'switch-stick-r-horizontal': `${SWITCH_BASE}/switch_stick_r_horizontal.svg`,
+  'switch-stick-r-vertical':   `${SWITCH_BASE}/switch_stick_r_vertical.svg`,
 
   // GameCube Wireless
   'gc-a':           `${GC_BASE}/gc_button_a.svg`,
@@ -52,6 +68,22 @@ export const BUTTON_ICON_MAP: Record<string, string> = {
   'gc-ddown':       `${GC_BASE}/gc_dpad_down.svg`,
   'gc-dleft':       `${GC_BASE}/gc_dpad_left.svg`,
   'gc-dright':      `${GC_BASE}/gc_dpad_right.svg`,
+
+  // GC stick directions
+  'gc-stick-l':            `${GC_BASE}/gc_stick_l.svg`,
+  'gc-stick-l-up':         `${GC_BASE}/gc_stick_l_up.svg`,
+  'gc-stick-l-down':       `${GC_BASE}/gc_stick_l_down.svg`,
+  'gc-stick-l-left':       `${GC_BASE}/gc_stick_l_left.svg`,
+  'gc-stick-l-right':      `${GC_BASE}/gc_stick_l_right.svg`,
+  'gc-stick-l-horizontal': `${GC_BASE}/gc_stick_l_horizontal.svg`,
+  'gc-stick-l-vertical':   `${GC_BASE}/gc_stick_l_vertical.svg`,
+  'gc-stick-c':            `${GC_BASE}/gc_stick_c.svg`,
+  'gc-stick-c-up':         `${GC_BASE}/gc_stick_c_up.svg`,
+  'gc-stick-c-down':       `${GC_BASE}/gc_stick_c_down.svg`,
+  'gc-stick-c-left':       `${GC_BASE}/gc_stick_c_left.svg`,
+  'gc-stick-c-right':      `${GC_BASE}/gc_stick_c_right.svg`,
+  'gc-stick-c-horizontal': `${GC_BASE}/gc_stick_c_horizontal.svg`,
+  'gc-stick-c-vertical':   `${GC_BASE}/gc_stick_c_vertical.svg`,
 
   // Xbox
   'xbox-a':         `${XBOX_BASE}/xbox_button_a.svg`,
@@ -101,10 +133,10 @@ export const BUTTON_ICON_MAP: Record<string, string> = {
   'snes-r':         `${SNES_BASE}/snes_r.svg`,
   'snes-select':    `${SNES_BASE}/snes_select.svg`,
   'snes-start':     `${SNES_BASE}/snes_start.svg`,
-  'snes-dup':       `${SNES_BASE}/snes_dpad.svg`,
-  'snes-ddown':     `${SNES_BASE}/snes_dpad.svg`,
-  'snes-dleft':     `${SNES_BASE}/snes_dpad.svg`,
-  'snes-dright':    `${SNES_BASE}/snes_dpad.svg`,
+  'snes-dup':       `${SNES_BASE}/snes_dpad_up.svg`,
+  'snes-ddown':     `${SNES_BASE}/snes_dpad_down.svg`,
+  'snes-dleft':     `${SNES_BASE}/snes_dpad_left.svg`,
+  'snes-dright':    `${SNES_BASE}/snes_dpad_right.svg`,
 
   // Keyboard
   'kb-a': `${KB_BASE}/keyboard_a.svg`, 'kb-b': `${KB_BASE}/keyboard_b.svg`,

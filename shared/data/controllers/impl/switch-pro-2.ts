@@ -40,6 +40,10 @@ const ICONS: Record<string, ButtonIcon> = {
   'switch-c':      icon('switch-c', 'C Button'),
   'switch-gl':     icon('switch-gl', 'GL'),
   'switch-gr':     icon('switch-gr', 'GR'),
+  'switch-stick-l-up':    icon('switch-stick-l-up', 'Stick Up'),
+  'switch-stick-l-down':  icon('switch-stick-l-down', 'Stick Down'),
+  'switch-stick-l-left':  icon('switch-stick-l-left', 'Stick Left'),
+  'switch-stick-l-right': icon('switch-stick-l-right', 'Stick Right'),
 };
 
 // ── USB Init Commands (bulk OUT on Interface 1) ──
@@ -161,19 +165,24 @@ function btn(snesButton: ButtonMapping['snesButton'], index: number, iconData: B
   return { snesButton, binding: { type: 'gamepad-button', index }, icon: iconData };
 }
 
+function axis(snesButton: ButtonMapping['snesButton'], axisIndex: number, direction: '+' | '-', iconData: ButtonIcon | null): ButtonMapping {
+  return { snesButton, binding: { type: 'gamepad-axis', axisIndex, direction }, icon: iconData };
+}
+
 const DEFAULT_MAPPINGS: ButtonMapping[] = [
-  btn('B',      0,  ICONS['switch-b']),
-  btn('A',      1,  ICONS['switch-a']),
-  btn('Y',      2,  ICONS['switch-y']),
-  btn('X',      3,  ICONS['switch-x']),
+  btn('A',      0,  ICONS['switch-a']),
+  btn('B',      1,  ICONS['switch-b']),
+  btn('X',      2,  ICONS['switch-x']),
+  btn('Y',      3,  ICONS['switch-y']),
   btn('L',      4,  ICONS['switch-l']),
   btn('R',      5,  ICONS['switch-r']),
-  btn('Select', 8,  ICONS['switch-minus']),
-  btn('Start',  9,  ICONS['switch-plus']),
-  btn('Up',     12, ICONS['switch-dup']),
-  btn('Down',   13, ICONS['switch-ddown']),
-  btn('Left',   14, ICONS['switch-dleft']),
-  btn('Right',  15, ICONS['switch-dright']),
+  btn('Start',  8,  ICONS['switch-plus']),
+  btn('Select', 9,  ICONS['switch-minus']),
+  // Left stick for movement
+  axis('Up',    1, '-', ICONS['switch-stick-l-up']),
+  axis('Down',  1, '+', ICONS['switch-stick-l-down']),
+  axis('Left',  0, '-', ICONS['switch-stick-l-left']),
+  axis('Right', 0, '+', ICONS['switch-stick-l-right']),
 ];
 
 // ── Implementation ──

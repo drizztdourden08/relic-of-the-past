@@ -1,7 +1,7 @@
 .device-card {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   padding: 8px 12px;
   background: var(--color-bg-raised);
   border: 1px solid var(--color-border-subtle);
@@ -25,37 +25,55 @@
   pointer-events: none;
 }
 
-/* ─── Status light ─── */
-.device-card__status {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
+/* ─── Icon button (replaces status light) ─── */
+.device-card__left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
   flex-shrink: 0;
 }
 
-.device-card__status--active {
-  background: #4ade80;
-  box-shadow: 0 0 6px rgba(74, 222, 128, 0.6);
+.device-card__icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 4px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: filter 0.2s, transform 0.15s;
 }
 
-.device-card__status--detected {
-  background: #facc15;
-  box-shadow: 0 0 6px rgba(250, 204, 21, 0.4);
-  animation: pulse-status 2s ease-in-out infinite;
+.device-card__icon-btn:hover {
+  transform: scale(1.1);
 }
 
-.device-card__status--disconnected {
-  background: #6b7280;
+.device-card__icon-btn--active .device-card__icon {
+  filter: drop-shadow(0 0 6px rgba(74, 222, 128, 0.8)) drop-shadow(0 0 12px rgba(74, 222, 128, 0.4));
 }
 
-@keyframes pulse-status {
+.device-card__icon-btn--detected .device-card__icon {
+  filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.6)) drop-shadow(0 0 10px rgba(250, 204, 21, 0.3));
+  animation: pulse-icon 2s ease-in-out infinite;
+}
+
+.device-card__icon-btn--disconnected .device-card__icon {
+  filter: grayscale(1) opacity(0.5);
+}
+
+@keyframes pulse-icon {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  50% { opacity: 0.5; }
 }
 
 .device-card__icon {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   flex-shrink: 0;
   object-fit: contain;
 }
@@ -104,17 +122,4 @@
   background: rgba(250, 204, 21, 0.15);
   color: #facc15;
   border: 1px solid rgba(250, 204, 21, 0.3);
-}
-
-.device-card__drag-hint {
-  font-size: 16px;
-  color: var(--color-text-muted);
-  flex-shrink: 0;
-  opacity: 0.4;
-  transition: opacity 0.15s;
-}
-
-.device-card:hover .device-card__drag-hint {
-  opacity: 1;
-  color: var(--color-gold-base);
 }

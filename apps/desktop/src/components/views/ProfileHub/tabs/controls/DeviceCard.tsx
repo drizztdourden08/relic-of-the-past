@@ -1,7 +1,8 @@
 /**
  * DeviceCard — shows a detected input device (gamepad or keyboard).
+ * Two-column layout: left = controller icon (acts as status light + click to assign),
+ * right = label + API badge.
  * Draggable: drop onto the binding editor to apply that device's preset.
- * Status light: green = activated (Web API ready), yellow = detected but not activated.
  */
 
 import type { DetectedDevice } from '@shared/types/controls';
@@ -10,6 +11,7 @@ import './DeviceCard.css';
 interface DeviceCardProps {
   device: DetectedDevice;
   onDragStart?: (device: DetectedDevice) => void;
+  onAssign?: (device: DetectedDevice) => void;
 }
 
 /** Map controller family → silhouette icon path */
@@ -22,7 +24,12 @@ const FAMILY_ICON: Record<string, string> = {
   generic: '/buttons/generic/generic_joystick.svg',
 };
 
-export function DeviceCard({ device, onDragStart }: DeviceCardProps): JSX.Element {
+/** Map specific preset → more accurate icon */
+const PRESET_ICON: Record<string, string> = {
+  'gamecube-wireless': '/buttons/gc/controller_gamecube.svg',
+};
+
+export function DeviceCard({ device, onDragStart, onAssign }: DeviceCardProps): JSX.Element {
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData('application/x-device-id', device.id);
     e.dataTransfer.setData('application/x-preset-id', device.presetId ?? '');
@@ -32,18 +39,18 @@ export function DeviceCard({ device, onDragStart }: DeviceCardProps): JSX.Elemen
     onDragStart?.(device);
   };
 
-  const iconSrc = FAMILY_ICON[device.controllerFamily] ?? FAMILY_ICON.generic;
+  const iconSrc = (device.presetId && PRESET_ICON[device.presetId]) ?? FAMILY_ICON[device.controllerFamily] ?? FAMILY_ICON.generic;
 
   const statusClass = !device.connected
-    ? 'device-card__status--disconnected'
+    ? 'device-card__icon-btn--disconnected'
     : device.activated
-      ? 'device-card__status--active'
-      : 'device-card__status--detected';
+      ? 'device-card__icon-btn--active'
+      : 'device-card__icon-btn--detected';
 
   const statusTitle = !device.connected
     ? 'Disconnected'
     : device.activated
-      ? 'Ready'
+      ? 'Click to assign'
       : device.inputApi === 'hid'
         ? 'Connecting via HID…'
         : 'Press a button to activate';
@@ -58,14 +65,22 @@ export function DeviceCard({ device, onDragStart }: DeviceCardProps): JSX.Elemen
       className={`device-card ${device.connected ? '' : 'device-card--disconnected'}`}
       draggable
       onDragStart={handleDragStart}
+      data-device-id={device.id}
     >
-      <span className={`device-card__status ${statusClass}`} title={statusTitle} />
-      <img src={iconSrc} alt={device.controllerFamily} className="device-card__icon" />
-      <div className="device-card__info">
-        <span className="device-card__name">{device.displayName}</span>
+      <div className="device-card__left">
+        <button
+          className={`device-card__icon-btn ${statusClass}`}
+          onClick={() => onAssign?.(device)}
+          title={statusTitle}
+          type="button"
+        >
+          <img src={iconSrc} alt={device.controllerFamily} className="device-card__icon" />
+        </button>
         {apiLabel && <span className={`device-card__api device-card__api--${device.inputApi}`}>{apiLabel}</span>}
       </div>
-      <span className="device-card__drag-hint" title="Drag to assign to profile">⠿</span>
+      <div className="device-card__info">
+        <span className="device-card__name">{device.displayName}</span>
+      </div>
     </div>
   );
 }
