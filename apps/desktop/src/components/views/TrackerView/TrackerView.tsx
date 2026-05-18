@@ -1,12 +1,12 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import type { CheckDefinition } from '@shared/types/tracker';
-import type { CheckStatus } from '@shared/lib/logic-eval';
-import { computeTrackerSnapshot } from '@shared/lib/logic-eval';
-import { resolveRules, VANILLA_CONFIG } from '@shared/lib/resolve-rules';
-import { ALL_CHECKS } from '@shared/data/checks';
-import { getCheckTags } from '@shared/data/checks/tags';
-import type { GroupDimension, FilterState } from '@shared/data/checks/grouping';
-import { buildGroupTree, filterChecks } from '@shared/data/checks/grouping';
+import type { CheckDefinition } from '@shared/game/types';
+import type { CheckStatus } from '@shared/game/logic/eval';
+import { computeTrackerSnapshot } from '@shared/game/logic/eval';
+import { resolveRules, VANILLA_CONFIG } from '@shared/game/logic/presets';
+import { ALL_CHECKS } from '@shared/game/checks';
+import { getCheckTags } from '@shared/game/checks/tags';
+import type { GroupDimension, FilterState } from '@shared/game/checks/grouping';
+import { buildGroupTree, filterChecks } from '@shared/game/checks/grouping';
 import {
   onInventoryChanged, onUnknownItem, onCompletedChecksChanged,
   getCurrentInventory, getCompletedChecks, getUnknownItems, loadUnknownItems,

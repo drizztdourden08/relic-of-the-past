@@ -5,9 +5,9 @@
  * while open mode allows free roaming as before.
  */
 import { describe, it, expect } from 'vitest';
-import { getReachableRegions, getAccessibleChecks } from '../../shared/lib/logic-eval';
-import { resolveRules, VANILLA_CONFIG, OPEN_CONFIG } from '../../shared/lib/resolve-rules';
-import { ALL_CHECKS } from '../../shared/data/checks';
+import { getReachableRegions, getAccessibleChecks } from '../../shared/game/logic/eval';
+import { resolveRules, VANILLA_CONFIG, OPEN_CONFIG } from '../../shared/game/logic/presets';
+import { ALL_CHECKS } from '../../shared/game/checks';
 
 describe('LogicConfig — Vanilla Mode', () => {
   const resolved = resolveRules(VANILLA_CONFIG);

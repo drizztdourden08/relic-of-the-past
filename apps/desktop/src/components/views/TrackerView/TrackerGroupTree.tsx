@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import type { CheckDefinition } from '@shared/types/tracker';
-import type { CheckStatus } from '@shared/lib/logic-eval';
-import type { GroupNode } from '@shared/data/checks/grouping';
+import type { CheckDefinition } from '@shared/game/types';
+import type { CheckStatus } from '@shared/game/logic/eval';
+import type { GroupNode } from '@shared/game/checks/grouping';
 import type { ViewMode } from './TrackerFilters';
 import { TrackerCheckRow } from './TrackerCheckRow';
-import { getItemSprite } from '@shared/data/item-sprites';
+import { getItemSprite } from '@shared/game/items/sprites';
 import './TrackerView.css';
 
 interface TrackerGroupTreeProps {

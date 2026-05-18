@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react';
-import type { CheckTag } from '@shared/data/checks/tags';
-import { TAG_DEFINITIONS } from '@shared/data/checks/tags';
-import type { GroupDimension, StatusFilter } from '@shared/data/checks/grouping';
-import { GROUP_DIMENSIONS } from '@shared/data/checks/grouping';
-import type { FilterState } from '@shared/data/checks/grouping';
+import type { CheckTag } from '@shared/game/checks/tags';
+import { TAG_DEFINITIONS } from '@shared/game/checks/tags';
+import type { GroupDimension, StatusFilter } from '@shared/game/checks/grouping';
+import { GROUP_DIMENSIONS } from '@shared/game/checks/grouping';
+import type { FilterState } from '@shared/game/checks/grouping';
 import './TrackerView.css';
 
 export type ViewMode = 'compact' | 'detailed' | 'visual';

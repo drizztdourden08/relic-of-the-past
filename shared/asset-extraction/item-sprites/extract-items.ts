@@ -133,7 +133,7 @@ export function extractAllItemSprites(
   const allSprites: SpriteDef[] = Array.isArray(defsOrPath)
     ? defsOrPath
     : (JSON.parse(readFileSync(
-        defsOrPath ?? join(__dirname, '..', '..', 'data', 'sprite-definitions.json'),
+        defsOrPath ?? join(__dirname, '..', '..', 'game', 'sprites', 'definitions.json'),
         'utf-8',
       )) as SpriteDefsJson).sprites;
 
