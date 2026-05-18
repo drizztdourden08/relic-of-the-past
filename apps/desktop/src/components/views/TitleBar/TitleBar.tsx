@@ -17,6 +17,7 @@ interface TitleBarProps {
   onToggleChecks: () => void;
   onShowDataManager: (tab?: string) => void;
   onShowInputTester: () => void;
+  onShowCredits: () => void;
   onShowSpriteDebug: () => void;
   activeProfile: Profile | null;
   gameRunning: boolean;
@@ -36,6 +37,7 @@ export function TitleBar({
   onToggleChecks,
   onShowDataManager,
   onShowInputTester,
+  onShowCredits,
   onShowSpriteDebug,
   activeProfile,
   gameRunning,
@@ -154,6 +156,12 @@ export function TitleBar({
       ],
     },
     'separator',
+    {
+      key: 'credits',
+      icon: '📜',
+      label: 'Credits',
+      onClick: () => { closeMenu(); onShowCredits(); },
+    },
     { key: 'quit', icon: '✕', label: 'Quit', onClick: () => window.api.close() },
   ];
 

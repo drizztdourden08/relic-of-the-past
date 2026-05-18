@@ -9,6 +9,7 @@ import { ProfileHub } from './components/views/ProfileHub';
 import { DataManager } from './components/views/DataManager';
 import { WidgetManager, useWidgetLayout, InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent } from './components/widgets';
 import { InputCalibration } from './components/views/InputTester';
+import { CreditsPage } from './components/views/ProfileHub/tabs/CreditsTab';
 import { SpriteDebug } from './components/views/SpriteDebug';
 import { FullScreenLayer } from './components/composites/FullScreenLayer';
 import { Dialog } from './components/composites/Dialog';
@@ -48,7 +49,7 @@ function syncAspectRatioLock(constraint: GameSettings['viewportConstraint'], asp
   window.api.setAspectRatioLock(ratio, extra);
 }
 
-type PageId = 'none' | 'picker' | 'profile' | 'data' | 'input-tester';
+type PageId = 'none' | 'picker' | 'profile' | 'data' | 'input-tester' | 'credits';
 
 interface ConfirmDialog {
   title: string;
@@ -647,6 +648,7 @@ export function App(): JSX.Element {
         onToggleChecks={() => widgets.toggle('checks')}
         onShowDataManager={handleShowDataManager}
         onShowInputTester={() => setActivePage('input-tester')}
+        onShowCredits={() => setActivePage('credits')}
         onShowSpriteDebug={() => setShowSpriteDebug(v => !v)}
         activeProfile={activeProfile}
         gameRunning={isGameRunning}
@@ -730,6 +732,12 @@ export function App(): JSX.Element {
         {activePage === 'input-tester' && (
           <FullScreenLayer onClose={closePage}>
             <InputCalibration />
+          </FullScreenLayer>
+        )}
+
+        {activePage === 'credits' && (
+          <FullScreenLayer onClose={closePage}>
+            <CreditsPage />
           </FullScreenLayer>
         )}
 
