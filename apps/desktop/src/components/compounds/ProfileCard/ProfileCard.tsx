@@ -1,25 +1,17 @@
 import { Card } from '../../composites/Card';
 import { IconButton } from '../../primitives/IconButton';
+import { formatDate, formatRomName } from './behavior/formatters';
 import './ProfileCard.css';
 
-interface ProfileCardProps {
+export interface ProfileCardProps {
   profile: Profile;
   onSelect: (profile: Profile) => void;
   onDelete: (id: string) => void;
 }
 
-function formatDate(ts: number): string {
-  if (!ts) return 'Never';
-  return new Date(ts).toLocaleDateString(undefined, {
-    month: 'short', day: 'numeric', year: 'numeric',
-  });
-}
+export const ProfileCard = (props: ProfileCardProps) => {
+  const { profile, onSelect, onDelete } = props;
 
-function formatRomName(romFile: string): string {
-  return romFile.replace(/\.(sfc|smc)$/i, '');
-}
-
-export function ProfileCard({ profile, onSelect, onDelete }: ProfileCardProps): JSX.Element {
   return (
     <button className="profile-card" onClick={() => onSelect(profile)}>
       <div className="profile-card__main">
@@ -38,4 +30,4 @@ export function ProfileCard({ profile, onSelect, onDelete }: ProfileCardProps): 
       </div>
     </button>
   );
-}
+};

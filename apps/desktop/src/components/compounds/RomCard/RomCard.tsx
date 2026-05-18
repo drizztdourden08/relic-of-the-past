@@ -1,26 +1,17 @@
 import { Badge } from '../../primitives/Badge';
 import { Button } from '../../primitives/Button';
 import { IconButton } from '../../primitives/IconButton';
+import { formatRomName, formatSize } from './behavior/formatters';
 import './RomCard.css';
 
-interface RomCardProps {
+export interface RomCardProps {
   rom: RomDisplayInfo;
   onExtract: (romFile: string) => void;
   onDelete: (romFile: string) => void;
 }
 
-function formatRomName(romFile: string): string {
-  return romFile.replace(/\.(sfc|smc)$/i, '');
-}
-
-function formatSize(bytes: number | null): string {
-  if (bytes == null) return '';
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
-export function RomCard({ rom, onExtract, onDelete }: RomCardProps): JSX.Element {
+export const RomCard = (props: RomCardProps) => {
+  const { rom, onExtract, onDelete } = props;
   const isFailed = rom.extractionStatus === 'failed';
 
   return (
@@ -74,4 +65,4 @@ export function RomCard({ rom, onExtract, onDelete }: RomCardProps): JSX.Element
       </IconButton>
     </div>
   );
-}
+};

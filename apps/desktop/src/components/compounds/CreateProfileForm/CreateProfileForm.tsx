@@ -4,17 +4,14 @@ import { TextInput } from '../../primitives/TextInput';
 import { NativeSelect } from '../../primitives/Select';
 import './CreateProfileForm.css';
 
-interface CreateProfileFormProps {
+export interface CreateProfileFormProps {
   readyRoms: RomDisplayInfo[];
   onCreate: (name: string, romFile: string) => void;
   onCancel: () => void;
 }
 
-export function CreateProfileForm({
-  readyRoms,
-  onCreate,
-  onCancel,
-}: CreateProfileFormProps): JSX.Element {
+export const CreateProfileForm = (props: CreateProfileFormProps) => {
+  const { readyRoms, onCreate, onCancel } = props;
   const [name, setName] = useState('');
   const [rom, setRom] = useState(readyRoms[0]?.romFile ?? '');
 
@@ -51,4 +48,4 @@ export function CreateProfileForm({
       </div>
     </div>
   );
-}
+};
