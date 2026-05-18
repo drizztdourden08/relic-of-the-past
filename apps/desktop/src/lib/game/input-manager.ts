@@ -337,6 +337,13 @@ export class InputManager {
       this.initController(info.deviceKey, info.vendorId, info.productId);
     });
 
+    // Catch devices opened before this subscription was active (startup race)
+    window.api.getOpenHidKeys().then(keys => {
+      for (const key of keys) {
+        webHidReader.markDeviceOpened(key);
+      }
+    }).catch(() => {});
+
     // Initial device scan
     this.refreshDevices();
 
@@ -508,14 +515,6 @@ export class InputManager {
     window.api.enumerateHidDevices()
       .then(hidDevices => {
         this.hidDeviceCache = hidDevices;
-        // Mark all enumerated HID devices as connected in webHidReader
-        // (handles devices that opened before InputManager subscribed to hid:device-opened)
-        for (const hid of hidDevices) {
-          const name = (hid.product || '').toLowerCase();
-          if (name.includes('mouse') || name.includes('trackpad') || name.includes('touchpad')) continue;
-          const key = `${hid.vendorId}:${hid.productId}`;
-          webHidReader.markDeviceOpened(key, hid.product);
-        }
         const updated = detectAllDevices(hidDevices);
         // Mark HID devices as stale if no reports received for >2s
         for (const dev of updated) {

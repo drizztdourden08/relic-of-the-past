@@ -149,6 +149,9 @@ class GameCubeWirelessController extends BaseController {
     if (reportId === 0x05 && data.byteLength >= 16) {
       return this.parseUSB(data);
     }
+    if (reportId === 0x0A && data.byteLength >= 11) {
+      return this.parseReport0A(data);
+    }
     if (reportId === 0x3F && data.byteLength >= 7) {
       return this.parseSimple(data);
     }
@@ -230,6 +233,59 @@ class GameCubeWirelessController extends BaseController {
     ];
 
     return { buttons, axes, rawSticks: [lx, ly, rx, ry] };
+  }
+
+  /**
+   * Report 0x0A — alternate USB HID mode (after USB init 0x03 command).
+   * Same byte layout as Switch Pro Controller 2's report 0x09.
+   *
+   * Byte layout (DataView offsets, after report ID byte):
+   *   0: Timer    1: Battery
+   *   2: Buttons byte 0: B(0x01) A(0x02) Y(0x04) X(0x08) R(0x10) ZR(0x20) Start(0x40)
+   *   3: Buttons byte 1: DpDn(0x01) DpRt(0x02) DpLt(0x04) DpUp(0x08) L(0x10) ZL(0x20) Chat(0x40)
+   *   4: Buttons byte 2: Home(0x01) Capture(0x02) GR(0x04) GL(0x08)
+   *   5-7: Left stick (12-bit packed)
+   *   8-10: C-Stick (12-bit packed)
+   */
+  private parseReport0A(data: DataView): ParsedInput {
+    const b0 = data.getUint8(2);
+    const b1 = data.getUint8(3);
+    const b2 = data.getUint8(4);
+
+    const lxRaw = data.getUint8(5) | ((data.getUint8(6) & 0x0F) << 8);
+    const lyRaw = (data.getUint8(6) >> 4) | (data.getUint8(7) << 4);
+    const rxRaw = data.getUint8(8) | ((data.getUint8(9) & 0x0F) << 8);
+    const ryRaw = (data.getUint8(9) >> 4) | (data.getUint8(10) << 4);
+
+    const buttons: boolean[] = [
+      !!(b0 & 0x02),  //  0: A
+      !!(b0 & 0x01),  //  1: B
+      !!(b0 & 0x08),  //  2: X
+      !!(b0 & 0x04),  //  3: Y
+      !!(b1 & 0x10),  //  4: L
+      !!(b0 & 0x10),  //  5: R
+      !!(b1 & 0x20),  //  6: ZL
+      !!(b0 & 0x20),  //  7: ZR
+      !!(b0 & 0x40),  //  8: Start
+      !!(b1 & 0x40),  //  9: Chat
+      !!(b1 & 0x08),  // 10: DPad Up
+      !!(b1 & 0x01),  // 11: DPad Down
+      !!(b1 & 0x04),  // 12: DPad Left
+      !!(b1 & 0x02),  // 13: DPad Right
+      !!(b2 & 0x01),  // 14: Home
+      !!(b2 & 0x02),  // 15: Capture
+    ];
+
+    const DZ = 0.05;
+    const RANGE = 750; // 0x0a mode has ~±750 raw units of physical stick travel (vs 1200 in 0x05 mode)
+    const axes: number[] = [
+      applyDeadzone(normalizeStick12(lxRaw, 2048, RANGE), DZ),
+      -applyDeadzone(normalizeStick12(lyRaw, 2048, RANGE), DZ),
+      applyDeadzone(normalizeStick12(rxRaw, 2048, RANGE), DZ),
+      -applyDeadzone(normalizeStick12(ryRaw, 2048, RANGE), DZ),
+    ];
+
+    return { buttons, axes, rawSticks: [lxRaw, lyRaw, rxRaw, ryRaw] };
   }
 
   /**
@@ -374,7 +430,7 @@ class GameCubeWirelessController extends BaseController {
 
   // ── Haptics ──
 
-  supportsVibration(): boolean { return true; }
+  supportsVibration(): boolean { return false; }
 
   async vibrate(ctx: ControllerContext, pattern: VibrationSegment[], gapMs: number = 0): Promise<{ ok: boolean; error?: string }> {
     const segments: { haptic: number[]; frames: number }[] = [];

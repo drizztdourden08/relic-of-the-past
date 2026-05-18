@@ -23,7 +23,7 @@ import { CONTROLLER_PROFILES } from '@shared/data/controllers/profiles';
 import { findPresetByVidPid, parseGamepadId } from '@shared/data/controllers';
 import { SDL_CONTROLLER_DB } from '@shared/data/controllers/sdl-controller-list';
 import { getButtonIconUrl } from './button-icons';
-import { vibrateGamepad } from '../../../lib/game/vibration';
+import { vibrateGamepad, vibrateGamepadPattern } from '../../../lib/game/vibration';
 import './InputCalibration.css';
 
 interface HidDeviceInfo {
@@ -585,17 +585,14 @@ export function InputCalibration(): JSX.Element {
         <div className="input-cal__cards">
           {/* HID Controller Card — show as soon as connected, even without input */}
           {anyHidConnected && (() => {
-            // Build cards from devices with active HID state OR connected device keys
-            const keys = new Set([
-              ...webHidStates.keys(),
-              ...webHidReader.getConnectedDeviceKeys(),
-            ]);
+            // Build cards from authoritative connected device keys (updated immediately on disconnect)
+            const keys = new Set(webHidReader.getConnectedDeviceKeys());
             return [...keys].map(key => {
               // Find profile for this specific device key
               const [vidHex, pidHex] = key.split(':');
               const deviceProfile = CONTROLLER_PROFILES.find(
                 p => p.vendorId === vidHex?.padStart(4, '0') && p.productId === pidHex?.padStart(4, '0')
-              ) ?? connectedProfile;
+              ) ?? null;
 
               // Pre-fill placeholder state from profile so buttons/sticks render immediately
               const profileButtons = deviceProfile?.buttons.length ?? 0;
@@ -875,27 +872,23 @@ function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, 
 
       {/* Actions */}
       <div style={{ marginTop: 'var(--space-md)', display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>
-        <button className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 100, intensity: 1.0 }], 0).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); })}>
+        {profile?.supportsVibration && <>
+        <button className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 100, intensity: 1.0 }], 0).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); }).catch(e => webHidReader.addDiag(`⚠ Vibrate IPC error: ${e}`))}>
           100ms
         </button>
-        <button className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 250, intensity: 1.0 }], 0).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); })}>
+        <button className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 250, intensity: 1.0 }], 0).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); }).catch(e => webHidReader.addDiag(`⚠ Vibrate IPC error: ${e}`))}>
           250ms
         </button>
-        <button className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 1000, intensity: 1.0 }], 0).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); })}>
+        <button className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 1000, intensity: 1.0 }], 0).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); }).catch(e => webHidReader.addDiag(`⚠ Vibrate IPC error: ${e}`))}>
           1000ms
         </button>
-        <button className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); })}>
+        <button className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); }).catch(e => webHidReader.addDiag(`⚠ Vibrate IPC error: ${e}`))}>
           3×100ms
         </button>
-        <button className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 1000, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); })}>
+        <button className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 1000, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); }).catch(e => webHidReader.addDiag(`⚠ Vibrate IPC error: ${e}`))}>
           2-long-2
         </button>
-        <button
-          className="input-cal__btn"
-          onClick={() => setCalibrationTarget({ type: 'stick', side: 'both' })}
-        >
-          {hasStickCal ? 'Recalibrate Sticks' : 'Calibrate Sticks'}
-        </button>
+        </>}
         <span className="input-cal__debug-state" style={{ fontSize: 10, color: 'var(--color-text-muted)', fontFamily: 'monospace' }}>
           t={state.timestamp > 0 ? state.timestamp.toFixed(0) : '—'}
           {' '}btn={state.buttons.filter(Boolean).length}/{state.buttons.length}
@@ -1027,7 +1020,7 @@ function GamepadCard({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
 
   // For standard-mapped gamepads, use the Xbox profile for icons
   const isXbox = /xbox|xinput/i.test(gamepad.id) || detectedVidPid?.startsWith('045e') || false;
-  const xboxProfile = isXbox ? CONTROLLER_PROFILES.find(p => p.id === 'xbox-one') : null;
+  const xboxProfile = isXbox ? CONTROLLER_PROFILES.find(p => p.id === 'xbox') : null;
 
   const controllerIcon = isXbox ? CONTROLLER_ICON_MAP['xbox'] : null;
 
@@ -1095,9 +1088,12 @@ function GamepadCard({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
               {stickPairs.map(s => (
                 <StickCircle key={s.xIdx} x={gamepad.axes[s.xIdx] ?? 0} y={gamepad.axes[s.yIdx] ?? 0} label={s.label} />
               ))}
-              {triggerAxes.map(t => (
-                <TriggerBar key={t.idx} value={gamepad.axes[t.idx] ?? 0} label={t.label} />
-              ))}
+              {triggerAxes.map((t, ti) => {
+                // Gamepad API standard mapping: triggers are buttons 6+7, not axes 4+5
+                const triggerBtnIdx = 6 + ti;
+                const value = gamepad.buttons[triggerBtnIdx]?.value ?? gamepad.axes[t.idx] ?? 0;
+                return <TriggerBar key={t.idx} value={value} label={t.label} />;
+              })}
             </div>
           );
         }
@@ -1117,17 +1113,25 @@ function GamepadCard({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
       })()}
 
       {/* Vibration tests */}
+      {xboxProfile?.supportsVibration && (
       <div style={{ marginTop: 'var(--space-md)', display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>
-        <button className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 100)} title="Short pulse (100ms)">
-          Pulse
+        <button className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 100, { intensity: 1.0 })}>
+          100ms
         </button>
-        <button className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 300)} title="Medium rumble (300ms)">
-          Rumble
+        <button className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 250, { intensity: 1.0 })}>
+          250ms
         </button>
-        <button className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 800, { intensity: 1.0 })} title="Long sustained (800ms)">
-          Strong
+        <button className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 1000, { intensity: 1.0 })}>
+          1000ms
+        </button>
+        <button className="input-cal__btn" onClick={() => vibrateGamepadPattern(gamepad.index, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50)}>
+          3×100ms
+        </button>
+        <button className="input-cal__btn" onClick={() => vibrateGamepadPattern(gamepad.index, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 1000, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50)}>
+          2-long-2
         </button>
       </div>
+      )}
     </div>
   );
 }

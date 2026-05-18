@@ -42,6 +42,23 @@ export function vibrateGamepad(gamepadIndex: number, durationMs: number, opts?: 
 }
 
 /**
+ * Vibrate a Gamepad-API controller with a multi-segment pattern.
+ * Each segment has a duration and intensity, with gapMs silence between segments.
+ */
+export function vibrateGamepadPattern(
+  gamepadIndex: number,
+  pattern: { durationMs: number; intensity: number }[],
+  gapMs: number = 0,
+): void {
+  let delay = 0;
+  for (let i = 0; i < pattern.length; i++) {
+    const seg = pattern[i];
+    setTimeout(() => vibrateGamepad(gamepadIndex, seg.durationMs, { intensity: seg.intensity }), delay);
+    delay += seg.durationMs + (i < pattern.length - 1 ? gapMs : 0);
+  }
+}
+
+/**
  * Vibrate an HID controller via the registry's controller.vibrate() method.
  */
 export function vibrateHid(deviceKey: string, durationMs: number, opts?: VibrateOptions): void {

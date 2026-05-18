@@ -138,6 +138,7 @@ contextBridge.exposeInMainWorld('api', {
 
   // HID device enumeration
   enumerateHidDevices: () => ipcRenderer.invoke('hid:enumerate'),
+  getOpenHidKeys: () => ipcRenderer.invoke('hid:get-open-keys') as Promise<string[]>,
 
   // HID write (haptics, LED control via node-hid in main process)
   writeHidDevice: (deviceKey: string, data: number[]) => ipcRenderer.invoke('hid:write', deviceKey, data),

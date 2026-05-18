@@ -16,6 +16,7 @@ import HID from 'node-hid';
 import { BrowserWindow } from 'electron';
 import { Worker } from 'worker_threads';
 import path from 'path';
+import { sendUsbInit } from './usb-init';
 
 // Xbox VID — excluded because Windows XInput driver claims exclusive access
 const XBOX_VID = 0x045e;
@@ -53,6 +54,7 @@ interface OpenDevice {
   key: string; // "vid:pid" (hex, 4-char padded — matches WebHID deviceKey format)
   path: string;
   product: string;
+  writeFailed?: boolean;
 }
 
 export class HidInputReader {
@@ -202,6 +204,16 @@ export class HidInputReader {
       this.log(`Opening ${key} (${target.product || 'Unknown'}) usagePage=0x${(target.usagePage ?? 0).toString(16)} usage=0x${(target.usage ?? 0).toString(16)}`);
 
       try {
+        // Nintendo controllers need USB init on interface 1 before HID reports flow
+        if (target.vendorId === NINTENDO_VID && NINTENDO_PIDS.has(target.productId)) {
+          try {
+            const ok = await sendUsbInit(target.vendorId, target.productId);
+            if (ok) this.log(`USB init succeeded for ${key}`);
+          } catch (err) {
+            this.log(`USB init attempt for ${key}: ${(err as Error).message}`);
+          }
+        }
+
         const hid = new HID.HID(target.path);
         const dev: OpenDevice = {
           hid,
@@ -225,25 +237,28 @@ export class HidInputReader {
 
         this.log(`Opened ${key} (${dev.product})`);
 
-        // Nintendo controllers need a wake-up poke after USB enumeration.
-        // Send a silent haptic frame (report 0x02) — the one output report
-        // all Nintendo controllers accept — to kick the input pipeline.
-        if (target.vendorId === NINTENDO_VID) {
+        // SPC2 needs a wake-up haptic poke after USB enumeration.
+        // The USB init (sendUsbInit) already started HID streaming.
+        // Send a silent haptic frame as additional acknowledgment.
+        // Only SPC2 (0x2069) supports haptic writes — GC adapter and others don't.
+        if (target.vendorId === NINTENDO_VID && target.productId === 0x2069) {
           try {
             const wake = new Array(64).fill(0);
             wake[0] = 0x02; // report ID
             wake[1] = 0x50; // haptic counter byte
             wake[17] = 0x50;
-            // HAPTIC_SILENT: no vibration, just makes the device acknowledge us
             const silent = [0x3f, 0x01, 0xf0, 0x19, 0x00];
             for (let i = 0; i < silent.length; i++) {
               wake[2 + i] = silent[i];
               wake[18 + i] = silent[i];
             }
             hid.pause();
-            hid.write(wake);
-            hid.resume();
-            this.log(`Sent wake-up haptic frame to ${key}`);
+            try {
+              hid.write(wake);
+              this.log(`Sent wake-up haptic frame to ${key}`);
+            } finally {
+              hid.resume();
+            }
           } catch (err) {
             this.log(`Wake-up write failed for ${key}: ${(err as Error).message}`);
           }
@@ -310,6 +325,7 @@ export class HidInputReader {
   write(deviceKey: string, data: number[]): boolean {
     const dev = this.devices.find(d => d.key === deviceKey);
     if (!dev) return false;
+    if (dev.writeFailed) return false; // Suppress repeated writes to devices that don't support output
     try {
       const buf = new Array(64).fill(0);
       for (let i = 0; i < Math.min(data.length, 64); i++) buf[i] = data[i];
@@ -319,7 +335,10 @@ export class HidInputReader {
       return true;
     } catch (err) {
       dev.hid.resume();
-      this.log(`Write error ${deviceKey}: ${(err as Error).message}`);
+      if (!dev.writeFailed) {
+        dev.writeFailed = true;
+        this.log(`Write error ${deviceKey}: ${(err as Error).message} (suppressing further writes)`);
+      }
       return false;
     }
   }
@@ -415,7 +434,20 @@ export class HidInputReader {
     }
     frames.push(HidInputReader.HAPTIC_SILENT); // end with silence
 
-    this.writeFramesInWorker(dev, frames);
+    // Use worker thread for non-blocking writes
+    this.log(`vibratePattern: dispatching ${frames.length} frames to worker for ${deviceKey} path=${dev.path}`);
+    this.workerRequest({ type: 'vibrate', devicePath: dev.path, frames })
+      .then((result: any) => {
+        this.log(`vibratePattern worker result: ${JSON.stringify(result)}`);
+        if (!result.ok || result.writeErrors > 0) {
+          this.log(`Worker vibrate issue — falling back to direct write`);
+          this.writeFramesDirect(dev, frames);
+        }
+      })
+      .catch((err: Error) => {
+        this.log(`vibratePattern worker error: ${err.message} — falling back to direct write`);
+        this.writeFramesDirect(dev, frames);
+      });
     return { ok: true };
   }
 
@@ -463,21 +495,29 @@ export class HidInputReader {
       [0x3f, 0x01, 0xf0, 0x19, 0x00],
     ];
 
-    this.writeFramesInWorker(dev, pattern);
+    this.writeFramesDirect(dev, pattern);
     return { ok: true, frames: pattern.length, errors: 0, writeMs: 0 };
   }
 
-  /** Send haptic frames via the persistent worker — never blocks the main process. */
-  private writeFramesInWorker(dev: OpenDevice, frames: number[][]): void {
-    this.workerRequest({ type: 'vibrate', devicePath: dev.path, frames })
-      .then((result: any) => {
-        if (!result.ok) {
-          this.log(`Vibrate worker error: ${result.error}`);
-        }
-      })
-      .catch((err: Error) => {
-        this.log(`Vibrate worker error: ${err.message}`);
-      });
+  /** Write haptic frames directly from the reader handle (pause → write → resume). */
+  private writeFramesDirect(dev: OpenDevice, frames: number[][]): void {
+    dev.hid.pause();
+    let counter = 0;
+    for (const hapticData of frames) {
+      const buf = new Array(64).fill(0);
+      buf[0] = 0x02;
+      buf[1] = 0x50 | (counter & 0x0F);
+      buf[17] = buf[1];
+      for (let i = 0; i < hapticData.length; i++) {
+        buf[2 + i] = hapticData[i];
+        buf[18 + i] = hapticData[i];
+      }
+      try {
+        dev.hid.write(buf);
+      } catch { /* device may have disconnected */ }
+      counter = (counter + 1) & 0x0F;
+    }
+    dev.hid.resume();
   }
 
   private send(channel: string, data: unknown): void {

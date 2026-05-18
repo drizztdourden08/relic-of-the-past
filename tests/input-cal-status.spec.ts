@@ -26,7 +26,7 @@ test('report Input Calibration controller cards status', async () => {
   await window.waitForSelector('.input-cal', { timeout: 15_000 });
 
   // Give HID devices time to connect and report
-  await window.waitForTimeout(4000);
+  await window.waitForTimeout(6000);
 
   // Gather all HID cards info
   const cards = await window.evaluate(() => {

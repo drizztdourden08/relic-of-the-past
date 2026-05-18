@@ -301,6 +301,7 @@ interface ElectronAPI {
 
   // HID device enumeration
   enumerateHidDevices(): Promise<Array<{ vendorId: string; productId: string; product: string; manufacturer: string; path: string; serialNumber: string | null }>>;
+  getOpenHidKeys(): Promise<string[]>;
 
   // HID write (haptics, LED control via node-hid)
   writeHidDevice(deviceKey: string, data: number[]): Promise<boolean>;

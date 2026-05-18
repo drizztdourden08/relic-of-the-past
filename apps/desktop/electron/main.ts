@@ -972,6 +972,10 @@ function registerIpcHandlers(): void {
     }
   });
 
+  ipcMain.handle('hid:get-open-keys', () => {
+    return hidInputReader.getOpenDeviceKeys();
+  });
+
   // HID write (haptics, LED control) — forwards to node-hid in main process
   ipcMain.handle('hid:write', (_event, deviceKey: string, data: number[]) => {
     return hidInputReader.write(deviceKey, data);
