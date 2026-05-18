@@ -9,6 +9,46 @@
   cursor: grab;
   user-select: none;
   transition: border-color 0.15s, background 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ─── Stale state ─── */
+.device-card--stale {
+  border-color: #dc2626;
+  animation: stale-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes stale-pulse {
+  0%, 100% { border-color: #dc2626; }
+  50% { border-color: #991b1b; }
+}
+
+.device-card__stale-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(127, 29, 29, 0.85);
+  z-index: 10;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.device-card__stale-label {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #fca5a5;
+  text-shadow: 0 0 8px rgba(220, 38, 38, 0.8);
+}
+
+.device-card__stale-sub {
+  font-size: 10px;
+  color: #fecaca;
+  margin-top: 2px;
 }
 
 .device-card:hover {

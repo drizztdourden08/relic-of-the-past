@@ -493,6 +493,13 @@ export class InputManager {
   refreshDevices(): void {
     // Synchronous update with cached HID list + WebHID devices
     this.devices = detectAllDevices(this.hidDeviceCache);
+    // Mark HID devices as stale if no reports received for >2s
+    for (const dev of this.devices) {
+      if (dev.inputApi === 'hid' && dev.vendorId && dev.productId) {
+        const key = `${dev.vendorId}:${dev.productId}`;
+        dev.stale = webHidReader.isDeviceStale(key);
+      }
+    }
     for (const fn of this.deviceListeners) {
       try { fn(this.devices); } catch { /* ignore */ }
     }
@@ -510,6 +517,13 @@ export class InputManager {
           webHidReader.markDeviceOpened(key, hid.product);
         }
         const updated = detectAllDevices(hidDevices);
+        // Mark HID devices as stale if no reports received for >2s
+        for (const dev of updated) {
+          if (dev.inputApi === 'hid' && dev.vendorId && dev.productId) {
+            const key = `${dev.vendorId}:${dev.productId}`;
+            dev.stale = webHidReader.isDeviceStale(key);
+          }
+        }
         // Only notify if device list actually changed
         if (JSON.stringify(updated) !== JSON.stringify(this.devices)) {
           this.devices = updated;

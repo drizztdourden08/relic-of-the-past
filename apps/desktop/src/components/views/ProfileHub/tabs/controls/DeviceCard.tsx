@@ -62,11 +62,17 @@ export function DeviceCard({ device, onDragStart, onAssign }: DeviceCardProps): 
 
   return (
     <div
-      className={`device-card ${device.connected ? '' : 'device-card--disconnected'}`}
+      className={`device-card ${device.connected ? '' : 'device-card--disconnected'} ${device.stale ? 'device-card--stale' : ''}`}
       draggable
       onDragStart={handleDragStart}
       data-device-id={device.id}
     >
+      {device.stale && (
+        <div className="device-card__stale-overlay">
+          <span className="device-card__stale-label">STALE</span>
+          <span className="device-card__stale-sub">No HID data</span>
+        </div>
+      )}
       <div className="device-card__left">
         <button
           className={`device-card__icon-btn ${statusClass}`}

@@ -153,6 +153,7 @@ export interface DetectedDevice {
   presetId: string | null;  // Matched preset ID, null if unknown
   connected: boolean;       // HID-level connected (physical presence)
   activated: boolean;       // Web Gamepad API active (button pressed at least once)
+  stale: boolean;           // No HID reports received for >2s (device locked up)
   brandLogoKey: string | null;
   inputApi: InputApi;       // Which API this controller uses for input reading
 }

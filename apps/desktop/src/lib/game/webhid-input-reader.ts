@@ -98,6 +98,8 @@ class WebHidInputReader {
   private listeners = new Set<WebHidStateListener>();
   private rawListeners = new Set<WebHidRawListener>();
   private diagListeners = new Set<WebHidDiagListener>();
+  /** Timestamp of last received report per deviceKey */
+  private lastReportTime = new Map<string, number>();
   private diagLog: string[] = [];
   private connected = false;
   /** All device keys that have sent at least one IPC report (even if no parser matched) */
@@ -203,6 +205,20 @@ class WebHidInputReader {
   /** Get VID:PID keys of all devices that have sent IPC reports (for duplicate filtering + UI) */
   getConnectedDeviceKeys(): string[] { return [...this.connectedDeviceKeys]; }
 
+  /** Check if a device is stale (no HID reports for longer than timeoutMs). Default 2s. */
+  isDeviceStale(deviceKey: string, timeoutMs = 2000): boolean {
+    const last = this.lastReportTime.get(deviceKey);
+    if (!last) return false; // never received a report — not stale, just not started
+    return (performance.now() - last) > timeoutMs;
+  }
+
+  /** Get milliseconds since last report for a device (null if never received) */
+  getTimeSinceLastReport(deviceKey: string): number | null {
+    const last = this.lastReportTime.get(deviceKey);
+    if (!last) return null;
+    return performance.now() - last;
+  }
+
   /**
    * Mark a device as connected when the main process opens it (hid:device-opened event).
    * Some devices (e.g. GameCube adapter) don't send HID reports until a button is pressed,
@@ -212,6 +228,8 @@ class WebHidInputReader {
     if (!this.connectedDeviceKeys.has(deviceKey)) {
       this.connectedDeviceKeys.add(deviceKey);
       this.connected = true;
+      // Start the stale timer — if no reports arrive within 2s, device is stale
+      this.lastReportTime.set(deviceKey, performance.now());
       this.log(`Device opened: ${deviceKey}${product ? ` (${product})` : ''}`);
     }
   }
@@ -306,6 +324,7 @@ class WebHidInputReader {
     // Track this device as connected (even before parsing succeeds)
     const vid = vendorId.toString(16).padStart(4, '0');
     const pid = productId.toString(16).padStart(4, '0');
+    this.lastReportTime.set(deviceKey, performance.now());
     if (!this.connectedDeviceKeys.has(deviceKey)) {
       this.connectedDeviceKeys.add(deviceKey);
       this.connected = true;
@@ -368,6 +387,7 @@ class WebHidInputReader {
   handleIpcDisconnect(deviceKey: string, error?: string): void {
     this.states.delete(deviceKey);
     this.connectedDeviceKeys.delete(deviceKey);
+    this.lastReportTime.delete(deviceKey);
     this.connected = this.connectedDeviceKeys.size > 0;
     if (error) {
       this.log(`IPC device ERROR: ${deviceKey} — ${error}`);

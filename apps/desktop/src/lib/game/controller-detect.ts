@@ -55,6 +55,7 @@ function detectFromHid(hid: HidDeviceInfo, index: number, webApiActivated: boole
     presetId: preset?.id ?? null,
     connected: true,
     activated,
+    stale: false,
     brandLogoKey: preset?.brandLogoKey ?? null,
     inputApi: api,
   };
@@ -79,6 +80,7 @@ export function detectGamepad(gp: Gamepad): DetectedDevice {
     presetId: preset.id,
     connected: gp.connected,
     activated: true, // if it's in the Web API, it's activated
+    stale: false,
     brandLogoKey: preset.brandLogoKey,
     inputApi: preset.inputApi,
   };
@@ -99,6 +101,7 @@ export function detectKeyboard(index = 0): DetectedDevice {
     presetId: KEYBOARD_DEFAULT.id,
     connected: true,
     activated: true, // keyboard is always activated
+    stale: false,
     brandLogoKey: 'keyboard',
     inputApi: 'webapi',
   };
