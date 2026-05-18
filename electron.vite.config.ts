@@ -10,7 +10,7 @@ export default defineConfig({
       lib: {
         entry: {
           main: resolve(__dirname, 'apps/desktop/electron/main.ts'),
-          'hid-worker': resolve(__dirname, 'apps/desktop/electron/hid-worker.ts'),
+          'hid-worker': resolve(__dirname, 'apps/desktop/electron/input/hid-worker.ts'),
         },
       },
     },

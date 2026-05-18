@@ -9,10 +9,10 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import { webHidReader } from '../../../lib/game/webhid-input-reader';
-import type { WebHidInputState } from '../../../lib/game/webhid-input-reader';
-import { getInputManager } from '../../../lib/game/input-manager';
-import type { GamepadSnapshot } from '../../../lib/game/input-manager';
+import { webHidReader } from '../../../lib/input/hid-reader';
+import type { WebHidInputState } from '../../../lib/input/hid-reader';
+import { getInputManager } from '../../../lib/input/input-manager';
+import type { GamepadSnapshot } from '../../../lib/input/input-manager';
 import { HidCalibrationWizard } from './HidCalibrationWizard';
 import type { HidControllerMap } from './HidCalibrationWizard';
 import './InputTester.css';

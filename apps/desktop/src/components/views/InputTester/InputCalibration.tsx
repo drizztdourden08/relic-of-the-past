@@ -9,11 +9,11 @@
  */
 
 import { useState, useEffect, useRef, useCallback, useReducer } from 'react';
-import { webHidReader } from '../../../lib/game/webhid-input-reader';
-import type { WebHidInputState, DeviceStickCalibration } from '../../../lib/game/webhid-input-reader';
-import { getInputManager } from '../../../lib/game/input-manager';
-import type { GamepadSnapshot } from '../../../lib/game/input-manager';
-import { collectInputDiagnostics } from '../../../lib/game/input-diagnostics';
+import { webHidReader } from '../../../lib/input/hid-reader';
+import type { WebHidInputState, DeviceStickCalibration } from '../../../lib/input/hid-reader';
+import { getInputManager } from '../../../lib/input/input-manager';
+import type { GamepadSnapshot } from '../../../lib/input/input-manager';
+import { collectInputDiagnostics } from '../../../lib/input/diagnostics';
 import { HidCalibrationWizard } from './HidCalibrationWizard';
 import type { HidControllerMap } from './HidCalibrationWizard';
 import { StickCalibrationWizard } from './StickCalibrationWizard';
@@ -23,7 +23,7 @@ import { DEVICE_PROFILES } from '@shared/input';
 import { findPresetByVidPid, parseGamepadId } from '@shared/input';
 import { DEVICE_DATABASE } from '@shared/input/device-database';
 import { getButtonIconUrl } from './button-icons';
-import { vibrateGamepad, vibrateGamepadPattern } from '../../../lib/game/vibration';
+import { vibrateGamepad, vibrateGamepadPattern } from '../../../lib/input/vibration';
 import './InputCalibration.css';
 
 interface HidDeviceInfo {

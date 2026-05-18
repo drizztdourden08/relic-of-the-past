@@ -15,8 +15,8 @@
  */
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { webHidReader } from '../../../lib/game/webhid-input-reader';
-import type { WebHidRawReport } from '../../../lib/game/webhid-input-reader';
+import { webHidReader } from '../../../lib/input/hid-reader';
+import type { WebHidRawReport } from '../../../lib/input/hid-reader';
 import {
   DEVICE_PROFILES,
   findDeviceProfileByVidPid,
