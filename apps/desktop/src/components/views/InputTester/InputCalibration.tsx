@@ -17,8 +17,11 @@ import { collectInputDiagnostics } from '../../../lib/game/input-diagnostics';
 import { HidCalibrationWizard } from './HidCalibrationWizard';
 import type { HidControllerMap } from './HidCalibrationWizard';
 import { StickCalibrationWizard } from './StickCalibrationWizard';
+import { TriggerCalibrationWizard } from './TriggerCalibrationWizard';
+import type { TriggerCalibrationData } from './TriggerCalibrationWizard';
 import { CONTROLLER_PROFILES } from '@shared/data/controllers/profiles';
 import { findPresetByVidPid, parseGamepadId } from '@shared/data/controllers';
+import { SDL_CONTROLLER_DB } from '@shared/data/controllers/sdl-controller-list';
 import { getButtonIconUrl } from './button-icons';
 import { vibrateGamepad } from '../../../lib/game/vibration';
 import './InputCalibration.css';
@@ -44,6 +47,236 @@ const CONTROLLER_ICON_MAP: Record<string, string> = {
   xbox: '/buttons/xbox/controller_xboxseries.svg',
   playstation: '/buttons/playstation/controller_playstation5.svg',
 };
+
+// ── Idle Byte Analyzer ──
+
+type IdleAnalysisState = 'idle' | 'recording' | 'done';
+
+interface ByteAnalysis {
+  index: number;
+  min: number;
+  max: number;
+  uniqueValues: number[];
+  range: number;
+  classification: 'stable' | 'low-noise' | 'noisy' | 'full-range';
+}
+
+function IdleByteAnalyzer({ state }: { state: WebHidInputState }) {
+  const [phase, setPhase] = useState<IdleAnalysisState>('idle');
+  const [progress, setProgress] = useState(0);
+  const [result, setResult] = useState<ByteAnalysis[] | null>(null);
+  const framesRef = useRef<Uint8Array[]>([]);
+  const rafRef = useRef<number>(0);
+  const startRef = useRef<number>(0);
+  const rawRef = useRef(state.rawBytes);
+  rawRef.current = state.rawBytes;
+
+  const DURATION_MS = 3000;
+
+  const startRecording = useCallback(() => {
+    framesRef.current = [];
+    startRef.current = performance.now();
+    setPhase('recording');
+    setResult(null);
+    setProgress(0);
+
+    const sample = () => {
+      const elapsed = performance.now() - startRef.current;
+      setProgress(Math.min(1, elapsed / DURATION_MS));
+
+      if (rawRef.current) {
+        framesRef.current.push(new Uint8Array(rawRef.current));
+      }
+
+      if (elapsed < DURATION_MS) {
+        rafRef.current = requestAnimationFrame(sample);
+      } else {
+        // Analyze
+        const frames = framesRef.current;
+        if (frames.length === 0) { setPhase('idle'); return; }
+        const len = frames[0].length;
+        const analysis: ByteAnalysis[] = [];
+
+        for (let i = 0; i < len; i++) {
+          const seen = new Set<number>();
+          let min = 255, max = 0;
+          for (const f of frames) {
+            const v = f[i];
+            seen.add(v);
+            if (v < min) min = v;
+            if (v > max) max = v;
+          }
+          const range = max - min;
+          const uniqueValues = [...seen].sort((a, b) => a - b);
+          let classification: ByteAnalysis['classification'];
+          if (range === 0) classification = 'stable';
+          else if (range <= 3) classification = 'low-noise';
+          else if (range <= 30) classification = 'noisy';
+          else classification = 'full-range';
+
+          analysis.push({ index: i, min, max, uniqueValues, range, classification });
+        }
+
+        setResult(analysis);
+        setPhase('done');
+
+        // Copy to clipboard
+        const out = {
+          reportId: frames[0]?.[0],
+          frameCount: frames.length,
+          durationMs: DURATION_MS,
+          reportLength: len,
+          bytes: analysis.map(b => ({
+            i: b.index,
+            hex: `0x${b.index.toString(16).padStart(2, '0')}`,
+            min: b.min,
+            max: b.max,
+            range: b.range,
+            uniqueCount: b.uniqueValues.length,
+            classification: b.classification,
+            values: b.uniqueValues.length <= 16 ? b.uniqueValues.map(v => v.toString(16).padStart(2, '0')) : `${b.uniqueValues.length} unique`,
+          })),
+        };
+        navigator.clipboard.writeText(JSON.stringify(out, null, 2));
+      }
+    };
+    rafRef.current = requestAnimationFrame(sample);
+  }, []);
+
+  const classColor = (c: ByteAnalysis['classification']) => {
+    switch (c) {
+      case 'stable': return '#4ade80';
+      case 'low-noise': return '#facc15';
+      case 'noisy': return '#f97316';
+      case 'full-range': return '#ef4444';
+    }
+  };
+
+  return (
+    <details style={{ marginTop: 'var(--space-sm)' }}>
+      <summary style={{ fontSize: 11, color: 'var(--color-text-muted)', cursor: 'pointer', userSelect: 'none' }}>
+        Idle Byte Analyzer
+      </summary>
+      <div style={{ marginTop: 6 }}>
+        <p style={{ fontSize: 10, color: 'var(--color-text-muted)', margin: '0 0 6px' }}>
+          Leave sticks centered and press Record. Identifies noisy/timer bytes vs stable axis bytes.
+        </p>
+        <button
+          className="input-cal__btn"
+          style={{ fontSize: 10, padding: '2px 8px' }}
+          onClick={startRecording}
+          disabled={phase === 'recording'}
+        >
+          {phase === 'recording' ? `Recording... ${(progress * 100).toFixed(0)}%` : phase === 'done' ? '✓ Copied — Record Again' : 'Record Idle (3s)'}
+        </button>
+
+        {result && (
+          <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap', gap: 2, fontFamily: 'monospace', fontSize: 9 }}>
+            {result.map(b => (
+              <div key={b.index} style={{
+                width: 28, padding: '2px 1px', textAlign: 'center',
+                background: `${classColor(b.classification)}22`,
+                border: `1px solid ${classColor(b.classification)}66`,
+                borderRadius: 2,
+              }} title={`Byte ${b.index} (0x${b.index.toString(16).padStart(2,'0')})\nRange: ${b.min}–${b.max} (${b.range})\nUnique: ${b.uniqueValues.length}\n${b.classification}`}>
+                <div style={{ color: classColor(b.classification), fontWeight: 600 }}>{b.index}</div>
+                <div style={{ fontSize: 7, color: 'var(--color-text-muted)' }}>{b.range}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {result && (
+          <div style={{ marginTop: 6, fontSize: 9, color: 'var(--color-text-muted)' }}>
+            <span style={{ color: '#4ade80' }}>■</span> stable{' '}
+            <span style={{ color: '#facc15' }}>■</span> low-noise (±3){' '}
+            <span style={{ color: '#f97316' }}>■</span> noisy (±4-30){' '}
+            <span style={{ color: '#ef4444' }}>■</span> full-range (±30+)
+          </div>
+        )}
+      </div>
+    </details>
+  );
+}
+
+// ── Axis Record Button ──
+
+function AxisRecordButton({ getValues, label }: { getValues: () => number[]; label: string }) {
+  const [recording, setRecording] = useState(false);
+  const [done, setDone] = useState(false);
+  const bufRef = useRef<{ t: number; v: number[] }[]>([]);
+  const rafRef = useRef<number>(0);
+  const startRef = useRef<number>(0);
+  const getValRef = useRef(getValues);
+  getValRef.current = getValues;
+
+  const startRecording = useCallback(() => {
+    bufRef.current = [];
+    startRef.current = performance.now();
+    setRecording(true);
+    setDone(false);
+    const sample = () => {
+      bufRef.current.push({ t: Math.round(performance.now() - startRef.current), v: getValRef.current() });
+      rafRef.current = requestAnimationFrame(sample);
+    };
+    rafRef.current = requestAnimationFrame(sample);
+  }, []);
+
+  const stopRecording = useCallback(() => {
+    cancelAnimationFrame(rafRef.current);
+    setRecording(false);
+    const data = { label, samples: bufRef.current.length, durationMs: bufRef.current.length > 0 ? bufRef.current[bufRef.current.length - 1].t : 0, values: bufRef.current };
+    navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+    setDone(true);
+    setTimeout(() => setDone(false), 2000);
+  }, [label]);
+
+  const color = done ? '#4ade80' : recording ? '#ef4444' : 'var(--color-text-muted)';
+
+  return (
+    <button
+      onClick={recording ? stopRecording : startRecording}
+      title={recording ? 'Stop recording & copy to clipboard' : `Record ${label} axis data`}
+      style={{
+        width: 18, height: 18, padding: 0, border: 'none', borderRadius: 4,
+        background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        animation: recording ? 'axis-rec-flash 0.6s ease-in-out infinite' : undefined,
+      }}
+    >
+      <svg width="14" height="14" viewBox="0 0 14 14">
+        <circle cx="7" cy="7" r="6" fill="none" stroke={color} strokeWidth="1.5" />
+        <circle cx="7" cy="7" r="3" fill={color} />
+      </svg>
+    </button>
+  );
+}
+
+// ── Trigger Bar Component ──
+
+function TriggerBar({ value, label }: { value: number; label: string }) {
+  const clamped = Math.max(0, Math.min(1, value));
+  const fillH = clamped * 60; // 60px tall bar
+  return (
+    <div className="input-cal__stick-container">
+      <span className="input-cal__stick-label">{label}</span>
+      <div style={{
+        width: 24, height: 60, borderRadius: 4,
+        border: '1px solid var(--color-border-subtle)',
+        background: 'var(--color-bg-secondary, #1a1a2e)',
+        position: 'relative', overflow: 'hidden',
+      }}>
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0,
+          height: fillH,
+          background: 'var(--color-gold-bright)',
+          borderRadius: '0 0 3px 3px',
+          transition: 'height 0.05s linear',
+        }} />
+      </div>
+      <span className="input-cal__stick-values">{clamped.toFixed(2)}</span>
+    </div>
+  );
+}
 
 // ── Joystick Circle Component ──
 
@@ -74,6 +307,19 @@ function StickCircle({ x, y, label }: { x: number; y: number; label: string }) {
       </span>
     </div>
   );
+}
+
+/** Resolve a friendly controller name from SDL database, preset, or HID product string */
+function resolveDeviceName(vid: string, pid: string, hidProduct?: string): string {
+  const vidPid = `${vid.padStart(4, '0')}:${pid.padStart(4, '0')}`;
+  // Try SDL database first (893+ controllers)
+  const sdlEntry = SDL_CONTROLLER_DB.find(e => e.vidPid === vidPid);
+  if (sdlEntry) return sdlEntry.name;
+  // Try controller preset
+  const preset = findPresetByVidPid(vid, pid);
+  if (preset && preset.id !== 'generic') return preset.name;
+  // Fall back to HID product string or generic
+  return hidProduct || `HID ${vidPid}`;
 }
 
 // ── Main Component ──
@@ -117,19 +363,11 @@ export function InputCalibration(): JSX.Element {
   }, []);
 
   // ── Subscribe to InputManager for all input state ──
-  const hidStatesRef = useRef<Map<string, WebHidInputState>>(new Map());
   useEffect(() => {
     const inputMgr = getInputManager();
     const unsub = inputMgr.onInputState((hidStates, gamepadSnaps, _pressedKeys) => {
-      // Only create a new Map reference when the device set changes,
-      // not on every frame (avoids 60 Map copies/sec for just stick updates).
-      if (hidStates.size !== hidStatesRef.current.size ||
-          [...hidStates.keys()].some(k => !hidStatesRef.current.has(k))) {
-        const copy = new Map(hidStates);
-        hidStatesRef.current = copy;
-        setWebHidStates(copy);
-      }
-      setWebHidConnected(hidStates.size > 0 || webHidReader.isConnected());
+      setWebHidStates(hidStates);
+      setWebHidConnected(hidStates.size > 0 || webHidReader.isConnected() || webHidReader.getConnectedDeviceKeys().length > 0);
       // Update gamepad states
       setGamepads(gamepadSnaps);
     });
@@ -196,6 +434,13 @@ export function InputCalibration(): JSX.Element {
     await window.api.writeStickCalibration(updated);
   };
 
+  const handleTriggerCalibrationComplete = async (deviceKey: string, axisIndex: number, cal: TriggerCalibrationData) => {
+    // Store trigger calibration per device + axis index
+    webHidReader.setTriggerCalibration(deviceKey, axisIndex, cal);
+    // Persist alongside stick calibration
+    await window.api.writeTriggerCalibration(deviceKey, axisIndex, cal);
+  };
+
   // Auto-scroll log
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
@@ -208,6 +453,9 @@ export function InputCalibration(): JSX.Element {
     const [vidHex, pidHex] = keys[0].split(':');
     return CONTROLLER_PROFILES.find(p => p.vendorId === vidHex && p.productId === pidHex) ?? null;
   })();
+
+  // HID connected = any device keys registered (even unparsed devices)
+  const anyHidConnected = webHidConnected || webHidReader.getConnectedDeviceKeys().length > 0;
 
   // ── Diagnostic dump ──
   const [diagState, setDiagState] = useState<'idle' | 'running' | 'done'>('idle');
@@ -232,9 +480,9 @@ export function InputCalibration(): JSX.Element {
       {/* Header */}
       <div className="input-cal__header">
         <span className="input-cal__title">Input Calibration</span>
-        <span className={`input-cal__status ${webHidConnected ? 'input-cal__status--connected' : 'input-cal__status--disconnected'}`}>
-          {webHidConnected
-            ? `Connected • ${gamepads.length + (webHidConnected ? 1 : 0)} controller(s)`
+        <span className={`input-cal__status ${anyHidConnected ? 'input-cal__status--connected' : 'input-cal__status--disconnected'}`}>
+          {anyHidConnected
+            ? `Connected • ${gamepads.length + webHidReader.getConnectedDeviceKeys().length} controller(s)`
             : `${gamepads.length} controller(s) detected`}
         </span>
       </div>
@@ -247,7 +495,7 @@ export function InputCalibration(): JSX.Element {
         <button
           className="input-cal__btn"
           onClick={() => setCalibrating(true)}
-          disabled={!webHidConnected}
+          disabled={!anyHidConnected}
         >
           Calibrate
         </button>
@@ -307,7 +555,7 @@ export function InputCalibration(): JSX.Element {
       <div className="input-cal__section">
         <div className="input-cal__section-title">Controllers</div>
 
-        {gamepads.length === 0 && !webHidConnected && hidDeviceInfo.filter(d => d.vendorId !== '046d').length === 0 && (
+        {gamepads.length === 0 && !anyHidConnected && hidDeviceInfo.filter(d => d.vendorId !== '046d').length === 0 && (
           <div className="input-cal__empty">
             <p>No controllers detected.</p>
             <p style={{ fontSize: 'var(--text-sm)' }}>Press a button on your gamepad to activate it.</p>
@@ -316,8 +564,8 @@ export function InputCalibration(): JSX.Element {
 
         <div className="input-cal__cards">
           {/* HID Controller Card — show as soon as connected, even without input */}
-          {webHidConnected && (() => {
-            // Build cards from devices with active HID state
+          {anyHidConnected && (() => {
+            // Build cards from devices with active HID state OR connected device keys
             const keys = new Set([
               ...webHidStates.keys(),
               ...webHidReader.getConnectedDeviceKeys(),
@@ -348,6 +596,9 @@ export function InputCalibration(): JSX.Element {
                   existingStickCal={stickCalibrationStore[key] ?? null}
                   onStickCalibrationComplete={(cal) => {
                     handleStickCalibrationComplete(cal);
+                  }}
+                  onTriggerCalibrationComplete={(axisIndex, cal) => {
+                    handleTriggerCalibrationComplete(key, axisIndex, cal);
                   }}
                 />
               );
@@ -384,22 +635,25 @@ export function InputCalibration(): JSX.Element {
               const preset = findPresetByVidPid(d.vendorId, d.productId);
               const family = preset?.family;
               const icon = family ? CONTROLLER_ICON_MAP[family] : null;
-              const name = preset?.name ?? d.product ?? `HID ${key}`;
-              const isUnmapped = !preset;
+              const name = resolveDeviceName(d.vendorId, d.productId, d.product);
+              const isGeneric = !preset || preset.id === 'generic';
               return (
                 <div key={`inactive-${key}`} className="input-cal__card" style={{ opacity: 0.5 }}>
                   <div className="input-cal__card-header">
                     {icon && (
                       <img src={icon} alt="" draggable={false} style={{ width: 28, height: 28, opacity: 0.5, flexShrink: 0 }} />
                     )}
-                    <span className="input-cal__card-badge" style={{ background: isUnmapped ? '#7c3aed' : 'var(--color-bg-tertiary, #333)' }}>
-                      {isUnmapped ? 'Unmapped' : 'Inactive'}
+                    <span className="input-cal__card-badge" style={{ background: 'var(--color-bg-tertiary, #333)' }}>
+                      INACTIVE
+                    </span>
+                    <span className="input-cal__card-badge" style={{ background: '#1e40af', marginLeft: 4 }}>
+                      HID
                     </span>
                     <span className="input-cal__card-name">{name}</span>
                     <span className="input-cal__card-meta">{key}</span>
                   </div>
                   <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', margin: 'var(--space-sm) 0 0' }}>
-                    {isUnmapped
+                    {isGeneric
                       ? 'Press a button to activate, then use Calibrate to map this controller.'
                       : 'Press a button to activate this controller.'}
                   </p>
@@ -457,12 +711,20 @@ interface WebHidCardProps {
   hasStickCal?: boolean;
   existingStickCal?: DeviceStickCalibration | null;
   onStickCalibrationComplete?: (cal: DeviceStickCalibration) => void;
+  onTriggerCalibrationComplete?: (axisIndex: number, cal: TriggerCalibrationData) => void;
 }
 
-function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, onStickCalibrationComplete }: WebHidCardProps) {
-  const name = profile?.name ?? `HID ${deviceKey}`;
+/** What's being calibrated — null means nothing open */
+type CalibrationTarget =
+  | { type: 'stick'; side: 'left' | 'right' | 'both' }
+  | { type: 'trigger'; axisIndex: number; label: string }
+  | null;
+
+function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, onStickCalibrationComplete, onTriggerCalibrationComplete }: WebHidCardProps) {
+  const [vidHex, pidHex] = deviceKey.split(':');
+  const name = profile?.name ?? resolveDeviceName(vidHex, pidHex);
   const buttons = profile?.buttons ?? [];
-  const [stickCalibrating, setStickCalibrating] = useState(false);
+  const [calibrationTarget, setCalibrationTarget] = useState<CalibrationTarget>(null);
 
   const controllerIcon = profile ? CONTROLLER_ICON_MAP[profile.family] : null;
 
@@ -508,23 +770,75 @@ function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, 
         })}
       </div>
 
-      {/* Joystick circles */}
-      {state.axes.length >= 2 && (
-        <div className="input-cal__sticks">
-          <StickCircle
-            x={state.axes[0] ?? 0}
-            y={state.axes[1] ?? 0}
-            label="L Stick"
-          />
-          {state.axes.length >= 4 && (
-            <StickCircle
-              x={state.axes[2] ?? 0}
-              y={state.axes[3] ?? 0}
-              label="R Stick"
-            />
-          )}
-        </div>
-      )}
+      {/* Sticks and triggers — dynamically derived from profile axes */}
+      {(() => {
+        const axesDef = profile?.axes ?? [];
+        // Pair up stick axes (consecutive X/Y pairs)
+        const stickPairs: { label: string; xIdx: number; yIdx: number }[] = [];
+        const triggerAxes: { label: string; idx: number }[] = [];
+        let i = 0;
+        while (i < axesDef.length) {
+          if (axesDef[i].category === 'stick' && i + 1 < axesDef.length && axesDef[i + 1].category === 'stick') {
+            stickPairs.push({
+              label: axesDef[i].label.replace(/ X$/, ''),
+              xIdx: i,
+              yIdx: i + 1,
+            });
+            i += 2;
+          } else if (axesDef[i].category === 'trigger') {
+            triggerAxes.push({ label: axesDef[i].label, idx: i });
+            i++;
+          } else {
+            i++;
+          }
+        }
+        if (stickPairs.length === 0 && triggerAxes.length === 0) return null;
+        return (
+          <div className="input-cal__sticks">
+            {stickPairs.map((s, pairIdx) => (
+              <div key={s.xIdx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                <StickCircle
+                  x={state.axes[s.xIdx] ?? 0}
+                  y={state.axes[s.yIdx] ?? 0}
+                  label={s.label}
+                />
+                <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+                  <AxisRecordButton
+                    getValues={() => [state.axes[s.xIdx] ?? 0, state.axes[s.yIdx] ?? 0]}
+                    label={s.label}
+                  />
+                  <button
+                    className="input-cal__btn"
+                    style={{ fontSize: 9, padding: '1px 5px', lineHeight: 1.2 }}
+                    onClick={() => setCalibrationTarget({ type: 'stick', side: pairIdx === 0 ? 'left' : 'right' })}
+                    title={`Calibrate ${s.label}`}
+                  >Cal</button>
+                </div>
+              </div>
+            ))}
+            {triggerAxes.map(t => (
+              <div key={t.idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                <TriggerBar
+                  value={state.axes[t.idx] ?? 0}
+                  label={t.label}
+                />
+                <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+                  <AxisRecordButton
+                    getValues={() => [state.axes[t.idx] ?? 0]}
+                    label={t.label}
+                  />
+                  <button
+                    className="input-cal__btn"
+                    style={{ fontSize: 9, padding: '1px 5px', lineHeight: 1.2 }}
+                    onClick={() => setCalibrationTarget({ type: 'trigger', axisIndex: t.idx, label: t.label })}
+                    title={`Calibrate ${t.label}`}
+                  >Cal</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      })()}
 
       {/* Actions */}
       <div style={{ marginTop: 'var(--space-md)', display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>
@@ -545,7 +859,7 @@ function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, 
         </button>
         <button
           className="input-cal__btn"
-          onClick={() => setStickCalibrating(true)}
+          onClick={() => setCalibrationTarget({ type: 'stick', side: 'both' })}
         >
           {hasStickCal ? 'Recalibrate Sticks' : 'Calibrate Sticks'}
         </button>
@@ -556,19 +870,60 @@ function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, 
         </span>
       </div>
 
-      {/* Stick Calibration Wizard (inline) */}
-      {stickCalibrating && (
+      {/* Calibration Wizard (inline) */}
+      {calibrationTarget?.type === 'stick' && (
         <div style={{ marginTop: 'var(--space-md)' }}>
           <StickCalibrationWizard
+            target={calibrationTarget.side === 'both' ? undefined : calibrationTarget.side}
             onComplete={(cal) => {
               onStickCalibrationComplete?.(cal);
-              setStickCalibrating(false);
+              setCalibrationTarget(null);
             }}
-            onCancel={() => setStickCalibrating(false)}
+            onCancel={() => setCalibrationTarget(null)}
             existingCalibration={existingStickCal}
           />
         </div>
       )}
+      {calibrationTarget?.type === 'trigger' && (
+        <div style={{ marginTop: 'var(--space-md)' }}>
+          <TriggerCalibrationWizard
+            axisIndex={calibrationTarget.axisIndex}
+            label={calibrationTarget.label}
+            onComplete={(cal) => {
+              onTriggerCalibrationComplete?.(calibrationTarget.axisIndex, cal);
+              setCalibrationTarget(null);
+            }}
+            onCancel={() => setCalibrationTarget(null)}
+          />
+        </div>
+      )}
+
+      {/* Collapsible raw bytes debug */}
+      <details style={{ marginTop: 'var(--space-sm)' }}>
+        <summary style={{ fontSize: 11, color: 'var(--color-text-muted)', cursor: 'pointer', userSelect: 'none' }}>
+          Raw Bytes {state.reportId != null ? `(0x${state.reportId.toString(16).padStart(2, '0')})` : ''} — {state.rawBytes ? state.rawBytes.length : 0}B
+        </summary>
+        {state.rawBytes && (
+          <div style={{
+            display: 'flex', flexWrap: 'wrap', gap: 2, marginTop: 6,
+            fontFamily: 'monospace', fontSize: 10, lineHeight: 1,
+          }}>
+            {Array.from(state.rawBytes).map((b, i) => (
+              <div key={i} style={{
+                width: 22, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: b > 0 ? `rgba(129,140,248,${Math.min(1, b / 255 * 0.8 + 0.2)})` : '#2a2a3a',
+                color: b > 0 ? '#fff' : '#555',
+                borderRadius: 2, border: '1px solid #3a3a4a',
+              }}>
+                {b.toString(16).padStart(2, '0')}
+              </div>
+            ))}
+          </div>
+        )}
+      </details>
+
+      {/* Idle Byte Analyzer */}
+      <IdleByteAnalyzer state={state} />
     </div>
   );
 }
@@ -650,6 +1005,9 @@ function GamepadCard({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
           <img src={controllerIcon} alt="" draggable={false} style={{ width: 28, height: 28, opacity: 0.7, flexShrink: 0 }} />
         )}
         <span className="input-cal__card-badge">#{gamepad.index}</span>
+        <span className="input-cal__card-badge" style={{ background: isXbox ? '#166534' : '#7c3aed', marginLeft: 4 }}>
+          {isXbox ? 'XInput' : 'WebAPI'}
+        </span>
         <span className="input-cal__card-name">{displayName}</span>
         <span className="input-cal__card-meta">{detectedVidPid ?? (gamepad.mapping || 'unmapped')}</span>
       </div>
@@ -681,23 +1039,49 @@ function GamepadCard({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
         })}
       </div>
 
-      {/* Joystick circles */}
-      {gamepad.axes.length >= 2 && (
-        <div className="input-cal__sticks">
-          <StickCircle
-            x={gamepad.axes[0] ?? 0}
-            y={gamepad.axes[1] ?? 0}
-            label="L Stick"
-          />
-          {gamepad.axes.length >= 4 && (
-            <StickCircle
-              x={gamepad.axes[2] ?? 0}
-              y={gamepad.axes[3] ?? 0}
-              label="R Stick"
-            />
-          )}
-        </div>
-      )}
+      {/* Sticks and triggers — dynamically derived from profile or generic */}
+      {(() => {
+        const axesDef = xboxProfile?.axes;
+        if (axesDef && axesDef.length > 0) {
+          const stickPairs: { label: string; xIdx: number; yIdx: number }[] = [];
+          const triggerAxes: { label: string; idx: number }[] = [];
+          let i = 0;
+          while (i < axesDef.length) {
+            if (axesDef[i].category === 'stick' && i + 1 < axesDef.length && axesDef[i + 1].category === 'stick') {
+              stickPairs.push({ label: axesDef[i].label.replace(/ X$/, ''), xIdx: i, yIdx: i + 1 });
+              i += 2;
+            } else if (axesDef[i].category === 'trigger') {
+              triggerAxes.push({ label: axesDef[i].label, idx: i });
+              i++;
+            } else {
+              i++;
+            }
+          }
+          return (
+            <div className="input-cal__sticks">
+              {stickPairs.map(s => (
+                <StickCircle key={s.xIdx} x={gamepad.axes[s.xIdx] ?? 0} y={gamepad.axes[s.yIdx] ?? 0} label={s.label} />
+              ))}
+              {triggerAxes.map(t => (
+                <TriggerBar key={t.idx} value={gamepad.axes[t.idx] ?? 0} label={t.label} />
+              ))}
+            </div>
+          );
+        }
+        // Fallback: render stick circles for every consecutive pair of axes
+        const pairs: { xIdx: number; yIdx: number }[] = [];
+        for (let j = 0; j + 1 < gamepad.axes.length; j += 2) {
+          pairs.push({ xIdx: j, yIdx: j + 1 });
+        }
+        if (pairs.length === 0) return null;
+        return (
+          <div className="input-cal__sticks">
+            {pairs.map((p, k) => (
+              <StickCircle key={p.xIdx} x={gamepad.axes[p.xIdx] ?? 0} y={gamepad.axes[p.yIdx] ?? 0} label={`Stick ${k + 1}`} />
+            ))}
+          </div>
+        );
+      })()}
 
       {/* Vibration tests */}
       <div style={{ marginTop: 'var(--space-md)', display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>

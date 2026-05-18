@@ -96,6 +96,25 @@ export abstract class BaseController {
   async cleanup(_ctx: ControllerContext): Promise<void> {}
   async reset(ctx: ControllerContext): Promise<void> { await this.init(ctx); }
 
+  /**
+   * Nintendo USB HID handshake — wakes the controller over USB.
+   * All Nintendo HID controllers need this before they'll send reports.
+   */
+  protected async sendUsbHandshake(ctx: ControllerContext): Promise<void> {
+    const cmds = [
+      { data: [0x80, 0x01], label: 'MAC req' },
+      { data: [0x80, 0x02], label: 'Handshake' },
+      { data: [0x80, 0x04], label: 'USB mode' },
+    ];
+    for (const cmd of cmds) {
+      const buf = new Array(64).fill(0);
+      for (let i = 0; i < cmd.data.length; i++) buf[i] = cmd.data[i];
+      const ok = await ctx.hidWrite(buf);
+      ctx.log(`${this.name}: ${ok ? '✓' : '✗'} ${cmd.label}`);
+      await ctx.delay(50);
+    }
+  }
+
   // ── Haptics ──
   supportsVibration(): boolean { return false; }
   async vibrate(_ctx: ControllerContext, _pattern: VibrationSegment[], _gapMs?: number): Promise<{ ok: boolean; error?: string }> {

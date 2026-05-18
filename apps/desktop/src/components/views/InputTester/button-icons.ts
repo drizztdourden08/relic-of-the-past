@@ -8,6 +8,7 @@ const PS_BASE = '/buttons/playstation';
 const SNES_BASE = '/buttons/snes';
 const KB_BASE = '/buttons/keyboard';
 const GENERIC_BASE = '/buttons/generic';
+const GC_BASE = '/buttons/gc';
 
 /** Icon ID → SVG path mapping */
 export const BUTTON_ICON_MAP: Record<string, string> = {
@@ -33,6 +34,24 @@ export const BUTTON_ICON_MAP: Record<string, string> = {
   'switch-ddown':   `${SWITCH_BASE}/switch_dpad_down.svg`,
   'switch-dleft':   `${SWITCH_BASE}/switch_dpad_left.svg`,
   'switch-dright':  `${SWITCH_BASE}/switch_dpad_right.svg`,
+
+  // GameCube Wireless
+  'gc-a':           `${GC_BASE}/gc_button_a.svg`,
+  'gc-b':           `${GC_BASE}/gc_button_b.svg`,
+  'gc-x':           `${GC_BASE}/gc_button_x.svg`,
+  'gc-y':           `${GC_BASE}/gc_button_y.svg`,
+  'gc-l':           `${GC_BASE}/gc_trigger_l.svg`,
+  'gc-r':           `${GC_BASE}/gc_trigger_r.svg`,
+  'gc-zl':          `${GC_BASE}/gc_button_z.svg`,
+  'gc-zr':          `${GC_BASE}/gc_button_z.svg`,
+  'gc-start':       `${GC_BASE}/gc_button_start.svg`,
+  'gc-chat':        `${GC_BASE}/gc_button_chat.svg`,
+  'gc-home':        `${GC_BASE}/gc_button_home.svg`,
+  'gc-capture':     `${GC_BASE}/gc_button_capture.svg`,
+  'gc-dup':         `${GC_BASE}/gc_dpad_up.svg`,
+  'gc-ddown':       `${GC_BASE}/gc_dpad_down.svg`,
+  'gc-dleft':       `${GC_BASE}/gc_dpad_left.svg`,
+  'gc-dright':      `${GC_BASE}/gc_dpad_right.svg`,
 
   // Xbox
   'xbox-a':         `${XBOX_BASE}/xbox_button_a.svg`,

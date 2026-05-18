@@ -131,6 +131,11 @@ contextBridge.exposeInMainWorld('api', {
   readStickCalibration: () => ipcRenderer.invoke('stickCalibration:read'),
   writeStickCalibration: (store: Record<string, unknown>) => ipcRenderer.invoke('stickCalibration:write', store),
 
+  // Trigger calibration (per-device + axis)
+  readTriggerCalibration: () => ipcRenderer.invoke('triggerCalibration:read'),
+  writeTriggerCalibration: (deviceKey: string, axisIndex: number, cal: { base: number; max: number; deadzone: number }) =>
+    ipcRenderer.invoke('triggerCalibration:write', deviceKey, axisIndex, cal),
+
   // HID device enumeration
   enumerateHidDevices: () => ipcRenderer.invoke('hid:enumerate'),
 

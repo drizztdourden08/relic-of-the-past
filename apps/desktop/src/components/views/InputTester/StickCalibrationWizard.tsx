@@ -38,6 +38,8 @@ interface Props {
   onCancel: () => void;
   /** Current raw 12-bit stick values from parser (before normalization) */
   existingCalibration?: DeviceStickCalibration | null;
+  /** Which stick to calibrate — undefined means both */
+  target?: 'left' | 'right';
 }
 
 // ── Constants ──
@@ -83,8 +85,10 @@ function applyCalibration(
 
 // ── Component ──
 
-export function StickCalibrationWizard({ onComplete, onCancel, existingCalibration }: Props) {
+export function StickCalibrationWizard({ onComplete, onCancel, existingCalibration, target }: Props) {
   const [step, setStep] = useState<Step>('center');
+  const calibrateLeft = target !== 'right';
+  const calibrateRight = target !== 'left';
 
   // Raw 12-bit values (live)
   const [rawLX, setRawLX] = useState(2048);
@@ -174,20 +178,22 @@ export function StickCalibrationWizard({ onComplete, onCancel, existingCalibrati
     rangeMinMaxRef.current = next;
     setRangeMinMax(next);
 
-    // Auto-enable "Done" once we have decent range (>500 in each axis)
+    // Auto-enable "Done" once we have decent range (>500 in each targeted axis)
     const minRange = 500;
     const lxRange = next.lxMax - next.lxMin;
     const lyRange = next.lyMax - next.lyMin;
     const rxRange = next.rxMax - next.rxMin;
     const ryRange = next.ryMax - next.ryMin;
-    if (lxRange > minRange && lyRange > minRange && rxRange > minRange && ryRange > minRange) {
+    const leftOk = !calibrateLeft || (lxRange > minRange && lyRange > minRange);
+    const rightOk = !calibrateRight || (rxRange > minRange && ryRange > minRange);
+    if (leftOk && rightOk) {
       setRangeDone(true);
     }
   }, [step, rawLX, rawLY, rawRX, rawRY]);
 
   // ── Build calibration data ──
   const buildCalibration = useCallback((): DeviceStickCalibration => {
-    const left: StickCalibrationData = {
+    const left: StickCalibrationData = calibrateLeft ? {
       centerX: centerValues.lx,
       centerY: centerValues.ly,
       minX: rangeMinMax.lxMin,
@@ -196,8 +202,11 @@ export function StickCalibrationWizard({ onComplete, onCancel, existingCalibrati
       maxY: rangeMinMax.lyMax,
       innerDeadzone: innerDz,
       outerDeadzone: outerDz,
-    };
-    const right: StickCalibrationData = {
+    } : (existingCalibration?.left ?? {
+      centerX: 2048, centerY: 2048, minX: 0, maxX: 4095, minY: 0, maxY: 4095,
+      innerDeadzone: DEFAULT_INNER_DEADZONE, outerDeadzone: DEFAULT_OUTER_DEADZONE,
+    });
+    const right: StickCalibrationData = calibrateRight ? {
       centerX: centerValues.rx,
       centerY: centerValues.ry,
       minX: rangeMinMax.rxMin,
@@ -206,9 +215,12 @@ export function StickCalibrationWizard({ onComplete, onCancel, existingCalibrati
       maxY: rangeMinMax.ryMax,
       innerDeadzone: innerDz,
       outerDeadzone: outerDz,
-    };
+    } : (existingCalibration?.right ?? {
+      centerX: 2048, centerY: 2048, minX: 0, maxX: 4095, minY: 0, maxY: 4095,
+      innerDeadzone: DEFAULT_INNER_DEADZONE, outerDeadzone: DEFAULT_OUTER_DEADZONE,
+    });
     return { left, right, updatedAt: new Date().toISOString() };
-  }, [centerValues, rangeMinMax, innerDz, outerDz]);
+  }, [centerValues, rangeMinMax, innerDz, outerDz, calibrateLeft, calibrateRight, existingCalibration]);
 
   // ── Live preview (review step) ──
   const previewCal = step === 'review' ? buildCalibration() : null;
@@ -257,7 +269,9 @@ export function StickCalibrationWizard({ onComplete, onCancel, existingCalibrati
   return (
     <div className="hid-cal" style={{ maxWidth: 520 }}>
       <div className="input-cal__header">
-        <span className="input-cal__title">Stick Calibration</span>
+        <span className="input-cal__title">
+          {target ? `${target === 'left' ? 'Left' : 'Right'} Stick Calibration` : 'Stick Calibration'}
+        </span>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="input-cal__btn" onClick={onCancel}>Cancel</button>
         </div>
@@ -289,7 +303,7 @@ export function StickCalibrationWizard({ onComplete, onCancel, existingCalibrati
       {step === 'center' && (
         <div>
           <p style={{ fontSize: 13, color: 'var(--color-text-secondary)', margin: '0 0 12px' }}>
-            <strong>Leave both sticks at rest</strong> — don't touch them. The software will record the idle center position.
+            <strong>Leave {target ? `the ${target} stick` : 'both sticks'} at rest</strong> — don't touch {target ? 'it' : 'them'}. The software will record the idle center position.
           </p>
 
           {!centerDone ? (
@@ -311,12 +325,12 @@ export function StickCalibrationWizard({ onComplete, onCancel, existingCalibrati
           ) : (
             <div>
               <div style={{
-                display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8,
+                display: 'grid', gridTemplateColumns: calibrateLeft && calibrateRight ? '1fr 1fr' : '1fr', gap: 8,
                 fontSize: 12, fontFamily: 'monospace', marginBottom: 12,
                 padding: 8, background: 'var(--color-bg-inset)', borderRadius: 6,
               }}>
-                <div>L Center: {centerValues.lx}, {centerValues.ly}</div>
-                <div>R Center: {centerValues.rx}, {centerValues.ry}</div>
+                {calibrateLeft && <div>L Center: {centerValues.lx}, {centerValues.ly}</div>}
+                {calibrateRight && <div>R Center: {centerValues.rx}, {centerValues.ry}</div>}
               </div>
               <div style={{ display: 'flex', gap: 8 }}>
                 <button
@@ -346,15 +360,15 @@ export function StickCalibrationWizard({ onComplete, onCancel, existingCalibrati
 
           {/* Live raw preview */}
           <div style={{ display: 'flex', gap: 20, marginTop: 16, justifyContent: 'center' }}>
-            {renderStickPreview((rawLX - 2048) / 2048, -(rawLY - 2048) / 2048, 'L Stick (raw)')}
-            {renderStickPreview((rawRX - 2048) / 2048, -(rawRY - 2048) / 2048, 'R Stick (raw)')}
+            {calibrateLeft && renderStickPreview((rawLX - 2048) / 2048, -(rawLY - 2048) / 2048, 'L Stick (raw)')}
+            {calibrateRight && renderStickPreview((rawRX - 2048) / 2048, -(rawRY - 2048) / 2048, 'R Stick (raw)')}
           </div>
           <div style={{
             display: 'flex', gap: 40, justifyContent: 'center', marginTop: 4,
             fontSize: 10, fontFamily: 'monospace', color: 'var(--color-text-muted)',
           }}>
-            <span>raw: {rawLX}, {rawLY}</span>
-            <span>raw: {rawRX}, {rawRY}</span>
+            {calibrateLeft && <span>raw: {rawLX}, {rawLY}</span>}
+            {calibrateRight && <span>raw: {rawRX}, {rawRY}</span>}
           </div>
         </div>
       )}
@@ -363,35 +377,39 @@ export function StickCalibrationWizard({ onComplete, onCancel, existingCalibrati
       {step === 'range' && (
         <div>
           <p style={{ fontSize: 13, color: 'var(--color-text-secondary)', margin: '0 0 12px' }}>
-            <strong>Slowly rotate both sticks</strong> in full circles, reaching the physical limits in all directions. Do this for both sticks.
+            <strong>Slowly rotate {target ? `the ${target} stick` : 'both sticks'}</strong> in full circles, reaching the physical limits in all directions.
           </p>
 
           {/* Range info grid */}
           <div style={{
-            display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8,
+            display: 'grid', gridTemplateColumns: calibrateLeft && calibrateRight ? '1fr 1fr' : '1fr', gap: 8,
             fontSize: 11, fontFamily: 'monospace', marginBottom: 12,
             padding: 8, background: 'var(--color-bg-inset)', borderRadius: 6,
           }}>
+            {calibrateLeft && (
             <div>
               <div style={{ fontWeight: 600, marginBottom: 4 }}>Left Stick</div>
               <div>X: {rangeMinMax.lxMin} — {rangeMinMax.lxMax} (Δ{rangeMinMax.lxMax - rangeMinMax.lxMin})</div>
               <div>Y: {rangeMinMax.lyMin} — {rangeMinMax.lyMax} (Δ{rangeMinMax.lyMax - rangeMinMax.lyMin})</div>
             </div>
+            )}
+            {calibrateRight && (
             <div>
               <div style={{ fontWeight: 600, marginBottom: 4 }}>Right Stick</div>
               <div>X: {rangeMinMax.rxMin} — {rangeMinMax.rxMax} (Δ{rangeMinMax.rxMax - rangeMinMax.rxMin})</div>
               <div>Y: {rangeMinMax.ryMin} — {rangeMinMax.ryMax} (Δ{rangeMinMax.ryMax - rangeMinMax.ryMin})</div>
             </div>
+            )}
           </div>
 
           {/* Live sticks — show with center-adjusted preview */}
           <div style={{ display: 'flex', gap: 20, justifyContent: 'center' }}>
-            {renderStickPreview(
+            {calibrateLeft && renderStickPreview(
               (rawLX - centerValues.lx) / Math.max(rangeMinMax.lxMax - centerValues.lx, centerValues.lx - rangeMinMax.lxMin, 1),
               -(rawLY - centerValues.ly) / Math.max(rangeMinMax.lyMax - centerValues.ly, centerValues.ly - rangeMinMax.lyMin, 1),
               'L Stick',
             )}
-            {renderStickPreview(
+            {calibrateRight && renderStickPreview(
               (rawRX - centerValues.rx) / Math.max(rangeMinMax.rxMax - centerValues.rx, centerValues.rx - rangeMinMax.rxMin, 1),
               -(rawRY - centerValues.ry) / Math.max(rangeMinMax.ryMax - centerValues.ry, centerValues.ry - rangeMinMax.ryMin, 1),
               'R Stick',
@@ -414,7 +432,7 @@ export function StickCalibrationWizard({ onComplete, onCancel, existingCalibrati
             </button>
             {!rangeDone && (
               <span style={{ fontSize: 11, color: 'var(--color-text-muted)', alignSelf: 'center' }}>
-                Rotate both sticks fully to continue...
+                Rotate {target ? `the ${target} stick` : 'both sticks'} fully to continue...
               </span>
             )}
           </div>
@@ -463,8 +481,8 @@ export function StickCalibrationWizard({ onComplete, onCancel, existingCalibrati
 
           {/* Live calibrated preview */}
           <div style={{ display: 'flex', gap: 20, justifyContent: 'center' }}>
-            {renderStickPreview(previewL.x, previewL.y, 'L Stick (calibrated)', 120)}
-            {renderStickPreview(previewR.x, previewR.y, 'R Stick (calibrated)', 120)}
+            {calibrateLeft && renderStickPreview(previewL.x, previewL.y, 'L Stick (calibrated)', 120)}
+            {calibrateRight && renderStickPreview(previewR.x, previewR.y, 'R Stick (calibrated)', 120)}
           </div>
 
           <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>

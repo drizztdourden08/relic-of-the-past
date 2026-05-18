@@ -177,6 +177,16 @@ export class HidInputReader {
       groups.get(key)!.push(d);
     }
 
+    // Remove devices that disappeared from enumeration (unplugged)
+    const enumeratedKeys = new Set(groups.keys());
+    for (const dev of [...this.devices]) {
+      if (!enumeratedKeys.has(dev.key)) {
+        this.log(`Device ${dev.key} (${dev.product}) no longer enumerated — removing`);
+        this.removeDevice(dev);
+        this.send('hid:disconnect', { deviceKey: dev.key, product: dev.product });
+      }
+    }
+
     for (const [key, interfaces] of groups) {
       // Skip if already open
       if (this.devices.some(d => d.key === key)) continue;
@@ -214,6 +224,31 @@ export class HidInputReader {
         });
 
         this.log(`Opened ${key} (${dev.product})`);
+
+        // Nintendo controllers need a wake-up poke after USB enumeration.
+        // Send a silent haptic frame (report 0x02) — the one output report
+        // all Nintendo controllers accept — to kick the input pipeline.
+        if (target.vendorId === NINTENDO_VID) {
+          try {
+            const wake = new Array(64).fill(0);
+            wake[0] = 0x02; // report ID
+            wake[1] = 0x50; // haptic counter byte
+            wake[17] = 0x50;
+            // HAPTIC_SILENT: no vibration, just makes the device acknowledge us
+            const silent = [0x3f, 0x01, 0xf0, 0x19, 0x00];
+            for (let i = 0; i < silent.length; i++) {
+              wake[2 + i] = silent[i];
+              wake[18 + i] = silent[i];
+            }
+            hid.pause();
+            hid.write(wake);
+            hid.resume();
+            this.log(`Sent wake-up haptic frame to ${key}`);
+          } catch (err) {
+            this.log(`Wake-up write failed for ${key}: ${(err as Error).message}`);
+          }
+        }
+
         // Notify renderer a new device is available
         this.send('hid:device-opened', {
           deviceKey: key,
@@ -252,8 +287,7 @@ export class HidInputReader {
     this._fwdCount++;
     if (now - this._fwdLogTime > 2000 && this._fwdCount > 0) {
       const msg = `[HID-MAIN] sent=${this._fwdCount} maxGap=${this._fwdGapMax.toFixed(1)}ms bursts=${this._fwdBursts}`;
-      console.log(msg);
-      // Also send to renderer so it appears in the diag UI
+      // Send to renderer diag UI only (no terminal log)
       this.send('hid:main-perf', msg);
       this._fwdCount = 0;
       this._fwdGapMax = 0;

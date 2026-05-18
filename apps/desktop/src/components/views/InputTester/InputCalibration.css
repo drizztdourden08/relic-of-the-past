@@ -150,6 +150,11 @@
   100% { left: 100%; }
 }
 
+@keyframes axis-rec-flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
 .input-cal__card:hover {
   border-color: var(--color-border-default);
 }
@@ -569,6 +574,34 @@
   font-size: 9px;
   color: #888;
   font-family: var(--font-mono);
+}
+
+.hid-cal__input-clear {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: #888;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 0;
+  margin-left: 2px;
+}
+.hid-cal__input-clear:hover {
+  background: #3a1a1a;
+  color: #f87171;
+}
+
+.hid-cal__input-item--pending:hover,
+.hid-cal__input-item--captured:hover,
+.hid-cal__input-item--skipped:hover {
+  border-color: #555;
 }
 
 /* ── Byte grid ── */

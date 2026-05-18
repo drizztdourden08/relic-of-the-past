@@ -15,6 +15,10 @@ export interface WebHidInputState {
   timestamp: number;
   /** Raw 12-bit stick values [lx, ly, rx, ry] before calibration (for calibration UI) */
   rawSticks?: [number, number, number, number];
+  /** Raw HID report bytes (for debug UI) */
+  rawBytes?: Uint8Array;
+  /** HID report ID */
+  reportId?: number;
 }
 
 /** Raw report emitted for calibration — unprocessed bytes */
@@ -96,9 +100,13 @@ class WebHidInputReader {
   private diagListeners = new Set<WebHidDiagListener>();
   private diagLog: string[] = [];
   private connected = false;
+  /** All device keys that have sent at least one IPC report (even if no parser matched) */
+  private connectedDeviceKeys = new Set<string>();
   private disconnectListeners = new Set<WebHidDisconnectListener>();
   /** Per-device stick calibration, keyed by "vid:pid" */
   private stickCalibrations = new Map<string, DeviceStickCalibration>();
+  /** Per-device trigger calibrations, keyed by "vid:pid:axisIndex" */
+  private triggerCalibrations = new Map<string, { base: number; max: number; deadzone: number }>();
   /** Ring buffer of raw HID report hex strings for diagnostics */
   private rawReportLog: string[] = [];
   private static readonly RAW_LOG_MAX = 100;
@@ -128,7 +136,28 @@ class WebHidInputReader {
       this.stickCalibrations.set(key, cal);
     }
     if (Object.keys(store).length > 0) {
-      this.log(`Loaded stick calibrations for ${Object.keys(store).length} device(s)`);
+      this.log(`Loaded saved stick calibrations (${Object.keys(store).length} profile(s))`);
+    }
+  }
+
+  /** Set trigger calibration for a specific device + axis */
+  setTriggerCalibration(deviceKey: string, axisIndex: number, cal: { base: number; max: number; deadzone: number }): void {
+    this.triggerCalibrations.set(`${deviceKey}:${axisIndex}`, cal);
+    this.log(`Trigger calibration loaded for ${deviceKey} axis ${axisIndex}`);
+  }
+
+  /** Get trigger calibration for a device + axis */
+  getTriggerCalibration(deviceKey: string, axisIndex: number): { base: number; max: number; deadzone: number } | undefined {
+    return this.triggerCalibrations.get(`${deviceKey}:${axisIndex}`);
+  }
+
+  /** Load all trigger calibrations from store */
+  loadTriggerCalibrations(store: Record<string, { base: number; max: number; deadzone: number }>): void {
+    for (const [key, cal] of Object.entries(store)) {
+      this.triggerCalibrations.set(key, cal);
+    }
+    if (Object.keys(store).length > 0) {
+      this.log(`Loaded saved trigger calibrations (${Object.keys(store).length} entry(s))`);
     }
   }
 
@@ -171,8 +200,21 @@ class WebHidInputReader {
   isConnected(): boolean { return this.connected; }
   getRawReportLog(): string[] { return [...this.rawReportLog]; }
 
-  /** Get VID:PID keys of all devices with active HID state (for duplicate filtering) */
-  getConnectedDeviceKeys(): string[] { return [...this.states.keys()]; }
+  /** Get VID:PID keys of all devices that have sent IPC reports (for duplicate filtering + UI) */
+  getConnectedDeviceKeys(): string[] { return [...this.connectedDeviceKeys]; }
+
+  /**
+   * Mark a device as connected when the main process opens it (hid:device-opened event).
+   * Some devices (e.g. GameCube adapter) don't send HID reports until a button is pressed,
+   * so we can't rely on handleIpcReport to set the connected state.
+   */
+  markDeviceOpened(deviceKey: string, product?: string): void {
+    if (!this.connectedDeviceKeys.has(deviceKey)) {
+      this.connectedDeviceKeys.add(deviceKey);
+      this.connected = true;
+      this.log(`Device opened: ${deviceKey}${product ? ` (${product})` : ''}`);
+    }
+  }
 
   private pushRawLog(entry: string): void {
     this.rawReportLog.push(entry);
@@ -261,9 +303,16 @@ class WebHidInputReader {
       for (const cb of this.rawListeners) cb(raw);
     }
 
-    // Parse via controller registry (single source of truth)
+    // Track this device as connected (even before parsing succeeds)
     const vid = vendorId.toString(16).padStart(4, '0');
     const pid = productId.toString(16).padStart(4, '0');
+    if (!this.connectedDeviceKeys.has(deviceKey)) {
+      this.connectedDeviceKeys.add(deviceKey);
+      this.connected = true;
+      this.log(`IPC device connected: ${deviceKey} (${vid}:${pid})`);
+    }
+
+    // Parse via controller registry (single source of truth)
     const controller = findController(vid, pid);
     let parsed: { buttons: boolean[]; axes: number[]; rawSticks?: [number, number, number, number] } | null = null;
 
@@ -274,17 +323,28 @@ class WebHidInputReader {
         const cal = this.stickCalibrations.get(deviceKey);
         if (cal) {
           const [lxR, lyR, rxR, ryR] = parsed.rawSticks;
-          parsed.axes = applySticksCalibration(lxR, lyR, rxR, ryR, cal);
+          const calibratedSticks = applySticksCalibration(lxR, lyR, rxR, ryR, cal);
+          // Preserve trigger/extra axes beyond the 4 stick axes
+          parsed.axes = [...calibratedSticks, ...parsed.axes.slice(4)];
+        }
+      }
+
+      // Apply trigger calibrations if available
+      if (parsed) {
+        for (let i = 4; i < parsed.axes.length; i++) {
+          const tcal = this.triggerCalibrations.get(`${deviceKey}:${i}`);
+          if (tcal) {
+            const range = tcal.max - tcal.base;
+            if (range > 0) {
+              const normalized = Math.max(0, Math.min(1, (parsed.axes[i] - tcal.base) / range));
+              parsed.axes[i] = normalized < tcal.deadzone ? 0 : (normalized - tcal.deadzone) / (1 - tcal.deadzone);
+            }
+          }
         }
       }
     }
 
     if (parsed) {
-      // Mark as connected if not already
-      if (!this.connected) {
-        this.connected = true;
-        this.log(`IPC device connected: ${deviceKey}`);
-      }
 
       const state: WebHidInputState = {
         deviceKey,
@@ -292,6 +352,8 @@ class WebHidInputReader {
         axes: parsed.axes,
         timestamp: performance.now(),
         rawSticks: parsed.rawSticks,
+        rawBytes: buf,
+        reportId,
       };
       this.states.set(deviceKey, state);
       for (const cb of this.listeners) cb(state);
@@ -305,7 +367,8 @@ class WebHidInputReader {
    */
   handleIpcDisconnect(deviceKey: string, error?: string): void {
     this.states.delete(deviceKey);
-    this.connected = this.states.size > 0;
+    this.connectedDeviceKeys.delete(deviceKey);
+    this.connected = this.connectedDeviceKeys.size > 0;
     if (error) {
       this.log(`IPC device ERROR: ${deviceKey} — ${error}`);
       this.addDiag(`⚠ Device error (${deviceKey}): ${error}. Try unplugging and replugging.`);

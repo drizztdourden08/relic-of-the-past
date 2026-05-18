@@ -267,6 +267,11 @@ export class InputManager {
           webHidReader.loadStickCalibrations(store as Record<string, import('./webhid-input-reader').DeviceStickCalibration>);
         })
         .catch(() => { /* no calibration file yet — that's fine */ });
+      window.api.readTriggerCalibration()
+        .then((store) => {
+          webHidReader.loadTriggerCalibrations(store);
+        })
+        .catch(() => { /* no trigger calibration file yet — that's fine */ });
     }
 
     window.addEventListener('keydown', this.onKeyDown);
@@ -285,8 +290,8 @@ export class InputManager {
     // Subscribe to WebHID input (Switch, PS, 8BitDo)
     this.hidUnsubscribe = webHidReader.onInput((state: WebHidInputState) => {
       this.hidStates.set(state.deviceKey, { buttons: state.buttons, axes: state.axes });
-      if (!this.currentHidStates.has(state.deviceKey)) this.hidStatesDirty = true;
       this.currentHidStates.set(state.deviceKey, state);
+      this.hidStatesDirty = true;
       // Auto-resume if paused due to controller disconnect and this device reconnected
       if (this.paused && this.pausedControllerName !== 'Manual pause') {
         this.resume();
@@ -327,6 +332,8 @@ export class InputManager {
 
     // Auto-init controllers when a new HID device is opened by the main process
     this.ipcDeviceOpenedUnsub = window.api.onHidDeviceOpened((info) => {
+      // Mark device as connected immediately (some devices don't send reports until button press)
+      webHidReader.markDeviceOpened(info.deviceKey, info.product);
       this.initController(info.deviceKey, info.vendorId, info.productId);
     });
 
@@ -494,6 +501,14 @@ export class InputManager {
     window.api.enumerateHidDevices()
       .then(hidDevices => {
         this.hidDeviceCache = hidDevices;
+        // Mark all enumerated HID devices as connected in webHidReader
+        // (handles devices that opened before InputManager subscribed to hid:device-opened)
+        for (const hid of hidDevices) {
+          const name = (hid.product || '').toLowerCase();
+          if (name.includes('mouse') || name.includes('trackpad') || name.includes('touchpad')) continue;
+          const key = `${hid.vendorId}:${hid.productId}`;
+          webHidReader.markDeviceOpened(key, hid.product);
+        }
         const updated = detectAllDevices(hidDevices);
         // Only notify if device list actually changed
         if (JSON.stringify(updated) !== JSON.stringify(this.devices)) {
@@ -823,11 +838,7 @@ export class InputManager {
     // Snapshot gamepads (filter duplicates with WebHID)
     this.currentGamepads = this.snapshotGamepads();
 
-    // DEBUG: log pipeline state every 120 frames (~2s)
     this._pollDbg++;
-    if (this._pollDbg % 600 === 1) {
-      console.log(`[INPUT-POLL] suppressed=${this.inputSuppressed} paused=${this.paused} hidStates=${this.hidStates.size} gamepadBtnMap=${this.gamepadButtonMap.size} axisMap=${this.gamepadAxisMap.size} profile=${this.activeProfile?.name ?? 'NONE'} setInputFn=${!!this.setInputFn}`);
-    }
 
     if (!this.paused && !this.inputSuppressed) {
       const mask = this.computeBitmask();
@@ -1204,6 +1215,8 @@ export function getInputManager(): InputManager {
     instance = new InputManager();
     instance.start();
   }
+  // Expose for E2E testing
+  if (typeof window !== 'undefined') (window as any).__inputManager = instance;
   return instance;
 }
 

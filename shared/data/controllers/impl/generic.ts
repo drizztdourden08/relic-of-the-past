@@ -70,10 +70,12 @@ const BUTTONS: ControllerButton[] = [
 ];
 
 const AXES: ControllerAxis[] = [
-  { id: 'leftX',  label: 'Left Stick X',  category: 'stick' },
-  { id: 'leftY',  label: 'Left Stick Y',  category: 'stick' },
-  { id: 'rightX', label: 'Right Stick X', category: 'stick' },
-  { id: 'rightY', label: 'Right Stick Y', category: 'stick' },
+  { id: 'leftX',        label: 'Left Stick X',    category: 'stick' },
+  { id: 'leftY',        label: 'Left Stick Y',    category: 'stick' },
+  { id: 'rightX',       label: 'Right Stick X',   category: 'stick' },
+  { id: 'rightY',       label: 'Right Stick Y',   category: 'stick' },
+  { id: 'leftTrigger',  label: 'Left Trigger',    category: 'trigger' },
+  { id: 'rightTrigger', label: 'Right Trigger',   category: 'trigger' },
 ];
 
 /**

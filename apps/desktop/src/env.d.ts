@@ -295,6 +295,10 @@ interface ElectronAPI {
   readStickCalibration(): Promise<Record<string, unknown>>;
   writeStickCalibration(store: Record<string, unknown>): Promise<void>;
 
+  // Trigger calibration (per-device + axis)
+  readTriggerCalibration(): Promise<Record<string, { base: number; max: number; deadzone: number }>>;
+  writeTriggerCalibration(deviceKey: string, axisIndex: number, cal: { base: number; max: number; deadzone: number }): Promise<void>;
+
   // HID device enumeration
   enumerateHidDevices(): Promise<Array<{ vendorId: string; productId: string; product: string; manufacturer: string; path: string; serialNumber: string | null }>>;
 

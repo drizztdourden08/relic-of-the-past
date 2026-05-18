@@ -5,6 +5,7 @@
  */
 
 // Specific controllers (matched by VID:PID)
+import './impl/gamecube-wireless';
 import './impl/switch-pro-2';
 import './impl/switch-pro';
 import './impl/xbox';

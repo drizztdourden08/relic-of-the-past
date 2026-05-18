@@ -35,6 +35,8 @@ import {
   writeInputProfiles,
   readStickCalibration,
   writeStickCalibration,
+  readTriggerCalibration,
+  writeTriggerCalibration,
   ensureDataDirectories,
   migrateDataFolder,
 } from './profile-manager';
@@ -98,13 +100,6 @@ function createWindow(): void {
       mainWindow!.webContents.setIgnoreMenuShortcuts(true);
     } else {
       mainWindow!.webContents.setIgnoreMenuShortcuts(false);
-    }
-  });
-
-  // DEBUG: Pipe renderer console.log to main process stdout
-  mainWindow.webContents.on('console-message', (_event, _level, message) => {
-    if (message.startsWith('[HID-') || message.startsWith('[INPUT-')) {
-      console.log(message);
     }
   });
 
@@ -957,6 +952,14 @@ function registerIpcHandlers(): void {
 
   ipcMain.handle('stickCalibration:write', async (_event, store: Record<string, unknown>) => {
     await writeStickCalibration(store as any);
+  });
+
+  ipcMain.handle('triggerCalibration:read', async () => {
+    return readTriggerCalibration();
+  });
+
+  ipcMain.handle('triggerCalibration:write', async (_event, deviceKey: string, axisIndex: number, cal: { base: number; max: number; deadzone: number }) => {
+    await writeTriggerCalibration(deviceKey, axisIndex, cal);
   });
 
   // HID device enumeration (async — uses worker thread to avoid blocking main)

@@ -9,6 +9,7 @@
 
 import type { DetectedDevice, InputApi } from '@shared/types/controls';
 import { resolvePreset, parseGamepadId, findPresetByVidPid, KEYBOARD_DEFAULT } from '@shared/data/controllers';
+import { SDL_CONTROLLER_DB } from '@shared/data/controllers/sdl-controller-list';
 
 interface HidDeviceInfo {
   vendorId: string;
@@ -25,11 +26,23 @@ interface HidDeviceInfo {
  */
 function detectFromHid(hid: HidDeviceInfo, index: number, webApiActivated: boolean): DetectedDevice {
   const preset = findPresetByVidPid(hid.vendorId, hid.productId);
-  const api = preset?.inputApi ?? 'webapi';
+  // If a device was found via HID enumeration, it should use HID by default.
+  // Only Xbox (xinput) controllers need the Gamepad API since Windows claims exclusive HID access.
+  // The generic fallback has inputApi='webapi' which is wrong for HID-enumerated devices.
+  const isGenericFallback = preset?.id === 'generic';
+  const api = preset?.inputApi === 'xinput' ? 'xinput'
+    : isGenericFallback ? 'hid'
+    : (preset?.inputApi ?? 'hid');
 
   // HID-api controllers are always activated (direct HID reading, no button press needed).
-  // XInput/WebAPI controllers need a button press to appear in navigator.getGamepads().
-  const activated = api === 'hid' ? true : webApiActivated;
+  // XInput controllers need a button press to appear in navigator.getGamepads().
+  const activated = api === 'xinput' ? webApiActivated : true;
+
+  // Resolve display name: specific preset > SDL database > HID product string
+  const sdlName = isGenericFallback
+    ? SDL_CONTROLLER_DB.find(e => e.vidPid === `${hid.vendorId}:${hid.productId}`)?.name
+    : undefined;
+  const displayName = (!isGenericFallback && preset?.name) || sdlName || hid.product;
 
   return {
     id: `hid-${hid.vendorId}-${hid.productId}`,
@@ -38,7 +51,7 @@ function detectFromHid(hid: HidDeviceInfo, index: number, webApiActivated: boole
     vendorId: hid.vendorId,
     productId: hid.productId,
     controllerFamily: preset?.family ?? 'generic',
-    displayName: preset?.name ?? hid.product,
+    displayName,
     presetId: preset?.id ?? null,
     connected: true,
     activated,

@@ -46,15 +46,8 @@ const HAPTIC_MEDIUM: number[] = [0x75, 0x19, 0x41, 0x9b, 0x03];
 const HAPTIC_LIGHT:  number[] = [0x48, 0x71, 0x20, 0x5a, 0x02];
 const HAPTIC_SILENT: number[] = [0x3f, 0x01, 0xf0, 0x19, 0x00];
 
-// ── HID Init Commands ──
-
-const INIT_COMMANDS: { data: number[]; label: string }[] = [
-  { data: [0x80, 0x01], label: 'MAC req' },
-  { data: [0x80, 0x02], label: 'Handshake' },
-  { data: [0x80, 0x04], label: 'USB mode' },
-  // Output report 0x01: subcmd 0x03 (set input report mode), mode=0x30 (full)
-  { data: [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x30], label: 'SubCmd: mode=full' },
-];
+// ── HID Init ──
+// Handshake (0x80) is in base class. Only the subcmd 0x30 is controller-specific.
 
 // ── SNES Button Mappings ──
 
@@ -234,18 +227,16 @@ class SwitchProController extends BaseController {
   async init(ctx: ControllerContext): Promise<void> {
     if (this.initDone.has(ctx.deviceKey)) return;
 
-    ctx.log('Switch Pro: Sending HID init sequence...');
-    for (const cmd of INIT_COMMANDS) {
-      const buf = new Array(64).fill(0);
-      for (let i = 0; i < cmd.data.length; i++) buf[i] = cmd.data[i];
-      const ok = await ctx.hidWrite(buf);
-      if (ok) {
-        ctx.log(`Switch Pro: ✓ ${cmd.label}`);
-      } else {
-        ctx.log(`Switch Pro: ✗ ${cmd.label}`);
-      }
-      await ctx.delay(50);
-    }
+    // Shared Nintendo USB handshake (0x80 commands)
+    await this.sendUsbHandshake(ctx);
+
+    // Switch Pro needs subcmd to enter full report mode (0x30)
+    const subcmd = [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x30];
+    const buf = new Array(64).fill(0);
+    for (let i = 0; i < subcmd.length; i++) buf[i] = subcmd[i];
+    const ok = await ctx.hidWrite(buf);
+    ctx.log(`Switch Pro: ${ok ? '✓' : '✗'} SubCmd: mode=full`);
+    await ctx.delay(50);
 
     this.initDone.add(ctx.deviceKey);
     ctx.log('Switch Pro: Init complete');
