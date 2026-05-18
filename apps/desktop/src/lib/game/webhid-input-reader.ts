@@ -6,7 +6,7 @@
  * in the Electron main process. This module is purely a parser + state store.
  */
 
-import { findController } from '@shared/data/controllers/register-all';
+import { findController } from '@shared/input/register-all';
 
 export interface WebHidInputState {
   deviceKey: string;

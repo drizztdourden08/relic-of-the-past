@@ -5,15 +5,18 @@
  */
 
 // Specific controllers (matched by VID:PID)
-import './impl/gamecube-wireless';
-import './impl/switch-pro-2';
-import './impl/switch-pro';
-import './impl/xbox';
-import './impl/playstation';
-import './impl/8bitdo';
+import './presets/gamecube-wireless';
+import './presets/switch-pro-2';
+import './presets/switch-pro';
+import './presets/xbox';
+import './presets/playstation';
+import './presets/8bitdo';
+
+// Keyboard
+import './presets/keyboard';
 
 // Generic fallback (matches anything) — must be last
-import './impl/generic';
+import './presets/generic';
 
 // Re-export registry API for consumers
 export { findController, findControllerById, getAllControllers } from './registry';

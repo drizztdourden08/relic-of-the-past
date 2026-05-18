@@ -19,9 +19,9 @@ import type { HidControllerMap } from './HidCalibrationWizard';
 import { StickCalibrationWizard } from './StickCalibrationWizard';
 import { TriggerCalibrationWizard } from './TriggerCalibrationWizard';
 import type { TriggerCalibrationData } from './TriggerCalibrationWizard';
-import { CONTROLLER_PROFILES } from '@shared/data/controllers/profiles';
-import { findPresetByVidPid, parseGamepadId } from '@shared/data/controllers';
-import { SDL_CONTROLLER_DB } from '@shared/data/controllers/sdl-controller-list';
+import { DEVICE_PROFILES } from '@shared/input';
+import { findPresetByVidPid, parseGamepadId } from '@shared/input';
+import { DEVICE_DATABASE } from '@shared/input/device-database';
 import { getButtonIconUrl } from './button-icons';
 import { vibrateGamepad, vibrateGamepadPattern } from '../../../lib/game/vibration';
 import './InputCalibration.css';
@@ -333,7 +333,7 @@ function StickCircle({ x, y, label, iconPrefix }: { x: number; y: number; label:
 function resolveDeviceName(vid: string, pid: string, hidProduct?: string): string {
   const vidPid = `${vid.padStart(4, '0')}:${pid.padStart(4, '0')}`;
   // Try SDL database first (893+ controllers)
-  const sdlEntry = SDL_CONTROLLER_DB.find(e => e.vidPid === vidPid);
+  const sdlEntry = DEVICE_DATABASE.find(e => e.vidPid === vidPid);
   if (sdlEntry) return sdlEntry.name;
   // Try controller preset
   const preset = findPresetByVidPid(vid, pid);
@@ -471,7 +471,7 @@ export function InputCalibration(): JSX.Element {
     const keys = webHidReader.getConnectedDeviceKeys();
     if (keys.length === 0) return null;
     const [vidHex, pidHex] = keys[0].split(':');
-    return CONTROLLER_PROFILES.find(p => p.vendorId === vidHex && p.productId === pidHex) ?? null;
+    return DEVICE_PROFILES.find(p => p.vendorId === vidHex && p.productId === pidHex) ?? null;
   })();
 
   // HID connected = any device keys registered (even unparsed devices)
@@ -590,7 +590,7 @@ export function InputCalibration(): JSX.Element {
             return [...keys].map(key => {
               // Find profile for this specific device key
               const [vidHex, pidHex] = key.split(':');
-              const deviceProfile = CONTROLLER_PROFILES.find(
+              const deviceProfile = DEVICE_PROFILES.find(
                 p => p.vendorId === vidHex?.padStart(4, '0') && p.productId === pidHex?.padStart(4, '0')
               ) ?? null;
 
@@ -724,7 +724,7 @@ export function InputCalibration(): JSX.Element {
 interface WebHidCardProps {
   deviceKey: string;
   state: WebHidInputState;
-  profile: (typeof CONTROLLER_PROFILES)[number] | null;
+  profile: (typeof DEVICE_PROFILES)[number] | null;
   hasStickCal?: boolean;
   existingStickCal?: DeviceStickCalibration | null;
   onStickCalibrationComplete?: (cal: DeviceStickCalibration) => void;
@@ -1020,7 +1020,7 @@ function GamepadCard({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
 
   // For standard-mapped gamepads, use the Xbox profile for icons
   const isXbox = /xbox|xinput/i.test(gamepad.id) || detectedVidPid?.startsWith('045e') || false;
-  const xboxProfile = isXbox ? CONTROLLER_PROFILES.find(p => p.id === 'xbox') : null;
+  const xboxProfile = isXbox ? DEVICE_PROFILES.find(p => p.id === 'xbox') : null;
 
   const controllerIcon = isXbox ? CONTROLLER_ICON_MAP['xbox'] : null;
 

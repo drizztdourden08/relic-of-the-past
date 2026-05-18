@@ -44,7 +44,7 @@ test.describe('HID Priority', () => {
         inputApi: d.inputApi,
         activated: d.activated,
         type: d.type,
-        controllerFamily: d.controllerFamily,
+        deviceFamily: d.deviceFamily,
       }));
     });
 

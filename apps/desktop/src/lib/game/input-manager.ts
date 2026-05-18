@@ -11,11 +11,11 @@
 
 import type { InputProfile, InputBinding, SnesButton, FunctionMapping, FunctionAction, ButtonIcon } from '@shared/types/controls';
 import { SNES_BUTTON_BITS, DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
-import { KEYBOARD_DEFAULT, parseGamepadId } from '@shared/data/controllers';
+import { KEYBOARD_DEFAULT, parseGamepadId } from '@shared/input';
 import type { DetectedDevice } from '@shared/types/controls';
-import { findProfileByVidPid } from '@shared/data/controllers/profiles';
-import { findController } from '@shared/data/controllers/register-all';
-import type { ControllerContext } from '@shared/data/controllers/base';
+import { findDeviceProfileByVidPid } from '@shared/input';
+import { findController } from '@shared/input/register-all';
+import type { ControllerContext } from '@shared/input/base';
 import { detectAllDevices, markActivated, updateActivationState } from './controller-detect';
 import { webHidReader } from './webhid-input-reader';
 import type { WebHidInputState } from './webhid-input-reader';
@@ -772,8 +772,8 @@ export class InputManager {
    */
   private checkControllerDisconnectPause(): void {
     if (this.paused) return;
-    const assigned = this.activeProfile?.assignedController;
-    if (assigned && assigned.controllerFamily !== 'keyboard') {
+    const assigned = this.activeProfile?.assignedDevice;
+    if (assigned && assigned.deviceFamily !== 'keyboard') {
       const stillConnected = this.devices.some(
         d => d.vendorId === assigned.vendorId && d.productId === assigned.productId && d.connected
       );
@@ -1200,16 +1200,16 @@ function isTextInput(target: EventTarget | null): boolean {
          (target as HTMLElement).isContentEditable;
 }
 
-/** Create an InputProfile from a ControllerPreset for use as defaults. */
-function profileFromPreset(preset: import('@shared/types/controls').ControllerPreset): InputProfile {
+/** Create an InputProfile from a DevicePreset for use as defaults. */
+function profileFromPreset(preset: import('@shared/types/controls').DevicePreset): InputProfile {
   return {
     id: `default-${preset.id}`,
     name: preset.name,
     deviceType: preset.family === 'keyboard' ? 'keyboard' : 'gamepad',
-    controllerFamily: preset.family,
+    deviceFamily: preset.family,
     mappings: [...preset.defaultMappings],
     isDefault: true,
-    assignedController: null,
+    assignedDevice: null,
     createdAt: Date.now(),
     modifiedAt: Date.now(),
   };
@@ -1247,7 +1247,7 @@ export function resolveFunctionMappingIcon(m: FunctionMapping): ButtonIcon | nul
   const vid = m.sourceVid?.toLowerCase().padStart(4, '0');
   const pid = m.sourcePid?.toLowerCase().padStart(4, '0');
   if (!vid || !pid) return null;
-  const profile = findProfileByVidPid(vid, pid);
+  const profile = findDeviceProfileByVidPid(vid, pid);
   if (!profile) return null;
   if (m.binding.type === 'gamepad-button') {
     const b = profile.buttons[m.binding.index];

@@ -8,8 +8,8 @@
  */
 
 import type { DetectedDevice, InputApi } from '@shared/types/controls';
-import { resolvePreset, parseGamepadId, findPresetByVidPid, KEYBOARD_DEFAULT } from '@shared/data/controllers';
-import { SDL_CONTROLLER_DB } from '@shared/data/controllers/sdl-controller-list';
+import { resolvePreset, parseGamepadId, findPresetByVidPid, KEYBOARD_DEFAULT } from '@shared/input';
+import { DEVICE_DATABASE } from '@shared/input/device-database';
 
 interface HidDeviceInfo {
   vendorId: string;
@@ -40,7 +40,7 @@ function detectFromHid(hid: HidDeviceInfo, index: number, webApiActivated: boole
 
   // Resolve display name: specific preset > SDL database > HID product string
   const sdlName = isGenericFallback
-    ? SDL_CONTROLLER_DB.find(e => e.vidPid === `${hid.vendorId}:${hid.productId}`)?.name
+    ? DEVICE_DATABASE.find(e => e.vidPid === `${hid.vendorId}:${hid.productId}`)?.name
     : undefined;
   const displayName = (!isGenericFallback && preset?.name) || sdlName || hid.product;
 
@@ -50,7 +50,7 @@ function detectFromHid(hid: HidDeviceInfo, index: number, webApiActivated: boole
     rawId: hid.product,
     vendorId: hid.vendorId,
     productId: hid.productId,
-    controllerFamily: preset?.family ?? 'generic',
+    deviceFamily: preset?.family ?? 'generic',
     displayName,
     presetId: preset?.id ?? null,
     connected: true,
@@ -75,7 +75,7 @@ export function detectGamepad(gp: Gamepad): DetectedDevice {
     rawId: gp.id,
     vendorId: parsed?.vid ?? null,
     productId: parsed?.pid ?? null,
-    controllerFamily: preset.family,
+    deviceFamily: preset.family,
     displayName: preset.name,
     presetId: preset.id,
     connected: gp.connected,
@@ -96,7 +96,7 @@ export function detectKeyboard(index = 0): DetectedDevice {
     rawId: 'Standard Keyboard',
     vendorId: null,
     productId: null,
-    controllerFamily: 'keyboard',
+    deviceFamily: 'keyboard',
     displayName: 'Keyboard',
     presetId: KEYBOARD_DEFAULT.id,
     connected: true,

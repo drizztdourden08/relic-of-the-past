@@ -27,8 +27,8 @@ import {
   FUNCTION_ACTION_LABELS,
   DEFAULT_FUNCTION_MAPPINGS,
 } from '@shared/types/controls';
-import { findPresetById, KEYBOARD_DEFAULT } from '@shared/data/controllers';
-import { findProfileByVidPid } from '@shared/data/controllers/profiles';
+import { findPresetById, KEYBOARD_DEFAULT } from '@shared/input';
+import { findDeviceProfileByVidPid } from '@shared/input';
 import { getInputManager, profileFromPreset, resolveFunctionMappingIcon } from '../../../../lib/game/input-manager';
 import { InputProfileList } from './controls/InputProfileList';
 import { DeviceCard } from './controls/DeviceCard';
@@ -119,10 +119,10 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
       id: `custom-${Date.now()}`,
       name: `Custom Profile ${profiles.length + 1}`,
       deviceType: 'keyboard',
-      controllerFamily: 'keyboard',
+      deviceFamily: 'keyboard',
       mappings: [...KEYBOARD_DEFAULT.defaultMappings],
       isDefault: false,
-      assignedController: null,
+      assignedDevice: null,
       createdAt: Date.now(),
       modifiedAt: Date.now(),
     };
@@ -225,7 +225,7 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
   /**
    * Handle a captured input from BindingListener.
    * Stores ONLY the binding + padded sourceVid/sourcePid. Never stores icons.
-   * Icons are always derived at render time in displayMappings via CONTROLLER_PROFILES.
+   * Icons are always derived at render time in displayMappings via DEVICE_PROFILES.
    */
   const handleCapture = useCallback((binding: InputBinding, sourceDeviceKey?: string, vendorId?: string | null, productId?: string | null) => {
     if (!listeningFor) return;
@@ -322,7 +322,7 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
 
   /**
    * Apply a controller preset via drag-drop.
-   * Strips all preset icons — icons are ALWAYS resolved at render time from CONTROLLER_PROFILES.
+   * Strips all preset icons — icons are ALWAYS resolved at render time from DEVICE_PROFILES.
    */
   const handleApplyPreset = useCallback(() => {
     if (!confirmPreset || !activeProfile) return;
@@ -348,13 +348,13 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
       ...activeProfile,
       name: preset.name,
       deviceType: preset.family === 'keyboard' ? 'keyboard' : 'gamepad',
-      controllerFamily: preset.family,
+      deviceFamily: preset.family,
       mappings: mappingsWithSource,
-      assignedController: preset.family !== 'keyboard' ? {
+      assignedDevice: preset.family !== 'keyboard' ? {
         vendorId: vid,
         productId: pid,
         displayName: confirmPreset.deviceName,
-        controllerFamily: preset.family,
+        deviceFamily: preset.family,
         presetId: preset.id,
       } : null,
       modifiedAt: Date.now(),
@@ -402,7 +402,7 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
         }
       }
       // Also include assigned controller if set
-      const assigned = activeProfile.assignedController;
+      const assigned = activeProfile.assignedDevice;
       if (assigned?.vendorId && assigned?.productId) {
         usedDeviceKeys.add(`${padHex(assigned.vendorId)}:${padHex(assigned.productId)}`);
       }
@@ -416,8 +416,8 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
             d.vendorId && d.productId &&
             padHex(d.vendorId) === vid && padHex(d.productId) === pid
           );
-          const profile = findProfileByVidPid(vid, pid);
-          const family = profile?.family ?? liveDevice?.controllerFamily ?? 'generic';
+          const profile = findDeviceProfileByVidPid(vid, pid);
+          const family = profile?.family ?? liveDevice?.deviceFamily ?? 'generic';
           const icon = familyIconMap[family] ?? familyIconMap.generic;
           const displayName = profile?.name ?? liveDevice?.displayName ?? 'Controller';
           inputs.push({
@@ -429,7 +429,7 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
         }
       } else {
         // No sourceVid/Pid on any mapping — show generic based on profile family
-        const family = activeProfile.controllerFamily;
+        const family = activeProfile.deviceFamily;
         const icon = familyIconMap[family] ?? familyIconMap.generic;
         inputs.push({
           type: 'gamepad',
@@ -442,7 +442,7 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
     return inputs;
   }, [activeProfile, devices]);
 
-  // ─── Resolve ALL gamepad icons at render time from CONTROLLER_PROFILES ───
+  // ─── Resolve ALL gamepad icons at render time from DEVICE_PROFILES ───
   // This is the SINGLE source of truth for button icons and labels.
   // Gamepad icons are NEVER stored — always derived from sourceVid:sourcePid + button index.
   const displayMappings = useMemo(() => {
@@ -454,7 +454,7 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
       // None or keyboard bindings: no controller icon needed
       if (existing.binding.type === 'none' || existing.binding.type === 'keyboard') return { ...existing, icon: null };
 
-      // Gamepad bindings: ALWAYS resolve from CONTROLLER_PROFILES via sourceVid:sourcePid
+      // Gamepad bindings: ALWAYS resolve from DEVICE_PROFILES via sourceVid:sourcePid
       const vid = existing.sourceVid ? padHex(existing.sourceVid) : null;
       const pid = existing.sourcePid ? padHex(existing.sourcePid) : null;
       if (!vid || !pid) {
@@ -462,7 +462,7 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
         return existing.icon?.key ? existing : { ...existing, icon: null };
       }
 
-      const profile = findProfileByVidPid(vid, pid);
+      const profile = findDeviceProfileByVidPid(vid, pid);
       if (!profile) return { ...existing, icon: null };
 
       if (existing.binding.type === 'gamepad-button') {
