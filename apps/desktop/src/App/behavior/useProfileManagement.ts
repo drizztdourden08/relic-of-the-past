@@ -231,12 +231,18 @@ export const useProfileManagement = (params: {
     });
   }, [activeProfile, refreshProfilesAndRoms, showDialog, dismissDialog, onGameClear]);
 
+  const romDisplayInfos = romStatuses.map((rom) => ({
+    ...rom,
+    extractionStatus: extractionStates[rom.romFile] ?? (rom.hasAssets ? 'ready' : 'idle'),
+  }));
+
   return {
     profiles,
     setProfiles,
     romStatuses,
     setRomStatuses,
     extractionStates,
+    romDisplayInfos,
     activeProfile,
     setActiveProfile,
     importingRom,

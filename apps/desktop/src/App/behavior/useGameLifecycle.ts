@@ -1,20 +1,13 @@
 import { useState, useCallback, useEffect } from 'react';
-import { subscribeGameState, resetGame, getInputManager } from '../../lib/game';
+import { subscribeGameState, resetGame } from '../../lib/game';
 
-export const useGameLifecycle = (params: {
-  activeProfile: Profile | null;
-  activePage: string;
-  showSpriteDebug: boolean;
-  loadProfileForGame: (profile: Profile) => Promise<void>;
-}) => {
-  const { activeProfile, activePage, showSpriteDebug, loadProfileForGame } = params;
-
+const useGameLifecycle = () => {
   const [assetData, setAssetData] = useState<Uint8Array | null>(null);
+  const [configIni, setConfigIni] = useState<string | undefined>(undefined);
   const [gameCrashed, setGameCrashed] = useState(false);
 
-  const isGameRunning = assetData != null && !gameCrashed;
+  const isRunning = assetData != null && !gameCrashed;
 
-  // Subscribe to game state for crash detection
   useEffect(() => {
     return subscribeGameState((state) => {
       if (state.status === 'error') {
@@ -23,57 +16,26 @@ export const useGameLifecycle = (params: {
     });
   }, []);
 
-  // Input suppression: disable game input when menus/settings/overlays are open
-  useEffect(() => {
-    const gameActive = isGameRunning && activePage === 'none' && !showSpriteDebug;
-    getInputManager().setInputSuppressed(!gameActive);
-  }, [activePage, isGameRunning, showSpriteDebug]);
-
-  const handleStartGame = useCallback(() => {
-    if (activeProfile) {
-      loadProfileForGame(activeProfile);
-    }
-  }, [activeProfile, loadProfileForGame]);
-
-  const handleStopGame = useCallback(() => {
-    resetGame();
-    setAssetData(null);
+  const setGameData = useCallback((data: Uint8Array, ini?: string) => {
+    setAssetData(data);
+    setConfigIni(ini);
     setGameCrashed(false);
   }, []);
 
-  const handleResetGame = useCallback(() => {
-    if (activeProfile) {
-      resetGame();
-      setAssetData(null);
-      setGameCrashed(false);
-      loadProfileForGame(activeProfile);
-    }
-  }, [activeProfile, loadProfileForGame]);
+  const stop = useCallback(() => {
+    resetGame();
+    setAssetData(null);
+    setConfigIni(undefined);
+    setGameCrashed(false);
+  }, []);
 
   const clearGame = useCallback(() => {
     setAssetData(null);
+    setConfigIni(undefined);
     setGameCrashed(false);
   }, []);
 
-  const startGame = useCallback((data: Uint8Array) => {
-    setAssetData(data);
-  }, []);
-
-  const resetCrash = useCallback(() => {
-    resetGame();
-    setGameCrashed(false);
-    setAssetData(null);
-  }, []);
-
-  return {
-    assetData,
-    isGameRunning,
-    gameCrashed,
-    handleStartGame,
-    handleStopGame,
-    handleResetGame,
-    clearGame,
-    startGame,
-    resetCrash,
-  };
+  return { isRunning, assetData, configIni, setGameData, stop, clearGame };
 };
+
+export { useGameLifecycle };

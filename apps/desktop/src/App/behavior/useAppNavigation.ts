@@ -1,8 +1,8 @@
 import { useState, useCallback } from 'react';
 import type { PageId } from '../types';
 
-export const useAppNavigation = (params: { activeProfile: Profile | null; isGameRunning: boolean; refreshLists: () => Promise<void> }) => {
-  const { activeProfile, isGameRunning, refreshLists } = params;
+const useAppNavigation = (params: { activeProfile: Profile | null; refreshLists: () => Promise<void> }) => {
+  const { activeProfile, refreshLists } = params;
   const [activePage, setActivePage] = useState<PageId>('none');
 
   const closePage = useCallback(() => setActivePage('none'), []);
@@ -34,3 +34,5 @@ export const useAppNavigation = (params: { activeProfile: Profile | null; isGame
     handleShowDataManager,
   };
 };
+
+export { useAppNavigation };

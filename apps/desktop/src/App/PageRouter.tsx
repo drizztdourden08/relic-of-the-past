@@ -1,0 +1,153 @@
+import { useCallback } from 'react';
+import { ProfilePicker } from '../components/views/ProfilePicker';
+import { ProfileHub } from '../components/views/ProfileHub';
+import { DataManager } from '../components/views/DataManager';
+import { InputCalibration } from '../components/views/InputTester';
+import { CreditsPage } from '../components/views/ProfileHub/tabs/CreditsTab';
+import { FullScreenLayer } from '../components/composites/FullScreenLayer';
+import type { PageId, RomDisplayInfo } from './types';
+import type { GameSettings } from '@shared/types/settings';
+
+interface PageRouterProps {
+  nav: {
+    activePage: PageId;
+    setActivePage: (page: PageId) => void;
+    closePage: () => void;
+  };
+  profileMgmt: {
+    profiles: Profile[];
+    activeProfile: Profile | null;
+    romDisplayInfos: RomDisplayInfo[];
+    importingRom: boolean;
+    loadingProfile: string | null;
+    loadProfileForGame: (profile: Profile) => Promise<void>;
+    refreshProfilesAndRoms: () => Promise<void>;
+    handleSelectProfile: (profile: Profile) => Promise<void>;
+    handleCreateProfile: (name: string, romFile: string, language?: string, msuPack?: string) => Promise<void>;
+    handleDeleteProfile: (id: string) => void;
+    handleImportRom: () => Promise<void>;
+    handleExtractAssets: (romFile: string) => Promise<void>;
+    handleDeleteRom: (romFile: string) => void;
+  };
+  game: {
+    isRunning: boolean;
+    stop: () => void;
+  };
+  display: {
+    handleWindowModeChange: (mode: GameSettings['windowMode']) => void;
+    handleConstraintSettingsChange: (constraint: GameSettings['viewportConstraint'], ar: GameSettings['aspectRatio']) => void;
+    handleDisplayPerfChange: (enabled: boolean) => void;
+    handleEdgeEffectChange: (enabled: boolean) => void;
+  };
+  audio: {
+    handleMasterVolumeChange: (volume: number) => void;
+    muteOverride: { volume: number; version: number } | null;
+  };
+  saveState: {
+    handleSaveSlotSettingsChange: (enabled: boolean, duration: number) => void;
+  };
+  handleDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
+  handleShowPicker: () => void;
+  dataTab: string;
+}
+
+const PageRouter = (props: PageRouterProps) => {
+  const { nav, profileMgmt, game, display, audio, saveState, handleDeleteConfirm, handleShowPicker, dataTab } = props;
+
+  const handleStartGame = useCallback(() => {
+    if (profileMgmt.activeProfile) {
+      profileMgmt.loadProfileForGame(profileMgmt.activeProfile);
+      nav.setActivePage('none');
+    }
+  }, [profileMgmt, nav]);
+
+  const handleResetGame = useCallback(() => {
+    if (profileMgmt.activeProfile) {
+      game.stop();
+      profileMgmt.loadProfileForGame(profileMgmt.activeProfile);
+    }
+  }, [profileMgmt, game]);
+
+  if (nav.activePage === 'picker') {
+    return (
+      <FullScreenLayer onClose={nav.closePage}>
+        <ProfilePicker
+          profiles={profileMgmt.profiles}
+          romStatuses={profileMgmt.romDisplayInfos}
+          onSelectProfile={(p: Profile) => { profileMgmt.handleSelectProfile(p); nav.setActivePage('profile'); }}
+          onCreateProfile={(name: string, romFile: string) => { profileMgmt.handleCreateProfile(name, romFile); nav.setActivePage('profile'); }}
+          onDeleteProfile={profileMgmt.handleDeleteProfile}
+          onImportRom={profileMgmt.handleImportRom}
+          onExtractAssets={profileMgmt.handleExtractAssets}
+          onDeleteRom={profileMgmt.handleDeleteRom}
+          importingRom={profileMgmt.importingRom}
+          loadingProfile={profileMgmt.loadingProfile}
+        />
+      </FullScreenLayer>
+    );
+  }
+
+  if (nav.activePage === 'profile' && profileMgmt.activeProfile) {
+    return (
+      <FullScreenLayer onClose={nav.closePage}>
+        <ProfileHub
+          profile={profileMgmt.activeProfile}
+          isGameRunning={game.isRunning}
+          onStartGame={handleStartGame}
+          onStopGame={game.stop}
+          onResetGame={handleResetGame}
+          onWindowModeChange={display.handleWindowModeChange}
+          onConstraintSettingsChange={display.handleConstraintSettingsChange}
+          onMasterVolumeChange={audio.handleMasterVolumeChange}
+          onDisplayPerfChange={display.handleDisplayPerfChange}
+          onEdgeEffectChange={display.handleEdgeEffectChange}
+          onSaveSlotSettingsChange={saveState.handleSaveSlotSettingsChange}
+          masterVolumeOverride={audio.muteOverride}
+        />
+      </FullScreenLayer>
+    );
+  }
+
+  if (nav.activePage === 'data') {
+    return (
+      <FullScreenLayer onClose={nav.closePage}>
+        <DataManager
+          profiles={profileMgmt.profiles}
+          romStatuses={profileMgmt.romDisplayInfos}
+          onSelectProfile={(p: Profile) => { profileMgmt.handleSelectProfile(p); nav.setActivePage('profile'); }}
+          onCreateProfile={(name: string, rom: string, lang?: string, msu?: string) => { profileMgmt.handleCreateProfile(name, rom, lang, msu); nav.setActivePage('profile'); }}
+          onDeleteProfile={profileMgmt.handleDeleteProfile}
+          onImportRom={profileMgmt.handleImportRom}
+          onExtractAssets={profileMgmt.handleExtractAssets}
+          onDeleteRom={profileMgmt.handleDeleteRom}
+          onRefresh={profileMgmt.refreshProfilesAndRoms}
+          onDeleteConfirm={handleDeleteConfirm}
+          loadingProfile={profileMgmt.loadingProfile}
+          initialTab={dataTab as any}
+          isGameRunning={game.isRunning}
+          onSwitchProfile={handleShowPicker}
+        />
+      </FullScreenLayer>
+    );
+  }
+
+  if (nav.activePage === 'input-tester') {
+    return (
+      <FullScreenLayer onClose={nav.closePage}>
+        <InputCalibration />
+      </FullScreenLayer>
+    );
+  }
+
+  if (nav.activePage === 'credits') {
+    return (
+      <FullScreenLayer onClose={nav.closePage}>
+        <CreditsPage />
+      </FullScreenLayer>
+    );
+  }
+
+  return null;
+};
+
+export { PageRouter };

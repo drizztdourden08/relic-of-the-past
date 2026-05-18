@@ -2,61 +2,39 @@ import { useState, useCallback, useEffect } from 'react';
 import { TitleBar } from '../components/views/TitleBar';
 import { GameLayer } from '../components/views/GameLayer';
 import { SaveStateOverlay } from '../components/views/SaveStateOverlay/SaveStateOverlay';
-import { useEnhancedSaveSlot } from '../components/views/SaveStateOverlay/behavior/useEnhancedSaveSlot';
-import { ProfilePicker } from '../components/views/ProfilePicker';
-import { ProfileHub } from '../components/views/ProfileHub';
-import { DataManager } from '../components/views/DataManager';
 import { WidgetManager, useWidgetLayout } from '../components/composites/Widget';
 import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent } from '../widgets';
-import { InputCalibration } from '../components/views/InputTester';
-import { CreditsPage } from '../components/views/ProfileHub/tabs/CreditsTab';
 import { SpriteDebug } from '../components/views/SpriteDebug';
-import { FullScreenLayer } from '../components/composites/FullScreenLayer';
 import { Dialog } from '../components/composites/Dialog';
-import { log } from '../lib/log-bus';
-import type { LogChannel, LogLevel } from '../lib/log-bus';
-import { subscribeGameState, resetGame, getInputManager } from '../lib/game';
-import { setSpritesBase } from '@shared/game/items/sprites';
+import { PageRouter } from './PageRouter';
 import { useAppNavigation } from './behavior/useAppNavigation';
 import { useAudioSettings } from './behavior/useAudioSettings';
 import { useConfirmDialog } from './behavior/useConfirmDialog';
 import { useDisplaySettings } from './behavior/useDisplaySettings';
+import { useGameLifecycle } from './behavior/useGameLifecycle';
+import { useIpcLogBridge } from './behavior/useIpcLogBridge';
+import { useKeyboardShortcuts } from './behavior/useKeyboardShortcuts';
 import { useProfileManagement } from './behavior/useProfileManagement';
+import { useSaveOverlay } from './behavior/useSaveOverlay';
 import { useSaveStateSettings } from './behavior/useSaveStateSettings';
-import type { RomDisplayInfo } from './types';
+import { useStartup } from './behavior/useStartup';
+import { getInputManager } from '../lib/game';
 import './App.css';
 
 export const App = () => {
-  const [showSpriteDebug, setShowSpriteDebug] = useState(false);
-  const [showSaveStates, setShowSaveStates] = useState(false);
   const [dataTab, setDataTab] = useState<string>('profiles');
-  const [assetData, setAssetData] = useState<Uint8Array | null>(null);
-  const [gameCrashed, setGameCrashed] = useState(false);
-  const [configIni, setConfigIni] = useState<string | undefined>(undefined);
 
-  const isGameRunning = assetData != null && !gameCrashed;
-
-  // ─── Hooks ───
   const { dialog, showDialog, dismissDialog, handleDeleteConfirm } = useConfirmDialog();
+  const game = useGameLifecycle();
   const audio = useAudioSettings();
   const saveState = useSaveStateSettings();
-
-  const display = useDisplaySettings({ isGameRunning });
-
-  const clearGame = useCallback(() => {
-    setAssetData(null);
-    setGameCrashed(false);
-  }, []);
-
+  const display = useDisplaySettings({ isGameRunning: game.isRunning });
   const profileMgmt = useProfileManagement({
-    refreshLists: async () => {
-      await profileMgmt.refreshProfilesAndRoms();
-    },
+    refreshLists: async () => { await profileMgmt.refreshProfilesAndRoms(); },
     showDialog,
     dismissDialog,
     onProfileLoaded: (data) => {
-      setAssetData(data.assetData);
-      setConfigIni(data.configIni);
+      game.setGameData(data.assetData, data.configIni);
       display.initFromSettings({
         windowMode: data.settings.windowMode,
         viewportConstraint: data.settings.viewportConstraint,
@@ -68,101 +46,25 @@ export const App = () => {
       audio.initFromSettings(data.settings.masterVolume);
       saveState.initFromSettings(data.settings.enhancedSaveSlotShortcut, data.settings.saveHoldDuration);
     },
-    onGameClear: clearGame,
+    onGameClear: () => game.clearGame(),
   });
-
-  const nav = useAppNavigation({
-    activeProfile: profileMgmt.activeProfile,
-    isGameRunning,
-    refreshLists: profileMgmt.refreshProfilesAndRoms,
-  });
-
+  const nav = useAppNavigation({ activeProfile: profileMgmt.activeProfile, refreshLists: profileMgmt.refreshProfilesAndRoms });
   const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null);
+  const saveOverlay = useSaveOverlay(saveState, game.isRunning);
+  const { showSpriteDebug, toggleSpriteDebug } = useKeyboardShortcuts(nav, dialog, dismissDialog, profileMgmt.activeProfile);
 
-  // ─── Game lifecycle ───
+  useStartup(profileMgmt, nav);
+  useIpcLogBridge();
 
-  // Subscribe to game state for crash detection
+  // Input suppression: disable game input when menus/overlays are open
   useEffect(() => {
-    return subscribeGameState((state) => {
-      if (state.status === 'error') {
-        setGameCrashed(true);
-      }
-    });
-  }, []);
-
-  // Input suppression
-  useEffect(() => {
-    const gameActive = isGameRunning && nav.activePage === 'none' && !showSpriteDebug;
+    const gameActive = game.isRunning && nav.activePage === 'none' && !showSpriteDebug;
     getInputManager().setInputSuppressed(!gameActive);
-  }, [nav.activePage, isGameRunning, showSpriteDebug]);
+  }, [game.isRunning, nav.activePage, showSpriteDebug]);
 
-  // Bridge IPC log events
-  useEffect(() => {
-    return window.api.onLogEntry((entry) => {
-      const channel = entry.channel as LogChannel;
-      const level = entry.level as LogLevel;
-      if (channel in log && typeof log[channel] === 'function') {
-        log[channel](entry.message, level);
-      }
-    });
-  }, []);
-
-  // ─── Game actions ───
-  const handleStartGame = useCallback(() => {
-    if (profileMgmt.activeProfile) {
-      profileMgmt.loadProfileForGame(profileMgmt.activeProfile);
-      nav.setActivePage('none');
-    }
-  }, [profileMgmt.activeProfile, profileMgmt.loadProfileForGame, nav]);
-
-  const handleStopGame = useCallback(() => {
-    resetGame();
-    clearGame();
-  }, [clearGame]);
-
-  const handleResetGame = useCallback(() => {
-    if (profileMgmt.activeProfile) {
-      resetGame();
-      clearGame();
-      profileMgmt.loadProfileForGame(profileMgmt.activeProfile);
-    }
-  }, [profileMgmt.activeProfile, profileMgmt.loadProfileForGame, clearGame]);
-
-  // ─── Enhanced save slot shortcut flow ───
-  const enhancedSave = useEnhancedSaveSlot(saveState.enhancedSaveSlot, saveState.saveHoldDuration, isGameRunning);
-  const saveOverlayOpen = (showSaveStates && isGameRunning) || enhancedSave.open;
-  const handleSaveOverlayClose = useCallback(() => {
-    setShowSaveStates(false);
-    enhancedSave.close();
-  }, [enhancedSave]);
-
-  // ─── ESC key handler ───
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.altKey && e.key === 'Enter') {
-        e.preventDefault();
-        window.api.toggleFullscreen();
-        return;
-      }
-      if (e.ctrlKey && e.shiftKey && e.key === 'D' && window.api.isDev) {
-        e.preventDefault();
-        setShowSpriteDebug(v => !v);
-        return;
-      }
-      if (e.key !== 'Escape') return;
-      if (dialog) { e.preventDefault(); dismissDialog(); return; }
-      if (nav.activePage === 'picker' && profileMgmt.activeProfile) { e.preventDefault(); nav.setActivePage('none'); return; }
-      if (nav.activePage === 'data') { e.preventDefault(); nav.setActivePage(profileMgmt.activeProfile ? 'none' : 'picker'); return; }
-      if (nav.activePage === 'profile') { e.preventDefault(); nav.setActivePage('none'); return; }
-      if (nav.activePage === 'none' && profileMgmt.activeProfile) { e.preventDefault(); nav.setActivePage('profile'); return; }
-    };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
-  }, [nav.activePage, profileMgmt.activeProfile, dialog, dismissDialog, nav]);
-
-  // ─── Switch to picker (with confirmation if game is running) ───
+  // ─── Navigation with game-running confirmation ───
   const handleShowPicker = useCallback(async () => {
-    if (isGameRunning) {
+    if (game.isRunning) {
       showDialog({
         title: 'Switch Profile',
         message: 'This will close the currently running game. Any unsaved progress will be lost.',
@@ -170,17 +72,15 @@ export const App = () => {
         variant: 'default',
         onConfirm: async () => {
           dismissDialog();
-          clearGame();
+          game.clearGame();
           profileMgmt.setActiveProfile(null);
-          await profileMgmt.refreshProfilesAndRoms();
-          nav.setActivePage('picker');
+          await nav.handleShowPicker();
         },
       });
     } else {
-      await profileMgmt.refreshProfilesAndRoms();
-      nav.setActivePage('picker');
+      await nav.handleShowPicker();
     }
-  }, [isGameRunning, showDialog, dismissDialog, clearGame, profileMgmt, nav]);
+  }, [game, showDialog, dismissDialog, profileMgmt, nav]);
 
   const handleShowProfile = useCallback(async () => {
     if (profileMgmt.activeProfile) {
@@ -195,54 +95,6 @@ export const App = () => {
     nav.setActivePage('data');
   }, [profileMgmt, nav]);
 
-  // ─── Startup: check profiles and auto-load ───
-  useEffect(() => {
-    (async () => {
-      try {
-        const [profileList, romStatusList, appState] = await Promise.all([
-          window.api.listProfiles(),
-          window.api.listRomsWithStatus(),
-          window.api.getAppState(),
-        ]);
-
-        profileMgmt.setProfiles(profileList);
-        profileMgmt.setRomStatuses(romStatusList);
-
-        if (profileList.length === 0) {
-          log.app('No profiles found, showing setup screen');
-          nav.setActivePage('picker');
-        } else if (profileList.length === 1) {
-          log.app('Single profile found, showing profile page...');
-          profileMgmt.setActiveProfile(profileList[0]);
-          setSpritesBase(window.api.getSpritesBaseUrl(profileList[0].romFile));
-          nav.setActivePage('profile');
-        } else {
-          const lastProfile = appState.lastProfileId
-            ? profileList.find((p) => p.id === appState.lastProfileId)
-            : null;
-          if (lastProfile) {
-            log.app(`Resuming last profile: ${lastProfile.name}`);
-            profileMgmt.setActiveProfile(lastProfile);
-            setSpritesBase(window.api.getSpritesBaseUrl(lastProfile.romFile));
-            nav.setActivePage('profile');
-          } else {
-            nav.setActivePage('picker');
-          }
-        }
-      } catch (err) {
-        log.error(`Startup failed: ${err}`);
-        nav.setActivePage('picker');
-      }
-    })();
-  }, []);
-
-  // ─── Derived state ───
-  const romDisplayInfos: RomDisplayInfo[] = profileMgmt.romStatuses.map((rom) => ({
-    ...rom,
-    extractionStatus: profileMgmt.extractionStates[rom.romFile] ?? (rom.hasAssets ? 'ready' : 'idle'),
-  }));
-
-  // ─── Render ───
   return (
     <div className="app">
       <TitleBar
@@ -250,15 +102,15 @@ export const App = () => {
         onSwitchProfile={handleShowPicker}
         onShowProfile={handleShowProfile}
         onShowLogs={() => widgets.toggle('logs')}
-        onToggleSaveStates={() => setShowSaveStates((v) => !v)}
+        onToggleSaveStates={saveOverlay.toggle}
         onToggleInventory={() => widgets.toggle('inventory')}
         onToggleChecks={() => widgets.toggle('checks')}
         onShowDataManager={handleShowDataManager}
         onShowInputTester={() => nav.setActivePage('input-tester')}
         onShowCredits={() => nav.setActivePage('credits')}
-        onShowSpriteDebug={() => setShowSpriteDebug(v => !v)}
+        onShowSpriteDebug={toggleSpriteDebug}
         activeProfile={profileMgmt.activeProfile}
-        gameRunning={isGameRunning}
+        gameRunning={game.isRunning}
         windowMode={display.windowMode}
         isMuted={audio.isMuted}
         onToggleMute={audio.handleToggleMute}
@@ -266,97 +118,44 @@ export const App = () => {
       />
 
       <div className="app__content">
-        {!isGameRunning && (
+        {!game.isRunning && (
           <img className="app__bg-logo" src="./logos/logo-512.png" alt="" />
         )}
 
-        <GameLayer assetData={assetData} configIni={configIni} profileId={profileMgmt.activeProfile?.id} stretch={display.viewportConstraint !== 'none'} edgeEffect={display.overworldEdgeEffect} />
-
-        <SaveStateOverlay
-          open={saveOverlayOpen}
-          onClose={handleSaveOverlayClose}
-          highlightedSlot={enhancedSave.highlightedSlot}
-          holdProgress={enhancedSave.holdProgress}
-          hints={enhancedSave.hints}
+        <GameLayer
+          assetData={game.assetData}
+          configIni={game.configIni}
+          profileId={profileMgmt.activeProfile?.id}
+          stretch={display.viewportConstraint !== 'none'}
+          edgeEffect={display.overworldEdgeEffect}
         />
 
-        {nav.activePage === 'picker' && (
-          <FullScreenLayer onClose={nav.closePage}>
-            <ProfilePicker
-              profiles={profileMgmt.profiles}
-              romStatuses={romDisplayInfos}
-              onSelectProfile={(p: Profile) => { profileMgmt.handleSelectProfile(p); nav.setActivePage('profile'); }}
-              onCreateProfile={(name: string, romFile: string) => { profileMgmt.handleCreateProfile(name, romFile); nav.setActivePage('profile'); }}
-              onDeleteProfile={profileMgmt.handleDeleteProfile}
-              onImportRom={profileMgmt.handleImportRom}
-              onExtractAssets={profileMgmt.handleExtractAssets}
-              onDeleteRom={profileMgmt.handleDeleteRom}
-              importingRom={profileMgmt.importingRom}
-              loadingProfile={profileMgmt.loadingProfile}
-            />
-          </FullScreenLayer>
-        )}
+        <SaveStateOverlay
+          open={saveOverlay.open}
+          onClose={saveOverlay.close}
+          highlightedSlot={saveOverlay.highlightedSlot}
+          holdProgress={saveOverlay.holdProgress}
+          hints={saveOverlay.hints}
+        />
 
-        {nav.activePage === 'profile' && profileMgmt.activeProfile && (
-          <FullScreenLayer onClose={nav.closePage}>
-            <ProfileHub
-              profile={profileMgmt.activeProfile}
-              isGameRunning={isGameRunning}
-              onStartGame={handleStartGame}
-              onStopGame={handleStopGame}
-              onResetGame={handleResetGame}
-              onWindowModeChange={display.handleWindowModeChange}
-              onConstraintSettingsChange={display.handleConstraintSettingsChange}
-              onMasterVolumeChange={audio.handleMasterVolumeChange}
-              onDisplayPerfChange={display.handleDisplayPerfChange}
-              onEdgeEffectChange={display.handleEdgeEffectChange}
-              onSaveSlotSettingsChange={saveState.handleSaveSlotSettingsChange}
-              masterVolumeOverride={audio.muteOverride}
-            />
-          </FullScreenLayer>
-        )}
-
-        {nav.activePage === 'data' && (
-          <FullScreenLayer onClose={nav.closePage}>
-            <DataManager
-              profiles={profileMgmt.profiles}
-              romStatuses={romDisplayInfos}
-              onSelectProfile={(p: Profile) => { profileMgmt.handleSelectProfile(p); nav.setActivePage('profile'); }}
-              onCreateProfile={(name: string, rom: string, lang?: string, msu?: string) => { profileMgmt.handleCreateProfile(name, rom, lang, msu); nav.setActivePage('profile'); }}
-              onDeleteProfile={profileMgmt.handleDeleteProfile}
-              onImportRom={profileMgmt.handleImportRom}
-              onExtractAssets={profileMgmt.handleExtractAssets}
-              onDeleteRom={profileMgmt.handleDeleteRom}
-              onRefresh={profileMgmt.refreshProfilesAndRoms}
-              onDeleteConfirm={handleDeleteConfirm}
-              loadingProfile={profileMgmt.loadingProfile}
-              initialTab={dataTab as any}
-              isGameRunning={isGameRunning}
-              onSwitchProfile={handleShowPicker}
-            />
-          </FullScreenLayer>
-        )}
-
-        {nav.activePage === 'input-tester' && (
-          <FullScreenLayer onClose={nav.closePage}>
-            <InputCalibration />
-          </FullScreenLayer>
-        )}
-
-        {nav.activePage === 'credits' && (
-          <FullScreenLayer onClose={nav.closePage}>
-            <CreditsPage />
-          </FullScreenLayer>
-        )}
+        <PageRouter
+          nav={nav}
+          profileMgmt={profileMgmt}
+          game={game}
+          display={display}
+          audio={audio}
+          saveState={saveState}
+          handleDeleteConfirm={handleDeleteConfirm}
+          handleShowPicker={handleShowPicker}
+          dataTab={dataTab}
+        />
 
         <WidgetManager
           layout={widgets.layout}
-          gameRunning={isGameRunning && nav.activePage === 'none' && !showSpriteDebug}
+          gameRunning={game.isRunning && nav.activePage === 'none' && !showSpriteDebug}
           onUpdate={widgets.update}
           onClose={widgets.close}
-          settingsContent={{
-            inventory: <InventoryWidgetSettings />,
-          }}
+          settingsContent={{ inventory: <InventoryWidgetSettings /> }}
         >
           {{
             inventory: <InventoryWidgetContent />,
@@ -364,7 +163,8 @@ export const App = () => {
             logs: <LogsWidgetContent />,
           }}
         </WidgetManager>
-        {showSpriteDebug && <SpriteDebug onClose={() => setShowSpriteDebug(false)} />}
+
+        {showSpriteDebug && <SpriteDebug onClose={toggleSpriteDebug} />}
       </div>
 
       <Dialog
