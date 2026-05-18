@@ -45,7 +45,7 @@ export const HomeTab = (props: HomeTabProps) => {
     lastPlayed,
     created,
     windowMode,
-  } = props; {
+  } = props;
   const [slots, setSlots] = useState<SlotInfo[]>(() =>
     Array.from({ length: 10 }, (_, i) => ({ slot: i, timestamp: null, screenshot: null }))
   );
