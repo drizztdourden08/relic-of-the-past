@@ -170,9 +170,11 @@ type ByteStatus = 'unknown' | 'gyro' | 'counter' | 'stick' | 'trigger' | 'button
 interface Props {
   onComplete: (map: HidControllerMap) => void;
   onCancel: () => void;
+  /** Filter raw reports to only this device (prevents cross-device interference) */
+  deviceKey?: string;
 }
 
-export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Element {
+export function HidCalibrationWizard({ onComplete, onCancel, deviceKey }: Props): JSX.Element {
   const [selectedProfileId, setSelectedProfileId] = useState('');
   const [selectedSdlVidPid, setSelectedSdlVidPid] = useState('');
   const [hasGyro, setHasGyro] = useState(true); // default true until proven otherwise
@@ -447,6 +449,9 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
     if (phase !== 'live') return;
 
     const unsub = webHidReader.onRawReport((report) => {
+      // Skip reports from other devices when deviceKey filter is active
+      if (deviceKey && report.deviceKey !== deviceKey) return;
+
       const bytes = new Uint8Array(report.bytes);
       setLatestBytes(bytes);
       lastReportIdRef.current = report.reportId;
@@ -457,7 +462,8 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
 
       const keys = webHidReader.getConnectedDeviceKeys();
       if (keys.length > 0 && deviceInfoRef.current.vendorId === 0) {
-        const [vidH, pidH] = keys[0].split(':');
+        const targetKey = deviceKey ?? keys[0];
+        const [vidH, pidH] = targetKey.split(':');
         deviceInfoRef.current.vendorId = parseInt(vidH, 16);
         deviceInfoRef.current.productId = parseInt(pidH, 16);
       }
@@ -793,7 +799,7 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
       unsub();
       if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
     };
-  }, [phase, addLog, doAdvance, updateByteStatuses]);
+  }, [phase, addLog, doAdvance, updateByteStatuses, deviceKey]);
 
   // ── Profile confirm ──
   const handleProfileConfirm = useCallback(() => {

@@ -149,7 +149,7 @@ class GameCubeWirelessController extends BaseController {
     if (reportId === 0x05 && data.byteLength >= 16) {
       return this.parseUSB(data);
     }
-    if (reportId === 0x0A && data.byteLength >= 11) {
+    if (reportId === 0x0A && data.byteLength >= 14) {
       return this.parseReport0A(data);
     }
     if (reportId === 0x3F && data.byteLength >= 7) {
@@ -246,6 +246,9 @@ class GameCubeWirelessController extends BaseController {
    *   4: Buttons byte 2: Home(0x01) Capture(0x02) GR(0x04) GL(0x08)
    *   5-7: Left stick (12-bit packed)
    *   8-10: C-Stick (12-bit packed)
+   *  11: Unknown
+   *  12: Left trigger  (8-bit, rest ~32, max ~230)
+   *  13: Right trigger (8-bit, rest ~32, max ~230)
    */
   private parseReport0A(data: DataView): ParsedInput {
     const b0 = data.getUint8(2);
@@ -283,6 +286,8 @@ class GameCubeWirelessController extends BaseController {
       -applyDeadzone(normalizeStick12(lyRaw, 2048, RANGE), DZ),
       applyDeadzone(normalizeStick12(rxRaw, 2048, RANGE), DZ),
       -applyDeadzone(normalizeStick12(ryRaw, 2048, RANGE), DZ),
+      Math.max(0, Math.min(1, (data.getUint8(12) - 32) / (230 - 32))),  // Left trigger analog
+      Math.max(0, Math.min(1, (data.getUint8(13) - 32) / (230 - 32))),  // Right trigger analog
     ];
 
     return { buttons, axes, rawSticks: [lxRaw, lyRaw, rxRaw, ryRaw] };

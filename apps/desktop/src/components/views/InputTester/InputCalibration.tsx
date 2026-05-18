@@ -545,6 +545,7 @@ export function InputCalibration(): JSX.Element {
           <HidCalibrationWizard
             onComplete={handleCalibrationComplete}
             onCancel={() => setCalibrating(false)}
+            deviceKey={webHidReader.getConnectedDeviceKeys()[0]}
           />
         </div>
       )}
@@ -907,6 +908,7 @@ function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, 
             }}
             onCancel={() => setCalibrationTarget(null)}
             existingCalibration={existingStickCal}
+            deviceKey={deviceKey}
           />
         </div>
       )}
@@ -920,6 +922,7 @@ function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, 
               setCalibrationTarget(null);
             }}
             onCancel={() => setCalibrationTarget(null)}
+            deviceKey={deviceKey}
           />
         </div>
       )}

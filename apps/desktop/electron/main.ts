@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell, ipcMain, dialog, net, Menu } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, dialog, net, Menu, session } from 'electron';
 import { join, basename, extname } from 'path';
 import { readFile, mkdir, writeFile, access, copyFile, rm, stat, readdir, rename } from 'fs/promises';
 import { createWriteStream } from 'fs';
@@ -994,6 +994,11 @@ function registerIpcHandlers(): void {
 }
 
 app.whenReady().then(async () => {
+  // In dev mode, clear HTTP cache so static asset changes are picked up immediately
+  if (is.dev) {
+    await session.defaultSession.clearCache();
+  }
+
   initProfileManager(app.getPath('userData'));
   await migrateDataFolder();
   await ensureDataDirectories();
