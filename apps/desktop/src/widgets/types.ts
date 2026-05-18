@@ -55,7 +55,7 @@ export interface WidgetDefinition {
 
 // ─── Defaults ───
 
-export function createDefaultWidgetState(def: WidgetDefinition, order = 0): WidgetState {
+export const createDefaultWidgetState = (def: WidgetDefinition, order = 0): WidgetState => {
   return {
     id: def.id,
     mode: 'docked',
@@ -101,11 +101,11 @@ export const WIDGET_DEFINITIONS: WidgetDefinition[] = [
   },
 ];
 
-export function getWidgetDefinition(id: string): WidgetDefinition | undefined {
+export const getWidgetDefinition = (id: string): WidgetDefinition | undefined => {
   return WIDGET_DEFINITIONS.find((d) => d.id === id);
 }
 
-export function createDefaultLayout(): WidgetLayout {
+export const createDefaultLayout = (): WidgetLayout => {
   return {
     widgets: WIDGET_DEFINITIONS.map((def, i) => createDefaultWidgetState(def, i)),
   };

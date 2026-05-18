@@ -8,7 +8,7 @@
  *  - Provide update/close callbacks that propagate to store
  */
 import { useMemo, useCallback } from 'react';
-import type { WidgetLayout, WidgetState, SnapSide } from './widget-types';
+import type { WidgetLayout, WidgetState, SnapSide } from './types';
 import { Widget } from './Widget';
 
 const TITLEBAR_HEIGHT = 38; // pixels reserved for the app titlebar
@@ -24,7 +24,8 @@ interface WidgetManagerProps {
   settingsContent?: Record<string, React.ReactNode>;
 }
 
-export function WidgetManager({ layout, gameRunning, onUpdate, onClose, children, settingsContent }: WidgetManagerProps) {
+export const WidgetManager = (props: WidgetManagerProps) => {
+  const { layout, gameRunning, onUpdate, onClose, children, settingsContent } = props;
   // Filter: only show widgets that are visible AND match the current visibility mode
   const activeWidgets = useMemo(() => {
     return layout.widgets.filter((w) => {

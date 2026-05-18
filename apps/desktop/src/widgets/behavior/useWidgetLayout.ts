@@ -3,10 +3,10 @@
  * Handles local persistence + profile-based save/load.
  */
 import { useState, useCallback, useEffect, useRef } from 'react';
-import type { WidgetLayout, WidgetState } from './widget-types';
-import { loadLayoutLocal, saveLayoutLocal, loadLayoutForProfile, saveLayoutForProfile, updateWidget } from './widget-store';
+import type { WidgetLayout, WidgetState } from '../types';
+import { loadLayoutLocal, saveLayoutLocal, loadLayoutForProfile, saveLayoutForProfile, updateWidget } from './widgetStore';
 
-export function useWidgetLayout(profileId: string | null) {
+export const useWidgetLayout = (profileId: string | null) => {
   const [layout, setLayoutRaw] = useState<WidgetLayout>(loadLayoutLocal);
   const profileIdRef = useRef(profileId);
   profileIdRef.current = profileId;

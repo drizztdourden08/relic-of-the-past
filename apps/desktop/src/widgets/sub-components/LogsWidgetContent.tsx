@@ -3,16 +3,16 @@
  * Adapts the existing log-bus subscription into widget content form.
  */
 import { useState, useEffect, useRef } from 'react';
-import { subscribe, getEntries, CHANNEL_COLORS, type LogEntry } from '../../../lib/log-bus';
+import { subscribe, getEntries, CHANNEL_COLORS, type LogEntry } from '../../lib/log-bus';
 
 const MAX_ENTRIES = 200;
 
-function formatTime(ts: number): string {
+const formatTime = (ts: number): string => {
   const d = new Date(ts);
   return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;
 }
 
-export function LogsWidgetContent() {
+export const LogsWidgetContent = () => {
   const [entries, setEntries] = useState<LogEntry[]>(() => getEntries());
   const bottomRef = useRef<HTMLDivElement>(null);
 

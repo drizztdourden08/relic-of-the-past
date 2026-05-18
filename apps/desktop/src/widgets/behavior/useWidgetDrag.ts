@@ -8,10 +8,10 @@ interface DragPosition {
   y: number;
 }
 
-export function useWidgetDrag(
+export const useWidgetDrag = (
   pos: DragPosition,
   onMove: (x: number, y: number) => void,
-) {
+) => {
   const dragging = useRef(false);
   const offset = useRef({ x: 0, y: 0 });
 

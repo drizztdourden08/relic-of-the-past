@@ -3,9 +3,9 @@
  * Wraps TrackerInventory with data subscription + view mode state.
  */
 import { useState, useEffect } from 'react';
-import { onInventoryChanged, getCurrentInventory } from '../../../lib/game';
-import { TrackerInventory } from '../../views/TrackerView/TrackerInventory';
-import { SegmentedControl } from '../../primitives';
+import { onInventoryChanged, getCurrentInventory } from '../../lib/game';
+import { TrackerInventory } from '../../components/views/TrackerView/TrackerInventory';
+import { SegmentedControl } from '../../components/primitives';
 import type { InventoryViewMode } from '@shared/game/items/sprites';
 
 const VIEW_OPTIONS: { value: InventoryViewMode; label: string }[] = [
@@ -16,7 +16,7 @@ const VIEW_OPTIONS: { value: InventoryViewMode; label: string }[] = [
 
 const STORAGE_KEY = 'inventory-view-mode';
 
-export function InventoryWidgetContent() {
+export const InventoryWidgetContent = () => {
   const [inventory, setInventory] = useState<Set<string>>(() => getCurrentInventory());
   const [viewMode, setViewMode] = useState<InventoryViewMode>(() => {
     return (localStorage.getItem(STORAGE_KEY) as InventoryViewMode) || 'default';
@@ -39,7 +39,7 @@ export function InventoryWidgetContent() {
 }
 
 /** Settings content for the inventory widget (rendered inside the dropdown) */
-export function InventoryWidgetSettings() {
+export const InventoryWidgetSettings = () => {
   const [viewMode, setViewMode] = useState<InventoryViewMode>(() => {
     return (localStorage.getItem(STORAGE_KEY) as InventoryViewMode) || 'default';
   });

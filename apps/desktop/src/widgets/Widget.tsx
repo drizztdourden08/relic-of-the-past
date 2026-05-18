@@ -4,10 +4,10 @@
  * Handles: docking, floating, drag, resize, hover-to-reveal-frame.
  */
 import { useState, useCallback, useRef, useMemo } from 'react';
-import type { WidgetState, SnapSide } from './widget-types';
-import { getWidgetDefinition } from './widget-types';
-import { useWidgetDrag } from './useWidgetDrag';
-import { useWidgetResize, getDockedResizeEdge } from './useWidgetResize';
+import type { WidgetState, SnapSide } from './types';
+import { getWidgetDefinition } from './types';
+import { useWidgetDrag } from './behavior/useWidgetDrag';
+import { useWidgetResize, getDockedResizeEdge } from './behavior/useWidgetResize';
 import { WidgetSettings } from './WidgetSettings';
 
 interface WidgetProps {
@@ -21,7 +21,8 @@ interface WidgetProps {
   dockedStyle?: React.CSSProperties;
 }
 
-export function Widget({ state, onChange, onClose, children, settingsContent, dockedStyle }: WidgetProps) {
+export const Widget = (props: WidgetProps) => {
+  const { state, onChange, onClose, children, settingsContent, dockedStyle } = props;
   const [hovered, setHovered] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const gearRef = useRef<HTMLButtonElement>(null);
