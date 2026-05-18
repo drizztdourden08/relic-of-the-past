@@ -26,23 +26,22 @@ export interface Section {
   subsections: SubSection[];
 }
 
-interface SettingsLayoutProps {
+export interface SettingsLayoutProps {
   sections: Section[];
   settings: GameSettings;
   onChange: (patch: Partial<GameSettings>) => void;
-  /** Render a custom control for a given setting key. Return null for default toggle rendering. */
   renderControl?: (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void) => ReactNode | null;
-  /** Determine if a toggle should be disabled based on key and settings. */
   isDisabled?: (key: string, settings: GameSettings) => boolean;
 }
 
-export function SettingsLayout({
-  sections,
-  settings,
-  onChange,
-  renderControl,
-  isDisabled,
-}: SettingsLayoutProps) {
+export const SettingsLayout = (props: SettingsLayoutProps) => {
+  const {
+    sections,
+    settings,
+    onChange,
+    renderControl,
+    isDisabled,
+  } = props;
   const [filter, setFilter] = useState('');
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -158,4 +157,4 @@ export function SettingsLayout({
       </div>
     </div>
   );
-}
+};

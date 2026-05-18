@@ -1,13 +1,15 @@
 import type { ReactNode } from 'react';
 import './SettingsSection.css';
 
-interface SettingsSectionProps {
+export interface SettingsSectionProps {
   title: string;
   description?: string;
   children: ReactNode;
 }
 
-export function SettingsSection({ title, description, children }: SettingsSectionProps) {
+export const SettingsSection = (props: SettingsSectionProps) => {
+  const { title, description, children } = props;
+
   return (
     <section className="settings-section">
       <div className="settings-section__header">
@@ -19,4 +21,4 @@ export function SettingsSection({ title, description, children }: SettingsSectio
       </div>
     </section>
   );
-}
+};
