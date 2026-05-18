@@ -1,16 +1,8 @@
-import './Toggle.css';
+﻿import './Toggle.css';
+import { type ToggleProps } from './types';
 
-export interface ToggleProps {
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  label?: string;
-  description?: string;
-  disabled?: boolean;
-  id?: string;
-  link?: string;
-}
 
-export const Toggle = (props: ToggleProps) => {
+const Toggle = (props: ToggleProps) => {
   const { checked, onChange, label, description, disabled = false, id, link } = props;
   const toggleId = id ?? `toggle-${label?.replace(/\s+/g, '-').toLowerCase() ?? 'unnamed'}`;
 
@@ -53,4 +45,8 @@ export const Toggle = (props: ToggleProps) => {
       </span>
     </label>
   );
+};
+
+export {
+  Toggle,
 };

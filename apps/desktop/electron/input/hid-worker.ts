@@ -10,6 +10,16 @@
 import { parentPort } from 'worker_threads';
 import HID from 'node-hid';
 
+/** Blocking sleep for inter-frame pacing (safe in worker threads). */
+const sleepSab = new SharedArrayBuffer(4);
+const sleepView = new Int32Array(sleepSab);
+function sleepMs(ms: number): void {
+  Atomics.wait(sleepView, 0, 0, ms);
+}
+
+/** Frame interval in ms — SPC2 haptic endpoint runs at ~250Hz */
+const FRAME_INTERVAL_MS = 5;
+
 interface EnumerateMsg {
   type: 'enumerate';
   id: number;
@@ -67,6 +77,7 @@ function handleVibrate(id: number, devicePath: string, frames: number[][]): void
         if (writeErrors === 1) parentPort!.postMessage({ type: 'log', msg: `first write error: ${writeErr?.message}` });
       }
       counter = (counter + 1) & 0x0F;
+      sleepMs(FRAME_INTERVAL_MS);
     }
     dev.close();
     parentPort!.postMessage({ type: 'log', msg: `done: ${frames.length} frames, ${writeErrors} errors` });

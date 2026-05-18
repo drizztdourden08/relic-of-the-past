@@ -4,13 +4,10 @@ import { useLogOverlay } from './behavior/useLogOverlay';
 import { formatTime } from './behavior/formatTime';
 import { CHANNEL_COLORS } from '../../../lib/log-bus';
 import './LogOverlay.css';
+import type { LogOverlayProps } from './types';
 
-export interface LogOverlayProps {
-  visible: boolean;
-  onClose: () => void;
-}
 
-export const LogOverlay = (props: LogOverlayProps) => {
+const LogOverlay = (props: LogOverlayProps) => {
   const { visible: externalVisible, onClose } = props;
   const bottomRef = useRef<HTMLDivElement>(null);
   const { visible: f12Visible, setVisible: setF12Visible, entries } = useLogOverlay(bottomRef);
@@ -54,3 +51,5 @@ export const LogOverlay = (props: LogOverlayProps) => {
     </div>
   );
 };
+
+export { LogOverlay };

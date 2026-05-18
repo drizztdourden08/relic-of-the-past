@@ -1,12 +1,9 @@
-import type { ReactNode, HTMLAttributes } from 'react';
+﻿import type { ReactNode, HTMLAttributes } from 'react';
 import './Card.css';
+import { type CardProps } from './types';
 
-export interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'interactive' | 'danger';
-  children: ReactNode;
-}
 
-export const Card = (props: CardProps) => {
+const Card = (props: CardProps) => {
   const { variant = 'default', children, className = '', ...rest } = props;
 
   return (
@@ -14,4 +11,8 @@ export const Card = (props: CardProps) => {
       {children}
     </div>
   );
+};
+
+export {
+  Card,
 };

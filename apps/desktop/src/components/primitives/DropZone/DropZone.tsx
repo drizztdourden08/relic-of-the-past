@@ -1,15 +1,9 @@
-import { useState, useRef, useCallback, type DragEvent } from 'react';
+﻿import { useState, useRef, useCallback, type DragEvent } from 'react';
 import './DropZone.css';
+import { type DropZoneProps } from './types';
 
-export interface DropZoneProps {
-  accept?: string[];
-  label?: string;
-  hint?: string;
-  disabled?: boolean;
-  onDrop: (files: File[]) => void;
-}
 
-export const DropZone = (props: DropZoneProps) => {
+const DropZone = (props: DropZoneProps) => {
   const {
     accept,
     label = 'Drop files here',
@@ -93,4 +87,8 @@ export const DropZone = (props: DropZoneProps) => {
       />
     </div>
   );
+};
+
+export {
+  DropZone,
 };

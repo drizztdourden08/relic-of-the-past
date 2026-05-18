@@ -1,20 +1,8 @@
-import { useLayoutEffect, useRef, type ReactNode } from 'react';
+﻿import { useLayoutEffect, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { type PortalLayer, type PortalProps } from './types';
+import { LAYERS } from './constants';
 
-const LAYERS = {
-  overlay: 100,
-  modal: 200,
-  popover: 250,
-  toast: 300,
-  tooltip: 400,
-} as const;
-
-export type PortalLayer = keyof typeof LAYERS;
-
-export interface PortalProps {
-  layer: PortalLayer;
-  children: ReactNode;
-}
 
 const getPortalRoot = (): HTMLElement => {
   let root = document.getElementById('portal-root');
@@ -46,7 +34,7 @@ const getLayerContainer = (layer: PortalLayer): HTMLElement => {
   return el;
 };
 
-export const Portal = (props: PortalProps): React.ReactPortal | null => {
+const Portal = (props: PortalProps): React.ReactPortal | null => {
   const { layer, children } = props;
   const containerRef = useRef<HTMLElement | null>(null);
 
@@ -59,4 +47,8 @@ export const Portal = (props: PortalProps): React.ReactPortal | null => {
   }
 
   return createPortal(children, containerRef.current);
+};
+
+export {
+  Portal,
 };

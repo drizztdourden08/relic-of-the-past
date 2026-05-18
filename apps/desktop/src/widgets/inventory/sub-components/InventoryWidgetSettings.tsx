@@ -3,7 +3,7 @@ import type { InventoryViewMode } from '@shared/game/items/sprites';
 import { SegmentedControl } from '../../../components/primitives';
 import { STORAGE_KEY, VIEW_OPTIONS } from '../constants';
 
-export const InventoryWidgetSettings = () => {
+const InventoryWidgetSettings = () => {
   const [viewMode, setViewMode] = useState<InventoryViewMode>(() => {
     return (localStorage.getItem(STORAGE_KEY) as InventoryViewMode) || 'default';
   });
@@ -21,3 +21,5 @@ export const InventoryWidgetSettings = () => {
     </div>
   );
 };
+
+export { InventoryWidgetSettings };

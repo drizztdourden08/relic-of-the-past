@@ -18,7 +18,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { getInputManager, saveState, loadState, resolveFunctionMappingIcon } from '../../../lib/game';
 import type { FunctionAction, FunctionMapping } from '@shared/types/controls';
 import { getBindingLabel, getBindingIconUrl } from '../../views/ProfileHub/tabs/controls/BindingRow';
-import { keyCodeToIconId, getButtonIconUrl } from '../../views/InputTester/button-icons';
+import { keyCodeToIconId, getButtonIconUrl } from '../../views/InputTester/data/button-icons';
 import { log } from '../../../lib/log-bus';
 
 /** Time in ms below which a second press is considered a "tap" → LOAD */

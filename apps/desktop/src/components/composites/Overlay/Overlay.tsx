@@ -1,14 +1,15 @@
-import type { ReactNode } from 'react';
+﻿import type { ReactNode } from 'react';
 import './Overlay.css';
+import { type OverlayProps } from './types';
 
-export interface OverlayProps {
-  visible: boolean;
-  children: ReactNode;
-}
 
-export const Overlay = (props: OverlayProps) => {
+const Overlay = (props: OverlayProps) => {
   const { visible, children } = props;
 
   if (!visible) return null;
   return <div className="overlay">{children}</div>;
+};
+
+export {
+  Overlay,
 };

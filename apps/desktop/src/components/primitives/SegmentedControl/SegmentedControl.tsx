@@ -1,21 +1,10 @@
-import { useRef, useState, useEffect, useCallback } from 'react';
+﻿import { useRef, useState, useEffect, useCallback } from 'react';
 import './SegmentedControl.css';
+import { type SegmentOption, type SegmentedControlProps } from './types';
 
-export interface SegmentOption<T extends string = string> {
-  value: T;
-  label: string;
-}
 
-export interface SegmentedControlProps<T extends string = string> {
-  value: T;
-  options: SegmentOption<T>[];
-  onChange: (value: T) => void;
-  label?: string;
-  description?: string;
-  disabled?: boolean;
-}
 
-export const SegmentedControl = <T extends string = string>(props: SegmentedControlProps<T>) => {
+const SegmentedControl = <T extends string = string>(props: SegmentedControlProps<T>) => {
   const {
     value,
     options,
@@ -79,4 +68,8 @@ export const SegmentedControl = <T extends string = string>(props: SegmentedCont
       </div>
     </div>
   );
+};
+
+export {
+  SegmentedControl,
 };

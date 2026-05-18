@@ -34,7 +34,7 @@ import { InputProfileList } from './controls/InputProfileList';
 import { DeviceCard } from './controls/DeviceCard';
 import { BindingRow } from './controls/BindingRow';
 import { BindingListener } from './controls/BindingListener';
-import { getSnesIconUrl } from '../../InputTester/button-icons';
+import { getSnesIconUrl } from '../../InputTester/data/button-icons';
 import { Dialog } from '../../../composites/Dialog/Dialog';
 import './ControlsSettings.css';
 

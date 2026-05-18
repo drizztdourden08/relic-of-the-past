@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { DropZone } from '../../../primitives/DropZone/DropZone';
+import { DropZone } from '../../../primitives/DropZone';
 import './MsuImport.css';
 
 interface MsuImportProps {

@@ -1,0 +1,11 @@
+import type { PortalLayer } from './types';
+
+const LAYERS: Record<PortalLayer, number> = {
+  overlay: 100,
+  modal: 200,
+  popover: 250,
+  toast: 300,
+  tooltip: 400,
+} as const;
+
+export { LAYERS };

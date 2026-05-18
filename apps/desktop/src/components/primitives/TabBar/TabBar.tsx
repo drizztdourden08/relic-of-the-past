@@ -1,18 +1,9 @@
-import './TabBar.css';
+﻿import './TabBar.css';
+import { type TabItem, type TabBarProps } from './types';
 
-export interface TabItem {
-  id: string;
-  label: string;
-  icon?: string;
-}
 
-export interface TabBarProps {
-  tabs: TabItem[];
-  activeTab: string;
-  onTabChange: (tabId: string) => void;
-}
 
-export const TabBar = (props: TabBarProps) => {
+const TabBar = (props: TabBarProps) => {
   const { tabs, activeTab, onTabChange } = props;
 
   return (
@@ -32,4 +23,8 @@ export const TabBar = (props: TabBarProps) => {
       ))}
     </nav>
   );
+};
+
+export {
+  TabBar,
 };

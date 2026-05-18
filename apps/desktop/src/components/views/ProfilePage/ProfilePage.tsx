@@ -2,17 +2,10 @@ import { Button } from '../../primitives/Button';
 import { Badge } from '../../primitives/Badge';
 import { formatDate, formatRomName } from './behavior/formatters';
 import './ProfilePage.css';
+import type { ProfilePageProps } from './types';
 
-export interface ProfilePageProps {
-  profile: Profile;
-  romStatus: RomDisplayInfo | null;
-  isGameRunning: boolean;
-  onStartGame: () => void;
-  onDeleteProfile: () => void;
-  onSwitchProfile: () => void;
-}
 
-export const ProfilePage = (props: ProfilePageProps) => {
+const ProfilePage = (props: ProfilePageProps) => {
   const {
     profile,
     romStatus,
@@ -74,3 +67,5 @@ export const ProfilePage = (props: ProfilePageProps) => {
     </div>
   );
 };
+
+export { ProfilePage };

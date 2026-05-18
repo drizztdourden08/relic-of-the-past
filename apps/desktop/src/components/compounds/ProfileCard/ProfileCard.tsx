@@ -1,15 +1,11 @@
-import { Card } from '../../composites/Card';
+﻿import { Card } from '../../composites/Card';
 import { IconButton } from '../../primitives/IconButton';
 import { formatDate, formatRomName } from './behavior/formatters';
 import './ProfileCard.css';
+import { type ProfileCardProps } from './types';
 
-export interface ProfileCardProps {
-  profile: Profile;
-  onSelect: (profile: Profile) => void;
-  onDelete: (id: string) => void;
-}
 
-export const ProfileCard = (props: ProfileCardProps) => {
+const ProfileCard = (props: ProfileCardProps) => {
   const { profile, onSelect, onDelete } = props;
 
   return (
@@ -30,4 +26,8 @@ export const ProfileCard = (props: ProfileCardProps) => {
       </div>
     </button>
   );
+};
+
+export {
+  ProfileCard,
 };

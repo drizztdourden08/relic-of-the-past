@@ -2,18 +2,12 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { useGameState } from './behavior/useGameState';
 import { getInputManager, wasmGetViewportInfo, wasmRenderCleanFrame } from '../../../lib/game';
 import { createEdgeGlowRenderer, type EdgeGlowRenderer } from '../../../lib/game/edge-glow-shader';
-import { ControllerDisconnectOverlay } from './ControllerDisconnectOverlay';
+import { ControllerDisconnectOverlay } from './sub-components/ControllerDisconnectOverlay';
 import './GameLayer.css';
+import type { GameLayerProps } from './types';
 
-export interface GameLayerProps {
-  assetData: Uint8Array | null;
-  configIni?: string;
-  profileId?: string;
-  stretch?: boolean;
-  edgeEffect?: boolean;
-}
 
-export const GameLayer = (props: GameLayerProps) => {
+const GameLayer = (props: GameLayerProps) => {
   const { assetData, configIni, profileId, stretch, edgeEffect = true } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -287,3 +281,5 @@ export const GameLayer = (props: GameLayerProps) => {
     </div>
   );
 };
+
+export { GameLayer };

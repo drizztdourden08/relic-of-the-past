@@ -1,31 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
-import { ProfileManager } from './ProfileManager';
-import { RomManager } from './RomManager';
-import { LanguageManager } from './LanguageManager';
-import { MsuManager } from './MsuManager';
-import { SpriteManager } from './SpriteManager';
+import { ProfileManager } from './sub-components/ProfileManager';
+import { RomManager } from './sub-components/RomManager';
+import { LanguageManager } from './sub-components/LanguageManager';
+import { MsuManager } from './sub-components/MsuManager';
+import { SpriteManager } from './sub-components/SpriteManager';
 import './DataManager.css';
+import type { DataTab, DataManagerProps } from './types';
 
-export type DataTab = 'profiles' | 'roms' | 'languages' | 'msu' | 'sprites';
 
-export interface DataManagerProps {
-  profiles: Profile[];
-  romStatuses: RomDisplayInfo[];
-  onSelectProfile: (profile: Profile) => void;
-  onCreateProfile: (name: string, romFile: string, language?: string, msuPack?: string) => void;
-  onDeleteProfile: (id: string) => void;
-  onImportRom: () => void;
-  onExtractAssets: (romFile: string) => void;
-  onDeleteRom: (romFile: string) => void;
-  onRefresh: () => void;
-  onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
-  loadingProfile?: string | null;
-  initialTab?: DataTab;
-  isGameRunning?: boolean;
-  onSwitchProfile: () => void;
-}
 
-export const DataManager = (props: DataManagerProps) => {
+const DataManager = (props: DataManagerProps) => {
   const {
     profiles,
     romStatuses,
@@ -151,3 +135,5 @@ export const DataManager = (props: DataManagerProps) => {
     </div>
   );
 };
+
+export { DataManager };

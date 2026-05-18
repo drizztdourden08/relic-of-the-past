@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { TitleBar } from '../components/views/TitleBar';
 import { GameLayer } from '../components/views/GameLayer';
 import { SaveStateOverlay } from '../components/views/SaveStateOverlay/SaveStateOverlay';
-import { useEnhancedSaveSlot } from '../components/views/SaveStateOverlay/useEnhancedSaveSlot';
+import { useEnhancedSaveSlot } from '../components/views/SaveStateOverlay/behavior/useEnhancedSaveSlot';
 import { ProfilePicker } from '../components/views/ProfilePicker';
 import { ProfileHub } from '../components/views/ProfileHub';
 import { DataManager } from '../components/views/DataManager';

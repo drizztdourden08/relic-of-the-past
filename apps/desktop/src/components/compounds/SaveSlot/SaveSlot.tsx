@@ -1,21 +1,8 @@
-import './SaveSlot.css';
+﻿import './SaveSlot.css';
+import { type SaveSlotProps } from './types';
 
-export interface SaveSlotProps {
-  slot: number;
-  screenshotUrl: string | null;
-  timestamp: number;
-  isEmpty: boolean;
-  busy: boolean;
-  shortcutKey?: string;
-  disableSave?: boolean;
-  disableLoad?: boolean;
-  highlighted?: boolean;
-  holdProgress?: number;
-  onSave: (slot: number) => void;
-  onLoad: (slot: number) => void;
-}
 
-export const SaveSlot = (props: SaveSlotProps) => {
+const SaveSlot = (props: SaveSlotProps) => {
   const {
     slot,
     screenshotUrl,
@@ -88,4 +75,8 @@ export const SaveSlot = (props: SaveSlotProps) => {
       )}
     </div>
   );
+};
+
+export {
+  SaveSlot,
 };

@@ -4,21 +4,10 @@ import { RomCard } from '../../compounds/RomCard';
 import { CreateProfileForm } from '../../compounds/CreateProfileForm';
 import { Button } from '../../primitives/Button';
 import './ProfilePicker.css';
+import type { ProfilePickerProps } from './types';
 
-export interface ProfilePickerProps {
-  profiles: Profile[];
-  romStatuses: RomDisplayInfo[];
-  onSelectProfile: (profile: Profile) => void;
-  onCreateProfile: (name: string, romFile: string) => void;
-  onDeleteProfile: (id: string) => void;
-  onImportRom: () => void;
-  onExtractAssets: (romFile: string) => void;
-  onDeleteRom: (romFile: string) => void;
-  importingRom?: boolean;
-  loadingProfile?: string | null;
-}
 
-export const ProfilePicker = (props: ProfilePickerProps) => {
+const ProfilePicker = (props: ProfilePickerProps) => {
   const {
     profiles,
     romStatuses,
@@ -126,3 +115,5 @@ export const ProfilePicker = (props: ProfilePickerProps) => {
     </div>
   );
 };
+
+export { ProfilePicker };

@@ -1,13 +1,9 @@
-import type { ReactNode } from 'react';
+﻿import type { ReactNode } from 'react';
 import './SettingsSection.css';
+import { type SettingsSectionProps } from './types';
 
-export interface SettingsSectionProps {
-  title: string;
-  description?: string;
-  children: ReactNode;
-}
 
-export const SettingsSection = (props: SettingsSectionProps) => {
+const SettingsSection = (props: SettingsSectionProps) => {
   const { title, description, children } = props;
 
   return (
@@ -21,4 +17,8 @@ export const SettingsSection = (props: SettingsSectionProps) => {
       </div>
     </section>
   );
+};
+
+export {
+  SettingsSection,
 };

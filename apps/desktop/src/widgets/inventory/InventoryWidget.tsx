@@ -4,10 +4,10 @@
  */
 import { useState, useEffect } from 'react';
 import { onInventoryChanged, getCurrentInventory } from '../../lib/game';
-import { TrackerInventory } from '../../components/views/TrackerView/TrackerInventory';
+import { TrackerInventory } from '../../components/views/TrackerView/sub-components/TrackerInventory';
 import { useInventoryViewMode } from './behavior/useInventoryViewMode';
 
-export const InventoryWidgetContent = () => {
+const InventoryWidgetContent = () => {
   const [inventory, setInventory] = useState<Set<string>>(() => getCurrentInventory());
   const viewMode = useInventoryViewMode();
 
@@ -16,3 +16,4 @@ export const InventoryWidgetContent = () => {
   return <TrackerInventory inventory={inventory} viewMode={viewMode} />;
 };
 
+export { InventoryWidgetContent };

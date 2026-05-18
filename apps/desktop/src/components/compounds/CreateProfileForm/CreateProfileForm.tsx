@@ -1,16 +1,12 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Button } from '../../primitives/Button';
 import { TextInput } from '../../primitives/TextInput';
 import { NativeSelect } from '../../primitives/Select';
 import './CreateProfileForm.css';
+import { type CreateProfileFormProps } from './types';
 
-export interface CreateProfileFormProps {
-  readyRoms: RomDisplayInfo[];
-  onCreate: (name: string, romFile: string) => void;
-  onCancel: () => void;
-}
 
-export const CreateProfileForm = (props: CreateProfileFormProps) => {
+const CreateProfileForm = (props: CreateProfileFormProps) => {
   const { readyRoms, onCreate, onCancel } = props;
   const [name, setName] = useState('');
   const [rom, setRom] = useState(readyRoms[0]?.romFile ?? '');
@@ -48,4 +44,8 @@ export const CreateProfileForm = (props: CreateProfileFormProps) => {
       </div>
     </div>
   );
+};
+
+export {
+  CreateProfileForm,
 };

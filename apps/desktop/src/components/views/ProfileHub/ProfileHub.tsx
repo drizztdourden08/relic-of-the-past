@@ -3,7 +3,7 @@ import type { GameSettings } from '@shared/types/settings';
 import { Button } from '../../primitives/Button';
 import { ToastContainer, type ToastItem } from '../../primitives/Toast';
 import { HomeTab } from './tabs/HomeTab';
-import { SettingsView } from './SettingsView';
+import { SettingsView } from './sub-components/SettingsView';
 import { AudioSettings } from './tabs/AudioSettings';
 import { GameplaySettings } from './tabs/GameplaySettings';
 import { ControlsSettings } from './tabs/ControlsSettings';
@@ -12,25 +12,12 @@ import { pushLiveSettings, LIVE_SETTINGS, getInputManager } from '../../../lib/g
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { log } from '../../../lib/log-bus';
 import './ProfileHub.css';
+import type { ProfileHubProps } from './types';
 
-export interface ProfileHubProps {
-  profile: Profile;
-  isGameRunning: boolean;
-  onStartGame: () => void;
-  onStopGame: () => void;
-  onResetGame: () => void;
-  onWindowModeChange?: (mode: GameSettings['windowMode']) => void;
-  onConstraintSettingsChange?: (constraint: GameSettings['viewportConstraint'], aspectRatio: GameSettings['aspectRatio']) => void;
-  onMasterVolumeChange?: (volume: number) => void;
-  onDisplayPerfChange?: (enabled: boolean) => void;
-  onSaveSlotSettingsChange?: (enhanced: boolean, holdDuration: number) => void;
-  onEdgeEffectChange?: (enabled: boolean) => void;
-  masterVolumeOverride?: { volume: number; version: number } | null;
-}
 
 type TopTab = 'home' | 'settings' | 'audio' | 'gameplay' | 'controls';
 
-export const ProfileHub = (props: ProfileHubProps) => {
+const ProfileHub = (props: ProfileHubProps) => {
   const {
     profile,
     isGameRunning,
@@ -288,3 +275,5 @@ export const ProfileHub = (props: ProfileHubProps) => {
     </div>
   );
 };
+
+export { ProfileHub };

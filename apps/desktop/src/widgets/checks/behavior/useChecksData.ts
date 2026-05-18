@@ -9,7 +9,7 @@ import {
   onInventoryChanged, onCompletedChecksChanged,
   getCurrentInventory, getCompletedChecks,
 } from '../../../lib/game';
-import type { ViewMode } from '../../../components/views/TrackerView/TrackerFilters';
+import type { ViewMode } from '../../../components/views/TrackerView/sub-components/TrackerFilters';
 
 export const useChecksData = () => {
   const [inventory, setInventory] = useState<Set<string>>(() => getCurrentInventory());

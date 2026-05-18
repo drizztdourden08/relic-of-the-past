@@ -2,12 +2,12 @@
  * ChecksWidget — Content for the Checks widget.
  * Wraps TrackerSummary + TrackerFilters + TrackerGroupTree with data subscriptions.
  */
-import { TrackerSummary } from '../../components/views/TrackerView/TrackerSummary';
-import { TrackerFilters } from '../../components/views/TrackerView/TrackerFilters';
-import { TrackerGroupTree } from '../../components/views/TrackerView/TrackerGroupTree';
+import { TrackerSummary } from '../../components/views/TrackerView/sub-components/TrackerSummary';
+import { TrackerFilters } from '../../components/views/TrackerView/sub-components/TrackerFilters';
+import { TrackerGroupTree } from '../../components/views/TrackerView/sub-components/TrackerGroupTree';
 import { useChecksData } from './behavior/useChecksData';
 
-export const ChecksWidgetContent = () => {
+const ChecksWidgetContent = () => {
   const { viewMode, setViewMode, grouping, setGrouping, filter, setFilter, snapshot, stats, groupTree } = useChecksData();
 
   return (
@@ -36,3 +36,4 @@ export const ChecksWidgetContent = () => {
   );
 };
 
+export { ChecksWidgetContent };

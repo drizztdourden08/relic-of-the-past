@@ -1,19 +1,10 @@
-import { useEffect, useRef } from 'react';
+﻿import { useEffect, useRef } from 'react';
 import { Button } from '../../primitives/Button';
 import './Dialog.css';
+import { type DialogProps } from './types';
 
-export interface DialogProps {
-  open: boolean;
-  title: string;
-  message: string;
-  confirmLabel?: string;
-  cancelLabel?: string;
-  variant?: 'danger' | 'default';
-  onConfirm: () => void;
-  onCancel: () => void;
-}
 
-export const Dialog = (props: DialogProps) => {
+const Dialog = (props: DialogProps) => {
   const {
     open,
     title,
@@ -59,4 +50,8 @@ export const Dialog = (props: DialogProps) => {
       </div>
     </div>
   );
+};
+
+export {
+  Dialog,
 };

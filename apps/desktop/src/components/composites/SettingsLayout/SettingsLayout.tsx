@@ -1,40 +1,16 @@
-import { useState, useRef, useCallback, useMemo, type ReactNode } from 'react';
+﻿import { useState, useRef, useCallback, useMemo, type ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { Toggle } from '../../primitives/Toggle';
 import './SettingsLayout.css';
+import { type SettingItem, type SubSection, type Section, type SettingsLayoutProps } from './types';
 
 // ─── Shared types for section-based settings layouts ───
 
-export interface SettingItem {
-  key: string;
-  label: string;
-  description: string;
-  keywords?: string;
-  /** Optional external URL to open when an info link is clicked */
-  link?: string;
-}
 
-export interface SubSection {
-  id: string;
-  title: string;
-  items: SettingItem[];
-}
 
-export interface Section {
-  id: string;
-  title: string;
-  subsections: SubSection[];
-}
 
-export interface SettingsLayoutProps {
-  sections: Section[];
-  settings: GameSettings;
-  onChange: (patch: Partial<GameSettings>) => void;
-  renderControl?: (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void) => ReactNode | null;
-  isDisabled?: (key: string, settings: GameSettings) => boolean;
-}
 
-export const SettingsLayout = (props: SettingsLayoutProps) => {
+const SettingsLayout = (props: SettingsLayoutProps) => {
   const {
     sections,
     settings,
@@ -71,7 +47,7 @@ export const SettingsLayout = (props: SettingsLayoutProps) => {
   }, [filterLower, sections]);
 
   const renderToggle = (key: string, item: SettingItem) => {
-    const val = (settings as Record<string, unknown>)[key];
+    const val = (settings as unknown as Record<string, unknown>)[key];
     if (typeof val !== 'boolean') return null;
     const disabled = isDisabled?.(key, settings) ?? false;
 
@@ -157,4 +133,8 @@ export const SettingsLayout = (props: SettingsLayoutProps) => {
       </div>
     </div>
   );
+};
+
+export {
+  SettingsLayout,
 };

@@ -3,7 +3,7 @@ import type { GameSettings } from '@shared/types/settings';
 import { SegmentedControl } from '../../../primitives/SegmentedControl';
 import { Slider } from '../../../primitives/Slider';
 import { MsuImport } from './MsuImport';
-import { SettingsLayout, type Section } from '../../../composites/SettingsLayout/SettingsLayout';
+import { SettingsLayout, type Section } from '../../../composites/SettingsLayout';
 
 interface AudioSettingsProps {
   profileId: string;

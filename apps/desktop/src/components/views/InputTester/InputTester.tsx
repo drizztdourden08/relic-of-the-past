@@ -13,8 +13,8 @@ import { webHidReader } from '../../../lib/input/hid-reader';
 import type { WebHidInputState } from '../../../lib/input/hid-reader';
 import { getInputManager } from '../../../lib/input/input-manager';
 import type { GamepadSnapshot } from '../../../lib/input/input-manager';
-import { HidCalibrationWizard } from './HidCalibrationWizard';
-import type { HidControllerMap } from './HidCalibrationWizard';
+import { HidCalibrationWizard } from './sub-components/HidCalibrationWizard';
+import type { HidControllerMap } from './sub-components/HidCalibrationWizard';
 import './InputTester.css';
 
 interface EventEntry {
@@ -33,7 +33,7 @@ interface HidDevice {
   serialNumber: string | null;
 }
 
-export const InputTester = () => {
+const InputTester = () => {
   const [gamepads, setGamepads] = useState<GamepadSnapshot[]>([]);
   const [events, setEvents] = useState<EventEntry[]>([]);
   const [hidDevices, setHidDevices] = useState<HidDevice[]>([]);
@@ -190,7 +190,6 @@ export const InputTester = () => {
                   <div
                     className="input-tester__axis-fill"
                     style={{
-                      left: `${50 + val * 50}%`,
                       width: `${Math.abs(val) * 50}%`,
                       ...(val < 0 ? { left: `${50 + val * 50}%` } : { left: '50%' }),
                     }}
@@ -361,3 +360,5 @@ export const InputTester = () => {
     </div>
   );
 };
+
+export { InputTester };

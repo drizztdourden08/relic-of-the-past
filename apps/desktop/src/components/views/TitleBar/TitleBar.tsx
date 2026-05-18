@@ -6,28 +6,10 @@ import { useTitleBar } from './behavior/useTitleBar';
 import { WindowControls } from './sub-components/WindowControls';
 import { getFps } from '../../../lib/game';
 import './TitleBar.css';
+import type { TitleBarProps } from './types';
 
-export interface TitleBarProps {
-  onImportRom: () => void;
-  onSwitchProfile: () => void;
-  onShowProfile: () => void;
-  onShowLogs: () => void;
-  onToggleSaveStates: () => void;
-  onToggleInventory: () => void;
-  onToggleChecks: () => void;
-  onShowDataManager: (tab?: string) => void;
-  onShowInputTester: () => void;
-  onShowCredits: () => void;
-  onShowSpriteDebug: () => void;
-  activeProfile: Profile | null;
-  gameRunning: boolean;
-  windowMode?: GameSettings['windowMode'];
-  isMuted?: boolean;
-  onToggleMute?: () => void;
-  showFps?: boolean;
-}
 
-export const TitleBar = (props: TitleBarProps) => {
+const TitleBar = (props: TitleBarProps) => {
   const {
     onImportRom,
     onSwitchProfile,
@@ -280,3 +262,5 @@ export const TitleBar = (props: TitleBarProps) => {
     </div>
   );
 };
+
+export { TitleBar };

@@ -7,7 +7,7 @@ import { subscribe, getEntries, CHANNEL_COLORS, type LogEntry } from '../../lib/
 import { MAX_ENTRIES } from './constants';
 import { formatTime } from './behavior/formatTime';
 
-export const LogsWidgetContent = () => {
+const LogsWidgetContent = () => {
   const [entries, setEntries] = useState<LogEntry[]>(() => getEntries());
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -40,3 +40,5 @@ export const LogsWidgetContent = () => {
     </div>
   );
 }
+
+export { LogsWidgetContent };

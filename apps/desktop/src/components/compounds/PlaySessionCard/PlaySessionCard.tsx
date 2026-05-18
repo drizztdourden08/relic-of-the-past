@@ -1,12 +1,10 @@
-import type { PlaySession } from '@shared/types/session';
+﻿import type { PlaySession } from '@shared/types/session';
 import { formatSessionDate, formatDuration } from './behavior/formatters';
 import './PlaySessionCard.css';
+import { type PlaySessionCardProps } from './types';
 
-export interface PlaySessionCardProps {
-  session: PlaySession;
-}
 
-export const PlaySessionCard = (props: PlaySessionCardProps) => {
+const PlaySessionCard = (props: PlaySessionCardProps) => {
   const { session } = props;
 
   return (
@@ -19,4 +17,8 @@ export const PlaySessionCard = (props: PlaySessionCardProps) => {
       <span className="session-card__duration">{formatDuration(session.durationMs)}</span>
     </div>
   );
+};
+
+export {
+  PlaySessionCard,
 };

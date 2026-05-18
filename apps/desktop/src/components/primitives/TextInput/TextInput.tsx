@@ -1,10 +1,14 @@
-import type { InputHTMLAttributes } from 'react';
+﻿import type { InputHTMLAttributes } from 'react';
 import './TextInput.css';
+import { type TextInputProps } from './types';
 
-export interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {}
 
-export const TextInput = (props: TextInputProps) => {
+const TextInput = (props: TextInputProps) => {
   const { className = '', ...rest } = props;
 
   return <input className={`text-input ${className}`} {...rest} />;
+};
+
+export {
+  TextInput,
 };

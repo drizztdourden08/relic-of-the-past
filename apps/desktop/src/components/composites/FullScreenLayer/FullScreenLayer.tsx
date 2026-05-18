@@ -1,13 +1,10 @@
-import type { ReactNode } from 'react';
+﻿import type { ReactNode } from 'react';
 import { IconButton } from '../../primitives/IconButton';
 import './FullScreenLayer.css';
+import { type FullScreenLayerProps } from './types';
 
-export interface FullScreenLayerProps {
-  children: ReactNode;
-  onClose: () => void;
-}
 
-export const FullScreenLayer = (props: FullScreenLayerProps) => {
+const FullScreenLayer = (props: FullScreenLayerProps) => {
   const { children, onClose } = props;
 
   return (
@@ -26,4 +23,8 @@ export const FullScreenLayer = (props: FullScreenLayerProps) => {
       </div>
     </div>
   );
+};
+
+export {
+  FullScreenLayer,
 };
