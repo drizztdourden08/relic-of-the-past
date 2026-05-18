@@ -1,4 +1,4 @@
-import type { Requirement } from '../../types/tracker';
+import type { Requirement } from '../types';
 import {
   hasSword, hasBeamSword, hasMeleeWeapon,
   canLiftRocks, canLiftHeavyRocks,

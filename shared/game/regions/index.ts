@@ -1,4 +1,4 @@
-import type { RegionDefinition, RegionConnection } from '../../types/tracker';
+import type { RegionDefinition, RegionConnection } from '../types';
 import { OVERWORLD_REGIONS, OVERWORLD_CONNECTIONS } from './overworld';
 import { DUNGEON_REGIONS, DUNGEON_CONNECTIONS } from './dungeons';
 

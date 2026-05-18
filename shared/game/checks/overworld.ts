@@ -1,4 +1,4 @@
-import type { CheckDefinition } from '../../types/tracker';
+import type { CheckDefinition } from '../types';
 
 export const OVERWORLD_CHECKS: CheckDefinition[] = [
   // ─── Progression Events (milestones, no item reward) ───

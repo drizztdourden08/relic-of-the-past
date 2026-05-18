@@ -1,5 +1,5 @@
-import type { Requirement, CheckDefinition, RegionConnection } from '../types/tracker';
-import { ITEM_GROUPS } from '../data/items';
+import type { Requirement, CheckDefinition, RegionConnection } from '../types';
+import { ITEM_GROUPS } from '../items/groups';
 
 // ─── Requirement Evaluation ───
 
@@ -81,10 +81,6 @@ export function getReachableRegions(
   }
 
   // Fixed-point: re-traverse until no new regions found.
-  // Needed because reaching a new region may unlock connections from
-  // previously-visited regions that lead to other new regions via
-  // different paths. A single BFS pass can miss these if the adjacency
-  // list was traversed before the enabling region was reached.
   let changed = true;
   while (changed) {
     changed = false;
@@ -161,7 +157,6 @@ export function getCheckStatus(
 
 /**
  * For a blocked check, find the immediate missing items from its requirement tree.
- * Returns item names that, if obtained, would help satisfy the requirement.
  */
 export function getBlockingItems(
   req: Requirement,
@@ -172,7 +167,6 @@ export function getBlockingItems(
   }
 
   if ('and' in req) {
-    // All branches must be satisfied — collect missing from all unsatisfied branches
     const missing: string[] = [];
     for (const sub of req.and) {
       if (!evaluateRequirement(sub, inventory)) {
@@ -183,7 +177,6 @@ export function getBlockingItems(
   }
 
   if ('or' in req) {
-    // Any branch suffices — return the blocking items from the branch with fewest missing
     let best: string[] | null = null;
     for (const sub of req.or) {
       if (evaluateRequirement(sub, inventory)) return [];

@@ -1,4 +1,4 @@
-import { CREDITS, getUsageLabel } from '@shared/data/credits';
+import { CREDITS, getUsageLabel } from '@shared/credits';
 import './CreditsTab.css';
 
 export function CreditsPage() {

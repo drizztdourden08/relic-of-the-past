@@ -189,7 +189,7 @@ const AREA_RULES: Array<{ pattern: RegExp | Set<string>; tag: CheckTag }> = [
 
 // ─── Compute tags for a check ───
 
-import type { CheckDefinition } from '../../types/tracker';
+import type { CheckDefinition } from '../types';
 
 export function computeCheckTags(check: CheckDefinition): CheckTag[] {
   const tags: Set<CheckTag> = new Set();

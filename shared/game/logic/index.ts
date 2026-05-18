@@ -9,3 +9,18 @@ export {
   hasMiseryMireMedallion, hasTurtleRockMedallion,
   hasCrystals,
 } from './helpers';
+export {
+  evaluateRequirement,
+  getReachableRegions,
+  getAccessibleChecks,
+  getCheckStatus,
+  getBlockingItems,
+  computeTrackerSnapshot,
+  type CheckStatus,
+} from './eval';
+export {
+  resolveRules,
+  VANILLA_CONFIG,
+  OPEN_CONFIG,
+  type ResolvedRules,
+} from './presets';

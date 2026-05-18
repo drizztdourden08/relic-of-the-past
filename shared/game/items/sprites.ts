@@ -148,16 +148,9 @@ export function getItemSprite(itemName: string): string | undefined {
   return `${getSpritesBase()}${filename}.png`;
 }
 
-/**
- * All known inventory item names that have sprites.
- */
+/** All known inventory item names that have sprites. */
 export const INVENTORY_ITEMS = Object.keys(ITEM_SPRITE_MAP);
 
-/**
- * The items to display in the visual inventory grid, grouped by category.
- * Each category has a label and a list of items with their display name,
- * tracker item name (matching inventoryToItemSet output), and sprite.
- */
 export interface InventorySlot {
   displayName: string;
   /** The tracker item name(s) to check in the inventory set — first match wins */
@@ -168,6 +161,22 @@ export interface InventorySlot {
 export interface InventoryCategory {
   label: string;
   items: InventorySlot[];
+}
+
+export type InventoryViewMode = 'default' | 'ingame' | 'compact';
+
+/**
+ * Resolve which sprite to show for a tiered item, given the current inventory.
+ * E.g. if inventory has 'Tempered Sword', show tempered-sword.png.
+ */
+export function resolveItemSprite(slot: InventorySlot, inventory: Set<string>): { obtained: boolean; sprite: string } {
+  for (const name of slot.trackerNames) {
+    if (inventory.has(name)) {
+      const sprite = ITEM_SPRITE_MAP[name];
+      return { obtained: true, sprite: sprite ?? slot.sprite };
+    }
+  }
+  return { obtained: false, sprite: slot.sprite };
 }
 
 export const INVENTORY_LAYOUT: InventoryCategory[] = [
@@ -235,26 +244,7 @@ export const INVENTORY_LAYOUT: InventoryCategory[] = [
   },
 ];
 
-/**
- * Resolve which sprite to show for a tiered item, given the current inventory.
- * E.g. if inventory has 'Tempered Sword', show tempered-sword.png.
- */
-export function resolveItemSprite(slot: InventorySlot, inventory: Set<string>): { obtained: boolean; sprite: string } {
-  for (const name of slot.trackerNames) {
-    if (inventory.has(name)) {
-      const sprite = ITEM_SPRITE_MAP[name];
-      return { obtained: true, sprite: sprite ?? slot.sprite };
-    }
-  }
-  return { obtained: false, sprite: slot.sprite };
-}
-
-// ─── View mode type ───
-
-export type InventoryViewMode = 'default' | 'ingame' | 'compact';
-
 // ─── In-Game Layout (matches the SNES pause screen inventory) ───
-// 5×4 grid of usable items + side equipment + bottom passive gear
 
 export const INGAME_ITEMS_GRID: InventorySlot[][] = [
   // Row 1
@@ -306,9 +296,6 @@ export const INGAME_PASSIVES: InventorySlot[] = [
   { displayName: 'Flippers', trackerNames: ['Flippers'], sprite: 'hud-flippers' },
   { displayName: 'Moon Pearl', trackerNames: ['Moon Pearl'], sprite: 'hud-moon-pearl' },
 ];
-
-// ─── Compact Layout (in-game style but with upgrades broken down, no categories) ───
-// Flat grid of individual items/tiers. Shows each upgrade separately.
 
 export const COMPACT_LAYOUT: InventorySlot[] = [
   // Swords

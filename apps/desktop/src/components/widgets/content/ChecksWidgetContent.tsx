@@ -3,12 +3,12 @@
  * Wraps TrackerSummary + TrackerFilters + TrackerGroupTree with data subscriptions.
  */
 import { useState, useEffect, useMemo } from 'react';
-import { computeTrackerSnapshot } from '@shared/lib/logic-eval';
-import { resolveRules, VANILLA_CONFIG } from '@shared/lib/resolve-rules';
-import { ALL_CHECKS } from '@shared/data/checks';
-import { getCheckTags } from '@shared/data/checks/tags';
-import type { GroupDimension, FilterState } from '@shared/data/checks/grouping';
-import { buildGroupTree, filterChecks } from '@shared/data/checks/grouping';
+import { computeTrackerSnapshot } from '@shared/game/logic/eval';
+import { resolveRules, VANILLA_CONFIG } from '@shared/game/logic/presets';
+import { ALL_CHECKS } from '@shared/game/checks';
+import { getCheckTags } from '@shared/game/checks/tags';
+import type { GroupDimension, FilterState } from '@shared/game/checks/grouping';
+import { buildGroupTree, filterChecks } from '@shared/game/checks/grouping';
 import {
   onInventoryChanged, onCompletedChecksChanged,
   getCurrentInventory, getCompletedChecks,

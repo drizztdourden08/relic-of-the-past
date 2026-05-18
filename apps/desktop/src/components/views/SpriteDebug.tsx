@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { ITEM_SPRITE_MAP } from '@shared/data/item-sprites';
+import { ITEM_SPRITE_MAP } from '@shared/game/items/sprites';
 import {
   SPRITE_MANIFEST,
   CATEGORY_LABELS,
   CATEGORY_ORDER,
   type SpriteCategory,
   type SpriteManifestEntry,
-} from '@shared/data/sprite-manifest';
+} from '@shared/game/sprites';
 
 // Dev debug page uses static public path (these sprites are in /public/sprites/items/)
 function devSpritePath(file: string): string {

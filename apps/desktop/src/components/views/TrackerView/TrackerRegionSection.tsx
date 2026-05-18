@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import type { CheckDefinition } from '@shared/types/tracker';
-import type { CheckStatus } from '@shared/lib/logic-eval';
+import type { CheckDefinition } from '@shared/game/types';
+import type { CheckStatus } from '@shared/game/logic/eval';
 import { TrackerCheckRow } from './TrackerCheckRow';
 import './TrackerView.css';
 

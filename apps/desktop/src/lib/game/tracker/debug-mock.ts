@@ -18,7 +18,7 @@
 
 import { getModule, setModule } from '../wasm-bridge';
 import type { EmscriptenModule } from '../types';
-import { CHECK_ROOM_FLAGS, CHEST_OPEN_MASKS } from '@shared/data/checks/room-flags';
+import { CHECK_ROOM_FLAGS, CHEST_OPEN_MASKS } from '@shared/game/checks/flags/room';
 import { pollInventoryState, getCurrentInventory, getCompletedChecks } from './bridge';
 import { log } from '../../log-bus';
 

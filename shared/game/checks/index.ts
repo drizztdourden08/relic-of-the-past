@@ -1,4 +1,4 @@
-import type { CheckDefinition } from '../../types/tracker';
+import type { CheckDefinition } from '../types';
 import { OVERWORLD_CHECKS } from './overworld';
 import { DUNGEON_CHECKS } from './dungeons';
 
@@ -10,3 +10,7 @@ export const ALL_CHECKS: CheckDefinition[] = [...OVERWORLD_CHECKS, ...DUNGEON_CH
 export const CHECK_BY_ID = new Map<string, CheckDefinition>(
   ALL_CHECKS.map(c => [c.id, c])
 );
+
+export * from './tags';
+export * from './grouping';
+export * from './flags';

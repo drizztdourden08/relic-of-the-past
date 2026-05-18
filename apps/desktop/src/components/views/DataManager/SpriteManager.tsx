@@ -5,7 +5,7 @@ import {
   CATEGORY_LABELS,
   CATEGORY_ORDER,
   type SpriteCategory,
-} from '@shared/data/sprite-manifest';
+} from '@shared/game/sprites';
 import './SpriteManager.css';
 
 interface SpriteManagerProps {

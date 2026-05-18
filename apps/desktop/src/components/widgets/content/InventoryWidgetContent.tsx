@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { onInventoryChanged, getCurrentInventory } from '../../../lib/game';
 import { TrackerInventory } from '../../views/TrackerView/TrackerInventory';
 import { SegmentedControl } from '../../primitives';
-import type { InventoryViewMode } from '@shared/data/item-sprites';
+import type { InventoryViewMode } from '@shared/game/items/sprites';
 
 const VIEW_OPTIONS: { value: InventoryViewMode; label: string }[] = [
   { value: 'default', label: 'List' },

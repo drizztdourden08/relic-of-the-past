@@ -1,8 +1,8 @@
-import type { InventoryCategory, InventorySlot, InventoryViewMode } from '@shared/data/item-sprites';
+import type { InventoryCategory, InventorySlot, InventoryViewMode } from '@shared/game/items/sprites';
 import {
   INVENTORY_LAYOUT, INGAME_ITEMS_GRID, INGAME_EQUIPMENT, INGAME_PASSIVES, COMPACT_LAYOUT,
   resolveItemSprite, getSpritesBase,
-} from '@shared/data/item-sprites';
+} from '@shared/game/items/sprites';
 import './TrackerView.css';
 
 interface TrackerInventoryProps {

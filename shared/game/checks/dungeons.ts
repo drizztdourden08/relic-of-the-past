@@ -1,4 +1,4 @@
-import type { CheckDefinition } from '../../types/tracker';
+import type { CheckDefinition } from '../types';
 
 export const DUNGEON_CHECKS: CheckDefinition[] = [
   // ═══════════════════════════════════════════

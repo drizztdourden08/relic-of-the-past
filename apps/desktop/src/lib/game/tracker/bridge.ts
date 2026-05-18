@@ -6,12 +6,12 @@
 
 import { getModule } from '../wasm-bridge';
 import { log } from '../../log-bus';
-import { ITEM_ID_TO_NAME } from './constants';
+import { ITEM_ID_TO_NAME } from '@shared/game/items/id-map';
 import { parseInventoryBuffer, inventoryToItemSet, progressToEvents, setsEqual } from './inventory';
-import { CHECK_ROOM_FLAGS, CHEST_OPEN_MASKS, DIRECT_ROOM_FLAGS } from '@shared/data/checks/room-flags';
-import { CHECK_NPC_FLAGS } from '@shared/data/checks/npc-flags';
-import { CHECK_OVERWORLD_FLAGS } from '@shared/data/checks/overworld-flags';
-import { CHECK_EVENT_FLAGS } from '@shared/data/checks/event-flags';
+import { CHECK_ROOM_FLAGS, CHEST_OPEN_MASKS, DIRECT_ROOM_FLAGS } from '@shared/game/checks/flags/room';
+import { CHECK_NPC_FLAGS } from '@shared/game/checks/flags/npc';
+import { CHECK_OVERWORLD_FLAGS } from '@shared/game/checks/flags/overworld';
+import { CHECK_EVENT_FLAGS } from '@shared/game/checks/flags/event';
 
 // ─── Listener types ───
 

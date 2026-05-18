@@ -1,4 +1,4 @@
-import type { RegionDefinition, RegionConnection } from '../../types/tracker';
+import type { RegionDefinition, RegionConnection } from '../types';
 
 // ─── Dungeon Region Definitions ───
 

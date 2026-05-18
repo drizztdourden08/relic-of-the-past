@@ -1,15 +1,4 @@
-/**
- * Sprite manifest — derived from the single source of truth: sprite-definitions.json
- *
- * This file does NOT contain hardcoded sprite data. It imports the JSON definition
- * and exports typed arrays for use in the UI. The same JSON is consumed by the
- * Python extraction script.
- *
- * Sprites are extracted from the user's own ROM at runtime and are never
- * distributed with the source code.
- */
-
-import definitions from './sprite-definitions.json';
+import definitions from './definitions.json';
 
 export type SpriteCategory = 'hud' | 'receipt' | 'drop';
 

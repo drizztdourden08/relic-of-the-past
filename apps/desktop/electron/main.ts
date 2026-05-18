@@ -36,7 +36,7 @@ import {
 } from './profile-manager';
 import { registerInputHandlers, stopInputHandlers, initCalibrationStore, initProfileStore } from './input';
 import { extractAllItemSprites } from '../../../shared/asset-extraction/item-sprites/extract-items';
-import spriteDefinitions from '../../../shared/data/sprite-definitions.json';
+import spriteDefinitions from '../../../shared/game/sprites/definitions.json';
 import { loadRom } from '../../../shared/asset-extraction/rom/rom-loader';
 import { compileResources } from '../../../shared/asset-extraction/compile-resources';
 import { decodeStrings, formatDialogueText } from '../../../shared/asset-extraction/text/dialogue-decoder';

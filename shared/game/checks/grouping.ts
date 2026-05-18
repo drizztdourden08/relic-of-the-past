@@ -5,8 +5,8 @@
  * Supports 0-5 levels of nesting. Each level is a "grouping dimension".
  */
 
-import type { CheckDefinition } from '../../types/tracker';
-import type { CheckStatus } from '../../lib/logic-eval';
+import type { CheckDefinition } from '../types';
+import type { CheckStatus } from '../logic/eval';
 import type { CheckTag } from './tags';
 import { getCheckTags, TAG_DEFINITIONS } from './tags';
 

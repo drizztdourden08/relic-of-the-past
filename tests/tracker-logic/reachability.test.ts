@@ -9,10 +9,10 @@
  * Run: npx vitest run tests/tracker-logic/reachability.test.ts
  */
 import { describe, it, expect } from 'vitest';
-import { getReachableRegions, getAccessibleChecks } from '../../shared/lib/logic-eval';
-import { ALL_CONNECTIONS } from '../../shared/data/regions';
-import { ALL_CHECKS } from '../../shared/data/checks';
-import { REGION_RULES, CHECK_RULES } from '../../shared/data/logic';
+import { getReachableRegions, getAccessibleChecks } from '../../shared/game/logic/eval';
+import { ALL_CONNECTIONS } from '../../shared/game/regions';
+import { ALL_CHECKS } from '../../shared/game/checks';
+import { REGION_RULES, CHECK_RULES } from '../../shared/game/logic';
 
 describe('Tracker Reachability — Empty Inventory', () => {
   const emptyInventory = new Set<string>();

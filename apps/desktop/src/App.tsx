@@ -17,7 +17,7 @@ import { log } from './lib/log-bus';
 import type { LogChannel, LogLevel } from './lib/log-bus';
 import { subscribeGameState, resetGame, setMasterVolume, setMsuData, getInputManager } from './lib/game';
 import { serializeToIni, mergeSettings } from './lib/game/settings';
-import { setSpritesBase } from '@shared/data/item-sprites';
+import { setSpritesBase } from '@shared/game/items/sprites';
 import './App.css';
 
 const TITLEBAR_HEIGHT = 38;
