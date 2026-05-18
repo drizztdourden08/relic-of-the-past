@@ -1,32 +1,20 @@
-import './RadioGroup.css';
+﻿import './RadioGroup.css';
+import { type RadioOption, type RadioGroupProps } from './types';
 
-export interface RadioOption<T extends string = string> {
-  value: T;
-  label: string;
-  description?: string;
-}
 
-interface RadioGroupProps<T extends string = string> {
-  value: T;
-  options: RadioOption<T>[];
-  onChange: (value: T) => void;
-  label?: string;
-  description?: string;
-  direction?: 'horizontal' | 'vertical';
-  disabled?: boolean;
-  name?: string;
-}
 
-export function RadioGroup<T extends string = string>({
-  value,
-  options,
-  onChange,
-  label,
-  description,
-  direction = 'horizontal',
-  disabled = false,
-  name,
-}: RadioGroupProps<T>) {
+const RadioGroup = <T extends string = string>(props: RadioGroupProps<T>) => {
+  const {
+    value,
+    options,
+    onChange,
+    label,
+    description,
+    direction = 'horizontal',
+    disabled = false,
+    name,
+  } = props;
+
   const groupName = name ?? `radio-${label?.replace(/\s+/g, '-').toLowerCase() ?? 'group'}`;
 
   return (
@@ -64,4 +52,8 @@ export function RadioGroup<T extends string = string>({
       </div>
     </fieldset>
   );
-}
+};
+
+export {
+  RadioGroup,
+};

@@ -34,7 +34,7 @@ import { InputProfileList } from './controls/InputProfileList';
 import { DeviceCard } from './controls/DeviceCard';
 import { BindingRow } from './controls/BindingRow';
 import { BindingListener } from './controls/BindingListener';
-import { getSnesIconUrl } from '../../InputTester/button-icons';
+import { getSnesIconUrl } from '../../InputTester/data/button-icons';
 import { Dialog } from '../../../composites/Dialog/Dialog';
 import './ControlsSettings.css';
 
@@ -49,7 +49,8 @@ function padHex(v: string): string {
   return v.toLowerCase().padStart(4, '0');
 }
 
-export function ControlsSettings({ settings, onChange, profileId }: ControlsSettingsProps): JSX.Element {
+export const ControlsSettings = (props: ControlsSettingsProps) => {
+  const { settings, onChange, profileId } = props;
   const [profiles, setProfiles] = useState<InputProfile[]>([]);
   const [activeProfile, setActiveProfile] = useState<InputProfile | null>(null);
   const [devices, setDevices] = useState<DetectedDevice[]>([]);

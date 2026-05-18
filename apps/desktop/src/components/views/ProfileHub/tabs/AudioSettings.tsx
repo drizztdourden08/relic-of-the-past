@@ -3,7 +3,7 @@ import type { GameSettings } from '@shared/types/settings';
 import { SegmentedControl } from '../../../primitives/SegmentedControl';
 import { Slider } from '../../../primitives/Slider';
 import { MsuImport } from './MsuImport';
-import { SettingsLayout, type Section } from '../../../composites/SettingsLayout/SettingsLayout';
+import { SettingsLayout, type Section } from '../../../composites/SettingsLayout';
 
 interface AudioSettingsProps {
   profileId: string;
@@ -180,7 +180,8 @@ function isDisabled(key: string, settings: GameSettings): boolean {
   return false;
 }
 
-export function AudioSettings({ profileId, settings, onChange }: AudioSettingsProps) {
+export const AudioSettings = (props: AudioSettingsProps) => {
+  const { profileId, settings, onChange } = props;
   const renderControlWithProfile = (key: string, s: GameSettings, cb: (patch: Partial<GameSettings>) => void): ReactNode | null => {
     if (key === 'msuImport') {
       return <MsuImport profileId={profileId} />;

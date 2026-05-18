@@ -30,7 +30,8 @@ const OUTPUT_OPTIONS = [
   { value: 'OpenGL ES', label: 'OpenGL ES' },
 ];
 
-export function GraphicsSettings({ settings, onChange }: GraphicsSettingsProps) {
+export const GraphicsSettings = (props: GraphicsSettingsProps) => {
+  const { settings, onChange } = props;
   return (
     <div className="settings-tab">
       <SettingsSection title="Display">

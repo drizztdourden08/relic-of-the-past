@@ -1,34 +1,23 @@
-import './SaveSlot.css';
+﻿import './SaveSlot.css';
+import { type SaveSlotProps } from './types';
 
-interface SaveSlotProps {
-  slot: number;
-  screenshotUrl: string | null;
-  timestamp: number;
-  isEmpty: boolean;
-  busy: boolean;
-  shortcutKey?: string;
-  disableSave?: boolean;
-  disableLoad?: boolean;
-  highlighted?: boolean;
-  holdProgress?: number; // 0-1, fill overlay for save confirmation
-  onSave: (slot: number) => void;
-  onLoad: (slot: number) => void;
-}
 
-export function SaveSlot({
-  slot,
-  screenshotUrl,
-  timestamp,
-  isEmpty,
-  busy,
-  shortcutKey,
-  disableSave,
-  disableLoad,
-  highlighted,
-  holdProgress,
-  onSave,
-  onLoad,
-}: SaveSlotProps) {
+const SaveSlot = (props: SaveSlotProps) => {
+  const {
+    slot,
+    screenshotUrl,
+    timestamp,
+    isEmpty,
+    busy,
+    shortcutKey,
+    disableSave,
+    disableLoad,
+    highlighted,
+    holdProgress,
+    onSave,
+    onLoad,
+  } = props;
+
   const cardClass = [
     'save-slot__card',
     highlighted ? 'save-slot__card--highlighted' : '',
@@ -86,4 +75,8 @@ export function SaveSlot({
       )}
     </div>
   );
-}
+};
+
+export {
+  SaveSlot,
+};

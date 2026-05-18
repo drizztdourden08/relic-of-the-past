@@ -1,13 +1,15 @@
-import type { ReactNode } from 'react';
+﻿import type { ReactNode } from 'react';
 import './Badge.css';
+import { type BadgeVariant, type BadgeProps } from './types';
 
-type BadgeVariant = 'success' | 'warning' | 'danger' | 'neutral';
 
-interface BadgeProps {
-  variant?: BadgeVariant;
-  children: ReactNode;
-}
 
-export function Badge({ variant = 'neutral', children }: BadgeProps): JSX.Element {
+const Badge = (props: BadgeProps) => {
+  const { variant = 'neutral', children } = props;
+
   return <span className={`badge badge--${variant}`}>{children}</span>;
-}
+};
+
+export {
+  Badge,
+};

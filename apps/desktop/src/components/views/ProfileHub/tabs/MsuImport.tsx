@@ -1,12 +1,13 @@
 import { useState, useCallback } from 'react';
-import { DropZone } from '../../../primitives/DropZone/DropZone';
+import { DropZone } from '../../../primitives/DropZone';
 import './MsuImport.css';
 
 interface MsuImportProps {
   profileId: string;
 }
 
-export function MsuImport({ profileId }: MsuImportProps) {
+export const MsuImport = (props: MsuImportProps) => {
+  const { profileId } = props;
   const [url, setUrl] = useState('');
   const [status, setStatus] = useState<{ message: string; variant: '' | 'error' | 'success' }>({ message: '', variant: '' });
   const [busy, setBusy] = useState(false);

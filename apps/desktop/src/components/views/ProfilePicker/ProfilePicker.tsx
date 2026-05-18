@@ -4,32 +4,22 @@ import { RomCard } from '../../compounds/RomCard';
 import { CreateProfileForm } from '../../compounds/CreateProfileForm';
 import { Button } from '../../primitives/Button';
 import './ProfilePicker.css';
+import type { ProfilePickerProps } from './types';
 
-interface ProfilePickerProps {
-  profiles: Profile[];
-  romStatuses: RomDisplayInfo[];
-  onSelectProfile: (profile: Profile) => void;
-  onCreateProfile: (name: string, romFile: string) => void;
-  onDeleteProfile: (id: string) => void;
-  onImportRom: () => void;
-  onExtractAssets: (romFile: string) => void;
-  onDeleteRom: (romFile: string) => void;
-  importingRom?: boolean;
-  loadingProfile?: string | null;
-}
 
-export function ProfilePicker({
-  profiles,
-  romStatuses,
-  onSelectProfile,
-  onCreateProfile,
-  onDeleteProfile,
-  onImportRom,
-  onExtractAssets,
-  onDeleteRom,
-  importingRom = false,
-  loadingProfile = null,
-}: ProfilePickerProps): JSX.Element {
+const ProfilePicker = (props: ProfilePickerProps) => {
+  const {
+    profiles,
+    romStatuses,
+    onSelectProfile,
+    onCreateProfile,
+    onDeleteProfile,
+    onImportRom,
+    onExtractAssets,
+    onDeleteRom,
+    importingRom = false,
+    loadingProfile = null,
+  } = props;
   const [creating, setCreating] = useState(false);
   const readyRoms = romStatuses.filter((r) => r.hasAssets);
 
@@ -124,4 +114,6 @@ export function ProfilePicker({
       </div>
     </div>
   );
-}
+};
+
+export { ProfilePicker };

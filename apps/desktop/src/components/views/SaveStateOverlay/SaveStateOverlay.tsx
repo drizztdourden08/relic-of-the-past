@@ -2,35 +2,19 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { saveState, loadState, getActiveProfileId } from '../../../lib/game';
 import { SaveSlot } from '../../compounds/SaveSlot';
 import { log } from '../../../lib/log-bus';
-import type { SlotHint } from './useEnhancedSaveSlot';
+import type { SlotHint } from './behavior/useEnhancedSaveSlot';
 import './SaveStateOverlay.css';
+import type { SaveStateOverlayProps, SlotInfo } from './types';
+import { SLOT_COUNT, SHORTCUT_KEYS, ANIM_MS } from './constants';
 
-const SLOT_COUNT = 12;
-const SHORTCUT_KEYS = ['F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12'];
-const ANIM_MS = 180;
 
-interface SlotInfo {
-  slot: number;
-  timestamp: number;
-  size: number;
-  hasScreenshot: boolean;
-  screenshotUrl: string | null;
-}
-
-interface SaveStateOverlayProps {
-  open: boolean;
-  onClose: () => void;
-  highlightedSlot?: number | null;
-  holdProgress?: number; // 0-1 for the highlighted slot
-  hints?: SlotHint[];
-}
-
-export function SaveStateOverlay({ open, onClose, highlightedSlot, holdProgress, hints }: SaveStateOverlayProps): JSX.Element | null {
+const SaveStateOverlay = (props: SaveStateOverlayProps) => {
+  const { open, onClose, highlightedSlot, holdProgress, hints } = props;
   const [slots, setSlots] = useState<SlotInfo[]>([]);
   const [busy, setBusy] = useState<number | null>(null);
   const [visible, setVisible] = useState(false);
   const [animating, setAnimating] = useState<'in' | 'out' | null>(null);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const loadSlots = useCallback(async () => {
     const profileId = getActiveProfileId();
@@ -171,4 +155,6 @@ export function SaveStateOverlay({ open, onClose, highlightedSlot, holdProgress,
       </div>
     </div>
   );
-}
+};
+
+export { SaveStateOverlay };

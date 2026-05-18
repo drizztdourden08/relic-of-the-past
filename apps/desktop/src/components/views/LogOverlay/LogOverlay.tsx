@@ -1,20 +1,14 @@
 import { useRef } from 'react';
 import { IconButton } from '../../primitives/IconButton';
 import { useLogOverlay } from './behavior/useLogOverlay';
+import { formatTime } from './behavior/formatTime';
 import { CHANNEL_COLORS } from '../../../lib/log-bus';
 import './LogOverlay.css';
+import type { LogOverlayProps } from './types';
 
-function formatTime(ts: number): string {
-  const d = new Date(ts);
-  return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;
-}
 
-interface LogOverlayProps {
-  visible: boolean;
-  onClose: () => void;
-}
-
-export function LogOverlay({ visible: externalVisible, onClose }: LogOverlayProps): JSX.Element | null {
+const LogOverlay = (props: LogOverlayProps) => {
+  const { visible: externalVisible, onClose } = props;
   const bottomRef = useRef<HTMLDivElement>(null);
   const { visible: f12Visible, setVisible: setF12Visible, entries } = useLogOverlay(bottomRef);
 
@@ -56,4 +50,6 @@ export function LogOverlay({ visible: externalVisible, onClose }: LogOverlayProp
       </div>
     </div>
   );
-}
+};
+
+export { LogOverlay };

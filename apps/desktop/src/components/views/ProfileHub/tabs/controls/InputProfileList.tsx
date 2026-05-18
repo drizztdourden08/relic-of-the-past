@@ -18,15 +18,16 @@ interface InputProfileListProps {
   onCreate: () => void;
 }
 
-export function InputProfileList({
-  profiles,
-  activeId,
-  initialEditId,
-  onSelect,
-  onDelete,
-  onRename,
-  onCreate,
-}: InputProfileListProps): JSX.Element {
+export const InputProfileList = (props: InputProfileListProps) => {
+  const {
+    profiles,
+    activeId,
+    initialEditId,
+    onSelect,
+    onDelete,
+    onRename,
+    onCreate,
+  } = props;
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
   const consumedInitialRef = useRef<string | null>(null);

@@ -1,20 +1,12 @@
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
+﻿import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import './Button.css';
+import { type ButtonVariant, type ButtonSize, type ButtonProps } from './types';
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
-type ButtonSize = 'sm' | 'md';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  fullWidth?: boolean;
-  icon?: ReactNode;
-}
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = 'secondary', size = 'md', fullWidth = false, icon, children, className = '', ...props },
-  ref,
-) {
+const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
+  const { variant = 'secondary', size = 'md', fullWidth = false, icon, children, className = '', ...rest } = props;
+
   const cls = [
     'btn',
     `btn--${variant}`,
@@ -24,9 +16,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   ].filter(Boolean).join(' ');
 
   return (
-    <button ref={ref} className={cls} {...props}>
+    <button ref={ref} className={cls} {...rest}>
       {icon && <span className="btn__icon">{icon}</span>}
       {children}
     </button>
   );
 });
+
+export {
+  Button,
+};

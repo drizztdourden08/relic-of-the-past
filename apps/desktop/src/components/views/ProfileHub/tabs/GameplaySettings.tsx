@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
-import { SettingsLayout, type Section } from '../../../composites/SettingsLayout/SettingsLayout';
+import { SettingsLayout, type Section } from '../../../composites/SettingsLayout';
 import { Toggle } from '../../../primitives/Toggle';
 import { Slider } from '../../../primitives/Slider';
 
@@ -142,7 +142,8 @@ function renderControl(key: string, settings: GameSettings, onChange: (patch: Pa
   return null;
 }
 
-export function GameplaySettings({ settings, onChange }: GameplaySettingsProps) {
+export const GameplaySettings = (props: GameplaySettingsProps) => {
+  const { settings, onChange } = props;
   return (
     <SettingsLayout
       sections={SECTIONS}

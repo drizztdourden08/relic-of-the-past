@@ -1,28 +1,21 @@
-import { useEffect, useRef } from 'react';
+﻿import { useEffect, useRef } from 'react';
 import { Button } from '../../primitives/Button';
 import './Dialog.css';
+import { type DialogProps } from './types';
 
-interface DialogProps {
-  open: boolean;
-  title: string;
-  message: string;
-  confirmLabel?: string;
-  cancelLabel?: string;
-  variant?: 'danger' | 'default';
-  onConfirm: () => void;
-  onCancel: () => void;
-}
 
-export function Dialog({
-  open,
-  title,
-  message,
-  confirmLabel = 'Confirm',
-  cancelLabel = 'Cancel',
-  variant = 'default',
-  onConfirm,
-  onCancel,
-}: DialogProps): JSX.Element | null {
+const Dialog = (props: DialogProps) => {
+  const {
+    open,
+    title,
+    message,
+    confirmLabel = 'Confirm',
+    cancelLabel = 'Cancel',
+    variant = 'default',
+    onConfirm,
+    onCancel,
+  } = props;
+
   const confirmRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -31,7 +24,6 @@ export function Dialog({
       if (e.key === 'Escape') { e.preventDefault(); onCancel(); }
     };
     document.addEventListener('keydown', handler);
-    // Focus confirm button when dialog opens
     confirmRef.current?.focus();
     return () => document.removeEventListener('keydown', handler);
   }, [open, onCancel]);
@@ -58,4 +50,8 @@ export function Dialog({
       </div>
     </div>
   );
-}
+};
+
+export {
+  Dialog,
+};

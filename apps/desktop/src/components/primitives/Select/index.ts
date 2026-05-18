@@ -1,2 +1,3 @@
-export { Select, NativeSelect } from './Select';
-export type { SelectOption, SelectGroup } from './Select';
+export { Select } from './Select';
+export { NativeSelect } from './sub-components/NativeSelect';
+export type { SelectOption, SelectGroup, SelectProps } from './types';

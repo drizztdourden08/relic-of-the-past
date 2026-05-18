@@ -1,25 +1,12 @@
-import type { PlaySession } from '@shared/types/session';
+﻿import type { PlaySession } from '@shared/types/session';
+import { formatSessionDate, formatDuration } from './behavior/formatters';
 import './PlaySessionCard.css';
+import { type PlaySessionCardProps } from './types';
 
-interface PlaySessionCardProps {
-  session: PlaySession;
-}
 
-function formatSessionDate(ts: number): string {
-  return new Date(ts).toLocaleDateString(undefined, {
-    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
-  });
-}
+const PlaySessionCard = (props: PlaySessionCardProps) => {
+  const { session } = props;
 
-function formatDuration(ms: number): string {
-  const totalMin = Math.floor(ms / 60000);
-  if (totalMin < 60) return `${totalMin}m`;
-  const h = Math.floor(totalMin / 60);
-  const m = totalMin % 60;
-  return m > 0 ? `${h}h ${m}m` : `${h}h`;
-}
-
-export function PlaySessionCard({ session }: PlaySessionCardProps) {
   return (
     <div className="session-card">
       <span className="session-card__dot" />
@@ -30,4 +17,8 @@ export function PlaySessionCard({ session }: PlaySessionCardProps) {
       <span className="session-card__duration">{formatDuration(session.durationMs)}</span>
     </div>
   );
-}
+};
+
+export {
+  PlaySessionCard,
+};

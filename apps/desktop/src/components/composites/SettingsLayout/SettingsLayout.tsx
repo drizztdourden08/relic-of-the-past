@@ -1,48 +1,23 @@
-import { useState, useRef, useCallback, useMemo, type ReactNode } from 'react';
+﻿import { useState, useRef, useCallback, useMemo, type ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { Toggle } from '../../primitives/Toggle';
 import './SettingsLayout.css';
+import { type SettingItem, type SubSection, type Section, type SettingsLayoutProps } from './types';
 
 // ─── Shared types for section-based settings layouts ───
 
-export interface SettingItem {
-  key: string;
-  label: string;
-  description: string;
-  keywords?: string;
-  /** Optional external URL to open when an info link is clicked */
-  link?: string;
-}
 
-export interface SubSection {
-  id: string;
-  title: string;
-  items: SettingItem[];
-}
 
-export interface Section {
-  id: string;
-  title: string;
-  subsections: SubSection[];
-}
 
-interface SettingsLayoutProps {
-  sections: Section[];
-  settings: GameSettings;
-  onChange: (patch: Partial<GameSettings>) => void;
-  /** Render a custom control for a given setting key. Return null for default toggle rendering. */
-  renderControl?: (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void) => ReactNode | null;
-  /** Determine if a toggle should be disabled based on key and settings. */
-  isDisabled?: (key: string, settings: GameSettings) => boolean;
-}
 
-export function SettingsLayout({
-  sections,
-  settings,
-  onChange,
-  renderControl,
-  isDisabled,
-}: SettingsLayoutProps) {
+const SettingsLayout = (props: SettingsLayoutProps) => {
+  const {
+    sections,
+    settings,
+    onChange,
+    renderControl,
+    isDisabled,
+  } = props;
   const [filter, setFilter] = useState('');
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -72,7 +47,7 @@ export function SettingsLayout({
   }, [filterLower, sections]);
 
   const renderToggle = (key: string, item: SettingItem) => {
-    const val = (settings as Record<string, unknown>)[key];
+    const val = (settings as unknown as Record<string, unknown>)[key];
     if (typeof val !== 'boolean') return null;
     const disabled = isDisabled?.(key, settings) ?? false;
 
@@ -158,4 +133,8 @@ export function SettingsLayout({
       </div>
     </div>
   );
-}
+};
+
+export {
+  SettingsLayout,
+};

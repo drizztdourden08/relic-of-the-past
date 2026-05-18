@@ -1,37 +1,24 @@
-import { useRef } from 'react';
+﻿import { useRef } from 'react';
 import './Slider.css';
+import { type SliderProps } from './types';
 
-interface SliderProps {
-  value: number;
-  min: number;
-  max: number;
-  step?: number;
-  onChange: (value: number) => void;
-  label?: string;
-  description?: string;
-  disabled?: boolean;
-  showValue?: boolean;
-  formatValue?: (value: number) => string;
-  /** Show a mute/unmute button before the slider track */
-  mute?: boolean;
-  /** Called when the mute button is clicked */
-  onMuteToggle?: () => void;
-}
 
-export function Slider({
-  value,
-  min,
-  max,
-  step = 1,
-  onChange,
-  label,
-  description,
-  disabled = false,
-  showValue = true,
-  formatValue = String,
-  mute,
-  onMuteToggle,
-}: SliderProps) {
+const Slider = (props: SliderProps) => {
+  const {
+    value,
+    min,
+    max,
+    step = 1,
+    onChange,
+    label,
+    description,
+    disabled = false,
+    showValue = true,
+    formatValue = String,
+    mute,
+    onMuteToggle,
+  } = props;
+
   const pct = ((value - min) / (max - min)) * 100;
   const prevVolumeRef = useRef(value || 100);
 
@@ -84,4 +71,8 @@ export function Slider({
       </div>
     </div>
   );
-}
+};
+
+export {
+  Slider,
+};

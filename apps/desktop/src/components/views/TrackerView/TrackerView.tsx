@@ -14,35 +14,15 @@ import {
 } from '../../../lib/game';
 import type { UnknownItemEntry } from '../../../lib/game';
 import { SegmentedControl, Slider } from '../../primitives';
-import { TrackerSummary } from './TrackerSummary';
-import { TrackerInventory } from './TrackerInventory';
-import { TrackerFilters, type ViewMode } from './TrackerFilters';
-import { TrackerGroupTree } from './TrackerGroupTree';
+import { TrackerSummary } from './sub-components/TrackerSummary';
+import { TrackerInventory } from './sub-components/TrackerInventory';
+import { TrackerFilters, type ViewMode } from './sub-components/TrackerFilters';
+import { TrackerGroupTree } from './sub-components/TrackerGroupTree';
 import './TrackerView.css';
+import type { PanelSide, PanelSettings, TrackerLayoutSettings, PanelHeaderProps, TrackerPanelProps, TrackerViewProps } from './types';
+import { STORAGE_KEY, MODE_OPTIONS } from './constants';
 
 // ─── Panel Settings ───
-
-type PanelSide = 'left' | 'right';
-type PanelMode = 'docked' | 'floating';
-
-interface PanelSettings {
-  mode: PanelMode;
-  side: PanelSide;
-  opacity: number; // 0.2 - 1.0 (frame only)
-  x: number;
-  y: number;
-}
-
-interface TrackerLayoutSettings {
-  /** Are inventory and checks in the same panel? */
-  combined: boolean;
-  /** Settings for the combined panel, or inventory panel when split */
-  inventory: PanelSettings;
-  /** Settings for the checks panel when split */
-  checks: PanelSettings;
-}
-
-const STORAGE_KEY = 'tracker-layout';
 
 function defaultPanel(side: PanelSide = 'right', x = 100, y = 100): PanelSettings {
   return { mode: 'docked', side, opacity: 1.0, x, y };
@@ -154,23 +134,6 @@ function useTrackerData() {
 
 // ─── Panel Header (toolbar) ───
 
-interface PanelHeaderProps {
-  title: string;
-  panelSettings: PanelSettings;
-  onSettingsChange: (updater: (p: PanelSettings) => PanelSettings) => void;
-  onClose: () => void;
-  onPopOut?: () => void;
-  onDock?: () => void;
-  showPopOut?: boolean;
-  onMouseDown?: (e: React.MouseEvent) => void;
-}
-
-const MODE_OPTIONS = [
-  { value: 'left' as const, label: '◧' },
-  { value: 'right' as const, label: '◨' },
-  { value: 'float' as const, label: '⊡' },
-];
-
 function PanelHeader({ title, panelSettings, onSettingsChange, onClose, onPopOut, onDock, showPopOut, onMouseDown }: PanelHeaderProps) {
   const modeValue = panelSettings.mode === 'floating' ? 'float' : panelSettings.side;
 
@@ -208,13 +171,6 @@ function PanelHeader({ title, panelSettings, onSettingsChange, onClose, onPopOut
 
 // ─── Single Panel Shell ───
 
-interface TrackerPanelProps {
-  panelSettings: PanelSettings;
-  children: React.ReactNode;
-  className?: string;
-  onDragStart?: (e: React.MouseEvent) => void;
-}
-
 function TrackerPanel({ panelSettings, children, className = '', onDragStart }: TrackerPanelProps) {
   const [hovered, setHovered] = useState(false);
   const { mode, side, opacity } = panelSettings;
@@ -247,12 +203,9 @@ function TrackerPanel({ panelSettings, children, className = '', onDragStart }: 
 
 // ─── Main TrackerView ───
 
-interface TrackerViewProps {
-  visible: boolean;
-  onClose: () => void;
-}
 
-export function TrackerView({ visible, onClose }: TrackerViewProps) {
+const TrackerView = (props: TrackerViewProps) => {
+  const { visible, onClose } = props;
   const [layout, setLayoutRaw] = useState<TrackerLayoutSettings>(loadLayout);
   const [viewMode, setViewMode] = useState<ViewMode>('compact');
   const [grouping, setGrouping] = useState<GroupDimension[]>(['world', 'dungeon']);
@@ -390,4 +343,6 @@ export function TrackerView({ visible, onClose }: TrackerViewProps) {
       </TrackerPanel>
     </>
   );
-}
+};
+
+export { TrackerView };

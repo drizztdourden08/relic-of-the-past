@@ -1,13 +1,12 @@
-import type { ReactNode } from 'react';
+﻿import type { ReactNode } from 'react';
 import { IconButton } from '../../primitives/IconButton';
 import './FullScreenLayer.css';
+import { type FullScreenLayerProps } from './types';
 
-interface FullScreenLayerProps {
-  children: ReactNode;
-  onClose: () => void;
-}
 
-export function FullScreenLayer({ children, onClose }: FullScreenLayerProps): JSX.Element {
+const FullScreenLayer = (props: FullScreenLayerProps) => {
+  const { children, onClose } = props;
+
   return (
     <div className="fullscreen-layer">
       <div className="fullscreen-layer__card">
@@ -24,4 +23,8 @@ export function FullScreenLayer({ children, onClose }: FullScreenLayerProps): JS
       </div>
     </div>
   );
-}
+};
+
+export {
+  FullScreenLayer,
+};

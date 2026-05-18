@@ -1,46 +1,31 @@
 import { useState, useEffect, useCallback } from 'react';
-import { ProfileManager } from './ProfileManager';
-import { RomManager } from './RomManager';
-import { LanguageManager } from './LanguageManager';
-import { MsuManager } from './MsuManager';
-import { SpriteManager } from './SpriteManager';
+import { ProfileManager } from './sub-components/ProfileManager';
+import { RomManager } from './sub-components/RomManager';
+import { LanguageManager } from './sub-components/LanguageManager';
+import { MsuManager } from './sub-components/MsuManager';
+import { SpriteManager } from './sub-components/SpriteManager';
 import './DataManager.css';
+import type { DataTab, DataManagerProps } from './types';
 
-type DataTab = 'profiles' | 'roms' | 'languages' | 'msu' | 'sprites';
 
-interface DataManagerProps {
-  profiles: Profile[];
-  romStatuses: RomDisplayInfo[];
-  onSelectProfile: (profile: Profile) => void;
-  onCreateProfile: (name: string, romFile: string, language?: string, msuPack?: string) => void;
-  onDeleteProfile: (id: string) => void;
-  onImportRom: () => void;
-  onExtractAssets: (romFile: string) => void;
-  onDeleteRom: (romFile: string) => void;
-  onRefresh: () => void;
-  onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
-  loadingProfile?: string | null;
-  initialTab?: DataTab;
-  isGameRunning?: boolean;
-  onSwitchProfile: () => void;
-}
 
-export function DataManager({
-  profiles,
-  romStatuses,
-  onSelectProfile,
-  onCreateProfile,
-  onDeleteProfile,
-  onImportRom,
-  onExtractAssets,
-  onDeleteRom,
-  onRefresh,
-  onDeleteConfirm,
-  loadingProfile = null,
-  initialTab,
-  isGameRunning = false,
-  onSwitchProfile,
-}: DataManagerProps) {
+const DataManager = (props: DataManagerProps) => {
+  const {
+    profiles,
+    romStatuses,
+    onSelectProfile,
+    onCreateProfile,
+    onDeleteProfile,
+    onImportRom,
+    onExtractAssets,
+    onDeleteRom,
+    onRefresh,
+    onDeleteConfirm,
+    loadingProfile = null,
+    initialTab,
+    isGameRunning = false,
+    onSwitchProfile,
+  } = props;
   const [activeTab, setActiveTab] = useState<DataTab>(initialTab ?? 'profiles');
   const [msuCount, setMsuCount] = useState(0);
   const [langCount, setLangCount] = useState(0);
@@ -149,4 +134,6 @@ export function DataManager({
       </div>
     </div>
   );
-}
+};
+
+export { DataManager };

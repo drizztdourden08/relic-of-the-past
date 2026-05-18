@@ -1,30 +1,23 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+﻿import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import './IconButton.css';
+import { type IconButtonVariant, type IconButtonProps } from './types';
 
-type IconButtonVariant = 'ghost' | 'danger';
 
-interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: IconButtonVariant;
-  size?: 'sm' | 'md';
-  label: string;
-  children: ReactNode;
-}
 
-export function IconButton({
-  variant = 'ghost',
-  size = 'sm',
-  label,
-  children,
-  className = '',
-  ...props
-}: IconButtonProps): JSX.Element {
+const IconButton = (props: IconButtonProps) => {
+  const { variant = 'ghost', size = 'sm', label, children, className = '', ...rest } = props;
+
   return (
     <button
       className={`icon-btn icon-btn--${variant} icon-btn--${size} ${className}`}
       aria-label={label}
-      {...props}
+      {...rest}
     >
       {children}
     </button>
   );
-}
+};
+
+export {
+  IconButton,
+};

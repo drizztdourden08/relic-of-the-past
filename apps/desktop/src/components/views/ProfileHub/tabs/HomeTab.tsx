@@ -36,15 +36,16 @@ interface SlotInfo {
   screenshot: string | null;
 }
 
-export function HomeTab({
-  profileId,
-  romFile,
-  isGameRunning,
-  onStartGame,
-  lastPlayed,
-  created,
-  windowMode,
-}: HomeTabProps) {
+export const HomeTab = (props: HomeTabProps) => {
+  const {
+    profileId,
+    romFile,
+    isGameRunning,
+    onStartGame,
+    lastPlayed,
+    created,
+    windowMode,
+  } = props;
   const [slots, setSlots] = useState<SlotInfo[]>(() =>
     Array.from({ length: 10 }, (_, i) => ({ slot: i, timestamp: null, screenshot: null }))
   );
