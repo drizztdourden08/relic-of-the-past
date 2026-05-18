@@ -111,8 +111,9 @@ export const App = () => {
   const handleStartGame = useCallback(() => {
     if (profileMgmt.activeProfile) {
       profileMgmt.loadProfileForGame(profileMgmt.activeProfile);
+      nav.setActivePage('none');
     }
-  }, [profileMgmt.activeProfile, profileMgmt.loadProfileForGame]);
+  }, [profileMgmt.activeProfile, profileMgmt.loadProfileForGame, nav]);
 
   const handleStopGame = useCallback(() => {
     resetGame();
@@ -350,7 +351,7 @@ export const App = () => {
 
         <WidgetManager
           layout={widgets.layout}
-          gameRunning={isGameRunning}
+          gameRunning={isGameRunning && nav.activePage === 'none' && !showSpriteDebug}
           onUpdate={widgets.update}
           onClose={widgets.close}
           settingsContent={{
