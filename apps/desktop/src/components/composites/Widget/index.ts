@@ -1,0 +1,10 @@
+export { Widget } from './Widget';
+export { WidgetManager } from './WidgetManager';
+export { WidgetSettings } from './WidgetSettings';
+export type { WidgetState, WidgetLayout, WidgetDefinition, SnapSide, WidgetMode, WidgetVisibility } from './types';
+export { WIDGET_DEFINITIONS, createDefaultLayout, getWidgetDefinition } from './types';
+export { loadLayoutLocal, saveLayoutLocal, loadLayoutForProfile, saveLayoutForProfile, updateWidget, getWidgetState } from './behavior/widgetStore';
+export { useWidgetLayout } from './behavior/useWidgetLayout';
+export { useWidgetDrag } from './behavior/useWidgetDrag';
+export { useWidgetResize, getDockedResizeEdge } from './behavior/useWidgetResize';
+import './widgets.css';

@@ -4,9 +4,9 @@
  * Rendered as a portal popover anchored below the gear button.
  */
 import { useRef, useLayoutEffect, useState, useEffect, type ReactNode } from 'react';
-import { Portal } from '../components/primitives/Portal';
-import { SegmentedControl } from '../components/primitives/SegmentedControl';
-import { Slider } from '../components/primitives/Slider';
+import { Portal } from '../../primitives/Portal';
+import { SegmentedControl } from '../../primitives/SegmentedControl';
+import { Slider } from '../../primitives/Slider';
 import type { WidgetState, SnapSide, WidgetMode } from './types';
 
 type PositionValue = 'left' | 'right' | 'top' | 'bottom' | 'float';

@@ -1,11 +1,3 @@
-export { Widget } from './Widget';
-export { WidgetManager } from './WidgetManager';
-export { WidgetSettings } from './WidgetSettings';
-export type { WidgetState, WidgetLayout, WidgetDefinition, SnapSide, WidgetMode, WidgetVisibility } from './types';
-export { WIDGET_DEFINITIONS, createDefaultLayout, getWidgetDefinition } from './types';
-export { loadLayoutLocal, saveLayoutLocal, loadLayoutForProfile, saveLayoutForProfile, updateWidget, getWidgetState } from './behavior/widgetStore';
-export { useWidgetLayout } from './behavior/useWidgetLayout';
-export { InventoryWidgetContent, InventoryWidgetSettings } from './sub-components/InventoryWidgetContent';
-export { ChecksWidgetContent } from './sub-components/ChecksWidgetContent';
-export { LogsWidgetContent } from './sub-components/LogsWidgetContent';
-import './widgets.css';
+export { InventoryWidgetContent, InventoryWidgetSettings } from './inventory';
+export { ChecksWidgetContent } from './checks';
+export { LogsWidgetContent } from './logs';

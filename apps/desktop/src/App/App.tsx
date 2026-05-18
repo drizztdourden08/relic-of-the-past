@@ -6,7 +6,8 @@ import { useEnhancedSaveSlot } from '../components/views/SaveStateOverlay/useEnh
 import { ProfilePicker } from '../components/views/ProfilePicker';
 import { ProfileHub } from '../components/views/ProfileHub';
 import { DataManager } from '../components/views/DataManager';
-import { WidgetManager, useWidgetLayout, InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent } from '../widgets';
+import { WidgetManager, useWidgetLayout } from '../components/composites/Widget';
+import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent } from '../widgets';
 import { InputCalibration } from '../components/views/InputTester';
 import { CreditsPage } from '../components/views/ProfileHub/tabs/CreditsTab';
 import { SpriteDebug } from '../components/views/SpriteDebug';
