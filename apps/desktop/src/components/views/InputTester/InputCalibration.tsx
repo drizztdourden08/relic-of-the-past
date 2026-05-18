@@ -897,10 +897,22 @@ function GamepadCard({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
               i++;
             }
           }
+          const stickIconPrefixes = isXbox ? ['xbox-stick-l', 'xbox-stick-r'] : [];
           return (
             <div className="input-cal__sticks">
-              {stickPairs.map(s => (
-                <StickCircle key={s.xIdx} x={gamepad.axes[s.xIdx] ?? 0} y={gamepad.axes[s.yIdx] ?? 0} label={s.label} />
+              {stickPairs.map((s, pairIdx) => (
+                <div key={s.xIdx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                  <StickCircle
+                    x={gamepad.axes[s.xIdx] ?? 0}
+                    y={gamepad.axes[s.yIdx] ?? 0}
+                    label={s.label}
+                    iconPrefix={stickIconPrefixes[pairIdx]}
+                  />
+                  <AxisRecordButton
+                    getValues={() => [gamepad.axes[s.xIdx] ?? 0, gamepad.axes[s.yIdx] ?? 0]}
+                    label={s.label}
+                  />
+                </div>
               ))}
               {triggerAxes.map((t, ti) => {
                 // Gamepad API standard mapping: triggers are buttons 6+7, not axes 4+5

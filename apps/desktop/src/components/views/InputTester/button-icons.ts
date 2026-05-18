@@ -106,6 +106,22 @@ export const BUTTON_ICON_MAP: Record<string, string> = {
   'xbox-dleft':     `${XBOX_BASE}/xbox_dpad_left.svg`,
   'xbox-dright':    `${XBOX_BASE}/xbox_dpad_right.svg`,
 
+  // Xbox stick directions
+  'xbox-stick-l':            `${XBOX_BASE}/xbox_stick_l.svg`,
+  'xbox-stick-l-up':         `${XBOX_BASE}/xbox_stick_l_up.svg`,
+  'xbox-stick-l-down':       `${XBOX_BASE}/xbox_stick_l_down.svg`,
+  'xbox-stick-l-left':       `${XBOX_BASE}/xbox_stick_l_left.svg`,
+  'xbox-stick-l-right':      `${XBOX_BASE}/xbox_stick_l_right.svg`,
+  'xbox-stick-l-horizontal': `${XBOX_BASE}/xbox_stick_l_horizontal.svg`,
+  'xbox-stick-l-vertical':   `${XBOX_BASE}/xbox_stick_l_vertical.svg`,
+  'xbox-stick-r':            `${XBOX_BASE}/xbox_stick_r.svg`,
+  'xbox-stick-r-up':         `${XBOX_BASE}/xbox_stick_r_up.svg`,
+  'xbox-stick-r-down':       `${XBOX_BASE}/xbox_stick_r_down.svg`,
+  'xbox-stick-r-left':       `${XBOX_BASE}/xbox_stick_r_left.svg`,
+  'xbox-stick-r-right':      `${XBOX_BASE}/xbox_stick_r_right.svg`,
+  'xbox-stick-r-horizontal': `${XBOX_BASE}/xbox_stick_r_horizontal.svg`,
+  'xbox-stick-r-vertical':   `${XBOX_BASE}/xbox_stick_r_vertical.svg`,
+
   // PlayStation
   'ps-cross':       `${PS_BASE}/playstation_button_cross.svg`,
   'ps-circle':      `${PS_BASE}/playstation_button_circle.svg`,

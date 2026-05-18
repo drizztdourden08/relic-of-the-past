@@ -25,6 +25,10 @@ const ICONS: Record<string, ButtonIcon> = {
   'xbox-menu':   icon('xbox-menu', 'Menu'),
   'xbox-ls':     icon('xbox-ls', 'Left Stick'),
   'xbox-rs':     icon('xbox-rs', 'Right Stick'),
+  'xbox-stick-l-up':    icon('xbox-stick-l-up', 'Left Stick Up'),
+  'xbox-stick-l-down':  icon('xbox-stick-l-down', 'Left Stick Down'),
+  'xbox-stick-l-left':  icon('xbox-stick-l-left', 'Left Stick Left'),
+  'xbox-stick-l-right': icon('xbox-stick-l-right', 'Left Stick Right'),
   'xbox-dup':    icon('xbox-dup', 'D-Pad Up'),
   'xbox-ddown':  icon('xbox-ddown', 'D-Pad Down'),
   'xbox-dleft':  icon('xbox-dleft', 'D-Pad Left'),
@@ -37,6 +41,10 @@ function btn(snesButton: ButtonMapping['snesButton'], index: number, iconData: B
   return { snesButton, binding: { type: 'gamepad-button', index }, icon: iconData };
 }
 
+function axis(snesButton: ButtonMapping['snesButton'], axisIndex: number, direction: '+' | '-', iconData: ButtonIcon | null): ButtonMapping {
+  return { snesButton, binding: { type: 'gamepad-axis', axisIndex, direction }, icon: iconData };
+}
+
 const DEFAULT_MAPPINGS: ButtonMapping[] = [
   btn('A',      0,  ICONS['xbox-a']),
   btn('B',      1,  ICONS['xbox-b']),
@@ -46,10 +54,11 @@ const DEFAULT_MAPPINGS: ButtonMapping[] = [
   btn('R',      5,  ICONS['xbox-rb']),
   btn('Start',  9,  ICONS['xbox-menu']),
   btn('Select', 8,  ICONS['xbox-view']),
-  btn('Up',     12, ICONS['xbox-dup']),
-  btn('Down',   13, ICONS['xbox-ddown']),
-  btn('Left',   14, ICONS['xbox-dleft']),
-  btn('Right',  15, ICONS['xbox-dright']),
+  // Left stick for movement
+  axis('Up',    1, '-', ICONS['xbox-stick-l-up']),
+  axis('Down',  1, '+', ICONS['xbox-stick-l-down']),
+  axis('Left',  0, '-', ICONS['xbox-stick-l-left']),
+  axis('Right', 0, '+', ICONS['xbox-stick-l-right']),
 ];
 
 const BUTTONS: ControllerButton[] = [

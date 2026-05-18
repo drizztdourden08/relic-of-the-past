@@ -1,9 +1,9 @@
 {
-  "name": "alttp-pc",
+  "name": "relic-of-the-past",
   "version": "0.1.0",
   "private": true,
-  "description": "ALttP PC Port Randomizer — Electron + React + WASM",
-  "author": "drizz",
+  "description": "Relic of the Past – Electron + React + WASM",
+  "author": "drizztdourden_",
   "license": "MIT",
   "main": "dist/electron/main.js",
   "scripts": {

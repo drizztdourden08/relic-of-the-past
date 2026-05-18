@@ -36,7 +36,7 @@ export function ProfilePicker({
   return (
     <div className="picker">
       <div className="picker__header">
-        <h2 className="picker__title">ALttP PC Port</h2>
+        <h2 className="picker__title">Relic of the Past</h2>
         <p className="picker__subtitle">
           Import ROMs and create profiles with isolated saves and settings
         </p>

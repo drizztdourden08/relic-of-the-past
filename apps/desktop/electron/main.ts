@@ -42,7 +42,7 @@ import { compileResources } from '../../../shared/asset-extraction/compile-resou
 import { decodeStrings, formatDialogueText } from '../../../shared/asset-extraction/text/dialogue-decoder';
 
 // Ensure consistent userData path across dev and production
-app.setName('alttp-pc');
+app.setName('relic-of-the-past');
 
 // Register custom protocol for serving sprite images from userData
 protocol.registerSchemesAsPrivileged([
@@ -71,7 +71,10 @@ function createWindow(): void {
     frame: false,
     titleBarStyle: 'hidden',
     autoHideMenuBar: true,
-    title: 'ALttP Randomizer',
+    title: 'Relic of the Past',
+    icon: is.dev
+      ? join(__dirname, '../../apps/desktop/public/logos/logo-256.png')
+      : join(__dirname, '../renderer/logos/logo-256.png'),
     backgroundColor: '#16213e',
     show: !noFocus,
     webPreferences: {

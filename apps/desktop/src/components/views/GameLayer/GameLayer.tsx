@@ -260,7 +260,7 @@ export function GameLayer({ assetData, configIni, profileId, stretch, edgeEffect
         key={canvasKey}
         ref={canvasRef}
         id="canvas"
-        className={`game-layer__canvas${status === 'running' ? ' game-layer__canvas--hidden' : ''}`}
+        className={`game-layer__canvas${status === 'running' ? ' game-layer__canvas--hidden' : ' game-layer__canvas--idle'}`}
         width={512}
         height={448}
         tabIndex={0}

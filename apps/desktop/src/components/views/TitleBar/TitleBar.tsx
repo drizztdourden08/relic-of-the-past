@@ -270,7 +270,9 @@ export function TitleBar({
       </div>
 
       <div className="titlebar__center">
-        <span className="titlebar__title">ALttP Randomizer</span>
+        <img className="titlebar__logo" src="./logos/logo-128.png" alt="" />
+        <span className="titlebar__title">Relic of the Past</span>
+        <img className="titlebar__logo" src="./logos/logo-128.png" alt="" />
       </div>
 
       <WindowControls isMaximized={isMaximized} />

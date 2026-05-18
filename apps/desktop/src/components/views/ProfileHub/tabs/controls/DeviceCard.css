@@ -51,6 +51,7 @@
   align-items: center;
   gap: 4px;
   flex-shrink: 0;
+  width: 44px;
 }
 
 .device-card__icon-btn {

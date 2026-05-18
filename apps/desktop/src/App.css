@@ -12,3 +12,17 @@
   position: relative;
   overflow: hidden;
 }
+
+.app__bg-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  max-width: 400px;
+  height: auto;
+  opacity: 0.15;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+}

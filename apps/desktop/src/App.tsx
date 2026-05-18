@@ -656,6 +656,11 @@ export function App(): JSX.Element {
       />
 
       <div className="app__content">
+        {/* Background logo decoration — visible when game is not running */}
+        {!isGameRunning && (
+          <img className="app__bg-logo" src="./logos/logo-512.png" alt="" />
+        )}
+
         {/* Game canvas — always present as background layer */}
         <GameLayer assetData={assetData} configIni={configIni} profileId={activeProfile?.id} stretch={viewportConstraint !== 'none'} edgeEffect={overworldEdgeEffect} />
 

@@ -39,7 +39,7 @@ export const ROM_FILES = {
 
 const USER_DATA_PATH = join(
   process.env.APPDATA ?? join(process.env.HOME ?? '', 'AppData', 'Roaming'),
-  'alttp-pc',
+  'relic-of-the-past',
 );
 
 // ─── App lifecycle ───

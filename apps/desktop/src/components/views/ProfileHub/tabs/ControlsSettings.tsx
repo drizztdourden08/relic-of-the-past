@@ -63,6 +63,8 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
   const [newlyCreatedId, setNewlyCreatedId] = useState<string | null>(null);
   const [confirmPreset, setConfirmPreset] = useState<{ presetId: string; deviceName: string; vid: string; pid: string } | null>(null);
   const [activeTab, setActiveTab] = useState<'controls' | 'enhanced' | 'shortcuts' | 'cheats'>('controls');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
+  const [devicesCollapsed, setDevicesCollapsed] = useState(false);
   const loadedRef = useRef(false);
 
   // ─── Load profiles from disk ───
@@ -484,19 +486,47 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
     });
   }, [activeProfile]);
 
+  const filteredDevices = devices.filter(d => !d.displayName.toLowerCase().includes('mouse'));
+
   return (
     <div className="controls-settings">
       {/* Left column: profile list */}
-      <div className="controls-settings__sidebar">
-        <InputProfileList
-          profiles={profiles}
-          activeId={activeProfile?.id ?? null}
-          initialEditId={newlyCreatedId}
-          onSelect={selectProfile}
-          onDelete={(p) => setDeleteTarget(p)}
-          onRename={handleRename}
-          onCreate={handleCreate}
-        />
+      <div className={`controls-settings__sidebar ${sidebarCollapsed ? 'controls-settings__sidebar--collapsed' : ''}`}>
+        <div className="controls-settings__col-header">
+          <button
+            className="controls-settings__col-toggle"
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            title={sidebarCollapsed ? 'Expand' : 'Collapse'}
+          >
+            {sidebarCollapsed ? '▶' : '◀'}
+          </button>
+          <span className="controls-settings__col-title">Profiles</span>
+        </div>
+        {/* Collapsed: show icon strip for quick profile selection */}
+        <div className="controls-settings__sidebar-icons">
+          {profiles.map((p) => (
+            <button
+              key={p.id}
+              className={`controls-settings__sidebar-icon-btn ${p.id === activeProfile?.id ? 'controls-settings__sidebar-icon-btn--active' : ''}`}
+              onClick={() => selectProfile(p)}
+              title={p.name}
+            >
+              {p.deviceType === 'keyboard' ? '⌨️' : '🎮'}
+            </button>
+          ))}
+        </div>
+        {/* Expanded: full profile list */}
+        <div className="controls-settings__sidebar-content">
+          <InputProfileList
+            profiles={profiles}
+            activeId={activeProfile?.id ?? null}
+            initialEditId={newlyCreatedId}
+            onSelect={selectProfile}
+            onDelete={(p) => setDeleteTarget(p)}
+            onRename={handleRename}
+            onCreate={handleCreate}
+          />
+        </div>
       </div>
 
       {/* Center column: tabbed content */}
@@ -639,10 +669,19 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
       </div>
 
       {/* Right column: detected devices */}
-      <div className="controls-settings__devices-column">
-        <div className="controls-settings__section-header">Detected Devices</div>
+      <div className={`controls-settings__devices-column ${devicesCollapsed ? 'controls-settings__devices-column--collapsed' : ''}`}>
+        <div className="controls-settings__col-header">
+          <button
+            className="controls-settings__col-toggle"
+            onClick={() => setDevicesCollapsed(!devicesCollapsed)}
+            title={devicesCollapsed ? 'Expand' : 'Collapse'}
+          >
+            {devicesCollapsed ? '◀' : '▶'}
+          </button>
+          <span className="controls-settings__col-title">Devices</span>
+        </div>
         <div className="controls-settings__device-list">
-          {devices.filter(d => !d.displayName.toLowerCase().includes('mouse')).map(device => (
+          {filteredDevices.map(device => (
             <DeviceCard
               key={device.id}
               device={device}
@@ -657,11 +696,11 @@ export function ControlsSettings({ settings, onChange, profileId }: ControlsSett
               }}
             />
           ))}
-          {devices.filter(d => !d.displayName.toLowerCase().includes('mouse')).length === 0 && (
+          {filteredDevices.length === 0 && (
             <p className="controls-settings__no-devices">No devices detected</p>
           )}
         </div>
-        <p className="controls-settings__device-hint">
+        <p className="controls-settings__devices-column-expanded controls-settings__device-hint">
           Click controller icon or drag onto bindings to assign.
         </p>
       </div>

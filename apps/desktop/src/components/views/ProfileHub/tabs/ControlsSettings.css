@@ -6,9 +6,113 @@
 
 /* ─── Left sidebar ─── */
 .controls-settings__sidebar {
+  display: flex;
+  flex-direction: column;
   width: 220px;
   flex-shrink: 0;
   overflow-y: auto;
+  border-right: 1px solid var(--color-border-subtle);
+  padding-right: 8px;
+  transition: width 0.2s ease;
+}
+
+.controls-settings__sidebar--collapsed {
+  width: fit-content;
+}
+
+.controls-settings__sidebar--collapsed .controls-settings__sidebar-content {
+  display: none;
+}
+
+/* Collapsed icon strip — shows just the device icons for quick selection */
+.controls-settings__sidebar-icons {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 0;
+  gap: 2px;
+}
+
+.controls-settings__sidebar--collapsed .controls-settings__sidebar-icons {
+  display: flex;
+}
+
+.controls-settings__sidebar-icon-btn {
+  all: unset;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 18px;
+  opacity: 0.6;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.controls-settings__sidebar-icon-btn:hover {
+  opacity: 1;
+  background: var(--color-bg-hover);
+}
+
+.controls-settings__sidebar-icon-btn--active {
+  opacity: 1;
+  background: var(--color-gold-glow);
+}
+
+/* ─── Shared column header (title + toggle) ─── */
+.controls-settings__col-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  flex-shrink: 0;
+}
+
+.controls-settings__col-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+/* When collapsed, rotate the title vertically */
+.controls-settings__sidebar--collapsed .controls-settings__col-header,
+.controls-settings__devices-column--collapsed .controls-settings__col-header {
+  flex-direction: column;
+  border-bottom: none;
+  padding: 8px 4px;
+}
+
+.controls-settings__sidebar--collapsed .controls-settings__col-title,
+.controls-settings__devices-column--collapsed .controls-settings__col-title {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 11px;
+  margin-top: 6px;
+}
+
+.controls-settings__col-toggle {
+  all: unset;
+  cursor: pointer;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: var(--color-text-muted);
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.controls-settings__col-toggle:hover {
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
 }
 
 /* ─── Center: binding editor ─── */
@@ -66,13 +170,35 @@
 
 /* ─── Right sidebar: detected devices ─── */
 .controls-settings__devices-column {
-  width: 240px;
+  width: fit-content;
+  max-width: 260px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   border-left: 1px solid var(--color-border-subtle);
-  padding: 16px;
+  padding: 10px;
+  transition: max-width 0.2s ease, padding 0.2s ease;
+}
+
+.controls-settings__devices-column--collapsed {
+  max-width: none;
+  padding: 6px;
+}
+
+/* When collapsed, hide the label text in each card but keep the card structure intact */
+.controls-settings__devices-column--collapsed .device-card__info {
+  display: none;
+}
+
+.controls-settings__devices-column--collapsed .device-card {
+  padding: 6px;
+  gap: 0;
+}
+
+/* Hide expanded-only content */
+.controls-settings__devices-column--collapsed .controls-settings__devices-column-expanded {
+  display: none;
 }
 
 /* ─── Section headers ─── */

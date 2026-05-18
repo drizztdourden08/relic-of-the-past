@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-bg-deep);
+  background: #000000;
   z-index: 0;
   overflow: hidden;
 }
@@ -19,6 +19,10 @@
 /* ─── Edge glow FX overlay canvas ─── */
 .game-layer__canvas--hidden {
   position: absolute;
+  visibility: hidden;
+}
+
+.game-layer__canvas--idle {
   visibility: hidden;
 }
 
