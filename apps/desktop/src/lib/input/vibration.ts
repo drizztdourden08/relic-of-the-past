@@ -79,3 +79,21 @@ export function vibrate(target: string, durationMs: number, opts?: VibrateOption
     vibrateHid(target, durationMs, opts);
   }
 }
+
+/**
+ * Convenience: vibrate a pattern on whatever controller type, by key.
+ *   - "gamepad-N" → Gamepad API pattern
+ *   - "xxxx:yyyy" → HID pattern via IPC
+ */
+export function vibratePattern(
+  target: string,
+  pattern: { durationMs: number; intensity: number }[],
+  gapMs: number = 0,
+): void {
+  if (target.startsWith('gamepad-')) {
+    const idx = parseInt(target.replace('gamepad-', ''), 10);
+    if (!isNaN(idx)) vibrateGamepadPattern(idx, pattern, gapMs);
+  } else {
+    window.api.vibratePattern(target, pattern, gapMs);
+  }
+}

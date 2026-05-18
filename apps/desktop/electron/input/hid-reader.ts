@@ -70,10 +70,14 @@ export class HidInputReader {
     if (!this.worker) {
       const workerPath = path.join(__dirname, 'hid-worker.js');
       this.worker = new Worker(workerPath);
-      this.worker.on('message', (msg: { id: number; [k: string]: any }) => {
-        const cb = this.workerCallbacks.get(msg.id);
+      this.worker.on('message', (msg: { id?: number; type?: string; msg?: string; [k: string]: any }) => {
+        if (msg.type === 'log') {
+          this.log(`[worker] ${msg.msg}`);
+          return;
+        }
+        const cb = this.workerCallbacks.get(msg.id!);
         if (cb) {
-          this.workerCallbacks.delete(msg.id);
+          this.workerCallbacks.delete(msg.id!);
           cb(msg);
         }
       });
@@ -349,23 +353,20 @@ export class HidInputReader {
   private static readonly HAPTIC_LIGHT:  number[] = [0x48, 0x71, 0x20, 0x5a, 0x02];
   private static readonly HAPTIC_SILENT: number[] = [0x3f, 0x01, 0xf0, 0x19, 0x00];
 
-  /**
-   * Vibrate an HID controller for a given duration and intensity.
-   * Pauses the read listener during writes (node-hid can't read+write simultaneously).
-   * Writes all frames synchronously then resumes reading.
-   */
-  vibrate(deviceKey: string, durationMs: number, intensity: number): boolean {
-    const dev = this.devices.find(d => d.key === deviceKey);
-    if (!dev) return false;
-
+  /** Map intensity (0–1) to a haptic data array. */
+  private static hapticForIntensity(intensity: number): number[] {
     const clamped = Math.max(0, Math.min(1, intensity));
-    const sustain = clamped >= 0.7 ? HidInputReader.HAPTIC_STRONG
+    return clamped >= 0.7 ? HidInputReader.HAPTIC_STRONG
       : clamped >= 0.3 ? HidInputReader.HAPTIC_MEDIUM
       : HidInputReader.HAPTIC_LIGHT;
+  }
 
+  /** Build frames for a single vibration segment with attack/release envelope. */
+  private static buildSegmentFrames(durationMs: number, intensity: number): number[][] {
+    const clamped = Math.max(0, Math.min(1, intensity));
+    const sustain = HidInputReader.hapticForIntensity(clamped);
     const frameCount = Math.max(1, Math.ceil(durationMs / 4));
 
-    // Build frame list: short attack, sustain, release, silence
     const frames: number[][] = [];
     if (frameCount > 6) {
       frames.push(HidInputReader.HAPTIC_LIGHT);
@@ -376,30 +377,38 @@ export class HidInputReader {
     for (let i = 0; i < sustainCount; i++) frames.push(sustain);
     if (releaseCount >= 2 && clamped >= 0.3) frames.push(HidInputReader.HAPTIC_LIGHT);
     frames.push(HidInputReader.HAPTIC_SILENT);
+    return frames;
+  }
 
-    // Pause reader, write all frames, resume reader
-    dev.hid.pause();
-    let counter = 0;
-    let errors = 0;
-    for (const hapticData of frames) {
-      const buf = new Array(64).fill(0);
-      buf[0] = 0x02;
-      buf[1] = 0x50 | (counter & 0x0F);
-      buf[17] = buf[1];
-      for (let i = 0; i < hapticData.length; i++) {
-        buf[2 + i] = hapticData[i];
-        buf[18 + i] = hapticData[i];
+  /** Build frames for a multi-segment pattern with gaps between segments. */
+  private static buildPatternFrames(pattern: { durationMs: number; intensity: number }[], gapMs: number): number[][] {
+    const frames: number[][] = [];
+    const gapFrames = Math.max(0, Math.ceil(gapMs / 4));
+
+    for (let s = 0; s < pattern.length; s++) {
+      const seg = pattern[s];
+      const haptic = HidInputReader.hapticForIntensity(seg.intensity);
+      const count = Math.max(1, Math.ceil(seg.durationMs / 4));
+      for (let i = 0; i < count; i++) frames.push(haptic);
+      if (gapFrames > 0 && s < pattern.length - 1) {
+        for (let i = 0; i < gapFrames; i++) frames.push(HidInputReader.HAPTIC_SILENT);
       }
-      try {
-        dev.hid.write(buf);
-      } catch {
-        errors++;
-      }
-      counter = (counter + 1) & 0x0F;
     }
-    dev.hid.resume();
+    frames.push(HidInputReader.HAPTIC_SILENT);
+    return frames;
+  }
 
-    return errors === 0;
+  /**
+   * Vibrate an HID controller for a given duration and intensity.
+   * Uses direct writes (pauses read listener during write).
+   */
+  vibrate(deviceKey: string, durationMs: number, intensity: number): boolean {
+    const dev = this.devices.find(d => d.key === deviceKey);
+    if (!dev) return false;
+
+    const frames = HidInputReader.buildSegmentFrames(durationMs, intensity);
+    this.writeFramesDirect(dev, frames);
+    return true;
   }
 
   /**
@@ -415,26 +424,8 @@ export class HidInputReader {
       return { ok: false, error: msg };
     }
 
-    // Build all frames up front
-    const frames: number[][] = [];
-    const gapFrames = Math.max(0, Math.ceil(gapMs / 4));
+    const frames = HidInputReader.buildPatternFrames(pattern, gapMs);
 
-    for (let s = 0; s < pattern.length; s++) {
-      const seg = pattern[s];
-      const clamped = Math.max(0, Math.min(1, seg.intensity));
-      const haptic = clamped >= 0.7 ? HidInputReader.HAPTIC_STRONG
-        : clamped >= 0.3 ? HidInputReader.HAPTIC_MEDIUM
-        : HidInputReader.HAPTIC_LIGHT;
-      const count = Math.max(1, Math.ceil(seg.durationMs / 4));
-      for (let i = 0; i < count; i++) frames.push(haptic);
-      // Gap between segments
-      if (gapFrames > 0 && s < pattern.length - 1) {
-        for (let i = 0; i < gapFrames; i++) frames.push(HidInputReader.HAPTIC_SILENT);
-      }
-    }
-    frames.push(HidInputReader.HAPTIC_SILENT); // end with silence
-
-    // Use worker thread for non-blocking writes
     this.log(`vibratePattern: dispatching ${frames.length} frames to worker for ${deviceKey} path=${dev.path}`);
     this.workerRequest({ type: 'vibrate', devicePath: dev.path, frames })
       .then((result: any) => {
@@ -449,54 +440,6 @@ export class HidInputReader {
         this.writeFramesDirect(dev, frames);
       });
     return { ok: true };
-  }
-
-  /**
-   * Test vibration: sends the full procon2tool haptic pattern in a Worker thread.
-   */
-  testVibration(deviceKey: string): { ok: boolean; frames: number; errors: number; writeMs: number; error?: string } {
-    const dev = this.devices.find(d => d.key === deviceKey);
-    if (!dev) {
-      return { ok: false, frames: 0, errors: 0, writeMs: 0, error: `no device for key="${deviceKey}"` };
-    }
-
-    const pattern: number[][] = [
-      [0x93, 0x35, 0x36, 0x1c, 0x0d],
-      [0xa8, 0x29, 0xc5, 0xdc, 0x0c],
-      [0x75, 0x21, 0xb5, 0x5d, 0x13],
-      [0x75, 0xf5, 0x70, 0x1e, 0x11],
-      [0xba, 0x55, 0x40, 0x1e, 0x08],
-      [0x90, 0x31, 0x10, 0x9e, 0x00],
-      [0x90, 0x15, 0x10, 0x9e, 0x00],
-      [0x90, 0x15, 0x10, 0x9e, 0x00],
-      [0x90, 0x01, 0x10, 0x1e, 0x00],
-      [0x90, 0x15, 0x10, 0x9e, 0x00],
-      [0x75, 0x15, 0x73, 0x1e, 0x11],
-      [0x7b, 0x95, 0x92, 0x5c, 0x13],
-      [0x8d, 0xc5, 0xa1, 0x1b, 0x10],
-      [0x7e, 0x31, 0xc1, 0xdc, 0x0b],
-      [0x6f, 0x2d, 0x31, 0xdc, 0x03],
-      [0x75, 0x19, 0x41, 0x9b, 0x03],
-      [0x6f, 0x15, 0xe1, 0xda, 0x02],
-      [0x66, 0xf1, 0xe0, 0xda, 0x02],
-      [0x63, 0xdd, 0x10, 0x5b, 0x02],
-      [0x5a, 0xb9, 0x10, 0x5b, 0x02],
-      [0x4e, 0x99, 0x50, 0x5a, 0x02],
-      [0x45, 0x81, 0x20, 0x5a, 0x02],
-      [0x48, 0x85, 0x50, 0x5a, 0x02],
-      [0x4b, 0x85, 0x50, 0x5a, 0x02],
-      [0x4b, 0x7d, 0x80, 0x5a, 0x02],
-      [0x48, 0x71, 0x20, 0x5a, 0x02],
-      [0x48, 0x71, 0xc0, 0x99, 0x02],
-      [0x45, 0x65, 0x90, 0x99, 0x02],
-      [0x42, 0x61, 0x90, 0x99, 0x02],
-      [0x3c, 0x59, 0xd0, 0x98, 0x02],
-      [0x3f, 0x01, 0xf0, 0x19, 0x00],
-      [0x3f, 0x01, 0xf0, 0x19, 0x00],
-    ];
-
-    this.writeFramesDirect(dev, pattern);
-    return { ok: true, frames: pattern.length, errors: 0, writeMs: 0 };
   }
 
   /** Write haptic frames directly from the reader handle (pause → write → resume). */

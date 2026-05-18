@@ -99,10 +99,6 @@ export function registerInputHandlers(mainWindow: BrowserWindow): void {
     return hidInputReader.vibrate(deviceKey, durationMs, intensity);
   });
 
-  ipcMain.handle('hid:test-vibration', (_event, deviceKey: string) => {
-    return hidInputReader.testVibration(deviceKey);
-  });
-
   ipcMain.handle('hid:vibrate-pattern', (_event, deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number) => {
     return hidInputReader.vibratePattern(deviceKey, pattern, gapMs);
   });

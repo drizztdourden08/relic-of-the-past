@@ -146,7 +146,7 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.invoke('hid:vibrate', deviceKey, durationMs, intensity),
   vibratePattern: (deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number) =>
     ipcRenderer.invoke('hid:vibrate-pattern', deviceKey, pattern, gapMs),
-  testVibration: (deviceKey: string) => ipcRenderer.invoke('hid:test-vibration', deviceKey),
+
 
   // HID input reports from main process (node-hid reader)
   onHidReport: (callback: (deviceKey: string, vendorId: number, productId: number, data: Buffer) => void) => {

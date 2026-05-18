@@ -6,6 +6,5 @@ export { InputManager, getInputManager, profileFromPreset, resolveFunctionMappin
 export type { DeviceChangeListener, InputStateListener, RawInputEvent, RawInputListener, PauseListener, GamepadSnapshot } from './input-manager';
 export { webHidReader } from './hid-reader';
 export type { WebHidInputState, DeviceStickCalibration, WebHidRawReport } from './hid-reader';
-export { collectInputDiagnostics } from './diagnostics';
-export { vibrateGamepad, vibrateGamepadPattern } from './vibration';
+export { vibrateGamepad, vibrateGamepadPattern, vibrate, vibratePattern } from './vibration';
 export { detectAllDevices } from './device-detector';

@@ -45,10 +45,10 @@ function handleEnumerate(id: number): void {
 }
 
 function handleVibrate(id: number, devicePath: string, frames: number[][]): void {
-  console.log(`[HID-WORKER] vibrate: path=${devicePath}, frames=${frames.length}`);
+  parentPort!.postMessage({ type: 'log', msg: `vibrate: path=${devicePath}, frames=${frames.length}` });
   try {
     const dev = new HID.HID(devicePath);
-    console.log(`[HID-WORKER] opened device OK`);
+    parentPort!.postMessage({ type: 'log', msg: `opened device OK` });
     let counter = 0;
     let writeErrors = 0;
     for (const haptic of frames) {
@@ -64,15 +64,15 @@ function handleVibrate(id: number, devicePath: string, frames: number[][]): void
         dev.write(buf);
       } catch (writeErr: any) {
         writeErrors++;
-        if (writeErrors === 1) console.log(`[HID-WORKER] first write error: ${writeErr?.message}`);
+        if (writeErrors === 1) parentPort!.postMessage({ type: 'log', msg: `first write error: ${writeErr?.message}` });
       }
       counter = (counter + 1) & 0x0F;
     }
     dev.close();
-    console.log(`[HID-WORKER] done: ${frames.length} frames, ${writeErrors} errors`);
+    parentPort!.postMessage({ type: 'log', msg: `done: ${frames.length} frames, ${writeErrors} errors` });
     parentPort!.postMessage({ id, ok: true, frames: frames.length, writeErrors });
   } catch (err: any) {
-    console.log(`[HID-WORKER] open/fatal error: ${err?.message}`);
+    parentPort!.postMessage({ type: 'log', msg: `open/fatal error: ${err?.message}` });
     parentPort!.postMessage({ id, ok: false, error: err?.message ?? 'vibrate failed' });
   }
 }
