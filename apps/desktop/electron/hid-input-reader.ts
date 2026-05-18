@@ -237,10 +237,11 @@ export class HidInputReader {
 
         this.log(`Opened ${key} (${dev.product})`);
 
-        // Nintendo controllers need a wake-up poke after USB enumeration.
+        // SPC2 needs a wake-up haptic poke after USB enumeration.
         // The USB init (sendUsbInit) already started HID streaming.
         // Send a silent haptic frame as additional acknowledgment.
-        if (target.vendorId === NINTENDO_VID) {
+        // Only SPC2 (0x2069) supports haptic writes — GC adapter and others don't.
+        if (target.vendorId === NINTENDO_VID && target.productId === 0x2069) {
           try {
             const wake = new Array(64).fill(0);
             wake[0] = 0x02; // report ID

@@ -587,7 +587,6 @@ export function InputCalibration(): JSX.Element {
           {anyHidConnected && (() => {
             // Build cards from authoritative connected device keys (updated immediately on disconnect)
             const keys = new Set(webHidReader.getConnectedDeviceKeys());
-            console.log('[DEBUG-CARDS] keys:', [...keys], 'gamepads:', gamepads.length);
             return [...keys].map(key => {
               // Find profile for this specific device key
               const [vidHex, pidHex] = key.split(':');
@@ -1089,9 +1088,12 @@ function GamepadCard({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
               {stickPairs.map(s => (
                 <StickCircle key={s.xIdx} x={gamepad.axes[s.xIdx] ?? 0} y={gamepad.axes[s.yIdx] ?? 0} label={s.label} />
               ))}
-              {triggerAxes.map(t => (
-                <TriggerBar key={t.idx} value={gamepad.axes[t.idx] ?? 0} label={t.label} />
-              ))}
+              {triggerAxes.map((t, ti) => {
+                // Gamepad API standard mapping: triggers are buttons 6+7, not axes 4+5
+                const triggerBtnIdx = 6 + ti;
+                const value = gamepad.buttons[triggerBtnIdx]?.value ?? gamepad.axes[t.idx] ?? 0;
+                return <TriggerBar key={t.idx} value={value} label={t.label} />;
+              })}
             </div>
           );
         }
