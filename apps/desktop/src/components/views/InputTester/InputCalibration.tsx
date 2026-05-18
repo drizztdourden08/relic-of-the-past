@@ -23,7 +23,7 @@ import { CONTROLLER_PROFILES } from '@shared/data/controllers/profiles';
 import { findPresetByVidPid, parseGamepadId } from '@shared/data/controllers';
 import { SDL_CONTROLLER_DB } from '@shared/data/controllers/sdl-controller-list';
 import { getButtonIconUrl } from './button-icons';
-import { vibrateGamepad } from '../../../lib/game/vibration';
+import { vibrateGamepad, vibrateGamepadPattern } from '../../../lib/game/vibration';
 import './InputCalibration.css';
 
 interface HidDeviceInfo {
@@ -585,17 +585,15 @@ export function InputCalibration(): JSX.Element {
         <div className="input-cal__cards">
           {/* HID Controller Card — show as soon as connected, even without input */}
           {anyHidConnected && (() => {
-            // Build cards from devices with active HID state OR connected device keys
-            const keys = new Set([
-              ...webHidStates.keys(),
-              ...webHidReader.getConnectedDeviceKeys(),
-            ]);
+            // Build cards from authoritative connected device keys (updated immediately on disconnect)
+            const keys = new Set(webHidReader.getConnectedDeviceKeys());
+            console.log('[DEBUG-CARDS] keys:', [...keys], 'gamepads:', gamepads.length);
             return [...keys].map(key => {
               // Find profile for this specific device key
               const [vidHex, pidHex] = key.split(':');
               const deviceProfile = CONTROLLER_PROFILES.find(
                 p => p.vendorId === vidHex?.padStart(4, '0') && p.productId === pidHex?.padStart(4, '0')
-              ) ?? connectedProfile;
+              ) ?? null;
 
               // Pre-fill placeholder state from profile so buttons/sticks render immediately
               const profileButtons = deviceProfile?.buttons.length ?? 0;
@@ -1023,7 +1021,7 @@ function GamepadCard({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
 
   // For standard-mapped gamepads, use the Xbox profile for icons
   const isXbox = /xbox|xinput/i.test(gamepad.id) || detectedVidPid?.startsWith('045e') || false;
-  const xboxProfile = isXbox ? CONTROLLER_PROFILES.find(p => p.id === 'xbox-one') : null;
+  const xboxProfile = isXbox ? CONTROLLER_PROFILES.find(p => p.id === 'xbox') : null;
 
   const controllerIcon = isXbox ? CONTROLLER_ICON_MAP['xbox'] : null;
 
@@ -1113,17 +1111,25 @@ function GamepadCard({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
       })()}
 
       {/* Vibration tests */}
+      {xboxProfile?.supportsVibration && (
       <div style={{ marginTop: 'var(--space-md)', display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>
-        <button className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 100)} title="Short pulse (100ms)">
-          Pulse
+        <button className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 100, { intensity: 1.0 })}>
+          100ms
         </button>
-        <button className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 300)} title="Medium rumble (300ms)">
-          Rumble
+        <button className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 250, { intensity: 1.0 })}>
+          250ms
         </button>
-        <button className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 800, { intensity: 1.0 })} title="Long sustained (800ms)">
-          Strong
+        <button className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 1000, { intensity: 1.0 })}>
+          1000ms
+        </button>
+        <button className="input-cal__btn" onClick={() => vibrateGamepadPattern(gamepad.index, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50)}>
+          3×100ms
+        </button>
+        <button className="input-cal__btn" onClick={() => vibrateGamepadPattern(gamepad.index, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 1000, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50)}>
+          2-long-2
         </button>
       </div>
+      )}
     </div>
   );
 }

@@ -102,6 +102,8 @@ class XboxController extends BaseController {
   readonly defaultMappings = DEFAULT_MAPPINGS;
   readonly buttons = BUTTONS;
   readonly axes = AXES;
+
+  supportsVibration(): boolean { return true; }
 }
 
 registerController(new XboxController());

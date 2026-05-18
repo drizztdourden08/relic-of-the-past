@@ -252,9 +252,12 @@ export class HidInputReader {
               wake[18 + i] = silent[i];
             }
             hid.pause();
-            hid.write(wake);
-            hid.resume();
-            this.log(`Sent wake-up haptic frame to ${key}`);
+            try {
+              hid.write(wake);
+              this.log(`Sent wake-up haptic frame to ${key}`);
+            } finally {
+              hid.resume();
+            }
           } catch (err) {
             this.log(`Wake-up write failed for ${key}: ${(err as Error).message}`);
           }
