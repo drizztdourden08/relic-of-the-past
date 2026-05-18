@@ -1,0 +1,130 @@
+/**
+ * Raw Input Dispatcher — rising-edge detection and event emission
+ * for any button/key/axis press on any device. Used by rebinding UI,
+ * input tester, etc.
+ */
+
+import type { InputBinding } from '@shared/types/controls';
+import { webHidReader } from './hid-reader';
+
+/** Raw input event — fired when any button/key/axis is pressed on any device */
+export interface RawInputEvent {
+  binding: InputBinding;
+  sourceDeviceKey: string;
+  vendorId: string | null;
+  productId: string | null;
+}
+export type RawInputListener = (event: RawInputEvent) => void;
+
+export class RawInputDispatcher {
+  private listeners = new Set<RawInputListener>();
+
+  // Previous frame state for rising-edge detection
+  private prevGamepadButtons = new Map<number, boolean[]>();
+  private prevHidButtons = new Map<string, boolean[]>();
+  private prevGamepadAxes = new Map<number, ('+' | '-' | null)[]>();
+  private prevHidAxes = new Map<string, ('+' | '-' | null)[]>();
+
+  get hasListeners(): boolean {
+    return this.listeners.size > 0;
+  }
+
+  subscribe(listener: RawInputListener): () => void {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
+  }
+
+  /** Emit a raw input event (keyboard presses call this directly) */
+  emit(binding: InputBinding, sourceDeviceKey: string, vendorId: string | null = null, productId: string | null = null): void {
+    if (this.listeners.size === 0) return;
+    const event: RawInputEvent = { binding, sourceDeviceKey, vendorId, productId };
+    for (const fn of this.listeners) {
+      try { fn(event); } catch { /* ignore */ }
+    }
+  }
+
+  /** Emit rising-edge events for gamepad buttons/axes (called each frame) */
+  emitGamepadEvents(gamepadVidPid: Map<number, { vid: string; pid: string }>): void {
+    const gamepads = navigator.getGamepads();
+    const hidIdSet = new Set(webHidReader.getConnectedDeviceKeys());
+    for (const gp of gamepads) {
+      if (!gp || !gp.connected) continue;
+      // Skip if this gamepad is a duplicate of a WebHID device
+      const gpIdLower = gp.id.toLowerCase();
+      let isDuplicate = false;
+      for (const hidId of hidIdSet) {
+        const [vid, pid] = hidId.split(':');
+        if (gpIdLower.includes(`vendor: ${vid}`) && gpIdLower.includes(`product: ${pid}`)) {
+          isDuplicate = true;
+          break;
+        }
+      }
+      if (isDuplicate) continue;
+
+      const prev = this.prevGamepadButtons.get(gp.index) ?? [];
+      const curr = gp.buttons.map(b => b.pressed);
+      const cached = gamepadVidPid.get(gp.index);
+      const vid = cached?.vid ?? null;
+      const pid = cached?.pid ?? null;
+      for (let i = 0; i < curr.length; i++) {
+        if (curr[i] && !prev[i]) {
+          this.emit({ type: 'gamepad-button', index: i }, `gamepad-${gp.index}`, vid, pid);
+        }
+      }
+      // Axes — rising-edge
+      const prevAxes = this.prevGamepadAxes.get(gp.index) ?? [];
+      const currAxes: ('+' | '-' | null)[] = [];
+      for (let i = 0; i < gp.axes.length; i++) {
+        const val = gp.axes[i];
+        const dir: '+' | '-' | null = Math.abs(val) > 0.5 ? (val > 0 ? '+' : '-') : null;
+        currAxes[i] = dir;
+        if (dir !== null && dir !== prevAxes[i]) {
+          this.emit(
+            { type: 'gamepad-axis', axisIndex: i, direction: dir },
+            `gamepad-${gp.index}`,
+            vid, pid,
+          );
+        }
+      }
+      this.prevGamepadButtons.set(gp.index, curr);
+      this.prevGamepadAxes.set(gp.index, currAxes);
+    }
+  }
+
+  /** Emit rising-edge events for HID buttons/axes (called each frame) */
+  emitHidEvents(hidStates: Map<string, { buttons: boolean[]; axes: number[] }>): void {
+    for (const [deviceKey, state] of hidStates) {
+      const prev = this.prevHidButtons.get(deviceKey) ?? [];
+      const parts = deviceKey.split(':');
+      const vid = parts[0] ? parts[0].toLowerCase().padStart(4, '0') : null;
+      const pid = parts[1] ? parts[1].toLowerCase().padStart(4, '0') : null;
+      for (let i = 0; i < state.buttons.length; i++) {
+        if (state.buttons[i] && !prev[i]) {
+          this.emit({ type: 'gamepad-button', index: i }, deviceKey, vid, pid);
+        }
+      }
+      // Axes — rising-edge
+      const prevAxes = this.prevHidAxes.get(deviceKey) ?? [];
+      const currAxes: ('+' | '-' | null)[] = [];
+      for (let i = 0; i < state.axes.length; i++) {
+        const val = state.axes[i];
+        const dir: '+' | '-' | null = Math.abs(val) > 0.5 ? (val > 0 ? '+' : '-') : null;
+        currAxes[i] = dir;
+        if (dir !== null && dir !== prevAxes[i]) {
+          this.emit(
+            { type: 'gamepad-axis', axisIndex: i, direction: dir },
+            deviceKey, vid, pid,
+          );
+        }
+      }
+      this.prevHidButtons.set(deviceKey, [...state.buttons]);
+      this.prevHidAxes.set(deviceKey, currAxes);
+    }
+  }
+
+  /** Clean up stale device state on disconnect */
+  removeDevice(deviceKey: string): void {
+    this.prevHidButtons.delete(deviceKey);
+    this.prevHidAxes.delete(deviceKey);
+  }
+}

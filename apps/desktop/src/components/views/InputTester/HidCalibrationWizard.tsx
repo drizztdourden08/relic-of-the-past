@@ -15,15 +15,15 @@
  */
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { webHidReader } from '../../../lib/game/webhid-input-reader';
-import type { WebHidRawReport } from '../../../lib/game/webhid-input-reader';
+import { webHidReader } from '../../../lib/input/hid-reader';
+import type { WebHidRawReport } from '../../../lib/input/hid-reader';
 import {
-  CONTROLLER_PROFILES,
-  findProfileByVidPid,
-} from '@shared/data/controllers/profiles';
-import type { ControllerProfile } from '@shared/data/controllers/profiles';
-import { SDL_CONTROLLER_DB } from '@shared/data/controllers/sdl-controller-list';
-import type { SdlControllerEntry } from '@shared/data/controllers/sdl-controller-list';
+  DEVICE_PROFILES,
+  findDeviceProfileByVidPid,
+} from '@shared/input';
+import type { DeviceProfile } from '@shared/input';
+import { DEVICE_DATABASE } from '@shared/input/device-database';
+import type { DeviceDatabaseEntry } from '@shared/input/device-database';
 import { Select } from '../../primitives';
 import type { SelectOption } from '../../primitives';
 
@@ -170,13 +170,15 @@ type ByteStatus = 'unknown' | 'gyro' | 'counter' | 'stick' | 'trigger' | 'button
 interface Props {
   onComplete: (map: HidControllerMap) => void;
   onCancel: () => void;
+  /** Filter raw reports to only this device (prevents cross-device interference) */
+  deviceKey?: string;
 }
 
-export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Element {
+export function HidCalibrationWizard({ onComplete, onCancel, deviceKey }: Props): JSX.Element {
   const [selectedProfileId, setSelectedProfileId] = useState('');
   const [selectedSdlVidPid, setSelectedSdlVidPid] = useState('');
   const [hasGyro, setHasGyro] = useState(true); // default true until proven otherwise
-  const [profile, setProfile] = useState<ControllerProfile | null>(null);
+  const [profile, setProfile] = useState<DeviceProfile | null>(null);
   const [phase, setPhase] = useState<Phase>('select-profile');
 
   // Gyro & idle state
@@ -348,7 +350,7 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
     const vidPid = `${vid}:${pid}`;
 
     // Match SDL database for gyro info
-    const sdlMatch = SDL_CONTROLLER_DB.find(e => e.vidPid === vidPid);
+    const sdlMatch = DEVICE_DATABASE.find(e => e.vidPid === vidPid);
     if (sdlMatch) {
       setSelectedSdlVidPid(vidPid);
       setHasGyro(sdlMatch.hasGyro);
@@ -358,7 +360,7 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
     }
 
     // Match calibration profile
-    const profileMatch = findProfileByVidPid(vid, pid);
+    const profileMatch = findDeviceProfileByVidPid(vid, pid);
     if (profileMatch) {
       setSelectedProfileId(profileMatch.id);
       addLog(`Auto-detected profile: ${profileMatch.name} (${vid}:${pid})`);
@@ -369,7 +371,7 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
 
   // ── SDL controller options for searchable picker ──
   const sdlOptions: SelectOption[] = useMemo(() =>
-    SDL_CONTROLLER_DB
+    DEVICE_DATABASE
       .filter(e => e.vidPid)
       .map(e => ({
         value: e.vidPid!,
@@ -381,13 +383,13 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
   // ── Update hasGyro + auto-resolve profile when SDL selection changes ──
   const handleSdlSelect = useCallback((vidPid: string) => {
     setSelectedSdlVidPid(vidPid);
-    const entry = SDL_CONTROLLER_DB.find(e => e.vidPid === vidPid);
+    const entry = DEVICE_DATABASE.find(e => e.vidPid === vidPid);
     if (entry) setHasGyro(entry.hasGyro);
 
     // Auto-resolve calibration profile from SDL VID:PID
     if (vidPid) {
       const [vid, pid] = vidPid.split(':');
-      const profileMatch = findProfileByVidPid(vid, pid);
+      const profileMatch = findDeviceProfileByVidPid(vid, pid);
       if (profileMatch) setSelectedProfileId(profileMatch.id);
     }
   }, []);
@@ -447,6 +449,9 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
     if (phase !== 'live') return;
 
     const unsub = webHidReader.onRawReport((report) => {
+      // Skip reports from other devices when deviceKey filter is active
+      if (deviceKey && report.deviceKey !== deviceKey) return;
+
       const bytes = new Uint8Array(report.bytes);
       setLatestBytes(bytes);
       lastReportIdRef.current = report.reportId;
@@ -457,7 +462,8 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
 
       const keys = webHidReader.getConnectedDeviceKeys();
       if (keys.length > 0 && deviceInfoRef.current.vendorId === 0) {
-        const [vidH, pidH] = keys[0].split(':');
+        const targetKey = deviceKey ?? keys[0];
+        const [vidH, pidH] = targetKey.split(':');
         deviceInfoRef.current.vendorId = parseInt(vidH, 16);
         deviceInfoRef.current.productId = parseInt(pidH, 16);
       }
@@ -793,11 +799,11 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
       unsub();
       if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
     };
-  }, [phase, addLog, doAdvance, updateByteStatuses]);
+  }, [phase, addLog, doAdvance, updateByteStatuses, deviceKey]);
 
   // ── Profile confirm ──
   const handleProfileConfirm = useCallback(() => {
-    const p = CONTROLLER_PROFILES.find(pr => pr.id === selectedProfileId);
+    const p = DEVICE_PROFILES.find(pr => pr.id === selectedProfileId);
     if (!p) return;
     setProfile(p);
 
@@ -1447,7 +1453,7 @@ export function HidCalibrationWizard({ onComplete, onCancel }: Props): JSX.Eleme
 
         {selectedProfileId && (
           <p style={{ fontSize: 12, color: '#6ee7b7', margin: '0 0 12px' }}>
-            ✓ Profile auto-detected: <strong>{CONTROLLER_PROFILES.find(p => p.id === selectedProfileId)?.name ?? selectedProfileId}</strong>
+            ✓ Profile auto-detected: <strong>{DEVICE_PROFILES.find(p => p.id === selectedProfileId)?.name ?? selectedProfileId}</strong>
           </p>
         )}
         {!selectedProfileId && selectedSdlVidPid && (

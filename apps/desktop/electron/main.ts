@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell, ipcMain, dialog, net, Menu } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, dialog, net, Menu, session, protocol } from 'electron';
 import { join, basename, extname } from 'path';
 import { readFile, mkdir, writeFile, access, copyFile, rm, stat, readdir, rename } from 'fs/promises';
 import { createWriteStream } from 'fs';
@@ -31,17 +31,10 @@ import {
   saveSession,
   saveTrackerState,
   loadTrackerState,
-  readInputProfiles,
-  writeInputProfiles,
-  readStickCalibration,
-  writeStickCalibration,
-  readTriggerCalibration,
-  writeTriggerCalibration,
   ensureDataDirectories,
   migrateDataFolder,
 } from './profile-manager';
-import { enumerateControllers } from './hid-devices';
-import { hidInputReader } from './hid-input-reader';
+import { registerInputHandlers, stopInputHandlers, initCalibrationStore, initProfileStore } from './input';
 import { extractAllItemSprites } from '../../../shared/asset-extraction/item-sprites/extract-items';
 import spriteDefinitions from '../../../shared/data/sprite-definitions.json';
 import { loadRom } from '../../../shared/asset-extraction/rom/rom-loader';
@@ -50,6 +43,11 @@ import { decodeStrings, formatDialogueText } from '../../../shared/asset-extract
 
 // Ensure consistent userData path across dev and production
 app.setName('alttp-pc');
+
+// Register custom protocol for serving sprite images from userData
+protocol.registerSchemesAsPrivileged([
+  { scheme: 'app-sprite', privileges: { standard: true, secure: true, supportFetchAPI: true } },
+]);
 
 // Allow gamepad enumeration without requiring a button press first
 app.commandLine.appendSwitch('disable-features', 'RestrictGamepadAccess');
@@ -109,37 +107,6 @@ function createWindow(): void {
   });
   mainWindow.webContents.session.setPermissionRequestHandler((_webContents, permission, callback) => {
     callback(true);
-  });
-
-  // Auto-select HID devices (bypass the picker dialog for WebHID)
-  mainWindow.webContents.session.on('select-hid-device', (event, details, callback) => {
-    event.preventDefault();
-    // Auto-select the first matching device
-    if (details.deviceList.length > 0) {
-      callback(details.deviceList[0].deviceId);
-    } else {
-      callback('');
-    }
-  });
-
-  // Auto-select USB devices (bypass the picker dialog for WebUSB)
-  mainWindow.webContents.session.on('select-usb-device', (event, details, callback) => {
-    event.preventDefault();
-    const device = details.deviceList.find(
-      (d) => d.vendorId === 0x057E
-    );
-    if (device) {
-      callback(device.deviceId);
-    } else if (details.deviceList.length > 0) {
-      callback(details.deviceList[0].deviceId);
-    } else {
-      callback();
-    }
-  });
-
-  // Grant permission to any HID/USB device
-  mainWindow.webContents.session.setDevicePermissionHandler((_details) => {
-    return true;
   });
 
   if (process.argv.includes('--muted')) {
@@ -936,67 +903,6 @@ function registerIpcHandlers(): void {
     return loadTrackerState(profileId);
   });
 
-  // Input profiles
-  ipcMain.handle('inputProfiles:read', async (_event, profileId: string) => {
-    return readInputProfiles(profileId);
-  });
-
-  ipcMain.handle('inputProfiles:write', async (_event, profileId: string, profiles: unknown[]) => {
-    await writeInputProfiles(profileId, profiles);
-  });
-
-  // Stick calibration (global per-device)
-  ipcMain.handle('stickCalibration:read', async () => {
-    return readStickCalibration();
-  });
-
-  ipcMain.handle('stickCalibration:write', async (_event, store: Record<string, unknown>) => {
-    await writeStickCalibration(store as any);
-  });
-
-  ipcMain.handle('triggerCalibration:read', async () => {
-    return readTriggerCalibration();
-  });
-
-  ipcMain.handle('triggerCalibration:write', async (_event, deviceKey: string, axisIndex: number, cal: { base: number; max: number; deadzone: number }) => {
-    await writeTriggerCalibration(deviceKey, axisIndex, cal);
-  });
-
-  // HID device enumeration (async — uses worker thread to avoid blocking main)
-  ipcMain.handle('hid:enumerate', async () => {
-    try {
-      const rawDevices = await hidInputReader.enumerateDevicesAsync();
-      return enumerateControllers(rawDevices);
-    } catch {
-      return enumerateControllers(); // fallback to sync if worker fails
-    }
-  });
-
-  ipcMain.handle('hid:get-open-keys', () => {
-    return hidInputReader.getOpenDeviceKeys();
-  });
-
-  // HID write (haptics, LED control) — forwards to node-hid in main process
-  ipcMain.handle('hid:write', (_event, deviceKey: string, data: number[]) => {
-    return hidInputReader.write(deviceKey, data);
-  });
-
-  // HID test vibration — plays a short haptic pattern on SPC2
-  ipcMain.handle('hid:vibrate', (_event, deviceKey: string, durationMs: number, intensity: number) => {
-    return hidInputReader.vibrate(deviceKey, durationMs, intensity);
-  });
-
-  // HID test vibration — original hardcoded procon2tool pattern (known-good baseline)
-  ipcMain.handle('hid:test-vibration', (_event, deviceKey: string) => {
-    return hidInputReader.testVibration(deviceKey);
-  });
-
-  // HID pattern vibration — flat segments with optional gaps
-  ipcMain.handle('hid:vibrate-pattern', (_event, deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number) => {
-    return hidInputReader.vibratePattern(deviceKey, pattern, gapMs);
-  });
-
-
   // Get userData path
   ipcMain.handle('app:getUserDataPath', () => app.getPath('userData'));
 
@@ -1093,6 +999,19 @@ function registerIpcHandlers(): void {
 }
 
 app.whenReady().then(async () => {
+  // Register protocol handler to serve sprites from userData/Data/sprites/
+  protocol.handle('app-sprite', (request) => {
+    // URL: app-sprite://sprites/ROM_STEM/filename.png
+    const url = new URL(request.url);
+    const filePath = join(app.getPath('userData'), 'Data', 'sprites', url.pathname.replace(/^\//, ''));
+    return net.fetch('file:///' + filePath.replace(/\\/g, '/'));
+  });
+
+  // In dev mode, clear HTTP cache so static asset changes are picked up immediately
+  if (is.dev) {
+    await session.defaultSession.clearCache();
+  }
+
   initProfileManager(app.getPath('userData'));
   await migrateDataFolder();
   await ensureDataDirectories();
@@ -1100,9 +1019,12 @@ app.whenReady().then(async () => {
   registerIpcHandlers();
   createWindow();
 
-  // Start reading HID controllers in the main process (node-hid)
+  // Initialize input subsystem (HID, USB, calibration, profiles)
   if (mainWindow) {
-    hidInputReader.start(mainWindow);
+    const dataPath = app.getPath('userData');
+    initCalibrationStore(dataPath);
+    initProfileStore(dataPath);
+    registerInputHandlers(mainWindow);
   }
 
 
@@ -1147,7 +1069,7 @@ app.whenReady().then(async () => {
 });
 
 app.on('will-quit', () => {
-  hidInputReader.stop();
+  stopInputHandlers();
 });
 
 app.on('window-all-closed', () => {

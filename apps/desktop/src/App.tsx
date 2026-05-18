@@ -60,7 +60,7 @@ interface ConfirmDialog {
 }
 
 export function App(): JSX.Element {
-  const [activePage, setActivePage] = useState<PageId>('input-tester');
+  const [activePage, setActivePage] = useState<PageId>('none');
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [romStatuses, setRomStatuses] = useState<RomInfo[]>([]);
   const [extractionStates, setExtractionStates] = useState<Record<string, RomExtractionStatus>>({});
@@ -405,9 +405,6 @@ export function App(): JSX.Element {
 
         setProfiles(profileList);
         setRomStatuses(romStatusList);
-
-        // DEBUG: skip page override when forcing input-tester
-        if (activePage === 'input-tester') return;
 
         if (profileList.length === 0) {
           log.app('No profiles found, showing setup screen');

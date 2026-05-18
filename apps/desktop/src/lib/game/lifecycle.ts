@@ -10,7 +10,7 @@ import { getModule, setModule, setProfileId, getProfileId, setState, setInput } 
 import { startSramSync, stopSramSync } from './sram-sync';
 import { resetMasterVolume } from './audio-volume';
 import { initTrackerBridge, destroyTrackerBridge } from './tracker';
-import { getInputManager } from './input-manager';
+import { getInputManager } from '../input/input-manager';
 
 declare function Zelda3(config: Record<string, unknown>): Promise<EmscriptenModule>;
 

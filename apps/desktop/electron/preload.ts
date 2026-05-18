@@ -1,12 +1,6 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
-import { join, parse } from 'path';
+import { parse } from 'path';
 
-// Compute sprites base path synchronously (available immediately in renderer)
-const spritesRootPath = process.env.APPDATA
-  ? join(process.env.APPDATA, 'alttp-pc', 'Data', 'sprites')
-  : join(process.env.HOME || '', '.config', 'alttp-pc', 'Data', 'sprites');
-
-const spritesRootUrl = spritesRootPath.replace(/\\/g, '/');
 const isDev = process.env.NODE_ENV !== 'production';
 
 function romStem(romFile: string): string {
@@ -17,9 +11,9 @@ contextBridge.exposeInMainWorld('api', {
   // Dev mode flag
   isDev,
 
-  // Sprites base URL — per-ROM: dev mode uses Vite public folder, production uses file:// to userData
+  // Sprites base URL — per-ROM: uses custom protocol to serve from userData
   getSpritesBaseUrl: (romFile: string) =>
-    isDev ? '/sprites/items/' : `file:///${spritesRootUrl}/${romStem(romFile)}/`,
+    `app-sprite://sprites/${romStem(romFile)}/`,
 
   // File path helper (Electron 35+ removed File.path from renderer)
   getFilePath: (file: File) => webUtils.getPathForFile(file),
@@ -146,7 +140,7 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.invoke('hid:vibrate', deviceKey, durationMs, intensity),
   vibratePattern: (deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number) =>
     ipcRenderer.invoke('hid:vibrate-pattern', deviceKey, pattern, gapMs),
-  testVibration: (deviceKey: string) => ipcRenderer.invoke('hid:test-vibration', deviceKey),
+
 
   // HID input reports from main process (node-hid reader)
   onHidReport: (callback: (deviceKey: string, vendorId: number, productId: number, data: Buffer) => void) => {

@@ -9,7 +9,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { webHidReader } from '../../../lib/game/webhid-input-reader';
+import { webHidReader } from '../../../lib/input/hid-reader';
 
 // ── Types ──
 
@@ -28,6 +28,8 @@ interface Props {
   onComplete: (cal: TriggerCalibrationData) => void;
   onCancel: () => void;
   existingCalibration?: TriggerCalibrationData | null;
+  /** Filter input state to only this device */
+  deviceKey?: string;
 }
 
 // ── Constants ──
@@ -37,7 +39,7 @@ const DEFAULT_DEADZONE = 0.05;
 
 // ── Component ──
 
-export function TriggerCalibrationWizard({ axisIndex, label, onComplete, onCancel, existingCalibration }: Props) {
+export function TriggerCalibrationWizard({ axisIndex, label, onComplete, onCancel, existingCalibration, deviceKey }: Props) {
   const [step, setStep] = useState<Step>('rest');
 
   // Live raw trigger value (0..1 from parser)
@@ -69,6 +71,8 @@ export function TriggerCalibrationWizard({ axisIndex, label, onComplete, onCance
   // This avoids the React dedup problem where constant values don't trigger re-renders.
   useEffect(() => {
     const unsub = webHidReader.onInput((state) => {
+      if (deviceKey && state.deviceKey !== deviceKey) return;
+
       const val = state.axes[axisIndex] ?? 0;
       setRawValue(val);
 

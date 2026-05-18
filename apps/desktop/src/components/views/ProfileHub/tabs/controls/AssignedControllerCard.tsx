@@ -1,13 +1,13 @@
 /**
- * AssignedControllerCard — shows the controller assigned to the active profile.
+ * AssignedDeviceCard — shows the controller assigned to the active profile.
  * Displays connection/activation status, controller info, and an unassign button.
  */
 
-import type { AssignedController, DetectedDevice } from '@shared/types/controls';
+import type { AssignedDevice, DetectedDevice } from '@shared/types/controls';
 import './AssignedControllerCard.css';
 
-interface AssignedControllerCardProps {
-  assigned: AssignedController;
+interface AssignedDeviceCardProps {
+  assigned: AssignedDevice;
   /** Live device matching the assigned controller, if connected */
   liveDevice: DetectedDevice | null;
   onUnassign: () => void;
@@ -22,10 +22,10 @@ const FAMILY_EMOJI: Record<string, string> = {
   generic: '🎮',
 };
 
-export function AssignedControllerCard({ assigned, liveDevice, onUnassign }: AssignedControllerCardProps): JSX.Element {
+export function AssignedDeviceCard({ assigned, liveDevice, onUnassign }: AssignedDeviceCardProps): JSX.Element {
   const isConnected = liveDevice?.connected ?? false;
   const isActivated = liveDevice?.activated ?? false;
-  const emoji = FAMILY_EMOJI[assigned.controllerFamily] ?? '🎮';
+  const emoji = FAMILY_EMOJI[assigned.deviceFamily] ?? '🎮';
 
   const statusLabel = !isConnected
     ? 'Disconnected'

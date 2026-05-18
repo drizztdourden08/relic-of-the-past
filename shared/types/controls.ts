@@ -58,7 +58,7 @@ export const SNES_ACTION_LABELS: Record<SnesButton, string> = {
 
 // ── Controller families (for icon sets) ──
 
-export type ControllerFamily =
+export type DeviceFamily =
   | 'xbox'
   | 'playstation'
   | 'nintendo'
@@ -132,10 +132,10 @@ export interface InputProfile {
   id: string;
   name: string;
   deviceType: 'gamepad' | 'keyboard';
-  controllerFamily: ControllerFamily;
+  deviceFamily: DeviceFamily;
   mappings: ButtonMapping[];
   isDefault: boolean;  // Factory preset (non-deletable) vs user-created
-  assignedController: AssignedController | null;
+  assignedDevice: AssignedDevice | null;
   createdAt: number;
   modifiedAt: number;
 }
@@ -148,7 +148,7 @@ export interface DetectedDevice {
   rawId: string;            // Gamepad.id string or "Standard Keyboard"
   vendorId: string | null;
   productId: string | null;
-  controllerFamily: ControllerFamily;
+  deviceFamily: DeviceFamily;
   displayName: string;      // Resolved: "Xbox Series X|S Controller"
   presetId: string | null;  // Matched preset ID, null if unknown
   connected: boolean;       // HID-level connected (physical presence)
@@ -158,23 +158,23 @@ export interface DetectedDevice {
   inputApi: InputApi;       // Which API this controller uses for input reading
 }
 
-// ── Assigned controller info (persisted with profile) ──
+// ── Assigned device info (persisted with profile) ──
 
-export interface AssignedController {
+export interface AssignedDevice {
   vendorId: string;
   productId: string;
   displayName: string;
-  controllerFamily: ControllerFamily;
+  deviceFamily: DeviceFamily;
   presetId: string | null;
 }
 
-// ── Controller preset (ships with the app) ──
+// ── Device preset (ships with the app) ──
 
-export interface ControllerPreset {
+export interface DevicePreset {
   id: string;
   name: string;
-  family: ControllerFamily;
-  /** Which input API to use for reading this controller */
+  family: DeviceFamily;
+  /** Which input API to use for reading this device */
   inputApi: InputApi;
   /** VID hex strings (lowercase) this preset matches */
   vendorIds: string[];
@@ -182,7 +182,7 @@ export interface ControllerPreset {
   productIds: string[];
   defaultMappings: ButtonMapping[];
   brandLogoKey: string | null;
-  /** Icon set for this controller family */
+  /** Icon set for this device family */
   buttonIcons: Partial<Record<string, ButtonIcon>>;
 }
 

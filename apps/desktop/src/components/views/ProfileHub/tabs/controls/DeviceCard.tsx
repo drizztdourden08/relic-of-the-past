@@ -39,7 +39,7 @@ export function DeviceCard({ device, onDragStart, onAssign }: DeviceCardProps): 
     onDragStart?.(device);
   };
 
-  const iconSrc = (device.presetId && PRESET_ICON[device.presetId]) ?? FAMILY_ICON[device.controllerFamily] ?? FAMILY_ICON.generic;
+  const iconSrc = (device.presetId && PRESET_ICON[device.presetId]) ?? FAMILY_ICON[device.deviceFamily] ?? FAMILY_ICON.generic;
 
   const statusClass = !device.connected
     ? 'device-card__icon-btn--disconnected'
@@ -74,7 +74,7 @@ export function DeviceCard({ device, onDragStart, onAssign }: DeviceCardProps): 
           title={statusTitle}
           type="button"
         >
-          <img src={iconSrc} alt={device.controllerFamily} className="device-card__icon" />
+          <img src={iconSrc} alt={device.deviceFamily} className="device-card__icon" />
         </button>
         {apiLabel && <span className={`device-card__api device-card__api--${device.inputApi}`}>{apiLabel}</span>}
         {device.stale && <span className="device-card__api device-card__api--stale">STALE</span>}

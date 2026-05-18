@@ -1,17 +1,14 @@
 /**
- * Controller preset registry — lookup by VID/PID, list all, find by ID.
- *
- * This module delegates to the new registry system (register-all.ts + impl/ classes)
- * while maintaining the ControllerPreset interface for backward compatibility.
+ * Input device preset registry — lookup by VID/PID, list all, find by ID.
  */
 
-import type { ControllerPreset } from '../../types/controls';
+import type { DevicePreset } from '../types/controls';
 import { findController, findControllerById, getAllControllers } from './register-all';
-import type { BaseController } from './base';
-import { KEYBOARD_DEFAULT } from './keyboard';
+import type { BaseController, ControllerButton, ControllerAxis } from './base';
+import { KEYBOARD_DEFAULT } from './presets/keyboard';
 
-/** Adapt a BaseController to the legacy ControllerPreset interface. */
-function toPreset(ctrl: BaseController): ControllerPreset {
+/** Adapt a BaseController to the DevicePreset interface. */
+function toPreset(ctrl: BaseController): DevicePreset {
   return {
     id: ctrl.id,
     name: ctrl.name,
@@ -26,23 +23,23 @@ function toPreset(ctrl: BaseController): ControllerPreset {
 }
 
 /** All registered presets (order = registry order) */
-export const ALL_PRESETS: ControllerPreset[] = getAllControllers().map(toPreset);
+export const ALL_PRESETS: DevicePreset[] = getAllControllers().map(toPreset);
 
 /** Find a preset by VID:PID pair (lowercase hex, auto-pads to 4 chars) */
-export function findPresetByVidPid(vid: string, pid: string): ControllerPreset | null {
+export function findPresetByVidPid(vid: string, pid: string): DevicePreset | null {
   const ctrl = findController(vid, pid);
   return ctrl ? toPreset(ctrl) : null;
 }
 
 /** Find a preset by its unique ID */
-export function findPresetById(id: string): ControllerPreset | null {
+export function findPresetById(id: string): DevicePreset | null {
   if (id === 'keyboard-default') return KEYBOARD_DEFAULT;
   const ctrl = findControllerById(id);
   return ctrl ? toPreset(ctrl) : null;
 }
 
 /** Get the best-matching preset for a Gamepad.id string + mapping field */
-export function resolvePreset(gamepadId: string, mapping: string): ControllerPreset {
+export function resolvePreset(gamepadId: string, mapping: string): DevicePreset {
   const parsed = parseGamepadId(gamepadId);
   if (parsed) {
     const match = findPresetByVidPid(parsed.vid, parsed.pid);
@@ -91,4 +88,69 @@ export function parseGamepadId(id: string): { vid: string; pid: string } | null 
   return null;
 }
 
-export { KEYBOARD_DEFAULT } from './keyboard';
+export { KEYBOARD_DEFAULT } from './presets/keyboard';
+
+// ── Device Profile (replaces legacy profiles/ adapter) ──
+
+export interface DeviceProfileButton {
+  id: string;
+  label: string;
+  icon: string;
+  category: 'face' | 'shoulder' | 'trigger' | 'dpad' | 'stick' | 'system';
+}
+
+export interface DeviceProfileAxis {
+  id: string;
+  label: string;
+  category: 'stick' | 'trigger';
+}
+
+export interface DeviceProfile {
+  id: string;
+  name: string;
+  vendorId: string | null;
+  productId: string | null;
+  family: string;
+  inputApi: string;
+  buttons: DeviceProfileButton[];
+  axes: DeviceProfileAxis[];
+  supportsVibration: boolean;
+}
+
+function toDeviceProfile(ctrl: BaseController): DeviceProfile {
+  return {
+    id: ctrl.id,
+    name: ctrl.name,
+    vendorId: ctrl.vendorIds[0] ?? null,
+    productId: ctrl.productIds[0] ?? null,
+    family: ctrl.family,
+    inputApi: ctrl.inputApi,
+    buttons: ctrl.buttons.map((b: ControllerButton) => ({
+      id: b.id,
+      label: b.label,
+      icon: b.icon,
+      category: b.category,
+    })),
+    axes: ctrl.axes.map((a: ControllerAxis) => ({
+      id: a.id,
+      label: a.label,
+      category: a.category,
+    })),
+    supportsVibration: ctrl.supportsVibration(),
+  };
+}
+
+/** All registered device profiles */
+export const DEVICE_PROFILES: DeviceProfile[] = getAllControllers().map(toDeviceProfile);
+
+/** Find device profile by VID/PID (hex strings) */
+export function findDeviceProfileByVidPid(vid: string, pid: string): DeviceProfile | null {
+  const ctrl = findController(vid, pid);
+  return ctrl ? toDeviceProfile(ctrl) : null;
+}
+
+/** Find device profile by id */
+export function findDeviceProfileById(id: string): DeviceProfile | null {
+  const ctrl = getAllControllers().find(c => c.id === id);
+  return ctrl ? toDeviceProfile(ctrl) : null;
+}

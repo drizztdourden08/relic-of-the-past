@@ -307,7 +307,6 @@ interface ElectronAPI {
   writeHidDevice(deviceKey: string, data: number[]): Promise<boolean>;
   vibrateHid(deviceKey: string, durationMs: number, intensity: number): Promise<boolean>;
   vibratePattern(deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number): Promise<{ ok: boolean; error?: string }>;
-  testVibration(deviceKey: string): Promise<boolean>;
 
   // HID input reports from main process (node-hid reader)
   onHidReport(callback: (deviceKey: string, vendorId: number, productId: number, data: Buffer) => void): () => void;

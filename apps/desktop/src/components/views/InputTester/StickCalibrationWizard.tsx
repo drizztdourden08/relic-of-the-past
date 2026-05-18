@@ -10,7 +10,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { webHidReader } from '../../../lib/game/webhid-input-reader';
+import { webHidReader } from '../../../lib/input/hid-reader';
 
 // ── Types ──
 
@@ -40,6 +40,8 @@ interface Props {
   existingCalibration?: DeviceStickCalibration | null;
   /** Which stick to calibrate — undefined means both */
   target?: 'left' | 'right';
+  /** Filter input state to only this device */
+  deviceKey?: string;
 }
 
 // ── Constants ──
@@ -85,7 +87,7 @@ function applyCalibration(
 
 // ── Component ──
 
-export function StickCalibrationWizard({ onComplete, onCancel, existingCalibration, target }: Props) {
+export function StickCalibrationWizard({ onComplete, onCancel, existingCalibration, target, deviceKey }: Props) {
   const [step, setStep] = useState<Step>('center');
   const calibrateLeft = target !== 'right';
   const calibrateRight = target !== 'left';
@@ -123,6 +125,7 @@ export function StickCalibrationWizard({ onComplete, onCancel, existingCalibrati
   // ── Subscribe to input state for rawSticks (controller-agnostic) ──
   useEffect(() => {
     const unsub = webHidReader.onInput((state) => {
+      if (deviceKey && state.deviceKey !== deviceKey) return;
       if (!state.rawSticks) return;
       const [lx, ly, rx, ry] = state.rawSticks;
       setRawLX(lx);

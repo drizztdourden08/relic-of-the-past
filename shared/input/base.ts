@@ -4,7 +4,7 @@
  * for identity, UI metadata, SNES mappings, HID parsing, lifecycle, and haptics.
  */
 
-import type { ButtonMapping, ButtonIcon, ControllerFamily, InputApi, SnesButton } from '../../types/controls';
+import type { ButtonMapping, ButtonIcon, DeviceFamily, InputApi, SnesButton } from '../types/controls';
 
 // ── Parsed input state from a HID report ──
 
@@ -71,7 +71,7 @@ export abstract class BaseController {
   // ── Identity & Matching ──
   abstract readonly id: string;
   abstract readonly name: string;
-  abstract readonly family: ControllerFamily;
+  abstract readonly family: DeviceFamily;
   abstract readonly inputApi: InputApi;
   abstract readonly vendorIds: string[];
   abstract readonly productIds: string[];

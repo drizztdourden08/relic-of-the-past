@@ -9,21 +9,20 @@
  */
 
 import { useState, useEffect, useRef, useCallback, useReducer } from 'react';
-import { webHidReader } from '../../../lib/game/webhid-input-reader';
-import type { WebHidInputState, DeviceStickCalibration } from '../../../lib/game/webhid-input-reader';
-import { getInputManager } from '../../../lib/game/input-manager';
-import type { GamepadSnapshot } from '../../../lib/game/input-manager';
-import { collectInputDiagnostics } from '../../../lib/game/input-diagnostics';
+import { webHidReader } from '../../../lib/input/hid-reader';
+import type { WebHidInputState, DeviceStickCalibration } from '../../../lib/input/hid-reader';
+import { getInputManager } from '../../../lib/input/input-manager';
+import type { GamepadSnapshot } from '../../../lib/input/input-manager';
 import { HidCalibrationWizard } from './HidCalibrationWizard';
 import type { HidControllerMap } from './HidCalibrationWizard';
 import { StickCalibrationWizard } from './StickCalibrationWizard';
 import { TriggerCalibrationWizard } from './TriggerCalibrationWizard';
 import type { TriggerCalibrationData } from './TriggerCalibrationWizard';
-import { CONTROLLER_PROFILES } from '@shared/data/controllers/profiles';
-import { findPresetByVidPid, parseGamepadId } from '@shared/data/controllers';
-import { SDL_CONTROLLER_DB } from '@shared/data/controllers/sdl-controller-list';
+import { DEVICE_PROFILES } from '@shared/input';
+import { findPresetByVidPid, parseGamepadId } from '@shared/input';
+import { DEVICE_DATABASE } from '@shared/input/device-database';
 import { getButtonIconUrl } from './button-icons';
-import { vibrateGamepad, vibrateGamepadPattern } from '../../../lib/game/vibration';
+import { vibrateGamepad, vibrateGamepadPattern } from '../../../lib/input/vibration';
 import './InputCalibration.css';
 
 interface HidDeviceInfo {
@@ -47,157 +46,6 @@ const CONTROLLER_ICON_MAP: Record<string, string> = {
   xbox: '/buttons/xbox/controller_xboxseries.svg',
   playstation: '/buttons/playstation/controller_playstation5.svg',
 };
-
-// ── Idle Byte Analyzer ──
-
-type IdleAnalysisState = 'idle' | 'recording' | 'done';
-
-interface ByteAnalysis {
-  index: number;
-  min: number;
-  max: number;
-  uniqueValues: number[];
-  range: number;
-  classification: 'stable' | 'low-noise' | 'noisy' | 'full-range';
-}
-
-function IdleByteAnalyzer({ state }: { state: WebHidInputState }) {
-  const [phase, setPhase] = useState<IdleAnalysisState>('idle');
-  const [progress, setProgress] = useState(0);
-  const [result, setResult] = useState<ByteAnalysis[] | null>(null);
-  const framesRef = useRef<Uint8Array[]>([]);
-  const rafRef = useRef<number>(0);
-  const startRef = useRef<number>(0);
-  const rawRef = useRef(state.rawBytes);
-  rawRef.current = state.rawBytes;
-
-  const DURATION_MS = 3000;
-
-  const startRecording = useCallback(() => {
-    framesRef.current = [];
-    startRef.current = performance.now();
-    setPhase('recording');
-    setResult(null);
-    setProgress(0);
-
-    const sample = () => {
-      const elapsed = performance.now() - startRef.current;
-      setProgress(Math.min(1, elapsed / DURATION_MS));
-
-      if (rawRef.current) {
-        framesRef.current.push(new Uint8Array(rawRef.current));
-      }
-
-      if (elapsed < DURATION_MS) {
-        rafRef.current = requestAnimationFrame(sample);
-      } else {
-        // Analyze
-        const frames = framesRef.current;
-        if (frames.length === 0) { setPhase('idle'); return; }
-        const len = frames[0].length;
-        const analysis: ByteAnalysis[] = [];
-
-        for (let i = 0; i < len; i++) {
-          const seen = new Set<number>();
-          let min = 255, max = 0;
-          for (const f of frames) {
-            const v = f[i];
-            seen.add(v);
-            if (v < min) min = v;
-            if (v > max) max = v;
-          }
-          const range = max - min;
-          const uniqueValues = [...seen].sort((a, b) => a - b);
-          let classification: ByteAnalysis['classification'];
-          if (range === 0) classification = 'stable';
-          else if (range <= 3) classification = 'low-noise';
-          else if (range <= 30) classification = 'noisy';
-          else classification = 'full-range';
-
-          analysis.push({ index: i, min, max, uniqueValues, range, classification });
-        }
-
-        setResult(analysis);
-        setPhase('done');
-
-        // Copy to clipboard
-        const out = {
-          reportId: frames[0]?.[0],
-          frameCount: frames.length,
-          durationMs: DURATION_MS,
-          reportLength: len,
-          bytes: analysis.map(b => ({
-            i: b.index,
-            hex: `0x${b.index.toString(16).padStart(2, '0')}`,
-            min: b.min,
-            max: b.max,
-            range: b.range,
-            uniqueCount: b.uniqueValues.length,
-            classification: b.classification,
-            values: b.uniqueValues.length <= 16 ? b.uniqueValues.map(v => v.toString(16).padStart(2, '0')) : `${b.uniqueValues.length} unique`,
-          })),
-        };
-        navigator.clipboard.writeText(JSON.stringify(out, null, 2));
-      }
-    };
-    rafRef.current = requestAnimationFrame(sample);
-  }, []);
-
-  const classColor = (c: ByteAnalysis['classification']) => {
-    switch (c) {
-      case 'stable': return '#4ade80';
-      case 'low-noise': return '#facc15';
-      case 'noisy': return '#f97316';
-      case 'full-range': return '#ef4444';
-    }
-  };
-
-  return (
-    <details style={{ marginTop: 'var(--space-sm)' }}>
-      <summary style={{ fontSize: 11, color: 'var(--color-text-muted)', cursor: 'pointer', userSelect: 'none' }}>
-        Idle Byte Analyzer
-      </summary>
-      <div style={{ marginTop: 6 }}>
-        <p style={{ fontSize: 10, color: 'var(--color-text-muted)', margin: '0 0 6px' }}>
-          Leave sticks centered and press Record. Identifies noisy/timer bytes vs stable axis bytes.
-        </p>
-        <button
-          className="input-cal__btn"
-          style={{ fontSize: 10, padding: '2px 8px' }}
-          onClick={startRecording}
-          disabled={phase === 'recording'}
-        >
-          {phase === 'recording' ? `Recording... ${(progress * 100).toFixed(0)}%` : phase === 'done' ? '✓ Copied — Record Again' : 'Record Idle (3s)'}
-        </button>
-
-        {result && (
-          <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap', gap: 2, fontFamily: 'monospace', fontSize: 9 }}>
-            {result.map(b => (
-              <div key={b.index} style={{
-                width: 28, padding: '2px 1px', textAlign: 'center',
-                background: `${classColor(b.classification)}22`,
-                border: `1px solid ${classColor(b.classification)}66`,
-                borderRadius: 2,
-              }} title={`Byte ${b.index} (0x${b.index.toString(16).padStart(2,'0')})\nRange: ${b.min}–${b.max} (${b.range})\nUnique: ${b.uniqueValues.length}\n${b.classification}`}>
-                <div style={{ color: classColor(b.classification), fontWeight: 600 }}>{b.index}</div>
-                <div style={{ fontSize: 7, color: 'var(--color-text-muted)' }}>{b.range}</div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {result && (
-          <div style={{ marginTop: 6, fontSize: 9, color: 'var(--color-text-muted)' }}>
-            <span style={{ color: '#4ade80' }}>■</span> stable{' '}
-            <span style={{ color: '#facc15' }}>■</span> low-noise (±3){' '}
-            <span style={{ color: '#f97316' }}>■</span> noisy (±4-30){' '}
-            <span style={{ color: '#ef4444' }}>■</span> full-range (±30+)
-          </div>
-        )}
-      </div>
-    </details>
-  );
-}
 
 // ── Axis Record Button ──
 
@@ -333,7 +181,7 @@ function StickCircle({ x, y, label, iconPrefix }: { x: number; y: number; label:
 function resolveDeviceName(vid: string, pid: string, hidProduct?: string): string {
   const vidPid = `${vid.padStart(4, '0')}:${pid.padStart(4, '0')}`;
   // Try SDL database first (893+ controllers)
-  const sdlEntry = SDL_CONTROLLER_DB.find(e => e.vidPid === vidPid);
+  const sdlEntry = DEVICE_DATABASE.find(e => e.vidPid === vidPid);
   if (sdlEntry) return sdlEntry.name;
   // Try controller preset
   const preset = findPresetByVidPid(vid, pid);
@@ -471,28 +319,11 @@ export function InputCalibration(): JSX.Element {
     const keys = webHidReader.getConnectedDeviceKeys();
     if (keys.length === 0) return null;
     const [vidHex, pidHex] = keys[0].split(':');
-    return CONTROLLER_PROFILES.find(p => p.vendorId === vidHex && p.productId === pidHex) ?? null;
+    return DEVICE_PROFILES.find(p => p.vendorId === vidHex && p.productId === pidHex) ?? null;
   })();
 
   // HID connected = any device keys registered (even unparsed devices)
   const anyHidConnected = webHidConnected || webHidReader.getConnectedDeviceKeys().length > 0;
-
-  // ── Diagnostic dump ──
-  const [diagState, setDiagState] = useState<'idle' | 'running' | 'done'>('idle');
-  const runDiagnostics = useCallback(async () => {
-    setDiagState('running');
-    try {
-      const result = await collectInputDiagnostics();
-      const json = JSON.stringify(result, null, 2);
-      await navigator.clipboard.writeText(json);
-      console.log('[DIAG] Full diagnostics:', result);
-      setDiagState('done');
-      setTimeout(() => setDiagState('idle'), 5000);
-    } catch (e) {
-      console.error('[DIAG] Failed:', e);
-      setDiagState('idle');
-    }
-  }, []);
 
   // ── Render ──
   return (
@@ -519,23 +350,6 @@ export function InputCalibration(): JSX.Element {
         >
           Calibrate
         </button>
-        <button
-          onClick={runDiagnostics}
-          disabled={diagState === 'running'}
-          style={{
-            padding: '6px 16px',
-            fontWeight: 700,
-            fontSize: 13,
-            border: 'none',
-            borderRadius: 6,
-            cursor: diagState === 'running' ? 'wait' : 'pointer',
-            color: '#000',
-            background: diagState === 'done' ? '#4ade80' : diagState === 'running' ? '#facc15' : '#f87171',
-            transition: 'background 0.2s',
-          }}
-        >
-          {diagState === 'done' ? '✓ Copied to Clipboard' : diagState === 'running' ? 'Collecting...' : 'Dump Diagnostics'}
-        </button>
 
       </div>
 
@@ -545,6 +359,7 @@ export function InputCalibration(): JSX.Element {
           <HidCalibrationWizard
             onComplete={handleCalibrationComplete}
             onCancel={() => setCalibrating(false)}
+            deviceKey={webHidReader.getConnectedDeviceKeys()[0]}
           />
         </div>
       )}
@@ -590,7 +405,7 @@ export function InputCalibration(): JSX.Element {
             return [...keys].map(key => {
               // Find profile for this specific device key
               const [vidHex, pidHex] = key.split(':');
-              const deviceProfile = CONTROLLER_PROFILES.find(
+              const deviceProfile = DEVICE_PROFILES.find(
                 p => p.vendorId === vidHex?.padStart(4, '0') && p.productId === pidHex?.padStart(4, '0')
               ) ?? null;
 
@@ -724,7 +539,7 @@ export function InputCalibration(): JSX.Element {
 interface WebHidCardProps {
   deviceKey: string;
   state: WebHidInputState;
-  profile: (typeof CONTROLLER_PROFILES)[number] | null;
+  profile: (typeof DEVICE_PROFILES)[number] | null;
   hasStickCal?: boolean;
   existingStickCal?: DeviceStickCalibration | null;
   onStickCalibrationComplete?: (cal: DeviceStickCalibration) => void;
@@ -907,6 +722,7 @@ function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, 
             }}
             onCancel={() => setCalibrationTarget(null)}
             existingCalibration={existingStickCal}
+            deviceKey={deviceKey}
           />
         </div>
       )}
@@ -920,6 +736,7 @@ function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, 
               setCalibrationTarget(null);
             }}
             onCancel={() => setCalibrationTarget(null)}
+            deviceKey={deviceKey}
           />
         </div>
       )}
@@ -947,9 +764,6 @@ function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, 
           </div>
         )}
       </details>
-
-      {/* Idle Byte Analyzer */}
-      <IdleByteAnalyzer state={state} />
     </div>
   );
 }
@@ -1020,7 +834,7 @@ function GamepadCard({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
 
   // For standard-mapped gamepads, use the Xbox profile for icons
   const isXbox = /xbox|xinput/i.test(gamepad.id) || detectedVidPid?.startsWith('045e') || false;
-  const xboxProfile = isXbox ? CONTROLLER_PROFILES.find(p => p.id === 'xbox') : null;
+  const xboxProfile = isXbox ? DEVICE_PROFILES.find(p => p.id === 'xbox') : null;
 
   const controllerIcon = isXbox ? CONTROLLER_ICON_MAP['xbox'] : null;
 
