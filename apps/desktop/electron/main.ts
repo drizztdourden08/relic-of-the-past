@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell, ipcMain, dialog, net, Menu, session } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, dialog, net, Menu, session, protocol } from 'electron';
 import { join, basename, extname } from 'path';
 import { readFile, mkdir, writeFile, access, copyFile, rm, stat, readdir, rename } from 'fs/promises';
 import { createWriteStream } from 'fs';
@@ -43,6 +43,11 @@ import { decodeStrings, formatDialogueText } from '../../../shared/asset-extract
 
 // Ensure consistent userData path across dev and production
 app.setName('alttp-pc');
+
+// Register custom protocol for serving sprite images from userData
+protocol.registerSchemesAsPrivileged([
+  { scheme: 'app-sprite', privileges: { standard: true, secure: true, supportFetchAPI: true } },
+]);
 
 // Allow gamepad enumeration without requiring a button press first
 app.commandLine.appendSwitch('disable-features', 'RestrictGamepadAccess');
@@ -994,6 +999,14 @@ function registerIpcHandlers(): void {
 }
 
 app.whenReady().then(async () => {
+  // Register protocol handler to serve sprites from userData/Data/sprites/
+  protocol.handle('app-sprite', (request) => {
+    // URL: app-sprite://sprites/ROM_STEM/filename.png
+    const url = new URL(request.url);
+    const filePath = join(app.getPath('userData'), 'Data', 'sprites', url.pathname.replace(/^\//, ''));
+    return net.fetch('file:///' + filePath.replace(/\\/g, '/'));
+  });
+
   // In dev mode, clear HTTP cache so static asset changes are picked up immediately
   if (is.dev) {
     await session.defaultSession.clearCache();

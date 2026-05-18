@@ -1,16 +1,14 @@
 /**
  * Global controller vibration API.
  *
- * Provides a single `vibrate(target, durationMs, intensity?)` function that
- * works across controller types:
- *   - HID controllers (SPC2 etc.): uses registry controller.vibrate() via InputManager
- *   - Gamepad API controllers (Xbox etc.): uses vibrationActuator.playEffect()
+ * Provides unified `vibrate()` and `vibratePattern()` functions that work
+ * across controller types:
+ *   - HID controllers (SPC2, Switch Pro, etc.): batch frame writes via main-process worker
+ *   - Gamepad API controllers (Xbox etc.): vibrationActuator.playEffect()
  *
- * Any code (game hooks, UI, etc.) can call vibrate() without caring about
- * the underlying transport.
+ * Any code (game hooks, UI, etc.) can call vibrate()/vibratePattern() without
+ * caring about the underlying transport.
  */
-
-import { getInputManager } from './input-manager';
 
 // ── Public API ────────────────────────────────────────────────────────────
 
@@ -59,11 +57,11 @@ export function vibrateGamepadPattern(
 }
 
 /**
- * Vibrate an HID controller via the registry's controller.vibrate() method.
+ * Vibrate an HID controller via the main-process batch pipeline (worker thread).
  */
 export function vibrateHid(deviceKey: string, durationMs: number, opts?: VibrateOptions): void {
   const intensity = opts?.intensity ?? 0.7;
-  getInputManager().vibrateController(deviceKey, durationMs, intensity).catch(() => {});
+  window.api.vibratePattern(deviceKey, [{ durationMs, intensity }], 0);
 }
 
 /**

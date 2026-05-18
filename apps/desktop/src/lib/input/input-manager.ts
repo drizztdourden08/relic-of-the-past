@@ -315,13 +315,6 @@ export class InputManager {
 
   // ─── Controller lifecycle ───
 
-  async vibrateController(deviceKey: string, durationMs: number, intensity = 0.7): Promise<boolean> {
-    const entry = this.activeControllers.get(deviceKey);
-    if (!entry || !entry.controller.supportsVibration()) return false;
-    const result = await entry.controller.vibrate(entry.ctx, [{ durationMs, intensity }]);
-    return result.ok;
-  }
-
   refreshDevices(): void {
     this.devices = detectAllDevices(this.hidDeviceCache);
     for (const dev of this.devices) {

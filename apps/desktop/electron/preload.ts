@@ -1,12 +1,6 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
-import { join, parse } from 'path';
+import { parse } from 'path';
 
-// Compute sprites base path synchronously (available immediately in renderer)
-const spritesRootPath = process.env.APPDATA
-  ? join(process.env.APPDATA, 'alttp-pc', 'Data', 'sprites')
-  : join(process.env.HOME || '', '.config', 'alttp-pc', 'Data', 'sprites');
-
-const spritesRootUrl = spritesRootPath.replace(/\\/g, '/');
 const isDev = process.env.NODE_ENV !== 'production';
 
 function romStem(romFile: string): string {
@@ -17,9 +11,9 @@ contextBridge.exposeInMainWorld('api', {
   // Dev mode flag
   isDev,
 
-  // Sprites base URL — per-ROM: dev mode uses Vite public folder, production uses file:// to userData
+  // Sprites base URL — per-ROM: uses custom protocol to serve from userData
   getSpritesBaseUrl: (romFile: string) =>
-    isDev ? '/sprites/items/' : `file:///${spritesRootUrl}/${romStem(romFile)}/`,
+    `app-sprite://sprites/${romStem(romFile)}/`,
 
   // File path helper (Electron 35+ removed File.path from renderer)
   getFilePath: (file: File) => webUtils.getPathForFile(file),
