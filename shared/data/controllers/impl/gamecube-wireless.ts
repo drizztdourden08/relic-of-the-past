@@ -430,7 +430,7 @@ class GameCubeWirelessController extends BaseController {
 
   // ── Haptics ──
 
-  supportsVibration(): boolean { return true; }
+  supportsVibration(): boolean { return false; }
 
   async vibrate(ctx: ControllerContext, pattern: VibrationSegment[], gapMs: number = 0): Promise<{ ok: boolean; error?: string }> {
     const segments: { haptic: number[]; frames: number }[] = [];

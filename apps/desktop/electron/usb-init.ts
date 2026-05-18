@@ -38,6 +38,17 @@ const ENABLE_HID_OUTPUT = Buffer.from([
 ]);
 
 /**
+ * Enable Haptics — command 0x03, arg 0x0a
+ * Enables HID output report processing for haptic feedback (report ID 0x02).
+ * Without this, the controller silently ignores haptic writes.
+ * Reference: procon2tool step 14
+ */
+const ENABLE_HAPTICS = Buffer.from([
+  0x03, 0x91, 0x00, 0x0a, 0x00, 0x04,
+  0x00, 0x00, 0x09, 0x00, 0x00, 0x00,
+]);
+
+/**
  * Set Player LED — command 0x09
  * Confirms connection and sets player indicator LED.
  * Byte 8: LED mask (0x01 = player 1)
@@ -113,6 +124,11 @@ export async function sendUsbInit(vid: number, pid: number): Promise<boolean> {
     // Send init sequence
     await transferOut(outEp, ENABLE_HID_OUTPUT);
     log(`Sent ENABLE_HID_OUTPUT to ${vid.toString(16)}:${pid.toString(16)}`);
+
+    await sleep(15);
+
+    await transferOut(outEp, ENABLE_HAPTICS);
+    log(`Sent ENABLE_HAPTICS to ${vid.toString(16)}:${pid.toString(16)}`);
 
     await sleep(15);
 

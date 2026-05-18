@@ -430,7 +430,20 @@ export class HidInputReader {
     }
     frames.push(HidInputReader.HAPTIC_SILENT); // end with silence
 
-    this.writeFramesInWorker(dev, frames);
+    // Use worker thread for non-blocking writes
+    this.log(`vibratePattern: dispatching ${frames.length} frames to worker for ${deviceKey} path=${dev.path}`);
+    this.workerRequest({ type: 'vibrate', devicePath: dev.path, frames })
+      .then((result: any) => {
+        this.log(`vibratePattern worker result: ${JSON.stringify(result)}`);
+        if (!result.ok || result.writeErrors > 0) {
+          this.log(`Worker vibrate issue — falling back to direct write`);
+          this.writeFramesDirect(dev, frames);
+        }
+      })
+      .catch((err: Error) => {
+        this.log(`vibratePattern worker error: ${err.message} — falling back to direct write`);
+        this.writeFramesDirect(dev, frames);
+      });
     return { ok: true };
   }
 
@@ -478,21 +491,29 @@ export class HidInputReader {
       [0x3f, 0x01, 0xf0, 0x19, 0x00],
     ];
 
-    this.writeFramesInWorker(dev, pattern);
+    this.writeFramesDirect(dev, pattern);
     return { ok: true, frames: pattern.length, errors: 0, writeMs: 0 };
   }
 
-  /** Send haptic frames via the persistent worker — never blocks the main process. */
-  private writeFramesInWorker(dev: OpenDevice, frames: number[][]): void {
-    this.workerRequest({ type: 'vibrate', devicePath: dev.path, frames })
-      .then((result: any) => {
-        if (!result.ok) {
-          this.log(`Vibrate worker error: ${result.error}`);
-        }
-      })
-      .catch((err: Error) => {
-        this.log(`Vibrate worker error: ${err.message}`);
-      });
+  /** Write haptic frames directly from the reader handle (pause → write → resume). */
+  private writeFramesDirect(dev: OpenDevice, frames: number[][]): void {
+    dev.hid.pause();
+    let counter = 0;
+    for (const hapticData of frames) {
+      const buf = new Array(64).fill(0);
+      buf[0] = 0x02;
+      buf[1] = 0x50 | (counter & 0x0F);
+      buf[17] = buf[1];
+      for (let i = 0; i < hapticData.length; i++) {
+        buf[2 + i] = hapticData[i];
+        buf[18 + i] = hapticData[i];
+      }
+      try {
+        dev.hid.write(buf);
+      } catch { /* device may have disconnected */ }
+      counter = (counter + 1) & 0x0F;
+    }
+    dev.hid.resume();
   }
 
   private send(channel: string, data: unknown): void {

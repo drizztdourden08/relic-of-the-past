@@ -28,6 +28,7 @@ export interface ControllerProfile {
   inputApi: string;
   buttons: ControllerProfileButton[];
   axes: ControllerProfileAxis[];
+  supportsVibration: boolean;
 }
 
 /** Adapt a BaseController to the legacy ControllerProfile interface. */
@@ -50,6 +51,7 @@ function toProfile(ctrl: BaseController): ControllerProfile {
       label: a.label,
       category: a.category,
     })),
+    supportsVibration: ctrl.supportsVibration(),
   };
 }
 

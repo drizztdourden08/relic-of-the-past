@@ -45,9 +45,12 @@ function handleEnumerate(id: number): void {
 }
 
 function handleVibrate(id: number, devicePath: string, frames: number[][]): void {
+  console.log(`[HID-WORKER] vibrate: path=${devicePath}, frames=${frames.length}`);
   try {
     const dev = new HID.HID(devicePath);
+    console.log(`[HID-WORKER] opened device OK`);
     let counter = 0;
+    let writeErrors = 0;
     for (const haptic of frames) {
       const buf = new Array(64).fill(0);
       buf[0] = 0x02;
@@ -59,12 +62,17 @@ function handleVibrate(id: number, devicePath: string, frames: number[][]): void
       }
       try {
         dev.write(buf);
-      } catch { /* device may have disconnected */ }
+      } catch (writeErr: any) {
+        writeErrors++;
+        if (writeErrors === 1) console.log(`[HID-WORKER] first write error: ${writeErr?.message}`);
+      }
       counter = (counter + 1) & 0x0F;
     }
     dev.close();
-    parentPort!.postMessage({ id, ok: true, frames: frames.length });
+    console.log(`[HID-WORKER] done: ${frames.length} frames, ${writeErrors} errors`);
+    parentPort!.postMessage({ id, ok: true, frames: frames.length, writeErrors });
   } catch (err: any) {
+    console.log(`[HID-WORKER] open/fatal error: ${err?.message}`);
     parentPort!.postMessage({ id, ok: false, error: err?.message ?? 'vibrate failed' });
   }
 }
