@@ -250,7 +250,7 @@ const GameLayer = (props: GameLayerProps) => {
       <canvas
         key={`fx-${canvasKey}`}
         ref={fxCanvasRef}
-        className="game-layer__fx-canvas"
+        className={`game-layer__fx-canvas${status !== 'running' ? ' game-layer__fx-canvas--hidden' : ''}`}
         width={512}
         height={448}
       />

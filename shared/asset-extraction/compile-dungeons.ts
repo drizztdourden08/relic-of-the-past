@@ -90,6 +90,10 @@ function buildDungeonAttrs(rom: RomData, A: AssetBuilder): void {
 }
 
 function buildDefaultAndOverlayRooms(rom: RomData, A: AssetBuilder): void {
+  // Entrance data must come first (matches C code asset order in assets.h)
+  buildEntranceData(rom, A, 0, 133, 'kEntranceData_');
+  buildEntranceData(rom, A, 1, 7, 'kStartingPoint_');
+
   const defaultData: number[] = [];
   const defaultOffs = new Array(8).fill(0);
   for (let i = 0; i < 8; i++) {
@@ -111,9 +115,6 @@ function buildDefaultAndOverlayRooms(rom: RomData, A: AssetBuilder): void {
   }
   A.addUint8('kDungeonRoomOverlay', overlayData);
   A.addUint16('kDungeonRoomOverlayOffs', overlayOffs);
-
-  buildEntranceData(rom, A, 0, 133, 'kEntranceData_');
-  buildEntranceData(rom, A, 1, 7, 'kStartingPoint_');
 }
 
 function copyRoomLayer(rom: RomData, addr: number, out: number[]): void {

@@ -75,6 +75,9 @@ async function resetGame(): Promise<void> {
   }
   const mod = getModule();
   if (mod) {
+    // Stop Emscripten's main loop to prevent stale rendering
+    try { (mod as any)._emscripten_cancel_main_loop?.(); } catch { /* ignore */ }
+
     const sdl2 = (mod as any).SDL2 as
       | { audioContext?: AudioContext; audio?: { scriptProcessorNode?: AudioNode }; capture?: { scriptProcessorNode?: AudioNode } }
       | undefined;
@@ -82,10 +85,11 @@ async function resetGame(): Promise<void> {
     if (sdl2?.capture?.scriptProcessorNode) sdl2.capture.scriptProcessorNode.disconnect();
     if (sdl2?.audioContext) sdl2.audioContext.close().catch(() => {});
 
-    const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
+    // Free GPU resources — safe because the FX renderer guards with isContextLost()
+    const canvas = mod.canvas as HTMLCanvasElement | undefined;
     if (canvas) {
-      const gl = canvas.getContext('webgl2') ?? canvas.getContext('webgl');
-      if (gl) gl.getExtension('WEBGL_lose_context')?.loseContext();
+      const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+      gl?.getExtension('WEBGL_lose_context')?.loseContext();
     }
   }
   setModule(null);

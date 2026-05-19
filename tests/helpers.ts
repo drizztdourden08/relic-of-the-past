@@ -101,7 +101,7 @@ export async function waitForScreen(window: Page, screen: ScreenName, timeoutMs 
       () => !document.querySelector('.fullscreen-layer:not([style*="display: none"])'),
       { timeout: timeoutMs },
     );
-    await window.waitForSelector('.game-layer__canvas', { timeout: timeoutMs });
+    await window.waitForSelector('.game-layer__canvas', { state: 'attached', timeout: timeoutMs });
   } else {
     await window.waitForSelector('.app', { timeout: timeoutMs });
   }

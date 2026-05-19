@@ -16,6 +16,9 @@ import { getModule } from './wasm-bridge';
 import { setMasterVolume } from './audio-volume';
 import { log } from '../log-bus';
 
+// Track the last-pushed forceBackdropBlack value so we can re-assert after state loads
+let lastBackdropBlack = false;
+
 // Feature flag enum values — must match features.h
 const FEATURE_FLAGS = {
   extendScreen64:         1,
@@ -144,6 +147,7 @@ function pushLiveSettings(settings: GameSettings): boolean {
 
     // Force backdrop to black (guard: function may not exist in older WASM builds)
     try {
+      lastBackdropBlack = !!settings.forceBackdropBlack;
       mod.ccall('WasmSetForceBackdropBlack', null, ['number'], [settings.forceBackdropBlack ? 1 : 0]);
     } catch { /* WASM not rebuilt yet */ }
 
@@ -155,9 +159,22 @@ function pushLiveSettings(settings: GameSettings): boolean {
   }
 }
 
+/**
+ * Re-assert the current forceBackdropBlack state to WASM.
+ * Called after state loads to ensure the flag isn't lost.
+ * Uses the last value pushed via pushLiveSettings as source of truth.
+ */
+function reassertBackdropBlack(): void {
+  const mod = getModule();
+  if (!mod) return;
+  try {
+    mod.ccall('WasmSetForceBackdropBlack', null, ['number'], [lastBackdropBlack ? 1 : 0]);
+  } catch { /* ignore — WASM may not have this export */ }
+}
+
 /** Check if a setting change requires a game restart (i.e. it's NOT live-updatable). */
 function requiresRestart(changedKeys: (keyof GameSettings)[]): boolean {
   return changedKeys.some((k) => !LIVE_SETTINGS.has(k));
 }
 
-export { LIVE_SETTINGS, pushLiveSettings, requiresRestart };
+export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, requiresRestart };

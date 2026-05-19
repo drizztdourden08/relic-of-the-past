@@ -5,6 +5,7 @@
 import { log } from '../log-bus';
 import { getModule, getProfileId } from './wasm-bridge';
 import { pollInventoryState } from './tracker';
+import { reassertBackdropBlack } from './live-settings';
 
 function captureScreenshot(): Promise<Blob | null> {
   const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
@@ -94,6 +95,9 @@ async function loadState(slot: number): Promise<boolean> {
     log.app(`[LoadState] Calling ccall('WasmLoadState', slot=${slot})...`);
     mod.ccall('WasmLoadState', null, ['number'], [slot]);
     log.app(`[LoadState] ccall returned — state loaded ✓`);
+
+    // Re-assert backdrop black flag (defensive: ensures it's not lost after load)
+    reassertBackdropBlack();
 
     // Force inventory poll so tracker reflects the loaded state
     pollInventoryState(true);

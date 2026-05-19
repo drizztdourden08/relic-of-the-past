@@ -8,7 +8,7 @@ import { HeroSaveCard } from '../../../compounds/HeroSaveCard';
 import { PlaySessionCard } from '../../../compounds/PlaySessionCard';
 import { Dialog } from '../../../composites/Dialog';
 import { listSessions } from '../../../../lib/game/session-tracker';
-import { saveState, loadState, subscribeGameState } from '../../../../lib/game';
+import { saveState, loadState, subscribeGameState, reassertBackdropBlack } from '../../../../lib/game';
 import { log } from '../../../../lib/log-bus';
 import './HomeTab.css';
 
@@ -172,7 +172,7 @@ const HomeTab = (props: HomeTabProps) => {
       onStartGame();
       await new Promise<void>((resolve) => {
         const unsub = subscribeGameState((state) => {
-          if (state.status === 'running' || state.status === 'error' || state.status === 'idle') {
+          if (state.status === 'running' || state.status === 'error') {
             unsub();
             resolve();
           }
@@ -229,7 +229,7 @@ const HomeTab = (props: HomeTabProps) => {
       onStartGame();
       await new Promise<void>((resolve) => {
         const unsub = subscribeGameState((state) => {
-          if (state.status === 'running' || state.status === 'error' || state.status === 'idle') {
+          if (state.status === 'running' || state.status === 'error') {
             unsub();
             resolve();
           }
@@ -242,6 +242,7 @@ const HomeTab = (props: HomeTabProps) => {
       if (mod) {
         mod.FS.writeFile('/saves/save98.sav', new Uint8Array(buffer));
         mod.ccall('WasmLoadState', null, ['number'], [98]);
+        reassertBackdropBlack();
         try { mod.FS.unlink('/saves/save98.sav'); } catch { /* ignore */ }
       }
     }
@@ -313,7 +314,7 @@ const HomeTab = (props: HomeTabProps) => {
       onStartGame();
       await new Promise<void>((resolve) => {
         const unsub = subscribeGameState((state) => {
-          if (state.status === 'running' || state.status === 'error' || state.status === 'idle') {
+          if (state.status === 'running' || state.status === 'error') {
             unsub();
             resolve();
           }
@@ -326,6 +327,7 @@ const HomeTab = (props: HomeTabProps) => {
       if (mod) {
         mod.FS.writeFile('/saves/save98.sav', new Uint8Array(buffer));
         mod.ccall('WasmLoadState', null, ['number'], [98]);
+        reassertBackdropBlack();
         try { mod.FS.unlink('/saves/save98.sav'); } catch { /* ignore */ }
       }
     }

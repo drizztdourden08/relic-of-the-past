@@ -15,7 +15,7 @@ const registerAssetHandlers = () => {
     const assetFile = getAssetFileName(romFile);
     try {
       const data = await readFile(getUserDataPath('assets', assetFile));
-      return data.buffer;
+      return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
     } catch {
       return null;
     }

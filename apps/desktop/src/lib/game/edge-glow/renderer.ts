@@ -129,6 +129,7 @@ function createEdgeGlowRenderer(
   // ─── Public API ───
 
   function render(gameCanvas: HTMLCanvasElement, time: number, cleanFrame?: { data: Uint8Array; width: number; height: number } | null): void {
+    if (gl.isContextLost()) return;
     if (gameCanvas.width !== width || gameCanvas.height !== height) {
       resize(gameCanvas.width, gameCanvas.height);
     }
