@@ -27,15 +27,15 @@ import type { DeviceDatabaseEntry } from '@shared/input/device-database';
 import { Select } from '../../../primitives';
 import type { SelectOption } from '../../../primitives';
 import type {
-  AxisSubStep, ByteStatus, CaptureState, GyroState, HidAxisMapping,
-  HidButtonMapping, HidControllerMap, IdleState, InputItem, Phase,
+  AxisSubStep, ButtonDiff, ByteStatus, CaptureState, GyroState, HidAxisMapping,
+  HidButtonMapping, HidControllerMap, IdleRecordResult, IdleState, InputItem, InputStatus, Phase,
   StickCandidate, StickSide, TriggerSide,
 } from './hid-calibration/types';
 import {
-  AXIS_LABELS, CONFIRM_FRAMES, STICK_IDS, STICK_RANGE_THRESHOLD,
+  ANALOG_THRESHOLD_DELTA, AXIS_LABELS, CONFIRM_FRAMES, STICK_IDS, STICK_RANGE_THRESHOLD,
   STICK_STABLE_FRAMES, TRIGGER_IDS, TRIGGER_RANGE_THRESHOLD, TRIGGER_STABLE_FRAMES,
 } from './hid-calibration/constants';
-import { findAxisBytes, findButtonBits, findCounterBytes, hex } from './hid-calibration/hid-analysis';
+import { findAxisBytes, findButtonBits, findCounterBytes, hex, popcount } from './hid-calibration/hid-analysis';
 
 // ── Component ──────────────────────────────────────────────────────────────────
 
