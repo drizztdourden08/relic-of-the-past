@@ -13,6 +13,8 @@ import { resetMasterVolume } from './audio-volume';
 import { initTrackerBridge, destroyTrackerBridge } from './tracker';
 import { startSession, endSession } from './session-tracker';
 import { getInputManager } from '../input/input-manager';
+import { initUIBridge, stopUIBridge } from './ui-bridge';
+import { useGameUIStore } from '../../stores/game-ui-store';
 
 declare function Zelda3(config: Record<string, unknown>): Promise<EmscriptenModule>;
 
@@ -66,6 +68,7 @@ async function resetGame(): Promise<void> {
   await endSession();
   stopAutoSave();
   stopSramSync();
+  stopUIBridge();
   destroyTrackerBridge();
   resetMasterVolume();
   getInputManager().stop();
@@ -195,6 +198,9 @@ async function startGame(
 
     // ─── Tracker bridge: wire up item/inventory notifications ───
     initTrackerBridge();
+
+    // ─── UI bridge: start rAF polling for React overlay state ───
+    initUIBridge(useGameUIStore.getState()._setState);
 
     if (getProfileId()) {
       startSession(getProfileId()!);

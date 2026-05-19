@@ -3,6 +3,7 @@ import { useGameState } from './behavior/useGameState';
 import { getInputManager, wasmGetViewportInfo, wasmRenderCleanFrame } from '../../../lib/game';
 import { createEdgeGlowRenderer, type EdgeGlowRenderer } from '../../../lib/game/edge-glow';
 import { ControllerDisconnectOverlay } from './sub-components/ControllerDisconnectOverlay';
+import { GameOverlay } from '../GameOverlay';
 import './GameLayer.css';
 import type { GameLayerProps } from './types';
 
@@ -265,6 +266,7 @@ const GameLayer = (props: GameLayerProps) => {
           </div>
         </div>
       )}
+      {status === 'running' && <GameOverlay />}
     </div>
   );
 };

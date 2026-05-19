@@ -22,7 +22,8 @@
     "pngjs": "^7.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "usb": "^2.17.0"
+    "usb": "^2.17.0",
+    "zustand": "^5.0.13"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",

@@ -62,7 +62,8 @@ OPUS_SRC := $(ZELDA3)/third_party/opus-1.3.1-stripped/opus_decoder_amalgam.c
 HOOK_SRCS := ../game-hooks/game_hooks.c \
              ../game-hooks/item_overrides.c \
              ../game-hooks/state_queries.c \
-             ../game-hooks/check_triggers.c
+             ../game-hooks/check_triggers.c \
+             ../game-hooks/ui_state.c
 
 # Our Emscripten-specific main
 EM_MAIN := emscripten_main.c
@@ -88,7 +89,7 @@ EMFLAGS := -sUSE_SDL=2 \
 	-sFORCE_FILESYSTEM=1 \
 	-sMODULARIZE=1 \
 	-sEXPORT_NAME='Zelda3' \
-	-sEXPORTED_FUNCTIONS='["_main","_WasmSaveState","_WasmLoadState","_WasmSaveSram","_WasmLoadSram","_WasmSetItemOverride","_WasmClearItemOverrides","_WasmSetFeatures","_WasmGetFeatures","_WasmSetPpuRenderFlags","_WasmGetPpuRenderFlags","_WasmGetFps","_WasmSetDisplayPerf","_WasmGetInventoryState","_WasmGetRoomFlags","_WasmGetLiveRoomFlags","_WasmGetOverworldFlags","_WasmGetProgressFlags","_WasmSetInput","_WasmSetInputMode","_WasmTriggerCheck","_WasmTriggerNpcCheck","_WasmSetPaused","_WasmGetPaused","_WasmTogglePause","_WasmReset","_WasmCheat","_WasmGetViewportInfo","_WasmRenderCleanFrame","_WasmGetCleanFrameWidth","_WasmGetCleanFrameHeight"]' \
+	-sEXPORTED_FUNCTIONS='["_main","_WasmSaveState","_WasmLoadState","_WasmSaveSram","_WasmLoadSram","_WasmSetItemOverride","_WasmClearItemOverrides","_WasmSetFeatures","_WasmGetFeatures","_WasmSetPpuRenderFlags","_WasmGetPpuRenderFlags","_WasmGetFps","_WasmSetDisplayPerf","_WasmGetInventoryState","_WasmGetRoomFlags","_WasmGetLiveRoomFlags","_WasmGetOverworldFlags","_WasmGetProgressFlags","_WasmSetInput","_WasmSetInputMode","_WasmTriggerCheck","_WasmTriggerNpcCheck","_WasmSetPaused","_WasmGetPaused","_WasmTogglePause","_WasmReset","_WasmCheat","_WasmGetViewportInfo","_WasmRenderCleanFrame","_WasmGetCleanFrameWidth","_WasmGetCleanFrameHeight","_WasmGetGameUIState","_WasmSetUIOverlayMode","_WasmGetUIOverlayMode"]' \
 	-sEXPORTED_RUNTIME_METHODS='["ccall","cwrap","FS","HEAPU8"]' \
 	-sASYNCIFY
 

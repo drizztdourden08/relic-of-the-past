@@ -192,6 +192,41 @@ function wasmRenderCleanFrame(): { data: Uint8Array; width: number; height: numb
   }
 }
 
+// ─── Game UI State (for React overlay) ───
+
+/** Size of the UI state buffer exported from C */
+const UI_STATE_BUFFER_SIZE = 109;
+
+/**
+ * Read the raw game UI state buffer from WASM.
+ * Returns the HEAP pointer and HEAPU8 reference, or null if unavailable.
+ */
+function wasmGetGameUIState(): { heap: Uint8Array; ptr: number } | null {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return null;
+  try {
+    const ptr = mod.ccall('WasmGetGameUIState', 'number', [], []) as number;
+    if (!ptr) return null;
+    return { heap: mod.HEAPU8, ptr };
+  } catch {
+    return null;
+  }
+}
+
+/** Set the UI overlay mode bitmask (controls native rendering suppression). */
+function wasmSetUIOverlayMode(mode: number): void {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return;
+  mod.ccall('WasmSetUIOverlayMode', null, ['number'], [mode]);
+}
+
+/** Get the current UI overlay mode bitmask. */
+function wasmGetUIOverlayMode(): number {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return 0;
+  return mod.ccall('WasmGetUIOverlayMode', 'number', [], []) as number;
+}
+
 export {
   getGameState,
   getModule,
@@ -201,13 +236,17 @@ export {
   setProfileId,
   setState,
   subscribeGameState,
+  UI_STATE_BUFFER_SIZE,
   wasmCheat,
+  wasmGetGameUIState,
   wasmGetPaused,
+  wasmGetUIOverlayMode,
   wasmGetViewportInfo,
   wasmRenderCleanFrame,
   wasmReset,
   wasmSetForceBackdropBlack,
   wasmSetPaused,
+  wasmSetUIOverlayMode,
   wasmTogglePause
 };
 export type { ViewportInfo };
