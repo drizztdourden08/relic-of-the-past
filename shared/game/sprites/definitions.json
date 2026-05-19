@@ -1066,13 +1066,13 @@
       "file": "hud-itembox-tl",
       "label": "Item Box (Top-Left)",
       "category": "hud",
-      "extract": { "method": "hud-single", "tiles": [10320] }
+      "extract": { "method": "hud-single", "tiles": [26716] }
     },
     {
       "file": "hud-itembox-top",
       "label": "Item Box (Top)",
       "category": "hud",
-      "extract": { "method": "hud-single", "tiles": [10322] }
+      "extract": { "method": "hud-single", "tiles": [10331] }
     },
     {
       "file": "hud-itembox-tr",
@@ -1084,7 +1084,7 @@
       "file": "hud-itembox-left",
       "label": "Item Box (Left)",
       "category": "hud",
-      "extract": { "method": "hud-single", "tiles": [10324] }
+      "extract": { "method": "hud-single", "tiles": [26717] }
     },
     {
       "file": "hud-itembox-right",
@@ -1096,19 +1096,19 @@
       "file": "hud-itembox-bl",
       "label": "Item Box (Bottom-Left)",
       "category": "hud",
-      "extract": { "method": "hud-single", "tiles": [10329] }
+      "extract": { "method": "hud-single", "tiles": [59484] }
     },
     {
       "file": "hud-itembox-bottom",
       "label": "Item Box (Bottom)",
       "category": "hud",
-      "extract": { "method": "hud-single", "tiles": [10331] }
+      "extract": { "method": "hud-single", "tiles": [43099] }
     },
     {
       "file": "hud-itembox-br",
       "label": "Item Box (Bottom-Right)",
       "category": "hud",
-      "extract": { "method": "hud-single", "tiles": [10328] }
+      "extract": { "method": "hud-single", "tiles": [43100] }
     }
   ]
 }
