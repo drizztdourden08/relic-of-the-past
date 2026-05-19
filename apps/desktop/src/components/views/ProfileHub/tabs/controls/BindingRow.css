@@ -119,3 +119,9 @@
   color: var(--color-danger-base, #e94560);
   border-color: var(--color-danger-base, #e94560);
 }
+
+.binding-row--reserved {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: default;
+}

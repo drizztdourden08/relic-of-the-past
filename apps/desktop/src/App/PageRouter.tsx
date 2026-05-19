@@ -7,6 +7,7 @@ import { CreditsPage } from '../components/views/ProfileHub/tabs/CreditsTab';
 import { FullScreenLayer } from '../components/composites/FullScreenLayer';
 import type { PageId, RomDisplayInfo } from './types';
 import type { GameSettings } from '@shared/types/settings';
+import type { ProfileHubTab } from '../components/views/ProfileHub/types';
 
 interface PageRouterProps {
   nav: {
@@ -49,10 +50,12 @@ interface PageRouterProps {
   handleDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
   handleShowPicker: () => void;
   dataTab: string;
+  profileHubTab: ProfileHubTab;
+  onProfileHubTabChange: (tab: ProfileHubTab) => void;
 }
 
 const PageRouter = (props: PageRouterProps) => {
-  const { nav, profileMgmt, game, display, audio, saveState, handleDeleteConfirm, handleShowPicker, dataTab } = props;
+  const { nav, profileMgmt, game, display, audio, saveState, handleDeleteConfirm, handleShowPicker, dataTab, profileHubTab, onProfileHubTabChange } = props;
 
   const handleStartGame = useCallback(() => {
     if (profileMgmt.activeProfile) {
@@ -103,6 +106,8 @@ const PageRouter = (props: PageRouterProps) => {
           onEdgeEffectChange={display.handleEdgeEffectChange}
           onSaveSlotSettingsChange={saveState.handleSaveSlotSettingsChange}
           masterVolumeOverride={audio.muteOverride}
+          activeTab={profileHubTab}
+          onTabChange={onProfileHubTabChange}
         />
       </FullScreenLayer>
     );

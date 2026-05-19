@@ -1,6 +1,8 @@
 import type { Profile } from '@shared/types/profile';
 import type { GameSettings } from '@shared/types/settings';
 
+type ProfileHubTab = 'home' | 'settings' | 'audio' | 'gameplay' | 'controls';
+
 interface ProfileHubProps {
   profile: Profile;
   isGameRunning: boolean;
@@ -14,8 +16,11 @@ interface ProfileHubProps {
   onSaveSlotSettingsChange?: (enhanced: boolean, holdDuration: number) => void;
   onEdgeEffectChange?: (enabled: boolean) => void;
   masterVolumeOverride?: { volume: number; version: number } | null;
+  activeTab?: ProfileHubTab;
+  onTabChange?: (tab: ProfileHubTab) => void;
 }
 
 export type {
   ProfileHubProps,
+  ProfileHubTab,
 };

@@ -381,6 +381,8 @@ class InputManager {
 
   private onKeyDown = (e: KeyboardEvent): void => {
     if (isTextInput(e.target)) return;
+    // Escape is reserved for app-level menu toggle — never process as game/function input
+    if (e.code === 'Escape') return;
     this.allPressedKeys.add(e.code);
     this.rawDispatcher.emit({ type: 'keyboard', code: e.code }, 'keyboard');
 

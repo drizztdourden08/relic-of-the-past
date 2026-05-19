@@ -12,10 +12,8 @@ import { pushLiveSettings, LIVE_SETTINGS, getInputManager } from '../../../lib/g
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { log } from '../../../lib/log-bus';
 import './ProfileHub.css';
-import type { ProfileHubProps } from './types';
+import type { ProfileHubProps, ProfileHubTab } from './types';
 
-
-type TopTab = 'home' | 'settings' | 'audio' | 'gameplay' | 'controls';
 
 const ProfileHub = (props: ProfileHubProps) => {
   const {
@@ -31,8 +29,12 @@ const ProfileHub = (props: ProfileHubProps) => {
     onSaveSlotSettingsChange,
     onEdgeEffectChange,
     masterVolumeOverride,
+    activeTab: controlledTab,
+    onTabChange,
   } = props;
-  const [activeTab, setActiveTab] = useState<TopTab>('home');
+  const [internalTab, setInternalTab] = useState<ProfileHubTab>('home');
+  const activeTab = controlledTab ?? internalTab;
+  const setActiveTab = (tab: ProfileHubTab) => { onTabChange?.(tab); setInternalTab(tab); };
   const [settings, setSettings] = useState<GameSettings>(DEFAULT_SETTINGS);
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const restartToastShownRef = useRef(false);

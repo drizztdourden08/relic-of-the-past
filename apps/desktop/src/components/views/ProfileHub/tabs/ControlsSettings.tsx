@@ -625,6 +625,14 @@ export const ControlsSettings = (props: ControlsSettingsProps) => {
                 <div className="binding-row__icon-slot" />
                 <span className="binding-row__binding-label">Binding</span>
               </div>
+              {/* Reserved system shortcut — non-editable */}
+              <div className="binding-row binding-row--reserved" title="Reserved — cannot be rebound">
+                <span className="binding-row__action-label">Open / Close Menu</span>
+                <div className="binding-row__icon-slot" />
+                <span className="binding-row__snes-label" />
+                <div className="binding-row__icon-slot" />
+                <span className="binding-row__binding-label">Esc</span>
+              </div>
               {displayFunctionMappings
                 .filter(m => (SHORTCUT_ACTIONS as readonly string[]).includes(m.action))
                 .map(mapping => (

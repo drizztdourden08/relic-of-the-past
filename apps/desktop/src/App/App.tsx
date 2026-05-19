@@ -7,6 +7,7 @@ import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, L
 import { SpriteDebug } from '../components/views/SpriteDebug';
 import { Dialog } from '../components/composites/Dialog';
 import { PageRouter } from './PageRouter';
+import type { ProfileHubTab } from '../components/views/ProfileHub/types';
 import { useAppNavigation } from './behavior/useAppNavigation';
 import { useAudioSettings } from './behavior/useAudioSettings';
 import { useConfirmDialog } from './behavior/useConfirmDialog';
@@ -23,6 +24,7 @@ import './App.css';
 
 export const App = () => {
   const [dataTab, setDataTab] = useState<string>('profiles');
+  const [profileHubTab, setProfileHubTab] = useState<ProfileHubTab>('home');
 
   const { dialog, showDialog, dismissDialog, handleDeleteConfirm } = useConfirmDialog();
   const game = useGameLifecycle();
@@ -51,7 +53,9 @@ export const App = () => {
   const nav = useAppNavigation({ activeProfile: profileMgmt.activeProfile, refreshLists: profileMgmt.refreshProfilesAndRoms });
   const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null);
   const saveOverlay = useSaveOverlay(saveState, game.isRunning);
-  const { showSpriteDebug, toggleSpriteDebug } = useKeyboardShortcuts(nav, dialog, dismissDialog, profileMgmt.activeProfile);
+  const [showSpriteDebug, setShowSpriteDebug] = useState(false);
+  const toggleSpriteDebug = useCallback(() => setShowSpriteDebug(v => !v), []);
+  useKeyboardShortcuts(nav, dialog, dismissDialog, profileMgmt.activeProfile, showSpriteDebug, setShowSpriteDebug);
 
   useStartup(profileMgmt, nav);
   useIpcLogBridge();
@@ -148,6 +152,8 @@ export const App = () => {
           handleDeleteConfirm={handleDeleteConfirm}
           handleShowPicker={handleShowPicker}
           dataTab={dataTab}
+          profileHubTab={profileHubTab}
+          onProfileHubTabChange={setProfileHubTab}
         />
 
         <WidgetManager
