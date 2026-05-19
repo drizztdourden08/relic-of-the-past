@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useGameState } from './behavior/useGameState';
 import { getInputManager, wasmGetViewportInfo, wasmRenderCleanFrame } from '../../../lib/game';
-import { createEdgeGlowRenderer, type EdgeGlowRenderer } from '../../../lib/game/edge-glow-shader';
+import { createEdgeGlowRenderer, type EdgeGlowRenderer } from '../../../lib/game/edge-glow';
 import { ControllerDisconnectOverlay } from './sub-components/ControllerDisconnectOverlay';
 import './GameLayer.css';
 import type { GameLayerProps } from './types';
