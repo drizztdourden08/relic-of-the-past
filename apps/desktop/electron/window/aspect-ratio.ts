@@ -38,7 +38,7 @@ function registerAspectRatioHandlers(): void {
     win.on('will-resize', (e, newBounds, details) => {
       if (lockedRatio <= 0) return;
 
-      const edge = details?.edge ?? '';
+      const edge: string = details?.edge ?? '';
       const isSideH = edge === 'left' || edge === 'right';
       const isSideV = edge === 'bottom' || edge === 'top';
 

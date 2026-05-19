@@ -3,9 +3,9 @@
  * Wraps TrackerInventory with data subscription + view mode state.
  */
 import { useState, useEffect } from 'react';
-import { onInventoryChanged, getCurrentInventory } from '../../../lib/game';
-import { TrackerInventory } from '../../views/TrackerView/sub-components/TrackerInventory';
-import { SegmentedControl } from '../../primitives';
+import { onInventoryChanged, getCurrentInventory } from '../../lib/game';
+import { TrackerInventory } from '../../components/views/TrackerView/sub-components/TrackerInventory';
+import { SegmentedControl } from '../../components/primitives';
 import type { InventoryViewMode } from '@shared/game/items/sprites';
 
 const VIEW_OPTIONS: { value: InventoryViewMode; label: string }[] = [

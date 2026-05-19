@@ -42,7 +42,7 @@ async function saveState(slot: number): Promise<boolean> {
     const data = mod.FS.readFile(savePath);
     log.app(`[SaveState] Read ${data.byteLength} bytes from MEMFS`);
 
-    const ab = data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
+    const ab = (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength);
     log.app(`[SaveState] Sending ${ab.byteLength} bytes to main process (profileId=${profileId}, slot=${slot})...`);
     await window.api.writeState(profileId, slot, ab);
     log.app(`[SaveState] Slot ${slot} persisted to disk ✓`);

@@ -8,6 +8,9 @@ interface EmscriptenFS {
 
 interface EmscriptenModule {
   FS: EmscriptenFS;
+  HEAPU8: Uint8Array;
+  ccall(ident: string, returnType: 'number', argTypes: string[], args: unknown[]): number;
+  ccall(ident: string, returnType: 'string', argTypes: string[], args: unknown[]): string;
   ccall(ident: string, returnType: string | null, argTypes: string[], args: unknown[]): unknown;
 }
 

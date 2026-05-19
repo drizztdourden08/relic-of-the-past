@@ -15,7 +15,7 @@ import {
 } from '../../lib/game';
 import { TrackerSummary } from '../../components/views/TrackerView/sub-components/TrackerSummary';
 import { TrackerFilters, type ViewMode } from '../../components/views/TrackerView/sub-components/TrackerFilters';
-import { TrackerGroupTree } from '../../views/TrackerView/sub-components/TrackerGroupTree';
+import { TrackerGroupTree } from '../../components/views/TrackerView/sub-components/TrackerGroupTree';
 
 const ChecksWidgetContent = () => {
   const [inventory, setInventory] = useState<Set<string>>(() => getCurrentInventory());

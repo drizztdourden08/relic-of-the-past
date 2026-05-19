@@ -12,10 +12,10 @@ import { buildGroupTree, filterChecks } from '@shared/game/checks/grouping';
 import {
   onInventoryChanged, onCompletedChecksChanged,
   getCurrentInventory, getCompletedChecks,
-} from '../../../lib/game';
-import { TrackerSummary } from '../../views/TrackerView/sub-components/TrackerSummary';
-import { TrackerFilters, type ViewMode } from '../../views/TrackerView/sub-components/TrackerFilters';
-import { TrackerGroupTree } from '../../views/TrackerView/sub-components/TrackerGroupTree';
+} from '../../lib/game';
+import { TrackerSummary } from '../../components/views/TrackerView/sub-components/TrackerSummary';
+import { TrackerFilters, type ViewMode } from '../../components/views/TrackerView/sub-components/TrackerFilters';
+import { TrackerGroupTree } from '../../components/views/TrackerView/sub-components/TrackerGroupTree';
 
 const ChecksWidgetContent = () => {
   const [inventory, setInventory] = useState<Set<string>>(() => getCurrentInventory());

@@ -31,7 +31,7 @@ async function syncSramToDisk(): Promise<void> {
     const hash = simpleHash(data);
     if (hash === lastSramHash) return;
     lastSramHash = hash;
-    await window.api.writeSram(profileId, data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength));
+    await window.api.writeSram(profileId, (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength));
     log.app(`[SRAM] Synced ${data.byteLength} bytes to disk (hash=${hash})`);
   } catch {
     // Silently ignore — may happen during shutdown
