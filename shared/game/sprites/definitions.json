@@ -1022,9 +1022,9 @@
     },
     {
       "file": "hud-magic-label",
-      "label": "Magic Label (MP)",
+      "label": "Magic Label (½)",
       "category": "hud",
-      "extract": { "method": "hud-strip", "tiles": [10487, 10321, 10490] }
+      "extract": { "method": "hud-strip", "tiles": [10487, 10321] }
     },
     {
       "file": "hud-magic-fill-full",
