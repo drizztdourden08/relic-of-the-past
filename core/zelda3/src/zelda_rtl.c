@@ -510,7 +510,7 @@ void StateRecorder_Load(StateRecorder *sr, FILE *f, bool replay_mode) {
     if (sr->base_snapshot.size) {
       LoadFuncState state = { sr->base_snapshot.data, sr->base_snapshot.data + sr->base_snapshot.size };
       LoadSnesState(&loadFunc, &state);
-      assert(state.p <= state.pend);
+      assert(state.p == state.pend);
     } else {
       ZeldaReset(false);
     }
@@ -526,7 +526,7 @@ void StateRecorder_Load(StateRecorder *sr, FILE *f, bool replay_mode) {
     LoadFuncState state = { arr.data, arr.data + arr.size };
     LoadSnesState(&loadFunc, &state);
     ByteArray_Destroy(&arr);
-    assert(state.p <= state.pend);
+    assert(state.p == state.pend);
   }
 }
 
