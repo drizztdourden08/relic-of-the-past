@@ -116,10 +116,10 @@ const GameLayer = (props: GameLayerProps) => {
         // Query WASM for precise viewport info
         const vp = wasmGetViewportInfo();
         if (vp) {
-          // Enable on overworld (module 9) with extended aspect ratio
-          // Keep effect visible during text/events if we were on overworld
+          // Use locationModule (physical location, unaffected by text/menu overlays)
+          // so effects persist during telepathy, NPC dialogue, etc.
           const hasExtended = vp.extraLeftRight > 0 || (vp.snesHeight === 240);
-          const isOverworld = vp.mainModule === 9;
+          const isOverworld = vp.locationModule === 9;
           if (isOverworld && hasExtended && edgeEffectRef.current) {
             renderer.setEnabled(true);
           } else if (!edgeEffectRef.current || (!vp.isGameplay && !isOverworld)) {

@@ -124,6 +124,10 @@ interface ViewportInfo {
   blackBottom: number;
   /** Whether the game is in active gameplay (dungeon or overworld) */
   isGameplay: boolean;
+  /** Physical location module (unaffected by text/menu overlays) */
+  locationModule: number;
+  /** Whether the player is currently indoors (house/dungeon/cave) */
+  isIndoors: boolean;
 }
 
 /**
@@ -145,6 +149,8 @@ function wasmGetViewportInfo(): ViewportInfo | null {
     const extraBottomCur = heap[ptr + 5];
     const snesWidth = heap[ptr + 6] | (heap[ptr + 7] << 8);
     const snesHeight = heap[ptr + 8] | (heap[ptr + 9] << 8);
+    const locationModule = heap[ptr + 10];
+    const isIndoors = heap[ptr + 11] !== 0;
 
     // Black pixels = max extra - actual rendered extra
     const blackLeft = extraLeftRight - extraLeftCur;
@@ -152,12 +158,13 @@ function wasmGetViewportInfo(): ViewportInfo | null {
     // Bottom: extend_y adds 16 rows (240-224), extraBottomCur = how many have content
     const blackBottom = snesHeight === 240 ? (16 - extraBottomCur) : 0;
 
-    // Active gameplay = module 7 (dungeon) or 9 (overworld)
-    const isGameplay = (mainModule === 7 || mainModule === 9);
+    // Active gameplay = location module 7 (dungeon) or 9 (overworld)
+    const isGameplay = (locationModule === 7 || locationModule === 9);
 
     return {
       mainModule, submodule, extraLeftRight, extraLeftCur, extraRightCur,
-      extraBottomCur, snesWidth, snesHeight, blackLeft, blackRight, blackBottom, isGameplay,
+      extraBottomCur, snesWidth, snesHeight, blackLeft, blackRight, blackBottom,
+      isGameplay, locationModule, isIndoors,
     };
   } catch {
     return null;

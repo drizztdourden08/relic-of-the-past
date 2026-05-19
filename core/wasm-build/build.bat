@@ -53,7 +53,11 @@ set SNES_SRCS=^
 
 set OPUS_SRC=%ZELDA3%\third_party\opus-1.3.1-stripped\opus_decoder_amalgam.c
 
-set HOOK_SRCS=..\game-hooks\game_hooks.c
+set HOOK_SRCS=^
+ ..\game-hooks\game_hooks.c^
+ ..\game-hooks\state_queries.c^
+ ..\game-hooks\item_overrides.c^
+ ..\game-hooks\check_triggers.c
 
 set EM_MAIN=emscripten_main.c
 

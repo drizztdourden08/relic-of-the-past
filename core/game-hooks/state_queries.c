@@ -96,7 +96,7 @@ int WasmGetProgressFlags(void) {
 
 // ─── Viewport Info ───
 
-static uint8 g_viewport_buf[10];
+static uint8 g_viewport_buf[12];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetViewportInfo(void) {
@@ -112,5 +112,19 @@ int WasmGetViewportInfo(void) {
   g_viewport_buf[7] = (w >> 8) & 0xFF;
   g_viewport_buf[8] = h & 0xFF;
   g_viewport_buf[9] = (h >> 8) & 0xFF;
+
+  // locationModule: the player's physical location regardless of UI overlays.
+  // Modules 14 (text/menu), 15 (spotlight close), 16 (spotlight open) are transient
+  // overlays — the player hasn't moved, so report saved_module_for_menu instead.
+  // Guard: if saved_module_for_menu is 0 while in module 14, this is a real menu
+  // screen (file select etc), not a gameplay overlay — report the actual module.
+  uint8 mod = main_module_index;
+  if ((mod == 14 || mod == 15 || mod == 16) && saved_module_for_menu != 0) {
+    g_viewport_buf[10] = saved_module_for_menu;
+  } else {
+    g_viewport_buf[10] = mod;
+  }
+
+  g_viewport_buf[11] = player_is_indoors;
   return (int)g_viewport_buf;
 }
