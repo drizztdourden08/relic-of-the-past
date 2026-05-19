@@ -17,10 +17,12 @@ const useKeyboardShortcuts = (
       if (e.key !== 'Escape') return;
       e.preventDefault();
 
-      // Dismiss confirm dialog (only exception — ESC closes dialogs)
+      // Dismiss confirm dialog
       if (dialog) { dismissDialog(); return; }
-      // Open home (profile hub) from game view — ESC never closes pages
-      if (nav.activePage === 'none' && activeProfile) { nav.setActivePage('profile'); }
+      // Close any open page
+      if (nav.activePage !== 'none') { nav.setActivePage('none'); return; }
+      // Open home (profile hub) from game view
+      if (activeProfile) { nav.setActivePage('profile'); }
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
