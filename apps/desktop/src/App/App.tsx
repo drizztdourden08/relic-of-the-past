@@ -55,7 +55,17 @@ export const App = () => {
   const saveOverlay = useSaveOverlay(saveState, game.isRunning);
   const [showSpriteDebug, setShowSpriteDebug] = useState(false);
   const toggleSpriteDebug = useCallback(() => setShowSpriteDebug(v => !v), []);
-  useKeyboardShortcuts(nav, dialog, dismissDialog, profileMgmt.activeProfile, showSpriteDebug, setShowSpriteDebug);
+  useKeyboardShortcuts(nav, dialog, dismissDialog, profileMgmt.activeProfile);
+
+  // Dev-only sprite debug toggle (Ctrl+Shift+D)
+  useEffect(() => {
+    if (!window.api.isDev) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'D') { e.preventDefault(); setShowSpriteDebug(v => !v); }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, []);
 
   useStartup(profileMgmt, nav);
   useIpcLogBridge();

@@ -34,7 +34,7 @@ import { InputProfileList } from './controls/InputProfileList';
 import { DeviceCard } from './controls/DeviceCard';
 import { BindingRow } from './controls/BindingRow';
 import { BindingListener } from './controls/BindingListener';
-import { getSnesIconUrl } from '../../InputTester/data/button-icons';
+import { getSnesIconUrl, getButtonIconUrl } from '../../InputTester/data/button-icons';
 import { Dialog } from '../../../composites/Dialog/Dialog';
 import './ControlsSettings.css';
 
@@ -627,10 +627,12 @@ export const ControlsSettings = (props: ControlsSettingsProps) => {
               </div>
               {/* Reserved system shortcut — non-editable */}
               <div className="binding-row binding-row--reserved" title="Reserved — cannot be rebound">
-                <span className="binding-row__action-label">Open / Close Menu</span>
+                <span className="binding-row__action-label">Open Menu</span>
                 <div className="binding-row__icon-slot" />
                 <span className="binding-row__snes-label" />
-                <div className="binding-row__icon-slot" />
+                <div className="binding-row__icon-slot">
+                  <img src={getButtonIconUrl('kb-escape')!} alt="Esc" className="binding-row__icon-img" />
+                </div>
                 <span className="binding-row__binding-label">Esc</span>
               </div>
               {displayFunctionMappings
