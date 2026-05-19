@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import type { InventoryViewMode } from '@shared/game/items/sprites';
 import { STORAGE_KEY } from '../constants';
 
-export const useInventoryViewMode = () => {
+const useInventoryViewMode = () => {
   const [viewMode, setViewMode] = useState<InventoryViewMode>(() => {
     return (localStorage.getItem(STORAGE_KEY) as InventoryViewMode) || 'default';
   });
@@ -19,3 +19,5 @@ export const useInventoryViewMode = () => {
 
   return viewMode;
 };
+
+export { useInventoryViewMode };

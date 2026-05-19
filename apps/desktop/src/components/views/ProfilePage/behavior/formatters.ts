@@ -1,4 +1,4 @@
-export const formatDate = (ts: number): string => {
+const formatDate = (ts: number): string => {
   if (!ts) return 'Never';
   return new Date(ts).toLocaleDateString(undefined, {
     month: 'long', day: 'numeric', year: 'numeric',
@@ -6,6 +6,8 @@ export const formatDate = (ts: number): string => {
   });
 };
 
-export const formatRomName = (romFile: string): string => {
+const formatRomName = (romFile: string): string => {
   return romFile.replace(/\.(sfc|smc)$/i, '');
 };
+
+export { formatDate, formatRomName };

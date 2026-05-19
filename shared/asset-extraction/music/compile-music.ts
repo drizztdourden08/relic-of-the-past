@@ -414,7 +414,7 @@ function processSfxList(caption: string, lines: string[], registry: NameRegistry
 
 // ─── Public API ───
 
-export interface MusicCompileInput {
+interface MusicCompileInput {
   /** Contents of sound_intro.txt, sound_indoor.txt, sound_ending.txt */
   songTexts: Record<string, string>;
   /** Contents of sfx.txt */
@@ -425,7 +425,7 @@ export interface MusicCompileInput {
   musicInfoYaml: string;
 }
 
-export interface CompiledSoundBank {
+interface CompiledSoundBank {
   /** Full 64KB memory (nulls → 0) */
   data: Buffer;
   /** Raw serializer memory with nulls preserved (needed for produceLoadableSeq) */
@@ -436,7 +436,7 @@ export interface CompiledSoundBank {
  * Compile a sound bank from extracted text files.
  * Returns the loadable data sequence matching what the SNES SPC700 expects.
  */
-export function compileSoundBank(songName: string, input: MusicCompileInput): CompiledSoundBank {
+function compileSoundBank(songName: string, input: MusicCompileInput): CompiledSoundBank {
   const registry = new NameRegistry();
   const serializer = new MusicSerializer();
 
@@ -540,7 +540,7 @@ export function compileSoundBank(songName: string, input: MusicCompileInput): Co
  * Produce a loadable sequence (the format used in zelda3_assets.dat).
  * Groups consecutive non-null bytes into chunks with (length, target) headers.
  */
-export function produceLoadableSeq(serializer_memory: (number | null)[]): Buffer {
+function produceLoadableSeq(serializer_memory: (number | null)[]): Buffer {
   const chunks: Buffer[] = [];
   let start = 0;
 
@@ -574,3 +574,6 @@ export function produceLoadableSeq(serializer_memory: (number | null)[]): Buffer
 
   return Buffer.concat(chunks);
 }
+
+export { compileSoundBank, produceLoadableSeq };
+export type { CompiledSoundBank, MusicCompileInput };

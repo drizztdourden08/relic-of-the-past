@@ -2,61 +2,61 @@ import type { Requirement } from '../types';
 
 // ─── Sword Checks ───
 
-export const hasSword: Requirement = {
+const hasSword: Requirement = {
   or: ['Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword'],
 };
 
-export const hasBeamSword: Requirement = {
+const hasBeamSword: Requirement = {
   or: ['Master Sword', 'Tempered Sword', 'Golden Sword'],
 };
 
 // ─── Melee ───
 
-export const hasMeleeWeapon: Requirement = {
+const hasMeleeWeapon: Requirement = {
   or: [hasSword, 'Hammer'],
 };
 
 // ─── Gloves ───
 
-export const canLiftRocks: Requirement = {
+const canLiftRocks: Requirement = {
   or: ['Power Glove', 'Titans Mitts'],
 };
 
-export const canLiftHeavyRocks: Requirement = 'Titans Mitts';
+const canLiftHeavyRocks: Requirement = 'Titans Mitts';
 
 // ─── Ranged ───
 
-export const canShootArrows: Requirement = {
+const canShootArrows: Requirement = {
   or: ['Bow', 'Silver Bow'],
 };
 
 // ─── Bombs (always available in vanilla open mode) ───
 
-export const canUseBombs: Requirement = 'Bombs';
+const canUseBombs: Requirement = 'Bombs';
 
-export const canBombOrBonk: Requirement = {
+const canBombOrBonk: Requirement = {
   or: ['Pegasus Boots', canUseBombs],
 };
 
 // ─── Fire / Ice ───
 
-export const hasFireSource: Requirement = {
+const hasFireSource: Requirement = {
   or: ['Fire Rod', 'Lamp'],
 };
 
-export const canMeltThings: Requirement = {
+const canMeltThings: Requirement = {
   or: ['Fire Rod', { and: ['Bombos', hasSword] }],
 };
 
 // ─── Tablets ───
 
-export const canRetrieveTablet: Requirement = {
+const canRetrieveTablet: Requirement = {
   and: ['Book of Mudora', hasBeamSword],
 };
 
 // ─── Crystal Switch ───
 
-export const canActivateCrystalSwitch: Requirement = {
+const canActivateCrystalSwitch: Requirement = {
   or: [
     hasSword,
     'Hammer',
@@ -74,7 +74,7 @@ export const canActivateCrystalSwitch: Requirement = {
 
 // ─── Kill Most Things (non-enemizer) ───
 
-export const canKillMostThings: Requirement = {
+const canKillMostThings: Requirement = {
   or: [
     hasMeleeWeapon,
     'Cane of Somaria',
@@ -89,11 +89,30 @@ export const canKillMostThings: Requirement = {
 // In vanilla, Misery Mire requires Ether and Turtle Rock requires Quake.
 // These are the fixed vanilla medallion requirements.
 
-export const hasMiseryMireMedallion: Requirement = 'Ether';
-export const hasTurtleRockMedallion: Requirement = 'Quake';
+const hasMiseryMireMedallion: Requirement = 'Ether';
+const hasTurtleRockMedallion: Requirement = 'Quake';
 
 // ─── Crystal Count ───
 
-export const hasCrystals = (n: number): Requirement => ({
+const hasCrystals = (n: number): Requirement => ({
   count: ['Crystals', n],
 });
+
+export {
+  canActivateCrystalSwitch,
+  canBombOrBonk,
+  canKillMostThings,
+  canLiftHeavyRocks,
+  canLiftRocks,
+  canMeltThings,
+  canRetrieveTablet,
+  canShootArrows,
+  canUseBombs,
+  hasBeamSword,
+  hasCrystals,
+  hasFireSource,
+  hasMeleeWeapon,
+  hasMiseryMireMedallion,
+  hasSword,
+  hasTurtleRockMedallion
+};

@@ -21,7 +21,7 @@ function getSDL2Audio(): { audioContext: AudioContext; scriptProcessorNode: Audi
  * Hook into the SDL2 audio pipeline to insert a master gain node.
  * Must be called after the WASM module is running and audio is initialized.
  */
-export function initMasterVolume(volume: number): void {
+function initMasterVolume(volume: number): void {
   const sdl2 = getSDL2Audio();
   if (!sdl2) {
     pendingVolume = volume;
@@ -47,7 +47,7 @@ export function initMasterVolume(volume: number): void {
 /**
  * Set the master volume (0–100). Works whether or not audio is initialized.
  */
-export function setMasterVolume(volume: number): void {
+function setMasterVolume(volume: number): void {
   if (gainNode) {
     gainNode.gain.value = volume / 100;
   } else {
@@ -58,14 +58,14 @@ export function setMasterVolume(volume: number): void {
 /**
  * Get pending volume if audio wasn't ready when first set.
  */
-export function getPendingVolume(): number | null {
+function getPendingVolume(): number | null {
   return pendingVolume;
 }
 
 /**
  * Reset state when game stops.
  */
-export function resetMasterVolume(): void {
+function resetMasterVolume(): void {
   gainNode = null;
   pendingVolume = null;
 }
@@ -74,7 +74,7 @@ export function resetMasterVolume(): void {
  * Suspend audio output (mute by suspending AudioContext).
  * Used when game is paused to silence music.
  */
-export function suspendAudio(): void {
+function suspendAudio(): void {
   const sdl2 = getSDL2Audio();
   if (sdl2?.audioContext.state === 'running') {
     sdl2.audioContext.suspend();
@@ -84,9 +84,18 @@ export function suspendAudio(): void {
 /**
  * Resume audio output after pause.
  */
-export function resumeAudio(): void {
+function resumeAudio(): void {
   const sdl2 = getSDL2Audio();
   if (sdl2?.audioContext.state === 'suspended') {
     sdl2.audioContext.resume();
   }
 }
+
+export {
+  getPendingVolume,
+  initMasterVolume,
+  resetMasterVolume,
+  resumeAudio,
+  setMasterVolume,
+  suspendAudio
+};

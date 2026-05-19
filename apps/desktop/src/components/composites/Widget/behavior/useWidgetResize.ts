@@ -15,7 +15,7 @@ type Edge = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
 const MIN_WIDTH = 200;
 const MIN_HEIGHT = 120;
 
-export const useWidgetResize = (
+const useWidgetResize = (
   size: Size,
   pos: { x: number; y: number },
   onResize: (width: number, height: number, x: number, y: number) => void,
@@ -77,7 +77,7 @@ export const useWidgetResize = (
  * left-docked → east edge, right-docked → west edge,
  * top-docked → south edge, bottom-docked → north edge.
  */
-export const getDockedResizeEdge = (side: SnapSide): Edge => {
+const getDockedResizeEdge = (side: SnapSide): Edge => {
   switch (side) {
     case 'left': return 'e';
     case 'right': return 'w';
@@ -85,3 +85,5 @@ export const getDockedResizeEdge = (side: SnapSide): Edge => {
     case 'bottom': return 'n';
   }
 }
+
+export { getDockedResizeEdge, useWidgetResize };

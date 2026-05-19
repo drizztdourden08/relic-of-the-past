@@ -1,6 +1,6 @@
 import type { InventoryCategory } from './inventory-types';
 
-export const INVENTORY_LAYOUT: InventoryCategory[] = [
+const INVENTORY_LAYOUT: InventoryCategory[] = [
   {
     label: 'Weapons',
     items: [
@@ -64,3 +64,5 @@ export const INVENTORY_LAYOUT: InventoryCategory[] = [
     ],
   },
 ];
+
+export { INVENTORY_LAYOUT };

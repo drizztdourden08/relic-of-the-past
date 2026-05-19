@@ -1,6 +1,6 @@
 import type { LogicConfig } from '../../types';
 
-export const VANILLA_CONFIG: LogicConfig = {
+const VANILLA_CONFIG: LogicConfig = {
   mode: 'vanilla',
   startingRegion: 'menu',
   startingItems: [],
@@ -17,3 +17,5 @@ export const VANILLA_CONFIG: LogicConfig = {
   keysanity: false,
   bigKeyShuffle: false,
 };
+
+export { VANILLA_CONFIG };

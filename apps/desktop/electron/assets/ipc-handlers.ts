@@ -6,7 +6,7 @@ import { getMainWindow } from '../window';
 import { loadRom } from '../../../../shared/asset-extraction/rom/rom-loader';
 import { compileResources } from '../../../../shared/asset-extraction/compile-resources';
 
-export const registerAssetHandlers = () => {
+const registerAssetHandlers = () => {
   ipcMain.handle('assets:check', async (_event, romFile: string) => {
     return hasAssetForRom(romFile);
   });
@@ -52,3 +52,5 @@ export const registerAssetHandlers = () => {
     }
   });
 };
+
+export { registerAssetHandlers };

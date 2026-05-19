@@ -22,7 +22,7 @@ import { ImageBuffer } from '../graphics/png-writer';
  * Load HUD palettes from ROM.
  * Returns a Map keyed by (palIdx, colorIdx) → RGBA.
  */
-export function loadHudPalette(rom: RomData): Map<number, RGBA> {
+function loadHudPalette(rom: RomData): Map<number, RGBA> {
   const words = rom.getWords(ADDR_HUD_PALETTE, 64);
   const palette = new Map<number, RGBA>();
   for (let p = 0; p < 16; p++) {
@@ -39,7 +39,7 @@ export function loadHudPalette(rom: RomData): Map<number, RGBA> {
  * Load raw HUD tile sheets from ROM (decompressed).
  * Returns 3 sheets in order: [sheet106, sheet107, sheet105]
  */
-export function loadHudSheets(rom: RomData): Buffer[] {
+function loadHudSheets(rom: RomData): Buffer[] {
   const sheetIds = [106, 107, 105];
   return sheetIds.map(id =>
     decompress(kCompSpritePtrs[id], (addr) => rom.getByte(addr), false)
@@ -49,7 +49,7 @@ export function loadHudSheets(rom: RomData): Buffer[] {
 /**
  * Decode a single 8×8 HUD tile from its tile ID.
  */
-export function decodeHudTile(
+function decodeHudTile(
   tileId: number,
   sheets: Buffer[],
   palette: Map<number, RGBA>,
@@ -86,7 +86,7 @@ export function decodeHudTile(
 /**
  * Extract a standard 16×16 HUD sprite from 4 tile IDs (TL, TR, BL, BR).
  */
-export function extractHudStandard(
+function extractHudStandard(
   tileIds: number[],
   sheets: Buffer[],
   palette: Map<number, RGBA>,
@@ -103,7 +103,7 @@ export function extractHudStandard(
 /**
  * Extract a special HUD sprite with custom layout.
  */
-export function extractHudSpecial(
+function extractHudSpecial(
   tileIds: number[],
   layout: string,
   sheets: Buffer[],
@@ -119,3 +119,11 @@ export function extractHudSpecial(
   }
   throw new Error(`Unknown HUD special layout: ${layout}`);
 }
+
+export {
+  decodeHudTile,
+  extractHudSpecial,
+  extractHudStandard,
+  loadHudPalette,
+  loadHudSheets
+};

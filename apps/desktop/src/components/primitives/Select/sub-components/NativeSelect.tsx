@@ -1,6 +1,6 @@
 import type { NativeSelectProps } from '../types';
 
-export const NativeSelect = (props: NativeSelectProps) => {
+const NativeSelect = (props: NativeSelectProps) => {
   const { className = '', children, ...rest } = props;
 
   return (
@@ -9,3 +9,5 @@ export const NativeSelect = (props: NativeSelectProps) => {
     </select>
   );
 };
+
+export { NativeSelect };

@@ -4,7 +4,7 @@ import { SelectItem } from './sub-components/SelectItem';
 import type { SelectProps, SelectOption } from './types';
 import './Select.css';
 
-export const Select = (props: SelectProps) => {
+const Select = (props: SelectProps) => {
   const {
     value,
     onChange,
@@ -131,3 +131,5 @@ export const Select = (props: SelectProps) => {
     </>
   );
 };
+
+export { Select };

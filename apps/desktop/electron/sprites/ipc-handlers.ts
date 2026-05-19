@@ -11,7 +11,7 @@ function spriteDir(romFile: string): string {
   return getUserDataPath('sprites', stem);
 }
 
-export function registerSpriteHandlers(): void {
+function registerSpriteHandlers(): void {
   ipcMain.handle('sprites:extract', async (_event, romFile: string) => {
     const localRomPath = getUserDataPath('roms', romFile);
     const outDir = spriteDir(romFile);
@@ -96,3 +96,5 @@ export function registerSpriteHandlers(): void {
     await writeFile(getUserDataPath('sprite-review.json'), JSON.stringify(data, null, 2), 'utf-8');
   });
 }
+
+export { registerSpriteHandlers };

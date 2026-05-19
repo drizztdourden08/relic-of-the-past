@@ -1,7 +1,7 @@
 import type { WidgetDefinition, WidgetState, WidgetLayout } from '../types';
 import { WIDGET_DEFINITIONS } from '../constants';
 
-export const createDefaultWidgetState = (def: WidgetDefinition, order = 0): WidgetState => {
+const createDefaultWidgetState = (def: WidgetDefinition, order = 0): WidgetState => {
   return {
     id: def.id,
     mode: 'docked',
@@ -18,12 +18,14 @@ export const createDefaultWidgetState = (def: WidgetDefinition, order = 0): Widg
   };
 };
 
-export const getWidgetDefinition = (id: string): WidgetDefinition | undefined => {
+const getWidgetDefinition = (id: string): WidgetDefinition | undefined => {
   return WIDGET_DEFINITIONS.find((d) => d.id === id);
 };
 
-export const createDefaultLayout = (): WidgetLayout => {
+const createDefaultLayout = (): WidgetLayout => {
   return {
     widgets: WIDGET_DEFINITIONS.map((def, i) => createDefaultWidgetState(def, i)),
   };
 };
+
+export { createDefaultLayout, createDefaultWidgetState, getWidgetDefinition };

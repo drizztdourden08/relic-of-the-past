@@ -1,7 +1,7 @@
 import { ipcMain, dialog } from 'electron';
 import { getMainWindow } from '../window';
 
-export const registerDialogHandlers = () => {
+const registerDialogHandlers = () => {
   ipcMain.handle('dialog:openRom', async () => {
     const mainWindow = getMainWindow();
     if (!mainWindow) return null;
@@ -17,3 +17,5 @@ export const registerDialogHandlers = () => {
     return result.filePaths[0];
   });
 };
+
+export { registerDialogHandlers };

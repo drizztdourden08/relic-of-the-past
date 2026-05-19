@@ -7,7 +7,7 @@ async function exists(p: string): Promise<boolean> {
   try { await access(p); return true; } catch { return false; }
 }
 
-export async function migrateDataFolder(): Promise<void> {
+async function migrateDataFolder(): Promise<void> {
   const dataDir = getUserDataPath();
   const migrationDirs = ['roms', 'profiles', 'assets', 'config'];
 
@@ -97,3 +97,5 @@ async function migrateMsuPacks(): Promise<void> {
     await rm(profileMsuDir, { recursive: true, force: true });
   }
 }
+
+export { migrateDataFolder };

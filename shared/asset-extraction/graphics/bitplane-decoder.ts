@@ -17,7 +17,7 @@
  * @param offset - Byte offset to start of this tile
  * @returns 64-element array of 2-bit palette indices (row-major, left-to-right)
  */
-export function decode2bppTile(data: Buffer | Uint8Array, offset: number): Uint8Array {
+function decode2bppTile(data: Buffer | Uint8Array, offset: number): Uint8Array {
   const pixels = new Uint8Array(64);
   for (let y = 0; y < 8; y++) {
     const d0 = data[offset + y * 2];
@@ -40,7 +40,7 @@ export function decode2bppTile(data: Buffer | Uint8Array, offset: number): Uint8
  * @param offset - Byte offset to start of this tile
  * @returns 64-element array of 3-bit palette indices
  */
-export function decode3bppTile(data: Buffer | Uint8Array, offset: number): Uint8Array {
+function decode3bppTile(data: Buffer | Uint8Array, offset: number): Uint8Array {
   const pixels = new Uint8Array(64);
   for (let y = 0; y < 8; y++) {
     const d0 = data[offset + y * 2];
@@ -67,7 +67,7 @@ export function decode3bppTile(data: Buffer | Uint8Array, offset: number): Uint8
  * @param offset - Byte offset to start of this tile
  * @returns 64-element array of 4-bit palette indices
  */
-export function decode4bppTile(data: Buffer | Uint8Array, offset: number): Uint8Array {
+function decode4bppTile(data: Buffer | Uint8Array, offset: number): Uint8Array {
   const pixels = new Uint8Array(64);
   for (let y = 0; y < 8; y++) {
     const d0 = data[offset + y * 2];
@@ -94,7 +94,7 @@ export function decode4bppTile(data: Buffer | Uint8Array, offset: number): Uint8
  * @param startOffset - Byte offset into data to begin decoding
  * @returns Array of decoded tiles (each tile is 64-element Uint8Array)
  */
-export function decode2bppTileset(
+function decode2bppTileset(
   data: Buffer | Uint8Array,
   tileCount: number,
   startOffset = 0,
@@ -114,7 +114,7 @@ export function decode2bppTileset(
  * @param startOffset - Byte offset into data
  * @returns Array of decoded tiles
  */
-export function decode3bppTileset(
+function decode3bppTileset(
   data: Buffer | Uint8Array,
   tileCount: number,
   startOffset = 0,
@@ -134,7 +134,7 @@ export function decode3bppTileset(
  * @param startOffset - Byte offset into data
  * @returns Array of decoded tiles
  */
-export function decode4bppTileset(
+function decode4bppTileset(
   data: Buffer | Uint8Array,
   tileCount: number,
   startOffset = 0,
@@ -149,7 +149,7 @@ export function decode4bppTileset(
 /**
  * Apply horizontal flip to an 8×8 tile pixel array.
  */
-export function flipTileX(pixels: Uint8Array): Uint8Array {
+function flipTileX(pixels: Uint8Array): Uint8Array {
   const flipped = new Uint8Array(64);
   for (let y = 0; y < 8; y++) {
     for (let x = 0; x < 8; x++) {
@@ -162,7 +162,7 @@ export function flipTileX(pixels: Uint8Array): Uint8Array {
 /**
  * Apply vertical flip to an 8×8 tile pixel array.
  */
-export function flipTileY(pixels: Uint8Array): Uint8Array {
+function flipTileY(pixels: Uint8Array): Uint8Array {
   const flipped = new Uint8Array(64);
   for (let y = 0; y < 8; y++) {
     for (let x = 0; x < 8; x++) {
@@ -171,3 +171,14 @@ export function flipTileY(pixels: Uint8Array): Uint8Array {
   }
   return flipped;
 }
+
+export {
+  decode2bppTile,
+  decode2bppTileset,
+  decode3bppTile,
+  decode3bppTileset,
+  decode4bppTile,
+  decode4bppTileset,
+  flipTileX,
+  flipTileY
+};

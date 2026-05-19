@@ -109,7 +109,7 @@ function extractOne(def: SpriteExtractDef, ctx: ExtractionContext): ImageBuffer 
   }
 }
 
-export interface ExtractionResult {
+interface ExtractionResult {
   total: number;
   counts: { hud: number; receipt: number; drop: number };
   errors: string[];
@@ -124,7 +124,7 @@ export interface ExtractionResult {
  * @param defsOrPath - Sprites array, path to sprite-definitions.json, or omit for auto-detect
  * @returns Extraction result summary
  */
-export function extractAllItemSprites(
+function extractAllItemSprites(
   romPath: string,
   outputDir: string,
   defsOrPath?: string | SpriteDef[],
@@ -201,7 +201,7 @@ export function extractAllItemSprites(
  * @param outputDir - Directory for output PNGs
  * @param defsOrPath - Either a path to sprite-definitions.json, or the sprites array directly
  */
-export function extractAllItemSpritesFromRom(
+function extractAllItemSpritesFromRom(
   rom: RomData,
   outputDir: string,
   defsOrPath: string | SpriteDef[],
@@ -256,3 +256,6 @@ export function extractAllItemSpritesFromRom(
     removedStale,
   };
 }
+
+export { extractAllItemSprites, extractAllItemSpritesFromRom };
+export type { ExtractionResult };

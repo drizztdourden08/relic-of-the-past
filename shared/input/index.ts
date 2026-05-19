@@ -23,23 +23,23 @@ function toPreset(ctrl: BaseController): DevicePreset {
 }
 
 /** All registered presets (order = registry order) */
-export const ALL_PRESETS: DevicePreset[] = getAllControllers().map(toPreset);
+const ALL_PRESETS: DevicePreset[] = getAllControllers().map(toPreset);
 
 /** Find a preset by VID:PID pair (lowercase hex, auto-pads to 4 chars) */
-export function findPresetByVidPid(vid: string, pid: string): DevicePreset | null {
+function findPresetByVidPid(vid: string, pid: string): DevicePreset | null {
   const ctrl = findController(vid, pid);
   return ctrl ? toPreset(ctrl) : null;
 }
 
 /** Find a preset by its unique ID */
-export function findPresetById(id: string): DevicePreset | null {
+function findPresetById(id: string): DevicePreset | null {
   if (id === 'keyboard-default') return KEYBOARD_DEFAULT;
   const ctrl = findControllerById(id);
   return ctrl ? toPreset(ctrl) : null;
 }
 
 /** Get the best-matching preset for a Gamepad.id string + mapping field */
-export function resolvePreset(gamepadId: string, mapping: string): DevicePreset {
+function resolvePreset(gamepadId: string, mapping: string): DevicePreset {
   const parsed = parseGamepadId(gamepadId);
   if (parsed) {
     const match = findPresetByVidPid(parsed.vid, parsed.pid);
@@ -71,7 +71,7 @@ export function resolvePreset(gamepadId: string, mapping: string): DevicePreset 
  *    Chrome:  "Xbox Wireless Controller (STANDARD GAMEPAD Vendor: 045e Product: 02fd)"
  *    Firefox: "045e-02fd-Xbox Wireless Controller"
  */
-export function parseGamepadId(id: string): { vid: string; pid: string } | null {
+function parseGamepadId(id: string): { vid: string; pid: string } | null {
   // Chrome format: "Vendor: XXXX Product: XXXX"
   const chromeMatch = id.match(/Vendor:\s*([0-9a-fA-F]{4})\s+Product:\s*([0-9a-fA-F]{4})/);
   if (chromeMatch) {
@@ -92,20 +92,20 @@ export { KEYBOARD_DEFAULT } from './presets/keyboard';
 
 // ── Device Profile (replaces legacy profiles/ adapter) ──
 
-export interface DeviceProfileButton {
+interface DeviceProfileButton {
   id: string;
   label: string;
   icon: string;
   category: 'face' | 'shoulder' | 'trigger' | 'dpad' | 'stick' | 'system';
 }
 
-export interface DeviceProfileAxis {
+interface DeviceProfileAxis {
   id: string;
   label: string;
   category: 'stick' | 'trigger';
 }
 
-export interface DeviceProfile {
+interface DeviceProfile {
   id: string;
   name: string;
   vendorId: string | null;
@@ -141,16 +141,28 @@ function toDeviceProfile(ctrl: BaseController): DeviceProfile {
 }
 
 /** All registered device profiles */
-export const DEVICE_PROFILES: DeviceProfile[] = getAllControllers().map(toDeviceProfile);
+const DEVICE_PROFILES: DeviceProfile[] = getAllControllers().map(toDeviceProfile);
 
 /** Find device profile by VID/PID (hex strings) */
-export function findDeviceProfileByVidPid(vid: string, pid: string): DeviceProfile | null {
+function findDeviceProfileByVidPid(vid: string, pid: string): DeviceProfile | null {
   const ctrl = findController(vid, pid);
   return ctrl ? toDeviceProfile(ctrl) : null;
 }
 
 /** Find device profile by id */
-export function findDeviceProfileById(id: string): DeviceProfile | null {
+function findDeviceProfileById(id: string): DeviceProfile | null {
   const ctrl = getAllControllers().find(c => c.id === id);
   return ctrl ? toDeviceProfile(ctrl) : null;
 }
+
+export {
+  ALL_PRESETS,
+  DEVICE_PROFILES,
+  findDeviceProfileById,
+  findDeviceProfileByVidPid,
+  findPresetById,
+  findPresetByVidPid,
+  parseGamepadId,
+  resolvePreset
+};
+export type { DeviceProfile, DeviceProfileAxis, DeviceProfileButton };

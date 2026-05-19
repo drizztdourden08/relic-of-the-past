@@ -20,7 +20,7 @@ interface BindingListenerProps {
   onCancel: () => void;
 }
 
-export const BindingListener = (props: BindingListenerProps) => {
+const BindingListener = (props: BindingListenerProps) => {
   const { actionLabel, onCapture, onCancel } = props;
   const [canCancel, setCanCancel] = useState(false);
 
@@ -97,3 +97,5 @@ export const BindingListener = (props: BindingListenerProps) => {
     </div>
   );
 }
+
+export { BindingListener };

@@ -1,7 +1,7 @@
 import { CREDITS, getUsageLabel } from '@shared/credits';
 import './CreditsTab.css';
 
-export const CreditsPage = () => {
+const CreditsPage = () => {
   return (
     <div className="credits-tab">
       <div className="credits-tab__header">
@@ -51,3 +51,5 @@ export const CreditsPage = () => {
     </div>
   );
 }
+
+export { CreditsPage };

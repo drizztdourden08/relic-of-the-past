@@ -3,7 +3,7 @@ import { ImportForm } from './ImportForm';
 import { IconButton } from '../../../primitives/IconButton';
 import { formatBytes } from '../../../../utils/formatBytes';
 
-export interface RomManagerProps {
+interface RomManagerProps {
   romStatuses: RomDisplayInfo[];
   onImportRom: () => void;
   onExtractAssets: (romFile: string) => void;
@@ -19,7 +19,7 @@ interface RomDetail {
   modified: string;
 }
 
-export const RomManager = (props: RomManagerProps) => {
+const RomManager = (props: RomManagerProps) => {
   const { romStatuses, onImportRom, onExtractAssets, onDeleteRom, onRefresh } = props;
   const [selected, setSelected] = useState<string | null>(null);
   const [detail, setDetail] = useState<RomDetail | null>(null);
@@ -154,3 +154,6 @@ export const RomManager = (props: RomManagerProps) => {
     </div>
   );
 };
+
+export { RomManager };
+export type { RomManagerProps };

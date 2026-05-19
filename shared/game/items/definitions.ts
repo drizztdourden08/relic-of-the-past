@@ -1,10 +1,10 @@
-export interface ItemDefinition {
+interface ItemDefinition {
   id: number;
   name: string;
   category: string;
 }
 
-export const ITEMS: ItemDefinition[] = [
+const ITEMS: ItemDefinition[] = [
   // Weapons
   { id: 0x0b, name: 'Bow', category: 'weapon' },
   { id: 0x3b, name: 'Silver Bow', category: 'weapon' },
@@ -119,3 +119,6 @@ export const ITEMS: ItemDefinition[] = [
   { id: 0x93, name: 'Big Key (Turtle Rock)', category: 'key' },
   { id: 0x92, name: 'Big Key (Ganons Tower)', category: 'key' },
 ];
+
+export { ITEMS };
+export type { ItemDefinition };

@@ -1,6 +1,6 @@
 import type { SelectItemProps } from '../types';
 
-export const SelectItem = (props: SelectItemProps) => {
+const SelectItem = (props: SelectItemProps) => {
   const { option, selected, highlighted, idx, onSelect, renderOption } = props;
 
   const cls = [
@@ -29,3 +29,5 @@ export const SelectItem = (props: SelectItemProps) => {
     </div>
   );
 };
+
+export { SelectItem };

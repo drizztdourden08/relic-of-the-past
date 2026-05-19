@@ -127,7 +127,7 @@ function encodeGreedyFromDict(
  * @param lang - Language code
  * @returns Array of compressed byte arrays (one per string)
  */
-export function compressStrings(strings: string[], lang = 'us'): Uint8Array[] {
+function compressStrings(strings: string[], lang = 'us'): Uint8Array[] {
   const info = kLanguages[lang];
   if (!info) throw new Error(`Unknown language: ${lang}`);
 
@@ -161,7 +161,7 @@ export function compressStrings(strings: string[], lang = 'us'): Uint8Array[] {
  * Encode a language's dictionary as byte arrays (one per entry).
  * Each dictionary entry becomes an array of alphabet indices.
  */
-export function encodeDictionary(lang = 'us'): Uint8Array[] {
+function encodeDictionary(lang = 'us'): Uint8Array[] {
   const info = kLanguages[lang];
   if (!info) throw new Error(`Unknown language: ${lang}`);
 
@@ -180,3 +180,5 @@ export function encodeDictionary(lang = 'us'): Uint8Array[] {
     return new Uint8Array(bytes);
   });
 }
+
+export { compressStrings, encodeDictionary };

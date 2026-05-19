@@ -7,7 +7,7 @@ import { readFile, writeFile } from 'fs/promises';
 
 let userDataPath = '';
 
-export function initCalibrationStore(dataPath: string): void {
+function initCalibrationStore(dataPath: string): void {
   userDataPath = dataPath;
 }
 
@@ -17,7 +17,7 @@ function path(...segments: string[]): string {
 
 // ── Stick calibration ──
 
-export interface StickCalibrationData {
+interface StickCalibrationData {
   centerX: number;
   centerY: number;
   minX: number;
@@ -28,18 +28,18 @@ export interface StickCalibrationData {
   outerDeadzone: number;
 }
 
-export interface DeviceStickCalibration {
+interface DeviceStickCalibration {
   left: StickCalibrationData;
   right: StickCalibrationData;
   updatedAt: string;
 }
 
 /** All stick calibrations keyed by "vid:pid" */
-export type StickCalibrationStore = Record<string, DeviceStickCalibration>;
+type StickCalibrationStore = Record<string, DeviceStickCalibration>;
 
 const STICK_CAL_FILE = 'stick-calibration.json';
 
-export async function readStickCalibration(): Promise<StickCalibrationStore> {
+async function readStickCalibration(): Promise<StickCalibrationStore> {
   try {
     const data = await readFile(path(STICK_CAL_FILE), 'utf-8');
     return JSON.parse(data);
@@ -48,7 +48,7 @@ export async function readStickCalibration(): Promise<StickCalibrationStore> {
   }
 }
 
-export async function writeStickCalibration(store: StickCalibrationStore): Promise<void> {
+async function writeStickCalibration(store: StickCalibrationStore): Promise<void> {
   await writeFile(path(STICK_CAL_FILE), JSON.stringify(store, null, 2), 'utf-8');
 }
 
@@ -56,7 +56,7 @@ export async function writeStickCalibration(store: StickCalibrationStore): Promi
 
 const TRIGGER_CAL_FILE = 'trigger-calibration.json';
 
-export async function readTriggerCalibration(): Promise<Record<string, { base: number; max: number; deadzone: number }>> {
+async function readTriggerCalibration(): Promise<Record<string, { base: number; max: number; deadzone: number }>> {
   try {
     const data = await readFile(path(TRIGGER_CAL_FILE), 'utf-8');
     return JSON.parse(data);
@@ -65,7 +65,7 @@ export async function readTriggerCalibration(): Promise<Record<string, { base: n
   }
 }
 
-export async function writeTriggerCalibration(
+async function writeTriggerCalibration(
   deviceKey: string, axisIndex: number,
   cal: { base: number; max: number; deadzone: number },
 ): Promise<void> {
@@ -73,3 +73,12 @@ export async function writeTriggerCalibration(
   store[`${deviceKey}:${axisIndex}`] = cal;
   await writeFile(path(TRIGGER_CAL_FILE), JSON.stringify(store, null, 2), 'utf-8');
 }
+
+export {
+  initCalibrationStore,
+  readStickCalibration,
+  readTriggerCalibration,
+  writeStickCalibration,
+  writeTriggerCalibration
+};
+export type { DeviceStickCalibration, StickCalibrationData, StickCalibrationStore };

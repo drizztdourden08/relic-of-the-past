@@ -8,7 +8,7 @@ import type { ButtonMapping, ButtonIcon, DeviceFamily, InputApi, SnesButton } fr
 
 // ── Parsed input state from a HID report ──
 
-export interface ParsedInput {
+interface ParsedInput {
   buttons: boolean[];
   axes: number[];
   /** Raw stick values before calibration (for calibration UI) */
@@ -17,7 +17,7 @@ export interface ParsedInput {
 
 // ── Controller context (provided by the runtime environment) ──
 
-export interface ControllerContext {
+interface ControllerContext {
   deviceKey: string;
   /** Write raw bytes to the HID device via node-hid in main process */
   hidWrite(data: number[]): Promise<boolean>;
@@ -33,14 +33,14 @@ export interface ControllerContext {
 
 // ── Vibration pattern segment ──
 
-export interface VibrationSegment {
+interface VibrationSegment {
   durationMs: number;
   intensity: number; // 0.0 - 1.0
 }
 
 // ── Stick calibration defaults (built into controller, before user calibration) ──
 
-export interface StickDefaults {
+interface StickDefaults {
   encoding: '12bit-packed' | '8bit-centered';
   center: number;
   range: number;
@@ -50,16 +50,16 @@ export interface StickDefaults {
 
 // ── Button/axis metadata ──
 
-export type ButtonCategory = 'face' | 'shoulder' | 'trigger' | 'dpad' | 'stick' | 'system';
+type ButtonCategory = 'face' | 'shoulder' | 'trigger' | 'dpad' | 'stick' | 'system';
 
-export interface ControllerButton {
+interface ControllerButton {
   id: string;
   label: string;
   icon: string;
   category: ButtonCategory;
 }
 
-export interface ControllerAxis {
+interface ControllerAxis {
   id: string;
   label: string;
   category: 'stick' | 'trigger';
@@ -131,3 +131,13 @@ export abstract class BaseController {
     return this.vendorIds.some(x => x === v) && this.productIds.some(x => x === p);
   }
 }
+
+export type {
+  ButtonCategory,
+  ControllerAxis,
+  ControllerButton,
+  ControllerContext,
+  ParsedInput,
+  StickDefaults,
+  VibrationSegment
+};

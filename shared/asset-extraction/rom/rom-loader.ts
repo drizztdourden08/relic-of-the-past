@@ -8,9 +8,9 @@ import type { RomData, RomLanguage, RomHashTable } from './rom-types';
 import { snesToLinear } from './snes-address';
 
 /** Known ROM SHA1 hashes */
-export const ZELDA3_SHA1_US = '6D4F10A8B10E10DBE624CB23CF03B88BB8252973';
+const ZELDA3_SHA1_US = '6D4F10A8B10E10DBE624CB23CF03B88BB8252973';
 
-export const ZELDA3_SHA1: RomHashTable = {
+const ZELDA3_SHA1: RomHashTable = {
   [ZELDA3_SHA1_US]: { language: 'us', description: 'Legend of Zelda, The - A Link to the Past (USA)' },
   '2E62494967FB0AFDF5DA1635607F9641DF7C6559': { language: 'de', description: 'Legend of Zelda, The - A Link to the Past (Germany)' },
   '229364A1B92A05167CD38609B1AA98F7041987CC': { language: 'fr', description: 'Legend of Zelda, The - A Link to the Past (France)' },
@@ -31,7 +31,7 @@ export const ZELDA3_SHA1: RomHashTable = {
  * @param path - Absolute path to the .sfc/.smc ROM file
  * @param supportMultilanguage - If true, accepts any known ROM. If false (default), US-only.
  */
-export function loadRom(path: string, supportMultilanguage = false): RomData {
+function loadRom(path: string, supportMultilanguage = false): RomData {
   let romBytes = Buffer.from(readFileSync(path));
 
   // Strip SMC header (512 bytes) if present
@@ -74,7 +74,7 @@ export function loadRom(path: string, supportMultilanguage = false): RomData {
 /**
  * Load ROM from a Buffer (useful when the file is already in memory, e.g. from Electron IPC).
  */
-export function loadRomFromBuffer(buffer: Buffer, supportMultilanguage = false): RomData {
+function loadRomFromBuffer(buffer: Buffer, supportMultilanguage = false): RomData {
   let romBytes = buffer;
 
   // Strip SMC header if present
@@ -158,3 +158,10 @@ function createRomData(bytes: Buffer, language: RomLanguage, description: string
     },
   };
 }
+
+export {
+  ZELDA3_SHA1,
+  ZELDA3_SHA1_US,
+  loadRom,
+  loadRomFromBuffer
+};

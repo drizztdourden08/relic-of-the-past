@@ -182,7 +182,7 @@ const App = () => {
 
 ## TypeScript
 
-- Prefer `type` over `interface` unless declaration merging is needed.
+- Both `type` and `interface` are valid — use whichever fits. They live together in their own `types.ts` file (one per component/module).
 - Use `import type { ... }` for type-only imports.
 - No `any` unless interfacing with untyped externals (cast with `as any` comment explaining why).
 - Shared types live in `shared/types/` or component-local `types.ts`.

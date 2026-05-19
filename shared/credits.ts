@@ -3,7 +3,7 @@
  * Keep in sync with CREDITS.md in the repository root.
  */
 
-export type UsageLevel =
+type UsageLevel =
   | 'original-work'
   | 'core-dependency'
   | 'data-direct'
@@ -13,7 +13,7 @@ export type UsageLevel =
   | 'reference'
   | 'inspiration';
 
-export interface CreditEntry {
+interface CreditEntry {
   name: string;
   project: string;
   description: string;
@@ -23,7 +23,7 @@ export interface CreditEntry {
   license?: string;
 }
 
-export interface CreditCategory {
+interface CreditCategory {
   id: string;
   title: string;
   entries: CreditEntry[];
@@ -40,11 +40,11 @@ const USAGE_LABELS: Record<UsageLevel, string> = {
   'inspiration': 'Inspiration',
 };
 
-export function getUsageLabel(usage: UsageLevel): string {
+function getUsageLabel(usage: UsageLevel): string {
   return USAGE_LABELS[usage];
 }
 
-export const CREDITS: CreditCategory[] = [
+const CREDITS: CreditCategory[] = [
   {
     id: 'game',
     title: 'Game & Core Engine',
@@ -168,3 +168,6 @@ export const CREDITS: CreditCategory[] = [
     ],
   },
 ];
+
+export { CREDITS, getUsageLabel };
+export type { CreditCategory, CreditEntry, UsageLevel };

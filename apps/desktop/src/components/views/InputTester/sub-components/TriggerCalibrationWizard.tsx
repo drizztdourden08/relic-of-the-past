@@ -13,7 +13,7 @@ import { webHidReader } from '../../../../lib/input/hid-reader';
 
 // ── Types ──
 
-export interface TriggerCalibrationData {
+interface TriggerCalibrationData {
   base: number;
   max: number;
   deadzone: number;
@@ -39,7 +39,7 @@ const DEFAULT_DEADZONE = 0.05;
 
 // ── Component ──
 
-export const TriggerCalibrationWizard = (props: Props) => {
+const TriggerCalibrationWizard = (props: Props) => {
   const { axisIndex, label, onComplete, onCancel, existingCalibration, deviceKey } = props;
   const [step, setStep] = useState<Step>('rest');
 
@@ -341,3 +341,6 @@ export const TriggerCalibrationWizard = (props: Props) => {
     </div>
   );
 }
+
+export { TriggerCalibrationWizard };
+export type { TriggerCalibrationData };

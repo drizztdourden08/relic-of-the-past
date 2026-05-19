@@ -10,7 +10,7 @@
  *   [12] = player_sleep_in_bed_state: 0=asleep, 1=uncle woke Link, 2=Link out of bed
  */
 
-export interface EventFlagEntry {
+interface EventFlagEntry {
   /** Index into the progress buffer */
   bufferIndex: number;
   /** Comparison type */
@@ -19,7 +19,7 @@ export interface EventFlagEntry {
   value: number | number[];
 }
 
-export const CHECK_EVENT_FLAGS: Record<string, EventFlagEntry> = {
+const CHECK_EVENT_FLAGS: Record<string, EventFlagEntry> = {
   // Link wakes up = player_sleep_in_bed_state >= 2 (got out of bed)
   // NOTE: For loaded saves past uncle, progressToEvents also fires 'Link Wakes Up'
   // via sram_progress_indicator >= 1, but for the CHECK completion we use the bed state.
@@ -44,3 +44,6 @@ export const CHECK_EVENT_FLAGS: Record<string, EventFlagEntry> = {
     value: 2,
   },
 };
+
+export { CHECK_EVENT_FLAGS };
+export type { EventFlagEntry };

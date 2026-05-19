@@ -5,7 +5,7 @@
 import { log } from '../log-bus';
 import { getModule } from './wasm-bridge';
 
-export function setItemOverride(roomId: number, originalItem: number, newItem: number): void {
+function setItemOverride(roomId: number, originalItem: number, newItem: number): void {
   const mod = getModule();
   if (!mod) {
     log.error('[Randomizer] setItemOverride called with no active module');
@@ -15,9 +15,11 @@ export function setItemOverride(roomId: number, originalItem: number, newItem: n
   log.app(`[Randomizer] Override set: room ${roomId}, 0x${originalItem.toString(16)} → 0x${newItem.toString(16)}`);
 }
 
-export function clearItemOverrides(): void {
+function clearItemOverrides(): void {
   const mod = getModule();
   if (!mod) return;
   mod.ccall('WasmClearItemOverrides', null, [], []);
   log.app('[Randomizer] All overrides cleared');
 }
+
+export { clearItemOverrides, setItemOverride };

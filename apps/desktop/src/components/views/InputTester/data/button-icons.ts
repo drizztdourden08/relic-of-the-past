@@ -11,7 +11,7 @@ const GENERIC_BASE = '/buttons/generic';
 const GC_BASE = '/buttons/gc';
 
 /** Icon ID → SVG path mapping */
-export const BUTTON_ICON_MAP: Record<string, string> = {
+const BUTTON_ICON_MAP: Record<string, string> = {
   // Switch (Pro Controller 2 / Pro Controller)
   'switch-a':       `${SWITCH_BASE}/switch_button_a.svg`,
   'switch-b':       `${SWITCH_BASE}/switch_button_b.svg`,
@@ -226,12 +226,12 @@ export const BUTTON_ICON_MAP: Record<string, string> = {
 };
 
 /** Get icon URL for a profile button icon ID. Returns null if not mapped. */
-export const getButtonIconUrl = (iconId: string): string | null => {
+const getButtonIconUrl = (iconId: string): string | null => {
   return BUTTON_ICON_MAP[iconId] ?? null;
 }
 
 /** Map KeyboardEvent.code → icon ID (e.g. "KeyZ" → "kb-z", "ArrowUp" → "kb-arrow-up") */
-export const keyCodeToIconId = (code: string): string | null => {
+const keyCodeToIconId = (code: string): string | null => {
   if (code.startsWith('Key')) return `kb-${code.slice(3).toLowerCase()}`;
   if (code.startsWith('Digit')) return `kb-${code.slice(5)}`;
   const map: Record<string, string> = {
@@ -263,7 +263,14 @@ const SNES_ICON_MAP: Record<string, string> = {
   Up: 'snes-dup', Down: 'snes-ddown', Left: 'snes-dleft', Right: 'snes-dright',
 };
 
-export const getSnesIconUrl = (snesButton: string): string | null => {
+const getSnesIconUrl = (snesButton: string): string | null => {
   const iconId = SNES_ICON_MAP[snesButton];
   return iconId ? getButtonIconUrl(iconId) : null;
 }
+
+export {
+  BUTTON_ICON_MAP,
+  getButtonIconUrl,
+  getSnesIconUrl,
+  keyCodeToIconId
+};

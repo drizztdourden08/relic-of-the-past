@@ -16,7 +16,7 @@ const VIEW_OPTIONS: { value: InventoryViewMode; label: string }[] = [
 
 const STORAGE_KEY = 'inventory-view-mode';
 
-export const InventoryWidgetContent = () => {
+const InventoryWidgetContent = () => {
   const [inventory, setInventory] = useState<Set<string>>(() => getCurrentInventory());
   const [viewMode, setViewMode] = useState<InventoryViewMode>(() => {
     return (localStorage.getItem(STORAGE_KEY) as InventoryViewMode) || 'default';
@@ -39,7 +39,7 @@ export const InventoryWidgetContent = () => {
 }
 
 /** Settings content for the inventory widget (rendered inside the dropdown) */
-export const InventoryWidgetSettings = () => {
+const InventoryWidgetSettings = () => {
   const [viewMode, setViewMode] = useState<InventoryViewMode>(() => {
     return (localStorage.getItem(STORAGE_KEY) as InventoryViewMode) || 'default';
   });
@@ -58,3 +58,5 @@ export const InventoryWidgetSettings = () => {
     </div>
   );
 }
+
+export { InventoryWidgetContent, InventoryWidgetSettings };

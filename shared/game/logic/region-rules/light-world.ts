@@ -6,7 +6,7 @@ import {
 } from '../helpers';
 
 /** Region entrance rules for Light World locations. */
-export const LIGHT_WORLD_REGION_RULES: Record<string, Requirement> = {
+const LIGHT_WORLD_REGION_RULES: Record<string, Requirement> = {
   'Light World Bomb Hut': canUseBombs,
   'Kings Grave': 'Pegasus Boots',
   'Kings Grave Outer Rocks': canLiftHeavyRocks,
@@ -51,3 +51,5 @@ export const LIGHT_WORLD_REGION_RULES: Record<string, Requirement> = {
 
   'Paradox Cave Bomb Jump': canUseBombs,
 };
+
+export { LIGHT_WORLD_REGION_RULES };

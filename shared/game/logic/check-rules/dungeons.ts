@@ -7,7 +7,7 @@ import {
 } from '../helpers';
 
 /** Check rules for dungeon-internal locations. */
-export const DUNGEON_CHECK_RULES: Record<string, Requirement> = {
+const DUNGEON_CHECK_RULES: Record<string, Requirement> = {
   // ── Hyrule Castle / Sewers ─────────────────────────────────────────
   'Sewers - Dark Cross': 'Lamp',
   'Sewers - Key Rat Key Drop': 'Lamp',
@@ -95,3 +95,5 @@ export const DUNGEON_CHECK_RULES: Record<string, Requirement> = {
   // ── Ganon (final boss) ─────────────────────────────────────────────
   'Ganon': { and: [hasBeamSword, 'Lamp', 'Silver Arrows'] },
 };
+
+export { DUNGEON_CHECK_RULES };

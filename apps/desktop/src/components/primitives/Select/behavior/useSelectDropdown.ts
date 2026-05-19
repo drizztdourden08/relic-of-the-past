@@ -1,14 +1,14 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import type { SelectOption } from '../types';
 
-export interface UseSelectDropdownParams {
+interface UseSelectDropdownParams {
   disabled: boolean;
   searchable: boolean;
   allOptions: SelectOption[];
   onChange: (value: string) => void;
 }
 
-export const useSelectDropdown = (params: UseSelectDropdownParams) => {
+const useSelectDropdown = (params: UseSelectDropdownParams) => {
   const { disabled, searchable, allOptions, onChange } = params;
 
   const [open, setOpen] = useState(false);
@@ -156,3 +156,6 @@ export const useSelectDropdown = (params: UseSelectDropdownParams) => {
     handleKeyDown,
   };
 };
+
+export { useSelectDropdown };
+export type { UseSelectDropdownParams };

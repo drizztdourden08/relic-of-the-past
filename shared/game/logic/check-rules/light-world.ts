@@ -4,7 +4,7 @@ import {
 } from '../helpers';
 
 /** Check rules for Light World overworld locations. */
-export const LIGHT_WORLD_CHECK_RULES: Record<string, Requirement> = {
+const LIGHT_WORLD_CHECK_RULES: Record<string, Requirement> = {
   'Ether Tablet': canRetrieveTablet,
   'Bombos Tablet': canRetrieveTablet,
   'Old Man': 'Lamp',
@@ -22,3 +22,5 @@ export const LIGHT_WORLD_CHECK_RULES: Record<string, Requirement> = {
   'Missing Smith': canLiftHeavyRocks,
   "Zora's Ledge": 'Flippers',
 };
+
+export { LIGHT_WORLD_CHECK_RULES };

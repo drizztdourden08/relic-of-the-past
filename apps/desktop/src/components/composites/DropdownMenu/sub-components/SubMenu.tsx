@@ -1,11 +1,11 @@
 import { useRef, useState } from 'react';
 import type { MenuItem } from '../types';
 
-export interface SubMenuProps {
+interface SubMenuProps {
   item: MenuItem;
 }
 
-export const SubMenu = (props: SubMenuProps) => {
+const SubMenu = (props: SubMenuProps) => {
   const { item } = props;
   const ref = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
@@ -62,3 +62,6 @@ export const SubMenu = (props: SubMenuProps) => {
     </div>
   );
 };
+
+export { SubMenu };
+export type { SubMenuProps };

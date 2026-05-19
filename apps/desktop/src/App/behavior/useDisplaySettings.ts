@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { syncAspectRatioLock } from './syncAspectRatioLock';
 
-export const useDisplaySettings = (params: { isGameRunning: boolean }) => {
+const useDisplaySettings = (params: { isGameRunning: boolean }) => {
   const { isGameRunning } = params;
 
   const [windowMode, setWindowMode] = useState<GameSettings['windowMode']>('default');
@@ -103,3 +103,5 @@ export const useDisplaySettings = (params: { isGameRunning: boolean }) => {
     initFromSettings,
   };
 };
+
+export { useDisplaySettings };

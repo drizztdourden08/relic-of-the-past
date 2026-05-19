@@ -8,7 +8,7 @@ interface DragPosition {
   y: number;
 }
 
-export const useWidgetDrag = (
+const useWidgetDrag = (
   pos: DragPosition,
   onMove: (x: number, y: number) => void,
 ) => {
@@ -40,3 +40,5 @@ export const useWidgetDrag = (
 
   return onMouseDown;
 }
+
+export { useWidgetDrag };

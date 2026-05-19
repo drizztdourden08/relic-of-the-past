@@ -10,7 +10,7 @@ import { loadAppState, saveAppState } from '../profiles/app-state';
 
 const ROM_EXTENSIONS = new Set(['.sfc', '.smc']);
 
-export function registerRomHandlers(): void {
+function registerRomHandlers(): void {
   ipcMain.handle('roms:list', () => listRoms());
 
   ipcMain.handle('roms:listWithStatus', async () => {
@@ -163,3 +163,5 @@ export function registerRomHandlers(): void {
     } catch { return null; }
   });
 }
+
+export { registerRomHandlers };

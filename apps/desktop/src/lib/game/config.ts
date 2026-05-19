@@ -1,5 +1,5 @@
 // Default config for WASM builds
-export const DEFAULT_ZELDA3_INI = `[General]
+const DEFAULT_ZELDA3_INI = `[General]
 Autosave = 0
 ExtendedAspectRatio = 4:3
 
@@ -27,3 +27,5 @@ CollectItemsWithSword = 0
 DisableLowHealthBeep = 0
 SkipIntroOnKeypress = 0
 `;
+
+export { DEFAULT_ZELDA3_INI };

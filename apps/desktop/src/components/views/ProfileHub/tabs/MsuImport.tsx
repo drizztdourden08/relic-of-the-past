@@ -6,7 +6,7 @@ interface MsuImportProps {
   profileId: string;
 }
 
-export const MsuImport = (props: MsuImportProps) => {
+const MsuImport = (props: MsuImportProps) => {
   const { profileId } = props;
   const [url, setUrl] = useState('');
   const [status, setStatus] = useState<{ message: string; variant: '' | 'error' | 'success' }>({ message: '', variant: '' });
@@ -105,3 +105,5 @@ export const MsuImport = (props: MsuImportProps) => {
     </div>
   );
 }
+
+export { MsuImport };

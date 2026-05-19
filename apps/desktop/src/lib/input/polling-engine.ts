@@ -9,7 +9,7 @@ import { SNES_BUTTON_BITS } from '@shared/types/controls';
 import { webHidReader } from './hid-reader';
 
 /** Gamepad snapshot matching the shape InputCalibration/InputTester need */
-export interface GamepadSnapshot {
+interface GamepadSnapshot {
   index: number;
   id: string;
   connected: boolean;
@@ -22,7 +22,7 @@ export interface GamepadSnapshot {
 /**
  * Compute the SNES bitmask from all input sources for this frame.
  */
-export function computeBitmask(
+function computeBitmask(
   keyStates: Map<string, boolean>,
   keyboardMap: Map<string, SnesButton>,
   gamepadButtonMap: Map<number, SnesButton>,
@@ -107,7 +107,7 @@ export function computeBitmask(
 /**
  * Snapshot all connected gamepads, filtering out those already handled by WebHID.
  */
-export function snapshotGamepads(): GamepadSnapshot[] {
+function snapshotGamepads(): GamepadSnapshot[] {
   const raw = navigator.getGamepads();
   const snaps: GamepadSnapshot[] = [];
   const hidIds = new Set(webHidReader.getConnectedDeviceKeys());
@@ -135,3 +135,6 @@ export function snapshotGamepads(): GamepadSnapshot[] {
   }
   return snaps;
 }
+
+export { computeBitmask, snapshotGamepads };
+export type { GamepadSnapshot };

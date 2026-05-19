@@ -301,7 +301,7 @@ function extractRoom(rom: RomData, roomIndex: number, entrances0: Map<number, Re
  * Extract all 320 dungeon rooms from ROM.
  * @returns Map of filename → YAML content
  */
-export function extractAllDungeonRooms(rom: RomData): Map<string, string> {
+function extractAllDungeonRooms(rom: RomData): Map<string, string> {
   const entrances0 = getEntranceInfo(rom, 0);
   const entrances1 = getEntranceInfo(rom, 1);
   const chestInfoMap = getChestInfo(rom);
@@ -317,7 +317,7 @@ export function extractAllDungeonRooms(rom: RomData): Map<string, string> {
 /**
  * Extract default rooms (8 entries).
  */
-export function extractDefaultRooms(rom: RomData): string {
+function extractDefaultRooms(rom: RomData): string {
   const defaultRooms: Record<string, RoomObject[]> = {};
   for (let i = 0; i < 8; i++) {
     const p = 0x84ef2f + i * 3;
@@ -331,7 +331,7 @@ export function extractDefaultRooms(rom: RomData): string {
 /**
  * Extract overlay rooms (19 entries).
  */
-export function extractOverlayRooms(rom: RomData): string {
+function extractOverlayRooms(rom: RomData): string {
   const overlayRooms: Record<string, RoomObject[]> = {};
   for (let i = 0; i < 19; i++) {
     const p = 0x84ecc0 + i * 3;
@@ -345,7 +345,7 @@ export function extractOverlayRooms(rom: RomData): string {
 /**
  * Extract map32_to_map16 data.
  */
-export function extractMap32ToMap16(rom: RomData): string {
+function extractMap32ToMap16(rom: RomData): string {
   const lines: string[] = [];
   const getit = (ea: number): number[] => {
     const ov = [0, 1, 2, 3, 4, 5].map(j => rom.getByte(ea + j));
@@ -367,3 +367,10 @@ export function extractMap32ToMap16(rom: RomData): string {
   }
   return lines.join('\n') + '\n';
 }
+
+export {
+  extractAllDungeonRooms,
+  extractDefaultRooms,
+  extractMap32ToMap16,
+  extractOverlayRooms
+};

@@ -1,18 +1,25 @@
-export type ToastVariant = 'danger' | 'warning' | 'info';
+type ToastVariant = 'danger' | 'warning' | 'info';
 
-export interface ToastItem {
+interface ToastItem {
   id: string;
   message: string;
   variant?: ToastVariant;
   duration?: number;
 }
 
-export interface ToastProps {
+interface ToastProps {
   item: ToastItem;
   onDismiss: (id: string) => void;
 }
 
-export interface ToastContainerProps {
+interface ToastContainerProps {
   toasts: ToastItem[];
   onDismiss: (id: string) => void;
 }
+
+export type {
+  ToastContainerProps,
+  ToastItem,
+  ToastProps,
+  ToastVariant
+};

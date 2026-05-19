@@ -11,7 +11,7 @@ import {
 } from '../../../lib/game';
 import type { ViewMode } from '../../../components/views/TrackerView/sub-components/TrackerFilters';
 
-export const useChecksData = () => {
+const useChecksData = () => {
   const [inventory, setInventory] = useState<Set<string>>(() => getCurrentInventory());
   const [completedChecks, setCompletedChecks] = useState<Set<string>>(() => getCompletedChecks());
   const [viewMode, setViewMode] = useState<ViewMode>('compact');
@@ -53,3 +53,5 @@ export const useChecksData = () => {
     snapshot, stats, groupTree,
   };
 };
+
+export { useChecksData };

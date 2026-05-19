@@ -94,23 +94,23 @@ const type2_names = [
 // ─── Derived name arrays ───
 
 /** Room object type 0 names: "XX-Name" for indices 0x00-0xF7 */
-export const kType0Names: string[] = Array.from({ length: 0xf8 }, (_, i) =>
+const kType0Names: string[] = Array.from({ length: 0xf8 }, (_, i) =>
   `${i.toString(16).toUpperCase().padStart(2, '0')}-${type0_names[i]}`
 );
 
 /** Room object type 1 names: "XXX-Name" for indices 0xF80+ */
-export const kType1Names: string[] = Array.from({ length: 0x80 }, (_, i) =>
+const kType1Names: string[] = Array.from({ length: 0x80 }, (_, i) =>
   `${(0xf80 + i).toString(16).toUpperCase().padStart(3, '0')}-${type0_names[i + 0xf8]}`
 );
 
 /** Room object type 2 names: "X-Name" */
-export const kType2Names: string[] = type2_names.map((name, i) =>
+const kType2Names: string[] = type2_names.map((name, i) =>
   `${(i + 0x100).toString(16).toUpperCase()}-${name}`
 );
 
 // ─── Tag names ───
 
-export const kTagNames: string[] = [
+const kTagNames: string[] = [
   'None','NW Kill enemy to open','NE Kill enemy to open','SW Kill enemy to open','SE Kill enemy to open',
   'W Kill enemy to open','E Kill enemy to open','N Kill enemy to open','S Kill enemy to open',
   'Clear quadrant to open','Clear room to open',
@@ -130,19 +130,19 @@ export const kTagNames: string[] = [
 
 // ─── Effect names ───
 
-export const kEffectNames: string[] = [
+const kEffectNames: string[] = [
   'None','01','Moving floor','Moving water','04','Red flashes','Light torch to see floor','Ganon room',
 ];
 
 // ─── Collision names ───
 
-export const kCollisionNames: string[] = [
+const kCollisionNames: string[] = [
   'One','Both','Both w/scroll','Moving floor','Moving water',
 ];
 
 // ─── BG2 property ───
 
-export const kBg2: string[] = [
+const kBg2: string[] = [
   'None','Parallaxing','Dark','On top','Translucent','Parallaxing2','Normal','Addition','Dark room',
 ];
 
@@ -159,7 +159,7 @@ const kMusicNamesMap: Record<number, string> = {
 };
 
 /** Resolve music index → name string */
-export const kMusicNames: Record<number, string> = new Proxy(kMusicNamesMap, {
+const kMusicNames: Record<number, string> = new Proxy(kMusicNamesMap, {
   get(target, prop) {
     const key = typeof prop === 'string' ? Number(prop) : undefined;
     if (key !== undefined && key in target) return target[key];
@@ -174,7 +174,7 @@ const kAmbientSoundNameMap: Record<number, string> = {
   11: 'Flute', 13: 'Chime 1', 15: 'Chime 2',
 };
 
-export const kAmbientSoundName: Record<number, string> = new Proxy(kAmbientSoundNameMap, {
+const kAmbientSoundName: Record<number, string> = new Proxy(kAmbientSoundNameMap, {
   get(target, prop) {
     const key = typeof prop === 'string' ? Number(prop) : undefined;
     if (key !== undefined && key in target) return target[key];
@@ -184,14 +184,14 @@ export const kAmbientSoundName: Record<number, string> = new Proxy(kAmbientSound
 
 // ─── Palace names ───
 
-export const kPalaceNames: string[] = [
+const kPalaceNames: string[] = [
   'None','Church','Castle','East','Desert','Agahnim',
   'Water','Dark','Mud','Wood','Ice','Tower','Town','Mountain','Agahnim2',
 ];
 
 // ─── Area names (160 overworld areas) ───
 
-export const kAreaNames: string[] = [
+const kAreaNames: string[] = [
   'LW 000 : Lost Woods NW','LW 001 : Lost Woods NE','LW 002 : Lumberjack Estate',
   'LW 003 : Tower of Hera NW','LW 004 : Tower of Hera NE','LW 005 : Death Mountain Bridge NW',
   'LW 006 : Death Mountain Bridge NE','LW 007 : Turtle Rock','LW 008 : Lost Woods SW','LW 009 : Lost Woods SE',
@@ -249,7 +249,7 @@ export const kAreaNames: string[] = [
 
 // ─── Entrance names (133 entries) ───
 
-export const kEntranceNames: string[] = [
+const kEntranceNames: string[] = [
   "Link's House Intro","Link's House Post-intro",'Sanctuary','Hyrule Castle West','Hyrule Castle Central',
   'Hyrule Castle East','Death Mountain Express (Lower)','Death Mountain Express (Upper)','Eastern Palace',
   'Desert Palace Central','Desert Palace East','Desert Palace West','Desert Palace Boss Lair',
@@ -289,7 +289,7 @@ export const kEntranceNames: string[] = [
 
 // ─── Sprite names ───
 
-export const kSpriteNames: string[] = [
+const kSpriteNames: string[] = [
   '00-Raven','01-Vulture','02','03-BigCanon','04-PullSwitch','05-DnSwitch','06-TrapSwitch','07-FloorMove',
   '08-Octorok','09-Mouldrum','0A-4WayOctorok','0B-Chicken','0C-HoveringRock','0D-Cucumber','0E-SnapDragon',
   '0F-OctoBlimp','10','11-Hinox','12-PigSpearMan','13-MiniHelmasaur','14-GargoyleGrate','15-Bubble',
@@ -356,4 +356,21 @@ function buildSecretNames(): Record<number, string> {
   return r;
 }
 
-export const kSecretNames: Record<number, string> = buildSecretNames();
+const kSecretNames: Record<number, string> = buildSecretNames();
+
+export {
+  kAmbientSoundName,
+  kAreaNames,
+  kBg2,
+  kCollisionNames,
+  kEffectNames,
+  kEntranceNames,
+  kMusicNames,
+  kPalaceNames,
+  kSecretNames,
+  kSpriteNames,
+  kTagNames,
+  kType0Names,
+  kType1Names,
+  kType2Names
+};

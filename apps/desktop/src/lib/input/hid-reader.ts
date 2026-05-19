@@ -12,7 +12,7 @@ import type { StickCalibrationData, DeviceStickCalibration, TriggerCalibration }
 
 export type { StickCalibrationData, DeviceStickCalibration };
 
-export interface WebHidInputState {
+interface WebHidInputState {
   deviceKey: string;
   buttons: boolean[];
   axes: number[];
@@ -26,19 +26,19 @@ export interface WebHidInputState {
 }
 
 /** Raw report emitted for calibration — unprocessed bytes */
-export interface WebHidRawReport {
+interface WebHidRawReport {
   deviceKey: string;
   reportId: number;
   bytes: Uint8Array;
   timestamp: number;
 }
 
-export type WebHidStateListener = (state: WebHidInputState) => void;
-export type WebHidRawListener = (report: WebHidRawReport) => void;
-export type WebHidDiagListener = (msg: string) => void;
+type WebHidStateListener = (state: WebHidInputState) => void;
+type WebHidRawListener = (report: WebHidRawReport) => void;
+type WebHidDiagListener = (msg: string) => void;
 
 /** Fired when a WebHID device physically disconnects. deviceKey = "vid:pid" */
-export type WebHidDisconnectListener = (deviceKey: string, deviceName: string) => void;
+type WebHidDisconnectListener = (deviceKey: string, deviceName: string) => void;
 
 class WebHidInputReader {
   private states = new Map<string, WebHidInputState>();
@@ -346,9 +346,19 @@ class WebHidInputReader {
 }
 
 /** Singleton instance */
-export const webHidReader = new WebHidInputReader();
+const webHidReader = new WebHidInputReader();
 
 // Expose for Playwright testing
 if (typeof window !== 'undefined') {
   (window as any).__webHidReader = webHidReader;
 }
+
+export { webHidReader };
+export type {
+  WebHidDiagListener,
+  WebHidDisconnectListener,
+  WebHidInputState,
+  WebHidRawListener,
+  WebHidRawReport,
+  WebHidStateListener
+};

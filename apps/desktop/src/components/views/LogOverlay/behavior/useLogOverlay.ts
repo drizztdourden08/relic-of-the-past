@@ -3,7 +3,7 @@ import { subscribe, getEntries, type LogEntry } from '../../../../lib/log-bus';
 
 const MAX_ENTRIES = 200;
 
-export const useLogOverlay = (bottomRef: RefObject<HTMLDivElement | null>) => {
+const useLogOverlay = (bottomRef: RefObject<HTMLDivElement | null>) => {
   const [visible, setVisible] = useState(false);
   const [entries, setEntries] = useState<LogEntry[]>(() => getEntries());
 
@@ -38,3 +38,5 @@ export const useLogOverlay = (bottomRef: RefObject<HTMLDivElement | null>) => {
 
   return { visible, setVisible, entries };
 }
+
+export { useLogOverlay };

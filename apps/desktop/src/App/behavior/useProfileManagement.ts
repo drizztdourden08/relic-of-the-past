@@ -6,7 +6,7 @@ import { serializeToIni, mergeSettings } from '../../lib/game/settings';
 import { setSpritesBase } from '@shared/game/items/sprites';
 import type { InputProfile } from '@shared/types/controls';
 
-export const useProfileManagement = (params: {
+const useProfileManagement = (params: {
   refreshLists: () => Promise<void>;
   showDialog: (config: ConfirmDialog) => void;
   dismissDialog: () => void;
@@ -257,3 +257,5 @@ export const useProfileManagement = (params: {
     handleDeleteRom,
   };
 };
+
+export { useProfileManagement };

@@ -76,7 +76,7 @@ function formatSettingValue(value: unknown, format?: (v: unknown) => string): st
   return String(value);
 }
 
-export interface ProfileManagerProps {
+interface ProfileManagerProps {
   profiles: Profile[];
   romStatuses: RomDisplayInfo[];
   onSelectProfile: (profile: Profile) => void;
@@ -87,7 +87,7 @@ export interface ProfileManagerProps {
   onSwitchProfile: () => void;
 }
 
-export const ProfileManager = (props: ProfileManagerProps) => {
+const ProfileManager = (props: ProfileManagerProps) => {
   const {
     profiles,
     romStatuses,
@@ -325,3 +325,6 @@ export const ProfileManager = (props: ProfileManagerProps) => {
     </div>
   );
 };
+
+export { ProfileManager };
+export type { ProfileManagerProps };

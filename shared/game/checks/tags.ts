@@ -9,7 +9,7 @@
 // ─── Tag definitions ───
 
 /** All possible tags a check can have */
-export type CheckTag =
+type CheckTag =
   // World
   | 'light_world'
   | 'dark_world'
@@ -56,13 +56,13 @@ export type CheckTag =
   | 'turtle_rock'
   | 'ganons_tower';
 
-export interface TagDefinition {
+interface TagDefinition {
   id: CheckTag;
   label: string;
   category: 'world' | 'location' | 'area' | 'content' | 'dungeon';
 }
 
-export const TAG_DEFINITIONS: TagDefinition[] = [
+const TAG_DEFINITIONS: TagDefinition[] = [
   // World
   { id: 'light_world', label: 'Light World', category: 'world' },
   { id: 'dark_world', label: 'Dark World', category: 'world' },
@@ -191,7 +191,7 @@ const AREA_RULES: Array<{ pattern: RegExp | Set<string>; tag: CheckTag }> = [
 
 import type { CheckDefinition } from '../types';
 
-export function computeCheckTags(check: CheckDefinition): CheckTag[] {
+function computeCheckTags(check: CheckDefinition): CheckTag[] {
   const tags: Set<CheckTag> = new Set();
 
   // ── World tag ──
@@ -267,7 +267,7 @@ export function computeCheckTags(check: CheckDefinition): CheckTag[] {
 // ─── Pre-computed tag lookup ───
 let _tagCache: Map<string, CheckTag[]> | null = null;
 
-export function getCheckTags(checks: CheckDefinition[]): Map<string, CheckTag[]> {
+function getCheckTags(checks: CheckDefinition[]): Map<string, CheckTag[]> {
   if (_tagCache) return _tagCache;
   _tagCache = new Map();
   for (const check of checks) {
@@ -276,6 +276,14 @@ export function getCheckTags(checks: CheckDefinition[]): Map<string, CheckTag[]>
   return _tagCache;
 }
 
-export function getTagsForCheck(checkId: string, allChecks: CheckDefinition[]): CheckTag[] {
+function getTagsForCheck(checkId: string, allChecks: CheckDefinition[]): CheckTag[] {
   return getCheckTags(allChecks).get(checkId) ?? [];
 }
+
+export {
+  TAG_DEFINITIONS,
+  computeCheckTags,
+  getCheckTags,
+  getTagsForCheck
+};
+export type { CheckTag, TagDefinition };

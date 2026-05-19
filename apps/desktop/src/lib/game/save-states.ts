@@ -18,7 +18,7 @@ function captureScreenshot(): Promise<Blob | null> {
   });
 }
 
-export async function saveState(slot: number): Promise<boolean> {
+async function saveState(slot: number): Promise<boolean> {
   const mod = getModule();
   const profileId = getProfileId();
   log.app(`[SaveState] saveState(${slot}) called — module=${!!mod}, profileId=${profileId}`);
@@ -66,7 +66,7 @@ export async function saveState(slot: number): Promise<boolean> {
   }
 }
 
-export async function loadState(slot: number): Promise<boolean> {
+async function loadState(slot: number): Promise<boolean> {
   const mod = getModule();
   const profileId = getProfileId();
   log.app(`[LoadState] loadState(${slot}) called — module=${!!mod}, profileId=${profileId}`);
@@ -105,3 +105,5 @@ export async function loadState(slot: number): Promise<boolean> {
     return false;
   }
 }
+
+export { loadState, saveState };

@@ -6,7 +6,7 @@
  * Source: Archipelago ALTTPR client location_table_ow
  */
 
-export interface OverworldFlagEntry {
+interface OverworldFlagEntry {
   screen: number;
   mask: number;
 }
@@ -15,7 +15,7 @@ export interface OverworldFlagEntry {
  * Checks detected via save_ow_event_info[screen] & mask.
  * Covers standing items, dig spots, and events on the overworld.
  */
-export const CHECK_OVERWORLD_FLAGS: Record<string, OverworldFlagEntry> = {
+const CHECK_OVERWORLD_FLAGS: Record<string, OverworldFlagEntry> = {
   // ═══════════════════════════════════════════
   // Standing items (overworld)
   // ═══════════════════════════════════════════
@@ -45,3 +45,6 @@ export const CHECK_OVERWORLD_FLAGS: Record<string, OverworldFlagEntry> = {
   // ═══════════════════════════════════════════
   'Sunken Treasure': { screen: 0x3b, mask: 0x40 },
 };
+
+export { CHECK_OVERWORLD_FLAGS };
+export type { OverworldFlagEntry };

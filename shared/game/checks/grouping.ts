@@ -12,7 +12,7 @@ import { getCheckTags, TAG_DEFINITIONS } from './tags';
 
 // ─── Grouping dimensions ───
 
-export type GroupDimension =
+type GroupDimension =
   | 'world'       // light_world / dark_world
   | 'area'        // kakariko, death_mountain, etc.
   | 'location'    // cave, house, dungeon, overworld
@@ -21,13 +21,13 @@ export type GroupDimension =
   | 'type'        // check type (chest, npc, boss, etc.)
   | 'content';    // key, map_compass, boss_item, progression, junk
 
-export interface GroupDimensionDef {
+interface GroupDimensionDef {
   id: GroupDimension;
   label: string;
   description: string;
 }
 
-export const GROUP_DIMENSIONS: GroupDimensionDef[] = [
+const GROUP_DIMENSIONS: GroupDimensionDef[] = [
   { id: 'world', label: 'World', description: 'Light World / Dark World' },
   { id: 'area', label: 'Area', description: 'Geographic region (Kakariko, Death Mountain, etc.)' },
   { id: 'location', label: 'Location Type', description: 'Cave, House, Dungeon, Overworld' },
@@ -39,7 +39,7 @@ export const GROUP_DIMENSIONS: GroupDimensionDef[] = [
 
 // ─── Group node tree ───
 
-export interface GroupNode {
+interface GroupNode {
   key: string;
   label: string;
   children: GroupNode[];
@@ -90,7 +90,7 @@ function getGroupValue(check: CheckDefinition, dimension: GroupDimension, tags: 
 
 // ─── Build grouped tree ───
 
-export function buildGroupTree(
+function buildGroupTree(
   checks: CheckDefinition[],
   statuses: Map<string, CheckStatus>,
   dimensions: GroupDimension[],
@@ -177,10 +177,10 @@ function computeStats(
 
 // ─── Filter checks by tags and search query ───
 
-export type ItemFilter = 'all' | 'rewards' | 'non-rewards';
-export type StatusFilter = 'all' | 'completed' | 'reachable' | 'blocked';
+type ItemFilter = 'all' | 'rewards' | 'non-rewards';
+type StatusFilter = 'all' | 'completed' | 'reachable' | 'blocked';
 
-export interface FilterState {
+interface FilterState {
   searchQuery: string;
   activeTags: CheckTag[];
   /** If true, check must have ALL active tags. If false, ANY. */
@@ -191,7 +191,7 @@ export interface FilterState {
   statusFilter?: StatusFilter;
 }
 
-export function filterChecks(
+function filterChecks(
   checks: CheckDefinition[],
   filter: FilterState,
   tagMap: Map<string, CheckTag[]>,
@@ -242,3 +242,13 @@ export function filterChecks(
 
   return result;
 }
+
+export { GROUP_DIMENSIONS, buildGroupTree, filterChecks };
+export type {
+  FilterState,
+  GroupDimension,
+  GroupDimensionDef,
+  GroupNode,
+  ItemFilter,
+  StatusFilter
+};

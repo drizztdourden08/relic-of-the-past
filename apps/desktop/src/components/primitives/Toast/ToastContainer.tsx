@@ -2,7 +2,7 @@ import { Portal } from '../Portal';
 import { Toast } from './Toast';
 import type { ToastContainerProps } from './types';
 
-export const ToastContainer = (props: ToastContainerProps) => {
+const ToastContainer = (props: ToastContainerProps) => {
   const { toasts, onDismiss } = props;
 
   if (toasts.length === 0) return null;
@@ -17,3 +17,5 @@ export const ToastContainer = (props: ToastContainerProps) => {
     </Portal>
   );
 };
+
+export { ToastContainer };

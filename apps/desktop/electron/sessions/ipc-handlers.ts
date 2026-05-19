@@ -4,7 +4,7 @@ import { join } from 'path';
 import { getUserDataPath } from '../lib/paths';
 import type { PlaySession } from '../../../../shared/types/session';
 
-export function registerSessionHandlers(): void {
+function registerSessionHandlers(): void {
   ipcMain.handle('sessions:list', async (_event, profileId: string) => {
     try {
       const data = await readFile(getUserDataPath('profiles', profileId, 'sessions.json'), 'utf-8');
@@ -45,3 +45,5 @@ export function registerSessionHandlers(): void {
     }
   });
 }
+
+export { registerSessionHandlers };

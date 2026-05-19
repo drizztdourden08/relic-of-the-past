@@ -45,7 +45,7 @@ const kTab1 = [
   2, 2, 0, 0, 2, 0, 2, 2, 2, 0, 2, 2,
 ];
 
-export const kReceiveItemGfx = [
+const kReceiveItemGfx = [
   6, 0x18, 0x18, 0x18, 0x2d, 0x20, 0x2e, 9, 9, 0xa, 8, 5, 0x10, 0xb, 0x2c, 0x1b,
   0x1a, 0x1c, 0x14, 0x19, 0xc, 7, 0x1d, 0x2f, 7, 0x15, 0x12, 0xd, 0xd, 0xe, 0x11, 0x17,
   0x28, 0x27, 4, 4, 0xf, 0x16, 3, 0x13, 1, 0x1e, 0x10, 0, 0, 0, 0, 0,
@@ -62,14 +62,14 @@ const PAL5_CONFIG: Record<number, [number, number]> = {
 /**
  * Sprite palette state — loaded from ROM, mutated for per-sprite overrides.
  */
-export interface SpritePalettes {
+interface SpritePalettes {
   palettes: RGBA[][];
 }
 
 /**
  * Load all sprite palettes from ROM.
  */
-export function loadSpritePalettes(rom: RomData): SpritePalettes {
+function loadSpritePalettes(rom: RomData): SpritePalettes {
   const palettes: RGBA[][] = Array.from({ length: 8 }, () =>
     new Array(16).fill(TRANSPARENT) as RGBA[]
   );
@@ -125,7 +125,7 @@ export function loadSpritePalettes(rom: RomData): SpritePalettes {
 /**
  * Build palette 5 with specific sword/shield type colors.
  */
-export function buildPal5(rom: RomData, base: RGBA[], swordType: number, shieldType: number): RGBA[] {
+function buildPal5(rom: RomData, base: RGBA[], swordType: number, shieldType: number): RGBA[] {
   const pal = [...base];
   const swordPal = rom.getWords(ADDR_SWORD_PALETTE, 12);
   const shieldPal = rom.getWords(ADDR_SHIELD_PALETTE, 12);
@@ -141,14 +141,14 @@ export function buildPal5(rom: RomData, base: RGBA[], swordType: number, shieldT
 /**
  * Load receipt sprite sheets (0x5A - 0x5D combined).
  */
-export interface ReceiptSheets {
+interface ReceiptSheets {
   base: Buffer;     // sheet 0x5A
   sheet5B: Buffer;  // sheet 0x5B
   sheet5C: Buffer;  // sheet 0x5C
   sheet5D: Buffer;  // sheet 0x5D
 }
 
-export function loadReceiptSheets(rom: RomData): ReceiptSheets {
+function loadReceiptSheets(rom: RomData): ReceiptSheets {
   const getByte = (addr: number) => rom.getByte(addr);
   return {
     base: decompress(kCompSpritePtrs[0x5a], getByte, false),
@@ -226,7 +226,7 @@ function extractReceipt8x16(raw: Buffer, offset: number, palette: RGBA[]): Image
 /**
  * Extract a receipt sprite by ID.
  */
-export function extractReceipt(
+function extractReceipt(
   receiptId: number,
   rom: RomData,
   sheets: ReceiptSheets,
@@ -273,7 +273,7 @@ export function extractReceipt(
 /**
  * Extract a receipt sprite with a different palette (recolor variant).
  */
-export function extractReceiptRecolor(
+function extractReceiptRecolor(
   receiptId: number,
   palIdx: number,
   rom: RomData,
@@ -296,4 +296,14 @@ export function extractReceiptRecolor(
 }
 
 // Re-export decode3bppTile for use by drop-decoder
-export { decode3bppTile };
+
+export {
+  buildPal5,
+  decode3bppTile,
+  extractReceipt,
+  extractReceiptRecolor,
+  kReceiveItemGfx,
+  loadReceiptSheets,
+  loadSpritePalettes
+};
+export type { ReceiptSheets, SpritePalettes };

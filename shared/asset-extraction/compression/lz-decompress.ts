@@ -20,7 +20,7 @@
 import type { RomData } from '../rom/rom-types';
 
 /** Callback type matching Python's get_byte pattern */
-export type GetByteFn = (addr: number) => number;
+type GetByteFn = (addr: number) => number;
 
 /**
  * Decompress data from a SNES address using the Zelda 3 LZ format.
@@ -30,18 +30,18 @@ export type GetByteFn = (addr: number) => number;
  * @param offsetIsBe - If true (default), copy offsets are big-endian
  * @param returnLength - If true, returns [data, compressedLength] tuple
  */
-export function decompress(
+function decompress(
   ea: number,
   getByte: GetByteFn,
   offsetIsBe?: boolean,
 ): Buffer;
-export function decompress(
+function decompress(
   ea: number,
   getByte: GetByteFn,
   offsetIsBe: boolean,
   returnLength: true,
 ): [Buffer, number];
-export function decompress(
+function decompress(
   ea: number,
   getByte: GetByteFn,
   offsetIsBe = true,
@@ -129,7 +129,7 @@ export function decompress(
 /**
  * Convenience wrapper: decompress from a RomData instance.
  */
-export function decompressFromRom(
+function decompressFromRom(
   rom: RomData,
   ea: number,
   offsetIsBe = true,
@@ -140,10 +140,13 @@ export function decompressFromRom(
 /**
  * Convenience wrapper that also returns compressed stream length.
  */
-export function decompressFromRomWithLength(
+function decompressFromRomWithLength(
   rom: RomData,
   ea: number,
   offsetIsBe = true,
 ): [Buffer, number] {
   return decompress(ea, (addr) => rom.getByte(addr), offsetIsBe, true);
 }
+
+export { decompress, decompressFromRom, decompressFromRomWithLength };
+export type { GetByteFn };

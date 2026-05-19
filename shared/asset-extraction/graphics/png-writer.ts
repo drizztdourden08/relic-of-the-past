@@ -10,7 +10,7 @@ import type { RGBA } from './palette';
 /**
  * Simple RGBA image buffer for compositing tiles before PNG export.
  */
-export class ImageBuffer {
+class ImageBuffer {
   readonly width: number;
   readonly height: number;
   /** Raw RGBA pixel data (4 bytes per pixel, row-major) */
@@ -129,3 +129,5 @@ export class ImageBuffer {
     writeFileSync(filePath, this.toPngBuffer());
   }
 }
+
+export { ImageBuffer };

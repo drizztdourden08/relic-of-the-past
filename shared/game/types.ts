@@ -1,6 +1,6 @@
 // ─── Check Types ───
 
-export type CheckType =
+type CheckType =
   | 'chest'
   | 'npc'
   | 'standing'
@@ -12,9 +12,9 @@ export type CheckType =
   | 'bonk'
   | 'event';
 
-export type RegionType = 'lightWorld' | 'darkWorld' | 'dungeon' | 'cave';
+type RegionType = 'lightWorld' | 'darkWorld' | 'dungeon' | 'cave';
 
-export interface CheckDefinition {
+interface CheckDefinition {
   id: string;
   name: string;
   type: CheckType;
@@ -27,14 +27,14 @@ export interface CheckDefinition {
   chestIndex?: number;
 }
 
-export interface RegionDefinition {
+interface RegionDefinition {
   id: string;
   name: string;
   type: RegionType;
   dungeon?: string;
 }
 
-export interface RegionConnection {
+interface RegionConnection {
   from: string;
   to: string;
   entrance: string;
@@ -42,7 +42,7 @@ export interface RegionConnection {
 
 // ─── Requirement Expression Tree ───
 
-export type Requirement =
+type Requirement =
   | string
   | { and: Requirement[] }
   | { or: Requirement[] }
@@ -50,12 +50,12 @@ export type Requirement =
 
 // ─── Tracker State ───
 
-export interface CheckState {
+interface CheckState {
   completed: boolean;
   timestamp?: number;
 }
 
-export interface TrackerState {
+interface TrackerState {
   profileId: string;
   checks: Record<string, CheckState>;
   inventory: string[];
@@ -64,11 +64,11 @@ export interface TrackerState {
 
 // ─── Logic Configuration ───
 
-export type LogicMode = 'vanilla' | 'open' | 'inverted' | 'no-logic';
-export type SwordMode = 'normal' | 'swordless' | 'assured';
-export type Goal = 'ganon' | 'pedestal' | 'triforce-hunt' | 'crystals' | 'bosses';
+type LogicMode = 'vanilla' | 'open' | 'inverted' | 'no-logic';
+type SwordMode = 'normal' | 'swordless' | 'assured';
+type Goal = 'ganon' | 'pedestal' | 'triforce-hunt' | 'crystals' | 'bosses';
 
-export interface LogicConfig {
+interface LogicConfig {
   mode: LogicMode;
   /** Region ID where the game starts (default: 'menu') */
   startingRegion: string;
@@ -102,3 +102,18 @@ export interface LogicConfig {
   /** Whether big keys are in the general item pool */
   bigKeyShuffle: boolean;
 }
+
+export type {
+  CheckDefinition,
+  CheckState,
+  CheckType,
+  Goal,
+  LogicConfig,
+  LogicMode,
+  RegionConnection,
+  RegionDefinition,
+  RegionType,
+  Requirement,
+  SwordMode,
+  TrackerState
+};

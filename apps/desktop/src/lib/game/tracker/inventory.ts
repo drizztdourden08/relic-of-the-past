@@ -4,7 +4,7 @@
  * tracker-compatible item names.
  */
 
-export interface RawInventoryState {
+interface RawInventoryState {
   bow: number;
   boomerang: number;
   hookshot: number;
@@ -41,7 +41,7 @@ export interface RawInventoryState {
   healthCapacity: number;
 }
 
-export function parseInventoryBuffer(heapU8: Uint8Array, ptr: number): RawInventoryState {
+function parseInventoryBuffer(heapU8: Uint8Array, ptr: number): RawInventoryState {
   return {
     bow: heapU8[ptr],
     boomerang: heapU8[ptr + 1],
@@ -80,7 +80,7 @@ export function parseInventoryBuffer(heapU8: Uint8Array, ptr: number): RawInvent
   };
 }
 
-export function inventoryToItemSet(raw: RawInventoryState): Set<string> {
+function inventoryToItemSet(raw: RawInventoryState): Set<string> {
   const items = new Set<string>();
 
   // Sword progression
@@ -178,7 +178,7 @@ export function inventoryToItemSet(raw: RawInventoryState): Set<string> {
  *   [1]  = sram_progress_flags (0xF3C6): bit 0x01 = uncle passage done
  *   [12] = player_sleep_in_bed_state: 0=asleep, 1=uncle woke Link, 2=Link out of bed
  */
-export function progressToEvents(heapU8: Uint8Array, progPtr: number): string[] {
+function progressToEvents(heapU8: Uint8Array, progPtr: number): string[] {
   const events: string[] = [];
   const progressIndicator = heapU8[progPtr];       // index 0
   const sleepState = heapU8[progPtr + 12];         // index 12
@@ -196,10 +196,18 @@ export function progressToEvents(heapU8: Uint8Array, progPtr: number): string[] 
   return events;
 }
 
-export function setsEqual(a: Set<string>, b: Set<string>): boolean {
+function setsEqual(a: Set<string>, b: Set<string>): boolean {
   if (a.size !== b.size) return false;
   for (const item of a) {
     if (!b.has(item)) return false;
   }
   return true;
 }
+
+export {
+  inventoryToItemSet,
+  parseInventoryBuffer,
+  progressToEvents,
+  setsEqual
+};
+export type { RawInventoryState };

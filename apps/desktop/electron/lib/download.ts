@@ -4,7 +4,7 @@ import { pipeline } from 'stream/promises';
 import { app, net } from 'electron';
 
 /** Download a URL to a temp file and return its path. */
-export async function downloadToTemp(url: string, suffix = '.zip'): Promise<string> {
+async function downloadToTemp(url: string, suffix = '.zip'): Promise<string> {
   const parsed = new URL(url);
   if (!['http:', 'https:'].includes(parsed.protocol)) {
     throw new Error('Only HTTP/HTTPS URLs are supported');
@@ -19,3 +19,5 @@ export async function downloadToTemp(url: string, suffix = '.zip'): Promise<stri
   await pipeline(body, fileStream);
   return tempFile;
 }
+
+export { downloadToTemp };

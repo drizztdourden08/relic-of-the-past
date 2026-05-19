@@ -1,4 +1,4 @@
-export interface PlaySession {
+interface PlaySession {
   id: string;
   profileId: string;
   startedAt: number;
@@ -6,3 +6,5 @@ export interface PlaySession {
   durationMs: number;
   stats: Record<string, unknown>;
 }
+
+export type { PlaySession };

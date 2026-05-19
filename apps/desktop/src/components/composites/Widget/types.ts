@@ -5,15 +5,15 @@
 // ─── Snap sides ───
 
 /** Docking sides: left/right stack vertically, top/bottom stack horizontally */
-export type SnapSide = 'left' | 'right' | 'top' | 'bottom';
-export type WidgetMode = 'docked' | 'floating';
+type SnapSide = 'left' | 'right' | 'top' | 'bottom';
+type WidgetMode = 'docked' | 'floating';
 
 /** When the widget should be visible */
-export type WidgetVisibility = 'always' | 'game-only';
+type WidgetVisibility = 'always' | 'game-only';
 
 // ─── Per-widget state ───
 
-export interface WidgetState {
+interface WidgetState {
   id: string;              // Unique widget ID (e.g. 'inventory', 'checks', 'logs')
   mode: WidgetMode;
   side: SnapSide;          // Relevant when docked
@@ -34,13 +34,13 @@ export interface WidgetState {
 
 // ─── Registry (full layout) ───
 
-export interface WidgetLayout {
+interface WidgetLayout {
   widgets: WidgetState[];
 }
 
 // ─── Widget definition (static registration) ───
 
-export interface WidgetDefinition {
+interface WidgetDefinition {
   id: string;
   label: string;
   defaultVisibility: WidgetVisibility;
@@ -49,3 +49,11 @@ export interface WidgetDefinition {
   defaultFloatingSize: { width: number; height: number };
 }
 
+export type {
+  SnapSide,
+  WidgetDefinition,
+  WidgetLayout,
+  WidgetMode,
+  WidgetState,
+  WidgetVisibility
+};

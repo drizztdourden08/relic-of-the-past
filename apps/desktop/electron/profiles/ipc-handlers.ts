@@ -3,7 +3,7 @@ import type { Profile } from '../../../../shared/types/profile';
 import { listProfiles, createProfile, loadProfile, updateProfile, deleteProfile } from './store';
 import { loadAppState, saveAppState } from './app-state';
 
-export function registerProfileHandlers(): void {
+function registerProfileHandlers(): void {
   ipcMain.handle('profiles:list', () => listProfiles());
 
   ipcMain.handle('profiles:create', async (_event, name: string, romFile: string, language?: string, msuPack?: string) => {
@@ -49,3 +49,5 @@ export function registerProfileHandlers(): void {
     return profile;
   });
 }
+
+export { registerProfileHandlers };

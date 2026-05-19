@@ -14,7 +14,7 @@ const STORAGE_KEY = 'widget-layout';
 
 // ─── Local (session) persistence ───
 
-export const loadLayoutLocal = (): WidgetLayout => {
+const loadLayoutLocal = (): WidgetLayout => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
@@ -26,13 +26,13 @@ export const loadLayoutLocal = (): WidgetLayout => {
   return createDefaultLayout();
 }
 
-export const saveLayoutLocal = (layout: WidgetLayout): void => {
+const saveLayoutLocal = (layout: WidgetLayout): void => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
 }
 
 // ─── Profile persistence (via IPC) ───
 
-export const loadLayoutForProfile = async (profileId: string): Promise<WidgetLayout> => {
+const loadLayoutForProfile = async (profileId: string): Promise<WidgetLayout> => {
   try {
     const state: any = await window.api.loadTrackerState(profileId);
     if (state?.widgetLayout) {
@@ -42,7 +42,7 @@ export const loadLayoutForProfile = async (profileId: string): Promise<WidgetLay
   return loadLayoutLocal(); // Fallback to local layout
 }
 
-export const saveLayoutForProfile = async (profileId: string, layout: WidgetLayout): Promise<void> => {
+const saveLayoutForProfile = async (profileId: string, layout: WidgetLayout): Promise<void> => {
   // Load existing tracker state and merge widget layout into it
   let existing: any = {};
   try {
@@ -70,13 +70,22 @@ const ensureAllWidgets = (layout: WidgetLayout): WidgetLayout => {
 }
 
 /** Get a single widget state from the layout. */
-export const getWidgetState = (layout: WidgetLayout, id: string): WidgetState | undefined => {
+const getWidgetState = (layout: WidgetLayout, id: string): WidgetState | undefined => {
   return layout.widgets.find((w) => w.id === id);
 }
 
 /** Update a single widget in the layout. */
-export const updateWidget = (layout: WidgetLayout, id: string, patch: Partial<WidgetState>): WidgetLayout => {
+const updateWidget = (layout: WidgetLayout, id: string, patch: Partial<WidgetState>): WidgetLayout => {
   return {
     widgets: layout.widgets.map((w) => (w.id === id ? { ...w, ...patch } : w)),
   };
 }
+
+export {
+  getWidgetState,
+  loadLayoutForProfile,
+  loadLayoutLocal,
+  saveLayoutForProfile,
+  saveLayoutLocal,
+  updateWidget
+};

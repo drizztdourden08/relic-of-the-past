@@ -24,9 +24,9 @@ import { log } from '../../../lib/log-bus';
 /** Time in ms below which a second press is considered a "tap" → LOAD */
 const TAP_THRESHOLD_MS = 180;
 
-export type HintAction = 'tap-load' | 'hold-save' | 'esc-cancel' | 'holding-save';
+type HintAction = 'tap-load' | 'hold-save' | 'esc-cancel' | 'holding-save';
 
-export interface SlotHint {
+interface SlotHint {
   action: HintAction;
   keyLabel: string;        // text fallback (e.g. "F1", "Shift+F1", "Esc")
   iconUrl: string | null;  // SVG icon URL from button-icons system
@@ -96,7 +96,7 @@ function getEscBinding(): { label: string; iconUrl: string | null } {
   };
 }
 
-export const useEnhancedSaveSlot = (
+const useEnhancedSaveSlot = (
   enabled: boolean,
   holdDurationSec: number,
   gameRunning: boolean,
@@ -360,3 +360,6 @@ export const useEnhancedSaveSlot = (
     close,
   };
 }
+
+export { useEnhancedSaveSlot };
+export type { HintAction, SlotHint };

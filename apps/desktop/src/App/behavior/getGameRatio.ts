@@ -1,6 +1,6 @@
 import type { GameSettings } from '@shared/types/settings';
 
-export const getGameRatio = (aspectRatio: GameSettings['aspectRatio']): number => {
+const getGameRatio = (aspectRatio: GameSettings['aspectRatio']): number => {
   const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
   if (canvas && canvas.width > 0 && canvas.height > 0) {
     return canvas.width / canvas.height;
@@ -14,3 +14,5 @@ export const getGameRatio = (aspectRatio: GameSettings['aspectRatio']): number =
     default:      return 4 / 3;
   }
 };
+
+export { getGameRatio };

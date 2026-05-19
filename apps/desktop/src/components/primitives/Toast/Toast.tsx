@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type { ToastProps } from './types';
 import './Toast.css';
 
-export const Toast = (props: ToastProps) => {
+const Toast = (props: ToastProps) => {
   const { item, onDismiss } = props;
   const [exiting, setExiting] = useState(false);
   const variant = item.variant ?? 'info';
@@ -28,3 +28,5 @@ export const Toast = (props: ToastProps) => {
     </div>
   );
 };
+
+export { Toast };

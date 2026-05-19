@@ -12,7 +12,7 @@
 
 // ── Public API ────────────────────────────────────────────────────────────
 
-export interface VibrateOptions {
+interface VibrateOptions {
   /** Vibration strength 0–1. Default 0.7. */
   intensity?: number;
 }
@@ -21,7 +21,7 @@ export interface VibrateOptions {
  * Vibrate a Gamepad-API controller (Xbox, generic) using the standard
  * vibrationActuator API available in Chromium.
  */
-export function vibrateGamepad(gamepadIndex: number, durationMs: number, opts?: VibrateOptions): void {
+function vibrateGamepad(gamepadIndex: number, durationMs: number, opts?: VibrateOptions): void {
   const intensity = opts?.intensity ?? 0.7;
   try {
     const gp = navigator.getGamepads()[gamepadIndex];
@@ -43,7 +43,7 @@ export function vibrateGamepad(gamepadIndex: number, durationMs: number, opts?: 
  * Vibrate a Gamepad-API controller with a multi-segment pattern.
  * Each segment has a duration and intensity, with gapMs silence between segments.
  */
-export function vibrateGamepadPattern(
+function vibrateGamepadPattern(
   gamepadIndex: number,
   pattern: { durationMs: number; intensity: number }[],
   gapMs: number = 0,
@@ -59,7 +59,7 @@ export function vibrateGamepadPattern(
 /**
  * Vibrate an HID controller via the main-process batch pipeline (worker thread).
  */
-export function vibrateHid(deviceKey: string, durationMs: number, opts?: VibrateOptions): void {
+function vibrateHid(deviceKey: string, durationMs: number, opts?: VibrateOptions): void {
   const intensity = opts?.intensity ?? 0.7;
   window.api.vibratePattern(deviceKey, [{ durationMs, intensity }], 0);
 }
@@ -69,7 +69,7 @@ export function vibrateHid(deviceKey: string, durationMs: number, opts?: Vibrate
  *   - "gamepad-N" → Gamepad API
  *   - "xxxx:yyyy" → HID
  */
-export function vibrate(target: string, durationMs: number, opts?: VibrateOptions): void {
+function vibrate(target: string, durationMs: number, opts?: VibrateOptions): void {
   if (target.startsWith('gamepad-')) {
     const idx = parseInt(target.replace('gamepad-', ''), 10);
     if (!isNaN(idx)) vibrateGamepad(idx, durationMs, opts);
@@ -83,7 +83,7 @@ export function vibrate(target: string, durationMs: number, opts?: VibrateOption
  *   - "gamepad-N" → Gamepad API pattern
  *   - "xxxx:yyyy" → HID pattern via IPC
  */
-export function vibratePattern(
+function vibratePattern(
   target: string,
   pattern: { durationMs: number; intensity: number }[],
   gapMs: number = 0,
@@ -95,3 +95,12 @@ export function vibratePattern(
     window.api.vibratePattern(target, pattern, gapMs);
   }
 }
+
+export {
+  vibrate,
+  vibrateGamepad,
+  vibrateGamepadPattern,
+  vibrateHid,
+  vibratePattern
+};
+export type { VibrateOptions };

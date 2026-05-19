@@ -6,7 +6,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import type { WidgetLayout, WidgetState } from '../types';
 import { loadLayoutLocal, saveLayoutLocal, loadLayoutForProfile, saveLayoutForProfile, updateWidget } from './widgetStore';
 
-export const useWidgetLayout = (profileId: string | null) => {
+const useWidgetLayout = (profileId: string | null) => {
   const [layout, setLayoutRaw] = useState<WidgetLayout>(loadLayoutLocal);
   const profileIdRef = useRef(profileId);
   profileIdRef.current = profileId;
@@ -55,3 +55,5 @@ export const useWidgetLayout = (profileId: string | null) => {
 
   return { layout, update, close, open, toggle };
 }
+
+export { useWidgetLayout };

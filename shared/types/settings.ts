@@ -1,7 +1,7 @@
 import type { FunctionMapping } from './controls';
 
 /** Per-profile game settings — mirrors zelda3 config.h / zelda3.ini fields */
-export interface GameSettings {
+interface GameSettings {
   // ─── General ───
   autosave: boolean;
   displayPerfInTitle: boolean;
@@ -64,3 +64,5 @@ export interface GameSettings {
   enhancedSaveSlotShortcut: boolean;
   saveHoldDuration: number; // seconds, 1-5
 }
+
+export type { GameSettings };

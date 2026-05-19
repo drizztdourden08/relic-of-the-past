@@ -2,16 +2,16 @@ import type { InventorySlot } from './inventory-types';
 
 let _spritesBase = '/sprites/items/';
 
-export function setSpritesBase(base: string): void {
+function setSpritesBase(base: string): void {
   _spritesBase = base;
 }
 
-export function getSpritesBase(): string {
+function getSpritesBase(): string {
   return _spritesBase;
 }
 
 /** Direct item name → sprite filename mapping */
-export const ITEM_SPRITE_MAP: Record<string, string> = {
+const ITEM_SPRITE_MAP: Record<string, string> = {
   // Swords
   'Fighter Sword':     'hud-fighter-sword',
   'Master Sword':      'hud-master-sword',
@@ -124,7 +124,7 @@ export const ITEM_SPRITE_MAP: Record<string, string> = {
 };
 
 /** All known inventory item names that have sprites. */
-export const INVENTORY_ITEMS = Object.keys(ITEM_SPRITE_MAP);
+const INVENTORY_ITEMS = Object.keys(ITEM_SPRITE_MAP);
 
 /**
  * Get the sprite path for a given item name.
@@ -132,7 +132,7 @@ export const INVENTORY_ITEMS = Object.keys(ITEM_SPRITE_MAP);
  * Handles dungeon-specific names like "Small Key (Hyrule Castle)" by
  * stripping the parenthetical suffix.
  */
-export function getItemSprite(itemName: string): string | undefined {
+function getItemSprite(itemName: string): string | undefined {
   let filename = ITEM_SPRITE_MAP[itemName];
   if (!filename) {
     const base = itemName.replace(/\s*\(.*\)$/, '');
@@ -148,7 +148,7 @@ export function getItemSprite(itemName: string): string | undefined {
  * Resolve which sprite to show for a tiered item, given the current inventory.
  * E.g. if inventory has 'Tempered Sword', show tempered-sword.png.
  */
-export function resolveItemSprite(slot: InventorySlot, inventory: Set<string>): { obtained: boolean; sprite: string } {
+function resolveItemSprite(slot: InventorySlot, inventory: Set<string>): { obtained: boolean; sprite: string } {
   for (const name of slot.trackerNames) {
     if (inventory.has(name)) {
       const sprite = ITEM_SPRITE_MAP[name];
@@ -157,3 +157,12 @@ export function resolveItemSprite(slot: InventorySlot, inventory: Set<string>): 
   }
   return { obtained: false, sprite: slot.sprite };
 }
+
+export {
+  INVENTORY_ITEMS,
+  ITEM_SPRITE_MAP,
+  getItemSprite,
+  getSpritesBase,
+  resolveItemSprite,
+  setSpritesBase
+};

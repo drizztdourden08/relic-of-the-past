@@ -8,7 +8,7 @@ import {
 } from '../helpers';
 
 /** Region entrance rules for dungeon-internal progression. */
-export const DUNGEON_REGION_RULES: Record<string, Requirement> = {
+const DUNGEON_REGION_RULES: Record<string, Requirement> = {
   // Hyrule Castle / Sewers
   'Sewers Door': 'Small Key (Hyrule Castle)',
   'Sewers Back Door': 'Small Key (Hyrule Castle)',
@@ -110,3 +110,5 @@ export const DUNGEON_REGION_RULES: Record<string, Requirement> = {
   'Ganons Tower Moldorm Gap': 'Hookshot',
   'Ganon Drop': hasBeamSword,
 };
+
+export { DUNGEON_REGION_RULES };

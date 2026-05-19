@@ -193,7 +193,7 @@ const CAVE_REGIONS: RegionDefinition[] = [
 
 // ─── All Overworld Regions ───
 
-export const OVERWORLD_REGIONS: RegionDefinition[] = [
+const OVERWORLD_REGIONS: RegionDefinition[] = [
   ...LIGHT_WORLD_REGIONS,
   ...DARK_WORLD_REGIONS,
   ...CAVE_REGIONS,
@@ -203,7 +203,7 @@ export const OVERWORLD_REGIONS: RegionDefinition[] = [
 // Each connection represents a traversable edge in the region graph.
 // Entrance names match Archipelago's entrance randomizer naming.
 
-export const OVERWORLD_CONNECTIONS: RegionConnection[] = [
+const OVERWORLD_CONNECTIONS: RegionConnection[] = [
   // ══════════════════════════════════════════════════
   // Menu (Save & Quit destinations)
   // ══════════════════════════════════════════════════
@@ -718,3 +718,5 @@ export const OVERWORLD_CONNECTIONS: RegionConnection[] = [
   // ══════════════════════════════════════════════════
   { from: 'south-dark-world', to: 'west-dark-world', entrance: 'Village of Outcasts Heavy Rock' },
 ];
+
+export { OVERWORLD_CONNECTIONS, OVERWORLD_REGIONS };

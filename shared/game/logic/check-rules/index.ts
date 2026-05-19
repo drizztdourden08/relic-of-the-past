@@ -8,8 +8,10 @@ export { DARK_WORLD_CHECK_RULES } from './dark-world';
 export { DUNGEON_CHECK_RULES } from './dungeons';
 
 /** Combined check rules (all worlds + dungeons). */
-export const CHECK_RULES: Record<string, Requirement> = {
+const CHECK_RULES: Record<string, Requirement> = {
   ...LIGHT_WORLD_CHECK_RULES,
   ...DARK_WORLD_CHECK_RULES,
   ...DUNGEON_CHECK_RULES,
 };
+
+export { CHECK_RULES };

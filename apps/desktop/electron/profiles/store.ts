@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto';
 import type { Profile } from '../../../../shared/types/profile';
 import { getUserDataPath } from '../lib/paths';
 
-export async function listProfiles(): Promise<Profile[]> {
+async function listProfiles(): Promise<Profile[]> {
   const profilesDir = getUserDataPath('profiles');
   await mkdir(profilesDir, { recursive: true });
 
@@ -29,7 +29,7 @@ export async function listProfiles(): Promise<Profile[]> {
   return profiles.sort((a, b) => b.lastPlayed - a.lastPlayed);
 }
 
-export async function createProfile(name: string, romFile: string, language?: string, msuPack?: string): Promise<Profile> {
+async function createProfile(name: string, romFile: string, language?: string, msuPack?: string): Promise<Profile> {
   const id = randomUUID().slice(0, 8);
   const now = Date.now();
   const profile: Profile = { id, name, romFile, created: now, lastPlayed: now };
@@ -44,7 +44,7 @@ export async function createProfile(name: string, romFile: string, language?: st
   return profile;
 }
 
-export async function loadProfile(id: string): Promise<Profile | null> {
+async function loadProfile(id: string): Promise<Profile | null> {
   try {
     const data = await readFile(getUserDataPath('profiles', id, 'profile.json'), 'utf-8');
     return JSON.parse(data);
@@ -53,7 +53,7 @@ export async function loadProfile(id: string): Promise<Profile | null> {
   }
 }
 
-export async function updateProfile(profile: Profile): Promise<void> {
+async function updateProfile(profile: Profile): Promise<void> {
   await writeFile(
     getUserDataPath('profiles', profile.id, 'profile.json'),
     JSON.stringify(profile, null, 2),
@@ -61,6 +61,14 @@ export async function updateProfile(profile: Profile): Promise<void> {
   );
 }
 
-export async function deleteProfile(id: string): Promise<void> {
+async function deleteProfile(id: string): Promise<void> {
   await rm(getUserDataPath('profiles', id), { recursive: true, force: true });
 }
+
+export {
+  createProfile,
+  deleteProfile,
+  listProfiles,
+  loadProfile,
+  updateProfile
+};

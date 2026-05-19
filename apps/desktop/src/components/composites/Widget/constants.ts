@@ -1,10 +1,10 @@
 import type { WidgetDefinition, WidgetVisibility, SnapSide } from './types';
 
 /** Pixels reserved for the app titlebar */
-export const TITLEBAR_HEIGHT = 38;
+const TITLEBAR_HEIGHT = 38;
 
 /** Position options for the settings segmented control */
-export const POSITION_OPTIONS: { value: 'left' | 'right' | 'top' | 'bottom' | 'float'; label: string }[] = [
+const POSITION_OPTIONS: { value: 'left' | 'right' | 'top' | 'bottom' | 'float'; label: string }[] = [
   { value: 'left', label: '◧' },
   { value: 'right', label: '◨' },
   { value: 'top', label: '▽' },
@@ -13,7 +13,7 @@ export const POSITION_OPTIONS: { value: 'left' | 'right' | 'top' | 'bottom' | 'f
 ];
 
 /** Static registry of all known widget definitions */
-export const WIDGET_DEFINITIONS: WidgetDefinition[] = [
+const WIDGET_DEFINITIONS: WidgetDefinition[] = [
   {
     id: 'inventory',
     label: 'Inventory',
@@ -39,3 +39,5 @@ export const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultFloatingSize: { width: 600, height: 220 },
   },
 ];
+
+export { POSITION_OPTIONS, TITLEBAR_HEIGHT, WIDGET_DEFINITIONS };

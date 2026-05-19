@@ -21,12 +21,12 @@ const LANGUAGE_NAMES: Record<string, string> = {
   redux: 'Redux',
 };
 
-export interface LanguageManagerProps {
+interface LanguageManagerProps {
   romStatuses: RomDisplayInfo[];
   onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
 }
 
-export const LanguageManager = (props: LanguageManagerProps) => {
+const LanguageManager = (props: LanguageManagerProps) => {
   const { romStatuses, onDeleteConfirm } = props;
   const [languages, setLanguages] = useState<LanguageInfo[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
@@ -160,3 +160,6 @@ export const LanguageManager = (props: LanguageManagerProps) => {
     </div>
   );
 };
+
+export { LanguageManager };
+export type { LanguageManagerProps };

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-export const useSaveStateSettings = () => {
+const useSaveStateSettings = () => {
   const [enhancedSaveSlot, setEnhancedSaveSlot] = useState(true);
   const [saveHoldDuration, setSaveHoldDuration] = useState(2);
 
@@ -21,3 +21,5 @@ export const useSaveStateSettings = () => {
     initFromSettings,
   };
 };
+
+export { useSaveStateSettings };

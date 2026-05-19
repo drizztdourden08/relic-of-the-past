@@ -9,7 +9,7 @@ interface ControllerDisconnectOverlayProps {
   controllerName: string;
 }
 
-export const ControllerDisconnectOverlay = (props: ControllerDisconnectOverlayProps) => {
+const ControllerDisconnectOverlay = (props: ControllerDisconnectOverlayProps) => {
   const { controllerName } = props;
   return (
     <div className="controller-disconnect-overlay">
@@ -31,3 +31,5 @@ export const ControllerDisconnectOverlay = (props: ControllerDisconnectOverlayPr
     </div>
   );
 }
+
+export { ControllerDisconnectOverlay };

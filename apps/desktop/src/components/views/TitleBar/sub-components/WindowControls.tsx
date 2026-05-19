@@ -4,7 +4,7 @@ interface WindowControlsProps {
   isMaximized: boolean;
 }
 
-export const WindowControls = (props: WindowControlsProps) => {
+const WindowControls = (props: WindowControlsProps) => {
   const { isMaximized } = props;
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -66,3 +66,5 @@ export const WindowControls = (props: WindowControlsProps) => {
     </div>
   );
 }
+
+export { WindowControls };

@@ -1,8 +1,8 @@
 import type { GameSettings } from '@shared/types/settings';
 
-export type PageId = 'none' | 'picker' | 'profile' | 'data' | 'input-tester' | 'credits';
+type PageId = 'none' | 'picker' | 'profile' | 'data' | 'input-tester' | 'credits';
 
-export interface ConfirmDialog {
+interface ConfirmDialog {
   title: string;
   message: string;
   confirmLabel: string;
@@ -10,11 +10,11 @@ export interface ConfirmDialog {
   onConfirm: () => void;
 }
 
-export interface RomDisplayInfo extends RomInfo {
+interface RomDisplayInfo extends RomInfo {
   extractionStatus: RomExtractionStatus | 'idle';
 }
 
-export interface DisplaySettings {
+interface DisplaySettings {
   windowMode: GameSettings['windowMode'];
   isFullscreen: boolean;
   viewportConstraint: GameSettings['viewportConstraint'];
@@ -23,7 +23,15 @@ export interface DisplaySettings {
   overworldEdgeEffect: boolean;
 }
 
-export interface AudioSettings {
+interface AudioSettings {
   masterVolume: number;
   isMuted: boolean;
 }
+
+export type {
+  AudioSettings,
+  ConfirmDialog,
+  DisplaySettings,
+  PageId,
+  RomDisplayInfo
+};

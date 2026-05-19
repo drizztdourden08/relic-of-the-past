@@ -22,7 +22,7 @@ import { useStartup } from './behavior/useStartup';
 import { getInputManager } from '../lib/game';
 import './App.css';
 
-export const App = () => {
+const App = () => {
   const [dataTab, setDataTab] = useState<string>('profiles');
   const [profileHubTab, setProfileHubTab] = useState<ProfileHubTab>('home');
 
@@ -195,3 +195,5 @@ export const App = () => {
     </div>
   );
 };
+
+export { App };

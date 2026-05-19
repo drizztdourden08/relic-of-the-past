@@ -8,7 +8,7 @@ import {
 } from '../helpers';
 
 /** Region entrance rules for Dark World locations. */
-export const DARK_WORLD_REGION_RULES: Record<string, Requirement> = {
+const DARK_WORLD_REGION_RULES: Record<string, Requirement> = {
   // Dark World overworld connections
   'Dark Lake Hylia Drop (East)': {
     or: [{ and: ['Moon Pearl', 'Flippers'] }, 'Magic Mirror'],
@@ -79,3 +79,5 @@ export const DARK_WORLD_REGION_RULES: Record<string, Requirement> = {
   'Death Mountain Floating Island Mirror Spot': 'Magic Mirror',
   'Dark Lake Hylia Central Island Mirror Spot': 'Magic Mirror',
 };
+
+export { DARK_WORLD_REGION_RULES };

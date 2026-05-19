@@ -1,4 +1,4 @@
-export interface EmscriptenFS {
+interface EmscriptenFS {
   writeFile(path: string, data: Uint8Array | string): void;
   mkdir(path: string): void;
   readdir(path: string): string[];
@@ -6,14 +6,21 @@ export interface EmscriptenFS {
   analyzePath(path: string): { exists: boolean };
 }
 
-export interface EmscriptenModule {
+interface EmscriptenModule {
   FS: EmscriptenFS;
   ccall(ident: string, returnType: string | null, argTypes: string[], args: unknown[]): unknown;
 }
 
-export type GameStatus = 'idle' | 'loading' | 'running' | 'error';
+type GameStatus = 'idle' | 'loading' | 'running' | 'error';
 
-export interface GameState {
+interface GameState {
   status: GameStatus;
   error: string | null;
 }
+
+export type {
+  EmscriptenFS,
+  EmscriptenModule,
+  GameState,
+  GameStatus
+};

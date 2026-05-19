@@ -10,7 +10,7 @@ interface TrackerRegionSectionProps {
   statuses: Map<string, CheckStatus>;
 }
 
-export const TrackerRegionSection = (props: TrackerRegionSectionProps) => {
+const TrackerRegionSection = (props: TrackerRegionSectionProps) => {
   const { region, checks, statuses } = props;
   const [expanded, setExpanded] = useState(false);
 
@@ -40,3 +40,5 @@ export const TrackerRegionSection = (props: TrackerRegionSectionProps) => {
     </div>
   );
 }
+
+export { TrackerRegionSection };

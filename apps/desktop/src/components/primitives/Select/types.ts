@@ -1,17 +1,17 @@
 import type { ReactNode, SelectHTMLAttributes } from 'react';
 
-export interface SelectOption {
+interface SelectOption {
   value: string;
   label: string;
   description?: string;
 }
 
-export interface SelectGroup {
+interface SelectGroup {
   label: string;
   options: SelectOption[];
 }
 
-export interface SelectProps {
+interface SelectProps {
   value: string;
   onChange: (value: string) => void;
   options?: SelectOption[];
@@ -24,9 +24,9 @@ export interface SelectProps {
   renderOption?: (option: SelectOption, isSelected: boolean) => ReactNode;
 }
 
-export interface NativeSelectProps extends SelectHTMLAttributes<HTMLSelectElement> {}
+interface NativeSelectProps extends SelectHTMLAttributes<HTMLSelectElement> {}
 
-export interface SelectItemProps {
+interface SelectItemProps {
   option: SelectOption;
   selected: boolean;
   highlighted: boolean;
@@ -34,3 +34,11 @@ export interface SelectItemProps {
   onSelect: (val: string) => void;
   renderOption?: (option: SelectOption, isSelected: boolean) => ReactNode;
 }
+
+export type {
+  NativeSelectProps,
+  SelectGroup,
+  SelectItemProps,
+  SelectOption,
+  SelectProps
+};

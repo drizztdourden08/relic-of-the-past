@@ -1,5 +1,5 @@
 /** Seed data structure for randomizer */
-export interface SeedData {
+interface SeedData {
   version: string;
   seed: string;
   locations: Record<string, LocationEntry>;
@@ -9,26 +9,34 @@ export interface SeedData {
   entrances?: Record<string, string>;
 }
 
-export interface LocationEntry {
+interface LocationEntry {
   item: string;
   player?: number;
 }
 
-export interface GoalMode {
+interface GoalMode {
   type: 'ganon' | 'pedestal' | 'triforce' | 'custom';
   requiredCrystals?: number;
 }
 
-export interface MedallionConfig {
+interface MedallionConfig {
   mire: 'bombos' | 'ether' | 'quake';
   turtleRock: 'bombos' | 'ether' | 'quake';
 }
 
 /** Save file metadata */
-export interface SaveMeta {
+interface SaveMeta {
   slot: number;
   name: string;
   seedId: string;
   timestamp: number;
   playTime: number;
 }
+
+export type {
+  GoalMode,
+  LocationEntry,
+  MedallionConfig,
+  SaveMeta,
+  SeedData
+};

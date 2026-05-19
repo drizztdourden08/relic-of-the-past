@@ -7,7 +7,7 @@ import { ITEM_GROUPS } from '../items/groups';
  * Evaluate a Requirement expression tree against an inventory set.
  * Returns true if the requirement is satisfied.
  */
-export function evaluateRequirement(
+function evaluateRequirement(
   req: Requirement,
   inventory: Set<string>,
 ): boolean {
@@ -44,7 +44,7 @@ export function evaluateRequirement(
  * Starting from 'Menu', BFS through the region graph following connections
  * whose entrance rules are satisfied by the current inventory.
  */
-export function getReachableRegions(
+function getReachableRegions(
   inventory: Set<string>,
   connections: RegionConnection[],
   regionRules: Record<string, Requirement>,
@@ -103,12 +103,12 @@ export function getReachableRegions(
 
 // ─── Check Status ───
 
-export type CheckStatus = 'completed' | 'reachable' | 'blocked';
+type CheckStatus = 'completed' | 'reachable' | 'blocked';
 
 /**
  * Get all accessible checks: those in reachable regions whose local rules are satisfied.
  */
-export function getAccessibleChecks(
+function getAccessibleChecks(
   inventory: Set<string>,
   completedChecks: Set<string>,
   checks: CheckDefinition[],
@@ -132,7 +132,7 @@ export function getAccessibleChecks(
 /**
  * Get the status of a single check.
  */
-export function getCheckStatus(
+function getCheckStatus(
   checkId: string,
   inventory: Set<string>,
   completedChecks: Set<string>,
@@ -158,7 +158,7 @@ export function getCheckStatus(
 /**
  * For a blocked check, find the immediate missing items from its requirement tree.
  */
-export function getBlockingItems(
+function getBlockingItems(
   req: Requirement,
   inventory: Set<string>,
 ): string[] {
@@ -204,7 +204,7 @@ export function getBlockingItems(
 /**
  * Full tracker snapshot: compute status for every check.
  */
-export function computeTrackerSnapshot(
+function computeTrackerSnapshot(
   inventory: Set<string>,
   completedChecks: Set<string>,
   checks: CheckDefinition[],
@@ -237,3 +237,13 @@ export function computeTrackerSnapshot(
 
   return result;
 }
+
+export {
+  computeTrackerSnapshot,
+  evaluateRequirement,
+  getAccessibleChecks,
+  getBlockingItems,
+  getCheckStatus,
+  getReachableRegions
+};
+export type { CheckStatus };

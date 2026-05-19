@@ -1,6 +1,6 @@
 import type { CheckDefinition } from '../types';
 
-export const LIGHT_WORLD_CHECKS: CheckDefinition[] = [
+const LIGHT_WORLD_CHECKS: CheckDefinition[] = [
   // ─── Progression Events (milestones, no item reward) ───
 
   { id: 'event-link-wakes-up', name: 'Link Wakes Up', type: 'event', region: 'menu' },
@@ -114,3 +114,5 @@ export const LIGHT_WORLD_CHECKS: CheckDefinition[] = [
   { id: 'Mimic Cave', name: 'Mimic Cave', type: 'chest', region: 'mimic-cave', vanillaItem: 'Heart Piece' },
   { id: 'Spike Cave', name: 'Spike Cave', type: 'chest', region: 'spike-cave', vanillaItem: 'Cane of Byrna' },
 ];
+
+export { LIGHT_WORLD_CHECKS };

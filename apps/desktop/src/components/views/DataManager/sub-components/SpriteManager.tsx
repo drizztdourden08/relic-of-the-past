@@ -8,11 +8,11 @@ import {
 } from '@shared/game/sprites';
 import './SpriteManager.css';
 
-export interface SpriteManagerProps {
+interface SpriteManagerProps {
   romStatuses: RomDisplayInfo[];
 }
 
-export const SpriteManager = (props: SpriteManagerProps) => {
+const SpriteManager = (props: SpriteManagerProps) => {
   const { romStatuses } = props;
   const [selectedRom, setSelectedRom] = useState('');
   const [extracting, setExtracting] = useState(false);
@@ -202,3 +202,6 @@ const SpriteCard = ({ file, label, category, baseUrl }: { file: string; label: s
     </div>
   );
 };
+
+export { SpriteManager };
+export type { SpriteManagerProps };

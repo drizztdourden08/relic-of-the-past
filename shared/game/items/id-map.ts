@@ -9,7 +9,7 @@
  * ───────────────────────────────────────────────────────────────
  */
 
-export const ITEM_ID_TO_NAME: Record<number, string> = {
+const ITEM_ID_TO_NAME: Record<number, string> = {
   // Swords (0xF359 = link_sword_type, values 1–4)
   0x00: 'Fighter Sword',
   0x01: 'Master Sword',
@@ -126,3 +126,5 @@ export const ITEM_ID_TO_NAME: Record<number, string> = {
   // Pegasus Boots
   0x4b: 'Pegasus Boots',     // 0xF355
 };
+
+export { ITEM_ID_TO_NAME };

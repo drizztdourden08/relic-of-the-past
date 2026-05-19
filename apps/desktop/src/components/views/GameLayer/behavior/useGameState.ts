@@ -7,7 +7,7 @@ import {
 } from '../../../../lib/game';
 import { useEffect } from 'react';
 
-export const useGameState = () => {
+const useGameState = () => {
   const [status, setStatus] = useState<GameStatus>(() => getGameState().status);
   const [error, setError] = useState<string | null>(() => getGameState().error);
   const startedRef = useRef(false);
@@ -35,3 +35,5 @@ export const useGameState = () => {
 
   return { status, error, start };
 }
+
+export { useGameState };

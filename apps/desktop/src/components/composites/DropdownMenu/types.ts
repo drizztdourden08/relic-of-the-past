@@ -1,6 +1,6 @@
 import type { RefObject } from 'react';
 
-export interface MenuItem {
+interface MenuItem {
   key: string;
   icon?: string;
   label: string;
@@ -10,9 +10,11 @@ export interface MenuItem {
   children?: MenuItem[];
 }
 
-export type MenuEntry = MenuItem | 'separator';
+type MenuEntry = MenuItem | 'separator';
 
-export interface DropdownMenuProps {
+interface DropdownMenuProps {
   items: MenuEntry[];
   anchorRef?: RefObject<HTMLElement | null>;
 }
+
+export type { DropdownMenuProps, MenuEntry, MenuItem };

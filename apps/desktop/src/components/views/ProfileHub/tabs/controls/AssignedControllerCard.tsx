@@ -22,7 +22,7 @@ const FAMILY_EMOJI: Record<string, string> = {
   generic: '🎮',
 };
 
-export const AssignedDeviceCard = (props: AssignedDeviceCardProps) => {
+const AssignedDeviceCard = (props: AssignedDeviceCardProps) => {
   const { assigned, liveDevice, onUnassign } = props;
   const isConnected = liveDevice?.connected ?? false;
   const isActivated = liveDevice?.activated ?? false;
@@ -61,3 +61,5 @@ export const AssignedDeviceCard = (props: AssignedDeviceCardProps) => {
     </div>
   );
 }
+
+export { AssignedDeviceCard };

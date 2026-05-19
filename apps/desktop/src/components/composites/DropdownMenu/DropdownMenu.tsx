@@ -4,7 +4,7 @@ import { SubMenu } from './sub-components/SubMenu';
 import type { DropdownMenuProps } from './types';
 import './DropdownMenu.css';
 
-export const DropdownMenu = (props: DropdownMenuProps) => {
+const DropdownMenu = (props: DropdownMenuProps) => {
   const { items, anchorRef } = props;
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
 
@@ -45,3 +45,5 @@ export const DropdownMenu = (props: DropdownMenuProps) => {
 };
 
 export type { MenuItem, MenuEntry } from './types';
+
+export { DropdownMenu };

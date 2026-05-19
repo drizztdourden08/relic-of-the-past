@@ -3,24 +3,24 @@
  */
 
 /** Supported ROM language/region variants */
-export type RomLanguage =
+type RomLanguage =
   | 'us' | 'de' | 'fr' | 'fr-c' | 'en'
   | 'es' | 'pl' | 'pt' | 'redux' | 'nl' | 'sv';
 
 /** ROM identification entry */
-export interface RomIdentEntry {
+interface RomIdentEntry {
   language: RomLanguage;
   description: string;
 }
 
 /** SHA1 hash (uppercase hex) → ROM identification */
-export type RomHashTable = Record<string, RomIdentEntry>;
+type RomHashTable = Record<string, RomIdentEntry>;
 
 /**
  * Loaded ROM data — the primary dependency injected into all extraction functions.
  * Replaces the Python global `ROM` singleton.
  */
-export interface RomData {
+interface RomData {
   /** Raw ROM bytes (header stripped) */
   readonly bytes: Buffer;
   /** Detected language/region */
@@ -43,3 +43,10 @@ export interface RomData {
   /** Read N 16-bit words starting at SNES address (handles bank boundaries) */
   getWords(addr: number, n: number): number[];
 }
+
+export type {
+  RomData,
+  RomHashTable,
+  RomIdentEntry,
+  RomLanguage
+};

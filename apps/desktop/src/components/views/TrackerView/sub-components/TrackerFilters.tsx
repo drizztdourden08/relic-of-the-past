@@ -6,7 +6,7 @@ import { GROUP_DIMENSIONS } from '@shared/game/checks/grouping';
 import type { FilterState } from '@shared/game/checks/grouping';
 import '../TrackerView.css';
 
-export type ViewMode = 'compact' | 'detailed' | 'visual';
+type ViewMode = 'compact' | 'detailed' | 'visual';
 
 interface TrackerFiltersProps {
   filter: FilterState;
@@ -17,7 +17,7 @@ interface TrackerFiltersProps {
   onViewModeChange: (mode: ViewMode) => void;
 }
 
-export const TrackerFilters = (props: TrackerFiltersProps) => {
+const TrackerFilters = (props: TrackerFiltersProps) => {
   const { filter, onFilterChange, grouping, onGroupingChange, viewMode, onViewModeChange } = props;
   const [showGroupConfig, setShowGroupConfig] = useState(false);
   const [showTagFilter, setShowTagFilter] = useState(false);
@@ -177,3 +177,6 @@ export const TrackerFilters = (props: TrackerFiltersProps) => {
     </div>
   );
 }
+
+export { TrackerFilters };
+export type { ViewMode };

@@ -65,7 +65,7 @@ function detectFromHid(hid: HidDeviceInfo, index: number, webApiActivated: boole
  * Build a DetectedDevice from a Web Gamepad API Gamepad object.
  * Only available after the user presses a button.
  */
-export function detectGamepad(gp: Gamepad): DetectedDevice {
+function detectGamepad(gp: Gamepad): DetectedDevice {
   const preset = resolvePreset(gp.id, gp.mapping);
   const parsed = parseGamepadId(gp.id);
 
@@ -89,7 +89,7 @@ export function detectGamepad(gp: Gamepad): DetectedDevice {
 /**
  * Build a DetectedDevice for a keyboard.
  */
-export function detectKeyboard(index = 0): DetectedDevice {
+function detectKeyboard(index = 0): DetectedDevice {
   return {
     id: `keyboard-${index}`,
     type: 'keyboard',
@@ -114,12 +114,12 @@ export function detectKeyboard(index = 0): DetectedDevice {
 const activatedIndices = new Set<number>();
 
 /** Mark a gamepad index as activated. Call from gamepadconnected handler. */
-export function markActivated(index: number): void {
+function markActivated(index: number): void {
   activatedIndices.add(index);
 }
 
 /** Also check current input state as a fallback (e.g. if event was missed). */
-export function updateActivationState(): void {
+function updateActivationState(): void {
   const gamepads = navigator.getGamepads();
   for (const gp of gamepads) {
     if (!gp || !gp.connected) continue;
@@ -145,7 +145,7 @@ function hasAnyActivation(): boolean {
  *
  * @param hidDevices — from window.api.enumerateHidDevices()
  */
-export function detectAllDevices(hidDevices?: HidDeviceInfo[]): DetectedDevice[] {
+function detectAllDevices(hidDevices?: HidDeviceInfo[]): DetectedDevice[] {
   const devices: DetectedDevice[] = [];
 
   // Always include keyboard
@@ -175,3 +175,10 @@ export function detectAllDevices(hidDevices?: HidDeviceInfo[]): DetectedDevice[]
   return devices;
 }
 
+export {
+  detectAllDevices,
+  detectGamepad,
+  detectKeyboard,
+  markActivated,
+  updateActivationState
+};

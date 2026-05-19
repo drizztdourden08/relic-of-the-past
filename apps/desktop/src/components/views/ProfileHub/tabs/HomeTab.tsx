@@ -36,7 +36,7 @@ interface SlotInfo {
   screenshot: string | null;
 }
 
-export const HomeTab = (props: HomeTabProps) => {
+const HomeTab = (props: HomeTabProps) => {
   const {
     profileId,
     romFile,
@@ -176,3 +176,5 @@ export const HomeTab = (props: HomeTabProps) => {
     </div>
   );
 }
+
+export { HomeTab };

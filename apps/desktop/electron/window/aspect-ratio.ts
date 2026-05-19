@@ -4,7 +4,7 @@ import { getMainWindow } from './create-window';
 let lockedRatio = 0;
 let lockedExtraHeight = 0;
 
-export function registerAspectRatioHandlers(): void {
+function registerAspectRatioHandlers(): void {
   ipcMain.on('window:setAspectRatioLock', (_e, ratio: number, extraHeight: number) => {
     const mainWindow = getMainWindow();
     if (!mainWindow) return;
@@ -96,3 +96,5 @@ export function registerAspectRatioHandlers(): void {
     });
   });
 }
+
+export { registerAspectRatioHandlers };

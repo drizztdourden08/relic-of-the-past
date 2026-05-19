@@ -74,7 +74,7 @@ const kDecodeTab = [
 /**
  * Loaded sprite sheet cache for drop sprites.
  */
-export interface DropSheets {
+interface DropSheets {
   sheets: Map<number, Buffer>;
   sheet96: Buffer;
 }
@@ -82,7 +82,7 @@ export interface DropSheets {
 /**
  * Load sprite sheets needed for drop sprite extraction.
  */
-export function loadDropSheets(rom: RomData): DropSheets {
+function loadDropSheets(rom: RomData): DropSheets {
   const getByte = (addr: number) => rom.getByte(addr);
   const sheetIds = [0, 6, 7, 10, 27];
   const sheets = new Map<number, Buffer>();
@@ -163,7 +163,7 @@ function extractTall(charId: number, palette: RGBA[], dropSheets: DropSheets): I
 /**
  * Extract a standard drop sprite by sprite type.
  */
-export function extractDropStandard(
+function extractDropStandard(
   spriteType: number,
   paletteIdx: number,
   spritePalettes: SpritePalettes,
@@ -183,7 +183,7 @@ export function extractDropStandard(
 /**
  * Extract a numbered drop sprite (e.g., bomb count, arrow count).
  */
-export function extractDropNumbered(
+function extractDropNumbered(
   _spriteType: number,
   paletteIdx: number,
   group: number,
@@ -217,7 +217,7 @@ export function extractDropNumbered(
 /**
  * Extract a rupee drop sprite from sheet 96.
  */
-export function extractDropRupee(
+function extractDropRupee(
   paletteIdx: number,
   spritePalettes: SpritePalettes,
   dropSheets: DropSheets,
@@ -234,7 +234,7 @@ export function extractDropRupee(
 /**
  * Extract a big key drop sprite.
  */
-export function extractDropBigkey(
+function extractDropBigkey(
   paletteIdx: number,
   spritePalettes: SpritePalettes,
   receiptSheets: ReceiptSheets,
@@ -259,7 +259,7 @@ export function extractDropBigkey(
 /**
  * Extract a fighter's shield drop sprite (tall/2-tile from specific sheet).
  */
-export function extractDropShieldFighters(
+function extractDropShieldFighters(
   sheetId: number,
   tileIds: number[],
   paletteIdx: number,
@@ -279,7 +279,7 @@ export function extractDropShieldFighters(
 /**
  * Extract a fire shield drop sprite (16×16 from 4 tiles).
  */
-export function extractDropShieldFire(
+function extractDropShieldFire(
   sheetId: number,
   tileIds: number[],
   paletteIdx: number,
@@ -300,7 +300,7 @@ export function extractDropShieldFire(
 /**
  * Extract the Super Bomb follower sprite.
  */
-export function extractFollowerBomb(
+function extractFollowerBomb(
   paletteIdx: number,
   rom: RomData,
   spritePalettes: SpritePalettes,
@@ -318,3 +318,15 @@ export function extractFollowerBomb(
   }
   return img;
 }
+
+export {
+  extractDropBigkey,
+  extractDropNumbered,
+  extractDropRupee,
+  extractDropShieldFighters,
+  extractDropShieldFire,
+  extractDropStandard,
+  extractFollowerBomb,
+  loadDropSheets
+};
+export type { DropSheets };

@@ -1,4 +1,4 @@
-export interface Profile {
+interface Profile {
   id: string;
   name: string;
   romFile: string;
@@ -8,6 +8,8 @@ export interface Profile {
   msuPack?: string;    // MSU pack directory name
 }
 
-export interface AppState {
+interface AppState {
   lastProfileId: string | null;
 }
+
+export type { AppState, Profile };

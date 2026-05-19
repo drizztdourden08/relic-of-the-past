@@ -79,7 +79,7 @@ function buildPpuFlags(s: GameSettings): number {
 }
 
 /** Settings keys that can be live-updated while the game runs. */
-export const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
+const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   // Feature flags (synced every frame via g_wanted_zelda_features)
   'itemSwitchLR',
   'itemSwitchLRLimit',
@@ -120,7 +120,7 @@ export const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
 ]);
 
 /** Push live-updatable settings to the running WASM module. Returns true if successful. */
-export function pushLiveSettings(settings: GameSettings): boolean {
+function pushLiveSettings(settings: GameSettings): boolean {
   const mod = getModule();
   if (!mod) {
     log.app('Live settings: no WASM module available', 'warn');
@@ -156,6 +156,8 @@ export function pushLiveSettings(settings: GameSettings): boolean {
 }
 
 /** Check if a setting change requires a game restart (i.e. it's NOT live-updatable). */
-export function requiresRestart(changedKeys: (keyof GameSettings)[]): boolean {
+function requiresRestart(changedKeys: (keyof GameSettings)[]): boolean {
   return changedKeys.some((k) => !LIVE_SETTINGS.has(k));
 }
+
+export { LIVE_SETTINGS, pushLiveSettings, requiresRestart };

@@ -1,7 +1,7 @@
 import { ipcMain, BrowserWindow } from 'electron';
 import { getMainWindow } from './create-window';
 
-export function registerWindowHandlers(): void {
+function registerWindowHandlers(): void {
   const win = () => getMainWindow();
 
   // Window controls
@@ -38,3 +38,5 @@ export function registerWindowHandlers(): void {
   });
   ipcMain.handle('window:isFullscreen', () => win()?.isFullScreen() ?? false);
 }
+
+export { registerWindowHandlers };

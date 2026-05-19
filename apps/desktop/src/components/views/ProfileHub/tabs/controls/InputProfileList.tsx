@@ -18,7 +18,7 @@ interface InputProfileListProps {
   onCreate: () => void;
 }
 
-export const InputProfileList = (props: InputProfileListProps) => {
+const InputProfileList = (props: InputProfileListProps) => {
   const {
     profiles,
     activeId,
@@ -124,3 +124,5 @@ export const InputProfileList = (props: InputProfileListProps) => {
     </div>
   );
 }
+
+export { InputProfileList };

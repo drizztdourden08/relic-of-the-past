@@ -6,7 +6,7 @@
 import type { LanguageConfig } from './language-data';
 import { kLanguages } from './language-data';
 
-export interface DecodedString {
+interface DecodedString {
   text: string;
   srcData: number[];
 }
@@ -18,7 +18,7 @@ export interface DecodedString {
  * @param lang - Language code (us, de, fr, etc.)
  * @returns Array of decoded strings with their raw byte data
  */
-export function decodeStrings(
+function decodeStrings(
   getByte: (addr: number) => number,
   lang: string,
 ): DecodedString[] {
@@ -27,7 +27,7 @@ export function decodeStrings(
   return decodeStringsWithConfig(getByte, info, lang);
 }
 
-export function decodeStringsWithConfig(
+function decodeStringsWithConfig(
   getByte: (addr: number) => number,
   info: LanguageConfig,
   lang: string,
@@ -97,7 +97,7 @@ export function decodeStringsWithConfig(
  * Format decoded strings as numbered dialogue text (matches Python print_strings output).
  * Inserts the synthetic extra_str at index 4 for US-format ROMs with 396 strings.
  */
-export function formatDialogueText(strings: DecodedString[]): string {
+function formatDialogueText(strings: DecodedString[]): string {
   let texts = strings;
   if (texts.length === 396) {
     const extraStr = '[Speed 00]0- [Number 00]. 1- [Number 01][2]2- [Number 02]. 3- [Number 03]';
@@ -109,3 +109,6 @@ export function formatDialogueText(strings: DecodedString[]): string {
   }
   return texts.map((s, i) => `${i + 1}: ${s.text}`).join('\n') + '\n';
 }
+
+export { decodeStrings, decodeStringsWithConfig, formatDialogueText };
+export type { DecodedString };

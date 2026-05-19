@@ -17,7 +17,7 @@ import { TrackerSummary } from '../../views/TrackerView/sub-components/TrackerSu
 import { TrackerFilters, type ViewMode } from '../../views/TrackerView/sub-components/TrackerFilters';
 import { TrackerGroupTree } from '../../views/TrackerView/sub-components/TrackerGroupTree';
 
-export const ChecksWidgetContent = () => {
+const ChecksWidgetContent = () => {
   const [inventory, setInventory] = useState<Set<string>>(() => getCurrentInventory());
   const [completedChecks, setCompletedChecks] = useState<Set<string>>(() => getCompletedChecks());
   const [viewMode, setViewMode] = useState<ViewMode>('compact');
@@ -77,3 +77,5 @@ export const ChecksWidgetContent = () => {
     </div>
   );
 }
+
+export { ChecksWidgetContent };

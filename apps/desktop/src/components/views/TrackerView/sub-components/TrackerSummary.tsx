@@ -7,7 +7,7 @@ interface TrackerSummaryProps {
   total: number;
 }
 
-export const TrackerSummary = (props: TrackerSummaryProps) => {
+const TrackerSummary = (props: TrackerSummaryProps) => {
   const { completed, reachable, blocked, total } = props;
   const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
 
@@ -33,3 +33,5 @@ export const TrackerSummary = (props: TrackerSummaryProps) => {
     </div>
   );
 }
+
+export { TrackerSummary };

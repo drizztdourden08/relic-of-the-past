@@ -1,13 +1,15 @@
-export interface InventorySlot {
+interface InventorySlot {
   displayName: string;
   /** The tracker item name(s) to check in the inventory set — first match wins */
   trackerNames: string[];
   sprite: string;
 }
 
-export interface InventoryCategory {
+interface InventoryCategory {
   label: string;
   items: InventorySlot[];
 }
 
-export type InventoryViewMode = 'default' | 'ingame' | 'compact';
+type InventoryViewMode = 'default' | 'ingame' | 'compact';
+
+export type { InventoryCategory, InventorySlot, InventoryViewMode };

@@ -29,7 +29,7 @@ import type { SelectOption } from '../../../primitives';
 
 // ── Exported types ─────────────────────────────────────────────────────────────
 
-export interface HidButtonMapping {
+interface HidButtonMapping {
   byteIndex: number;
   bitMask: number;
   /** For analog triggers: value above which the button is considered pressed */
@@ -38,22 +38,22 @@ export interface HidButtonMapping {
   restValue?: number;
 }
 
-export interface HidAxisMapping {
+interface HidAxisMapping {
   byteIndex: number; center: number;
   min: number; max: number; inverted: boolean;
 }
 
-export interface IdleByteAnalysis {
+interface IdleByteAnalysis {
   byteIndex: number; min: number; max: number; range: number;
   average: number; uniqueCount: number; uniqueValues: number[] | string;
 }
 
-export interface IdleRecordResult {
+interface IdleRecordResult {
   label: string; durationMs: number; frameCount: number;
   bytes: IdleByteAnalysis[];
 }
 
-export interface HidControllerMap {
+interface HidControllerMap {
   name: string; profileId: string;
   vendorId: number; productId: number;
   reportId: number; reportLength: number;
@@ -174,7 +174,7 @@ interface Props {
   deviceKey?: string;
 }
 
-export const HidCalibrationWizard = (props: Props) => {
+const HidCalibrationWizard = (props: Props) => {
   const { onComplete, onCancel, deviceKey } = props;
   const [selectedProfileId, setSelectedProfileId] = useState('');
   const [selectedSdlVidPid, setSelectedSdlVidPid] = useState('');
@@ -1871,3 +1871,12 @@ export const HidCalibrationWizard = (props: Props) => {
     );
   }
 }
+
+export { HidCalibrationWizard };
+export type {
+  HidAxisMapping,
+  HidButtonMapping,
+  HidControllerMap,
+  IdleByteAnalysis,
+  IdleRecordResult
+};

@@ -14,7 +14,7 @@ import { readCompletedChecks } from './flag-polling';
 
 type ItemReceivedListener = (itemName: string, itemId: number, method: number) => void;
 type InventoryChangedListener = (inventory: Set<string>) => void;
-export type UnknownItemEntry = { id: number; method: number; timestamp: number };
+type UnknownItemEntry = { id: number; method: number; timestamp: number };
 type UnknownItemListener = (items: UnknownItemEntry[]) => void;
 type CompletedChecksListener = (checks: Set<string>) => void;
 
@@ -31,49 +31,49 @@ let pollIntervalId: ReturnType<typeof setInterval> | null = null;
 
 // ─── Public API ───
 
-export function onItemReceived(fn: ItemReceivedListener): () => void {
+function onItemReceived(fn: ItemReceivedListener): () => void {
   itemListeners.add(fn);
   return () => itemListeners.delete(fn);
 }
 
-export function onInventoryChanged(fn: InventoryChangedListener): () => void {
+function onInventoryChanged(fn: InventoryChangedListener): () => void {
   inventoryListeners.add(fn);
   return () => inventoryListeners.delete(fn);
 }
 
-export function getCurrentInventory(): Set<string> {
+function getCurrentInventory(): Set<string> {
   return currentInventory;
 }
 
-export function onUnknownItem(fn: UnknownItemListener): () => void {
+function onUnknownItem(fn: UnknownItemListener): () => void {
   unknownItemListeners.add(fn);
   return () => unknownItemListeners.delete(fn);
 }
 
-export function getUnknownItems(): UnknownItemEntry[] {
+function getUnknownItems(): UnknownItemEntry[] {
   return unknownItems;
 }
 
-export function loadUnknownItems(items: UnknownItemEntry[]): void {
+function loadUnknownItems(items: UnknownItemEntry[]): void {
   unknownItems = items;
   for (const fn of unknownItemListeners) {
     try { fn(unknownItems); } catch { /* ignore */ }
   }
 }
 
-export function onCompletedChecksChanged(fn: CompletedChecksListener): () => void {
+function onCompletedChecksChanged(fn: CompletedChecksListener): () => void {
   completedChecksListeners.add(fn);
   return () => completedChecksListeners.delete(fn);
 }
 
-export function getCompletedChecks(): Set<string> {
+function getCompletedChecks(): Set<string> {
   return currentCompletedChecks;
 }
 
 /**
  * Poll WASM room flags to determine which checks are completed.
  */
-export function pollRoomFlags(force = false): void {
+function pollRoomFlags(force = false): void {
   const mod = getModule();
   if (!mod) return;
 
@@ -97,7 +97,7 @@ export function pollRoomFlags(force = false): void {
  * Poll the WASM module for current inventory state and update the tracker.
  * When `force` is true, always notify listeners even if unchanged (e.g. after save state load).
  */
-export function pollInventoryState(force = false): void {
+function pollInventoryState(force = false): void {
   const mod = getModule();
   if (!mod) return;
 
@@ -152,7 +152,7 @@ export function pollInventoryState(force = false): void {
  * Initialize the tracker bridge. Sets up the item received callback
  * and starts polling inventory state.
  */
-export function initTrackerBridge(): void {
+function initTrackerBridge(): void {
   log.app('Initializing tracker bridge');
 
   (window as any).__onItemReceived = (itemId: number, method: number) => {
@@ -191,7 +191,7 @@ export function initTrackerBridge(): void {
  * Only clears polling and window callback — listeners persist across
  * bridge re-initializations so components don't need to re-register.
  */
-export function destroyTrackerBridge(): void {
+function destroyTrackerBridge(): void {
   if (pollIntervalId !== null) {
     clearInterval(pollIntervalId);
     pollIntervalId = null;
@@ -200,3 +200,19 @@ export function destroyTrackerBridge(): void {
   currentInventory = new Set();
   currentCompletedChecks = new Set();
 }
+
+export {
+  destroyTrackerBridge,
+  getCompletedChecks,
+  getCurrentInventory,
+  getUnknownItems,
+  initTrackerBridge,
+  loadUnknownItems,
+  onCompletedChecksChanged,
+  onInventoryChanged,
+  onItemReceived,
+  onUnknownItem,
+  pollInventoryState,
+  pollRoomFlags
+};
+export type { UnknownItemEntry };

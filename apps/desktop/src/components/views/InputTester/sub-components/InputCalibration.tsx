@@ -192,7 +192,7 @@ function resolveDeviceName(vid: string, pid: string, hidProduct?: string): strin
 
 // ── Main Component ──
 
-export const InputCalibration = () => {
+const InputCalibration = () => {
   const [gamepads, setGamepads] = useState<GamepadSnapshot[]>([]);
   const [events, setEvents] = useState<EventEntry[]>([]);
   const logRef = useRef<HTMLDivElement>(null);
@@ -961,3 +961,5 @@ function GamepadCard({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
     </div>
   );
 }
+
+export { InputCalibration };

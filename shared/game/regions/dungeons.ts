@@ -2,7 +2,7 @@ import type { RegionDefinition, RegionConnection } from '../types';
 
 // ─── Dungeon Region Definitions ───
 
-export const DUNGEON_REGIONS: RegionDefinition[] = [
+const DUNGEON_REGIONS: RegionDefinition[] = [
   // ── Hyrule Castle ──
   { id: 'hyrule-castle', name: 'Hyrule Castle', type: 'dungeon', dungeon: 'Hyrule Castle' },
   { id: 'sewer-drop', name: 'Sewer Drop', type: 'dungeon', dungeon: 'Hyrule Castle' },
@@ -108,7 +108,7 @@ export const DUNGEON_REGIONS: RegionDefinition[] = [
 
 // ─── Dungeon Region Connections ───
 
-export const DUNGEON_CONNECTIONS: RegionConnection[] = [
+const DUNGEON_CONNECTIONS: RegionConnection[] = [
   // ── Hyrule Castle ──
   { from: 'hyrule-castle', to: 'sewer-drop', entrance: 'Throne Room' },
   { from: 'sewer-drop', to: 'sewers-dark', entrance: 'Sewer Drop' },
@@ -211,3 +211,5 @@ export const DUNGEON_CONNECTIONS: RegionConnection[] = [
   { from: 'ganons-tower-before-moldorm', to: 'ganons-tower-moldorm', entrance: 'Ganons Tower Moldorm Door' },
   { from: 'ganons-tower-moldorm', to: 'agahnim-2', entrance: 'Ganons Tower Moldorm Gap' },
 ];
+
+export { DUNGEON_CONNECTIONS, DUNGEON_REGIONS };

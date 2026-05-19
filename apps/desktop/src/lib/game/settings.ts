@@ -4,7 +4,7 @@
 
 import type { GameSettings } from '@shared/types/settings';
 
-export const DEFAULT_SETTINGS: GameSettings = {
+const DEFAULT_SETTINGS: GameSettings = {
   // General
   autosave: false,
   displayPerfInTitle: false,
@@ -72,7 +72,7 @@ function boolToIni(v: boolean): string {
 }
 
 /** Serialize GameSettings to a zelda3.ini string for WASM consumption. */
-export function serializeToIni(settings: GameSettings, msuPath?: string): string {
+function serializeToIni(settings: GameSettings, msuPath?: string): string {
   // Build ExtendedAspectRatio value with modifiers
   const parts: string[] = [];
   if (settings.extendY) parts.push('extend_y');
@@ -127,7 +127,7 @@ CancelBirdTravel = ${boolToIni(settings.cancelBirdTravel)}
 }
 
 /** Merge partial settings over defaults, producing a complete GameSettings. */
-export function mergeSettings(partial: Partial<GameSettings>): GameSettings {
+function mergeSettings(partial: Partial<GameSettings>): GameSettings {
   const merged = { ...DEFAULT_SETTINGS, ...partial };
 
   // Migrate old windowMode values from previous schema
@@ -166,3 +166,5 @@ export function mergeSettings(partial: Partial<GameSettings>): GameSettings {
 
   return merged;
 }
+
+export { DEFAULT_SETTINGS, mergeSettings, serializeToIni };

@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { DropZone } from '../../../primitives/DropZone';
 
-export interface ImportFormProps {
+interface ImportFormProps {
   placeholder?: string;
   accept?: string[];
   dropLabel?: string;
@@ -11,7 +11,7 @@ export interface ImportFormProps {
   onFileImport: (files: File[]) => Promise<{ success: boolean; message: string }>;
 }
 
-export const ImportForm = (props: ImportFormProps) => {
+const ImportForm = (props: ImportFormProps) => {
   const {
     placeholder = 'Paste download URL…',
     accept = ['.zip'],
@@ -99,3 +99,6 @@ export const ImportForm = (props: ImportFormProps) => {
     </div>
   );
 };
+
+export { ImportForm };
+export type { ImportFormProps };

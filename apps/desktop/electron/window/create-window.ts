@@ -4,11 +4,11 @@ import { is } from '@electron-toolkit/utils';
 
 let mainWindow: BrowserWindow | null = null;
 
-export function getMainWindow(): BrowserWindow | null {
+function getMainWindow(): BrowserWindow | null {
   return mainWindow;
 }
 
-export function createWindow(): BrowserWindow {
+function createWindow(): BrowserWindow {
   const noFocus = process.argv.includes('--no-focus');
 
   mainWindow = new BrowserWindow({
@@ -74,3 +74,5 @@ export function createWindow(): BrowserWindow {
 
   return mainWindow;
 }
+
+export { createWindow, getMainWindow };

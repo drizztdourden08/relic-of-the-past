@@ -7,7 +7,7 @@ import { readFile, mkdir, writeFile } from 'fs/promises';
 
 let userDataPath = '';
 
-export function initProfileStore(dataPath: string): void {
+function initProfileStore(dataPath: string): void {
   userDataPath = dataPath;
 }
 
@@ -15,7 +15,7 @@ function path(...segments: string[]): string {
   return join(userDataPath, 'Data', ...segments);
 }
 
-export async function readInputProfiles(profileId: string): Promise<unknown[]> {
+async function readInputProfiles(profileId: string): Promise<unknown[]> {
   try {
     const data = await readFile(path('profiles', profileId, 'input-profiles.json'), 'utf-8');
     return JSON.parse(data);
@@ -24,8 +24,10 @@ export async function readInputProfiles(profileId: string): Promise<unknown[]> {
   }
 }
 
-export async function writeInputProfiles(profileId: string, profiles: unknown[]): Promise<void> {
+async function writeInputProfiles(profileId: string, profiles: unknown[]): Promise<void> {
   const profileDir = path('profiles', profileId);
   await mkdir(profileDir, { recursive: true });
   await writeFile(join(profileDir, 'input-profiles.json'), JSON.stringify(profiles, null, 2), 'utf-8');
 }
+
+export { initProfileStore, readInputProfiles, writeInputProfiles };

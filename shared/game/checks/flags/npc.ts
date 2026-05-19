@@ -23,7 +23,7 @@
  * Source: core/zelda3/src/sprite_main.c (NPC handlers)
  */
 
-export interface NpcCheckConfig {
+interface NpcCheckConfig {
   // ─── Detection (bridge polling) ───
   /** Index into the progress buffer */
   bufferIndex: number;
@@ -52,12 +52,12 @@ export interface NpcCheckConfig {
 /**
  * Backwards-compatible type alias for the bridge polling code.
  */
-export interface NpcFlagEntry {
+interface NpcFlagEntry {
   bufferIndex: number;
   mask: number;
 }
 
-export const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
+const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
   // ═══════════════════════════════════════════════════════════════
   // Link's Uncle — Secret Passage (room 0x55)
   // Sprite 0x73 (UncleAndPriest), handler: Uncle_InPassage
@@ -316,3 +316,6 @@ export const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
     sourceFunc: 'Sprite_28_DarkWorldHintNPC',
   },
 };
+
+export { CHECK_NPC_FLAGS };
+export type { NpcCheckConfig, NpcFlagEntry };

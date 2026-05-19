@@ -447,7 +447,7 @@ function formatSfxLine(line: SfxLine): string {
 
 // ─── Public API ───
 
-export interface MusicExtractionResult {
+interface MusicExtractionResult {
   /** Song text files: { 'sound_intro.txt': content, ... } */
   songTexts: Record<string, string>;
   /** SFX text: 'sfx.txt' content */
@@ -460,7 +460,7 @@ export interface MusicExtractionResult {
   musicInfoYaml: string;
 }
 
-export function extractSoundData(rom: RomData): MusicExtractionResult {
+function extractSoundData(rom: RomData): MusicExtractionResult {
   const ctx = new SoundBankContext();
   const songTexts: Record<string, string> = {};
   let sfxText = '';
@@ -653,3 +653,6 @@ function printAllSfx(ctx: SoundBankContext): string {
 
   return output;
 }
+
+export { extractSoundData };
+export type { MusicExtractionResult };

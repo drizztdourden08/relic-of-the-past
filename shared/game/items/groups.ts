@@ -1,4 +1,4 @@
-export const ITEM_GROUPS: Record<string, string[]> = {
+const ITEM_GROUPS: Record<string, string[]> = {
   Swords: ['Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword'],
   Bottles: [
     'Bottle',
@@ -23,3 +23,5 @@ export const ITEM_GROUPS: Record<string, string[]> = {
   Bows: ['Bow', 'Silver Bow', 'Silver Arrows'],
   Gloves: ['Power Glove', 'Titans Mitts'],
 };
+
+export { ITEM_GROUPS };

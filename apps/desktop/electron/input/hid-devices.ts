@@ -7,7 +7,7 @@
 
 import HID from 'node-hid';
 
-export interface HidDeviceInfo {
+interface HidDeviceInfo {
   vendorId: string;   // lowercase hex, 4 chars
   productId: string;  // lowercase hex, 4 chars
   product: string;    // USB product name
@@ -57,7 +57,7 @@ function toHex4(n: number): string {
  * Accepts an optional pre-fetched device list (e.g. from a worker thread)
  * to avoid blocking the main thread with HID.devices().
  */
-export function enumerateControllers(rawDevices?: HID.Device[]): HidDeviceInfo[] {
+function enumerateControllers(rawDevices?: HID.Device[]): HidDeviceInfo[] {
   const raw = rawDevices ?? HID.devices();
   const seen = new Map<string, HidDeviceInfo>();
 
@@ -88,3 +88,6 @@ export function enumerateControllers(rawDevices?: HID.Device[]): HidDeviceInfo[]
 
   return Array.from(seen.values());
 }
+
+export { enumerateControllers };
+export type { HidDeviceInfo };

@@ -15,7 +15,7 @@ import { getInputManager } from '../input/input-manager';
 declare function Zelda3(config: Record<string, unknown>): Promise<EmscriptenModule>;
 
 // ─── MSU data staging ───
-export interface MsuTrackData {
+interface MsuTrackData {
   num: number;
   ext: string;
   data: Uint8Array;
@@ -24,14 +24,14 @@ export interface MsuTrackData {
 let pendingMsuData: MsuTrackData[] | null = null;
 
 /** Stage MSU track data to be written to MEMFS during game start. */
-export function setMsuData(data: MsuTrackData[] | null): void {
+function setMsuData(data: MsuTrackData[] | null): void {
   pendingMsuData = data;
 }
 
 let activeCrashHandler: ((e: ErrorEvent) => void) | null = null;
 let startGeneration = 0;
 
-export function resetGame(): void {
+function resetGame(): void {
   stopSramSync();
   destroyTrackerBridge();
   resetMasterVolume();
@@ -61,7 +61,7 @@ export function resetGame(): void {
   setState({ status: 'idle', error: null });
 }
 
-export async function startGame(
+async function startGame(
   canvas: HTMLCanvasElement,
   assetData: Uint8Array,
   configIni?: string,
@@ -174,3 +174,6 @@ export async function startGame(
     window.removeEventListener('error', onWasmCrash);
   }
 }
+
+export { resetGame, setMsuData, startGame };
+export type { MsuTrackData };

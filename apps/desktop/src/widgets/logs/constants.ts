@@ -1,1 +1,3 @@
-export const MAX_ENTRIES = 200;
+const MAX_ENTRIES = 200;
+
+export { MAX_ENTRIES };

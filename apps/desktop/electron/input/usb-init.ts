@@ -80,7 +80,7 @@ function sleep(ms: number): Promise<void> {
  * Send USB init commands to a Nintendo controller to start HID streaming.
  * Returns true if commands were sent successfully.
  */
-export async function sendUsbInit(vid: number, pid: number): Promise<boolean> {
+async function sendUsbInit(vid: number, pid: number): Promise<boolean> {
   if (vid !== NINTENDO_VID || !NEEDS_USB_INIT.has(pid)) {
     return false;
   }
@@ -156,7 +156,7 @@ async function releaseAndClose(iface: Interface, device: ReturnType<typeof findB
 /**
  * Run USB init for all connected Nintendo controllers that need it.
  */
-export async function initAllNintendoControllers(): Promise<void> {
+async function initAllNintendoControllers(): Promise<void> {
   for (const pid of NEEDS_USB_INIT) {
     try {
       await sendUsbInit(NINTENDO_VID, pid);
@@ -165,3 +165,5 @@ export async function initAllNintendoControllers(): Promise<void> {
     }
   }
 }
+
+export { initAllNintendoControllers, sendUsbInit };

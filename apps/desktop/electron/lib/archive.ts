@@ -4,7 +4,7 @@ import { app } from 'electron';
 import StreamZip from 'node-stream-zip';
 
 /** Extract a zip/archive to a temp directory and return the temp path. */
-export async function extractArchiveToTemp(archivePath: string): Promise<string> {
+async function extractArchiveToTemp(archivePath: string): Promise<string> {
   const tempDir = join(app.getPath('temp'), `archive-extract-${Date.now()}`);
   await mkdir(tempDir, { recursive: true });
   const zip = new StreamZip.async({ file: archivePath });
@@ -17,7 +17,7 @@ export async function extractArchiveToTemp(archivePath: string): Promise<string>
 }
 
 /** Walk a directory recursively and return all files matching a set of extensions. */
-export async function walkFiles(dir: string, extensions?: Set<string>): Promise<string[]> {
+async function walkFiles(dir: string, extensions?: Set<string>): Promise<string[]> {
   const found: string[] = [];
   const entries = await readdir(dir, { withFileTypes: true });
   for (const entry of entries) {
@@ -30,3 +30,5 @@ export async function walkFiles(dir: string, extensions?: Set<string>): Promise<
   }
   return found;
 }
+
+export { extractArchiveToTemp, walkFiles };

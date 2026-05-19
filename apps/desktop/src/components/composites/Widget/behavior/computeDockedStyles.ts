@@ -1,7 +1,7 @@
 import type { WidgetState, SnapSide } from '../types';
 import { TITLEBAR_HEIGHT } from '../constants';
 
-export const computeDockedStyles = (widgets: WidgetState[]): Map<string, React.CSSProperties> => {
+const computeDockedStyles = (widgets: WidgetState[]): Map<string, React.CSSProperties> => {
   const styles = new Map<string, React.CSSProperties>();
 
   // Group docked widgets by side, sorted by order
@@ -67,3 +67,5 @@ export const computeDockedStyles = (widgets: WidgetState[]): Map<string, React.C
 
   return styles;
 };
+
+export { computeDockedStyles };

@@ -20,7 +20,7 @@ const BRR_FILTERS = [
  * @param olds - Initial filter state [old, older] (default [0, 0])
  * @returns Int16Array of decoded PCM samples
  */
-export function decodeBrr(
+function decodeBrr(
   getByte: (offset: number) => number,
   olds: [number, number] = [0, 0],
 ): Int16Array {
@@ -89,7 +89,7 @@ function brrGetOne(old: number, rs: number, r: number): number {
  * @param lossless - If true, asserts zero encoding error (throws on lossy encode)
  * @returns BRR-encoded byte array
  */
-export function encodeBrr(
+function encodeBrr(
   data: Int16Array | number[],
   brrRepeat: number,
   olds: [number, number] = [0, 0],
@@ -183,3 +183,5 @@ export function encodeBrr(
 
   return result;
 }
+
+export { decodeBrr, encodeBrr };

@@ -1,4 +1,4 @@
-export const formatRelativeTime = (ts: number | undefined): string => {
+const formatRelativeTime = (ts: number | undefined): string => {
   if (!ts) return 'Never';
   const diffMs = Date.now() - ts;
   const diffMins = Math.floor(diffMs / 60000);
@@ -10,3 +10,5 @@ export const formatRelativeTime = (ts: number | undefined): string => {
   if (diffDays < 30) return `${diffDays}d ago`;
   return new Date(ts).toLocaleDateString();
 };
+
+export { formatRelativeTime };

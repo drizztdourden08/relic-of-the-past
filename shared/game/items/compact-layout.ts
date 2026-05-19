@@ -1,6 +1,6 @@
 import type { InventorySlot } from './inventory-types';
 
-export const COMPACT_LAYOUT: InventorySlot[] = [
+const COMPACT_LAYOUT: InventorySlot[] = [
   // Swords
   { displayName: 'Fighter', trackerNames: ['Fighter Sword'], sprite: 'hud-fighter-sword' },
   { displayName: 'Master', trackerNames: ['Master Sword'], sprite: 'hud-master-sword' },
@@ -48,3 +48,5 @@ export const COMPACT_LAYOUT: InventorySlot[] = [
   { displayName: 'Flippers', trackerNames: ['Flippers'], sprite: 'hud-flippers' },
   { displayName: 'Pearl', trackerNames: ['Moon Pearl'], sprite: 'hud-moon-pearl' },
 ];
+
+export { COMPACT_LAYOUT };

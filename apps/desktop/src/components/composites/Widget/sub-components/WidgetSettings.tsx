@@ -21,7 +21,7 @@ interface WidgetSettingsProps {
   children?: ReactNode;
 }
 
-export const WidgetSettings = (props: WidgetSettingsProps) => {
+const WidgetSettings = (props: WidgetSettingsProps) => {
   const { widget, anchorRef, onClose, onChange, children } = props;
   const panelRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
@@ -120,3 +120,5 @@ export const WidgetSettings = (props: WidgetSettingsProps) => {
     </Portal>
   );
 }
+
+export { WidgetSettings };

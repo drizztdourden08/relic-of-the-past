@@ -23,7 +23,7 @@ interface WidgetManagerProps {
   settingsContent?: Record<string, React.ReactNode>;
 }
 
-export const WidgetManager = (props: WidgetManagerProps) => {
+const WidgetManager = (props: WidgetManagerProps) => {
   const { layout, gameRunning, onUpdate, onClose, children, settingsContent } = props;
   // Filter: only show widgets that are visible AND match the current visibility mode
   const activeWidgets = useMemo(() => {
@@ -59,3 +59,5 @@ export const WidgetManager = (props: WidgetManagerProps) => {
     </div>
   );
 }
+
+export { WidgetManager };

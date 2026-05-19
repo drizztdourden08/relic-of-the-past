@@ -146,12 +146,12 @@ function getTrackNumber(filename: string): number | null {
   return match ? parseInt(match[1], 10) : null;
 }
 
-export interface MsuManagerProps {
+interface MsuManagerProps {
   onDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
   onRefresh: () => void;
 }
 
-export const MsuManager = (props: MsuManagerProps) => {
+const MsuManager = (props: MsuManagerProps) => {
   const { onDeleteConfirm, onRefresh } = props;
   const [packs, setPacks] = useState<MsuPack[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
@@ -490,3 +490,6 @@ const TrackRow = ({
     </div>
   );
 };
+
+export { MsuManager };
+export type { MsuManagerProps };

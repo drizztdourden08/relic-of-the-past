@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { setMasterVolume } from '../../lib/game';
 
-export const useAudioSettings = () => {
+const useAudioSettings = () => {
   const [masterVolume, setMasterVolumeState] = useState(100);
   const prevVolumeRef = useRef(100);
   const [muteOverride, setMuteOverride] = useState<{ volume: number; version: number } | null>(null);
@@ -42,3 +42,5 @@ export const useAudioSettings = () => {
     initFromSettings,
   };
 };
+
+export { useAudioSettings };

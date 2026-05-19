@@ -16,23 +16,23 @@
  *   Bit 10 (0x0400): Key drop / standing torch / special item
  *   Bit 11 (0x0800): Boss defeated / heart piece / key item
  */
-export interface RoomFlagEntry {
+interface RoomFlagEntry {
   roomId: number;
   chestIndex: number;
 }
 
-export interface DirectRoomFlagEntry {
+interface DirectRoomFlagEntry {
   roomId: number;
   mask: number;
 }
 
 /** Chest-open bit masks indexed by chestIndex (0-5) for save_dung_info format. */
-export const CHEST_OPEN_MASKS = [0x10, 0x20, 0x40, 0x80, 0x100, 0x200] as const;
+const CHEST_OPEN_MASKS = [0x10, 0x20, 0x40, 0x80, 0x100, 0x200] as const;
 
 /**
  * Chest-type checks: detected via CHEST_OPEN_MASKS[chestIndex].
  */
-export const CHECK_ROOM_FLAGS: Record<string, RoomFlagEntry> = {
+const CHECK_ROOM_FLAGS: Record<string, RoomFlagEntry> = {
   // ═══════════════════════════════════════════
   // Hyrule Castle / Sewers
   // ═══════════════════════════════════════════
@@ -267,7 +267,7 @@ export const CHECK_ROOM_FLAGS: Record<string, RoomFlagEntry> = {
  * Direct-mask room flag checks: key drops, bosses, prizes, and standing items
  * that use specific bits in save_dung_info[roomId] rather than chestIndex.
  */
-export const DIRECT_ROOM_FLAGS: Record<string, DirectRoomFlagEntry> = {
+const DIRECT_ROOM_FLAGS: Record<string, DirectRoomFlagEntry> = {
   // ═══════════════════════════════════════════
   // Standing items (torches, ground items in dungeon rooms)
   // ═══════════════════════════════════════════
@@ -346,3 +346,6 @@ export const DIRECT_ROOM_FLAGS: Record<string, DirectRoomFlagEntry> = {
   'Ganons Tower - Conveyor Star Pits Pot Key': { roomId: 0x7b, mask: 0x400 },
   'Ganons Tower - Mini Helmasaur Key Drop': { roomId: 0x3d, mask: 0x400 },
 };
+
+export { CHECK_ROOM_FLAGS, CHEST_OPEN_MASKS, DIRECT_ROOM_FLAGS };
+export type { DirectRoomFlagEntry, RoomFlagEntry };

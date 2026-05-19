@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import type { ConfirmDialog } from '../types';
 
-export const useConfirmDialog = () => {
+const useConfirmDialog = () => {
   const [dialog, setDialog] = useState<ConfirmDialog | null>(null);
 
   const showDialog = useCallback((config: ConfirmDialog) => {
@@ -29,3 +29,5 @@ export const useConfirmDialog = () => {
     handleDeleteConfirm,
   };
 };
+
+export { useConfirmDialog };

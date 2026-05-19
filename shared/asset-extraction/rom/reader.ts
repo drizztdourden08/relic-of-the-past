@@ -4,7 +4,7 @@
  */
 import type { RomData } from './rom-types';
 
-export class RomReader {
+class RomReader {
   private ea: number;
   private readonly rom: RomData;
 
@@ -52,3 +52,5 @@ export class RomReader {
     return result;
   }
 }
+
+export { RomReader };

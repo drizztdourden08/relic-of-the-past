@@ -46,7 +46,7 @@ const extractDialogueFromRom = async (romAbsPath: string, langDir: string, langC
   }
 };
 
-export const registerLanguageHandlers = () => {
+const registerLanguageHandlers = () => {
   ipcMain.handle('languages:list', async () => {
     const langDir = getUserDataPath('languages');
     try {
@@ -113,3 +113,5 @@ export const registerLanguageHandlers = () => {
     } catch { return null; }
   });
 };
+
+export { registerLanguageHandlers };

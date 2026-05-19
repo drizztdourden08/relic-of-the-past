@@ -7,9 +7,9 @@ import type { FunctionMapping, FunctionAction } from '@shared/types/controls';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { webHidReader } from './hid-reader';
 
-export type FunctionKeyUpListener = (action: FunctionAction) => void;
+type FunctionKeyUpListener = (action: FunctionAction) => void;
 
-export class FunctionActionEngine {
+class FunctionActionEngine {
   private functionMappings: FunctionMapping[] = DEFAULT_FUNCTION_MAPPINGS;
   private functionKeyMap = new Map<string, FunctionAction>(); // "code:s:c:a" → action
   private functionGamepadButtonMap = new Map<number, FunctionAction>();
@@ -219,3 +219,6 @@ export class FunctionActionEngine {
     }
   }
 }
+
+export { FunctionActionEngine };
+export type { FunctionKeyUpListener };

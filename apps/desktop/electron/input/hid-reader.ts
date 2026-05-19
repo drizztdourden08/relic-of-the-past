@@ -57,7 +57,7 @@ interface OpenDevice {
   writeFailed?: boolean;
 }
 
-export class HidInputReader {
+class HidInputReader {
   private devices: OpenDevice[] = [];
   private scanInterval: ReturnType<typeof setInterval> | null = null;
   private window: BrowserWindow | null = null;
@@ -471,4 +471,6 @@ export class HidInputReader {
 }
 
 /** Singleton instance */
-export const hidInputReader = new HidInputReader();
+const hidInputReader = new HidInputReader();
+
+export { HidInputReader, hidInputReader };

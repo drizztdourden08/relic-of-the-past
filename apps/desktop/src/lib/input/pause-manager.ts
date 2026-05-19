@@ -7,9 +7,9 @@
 import type { DetectedDevice } from '@shared/types/controls';
 import type { InputProfile } from '@shared/types/controls';
 
-export type PauseListener = (paused: boolean, controllerName: string) => void;
+type PauseListener = (paused: boolean, controllerName: string) => void;
 
-export class PauseManager {
+class PauseManager {
   private paused = false;
   private pausedControllerName = '';
   private listeners = new Set<PauseListener>();
@@ -90,3 +90,6 @@ export class PauseManager {
     }
   }
 }
+
+export { PauseManager };
+export type { PauseListener };

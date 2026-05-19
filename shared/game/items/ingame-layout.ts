@@ -1,6 +1,6 @@
 import type { InventorySlot } from './inventory-types';
 
-export const INGAME_ITEMS_GRID: InventorySlot[][] = [
+const INGAME_ITEMS_GRID: InventorySlot[][] = [
   // Row 1
   [
     { displayName: 'Bow', trackerNames: ['Silver Bow', 'Bow'], sprite: 'hud-bow' },
@@ -38,15 +38,17 @@ export const INGAME_ITEMS_GRID: InventorySlot[][] = [
   ],
 ];
 
-export const INGAME_EQUIPMENT: InventorySlot[] = [
+const INGAME_EQUIPMENT: InventorySlot[] = [
   { displayName: 'Sword', trackerNames: ['Golden Sword', 'Tempered Sword', 'Master Sword', 'Fighter Sword'], sprite: 'hud-fighter-sword' },
   { displayName: 'Shield', trackerNames: ['Mirror Shield', 'Fire Shield', 'Fighters Shield'], sprite: 'hud-fighters-shield' },
   { displayName: 'Armor', trackerNames: ['Red Mail', 'Blue Mail'], sprite: 'hud-green-mail' },
 ];
 
-export const INGAME_PASSIVES: InventorySlot[] = [
+const INGAME_PASSIVES: InventorySlot[] = [
   { displayName: 'Gloves', trackerNames: ['Titans Mitts', 'Power Glove'], sprite: 'hud-power-glove' },
   { displayName: 'Boots', trackerNames: ['Pegasus Boots'], sprite: 'hud-pegasus-boots' },
   { displayName: 'Flippers', trackerNames: ['Flippers'], sprite: 'hud-flippers' },
   { displayName: 'Moon Pearl', trackerNames: ['Moon Pearl'], sprite: 'hud-moon-pearl' },
 ];
+
+export { INGAME_EQUIPMENT, INGAME_ITEMS_GRID, INGAME_PASSIVES };

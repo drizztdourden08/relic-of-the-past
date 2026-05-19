@@ -1,6 +1,6 @@
 import type { CheckDefinition } from '../types';
 
-export const DUNGEON_CHECKS: CheckDefinition[] = [
+const DUNGEON_CHECKS: CheckDefinition[] = [
   // ═══════════════════════════════════════════
   // Hyrule Castle / Sewers
   // ═══════════════════════════════════════════
@@ -230,3 +230,5 @@ export const DUNGEON_CHECKS: CheckDefinition[] = [
   { id: 'Ganons Tower - Conveyor Star Pits Pot Key', name: 'Conveyor Star Pits Pot Key', type: 'keyDrop', region: 'ganons-tower-compass-room', dungeon: "Ganon's Tower", vanillaItem: 'Small Key (Ganons Tower)' },
   { id: 'Ganons Tower - Mini Helmasaur Key Drop', name: 'Mini Helmasaur Key Drop', type: 'keyDrop', region: 'ganons-tower-before-moldorm', dungeon: "Ganon's Tower", vanillaItem: 'Small Key (Ganons Tower)' },
 ];
+
+export { DUNGEON_CHECKS };

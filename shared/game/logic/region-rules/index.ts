@@ -8,8 +8,10 @@ export { DARK_WORLD_REGION_RULES } from './dark-world';
 export { DUNGEON_REGION_RULES } from './dungeons';
 
 /** Combined region entrance rules (all worlds + dungeons). */
-export const REGION_RULES: Record<string, Requirement> = {
+const REGION_RULES: Record<string, Requirement> = {
   ...LIGHT_WORLD_REGION_RULES,
   ...DARK_WORLD_REGION_RULES,
   ...DUNGEON_REGION_RULES,
 };
+
+export { REGION_RULES };

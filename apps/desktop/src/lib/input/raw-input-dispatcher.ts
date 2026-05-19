@@ -8,15 +8,15 @@ import type { InputBinding } from '@shared/types/controls';
 import { webHidReader } from './hid-reader';
 
 /** Raw input event — fired when any button/key/axis is pressed on any device */
-export interface RawInputEvent {
+interface RawInputEvent {
   binding: InputBinding;
   sourceDeviceKey: string;
   vendorId: string | null;
   productId: string | null;
 }
-export type RawInputListener = (event: RawInputEvent) => void;
+type RawInputListener = (event: RawInputEvent) => void;
 
-export class RawInputDispatcher {
+class RawInputDispatcher {
   private listeners = new Set<RawInputListener>();
 
   // Previous frame state for rising-edge detection
@@ -128,3 +128,6 @@ export class RawInputDispatcher {
     this.prevHidAxes.delete(deviceKey);
   }
 }
+
+export { RawInputDispatcher };
+export type { RawInputEvent, RawInputListener };

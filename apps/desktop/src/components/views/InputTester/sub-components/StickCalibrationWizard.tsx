@@ -14,7 +14,7 @@ import { webHidReader } from '../../../../lib/input/hid-reader';
 
 // ── Types ──
 
-export interface StickCalibrationData {
+interface StickCalibrationData {
   centerX: number;
   centerY: number;
   minX: number;
@@ -25,7 +25,7 @@ export interface StickCalibrationData {
   outerDeadzone: number;
 }
 
-export interface DeviceStickCalibration {
+interface DeviceStickCalibration {
   left: StickCalibrationData;
   right: StickCalibrationData;
   updatedAt: string;
@@ -87,7 +87,7 @@ function applyCalibration(
 
 // ── Component ──
 
-export const StickCalibrationWizard = (props: Props) => {
+const StickCalibrationWizard = (props: Props) => {
   const { onComplete, onCancel, existingCalibration, target, deviceKey } = props;
   const [step, setStep] = useState<Step>('center');
   const calibrateLeft = target !== 'right';
@@ -512,5 +512,5 @@ export const StickCalibrationWizard = (props: Props) => {
   );
 }
 
-export { applyCalibration };
-export type { StickCalibrationData as StickCal };
+export { StickCalibrationWizard, applyCalibration };
+export type { DeviceStickCalibration, StickCalibrationData, StickCalibrationData as StickCal };

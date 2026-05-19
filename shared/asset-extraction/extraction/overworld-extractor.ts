@@ -227,7 +227,7 @@ function extractOverworldArea(
  * Extract all overworld areas from ROM.
  * @returns Map of filename → YAML content
  */
-export function extractAllOverworldAreas(rom: RomData): Map<string, string> {
+function extractAllOverworldAreas(rom: RomData): Map<string, string> {
   const exitDatas = getExitDatas(rom);
   const travelInfos = getOwTravelInfos(rom);
   const entranceInfo = getOwEntranceInfo(rom);
@@ -243,3 +243,5 @@ export function extractAllOverworldAreas(rom: RomData): Map<string, string> {
   }
   return results;
 }
+
+export { extractAllOverworldAreas };

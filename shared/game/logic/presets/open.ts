@@ -1,6 +1,6 @@
 import type { LogicConfig } from '../../types';
 
-export const OPEN_CONFIG: LogicConfig = {
+const OPEN_CONFIG: LogicConfig = {
   mode: 'open',
   startingRegion: 'menu',
   startingItems: [],
@@ -17,3 +17,5 @@ export const OPEN_CONFIG: LogicConfig = {
   keysanity: false,
   bigKeyShuffle: false,
 };
+
+export { OPEN_CONFIG };

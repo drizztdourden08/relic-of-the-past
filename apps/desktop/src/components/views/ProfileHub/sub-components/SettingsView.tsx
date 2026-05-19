@@ -3,7 +3,7 @@ import type { GameSettings } from '@shared/types/settings';
 import { SegmentedControl } from '../../../primitives/SegmentedControl';
 import { SettingsLayout, type Section } from '../../../composites/SettingsLayout';
 
-export interface SettingsViewProps {
+interface SettingsViewProps {
   settings: GameSettings;
   onChange: (patch: Partial<GameSettings>) => void;
 }
@@ -158,7 +158,7 @@ function renderControl(key: string, settings: GameSettings, onChange: (patch: Pa
   }
 }
 
-export const SettingsView = (props: SettingsViewProps) => {
+const SettingsView = (props: SettingsViewProps) => {
   const { settings, onChange } = props;
 
   return (
@@ -170,3 +170,6 @@ export const SettingsView = (props: SettingsViewProps) => {
     />
   );
 };
+
+export { SettingsView };
+export type { SettingsViewProps };

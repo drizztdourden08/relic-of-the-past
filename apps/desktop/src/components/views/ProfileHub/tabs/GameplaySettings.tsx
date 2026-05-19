@@ -142,7 +142,7 @@ function renderControl(key: string, settings: GameSettings, onChange: (patch: Pa
   return null;
 }
 
-export const GameplaySettings = (props: GameplaySettingsProps) => {
+const GameplaySettings = (props: GameplaySettingsProps) => {
   const { settings, onChange } = props;
   return (
     <SettingsLayout
@@ -154,3 +154,5 @@ export const GameplaySettings = (props: GameplaySettingsProps) => {
     />
   );
 }
+
+export { GameplaySettings };

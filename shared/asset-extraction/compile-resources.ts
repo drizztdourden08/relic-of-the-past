@@ -1010,7 +1010,7 @@ function buildSoundBanks(rom: RomData, A: AssetBuilder): void {
 
 // ─── Main entry point ───
 
-export interface CompileOptions {
+interface CompileOptions {
   /** If true, skip dialogue (requires language extraction) */
   skipDialogue?: boolean;
   /** If true, skip sound banks (requires music compiler) */
@@ -1021,7 +1021,7 @@ export interface CompileOptions {
  * Compile all game assets from ROM into the zelda3_assets.dat binary format.
  * @returns Buffer containing the complete asset file
  */
-export function compileResources(rom: RomData, options: CompileOptions = {}): Buffer {
+function compileResources(rom: RomData, options: CompileOptions = {}): Buffer {
   const A = new AssetBuilder();
 
   if (!options.skipMusic) buildSoundBanks(rom, A);
@@ -1045,3 +1045,5 @@ export function compileResources(rom: RomData, options: CompileOptions = {}): Bu
   return A.serialize();
 }
 
+export { compileResources };
+export type { CompileOptions };

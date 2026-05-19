@@ -21,7 +21,7 @@ interface WidgetProps {
   dockedStyle?: React.CSSProperties;
 }
 
-export const Widget = (props: WidgetProps) => {
+const Widget = (props: WidgetProps) => {
   const { state, onChange, onClose, children, settingsContent, dockedStyle } = props;
   const [hovered, setHovered] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -149,3 +149,5 @@ export const Widget = (props: WidgetProps) => {
     </div>
   );
 }
+
+export { Widget };

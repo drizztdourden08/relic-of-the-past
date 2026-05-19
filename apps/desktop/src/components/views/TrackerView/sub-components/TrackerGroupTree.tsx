@@ -14,7 +14,7 @@ interface TrackerGroupTreeProps {
   depth?: number;
 }
 
-export const TrackerGroupTree = (props: TrackerGroupTreeProps) => {
+const TrackerGroupTree = (props: TrackerGroupTreeProps) => {
   const { node, statuses, viewMode, depth = 0 } = props;
   // Root node renders children directly
   if (depth === 0 && node.children.length > 0) {
@@ -132,3 +132,5 @@ function CheckCard({ check, status, itemOverride }: { check: CheckDefinition; st
     </div>
   );
 }
+
+export { TrackerGroupTree };

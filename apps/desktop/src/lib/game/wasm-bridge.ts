@@ -12,34 +12,34 @@ let currentState: GameState = { status: 'idle', error: null };
 let currentProfileId: string | null = null;
 const listeners = new Set<GameStateListener>();
 
-export function setState(next: GameState): void {
+function setState(next: GameState): void {
   currentState = next;
   for (const fn of listeners) {
     try { fn(next); } catch { /* ignore */ }
   }
 }
 
-export function getGameState(): GameState {
+function getGameState(): GameState {
   return currentState;
 }
 
-export function getModule(): EmscriptenModule | null {
+function getModule(): EmscriptenModule | null {
   return currentModule;
 }
 
-export function setModule(mod: EmscriptenModule | null): void {
+function setModule(mod: EmscriptenModule | null): void {
   currentModule = mod;
 }
 
-export function getProfileId(): string | null {
+function getProfileId(): string | null {
   return currentProfileId;
 }
 
-export function setProfileId(id: string | null): void {
+function setProfileId(id: string | null): void {
   currentProfileId = id;
 }
 
-export function subscribeGameState(fn: GameStateListener): () => void {
+function subscribeGameState(fn: GameStateListener): () => void {
   listeners.add(fn);
   return () => listeners.delete(fn);
 }
@@ -48,7 +48,7 @@ export function subscribeGameState(fn: GameStateListener): () => void {
  * Push a SNES input bitmask to the running WASM module.
  * Called by InputManager each frame.
  */
-export function setInput(mask: number): void {
+function setInput(mask: number): void {
   const mod = currentModule;
   if (!mod || currentState.status !== 'running') return;
   mod.ccall('WasmSetInput', null, ['number'], [mask]);
@@ -57,42 +57,42 @@ export function setInput(mask: number): void {
 // ─── Game commands (pause, reset, cheats) ───
 
 /** Pause or unpause the game at the WASM/C level. */
-export function wasmSetPaused(paused: boolean): void {
+function wasmSetPaused(paused: boolean): void {
   const mod = currentModule;
   if (!mod || currentState.status !== 'running') return;
   mod.ccall('WasmSetPaused', null, ['number'], [paused ? 1 : 0]);
 }
 
 /** Query whether the game is paused at the WASM/C level. */
-export function wasmGetPaused(): boolean {
+function wasmGetPaused(): boolean {
   const mod = currentModule;
   if (!mod || currentState.status !== 'running') return false;
   return mod.ccall('WasmGetPaused', 'number', [], []) !== 0;
 }
 
 /** Toggle game pause at the WASM/C level. */
-export function wasmTogglePause(): void {
+function wasmTogglePause(): void {
   const mod = currentModule;
   if (!mod || currentState.status !== 'running') return;
   mod.ccall('WasmTogglePause', null, [], []);
 }
 
 /** Reset the game. warm=true preserves SRAM, warm=false is a cold reset. */
-export function wasmReset(warm: boolean): void {
+function wasmReset(warm: boolean): void {
   const mod = currentModule;
   if (!mod || currentState.status !== 'running') return;
   mod.ccall('WasmReset', null, ['number'], [warm ? 1 : 0]);
 }
 
 /** Execute a cheat command. 'w' = health, 'W' = equipment, 'o' = keys. */
-export function wasmCheat(cmd: string): void {
+function wasmCheat(cmd: string): void {
   const mod = currentModule;
   if (!mod || currentState.status !== 'running') return;
   mod.ccall('WasmCheat', null, ['number'], [cmd.charCodeAt(0)]);
 }
 
 /** Force the PPU backdrop color (CGRAM[0]) to black every frame. */
-export function wasmSetForceBackdropBlack(enabled: boolean): void {
+function wasmSetForceBackdropBlack(enabled: boolean): void {
   const mod = currentModule;
   if (!mod || currentState.status !== 'running') return;
   mod.ccall('WasmSetForceBackdropBlack', null, ['number'], [enabled ? 1 : 0]);
@@ -100,7 +100,7 @@ export function wasmSetForceBackdropBlack(enabled: boolean): void {
 
 // ─── Viewport Info (for edge glow shader) ───
 
-export interface ViewportInfo {
+interface ViewportInfo {
   /** Game module: 7=dungeon, 9=overworld, 14=menu, 0/1=intro/title */
   mainModule: number;
   submodule: number;
@@ -130,7 +130,7 @@ export interface ViewportInfo {
  * Read viewport/game-state info from WASM for shader edge detection.
  * Returns null if the module isn't running or the export doesn't exist yet.
  */
-export function wasmGetViewportInfo(): ViewportInfo | null {
+function wasmGetViewportInfo(): ViewportInfo | null {
   const mod = currentModule;
   if (!mod || currentState.status !== 'running') return null;
   try {
@@ -168,7 +168,7 @@ export function wasmGetViewportInfo(): ViewportInfo | null {
  * Render a clean frame (no HUD/BG3) into WASM memory and return the pixel data.
  * Returns null if the module isn't running or the export doesn't exist.
  */
-export function wasmRenderCleanFrame(): { data: Uint8Array; width: number; height: number } | null {
+function wasmRenderCleanFrame(): { data: Uint8Array; width: number; height: number } | null {
   const mod = currentModule;
   if (!mod || currentState.status !== 'running') return null;
   try {
@@ -184,3 +184,23 @@ export function wasmRenderCleanFrame(): { data: Uint8Array; width: number; heigh
     return null;
   }
 }
+
+export {
+  getGameState,
+  getModule,
+  getProfileId,
+  setInput,
+  setModule,
+  setProfileId,
+  setState,
+  subscribeGameState,
+  wasmCheat,
+  wasmGetPaused,
+  wasmGetViewportInfo,
+  wasmRenderCleanFrame,
+  wasmReset,
+  wasmSetForceBackdropBlack,
+  wasmSetPaused,
+  wasmTogglePause
+};
+export type { ViewportInfo };

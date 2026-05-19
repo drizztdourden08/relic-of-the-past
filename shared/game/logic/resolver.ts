@@ -12,7 +12,7 @@ const VANILLA_INTRO_CONNECTION: RegionConnection =
 
 // ─── Rule Resolution ───
 
-export interface ResolvedRules {
+interface ResolvedRules {
   regionRules: Record<string, Requirement>;
   checkRules: Record<string, Requirement>;
   connections: RegionConnection[];
@@ -27,7 +27,7 @@ export interface ResolvedRules {
  * - open: free S&Q to Link's House, Sanctuary, Old Man Cave
  * - no-logic: no rules at all (everything reachable)
  */
-export function resolveRules(config: LogicConfig): ResolvedRules {
+function resolveRules(config: LogicConfig): ResolvedRules {
   if (config.mode === 'no-logic') {
     return {
       regionRules: {},
@@ -118,3 +118,6 @@ function getSQGateRequirement(entrance: string, _config: LogicConfig): Requireme
       return 'Impossible';
   }
 }
+
+export { resolveRules };
+export type { ResolvedRules };

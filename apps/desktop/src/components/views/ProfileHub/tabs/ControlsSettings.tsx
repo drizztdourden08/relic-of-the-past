@@ -49,7 +49,7 @@ function padHex(v: string): string {
   return v.toLowerCase().padStart(4, '0');
 }
 
-export const ControlsSettings = (props: ControlsSettingsProps) => {
+const ControlsSettings = (props: ControlsSettingsProps) => {
   const { settings, onChange, profileId } = props;
   const [profiles, setProfiles] = useState<InputProfile[]>([]);
   const [activeProfile, setActiveProfile] = useState<InputProfile | null>(null);
@@ -754,3 +754,5 @@ export const ControlsSettings = (props: ControlsSettingsProps) => {
     </div>
   );
 }
+
+export { ControlsSettings };

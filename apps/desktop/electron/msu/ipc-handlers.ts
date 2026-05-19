@@ -25,7 +25,7 @@ async function extractArchiveToMsu(archivePath: string, msuDir: string): Promise
   }
 }
 
-export function registerMsuHandlers(): void {
+function registerMsuHandlers(): void {
   ipcMain.handle('msu:import', async (_event, packName: string, url: string) => {
     let tempFile: string | undefined;
     try {
@@ -132,3 +132,5 @@ export function registerMsuHandlers(): void {
     return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
   });
 }
+
+export { registerMsuHandlers };

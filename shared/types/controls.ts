@@ -1,15 +1,15 @@
 // ── SNES Buttons ──
 
-export const SNES_BUTTONS = [
+const SNES_BUTTONS = [
   'A', 'B', 'X', 'Y', 'L', 'R',
   'Start', 'Select',
   'Up', 'Down', 'Left', 'Right',
 ] as const;
 
-export type SnesButton = (typeof SNES_BUTTONS)[number];
+type SnesButton = (typeof SNES_BUTTONS)[number];
 
 /** Bitmask positions matching emscripten_main.c g_input1_state */
-export const SNES_BUTTON_BITS: Record<SnesButton, number> = {
+const SNES_BUTTON_BITS: Record<SnesButton, number> = {
   B:      0,
   Y:      1,
   Select: 2,
@@ -25,7 +25,7 @@ export const SNES_BUTTON_BITS: Record<SnesButton, number> = {
 };
 
 /** Human-readable SNES button names (Nintendo layout) */
-export const SNES_BUTTON_LABELS: Record<SnesButton, string> = {
+const SNES_BUTTON_LABELS: Record<SnesButton, string> = {
   A: 'A Button',
   B: 'B Button',
   X: 'X Button',
@@ -41,7 +41,7 @@ export const SNES_BUTTON_LABELS: Record<SnesButton, string> = {
 };
 
 /** Game action labels — what each SNES button does in ALttP */
-export const SNES_ACTION_LABELS: Record<SnesButton, string> = {
+const SNES_ACTION_LABELS: Record<SnesButton, string> = {
   A: 'Interact',
   B: 'Sword',
   X: 'Map',
@@ -58,7 +58,7 @@ export const SNES_ACTION_LABELS: Record<SnesButton, string> = {
 
 // ── Controller families (for icon sets) ──
 
-export type DeviceFamily =
+type DeviceFamily =
   | 'xbox'
   | 'playstation'
   | 'nintendo'
@@ -72,15 +72,15 @@ export type DeviceFamily =
  *  - 'hid':    Raw HID reports via node-hid (Switch, PlayStation, 8BitDo)
  *  - 'webapi': Web Gamepad API only (fallback for unknowns that Chromium maps)
  */
-export type InputApi = 'xinput' | 'hid' | 'webapi';
+type InputApi = 'xinput' | 'hid' | 'webapi';
 
 // ── Input bindings ──
 
-export interface NoneBinding {
+interface NoneBinding {
   type: 'none';
 }
 
-export interface KeyboardBinding {
+interface KeyboardBinding {
   type: 'keyboard';
   code: string;       // KeyboardEvent.code, e.g. "KeyZ", "ArrowUp"
   label?: string;     // Display override, e.g. "Z"
@@ -91,24 +91,24 @@ export interface KeyboardBinding {
   };
 }
 
-export interface GamepadButtonBinding {
+interface GamepadButtonBinding {
   type: 'gamepad-button';
   index: number;      // Standard Gamepad button index (0-16)
   label?: string;
 }
 
-export interface GamepadAxisBinding {
+interface GamepadAxisBinding {
   type: 'gamepad-axis';
   axisIndex: number;  // 0-3
   direction: '+' | '-';
   label?: string;
 }
 
-export type InputBinding = NoneBinding | KeyboardBinding | GamepadButtonBinding | GamepadAxisBinding;
+type InputBinding = NoneBinding | KeyboardBinding | GamepadButtonBinding | GamepadAxisBinding;
 
 // ── Button icon reference ──
 
-export interface ButtonIcon {
+interface ButtonIcon {
   key: string;          // e.g. "xbox-a", "ps-cross", "switch-b"
   path: string | null;  // asset path — null until icons are provided
   label: string;        // text fallback: "A", "✕", "B"
@@ -116,7 +116,7 @@ export interface ButtonIcon {
 
 // ── Per-button mapping ──
 
-export interface ButtonMapping {
+interface ButtonMapping {
   snesButton: SnesButton;
   binding: InputBinding;
   icon: ButtonIcon | null; // null = no icon shown, layout unchanged
@@ -128,7 +128,7 @@ export interface ButtonMapping {
 
 // ── Input profile (persisted per-profile) ──
 
-export interface InputProfile {
+interface InputProfile {
   id: string;
   name: string;
   deviceType: 'gamepad' | 'keyboard';
@@ -142,7 +142,7 @@ export interface InputProfile {
 
 // ── Detected device at runtime (not persisted) ──
 
-export interface DetectedDevice {
+interface DetectedDevice {
   id: string;               // Unique runtime ID (e.g. "gamepad-0", "keyboard-0")
   type: 'gamepad' | 'keyboard';
   rawId: string;            // Gamepad.id string or "Standard Keyboard"
@@ -160,7 +160,7 @@ export interface DetectedDevice {
 
 // ── Assigned device info (persisted with profile) ──
 
-export interface AssignedDevice {
+interface AssignedDevice {
   vendorId: string;
   productId: string;
   displayName: string;
@@ -170,7 +170,7 @@ export interface AssignedDevice {
 
 // ── Device preset (ships with the app) ──
 
-export interface DevicePreset {
+interface DevicePreset {
   id: string;
   name: string;
   family: DeviceFamily;
@@ -188,7 +188,7 @@ export interface DevicePreset {
 
 // ── Function Actions (Shortcuts & Cheats) ──
 
-export const SHORTCUT_ACTIONS = [
+const SHORTCUT_ACTIONS = [
   'save-state-1', 'save-state-2', 'save-state-3', 'save-state-4',
   'save-state-5', 'save-state-6', 'save-state-7', 'save-state-8',
   'save-state-9', 'save-state-10', 'save-state-11', 'save-state-12',
@@ -199,15 +199,15 @@ export const SHORTCUT_ACTIONS = [
   'fullscreen', 'turbo',
 ] as const;
 
-export const CHEAT_ACTIONS = [
+const CHEAT_ACTIONS = [
   'cheat-health', 'cheat-equipment', 'cheat-keys', 'cheat-noclip',
 ] as const;
 
-export const FUNCTION_ACTIONS = [...SHORTCUT_ACTIONS, ...CHEAT_ACTIONS] as const;
+const FUNCTION_ACTIONS = [...SHORTCUT_ACTIONS, ...CHEAT_ACTIONS] as const;
 
-export type FunctionAction = (typeof FUNCTION_ACTIONS)[number];
+type FunctionAction = (typeof FUNCTION_ACTIONS)[number];
 
-export const FUNCTION_ACTION_LABELS: Record<FunctionAction, string> = {
+const FUNCTION_ACTION_LABELS: Record<FunctionAction, string> = {
   'save-state-1': 'Save State 1',
   'save-state-2': 'Save State 2',
   'save-state-3': 'Save State 3',
@@ -242,7 +242,7 @@ export const FUNCTION_ACTION_LABELS: Record<FunctionAction, string> = {
   'cheat-noclip': 'Walk Through Walls',
 };
 
-export interface FunctionMapping {
+interface FunctionMapping {
   action: FunctionAction;
   binding: InputBinding;
   icon: ButtonIcon | null;
@@ -250,7 +250,7 @@ export interface FunctionMapping {
   sourcePid?: string | null;
 }
 
-export const DEFAULT_FUNCTION_MAPPINGS: FunctionMapping[] = [
+const DEFAULT_FUNCTION_MAPPINGS: FunctionMapping[] = [
   { action: 'save-state-1', binding: { type: 'keyboard', code: 'F1', modifiers: { shift: true } }, icon: null },
   { action: 'save-state-2', binding: { type: 'keyboard', code: 'F2', modifiers: { shift: true } }, icon: null },
   { action: 'save-state-3', binding: { type: 'keyboard', code: 'F3', modifiers: { shift: true } }, icon: null },
@@ -284,3 +284,33 @@ export const DEFAULT_FUNCTION_MAPPINGS: FunctionMapping[] = [
   { action: 'cheat-keys', binding: { type: 'keyboard', code: 'KeyO' }, icon: null },
   { action: 'cheat-noclip', binding: { type: 'keyboard', code: 'KeyE', modifiers: { ctrl: true } }, icon: null },
 ];
+
+export {
+  CHEAT_ACTIONS,
+  DEFAULT_FUNCTION_MAPPINGS,
+  FUNCTION_ACTIONS,
+  FUNCTION_ACTION_LABELS,
+  SHORTCUT_ACTIONS,
+  SNES_ACTION_LABELS,
+  SNES_BUTTONS,
+  SNES_BUTTON_BITS,
+  SNES_BUTTON_LABELS
+};
+export type {
+  AssignedDevice,
+  ButtonIcon,
+  ButtonMapping,
+  DetectedDevice,
+  DeviceFamily,
+  DevicePreset,
+  FunctionAction,
+  FunctionMapping,
+  GamepadAxisBinding,
+  GamepadButtonBinding,
+  InputApi,
+  InputBinding,
+  InputProfile,
+  KeyboardBinding,
+  NoneBinding,
+  SnesButton
+};

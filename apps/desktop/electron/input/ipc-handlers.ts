@@ -18,7 +18,7 @@ import {
  * Register all input-related IPC handlers and set up device permissions.
  * Call once after the main window is created.
  */
-export function registerInputHandlers(mainWindow: BrowserWindow): void {
+function registerInputHandlers(mainWindow: BrowserWindow): void {
   // ── Device permission handlers ──
 
   mainWindow.webContents.session.on('select-hid-device', (event, details, callback) => {
@@ -111,6 +111,8 @@ export function registerInputHandlers(mainWindow: BrowserWindow): void {
 /**
  * Stop input subsystem. Call on app quit.
  */
-export function stopInputHandlers(): void {
+function stopInputHandlers(): void {
   hidInputReader.stop();
 }
+
+export { registerInputHandlers, stopInputHandlers };

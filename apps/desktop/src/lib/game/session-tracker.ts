@@ -12,7 +12,7 @@ function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
-export function startSession(profileId: string): void {
+function startSession(profileId: string): void {
   if (activeSession) {
     endSession();
   }
@@ -24,7 +24,7 @@ export function startSession(profileId: string): void {
   log.app(`[Session] Started session ${activeSession.id} for profile ${profileId}`);
 }
 
-export async function endSession(): Promise<PlaySession | null> {
+async function endSession(): Promise<PlaySession | null> {
   if (!activeSession) return null;
 
   const now = Date.now();
@@ -49,14 +49,21 @@ export async function endSession(): Promise<PlaySession | null> {
   return session;
 }
 
-export function getActiveSession() {
+function getActiveSession() {
   return activeSession;
 }
 
-export async function listSessions(profileId: string): Promise<PlaySession[]> {
+async function listSessions(profileId: string): Promise<PlaySession[]> {
   try {
     return await window.api.listSessions(profileId);
   } catch {
     return [];
   }
 }
+
+export {
+  endSession,
+  getActiveSession,
+  listSessions,
+  startSession
+};

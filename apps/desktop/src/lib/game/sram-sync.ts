@@ -38,16 +38,18 @@ async function syncSramToDisk(): Promise<void> {
   }
 }
 
-export function startSramSync(): void {
+function startSramSync(): void {
   stopSramSync();
   lastSramHash = null;
   sramSyncInterval = setInterval(syncSramToDisk, 5000);
 }
 
-export function stopSramSync(): void {
+function stopSramSync(): void {
   if (sramSyncInterval) {
     clearInterval(sramSyncInterval);
     sramSyncInterval = null;
   }
   syncSramToDisk();
 }
+
+export { startSramSync, stopSramSync };

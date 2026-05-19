@@ -6,7 +6,7 @@
  * Contains 893 unique device names from 1890 mapping entries.
  */
 
-export interface DeviceDatabaseEntry {
+interface DeviceDatabaseEntry {
   name: string;
   platforms: ('windows' | 'mac' | 'linux')[];
   vidPid?: string;
@@ -17,7 +17,7 @@ export interface DeviceDatabaseEntry {
   axes?: string[];
 }
 
-export const DEVICE_DATABASE: DeviceDatabaseEntry[] = [
+const DEVICE_DATABASE: DeviceDatabaseEntry[] = [
   { name: "2 In 1 Joystick", platforms: ["mac"], vidPid: "0e8f:0003", hasGyro: false, buttons: ["a","b","back","dpdown","dpleft","dpright","dpup","leftshoulder","leftstick","lefttrigger","rightshoulder","rightstick","righttrigger","start","x","y"], axes: ["leftx","lefty","rightx","righty"] },
   { name: "3 In 1 Conversion Box", platforms: ["windows"], vidPid: "0f30:010a", hasGyro: false, buttons: ["a","b","back","dpdown","dpleft","dpright","dpup","leftshoulder","leftstick","lefttrigger","rightshoulder","rightstick","righttrigger","start","x","y"], axes: ["leftx","lefty","rightx","righty"] },
   { name: "3dRudder Foot Motion Controller", platforms: ["windows"], vidPid: "2dfa:0001", hasGyro: false, axes: ["leftx","lefty","rightx","righty"] },
@@ -912,3 +912,6 @@ export const DEVICE_DATABASE: DeviceDatabaseEntry[] = [
   { name: "Zeroplus PS4 Controller", platforms: ["linux"], vidPid: "0c12:2e18", hasGyro: false, buttons: ["a","b","back","dpdown","dpleft","dpright","dpup","guide","leftshoulder","leftstick","rightshoulder","rightstick","start","x","y"], axes: ["lefttrigger","leftx","lefty","righttrigger","rightx","righty"] },
   { name: "ZhiXu GuliKit D", platforms: ["linux"], vidPid: "0079:0122", hasGyro: false, buttons: ["a","b","back","dpdown","dpleft","dpright","dpup","leftshoulder","leftstick","lefttrigger","rightshoulder","rightstick","righttrigger","start","x","y"], axes: ["leftx","lefty","rightx","righty"] },
 ];
+
+export { DEVICE_DATABASE };
+export type { DeviceDatabaseEntry };

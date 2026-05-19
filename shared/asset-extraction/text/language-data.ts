@@ -5,7 +5,7 @@
  * Ported from: core/zelda3/assets/text_compression.py
  */
 
-export interface LanguageConfig {
+interface LanguageConfig {
   id: string;
   alphabet: string[];
   dictionary: string[];
@@ -382,7 +382,7 @@ const langFR_C: LanguageConfig = {
 };
 
 /** All supported languages indexed by their code. */
-export const kLanguages: Record<string, LanguageConfig> = {
+const kLanguages: Record<string, LanguageConfig> = {
   us: langUS,
   de: langDE,
   fr: langFR,
@@ -397,12 +397,15 @@ export const kLanguages: Record<string, LanguageConfig> = {
 };
 
 /** Get the dialogue filename for a language code. */
-export function dialogueFilename(lang: string): string {
+function dialogueFilename(lang: string): string {
   if (lang === 'us') return 'dialogue.txt';
   return `dialogue_${lang.replace('-', '_')}.txt`;
 }
 
 /** Check if a language uses the newer encoder format. */
-export function usesNewFormat(lang: string): boolean {
+function usesNewFormat(lang: string): boolean {
   return kLanguages[lang].encoder === 'new';
 }
+
+export { dialogueFilename, kLanguages, usesNewFormat };
+export type { LanguageConfig };

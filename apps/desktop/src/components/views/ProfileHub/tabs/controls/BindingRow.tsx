@@ -41,7 +41,7 @@ function formatKeyBinding(b: KeyboardBinding): string {
   return parts.join(' + ');
 }
 
-export const getBindingLabel = (binding: InputBinding, icon?: ButtonIcon | null): string => {
+const getBindingLabel = (binding: InputBinding, icon?: ButtonIcon | null): string => {
   if (binding.type === 'none') return '—';
   if (icon?.label) return icon.label;
   switch (binding.type) {
@@ -54,7 +54,7 @@ export const getBindingLabel = (binding: InputBinding, icon?: ButtonIcon | null)
   }
 }
 
-export const getBindingIconUrl = (binding: InputBinding, icon?: ButtonIcon | null): string | null => {
+const getBindingIconUrl = (binding: InputBinding, icon?: ButtonIcon | null): string | null => {
   if (binding.type === 'none') return null;
   if (icon?.path) return icon.path;
   if (icon?.key) {
@@ -68,7 +68,7 @@ export const getBindingIconUrl = (binding: InputBinding, icon?: ButtonIcon | nul
   return null;
 }
 
-export const BindingRow = (props: BindingRowProps) => {
+const BindingRow = (props: BindingRowProps) => {
   const { actionLabel, middleLabel, middleIconUrl, binding, bindingIcon, onRebind, onClear } = props;
   const bindingLabel = getBindingLabel(binding, bindingIcon);
   const bindingIconSrc = getBindingIconUrl(binding, bindingIcon);
@@ -119,3 +119,5 @@ export const BindingRow = (props: BindingRowProps) => {
     </div>
   );
 }
+
+export { BindingRow, getBindingIconUrl, getBindingLabel };

@@ -1,6 +1,6 @@
 import type { CheckDefinition } from '../types';
 
-export const DARK_WORLD_CHECKS: CheckDefinition[] = [
+const DARK_WORLD_CHECKS: CheckDefinition[] = [
   { id: 'Pyramid', name: 'Pyramid', type: 'standing', region: 'east-dark-world', vanillaItem: 'Heart Piece' },
   { id: 'Catfish', name: 'Catfish', type: 'npc', region: 'catfish', vanillaItem: 'Quake' },
   { id: 'Stumpy', name: 'Stumpy', type: 'npc', region: 'south-dark-world', vanillaItem: 'Shovel' },
@@ -37,3 +37,5 @@ export const DARK_WORLD_CHECKS: CheckDefinition[] = [
   { id: 'Agahnim 1', name: 'Agahnim 1', type: 'boss', region: 'agahnim-1', dungeon: 'Castle Tower' },
   { id: 'Agahnim 2', name: 'Agahnim 2', type: 'boss', region: 'agahnim-2', dungeon: "Ganon's Tower" },
 ];
+
+export { DARK_WORLD_CHECKS };

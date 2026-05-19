@@ -11,7 +11,7 @@
  * Convert a SNES LoROM address to a linear ROM file offset.
  * Asserts that bit 15 is set (required for LoROM mapping).
  */
-export function snesToLinear(ea: number): number {
+function snesToLinear(ea: number): number {
   if ((ea & 0x8000) === 0) {
     throw new Error(`Invalid SNES address 0x${ea.toString(16)}: bit 15 not set`);
   }
@@ -22,7 +22,7 @@ export function snesToLinear(ea: number): number {
  * Advance a SNES address by 1, crossing bank boundaries.
  * When the low 16 bits overflow past 0xFFFF, advance to next bank at 0x8000.
  */
-export function advanceAddress(ea: number): number {
+function advanceAddress(ea: number): number {
   ea += 1;
   if ((ea & 0xffff) === 0) {
     ea += 0x8000;
@@ -34,10 +34,12 @@ export function advanceAddress(ea: number): number {
  * Advance a SNES address by 1 with word-granularity bank crossing.
  * When bit 15 clears (address crosses out of ROM window), jump to next bank.
  */
-export function advanceAddressWord(ea: number): number {
+function advanceAddressWord(ea: number): number {
   ea += 2;
   if ((ea & 0x8000) === 0) {
     ea += 0x8000;
   }
   return ea;
 }
+
+export { advanceAddress, advanceAddressWord, snesToLinear };
