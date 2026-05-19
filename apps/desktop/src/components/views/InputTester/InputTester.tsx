@@ -4,116 +4,20 @@
  * Shows every connected gamepad with real-time button/axis state,
  * event log, and HID enumeration results. Useful for diagnosing
  * whether the browser/Electron actually receives input.
- *
- * All input state comes from InputManager (single source of truth).
  */
 
-import { useState, useEffect, useRef } from 'react';
-import { webHidReader } from '../../../lib/input/hid-reader';
-import type { WebHidInputState } from '../../../lib/input/hid-reader';
-import { getInputManager } from '../../../lib/input/input-manager';
-import type { GamepadSnapshot } from '../../../lib/input/input-manager';
+import { useInputTester } from './useInputTester';
+import { GamepadCard } from './GamepadCard';
+import { WebHidDeviceCard } from './WebHidDeviceCard';
 import { HidCalibrationWizard } from './sub-components/HidCalibrationWizard';
-import type { HidControllerMap } from './sub-components/HidCalibrationWizard';
 import './InputTester.css';
 
-interface EventEntry {
-  time: number;
-  type: 'connect' | 'disconnect';
-  index: number;
-  id: string;
-}
-
-interface HidDevice {
-  vendorId: string;
-  productId: string;
-  product: string;
-  manufacturer: string;
-  path: string;
-  serialNumber: string | null;
-}
-
 const InputTester = () => {
-  const [gamepads, setGamepads] = useState<GamepadSnapshot[]>([]);
-  const [events, setEvents] = useState<EventEntry[]>([]);
-  const [hidDevices, setHidDevices] = useState<HidDevice[]>([]);
-  const eventLogRef = useRef<HTMLDivElement>(null);
-
-  // WebHID state
-  const [webHidConnected, setWebHidConnected] = useState(webHidReader.isConnected());
-  const [webHidStates, setWebHidStates] = useState<Map<string, WebHidInputState>>(new Map());
-  const [webHidDiag, setWebHidDiag] = useState<string[]>(webHidReader.getDiagLog());
-
-  // ── Subscribe to InputManager for all input state ──
-  useEffect(() => {
-    const inputMgr = getInputManager();
-    const unsub = inputMgr.onInputState((hidStates, gamepadSnaps, _pressedKeys) => {
-      setWebHidStates(hidStates);
-      setWebHidConnected(hidStates.size > 0 || webHidReader.isConnected());
-      setGamepads(gamepadSnaps);
-    });
-    return unsub;
-  }, []);
-
-  // Listen for gamepad events (for log only)
-  useEffect(() => {
-    const onConnect = (e: GamepadEvent) => {
-      setEvents(prev => [...prev.slice(-49), {
-        time: Date.now(),
-        type: 'connect',
-        index: e.gamepad.index,
-        id: e.gamepad.id,
-      }]);
-    };
-    const onDisconnect = (e: GamepadEvent) => {
-      setEvents(prev => [...prev.slice(-49), {
-        time: Date.now(),
-        type: 'disconnect',
-        index: e.gamepad.index,
-        id: e.gamepad.id,
-      }]);
-    };
-    window.addEventListener('gamepadconnected', onConnect);
-    window.addEventListener('gamepaddisconnected', onDisconnect);
-    return () => {
-      window.removeEventListener('gamepadconnected', onConnect);
-      window.removeEventListener('gamepaddisconnected', onDisconnect);
-    };
-  }, []);
-
-  // Auto-scroll event log
-  useEffect(() => {
-    if (eventLogRef.current) {
-      eventLogRef.current.scrollTop = eventLogRef.current.scrollHeight;
-    }
-  }, [events]);
-
-  // Enumerate HID devices on mount (node-hid, for reference)
-  useEffect(() => {
-    window.api.enumerateHidDevices().then(setHidDevices).catch(() => {});
-  }, []);
-
-  // HID diagnostics
-  useEffect(() => {
-    const unsubDiag = webHidReader.onDiag(() => {
-      setWebHidDiag([...webHidReader.getDiagLog()]);
-    });
-    return unsubDiag;
-  }, []);
-
-  // Calibration wizard state
-  const [calibrating, setCalibrating] = useState(false);
-  const [lastCalibration, setLastCalibration] = useState<HidControllerMap | null>(null);
-
-  const handleCalibrationComplete = (map: HidControllerMap) => {
-    setLastCalibration(map);
-    setCalibrating(false);
-  };
-
-  const anyInput = gamepads.some(gp =>
-    gp.buttons.some(b => b.pressed || b.value > 0.1) ||
-    gp.axes.some(a => Math.abs(a) > 0.1)
-  );
+  const {
+    gamepads, events, hidDevices, eventLogRef,
+    webHidConnected, webHidStates, webHidDiag,
+    calibrating, setCalibrating, lastCalibration, handleCalibrationComplete,
+  } = useInputTester();
 
   return (
     <div className="input-tester">
@@ -151,63 +55,10 @@ const InputTester = () => {
       )}
 
       {gamepads.map(gp => (
-        <div key={gp.index} className="input-tester__gamepad">
-          <div className="input-tester__gamepad-header">
-            <span className="input-tester__gamepad-index">#{gp.index}</span>
-            <span className="input-tester__gamepad-id">{gp.id}</span>
-            <span className="input-tester__gamepad-mapping">mapping: {gp.mapping || 'none'}</span>
-          </div>
-
-          {/* Buttons */}
-          <div className="input-tester__section-label">
-            Buttons ({gp.buttons.length})
-          </div>
-          <div className="input-tester__buttons">
-            {gp.buttons.map((btn, i) => (
-              <div
-                key={i}
-                className={`input-tester__button ${
-                  btn.pressed ? 'input-tester__button--pressed'
-                    : btn.touched ? 'input-tester__button--touched'
-                    : 'input-tester__button--idle'
-                }`}
-                title={`B${i}: pressed=${btn.pressed} touched=${btn.touched} value=${btn.value.toFixed(2)}`}
-              >
-                {i}
-              </div>
-            ))}
-          </div>
-
-          {/* Axes */}
-          <div className="input-tester__section-label">
-            Axes ({gp.axes.length})
-          </div>
-          <div className="input-tester__axes">
-            {gp.axes.map((val, i) => (
-              <div key={i} className="input-tester__axis">
-                <span className="input-tester__axis-label">A{i}</span>
-                <div className="input-tester__axis-bar">
-                  <div
-                    className="input-tester__axis-fill"
-                    style={{
-                      width: `${Math.abs(val) * 50}%`,
-                      ...(val < 0 ? { left: `${50 + val * 50}%` } : { left: '50%' }),
-                    }}
-                  />
-                </div>
-                <span className="input-tester__axis-value">{val.toFixed(4)}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Raw timestamp */}
-          <div className="input-tester__raw">
-            timestamp: {gp.timestamp.toFixed(0)} | connected: {String(gp.connected)}
-          </div>
-        </div>
+        <GamepadCard key={gp.index} gamepad={gp} />
       ))}
 
-      {/* Calibration Wizard (shown when active) */}
+      {/* Calibration Wizard */}
       {calibrating && (
         <HidCalibrationWizard
           onComplete={handleCalibrationComplete}
@@ -268,69 +119,11 @@ const InputTester = () => {
         )}
 
         {[...webHidStates.entries()].map(([key, state]) => (
-          <div key={key} className="input-tester__gamepad" style={{ marginTop: 8 }}>
-            <div className="input-tester__gamepad-header">
-              <span className="input-tester__gamepad-index">HID</span>
-              <span className="input-tester__gamepad-id">{key}</span>
-              <span className="input-tester__gamepad-mapping" style={{ color: '#818cf8' }}>WebHID</span>
-            </div>
-            <div className="input-tester__section-label">Buttons ({state.buttons.length})</div>
-            <div className="input-tester__buttons">
-              {state.buttons.map((pressed, i) => (
-                <div
-                  key={i}
-                  className={`input-tester__button ${pressed ? 'input-tester__button--pressed' : 'input-tester__button--idle'}`}
-                >
-                  {i}
-                </div>
-              ))}
-            </div>
-            <div className="input-tester__section-label">Axes ({state.axes.length})</div>
-            <div className="input-tester__axes">
-              {state.axes.map((val, i) => (
-                <div key={i} className="input-tester__axis">
-                  <span className="input-tester__axis-label">A{i}</span>
-                  <div className="input-tester__axis-bar">
-                    <div
-                      className="input-tester__axis-fill"
-                      style={{
-                        left: val < 0 ? `${50 + val * 50}%` : '50%',
-                        width: `${Math.abs(val) * 50}%`,
-                      }}
-                    />
-                  </div>
-                  <span className="input-tester__axis-value">{val.toFixed(4)}</span>
-                </div>
-              ))}
-            </div>
-            {/* Collapsible raw bytes debug */}
-            <details className="input-tester__raw-bytes-details">
-              <summary style={{ fontSize: 11, color: '#888', cursor: 'pointer', userSelect: 'none', marginTop: 8 }}>
-                Raw Bytes {state.reportId != null ? `(report 0x${state.reportId.toString(16).padStart(2, '0')})` : ''} — {state.rawBytes ? state.rawBytes.length : 0} bytes
-              </summary>
-              {state.rawBytes && (
-                <div style={{
-                  display: 'flex', flexWrap: 'wrap', gap: 2, marginTop: 6,
-                  fontFamily: 'monospace', fontSize: 10, lineHeight: 1,
-                }}>
-                  {Array.from(state.rawBytes).map((b, i) => (
-                    <div key={i} style={{
-                      width: 22, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      background: b > 0 ? `rgba(129,140,248,${Math.min(1, b / 255 * 0.8 + 0.2)})` : '#2a2a3a',
-                      color: b > 0 ? '#fff' : '#555',
-                      borderRadius: 2, border: '1px solid #3a3a4a',
-                    }}>
-                      {b.toString(16).padStart(2, '0')}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </details>
-          </div>
+          <WebHidDeviceCard key={key} deviceKey={key} state={state} />
         ))}
       </div>
 
-      {/* HID enumeration (from node-hid via main process — reference only) */}
+      {/* HID enumeration (from node-hid via main process) */}
       <div className="input-tester__hid-section">
         <h3>HID Enumeration (node-hid, reference)</h3>
         {hidDevices.length === 0 && (

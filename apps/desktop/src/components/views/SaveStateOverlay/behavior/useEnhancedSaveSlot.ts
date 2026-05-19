@@ -15,86 +15,12 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { getInputManager, saveState, loadState, resolveFunctionMappingIcon } from '../../../../lib/game';
-import type { FunctionAction, FunctionMapping } from '@shared/types/controls';
-import { getBindingLabel, getBindingIconUrl } from '../../../views/ProfileHub/tabs/controls/BindingRow';
-import { keyCodeToIconId, getButtonIconUrl } from '../../../views/InputTester/data/button-icons';
+import { getInputManager, saveState, loadState } from '../../../../lib/game';
+import type { FunctionAction } from '@shared/types/controls';
 import { log } from '../../../../lib/log-bus';
-
-/** Time in ms below which a second press is considered a "tap" → LOAD */
-const TAP_THRESHOLD_MS = 180;
-
-type HintAction = 'tap-load' | 'hold-save' | 'esc-cancel' | 'holding-save';
-
-interface SlotHint {
-  action: HintAction;
-  keyLabel: string;        // text fallback (e.g. "F1", "Shift+F1", "Esc")
-  iconUrl: string | null;  // SVG icon URL from button-icons system
-}
-
-interface EnhancedSaveSlotState {
-  open: boolean;
-  highlightedSlot: number | null;
-  holdProgress: number;
-  hints: SlotHint[];
-  close: () => void;
-}
-
-/**
- * Wrap a save/load action with pause handling: if game is paused, unpause first,
- * do the action, then re-pause.
- */
-async function withPauseGuard(action: () => Promise<boolean>): Promise<boolean> {
-  const inputMgr = getInputManager();
-  const wasPaused = inputMgr.isPaused();
-  if (wasPaused) {
-    inputMgr.resume();
-    // Let one frame run so WASM is unpaused before the action
-    await new Promise(r => requestAnimationFrame(r));
-  }
-  const result = await action();
-  if (wasPaused) {
-    // Let at least one frame render so the screen updates after a load,
-    // then re-pause. Two rAFs: one for WASM to process, one to paint.
-    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-    inputMgr.togglePause();
-  }
-  return result;
-}
-
-/** Look up the binding for a slot's load action from function mappings */
-function getSlotBinding(mappings: FunctionMapping[], slot: number): { label: string; iconUrl: string | null } {
-  // Prefer load binding (that's what you press first)
-  const loadAction = `load-state-${slot + 1}` as FunctionAction;
-  const loadMapping = mappings.find(m => m.action === loadAction && m.binding.type !== 'none');
-  if (loadMapping) {
-    const icon = loadMapping.icon ?? resolveFunctionMappingIcon(loadMapping);
-    return {
-      label: getBindingLabel(loadMapping.binding, icon),
-      iconUrl: getBindingIconUrl(loadMapping.binding, icon),
-    };
-  }
-  // Fallback to save binding
-  const saveAction = `save-state-${slot + 1}` as FunctionAction;
-  const saveMapping = mappings.find(m => m.action === saveAction && m.binding.type !== 'none');
-  if (saveMapping) {
-    const icon = saveMapping.icon ?? resolveFunctionMappingIcon(saveMapping);
-    return {
-      label: getBindingLabel(saveMapping.binding, icon),
-      iconUrl: getBindingIconUrl(saveMapping.binding, icon),
-    };
-  }
-  return { label: `Slot ${slot + 1}`, iconUrl: null };
-}
-
-/** Get ESC key icon */
-function getEscBinding(): { label: string; iconUrl: string | null } {
-  const iconId = keyCodeToIconId('Escape');
-  return {
-    label: 'Esc',
-    iconUrl: iconId ? getButtonIconUrl(iconId) : null,
-  };
-}
+import { TAP_THRESHOLD_MS } from './enhanced-save-slot.types';
+import type { EnhancedSaveSlotState, SlotHint } from './enhanced-save-slot.types';
+import { withPauseGuard, buildIdleHints, buildHoldingHints } from './enhanced-save-slot.helpers';
 
 const useEnhancedSaveSlot = (
   enabled: boolean,
@@ -144,27 +70,22 @@ const useEnhancedSaveSlot = (
     if (!open) return;
     const inputMgr = getInputManager();
 
-    // Keyboard: ESC or any non-slot-mapped key cancels
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Escape') {
         e.preventDefault();
         close();
         return;
       }
-      // Check if this key is mapped to a save/load slot — if not, cancel
       const mappings = inputMgr.getFunctionMappings();
       const isSlotKey = mappings.some(m =>
         m.binding.type === 'keyboard' &&
         m.binding.code === e.code &&
         (m.action.startsWith('load-state-') || m.action.startsWith('save-state-'))
       );
-      if (!isSlotKey) {
-        close();
-      }
+      if (!isSlotKey) close();
     };
     window.addEventListener('keydown', onKeyDown);
 
-    // Gamepad: any button NOT mapped to a save/load slot cancels
     const mappings = inputMgr.getFunctionMappings();
     const slotButtonIndices = new Set<number>();
     for (const m of mappings) {
@@ -173,10 +94,8 @@ const useEnhancedSaveSlot = (
       }
     }
 
-    // Track previous button states to detect rising edges
     const prevButtons = new Map<string, boolean[]>();
     const unsub = inputMgr.onInputState((hidStates, gamepads) => {
-      // Check WebHID controllers
       for (const [key, state] of hidStates) {
         const prev = prevButtons.get(key) ?? [];
         for (let i = 0; i < state.buttons.length; i++) {
@@ -187,7 +106,6 @@ const useEnhancedSaveSlot = (
         }
         prevButtons.set(key, [...state.buttons]);
       }
-      // Check standard gamepads
       for (const gp of gamepads) {
         const gpKey = `gp-${gp.index}`;
         const prev = prevButtons.get(gpKey) ?? [];
@@ -207,38 +125,20 @@ const useEnhancedSaveSlot = (
     };
   }, [open, close]);
 
+  // Main subscription: slot actions + key-up handler
   useEffect(() => {
     if (!gameRunning) return;
 
     const inputMgr = getInputManager();
     const unsubs: (() => void)[] = [];
     const mappings = inputMgr.getFunctionMappings();
-    const escInfo = getEscBinding();
-
-    /** Build idle hints from actual bindings */
-    const idleHints = (slot: number): SlotHint[] => {
-      const slotInfo = getSlotBinding(mappings, slot);
-      return [
-        { action: 'tap-load', keyLabel: slotInfo.label, iconUrl: slotInfo.iconUrl },
-        { action: 'hold-save', keyLabel: slotInfo.label, iconUrl: slotInfo.iconUrl },
-        { action: 'esc-cancel', keyLabel: escInfo.label, iconUrl: escInfo.iconUrl },
-      ];
-    };
-
-    /** Hints while holding */
-    const holdingHints = (slot: number): SlotHint[] => {
-      const slotInfo = getSlotBinding(mappings, slot);
-      return [
-        { action: 'holding-save', keyLabel: slotInfo.label, iconUrl: slotInfo.iconUrl },
-      ];
-    };
 
     const startHold = (slot: number) => {
       holdStartRef.current = performance.now();
       holdSlotRef.current = slot;
       holdCompleteRef.current = false;
       awaitingHoldRef.current = true;
-      setHints(holdingHints(slot));
+      setHints(buildHoldingHints(mappings, slot));
 
       const tick = () => {
         if (holdStartRef.current == null) return;
@@ -276,7 +176,7 @@ const useEnhancedSaveSlot = (
         pendingSlotRef.current = slot;
         setHighlightedSlot(slot);
         setHoldProgress(0);
-        setHints(idleHints(slot));
+        setHints(buildIdleHints(mappings, slot));
         setOpen(true);
         return true;
       }
@@ -286,7 +186,7 @@ const useEnhancedSaveSlot = (
         pendingSlotRef.current = slot;
         setHighlightedSlot(slot);
         setHoldProgress(0);
-        setHints(idleHints(slot));
+        setHints(buildIdleHints(mappings, slot));
         return true;
       }
 
@@ -342,7 +242,7 @@ const useEnhancedSaveSlot = (
         withPauseGuard(() => loadState(slot)).then(() => close());
       } else {
         cancelHold();
-        setHints(idleHints(slot));
+        setHints(buildIdleHints(mappings, slot));
       }
     }));
 
@@ -362,4 +262,4 @@ const useEnhancedSaveSlot = (
 }
 
 export { useEnhancedSaveSlot };
-export type { HintAction, SlotHint };
+export type { HintAction, SlotHint } from './enhanced-save-slot.types';

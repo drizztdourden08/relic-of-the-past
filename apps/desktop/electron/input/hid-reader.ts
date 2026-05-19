@@ -17,45 +17,9 @@ import { BrowserWindow } from 'electron';
 import { Worker } from 'worker_threads';
 import path from 'path';
 import { sendUsbInit } from './usb-init';
-
-// Xbox VID — excluded because Windows XInput driver claims exclusive access
-const XBOX_VID = 0x045e;
-
-// Nintendo VID
-const NINTENDO_VID = 0x057e;
-
-// All known Nintendo controller PIDs (for general identification)
-const NINTENDO_PIDS = new Set([
-  0x2009, // Switch Pro Controller
-  0x2069, // Switch Pro Controller 2
-  0x2006, // Joy-Con L
-  0x2007, // Joy-Con R
-  0x2066, // Joy-Con 2 L
-  0x2067, // Joy-Con 2 R
-  0x2073, // GC Controller
-]);
-
-/** HID usage pages/usages that indicate a game controller */
-const GAMEPAD_USAGE_PAGES = new Set([0x01]); // Generic Desktop
-const GAMEPAD_USAGES = new Set([
-  0x04, // Joystick
-  0x05, // Game Pad
-  0x08, // Multi-axis Controller
-]);
-
-function toHex4(n: number): string {
-  return n.toString(16).padStart(4, '0');
-}
-
-interface OpenDevice {
-  hid: HID.HID;
-  vid: number;
-  pid: number;
-  key: string; // "vid:pid" (hex, 4-char padded — matches WebHID deviceKey format)
-  path: string;
-  product: string;
-  writeFailed?: boolean;
-}
+import { NINTENDO_VID, NINTENDO_PIDS, toHex4, OpenDevice } from './hid-constants';
+import { filterGamepadCandidates, groupByVidPid, selectBestInterface } from './hid-discovery';
+import { buildSegmentFrames, buildPatternFrames, writeFramesDirect, buildSilentFrame } from './hid-haptics';
 
 class HidInputReader {
   private devices: OpenDevice[] = [];
@@ -65,7 +29,109 @@ class HidInputReader {
   private workerReqId = 0;
   private workerCallbacks = new Map<number, (result: any) => void>();
 
-  /** Lazy-start the persistent HID worker thread. */
+  // ── Main-process send timing ──
+  private _fwdLastTime = 0;
+  private _fwdGapMax = 0;
+  private _fwdBursts = 0;
+  private _fwdCount = 0;
+  private _fwdLogTime = 0;
+
+  /** Start scanning for controllers and reading input. */
+  start(win: BrowserWindow): void {
+    this.window = win;
+    this.log(`HID input reader starting...`);
+    this.scanAndOpen();
+    this.scanInterval = setInterval(() => this.scanAndOpen(), 3000);
+  }
+
+  /** Stop all readers and close devices. Sends SILENT haptic frame before closing. */
+  stop(): void {
+    if (this.scanInterval) {
+      clearInterval(this.scanInterval);
+      this.scanInterval = null;
+    }
+    if (this.worker) {
+      this.worker.terminate().catch(() => {});
+      this.worker = null;
+      this.workerCallbacks.clear();
+    }
+    for (const dev of this.devices) {
+      try {
+        const buf = buildSilentFrame(0x50);
+        dev.hid.pause();
+        dev.hid.write(buf);
+        dev.hid.resume();
+      } catch { /* ignore — best effort cleanup */ }
+      try { dev.hid.close(); } catch { /* ignore */ }
+    }
+    this.devices = [];
+  }
+
+  /** Get list of currently open device keys */
+  getOpenDeviceKeys(): string[] {
+    return this.devices.map(d => d.key);
+  }
+
+  /** Write raw data to an open HID device (for haptics, LED, etc.) */
+  write(deviceKey: string, data: number[]): boolean {
+    const dev = this.devices.find(d => d.key === deviceKey);
+    if (!dev) return false;
+    if (dev.writeFailed) return false;
+    try {
+      const buf = new Array(64).fill(0);
+      for (let i = 0; i < Math.min(data.length, 64); i++) buf[i] = data[i];
+      dev.hid.pause();
+      dev.hid.write(buf);
+      dev.hid.resume();
+      return true;
+    } catch (err) {
+      dev.hid.resume();
+      if (!dev.writeFailed) {
+        dev.writeFailed = true;
+        this.log(`Write error ${deviceKey}: ${(err as Error).message} (suppressing further writes)`);
+      }
+      return false;
+    }
+  }
+
+  /** Vibrate an HID controller for a given duration and intensity. */
+  vibrate(deviceKey: string, durationMs: number, intensity: number): boolean {
+    const dev = this.devices.find(d => d.key === deviceKey);
+    if (!dev) return false;
+    const frames = buildSegmentFrames(durationMs, intensity);
+    writeFramesDirect(dev, frames);
+    return true;
+  }
+
+  /** Vibrate with a pattern: array of {durationMs, intensity} segments with gaps. */
+  vibratePattern(deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number = 0): { ok: boolean; error?: string } {
+    const dev = this.devices.find(d => d.key === deviceKey);
+    if (!dev) {
+      const msg = `Device not found: "${deviceKey}" (available: ${this.devices.map(d => d.key).join(', ') || 'none'})`;
+      this.log(msg);
+      this.send('hid:error', { deviceKey, error: msg });
+      return { ok: false, error: msg };
+    }
+
+    const frames = buildPatternFrames(pattern, gapMs);
+    this.log(`vibratePattern: dispatching ${frames.length} frames to worker for ${deviceKey} path=${dev.path}`);
+    this.workerRequest({ type: 'vibrate', devicePath: dev.path, frames })
+      .then((result: any) => {
+        this.log(`vibratePattern worker result: ${JSON.stringify(result)}`);
+        if (!result.ok || result.writeErrors > 0) {
+          this.log(`Worker vibrate issue — falling back to direct write`);
+          writeFramesDirect(dev, frames);
+        }
+      })
+      .catch((err: Error) => {
+        this.log(`vibratePattern worker error: ${err.message} — falling back to direct write`);
+        writeFramesDirect(dev, frames);
+      });
+    return { ok: true };
+  }
+
+  // ── Worker thread management ──
+
   private ensureWorker(): Worker {
     if (!this.worker) {
       const workerPath = path.join(__dirname, 'hid-worker.js');
@@ -88,7 +154,6 @@ class HidInputReader {
     return this.worker;
   }
 
-  /** Send a message to the worker and get a Promise for the response. */
   private workerRequest<T = any>(msg: Record<string, any>): Promise<T> {
     const id = ++this.workerReqId;
     const w = this.ensureWorker();
@@ -98,90 +163,24 @@ class HidInputReader {
     });
   }
 
-  /** Non-blocking device enumeration via worker thread. */
   async enumerateDevicesAsync(): Promise<HID.Device[]> {
     const result = await this.workerRequest<{ ok: boolean; devices?: HID.Device[]; error?: string }>({ type: 'enumerate' });
     if (result.ok && result.devices) return result.devices;
     throw new Error(result.error ?? 'enumerate failed');
   }
 
-  /** Start scanning for controllers and reading input. */
-  start(win: BrowserWindow): void {
-    this.window = win;
-    this.log(`HID input reader starting...`);
-    this.scanAndOpen();
-    // Re-scan every 3s for hot-plug — async, never blocks main thread
-    this.scanInterval = setInterval(() => this.scanAndOpen(), 3000);
-  }
-
-  /** Stop all readers and close devices. Sends SILENT haptic frame before closing. */
-  stop(): void {
-    if (this.scanInterval) {
-      clearInterval(this.scanInterval);
-      this.scanInterval = null;
-    }
-    // Terminate the worker thread
-    if (this.worker) {
-      this.worker.terminate().catch(() => {});
-      this.worker = null;
-      this.workerCallbacks.clear();
-    }
-    for (const dev of this.devices) {
-      // Send SILENT haptic frame to stop any running vibration before closing
-      try {
-        const buf = new Array(64).fill(0);
-        buf[0] = 0x02;
-        buf[1] = 0x50;
-        buf[17] = 0x50;
-        // HAPTIC_SILENT pattern
-        const silent = [0x3f, 0x01, 0xf0, 0x19, 0x00];
-        for (let i = 0; i < silent.length; i++) {
-          buf[2 + i] = silent[i];
-          buf[18 + i] = silent[i];
-        }
-        dev.hid.pause();
-        dev.hid.write(buf);
-        dev.hid.resume();
-      } catch { /* ignore — best effort cleanup */ }
-      try { dev.hid.close(); } catch { /* ignore */ }
-    }
-    this.devices = [];
-  }
-
-  /** Get list of currently open device keys */
-  getOpenDeviceKeys(): string[] {
-    return this.devices.map(d => d.key);
-  }
-
-  private log(msg: string): void {
-    console.log(`[HID] ${msg}`);
-  }
+  // ── Device scanning & connection ──
 
   private async scanAndOpen(): Promise<void> {
     let allDevices: HID.Device[];
     try {
       allDevices = await this.enumerateDevicesAsync();
     } catch {
-      return; // worker error — skip this scan
+      return;
     }
 
-    // Find all gamepad-like HID interfaces (excluding Xbox)
-    // Require gamepad usage (page=0x01, usage=0x04/0x05/0x08) to avoid
-    // opening mice/keyboards from manufacturers that also make controllers.
-    const candidates = allDevices.filter(d => {
-      if (d.vendorId === XBOX_VID) return false;
-      const isGamepadUsage = GAMEPAD_USAGE_PAGES.has(d.usagePage ?? 0) &&
-                             GAMEPAD_USAGES.has(d.usage ?? 0);
-      return isGamepadUsage;
-    });
-
-    // Group by VID:PID
-    const groups = new Map<string, typeof candidates>();
-    for (const d of candidates) {
-      const key = `${toHex4(d.vendorId)}:${toHex4(d.productId)}`;
-      if (!groups.has(key)) groups.set(key, []);
-      groups.get(key)!.push(d);
-    }
+    const candidates = filterGamepadCandidates(allDevices);
+    const groups = groupByVidPid(candidates);
 
     // Remove devices that disappeared from enumeration (unplugged)
     const enumeratedKeys = new Set(groups.keys());
@@ -194,21 +193,14 @@ class HidInputReader {
     }
 
     for (const [key, interfaces] of groups) {
-      // Skip if already open
       if (this.devices.some(d => d.key === key)) continue;
 
-      // Prefer usagePage=0x01 usage=0x05 (Game Pad), then 0x04 (Joystick), then any 0x01
-      let target = interfaces.find(d => d.usagePage === 0x01 && d.usage === 0x05);
-      if (!target) target = interfaces.find(d => d.usagePage === 0x01 && d.usage === 0x04);
-      if (!target) target = interfaces.find(d => d.usagePage === 0x01);
-      if (!target) target = interfaces[0];
-
-      if (!target.path) continue;
+      const target = selectBestInterface(interfaces);
+      if (!target || !target.path) continue;
 
       this.log(`Opening ${key} (${target.product || 'Unknown'}) usagePage=0x${(target.usagePage ?? 0).toString(16)} usage=0x${(target.usage ?? 0).toString(16)}`);
 
       try {
-        // Nintendo controllers need USB init on interface 1 before HID reports flow
         if (target.vendorId === NINTENDO_VID && NINTENDO_PIDS.has(target.productId)) {
           try {
             const ok = await sendUsbInit(target.vendorId, target.productId);
@@ -229,10 +221,7 @@ class HidInputReader {
         };
         this.devices.push(dev);
 
-        hid.on('data', (data: Buffer) => {
-          this.forwardReport(dev, data);
-        });
-
+        hid.on('data', (data: Buffer) => this.forwardReport(dev, data));
         hid.on('error', (err: Error) => {
           this.log(`Device error ${key}: ${err.message}`);
           this.removeDevice(dev);
@@ -241,21 +230,10 @@ class HidInputReader {
 
         this.log(`Opened ${key} (${dev.product})`);
 
-        // SPC2 needs a wake-up haptic poke after USB enumeration.
-        // The USB init (sendUsbInit) already started HID streaming.
-        // Send a silent haptic frame as additional acknowledgment.
-        // Only SPC2 (0x2069) supports haptic writes — GC adapter and others don't.
+        // SPC2 wake-up haptic poke
         if (target.vendorId === NINTENDO_VID && target.productId === 0x2069) {
           try {
-            const wake = new Array(64).fill(0);
-            wake[0] = 0x02; // report ID
-            wake[1] = 0x50; // haptic counter byte
-            wake[17] = 0x50;
-            const silent = [0x3f, 0x01, 0xf0, 0x19, 0x00];
-            for (let i = 0; i < silent.length; i++) {
-              wake[2 + i] = silent[i];
-              wake[18 + i] = silent[i];
-            }
+            const wake = buildSilentFrame(0x50);
             hid.pause();
             try {
               hid.write(wake);
@@ -268,7 +246,6 @@ class HidInputReader {
           }
         }
 
-        // Notify renderer a new device is available
         this.send('hid:device-opened', {
           deviceKey: key,
           vendorId: toHex4(target.vendorId),
@@ -281,21 +258,11 @@ class HidInputReader {
     }
   }
 
-  // ── Main-process send timing ──
-  private _fwdLastTime = 0;
-  private _fwdGapMax = 0;
-  private _fwdBursts = 0;
-  private _fwdCount = 0;
-  private _fwdLogTime = 0;
+  // ── Report forwarding ──
 
-  /**
-   * Forward raw HID report to the renderer.
-   * The first byte of the buffer is the report ID.
-   */
   private forwardReport(dev: OpenDevice, data: Buffer): void {
     if (!this.window || this.window.isDestroyed()) return;
 
-    // Measure main-process send timing
     const now = performance.now();
     if (this._fwdLastTime > 0) {
       const gap = now - this._fwdLastTime;
@@ -306,7 +273,6 @@ class HidInputReader {
     this._fwdCount++;
     if (now - this._fwdLogTime > 2000 && this._fwdCount > 0) {
       const msg = `[HID-MAIN] sent=${this._fwdCount} maxGap=${this._fwdGapMax.toFixed(1)}ms bursts=${this._fwdBursts}`;
-      // Send to renderer diag UI only (no terminal log)
       this.send('hid:main-perf', msg);
       this._fwdCount = 0;
       this._fwdGapMax = 0;
@@ -314,159 +280,24 @@ class HidInputReader {
       this._fwdLogTime = now;
     }
 
-    // Send buffer directly — Electron serializes Buffer/Uint8Array efficiently
     this.window.webContents.send('hid:report', dev.key, dev.vid, dev.pid, data);
   }
+
+  // ── Utilities ──
 
   private removeDevice(dev: OpenDevice): void {
     try { dev.hid.close(); } catch { /* ignore */ }
     this.devices = this.devices.filter(d => d !== dev);
   }
 
-  /** Write raw data to an open HID device (for haptics, LED, etc.)
-   *  On Windows, node-hid requires the buffer to match the HID output report size.
-   *  For Switch controllers this is 64 bytes. Data is zero-padded as needed. */
-  write(deviceKey: string, data: number[]): boolean {
-    const dev = this.devices.find(d => d.key === deviceKey);
-    if (!dev) return false;
-    if (dev.writeFailed) return false; // Suppress repeated writes to devices that don't support output
-    try {
-      const buf = new Array(64).fill(0);
-      for (let i = 0; i < Math.min(data.length, 64); i++) buf[i] = data[i];
-      dev.hid.pause();
-      dev.hid.write(buf);
-      dev.hid.resume();
-      return true;
-    } catch (err) {
-      dev.hid.resume();
-      if (!dev.writeFailed) {
-        dev.writeFailed = true;
-        this.log(`Write error ${deviceKey}: ${(err as Error).message} (suppressing further writes)`);
-      }
-      return false;
-    }
-  }
-
-  // Known-working haptic data from procon2tool TEST_HAPTIC_PATTERN
-  private static readonly HAPTIC_STRONG: number[] = [0x93, 0x35, 0x36, 0x1c, 0x0d];
-  private static readonly HAPTIC_MEDIUM: number[] = [0x75, 0x19, 0x41, 0x9b, 0x03];
-  private static readonly HAPTIC_LIGHT:  number[] = [0x48, 0x71, 0x20, 0x5a, 0x02];
-  private static readonly HAPTIC_SILENT: number[] = [0x3f, 0x01, 0xf0, 0x19, 0x00];
-
-  /** Map intensity (0–1) to a haptic data array. */
-  private static hapticForIntensity(intensity: number): number[] {
-    const clamped = Math.max(0, Math.min(1, intensity));
-    return clamped >= 0.7 ? HidInputReader.HAPTIC_STRONG
-      : clamped >= 0.3 ? HidInputReader.HAPTIC_MEDIUM
-      : HidInputReader.HAPTIC_LIGHT;
-  }
-
-  /** Build frames for a single vibration segment with attack/release envelope. */
-  private static buildSegmentFrames(durationMs: number, intensity: number): number[][] {
-    const clamped = Math.max(0, Math.min(1, intensity));
-    const sustain = HidInputReader.hapticForIntensity(clamped);
-    const frameCount = Math.max(1, Math.ceil(durationMs / 4));
-
-    const frames: number[][] = [];
-    if (frameCount > 6) {
-      frames.push(HidInputReader.HAPTIC_LIGHT);
-      if (clamped >= 0.3) frames.push(HidInputReader.HAPTIC_MEDIUM);
-    }
-    const releaseCount = Math.min(2, Math.max(1, Math.floor(frameCount * 0.1)));
-    const sustainCount = Math.max(1, frameCount - frames.length - releaseCount);
-    for (let i = 0; i < sustainCount; i++) frames.push(sustain);
-    if (releaseCount >= 2 && clamped >= 0.3) frames.push(HidInputReader.HAPTIC_LIGHT);
-    frames.push(HidInputReader.HAPTIC_SILENT);
-    return frames;
-  }
-
-  /** Build frames for a multi-segment pattern with gaps between segments. */
-  private static buildPatternFrames(pattern: { durationMs: number; intensity: number }[], gapMs: number): number[][] {
-    const frames: number[][] = [];
-    const gapFrames = Math.max(0, Math.ceil(gapMs / 4));
-
-    for (let s = 0; s < pattern.length; s++) {
-      const seg = pattern[s];
-      const haptic = HidInputReader.hapticForIntensity(seg.intensity);
-      const count = Math.max(1, Math.ceil(seg.durationMs / 4));
-      for (let i = 0; i < count; i++) frames.push(haptic);
-      if (gapFrames > 0 && s < pattern.length - 1) {
-        for (let i = 0; i < gapFrames; i++) frames.push(HidInputReader.HAPTIC_SILENT);
-      }
-    }
-    frames.push(HidInputReader.HAPTIC_SILENT);
-    return frames;
-  }
-
-  /**
-   * Vibrate an HID controller for a given duration and intensity.
-   * Uses direct writes (pauses read listener during write).
-   */
-  vibrate(deviceKey: string, durationMs: number, intensity: number): boolean {
-    const dev = this.devices.find(d => d.key === deviceKey);
-    if (!dev) return false;
-
-    const frames = HidInputReader.buildSegmentFrames(durationMs, intensity);
-    this.writeFramesDirect(dev, frames);
-    return true;
-  }
-
-  /**
-   * Vibrate with a pattern: array of {durationMs, intensity} segments with gaps between.
-   * Writes happen in a Worker thread so the main process is never blocked.
-   */
-  vibratePattern(deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number = 0): { ok: boolean; error?: string } {
-    const dev = this.devices.find(d => d.key === deviceKey);
-    if (!dev) {
-      const msg = `Device not found: "${deviceKey}" (available: ${this.devices.map(d => d.key).join(', ') || 'none'})`;
-      this.log(msg);
-      this.send('hid:error', { deviceKey, error: msg });
-      return { ok: false, error: msg };
-    }
-
-    const frames = HidInputReader.buildPatternFrames(pattern, gapMs);
-
-    this.log(`vibratePattern: dispatching ${frames.length} frames to worker for ${deviceKey} path=${dev.path}`);
-    this.workerRequest({ type: 'vibrate', devicePath: dev.path, frames })
-      .then((result: any) => {
-        this.log(`vibratePattern worker result: ${JSON.stringify(result)}`);
-        if (!result.ok || result.writeErrors > 0) {
-          this.log(`Worker vibrate issue — falling back to direct write`);
-          this.writeFramesDirect(dev, frames);
-        }
-      })
-      .catch((err: Error) => {
-        this.log(`vibratePattern worker error: ${err.message} — falling back to direct write`);
-        this.writeFramesDirect(dev, frames);
-      });
-    return { ok: true };
-  }
-
-  /** Write haptic frames directly from the reader handle (pause → write → resume). */
-  private writeFramesDirect(dev: OpenDevice, frames: number[][]): void {
-    dev.hid.pause();
-    let counter = 0;
-    for (const hapticData of frames) {
-      const buf = new Array(64).fill(0);
-      buf[0] = 0x02;
-      buf[1] = 0x50 | (counter & 0x0F);
-      buf[17] = buf[1];
-      for (let i = 0; i < hapticData.length; i++) {
-        buf[2 + i] = hapticData[i];
-        buf[18 + i] = hapticData[i];
-      }
-      try {
-        dev.hid.write(buf);
-      } catch { /* device may have disconnected */ }
-      counter = (counter + 1) & 0x0F;
-    }
-    dev.hid.resume();
-  }
-
   private send(channel: string, data: unknown): void {
     if (this.window && !this.window.isDestroyed()) {
       this.window.webContents.send(channel, data);
     }
+  }
+
+  private log(msg: string): void {
+    console.log(`[HID] ${msg}`);
   }
 }
 
