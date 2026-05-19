@@ -71,8 +71,11 @@ const PageRouter = (props: PageRouterProps) => {
     }
   }, [profileMgmt, game]);
 
+  // ProfileHub stays mounted to preserve scroll/state; other pages use early returns
+  let otherPage: React.ReactNode = null;
+
   if (nav.activePage === 'picker') {
-    return (
+    otherPage = (
       <FullScreenLayer onClose={nav.closePage}>
         <ProfilePicker
           profiles={profileMgmt.profiles}
@@ -88,33 +91,8 @@ const PageRouter = (props: PageRouterProps) => {
         />
       </FullScreenLayer>
     );
-  }
-
-  if (nav.activePage === 'profile' && profileMgmt.activeProfile) {
-    return (
-      <FullScreenLayer onClose={nav.closePage}>
-        <ProfileHub
-          profile={profileMgmt.activeProfile}
-          isGameRunning={game.isRunning}
-          onStartGame={handleStartGame}
-          onStopGame={game.stop}
-          onResetGame={handleResetGame}
-          onWindowModeChange={display.handleWindowModeChange}
-          onConstraintSettingsChange={display.handleConstraintSettingsChange}
-          onMasterVolumeChange={audio.handleMasterVolumeChange}
-          onDisplayPerfChange={display.handleDisplayPerfChange}
-          onEdgeEffectChange={display.handleEdgeEffectChange}
-          onSaveSlotSettingsChange={saveState.handleSaveSlotSettingsChange}
-          masterVolumeOverride={audio.muteOverride}
-          activeTab={profileHubTab}
-          onTabChange={onProfileHubTabChange}
-        />
-      </FullScreenLayer>
-    );
-  }
-
-  if (nav.activePage === 'data') {
-    return (
+  } else if (nav.activePage === 'data') {
+    otherPage = (
       <FullScreenLayer onClose={nav.closePage}>
         <DataManager
           profiles={profileMgmt.profiles}
@@ -134,25 +112,47 @@ const PageRouter = (props: PageRouterProps) => {
         />
       </FullScreenLayer>
     );
-  }
-
-  if (nav.activePage === 'input-tester') {
-    return (
+  } else if (nav.activePage === 'input-tester') {
+    otherPage = (
       <FullScreenLayer onClose={nav.closePage}>
         <InputCalibration />
       </FullScreenLayer>
     );
-  }
-
-  if (nav.activePage === 'credits') {
-    return (
+  } else if (nav.activePage === 'credits') {
+    otherPage = (
       <FullScreenLayer onClose={nav.closePage}>
         <CreditsPage />
       </FullScreenLayer>
     );
   }
 
-  return null;
+  const profileHubVisible = nav.activePage === 'profile' && !!profileMgmt.activeProfile;
+
+  return (
+    <>
+      {otherPage}
+      {profileMgmt.activeProfile && (
+        <FullScreenLayer onClose={nav.closePage} hidden={!profileHubVisible}>
+          <ProfileHub
+            profile={profileMgmt.activeProfile}
+            isGameRunning={game.isRunning}
+            onStartGame={handleStartGame}
+            onStopGame={game.stop}
+            onResetGame={handleResetGame}
+            onWindowModeChange={display.handleWindowModeChange}
+            onConstraintSettingsChange={display.handleConstraintSettingsChange}
+            onMasterVolumeChange={audio.handleMasterVolumeChange}
+            onDisplayPerfChange={display.handleDisplayPerfChange}
+            onEdgeEffectChange={display.handleEdgeEffectChange}
+            onSaveSlotSettingsChange={saveState.handleSaveSlotSettingsChange}
+            masterVolumeOverride={audio.muteOverride}
+            activeTab={profileHubTab}
+            onTabChange={onProfileHubTabChange}
+          />
+        </FullScreenLayer>
+      )}
+    </>
+  );
 };
 
 export { PageRouter };

@@ -78,9 +78,13 @@ export type ScreenName = 'loading' | 'picker' | 'profile' | 'game';
 
 export async function getScreen(window: Page): Promise<ScreenName> {
   return window.evaluate(() => {
-    // Full-screen pages take priority (canvas is always present underneath)
-    if (document.querySelector('.fullscreen-layer .picker')) return 'picker';
-    if (document.querySelector('.fullscreen-layer .profile-hub')) return 'profile';
+    // Only consider visible fullscreen layers (not hidden/persistent ones)
+    const visible = (sel: string) => {
+      const el = document.querySelector(sel);
+      return el && (el.closest('.fullscreen-layer') as HTMLElement)?.style.display !== 'none';
+    };
+    if (visible('.fullscreen-layer .picker')) return 'picker';
+    if (visible('.fullscreen-layer .profile-hub')) return 'profile';
     if (document.querySelector('.game-layer__canvas')) return 'game';
     return 'loading';
   }) as Promise<ScreenName>;
@@ -90,11 +94,11 @@ export async function waitForScreen(window: Page, screen: ScreenName, timeoutMs 
   if (screen === 'picker') {
     await window.waitForSelector('.fullscreen-layer .picker', { timeout: timeoutMs });
   } else if (screen === 'profile') {
-    await window.waitForSelector('.fullscreen-layer .profile-hub', { timeout: timeoutMs });
+    await window.waitForSelector('.fullscreen-layer:not([style*="display: none"]) .profile-hub', { timeout: timeoutMs });
   } else if (screen === 'game') {
-    // Wait for any fullscreen layer to disappear (canvas is always present)
+    // Wait for all visible fullscreen layers to disappear (hidden ones may persist)
     await window.waitForFunction(
-      () => !document.querySelector('.fullscreen-layer'),
+      () => !document.querySelector('.fullscreen-layer:not([style*="display: none"])'),
       { timeout: timeoutMs },
     );
     await window.waitForSelector('.game-layer__canvas', { timeout: timeoutMs });

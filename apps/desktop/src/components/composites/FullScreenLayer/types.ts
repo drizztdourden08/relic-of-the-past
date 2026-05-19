@@ -3,6 +3,7 @@
 interface FullScreenLayerProps {
   children: ReactNode;
   onClose: () => void;
+  hidden?: boolean;
 }
 
 export type {

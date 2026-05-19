@@ -374,6 +374,8 @@ class InputManager {
   }
 
   private guardEmscriptenKeys = (e: KeyboardEvent): void => {
+    // Never block Escape — it's handled by the app-level menu toggle
+    if (e.code === 'Escape') return;
     if (isTextInput(e.target) || this.inputSuppressed) {
       e.stopPropagation();
     }

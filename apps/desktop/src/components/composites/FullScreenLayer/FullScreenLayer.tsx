@@ -1,14 +1,13 @@
-﻿import type { ReactNode } from 'react';
-import { IconButton } from '../../primitives/IconButton';
+﻿import { IconButton } from '../../primitives/IconButton';
 import './FullScreenLayer.css';
 import { type FullScreenLayerProps } from './types';
 
 
 const FullScreenLayer = (props: FullScreenLayerProps) => {
-  const { children, onClose } = props;
+  const { children, onClose, hidden } = props;
 
   return (
-    <div className="fullscreen-layer">
+    <div className="fullscreen-layer" style={hidden ? { display: 'none' } : undefined}>
       <div className="fullscreen-layer__card">
         <div className="fullscreen-layer__close">
           <IconButton variant="ghost" size="md" label="Close" onClick={onClose}>
