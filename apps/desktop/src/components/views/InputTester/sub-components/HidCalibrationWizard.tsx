@@ -26,144 +26,16 @@ import { DEVICE_DATABASE } from '@shared/input/device-database';
 import type { DeviceDatabaseEntry } from '@shared/input/device-database';
 import { Select } from '../../../primitives';
 import type { SelectOption } from '../../../primitives';
-
-// ── Exported types ─────────────────────────────────────────────────────────────
-
-interface HidButtonMapping {
-  byteIndex: number;
-  bitMask: number;
-  /** For analog triggers: value above which the button is considered pressed */
-  threshold?: number;
-  /** For analog triggers: resting value of the byte */
-  restValue?: number;
-}
-
-interface HidAxisMapping {
-  byteIndex: number; center: number;
-  min: number; max: number; inverted: boolean;
-}
-
-interface IdleByteAnalysis {
-  byteIndex: number; min: number; max: number; range: number;
-  average: number; uniqueCount: number; uniqueValues: number[] | string;
-}
-
-interface IdleRecordResult {
-  label: string; durationMs: number; frameCount: number;
-  bytes: IdleByteAnalysis[];
-}
-
-interface HidControllerMap {
-  name: string; profileId: string;
-  vendorId: number; productId: number;
-  reportId: number; reportLength: number;
-  buttons: Record<string, HidButtonMapping>;
-  axes: Record<string, HidAxisMapping>;
-  excludedBytes: number[];
-  idleData?: Record<string, IdleRecordResult>;
-  createdAt: number;
-}
-
-// ── Internal types ─────────────────────────────────────────────────────────────
-
-type Phase = 'select-profile' | 'live';
-type CaptureState = 'waiting-press' | 'confirming-press' | 'waiting-release';
-type AxisSubStep = 'pos' | 'neg';
-type InputStatus = 'pending' | 'active' | 'captured' | 'skipped';
-type StickSide = 'left' | 'right';
-type GyroState = 'idle' | 'recording' | 'done';
-type IdleState = 'idle' | 'done';
-
-interface InputItem {
-  kind: 'button' | 'axis'; id: string; label: string;
-  category: string; status: InputStatus;
-  result?: string; mapping?: HidButtonMapping; axisMapping?: HidAxisMapping;
-}
-
-// ── Helpers ────────────────────────────────────────────────────────────────────
-
-const hex = (b: number) => b.toString(16).padStart(2, '0');
-const popcount = (n: number) => { let c = 0; let v = n; while (v) { c += v & 1; v >>>= 1; } return c; };
-const STICK_IDS = new Set(['leftX', 'leftY', 'rightX', 'rightY']);
-const TRIGGER_IDS = new Set(['leftTrigger', 'rightTrigger']);
-type TriggerSide = 'left' | 'right';
-
-/** Minimum byte delta to consider a change "analog" rather than digital */
-const ANALOG_THRESHOLD_DELTA = 30;
-
-interface ButtonDiff {
-  byteIndex: number; bitMask: number;
-  analog: boolean; restValue: number; pressedValue: number;
-}
-
-function findButtonBits(bl: Uint8Array, pressed: Uint8Array, excluded: Set<number>): ButtonDiff[] {
-  const out: ButtonDiff[] = [];
-  for (let i = 0; i < Math.min(bl.length, pressed.length); i++) {
-    if (excluded.has(i)) continue;
-    const xor = bl[i] ^ pressed[i];
-    if (!xor) continue;
-    const delta = Math.abs(pressed[i] - bl[i]);
-    // Analog: large delta with many bits changing (analog trigger ramp)
-    const isAnalog = delta >= ANALOG_THRESHOLD_DELTA && popcount(xor) > 3;
-    out.push({ byteIndex: i, bitMask: xor, analog: isAnalog, restValue: bl[i], pressedValue: pressed[i] });
-  }
-  return out;
-}
-
-function findAxisBytes(bl: Uint8Array, s: Uint8Array, excluded: Set<number>, minDelta = 30) {
-  const out: { byteIndex: number; baseVal: number; sampleVal: number }[] = [];
-  for (let i = 0; i < Math.min(bl.length, s.length); i++) {
-    if (excluded.has(i)) continue;
-    if (Math.abs(s[i] - bl[i]) >= minDelta) {
-      out.push({ byteIndex: i, baseVal: bl[i], sampleVal: s[i] });
-    }
-  }
-  return out;
-}
-
-function findCounterBytes(reports: Uint8Array[]): Set<number> {
-  const counters = new Set<number>();
-  if (reports.length < 10) return counters;
-  const len = reports[0].length;
-  for (let i = 0; i < len; i++) {
-    let changes = 0;
-    let smallDeltas = 0;
-    for (let r = 1; r < reports.length; r++) {
-      if (reports[r][i] !== reports[r - 1][i]) {
-        changes++;
-        // Check if delta is small (counter-like: +1, +2, or wrapping)
-        const d = (reports[r][i] - reports[r - 1][i] + 256) % 256;
-        if (d <= 3 || d >= 253) smallDeltas++;
-      }
-    }
-    const total = reports.length - 1;
-    // Counter: changes frequently AND most deltas are tiny increments
-    if (changes / total > 0.7 && smallDeltas / Math.max(changes, 1) > 0.6) {
-      counters.add(i);
-    }
-  }
-  return counters;
-}
-
-interface StickCandidate { idx: number; range: number; min: number; max: number; center: number; }
-
-const STICK_RANGE_THRESHOLD = 60;
-const STICK_STABLE_FRAMES = 8;
-const CONFIRM_FRAMES = 5;
-
-const AXIS_LABELS: Record<string, { pos: string; neg: string }> = {
-  leftX:  { pos: 'Push LEFT stick fully RIGHT',  neg: 'Push LEFT stick fully LEFT' },
-  leftY:  { pos: 'Push LEFT stick fully DOWN',   neg: 'Push LEFT stick fully UP' },
-  rightX: { pos: 'Push RIGHT stick fully RIGHT', neg: 'Push RIGHT stick fully LEFT' },
-  rightY: { pos: 'Push RIGHT stick fully DOWN',  neg: 'Push RIGHT stick fully UP' },
-};
-
-const TRIGGER_RANGE_THRESHOLD = 40;
-const TRIGGER_STABLE_FRAMES = 6;
-
-// ── Byte status for visualization ──────────────────────────────────────────────
-
-type ByteStatus = 'unknown' | 'gyro' | 'counter' | 'stick' | 'trigger' | 'button' | 'idle';
+import type {
+  AxisSubStep, ByteStatus, CaptureState, GyroState, HidAxisMapping,
+  HidButtonMapping, HidControllerMap, IdleState, InputItem, Phase,
+  StickCandidate, StickSide, TriggerSide,
+} from './hid-calibration/types';
+import {
+  AXIS_LABELS, CONFIRM_FRAMES, STICK_IDS, STICK_RANGE_THRESHOLD,
+  STICK_STABLE_FRAMES, TRIGGER_IDS, TRIGGER_RANGE_THRESHOLD, TRIGGER_STABLE_FRAMES,
+} from './hid-calibration/constants';
+import { findAxisBytes, findButtonBits, findCounterBytes, hex } from './hid-calibration/hid-analysis';
 
 // ── Component ──────────────────────────────────────────────────────────────────
 
@@ -1877,6 +1749,5 @@ export type {
   HidAxisMapping,
   HidButtonMapping,
   HidControllerMap,
-  IdleByteAnalysis,
-  IdleRecordResult
-};
+} from './hid-calibration/types';
+export type { IdleByteAnalysis, IdleRecordResult } from './hid-calibration/types';
