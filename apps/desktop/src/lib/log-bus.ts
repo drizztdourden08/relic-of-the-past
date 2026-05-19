@@ -1,7 +1,7 @@
-export type LogChannel = 'core' | 'app' | 'randomizer' | 'wasm' | 'ipc' | 'error';
-export type LogLevel = 'info' | 'warn' | 'error';
+type LogChannel = 'core' | 'app' | 'randomizer' | 'wasm' | 'ipc' | 'error';
+type LogLevel = 'info' | 'warn' | 'error';
 
-export interface LogEntry {
+interface LogEntry {
   id: number;
   timestamp: number;
   channel: LogChannel;
@@ -9,7 +9,7 @@ export interface LogEntry {
   message: string;
 }
 
-export type LogListener = (entry: LogEntry) => void;
+type LogListener = (entry: LogEntry) => void;
 
 const MAX_ENTRIES = 200;
 
@@ -40,7 +40,7 @@ function emit(channel: LogChannel, level: LogLevel, message: string): void {
   }
 }
 
-export const log = {
+const log = {
   core(msg: string, level: LogLevel = 'info'): void { emit('core', level, msg); },
   app(msg: string, level: LogLevel = 'info'): void { emit('app', level, msg); },
   randomizer(msg: string, level: LogLevel = 'info'): void { emit('randomizer', level, msg); },
@@ -49,16 +49,16 @@ export const log = {
   error(msg: string): void { emit('error', 'error', msg); },
 };
 
-export function subscribe(listener: LogListener): () => void {
+function subscribe(listener: LogListener): () => void {
   listeners.add(listener);
   return () => listeners.delete(listener);
 }
 
-export function getEntries(): LogEntry[] {
+function getEntries(): LogEntry[] {
   return [...entries];
 }
 
-export const CHANNEL_COLORS: Record<LogChannel, string> = {
+const CHANNEL_COLORS: Record<LogChannel, string> = {
   core: '#4a9',
   app: '#5b9bd5',
   randomizer: '#b388ff',
@@ -70,7 +70,7 @@ export const CHANNEL_COLORS: Record<LogChannel, string> = {
 // Intercept global errors and unhandled rejections
 function installGlobalHandlers(): void {
   window.addEventListener('error', (e) => {
-    // WASM RuntimeErrors are handled exclusively by game-instance's crash handler.
+    // WASM RuntimeErrors are handled exclusively by the lifecycle crash handler.
     // Never log them here — they would flood during the game loop.
     if (e.error instanceof WebAssembly.RuntimeError) {
       e.preventDefault();
@@ -87,3 +87,6 @@ installGlobalHandlers();
 
 // Expose getEntries for Playwright / devtools access
 (window as any).__logEntries = getEntries;
+
+export { log, subscribe, getEntries, CHANNEL_COLORS };
+export type { LogChannel, LogLevel, LogEntry, LogListener };

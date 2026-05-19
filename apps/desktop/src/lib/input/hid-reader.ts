@@ -7,6 +7,10 @@
  */
 
 import { findController } from '@shared/input/register-all';
+import { applySticksCalibration, applyTriggerCalibration } from './stick-calibration';
+import type { StickCalibrationData, DeviceStickCalibration, TriggerCalibration } from './stick-calibration';
+
+export type { StickCalibrationData, DeviceStickCalibration };
 
 export interface WebHidInputState {
   deviceKey: string;
@@ -36,63 +40,6 @@ export type WebHidDiagListener = (msg: string) => void;
 /** Fired when a WebHID device physically disconnects. deviceKey = "vid:pid" */
 export type WebHidDisconnectListener = (deviceKey: string, deviceName: string) => void;
 
-// ── Stick calibration types ──
-
-export interface StickCalibrationData {
-  centerX: number;
-  centerY: number;
-  minX: number;
-  maxX: number;
-  minY: number;
-  maxY: number;
-  innerDeadzone: number;
-  outerDeadzone: number;
-}
-
-export interface DeviceStickCalibration {
-  left: StickCalibrationData;
-  right: StickCalibrationData;
-  updatedAt: string;
-}
-
-/** Apply stick calibration: asymmetric normalize → circular clamp → deadzone rescaling */
-function applySticksCalibration(
-  lxRaw: number, lyRaw: number, rxRaw: number, ryRaw: number,
-  cal: DeviceStickCalibration,
-): number[] {
-  const applyOne = (rawX: number, rawY: number, s: StickCalibrationData) => {
-    const rnx = s.centerX - s.minX || 1;
-    const rpx = s.maxX - s.centerX || 1;
-    const rny = s.centerY - s.minY || 1;
-    const rpy = s.maxY - s.centerY || 1;
-
-    const nx = rawX < s.centerX
-      ? -(s.centerX - rawX) / rnx
-      : (rawX - s.centerX) / rpx;
-    // Y inverted (raw Y increases downward, game Y increases upward)
-    const ny = rawY < s.centerY
-      ? (s.centerY - rawY) / rny
-      : -(rawY - s.centerY) / rpy;
-
-    let mag = Math.sqrt(nx * nx + ny * ny);
-    let cx = nx, cy = ny;
-    if (mag > 1) { cx /= mag; cy /= mag; mag = 1; }
-
-    if (mag < s.innerDeadzone) return { x: 0, y: 0 };
-
-    const rescaled = Math.min(
-      (mag - s.innerDeadzone) / (s.outerDeadzone - s.innerDeadzone),
-      1,
-    );
-    const scale = mag > 0 ? rescaled / mag : 0;
-    return { x: cx * scale, y: cy * scale };
-  };
-
-  const l = applyOne(lxRaw, lyRaw, cal.left);
-  const r = applyOne(rxRaw, ryRaw, cal.right);
-  return [l.x, l.y, r.x, r.y];
-}
-
 class WebHidInputReader {
   private states = new Map<string, WebHidInputState>();
   private listeners = new Set<WebHidStateListener>();
@@ -108,7 +55,7 @@ class WebHidInputReader {
   /** Per-device stick calibration, keyed by "vid:pid" */
   private stickCalibrations = new Map<string, DeviceStickCalibration>();
   /** Per-device trigger calibrations, keyed by "vid:pid:axisIndex" */
-  private triggerCalibrations = new Map<string, { base: number; max: number; deadzone: number }>();
+  private triggerCalibrations = new Map<string, TriggerCalibration>();
   /** Ring buffer of raw HID report hex strings for diagnostics */
   private rawReportLog: string[] = [];
   private static readonly RAW_LOG_MAX = 100;
@@ -143,13 +90,13 @@ class WebHidInputReader {
   }
 
   /** Set trigger calibration for a specific device + axis */
-  setTriggerCalibration(deviceKey: string, axisIndex: number, cal: { base: number; max: number; deadzone: number }): void {
+  setTriggerCalibration(deviceKey: string, axisIndex: number, cal: TriggerCalibration): void {
     this.triggerCalibrations.set(`${deviceKey}:${axisIndex}`, cal);
     this.log(`Trigger calibration loaded for ${deviceKey} axis ${axisIndex}`);
   }
 
   /** Get trigger calibration for a device + axis */
-  getTriggerCalibration(deviceKey: string, axisIndex: number): { base: number; max: number; deadzone: number } | undefined {
+  getTriggerCalibration(deviceKey: string, axisIndex: number): TriggerCalibration | undefined {
     return this.triggerCalibrations.get(`${deviceKey}:${axisIndex}`);
   }
 
@@ -353,11 +300,7 @@ class WebHidInputReader {
         for (let i = 4; i < parsed.axes.length; i++) {
           const tcal = this.triggerCalibrations.get(`${deviceKey}:${i}`);
           if (tcal) {
-            const range = tcal.max - tcal.base;
-            if (range > 0) {
-              const normalized = Math.max(0, Math.min(1, (parsed.axes[i] - tcal.base) / range));
-              parsed.axes[i] = normalized < tcal.deadzone ? 0 : (normalized - tcal.deadzone) / (1 - tcal.deadzone);
-            }
+            parsed.axes[i] = applyTriggerCalibration(parsed.axes[i], tcal);
           }
         }
       }

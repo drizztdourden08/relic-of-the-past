@@ -6,18 +6,17 @@
  *   - FunctionActionEngine — shortcut/cheat key bindings
  *   - RawInputDispatcher — rising-edge detection for rebinding UI
  *   - polling-engine — SNES bitmask computation
+ *   - controller-lifecycle — HID controller init/reset
+ *   - gamepad-vid-pid — VID/PID resolution heuristics
+ *   - profile-utils — profile creation from presets, icon resolution
  *
  * Lifecycle: create → start() → stop() → start() → ...
  * Auto-starts on app boot (not just game launch) so Controls/Calibration pages work.
  */
 
-import type { InputProfile, SnesButton, FunctionMapping, FunctionAction, ButtonIcon } from '@shared/types/controls';
-import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
-import { KEYBOARD_DEFAULT, parseGamepadId } from '@shared/input';
+import type { InputProfile, SnesButton, FunctionMapping, FunctionAction } from '@shared/types/controls';
+import { KEYBOARD_DEFAULT } from '@shared/input';
 import type { DetectedDevice } from '@shared/types/controls';
-import { findDeviceProfileByVidPid } from '@shared/input';
-import { findController } from '@shared/input/register-all';
-import type { ControllerContext } from '@shared/input/base';
 import { detectAllDevices, markActivated, updateActivationState } from './device-detector';
 import { webHidReader } from './hid-reader';
 import type { WebHidInputState } from './hid-reader';
@@ -30,18 +29,22 @@ import { RawInputDispatcher } from './raw-input-dispatcher';
 import type { RawInputEvent, RawInputListener } from './raw-input-dispatcher';
 import { computeBitmask, snapshotGamepads } from './polling-engine';
 import type { GamepadSnapshot } from './polling-engine';
+import { profileFromPreset, resolveFunctionMappingIcon } from './profile-utils';
+import { resolveGamepadVidPid } from './gamepad-vid-pid';
+import type { HidDeviceInfo } from './gamepad-vid-pid';
+import { initController, resetController } from './controller-lifecycle';
+import type { ControllerEntry } from './controller-lifecycle';
 
-export type DeviceChangeListener = (devices: DetectedDevice[]) => void;
-export type { PauseListener, RawInputEvent, RawInputListener, GamepadSnapshot };
+type DeviceChangeListener = (devices: DetectedDevice[]) => void;
 
 /** Per-frame state listener — for InputCalibration, InputTester visualization */
-export type InputStateListener = (
+type InputStateListener = (
   hidStates: Map<string, WebHidInputState>,
   gamepads: GamepadSnapshot[],
   pressedKeys: Set<string>,
 ) => void;
 
-export class InputManager {
+class InputManager {
   private activeProfile: InputProfile | null = null;
   private keyStates = new Map<string, boolean>();
   private allPressedKeys = new Set<string>();
@@ -67,9 +70,9 @@ export class InputManager {
   // Device tracking
   private devices: DetectedDevice[] = [];
   private deviceListeners = new Set<DeviceChangeListener>();
-  private hidDeviceCache: Array<{ vendorId: string; productId: string; product: string; manufacturer: string; path: string; serialNumber: string | null }> = [];
+  private hidDeviceCache: HidDeviceInfo[] = [];
   private gamepadVidPid = new Map<number, { vid: string; pid: string }>();
-  private activeControllers = new Map<string, { controller: ReturnType<typeof findController>; ctx: ControllerContext }>();
+  private activeControllers = new Map<string, ControllerEntry>();
 
   // Per-frame state
   private currentHidStates = new Map<string, WebHidInputState>();
@@ -88,7 +91,6 @@ export class InputManager {
   private readonly rawDispatcher = new RawInputDispatcher();
 
   constructor() {
-    // Wire pause manager callbacks
     this.pauseManager.onPause = (zeroBitmask) => {
       if (zeroBitmask) this.setInputFn?.(0);
       wasmSetPaused(true);
@@ -98,7 +100,6 @@ export class InputManager {
       wasmSetPaused(false);
       resumeAudio();
     };
-    // Wire function actions → pause toggle
     this.functionActions.onPauseToggle = () => this.pauseManager.togglePause();
   }
 
@@ -208,7 +209,6 @@ export class InputManager {
       this.setProfile(profileFromPreset(KEYBOARD_DEFAULT));
     }
 
-    // Load calibrations
     if (!this.calibrationLoaded) {
       this.calibrationLoaded = true;
       window.api.readStickCalibration()
@@ -230,7 +230,6 @@ export class InputManager {
     document.documentElement.addEventListener('keydown', this.guardEmscriptenKeys);
     document.documentElement.addEventListener('keypress', this.guardEmscriptenKeys);
 
-    // Subscribe to WebHID input
     this.hidUnsubscribe = webHidReader.onInput((state: WebHidInputState) => {
       this.hidStates.set(state.deviceKey, { buttons: state.buttons, axes: state.axes });
       this.currentHidStates.set(state.deviceKey, state);
@@ -246,7 +245,6 @@ export class InputManager {
       this.pauseManager.checkControllerDisconnect(this.activeProfile, this.devices);
     });
 
-    // IPC subscriptions
     this.ipcReportUnsub = window.api.onHidReport((deviceKey, vendorId, productId, data) => {
       webHidReader.handleIpcReport(deviceKey, vendorId, productId, data);
     });
@@ -256,17 +254,16 @@ export class InputManager {
     });
     this.ipcErrorUnsub = window.api.onHidError((info) => {
       webHidReader.addDiag(`⚠ HID error (${info.deviceKey}): ${info.error}`);
-      this.resetController(info.deviceKey);
+      resetController(info.deviceKey, this.activeControllers);
     });
     this.ipcMainPerfUnsub = window.api.onHidMainPerf((msg) => {
       webHidReader.addDiag(`🖥 ${msg}`);
     });
     this.ipcDeviceOpenedUnsub = window.api.onHidDeviceOpened((info) => {
       webHidReader.markDeviceOpened(info.deviceKey, info.product);
-      this.initController(info.deviceKey, info.vendorId, info.productId);
+      initController(info.deviceKey, info.vendorId, info.productId, this.activeControllers);
     });
 
-    // Catch devices opened before subscription
     window.api.getOpenHidKeys().then(keys => {
       for (const key of keys) {
         webHidReader.markDeviceOpened(key);
@@ -313,7 +310,7 @@ export class InputManager {
     this.setInputFn?.(0);
   }
 
-  // ─── Controller lifecycle ───
+  // ─── Device management ───
 
   refreshDevices(): void {
     this.devices = detectAllDevices(this.hidDeviceCache);
@@ -346,7 +343,7 @@ export class InputManager {
         const gamepads = navigator.getGamepads();
         for (const gp of gamepads) {
           if (gp && gp.connected && !this.gamepadVidPid.has(gp.index)) {
-            this.resolveGamepadVidPid(gp);
+            this.doResolveGamepadVidPid(gp);
           }
         }
       })
@@ -415,7 +412,7 @@ export class InputManager {
   private onGamepadConnected = (e: GamepadEvent): void => {
     markActivated(e.gamepad.index);
     updateActivationState();
-    this.resolveGamepadVidPid(e.gamepad);
+    this.doResolveGamepadVidPid(e.gamepad);
     this.refreshDevices();
     this.pauseManager.autoResume();
   };
@@ -426,85 +423,11 @@ export class InputManager {
     this.pauseManager.checkControllerDisconnect(this.activeProfile, this.devices);
   };
 
-  private resolveGamepadVidPid(gp: Gamepad): void {
-    const parsed = parseGamepadId(gp.id);
-    if (parsed && parsed.vid !== '0000') {
-      this.gamepadVidPid.set(gp.index, {
-        vid: parsed.vid.toLowerCase().padStart(4, '0'),
-        pid: parsed.pid.toLowerCase().padStart(4, '0'),
-      });
-      return;
-    }
-    const idLower = gp.id.toLowerCase();
-    for (const hid of this.hidDeviceCache) {
-      const hidName = (hid.product || '').toLowerCase();
-      const hidMfg = (hid.manufacturer || '').toLowerCase();
-      if ((idLower.includes('xbox') || idLower.includes('xinput')) &&
-          (hidName.includes('xbox') || hidMfg.includes('microsoft') || hid.vendorId.toLowerCase().padStart(4, '0') === '045e')) {
-        this.gamepadVidPid.set(gp.index, {
-          vid: hid.vendorId.toLowerCase().padStart(4, '0'),
-          pid: hid.productId.toLowerCase().padStart(4, '0'),
-        });
-        return;
-      }
-      if ((idLower.includes('dualshock') || idLower.includes('dualsense') || idLower.includes('playstation')) &&
-          (hidName.includes('dual') || hidMfg.includes('sony') || hid.vendorId.toLowerCase().padStart(4, '0') === '054c')) {
-        this.gamepadVidPid.set(gp.index, {
-          vid: hid.vendorId.toLowerCase().padStart(4, '0'),
-          pid: hid.productId.toLowerCase().padStart(4, '0'),
-        });
-        return;
-      }
-    }
+  private doResolveGamepadVidPid(gp: Gamepad): void {
     const alreadyMapped = new Set([...this.gamepadVidPid.values()].map(v => `${v.vid}:${v.pid}`));
-    const unmatchedHid = this.hidDeviceCache.filter(h => {
-      const key = `${h.vendorId.toLowerCase().padStart(4, '0')}:${h.productId.toLowerCase().padStart(4, '0')}`;
-      if (alreadyMapped.has(key)) return false;
-      const name = (h.product || '').toLowerCase();
-      return !name.includes('mouse') && !name.includes('keyboard') && !name.includes('trackpad');
-    });
-    if (unmatchedHid.length === 1) {
-      this.gamepadVidPid.set(gp.index, {
-        vid: unmatchedHid[0].vendorId.toLowerCase().padStart(4, '0'),
-        pid: unmatchedHid[0].productId.toLowerCase().padStart(4, '0'),
-      });
-    }
-  }
-
-  private async initController(deviceKey: string, vendorId: string, productId: string): Promise<void> {
-    const controller = findController(vendorId, productId);
-    if (!controller) return;
-    const ctx: ControllerContext = {
-      deviceKey,
-      hidWrite: (data: number[]) => window.api.writeHidDevice(deviceKey, data),
-      usbOpen: async (vid: number, pid: number) => {
-        if (!navigator.usb) return null;
-        try {
-          return await navigator.usb.requestDevice({ filters: [{ vendorId: vid, productId: pid }] });
-        } catch { return null; }
-      },
-      usbClose: async (device: USBDevice) => {
-        try { await device.close(); } catch { /* ignore */ }
-      },
-      log: (msg: string) => webHidReader.addDiag(msg),
-      delay: (ms: number) => new Promise(r => setTimeout(r, ms)),
-    };
-    this.activeControllers.set(deviceKey, { controller, ctx });
-    try {
-      await controller.init(ctx);
-    } catch (e: any) {
-      webHidReader.addDiag(`⚠ Controller init failed (${deviceKey}): ${e.message}`);
-    }
-  }
-
-  private async resetController(deviceKey: string): Promise<void> {
-    const entry = this.activeControllers.get(deviceKey);
-    if (!entry) return;
-    try {
-      await entry.controller.reset(entry.ctx);
-      webHidReader.addDiag(`Controller reset successful (${deviceKey})`);
-    } catch (e: any) {
-      webHidReader.addDiag(`⚠ Controller reset failed (${deviceKey}): ${e.message}`);
+    const result = resolveGamepadVidPid(gp, this.hidDeviceCache, alreadyMapped);
+    if (result) {
+      this.gamepadVidPid.set(gp.index, result);
     }
   }
 
@@ -518,18 +441,15 @@ export class InputManager {
       this.setInputFn?.(mask);
     }
 
-    // Raw input events (always active — for rebinding UI)
     if (this.rawDispatcher.hasListeners) {
       this.rawDispatcher.emitGamepadEvents(this.gamepadVidPid);
       this.rawDispatcher.emitHidEvents(this.hidStates);
     }
 
-    // Function actions (always except when suppressed)
     if (!this.inputSuppressed && this.functionActions.hasMappedGamepadButtons) {
       this.functionActions.checkGamepads(this.hidStates);
     }
 
-    // State listeners (visualization)
     if (this.stateListeners.size > 0) {
       if (this.hidStatesDirty) {
         this.currentHidStates = new Map(this.currentHidStates);
@@ -553,26 +473,11 @@ function isTextInput(target: EventTarget | null): boolean {
          (target as HTMLElement).isContentEditable;
 }
 
-/** Create an InputProfile from a DevicePreset for use as defaults. */
-export function profileFromPreset(preset: import('@shared/types/controls').DevicePreset): InputProfile {
-  return {
-    id: `default-${preset.id}`,
-    name: preset.name,
-    deviceType: preset.family === 'keyboard' ? 'keyboard' : 'gamepad',
-    deviceFamily: preset.family,
-    mappings: [...preset.defaultMappings],
-    isDefault: true,
-    assignedDevice: null,
-    createdAt: Date.now(),
-    modifiedAt: Date.now(),
-  };
-}
-
 // ─── Singleton ───
 
 let instance: InputManager | null = null;
 
-export function getInputManager(): InputManager {
+function getInputManager(): InputManager {
   if (!instance) {
     instance = new InputManager();
     instance.start();
@@ -581,27 +486,5 @@ export function getInputManager(): InputManager {
   return instance;
 }
 
-/**
- * Resolve the display icon for a FunctionMapping's gamepad binding.
- */
-export function resolveFunctionMappingIcon(m: FunctionMapping): ButtonIcon | null {
-  if (m.icon) return m.icon;
-  if (m.binding.type === 'none' || m.binding.type === 'keyboard') return null;
-  const vid = m.sourceVid?.toLowerCase().padStart(4, '0');
-  const pid = m.sourcePid?.toLowerCase().padStart(4, '0');
-  if (!vid || !pid) return null;
-  const profile = findDeviceProfileByVidPid(vid, pid);
-  if (!profile) return null;
-  if (m.binding.type === 'gamepad-button') {
-    const b = profile.buttons[m.binding.index];
-    if (b) return { key: b.icon, label: b.label, path: null };
-  }
-  if (m.binding.type === 'gamepad-axis') {
-    const ax = profile.axes?.[m.binding.axisIndex];
-    if (ax) {
-      const dir = m.binding.direction === '+' ? '+' : '−';
-      return { key: `${profile.id}-axis`, label: `${ax.label} ${dir}`, path: null };
-    }
-  }
-  return null;
-}
+export { InputManager, getInputManager, profileFromPreset, resolveFunctionMappingIcon };
+export type { DeviceChangeListener, InputStateListener, PauseListener, RawInputEvent, RawInputListener, GamepadSnapshot };
