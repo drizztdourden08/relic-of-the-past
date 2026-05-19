@@ -37,10 +37,35 @@
   font-weight: var(--weight-medium);
 }
 
+/* Two-column layout */
+.home-tab__columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+  min-height: 0;
+}
+
+.home-tab__col-left {
+  min-width: 0;
+}
+
+.home-tab__col-right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  min-width: 0;
+}
+
 .home-tab__section {
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
+}
+
+.home-tab__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .home-tab__section-title {
@@ -54,8 +79,61 @@
 
 .home-tab__save-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--space-sm);
+}
+
+.home-tab__save-list {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.home-tab__save-list > * + * {
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.home-tab__new-save-btn {
+  font-size: var(--text-xs);
+  padding: 4px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-subtle);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-weight: var(--weight-medium);
+  transition: background 0.15s, color 0.15s;
+}
+
+.home-tab__new-save-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text-primary);
+}
+
+.home-tab__new-save-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.home-tab__save-name-input {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  outline: none;
+  margin-top: var(--space-sm);
+}
+
+.home-tab__save-name-input:focus {
+  border-color: var(--color-border-focus);
 }
 
 .home-tab__sessions {

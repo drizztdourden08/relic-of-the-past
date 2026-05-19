@@ -22,8 +22,8 @@ const useGameLifecycle = () => {
     setGameCrashed(false);
   }, []);
 
-  const stop = useCallback(() => {
-    resetGame();
+  const stop = useCallback(async () => {
+    await resetGame();
     setAssetData(null);
     setConfigIni(undefined);
     setGameCrashed(false);

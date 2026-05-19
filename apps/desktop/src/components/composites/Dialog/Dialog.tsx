@@ -14,6 +14,7 @@ const Dialog = (props: DialogProps) => {
     variant = 'default',
     onConfirm,
     onCancel,
+    children,
   } = props;
 
   const confirmRef = useRef<HTMLButtonElement>(null);
@@ -34,7 +35,8 @@ const Dialog = (props: DialogProps) => {
     <div className="dialog-backdrop" onClick={onCancel}>
       <div className="dialog" onClick={(e) => e.stopPropagation()}>
         <h3 className="dialog__title">{title}</h3>
-        <p className="dialog__message">{message}</p>
+        {message && <p className="dialog__message">{message}</p>}
+        {children}
         <div className="dialog__actions">
           <Button variant="secondary" onClick={onCancel}>
             {cancelLabel}

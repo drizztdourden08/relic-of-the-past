@@ -8,6 +8,7 @@ import type { EmscriptenModule } from './types';
 import { DEFAULT_ZELDA3_INI } from './config';
 import { getModule, setModule, setProfileId, getProfileId, setState, setInput } from './wasm-bridge';
 import { startSramSync, stopSramSync } from './sram-sync';
+import { startAutoSave, stopAutoSave, saveOnQuit } from './auto-save';
 import { resetMasterVolume } from './audio-volume';
 import { initTrackerBridge, destroyTrackerBridge } from './tracker';
 import { getInputManager } from '../input/input-manager';
@@ -28,10 +29,40 @@ function setMsuData(data: MsuTrackData[] | null): void {
   pendingMsuData = data;
 }
 
+// ─── Auto-save config (set before game start, used during stop) ───
+interface AutoSaveConfig {
+  enabled: boolean;
+  intervalSeconds: number;
+  maxEntries: number;
+  saveOnQuit: boolean;
+}
+
+let activeAutoSaveConfig: AutoSaveConfig | null = null;
+
+function setAutoSaveConfig(config: AutoSaveConfig | null): void {
+  activeAutoSaveConfig = config;
+}
+
 let activeCrashHandler: ((e: ErrorEvent) => void) | null = null;
 let startGeneration = 0;
 
-function resetGame(): void {
+async function resetGame(): Promise<void> {
+  // Save-on-quit: create auto-save before teardown
+  if (activeAutoSaveConfig?.saveOnQuit) {
+    try {
+      await saveOnQuit();
+      if (activeAutoSaveConfig.maxEntries) {
+        const profileId = getProfileId();
+        if (profileId) {
+          await window.api.pruneAutoSaves(profileId, activeAutoSaveConfig.maxEntries);
+        }
+      }
+    } catch {
+      // Best-effort — don't block shutdown
+    }
+  }
+
+  stopAutoSave();
   stopSramSync();
   destroyTrackerBridge();
   resetMasterVolume();
@@ -161,6 +192,10 @@ async function startGame(
 
     if (getProfileId()) {
       startSramSync();
+      // Start auto-save timer if configured
+      if (activeAutoSaveConfig?.enabled) {
+        startAutoSave(activeAutoSaveConfig.intervalSeconds, activeAutoSaveConfig.maxEntries);
+      }
     }
 
     const myGen = startGeneration;
@@ -175,5 +210,5 @@ async function startGame(
   }
 }
 
-export { resetGame, setMsuData, startGame };
-export type { MsuTrackData };
+export { resetGame, setAutoSaveConfig, setMsuData, startGame };
+export type { AutoSaveConfig, MsuTrackData };

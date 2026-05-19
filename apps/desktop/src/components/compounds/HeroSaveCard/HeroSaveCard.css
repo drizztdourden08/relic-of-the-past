@@ -1,0 +1,95 @@
+.hero-save-card {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-lg);
+  transition: background 0.15s;
+}
+
+.hero-save-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.hero-save-card--busy {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.hero-save-card__thumb {
+  width: 180px;
+  height: 120px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.hero-save-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-save-card__empty-thumb {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.hero-save-card__no-screenshot {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.hero-save-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+}
+
+.hero-save-card__label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hero-save-card__name {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semi);
+  color: var(--color-text-primary);
+}
+
+.hero-save-card__time {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.hero-save-card__load-btn {
+  align-self: flex-start;
+  font-size: var(--text-sm);
+  padding: 6px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-subtle);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  font-weight: var(--weight-medium);
+  transition: background 0.15s;
+}
+
+.hero-save-card__load-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.hero-save-card__load-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

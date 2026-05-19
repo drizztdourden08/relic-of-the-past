@@ -3,7 +3,11 @@ import type { FunctionMapping } from './controls';
 /** Per-profile game settings — mirrors zelda3 config.h / zelda3.ini fields */
 interface GameSettings {
   // ─── General ───
-  autosave: boolean;
+  autosave: boolean; // Legacy: C-level autosave (slot 0 save/restore) — kept for INI compat
+  autoSaveEnabled: boolean;
+  autoSaveIntervalSeconds: number; // 60-1800, default 300
+  autoSaveMaxEntries: number; // 1-20, default 5
+  saveOnQuit: boolean;
   displayPerfInTitle: boolean;
   disableFrameDelay: boolean;
 

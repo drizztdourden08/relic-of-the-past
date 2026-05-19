@@ -51,5 +51,6 @@ scripts/
 
 # Saves (user data)
 saves/
+!apps/desktop/electron/saves/
 seeds/
 config/

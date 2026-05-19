@@ -7,6 +7,10 @@ import type { GameSettings } from '@shared/types/settings';
 const DEFAULT_SETTINGS: GameSettings = {
   // General
   autosave: false,
+  autoSaveEnabled: false,
+  autoSaveIntervalSeconds: 300,
+  autoSaveMaxEntries: 5,
+  saveOnQuit: true,
   displayPerfInTitle: false,
   disableFrameDelay: false,
 

@@ -242,7 +242,7 @@ interface ElectronAPI {
   // IPC log bridge
   onLogEntry(callback: (entry: { channel: string; level: string; message: string }) => void): () => void;
 
-  // Saves
+  // Saves — Quick States
   writeSram(profileId: string, data: ArrayBuffer): Promise<void>;
   readSram(profileId: string): Promise<ArrayBuffer | null>;
   writeState(profileId: string, slot: number, data: ArrayBuffer): Promise<void>;
@@ -252,6 +252,22 @@ interface ElectronAPI {
   readScreenshot(profileId: string, slot: number): Promise<string | null>;
   getSlotInfos(profileId: string): Promise<Array<{ slot: number; timestamp: number; size: number; hasScreenshot: boolean }>>;
 
+  // Saves — Normal (named saves)
+  createNormalSave(profileId: string, name: string, data: ArrayBuffer, screenshot?: ArrayBuffer): Promise<{ id: string; name: string; timestamp: number; size: number; hasScreenshot: boolean }>;
+  listNormalSaves(profileId: string): Promise<Array<{ id: string; name: string; timestamp: number; size: number; hasScreenshot: boolean }>>;
+  loadNormalSave(profileId: string, id: string): Promise<ArrayBuffer | null>;
+  loadNormalScreenshot(profileId: string, id: string): Promise<string | null>;
+  overwriteNormalSave(profileId: string, id: string, data: ArrayBuffer, screenshot?: ArrayBuffer): Promise<{ id: string; name: string; timestamp: number; size: number; hasScreenshot: boolean } | null>;
+  deleteNormalSave(profileId: string, id: string): Promise<void>;
+  renameNormalSave(profileId: string, id: string, newName: string): Promise<{ id: string; name: string; timestamp: number; size: number; hasScreenshot: boolean } | null>;
+
+  // Saves — Auto-saves
+  createAutoSave(profileId: string, trigger: 'timer' | 'quit', data: ArrayBuffer, screenshot?: ArrayBuffer): Promise<{ id: string; timestamp: number; size: number; trigger: string; hasScreenshot: boolean }>;
+  listAutoSaves(profileId: string): Promise<Array<{ id: string; timestamp: number; size: number; trigger: string; hasScreenshot: boolean }>>;
+  loadAutoSave(profileId: string, id: string): Promise<ArrayBuffer | null>;
+  loadAutoScreenshot(profileId: string, id: string): Promise<string | null>;
+  deleteAutoSave(profileId: string, id: string): Promise<void>;
+  pruneAutoSaves(profileId: string, maxEntries: number): Promise<void>;
   // Config (per-profile settings)
   readConfig(profileId: string): Promise<Record<string, unknown> | null>;
   writeConfig(profileId: string, settings: Record<string, unknown>): Promise<void>;

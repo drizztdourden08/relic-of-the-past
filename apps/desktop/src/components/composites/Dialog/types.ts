@@ -7,6 +7,7 @@
   variant?: 'danger' | 'default';
   onConfirm: () => void;
   onCancel: () => void;
+  children?: React.ReactNode;
 }
 
 export type {

@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import type { ConfirmDialog } from '../types';
 import { log } from '../../lib/log-bus';
-import { resetGame, setMsuData, getInputManager } from '../../lib/game';
+import { resetGame, setMsuData, setAutoSaveConfig, getInputManager } from '../../lib/game';
 import { serializeToIni, mergeSettings } from '../../lib/game/settings';
 import { setSpritesBase } from '@shared/game/items/sprites';
 import type { InputProfile } from '@shared/types/controls';
@@ -36,7 +36,7 @@ const useProfileManagement = (params: {
   }, []);
 
   const loadProfileForGame = useCallback(async (profile: Profile) => {
-    resetGame();
+    await resetGame();
     onGameClear();
 
     setActiveProfile(profile);
@@ -96,6 +96,14 @@ const useProfileManagement = (params: {
     const msuPath = (profile.msuPack && settings.enableMSU !== 'false') ? '/msu/' : undefined;
     const ini = serializeToIni(settings, msuPath);
     log.app(`Loaded profile settings (aspect: ${settings.aspectRatio}, viewport: ${settings.viewportConstraint}, renderer: ${settings.newRenderer ? 'new' : 'old'})`);
+
+    // Configure auto-save before game starts
+    setAutoSaveConfig({
+      enabled: settings.autoSaveEnabled,
+      intervalSeconds: settings.autoSaveIntervalSeconds,
+      maxEntries: settings.autoSaveMaxEntries,
+      saveOnQuit: settings.saveOnQuit,
+    });
 
     const hasAssets = await window.api.checkAssets(profile.romFile);
     if (!hasAssets) {

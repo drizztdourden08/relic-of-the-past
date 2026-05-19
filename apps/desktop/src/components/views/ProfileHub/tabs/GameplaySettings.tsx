@@ -15,15 +15,18 @@ const SECTIONS: Section[] = [
     title: 'General',
     subsections: [
       {
-        id: 'general-system',
-        title: 'System',
+        id: 'general-autosave',
+        title: 'Auto-Save',
         items: [
-          { key: 'autosave', label: 'Autosave', description: 'Automatically save your progress when quitting and restore it on next launch', keywords: 'auto save restore quit' },
+          { key: 'autoSaveEnabled', label: 'Enable Auto-Save', description: 'Automatically create save state snapshots at regular intervals during gameplay', keywords: 'auto save timer interval automatic' },
+          { key: 'autoSaveIntervalSeconds', label: 'Auto-Save Interval', description: 'How often to create an automatic save (in seconds)', keywords: 'auto save interval time frequency' },
+          { key: 'autoSaveMaxEntries', label: 'Max Auto-Save Entries', description: 'Maximum number of auto-saves to keep (oldest are pruned)', keywords: 'auto save max limit entries prune' },
+          { key: 'saveOnQuit', label: 'Save on Quit', description: 'Automatically create a save state when you stop the game or close the app', keywords: 'save quit close exit auto' },
         ],
       },
       {
         id: 'general-savestates',
-        title: 'Save States',
+        title: 'Quick Save States',
         items: [
           { key: 'enhancedSaveSlotShortcut', label: 'Enhanced Save Slot Shortcut', description: 'Opens the save slot menu on shortcut press instead of immediately saving/loading', keywords: 'save state slot shortcut enhanced menu overlay' },
           { key: 'saveHoldDuration', label: 'Hold to Save Duration', description: 'How long to hold the key to save (seconds)', keywords: 'save hold duration time seconds' },
@@ -110,10 +113,62 @@ const SECTIONS: Section[] = [
 function isDisabled(key: string, settings: GameSettings): boolean {
   if (key === 'itemSwitchLRLimit') return !settings.itemSwitchLR;
   if (key === 'saveHoldDuration') return !settings.enhancedSaveSlotShortcut;
+  if (key === 'autoSaveIntervalSeconds') return !settings.autoSaveEnabled;
+  if (key === 'autoSaveMaxEntries') return !settings.autoSaveEnabled;
   return false;
 }
 
 function renderControl(key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null {
+  if (key === 'autoSaveEnabled') {
+    return (
+      <Toggle
+        label="Enable Auto-Save"
+        description="Automatically create save state snapshots at regular intervals during gameplay"
+        checked={settings.autoSaveEnabled}
+        onChange={(v) => onChange({ autoSaveEnabled: v })}
+      />
+    );
+  }
+  if (key === 'autoSaveIntervalSeconds') {
+    return (
+      <Slider
+        label="Auto-Save Interval"
+        description="How often to create an automatic save"
+        value={settings.autoSaveIntervalSeconds}
+        min={60}
+        max={1800}
+        step={60}
+        formatValue={(v) => v >= 60 ? `${Math.floor(v / 60)}m` : `${v}s`}
+        onChange={(v) => onChange({ autoSaveIntervalSeconds: v })}
+        disabled={!settings.autoSaveEnabled}
+      />
+    );
+  }
+  if (key === 'autoSaveMaxEntries') {
+    return (
+      <Slider
+        label="Max Auto-Save Entries"
+        description="Maximum number of auto-saves to keep (oldest are pruned)"
+        value={settings.autoSaveMaxEntries}
+        min={1}
+        max={20}
+        step={1}
+        formatValue={(v) => `${v}`}
+        onChange={(v) => onChange({ autoSaveMaxEntries: v })}
+        disabled={!settings.autoSaveEnabled}
+      />
+    );
+  }
+  if (key === 'saveOnQuit') {
+    return (
+      <Toggle
+        label="Save on Quit"
+        description="Automatically create a save state when you stop the game or close the app"
+        checked={settings.saveOnQuit}
+        onChange={(v) => onChange({ saveOnQuit: v })}
+      />
+    );
+  }
   if (key === 'enhancedSaveSlotShortcut') {
     return (
       <Toggle

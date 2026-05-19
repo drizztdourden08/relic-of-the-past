@@ -9,5 +9,6 @@ interface GameEvent {
 
 // Re-export game domain types from their canonical location
 export type { SeedData, LocationEntry, GoalMode, MedallionConfig, SaveMeta } from '../game/seed';
+export type { AutoSaveInfo, AutoSaveSettings, NormalSaveInfo, QuickSaveSlotInfo } from './saves';
 
 export type { GameEvent };
