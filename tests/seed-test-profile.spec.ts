@@ -4,7 +4,7 @@
  * Creates a "Dev Testing" profile with all 13 chapter reference saves
  * loaded as Normal Saves. Idempotent — skips if profile already exists.
  *
- * Usage: npx playwright test scripts/seed-test-profile.ts
+ * Usage: npx playwright test seed-test-profile.spec.ts
  */
 
 import { test } from '@playwright/test';
@@ -16,7 +16,7 @@ import {
   listProfiles,
   TEST_ROMS,
   PROJECT_ROOT,
-} from '../tests/helpers';
+} from './helpers';
 
 const PROFILE_NAME = 'Dev Testing';
 const REF_SAVES_DIR = join(PROJECT_ROOT, 'core', 'zelda3', 'saves', 'ref');
@@ -80,11 +80,16 @@ test('Seed Dev Testing profile with chapter saves', async () => {
 
       const savePath = join(REF_SAVES_DIR, fileName);
       const data = await readFile(savePath);
-      const ab = data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
+      const b64 = data.toString('base64');
 
       await window.evaluate(
-        ({ pid, name, buf }) => window.api.createNormalSave(pid, name, buf),
-        { pid: profileId, name: saveName, buf: ab },
+        ({ pid, name, encoded }) => {
+          const binary = atob(encoded);
+          const bytes = new Uint8Array(binary.length);
+          for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+          return window.api.createNormalSave(pid, name, bytes.buffer);
+        },
+        { pid: profileId, name: saveName, encoded: b64 },
       );
 
       seeded++;

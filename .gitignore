@@ -46,8 +46,8 @@ test-results/
 tests/test-results/
 tests/screenshots/
 
-# Dev scripts (utility, not part of the build)
-scripts/
+# Temporary/throwaway scripts (not tracked)
+temp-scripts/
 
 # Saves (user data)
 saves/

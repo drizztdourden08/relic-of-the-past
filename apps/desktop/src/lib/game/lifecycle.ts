@@ -11,6 +11,7 @@ import { startSramSync, stopSramSync } from './sram-sync';
 import { startAutoSave, stopAutoSave, saveOnQuit } from './auto-save';
 import { resetMasterVolume } from './audio-volume';
 import { initTrackerBridge, destroyTrackerBridge } from './tracker';
+import { startSession, endSession } from './session-tracker';
 import { getInputManager } from '../input/input-manager';
 
 declare function Zelda3(config: Record<string, unknown>): Promise<EmscriptenModule>;
@@ -62,6 +63,7 @@ async function resetGame(): Promise<void> {
     }
   }
 
+  await endSession();
   stopAutoSave();
   stopSramSync();
   destroyTrackerBridge();
@@ -191,6 +193,7 @@ async function startGame(
     initTrackerBridge();
 
     if (getProfileId()) {
+      startSession(getProfileId()!);
       startSramSync();
       // Start auto-save timer if configured
       if (activeAutoSaveConfig?.enabled) {

@@ -143,6 +143,8 @@
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  max-height: 360px;
+  overflow-y: auto;
 }
 
 .home-tab__sessions > * + * {
