@@ -35,7 +35,7 @@ interface SpriteDefsJson {
   sprites: Array<{
     file: string;
     label: string;
-    category: 'hud' | 'receipt' | 'drop';
+    category: 'hud' | 'hud-item' | 'receipt' | 'drop';
     extract: Record<string, unknown>;
   }>;
 }
@@ -94,7 +94,7 @@ describe.skipIf(!romAvailable || !pythonSpritesExist)('Item sprite extraction â€
   });
 
   it('matches Python output for all HUD sprites', () => {
-    const hudSprites = defs.sprites.filter(s => s.category === 'hud');
+    const hudSprites = defs.sprites.filter(s => s.category === 'hud' || s.category === 'hud-item');
     const results: string[] = [];
 
     for (const sprite of hudSprites) {

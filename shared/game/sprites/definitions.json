@@ -6,361 +6,361 @@
     {
       "file": "hud-fighter-sword",
       "label": "Fighter Sword",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [11364, 11470, 11381, 15653] }
     },
     {
       "file": "hud-master-sword",
       "label": "Master Sword",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [11402, 11365, 9332, 15654] }
     },
     {
       "file": "hud-tempered-sword",
       "label": "Tempered Sword",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9354, 9317, 15476, 11592] }
     },
     {
       "file": "hud-golden-sword",
       "label": "Golden Sword",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [10378, 10341, 11380, 11577] }
     },
     {
       "file": "hud-fighters-shield",
       "label": "Fighter's Shield",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [11517, 27901, 11518, 27902] }
     },
     {
       "file": "hud-fire-shield",
       "label": "Fire Shield",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [13567, 29951, 13471, 29855] }
     },
     {
       "file": "hud-mirror-shield",
       "label": "Mirror Shield",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [10368, 10369, 10381, 10382] }
     },
     {
       "file": "hud-green-mail",
       "label": "Green Mail",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [15464, 31848, 15480, 31864] }
     },
     {
       "file": "hud-blue-mail",
       "label": "Blue Mail",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [11368, 27752, 11384, 27768] }
     },
     {
       "file": "hud-red-mail",
       "label": "Red Mail",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9320, 25704, 9336, 25720] }
     },
     {
       "file": "hud-bow-no-arrows",
       "label": "Bow (no arrows)",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [10426, 10473, 10472, 10443] }
     },
     {
       "file": "hud-bow",
       "label": "Bow",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [10426, 10314, 10313, 10443] }
     },
     {
       "file": "hud-silver-bow",
       "label": "Silver Bow",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [10426, 10427, 9418, 10443] }
     },
     {
       "file": "hud-blue-boomerang",
       "label": "Blue Boomerang",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [11448, 11449, 11509, 11465] }
     },
     {
       "file": "hud-red-boomerang",
       "label": "Red Boomerang",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9400, 9401, 9461, 9417] }
     },
     {
       "file": "hud-hookshot",
       "label": "Hookshot",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9461, 9462, 9408, 9461] }
     },
     {
       "file": "hud-bombs",
       "label": "Bombs",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [11442, 11443, 11458, 27842] }
     },
     {
       "file": "hud-mushroom",
       "label": "Mushroom",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9284, 9285, 9286, 9287] }
     },
     {
       "file": "hud-magic-powder",
       "label": "Magic Powder",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [8251, 8252, 8253, 8254] }
     },
     {
       "file": "hud-fire-rod",
       "label": "Fire Rod",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9392, 9393, 9408, 9409] }
     },
     {
       "file": "hud-ice-rod",
       "label": "Ice Rod",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [11440, 11454, 11456, 11457] }
     },
     {
       "file": "hud-bombos",
       "label": "Bombos",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [10365, 10366, 59518, 59517] }
     },
     {
       "file": "hud-ether",
       "label": "Ether",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [10358, 10359, 59511, 59510] }
     },
     {
       "file": "hud-quake",
       "label": "Quake",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [10342, 10343, 59495, 59494] }
     },
     {
       "file": "hud-lamp",
       "label": "Lamp",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9404, 9405, 9420, 9421] }
     },
     {
       "file": "hud-hammer",
       "label": "Hammer",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [8374, 8375, 8390, 8391] }
     },
     {
       "file": "hud-shovel",
       "label": "Shovel",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [8400, 8401, 8416, 8417] }
     },
     {
       "file": "hud-flute",
       "label": "Flute",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [11476, 11477, 11492, 11493] }
     },
     {
       "file": "hud-bug-net",
       "label": "Bug Net",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [15424, 15425, 10306, 15427] }
     },
     {
       "file": "hud-book-of-mudora",
       "label": "Book of Mudora",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [15525, 15526, 15576, 15577] }
     },
     {
       "file": "hud-cane-of-somaria",
       "label": "Cane of Somaria",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9436, 9437, 9452, 9453] }
     },
     {
       "file": "hud-cane-of-byrna",
       "label": "Cane of Byrna",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [11484, 11485, 11500, 11501] }
     },
     {
       "file": "hud-cape",
       "label": "Cape",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9396, 9397, 9412, 9413] }
     },
     {
       "file": "hud-magic-mirror",
       "label": "Magic Mirror",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [11362, 11363, 11378, 11379] }
     },
     {
       "file": "hud-power-glove",
       "label": "Power Glove",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [8496, 8497, 8512, 8513] }
     },
     {
       "file": "hud-titans-mitts",
       "label": "Titan's Mitts",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [10458, 10459, 10474, 10475] }
     },
     {
       "file": "hud-pegasus-boots",
       "label": "Pegasus Boots",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [13353, 13354, 13355, 13356] }
     },
     {
       "file": "hud-flippers",
       "label": "Flippers",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [11418, 11419, 11421, 11422] }
     },
     {
       "file": "hud-moon-pearl",
       "label": "Moon Pearl",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9267, 9268, 9269, 9270] }
     },
     {
       "file": "hud-bottle",
       "label": "Bottle (empty)",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [10295, 10296, 11459, 11475] }
     },
     {
       "file": "hud-mushroom-2",
       "label": "Mushroom",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [8260, 8261, 8262, 8263] }
     },
     {
       "file": "hud-bottle-red",
       "label": "Bottle (red potion)",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9426, 25810, 9442, 9443] }
     },
     {
       "file": "hud-bottle-green",
       "label": "Bottle (green potion)",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [15570, 31954, 15586, 15587] }
     },
     {
       "file": "hud-bottle-blue",
       "label": "Bottle (blue potion)",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [11474, 27858, 11490, 11491] }
     },
     {
       "file": "hud-bottle-fairy",
       "label": "Bottle (fairy)",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [10325, 26709, 11351, 11354] }
     },
     {
       "file": "hud-bottle-bee",
       "label": "Bottle (bee)",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [10295, 10296, 10297, 10298] }
     },
     {
       "file": "hud-bottle-good-bee",
       "label": "Bottle (good bee)",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [10295, 10296, 10297, 10298] }
     },
     {
       "file": "hud-big-key",
       "label": "Big Key",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [10454, 26838, 10470, 10471] }
     },
     {
       "file": "hud-compass",
       "label": "Compass",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9407, 25791, 11471, 27855] }
     },
     {
       "file": "hud-map",
       "label": "Map",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [10462, 10463, 10478, 10479] }
     },
     {
       "file": "hud-red-pendant",
       "label": "Red Pendant",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9515, 9516, 9517, 9518] }
     },
     {
       "file": "hud-blue-pendant",
       "label": "Blue Pendant",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [11563, 11564, 11565, 11566] }
     },
     {
       "file": "hud-green-pendant",
       "label": "Green Pendant",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [15659, 15660, 15661, 15662] }
     },
     {
       "file": "hud-crystal",
       "label": "Crystal",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-special", "tiles": [11588, 11589], "layout": "8x16-centered" }
     },
     {
       "file": "hud-big-key-chest",
       "label": "Big Key (chest)",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [13643, 13644, 13645, 13646] }
     },
     {
       "file": "hud-heart-piece-0",
       "label": "Heart Piece (0/4)",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9348, 25732, 9349, 25733] }
     },
     {
       "file": "hud-heart-piece-1",
       "label": "Heart Piece (1/4)",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9389, 25732, 9349, 25733] }
     },
     {
       "file": "hud-heart-piece-2",
       "label": "Heart Piece (2/4)",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9389, 25732, 9390, 25733] }
     },
     {
       "file": "hud-heart-piece-3",
       "label": "Heart Piece (3/4)",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9389, 25773, 9390, 25733] }
     },
     {
       "file": "hud-heart-piece-4",
       "label": "Heart Piece (4/4)",
-      "category": "hud",
+      "category": "hud-item",
       "extract": { "method": "hud-tiles", "tiles": [9389, 25773, 9390, 25774] }
     },
 
@@ -886,6 +886,229 @@
       "label": "Super Bomb",
       "category": "drop",
       "extract": { "method": "follower-bomb", "palette": 4 }
+    },
+
+    {
+      "file": "hud-heart-full",
+      "label": "Heart (Full)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9376] }
+    },
+    {
+      "file": "hud-heart-three-quarter",
+      "label": "Heart (3/4)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9377] }
+    },
+    {
+      "file": "hud-heart-half",
+      "label": "Heart (1/2)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9378] }
+    },
+    {
+      "file": "hud-heart-quarter",
+      "label": "Heart (1/4)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9379] }
+    },
+    {
+      "file": "hud-heart-empty",
+      "label": "Heart (Empty)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9380] }
+    },
+    {
+      "file": "hud-rupee-icon",
+      "label": "Rupee Icon",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [15528] }
+    },
+    {
+      "file": "hud-bomb-icon",
+      "label": "Bomb Icon",
+      "category": "hud",
+      "extract": { "method": "hud-strip", "tiles": [11400, 11401] }
+    },
+    {
+      "file": "hud-arrow-icon",
+      "label": "Arrow Icon",
+      "category": "hud",
+      "extract": { "method": "hud-strip", "tiles": [8359, 8361] }
+    },
+    {
+      "file": "hud-key-icon",
+      "label": "Key Icon",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10353] }
+    },
+    {
+      "file": "hud-life-text",
+      "label": "LIFE Text",
+      "category": "hud",
+      "extract": { "method": "hud-strip", "tiles": [9387, 9388] }
+    },
+    {
+      "file": "hud-life-dash-left",
+      "label": "Life Dash (Left)",
+      "category": "hud",
+      "extract": { "method": "hud-strip", "tiles": [10379, 10383] }
+    },
+    {
+      "file": "hud-life-dash-right",
+      "label": "Life Dash (Right)",
+      "category": "hud",
+      "extract": { "method": "hud-strip", "tiles": [26767, 26763] }
+    },
+    {
+      "file": "hud-digit-0",
+      "label": "Digit 0",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9360] }
+    },
+    {
+      "file": "hud-digit-1",
+      "label": "Digit 1",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9361] }
+    },
+    {
+      "file": "hud-digit-2",
+      "label": "Digit 2",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9362] }
+    },
+    {
+      "file": "hud-digit-3",
+      "label": "Digit 3",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9363] }
+    },
+    {
+      "file": "hud-digit-4",
+      "label": "Digit 4",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9364] }
+    },
+    {
+      "file": "hud-digit-5",
+      "label": "Digit 5",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9365] }
+    },
+    {
+      "file": "hud-digit-6",
+      "label": "Digit 6",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9366] }
+    },
+    {
+      "file": "hud-digit-7",
+      "label": "Digit 7",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9367] }
+    },
+    {
+      "file": "hud-digit-8",
+      "label": "Digit 8",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9368] }
+    },
+    {
+      "file": "hud-digit-9",
+      "label": "Digit 9",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [9369] }
+    },
+    {
+      "file": "hud-magic-label",
+      "label": "Magic Label (MP)",
+      "category": "hud",
+      "extract": { "method": "hud-strip", "tiles": [10487, 10321, 10490] }
+    },
+    {
+      "file": "hud-magic-fill-full",
+      "label": "Magic Fill (Full)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [15454] }
+    },
+    {
+      "file": "hud-magic-fill-three-quarter",
+      "label": "Magic Fill (3/4)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [15438] }
+    },
+    {
+      "file": "hud-magic-fill-half",
+      "label": "Magic Fill (1/2)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [15437] }
+    },
+    {
+      "file": "hud-magic-fill-quarter",
+      "label": "Magic Fill (1/4)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [15436] }
+    },
+    {
+      "file": "hud-magic-fill-empty",
+      "label": "Magic Fill (Empty)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [15605] }
+    },
+    {
+      "file": "hud-magic-cap",
+      "label": "Magic Cap (Top)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [15455] }
+    },
+    {
+      "file": "hud-itembox-tl",
+      "label": "Item Box (Top-Left)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10320] }
+    },
+    {
+      "file": "hud-itembox-top",
+      "label": "Item Box (Top)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10322] }
+    },
+    {
+      "file": "hud-itembox-tr",
+      "label": "Item Box (Top-Right)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10332] }
+    },
+    {
+      "file": "hud-itembox-left",
+      "label": "Item Box (Left)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10324] }
+    },
+    {
+      "file": "hud-itembox-right",
+      "label": "Item Box (Right)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10333] }
+    },
+    {
+      "file": "hud-itembox-bl",
+      "label": "Item Box (Bottom-Left)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10329] }
+    },
+    {
+      "file": "hud-itembox-bottom",
+      "label": "Item Box (Bottom)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10331] }
+    },
+    {
+      "file": "hud-itembox-br",
+      "label": "Item Box (Bottom-Right)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10328] }
     }
   ]
 }

@@ -14,6 +14,7 @@ import { ImageBuffer } from '../graphics/png-writer';
 import {
   loadHudPalette, loadHudSheets,
   extractHudStandard, extractHudSpecial,
+  extractHudSingle, extractHudStrip, extractHudVStrip,
 } from './hud-decoder';
 import {
   loadSpritePalettes, loadReceiptSheets,
@@ -44,7 +45,7 @@ interface SpriteExtractDef {
 interface SpriteDef {
   file: string;
   label: string;
-  category: 'hud' | 'receipt' | 'drop';
+  category: 'hud' | 'hud-item' | 'receipt' | 'drop';
   extract: SpriteExtractDef;
 }
 
@@ -76,6 +77,15 @@ function extractOne(def: SpriteExtractDef, ctx: ExtractionContext): ImageBuffer 
 
     case 'hud-special':
       return extractHudSpecial(def.tiles!, def.layout!, ctx.hudSheets, ctx.hudPalette);
+
+    case 'hud-single':
+      return extractHudSingle(def.tiles![0], ctx.hudSheets, ctx.hudPalette);
+
+    case 'hud-strip':
+      return extractHudStrip(def.tiles!, ctx.hudSheets, ctx.hudPalette);
+
+    case 'hud-vstrip':
+      return extractHudVStrip(def.tiles!, ctx.hudSheets, ctx.hudPalette);
 
     case 'receipt':
       return extractReceipt(def.receiptId!, ctx.rom, ctx.receiptSheets, ctx.spritePalettes);
@@ -111,7 +121,7 @@ function extractOne(def: SpriteExtractDef, ctx: ExtractionContext): ImageBuffer 
 
 interface ExtractionResult {
   total: number;
-  counts: { hud: number; receipt: number; drop: number };
+  counts: { hud: number; 'hud-item': number; receipt: number; drop: number };
   errors: string[];
   removedStale: number;
 }
@@ -150,7 +160,7 @@ function extractAllItemSprites(
     dropSheets: loadDropSheets(rom),
   };
 
-  const counts = { hud: 0, receipt: 0, drop: 0 };
+  const counts = { hud: 0, 'hud-item': 0, receipt: 0, drop: 0 };
   const errors: string[] = [];
 
   // Extract each sprite
@@ -186,7 +196,7 @@ function extractAllItemSprites(
   }
 
   return {
-    total: counts.hud + counts.receipt + counts.drop,
+    total: counts.hud + counts['hud-item'] + counts.receipt + counts.drop,
     counts,
     errors,
     removedStale,
@@ -219,7 +229,7 @@ function extractAllItemSpritesFromRom(
     dropSheets: loadDropSheets(rom),
   };
 
-  const counts = { hud: 0, receipt: 0, drop: 0 };
+  const counts = { hud: 0, 'hud-item': 0, receipt: 0, drop: 0 };
   const errors: string[] = [];
 
   for (const spriteDef of allSprites) {
@@ -250,7 +260,7 @@ function extractAllItemSpritesFromRom(
   } catch { /* ok */ }
 
   return {
-    total: counts.hud + counts.receipt + counts.drop,
+    total: counts.hud + counts['hud-item'] + counts.receipt + counts.drop,
     counts,
     errors,
     removedStale,

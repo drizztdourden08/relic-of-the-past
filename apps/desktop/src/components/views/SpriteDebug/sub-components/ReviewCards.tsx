@@ -13,7 +13,7 @@ function SpriteImageCard({ sprite, entry, onSetStatus, onSetComment }: {
 }) {
   const border = entry.status === 'good' ? '#4caf50' : entry.status === 'bad' ? '#f44336' : entry.status === 'yellow' ? '#f5c542' : 'rgba(255,255,255,0.08)';
   const bg = entry.status === 'good' ? 'rgba(76,175,80,0.06)' : entry.status === 'bad' ? 'rgba(244,67,54,0.06)' : entry.status === 'yellow' ? 'rgba(245,197,66,0.06)' : 'rgba(255,255,255,0.02)';
-  const catColor = sprite.category === 'hud' ? '#8bb4e0' : sprite.category === 'receipt' ? '#c4a862' : '#82c487';
+  const catColor = sprite.category === 'hud' || sprite.category === 'hud-item' ? '#8bb4e0' : sprite.category === 'receipt' ? '#c4a862' : '#82c487';
 
   return (
     <div style={{ ...S.card, borderColor: border, background: bg }}>

@@ -1,6 +1,6 @@
 import definitions from './definitions.json';
 
-type SpriteCategory = 'hud' | 'receipt' | 'drop';
+type SpriteCategory = 'hud' | 'hud-item' | 'receipt' | 'drop';
 
 interface SpriteManifestEntry {
   /** Filename without extension (e.g. "hud-bow") */
@@ -32,12 +32,13 @@ const SPRITE_MANIFEST: SpriteManifestEntry[] = definitions.sprites.map(s => ({
 }));
 
 const CATEGORY_LABELS: Record<SpriteCategory, string> = {
-  hud: 'HUD / UI',
+  hud: 'HUD',
+  'hud-item': 'HUD Item',
   receipt: 'Receipt / Chest',
   drop: 'Droppable',
 };
 
-const CATEGORY_ORDER: SpriteCategory[] = ['hud', 'receipt', 'drop'];
+const CATEGORY_ORDER: SpriteCategory[] = ['hud', 'hud-item', 'receipt', 'drop'];
 
 export {
   CATEGORY_LABELS,

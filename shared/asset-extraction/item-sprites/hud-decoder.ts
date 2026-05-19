@@ -120,10 +120,60 @@ function extractHudSpecial(
   throw new Error(`Unknown HUD special layout: ${layout}`);
 }
 
+/**
+ * Extract a single 8×8 HUD tile, returned as 8×8 (scaled later by caller).
+ */
+function extractHudSingle(
+  tileId: number,
+  sheets: Buffer[],
+  palette: Map<number, RGBA>,
+): ImageBuffer {
+  return decodeHudTile(tileId, sheets, palette);
+}
+
+/**
+ * Extract a horizontal strip of HUD tiles at 8px each.
+ * Returns a (count×8) × 8 image.
+ */
+function extractHudStrip(
+  tileIds: number[],
+  sheets: Buffer[],
+  palette: Map<number, RGBA>,
+): ImageBuffer {
+  const w = tileIds.length * 8;
+  const img = new ImageBuffer(w, 8);
+  for (let i = 0; i < tileIds.length; i++) {
+    const tile = decodeHudTile(tileIds[i], sheets, palette);
+    img.paste(tile, i * 8, 0);
+  }
+  return img;
+}
+
+/**
+ * Extract a vertical strip of HUD tiles at 8px each.
+ * Returns a 8 × (count×8) image.
+ */
+function extractHudVStrip(
+  tileIds: number[],
+  sheets: Buffer[],
+  palette: Map<number, RGBA>,
+): ImageBuffer {
+  const h = tileIds.length * 8;
+  const img = new ImageBuffer(8, h);
+  for (let i = 0; i < tileIds.length; i++) {
+    const tile = decodeHudTile(tileIds[i], sheets, palette);
+    img.paste(tile, 0, i * 8);
+  }
+  return img;
+}
+
 export {
   decodeHudTile,
+  extractHudSingle,
   extractHudSpecial,
   extractHudStandard,
+  extractHudStrip,
+  extractHudVStrip,
   loadHudPalette,
   loadHudSheets
 };
