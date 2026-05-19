@@ -18,17 +18,19 @@ function createEdgeGlowRenderer(
   glCanvas: HTMLCanvasElement,
   options: EdgeGlowOptions = {},
 ): EdgeGlowRenderer | null {
-  const gl = glCanvas.getContext('webgl', {
+  const glOrNull = glCanvas.getContext('webgl', {
     alpha: false,
     antialias: false,
     premultipliedAlpha: false,
     preserveDrawingBuffer: false,
   });
 
-  if (!gl) {
+  if (!glOrNull) {
     console.warn('[EdgeGlow] WebGL not available');
     return null;
   }
+
+  const gl = glOrNull;
 
   const {
     blurRadius = 16.0,
@@ -40,15 +42,20 @@ function createEdgeGlowRenderer(
 
   // ─── Compile shaders & link programs ───
 
-  const mirrorProg = createProgram(gl, FULLSCREEN_VERT, MIRROR_FRAG);
-  const blurHProg = createProgram(gl, FULLSCREEN_VERT, BLUR_H_FRAG);
-  const blurVProg = createProgram(gl, FULLSCREEN_VERT, BLUR_V_FRAG);
-  const compositeProg = createProgram(gl, FULLSCREEN_VERT, COMPOSITE_FRAG);
+  const mirrorProgOrNull = createProgram(gl, FULLSCREEN_VERT, MIRROR_FRAG);
+  const blurHProgOrNull = createProgram(gl, FULLSCREEN_VERT, BLUR_H_FRAG);
+  const blurVProgOrNull = createProgram(gl, FULLSCREEN_VERT, BLUR_V_FRAG);
+  const compositeProgOrNull = createProgram(gl, FULLSCREEN_VERT, COMPOSITE_FRAG);
 
-  if (!mirrorProg || !blurHProg || !blurVProg || !compositeProg) {
+  if (!mirrorProgOrNull || !blurHProgOrNull || !blurVProgOrNull || !compositeProgOrNull) {
     console.error('[EdgeGlow] Failed to compile shader programs');
     return null;
   }
+
+  const mirrorProg = mirrorProgOrNull;
+  const blurHProg = blurHProgOrNull;
+  const blurVProg = blurVProgOrNull;
+  const compositeProg = compositeProgOrNull;
 
   // ─── Uniform locations ───
 
