@@ -379,25 +379,40 @@ const HomeTab = (props: HomeTabProps) => {
 
       {/* Two-column layout: Quick saves (left) | Normal + Auto saves (right) */}
       <div className="home-tab__columns">
-        {/* Left column: Quick Saves */}
-        <section className="home-tab__section home-tab__col-left">
-          <h3 className="home-tab__section-title">Quick Saves</h3>
-          <div className="home-tab__save-grid">
-            {slots.map((s) => (
-              <SaveSlot
-                key={s.slot}
-                slot={s.slot}
-                screenshotUrl={s.screenshot}
-                timestamp={s.timestamp ?? 0}
-                isEmpty={!s.timestamp}
-                busy={busySlot === s.slot}
-                disableSave={!isGameRunning}
-                onSave={handleQuickSave}
-                onLoad={handleQuickLoad}
-              />
-            ))}
-          </div>
-        </section>
+        {/* Left column: Quick Saves + Play Sessions */}
+        <div className="home-tab__col-left">
+          <section className="home-tab__section">
+            <h3 className="home-tab__section-title">Quick Saves</h3>
+            <div className="home-tab__save-grid">
+              {slots.map((s) => (
+                <SaveSlot
+                  key={s.slot}
+                  slot={s.slot}
+                  screenshotUrl={s.screenshot}
+                  timestamp={s.timestamp ?? 0}
+                  isEmpty={!s.timestamp}
+                  busy={busySlot === s.slot}
+                  disableSave={!isGameRunning}
+                  onSave={handleQuickSave}
+                  onLoad={handleQuickLoad}
+                />
+              ))}
+            </div>
+          </section>
+
+          <section className="home-tab__section">
+            <h3 className="home-tab__section-title">Play Sessions</h3>
+            {sessions.length === 0 ? (
+              <p className="home-tab__empty">No play sessions yet</p>
+            ) : (
+              <div className="home-tab__sessions">
+                {sessions.map((s) => (
+                  <PlaySessionCard key={s.id} session={s} />
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
 
         {/* Right column: Normal Saves + Auto Saves */}
         <div className="home-tab__col-right">
@@ -459,20 +474,6 @@ const HomeTab = (props: HomeTabProps) => {
           </section>
         </div>
       </div>
-
-      {/* Play Sessions */}
-      <section className="home-tab__section">
-        <h3 className="home-tab__section-title">Play Sessions</h3>
-        {sessions.length === 0 ? (
-          <p className="home-tab__empty">No play sessions yet</p>
-        ) : (
-          <div className="home-tab__sessions">
-            {sessions.map((s) => (
-              <PlaySessionCard key={s.id} session={s} />
-            ))}
-          </div>
-        )}
-      </section>
 
       {/* Dialogs */}
       <Dialog

@@ -36,8 +36,8 @@ const useProfileManagement = (params: {
   }, []);
 
   const loadProfileForGame = useCallback(async (profile: Profile) => {
-    await resetGame();
     onGameClear();
+    await resetGame();
 
     setActiveProfile(profile);
     setLoadingProfile(profile.name);

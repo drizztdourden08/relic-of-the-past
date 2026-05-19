@@ -26,6 +26,30 @@
   visibility: hidden;
 }
 
+/* ─── Loading/Error status overlay ─── */
+.game-layer__status-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.game-layer__status-text {
+  font: 18px monospace;
+}
+
+.game-layer__status-text--loading {
+  color: #c8a84e;
+}
+
+.game-layer__status-text--error {
+  color: #e94560;
+  font-size: 16px;
+}
+
 .game-layer__fx-canvas {
   image-rendering: pixelated;
   outline: none;

@@ -226,31 +226,18 @@ const GameLayer = (props: GameLayerProps) => {
     };
   }, [status, canvasKey]);
 
-  // Draw placeholder when not running
-  useEffect(() => {
-    if (status === 'running') return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    ctx.fillStyle = '#0a0a0f';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.textAlign = 'center';
-
-    if (status === 'loading') {
-      ctx.fillStyle = '#c8a84e';
-      ctx.font = '18px monospace';
-      ctx.fillText('Loading WASM core...', canvas.width / 2, canvas.height / 2);
-    } else if (status === 'error') {
-      ctx.fillStyle = '#e94560';
-      ctx.font = '16px monospace';
-      ctx.fillText(`Error: ${error}`, canvas.width / 2, canvas.height / 2);
-    }
-  }, [status, error]);
-
   return (
     <div className="game-layer" ref={containerRef}>
+      {status === 'loading' && (
+        <div className="game-layer__status-overlay">
+          <span className="game-layer__status-text game-layer__status-text--loading">Loading WASM core...</span>
+        </div>
+      )}
+      {status === 'error' && (
+        <div className="game-layer__status-overlay">
+          <span className="game-layer__status-text game-layer__status-text--error">Error: {error}</span>
+        </div>
+      )}
       <canvas
         key={canvasKey}
         ref={canvasRef}
