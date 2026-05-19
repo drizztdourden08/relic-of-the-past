@@ -16,4 +16,3 @@ export {
   pollInventoryState,
   pollRoomFlags,
 } from './bridge';
-export { installTrackerDebug } from './debug-mock';
