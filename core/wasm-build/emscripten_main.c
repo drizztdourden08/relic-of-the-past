@@ -356,16 +356,37 @@ void WasmSetDisplayPerf(int enable) {
   g_config.display_perf_title = enable;
 }
 
+// Pending sub-volumes: -1 = no pending value, 0-128 = deferred until player/DSP ready
+static int g_pending_music_volume = -1;
+static int g_pending_sfx_volume = -1;
+
+EMSCRIPTEN_KEEPALIVE
+void WasmSetAppMasterVolume(int volume) {
+  // volume: 0-128 scale. Maps to SDL_MIX_MAXVOLUME (128) range.
+  if (volume <= 0)
+    g_sdl_audio_mixer_volume = 0;
+  else if (volume >= 128)
+    g_sdl_audio_mixer_volume = SDL_MIX_MAXVOLUME;
+  else
+    g_sdl_audio_mixer_volume = volume;
+}
+
 EMSCRIPTEN_KEEPALIVE
 void WasmSetMusicVolume(int volume) {
+  uint8_t v = (uint8_t)(volume > 128 ? 128 : (volume < 0 ? 0 : volume));
   if (g_zenv.player && g_zenv.player->dsp)
-    dsp_setMusicVolume(g_zenv.player->dsp, (uint8_t)(volume > 128 ? 128 : (volume < 0 ? 0 : volume)));
+    dsp_setMusicVolume(g_zenv.player->dsp, v);
+  else
+    g_pending_music_volume = v;
 }
 
 EMSCRIPTEN_KEEPALIVE
 void WasmSetSfxVolume(int volume) {
+  uint8_t v = (uint8_t)(volume > 128 ? 128 : (volume < 0 ? 0 : volume));
   if (g_zenv.player && g_zenv.player->dsp)
-    dsp_setSfxVolume(g_zenv.player->dsp, (uint8_t)(volume > 128 ? 128 : (volume < 0 ? 0 : volume)));
+    dsp_setSfxVolume(g_zenv.player->dsp, v);
+  else
+    g_pending_sfx_volume = v;
 }
 
 // ---------------------------------------------------------------------------
@@ -433,6 +454,18 @@ static void HandleCommand(int keyCode) {
 // Frame callback for emscripten_set_main_loop
 // ---------------------------------------------------------------------------
 static void MainFrameCallback(void) {
+  // Apply deferred sub-volumes once the player/DSP are initialized
+  if (g_zenv.player && g_zenv.player->dsp) {
+    if (g_pending_music_volume >= 0) {
+      dsp_setMusicVolume(g_zenv.player->dsp, (uint8_t)g_pending_music_volume);
+      g_pending_music_volume = -1;
+    }
+    if (g_pending_sfx_volume >= 0) {
+      dsp_setSfxVolume(g_zenv.player->dsp, (uint8_t)g_pending_sfx_volume);
+      g_pending_sfx_volume = -1;
+    }
+  }
+
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
     switch (event.type) {

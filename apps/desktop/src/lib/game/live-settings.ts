@@ -22,6 +22,10 @@ let lastBackdropBlack = false;
 let lastHudHidden = false;
 // Track the last-pushed pauseHidden value so we can re-assert after state loads
 let lastPauseHidden = false;
+// Track the last-pushed volume values so we can re-assert after state loads
+let lastMasterVolume = 100;
+let lastMusicVol = 128; // 0-128 WASM scale
+let lastSfxVol = 128;  // 0-128 WASM scale
 
 // Feature flag enum values — must match features.h
 const FEATURE_FLAGS = {
@@ -159,16 +163,19 @@ function pushLiveSettings(settings: GameSettings): boolean {
     const ppuFlags = buildPpuFlags(settings);
     mod.ccall('WasmSetPpuRenderFlags', null, ['number'], [ppuFlags]);
 
-    // Master volume via Web Audio GainNode
+    // Master volume via Web Audio GainNode + WASM SDL mixer (belt-and-suspenders)
     setMasterVolume(settings.masterVolume);
+    lastMasterVolume = settings.masterVolume;
+    try {
+      const masterWasm = Math.round(settings.masterVolume * 1.28); // 0-100 → 0-128
+      mod.ccall('WasmSetAppMasterVolume', null, ['number'], [masterWasm]);
+    } catch { /* WASM not rebuilt yet */ }
 
     // Sub-volumes via WASM DSP (0-100 → 0-128 scale)
-    try {
-      const musicVol = settings.musicMuted ? 0 : Math.round(settings.musicVolume * 1.28);
-      mod.ccall('WasmSetMusicVolume', null, ['number'], [musicVol]);
-      const sfxVol = settings.sfxMuted ? 0 : Math.round(settings.sfxVolume * 1.28);
-      mod.ccall('WasmSetSfxVolume', null, ['number'], [sfxVol]);
-    } catch { /* WASM not rebuilt yet */ }
+    const musicVol = settings.musicMuted ? 0 : Math.round(settings.musicVolume * 1.28);
+    const sfxVol = settings.sfxMuted ? 0 : Math.round(settings.sfxVolume * 1.28);
+    try { mod.ccall('WasmSetMusicVolume', null, ['number'], [musicVol]); lastMusicVol = musicVol; } catch {}
+    try { mod.ccall('WasmSetSfxVolume', null, ['number'], [sfxVol]); lastSfxVol = sfxVol; } catch {}
 
     // FPS display toggle (guard: function may not exist in older WASM builds)
     try {
@@ -240,6 +247,19 @@ function reassertPauseHidden(): void {
   } catch { /* ignore — WASM may not have this export */ }
 }
 
+/**
+ * Re-assert all volume settings.
+ * Called after state loads and on initial game start to ensure volumes are correct.
+ */
+function reassertVolumes(): void {
+  const mod = getModule();
+  if (!mod) return;
+  setMasterVolume(lastMasterVolume);
+  try { mod.ccall('WasmSetAppMasterVolume', null, ['number'], [Math.round(lastMasterVolume * 1.28)]); } catch {}
+  try { mod.ccall('WasmSetMusicVolume', null, ['number'], [lastMusicVol]); } catch {}
+  try { mod.ccall('WasmSetSfxVolume', null, ['number'], [lastSfxVol]); } catch {}
+}
+
 /** Check if a setting change requires a game restart (i.e. it's NOT live-updatable). */
 function requiresRestart(changedKeys: (keyof GameSettings)[]): boolean {
   return changedKeys.some((k) => !LIVE_SETTINGS.has(k));
@@ -256,6 +276,9 @@ function primeLiveSettings(settings: GameSettings): void {
   lastHudHidden = hideHud;
   const hidePause = settings.hudMode === 'enhanced' && settings.hudEnhancedParts.includes('pause');
   lastPauseHidden = hidePause;
+  lastMasterVolume = settings.masterVolume;
+  lastMusicVol = settings.musicMuted ? 0 : Math.round(settings.musicVolume * 1.28);
+  lastSfxVol = settings.sfxMuted ? 0 : Math.round(settings.sfxVolume * 1.28);
 }
 
-export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, reassertHudHidden, reassertPauseHidden, requiresRestart, primeLiveSettings };
+export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, reassertHudHidden, reassertPauseHidden, reassertVolumes, requiresRestart, primeLiveSettings };

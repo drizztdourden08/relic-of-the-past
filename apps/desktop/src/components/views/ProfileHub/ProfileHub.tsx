@@ -100,6 +100,8 @@ const ProfileHub = (props: ProfileHubProps) => {
             heartMode: merged.hudHeartMode,
             magicMode: merged.hudMagicMode,
             countLayout: merged.hudCountLayout,
+            pauseStyle: merged.hudPauseStyle,
+            pauseHighlight: merged.hudPauseHighlight,
           });
           onWindowModeChange?.(merged.windowMode);
           onConstraintSettingsChange?.(merged.viewportConstraint, merged.aspectRatio);
@@ -107,7 +109,10 @@ const ProfileHub = (props: ProfileHubProps) => {
           onDisplayPerfChange?.(merged.displayPerfInTitle);
           onEdgeEffectChange?.(merged.overworldEdgeEffect);
           getInputManager().setFunctionMappings(merged.functionMappings ?? DEFAULT_FUNCTION_MAPPINGS);
-          if (isGameRunning) pushLiveSettings(merged);
+          // Always attempt to push — if module isn't running yet, it's a no-op.
+          // This avoids stale closure issues where isGameRunning is false in this effect
+          // but the game starts before readConfig resolves.
+          pushLiveSettings(merged);
         }
       } catch { /* use defaults */ }
     })();
@@ -172,7 +177,7 @@ const ProfileHub = (props: ProfileHubProps) => {
       }
 
       // Sync HUD settings to store for live rendering
-      if ('hudMode' in patch || 'hudStyle' in patch || 'hudRatio' in patch || 'hudEnhancedParts' in patch || 'hudHeartMode' in patch || 'hudMagicMode' in patch || 'hudCountLayout' in patch) {
+      if ('hudMode' in patch || 'hudStyle' in patch || 'hudRatio' in patch || 'hudEnhancedParts' in patch || 'hudHeartMode' in patch || 'hudMagicMode' in patch || 'hudCountLayout' in patch || 'hudPauseStyle' in patch || 'hudPauseHighlight' in patch) {
         useHudSettingsStore.getState().setHudSettings({
           mode: next.hudMode,
           style: next.hudStyle,
@@ -181,6 +186,8 @@ const ProfileHub = (props: ProfileHubProps) => {
           heartMode: next.hudHeartMode,
           magicMode: next.hudMagicMode,
           countLayout: next.hudCountLayout,
+          pauseStyle: next.hudPauseStyle,
+          pauseHighlight: next.hudPauseHighlight,
         });
       }
 
@@ -204,6 +211,16 @@ const ProfileHub = (props: ProfileHubProps) => {
       return next;
     });
   }, [profile.id, isGameRunning]);
+
+  // Listen for external settings change requests (e.g. from debug widget)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const patch = (e as CustomEvent).detail as Partial<GameSettings>;
+      if (patch) handleSettingsChange(patch);
+    };
+    window.addEventListener('settings:change', handler);
+    return () => window.removeEventListener('settings:change', handler);
+  }, [handleSettingsChange]);
 
   const dismissToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));

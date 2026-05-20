@@ -10,6 +10,7 @@ import { getModule, setModule, setProfileId, getProfileId, setState, setInput } 
 import { startSramSync, stopSramSync } from './sram-sync';
 import { startAutoSave, stopAutoSave, saveOnQuit } from './auto-save';
 import { resetMasterVolume } from './audio-volume';
+import { reassertVolumes } from './live-settings';
 import { initTrackerBridge, destroyTrackerBridge } from './tracker';
 import { startSession, endSession } from './session-tracker';
 import { getInputManager } from '../input/input-manager';
@@ -190,6 +191,9 @@ async function startGame(
     setState({ status: 'running', error: null });
     log.wasm('WASM module running');
     canvas.focus();
+
+    // ─── Apply saved volume settings immediately ───
+    reassertVolumes();
 
     // ─── Input manager: wire JS-driven input to WASM ───
     const inputMgr = getInputManager();

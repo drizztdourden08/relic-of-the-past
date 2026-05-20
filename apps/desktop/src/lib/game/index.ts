@@ -10,7 +10,7 @@ export { setMsuData, setAutoSaveConfig } from './lifecycle';
 export type { MsuTrackData, AutoSaveConfig } from './lifecycle';
 export { saveState, loadState } from './save-states';
 export { setItemOverride, clearItemOverrides } from './randomizer';
-export { pushLiveSettings, reassertBackdropBlack, reassertHudHidden, requiresRestart, primeLiveSettings, LIVE_SETTINGS } from './live-settings';
+export { pushLiveSettings, reassertBackdropBlack, reassertHudHidden, reassertPauseHidden, reassertVolumes, requiresRestart, primeLiveSettings, LIVE_SETTINGS } from './live-settings';
 export { initMasterVolume, setMasterVolume, suspendAudio, resumeAudio } from './audio-volume';
 export { getFps } from './fps';
 export { getInputManager, resolveFunctionMappingIcon } from '../input/input-manager';
