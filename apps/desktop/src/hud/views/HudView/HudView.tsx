@@ -58,7 +58,7 @@ const HudView = () => {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        paddingTop: 200,
+        paddingTop: 1.75 * tile,
       }}
     >
           {/* Left group: magic meter + item box + counts (original mode) */}
