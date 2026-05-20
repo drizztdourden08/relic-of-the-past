@@ -1,6 +1,6 @@
 import type { RegionConnection } from '../../types';
 
 export const LW_SPECIAL_CONNECTIONS: RegionConnection[] = [
-  { from: 'light-world', to: 'chris-houlihan-room', entrance: 'Chris Houlihan Room', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance'] },
-  { from: 'chris-houlihan-room', to: 'light-world', entrance: 'Chris Houlihan Room Exit', tags: ['transit:warp', 'dir:one-way', 'ctx:exit'] },
+  { from: 'lw-1b', to: 'chris-houlihan-room', entrance: 'Chris Houlihan Room', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance'] },
+  { from: 'chris-houlihan-room', to: 'lw-2c', entrance: 'Chris Houlihan Room Exit', tags: ['transit:warp', 'dir:one-way', 'ctx:exit'] },
 ];

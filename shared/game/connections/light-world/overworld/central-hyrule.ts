@@ -2,7 +2,7 @@ import type { RegionConnection } from '../../../types';
 
 export const LW_OVERWORLD_CENTRAL_CONNECTIONS: RegionConnection[] = [
   // Save & Quit → overworld
-  { from: 'menu', to: 'light-world', entrance: 'Links House S&Q', tags: ['transit:warp', 'dir:one-way', 'ctx:save-quit'] },
+  { from: 'menu', to: 'links-house', entrance: 'Links House S&Q', tags: ['transit:warp', 'dir:one-way', 'ctx:save-quit'] },
 
   // Rain state transitions
   { from: 'links-house', to: 'light-world-rain', entrance: 'Links House Exit (Rain)', tags: ['transit:door', 'dir:one-way', 'ctx:exit', 'barrier:event'] },

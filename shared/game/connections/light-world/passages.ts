@@ -2,7 +2,7 @@ import type { RegionConnection } from '../../types';
 
 export const LW_PASSAGE_CONNECTIONS: RegionConnection[] = [
   // Hyrule Castle Secret Entrance
-  { from: 'light-world', to: 'hyrule-castle-secret-entrance', entrance: 'Hyrule Castle Secret Entrance Drop', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance'] },
+  { from: 'lw-1b', to: 'hyrule-castle-secret-entrance', entrance: 'Hyrule Castle Secret Entrance Drop', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance'] },
   { from: 'light-world-rain', to: 'hyrule-castle-secret-entrance', entrance: 'HC Secret Entrance Drop (Rain)', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance', 'barrier:event'] },
   { from: 'hyrule-castle-courtyard', to: 'hyrule-castle-secret-entrance', entrance: 'Hyrule Castle Secret Entrance Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:entrance'] },
   { from: 'hyrule-castle-secret-entrance', to: 'lw-1b', entrance: 'Secret Passage to Castle', tags: ['transit:door', 'dir:one-way', 'ctx:internal'] },
@@ -23,7 +23,7 @@ export const LW_PASSAGE_CONNECTIONS: RegionConnection[] = [
 
   // Death Mountain Return Cave
   { from: 'death-mountain-return-ledge', to: 'death-mountain-return-cave', entrance: 'Death Mountain Return Cave (East)', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
-  { from: 'death-mountain-return-cave', to: 'light-world', entrance: 'Death Mountain Return Cave Exit (West)', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+  { from: 'death-mountain-return-cave', to: 'lw-0a', entrance: 'Death Mountain Return Cave Exit (West)', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
 
   // Spiral Cave
   { from: 'east-death-mountain-bottom', to: 'spiral-cave-bottom', entrance: 'Spiral Cave', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
