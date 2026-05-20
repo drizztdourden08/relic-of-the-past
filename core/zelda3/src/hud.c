@@ -4,7 +4,7 @@
 #include "variables.h"
 #include "messaging.h"
 
-uint8 g_hud_hidden;
+uint8 g_hud_hide_mask;
 
 enum {
   kNewStyleInventory = 0,

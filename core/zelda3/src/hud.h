@@ -1,9 +1,17 @@
 #pragma once
 #include "types.h"
 
-// When non-zero, the gameplay HUD is hidden (tiles blanked).
-// Set from WASM JS layer when enhanced HUD overlay is active.
-extern uint8 g_hud_hidden;
+// Bitmask controlling which HUD components are hidden.
+// Each bit corresponds to a component; when set, tiles belonging
+// to that component are replaced with transparent (0x207f) during
+// the NMI VRAM copy. The buffer itself stays untouched.
+#define HUD_HIDE_MAGIC    0x01
+#define HUD_HIDE_ITEM     0x02
+#define HUD_HIDE_LIFE     0x04
+#define HUD_HIDE_COUNTERS 0x08
+#define HUD_HIDE_ALL      0x0F
+
+extern uint8 g_hud_hide_mask;
 
 enum kHudItems {
 

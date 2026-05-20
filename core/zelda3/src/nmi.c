@@ -2,11 +2,99 @@
 #include "zelda_rtl.h"
 #include "variables.h"
 #include "messaging.h"
+#include "hud.h"
 #include "snes/snes_regs.h"
 #include "snes/ppu.h"
 #include "assets.h"
 #include "audio.h"
-#include "hud.h"
+
+// ---------------------------------------------------------------------------
+// HUD tile value arrays for per-component hiding.
+// Each array lists the tile values (uint16 tilemap entries) that belong
+// to a specific HUD component. When a component's bit is set in
+// g_hud_hide_mask, any buffer entry matching one of its values gets
+// replaced with 0x207f (transparent) during the NMI VRAM copy.
+// ---------------------------------------------------------------------------
+
+// Magic meter frame tiles (from kHudTilemapLeftPart)
+static const uint16 kHudTiles_Magic[] = {
+  0x2850, 0xa856, 0x2852, 0x285b, 0x285c, // row 0
+  0x2854, 0x2858, 0x285d,                  // rows 1-2 borders
+  0x304e, 0x305e,                          // rows 2-4 fill background
+  0x2859, 0xa85b, 0xa85c,                  // row 3 bottom border
+  0x6854,                                  // row 4
+  0xa850, 0x2856, 0xe850,                  // row 5 bottom cap
+  // 1/2 magic label
+  0x28F7, 0x2851, 0x28FA,
+  // Magic fill levels (kUpdateMagicPowerTilemap)
+  0x3cf5, 0x3c5f, 0x3c4c, 0x3c4d, 0x3c4e, 0x3c5e,
+};
+#define kHudTiles_Magic_Count (sizeof(kHudTiles_Magic) / sizeof(kHudTiles_Magic[0]))
+
+// Item box tiles — the 0x20f5 "empty" background plus all possible
+// item icon tiles. Rather than listing 100+ item tiles, we use a
+// simpler rule: the item box occupies known positions (37,38,69,70)
+// so any non-0x207f tile at those positions is an item tile.
+// We still list the empty-item background tile for value matching.
+static const uint16 kHudTiles_Item[] = {
+  0x20f5, // empty item background
+};
+#define kHudTiles_Item_Count (sizeof(kHudTiles_Item) / sizeof(kHudTiles_Item[0]))
+
+// "— LIFE —" text tiles (from kHudTilemapRightPart row 0)
+// Plus heart tiles (full, half, empty container)
+static const uint16 kHudTiles_Life[] = {
+  0x288b, 0x288f, 0x24ab, 0x24ac, 0x688f, 0x688b, // LIFE text
+  0x24A2, 0x24A1, 0x24A0, // heart: full, half, empty
+};
+#define kHudTiles_Life_Count (sizeof(kHudTiles_Life) / sizeof(kHudTiles_Life[0]))
+
+// Counter area tiles (rupees/bombs/arrows/keys icons + digits)
+static const uint16 kHudTiles_Counters[] = {
+  // Static background icons (from kHudInventoryBg)
+  0x3ca8, 0x2c88, 0x2c89, 0x20a7, 0x20a9, 0x2871,
+  // Bow slot indicators
+  0x2486, 0x2487,
+  // Digits 0-9 in normal palette
+  0x2400, 0x2401, 0x2402, 0x2403, 0x2404,
+  0x2405, 0x2406, 0x2407, 0x2408, 0x2409,
+  // Digits 0-9 in yellow (max reached) palette
+  0x3400, 0x3401, 0x3402, 0x3403, 0x3404,
+  0x3405, 0x3406, 0x3407, 0x3408, 0x3409,
+  // Blank digit
+  0x247f,
+};
+#define kHudTiles_Counters_Count (sizeof(kHudTiles_Counters) / sizeof(kHudTiles_Counters[0]))
+
+// Item box known positions (HUDXY(5,1), HUDXY(6,1), HUDXY(5,2), HUDXY(6,2))
+static const uint8 kHudItemBoxPositions[] = { 37, 38, 69, 70 };
+
+// Check if a tile value should be hidden given the active mask.
+static bool Nmi_ShouldHideTile(uint16 tile, int position) {
+  if (tile == 0x207f)
+    return false; // already transparent
+  if (g_hud_hide_mask == HUD_HIDE_ALL)
+    return true;  // fast path: hide everything
+  if (g_hud_hide_mask & HUD_HIDE_MAGIC) {
+    for (int i = 0; i < (int)kHudTiles_Magic_Count; i++)
+      if (tile == kHudTiles_Magic[i]) return true;
+  }
+  if (g_hud_hide_mask & HUD_HIDE_ITEM) {
+    // Item box: match by position (too many possible item tile values)
+    for (int i = 0; i < 4; i++)
+      if (position == kHudItemBoxPositions[i]) return true;
+  }
+  if (g_hud_hide_mask & HUD_HIDE_LIFE) {
+    for (int i = 0; i < (int)kHudTiles_Life_Count; i++)
+      if (tile == kHudTiles_Life[i]) return true;
+  }
+  if (g_hud_hide_mask & HUD_HIDE_COUNTERS) {
+    for (int i = 0; i < (int)kHudTiles_Counters_Count; i++)
+      if (tile == kHudTiles_Counters[i]) return true;
+  }
+  return false;
+}
+// ---------------------------------------------------------------------------
 
 static const uint8 kNmiVramAddrs[] = {
   0, 0, 4, 8, 12, 8, 12, 0, 4, 0, 8, 4, 12, 4, 12, 0,
@@ -205,15 +293,14 @@ void NMI_DoUpdates() {  // 8089e0
     memcpy(&g_zenv.vram[animated_tile_vram_addr], &g_ram[animated_tile_data_src], 0x400);
   }
 
-  if (g_hud_hidden)
-    flag_update_hud_in_nmi = 1;
-
   if (flag_update_hud_in_nmi) {
-    if (g_hud_hidden) {
+    uint16 *dst = &g_zenv.vram[word_7E0219];
+    if (g_hud_hide_mask) {
       for (int i = 0; i < 165; i++)
-        hud_tile_indices_buffer[i] = 0x207f;
+        dst[i] = Nmi_ShouldHideTile(hud_tile_indices_buffer[i], i) ? 0x207f : hud_tile_indices_buffer[i];
+    } else {
+      memcpy(dst, hud_tile_indices_buffer, 165 * sizeof(uint16));
     }
-    memcpy(&g_zenv.vram[word_7E0219], hud_tile_indices_buffer, 165 * sizeof(uint16));
   }
 
   if (flag_update_cgram_in_nmi) {

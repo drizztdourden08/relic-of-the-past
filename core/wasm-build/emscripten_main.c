@@ -305,11 +305,12 @@ void WasmSetPpuRenderFlags(int flags) {
 
 EMSCRIPTEN_KEEPALIVE
 void WasmSetHudHidden(int hidden) {
-  uint8 was_hidden = g_hud_hidden;
-  g_hud_hidden = hidden ? 1 : 0;
-  // When transitioning from hidden → visible, force a full HUD rebuild
-  if (was_hidden && !g_hud_hidden)
-    Hud_Rebuild();
+  uint8 old_mask = g_hud_hide_mask;
+  g_hud_hide_mask = hidden ? HUD_HIDE_ALL : 0;
+  // When transitioning from hidden → visible, force a HUD refresh
+  if (old_mask && !g_hud_hide_mask) {
+    flag_update_hud_in_nmi++;
+  }
 }
 
 EMSCRIPTEN_KEEPALIVE
