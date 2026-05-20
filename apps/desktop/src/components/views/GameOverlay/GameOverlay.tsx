@@ -70,15 +70,15 @@ function GameOverlay({ width, height }: GameOverlayProps) {
               display: 'flex',
               flexDirection: 'column',
               height: '200%',
-              transform: isMenuVisible ? 'translateY(-50%)' : 'translateY(0)',
+              transform: isMenuVisible ? 'translateY(0)' : 'translateY(-50%)',
               transition: isTransitioning ? `transform ${MENU_TRANSITION_MS}ms linear` : 'none',
             }}
           >
-            {/* Pause menu placeholder — sits above (first in flow = top half) */}
+            {/* Pause menu placeholder — hidden above viewport */}
             <div style={{ flex: '0 0 50%', position: 'relative' }}>
               {/* TODO: Enhanced pause menu content goes here */}
             </div>
-            {/* Enhanced HUD — bottom half (visible during gameplay) */}
+            {/* Enhanced HUD — visible during gameplay */}
             <div style={{ flex: '0 0 50%', position: 'relative' }}>
               <HudView />
             </div>
