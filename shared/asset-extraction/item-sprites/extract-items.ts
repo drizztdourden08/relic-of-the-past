@@ -46,7 +46,7 @@ interface SpriteExtractDef {
 interface SpriteDef {
   file: string;
   label: string;
-  category: 'hud' | 'hud-item' | 'receipt' | 'drop';
+  category: 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop';
   extract: SpriteExtractDef;
 }
 
@@ -122,7 +122,7 @@ function extractOne(def: SpriteExtractDef, ctx: ExtractionContext): ImageBuffer 
 
 interface ExtractionResult {
   total: number;
-  counts: { hud: number; 'hud-item': number; receipt: number; drop: number };
+  counts: { hud: number; 'hud-pause': number; 'hud-item': number; fonts: number; receipt: number; drop: number };
   errors: string[];
   removedStale: number;
 }
@@ -161,7 +161,7 @@ function extractAllItemSprites(
     dropSheets: loadDropSheets(rom),
   };
 
-  const counts = { hud: 0, 'hud-item': 0, receipt: 0, drop: 0 };
+  const counts = { hud: 0, 'hud-pause': 0, 'hud-item': 0, fonts: 0, receipt: 0, drop: 0 };
   const errors: string[] = [];
 
   // Extract each sprite
@@ -197,7 +197,7 @@ function extractAllItemSprites(
   }
 
   return {
-    total: counts.hud + counts['hud-item'] + counts.receipt + counts.drop,
+    total: counts.hud + counts['hud-pause'] + counts['hud-item'] + counts.fonts + counts.receipt + counts.drop,
     counts,
     errors,
     removedStale,
@@ -230,7 +230,7 @@ function extractAllItemSpritesFromRom(
     dropSheets: loadDropSheets(rom),
   };
 
-  const counts = { hud: 0, 'hud-item': 0, receipt: 0, drop: 0 };
+  const counts = { hud: 0, 'hud-pause': 0, 'hud-item': 0, fonts: 0, receipt: 0, drop: 0 };
   const errors: string[] = [];
 
   for (const spriteDef of allSprites) {
@@ -261,7 +261,7 @@ function extractAllItemSpritesFromRom(
   } catch { /* ok */ }
 
   return {
-    total: counts.hud + counts['hud-item'] + counts.receipt + counts.drop,
+    total: counts.hud + counts['hud-pause'] + counts['hud-item'] + counts.fonts + counts.receipt + counts.drop,
     counts,
     errors,
     removedStale,

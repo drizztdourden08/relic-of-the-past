@@ -31,7 +31,7 @@ const HudNumber = (props: HudNumberProps) => {
       {str.split('').map((d, i) => (
         <img
           key={i}
-          src={`${spritesBase}hud-digit-${d}.png`}
+          src={`${spritesBase}font-digit-${d}.png`}
           height={tile}
           draggable={false}
           style={{
