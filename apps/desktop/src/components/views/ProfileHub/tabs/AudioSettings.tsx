@@ -54,6 +54,14 @@ const SECTIONS: Section[] = [
           { key: 'masterVolume', label: 'Master Volume', description: 'Controls the overall game volume — affects all audio output', keywords: 'volume master level loud quiet' },
         ],
       },
+      {
+        id: 'volume-channels',
+        title: 'Channels',
+        items: [
+          { key: 'musicVolume', label: 'Music Volume', description: 'Controls the background music volume (SPC channels 0-5)', keywords: 'volume music bgm background' },
+          { key: 'sfxVolume', label: 'SFX Volume', description: 'Controls the sound effects volume (SPC channels 6-7)', keywords: 'volume sfx sound effects' },
+        ],
+      },
     ],
   },
   {
@@ -111,6 +119,36 @@ function renderControl(key: string, settings: GameSettings, onChange: (patch: Pa
           onChange={(v) => onChange({ masterVolume: v })}
           formatValue={(v) => `${v}%`}
           mute={settings.masterVolume === 0}
+        />
+      );
+    case 'musicVolume':
+      return (
+        <Slider
+          label="Music Volume"
+          description="Controls the background music volume (SPC channels 0-5)"
+          value={settings.musicVolume ?? 100}
+          min={0}
+          max={100}
+          step={5}
+          onChange={(v) => onChange({ musicVolume: v })}
+          formatValue={(v) => `${v}%`}
+          mute={settings.musicMuted}
+          onMuteToggle={() => onChange({ musicMuted: !settings.musicMuted })}
+        />
+      );
+    case 'sfxVolume':
+      return (
+        <Slider
+          label="SFX Volume"
+          description="Controls the sound effects volume (SPC channels 6-7)"
+          value={settings.sfxVolume ?? 100}
+          min={0}
+          max={100}
+          step={5}
+          onChange={(v) => onChange({ sfxVolume: v })}
+          formatValue={(v) => `${v}%`}
+          mute={settings.sfxMuted}
+          onMuteToggle={() => onChange({ sfxMuted: !settings.sfxMuted })}
         />
       );
     case 'audioChannels':

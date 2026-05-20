@@ -13,6 +13,7 @@
 
 #include "snes/ppu.h"
 #include "snes/dma.h"
+#include "snes/dsp.h"
 
 #include "src/types.h"
 #include "src/variables.h"
@@ -314,6 +315,20 @@ void WasmSetHudHidden(int hidden) {
 }
 
 EMSCRIPTEN_KEEPALIVE
+void WasmSetPauseHidden(int hidden) {
+  g_pause_hide_mask = hidden ? PAUSE_HIDE_ALL : 0;
+  // Immediately filter existing VRAM if pause menu is currently active.
+  // Handles save-state loads where NMI already uploaded tiles before mask was set.
+  if (g_pause_hide_mask && main_module_index == 14) {
+    uint16 *vram = &g_zenv.vram[104 << 8]; // kNmiVramAddrs[0x22]=104
+    for (int i = 0; i < 0x400; i++) {
+      if (vram[i] != 0x207f)
+        vram[i] = 0x207f;
+    }
+  }
+}
+
+EMSCRIPTEN_KEEPALIVE
 int WasmGetPpuRenderFlags(void) {
   return g_ppu_render_flags;
 }
@@ -339,6 +354,18 @@ int WasmGetFps(void) {
 EMSCRIPTEN_KEEPALIVE
 void WasmSetDisplayPerf(int enable) {
   g_config.display_perf_title = enable;
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmSetMusicVolume(int volume) {
+  if (g_zenv.player && g_zenv.player->dsp)
+    dsp_setMusicVolume(g_zenv.player->dsp, (uint8_t)(volume > 128 ? 128 : (volume < 0 ? 0 : volume)));
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmSetSfxVolume(int volume) {
+  if (g_zenv.player && g_zenv.player->dsp)
+    dsp_setSfxVolume(g_zenv.player->dsp, (uint8_t)(volume > 128 ? 128 : (volume < 0 ? 0 : volume)));
 }
 
 // ---------------------------------------------------------------------------

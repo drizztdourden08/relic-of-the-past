@@ -20,6 +20,8 @@ import { log } from '../log-bus';
 let lastBackdropBlack = false;
 // Track the last-pushed hudHidden value so we can re-assert after state loads
 let lastHudHidden = false;
+// Track the last-pushed pauseHidden value so we can re-assert after state loads
+let lastPauseHidden = false;
 
 // Feature flag enum values — must match features.h
 const FEATURE_FLAGS = {
@@ -110,6 +112,11 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'viewportConstraint',
   // Audio volume (Web Audio gain, no restart needed)
   'masterVolume',
+  // Sub-volumes (WASM DSP-level, no restart needed)
+  'musicVolume',
+  'musicMuted',
+  'sfxVolume',
+  'sfxMuted',
   // FPS display (toggled via WasmSetDisplayPerf)
   'displayPerfInTitle',
   // Enhanced save slot settings (JS-only, no WASM restart needed)
@@ -130,6 +137,8 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'hudHeartMode',
   'hudMagicMode',
   'hudCountLayout',
+  'hudPauseStyle',
+  'hudPauseHighlight',
   // Notification settings (React-only, no WASM restart needed)
   'showRegionNotification',
   'showTransitionNotification',
@@ -153,6 +162,14 @@ function pushLiveSettings(settings: GameSettings): boolean {
     // Master volume via Web Audio GainNode
     setMasterVolume(settings.masterVolume);
 
+    // Sub-volumes via WASM DSP (0-100 → 0-128 scale)
+    try {
+      const musicVol = settings.musicMuted ? 0 : Math.round(settings.musicVolume * 1.28);
+      mod.ccall('WasmSetMusicVolume', null, ['number'], [musicVol]);
+      const sfxVol = settings.sfxMuted ? 0 : Math.round(settings.sfxVolume * 1.28);
+      mod.ccall('WasmSetSfxVolume', null, ['number'], [sfxVol]);
+    } catch { /* WASM not rebuilt yet */ }
+
     // FPS display toggle (guard: function may not exist in older WASM builds)
     try {
       mod.ccall('WasmSetDisplayPerf', null, ['number'], [settings.displayPerfInTitle ? 1 : 0]);
@@ -169,6 +186,13 @@ function pushLiveSettings(settings: GameSettings): boolean {
       const hideHud = settings.hudMode === 'enhanced' && settings.hudEnhancedParts.includes('main');
       lastHudHidden = hideHud;
       mod.ccall('WasmSetHudHidden', null, ['number'], [hideHud ? 1 : 0]);
+    } catch { /* WASM not rebuilt yet */ }
+
+    // Hide native pause menu when enhanced pause overlay is active
+    try {
+      const hidePause = settings.hudMode === 'enhanced' && settings.hudEnhancedParts.includes('pause');
+      lastPauseHidden = hidePause;
+      mod.ccall('WasmSetPauseHidden', null, ['number'], [hidePause ? 1 : 0]);
     } catch { /* WASM not rebuilt yet */ }
 
     log.app(`Live settings pushed — features: 0x${features.toString(16)}, ppu: 0x${ppuFlags.toString(16)}`);
@@ -204,6 +228,18 @@ function reassertHudHidden(): void {
   } catch { /* ignore — WASM may not have this export */ }
 }
 
+/**
+ * Re-assert the current pauseHidden state to WASM.
+ * Called after state loads to ensure the flag isn't lost.
+ */
+function reassertPauseHidden(): void {
+  const mod = getModule();
+  if (!mod) return;
+  try {
+    mod.ccall('WasmSetPauseHidden', null, ['number'], [lastPauseHidden ? 1 : 0]);
+  } catch { /* ignore — WASM may not have this export */ }
+}
+
 /** Check if a setting change requires a game restart (i.e. it's NOT live-updatable). */
 function requiresRestart(changedKeys: (keyof GameSettings)[]): boolean {
   return changedKeys.some((k) => !LIVE_SETTINGS.has(k));
@@ -218,6 +254,8 @@ function primeLiveSettings(settings: GameSettings): void {
   lastBackdropBlack = !!settings.forceBackdropBlack;
   const hideHud = settings.hudMode === 'enhanced' && settings.hudEnhancedParts.includes('main');
   lastHudHidden = hideHud;
+  const hidePause = settings.hudMode === 'enhanced' && settings.hudEnhancedParts.includes('pause');
+  lastPauseHidden = hidePause;
 }
 
-export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, reassertHudHidden, requiresRestart, primeLiveSettings };
+export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, reassertHudHidden, reassertPauseHidden, requiresRestart, primeLiveSettings };

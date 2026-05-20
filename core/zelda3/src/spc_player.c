@@ -1223,11 +1223,16 @@ void SpcPlayer_GenerateSamples(SpcPlayer *p) {
 
   assert(p->dsp->sampleOffset <= 534);
 
+  // Sync SFX channel mask to DSP for per-group volume scaling
+  p->dsp->sfxChannelMask = p->is_chan_on;
+
   for (;;) {
     if (p->timer_cycles >= 64) {
       Spc_Loop_Part2(p, p->timer_cycles >> 6);
       Spc_Loop_Part1(p);
       p->timer_cycles &= 63;
+      // Re-sync after SPC tick may have changed channel allocation
+      p->dsp->sfxChannelMask = p->is_chan_on;
     }
 
     // sample rate 32000

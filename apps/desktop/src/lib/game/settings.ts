@@ -54,6 +54,10 @@ const DEFAULT_SETTINGS: GameSettings = {
   // Audio
   enableAudio: true,
   masterVolume: 100,
+  musicVolume: 100,
+  musicMuted: false,
+  sfxVolume: 100,
+  sfxMuted: false,
   audioFreq: 44100,
   audioChannels: 2,
   audioSamples: 2048,
@@ -69,10 +73,12 @@ const DEFAULT_SETTINGS: GameSettings = {
   hudMode: 'original',
   hudStyle: 'vanilla',
   hudRatio: 'match',
-  hudEnhancedParts: ['main'],
+  hudEnhancedParts: ['main', 'pause'],
   hudHeartMode: 'original',
   hudMagicMode: 'original',
   hudCountLayout: 'centered',
+  hudPauseStyle: 'vanilla',
+  hudPauseHighlight: 'box',
 
   // Controls
   activeInputProfileId: null,

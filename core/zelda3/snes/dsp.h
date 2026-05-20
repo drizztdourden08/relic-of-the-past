@@ -48,7 +48,11 @@ typedef struct DspChannel {
 
 struct Dsp {
   uint8_t *apu_ram;
-  // mirror ram
+  // sub-volume controls — placed before `ram` so they are NOT serialized by dsp_saveload
+  uint8_t musicVolume;    // music channels volume (0=mute, 128=full)
+  uint8_t sfxVolume;      // sfx channels volume (0=mute, 128=full)
+  uint8_t sfxChannelMask; // bitmask: bit i=1 means channel i is currently SFX
+  // mirror ram (serialization starts here — do NOT add fields below this line)
   uint8_t ram[0x80];
   // 8 channels
   DspChannel channel[8];
@@ -96,5 +100,7 @@ uint8_t dsp_read(Dsp* dsp, uint8_t adr);
 void dsp_write(Dsp* dsp, uint8_t adr, uint8_t val);
 void dsp_getSamples(Dsp* dsp, int16_t* sampleData, int samplesPerFrame, int numChannels);
 void dsp_saveload(Dsp *dsp, SaveLoadFunc *func, void *ctx);
+void dsp_setMusicVolume(Dsp* dsp, uint8_t volume);
+void dsp_setSfxVolume(Dsp* dsp, uint8_t volume);
 
 #endif

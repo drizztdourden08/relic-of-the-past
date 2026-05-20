@@ -51,6 +51,10 @@ interface GameSettings {
   // ─── Audio ───
   enableAudio: boolean;
   masterVolume: number; // 0-100
+  musicVolume: number; // 0-100
+  musicMuted: boolean;
+  sfxVolume: number; // 0-100
+  sfxMuted: boolean;
   audioFreq: number;
   audioChannels: 1 | 2;
   audioSamples: number;
@@ -70,6 +74,8 @@ interface GameSettings {
   hudHeartMode: 'original' | 'smooth';
   hudMagicMode: 'original' | 'accurate';
   hudCountLayout: 'centered' | 'original';
+  hudPauseStyle: 'vanilla' | 'enhanced';
+  hudPauseHighlight: 'box' | 'glow' | 'none';
 
   // ─── Controls ───
   activeInputProfileId: string | null;

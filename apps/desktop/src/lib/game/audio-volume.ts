@@ -7,6 +7,7 @@ import { getModule } from './wasm-bridge';
 
 let gainNode: GainNode | null = null;
 let pendingVolume: number | null = null;
+let pendingPollId: ReturnType<typeof setInterval> | null = null;
 
 function getSDL2Audio(): { audioContext: AudioContext; scriptProcessorNode: AudioNode } | null {
   const mod = getModule();
@@ -17,6 +18,32 @@ function getSDL2Audio(): { audioContext: AudioContext; scriptProcessorNode: Audi
   return { audioContext: sdl2.audioContext, scriptProcessorNode: sdl2.audio.scriptProcessorNode };
 }
 
+/** Stop any active pending-volume poll. */
+function clearPendingPoll(): void {
+  if (pendingPollId !== null) {
+    clearInterval(pendingPollId);
+    pendingPollId = null;
+  }
+}
+
+/** Start polling for SDL2 readiness so we can apply the pending volume. */
+function startPendingPoll(): void {
+  clearPendingPoll();
+  pendingPollId = setInterval(() => {
+    if (pendingVolume === null) {
+      clearPendingPoll();
+      return;
+    }
+    const sdl2 = getSDL2Audio();
+    if (sdl2) {
+      const vol = pendingVolume;
+      pendingVolume = null;
+      clearPendingPoll();
+      initMasterVolume(vol);
+    }
+  }, 50);
+}
+
 /**
  * Hook into the SDL2 audio pipeline to insert a master gain node.
  * Must be called after the WASM module is running and audio is initialized.
@@ -25,6 +52,7 @@ function initMasterVolume(volume: number): void {
   const sdl2 = getSDL2Audio();
   if (!sdl2) {
     pendingVolume = volume;
+    startPendingPoll();
     return;
   }
 
@@ -68,6 +96,7 @@ function getPendingVolume(): number | null {
 function resetMasterVolume(): void {
   gainNode = null;
   pendingVolume = null;
+  clearPendingPoll();
 }
 
 /**

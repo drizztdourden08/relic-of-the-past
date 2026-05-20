@@ -106,6 +106,9 @@ void dsp_reset(Dsp* dsp) {
   dsp->reset = true;
   dsp->masterVolumeL = 0;
   dsp->masterVolumeR = 0;
+  dsp->musicVolume = 128;
+  dsp->sfxVolume = 128;
+  dsp->sfxChannelMask = 0;
   dsp->noiseSample = -0x4000;
   dsp->noiseRate = 0;
   dsp->noiseCounter = 0;
@@ -134,8 +137,15 @@ void dsp_cycle(Dsp* dsp) {
   int totalR = 0;
   for(int i = 0; i < 8; i++) {
     dsp_cycleChannel(dsp, i);
-    totalL += (dsp->channel[i].sampleOut * dsp->channel[i].volumeL) >> 6;
-    totalR += (dsp->channel[i].sampleOut * dsp->channel[i].volumeR) >> 6;
+    // Apply sub-volume to sampleOut directly so it affects both main mix and echo input
+    uint8_t groupVol = (dsp->sfxChannelMask & (1 << i)) ? dsp->sfxVolume : dsp->musicVolume;
+    if (groupVol < 128) {
+      dsp->channel[i].sampleOut = (dsp->channel[i].sampleOut * groupVol) >> 7;
+    }
+    int sampleL = (dsp->channel[i].sampleOut * dsp->channel[i].volumeL) >> 6;
+    int sampleR = (dsp->channel[i].sampleOut * dsp->channel[i].volumeR) >> 6;
+    totalL += sampleL;
+    totalR += sampleR;
     totalL = totalL < -0x8000 ? -0x8000 : (totalL > 0x7fff ? 0x7fff : totalL); // clamp 16-bit
     totalR = totalR < -0x8000 ? -0x8000 : (totalR > 0x7fff ? 0x7fff : totalR); // clamp 16-bit
   }
@@ -656,4 +666,12 @@ void dsp_getSamples(Dsp* dsp, int16_t* sampleData, int samplesPerFrame, int numC
     }
   }
   dsp->sampleOffset = 0;
+}
+
+void dsp_setMusicVolume(Dsp* dsp, uint8_t volume) {
+  dsp->musicVolume = volume > 128 ? 128 : volume;
+}
+
+void dsp_setSfxVolume(Dsp* dsp, uint8_t volume) {
+  dsp->sfxVolume = volume > 128 ? 128 : volume;
 }
