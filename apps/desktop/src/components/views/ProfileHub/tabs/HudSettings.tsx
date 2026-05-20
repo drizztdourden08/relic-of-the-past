@@ -10,35 +10,50 @@ interface HudSettingsProps {
 
 const SECTIONS: Section[] = [
   {
-    id: 'hearts',
-    title: 'Hearts',
+    id: 'hud-display',
+    title: 'Display',
+    subsections: [
+      {
+        id: 'hud-mode',
+        title: 'HUD Mode',
+        items: [
+          { key: 'hudMode', label: 'HUD Mode', description: 'Original uses the game canvas HUD. Enhanced renders a separate overlay HUD.', keywords: 'hud mode original enhanced overlay' },
+        ],
+      },
+      {
+        id: 'hud-style',
+        title: 'Style',
+        items: [
+          { key: 'hudStyle', label: 'Style', description: 'Visual theme for the HUD overlay', keywords: 'hud style vanilla modern theme' },
+        ],
+      },
+      {
+        id: 'hud-ratio',
+        title: 'Ratio',
+        items: [
+          { key: 'hudRatio', label: 'Ratio', description: 'Aspect ratio for the HUD overlay. Match uses the current screen ratio.', keywords: 'hud ratio aspect match' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'hud-elements',
+    title: 'Elements',
     subsections: [
       {
         id: 'hearts-style',
-        title: 'Style',
+        title: 'Hearts',
         items: [
           { key: 'hudHeartMode', label: 'Heart Style', description: 'Visual style for the life hearts display', keywords: 'heart life health style' },
         ],
       },
-    ],
-  },
-  {
-    id: 'magic',
-    title: 'Magic Meter',
-    subsections: [
       {
         id: 'magic-style',
-        title: 'Style',
+        title: 'Magic Meter',
         items: [
           { key: 'hudMagicMode', label: 'Magic Meter Style', description: 'Visual style for the magic power meter', keywords: 'magic meter style bar' },
         ],
       },
-    ],
-  },
-  {
-    id: 'layout',
-    title: 'Layout',
-    subsections: [
       {
         id: 'layout-counts',
         title: 'Counters',
@@ -49,6 +64,41 @@ const SECTIONS: Section[] = [
     ],
   },
 ];
+
+const HUD_MODE_OPTIONS = [
+  { value: 'original', label: 'Original' },
+  { value: 'enhanced', label: 'Enhanced' },
+];
+
+const HUD_STYLE_OPTIONS = [
+  { value: 'vanilla', label: 'Vanilla' },
+  { value: 'modern', label: 'Modern', disabled: true },
+];
+
+const ASPECT_OPTIONS = [
+  { value: '4:3', label: '4:3' },
+  { value: '3:2', label: '3:2' },
+  { value: '16:9', label: '16:9' },
+  { value: '16:10', label: '16:10' },
+  { value: '18:9', label: '18:9' },
+];
+
+/** Convert ratio string to numeric value for comparison */
+function ratioToNum(r: string): number {
+  const [w, h] = r.split(':').map(Number);
+  return w / h;
+}
+
+function getHudRatioOptions(screenRatio: GameSettings['aspectRatio']) {
+  const screenVal = ratioToNum(screenRatio);
+  return [
+    { value: 'match' as const, label: 'Match' },
+    ...ASPECT_OPTIONS.map((opt) => ({
+      ...opt,
+      disabled: ratioToNum(opt.value) > screenVal,
+    })),
+  ];
+}
 
 const HEART_OPTIONS = [
   { value: 'original', label: 'Original' },
@@ -67,6 +117,33 @@ const COUNT_LAYOUT_OPTIONS = [
 
 function renderControl(key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null {
   switch (key) {
+    case 'hudMode':
+      return (
+        <SegmentedControl
+          label="HUD Mode"
+          value={settings.hudMode}
+          options={HUD_MODE_OPTIONS}
+          onChange={(v) => onChange({ hudMode: v as GameSettings['hudMode'] })}
+        />
+      );
+    case 'hudStyle':
+      return (
+        <SegmentedControl
+          label="Style"
+          value={settings.hudStyle}
+          options={HUD_STYLE_OPTIONS}
+          onChange={(v) => onChange({ hudStyle: v as GameSettings['hudStyle'] })}
+        />
+      );
+    case 'hudRatio':
+      return (
+        <SegmentedControl
+          label="Ratio"
+          value={settings.hudRatio}
+          options={getHudRatioOptions(settings.aspectRatio)}
+          onChange={(v) => onChange({ hudRatio: v as GameSettings['hudRatio'] })}
+        />
+      );
     case 'hudHeartMode':
       return (
         <SegmentedControl

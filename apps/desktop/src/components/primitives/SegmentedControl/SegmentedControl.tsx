@@ -60,7 +60,7 @@ const SegmentedControl = <T extends string = string>(props: SegmentedControlProp
             aria-checked={value === opt.value}
             className={`segmented__btn ${value === opt.value ? 'segmented__btn--active' : ''}`}
             onClick={() => onChange(opt.value)}
-            disabled={disabled}
+            disabled={disabled || opt.disabled}
           >
             {opt.label}
           </button>

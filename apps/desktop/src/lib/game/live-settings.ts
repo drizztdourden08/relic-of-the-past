@@ -121,6 +121,9 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   // Backdrop color (WASM flag, pushed live)
   'forceBackdropBlack',
   // HUD settings (React-only, no WASM restart needed)
+  'hudMode',
+  'hudStyle',
+  'hudRatio',
   'hudHeartMode',
   'hudMagicMode',
   'hudCountLayout',

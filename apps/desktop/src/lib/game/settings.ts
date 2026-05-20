@@ -66,6 +66,9 @@ const DEFAULT_SETTINGS: GameSettings = {
   forceBackdropBlack: false,
 
   // HUD
+  hudMode: 'original',
+  hudStyle: 'vanilla',
+  hudRatio: 'match',
   hudHeartMode: 'original',
   hudMagicMode: 'original',
   hudCountLayout: 'centered',

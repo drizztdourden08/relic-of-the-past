@@ -1,8 +1,13 @@
 /**
  * HudNumber — renders a multi-digit number using HUD digit sprites.
- * Fully flex-based. Each digit image is sized via scale, laid out with flex gap.
- * Drop shadow is achieved via CSS filter on a layered element.
+ * Plain flex row with SVG filter for down+right shadow (no diagonal).
  */
+
+/** SVG filter: shadow down and right only, no diagonal compounding */
+function digitShadowFilter(s: number): string {
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg'><filter id='s' color-interpolation-filters='sRGB'><feFlood flood-color='black' result='black'/><feComposite in='black' in2='SourceAlpha' operator='in' result='silhouette'/><feOffset in='silhouette' dx='${s}' dy='0' result='right'/><feOffset in='silhouette' dx='0' dy='${s}' result='down'/><feMerge><feMergeNode in='right'/><feMergeNode in='down'/><feMergeNode in='SourceGraphic'/></feMerge></filter></svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}#s")`;
+}
 
 interface HudNumberProps {
   value: number;
@@ -19,54 +24,21 @@ const HudNumber = (props: HudNumberProps) => {
     .padStart(digits, '0');
 
   const tile = 8 * scale;
-  const shadow = scale; // 1 SNES pixel
+  const shadow = scale;
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 0, imageRendering: 'pixelated' as const }}>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
       {str.split('').map((d, i) => (
-        <div key={i} style={{ position: 'relative', width: tile, height: tile, marginRight: i < str.length - 1 ? -2 * scale : 0 }}>
-          {/* Shadow — down */}
-          <img
-            src={`${spritesBase}hud-digit-${d}.png`}
-            width={tile}
-            height={tile}
-            draggable={false}
-            style={{
-              position: 'absolute',
-              left: 0,
-              top: shadow,
-              imageRendering: 'pixelated',
-              filter: 'brightness(0)',
-            }}
-          />
-          {/* Shadow — right */}
-          <img
-            src={`${spritesBase}hud-digit-${d}.png`}
-            width={tile}
-            height={tile}
-            draggable={false}
-            style={{
-              position: 'absolute',
-              left: shadow,
-              top: 0,
-              imageRendering: 'pixelated',
-              filter: 'brightness(0)',
-            }}
-          />
-          {/* Foreground */}
-          <img
-            src={`${spritesBase}hud-digit-${d}.png`}
-            width={tile}
-            height={tile}
-            draggable={false}
-            style={{
-              position: 'absolute',
-              left: 0,
-              top: 0,
-              imageRendering: 'pixelated',
-            }}
-          />
-        </div>
+        <img
+          key={i}
+          src={`${spritesBase}hud-digit-${d}.png`}
+          height={tile}
+          draggable={false}
+          style={{
+            imageRendering: 'pixelated',
+            filter: digitShadowFilter(shadow),
+          }}
+        />
       ))}
     </div>
   );

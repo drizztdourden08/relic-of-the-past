@@ -63,6 +63,9 @@ interface GameSettings {
   forceBackdropBlack: boolean;
 
   // ─── HUD ───
+  hudMode: 'original' | 'enhanced';
+  hudStyle: 'vanilla' | 'modern';
+  hudRatio: 'match' | '4:3' | '3:2' | '16:9' | '16:10' | '18:9';
   hudHeartMode: 'original' | 'smooth';
   hudMagicMode: 'original' | 'accurate';
   hudCountLayout: 'centered' | 'original';

@@ -93,6 +93,9 @@ const ProfileHub = (props: ProfileHubProps) => {
           const merged = mergeSettings(saved);
           setSettings(merged);
           useHudSettingsStore.getState().setHudSettings({
+            mode: merged.hudMode,
+            style: merged.hudStyle,
+            ratio: merged.hudRatio,
             heartMode: merged.hudHeartMode,
             magicMode: merged.hudMagicMode,
             countLayout: merged.hudCountLayout,
@@ -168,8 +171,11 @@ const ProfileHub = (props: ProfileHubProps) => {
       }
 
       // Sync HUD settings to store for live rendering
-      if ('hudHeartMode' in patch || 'hudMagicMode' in patch || 'hudCountLayout' in patch) {
+      if ('hudMode' in patch || 'hudStyle' in patch || 'hudRatio' in patch || 'hudHeartMode' in patch || 'hudMagicMode' in patch || 'hudCountLayout' in patch) {
         useHudSettingsStore.getState().setHudSettings({
+          mode: next.hudMode,
+          style: next.hudStyle,
+          ratio: next.hudRatio,
           heartMode: next.hudHeartMode,
           magicMode: next.hudMagicMode,
           countLayout: next.hudCountLayout,
