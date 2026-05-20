@@ -1,1 +1,1 @@
-export { HudSprite } from './HudSprite';
+export { HudSprite, outlineFilter } from './HudSprite';

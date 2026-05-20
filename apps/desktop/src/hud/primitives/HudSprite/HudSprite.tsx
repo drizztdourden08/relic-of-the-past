@@ -1,6 +1,6 @@
 /**
  * HudSprite — renders a single sprite image with pixel-perfect scaling.
- * Optionally adds a 1px (scaled) black outline/background behind the sprite.
+ * Optionally adds a 1px (scaled) drop-shadow outline following the alpha shape.
  */
 
 interface HudSpriteProps {
@@ -11,46 +11,43 @@ interface HudSpriteProps {
   scale: number;
 }
 
+/**
+ * Generates a CSS filter using an inline SVG with two feMorphology passes
+ * (horizontal + vertical dilate merged) to create a cross-shaped outline.
+ * No diagonal spread. Radius = scale (1 SNES pixel thick).
+ */
+function outlineFilter(s: number): string {
+  const svg = [
+    `<svg xmlns='http://www.w3.org/2000/svg'>`,
+    `<filter id='o' x='-10%' y='-10%' width='120%' height='120%' color-interpolation-filters='sRGB'>`,
+    `<feMorphology in='SourceAlpha' operator='dilate' radius='${s} 0' result='h'/>`,
+    `<feMorphology in='SourceAlpha' operator='dilate' radius='0 ${s}' result='v'/>`,
+    `<feMerge result='d'><feMergeNode in='h'/><feMergeNode in='v'/></feMerge>`,
+    `<feFlood flood-color='black' result='c'/>`,
+    `<feComposite in='c' in2='d' operator='in' result='outline'/>`,
+    `<feMerge><feMergeNode in='outline'/><feMergeNode in='SourceGraphic'/></feMerge>`,
+    `</filter></svg>`,
+  ].join('');
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}#o")`;
+}
+
 const HudSprite = (props: HudSpriteProps) => {
   const { src, width, height, outline = false, scale } = props;
-  const border = outline ? scale : 0;
-
-  if (!outline) {
-    return (
-      <img
-        src={src}
-        width={width}
-        height={height}
-        draggable={false}
-        style={{ display: 'block', imageRendering: 'pixelated' }}
-      />
-    );
-  }
 
   return (
-    <div style={{
-      position: 'relative',
-      width: width + border * 2,
-      height: height + border * 2,
-      background: '#000',
-      imageRendering: 'pixelated',
-    }}>
-      <img
-        src={src}
-        width={width}
-        height={height}
-        draggable={false}
-        style={{
-          display: 'block',
-          imageRendering: 'pixelated',
-          position: 'relative',
-          left: border,
-          top: border,
-        }}
-      />
-    </div>
+    <img
+      src={src}
+      width={width}
+      height={height}
+      draggable={false}
+      style={{
+        display: 'block',
+        imageRendering: 'pixelated',
+        filter: outline ? outlineFilter(scale) : undefined,
+      }}
+    />
   );
 };
 
-export { HudSprite };
+export { HudSprite, outlineFilter };
 export type { HudSpriteProps };

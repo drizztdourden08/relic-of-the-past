@@ -49,25 +49,13 @@ const HudLife = (props: HudLifeProps) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: 10 * tile }}>
       {/* LIFE label — centered */}
-      <div style={{ position: 'relative', height: tile + shadow, display: 'flex', justifyContent: 'center' }}>
-        {/* Shadow */}
-        <div style={{ position: 'absolute', top: shadow, left: 0, width: '100%', display: 'flex', justifyContent: 'center' }}>
-          <img src={`${spritesBase}hud-life-dash-left.png`} height={tile} draggable={false}
-            style={{ imageRendering: 'pixelated', filter: 'brightness(0)' }} />
-          <img src={`${spritesBase}hud-life-text.png`} height={tile} draggable={false}
-            style={{ imageRendering: 'pixelated', filter: 'brightness(0)' }} />
-          <img src={`${spritesBase}hud-life-dash-right.png`} height={tile} draggable={false}
-            style={{ imageRendering: 'pixelated', filter: 'brightness(0)' }} />
-        </div>
-        {/* Foreground */}
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', display: 'flex', justifyContent: 'center' }}>
-          <img src={`${spritesBase}hud-life-dash-left.png`} height={tile} draggable={false}
-            style={{ imageRendering: 'pixelated' }} />
-          <img src={`${spritesBase}hud-life-text.png`} height={tile} draggable={false}
-            style={{ imageRendering: 'pixelated' }} />
-          <img src={`${spritesBase}hud-life-dash-right.png`} height={tile} draggable={false}
-            style={{ imageRendering: 'pixelated' }} />
-        </div>
+      <div style={{ display: 'flex', justifyContent: 'center', height: tile + shadow }}>
+        <img src={`${spritesBase}hud-life-dash-left.png`} height={tile} draggable={false}
+          style={{ imageRendering: 'pixelated', filter: `drop-shadow(0 ${shadow}px 0 black) drop-shadow(${-shadow}px 0 0 black) drop-shadow(${shadow}px 0 0 black)` }} />
+        <img src={`${spritesBase}hud-life-text.png`} height={tile} draggable={false}
+          style={{ imageRendering: 'pixelated', filter: `drop-shadow(${shadow}px 0 0 black) drop-shadow(0 ${shadow}px 0 black)` }} />
+        <img src={`${spritesBase}hud-life-dash-right.png`} height={tile} draggable={false}
+          style={{ imageRendering: 'pixelated', filter: `drop-shadow(0 ${shadow}px 0 black) drop-shadow(${-shadow}px 0 0 black) drop-shadow(${shadow}px 0 0 black)` }} />
       </div>
 
       {/* Hearts — wrap naturally (10 per row at tile width) */}

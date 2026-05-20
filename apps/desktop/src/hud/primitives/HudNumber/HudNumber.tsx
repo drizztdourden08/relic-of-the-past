@@ -25,7 +25,21 @@ const HudNumber = (props: HudNumberProps) => {
     <div style={{ display: 'flex', alignItems: 'center', gap: 0, imageRendering: 'pixelated' as const }}>
       {str.split('').map((d, i) => (
         <div key={i} style={{ position: 'relative', width: tile, height: tile, marginRight: i < str.length - 1 ? -2 * scale : 0 }}>
-          {/* Shadow */}
+          {/* Shadow — down */}
+          <img
+            src={`${spritesBase}hud-digit-${d}.png`}
+            width={tile}
+            height={tile}
+            draggable={false}
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: shadow,
+              imageRendering: 'pixelated',
+              filter: 'brightness(0)',
+            }}
+          />
+          {/* Shadow — right */}
           <img
             src={`${spritesBase}hud-digit-${d}.png`}
             width={tile}
@@ -34,7 +48,7 @@ const HudNumber = (props: HudNumberProps) => {
             style={{
               position: 'absolute',
               left: shadow,
-              top: shadow,
+              top: 0,
               imageRendering: 'pixelated',
               filter: 'brightness(0)',
             }}

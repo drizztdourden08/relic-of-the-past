@@ -78,7 +78,7 @@ const HudView = () => {
               />
             </div>
             {countLayout === 'original' && (
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: tile * 0.5 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: tile }}>
                 {counts}
               </div>
             )}
@@ -86,7 +86,7 @@ const HudView = () => {
 
           {/* Middle group: counts (centered mode only) */}
           {countLayout === 'centered' && (
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: tile * 0.5 }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: tile }}>
               {counts}
             </div>
           )}

@@ -1,3 +1,5 @@
+import { outlineFilter } from '../../primitives/HudSprite';
+
 type MagicMeterMode = 'original' | 'accurate';
 
 interface HudMagicMeterProps {
@@ -42,6 +44,7 @@ const HudMagicMeter = (props: HudMagicMeterProps) => {
       width: frameW - inset * 2,
       height: frameH - inset * 2,
       background: 'black',
+      zIndex: 0,
     }} />
   );
 
@@ -49,7 +52,9 @@ const HudMagicMeter = (props: HudMagicMeterProps) => {
     return (
       <div style={{ width: frameW, height: frameH, position: 'relative', imageRendering: 'pixelated' as const }}>
         {interiorFill}
-        <MagicOriginal tile={tile} spritesBase={spritesBase} fillLevel={fillLevel} />
+        <div style={{ position: 'absolute', inset: 0, zIndex: 2, filter: outlineFilter(scale) }}>
+          <MagicOriginal tile={tile} spritesBase={spritesBase} fillLevel={fillLevel} />
+        </div>
       </div>
     );
   }
@@ -126,62 +131,63 @@ function MagicOriginal(props: { tile: number; spritesBase: string; fillLevel: nu
 function MagicAccurate(props: { tile: number; scale: number; spritesBase: string; value: number }) {
   const { tile, scale, spritesBase, value } = props;
 
-  const interiorH = 4 * tile;
+  const inset = tile * 0.8;
+  const interiorW = tile * 3 - inset * 2;
+  const interiorH = tile * 6 - inset * 2;
   const fillFraction = Math.min(Math.max(value / 128, 0), 1);
   const fillH = fillFraction * interiorH;
+  const whiteInset = 2 * scale; // white line is narrower than fill
 
   return (
     <>
-      {/* Frame */}
-      <img src={`${spritesBase}hud-magic-tl.png`} width={tile} height={tile} draggable={false}
-        style={{ position: 'absolute', left: 0, top: 0, imageRendering: 'pixelated' }} />
-      <img src={`${spritesBase}hud-magic-top.png`} width={tile} height={tile} draggable={false}
-        style={{ position: 'absolute', left: tile, top: 0, imageRendering: 'pixelated' }} />
-      <img src={`${spritesBase}hud-magic-tr.png`} width={tile} height={tile} draggable={false}
-        style={{ position: 'absolute', left: tile * 2, top: 0, imageRendering: 'pixelated' }} />
-      {Array.from({ length: 4 }).map((_, i) => (
-        <div key={i}>
-          <img src={`${spritesBase}hud-magic-left.png`} width={tile} height={tile} draggable={false}
-            style={{ position: 'absolute', left: 0, top: tile * (i + 1), imageRendering: 'pixelated' }} />
-          <img src={`${spritesBase}hud-magic-right.png`} width={tile} height={tile} draggable={false}
-            style={{ position: 'absolute', left: tile * 2, top: tile * (i + 1), imageRendering: 'pixelated' }} />
-        </div>
-      ))}
-      <img src={`${spritesBase}hud-magic-bl.png`} width={tile} height={tile} draggable={false}
-        style={{ position: 'absolute', left: 0, top: tile * 5, imageRendering: 'pixelated' }} />
-      <img src={`${spritesBase}hud-magic-bottom.png`} width={tile} height={tile} draggable={false}
-        style={{ position: 'absolute', left: tile, top: tile * 5, imageRendering: 'pixelated' }} />
-      <img src={`${spritesBase}hud-magic-br.png`} width={tile} height={tile} draggable={false}
-        style={{ position: 'absolute', left: tile * 2, top: tile * 5, imageRendering: 'pixelated' }} />
+      {/* Frame border tiles (z:2 — above black bg and green fill) */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 2, filter: outlineFilter(scale) }}>
+        <img src={`${spritesBase}hud-magic-tl.png`} width={tile} height={tile} draggable={false}
+          style={{ position: 'absolute', left: 0, top: 0, imageRendering: 'pixelated' }} />
+        <img src={`${spritesBase}hud-magic-top.png`} width={tile} height={tile} draggable={false}
+          style={{ position: 'absolute', left: tile, top: 0, imageRendering: 'pixelated' }} />
+        <img src={`${spritesBase}hud-magic-tr.png`} width={tile} height={tile} draggable={false}
+          style={{ position: 'absolute', left: tile * 2, top: 0, imageRendering: 'pixelated' }} />
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i}>
+            <img src={`${spritesBase}hud-magic-left.png`} width={tile} height={tile} draggable={false}
+              style={{ position: 'absolute', left: 0, top: tile * (i + 1), imageRendering: 'pixelated' }} />
+            <img src={`${spritesBase}hud-magic-right.png`} width={tile} height={tile} draggable={false}
+              style={{ position: 'absolute', left: tile * 2, top: tile * (i + 1), imageRendering: 'pixelated' }} />
+          </div>
+        ))}
+        <img src={`${spritesBase}hud-magic-bl.png`} width={tile} height={tile} draggable={false}
+          style={{ position: 'absolute', left: 0, top: tile * 5, imageRendering: 'pixelated' }} />
+        <img src={`${spritesBase}hud-magic-bottom.png`} width={tile} height={tile} draggable={false}
+          style={{ position: 'absolute', left: tile, top: tile * 5, imageRendering: 'pixelated' }} />
+        <img src={`${spritesBase}hud-magic-br.png`} width={tile} height={tile} draggable={false}
+          style={{ position: 'absolute', left: tile * 2, top: tile * 5, imageRendering: 'pixelated' }} />
+      </div>
 
-      {/* CSS fill (1 tile wide × 4 tiles tall interior) */}
-      <div style={{
-        position: 'absolute',
-        left: tile,
-        top: tile,
-        width: tile,
-        height: interiorH,
-        overflow: 'hidden',
-      }}>
+      {/* Green fill — percentage-based, grows from bottom */}
+      {fillFraction > 0 && (
         <div style={{
           position: 'absolute',
-          bottom: 0,
-          left: 0,
-          width: tile,
+          left: inset,
+          bottom: inset,
+          width: interiorW,
           height: fillH,
           backgroundColor: MAGIC_GREEN,
-        }} />
-        {fillFraction > 0 && fillFraction < 1 && (
-          <div style={{
-            position: 'absolute',
-            left: 0,
-            bottom: fillH,
-            width: tile,
-            height: scale,
-            backgroundColor: MAGIC_WHITE,
-          }} />
-        )}
-      </div>
+          zIndex: 1,
+        }}>
+          {/* White cap line at top of green fill */}
+          {fillFraction < 1 && (
+            <div style={{
+              position: 'absolute',
+              left: whiteInset,
+              top: 0,
+              width: interiorW - whiteInset * 2,
+              height: scale,
+              backgroundColor: MAGIC_WHITE,
+            }} />
+          )}
+        </div>
+      )}
     </>
   );
 }
