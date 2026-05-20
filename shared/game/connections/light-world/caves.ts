@@ -14,6 +14,7 @@ export const LW_CAVE_CONNECTIONS: RegionConnection[] = [
 
   // East / Graveyard
   { from: 'kings-grave-area', to: 'kings-grave', entrance: 'Kings Grave', tags: ['transit:grave', 'dir:one-way', 'ctx:entrance', 'barrier:gloves'] },
+  { from: 'kings-grave', to: 'kings-grave-area', entrance: 'Kings Grave Exit', tags: ['transit:door', 'dir:one-way', 'ctx:exit'] },
   { from: 'graveyard-ledge', to: 'graveyard-cave', entrance: 'Graveyard Cave', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
 
   // South / Lake Hylia

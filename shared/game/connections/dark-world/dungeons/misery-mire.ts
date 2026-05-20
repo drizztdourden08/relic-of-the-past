@@ -1,7 +1,7 @@
 import type { RegionConnection } from '../../../types';
 
 export const DW_MISERY_MIRE_CONNECTIONS: RegionConnection[] = [
-  { from: 'overworld', to: 'mm-0x98', entrance: 'Mire Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter', 'barrier:medallion'] },
+  { from: 'dw-30', to: 'mm-0x98', entrance: 'Mire Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter', 'barrier:medallion'] },
   { from: 'mm-0x90', to: 'mm-0xa0', entrance: 'Boss Return', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'mm-0x91', to: 'mm-0xa1', entrance: 'South Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
   { from: 'mm-0x91', to: 'mm-0x92', entrance: 'West Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
@@ -30,6 +30,6 @@ export const DW_MISERY_MIRE_CONNECTIONS: RegionConnection[] = [
   { from: 'mm-0xb1', to: 'mm-0xb2', entrance: 'Key Door', tags: ['transit:walk', 'dir:two-way', 'ctx:internal', 'barrier:small-key'] },
   { from: 'mm-0xc1', to: 'mm-0xd1', entrance: 'Key Door South', tags: ['transit:walk', 'dir:two-way', 'ctx:internal', 'barrier:small-key'] },
   { from: 'mm-0x91', to: 'mm-0x92', entrance: 'Dark Cane Walk', tags: ['transit:walk', 'dir:two-way', 'ctx:internal', 'barrier:dark'] },
-  { from: 'mm-0x98', to: 'dw-70', entrance: 'Mire Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
-  { from: 'mm-0x97', to: 'dw-70', entrance: 'Compass Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+  { from: 'mm-0x98', to: 'dw-30', entrance: 'Mire Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+  { from: 'mm-0x97', to: 'dw-30', entrance: 'Compass Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
 ];

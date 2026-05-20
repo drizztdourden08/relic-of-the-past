@@ -1,7 +1,7 @@
 import type { RegionConnection } from '../../../types';
 
 export const DW_GANONS_TOWER_CONNECTIONS: RegionConnection[] = [
-  { from: 'overworld', to: 'gt-0x9b', entrance: 'Tower Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter', 'barrier:crystals'] },
+  { from: 'dw-03', to: 'gt-0x9b', entrance: 'Tower Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter', 'barrier:crystals'] },
   { from: 'gt-0x05', to: 'gt-0xa5', entrance: 'Wizzrobe Return', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'gt-0x0c', to: 'gt-0x0d', entrance: 'East to Agahnim', tags: ['transit:walk', 'dir:two-way', 'ctx:boss'] },
   { from: 'gt-0x0c', to: 'gt-0x1c', entrance: 'South Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
@@ -49,8 +49,8 @@ export const DW_GANONS_TOWER_CONNECTIONS: RegionConnection[] = [
   { from: 'gt-0x5b', to: 'gt-0x3c', entrance: 'Gauntlet Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'gt-0x9b', to: 'gt-0x8b', entrance: 'Hub Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal', 'barrier:small-key'] },
   { from: 'gt-0x7b', to: 'gt-0x5b', entrance: 'Gauntlet Entry', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
-  { from: 'gt-0x9b', to: 'dw-43', entrance: 'Tower Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
-  { from: 'gt-0x0c', to: 'dw-43', entrance: 'Ganon Warp', tags: ['transit:warp', 'dir:one-way', 'ctx:exit'] },
+  { from: 'gt-0x9b', to: 'dw-03', entrance: 'Tower Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+  { from: 'gt-0x0c', to: 'dw-03', entrance: 'Ganon Warp', tags: ['transit:warp', 'dir:one-way', 'ctx:exit'] },
   { from: 'gt-0x3c', to: 'gt-0x1c', entrance: 'Ascent Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'gt-0x6b', to: 'gt-0x5b', entrance: 'Gauntlet Entry 2', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'gt-0x9c', to: 'gt-0x8c', entrance: 'Left Path Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },

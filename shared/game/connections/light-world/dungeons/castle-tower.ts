@@ -1,7 +1,7 @@
 import type { RegionConnection } from '../../../types';
 
 export const LW_CASTLE_TOWER_CONNECTIONS: RegionConnection[] = [
-  { from: 'overworld', to: 'ct-0xe0', entrance: 'Tower Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'lw-1b', to: 'ct-0xe0', entrance: 'Tower Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'ct-0x20', to: 'ct-0x30', entrance: 'Descent Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'ct-0x30', to: 'ct-0x40', entrance: 'Descent Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'ct-0x40', to: 'ct-0xb0', entrance: 'Descent Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },

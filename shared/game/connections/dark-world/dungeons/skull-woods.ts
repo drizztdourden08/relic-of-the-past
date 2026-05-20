@@ -1,10 +1,10 @@
 import type { RegionConnection } from '../../../types';
 
 export const DW_SKULL_WOODS_CONNECTIONS: RegionConnection[] = [
-  { from: 'overworld', to: 'sw-0x59', entrance: 'Pot Circle Hole', tags: ['transit:hole', 'dir:one-way', 'ctx:dungeon-enter'] },
-  { from: 'overworld', to: 'sw-0x57', entrance: 'West Entrance', tags: ['transit:hole', 'dir:one-way', 'ctx:dungeon-enter'] },
-  { from: 'overworld', to: 'sw-0x58', entrance: 'Main Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
-  { from: 'overworld', to: 'sw-0x56', entrance: 'Big Chest Entrance', tags: ['transit:hole', 'dir:one-way', 'ctx:dungeon-enter'] },
+  { from: 'dw-00', to: 'sw-0x59', entrance: 'Pot Circle Hole', tags: ['transit:hole', 'dir:one-way', 'ctx:dungeon-enter'] },
+  { from: 'dw-00', to: 'sw-0x57', entrance: 'West Entrance', tags: ['transit:hole', 'dir:one-way', 'ctx:dungeon-enter'] },
+  { from: 'dw-00', to: 'sw-0x58', entrance: 'Main Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'dw-00', to: 'sw-0x56', entrance: 'Big Chest Entrance', tags: ['transit:hole', 'dir:one-way', 'ctx:dungeon-enter'] },
   { from: 'sw-0x29', to: 'sw-0x39', entrance: 'Boss Return', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'sw-0x39', to: 'sw-0x49', entrance: 'South Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal', 'barrier:small-key'] },
   { from: 'sw-0x49', to: 'sw-0x59', entrance: 'South Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
@@ -19,7 +19,7 @@ export const DW_SKULL_WOODS_CONNECTIONS: RegionConnection[] = [
   { from: 'sw-0x29', to: 'sw-0x39', entrance: 'Boss Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:boss'] },
   { from: 'sw-0x49', to: 'sw-0x39', entrance: 'Key Door North', tags: ['transit:walk', 'dir:two-way', 'ctx:internal', 'barrier:small-key'] },
   { from: 'sw-0x68', to: 'sw-0x49', entrance: 'Fire Rod Passage', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal', 'barrier:fire'] },
-  { from: 'sw-0x56', to: 'dw-40', entrance: 'Big Chest Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
-  { from: 'sw-0x58', to: 'dw-40', entrance: 'Main Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
-  { from: 'sw-0x68', to: 'dw-40', entrance: 'South Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+  { from: 'sw-0x56', to: 'dw-00', entrance: 'Big Chest Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+  { from: 'sw-0x58', to: 'dw-00', entrance: 'Main Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+  { from: 'sw-0x68', to: 'dw-00', entrance: 'South Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
 ];

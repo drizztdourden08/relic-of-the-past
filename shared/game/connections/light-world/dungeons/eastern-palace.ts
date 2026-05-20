@@ -1,7 +1,7 @@
 import type { RegionConnection } from '../../../types';
 
 export const LW_EASTERN_PALACE_CONNECTIONS: RegionConnection[] = [
-  { from: 'overworld', to: 'ep-0xc9', entrance: 'Palace Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'lw-1e', to: 'ep-0xc9', entrance: 'Palace Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'ep-0x89', to: 'ep-0xa9', entrance: 'Big Key Door Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal', 'barrier:big-key'] },
   { from: 'ep-0x89', to: 'ep-0x99', entrance: 'South Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
   { from: 'ep-0x99', to: 'ep-0xda', entrance: 'Reward Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },

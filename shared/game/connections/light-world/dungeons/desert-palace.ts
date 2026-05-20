@@ -1,9 +1,9 @@
 import type { RegionConnection } from '../../../types';
 
 export const LW_DESERT_PALACE_CONNECTIONS: RegionConnection[] = [
-  { from: 'overworld', to: 'dp-0x84', entrance: 'Main Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
-  { from: 'overworld', to: 'dp-0x83', entrance: 'West Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
-  { from: 'overworld', to: 'dp-0x85', entrance: 'East Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'lw-30', to: 'dp-0x84', entrance: 'Main Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'lw-30', to: 'dp-0x83', entrance: 'West Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'lw-30', to: 'dp-0x85', entrance: 'East Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'dp-0x33', to: 'dp-0x43', entrance: 'Boss Door', tags: ['transit:walk', 'dir:two-way', 'ctx:boss', 'barrier:big-key'] },
   { from: 'dp-0x43', to: 'dp-0x53', entrance: 'South Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
   { from: 'dp-0x53', to: 'dp-0x63', entrance: 'South Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal', 'barrier:small-key'] },

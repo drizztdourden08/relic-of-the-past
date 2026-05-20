@@ -5,7 +5,7 @@ export const LW_PASSAGE_CONNECTIONS: RegionConnection[] = [
   { from: 'light-world', to: 'hyrule-castle-secret-entrance', entrance: 'Hyrule Castle Secret Entrance Drop', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance'] },
   { from: 'light-world-rain', to: 'hyrule-castle-secret-entrance', entrance: 'HC Secret Entrance Drop (Rain)', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance', 'barrier:event'] },
   { from: 'hyrule-castle-courtyard', to: 'hyrule-castle-secret-entrance', entrance: 'Hyrule Castle Secret Entrance Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:entrance'] },
-  { from: 'hyrule-castle-secret-entrance', to: 'hyrule-castle', entrance: 'Secret Passage to Castle', tags: ['transit:door', 'dir:one-way', 'ctx:internal'] },
+  { from: 'hyrule-castle-secret-entrance', to: 'lw-1b', entrance: 'Secret Passage to Castle', tags: ['transit:door', 'dir:one-way', 'ctx:internal'] },
 
   // Old Man Cave (connects death-mountain-entrance ↔ death-mountain)
   { from: 'death-mountain-entrance', to: 'old-man-cave', entrance: 'Old Man Cave (West)', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
@@ -35,4 +35,5 @@ export const LW_PASSAGE_CONNECTIONS: RegionConnection[] = [
   { from: 'fairy-ascension-ledge', to: 'fairy-ascension-cave-top', entrance: 'Fairy Ascension Cave (Top)', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'fairy-ascension-cave-bottom', to: 'fairy-ascension-cave-drop', entrance: 'Fairy Ascension Cave Climb', tags: ['transit:stairs', 'dir:one-way', 'ctx:internal'] },
   { from: 'fairy-ascension-cave-top', to: 'fairy-ascension-cave-drop', entrance: 'Fairy Ascension Cave Drop', tags: ['transit:hole', 'dir:one-way', 'ctx:internal'] },
+  { from: 'fairy-ascension-cave-drop', to: 'fairy-ascension-plateau', entrance: 'Fairy Ascension Cave Exit', tags: ['transit:door', 'dir:one-way', 'ctx:exit'] },
 ];

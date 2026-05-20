@@ -7,6 +7,8 @@ import { DW_OVERWORLD_DARK_NORTH_CONNECTIONS } from './dark-north';
 import { DW_OVERWORLD_DARK_SOUTH_CONNECTIONS } from './dark-south';
 import { DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS } from './skull-woods-area';
 import { DW_OVERWORLD_VILLAGE_CONNECTIONS } from './village-of-outcasts';
+import { DW_SCREEN_ADJACENCY_CONNECTIONS } from './screen-adjacency';
+import { DW_SCREEN_AREA_CONNECTIONS } from './screen-areas';
 
 export const DW_OVERWORLD_CONNECTIONS: RegionConnection[] = [
   ...DW_OVERWORLD_DARK_DEATH_MOUNTAIN_CONNECTIONS,
@@ -17,4 +19,6 @@ export const DW_OVERWORLD_CONNECTIONS: RegionConnection[] = [
   ...DW_OVERWORLD_DARK_SOUTH_CONNECTIONS,
   ...DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS,
   ...DW_OVERWORLD_VILLAGE_CONNECTIONS,
+  ...DW_SCREEN_ADJACENCY_CONNECTIONS,
+  ...DW_SCREEN_AREA_CONNECTIONS,
 ];

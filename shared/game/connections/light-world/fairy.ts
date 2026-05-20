@@ -6,6 +6,7 @@ export const LW_FAIRY_CONNECTIONS: RegionConnection[] = [
   { from: 'light-world', to: 'waterfall-of-wishing', entrance: 'Waterfall of Wishing', tags: ['transit:waterfall', 'dir:two-way', 'ctx:entrance', 'barrier:swim'] },
   { from: 'zoras-river', to: 'waterfall-of-wishing', entrance: 'Waterfall of Wishing', tags: ['transit:waterfall', 'dir:two-way', 'ctx:entrance', 'barrier:swim'] },
   { from: 'light-world', to: 'north-fairy-cave', entrance: 'North Fairy Cave Drop', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance'] },
+  { from: 'north-fairy-cave', to: 'light-world', entrance: 'North Fairy Cave Exit', tags: ['transit:door', 'dir:one-way', 'ctx:exit'] },
   { from: 'light-world', to: 'lake-hylia-healer-fairy', entrance: 'Lake Hylia Fairy', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'light-world', to: 'swamp-healer-fairy', entrance: 'Light Hype Fairy', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'light-world', to: 'desert-healer-fairy', entrance: 'Desert Fairy', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },

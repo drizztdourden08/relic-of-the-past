@@ -1,7 +1,7 @@
 import type { RegionConnection } from '../../../types';
 
 export const DW_ICE_PALACE_CONNECTIONS: RegionConnection[] = [
-  { from: 'overworld', to: 'ip-0x9e', entrance: 'Palace Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'dw-35', to: 'ip-0x9e', entrance: 'Palace Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'ip-0x0e', to: 'ip-0x1e', entrance: 'Boss Return', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'ip-0x1e', to: 'ip-0x1f', entrance: 'East Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
   { from: 'ip-0x1e', to: 'ip-0x2e', entrance: 'Slide Up', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
@@ -35,7 +35,7 @@ export const DW_ICE_PALACE_CONNECTIONS: RegionConnection[] = [
   { from: 'ip-0xde', to: 'ip-0xce', entrance: 'North Return', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
   { from: 'ip-0x9e', to: 'ip-0x8e', entrance: 'Big Key Door', tags: ['transit:walk', 'dir:two-way', 'ctx:internal', 'barrier:big-key'] },
   { from: 'ip-0x6e', to: 'ip-0x0e', entrance: 'Boss Door', tags: ['transit:walk', 'dir:two-way', 'ctx:boss', 'barrier:big-key'] },
-  { from: 'ip-0x9e', to: 'dw-75', entrance: 'Palace Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+  { from: 'ip-0x9e', to: 'dw-35', entrance: 'Palace Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
   { from: 'ip-0x5e', to: 'ip-0x4e', entrance: 'Bomb Floor Drop', tags: ['transit:hole', 'dir:one-way', 'ctx:internal'] },
   { from: 'ip-0x4f', to: 'ip-0x3f', entrance: 'Spike Drop', tags: ['transit:hole', 'dir:one-way', 'ctx:internal'] },
 ];

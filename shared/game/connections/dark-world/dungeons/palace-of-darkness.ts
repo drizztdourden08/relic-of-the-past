@@ -1,7 +1,7 @@
 import type { RegionConnection } from '../../../types';
 
 export const DW_PALACE_OF_DARKNESS_CONNECTIONS: RegionConnection[] = [
-  { from: 'overworld', to: 'pod-0x4a', entrance: 'Palace Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'dw-0a', to: 'pod-0x4a', entrance: 'Palace Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'pod-0x09', to: 'pod-0x4b', entrance: 'Dark Maze Stairs Up', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'pod-0x09', to: 'pod-0x4a', entrance: 'Entrance Hall Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'pod-0x09', to: 'pod-0x19', entrance: 'South Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
@@ -28,6 +28,6 @@ export const DW_PALACE_OF_DARKNESS_CONNECTIONS: RegionConnection[] = [
   { from: 'pod-0x4b', to: 'pod-0x1a', entrance: 'Warps Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'pod-0x5a', to: 'pod-0x0a', entrance: 'Return Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'pod-0x5a', to: 'pod-0x6a', entrance: 'South to Boss', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
-  { from: 'pod-0x4a', to: 'dw-4a', entrance: 'Palace Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
-  { from: 'pod-0x6a', to: 'dw-4a', entrance: 'Boss Reward Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+  { from: 'pod-0x4a', to: 'dw-0a', entrance: 'Palace Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+  { from: 'pod-0x6a', to: 'dw-0a', entrance: 'Boss Reward Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
 ];

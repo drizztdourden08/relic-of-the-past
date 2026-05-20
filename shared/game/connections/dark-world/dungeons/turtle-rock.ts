@@ -1,10 +1,10 @@
 import type { RegionConnection } from '../../../types';
 
 export const DW_TURTLE_ROCK_CONNECTIONS: RegionConnection[] = [
-  { from: 'overworld', to: 'tr-0xd5', entrance: 'Main Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter', 'barrier:medallion'] },
-  { from: 'overworld', to: 'tr-0xc5', entrance: 'Middle Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
-  { from: 'overworld', to: 'tr-0xc7', entrance: 'East Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
-  { from: 'overworld', to: 'tr-0xc4', entrance: 'West Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'dw-07', to: 'tr-0xd5', entrance: 'Main Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter', 'barrier:medallion'] },
+  { from: 'dw-07', to: 'tr-0xc5', entrance: 'Middle Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'dw-07', to: 'tr-0xc7', entrance: 'East Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'dw-07', to: 'tr-0xc4', entrance: 'West Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'tr-0x04', to: 'tr-0x14', entrance: 'Boss Return', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'tr-0x13', to: 'tr-0x14', entrance: 'East Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
   { from: 'tr-0x13', to: 'tr-0x23', entrance: 'South Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
@@ -28,9 +28,9 @@ export const DW_TURTLE_ROCK_CONNECTIONS: RegionConnection[] = [
   { from: 'tr-0xd5', to: 'tr-0xd6', entrance: 'East Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
   { from: 'tr-0xc5', to: 'tr-0xa4', entrance: 'Crystaroller Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'tr-0xc5', to: 'tr-0x13', entrance: 'Deep Descent Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal', 'barrier:small-key'] },
-  { from: 'tr-0xd5', to: 'dw-47', entrance: 'Main Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
-  { from: 'tr-0xc4', to: 'dw-47', entrance: 'West Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
-  { from: 'tr-0xc5', to: 'dw-47', entrance: 'Middle Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
-  { from: 'tr-0xc7', to: 'dw-47', entrance: 'East Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
-  { from: 'tr-0x04', to: 'dw-47', entrance: 'Boss Reward Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+  { from: 'tr-0xd5', to: 'dw-07', entrance: 'Main Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+  { from: 'tr-0xc4', to: 'dw-07', entrance: 'West Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+  { from: 'tr-0xc5', to: 'dw-07', entrance: 'Middle Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+  { from: 'tr-0xc7', to: 'dw-07', entrance: 'East Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+  { from: 'tr-0x04', to: 'dw-07', entrance: 'Boss Reward Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
 ];

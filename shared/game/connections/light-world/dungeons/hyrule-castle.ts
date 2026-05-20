@@ -1,14 +1,14 @@
 import type { RegionConnection } from '../../../types';
 
 export const LW_HYRULE_CASTLE_CONNECTIONS: RegionConnection[] = [
-  { from: 'overworld', to: 'hc-0x12', entrance: 'Sanctuary Door', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
-  { from: 'overworld', to: 'hc-0x60', entrance: 'West Wing Door', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
-  { from: 'overworld', to: 'hc-0x61', entrance: 'Main Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
-  { from: 'overworld', to: 'hc-0x62', entrance: 'East Wing Door', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
-  { from: 'overworld', to: 'hc-0x80', entrance: 'Secret Entrance', tags: ['transit:hole', 'dir:two-way', 'ctx:dungeon-enter'] },
-  { from: 'overworld', to: 'hc-0x51', entrance: 'Uncle\'s Passage', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
-  { from: 'overworld', to: 'hc-0x18', entrance: 'Sewers Drop', tags: ['transit:grave', 'dir:two-way', 'ctx:dungeon-enter'] },
-  { from: 'overworld', to: 'hc-0x11', entrance: 'Sewers Back Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'lw-13', to: 'hc-0x12', entrance: 'Sanctuary Door', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'lw-1b', to: 'hc-0x60', entrance: 'West Wing Door', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'lw-1b', to: 'hc-0x61', entrance: 'Main Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'lw-1b', to: 'hc-0x62', entrance: 'East Wing Door', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'lw-23', to: 'hc-0x80', entrance: 'Secret Entrance', tags: ['transit:hole', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'lw-2c', to: 'hc-0x51', entrance: 'Uncle\'s Passage', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'lw-14', to: 'hc-0x18', entrance: 'Sewers Drop', tags: ['transit:grave', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'lw-14', to: 'hc-0x11', entrance: 'Sewers Back Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'hc-0x01', to: 'hc-0x72', entrance: 'East Corridor Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'hc-0x01', to: 'hc-0x50', entrance: 'Cell Warp', tags: ['transit:warp', 'dir:two-way', 'ctx:internal'] },
   { from: 'hc-0x01', to: 'hc-0x52', entrance: 'Guard Room Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
