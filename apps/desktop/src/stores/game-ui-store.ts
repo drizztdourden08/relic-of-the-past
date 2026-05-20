@@ -24,7 +24,7 @@ const initialState: GameUIState = {
   equipment: { sword: 0, shield: 0, armor: 0, gloves: 0, boots: 0, flippers: 0, moonPearl: 0 },
   dungeonProgress: { pendants: 0, crystals: 0, maps: 0, compasses: 0, bigKeys: 0 },
   text: { messageId: 0, messagingModule: 0, renderPhase: 0, incrementalState: 0, choice: 0, waitTimer: 0, isActive: false },
-  map: { overworldMapState: 0, dungeonFloor: 0, dungeonIdx: 0, dungeonInitState: 0, palaceIndex: 0, roomIndex: 0, currentFloor: 0 },
+  map: { overworldMapState: 0, dungeonFloor: 0, dungeonIdx: 0, dungeonInitState: 0, palaceIndex: 0, roomIndex: 0, currentFloor: 0, overworldScreenIndex: 0, overworldAreaIndex: 0, isIndoors: false, isDarkWorld: false },
   floorIndicator: { timer: 0, floor: 0, isVisible: false },
   saveMenu: { cursorPosition: 0, sourceModule: 0, progressIndicator: 0 },
 };

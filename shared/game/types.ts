@@ -31,10 +31,33 @@ interface CheckDefinition {
 }
 
 interface RegionDefinition {
+  /** Unique ID: lw-XX for light world OW, dw-XX for dark world OW, room-XXX for indoor rooms */
   id: string;
+  /** Specific name of this screen/room */
   name: string;
   type: RegionType;
+  /** Native game screen/room index (unique within its type context) */
+  inGameIndex: number;
+  /** Dungeon name (for dungeon rooms) */
   dungeon?: string;
+
+  // ─── Notification Grouping ───
+  /** Area name shown in notifications. Shared across screens in the same zone.
+   *  Notification only fires when this changes between screens. */
+  displayName: string;
+  /** Room-specific detail shown smaller (e.g. "B1", "Entrance Hall") */
+  subtitle?: string;
+
+  // ─── Grid / Layout ───
+  /** Column in the 8×8 (OW) or 16×16 (dungeon) grid */
+  gridX?: number;
+  /** Row in the grid */
+  gridY?: number;
+  /** Dungeon floor (-1, 0, 1, 2...) */
+  floor?: number;
+  /** Overworld: is this a 2×2 merged "big" screen? */
+  big?: boolean;
+
   /** Namespaced tags for categorization (e.g. 'world:light', 'type:cave', 'area:kakariko') */
   tags: readonly RegionTag[];
 }
@@ -189,6 +212,10 @@ interface MapState {
   palaceIndex: number;
   roomIndex: number;
   currentFloor: number;
+  overworldScreenIndex: number;
+  overworldAreaIndex: number;
+  isIndoors: boolean;
+  isDarkWorld: boolean;
 }
 
 interface FloorIndicatorState {

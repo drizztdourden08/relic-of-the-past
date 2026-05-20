@@ -76,6 +76,10 @@ interface GameSettings {
   functionMappings?: FunctionMapping[];
   enhancedSaveSlotShortcut: boolean;
   saveHoldDuration: number; // seconds, 1-5
+
+  // ─── Notifications ───
+  showRegionNotification: boolean;
+  showTransitionNotification: boolean;
 }
 
 export type { GameSettings };

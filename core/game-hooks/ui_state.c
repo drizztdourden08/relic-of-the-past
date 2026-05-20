@@ -130,6 +130,13 @@ int WasmGetGameUIState(void) {
   // ─── Byte 108: Overlay mode echo ───
   b[108] = g_ui_overlay_mode;
 
+  // ─── Bytes 109–113: Location State ───
+  b[109] = (uint8)(overworld_screen_index & 0xFF);
+  b[110] = (uint8)((overworld_screen_index >> 8) & 0xFF);
+  b[111] = player_is_indoors;
+  b[112] = is_in_dark_world;
+  b[113] = (uint8)(overworld_area_index & 0xFF);
+
   return (int)g_ui_state_buf;
 }
 

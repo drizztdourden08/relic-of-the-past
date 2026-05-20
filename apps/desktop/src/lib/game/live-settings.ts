@@ -130,6 +130,9 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'hudHeartMode',
   'hudMagicMode',
   'hudCountLayout',
+  // Notification settings (React-only, no WASM restart needed)
+  'showRegionNotification',
+  'showTransitionNotification',
 ]);
 
 /** Push live-updatable settings to the running WASM module. Returns true if successful. */

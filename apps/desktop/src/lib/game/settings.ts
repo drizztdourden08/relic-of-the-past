@@ -78,6 +78,10 @@ const DEFAULT_SETTINGS: GameSettings = {
   activeInputProfileId: null,
   enhancedSaveSlotShortcut: true,
   saveHoldDuration: 2,
+
+  // Notifications
+  showRegionNotification: true,
+  showTransitionNotification: true,
 };
 
 function boolToIni(v: boolean): string {

@@ -13,6 +13,7 @@ export { HudLife } from './compounds/HudLife';
 
 // Views
 export { HudView } from './views/HudView';
+export { PauseMenuView } from './views/PauseMenuView';
 
 // Hooks
 export { useHud } from './hooks/useHud';

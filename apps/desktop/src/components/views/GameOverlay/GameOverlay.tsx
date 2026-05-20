@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { HudView } from '../../../hud';
+import { HudView, PauseMenuView } from '../../../hud';
 import { useHudSettingsStore } from '../../../stores/hud-settings-store';
 import { wasmGetMenuState } from '../../../lib/game';
 import '../../../hud/hud.css';
@@ -74,9 +74,9 @@ function GameOverlay({ width, height }: GameOverlayProps) {
               transition: isTransitioning ? `transform ${MENU_TRANSITION_MS}ms linear` : 'none',
             }}
           >
-            {/* Pause menu placeholder — hidden above viewport */}
+            {/* Pause menu — hidden above viewport, slides in on pause */}
             <div style={{ flex: '0 0 50%', position: 'relative' }}>
-              {/* TODO: Enhanced pause menu content goes here */}
+              <PauseMenuView />
             </div>
             {/* Enhanced HUD — visible during gameplay */}
             <div style={{ flex: '0 0 50%', position: 'relative' }}>

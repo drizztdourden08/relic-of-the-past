@@ -146,6 +146,12 @@ function parseGameUIBuffer(heap: Uint8Array, ptr: number): GameUIState {
   const order: number[] = [];
   for (let i = 0; i < 24; i++) order.push(b[p + 84 + i]);
 
+  // Location state (bytes 109–113)
+  const overworldScreenIndex = b[p + 109] | (b[p + 110] << 8);
+  const isIndoors = b[p + 111] !== 0;
+  const isDarkWorld = b[p + 112] !== 0;
+  const overworldAreaIndex = b[p + 113];
+
   // Derive mode
   const mode = deriveUIMode(mainModule, subModule, subSubModule, floorTimer);
 
@@ -173,6 +179,7 @@ function parseGameUIBuffer(heap: Uint8Array, ptr: number): GameUIState {
   const map: MapState = {
     overworldMapState, dungeonFloor, dungeonIdx, dungeonInitState,
     palaceIndex, roomIndex, currentFloor,
+    overworldScreenIndex, overworldAreaIndex, isIndoors, isDarkWorld,
   };
 
   const floorIndicator: FloorIndicatorState = {
@@ -226,6 +233,8 @@ function stateChanged(a: GameUIState, b: GameUIState): boolean {
   if (am.overworldMapState !== bm.overworldMapState || am.dungeonFloor !== bm.dungeonFloor) return true;
   if (am.dungeonIdx !== bm.dungeonIdx || am.roomIndex !== bm.roomIndex) return true;
   if (am.currentFloor !== bm.currentFloor || am.dungeonInitState !== bm.dungeonInitState) return true;
+  if (am.overworldScreenIndex !== bm.overworldScreenIndex || am.isIndoors !== bm.isIndoors) return true;
+  if (am.isDarkWorld !== bm.isDarkWorld || am.overworldAreaIndex !== bm.overworldAreaIndex) return true;
 
   const af = a.floorIndicator, bf = b.floorIndicator;
   if (af.timer !== bf.timer || af.isVisible !== bf.isVisible) return true;
