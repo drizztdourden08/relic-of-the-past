@@ -28,19 +28,29 @@ const GameLayer = (props: GameLayerProps) => {
   // Compute fitted size using shared hook (same formula for canvas + overlay)
   const fitSize = useCanvasFit(containerRef, bufSize.w, bufSize.h, stretch);
 
-  // Apply fitted size to canvases (they need direct DOM style manipulation)
+  // Apply fitted size to canvases (they need direct DOM style manipulation).
+  // Depends on `status` because SDL/Emscripten removes inline styles during
+  // WASM initialization — we must re-apply after it transitions to 'running'.
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const fxCanvas = fxCanvasRef.current;
-    if (canvas) {
-      canvas.style.width = `${fitSize.width}px`;
-      canvas.style.height = `${fitSize.height}px`;
+    const applyStyles = () => {
+      const canvas = canvasRef.current;
+      const fxCanvas = fxCanvasRef.current;
+      if (canvas) {
+        canvas.style.width = `${fitSize.width}px`;
+        canvas.style.height = `${fitSize.height}px`;
+      }
+      if (fxCanvas) {
+        fxCanvas.style.width = `${fitSize.width}px`;
+        fxCanvas.style.height = `${fitSize.height}px`;
+      }
+    };
+    applyStyles();
+    // Re-apply after a frame to override any SDL style manipulation during init
+    if (status === 'running') {
+      const id = requestAnimationFrame(applyStyles);
+      return () => cancelAnimationFrame(id);
     }
-    if (fxCanvas) {
-      fxCanvas.style.width = `${fitSize.width}px`;
-      fxCanvas.style.height = `${fitSize.height}px`;
-    }
-  }, [fitSize]);
+  }, [fitSize, status]);
 
   // Sync buffer size from canvas after WASM starts (SDL may change canvas.width/height)
   useEffect(() => {

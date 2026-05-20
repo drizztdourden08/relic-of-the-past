@@ -5,6 +5,7 @@
 #include "messaging.h"
 
 uint8 g_hud_hide_mask;
+uint8 g_pause_hide_mask;
 
 enum {
   kNewStyleInventory = 0,

@@ -8,7 +8,7 @@ import { HeroSaveCard } from '../../../compounds/HeroSaveCard';
 import { PlaySessionCard } from '../../../compounds/PlaySessionCard';
 import { Dialog } from '../../../composites/Dialog';
 import { listSessions } from '../../../../lib/game/session-tracker';
-import { saveState, loadState, subscribeGameState, reassertBackdropBlack } from '../../../../lib/game';
+import { saveState, loadState, subscribeGameState, reassertBackdropBlack, reassertHudHidden, reassertPauseHidden } from '../../../../lib/game';
 import { log } from '../../../../lib/log-bus';
 import './HomeTab.css';
 
@@ -243,6 +243,8 @@ const HomeTab = (props: HomeTabProps) => {
         mod.FS.writeFile('/saves/save98.sav', new Uint8Array(buffer));
         mod.ccall('WasmLoadState', null, ['number'], [98]);
         reassertBackdropBlack();
+        reassertHudHidden();
+        reassertPauseHidden();
         try { mod.FS.unlink('/saves/save98.sav'); } catch { /* ignore */ }
       }
     }
@@ -328,6 +330,8 @@ const HomeTab = (props: HomeTabProps) => {
         mod.FS.writeFile('/saves/save98.sav', new Uint8Array(buffer));
         mod.ccall('WasmLoadState', null, ['number'], [98]);
         reassertBackdropBlack();
+        reassertHudHidden();
+        reassertPauseHidden();
         try { mod.FS.unlink('/saves/save98.sav'); } catch { /* ignore */ }
       }
     }

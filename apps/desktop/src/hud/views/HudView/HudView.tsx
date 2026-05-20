@@ -32,8 +32,10 @@ const HudView = () => {
     const w = el.clientWidth;
     if (h <= 0 || w <= 0) return;
 
-    // Scale is always derived from height so HUD elements stay the same size
-    const newScale = h / SNES_HEIGHT;
+    // Scale derived from height — uses canvas native height to respect extendY (240-line mode)
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement | null;
+    const nativeH = canvas ? canvas.height / 2 : SNES_HEIGHT;
+    const newScale = h / nativeH;
     setScale(newScale);
 
     // Determine HUD content width based on chosen ratio

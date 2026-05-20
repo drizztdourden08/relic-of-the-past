@@ -8,6 +8,8 @@ interface HudSettings {
   heartMode: 'original' | 'smooth';
   magicMode: 'original' | 'accurate';
   countLayout: 'centered' | 'original';
+  pauseStyle: 'vanilla' | 'enhanced';
+  pauseHighlight: 'box' | 'glow' | 'none';
 }
 
 interface HudSettingsStore extends HudSettings {
@@ -18,10 +20,12 @@ const useHudSettingsStore = create<HudSettingsStore>()((set) => ({
   mode: 'original',
   style: 'vanilla',
   ratio: 'match',
-  enhancedParts: ['main'],
+  enhancedParts: ['main', 'pause'],
   heartMode: 'original',
   magicMode: 'original',
   countLayout: 'centered',
+  pauseStyle: 'vanilla',
+  pauseHighlight: 'box',
   setHudSettings: (patch) => set(patch),
 }));
 

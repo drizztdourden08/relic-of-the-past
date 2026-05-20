@@ -7,6 +7,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { HudView, PauseMenuView } from '../../../hud';
+import { LocationNotification } from '../../../hud/composites/LocationNotification';
+import { useLocationNotification } from '../../../hud/hooks/useLocationNotification';
 import { useHudSettingsStore } from '../../../stores/hud-settings-store';
 import { wasmGetMenuState } from '../../../lib/game';
 import '../../../hud/hud.css';
@@ -23,13 +25,18 @@ type MenuPhase = 'gameplay' | 'opening' | 'open' | 'closing';
 
 function GameOverlay({ width, height }: GameOverlayProps) {
   const { mode, enhancedParts } = useHudSettingsStore();
-  const showMainHud = mode === 'enhanced' && enhancedParts.includes('main');
+  const isEnhanced = mode === 'enhanced';
+  const showMainHud = isEnhanced && enhancedParts.includes('main');
+  const showPauseMenu = isEnhanced && enhancedParts.includes('pause');
   const [menuPhase, setMenuPhase] = useState<MenuPhase>('gameplay');
   const rafRef = useRef<number>(0);
 
-  // Poll WASM menu state each frame
+  // Subscribe to map changes → fire location notifications
+  useLocationNotification();
+
+  // Poll WASM menu state each frame — active whenever enhanced mode is on
   useEffect(() => {
-    if (!showMainHud) return;
+    if (!isEnhanced) return;
     const poll = () => {
       const state = wasmGetMenuState();
       const phase: MenuPhase =
@@ -42,9 +49,9 @@ function GameOverlay({ width, height }: GameOverlayProps) {
     };
     rafRef.current = requestAnimationFrame(poll);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [showMainHud]);
+  }, [isEnhanced]);
 
-  // Determine slide position: 0% = HUD visible, -100% = menu visible
+  // Determine slide position
   const isMenuVisible = menuPhase === 'opening' || menuPhase === 'open';
   const isTransitioning = menuPhase === 'opening' || menuPhase === 'closing';
 
@@ -62,7 +69,12 @@ function GameOverlay({ width, height }: GameOverlayProps) {
       }}
     >
       <div style={{ width, height, position: 'relative', overflow: 'hidden' }}>
-        {showMainHud && (
+        {/* Animation container — always present when enhanced mode is on.
+            Two slots stacked vertically (200% height): pause on top, HUD on bottom.
+            During gameplay translateY(-50%) shows the bottom (HUD) slot.
+            When pause opens, translateY(0) shows the top (pause) slot.
+            Slots are always present for stable layout; content is conditional. */}
+        {isEnhanced && (
           <div
             style={{
               position: 'absolute',
@@ -74,16 +86,18 @@ function GameOverlay({ width, height }: GameOverlayProps) {
               transition: isTransitioning ? `transform ${MENU_TRANSITION_MS}ms linear` : 'none',
             }}
           >
-            {/* Pause menu — hidden above viewport, slides in on pause */}
+            {/* Pause menu slot */}
             <div style={{ flex: '0 0 50%', position: 'relative' }}>
-              <PauseMenuView />
+              {showPauseMenu && <PauseMenuView />}
             </div>
-            {/* Enhanced HUD — visible during gameplay */}
+            {/* HUD slot */}
             <div style={{ flex: '0 0 50%', position: 'relative' }}>
-              <HudView />
+              {showMainHud && <HudView />}
             </div>
           </div>
         )}
+        {/* Location change notifications — always rendered when overlay is active */}
+        <LocationNotification />
       </div>
     </div>
   );

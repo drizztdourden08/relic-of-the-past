@@ -96,6 +96,253 @@ static bool Nmi_ShouldHideTile(uint16 tile, int position) {
 }
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Pause menu tile value arrays for per-component hiding.
+// Same pattern as HUD: each array lists tile values belonging to a
+// category. When the corresponding bit is set in g_pause_hide_mask,
+// matching tiles in the NMI_UploadTilemap buffer are replaced with 0x207f.
+// ---------------------------------------------------------------------------
+
+// Border tiles from Hud_DrawBox — corners, h-edges, v-edges with all
+// palette/flip variants. Palettes used: 1 (abilities), 2 (equipment/progress),
+// 3 (X items), 4 (L/R items), 7 (Y items).
+static const uint16 kPauseTiles_Borders[] = {
+  // Palette 1 (abilities box)
+  0x24FB, 0x64FB, 0xA4FB, 0xE4FB,  // corners (TL, TR, BL, BR)
+  0x24FC, 0x64FC,                    // v-edges (left, right)
+  0x24F9, 0xA4F9,                    // h-edges (top, bottom)
+  // Palette 2 (equipment, progress, selected item, bottle menu)
+  0x28FB, 0x68FB, 0xA8FB, 0xE8FB,
+  0x28FC, 0x68FC,
+  0x28F9, 0xA8F9,
+  // Palette 3 (X button items)
+  0x2CFB, 0x6CFB, 0xACFB, 0xECFB,
+  0x2CFC, 0x6CFC,
+  0x2CF9, 0xACF9,
+  // Palette 4 (L/R button items)
+  0x30FB, 0x70FB, 0xB0FB, 0xF0FB,
+  0x30FC, 0x70FC,
+  0x30F9, 0xB0F9,
+  // Palette 7 (Y button items)
+  0x3CFB, 0x7CFB, 0xBCFB, 0xFCFB,
+  0x3CFC, 0x7CFC,
+  0x3CF9, 0xBCF9,
+};
+#define kPauseTiles_Borders_Count (sizeof(kPauseTiles_Borders) / sizeof(kPauseTiles_Borders[0]))
+
+// Background fill tiles — the solid black interior of every box
+static const uint16 kPauseTiles_Fill[] = {
+  0x24F5,  // main fill (pal 1)
+  0x2CF5,  // ability box fill (pal 3)
+  0x20F5,  // empty item slot (pal 0)
+};
+#define kPauseTiles_Fill_Count (sizeof(kPauseTiles_Fill) / sizeof(kPauseTiles_Fill[0]))
+
+// All item icon tiles — every possible 2x2 item graphic from all
+// kHudItem* arrays. Covers inventory grid, equipment, abilities,
+// dungeon items, bottles, heart pieces.
+static const uint16 kPauseTiles_Items[] = {
+  // Bottles (empty, mushroom, potion variants, bee, faerie, good bee)
+  0x2044, 0x2045, 0x2046, 0x2047,
+  0x2837, 0x2838, 0x2839, 0x283a,
+  0x2cc3, 0x2cd3,
+  0x24d2, 0x64d2, 0x24e2, 0x24e3,
+  0x3cd2, 0x7cd2, 0x3ce2, 0x3ce3,
+  0x2cd2, 0x6cd2, 0x2ce2, 0x2ce3,
+  0x2855, 0x6855, 0x2c57, 0x2c5a,
+  // Bow (all levels)
+  0x28ba, 0x28bb, 0x28cb, 0x28e8, 0x28e9,
+  0x284a, 0x2849, 0x24ca,
+  // Boomerang (blue, red)
+  0x2cb8, 0x2cb9, 0x2cc9,
+  0x24b8, 0x24b9, 0x24c9,
+  // Hookshot
+  0x24f6, 0x24c0,
+  // Bombs
+  0x2cb2, 0x2cb3, 0x2cc2, 0x6cc2,
+  // Mushroom / Magic Powder
+  0x2444, 0x2445, 0x2446, 0x2447,
+  0x203b, 0x203c, 0x203d, 0x203e,
+  // Fire Rod
+  0x24b0, 0x24b1, 0x24c1,
+  // Ice Rod
+  0x2cb0, 0x2cbe, 0x2cc0, 0x2cc1,
+  // Bombos
+  0x287d, 0x287e, 0xe87e, 0xe87d,
+  // Ether
+  0x2876, 0x2877, 0xe877, 0xe876,
+  // Quake
+  0x2866, 0x2867, 0xe867, 0xe866,
+  // Lamp/Torch
+  0x24bc, 0x24bd, 0x24cc, 0x24cd,
+  // Hammer
+  0x20b6, 0x20b7, 0x20c6, 0x20c7,
+  // Flute (shovel, flute variants)
+  0x20d0, 0x20d1, 0x20e0, 0x20e1,
+  0x2cd4, 0x2cd5, 0x2ce4, 0x2ce5,
+  // Bug Net
+  0x3c40, 0x3c41, 0x2842, 0x3c43,
+  // Book of Mudora
+  0x3ca5, 0x3ca6, 0x3cd8, 0x3cd9,
+  // Cane of Somaria
+  0x24dc, 0x24dd, 0x24ec, 0x24ed,
+  // Cane of Byrna
+  0x2cdc, 0x2cdd, 0x2cec, 0x2ced,
+  // Magic Cape
+  0x24b4, 0x24b5, 0x24c4, 0x24c5,
+  // Magic Mirror (all states)
+  0x28de, 0x28df, 0x28ee, 0x28ef,
+  0x2c62, 0x2c63, 0x2c72, 0x2c73,
+  0x2886, 0x2887, 0x2888, 0x2889,
+  // Gloves (power, titan)
+  0x2130, 0x2131, 0x2140, 0x2141,
+  0x28da, 0x28db, 0x28ea, 0x28eb,
+  // Pegasus Boots
+  0x3429, 0x342a, 0x342b, 0x342c,
+  // Flippers
+  0x2c9a, 0x2c9b, 0x2c9d, 0x2c9e,
+  // Moon Pearl
+  0x2433, 0x2434, 0x2435, 0x2436,
+  // Swords (fighter, master, tempered, gold)
+  0x2c64, 0x2cce, 0x2c75, 0x3d25,
+  0x2c8a, 0x2c65, 0x2474, 0x3d26,
+  0x248a, 0x2465, 0x3c74, 0x2d48,
+  0x288a, 0x2865, 0x2c74, 0x2d39,
+  // Shields (fighter, fire, mirror)
+  0x2cfd, 0x6cfd, 0x2cfe, 0x6cfe,
+  0x34ff, 0x74ff, 0x349f, 0x749f,
+  0x2880, 0x2881, 0x288d, 0x288e,
+  // Armor (green, blue, red)
+  0x3c68, 0x7c68, 0x3c78, 0x7c78,
+  0x2c68, 0x6c68, 0x2c78, 0x6c78,
+  0x2468, 0x6468, 0x2478, 0x6478,
+  // Heart Pieces (1/4, 2/4, 3/4)
+  0x2484, 0x6484, 0x2485, 0x6485,
+  0x24ad, 0x64ad, 0x24ae,
+  // Palace Big Key / Crystal
+  0x28d6, 0x68d6, 0x28e6, 0x28e7,
+  0x354b, 0x354c, 0x354d, 0x354e,
+  // Dungeon Compass
+  0x24bf, 0x64bf, 0x2ccf, 0x6ccf,
+};
+#define kPauseTiles_Items_Count (sizeof(kPauseTiles_Items) / sizeof(kPauseTiles_Items[0]))
+
+// Progress icons — pendants and crystals (labels + icons)
+static const uint16 kPauseTiles_Progress[] = {
+  // Pendant label "PENDA" (from kProgressIconPendantsBg)
+  0x2521, 0x2522, 0x2523, 0x2524, 0x253F,
+  // Crystal label "CRYST"
+  0x252F, 0x2534, 0x2535, 0x2536, 0x2537,
+  // Empty pendant placeholders (pal 0)
+  0x213B, 0x213C, 0x213D, 0x213E,
+  // Empty pendant highlighted (pal 4)
+  0x313B, 0x313C, 0x313D, 0x313E,
+  // Pendant of Power (red, pal 1)
+  0x252B, 0x252C, 0x252D, 0x252E,
+  // Pendant of Wisdom (blue, pal 3)
+  0x2D2B, 0x2D2C, 0x2D2D, 0x2D2E,
+  // Pendant of Courage (green, pal 7)
+  0x3D2B, 0x3D2C, 0x3D2D, 0x3D2E,
+  // Empty crystal slots (pal 4)
+  0x3146, 0x3147,
+  // Filled crystal (pal 3)
+  0x2D44, 0x2D45,
+};
+#define kPauseTiles_Progress_Count (sizeof(kPauseTiles_Progress) / sizeof(kPauseTiles_Progress[0]))
+
+// Text tiles — item names, ability labels, equipment headers.
+// Covers the pal-1 alphabet (a-z), pal-3 ability alphabet, digits,
+// graphic text tiles, and section label tiles.
+static const uint16 kPauseTiles_Text[] = {
+  // Item name alphabet (pal 1): a-z + dash
+  0x2550, 0x2551, 0x2552, 0x2553, 0x2554, 0x2555, 0x2556, 0x2557,
+  0x2558, 0x2559, 0x255a, 0x255b, 0x255c, 0x255d, 0x255e, 0x255f,
+  0x2560, 0x2561, 0x2562, 0x2563, 0x2564, 0x2565, 0x2566, 0x2567,
+  0x2568, 0x2569, 0x256a,
+  // Bow/item graphic text tiles (pal 1)
+  0x256b, 0x256c, 0x256e, 0x256f,
+  0x2570, 0x2571, 0x2572, 0x2573, 0x2574, 0x2575, 0x2576, 0x2577,
+  0x2578, 0x2579, 0x257a, 0x257b, 0x257c, 0x257d, 0x257e, 0x257f,
+  // Digits in item text (pal 1)
+  0x2400, 0x2401, 0x2402, 0x2403, 0x2404,
+  0x2405, 0x2406, 0x2407, 0x2408, 0x2409,
+  // Ability text alphabet (pal 3): a-z subset + level numbers
+  0x2D50, 0x2D51, 0x2D52, 0x2D53, 0x2D54, 0x2D55, 0x2D56, 0x2D57,
+  0x2D58, 0x2D59, 0x2D5A, 0x2D5B, 0x2D5C, 0x2D5D, 0x2D5E, 0x2D5F,
+  0x2D60, 0x2D61, 0x2D62, 0x2D63, 0x2D64, 0x2D65, 0x2D66,
+  0x2D27, 0x2D28, 0x2D29,  // gloves "1", "2", "3"
+  // Ability misc (pal 3)
+  0x2C2E,  // middle dot
+  0x2C01, 0x2C18, 0x2C28,  // "A" "X" "0x28" graphics in ability row 7
+  // Equipment header tiles "EQUIP"
+  0x2479, 0x247A, 0x247B, 0x247C, 0x248C,
+  // Dungeon items header "D.ITEMS"
+  0x2469, 0x246A, 0x246B, 0x246C, 0x246D,
+};
+#define kPauseTiles_Text_Count (sizeof(kPauseTiles_Text) / sizeof(kPauseTiles_Text[0]))
+
+// UI elements — button letters, section markers, separator, flashing circle.
+static const uint16 kPauseTiles_UI[] = {
+  // Y button letter (pal 7)
+  0x3CF0, 0x3CF1,
+  // X button letter (pal 3)
+  0x2CF0, 0xACF0,
+  // L button letter (pal 4)
+  0x300E, 0x300F,
+  // R button letter (pal 4)
+  0x300C, 0x300D,
+  // A button (abilities section)
+  0xA4F0, 0x24F2,
+  // Section header markers (item grid "USE", abilities "DO")
+  0x246E, 0x246F, 0x2482, 0x2483,
+  // Equipment separator dots
+  0x28D7,
+  // Flashing selection circle — pal 7 (Y)
+  0x3C61, 0x7C61, 0x3C70, 0x7C70, 0xBC70, 0xFC70, 0xBC61, 0xFC61,
+  0x3C60, 0x7C60, 0xFC60, 0xBC60,
+  // Flashing selection circle — pal 3 (X)
+  0x2C61, 0x6C61, 0x2C70, 0x6C70, 0xAC70, 0xEC70, 0xAC61, 0xEC61,
+  0x2C60, 0x6C60, 0xEC60, 0xAC60,
+  // Flashing selection circle — pal 4 (L/R)
+  0x3061, 0x7061, 0x3070, 0x7070, 0xB070, 0xF070, 0xB061, 0xF061,
+  0x3060, 0x7060, 0xF060, 0xB060,
+};
+#define kPauseTiles_UI_Count (sizeof(kPauseTiles_UI) / sizeof(kPauseTiles_UI[0]))
+
+// Check if a tile value should be hidden given the active pause mask.
+static bool Nmi_ShouldHidePauseTile(uint16 tile) {
+  if (tile == 0x207f)
+    return false;
+  if (g_pause_hide_mask == PAUSE_HIDE_ALL)
+    return true;  // fast path: hide everything
+  if (g_pause_hide_mask & PAUSE_HIDE_BORDERS) {
+    for (int i = 0; i < (int)kPauseTiles_Borders_Count; i++)
+      if (tile == kPauseTiles_Borders[i]) return true;
+  }
+  if (g_pause_hide_mask & PAUSE_HIDE_FILL) {
+    for (int i = 0; i < (int)kPauseTiles_Fill_Count; i++)
+      if (tile == kPauseTiles_Fill[i]) return true;
+  }
+  if (g_pause_hide_mask & PAUSE_HIDE_ITEMS) {
+    for (int i = 0; i < (int)kPauseTiles_Items_Count; i++)
+      if (tile == kPauseTiles_Items[i]) return true;
+  }
+  if (g_pause_hide_mask & PAUSE_HIDE_PROGRESS) {
+    for (int i = 0; i < (int)kPauseTiles_Progress_Count; i++)
+      if (tile == kPauseTiles_Progress[i]) return true;
+  }
+  if (g_pause_hide_mask & PAUSE_HIDE_TEXT) {
+    for (int i = 0; i < (int)kPauseTiles_Text_Count; i++)
+      if (tile == kPauseTiles_Text[i]) return true;
+  }
+  if (g_pause_hide_mask & PAUSE_HIDE_UI) {
+    for (int i = 0; i < (int)kPauseTiles_UI_Count; i++)
+      if (tile == kPauseTiles_UI[i]) return true;
+  }
+  return false;
+}
+// ---------------------------------------------------------------------------
+
 static const uint8 kNmiVramAddrs[] = {
   0, 0, 4, 8, 12, 8, 12, 0, 4, 0, 8, 4, 12, 4, 12, 0,
   8, 16, 20, 24, 28, 24, 28, 16, 20, 16, 24, 20, 28, 20, 28, 16,
@@ -368,7 +615,15 @@ void NMI_DoUpdates() {  // 8089e0
 }
 
 void NMI_UploadTilemap() {  // 808cb0
-  memcpy(&g_zenv.vram[kNmiVramAddrs[BYTE(nmi_load_target_addr)] << 8], &g_ram[0x1000], 0x800);
+  uint16 *dst = &g_zenv.vram[kNmiVramAddrs[BYTE(nmi_load_target_addr)] << 8];
+  uint16 *src = (uint16 *)&g_ram[0x1000];
+
+  if (g_pause_hide_mask && BYTE(nmi_load_target_addr) == 0x22) {
+    for (int i = 0; i < 0x400; i++)
+      dst[i] = Nmi_ShouldHidePauseTile(src[i]) ? 0x207f : src[i];
+  } else {
+    memcpy(dst, src, 0x800);
+  }
 
   *(uint16 *)&g_ram[0x1000] = 0;
   nmi_disable_core_updates = 0;

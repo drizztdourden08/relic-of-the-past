@@ -4,6 +4,7 @@
  */
 
 import { useGameUIStore } from '../../stores/game-ui-store';
+import { useHudSettingsStore } from '../../stores/hud-settings-store';
 
 const ITEM_NAMES = [
   'Bow', 'Boomerang', 'Hookshot', 'Bombs', 'Mushroom/Powder',
@@ -27,8 +28,32 @@ function formatBitmask(value: number, bits: number): string {
 
 function DebugWidgetContent() {
   const state = useGameUIStore();
+  const hudSettings = useHudSettingsStore();
 
   const { mode, gameMode, hud, inventory, equipment, dungeonProgress, text, map, floorIndicator, saveMenu } = state;
+
+  const toggleMainPart = () => {
+    const parts = [...hudSettings.enhancedParts];
+    const hasMain = parts.includes('main');
+    const nextParts = hasMain
+      ? parts.filter(p => p !== 'main') as ('main' | 'pause')[]
+      : [...parts, 'main'] as ('main' | 'pause')[];
+    window.dispatchEvent(new CustomEvent('settings:change', { detail: { hudEnhancedParts: nextParts } }));
+  };
+
+  const togglePausePart = () => {
+    const parts = [...hudSettings.enhancedParts];
+    const hasPause = parts.includes('pause');
+    const nextParts = hasPause
+      ? parts.filter(p => p !== 'pause') as ('main' | 'pause')[]
+      : [...parts, 'pause'] as ('main' | 'pause')[];
+    window.dispatchEvent(new CustomEvent('settings:change', { detail: { hudEnhancedParts: nextParts } }));
+  };
+
+  const btnStyle: React.CSSProperties = {
+    background: '#333', color: '#0f0', border: '1px solid #0f0',
+    fontSize: '9px', padding: '2px 5px', cursor: 'pointer', fontFamily: 'monospace',
+  };
 
   return (
     <div
@@ -45,6 +70,14 @@ function DebugWidgetContent() {
         whiteSpace: 'pre',
       }}
     >
+      <div style={{ display: 'flex', gap: '4px', marginBottom: '4px', whiteSpace: 'normal' }}>
+        <button style={btnStyle} onClick={toggleMainPart}>
+          Main: {hudSettings.enhancedParts.includes('main') ? 'enhanced' : 'original'}
+        </button>
+        <button style={btnStyle} onClick={togglePausePart}>
+          Pause: {hudSettings.enhancedParts.includes('pause') ? 'enhanced' : 'original'}
+        </button>
+      </div>
 {`── MODE ──
 UI Mode: ${mode}
 Module: ${gameMode.mainModule} / Sub: ${gameMode.subModule} / SubSub: ${gameMode.subSubModule}

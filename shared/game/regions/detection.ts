@@ -15,6 +15,23 @@ export interface RegionLookup {
   byCaveRoom: Map<number, RegionDefinition>;
 }
 
+/** Maps dungeon name → palace index byte value used in the ROM */
+const DUNGEON_PALACE: Record<string, number> = {
+  'Hyrule Castle': 0,
+  'Eastern Palace': 2,
+  'Desert Palace': 4,
+  'Tower of Hera': 6,
+  'Palace of Darkness': 8,
+  'Swamp Palace': 10,
+  'Skull Woods': 12,
+  "Thieves' Town": 14,
+  'Ice Palace': 16,
+  'Misery Mire': 18,
+  'Turtle Rock': 20,
+  "Ganon's Tower": 22,
+  'Castle Tower': 24,
+};
+
 function buildRegionLookup(regions: RegionDefinition[] = ALL_REGIONS): RegionLookup {
   const byOverworldScreen = new Map<number, RegionDefinition>();
   const byDungeonRoom = new Map<string, RegionDefinition>();
@@ -28,9 +45,11 @@ function buildRegionLookup(regions: RegionDefinition[] = ALL_REGIONS): RegionLoo
       case 'darkWorld':
         byOverworldScreen.set(region.inGameIndex, region);
         break;
-      case 'dungeon':
-        byDungeonRoom.set(region.inGameIndex.toString(), region);
+      case 'dungeon': {
+        const palace = region.dungeon ? (DUNGEON_PALACE[region.dungeon] ?? 0) : 0;
+        byDungeonRoom.set(`${palace}:${region.inGameIndex}`, region);
         break;
+      }
       case 'cave':
         byCaveRoom.set(region.inGameIndex, region);
         break;
@@ -65,10 +84,11 @@ export function resolveCurrentRegion(
   if (isIndoors) {
     const dungeonIdx = palaceIndex >> 1;
     if (dungeonIdx <= 12) {
-      // Dungeon — key is room index (palace context narrows which dungeon)
-      return lookup.byDungeonRoom.get(roomIndex.toString()) ?? null;
+      // Try dungeon lookup first (palace-aware key prevents cross-dungeon collisions)
+      const dungeon = lookup.byDungeonRoom.get(`${palaceIndex}:${roomIndex}`);
+      if (dungeon) return dungeon;
     }
-    // Cave / house
+    // Cave / house (or a cave room that shares an index with a dungeon room)
     return lookup.byCaveRoom.get(roomIndex) ?? null;
   }
 

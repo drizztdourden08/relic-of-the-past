@@ -1,6 +1,7 @@
 import { BrowserWindow } from 'electron';
 import { join } from 'path';
 import { is } from '@electron-toolkit/utils';
+import { loadWindowState } from './window-state';
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -10,10 +11,13 @@ function getMainWindow(): BrowserWindow | null {
 
 function createWindow(): BrowserWindow {
   const noFocus = process.argv.includes('--no-focus');
+  const saved = loadWindowState();
 
   mainWindow = new BrowserWindow({
-    width: 1280,
-    height: 720,
+    width: saved.width,
+    height: saved.height,
+    x: saved.x,
+    y: saved.y,
     minWidth: 360,
     minHeight: 280,
     frame: false,
@@ -32,6 +36,13 @@ function createWindow(): BrowserWindow {
       nodeIntegration: false,
     },
   });
+
+  if (saved.isMaximized) {
+    mainWindow.maximize();
+  }
+  if (saved.isFullscreen) {
+    mainWindow.setFullScreen(true);
+  }
 
   if (noFocus) {
     mainWindow.showInactive();

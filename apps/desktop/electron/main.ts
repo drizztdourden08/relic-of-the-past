@@ -3,6 +3,7 @@ import { is } from '@electron-toolkit/utils';
 
 import { initPaths, ensureDataDirectories } from './lib/paths';
 import { createWindow, getMainWindow, registerWindowHandlers, registerAspectRatioHandlers } from './window';
+import { saveWindowState } from './window/window-state';
 import { registerDialogHandlers } from './dialogs/ipc-handlers';
 import { registerProfileHandlers, migrateDataFolder } from './profiles';
 import { registerRomHandlers } from './roms';
@@ -104,6 +105,11 @@ app.whenReady().then(async () => {
   mainWindow.on('unmaximize', () => mainWindow.webContents.send('window:maximized', false));
   mainWindow.on('enter-full-screen', () => mainWindow.webContents.send('window:fullscreen', true));
   mainWindow.on('leave-full-screen', () => mainWindow.webContents.send('window:fullscreen', false));
+
+  // Persist window size/position/mode on close
+  mainWindow.on('close', () => {
+    saveWindowState(mainWindow);
+  });
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

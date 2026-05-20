@@ -22,10 +22,17 @@ export interface NavigationResult {
 
 type AdjacencyList = Map<string, { to: string; entrance: string }[]>;
 
-function buildAdjacencyList(connections: RegionConnection[]): AdjacencyList {
+export interface PathfindingOptions {
+  /** Allow connections tagged with barrier:glitch. Default: false */
+  allowGlitches?: boolean;
+}
+
+function buildAdjacencyList(connections: RegionConnection[], options: PathfindingOptions = {}): AdjacencyList {
+  const { allowGlitches = false } = options;
   const adj: AdjacencyList = new Map();
 
   for (const conn of connections) {
+    if (!allowGlitches && conn.tags.includes('barrier:glitch')) continue;
     // Forward edge: from → to
     let edges = adj.get(conn.from);
     if (!edges) {
@@ -57,9 +64,9 @@ function buildAdjacencyList(connections: RegionConnection[]): AdjacencyList {
  * BFS shortest-path from source to target, ignoring all logic/barrier requirements.
  * Returns the full path with region names and entrance labels.
  */
-export function findShortestPath(sourceId: string, targetId: string): NavigationResult {
+export function findShortestPath(sourceId: string, targetId: string, options: PathfindingOptions = {}): NavigationResult {
   const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
-  const adj = buildAdjacencyList(allConnections);
+  const adj = buildAdjacencyList(allConnections, options);
 
   const totalNodes = adj.size;
   const totalEdges = allConnections.length;
@@ -191,9 +198,9 @@ function isLogicalArea(id: string): boolean {
  *   - If A is an interior: add edge interior→screen for each screen B (exiting)
  *   - Never create interior→interior shortcuts through L
  */
-function buildPreciseAdjacencyList(connections: RegionConnection[]): AdjacencyList {
+function buildPreciseAdjacencyList(connections: RegionConnection[], options: PathfindingOptions = {}): AdjacencyList {
   // First build the full graph
-  const fullAdj = buildAdjacencyList(connections);
+  const fullAdj = buildAdjacencyList(connections, options);
 
   // Collect logical area nodes and their connections
   const logicalAreas = new Set<string>();
@@ -267,9 +274,9 @@ function buildPreciseAdjacencyList(connections: RegionConnection[]): AdjacencyLi
  * (lw-XX, dw-XX) and interiors (caves/dungeons/houses).
  * Logical area hubs are eliminated, forcing screen-by-screen routing.
  */
-export function findPrecisePath(sourceId: string, targetId: string): NavigationResult {
+export function findPrecisePath(sourceId: string, targetId: string, options: PathfindingOptions = {}): NavigationResult {
   const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
-  const adj = buildPreciseAdjacencyList(allConnections);
+  const adj = buildPreciseAdjacencyList(allConnections, options);
 
   const totalNodes = adj.size;
   const totalEdges = allConnections.length;

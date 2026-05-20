@@ -13,6 +13,19 @@
 
 extern uint8 g_hud_hide_mask;
 
+// Bitmask controlling which pause menu components are hidden.
+// Same principle as HUD hiding: tiles matching known values are
+// replaced with 0x207f during the NMI tilemap upload.
+#define PAUSE_HIDE_BORDERS  0x01
+#define PAUSE_HIDE_FILL     0x02
+#define PAUSE_HIDE_ITEMS    0x04
+#define PAUSE_HIDE_PROGRESS 0x08
+#define PAUSE_HIDE_TEXT     0x10
+#define PAUSE_HIDE_UI       0x20
+#define PAUSE_HIDE_ALL      0x3F
+
+extern uint8 g_pause_hide_mask;
+
 enum kHudItems {
 
   kHudItem_Bombs = 4,
