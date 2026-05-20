@@ -35,6 +35,7 @@ interface SpriteExtractDef {
   method: string;
   tiles?: number[];
   layout?: string;
+  width?: number;
   receiptId?: number;
   spriteType?: number;
   palette?: number;
@@ -82,7 +83,7 @@ function extractOne(def: SpriteExtractDef, ctx: ExtractionContext): ImageBuffer 
       return extractHudSingle(def.tiles![0], ctx.hudSheets, ctx.hudPalette);
 
     case 'hud-strip':
-      return extractHudStrip(def.tiles!, ctx.hudSheets, ctx.hudPalette);
+      return extractHudStrip(def.tiles!, ctx.hudSheets, ctx.hudPalette, def.width);
 
     case 'hud-vstrip':
       return extractHudVStrip(def.tiles!, ctx.hudSheets, ctx.hudPalette);

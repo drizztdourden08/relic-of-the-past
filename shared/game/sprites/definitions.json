@@ -1024,7 +1024,7 @@
       "file": "hud-magic-label",
       "label": "Magic Label (½)",
       "category": "hud",
-      "extract": { "method": "hud-strip", "tiles": [10487, 10321, 10490] }
+      "extract": { "method": "hud-strip", "tiles": [10487, 10321, 10490], "width": 20 }
     },
     {
       "file": "hud-magic-tl",
