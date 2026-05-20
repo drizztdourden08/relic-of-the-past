@@ -11,7 +11,7 @@ export const DW_OVERWORLD_VILLAGE_CONNECTIONS: RegionConnection[] = [
   { from: 'bumper-cave-ledge', to: 'bumper-cave-entrance', entrance: 'Bumper Cave Ledge Drop', tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'] },
 
   // Mirror spots
-  { from: 'west-dark-world', to: 'light-world', entrance: 'West Dark World Mirror Spot', tags: ['transit:mirror', 'dir:one-way', 'ctx:cross-world'] },
+  { from: 'west-dark-world', to: 'lw-20', entrance: 'West Dark World Mirror Spot', tags: ['transit:mirror', 'dir:one-way', 'ctx:cross-world'] },
   { from: 'west-dark-world', to: 'graveyard-ledge', entrance: 'Graveyard Ledge Mirror Spot', tags: ['transit:mirror', 'dir:one-way', 'ctx:cross-world'] },
   { from: 'west-dark-world', to: 'kings-grave-area', entrance: 'Kings Grave Mirror Spot', tags: ['transit:mirror', 'dir:one-way', 'ctx:cross-world'] },
   { from: 'bumper-cave-ledge', to: 'death-mountain-return-ledge', entrance: 'Bumper Cave Ledge Mirror Spot', tags: ['transit:mirror', 'dir:one-way', 'ctx:cross-world'] },

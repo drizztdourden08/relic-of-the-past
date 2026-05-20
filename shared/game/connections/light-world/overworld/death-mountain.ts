@@ -28,5 +28,5 @@ export const LW_OVERWORLD_DEATH_MOUNTAIN_CONNECTIONS: RegionConnection[] = [
 
   // Flute destination
   { from: 'light-world', to: 'death-mountain-entrance', entrance: 'Flute Spot 1', tags: ['transit:warp', 'dir:one-way', 'ctx:overworld'] },
-  { from: 'light-world', to: 'death-mountain-entrance', entrance: 'Death Mountain Entrance Rock', tags: ['transit:rock', 'dir:two-way', 'ctx:overworld', 'barrier:gloves'] },
+  { from: 'lw-0a', to: 'death-mountain-entrance', entrance: 'Death Mountain Entrance Rock', tags: ['transit:rock', 'dir:two-way', 'ctx:overworld', 'barrier:gloves'] },
 ];

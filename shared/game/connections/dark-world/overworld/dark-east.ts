@@ -10,6 +10,6 @@ export const DW_OVERWORLD_DARK_EAST_CONNECTIONS: RegionConnection[] = [
   { from: 'pyramid-ledge', to: 'east-dark-world', entrance: 'Pyramid Ledge Drop', tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'] },
 
   // Mirror spots
-  { from: 'east-dark-world', to: 'light-world', entrance: 'East Dark World Mirror Spot', tags: ['transit:mirror', 'dir:one-way', 'ctx:cross-world'] },
+  { from: 'east-dark-world', to: 'lw-27', entrance: 'East Dark World Mirror Spot', tags: ['transit:mirror', 'dir:one-way', 'ctx:cross-world'] },
   { from: 'east-dark-world', to: 'hyrule-castle-ledge', entrance: 'Hyrule Castle Ledge Mirror Spot', tags: ['transit:mirror', 'dir:one-way', 'ctx:cross-world'] },
 ];

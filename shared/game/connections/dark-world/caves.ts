@@ -9,7 +9,7 @@ export const DW_CAVE_CONNECTIONS: RegionConnection[] = [
   { from: 'bumper-cave-ledge', to: 'bumper-cave', entrance: 'Bumper Cave (Top)', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
 
   // Hype Cave
-  { from: 'south-dark-world', to: 'hype-cave', entrance: 'Hype Cave', tags: ['transit:bomb', 'dir:two-way', 'ctx:entrance', 'barrier:bomb'] },
+  { from: 'dw-34', to: 'hype-cave', entrance: 'Hype Cave', tags: ['transit:bomb', 'dir:two-way', 'ctx:entrance', 'barrier:bomb'] },
 
   // Dark Lake Hylia Ledge Spike Cave
   { from: 'dark-lake-hylia-ledge', to: 'dark-lake-hylia-ledge-spike-cave', entrance: 'Dark Lake Hylia Ledge Spike Cave', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
