@@ -2,16 +2,15 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { ITEM_SPRITE_MAP } from '@shared/game/items/sprites';
 import type { ReviewStatus, ReviewData } from '../types';
 import { FilterBtns, Stats } from './ReviewControls';
-import { ItemAssocCard, devSpritePath } from './ReviewCards';
+import { ItemAssocCard } from './ReviewCards';
 import { S } from '../styles';
 
 const ALL_ITEMS = Object.entries(ITEM_SPRITE_MAP).map(([name, file]) => ({
   name,
   file,
-  src: file ? devSpritePath(file) : '',
 }));
 
-function ItemReviewPanel() {
+function ItemReviewPanel({ baseUrl }: { baseUrl: string }) {
   const [data, setData] = useState<ReviewData>({});
   const [loaded, setLoaded] = useState(false);
   const [filter, setFilter] = useState<'all' | ReviewStatus>('all');
@@ -73,6 +72,7 @@ function ItemReviewPanel() {
             key={item.name}
             item={item}
             entry={data[item.name] ?? { status: 'neutral' }}
+            baseUrl={baseUrl}
             onSetStatus={s => setStatus(item.name, s)}
             onSetComment={c => setComment(item.name, c)}
           />

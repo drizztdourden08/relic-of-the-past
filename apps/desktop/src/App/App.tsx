@@ -180,7 +180,7 @@ const App = () => {
           }}
         </WidgetManager>
 
-        {showSpriteDebug && <SpriteDebug onClose={toggleSpriteDebug} />}
+        {showSpriteDebug && <SpriteDebug onClose={toggleSpriteDebug} romFile={profileMgmt.activeProfile?.romFile ?? ''} />}
       </div>
 
       <Dialog

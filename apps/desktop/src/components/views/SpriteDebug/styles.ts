@@ -158,8 +158,9 @@ const S: Record<string, React.CSSProperties> = {
     borderRadius: 4,
   },
   sprite: {
-    width: 32,
-    height: 32,
+    maxWidth: 32,
+    maxHeight: 32,
+    objectFit: 'contain' as const,
     imageRendering: 'pixelated' as const,
   },
   cardInfo: {

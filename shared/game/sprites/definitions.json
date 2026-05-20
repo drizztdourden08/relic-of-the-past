@@ -895,28 +895,16 @@
       "extract": { "method": "hud-single", "tiles": [9376] }
     },
     {
-      "file": "hud-heart-three-quarter",
-      "label": "Heart (3/4)",
+      "file": "hud-heart-half",
+      "label": "Heart (Half)",
       "category": "hud",
       "extract": { "method": "hud-single", "tiles": [9377] }
-    },
-    {
-      "file": "hud-heart-half",
-      "label": "Heart (1/2)",
-      "category": "hud",
-      "extract": { "method": "hud-single", "tiles": [9378] }
-    },
-    {
-      "file": "hud-heart-quarter",
-      "label": "Heart (1/4)",
-      "category": "hud",
-      "extract": { "method": "hud-single", "tiles": [9379] }
     },
     {
       "file": "hud-heart-empty",
       "label": "Heart (Empty)",
       "category": "hud",
-      "extract": { "method": "hud-single", "tiles": [9380] }
+      "extract": { "method": "hud-single", "tiles": [9378] }
     },
     {
       "file": "hud-rupee-icon",

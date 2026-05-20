@@ -44,6 +44,7 @@ export {
   CATEGORY_LABELS,
   CATEGORY_ORDER,
   SPRITE_MANIFEST,
+  getSpritesBase,
   getSpritePath,
   setSpritesBase
 };

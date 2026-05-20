@@ -3,12 +3,8 @@ import type { SpriteManifestEntry } from '@shared/game/sprites';
 import { StatusBtns } from './ReviewControls';
 import { S } from '../styles';
 
-function devSpritePath(file: string): string {
-  return `/sprites/items/${file}.png`;
-}
-
-function SpriteImageCard({ sprite, entry, onSetStatus, onSetComment }: {
-  sprite: SpriteManifestEntry; entry: ReviewEntry;
+function SpriteImageCard({ sprite, entry, baseUrl, onSetStatus, onSetComment }: {
+  sprite: SpriteManifestEntry; entry: ReviewEntry; baseUrl: string;
   onSetStatus: (s: ReviewStatus) => void; onSetComment: (c: string) => void;
 }) {
   const border = entry.status === 'good' ? '#4caf50' : entry.status === 'bad' ? '#f44336' : entry.status === 'yellow' ? '#f5c542' : 'rgba(255,255,255,0.08)';
@@ -19,7 +15,7 @@ function SpriteImageCard({ sprite, entry, onSetStatus, onSetComment }: {
     <div style={{ ...S.card, borderColor: border, background: bg }}>
       <div style={S.cardTop}>
         <div style={S.spriteWrap}>
-          <img src={devSpritePath(sprite.file)} alt={sprite.label} style={S.sprite} draggable={false}
+          <img src={`${baseUrl}${sprite.file}.png`} alt={sprite.label} style={S.sprite} draggable={false}
             onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
         </div>
         <div style={S.cardInfo}>
@@ -38,8 +34,8 @@ function SpriteImageCard({ sprite, entry, onSetStatus, onSetComment }: {
   );
 }
 
-function ItemAssocCard({ item, entry, onSetStatus, onSetComment }: {
-  item: { name: string; file: string; src: string }; entry: ReviewEntry;
+function ItemAssocCard({ item, entry, baseUrl, onSetStatus, onSetComment }: {
+  item: { name: string; file: string }; entry: ReviewEntry; baseUrl: string;
   onSetStatus: (s: ReviewStatus) => void; onSetComment: (c: string) => void;
 }) {
   const border = entry.status === 'good' ? '#4caf50' : entry.status === 'bad' ? '#f44336' : entry.status === 'yellow' ? '#f5c542' : 'rgba(255,255,255,0.08)';
@@ -49,8 +45,8 @@ function ItemAssocCard({ item, entry, onSetStatus, onSetComment }: {
     <div style={{ ...S.card, borderColor: border, background: bg }}>
       <div style={S.cardTop}>
         <div style={S.spriteWrap}>
-          {item.src ? (
-            <img src={item.src} alt={item.name} style={S.sprite} draggable={false}
+          {item.file ? (
+            <img src={`${baseUrl}${item.file}.png`} alt={item.name} style={S.sprite} draggable={false}
               onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
           ) : (
             <span style={{ fontSize: 9, color: '#555' }}>none</span>
@@ -71,4 +67,4 @@ function ItemAssocCard({ item, entry, onSetStatus, onSetComment }: {
   );
 }
 
-export { ItemAssocCard, SpriteImageCard, devSpritePath };
+export { ItemAssocCard, SpriteImageCard };

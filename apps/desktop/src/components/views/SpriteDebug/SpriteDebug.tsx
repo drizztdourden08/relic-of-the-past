@@ -5,8 +5,9 @@ import { ItemReviewPanel } from './sub-components/ItemReviewPanel';
 import { S } from './styles';
 
 const SpriteDebug = (props: SpriteDebugProps) => {
-  const { onClose } = props;
+  const { onClose, romFile } = props;
   const [mode, setMode] = useState<ReviewMode>('sprites');
+  const baseUrl = romFile ? window.api.getSpritesBaseUrl(romFile) : '';
 
   return (
     <div style={S.overlay}>
@@ -33,7 +34,7 @@ const SpriteDebug = (props: SpriteDebugProps) => {
         <button onClick={onClose} style={S.closeBtn}>✕</button>
       </div>
 
-      {mode === 'sprites' ? <SpriteReviewPanel /> : <ItemReviewPanel />}
+      {mode === 'sprites' ? <SpriteReviewPanel baseUrl={baseUrl} /> : <ItemReviewPanel baseUrl={baseUrl} />}
     </div>
   );
 };
