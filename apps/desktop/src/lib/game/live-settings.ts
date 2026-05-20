@@ -18,6 +18,8 @@ import { log } from '../log-bus';
 
 // Track the last-pushed forceBackdropBlack value so we can re-assert after state loads
 let lastBackdropBlack = false;
+// Track the last-pushed hudHidden value so we can re-assert after state loads
+let lastHudHidden = false;
 
 // Feature flag enum values — must match features.h
 const FEATURE_FLAGS = {
@@ -124,6 +126,7 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'hudMode',
   'hudStyle',
   'hudRatio',
+  'hudEnhancedParts',
   'hudHeartMode',
   'hudMagicMode',
   'hudCountLayout',
@@ -158,6 +161,13 @@ function pushLiveSettings(settings: GameSettings): boolean {
       mod.ccall('WasmSetForceBackdropBlack', null, ['number'], [settings.forceBackdropBlack ? 1 : 0]);
     } catch { /* WASM not rebuilt yet */ }
 
+    // Hide native gameplay HUD when enhanced overlay is active
+    try {
+      const hideHud = settings.hudMode === 'enhanced' && settings.hudEnhancedParts.includes('main');
+      lastHudHidden = hideHud;
+      mod.ccall('WasmSetHudHidden', null, ['number'], [hideHud ? 1 : 0]);
+    } catch { /* WASM not rebuilt yet */ }
+
     log.app(`Live settings pushed — features: 0x${features.toString(16)}, ppu: 0x${ppuFlags.toString(16)}`);
     return true;
   } catch (e) {
@@ -179,9 +189,21 @@ function reassertBackdropBlack(): void {
   } catch { /* ignore — WASM may not have this export */ }
 }
 
+/**
+ * Re-assert the current hudHidden state to WASM.
+ * Called after state loads to ensure the flag isn't lost.
+ */
+function reassertHudHidden(): void {
+  const mod = getModule();
+  if (!mod) return;
+  try {
+    mod.ccall('WasmSetHudHidden', null, ['number'], [lastHudHidden ? 1 : 0]);
+  } catch { /* ignore — WASM may not have this export */ }
+}
+
 /** Check if a setting change requires a game restart (i.e. it's NOT live-updatable). */
 function requiresRestart(changedKeys: (keyof GameSettings)[]): boolean {
   return changedKeys.some((k) => !LIVE_SETTINGS.has(k));
 }
 
-export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, requiresRestart };
+export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, reassertHudHidden, requiresRestart };

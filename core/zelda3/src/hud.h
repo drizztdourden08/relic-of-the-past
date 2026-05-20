@@ -1,6 +1,10 @@
 #pragma once
 #include "types.h"
 
+// When non-zero, the gameplay HUD is hidden (tiles blanked).
+// Set from WASM JS layer when enhanced HUD overlay is active.
+extern uint8 g_hud_hidden;
+
 enum kHudItems {
 
   kHudItem_Bombs = 4,

@@ -6,6 +6,7 @@
 #include "snes/ppu.h"
 #include "assets.h"
 #include "audio.h"
+#include "hud.h"
 
 static const uint8 kNmiVramAddrs[] = {
   0, 0, 4, 8, 12, 8, 12, 0, 4, 0, 8, 4, 12, 4, 12, 0,
@@ -204,7 +205,14 @@ void NMI_DoUpdates() {  // 8089e0
     memcpy(&g_zenv.vram[animated_tile_vram_addr], &g_ram[animated_tile_data_src], 0x400);
   }
 
+  if (g_hud_hidden)
+    flag_update_hud_in_nmi = 1;
+
   if (flag_update_hud_in_nmi) {
+    if (g_hud_hidden) {
+      for (int i = 0; i < 165; i++)
+        hud_tile_indices_buffer[i] = 0x207f;
+    }
     memcpy(&g_zenv.vram[word_7E0219], hud_tile_indices_buffer, 165 * sizeof(uint16));
   }
 

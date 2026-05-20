@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout, type Section } from '../../../composites/SettingsLayout';
 import { SegmentedControl } from '../../../primitives/SegmentedControl';
+import { ToggleGroup } from '../../../primitives/ToggleGroup';
 
 interface HudSettingsProps {
   settings: GameSettings;
@@ -32,6 +33,13 @@ const SECTIONS: Section[] = [
         title: 'Ratio',
         items: [
           { key: 'hudRatio', label: 'Ratio', description: 'Aspect ratio for the HUD overlay. Match uses the current screen ratio.', keywords: 'hud ratio aspect match' },
+        ],
+      },
+      {
+        id: 'hud-enhanced-parts',
+        title: 'Enhanced Parts',
+        items: [
+          { key: 'hudEnhancedParts', label: 'Enhanced Parts', description: 'Select which HUD parts to replace with the enhanced overlay', keywords: 'hud parts main pause enhanced' },
         ],
       },
     ],
@@ -115,6 +123,11 @@ const COUNT_LAYOUT_OPTIONS = [
   { value: 'original', label: 'Original' },
 ];
 
+const ENHANCED_PARTS_OPTIONS = [
+  { value: 'main', label: 'Main' },
+  { value: 'pause', label: 'Pause', disabled: true },
+];
+
 function renderControl(key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null {
   switch (key) {
     case 'hudMode':
@@ -142,6 +155,15 @@ function renderControl(key: string, settings: GameSettings, onChange: (patch: Pa
           value={settings.hudRatio}
           options={getHudRatioOptions(settings.aspectRatio)}
           onChange={(v) => onChange({ hudRatio: v as GameSettings['hudRatio'] })}
+        />
+      );
+    case 'hudEnhancedParts':
+      return (
+        <ToggleGroup
+          label="Enhanced Parts"
+          value={settings.hudEnhancedParts as string[]}
+          options={ENHANCED_PARTS_OPTIONS}
+          onChange={(v) => onChange({ hudEnhancedParts: v as GameSettings['hudEnhancedParts'] })}
         />
       );
     case 'hudHeartMode':

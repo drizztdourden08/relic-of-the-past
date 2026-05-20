@@ -4,6 +4,8 @@
 #include "variables.h"
 #include "messaging.h"
 
+uint8 g_hud_hidden;
+
 enum {
   kNewStyleInventory = 0,
   kHudItemCount = kNewStyleInventory ? 24 : 20,

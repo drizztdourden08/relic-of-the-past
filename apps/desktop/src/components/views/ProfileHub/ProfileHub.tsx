@@ -96,6 +96,7 @@ const ProfileHub = (props: ProfileHubProps) => {
             mode: merged.hudMode,
             style: merged.hudStyle,
             ratio: merged.hudRatio,
+            enhancedParts: merged.hudEnhancedParts,
             heartMode: merged.hudHeartMode,
             magicMode: merged.hudMagicMode,
             countLayout: merged.hudCountLayout,
@@ -171,11 +172,12 @@ const ProfileHub = (props: ProfileHubProps) => {
       }
 
       // Sync HUD settings to store for live rendering
-      if ('hudMode' in patch || 'hudStyle' in patch || 'hudRatio' in patch || 'hudHeartMode' in patch || 'hudMagicMode' in patch || 'hudCountLayout' in patch) {
+      if ('hudMode' in patch || 'hudStyle' in patch || 'hudRatio' in patch || 'hudEnhancedParts' in patch || 'hudHeartMode' in patch || 'hudMagicMode' in patch || 'hudCountLayout' in patch) {
         useHudSettingsStore.getState().setHudSettings({
           mode: next.hudMode,
           style: next.hudStyle,
           ratio: next.hudRatio,
+          enhancedParts: next.hudEnhancedParts,
           heartMode: next.hudHeartMode,
           magicMode: next.hudMagicMode,
           countLayout: next.hudCountLayout,

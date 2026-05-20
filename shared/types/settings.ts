@@ -66,6 +66,7 @@ interface GameSettings {
   hudMode: 'original' | 'enhanced';
   hudStyle: 'vanilla' | 'modern';
   hudRatio: 'match' | '4:3' | '3:2' | '16:9' | '16:10' | '18:9';
+  hudEnhancedParts: ('main' | 'pause')[];
   hudHeartMode: 'original' | 'smooth';
   hudMagicMode: 'original' | 'accurate';
   hudCountLayout: 'centered' | 'original';

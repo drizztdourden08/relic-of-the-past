@@ -25,6 +25,7 @@
 #include "src/audio.h"
 #include "src/spc_player.h"
 #include "src/features.h"
+#include "src/hud.h"
 
 // ---------------------------------------------------------------------------
 // WASM-safe ZeldaInitialize — workaround for ppu_init() signature mismatch.
@@ -300,6 +301,15 @@ EMSCRIPTEN_KEEPALIVE
 void WasmSetPpuRenderFlags(int flags) {
   // Preserve BlackBG2 flag (managed separately by WasmSetForceBackdropBlack)
   g_ppu_render_flags = flags | (g_force_backdrop_black ? kPpuRenderFlags_BlackBG2 : 0);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmSetHudHidden(int hidden) {
+  uint8 was_hidden = g_hud_hidden;
+  g_hud_hidden = hidden ? 1 : 0;
+  // When transitioning from hidden → visible, force a full HUD rebuild
+  if (was_hidden && !g_hud_hidden)
+    Hud_Rebuild();
 }
 
 EMSCRIPTEN_KEEPALIVE

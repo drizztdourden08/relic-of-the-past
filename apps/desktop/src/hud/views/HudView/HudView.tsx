@@ -55,12 +55,17 @@ const HudView = () => {
         inset: 0,
         pointerEvents: 'none',
         overflow: 'hidden',
+      }}
+    >
+      {/* HUD content */}
+      <div style={{
+        position: 'relative',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         paddingTop: 1.75 * tile,
-      }}
-    >
+        height: '100%',
+      }}>
           {/* Left group: magic meter + item box + counts (original mode) */}
           <div style={{ display: 'flex', alignItems: 'flex-start', marginLeft: 2 * tile }}>
             <HudMagicMeter
@@ -101,6 +106,7 @@ const HudView = () => {
               spritesBase={spritesBase}
             />
           </div>
+      </div>
     </div>
   );
 };

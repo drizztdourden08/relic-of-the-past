@@ -69,6 +69,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   hudMode: 'original',
   hudStyle: 'vanilla',
   hudRatio: 'match',
+  hudEnhancedParts: ['main'],
   hudHeartMode: 'original',
   hudMagicMode: 'original',
   hudCountLayout: 'centered',

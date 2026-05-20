@@ -1,10 +1,11 @@
 /**
  * GameOverlay — sized to match the game canvas exactly.
  * pointer-events: none so it doesn't interfere with input.
- * Renders the HUD replacement.
+ * Renders the HUD replacement when enhanced mode is active.
  */
 
 import { HudView } from '../../../hud';
+import { useHudSettingsStore } from '../../../stores/hud-settings-store';
 import '../../../hud/hud.css';
 
 interface GameOverlayProps {
@@ -13,6 +14,9 @@ interface GameOverlayProps {
 }
 
 function GameOverlay({ width, height }: GameOverlayProps) {
+  const { mode, enhancedParts } = useHudSettingsStore();
+  const showMainHud = mode === 'enhanced' && enhancedParts.includes('main');
+
   return (
     <div
       style={{
@@ -27,7 +31,7 @@ function GameOverlay({ width, height }: GameOverlayProps) {
       }}
     >
       <div style={{ width, height, position: 'relative' }}>
-        <HudView />
+        {showMainHud && <HudView />}
       </div>
     </div>
   );

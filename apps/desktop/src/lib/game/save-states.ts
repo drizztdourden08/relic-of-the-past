@@ -5,7 +5,7 @@
 import { log } from '../log-bus';
 import { getModule, getProfileId } from './wasm-bridge';
 import { pollInventoryState } from './tracker';
-import { reassertBackdropBlack } from './live-settings';
+import { reassertBackdropBlack, reassertHudHidden } from './live-settings';
 
 function captureScreenshot(): Promise<Blob | null> {
   const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
@@ -98,6 +98,9 @@ async function loadState(slot: number): Promise<boolean> {
 
     // Re-assert backdrop black flag (defensive: ensures it's not lost after load)
     reassertBackdropBlack();
+
+    // Re-assert HUD hidden flag
+    reassertHudHidden();
 
     // Force inventory poll so tracker reflects the loaded state
     pollInventoryState(true);
