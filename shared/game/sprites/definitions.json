@@ -1024,7 +1024,55 @@
       "file": "hud-magic-label",
       "label": "Magic Label (½)",
       "category": "hud",
-      "extract": { "method": "hud-strip", "tiles": [10487, 10321] }
+      "extract": { "method": "hud-strip", "tiles": [10487, 10321, 10490] }
+    },
+    {
+      "file": "hud-magic-tl",
+      "label": "Magic Meter (Top-Left)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10320] }
+    },
+    {
+      "file": "hud-magic-tr",
+      "label": "Magic Meter (Top-Right)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [26704] }
+    },
+    {
+      "file": "hud-magic-left",
+      "label": "Magic Meter (Left)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10324] }
+    },
+    {
+      "file": "hud-magic-right",
+      "label": "Magic Meter (Right)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [26708] }
+    },
+    {
+      "file": "hud-magic-bl",
+      "label": "Magic Meter (Bottom-Left)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [43088] }
+    },
+    {
+      "file": "hud-magic-br",
+      "label": "Magic Meter (Bottom-Right)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [59472] }
+    },
+    {
+      "file": "hud-magic-top",
+      "label": "Magic Meter (Top Cap)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [43094] }
+    },
+    {
+      "file": "hud-magic-bottom",
+      "label": "Magic Meter (Bottom Cap)",
+      "category": "hud",
+      "extract": { "method": "hud-single", "tiles": [10326] }
     },
     {
       "file": "hud-magic-fill-full",
@@ -1058,7 +1106,7 @@
     },
     {
       "file": "hud-magic-cap",
-      "label": "Magic Cap (Top)",
+      "label": "Magic Cap (Transition)",
       "category": "hud",
       "extract": { "method": "hud-single", "tiles": [15455] }
     },
