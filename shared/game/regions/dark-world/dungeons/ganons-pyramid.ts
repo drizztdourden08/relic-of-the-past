@@ -1,5 +1,12 @@
-import type { RegionDefinition } from '../types';
+import type { RegionDefinition } from '../../../types';
 
-export const GANON_DUNGEON: RegionDefinition[] = [
-  { id: 'ganon', name: 'Ganon', type: 'dungeon', dungeon: "Ganon's Tower", tags: ['world:dark', 'env:inside', 'type:dungeon', 'area:dark_east', 'dungeon:ganons_tower', 'role:boss_room'] },
+/**
+ * Ganon's Pyramid — The final battle area.
+ */
+export const GANONS_PYRAMID_DUNGEON: RegionDefinition[] = [
+  {
+    id: 'bottom-of-pyramid', name: "Bottom of Pyramid", type: 'dungeon', inGameIndex: 0x00,
+    dungeon: "Ganon's Tower", displayName: "Ganon's Pyramid", subtitle: 'Ganon',
+    tags: ['world:dark', 'env:inside', 'type:dungeon', 'area:dark_north', 'dungeon:ganons_tower', 'role:boss_room'],
+  },
 ];

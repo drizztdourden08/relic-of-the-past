@@ -36,8 +36,10 @@ interface RegionDefinition {
   /** Specific name of this screen/room */
   name: string;
   type: RegionType;
-  /** Native game screen/room index (unique within its type context) */
-  inGameIndex: number;
+  /** Native game screen/room index (unique within its type context).
+   *  Required for overworld screens and dungeon rooms (used for detection).
+   *  Optional for caves/houses where room index isn't yet mapped. */
+  inGameIndex?: number;
   /** Dungeon name (for dungeon rooms) */
   dungeon?: string;
 

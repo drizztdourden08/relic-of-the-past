@@ -1304,160 +1304,72 @@
       "extract": { "method": "hud-single", "tiles": [9577] }
     },
     {
-      "file": "font-letter-a-orange",
-      "label": "Letter A (Orange)",
+      "file": "font-level-1",
+      "label": "Level .1",
       "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11600] }
+      "extract": { "method": "hud-single", "tiles": [11559] }
     },
     {
-      "file": "font-letter-b-orange",
-      "label": "Letter B (Orange)",
+      "file": "font-level-2",
+      "label": "Level .2",
       "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11601] }
+      "extract": { "method": "hud-single", "tiles": [11560] }
     },
     {
-      "file": "font-letter-c-orange",
-      "label": "Letter C (Orange)",
+      "file": "font-level-3",
+      "label": "Level .3",
       "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11602] }
+      "extract": { "method": "hud-single", "tiles": [11561] }
     },
     {
-      "file": "font-letter-d-orange",
-      "label": "Letter D (Orange)",
+      "file": "font-dot",
+      "label": "Dot Separator",
       "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11603] }
+      "extract": { "method": "hud-single", "tiles": [10455] }
+    },
+
+    {
+      "file": "pause-btn-y",
+      "label": "Button Y",
+      "category": "hud-pause",
+      "extract": { "method": "hud-vstrip", "tiles": [15600, 15601] }
     },
     {
-      "file": "font-letter-e-orange",
-      "label": "Letter E (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11604] }
+      "file": "pause-btn-x",
+      "label": "Button X",
+      "category": "hud-pause",
+      "extract": { "method": "hud-vstrip", "tiles": [11504, 44272] }
     },
     {
-      "file": "font-letter-f-orange",
-      "label": "Letter F (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11605] }
+      "file": "pause-btn-a",
+      "label": "Button A",
+      "category": "hud-pause",
+      "extract": { "method": "hud-vstrip", "tiles": [42224, 9458] }
+    },
+
+    {
+      "file": "pause-label-pendants",
+      "label": "Label: PENDANTS",
+      "category": "hud-pause",
+      "extract": { "method": "hud-strip", "tiles": [9505, 9506, 9507, 9508, 9535] }
     },
     {
-      "file": "font-letter-g-orange",
-      "label": "Letter G (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11606] }
+      "file": "pause-label-crystals",
+      "label": "Label: CRYSTALS",
+      "category": "hud-pause",
+      "extract": { "method": "hud-strip", "tiles": [9519, 9524, 9525, 9526, 9527] }
     },
     {
-      "file": "font-letter-h-orange",
-      "label": "Letter H (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11607] }
+      "file": "pause-label-equipment",
+      "label": "Label: EQUIPMENT",
+      "category": "hud-pause",
+      "extract": { "method": "hud-strip", "tiles": [9337, 9338, 9339, 9340, 9356] }
     },
     {
-      "file": "font-letter-i-orange",
-      "label": "Letter I (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11608] }
-    },
-    {
-      "file": "font-letter-j-orange",
-      "label": "Letter J (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11609] }
-    },
-    {
-      "file": "font-letter-k-orange",
-      "label": "Letter K (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11610] }
-    },
-    {
-      "file": "font-letter-l-orange",
-      "label": "Letter L (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11611] }
-    },
-    {
-      "file": "font-letter-m-orange",
-      "label": "Letter M (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11612] }
-    },
-    {
-      "file": "font-letter-n-orange",
-      "label": "Letter N (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11613] }
-    },
-    {
-      "file": "font-letter-o-orange",
-      "label": "Letter O (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11614] }
-    },
-    {
-      "file": "font-letter-p-orange",
-      "label": "Letter P (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11615] }
-    },
-    {
-      "file": "font-letter-q-orange",
-      "label": "Letter Q (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11616] }
-    },
-    {
-      "file": "font-letter-r-orange",
-      "label": "Letter R (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11617] }
-    },
-    {
-      "file": "font-letter-s-orange",
-      "label": "Letter S (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11618] }
-    },
-    {
-      "file": "font-letter-t-orange",
-      "label": "Letter T (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11619] }
-    },
-    {
-      "file": "font-letter-u-orange",
-      "label": "Letter U (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11620] }
-    },
-    {
-      "file": "font-letter-v-orange",
-      "label": "Letter V (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11621] }
-    },
-    {
-      "file": "font-letter-w-orange",
-      "label": "Letter W (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11622] }
-    },
-    {
-      "file": "font-letter-x-orange",
-      "label": "Letter X (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11623] }
-    },
-    {
-      "file": "font-letter-y-orange",
-      "label": "Letter Y (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11624] }
-    },
-    {
-      "file": "font-letter-z-orange",
-      "label": "Letter Z (Orange)",
-      "category": "fonts",
-      "extract": { "method": "hud-single", "tiles": [11625] }
+      "file": "pause-label-dungeon-item",
+      "label": "Label: DUNGEON ITEM",
+      "category": "hud-pause",
+      "extract": { "method": "hud-strip", "tiles": [9321, 9322, 9323, 9324, 9325, 9326, 9327] }
     },
 
     {
@@ -1479,58 +1391,76 @@
       "extract": { "method": "hud-single", "tiles": [15612] }
     },
     {
-      "file": "pause-border-corner-orange",
-      "label": "Border Corner (Orange)",
+      "file": "pause-border-corner-blue",
+      "label": "Border Corner (Blue)",
       "category": "hud-pause",
       "extract": { "method": "hud-single", "tiles": [11515] }
     },
     {
-      "file": "pause-border-hedge-orange",
-      "label": "Border H-Edge (Orange)",
+      "file": "pause-border-hedge-blue",
+      "label": "Border H-Edge (Blue)",
       "category": "hud-pause",
       "extract": { "method": "hud-single", "tiles": [11513] }
     },
     {
-      "file": "pause-border-vedge-orange",
-      "label": "Border V-Edge (Orange)",
+      "file": "pause-border-vedge-blue",
+      "label": "Border V-Edge (Blue)",
       "category": "hud-pause",
       "extract": { "method": "hud-single", "tiles": [11516] }
+    },
+    {
+      "file": "pause-border-corner-gray",
+      "label": "Border Corner (Gray)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [12539] }
+    },
+    {
+      "file": "pause-border-hedge-gray",
+      "label": "Border H-Edge (Gray)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [12537] }
+    },
+    {
+      "file": "pause-border-vedge-gray",
+      "label": "Border V-Edge (Gray)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [12540] }
     },
     {
       "file": "pause-border-corner-yellow",
       "label": "Border Corner (Yellow)",
       "category": "hud-pause",
-      "extract": { "method": "hud-single", "tiles": [12539] }
+      "extract": { "method": "hud-single", "tiles": [10491] }
     },
     {
       "file": "pause-border-hedge-yellow",
       "label": "Border H-Edge (Yellow)",
       "category": "hud-pause",
-      "extract": { "method": "hud-single", "tiles": [12537] }
+      "extract": { "method": "hud-single", "tiles": [10489] }
     },
     {
       "file": "pause-border-vedge-yellow",
       "label": "Border V-Edge (Yellow)",
       "category": "hud-pause",
-      "extract": { "method": "hud-single", "tiles": [12540] }
-    },
-    {
-      "file": "pause-border-corner-purple",
-      "label": "Border Corner (Purple)",
-      "category": "hud-pause",
-      "extract": { "method": "hud-single", "tiles": [10491] }
-    },
-    {
-      "file": "pause-border-hedge-purple",
-      "label": "Border H-Edge (Purple)",
-      "category": "hud-pause",
-      "extract": { "method": "hud-single", "tiles": [10489] }
-    },
-    {
-      "file": "pause-border-vedge-purple",
-      "label": "Border V-Edge (Purple)",
-      "category": "hud-pause",
       "extract": { "method": "hud-single", "tiles": [10492] }
+    },
+    {
+      "file": "pause-border-corner-red",
+      "label": "Border Corner (Red)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [9467] }
+    },
+    {
+      "file": "pause-border-hedge-red",
+      "label": "Border H-Edge (Red)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [9465] }
+    },
+    {
+      "file": "pause-border-vedge-red",
+      "label": "Border V-Edge (Red)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-single", "tiles": [9468] }
     },
     {
       "file": "pause-pendant-empty",
@@ -1542,7 +1472,7 @@
       "file": "pause-pendant-green",
       "label": "Pendant (Green/Courage)",
       "category": "hud-pause",
-      "extract": { "method": "hud-tiles", "tiles": [9515, 9516, 9517, 9518] }
+      "extract": { "method": "hud-tiles", "tiles": [15659, 15660, 15661, 15662] }
     },
     {
       "file": "pause-pendant-blue",
@@ -1554,7 +1484,7 @@
       "file": "pause-pendant-red",
       "label": "Pendant (Red/Power)",
       "category": "hud-pause",
-      "extract": { "method": "hud-tiles", "tiles": [15659, 15660, 15661, 15662] }
+      "extract": { "method": "hud-tiles", "tiles": [9515, 9516, 9517, 9518] }
     },
     {
       "file": "pause-crystal-empty",

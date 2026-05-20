@@ -8,7 +8,7 @@ import {
 
 // ─── Vanilla-only intro connection ───
 const VANILLA_INTRO_CONNECTION: RegionConnection =
-  { from: 'menu', to: 'links-house', entrance: 'Vanilla Intro' };
+  { from: 'menu', to: 'links-house', entrance: 'Vanilla Intro', tags: [] };
 
 // ─── Rule Resolution ───
 

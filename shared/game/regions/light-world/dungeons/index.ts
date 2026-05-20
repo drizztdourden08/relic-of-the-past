@@ -1,4 +1,4 @@
-import type { RegionDefinition } from '../../types';
+import type { RegionDefinition } from '../../../types';
 
 import { HYRULE_CASTLE_DUNGEON } from './hyrule-castle';
 import { CASTLE_TOWER_DUNGEON } from './castle-tower';

@@ -23,20 +23,16 @@ function buildRegionLookup(regions: RegionDefinition[] = ALL_REGIONS): RegionLoo
   for (const region of regions) {
     if (region.inGameIndex == null) continue;
 
-    const indices = Array.isArray(region.inGameIndex)
-      ? region.inGameIndex
-      : [region.inGameIndex];
-
     switch (region.type) {
       case 'lightWorld':
       case 'darkWorld':
-        for (const idx of indices) byOverworldScreen.set(idx, region);
+        byOverworldScreen.set(region.inGameIndex, region);
         break;
       case 'dungeon':
-        for (const idx of indices) byDungeonRoom.set(idx.toString(), region);
+        byDungeonRoom.set(region.inGameIndex.toString(), region);
         break;
       case 'cave':
-        for (const idx of indices) byCaveRoom.set(idx, region);
+        byCaveRoom.set(region.inGameIndex, region);
         break;
     }
   }
