@@ -125,6 +125,8 @@ int WasmGetViewportInfo(void) {
     g_viewport_buf[10] = mod;
   }
 
-  g_viewport_buf[11] = player_is_indoors;
+  // locationType: 0=overworld/other, 1=house/cave, 2=dungeon
+  uint8 locMod = g_viewport_buf[10];
+  g_viewport_buf[11] = (locMod == 7) ? (cur_palace_index_x2 == 0xff ? 1 : 2) : 0;
   return (int)g_viewport_buf;
 }

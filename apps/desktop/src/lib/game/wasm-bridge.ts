@@ -126,8 +126,8 @@ interface ViewportInfo {
   isGameplay: boolean;
   /** Physical location module (unaffected by text/menu overlays) */
   locationModule: number;
-  /** Whether the player is currently indoors (house/dungeon/cave) */
-  isIndoors: boolean;
+  /** Location type: 0=overworld/other, 1=house/cave, 2=dungeon */
+  locationType: number;
 }
 
 /**
@@ -150,7 +150,7 @@ function wasmGetViewportInfo(): ViewportInfo | null {
     const snesWidth = heap[ptr + 6] | (heap[ptr + 7] << 8);
     const snesHeight = heap[ptr + 8] | (heap[ptr + 9] << 8);
     const locationModule = heap[ptr + 10];
-    const isIndoors = heap[ptr + 11] !== 0;
+    const locationType = heap[ptr + 11]; // 0=overworld, 1=house/cave, 2=dungeon
 
     // Black pixels = max extra - actual rendered extra
     const blackLeft = extraLeftRight - extraLeftCur;
@@ -164,7 +164,7 @@ function wasmGetViewportInfo(): ViewportInfo | null {
     return {
       mainModule, submodule, extraLeftRight, extraLeftCur, extraRightCur,
       extraBottomCur, snesWidth, snesHeight, blackLeft, blackRight, blackBottom,
-      isGameplay, locationModule, isIndoors,
+      isGameplay, locationModule, locationType,
     };
   } catch {
     return null;
@@ -227,6 +227,20 @@ function wasmGetUIOverlayMode(): number {
   return mod.ccall('WasmGetUIOverlayMode', 'number', [], []) as number;
 }
 
+/**
+ * Get in-game menu state: 0=gameplay, 1=opening, 2=open, 3=closing.
+ * Used to sync enhanced HUD overlay transitions with the native pause animation.
+ */
+function wasmGetMenuState(): number {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return 0;
+  try {
+    return mod.ccall('WasmGetMenuState', 'number', [], []) as number;
+  } catch {
+    return 0;
+  }
+}
+
 export {
   getGameState,
   getModule,
@@ -239,6 +253,7 @@ export {
   UI_STATE_BUFFER_SIZE,
   wasmCheat,
   wasmGetGameUIState,
+  wasmGetMenuState,
   wasmGetPaused,
   wasmGetUIOverlayMode,
   wasmGetViewportInfo,

@@ -23,7 +23,7 @@ function createWindow(): BrowserWindow {
     icon: is.dev
       ? join(__dirname, '../../apps/desktop/public/logos/logo-256.png')
       : join(__dirname, '../renderer/logos/logo-256.png'),
-    backgroundColor: '#16213e',
+    backgroundColor: '#000000',
     show: !noFocus,
     webPreferences: {
       preload: join(__dirname, '../preload/preload.js'),

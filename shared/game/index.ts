@@ -4,6 +4,7 @@ export * from './types';
 export * from './items';
 export * from './checks';
 export * from './regions';
+export * from './connections';
 export * from './logic';
 export {
   SPRITE_MANIFEST,

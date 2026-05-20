@@ -1,4 +1,4 @@
-import { useHud, SNES_WIDTH } from '../../hooks/useHud';
+import { useHud, SNES_HEIGHT } from '../../hooks/useHud';
 import { useHudSettingsStore } from '../../../stores/hud-settings-store';
 import { HudMagicMeter } from '../../composites/HudMagicMeter';
 import { HudCurrentItem } from '../../composites/HudCurrentItem';
@@ -6,19 +6,48 @@ import { HudCount } from '../../composites/HudCount';
 import { HudLife } from '../../compounds/HudLife';
 import { useRef, useEffect, useState, useCallback } from 'react';
 
+/** Convert a ratio setting string to a numeric width/height value */
+function ratioToNumeric(ratio: string): number {
+  switch (ratio) {
+    case '4:3': return 4 / 3;
+    case '3:2': return 3 / 2;
+    case '16:10': return 16 / 10;
+    case '16:9': return 16 / 9;
+    case '18:9': return 18 / 9;
+    default: return 0; // 'match' — use full container width
+  }
+}
+
 const HudView = () => {
-  const { heartMode, magicMode, countLayout } = useHudSettingsStore();
+  const { heartMode, magicMode, countLayout, ratio: hudRatio } = useHudSettingsStore();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(2);
+  const [hudWidth, setHudWidth] = useState<number | undefined>(undefined);
 
   const computeScale = useCallback(() => {
     const el = containerRef.current;
     if (!el) return;
+    const h = el.clientHeight;
     const w = el.clientWidth;
-    if (w <= 0) return;
-    setScale(w / SNES_WIDTH);
-  }, []);
+    if (h <= 0 || w <= 0) return;
+
+    // Scale is always derived from height so HUD elements stay the same size
+    const newScale = h / SNES_HEIGHT;
+    setScale(newScale);
+
+    // Determine HUD content width based on chosen ratio
+    const numericRatio = ratioToNumeric(hudRatio);
+    if (numericRatio <= 0) {
+      // 'match' — use full container width
+      setHudWidth(undefined);
+    } else {
+      // Clamp: HUD ratio can't be wider than the screen
+      const screenRatio = w / h;
+      const effectiveRatio = Math.min(numericRatio, screenRatio);
+      setHudWidth(Math.floor(h * effectiveRatio));
+    }
+  }, [hudRatio]);
 
   useEffect(() => {
     computeScale();
@@ -57,7 +86,7 @@ const HudView = () => {
         overflow: 'hidden',
       }}
     >
-      {/* HUD content */}
+      {/* HUD content — centered at chosen ratio width */}
       <div style={{
         position: 'relative',
         display: 'flex',
@@ -65,6 +94,8 @@ const HudView = () => {
         alignItems: 'flex-start',
         paddingTop: 1.75 * tile,
         height: '100%',
+        width: hudWidth != null ? hudWidth : '100%',
+        margin: hudWidth != null ? '0 auto' : undefined,
       }}>
           {/* Left group: magic meter + item box + counts (original mode) */}
           <div style={{ display: 'flex', alignItems: 'flex-start', marginLeft: 2 * tile }}>

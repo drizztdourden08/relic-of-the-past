@@ -1,3 +1,6 @@
+import type { RegionTag } from './regions/tags';
+import type { ConnectionTag } from './connections/tags';
+
 // ─── Check Types ───
 
 type CheckType =
@@ -32,12 +35,15 @@ interface RegionDefinition {
   name: string;
   type: RegionType;
   dungeon?: string;
+  /** Namespaced tags for categorization (e.g. 'world:light', 'type:cave', 'area:kakariko') */
+  tags: readonly RegionTag[];
 }
 
 interface RegionConnection {
   from: string;
   to: string;
   entrance: string;
+  tags: readonly ConnectionTag[];
 }
 
 // ─── Requirement Expression Tree ───

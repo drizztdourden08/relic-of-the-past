@@ -6,7 +6,7 @@ REM Prerequisites: Emscripten SDK must be activated (run emsdk_env.bat first)
 setlocal enabledelayedexpansion
 
 set ZELDA3=..\zelda3
-set OUTPUT_DIR=output
+set OUTPUT_DIR=..\..\apps\desktop\public\wasm
 
 if not exist "%OUTPUT_DIR%" mkdir "%OUTPUT_DIR%"
 if not exist "assets" mkdir "assets"

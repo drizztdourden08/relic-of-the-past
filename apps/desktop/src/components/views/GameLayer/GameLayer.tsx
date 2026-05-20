@@ -98,7 +98,7 @@ const GameLayer = (props: GameLayerProps) => {
           const isOverworld = vp.locationModule === 9;
           if (isOverworld && hasExtended && edgeEffectRef.current) {
             renderer.setEnabled(true);
-          } else if (!edgeEffectRef.current || (!vp.isGameplay && !isOverworld)) {
+          } else if (!edgeEffectRef.current || !isOverworld) {
             renderer.setEnabled(false);
           }
           // Only update bounds when on overworld — freeze during text/events

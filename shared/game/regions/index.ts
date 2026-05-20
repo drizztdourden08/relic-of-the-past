@@ -1,16 +1,19 @@
-import type { RegionDefinition, RegionConnection } from '../types';
-import { OVERWORLD_REGIONS, OVERWORLD_CONNECTIONS } from './overworld';
-import { DUNGEON_REGIONS, DUNGEON_CONNECTIONS } from './dungeons';
+import type { RegionDefinition } from '../types';
+import { ALL_LIGHT_WORLD_REGIONS } from './light-world';
+import { ALL_DARK_WORLD_REGIONS } from './dark-world';
 
-export { OVERWORLD_REGIONS, OVERWORLD_CONNECTIONS } from './overworld';
-export { DUNGEON_REGIONS, DUNGEON_CONNECTIONS } from './dungeons';
+export { ALL_LIGHT_WORLD_REGIONS } from './light-world';
+export { ALL_DARK_WORLD_REGIONS } from './dark-world';
+export { TAG_METADATA, hasAllTags, hasAnyTag, getTagNamespace, getTagValue } from './tags';
+export type { RegionTag, WorldTag, EnvironmentTag, LocationTypeTag, AreaTag, DungeonTag, RoleTag, TagMetadata } from './tags';
 
-const ALL_REGIONS: RegionDefinition[] = [...OVERWORLD_REGIONS, ...DUNGEON_REGIONS];
-
-const ALL_CONNECTIONS: RegionConnection[] = [...OVERWORLD_CONNECTIONS, ...DUNGEON_CONNECTIONS];
+const ALL_REGIONS: RegionDefinition[] = [
+  ...ALL_LIGHT_WORLD_REGIONS,
+  ...ALL_DARK_WORLD_REGIONS,
+];
 
 const REGION_BY_ID = new Map<string, RegionDefinition>(
   ALL_REGIONS.map(r => [r.id, r])
 );
 
-export { ALL_CONNECTIONS, ALL_REGIONS, REGION_BY_ID };
+export { ALL_REGIONS, REGION_BY_ID };

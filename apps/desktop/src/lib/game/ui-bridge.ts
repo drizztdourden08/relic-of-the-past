@@ -17,14 +17,14 @@ import type {
   TextState,
   UIMode
 } from '@shared/game/types';
-import { wasmGetGameUIState, wasmSetPaused } from './wasm-bridge';
+import { wasmGetGameUIState } from './wasm-bridge';
 
 // ─── Module-level state ───
 
 let rafId: number | null = null;
 let prevState: GameUIState | null = null;
 let storeUpdater: ((state: GameUIState) => void) | null = null;
-let mapPauseActive = false;
+
 
 // ─── Buffer Parser ───
 
@@ -248,25 +248,13 @@ function stateChanged(a: GameUIState, b: GameUIState): boolean {
 }
 
 // ─── Map pause control ───
-// Pause the game when the map reaches its idle state so the background is frozen.
-// OW map idle = overworld_map_state 5, Dungeon map idle = dungmap state 3.
+// Previously paused the game when the map reached idle state, but this created a
+// deadlock: pausing stops ZeldaRunFrame() which prevents input processing, so
+// the player can never close the map. The game's own submodule system already
+// handles map idle state correctly without external intervention.
 
-function checkMapPause(state: GameUIState): void {
-  const isMapMode = state.mode === 'dungeon_map' || state.mode === 'overworld_map';
-
-  if (isMapMode && !mapPauseActive) {
-    // Check if map has reached idle state
-    const owIdle = state.mode === 'overworld_map' && state.map.overworldMapState >= 5;
-    const dungIdle = state.mode === 'dungeon_map' && state.map.dungeonInitState >= 3;
-    if (owIdle || dungIdle) {
-      wasmSetPaused(true);
-      mapPauseActive = true;
-    }
-  } else if (!isMapMode && mapPauseActive) {
-    // Left map mode — unpause
-    wasmSetPaused(false);
-    mapPauseActive = false;
-  }
+function checkMapPause(_state: GameUIState): void {
+  // no-op — map pause removed to fix input deadlock
 }
 
 // ─── rAF Loop ───
@@ -303,10 +291,7 @@ function stopUIBridge(): void {
     cancelAnimationFrame(rafId);
     rafId = null;
   }
-  if (mapPauseActive) {
-    wasmSetPaused(false);
-    mapPauseActive = false;
-  }
+
   prevState = null;
   storeUpdater = null;
 }

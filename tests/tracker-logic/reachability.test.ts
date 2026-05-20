@@ -10,7 +10,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import { getReachableRegions, getAccessibleChecks } from '../../shared/game/logic/eval';
-import { ALL_CONNECTIONS } from '../../shared/game/regions';
+import { ALL_CONNECTIONS } from '../../shared/game/connections';
 import { ALL_CHECKS } from '../../shared/game/checks';
 import { REGION_RULES, CHECK_RULES } from '../../shared/game/logic';
 

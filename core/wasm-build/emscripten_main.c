@@ -318,6 +318,19 @@ int WasmGetPpuRenderFlags(void) {
   return g_ppu_render_flags;
 }
 
+// Returns the in-game menu state:
+// 0 = gameplay, 1 = menu opening, 2 = menu open, 3 = menu closing
+EMSCRIPTEN_KEEPALIVE
+int WasmGetMenuState(void) {
+  if (main_module_index != 14 || submodule_index != 1)
+    return 0;
+  // Inside Hud_Module_Run: overworld_map_state drives the sub-phase
+  uint8 phase = overworld_map_state;
+  if (phase <= 2) return 1; // clearing/init/scrolling down
+  if (phase == 6) return 3; // scrolling back up
+  return 2;                 // browsing (states 3-5, 7-12)
+}
+
 EMSCRIPTEN_KEEPALIVE
 int WasmGetFps(void) {
   return g_curr_fps;

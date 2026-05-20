@@ -20,7 +20,7 @@ import { useSaveOverlay } from './behavior/useSaveOverlay';
 import { useSaveStateSettings } from './behavior/useSaveStateSettings';
 import { useStartup } from './behavior/useStartup';
 import { useAutoTest } from './behavior/useAutoTest';
-import { getInputManager } from '../lib/game';
+import { getInputManager, primeLiveSettings } from '../lib/game';
 import './App.css';
 
 const App = () => {
@@ -37,6 +37,7 @@ const App = () => {
     showDialog,
     dismissDialog,
     onProfileLoaded: (data) => {
+      primeLiveSettings(data.settings);
       game.setGameData(data.assetData, data.configIni);
       display.initFromSettings({
         windowMode: data.settings.windowMode,

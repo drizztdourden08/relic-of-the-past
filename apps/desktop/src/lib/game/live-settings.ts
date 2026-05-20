@@ -206,4 +206,15 @@ function requiresRestart(changedKeys: (keyof GameSettings)[]): boolean {
   return changedKeys.some((k) => !LIVE_SETTINGS.has(k));
 }
 
-export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, reassertHudHidden, requiresRestart };
+/**
+ * Prime tracked live-setting values from known-good settings.
+ * Call this early (e.g. in onProfileLoaded) so reassert* functions
+ * have correct values even if pushLiveSettings hasn't fired yet.
+ */
+function primeLiveSettings(settings: GameSettings): void {
+  lastBackdropBlack = !!settings.forceBackdropBlack;
+  const hideHud = settings.hudMode === 'enhanced' && settings.hudEnhancedParts.includes('main');
+  lastHudHidden = hideHud;
+}
+
+export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, reassertHudHidden, requiresRestart, primeLiveSettings };
