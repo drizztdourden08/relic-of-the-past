@@ -1,19 +1,25 @@
 import type { RegionConnection } from '../../../types';
 
 export const DW_SKULL_WOODS_CONNECTIONS: RegionConnection[] = [
-  // Entrances from forest
-  { from: 'skull-woods-forest', to: 'skull-woods-first-section', entrance: 'Skull Woods First Section Door', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
-  { from: 'skull-woods-forest', to: 'skull-woods-second-section-drop', entrance: 'Skull Woods Second Section Door (East)', tags: ['transit:hole', 'dir:one-way', 'ctx:dungeon-enter'] },
-  { from: 'skull-woods-forest', to: 'skull-woods-second-section-drop', entrance: 'Skull Woods Second Section Door (West)', tags: ['transit:hole', 'dir:one-way', 'ctx:dungeon-enter'] },
-  { from: 'skull-woods-forest-west', to: 'skull-woods-final-section-entrance', entrance: 'Skull Woods Final Section', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter', 'barrier:fire'] },
-
-  // Internal
-  { from: 'skull-woods-first-section', to: 'skull-woods-first-section-left', entrance: 'Skull Woods First Section South Door', tags: ['transit:door', 'dir:two-way', 'ctx:internal'] },
-  { from: 'skull-woods-first-section', to: 'skull-woods-first-section-left', entrance: 'Skull Woods First Section West Door', tags: ['transit:door', 'dir:two-way', 'ctx:internal'] },
-  { from: 'skull-woods-first-section-right', to: 'skull-woods-first-section', entrance: 'Skull Woods First Section (Right) North Door', tags: ['transit:door', 'dir:two-way', 'ctx:internal'] },
-  { from: 'skull-woods-first-section-left', to: 'skull-woods-first-section-right', entrance: 'Skull Woods First Section (Left) Door to Right', tags: ['transit:door', 'dir:two-way', 'ctx:internal'] },
-  { from: 'skull-woods-first-section-left', to: 'skull-woods-first-section', entrance: 'Skull Woods First Section (Left) Door to Exit', tags: ['transit:door', 'dir:two-way', 'ctx:internal'] },
-  { from: 'skull-woods-second-section-drop', to: 'skull-woods-second-section', entrance: 'Skull Woods Second Section (Drop)', tags: ['transit:hole', 'dir:one-way', 'ctx:internal'] },
-  { from: 'skull-woods-final-section-entrance', to: 'skull-woods-final-section-mothula', entrance: 'Skull Woods Torch Room', tags: ['transit:door', 'dir:one-way', 'ctx:boss', 'barrier:fire'] },
-  { from: 'skull-woods-first-section', to: 'skull-woods-first-section-top', entrance: 'Skull Woods First Section Bomb Jump', tags: ['transit:bomb', 'dir:one-way', 'ctx:internal', 'barrier:bomb'] },
+  { from: 'overworld', to: 'sw-0x59', entrance: 'Pot Circle Hole', tags: ['transit:hole', 'dir:one-way', 'ctx:dungeon-enter'] },
+  { from: 'overworld', to: 'sw-0x57', entrance: 'West Entrance', tags: ['transit:hole', 'dir:one-way', 'ctx:dungeon-enter'] },
+  { from: 'overworld', to: 'sw-0x58', entrance: 'Main Entrance', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
+  { from: 'overworld', to: 'sw-0x56', entrance: 'Big Chest Entrance', tags: ['transit:hole', 'dir:one-way', 'ctx:dungeon-enter'] },
+  { from: 'sw-0x29', to: 'sw-0x39', entrance: 'Boss Return', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
+  { from: 'sw-0x39', to: 'sw-0x49', entrance: 'South Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal', 'barrier:small-key'] },
+  { from: 'sw-0x49', to: 'sw-0x59', entrance: 'South Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
+  { from: 'sw-0x56', to: 'sw-0x57', entrance: 'East Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
+  { from: 'sw-0x56', to: 'sw-0x58', entrance: 'East Passage (far)', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
+  { from: 'sw-0x57', to: 'sw-0x58', entrance: 'East Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
+  { from: 'sw-0x57', to: 'sw-0x67', entrance: 'South Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
+  { from: 'sw-0x58', to: 'sw-0x68', entrance: 'South to Entrance', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
+  { from: 'sw-0x58', to: 'sw-0x59', entrance: 'East Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
+  { from: 'sw-0x67', to: 'sw-0x68', entrance: 'East Passage', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
+  { from: 'sw-0x68', to: 'sw-0x58', entrance: 'North Return', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
+  { from: 'sw-0x29', to: 'sw-0x39', entrance: 'Boss Stairs', tags: ['transit:stairs', 'dir:two-way', 'ctx:boss'] },
+  { from: 'sw-0x49', to: 'sw-0x39', entrance: 'Key Door North', tags: ['transit:walk', 'dir:two-way', 'ctx:internal', 'barrier:small-key'] },
+  { from: 'sw-0x68', to: 'sw-0x49', entrance: 'Fire Rod Passage', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal', 'barrier:fire'] },
+  { from: 'sw-0x56', to: 'dw-40', entrance: 'Big Chest Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+  { from: 'sw-0x58', to: 'dw-40', entrance: 'Main Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+  { from: 'sw-0x68', to: 'dw-40', entrance: 'South Exit', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
 ];

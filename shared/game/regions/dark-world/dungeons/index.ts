@@ -8,7 +8,6 @@ import { ICE_PALACE_DUNGEON } from './ice-palace';
 import { MISERY_MIRE_DUNGEON } from './misery-mire';
 import { TURTLE_ROCK_DUNGEON } from './turtle-rock';
 import { GANONS_TOWER_DUNGEON } from './ganons-tower';
-import { GANONS_PYRAMID_DUNGEON } from './ganons-pyramid';
 
 export { PALACE_OF_DARKNESS_DUNGEON } from './palace-of-darkness';
 export { SWAMP_PALACE_DUNGEON } from './swamp-palace';
@@ -18,7 +17,6 @@ export { ICE_PALACE_DUNGEON } from './ice-palace';
 export { MISERY_MIRE_DUNGEON } from './misery-mire';
 export { TURTLE_ROCK_DUNGEON } from './turtle-rock';
 export { GANONS_TOWER_DUNGEON } from './ganons-tower';
-export { GANONS_PYRAMID_DUNGEON } from './ganons-pyramid';
 
 export const DW_DUNGEON_REGIONS: RegionDefinition[] = [
   ...PALACE_OF_DARKNESS_DUNGEON,
@@ -29,5 +27,4 @@ export const DW_DUNGEON_REGIONS: RegionDefinition[] = [
   ...MISERY_MIRE_DUNGEON,
   ...TURTLE_ROCK_DUNGEON,
   ...GANONS_TOWER_DUNGEON,
-  ...GANONS_PYRAMID_DUNGEON,
 ];
