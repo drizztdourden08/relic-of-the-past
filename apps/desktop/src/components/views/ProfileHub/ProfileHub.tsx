@@ -6,9 +6,11 @@ import { HomeTab } from './tabs/HomeTab';
 import { SettingsView } from './sub-components/SettingsView';
 import { AudioSettings } from './tabs/AudioSettings';
 import { GameplaySettings } from './tabs/GameplaySettings';
+import { HudSettings } from './tabs/HudSettings';
 import { ControlsSettings } from './tabs/ControlsSettings';
 import { DEFAULT_SETTINGS, mergeSettings } from '../../../lib/game/settings';
 import { pushLiveSettings, LIVE_SETTINGS, getInputManager } from '../../../lib/game';
+import { useHudSettingsStore } from '../../../stores/hud-settings-store';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { log } from '../../../lib/log-bus';
 import './ProfileHub.css';
@@ -90,6 +92,11 @@ const ProfileHub = (props: ProfileHubProps) => {
         if (saved) {
           const merged = mergeSettings(saved);
           setSettings(merged);
+          useHudSettingsStore.getState().setHudSettings({
+            heartMode: merged.hudHeartMode,
+            magicMode: merged.hudMagicMode,
+            countLayout: merged.hudCountLayout,
+          });
           onWindowModeChange?.(merged.windowMode);
           onConstraintSettingsChange?.(merged.viewportConstraint, merged.aspectRatio);
           onMasterVolumeChange?.(merged.masterVolume);
@@ -158,6 +165,15 @@ const ProfileHub = (props: ProfileHubProps) => {
       // Notify parent of edge effect toggle
       if ('overworldEdgeEffect' in patch) {
         onEdgeEffectChange?.(next.overworldEdgeEffect);
+      }
+
+      // Sync HUD settings to store for live rendering
+      if ('hudHeartMode' in patch || 'hudMagicMode' in patch || 'hudCountLayout' in patch) {
+        useHudSettingsStore.getState().setHudSettings({
+          heartMode: next.hudHeartMode,
+          magicMode: next.hudMagicMode,
+          countLayout: next.hudCountLayout,
+        });
       }
 
       // If game is running, push live settings and maybe show restart toast
@@ -239,6 +255,13 @@ const ProfileHub = (props: ProfileHubProps) => {
             <span className="profile-hub__tab-label">Gameplay</span>
           </button>
           <button
+            className={`profile-hub__tab ${activeTab === 'hud' ? 'profile-hub__tab--active' : ''}`}
+            onClick={() => setActiveTab('hud')}
+          >
+            <span className="profile-hub__tab-icon">🖥️</span>
+            <span className="profile-hub__tab-label">HUD</span>
+          </button>
+          <button
             className={`profile-hub__tab ${activeTab === 'controls' ? 'profile-hub__tab--active' : ''}`}
             onClick={() => setActiveTab('controls')}
           >
@@ -267,6 +290,9 @@ const ProfileHub = (props: ProfileHubProps) => {
           )}
           {activeTab === 'gameplay' && (
             <GameplaySettings settings={settings} onChange={handleSettingsChange} />
+          )}
+          {activeTab === 'hud' && (
+            <HudSettings settings={settings} onChange={handleSettingsChange} />
           )}
           {activeTab === 'controls' && (
             <ControlsSettings settings={settings} onChange={handleSettingsChange} profileId={profile.id} />

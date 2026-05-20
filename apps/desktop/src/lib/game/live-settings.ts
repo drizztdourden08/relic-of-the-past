@@ -120,6 +120,10 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'overworldEdgeEffect',
   // Backdrop color (WASM flag, pushed live)
   'forceBackdropBlack',
+  // HUD settings (React-only, no WASM restart needed)
+  'hudHeartMode',
+  'hudMagicMode',
+  'hudCountLayout',
 ]);
 
 /** Push live-updatable settings to the running WASM module. Returns true if successful. */

@@ -14,6 +14,7 @@ import { registerLanguageHandlers } from './languages/ipc-handlers';
 import { registerSessionHandlers } from './sessions/ipc-handlers';
 import { registerSpriteProtocol } from './protocol/sprite-protocol';
 import { registerInputHandlers, stopInputHandlers, initCalibrationStore, initProfileStore } from './input';
+import { registerTestHandlers } from './test/ipc-handlers';
 import { ipcMain } from 'electron';
 import { extractAllItemSprites } from '../../../shared/asset-extraction/item-sprites/extract-items';
 import spriteDefinitions from '../../../shared/game/sprites/definitions.json';
@@ -59,6 +60,7 @@ app.whenReady().then(async () => {
   registerSpriteHandlers();
   registerLanguageHandlers();
   registerSessionHandlers();
+  registerTestHandlers();
 
   // App info handler
   ipcMain.handle('app:getUserDataPath', () => app.getPath('userData'));

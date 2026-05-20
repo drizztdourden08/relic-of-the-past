@@ -9,6 +9,7 @@ interface TitleBarProps {
   onToggleSaveStates: () => void;
   onToggleInventory: () => void;
   onToggleChecks: () => void;
+  onToggleDebug: () => void;
   onShowDataManager: (tab?: string) => void;
   onShowInputTester: () => void;
   onShowCredits: () => void;

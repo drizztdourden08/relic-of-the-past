@@ -5,6 +5,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { WidgetLayout, WidgetState } from '../types';
 import { loadLayoutLocal, saveLayoutLocal, loadLayoutForProfile, saveLayoutForProfile, updateWidget } from './widgetStore';
+import { createDefaultWidgetState, getWidgetDefinition } from './createWidgetState';
 
 const useWidgetLayout = (profileId: string | null) => {
   const [layout, setLayoutRaw] = useState<WidgetLayout>(loadLayoutLocal);
@@ -48,7 +49,12 @@ const useWidgetLayout = (profileId: string | null) => {
   const toggle = useCallback((id: string) => {
     setLayout((prev) => {
       const w = prev.widgets.find((w) => w.id === id);
-      if (!w) return prev;
+      if (!w) {
+        // Widget not in layout yet — create it as visible
+        const def = getWidgetDefinition(id);
+        if (!def) return prev;
+        return { widgets: [...prev.widgets, { ...createDefaultWidgetState(def, prev.widgets.length), visible: true }] };
+      }
       return updateWidget(prev, id, { visible: !w.visible });
     });
   }, [setLayout]);

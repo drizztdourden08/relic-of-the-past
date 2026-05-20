@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { useGameState } from './behavior/useGameState';
 import { getInputManager, wasmGetViewportInfo, wasmRenderCleanFrame } from '../../../lib/game';
 import { createEdgeGlowRenderer, type EdgeGlowRenderer } from '../../../lib/game/edge-glow';
+import { useCanvasFit } from '../../../hooks/useCanvasFit';
 import { ControllerDisconnectOverlay } from './sub-components/ControllerDisconnectOverlay';
 import { GameOverlay } from '../GameOverlay';
 import './GameLayer.css';
@@ -18,67 +19,40 @@ const GameLayer = (props: GameLayerProps) => {
   const edgeEffectRef = useRef(edgeEffect);
   edgeEffectRef.current = edgeEffect;
   const { status, error, start } = useGameState();
-  // Increment to force React to create a fresh <canvas> DOM element on restart,
-  // ensuring the new WASM instance gets a clean WebGL context.
   const [canvasKey, setCanvasKey] = useState(0);
   const hasStartedRef = useRef(false);
   const [controllerPaused, setControllerPaused] = useState(false);
   const [disconnectedName, setDisconnectedName] = useState('');
+  const [bufSize, setBufSize] = useState({ w: 512, h: 448 });
 
-  // Scale canvas to fill the container while maintaining aspect ratio
-  const fitCanvas = useCallback(() => {
+  // Compute fitted size using shared hook (same formula for canvas + overlay)
+  const fitSize = useCanvasFit(containerRef, bufSize.w, bufSize.h, stretch);
+
+  // Apply fitted size to canvases (they need direct DOM style manipulation)
+  useEffect(() => {
     const canvas = canvasRef.current;
     const fxCanvas = fxCanvasRef.current;
-    const container = containerRef.current;
-    if (!canvas || !container) return;
-
-    const containerW = container.clientWidth;
-    const containerH = container.clientHeight;
-    if (!containerW || !containerH) return;
-
-    if (stretch) {
-      canvas.style.width = `${containerW}px`;
-      canvas.style.height = `${containerH}px`;
-      if (fxCanvas) {
-        fxCanvas.style.width = `${containerW}px`;
-        fxCanvas.style.height = `${containerH}px`;
-      }
-      return;
+    if (canvas) {
+      canvas.style.width = `${fitSize.width}px`;
+      canvas.style.height = `${fitSize.height}px`;
     }
-
-    const bufW = canvas.width;
-    const bufH = canvas.height;
-    if (!bufW || !bufH) return;
-
-    const scale = Math.min(containerW / bufW, containerH / bufH);
-    const cssW = Math.floor(bufW * scale);
-    const cssH = Math.floor(bufH * scale);
-
-    canvas.style.width = `${cssW}px`;
-    canvas.style.height = `${cssH}px`;
     if (fxCanvas) {
-      fxCanvas.style.width = `${cssW}px`;
-      fxCanvas.style.height = `${cssH}px`;
+      fxCanvas.style.width = `${fitSize.width}px`;
+      fxCanvas.style.height = `${fitSize.height}px`;
     }
-  }, [stretch]);
+  }, [fitSize]);
 
-  // Observe container size changes and re-fit
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const ro = new ResizeObserver(() => fitCanvas());
-    ro.observe(container);
-    return () => ro.disconnect();
-  }, [fitCanvas, canvasKey]);
-
-  // Re-fit after WASM starts (SDL may change canvas.width/height)
+  // Sync buffer size from canvas after WASM starts (SDL may change canvas.width/height)
   useEffect(() => {
     if (status !== 'running') return;
-    // SDL_CreateWindow sets canvas.width/height; fit after a tick
-    const id = requestAnimationFrame(() => fitCanvas());
+    const id = requestAnimationFrame(() => {
+      const canvas = canvasRef.current;
+      if (canvas && (canvas.width !== bufSize.w || canvas.height !== bufSize.h)) {
+        setBufSize({ w: canvas.width, h: canvas.height });
+      }
+    });
     return () => cancelAnimationFrame(id);
-  }, [status, fitCanvas]);
+  }, [status, canvasKey]);
 
   // ─── Edge glow shader render loop ───
   useEffect(() => {
@@ -112,6 +86,7 @@ const GameLayer = (props: GameLayerProps) => {
         if (gameCanvas.width !== fxCanvas.width || gameCanvas.height !== fxCanvas.height) {
           fxCanvas.width = gameCanvas.width;
           fxCanvas.height = gameCanvas.height;
+          setBufSize({ w: gameCanvas.width, h: gameCanvas.height });
         }
 
         // Query WASM for precise viewport info
@@ -266,7 +241,7 @@ const GameLayer = (props: GameLayerProps) => {
           </div>
         </div>
       )}
-      {status === 'running' && <GameOverlay />}
+      {status === 'running' && <GameOverlay width={fitSize.width} height={fitSize.height} />}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import type { Profile } from '@shared/types/profile';
 import type { GameSettings } from '@shared/types/settings';
 
-type ProfileHubTab = 'home' | 'settings' | 'audio' | 'gameplay' | 'controls';
+type ProfileHubTab = 'home' | 'settings' | 'audio' | 'gameplay' | 'hud' | 'controls';
 
 interface ProfileHubProps {
   profile: Profile;

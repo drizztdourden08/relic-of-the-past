@@ -209,4 +209,8 @@ contextBridge.exposeInMainWorld('api', {
   checkSpritesExtracted: (romFile: string) => ipcRenderer.invoke('sprites:check', romFile),
   deleteSprites: (romFile: string) => ipcRenderer.invoke('sprites:delete', romFile),
   getSpritePath: (romFile: string, file: string) => ipcRenderer.invoke('sprites:getPath', romFile, file),
+
+  // Test automation
+  getTestArgs: () => ipcRenderer.invoke('test:getArgs') as Promise<{ autoState: number | null; screenshot: string | null }>,
+  takeScreenshot: (name: string) => ipcRenderer.invoke('test:screenshot', name) as Promise<string>,
 });

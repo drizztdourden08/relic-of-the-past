@@ -38,6 +38,14 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultDockedSize: 180,
     defaultFloatingSize: { width: 600, height: 220 },
   },
+  {
+    id: 'debug',
+    label: 'Debug',
+    defaultVisibility: 'game-only' as WidgetVisibility,
+    defaultSide: 'right' as SnapSide,
+    defaultDockedSize: 320,
+    defaultFloatingSize: { width: 340, height: 500 },
+  },
 ];
 
 export { POSITION_OPTIONS, TITLEBAR_HEIGHT, WIDGET_DEFINITIONS };

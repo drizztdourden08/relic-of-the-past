@@ -65,6 +65,11 @@ const DEFAULT_SETTINGS: GameSettings = {
   overworldEdgeEffect: true,
   forceBackdropBlack: false,
 
+  // HUD
+  hudHeartMode: 'original',
+  hudMagicMode: 'original',
+  hudCountLayout: 'centered',
+
   // Controls
   activeInputProfileId: null,
   enhancedSaveSlotShortcut: true,

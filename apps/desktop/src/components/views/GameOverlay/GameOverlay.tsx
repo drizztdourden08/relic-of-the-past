@@ -1,23 +1,34 @@
 /**
- * GameOverlay — positioned absolutely over the game canvas.
+ * GameOverlay — sized to match the game canvas exactly.
  * pointer-events: none so it doesn't interfere with input.
- * Renders the DebugStateDisplay for data sync verification.
+ * Renders the HUD replacement.
  */
 
-import { DebugStateDisplay } from './DebugStateDisplay';
+import { HudView } from '../../../hud';
+import '../../../hud/hud.css';
 
-function GameOverlay() {
+interface GameOverlayProps {
+  width: number;
+  height: number;
+}
+
+function GameOverlay({ width, height }: GameOverlayProps) {
   return (
     <div
       style={{
         position: 'absolute',
         inset: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         pointerEvents: 'none',
         zIndex: 10,
         overflow: 'hidden',
       }}
     >
-      <DebugStateDisplay />
+      <div style={{ width, height, position: 'relative' }}>
+        <HudView />
+      </div>
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { TitleBar } from '../components/views/TitleBar';
 import { GameLayer } from '../components/views/GameLayer';
 import { SaveStateOverlay } from '../components/views/SaveStateOverlay/SaveStateOverlay';
 import { WidgetManager, useWidgetLayout } from '../components/composites/Widget';
-import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent } from '../widgets';
+import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent } from '../widgets';
 import { SpriteDebug } from '../components/views/SpriteDebug';
 import { Dialog } from '../components/composites/Dialog';
 import { PageRouter } from './PageRouter';
@@ -19,6 +19,7 @@ import { useProfileManagement } from './behavior/useProfileManagement';
 import { useSaveOverlay } from './behavior/useSaveOverlay';
 import { useSaveStateSettings } from './behavior/useSaveStateSettings';
 import { useStartup } from './behavior/useStartup';
+import { useAutoTest } from './behavior/useAutoTest';
 import { getInputManager } from '../lib/game';
 import './App.css';
 
@@ -68,6 +69,7 @@ const App = () => {
   }, []);
 
   useStartup(profileMgmt, nav);
+  useAutoTest({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame });
   useIpcLogBridge();
 
   // Input suppression: disable game input when menus/overlays are open
@@ -119,6 +121,7 @@ const App = () => {
         onToggleSaveStates={saveOverlay.toggle}
         onToggleInventory={() => widgets.toggle('inventory')}
         onToggleChecks={() => widgets.toggle('checks')}
+        onToggleDebug={() => widgets.toggle('debug')}
         onShowDataManager={handleShowDataManager}
         onShowInputTester={() => nav.setActivePage('input-tester')}
         onShowCredits={() => nav.setActivePage('credits')}
@@ -177,6 +180,7 @@ const App = () => {
             inventory: <InventoryWidgetContent />,
             checks: <ChecksWidgetContent />,
             logs: <LogsWidgetContent />,
+            debug: <DebugWidgetContent />,
           }}
         </WidgetManager>
 

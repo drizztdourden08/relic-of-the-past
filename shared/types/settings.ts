@@ -62,6 +62,11 @@ interface GameSettings {
   overworldEdgeEffect: boolean;
   forceBackdropBlack: boolean;
 
+  // ─── HUD ───
+  hudHeartMode: 'original' | 'smooth';
+  hudMagicMode: 'original' | 'accurate';
+  hudCountLayout: 'centered' | 'original';
+
   // ─── Controls ───
   activeInputProfileId: string | null;
   functionMappings?: FunctionMapping[];
