@@ -13,6 +13,13 @@ export { setItemOverride, clearItemOverrides } from './randomizer';
 export { pushLiveSettings, reassertBackdropBlack, reassertHudHidden, reassertPauseHidden, reassertVolumes, requiresRestart, primeLiveSettings, LIVE_SETTINGS } from './live-settings';
 export { initMasterVolume, setMasterVolume, suspendAudio, resumeAudio } from './audio-volume';
 export { getFps } from './fps';
+export {
+  cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck,
+  cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows, cheatRefillMagic,
+  cheatFillBottle, cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct,
+  BottleContents,
+} from './cheats';
+export type { BottleContentsValue } from './cheats';
 export { getInputManager, resolveFunctionMappingIcon } from '../input/input-manager';
 export type { UnknownItemEntry } from './tracker';
 export {

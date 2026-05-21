@@ -3,7 +3,7 @@ import { TitleBar } from '../components/views/TitleBar';
 import { GameLayer } from '../components/views/GameLayer';
 import { SaveStateOverlay } from '../components/views/SaveStateOverlay/SaveStateOverlay';
 import { WidgetManager, useWidgetLayout } from '../components/composites/Widget';
-import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent } from '../widgets';
+import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, CheatsWidgetContent } from '../widgets';
 import { SpriteDebug } from '../components/views/SpriteDebug';
 import { Dialog } from '../components/composites/Dialog';
 import { PageRouter } from './PageRouter';
@@ -123,10 +123,12 @@ const App = () => {
         onToggleInventory={() => widgets.toggle('inventory')}
         onToggleChecks={() => widgets.toggle('checks')}
         onToggleDebug={() => widgets.toggle('debug')}
+        onToggleCheats={() => widgets.toggle('cheats')}
         onShowDataManager={handleShowDataManager}
         onShowInputTester={() => nav.setActivePage('input-tester')}
         onShowCredits={() => nav.setActivePage('credits')}
         onShowSpriteDebug={toggleSpriteDebug}
+        onShowConnectionDebug={() => widgets.toggle('navigation')}
         activeProfile={profileMgmt.activeProfile}
         gameRunning={game.isRunning}
         windowMode={display.windowMode}
@@ -182,6 +184,8 @@ const App = () => {
             checks: <ChecksWidgetContent />,
             logs: <LogsWidgetContent />,
             debug: <DebugWidgetContent />,
+            navigation: <NavigationWidgetContent romFile={profileMgmt.activeProfile?.romFile ?? ''} />,
+            cheats: <CheatsWidgetContent />,
           }}
         </WidgetManager>
 

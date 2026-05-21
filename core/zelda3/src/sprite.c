@@ -13,6 +13,7 @@
 #include "tile_detect.h"
 #include "sprite_main.h"
 #include "assets.h"
+#include "game_hooks.h"
 static const uint16 kOamGetBufferPos_Tab0[6] = {0x171, 0x201, 0x31, 0xc1, 0x141, 0x1d1};
 static const uint16 kOamGetBufferPos_Tab1[48] = {
    0x30,  0x50,  0x80,  0xb0,  0xe0, 0x110, 0x140, 0x170, 0x1d0, 0x1d4, 0x1dc, 0x1e0, 0x1e4, 0x1ec, 0x1f0, 0x1f8,
@@ -2298,6 +2299,14 @@ void Sprite_ApplyCalculatedDamage(int k, int a) {  // 86ed89
 }
 
 void Sprite_GiveDamage(int k, uint8 dmg, uint8 r0_hit_timer) {  // 86edc5
+  // Cheat: apply outgoing damage multiplier
+  if (dmg > 0 && dmg < 249) {
+    uint8 mult = GameHook_GetDamageMultiplier();
+    if (mult > 1) {
+      uint16 scaled = (uint16)dmg * mult;
+      dmg = scaled > 248 ? 248 : (uint8)scaled;  // Cap below special values
+    }
+  }
   if (dmg == 249) {
     Sprite_Func18(k, 0xe3);
     return;

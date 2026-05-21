@@ -19,10 +19,12 @@ const TitleBar = (props: TitleBarProps) => {
     onToggleInventory,
     onToggleChecks,
     onToggleDebug,
+    onToggleCheats,
     onShowDataManager,
     onShowInputTester,
     onShowCredits,
     onShowSpriteDebug,
+    onShowConnectionDebug,
     activeProfile,
     gameRunning,
     windowMode = 'default',
@@ -31,9 +33,7 @@ const TitleBar = (props: TitleBarProps) => {
     showFps = false,
   } = props;
   const menuRef = useRef<HTMLDivElement>(null);
-  const debugMenuRef = useRef<HTMLDivElement>(null);
   const { isMaximized, menuOpen, toggleMenu, closeMenu } = useTitleBar(menuRef);
-  const [debugMenuOpen, setDebugMenuOpen] = useState(false);
   const [pinned, setPinned] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -87,18 +87,6 @@ const TitleBar = (props: TitleBarProps) => {
     onToggleMute?.();
   };
 
-  // Close debug menu on outside click
-  useEffect(() => {
-    if (!debugMenuOpen) return;
-    const handler = (e: MouseEvent) => {
-      const target = e.target as Node;
-      if (debugMenuRef.current?.contains(target)) return;
-      if ((target as Element).closest?.('.dropdown-menu')) return;
-      setDebugMenuOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [debugMenuOpen]);
 
   const menuItems: (Parameters<typeof DropdownMenu>[0]['items'][number])[] = [
     {
@@ -135,9 +123,20 @@ const TitleBar = (props: TitleBarProps) => {
       children: [
         { key: 'inventory', icon: '🎒', label: 'Inventory Tracker', onClick: () => { closeMenu(); onToggleInventory(); } },
         { key: 'checks', icon: '🗺️', label: 'Checks Tracker', onClick: () => { closeMenu(); onToggleChecks(); } },
+        { key: 'cheats', icon: '⚡', label: 'Cheats', onClick: () => { closeMenu(); onToggleCheats(); } },
         { key: 'logs', icon: '📋', label: 'Logs', onClick: () => { closeMenu(); onShowLogs(); } },
         { key: 'debug', icon: '🐛', label: 'Debug State', onClick: () => { closeMenu(); onToggleDebug(); } },
+        { key: 'navigation', icon: '🔗', label: 'Location & Navigation', onClick: () => { closeMenu(); onShowConnectionDebug(); } },
+      ],
+    },
+    {
+      key: 'advanced',
+      icon: '⚙️',
+      label: 'Advanced',
+      children: [
         { key: 'input-tester', icon: '🎮', label: 'Input Calibration', onClick: () => { closeMenu(); onShowInputTester(); } },
+        { key: 'dev-console', icon: '🛠️', label: 'Dev Console', onClick: () => { closeMenu(); window.api.openDevTools(); } },
+        { key: 'sprite-debug', icon: '🖼️', label: 'Sprite Debug', onClick: () => { closeMenu(); onShowSpriteDebug(); } },
       ],
     },
     'separator',
@@ -150,23 +149,7 @@ const TitleBar = (props: TitleBarProps) => {
     { key: 'quit', icon: '✕', label: 'Quit', onClick: () => window.api.close() },
   ];
 
-  // Dev-only debug menu (separate dropdown)
-  const debugMenuItems: typeof menuItems = window.api.isDev ? [
-    {
-      key: 'sprite-debug',
-      icon: '🖼️',
-      label: 'Sprite Debug',
-      description: 'Review all item sprites',
-      onClick: () => { setDebugMenuOpen(false); onShowSpriteDebug(); },
-    },
-    {
-      key: 'dev-console',
-      icon: '🛠️',
-      label: 'Dev Console',
-      description: 'Open Chrome DevTools',
-      onClick: () => { setDebugMenuOpen(false); window.api.openDevTools(); },
-    },
-  ] : [];
+
 
   const titlebarClass = [
     'titlebar',
@@ -234,21 +217,6 @@ const TitleBar = (props: TitleBarProps) => {
           </IconButton>
         )}
         {menuOpen && <DropdownMenu items={menuItems} anchorRef={menuRef} />}
-        {window.api.isDev && (
-          <div ref={debugMenuRef} style={{ position: 'relative', display: 'inline-flex' }}>
-            <IconButton
-              variant="ghost"
-              size="md"
-              label="Debug"
-              onClick={() => setDebugMenuOpen(v => !v)}
-            >
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style={{ opacity: 0.6 }}>
-                <path d="M4.355.522a.5.5 0 0 1 .623.333l.291.956A5 5 0 0 1 8 1c1.007 0 1.946.298 2.731.811l.29-.956a.5.5 0 1 1 .957.29l-.41 1.352A5 5 0 0 1 13 6h.5a.5.5 0 0 1 0 1H13v1h.5a.5.5 0 0 1 0 1H13a5 5 0 0 1-10 0h-.5a.5.5 0 0 1 0-1H3V7h-.5a.5.5 0 0 1 0-1H3a5 5 0 0 1 1.432-3.503l-.41-1.352a.5.5 0 0 1 .333-.623M6 7v1h4V7zm0 2v1h4V9z" />
-              </svg>
-            </IconButton>
-            {debugMenuOpen && <DropdownMenu items={debugMenuItems} anchorRef={debugMenuRef} />}
-          </div>
-        )}
         {showFps && fps > 0 && (
           <span className="titlebar__fps">{fps} FPS</span>
         )}

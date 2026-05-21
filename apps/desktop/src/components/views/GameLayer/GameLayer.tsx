@@ -26,11 +26,6 @@ const GameLayer = (props: GameLayerProps) => {
   const [disconnectedName, setDisconnectedName] = useState('');
   const [bufSize, setBufSize] = useState({ w: 512, h: 448 });
 
-  // Debug sliders for pixelation effect
-  const [pixelSize, setPixelSize] = useState(4.0);
-  const [pixelDivisor, setPixelDivisor] = useState(15.0);
-  const [pixelExponent, setPixelExponent] = useState(0.55);
-
   // Compute fitted size using shared hook (same formula for canvas + overlay)
   const fitSize = useCanvasFit(containerRef, bufSize.w, bufSize.h, stretch);
 
@@ -199,11 +194,6 @@ const GameLayer = (props: GameLayerProps) => {
     return unsub;
   }, [status]);
 
-  // Sync pixelate params to renderer
-  useEffect(() => {
-    glowRendererRef.current?.setPixelateParams(pixelSize, pixelDivisor, pixelExponent);
-  }, [pixelSize, pixelDivisor, pixelExponent]);
-
   // Double-click canvas to resume from pause
   useEffect(() => {
     if (status !== 'running') return;
@@ -264,16 +254,6 @@ const GameLayer = (props: GameLayerProps) => {
       )}
       {status === 'running' && <ConnectionOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
       {status === 'running' && <GameOverlay width={fitSize.width} height={fitSize.height} />}
-      {status === 'running' && (
-        <div style={{ position: 'absolute', top: 8, left: 8, zIndex: 9999, background: 'rgba(0,0,0,0.8)', padding: '8px 12px', borderRadius: 6, color: '#fff', fontSize: 11, fontFamily: 'monospace' }}>
-          <div>pixelSize: {pixelSize.toFixed(1)}</div>
-          <input type="range" min="1" max="16" step="0.5" value={pixelSize} onChange={e => setPixelSize(+e.target.value)} style={{ width: 160 }} />
-          <div>pixelDivisor: {pixelDivisor.toFixed(1)}</div>
-          <input type="range" min="1" max="60" step="1" value={pixelDivisor} onChange={e => setPixelDivisor(+e.target.value)} style={{ width: 160 }} />
-          <div>pixelExponent: {pixelExponent.toFixed(2)}</div>
-          <input type="range" min="0.1" max="3" step="0.05" value={pixelExponent} onChange={e => setPixelExponent(+e.target.value)} style={{ width: 160 }} />
-        </div>
-      )}
     </div>
   );
 };

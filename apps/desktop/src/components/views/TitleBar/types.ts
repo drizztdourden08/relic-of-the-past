@@ -10,10 +10,12 @@ interface TitleBarProps {
   onToggleInventory: () => void;
   onToggleChecks: () => void;
   onToggleDebug: () => void;
+  onToggleCheats: () => void;
   onShowDataManager: (tab?: string) => void;
   onShowInputTester: () => void;
   onShowCredits: () => void;
   onShowSpriteDebug: () => void;
+  onShowConnectionDebug: () => void;
   activeProfile: Profile | null;
   gameRunning: boolean;
   windowMode?: GameSettings['windowMode'];

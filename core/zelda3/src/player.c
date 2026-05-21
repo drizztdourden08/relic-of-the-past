@@ -156,6 +156,19 @@ void Link_ControlHandler() {  // 87807f
       if (!link_disable_sprite_damage) {
         uint8 dmg = link_give_damage;
         link_give_damage = 0;
+        // Cheat: apply extra armor reduction (stacks with normal armor)
+        {
+          uint8 extra_pct = GameHook_GetExtraArmorPct();
+          if (extra_pct > 0 && dmg > 0) {
+            uint8 reduced = (uint8)((uint16)dmg * (100 - extra_pct) / 100);
+            dmg = reduced < 1 ? (extra_pct >= 100 ? 0 : 1) : reduced;
+          }
+        }
+        if (dmg == 0) {
+          link_auxiliary_state = 0;
+          link_incapacitated_timer = 0;
+          goto skip_damage;
+        }
         if (ancilla_type[0] == 5 && player_handler_timer == 0 && link_delay_timer_spin_attack) {
           ancilla_type[0] = 0;
           flag_for_boomerang_in_place = 0;
@@ -177,6 +190,7 @@ void Link_ControlHandler() {  // 87807f
         }
         link_health_current = new_dmg;
       }
+skip_damage:;
     }
   }
   if (link_player_handler_state)

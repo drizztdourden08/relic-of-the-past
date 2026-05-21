@@ -3,6 +3,9 @@
  * pointer-events: none so it doesn't interfere with input.
  * Renders the HUD replacement when enhanced mode is active.
  * Handles the pause menu slide transition (483ms linear, matching vanilla).
+ *
+ * Hierarchy: OverlayRoot > (PauseMenuView | HudView | LocationNotification)
+ * Each view is absolutely positioned and uses translateY for the slide animation.
  */
 
 import { useEffect, useRef, useState } from 'react';
@@ -54,51 +57,38 @@ function GameOverlay({ width, height }: GameOverlayProps) {
   // Determine slide position
   const isMenuVisible = menuPhase === 'opening' || menuPhase === 'open';
   const isTransitioning = menuPhase === 'opening' || menuPhase === 'closing';
+  const transition = isTransitioning ? `transform ${MENU_TRANSITION_MS}ms linear` : 'none';
 
   return (
     <div
+      className="game-overlay"
       style={{
         position: 'absolute',
         inset: 0,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        width,
+        height,
+        margin: 'auto',
         pointerEvents: 'none',
         zIndex: 10,
         overflow: 'hidden',
       }}
     >
-      <div style={{ width, height, position: 'relative', overflow: 'hidden' }}>
-        {/* Animation container — always present when enhanced mode is on.
-            Two slots stacked vertically (200% height): pause on top, HUD on bottom.
-            During gameplay translateY(-50%) shows the bottom (HUD) slot.
-            When pause opens, translateY(0) shows the top (pause) slot.
-            Slots are always present for stable layout; content is conditional. */}
-        {isEnhanced && (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              flexDirection: 'column',
-              height: '200%',
-              transform: isMenuVisible ? 'translateY(0)' : 'translateY(-50%)',
-              transition: isTransitioning ? `transform ${MENU_TRANSITION_MS}ms linear` : 'none',
-            }}
-          >
-            {/* Pause menu slot */}
-            <div style={{ flex: '0 0 50%', position: 'relative' }}>
-              {showPauseMenu && <PauseMenuView />}
-            </div>
-            {/* HUD slot */}
-            <div style={{ flex: '0 0 50%', position: 'relative' }}>
-              {showMainHud && <HudView />}
-            </div>
-          </div>
-        )}
-        {/* Location change notifications — always rendered when overlay is active */}
-        <LocationNotification />
-      </div>
+      {/* Pause menu — slides down from above */}
+      {showPauseMenu && (
+        <PauseMenuView
+          slideTransform={isMenuVisible ? 'translateY(0)' : 'translateY(-100%)'}
+          slideTransition={transition}
+        />
+      )}
+      {/* HUD — slides down when menu opens */}
+      {showMainHud && (
+        <HudView
+          slideTransform={isMenuVisible ? 'translateY(100%)' : 'translateY(0)'}
+          slideTransition={transition}
+        />
+      )}
+      {/* Location change notifications */}
+      <LocationNotification />
     </div>
   );
 }

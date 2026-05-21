@@ -9,6 +9,7 @@ interface EdgeGlowRenderer {
   setBlackBounds(left: number, right: number, bottom: number): void;
   setMaxBounds(left: number, right: number, bottom: number): void;
   setEffectOpacity(opacity: number): void;
+  setPixelateParams(size: number, divisor: number, exponent: number): void;
   dispose(): void;
 }
 

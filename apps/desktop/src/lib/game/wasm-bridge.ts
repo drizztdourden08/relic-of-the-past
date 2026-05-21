@@ -128,6 +128,14 @@ interface ViewportInfo {
   locationModule: number;
   /** Location type: 0=overworld/other, 1=house/cave, 2=dungeon */
   locationType: number;
+  /** Camera world X position (BG2 horizontal scroll) */
+  cameraX: number;
+  /** Camera world Y position (BG2 vertical scroll) */
+  cameraY: number;
+  /** Link's world X position */
+  linkX: number;
+  /** Link's world Y position */
+  linkY: number;
 }
 
 /**
@@ -151,6 +159,10 @@ function wasmGetViewportInfo(): ViewportInfo | null {
     const snesHeight = heap[ptr + 8] | (heap[ptr + 9] << 8);
     const locationModule = heap[ptr + 10];
     const locationType = heap[ptr + 11]; // 0=overworld, 1=house/cave, 2=dungeon
+    const cameraX = heap[ptr + 12] | (heap[ptr + 13] << 8);
+    const cameraY = heap[ptr + 14] | (heap[ptr + 15] << 8);
+    const linkX = heap[ptr + 16] | (heap[ptr + 17] << 8);
+    const linkY = heap[ptr + 18] | (heap[ptr + 19] << 8);
 
     // Black pixels = max extra - actual rendered extra
     const blackLeft = extraLeftRight - extraLeftCur;
@@ -164,7 +176,7 @@ function wasmGetViewportInfo(): ViewportInfo | null {
     return {
       mainModule, submodule, extraLeftRight, extraLeftCur, extraRightCur,
       extraBottomCur, snesWidth, snesHeight, blackLeft, blackRight, blackBottom,
-      isGameplay, locationModule, locationType,
+      isGameplay, locationModule, locationType, cameraX, cameraY, linkX, linkY,
     };
   } catch {
     return null;

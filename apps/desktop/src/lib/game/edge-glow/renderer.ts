@@ -96,7 +96,9 @@ function createEdgeGlowRenderer(
     dynRight: gl.getUniformLocation(compositeProg, 'u_dynRight'),
     dynBottom: gl.getUniformLocation(compositeProg, 'u_dynBottom'),
     effectOpacity: gl.getUniformLocation(compositeProg, 'u_effectOpacity'),
-  };
+    pixelSize: gl.getUniformLocation(compositeProg, 'u_pixelSize'),
+    pixelDivisor: gl.getUniformLocation(compositeProg, 'u_pixelDivisor'),
+    pixelExponent: gl.getUniformLocation(compositeProg, 'u_pixelExponent'),
   };
 
   // ─── Fullscreen quad geometry ───
@@ -120,12 +122,16 @@ function createEdgeGlowRenderer(
   let maxRight = 0;
   let maxBottom = 0;
   let effectOpacity = 1.0;
+  let pixelSizeMultiplier = 10.0;
+  let pixelDivisor = 60.0;
+  let pixelExponent = 1.45;
 
   const gameTexture = createTextureNearest(gl);
   const cleanTexture = createTextureNearest(gl);
   let fboMirror = createFBONearest(gl, width, height);
   let fboA = createFBO(gl, width, height);
   let fboB = createFBO(gl, width, height);
+
 
   // ─── Public API ───
 
@@ -202,7 +208,7 @@ function createEdgeGlowRenderer(
       readTex = fboB.texture;
     }
 
-    // Final composite
+    // Final composite → screen
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.viewport(0, 0, width, height);
     gl.useProgram(compositeProg);
@@ -231,6 +237,10 @@ function createEdgeGlowRenderer(
     gl.uniform1f(compositeUniforms.dynRight, blackRight);
     gl.uniform1f(compositeUniforms.dynBottom, blackBottom);
     gl.uniform1f(compositeUniforms.effectOpacity, effectOpacity);
+    const pixelSize = glCanvas.clientWidth > 0 ? (glCanvas.clientWidth / width) * pixelSizeMultiplier : pixelSizeMultiplier;
+    gl.uniform1f(compositeUniforms.pixelSize, pixelSize);
+    gl.uniform1f(compositeUniforms.pixelDivisor, pixelDivisor);
+    gl.uniform1f(compositeUniforms.pixelExponent, pixelExponent);
 
     drawQuad(gl, compositeProg, quadBuffer);
   }
@@ -269,6 +279,12 @@ function createEdgeGlowRenderer(
     effectOpacity = opacity;
   }
 
+  function setPixelateParams(size: number, divisor: number, exponent: number): void {
+    pixelSizeMultiplier = size;
+    pixelDivisor = divisor;
+    pixelExponent = exponent;
+  }
+
   function dispose(): void {
     gl.deleteProgram(mirrorProg);
     gl.deleteProgram(blurHProg);
@@ -282,7 +298,7 @@ function createEdgeGlowRenderer(
     destroyFBO(gl, fboB);
   }
 
-  return { render, resize, setEnabled, setBlackBounds, setMaxBounds, setEffectOpacity, dispose };
+  return { render, resize, setEnabled, setBlackBounds, setMaxBounds, setEffectOpacity, setPixelateParams, dispose };
 }
 
 export { createEdgeGlowRenderer };

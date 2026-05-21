@@ -46,6 +46,22 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultDockedSize: 320,
     defaultFloatingSize: { width: 340, height: 500 },
   },
+  {
+    id: 'navigation',
+    label: 'Location & Navigation',
+    defaultVisibility: 'game-only' as WidgetVisibility,
+    defaultSide: 'left' as SnapSide,
+    defaultDockedSize: 320,
+    defaultFloatingSize: { width: 340, height: 460 },
+  },
+  {
+    id: 'cheats',
+    label: 'Cheats',
+    defaultVisibility: 'game-only' as WidgetVisibility,
+    defaultSide: 'right' as SnapSide,
+    defaultDockedSize: 340,
+    defaultFloatingSize: { width: 360, height: 500 },
+  },
 ];
 
 export { POSITION_OPTIONS, TITLEBAR_HEIGHT, WIDGET_DEFINITIONS };
