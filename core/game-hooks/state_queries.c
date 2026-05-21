@@ -96,7 +96,7 @@ int WasmGetProgressFlags(void) {
 
 // ─── Viewport Info ───
 
-static uint8 g_viewport_buf[12];
+static uint8 g_viewport_buf[20];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetViewportInfo(void) {
@@ -128,5 +128,21 @@ int WasmGetViewportInfo(void) {
   // locationType: 0=overworld/other, 1=house/cave, 2=dungeon
   uint8 locMod = g_viewport_buf[10];
   g_viewport_buf[11] = (locMod == 7) ? (cur_palace_index_x2 == 0xff ? 1 : 2) : 0;
+
+  // Camera world position (BG2 scroll = top-left of viewport in world coords)
+  uint16 camX = BG2HOFS_copy2;
+  uint16 camY = BG2VOFS_copy2;
+  g_viewport_buf[12] = camX & 0xFF;
+  g_viewport_buf[13] = (camX >> 8) & 0xFF;
+  g_viewport_buf[14] = camY & 0xFF;
+  g_viewport_buf[15] = (camY >> 8) & 0xFF;
+
+  // Link's world position
+  uint16 lx = link_x_coord;
+  uint16 ly = link_y_coord;
+  g_viewport_buf[16] = lx & 0xFF;
+  g_viewport_buf[17] = (lx >> 8) & 0xFF;
+  g_viewport_buf[18] = ly & 0xFF;
+  g_viewport_buf[19] = (ly >> 8) & 0xFF;
   return (int)g_viewport_buf;
 }

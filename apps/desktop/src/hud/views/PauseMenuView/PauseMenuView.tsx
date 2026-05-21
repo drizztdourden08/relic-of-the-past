@@ -19,29 +19,41 @@ import { PauseNamePanel } from '../../compounds/PauseNamePanel';
 import { PauseProgressPanel } from '../../compounds/PauseProgressPanel';
 import { PauseAbilitiesPanel } from '../../compounds/PauseAbilitiesPanel';
 import { PauseEquipmentPanel } from '../../compounds/PauseEquipmentPanel';
+import { PauseBottlePanel } from '../../compounds/PauseBottlePanel';
+import { getSlotSprite } from '../../composites/PauseItemSlot';
 
 /** Standard SNES menu content area */
-const MENU_W = 256;
 const MENU_H = 224;
+
+/** Bottle content value → display name */
+const BOTTLE_CONTENT_NAMES: Record<number, string> = {
+  2: 'BOTTLE',
+  3: 'RED POTION',
+  4: 'GREEN POTION',
+  5: 'BLUE POTION',
+  6: 'FAIRY',
+  7: 'BEE',
+  8: 'GOOD BEE',
+};
 
 /**
  * Grid slot → save RAM index (kHudItemToItemOrg from hud.c).
  * Maps the pause menu cursor position to the inventory save data index.
+ * Used for cursor navigation logic, NOT for visual display order.
  */
 const GRID_TO_SAVE = [0, 3, 2, 14, 1, 10, 5, 6, 15, 16, 17, 9, 4, 8, 7, 12, 11, 18, 13, 19];
 
-/** Base item names indexed by grid slot position */
-const GRID_SLOT_NAMES = [
-  'BOW', 'BOMBS', 'HOOKSHOT', 'BOOK', 'BOOMERANG',
-  'LAMP', 'FIRE ROD', 'ICE ROD', 'BOTTLE', 'SOMARIA',
-  'BYRNA', 'QUAKE', 'MUSHROOM', 'ETHER', 'BOMBOS',
-  'FLUTE', 'HAMMER', 'CAPE', 'BUG NET', 'MIRROR',
+/** Item names indexed by save-RAM slot (0-19) */
+const SAVE_SLOT_NAMES = [
+  'BOW', 'BOOMERANG', 'HOOKSHOT', 'BOMBS', 'MUSHROOM',
+  'FIRE ROD', 'ICE ROD', 'BOMBOS', 'ETHER', 'QUAKE',
+  'LAMP', 'HAMMER', 'SHOVEL', 'BUG NET', 'BOOK',
+  'BOTTLE', 'SOMARIA', 'BYRNA', 'CAPE', 'MIRROR',
 ];
 
-/** Get item name for a grid slot, considering upgrade values */
-function getItemNameForSlot(gridSlot: number, items: number[]): string {
-  if (gridSlot < 0 || gridSlot >= GRID_TO_SAVE.length) return '';
-  const saveIdx = GRID_TO_SAVE[gridSlot];
+/** Get item name for a save slot, considering upgrade values */
+function getItemNameForSlot(saveIdx: number, items: number[]): string {
+  if (saveIdx < 0 || saveIdx >= 20) return '';
   const value = items[saveIdx];
   if (!value) return '';
   // Upgrade variants
@@ -50,14 +62,12 @@ function getItemNameForSlot(gridSlot: number, items: number[]): string {
   if (saveIdx === 4 && value >= 2) return 'POWDER';
   if (saveIdx === 12 && value >= 2) return 'FLUTE';
   if (saveIdx === 12 && value === 1) return 'SHOVEL';
-  return GRID_SLOT_NAMES[gridSlot];
+  return SAVE_SLOT_NAMES[saveIdx];
 }
 
-function PauseMenuView() {
+function PauseMenuView({ slideTransform, slideTransition }: { slideTransform?: string; slideTransition?: string } = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
-  const [xOffset, setXOffset] = useState(0);
-  const [yOffset, setYOffset] = useState(0);
 
   const computeLayout = useCallback(() => {
     const el = containerRef.current;
@@ -67,15 +77,10 @@ function PauseMenuView() {
 
     const canvas = document.getElementById('canvas') as HTMLCanvasElement | null;
     // Canvas buffer is always 2× native (448 for 224-line, 480 for 240-line extendY)
-    const nativeW = canvas ? canvas.width / 2 : MENU_W;
     const nativeH = canvas ? canvas.height / 2 : MENU_H;
 
     // Scale to match the game's pixel size (respects extendY 240-line mode)
-    const s = h / nativeH;
-    setScale(s);
-    setXOffset((nativeW - MENU_W) / 2);
-    // In extendY (240-line), the 224px menu content is vertically centered in the 240px viewport
-    setYOffset((nativeH - MENU_H) / 2 * s);
+    setScale(h / nativeH);
   }, []);
 
   useEffect(() => {
@@ -90,7 +95,60 @@ function PauseMenuView() {
   const { data, config } = usePauseMenu(scale);
   const { spritesBase } = config;
 
-  const selectedItemName = getItemNameForSlot(data.equippedY, data.items);
+  // Build display items array — replace bottle slot with actual bottle content
+  const displayItems = [...data.items];
+  if (displayItems[15] > 0) {
+    displayItems[15] = data.bottles[displayItems[15] - 1] ?? 0;
+  }
+
+  const selectedSaveIdx = data.equippedY > 0 ? data.equippedY - 1 : -1;
+  const isBottleSelected = selectedSaveIdx === 15 && data.items[15] > 0;
+
+  // Bottle panel expand/collapse animation (~300ms, matching SNES 18-frame expand)
+  const [bottlePhase, setBottlePhase] = useState<'hidden' | 'expanding' | 'visible' | 'collapsing'>('hidden');
+  const prevBottleRef = useRef(false);
+  useEffect(() => {
+    if (isBottleSelected && !prevBottleRef.current) {
+      setBottlePhase('expanding');
+    } else if (!isBottleSelected && prevBottleRef.current) {
+      setBottlePhase('collapsing');
+    }
+    prevBottleRef.current = isBottleSelected;
+  }, [isBottleSelected]);
+
+  const showBottlePanel = bottlePhase !== 'hidden';
+  const showNormalPanels = bottlePhase === 'hidden';
+
+  const bottlePanelStyle: React.CSSProperties = bottlePhase === 'expanding'
+    ? { animation: 'bottle-panel-expand 300ms steps(18) forwards' }
+    : bottlePhase === 'collapsing'
+    ? { animation: 'bottle-panel-collapse 300ms steps(18) forwards' }
+    : {};
+
+  const handleBottleAnimEnd = useCallback(() => {
+    if (bottlePhase === 'expanding') setBottlePhase('visible');
+    else if (bottlePhase === 'collapsing') setBottlePhase('hidden');
+  }, [bottlePhase]);
+
+  // When on bottle slot, show the selected bottle's content name
+  const selectedItemName = isBottleSelected
+    ? (BOTTLE_CONTENT_NAMES[data.bottles[data.items[15] - 1]] ?? '')
+    : getItemNameForSlot(selectedSaveIdx, data.items);
+
+  // Get the selected item's sprite for the name panel
+  const selectedItemSprite = selectedSaveIdx >= 0
+    ? getSlotSprite(selectedSaveIdx, isBottleSelected ? (data.bottles[data.items[15] - 1] ?? 0) : (data.items[selectedSaveIdx] ?? 0)) : null;
+
+  // Derive ability flags from equipment/items as fallback when WASM hasn't exported them yet.
+  // Real link_ability_flags (byte 81) will be non-zero once WASM is rebuilt.
+  const derivedAbilityFlags = data.abilityFlags || (
+    (data.gloves > 0 ? 0x80 : 0) |    // bit 7: LIFT
+    (data.items[14] > 0 ? 0x40 : 0) |  // bit 6: READ (book of mudora)
+    (data.items[14] > 0 ? 0x20 : 0) |  // bit 5: TALK (book grants this too)
+    0x08 |                               // bit 3: PULL (always available)
+    (data.boots > 0 ? 0x04 : 0) |      // bit 2: RUN
+    (data.flippers > 0 ? 0x02 : 0)     // bit 1: SWIM
+  );
 
   const tile = 8 * scale;
 
@@ -99,72 +157,101 @@ function PauseMenuView() {
   return (
     <div
       ref={containerRef}
-      style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}
+      className="pause-menu"
+      style={{
+        position: 'absolute',
+        inset: 0,
+        overflow: 'hidden',
+        transform: slideTransform,
+        transition: slideTransition,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
     >
-      <div style={{
+      <div className="pause-grid" style={{
         display: 'grid',
         gridTemplateColumns: `repeat(32, ${tile}px)`,
         gridTemplateRows: `repeat(28, ${tile}px)`,
-        marginLeft: xOffset * scale,
-        marginTop: yOffset,
       }}>
-        {/* Items panel: tiles (1,5)→(19,19), offset -3 = rows 2-16, cols 2-20 */}
-        <div style={{ gridColumn: '2 / 21', gridRow: '2 / 17' }}>
-          <PauseItemGrid
-            items={data.items}
-            selectedIndex={data.equippedY}
-            gridToSave={GRID_TO_SAVE}
-            spritesBase={spritesBase}
+      {/* Items panel: tiles (1,5)→(19,19), offset -3 = rows 2-16, cols 2-20 */}
+      <PauseItemGrid
+        items={displayItems}
+        selectedIndex={selectedSaveIdx}
+        staticSelection={isBottleSelected}
+        spritesBase={spritesBase}
+        scale={scale}
+        style={{ gridColumn: '2 / 21', gridRow: '2 / 17' }}
+      />
+
+      {/* Name panel: tiles (21,5)→(30,10), offset = rows 2-7, cols 22-31 */}
+      <PauseNamePanel
+        itemName={selectedItemName}
+        itemSprite={selectedItemSprite}
+        borderColor={showBottlePanel ? 'yellow' : 'green'}
+        spritesBase={spritesBase}
+        scale={scale}
+        style={{ gridColumn: '22 / 32', gridRow: '2 / 8' }}
+      />
+
+      {/* Right side: bottle panel when on bottle slot, otherwise progress + equipment */}
+      {showBottlePanel && (
+        <div
+          style={{ gridColumn: '22 / 32', gridRow: '8 / 27', ...bottlePanelStyle }}
+          onAnimationEnd={handleBottleAnimEnd}
+        >
+          <PauseBottlePanel
+            bottles={data.bottles}
+            selectedIndex={data.items[15] - 1}
             scale={scale}
+            spritesBase={spritesBase}
           />
         </div>
-
-        {/* Name panel: tiles (21,5)→(30,10), offset = rows 2-7, cols 22-31 */}
-        <div style={{ gridColumn: '22 / 32', gridRow: '2 / 8' }}>
-          <PauseNamePanel
-            itemName={selectedItemName}
-            spritesBase={spritesBase}
-            scale={scale}
-          />
-        </div>
-
-        {/* Progress panel: tiles (21,11)→(30,19), offset = rows 8-16, cols 22-31 */}
-        <div style={{ gridColumn: '22 / 32', gridRow: '8 / 17' }}>
+      )}
+      {showNormalPanels && (
+        <>
+          {/* Progress panel: tiles (21,11)→(30,19), offset = rows 8-16, cols 22-31 */}
           <PauseProgressPanel
             pendants={data.pendants}
             crystals={data.crystals}
             showCrystals={data.showCrystals}
             spritesBase={spritesBase}
             scale={scale}
+            style={{ gridColumn: '22 / 32', gridRow: '8 / 17' }}
           />
-        </div>
 
-        {/* Abilities panel: tiles (1,21)→(19,29), offset = rows 18-26, cols 2-20 */}
-        <div style={{ gridColumn: '2 / 21', gridRow: '18 / 27' }}>
-          <PauseAbilitiesPanel
-            gloves={data.gloves}
-            boots={data.boots}
-            flippers={data.flippers}
-            moonPearl={data.moonPearl}
-            abilityFlags={0}
-            spritesBase={spritesBase}
-            scale={scale}
-          />
-        </div>
-
-        {/* Equipment panel: tiles (21,21)→(30,29), offset = rows 18-26, cols 22-31 */}
-        <div style={{ gridColumn: '22 / 32', gridRow: '18 / 27' }}>
+          {/* Equipment panel: tiles (21,21)→(30,29), offset = rows 18-26, cols 22-31 */}
           <PauseEquipmentPanel
             sword={data.sword}
             shield={data.shield}
             armor={data.armor}
+            heartPieces={data.heartPieces}
+            isInDungeon={data.isInDungeon}
+            bigKeys={data.bigKeys}
+            maps={data.maps}
+            compasses={data.compasses}
+            palaceIndex={data.palaceIndex}
             spritesBase={spritesBase}
             scale={scale}
+            style={{ gridColumn: '22 / 32', gridRow: '18 / 27' }}
           />
-        </div>
+        </>
+      )}
+
+      {/* Abilities panel: tiles (1,21)→(19,29), offset = rows 18-26, cols 2-20 */}
+      <PauseAbilitiesPanel
+        gloves={data.gloves}
+        boots={data.boots}
+        flippers={data.flippers}
+        moonPearl={data.moonPearl}
+        abilityFlags={derivedAbilityFlags}
+        spritesBase={spritesBase}
+        scale={scale}
+        style={{ gridColumn: '2 / 21', gridRow: '18 / 27' }}
+      />
       </div>
     </div>
   );
 }
 
-export { PauseMenuView, GRID_TO_SAVE, GRID_SLOT_NAMES, getItemNameForSlot };
+export { PauseMenuView, GRID_TO_SAVE, SAVE_SLOT_NAMES, getItemNameForSlot };

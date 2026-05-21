@@ -8,53 +8,63 @@
 import { PauseBorderBox } from '../../primitives/PauseBorderBox';
 import { PauseItemSlot } from '../../composites/PauseItemSlot';
 import { PauseButtonLabel } from '../../composites/PauseButtonLabel';
+import { PauseLabel } from '../../primitives/PauseLabel';
 
 interface PauseItemGridProps {
   items: number[];
   selectedIndex: number;
-  gridToSave: number[];
+  staticSelection?: boolean;
   scale: number;
   spritesBase: string;
+  style?: React.CSSProperties;
 }
 
 /**
  * The item grid is 5 columns wide. The game uses a 19×15 tile box.
  * Items are arranged in a 5×4 grid with spacing.
- * gridToSave maps grid slot → save RAM index for correct display order.
+ * Visual order = sequential save-RAM indices 0-19.
  */
-const PauseItemGrid = ({ items, selectedIndex, gridToSave, scale, spritesBase }: PauseItemGridProps) => {
+const PauseItemGrid = ({ items, selectedIndex, staticSelection, scale, spritesBase, style }: PauseItemGridProps) => {
   const tile = 8 * scale;
   const innerCols = 17;
   const innerRows = 13;
 
   return (
+    <div style={{ position: 'relative', ...style }}>
     <PauseBorderBox color="green" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase}>
-      {/* Y-button indicator — positioned absolutely, overlaps top border by 1 tile */}
-      <div style={{ position: 'absolute', top: -tile, left: 0 }}>
+      {/* Y-button indicator */}
+      <div style={{ position: 'absolute', top: 0, left: 0 }}>
         <PauseButtonLabel button="y" scale={scale} spritesBase={spritesBase} />
       </div>
 
-      {/* Item grid: 5 cols × 4 rows using CSS Grid */}
+      {/* Item grid: 5 cols × 4 rows — positioned to match SNES BG3 layout */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: `repeat(5, ${tile * 2}px)`,
         gridTemplateRows: `repeat(4, ${tile * 2}px)`,
         gap: `${tile}px`,
-        marginTop: tile,
-        marginLeft: tile,
+        position: 'absolute',
+        top: tile,
+        left: tile * 2,
       }}>
-        {gridToSave.slice(0, 20).map((saveIdx, gridIdx) => (
+        {Array.from({length: 20}, (_, i) => (
           <PauseItemSlot
-            key={gridIdx}
-            saveSlotIndex={saveIdx}
-            itemValue={items[saveIdx] ?? 0}
-            selected={gridIdx === selectedIndex}
+            key={i}
+            saveSlotIndex={i}
+            itemValue={items[i] ?? 0}
+            selected={i === selectedIndex}
+            animate={!staticSelection}
             scale={scale}
             spritesBase={spritesBase}
           />
         ))}
       </div>
     </PauseBorderBox>
+    {/* "ITEM" label on top border, col 2 */}
+    <div style={{ position: 'absolute', top: 0, left: tile * 2, zIndex: 1, background: 'black' }}>
+      <PauseLabel name="item" tiles={2} scale={scale} spritesBase={spritesBase} />
+    </div>
+    </div>
   );
 };
 

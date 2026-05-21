@@ -114,9 +114,9 @@ int WasmGetGameUIState(void) {
   b[78] = (uint8)((dungeon_room_index >> 8) & 0xFF);
   b[79] = dung_cur_floor;
 
-  // ─── Bytes 80–81: Floor Indicator ───
+  // ─── Bytes 80–81: Floor Indicator / Ability Flags ───
   b[80] = hud_floor_changed_timer;
-  b[81] = 0; // padding
+  b[81] = link_ability_flags;
 
   // ─── Bytes 82–83: Save Menu / Meta ───
   b[82] = saved_module_for_menu;
@@ -130,12 +130,13 @@ int WasmGetGameUIState(void) {
   // ─── Byte 108: Overlay mode echo ───
   b[108] = g_ui_overlay_mode;
 
-  // ─── Bytes 109–113: Location State ───
+  // ─── Bytes 109–114: Location State ───
   b[109] = (uint8)(overworld_screen_index & 0xFF);
   b[110] = (uint8)((overworld_screen_index >> 8) & 0xFF);
   b[111] = player_is_indoors;
   b[112] = is_in_dark_world;
   b[113] = (uint8)(overworld_area_index & 0xFF);
+  b[114] = link_heart_pieces;
 
   return (int)g_ui_state_buf;
 }

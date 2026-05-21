@@ -135,8 +135,9 @@ function parseGameUIBuffer(heap: Uint8Array, ptr: number): GameUIState {
   const roomIndex = b[p + 77] | (b[p + 78] << 8);
   const currentFloor = b[p + 79];
 
-  // Floor indicator (bytes 80–81)
+  // Floor indicator / ability flags (bytes 80–81)
   const floorTimer = b[p + 80];
+  const abilityFlags = b[p + 81];
 
   // Save menu (bytes 82–83)
   const sourceModule = b[p + 82];
@@ -146,11 +147,12 @@ function parseGameUIBuffer(heap: Uint8Array, ptr: number): GameUIState {
   const order: number[] = [];
   for (let i = 0; i < 24; i++) order.push(b[p + 84 + i]);
 
-  // Location state (bytes 109–113)
+  // Location state (bytes 109–114)
   const overworldScreenIndex = b[p + 109] | (b[p + 110] << 8);
   const isIndoors = b[p + 111] !== 0;
   const isDarkWorld = b[p + 112] !== 0;
   const overworldAreaIndex = b[p + 113];
+  const heartPieces = b[p + 114];
 
   // Derive mode
   const mode = deriveUIMode(mainModule, subModule, subSubModule, floorTimer);
@@ -166,7 +168,7 @@ function parseGameUIBuffer(heap: Uint8Array, ptr: number): GameUIState {
 
   const inventoryState: InventoryState = { items, bottles, order };
 
-  const equipment: EquipmentState = { sword, shield, armor, gloves, boots, flippers, moonPearl };
+  const equipment: EquipmentState = { sword, shield, armor, gloves, boots, flippers, moonPearl, abilityFlags, heartPieces };
 
   const dungeonProgress: DungeonProgressState = { pendants, crystals, maps, compasses, bigKeys };
 

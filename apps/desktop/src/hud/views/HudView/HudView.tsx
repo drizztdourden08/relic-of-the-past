@@ -18,7 +18,7 @@ function ratioToNumeric(ratio: string): number {
   }
 }
 
-const HudView = () => {
+const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string; slideTransition?: string } = {}) => {
   const { heartMode, magicMode, countLayout, ratio: hudRatio } = useHudSettingsStore();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -86,6 +86,8 @@ const HudView = () => {
         inset: 0,
         pointerEvents: 'none',
         overflow: 'hidden',
+        transform: slideTransform,
+        transition: slideTransition,
       }}
     >
       {/* HUD content — centered at chosen ratio width */}

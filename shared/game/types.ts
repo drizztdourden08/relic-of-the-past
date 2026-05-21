@@ -186,6 +186,8 @@ interface EquipmentState {
   boots: number;
   flippers: number;
   moonPearl: number;
+  abilityFlags: number;
+  heartPieces: number;
 }
 
 interface DungeonProgressState {

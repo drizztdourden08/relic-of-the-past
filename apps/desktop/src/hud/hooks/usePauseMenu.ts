@@ -30,10 +30,26 @@ interface PauseMenuData {
   flippers: number;
   /** Moon Pearl (0=none, 1=yes) */
   moonPearl: number;
+  /** Ability flags bitmask from link_ability_flags */
+  abilityFlags: number;
   /** Whether to show crystals vs pendants */
   showCrystals: boolean;
   /** Progress indicator (0-2 = LW dungeons, 3+ = DW) */
   progressIndicator: number;
+  /** Heart pieces collected (0-3) */
+  heartPieces: number;
+  /** Whether Link is currently in a dungeon (palace) */
+  isInDungeon: boolean;
+  /** Dungeon big keys bitmask */
+  bigKeys: number;
+  /** Dungeon maps bitmask */
+  maps: number;
+  /** Dungeon compasses bitmask */
+  compasses: number;
+  /** Current palace index (×2) */
+  palaceIndex: number;
+  /** Bottle contents (4 slots, values 0-8) */
+  bottles: number[];
 }
 
 interface PauseMenuConfig {
@@ -53,6 +69,7 @@ function usePauseMenu(scale: number): UsePauseMenuResult {
   const dungeon = useGameUIStore((s) => s.dungeonProgress);
   const hud = useGameUIStore((s) => s.hud);
   const saveMenu = useGameUIStore((s) => s.saveMenu);
+  const map = useGameUIStore((s) => s.map);
 
   const spritesBase = getSpritesBase();
 
@@ -69,8 +86,16 @@ function usePauseMenu(scale: number): UsePauseMenuResult {
     boots: equipment.boots,
     flippers: equipment.flippers,
     moonPearl: equipment.moonPearl,
+    abilityFlags: equipment.abilityFlags,
     showCrystals: saveMenu.progressIndicator >= 3,
     progressIndicator: saveMenu.progressIndicator,
+    heartPieces: equipment.heartPieces,
+    isInDungeon: map.palaceIndex !== 0xff,
+    bigKeys: dungeon.bigKeys,
+    maps: dungeon.maps,
+    compasses: dungeon.compasses,
+    palaceIndex: map.palaceIndex,
+    bottles: inventory.bottles,
   };
 
   const config: PauseMenuConfig = { scale, spritesBase };

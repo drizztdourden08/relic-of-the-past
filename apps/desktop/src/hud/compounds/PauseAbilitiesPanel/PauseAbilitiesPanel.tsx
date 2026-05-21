@@ -1,22 +1,21 @@
 /**
- * PauseAbilitiesPanel — displays Link's abilities (lift, dash, swim, etc.)
- * with level indicators.
+ * PauseAbilitiesPanel — displays Link's abilities and equipment.
  *
- * Game layout: tiles (1,21)→(19,29) = 19×9 tiles
- * Abilities are controlled by link_ability_flags:
- *   bit7: Lift (gloves)
- *   bit6: Dash (boots)
- *   bit5: Swim (flippers)
- *   bit4: Talk (book)
- *   bit3: Pull
- *   bit2: Read
+ * Game layout: tiles (1,21)→(19,29) = 19×9 tiles (inner 17×7)
+ * Abilities drawn via link_ability_flags in a 3×2 grid:
+ *   Row 1 (y=22): bit7=LIFT, bit6=READ, bit5=TALK
+ *   Row 2 (y=24): bit3=PULL, bit2=RUN,  bit1=SWIM
+ *   (bit4 is skipped in the original loop)
  *
- * Equipment shown: boots, gloves, flippers, moon pearl
+ * Gloves override: if link_item_gloves > 0, LIFT text shows "LIFT.1" or "LIFT.2"
+ *
+ * Equipment sprites at bottom row (y=27):
+ *   col 4=boots, col 8=gloves, col 12=flippers, col 16=moon pearl
  */
 import { PauseBorderBox } from '../../primitives/PauseBorderBox';
-import { PauseLabel } from '../../primitives/PauseLabel';
 import { PauseButtonLabel } from '../../composites/PauseButtonLabel';
 import { PauseEquipSlot } from '../../composites/PauseEquipSlot';
+import { PauseLabel } from '../../primitives/PauseLabel';
 
 interface PauseAbilitiesPanelProps {
   gloves: number;
@@ -26,39 +25,91 @@ interface PauseAbilitiesPanelProps {
   abilityFlags: number;
   scale: number;
   spritesBase: string;
+  style?: React.CSSProperties;
 }
 
 const PauseAbilitiesPanel = (props: PauseAbilitiesPanelProps) => {
-  const { gloves, boots, flippers, moonPearl, scale, spritesBase } = props;
+  const { gloves, boots, flippers, moonPearl, abilityFlags, scale, spritesBase, style } = props;
   const tile = 8 * scale;
-  // Box: 17 inner cols × 7 inner rows (+ 2 border = 19×9)
   const innerCols = 17;
   const innerRows = 7;
 
+  // SNES ability text grid: 3 columns × 2 rows
+  // Row 1 (bits 7,6,5): LIFT, READ, TALK at tile positions (3,1), (8,1), (13,1)
+  // Row 2 (bits 3,2,1): PULL, RUN,  SWIM at tile positions (3,3), (8,3), (13,3)
+  // Note: bit 4 is skipped (outer loop shift in original code)
+  const abilityGrid: { label: string; bit: number; col: number; row: number }[] = [
+    { label: 'LIFT', bit: 7, col: 3, row: 1 },
+    { label: 'READ', bit: 6, col: 8, row: 1 },
+    { label: 'TALK', bit: 5, col: 13, row: 1 },
+    { label: 'PULL', bit: 3, col: 3, row: 3 },
+    { label: 'RUN', bit: 2, col: 8, row: 3 },
+    { label: 'SWIM', bit: 1, col: 13, row: 3 },
+  ];
+
+  // Gloves level determines the .N suffix on LIFT (0/none=.1, 1=Power Glove=.2, 2=Titan's Mitts=.3)
+  const liftLevel = gloves + 1;
+
+  // Both containers align with the item grid above: starts at col 2, width = 14 tiles
+  const gridLeft = tile * 2;
+  const gridWidth = tile * 14;
+
   return (
+    <div style={{ position: 'relative', ...style }}>
     <PauseBorderBox color="red" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase}>
-      {/* A-button indicator — overlaps border */}
-      <div style={{ position: 'absolute', top: -tile, left: 0 }}>
+      {/* A-button indicator */}
+      <div style={{ position: 'absolute', top: 0, left: 0 }}>
         <PauseButtonLabel button="a" scale={scale} spritesBase={spritesBase} />
       </div>
 
-      {/* "DO" title (dungeon-item label) */}
-      <div style={{ display: 'flex', alignItems: 'center', marginLeft: tile * 2 }}>
-        <PauseLabel name="dungeon-item" tiles={2} scale={scale} spritesBase={spritesBase} />
-      </div>
-
-      {/* Ability text labels (LIFT, DASH, etc.) — shown when acquired */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: `${tile * 0.5}px ${tile * 2}px`, marginTop: tile }}>
-        {gloves > 0 && <span style={{ color: '#fff', fontSize: tile * 0.9, fontFamily: 'monospace', imageRendering: 'pixelated' }}>LIFT.{gloves}</span>}
-        {boots > 0 && <span style={{ color: '#fff', fontSize: tile * 0.9, fontFamily: 'monospace' }}>DASH</span>}
-        {flippers > 0 && <span style={{ color: '#fff', fontSize: tile * 0.9, fontFamily: 'monospace' }}>SWIM</span>}
-      </div>
-
-      {/* Equipment row at bottom */}
+      {/* Abilities grid: 3 cols × 2 rows with equal spacing */}
       <div style={{
+        position: 'absolute',
+        top: tile * 2 / 3,
+        left: gridLeft,
+        width: tile * 16.7,
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gridTemplateRows: 'repeat(2, 1fr)',
+        height: tile * 4,
+      }}>
+        {abilityGrid.map(({ label, bit }) => (
+          <div key={label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+            {(abilityFlags & (1 << bit)) ? (
+              <>
+                {label.split('').map((ch, i) => (
+                  <img
+                    key={i}
+                    src={`${spritesBase}font-letter-${ch.toLowerCase()}.png`}
+                    width={tile}
+                    height={tile}
+                    draggable={false}
+                    style={{ display: 'block', imageRendering: 'pixelated' }}
+                  />
+                ))}
+                {label === 'LIFT' && (
+                  <img
+                    src={`${spritesBase}font-level-${liftLevel}.png`}
+                    width={tile}
+                    height={tile}
+                    draggable={false}
+                    style={{ display: 'block', imageRendering: 'pixelated' }}
+                  />
+                )}
+              </>
+            ) : null}
+          </div>
+        ))}
+      </div>
+
+      {/* Equipment items: flex with equal spacing, aligned with item grid */}
+      <div style={{
+        position: 'absolute',
+        top: tile * 5,
+        left: gridLeft,
+        width: gridWidth,
         display: 'flex',
-        gap: `${tile * 2}px`,
-        marginTop: 'auto',
+        justifyContent: 'space-between',
       }}>
         <PauseEquipSlot type="boots" level={boots} scale={scale} spritesBase={spritesBase} />
         <PauseEquipSlot type="gloves" level={gloves} scale={scale} spritesBase={spritesBase} />
@@ -66,6 +117,11 @@ const PauseAbilitiesPanel = (props: PauseAbilitiesPanelProps) => {
         <PauseEquipSlot type="moonPearl" level={moonPearl} scale={scale} spritesBase={spritesBase} />
       </div>
     </PauseBorderBox>
+    {/* "DO" label on top border, col 2 */}
+    <div style={{ position: 'absolute', top: 0, left: tile * 2, zIndex: 1, background: 'black' }}>
+      <PauseLabel name="do" tiles={2} scale={scale} spritesBase={spritesBase} />
+    </div>
+    </div>
   );
 };
 

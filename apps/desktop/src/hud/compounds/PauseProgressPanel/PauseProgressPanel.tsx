@@ -19,9 +19,10 @@ interface PauseProgressPanelProps {
   showCrystals: boolean;
   scale: number;
   spritesBase: string;
+  style?: React.CSSProperties;
 }
 
-const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBase }: PauseProgressPanelProps) => {
+const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBase, style }: PauseProgressPanelProps) => {
   const tile = 8 * scale;
   // Box: 8 inner cols × 7 inner rows (+ 2 border = 10×9)
   const innerCols = 8;
@@ -39,7 +40,7 @@ const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBa
     ];
 
     return (
-      <PauseBorderBox color="yellow" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase}>
+      <PauseBorderBox color="yellow" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} style={style}>
         {/* CRYSTALS label */}
         <PauseLabel name="crystals" tiles={5} scale={scale} spritesBase={spritesBase} />
 
@@ -63,7 +64,7 @@ const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBa
 
   // Pendant layout: green (top center), blue (bottom left), red (bottom right)
   return (
-    <PauseBorderBox color="yellow" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase}>
+    <PauseBorderBox color="yellow" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} style={style}>
       {/* PENDANTS label */}
       <PauseLabel name="pendants" tiles={5} scale={scale} spritesBase={spritesBase} />
 

@@ -1371,6 +1371,18 @@
       "category": "hud-pause",
       "extract": { "method": "hud-strip", "tiles": [9321, 9322, 9323, 9324, 9325, 9326, 9327] }
     },
+    {
+      "file": "pause-label-do",
+      "label": "Label: DO (Abilities border)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-strip", "tiles": [9346, 9347] }
+    },
+    {
+      "file": "pause-label-item",
+      "label": "Label: ITEM (Items border)",
+      "category": "hud-pause",
+      "extract": { "method": "hud-strip", "tiles": [9326, 9327] }
+    },
 
     {
       "file": "pause-border-corner-green",

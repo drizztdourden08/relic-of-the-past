@@ -8,6 +8,25 @@
   to { opacity: 1; }
 }
 
+/* Pause menu cursor: 16 frames on, 16 off at 60fps = 533ms cycle */
+@keyframes pause-cursor-flash {
+  0%   { opacity: 1; }
+  50%  { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Bottle panel expand: reveals from bottom upward (like SNES Hud_ExpandBottleMenu) */
+@keyframes bottle-panel-expand {
+  from { clip-path: inset(100% 0 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+
+/* Bottle panel collapse: hides from top downward (like SNES Hud_EraseBottleMenu) */
+@keyframes bottle-panel-collapse {
+  from { clip-path: inset(0 0 0 0); }
+  to   { clip-path: inset(100% 0 0 0); }
+}
+
 /* ─── Location Notifications ─── */
 
 .location-notification-container {

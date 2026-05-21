@@ -23,4 +23,12 @@ void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id);
 void GameHook_TriggerNpcCheck(uint8 flag_type, uint8 flag_mask, uint8 item_id,
                               uint8 sprite_type_id, uint8 post_gfx);
 
+// ─── Cheats (cheats.c) ───
+
+// Returns the current outgoing damage multiplier (1 = normal).
+uint8 GameHook_GetDamageMultiplier(void);
+
+// Returns extra armor reduction percentage (0-100). Stacks with armor.
+uint8 GameHook_GetExtraArmorPct(void);
+
 #endif // GAME_HOOKS_H
