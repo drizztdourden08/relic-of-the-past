@@ -31,4 +31,26 @@ uint8 GameHook_GetDamageMultiplier(void);
 // Returns extra armor reduction percentage (0-100). Stacks with armor.
 uint8 GameHook_GetExtraArmorPct(void);
 
+// ─── Haptic Events (haptic_events.c) ───
+
+// Called when Link starts a sword swing animation.
+void GameHook_NotifySwordSwing(void);
+
+// Called when Link's sword connects with an enemy sprite.
+void GameHook_NotifySwordHitEnemy(uint8 damage_dealt);
+
+// Called when Link's sword clinks against an invulnerable surface/enemy.
+void GameHook_NotifySwordClink(void);
+
+// Called when Link takes damage (damage_amount = hearts lost in 1/8ths).
+void GameHook_NotifyDamageTaken(uint8 damage_amount);
+
+// Called when Link uses a Y-button item.
+void GameHook_NotifyItemUsed(uint8 item_id);
+
+// Called for environmental haptic events (falling, landing, chest open, etc.)
+// event_type: 0=fall_into_pit, 1=land_from_ledge, 2=chest_open, 3=bomb_explode,
+//             4=enter_water, 5=mirror_warp, 6=quake, 7=boss_defeated
+void GameHook_NotifyEnvironmentalEvent(uint8 event_type);
+
 #endif // GAME_HOOKS_H

@@ -8,6 +8,7 @@ import { AudioSettings } from './tabs/AudioSettings';
 import { GameplaySettings } from './tabs/GameplaySettings';
 import { HudSettings } from './tabs/HudSettings';
 import { ControlsSettings } from './tabs/ControlsSettings';
+import { HapticsSettings } from './tabs/HapticsSettings';
 import { DEFAULT_SETTINGS, mergeSettings } from '../../../lib/game/settings';
 import { pushLiveSettings, LIVE_SETTINGS, getInputManager } from '../../../lib/game';
 import { useHudSettingsStore } from '../../../stores/hud-settings-store';
@@ -293,6 +294,13 @@ const ProfileHub = (props: ProfileHubProps) => {
             <span className="profile-hub__tab-icon">⌨️</span>
             <span className="profile-hub__tab-label">Controls</span>
           </button>
+          <button
+            className={`profile-hub__tab ${activeTab === 'haptics' ? 'profile-hub__tab--active' : ''}`}
+            onClick={() => setActiveTab('haptics')}
+          >
+            <span className="profile-hub__tab-icon">📳</span>
+            <span className="profile-hub__tab-label">Haptics</span>
+          </button>
         </div>
 
         <div className="profile-hub__content">
@@ -321,6 +329,9 @@ const ProfileHub = (props: ProfileHubProps) => {
           )}
           {activeTab === 'controls' && (
             <ControlsSettings settings={settings} onChange={handleSettingsChange} profileId={profile.id} />
+          )}
+          {activeTab === 'haptics' && (
+            <HapticsSettings settings={settings} onChange={handleSettingsChange} />
           )}
         </div>
       </div>

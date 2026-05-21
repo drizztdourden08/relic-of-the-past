@@ -166,3 +166,4 @@ export {
   resolvePreset
 };
 export type { DeviceProfile, DeviceProfileAxis, DeviceProfileButton };
+export * from './haptics';

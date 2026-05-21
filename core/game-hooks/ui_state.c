@@ -138,6 +138,12 @@ int WasmGetGameUIState(void) {
   b[113] = (uint8)(overworld_area_index & 0xFF);
   b[114] = link_heart_pieces;
 
+  // ─── Bytes 115–118: Player Action State (for haptics) ───
+  b[115] = link_player_handler_state;
+  b[116] = link_is_running;
+  b[117] = link_dash_ctr;
+  b[118] = link_animation_steps;
+
   return (int)g_ui_state_buf;
 }
 

@@ -14,6 +14,7 @@
 import type { GameSettings } from '@shared/types/settings';
 import { getModule } from './wasm-bridge';
 import { setMasterVolume } from './audio-volume';
+import { updateHapticBridgeSettings } from '../input/haptic-bridge';
 import { log } from '../log-bus';
 
 // Track the last-pushed forceBackdropBlack value so we can re-assert after state loads
@@ -146,6 +147,8 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   // Notification settings (React-only, no WASM restart needed)
   'showRegionNotification',
   'showTransitionNotification',
+  // Haptics (JS-only, no WASM restart needed)
+  'haptics',
 ]);
 
 /** Push live-updatable settings to the running WASM module. Returns true if successful. */
@@ -201,6 +204,11 @@ function pushLiveSettings(settings: GameSettings): boolean {
       lastPauseHidden = hidePause;
       mod.ccall('WasmSetPauseHidden', null, ['number'], [hidePause ? 1 : 0]);
     } catch { /* WASM not rebuilt yet */ }
+
+    // Haptic feedback settings (JS-only, no WASM needed)
+    if (settings.haptics) {
+      updateHapticBridgeSettings(settings.haptics);
+    }
 
     log.app(`Live settings pushed — features: 0x${features.toString(16)}, ppu: 0x${ppuFlags.toString(16)}`);
     return true;

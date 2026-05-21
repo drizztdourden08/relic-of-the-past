@@ -14,8 +14,10 @@ import { reassertVolumes } from './live-settings';
 import { initTrackerBridge, destroyTrackerBridge } from './tracker';
 import { startSession, endSession } from './session-tracker';
 import { getInputManager } from '../input/input-manager';
+import { initHapticBridge, destroyHapticBridge, updateHapticBridgeSettings } from '../input/haptic-bridge';
 import { initUIBridge, stopUIBridge } from './ui-bridge';
 import { useGameUIStore } from '../../stores/game-ui-store';
+import { DEFAULT_SETTINGS } from './settings';
 
 declare function Zelda3(config: Record<string, unknown>): Promise<EmscriptenModule>;
 
@@ -71,6 +73,7 @@ async function resetGame(): Promise<void> {
   stopSramSync();
   stopUIBridge();
   destroyTrackerBridge();
+  destroyHapticBridge();
   resetMasterVolume();
   getInputManager().stop();
   if (activeCrashHandler) {
@@ -202,6 +205,9 @@ async function startGame(
 
     // ─── Tracker bridge: wire up item/inventory notifications ───
     initTrackerBridge();
+
+    // ─── Haptic bridge: wire up vibration feedback for game events ───
+    initHapticBridge(DEFAULT_SETTINGS.haptics);
 
     // ─── UI bridge: start rAF polling for React overlay state ───
     initUIBridge(useGameUIStore.getState()._setState);

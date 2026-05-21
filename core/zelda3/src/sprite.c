@@ -2354,6 +2354,7 @@ void Sprite_GiveDamage(int k, uint8 dmg, uint8 r0_hit_timer) {  // 86edc5
     return;
   }
   sprite_hit_timer[k] = r0_hit_timer;
+  GameHook_NotifySwordHitEnemy(dmg);
   if (sprite_type[k] != 0x92 || sprite_C[k] >= 3) {
     uint8 sfx = sprite_flags[k] & 2 ? 0x21 :
                 sprite_flags5[k] & 0x10 ? 0x1c : 8;
@@ -2829,6 +2830,7 @@ void Sprite_ApplyRecoilToLink(int k, uint8 vel) {  // 86f688
 void Link_PlaceWeaponTink() {  // 86f69f
   if (repulsespark_timer)
     return;
+  GameHook_NotifySwordClink();
   repulsespark_timer = 5;
   int t = (uint8)link_x_coord + player_oam_x_offset;
   repulsespark_x_lo = t;

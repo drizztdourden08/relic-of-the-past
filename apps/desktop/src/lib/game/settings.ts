@@ -88,6 +88,19 @@ const DEFAULT_SETTINGS: GameSettings = {
   // Notifications
   showRegionNotification: true,
   showTransitionNotification: true,
+
+  // Haptics
+  haptics: {
+    enabled: false,
+    intensity: 70,
+    swordSwing: true,
+    swordHitEnemy: true,
+    swordClink: true,
+    damageTaken: true,
+    itemUse: true,
+    dashVibration: true,
+    environmentalEffects: true,
+  },
 };
 
 function boolToIni(v: boolean): string {

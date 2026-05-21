@@ -64,7 +64,8 @@ HOOK_SRCS := ../game-hooks/game_hooks.c \
              ../game-hooks/state_queries.c \
              ../game-hooks/check_triggers.c \
              ../game-hooks/ui_state.c \
-             ../game-hooks/cheats.c
+             ../game-hooks/cheats.c \
+             ../game-hooks/haptic_events.c
 
 # Our Emscripten-specific main
 EM_MAIN := emscripten_main.c

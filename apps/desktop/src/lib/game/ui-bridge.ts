@@ -18,6 +18,7 @@ import type {
   UIMode
 } from '@shared/game/types';
 import { wasmGetGameUIState } from './wasm-bridge';
+import { pollHapticState, resetHapticPolling } from './haptic-polling';
 
 // ─── Module-level state ───
 
@@ -273,6 +274,9 @@ function checkMapPause(_state: GameUIState): void {
 function pollFrame(): void {
   const result = wasmGetGameUIState();
   if (result) {
+    // Haptic polling runs every frame (even if UI state hasn't changed)
+    pollHapticState(result.heap, result.ptr);
+
     const state = parseGameUIBuffer(result.heap, result.ptr);
     if (!prevState || stateChanged(prevState, state)) {
       prevState = state;
@@ -305,6 +309,7 @@ function stopUIBridge(): void {
 
   prevState = null;
   storeUpdater = null;
+  resetHapticPolling();
 }
 
 export { initUIBridge, parseGameUIBuffer, stopUIBridge };

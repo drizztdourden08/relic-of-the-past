@@ -59,7 +59,8 @@ set HOOK_SRCS=^
  ..\game-hooks\item_overrides.c^
  ..\game-hooks\check_triggers.c^
  ..\game-hooks\ui_state.c^
- ..\game-hooks\cheats.c
+ ..\game-hooks\cheats.c^
+ ..\game-hooks\haptic_events.c
 
 set EM_MAIN=emscripten_main.c
 

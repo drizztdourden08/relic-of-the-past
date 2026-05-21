@@ -1,5 +1,18 @@
 import type { FunctionMapping } from './controls';
 
+/** Haptic feedback configuration — controls vibration/rumble for game events */
+interface HapticSettings {
+  enabled: boolean;
+  intensity: number; // 0–100 global multiplier
+  swordSwing: boolean;
+  swordHitEnemy: boolean;
+  swordClink: boolean;
+  damageTaken: boolean;
+  itemUse: boolean;
+  dashVibration: boolean;
+  environmentalEffects: boolean;
+}
+
 /** Per-profile game settings — mirrors zelda3 config.h / zelda3.ini fields */
 interface GameSettings {
   // ─── General ───
@@ -86,6 +99,9 @@ interface GameSettings {
   // ─── Notifications ───
   showRegionNotification: boolean;
   showTransitionNotification: boolean;
+
+  // ─── Haptics ───
+  haptics: HapticSettings;
 }
 
-export type { GameSettings };
+export type { GameSettings, HapticSettings };

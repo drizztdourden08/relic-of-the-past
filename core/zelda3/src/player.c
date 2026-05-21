@@ -176,6 +176,7 @@ void Link_ControlHandler() {  // 87807f
         if (countdown_for_blink == 0)
           countdown_for_blink = 58;
         Ancilla_Sfx2_Near(38);
+        GameHook_NotifyDamageTaken(dmg);
         number_of_times_hurt_by_sprites++;
         uint8 new_dmg = link_health_current - dmg;
         if (new_dmg == 0 || new_dmg >= 0xa8) {
@@ -2038,6 +2039,9 @@ void Link_HandleYItem() {  // 879b0e
   if (current_item_active == 5 || current_item_active == 6)
     eq_selected_rod = current_item_active - 5 + 1;
 
+  if (current_item_active != 0 && (filtered_joypad_H & kJoypadH_Y))
+    GameHook_NotifyItemUsed(current_item_active);
+
   switch (current_item_active) {
   case 0:
     break;
@@ -2183,6 +2187,7 @@ void Link_CheckForSwordSwing() {  // 879cd9
     }
     button_mask_b_y |= 0x80;
     HandleSwordSfxAndBeam();
+    GameHook_NotifySwordSwing();
     link_cant_change_direction |= 1;
     link_animation_steps = 0;
   }
