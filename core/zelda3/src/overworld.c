@@ -6,6 +6,7 @@
 #include "sprite.h"
 #include "ancilla.h"
 #include "player.h"
+#include "game_hooks.h"
 #include "misc.h"
 #include "messaging.h"
 #include "player_oam.h"
@@ -1307,6 +1308,7 @@ void Module09_MirrorWarp() {  // 82b1fa
 }
 
 void MirrorWarp_FinalizeAndLoadDestination() {  // 82b260
+  GameHook_NotifyEnvironmentalEvent(5); // MIRROR_WARP
   HdmaSetup(0, 0xf2fb, 0x41, 0, (uint8)WH0, 0);
   IrisSpotlight_ResetTable();
   palette_filter_countdown = 0;

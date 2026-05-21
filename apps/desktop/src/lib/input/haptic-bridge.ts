@@ -1,92 +1,144 @@
 /**
  * Haptic Bridge — connects C game events to the haptic service and controller vibration.
  *
- * Registers `window.__onHapticEvent` callback for WASM/C hook notifications,
- * and wires the haptic service's output to the active controller via vibratePattern().
+ * Uses a vibration mixer to coalesce overlapping events into a single active
+ * envelope. This prevents flooding the HID worker (which opens/writes/closes
+ * the device synchronously per request).
+ *
+ * Merge strategy:
+ *  - Motor OFF + new event → send immediately
+ *  - Motor ON + stronger event → interrupt with new pattern
+ *  - Motor ON + same/weaker event → extend active duration (motor already running)
  */
 
 import { handleHapticEvent, setVibrateFunction, updateHapticSettings } from '@shared/input/haptics';
 import type { HapticSettings } from '@shared/input/haptics';
 import type { VibrationSegment } from '@shared/input/base';
-import { vibratePattern } from './vibration';
-import { getInputManager } from './input-manager';
+import { webHidReader } from './hid-reader';
 
 let initialized = false;
-let activeTarget: string | null = null;
 
-/**
- * Resolve the current vibration target from the input manager's detected devices.
- * Prefers the first connected, activated gamepad that supports vibration.
- */
-function resolveVibrationTarget(): string | null {
-  const mgr = getInputManager();
-  const devices = mgr.getDevices();
+// ─── Vibration Mixer State ───
 
-  // Find first connected + activated gamepad
-  for (const dev of devices) {
-    if (dev.type === 'gamepad' && dev.connected && dev.activated) {
-      return dev.id;
-    }
-  }
-  return null;
+/** Timestamp (performance.now) when the current vibration is expected to end */
+let activeUntil = 0;
+/** Peak intensity of the currently playing vibration */
+let activeIntensity = 0;
+/** Timer to reset state after vibration expires (for bookkeeping) */
+let decayTimer: ReturnType<typeof setTimeout> | null = null;
+
+// ─── Debug Counters ───
+let debugEventCount = 0;
+let debugDispatchCount = 0;
+let debugMergedCount = 0;
+let debugCHookCount = 0;
+let debugLogTimer: ReturnType<typeof setInterval> | null = null;
+
+function startDebugLog(): void {
+  if (debugLogTimer) return;
+  debugLogTimer = setInterval(() => {
+    if (debugCHookCount === 0 && debugEventCount === 0) return;
+    console.log(`[Haptic] C-hooks=${debugCHookCount} service=${debugEventCount} dispatched=${debugDispatchCount} merged=${debugMergedCount}`);
+    debugCHookCount = 0;
+    debugEventCount = 0;
+    debugDispatchCount = 0;
+    debugMergedCount = 0;
+  }, 1000);
 }
 
 /**
  * The dispatch function passed to the haptic service.
- * Resolves the active controller target and sends the pattern.
+ * Prevents flooding the HID worker while ensuring every distinct event is felt.
+ *
+ * Strategy:
+ *  - Motor OFF → send immediately
+ *  - Motor ON + stronger event → interrupt (send immediately)
+ *  - Motor ON + same/weaker → drop (motor is already vibrating; let it finish naturally)
+ *
+ * No extending — each pattern plays once and stops. The next event after
+ * the motor finishes triggers a fresh send. This prevents the "lag queue" where
+ * the HID worker piles up dozens of sequential patterns.
  */
 function dispatchVibration(pattern: VibrationSegment[], gapMs?: number): void {
-  // Re-resolve target each call (controller may connect/disconnect)
-  const target = resolveVibrationTarget();
-  if (!target) return;
-  activeTarget = target;
-  vibratePattern(target, pattern, gapMs ?? 0);
+  const now = performance.now();
+  debugEventCount++;
+
+  // Compute peak intensity and total duration from the incoming pattern
+  let peakIntensity = 0;
+  let totalDuration = 0;
+  for (const seg of pattern) {
+    if (seg.intensity > peakIntensity) peakIntensity = seg.intensity;
+    totalDuration += seg.durationMs;
+  }
+  if (gapMs && pattern.length > 1) totalDuration += gapMs * (pattern.length - 1);
+
+  // Add overhead estimate for HID worker (open device + frame writes + close)
+  const workerOverheadMs = 20;
+  const effectiveDuration = totalDuration + workerOverheadMs;
+
+  const motorOff = now >= activeUntil;
+  const stronger = peakIntensity > activeIntensity;
+
+  if (motorOff || stronger) {
+    debugDispatchCount++;
+    sendToController(pattern, gapMs);
+    activeIntensity = peakIntensity;
+    activeUntil = now + effectiveDuration;
+    scheduleDecay(effectiveDuration);
+  } else {
+    // Motor already vibrating at this intensity — drop to prevent queue buildup
+    debugMergedCount++;
+  }
 }
 
-/**
- * Initialize the haptic bridge.
- * - Registers the window.__onHapticEvent callback for C-side hook notifications.
- * - Wires the haptic service output to the controller vibration system.
- */
+function sendToController(pattern: VibrationSegment[], gapMs?: number): void {
+  const keys = webHidReader.getConnectedDeviceKeys();
+  if (keys.length === 0) return;
+  window.api.vibratePattern(keys[0], pattern, gapMs ?? 0);
+}
+
+function scheduleDecay(ms: number): void {
+  if (decayTimer !== null) clearTimeout(decayTimer);
+  decayTimer = setTimeout(() => {
+    activeIntensity = 0;
+    activeUntil = 0;
+    decayTimer = null;
+  }, ms);
+}
+
+// ─── Bridge Lifecycle ───
+
 function initHapticBridge(settings: HapticSettings): void {
   if (initialized) return;
   initialized = true;
 
-  // Wire the haptic service to our dispatch function
+  startDebugLog();
   setVibrateFunction(dispatchVibration);
   updateHapticSettings(settings);
 
-  // Register the global callback that the C/WASM hooks call
   (window as any).__onHapticEvent = (eventType: number, param: number) => {
+    debugCHookCount++;
     handleHapticEvent(eventType, param);
   };
 }
 
-/**
- * Update haptic settings at runtime (when user changes settings).
- */
 function updateHapticBridgeSettings(settings: HapticSettings): void {
   updateHapticSettings(settings);
 }
 
-/**
- * Destroy the haptic bridge (cleanup on game stop).
- */
 function destroyHapticBridge(): void {
   (window as any).__onHapticEvent = null;
   setVibrateFunction(null);
-  activeTarget = null;
+  if (decayTimer !== null) clearTimeout(decayTimer);
+  if (debugLogTimer !== null) clearInterval(debugLogTimer);
+  debugLogTimer = null;
+  activeIntensity = 0;
+  activeUntil = 0;
   initialized = false;
-}
-
-/** Get the currently resolved vibration target (for debugging) */
-function getActiveVibrationTarget(): string | null {
-  return activeTarget;
 }
 
 export {
   destroyHapticBridge,
-  getActiveVibrationTarget,
   initHapticBridge,
   updateHapticBridgeSettings
 };

@@ -91,7 +91,7 @@ const DEFAULT_SETTINGS: GameSettings = {
 
   // Haptics
   haptics: {
-    enabled: false,
+    enabled: true,
     intensity: 70,
     swordSwing: true,
     swordHitEnemy: true,

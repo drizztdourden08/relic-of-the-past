@@ -34,7 +34,8 @@ uint8 GameHook_GetExtraArmorPct(void);
 // ─── Haptic Events (haptic_events.c) ───
 
 // Called when Link starts a sword swing animation.
-void GameHook_NotifySwordSwing(void);
+// swing_type: 0 = normal full swing, 1 = rapid re-swing (quick slash)
+void GameHook_NotifySwordSwing(int swing_type);
 
 // Called when Link's sword connects with an enemy sprite.
 void GameHook_NotifySwordHitEnemy(uint8 damage_dealt);
@@ -52,5 +53,11 @@ void GameHook_NotifyItemUsed(uint8 item_id);
 // event_type: 0=fall_into_pit, 1=land_from_ledge, 2=chest_open, 3=bomb_explode,
 //             4=enter_water, 5=mirror_warp, 6=quake, 7=boss_defeated
 void GameHook_NotifyEnvironmentalEvent(uint8 event_type);
+
+// Called when hookshot hits a wall and retracts.
+void GameHook_NotifyHookshotWall(void);
+
+// Called when boomerang returns to Link (catch).
+void GameHook_NotifyBoomerangCatch(void);
 
 #endif // GAME_HOOKS_H

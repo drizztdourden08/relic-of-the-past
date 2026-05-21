@@ -1,9 +1,11 @@
 /**
  * Haptic Feedback Service — maps game events to vibration patterns.
- * Central dispatch for all haptic feedback in the game.
+ * All pattern definitions live in ./haptic-patterns.ts (the config file).
+ * This module handles dispatch, cooldowns, delays, and settings gating.
  */
 
 import type { VibrationSegment } from './base';
+import { HAPTIC_PATTERNS, type HapticPatternEntry, type HapticPatternId } from './haptic-patterns';
 
 // ─── Event Types (must match C-side enum in haptic_events.c) ───
 
@@ -14,6 +16,8 @@ export const HapticEventType = {
   DAMAGE_TAKEN: 3,
   ITEM_USED: 4,
   ENVIRONMENTAL: 5,
+  HOOKSHOT_WALL: 6,
+  BOOMERANG_CATCH: 7,
 } as const;
 
 export type HapticEventTypeValue = (typeof HapticEventType)[keyof typeof HapticEventType];
@@ -55,157 +59,58 @@ export const HapticItemId = {
   SHOVEL: 21,
 } as const;
 
-// ─── Vibration Pattern Library ───
+// ─── Cooldown Tracking ───
 
-/** Very faint — barely perceptible */
-function veryFaint(durationMs: number): VibrationSegment[] {
-  return [{ durationMs, intensity: 0.15 }];
+const lastFireTime = new Map<string, number>();
+
+function checkCooldown(patternId: string, cooldownMs: number): boolean {
+  if (cooldownMs <= 0) return true;
+  const now = performance.now();
+  const last = lastFireTime.get(patternId) ?? 0;
+  if (now - last < cooldownMs) return false;
+  lastFireTime.set(patternId, now);
+  return true;
 }
-
-/** Faint — noticeable but subtle */
-function faint(durationMs: number): VibrationSegment[] {
-  return [{ durationMs, intensity: 0.25 }];
-}
-
-/** Medium — normal feedback */
-function medium(durationMs: number): VibrationSegment[] {
-  return [{ durationMs, intensity: 0.50 }];
-}
-
-/** Strong — impactful */
-function strong(durationMs: number): VibrationSegment[] {
-  return [{ durationMs, intensity: 0.70 }];
-}
-
-/** Heavy — maximum impact */
-function heavy(durationMs: number): VibrationSegment[] {
-  return [{ durationMs, intensity: 1.0 }];
-}
-
-/** Double tap pattern */
-function doubleTap(durationMs: number, intensity: number): VibrationSegment[] {
-  const half = Math.floor(durationMs / 2);
-  return [
-    { durationMs: half, intensity },
-    { durationMs: half, intensity },
-  ];
-}
-
-/** Crescendo — ramps up intensity */
-function crescendo(durationMs: number, maxIntensity: number): VibrationSegment[] {
-  const steps = 4;
-  const stepDuration = Math.floor(durationMs / steps);
-  return Array.from({ length: steps }, (_, i) => ({
-    durationMs: stepDuration,
-    intensity: (maxIntensity / steps) * (i + 1),
-  }));
-}
-
-/** Fade out — starts strong and decays */
-function fadeOut(durationMs: number, startIntensity: number): VibrationSegment[] {
-  const steps = 4;
-  const stepDuration = Math.floor(durationMs / steps);
-  return Array.from({ length: steps }, (_, i) => ({
-    durationMs: stepDuration,
-    intensity: startIntensity * (1 - i / steps),
-  }));
-}
-
-// ─── Pattern Definitions ───
-
-const PATTERNS = {
-  // Sword
-  swordSwing: veryFaint(40),
-  swordHitEnemy: medium(80),
-  swordClink: doubleTap(60, 0.25),
-  spinAttackRelease: strong(120),
-
-  // Damage taken (scaled by amount in getDamagePattern)
-  damageLow: [{ durationMs: 100, intensity: 0.40 }],        // 1-2 hearts
-  damageMedium: [{ durationMs: 150, intensity: 0.70 }],     // 3-4 hearts
-  damageHigh: heavy(200),                                     // 5+ hearts
-  death: fadeOut(500, 1.0),
-
-  // Dash
-  dashStep: [{ durationMs: 20, intensity: 0.20 }],
-
-  // Items
-  itemBomb: strong(150),
-  itemHookshot: medium(60),
-  itemHookshotWall: faint(40),
-  itemHammer: strong(100),
-  itemFireRod: medium(50),
-  itemIceRod: [...medium(50), { durationMs: 30, intensity: 0.30 }],
-  itemBombos: crescendo(300, 1.0),
-  itemEther: medium(200),
-  itemQuake: crescendo(400, 1.0),
-  itemCaneSomaria: faint(30),
-  itemCape: veryFaint(50),
-  itemBoomerangCatch: faint(30),
-  itemShovel: medium(60),
-
-  // Environmental
-  fallIntoPit: medium(150),
-  landFromLedge: faint(40),
-  chestOpen: medium(100),
-  bombExplode: strong(150),
-  enterWater: faint(40),
-  mirrorWarp: crescendo(150, 0.50),
-  quakeEnvironment: crescendo(400, 1.0),
-  bossDefeated: fadeOut(300, 0.80),
-
-  // Pickups
-  heartPiece: medium(120),
-  pendantCrystal: strong(200),
-  largeRupee: veryFaint(30),
-} as const;
 
 // ─── Pattern Selection Logic ───
 
-function getDamagePattern(damageAmount: number): VibrationSegment[] {
-  // damageAmount is in 1/8th hearts
-  if (damageAmount >= 40) return PATTERNS.damageHigh;  // 5+ full hearts
-  if (damageAmount >= 24) return PATTERNS.damageMedium; // 3-4 hearts
-  return PATTERNS.damageLow;
+function getDamagePatternId(damageAmount: number): HapticPatternId {
+  if (damageAmount >= 40) return 'damageHigh';
+  if (damageAmount >= 24) return 'damageMedium';
+  return 'damageLow';
 }
 
-function getItemPattern(itemId: number): VibrationSegment[] | null {
+function getItemPatternId(itemId: number): HapticPatternId | null {
   switch (itemId) {
-    case HapticItemId.BOMBS: return PATTERNS.itemBomb;
-    case HapticItemId.BOOMERANG: return PATTERNS.itemBoomerangCatch;
-    case HapticItemId.BOW: return null; // too subtle
-    case HapticItemId.HAMMER: return PATTERNS.itemHammer;
-    case HapticItemId.FIRE_ROD: return PATTERNS.itemFireRod;
-    case HapticItemId.ICE_ROD: return PATTERNS.itemIceRod;
-    case HapticItemId.HOOKSHOT: return PATTERNS.itemHookshot;
-    case HapticItemId.BOMBOS: return PATTERNS.itemBombos;
-    case HapticItemId.ETHER: return PATTERNS.itemEther;
-    case HapticItemId.QUAKE: return PATTERNS.itemQuake;
-    case HapticItemId.CANE_SOMARIA: return PATTERNS.itemCaneSomaria;
-    case HapticItemId.CANE_BYRNA: return PATTERNS.itemCaneSomaria;
-    case HapticItemId.CAPE: return PATTERNS.itemCape;
+    case HapticItemId.BOMBS: return 'itemBomb';
+    case HapticItemId.BOOMERANG: return null; // catch handled by separate event
+    case HapticItemId.BOW: return 'itemBow';
+    case HapticItemId.HAMMER: return 'itemHammer';
+    case HapticItemId.FIRE_ROD: return 'itemFireRod';
+    case HapticItemId.ICE_ROD: return 'itemIceRod';
+    case HapticItemId.HOOKSHOT: return 'itemHookshot';
+    case HapticItemId.BOMBOS: return 'itemBombos';
+    case HapticItemId.ETHER: return 'itemEther';
+    case HapticItemId.QUAKE: return 'itemQuake';
+    case HapticItemId.CANE_SOMARIA: return 'itemCaneSomaria';
+    case HapticItemId.CANE_BYRNA: return 'itemCaneSomaria';
+    case HapticItemId.CAPE: return 'itemCape';
     case HapticItemId.MIRROR: return null; // handled by environmental
-    case HapticItemId.SHOVEL: return PATTERNS.itemShovel;
-    case HapticItemId.LAMP: return null;
-    case HapticItemId.POWDER: return null;
-    case HapticItemId.BOTTLE: return null;
-    case HapticItemId.BOOK: return null;
-    case HapticItemId.FLUTE: return null;
-    case HapticItemId.BUG_NET: return null;
+    case HapticItemId.SHOVEL: return 'itemShovel';
     default: return null;
   }
 }
 
-function getEnvironmentalPattern(subEvent: number): VibrationSegment[] | null {
+function getEnvironmentalPatternId(subEvent: number): HapticPatternId | null {
   switch (subEvent) {
-    case EnvironmentalEvent.FALL_INTO_PIT: return PATTERNS.fallIntoPit;
-    case EnvironmentalEvent.LAND_FROM_LEDGE: return PATTERNS.landFromLedge;
-    case EnvironmentalEvent.CHEST_OPEN: return PATTERNS.chestOpen;
-    case EnvironmentalEvent.BOMB_EXPLODE: return PATTERNS.bombExplode;
-    case EnvironmentalEvent.ENTER_WATER: return PATTERNS.enterWater;
-    case EnvironmentalEvent.MIRROR_WARP: return PATTERNS.mirrorWarp;
-    case EnvironmentalEvent.QUAKE: return PATTERNS.quakeEnvironment;
-    case EnvironmentalEvent.BOSS_DEFEATED: return PATTERNS.bossDefeated;
+    case EnvironmentalEvent.FALL_INTO_PIT: return 'fallIntoPit';
+    case EnvironmentalEvent.LAND_FROM_LEDGE: return 'landFromLedge';
+    case EnvironmentalEvent.CHEST_OPEN: return 'chestOpen';
+    case EnvironmentalEvent.BOMB_EXPLODE: return 'bombExplode';
+    case EnvironmentalEvent.ENTER_WATER: return 'enterWater';
+    case EnvironmentalEvent.MIRROR_WARP: return 'mirrorWarp';
+    case EnvironmentalEvent.QUAKE: return 'quakeEnvironment';
+    case EnvironmentalEvent.BOSS_DEFEATED: return 'bossDefeated';
     default: return null;
   }
 }
@@ -227,7 +132,7 @@ export interface HapticSettings {
 type VibrateFunction = (pattern: VibrationSegment[], gapMs?: number) => void;
 
 let currentSettings: HapticSettings = {
-  enabled: false,
+  enabled: true,
   intensity: 70,
   swordSwing: true,
   swordHitEnemy: true,
@@ -244,30 +149,52 @@ const DASH_PULSE_INTERVAL_MS = 125; // ~8Hz
 
 // ─── Public API ───
 
-/** Update haptic settings (called when settings change) */
 export function updateHapticSettings(settings: HapticSettings): void {
   currentSettings = { ...settings };
 }
 
-/** Register the vibration dispatch function (from controller system) */
 export function setVibrateFunction(fn: VibrateFunction | null): void {
   vibrateFn = fn;
 }
 
-/** Scale a pattern by the global intensity multiplier */
-function scalePattern(pattern: VibrationSegment[]): VibrationSegment[] {
+// ─── Internal Dispatch ───
+
+function scalePattern(segments: VibrationSegment[]): VibrationSegment[] {
   const scale = currentSettings.intensity / 100;
-  return pattern.map(seg => ({
+  return segments.map(seg => ({
     durationMs: seg.durationMs,
     intensity: Math.min(1.0, seg.intensity * scale),
   }));
 }
 
-/** Dispatch a vibration pattern if enabled */
-function dispatch(pattern: VibrationSegment[] | null, gapMs?: number): void {
-  if (!pattern || !vibrateFn || !currentSettings.enabled) return;
-  vibrateFn(scalePattern(pattern), gapMs);
+/**
+ * Fire a pattern by ID. Handles cooldown checking and delayed dispatch.
+ */
+function firePattern(patternId: HapticPatternId): void {
+  if (!vibrateFn || !currentSettings.enabled) return;
+
+  const entry: HapticPatternEntry = HAPTIC_PATTERNS[patternId];
+  if (!entry) return;
+
+  // Cooldown check
+  if (entry.cooldownMs && !checkCooldown(patternId, entry.cooldownMs)) return;
+
+  const scaled = scalePattern(entry.segments);
+  const gapMs = entry.gapMs ?? 0;
+
+  // Delay support
+  if (entry.delayMs && entry.delayMs > 0) {
+    setTimeout(() => {
+      if (vibrateFn && currentSettings.enabled) {
+        vibrateFn(scaled, gapMs);
+      }
+    }, entry.delayMs);
+  } else {
+    vibrateFn(scaled, gapMs);
+  }
 }
+
+// ─── Event Handlers ───
 
 /** Handle a haptic event from the C game hooks */
 export function handleHapticEvent(eventType: number, param: number): void {
@@ -275,27 +202,41 @@ export function handleHapticEvent(eventType: number, param: number): void {
 
   switch (eventType) {
     case HapticEventType.SWORD_SWING:
-      if (currentSettings.swordSwing) dispatch(PATTERNS.swordSwing);
+      if (currentSettings.swordSwing) firePattern(param === 1 ? 'swordSwingRapid' : 'swordSwing');
       break;
 
     case HapticEventType.SWORD_HIT_ENEMY:
-      if (currentSettings.swordHitEnemy) dispatch(PATTERNS.swordHitEnemy);
+      if (currentSettings.swordHitEnemy) firePattern('swordHitEnemy');
       break;
 
     case HapticEventType.SWORD_CLINK:
-      if (currentSettings.swordClink) dispatch(PATTERNS.swordClink, 15);
+      if (currentSettings.swordClink) firePattern('swordClink');
       break;
 
     case HapticEventType.DAMAGE_TAKEN:
-      if (currentSettings.damageTaken) dispatch(getDamagePattern(param));
+      if (currentSettings.damageTaken) firePattern(getDamagePatternId(param));
       break;
 
-    case HapticEventType.ITEM_USED:
-      if (currentSettings.itemUse) dispatch(getItemPattern(param));
+    case HapticEventType.ITEM_USED: {
+      if (!currentSettings.itemUse) break;
+      const id = getItemPatternId(param);
+      if (id) firePattern(id);
+      break;
+    }
+
+    case HapticEventType.ENVIRONMENTAL: {
+      if (!currentSettings.environmentalEffects) break;
+      const id = getEnvironmentalPatternId(param);
+      if (id) firePattern(id);
+      break;
+    }
+
+    case HapticEventType.HOOKSHOT_WALL:
+      if (currentSettings.itemUse) firePattern('itemHookshotWall');
       break;
 
-    case HapticEventType.ENVIRONMENTAL:
-      if (currentSettings.environmentalEffects) dispatch(getEnvironmentalPattern(param));
+    case HapticEventType.BOOMERANG_CATCH:
+      if (currentSettings.itemUse) firePattern('itemBoomerangCatch');
       break;
   }
 }
@@ -307,7 +248,7 @@ export function handleDashPulse(): void {
   const now = performance.now();
   if (now - lastDashPulseTime < DASH_PULSE_INTERVAL_MS) return;
   lastDashPulseTime = now;
-  dispatch(PATTERNS.dashStep);
+  firePattern('dashStep');
 }
 
 /** Reset dash timer (call when dash ends) */
@@ -318,25 +259,24 @@ export function resetDashState(): void {
 /** Trigger death vibration pattern */
 export function handleDeath(): void {
   if (!currentSettings.enabled || !currentSettings.damageTaken || !vibrateFn) return;
-  dispatch(PATTERNS.death);
+  firePattern('death');
 }
 
 /** Trigger spin attack release vibration */
 export function handleSpinAttack(): void {
   if (!currentSettings.enabled || !currentSettings.swordSwing || !vibrateFn) return;
-  dispatch(PATTERNS.spinAttackRelease);
+  firePattern('spinAttackRelease');
 }
 
 /** Trigger environmental event from JS polling */
 export function handleEnvironmental(subEvent: number): void {
   if (!currentSettings.enabled || !currentSettings.environmentalEffects || !vibrateFn) return;
-  dispatch(getEnvironmentalPattern(subEvent));
+  const id = getEnvironmentalPatternId(subEvent);
+  if (id) firePattern(id);
 }
 
-/** Trigger pickup vibration (heart piece, pendant, etc.) */
+/** Trigger pickup vibration */
 export function handlePickup(type: 'heartPiece' | 'pendantCrystal' | 'largeRupee'): void {
   if (!currentSettings.enabled || !currentSettings.environmentalEffects || !vibrateFn) return;
-  dispatch(PATTERNS[type]);
+  firePattern(type);
 }
-
-export { PATTERNS };

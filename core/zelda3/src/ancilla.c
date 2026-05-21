@@ -6,6 +6,7 @@
 #include "tagalong.h"
 #include "overworld.h"
 #include "tile_detect.h"
+#include "game_hooks.h"
 #include "player.h"
 #include "misc.h"
 #include "dungeon.h"
@@ -1357,6 +1358,7 @@ void Boomerang_StopOffScreen(int k) {  // 8892ab
 }
 
 void Boomerang_Terminate(int k) {  // 8892f5
+  GameHook_NotifyBoomerangCatch();
   ancilla_type[k] = 0;
   flag_for_boomerang_in_place = 0;
   if (link_item_in_hand & 0x80) {
@@ -1550,6 +1552,7 @@ label1:
   if (!--ancilla_arr3[k]) {
     if (++ancilla_item_to_link[k] == 1) {
       Ancilla_Sfx2_Pan(k, 0xc);
+      GameHook_NotifyEnvironmentalEvent(3); // BOMB_EXPLODE
       if (k + 1 == flag_is_ancilla_to_pick_up) {
         flag_is_ancilla_to_pick_up = 0;
         if (link_state_bits & 0x80) {
@@ -3169,6 +3172,7 @@ endif_7:
     if (!(tiledetect_misc_tiles & 3)) {
       AncillaAdd_HookshotWallClink(k, 6, 1);
       Ancilla_Sfx2_Pan(k, (tiledetect_misc_tiles & 0x30) ? 6 : 5);
+      GameHook_NotifyHookshotWall();
     }
   }
 
@@ -6210,6 +6214,7 @@ int AncillaAdd_Arrow(uint8 a, uint8 ax, uint8 ay, uint16 xcoord, uint16 ycoord) 
 
   if (k >= 0) {
     sound_effect_1 = Link_CalculateSfxPan() | 7;
+    GameHook_NotifyItemUsed(3); // BOW
     ancilla_H[k] = 0;
     ancilla_item_to_link[k] = 8;
     int j = ax >> 1;

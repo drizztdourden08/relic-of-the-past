@@ -15,6 +15,7 @@ import type { GameSettings } from '@shared/types/settings';
 import { getModule } from './wasm-bridge';
 import { setMasterVolume } from './audio-volume';
 import { updateHapticBridgeSettings } from '../input/haptic-bridge';
+import { DEFAULT_SETTINGS } from './settings';
 import { log } from '../log-bus';
 
 // Track the last-pushed forceBackdropBlack value so we can re-assert after state loads
@@ -206,9 +207,7 @@ function pushLiveSettings(settings: GameSettings): boolean {
     } catch { /* WASM not rebuilt yet */ }
 
     // Haptic feedback settings (JS-only, no WASM needed)
-    if (settings.haptics) {
-      updateHapticBridgeSettings(settings.haptics);
-    }
+    updateHapticBridgeSettings(settings.haptics ?? DEFAULT_SETTINGS.haptics);
 
     log.app(`Live settings pushed — features: 0x${features.toString(16)}, ppu: 0x${ppuFlags.toString(16)}`);
     return true;

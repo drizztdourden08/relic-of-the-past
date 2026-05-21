@@ -991,6 +991,7 @@ void Link_HoppingHorizontally_FindTile_Y() {  // 878b9b
 }
 
 void Link_SetToDeepWater() {  // 878c44
+  GameHook_NotifyEnvironmentalEvent(4); // ENTER_WATER
   link_is_in_deep_water = 1;
   link_some_direction_bits = link_direction_last;
   Link_ResetSwimmingState();
@@ -1519,6 +1520,7 @@ endif_1:
     link_incapacitated_timer = 0;
     link_auxiliary_state = 0;
     Ancilla_Sfx3_Near(31);
+    GameHook_NotifyEnvironmentalEvent(0); // FALL_INTO_PIT
   }
 
   link_cant_change_direction = 0;
@@ -2187,7 +2189,7 @@ void Link_CheckForSwordSwing() {  // 879cd9
     }
     button_mask_b_y |= 0x80;
     HandleSwordSfxAndBeam();
-    GameHook_NotifySwordSwing();
+    GameHook_NotifySwordSwing(0);
     link_cant_change_direction |= 1;
     link_animation_steps = 0;
   }
@@ -2210,6 +2212,7 @@ void Link_CheckForSwordSwing() {  // 879cd9
     } else if (button_b_frames >= 4 && (button_mask_b_y & 1) && (joypad1H_last & kJoypadH_B)) {
       button_mask_b_y &= ~1;
       HandleSwordSfxAndBeam();
+      GameHook_NotifySwordSwing(1);
       return;
     }
   }
@@ -3827,6 +3830,7 @@ void Link_PerformOpenChest() {  // 87b574
   }
   assert(chest_position != -1);
   item_receipt_method = 1;
+  GameHook_NotifyEnvironmentalEvent(2); // CHEST_OPEN
   uint8 alt = kReceiveItemAlternates[item];
   if (alt != 0xff) {
     uint16 ram_addr = kMemoryLocationToGiveItemTo[item];
@@ -5119,6 +5123,7 @@ void StartMovementCollisionChecks_X_HandleOutdoors() {  // 87c8e9
 
   if ((detection_of_ledge_tiles_horiz_uphoriz & 7) != 0 && RunLedgeHopTimer()) {
     Ancilla_Sfx2_Near(0x20);
+    GameHook_NotifyEnvironmentalEvent(1); // LAND_FROM_LEDGE
     link_actual_vel_x = (link_last_direction_moved_towards & 1) ? 0x10 : -0x10;
     Link_CancelDash();
     link_auxiliary_state = 2;

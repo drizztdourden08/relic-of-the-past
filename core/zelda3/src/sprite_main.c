@@ -6,6 +6,7 @@
 #include "load_gfx.h"
 #include "hud.h"
 #include "dungeon.h"
+#include "game_hooks.h"
 #include "player.h"
 #include "misc.h"
 
@@ -18049,6 +18050,7 @@ void Sprite_ScheduleBossForDeath(int k) {  // 9ddc16
   sprite_state[k] = 4;
   sprite_A[k] = 0;
   sprite_delay_main[k] = 224;
+  GameHook_NotifyEnvironmentalEvent(7); // BOSS_DEFEATED
 }
 
 void Sprite_MakeBossExplosion(int k) {  // 9ddc2a
