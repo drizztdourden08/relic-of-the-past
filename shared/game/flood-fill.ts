@@ -466,7 +466,7 @@ export function getAdjacentScreen(screenIdx: number, edge: 'north' | 'south' | '
   }
 }
 
-export function runFloodFill(rom: RomData, screenIndex: number, inventory?: Set<string>): FloodFillResult {
+export function runFloodFill(rom: RomData, screenIndex: number, inventory?: Set<string>, startPos?: { row: number; col: number }): FloodFillResult {
   if (!cachedTables) initFloodFillEngine(rom);
   const { map32, map16ToMap8, map8ToAttr, entrances } = cachedTables!;
 
@@ -646,9 +646,10 @@ export function runFloodFill(rom: RomData, screenIndex: number, inventory?: Set<
   // Build entrance positions for the flood fill
   const entrancePositions = screenEntrances.map(e => ({ row: e.gridRow, col: e.gridCol, idx: e.id }));
 
-  // Find a good starting position (first free tile near center, or first free tile overall)
-  let startRow = 32, startCol = 32;
-  if (grid[startRow][startCol].type !== 'free') {
+  // Find a good starting position (use provided startPos, or first free tile near center)
+  let startRow = startPos?.row ?? 32;
+  let startCol = startPos?.col ?? 32;
+  if (grid[startRow]?.[startCol]?.type !== 'free') {
     let found = false;
     for (let radius = 1; radius < 32 && !found; radius++) {
       for (let dr = -radius; dr <= radius && !found; dr++) {
@@ -668,14 +669,17 @@ export function runFloodFill(rom: RomData, screenIndex: number, inventory?: Set<
   const reachableLedges = ledges.filter(l => reachable[l.startRow]?.[l.startCol]);
 
   // Summarize borders
+  const inv = inventory ?? new Set<string>();
   const borders: FloodFillResult['borders'] = { north: { freeTiles: [], itemTiles: [] }, south: { freeTiles: [], itemTiles: [] }, east: { freeTiles: [], itemTiles: [] }, west: { freeTiles: [], itemTiles: [] } };
   for (const t of transitions) {
     if (t.edge === 'entrance') continue;
     const pos = t.edge === 'north' || t.edge === 'south' ? t.col : t.row;
-    if (t.requirements.length === 0) {
+    // Filter out requirements already satisfied by inventory
+    const unmet = t.requirements.filter(r => !inv.has(r));
+    if (unmet.length === 0) {
       borders[t.edge].freeTiles.push(pos);
     } else {
-      borders[t.edge].itemTiles.push({ pos, requirements: t.requirements });
+      borders[t.edge].itemTiles.push({ pos, requirements: unmet });
     }
   }
 
