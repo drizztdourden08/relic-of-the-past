@@ -204,6 +204,11 @@ contextBridge.exposeInMainWorld('api', {
   loadSpriteReview: () => ipcRenderer.invoke('spriteReview:load'),
   saveSpriteReview: (data: unknown) => ipcRenderer.invoke('spriteReview:save', data),
 
+  // Connection review (overworld connectivity)
+  loadConnectionReview: () => ipcRenderer.invoke('connectionReview:load'),
+  saveConnectionReview: (data: unknown) => ipcRenderer.invoke('connectionReview:save', data),
+  runFloodFill: (romFile: string, screenIndex: number, items?: string[]) => ipcRenderer.invoke('connectionReview:floodFill', romFile, screenIndex, items),
+
   // Sprite extraction (per-ROM)
   extractSprites: (romFile: string) => ipcRenderer.invoke('sprites:extract', romFile),
   checkSpritesExtracted: (romFile: string) => ipcRenderer.invoke('sprites:check', romFile),

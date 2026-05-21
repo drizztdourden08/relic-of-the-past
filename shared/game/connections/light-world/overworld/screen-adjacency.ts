@@ -81,7 +81,6 @@ export const LW_SCREEN_ADJACENCY_CONNECTIONS: RegionConnection[] = [
   { from: 'lw-26', to: 'lw-2e', entrance: 'Eastern Ruins SW South to Eastern Ruins Ridge', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'lw-27', to: 'lw-2f', entrance: 'Eastern Ruins SE South to Eastern Cul-de-sac', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'lw-28', to: 'lw-29', entrance: 'Kakariko Maze East to Kakariko South Annex', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
-  { from: 'lw-28', to: 'lw-30', entrance: 'Kakariko Maze South to Desert of Mystery NW', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'lw-29', to: 'lw-2a', entrance: 'Kakariko South Annex East to Haunted Grove', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'lw-29', to: 'lw-31', entrance: 'Kakariko South Annex South to Desert of Mystery NE', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'lw-2a', to: 'lw-2b', entrance: 'Haunted Grove East to Uncle\'s Estate West', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },

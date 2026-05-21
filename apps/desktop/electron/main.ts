@@ -16,6 +16,7 @@ import { registerSessionHandlers } from './sessions/ipc-handlers';
 import { registerSpriteProtocol } from './protocol/sprite-protocol';
 import { registerInputHandlers, stopInputHandlers, initCalibrationStore, initProfileStore } from './input';
 import { registerTestHandlers } from './test/ipc-handlers';
+import { registerConnectionHandlers } from './connections/ipc-handlers';
 import { ipcMain } from 'electron';
 import { extractAllItemSprites } from '../../../shared/asset-extraction/item-sprites/extract-items';
 import spriteDefinitions from '../../../shared/game/sprites/definitions.json';
@@ -62,6 +63,7 @@ app.whenReady().then(async () => {
   registerLanguageHandlers();
   registerSessionHandlers();
   registerTestHandlers();
+  registerConnectionHandlers();
 
   // App info handler
   ipcMain.handle('app:getUserDataPath', () => app.getPath('userData'));
@@ -76,7 +78,7 @@ app.whenReady().then(async () => {
   initProfileStore(dataPath);
   registerInputHandlers(mainWindow);
 
-  // Set up application menu for clipboard shortcuts
+  // Set up application menu for clipboard shortcuts only (debug items moved to in-app Advanced menu)
   Menu.setApplicationMenu(Menu.buildFromTemplate([
     {
       label: 'Edit',
@@ -88,14 +90,6 @@ app.whenReady().then(async () => {
         { role: 'copy' },
         { role: 'paste' },
         { role: 'selectAll' },
-      ],
-    },
-    {
-      label: 'View',
-      submenu: [
-        { role: 'toggleDevTools', label: 'Developer Console', accelerator: 'F12' },
-        { role: 'reload' },
-        { role: 'forceReload' },
       ],
     },
   ]));
