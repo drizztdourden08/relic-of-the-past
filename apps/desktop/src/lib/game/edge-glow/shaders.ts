@@ -213,7 +213,7 @@ void main() {
     edgePixelDist = max(edgePixelDist, pixelX - dynRightBound);
   if (pixelY > dynBottomBound)
     edgePixelDist = max(edgePixelDist, pixelY - dynBottomBound);
-  float blurMix = clamp(edgePixelDist / 50.0, 0.0, 1.0) * u_effectOpacity;
+  float blurMix = pow(clamp(edgePixelDist / 15.0, 0.0, 1.0), 0.55) * u_effectOpacity;
   vec4 color = mix(mirror, blur, blurMix);
 
   vec2 voronoiUV = v_uv * u_noiseScale;

@@ -97,6 +97,7 @@ function createEdgeGlowRenderer(
     dynBottom: gl.getUniformLocation(compositeProg, 'u_dynBottom'),
     effectOpacity: gl.getUniformLocation(compositeProg, 'u_effectOpacity'),
   };
+  };
 
   // ─── Fullscreen quad geometry ───
 

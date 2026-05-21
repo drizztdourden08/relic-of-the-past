@@ -4,6 +4,7 @@ import { getInputManager, wasmGetViewportInfo, wasmRenderCleanFrame } from '../.
 import { createEdgeGlowRenderer, type EdgeGlowRenderer } from '../../../lib/game/edge-glow';
 import { useCanvasFit } from '../../../hooks/useCanvasFit';
 import { ControllerDisconnectOverlay } from './sub-components/ControllerDisconnectOverlay';
+import { ConnectionOverlay } from './sub-components/ConnectionOverlay';
 import { GameOverlay } from '../GameOverlay';
 import './GameLayer.css';
 import type { GameLayerProps } from './types';
@@ -251,6 +252,7 @@ const GameLayer = (props: GameLayerProps) => {
           </div>
         </div>
       )}
+      {status === 'running' && <ConnectionOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
       {status === 'running' && <GameOverlay width={fitSize.width} height={fitSize.height} />}
     </div>
   );
