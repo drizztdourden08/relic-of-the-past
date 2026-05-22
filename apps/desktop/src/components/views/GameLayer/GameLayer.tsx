@@ -238,9 +238,9 @@ const GameLayer = (props: GameLayerProps) => {
         const vp = wasmGetViewportInfo();
         let screenId = -1;
         if (vp && vp.locationModule === 9) {
-          const col = Math.floor((vp.cameraX + 128) / 512) & 7;
-          const row = Math.floor((vp.cameraY + 112) / 512) & 7;
-          screenId = row * 8 + col;
+          const screenCol = Math.floor((vp.cameraX + 128) / 512) & 7;
+          const screenRow = Math.floor((vp.cameraY + 112) / 512) & 7;
+          screenId = screenRow * 8 + screenCol;
         }
 
         if (screenId !== prevScreenId || useShadowEditorStore.getState().dirty) {
@@ -252,6 +252,13 @@ const GameLayer = (props: GameLayerProps) => {
           } else {
             renderer.setEnabled(false);
           }
+        }
+
+        // Update viewport origin every frame (camera scrolls within a screen)
+        if (vp && vp.locationModule === 9) {
+          const viewLeft = vp.cameraX - vp.extraLeftRight;
+          const viewTop = vp.cameraY;
+          renderer.setScreenOrigin(viewLeft, viewTop);
         }
 
         renderer.render(gameCanvas, time);

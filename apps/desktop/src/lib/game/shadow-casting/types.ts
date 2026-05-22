@@ -5,6 +5,8 @@ interface ShadowRenderer {
   render(gameCanvas: HTMLCanvasElement, time: number): void;
   /** Update the screen data (called on screen transitions) */
   setScreenData(data: ScreenShadowData | null): void;
+  /** Set the world-space origin of the current screen (for coordinate conversion) */
+  setScreenOrigin(worldX: number, worldY: number): void;
   /** Resize internal buffers to match game canvas */
   resize(width: number, height: number): void;
   /** Enable/disable rendering */

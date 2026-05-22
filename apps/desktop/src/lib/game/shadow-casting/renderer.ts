@@ -110,9 +110,12 @@ function createShadowRenderer(
   let screenData: ScreenShadowData | null = null;
   let heightmapDirty = false;
 
+  let screenWorldX = 0;
+  let screenWorldY = 0;
+
   function rebuildHeightmap(): void {
     if (!screenData || screenData.heightmap.length === 0) return;
-    const texData = buildHeightmapTexture(screenData.heightmap, width, height);
+    const texData = buildHeightmapTexture(screenData.heightmap, width, height, screenWorldX, screenWorldY);
     gl.bindTexture(gl.TEXTURE_2D, heightmapTex);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, width, height, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, texData);
     heightmapDirty = false;
@@ -232,6 +235,15 @@ function createShadowRenderer(
       heightmapDirty = true;
       if (!data || (data.heightmap.length === 0 && data.lights.length === 0)) {
         enabled = false;
+      }
+    },
+
+    setScreenOrigin(worldX: number, worldY: number): void {
+      // Only rebuild if origin moved significantly (avoids per-pixel rebuilds during scrolling)
+      if (Math.abs(screenWorldX - worldX) > 2 || Math.abs(screenWorldY - worldY) > 2) {
+        screenWorldX = worldX;
+        screenWorldY = worldY;
+        heightmapDirty = true;
       }
     },
 

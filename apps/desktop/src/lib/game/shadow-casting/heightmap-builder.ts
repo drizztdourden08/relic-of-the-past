@@ -8,16 +8,21 @@ import type { HeightmapElement, ShapeDefinition } from '@shared/types/shadow-cas
 /**
  * Build a heightmap texture from a list of heightmap elements.
  * Returns a Uint8Array (single channel, R = height * 255) sized width × height.
+ *
+ * @param offsetX World X origin of the current screen (subtracted from shape coords)
+ * @param offsetY World Y origin of the current screen (subtracted from shape coords)
  */
 function buildHeightmapTexture(
   elements: HeightmapElement[],
   width: number,
   height: number,
+  offsetX: number = 0,
+  offsetY: number = 0,
 ): Uint8Array {
   const buffer = new Uint8Array(width * height);
 
   for (const element of elements) {
-    rasterizeElement(buffer, width, height, element);
+    rasterizeElement(buffer, width, height, element, offsetX, offsetY);
   }
 
   return buffer;
@@ -28,22 +33,32 @@ function rasterizeElement(
   bufWidth: number,
   bufHeight: number,
   element: HeightmapElement,
+  offsetX: number,
+  offsetY: number,
 ): void {
   const { shape, height, smoothing } = element;
 
+  // Convert world-space shape to screen-local coordinates
+  const localShape: ShapeDefinition = {
+    ...shape,
+    x: shape.x - offsetX,
+    y: shape.y - offsetY,
+    points: shape.points?.map(p => ({ x: p.x - offsetX, y: p.y - offsetY })),
+  };
+
   // Compute bounding box for the shape
-  const halfW = shape.width / 2;
-  const halfH = shape.height / 2;
+  const halfW = localShape.width / 2;
+  const halfH = localShape.height / 2;
   const margin = smoothing;
 
-  const minX = Math.max(0, Math.floor(shape.x - halfW - margin));
-  const maxX = Math.min(bufWidth - 1, Math.ceil(shape.x + halfW + margin));
-  const minY = Math.max(0, Math.floor(shape.y - halfH - margin));
-  const maxY = Math.min(bufHeight - 1, Math.ceil(shape.y + halfH + margin));
+  const minX = Math.max(0, Math.floor(localShape.x - halfW - margin));
+  const maxX = Math.min(bufWidth - 1, Math.ceil(localShape.x + halfW + margin));
+  const minY = Math.max(0, Math.floor(localShape.y - halfH - margin));
+  const maxY = Math.min(bufHeight - 1, Math.ceil(localShape.y + halfH + margin));
 
   for (let py = minY; py <= maxY; py++) {
     for (let px = minX; px <= maxX; px++) {
-      const dist = distanceToShape(px, py, shape);
+      const dist = distanceToShape(px, py, localShape);
       let value: number;
 
       if (dist <= 0) {
