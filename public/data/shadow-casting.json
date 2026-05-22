@@ -100,8 +100,8 @@
           "shape": {
             "id": "shape_1779425894881_1",
             "type": "freehand",
-            "x": 1841.9400244798042,
-            "y": 1161.817589576547,
+            "x": 1834.9008567931455,
+            "y": 1160.514657980456,
             "width": 61.006119951040546,
             "height": 59.93485342019562,
             "points": [
@@ -169,10 +169,11 @@
                 "x": 1842.4614443084456,
                 "y": 1131.8501628664494
               }
-            ]
+            ],
+            "rotation": 3
           },
-          "height": 0.5,
-          "smoothing": 4
+          "height": 0.43,
+          "smoothing": 16
         }
       ],
       "lights": [],
@@ -182,7 +183,7 @@
         "sunElevation": 45,
         "sunIntensity": 0.8,
         "ambientIntensity": 0.3,
-        "dayNightCycle": false,
+        "dayNightCycle": true,
         "cycleSpeed": 120,
         "shadowSoftness": 0.5
       }

@@ -166,7 +166,7 @@ void main() {
 }
 `;
 
-/** Composite pass — multiply light texture over game frame */
+/** Composite pass — output light map only (CSS mix-blend-mode: multiply combines with game) */
 const COMPOSITE_FRAG = /* glsl */ `
 precision mediump float;
 varying vec2 v_uv;
@@ -174,13 +174,12 @@ uniform sampler2D u_gameTexture;
 uniform sampler2D u_lightTexture;
 
 void main() {
-  vec4 gameColor = texture2D(u_gameTexture, v_uv);
   vec4 lightColor = texture2D(u_lightTexture, v_uv);
 
-  // Multiply: darken shadowed areas, slightly brighten lit areas
-  vec3 result = gameColor.rgb * lightColor.rgb;
-
-  gl_FragColor = vec4(result, gameColor.a);
+  // Output the light multiplier directly.
+  // White (1,1,1) = fully lit, darker = shadowed.
+  // CSS mix-blend-mode: multiply on the canvas handles combining with the game frame.
+  gl_FragColor = vec4(lightColor.rgb, 1.0);
 }
 `;
 
