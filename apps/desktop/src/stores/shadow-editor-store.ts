@@ -1,0 +1,297 @@
+import { create } from 'zustand';
+import type {
+  ShadowCastingProject,
+  ScreenShadowData,
+  HeightmapElement,
+  LightSource,
+  ScreenLightingConfig,
+} from '@shared/types/shadow-casting';
+import { EMPTY_SHADOW_PROJECT } from '@shared/types/shadow-casting';
+
+type EditorTool = 'select' | 'polygon' | 'freehand' | 'point-light' | 'shape-light';
+type HeightPreset = '0.25' | '0.5' | '0.75' | '1.0' | 'custom';
+
+interface ShadowEditorStore {
+  // ─── Visibility ───
+  open: boolean;
+  setOpen: (open: boolean) => void;
+
+  // ─── Project data ───
+  project: ShadowCastingProject;
+  dirty: boolean;
+
+  // ─── Tool state ───
+  activeTool: EditorTool;
+  selectedElementId: string | null;
+  selectedType: 'heightmap' | 'light' | null;
+
+  // ─── Tool parameters ───
+  polygonSides: number;
+  polygonCornerRadius: number;
+  heightPreset: HeightPreset;
+  customHeight: number;
+  defaultSmoothing: number;
+  defaultLightIntensity: number;
+  defaultLightRadius: number;
+
+  // ─── Freehand state ───
+  freehandPoints: { x: number; y: number }[];
+  isDrawingFreehand: boolean;
+
+  // ─── Drag state ───
+  isDragging: boolean;
+  dragStartWorld: { x: number; y: number } | null;
+
+  // ─── Undo/Redo ───
+  undoStack: ScreenShadowData[];
+  redoStack: ScreenShadowData[];
+
+  // ─── Actions ───
+  loadProject: (project: ShadowCastingProject) => void;
+  setActiveTool: (tool: EditorTool) => void;
+  setSelectedElement: (id: string | null, type: 'heightmap' | 'light' | null) => void;
+
+  // Height
+  setHeightPreset: (preset: HeightPreset) => void;
+  setCustomHeight: (height: number) => void;
+  getEffectiveHeight: () => number;
+
+  // Tool params
+  setPolygonSides: (sides: number) => void;
+  setPolygonCornerRadius: (radius: number) => void;
+  setDefaultSmoothing: (smoothing: number) => void;
+  setDefaultLightIntensity: (intensity: number) => void;
+  setDefaultLightRadius: (radius: number) => void;
+
+  // Screen data mutations
+  addHeightmapElement: (screenId: number, element: HeightmapElement) => void;
+  updateHeightmapElement: (screenId: number, id: string, patch: Partial<HeightmapElement>) => void;
+  removeHeightmapElement: (screenId: number, id: string) => void;
+  addLight: (screenId: number, light: LightSource) => void;
+  updateLight: (screenId: number, id: string, patch: Partial<LightSource>) => void;
+  removeLight: (screenId: number, id: string) => void;
+  updateLighting: (screenId: number, patch: Partial<ScreenLightingConfig>) => void;
+
+  // Freehand
+  addFreehandPoint: (point: { x: number; y: number }) => void;
+  clearFreehandPoints: () => void;
+  setIsDrawingFreehand: (drawing: boolean) => void;
+
+  // Drag
+  setIsDragging: (dragging: boolean) => void;
+  setDragStartWorld: (pos: { x: number; y: number } | null) => void;
+
+  // Undo/Redo
+  undo: (screenId: number) => void;
+  redo: (screenId: number) => void;
+
+  // Persistence
+  markClean: () => void;
+  save: () => Promise<void>;
+
+  // Helpers
+  getScreenData: (screenId: number) => ScreenShadowData;
+}
+
+function ensureScreenData(project: ShadowCastingProject, screenId: number): ScreenShadowData {
+  if (project.screens[screenId]) return project.screens[screenId];
+  return {
+    screenId,
+    heightmap: [],
+    lights: [],
+    lighting: { ...project.globalDefaults },
+  };
+}
+
+function pushUndo(state: ShadowEditorStore, screenId: number): { undoStack: ScreenShadowData[]; redoStack: ScreenShadowData[] } {
+  const current = ensureScreenData(state.project, screenId);
+  return {
+    undoStack: [...state.undoStack.slice(-20), current],
+    redoStack: [],
+  };
+}
+
+const useShadowEditorStore = create<ShadowEditorStore>((set, get) => ({
+  open: false,
+  setOpen: (open) => set({ open }),
+
+  project: { ...EMPTY_SHADOW_PROJECT },
+  dirty: false,
+  activeTool: 'select',
+  selectedElementId: null,
+  selectedType: null,
+  polygonSides: 4,
+  polygonCornerRadius: 0,
+  heightPreset: '0.5',
+  customHeight: 0.5,
+  defaultSmoothing: 4,
+  defaultLightIntensity: 0.8,
+  defaultLightRadius: 64,
+  freehandPoints: [],
+  isDrawingFreehand: false,
+  isDragging: false,
+  dragStartWorld: null,
+  undoStack: [],
+  redoStack: [],
+
+  loadProject: (project) => set({ project, dirty: false, undoStack: [], redoStack: [] }),
+
+  setActiveTool: (tool) => set({ activeTool: tool, selectedElementId: null, selectedType: null, freehandPoints: [], isDrawingFreehand: false }),
+
+  setSelectedElement: (id, type) => set({ selectedElementId: id, selectedType: type }),
+
+  setHeightPreset: (preset) => set({ heightPreset: preset }),
+  setCustomHeight: (height) => set({ customHeight: height, heightPreset: 'custom' }),
+  getEffectiveHeight: () => {
+    const s = get();
+    if (s.heightPreset === 'custom') return s.customHeight;
+    return parseFloat(s.heightPreset);
+  },
+
+  setPolygonSides: (sides) => set({ polygonSides: sides }),
+  setPolygonCornerRadius: (radius) => set({ polygonCornerRadius: radius }),
+  setDefaultSmoothing: (smoothing) => set({ defaultSmoothing: smoothing }),
+  setDefaultLightIntensity: (intensity) => set({ defaultLightIntensity: intensity }),
+  setDefaultLightRadius: (radius) => set({ defaultLightRadius: radius }),
+
+  addHeightmapElement: (screenId, element) => {
+    const state = get();
+    const undo = pushUndo(state, screenId);
+    const screenData = ensureScreenData(state.project, screenId);
+    const newScreenData = { ...screenData, heightmap: [...screenData.heightmap, element] };
+    set({
+      project: { ...state.project, screens: { ...state.project.screens, [screenId]: newScreenData } },
+      dirty: true,
+      ...undo,
+      selectedElementId: element.id,
+      selectedType: 'heightmap',
+    });
+  },
+
+  updateHeightmapElement: (screenId, id, patch) => {
+    const state = get();
+    const screenData = ensureScreenData(state.project, screenId);
+    const newHeightmap = screenData.heightmap.map((el) =>
+      el.id === id ? { ...el, ...patch } : el,
+    );
+    const newScreenData = { ...screenData, heightmap: newHeightmap };
+    set({
+      project: { ...state.project, screens: { ...state.project.screens, [screenId]: newScreenData } },
+      dirty: true,
+    });
+  },
+
+  removeHeightmapElement: (screenId, id) => {
+    const state = get();
+    const undo = pushUndo(state, screenId);
+    const screenData = ensureScreenData(state.project, screenId);
+    const newScreenData = { ...screenData, heightmap: screenData.heightmap.filter((el) => el.id !== id) };
+    set({
+      project: { ...state.project, screens: { ...state.project.screens, [screenId]: newScreenData } },
+      dirty: true,
+      ...undo,
+      selectedElementId: null,
+      selectedType: null,
+    });
+  },
+
+  addLight: (screenId, light) => {
+    const state = get();
+    const undo = pushUndo(state, screenId);
+    const screenData = ensureScreenData(state.project, screenId);
+    const newScreenData = { ...screenData, lights: [...screenData.lights, light] };
+    set({
+      project: { ...state.project, screens: { ...state.project.screens, [screenId]: newScreenData } },
+      dirty: true,
+      ...undo,
+      selectedElementId: light.id,
+      selectedType: 'light',
+    });
+  },
+
+  updateLight: (screenId, id, patch) => {
+    const state = get();
+    const screenData = ensureScreenData(state.project, screenId);
+    const newLights = screenData.lights.map((l) => (l.id === id ? { ...l, ...patch } : l));
+    const newScreenData = { ...screenData, lights: newLights };
+    set({
+      project: { ...state.project, screens: { ...state.project.screens, [screenId]: newScreenData } },
+      dirty: true,
+    });
+  },
+
+  removeLight: (screenId, id) => {
+    const state = get();
+    const undo = pushUndo(state, screenId);
+    const screenData = ensureScreenData(state.project, screenId);
+    const newScreenData = { ...screenData, lights: screenData.lights.filter((l) => l.id !== id) };
+    set({
+      project: { ...state.project, screens: { ...state.project.screens, [screenId]: newScreenData } },
+      dirty: true,
+      ...undo,
+      selectedElementId: null,
+      selectedType: null,
+    });
+  },
+
+  updateLighting: (screenId, patch) => {
+    const state = get();
+    const screenData = ensureScreenData(state.project, screenId);
+    const newScreenData = { ...screenData, lighting: { ...screenData.lighting, ...patch } };
+    set({
+      project: { ...state.project, screens: { ...state.project.screens, [screenId]: newScreenData } },
+      dirty: true,
+    });
+  },
+
+  addFreehandPoint: (point) => set((s) => ({ freehandPoints: [...s.freehandPoints, point] })),
+  clearFreehandPoints: () => set({ freehandPoints: [] }),
+  setIsDrawingFreehand: (drawing) => set({ isDrawingFreehand: drawing }),
+
+  setIsDragging: (dragging) => set({ isDragging: dragging }),
+  setDragStartWorld: (pos) => set({ dragStartWorld: pos }),
+
+  undo: (screenId) => {
+    const state = get();
+    if (state.undoStack.length === 0) return;
+    const prev = state.undoStack[state.undoStack.length - 1];
+    const currentScreenData = ensureScreenData(state.project, screenId);
+    set({
+      project: { ...state.project, screens: { ...state.project.screens, [screenId]: prev } },
+      dirty: true,
+      undoStack: state.undoStack.slice(0, -1),
+      redoStack: [...state.redoStack, currentScreenData],
+    });
+  },
+
+  redo: (screenId) => {
+    const state = get();
+    if (state.redoStack.length === 0) return;
+    const next = state.redoStack[state.redoStack.length - 1];
+    const currentScreenData = ensureScreenData(state.project, screenId);
+    set({
+      project: { ...state.project, screens: { ...state.project.screens, [screenId]: next } },
+      dirty: true,
+      redoStack: state.redoStack.slice(0, -1),
+      undoStack: [...state.undoStack, currentScreenData],
+    });
+  },
+
+  markClean: () => set({ dirty: false }),
+
+  save: async () => {
+    const state = get();
+    if (!state.dirty) return;
+    try {
+      await window.api.shadowCasting.save(state.project);
+      set({ dirty: false });
+    } catch (err) {
+      console.error('[ShadowEditor] Save failed:', err);
+    }
+  },
+
+  getScreenData: (screenId) => ensureScreenData(get().project, screenId),
+}));
+
+export { useShadowEditorStore };
+export type { EditorTool, HeightPreset };

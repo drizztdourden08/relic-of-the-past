@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "screens": {
+    "0": {
+      "screenId": 0,
+      "heightmap": [
+        {
+          "id": "hm_1779424537834_8",
+          "shape": {
+            "id": "shape_1779424537834_7",
+            "type": "freehand",
+            "x": 209,
+            "y": 96,
+            "width": 236,
+            "height": 186,
+            "points": [
+              {
+                "x": 101,
+                "y": 144
+              },
+              {
+                "x": 175,
+                "y": 188
+              },
+              {
+                "x": 249,
+                "y": 189
+              },
+              {
+                "x": 295,
+                "y": 169
+              },
+              {
+                "x": 321,
+                "y": 129
+              },
+              {
+                "x": 327,
+                "y": 65
+              },
+              {
+                "x": 324,
+                "y": 35
+              },
+              {
+                "x": 285,
+                "y": 7
+              },
+              {
+                "x": 130,
+                "y": 3
+              },
+              {
+                "x": 91,
+                "y": 45
+              },
+              {
+                "x": 94,
+                "y": 105
+              },
+              {
+                "x": 102,
+                "y": 132
+              },
+              {
+                "x": 102,
+                "y": 131
+              },
+              {
+                "x": 102,
+                "y": 131
+              },
+              {
+                "x": 102,
+                "y": 131
+              }
+            ]
+          },
+          "height": 0.5,
+          "smoothing": 4
+        }
+      ],
+      "lights": [],
+      "lighting": {
+        "sunEnabled": true,
+        "sunAngle": 315,
+        "sunElevation": 45,
+        "sunIntensity": 0.8,
+        "ambientIntensity": 0.3,
+        "dayNightCycle": false,
+        "cycleSpeed": 120,
+        "shadowSoftness": 0.5
+      }
+    }
+  },
+  "globalDefaults": {
+    "sunEnabled": true,
+    "sunAngle": 315,
+    "sunElevation": 45,
+    "sunIntensity": 0.8,
+    "ambientIntensity": 0.3,
+    "dayNightCycle": false,
+    "cycleSpeed": 120,
+    "shadowSoftness": 0.5
+  }
+}

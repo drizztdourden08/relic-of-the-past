@@ -5,7 +5,7 @@ import { SaveStateOverlay } from '../components/views/SaveStateOverlay/SaveState
 import { WidgetManager, useWidgetLayout } from '../components/composites/Widget';
 import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, CheatsWidgetContent } from '../widgets';
 import { SpriteDebug } from '../components/views/SpriteDebug';
-import { ShadowEditor } from '../components/views/ShadowEditor';
+import { useShadowEditorStore } from '../stores/shadow-editor-store';
 import { Dialog } from '../components/composites/Dialog';
 import { PageRouter } from './PageRouter';
 import type { ProfileHubTab } from '../components/views/ProfileHub/types';
@@ -59,7 +59,6 @@ const App = () => {
   const saveOverlay = useSaveOverlay(saveState, game.isRunning);
   const [showSpriteDebug, setShowSpriteDebug] = useState(false);
   const toggleSpriteDebug = useCallback(() => setShowSpriteDebug(v => !v), []);
-  const [showShadowEditor, setShowShadowEditor] = useState(false);
   const [shadowEditorWarningShown, setShadowEditorWarningShown] = useState(
     () => localStorage.getItem('shadowEditor.warningDismissed') === 'true',
   );
@@ -74,11 +73,11 @@ const App = () => {
           dismissDialog();
           localStorage.setItem('shadowEditor.warningDismissed', 'true');
           setShadowEditorWarningShown(true);
-          setShowShadowEditor(true);
+          useShadowEditorStore.getState().setOpen(true);
         },
       });
     } else {
-      setShowShadowEditor(true);
+      useShadowEditorStore.getState().setOpen(true);
     }
   }, [shadowEditorWarningShown, showDialog, dismissDialog]);
   useKeyboardShortcuts(nav, dialog, dismissDialog, profileMgmt.activeProfile);
@@ -99,9 +98,9 @@ const App = () => {
 
   // Input suppression: disable game input when menus/overlays are open
   useEffect(() => {
-    const gameActive = game.isRunning && nav.activePage === 'none' && !showSpriteDebug && !showShadowEditor;
+    const gameActive = game.isRunning && nav.activePage === 'none' && !showSpriteDebug;
     getInputManager().setInputSuppressed(!gameActive);
-  }, [game.isRunning, nav.activePage, showSpriteDebug, showShadowEditor]);
+  }, [game.isRunning, nav.activePage, showSpriteDebug]);
 
   // ─── Navigation with game-running confirmation ───
   const handleShowPicker = useCallback(async () => {
@@ -216,13 +215,6 @@ const App = () => {
         </WidgetManager>
 
         {showSpriteDebug && <SpriteDebug onClose={toggleSpriteDebug} romFile={profileMgmt.activeProfile?.romFile ?? ''} />}
-        {showShadowEditor && window.api.isDev && (
-          <ShadowEditor
-            width={512}
-            height={448}
-            onClose={() => setShowShadowEditor(false)}
-          />
-        )}
       </div>
 
       <Dialog

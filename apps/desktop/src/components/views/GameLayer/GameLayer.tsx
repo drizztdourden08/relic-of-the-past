@@ -7,6 +7,8 @@ import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shado
 import { useCanvasFit } from '../../../hooks/useCanvasFit';
 import { ControllerDisconnectOverlay } from './sub-components/ControllerDisconnectOverlay';
 import { ConnectionOverlay } from './sub-components/ConnectionOverlay';
+import { ShadowEditorOverlay } from './sub-components/ShadowEditorOverlay';
+import { ShadowEditorPanel } from './sub-components/ShadowEditorPanel';
 import { GameOverlay } from '../GameOverlay';
 import './GameLayer.css';
 import type { GameLayerProps } from './types';
@@ -350,6 +352,8 @@ const GameLayer = (props: GameLayerProps) => {
         </div>
       )}
       {status === 'running' && <ConnectionOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
+      {status === 'running' && <ShadowEditorOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
+      {status === 'running' && <ShadowEditorPanel />}
       {status === 'running' && <GameOverlay width={fitSize.width} height={fitSize.height} />}
     </div>
   );
