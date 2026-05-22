@@ -8,6 +8,7 @@
 #include "src/assets.h"
 #include "src/zelda_rtl.h"
 #include "src/config.h"
+#include "src/hud.h"
 #include "snes/ppu.h"
 
 // Forward-declare Link_ReceiveItem from player.c

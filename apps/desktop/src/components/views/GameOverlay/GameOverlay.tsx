@@ -11,9 +11,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { HudView, PauseMenuView } from '../../../hud';
 import { LocationNotification } from '../../../hud/composites/LocationNotification';
+import { DeliveryQueueIndicator } from '../../../hud/composites/DeliveryQueueIndicator';
 import { useLocationNotification } from '../../../hud/hooks/useLocationNotification';
 import { useHudSettingsStore } from '../../../stores/hud-settings-store';
-import { wasmGetMenuState } from '../../../lib/game';
+import { useDeliveryQueueStore } from '../../../stores/delivery-queue-store';
+import { wasmGetMenuState, deliveryQueue } from '../../../lib/game';
 import '../../../hud/hud.css';
 
 interface GameOverlayProps {
@@ -36,6 +38,12 @@ function GameOverlay({ width, height }: GameOverlayProps) {
 
   // Subscribe to map changes → fire location notifications
   useLocationNotification();
+
+  // Subscribe delivery queue → zustand store sync
+  useEffect(() => {
+    const unsub = deliveryQueue.subscribe(useDeliveryQueueStore.getState()._sync);
+    return unsub;
+  }, []);
 
   // Poll WASM menu state each frame — active whenever enhanced mode is on
   useEffect(() => {
@@ -89,6 +97,8 @@ function GameOverlay({ width, height }: GameOverlayProps) {
       )}
       {/* Location change notifications */}
       <LocationNotification />
+      {/* Delivery queue indicator (bottom-right) */}
+      <DeliveryQueueIndicator />
     </div>
   );
 }

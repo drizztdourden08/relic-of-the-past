@@ -4,6 +4,19 @@
  */
 
 import { getModule, getGameState } from './wasm-bridge';
+import { enqueue } from './delivery-queue';
+import type { DeliveryAction } from './delivery-queue';
+import { ITEM_ID_TO_NAME } from '@shared/game/items';
+
+// Expose trace helper on window for dev-console debugging
+if (typeof window !== 'undefined') {
+  (window as any).__trace = (frames = 120) => {
+    const mod = getModule();
+    if (!mod) { console.warn('WASM not loaded'); return; }
+    mod.ccall('WasmCheatStartTrace', null, ['number'], [frames]);
+    console.log(`[Trace] Recording ${frames} frames — check console for [TRACE] output`);
+  };
+}
 
 /** Bottle slot contents (values stored in link_bottle_info[0..3]) */
 export const BottleContents = {
@@ -27,33 +40,39 @@ function ccall(fn: string, args: number[]): void {
   mod.ccall(fn, null, args.map(() => 'number'), args);
 }
 
-// ─── Item Giving ───
+// ─── Item Giving (routed through delivery queue) ───
 
-/** Give item by ID with hold-up animation. Does NOT mark any check. */
+/** Give item by ID with hold-up animation. Queued until Link can receive. */
 export function cheatGiveItem(itemId: number): void {
   if (!isReady()) return;
-  ccall('WasmCheatGiveItem', [itemId]);
+  const action: DeliveryAction = { type: 'give_item', itemId };
+  const name = ITEM_ID_TO_NAME[itemId] ?? `Unknown Item #${itemId}`;
+  enqueue(name, 'cheat', action);
 }
 
 /**
  * Trigger a chest-type check: sets room flag, plays animation, marks as completed.
- * Uses the existing WasmTriggerCheck export.
+ * Queued until Link can receive.
  */
 export function cheatTriggerCheck(roomId: number, chestIndex: number, itemId: number): void {
   if (!isReady()) return;
-  ccall('WasmTriggerCheck', [roomId, chestIndex, itemId]);
+  const action: DeliveryAction = { type: 'trigger_check', roomId, chestIndex, itemId };
+  const name = ITEM_ID_TO_NAME[itemId] ?? `Unknown Item #${itemId}`;
+  enqueue(name, 'cheat', action);
 }
 
 /**
  * Trigger an NPC-type check: sets progress flags, gives item with animation.
- * Uses the existing WasmTriggerNpcCheck export.
+ * Queued until Link can receive.
  */
 export function cheatTriggerNpcCheck(
   flagType: number, flagMask: number, itemId: number,
   spriteType: number, postGfx: number
 ): void {
   if (!isReady()) return;
-  ccall('WasmTriggerNpcCheck', [flagType, flagMask, itemId, spriteType, postGfx]);
+  const action: DeliveryAction = { type: 'trigger_npc_check', flagType, flagMask, itemId, spriteType, postGfx };
+  const name = ITEM_ID_TO_NAME[itemId] ?? `Unknown Item #${itemId}`;
+  enqueue(name, 'cheat', action);
 }
 
 // ─── Stats ───
@@ -120,4 +139,10 @@ export function cheatSetDamageMultiplier(mult: number): void {
 export function cheatSetExtraArmorPct(pct: number): void {
   if (!isReady()) return;
   ccall('WasmCheatSetExtraArmorPct', [Math.max(0, Math.min(100, pct))]);
+}
+
+/** Start debug trace for N frames (default 120). Output goes to browser console. */
+export function cheatStartTrace(frames = 120): void {
+  if (!isReady()) return;
+  ccall('WasmCheatStartTrace', [frames]);
 }

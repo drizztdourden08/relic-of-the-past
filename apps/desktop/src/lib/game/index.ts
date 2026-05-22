@@ -17,6 +17,7 @@ export {
   cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck,
   cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows, cheatRefillMagic,
   cheatFillBottle, cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct,
+  cheatStartTrace,
   BottleContents,
 } from './cheats';
 export type { BottleContentsValue } from './cheats';
@@ -28,3 +29,6 @@ export {
   getCurrentInventory, getCompletedChecks, getUnknownItems, loadUnknownItems,
   pollInventoryState, pollRoomFlags,
 } from './tracker';
+export { deliveryQueue } from './delivery-queue';
+export type { DeliveryEntry, DeliveryAction, DeliveryQueueState } from './delivery-queue';
+export { deliverItem, deliverCheck, deliverNpcCheck, deliverCustom } from './delivery-api';

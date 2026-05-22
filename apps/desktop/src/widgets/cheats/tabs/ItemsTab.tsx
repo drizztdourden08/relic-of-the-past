@@ -34,7 +34,7 @@ const ItemsTab = () => {
     const map = new Map<string, typeof ITEMS>();
     for (const cat of CATEGORY_ORDER) map.set(cat, []);
     for (const item of ITEMS) {
-      if (item.id < 0) continue; // Skip events/crystals — not real item IDs
+      if (item.id < 0 || item.id > 0x4b) continue; // Skip events/crystals/randomizer-only IDs
       const list = map.get(item.category);
       if (list) list.push(item);
     }

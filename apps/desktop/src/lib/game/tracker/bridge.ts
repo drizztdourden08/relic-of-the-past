@@ -170,8 +170,9 @@ function initTrackerBridge(): void {
         try { fn(unknownItems); } catch { /* ignore */ }
       }
     }
-    // Poll inventory immediately after receiving an item
-    pollInventoryState();
+    // Defer poll to next microtask — avoids re-entrant WASM calls
+    // (this callback fires via EM_ASM while WasmCheatGiveItem is still on the WASM stack)
+    queueMicrotask(() => pollInventoryState());
   };
 
   // Reset unknown items on fresh game start

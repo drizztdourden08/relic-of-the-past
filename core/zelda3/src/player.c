@@ -136,7 +136,28 @@ void Link_Main() {  // 878000
 //  RunEmulatedFunc(0x878000, 0, 0, 0, true, true, -2, 0);
 //  return;
 
-
+  // ─── DEBUG TRACE: logs state each frame in Link_Main ───
+  extern int g_cheat_trace_frames;
+  static int dbg_main_trace = 0;
+  if (g_cheat_trace_frames > 0) {
+    dbg_main_trace = g_cheat_trace_frames;
+    g_cheat_trace_frames = 0;
+  }
+  if (dbg_main_trace > 0) {
+    dbg_main_trace--;
+    printf("[TRACE] Link_Main: immobilized=%d, handler_state=%d, item_in_hand=%d, "
+           "button_mask_b_y=0x%02x, filtered_H=0x%02x, joypad1H_last=0x%02x, "
+           "current_item_y=%d, current_item_active=%d, player_handler_timer=%d, "
+           "link_delay_timer=%d, direction_facing=%d, module=%d sub=%d, "
+           "link_animation_steps=%d, link_speed_setting=%d\n",
+           flag_is_link_immobilized, link_player_handler_state, link_item_in_hand,
+           button_mask_b_y, filtered_joypad_H, joypad1H_last,
+           current_item_y, current_item_active, player_handler_timer,
+           link_delay_timer_spin_attack, link_direction_facing,
+           main_module_index, submodule_index,
+           link_animation_steps, link_speed_setting);
+  }
+  // ─── END DEBUG TRACE ───
 
   link_x_coord_prev = link_x_coord;
   link_y_coord_prev = link_y_coord;
@@ -147,6 +168,7 @@ void Link_Main() {  // 878000
 }
 
 void Link_ControlHandler() {  // 87807f
+
   if (link_give_damage) {
     if (link_cape_mode) {
       link_give_damage = 0;
@@ -2319,9 +2341,10 @@ void LinkItem_Rod() {  // 879eef
     return;
   player_handler_timer++;
 
-  link_delay_timer_spin_attack = kRodAnimDelays[player_handler_timer];
-  if (player_handler_timer != 3)
+  if (player_handler_timer < 3) {
+    link_delay_timer_spin_attack = kRodAnimDelays[player_handler_timer];
     return;
+  }
   link_debug_value_2 = 0;
   link_speed_setting = 0;
   player_handler_timer = 0;
@@ -2352,21 +2375,24 @@ void LinkItem_Hammer() {  // 879f7b
     return;
   player_handler_timer++;
 
-  link_delay_timer_spin_attack = kHammerAnimDelays[player_handler_timer];
-  if (player_handler_timer == 1) {
-    TileDetect_MainHandler(3);
-    Ancilla_AddHitStars(22, 0);
-    if (sound_effect_1 == 0) {
-      Ancilla_Sfx2_Near(16);
-      SpawnHammerWaterSplash();
+  if (player_handler_timer < 3) {
+    link_delay_timer_spin_attack = kHammerAnimDelays[player_handler_timer];
+    if (player_handler_timer == 1) {
+      TileDetect_MainHandler(3);
+      Ancilla_AddHitStars(22, 0);
+      if (sound_effect_1 == 0) {
+        Ancilla_Sfx2_Near(16);
+        SpawnHammerWaterSplash();
+      }
     }
-  } else if (player_handler_timer == 3) {
-    player_handler_timer = 0;
-    link_delay_timer_spin_attack = 0;
-    button_mask_b_y &= ~0x40;
-    link_cant_change_direction &= ~1;
-    link_item_in_hand &= ~2;
+    return;
   }
+
+  player_handler_timer = 0;
+  link_delay_timer_spin_attack = 0;
+  button_mask_b_y &= ~0x40;
+  link_cant_change_direction &= ~1;
+  link_item_in_hand &= ~2;
 }
 
 void LinkItem_Bow() {  // 87a006
@@ -2387,22 +2413,27 @@ void LinkItem_Bow() {  // 87a006
     return;
   player_handler_timer++;
 
-  link_delay_timer_spin_attack = kBowDelays[player_handler_timer];
-  if (player_handler_timer != 3)
+  if (player_handler_timer < 3) {
+    link_delay_timer_spin_attack = kBowDelays[player_handler_timer];
     return;
+  }
 
-  int obj = AncillaAdd_Arrow(9, link_direction_facing, 2, link_x_coord, link_y_coord);
-  if (obj >= 0) {
-    if (archery_game_arrows_left) {
-      archery_game_arrows_left--;
-      link_num_arrows += 2;
-    }
-    if (!archery_game_out_of_arrows && link_num_arrows) {
-      if (--link_num_arrows == 0)
-        Hud_RefreshIcon();
-    } else {
-      ancilla_type[obj] = 0;
-      Ancilla_Sfx2_Near(60);
+  // Timer reached end — fire arrow and clean up.
+  // Use >= 3 to guarantee cleanup even if timer was corrupted.
+  if (player_handler_timer == 3) {
+    int obj = AncillaAdd_Arrow(9, link_direction_facing, 2, link_x_coord, link_y_coord);
+    if (obj >= 0) {
+      if (archery_game_arrows_left) {
+        archery_game_arrows_left--;
+        link_num_arrows += 2;
+      }
+      if (!archery_game_out_of_arrows && link_num_arrows) {
+        if (--link_num_arrows == 0)
+          Hud_RefreshIcon();
+      } else {
+        ancilla_type[obj] = 0;
+        Ancilla_Sfx2_Near(60);
+      }
     }
   }
 

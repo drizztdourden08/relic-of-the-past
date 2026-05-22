@@ -40,7 +40,8 @@ type BarrierTag =
   | 'barrier:hookshot'    // hookshot required to cross
   | 'barrier:swim'        // flippers required
   | 'barrier:fire'        // fire source needed (fire rod or lamp)
-  | 'barrier:book';       // Book of Mudora required
+  | 'barrier:book'        // Book of Mudora required
+  | 'barrier:glitch';     // requires a glitch to access
 
 /** Directionality of the connection */
 type DirectionTag =

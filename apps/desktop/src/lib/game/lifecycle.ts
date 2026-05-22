@@ -18,6 +18,7 @@ import { initHapticBridge, destroyHapticBridge, updateHapticBridgeSettings } fro
 import { initUIBridge, stopUIBridge } from './ui-bridge';
 import { useGameUIStore } from '../../stores/game-ui-store';
 import { DEFAULT_SETTINGS } from './settings';
+import { deliveryQueue } from './delivery-queue';
 
 declare function Zelda3(config: Record<string, unknown>): Promise<EmscriptenModule>;
 
@@ -72,6 +73,8 @@ async function resetGame(): Promise<void> {
   stopAutoSave();
   stopSramSync();
   stopUIBridge();
+  deliveryQueue.stopProcessing();
+  deliveryQueue.clear();
   destroyTrackerBridge();
   destroyHapticBridge();
   resetMasterVolume();
@@ -184,7 +187,10 @@ async function startGame(
           pendingMsuData = null; // Free staging memory
         }
       }],
-      print: (text: string) => log.core(text),
+      print: (text: string) => {
+        log.core(text);
+        if (text.startsWith('[TRACE]')) console.log(text);
+      },
       printErr: (text: string) => log.core(text, 'error'),
     });
 
@@ -211,6 +217,9 @@ async function startGame(
 
     // ─── UI bridge: start rAF polling for React overlay state ───
     initUIBridge(useGameUIStore.getState()._setState);
+
+    // ─── Delivery queue: start processing pending item deliveries ───
+    deliveryQueue.startProcessing();
 
     if (getProfileId()) {
       startSession(getProfileId()!);

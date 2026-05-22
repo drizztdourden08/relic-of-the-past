@@ -20,7 +20,6 @@ function createWindow(): BrowserWindow {
     y: saved.y,
     minWidth: 360,
     minHeight: 280,
-    frame: false,
     titleBarStyle: 'hidden',
     autoHideMenuBar: true,
     title: 'Relic of the Past',

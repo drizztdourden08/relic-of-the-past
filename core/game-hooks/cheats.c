@@ -1,5 +1,8 @@
 #include "game_hooks_internal.h"
 
+// ─── Debug trace (read by Link_ControlHandler in player.c) ───
+int g_cheat_trace_frames = 0;
+
 // ─── Cheat State (persists until reset or explicit disable) ───
 
 static uint8 g_cheat_damage_mult = 1;      // Outgoing damage multiplier (1-255)
@@ -17,10 +20,18 @@ uint8 GameHook_GetExtraArmorPct(void) {
 
 // ─── WASM Exports ───
 
-// Give any item by ID — plays hold-up animation, updates inventory.
+// Give any item by ID — plays standing receipt animation (hold-up), updates inventory.
 // Does NOT mark any check as completed.
+// Uses item_receipt_method=0 (standing/NPC style) for natural-looking delivery.
+// NOTE: item_id must be 0–75 (0x4B). The game's item receipt arrays
+// (kMemoryLocationToGiveItemTo, kValueToGiveItemTo, kReceiveItemGfx, etc.)
+// are exactly 76 entries. IDs >= 76 cause out-of-bounds reads that corrupt g_ram.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatGiveItem(int item_id) {
+  if ((uint8)item_id >= 76) {
+    printf("[Cheat] GiveItem: blocked — item_id 0x%02x exceeds max valid receipt ID (0x4B)\n", item_id);
+    return;
+  }
   if (main_module_index != 7 && main_module_index != 9) {
     printf("[Cheat] GiveItem: blocked — not in gameplay (module=%d)\n", main_module_index);
     return;
@@ -131,4 +142,30 @@ EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetExtraArmorPct(int pct) {
   g_cheat_extra_armor_pct = (uint8)(pct < 0 ? 0 : (pct > 100 ? 100 : pct));
   printf("[Cheat] SetExtraArmorPct: %d%%\n", g_cheat_extra_armor_pct);
+}
+
+// Start debug tracing for N frames (output goes to browser console).
+EMSCRIPTEN_KEEPALIVE
+void WasmCheatStartTrace(int frames) {
+  g_cheat_trace_frames = (frames < 1) ? 60 : frames;
+  printf("[Cheat] StartTrace: %d frames\n", g_cheat_trace_frames);
+}
+
+// Query whether Link can currently receive an item via the delivery system.
+// Returns 1 if safe to call Link_ReceiveItem, 0 otherwise.
+EMSCRIPTEN_KEEPALIVE
+int WasmCanReceiveItem(void) {
+  // Must be in dungeon (7) or overworld (9) gameplay
+  if (main_module_index != 7 && main_module_index != 9)
+    return 0;
+  // Must not be in a submodule (menu, transition, text, etc.)
+  if (submodule_index != 0)
+    return 0;
+  // Must not already be immobilized (receiving item, cutscene, etc.)
+  if (flag_is_link_immobilized)
+    return 0;
+  // Must not be mid-item-use
+  if (link_item_in_hand)
+    return 0;
+  return 1;
 }

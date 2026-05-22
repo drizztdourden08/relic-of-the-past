@@ -16,7 +16,7 @@ const ITEMS: ItemDefinition[] = [
   { id: 0x09, name: 'Hammer', category: 'weapon' },
   { id: 0x15, name: 'Cane of Somaria', category: 'weapon' },
   { id: 0x49, name: 'Fighter Sword', category: 'weapon' },
-  { id: 0x50, name: 'Master Sword', category: 'weapon' },
+  { id: 0x01, name: 'Master Sword', category: 'weapon' },
   { id: 0x02, name: 'Tempered Sword', category: 'weapon' },
   { id: 0x03, name: 'Golden Sword', category: 'weapon' },
   { id: 0x5e, name: 'Progressive Sword', category: 'weapon' },
