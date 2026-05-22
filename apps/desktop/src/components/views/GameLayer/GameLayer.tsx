@@ -5,6 +5,7 @@ import { createEdgeGlowRenderer, type EdgeGlowRenderer } from '../../../lib/game
 import { createShadowRenderer, type ShadowRenderer } from '../../../lib/game/shadow-casting';
 import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
 import { useCanvasFit } from '../../../hooks/useCanvasFit';
+import { useShadowEditorStore } from '../../../stores/shadow-editor-store';
 import { ControllerDisconnectOverlay } from './sub-components/ControllerDisconnectOverlay';
 import { ConnectionOverlay } from './sub-components/ConnectionOverlay';
 import { ShadowEditorOverlay } from './sub-components/ShadowEditorOverlay';
@@ -211,6 +212,13 @@ const GameLayer = (props: GameLayerProps) => {
       if (!renderer) return;
       shadowRendererRef.current = renderer;
 
+      // Subscribe to editor store so live edits are reflected
+      const unsub = useShadowEditorStore.subscribe((state) => {
+        if (state.dirty || state.open) {
+          shadowProjectRef.current = state.project;
+        }
+      });
+
       let prevScreenId = -1;
 
       const loop = (time: number) => {
@@ -226,11 +234,16 @@ const GameLayer = (props: GameLayerProps) => {
           renderer.resize(gameCanvas.width, gameCanvas.height);
         }
 
-        // Detect current screen from WASM viewport
+        // Detect current overworld screen from camera position
         const vp = wasmGetViewportInfo();
-        const screenId = vp?.locationModule ?? -1;
+        let screenId = -1;
+        if (vp && vp.locationModule === 9) {
+          const col = Math.floor((vp.cameraX + 128) / 512) & 7;
+          const row = Math.floor((vp.cameraY + 112) / 512) & 7;
+          screenId = row * 8 + col;
+        }
 
-        if (screenId !== prevScreenId) {
+        if (screenId !== prevScreenId || useShadowEditorStore.getState().dirty) {
           prevScreenId = screenId;
           const screenData = shadowProjectRef.current.screens[screenId] ?? null;
           renderer.setScreenData(screenData);
@@ -245,6 +258,10 @@ const GameLayer = (props: GameLayerProps) => {
         shadowRafId = requestAnimationFrame(loop);
       };
       shadowRafId = requestAnimationFrame(loop);
+
+      // Store cleanup for when effect unmounts
+      const origCleanup = () => { unsub(); };
+      (shadowRendererRef as any)._unsub = origCleanup;
     };
 
     init();
@@ -253,6 +270,7 @@ const GameLayer = (props: GameLayerProps) => {
       cancelled = true;
       cancelAnimationFrame(shadowRafId);
       if (shadowRendererRef.current) {
+        (shadowRendererRef as any)._unsub?.();
         shadowRendererRef.current.dispose();
         shadowRendererRef.current = null;
       }
