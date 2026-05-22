@@ -92,6 +92,7 @@ const SECTIONS: Section[] = [
         title: 'Overworld',
         items: [
           { key: 'overworldEdgeEffect', label: 'Edge Effect', description: 'Fill black borders with a blurred mirror reflection and animated decay effect instead of solid black', keywords: 'edge glow mirror blur voronoi overworld widescreen border' },
+          { key: 'postProcessingShadows', label: 'Shadow Casting', description: 'Heightmap-based dynamic shadows and lighting overlay on the overworld', keywords: 'shadow lighting heightmap dynamic sun' },
         ],
       },
       {
