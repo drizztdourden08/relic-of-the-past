@@ -218,4 +218,11 @@ contextBridge.exposeInMainWorld('api', {
   // Test automation
   getTestArgs: () => ipcRenderer.invoke('test:getArgs') as Promise<{ autoState: number | null; screenshot: string | null }>,
   takeScreenshot: (name: string) => ipcRenderer.invoke('test:screenshot', name) as Promise<string>,
+
+  // Shadow casting (dev-only write, always-available read)
+  shadowCasting: {
+    load: () => ipcRenderer.invoke('shadow-casting:load'),
+    save: (data: unknown) => ipcRenderer.invoke('shadow-casting:save', data),
+    getScreen: (screenId: number) => ipcRenderer.invoke('shadow-casting:get-screen', screenId),
+  },
 });

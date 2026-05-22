@@ -16,6 +16,7 @@ interface TitleBarProps {
   onShowCredits: () => void;
   onShowSpriteDebug: () => void;
   onShowConnectionDebug: () => void;
+  onShowShadowEditor: () => void;
   activeProfile: Profile | null;
   gameRunning: boolean;
   windowMode?: GameSettings['windowMode'];

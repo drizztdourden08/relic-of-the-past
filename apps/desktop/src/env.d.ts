@@ -347,6 +347,13 @@ interface ElectronAPI {
   checkSpritesExtracted(romFile: string): Promise<{ extracted: boolean; count: number }>;
   deleteSprites(romFile: string): Promise<{ success: boolean; error?: string }>;
   getSpritePath(romFile: string, file: string): Promise<string>;
+
+  // Shadow casting (dev-only write, always-available read)
+  shadowCasting: {
+    load(): Promise<import('@shared/types/shadow-casting').ShadowCastingProject>;
+    save(data: unknown): Promise<{ success: boolean }>;
+    getScreen(screenId: number): Promise<import('@shared/types/shadow-casting').ScreenShadowData | null>;
+  };
 }
 
 declare function Zelda3(config: Record<string, unknown>): Promise<unknown>;

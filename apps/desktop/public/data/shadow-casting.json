@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "screens": {},
+  "globalDefaults": {
+    "sunEnabled": true,
+    "sunAngle": 315,
+    "sunElevation": 45,
+    "sunIntensity": 0.8,
+    "ambientIntensity": 0.3,
+    "dayNightCycle": false,
+    "cycleSpeed": 120,
+    "shadowSoftness": 0.5
+  }
+}

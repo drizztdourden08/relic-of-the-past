@@ -120,6 +120,21 @@ const GraphicsSettings = (props: GraphicsSettingsProps) => {
           onChange={(v) => onChange({ dimFlashes: v })}
         />
       </SettingsSection>
+
+      <SettingsSection title="Post-Processing">
+        <Toggle
+          label="Edge Glow"
+          description="Ambient glow effect around screen edges during widescreen"
+          checked={settings.overworldEdgeEffect}
+          onChange={(v) => onChange({ overworldEdgeEffect: v })}
+        />
+        <Toggle
+          label="Shadow Casting"
+          description="Heightmap-based dynamic shadows and lighting overlay"
+          checked={settings.postProcessingShadows}
+          onChange={(v) => onChange({ postProcessingShadows: v })}
+        />
+      </SettingsSection>
     </div>
   );
 }

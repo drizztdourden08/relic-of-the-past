@@ -2,6 +2,8 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { useGameState } from './behavior/useGameState';
 import { getInputManager, wasmGetViewportInfo, wasmRenderCleanFrame } from '../../../lib/game';
 import { createEdgeGlowRenderer, type EdgeGlowRenderer } from '../../../lib/game/edge-glow';
+import { createShadowRenderer, type ShadowRenderer } from '../../../lib/game/shadow-casting';
+import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
 import { useCanvasFit } from '../../../hooks/useCanvasFit';
 import { ControllerDisconnectOverlay } from './sub-components/ControllerDisconnectOverlay';
 import { ConnectionOverlay } from './sub-components/ConnectionOverlay';
@@ -11,11 +13,16 @@ import type { GameLayerProps } from './types';
 
 
 const GameLayer = (props: GameLayerProps) => {
-  const { assetData, configIni, profileId, stretch, edgeEffect = true } = props;
+  const { assetData, configIni, profileId, stretch, edgeEffect = true, shadowCasting = false } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fxCanvasRef = useRef<HTMLCanvasElement>(null);
+  const shadowCanvasRef = useRef<HTMLCanvasElement>(null);
   const glowRendererRef = useRef<EdgeGlowRenderer | null>(null);
+  const shadowRendererRef = useRef<ShadowRenderer | null>(null);
+  const shadowProjectRef = useRef<ShadowCastingProject | null>(null);
+  const shadowCastingRef = useRef(shadowCasting);
+  shadowCastingRef.current = shadowCasting;
   const rafIdRef = useRef<number>(0);
   const edgeEffectRef = useRef(edgeEffect);
   edgeEffectRef.current = edgeEffect;
@@ -36,6 +43,7 @@ const GameLayer = (props: GameLayerProps) => {
     const applyStyles = () => {
       const canvas = canvasRef.current;
       const fxCanvas = fxCanvasRef.current;
+      const shadowCanvas = shadowCanvasRef.current;
       if (canvas) {
         canvas.style.width = `${fitSize.width}px`;
         canvas.style.height = `${fitSize.height}px`;
@@ -43,6 +51,10 @@ const GameLayer = (props: GameLayerProps) => {
       if (fxCanvas) {
         fxCanvas.style.width = `${fitSize.width}px`;
         fxCanvas.style.height = `${fitSize.height}px`;
+      }
+      if (shadowCanvas) {
+        shadowCanvas.style.width = `${fitSize.width}px`;
+        shadowCanvas.style.height = `${fitSize.height}px`;
       }
     };
     applyStyles();
@@ -167,6 +179,84 @@ const GameLayer = (props: GameLayerProps) => {
     };
   }, [status, canvasKey]);
 
+  // ─── Shadow casting shader render loop ───
+  useEffect(() => {
+    if (status !== 'running') return;
+    const gameCanvas = canvasRef.current;
+    const shadowCanvas = shadowCanvasRef.current;
+    if (!gameCanvas || !shadowCanvas) return;
+
+    // Load shadow project data
+    let cancelled = false;
+    let shadowRafId = 0;
+
+    const init = async () => {
+      try {
+        const project = await window.api.shadowCasting.load();
+        if (cancelled) return;
+        shadowProjectRef.current = project;
+      } catch {
+        shadowProjectRef.current = null;
+      }
+
+      if (cancelled) return;
+
+      // Size shadow canvas to match game
+      shadowCanvas.width = gameCanvas.width;
+      shadowCanvas.height = gameCanvas.height;
+
+      const renderer = createShadowRenderer(shadowCanvas);
+      if (!renderer) return;
+      shadowRendererRef.current = renderer;
+
+      let prevScreenId = -1;
+
+      const loop = (time: number) => {
+        if (!shadowCastingRef.current || !shadowProjectRef.current) {
+          renderer.setEnabled(false);
+          renderer.render(gameCanvas, time);
+          shadowRafId = requestAnimationFrame(loop);
+          return;
+        }
+
+        // Sync buffer size
+        if (gameCanvas.width !== shadowCanvas.width || gameCanvas.height !== shadowCanvas.height) {
+          renderer.resize(gameCanvas.width, gameCanvas.height);
+        }
+
+        // Detect current screen from WASM viewport
+        const vp = wasmGetViewportInfo();
+        const screenId = vp?.locationModule ?? -1;
+
+        if (screenId !== prevScreenId) {
+          prevScreenId = screenId;
+          const screenData = shadowProjectRef.current.screens[screenId] ?? null;
+          renderer.setScreenData(screenData);
+          if (screenData && screenData.heightmap.length > 0) {
+            renderer.setEnabled(true);
+          } else {
+            renderer.setEnabled(false);
+          }
+        }
+
+        renderer.render(gameCanvas, time);
+        shadowRafId = requestAnimationFrame(loop);
+      };
+      shadowRafId = requestAnimationFrame(loop);
+    };
+
+    init();
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(shadowRafId);
+      if (shadowRendererRef.current) {
+        shadowRendererRef.current.dispose();
+        shadowRendererRef.current = null;
+      }
+    };
+  }, [status, canvasKey]);
+
   // Start game when assets arrive
   useEffect(() => {
     if (assetData && status === 'idle' && canvasRef.current) {
@@ -238,6 +328,13 @@ const GameLayer = (props: GameLayerProps) => {
         key={`fx-${canvasKey}`}
         ref={fxCanvasRef}
         className={`game-layer__fx-canvas${status !== 'running' ? ' game-layer__fx-canvas--hidden' : ''}`}
+        width={512}
+        height={448}
+      />
+      <canvas
+        key={`shadow-${canvasKey}`}
+        ref={shadowCanvasRef}
+        className={`game-layer__shadow-canvas${status !== 'running' ? ' game-layer__shadow-canvas--hidden' : ''}`}
         width={512}
         height={448}
       />

@@ -5,6 +5,7 @@ import { SaveStateOverlay } from '../components/views/SaveStateOverlay/SaveState
 import { WidgetManager, useWidgetLayout } from '../components/composites/Widget';
 import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, CheatsWidgetContent } from '../widgets';
 import { SpriteDebug } from '../components/views/SpriteDebug';
+import { ShadowEditor } from '../components/views/ShadowEditor';
 import { Dialog } from '../components/composites/Dialog';
 import { PageRouter } from './PageRouter';
 import type { ProfileHubTab } from '../components/views/ProfileHub/types';
@@ -45,6 +46,7 @@ const App = () => {
         aspectRatio: data.settings.aspectRatio,
         displayPerfInTitle: data.settings.displayPerfInTitle,
         overworldEdgeEffect: data.settings.overworldEdgeEffect,
+        postProcessingShadows: data.settings.postProcessingShadows,
         startFullscreen: data.settings.startFullscreen,
       });
       audio.initFromSettings(data.settings.masterVolume);
@@ -57,6 +59,28 @@ const App = () => {
   const saveOverlay = useSaveOverlay(saveState, game.isRunning);
   const [showSpriteDebug, setShowSpriteDebug] = useState(false);
   const toggleSpriteDebug = useCallback(() => setShowSpriteDebug(v => !v), []);
+  const [showShadowEditor, setShowShadowEditor] = useState(false);
+  const [shadowEditorWarningShown, setShadowEditorWarningShown] = useState(
+    () => localStorage.getItem('shadowEditor.warningDismissed') === 'true',
+  );
+  const handleShowShadowEditor = useCallback(() => {
+    if (!shadowEditorWarningShown) {
+      showDialog({
+        title: 'Shadow Editor — Developer Tool',
+        message: 'This tool modifies shadow casting data that is committed directly to the project source code. Any changes you make here will affect the game\'s lighting for ALL builds.\n\nThis tool is only available in development mode.',
+        confirmLabel: 'I understand, open editor',
+        variant: 'default',
+        onConfirm: () => {
+          dismissDialog();
+          localStorage.setItem('shadowEditor.warningDismissed', 'true');
+          setShadowEditorWarningShown(true);
+          setShowShadowEditor(true);
+        },
+      });
+    } else {
+      setShowShadowEditor(true);
+    }
+  }, [shadowEditorWarningShown, showDialog, dismissDialog]);
   useKeyboardShortcuts(nav, dialog, dismissDialog, profileMgmt.activeProfile);
 
   // Dev-only sprite debug toggle (Ctrl+Shift+D)
@@ -75,9 +99,9 @@ const App = () => {
 
   // Input suppression: disable game input when menus/overlays are open
   useEffect(() => {
-    const gameActive = game.isRunning && nav.activePage === 'none' && !showSpriteDebug;
+    const gameActive = game.isRunning && nav.activePage === 'none' && !showSpriteDebug && !showShadowEditor;
     getInputManager().setInputSuppressed(!gameActive);
-  }, [game.isRunning, nav.activePage, showSpriteDebug]);
+  }, [game.isRunning, nav.activePage, showSpriteDebug, showShadowEditor]);
 
   // ─── Navigation with game-running confirmation ───
   const handleShowPicker = useCallback(async () => {
@@ -129,6 +153,7 @@ const App = () => {
         onShowCredits={() => nav.setActivePage('credits')}
         onShowSpriteDebug={toggleSpriteDebug}
         onShowConnectionDebug={() => widgets.toggle('navigation')}
+        onShowShadowEditor={handleShowShadowEditor}
         activeProfile={profileMgmt.activeProfile}
         gameRunning={game.isRunning}
         windowMode={display.windowMode}
@@ -148,6 +173,7 @@ const App = () => {
           profileId={profileMgmt.activeProfile?.id}
           stretch={display.viewportConstraint !== 'none'}
           edgeEffect={display.overworldEdgeEffect}
+          shadowCasting={display.postProcessingShadows}
         />
 
         <SaveStateOverlay
@@ -190,6 +216,13 @@ const App = () => {
         </WidgetManager>
 
         {showSpriteDebug && <SpriteDebug onClose={toggleSpriteDebug} romFile={profileMgmt.activeProfile?.romFile ?? ''} />}
+        {showShadowEditor && window.api.isDev && (
+          <ShadowEditor
+            width={512}
+            height={448}
+            onClose={() => setShowShadowEditor(false)}
+          />
+        )}
       </div>
 
       <Dialog

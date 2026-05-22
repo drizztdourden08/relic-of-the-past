@@ -65,8 +65,9 @@ const DEFAULT_SETTINGS: GameSettings = {
   resumeMSU: true,
   msuVolume: 100,
 
-  // Enhancements
+  // Post-Processing
   overworldEdgeEffect: true,
+  postProcessingShadows: false,
   forceBackdropBlack: false,
 
   // HUD
