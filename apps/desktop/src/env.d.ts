@@ -354,6 +354,20 @@ interface ElectronAPI {
     save(data: unknown): Promise<{ success: boolean }>;
     getScreen(screenId: number): Promise<import('@shared/types/shadow-casting').ScreenShadowData | null>;
   };
+
+  // Auto-updater
+  updater: {
+    check(): Promise<unknown>;
+    getAvailable(): Promise<{ version: string; releaseNotes: string; releaseDate: string } | null>;
+    download(): Promise<void>;
+    install(): void;
+    getVersion(): Promise<string>;
+    onUpdateAvailable(callback: (info: { version: string; releaseNotes: string; releaseDate: string }) => void): () => void;
+    onUpToDate(callback: () => void): () => void;
+    onDownloadProgress(callback: (progress: { percent: number; bytesPerSecond: number; transferred: number; total: number }) => void): () => void;
+    onDownloadComplete(callback: () => void): () => void;
+    onError(callback: (error: string) => void): () => void;
+  };
 }
 
 declare function Zelda3(config: Record<string, unknown>): Promise<unknown>;

@@ -7,6 +7,8 @@ import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, L
 import { SpriteDebug } from '../components/views/SpriteDebug';
 import { useShadowEditorStore } from '../stores/shadow-editor-store';
 import { Dialog } from '../components/composites/Dialog';
+import { UpdateDialog } from '../components/composites/UpdateDialog';
+import { AboutDialog } from '../components/composites/AboutDialog';
 import { PageRouter } from './PageRouter';
 import type { ProfileHubTab } from '../components/views/ProfileHub/types';
 import { useAppNavigation } from './behavior/useAppNavigation';
@@ -21,6 +23,7 @@ import { useSaveOverlay } from './behavior/useSaveOverlay';
 import { useSaveStateSettings } from './behavior/useSaveStateSettings';
 import { useStartup } from './behavior/useStartup';
 import { useAutoTest } from './behavior/useAutoTest';
+import { useAutoUpdate } from '../hooks/useAutoUpdate';
 import { getInputManager, primeLiveSettings } from '../lib/game';
 import './App.css';
 
@@ -57,6 +60,9 @@ const App = () => {
   const nav = useAppNavigation({ activeProfile: profileMgmt.activeProfile, refreshLists: profileMgmt.refreshProfilesAndRoms });
   const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null);
   const saveOverlay = useSaveOverlay(saveState, game.isRunning);
+  const update = useAutoUpdate();
+  const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
   const [showSpriteDebug, setShowSpriteDebug] = useState(false);
   const toggleSpriteDebug = useCallback(() => setShowSpriteDebug(v => !v), []);
   const [shadowEditorWarningShown, setShadowEditorWarningShown] = useState(
@@ -153,12 +159,15 @@ const App = () => {
         onShowSpriteDebug={toggleSpriteDebug}
         onShowConnectionDebug={() => widgets.toggle('navigation')}
         onShowShadowEditor={handleShowShadowEditor}
+        onShowAbout={() => setShowAbout(true)}
         activeProfile={profileMgmt.activeProfile}
         gameRunning={game.isRunning}
         windowMode={display.windowMode}
         isMuted={audio.isMuted}
         onToggleMute={audio.handleToggleMute}
         showFps={display.showFps}
+        updateAvailable={update.status === 'available' || update.status === 'ready'}
+        onUpdateClick={() => setShowUpdateDialog(true)}
       />
 
       <div className="app__content">
@@ -225,6 +234,19 @@ const App = () => {
         variant={dialog?.variant}
         onConfirm={dialog?.onConfirm ?? (() => {})}
         onCancel={dismissDialog}
+      />
+
+      <UpdateDialog
+        open={showUpdateDialog}
+        state={update}
+        onDownload={update.download}
+        onInstall={update.install}
+        onClose={() => setShowUpdateDialog(false)}
+      />
+
+      <AboutDialog
+        open={showAbout}
+        onClose={() => setShowAbout(false)}
       />
     </div>
   );
