@@ -25,23 +25,23 @@ module.exports = {
     signAndEditExecutable: false,
   },
   portable: {
-    artifactName: 'rotp-portable.exe',
+    artifactName: 'rotp-windows-portable.exe',
   },
   nsis: {
     oneClick: false,
     allowToChangeInstallationDirectory: true,
     createDesktopShortcut: true,
-    artifactName: 'rotp-setup.exe',
+    artifactName: 'rotp-windows-setup.exe',
   },
   mac: {
     target: ['dmg', 'zip'],
     icon: 'apps/desktop/public/logos/logo-512.png',
-    artifactName: 'rotp.${ext}',
+    artifactName: 'rotp-macos.${ext}',
   },
   linux: {
     target: ['AppImage', 'deb'],
     icon: 'apps/desktop/public/logos/logo-256.png',
-    artifactName: 'rotp.${ext}',
+    artifactName: 'rotp-linux.${ext}',
     category: 'Game',
     maintainer: 'drizztdourden08@users.noreply.github.com',
   },
