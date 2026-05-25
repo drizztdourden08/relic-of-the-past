@@ -25,12 +25,16 @@ const TitleBar = (props: TitleBarProps) => {
     onShowCredits,
     onShowSpriteDebug,
     onShowConnectionDebug,
+    onShowShadowEditor,
+    onShowAbout,
     activeProfile,
     gameRunning,
     windowMode = 'default',
     isMuted = false,
     onToggleMute,
     showFps = false,
+    updateAvailable = false,
+    onUpdateClick,
   } = props;
   const menuRef = useRef<HTMLDivElement>(null);
   const { isMaximized, menuOpen, toggleMenu, closeMenu } = useTitleBar(menuRef);
@@ -137,6 +141,7 @@ const TitleBar = (props: TitleBarProps) => {
         { key: 'input-tester', icon: '🎮', label: 'Input Calibration', onClick: () => { closeMenu(); onShowInputTester(); } },
         { key: 'dev-console', icon: '🛠️', label: 'Dev Console', onClick: () => { closeMenu(); window.api.openDevTools(); } },
         { key: 'sprite-debug', icon: '🖼️', label: 'Sprite Debug', onClick: () => { closeMenu(); onShowSpriteDebug(); } },
+        ...(window.api.isDev ? [{ key: 'shadow-editor', icon: '🌓', label: 'Shadow Editor', onClick: () => { closeMenu(); onShowShadowEditor(); } }] : []),
       ],
     },
     'separator',
@@ -145,6 +150,12 @@ const TitleBar = (props: TitleBarProps) => {
       icon: '📜',
       label: 'Credits',
       onClick: () => { closeMenu(); onShowCredits(); },
+    },
+    {
+      key: 'about',
+      icon: 'ℹ️',
+      label: 'About',
+      onClick: () => { closeMenu(); onShowAbout(); },
     },
     { key: 'quit', icon: '✕', label: 'Quit', onClick: () => window.api.close() },
   ];
@@ -226,6 +237,11 @@ const TitleBar = (props: TitleBarProps) => {
         <img className="titlebar__logo" src="./logos/logo-128.png" alt="" />
         <span className="titlebar__title">Relic of the Past</span>
         <img className="titlebar__logo" src="./logos/logo-128.png" alt="" />
+        {updateAvailable && (
+          <button className="titlebar__update-badge" onClick={onUpdateClick}>
+            Update available
+          </button>
+        )}
       </div>
 
       <WindowControls isMaximized={isMaximized} />

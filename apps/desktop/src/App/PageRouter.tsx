@@ -39,6 +39,7 @@ interface PageRouterProps {
     handleConstraintSettingsChange: (constraint: GameSettings['viewportConstraint'], ar: GameSettings['aspectRatio']) => void;
     handleDisplayPerfChange: (enabled: boolean) => void;
     handleEdgeEffectChange: (enabled: boolean) => void;
+    handleShadowCastingChange: (enabled: boolean) => void;
   };
   audio: {
     handleMasterVolumeChange: (volume: number) => void;
@@ -144,6 +145,7 @@ const PageRouter = (props: PageRouterProps) => {
             onMasterVolumeChange={audio.handleMasterVolumeChange}
             onDisplayPerfChange={display.handleDisplayPerfChange}
             onEdgeEffectChange={display.handleEdgeEffectChange}
+            onShadowCastingChange={display.handleShadowCastingChange}
             onSaveSlotSettingsChange={saveState.handleSaveSlotSettingsChange}
             masterVolumeOverride={audio.muteOverride}
             activeTab={profileHubTab}

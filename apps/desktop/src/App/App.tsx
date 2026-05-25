@@ -5,7 +5,10 @@ import { SaveStateOverlay } from '../components/views/SaveStateOverlay/SaveState
 import { WidgetManager, useWidgetLayout } from '../components/composites/Widget';
 import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, CheatsWidgetContent } from '../widgets';
 import { SpriteDebug } from '../components/views/SpriteDebug';
+import { useShadowEditorStore } from '../stores/shadow-editor-store';
 import { Dialog } from '../components/composites/Dialog';
+import { UpdateDialog } from '../components/composites/UpdateDialog';
+import { AboutDialog } from '../components/composites/AboutDialog';
 import { PageRouter } from './PageRouter';
 import type { ProfileHubTab } from '../components/views/ProfileHub/types';
 import { useAppNavigation } from './behavior/useAppNavigation';
@@ -20,6 +23,7 @@ import { useSaveOverlay } from './behavior/useSaveOverlay';
 import { useSaveStateSettings } from './behavior/useSaveStateSettings';
 import { useStartup } from './behavior/useStartup';
 import { useAutoTest } from './behavior/useAutoTest';
+import { useAutoUpdate } from '../hooks/useAutoUpdate';
 import { getInputManager, primeLiveSettings } from '../lib/game';
 import './App.css';
 
@@ -45,6 +49,7 @@ const App = () => {
         aspectRatio: data.settings.aspectRatio,
         displayPerfInTitle: data.settings.displayPerfInTitle,
         overworldEdgeEffect: data.settings.overworldEdgeEffect,
+        postProcessingShadows: data.settings.postProcessingShadows,
         startFullscreen: data.settings.startFullscreen,
       });
       audio.initFromSettings(data.settings.masterVolume);
@@ -55,8 +60,32 @@ const App = () => {
   const nav = useAppNavigation({ activeProfile: profileMgmt.activeProfile, refreshLists: profileMgmt.refreshProfilesAndRoms });
   const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null);
   const saveOverlay = useSaveOverlay(saveState, game.isRunning);
+  const update = useAutoUpdate();
+  const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
   const [showSpriteDebug, setShowSpriteDebug] = useState(false);
   const toggleSpriteDebug = useCallback(() => setShowSpriteDebug(v => !v), []);
+  const [shadowEditorWarningShown, setShadowEditorWarningShown] = useState(
+    () => localStorage.getItem('shadowEditor.warningDismissed') === 'true',
+  );
+  const handleShowShadowEditor = useCallback(() => {
+    if (!shadowEditorWarningShown) {
+      showDialog({
+        title: 'Shadow Editor — Developer Tool',
+        message: 'This tool modifies shadow casting data that is committed directly to the project source code. Any changes you make here will affect the game\'s lighting for ALL builds.\n\nThis tool is only available in development mode.',
+        confirmLabel: 'I understand, open editor',
+        variant: 'default',
+        onConfirm: () => {
+          dismissDialog();
+          localStorage.setItem('shadowEditor.warningDismissed', 'true');
+          setShadowEditorWarningShown(true);
+          useShadowEditorStore.getState().setOpen(true);
+        },
+      });
+    } else {
+      useShadowEditorStore.getState().setOpen(true);
+    }
+  }, [shadowEditorWarningShown, showDialog, dismissDialog]);
   useKeyboardShortcuts(nav, dialog, dismissDialog, profileMgmt.activeProfile);
 
   // Dev-only sprite debug toggle (Ctrl+Shift+D)
@@ -129,12 +158,16 @@ const App = () => {
         onShowCredits={() => nav.setActivePage('credits')}
         onShowSpriteDebug={toggleSpriteDebug}
         onShowConnectionDebug={() => widgets.toggle('navigation')}
+        onShowShadowEditor={handleShowShadowEditor}
+        onShowAbout={() => setShowAbout(true)}
         activeProfile={profileMgmt.activeProfile}
         gameRunning={game.isRunning}
         windowMode={display.windowMode}
         isMuted={audio.isMuted}
         onToggleMute={audio.handleToggleMute}
         showFps={display.showFps}
+        updateAvailable={update.status === 'available' || update.status === 'ready'}
+        onUpdateClick={() => setShowUpdateDialog(true)}
       />
 
       <div className="app__content">
@@ -148,6 +181,7 @@ const App = () => {
           profileId={profileMgmt.activeProfile?.id}
           stretch={display.viewportConstraint !== 'none'}
           edgeEffect={display.overworldEdgeEffect}
+          shadowCasting={display.postProcessingShadows}
         />
 
         <SaveStateOverlay
@@ -200,6 +234,19 @@ const App = () => {
         variant={dialog?.variant}
         onConfirm={dialog?.onConfirm ?? (() => {})}
         onCancel={dismissDialog}
+      />
+
+      <UpdateDialog
+        open={showUpdateDialog}
+        state={update}
+        onDownload={update.download}
+        onInstall={update.install}
+        onClose={() => setShowUpdateDialog(false)}
+      />
+
+      <AboutDialog
+        open={showAbout}
+        onClose={() => setShowAbout(false)}
       />
     </div>
   );

@@ -75,8 +75,9 @@ interface GameSettings {
   resumeMSU: boolean;
   msuVolume: number; // 0-100
 
-  // ─── Enhancements ───
+  // ─── Post-Processing ───
   overworldEdgeEffect: boolean;
+  postProcessingShadows: boolean;
   forceBackdropBlack: boolean;
 
   // ─── HUD ───

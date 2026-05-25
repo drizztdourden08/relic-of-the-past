@@ -35,17 +35,4 @@ export { canPass, isPassableForClearance, unmetRequirements } from './core/inven
 export { PriorityQueue } from './core/priority-queue';
 
 // ─── Screen Names ────────────────────────────────────────────────────────────
-export const SCREEN_NAMES: Record<number, string> = {
-  0x00: 'Lost Woods NW', 0x01: 'Lost Woods NE', 0x02: 'Lumberjack Area',
-  0x03: 'Death Mountain West', 0x05: 'Death Mountain East', 0x07: 'Turtle Rock Area',
-  0x0A: 'Witch Hut', 0x0F: 'Master Sword Grove',
-  0x10: 'Kakariko NW', 0x11: 'Kakariko NE', 0x12: 'Graveyard West',
-  0x14: 'Graveyard East', 0x18: 'Kakariko SW', 0x19: 'Kakariko SE',
-  0x1A: 'Haunted Grove', 0x1B: 'Castle Entrance',
-  0x22: 'Hyrule Castle', 0x28: 'Desert NW', 0x29: 'Eastern Palace',
-  0x2A: 'Desert North', 0x2B: "Uncle's Estate West", 0x2C: "Uncle's Estate East",
-  0x2D: 'Hylia Shore NW', 0x2E: 'Eastern Peninsula',
-  0x30: 'Desert SW', 0x32: 'Desert East', 0x33: 'Dam Headwaters',
-  0x34: 'Hyrule Wetlands NE', 0x35: 'Lake Hylia NW',
-  0x3A: 'South Shore', 0x3B: 'Lake Hylia Island',
-};
+export { SCREEN_NAMES, getScreenName } from './screen-names';

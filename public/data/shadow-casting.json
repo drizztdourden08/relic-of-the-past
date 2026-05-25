@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "screens": {
+    "19": {
+      "screenId": 19,
+      "heightmap": [
+        {
+          "id": "hm_1779445035032_2",
+          "shape": {
+            "id": "shape_1779445035032_1",
+            "type": "freehand",
+            "x": 1840.4186046511627,
+            "y": 1162.9967426710098,
+            "width": 61.527539779681774,
+            "height": 58.37133550488579,
+            "points": [
+              {
+                "x": 1826.079559363525,
+                "y": 1138.2410423452768
+              },
+              {
+                "x": 1809.6548347613218,
+                "y": 1157.5244299674266
+              },
+              {
+                "x": 1812.001223990208,
+                "y": 1175.5048859934855
+              },
+              {
+                "x": 1820.6046511627908,
+                "y": 1188.273615635179
+              },
+              {
+                "x": 1845.1113831089351,
+                "y": 1192.1824104234527
+              },
+              {
+                "x": 1862.3182374541004,
+                "y": 1188.013029315961
+              },
+              {
+                "x": 1871.1823745410036,
+                "y": 1171.0749185667753
+              },
+              {
+                "x": 1870.139534883721,
+                "y": 1151.530944625407
+              },
+              {
+                "x": 1857.3647490820074,
+                "y": 1139.8045602605864
+              },
+              {
+                "x": 1843.2864137086904,
+                "y": 1133.8110749185669
+              },
+              {
+                "x": 1842.2435740514077,
+                "y": 1134.3322475570033
+              },
+              {
+                "x": 1842.2435740514077,
+                "y": 1134.3322475570033
+              },
+              {
+                "x": 1842.2435740514077,
+                "y": 1134.3322475570033
+              }
+            ]
+          },
+          "height": 0.5,
+          "smoothing": 4
+        }
+      ],
+      "lights": [],
+      "lighting": {
+        "sunEnabled": true,
+        "sunAngle": 315,
+        "sunElevation": 45,
+        "sunIntensity": 0.8,
+        "ambientIntensity": 0.3,
+        "dayNightCycle": false,
+        "cycleSpeed": 120,
+        "shadowSoftness": 0.5
+      }
+    },
+    "44": {
+      "screenId": 44,
+      "heightmap": [
+        {
+          "id": "hm_1779449694427_2",
+          "shape": {
+            "id": "shape_1779449694427_1",
+            "type": "polygon",
+            "sides": 4,
+            "cornerRadius": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "x": 2240,
+            "y": 2773.416938110751,
+            "width": 134,
+            "height": 107.3363257364352
+          },
+          "height": 1,
+          "smoothing": 0
+        },
+        {
+          "id": "hm_1779449903118_2",
+          "shape": {
+            "id": "shape_1779449903118_1",
+            "type": "polygon",
+            "sides": 4,
+            "cornerRadius": 0,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "x": 2239.367809057527,
+            "y": 2762.328990228013,
+            "width": 84.8507711497969,
+            "height": 62.257928773871015
+          },
+          "height": 0.75,
+          "smoothing": 19
+        }
+      ],
+      "lights": [],
+      "lighting": {
+        "sunEnabled": true,
+        "sunAngle": 360,
+        "sunElevation": 85,
+        "sunIntensity": 1.45,
+        "ambientIntensity": 0.2,
+        "dayNightCycle": false,
+        "cycleSpeed": 10,
+        "shadowSoftness": 1
+      }
+    }
+  },
+  "globalDefaults": {
+    "sunEnabled": true,
+    "sunAngle": 315,
+    "sunElevation": 45,
+    "sunIntensity": 0.8,
+    "ambientIntensity": 0.3,
+    "dayNightCycle": false,
+    "cycleSpeed": 120,
+    "shadowSoftness": 0.5
+  }
+}

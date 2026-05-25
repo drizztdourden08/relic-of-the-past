@@ -16,7 +16,7 @@ describe.skipIf(!romAvailable)('Screen 0x31 internal connectivity', () => {
   });
 
   it('analyzes 0x31 (Desert NE) border and cliff data', () => {
-    const inv = new Set(['lift.0', 'lift.1']);
+    const inv = new Set(['lift.1', 'lift.2']);
     const result = floodFillScreen(rom, 0x31, inv);
 
     let reach = 0;
@@ -104,7 +104,7 @@ describe.skipIf(!romAvailable)('Screen 0x31 internal connectivity', () => {
   });
 
   it('checks 0x29 (Kakariko South Annex) south border', () => {
-    const inv = new Set(['lift.0', 'lift.1']);
+    const inv = new Set(['lift.1', 'lift.2']);
     const result = floodFillScreen(rom, 0x29, inv);
 
     let reach = 0;

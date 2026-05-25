@@ -16,12 +16,16 @@ interface TitleBarProps {
   onShowCredits: () => void;
   onShowSpriteDebug: () => void;
   onShowConnectionDebug: () => void;
+  onShowShadowEditor: () => void;
+  onShowAbout: () => void;
   activeProfile: Profile | null;
   gameRunning: boolean;
   windowMode?: GameSettings['windowMode'];
   isMuted?: boolean;
   onToggleMute?: () => void;
   showFps?: boolean;
+  updateAvailable?: boolean;
+  onUpdateClick?: () => void;
 }
 
 export type {

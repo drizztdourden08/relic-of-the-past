@@ -17,6 +17,8 @@ import { registerSpriteProtocol } from './protocol/sprite-protocol';
 import { registerInputHandlers, stopInputHandlers, initCalibrationStore, initProfileStore } from './input';
 import { registerTestHandlers } from './test/ipc-handlers';
 import { registerConnectionHandlers } from './connections/ipc-handlers';
+import { registerShadowCastingHandlers } from './shadow-casting';
+import { initAutoUpdater, registerUpdaterHandlers } from './updater';
 import { ipcMain } from 'electron';
 import { extractAllItemSprites } from '../../../shared/asset-extraction/item-sprites/extract-items';
 import spriteDefinitions from '../../../shared/game/sprites/definitions.json';
@@ -64,6 +66,7 @@ app.whenReady().then(async () => {
   registerSessionHandlers();
   registerTestHandlers();
   registerConnectionHandlers();
+  registerShadowCastingHandlers();
 
   // App info handler
   ipcMain.handle('app:getUserDataPath', () => app.getPath('userData'));
@@ -72,6 +75,10 @@ app.whenReady().then(async () => {
   createWindow();
 
   const mainWindow = getMainWindow()!;
+
+  // Initialize auto-updater
+  registerUpdaterHandlers();
+  initAutoUpdater(mainWindow);
 
   // Initialize input subsystem (HID, USB, calibration, profiles)
   initCalibrationStore(dataPath);

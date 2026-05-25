@@ -15,6 +15,7 @@ interface ProfileHubProps {
   onDisplayPerfChange?: (enabled: boolean) => void;
   onSaveSlotSettingsChange?: (enhanced: boolean, holdDuration: number) => void;
   onEdgeEffectChange?: (enabled: boolean) => void;
+  onShadowCastingChange?: (enabled: boolean) => void;
   masterVolumeOverride?: { volume: number; version: number } | null;
   activeTab?: ProfileHubTab;
   onTabChange?: (tab: ProfileHubTab) => void;

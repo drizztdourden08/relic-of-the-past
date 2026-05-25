@@ -3,6 +3,52 @@ import type { TilePassability } from './types';
 /**
  * Classify a raw Map8 collision attribute into a TilePassability.
  * This is the single source of truth for all navigation modules.
+ *
+ * Lift levels (1-indexed, there is NO lift.0):
+ *   lift.1 = Bushes, signs, light stones. Link has this from the start.
+ *            Still tracked as a requirement for randomizer (may not be available).
+ *   lift.2 = Dark rocks. Requires Titan's Mitt (gloves level 2).
+ *
+ * Attr ranges (from zelda3 source / disassembly):
+ *   0x00       = free (standard ground)
+ *   0x01–0x03  = walls/collision
+ *   0x04       = tall grass (walkable)
+ *   0x05–0x07  = floor variants (walkable)
+ *   0x08       = deep water (flippers)
+ *   0x09       = shallow water (walkable)
+ *   0x0A       = shallow water variant (walkable)
+ *   0x0B       = deep water variant (flippers)
+ *   0x0C       = grass/ground (walkable)
+ *   0x10,0x12,0x18,0x1A = cliff faces (blocked, turned to ledges by preprocessing)
+ *   0x11,0x13,0x19,0x1B = slopes (walkable)
+ *   0x20       = pit/hole
+ *   0x21–0x25  = floor tiles (walkable)
+ *   0x26       = wall
+ *   0x27       = hookshot target post (blocks walk, hookshot can grab)
+ *   0x28–0x2F  = cliff triggers (blocked, turned to ledges by preprocessing)
+ *   0x30–0x3C  = various floor/stair tiles (walkable)
+ *   0x40       = thick grass / bush variant (lift.1)
+ *   0x41       = floor (walkable)
+ *   0x43       = wall
+ *   0x44       = diggable ground (walkable)
+ *   0x45       = floor (walkable)
+ *   0x46       = wall
+ *   0x47       = floor (walkable)
+ *   0x48       = bush (lift.1 or sword or boomerang)
+ *   0x49       = floor (walkable)
+ *   0x4A       = light stone (lift.1)
+ *   0x4B       = diggable (walkable)
+ *   0x50       = bush/sign variant (lift.1)
+ *   0x51       = bush/sign variant (lift.1)
+ *   0x52       = dark rock (lift.2 — Titan's Mitt)
+ *   0x53       = dark rock variant (lift.2)
+ *   0x54       = hammer peg (hammer) ← PREVIOUSLY MISLABELED as lift.2
+ *   0x55       = dark rock variant (lift.2)
+ *   0x56       = dark rock variant (lift.2)
+ *   0x57       = bonk rock (boots)
+ *   0x5E–0x66  = various floor tiles (walkable)
+ *   0x6C–0x6F  = outdoor walkable
+ *   0xD0–0xEF  = floor variants (walkable)
  */
 export function classifyTileAttr(attr: number): TilePassability {
   // Fast path: common walkable tiles
@@ -27,15 +73,19 @@ export function classifyTileAttr(attr: number): TilePassability {
     case 0x04: case 0x44: case 0x4b:
       return { type: 'free' };
 
-    // Bushes — liftable with bare hands (lift.0)
+    // Bushes / signs — liftable (lift.1) or cuttable (sword/boomerang)
     case 0x40: case 0x48: case 0x4a: case 0x50: case 0x51:
-      return { type: 'obstacle', req: 'lift.0' };
-
-    // Grey rocks — Power Glove (lift.1)
-    case 0x52: case 0x53: case 0x54: case 0x55: case 0x56:
       return { type: 'obstacle', req: 'lift.1' };
 
-    // Bonk pegs — Pegasus Boots
+    // Dark rocks — Titan's Mitt (lift.2)
+    case 0x52: case 0x53: case 0x55: case 0x56:
+      return { type: 'obstacle', req: 'lift.2' };
+
+    // Hammer pegs — Magic Hammer
+    case 0x54:
+      return { type: 'obstacle', req: 'hammer' };
+
+    // Bonk rocks — Pegasus Boots
     case 0x57:
       return { type: 'obstacle', req: 'boots' };
 
@@ -47,7 +97,7 @@ export function classifyTileAttr(attr: number): TilePassability {
     case 0x11: case 0x13: case 0x19: case 0x1b:
       return { type: 'free' };
 
-    // Cliff tiles — blocked (converted to ledges by cliff preprocessing)
+    // Cliff faces — blocked (converted to ledges by cliff preprocessing)
     case 0x10: case 0x18: case 0x12: case 0x1a:
       return { type: 'blocked' };
 
@@ -60,7 +110,7 @@ export function classifyTileAttr(attr: number): TilePassability {
     case 0x20:
       return { type: 'pit' };
 
-    // Hookshottable / fence posts — blocks walk
+    // Hookshot target post — blocks walk (hookshot can grab from distance)
     case 0x27:
       return { type: 'blocked' };
 

@@ -40,9 +40,9 @@ const regionAfter = {
     ],
 
     obstacles: [
-      { position: { row: 20, col: 15 }, tileAttr: 0x48, type: 'bush', requirements: [['lift.0'], ['sword']], gatesPoint: undefined },
-      { position: { row: 20, col: 16 }, tileAttr: 0x48, type: 'bush', requirements: [['lift.0'], ['sword']], gatesPoint: undefined },
-      { position: { row: 35, col: 40 }, tileAttr: 0x52, type: 'dark_rock', requirements: [['lift.1']], gatesPoint: 'lw-2c-edge-e-0' },
+      { position: { row: 20, col: 15 }, tileAttr: 0x48, type: 'bush', requirements: [['lift.1'], ['sword']], gatesPoint: undefined },
+      { position: { row: 20, col: 16 }, tileAttr: 0x48, type: 'bush', requirements: [['lift.1'], ['sword']], gatesPoint: undefined },
+      { position: { row: 35, col: 40 }, tileAttr: 0x52, type: 'dark_rock', requirements: [['lift.2']], gatesPoint: 'lw-2c-edge-e-0' },
     ],
 
     features: [

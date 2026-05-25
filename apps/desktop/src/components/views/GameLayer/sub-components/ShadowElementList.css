@@ -1,0 +1,126 @@
+.shadow-element-list {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  bottom: 8px;
+  width: 180px;
+  z-index: 100;
+  background: var(--color-surface-overlay, rgba(20, 20, 30, 0.95));
+  border: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.08));
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  padding: 6px 0;
+  gap: 4px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.shadow-element-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.shadow-element-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+
+/* ─── Group ─── */
+.shadow-element-list__group {
+  display: flex;
+  flex-direction: column;
+}
+
+.shadow-element-list__group-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary, rgba(255, 255, 255, 0.6));
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.shadow-element-list__group-icon {
+  font-size: 12px;
+}
+
+.shadow-element-list__count {
+  margin-left: auto;
+  font-size: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 1px 5px;
+  font-weight: 400;
+}
+
+/* ─── Items ─── */
+.shadow-element-list__items {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.shadow-element-list__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-primary, rgba(255, 255, 255, 0.8));
+  font-size: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+}
+
+.shadow-element-list__item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.shadow-element-list__item--active {
+  background: var(--color-accent-bg, rgba(74, 158, 255, 0.15));
+  color: var(--color-text-primary, #fff);
+}
+
+.shadow-element-list__item--active:hover {
+  background: var(--color-accent-bg, rgba(74, 158, 255, 0.2));
+}
+
+.shadow-element-list__item-icon {
+  font-size: 13px;
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+}
+
+.shadow-element-list__item-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shadow-element-list__item-tag {
+  font-size: 10px;
+  color: var(--color-text-secondary, rgba(255, 255, 255, 0.5));
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  padding: 1px 4px;
+  flex-shrink: 0;
+}
+
+/* ─── Empty State ─── */
+.shadow-element-list__empty {
+  padding: 16px 10px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--color-text-secondary, rgba(255, 255, 255, 0.4));
+}

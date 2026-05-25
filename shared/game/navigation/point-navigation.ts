@@ -148,7 +148,7 @@ function canLeaveLedgeDir(dir: string, dr: number, dc: number): boolean {
 /** Get collision grid from a screen (using the orchestrator). */
 function getGridFromResult(rom: RomData, screenIndex: number): TilePassability[][] | null {
   try {
-    const result = floodFillScreen(rom, screenIndex, new Set(['lift.0']));
+    const result = floodFillScreen(rom, screenIndex, new Set(['lift.1']));
     // The grid isn't directly in the result — we need the attrGrid to reconstruct
     // For now, just confirm the screen is valid
     return null; // Placeholder — route-planner handles grid access directly

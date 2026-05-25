@@ -4,6 +4,7 @@ interface GameLayerProps {
   profileId?: string;
   stretch?: boolean;
   edgeEffect?: boolean;
+  shadowCasting?: boolean;
 }
 
 export type {

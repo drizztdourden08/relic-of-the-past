@@ -31,6 +31,7 @@ const ProfileHub = (props: ProfileHubProps) => {
     onDisplayPerfChange,
     onSaveSlotSettingsChange,
     onEdgeEffectChange,
+    onShadowCastingChange,
     masterVolumeOverride,
     activeTab: controlledTab,
     onTabChange,
@@ -109,6 +110,7 @@ const ProfileHub = (props: ProfileHubProps) => {
           onMasterVolumeChange?.(merged.masterVolume);
           onDisplayPerfChange?.(merged.displayPerfInTitle);
           onEdgeEffectChange?.(merged.overworldEdgeEffect);
+          onShadowCastingChange?.(merged.postProcessingShadows);
           getInputManager().setFunctionMappings(merged.functionMappings ?? DEFAULT_FUNCTION_MAPPINGS);
           // Always attempt to push — if module isn't running yet, it's a no-op.
           // This avoids stale closure issues where isGameRunning is false in this effect
@@ -175,6 +177,11 @@ const ProfileHub = (props: ProfileHubProps) => {
       // Notify parent of edge effect toggle
       if ('overworldEdgeEffect' in patch) {
         onEdgeEffectChange?.(next.overworldEdgeEffect);
+      }
+
+      // Notify parent of shadow casting toggle
+      if ('postProcessingShadows' in patch) {
+        onShadowCastingChange?.(next.postProcessingShadows);
       }
 
       // Sync HUD settings to store for live rendering

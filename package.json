@@ -5,16 +5,25 @@
   "description": "Relic of the Past – Electron + React + WASM",
   "author": "drizztdourden_",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/drizztdourden08/relic-of-the-past.git"
+  },
   "main": "dist/electron/main.js",
   "scripts": {
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "preview": "electron-vite preview",
+    "package": "rimraf release && electron-vite build && electron-builder --win --mac --linux --config electron-builder.config.js -c.directories.output=release && rimraf release/win-unpacked release/mac-arm64 release/mac release/linux-unpacked release/.icon-ico release/builder-debug.yml release/builder-effective-config.yaml",
+    "package:win": "rimraf release/win && electron-vite build && electron-builder --win --config electron-builder.config.js -c.directories.output=release/win && rimraf release/win/win-unpacked release/win/.icon-ico release/win/builder-debug.yml release/win/builder-effective-config.yaml",
+    "package:mac": "rimraf release/mac && electron-vite build && electron-builder --mac --config electron-builder.config.js -c.directories.output=release/mac && rimraf release/mac/mac-arm64 release/mac/mac release/mac/.icon-ico release/mac/builder-debug.yml release/mac/builder-effective-config.yaml",
+    "package:linux": "rimraf release/linux && electron-vite build && electron-builder --linux --config electron-builder.config.js -c.directories.output=release/linux && rimraf release/linux/linux-unpacked release/linux/.icon-ico release/linux/builder-debug.yml release/linux/builder-effective-config.yaml",
     "lint": "tsc --noEmit && eslint .",
     "clean": "rimraf dist out release"
   },
   "dependencies": {
     "@electron-toolkit/utils": "^4.0.0",
+    "electron-updater": "^6.8.3",
     "js-yaml": "^4.1.1",
     "node-hid": "^3.1.0",
     "node-stream-zip": "^1.15.0",

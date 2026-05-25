@@ -232,8 +232,8 @@ Each must be tested and validated by the flood fill.
 
 | Requirement | Tile Attr | Current Status |
 |-------------|-----------|----------------|
-| `lift.0` | 0x40, 0x48, 0x4A, 0x50, 0x51 | ✅ Working |
-| `lift.1` | 0x52, 0x53, 0x54, 0x55, 0x56 | ⚠️ Needs split (see below) |
+| `lift.1` | 0x40, 0x48, 0x4A, 0x50, 0x51 | ✅ Working |
+| `lift.2` | 0x52, 0x53, 0x54, 0x55, 0x56 | ⚠️ Needs split (see below) |
 | `boots` | 0x57 | ✅ Working |
 | `flippers` | 0x08, 0x0B | ✅ Working |
 | Ledges (one-way) | 0x28–0x2F | ✅ Cliff preprocessing handles |
@@ -248,7 +248,7 @@ Each must be tested and validated by the flood fill.
 | 2 | `hookshot` | Gap-crossing logic: max distance? Valid targets (0x27)? Crosses water? | Find hookshot-mandatory screen |
 | 3 | `bombs` | Overworld bombable walls — distinct attr or same as blocked? | Find bombable overworld spot |
 | 4 | `mirror` | Does it work on all DW tiles? Position-exact to LW? | Verify in-game at known spots |
-| 5 | `sword` / `boomerang` | Can cut bushes (alternative to lift.0)? Which attrs? | Test bush cutting vs lifting |
+| 5 | `sword` / `boomerang` | Can cut bushes (alternative to lift.1)? Which attrs? | Test bush cutting vs lifting |
 | 6 | Interior rooms | How to read room tile data from ROM (different format) | Extract Link's House tiles |
 | 7 | Dungeon keys | Key door attrs? Big key door attrs? | Check Eastern Palace ROM data |
 

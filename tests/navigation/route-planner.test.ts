@@ -19,7 +19,7 @@ describe.skipIf(!romAvailable)('Route Planner', () => {
   it('finds shortest path from Kakariko Shop to Link\'s House', () => {
     const source: Location = { regionId: 'kakariko-shop' };
     const target: Location = { regionId: 'links-house' };
-    const inventory = new Set(['lift.0']); // Power Gloves (needed to traverse bushes)
+    const inventory = new Set(['lift.1']); // Link has from start (needed to traverse bushes)
 
     const result = planRoute(rom, source, target, inventory);
 
@@ -41,7 +41,7 @@ describe.skipIf(!romAvailable)('Route Planner', () => {
     // Use tiles known to be reachable on screen 0x2c
     const source: Location = { regionId: 'lw-2c', tile: { row: 63, col: 29 } };
     const target: Location = { regionId: 'lw-2c', tile: { row: 30, col: 22 } };
-    const inventory = new Set(['lift.0']);
+    const inventory = new Set(['lift.1']);
 
     const result = planRoute(rom, source, target, inventory);
 
@@ -50,17 +50,17 @@ describe.skipIf(!romAvailable)('Route Planner', () => {
     console.log(`\nSame-screen route: ${result!.totalSteps} tile steps`);
   });
 
-  it('detects lift.1 requirement when path crosses heavy rocks', () => {
-    // Screen 0x19 (Kakariko NE) has heavy rocks at (24,28)-(25,29).
-    // Targeting a rock tile forces the A* to cross it, detecting lift.1.
+  it('routes through Kakariko NE with full lift inventory', () => {
+    // Screen 0x19 (Kakariko NE) — route there with full lift set.
+    // The path crosses bushes (lift.1) getting there.
     const source: Location = { regionId: 'links-house' };
     const target: Location = { regionId: 'lw-19', tile: { row: 24, col: 28 } };
-    const inventory = new Set(['lift.0', 'lift.1']); // Titan's Mitt for black rocks
+    const inventory = new Set(['lift.1', 'lift.2']); // Titan's Mitt for black rocks
 
     const result = planRoute(rom, source, target, inventory);
 
     expect(result).not.toBeNull();
-    console.log('\n=== Link\'s House \u2192 Heavy Rock on Kakariko NE ===');
+    console.log('\n=== Link\'s House \u2192 Kakariko NE ===');
     console.log(`Total screens: ${result!.totalScreens}`);
     console.log(`Total tile steps: ${result!.totalSteps}`);
     console.log(`Requirements: ${result!.requirements.length ? result!.requirements.join(', ') : 'none'}`);
@@ -71,15 +71,15 @@ describe.skipIf(!romAvailable)('Route Planner', () => {
       console.log(`    Entry: (${step.entry.row}, ${step.entry.col}) \u2192 Exit: (${step.exit.row}, ${step.exit.col})`);
       console.log(`    Tile steps: ${step.tileSteps}`);
     }
-    // The path must cross the heavy rock, so lift.1 should be in requirements
+    // Route crosses bushes, so at minimum lift.1 is required
     expect(result!.requirements).toContain('lift.1');
   });
 
   it('cannot reach heavy rock tile without Titan\'s Mitt', () => {
-    // Same destination but without lift.1 — A* can't enter the rock tile
+    // Same destination but without lift.2 — A* can't enter the rock tile
     const source: Location = { regionId: 'links-house' };
     const target: Location = { regionId: 'lw-19', tile: { row: 24, col: 28 } };
-    const inventory = new Set(['lift.0']); // Only Power Glove — no Titan's Mitt
+    const inventory = new Set(['lift.1']); // Only base lift — no Titan's Mitt
 
     const result = planRoute(rom, source, target, inventory);
 
@@ -88,6 +88,6 @@ describe.skipIf(!romAvailable)('Route Planner', () => {
     // since A* failed on the last screen
     expect(result).not.toBeNull();
     console.log(`Requirements: ${result!.requirements.length ? result!.requirements.join(', ') : 'none'}`);
-    expect(result!.requirements).not.toContain('lift.1');
+    expect(result!.requirements).not.toContain('lift.2');
   });
 });

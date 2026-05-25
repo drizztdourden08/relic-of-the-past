@@ -11,6 +11,7 @@ const useDisplaySettings = (params: { isGameRunning: boolean }) => {
   const [aspectRatio, setAspectRatio] = useState<GameSettings['aspectRatio']>('4:3');
   const [showFps, setShowFps] = useState(false);
   const [overworldEdgeEffect, setOverworldEdgeEffect] = useState(true);
+  const [postProcessingShadows, setPostProcessingShadows] = useState(false);
 
   const handleWindowModeChange = useCallback((mode: GameSettings['windowMode']) => {
     setWindowMode(mode);
@@ -27,6 +28,10 @@ const useDisplaySettings = (params: { isGameRunning: boolean }) => {
 
   const handleEdgeEffectChange = useCallback((enabled: boolean) => {
     setOverworldEdgeEffect(enabled);
+  }, []);
+
+  const handleShadowCastingChange = useCallback((enabled: boolean) => {
+    setPostProcessingShadows(enabled);
   }, []);
 
   // Track fullscreen state for aspect ratio lock
@@ -77,6 +82,7 @@ const useDisplaySettings = (params: { isGameRunning: boolean }) => {
     aspectRatio: GameSettings['aspectRatio'];
     displayPerfInTitle: boolean;
     overworldEdgeEffect: boolean;
+    postProcessingShadows: boolean;
     startFullscreen: boolean;
   }) => {
     setWindowMode(settings.windowMode);
@@ -84,6 +90,7 @@ const useDisplaySettings = (params: { isGameRunning: boolean }) => {
     setAspectRatio(settings.aspectRatio);
     setShowFps(settings.displayPerfInTitle);
     setOverworldEdgeEffect(settings.overworldEdgeEffect);
+    setPostProcessingShadows(settings.postProcessingShadows);
     if (settings.startFullscreen) {
       window.api.setFullscreen(true);
     }
@@ -96,10 +103,12 @@ const useDisplaySettings = (params: { isGameRunning: boolean }) => {
     aspectRatio,
     showFps,
     overworldEdgeEffect,
+    postProcessingShadows,
     handleWindowModeChange,
     handleConstraintSettingsChange,
     handleDisplayPerfChange,
     handleEdgeEffectChange,
+    handleShadowCastingChange,
     initFromSettings,
   };
 };

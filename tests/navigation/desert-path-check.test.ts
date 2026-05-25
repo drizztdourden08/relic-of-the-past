@@ -15,7 +15,7 @@ describe.skipIf(!romAvailable)('Expected desert→maze path borders', () => {
   });
 
   it('checks border overlaps along expected path', () => {
-    const inv = new Set(['lift.0', 'lift.1']);
+    const inv = new Set(['lift.1', 'lift.2']);
 
     // User's expected path: 0x38 → 0x39 → 0x3A → (up) 0x32 → (west) 0x31 → (up) 0x29 → (west) 0x28
     // Or maybe: 0x38 → 0x39 → 0x3A → something → ... → 0x28

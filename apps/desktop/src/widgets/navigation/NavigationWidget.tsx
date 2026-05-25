@@ -8,9 +8,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useGameUIStore } from '../../stores/game-ui-store';
 import { useConnectionOverlayStore } from '../../stores/connection-overlay-store';
-import { SCREEN_NAMES } from '@shared/game/flood-fill';
+import { SCREEN_NAMES } from '@shared/game/navigation';
 import { wasmGetViewportInfo } from '../../lib/game';
-import type { FloodFillResult, ConnectionInfo } from '@shared/game/flood-fill';
+import type { FloodFillResult, ConnectionInfo } from '@shared/game/navigation';
 
 type ReviewStatus = 'neutral' | 'good' | 'bad' | 'yellow';
 interface ReviewEntry { status: ReviewStatus; comment?: string; }
@@ -69,9 +69,8 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
     setRunning(true);
     try {
       // Build inventory from current equipment state
-      // lift.0=always (bushes), lift.1=Power Glove (grey rocks), lift.2=Titan's Mitt (dark rocks)
-      const items: string[] = ['lift.0'];
-      if (equipment.gloves >= 1) items.push('lift.1');
+      // lift.1=always (bushes/light stones, Link has from start), lift.2=Titan's Mitt (dark rocks)
+      const items: string[] = ['lift.1'];
       if (equipment.gloves >= 2) items.push('lift.2');
       if (equipment.boots) items.push('boots');
       if (equipment.flippers) items.push('flippers');
