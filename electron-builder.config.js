@@ -19,13 +19,6 @@ module.exports = {
     '**/node_modules/node-hid/**',
     '**/node_modules/usb/**',
   ],
-  extraResources: [
-    {
-      from: 'apps/desktop/public/wasm',
-      to: 'public/wasm',
-      filter: ['**/*'],
-    },
-  ],
   win: {
     target: ['portable', 'nsis'],
     icon: 'apps/desktop/public/logos/logo-256.png',
@@ -49,5 +42,7 @@ module.exports = {
     target: ['AppImage', 'deb'],
     icon: 'apps/desktop/public/logos/logo-256.png',
     artifactName: 'rotp.${ext}',
+    category: 'Game',
+    maintainer: 'drizztdourden08@users.noreply.github.com',
   },
 };

@@ -33,6 +33,20 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 3.1.51
+
+      - name: Build WASM
+        run: |
+          cd core/wasm-build
+          emmake make
+          mkdir -p ../../apps/desktop/public/wasm
+          cp output/zelda3.js ../../apps/desktop/public/wasm/
+          cp output/zelda3.wasm ../../apps/desktop/public/wasm/
+        shell: bash
+
       - name: Install dependencies
         run: npm ci
 
