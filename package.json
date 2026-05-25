@@ -1,6 +1,6 @@
 {
   "name": "relic-of-the-past",
-  "version": "0.8.1",
+  "version": "0.8.0",
   "private": true,
   "description": "Relic of the Past – Electron + React + WASM",
   "author": {
@@ -15,23 +15,21 @@
   "main": "dist/electron/main.js",
   "scripts": {
     "dev": "electron-vite dev",
-    "build": "electron-vite build",
+    "build": "rimraf dist release && electron-vite build && electron-builder --win --config scripts/build/electron-builder.config.js -c.directories.output=release && rimraf dist release/win-unpacked release/builder-debug.yml release/builder-effective-config.yaml",
+    "build:win": "rimraf dist release && electron-vite build && electron-builder --win --config scripts/build/electron-builder.config.js -c.directories.output=release && rimraf dist release/win-unpacked release/builder-debug.yml release/builder-effective-config.yaml",
     "preview": "electron-vite preview",
-    "package": "rimraf release && electron-vite build && electron-builder --win --mac --linux --config electron-builder.config.js -c.directories.output=release && rimraf release/win-unpacked release/mac-arm64 release/mac release/linux-unpacked release/.icon-ico release/builder-debug.yml release/builder-effective-config.yaml",
-    "package:win": "rimraf release/win && electron-vite build && electron-builder --win --config electron-builder.config.js -c.directories.output=release/win && rimraf release/win/win-unpacked release/win/.icon-ico release/win/builder-debug.yml release/win/builder-effective-config.yaml",
-    "package:mac": "rimraf release/mac && electron-vite build && electron-builder --mac --config electron-builder.config.js -c.directories.output=release/mac && rimraf release/mac/mac-arm64 release/mac/mac release/mac/.icon-ico release/mac/builder-debug.yml release/mac/builder-effective-config.yaml",
-    "package:linux": "rimraf release/linux && electron-vite build && electron-builder --linux --config electron-builder.config.js -c.directories.output=release/linux && rimraf release/linux/linux-unpacked release/linux/.icon-ico release/linux/builder-debug.yml release/linux/builder-effective-config.yaml",
     "lint": "tsc --noEmit && eslint .",
-    "clean": "rimraf dist out release",
+    "clean": "rimraf dist release",
+    "release": "npm version patch --no-git-tag-version && node -e \"const v='v'+require('./package.json').version;const{execSync:r}=require('child_process');r('git add package.json package-lock.json',{stdio:'inherit'});r(`git commit -m \\\"release: ${v}\\\"`,{stdio:'inherit'});r(`git tag -f ${v}`,{stdio:'inherit'});r('git push',{stdio:'inherit'});r(`git push origin ${v}`,{stdio:'inherit'});console.log(`\\nReleased ${v}`)\"",
     "version:patch": "npm version patch --no-git-tag-version",
     "version:minor": "npm version minor --no-git-tag-version",
-    "version:major": "npm version major --no-git-tag-version",
-    "release": "npm version patch --no-git-tag-version && node -e \"const v='v'+require('./package.json').version;const{execSync:r}=require('child_process');r('git add package.json package-lock.json',{stdio:'inherit'});r(`git commit -m \\\"release: ${v}\\\"`,{stdio:'inherit'});r(`git tag -f ${v}`,{stdio:'inherit'});r('git push',{stdio:'inherit'});r(`git push origin ${v}`,{stdio:'inherit'});console.log(`\\nReleased ${v}`)\""
+    "version:major": "npm version major --no-git-tag-version"
   },
   "dependencies": {
     "@electron-toolkit/utils": "^4.0.0",
     "electron-updater": "^6.8.3",
     "js-yaml": "^4.1.1",
+    "marked": "^18.0.4",
     "node-hid": "^3.3.0",
     "node-stream-zip": "^1.15.0",
     "pngjs": "^7.0.0",
@@ -53,7 +51,10 @@
     "electron-vite": "^5.0.0",
     "eslint": "^10.4.0",
     "playwright": "^1.60.0",
+    "png-to-ico": "^3.0.1",
+    "rcedit": "^5.0.2",
     "rimraf": "^6.1.3",
+    "sharp": "^0.34.5",
     "typescript": "^6.0.3",
     "vite": "^7.3.3",
     "vitest": "^4.1.7"

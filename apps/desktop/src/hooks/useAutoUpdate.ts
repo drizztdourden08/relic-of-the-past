@@ -14,8 +14,14 @@ export function useAutoUpdate() {
     progress: null,
     error: null,
   });
+  const [portable, setPortable] = useState(false);
 
   useEffect(() => {
+    window.api.updater.isPortable().then((v) => setPortable(v));
+  }, []);
+
+  useEffect(() => {
+    if (portable) return;
     const cleanups: (() => void)[] = [];
 
     cleanups.push(window.api.updater.onUpdateAvailable((info) => {
@@ -46,11 +52,16 @@ export function useAutoUpdate() {
     });
 
     return () => cleanups.forEach((fn) => fn());
-  }, []);
+  }, [portable]);
 
   const check = useCallback(async () => {
-    setState((s) => ({ ...s, status: 'checking' }));
-    await window.api.updater.check();
+    setState((s) => ({ ...s, status: 'checking', error: null }));
+    try {
+      await window.api.updater.check();
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      setState((s) => ({ ...s, status: 'error', error: message }));
+    }
   }, []);
 
   const download = useCallback(async () => {
@@ -62,5 +73,5 @@ export function useAutoUpdate() {
     window.api.updater.install();
   }, []);
 
-  return { ...state, check, download, install };
+  return { ...state, portable, check, download, install };
 }

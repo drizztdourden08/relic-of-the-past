@@ -228,6 +228,7 @@ contextBridge.exposeInMainWorld('api', {
 
   // Auto-updater
   updater: {
+    isPortable: () => ipcRenderer.invoke('updater:isPortable') as Promise<boolean>,
     check: () => ipcRenderer.invoke('updater:check'),
     getAvailable: () => ipcRenderer.invoke('updater:getAvailable'),
     download: () => ipcRenderer.invoke('updater:download'),

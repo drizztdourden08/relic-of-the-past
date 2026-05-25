@@ -75,10 +75,9 @@
 }
 
 .titlebar__update-badge {
-  position: absolute;
-  right: calc(var(--titlebar-btn-width) * 3 + var(--space-sm));
-  background: none;
-  border: none;
+  margin-left: var(--space-xs, 4px);
+  background: rgba(76, 175, 80, 0.15);
+  border: 1px solid #4caf50;
   color: #4caf50;
   font-size: var(--text-xs, 11px);
   font-weight: var(--weight-semibold, 600);
@@ -91,7 +90,7 @@
 }
 
 .titlebar__update-badge:hover {
-  background: rgba(76, 175, 80, 0.15);
+  background: rgba(76, 175, 80, 0.3);
 }
 
 @keyframes update-pulse {

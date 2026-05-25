@@ -1,7 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
+import { marked } from 'marked';
 import { Button } from '../../primitives/Button';
 import type { UpdateState } from '../../../hooks/useAutoUpdate';
 import './UpdateDialog.css';
+
+function renderNotes(md: string): string {
+  const html = marked.parse(md, { async: false }) as string;
+  // Strip <a> tags to plain text so links aren't clickable
+  return html.replace(/<a[^>]*>(.*?)<\/a>/g, '$1');
+}
 
 interface UpdateDialogProps {
   open: boolean;
@@ -13,6 +20,11 @@ interface UpdateDialogProps {
 
 const UpdateDialog = ({ open, state, onDownload, onInstall, onClose }: UpdateDialogProps) => {
   const confirmRef = useRef<HTMLButtonElement>(null);
+
+  const notesHtml = useMemo(() => {
+    if (!state.info?.releaseNotes) return '';
+    return renderNotes(state.info.releaseNotes);
+  }, [state.info?.releaseNotes]);
 
   useEffect(() => {
     if (!open) return;
@@ -48,14 +60,18 @@ const UpdateDialog = ({ open, state, onDownload, onInstall, onClose }: UpdateDia
             <p className="update-dialog__version">
               Version <strong>{info.version}</strong> is available
             </p>
-            {info.releaseNotes && (
+            {info.releaseNotes ? (
               <div className="update-dialog__notes">
                 <h4>Release Notes</h4>
                 <div
                   className="update-dialog__notes-content"
-                  dangerouslySetInnerHTML={{ __html: info.releaseNotes }}
+                  dangerouslySetInnerHTML={{ __html: notesHtml }}
                 />
               </div>
+            ) : (
+              <p className="update-dialog__no-notes">
+                A new version is ready to install.
+              </p>
             )}
           </div>
         )}

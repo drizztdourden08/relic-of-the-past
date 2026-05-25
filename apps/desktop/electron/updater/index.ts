@@ -10,22 +10,35 @@ export interface UpdateInfo {
 
 let updateAvailable: UpdateInfo | null = null;
 
-export function initAutoUpdater(mainWindow: BrowserWindow): void {
-  // Don't check for updates in dev mode
-  if (is.dev) return;
+export const isPortable = !!process.env.PORTABLE_EXECUTABLE_DIR;
 
-  // Temporary: token for private repo auto-update testing (revert before public release)
-  process.env.GH_TOKEN = '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';
+export function initAutoUpdater(mainWindow: BrowserWindow): void {
+  if (is.dev || isPortable) return;
+
+  autoUpdater.setFeedURL({
+    provider: 'github',
+    owner: 'drizztdourden08',
+    repo: 'relic-of-the-past',
+  });
 
   autoUpdater.autoDownload = false;
   autoUpdater.autoInstallOnAppQuit = false;
 
-  autoUpdater.on('update-available', (info) => {
-    const notes = typeof info.releaseNotes === 'string'
-      ? info.releaseNotes
-      : Array.isArray(info.releaseNotes)
-        ? info.releaseNotes.map((n) => (typeof n === 'string' ? n : n.note)).join('\n')
-        : '';
+  autoUpdater.on('update-available', async (info) => {
+    // Fetch release notes from GitHub API (electron-updater doesn't include them)
+    let notes = '';
+    try {
+      const res = await fetch(
+        `https://api.github.com/repos/drizztdourden08/relic-of-the-past/releases/tags/v${info.version}`,
+        { headers: { Accept: 'application/vnd.github.v3+json' } },
+      );
+      if (res.ok) {
+        const release = await res.json();
+        notes = release.body ?? '';
+      }
+    } catch {
+      // Silently fail — notes are optional
+    }
 
     updateAvailable = {
       version: info.version,
@@ -57,20 +70,24 @@ export function initAutoUpdater(mainWindow: BrowserWindow): void {
     mainWindow.webContents.send('updater:error', err.message);
   });
 
-  // Check for updates after a short delay
   setTimeout(() => {
-    autoUpdater.checkForUpdates().catch(() => {});
+    autoUpdater.checkForUpdates().catch((err) => {
+      console.error('[updater] check failed:', err);
+    });
   }, 5000);
 }
 
 export function registerUpdaterHandlers(): void {
+  ipcMain.handle('updater:isPortable', () => isPortable);
+
   ipcMain.handle('updater:check', async () => {
-    if (is.dev) return null;
+    if (is.dev || isPortable) return null;
     try {
       const result = await autoUpdater.checkForUpdates();
       return result?.updateInfo ?? null;
-    } catch {
-      return null;
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      throw new Error(message);
     }
   });
 

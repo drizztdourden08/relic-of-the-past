@@ -166,9 +166,9 @@ const App = () => {
         isMuted={audio.isMuted}
         onToggleMute={audio.handleToggleMute}
         showFps={display.showFps}
-        updateAvailable={update.status === 'available' || update.status === 'ready'}
+        updateAvailable={!update.portable && (update.status === 'available' || update.status === 'ready')}
         onUpdateClick={() => setShowUpdateDialog(true)}
-        onCheckForUpdates={() => { update.check(); setShowUpdateDialog(true); }}
+        onCheckForUpdates={update.portable ? undefined : () => { update.check(); setShowUpdateDialog(true); }}
       />
 
       <div className="app__content">

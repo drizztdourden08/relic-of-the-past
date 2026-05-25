@@ -140,13 +140,18 @@ const TitleBar = (props: TitleBarProps) => {
       label: 'Advanced',
       children: [
         { key: 'input-tester', icon: '🎮', label: 'Input Calibration', onClick: () => { closeMenu(); onShowInputTester(); } },
-        { key: 'check-updates', icon: '🔄', label: 'Check for Updates', onClick: () => { closeMenu(); onCheckForUpdates?.(); } },
         { key: 'dev-console', icon: '🛠️', label: 'Dev Console', onClick: () => { closeMenu(); window.api.openDevTools(); } },
         { key: 'sprite-debug', icon: '🖼️', label: 'Sprite Debug', onClick: () => { closeMenu(); onShowSpriteDebug(); } },
         ...(window.api.isDev ? [{ key: 'shadow-editor', icon: '🌓', label: 'Shadow Editor', onClick: () => { closeMenu(); onShowShadowEditor(); } }] : []),
       ],
     },
     'separator',
+    ...(onCheckForUpdates ? [{
+      key: 'check-updates',
+      icon: '🔄',
+      label: 'Check for Updates',
+      onClick: () => { closeMenu(); onCheckForUpdates(); },
+    }] : []),
     {
       key: 'credits',
       icon: '📜',
@@ -229,6 +234,11 @@ const TitleBar = (props: TitleBarProps) => {
             </svg>
           </IconButton>
         )}
+        {updateAvailable && (
+          <button className="titlebar__update-badge" onClick={onUpdateClick}>
+            Update available
+          </button>
+        )}
         {menuOpen && <DropdownMenu items={menuItems} anchorRef={menuRef} />}
         {showFps && fps > 0 && (
           <span className="titlebar__fps">{fps} FPS</span>
@@ -239,11 +249,6 @@ const TitleBar = (props: TitleBarProps) => {
         <img className="titlebar__logo" src="./logos/logo-128.png" alt="" />
         <span className="titlebar__title">Relic of the Past</span>
         <img className="titlebar__logo" src="./logos/logo-128.png" alt="" />
-        {updateAvailable && (
-          <button className="titlebar__update-badge" onClick={onUpdateClick}>
-            Update available
-          </button>
-        )}
       </div>
 
       <WindowControls isMaximized={isMaximized} />

@@ -3,6 +3,7 @@ module.exports = {
   appId: 'com.relicofthepast.app',
   productName: 'Relic of the Past',
   npmRebuild: false,
+  afterPack: './scripts/build/afterPack.cjs',
   publish: [{
     provider: 'github',
     owner: 'drizztdourden08',
@@ -12,7 +13,9 @@ module.exports = {
     buildResources: 'build',
   },
   files: [
-    'dist/**/*',
+    'dist/electron/**/*',
+    'dist/preload/**/*',
+    'dist/renderer/**/*',
     'package.json',
   ],
   asarUnpack: [
@@ -21,7 +24,7 @@ module.exports = {
   ],
   win: {
     target: ['portable', 'nsis'],
-    icon: 'apps/desktop/public/logos/logo-256.png',
+    icon: 'apps/desktop/public/logos/icon.ico',
     signAndEditExecutable: false,
   },
   portable: {
@@ -32,6 +35,8 @@ module.exports = {
     allowToChangeInstallationDirectory: true,
     createDesktopShortcut: true,
     artifactName: 'rotp-windows-setup.exe',
+    installerSidebar: 'apps/desktop/public/logos/installerSidebar.bmp',
+    uninstallerSidebar: 'apps/desktop/public/logos/uninstallerSidebar.bmp',
   },
   mac: {
     target: ['dmg', 'zip'],
