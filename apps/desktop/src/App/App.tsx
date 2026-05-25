@@ -168,6 +168,7 @@ const App = () => {
         showFps={display.showFps}
         updateAvailable={update.status === 'available' || update.status === 'ready'}
         onUpdateClick={() => setShowUpdateDialog(true)}
+        onCheckForUpdates={() => { update.check(); setShowUpdateDialog(true); }}
       />
 
       <div className="app__content">

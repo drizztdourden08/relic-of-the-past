@@ -48,6 +48,11 @@ export function useAutoUpdate() {
     return () => cleanups.forEach((fn) => fn());
   }, []);
 
+  const check = useCallback(async () => {
+    setState((s) => ({ ...s, status: 'checking' }));
+    await window.api.updater.check();
+  }, []);
+
   const download = useCallback(async () => {
     setState((s) => ({ ...s, status: 'downloading', progress: null }));
     await window.api.updater.download();
@@ -57,5 +62,5 @@ export function useAutoUpdate() {
     window.api.updater.install();
   }, []);
 
-  return { ...state, download, install };
+  return { ...state, check, download, install };
 }

@@ -14,6 +14,9 @@ export function initAutoUpdater(mainWindow: BrowserWindow): void {
   // Don't check for updates in dev mode
   if (is.dev) return;
 
+  // Temporary: token for private repo auto-update testing (revert before public release)
+  process.env.GH_TOKEN = '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';
+
   autoUpdater.autoDownload = false;
   autoUpdater.autoInstallOnAppQuit = false;
 

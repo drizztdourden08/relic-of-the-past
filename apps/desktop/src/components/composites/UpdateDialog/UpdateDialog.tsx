@@ -31,7 +31,17 @@ const UpdateDialog = ({ open, state, onDownload, onInstall, onClose }: UpdateDia
   return (
     <div className="dialog-backdrop" onClick={onClose}>
       <div className="dialog update-dialog" onClick={(e) => e.stopPropagation()}>
-        <h3 className="dialog__title">Update Available</h3>
+        <h3 className="dialog__title">
+          {status === 'checking' ? 'Checking for Updates' : status === 'idle' && !info ? 'No Updates Available' : 'Update Available'}
+        </h3>
+
+        {status === 'checking' && (
+          <p className="update-dialog__checking">Checking for updates...</p>
+        )}
+
+        {status === 'idle' && !info && (
+          <p className="update-dialog__up-to-date">You're running the latest version.</p>
+        )}
 
         {info && (
           <div className="update-dialog__info">

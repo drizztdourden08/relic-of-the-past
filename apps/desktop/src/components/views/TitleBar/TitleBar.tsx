@@ -35,6 +35,7 @@ const TitleBar = (props: TitleBarProps) => {
     showFps = false,
     updateAvailable = false,
     onUpdateClick,
+    onCheckForUpdates,
   } = props;
   const menuRef = useRef<HTMLDivElement>(null);
   const { isMaximized, menuOpen, toggleMenu, closeMenu } = useTitleBar(menuRef);
@@ -139,6 +140,7 @@ const TitleBar = (props: TitleBarProps) => {
       label: 'Advanced',
       children: [
         { key: 'input-tester', icon: '🎮', label: 'Input Calibration', onClick: () => { closeMenu(); onShowInputTester(); } },
+        { key: 'check-updates', icon: '🔄', label: 'Check for Updates', onClick: () => { closeMenu(); onCheckForUpdates?.(); } },
         { key: 'dev-console', icon: '🛠️', label: 'Dev Console', onClick: () => { closeMenu(); window.api.openDevTools(); } },
         { key: 'sprite-debug', icon: '🖼️', label: 'Sprite Debug', onClick: () => { closeMenu(); onShowSpriteDebug(); } },
         ...(window.api.isDev ? [{ key: 'shadow-editor', icon: '🌓', label: 'Shadow Editor', onClick: () => { closeMenu(); onShowShadowEditor(); } }] : []),

@@ -26,6 +26,7 @@ interface TitleBarProps {
   showFps?: boolean;
   updateAvailable?: boolean;
   onUpdateClick?: () => void;
+  onCheckForUpdates?: () => void;
 }
 
 export type {
