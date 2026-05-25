@@ -1,5 +1,6 @@
 import type { RegionTag } from './regions/tags';
 import type { ConnectionTag } from './connections/tags';
+import type { RegionNavData, ConnectionNavData } from './navigation/plan/navigation-data.types';
 
 // ─── Check Types ───
 
@@ -62,6 +63,10 @@ interface RegionDefinition {
 
   /** Namespaced tags for categorization (e.g. 'world:light', 'type:cave', 'area:kakariko') */
   tags: readonly RegionTag[];
+
+  // ─── Navigation (populated by analysis script) ───
+  /** Tile-level navigation data. Added by scripts/analyze-navigation.ts. */
+  nav?: RegionNavData;
 }
 
 interface RegionConnection {
@@ -69,6 +74,10 @@ interface RegionConnection {
   to: string;
   entrance: string;
   tags: readonly ConnectionTag[];
+
+  // ─── Navigation (populated by analysis script) ───
+  /** Tile-level navigation data. Added by scripts/analyze-navigation.ts. */
+  nav?: ConnectionNavData;
 }
 
 // ─── Requirement Expression Tree ───

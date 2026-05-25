@@ -2,7 +2,7 @@ import { ipcMain } from 'electron';
 import { readFile, writeFile } from 'fs/promises';
 import { getUserDataPath } from '../lib/paths';
 import { loadRom } from '../../../../shared/asset-extraction/rom/rom-loader';
-import { runFloodFill, getConnections, initFloodFillEngine } from '../../../../shared/game/flood-fill';
+import { floodFillScreen, initEngine, getConnections } from '../../../../shared/game/navigation';
 
 function registerConnectionHandlers(): void {
   ipcMain.handle('connectionReview:load', async () => {
@@ -26,11 +26,11 @@ function registerConnectionHandlers(): void {
       // Cache the ROM to avoid reloading on every screen
       if (!romCache || romCache.path !== romPath) {
         romCache = { path: romPath, rom: loadRom(romPath) };
-        initFloodFillEngine(romCache.rom);
+        initEngine(romCache.rom);
       }
 
       const inventory = new Set(items ?? []);
-      const result = runFloodFill(romCache.rom, screenIndex, inventory);
+      const result = floodFillScreen(romCache.rom, screenIndex, inventory);
       const connections = getConnections(result);
 
       // Serialize (boolean[][] → flat arrays for IPC transfer)

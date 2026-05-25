@@ -16,7 +16,7 @@
  * Every traversal requirement the flood fill tests for.
  *
  * VERIFIED (working in classifier):
- *   lift.0, lift.1, boots, flippers
+ *   lift.1, lift.2, boots, flippers
  *
  * NEEDS USER TESTING:
  *   hammer, hookshot, bombs, sword, boomerang, mirror
@@ -27,7 +27,7 @@
  *   bow, bombos, ether, quake
  */
 export type TraversalRequirement =
-  | 'lift.0' | 'lift.1'
+  | 'lift.1' | 'lift.2'
   | 'sword' | 'boomerang' | 'bombs' | 'hammer' | 'powder'
   | 'boots' | 'flippers' | 'hookshot' | 'mirror' | 'moonpearl'
   | 'flute' | 'cape' | 'byrna' | 'somaria'
@@ -40,9 +40,9 @@ export type TraversalRequirement =
 
 /**
  * OR-of-AND requirement logic.
- *   [['lift.0']]                 → needs power glove
+ *   [['lift.1']]                 → needs base lift (Link has from start)
  *   [['sword'], ['boomerang']]   → needs sword OR boomerang
- *   [['hammer', 'lift.0']]       → needs BOTH
+ *   [['hammer', 'lift.1']]       → needs BOTH
  *   []                           → no requirements
  */
 export type RequirementSet = TraversalRequirement[][];

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { FloodFillResult, ConnectionInfo } from '@shared/game/flood-fill';
+import type { FloodFillResult, ConnectionInfo } from '@shared/game/navigation';
 
 interface ConnectionOverlayState {
   /** Whether the overlay is visible */

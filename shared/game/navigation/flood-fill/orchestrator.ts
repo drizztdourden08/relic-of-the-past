@@ -77,18 +77,19 @@ function findStartPosition(grid: CollisionGrid, startPos?: GridPos): GridPos {
 
   if (grid.tiles[row]?.[col]?.type === 'free') return { row, col };
 
-  // Spiral search for nearest free tile
-  for (let radius = 1; radius < 32; radius++) {
+  // Spiral search outward from the requested position
+  for (let radius = 1; radius < GRID_SIZE; radius++) {
     for (let dr = -radius; dr <= radius; dr++) {
       for (let dc = -radius; dc <= radius; dc++) {
-        const r = 32 + dr, c = 32 + dc;
+        if (Math.abs(dr) !== radius && Math.abs(dc) !== radius) continue; // only perimeter
+        const r = row + dr, c = col + dc;
         if (r >= 0 && r < GRID_SIZE && c >= 0 && c < GRID_SIZE && grid.tiles[r][c].type === 'free') {
           return { row: r, col: c };
         }
       }
     }
   }
-  return { row: 32, col: 32 };
+  return { row, col };
 }
 
 // ─── Public API ──────────────────────────────────────────────────────────────

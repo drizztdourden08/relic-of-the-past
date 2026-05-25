@@ -18,7 +18,7 @@ describe.skipIf(!romAvailable)('Desert ↔ Maze connectivity', () => {
   });
 
   it('checks border connectivity between 0x28 (Maze) and 0x30 (Desert NW)', () => {
-    const inv = new Set(['lift.0', 'lift.1']);
+    const inv = new Set(['lift.1', 'lift.2']);
 
     // Screen 0x28 = Kakariko Maze (row 5, col 0)
     const r28 = floodFillScreen(rom, 0x28, inv);
@@ -109,7 +109,7 @@ describe.skipIf(!romAvailable)('Desert ↔ Maze connectivity', () => {
   });
 
   it('checks screen-hop path from Desert Palace area to Maze', () => {
-    const inv = new Set(['lift.0', 'lift.1']);
+    const inv = new Set(['lift.1', 'lift.2']);
 
     // Screen 0x38 (Desert Palace SW) → Screen 0x28 (Kakariko Maze)
     const path = findScreenPath(rom, 0x38, 0x28, inv);
@@ -126,7 +126,7 @@ describe.skipIf(!romAvailable)('Desert ↔ Maze connectivity', () => {
   });
 
   it('attempts route from Desert Palace entrance to Maze Race finish', () => {
-    const inv = new Set(['lift.0', 'lift.1']);
+    const inv = new Set(['lift.1', 'lift.2']);
 
     // Desert Palace dungeon entrance region
     const source: Location = { regionId: 'lw-38' };
