@@ -26,7 +26,7 @@
     "version:patch": "npm version patch --no-git-tag-version",
     "version:minor": "npm version minor --no-git-tag-version",
     "version:major": "npm version major --no-git-tag-version",
-    "release": "npm version patch --no-git-tag-version && node -e \"const v='v'+require('./package.json').version;const{execSync:r}=require('child_process');r('git add package.json package-lock.json',{stdio:'inherit'});r(`git commit -m \\\"release: ${v}\\\"`,{stdio:'inherit'});r(`git tag ${v}`,{stdio:'inherit'});r('git push',{stdio:'inherit'});r(`git push origin ${v}`,{stdio:'inherit'});console.log(`\\nReleased ${v}`)\""
+    "release": "npm version patch --no-git-tag-version && node -e \"const v='v'+require('./package.json').version;const{execSync:r}=require('child_process');r('git add package.json package-lock.json',{stdio:'inherit'});r(`git commit -m \\\"release: ${v}\\\"`,{stdio:'inherit'});r(`git tag -f ${v}`,{stdio:'inherit'});r('git push',{stdio:'inherit'});r(`git push origin ${v}`,{stdio:'inherit'});console.log(`\\nReleased ${v}`)\""
   },
   "dependencies": {
     "@electron-toolkit/utils": "^4.0.0",
