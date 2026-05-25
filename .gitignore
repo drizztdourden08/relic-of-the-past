@@ -11,6 +11,9 @@ out/
 core/wasm-build/output/
 apps/desktop/public/wasm/
 
+# Extracted sprites (generated at runtime)
+apps/desktop/public/sprites/
+
 # Electron
 release/
 
