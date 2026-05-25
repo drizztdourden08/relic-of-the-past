@@ -5,7 +5,7 @@ module.exports = {
   npmRebuild: false,
   publish: [{
     provider: 'github',
-    owner: 'drizztdourden_',
+    owner: 'drizztdourden08',
     repo: 'relic-of-the-past',
   }],
   directories: {

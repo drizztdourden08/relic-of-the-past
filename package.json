@@ -5,6 +5,10 @@
   "description": "Relic of the Past – Electron + React + WASM",
   "author": "drizztdourden_",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/drizztdourden08/relic-of-the-past.git"
+  },
   "main": "dist/electron/main.js",
   "scripts": {
     "dev": "electron-vite dev",
