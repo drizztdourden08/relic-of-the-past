@@ -15,7 +15,6 @@ async function downloadToTemp(url: string, suffix = '.zip'): Promise<string> {
   const body = response.body;
   if (!body) throw new Error('Empty response body');
   const fileStream = createWriteStream(tempFile);
-  // @ts-expect-error - Node/Electron stream compatibility
   await pipeline(body, fileStream);
   return tempFile;
 }
