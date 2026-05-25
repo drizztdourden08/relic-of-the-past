@@ -19,7 +19,11 @@
     "package:mac": "rimraf release/mac && electron-vite build && electron-builder --mac --config electron-builder.config.js -c.directories.output=release/mac && rimraf release/mac/mac-arm64 release/mac/mac release/mac/.icon-ico release/mac/builder-debug.yml release/mac/builder-effective-config.yaml",
     "package:linux": "rimraf release/linux && electron-vite build && electron-builder --linux --config electron-builder.config.js -c.directories.output=release/linux && rimraf release/linux/linux-unpacked release/linux/.icon-ico release/linux/builder-debug.yml release/linux/builder-effective-config.yaml",
     "lint": "tsc --noEmit && eslint .",
-    "clean": "rimraf dist out release"
+    "clean": "rimraf dist out release",
+    "version:patch": "npm version patch --no-git-tag-version",
+    "version:minor": "npm version minor --no-git-tag-version",
+    "version:major": "npm version major --no-git-tag-version",
+    "release": "node -e \"const v='v'+require('./package.json').version;const{execSync:r}=require('child_process');r('git add package.json package-lock.json',{stdio:'inherit'});r(`git commit -m \\\"release: ${v}\\\"`,{stdio:'inherit'});r(`git tag ${v}`,{stdio:'inherit'});r('git push',{stdio:'inherit'});r('git push --tags',{stdio:'inherit'});console.log(`\\nReleased ${v}`)\""
   },
   "dependencies": {
     "@electron-toolkit/utils": "^4.0.0",
