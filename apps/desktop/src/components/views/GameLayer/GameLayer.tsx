@@ -10,6 +10,7 @@ import { ControllerDisconnectOverlay } from './sub-components/ControllerDisconne
 import { ConnectionOverlay } from './sub-components/ConnectionOverlay';
 import { ShadowEditorOverlay } from './sub-components/ShadowEditorOverlay';
 import { ShadowEditorPanel } from './sub-components/ShadowEditorPanel';
+import { ShadowElementList } from './sub-components/ShadowElementList';
 import { GameOverlay } from '../GameOverlay';
 import './GameLayer.css';
 import type { GameLayerProps } from './types';
@@ -35,6 +36,7 @@ const GameLayer = (props: GameLayerProps) => {
   const [controllerPaused, setControllerPaused] = useState(false);
   const [disconnectedName, setDisconnectedName] = useState('');
   const [bufSize, setBufSize] = useState({ w: 512, h: 448 });
+  const shadowDebugMode = useShadowEditorStore((s) => s.debugMode);
 
   // Compute fitted size using shared hook (same formula for canvas + overlay)
   const fitSize = useCanvasFit(containerRef, bufSize.w, bufSize.h, stretch);
@@ -241,26 +243,25 @@ const GameLayer = (props: GameLayerProps) => {
           const screenCol = Math.floor((vp.cameraX + 128) / 512) & 7;
           const screenRow = Math.floor((vp.cameraY + 112) / 512) & 7;
           screenId = screenRow * 8 + screenCol;
+
+          // Update viewport origin every frame (same coords as ConnectionOverlay)
+          const viewLeft = vp.cameraX - vp.extraLeftRight;
+          const viewTop = vp.cameraY;
+          renderer.setScreenOrigin(viewLeft, viewTop, vp.snesWidth, vp.snesHeight);
         }
 
         if (screenId !== prevScreenId || useShadowEditorStore.getState().dirty) {
           prevScreenId = screenId;
           const screenData = shadowProjectRef.current.screens[screenId] ?? null;
           renderer.setScreenData(screenData);
-          if (screenData && screenData.heightmap.length > 0) {
+          if (screenData && (screenData.heightmap.length > 0 || screenData.lights.length > 0)) {
             renderer.setEnabled(true);
           } else {
             renderer.setEnabled(false);
           }
         }
 
-        // Update viewport origin every frame (camera scrolls within a screen)
-        if (vp && vp.locationModule === 9) {
-          const viewLeft = vp.cameraX - vp.extraLeftRight;
-          const viewTop = vp.cameraY;
-          renderer.setScreenOrigin(viewLeft, viewTop);
-        }
-
+        renderer.setDebugMode(useShadowEditorStore.getState().debugMode);
         renderer.render(gameCanvas, time);
         shadowRafId = requestAnimationFrame(loop);
       };
@@ -284,7 +285,6 @@ const GameLayer = (props: GameLayerProps) => {
     };
   }, [status, canvasKey]);
 
-  // Start game when assets arrive
   useEffect(() => {
     if (assetData && status === 'idle' && canvasRef.current) {
       hasStartedRef.current = true;
@@ -362,9 +362,11 @@ const GameLayer = (props: GameLayerProps) => {
         key={`shadow-${canvasKey}`}
         ref={shadowCanvasRef}
         className={`game-layer__shadow-canvas${status !== 'running' ? ' game-layer__shadow-canvas--hidden' : ''}`}
+        style={shadowDebugMode ? { mixBlendMode: 'normal' } : undefined}
         width={512}
         height={448}
       />
+
       {controllerPaused && status === 'running' && disconnectedName && disconnectedName !== 'Manual pause' && (
         <ControllerDisconnectOverlay controllerName={disconnectedName} />
       )}
@@ -379,6 +381,7 @@ const GameLayer = (props: GameLayerProps) => {
       {status === 'running' && <ConnectionOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
       {status === 'running' && <ShadowEditorOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
       {status === 'running' && <ShadowEditorPanel />}
+      {status === 'running' && <ShadowElementList />}
       {status === 'running' && <GameOverlay width={fitSize.width} height={fitSize.height} />}
     </div>
   );

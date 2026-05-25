@@ -5,12 +5,14 @@ interface ShadowRenderer {
   render(gameCanvas: HTMLCanvasElement, time: number): void;
   /** Update the screen data (called on screen transitions) */
   setScreenData(data: ScreenShadowData | null): void;
-  /** Set the world-space origin of the current screen (for coordinate conversion) */
-  setScreenOrigin(worldX: number, worldY: number): void;
+  /** Set the viewport origin and size (called every frame for correct world-space alignment) */
+  setScreenOrigin(viewLeft: number, viewTop: number, snesWidth: number, snesHeight: number): void;
   /** Resize internal buffers to match game canvas */
   resize(width: number, height: number): void;
   /** Enable/disable rendering */
   setEnabled(enabled: boolean): void;
+  /** Toggle debug visualization mode */
+  setDebugMode(debug: boolean): void;
   /** Clean up GL resources */
   dispose(): void;
 }

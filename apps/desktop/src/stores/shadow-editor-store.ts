@@ -15,6 +15,10 @@ interface ShadowEditorStore {
   // ─── Visibility ───
   open: boolean;
   setOpen: (open: boolean) => void;
+  previewMode: boolean;
+  setPreviewMode: (preview: boolean) => void;
+  debugMode: boolean;
+  setDebugMode: (debug: boolean) => void;
 
   // ─── Project data ───
   project: ShadowCastingProject;
@@ -33,6 +37,7 @@ interface ShadowEditorStore {
   defaultSmoothing: number;
   defaultLightIntensity: number;
   defaultLightRadius: number;
+  heightLevels: { label: string; value: number }[];
 
   // ─── Freehand state ───
   freehandPoints: { x: number; y: number }[];
@@ -62,6 +67,9 @@ interface ShadowEditorStore {
   setDefaultSmoothing: (smoothing: number) => void;
   setDefaultLightIntensity: (intensity: number) => void;
   setDefaultLightRadius: (radius: number) => void;
+  addHeightLevel: (label: string, value: number) => void;
+  removeHeightLevel: (index: number) => void;
+  updateHeightLevel: (index: number, patch: { label?: string; value?: number }) => void;
 
   // Screen data mutations
   addHeightmapElement: (screenId: number, element: HeightmapElement) => void;
@@ -114,6 +122,10 @@ function pushUndo(state: ShadowEditorStore, screenId: number): { undoStack: Scre
 const useShadowEditorStore = create<ShadowEditorStore>((set, get) => ({
   open: false,
   setOpen: (open) => set({ open }),
+  previewMode: false,
+  setPreviewMode: (previewMode) => set({ previewMode }),
+  debugMode: false,
+  setDebugMode: (debugMode) => set({ debugMode }),
 
   project: { ...EMPTY_SHADOW_PROJECT },
   dirty: false,
@@ -124,9 +136,15 @@ const useShadowEditorStore = create<ShadowEditorStore>((set, get) => ({
   polygonCornerRadius: 0,
   heightPreset: '0.5',
   customHeight: 0.5,
-  defaultSmoothing: 4,
+  defaultSmoothing: 2,
   defaultLightIntensity: 0.8,
   defaultLightRadius: 64,
+  heightLevels: [
+    { label: 'Low', value: 0.25 },
+    { label: 'Mid', value: 0.5 },
+    { label: 'High', value: 0.75 },
+    { label: 'Wall', value: 1.0 },
+  ],
   freehandPoints: [],
   isDrawingFreehand: false,
   isDragging: false,
@@ -153,6 +171,12 @@ const useShadowEditorStore = create<ShadowEditorStore>((set, get) => ({
   setDefaultSmoothing: (smoothing) => set({ defaultSmoothing: smoothing }),
   setDefaultLightIntensity: (intensity) => set({ defaultLightIntensity: intensity }),
   setDefaultLightRadius: (radius) => set({ defaultLightRadius: radius }),
+
+  addHeightLevel: (label, value) => set((s) => ({ heightLevels: [...s.heightLevels, { label, value }] })),
+  removeHeightLevel: (index) => set((s) => ({ heightLevels: s.heightLevels.filter((_, i) => i !== index) })),
+  updateHeightLevel: (index, patch) => set((s) => ({
+    heightLevels: s.heightLevels.map((l, i) => i === index ? { ...l, ...patch } : l),
+  })),
 
   addHeightmapElement: (screenId, element) => {
     const state = get();

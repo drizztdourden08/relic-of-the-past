@@ -57,6 +57,7 @@ function createShadowRenderer(
     time: gl.getUniformLocation(shadowProg, 'u_time'),
     dayNightCycle: gl.getUniformLocation(shadowProg, 'u_dayNightCycle'),
     cycleSpeed: gl.getUniformLocation(shadowProg, 'u_cycleSpeed'),
+    debugMode: gl.getUniformLocation(shadowProg, 'u_debugMode'),
     numLights: gl.getUniformLocation(shadowProg, 'u_numLights'),
     lightPos: gl.getUniformLocation(shadowProg, 'u_lightPos'),
     lightColor: gl.getUniformLocation(shadowProg, 'u_lightColor'),
@@ -66,6 +67,7 @@ function createShadowRenderer(
 
   const blurUniforms = {
     texture: gl.getUniformLocation(blurProg, 'u_texture'),
+    heightmap: gl.getUniformLocation(blurProg, 'u_heightmap'),
     resolution: gl.getUniformLocation(blurProg, 'u_resolution'),
     radius: gl.getUniformLocation(blurProg, 'u_radius'),
     direction: gl.getUniformLocation(blurProg, 'u_direction'),
@@ -89,13 +91,14 @@ function createShadowRenderer(
   let blurFBO2 = createFBO(gl, width, height);
 
   // ─── Textures ───
+  // Heightmap is rebuilt every frame at viewport dimensions (matches game canvas exactly)
   const heightmapTex = gl.createTexture()!;
   gl.bindTexture(gl.TEXTURE_2D, heightmapTex);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-  // Initialize with empty heightmap
+  gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, width, height, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, new Uint8Array(width * height));
 
   const gameTex = gl.createTexture()!;
@@ -107,18 +110,25 @@ function createShadowRenderer(
 
   // ─── State ───
   let enabled = false;
+  let debugMode = false;
   let screenData: ScreenShadowData | null = null;
-  let heightmapDirty = false;
 
-  let screenWorldX = 0;
-  let screenWorldY = 0;
+  // Viewport world-space origin (viewLeft, viewTop) — updated every frame
+  let viewOriginX = 0;
+  let viewOriginY = 0;
+  // Viewport size in SNES pixels
+  let snesWidth = 512;
+  let snesHeight = 240;
 
   function rebuildHeightmap(): void {
     if (!screenData || screenData.heightmap.length === 0) return;
-    const texData = buildHeightmapTexture(screenData.heightmap, width, height, screenWorldX, screenWorldY);
+    // Build heightmap in viewport-local space, exactly matching the ConnectionOverlay's coords.
+    // offset = (viewLeft, viewTop) converts world coords → viewport-local coords.
+    const texData = buildHeightmapTexture(screenData.heightmap, snesWidth, snesHeight, viewOriginX, viewOriginY);
     gl.bindTexture(gl.TEXTURE_2D, heightmapTex);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, width, height, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, texData);
-    heightmapDirty = false;
+    // LUMINANCE = 1 byte/pixel; width may not be multiple of 4, so disable row alignment
+    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, snesWidth, snesHeight, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, texData);
   }
 
   function resizeFBOs(w: number, h: number): void {
@@ -130,7 +140,6 @@ function createShadowRenderer(
     blurFBO2 = createFBO(gl, w, h);
     width = w;
     height = h;
-    heightmapDirty = true;
   }
 
   const renderer: ShadowRenderer = {
@@ -142,9 +151,9 @@ function createShadowRenderer(
         return;
       }
 
-      if (heightmapDirty) {
-        rebuildHeightmap();
-      }
+      // Rebuild heightmap every frame at current viewport position
+      // (matches ConnectionOverlay's coordinate approach exactly)
+      rebuildHeightmap();
 
       // Upload game canvas as texture
       gl.bindTexture(gl.TEXTURE_2D, gameTex);
@@ -152,6 +161,12 @@ function createShadowRenderer(
 
       const lighting = screenData.lighting;
       const lightUniforms = computeLightUniforms(screenData.lights, gameCanvas);
+
+      // Offset light positions to viewport-local space
+      for (let i = 0; i < lightUniforms.numLights; i++) {
+        lightUniforms.positions[i * 3] -= viewOriginX;
+        lightUniforms.positions[i * 3 + 1] -= viewOriginY;
+      }
 
       // ─── Pass 1: Shadow computation ───
       gl.bindFramebuffer(gl.FRAMEBUFFER, shadowFBO.framebuffer);
@@ -166,7 +181,7 @@ function createShadowRenderer(
       gl.bindTexture(gl.TEXTURE_2D, gameTex);
       gl.uniform1i(shadowUniforms.gameTexture, 1);
 
-      gl.uniform2f(shadowUniforms.resolution, width, height);
+      gl.uniform2f(shadowUniforms.resolution, snesWidth, snesHeight);
       gl.uniform1f(shadowUniforms.sunEnabled, lighting.sunEnabled ? 1.0 : 0.0);
       gl.uniform1f(shadowUniforms.sunAngle, lighting.sunAngle * Math.PI / 180);
       gl.uniform1f(shadowUniforms.sunElevation, lighting.sunElevation * Math.PI / 180);
@@ -175,6 +190,7 @@ function createShadowRenderer(
       gl.uniform1f(shadowUniforms.time, time / 1000);
       gl.uniform1f(shadowUniforms.dayNightCycle, lighting.dayNightCycle ? 1.0 : 0.0);
       gl.uniform1f(shadowUniforms.cycleSpeed, lighting.cycleSpeed);
+      gl.uniform1f(shadowUniforms.debugMode, debugMode ? 1.0 : 0.0);
 
       // Upload light uniforms
       gl.uniform1i(shadowUniforms.numLights, lightUniforms.numLights);
@@ -187,7 +203,7 @@ function createShadowRenderer(
 
       // ─── Pass 2: Blur H ───
       const blurRadius = lighting.shadowSoftness * 8.0; // 0–8px blur
-      if (blurRadius > 0.1) {
+      if (blurRadius > 0.1 && !debugMode) {
         gl.bindFramebuffer(gl.FRAMEBUFFER, blurFBO1.framebuffer);
         gl.viewport(0, 0, width, height);
         gl.useProgram(blurProg);
@@ -195,6 +211,9 @@ function createShadowRenderer(
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, shadowFBO.texture);
         gl.uniform1i(blurUniforms.texture, 0);
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, heightmapTex);
+        gl.uniform1i(blurUniforms.heightmap, 1);
         gl.uniform2f(blurUniforms.resolution, width, height);
         gl.uniform1f(blurUniforms.radius, blurRadius);
         gl.uniform2f(blurUniforms.direction, 1.0, 0.0);
@@ -208,6 +227,9 @@ function createShadowRenderer(
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, blurFBO1.texture);
         gl.uniform1i(blurUniforms.texture, 0);
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, heightmapTex);
+        gl.uniform1i(blurUniforms.heightmap, 1);
         gl.uniform2f(blurUniforms.direction, 0.0, 1.0);
 
         drawQuad(gl, blurProg, quadBuffer);
@@ -223,7 +245,7 @@ function createShadowRenderer(
       gl.uniform1i(compositeUniforms.gameTexture, 0);
 
       gl.activeTexture(gl.TEXTURE1);
-      const lightTex = blurRadius > 0.1 ? blurFBO2.texture : shadowFBO.texture;
+      const lightTex = (blurRadius > 0.1 && !debugMode) ? blurFBO2.texture : shadowFBO.texture;
       gl.bindTexture(gl.TEXTURE_2D, lightTex);
       gl.uniform1i(compositeUniforms.lightTexture, 1);
 
@@ -232,19 +254,16 @@ function createShadowRenderer(
 
     setScreenData(data: ScreenShadowData | null): void {
       screenData = data;
-      heightmapDirty = true;
       if (!data || (data.heightmap.length === 0 && data.lights.length === 0)) {
         enabled = false;
       }
     },
 
-    setScreenOrigin(worldX: number, worldY: number): void {
-      // Only rebuild if origin moved significantly (avoids per-pixel rebuilds during scrolling)
-      if (Math.abs(screenWorldX - worldX) > 2 || Math.abs(screenWorldY - worldY) > 2) {
-        screenWorldX = worldX;
-        screenWorldY = worldY;
-        heightmapDirty = true;
-      }
+    setScreenOrigin(viewLeft: number, viewTop: number, viewWidth: number, viewHeight: number): void {
+      viewOriginX = viewLeft;
+      viewOriginY = viewTop;
+      snesWidth = viewWidth;
+      snesHeight = viewHeight;
     },
 
     resize(w: number, h: number): void {
@@ -256,6 +275,10 @@ function createShadowRenderer(
 
     setEnabled(value: boolean): void {
       enabled = value;
+    },
+
+    setDebugMode(value: boolean): void {
+      debugMode = value;
     },
 
     dispose(): void {

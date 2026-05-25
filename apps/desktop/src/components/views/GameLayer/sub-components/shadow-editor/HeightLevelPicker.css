@@ -1,0 +1,43 @@
+.height-level-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.height-level-picker__btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.08));
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-text-secondary, rgba(255, 255, 255, 0.7));
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.height-level-picker__btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.height-level-picker__btn--active {
+  background: var(--color-accent-bg, rgba(74, 158, 255, 0.15));
+  border-color: var(--color-accent, #4a9eff);
+  color: var(--color-text-primary, #fff);
+}
+
+.height-level-picker__swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.height-level-picker__label {
+  flex: 1;
+  text-align: left;
+}

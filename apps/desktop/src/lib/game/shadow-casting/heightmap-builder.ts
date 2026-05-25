@@ -36,7 +36,7 @@ function rasterizeElement(
   offsetX: number,
   offsetY: number,
 ): void {
-  const { shape, height, smoothing } = element;
+  const { shape, height } = element;
 
   // Convert world-space shape to screen-local coordinates
   const localShape: ShapeDefinition = {
@@ -46,36 +46,26 @@ function rasterizeElement(
     points: shape.points?.map(p => ({ x: p.x - offsetX, y: p.y - offsetY })),
   };
 
-  // Compute bounding box for the shape
+  // Compute bounding box for the shape (no margin needed — hard edges)
   const halfW = localShape.width / 2;
   const halfH = localShape.height / 2;
-  const margin = smoothing;
 
-  const minX = Math.max(0, Math.floor(localShape.x - halfW - margin));
-  const maxX = Math.min(bufWidth - 1, Math.ceil(localShape.x + halfW + margin));
-  const minY = Math.max(0, Math.floor(localShape.y - halfH - margin));
-  const maxY = Math.min(bufHeight - 1, Math.ceil(localShape.y + halfH + margin));
+  const minX = Math.max(0, Math.floor(localShape.x - halfW));
+  const maxX = Math.min(bufWidth - 1, Math.ceil(localShape.x + halfW));
+  const minY = Math.max(0, Math.floor(localShape.y - halfH));
+  const maxY = Math.min(bufHeight - 1, Math.ceil(localShape.y + halfH));
 
   for (let py = minY; py <= maxY; py++) {
     for (let px = minX; px <= maxX; px++) {
       const dist = distanceToShape(px, py, localShape);
-      let value: number;
 
       if (dist <= 0) {
-        // Inside shape
-        value = height;
-      } else if (smoothing > 0 && dist < smoothing) {
-        // In smoothing zone — linear falloff
-        value = height * (1 - dist / smoothing);
-      } else {
-        continue;
-      }
-
-      const idx = py * bufWidth + px;
-      // Max blend: tallest element wins
-      const byteVal = Math.round(value * 255);
-      if (byteVal > buffer[idx]) {
-        buffer[idx] = byteVal;
+        // Inside shape — hard edge, full height
+        const idx = py * bufWidth + px;
+        const byteVal = Math.round(height * 255);
+        if (byteVal > buffer[idx]) {
+          buffer[idx] = byteVal;
+        }
       }
     }
   }

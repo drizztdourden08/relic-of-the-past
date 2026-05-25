@@ -3,78 +3,122 @@
   top: 8px;
   right: 8px;
   bottom: 8px;
-  width: 280px;
+  width: 260px;
   z-index: 100;
-  background: var(--color-surface-overlay, rgba(20, 20, 30, 0.92));
+  background: var(--color-surface-overlay, rgba(20, 20, 30, 0.95));
   border: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.08));
   border-radius: 8px;
-  overflow-y: auto;
-  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
   backdrop-filter: blur(8px);
-  scrollbar-width: thin;
+  overflow: hidden; /* Don't overflow the outer container */
 }
 
+/* ─── Header ─── */
 .shadow-editor-panel__header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding-bottom: 8px;
+  gap: 6px;
+  padding: 8px 10px;
   border-bottom: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.08));
+  flex-shrink: 0;
 }
 
 .shadow-editor-panel__title {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--color-text-primary, #fff);
   flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .shadow-editor-panel__dirty {
   color: var(--color-accent, #ff8800);
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .shadow-editor-panel__actions {
   display: flex;
-  gap: 4px;
+  gap: 2px;
   align-items: center;
 }
 
-.shadow-editor-panel__row {
+/* ─── Toolbar ─── */
+.shadow-editor-panel__toolbar {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.06));
+  flex-shrink: 0;
+}
+
+/* ─── Tool Options (between toolbar and body) ─── */
+.shadow-editor-panel__tool-opts {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.06));
   display: flex;
+  flex-direction: column;
   gap: 8px;
+  flex-shrink: 0;
 }
 
-.shadow-editor-panel__row > * {
+/* ─── Scrollable Body ─── */
+.shadow-editor-panel__body {
   flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 10px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
 
-.shadow-editor-panel__info {
-  font-size: 11px;
-  color: var(--color-text-secondary, rgba(255, 255, 255, 0.5));
-  text-align: center;
-  padding-top: 8px;
-  border-top: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.08));
+.shadow-editor-panel__body::-webkit-scrollbar {
+  width: 4px;
 }
 
-.shadow-editor-panel__field {
+.shadow-editor-panel__body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+
+/* ─── Field Rows ─── */
+.shadow-editor-panel__field-row {
   display: flex;
-  align-items: center;
   gap: 6px;
-  font-size: 12px;
-  color: var(--color-text-secondary, rgba(255, 255, 255, 0.7));
 }
 
-.shadow-editor-panel__field input {
-  width: 100%;
-  background: var(--color-input-bg, rgba(255, 255, 255, 0.06));
-  border: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.1));
-  border-radius: 4px;
-  color: var(--color-text-primary, #fff);
-  padding: 4px 6px;
-  font-size: 12px;
-  font-family: monospace;
+.shadow-editor-panel__field-row > * {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ─── Subsections ─── */
+.shadow-editor-panel__subsection {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.shadow-editor-panel__sublabel {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-secondary, rgba(255, 255, 255, 0.6));
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ─── Footer ─── */
+.shadow-editor-panel__footer {
+  font-size: 10px;
+  color: var(--color-text-secondary, rgba(255, 255, 255, 0.4));
+  text-align: center;
+  padding: 6px 10px;
+  border-top: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.06));
+  flex-shrink: 0;
+}
+
+/* ─── Active icon button state ─── */
+.icon-btn--active {
+  background: var(--color-accent-bg, rgba(74, 158, 255, 0.2)) !important;
+  color: var(--color-accent, #4a9eff) !important;
 }
