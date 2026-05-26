@@ -159,7 +159,12 @@ describe.skipIf(!romAvailable)('Bush/Corridor Diagnostic', () => {
     logPoint('displayed', s24, 50, 48);
     logPoint('transposed', s24, 48, 50);
 
+    console.log('\n=== Screen 0x24 newly reported tile [54,53] (should be reachable/pink after lift.1) ===');
+    logPoint('displayed', s24, 54, 53);
+    logPoint('transposed', s24, 53, 54);
+
     dumpArea('0x24 displayed [row=56,col=25]', s24.attrGrid, s24.reachable, s24.reqGrid, 56, 25, 4);
     dumpArea('0x24 displayed [row=50,col=48]', s24.attrGrid, s24.reachable, s24.reqGrid, 50, 48, 4);
+    dumpArea('0x24 displayed [row=54,col=53]', s24.attrGrid, s24.reachable, s24.reqGrid, 54, 53, 4);
   });
 });

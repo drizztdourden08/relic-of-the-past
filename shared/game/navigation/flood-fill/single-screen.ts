@@ -156,7 +156,14 @@ function getClearanceRequirement(
   for (const [r, c] of perps) {
     if (r < 0 || r >= GRID_SIZE || c < 0 || c >= GRID_SIZE) continue;
     const t = grid[r][c];
-    if (t.type === 'obstacle' && inventory.has(t.req as string) && reached[r][c] !== null) {
+    if (
+      t.type === 'obstacle' &&
+      inventory.has(t.req as string) &&
+      (
+        reached[r][c] !== null ||
+        (enteringTile.type === 'obstacle' && enteringTile.req === t.req)
+      )
+    ) {
       return { passes: true, req: t.req as string };
     }
     if (t.type === 'water' && inventory.has('flippers') && reached[r][c] !== null) {
