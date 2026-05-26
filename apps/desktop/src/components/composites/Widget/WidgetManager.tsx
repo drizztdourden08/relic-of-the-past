@@ -7,10 +7,11 @@
  *  - Filter widgets by visibility mode vs current app state (game-only vs always)
  *  - Provide update/close callbacks that propagate to store
  */
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useEffect } from 'react';
 import type { WidgetLayout, WidgetState } from './types';
 import { Widget } from './Widget';
 import { computeDockedStyles } from './behavior/computeDockedStyles';
+import { useExclusiveInsetsStore } from './behavior/exclusiveInsetsStore';
 
 interface WidgetManagerProps {
   layout: WidgetLayout;
@@ -34,8 +35,14 @@ const WidgetManager = (props: WidgetManagerProps) => {
     });
   }, [layout.widgets, gameRunning]);
 
-  // Compute docked layout positions
-  const dockedStyles = useMemo(() => computeDockedStyles(activeWidgets), [activeWidgets]);
+  // Compute docked layout positions + exclusive insets
+  const { styles: dockedStyles, exclusiveInsets } = useMemo(() => computeDockedStyles(activeWidgets), [activeWidgets]);
+
+  // Publish exclusive insets to global store so GameLayer can consume them
+  const setInsets = useExclusiveInsetsStore((s) => s.setInsets);
+  useEffect(() => {
+    setInsets(exclusiveInsets);
+  }, [exclusiveInsets, setInsets]);
 
   return (
     <div className="widget-manager">

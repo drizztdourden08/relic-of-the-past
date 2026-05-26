@@ -138,6 +138,17 @@ interface ViewportInfo {
   linkY: number;
 }
 
+export interface LiveSpriteInfo {
+  slot: number;
+  type: number;
+  state: number;
+  subtype: number;
+  subtype2: number;
+  e: number;
+  x: number;
+  y: number;
+}
+
 /**
  * Read viewport/game-state info from WASM for shader edge detection.
  * Returns null if the module isn't running or the export doesn't exist yet.
@@ -253,6 +264,172 @@ function wasmGetMenuState(): number {
   }
 }
 
+export interface OverworldVariantInfo {
+  /** sram_progress_indicator: 0=intro, 1=post-uncle, 2=zelda-rescued, 3=agahnim-defeated */
+  progressIndicator: number;
+  /** save_ow_event_info[screen] for the current screen */
+  screenEventFlags: number;
+  /** Whether the event overlay has been applied (bit 0x20) */
+  eventOverlayActive: boolean;
+  /** Human label for the current variant phase */
+  phaseLabel: string;
+}
+
+const PHASE_LABELS = ['intro', 'rain (pre-Sanctuary)', 'post-Sanctuary', 'post-Agahnim'];
+
+/**
+ * Read the current overworld variant state: progress tier + per-screen event flags.
+ */
+function wasmGetOverworldVariant(screenIndex: number): OverworldVariantInfo | null {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return null;
+  try {
+    const heap = mod.HEAPU8;
+
+    const progPtr = mod.ccall('WasmGetProgressFlags', 'number', [], []) as number;
+    if (!progPtr) return null;
+    const progressIndicator = heap[progPtr];
+
+    const owPtr = mod.ccall('WasmGetOverworldFlags', 'number', [], []) as number;
+    if (!owPtr) return null;
+    const screenEventFlags = heap[owPtr + (screenIndex & 0x7F)];
+    const eventOverlayActive = !!(screenEventFlags & 0x20);
+
+    return {
+      progressIndicator,
+      screenEventFlags,
+      eventOverlayActive,
+      phaseLabel: PHASE_LABELS[progressIndicator] ?? `unknown (${progressIndicator})`,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Read current indoor room collision attrs (64x64) from dung_bg2_attr_table.
+ * Uses Link's active layer (upper/lower) to pick the proper 0x1000-page.
+ */
+function wasmGetIndoorAttrGrid(): number[][] | null {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return null;
+  try {
+    const ptr = mod.ccall('WasmGetIndoorAttrTable', 'number', [], []) as number;
+    if (!ptr) return null;
+    const lower = (mod.ccall('WasmGetLinkIsOnLowerLevel', 'number', [], []) as number) !== 0;
+    const base = ptr + (lower ? 0x1000 : 0);
+    const heap = mod.HEAPU8;
+    const out: number[][] = Array.from({ length: 64 }, () => new Array<number>(64));
+    for (let r = 0; r < 64; r++) {
+      const rowBase = base + r * 64;
+      for (let c = 0; c < 64; c++) {
+        out[r][c] = heap[rowBase + c];
+      }
+    }
+    return out;
+  } catch {
+    return null;
+  }
+}
+
+/** Get active Uncle sprite blocker coordinates for indoor early-game variants. */
+function wasmGetIndoorUncleBlockers(): Array<{ x: number; y: number }> {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return [];
+  try {
+    const ptr = mod.ccall('WasmGetIndoorUncleBlockers', 'number', [], []) as number;
+    if (!ptr) return [];
+    const heap = mod.HEAPU8;
+    const count = Math.min(heap[ptr], 2);
+    const out: Array<{ x: number; y: number }> = [];
+    for (let i = 0; i < count; i++) {
+      const o = ptr + 1 + i * 4;
+      const x = heap[o + 0] | (heap[o + 1] << 8);
+      const y = heap[o + 2] | (heap[o + 3] << 8);
+      out.push({ x, y });
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+
+/** Get live dynamic blocker coordinates used by navigation flood fill. */
+function wasmGetNavigationBlockers(): Array<{ x: number; y: number }> {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return [];
+  try {
+    const ptr = mod.ccall('WasmGetNavigationBlockers', 'number', [], []) as number;
+    if (!ptr) return [];
+    const heap = mod.HEAPU8;
+    const count = Math.min(heap[ptr], 16);
+    const out: Array<{ x: number; y: number }> = [];
+    for (let i = 0; i < count; i++) {
+      const o = ptr + 1 + i * 4;
+      const x = heap[o + 0] | (heap[o + 1] << 8);
+      const y = heap[o + 2] | (heap[o + 3] << 8);
+      out.push({ x, y });
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+
+/** Read all currently active live sprites with debug metadata. */
+function wasmGetLiveSprites(): LiveSpriteInfo[] {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return [];
+  try {
+    const ptr = mod.ccall('WasmGetLiveSprites', 'number', [], []) as number;
+    if (!ptr) return [];
+    const heap = mod.HEAPU8;
+    const count = Math.min(heap[ptr], 16);
+    const out: LiveSpriteInfo[] = [];
+    for (let i = 0; i < count; i++) {
+      const o = ptr + 1 + i * 10;
+      out.push({
+        slot: heap[o + 0],
+        type: heap[o + 1],
+        state: heap[o + 2],
+        subtype: heap[o + 3],
+        subtype2: heap[o + 4],
+        e: heap[o + 5],
+        x: heap[o + 6] | (heap[o + 7] << 8),
+        y: heap[o + 8] | (heap[o + 9] << 8),
+      });
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Read static overworld tutorial guard spawn positions (0x3F/0x40) for the
+ * current area, independent of camera proximity loading.
+ */
+function wasmGetOverworldGuardSpawns(): Array<{ x: number; y: number }> {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return [];
+  try {
+    const ptr = mod.ccall('WasmGetOverworldGuardSpawns', 'number', [], []) as number;
+    if (!ptr) return [];
+    const heap = mod.HEAPU8;
+    const count = Math.min(heap[ptr], 16);
+    const out: Array<{ x: number; y: number }> = [];
+    for (let i = 0; i < count; i++) {
+      const o = ptr + 1 + i * 4;
+      const x = heap[o + 0] | (heap[o + 1] << 8);
+      const y = heap[o + 2] | (heap[o + 3] << 8);
+      out.push({ x, y });
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+
 export {
   getGameState,
   getModule,
@@ -266,6 +443,12 @@ export {
   wasmCheat,
   wasmGetGameUIState,
   wasmGetMenuState,
+  wasmGetIndoorAttrGrid,
+  wasmGetIndoorUncleBlockers,
+  wasmGetLiveSprites,
+  wasmGetNavigationBlockers,
+  wasmGetOverworldGuardSpawns,
+  wasmGetOverworldVariant,
   wasmGetPaused,
   wasmGetUIOverlayMode,
   wasmGetViewportInfo,
@@ -276,4 +459,4 @@ export {
   wasmSetUIOverlayMode,
   wasmTogglePause
 };
-export type { ViewportInfo };
+export type { LiveSpriteInfo, OverworldVariantInfo, ViewportInfo };

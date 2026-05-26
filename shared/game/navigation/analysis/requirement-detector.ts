@@ -13,7 +13,7 @@ import { findBorderBundles, type BorderBundle } from './border-bundles';
 
 /** Items tested in order of unlock frequency */
 const ITEM_PROGRESSION: TraversalRequirement[] = [
-  'lift.1', 'lift.2', 'boots', 'flippers', 'hammer', 'hookshot', 'bombs',
+  'lift.1', 'lift.2', 'lift.3', 'boots', 'flippers', 'hammer', 'hookshot', 'bombs',
   'sword', 'boomerang', 'mirror', 'firerod', 'lamp',
 ];
 

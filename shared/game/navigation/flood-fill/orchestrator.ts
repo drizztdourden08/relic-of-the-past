@@ -1,17 +1,19 @@
 import type { RomData } from '../../../asset-extraction/rom/rom-types';
 import type {
   FloodFillResult, OverworldEntrance, LedgeTraversal,
-  EngineCache, GridPos, CollisionGrid,
+  EngineCache, GridPos, CollisionGrid, ScreenVariant,
 } from '../types';
+import type { TileAttrContext } from '../tile-attrs';
 import { GRID_SIZE } from '../types';
 import { unmetRequirements } from '../core/inventory';
 import {
   loadMap32Tables, loadMap16ToMap8, loadMap8ToAttr, decompressScreen,
   ADDR_OW_ENTRANCE_AREA, ADDR_OW_ENTRANCE_POS, ADDR_OW_ENTRANCE_ID, ADDR_ENTRANCE_ROOM,
 } from '../screen-data';
-import { buildCollisionGrid } from '../screen-data/collision-grid';
+import { buildCollisionGrid, buildCollisionGridFromRawAttr } from '../screen-data/collision-grid';
 import { processStraightCliffs, processDiagonalCliffs, processSouthCliffs } from '../screen-data/cliff-preprocessing';
 import { floodFillBFS } from './single-screen';
+import { getOverlayPatches, type VariantState } from '../screen-data/event-overlays';
 
 // ─── Engine Cache ────────────────────────────────────────────────────────────
 
@@ -58,37 +60,109 @@ function loadOverworldEntrances(rom: RomData): OverworldEntrance[] {
 
 // ─── Screen Preparation ──────────────────────────────────────────────────────
 
-function prepareScreen(rom: RomData, screenIndex: number): { grid: CollisionGrid; ledges: LedgeTraversal[] } {
+function prepareScreen(
+  rom: RomData,
+  screenIndex: number,
+  variant?: ScreenVariant,
+  tileContext: TileAttrContext = 'overworld',
+  rawAttrOverride?: number[][],
+  dynamicBlockers?: GridPos[],
+): { grid: CollisionGrid; ledges: LedgeTraversal[]; dynamicBlockerCells: GridPos[] } {
   const engine = getEngine(rom);
+  const dynamicBlockerCells: GridPos[] = [];
+
+  const applyDynamicBlockers = (grid: CollisionGrid): void => {
+    if (!dynamicBlockers?.length) return;
+    const seen = new Set<string>();
+    for (const b of dynamicBlockers) {
+      for (let dr = 0; dr < 2; dr++) {
+        for (let dc = 0; dc < 2; dc++) {
+          const rr = b.row + dr;
+          const cc = b.col + dc;
+          if (rr < 0 || rr >= GRID_SIZE || cc < 0 || cc >= GRID_SIZE) continue;
+          grid.rawAttr[rr][cc] = 0x01;
+          grid.tiles[rr][cc] = { type: 'blocked' };
+          const key = `${rr},${cc}`;
+          if (!seen.has(key)) {
+            seen.add(key);
+            dynamicBlockerCells.push({ row: rr, col: cc });
+          }
+        }
+      }
+    }
+  };
+
+  if (rawAttrOverride) {
+    const grid = buildCollisionGridFromRawAttr(rawAttrOverride, tileContext);
+    applyDynamicBlockers(grid);
+    return { grid, ledges: [], dynamicBlockerCells };
+  }
+
   const map16 = decompressScreen(rom, screenIndex, engine.map32);
-  const grid = buildCollisionGrid(map16, engine.map16ToMap8, engine.map8ToAttr);
+
+  // Apply event overlay patches to the Map16 buffer before building collision grid
+  if (variant) {
+    const vs: VariantState = { eventFlags: variant.eventFlags };
+    const patches = getOverlayPatches(screenIndex, vs);
+    for (const p of patches) {
+      map16[p.row * 32 + p.col] = p.tile;
+    }
+  }
+
+  const grid = buildCollisionGrid(map16, engine.map16ToMap8, engine.map8ToAttr, tileContext);
+  applyDynamicBlockers(grid);
 
   const ledges: LedgeTraversal[] = [];
   processStraightCliffs(grid.tiles, grid.rawAttr, ledges);
   processDiagonalCliffs(grid.tiles, grid.rawAttr, ledges);
   processSouthCliffs(grid.tiles, grid.rawAttr, ledges);
 
-  return { grid, ledges };
+  return { grid, ledges, dynamicBlockerCells };
 }
 
 function findStartPosition(grid: CollisionGrid, startPos?: GridPos): GridPos {
-  const row = startPos?.row ?? 32;
-  const col = startPos?.col ?? 32;
+  const row = Math.max(0, Math.min(GRID_SIZE - 1, startPos?.row ?? 32));
+  const col = Math.max(0, Math.min(GRID_SIZE - 1, startPos?.col ?? 32));
 
-  if (grid.tiles[row]?.[col]?.type === 'free') return { row, col };
+  // Prefer local tiles first (requested tile + immediate neighbors), center-biased.
+  // This keeps fallback inside Link's body footprint before stepping outside.
+  const local: GridPos[] = [
+    { row, col },
+    { row, col: col + 1 },
+    { row, col: col - 1 },
+    { row: row + 1, col },
+    { row: row - 1, col },
+    { row: row + 1, col: col + 1 },
+    { row: row + 1, col: col - 1 },
+    { row: row - 1, col: col + 1 },
+    { row: row - 1, col: col - 1 },
+  ];
+  for (const p of local) {
+    if (p.row >= 0 && p.row < GRID_SIZE && p.col >= 0 && p.col < GRID_SIZE && grid.tiles[p.row][p.col].type === 'free') {
+      return p;
+    }
+  }
 
-  // Spiral search outward from the requested position
-  for (let radius = 1; radius < GRID_SIZE; radius++) {
-    for (let dr = -radius; dr <= radius; dr++) {
-      for (let dc = -radius; dc <= radius; dc++) {
-        if (Math.abs(dr) !== radius && Math.abs(dc) !== radius) continue; // only perimeter
-        const r = row + dr, c = col + dc;
-        if (r >= 0 && r < GRID_SIZE && c >= 0 && c < GRID_SIZE && grid.tiles[r][c].type === 'free') {
-          return { row: r, col: c };
-        }
+  // Fallback: pick nearest free tile to the geometric center of Link's 2x2 footprint.
+  // This avoids external/top-left bias from directional spiral scans.
+  const centerRow = row + 0.5;
+  const centerCol = col + 0.5;
+  let best: GridPos | null = null;
+  let bestD2 = Number.POSITIVE_INFINITY;
+  for (let r = 0; r < GRID_SIZE; r++) {
+    for (let c = 0; c < GRID_SIZE; c++) {
+      if (grid.tiles[r][c].type !== 'free') continue;
+      const dr = r - centerRow;
+      const dc = c - centerCol;
+      const d2 = dr * dr + dc * dc;
+      if (d2 < bestD2) {
+        bestD2 = d2;
+        best = { row: r, col: c };
       }
     }
   }
+  if (best) return best;
+
   return { row, col };
 }
 
@@ -103,18 +177,24 @@ export function floodFillScreen(
   screenIndex: number,
   inventory?: Set<string>,
   startPos?: GridPos,
+  variant?: ScreenVariant,
+  tileContext: TileAttrContext = 'overworld',
+  rawAttrOverride?: number[][],
+  dynamicBlockers?: GridPos[],
 ): FloodFillResult {
   const engine = getEngine(rom);
-  const { grid, ledges } = prepareScreen(rom, screenIndex);
+  const { grid, ledges, dynamicBlockerCells } = prepareScreen(rom, screenIndex, variant, tileContext, rawAttrOverride, dynamicBlockers);
 
-  const screenEntrances = engine.entrances.filter(e => (e.area & 0x3f) === (screenIndex & 0x3f));
+  // Only match entrances with exact area match.
+  // (Areas 0x40+ are small-screen variants of 0x00-0x3F — don't merge them)
+  const screenEntrances = engine.entrances.filter(e => e.area === screenIndex);
   const entrancePositions = screenEntrances.map(e => ({ row: e.gridRow, col: e.gridCol, idx: e.id }));
 
   const start = findStartPosition(grid, startPos);
   const inv = inventory ?? new Set<string>();
 
-  const { reachable, transitions, reachableCount, reqGrid } = floodFillBFS(
-    grid.tiles, start.row, start.col, entrancePositions, inv,
+  const { reachable, transitions, reachableCount, reqGrid, hookTargets } = floodFillBFS(
+    grid.tiles, start.row, start.col, entrancePositions, inv, grid.rawAttr, tileContext,
   );
 
   // Filter ledges to only reachable ones
@@ -141,15 +221,20 @@ export function floodFillScreen(
 
   return {
     screenIndex,
+    tileContext,
+    startPos: start,
     reachable,
     transitions,
     reachableCount,
     totalTiles: GRID_SIZE * GRID_SIZE,
     entrances: screenEntrances,
     ledges: reachableLedges,
+    hookTargets,
     attrGrid: grid.rawAttr,
     reqGrid,
+    dynamicBlockerCells,
     borders,
+    variant,
   };
 }
 

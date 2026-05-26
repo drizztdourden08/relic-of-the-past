@@ -109,6 +109,21 @@ const WidgetSettings = (props: WidgetSettingsProps) => {
           />
         </div>
 
+        {/* Default: exclusive (only when docked) */}
+        {widget.mode === 'docked' && (
+          <div className="widget-settings__row">
+            <span className="widget-settings__label">Exclusive</span>
+            <label className="widget-settings__toggle">
+              <input
+                type="checkbox"
+                checked={widget.exclusive ?? false}
+                onChange={(e) => onChange({ exclusive: e.target.checked })}
+              />
+              <span className="widget-settings__toggle-hint">Shrink game area</span>
+            </label>
+          </div>
+        )}
+
         {/* Widget-specific options */}
         {children && (
           <>

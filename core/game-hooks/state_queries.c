@@ -146,3 +146,197 @@ int WasmGetViewportInfo(void) {
   g_viewport_buf[19] = (ly >> 8) & 0xFF;
   return (int)g_viewport_buf;
 }
+
+// ─── Indoor Collision Attr Table ───
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetIndoorAttrTable(void) {
+  // 0x0000..0x0FFF = upper layer attrs, 0x1000..0x1FFF = lower layer attrs
+  return (int)dung_bg2_attr_table;
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetLinkIsOnLowerLevel(void) {
+  return link_is_on_lower_level ? 1 : 0;
+}
+
+// ─── Indoor Dynamic Blockers (Early-game Uncle) ───
+
+static uint8 g_indoor_uncle_blockers_buf[1 + 2 * 4];
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetIndoorUncleBlockers(void) {
+  // Buffer format:
+  // [0] = count (0..2)
+  // then per entry 4 bytes: xLo, xHi, yLo, yHi
+  g_indoor_uncle_blockers_buf[0] = 0;
+  if (!player_is_indoors)
+    return (int)g_indoor_uncle_blockers_buf;
+
+  uint8 count = 0;
+  for (int k = 15; k >= 0 && count < 2; k--) {
+    if (!sprite_state[k])
+      continue;
+    if (sprite_type[k] != 0x73)
+      continue; // UncleAndPriest family
+    if (sprite_E[k] != 0)
+      continue; // only Uncle variant, not priest/mantle
+
+    int o = 1 + count * 4;
+    g_indoor_uncle_blockers_buf[o + 0] = sprite_x_lo[k];
+    g_indoor_uncle_blockers_buf[o + 1] = sprite_x_hi[k];
+    g_indoor_uncle_blockers_buf[o + 2] = sprite_y_lo[k];
+    g_indoor_uncle_blockers_buf[o + 3] = sprite_y_hi[k];
+    count++;
+  }
+
+  g_indoor_uncle_blockers_buf[0] = count;
+  return (int)g_indoor_uncle_blockers_buf;
+}
+
+static uint8 g_nav_blockers_buf[1 + 16 * 4];
+
+static bool IsOverworldGuardBlockerType(uint8 type) {
+  switch (type) {
+    case 0x3F: // Tutorial guard/barrier
+    case 0x40: // Tutorial guard/barrier
+    case 0x41: // Blue guard
+    case 0x45: // Spear trooper
+    case 0x46: // Blue archer
+    case 0x47: // Green bush guard
+    case 0x48: // Red javelin guard
+    case 0x49: // Red bush guard
+    case 0x4A: // Bomb guard
+    case 0x4B: // Green knife guard
+      return true;
+    default:
+      return false;
+  }
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetNavigationBlockers(void) {
+  // Buffer format:
+  // [0] = count (0..16)
+  // then per entry 4 bytes: xLo, xHi, yLo, yHi
+  g_nav_blockers_buf[0] = 0;
+
+  uint8 count = 0;
+  for (int k = 15; k >= 0 && count < 16; k--) {
+    if (!sprite_state[k])
+      continue;
+
+    bool include = false;
+    const uint8 type = sprite_type[k];
+
+    if (player_is_indoors) {
+      // Uncle blocks paths in house/passage until sequence progression.
+      if (type == 0x73 && sprite_E[k] == 0) {
+        include = true;
+      }
+    } else {
+      // Overworld guard/NPC bodies can physically gate routes.
+      if (IsOverworldGuardBlockerType(type)) {
+        include = true;
+      }
+    }
+
+    if (!include)
+      continue;
+
+    int o = 1 + count * 4;
+    g_nav_blockers_buf[o + 0] = sprite_x_lo[k];
+    g_nav_blockers_buf[o + 1] = sprite_x_hi[k];
+    g_nav_blockers_buf[o + 2] = sprite_y_lo[k];
+    g_nav_blockers_buf[o + 3] = sprite_y_hi[k];
+    count++;
+  }
+
+  g_nav_blockers_buf[0] = count;
+  return (int)g_nav_blockers_buf;
+}
+
+static uint8 g_live_sprites_buf[1 + 16 * 10];
+static uint8 g_overworld_guard_spawns_buf[1 + 16 * 4];
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetLiveSprites(void) {
+  // Buffer format:
+  // [0] = count (0..16)
+  // per sprite (10 bytes):
+  // [0] slot, [1] type, [2] state, [3] subtype, [4] subtype2, [5] sprite_E,
+  // [6] xLo, [7] xHi, [8] yLo, [9] yHi
+  g_live_sprites_buf[0] = 0;
+
+  uint8 count = 0;
+  for (int k = 15; k >= 0 && count < 16; k--) {
+    if (!sprite_state[k])
+      continue;
+
+    int o = 1 + count * 10;
+    g_live_sprites_buf[o + 0] = (uint8)k;
+    g_live_sprites_buf[o + 1] = sprite_type[k];
+    g_live_sprites_buf[o + 2] = sprite_state[k];
+    g_live_sprites_buf[o + 3] = sprite_subtype[k];
+    g_live_sprites_buf[o + 4] = sprite_subtype2[k];
+    g_live_sprites_buf[o + 5] = sprite_E[k];
+    g_live_sprites_buf[o + 6] = sprite_x_lo[k];
+    g_live_sprites_buf[o + 7] = sprite_x_hi[k];
+    g_live_sprites_buf[o + 8] = sprite_y_lo[k];
+    g_live_sprites_buf[o + 9] = sprite_y_hi[k];
+    count++;
+  }
+
+  g_live_sprites_buf[0] = count;
+  return (int)g_live_sprites_buf;
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetOverworldGuardSpawns(void) {
+  // Buffer format:
+  // [0] = count (0..16)
+  // then per entry 4 bytes: xLo, xHi, yLo, yHi
+  g_overworld_guard_spawns_buf[0] = 0;
+
+  if (player_is_indoors)
+    return (int)g_overworld_guard_spawns_buf;
+
+  // The overworld engine proximity-loads sprites into sprite_state[].
+  // For flood-fill we also need static guard spawn locations even when unloaded.
+  uint8 count = 0;
+  const uint8 base_x_hi = HIBYTE(sprcoll_x_base);
+  const uint8 base_y_hi = HIBYTE(sprcoll_y_base);
+  const uint8 chunks_x = (uint8)(sprcoll_x_size >> 8);
+  const uint8 chunks_y = (uint8)(sprcoll_y_size >> 8);
+
+  for (uint8 cy = 0; cy < chunks_y && count < 16; cy++) {
+    for (uint8 cx = 0; cx < chunks_x && count < 16; cx++) {
+      const uint8 r1 = (uint8)(cy * 4 + cx);
+      for (uint16 cell = 0; cell < 256 && count < 16; cell++) {
+        const uint16 blk = ((uint16)r1 << 8) | cell;
+        const uint8 spawn = sprite_where_in_overworld[blk];
+        if (!spawn || spawn >= 0xF4)
+          continue; // empty / overlord
+
+        const uint8 type = (uint8)(spawn - 1);
+        if (type != 0x3F && type != 0x40)
+          continue;
+
+        const uint8 x_lo = (uint8)((blk << 4) & 0xF0);
+        const uint8 y_lo = (uint8)(blk & 0xF0);
+        const uint8 x_hi = (uint8)((blk >> 8 & 3) + base_x_hi);
+        const uint8 y_hi = (uint8)((blk >> 10) + base_y_hi);
+
+        int o = 1 + count * 4;
+        g_overworld_guard_spawns_buf[o + 0] = x_lo;
+        g_overworld_guard_spawns_buf[o + 1] = x_hi;
+        g_overworld_guard_spawns_buf[o + 2] = y_lo;
+        g_overworld_guard_spawns_buf[o + 3] = y_hi;
+        count++;
+      }
+    }
+  }
+
+  g_overworld_guard_spawns_buf[0] = count;
+  return (int)g_overworld_guard_spawns_buf;
+}

@@ -15,6 +15,7 @@ const createDefaultWidgetState = (def: WidgetDefinition, order = 0): WidgetState
     width: def.defaultFloatingSize.width,
     height: def.defaultFloatingSize.height,
     dockedSize: def.defaultDockedSize,
+    exclusive: false,
   };
 };
 

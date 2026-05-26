@@ -213,3 +213,24 @@
   flex: 1;
   min-width: 80px;
 }
+
+.widget-settings__toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--color-text-secondary, #999);
+}
+
+.widget-settings__toggle input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: #6a6;
+  cursor: pointer;
+}
+
+.widget-settings__toggle-hint {
+  font-size: 10px;
+  opacity: 0.7;
+}

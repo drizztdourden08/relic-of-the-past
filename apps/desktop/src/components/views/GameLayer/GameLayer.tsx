@@ -6,6 +6,7 @@ import { createShadowRenderer, type ShadowRenderer } from '../../../lib/game/sha
 import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
 import { useCanvasFit } from '../../../hooks/useCanvasFit';
 import { useShadowEditorStore } from '../../../stores/shadow-editor-store';
+import { useExclusiveInsetsStore } from '../../composites/Widget/behavior/exclusiveInsetsStore';
 import { ControllerDisconnectOverlay } from './sub-components/ControllerDisconnectOverlay';
 import { ConnectionOverlay } from './sub-components/ConnectionOverlay';
 import { ShadowEditorOverlay } from './sub-components/ShadowEditorOverlay';
@@ -37,6 +38,9 @@ const GameLayer = (props: GameLayerProps) => {
   const [disconnectedName, setDisconnectedName] = useState('');
   const [bufSize, setBufSize] = useState({ w: 512, h: 448 });
   const shadowDebugMode = useShadowEditorStore((s) => s.debugMode);
+
+  // Exclusive insets from widget layout (shrink game area when docked widgets claim space)
+  const exclusiveInsets = useExclusiveInsetsStore((s) => s.insets);
 
   // Compute fitted size using shared hook (same formula for canvas + overlay)
   const fitSize = useCanvasFit(containerRef, bufSize.w, bufSize.h, stretch);
@@ -331,7 +335,15 @@ const GameLayer = (props: GameLayerProps) => {
   }, [status, canvasKey]);
 
   return (
-    <div className="game-layer" ref={containerRef}>
+    <div
+      className="game-layer"
+      ref={containerRef}
+      style={
+        (exclusiveInsets.left || exclusiveInsets.right || exclusiveInsets.top || exclusiveInsets.bottom)
+          ? { left: exclusiveInsets.left, right: exclusiveInsets.right, top: exclusiveInsets.top, bottom: exclusiveInsets.bottom }
+          : undefined
+      }
+    >
       {status === 'loading' && (
         <div className="game-layer__status-overlay">
           <span className="game-layer__status-text game-layer__status-text--loading">Loading WASM core...</span>

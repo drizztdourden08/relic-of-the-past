@@ -9,7 +9,11 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useGameUIStore } from '../../stores/game-ui-store';
 import { useConnectionOverlayStore } from '../../stores/connection-overlay-store';
 import { SCREEN_NAMES } from '@shared/game/navigation';
-import { wasmGetViewportInfo } from '../../lib/game';
+import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetIndoorAttrGrid, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns } from '../../lib/game';
+import type { OverworldVariantInfo } from '../../lib/game';
+import type { TileAttrContext } from '@shared/game/navigation/tile-attrs';
+import { NavReviewPanel } from './NavReviewPanel';
+import type { BorderBundle } from './NavReviewPanel';
 import type { FloodFillResult, ConnectionInfo } from '@shared/game/navigation';
 
 type ReviewStatus = 'neutral' | 'good' | 'bad' | 'yellow';
@@ -31,14 +35,35 @@ const STATUS_BTNS: { key: ReviewStatus; label: string; color: string }[] = [
 ];
 
 function NavigationWidgetContent({ romFile }: { romFile: string }) {
-  const { overworldScreenIndex, isIndoors, isDarkWorld } = useGameUIStore(s => s.map);
+  const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld } = useGameUIStore(s => s.map);
   const equipment = useGameUIStore(s => s.equipment);
+  const inventoryItems = useGameUIStore(s => s.inventory.items);
   const overlayStore = useConnectionOverlayStore();
   const [reviewData, setReviewData] = useState<ReviewData>({});
   const [result, setResult] = useState<FloodFillResult | null>(null);
   const [connections, setConnections] = useState<ConnectionInfo[]>([]);
+  const [bundles, setBundles] = useState<BorderBundle[]>([]);
   const [running, setRunning] = useState(false);
+  const [autoRun, setAutoRun] = useState(false);
+  const [variant, setVariant] = useState<OverworldVariantInfo | null>(null);
+  const [dynamicBlockerCount, setDynamicBlockerCount] = useState(0);
+  const [debugTick, setDebugTick] = useState(0);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const prevScreenRef = useRef<number | null>(null);
+  const prevLiveOverworldScreenRef = useRef<number | null>(null);
+  const handleRunRef = useRef<(() => Promise<void>) | null>(null);
+  const pendingAutoSecondPassRef = useRef(false);
+  const autoSecondPassTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Use room index indoors; overworld screen index outside.
+  const activeScreenIndex = isIndoors ? roomIndex : overworldScreenIndex;
+
+  // Poll variant info on screen changes
+  useEffect(() => {
+    if (isIndoors) { setVariant(null); return; }
+    const v = wasmGetOverworldVariant(overworldScreenIndex);
+    setVariant(v);
+  }, [overworldScreenIndex, isIndoors]);
 
   // Load review data
   useEffect(() => {
@@ -50,45 +75,269 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
     saveTimer.current = setTimeout(() => window.api.saveConnectionReview(next), 300);
   }, []);
 
-  const locationKey = `${isDarkWorld ? 'dw' : 'lw'}-${overworldScreenIndex.toString(16).padStart(2, '0')}`;
-  const screenName = SCREEN_NAMES[overworldScreenIndex] ?? `Screen 0x${overworldScreenIndex.toString(16).toUpperCase()}`;
+  const locationKey = isIndoors
+    ? `room-${roomIndex.toString(16).padStart(3, '0')}`
+    : `${isDarkWorld ? 'dw' : 'lw'}-${overworldScreenIndex.toString(16).padStart(2, '0')}`;
+  const screenName = isIndoors
+    ? `Room 0x${roomIndex.toString(16).toUpperCase()}`
+    : (SCREEN_NAMES[overworldScreenIndex] ?? `Screen 0x${overworldScreenIndex.toString(16).toUpperCase()}`);
   const locationReview = reviewData[locationKey] ?? { status: 'neutral' as ReviewStatus, connections: {} };
+  const displayedVariant = !isIndoors
+    ? (result ? wasmGetOverworldVariant(result.screenIndex) : variant)
+    : null;
+  // Force a lightweight periodic rerender so live debug values update while moving.
+  useEffect(() => {
+    const id = setInterval(() => setDebugTick(t => (t + 1) & 1023), 200);
+    return () => clearInterval(id);
+  }, []);
+  const vpDebug = wasmGetViewportInfo?.();
+  const linkDebug = (() => {
+    void debugTick;
+    if (!vpDebug) return null;
+    const liveScreenCol = (vpDebug.linkX >> 9) & 7;
+    const liveScreenRow = (vpDebug.linkY >> 9) & 7;
+    const liveScreenIndex = (liveScreenRow << 3) | liveScreenCol;
+    const screenWorldX = liveScreenCol * 512;
+    const screenWorldY = liveScreenRow * 512;
+
+    const relX = vpDebug.linkX - screenWorldX;
+    const relY = vpDebug.linkY - screenWorldY;
+    const tileMinCol = Math.floor(relX / 8);
+    const tileMaxCol = Math.floor((relX + 15) / 8);
+    const tileMinRow = Math.floor(relY / 8);
+    const tileMaxRow = Math.floor((relY + 15) / 8);
+
+    const xc = vpDebug.linkX >> 3;
+    const baseX = screenWorldX >> 3;
+    const map16Col = ((xc - baseX) & 0x3E) >> 1;
+    const yc = vpDebug.linkY + 7;
+    const baseY = screenWorldY;
+    const map16Row = ((yc - baseY) & 0x1F0) >> 4;
+
+    return {
+      linkX: vpDebug.linkX,
+      linkY: vpDebug.linkY,
+      relX,
+      relY,
+      tileMinCol,
+      tileMaxCol,
+      tileMinRow,
+      tileMaxRow,
+      map16Row,
+      map16Col,
+      liveScreenIndex,
+    };
+  })();
 
   // Clear overlay when screen changes
   useEffect(() => {
-    if (result && result.screenIndex !== overworldScreenIndex) {
+    if (result && result.screenIndex !== activeScreenIndex) {
       setResult(null);
       setConnections([]);
       overlayStore.clear();
     }
-  }, [overworldScreenIndex]);
+  }, [activeScreenIndex]);
 
   // Run flood fill
   const handleRun = useCallback(async () => {
-    if (!romFile || isIndoors || running) return;
+    if (!romFile || running) return;
     setRunning(true);
     try {
+      const vp = wasmGetViewportInfo?.();
+      const liveOverworldScreenIndex = vp
+        ? ((((vp.linkY >> 9) & 7) << 3) | ((vp.linkX >> 9) & 7))
+        : overworldScreenIndex;
+      const runScreenIndex = isIndoors ? activeScreenIndex : liveOverworldScreenIndex;
+
       // Build inventory from current equipment state
-      // lift.1=always (bushes/light stones, Link has from start), lift.2=Titan's Mitt (dark rocks)
+      // lift.1=bushes/pots (no glove), lift.2=Power Glove (light rocks), lift.3=Titan's Mitt (dark rocks)
       const items: string[] = ['lift.1'];
-      if (equipment.gloves >= 2) items.push('lift.2');
+      if (equipment.gloves >= 1) items.push('lift.2');
+      if (equipment.gloves >= 2) items.push('lift.3');
       if (equipment.boots) items.push('boots');
       if (equipment.flippers) items.push('flippers');
+      if (inventoryItems[2] >= 1) items.push('hookshot');
+      if (inventoryItems[11] >= 1) items.push('hammer');
 
-      const resp = await window.api.runFloodFill(romFile, overworldScreenIndex, items);
+      // Calculate Link's position relative to the screen being analyzed.
+      // Indoors: infer current 512x512 room chunk from Link world coordinates.
+      let startPos: { row: number; col: number } | undefined;
+      let tileContext: TileAttrContext = isIndoors ? 'interior-house' : 'overworld';
+      let rawAttrGrid: number[][] | undefined;
+      let dynamicBlockers: Array<{ row: number; col: number }> | undefined;
+
+      // Build overworld dynamic blockers from live sprite data independently of viewport
+      // so blockers don't disappear if viewport data is transiently unavailable.
+      if (!isIndoors) {
+        const live = wasmGetLiveSprites();
+        const staticGuards = wasmGetOverworldGuardSpawns();
+        // Tutorial guards/barriers (0x3F/0x40) gate progression via expanded contact checks
+        // in game logic, so we inflate their effective blocker footprint for BFS.
+        const livePoints = live.flatMap(s => {
+          if (s.type === 0x3f || s.type === 0x40) {
+            const pts: Array<{ x: number; y: number }> = [];
+            for (let dr = -1; dr <= 1; dr++) {
+              for (let dc = -1; dc <= 1; dc++) {
+                pts.push({ x: s.x + dc * 8, y: s.y + dr * 8 });
+              }
+            }
+            return pts;
+          }
+          return [{ x: s.x, y: s.y }];
+        });
+
+        const staticGuardPoints = staticGuards.flatMap(g => {
+          const pts: Array<{ x: number; y: number }> = [];
+          for (let dr = -1; dr <= 1; dr++) {
+            for (let dc = -1; dc <= 1; dc++) {
+              pts.push({ x: g.x + dc * 8, y: g.y + dr * 8 });
+            }
+          }
+          return pts;
+        });
+
+        const blockers: Array<{ x: number; y: number }> = [];
+        const seen = new Set<string>();
+        for (const p of [...livePoints, ...staticGuardPoints]) {
+          const key = `${p.x},${p.y}`;
+          if (seen.has(key)) continue;
+          seen.add(key);
+          blockers.push(p);
+        }
+
+        const screenWorldX = (runScreenIndex & 7) * 512;
+        const screenWorldY = ((runScreenIndex >> 3) & 7) * 512;
+        dynamicBlockers = blockers
+          .map(b => ({ row: Math.floor((b.y - screenWorldY) / 8), col: Math.floor((b.x - screenWorldX) / 8) }))
+          .filter(p => p.row >= 0 && p.row < 64 && p.col >= 0 && p.col < 64);
+      }
+
+      if (vp) {
+        if (isIndoors) {
+          // TileDetect only branches on indoors, but we keep cave/house and dungeon contexts separate for future tuning.
+          tileContext = vp.locationType === 2 ? 'interior-dungeon' : 'interior-house';
+          rawAttrGrid = wasmGetIndoorAttrGrid() ?? undefined;
+
+          // Early-game indoor variant: Uncle at house / in-passage physically blocks tiles.
+          // We stamp his live sprite footprint into the attr grid so flood-fill reflects state.
+          if (rawAttrGrid) {
+            const blockers = wasmGetIndoorUncleBlockers();
+            const roomWorldX = Math.floor(vp.linkX / 512) * 512;
+            const roomWorldY = Math.floor(vp.linkY / 512) * 512;
+            for (const b of blockers) {
+              const c0 = Math.floor((b.x - roomWorldX) / 8);
+              const r0 = Math.floor((b.y - roomWorldY) / 8);
+              for (let dr = 0; dr < 2; dr++) {
+                for (let dc = 0; dc < 2; dc++) {
+                  const rr = r0 + dr;
+                  const cc = c0 + dc;
+                  if (rr >= 0 && rr < 64 && cc >= 0 && cc < 64) {
+                    rawAttrGrid[rr][cc] = 0x01; // wall/blocked
+                  }
+                }
+              }
+            }
+          }
+        }
+        const screenWorldX = isIndoors
+          ? (Math.floor(vp.linkX / 512) * 512)
+          : ((runScreenIndex & 7) * 512);
+        const screenWorldY = isIndoors
+          ? (Math.floor(vp.linkY / 512) * 512)
+          : (((runScreenIndex >> 3) & 7) * 512);
+
+        const relPixelX = vp.linkX - screenWorldX;
+        const relPixelY = vp.linkY - screenWorldY;
+
+        // Match overlay debug footprint: Link covers linkX..linkX+15 and linkY..linkY+15.
+        const tileMinCol = Math.floor(relPixelX / 8);
+        const tileMaxCol = Math.floor((relPixelX + 15) / 8);
+        const tileMinRow = Math.floor(relPixelY / 8);
+        const tileMaxRow = Math.floor((relPixelY + 15) / 8);
+
+        const centerCol = relPixelX / 8 + 0.5;
+        const centerRow = relPixelY / 8 + 0.5;
+        const clamp = (v: number) => Math.max(0, Math.min(63, v));
+
+        let best: { row: number; col: number } | null = null;
+        let bestD2 = Number.POSITIVE_INFINITY;
+        for (let r = tileMinRow; r <= tileMaxRow; r++) {
+          for (let c = tileMinCol; c <= tileMaxCol; c++) {
+            const rr = clamp(r);
+            const cc = clamp(c);
+            const dr = rr - centerRow;
+            const dc = cc - centerCol;
+            const d2 = dr * dr + dc * dc;
+            if (d2 < bestD2) {
+              bestD2 = d2;
+              best = { row: rr, col: cc };
+            }
+          }
+        }
+        startPos = best ?? { row: clamp(Math.floor(centerRow)), col: clamp(Math.floor(centerCol)) };
+      }
+
+      const runVariant = (!isIndoors) ? wasmGetOverworldVariant(runScreenIndex) : null;
+      const resp = await window.api.runFloodFill(romFile, runScreenIndex, items,
+        runVariant ? { progressTier: runVariant.progressIndicator, eventOverlay: runVariant.eventOverlayActive, eventFlags: runVariant.screenEventFlags } : undefined,
+        startPos,
+        tileContext,
+        rawAttrGrid,
+        dynamicBlockers,
+      );
       if ('error' in resp) { console.error(resp.error); return; }
+      setDynamicBlockerCount(resp.dynamicBlockerCells?.length ?? dynamicBlockers?.length ?? 0);
       const fillResult: FloodFillResult = {
         ...resp,
         reachable: resp.reachable.map((row: number[]) => row.map((v: number) => v === 1)),
         ledges: resp.ledges ?? [],
         attrGrid: resp.attrGrid,
+        startPos: resp.startPos ?? { row: 32, col: 32 },
       };
       setResult(fillResult);
       setConnections(resp.connections);
+      setBundles(resp.bundles ?? []);
       overlayStore.setData(fillResult, resp.connections);
     } catch (e) { console.error(e); }
-    finally { setRunning(false); }
-  }, [romFile, overworldScreenIndex, isIndoors, running, equipment]);
+    finally {
+      setRunning(false);
+      if (pendingAutoSecondPassRef.current) {
+        pendingAutoSecondPassRef.current = false;
+        if (autoSecondPassTimerRef.current) clearTimeout(autoSecondPassTimerRef.current);
+        autoSecondPassTimerRef.current = setTimeout(() => {
+          handleRunRef.current?.();
+        }, 120);
+      }
+    }
+  }, [romFile, activeScreenIndex, isIndoors, overworldScreenIndex, running, equipment, roomIndex, variant, inventoryItems]);
+
+  handleRunRef.current = handleRun;
+
+  useEffect(() => () => {
+    if (autoSecondPassTimerRef.current) clearTimeout(autoSecondPassTimerRef.current);
+  }, []);
+
+  // Auto-run flood fill on screen change
+  useEffect(() => {
+    if (!autoRun || !romFile || running) return;
+    if (prevScreenRef.current !== null && prevScreenRef.current !== activeScreenIndex) {
+      pendingAutoSecondPassRef.current = true;
+      handleRunRef.current?.();
+    }
+    prevScreenRef.current = activeScreenIndex;
+  }, [autoRun, activeScreenIndex, romFile, running, handleRun]);
+
+  useEffect(() => {
+    if (!autoRun || !romFile || running || isIndoors) return;
+    const vp = wasmGetViewportInfo?.();
+    if (!vp) return;
+    const liveScreen = (((vp.linkY >> 9) & 7) << 3) | ((vp.linkX >> 9) & 7);
+    if (prevLiveOverworldScreenRef.current !== null && prevLiveOverworldScreenRef.current !== liveScreen) {
+      pendingAutoSecondPassRef.current = true;
+      handleRunRef.current?.();
+    }
+    prevLiveOverworldScreenRef.current = liveScreen;
+  }, [autoRun, romFile, running, isIndoors, debugTick]);
 
   // Toggle overlay
   const toggleOverlay = useCallback(() => {
@@ -138,13 +387,62 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
       <div style={S.section}>
         <div style={S.locName}>{screenName}</div>
         <div style={S.meta}>
-          {locationKey} · {isDarkWorld ? 'DW' : 'LW'} · R{(overworldScreenIndex >> 3) & 7} C{overworldScreenIndex & 7}
+          {locationKey} · {isIndoors ? 'INDOOR' : (isDarkWorld ? 'DW' : 'LW')}
+          {!isIndoors && ` · R${(overworldScreenIndex >> 3) & 7} C${overworldScreenIndex & 7}`}
           {isIndoors && ' · (indoors)'}
         </div>
+        {displayedVariant && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginTop: 3, padding: '4px 6px', borderRadius: 4, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ fontSize: 9 }}>
+              <span style={{ color: '#999' }}>Progress: </span>
+              <span style={{ color: '#fc6' }}>{displayedVariant.phaseLabel}</span>
+            </div>
+            <div style={{ fontSize: 9 }}>
+              <span style={{ color: '#999' }}>Screen Tile Patch (bit 0x20): </span>
+              {displayedVariant.eventOverlayActive
+                ? <span style={{ color: '#4f8' }}>present ✓</span>
+                : <span style={{ color: '#a66' }}>none</span>}
+            </div>
+            <div style={{ fontSize: 9 }}>
+              <span style={{ color: '#999' }}>Flags: </span>
+              <span style={{ color: '#aac' }}>0x{displayedVariant.screenEventFlags.toString(16).padStart(2, '0')}</span>
+            </div>
+            <div style={{ fontSize: 9 }}>
+              <span style={{ color: '#999' }}>Dynamic NPC Blockers: </span>
+              <span style={{ color: dynamicBlockerCount > 0 ? '#fc6' : '#7aa' }}>{dynamicBlockerCount}</span>
+            </div>
+          </div>
+        )}
         {result && (
-          <div style={S.meta}>
-            {result.reachableCount}/{result.totalTiles} reachable ({(result.reachableCount / result.totalTiles * 100).toFixed(0)}%)
-            · {result.entrances.length} entrance{result.entrances.length !== 1 ? 's' : ''}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginTop: 3, padding: '4px 6px', borderRadius: 4, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ fontSize: 9 }}>
+              <span style={{ color: '#999' }}>Reachable: </span>
+              <span style={{ color: '#ccc' }}>{result.reachableCount}/{result.totalTiles} ({(result.reachableCount / result.totalTiles * 100).toFixed(0)}%)</span>
+            </div>
+            <div style={{ fontSize: 9 }}>
+              <span style={{ color: '#999' }}>Entrances: </span>
+              <span style={{ color: '#ccc' }}>{result.entrances.length}</span>
+            </div>
+            <div style={{ fontSize: 9 }}>
+              <span style={{ color: '#999' }}>Connections: </span>
+              <span style={{ color: '#ccc' }}>{connections.length}</span>
+            </div>
+          </div>
+        )}
+        {linkDebug && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginTop: 3, padding: '4px 6px', borderRadius: 4, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ fontSize: 9 }}>
+              <span style={{ color: '#999' }}>Link: </span>
+              <span style={{ color: '#7f7' }}>({linkDebug.linkX}, {linkDebug.linkY}) rel:({linkDebug.relX}, {linkDebug.relY})</span>
+            </div>
+            <div style={{ fontSize: 9 }}>
+              <span style={{ color: '#999' }}>Sub-tiles: </span>
+              <span style={{ color: '#7f7' }}>c{linkDebug.tileMinCol}-{linkDebug.tileMaxCol} r{linkDebug.tileMinRow}-{linkDebug.tileMaxRow}</span>
+              <span style={{ color: '#666' }}> | </span>
+              <span style={{ color: '#7f7' }}>Map16: ({linkDebug.map16Row},{linkDebug.map16Col})</span>
+              <span style={{ color: '#666' }}> | </span>
+              <span style={{ color: '#7f7' }}>Live screen: 0x{linkDebug.liveScreenIndex.toString(16).toUpperCase()}</span>
+            </div>
           </div>
         )}
         <StatusRow status={locationReview.status} comment={locationReview.comment} onStatus={setLocStatus} onComment={setLocComment} />
@@ -152,11 +450,14 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
 
       {/* Actions */}
       <div style={S.actions}>
-        <button style={{ ...S.btn, ...(running || isIndoors ? S.btnDisabled : {}) }} onClick={handleRun} disabled={running || isIndoors || !romFile}>
+        <button style={{ ...S.btn, ...(running ? S.btnDisabled : {}) }} onClick={handleRun} disabled={running || !romFile}>
           {running ? '⏳' : '▶'} Flood Fill
         </button>
         <button style={{ ...S.btn, ...(result ? {} : S.btnDisabled) }} onClick={toggleOverlay} disabled={!result}>
           {overlayStore.visible ? '👁 Hide' : '👁 Show'} Overlay
+        </button>
+        <button style={{ ...S.btn, ...(autoRun ? S.btnActive : {}) }} onClick={() => setAutoRun(a => !a)}>
+          {autoRun ? '⟳ Auto' : '⟳ Auto'}
         </button>
       </div>
 
@@ -176,6 +477,11 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
                 <div style={S.connHeader}>
                   <span style={{ ...S.dot, background: EDGE_COLORS[conn.edge] }} />
                   <span style={S.connTitle}>{EDGE_ARROWS[conn.edge]} {targetName}</span>
+                  <span style={S.dimBadge}>
+                    {conn.edge === 'north' || conn.edge === 'south'
+                      ? `${conn.positions.length}×1`
+                      : `1×${conn.positions.length}`}
+                  </span>
                 </div>
                 <div style={S.meta}>
                   {conn.freeTileCount} free{conn.itemTileCount > 0 ? ` + ${conn.itemTileCount} gated` : ''}
@@ -201,6 +507,7 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
                 <div style={S.connHeader}>
                   <span style={{ ...S.dot, background: EDGE_COLORS.entrance }} />
                   <span style={S.connTitle}>Room 0x{ent.roomId.toString(16).toUpperCase()} (#{ent.id})</span>
+                  <span style={S.dimBadge}>2×2</span>
                 </div>
                 <div style={S.meta}>
                   ({ent.gridRow},{ent.gridCol})
@@ -210,6 +517,21 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Nav Review Panel — connection point detail with per-bundle review */}
+      {result && bundles.length > 0 && (
+        <div style={S.section}>
+          <NavReviewPanel
+            locationKey={locationKey}
+            bundles={bundles}
+            entrances={result.entrances}
+            transitions={result.transitions}
+            borders={result.borders}
+            reachableCount={result.reachableCount}
+            totalTiles={result.totalTiles}
+          />
         </div>
       )}
     </div>
@@ -341,9 +663,11 @@ const S: Record<string, React.CSSProperties> = {
     borderRadius: 3, color: '#8f8', fontSize: 10, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
   },
   btnDisabled: { opacity: 0.35, cursor: 'not-allowed' },
+  btnActive: { background: 'rgba(100,200,255,0.18)', borderColor: 'rgba(100,200,255,0.5)', color: '#8cf' },
   connCard: { display: 'flex', flexDirection: 'column', gap: 2, padding: '4px 6px', borderRadius: 4, border: '1px solid rgba(255,255,255,0.08)', marginTop: 2 },
   connHeader: { display: 'flex', alignItems: 'center', gap: 5 },
   connTitle: { fontSize: 10, fontWeight: 600, color: '#ddd' },
+  dimBadge: { fontSize: 8, padding: '0 4px', borderRadius: 3, background: 'rgba(255,255,255,0.06)', color: '#888', marginLeft: 'auto', fontFamily: "'JetBrains Mono', monospace" },
   dot: { width: 8, height: 8, borderRadius: 2, flexShrink: 0 },
   statusRow: { display: 'flex', gap: 3, marginTop: 3 },
   statusBtn: {

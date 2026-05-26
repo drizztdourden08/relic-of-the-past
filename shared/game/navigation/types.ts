@@ -1,4 +1,5 @@
 import type { RomData } from '../../asset-extraction/rom/rom-types';
+import type { TileAttrContext } from './tile-attrs';
 
 // ─── Grid Constants ──────────────────────────────────────────────────────────
 
@@ -76,6 +77,9 @@ export interface BorderSummary {
 
 export interface FloodFillResult {
   screenIndex: number;
+  tileContext: TileAttrContext;
+  /** Grid position where the BFS started (top-left of Link's 2×2 at flood-fill time) */
+  startPos: GridPos;
   reachable: boolean[][];
   transitions: TransitionPoint[];
   reachableCount: number;
@@ -84,12 +88,32 @@ export interface FloodFillResult {
   ledges: LedgeTraversal[];
   attrGrid?: number[][];
   reqGrid?: string[][];
+  /** Dynamic blocker tiles applied to this BFS snapshot (runtime sprite blockers). */
+  dynamicBlockerCells?: GridPos[];
+  /** Grid positions of hookshot targets reachable from walked tiles */
+  hookTargets?: GridPos[];
+  /** Variant state at time of analysis (null = base ROM, no runtime state) */
+  variant?: ScreenVariant;
   borders: {
     north: BorderSummary;
     south: BorderSummary;
     east: BorderSummary;
     west: BorderSummary;
   };
+}
+
+/**
+ * Overworld screen variant state.
+ * Determined by progress tier + per-screen event flags.
+ * Affects tile layout via overlay patches applied to the base tilemap.
+ */
+export interface ScreenVariant {
+  /** sram_progress_indicator: 0=intro, 1=post-uncle, 2=zelda-rescued, 3=agahnim-defeated */
+  progressTier: number;
+  /** save_ow_event_info[screen] & 0x20 — event overlay applied */
+  eventOverlay: boolean;
+  /** Full event flags byte for the screen */
+  eventFlags: number;
 }
 
 export interface ConnectionInfo {

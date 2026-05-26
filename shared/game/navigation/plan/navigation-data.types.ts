@@ -27,7 +27,7 @@
  *   bow, bombos, ether, quake
  */
 export type TraversalRequirement =
-  | 'lift.1' | 'lift.2'
+  | 'lift.1' | 'lift.2' | 'lift.3'
   | 'sword' | 'boomerang' | 'bombs' | 'hammer' | 'powder'
   | 'boots' | 'flippers' | 'hookshot' | 'mirror' | 'moonpearl'
   | 'flute' | 'cape' | 'byrna' | 'somaria'

@@ -1,7 +1,6 @@
 import type { TilePassability, TransitionPoint, GridPos } from '../types';
 import { GRID_SIZE } from '../types';
-import { DIRECTIONS, has2TileClearance } from '../core';
-import { isPassableForClearance } from '../core/inventory';
+import { DIRECTIONS } from '../core';
 
 interface FloodCell {
   row: number;
@@ -76,14 +75,27 @@ export function floodFillBFS(
       const { canEnter, newReqs } = evaluateEntry(tile, dr, dc, requirements, inventory);
       if (!canEnter) continue;
 
-      const existingReqs = reached[nr][nc];
-      if (existingReqs !== null && existingReqs.size <= newReqs.size) continue;
+      // Link is 16×16px (2×2 sub-tiles). Check 2×2 clearance.
+      // Free/pit side clearance adds no requirement.
+      // If side clearance comes only from a liftable obstacle, accumulate that req
+      // so tight cliff|free|bush corridors are marked item-gated (pink), not free (blue).
+      const clearance = getClearanceRequirement(nr, nc, dr, dc, grid, inventory, tile, reached);
+      if (!clearance.passes) continue;
 
-      reached[nr][nc] = newReqs;
-      if (newReqs === requirements) {
-        deque.unshift({ row: nr, col: nc, requirements: newReqs });
+      let finalReqs = newReqs;
+      if (clearance.req && !finalReqs.has(clearance.req)) {
+        finalReqs = new Set(finalReqs);
+        finalReqs.add(clearance.req);
+      }
+
+      const existingReqs = reached[nr][nc];
+      if (existingReqs !== null && existingReqs.size <= finalReqs.size) continue;
+
+      reached[nr][nc] = finalReqs;
+      if (finalReqs === requirements) {
+        deque.unshift({ row: nr, col: nc, requirements: finalReqs });
       } else {
-        deque.push({ row: nr, col: nc, requirements: newReqs });
+        deque.push({ row: nr, col: nc, requirements: finalReqs });
       }
     }
   }
@@ -109,6 +121,51 @@ export function floodFillBFS(
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
+
+/**
+ * Check 2×2 clearance for Link's 16px body when entering (row, col) from (dr, dc).
+ * Free/pit tiles provide clearance at no cost.
+ * A liftable obstacle provides clearance only if inventory permits — its req is returned
+ * so the path accumulates it (making tiles reachable only via that corridor show as pink).
+ * If no perpendicular tile provides clearance, passes=false.
+ */
+function getClearanceRequirement(
+  row: number, col: number,
+  dr: number, dc: number,
+  grid: TilePassability[][],
+  inventory: Set<string>,
+  enteringTile: TilePassability,
+  reached: (Set<string> | null)[][],
+): { passes: boolean; req: string | null } {
+  const perps: [number, number][] = dr !== 0
+    ? [[row, col - 1], [row, col + 1]]
+    : [[row - 1, col], [row + 1, col]];
+
+  // First pass: free clearance (no requirement)
+  for (const [r, c] of perps) {
+    if (r < 0 || r >= GRID_SIZE || c < 0 || c >= GRID_SIZE) continue;
+    const t = grid[r][c];
+    if (t.type === 'free' || t.type === 'pit') return { passes: true, req: null };
+  }
+
+  // Second pass: obstacle-based clearance (propagates the obstacle's requirement).
+  // When relying on an obstacle as the side-clearance tile, require that obstacle tile
+  // to already be reachable. This prevents bootstrapping into enclosed obstacle pockets,
+  // while still allowing traversal inside legitimate bush fields.
+
+  for (const [r, c] of perps) {
+    if (r < 0 || r >= GRID_SIZE || c < 0 || c >= GRID_SIZE) continue;
+    const t = grid[r][c];
+    if (t.type === 'obstacle' && inventory.has(t.req as string) && reached[r][c] !== null) {
+      return { passes: true, req: t.req as string };
+    }
+    if (t.type === 'water' && inventory.has('flippers') && reached[r][c] !== null) {
+      return { passes: true, req: 'flippers' };
+    }
+  }
+
+  return { passes: false, req: null };
+}
 
 function recordBorderTransition(
   row: number, col: number,

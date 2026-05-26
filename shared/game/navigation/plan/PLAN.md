@@ -195,13 +195,66 @@ interface NavFeature {
 
 ### NavVariant — Progression Change
 
+The game uses an **overlay-based variant system**: one base tilemap + conditional tile patches.
+Two axes control which tiles are patched onto the base screen:
+
+1. **`sram_progress_indicator`** (0–3): Global progress tier
+   - 0 = intro (Link asleep)
+   - 1 = post-uncle (rain, Zelda rescue in progress)
+   - 2 = post-Sanctuary (rain stops, overworld unlocked)
+   - 3 = post-Agahnim (Dark World access, Master Sword grove changes)
+
+2. **`save_ow_event_info[screen] & 0x20`**: Per-screen event overlay
+   - When set, `Overworld_LoadEventOverlay()` patches specific Map16 tiles into
+     the screen tilemap (e.g., opened dungeon entrances, removed rocks).
+   - Additional bits: `& 0x02` = bomb door opened (secondary overlay)
+
+**Impact on flood fill**: The offline analysis currently runs against the BASE ROM tilemap
+(decompressed Map32 → Map16). This misses event overlays that change passability. The runtime
+widget now reports the current variant state. Future work: run flood fill multiple times per
+screen — once per relevant variant — and store results keyed by variant.
+
 ```typescript
 interface NavVariant {
-  trigger: string;  // 'agahnim.0' | 'rain_ended' | 'flute_activated' | etc.
+  /** What triggers this variant */
+  trigger: string;  // 'progress >= 2' | 'event_overlay' | 'agahnim.0' | 'master_sword' | etc.
+
+  /** Affected tile positions (Map16 coordinates patched) */
+  patchedTiles?: { pos: number; before: number; after: number }[];
+
+  /** Connection points that become available */
   pointsAdded?: string[];
+
+  /** Connection points that become unavailable */
   pointsRemoved?: string[];
 }
+
+/**
+ * Runtime variant state (stored in FloodFillResult and ScreenVariant type).
+ * Used to match analysis results to current game state.
+ */
+interface ScreenVariant {
+  /** sram_progress_indicator: 0=intro, 1=post-uncle, 2=zelda-rescued, 3=agahnim-defeated */
+  progressTier: number;
+  /** save_ow_event_info[screen] & 0x20 — event overlay applied */
+  eventOverlay: boolean;
+  /** Full event flags byte for the screen */
+  eventFlags: number;
+}
 ```
+
+### Key Screens With Variant Impact
+
+| Screen | Variant Trigger | Effect |
+|--------|-----------------|--------|
+| 0x00 (Lost Woods) | Master Sword pulled (`ow_event[0x80] & 0x40`) | Forest overlay changes |
+| 0x03–0x07 | `event & 0x20` | Rock pile at Map16 (16,14) removed |
+| 0x18 (Kakariko) | `event & 0x20` | Entrance opened |
+| 0x2A (Desert) | `event & 0x20` | Book/Ether tablet access |
+| 0x30 (DW entrance) | `progress >= 3` | Portal appears |
+| 0x33 (Hyrule Castle) | `progress >= 2` | Castle gate opens |
+| 0x70 (Misery Mire entrance) | `event[0x70] & 0x20` | Rain stops on this screen |
+| All LW screens | `progress < 2` | Rain overlay active |
 
 ### ConnectionTransitType
 
@@ -232,12 +285,17 @@ Each must be tested and validated by the flood fill.
 
 | Requirement | Tile Attr | Current Status |
 |-------------|-----------|----------------|
-| `lift.1` | 0x40, 0x48, 0x4A, 0x50, 0x51 | ✅ Working |
-| `lift.2` | 0x52, 0x53, 0x54, 0x55, 0x56 | ⚠️ Needs split (see below) |
-| `boots` | 0x57 | ✅ Working |
-| `flippers` | 0x08, 0x0B | ✅ Working |
+| `lift.1` | 0x50, 0x51 (bushes/signs) | ✅ Working |
+| `lift.2` | 0x52, 0x55 (light rocks — Power Glove) | ✅ Working |
+| `lift.3` | 0x53, 0x56 (dark rocks — Titan's Mitt) | ✅ Working |
+| `hammer` | 0x54 (hammer pegs) | ✅ Working |
+| `boots` | 0x57 (bonk rocks) | ✅ Working |
+| `flippers` | 0x08, 0x0B (deep water) | ✅ Working |
 | Ledges (one-way) | 0x28–0x2F | ✅ Cliff preprocessing handles |
-| Free tiles | 0x00, etc. | ✅ Working |
+| Free tiles | 0x00, 0x40, 0x48, 0x4A, etc. | ✅ Working |
+
+**Note**: 0x40 (thick grass), 0x48, 0x4A (diggable ground) are FREE —
+they do NOT block movement per `tile_detect.c` `TileDetect_ExecuteInner()`.
 | Blocked tiles | 0x01, 0x02, 0x03 | ✅ Working |
 
 ### Need User Testing (In-Game Verification)

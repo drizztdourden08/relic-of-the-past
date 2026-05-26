@@ -1,7 +1,20 @@
 import type { WidgetState, SnapSide } from '../types';
 import { TITLEBAR_HEIGHT } from '../constants';
 
-const computeDockedStyles = (widgets: WidgetState[]): Map<string, React.CSSProperties> => {
+/** Insets claimed by exclusive docked widgets (pixels) */
+interface ExclusiveInsets {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+}
+
+interface DockedLayoutResult {
+  styles: Map<string, React.CSSProperties>;
+  exclusiveInsets: ExclusiveInsets;
+}
+
+const computeDockedStyles = (widgets: WidgetState[]): DockedLayoutResult => {
   const styles = new Map<string, React.CSSProperties>();
 
   // Group docked widgets by side, sorted by order
@@ -20,6 +33,14 @@ const computeDockedStyles = (widgets: WidgetState[]): Map<string, React.CSSPrope
   const bottomHeight = sides.bottom.length > 0 ? Math.max(...sides.bottom.map((w) => w.dockedSize)) : 0;
   const leftWidth = sides.left.length > 0 ? Math.max(...sides.left.map((w) => w.dockedSize)) : 0;
   const rightWidth = sides.right.length > 0 ? Math.max(...sides.right.map((w) => w.dockedSize)) : 0;
+
+  // Compute exclusive insets: only count sides that have at least one exclusive widget
+  const exclusiveInsets: ExclusiveInsets = {
+    left: sides.left.some((w) => w.exclusive) ? leftWidth : 0,
+    right: sides.right.some((w) => w.exclusive) ? rightWidth : 0,
+    top: sides.top.some((w) => w.exclusive) ? topHeight : 0,
+    bottom: sides.bottom.some((w) => w.exclusive) ? bottomHeight : 0,
+  };
 
   // Left/Right: stack vertically, uniform width (max of all on that side)
   for (const side of ['left', 'right'] as const) {
@@ -65,7 +86,8 @@ const computeDockedStyles = (widgets: WidgetState[]): Map<string, React.CSSPrope
     }
   }
 
-  return styles;
+  return { styles, exclusiveInsets };
 };
 
 export { computeDockedStyles };
+export type { ExclusiveInsets, DockedLayoutResult };
