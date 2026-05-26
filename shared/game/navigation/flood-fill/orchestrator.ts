@@ -43,7 +43,9 @@ export function getEntrances(rom: RomData): OverworldEntrance[] {
 function loadOverworldEntrances(rom: RomData): OverworldEntrance[] {
   const entrances: OverworldEntrance[] = [];
   for (let i = 0; i < 129; i++) {
-    const area = rom.getWord(ADDR_OW_ENTRANCE_AREA + i * 2);
+    // Area table is byte-indexed (one area per entrance slot).
+    // Reading it as word/stride-2 mixes adjacent entries and produces wrong screen assignment.
+    const area = rom.getByte(ADDR_OW_ENTRANCE_AREA + i);
     const pos = rom.getWord(ADDR_OW_ENTRANCE_POS + i * 2);
     const id = rom.getByte(ADDR_OW_ENTRANCE_ID + i);
     const roomId = rom.getWord(ADDR_ENTRANCE_ROOM + id * 2);
