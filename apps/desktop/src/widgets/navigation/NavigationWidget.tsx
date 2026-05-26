@@ -34,6 +34,26 @@ const STATUS_BTNS: { key: ReviewStatus; label: string; color: string }[] = [
   { key: 'yellow', label: '⚠', color: '#fc4' },
 ];
 
+function getVisibleOverworldScreenIndices(vp: NonNullable<ReturnType<typeof wasmGetViewportInfo>>): number[] {
+  const viewLeft = vp.cameraX - vp.extraLeftRight;
+  const viewTop = vp.cameraY;
+  const viewRight = viewLeft + vp.snesWidth - 1;
+  const viewBottom = viewTop + vp.snesHeight - 1;
+
+  const minCol = Math.max(0, Math.min(7, Math.floor(viewLeft / 512)));
+  const maxCol = Math.max(0, Math.min(7, Math.floor(viewRight / 512)));
+  const minRow = Math.max(0, Math.min(7, Math.floor(viewTop / 512)));
+  const maxRow = Math.max(0, Math.min(7, Math.floor(viewBottom / 512)));
+
+  const out: number[] = [];
+  for (let r = minRow; r <= maxRow; r++) {
+    for (let c = minCol; c <= maxCol; c++) {
+      out.push((r << 3) | c);
+    }
+  }
+  return out;
+}
+
 function NavigationWidgetContent({ romFile }: { romFile: string }) {
   const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld } = useGameUIStore(s => s.map);
   const equipment = useGameUIStore(s => s.equipment);
@@ -47,6 +67,7 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
   const [autoRun, setAutoRun] = useState(false);
   const [variant, setVariant] = useState<OverworldVariantInfo | null>(null);
   const [dynamicBlockerCount, setDynamicBlockerCount] = useState(0);
+  const [visibleScreenIndices, setVisibleScreenIndices] = useState<number[]>([]);
   const [debugTick, setDebugTick] = useState(0);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prevScreenRef = useRef<number | null>(null);
@@ -85,6 +106,15 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
   const displayedVariant = !isIndoors
     ? (result ? wasmGetOverworldVariant(result.screenIndex) : variant)
     : null;
+  const renderResults = overlayStore.results.length > 0
+    ? overlayStore.results
+    : (result ? [result] : []);
+  const reachableSum = renderResults.reduce((sum, r) => sum + r.reachableCount, 0);
+  const totalTilesSum = renderResults.reduce((sum, r) => sum + r.totalTiles, 0);
+  const entranceSum = renderResults.reduce((sum, r) => sum + r.entrances.length, 0);
+  const visibleScreenLabel = visibleScreenIndices
+    .map(i => `0x${i.toString(16).toUpperCase()}`)
+    .join(', ');
   // Force a lightweight periodic rerender so live debug values update while moving.
   useEffect(() => {
     const id = setInterval(() => setDebugTick(t => (t + 1) & 1023), 200);
@@ -147,7 +177,11 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
       const liveOverworldScreenIndex = vp
         ? ((((vp.linkY >> 9) & 7) << 3) | ((vp.linkX >> 9) & 7))
         : overworldScreenIndex;
-      const runScreenIndex = isIndoors ? activeScreenIndex : liveOverworldScreenIndex;
+      const runScreenIndices = isIndoors
+        ? [activeScreenIndex]
+        : (vp ? getVisibleOverworldScreenIndices(vp) : [liveOverworldScreenIndex]);
+      const primaryScreenIndex = isIndoors ? activeScreenIndex : liveOverworldScreenIndex;
+      setVisibleScreenIndices(isIndoors ? [] : runScreenIndices);
 
       // Build inventory from current equipment state
       // lift.1=bushes/pots (no glove), lift.2=Power Glove (light rocks), lift.3=Titan's Mitt (dark rocks)
@@ -164,7 +198,7 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
       let startPos: { row: number; col: number } | undefined;
       let tileContext: TileAttrContext = isIndoors ? 'interior-house' : 'overworld';
       let rawAttrGrid: number[][] | undefined;
-      let dynamicBlockers: Array<{ row: number; col: number }> | undefined;
+      let blockerWorldPoints: Array<{ x: number; y: number }> = [];
 
       // Build overworld dynamic blockers from live sprite data independently of viewport
       // so blockers don't disappear if viewport data is transiently unavailable.
@@ -204,12 +238,7 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
           seen.add(key);
           blockers.push(p);
         }
-
-        const screenWorldX = (runScreenIndex & 7) * 512;
-        const screenWorldY = ((runScreenIndex >> 3) & 7) * 512;
-        dynamicBlockers = blockers
-          .map(b => ({ row: Math.floor((b.y - screenWorldY) / 8), col: Math.floor((b.x - screenWorldX) / 8) }))
-          .filter(p => p.row >= 0 && p.row < 64 && p.col >= 0 && p.col < 64);
+        blockerWorldPoints = blockers;
       }
 
       if (vp) {
@@ -241,10 +270,10 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
         }
         const screenWorldX = isIndoors
           ? (Math.floor(vp.linkX / 512) * 512)
-          : ((runScreenIndex & 7) * 512);
+          : ((primaryScreenIndex & 7) * 512);
         const screenWorldY = isIndoors
           ? (Math.floor(vp.linkY / 512) * 512)
-          : (((runScreenIndex >> 3) & 7) * 512);
+          : (((primaryScreenIndex >> 3) & 7) * 512);
 
         const relPixelX = vp.linkX - screenWorldX;
         const relPixelY = vp.linkY - screenWorldY;
@@ -277,27 +306,76 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
         startPos = best ?? { row: clamp(Math.floor(centerRow)), col: clamp(Math.floor(centerCol)) };
       }
 
-      const runVariant = (!isIndoors) ? wasmGetOverworldVariant(runScreenIndex) : null;
-      const resp = await window.api.runFloodFill(romFile, runScreenIndex, items,
-        runVariant ? { progressTier: runVariant.progressIndicator, eventOverlay: runVariant.eventOverlayActive, eventFlags: runVariant.screenEventFlags } : undefined,
-        startPos,
-        tileContext,
-        rawAttrGrid,
-        dynamicBlockers,
-      );
-      if ('error' in resp) { console.error(resp.error); return; }
-      setDynamicBlockerCount(resp.dynamicBlockerCells?.length ?? dynamicBlockers?.length ?? 0);
-      const fillResult: FloodFillResult = {
+      const responses = await Promise.all(runScreenIndices.map(async (screenIndex) => {
+        const runVariant = (!isIndoors) ? wasmGetOverworldVariant(screenIndex) : null;
+        const dynamicBlockers = !isIndoors
+          ? blockerWorldPoints
+            .map(b => ({
+              row: Math.floor((b.y - (((screenIndex >> 3) & 7) * 512)) / 8),
+              col: Math.floor((b.x - ((screenIndex & 7) * 512)) / 8),
+            }))
+            .filter(p => p.row >= 0 && p.row < 64 && p.col >= 0 && p.col < 64)
+          : undefined;
+
+        const resp = await window.api.runFloodFill(
+          romFile,
+          screenIndex,
+          items,
+          runVariant ? {
+            progressTier: runVariant.progressIndicator,
+            eventOverlay: runVariant.eventOverlayActive,
+            eventFlags: runVariant.screenEventFlags,
+          } : undefined,
+          screenIndex === primaryScreenIndex ? startPos : undefined,
+          tileContext,
+          rawAttrGrid,
+          dynamicBlockers,
+        );
+
+        return { screenIndex, resp, dynamicBlockers };
+      }));
+
+      const failed = responses.find(x => 'error' in x.resp);
+      if (failed && 'error' in failed.resp) {
+        console.error(failed.resp.error);
+        return;
+      }
+
+      const normalized = responses
+        .filter(x => !('error' in x.resp))
+        .map(x => ({
+          screenIndex: x.screenIndex,
+          resp: x.resp as {
+            screenIndex: number;
+            reachable: number[][];
+            ledges?: unknown[];
+            attrGrid: number[][];
+            startPos?: { row: number; col: number };
+            connections: ConnectionInfo[];
+            bundles?: BorderBundle[];
+            dynamicBlockerCells?: Array<{ row: number; col: number }>;
+          },
+          dynamicBlockers: x.dynamicBlockers,
+        }));
+
+      if (normalized.length === 0) return;
+
+      const fillResults: FloodFillResult[] = normalized.map(({ resp }) => ({
         ...resp,
         reachable: resp.reachable.map((row: number[]) => row.map((v: number) => v === 1)),
-        ledges: resp.ledges ?? [],
+        ledges: (resp.ledges as FloodFillResult['ledges']) ?? [],
         attrGrid: resp.attrGrid,
         startPos: resp.startPos ?? { row: 32, col: 32 },
-      };
-      setResult(fillResult);
-      setConnections(resp.connections);
-      setBundles(resp.bundles ?? []);
-      overlayStore.setData(fillResult, resp.connections);
+      }));
+
+      const primaryResult = fillResults.find(r => r.screenIndex === primaryScreenIndex) ?? fillResults[0];
+      const primaryResp = normalized.find(x => x.resp.screenIndex === primaryResult.screenIndex)!.resp;
+
+      setDynamicBlockerCount(normalized.reduce((sum, x) => sum + (x.resp.dynamicBlockerCells?.length ?? x.dynamicBlockers?.length ?? 0), 0));
+      setResult(primaryResult);
+      setConnections(primaryResp.connections);
+      setBundles(primaryResp.bundles ?? []);
+      overlayStore.setData(primaryResult, primaryResp.connections, fillResults);
     } catch (e) { console.error(e); }
     finally {
       setRunning(false);
@@ -342,8 +420,8 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
   // Toggle overlay
   const toggleOverlay = useCallback(() => {
     if (overlayStore.visible) overlayStore.setVisible(false);
-    else if (result) overlayStore.setData(result, connections);
-  }, [result, connections]);
+    else if (result) overlayStore.setData(result, connections, renderResults);
+  }, [result, connections, renderResults]);
 
   // Review helpers
   const setLocStatus = (status: ReviewStatus) => {
@@ -391,6 +469,9 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
           {!isIndoors && ` · R${(overworldScreenIndex >> 3) & 7} C${overworldScreenIndex & 7}`}
           {isIndoors && ' · (indoors)'}
         </div>
+        {!isIndoors && visibleScreenIndices.length > 1 && (
+          <div style={{ ...S.meta, color: '#6ef' }}>Live screens: {visibleScreenLabel}</div>
+        )}
         {displayedVariant && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginTop: 3, padding: '4px 6px', borderRadius: 4, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
             <div style={{ fontSize: 9 }}>
@@ -417,16 +498,22 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2, marginTop: 3, padding: '4px 6px', borderRadius: 4, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
             <div style={{ fontSize: 9 }}>
               <span style={{ color: '#999' }}>Reachable: </span>
-              <span style={{ color: '#ccc' }}>{result.reachableCount}/{result.totalTiles} ({(result.reachableCount / result.totalTiles * 100).toFixed(0)}%)</span>
+              <span style={{ color: '#ccc' }}>{reachableSum}/{totalTilesSum} ({totalTilesSum > 0 ? (reachableSum / totalTilesSum * 100).toFixed(0) : '0'}%)</span>
             </div>
             <div style={{ fontSize: 9 }}>
               <span style={{ color: '#999' }}>Entrances: </span>
-              <span style={{ color: '#ccc' }}>{result.entrances.length}</span>
+              <span style={{ color: '#ccc' }}>{entranceSum}</span>
             </div>
             <div style={{ fontSize: 9 }}>
               <span style={{ color: '#999' }}>Connections: </span>
               <span style={{ color: '#ccc' }}>{connections.length}</span>
             </div>
+            {!isIndoors && renderResults.length > 1 && (
+              <div style={{ fontSize: 9 }}>
+                <span style={{ color: '#999' }}>Analyzed screens: </span>
+                <span style={{ color: '#ccc' }}>{renderResults.length}</span>
+              </div>
+            )}
           </div>
         )}
         {linkDebug && (

@@ -48,9 +48,13 @@ export function floodFillBFS(
     // Record border transitions
     recordBorderTransition(row, col, requirements, foundBorders, transitions);
 
-    // Record entrance proximity
+    // Record entrance reachability only when BFS touches the 2x2 entrance trigger footprint.
+    // This avoids floating entrances that are merely nearby but not actually reachable.
     for (const ent of entrancePositions) {
-      if (Math.abs(row - ent.row) <= 6 && Math.abs(col - ent.col) <= 6) {
+      const inTrigger =
+        row >= ent.row && row <= ent.row + 1 &&
+        col >= ent.col && col <= ent.col + 1;
+      if (inTrigger) {
         const key = `entrance-${ent.idx}`;
         if (!foundBorders.has(key)) {
           foundBorders.add(key);

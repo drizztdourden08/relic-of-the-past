@@ -185,7 +185,7 @@ function findPath2x2FromLink(
 function ConnectionOverlay({ width, height, gameRunning }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
-  const { visible, result, connections } = useConnectionOverlayStore();
+  const { visible, result, results, connections } = useConnectionOverlayStore();
   const { overworldScreenIndex, roomIndex, isIndoors } = useGameUIStore(s => s.map);
   const activeScreenIndex = isIndoors ? roomIndex : overworldScreenIndex;
 
@@ -287,6 +287,11 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       const screenWorldY = isIndoors
         ? (Math.floor(vp.linkY / 512) * 512)
         : (((result.screenIndex >> 3) & 7) * 512);
+      const drawResults = results.length > 0 ? results : [result];
+      const getScreenWorldOrigin = (screenIndex: number) => ({
+        x: isIndoors ? (Math.floor(vp.linkX / 512) * 512) : ((screenIndex & 7) * 512),
+        y: isIndoors ? (Math.floor(vp.linkY / 512) * 512) : (((screenIndex >> 3) & 7) * 512),
+      });
 
       // Sub-tile size in game pixels
       const TILE_PX = 8;
@@ -296,39 +301,42 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       // Draw reachable tiles as dots (skip ledge tiles — those get arrows instead)
       const LEDGE_ATTRS = new Set([0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x01, 0x02, 0x03, 0x1a, 0x12]);
       ctx.globalAlpha = 0.55;
-      for (let r = 0; r < 64; r++) {
-        for (let c = 0; c < 64; c++) {
-          if (!result.reachable[r][c]) continue;
-          if (result.attrGrid && LEDGE_ATTRS.has(result.attrGrid[r][c])) continue;
+      for (const drawResult of drawResults) {
+        const origin = getScreenWorldOrigin(drawResult.screenIndex);
+        for (let r = 0; r < 64; r++) {
+          for (let c = 0; c < 64; c++) {
+            if (!drawResult.reachable[r][c]) continue;
+            if (drawResult.attrGrid && LEDGE_ATTRS.has(drawResult.attrGrid[r][c])) continue;
 
-          // Tile center in world coordinates
-          const worldX = screenWorldX + c * TILE_PX + TILE_PX / 2;
-          const worldY = screenWorldY + r * TILE_PX + TILE_PX / 2;
+            // Tile center in world coordinates
+            const worldX = origin.x + c * TILE_PX + TILE_PX / 2;
+            const worldY = origin.y + r * TILE_PX + TILE_PX / 2;
 
-          // Convert to position within the rendered SNES frame
-          const screenX = worldX - viewLeft;
-          const screenY = worldY - viewTop;
+            // Convert to position within the rendered SNES frame
+            const screenX = worldX - viewLeft;
+            const screenY = worldY - viewTop;
 
-          // Cull tiles outside viewport
-          if (screenX < -TILE_PX || screenX > snesW + TILE_PX) continue;
-          if (screenY < -TILE_PX || screenY > snesH + TILE_PX) continue;
+            // Cull tiles outside viewport
+            if (screenX < -TILE_PX || screenX > snesW + TILE_PX) continue;
+            if (screenY < -TILE_PX || screenY > snesH + TILE_PX) continue;
 
-          // Convert to display pixels
-          const dx = screenX * scaleX;
-          const dy = screenY * scaleY;
+            // Convert to display pixels
+            const dx = screenX * scaleX;
+            const dy = screenY * scaleY;
 
-          // Pink = requires ANY item (including lift.1 — DO NOT remove lift.1 from this check, it IS a real requirement)
-          // Cyan = completely free, no items needed
-          const hasReq = result.reqGrid && result.reqGrid[r][c] !== '';
+            // Pink = requires ANY item (including lift.1 — DO NOT remove lift.1 from this check, it IS a real requirement)
+            // Cyan = completely free, no items needed
+            const hasReq = drawResult.reqGrid && drawResult.reqGrid[r][c] !== '';
 
-          if (hasReq) {
-            ctx.fillStyle = 'rgba(255, 100, 180, 0.7)';
-          } else {
-            ctx.fillStyle = 'rgba(80, 200, 255, 0.6)';
+            if (hasReq) {
+              ctx.fillStyle = 'rgba(255, 100, 180, 0.7)';
+            } else {
+              ctx.fillStyle = 'rgba(80, 200, 255, 0.6)';
+            }
+            ctx.beginPath();
+            ctx.arc(dx, dy, dotRadius * 0.6, 0, Math.PI * 2);
+            ctx.fill();
           }
-          ctx.beginPath();
-          ctx.arc(dx, dy, dotRadius * 0.6, 0, Math.PI * 2);
-          ctx.fill();
         }
       }
 
@@ -351,13 +359,15 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       }
 
       // Draw hookshot targets: same-colored dot with a bright green ring border
-      if (result.hookTargets && result.hookTargets.length > 0) {
-        ctx.globalAlpha = 0.85;
-        ctx.lineWidth = Math.max(1.5, 2.5 * Math.min(scaleX, scaleY));
-        ctx.strokeStyle = '#00ff88';
-        for (const ht of result.hookTargets) {
-          const worldX = screenWorldX + ht.col * TILE_PX + TILE_PX / 2;
-          const worldY = screenWorldY + ht.row * TILE_PX + TILE_PX / 2;
+      ctx.globalAlpha = 0.85;
+      ctx.lineWidth = Math.max(1.5, 2.5 * Math.min(scaleX, scaleY));
+      ctx.strokeStyle = '#00ff88';
+      for (const drawResult of drawResults) {
+        if (!drawResult.hookTargets || drawResult.hookTargets.length === 0) continue;
+        const origin = getScreenWorldOrigin(drawResult.screenIndex);
+        for (const ht of drawResult.hookTargets) {
+          const worldX = origin.x + ht.col * TILE_PX + TILE_PX / 2;
+          const worldY = origin.y + ht.row * TILE_PX + TILE_PX / 2;
           const screenX = worldX - viewLeft;
           const screenY = worldY - viewTop;
           if (screenX < -TILE_PX || screenX > snesW + TILE_PX) continue;
@@ -366,9 +376,7 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
           const dx = screenX * scaleX;
           const dy = screenY * scaleY;
 
-          // Fill with the same color as normal reachable dots
-          // lift.1 IS a requirement — NEVER filter it out here
-          const hasReq = result.reqGrid && result.reqGrid[ht.row]?.[ht.col] !== '';
+          const hasReq = drawResult.reqGrid && drawResult.reqGrid[ht.row]?.[ht.col] !== '';
           ctx.fillStyle = hasReq
             ? 'rgba(255, 100, 180, 0.7)'
             : 'rgba(80, 200, 255, 0.6)';
@@ -376,7 +384,6 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
           ctx.arc(dx, dy, dotRadius * 0.6, 0, Math.PI * 2);
           ctx.fill();
 
-          // Green border ring to indicate hookshot-reachable
           ctx.beginPath();
           ctx.arc(dx, dy, dotRadius * 0.9, 0, Math.PI * 2);
           ctx.stroke();
@@ -470,13 +477,15 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       ctx.globalAlpha = 0.7;
       ctx.strokeStyle = '#cc5555';
       ctx.fillStyle = '#cc5555';
-      for (const ledge of result.ledges ?? []) {
+      for (const drawResult of drawResults) {
+        const origin = getScreenWorldOrigin(drawResult.screenIndex);
+        for (const ledge of drawResult.ledges ?? []) {
         // Start position (center of trigger tile)
-        const startWorldX = screenWorldX + ledge.startCol * TILE_PX + TILE_PX / 2;
-        const startWorldY = screenWorldY + ledge.startRow * TILE_PX + TILE_PX / 2;
+        const startWorldX = origin.x + ledge.startCol * TILE_PX + TILE_PX / 2;
+        const startWorldY = origin.y + ledge.startRow * TILE_PX + TILE_PX / 2;
         // End position (center of landing tile)
-        const endWorldX = screenWorldX + ledge.endCol * TILE_PX + TILE_PX / 2;
-        const endWorldY = screenWorldY + ledge.endRow * TILE_PX + TILE_PX / 2;
+        const endWorldX = origin.x + ledge.endCol * TILE_PX + TILE_PX / 2;
+        const endWorldY = origin.y + ledge.endRow * TILE_PX + TILE_PX / 2;
 
         const startSX = startWorldX - viewLeft;
         const startSY = startWorldY - viewTop;
@@ -510,6 +519,7 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
         ctx.lineTo(x2 - headLen * Math.cos(angle + 0.4), y2 - headLen * Math.sin(angle + 0.4));
         ctx.closePath();
         ctx.fill();
+        }
       }
 
       // Draw connection border tiles as larger colored dots
@@ -547,10 +557,12 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       // which aligns with the visible door graphic (doors span 2 Map16 tiles).
       ctx.globalAlpha = 0.95;
       ctx.fillStyle = EDGE_COLORS.entrance;
-      for (const ent of result.entrances) {
+      for (const drawResult of drawResults) {
+        const origin = getScreenWorldOrigin(drawResult.screenIndex);
+        for (const ent of drawResult.entrances) {
         // Entrance trigger is a single Map16 tile = 2×2 sub-tiles (16×16 game px)
-        const worldX = screenWorldX + ent.gridCol * TILE_PX + 8;
-        const worldY = screenWorldY + ent.gridRow * TILE_PX;
+        const worldX = origin.x + ent.gridCol * TILE_PX + 8;
+        const worldY = origin.y + ent.gridRow * TILE_PX;
         const screenX = worldX - viewLeft;
         const screenY = worldY - viewTop;
         if (screenX < -TILE_PX * 2 || screenX > snesW + TILE_PX) continue;
@@ -571,6 +583,7 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
         ctx.strokeStyle = '#fff';
         ctx.lineWidth = 1;
         ctx.strokeRect(dx - 0.5, dy - 0.5, dw + 1, dh + 1);
+        }
       }
 
       // ─── Debug: Link's position and tile coverage ───
@@ -632,7 +645,7 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
 
     rafRef.current = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [visible, result, connections, width, height, gameRunning, activeScreenIndex, isIndoors, overworldScreenIndex]);
+  }, [visible, result, results, connections, width, height, gameRunning, activeScreenIndex, isIndoors, overworldScreenIndex]);
 
   if (!visible || !result) return null;
 
