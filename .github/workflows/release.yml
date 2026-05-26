@@ -31,7 +31,7 @@ jobs:
           echo "Checking critical files..."
           test -f package.json || { echo "Missing package.json"; exit 1; }
           test -f package-lock.json || { echo "Missing package-lock.json"; exit 1; }
-          test -f electron-builder.config.js || test -f scripts/build/electron-builder.config.js || { echo "Missing electron-builder config"; exit 1; }
+          test -f scripts/build/electron-builder.config.js || { echo "Missing electron-builder config"; exit 1; }
           test -f electron.vite.config.ts || { echo "Missing electron.vite.config.ts"; exit 1; }
           test -d core/wasm-build || { echo "Missing core/wasm-build"; exit 1; }
           test -f core/wasm-build/Makefile || { echo "Missing WASM Makefile"; exit 1; }
@@ -87,7 +87,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npx electron-vite build
-          npx electron-builder ${{ matrix.args }} --publish never --config electron-builder.config.js -c.directories.output=release/${{ matrix.platform }}
+          npx electron-builder ${{ matrix.args }} --publish never --config scripts/build/electron-builder.config.js -c.directories.output=release/${{ matrix.platform }}
 
       - name: Clean build artifacts
         shell: bash
