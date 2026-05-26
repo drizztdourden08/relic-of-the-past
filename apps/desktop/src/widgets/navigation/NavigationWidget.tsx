@@ -360,13 +360,24 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
 
       if (normalized.length === 0) return;
 
-      const fillResults: FloodFillResult[] = normalized.map(({ resp }) => ({
-        ...resp,
-        reachable: resp.reachable.map((row: number[]) => row.map((v: number) => v === 1)),
-        ledges: (resp.ledges as FloodFillResult['ledges']) ?? [],
-        attrGrid: resp.attrGrid,
-        startPos: resp.startPos ?? { row: 32, col: 32 },
-      }));
+      const fillResults: FloodFillResult[] = normalized.map(({ resp }) => {
+        const reachableEntranceIds = new Set(
+          (resp.transitions ?? [])
+            .filter((t: any) => t.edge === 'entrance' && typeof t.entranceIdx === 'number')
+            .map((t: any) => t.entranceIdx as number),
+        );
+
+        const entrances = (resp.entrances ?? []).filter((ent: { id: number }) => reachableEntranceIds.has(ent.id));
+
+        return {
+          ...resp,
+          entrances,
+          reachable: resp.reachable.map((row: number[]) => row.map((v: number) => v === 1)),
+          ledges: (resp.ledges as FloodFillResult['ledges']) ?? [],
+          attrGrid: resp.attrGrid,
+          startPos: resp.startPos ?? { row: 32, col: 32 },
+        };
+      });
 
       const primaryResult = fillResults.find(r => r.screenIndex === primaryScreenIndex) ?? fillResults[0];
       const primaryResp = normalized.find(x => x.resp.screenIndex === primaryResult.screenIndex)!.resp;
