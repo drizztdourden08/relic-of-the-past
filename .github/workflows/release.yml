@@ -13,7 +13,32 @@ permissions:
   contents: write
 
 jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Validate package-lock.json
+        run: npm ci --dry-run
+
+      - name: Check required files exist
+        run: |
+          echo "Checking critical files..."
+          test -f package.json || { echo "Missing package.json"; exit 1; }
+          test -f package-lock.json || { echo "Missing package-lock.json"; exit 1; }
+          test -f electron-builder.config.js || test -f scripts/build/electron-builder.config.js || { echo "Missing electron-builder config"; exit 1; }
+          test -f electron.vite.config.ts || { echo "Missing electron.vite.config.ts"; exit 1; }
+          test -d core/wasm-build || { echo "Missing core/wasm-build"; exit 1; }
+          test -f core/wasm-build/Makefile || { echo "Missing WASM Makefile"; exit 1; }
+          echo "All preflight checks passed."
+
   build:
+    needs: preflight
     strategy:
       matrix:
         include:
