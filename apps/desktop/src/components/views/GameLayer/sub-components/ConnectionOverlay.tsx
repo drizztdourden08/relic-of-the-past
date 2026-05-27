@@ -185,7 +185,7 @@ function findPath2x2FromLink(
 function ConnectionOverlay({ width, height, gameRunning }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
-  const { visible, result, results, connections } = useConnectionOverlayStore();
+  const { visible, result, results, connections, setLockedPath } = useConnectionOverlayStore();
   const { overworldScreenIndex, roomIndex, isIndoors } = useGameUIStore(s => s.map);
   const activeScreenIndex = isIndoors ? roomIndex : overworldScreenIndex;
 
@@ -404,6 +404,17 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
         const path = goal2x2
           ? findPath2x2FromLink(vp.linkX, vp.linkY, screenWorldX, screenWorldY, goal2x2, result.reachable)
           : null;
+
+        // Push path to store when locked so the widget can copy it
+        if (ms.lockTarget) {
+          const attrGrid = result.attrGrid;
+          if (path && attrGrid) {
+            const pathTiles = path.map(p => ({ row: p.row, col: p.col, attr: attrGrid[p.row]?.[p.col] ?? -1 }));
+            setLockedPath(pathTiles);
+          } else {
+            setLockedPath(null);
+          }
+        }
 
         // Draw target 2×2 rectangle border regardless of path availability
         if (goal2x2) {

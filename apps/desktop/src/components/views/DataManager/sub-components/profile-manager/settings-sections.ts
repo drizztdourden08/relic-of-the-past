@@ -56,6 +56,7 @@ const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label
       { key: 'breakPotsWithSword', label: 'Break Pots with Sword' },
       { key: 'disableLowHealthBeep', label: 'Disable Low Health Beep' },
       { key: 'skipIntroOnKeypress', label: 'Skip Intro on Keypress' },
+      { key: 'disableTelepathy', label: 'Disable Telepathic Messages' },
       { key: 'showMaxItemsInYellow', label: 'Show Max Items in Yellow' },
       { key: 'moreActiveBombs', label: 'More Active Bombs' },
       { key: 'carryMoreRupees', label: 'Carry More Rupees' },

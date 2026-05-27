@@ -9,6 +9,7 @@ import { unmetRequirements } from '../core/inventory';
 import {
   loadMap32Tables, loadMap16ToMap8, loadMap8ToAttr, decompressScreen,
   ADDR_OW_ENTRANCE_AREA, ADDR_OW_ENTRANCE_POS, ADDR_OW_ENTRANCE_ID, ADDR_ENTRANCE_ROOM,
+  ADDR_FALLHOLE_POS, ADDR_FALLHOLE_AREA, ADDR_FALLHOLE_ENTRANCES, FALLHOLE_COUNT,
 } from '../screen-data';
 import { buildCollisionGrid, buildCollisionGridFromRawAttr } from '../screen-data/collision-grid';
 import { processStraightCliffs, processDiagonalCliffs, processSouthCliffs } from '../screen-data/cliff-preprocessing';
@@ -41,23 +42,90 @@ export function getEntrances(rom: RomData): OverworldEntrance[] {
 // ─── Entrance Loading ────────────────────────────────────────────────────────
 
 function loadOverworldEntrances(rom: RomData): OverworldEntrance[] {
+  // isSmall table: 0 = big (2×2) screen, non-zero = small (1×1)
+  const ADDR_OW_MAP_IS_SMALL = 0x82f88d;
   const entrances: OverworldEntrance[] = [];
+
+  // --- Regular door/cave entrances (kOverworld_Entrance tables) ---
   for (let i = 0; i < 129; i++) {
-    // Area table is byte-indexed (one area per entrance slot).
-    // Reading it as word/stride-2 mixes adjacent entries and produces wrong screen assignment.
-    const area = rom.getByte(ADDR_OW_ENTRANCE_AREA + i);
+    // Area table is uint16 (word-indexed, stride 2) — confirmed by compile_resources.py
+    // and the 258-byte gap (129×2) between ADDR_OW_ENTRANCE_AREA and ADDR_OW_ENTRANCE_POS.
+    let area = rom.getWord(ADDR_OW_ENTRANCE_AREA + i * 2);
     const pos = rom.getWord(ADDR_OW_ENTRANCE_POS + i * 2);
     const id = rom.getByte(ADDR_OW_ENTRANCE_ID + i);
     const roomId = rom.getWord(ADDR_ENTRANCE_ROOM + id * 2);
 
     const map16Row = pos >> 7;
     const map16Col = (pos & 0x7F) >> 1;
+
+    // For big screens, the area table stores the head (top-left) screen.
+    // Positions use the full 64×64 MAP16 coordinate space — determine the
+    // actual sub-screen quadrant from the position.
+    if (area < 192 && rom.getByte(ADDR_OW_MAP_IS_SMALL + (area & 0x3F)) === 0) {
+      if (map16Col >= 32) area += 1;  // right half
+      if (map16Row >= 32) area += 8;  // bottom half
+    }
+
     const gridRow = (map16Row % 32) * 2;
     const gridCol = (map16Col % 32) * 2;
 
     entrances.push({ area, pos, id, gridRow, gridCol, roomId });
   }
+
+  // --- Fall hole entrances (kFallHole tables) ---
+  // The pos encoding stores ((y - 8) & 0x3F) in the upper bits (see compile_resources.py).
+  // We must add 8 back to get the actual map16 row on the tilemap.
+  // The X column is 1 map16 tile right of the bush (Link's position when falling),
+  // so subtract 1 to place the marker on the bush itself.
+  for (let i = 0; i < FALLHOLE_COUNT; i++) {
+    let area = rom.getWord(ADDR_FALLHOLE_AREA + i * 2);
+    const pos = rom.getWord(ADDR_FALLHOLE_POS + i * 2);
+    const id = rom.getByte(ADDR_FALLHOLE_ENTRANCES + i);
+    const roomId = rom.getWord(ADDR_ENTRANCE_ROOM + id * 2);
+
+    const map16Col = (pos & 0x7F) >> 1;
+    const map16Row = ((pos >> 7) + 8) & 0x3F;
+
+    if (area < 192 && rom.getByte(ADDR_OW_MAP_IS_SMALL + (area & 0x3F)) === 0) {
+      if (map16Col >= 32) area += 1;
+      if (map16Row >= 32) area += 8;
+    }
+
+    const gridRow = (map16Row % 32) * 2;
+    const gridCol = (map16Col % 32) * 2 - 1;
+
+    entrances.push({ area, pos, id, gridRow, gridCol, roomId });
+  }
+
   return entrances;
+}
+
+/**
+ * Get the set of screens that form a big-screen group containing the given screen.
+ * For small screens, returns just [screenIndex].
+ * For big screens, returns all 4 sub-screens (head, head+1, head+8, head+9).
+ */
+export function getBigScreenGroup(rom: RomData, screenIndex: number): number[] {
+  const ADDR_OW_MAP_IS_SMALL = 0x82f88d;
+  const row = (screenIndex >> 3) & 7;
+  const col = screenIndex & 7;
+
+  // Check all 4 possible heads: current, left, above, above-left
+  for (const [dr, dc] of [[0, 0], [0, -1], [-1, 0], [-1, -1]] as const) {
+    const hRow = row + dr;
+    const hCol = col + dc;
+    if (hRow < 0 || hRow > 7 || hCol < 0 || hCol > 7) continue;
+    if (hRow + 1 > 7 || hCol + 1 > 7) continue;
+    const head = (hRow << 3) | hCol;
+    if (rom.getByte(ADDR_OW_MAP_IS_SMALL + (head & 0x3F)) === 0) {
+      // Verify this screen is one of the 4 sub-screens
+      const group = [head, head + 1, head + 8, head + 9];
+      if (group.includes(screenIndex)) {
+        return group;
+      }
+    }
+  }
+  return [screenIndex];
 }
 
 // ─── Screen Preparation ──────────────────────────────────────────────────────
@@ -183,6 +251,7 @@ export function floodFillScreen(
   tileContext: TileAttrContext = 'overworld',
   rawAttrOverride?: number[][],
   dynamicBlockers?: GridPos[],
+  extraSeeds?: GridPos[],
 ): FloodFillResult {
   const engine = getEngine(rom);
   const { grid, ledges, dynamicBlockerCells } = prepareScreen(rom, screenIndex, variant, tileContext, rawAttrOverride, dynamicBlockers);
@@ -196,7 +265,7 @@ export function floodFillScreen(
   const inv = inventory ?? new Set<string>();
 
   const { reachable, transitions, reachableCount, reqGrid, hookTargets } = floodFillBFS(
-    grid.tiles, start.row, start.col, entrancePositions, inv, grid.rawAttr, tileContext,
+    grid.tiles, start.row, start.col, entrancePositions, inv, grid.rawAttr, tileContext, extraSeeds,
   );
 
   // Filter ledges to only reachable ones

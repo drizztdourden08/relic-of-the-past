@@ -1,4 +1,6 @@
 import type { TilePassability, TransitionPoint, GridPos } from '../types';
+import type { TileAttrContext } from '../tile-attrs';
+import { getHookshotTargetTiles } from '../tile-attrs';
 import { GRID_SIZE } from '../types';
 import { DIRECTIONS } from '../core';
 
@@ -13,6 +15,7 @@ interface SingleScreenResult {
   transitions: TransitionPoint[];
   reachableCount: number;
   reqGrid: string[][];
+  hookTargets: GridPos[];
 }
 
 /**
@@ -26,6 +29,9 @@ export function floodFillBFS(
   startCol: number,
   entrancePositions: { row: number; col: number; idx: number }[],
   inventory: Set<string>,
+  rawAttr: number[][],
+  tileContext: TileAttrContext,
+  extraSeeds?: { row: number; col: number }[],
 ): SingleScreenResult {
   const reached: (Set<string> | null)[][] = Array.from(
     { length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(null),
@@ -38,6 +44,19 @@ export function floodFillBFS(
   deque.push({ row: startRow, col: startCol, requirements: startReqs });
   reached[startRow][startCol] = startReqs;
 
+  // Add extra seed positions (for multi-entry big-screen propagation)
+  if (extraSeeds) {
+    for (const seed of extraSeeds) {
+      if (seed.row >= 0 && seed.row < GRID_SIZE && seed.col >= 0 && seed.col < GRID_SIZE) {
+        if (reached[seed.row][seed.col] === null) {
+          const seedReqs = new Set<string>();
+          deque.push({ row: seed.row, col: seed.col, requirements: seedReqs });
+          reached[seed.row][seed.col] = seedReqs;
+        }
+      }
+    }
+  }
+
   while (deque.length > 0) {
     const cell = deque.shift()!;
     const { row, col, requirements } = cell;
@@ -48,18 +67,20 @@ export function floodFillBFS(
     // Record border transitions
     recordBorderTransition(row, col, requirements, foundBorders, transitions);
 
-    // Record entrance reachability only when BFS touches the 2x2 entrance trigger footprint.
-    // This avoids floating entrances that are merely nearby but not actually reachable.
+    // Record entrance reachability when BFS reaches a tile adjacent to (or inside)
+    // the 2x2 entrance trigger footprint. Entrance MAP16 tiles are typically walls
+    // (doors/caves); the game triggers entrances from the walkable tile in front
+    // via a +7px Y offset, so we use a 3-tile proximity ring. The walkable ground
+    // in front of doors is consistently ~4 grid rows below the entrance position.
     for (const ent of entrancePositions) {
-      const inTrigger =
-        row >= ent.row && row <= ent.row + 1 &&
-        col >= ent.col && col <= ent.col + 1;
-      if (inTrigger) {
-        const key = `entrance-${ent.idx}`;
-        if (!foundBorders.has(key)) {
-          foundBorders.add(key);
-          transitions.push({ row: ent.row, col: ent.col, edge: 'entrance', requirements: [...requirements], entranceIdx: ent.idx });
-        }
+      const key = `entrance-${ent.idx}`;
+      if (foundBorders.has(key)) continue;
+      const nearby =
+        row >= ent.row - 3 && row <= ent.row + 4 &&
+        col >= ent.col - 3 && col <= ent.col + 4;
+      if (nearby) {
+        foundBorders.add(key);
+        transitions.push({ row: ent.row, col: ent.col, edge: 'entrance', requirements: [...requirements], entranceIdx: ent.idx });
       }
     }
 
@@ -121,7 +142,18 @@ export function floodFillBFS(
     }),
   );
 
-  return { reachable, transitions, reachableCount, reqGrid };
+  // Collect hookshot targets among reachable tiles
+  const hookSet = getHookshotTargetTiles(tileContext);
+  const hookTargets: GridPos[] = [];
+  for (let r = 0; r < GRID_SIZE; r++) {
+    for (let c = 0; c < GRID_SIZE; c++) {
+      if (reachable[r][c] && hookSet.has(rawAttr[r][c])) {
+        hookTargets.push({ row: r, col: c });
+      }
+    }
+  }
+
+  return { reachable, transitions, reachableCount, reqGrid, hookTargets };
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

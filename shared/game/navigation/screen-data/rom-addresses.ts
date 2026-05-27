@@ -8,8 +8,14 @@ export const ADDR_MAP32_3 = 0x84B400;
 export const ADDR_MAP16_TO_MAP8 = 0x8F8000;
 export const ADDR_MAP8_TO_ATTR = 0x8E9459;
 
-/** ROM addresses for overworld entrance tables. */
+/** ROM addresses for overworld entrance tables (doors/caves). */
 export const ADDR_OW_ENTRANCE_AREA = 0x9BB96F;
 export const ADDR_OW_ENTRANCE_POS = 0x9BBA71;
 export const ADDR_OW_ENTRANCE_ID = 0x9BBB73;
 export const ADDR_ENTRANCE_ROOM = 0x82C813;
+
+/** ROM addresses for fall hole entrance tables (pits/holes). */
+export const ADDR_FALLHOLE_POS = 0x9BB800;
+export const ADDR_FALLHOLE_AREA = 0x9BB826;
+export const ADDR_FALLHOLE_ENTRANCES = 0x9BB84C;
+export const FALLHOLE_COUNT = 19;

@@ -88,6 +88,7 @@ const SECTIONS: Section[] = [
         items: [
           { key: 'disableLowHealthBeep', label: 'Disable Low Heart Beep', description: 'Silence the repeating warning beep when your health is low', keywords: 'beep heart health warning annoying' },
           { key: 'skipIntroOnKeypress', label: 'Skip Intro on Keypress', description: 'Press any key to skip the intro and title screen sequence', keywords: 'intro skip key press' },
+          { key: 'disableTelepathy', label: 'Disable Telepathic Messages', description: 'Suppress Zelda\'s periodic telepathic pleas while walking to the castle in the rain', keywords: 'zelda telepathy rain message annoying skip' },
           { key: 'showMaxItemsInYellow', label: 'Indicate Max Resources', description: 'Highlight rupees, bombs, and arrows in yellow when you\'re carrying the maximum amount', keywords: 'max yellow rupees bombs arrows' },
           { key: 'carryMoreRupees', label: 'Larger Wallet', description: 'Increase the maximum rupee capacity from 999 to 9999', keywords: 'rupees wallet money' },
         ],

@@ -44,6 +44,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   breakPotsWithSword: false,
   disableLowHealthBeep: false,
   skipIntroOnKeypress: false,
+  disableTelepathy: false,
   showMaxItemsInYellow: false,
   moreActiveBombs: false,
   carryMoreRupees: false,
@@ -160,6 +161,7 @@ CarryMoreRupees = ${boolToIni(settings.carryMoreRupees)}
 MiscBugFixes = ${boolToIni(settings.miscBugFixes)}
 GameChangingBugFixes = ${boolToIni(settings.gameChangingBugFixes)}
 CancelBirdTravel = ${boolToIni(settings.cancelBirdTravel)}
+DisableTelepathy = ${boolToIni(settings.disableTelepathy)}
 `;
 }
 

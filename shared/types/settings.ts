@@ -54,6 +54,7 @@ interface GameSettings {
   breakPotsWithSword: boolean;
   disableLowHealthBeep: boolean;
   skipIntroOnKeypress: boolean;
+  disableTelepathy: boolean;
   showMaxItemsInYellow: boolean;
   moreActiveBombs: boolean;
   carryMoreRupees: boolean;

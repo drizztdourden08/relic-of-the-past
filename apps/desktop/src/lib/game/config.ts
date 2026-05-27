@@ -26,6 +26,7 @@ TurnWhileDashing = 0
 CollectItemsWithSword = 0
 DisableLowHealthBeep = 0
 SkipIntroOnKeypress = 0
+DisableTelepathy = 0
 `;
 
 export { DEFAULT_ZELDA3_INI };

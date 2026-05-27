@@ -34,7 +34,7 @@ function registerConnectionHandlers(): void {
   // Run flood fill for a specific screen (CPU-intensive, runs in main process)
   let romCache: { path: string; rom: ReturnType<typeof loadRom> } | null = null;
 
-  ipcMain.handle('connectionReview:floodFill', async (_e, romFile: string, screenIndex: number, items?: string[], variant?: ScreenVariant, startPos?: { row: number; col: number }, tileContext?: TileAttrContext, rawAttrGrid?: number[][], dynamicBlockers?: Array<{ row: number; col: number }>) => {
+  ipcMain.handle('connectionReview:floodFill', async (_e, romFile: string, screenIndex: number, items?: string[], variant?: ScreenVariant, startPos?: { row: number; col: number }, tileContext?: TileAttrContext, rawAttrGrid?: number[][], dynamicBlockers?: Array<{ row: number; col: number }>, extraSeeds?: Array<{ row: number; col: number }>) => {
     try {
       const romPath = getUserDataPath('roms', romFile);
 
@@ -45,7 +45,7 @@ function registerConnectionHandlers(): void {
       }
 
       const inventory = new Set(items ?? []);
-      const result = floodFillScreen(romCache.rom, screenIndex, inventory, startPos, variant, tileContext ?? 'overworld', rawAttrGrid, dynamicBlockers);
+      const result = floodFillScreen(romCache.rom, screenIndex, inventory, startPos, variant, tileContext ?? 'overworld', rawAttrGrid, dynamicBlockers, extraSeeds);
       const connections = getConnections(result);
       const bundles = findBorderBundles(result);
 

@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import type { FloodFillResult, ConnectionInfo } from '@shared/game/navigation';
 
+interface PathTile { row: number; col: number; attr: number; }
+
 interface ConnectionOverlayState {
   /** Whether the overlay is visible */
   visible: boolean;
@@ -10,10 +12,18 @@ interface ConnectionOverlayState {
   results: FloodFillResult[];
   /** Detected connections */
   connections: ConnectionInfo[];
+  /** Locked target tile from overlay path debug */
+  lockedTarget: { row: number; col: number } | null;
+  /** Last computed A* path (with tile attrs) when target is locked */
+  lockedPath: PathTile[] | null;
   /** Toggle overlay visibility */
   setVisible: (visible: boolean) => void;
   /** Update with new flood fill data */
   setData: (result: FloodFillResult, connections: ConnectionInfo[], results?: FloodFillResult[]) => void;
+  /** Set locked target */
+  setLockedTarget: (tile: { row: number; col: number } | null) => void;
+  /** Set locked path */
+  setLockedPath: (path: PathTile[] | null) => void;
   /** Clear all data */
   clear: () => void;
 }
@@ -23,7 +33,11 @@ export const useConnectionOverlayStore = create<ConnectionOverlayState>((set) =>
   result: null,
   results: [],
   connections: [],
+  lockedTarget: null,
+  lockedPath: null,
   setVisible: (visible) => set({ visible }),
   setData: (result, connections, results) => set({ result, connections, results: results ?? [result], visible: true }),
-  clear: () => set({ result: null, results: [], connections: [], visible: false }),
+  setLockedTarget: (tile) => set({ lockedTarget: tile }),
+  setLockedPath: (path) => set({ lockedPath: path }),
+  clear: () => set({ result: null, results: [], connections: [], visible: false, lockedTarget: null, lockedPath: null }),
 }));
