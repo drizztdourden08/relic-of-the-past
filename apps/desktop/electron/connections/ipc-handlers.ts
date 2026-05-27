@@ -2,7 +2,7 @@ import { ipcMain } from 'electron';
 import { readFile, writeFile } from 'fs/promises';
 import { getUserDataPath } from '../lib/paths';
 import { loadRom } from '../../../../shared/asset-extraction/rom/rom-loader';
-import { floodFillScreen, initEngine, getConnections } from '../../../../shared/game/navigation';
+import { floodFillScreen, initEngine, getConnections, getBigScreenGroup } from '../../../../shared/game/navigation';
 import { findBorderBundles } from '../../../../shared/game/navigation/analysis/border-bundles';
 import type { ScreenVariant } from '../../../../shared/game/navigation/types';
 import type { TileAttrContext } from '../../../../shared/game/navigation/tile-attrs';
@@ -69,6 +69,19 @@ function registerConnectionHandlers(): void {
       };
     } catch (e) {
       return { error: e instanceof Error ? e.message : String(e) };
+    }
+  });
+
+  ipcMain.handle('connectionReview:bigScreenGroup', async (_e, romFile: string, screenIndex: number) => {
+    try {
+      const romPath = getUserDataPath('roms', romFile);
+      if (!romCache || romCache.path !== romPath) {
+        romCache = { path: romPath, rom: loadRom(romPath) };
+        initEngine(romCache.rom);
+      }
+      return getBigScreenGroup(romCache.rom, screenIndex);
+    } catch (e) {
+      return [screenIndex];
     }
   });
 }

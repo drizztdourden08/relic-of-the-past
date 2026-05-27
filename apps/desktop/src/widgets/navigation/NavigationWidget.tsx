@@ -335,10 +335,12 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
       };
 
       // Run primary screen first (from Link's position), then iteratively propagate
-      // to adjacent screens via border transitions until no new screens are discovered.
-      // Each screen is run with ALL accumulated border entry points as extra seeds,
-      // handling disconnected regions (e.g., 0x1B has east/west halves separated by walls).
-      const MAX_SCREENS = 9;
+      // to adjacent screens ONLY within the same big-screen group.
+      // Single screens: flood only that one screen (no propagation).
+      // Big screens (2×2): flood all 4 quadrants, nothing beyond.
+      const allowedScreens = new Set<number>(
+        isIndoors ? [primaryScreenIndex] : await window.api.getBigScreenGroup(romFile, primaryScreenIndex),
+      );
       const MAX_ITERATIONS = 8;
       let iterations = 0;
       const analyzed = new Map<number, Awaited<ReturnType<typeof runOne>>>();
@@ -346,11 +348,11 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
       const pendingSeeds = new Map<number, { row: number; col: number }[]>();
       pendingSeeds.set(primaryScreenIndex, [startPos!]);
 
-      while (pendingSeeds.size > 0 && analyzed.size < MAX_SCREENS && iterations < MAX_ITERATIONS) {
+      while (pendingSeeds.size > 0 && analyzed.size < allowedScreens.size && iterations < MAX_ITERATIONS) {
         iterations++;
 
         // Run all pending screens with their accumulated seeds
-        const batch = [...pendingSeeds.entries()].slice(0, MAX_SCREENS - analyzed.size);
+        const batch = [...pendingSeeds.entries()].slice(0, allowedScreens.size - analyzed.size);
         pendingSeeds.clear();
 
         const batchResponses = await Promise.all(
@@ -380,7 +382,7 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
               case 'east': adjScreen = sCol < 7 ? (sRow << 3 | (sCol + 1)) : null; entryPos = { row: t.row, col: 0 }; break;
             }
             if (adjScreen === null || entryPos === null) continue;
-            if (!analyzed.has(adjScreen)) {
+            if (!analyzed.has(adjScreen) && allowedScreens.has(adjScreen)) {
               // Add to pending seeds (accumulates multiple entries per screen)
               const existing = pendingSeeds.get(adjScreen) ?? [];
               existing.push(entryPos);

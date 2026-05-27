@@ -1,5 +1,5 @@
 // ─── Entry Point #1: Single Screen Flood Fill ────────────────────────────────
-export { floodFillScreen, initEngine, getConnections } from './flood-fill';
+export { floodFillScreen, initEngine, getConnections, getBigScreenGroup } from './flood-fill';
 
 // ─── Entry Point #2: Multi-Screen Flood Fill ─────────────────────────────────
 export { floodFillWorld } from './flood-fill';
