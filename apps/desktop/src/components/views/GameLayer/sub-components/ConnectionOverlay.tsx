@@ -537,6 +537,10 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       ctx.globalAlpha = 0.85;
       for (const conn of connections) {
         ctx.fillStyle = EDGE_COLORS[conn.edge] ?? '#fff';
+        // Use source screen origin if available, otherwise fall back to primary screen
+        const connOrigin = conn.sourceScreen != null
+          ? getScreenWorldOrigin(conn.sourceScreen)
+          : { x: screenWorldX, y: screenWorldY };
         for (const pos of conn.positions) {
           let r: number, c: number;
           switch (conn.edge) {
@@ -547,8 +551,8 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
             default: continue;
           }
 
-          const worldX = screenWorldX + c * TILE_PX + TILE_PX / 2;
-          const worldY = screenWorldY + r * TILE_PX + TILE_PX / 2;
+          const worldX = connOrigin.x + c * TILE_PX + TILE_PX / 2;
+          const worldY = connOrigin.y + r * TILE_PX + TILE_PX / 2;
           const screenX = worldX - viewLeft;
           const screenY = worldY - viewTop;
           if (screenX < -TILE_PX || screenX > snesW + TILE_PX) continue;

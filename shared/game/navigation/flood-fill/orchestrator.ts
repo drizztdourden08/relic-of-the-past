@@ -10,6 +10,7 @@ import {
   loadMap32Tables, loadMap16ToMap8, loadMap8ToAttr, decompressScreen,
   ADDR_OW_ENTRANCE_AREA, ADDR_OW_ENTRANCE_POS, ADDR_OW_ENTRANCE_ID, ADDR_ENTRANCE_ROOM,
   ADDR_FALLHOLE_POS, ADDR_FALLHOLE_AREA, ADDR_FALLHOLE_ENTRANCES, FALLHOLE_COUNT,
+  ADDR_EXIT_SCREEN, ADDR_EXIT_ROOMS, EXIT_COUNT,
 } from '../screen-data';
 import { buildCollisionGrid, buildCollisionGridFromRawAttr } from '../screen-data/collision-grid';
 import { processStraightCliffs, processDiagonalCliffs, processSouthCliffs } from '../screen-data/cliff-preprocessing';
@@ -26,6 +27,7 @@ export function initEngine(rom: RomData): void {
     map16ToMap8: loadMap16ToMap8(rom),
     map8ToAttr: loadMap8ToAttr(rom),
     entrances: loadOverworldEntrances(rom),
+    exitScreenByRoom: loadExitScreenMap(rom),
   };
 }
 
@@ -101,31 +103,55 @@ function loadOverworldEntrances(rom: RomData): OverworldEntrance[] {
 }
 
 /**
+ * Load the ROM's exit table: maps indoor room index → overworld screen on exit.
+ * Uses kExitDataRooms (79 entries, uint16) + kExitData_ScreenIndex (79 entries, uint8).
+ * Also supplements with overworld entrance table (roomId → area) for rooms not in exit table.
+ */
+function loadExitScreenMap(rom: RomData): Map<number, number> {
+  const exitMap = new Map<number, number>();
+
+  // Primary: exit table (kExitDataRooms → kExitData_ScreenIndex)
+  for (let i = 0; i < EXIT_COUNT; i++) {
+    const room = rom.getWord(ADDR_EXIT_ROOMS + i * 2);
+    const screen = rom.getByte(ADDR_EXIT_SCREEN + i);
+    exitMap.set(room, screen);
+  }
+
+  // Supplement: entrance table provides roomId → area for any entrance
+  for (let i = 0; i < 129; i++) {
+    const id = rom.getByte(ADDR_OW_ENTRANCE_ID + i);
+    const roomId = rom.getWord(ADDR_ENTRANCE_ROOM + id * 2);
+    if (!exitMap.has(roomId)) {
+      let area = rom.getWord(ADDR_OW_ENTRANCE_AREA + i * 2);
+      // For big screens, just use the head area — screen name resolves either way
+      exitMap.set(roomId, area & 0x3F);
+    }
+  }
+
+  return exitMap;
+}
+
+/**
  * Get the set of screens that form a big-screen group containing the given screen.
  * For small screens, returns just [screenIndex].
  * For big screens, returns all 4 sub-screens (head, head+1, head+8, head+9).
+ *
+ * Uses the kOverworldAreaHeads table (0x82A5EC) to find the canonical head,
+ * rather than guessing from isSmall alone (which marks ALL 4 members as 0).
  */
 export function getBigScreenGroup(rom: RomData, screenIndex: number): number[] {
   const ADDR_OW_MAP_IS_SMALL = 0x82f88d;
-  const row = (screenIndex >> 3) & 7;
-  const col = screenIndex & 7;
+  const ADDR_AREA_HEADS = 0x82A5EC;
+  const idx = screenIndex & 0x3F;
 
-  // Check all 4 possible heads: current, left, above, above-left
-  for (const [dr, dc] of [[0, 0], [0, -1], [-1, 0], [-1, -1]] as const) {
-    const hRow = row + dr;
-    const hCol = col + dc;
-    if (hRow < 0 || hRow > 7 || hCol < 0 || hCol > 7) continue;
-    if (hRow + 1 > 7 || hCol + 1 > 7) continue;
-    const head = (hRow << 3) | hCol;
-    if (rom.getByte(ADDR_OW_MAP_IS_SMALL + (head & 0x3F)) === 0) {
-      // Verify this screen is one of the 4 sub-screens
-      const group = [head, head + 1, head + 8, head + 9];
-      if (group.includes(screenIndex)) {
-        return group;
-      }
-    }
-  }
-  return [screenIndex];
+  // If this screen is small (byte != 0), it's standalone
+  if (rom.getByte(ADDR_OW_MAP_IS_SMALL + idx) !== 0) return [screenIndex];
+
+  // Find the canonical head via the area head table
+  const head = rom.getByte(ADDR_AREA_HEADS + idx);
+
+  // Big screen group: head, head+1, head+8, head+9
+  return [head, head + 1, head + 8, head + 9];
 }
 
 // ─── Screen Preparation ──────────────────────────────────────────────────────
@@ -306,7 +332,9 @@ export function floodFillScreen(
       const avgRow = Math.round(cluster.reduce((s, p) => s + p.row, 0) / cluster.length);
       const minCol = Math.min(...cluster.map(p => p.col)) - 1;
       const id = syntheticIdx++;
-      screenEntrances.push({ area: screenIndex, pos: 0, id, gridRow: avgRow, gridCol: minCol, roomId: 0 });
+      // Use exit screen map to determine what overworld screen this indoor room exits to
+      const exitScreen = engine.exitScreenByRoom.get(screenIndex) ?? 0;
+      screenEntrances.push({ area: exitScreen, pos: 0, id, gridRow: avgRow, gridCol: minCol, roomId: screenIndex });
       entrancePositions.push({ row: avgRow, col: minCol, idx: id });
     }
   }

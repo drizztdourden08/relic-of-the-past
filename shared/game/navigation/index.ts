@@ -54,3 +54,11 @@ export { PriorityQueue } from './core/priority-queue';
 
 // ─── Screen Names ────────────────────────────────────────────────────────────
 export { SCREEN_NAMES, getScreenName } from './screen-names';
+
+// ─── Entrance Names ──────────────────────────────────────────────────────────
+export { ENTRANCE_NAMES, classifyEntrance } from './entrance-names';
+export type { EntranceType } from './entrance-names';
+
+// ─── Screen Bundles ──────────────────────────────────────────────────────────
+export { buildScreenBundle } from './screen-bundles';
+export type { ScreenBundle } from './screen-bundles';

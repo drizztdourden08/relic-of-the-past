@@ -119,6 +119,8 @@ export interface ScreenVariant {
 export interface ConnectionInfo {
   edge: 'north' | 'south' | 'east' | 'west';
   targetScreen: number;
+  /** Screen index this connection originates from (set during aggregation) */
+  sourceScreen?: number;
   freeTileCount: number;
   itemTileCount: number;
   positions: number[];
@@ -203,4 +205,6 @@ export interface EngineCache {
   map16ToMap8: Uint16Array;
   map8ToAttr: Uint8Array;
   entrances: OverworldEntrance[];
+  /** Maps indoor room index → overworld screen the exit leads to */
+  exitScreenByRoom: Map<number, number>;
 }

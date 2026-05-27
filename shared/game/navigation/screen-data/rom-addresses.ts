@@ -19,3 +19,8 @@ export const ADDR_FALLHOLE_POS = 0x9BB800;
 export const ADDR_FALLHOLE_AREA = 0x9BB826;
 export const ADDR_FALLHOLE_ENTRANCES = 0x9BB84C;
 export const FALLHOLE_COUNT = 19;
+
+/** ROM addresses for overworld exit tables (indoor room → overworld on exit). */
+export const ADDR_EXIT_SCREEN = 0x82DE28;
+export const ADDR_EXIT_ROOMS = 0x82DD8A;
+export const EXIT_COUNT = 79;

@@ -1,7 +1,7 @@
 import { BrowserWindow } from 'electron';
 import { join } from 'path';
 import { is } from '@electron-toolkit/utils';
-import { loadWindowState } from './window-state';
+import { loadWindowState, trackWindowState } from './window-state';
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -16,8 +16,6 @@ function createWindow(): BrowserWindow {
   mainWindow = new BrowserWindow({
     width: saved.width,
     height: saved.height,
-    x: saved.x,
-    y: saved.y,
     minWidth: 360,
     minHeight: 280,
     titleBarStyle: 'hidden',
@@ -35,6 +33,19 @@ function createWindow(): BrowserWindow {
       nodeIntegration: false,
     },
   });
+
+  // Restore position using content bounds to avoid invisible frame offset on Windows
+  if (saved.x !== undefined && saved.y !== undefined) {
+    mainWindow.setContentBounds({
+      x: saved.x,
+      y: saved.y,
+      width: saved.width,
+      height: saved.height,
+    });
+  }
+
+  // Start tracking normal bounds before maximizing
+  trackWindowState(mainWindow);
 
   if (saved.isMaximized) {
     mainWindow.maximize();
