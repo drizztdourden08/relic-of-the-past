@@ -258,8 +258,58 @@ export function floodFillScreen(
 
   // Only match entrances with exact area match.
   // (Areas 0x40+ are small-screen variants of 0x00-0x3F — don't merge them)
-  const screenEntrances = engine.entrances.filter(e => e.area === screenIndex);
-  const entrancePositions = screenEntrances.map(e => ({ row: e.gridRow, col: e.gridCol, idx: e.id }));
+  let screenEntrances: OverworldEntrance[];
+  let entrancePositions: { row: number; col: number; idx: number }[];
+
+  if (tileContext === 'overworld') {
+    screenEntrances = engine.entrances.filter(e => e.area === screenIndex);
+    entrancePositions = screenEntrances.map(e => ({ row: e.gridRow, col: e.gridCol, idx: e.id }));
+  } else {
+    // Interior rooms: detect entrance/staircase tiles (0x8E/0x8F) from the attr grid.
+    // These are TileBehavior_Entrance tiles — walkable stairs/doors between rooms.
+    // First pass: collect all entrance tile positions, then cluster them.
+    screenEntrances = [];
+    entrancePositions = [];
+    const entranceTiles: GridPos[] = [];
+    for (let r = 0; r < GRID_SIZE; r++) {
+      for (let c = 0; c < GRID_SIZE; c++) {
+        const attr = grid.rawAttr[r][c];
+        if (attr === 0x8E || attr === 0x8F) {
+          entranceTiles.push({ row: r, col: c });
+        }
+      }
+    }
+    // Cluster entrance tiles: merge any tiles within 4 sub-tiles of each other
+    // into a single entrance marker (doors/stairs span multiple tiles).
+    const clustered = new Set<number>();
+    let syntheticIdx = 1000;
+    for (let i = 0; i < entranceTiles.length; i++) {
+      if (clustered.has(i)) continue;
+      // BFS/union-find within this cluster
+      const cluster: GridPos[] = [entranceTiles[i]];
+      clustered.add(i);
+      for (let qi = 0; qi < cluster.length; qi++) {
+        const cur = cluster[qi];
+        for (let j = i + 1; j < entranceTiles.length; j++) {
+          if (clustered.has(j)) continue;
+          const other = entranceTiles[j];
+          if (Math.abs(cur.row - other.row) <= 4 && Math.abs(cur.col - other.col) <= 4) {
+            clustered.add(j);
+            cluster.push(other);
+          }
+        }
+      }
+      // Position the marker at the vertical center of the cluster.
+      // Subtract 1 from col: the renderer adds +8px X (one sub-tile) which was
+      // calibrated for overworld entrance table coordinates. Interior attr grid
+      // positions are already the exact tile, so we offset by -1 to cancel it out.
+      const avgRow = Math.round(cluster.reduce((s, p) => s + p.row, 0) / cluster.length);
+      const minCol = Math.min(...cluster.map(p => p.col)) - 1;
+      const id = syntheticIdx++;
+      screenEntrances.push({ area: screenIndex, pos: 0, id, gridRow: avgRow, gridCol: minCol, roomId: 0 });
+      entrancePositions.push({ row: avgRow, col: minCol, idx: id });
+    }
+  }
 
   const start = findStartPosition(grid, startPos);
   const inv = inventory ?? new Set<string>();
@@ -271,7 +321,8 @@ export function floodFillScreen(
   // Filter ledges to only reachable ones
   const reachableLedges = ledges.filter(l => reachable[l.startRow]?.[l.startCol]);
 
-  // Summarize borders (filter out met requirements)
+  // Summarize borders (filter out met requirements).
+  // Interior rooms don't have border transitions — you can't walk off-screen indoors.
   const borders: FloodFillResult['borders'] = {
     north: { freeTiles: [], itemTiles: [] },
     south: { freeTiles: [], itemTiles: [] },
@@ -279,14 +330,16 @@ export function floodFillScreen(
     west: { freeTiles: [], itemTiles: [] },
   };
 
-  for (const t of transitions) {
-    if (t.edge === 'entrance') continue;
-    const pos = t.edge === 'north' || t.edge === 'south' ? t.col : t.row;
-    const unmet = unmetRequirements(t.requirements, inv);
-    if (unmet.length === 0) {
-      borders[t.edge].freeTiles.push(pos);
-    } else {
-      borders[t.edge].itemTiles.push({ pos, requirements: unmet });
+  if (tileContext === 'overworld') {
+    for (const t of transitions) {
+      if (t.edge === 'entrance') continue;
+      const pos = t.edge === 'north' || t.edge === 'south' ? t.col : t.row;
+      const unmet = unmetRequirements(t.requirements, inv);
+      if (unmet.length === 0) {
+        borders[t.edge].freeTiles.push(pos);
+      } else {
+        borders[t.edge].itemTiles.push({ pos, requirements: unmet });
+      }
     }
   }
 

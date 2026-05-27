@@ -233,12 +233,20 @@ function buildInteriorAttrs(): Readonly<Record<number, TileAttrDef>> {
   t[0x67] = { pass: 'blocked', labels: ['hammer peg'], cat: 'special' }; // crystal peg up
 
   // Dynamic/manipulated set.
-  // 0x70 is a liftable pot variant indoors.
+  // 0x70-0x72 are liftable pot variants indoors (TileBehavior_ManipulablyReplaced).
   t[0x70] = { pass: 'obstacle', req: 'lift.1', labels: ['pot'], cat: 'liftable' };
-  for (let attr = 0x71; attr <= 0x7F; attr++) {
+  t[0x71] = { pass: 'obstacle', req: 'lift.1', labels: ['pot'], cat: 'liftable' };
+  t[0x72] = { pass: 'obstacle', req: 'lift.1', labels: ['pot'], cat: 'liftable' };
+  for (let attr = 0x73; attr <= 0x7F; attr++) {
     t[attr] = { pass: 'blocked', labels: ['wall'], cat: 'special' };
   }
-  for (let attr = 0x80; attr <= 0xAF; attr++) {
+  // 0x8E-0x8F are interior entrance/staircase tiles (TileBehavior_Entrance).
+  for (let attr = 0x80; attr <= 0x8D; attr++) {
+    t[attr] = { pass: 'blocked', labels: ['wall'], cat: 'special' };
+  }
+  t[0x8E] = { pass: 'free', labels: ['stair'], cat: 'ground' };
+  t[0x8F] = { pass: 'free', labels: ['stair'], cat: 'ground' };
+  for (let attr = 0x90; attr <= 0xAF; attr++) {
     t[attr] = { pass: 'blocked', labels: ['wall'], cat: 'special' };
   }
   for (let attr = 0xC0; attr <= 0xCF; attr++) {
