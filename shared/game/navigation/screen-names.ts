@@ -1,4 +1,4 @@
-import { ALL_REGIONS } from '../regions';
+import { ALL_REGIONS } from '../data/regions';
 
 /**
  * Screen name lookup — derived from region dataset (single source of truth).

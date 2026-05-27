@@ -6,8 +6,8 @@ import { aStarOnGrid } from './point-navigation';
 import { floodFillScreen, getEntrances } from './flood-fill';
 import { classifyTileAttr } from './tile-classification';
 import { getScreenName } from './screen-names';
-import { REGION_BY_ID } from '../regions';
-import { ALL_CONNECTIONS, DUNGEON_CONNECTIONS } from '../connections';
+import { REGION_BY_ID } from '../data/regions';
+import { ALL_CONNECTIONS, DUNGEON_CONNECTIONS } from '../data/connections';
 
 // ─── Location Type ───────────────────────────────────────────────────────────
 

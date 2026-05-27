@@ -7,7 +7,7 @@ import { loadRom } from '../shared/asset-extraction/rom/rom-loader';
 import { floodFillScreen, initEngine } from '../shared/game/navigation/flood-fill';
 import { findBorderBundles, computeOverlap } from '../shared/game/navigation/analysis/border-bundles';
 import { getScreenName } from '../shared/game/navigation/screen-names';
-import { ALL_REGIONS } from '../shared/game/regions';
+import { ALL_REGIONS } from '../shared/game/data/regions';
 import { writeFileSync } from 'fs';
 
 const rom = loadRom('./test-roms/Legend of Zelda, The - A Link to the Past (USA).sfc');

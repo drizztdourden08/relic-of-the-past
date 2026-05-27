@@ -9,7 +9,7 @@
 import { useEffect, useRef } from 'react';
 import { useGameUIStore } from '../../stores/game-ui-store';
 import { useLocationNotificationStore } from '../../stores/location-notification-store';
-import { resolveCurrentRegion } from '@shared/game/regions/detection';
+import { resolveCurrentRegion } from '@shared/game/data/regions/detection';
 import type { RegionDefinition } from '@shared/game/types';
 
 /** Auto-dismiss delay in ms */

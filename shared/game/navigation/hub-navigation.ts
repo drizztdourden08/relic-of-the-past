@@ -1,7 +1,7 @@
 import type { RegionConnection, RegionDefinition } from '../types';
 import type { NavigationStep, NavigationResult, PathfindingOptions } from './types';
-import { ALL_CONNECTIONS, DUNGEON_CONNECTIONS } from '../connections';
-import { REGION_BY_ID } from '../regions';
+import { ALL_CONNECTIONS, DUNGEON_CONNECTIONS } from '../data/connections';
+import { REGION_BY_ID } from '../data/regions';
 
 type AdjacencyList = Map<string, { to: string; entrance: string }[]>;
 

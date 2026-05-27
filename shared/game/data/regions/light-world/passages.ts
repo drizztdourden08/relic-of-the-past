@@ -1,6 +1,7 @@
 import type { RegionDefinition } from '../../types';
 
 export const LW_PASSAGES: RegionDefinition[] = [
+  { id: 'hyrule-castle-secret-passage', name: 'Secret Passage', type: 'cave', displayName: 'Hyrule Castle', inGameIndex: 0x55, subtitle: 'Secret Passage', tags: ['world:light', 'env:underground', 'type:passage', 'area:hyrule_castle', 'role:connector'] },
   { id: 'hyrule-castle-secret-entrance', name: 'Hyrule Castle Secret Entrance', type: 'cave', displayName: 'Hyrule Castle', inGameIndex: 0x0126, subtitle: 'Secret Entrance', tags: ['world:light', 'env:underground', 'type:passage', 'area:hyrule_castle', 'role:connector'] },
   { id: 'old-man-cave', name: 'Old Man Cave', type: 'cave', displayName: 'Death Mountain', inGameIndex: 0x00f0, subtitle: 'Old Man Cave', tags: ['world:light', 'env:underground', 'type:passage', 'area:death_mountain', 'role:connector'] },
   { id: 'spectacle-rock-cave-bottom', name: 'Spectacle Rock Cave (Bottom)', type: 'cave', displayName: 'Death Mountain', inGameIndex: 0x00e3, subtitle: 'Spectacle Rock (Bottom)', tags: ['world:light', 'env:underground', 'type:passage', 'area:death_mountain', 'role:connector'] },

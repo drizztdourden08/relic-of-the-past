@@ -1,7 +1,7 @@
 import type { LogicConfig, Requirement, RegionConnection } from '../types';
 import { REGION_RULES } from './region-rules';
 import { CHECK_RULES } from './check-rules';
-import { ALL_CONNECTIONS } from '../connections';
+import { ALL_CONNECTIONS } from '../data/connections';
 import {
   hasSword, hasBeamSword, hasCrystals,
 } from './helpers';

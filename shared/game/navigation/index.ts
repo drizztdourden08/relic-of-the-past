@@ -62,3 +62,7 @@ export type { EntranceType } from './entrance-names';
 // ─── Screen Bundles ──────────────────────────────────────────────────────────
 export { buildScreenBundle } from './screen-bundles';
 export type { ScreenBundle } from './screen-bundles';
+
+// ─── Providers ───────────────────────────────────────────────────────────────
+export type { GridProvider, MetadataProvider } from './providers';
+export { buildGridFromRawAttr, RomGridProvider, CachedGridProvider } from './providers';

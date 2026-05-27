@@ -3,12 +3,15 @@
 
 #include "game_hooks.h"
 #include <stdio.h>
+#include <string.h>
 #include <emscripten.h>
 #include "src/variables.h"
 #include "src/assets.h"
 #include "src/zelda_rtl.h"
 #include "src/config.h"
 #include "src/hud.h"
+#include "src/overworld.h"
+#include "src/dungeon.h"
 #include "snes/ppu.h"
 
 // Forward-declare Link_ReceiveItem from player.c

@@ -5,7 +5,7 @@
  * Big screens (2×2) get a bundle of size 4 with positional sub-names.
  */
 
-import { ALL_REGIONS } from '../regions';
+import { ALL_REGIONS } from '../data/regions';
 import type { RegionDefinition } from '../types';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -42,7 +42,7 @@ const QUAD_POSITIONS: Record<number, string> = {
 
 const regionByIndex = new Map<number, RegionDefinition>(
   ALL_REGIONS
-    .filter(r => r.inGameIndex != null)
+    .filter(r => r.inGameIndex != null && (r.type === 'lightWorld' || r.type === 'darkWorld'))
     .map(r => [r.inGameIndex!, r])
 );
 

@@ -598,6 +598,37 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
         ctx.strokeStyle = '#fff';
         ctx.lineWidth = 1;
         ctx.strokeRect(dx - 0.5, dy - 0.5, dw + 1, dh + 1);
+
+        // Indoor stair/door: draw bidirectional arrow to indicate passable connection
+        if (isIndoors) {
+          const cx = dx + dw / 2;
+          const cy = dy + dh / 2;
+          const arrowLen = dh * 0.35;
+          const headSize = Math.max(3, dw * 0.2);
+          ctx.strokeStyle = '#44ddcc';
+          ctx.fillStyle = '#44ddcc';
+          ctx.lineWidth = Math.max(1.5, 2 * Math.min(scaleX, scaleY));
+          ctx.globalAlpha = 0.9;
+          // Vertical shaft
+          ctx.beginPath();
+          ctx.moveTo(cx, cy - arrowLen);
+          ctx.lineTo(cx, cy + arrowLen);
+          ctx.stroke();
+          // Top arrowhead (up)
+          ctx.beginPath();
+          ctx.moveTo(cx, cy - arrowLen);
+          ctx.lineTo(cx - headSize, cy - arrowLen + headSize);
+          ctx.lineTo(cx + headSize, cy - arrowLen + headSize);
+          ctx.closePath();
+          ctx.fill();
+          // Bottom arrowhead (down)
+          ctx.beginPath();
+          ctx.moveTo(cx, cy + arrowLen);
+          ctx.lineTo(cx - headSize, cy + arrowLen - headSize);
+          ctx.lineTo(cx + headSize, cy + arrowLen - headSize);
+          ctx.closePath();
+          ctx.fill();
+        }
         }
       }
 
@@ -635,14 +666,16 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
         }
       }
 
-      // Draw live sprite 16x16 footprints as bright red border-only boxes.
-      // This helps inspect blocker spacing versus Link's 2x2 movement footprint.
+      // Draw live sprite 16x16 footprints for navigation-relevant sprites only.
+      // Only show sprites that affect pathfinding (blocker/guard types).
       const liveSprites = wasmGetLiveSprites();
       if (liveSprites.length > 0) {
         ctx.globalAlpha = 1;
         ctx.strokeStyle = '#ff2222';
         ctx.lineWidth = Math.max(1.5, 2.5 * Math.min(scaleX, scaleY));
         for (const s of liveSprites) {
+          // Only highlight navigation blockers (guards/barriers + uncle)
+          if (s.type !== 0x3f && s.type !== 0x40 && !(s.type === 0x73 && s.e === 0)) continue;
           const worldX = s.x;
           const worldY = s.y;
           const sx = (worldX - viewLeft) * scaleX;
@@ -734,6 +767,7 @@ function OverlayLegend() {
       <LegendItem color="rgba(80,200,255,0.8)" label="reachable (free)" />
       <LegendItem color="rgba(255,100,180,0.8)" label="reachable (needs item)" />
       <LegendItem color="#cc5555" label="cliff jump" isArrow />
+      <LegendItem color="#44ddcc" label="stair/door passage" isArrow />
       <LegendItem color="rgba(80,200,255,0.8)" border="#00ff88" label="hookshot target" />
     </div>
   );

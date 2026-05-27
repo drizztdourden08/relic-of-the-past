@@ -291,6 +291,104 @@ int WasmGetLiveSprites(void) {
   return (int)g_live_sprites_buf;
 }
 
+// ─── Navigation Grid Exports ───
+// These build 64×64 collision attr grids on demand for any screen/room.
+// Used by the unified navigation engine (same code path: widget + offline).
+
+static uint8 g_nav_overworld_grid[64 * 64];
+
+EMSCRIPTEN_KEEPALIVE
+int WasmBuildOverworldAttrGrid(int screen_idx) {
+  // Use a 64-wide uint16 buffer (stride matches what DecompressAndDrawOneQuadrant expects).
+  // The function writes 32×32 Map16 tile IDs with row stride 64.
+  static uint16 nav_map16_buf[64 * 32];
+
+  map16_decode_last = 0xffff;
+  Overworld_DecompressAndDrawOneQuadrant(nav_map16_buf, screen_idx);
+
+  // Convert 32×32 Map16 → 64×64 collision attrs
+  const uint16 *map16ToMap8 = GetMap16toMap8Table();
+  const uint8 *map8ToAttr = GetMap8toTileAttr();
+
+  for (int row16 = 0; row16 < 32; row16++) {
+    for (int col16 = 0; col16 < 32; col16++) {
+      uint16 tile16 = nav_map16_buf[row16 * 64 + col16];
+      int base = tile16 * 4;
+      int gr = row16 * 2, gc = col16 * 2;
+
+      uint16 m8_tl = map16ToMap8[base + 0];
+      uint16 m8_tr = map16ToMap8[base + 1];
+      uint16 m8_bl = map16ToMap8[base + 2];
+      uint16 m8_br = map16ToMap8[base + 3];
+
+      uint8 a_tl = map8ToAttr[m8_tl & 0x1FF];
+      uint8 a_tr = map8ToAttr[m8_tr & 0x1FF];
+      uint8 a_bl = map8ToAttr[m8_bl & 0x1FF];
+      uint8 a_br = map8ToAttr[m8_br & 0x1FF];
+
+      // Propagate priority bit for deep grass/water (0x10..0x1B range)
+      if (a_tl >= 0x10 && a_tl < 0x1C) a_tl |= (m8_tl >> 14) & 1;
+      if (a_tr >= 0x10 && a_tr < 0x1C) a_tr |= (m8_tr >> 14) & 1;
+      if (a_bl >= 0x10 && a_bl < 0x1C) a_bl |= (m8_bl >> 14) & 1;
+      if (a_br >= 0x10 && a_br < 0x1C) a_br |= (m8_br >> 14) & 1;
+
+      g_nav_overworld_grid[(gr + 0) * 64 + gc + 0] = a_tl;
+      g_nav_overworld_grid[(gr + 0) * 64 + gc + 1] = a_tr;
+      g_nav_overworld_grid[(gr + 1) * 64 + gc + 0] = a_bl;
+      g_nav_overworld_grid[(gr + 1) * 64 + gc + 1] = a_br;
+    }
+  }
+
+  return (int)g_nav_overworld_grid;
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmBuildRoomAttrGrid(int room_id) {
+  // Save state that Dungeon_LoadRoom touches
+  uint16 saved_room = dungeon_room_index;
+
+  // Set target room
+  dungeon_room_index = (uint16)room_id;
+
+  // Clear tilemap buffers (Dungeon_LoadRoom draws into these)
+  memset(dung_bg2, 0, 0x2000 * 2);  // 64×64 uint16
+  memset(dung_bg1, 0, 0x2000 * 2);
+
+  // Clear attr tables
+  memset(dung_bg2_attr_table, 0, 0x2000);
+
+  // Initialize dung_torch_data with 0xFF so the torch search loop terminates
+  // immediately (it loops until it finds 0xFFFF terminator)
+  memset(&dung_torch_data[0], 0xFF, 0x120);
+
+  // Initialize movable_block_datas room fields to 0xFFFF (no matches)
+  for (int i = 0; i < 0x18C / 4; i++) {
+    movable_block_datas[i].room = 0xFFFF;
+  }
+
+  // Build the room tilemap (draws tiles into dung_bg2/bg1)
+  Dungeon_LoadRoom();
+
+  // Load custom tile attributes for this room's theme
+  Dungeon_LoadCustomTileAttr();
+
+  // Build collision attribute table from tilemap
+  dung_draw_width_indicator = 0;
+  dung_draw_height_indicator = 0;
+  overworld_map_state = 0;
+  Dungeon_LoadBasicAttribute_full(0x1000);
+
+  // Apply object and door collision overrides
+  Dungeon_LoadObjectAttribute();
+  Dungeon_LoadDoorAttribute();
+
+  // Restore
+  dungeon_room_index = saved_room;
+
+  // Return pointer to the attr table (caller reads 64×64 from ptr, +0x1000 for lower layer)
+  return (int)dung_bg2_attr_table;
+}
+
 EMSCRIPTEN_KEEPALIVE
 int WasmGetOverworldGuardSpawns(void) {
   // Buffer format:

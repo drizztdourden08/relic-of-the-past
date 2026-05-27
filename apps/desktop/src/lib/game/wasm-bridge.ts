@@ -332,6 +332,38 @@ function wasmGetIndoorAttrGrid(): number[][] | null {
   }
 }
 
+/**
+ * Build a 64×64 collision attr grid for any overworld screen (headless, no game state dependency).
+ * Returns a flat Uint8Array of 4096 bytes (row-major), or null if WASM unavailable.
+ */
+function wasmBuildOverworldAttrGrid(screenIndex: number): Uint8Array | null {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return null;
+  try {
+    const ptr = mod.ccall('WasmBuildOverworldAttrGrid', 'number', ['number'], [screenIndex]) as number;
+    if (!ptr) return null;
+    return new Uint8Array(mod.HEAPU8.buffer, ptr, 64 * 64);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Build a 64×64 collision attr grid for any indoor room (headless, loads room from asset data).
+ * Returns a flat Uint8Array of 4096 bytes (row-major), or null if WASM unavailable.
+ */
+function wasmBuildRoomAttrGrid(roomId: number): Uint8Array | null {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return null;
+  try {
+    const ptr = mod.ccall('WasmBuildRoomAttrGrid', 'number', ['number'], [roomId]) as number;
+    if (!ptr) return null;
+    return new Uint8Array(mod.HEAPU8.buffer, ptr, 64 * 64);
+  } catch {
+    return null;
+  }
+}
+
 /** Get active Uncle sprite blocker coordinates for indoor early-game variants. */
 function wasmGetIndoorUncleBlockers(): Array<{ x: number; y: number }> {
   const mod = currentModule;
@@ -440,6 +472,8 @@ export {
   setState,
   subscribeGameState,
   UI_STATE_BUFFER_SIZE,
+  wasmBuildOverworldAttrGrid,
+  wasmBuildRoomAttrGrid,
   wasmCheat,
   wasmGetGameUIState,
   wasmGetMenuState,

@@ -4,6 +4,8 @@ import type {
   EngineCache, GridPos, CollisionGrid, ScreenVariant,
 } from '../types';
 import type { TileAttrContext } from '../tile-attrs';
+import type { GridProvider } from '../providers/grid-provider';
+import { buildGridFromRawAttr } from '../providers/grid-provider';
 import { GRID_SIZE } from '../types';
 import { unmetRequirements } from '../core/inventory';
 import {
@@ -163,8 +165,8 @@ function prepareScreen(
   tileContext: TileAttrContext = 'overworld',
   rawAttrOverride?: number[][],
   dynamicBlockers?: GridPos[],
+  gridProvider?: GridProvider,
 ): { grid: CollisionGrid; ledges: LedgeTraversal[]; dynamicBlockerCells: GridPos[] } {
-  const engine = getEngine(rom);
   const dynamicBlockerCells: GridPos[] = [];
 
   const applyDynamicBlockers = (grid: CollisionGrid): void => {
@@ -194,6 +196,24 @@ function prepareScreen(
     return { grid, ledges: [], dynamicBlockerCells };
   }
 
+  // GridProvider fast path: use WASM-built grid when no variant patches are needed
+  if (gridProvider && !variant) {
+    const rawFlat = tileContext === 'overworld'
+      ? gridProvider.getOverworldRawAttr(screenIndex)
+      : gridProvider.getRoomRawAttr(screenIndex);
+    const grid = buildGridFromRawAttr(rawFlat, tileContext);
+    applyDynamicBlockers(grid);
+
+    const ledges: LedgeTraversal[] = [];
+    processStraightCliffs(grid.tiles, grid.rawAttr, ledges);
+    processDiagonalCliffs(grid.tiles, grid.rawAttr, ledges);
+    processSouthCliffs(grid.tiles, grid.rawAttr, ledges);
+
+    return { grid, ledges, dynamicBlockerCells };
+  }
+
+  // Fallback: ROM-based decompression (supports variant overlay patches)
+  const engine = getEngine(rom);
   const map16 = decompressScreen(rom, screenIndex, engine.map32);
 
   // Apply event overlay patches to the Map16 buffer before building collision grid
@@ -265,8 +285,45 @@ function findStartPosition(grid: CollisionGrid, startPos?: GridPos): GridPos {
 // ─── Public API ──────────────────────────────────────────────────────────────
 
 /**
+ * Body-awareness filter: Link is ~2 sub-tiles wide, so 1-tile-wide gaps
+ * (sandwiched between blocked tiles on both sides) are impassable.
+ * Mark such tiles as blocked so the BFS cannot squeeze through.
+ * Only applied for indoor contexts where there are no border transitions.
+ */
+function applyNarrowGapFilter(grid: CollisionGrid): void {
+  const { tiles, rawAttr } = grid;
+  // Collect positions to block (don't mutate during iteration)
+  const toBlock: GridPos[] = [];
+  for (let r = 0; r < GRID_SIZE; r++) {
+    for (let c = 0; c < GRID_SIZE; c++) {
+      if (tiles[r][c].type === 'blocked') continue;
+      // Horizontally sandwiched: both left and right are blocked (or edge)
+      const leftBlocked = c === 0 || tiles[r][c - 1].type === 'blocked';
+      const rightBlocked = c === GRID_SIZE - 1 || tiles[r][c + 1].type === 'blocked';
+      if (leftBlocked && rightBlocked) {
+        toBlock.push({ row: r, col: c });
+        continue;
+      }
+      // Vertically sandwiched: both above and below are blocked (or edge)
+      const aboveBlocked = r === 0 || tiles[r - 1][c].type === 'blocked';
+      const belowBlocked = r === GRID_SIZE - 1 || tiles[r + 1][c].type === 'blocked';
+      if (aboveBlocked && belowBlocked) {
+        toBlock.push({ row: r, col: c });
+      }
+    }
+  }
+  for (const { row, col } of toBlock) {
+    tiles[row][col] = { type: 'blocked' };
+    rawAttr[row][col] = 0x01;
+  }
+}
+
+/**
  * Run flood fill on a single screen.
  * Entry point #1: single screen reachability analysis.
+ *
+ * @param gridProvider  Optional GridProvider — when supplied, collision grids are built
+ *                      via WASM (or cached data) instead of ROM decompression.
  */
 export function floodFillScreen(
   rom: RomData,
@@ -278,9 +335,15 @@ export function floodFillScreen(
   rawAttrOverride?: number[][],
   dynamicBlockers?: GridPos[],
   extraSeeds?: GridPos[],
+  gridProvider?: GridProvider,
 ): FloodFillResult {
   const engine = getEngine(rom);
-  const { grid, ledges, dynamicBlockerCells } = prepareScreen(rom, screenIndex, variant, tileContext, rawAttrOverride, dynamicBlockers);
+  const { grid, ledges, dynamicBlockerCells } = prepareScreen(rom, screenIndex, variant, tileContext, rawAttrOverride, dynamicBlockers, gridProvider);
+
+  // Indoor rooms: block 1-tile-wide gaps that Link's 2-tile body can't fit through.
+  if (tileContext !== 'overworld') {
+    applyNarrowGapFilter(grid);
+  }
 
   // Only match entrances with exact area match.
   // (Areas 0x40+ are small-screen variants of 0x00-0x3F — don't merge them)
@@ -291,16 +354,17 @@ export function floodFillScreen(
     screenEntrances = engine.entrances.filter(e => e.area === screenIndex);
     entrancePositions = screenEntrances.map(e => ({ row: e.gridRow, col: e.gridCol, idx: e.id }));
   } else {
-    // Interior rooms: detect entrance/staircase tiles (0x8E/0x8F) from the attr grid.
-    // These are TileBehavior_Entrance tiles — walkable stairs/doors between rooms.
-    // First pass: collect all entrance tile positions, then cluster them.
+    // Interior rooms: detect door/entrance/staircase tiles from the attr grid.
+    // 0x80-0x8D are door passage tiles (stamped by Dungeon_LoadDoorAttribute).
+    // 0x8E/0x8F are TileBehavior_Entrance tiles (stairs between rooms/floors).
+    // First pass: collect all transition tile positions, then cluster them.
     screenEntrances = [];
     entrancePositions = [];
     const entranceTiles: GridPos[] = [];
     for (let r = 0; r < GRID_SIZE; r++) {
       for (let c = 0; c < GRID_SIZE; c++) {
         const attr = grid.rawAttr[r][c];
-        if (attr === 0x8E || attr === 0x8F) {
+        if (attr >= 0x80 && attr <= 0x8F) {
           entranceTiles.push({ row: r, col: c });
         }
       }
@@ -337,6 +401,10 @@ export function floodFillScreen(
       screenEntrances.push({ area: exitScreen, pos: 0, id, gridRow: avgRow, gridCol: minCol, roomId: screenIndex });
       entrancePositions.push({ row: avgRow, col: minCol, idx: id });
     }
+
+    // Entrance tiles (0x80-0x8F) are marked passable, so normal BFS will
+    // reach them naturally if they're connected to the start. We do NOT seed
+    // them as extra starts — doing so would bypass dynamic blockers (e.g. uncle).
   }
 
   const start = findStartPosition(grid, startPos);

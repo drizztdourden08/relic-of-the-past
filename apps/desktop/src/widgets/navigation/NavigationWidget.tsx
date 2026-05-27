@@ -21,8 +21,9 @@ import { useGameUIStore } from '../../stores/game-ui-store';
 import { useConnectionOverlayStore } from '../../stores/connection-overlay-store';
 import { SCREEN_NAMES, buildScreenBundle, ENTRANCE_NAMES, classifyEntrance } from '@shared/game/navigation';
 import type { ScreenBundle, EntranceType } from '@shared/game/navigation';
-import { getRegionLookup } from '@shared/game/regions';
+import { getRegionLookup } from '@shared/game/data/regions';
 import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetIndoorAttrGrid, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns } from '../../lib/game';
+import { getCompletedChecks } from '../../lib/game/tracker';
 import type { OverworldVariantInfo } from '../../lib/game';
 import type { TileAttrContext } from '@shared/game/navigation/tile-attrs';
 
@@ -64,7 +65,7 @@ function getVisibleOverworldScreenIndices(vp: NonNullable<ReturnType<typeof wasm
 }
 
 function NavigationWidgetContent({ romFile }: { romFile: string }) {
-  const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld } = useGameUIStore(s => s.map);
+  const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex } = useGameUIStore(s => s.map);
   const equipment = useGameUIStore(s => s.equipment);
   const inventoryItems = useGameUIStore(s => s.inventory.items);
   const overlayStore = useConnectionOverlayStore();
@@ -82,6 +83,8 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prevScreenRef = useRef<number | null>(null);
   const prevLiveOverworldScreenRef = useRef<number | null>(null);
+  const prevInventoryKeyRef = useRef<string | null>(null);
+  const pendingGroundedRunRef = useRef(false);
   const handleRunRef = useRef<(() => Promise<void>) | null>(null);
   const pendingAutoSecondPassRef = useRef(false);
   const autoSecondPassTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -112,6 +115,8 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
   const screenName = isIndoors
     ? (getRegionLookup().byCaveRoom.get(roomIndex)?.subtitle
       ?? getRegionLookup().byCaveRoom.get(roomIndex)?.name
+      ?? getRegionLookup().byDungeonRoom.get(`${palaceIndex}:${roomIndex}`)?.subtitle
+      ?? getRegionLookup().byDungeonRoom.get(`${palaceIndex}:${roomIndex}`)?.name
       ?? `Room 0x${roomIndex.toString(16).toUpperCase()}`)
     : (SCREEN_NAMES[overworldScreenIndex] ?? `Screen 0x${overworldScreenIndex.toString(16).toUpperCase()}`);
   const locationReview = reviewData[locationKey] ?? { status: 'neutral' as ReviewStatus, connections: {} };
@@ -254,15 +259,18 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
 
           // Early-game indoor variant: Uncle at house / in-passage physically blocks tiles.
           // We stamp his live sprite footprint into the attr grid so flood-fill reflects state.
-          if (rawAttrGrid) {
+          // Once the uncle check is collected, he no longer blocks (randomizer-safe).
+          if (rawAttrGrid && !getCompletedChecks().has("Link's Uncle")) {
             const blockers = wasmGetIndoorUncleBlockers();
             const roomWorldX = Math.floor(vp.linkX / 512) * 512;
             const roomWorldY = Math.floor(vp.linkY / 512) * 512;
+            // Uncle uses 3x3 expanded footprint (same as overworld guards)
+            // to properly block narrow passages.
             for (const b of blockers) {
               const c0 = Math.floor((b.x - roomWorldX) / 8);
               const r0 = Math.floor((b.y - roomWorldY) / 8);
-              for (let dr = 0; dr < 2; dr++) {
-                for (let dc = 0; dc < 2; dc++) {
+              for (let dr = -1; dr <= 1; dr++) {
+                for (let dc = -1; dc <= 1; dc++) {
                   const rr = r0 + dr;
                   const cc = c0 + dc;
                   if (rr >= 0 && rr < 64 && cc >= 0 && cc < 64) {
@@ -349,7 +357,8 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
       // Big screens (2×2): flood primary first, then propagate to other quadrants via border exits.
       const groupScreens = isIndoors ? [primaryScreenIndex] : await window.api.getBigScreenGroup(romFile, primaryScreenIndex);
       const allowedScreens = new Set<number>(groupScreens);
-      setScreenBundle(buildScreenBundle(groupScreens));
+      // Only build screen bundles for overworld — indoor rooms use screenName from region lookup
+      setScreenBundle(isIndoors ? null : buildScreenBundle(groupScreens));
       const MAX_ITERATIONS = 8;
       let iterations = 0;
       const analyzed = new Map<number, Awaited<ReturnType<typeof runOne>>>();
@@ -512,8 +521,15 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
   useEffect(() => {
     if (!autoRun || !romFile || running) return;
     if (prevScreenRef.current !== null && prevScreenRef.current !== activeScreenIndex) {
-      pendingAutoSecondPassRef.current = true;
-      handleRunRef.current?.();
+      // Delay flood fill until Link is grounded (submodule === 0).
+      // During transitions (falling, entering doors), submodule is non-zero.
+      const vp = wasmGetViewportInfo?.();
+      if (vp && vp.submodule !== 0) {
+        pendingGroundedRunRef.current = true;
+      } else {
+        pendingAutoSecondPassRef.current = true;
+        handleRunRef.current?.();
+      }
     }
     prevScreenRef.current = activeScreenIndex;
   }, [autoRun, activeScreenIndex, romFile, running, handleRun]);
@@ -524,11 +540,36 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
     if (!vp) return;
     const liveScreen = (((vp.linkY >> 9) & 7) << 3) | ((vp.linkX >> 9) & 7);
     if (prevLiveOverworldScreenRef.current !== null && prevLiveOverworldScreenRef.current !== liveScreen) {
-      pendingAutoSecondPassRef.current = true;
-      handleRunRef.current?.();
+      if (vp.submodule !== 0) {
+        pendingGroundedRunRef.current = true;
+      } else {
+        pendingAutoSecondPassRef.current = true;
+        handleRunRef.current?.();
+      }
     }
     prevLiveOverworldScreenRef.current = liveScreen;
   }, [autoRun, romFile, running, isIndoors, debugTick]);
+
+  // Check for pending grounded run on each tick (fires every 200ms via debugTick)
+  useEffect(() => {
+    if (!pendingGroundedRunRef.current || !autoRun || running) return;
+    const vp = wasmGetViewportInfo?.();
+    if (vp && vp.submodule === 0) {
+      pendingGroundedRunRef.current = false;
+      pendingAutoSecondPassRef.current = true;
+      handleRunRef.current?.();
+    }
+  }, [autoRun, running, debugTick]);
+
+  // Auto-run flood fill when inventory/equipment changes (affects reachability)
+  useEffect(() => {
+    if (!autoRun || !romFile || running) return;
+    const key = `${equipment.sword},${equipment.gloves},${equipment.boots ? 1 : 0},${equipment.flippers ? 1 : 0},${inventoryItems[2]},${inventoryItems[11]}`;
+    if (prevInventoryKeyRef.current !== null && prevInventoryKeyRef.current !== key) {
+      handleRunRef.current?.();
+    }
+    prevInventoryKeyRef.current = key;
+  }, [autoRun, romFile, running, equipment, inventoryItems]);
 
   // Toggle overlay
   const toggleOverlay = useCallback(() => {

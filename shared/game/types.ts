@@ -1,5 +1,5 @@
-import type { RegionTag } from './regions/tags';
-import type { ConnectionTag } from './connections/tags';
+import type { RegionTag } from './data/regions/tags';
+import type { ConnectionTag } from './data/connections/tags';
 import type { RegionNavData, ConnectionNavData } from './navigation/plan/navigation-data.types';
 
 // ─── Check Types ───

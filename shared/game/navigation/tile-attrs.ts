@@ -240,10 +240,12 @@ function buildInteriorAttrs(): Readonly<Record<number, TileAttrDef>> {
   for (let attr = 0x73; attr <= 0x7F; attr++) {
     t[attr] = { pass: 'blocked', labels: ['wall'], cat: 'special' };
   }
-  // 0x8E-0x8F are interior entrance/staircase tiles (TileBehavior_Entrance).
+  // 0x80-0x8D are door passage tiles stamped by Dungeon_LoadDoorAttribute().
+  // They mark open doorways between rooms and must be passable for flood fill.
   for (let attr = 0x80; attr <= 0x8D; attr++) {
-    t[attr] = { pass: 'blocked', labels: ['wall'], cat: 'special' };
+    t[attr] = { pass: 'free', labels: ['stair'], cat: 'ground' };
   }
+  // 0x8E-0x8F are interior entrance/staircase tiles (TileBehavior_Entrance).
   t[0x8E] = { pass: 'free', labels: ['stair'], cat: 'ground' };
   t[0x8F] = { pass: 'free', labels: ['stair'], cat: 'ground' };
   for (let attr = 0x90; attr <= 0xAF; attr++) {
