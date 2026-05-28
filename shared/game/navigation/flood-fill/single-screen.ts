@@ -23,6 +23,13 @@ interface SingleScreenResult {
  * Uses 0-1 deque: free tiles cost 0, obstacles cost 1.
  * Records all reachable border tiles and entrance positions.
  */
+export interface QuadrantBounds {
+  minRow: number;
+  maxRow: number;
+  minCol: number;
+  maxCol: number;
+}
+
 export function floodFillBFS(
   grid: TilePassability[][],
   startRow: number,
@@ -32,7 +39,12 @@ export function floodFillBFS(
   rawAttr: number[][],
   tileContext: TileAttrContext,
   extraSeeds?: { row: number; col: number }[],
+  quadrantBounds?: QuadrantBounds,
 ): SingleScreenResult {
+  const minR = quadrantBounds?.minRow ?? 0;
+  const maxR = quadrantBounds?.maxRow ?? GRID_SIZE - 1;
+  const minC = quadrantBounds?.minCol ?? 0;
+  const maxC = quadrantBounds?.maxCol ?? GRID_SIZE - 1;
   const reached: (Set<string> | null)[][] = Array.from(
     { length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(null),
   );
@@ -64,8 +76,8 @@ export function floodFillBFS(
     const existing = reached[row][col]!;
     if (existing.size < requirements.size) continue;
 
-    // Record border transitions
-    recordBorderTransition(row, col, requirements, foundBorders, transitions);
+    // Record border transitions (at quadrant edges, not just grid edges)
+    recordBorderTransition(row, col, requirements, foundBorders, transitions, minR, maxR, minC, maxC);
 
     // Record entrance reachability when BFS reaches a tile adjacent to (or inside)
     // the 2x2 entrance trigger footprint. Entrance MAP16 tiles are typically walls
@@ -88,7 +100,7 @@ export function floodFillBFS(
     for (const [dr, dc] of DIRECTIONS) {
       const nr = row + dr;
       const nc = col + dc;
-      if (nr < 0 || nr >= GRID_SIZE || nc < 0 || nc >= GRID_SIZE) continue;
+      if (nr < minR || nr > maxR || nc < minC || nc > maxC) continue;
 
       // Ledge exit restriction: can only leave in ledge direction
       const currentTile = grid[row][col];
@@ -229,20 +241,21 @@ function recordBorderTransition(
   requirements: Set<string>,
   foundBorders: Set<string>,
   transitions: TransitionPoint[],
+  minR: number, maxR: number, minC: number, maxC: number,
 ): void {
-  if (row === 0) {
+  if (row === minR) {
     const key = `north-${col}`;
     if (!foundBorders.has(key)) { foundBorders.add(key); transitions.push({ row, col, edge: 'north', requirements: [...requirements] }); }
   }
-  if (row === GRID_SIZE - 1) {
+  if (row === maxR) {
     const key = `south-${col}`;
     if (!foundBorders.has(key)) { foundBorders.add(key); transitions.push({ row, col, edge: 'south', requirements: [...requirements] }); }
   }
-  if (col === 0) {
+  if (col === minC) {
     const key = `west-${row}`;
     if (!foundBorders.has(key)) { foundBorders.add(key); transitions.push({ row, col, edge: 'west', requirements: [...requirements] }); }
   }
-  if (col === GRID_SIZE - 1) {
+  if (col === maxC) {
     const key = `east-${row}`;
     if (!foundBorders.has(key)) { foundBorders.add(key); transitions.push({ row, col, edge: 'east', requirements: [...requirements] }); }
   }

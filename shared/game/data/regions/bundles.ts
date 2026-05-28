@@ -28,6 +28,10 @@ export interface ScreenBundle {
   isMulti: boolean;
   /** The head screen index (top-left of the group) */
   head: number;
+  /** Indoor room shape when intra-room boundaries exist ('2x2'|'2x1'|'1x2') */
+  roomShape?: '2x2' | '2x1' | '1x2' | '1x1';
+  /** Which quadrant Link is currently in (for multi-screen rooms) */
+  activeQuadrant?: { x: number; y: number };
 }
 
 // ─── Positional Sub-Names ────────────────────────────────────────────────────

@@ -10,6 +10,7 @@ import { getAdjacentScreen } from '../core/grid-utils';
 import { buildCollisionGridFromRawAttr } from '../screen-data/collision-grid';
 import { processStraightCliffs, processDiagonalCliffs, processSouthCliffs } from '../screen-data/cliff-preprocessing';
 import { floodFillBFS } from './single-screen';
+import type { QuadrantBounds } from './single-screen';
 
 // ─── Screen Preparation ──────────────────────────────────────────────────────
 
@@ -105,6 +106,8 @@ export interface FloodFillOptions {
   entrances?: OverworldEntrance[];
   exitScreenByRoom?: Map<number, number>;
   variant?: ScreenVariant;
+  /** Restrict BFS to a sub-region of the 64×64 grid (for multi-screen indoor rooms). */
+  quadrantBounds?: QuadrantBounds;
 }
 
 /**
@@ -127,6 +130,7 @@ export function floodFillScreen(
     entrances = [],
     exitScreenByRoom,
     variant,
+    quadrantBounds,
   } = options;
 
   const { grid, ledges, dynamicBlockerCells } = prepareScreen(rawAttrGrid, tileContext, dynamicBlockers);
@@ -139,16 +143,16 @@ export function floodFillScreen(
     screenEntrances = entrances.filter(e => e.area === screenIndex);
     entrancePositions = screenEntrances.map(e => ({ row: e.gridRow, col: e.gridCol, idx: e.id }));
   } else {
-    // Interior rooms: detect door/entrance/staircase tiles from the attr grid.
-    // 0x80-0x8D are door passage tiles (stamped by Dungeon_LoadDoorAttribute).
+    // Interior rooms: detect entrance/staircase tiles from the attr grid.
     // 0x8E/0x8F are TileBehavior_Entrance tiles (stairs between rooms/floors).
+    // Note: 0x80-0x8D are door passage tiles for intra-room quadrant transitions — NOT exits.
     screenEntrances = [];
     entrancePositions = [];
     const entranceTiles: GridPos[] = [];
     for (let r = 0; r < GRID_SIZE; r++) {
       for (let c = 0; c < GRID_SIZE; c++) {
         const attr = grid.rawAttr[r][c];
-        if (attr >= 0x80 && attr <= 0x8F) {
+        if (attr === 0x8E || attr === 0x8F) {
           entranceTiles.push({ row: r, col: c });
         }
       }
@@ -172,7 +176,7 @@ export function floodFillScreen(
         }
       }
       const avgRow = Math.round(cluster.reduce((s, p) => s + p.row, 0) / cluster.length);
-      const minCol = Math.min(...cluster.map(p => p.col)) - 1;
+      const minCol = Math.min(...cluster.map(p => p.col));
       const id = syntheticIdx++;
       const exitScreen = exitScreenByRoom?.get(screenIndex) ?? 0;
       screenEntrances.push({ area: exitScreen, pos: 0, id, gridRow: avgRow, gridCol: minCol, roomId: screenIndex });
@@ -185,6 +189,7 @@ export function floodFillScreen(
 
   const { reachable, transitions, reachableCount, reqGrid, hookTargets } = floodFillBFS(
     grid.tiles, start.row, start.col, entrancePositions, inv, grid.rawAttr, tileContext,
+    undefined, quadrantBounds,
   );
 
   // Filter ledges to only reachable ones
@@ -202,9 +207,11 @@ export function floodFillScreen(
     if (t.edge === 'entrance') continue;
     // Skip traversal-only tiles (uncontrolled movement) from border connections
     if (reachable[t.row][t.col] >= 2) continue;
-    // Skip door/entrance tiles (0x80-0x8F) — those are entrance transitions, not scroll borders
+    // Skip door/entrance tiles (0x80-0x8F) at the actual room edge — those are entrance
+    // transitions, not scroll borders. But allow them at quadrant boundaries (intra-room).
     const attr = grid.rawAttr[t.row]?.[t.col] ?? 0;
-    if (attr >= 0x80 && attr <= 0x8F) continue;
+    const isAtRoomEdge = t.row === 0 || t.row === GRID_SIZE - 1 || t.col === 0 || t.col === GRID_SIZE - 1;
+    if (attr >= 0x80 && attr <= 0x8F && isAtRoomEdge) continue;
     const pos = t.edge === 'north' || t.edge === 'south' ? t.col : t.row;
     const unmet = unmetRequirements(t.requirements, inv);
     if (unmet.length === 0) {
@@ -221,7 +228,9 @@ export function floodFillScreen(
     reachable,
     transitions,
     reachableCount,
-    totalTiles: GRID_SIZE * GRID_SIZE,
+    totalTiles: quadrantBounds
+      ? (quadrantBounds.maxRow - quadrantBounds.minRow + 1) * (quadrantBounds.maxCol - quadrantBounds.minCol + 1)
+      : GRID_SIZE * GRID_SIZE,
     entrances: screenEntrances,
     ledges: reachableLedges,
     hookTargets,
@@ -250,19 +259,24 @@ function getAdjacentRoom(roomIdx: number, edge: 'north' | 'south' | 'east' | 'we
 }
 
 /** Extract border connection info from a flood fill result. */
-export function getConnections(result: FloodFillResult): ConnectionInfo[] {
+export function getConnections(result: FloodFillResult, intraEdges?: ('north' | 'south' | 'east' | 'west')[]): ConnectionInfo[] {
   const connections: ConnectionInfo[] = [];
   const edges: ('north' | 'south' | 'east' | 'west')[] = ['north', 'south', 'east', 'west'];
   const isIndoor = result.tileContext !== 'overworld';
+  const intraSet = new Set(intraEdges ?? []);
 
   for (const edge of edges) {
     const border = result.borders[edge];
     const totalTiles = border.freeTiles.length + border.itemTiles.length;
     if (totalTiles === 0) continue;
 
-    const targetScreen = isIndoor
-      ? getAdjacentRoom(result.screenIndex, edge)
-      : getAdjacentScreen(result.screenIndex, edge);
+    const isIntra = intraSet.has(edge);
+    // For intra-room edges, target is the same room (other quadrant).
+    const targetScreen = isIntra
+      ? result.screenIndex
+      : isIndoor
+        ? getAdjacentRoom(result.screenIndex, edge)
+        : getAdjacentScreen(result.screenIndex, edge);
     if (targetScreen === null) continue;
 
     const allPositions = [...border.freeTiles, ...border.itemTiles.map(t => t.pos)].sort((a, b) => a - b);
@@ -280,6 +294,7 @@ export function getConnections(result: FloodFillResult): ConnectionInfo[] {
         connections.push({
           edge,
           targetScreen,
+          isIntraRoom: isIntra || undefined,
           freeTileCount: bundleFree,
           itemTileCount: bundleItem,
           positions: bundlePositions,

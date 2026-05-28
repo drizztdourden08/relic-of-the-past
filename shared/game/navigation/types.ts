@@ -137,6 +137,8 @@ export interface ConnectionInfo {
   targetScreen: number;
   /** Screen index this connection originates from (set during aggregation) */
   sourceScreen?: number;
+  /** True if this connection is between quadrants of the same room (intra-room scroll boundary). */
+  isIntraRoom?: boolean;
   freeTileCount: number;
   itemTileCount: number;
   positions: number[];

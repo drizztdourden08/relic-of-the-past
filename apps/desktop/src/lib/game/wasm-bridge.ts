@@ -364,6 +364,93 @@ function wasmBuildRoomAttrGrid(roomId: number): Uint8Array | null {
   }
 }
 
+// ─── Room Layout & Door Boundary Info (intra-room screen transitions) ───
+
+export interface RoomLayoutInfo {
+  layout: number;
+  shape: '2x2' | '2x1' | '1x2' | '1x1';
+  quadrantFullsizeX: number;
+  quadrantFullsizeY: number;
+  quadrantX: number;
+  quadrantY: number;
+  /** Which edges of the current quadrant are intra-room boundaries (not room-to-room). */
+  intraEdges: ('north' | 'south' | 'east' | 'west')[];
+}
+
+export interface DoorBoundaryTile {
+  direction: 'north' | 'south' | 'west' | 'east';
+  col: number;
+  row: number;
+  doorType: number;
+  isOpen: boolean;
+}
+
+const LAYOUT_SHAPES: Array<'2x2' | '2x1' | '1x2' | '1x1'> = ['2x2', '2x2', '2x1', '2x1', '1x2', '1x2', '1x1', '1x1'];
+const DIR_NAMES: Array<'north' | 'south' | 'west' | 'east'> = ['north', 'south', 'west', 'east'];
+
+function wasmGetRoomLayoutInfo(): RoomLayoutInfo | null {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return null;
+  try {
+    const ptr = mod.ccall('WasmGetRoomLayoutInfo', 'number', [], []) as number;
+    if (!ptr) return null;
+    const heap = mod.HEAPU8;
+    const layout = heap[ptr];
+    const qfx = heap[ptr + 1];
+    const qfy = heap[ptr + 2];
+    const qx = heap[ptr + 3];
+    const qy = heap[ptr + 4];
+    const shape = LAYOUT_SHAPES[layout] ?? '1x1';
+
+    // Compute which edges are intra-room boundaries for the current quadrant.
+    // An edge is intra-room if: the room extends in that direction AND the axis isn't merged (blastwall).
+    const intraEdges: ('north' | 'south' | 'east' | 'west')[] = [];
+    if (shape === '2x2' || shape === '1x2') {
+      // Vertical axis has two screens
+      if (qfy === 0) { // not merged by blastwall
+        if (qy === 0) intraEdges.push('south');   // upper quad → south edge is intra-room
+        if (qy === 2) intraEdges.push('north');   // lower quad → north edge is intra-room
+      }
+    }
+    if (shape === '2x2' || shape === '2x1') {
+      // Horizontal axis has two screens
+      if (qfx === 0) { // not merged by blastwall
+        if (qx === 0) intraEdges.push('east');    // left quad → east edge is intra-room
+        if (qx === 1) intraEdges.push('west');    // right quad → west edge is intra-room
+      }
+    }
+
+    return { layout, shape, quadrantFullsizeX: qfx, quadrantFullsizeY: qfy, quadrantX: qx, quadrantY: qy, intraEdges };
+  } catch {
+    return null;
+  }
+}
+
+function wasmGetRoomDoorBoundaryTiles(): DoorBoundaryTile[] {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return [];
+  try {
+    const ptr = mod.ccall('WasmGetRoomDoorBoundaryTiles', 'number', [], []) as number;
+    if (!ptr) return [];
+    const heap = mod.HEAPU8;
+    const count = Math.min(heap[ptr], 16);
+    const out: DoorBoundaryTile[] = [];
+    for (let i = 0; i < count; i++) {
+      const o = ptr + 2 + i * 5;
+      out.push({
+        direction: DIR_NAMES[heap[o]] ?? 'north',
+        col: heap[o + 1],
+        row: heap[o + 2],
+        doorType: heap[o + 3],
+        isOpen: heap[o + 4] !== 0,
+      });
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+
 /** Get active Uncle sprite blocker coordinates for indoor early-game variants. */
 function wasmGetIndoorUncleBlockers(): Array<{ x: number; y: number }> {
   const mod = currentModule;
@@ -607,6 +694,8 @@ export {
   wasmGetOverworldGuardSpawns,
   wasmGetOverworldVariant,
   wasmGetPaused,
+  wasmGetRoomDoorBoundaryTiles,
+  wasmGetRoomLayoutInfo,
   wasmGetUIOverlayMode,
   wasmGetViewportInfo,
   wasmRenderCleanFrame,
@@ -616,4 +705,4 @@ export {
   wasmSetUIOverlayMode,
   wasmTogglePause
 };
-export type { EntranceData, ExitData, FallHole, LiveSpriteInfo, OverworldEntrance, OverworldVariantInfo, RoomHeader, ViewportInfo };
+export type { DoorBoundaryTile, EntranceData, ExitData, FallHole, LiveSpriteInfo, OverworldEntrance, OverworldVariantInfo, RoomHeader, RoomLayoutInfo, ViewportInfo };

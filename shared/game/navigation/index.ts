@@ -1,6 +1,7 @@
 // ─── Entry Point #1: Single Screen Flood Fill ────────────────────────────────
 export { floodFillScreen, getConnections } from './flood-fill';
 export type { FloodFillOptions } from './flood-fill';
+export type { QuadrantBounds } from './flood-fill';
 
 // ─── Entry Point #2: Multi-Screen Flood Fill ─────────────────────────────────
 export { floodFillWorld } from './flood-fill';

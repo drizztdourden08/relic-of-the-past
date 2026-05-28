@@ -662,19 +662,30 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       // Draw connection border tiles as larger colored dots
       ctx.globalAlpha = 0.85;
       for (const conn of connections) {
-        ctx.fillStyle = EDGE_COLORS[conn.edge] ?? '#fff';
+        ctx.fillStyle = conn.isIntraRoom ? '#66eebb' : (EDGE_COLORS[conn.edge] ?? '#fff');
         // Use source screen origin if available, otherwise fall back to primary screen
         const connOrigin = conn.sourceScreen != null
           ? getScreenWorldOrigin(conn.sourceScreen)
           : { x: screenWorldX, y: screenWorldY };
         for (const pos of conn.positions) {
           let r: number, c: number;
-          switch (conn.edge) {
-            case 'north': r = 0; c = pos; break;
-            case 'south': r = 63; c = pos; break;
-            case 'east': r = pos; c = 63; break;
-            case 'west': r = pos; c = 0; break;
-            default: continue;
+          if (conn.isIntraRoom) {
+            // Intra-room boundaries are at the quadrant midpoint (row/col 31 or 32)
+            switch (conn.edge) {
+              case 'north': r = 32; c = pos; break;
+              case 'south': r = 31; c = pos; break;
+              case 'east': r = pos; c = 31; break;
+              case 'west': r = pos; c = 32; break;
+              default: continue;
+            }
+          } else {
+            switch (conn.edge) {
+              case 'north': r = 0; c = pos; break;
+              case 'south': r = 63; c = pos; break;
+              case 'east': r = pos; c = 63; break;
+              case 'west': r = pos; c = 0; break;
+              default: continue;
+            }
           }
 
           const worldX = connOrigin.x + c * TILE_PX + TILE_PX / 2;

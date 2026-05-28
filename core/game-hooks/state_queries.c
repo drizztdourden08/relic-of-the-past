@@ -548,3 +548,82 @@ int WasmGetEntranceRooms(void) {
   }
   return (int)g_entrance_rooms_buf;
 }
+
+// ─── Room Layout Info (for intra-room screen boundaries) ───
+
+static uint8 g_room_layout_buf[8];
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetRoomLayoutInfo(void) {
+  // Returns: [layout(1), quadrant_fullsize_x(1), quadrant_fullsize_y(1),
+  //           link_quadrant_x(1), link_quadrant_y(1), pad(3)]
+  // layout byte = dung_layout_and_starting_quadrant (bits 7..2 = layout, bits 1..0 = start quadrant)
+  if (!player_is_indoors) {
+    memset(g_room_layout_buf, 0, sizeof(g_room_layout_buf));
+    return (int)g_room_layout_buf;
+  }
+  g_room_layout_buf[0] = (uint8)(dung_layout_and_starting_quadrant >> 2); // layout index 0-7
+  g_room_layout_buf[1] = quadrant_fullsize_x;  // 0=normal, 2=merged (blastwall destroyed)
+  g_room_layout_buf[2] = quadrant_fullsize_y;  // 0=normal, 2=merged
+  g_room_layout_buf[3] = link_quadrant_x;      // 0 or 1
+  g_room_layout_buf[4] = link_quadrant_y;      // 0 or 2
+  g_room_layout_buf[5] = 0;
+  g_room_layout_buf[6] = 0;
+  g_room_layout_buf[7] = 0;
+  return (int)g_room_layout_buf;
+}
+
+// ─── Room Door Boundary Tiles (decoded door positions for flood fill) ───
+// Max 16 doors per room. Each entry: [direction(1), tileCol(1), tileRow(1), doorType(1), isOpen(1)]
+// direction: 0=N, 1=S, 2=W, 3=E
+// For N/S doors: tileCol is the leftmost column of the 4-tile-wide opening
+// For W/E doors: tileRow is the topmost row of the 4-tile-tall opening
+
+static uint8 g_room_doors_buf[2 + 16 * 5];
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetRoomDoorBoundaryTiles(void) {
+  memset(g_room_doors_buf, 0, sizeof(g_room_doors_buf));
+
+  if (!player_is_indoors) {
+    return (int)g_room_doors_buf;
+  }
+
+  // dung_cur_door_idx holds 2× the number of doors loaded for the current room.
+  uint8 num_doors = (uint8)(dung_cur_door_idx >> 1);
+  if (num_doors > 16) num_doors = 16;
+
+  uint8 count = 0;
+  for (uint8 i = 0; i < num_doors; i++) {
+    uint8 dir = (uint8)(dung_door_direction[i] & 3);
+    uint8 type = (uint8)(door_type_and_slot[i] & 0xFF);
+
+    // Decode tilemap address → row/col
+    // Address is byte offset into 128-byte-wide tilemap.
+    // Strip 0x2000 priority flag. Bit 12 (0x1000) indicates second page (lower/right screen).
+    uint16 addr = dung_door_tilemap_address[i] & 0x1FFF;
+    uint8 row = (uint8)(addr / 128);
+    uint8 col = (uint8)((addr % 128) / 2);
+
+    // Check if this door is currently open
+    uint8 is_open = 0;
+    if (i < 4) {
+      // First 4 doors use dung_door_opened bitmask (bits 12-15)
+      is_open = (dung_door_opened & (0x1000 << i)) ? 1 : 0;
+    }
+    // Type 0 (regular/open) and type 0x30 (regular2) are always passable
+    if (type == 0 || type == 0x30) is_open = 1;
+
+    int o = 2 + count * 5;
+    g_room_doors_buf[o + 0] = dir;
+    g_room_doors_buf[o + 1] = col;
+    g_room_doors_buf[o + 2] = row;
+    g_room_doors_buf[o + 3] = type;
+    g_room_doors_buf[o + 4] = is_open;
+    count++;
+  }
+
+  g_room_doors_buf[0] = count;
+  g_room_doors_buf[1] = 0;
+  return (int)g_room_doors_buf;
+}

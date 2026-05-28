@@ -20,11 +20,11 @@ import exitDoorIcon from '@iconify-icons/game-icons/exit-door';
 import { useGameUIStore } from '../../stores/game-ui-store';
 import { useConnectionOverlayStore } from '../../stores/connection-overlay-store';
 import { buildScreenBundle, floodFillScreen, getConnections } from '@shared/game/navigation';
-import type { FloodFillOptions } from '@shared/game/navigation';
+import type { FloodFillOptions, QuadrantBounds } from '@shared/game/navigation';
 import type { ScreenBundle, OverworldEntrance } from '@shared/game/navigation';
 import { getRegionLookup, REGION_BY_ID } from '@shared/game/data/regions';
 import { ALL_CONNECTIONS } from '@shared/game/data/connections';
-import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetIndoorAttrGrid, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms } from '../../lib/game';
+import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetIndoorAttrGrid, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetRoomLayoutInfo, wasmGetRoomDoorBoundaryTiles } from '../../lib/game';
 import { getCompletedChecks } from '../../lib/game/tracker';
 import type { OverworldVariantInfo } from '../../lib/game';
 import type { TileAttrContext } from '@shared/game/navigation/tile-attrs';
@@ -203,6 +203,7 @@ function NavigationWidgetContent() {
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prevScreenRef = useRef<number | null>(null);
   const prevLiveOverworldScreenRef = useRef<number | null>(null);
+  const prevQuadrantKeyRef = useRef<string | null>(null);
   const prevInventoryKeyRef = useRef<string | null>(null);
   const pendingGroundedRunRef = useRef(false);
   const handleRunRef = useRef<(() => Promise<void>) | null>(null);
@@ -453,6 +454,29 @@ function NavigationWidgetContent() {
       const allEntrances = enrichEntrances();
       const exitScreenByRoom = wasmGetExitScreenMap();
 
+      // Get room layout info for intra-room edge detection (indoor only)
+      const roomLayout = isIndoors ? wasmGetRoomLayoutInfo() : null;
+      const intraEdges = roomLayout?.intraEdges ?? [];
+
+      // Compute quadrant bounds to restrict BFS to current quadrant in multi-screen rooms
+      let quadrantBounds: QuadrantBounds | undefined;
+      if (roomLayout && intraEdges.length > 0) {
+        const { shape, quadrantX, quadrantY } = roomLayout;
+        const halfR = 32, halfC = 32;
+        let minRow = 0, maxRow = 63, minCol = 0, maxCol = 63;
+        if (shape === '1x2' || shape === '2x2') {
+          // Vertical split: upper=rows 0-31, lower=rows 32-63
+          if (quadrantY === 0) { maxRow = halfR - 1; } // upper
+          else { minRow = halfR; }                      // lower
+        }
+        if (shape === '2x1' || shape === '2x2') {
+          // Horizontal split: left=cols 0-31, right=cols 32-63
+          if (quadrantX === 0) { maxCol = halfC - 1; } // left
+          else { minCol = halfC; }                      // right
+        }
+        quadrantBounds = { minRow, maxRow, minCol, maxCol };
+      }
+
       // Helper to run flood fill for one screen directly via orchestrator
       const runOneScreen = (screenIndex: number, sp?: { row: number; col: number }) => {
         let grid: number[][];
@@ -473,6 +497,7 @@ function NavigationWidgetContent() {
           dynamicBlockers,
           entrances: allEntrances,
           exitScreenByRoom,
+          quadrantBounds: isIndoors ? quadrantBounds : undefined,
           variant: runVariant ? {
             progressTier: runVariant.progressIndicator,
             eventOverlay: runVariant.eventOverlayActive,
@@ -480,7 +505,7 @@ function NavigationWidgetContent() {
           } : undefined,
         };
         const result = floodFillScreen(grid, screenIndex, opts);
-        const connections = getConnections(result);
+        const connections = getConnections(result, isIndoors ? intraEdges : undefined);
         return { screenIndex, result, connections, dynamicBlockers };
       };
 
@@ -555,23 +580,31 @@ function NavigationWidgetContent() {
       if (isIndoors) {
         const connectedRooms = new Set<number>([primaryScreenIndex]);
         for (const c of allConnections) {
-          connectedRooms.add(c.targetScreen);
+          if (!c.isIntraRoom) connectedRooms.add(c.targetScreen);
         }
         const roomList = [...connectedRooms];
-        const roomCols = roomList.map(r => r % 16);
-        const roomRows = roomList.map(r => Math.floor(r / 16));
-        const minCol = Math.min(...roomCols);
-        const maxCol = Math.max(...roomCols);
-        const minRow = Math.min(...roomRows);
-        const maxRow = Math.max(...roomRows);
+
+        // For multi-screen rooms, expand into virtual quadrant cells.
+        // Shape determines the grid dimensions of the current room.
+        const shape = roomLayout?.shape ?? '1x1';
+        const roomGridCols = (shape === '2x2' || shape === '2x1') ? 2 : 1;
+        const roomGridRows = (shape === '2x2' || shape === '1x2') ? 2 : 1;
+        const hasIntraEdges = intraEdges.length > 0;
+
+        // If room has intra-room boundaries, use the room's own grid shape
+        const bundleCols = hasIntraEdges ? roomGridCols : 1;
+        const bundleRows = hasIntraEdges ? roomGridRows : 1;
+
         setScreenBundle({
           name: screenName,
           screens: roomList,
-          cols: maxCol - minCol + 1,
-          rows: maxRow - minRow + 1,
+          cols: Math.max(bundleCols, roomList.length > 1 ? 2 : 1),
+          rows: Math.max(bundleRows, roomList.length > 1 ? 2 : 1),
           subNames: {}, screenNames: {},
-          isMulti: roomList.length > 1,
+          isMulti: hasIntraEdges || roomList.length > 1,
           head: primaryScreenIndex,
+          roomShape: hasIntraEdges ? shape : undefined,
+          activeQuadrant: hasIntraEdges ? { x: roomLayout!.quadrantX, y: roomLayout!.quadrantY } : undefined,
         });
       }
 
@@ -651,6 +684,24 @@ function NavigationWidgetContent() {
       handleRunRef.current?.();
     }
   }, [autoRun, running, debugTick]);
+
+  // Auto-run flood fill on indoor quadrant change (same room, different quadrant)
+  useEffect(() => {
+    if (!autoRun || running || !isIndoors) return;
+    const layout = wasmGetRoomLayoutInfo();
+    if (!layout || layout.intraEdges.length === 0) return;
+    const quadKey = `${layout.quadrantX},${layout.quadrantY}`;
+    if (prevQuadrantKeyRef.current !== null && prevQuadrantKeyRef.current !== quadKey) {
+      const vp = wasmGetViewportInfo?.();
+      if (vp && vp.submodule !== 0) {
+        pendingGroundedRunRef.current = true;
+      } else {
+        pendingAutoSecondPassRef.current = true;
+        handleRunRef.current?.();
+      }
+    }
+    prevQuadrantKeyRef.current = quadKey;
+  }, [autoRun, running, isIndoors, debugTick]);
 
   // Auto-run flood fill when inventory/equipment changes (affects reachability)
   useEffect(() => {
@@ -1211,34 +1262,34 @@ function PathCopyBtn() {
 
 // ─── ScreenMapWithConnections ──────────────────────────────────────────
 
-function ReachabilityCanvas({ reachable, size }: { reachable: number[][]; size: number }) {
+function ReachabilityCanvas({ reachable, size, bounds }: { reachable: number[][]; size: number; bounds?: { minRow: number; maxRow: number; minCol: number; maxCol: number } }) {
   const ref = useCallback((canvas: HTMLCanvasElement | null) => {
     if (!canvas) return;
-    canvas.width = 64;
-    canvas.height = 64;
+    const r0 = bounds?.minRow ?? 0, r1 = bounds?.maxRow ?? 63;
+    const c0 = bounds?.minCol ?? 0, c1 = bounds?.maxCol ?? 63;
+    const rows = r1 - r0 + 1, cols = c1 - c0 + 1;
+    canvas.width = cols;
+    canvas.height = rows;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    const img = ctx.createImageData(64, 64);
-    for (let r = 0; r < 64; r++) {
-      for (let c = 0; c < 64; c++) {
+    const img = ctx.createImageData(cols, rows);
+    for (let r = r0; r <= r1; r++) {
+      for (let c = c0; c <= c1; c++) {
         const state = reachable[r]?.[c] ?? 0;
-        const off = (r * 64 + c) * 4;
+        const off = ((r - r0) * cols + (c - c0)) * 4;
         if (state === 1) {
-          // Reachable — lightest gray
           img.data[off] = 90; img.data[off + 1] = 90; img.data[off + 2] = 90; img.data[off + 3] = 255;
         } else if (state >= 2) {
-          // Traversal — mid gray
           img.data[off] = 50; img.data[off + 1] = 50; img.data[off + 2] = 50; img.data[off + 3] = 255;
         } else {
-          // Unreachable — darkest
           img.data[off] = 18; img.data[off + 1] = 18; img.data[off + 2] = 18; img.data[off + 3] = 255;
         }
       }
     }
     ctx.putImageData(img, 0, 0);
-  }, [reachable]);
+  }, [reachable, bounds]);
 
-  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: size, height: size, borderRadius: 3, imageRendering: 'pixelated' }} />;
+  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', borderRadius: 3, imageRendering: 'pixelated' }} />;
 }
 
 function ScreenMapWithConnections({ bundle, connections, renderResults, linkScreenIndex, linkPos }: {
@@ -1254,29 +1305,89 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
   // Use CSS calc: container is 100% width, subtract edge padding to get grid area
   // We compute cell size assuming a fixed max widget width (~240px usable after root padding)
   const AVAIL = 224; // approx widget inner width minus root padding
-  const CELL = Math.floor((AVAIL - EDGE_PAD * 2 - (bundle.cols - 1) * GAP) / bundle.cols);
-  const gridW = bundle.cols * CELL + (bundle.cols - 1) * GAP;
-  const gridH = bundle.rows * CELL + (bundle.rows - 1) * GAP;
+
+  // For multi-screen rooms with roomShape, use shape dimensions for grid
+  const gridCols = bundle.roomShape
+    ? (bundle.roomShape === '2x2' || bundle.roomShape === '2x1' ? 2 : 1)
+    : bundle.cols;
+  const gridRows = bundle.roomShape
+    ? (bundle.roomShape === '2x2' || bundle.roomShape === '1x2' ? 2 : 1)
+    : bundle.rows;
+
+  // Quadrant proportions: each cell represents one quadrant
+  const qCols = bundle.roomShape ? (gridCols > 1 ? 32 : 64) : 64;
+  const qRows = bundle.roomShape ? (gridRows > 1 ? 32 : 64) : 64;
+  const cellW = Math.floor((AVAIL - EDGE_PAD * 2 - (gridCols - 1) * GAP) / gridCols);
+  const cellH = Math.floor(cellW * qRows / qCols);
+  const gridW = gridCols * cellW + (gridCols - 1) * GAP;
+  const gridH = gridRows * cellH + (gridRows - 1) * GAP;
   const totalW = gridW + EDGE_PAD * 2;
   const totalH = gridH + EDGE_PAD * 2;
 
-  // Group connections by edge
+  // Separate intra-room connections from external ones for rendering
+  const intraConns = connections.filter(c => c.isIntraRoom);
+  const externalConns = connections.filter(c => !c.isIntraRoom);
+
+  // Group external connections by edge
   const byEdge: Record<string, ConnectionInfo[]> = { north: [], south: [], east: [], west: [] };
-  for (const c of connections) {
+  for (const c of externalConns) {
     if (byEdge[c.edge]) byEdge[c.edge].push(c);
   }
 
   // Determine contrasting text color for each edge
   const textColor = (edge: string) => {
-    // Dark backgrounds get white text, light ones get black
     if (edge === 'north' || edge === 'west') return '#fff';
     return '#000';
   };
 
+  // Build virtual quadrant cells for multi-screen rooms
+  const quadrantCells: Array<{ col: number; row: number; label: string; isActive: boolean }> = [];
+  if (bundle.roomShape && bundle.roomShape !== '1x1') {
+    const aq = bundle.activeQuadrant ?? { x: 0, y: 0 };
+    if (bundle.roomShape === '1x2') {
+      quadrantCells.push({ col: 0, row: 0, label: 'Upper', isActive: aq.y === 0 });
+      quadrantCells.push({ col: 0, row: 1, label: 'Lower', isActive: aq.y === 2 });
+    } else if (bundle.roomShape === '2x1') {
+      quadrantCells.push({ col: 0, row: 0, label: 'Left', isActive: aq.x === 0 });
+      quadrantCells.push({ col: 1, row: 0, label: 'Right', isActive: aq.x === 1 });
+    } else { // 2x2
+      quadrantCells.push({ col: 0, row: 0, label: 'TL', isActive: aq.x === 0 && aq.y === 0 });
+      quadrantCells.push({ col: 1, row: 0, label: 'TR', isActive: aq.x === 1 && aq.y === 0 });
+      quadrantCells.push({ col: 0, row: 1, label: 'BL', isActive: aq.x === 0 && aq.y === 2 });
+      quadrantCells.push({ col: 1, row: 1, label: 'BR', isActive: aq.x === 1 && aq.y === 2 });
+    }
+  }
+
   return (
     <div style={{ position: 'relative', width: '100%', maxWidth: totalW, height: totalH, marginTop: 4, marginLeft: 'auto', marginRight: 'auto' }}>
-      {/* Grid cells */}
-      {bundle.screens.map((scr, idx) => {
+      {/* Grid cells — quadrant mode for multi-screen rooms */}
+      {quadrantCells.length > 0 ? quadrantCells.map((qc, idx) => {
+        const scrResult = qc.isActive ? renderResults.find(r => r.screenIndex === bundle.head) : undefined;
+        return (
+          <div key={idx} style={{
+            position: 'absolute',
+            left: EDGE_PAD + qc.col * (cellW + GAP),
+            top: EDGE_PAD + qc.row * (cellH + GAP),
+            width: cellW, height: cellH,
+            borderRadius: 3, fontSize: 10, textAlign: 'center',
+            display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+            background: qc.isActive ? 'rgba(100,255,100,0.12)' : 'rgba(255,255,255,0.04)',
+            border: `1px solid ${qc.isActive ? 'rgba(100,255,100,0.5)' : 'rgba(255,255,255,0.12)'}`,
+            color: qc.isActive ? '#8f8' : '#666',
+            overflow: 'hidden',
+          }}>
+            {scrResult && qc.isActive && <ReachabilityCanvas reachable={scrResult.reachable} size={cellW} bounds={{
+              minRow: gridRows > 1 ? qc.row * 32 : 0,
+              maxRow: gridRows > 1 ? qc.row * 32 + 31 : 63,
+              minCol: gridCols > 1 ? qc.col * 32 : 0,
+              maxCol: gridCols > 1 ? qc.col * 32 + 31 : 63,
+            }} />}
+            <div style={{ fontWeight: 700, fontSize: 11, position: 'relative' }}>{qc.label}</div>
+            {!qc.isActive && <div style={{ fontSize: 9, color: '#555', position: 'relative' }}>?</div>}
+            {scrResult && qc.isActive && <div style={{ fontSize: 9, color: '#999', position: 'relative' }}>{scrResult.reachableCount}/{scrResult.totalTiles}</div>}
+          </div>
+        );
+      }) : bundle.screens.map((scr, idx) => {
         const col = idx % bundle.cols;
         const row = Math.floor(idx / bundle.cols);
         const isActive = linkScreenIndex === scr;
@@ -1285,9 +1396,9 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
         return (
           <div key={scr} style={{
             position: 'absolute',
-            left: EDGE_PAD + col * (CELL + GAP),
-            top: EDGE_PAD + row * (CELL + GAP),
-            width: CELL, height: CELL,
+            left: EDGE_PAD + col * (cellW + GAP),
+            top: EDGE_PAD + row * (cellH + GAP),
+            width: cellW, height: cellH,
             borderRadius: 3, fontSize: 10, textAlign: 'center',
             display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
             background: isActive ? 'rgba(100,255,100,0.12)' : analyzed ? 'rgba(100,200,255,0.08)' : 'rgba(255,255,255,0.03)',
@@ -1295,7 +1406,7 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
             color: isActive ? '#8f8' : analyzed ? '#8cf' : '#666',
             overflow: 'hidden',
           }}>
-            {scrResult && <ReachabilityCanvas reachable={scrResult.reachable} size={CELL} />}
+            {scrResult && <ReachabilityCanvas reachable={scrResult.reachable} size={cellW} />}
             <div style={{ fontWeight: 700, fontSize: 11, position: 'relative' }}>{bundle.subNames[scr] || bundle.screenNames[scr]}</div>
             <div style={{ color: '#555', fontSize: 9, position: 'relative' }}>0x{scr.toString(16).toUpperCase()}</div>
             {scrResult && <div style={{ fontSize: 9, color: '#999', position: 'relative' }}>{scrResult.reachableCount}/{scrResult.totalTiles}</div>}
@@ -1305,20 +1416,35 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
 
       {/* Entrance markers — yellow squares positioned within their screen cell (reachable only) */}
       {renderResults.flatMap(r => r.entrances.filter(e => r.transitions.some(t => t.entranceIdx === e.id)).map(ent => {
-        const scrIdx = bundle.screens.indexOf(r.screenIndex);
-        if (scrIdx < 0) return null;
-        const col = scrIdx % bundle.cols;
-        const row = Math.floor(scrIdx / bundle.cols);
-        const cellLeft = EDGE_PAD + col * (CELL + GAP);
-        const cellTop = EDGE_PAD + row * (CELL + GAP);
-        const x = (ent.gridCol / 64) * CELL;
-        const y = (ent.gridRow / 64) * CELL;
-        const sz = Math.max(6, CELL * 4 / 64); // 4 tiles wide
+        let cellCol: number, cellRow: number, localX: number, localY: number;
+        if (quadrantCells.length > 0) {
+          // Quadrant mode: determine which cell the entrance falls in
+          const qRow = gridRows > 1 ? (ent.gridRow >= 32 ? 1 : 0) : 0;
+          const qCol = gridCols > 1 ? (ent.gridCol >= 32 ? 1 : 0) : 0;
+          cellCol = qCol;
+          cellRow = qRow;
+          const qRows = gridRows > 1 ? 32 : 64;
+          const qCols = gridCols > 1 ? 32 : 64;
+          const rowOff = qRow * 32;
+          const colOff = qCol * 32;
+          localX = ((ent.gridCol - colOff) / qCols) * cellW;
+          localY = ((ent.gridRow - rowOff) / qRows) * cellH;
+        } else {
+          const scrIdx = bundle.screens.indexOf(r.screenIndex);
+          if (scrIdx < 0) return null;
+          cellCol = scrIdx % bundle.cols;
+          cellRow = Math.floor(scrIdx / bundle.cols);
+          localX = (ent.gridCol / 64) * cellW;
+          localY = (ent.gridRow / 64) * cellH;
+        }
+        const cellLeft = EDGE_PAD + cellCol * (cellW + GAP);
+        const cellTop = EDGE_PAD + cellRow * (cellH + GAP);
+        const sz = Math.max(6, cellW * 4 / 64); // 4 tiles wide
         return (
           <div key={`ent-${r.screenIndex}-${ent.id}`} style={{
             position: 'absolute',
-            left: cellLeft + x - 1,
-            top: cellTop + y - 1,
+            left: cellLeft + localX - 1,
+            top: cellTop + localY - 1,
             width: sz, height: sz,
             border: '1.5px solid #ffcc44',
             borderRadius: 1,
@@ -1329,13 +1455,28 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
 
       {/* Link position — green dot */}
       {linkPos && bundle.screens.includes(linkPos.screen) && (() => {
-        const scrIdx = bundle.screens.indexOf(linkPos.screen);
-        const col = scrIdx % bundle.cols;
-        const row = Math.floor(scrIdx / bundle.cols);
-        const cellLeft = EDGE_PAD + col * (CELL + GAP);
-        const cellTop = EDGE_PAD + row * (CELL + GAP);
-        const x = (linkPos.col / 64) * CELL;
-        const y = (linkPos.row / 64) * CELL;
+        let cellLeft: number, cellTop: number, x: number, y: number;
+        if (quadrantCells.length > 0) {
+          // Quadrant mode: find active cell, position relative to quadrant bounds
+          const activeCell = quadrantCells.find(qc => qc.isActive);
+          if (!activeCell) return null;
+          cellLeft = EDGE_PAD + activeCell.col * (cellW + GAP);
+          cellTop = EDGE_PAD + activeCell.row * (cellH + GAP);
+          const qRows = gridRows > 1 ? 32 : 64;
+          const qCols = gridCols > 1 ? 32 : 64;
+          const rowOff = gridRows > 1 ? activeCell.row * 32 : 0;
+          const colOff = gridCols > 1 ? activeCell.col * 32 : 0;
+          x = ((linkPos.col - colOff) / qCols) * cellW;
+          y = ((linkPos.row - rowOff) / qRows) * cellH;
+        } else {
+          const scrIdx = bundle.screens.indexOf(linkPos.screen);
+          const col = scrIdx % bundle.cols;
+          const row = Math.floor(scrIdx / bundle.cols);
+          cellLeft = EDGE_PAD + col * (cellW + GAP);
+          cellTop = EDGE_PAD + row * (cellH + GAP);
+          x = (linkPos.col / 64) * cellW;
+          y = (linkPos.row / 64) * cellH;
+        }
         return (
           <div style={{
             position: 'absolute',
@@ -1350,14 +1491,69 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
         );
       })()}
 
+      {/* Intra-room connection bars between quadrant cells */}
+      {intraConns.map((c, i) => {
+        const p0 = c.positions[0], p1 = c.positions[c.positions.length - 1];
+        if (c.edge === 'south' && gridRows > 1) {
+          // Horizontal bar between upper and lower cells
+          const x0 = EDGE_PAD + (p0 / 64) * cellW;
+          const spanW = Math.max(8, ((p1 - p0 + 1) / 64) * cellW);
+          const yPos = EDGE_PAD + cellH + GAP / 2 - 2;
+          return (
+            <div key={`intra-s${i}`} style={{
+              position: 'absolute', left: x0, top: yPos,
+              width: spanW, height: 4, borderRadius: 2,
+              background: '#66eebb', opacity: 0.9, pointerEvents: 'none',
+            }} />
+          );
+        }
+        if (c.edge === 'north' && gridRows > 1) {
+          const x0 = EDGE_PAD + (p0 / 64) * cellW;
+          const spanW = Math.max(8, ((p1 - p0 + 1) / 64) * cellW);
+          const yPos = EDGE_PAD + cellH + GAP / 2 - 2;
+          return (
+            <div key={`intra-n${i}`} style={{
+              position: 'absolute', left: x0, top: yPos,
+              width: spanW, height: 4, borderRadius: 2,
+              background: '#66bbee', opacity: 0.9, pointerEvents: 'none',
+            }} />
+          );
+        }
+        if (c.edge === 'east' && gridCols > 1) {
+          const y0 = EDGE_PAD + (p0 / 64) * cellH;
+          const spanH = Math.max(8, ((p1 - p0 + 1) / 64) * cellH);
+          const xPos = EDGE_PAD + cellW + GAP / 2 - 2;
+          return (
+            <div key={`intra-e${i}`} style={{
+              position: 'absolute', left: xPos, top: y0,
+              width: 4, height: spanH, borderRadius: 2,
+              background: '#eeaa66', opacity: 0.9, pointerEvents: 'none',
+            }} />
+          );
+        }
+        if (c.edge === 'west' && gridCols > 1) {
+          const y0 = EDGE_PAD + (p0 / 64) * cellH;
+          const spanH = Math.max(8, ((p1 - p0 + 1) / 64) * cellH);
+          const xPos = EDGE_PAD + cellW + GAP / 2 - 2;
+          return (
+            <div key={`intra-w${i}`} style={{
+              position: 'absolute', left: xPos, top: y0,
+              width: 4, height: spanH, borderRadius: 2,
+              background: '#bb88ee', opacity: 0.9, pointerEvents: 'none',
+            }} />
+          );
+        }
+        return null;
+      })}
+
       {/* Edge connection indicators — sized and positioned by tile range */}
       {byEdge.north.map((c, i) => {
         const scrIdx = bundle.screens.indexOf(c.sourceScreen!);
         const col = scrIdx >= 0 ? scrIdx % bundle.cols : 0;
-        const colStart = EDGE_PAD + col * (CELL + GAP);
+        const colStart = EDGE_PAD + col * (cellW + GAP);
         const p0 = c.positions[0], p1 = c.positions[c.positions.length - 1];
-        const x0 = (p0 / 64) * CELL;
-        const spanW = Math.max(14, ((p1 - p0 + 1) / 64) * CELL);
+        const x0 = (p0 / 64) * cellW;
+        const spanW = Math.max(14, ((p1 - p0 + 1) / 64) * cellW);
         return (
           <div key={`n${i}`} style={{ position: 'absolute', top: 1, left: colStart + x0, width: spanW, height: 14, borderRadius: 2, background: EDGE_COLORS.north, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             title={`${getScreenDisplayName(c.targetScreen)} c${p0}-${p1} (${c.positions.length})`}>
@@ -1369,10 +1565,10 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
       {byEdge.south.map((c, i) => {
         const scrIdx = bundle.screens.indexOf(c.sourceScreen!);
         const col = scrIdx >= 0 ? scrIdx % bundle.cols : 0;
-        const colStart = EDGE_PAD + col * (CELL + GAP);
+        const colStart = EDGE_PAD + col * (cellW + GAP);
         const p0 = c.positions[0], p1 = c.positions[c.positions.length - 1];
-        const x0 = (p0 / 64) * CELL;
-        const spanW = Math.max(14, ((p1 - p0 + 1) / 64) * CELL);
+        const x0 = (p0 / 64) * cellW;
+        const spanW = Math.max(14, ((p1 - p0 + 1) / 64) * cellW);
         return (
           <div key={`s${i}`} style={{ position: 'absolute', bottom: 1, left: colStart + x0, width: spanW, height: 14, borderRadius: 2, background: EDGE_COLORS.south, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             title={`${getScreenDisplayName(c.targetScreen)} c${p0}-${p1} (${c.positions.length})`}>
@@ -1384,10 +1580,10 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
       {byEdge.west.map((c, i) => {
         const scrIdx = bundle.screens.indexOf(c.sourceScreen!);
         const row = scrIdx >= 0 ? Math.floor(scrIdx / bundle.cols) : 0;
-        const rowStart = EDGE_PAD + row * (CELL + GAP);
+        const rowStart = EDGE_PAD + row * (cellH + GAP);
         const p0 = c.positions[0], p1 = c.positions[c.positions.length - 1];
-        const y0 = (p0 / 64) * CELL;
-        const spanH = Math.max(14, ((p1 - p0 + 1) / 64) * CELL);
+        const y0 = (p0 / 64) * cellH;
+        const spanH = Math.max(14, ((p1 - p0 + 1) / 64) * cellH);
         return (
           <div key={`w${i}`} style={{ position: 'absolute', left: 1, top: rowStart + y0, width: 14, height: spanH, borderRadius: 2, background: EDGE_COLORS.west, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             title={`${getScreenDisplayName(c.targetScreen)} r${p0}-${p1} (${c.positions.length})`}>
@@ -1399,10 +1595,10 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
       {byEdge.east.map((c, i) => {
         const scrIdx = bundle.screens.indexOf(c.sourceScreen!);
         const row = scrIdx >= 0 ? Math.floor(scrIdx / bundle.cols) : 0;
-        const rowStart = EDGE_PAD + row * (CELL + GAP);
+        const rowStart = EDGE_PAD + row * (cellH + GAP);
         const p0 = c.positions[0], p1 = c.positions[c.positions.length - 1];
-        const y0 = (p0 / 64) * CELL;
-        const spanH = Math.max(14, ((p1 - p0 + 1) / 64) * CELL);
+        const y0 = (p0 / 64) * cellH;
+        const spanH = Math.max(14, ((p1 - p0 + 1) / 64) * cellH);
         return (
           <div key={`e${i}`} style={{ position: 'absolute', right: 1, top: rowStart + y0, width: 14, height: spanH, borderRadius: 2, background: EDGE_COLORS.east, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             title={`${getScreenDisplayName(c.targetScreen)} r${p0}-${p1} (${c.positions.length})`}>
