@@ -9,6 +9,8 @@ export function classifyTileAttr(attr: number, context: TileAttrContext = 'overw
   const def = getTileAttrsMap(context)[attr];
   if (!def) return { type: 'blocked' };
 
+  if (def.cat === 'stairs') return { type: 'stairs' };
+
   switch (def.pass) {
     case 'free':    return { type: 'free' };
     case 'obstacle': return { type: 'obstacle', req: def.req! };

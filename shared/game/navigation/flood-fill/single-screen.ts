@@ -1,7 +1,7 @@
 import type { TilePassability, TransitionPoint, GridPos, ReachState } from '../types';
 import type { TileAttrContext } from '../tile-attrs';
 import { getHookshotTargetTiles } from '../tile-attrs';
-import { GRID_SIZE, TRAVERSAL_DIR_OFFSET } from '../types';
+import { GRID_SIZE, TRAVERSAL_DIR_OFFSET, STAIRS_TRAVERSAL_STATE } from '../types';
 import { DIRECTIONS } from '../core';
 
 interface FloodCell {
@@ -101,12 +101,12 @@ export function floodFillBFS(
       if (!canEnter) continue;
 
       // Link is 16×16px (2×2 sub-tiles). Check 2×2 clearance.
-      // Skip clearance for ledge tiles — Link is mid-jump, body clearance doesn't apply.
+      // Skip clearance for ledge/stairs tiles — Link is mid-jump/transition, body clearance doesn't apply.
       // Free/pit side clearance adds no requirement.
       // If side clearance comes only from a liftable obstacle, accumulate that req
       // so tight cliff|free|bush corridors are marked item-gated (pink), not free (blue).
       let clearanceReq: string | null = null;
-      if (tile.type !== 'ledge') {
+      if (tile.type !== 'ledge' && tile.type !== 'stairs') {
         const clearance = getClearanceRequirement(nr, nc, dr, dc, grid, inventory, tile, reached);
         if (!clearance.passes) continue;
         clearanceReq = clearance.req;
@@ -139,6 +139,10 @@ export function floodFillBFS(
       // Ledge tiles are traversal-only — encode direction in state (>=2)
       if (tile.type === 'ledge') {
         return TRAVERSAL_DIR_OFFSET[tile.dir];
+      }
+      // Stairs are bidirectional traversal
+      if (tile.type === 'stairs') {
+        return STAIRS_TRAVERSAL_STATE;
       }
       reachableCount++;
       return 1;
@@ -191,7 +195,7 @@ function getClearanceRequirement(
   for (const [r, c] of perps) {
     if (r < 0 || r >= GRID_SIZE || c < 0 || c >= GRID_SIZE) continue;
     const t = grid[r][c];
-    if (t.type === 'free' || t.type === 'pit') return { passes: true, req: null };
+    if (t.type === 'free' || t.type === 'pit' || t.type === 'stairs') return { passes: true, req: null };
   }
 
   // Second pass: obstacle-based clearance (propagates the obstacle's requirement).
@@ -268,6 +272,7 @@ function evaluateEntry(
   switch (tile.type) {
     case 'free':
     case 'pit':
+    case 'stairs':
       return { canEnter: true, newReqs };
 
     case 'obstacle':

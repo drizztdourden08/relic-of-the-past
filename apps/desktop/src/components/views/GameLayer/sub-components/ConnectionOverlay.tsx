@@ -5,6 +5,7 @@ import { wasmGetViewportInfo, wasmGetLiveSprites } from '../../../../lib/game';
 import { classifyTileAttr } from '@shared/game/navigation/tile-classification';
 import { getTileAttrsMap, getAttrLabel } from '@shared/game/navigation/tile-attrs';
 import type { ReachState } from '@shared/game/navigation/types';
+import { STAIRS_TRAVERSAL_STATE } from '@shared/game/navigation/types';
 
 const EDGE_COLORS: Record<string, string> = {
   north: '#4488ff',
@@ -78,7 +79,7 @@ function isValid2x2(row: number, col: number, reachable: ReachState[][]): boolea
 
 /** Check if movement direction (dr,dc) is compatible with an encoded traversal state (>=2). */
 function isTraversalDirCompatible(state: number, dr: number, dc: number): boolean {
-  // state encodes direction: 2=s, 3=n, 4=e, 5=w, 6=se, 7=sw, 8=ne, 9=nw
+  // state encodes direction: 2=s, 3=n, 4=e, 5=w, 6=se, 7=sw, 8=ne, 9=nw, 10=stairs(any)
   switch (state) {
     case 2: return dr === 1 && dc === 0;   // south
     case 3: return dr === -1 && dc === 0;  // north
@@ -88,6 +89,7 @@ function isTraversalDirCompatible(state: number, dr: number, dc: number): boolea
     case 7: return dr === 1 || dc === -1;  // sw
     case 8: return dr === -1 || dc === 1;  // ne
     case 9: return dr === -1 || dc === -1; // nw
+    case 10: return true;                  // stairs — bidirectional
     default: return false;
   }
 }
@@ -334,8 +336,8 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       // Dot radius in display pixels
       const dotRadius = Math.max(2.5, 4 * Math.min(scaleX, scaleY));
 
-      // Draw reachable tiles as dots (skip ledge/traversal tiles — those get arrows instead)
-      const LEDGE_ATTRS = new Set([0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x01, 0x02, 0x03, 0x1a, 0x12, 0x11, 0x13, 0x19, 0x1b]);
+      // Draw reachable tiles as dots (skip ledge/traversal/stairs tiles — those get arrows instead)
+      const LEDGE_ATTRS = new Set([0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x01, 0x02, 0x03, 0x1a, 0x12, 0x11, 0x13, 0x19, 0x1b, 0x3d]);
       ctx.globalAlpha = 0.55;
       for (const drawResult of drawResults) {
         const origin = getScreenWorldOrigin(drawResult.screenIndex);
@@ -569,6 +571,78 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
         }
       }
 
+      // Draw stairs as purple double-ended arrows (bidirectional traversal)
+      ctx.globalAlpha = 0.8;
+      ctx.strokeStyle = '#aa44ff';
+      ctx.fillStyle = '#aa44ff';
+      for (const drawResult of drawResults) {
+        if (!drawResult.attrGrid) continue;
+        const origin = getScreenWorldOrigin(drawResult.screenIndex);
+        // Find connected runs of 0x3D tiles that are reachable (state = STAIRS_TRAVERSAL_STATE)
+        // Group vertically (stairs are typically vertical columns)
+        const visited = new Set<string>();
+        for (let r = 0; r < 64; r++) {
+          for (let c = 0; c < 64; c++) {
+            if (drawResult.reachable[r][c] !== STAIRS_TRAVERSAL_STATE) continue;
+            if (visited.has(`${r},${c}`)) continue;
+            // Trace connected stairs tiles (vertical run)
+            let minR = r, maxR = r;
+            visited.add(`${r},${c}`);
+            let nr = r + 1;
+            while (nr < 64 && drawResult.reachable[nr][c] === STAIRS_TRAVERSAL_STATE) {
+              visited.add(`${nr},${c}`);
+              maxR = nr;
+              nr++;
+            }
+            // Only draw arrow if run is at least 2 tiles
+            if (maxR - minR < 1) continue;
+
+            const startWorldX = origin.x + c * TILE_PX + TILE_PX / 2;
+            const startWorldY = origin.y + minR * TILE_PX + TILE_PX / 2;
+            const endWorldX = origin.x + c * TILE_PX + TILE_PX / 2;
+            const endWorldY = origin.y + maxR * TILE_PX + TILE_PX / 2;
+
+            const startSX = startWorldX - viewLeft;
+            const startSY = startWorldY - viewTop;
+            const endSX = endWorldX - viewLeft;
+            const endSY = endWorldY - viewTop;
+
+            if (startSY > snesH + TILE_PX && endSY > snesH + TILE_PX) continue;
+            if (startSY < -TILE_PX && endSY < -TILE_PX) continue;
+
+            const x1 = startSX * scaleX;
+            const y1 = startSY * scaleY;
+            const x2 = endSX * scaleX;
+            const y2 = endSY * scaleY;
+
+            // Shaft
+            ctx.lineWidth = Math.max(1.5, 2 * Math.min(scaleX, scaleY));
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+
+            // Arrowhead at both ends (double-ended)
+            const angle = Math.atan2(y2 - y1, x2 - x1);
+            const headLen = TILE_PX * Math.min(scaleX, scaleY) * 0.5;
+            // Bottom arrowhead
+            ctx.beginPath();
+            ctx.moveTo(x2, y2);
+            ctx.lineTo(x2 - headLen * Math.cos(angle - 0.4), y2 - headLen * Math.sin(angle - 0.4));
+            ctx.lineTo(x2 - headLen * Math.cos(angle + 0.4), y2 - headLen * Math.sin(angle + 0.4));
+            ctx.closePath();
+            ctx.fill();
+            // Top arrowhead (reversed)
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x1 + headLen * Math.cos(angle - 0.4), y1 + headLen * Math.sin(angle - 0.4));
+            ctx.lineTo(x1 + headLen * Math.cos(angle + 0.4), y1 + headLen * Math.sin(angle + 0.4));
+            ctx.closePath();
+            ctx.fill();
+          }
+        }
+      }
+
       // Draw connection border tiles as larger colored dots
       ctx.globalAlpha = 0.85;
       for (const conn of connections) {
@@ -772,7 +846,7 @@ function OverlayLegend() {
       <LegendItem color="rgba(80,200,255,0.8)" label="reachable (free)" />
       <LegendItem color="rgba(255,100,180,0.8)" label="reachable (needs item)" />
       <LegendItem color="#cc5555" label="cliff jump" isArrow />
-      <LegendItem color="#44ddcc" label="stair/door passage" isArrow />
+      <LegendItem color="#aa44ff" label="stairs (bidirectional)" isArrow />
       <LegendItem color="rgba(80,200,255,0.8)" border="#00ff88" label="hookshot target" />
     </div>
   );

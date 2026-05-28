@@ -67,6 +67,7 @@ export type TileCat =
   | 'water'
   | 'cliff-face'
   | 'cliff-trigger'
+  | 'stairs'
   | 'liftable'
   | 'special'
   | 'pit';
@@ -123,6 +124,7 @@ export const OVERWORLD_TILE_ATTRS: Readonly<Record<number, TileAttrDef>> = {
   0x3A: { pass: 'free', labels: ['floor'],                            cat: 'ground' },
   0x3B: { pass: 'free', labels: ['floor'],                            cat: 'ground' },
   0x3C: { pass: 'free', labels: ['floor'],                            cat: 'ground' },
+  0x3D: { pass: 'blocked', labels: ['stair'],                          cat: 'stairs' },
   0x40: { pass: 'free', labels: ['thick grass', 'cuttable'],          cat: 'ground' },
   0x41: { pass: 'free', labels: ['floor'],                            cat: 'ground' },
   0x44: { pass: 'free', labels: ['diggable', 'shovel target'],        cat: 'ground' },

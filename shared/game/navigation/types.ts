@@ -27,8 +27,12 @@ export type TilePassability =
   | { type: 'obstacle'; req: string }
   | { type: 'blocked' }
   | { type: 'ledge'; dir: LedgeDir }
+  | { type: 'stairs' }
   | { type: 'pit' }
   | { type: 'water' };
+
+/** Traversal state for bidirectional stairs (no fixed direction). */
+export const STAIRS_TRAVERSAL_STATE = 10;
 
 // ─── Position ────────────────────────────────────────────────────────────────
 
