@@ -484,20 +484,15 @@ function NavigationWidgetContent() {
         return { screenIndex, result, connections, dynamicBlockers };
       };
 
-      // Run primary screen first (from Link's position), then iteratively propagate
-      // to adjacent screens ONLY within the same big-screen group.
+      // Run primary screen first (from Link's position), then iteratively propagate.
+      // Indoors: single room only (loading adjacent rooms via wasmBuildRoomAttrGrid
+      // corrupts the live game's collision state because Dungeon_LoadRoom is destructive).
+      // Outdoors: propagate within the same big-screen group.
       const groupScreens = isIndoors ? [primaryScreenIndex] : computeBigScreenGroup(primaryScreenIndex);
       const allowedScreens = new Set<number>(groupScreens);
-      if (isIndoors) {
-        setScreenBundle({
-          name: screenName,
-          screens: [primaryScreenIndex],
-          cols: 1, rows: 1,
-          subNames: {}, screenNames: {},
-          isMulti: false,
-          head: primaryScreenIndex,
-        });
-      } else {
+      // Indoors: single-room flood fill only (wasmBuildRoomAttrGrid is destructive).
+      // We set the screen bundle AFTER flood fill to include adjacent rooms from edges.
+      if (!isIndoors) {
         setScreenBundle(buildScreenBundle(groupScreens));
       }
       const MAX_ITERATIONS = 8;
@@ -549,11 +544,35 @@ function NavigationWidgetContent() {
       const fillResults: FloodFillResult[] = responses.map(r => r.result);
       const primaryResult = fillResults.find(r => r.screenIndex === primaryScreenIndex) ?? fillResults[0];
 
-      const allConnections: ConnectionInfo[] = [];
+      let allConnections: ConnectionInfo[] = [];
       for (const r of responses) {
         for (const c of r.connections) {
           allConnections.push({ ...c, sourceScreen: r.screenIndex });
         }
+      }
+
+      // Build indoor screen bundle now that we know which edges were found
+      if (isIndoors) {
+        const connectedRooms = new Set<number>([primaryScreenIndex]);
+        for (const c of allConnections) {
+          connectedRooms.add(c.targetScreen);
+        }
+        const roomList = [...connectedRooms];
+        const roomCols = roomList.map(r => r % 16);
+        const roomRows = roomList.map(r => Math.floor(r / 16));
+        const minCol = Math.min(...roomCols);
+        const maxCol = Math.max(...roomCols);
+        const minRow = Math.min(...roomRows);
+        const maxRow = Math.max(...roomRows);
+        setScreenBundle({
+          name: screenName,
+          screens: roomList,
+          cols: maxCol - minCol + 1,
+          rows: maxRow - minRow + 1,
+          subNames: {}, screenNames: {},
+          isMulti: roomList.length > 1,
+          head: primaryScreenIndex,
+        });
       }
 
       setDynamicBlockerCount(responses.reduce((sum, x) => sum + (x.result.dynamicBlockerCells?.length ?? x.dynamicBlockers?.length ?? 0), 0));
@@ -718,7 +737,7 @@ function NavigationWidgetContent() {
       <div style={S.section}>
         <div style={S.locName}>
           {screenBundle ? screenBundle.name : screenName}
-          {screenBundle?.isMulti && <span style={{ fontSize: 9, color: '#888', marginLeft: 6 }}>({screenBundle.screens.length} screens)</span>}
+          {screenBundle?.isMulti && <span style={{ fontSize: 9, color: '#888', marginLeft: 6 }}>({screenBundle.screens.length} {isIndoors ? 'rooms' : 'screens'})</span>}
         </div>
         <div style={S.meta}>
           {locationKey} · {isIndoors ? 'INDOOR' : (isDarkWorld ? 'DW' : 'LW')}

@@ -616,4 +616,4 @@ export {
   wasmSetUIOverlayMode,
   wasmTogglePause
 };
-export type { FallHole, LiveSpriteInfo, OverworldEntrance, OverworldVariantInfo, ViewportInfo };
+export type { EntranceData, ExitData, FallHole, LiveSpriteInfo, OverworldEntrance, OverworldVariantInfo, RoomHeader, ViewportInfo };

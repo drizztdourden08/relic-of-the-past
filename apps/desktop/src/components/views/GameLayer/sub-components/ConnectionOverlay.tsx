@@ -326,10 +326,19 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
         ? (Math.floor(vp.linkY / 512) * 512)
         : (((result.screenIndex >> 3) & 7) * 512);
       const drawResults = results.length > 0 ? results : [result];
-      const getScreenWorldOrigin = (screenIndex: number) => ({
-        x: isIndoors ? (Math.floor(vp.linkX / 512) * 512) : ((screenIndex & 7) * 512),
-        y: isIndoors ? (Math.floor(vp.linkY / 512) * 512) : (((screenIndex >> 3) & 7) * 512),
-      });
+      const getScreenWorldOrigin = (screenIndex: number) => {
+        if (isIndoors) {
+          // Indoor rooms are on a 16-wide grid; each room = 512×512 game pixels
+          return {
+            x: (screenIndex % 16) * 512,
+            y: Math.floor(screenIndex / 16) * 512,
+          };
+        }
+        return {
+          x: (screenIndex & 7) * 512,
+          y: ((screenIndex >> 3) & 7) * 512,
+        };
+      };
 
       // Sub-tile size in game pixels
       const TILE_PX = 8;
@@ -598,9 +607,9 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
             if (maxR - minR < 1) continue;
 
             const startWorldX = origin.x + c * TILE_PX + TILE_PX / 2;
-            const startWorldY = origin.y + minR * TILE_PX + TILE_PX / 2;
+            const startWorldY = origin.y + minR * TILE_PX;  // top edge of first stair tile
             const endWorldX = origin.x + c * TILE_PX + TILE_PX / 2;
-            const endWorldY = origin.y + maxR * TILE_PX + TILE_PX / 2;
+            const endWorldY = origin.y + (maxR + 1) * TILE_PX;  // bottom edge of last stair tile
 
             const startSX = startWorldX - viewLeft;
             const startSY = startWorldY - viewTop;
@@ -615,28 +624,35 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
             const x2 = endSX * scaleX;
             const y2 = endSY * scaleY;
 
-            // Shaft
-            ctx.lineWidth = Math.max(1.5, 2 * Math.min(scaleX, scaleY));
-            ctx.beginPath();
-            ctx.moveTo(x1, y1);
-            ctx.lineTo(x2, y2);
-            ctx.stroke();
-
-            // Arrowhead at both ends (double-ended)
             const angle = Math.atan2(y2 - y1, x2 - x1);
-            const headLen = TILE_PX * Math.min(scaleX, scaleY) * 0.5;
+            const lineLen = Math.hypot(x2 - x1, y2 - y1);
+            const headLen = Math.min(TILE_PX * Math.min(scaleX, scaleY) * 0.5, lineLen * 0.25);
+            const spread = 0.5;
+            const shaftWidth = Math.max(1.5, 2 * Math.min(scaleX, scaleY));
+
+            // Shaft — stop at arrowhead bases, not tips
+            ctx.strokeStyle = '#ffffff';
+            ctx.fillStyle = '#ffffff';
+            ctx.globalAlpha = 1.0;
+            ctx.lineWidth = shaftWidth;
+            const dx = Math.cos(angle) * headLen * 0.85;
+            const dy = Math.sin(angle) * headLen * 0.85;
+            ctx.beginPath();
+            ctx.moveTo(x1 + dx, y1 + dy);
+            ctx.lineTo(x2 - dx, y2 - dy);
+            ctx.stroke();
             // Bottom arrowhead
             ctx.beginPath();
             ctx.moveTo(x2, y2);
-            ctx.lineTo(x2 - headLen * Math.cos(angle - 0.4), y2 - headLen * Math.sin(angle - 0.4));
-            ctx.lineTo(x2 - headLen * Math.cos(angle + 0.4), y2 - headLen * Math.sin(angle + 0.4));
+            ctx.lineTo(x2 - headLen * Math.cos(angle - spread), y2 - headLen * Math.sin(angle - spread));
+            ctx.lineTo(x2 - headLen * Math.cos(angle + spread), y2 - headLen * Math.sin(angle + spread));
             ctx.closePath();
             ctx.fill();
-            // Top arrowhead (reversed)
+            // Top arrowhead
             ctx.beginPath();
             ctx.moveTo(x1, y1);
-            ctx.lineTo(x1 + headLen * Math.cos(angle - 0.4), y1 + headLen * Math.sin(angle - 0.4));
-            ctx.lineTo(x1 + headLen * Math.cos(angle + 0.4), y1 + headLen * Math.sin(angle + 0.4));
+            ctx.lineTo(x1 - headLen * Math.cos(angle - spread + Math.PI), y1 - headLen * Math.sin(angle - spread + Math.PI));
+            ctx.lineTo(x1 - headLen * Math.cos(angle + spread + Math.PI), y1 - headLen * Math.sin(angle + spread + Math.PI));
             ctx.closePath();
             ctx.fill();
           }
@@ -707,6 +723,59 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
         ctx.strokeStyle = '#fff';
         ctx.lineWidth = 1;
         ctx.strokeRect(dx - 0.5, dy - 0.5, dw + 1, dh + 1);
+        }
+      }
+
+      // ─── Fall zone hazard stripes (pit tiles: 0x20) ───
+      // Diagonal yellow/transparent pattern on pit tiles that BFS reached
+      ctx.globalAlpha = 0.45;
+      const stripeSize = Math.max(2, 3 * Math.min(scaleX, scaleY));
+      for (const drawResult of drawResults) {
+        if (!drawResult.attrGrid) continue;
+        const origin = getScreenWorldOrigin(drawResult.screenIndex);
+        for (let r = 0; r < 64; r++) {
+          for (let c = 0; c < 64; c++) {
+            if (drawResult.attrGrid[r][c] !== 0x20) continue;
+            // Only show pits adjacent to reachable tiles (within 1 tile)
+            let nearReachable = false;
+            for (let dr = -1; dr <= 1 && !nearReachable; dr++) {
+              for (let dc = -1; dc <= 1 && !nearReachable; dc++) {
+                const nr = r + dr, nc = c + dc;
+                if (nr >= 0 && nr < 64 && nc >= 0 && nc < 64 && drawResult.reachable[nr][nc] === 1) {
+                  nearReachable = true;
+                }
+              }
+            }
+            if (!nearReachable) continue;
+
+            const worldX = origin.x + c * TILE_PX;
+            const worldY = origin.y + r * TILE_PX;
+            const screenX = worldX - viewLeft;
+            const screenY = worldY - viewTop;
+            if (screenX < -TILE_PX || screenX > snesW + TILE_PX) continue;
+            if (screenY < -TILE_PX || screenY > snesH + TILE_PX) continue;
+
+            const dx = screenX * scaleX;
+            const dy = screenY * scaleY;
+            const tw = TILE_PX * scaleX;
+            const th = TILE_PX * scaleY;
+
+            // Draw diagonal stripes within tile bounds
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(dx, dy, tw, th);
+            ctx.clip();
+            ctx.strokeStyle = '#ffcc00';
+            ctx.lineWidth = stripeSize * 0.7;
+            // Diagonal lines from bottom-left to top-right
+            for (let s = -tw; s < tw + th; s += stripeSize * 2) {
+              ctx.beginPath();
+              ctx.moveTo(dx + s, dy + th);
+              ctx.lineTo(dx + s + th, dy);
+              ctx.stroke();
+            }
+            ctx.restore();
+          }
         }
       }
 

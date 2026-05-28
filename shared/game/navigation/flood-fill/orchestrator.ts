@@ -198,18 +198,19 @@ export function floodFillScreen(
     west: { freeTiles: [], itemTiles: [] },
   };
 
-  if (tileContext === 'overworld') {
-    for (const t of transitions) {
-      if (t.edge === 'entrance') continue;
-      // Skip traversal-only tiles (uncontrolled movement) from border connections
-      if (reachable[t.row][t.col] >= 2) continue;
-      const pos = t.edge === 'north' || t.edge === 'south' ? t.col : t.row;
-      const unmet = unmetRequirements(t.requirements, inv);
-      if (unmet.length === 0) {
-        borders[t.edge].freeTiles.push(pos);
-      } else {
-        borders[t.edge].itemTiles.push({ pos, requirements: unmet });
-      }
+  for (const t of transitions) {
+    if (t.edge === 'entrance') continue;
+    // Skip traversal-only tiles (uncontrolled movement) from border connections
+    if (reachable[t.row][t.col] >= 2) continue;
+    // Skip door/entrance tiles (0x80-0x8F) — those are entrance transitions, not scroll borders
+    const attr = grid.rawAttr[t.row]?.[t.col] ?? 0;
+    if (attr >= 0x80 && attr <= 0x8F) continue;
+    const pos = t.edge === 'north' || t.edge === 'south' ? t.col : t.row;
+    const unmet = unmetRequirements(t.requirements, inv);
+    if (unmet.length === 0) {
+      borders[t.edge].freeTiles.push(pos);
+    } else {
+      borders[t.edge].itemTiles.push({ pos, requirements: unmet });
     }
   }
 
@@ -236,19 +237,32 @@ export function floodFillScreen(
 
 import type { ConnectionInfo } from '../types';
 
-
+/** Get adjacent room for indoor rooms (16-wide grid, 20 rows). */
+function getAdjacentRoom(roomIdx: number, edge: 'north' | 'south' | 'east' | 'west'): number | null {
+  const col = roomIdx % 16;
+  const row = Math.floor(roomIdx / 16);
+  switch (edge) {
+    case 'north': return row > 0 ? roomIdx - 16 : null;
+    case 'south': return row < 19 ? roomIdx + 16 : null;
+    case 'west': return col > 0 ? roomIdx - 1 : null;
+    case 'east': return col < 15 ? roomIdx + 1 : null;
+  }
+}
 
 /** Extract border connection info from a flood fill result. */
 export function getConnections(result: FloodFillResult): ConnectionInfo[] {
   const connections: ConnectionInfo[] = [];
   const edges: ('north' | 'south' | 'east' | 'west')[] = ['north', 'south', 'east', 'west'];
+  const isIndoor = result.tileContext !== 'overworld';
 
   for (const edge of edges) {
     const border = result.borders[edge];
     const totalTiles = border.freeTiles.length + border.itemTiles.length;
     if (totalTiles === 0) continue;
 
-    const targetScreen = getAdjacentScreen(result.screenIndex, edge);
+    const targetScreen = isIndoor
+      ? getAdjacentRoom(result.screenIndex, edge)
+      : getAdjacentScreen(result.screenIndex, edge);
     if (targetScreen === null) continue;
 
     const allPositions = [...border.freeTiles, ...border.itemTiles.map(t => t.pos)].sort((a, b) => a - b);
