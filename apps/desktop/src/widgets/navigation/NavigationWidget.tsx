@@ -411,7 +411,18 @@ function NavigationWidgetContent() {
       // to adjacent screens ONLY within the same big-screen group.
       const groupScreens = isIndoors ? [primaryScreenIndex] : computeBigScreenGroup(primaryScreenIndex);
       const allowedScreens = new Set<number>(groupScreens);
-      setScreenBundle(isIndoors ? null : buildScreenBundle(groupScreens));
+      if (isIndoors) {
+        setScreenBundle({
+          name: screenName,
+          screens: [primaryScreenIndex],
+          cols: 1, rows: 1,
+          subNames: {}, screenNames: {},
+          isMulti: false,
+          head: primaryScreenIndex,
+        });
+      } else {
+        setScreenBundle(buildScreenBundle(groupScreens));
+      }
       const MAX_ITERATIONS = 8;
       let iterations = 0;
       const analyzed = new Map<number, NonNullable<ReturnType<typeof runOneScreen>>>();
@@ -666,10 +677,12 @@ function NavigationWidgetContent() {
         <div style={S.section}>
           <div style={S.sectionTitle}>Link</div>
           <div style={S.infoBox}>
-            <div style={S.infoRow}>
-              <span style={S.infoLabel}>World</span>
-              <span style={{ color: '#7f7' }}>({linkDebug.linkX}, {linkDebug.linkY})</span>
-            </div>
+            {!isIndoors && (
+              <div style={S.infoRow}>
+                <span style={S.infoLabel}>World</span>
+                <span style={{ color: '#7f7' }}>({linkDebug.linkX}, {linkDebug.linkY})</span>
+              </div>
+            )}
             <div style={S.infoRow}>
               <span style={S.infoLabel}>Relative</span>
               <span style={{ color: '#7f7' }}>({linkDebug.relX}, {linkDebug.relY})</span>
@@ -682,10 +695,12 @@ function NavigationWidgetContent() {
               <span style={S.infoLabel}>Map16</span>
               <span style={{ color: '#7f7' }}>({linkDebug.map16Row}, {linkDebug.map16Col})</span>
             </div>
-            <div style={S.infoRow}>
-              <span style={S.infoLabel}>Live Screen</span>
-              <span style={{ color: '#7f7' }}>0x{linkDebug.liveScreenIndex.toString(16).toUpperCase()}</span>
-            </div>
+            {!isIndoors && (
+              <div style={S.infoRow}>
+                <span style={S.infoLabel}>Live Screen</span>
+                <span style={{ color: '#7f7' }}>0x{linkDebug.liveScreenIndex.toString(16).toUpperCase()}</span>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -723,44 +738,21 @@ function NavigationWidgetContent() {
               <span>{entranceSum}</span>
             </div>
             <div style={S.infoRow}>
-              <span style={S.infoLabel}>Connections</span>
-              <span>{connections.length} ({externalConnections.length} ext + {internalConnections.length} int)</span>
+              <span style={S.infoLabel}>Edges</span>
+              <span>{externalConnections.length}{internalConnections.length > 0 ? ` + ${internalConnections.length} int` : ''}</span>
             </div>
           </div>
         )}
       </div>
 
-      {/* ═══ 5. CONNECTIONS ═══ */}
-      {externalConnections.length > 0 && (
-        <div style={S.section}>
-          <div style={S.sectionTitle}>Connections</div>
-          {externalConnections.map(conn => {
-            const connKey = `${conn.edge}-${conn.sourceScreen?.toString(16)}-${conn.targetScreen.toString(16)}`;
-            const targetName = SCREEN_NAMES[conn.targetScreen] ?? `0x${conn.targetScreen.toString(16).toUpperCase()}`;
-            const fromLabel = screenBundle?.isMulti && conn.sourceScreen != null
-              ? ` (${screenBundle.subNames[conn.sourceScreen] ?? ''})`
-              : '';
-            return (
-              <div key={connKey} style={S.connCard}>
-                <div style={S.connHeader}>
-                  <EdgeArrowSvg edge={conn.edge} size={16} />
-                  <span style={S.connTitle}>{targetName}{fromLabel}</span>
-                  <span style={S.dimBadge}>{conn.freeTileCount}{conn.itemTileCount > 0 ? `+${conn.itemTileCount}` : ''}</span>
-                </div>
-                {conn.requirements.length > 0 && (
-                  <div style={S.meta}>{conn.requirements.map(r => <ReqIcon key={r} req={r} />)}</div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
+      {/* ═══ 5. CONNECTIONS (unified) ═══ */}
+      <div style={S.section}>
+        <div style={S.sectionTitle}>Connections</div>
 
-      {/* ═══ 6. ENTRANCES ═══ */}
-      {renderResults.some(r => r.entrances.length > 0) && (
-        <div style={S.section}>
-          <div style={S.sectionTitle}>Entrances</div>
-          {renderResults.map(r => {
+        {/* ─── Entrances sub-section ─── */}
+        <div style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 2, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Entrances ({entranceSum})</div>
+        {renderResults.some(r => r.entrances.length > 0) ? (
+          renderResults.map(r => {
             if (r.entrances.length === 0) return null;
             const scrLabel = screenBundle?.isMulti
               ? (screenBundle.screenNames[r.screenIndex] ?? `0x${r.screenIndex.toString(16).toUpperCase()}`)
@@ -797,17 +789,45 @@ function NavigationWidgetContent() {
                 </div>
               </div>
             );
-          })}
-        </div>
-      )}
+          })
+        ) : (
+          <div style={{ ...S.meta, color: '#666' }}>None</div>
+        )}
 
-      {/* ═══ 7. INTERNAL EDGES (multi-screen, diamond layout) ═══ */}
-      {screenBundle?.isMulti && internalConnections.length > 0 && (
-        <div style={S.section}>
-          <div style={S.sectionTitle}>Internal Edges</div>
-          <InternalEdgeDiamond connections={internalConnections} screenBundle={screenBundle} />
-        </div>
-      )}
+        {/* ─── Edges sub-section ─── */}
+        <div style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Edges ({externalConnections.length})</div>
+        {externalConnections.length > 0 ? (
+          externalConnections.map(conn => {
+            const connKey = `${conn.edge}-${conn.sourceScreen?.toString(16)}-${conn.targetScreen.toString(16)}`;
+            const targetName = SCREEN_NAMES[conn.targetScreen] ?? `0x${conn.targetScreen.toString(16).toUpperCase()}`;
+            const fromLabel = screenBundle?.isMulti && conn.sourceScreen != null
+              ? ` (${screenBundle.subNames[conn.sourceScreen] ?? ''})`
+              : '';
+            return (
+              <div key={connKey} style={S.connCard}>
+                <div style={S.connHeader}>
+                  <EdgeArrowSvg edge={conn.edge} size={16} />
+                  <span style={S.connTitle}>{targetName}{fromLabel}</span>
+                  <span style={S.dimBadge}>{conn.freeTileCount}{conn.itemTileCount > 0 ? `+${conn.itemTileCount}` : ''}</span>
+                </div>
+                {conn.requirements.length > 0 && (
+                  <div style={S.meta}>{conn.requirements.map(r => <ReqIcon key={r} req={r} />)}</div>
+                )}
+              </div>
+            );
+          })
+        ) : (
+          <div style={{ ...S.meta, color: '#666' }}>None</div>
+        )}
+
+        {/* ─── Internal Edges (multi-screen only) ─── */}
+        {screenBundle?.isMulti && internalConnections.length > 0 && (
+          <>
+            <div style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Internal ({internalConnections.length})</div>
+            <InternalEdgeDiamond connections={internalConnections} screenBundle={screenBundle} />
+          </>
+        )}
+      </div>
 
       {/* Review */}
       <StatusRow status={locationReview.status} comment={locationReview.comment} onStatus={setLocStatus} onComment={setLocComment} />

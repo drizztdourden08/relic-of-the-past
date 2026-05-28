@@ -598,37 +598,6 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
         ctx.strokeStyle = '#fff';
         ctx.lineWidth = 1;
         ctx.strokeRect(dx - 0.5, dy - 0.5, dw + 1, dh + 1);
-
-        // Indoor stair/door: draw bidirectional arrow to indicate passable connection
-        if (isIndoors) {
-          const cx = dx + dw / 2;
-          const cy = dy + dh / 2;
-          const arrowLen = dh * 0.35;
-          const headSize = Math.max(3, dw * 0.2);
-          ctx.strokeStyle = '#44ddcc';
-          ctx.fillStyle = '#44ddcc';
-          ctx.lineWidth = Math.max(1.5, 2 * Math.min(scaleX, scaleY));
-          ctx.globalAlpha = 0.9;
-          // Vertical shaft
-          ctx.beginPath();
-          ctx.moveTo(cx, cy - arrowLen);
-          ctx.lineTo(cx, cy + arrowLen);
-          ctx.stroke();
-          // Top arrowhead (up)
-          ctx.beginPath();
-          ctx.moveTo(cx, cy - arrowLen);
-          ctx.lineTo(cx - headSize, cy - arrowLen + headSize);
-          ctx.lineTo(cx + headSize, cy - arrowLen + headSize);
-          ctx.closePath();
-          ctx.fill();
-          // Bottom arrowhead (down)
-          ctx.beginPath();
-          ctx.moveTo(cx, cy + arrowLen);
-          ctx.lineTo(cx - headSize, cy + arrowLen - headSize);
-          ctx.lineTo(cx + headSize, cy + arrowLen - headSize);
-          ctx.closePath();
-          ctx.fill();
-        }
         }
       }
 

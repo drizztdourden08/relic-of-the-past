@@ -187,7 +187,7 @@ export const OVERWORLD_TILE_ATTRS: Readonly<Record<number, TileAttrDef>> = {
   0x20: { pass: 'pit', labels: ['pit', 'hole'],                       cat: 'pit' },
 
   // ═══ Special ═════════════════════════════════════════════════════════════════
-  0x27: { pass: 'blocked', labels: ['hookshot post', 'grapple point'], cat: 'special', hookTarget: true },
+  0x27: { pass: 'blocked', labels: ['hookshot-grabbable', 'grapple point'], cat: 'special', hookTarget: true },
 
   // ═══ Liftable / Clearable Obstacles ══════════════════════════════════════════
   // ⚠️ lift.1 IS a real requirement — NEVER remove it. It gates BFS and must show pink on overlay.
@@ -243,11 +243,11 @@ function buildInteriorAttrs(): Readonly<Record<number, TileAttrDef>> {
   // 0x80-0x8D are door passage tiles stamped by Dungeon_LoadDoorAttribute().
   // They mark open doorways between rooms and must be passable for flood fill.
   for (let attr = 0x80; attr <= 0x8D; attr++) {
-    t[attr] = { pass: 'free', labels: ['stair'], cat: 'ground' };
+    t[attr] = { pass: 'free', labels: ['door passage'], cat: 'ground' };
   }
   // 0x8E-0x8F are interior entrance/staircase tiles (TileBehavior_Entrance).
-  t[0x8E] = { pass: 'free', labels: ['stair'], cat: 'ground' };
-  t[0x8F] = { pass: 'free', labels: ['stair'], cat: 'ground' };
+  t[0x8E] = { pass: 'free', labels: ['entrance'], cat: 'ground' };
+  t[0x8F] = { pass: 'free', labels: ['entrance'], cat: 'ground' };
   for (let attr = 0x90; attr <= 0xAF; attr++) {
     t[attr] = { pass: 'blocked', labels: ['wall'], cat: 'special' };
   }
