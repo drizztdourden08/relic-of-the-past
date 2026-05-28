@@ -4,7 +4,7 @@ export const THIEVES_TOWN_DUNGEON: RegionDefinition[] = [
   {
     id: 'tt-0x44',
     name: 'Big Key Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x44,
     dungeon: 'Thieves\' Town',
     displayName: 'Thieves\' Town',
@@ -24,7 +24,7 @@ export const THIEVES_TOWN_DUNGEON: RegionDefinition[] = [
   {
     id: 'tt-0x45',
     name: 'Ambush Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x45,
     dungeon: 'Thieves\' Town',
     displayName: 'Thieves\' Town',
@@ -44,7 +44,7 @@ export const THIEVES_TOWN_DUNGEON: RegionDefinition[] = [
   {
     id: 'tt-0x64',
     name: 'Rail Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x64,
     dungeon: 'Thieves\' Town',
     displayName: 'Thieves\' Town',
@@ -64,7 +64,7 @@ export const THIEVES_TOWN_DUNGEON: RegionDefinition[] = [
   {
     id: 'tt-0x65',
     name: 'Blind the Thief',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x65,
     dungeon: 'Thieves\' Town',
     displayName: 'Thieves\' Town',
@@ -84,7 +84,7 @@ export const THIEVES_TOWN_DUNGEON: RegionDefinition[] = [
   {
     id: 'tt-0xab',
     name: 'Spike Switch Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xAB,
     dungeon: 'Thieves\' Town',
     displayName: 'Thieves\' Town',
@@ -104,7 +104,7 @@ export const THIEVES_TOWN_DUNGEON: RegionDefinition[] = [
   {
     id: 'tt-0xac',
     name: 'Attic',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xAC,
     dungeon: 'Thieves\' Town',
     displayName: 'Thieves\' Town',
@@ -124,7 +124,7 @@ export const THIEVES_TOWN_DUNGEON: RegionDefinition[] = [
   {
     id: 'tt-0xbb',
     name: 'Big Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xBB,
     dungeon: 'Thieves\' Town',
     displayName: 'Thieves\' Town',
@@ -144,7 +144,7 @@ export const THIEVES_TOWN_DUNGEON: RegionDefinition[] = [
   {
     id: 'tt-0xbc',
     name: 'Cell Block',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xBC,
     dungeon: 'Thieves\' Town',
     displayName: 'Thieves\' Town',
@@ -164,7 +164,7 @@ export const THIEVES_TOWN_DUNGEON: RegionDefinition[] = [
   {
     id: 'tt-0xcb',
     name: 'Hellway',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xCB,
     dungeon: 'Thieves\' Town',
     displayName: 'Thieves\' Town',
@@ -184,7 +184,7 @@ export const THIEVES_TOWN_DUNGEON: RegionDefinition[] = [
   {
     id: 'tt-0xcc',
     name: 'Map Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xCC,
     dungeon: 'Thieves\' Town',
     displayName: 'Thieves\' Town',
@@ -204,7 +204,7 @@ export const THIEVES_TOWN_DUNGEON: RegionDefinition[] = [
   {
     id: 'tt-0xdb',
     name: 'Compass Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xDB,
     dungeon: 'Thieves\' Town',
     displayName: 'Thieves\' Town',
@@ -224,7 +224,7 @@ export const THIEVES_TOWN_DUNGEON: RegionDefinition[] = [
   {
     id: 'tt-0xdc',
     name: 'Entrance Hall',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xDC,
     dungeon: 'Thieves\' Town',
     displayName: 'Thieves\' Town',

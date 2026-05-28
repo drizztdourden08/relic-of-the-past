@@ -4,7 +4,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x01',
     name: 'Dark Cross',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x01,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -25,7 +25,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x02',
     name: 'Secret Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x02,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -45,7 +45,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x11',
     name: 'Water Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x11,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -65,7 +65,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x12',
     name: 'Sanctuary',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x12,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -86,7 +86,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x18',
     name: 'Sewers Drop',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x18,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -106,7 +106,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x21',
     name: 'Key-Rat Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x21,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -126,7 +126,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x22',
     name: 'Switch Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x22,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -146,7 +146,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x32',
     name: 'Escape Dark Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x32,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -166,7 +166,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x41',
     name: 'First Dark Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x41,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -186,7 +186,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x42',
     name: 'Rope Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x42,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -206,7 +206,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x50',
     name: 'Zelda\'s Cell',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x50,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -226,7 +226,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x51',
     name: 'Uncle\'s Passage',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x51,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -246,7 +246,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x52',
     name: 'Guard Bypass',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x52,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -266,7 +266,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x60',
     name: 'West Wing',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x60,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -286,7 +286,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x61',
     name: 'Throne Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x61,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -307,7 +307,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x62',
     name: 'East Wing',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x62,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -327,7 +327,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x70',
     name: 'West Corridor',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x70,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -347,7 +347,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x71',
     name: 'Lobby',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x71,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -367,7 +367,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x72',
     name: 'East Corridor',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x72,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -387,7 +387,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x80',
     name: 'Boomerang Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x80,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -407,7 +407,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x81',
     name: 'Map Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x81,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
@@ -427,7 +427,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   {
     id: 'hc-0x82',
     name: 'South Guard Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x82,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',

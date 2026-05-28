@@ -1,10 +1,10 @@
 import type { RegionDefinition } from '../../types';
 
 export const DW_FAIRY: RegionDefinition[] = [
-  { id: 'bonk-fairy-dark', name: 'Bonk Fairy (Dark)', type: 'cave', displayName: 'Dark South', inGameIndex: 0x00f9, subtitle: 'Bonk Fairy', tags: ['world:dark', 'env:underground', 'type:fairy', 'area:dark_south'] },
-  { id: 'dark-lake-hylia-healer-fairy', name: 'Dark Lake Hylia Healer Fairy', type: 'cave', displayName: 'Dark Lake', inGameIndex: 0x00fa, subtitle: 'Healer Fairy', tags: ['world:dark', 'env:underground', 'type:fairy', 'area:dark_lake_hylia'] },
-  { id: 'dark-lake-hylia-ledge-healer-fairy', name: 'Dark Lake Hylia Ledge Healer Fairy', type: 'cave', displayName: 'Dark Lake', inGameIndex: 0x00fa, subtitle: 'Healer Fairy', tags: ['world:dark', 'env:underground', 'type:fairy', 'area:dark_lake_hylia'] },
-  { id: 'dark-desert-healer-fairy', name: 'Dark Desert Healer Fairy', type: 'cave', displayName: 'Swamp of Evil', inGameIndex: 0x00ea, subtitle: 'Healer Fairy', tags: ['world:dark', 'env:underground', 'type:fairy', 'area:dark_mire'] },
-  { id: 'dark-death-mountain-healer-fairy', name: 'Dark Death Mountain Healer Fairy', type: 'cave', displayName: 'Dark Death Mountain', inGameIndex: 0x00df, subtitle: 'Healer Fairy', tags: ['world:dark', 'env:underground', 'type:fairy', 'area:dark_death_mountain'] },
-  { id: 'pyramid-fairy', name: 'Pyramid Fairy', type: 'cave', displayName: 'Dark Eastern', inGameIndex: 0x0121, subtitle: 'Pyramid Fairy', tags: ['world:dark', 'env:underground', 'type:fairy', 'area:dark_east', 'role:treasure'] },
+  { id: 'bonk-fairy-dark', name: 'Bonk Fairy (Dark)', type: 'cave', indoor: true, displayName: 'Dark South', inGameIndex: 0x00f9, subtitle: 'Bonk Fairy', tags: ['world:dark', 'env:underground', 'type:fairy', 'area:dark_south'] },
+  { id: 'dark-lake-hylia-healer-fairy', name: 'Dark Lake Hylia Healer Fairy', type: 'cave', indoor: true, displayName: 'Dark Lake', inGameIndex: 0x00fa, subtitle: 'Healer Fairy', tags: ['world:dark', 'env:underground', 'type:fairy', 'area:dark_lake_hylia'] },
+  { id: 'dark-lake-hylia-ledge-healer-fairy', name: 'Dark Lake Hylia Ledge Healer Fairy', type: 'cave', indoor: true, displayName: 'Dark Lake', inGameIndex: 0x00fa, subtitle: 'Healer Fairy', tags: ['world:dark', 'env:underground', 'type:fairy', 'area:dark_lake_hylia'] },
+  { id: 'dark-desert-healer-fairy', name: 'Dark Desert Healer Fairy', type: 'cave', indoor: true, displayName: 'Swamp of Evil', inGameIndex: 0x00ea, subtitle: 'Healer Fairy', tags: ['world:dark', 'env:underground', 'type:fairy', 'area:dark_mire'] },
+  { id: 'dark-death-mountain-healer-fairy', name: 'Dark Death Mountain Healer Fairy', type: 'cave', indoor: true, displayName: 'Dark Death Mountain', inGameIndex: 0x00df, subtitle: 'Healer Fairy', tags: ['world:dark', 'env:underground', 'type:fairy', 'area:dark_death_mountain'] },
+  { id: 'pyramid-fairy', name: 'Pyramid Fairy', type: 'cave', indoor: true, displayName: 'Dark Eastern', inGameIndex: 0x0121, subtitle: 'Pyramid Fairy', tags: ['world:dark', 'env:underground', 'type:fairy', 'area:dark_east', 'role:treasure'] },
 ];

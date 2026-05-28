@@ -4,7 +4,7 @@ export const SWAMP_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'sp-0x06',
     name: 'Arrghus',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x06,
     dungeon: 'Swamp Palace',
     displayName: 'Swamp Palace',
@@ -24,7 +24,7 @@ export const SWAMP_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'sp-0x16',
     name: 'Big Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x16,
     dungeon: 'Swamp Palace',
     displayName: 'Swamp Palace',
@@ -44,7 +44,7 @@ export const SWAMP_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'sp-0x25',
     name: 'Waterway',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x25,
     dungeon: 'Swamp Palace',
     displayName: 'Swamp Palace',
@@ -64,7 +64,7 @@ export const SWAMP_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'sp-0x26',
     name: 'Key Pot Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x26,
     dungeon: 'Swamp Palace',
     displayName: 'Swamp Palace',
@@ -84,7 +84,7 @@ export const SWAMP_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'sp-0x28',
     name: 'Entrance Hall',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x28,
     dungeon: 'Swamp Palace',
     displayName: 'Swamp Palace',
@@ -104,7 +104,7 @@ export const SWAMP_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'sp-0x34',
     name: 'Compass Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x34,
     dungeon: 'Swamp Palace',
     displayName: 'Swamp Palace',
@@ -124,7 +124,7 @@ export const SWAMP_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'sp-0x35',
     name: 'West Wing',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x35,
     dungeon: 'Swamp Palace',
     displayName: 'Swamp Palace',
@@ -144,7 +144,7 @@ export const SWAMP_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'sp-0x36',
     name: 'Statue Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x36,
     dungeon: 'Swamp Palace',
     displayName: 'Swamp Palace',
@@ -164,7 +164,7 @@ export const SWAMP_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'sp-0x37',
     name: 'Map Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x37,
     dungeon: 'Swamp Palace',
     displayName: 'Swamp Palace',
@@ -184,7 +184,7 @@ export const SWAMP_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'sp-0x38',
     name: 'Lobby',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x38,
     dungeon: 'Swamp Palace',
     displayName: 'Swamp Palace',
@@ -205,7 +205,7 @@ export const SWAMP_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'sp-0x46',
     name: 'Push Block Puzzle',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x46,
     dungeon: 'Swamp Palace',
     displayName: 'Swamp Palace',
@@ -225,7 +225,7 @@ export const SWAMP_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'sp-0x54',
     name: 'Flooded Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x54,
     dungeon: 'Swamp Palace',
     displayName: 'Swamp Palace',
@@ -245,7 +245,7 @@ export const SWAMP_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'sp-0x66',
     name: 'Water Drain',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x66,
     dungeon: 'Swamp Palace',
     displayName: 'Swamp Palace',
@@ -265,7 +265,7 @@ export const SWAMP_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'sp-0x76',
     name: 'Waterfall Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x76,
     dungeon: 'Swamp Palace',
     displayName: 'Swamp Palace',

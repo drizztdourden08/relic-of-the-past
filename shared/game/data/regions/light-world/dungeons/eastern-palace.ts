@@ -4,7 +4,7 @@ export const EASTERN_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ep-0x89',
     name: 'Eyegore Key Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x89,
     dungeon: 'Eastern Palace',
     displayName: 'Eastern Palace',
@@ -24,7 +24,7 @@ export const EASTERN_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ep-0x99',
     name: 'Stalfos Spawn',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x99,
     dungeon: 'Eastern Palace',
     displayName: 'Eastern Palace',
@@ -44,7 +44,7 @@ export const EASTERN_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ep-0xa8',
     name: 'Big Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xA8,
     dungeon: 'Eastern Palace',
     displayName: 'Eastern Palace',
@@ -64,7 +64,7 @@ export const EASTERN_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ep-0xa9',
     name: 'Big Key Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xA9,
     dungeon: 'Eastern Palace',
     displayName: 'Eastern Palace',
@@ -84,7 +84,7 @@ export const EASTERN_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ep-0xaa',
     name: 'Dark Eyegore Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xAA,
     dungeon: 'Eastern Palace',
     displayName: 'Eastern Palace',
@@ -104,7 +104,7 @@ export const EASTERN_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ep-0xb8',
     name: 'West Cannonball',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xB8,
     dungeon: 'Eastern Palace',
     displayName: 'Eastern Palace',
@@ -124,7 +124,7 @@ export const EASTERN_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ep-0xb9',
     name: 'Lobby',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xB9,
     dungeon: 'Eastern Palace',
     displayName: 'Eastern Palace',
@@ -144,7 +144,7 @@ export const EASTERN_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ep-0xba',
     name: 'East Cannonball',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xBA,
     dungeon: 'Eastern Palace',
     displayName: 'Eastern Palace',
@@ -164,7 +164,7 @@ export const EASTERN_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ep-0xc8',
     name: 'Map Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xC8,
     dungeon: 'Eastern Palace',
     displayName: 'Eastern Palace',
@@ -184,7 +184,7 @@ export const EASTERN_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ep-0xc9',
     name: 'Entrance Hall',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xC9,
     dungeon: 'Eastern Palace',
     displayName: 'Eastern Palace',
@@ -204,7 +204,7 @@ export const EASTERN_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ep-0xd8',
     name: 'Compass Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xD8,
     dungeon: 'Eastern Palace',
     displayName: 'Eastern Palace',
@@ -224,7 +224,7 @@ export const EASTERN_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ep-0xd9',
     name: 'Armos Knights',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xD9,
     dungeon: 'Eastern Palace',
     displayName: 'Eastern Palace',
@@ -244,7 +244,7 @@ export const EASTERN_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ep-0xda',
     name: 'Boss Reward',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xDA,
     dungeon: 'Eastern Palace',
     displayName: 'Eastern Palace',

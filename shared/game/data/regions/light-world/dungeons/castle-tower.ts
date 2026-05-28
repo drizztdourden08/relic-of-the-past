@@ -4,7 +4,7 @@ export const CASTLE_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'ct-0x20',
     name: 'Agahnim',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x20,
     dungeon: 'Castle Tower',
     displayName: 'Castle Tower',
@@ -24,7 +24,7 @@ export const CASTLE_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'ct-0x30',
     name: 'Final Bridge',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x30,
     dungeon: 'Castle Tower',
     displayName: 'Castle Tower',
@@ -44,7 +44,7 @@ export const CASTLE_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'ct-0x40',
     name: 'Dark Maze',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x40,
     dungeon: 'Castle Tower',
     displayName: 'Castle Tower',
@@ -65,7 +65,7 @@ export const CASTLE_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'ct-0xb0',
     name: 'Dark Archer Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xB0,
     dungeon: 'Castle Tower',
     displayName: 'Castle Tower',
@@ -85,7 +85,7 @@ export const CASTLE_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'ct-0xc0',
     name: 'Circle of Pots',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xC0,
     dungeon: 'Castle Tower',
     displayName: 'Castle Tower',
@@ -105,7 +105,7 @@ export const CASTLE_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'ct-0xd0',
     name: 'Guard Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xD0,
     dungeon: 'Castle Tower',
     displayName: 'Castle Tower',
@@ -125,7 +125,7 @@ export const CASTLE_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'ct-0xe0',
     name: 'Entrance Hall',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xE0,
     dungeon: 'Castle Tower',
     displayName: 'Castle Tower',

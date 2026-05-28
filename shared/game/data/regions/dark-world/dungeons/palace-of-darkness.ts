@@ -4,7 +4,7 @@ export const PALACE_OF_DARKNESS_DUNGEON: RegionDefinition[] = [
   {
     id: 'pod-0x09',
     name: 'Dark Maze',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x09,
     dungeon: 'Palace of Darkness',
     displayName: 'Palace of Darkness',
@@ -25,7 +25,7 @@ export const PALACE_OF_DARKNESS_DUNGEON: RegionDefinition[] = [
   {
     id: 'pod-0x0a',
     name: 'Shooter Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x0A,
     dungeon: 'Palace of Darkness',
     displayName: 'Palace of Darkness',
@@ -45,7 +45,7 @@ export const PALACE_OF_DARKNESS_DUNGEON: RegionDefinition[] = [
   {
     id: 'pod-0x0b',
     name: 'Turtle Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x0B,
     dungeon: 'Palace of Darkness',
     displayName: 'Palace of Darkness',
@@ -65,7 +65,7 @@ export const PALACE_OF_DARKNESS_DUNGEON: RegionDefinition[] = [
   {
     id: 'pod-0x19',
     name: 'Dark Basement',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x19,
     dungeon: 'Palace of Darkness',
     displayName: 'Palace of Darkness',
@@ -85,7 +85,7 @@ export const PALACE_OF_DARKNESS_DUNGEON: RegionDefinition[] = [
   {
     id: 'pod-0x1a',
     name: 'Warps Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x1A,
     dungeon: 'Palace of Darkness',
     displayName: 'Palace of Darkness',
@@ -105,7 +105,7 @@ export const PALACE_OF_DARKNESS_DUNGEON: RegionDefinition[] = [
   {
     id: 'pod-0x1b',
     name: 'Map Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x1B,
     dungeon: 'Palace of Darkness',
     displayName: 'Palace of Darkness',
@@ -125,7 +125,7 @@ export const PALACE_OF_DARKNESS_DUNGEON: RegionDefinition[] = [
   {
     id: 'pod-0x2a',
     name: 'Big Hub',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x2A,
     dungeon: 'Palace of Darkness',
     displayName: 'Palace of Darkness',
@@ -145,7 +145,7 @@ export const PALACE_OF_DARKNESS_DUNGEON: RegionDefinition[] = [
   {
     id: 'pod-0x2b',
     name: 'Conveyor Bridge',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x2B,
     dungeon: 'Palace of Darkness',
     displayName: 'Palace of Darkness',
@@ -165,7 +165,7 @@ export const PALACE_OF_DARKNESS_DUNGEON: RegionDefinition[] = [
   {
     id: 'pod-0x3a',
     name: 'Compass Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x3A,
     dungeon: 'Palace of Darkness',
     displayName: 'Palace of Darkness',
@@ -185,7 +185,7 @@ export const PALACE_OF_DARKNESS_DUNGEON: RegionDefinition[] = [
   {
     id: 'pod-0x3b',
     name: 'Stalfos Pit',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x3B,
     dungeon: 'Palace of Darkness',
     displayName: 'Palace of Darkness',
@@ -205,7 +205,7 @@ export const PALACE_OF_DARKNESS_DUNGEON: RegionDefinition[] = [
   {
     id: 'pod-0x4a',
     name: 'Entrance Hall',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x4A,
     dungeon: 'Palace of Darkness',
     displayName: 'Palace of Darkness',
@@ -226,7 +226,7 @@ export const PALACE_OF_DARKNESS_DUNGEON: RegionDefinition[] = [
   {
     id: 'pod-0x4b',
     name: 'Rupee Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x4B,
     dungeon: 'Palace of Darkness',
     displayName: 'Palace of Darkness',
@@ -246,7 +246,7 @@ export const PALACE_OF_DARKNESS_DUNGEON: RegionDefinition[] = [
   {
     id: 'pod-0x5a',
     name: 'Hammer Bridge',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x5A,
     dungeon: 'Palace of Darkness',
     displayName: 'Palace of Darkness',
@@ -266,7 +266,7 @@ export const PALACE_OF_DARKNESS_DUNGEON: RegionDefinition[] = [
   {
     id: 'pod-0x6a',
     name: 'Helmasaur King',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x6A,
     dungeon: 'Palace of Darkness',
     displayName: 'Palace of Darkness',

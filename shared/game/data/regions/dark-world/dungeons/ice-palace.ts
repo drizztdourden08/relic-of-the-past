@@ -4,7 +4,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0x0e',
     name: 'Kholdstare',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x0E,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -24,7 +24,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0x1e',
     name: 'Pengator Big Key',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x1E,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -44,7 +44,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0x1f',
     name: 'Lonely Firebar',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x1F,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -64,7 +64,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0x2e',
     name: 'Slide Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x2E,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -84,7 +84,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0x3e',
     name: 'Hidden Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x3E,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -104,7 +104,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0x3f',
     name: 'Bomb-Jump Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x3F,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -124,7 +124,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0x4e',
     name: 'Pengator Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x4E,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -144,7 +144,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0x4f',
     name: 'Spike Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x4F,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -164,7 +164,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0x5e',
     name: 'Map Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x5E,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -184,7 +184,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0x5f',
     name: 'Bomb Floor Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x5F,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -204,7 +204,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0x6e',
     name: 'Compass Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x6E,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -224,7 +224,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0x7e',
     name: 'Conveyor Hellway',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x7E,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -244,7 +244,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0x7f',
     name: 'Freezor Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x7F,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -264,7 +264,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0x8e',
     name: 'Big Spike Traps',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x8E,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -284,7 +284,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0x9e',
     name: 'Entrance Hall',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x9E,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -305,7 +305,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0x9f',
     name: 'Stalfos Knights',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x9F,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -325,7 +325,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0xae',
     name: 'Ice Bridge',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xAE,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -345,7 +345,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0xaf',
     name: 'Block Push Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xAF,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -365,7 +365,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0xbe',
     name: 'Switch Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xBE,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -385,7 +385,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0xbf',
     name: 'Big Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xBF,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -405,7 +405,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0xce',
     name: 'Hole to B6',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xCE,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',
@@ -425,7 +425,7 @@ export const ICE_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'ip-0xde',
     name: 'Big Key Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xDE,
     dungeon: 'Ice Palace',
     displayName: 'Ice Palace',

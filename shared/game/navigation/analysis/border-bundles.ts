@@ -10,7 +10,7 @@
  */
 
 import type { FloodFillResult } from '../types';
-import type { ConnectionPointData } from '../plan/navigation-data.types';
+import type { ConnectionPointData } from '../nav-data.types';
 
 export interface BorderBundle {
   /** Unique ID: "lw-{screen:hex}-edge-{dir}-{index}" */

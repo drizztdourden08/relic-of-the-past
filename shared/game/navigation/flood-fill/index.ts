@@ -1,3 +1,4 @@
 export { floodFillBFS } from './single-screen';
-export { floodFillScreen, initEngine, getConnections, getEntrances, getBigScreenGroup } from './orchestrator';
+export { floodFillScreen, getConnections } from './orchestrator';
+export type { FloodFillOptions } from './orchestrator';
 export { floodFillWorld } from './multi-screen';

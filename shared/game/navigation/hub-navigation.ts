@@ -5,6 +5,27 @@ import { REGION_BY_ID } from '../data/regions';
 
 type AdjacencyList = Map<string, { to: string; entrance: string }[]>;
 
+// ─── Memoized Graph Instances ────────────────────────────────────────────────
+
+let cachedFullAdj: AdjacencyList | null = null;
+let cachedPreciseAdj: AdjacencyList | null = null;
+
+function getFullAdjacencyList(options: PathfindingOptions = {}): AdjacencyList {
+  if (!options.allowGlitches && cachedFullAdj) return cachedFullAdj;
+  const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
+  const adj = buildAdjacencyList(allConnections, options);
+  if (!options.allowGlitches) cachedFullAdj = adj;
+  return adj;
+}
+
+function getPreciseAdjacencyList(options: PathfindingOptions = {}): AdjacencyList {
+  if (!options.allowGlitches && cachedPreciseAdj) return cachedPreciseAdj;
+  const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
+  const adj = buildPreciseAdjacencyList(allConnections, options);
+  if (!options.allowGlitches) cachedPreciseAdj = adj;
+  return adj;
+}
+
 // ─── Graph Construction ──────────────────────────────────────────────────────
 
 function buildAdjacencyList(connections: RegionConnection[], options: PathfindingOptions = {}): AdjacencyList {
@@ -149,8 +170,7 @@ function bfsPath(adj: AdjacencyList, sourceId: string, targetId: string): Naviga
  * Entry point #4: region-graph navigation.
  */
 export function findShortestPath(sourceId: string, targetId: string, options: PathfindingOptions = {}): NavigationResult {
-  const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
-  const adj = buildAdjacencyList(allConnections, options);
+  const adj = getFullAdjacencyList(options);
   return bfsPath(adj, sourceId, targetId);
 }
 
@@ -159,15 +179,13 @@ export function findShortestPath(sourceId: string, targetId: string, options: Pa
  * Logical area hubs are eliminated, forcing screen-by-screen routing.
  */
 export function findPrecisePath(sourceId: string, targetId: string, options: PathfindingOptions = {}): NavigationResult {
-  const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
-  const adj = buildPreciseAdjacencyList(allConnections, options);
+  const adj = getPreciseAdjacencyList(options);
   return bfsPath(adj, sourceId, targetId);
 }
 
 /** Find all regions unreachable from source (disconnected nodes). */
 export function findUnreachableRegions(sourceId: string = 'menu'): { id: string; name: string; type: string }[] {
-  const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
-  const adj = buildAdjacencyList(allConnections);
+  const adj = getFullAdjacencyList();
 
   const visited = new Set<string>();
   const queue: string[] = [sourceId];
@@ -191,8 +209,8 @@ export function findUnreachableRegions(sourceId: string = 'menu'): { id: string;
 
 /** Get graph statistics for debugging. */
 export function getGraphStats() {
+  const adj = getFullAdjacencyList();
   const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
-  const adj = buildAdjacencyList(allConnections);
 
   const deadEnds: string[] = [];
   const incomingCount = new Map<string, number>();

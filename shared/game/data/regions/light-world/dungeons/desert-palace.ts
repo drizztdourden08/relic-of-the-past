@@ -4,7 +4,7 @@ export const DESERT_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'dp-0x33',
     name: 'Lanmolas',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x33,
     dungeon: 'Desert Palace',
     displayName: 'Desert Palace',
@@ -24,7 +24,7 @@ export const DESERT_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'dp-0x43',
     name: 'Popos Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x43,
     dungeon: 'Desert Palace',
     displayName: 'Desert Palace',
@@ -44,7 +44,7 @@ export const DESERT_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'dp-0x53',
     name: 'Torch Puzzle',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x53,
     dungeon: 'Desert Palace',
     displayName: 'Desert Palace',
@@ -64,7 +64,7 @@ export const DESERT_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'dp-0x63',
     name: 'Big Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x63,
     dungeon: 'Desert Palace',
     displayName: 'Desert Palace',
@@ -84,7 +84,7 @@ export const DESERT_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'dp-0x73',
     name: 'Map Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x73,
     dungeon: 'Desert Palace',
     displayName: 'Desert Palace',
@@ -104,7 +104,7 @@ export const DESERT_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'dp-0x74',
     name: 'Big Key Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x74,
     dungeon: 'Desert Palace',
     displayName: 'Desert Palace',
@@ -124,7 +124,7 @@ export const DESERT_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'dp-0x75',
     name: 'Compass Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x75,
     dungeon: 'Desert Palace',
     displayName: 'Desert Palace',
@@ -144,7 +144,7 @@ export const DESERT_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'dp-0x83',
     name: 'West Entrance',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x83,
     dungeon: 'Desert Palace',
     displayName: 'Desert Palace',
@@ -164,7 +164,7 @@ export const DESERT_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'dp-0x84',
     name: 'Main Entrance',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x84,
     dungeon: 'Desert Palace',
     displayName: 'Desert Palace',
@@ -185,7 +185,7 @@ export const DESERT_PALACE_DUNGEON: RegionDefinition[] = [
   {
     id: 'dp-0x85',
     name: 'East Entrance',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x85,
     dungeon: 'Desert Palace',
     displayName: 'Desert Palace',

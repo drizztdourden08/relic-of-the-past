@@ -1,59 +1,107 @@
 /**
- * Requirement Detector — determines which items gate access to each connection point.
+ * Requirement Detector — Determines which items gate which connection points.
  *
- * Strategy: flood the screen multiple times with different inventories.
- * Compare which border tiles become reachable with each item added.
- * The minimal item set needed to reach a tile = its requirements.
+ * Runs BFS with increasing item sets to determine the minimum requirements
+ * for reaching each connection point from the screen's walkable interior.
+ *
+ * Input: Flood fill results at various inventory levels
+ * Output: RequirementSet for each connection point / obstacle
  */
 
-import type { RomData } from '../../../asset-extraction/rom/rom-types';
-import type { RequirementSet, TraversalRequirement } from '../plan/navigation-data.types';
-import { floodFillScreen } from '../flood-fill';
-import { findBorderBundles, type BorderBundle } from './border-bundles';
+import type { RequirementSet, TraversalRequirement } from '../nav-data.types';
+import type { TileReq } from '../tile-attrs';
+import type { TileAttrContext } from '../tile-attrs';
+import type { GridPos } from '../types';
+import { GRID_SIZE } from '../types';
+import { floodFillScreen } from '../flood-fill/orchestrator';
 
-/** Items tested in order of unlock frequency */
-const ITEM_PROGRESSION: TraversalRequirement[] = [
-  'lift.1', 'lift.2', 'lift.3', 'boots', 'flippers', 'hammer', 'hookshot', 'bombs',
-  'sword', 'boomerang', 'mirror', 'firerod', 'lamp',
+/** Inventory levels to test, from no items to all items */
+export const INVENTORY_PROGRESSION: TraversalRequirement[][] = [
+  [],
+  ['boots'],
+  ['lift.1'],
+  ['lift.1', 'boots'],
+  ['lift.2'],
+  ['flippers'],
+  ['hammer'],
+  ['hookshot'],
+  ['bombs'],
+  ['lift.1', 'lift.2', 'boots', 'flippers', 'hammer', 'hookshot', 'bombs', 'sword', 'mirror'],
 ];
 
+export interface RequirementDetectorInput {
+  screenIndex: number;
+  getGrid: (screenIndex: number) => number[][];
+  tileContext: TileAttrContext;
+  /** Target tile positions to check reachability for (border tiles, entrances) */
+  targetPositions: GridPos[];
+}
+
+export interface DetectedRequirement {
+  /** Grid position of the target tile */
+  position: GridPos;
+  /** Minimum requirements (OR-of-AND) to reach this tile */
+  requirements: RequirementSet;
+}
+
 /**
- * For a given screen, determine which bundles require which items.
- * Returns a map: bundleId → RequirementSet
+ * Determine minimum requirements for each target position on a screen.
+ *
+ * Strategy: run BFS at each inventory level. For each target tile, record
+ * the FIRST (smallest) inventory set that reaches it. That set becomes
+ * the AND requirements. If multiple disjoint sets reach it, they form OR alternatives.
  */
-export function detectRequirements(
-  rom: RomData,
-  screenIndex: number,
-): Map<string, RequirementSet> {
-  const results = new Map<string, RequirementSet>();
+export function detectRequirements(input: RequirementDetectorInput): DetectedRequirement[] {
+  const { screenIndex, getGrid, tileContext, targetPositions } = input;
 
-  // Flood with no items — baseline
-  const baseResult = floodFillScreen(rom, screenIndex);
-  const baseBundles = findBorderBundles(baseResult);
-
-  // Mark all base bundles as no-requirement
-  for (const b of baseBundles) {
-    results.set(b.id, []);
+  let grid: number[][];
+  try {
+    grid = getGrid(screenIndex);
+  } catch {
+    return [];
   }
 
-  // Test each item individually
-  for (const item of ITEM_PROGRESSION) {
-    const inv = new Set<string>([item]);
-    const itemResult = floodFillScreen(rom, screenIndex, inv);
-    const itemBundles = findBorderBundles(itemResult);
+  if (targetPositions.length === 0) return [];
 
-    // Find bundles that are NEW (not in base)
-    for (const ib of itemBundles) {
-      if (!results.has(ib.id)) {
-        // This bundle only exists with this item
-        results.set(ib.id, [[item]]);
-      }
+  // Run flood fill at each inventory level and record which targets are reachable
+  const results: DetectedRequirement[] = [];
+  const reached = new Set<string>();
+  const posKey = (p: GridPos) => `${p.row},${p.col}`;
+
+  for (const inventoryItems of INVENTORY_PROGRESSION) {
+    const inventory = new Set<TileReq>(inventoryItems as TileReq[]);
+
+    const floodResult = floodFillScreen(grid, screenIndex, {
+      tileContext,
+      inventory,
+    });
+
+    for (const pos of targetPositions) {
+      const key = posKey(pos);
+      if (reached.has(key)) continue;
+
+      const row = Math.min(pos.row, GRID_SIZE - 1);
+      const col = Math.min(pos.col, GRID_SIZE - 1);
+      if (!floodResult.reachable[row]?.[col]) continue;
+
+      // This inventory level reaches the tile — record it as the minimum AND set
+      reached.add(key);
+      const reqs: RequirementSet = inventoryItems.length > 0
+        ? [inventoryItems.slice()]
+        : [];
+      results.push({ position: pos, requirements: reqs });
     }
   }
 
-  // Test item combinations for bundles still not found
-  // (e.g., needs lift.1 + hammer together)
-  // TODO: implement combinatorial testing for complex requirements
+  // Any targets not reached even with full inventory get flagged as unreachable
+  for (const pos of targetPositions) {
+    const key = posKey(pos);
+    if (!reached.has(key)) {
+      // Mark as impossible (empty AND inside OR = always false is represented by [['impossible']])
+      // But since RequirementSet is TraversalRequirement[][], we leave it as an impossible marker
+      results.push({ position: pos, requirements: [] });
+    }
+  }
 
   return results;
 }

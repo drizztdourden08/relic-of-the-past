@@ -1,4 +1,3 @@
-import type { RomData } from '../../asset-extraction/rom/rom-types';
 import type { TileAttrContext } from './tile-attrs';
 
 // ─── Grid Constants ──────────────────────────────────────────────────────────
@@ -198,13 +197,3 @@ export interface PathfindingOptions {
   allowGlitches?: boolean;
 }
 
-// ─── Engine Cache ────────────────────────────────────────────────────────────
-
-export interface EngineCache {
-  map32: Map32Tables;
-  map16ToMap8: Uint16Array;
-  map8ToAttr: Uint8Array;
-  entrances: OverworldEntrance[];
-  /** Maps indoor room index → overworld screen the exit leads to */
-  exitScreenByRoom: Map<number, number>;
-}

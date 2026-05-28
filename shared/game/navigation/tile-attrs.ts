@@ -261,9 +261,11 @@ function buildInteriorAttrs(): Readonly<Record<number, TileAttrDef>> {
   return t;
 }
 
-export const INTERIOR_HOUSE_TILE_ATTRS: Readonly<Record<number, TileAttrDef>> = buildInteriorAttrs();
-export const INTERIOR_CAVE_TILE_ATTRS: Readonly<Record<number, TileAttrDef>> = buildInteriorAttrs();
-export const INTERIOR_DUNGEON_TILE_ATTRS: Readonly<Record<number, TileAttrDef>> = buildInteriorAttrs();
+// Shared instance — all interior contexts use the same map until they diverge.
+const INTERIOR_ATTRS: Readonly<Record<number, TileAttrDef>> = buildInteriorAttrs();
+export const INTERIOR_HOUSE_TILE_ATTRS = INTERIOR_ATTRS;
+export const INTERIOR_CAVE_TILE_ATTRS = INTERIOR_ATTRS;
+export const INTERIOR_DUNGEON_TILE_ATTRS = INTERIOR_ATTRS;
 
 /** Backward-compat alias; prefer OVERWORLD_TILE_ATTRS. */
 export const TILE_ATTRS = OVERWORLD_TILE_ATTRS;

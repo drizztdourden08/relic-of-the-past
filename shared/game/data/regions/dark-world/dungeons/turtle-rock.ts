@@ -4,7 +4,7 @@ export const TURTLE_ROCK_DUNGEON: RegionDefinition[] = [
   {
     id: 'tr-0x04',
     name: 'Trinexx',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x04,
     dungeon: 'Turtle Rock',
     displayName: 'Turtle Rock',
@@ -24,7 +24,7 @@ export const TURTLE_ROCK_DUNGEON: RegionDefinition[] = [
   {
     id: 'tr-0x13',
     name: 'Roller Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x13,
     dungeon: 'Turtle Rock',
     displayName: 'Turtle Rock',
@@ -44,7 +44,7 @@ export const TURTLE_ROCK_DUNGEON: RegionDefinition[] = [
   {
     id: 'tr-0x14',
     name: 'Chain Chomps',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x14,
     dungeon: 'Turtle Rock',
     displayName: 'Turtle Rock',
@@ -64,7 +64,7 @@ export const TURTLE_ROCK_DUNGEON: RegionDefinition[] = [
   {
     id: 'tr-0x15',
     name: 'Big Key Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x15,
     dungeon: 'Turtle Rock',
     displayName: 'Turtle Rock',
@@ -84,7 +84,7 @@ export const TURTLE_ROCK_DUNGEON: RegionDefinition[] = [
   {
     id: 'tr-0x23',
     name: 'Pokey Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x23,
     dungeon: 'Turtle Rock',
     displayName: 'Turtle Rock',
@@ -104,7 +104,7 @@ export const TURTLE_ROCK_DUNGEON: RegionDefinition[] = [
   {
     id: 'tr-0x24',
     name: 'Big Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x24,
     dungeon: 'Turtle Rock',
     displayName: 'Turtle Rock',
@@ -124,7 +124,7 @@ export const TURTLE_ROCK_DUNGEON: RegionDefinition[] = [
   {
     id: 'tr-0xa4',
     name: 'Crystaroller Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xA4,
     dungeon: 'Turtle Rock',
     displayName: 'Turtle Rock',
@@ -144,7 +144,7 @@ export const TURTLE_ROCK_DUNGEON: RegionDefinition[] = [
   {
     id: 'tr-0xb4',
     name: 'Dark Maze',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xB4,
     dungeon: 'Turtle Rock',
     displayName: 'Turtle Rock',
@@ -164,7 +164,7 @@ export const TURTLE_ROCK_DUNGEON: RegionDefinition[] = [
   {
     id: 'tr-0xb5',
     name: 'Laser Bridge',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xB5,
     dungeon: 'Turtle Rock',
     displayName: 'Turtle Rock',
@@ -184,7 +184,7 @@ export const TURTLE_ROCK_DUNGEON: RegionDefinition[] = [
   {
     id: 'tr-0xb6',
     name: 'Map Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xB6,
     dungeon: 'Turtle Rock',
     displayName: 'Turtle Rock',
@@ -204,7 +204,7 @@ export const TURTLE_ROCK_DUNGEON: RegionDefinition[] = [
   {
     id: 'tr-0xb7',
     name: 'Laser Key Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xB7,
     dungeon: 'Turtle Rock',
     displayName: 'Turtle Rock',
@@ -224,7 +224,7 @@ export const TURTLE_ROCK_DUNGEON: RegionDefinition[] = [
   {
     id: 'tr-0xc4',
     name: 'West Entrance',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xC4,
     dungeon: 'Turtle Rock',
     displayName: 'Turtle Rock',
@@ -244,7 +244,7 @@ export const TURTLE_ROCK_DUNGEON: RegionDefinition[] = [
   {
     id: 'tr-0xc5',
     name: 'Entrance Hub',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xC5,
     dungeon: 'Turtle Rock',
     displayName: 'Turtle Rock',
@@ -265,7 +265,7 @@ export const TURTLE_ROCK_DUNGEON: RegionDefinition[] = [
   {
     id: 'tr-0xc6',
     name: 'Compass Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xC6,
     dungeon: 'Turtle Rock',
     displayName: 'Turtle Rock',
@@ -285,7 +285,7 @@ export const TURTLE_ROCK_DUNGEON: RegionDefinition[] = [
   {
     id: 'tr-0xc7',
     name: 'East Entrance',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xC7,
     dungeon: 'Turtle Rock',
     displayName: 'Turtle Rock',
@@ -305,7 +305,7 @@ export const TURTLE_ROCK_DUNGEON: RegionDefinition[] = [
   {
     id: 'tr-0xd5',
     name: 'Main Entrance',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xD5,
     dungeon: 'Turtle Rock',
     displayName: 'Turtle Rock',
@@ -325,7 +325,7 @@ export const TURTLE_ROCK_DUNGEON: RegionDefinition[] = [
   {
     id: 'tr-0xd6',
     name: 'Pipe Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xD6,
     dungeon: 'Turtle Rock',
     displayName: 'Turtle Rock',

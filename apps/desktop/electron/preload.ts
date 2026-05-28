@@ -207,8 +207,6 @@ contextBridge.exposeInMainWorld('api', {
   // Connection review (overworld connectivity)
   loadConnectionReview: () => ipcRenderer.invoke('connectionReview:load'),
   saveConnectionReview: (data: unknown) => ipcRenderer.invoke('connectionReview:save', data),
-  runFloodFill: (romFile: string, screenIndex: number, items?: string[], variant?: { progressTier: number; eventOverlay: boolean; eventFlags: number }, startPos?: { row: number; col: number }, tileContext?: 'overworld' | 'interior-house' | 'interior-cave' | 'interior-dungeon', rawAttrGrid?: number[][], dynamicBlockers?: Array<{ row: number; col: number }>, extraSeeds?: Array<{ row: number; col: number }>) => ipcRenderer.invoke('connectionReview:floodFill', romFile, screenIndex, items, variant, startPos, tileContext, rawAttrGrid, dynamicBlockers, extraSeeds),
-  getBigScreenGroup: (romFile: string, screenIndex: number) => ipcRenderer.invoke('connectionReview:bigScreenGroup', romFile, screenIndex) as Promise<number[]>,
 
   // Nav review (per-screen connection point documentation)
   loadNavReview: () => ipcRenderer.invoke('navReview:load'),

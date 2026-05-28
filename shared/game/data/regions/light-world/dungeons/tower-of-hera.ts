@@ -4,7 +4,7 @@ export const TOWER_OF_HERA_DUNGEON: RegionDefinition[] = [
   {
     id: 'toh-0x07',
     name: 'Moldorm',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x07,
     dungeon: 'Tower of Hera',
     displayName: 'Tower of Hera',
@@ -24,7 +24,7 @@ export const TOWER_OF_HERA_DUNGEON: RegionDefinition[] = [
   {
     id: 'toh-0x17',
     name: 'Big Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x17,
     dungeon: 'Tower of Hera',
     displayName: 'Tower of Hera',
@@ -44,7 +44,7 @@ export const TOWER_OF_HERA_DUNGEON: RegionDefinition[] = [
   {
     id: 'toh-0x27',
     name: 'Compass Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x27,
     dungeon: 'Tower of Hera',
     displayName: 'Tower of Hera',
@@ -64,7 +64,7 @@ export const TOWER_OF_HERA_DUNGEON: RegionDefinition[] = [
   {
     id: 'toh-0x31',
     name: 'Tile Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x31,
     dungeon: 'Tower of Hera',
     displayName: 'Tower of Hera',
@@ -84,7 +84,7 @@ export const TOWER_OF_HERA_DUNGEON: RegionDefinition[] = [
   {
     id: 'toh-0x77',
     name: 'Entrance Hall',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x77,
     dungeon: 'Tower of Hera',
     displayName: 'Tower of Hera',
@@ -105,7 +105,7 @@ export const TOWER_OF_HERA_DUNGEON: RegionDefinition[] = [
   {
     id: 'toh-0x87',
     name: 'Basement Cage',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x87,
     dungeon: 'Tower of Hera',
     displayName: 'Tower of Hera',
@@ -125,7 +125,7 @@ export const TOWER_OF_HERA_DUNGEON: RegionDefinition[] = [
   {
     id: 'toh-0xa7',
     name: 'Fairy Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xA7,
     dungeon: 'Tower of Hera',
     displayName: 'Tower of Hera',

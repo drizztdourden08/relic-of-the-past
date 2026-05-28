@@ -1,6 +1,6 @@
 import type { RegionTag } from './data/regions/tags';
 import type { ConnectionTag } from './data/connections/tags';
-import type { RegionNavData, ConnectionNavData } from './navigation/plan/navigation-data.types';
+import type { RegionNavData, ConnectionNavData } from './navigation/nav-data.types';
 
 // ─── Check Types ───
 
@@ -37,6 +37,9 @@ interface RegionDefinition {
   /** Specific name of this screen/room */
   name: string;
   type: RegionType;
+  /** Whether this region is indoors (caves, dungeons, houses) vs outdoors (overworld).
+   *  Determines TileAttrContext for navigation. */
+  indoor: boolean;
   /** Native game screen/room index (unique within its type context).
    *  Required for overworld screens and dungeon rooms (used for detection).
    *  Optional for caves/houses where room index isn't yet mapped. */

@@ -19,15 +19,58 @@ import unknownIcon from '@iconify-icons/game-icons/perspective-dice-six-faces-ra
 import exitDoorIcon from '@iconify-icons/game-icons/exit-door';
 import { useGameUIStore } from '../../stores/game-ui-store';
 import { useConnectionOverlayStore } from '../../stores/connection-overlay-store';
-import { SCREEN_NAMES, buildScreenBundle, ENTRANCE_NAMES, classifyEntrance } from '@shared/game/navigation';
-import type { ScreenBundle, EntranceType } from '@shared/game/navigation';
+import { SCREEN_NAMES, buildScreenBundle, ENTRANCE_NAMES, classifyEntrance, floodFillScreen, getConnections } from '@shared/game/navigation';
+import type { FloodFillOptions } from '@shared/game/navigation';
+import type { ScreenBundle, EntranceType, OverworldEntrance } from '@shared/game/navigation';
 import { getRegionLookup } from '@shared/game/data/regions';
-import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetIndoorAttrGrid, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns } from '../../lib/game';
+import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetIndoorAttrGrid, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms } from '../../lib/game';
 import { getCompletedChecks } from '../../lib/game/tracker';
 import type { OverworldVariantInfo } from '../../lib/game';
 import type { TileAttrContext } from '@shared/game/navigation/tile-attrs';
+import type { TileReq } from '@shared/game/navigation/tile-attrs';
 
 import type { FloodFillResult, ConnectionInfo } from '@shared/game/navigation';
+
+// ─── Local helpers for direct orchestrator calls ─────────────────────────────
+
+/** Convert flat Uint8Array (4096 bytes) to 64×64 number[][] grid */
+function uint8ToGrid(raw: Uint8Array): number[][] {
+  const grid: number[][] = new Array(64);
+  for (let r = 0; r < 64; r++) {
+    grid[r] = new Array(64);
+    for (let c = 0; c < 64; c++) {
+      grid[r][c] = raw[r * 64 + c];
+    }
+  }
+  return grid;
+}
+
+/** Enrich raw wasm entrance data with gridRow/gridCol/roomId for orchestrator */
+function enrichEntrances(): OverworldEntrance[] {
+  const raw = wasmGetOverworldEntrances();
+  const rooms = wasmGetEntranceRooms();
+  return raw.map(e => ({
+    area: e.area,
+    pos: e.pos,
+    id: e.id,
+    gridRow: (((e.pos >> 6) & 0x3f) % 32) * 2,
+    gridCol: ((e.pos & 0x3f) % 32) * 2,
+    roomId: rooms?.[e.id] ?? 0,
+  }));
+}
+
+/** Compute big-screen group from WASM area heads table */
+function computeBigScreenGroup(screenIndex: number): number[] {
+  const heads = wasmGetAreaHeads();
+  if (!heads) return [screenIndex];
+  const myHead = heads[screenIndex];
+  if (myHead === undefined) return [screenIndex];
+  const group: number[] = [];
+  for (let i = 0; i < 64; i++) {
+    if (heads[i] === myHead) group.push(i);
+  }
+  return group.length > 0 ? group : [screenIndex];
+}
 
 type ReviewStatus = 'neutral' | 'good' | 'bad' | 'yellow';
 interface ReviewEntry { status: ReviewStatus; comment?: string; }
@@ -64,7 +107,7 @@ function getVisibleOverworldScreenIndices(vp: NonNullable<ReturnType<typeof wasm
   return out;
 }
 
-function NavigationWidgetContent({ romFile }: { romFile: string }) {
+function NavigationWidgetContent() {
   const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex } = useGameUIStore(s => s.map);
   const equipment = useGameUIStore(s => s.equipment);
   const inventoryItems = useGameUIStore(s => s.inventory.items);
@@ -184,7 +227,7 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
 
   // Run flood fill
   const handleRun = useCallback(async () => {
-    if (!romFile || running) return;
+    if (running) return;
     setRunning(true);
     try {
       const vp = wasmGetViewportInfo?.();
@@ -329,71 +372,71 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
           .filter(p => p.row >= 0 && p.row < 64 && p.col >= 0 && p.col < 64)
         : undefined;
 
-      // Helper to run flood fill for one screen with a given start position
-      const runOne = async (screenIndex: number, sp?: { row: number; col: number }, extraSeeds?: Array<{ row: number; col: number }>) => {
+      // Get entrance data + exit map from WASM (cached per run)
+      const allEntrances = enrichEntrances();
+      const exitScreenByRoom = wasmGetExitScreenMap();
+
+      // Helper to run flood fill for one screen directly via orchestrator
+      const runOneScreen = (screenIndex: number, sp?: { row: number; col: number }) => {
+        let grid: number[][];
+        if (isIndoors) {
+          grid = rawAttrGrid!;
+        } else {
+          const raw = wasmBuildOverworldAttrGrid(screenIndex);
+          if (!raw) return null;
+          grid = uint8ToGrid(raw);
+        }
         const runVariant = (!isIndoors) ? wasmGetOverworldVariant(screenIndex) : null;
         const dynamicBlockers = getBlockersForScreen(screenIndex);
-        const resp = await window.api.runFloodFill(
-          romFile,
-          screenIndex,
-          items,
-          runVariant ? {
+
+        const opts: FloodFillOptions = {
+          tileContext,
+          inventory: new Set<TileReq>(items as TileReq[]),
+          startPos: sp,
+          dynamicBlockers,
+          entrances: allEntrances,
+          exitScreenByRoom,
+          variant: runVariant ? {
             progressTier: runVariant.progressIndicator,
             eventOverlay: runVariant.eventOverlayActive,
             eventFlags: runVariant.screenEventFlags,
           } : undefined,
-          sp,
-          tileContext,
-          rawAttrGrid,
-          dynamicBlockers,
-          extraSeeds,
-        );
-        return { screenIndex, resp, dynamicBlockers };
+        };
+        const result = floodFillScreen(grid, screenIndex, opts);
+        const connections = getConnections(result);
+        return { screenIndex, result, connections, dynamicBlockers };
       };
 
       // Run primary screen first (from Link's position), then iteratively propagate
       // to adjacent screens ONLY within the same big-screen group.
-      // Single screens: flood only that one screen (no propagation).
-      // Big screens (2×2): flood primary first, then propagate to other quadrants via border exits.
-      const groupScreens = isIndoors ? [primaryScreenIndex] : await window.api.getBigScreenGroup(romFile, primaryScreenIndex);
+      const groupScreens = isIndoors ? [primaryScreenIndex] : computeBigScreenGroup(primaryScreenIndex);
       const allowedScreens = new Set<number>(groupScreens);
-      // Only build screen bundles for overworld — indoor rooms use screenName from region lookup
       setScreenBundle(isIndoors ? null : buildScreenBundle(groupScreens));
       const MAX_ITERATIONS = 8;
       let iterations = 0;
-      const analyzed = new Map<number, Awaited<ReturnType<typeof runOne>>>();
+      const analyzed = new Map<number, NonNullable<ReturnType<typeof runOneScreen>>>();
       const pendingSeeds = new Map<number, { row: number; col: number }[]>();
 
-      // Start with primary screen only — others get seeded from border propagation
       pendingSeeds.set(primaryScreenIndex, [startPos!]);
 
       while (pendingSeeds.size > 0 && iterations < MAX_ITERATIONS) {
         iterations++;
-
-        // Run all pending screens with their accumulated seeds
         const batch = [...pendingSeeds.entries()];
         pendingSeeds.clear();
 
-        const batchResponses = await Promise.all(
-          batch.map(([screenIndex, seedList]) => {
-            const primary = seedList[0];
-            const extra = seedList.length > 1 ? seedList.slice(1) : undefined;
-            return runOne(screenIndex, primary, extra);
-          }),
-        );
-
-        for (const resp of batchResponses) {
-          if ('error' in resp.resp) continue;
-          analyzed.set(resp.screenIndex, resp);
+        for (const [screenIndex, seedList] of batch) {
+          const sp = seedList[0];
+          const entry = runOneScreen(screenIndex, sp);
+          if (!entry) continue;
+          analyzed.set(screenIndex, entry);
 
           // Extract border transitions to discover new adjacent screens
-          const transitions: Array<{ edge: string; col: number; row: number }> = resp.resp.transitions ?? [];
-          for (const t of transitions) {
+          for (const t of entry.result.transitions) {
             if (t.edge === 'entrance') continue;
             let adjScreen: number | null = null;
             let entryPos: { row: number; col: number } | null = null;
-            const sRow = (resp.screenIndex >> 3) & 7;
-            const sCol = resp.screenIndex & 7;
+            const sRow = (screenIndex >> 3) & 7;
+            const sCol = screenIndex & 7;
             switch (t.edge) {
               case 'north': adjScreen = sRow > 0 ? ((sRow - 1) << 3 | sCol) : null; entryPos = { row: 63, col: t.col }; break;
               case 'south': adjScreen = sRow < 7 ? ((sRow + 1) << 3 | sCol) : null; entryPos = { row: 0, col: t.col }; break;
@@ -402,11 +445,7 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
             }
             if (adjScreen === null || entryPos === null) continue;
             if (!allowedScreens.has(adjScreen)) continue;
-            if (analyzed.has(adjScreen)) {
-              // Already analyzed — skip (could re-seed but that's expensive)
-              continue;
-            }
-            // Add to pending seeds (accumulates multiple entries per screen)
+            if (analyzed.has(adjScreen)) continue;
             const existing = pendingSeeds.get(adjScreen) ?? [];
             existing.push(entryPos);
             pendingSeeds.set(adjScreen, existing);
@@ -415,85 +454,21 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
       }
 
       const responses = [...analyzed.values()];
+      if (responses.length === 0) return;
 
-      const failed = responses.find(x => 'error' in x.resp);
-      if (failed && 'error' in failed.resp) {
-        console.error(failed.resp.error);
-        return;
-      }
-
-      // Update visible screen list to reflect all screens actually analyzed
       setVisibleScreenIndices(responses.map(r => r.screenIndex).sort((a, b) => a - b));
 
-      const normalized = responses
-        .filter(x => !('error' in x.resp))
-        .map(x => ({
-          screenIndex: x.screenIndex,
-          resp: x.resp as {
-            screenIndex: number;
-            tileContext: string;
-            reachable: number[][];
-            ledges?: unknown[];
-            attrGrid: number[][];
-            startPos?: { row: number; col: number };
-            connections: ConnectionInfo[];
-            bundles?: BorderBundle[];
-            dynamicBlockerCells?: Array<{ row: number; col: number }>;
-            transitions: Array<{ edge: string; row: number; col: number; requirements: string[]; entranceIdx?: number }>;
-            entrances: Array<{ id: number; gridRow: number; gridCol: number; roomId: number; area: number; pos: number }>;
-            reachableCount: number;
-            totalTiles: number;
-            borders: FloodFillResult['borders'];
-            reqGrid?: string[][];
-            hookTargets?: Array<{ row: number; col: number }>;
-            variant?: { progressTier: number; eventOverlay: boolean; eventFlags: number };
-          },
-          dynamicBlockers: x.dynamicBlockers,
-        }));
-
-      if (normalized.length === 0) return;
-
-      const fillResults: FloodFillResult[] = normalized.map(({ resp }) => {
-        const reachableEntranceIds = new Set(
-          resp.transitions
-            .filter((t: any) => t.edge === 'entrance' && typeof t.entranceIdx === 'number')
-            .map((t: any) => t.entranceIdx as number),
-        );
-
-        const entrances = resp.entrances.filter((ent: { id: number }) => reachableEntranceIds.has(ent.id));
-
-        return {
-          screenIndex: resp.screenIndex,
-          tileContext: resp.tileContext as FloodFillResult['tileContext'],
-          startPos: resp.startPos ?? { row: 32, col: 32 },
-          reachable: resp.reachable.map((row: number[]) => row.map((v: number) => v === 1)),
-          transitions: resp.transitions as FloodFillResult['transitions'],
-          reachableCount: resp.reachableCount,
-          totalTiles: resp.totalTiles,
-          entrances,
-          ledges: (resp.ledges as FloodFillResult['ledges']) ?? [],
-          attrGrid: resp.attrGrid,
-          reqGrid: resp.reqGrid,
-          dynamicBlockerCells: resp.dynamicBlockerCells,
-          hookTargets: resp.hookTargets,
-          variant: resp.variant,
-          borders: resp.borders,
-        };
-      });
-
+      const fillResults: FloodFillResult[] = responses.map(r => r.result);
       const primaryResult = fillResults.find(r => r.screenIndex === primaryScreenIndex) ?? fillResults[0];
 
-      // Aggregate connections from ALL analyzed screens — no filtering.
-      // ALL connections are shown (internal between sub-screens + external leaving the group).
       const allConnections: ConnectionInfo[] = [];
-      for (const n of normalized) {
-        const conns: ConnectionInfo[] = n.resp.connections ?? [];
-        for (const c of conns) {
-          allConnections.push({ ...c, sourceScreen: n.screenIndex });
+      for (const r of responses) {
+        for (const c of r.connections) {
+          allConnections.push({ ...c, sourceScreen: r.screenIndex });
         }
       }
 
-      setDynamicBlockerCount(normalized.reduce((sum, x) => sum + (x.resp.dynamicBlockerCells?.length ?? x.dynamicBlockers?.length ?? 0), 0));
+      setDynamicBlockerCount(responses.reduce((sum, x) => sum + (x.result.dynamicBlockerCells?.length ?? x.dynamicBlockers?.length ?? 0), 0));
       setResult(primaryResult);
       setConnections(allConnections);
 
@@ -509,7 +484,7 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
         }, 120);
       }
     }
-  }, [romFile, activeScreenIndex, isIndoors, overworldScreenIndex, running, equipment, roomIndex, variant, inventoryItems]);
+  }, [activeScreenIndex, isIndoors, overworldScreenIndex, running, equipment, roomIndex, variant, inventoryItems]);
 
   handleRunRef.current = handleRun;
 
@@ -519,7 +494,7 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
 
   // Auto-run flood fill on screen change
   useEffect(() => {
-    if (!autoRun || !romFile || running) return;
+    if (!autoRun || running) return;
     if (prevScreenRef.current !== null && prevScreenRef.current !== activeScreenIndex) {
       // Delay flood fill until Link is grounded (submodule === 0).
       // During transitions (falling, entering doors), submodule is non-zero.
@@ -532,10 +507,10 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
       }
     }
     prevScreenRef.current = activeScreenIndex;
-  }, [autoRun, activeScreenIndex, romFile, running, handleRun]);
+  }, [autoRun, activeScreenIndex, running, handleRun]);
 
   useEffect(() => {
-    if (!autoRun || !romFile || running || isIndoors) return;
+    if (!autoRun || running || isIndoors) return;
     const vp = wasmGetViewportInfo?.();
     if (!vp) return;
     const liveScreen = (((vp.linkY >> 9) & 7) << 3) | ((vp.linkX >> 9) & 7);
@@ -548,7 +523,7 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
       }
     }
     prevLiveOverworldScreenRef.current = liveScreen;
-  }, [autoRun, romFile, running, isIndoors, debugTick]);
+  }, [autoRun, running, isIndoors, debugTick]);
 
   // Check for pending grounded run on each tick (fires every 200ms via debugTick)
   useEffect(() => {
@@ -563,13 +538,13 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
 
   // Auto-run flood fill when inventory/equipment changes (affects reachability)
   useEffect(() => {
-    if (!autoRun || !romFile || running) return;
+    if (!autoRun || running) return;
     const key = `${equipment.sword},${equipment.gloves},${equipment.boots ? 1 : 0},${equipment.flippers ? 1 : 0},${inventoryItems[2]},${inventoryItems[11]}`;
     if (prevInventoryKeyRef.current !== null && prevInventoryKeyRef.current !== key) {
       handleRunRef.current?.();
     }
     prevInventoryKeyRef.current = key;
-  }, [autoRun, romFile, running, equipment, inventoryItems]);
+  }, [autoRun, running, equipment, inventoryItems]);
 
   // Toggle overlay
   const toggleOverlay = useCallback(() => {
@@ -719,7 +694,7 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
       <div style={S.section}>
         <div style={S.sectionTitle}>Functions</div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-          <button style={{ ...S.btn, ...(running ? S.btnDisabled : {}) }} onClick={handleRun} disabled={running || !romFile}>
+          <button style={{ ...S.btn, ...(running ? S.btnDisabled : {}) }} onClick={handleRun} disabled={running}>
             {running ? '⏳' : '▶'} Flood Fill
           </button>
           <button style={{ ...S.btn, ...(result ? {} : S.btnDisabled) }} onClick={toggleOverlay} disabled={!result}>
@@ -796,11 +771,11 @@ function NavigationWidgetContent({ romFile }: { romFile: string }) {
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {r.entrances.map(ent => {
                   const t = r.transitions.find(t => t.entranceIdx === ent.id);
-                  const entName = ENTRANCE_NAMES[ent.id] ?? null;
+                  const entName = ENTRANCE_NAMES[ent.roomId] ?? null;
                   const isSyntheticIndoor = ent.id >= 1000 && isIndoors;
                   const entType = ent.id >= 1000
                     ? classifyEntranceFromRegion(roomIndex)
-                    : classifyEntrance(ent.id);
+                    : classifyEntrance(ent.roomId);
                   const displayName = entName
                     ?? (isSyntheticIndoor
                       ? (SCREEN_NAMES[ent.area] ?? 'Overworld')

@@ -4,7 +4,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0x90',
     name: 'Vitreous',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x90,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',
@@ -24,7 +24,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0x91',
     name: 'Dark Cane Floor',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x91,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',
@@ -44,7 +44,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0x92',
     name: 'Torch Puzzle',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x92,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',
@@ -64,7 +64,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0x93',
     name: 'Spike Key Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x93,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',
@@ -84,7 +84,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0x97',
     name: 'Compass Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x97,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',
@@ -104,7 +104,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0x98',
     name: 'Entrance Hall',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x98,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',
@@ -125,7 +125,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0xa0',
     name: 'Dark Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xA0,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',
@@ -145,7 +145,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0xa1',
     name: 'Big Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xA1,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',
@@ -165,7 +165,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0xa2',
     name: 'Big Key Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xA2,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',
@@ -185,7 +185,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0xa3',
     name: 'Slug Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xA3,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',
@@ -205,7 +205,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0xb1',
     name: 'Map Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xB1,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',
@@ -225,7 +225,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0xb2',
     name: 'Hub',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xB2,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',
@@ -245,7 +245,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0xb3',
     name: 'Bridge Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xB3,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',
@@ -265,7 +265,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0xc1',
     name: 'Spike Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xC1,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',
@@ -285,7 +285,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0xc2',
     name: 'Fishbone Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xC2,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',
@@ -305,7 +305,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0xc3',
     name: 'Conveyor Slugs',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xC3,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',
@@ -325,7 +325,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0xd1',
     name: 'Wizzrobe Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xD1,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',
@@ -345,7 +345,7 @@ export const MISERY_MIRE_DUNGEON: RegionDefinition[] = [
   {
     id: 'mm-0xd2',
     name: 'Lobby',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xD2,
     dungeon: 'Misery Mire',
     displayName: 'Misery Mire',

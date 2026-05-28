@@ -4,7 +4,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x05',
     name: 'Wizzrobes Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x05,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -24,7 +24,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x0c',
     name: 'Ganon-Ball Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x0C,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -44,7 +44,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x0d',
     name: 'Agahnim 2',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x0D,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -64,7 +64,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x1c',
     name: 'Ice Armos',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x1C,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -84,7 +84,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x1d',
     name: 'Final Hallway',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x1D,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -104,7 +104,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x3c',
     name: 'Mini Helmasaur Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x3C,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -124,7 +124,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x3d',
     name: 'Torch Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x3D,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -144,7 +144,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x4c',
     name: 'Spike Pit',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x4C,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -164,7 +164,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x4d',
     name: 'Moldorm Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x4D,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -184,7 +184,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x5b',
     name: 'Gauntlet Room 3',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x5B,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -204,7 +204,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x5c',
     name: 'Tile Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x5C,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -224,7 +224,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x5d',
     name: 'Compass Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x5D,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -244,7 +244,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x6b',
     name: 'Gauntlet Room 2',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x6B,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -264,7 +264,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x6c',
     name: 'Mimics Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x6C,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -284,7 +284,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x6d',
     name: 'Conveyor Cross',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x6D,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -304,7 +304,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x7b',
     name: 'Gauntlet Room 1',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x7B,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -324,7 +324,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x7c',
     name: 'Big Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x7C,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -344,7 +344,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x7d',
     name: 'Firesnake Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x7D,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -364,7 +364,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x8b',
     name: 'Entrance Hub',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x8B,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -384,7 +384,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x8c',
     name: 'Hope Room Left',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x8C,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -404,7 +404,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x8d',
     name: 'Hope Room Right',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x8D,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -424,7 +424,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x95',
     name: 'Bob\'s Torch',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x95,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -444,7 +444,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x96',
     name: 'DMs Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x96,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -464,7 +464,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x9b',
     name: 'Entrance Hall',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x9B,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -484,7 +484,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x9c',
     name: 'Map Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x9C,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -504,7 +504,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0x9d',
     name: 'Randomizer Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x9D,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -524,7 +524,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0xa5',
     name: 'Spike Skip Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xA5,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',
@@ -544,7 +544,7 @@ export const GANONS_TOWER_DUNGEON: RegionDefinition[] = [
   {
     id: 'gt-0xa6',
     name: 'Big Key Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0xA6,
     dungeon: 'Ganon\'s Tower',
     displayName: 'Ganon\'s Tower',

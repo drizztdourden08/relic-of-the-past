@@ -1,54 +1,67 @@
 /**
- * Entrance Resolver — maps entrance tiles found during flood fill
- * to their destination rooms via the ROM's entrance table.
+ * Entrance Resolver — Maps WASM entrance tables to connection points.
+ *
+ * Uses WASM entrance positions + exit screen map to identify which
+ * ConnectionPointData corresponds to which game entrance ID.
+ *
+ * Input: WASM entrance data (wasmGetOverworldEntrances, wasmGetExitScreenMap)
+ * Output: ConnectionPointData[] for each screen
  */
 
-import type { RomData } from '../../../asset-extraction/rom/rom-types';
+import type { ConnectionPointData } from '../nav-data.types';
 import type { OverworldEntrance } from '../types';
-import type { ConnectionPointData } from '../plan/navigation-data.types';
+import { GRID_SIZE } from '../types';
+
+export interface EntranceResolverInput {
+  entrances: OverworldEntrance[];
+  exitScreenByRoom: Map<number, number>;
+  entranceRooms: Uint16Array;
+}
 
 export interface ResolvedEntrance {
-  /** Overworld screen where the entrance is */
-  screen: number;
-  /** Grid position of the entrance tile */
-  position: { row: number; col: number };
-  /** Game's entrance index */
-  entranceIndex: number;
-  /** Destination room ID */
-  roomId: number;
-  /** Connection point data for this entrance */
-  connectionPoint: ConnectionPointData;
+  screenIndex: number;
+  entranceId: number;
+  point: ConnectionPointData;
 }
 
 /**
- * Resolve all known entrances for a given screen.
- * Uses the ROM's entrance table to map overworld positions → interior rooms.
+ * Resolve entrance positions into typed connection points.
+ *
+ * Each entrance becomes a ConnectionPointData with position and direction info.
+ * The entrance is placed on the overworld screen at (gridRow, gridCol) in 64×64 space.
  */
-export function resolveEntrances(
-  rom: RomData,
-  screenIndex: number,
-  entrances: OverworldEntrance[],
-): ResolvedEntrance[] {
+export function resolveEntrances(input: EntranceResolverInput): ResolvedEntrance[] {
+  const { entrances, exitScreenByRoom } = input;
   const results: ResolvedEntrance[] = [];
-  const screenEntrances = entrances.filter(e => e.area === screenIndex);
-  const prefix = `lw-${screenIndex.toString(16).padStart(2, '0')}`;
 
-  for (let i = 0; i < screenEntrances.length; i++) {
-    const ent = screenEntrances[i];
-    results.push({
-      screen: screenIndex,
-      position: { row: ent.gridRow, col: ent.gridCol },
+  for (const ent of entrances) {
+    const screenIndex = ent.area;
+    const row = Math.min(ent.gridRow, GRID_SIZE - 1);
+    const col = Math.min(ent.gridCol, GRID_SIZE - 1);
+
+    // Determine world prefix from screen index
+    const world = screenIndex >= 0x40 ? 'dw' : 'lw';
+    const screenHex = screenIndex.toString(16).padStart(2, '0');
+    const id = `${world}-${screenHex}-door-${ent.id}`;
+
+    // Determine exit screen for this entrance (which overworld screen the exit returns to)
+    const exitScreen = exitScreenByRoom.get(ent.roomId);
+
+    const point: ConnectionPointData = {
+      id,
+      tiles: [], // Doors don't have border tile arrays
+      requirements: [], // No tile-level requirements to reach the door itself
+      position: { row, col },
       entranceIndex: ent.id,
-      roomId: ent.roomId,
-      connectionPoint: {
-        id: `${prefix}-door-${i}`,
-        tiles: [],
-        requirements: [],
-        position: { row: ent.gridRow, col: ent.gridCol },
-        entranceIndex: ent.id,
-        oneWay: null,
-      },
-    });
+      oneWay: null, // Most entrances are bidirectional
+    };
+
+    // If exit screen differs from the entrance's area, it's a passage (one-way enter here)
+    if (exitScreen !== undefined && exitScreen !== screenIndex) {
+      point.oneWay = 'enter';
+    }
+
+    results.push({ screenIndex, entranceId: ent.id, point });
   }
 
   return results;

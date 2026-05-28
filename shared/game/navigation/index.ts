@@ -1,21 +1,12 @@
 // ─── Entry Point #1: Single Screen Flood Fill ────────────────────────────────
-export { floodFillScreen, initEngine, getConnections, getBigScreenGroup } from './flood-fill';
+export { floodFillScreen, getConnections } from './flood-fill';
+export type { FloodFillOptions } from './flood-fill';
 
 // ─── Entry Point #2: Multi-Screen Flood Fill ─────────────────────────────────
 export { floodFillWorld } from './flood-fill';
 
-// ─── Entry Point #3: Screen-Level Shortest Path ──────────────────────────────
-export { findScreenPath, getAdjacentScreen, clearScreenHopCache } from './screen-hop';
-
-// ─── Entry Point #4: Hub/Region Graph Navigation ─────────────────────────────
+// ─── Entry Point #3: Hub/Region Graph Navigation ─────────────────────────────
 export { findShortestPath, findPrecisePath, findUnreachableRegions, getGraphStats } from './hub-navigation';
-
-// ─── Entry Point #5: Tile-Level A* ──────────────────────────────────────────
-export { findTilePath, aStarOnGrid } from './point-navigation';
-
-// ─── Entry Point #6: Full Route Planner ──────────────────────────────────────
-export { planRoute } from './route-planner';
-export type { Location, RoutePlanResult, RoutePlanStep } from './route-planner';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 export type {
@@ -26,7 +17,6 @@ export type {
   ScreenCoverage, WorldFloodResult,
   ScreenPath, TilePath, RouteStep, Route,
   NavigationStep, NavigationResult, PathfindingOptions,
-  EngineCache,
 } from './types';
 
 // ─── Utilities ───────────────────────────────────────────────────────────────
@@ -63,6 +53,10 @@ export type { EntranceType } from './entrance-names';
 export { buildScreenBundle } from './screen-bundles';
 export type { ScreenBundle } from './screen-bundles';
 
-// ─── Providers ───────────────────────────────────────────────────────────────
-export type { GridProvider, MetadataProvider } from './providers';
-export { buildGridFromRawAttr, RomGridProvider, CachedGridProvider } from './providers';
+// ─── Navigation Data Types (for analysis + pathfinder) ───────────────────────
+export type {
+  TraversalRequirement, RequirementSet, ConnectionTransitType,
+  RegionNavData, ConnectionNavData, ConnectionPointData,
+  NavObstacle, NavFeature, NavVariant,
+} from './nav-data.types';
+

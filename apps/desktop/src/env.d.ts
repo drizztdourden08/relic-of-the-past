@@ -354,6 +354,12 @@ interface ElectronAPI {
     save(data: unknown): Promise<{ success: boolean }>;
     getScreen(screenId: number): Promise<import('@shared/types/shadow-casting').ScreenShadowData | null>;
   };
+
+  // Connection/navigation review data
+  loadConnectionReview(): Promise<unknown>;
+  saveConnectionReview(data: unknown): Promise<void>;
+  loadNavReview(): Promise<unknown>;
+  saveNavReview(data: unknown): Promise<void>;
 }
 
 declare function Zelda3(config: Record<string, unknown>): Promise<unknown>;

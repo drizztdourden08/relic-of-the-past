@@ -4,7 +4,7 @@ export const SKULL_WOODS_DUNGEON: RegionDefinition[] = [
   {
     id: 'sw-0x29',
     name: 'Mothula',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x29,
     dungeon: 'Skull Woods',
     displayName: 'Skull Woods',
@@ -24,7 +24,7 @@ export const SKULL_WOODS_DUNGEON: RegionDefinition[] = [
   {
     id: 'sw-0x39',
     name: 'Gibdo Key Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x39,
     dungeon: 'Skull Woods',
     displayName: 'Skull Woods',
@@ -44,7 +44,7 @@ export const SKULL_WOODS_DUNGEON: RegionDefinition[] = [
   {
     id: 'sw-0x49',
     name: 'Compass Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x49,
     dungeon: 'Skull Woods',
     displayName: 'Skull Woods',
@@ -64,7 +64,7 @@ export const SKULL_WOODS_DUNGEON: RegionDefinition[] = [
   {
     id: 'sw-0x56',
     name: 'Big Chest Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x56,
     dungeon: 'Skull Woods',
     displayName: 'Skull Woods',
@@ -84,7 +84,7 @@ export const SKULL_WOODS_DUNGEON: RegionDefinition[] = [
   {
     id: 'sw-0x57',
     name: 'Big Key Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x57,
     dungeon: 'Skull Woods',
     displayName: 'Skull Woods',
@@ -104,7 +104,7 @@ export const SKULL_WOODS_DUNGEON: RegionDefinition[] = [
   {
     id: 'sw-0x58',
     name: 'Map Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x58,
     dungeon: 'Skull Woods',
     displayName: 'Skull Woods',
@@ -125,7 +125,7 @@ export const SKULL_WOODS_DUNGEON: RegionDefinition[] = [
   {
     id: 'sw-0x59',
     name: 'Pot Prison',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x59,
     dungeon: 'Skull Woods',
     displayName: 'Skull Woods',
@@ -145,7 +145,7 @@ export const SKULL_WOODS_DUNGEON: RegionDefinition[] = [
   {
     id: 'sw-0x67',
     name: 'Pinball Room',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x67,
     dungeon: 'Skull Woods',
     displayName: 'Skull Woods',
@@ -165,7 +165,7 @@ export const SKULL_WOODS_DUNGEON: RegionDefinition[] = [
   {
     id: 'sw-0x68',
     name: 'Entrance Hall',
-    type: 'dungeon',
+    type: 'dungeon', indoor: true,
     inGameIndex: 0x68,
     dungeon: 'Skull Woods',
     displayName: 'Skull Woods',

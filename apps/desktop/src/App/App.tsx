@@ -209,7 +209,7 @@ const App = () => {
             checks: <ChecksWidgetContent />,
             logs: <LogsWidgetContent />,
             debug: <DebugWidgetContent />,
-            navigation: <NavigationWidgetContent romFile={profileMgmt.activeProfile?.romFile ?? ''} />,
+            navigation: <NavigationWidgetContent />,
             cheats: <CheatsWidgetContent />,
           }}
         </WidgetManager>

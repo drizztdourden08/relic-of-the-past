@@ -1,97 +1,151 @@
 /**
- * Navigation Analysis Script
+ * analyze-navigation.ts — Offline navigation data analysis script.
  *
- * Runs the global flood fill against a ROM and updates the region/connection data.
+ * Runs WASM headlessly (no Electron) to compute tile-level navigation data
+ * for every overworld screen. Populates RegionNavData and ConnectionNavData
+ * fields on the data model.
  *
- * Usage:
- *   npx tsx scripts/analyze-navigation.ts [options]
+ * Usage: npx tsx scripts/analyze-navigation.ts [--output <path>] [--screen <hex>]
  *
- * Options:
- *   --rom <path>           Path to ROM (default: test-roms/...USA.sfc)
- *   --screens <range>      Only analyze specific screens (e.g. "0x00-0x3F")
- *   --update-regions       Write nav data to region files
- *   --update-connections   Write nav data to connection files
- *   --dry-run              Print changes without writing
- *   --verbose              Show per-screen details
+ * Design:
+ *   1. Load WASM module (node + WASI, no browser)
+ *   2. For each overworld screen: build attr grid → flood fill → collect stats
+ *   3. Run border-bundle overlap analysis for all adjacent screen pairs
+ *   4. Resolve entrances using WASM entrance tables
+ *   5. Detect requirements via progressive inventory BFS
+ *   6. Write computed nav data to output (JSON or patched .ts)
+ *
+ * This is the ONE place where we exercise the full game simulation to
+ * extract navigation truth. Everything downstream reads from the output.
  */
 
-import { existsSync } from 'fs';
-import { join } from 'path';
-import { loadRom } from '../shared/asset-extraction/rom/rom-loader';
-import { globalFlood } from '../shared/game/navigation/analysis/global-flood';
+import { resolve } from 'path';
+import { writeFileSync } from 'fs';
 
-const DEFAULT_ROM = join(__dirname, '..', 'test-roms', 'Legend of Zelda, The - A Link to the Past (USA).sfc');
+// ─── Navigation imports ──────────────────────────────────────────────────────
+import { floodFillScreen, getConnections } from '../shared/game/navigation';
+import type { TileAttrContext } from '../shared/game/navigation';
+import {
+  runGlobalFlood,
+  resolveEntrances,
+  detectRequirements,
+  findBorderBundles,
+  computeOverlap,
+  buildRegionNavUpdates,
+  buildConnectionNavUpdates,
+} from '../shared/game/navigation/analysis';
 
-function parseArgs() {
-  const args = process.argv.slice(2);
-  return {
-    rom: args.find((_, i, a) => a[i - 1] === '--rom') ?? DEFAULT_ROM,
-    dryRun: args.includes('--dry-run'),
-    verbose: args.includes('--verbose'),
-    updateRegions: args.includes('--update-regions'),
-    updateConnections: args.includes('--update-connections'),
-  };
+// ─── Data model imports ──────────────────────────────────────────────────────
+import { ALL_REGIONS } from '../shared/game/data/regions';
+import { ALL_CONNECTIONS } from '../shared/game/data/connections';
+import type { RegionNavData, ConnectionNavData } from '../shared/game/navigation/nav-data.types';
+
+// ─── CLI Args ────────────────────────────────────────────────────────────────
+
+const args = process.argv.slice(2);
+const outputIdx = args.indexOf('--output');
+const outputPath = outputIdx >= 0 ? args[outputIdx + 1] : resolve(__dirname, '../public/data/nav-data.json');
+const screenIdx = args.indexOf('--screen');
+const singleScreen = screenIdx >= 0 ? parseInt(args[screenIdx + 1], 16) : null;
+
+// ─── WASM Loading (stub — requires headless WASM loader) ─────────────────────
+
+/**
+ * TODO: Implement headless WASM loading.
+ * This needs to instantiate the zelda3 WASM module in Node.js
+ * and expose the same bridge functions as the Electron renderer.
+ */
+async function loadWasm(): Promise<{
+  buildOverworldAttrGrid: (screenIndex: number) => number[][];
+  getOverworldEntrances: () => { area: number; pos: number; id: number }[];
+  getExitScreenMap: () => Map<number, number>;
+  getAreaHeads: () => Uint8Array;
+  getEntranceRooms: () => Uint16Array;
+}> {
+  // Stub — will load WASM and return bridge functions
+  throw new Error(
+    'Headless WASM loader not yet implemented. ' +
+    'Requires node-compatible WASM instantiation of zelda3.wasm'
+  );
 }
+
+// ─── Main ────────────────────────────────────────────────────────────────────
 
 async function main() {
-  const opts = parseArgs();
-
-  if (!existsSync(opts.rom)) {
-    console.error(`ROM not found: ${opts.rom}`);
-    process.exit(1);
+  console.log('=== Navigation Analysis ===');
+  console.log(`Output: ${outputPath}`);
+  if (singleScreen != null) {
+    console.log(`Single screen mode: 0x${singleScreen.toString(16)}`);
   }
 
-  console.log(`Loading ROM: ${opts.rom}`);
-  const rom = loadRom(opts.rom);
+  // 1. Load WASM
+  const wasm = await loadWasm();
 
-  console.log('Running global flood fill from Link\'s House area (screen 0x2C)...');
-  const result = globalFlood({
-    rom,
-    startScreen: 0x2C,
-    startPos: { row: 50, col: 30 }, // outdoor area south of Link's House
-    onProgress: (done, total) => {
-      if (opts.verbose) {
-        process.stdout.write(`\r  Screens analyzed: ${done}/${total}`);
-      }
-    },
+  // 2. Determine screen set
+  const allScreenIndices = ALL_REGIONS
+    .filter(r => r.inGameIndex != null && (r.type === 'lightWorld' || r.type === 'darkWorld'))
+    .map(r => r.inGameIndex!);
+
+  const screenSet = singleScreen != null ? [singleScreen] : allScreenIndices;
+  console.log(`Analyzing ${screenSet.length} screens...`);
+
+  // 3. Global flood fill
+  const tileContext: TileAttrContext = 'overworld';
+  const globalResult = runGlobalFlood({
+    getGrid: (idx) => wasm.buildOverworldAttrGrid(idx),
+    tileContext,
+    screenIndices: screenSet,
   });
 
-  if (opts.verbose) console.log('');
+  // 4. Border bundle analysis
+  const borderResults = new Map<string, number[]>();
+  for (const screenIndex of screenSet) {
+    const grid = wasm.buildOverworldAttrGrid(screenIndex);
+    const result = floodFillScreen(grid, screenIndex, { tileContext });
+    const connections = getConnections(result);
 
-  console.log(`\nResults:`);
-  console.log(`  Screens reached: ${result.screens.size} / 128`);
-  console.log(`  Connections found: ${result.connections.length}`);
-  console.log(`  Unreachable screens: ${result.unreachable.length}`);
-  console.log(`  Time: ${result.elapsedMs.toFixed(0)}ms`);
-
-  // Show reached screens
-  const reached = [...result.screens.keys()].sort((a, b) => a - b);
-  console.log(`\n  Reached: ${reached.map(s => `0x${s.toString(16).padStart(2, '0')}`).join(', ')}`);
-
-  if (result.unreachable.length > 0 && result.unreachable.length <= 30) {
-    console.log(`  Unreachable: ${result.unreachable.map(s => `0x${s.toString(16).padStart(2, '0')}`).join(', ')}`);
-  } else if (result.unreachable.length > 30) {
-    console.log(`  Unreachable: ${result.unreachable.length} screens (too many to list)`);
+    for (const conn of connections) {
+      const key = `${screenIndex}-${conn.targetScreen}`;
+      borderResults.set(key, conn.positions.map(p => p.col));
+    }
   }
 
-  if (opts.dryRun) {
-    console.log('\n[DRY RUN] No files modified.');
-    return;
-  }
+  // 5. Entrance resolution
+  const entrances = wasm.getOverworldEntrances().map(e => ({
+    area: e.area,
+    pos: e.pos,
+    id: e.id,
+  }));
+  const exitScreenByRoom = wasm.getExitScreenMap();
+  const entranceRooms = wasm.getEntranceRooms();
+  const resolvedEntrances = resolveEntrances({ entrances, exitScreenByRoom, entranceRooms });
 
-  if (opts.updateRegions) {
-    console.log('\nUpdating region files...');
-    // TODO: Phase 4 — call region-updater
-    console.log('  (not yet implemented)');
-  }
+  // 6. Requirement detection (per screen)
+  // TODO: Implement progressive inventory BFS per screen
 
-  if (opts.updateConnections) {
-    console.log('\nUpdating connection files...');
-    // TODO: Phase 4 — call connection-updater
-    console.log('  (not yet implemented)');
-  }
+  // 7. Build nav data updates
+  const regionUpdates = buildRegionNavUpdates(
+    new Map(Array.from(globalResult.screens.entries()).map(([idx, stats]) => [
+      idx,
+      { ...stats, connectionPointIds: [], obstacles: [], features: [] } as RegionNavData,
+    ]))
+  );
 
-  console.log('\nDone.');
+  const connectionUpdates = buildConnectionNavUpdates(borderResults, new Map());
+
+  // 8. Write output
+  const output = {
+    generatedAt: new Date().toISOString(),
+    regions: regionUpdates,
+    connections: connectionUpdates,
+  };
+
+  writeFileSync(outputPath, JSON.stringify(output, null, 2));
+  console.log(`Wrote ${regionUpdates.length} region updates, ${connectionUpdates.length} connection updates`);
+  console.log('Done.');
 }
 
-main().catch(e => { console.error(e); process.exit(1); });
+main().catch((err) => {
+  console.error('Analysis failed:', err.message);
+  process.exit(1);
+});
