@@ -149,11 +149,11 @@ export const OVERWORLD_TILE_ATTRS: Readonly<Record<number, TileAttrDef>> = {
   0xBE: { pass: 'free', labels: ['floor'],                            cat: 'ground' },
   0xBF: { pass: 'free', labels: ['floor'],                            cat: 'ground' },
 
-  // ═══ Slopes ══════════════════════════════════════════════════════════════════
-  0x11: { pass: 'free', labels: ['slope south'],                      cat: 'slope' },
-  0x13: { pass: 'free', labels: ['slope north'],                      cat: 'slope' },
-  0x19: { pass: 'free', labels: ['slope east'],                       cat: 'slope' },
-  0x1B: { pass: 'free', labels: ['slope west'],                       cat: 'slope' },
+  // ═══ Slopes / Cliff Edges (all impassable — cliff jumps extend through them) ═
+  0x11: { pass: 'blocked', labels: ['cliff edge south'],              cat: 'slope' },
+  0x13: { pass: 'blocked', labels: ['cliff edge north'],              cat: 'slope' },
+  0x19: { pass: 'blocked', labels: ['cliff edge east'],               cat: 'slope' },
+  0x1B: { pass: 'blocked', labels: ['cliff edge west'],               cat: 'slope' },
 
   // ═══ Walls ═══════════════════════════════════════════════════════════════════
   0x01: { pass: 'blocked', labels: ['wall'],                          cat: 'wall' },

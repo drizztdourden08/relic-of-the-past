@@ -7,11 +7,11 @@ describe('Tile Classification', () => {
       expect(classifyTileAttr(0x00)).toEqual({ type: 'free' });
     });
 
-    it('classifies slopes as free', () => {
-      expect(classifyTileAttr(0x11)).toEqual({ type: 'free' });
-      expect(classifyTileAttr(0x13)).toEqual({ type: 'free' });
-      expect(classifyTileAttr(0x19)).toEqual({ type: 'free' });
-      expect(classifyTileAttr(0x1b)).toEqual({ type: 'free' });
+    it('classifies cliff edge slopes as blocked', () => {
+      expect(classifyTileAttr(0x11)).toEqual({ type: 'blocked' });
+      expect(classifyTileAttr(0x13)).toEqual({ type: 'blocked' });
+      expect(classifyTileAttr(0x19)).toEqual({ type: 'blocked' });
+      expect(classifyTileAttr(0x1b)).toEqual({ type: 'blocked' });
     });
 
     it('classifies grass/diggable as free', () => {

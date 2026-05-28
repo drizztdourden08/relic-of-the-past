@@ -75,8 +75,7 @@ describe('Navigation Graph', () => {
       console.log(`Found: ${result.found}, Distance: ${result.distance}, Visited: ${result.visited}`);
       if (result.found) {
         for (const step of result.path) {
-          const via = step.entrance ? ` via "${step.entrance}"` : ' (start)';
-          console.log(`  → ${step.regionId} (${step.regionName})${via}`);
+          console.log(`  → ${step.regionId} (${step.regionName})`);
         }
       }
       expect(result.found).toBe(true);
@@ -88,8 +87,7 @@ describe('Navigation Graph', () => {
       console.log(`Found: ${result.found}, Distance: ${result.distance}, Visited: ${result.visited}`);
       if (result.found) {
         for (const step of result.path) {
-          const via = step.entrance ? ` via "${step.entrance}"` : ' (start)';
-          console.log(`  → ${step.regionId} (${step.regionName})${via}`);
+          console.log(`  → ${step.regionId} (${step.regionName})`);
         }
       }
     });
@@ -100,8 +98,7 @@ describe('Navigation Graph', () => {
       console.log(`Found: ${result.found}, Distance: ${result.distance}, Visited: ${result.visited}`);
       if (result.found) {
         for (const step of result.path) {
-          const via = step.entrance ? ` via "${step.entrance}"` : ' (start)';
-          console.log(`  → ${step.regionId} (${step.regionName})${via}`);
+          console.log(`  → ${step.regionId} (${step.regionName})`);
         }
       }
     });
@@ -112,8 +109,7 @@ describe('Navigation Graph', () => {
       console.log(`Found: ${result.found}, Distance: ${result.distance}, Visited: ${result.visited}`);
       if (result.found) {
         for (const step of result.path) {
-          const via = step.entrance ? ` via "${step.entrance}"` : ' (start)';
-          console.log(`  → ${step.regionId} (${step.regionName})${via}`);
+          console.log(`  → ${step.regionId} (${step.regionName})`);
         }
       }
     });

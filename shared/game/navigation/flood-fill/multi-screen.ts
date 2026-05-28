@@ -84,7 +84,7 @@ export function floodFillWorld(
       for (let r = 0; r < 64; r++) {
         for (let c = 0; c < 64; c++) {
           if (result.reachable[r][c] && !state.reachable[r][c]) {
-            state.reachable[r][c] = true;
+            state.reachable[r][c] = result.reachable[r][c];
             newTiles++;
           }
         }

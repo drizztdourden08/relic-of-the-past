@@ -1,7 +1,7 @@
-import type { TilePassability, TransitionPoint, GridPos } from '../types';
+import type { TilePassability, TransitionPoint, GridPos, ReachState } from '../types';
 import type { TileAttrContext } from '../tile-attrs';
 import { getHookshotTargetTiles } from '../tile-attrs';
-import { GRID_SIZE } from '../types';
+import { GRID_SIZE, TRAVERSAL_DIR_OFFSET } from '../types';
 import { DIRECTIONS } from '../core';
 
 interface FloodCell {
@@ -11,7 +11,7 @@ interface FloodCell {
 }
 
 interface SingleScreenResult {
-  reachable: boolean[][];
+  reachable: ReachState[][];
   transitions: TransitionPoint[];
   reachableCount: number;
   reqGrid: string[][];
@@ -101,16 +101,21 @@ export function floodFillBFS(
       if (!canEnter) continue;
 
       // Link is 16×16px (2×2 sub-tiles). Check 2×2 clearance.
+      // Skip clearance for ledge tiles — Link is mid-jump, body clearance doesn't apply.
       // Free/pit side clearance adds no requirement.
       // If side clearance comes only from a liftable obstacle, accumulate that req
       // so tight cliff|free|bush corridors are marked item-gated (pink), not free (blue).
-      const clearance = getClearanceRequirement(nr, nc, dr, dc, grid, inventory, tile, reached);
-      if (!clearance.passes) continue;
+      let clearanceReq: string | null = null;
+      if (tile.type !== 'ledge') {
+        const clearance = getClearanceRequirement(nr, nc, dr, dc, grid, inventory, tile, reached);
+        if (!clearance.passes) continue;
+        clearanceReq = clearance.req;
+      }
 
       let finalReqs = newReqs;
-      if (clearance.req && !finalReqs.has(clearance.req)) {
+      if (clearanceReq && !finalReqs.has(clearanceReq)) {
         finalReqs = new Set(finalReqs);
-        finalReqs.add(clearance.req);
+        finalReqs.add(clearanceReq);
       }
 
       const existingReqs = reached[nr][nc];
@@ -127,11 +132,16 @@ export function floodFillBFS(
 
   // Build results
   let reachableCount = 0;
-  const reachable: boolean[][] = Array.from({ length: GRID_SIZE }, (_, r) =>
+  const reachable: ReachState[][] = Array.from({ length: GRID_SIZE }, (_, r) =>
     Array.from({ length: GRID_SIZE }, (_, c) => {
-      const isReachable = reached[r][c] !== null;
-      if (isReachable) reachableCount++;
-      return isReachable;
+      if (reached[r][c] === null) return 0;
+      const tile = grid[r][c];
+      // Ledge tiles are traversal-only — encode direction in state (>=2)
+      if (tile.type === 'ledge') {
+        return TRAVERSAL_DIR_OFFSET[tile.dir];
+      }
+      reachableCount++;
+      return 1;
     }),
   );
 
@@ -239,7 +249,11 @@ function canLeaveLedge(dir: string, dr: number, dc: number): boolean {
     (dir === 's' && dr === 1) ||
     (dir === 'n' && dr === -1) ||
     (dir === 'e' && dc === 1) ||
-    (dir === 'w' && dc === -1)
+    (dir === 'w' && dc === -1) ||
+    (dir === 'ne' && (dr === -1 || dc === 1)) ||
+    (dir === 'nw' && (dr === -1 || dc === -1)) ||
+    (dir === 'se' && (dr === 1 || dc === 1)) ||
+    (dir === 'sw' && (dr === 1 || dc === -1))
   );
 }
 

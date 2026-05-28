@@ -94,16 +94,16 @@ function getReachableBorderTiles(result: FloodFillResult, direction: 'n' | 's' |
 
   switch (direction) {
     case 'n':
-      for (let col = 0; col < 64; col++) { if (grid[0]?.[col]) tiles.push(col); }
+      for (let col = 0; col < 64; col++) { if (grid[0]?.[col] === 1) tiles.push(col); }
       break;
     case 's':
-      for (let col = 0; col < 64; col++) { if (grid[63]?.[col]) tiles.push(col); }
+      for (let col = 0; col < 64; col++) { if (grid[63]?.[col] === 1) tiles.push(col); }
       break;
     case 'e':
-      for (let row = 0; row < 64; row++) { if (grid[row]?.[63]) tiles.push(row); }
+      for (let row = 0; row < 64; row++) { if (grid[row]?.[63] === 1) tiles.push(row); }
       break;
     case 'w':
-      for (let row = 0; row < 64; row++) { if (grid[row]?.[0]) tiles.push(row); }
+      for (let row = 0; row < 64; row++) { if (grid[row]?.[0] === 1) tiles.push(row); }
       break;
   }
 

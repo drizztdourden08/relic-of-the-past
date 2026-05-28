@@ -7,6 +7,19 @@ export const TOTAL_TILES = GRID_SIZE * GRID_SIZE;
 
 // ─── Tile Types ──────────────────────────────────────────────────────────────
 
+/**
+ * BFS reachability state for a tile:
+ * - 0: unreachable
+ * - 1: reachable (player has full control)
+ * - >=2: traversal (uncontrolled pass-through) with encoded direction:
+ *   2=s, 3=n, 4=e, 5=w, 6=se, 7=sw, 8=ne, 9=nw
+ */
+export type ReachState = number;
+
+/** Direction encoding for traversal states (state = 2 + index). */
+export const TRAVERSAL_DIRS: readonly LedgeDir[] = ['s', 'n', 'e', 'w', 'se', 'sw', 'ne', 'nw'] as const;
+export const TRAVERSAL_DIR_OFFSET: Record<LedgeDir, number> = { s: 2, n: 3, e: 4, w: 5, se: 6, sw: 7, ne: 8, nw: 9 };
+
 export type LedgeDir = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
 
 export type TilePassability =
@@ -79,7 +92,7 @@ export interface FloodFillResult {
   tileContext: TileAttrContext;
   /** Grid position where the BFS started (top-left of Link's 2×2 at flood-fill time) */
   startPos: GridPos;
-  reachable: boolean[][];
+  reachable: ReachState[][];
   transitions: TransitionPoint[];
   reachableCount: number;
   totalTiles: number;
@@ -132,7 +145,7 @@ export interface ScreenCoverage {
   screenIndex: number;
   entries: GridPos[];
   reachableCount: number;
-  reachable: boolean[][];
+  reachable: ReachState[][];
   borderFree: { north: Set<number>; south: Set<number>; east: Set<number>; west: Set<number> };
 }
 
@@ -181,7 +194,6 @@ export interface Route {
 export interface NavigationStep {
   regionId: string;
   regionName: string;
-  entrance: string | null;
 }
 
 export interface NavigationResult {

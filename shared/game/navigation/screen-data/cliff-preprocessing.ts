@@ -19,7 +19,7 @@ export function processStraightCliffs(
     0x2b: { dr: 0, dc: 1, dir: 'e' },
     0x2f: { dr: 0, dc: 1, dir: 'e' },
   };
-  const CLIFF_WALL = new Set([0x01, 0x02, 0x03, 0x1a, 0x12]);
+  const CLIFF_WALL = new Set([0x01, 0x02, 0x03, 0x1a, 0x12, 0x13, 0x1b]);
 
   for (let row = 0; row < GRID_SIZE; row++) {
     for (let col = 0; col < GRID_SIZE; col++) {
@@ -61,7 +61,7 @@ export function processDiagonalCliffs(
   rawAttr: number[][],
   ledges: LedgeTraversal[],
 ): void {
-  const DIAG_CLIFF_TILES = new Set([0x2c, 0x2d, 0x2e, 0x1a, 0x12]);
+  const DIAG_CLIFF_TILES = new Set([0x2c, 0x2d, 0x2e, 0x1a, 0x12, 0x13, 0x1b]);
   const DIAG_TRIGGERS: Record<number, { dir: 'ne' | 'nw' | 'se' | 'sw'; d1: [number, number]; d2: [number, number] }> = {
     0x2c: { dir: 'nw', d1: [-1, 0], d2: [0, -1] },
     0x2d: { dir: 'se', d1: [1, 0], d2: [0, 1] },
@@ -79,9 +79,10 @@ export function processDiagonalCliffs(
         // Approach check: must have a free tile on the entry side
         const approachR1 = row - d1[0], approachC1 = col - d1[1];
         const approachR2 = row - d2[0], approachC2 = col - d2[1];
-        const hasApproach =
-          (approachR1 >= 0 && approachR1 < GRID_SIZE && approachC1 >= 0 && approachC1 < GRID_SIZE && grid[approachR1][approachC1].type === 'free') ||
-          (approachR2 >= 0 && approachR2 < GRID_SIZE && approachC2 >= 0 && approachC2 < GRID_SIZE && grid[approachR2][approachC2].type === 'free');
+        const isApproachable = (r: number, c: number) =>
+          r >= 0 && r < GRID_SIZE && c >= 0 && c < GRID_SIZE &&
+          (grid[r][c].type === 'free' || DIAG_CLIFF_TILES.has(rawAttr[r][c]));
+        const hasApproach = isApproachable(approachR1, approachC1) || isApproachable(approachR2, approachC2);
         if (!hasApproach) continue;
 
         // Follow zigzag path

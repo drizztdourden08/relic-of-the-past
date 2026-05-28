@@ -7,9 +7,12 @@ function romStem(romFile: string): string {
   return parse(romFile).name;
 }
 
+const autoFlood = process.argv.includes('--auto-flood');
+
 contextBridge.exposeInMainWorld('api', {
   // Dev mode flag
   isDev,
+  autoFlood,
 
   // Sprites base URL — per-ROM: uses custom protocol to serve from userData
   getSpritesBaseUrl: (romFile: string) =>

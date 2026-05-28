@@ -7,21 +7,27 @@ import {
   canActivateCrystalSwitch, canKillMostThings,
 } from '../helpers';
 
-/** Region entrance rules for dungeon-internal progression. */
+/**
+ * Region connection rules for dungeon-internal progression (keyed by from|to).
+ *
+ * NOTE: These rules are currently inactive — the dungeon connection data does
+ * not yet use matching from|to keys. They will activate once dungeon connections
+ * are restructured to match these keys.
+ */
 const DUNGEON_REGION_RULES: Record<string, Requirement> = {
   // Hyrule Castle / Sewers
-  'Sewers Door': 'Small Key (Hyrule Castle)',
-  'Sewers Back Door': 'Small Key (Hyrule Castle)',
-  'Sewers Secret Room': canBombOrBonk,
+  'hc-0x01|hc-sewers': 'Small Key (Hyrule Castle)',
+  'hc-0x11|hc-sewers-back': 'Small Key (Hyrule Castle)',
+  'hc-sewers|hc-secret-room': canBombOrBonk,
 
   // Agahnims Tower
-  'Agahnim 1': { and: [hasSword, 'Small Key (Agahnims Tower)'] },
+  'ct-0x20|ct-agahnim': { and: [hasSword, 'Small Key (Agahnims Tower)'] },
 
   // Tower of Hera
-  'Tower of Hera Small Key Door': {
+  'toh-entrance|toh-key-door': {
     and: [canActivateCrystalSwitch, 'Small Key (Tower of Hera)'],
   },
-  'Tower of Hera Big Key Door': {
+  'toh-key-door|toh-big-key-door': {
     and: [
       canActivateCrystalSwitch,
       'Big Key (Tower of Hera)',
@@ -37,78 +43,78 @@ const DUNGEON_REGION_RULES: Record<string, Requirement> = {
   },
 
   // Desert Palace
-  'Desert Palace East Wing': 'Small Key (Desert Palace)',
+  'dp-main|dp-east-wing': 'Small Key (Desert Palace)',
 
   // Swamp Palace
-  'Swamp Palace Moat': { and: ['Flippers', 'Open Floodgate'] },
-  'Swamp Palace Small Key Door': 'Small Key (Swamp Palace)',
-  'Swamp Palace (Center)': { and: ['Hammer', 'Small Key (Swamp Palace)'] },
-  'Swamp Palace (North)': { and: ['Hookshot', 'Small Key (Swamp Palace)'] },
-  'Swamp Palace (West)': 'Small Key (Swamp Palace)',
+  'sp-entrance|sp-moat': { and: ['Flippers', 'Open Floodgate'] },
+  'sp-moat|sp-key-door': 'Small Key (Swamp Palace)',
+  'sp-key-door|sp-center': { and: ['Hammer', 'Small Key (Swamp Palace)'] },
+  'sp-center|sp-north': { and: ['Hookshot', 'Small Key (Swamp Palace)'] },
+  'sp-center|sp-west': 'Small Key (Swamp Palace)',
 
   // Thieves Town
-  'Thieves Town Big Key Door': 'Big Key (Thieves Town)',
-  'Blind Fight': { and: ['Small Key (Thieves Town)', canUseBombs] },
+  'tt-entrance|tt-big-key-door': 'Big Key (Thieves Town)',
+  'tt-big-key-door|tt-blind': { and: ['Small Key (Thieves Town)', canUseBombs] },
 
   // Skull Woods
-  'Skull Woods First Section South Door': 'Small Key (Skull Woods)',
-  'Skull Woods First Section (Right) North Door': 'Small Key (Skull Woods)',
-  'Skull Woods First Section West Door': 'Small Key (Skull Woods)',
-  'Skull Woods First Section (Left) Door to Exit': 'Small Key (Skull Woods)',
-  'Skull Woods Torch Room': {
+  'sw-first|sw-south-door': 'Small Key (Skull Woods)',
+  'sw-first-right|sw-north-door': 'Small Key (Skull Woods)',
+  'sw-first|sw-west-door': 'Small Key (Skull Woods)',
+  'sw-first-left|sw-exit-door': 'Small Key (Skull Woods)',
+  'sw-exit|sw-torch-room': {
     and: ['Small Key (Skull Woods)', 'Fire Rod', hasSword],
   },
 
   // Ice Palace
-  'Ice Palace (Second Section)': {
+  'ip-entrance|ip-second': {
     and: [canMeltThings, 'Small Key (Ice Palace)', canUseBombs],
   },
-  'Ice Palace (Main)': 'Small Key (Ice Palace)',
-  'Ice Palace (East)': { or: ['Hookshot', 'Small Key (Ice Palace)'] },
-  'Ice Palace (Kholdstare)': {
+  'ip-second|ip-main': 'Small Key (Ice Palace)',
+  'ip-main|ip-east': { or: ['Hookshot', 'Small Key (Ice Palace)'] },
+  'ip-main|ip-kholdstare': {
     and: [canLiftRocks, 'Hammer', 'Big Key (Ice Palace)'],
   },
 
   // Misery Mire
-  'Misery Mire Entrance Gap': 'Cane of Somaria',
-  'Misery Mire Entrance Gap Reverse': 'Cane of Somaria',
-  'Misery Mire (West)': 'Small Key (Misery Mire)',
-  'Misery Mire Big Key Door': 'Big Key (Misery Mire)',
-  'Misery Mire (Vitreous)': { and: ['Cane of Somaria', canUseBombs] },
+  'mm-entrance|mm-gap': 'Cane of Somaria',
+  'mm-gap|mm-entrance': 'Cane of Somaria',
+  'mm-gap|mm-west': 'Small Key (Misery Mire)',
+  'mm-west|mm-big-key-door': 'Big Key (Misery Mire)',
+  'mm-big-key-door|mm-vitreous': { and: ['Cane of Somaria', canUseBombs] },
 
   // Turtle Rock
-  'Turtle Rock Entrance Gap': 'Cane of Somaria',
-  'Turtle Rock Entrance Gap Reverse': 'Cane of Somaria',
-  'Turtle Rock Dark Room Staircase': 'Small Key (Turtle Rock)',
-  'Turtle Rock (Trinexx)': {
+  'tr-entrance|tr-gap': 'Cane of Somaria',
+  'tr-gap|tr-entrance': 'Cane of Somaria',
+  'tr-gap|tr-dark-room-staircase': 'Small Key (Turtle Rock)',
+  'tr-dark-room|tr-trinexx': {
     and: ['Small Key (Turtle Rock)', 'Big Key (Turtle Rock)', 'Cane of Somaria'],
   },
-  'Turtle Rock (Dark Room) (North)': 'Cane of Somaria',
-  'Turtle Rock (Dark Room) (South)': 'Cane of Somaria',
-  'Turtle Rock Second Section Bomb Wall': canKillMostThings,
+  'tr-dark-room|tr-north': 'Cane of Somaria',
+  'tr-north|tr-dark-room': 'Cane of Somaria',
+  'tr-dark-room|tr-bomb-wall': canKillMostThings,
 
   // Palace of Darkness
-  'Palace of Darkness Big Key Door': 'Big Key (Palace of Darkness)',
-  'Palace of Darkness Spike Statue Room Door': 'Small Key (Palace of Darkness)',
-  'Palace of Darkness Maze Door': 'Small Key (Palace of Darkness)',
+  'pod-entrance|pod-big-key-door': 'Big Key (Palace of Darkness)',
+  'pod-entrance|pod-spike-statue': 'Small Key (Palace of Darkness)',
+  'pod-spike-statue|pod-maze': 'Small Key (Palace of Darkness)',
 
   // Ganons Tower
-  'Ganons Tower (Tile Room)': 'Cane of Somaria',
-  'Ganons Tower (Hookshot Room)': {
+  'gt-entrance|gt-tile-room': 'Cane of Somaria',
+  'gt-entrance|gt-hookshot-room': {
     and: ['Hammer', { or: ['Hookshot', 'Pegasus Boots'] }],
   },
-  'Ganons Tower Big Key Door': 'Big Key (Ganons Tower)',
-  'Ganons Tower (Tile Room) Key Door': {
+  'gt-main|gt-big-key-door': 'Big Key (Ganons Tower)',
+  'gt-tile-room|gt-key-door': {
     and: ['Fire Rod', 'Small Key (Ganons Tower)'],
   },
-  'Ganons Tower (Map Room)': 'Small Key (Ganons Tower)',
-  'Ganons Tower (Double Switch Room)': { or: ['Cane of Somaria', canUseBombs] },
-  'Ganons Tower Torch Rooms': { and: [canKillMostThings, hasFireSource] },
-  'Ganons Tower Moldorm Door': {
+  'gt-main|gt-map-room': 'Small Key (Ganons Tower)',
+  'gt-main|gt-double-switch': { or: ['Cane of Somaria', canUseBombs] },
+  'gt-main|gt-torch-rooms': { and: [canKillMostThings, hasFireSource] },
+  'gt-torch-rooms|gt-moldorm-door': {
     and: ['Small Key (Ganons Tower)', canUseBombs],
   },
-  'Ganons Tower Moldorm Gap': 'Hookshot',
-  'Ganon Drop': hasBeamSword,
+  'gt-moldorm|gt-moldorm-gap': 'Hookshot',
+  'gt-moldorm-gap|gt-ganon-drop': hasBeamSword,
 };
 
 export { DUNGEON_REGION_RULES };

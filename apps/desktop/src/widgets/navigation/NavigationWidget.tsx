@@ -19,15 +19,48 @@ import unknownIcon from '@iconify-icons/game-icons/perspective-dice-six-faces-ra
 import exitDoorIcon from '@iconify-icons/game-icons/exit-door';
 import { useGameUIStore } from '../../stores/game-ui-store';
 import { useConnectionOverlayStore } from '../../stores/connection-overlay-store';
-import { SCREEN_NAMES, buildScreenBundle, ENTRANCE_NAMES, classifyEntrance, floodFillScreen, getConnections } from '@shared/game/navigation';
+import { buildScreenBundle, floodFillScreen, getConnections } from '@shared/game/navigation';
 import type { FloodFillOptions } from '@shared/game/navigation';
-import type { ScreenBundle, EntranceType, OverworldEntrance } from '@shared/game/navigation';
-import { getRegionLookup } from '@shared/game/data/regions';
-import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetIndoorAttrGrid, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms } from '../../lib/game';
+import type { ScreenBundle, OverworldEntrance } from '@shared/game/navigation';
+import { getRegionLookup, REGION_BY_ID } from '@shared/game/data/regions';
+import { ALL_CONNECTIONS } from '@shared/game/data/connections';
+import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetIndoorAttrGrid, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms } from '../../lib/game';
 import { getCompletedChecks } from '../../lib/game/tracker';
 import type { OverworldVariantInfo } from '../../lib/game';
 import type { TileAttrContext } from '@shared/game/navigation/tile-attrs';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
+
+type EntranceType = 'door' | 'cave' | 'hole' | 'well' | 'dungeon' | 'fairy' | 'shop' | 'house' | 'unknown';
+
+/** Get overworld screen display name from screen index */
+function getScreenDisplayName(screenIndex: number): string {
+  return getRegionLookup().byOverworldScreen.get(screenIndex)?.name ?? `0x${screenIndex.toString(16).toUpperCase()}`;
+}
+
+/** Pre-built map: fromRegionId → array of destination region IDs */
+const connectionsByFrom = new Map<string, string[]>();
+for (const conn of ALL_CONNECTIONS) {
+  let list = connectionsByFrom.get(conn.from);
+  if (!list) { list = []; connectionsByFrom.set(conn.from, list); }
+  list.push(conn.to);
+}
+
+/**
+ * Resolve display name for an entrance/connection destination.
+ * Given the current region ID and the target room's inGameIndex,
+ * finds the matching connection and returns the destination region's name.
+ */
+function getConnectionDestinationName(currentRegionId: string, targetRoomId: number): string | null {
+  const destinations = connectionsByFrom.get(currentRegionId);
+  if (!destinations) return null;
+  for (const toId of destinations) {
+    const region = REGION_BY_ID.get(toId);
+    if (region && region.inGameIndex === targetRoomId) {
+      return region.subtitle ?? region.name;
+    }
+  }
+  return null;
+}
 
 import type { FloodFillResult, ConnectionInfo } from '@shared/game/navigation';
 
@@ -48,15 +81,59 @@ function uint8ToGrid(raw: Uint8Array): number[][] {
 /** Enrich raw wasm entrance data with gridRow/gridCol/roomId for orchestrator */
 function enrichEntrances(): OverworldEntrance[] {
   const raw = wasmGetOverworldEntrances();
+  const holes = wasmGetFallHoles();
   const rooms = wasmGetEntranceRooms();
-  return raw.map(e => ({
-    area: e.area,
-    pos: e.pos,
-    id: e.id,
-    gridRow: (((e.pos >> 6) & 0x3f) % 32) * 2,
-    gridCol: ((e.pos & 0x3f) % 32) * 2,
-    roomId: rooms?.[e.id] ?? 0,
-  }));
+  const heads = wasmGetAreaHeads();
+
+  // For big screens (2×2 groups), entrances store the HEAD area and use 128×128 coordinates.
+  // We need to resolve each entrance to its correct sub-screen with 64×64 local coordinates.
+  const resolveToSubScreen = (area: number, bigRow: number, bigCol: number): { area: number; gridRow: number; gridCol: number } => {
+    if (!heads) return { area, gridRow: bigRow, gridCol: bigCol };
+    const head = heads[area];
+    // If the entrance's area IS a head and it's a big screen group, resolve sub-screen
+    if (head === area) {
+      const isBig = heads.some((h, i) => h === area && i !== area);
+      if (isBig && (bigRow >= 64 || bigCol >= 64)) {
+        const headRow = (area >> 3) & 7;
+        const headCol = area & 7;
+        const subRow = bigRow >= 64 ? 1 : 0;
+        const subCol = bigCol >= 64 ? 1 : 0;
+        const subScreen = ((headRow + subRow) << 3) | (headCol + subCol);
+        return { area: subScreen, gridRow: bigRow - subRow * 64, gridCol: bigCol - subCol * 64 };
+      }
+    }
+    return { area, gridRow: bigRow, gridCol: bigCol };
+  };
+
+  const entrances: OverworldEntrance[] = raw.map(e => {
+    const bigRow = (e.pos >> 7) * 2;
+    const bigCol = ((e.pos & 0x7F) >> 1) * 2;
+    const resolved = resolveToSubScreen(e.area, bigRow, bigCol);
+    return {
+      area: resolved.area,
+      pos: e.pos,
+      id: e.id,
+      gridRow: resolved.gridRow,
+      gridCol: resolved.gridCol,
+      roomId: rooms?.[e.id] ?? 0,
+    };
+  });
+  // Merge fall holes (pits that lead to rooms) — use id offset 200+ to avoid collision
+  // Fall hole pos encodes row as ((y_map16 - 8) & 0x3f) — add 8 back to recover true row
+  for (const h of holes) {
+    const bigRow = ((h.pos >> 7) + 8) * 2;
+    const bigCol = ((h.pos & 0x7F) >> 1) * 2;
+    const resolved = resolveToSubScreen(h.area, bigRow, bigCol);
+    entrances.push({
+      area: resolved.area,
+      pos: h.pos,
+      id: 200 + h.entranceId,
+      gridRow: resolved.gridRow,
+      gridCol: resolved.gridCol,
+      roomId: rooms?.[h.entranceId] ?? 0,
+    });
+  }
+  return entrances;
 }
 
 /** Compute big-screen group from WASM area heads table */
@@ -117,7 +194,7 @@ function NavigationWidgetContent() {
   const [connections, setConnections] = useState<ConnectionInfo[]>([]);
 
   const [running, setRunning] = useState(false);
-  const [autoRun, setAutoRun] = useState(false);
+  const [autoRun, setAutoRun] = useState(window.api.autoFlood ?? false);
   const [variant, setVariant] = useState<OverworldVariantInfo | null>(null);
   const [dynamicBlockerCount, setDynamicBlockerCount] = useState(0);
   const [visibleScreenIndices, setVisibleScreenIndices] = useState<number[]>([]);
@@ -161,7 +238,7 @@ function NavigationWidgetContent() {
       ?? getRegionLookup().byDungeonRoom.get(`${palaceIndex}:${roomIndex}`)?.subtitle
       ?? getRegionLookup().byDungeonRoom.get(`${palaceIndex}:${roomIndex}`)?.name
       ?? `Room 0x${roomIndex.toString(16).toUpperCase()}`)
-    : (SCREEN_NAMES[overworldScreenIndex] ?? `Screen 0x${overworldScreenIndex.toString(16).toUpperCase()}`);
+    : (getRegionLookup().byOverworldScreen.get(overworldScreenIndex)?.name ?? `Screen 0x${overworldScreenIndex.toString(16).toUpperCase()}`);
   const locationReview = reviewData[locationKey] ?? { status: 'neutral' as ReviewStatus, connections: {} };
   const displayedVariant = !isIndoors
     ? (result ? wasmGetOverworldVariant(result.screenIndex) : variant)
@@ -171,7 +248,7 @@ function NavigationWidgetContent() {
     : (result ? [result] : []);
   const reachableSum = renderResults.reduce((sum, r) => sum + r.reachableCount, 0);
   const totalTilesSum = renderResults.reduce((sum, r) => sum + r.totalTiles, 0);
-  const entranceSum = renderResults.reduce((sum, r) => sum + r.entrances.length, 0);
+  const entranceSum = renderResults.reduce((sum, r) => sum + r.entrances.filter(e => r.transitions.some(t => t.entranceIdx === e.id)).length, 0);
   // Force a lightweight periodic rerender so live debug values update while moving.
   useEffect(() => {
     const id = setInterval(() => setDebugTick(t => (t + 1) & 1023), 200);
@@ -503,6 +580,15 @@ function NavigationWidgetContent() {
     if (autoSecondPassTimerRef.current) clearTimeout(autoSecondPassTimerRef.current);
   }, []);
 
+  // Auto-flood CLI flag: trigger initial flood fill once active screen is known
+  const didAutoFloodInit = useRef(false);
+  useEffect(() => {
+    if (!window.api.autoFlood || didAutoFloodInit.current) return;
+    if (activeScreenIndex === null || running) return;
+    didAutoFloodInit.current = true;
+    handleRunRef.current?.();
+  }, [activeScreenIndex, running]);
+
   // Auto-run flood fill on screen change
   useEffect(() => {
     if (!autoRun || running) return;
@@ -641,7 +727,7 @@ function NavigationWidgetContent() {
 
         {/* Screen map with edge connection indicators */}
         {screenBundle && (
-          <ScreenMapWithConnections bundle={screenBundle} connections={externalConnections} renderResults={renderResults} linkScreenIndex={linkDebug?.liveScreenIndex ?? null} />
+          <ScreenMapWithConnections bundle={screenBundle} connections={externalConnections} renderResults={renderResults} linkScreenIndex={linkDebug?.liveScreenIndex ?? null} linkPos={linkDebug ? { screen: linkDebug.liveScreenIndex, row: linkDebug.tileMinRow, col: linkDebug.tileMinCol } : null} />
         )}
       </div>
 
@@ -751,27 +837,28 @@ function NavigationWidgetContent() {
 
         {/* ─── Entrances sub-section ─── */}
         <div style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 2, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Entrances ({entranceSum})</div>
-        {renderResults.some(r => r.entrances.length > 0) ? (
+        {renderResults.some(r => r.entrances.some(e => r.transitions.some(t => t.entranceIdx === e.id))) ? (
           renderResults.map(r => {
-            if (r.entrances.length === 0) return null;
+            const reachableEntrances = r.entrances.filter(e => r.transitions.some(t => t.entranceIdx === e.id));
+            if (reachableEntrances.length === 0) return null;
             const scrLabel = screenBundle?.isMulti
               ? (screenBundle.screenNames[r.screenIndex] ?? `0x${r.screenIndex.toString(16).toUpperCase()}`)
               : null;
+            const screenRegionId = `${isDarkWorld ? 'dw' : 'lw'}-${r.screenIndex.toString(16).padStart(2, '0')}`;
             return (
               <div key={`ent-${r.screenIndex}`}>
                 {scrLabel && <div style={{ ...S.meta, color: '#8cf', marginTop: 2 }}>{scrLabel}</div>}
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {r.entrances.map(ent => {
+                {reachableEntrances.map(ent => {
                   const t = r.transitions.find(t => t.entranceIdx === ent.id);
-                  const entName = ENTRANCE_NAMES[ent.roomId] ?? null;
                   const isSyntheticIndoor = ent.id >= 1000 && isIndoors;
                   const entType = ent.id >= 1000
                     ? classifyEntranceFromRegion(roomIndex)
-                    : classifyEntrance(ent.roomId);
-                  const displayName = entName
-                    ?? (isSyntheticIndoor
-                      ? (SCREEN_NAMES[ent.area] ?? 'Overworld')
-                      : `Room 0x${ent.roomId.toString(16).toUpperCase()}`);
+                    : classifyEntranceFromRegion(ent.roomId);
+                  const displayName = isSyntheticIndoor
+                    ? (REGION_BY_ID.get(`${isDarkWorld ? 'dw' : 'lw'}-${ent.area.toString(16).padStart(2, '0')}`)?.name ?? 'Overworld')
+                    : (getConnectionDestinationName(screenRegionId, ent.roomId)
+                      ?? `Room 0x${ent.roomId.toString(16).toUpperCase()}`);
                   const iconData = isSyntheticIndoor ? exitDoorIcon : ENTRANCE_ICONS[entType];
                   return (
                     <div key={`entrance-${ent.id}`} style={S.card}>
@@ -798,16 +885,22 @@ function NavigationWidgetContent() {
         <div style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Edges ({externalConnections.length})</div>
         {externalConnections.length > 0 ? (
           externalConnections.map(conn => {
-            const connKey = `${conn.edge}-${conn.sourceScreen?.toString(16)}-${conn.targetScreen.toString(16)}`;
-            const targetName = SCREEN_NAMES[conn.targetScreen] ?? `0x${conn.targetScreen.toString(16).toUpperCase()}`;
+            const connKey = `${conn.edge}-${conn.sourceScreen?.toString(16)}-${conn.targetScreen.toString(16)}-${conn.positions[0]}`;
+            const targetRegionId = `${isDarkWorld ? 'dw' : 'lw'}-${conn.targetScreen.toString(16).padStart(2, '0')}`;
+            const targetName = REGION_BY_ID.get(targetRegionId)?.name ?? `0x${conn.targetScreen.toString(16).toUpperCase()}`;
             const fromLabel = screenBundle?.isMulti && conn.sourceScreen != null
               ? ` (${screenBundle.subNames[conn.sourceScreen] ?? ''})`
+              : '';
+            const posAxis = conn.edge === 'north' || conn.edge === 'south' ? 'c' : 'r';
+            const posRange = conn.positions.length > 0
+              ? `${posAxis}${conn.positions[0]}-${conn.positions[conn.positions.length - 1]}`
               : '';
             return (
               <div key={connKey} style={S.connCard}>
                 <div style={S.connHeader}>
                   <EdgeArrowSvg edge={conn.edge} size={16} />
                   <span style={S.connTitle}>{targetName}{fromLabel}</span>
+                  <span style={S.dimBadge}>{posRange}</span>
                   <span style={S.dimBadge}>{conn.freeTileCount}{conn.itemTileCount > 0 ? `+${conn.itemTileCount}` : ''}</span>
                 </div>
                 {conn.requirements.length > 0 && (
@@ -1099,11 +1192,42 @@ function PathCopyBtn() {
 
 // ─── ScreenMapWithConnections ──────────────────────────────────────────
 
-function ScreenMapWithConnections({ bundle, connections, renderResults, linkScreenIndex }: {
+function ReachabilityCanvas({ reachable, size }: { reachable: number[][]; size: number }) {
+  const ref = useCallback((canvas: HTMLCanvasElement | null) => {
+    if (!canvas) return;
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const img = ctx.createImageData(64, 64);
+    for (let r = 0; r < 64; r++) {
+      for (let c = 0; c < 64; c++) {
+        const state = reachable[r]?.[c] ?? 0;
+        const off = (r * 64 + c) * 4;
+        if (state === 1) {
+          // Reachable — lightest gray
+          img.data[off] = 90; img.data[off + 1] = 90; img.data[off + 2] = 90; img.data[off + 3] = 255;
+        } else if (state >= 2) {
+          // Traversal — mid gray
+          img.data[off] = 50; img.data[off + 1] = 50; img.data[off + 2] = 50; img.data[off + 3] = 255;
+        } else {
+          // Unreachable — darkest
+          img.data[off] = 18; img.data[off + 1] = 18; img.data[off + 2] = 18; img.data[off + 3] = 255;
+        }
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+  }, [reachable]);
+
+  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: size, height: size, borderRadius: 3, imageRendering: 'pixelated' }} />;
+}
+
+function ScreenMapWithConnections({ bundle, connections, renderResults, linkScreenIndex, linkPos }: {
   bundle: ScreenBundle;
   connections: ConnectionInfo[];
   renderResults: FloodFillResult[];
   linkScreenIndex: number | null;
+  linkPos: { screen: number; row: number; col: number } | null;
 }) {
   // Fill available width; cells are square (1:1 aspect like 512×512 screens)
   const EDGE_PAD = 18; // space for connection indicators + padding
@@ -1150,23 +1274,75 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
             background: isActive ? 'rgba(100,255,100,0.12)' : analyzed ? 'rgba(100,200,255,0.08)' : 'rgba(255,255,255,0.03)',
             border: `1px solid ${isActive ? 'rgba(100,255,100,0.5)' : analyzed ? 'rgba(100,200,255,0.3)' : 'rgba(255,255,255,0.08)'}`,
             color: isActive ? '#8f8' : analyzed ? '#8cf' : '#666',
+            overflow: 'hidden',
           }}>
-            <div style={{ fontWeight: 700, fontSize: 11 }}>{bundle.subNames[scr] || bundle.screenNames[scr]}</div>
-            <div style={{ color: '#555', fontSize: 9 }}>0x{scr.toString(16).toUpperCase()}</div>
-            {scrResult && <div style={{ fontSize: 9, color: '#999' }}>{scrResult.reachableCount}/{scrResult.totalTiles}</div>}
+            {scrResult && <ReachabilityCanvas reachable={scrResult.reachable} size={CELL} />}
+            <div style={{ fontWeight: 700, fontSize: 11, position: 'relative' }}>{bundle.subNames[scr] || bundle.screenNames[scr]}</div>
+            <div style={{ color: '#555', fontSize: 9, position: 'relative' }}>0x{scr.toString(16).toUpperCase()}</div>
+            {scrResult && <div style={{ fontSize: 9, color: '#999', position: 'relative' }}>{scrResult.reachableCount}/{scrResult.totalTiles}</div>}
           </div>
         );
       })}
 
-      {/* Edge connection indicators — positioned by source screen's grid col/row */}
+      {/* Entrance markers — yellow squares positioned within their screen cell (reachable only) */}
+      {renderResults.flatMap(r => r.entrances.filter(e => r.transitions.some(t => t.entranceIdx === e.id)).map(ent => {
+        const scrIdx = bundle.screens.indexOf(r.screenIndex);
+        if (scrIdx < 0) return null;
+        const col = scrIdx % bundle.cols;
+        const row = Math.floor(scrIdx / bundle.cols);
+        const cellLeft = EDGE_PAD + col * (CELL + GAP);
+        const cellTop = EDGE_PAD + row * (CELL + GAP);
+        const x = (ent.gridCol / 64) * CELL;
+        const y = (ent.gridRow / 64) * CELL;
+        const sz = Math.max(6, CELL * 4 / 64); // 4 tiles wide
+        return (
+          <div key={`ent-${r.screenIndex}-${ent.id}`} style={{
+            position: 'absolute',
+            left: cellLeft + x - 1,
+            top: cellTop + y - 1,
+            width: sz, height: sz,
+            border: '1.5px solid #ffcc44',
+            borderRadius: 1,
+            pointerEvents: 'none',
+          }} />
+        );
+      }))}
+
+      {/* Link position — green dot */}
+      {linkPos && bundle.screens.includes(linkPos.screen) && (() => {
+        const scrIdx = bundle.screens.indexOf(linkPos.screen);
+        const col = scrIdx % bundle.cols;
+        const row = Math.floor(scrIdx / bundle.cols);
+        const cellLeft = EDGE_PAD + col * (CELL + GAP);
+        const cellTop = EDGE_PAD + row * (CELL + GAP);
+        const x = (linkPos.col / 64) * CELL;
+        const y = (linkPos.row / 64) * CELL;
+        return (
+          <div style={{
+            position: 'absolute',
+            left: cellLeft + x - 3,
+            top: cellTop + y - 3,
+            width: 6, height: 6,
+            borderRadius: '50%',
+            background: '#4f8',
+            boxShadow: '0 0 3px #4f8',
+            pointerEvents: 'none',
+          }} />
+        );
+      })()}
+
+      {/* Edge connection indicators — sized and positioned by tile range */}
       {byEdge.north.map((c, i) => {
         const scrIdx = bundle.screens.indexOf(c.sourceScreen!);
         const col = scrIdx >= 0 ? scrIdx % bundle.cols : 0;
-        const cellCenter = EDGE_PAD + col * (CELL + GAP) + CELL / 2;
+        const colStart = EDGE_PAD + col * (CELL + GAP);
+        const p0 = c.positions[0], p1 = c.positions[c.positions.length - 1];
+        const x0 = (p0 / 64) * CELL;
+        const spanW = Math.max(14, ((p1 - p0 + 1) / 64) * CELL);
         return (
-          <div key={`n${i}`} style={{ position: 'absolute', top: 1, left: cellCenter - 9, width: 18, height: 14, borderRadius: 2, background: EDGE_COLORS.north, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            title={`${SCREEN_NAMES[c.targetScreen] ?? '0x' + c.targetScreen.toString(16)} (${c.positions.length}w)`}>
-            <span style={{ fontSize: 10, fontWeight: 700, color: textColor('north'), lineHeight: 1 }}>{c.positions.length}</span>
+          <div key={`n${i}`} style={{ position: 'absolute', top: 1, left: colStart + x0, width: spanW, height: 14, borderRadius: 2, background: EDGE_COLORS.north, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            title={`${getScreenDisplayName(c.targetScreen)} c${p0}-${p1} (${c.positions.length})`}>
+            <span style={{ fontSize: 9, fontWeight: 700, color: textColor('north'), lineHeight: 1 }}>{c.positions.length}</span>
           </div>
         );
       })}
@@ -1174,11 +1350,14 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
       {byEdge.south.map((c, i) => {
         const scrIdx = bundle.screens.indexOf(c.sourceScreen!);
         const col = scrIdx >= 0 ? scrIdx % bundle.cols : 0;
-        const cellCenter = EDGE_PAD + col * (CELL + GAP) + CELL / 2;
+        const colStart = EDGE_PAD + col * (CELL + GAP);
+        const p0 = c.positions[0], p1 = c.positions[c.positions.length - 1];
+        const x0 = (p0 / 64) * CELL;
+        const spanW = Math.max(14, ((p1 - p0 + 1) / 64) * CELL);
         return (
-          <div key={`s${i}`} style={{ position: 'absolute', bottom: 1, left: cellCenter - 9, width: 18, height: 14, borderRadius: 2, background: EDGE_COLORS.south, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            title={`${SCREEN_NAMES[c.targetScreen] ?? '0x' + c.targetScreen.toString(16)} (${c.positions.length}w)`}>
-            <span style={{ fontSize: 10, fontWeight: 700, color: textColor('south'), lineHeight: 1 }}>{c.positions.length}</span>
+          <div key={`s${i}`} style={{ position: 'absolute', bottom: 1, left: colStart + x0, width: spanW, height: 14, borderRadius: 2, background: EDGE_COLORS.south, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            title={`${getScreenDisplayName(c.targetScreen)} c${p0}-${p1} (${c.positions.length})`}>
+            <span style={{ fontSize: 9, fontWeight: 700, color: textColor('south'), lineHeight: 1 }}>{c.positions.length}</span>
           </div>
         );
       })}
@@ -1186,11 +1365,14 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
       {byEdge.west.map((c, i) => {
         const scrIdx = bundle.screens.indexOf(c.sourceScreen!);
         const row = scrIdx >= 0 ? Math.floor(scrIdx / bundle.cols) : 0;
-        const cellCenter = EDGE_PAD + row * (CELL + GAP) + CELL / 2;
+        const rowStart = EDGE_PAD + row * (CELL + GAP);
+        const p0 = c.positions[0], p1 = c.positions[c.positions.length - 1];
+        const y0 = (p0 / 64) * CELL;
+        const spanH = Math.max(14, ((p1 - p0 + 1) / 64) * CELL);
         return (
-          <div key={`w${i}`} style={{ position: 'absolute', left: 1, top: cellCenter - 7, width: 16, height: 14, borderRadius: 2, background: EDGE_COLORS.west, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            title={`${SCREEN_NAMES[c.targetScreen] ?? '0x' + c.targetScreen.toString(16)} (${c.positions.length}w)`}>
-            <span style={{ fontSize: 10, fontWeight: 700, color: textColor('west'), lineHeight: 1 }}>{c.positions.length}</span>
+          <div key={`w${i}`} style={{ position: 'absolute', left: 1, top: rowStart + y0, width: 14, height: spanH, borderRadius: 2, background: EDGE_COLORS.west, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            title={`${getScreenDisplayName(c.targetScreen)} r${p0}-${p1} (${c.positions.length})`}>
+            <span style={{ fontSize: 9, fontWeight: 700, color: textColor('west'), lineHeight: 1 }}>{c.positions.length}</span>
           </div>
         );
       })}
@@ -1198,11 +1380,14 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
       {byEdge.east.map((c, i) => {
         const scrIdx = bundle.screens.indexOf(c.sourceScreen!);
         const row = scrIdx >= 0 ? Math.floor(scrIdx / bundle.cols) : 0;
-        const cellCenter = EDGE_PAD + row * (CELL + GAP) + CELL / 2;
+        const rowStart = EDGE_PAD + row * (CELL + GAP);
+        const p0 = c.positions[0], p1 = c.positions[c.positions.length - 1];
+        const y0 = (p0 / 64) * CELL;
+        const spanH = Math.max(14, ((p1 - p0 + 1) / 64) * CELL);
         return (
-          <div key={`e${i}`} style={{ position: 'absolute', right: 1, top: cellCenter - 7, width: 16, height: 14, borderRadius: 2, background: EDGE_COLORS.east, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            title={`${SCREEN_NAMES[c.targetScreen] ?? '0x' + c.targetScreen.toString(16)} (${c.positions.length}w)`}>
-            <span style={{ fontSize: 10, fontWeight: 700, color: textColor('east'), lineHeight: 1 }}>{c.positions.length}</span>
+          <div key={`e${i}`} style={{ position: 'absolute', right: 1, top: rowStart + y0, width: 14, height: spanH, borderRadius: 2, background: EDGE_COLORS.east, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            title={`${getScreenDisplayName(c.targetScreen)} r${p0}-${p1} (${c.positions.length})`}>
+            <span style={{ fontSize: 9, fontWeight: 700, color: textColor('east'), lineHeight: 1 }}>{c.positions.length}</span>
           </div>
         );
       })}

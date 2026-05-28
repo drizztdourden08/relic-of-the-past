@@ -4,6 +4,7 @@ import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { wasmGetViewportInfo, wasmGetLiveSprites } from '../../../../lib/game';
 import { classifyTileAttr } from '@shared/game/navigation/tile-classification';
 import { getTileAttrsMap, getAttrLabel } from '@shared/game/navigation/tile-attrs';
+import type { ReachState } from '@shared/game/navigation/types';
 
 const EDGE_COLORS: Record<string, string> = {
   north: '#4488ff',
@@ -68,18 +69,51 @@ function segmentOverlapsRect(a: { x: number; y: number }, b: { x: number; y: num
   return false;
 }
 
-/** Check whether a 2×2 block (top-left at row,col) is fully reachable. */
-function isValid2x2(row: number, col: number, reachable: boolean[][]): boolean {
+/** Check whether a 2×2 block (top-left at row,col) is fully reachable (player can stop here). */
+function isValid2x2(row: number, col: number, reachable: ReachState[][]): boolean {
   if (row < 0 || row + 1 >= 64 || col < 0 || col + 1 >= 64) return false;
-  return reachable[row][col] && reachable[row][col + 1] &&
-         reachable[row + 1][col] && reachable[row + 1][col + 1];
+  return reachable[row][col] === 1 && reachable[row][col + 1] === 1 &&
+         reachable[row + 1][col] === 1 && reachable[row + 1][col + 1] === 1;
+}
+
+/** Check if movement direction (dr,dc) is compatible with an encoded traversal state (>=2). */
+function isTraversalDirCompatible(state: number, dr: number, dc: number): boolean {
+  // state encodes direction: 2=s, 3=n, 4=e, 5=w, 6=se, 7=sw, 8=ne, 9=nw
+  switch (state) {
+    case 2: return dr === 1 && dc === 0;   // south
+    case 3: return dr === -1 && dc === 0;  // north
+    case 4: return dc === 1 && dr === 0;   // east
+    case 5: return dc === -1 && dr === 0;  // west
+    case 6: return dr === 1 || dc === 1;   // se
+    case 7: return dr === 1 || dc === -1;  // sw
+    case 8: return dr === -1 || dc === 1;  // ne
+    case 9: return dr === -1 || dc === -1; // nw
+    default: return false;
+  }
+}
+
+/** Check if a 2×2 move in direction (dr,dc) is valid — allows traversal tiles in their permitted direction. */
+function isValidMove2x2(
+  nr: number, nc: number, dr: number, dc: number,
+  reachable: ReachState[][],
+): boolean {
+  if (nr < 0 || nr + 1 >= 64 || nc < 0 || nc + 1 >= 64) return false;
+  const positions: [number, number][] = [[nr, nc], [nr, nc + 1], [nr + 1, nc], [nr + 1, nc + 1]];
+  for (const [r, c] of positions) {
+    const state = reachable[r][c];
+    if (state === 0) return false;
+    if (state >= 2) {
+      if (!isTraversalDirCompatible(state, dr, dc)) return false;
+    }
+  }
+  return true;
 }
 
 /**
  * Snap a cursor tile to the nearest valid 2×2 top-left corner.
  * Checks the 4 squares that contain the cursor tile first, then spirals out.
  */
-function findNearest2x2Goal(cursorRow: number, cursorCol: number, reachable: boolean[][]): GridPos | null {
+function findNearest2x2Goal(cursorRow: number, cursorCol: number, reachable: ReachState[][]): GridPos | null {
   // 4 squares whose footprint includes (cursorRow, cursorCol)
   const seeds: GridPos[] = [
     { row: cursorRow, col: cursorCol },
@@ -102,8 +136,10 @@ function findNearest2x2Goal(cursorRow: number, cursorCol: number, reachable: boo
   return null;
 }
 
-/** A* where each node is the top-left of a 2×2 block — all 4 tiles must be reachable at every step. */
-function findPath2x2AStar(start: GridPos, goal: GridPos, reachable: boolean[][]): GridPos[] | null {
+/** A* where each node is the top-left of a 2×2 block — allows traversal tiles in their permitted direction. */
+function findPath2x2AStar(
+  start: GridPos, goal: GridPos, reachable: ReachState[][],
+): GridPos[] | null {
   if (!isValid2x2(start.row, start.col, reachable) || !isValid2x2(goal.row, goal.col, reachable)) return null;
 
   const open: GridPos[] = [start];
@@ -140,7 +176,7 @@ function findPath2x2AStar(start: GridPos, goal: GridPos, reachable: boolean[][])
     for (const [dr, dc] of PATH_DIRS) {
       const nr = current.row + dr;
       const nc = current.col + dc;
-      if (!isValid2x2(nr, nc, reachable)) continue;
+      if (!isValidMove2x2(nr, nc, dr, dc, reachable)) continue;
 
       const nextKey = `${nr},${nc}`;
       if (closed.has(nextKey)) continue;
@@ -165,7 +201,7 @@ function findPath2x2FromLink(
   linkX: number, linkY: number,
   screenWorldX: number, screenWorldY: number,
   goal: GridPos,
-  reachable: boolean[][],
+  reachable: ReachState[][],
 ): GridPos[] | null {
   const startRow = Math.floor((linkY - screenWorldY) / 8);
   const startCol = Math.floor((linkX - screenWorldX) / 8);
@@ -298,14 +334,14 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       // Dot radius in display pixels
       const dotRadius = Math.max(2.5, 4 * Math.min(scaleX, scaleY));
 
-      // Draw reachable tiles as dots (skip ledge tiles — those get arrows instead)
-      const LEDGE_ATTRS = new Set([0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x01, 0x02, 0x03, 0x1a, 0x12]);
+      // Draw reachable tiles as dots (skip ledge/traversal tiles — those get arrows instead)
+      const LEDGE_ATTRS = new Set([0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x01, 0x02, 0x03, 0x1a, 0x12, 0x11, 0x13, 0x19, 0x1b]);
       ctx.globalAlpha = 0.55;
       for (const drawResult of drawResults) {
         const origin = getScreenWorldOrigin(drawResult.screenIndex);
         for (let r = 0; r < 64; r++) {
           for (let c = 0; c < 64; c++) {
-            if (!drawResult.reachable[r][c]) continue;
+            if (drawResult.reachable[r][c] !== 1) continue;
             if (drawResult.attrGrid && LEDGE_ATTRS.has(drawResult.attrGrid[r][c])) continue;
 
             // Tile center in world coordinates
@@ -329,7 +365,7 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
             const hasReq = drawResult.reqGrid && drawResult.reqGrid[r][c] !== '';
 
             if (hasReq) {
-              ctx.fillStyle = 'rgba(255, 100, 180, 0.7)';
+              ctx.fillStyle = 'rgba(255, 100, 180, 0.35)';
             } else {
               ctx.fillStyle = 'rgba(80, 200, 255, 0.6)';
             }
@@ -358,9 +394,9 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
         ctx.fill();
       }
 
-      // Draw hookshot targets: same-colored dot with a bright green ring border
-      ctx.globalAlpha = 0.85;
-      ctx.lineWidth = Math.max(1.5, 2.5 * Math.min(scaleX, scaleY));
+      // Draw hookshot targets: same-colored dot with a thin green ring border
+      ctx.globalAlpha = 0.7;
+      ctx.lineWidth = 1;
       ctx.strokeStyle = '#00ff88';
       for (const drawResult of drawResults) {
         if (!drawResult.hookTargets || drawResult.hookTargets.length === 0) continue;
@@ -378,14 +414,14 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
 
           const hasReq = drawResult.reqGrid && drawResult.reqGrid[ht.row]?.[ht.col] !== '';
           ctx.fillStyle = hasReq
-            ? 'rgba(255, 100, 180, 0.7)'
+            ? 'rgba(255, 100, 180, 0.35)'
             : 'rgba(80, 200, 255, 0.6)';
           ctx.beginPath();
           ctx.arc(dx, dy, dotRadius * 0.6, 0, Math.PI * 2);
           ctx.fill();
 
           ctx.beginPath();
-          ctx.arc(dx, dy, dotRadius * 0.9, 0, Math.PI * 2);
+          ctx.arc(dx, dy, dotRadius * 0.65, 0, Math.PI * 2);
           ctx.stroke();
         }
       }
@@ -567,16 +603,15 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       }
 
       // Draw entrance markers as 2×2 tile rectangles (16×16px trigger zone)
-      // The game checks link_x_coord >> 3 (Link's LEFT edge) against the entrance pos.
-      // Shift +8px in X to center the marker on Link's visual CENTER when entering,
-      // which aligns with the visible door graphic (doors span 2 Map16 tiles).
       ctx.globalAlpha = 0.95;
       ctx.fillStyle = EDGE_COLORS.entrance;
       for (const drawResult of drawResults) {
         const origin = getScreenWorldOrigin(drawResult.screenIndex);
         for (const ent of drawResult.entrances) {
+        // Only show entrances that BFS reached (have a matching transition)
+        if (!drawResult.transitions.some(t => t.entranceIdx === ent.id)) continue;
         // Entrance trigger is a single Map16 tile = 2×2 sub-tiles (16×16 game px)
-        const worldX = origin.x + ent.gridCol * TILE_PX + 8;
+        const worldX = origin.x + ent.gridCol * TILE_PX;
         const worldY = origin.y + ent.gridRow * TILE_PX;
         const screenX = worldX - viewLeft;
         const screenY = worldY - viewTop;
@@ -719,6 +754,7 @@ function PathControlsLegend() {
       <div style={{ color: '#ccc' }}>LMB hold: live A* path to cursor</div>
       <div style={{ color: '#ccc' }}>RMB while holding: lock target</div>
       <div style={{ color: '#ccc' }}>Release LMB: clear lock/path</div>
+      <div style={{ color: '#ffee00' }}>Shift+drag: select tiles → clipboard</div>
     </div>
   );
 }
@@ -786,7 +822,7 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
     attr: number; label: string;
     type: string; req: string | null;
     canPass: boolean | null;
-    reachable: boolean;
+    reachable: ReachState;
     hookTarget: boolean;
     /** Accumulated requirements the BFS needed to reach this tile (from reqGrid) */
     pathReqs: string;
@@ -794,6 +830,14 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
     spriteInfo: string[];
   } | null>(null);
   const vpRef = useRef<ReturnType<typeof wasmGetViewportInfo>>(null);
+
+  // ─── Rectangle selection state (Shift+LMB drag) ───
+  const [rectSel, setRectSel] = useState<{
+    startRow: number; startCol: number;
+    endRow: number; endCol: number;
+    active: boolean;
+  } | null>(null);
+  const [copied, setCopied] = useState(false);
 
   // Keep viewport info fresh
   useEffect(() => {
@@ -807,7 +851,105 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
     return () => cancelAnimationFrame(raf);
   }, []);
 
+  /** Convert mouse event to tile [row, col] or null if out of bounds */
+  const mouseToTile = useCallback((e: React.MouseEvent<HTMLDivElement>): GridPos | null => {
+    const vp = vpRef.current;
+    if (!vp || !result.attrGrid) return null;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    const snesW = vp.snesWidth;
+    const snesH = vp.snesHeight;
+    const scaleX = width / snesW;
+    const scaleY = height / snesH;
+    const snesX = mx / scaleX;
+    const snesY = my / scaleY;
+    const viewLeft = vp.cameraX - vp.extraLeftRight;
+    const viewTop = vp.cameraY;
+    const worldX = snesX + viewLeft;
+    const worldY = snesY + viewTop;
+    const screenWorldX = isIndoors
+      ? (Math.floor(vp.linkX / 512) * 512)
+      : ((result.screenIndex & 7) * 512);
+    const screenWorldY = isIndoors
+      ? (Math.floor(vp.linkY / 512) * 512)
+      : (((result.screenIndex >> 3) & 7) * 512);
+    const col = Math.floor((worldX - screenWorldX) / 8);
+    const row = Math.floor((worldY - screenWorldY) / 8);
+    if (row < 0 || row >= 64 || col < 0 || col >= 64) return null;
+    return { row, col };
+  }, [width, height, result, isIndoors]);
+
+  // Rectangle selection handlers
+  const handleRectMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!e.shiftKey || e.button !== 0) return;
+    const tile = mouseToTile(e);
+    if (!tile) return;
+    e.preventDefault();
+    e.stopPropagation();
+    setRectSel({ startRow: tile.row, startCol: tile.col, endRow: tile.row, endCol: tile.col, active: true });
+    setCopied(false);
+  }, [mouseToTile]);
+
+  const handleRectMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!rectSel?.active) return;
+    const tile = mouseToTile(e);
+    if (!tile) return;
+    setRectSel(s => s ? { ...s, endRow: tile.row, endCol: tile.col } : s);
+  }, [rectSel?.active, mouseToTile]);
+
+  const handleRectMouseUp = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!rectSel?.active || e.button !== 0) return;
+    const tile = mouseToTile(e);
+    if (tile) {
+      setRectSel(s => s ? { ...s, endRow: tile.row, endCol: tile.col, active: false } : s);
+    } else {
+      setRectSel(s => s ? { ...s, active: false } : s);
+    }
+
+    // Collect tile data in the rectangle
+    const sel = rectSel;
+    const endRow = tile?.row ?? sel.endRow;
+    const endCol = tile?.col ?? sel.endCol;
+    const r0 = Math.min(sel.startRow, endRow);
+    const r1 = Math.max(sel.startRow, endRow);
+    const c0 = Math.min(sel.startCol, endCol);
+    const c1 = Math.max(sel.startCol, endCol);
+
+    if (!result.attrGrid) return;
+
+    const context = result.tileContext ?? 'overworld';
+    // Build raw grid output: each row is an array of { attr, reachState } per tile
+    const rows: string[] = [];
+    for (let r = r0; r <= r1; r++) {
+      const cells: string[] = [];
+      for (let c = c0; c <= c1; c++) {
+        const attr = result.attrGrid[r][c];
+        const reach = result.reachable[r][c];
+        const ch = reach === 0 ? '-' : reach === 1 ? '+' : '~';
+        cells.push(`${attr.toString(16).padStart(2, '0')}${ch}`);
+      }
+      rows.push(cells.join(' '));
+    }
+
+    const header = [
+      `Tile Selection [${r0},${c0}] to [${r1},${c1}] (${(r1 - r0 + 1)}×${(c1 - c0 + 1)} = ${(r1 - r0 + 1) * (c1 - c0 + 1)} tiles)`,
+      `Context: ${context} | Screen: 0x${result.screenIndex.toString(16).padStart(2, '0')}`,
+      `Format: <hex_attr><+reachable|~traversal|-blocked>`,
+      ``,
+    ];
+
+    const text = header.join('\n') + rows.join('\n');
+    navigator.clipboard.writeText(text).then(() => setCopied(true));
+  }, [rectSel, result, mouseToTile]);
+
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    // If doing rectangle selection, only update the rect, skip tooltip
+    if (rectSel?.active) {
+      handleRectMouseMove(e);
+      return;
+    }
+
     const vp = vpRef.current;
     if (!vp || !result.attrGrid) {
       setTooltip(null);
@@ -991,11 +1133,43 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
     inventoryItems,
     onHoverTile,
     pathPreviewState,
+    rectSel?.active,
+    handleRectMouseMove,
   ]);
+
+  // Compute selection rectangle in display pixels for the visual overlay
+  const selectionRect = (() => {
+    if (!rectSel) return null;
+    const vp = vpRef.current;
+    if (!vp) return null;
+    const snesW = vp.snesWidth;
+    const snesH = vp.snesHeight;
+    const scaleX = width / snesW;
+    const scaleY = height / snesH;
+    const viewLeft = vp.cameraX - vp.extraLeftRight;
+    const viewTop = vp.cameraY;
+    const screenWorldX = isIndoors
+      ? (Math.floor(vp.linkX / 512) * 512)
+      : ((result.screenIndex & 7) * 512);
+    const screenWorldY = isIndoors
+      ? (Math.floor(vp.linkY / 512) * 512)
+      : (((result.screenIndex >> 3) & 7) * 512);
+    const r0 = Math.min(rectSel.startRow, rectSel.endRow);
+    const r1 = Math.max(rectSel.startRow, rectSel.endRow);
+    const c0 = Math.min(rectSel.startCol, rectSel.endCol);
+    const c1 = Math.max(rectSel.startCol, rectSel.endCol);
+    const x = (screenWorldX + c0 * 8 - viewLeft) * scaleX;
+    const y = (screenWorldY + r0 * 8 - viewTop) * scaleY;
+    const w = (c1 - c0 + 1) * 8 * scaleX;
+    const h = (r1 - r0 + 1) * 8 * scaleY;
+    return { x, y, w, h, tileCount: (r1 - r0 + 1) * (c1 - c0 + 1) };
+  })();
 
   return (
     <div
       onMouseMove={handleMouseMove}
+      onMouseDown={handleRectMouseDown}
+      onMouseUp={handleRectMouseUp}
       onMouseLeave={() => { setTooltip(null); if (onHoverTile) onHoverTile(-1, -1); }}
       style={{
         position: 'absolute',
@@ -1005,9 +1179,44 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
         width,
         height,
         zIndex: 6,
+        cursor: rectSel?.active ? 'crosshair' : undefined,
       }}
     >
-      {tooltip && (
+      {/* Rectangle selection visual */}
+      {selectionRect && (
+        <div style={{
+          position: 'absolute',
+          left: selectionRect.x,
+          top: selectionRect.y,
+          width: selectionRect.w,
+          height: selectionRect.h,
+          border: '2px solid #ffee00',
+          background: 'rgba(255, 238, 0, 0.12)',
+          pointerEvents: 'none',
+          zIndex: 7,
+        }} />
+      )}
+      {/* Copied confirmation badge */}
+      {copied && rectSel && !rectSel.active && (
+        <div style={{
+          position: 'absolute',
+          left: '50%',
+          top: 8,
+          transform: 'translateX(-50%)',
+          background: 'rgba(20,180,60,0.92)',
+          color: '#fff',
+          padding: '4px 12px',
+          borderRadius: 4,
+          fontFamily: 'monospace',
+          fontSize: 12,
+          fontWeight: 'bold',
+          pointerEvents: 'none',
+          zIndex: 8,
+        }}>
+          Tile data copied to clipboard! ({selectionRect?.tileCount} tiles)
+        </div>
+      )}
+      {tooltip && !rectSel?.active && (
         <div style={{
           position: 'absolute',
           left: tooltip.x,
@@ -1028,8 +1237,8 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
             <span style={{ color: '#888' }}>[{tooltip.row},{tooltip.col}]</span>
-            <span style={{ color: tooltip.reachable ? '#4f8' : '#f66', fontWeight: 'bold' }}>
-              {tooltip.reachable ? '✓ reachable' : '✗ blocked'}
+            <span style={{ color: tooltip.reachable === 1 ? '#4f8' : tooltip.reachable >= 2 ? '#fc0' : '#f66', fontWeight: 'bold' }}>
+              {tooltip.reachable === 1 ? '✓ reachable' : tooltip.reachable >= 2 ? '➔ traversal' : '✗ blocked'}
             </span>
           </div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>

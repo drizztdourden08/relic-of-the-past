@@ -201,6 +201,8 @@ export function floodFillScreen(
   if (tileContext === 'overworld') {
     for (const t of transitions) {
       if (t.edge === 'entrance') continue;
+      // Skip traversal-only tiles (uncontrolled movement) from border connections
+      if (reachable[t.row][t.col] >= 2) continue;
       const pos = t.edge === 'north' || t.edge === 'south' ? t.col : t.row;
       const unmet = unmetRequirements(t.requirements, inv);
       if (unmet.length === 0) {
@@ -249,18 +251,29 @@ export function getConnections(result: FloodFillResult): ConnectionInfo[] {
     const targetScreen = getAdjacentScreen(result.screenIndex, edge);
     if (targetScreen === null) continue;
 
-    const allPositions = [...border.freeTiles, ...border.itemTiles.map(t => t.pos)];
+    const allPositions = [...border.freeTiles, ...border.itemTiles.map(t => t.pos)].sort((a, b) => a - b);
     const allReqs = new Set<string>();
     for (const t of border.itemTiles) t.requirements.forEach(r => allReqs.add(r));
 
-    connections.push({
-      edge,
-      targetScreen,
-      freeTileCount: border.freeTiles.length,
-      itemTileCount: border.itemTiles.length,
-      positions: allPositions.sort((a, b) => a - b),
-      requirements: [...allReqs],
-    });
+    // Split into contiguous runs so blocked gaps produce separate connections
+    const itemPosSet = new Set(border.itemTiles.map(t => t.pos));
+    let bundleStart = 0;
+    for (let i = 1; i <= allPositions.length; i++) {
+      if (i === allPositions.length || allPositions[i] !== allPositions[i - 1] + 1) {
+        const bundlePositions = allPositions.slice(bundleStart, i);
+        const bundleFree = bundlePositions.filter(p => !itemPosSet.has(p)).length;
+        const bundleItem = bundlePositions.length - bundleFree;
+        connections.push({
+          edge,
+          targetScreen,
+          freeTileCount: bundleFree,
+          itemTileCount: bundleItem,
+          positions: bundlePositions,
+          requirements: [...allReqs],
+        });
+        bundleStart = i;
+      }
+    }
   }
 
   return connections;

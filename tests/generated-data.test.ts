@@ -205,7 +205,6 @@ describe('Generated Connections', () => {
       for (const conn of (data as any).connections) {
         expect(conn.from, `${prefix} connection missing 'from'`).toBeTruthy();
         expect(conn.to, `${prefix} connection missing 'to'`).toBeTruthy();
-        expect(conn.entrance, `${prefix} connection missing 'entrance'`).toBeTruthy();
         expect(conn.tags, `${prefix} connection missing 'tags'`).toBeInstanceOf(Array);
         expect(conn.tags.length, `${prefix} connection has empty tags`).toBeGreaterThan(0);
       }

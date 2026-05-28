@@ -16,7 +16,6 @@ import type { BorderBundle } from './border-bundles';
 export interface ConnectionNavUpdate {
   from: string;
   to: string;
-  entrance: string;
   nav: ConnectionNavData;
 }
 
@@ -166,7 +165,7 @@ export function buildConnectionNavUpdates(input: ConnectionUpdaterInput): Connec
       nav.invalid = true;
     }
 
-    updates.push({ from: conn.from, to: conn.to, entrance: conn.entrance, nav });
+    updates.push({ from: conn.from, to: conn.to, nav });
   }
 
   return updates;
@@ -195,7 +194,7 @@ export function writeConnectionNavData(
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
   const data = Object.fromEntries(
-    updates.map(u => [`${u.from}|${u.to}|${u.entrance}`, u.nav])
+    updates.map(u => [`${u.from}|${u.to}`, u.nav])
   );
   fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
 }

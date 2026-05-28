@@ -1,15 +1,15 @@
 import type { RegionConnection } from '../../types';
 
 export const LW_FAIRY_CONNECTIONS: RegionConnection[] = [
-  { from: 'lw-14', to: 'bonk-fairy-light', entrance: 'Bonk Fairy (Light)', tags: ['transit:bonk', 'dir:two-way', 'ctx:entrance', 'barrier:dash'] },
-  { from: 'lake-hylia-central-island', to: 'capacity-upgrade', entrance: 'Capacity Upgrade', tags: ['transit:waterfall', 'dir:two-way', 'ctx:entrance'] },
-  { from: 'lw-0f', to: 'waterfall-of-wishing', entrance: 'Waterfall of Wishing', tags: ['transit:waterfall', 'dir:two-way', 'ctx:entrance', 'barrier:swim'] },
-  { from: 'zoras-river', to: 'waterfall-of-wishing', entrance: 'Waterfall of Wishing', tags: ['transit:waterfall', 'dir:two-way', 'ctx:entrance', 'barrier:swim'] },
-  { from: 'lw-12', to: 'north-fairy-cave', entrance: 'North Fairy Cave Drop', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance'] },
-  { from: 'north-fairy-cave', to: 'lw-12', entrance: 'North Fairy Cave Exit', tags: ['transit:door', 'dir:one-way', 'ctx:exit'] },
-  { from: 'lw-35', to: 'lake-hylia-healer-fairy', entrance: 'Lake Hylia Fairy', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
-  { from: 'lw-3c', to: 'swamp-healer-fairy', entrance: 'Light Hype Fairy', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
-  { from: 'lw-30', to: 'desert-healer-fairy', entrance: 'Desert Fairy', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
-  { from: 'lw-34', to: 'long-fairy-cave', entrance: 'Long Fairy Cave', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
-  { from: 'east-death-mountain-bottom', to: 'hookshot-fairy', entrance: 'Hookshot Fairy', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
+  { from: 'lw-14', to: 'bonk-fairy-light', tags: ['transit:bonk', 'dir:two-way', 'ctx:entrance', 'barrier:dash'] },
+  { from: 'lake-hylia-central-island', to: 'capacity-upgrade', tags: ['transit:waterfall', 'dir:two-way', 'ctx:entrance'] },
+  { from: 'lw-0f', to: 'waterfall-of-wishing', tags: ['transit:waterfall', 'dir:two-way', 'ctx:entrance', 'barrier:swim'] },
+  { from: 'zoras-river', to: 'waterfall-of-wishing', tags: ['transit:waterfall', 'dir:two-way', 'ctx:entrance', 'barrier:swim'] },
+  { from: 'lw-12', to: 'north-fairy-cave', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance'] },
+  { from: 'north-fairy-cave', to: 'lw-12', tags: ['transit:door', 'dir:one-way', 'ctx:exit'] },
+  { from: 'lw-35', to: 'lake-hylia-healer-fairy', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
+  { from: 'lw-3c', to: 'swamp-healer-fairy', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
+  { from: 'lw-30', to: 'desert-healer-fairy', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
+  { from: 'lw-34', to: 'long-fairy-cave', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
+  { from: 'east-death-mountain-bottom', to: 'hookshot-fairy', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
 ];

@@ -54,14 +54,14 @@ function getReachableRegions(
   reachable.add('menu');
 
   // Build adjacency list once
-  const adj = new Map<string, { to: string; entrance: string }[]>();
+  const adj = new Map<string, string[]>();
   for (const conn of connections) {
     let list = adj.get(conn.from);
     if (!list) {
       list = [];
       adj.set(conn.from, list);
     }
-    list.push({ to: conn.to, entrance: conn.entrance });
+    list.push(conn.to);
   }
 
   while (queue.length > 0) {
@@ -69,10 +69,10 @@ function getReachableRegions(
     const neighbors = adj.get(current);
     if (!neighbors) continue;
 
-    for (const { to, entrance } of neighbors) {
+    for (const to of neighbors) {
       if (reachable.has(to)) continue;
 
-      const rule = regionRules[entrance];
+      const rule = regionRules[`${current}|${to}`];
       if (rule && !evaluateRequirement(rule, inventory)) continue;
 
       reachable.add(to);
@@ -87,9 +87,9 @@ function getReachableRegions(
     for (const region of reachable) {
       const neighbors = adj.get(region);
       if (!neighbors) continue;
-      for (const { to, entrance } of neighbors) {
+      for (const to of neighbors) {
         if (reachable.has(to)) continue;
-        const rule = regionRules[entrance];
+        const rule = regionRules[`${region}|${to}`];
         if (rule && !evaluateRequirement(rule, inventory)) continue;
         reachable.add(to);
         queue.push(to);

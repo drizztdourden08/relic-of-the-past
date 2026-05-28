@@ -75,7 +75,6 @@ interface RegionDefinition {
 interface RegionConnection {
   from: string;
   to: string;
-  entrance: string;
   tags: readonly ConnectionTag[];
 
   // ─── Navigation (populated by analysis script) ───

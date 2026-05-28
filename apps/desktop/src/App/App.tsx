@@ -96,6 +96,11 @@ const App = () => {
   useAutoTest({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame });
   useIpcLogBridge();
 
+  // Auto-open navigation widget when --auto-flood CLI flag is set
+  useEffect(() => {
+    if (window.api.autoFlood) widgets.open('navigation');
+  }, []);
+
   // Input suppression: disable game input when menus/overlays are open
   useEffect(() => {
     const gameActive = game.isRunning && nav.activePage === 'none' && !showSpriteDebug;

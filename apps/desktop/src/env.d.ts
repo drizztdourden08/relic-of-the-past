@@ -193,6 +193,7 @@ interface RomDisplayInfo extends RomInfo {
 interface ElectronAPI {
   // Dev mode flag
   isDev: boolean;
+  autoFlood: boolean;
 
   // Sprites base URL (per-ROM: file:// path to userData/Data/sprites/{romStem}/)
   getSpritesBaseUrl(romFile: string): string;

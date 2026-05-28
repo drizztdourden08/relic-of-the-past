@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { findBorderBundles, computeOverlap, buildWalkConnection } from '../../shared/game/navigation/analysis/border-bundles';
+import type { ReachState } from '../../shared/game/navigation/types';
 
 describe('Border Bundles', () => {
   describe('computeOverlap', () => {
@@ -84,12 +85,12 @@ describe('Border Bundles', () => {
   });
 });
 
-// Helper: create a 64×64 boolean grid with specific tiles marked reachable
-function createMockGrid(specs: { row: number; cols: number[] }[]): boolean[][] {
-  const grid: boolean[][] = Array.from({ length: 64 }, () => new Array(64).fill(false));
+// Helper: create a 64×64 ReachState grid with specific tiles marked reachable (1)
+function createMockGrid(specs: { row: number; cols: number[] }[]): ReachState[][] {
+  const grid: ReachState[][] = Array.from({ length: 64 }, () => new Array<ReachState>(64).fill(0));
   for (const { row, cols } of specs) {
     for (const col of cols) {
-      grid[row][col] = true;
+      grid[row][col] = 1;
     }
   }
   return grid;
