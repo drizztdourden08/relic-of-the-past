@@ -45,7 +45,8 @@ function prepareScreen(
 
   // Cliff preprocessing (ledge one-way traversals)
   const ledges: LedgeTraversal[] = [];
-  processStraightCliffs(grid.tiles, grid.rawAttr, ledges);
+  const isIndoors = tileContext !== 'overworld';
+  processStraightCliffs(grid.tiles, grid.rawAttr, ledges, isIndoors);
   processDiagonalCliffs(grid.tiles, grid.rawAttr, ledges);
   processSouthCliffs(grid.tiles, grid.rawAttr, ledges);
 

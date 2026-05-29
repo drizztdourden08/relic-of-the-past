@@ -4,22 +4,38 @@ import { GRID_SIZE } from '../types';
 /**
  * Straight cliff-jump preprocessing.
  * Converts cliff triggers (0x28-0x2b, 0x2f) into directional ledge tiles
- * when they have 2-tile perpendicular width.
+ * when they have 2-tile perpendicular width (overworld) or unconditionally (indoor).
+ *
+ * Indoor ledges have flipped geometry: 0x28 (ledge north outdoors) becomes
+ * a southward hop indoors because the cliff face is BELOW the trigger tile.
  */
 export function processStraightCliffs(
   grid: TilePassability[][],
   rawAttr: number[][],
   ledges: LedgeTraversal[],
+  isIndoors = false,
 ): void {
   const CLIFF_TRIGGERS = new Set([0x28, 0x29, 0x2a, 0x2b, 0x2f]);
-  const CLIFF_DIRS: Record<number, { dr: number; dc: number; dir: 'n' | 's' | 'e' | 'w' }> = {
-    0x28: { dr: -1, dc: 0, dir: 'n' },
-    0x29: { dr: 1, dc: 0, dir: 's' },
-    0x2a: { dr: 0, dc: -1, dir: 'w' },
-    0x2b: { dr: 0, dc: 1, dir: 'e' },
-    0x2f: { dr: 0, dc: 1, dir: 'e' },
-  };
-  const CLIFF_WALL = new Set([0x01, 0x02, 0x03, 0x1a, 0x12, 0x13, 0x1b]);
+  // Indoor: directions are reversed (ledge trigger is above cliff face, not below)
+  const CLIFF_DIRS: Record<number, { dr: number; dc: number; dir: 'n' | 's' | 'e' | 'w' }> = isIndoors
+    ? {
+        0x28: { dr: 1, dc: 0, dir: 's' },
+        0x29: { dr: -1, dc: 0, dir: 'n' },
+        0x2a: { dr: 0, dc: 1, dir: 'e' },
+        0x2b: { dr: 0, dc: -1, dir: 'w' },
+        0x2f: { dr: 0, dc: -1, dir: 'w' },
+      }
+    : {
+        0x28: { dr: -1, dc: 0, dir: 'n' },
+        0x29: { dr: 1, dc: 0, dir: 's' },
+        0x2a: { dr: 0, dc: -1, dir: 'w' },
+        0x2b: { dr: 0, dc: 1, dir: 'e' },
+        0x2f: { dr: 0, dc: 1, dir: 'e' },
+      };
+  // Indoor walls include 0x04 (thick grass outdoors = wall indoors)
+  const CLIFF_WALL = isIndoors
+    ? new Set([0x01, 0x02, 0x03, 0x04, 0x1a, 0x12, 0x13, 0x1b])
+    : new Set([0x01, 0x02, 0x03, 0x1a, 0x12, 0x13, 0x1b]);
 
   for (let row = 0; row < GRID_SIZE; row++) {
     for (let col = 0; col < GRID_SIZE; col++) {
@@ -37,7 +53,7 @@ export function processStraightCliffs(
         if (row > 0 && (CLIFF_TRIGGERS.has(rawAttr[row - 1][col]) || CLIFF_WALL.has(rawAttr[row - 1][col]))) has2Wide = true;
         if (row < 63 && (CLIFF_TRIGGERS.has(rawAttr[row + 1][col]) || CLIFF_WALL.has(rawAttr[row + 1][col]))) has2Wide = true;
       }
-      if (!has2Wide) continue;
+      if (!has2Wide && !isIndoors) continue;
 
       grid[row][col] = { type: 'ledge', dir };
       let r = row + dr;
