@@ -418,6 +418,8 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       const DOT_COLOR_REACHABLE = 'rgba(80, 200, 255, 0.6)';
       const DOT_COLOR_REQ = 'rgba(255, 100, 180, 0.35)';
       ctx.globalAlpha = 0.55;
+      const l0Grid = result?.dualLayerGrids?.layer0;
+      const l1Grid = result?.dualLayerGrids?.layer1;
       for (const drawResult of drawResults) {
         const origin = getScreenWorldOrigin(drawResult.screenIndex);
         const hasDualLayer = !!layer1ReachableOverride || !!drawResult.layer1Reachable;
@@ -427,11 +429,11 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
             const layer1Reach = hasDualLayer && (layer1ReachableOverride?.[r]?.[c] ?? drawResult.layer1Reachable?.[r]?.[c] ?? false);
             if (!mergedReachable && !layer1Reach) continue;
 
-            // Split circle only for upper-floor-exclusive tiles (layer1 reachable, merged not)
-            const layersDisagree = hasDualLayer && !!layer1Reach && !mergedReachable;
+            // Split circle when layers have different values at this tile
+            const layersDiffer = hasDualLayer && l0Grid && l1Grid && l0Grid[r]?.[c] !== l1Grid[r]?.[c];
 
             // Skip ledge/traversal tiles (they get arrows) — but NOT split-circle tiles
-            if (!layersDisagree && drawResult.attrGrid && LEDGE_ATTRS.has(drawResult.attrGrid[r][c])) continue;
+            if (!layersDiffer && drawResult.attrGrid && LEDGE_ATTRS.has(drawResult.attrGrid[r][c])) continue;
 
             // Tile center in world coordinates
             const worldX = origin.x + c * TILE_PX + TILE_PX / 2;
@@ -452,13 +454,13 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
             const hasReq = drawResult.reqGrid && drawResult.reqGrid[r][c] !== '';
             const radius = dotRadius * 0.6;
 
-            if (layersDisagree) {
-              // Split circle: left = ground/layer1, right = above/layer0
-              // Same color rules as regular dots: cyan=reachable, pink=has req, transparent=not reachable
+            if (layersDiffer) {
+              // Split circle: two independent halves, each with its own reachability
+              // Left = GROUND (merged BFS), Right = ABOVE (upper-floor BFS)
               const splitAlpha = ctx.globalAlpha;
               ctx.globalAlpha = 0.85;
 
-              // Left half = GROUND (layer1): drawn only if merged flood fill reached it
+              // Left half = GROUND: cyan/pink if merged BFS reached, transparent if not
               if (mergedReachable) {
                 ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
                 ctx.beginPath();
@@ -466,7 +468,7 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
                 ctx.fill();
               }
 
-              // Right half = ABOVE (layer0): drawn only if upper-floor BFS reached it
+              // Right half = ABOVE: cyan/pink if upper-floor BFS reached, transparent if not
               if (layer1Reach) {
                 ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
                 ctx.beginPath();
@@ -482,7 +484,7 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
               ctx.stroke();
               ctx.globalAlpha = splitAlpha;
             } else if (mergedReachable) {
-              // Regular dot (layers agree — both reachable)
+              // Regular dot — layers agree or single layer
               ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
               ctx.beginPath();
               ctx.arc(dx, dy, radius, 0, Math.PI * 2);
