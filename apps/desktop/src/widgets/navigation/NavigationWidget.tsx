@@ -337,10 +337,10 @@ function NavigationWidgetContent() {
       if (!isIndoors) {
         const live = wasmGetLiveSprites();
         const staticGuards = wasmGetOverworldGuardSpawns();
-        // Tutorial guards/barriers (0x3F/0x40) gate progression via expanded contact checks
-        // in game logic, so we inflate their effective blocker footprint for BFS.
+        // Only specific sprites block BFS: tutorial guards (0x3F), barriers (0x40),
+        // and uncle (0x73 with e=0). Regular enemies are completely ignored.
         const livePoints = live.flatMap(s => {
-          if (s.type === 0x3f || s.type === 0x40) {
+          if (s.type === 0x3f || s.type === 0x40 || (s.type === 0x73 && s.e === 0)) {
             const pts: Array<{ x: number; y: number }> = [];
             for (let dr = -1; dr <= 1; dr++) {
               for (let dc = -1; dc <= 1; dc++) {
@@ -349,7 +349,7 @@ function NavigationWidgetContent() {
             }
             return pts;
           }
-          return [{ x: s.x, y: s.y }];
+          return [];
         });
 
         const staticGuardPoints = staticGuards.flatMap(g => {

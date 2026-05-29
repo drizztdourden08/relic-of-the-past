@@ -106,6 +106,7 @@ export const OVERWORLD_TILE_ATTRS: Readonly<Record<number, TileAttrDef>> = {
   0x15: { pass: 'free', labels: ['floor'],                            cat: 'ground' },
   0x16: { pass: 'free', labels: ['floor'],                            cat: 'ground' },
   0x17: { pass: 'free', labels: ['floor'],                            cat: 'ground' },
+  0x1D: { pass: 'blocked', labels: ['stair'],                          cat: 'stairs' },
   0x21: { pass: 'free', labels: ['floor'],                            cat: 'ground' },
   0x22: { pass: 'free', labels: ['stair'],                            cat: 'ground' },
   0x23: { pass: 'free', labels: ['floor'],                            cat: 'ground' },
