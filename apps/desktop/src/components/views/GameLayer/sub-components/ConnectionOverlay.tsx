@@ -1688,8 +1688,8 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
                   <div><span style={{ color: '#6cf' }}>0x{a1.toString(16).padStart(2, '0')}</span> <span style={{ color: '#fff' }}>{lbl1}</span></div>
                   <div><span style={{ color: '#aaa' }}>type:</span> <span style={{ color: '#fc6' }}>{cls1.type === 'ledge' ? `ledge (${cls1.dir})` : cls1.type}</span></div>
                   {def1?.req && <div><span style={{ color: '#aaa' }}>req:</span> <span style={{ color: '#fc6' }}>{def1.req}</span></div>}
-                  <div style={{ color: (l1Reach || l1Passable) ? '#4f8' : '#f66', fontWeight: 'bold' }}>
-                    {l1Reach ? '✓ reachable' : l1Passable ? '~ passable' : '✗ wall'}
+                  <div style={{ color: l1Passable ? '#4f8' : '#f66', fontWeight: 'bold' }}>
+                    {l1Passable ? '~ passable' : '✗ wall'}
                   </div>
                 </div>
                 {/* Above layer (layer0) */}
@@ -1698,8 +1698,8 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
                   <div><span style={{ color: '#6cf' }}>0x{a0.toString(16).padStart(2, '0')}</span> <span style={{ color: '#fff' }}>{lbl0}</span></div>
                   <div><span style={{ color: '#aaa' }}>type:</span> <span style={{ color: '#fc6' }}>{cls0.type === 'ledge' ? `ledge (${cls0.dir})` : cls0.type}</span></div>
                   {def0?.req && <div><span style={{ color: '#aaa' }}>req:</span> <span style={{ color: '#fc6' }}>{def0.req}</span></div>}
-                  <div style={{ color: (tooltip.reachable === 1 || l0Passable) ? '#4f8' : '#f66', fontWeight: 'bold' }}>
-                    {tooltip.reachable === 1 ? '✓ reachable' : l0Passable ? '~ passable' : '✗ wall'}
+                  <div style={{ color: (tooltip.reachable === 1 || l1Reach || l0Passable) ? '#4f8' : '#f66', fontWeight: 'bold' }}>
+                    {(tooltip.reachable === 1 || l1Reach) ? '✓ reachable' : l0Passable ? '~ passable' : '✗ wall'}
                   </div>
                 </div>
               </div>
