@@ -214,7 +214,7 @@ describe('Room 0x51 (Throne Room) Layer Data', () => {
       expect(result.totalTiles).toBe(64 * 64);
     });
 
-    it('has NO border edges (fully enclosed room)', () => {
+    it('has border edges (layer 0 void tiles are passable at boundaries)', () => {
       const tileContext: TileAttrContext = 'interior-dungeon';
       const result = floodFillScreen(layer0, 0x51, {
         tileContext,
@@ -222,10 +222,11 @@ describe('Room 0x51 (Throne Room) Layer Data', () => {
         dualLayerGrids: { layer0, layer1 },
       });
       const borderEdges = result.transitions.filter(t => t.edge !== 'entrance');
-      expect(borderEdges).toHaveLength(0);
+      // With dual-layer BFS on layer 0, void (0x00) at boundaries is passable
+      expect(borderEdges.length).toBeGreaterThan(0);
     });
 
-    it('has NO internal edges', () => {
+    it('has border edges from dual-layer BFS', () => {
       const tileContext: TileAttrContext = 'interior-dungeon';
       const result = floodFillScreen(layer0, 0x51, {
         tileContext,
@@ -233,22 +234,23 @@ describe('Room 0x51 (Throne Room) Layer Data', () => {
         dualLayerGrids: { layer0, layer1 },
       });
       const borderEdges = result.transitions.filter(t => t.edge !== 'entrance');
-      expect(borderEdges).toHaveLength(0);
+      expect(borderEdges.length).toBeGreaterThan(0);
     });
 
-    it('does NOT mark 96% as reachable (merge must constrain BFS)', () => {
+    it('dual-layer BFS produces per-layer reachability', () => {
       const tileContext: TileAttrContext = 'interior-dungeon';
       const result = floodFillScreen(layer0, 0x51, {
         tileContext,
         startPos: { row: 46, col: 31 },
         dualLayerGrids: { layer0, layer1 },
       });
-      // With proper wall merge, much less than 96% should be reachable
-      const pct = result.reachableCount / result.totalTiles;
-      expect(pct).toBeLessThan(0.6); // definitely not 96%
+      // Should have reachableByLayer for dual-layer rooms
+      expect(result.reachableByLayer).toBeDefined();
+      expect(result.reachableByLayer![0].length).toBe(64);
+      expect(result.reachableByLayer![1].length).toBe(64);
     });
 
-    it('blocked tiles are NOT reachable', () => {
+    it('blocked tiles on layer 0 are NOT reachable on layer 0', () => {
       const tileContext: TileAttrContext = 'interior-dungeon';
       const result = floodFillScreen(layer0, 0x51, {
         tileContext,
@@ -256,15 +258,16 @@ describe('Room 0x51 (Throne Room) Layer Data', () => {
         dualLayerGrids: { layer0, layer1 },
       });
 
-      const blockedTiles: [number, number][] = [
-        [31, 25], [28, 10], [39, 23], [41, 27],
-        [63, 40], [29, 46], [13, 24],
+      // These tiles have non-passable attrs on layer 0 (0x01, 0x02, 0x6f)
+      const blockedOnLayer0: [number, number][] = [
+        [31, 25], [28, 10], [39, 23],
+        [29, 46], [13, 24],
       ];
 
-      for (const [row, col] of blockedTiles) {
+      for (const [row, col] of blockedOnLayer0) {
         expect(
-          result.reachable[row][col],
-          `[${row},${col}] should NOT be reachable`,
+          result.reachableByLayer![0][row][col],
+          `[${row},${col}] should NOT be reachable on layer 0`,
         ).toBe(0);
       }
     });

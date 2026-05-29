@@ -227,74 +227,12 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
   const { overworldScreenIndex, roomIndex, isIndoors } = useGameUIStore(s => s.map);
   const activeScreenIndex = isIndoors ? roomIndex : overworldScreenIndex;
 
-  // Compute layer1 void detection for overlay circles.
-  // Tiles in enclosed 0x00 components on layer1 are real ground; boundary-touching = void.
-  // Step 1: find enclosed 0x00 regions (seeds). Step 2: BFS from seeds through passable tiles.
+  // Compute per-layer reachability for split-circle rendering.
+  // Uses the proper dual-layer BFS output from the orchestrator.
   const layer1ReachableOverride = useMemo(() => {
-    const layer0 = result?.dualLayerGrids?.layer0;
-    const layer1 = result?.dualLayerGrids?.layer1;
-    if (!layer0 || !layer1) return null;
-    const grid: boolean[][] = Array.from({ length: 64 }, () => Array(64).fill(false));
-
-    // Step 1: Flood from boundary through 0x00 to find void-connected tiles
-    const boundaryConnected: boolean[][] = Array.from({ length: 64 }, () => Array(64).fill(false));
-    const bQueue: Array<[number, number]> = [];
-    for (let r = 0; r < 64; r++) {
-      for (let c = 0; c < 64; c++) {
-        if ((r === 0 || r === 63 || c === 0 || c === 63) && layer1[r]?.[c] === 0x00) {
-          boundaryConnected[r][c] = true;
-          bQueue.push([r, c]);
-        }
-      }
-    }
-    while (bQueue.length > 0) {
-      const [qr, qc] = bQueue.shift()!;
-      for (const [dr, dc] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
-        const nr = qr + dr, nc = qc + dc;
-        if (nr < 0 || nr >= 64 || nc < 0 || nc >= 64) continue;
-        if (boundaryConnected[nr][nc]) continue;
-        if (layer1[nr]?.[nc] !== 0x00) continue;
-        boundaryConnected[nr][nc] = true;
-        bQueue.push([nr, nc]);
-      }
-    }
-
-    // Step 2: Enclosed seeds = 0x00 tiles NOT boundary-connected
-    const seeds: Array<[number, number]> = [];
-    for (let r = 0; r < 64; r++) {
-      for (let c = 0; c < 64; c++) {
-        if (layer1[r]?.[c] === 0x00 && !boundaryConnected[r][c]) {
-          grid[r][c] = true;
-          seeds.push([r, c]);
-        }
-      }
-    }
-
-    // Step 3: BFS from seeds through ALL non-boundary-connected tiles
-    // Expand freely (including through walls and layers-agree tiles)
-    // Only mark grid=true where layers actually differ
-    const visited: boolean[][] = Array.from({ length: 64 }, () => Array(64).fill(false));
-    for (const [sr, sc] of seeds) visited[sr][sc] = true;
-    const queue = [...seeds];
-    while (queue.length > 0) {
-      const [qr, qc] = queue.shift()!;
-      for (const [dr, dc] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
-        const nr = qr + dr, nc = qc + dc;
-        if (nr < 0 || nr >= 64 || nc < 0 || nc >= 64) continue;
-        if (visited[nr][nc]) continue;
-        if (boundaryConnected[nr][nc]) continue;
-        visited[nr][nc] = true;
-        const attr = layer1[nr]?.[nc] ?? 0;
-        // Mark reachable only if layers disagree and layer1 has content
-        if (attr !== 0x00 && layer0[nr]?.[nc] !== attr) {
-          grid[nr][nc] = true;
-        }
-        queue.push([nr, nc]);
-      }
-    }
-
-    return grid;
-  }, [result?.dualLayerGrids?.layer0, result?.dualLayerGrids?.layer1]);
+    if (!result?.reachableByLayer) return null;
+    return result.reachableByLayer;
+  }, [result?.reachableByLayer]);
 
   // Mouse/path state
   const [mouseState, setMouseState] = useState({
@@ -417,20 +355,22 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       // Overlay dot colors: consistent across regular dots and split circle halves
       const DOT_COLOR_REACHABLE = 'rgba(80, 200, 255, 0.6)';
       const DOT_COLOR_REQ = 'rgba(255, 100, 180, 0.35)';
+      const DOT_COLOR_LAYER1 = 'rgba(255, 220, 80, 0.6)';
       ctx.globalAlpha = 0.55;
-      const l0Grid = result?.dualLayerGrids?.layer0;
-      const l1Grid = result?.dualLayerGrids?.layer1;
       for (const drawResult of drawResults) {
         const origin = getScreenWorldOrigin(drawResult.screenIndex);
-        const hasDualLayer = !!layer1ReachableOverride || !!drawResult.layer1Reachable;
+        const perLayer = layer1ReachableOverride; // [layer0ReachState[][], layer1ReachState[][]] or null
+        const hasDualLayer = !!perLayer;
         for (let r = 0; r < 64; r++) {
           for (let c = 0; c < 64; c++) {
             const mergedReachable = drawResult.reachable[r][c] === 1;
-            const layer1Reach = hasDualLayer && (layer1ReachableOverride?.[r]?.[c] ?? drawResult.layer1Reachable?.[r]?.[c] ?? false);
-            if (!mergedReachable && !layer1Reach) continue;
+            // Per-layer reachability from dual-layer BFS
+            const layer0Reach = perLayer ? perLayer[0][r][c] !== 0 : mergedReachable;
+            const layer1Reach = perLayer ? perLayer[1][r][c] !== 0 : false;
+            if (!layer0Reach && !layer1Reach) continue;
 
-            // Split circle when layers have different values at this tile
-            const layersDiffer = hasDualLayer && l0Grid && l1Grid && l0Grid[r]?.[c] !== l1Grid[r]?.[c];
+            // Split circle when reachability differs between layers
+            const layersDiffer = hasDualLayer && (layer0Reach !== layer1Reach);
 
             // Skip ledge/traversal tiles (they get arrows) — but NOT split-circle tiles
             if (!layersDiffer && drawResult.attrGrid && LEDGE_ATTRS.has(drawResult.attrGrid[r][c])) continue;
@@ -455,22 +395,22 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
             const radius = dotRadius * 0.6;
 
             if (layersDiffer) {
-              // Split circle: two independent halves, each with its own reachability
-              // Left = GROUND (merged BFS), Right = ABOVE (upper-floor BFS)
+              // Split circle: two independent halves
+              // Left = Layer 0 (upper/BG2), Right = Layer 1 (lower/BG1)
               const splitAlpha = ctx.globalAlpha;
               ctx.globalAlpha = 0.85;
 
-              // Left half = GROUND: cyan/pink if merged BFS reached, transparent if not
-              if (mergedReachable) {
+              // Left half = Layer 0: cyan/pink if BFS reached on layer 0
+              if (layer0Reach) {
                 ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
                 ctx.beginPath();
                 ctx.arc(dx, dy, radius, Math.PI * 0.5, Math.PI * 1.5);
                 ctx.fill();
               }
 
-              // Right half = ABOVE: cyan/pink if upper-floor BFS reached, transparent if not
+              // Right half = Layer 1: yellow/pink if BFS reached on layer 1
               if (layer1Reach) {
-                ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
+                ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_LAYER1;
                 ctx.beginPath();
                 ctx.arc(dx, dy, radius, -Math.PI * 0.5, Math.PI * 0.5);
                 ctx.fill();
@@ -1166,73 +1106,15 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
   } | null>(null);
   const [copied, setCopied] = useState(false);
 
-  // Compute layer1 void detection: tiles in enclosed 0x00 components are real ground,
-  // tiles in boundary-touching 0x00 components are void. Used to suppress false split tooltips.
+  // Per-layer reachability for tooltip display (from dual-layer BFS)
   const layer1ReachableLocal = useMemo(() => {
-    const layer0 = result.dualLayerGrids?.layer0;
-    const layer1 = result.dualLayerGrids?.layer1;
-    if (!layer0 || !layer1) return undefined;
-    const grid: boolean[][] = Array.from({ length: 64 }, () => Array(64).fill(false));
-
-    // Step 1: Flood from boundary through 0x00 to find void-connected tiles
-    const boundaryConnected: boolean[][] = Array.from({ length: 64 }, () => Array(64).fill(false));
-    const bQueue: Array<[number, number]> = [];
-    for (let r = 0; r < 64; r++) {
-      for (let c = 0; c < 64; c++) {
-        if ((r === 0 || r === 63 || c === 0 || c === 63) && layer1[r]?.[c] === 0x00) {
-          boundaryConnected[r][c] = true;
-          bQueue.push([r, c]);
-        }
-      }
-    }
-    while (bQueue.length > 0) {
-      const [qr, qc] = bQueue.shift()!;
-      for (const [dr, dc] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
-        const nr = qr + dr, nc = qc + dc;
-        if (nr < 0 || nr >= 64 || nc < 0 || nc >= 64) continue;
-        if (boundaryConnected[nr][nc]) continue;
-        if (layer1[nr]?.[nc] !== 0x00) continue;
-        boundaryConnected[nr][nc] = true;
-        bQueue.push([nr, nc]);
-      }
-    }
-
-    // Step 2: Enclosed seeds = 0x00 tiles NOT boundary-connected
-    const seeds: Array<[number, number]> = [];
-    for (let r = 0; r < 64; r++) {
-      for (let c = 0; c < 64; c++) {
-        if (layer1[r]?.[c] === 0x00 && !boundaryConnected[r][c]) {
-          grid[r][c] = true;
-          seeds.push([r, c]);
-        }
-      }
-    }
-
-    // Step 3: BFS from seeds through ALL non-boundary-connected tiles
-    // Expand freely (including through walls and layers-agree tiles)
-    // Only mark grid=true where layers actually differ
-    const visited: boolean[][] = Array.from({ length: 64 }, () => Array(64).fill(false));
-    for (const [sr, sc] of seeds) visited[sr][sc] = true;
-    const queue = [...seeds];
-    while (queue.length > 0) {
-      const [qr, qc] = queue.shift()!;
-      for (const [dr, dc] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
-        const nr = qr + dr, nc = qc + dc;
-        if (nr < 0 || nr >= 64 || nc < 0 || nc >= 64) continue;
-        if (visited[nr][nc]) continue;
-        if (boundaryConnected[nr][nc]) continue;
-        visited[nr][nc] = true;
-        const attr = layer1[nr]?.[nc] ?? 0;
-        // Mark reachable only if layers disagree and layer1 has content
-        if (attr !== 0x00 && layer0[nr]?.[nc] !== attr) {
-          grid[nr][nc] = true;
-        }
-        queue.push([nr, nc]);
-      }
-    }
-
+    if (!result.reachableByLayer) return undefined;
+    // Convert layer 1 ReachState grid to boolean grid for tooltip compatibility
+    const grid: boolean[][] = Array.from({ length: 64 }, (_, r) =>
+      Array.from({ length: 64 }, (_, c) => result.reachableByLayer![1][r][c] !== 0),
+    );
     return grid;
-  }, [result.dualLayerGrids?.layer0, result.dualLayerGrids?.layer1]);
+  }, [result.reachableByLayer]);
 
   // Keep viewport info fresh
   useEffect(() => {
@@ -1274,7 +1156,7 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
         spriteInfo: [],
         layer0Attr: result.dualLayerGrids?.layer0[row]?.[col],
         layer1Attr: result.dualLayerGrids?.layer1[row]?.[col],
-        layer1Reach: layer1ReachableLocal?.[row]?.[col] ?? result.layer1Reachable?.[row]?.[col],
+        layer1Reach: layer1ReachableLocal?.[row]?.[col],
       });
       return true;
     };
@@ -1552,7 +1434,7 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
       spriteInfo,
       layer0Attr: result.dualLayerGrids?.layer0[tileRow]?.[tileCol],
       layer1Attr: result.dualLayerGrids?.layer1[tileRow]?.[tileCol],
-      layer1Reach: layer1ReachableLocal?.[tileRow]?.[tileCol] ?? result.layer1Reachable?.[tileRow]?.[tileCol],
+      layer1Reach: layer1ReachableLocal?.[tileRow]?.[tileCol],
     });
     if (onHoverTile) onHoverTile(tileRow, tileCol);
   }, [

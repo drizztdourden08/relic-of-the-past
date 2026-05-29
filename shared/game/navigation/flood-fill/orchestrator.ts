@@ -1,6 +1,6 @@
 import type {
   FloodFillResult, OverworldEntrance, LedgeTraversal,
-  GridPos, CollisionGrid, ScreenVariant, ReachState,
+  GridPos, CollisionGrid, ScreenVariant, ReachState, TransitionPoint,
 } from '../types';
 import type { TileAttrContext } from '../tile-attrs';
 import type { TileReq } from '../tile-attrs';
@@ -9,7 +9,7 @@ import { unmetRequirements } from '../core/inventory';
 import { getAdjacentScreen } from '../core/grid-utils';
 import { buildCollisionGridFromRawAttr } from '../screen-data/collision-grid';
 import { processStraightCliffs, processDiagonalCliffs, processSouthCliffs } from '../screen-data/cliff-preprocessing';
-import { floodFillBFS } from './single-screen';
+import { floodFillBFS, floodFillBFSDualLayer } from './single-screen';
 import type { QuadrantBounds } from './single-screen';
 
 // ─── Screen Preparation ──────────────────────────────────────────────────────
@@ -55,17 +55,6 @@ function prepareScreen(
 
   return { grid, ledges, dynamicBlockerCells };
 }
-
-/** Passable raw attrs for layer detection (tiles Link can stand on). */
-const PASSABLE_ATTRS = new Set([
-  0x00, 0x05, 0x06, 0x08, 0x09, 0x0A, 0x0D, 0x0E, 0x0F,
-  0x1C, 0x1E, 0x1F, 0x22, 0x27, 0x28, 0x29, 0x2A, 0x2B,
-  0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
-  0x3D, 0x40, 0x44, 0x45, 0x48, 0x49, 0x4A, 0x4B,
-  0x60, 0x62, 0x67, 0x68, 0x69, 0x6A, 0x6B,
-  0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87,
-  0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F,
-]);
 
 function findStartPosition(grid: CollisionGrid, startPos?: GridPos): GridPos {
   const row = Math.max(0, Math.min(GRID_SIZE - 1, startPos?.row ?? 32));
@@ -156,182 +145,192 @@ export function floodFillScreen(
 
   const isIndoors = tileContext !== 'overworld';
 
-  // Dual-layer BFS is disabled: layer 1 is too sparse to constrain movement
-  // independently, so BFS escapes via stair tiles and floods everywhere.
-  // Instead, always merge layers (union of walls) for proper offline BFS.
-  const isDualLayer = false;
-
-  // Always merge layers for BFS
-  let layer0Grid: CollisionGrid | undefined;
+  // Build collision grid(s) and run BFS
+  let grid: CollisionGrid;
   let ledges: LedgeTraversal[] = [];
   let dynamicBlockerCells: GridPos[] = [];
-  let bothLayersPassable: boolean[][] | undefined;
+  let reachable: ReachState[][];
+  let transitions: TransitionPoint[];
+  let reachableCount: number;
+  let reqGrid: string[][] | undefined;
+  let hookTargets: GridPos[] | undefined;
+  let tileLayer: (0 | 1 | 2)[][] | undefined;
+  let reachableByLayer: [ReachState[][], ReachState[][]] | undefined;
 
+  const useDualLayer = isIndoors && !!options.dualLayerGrids;
+
+  if (useDualLayer) {
+    const { layer0, layer1 } = options.dualLayerGrids!;
+    // Build separate collision grids for each layer
+    const prep0 = prepareScreen(layer0, tileContext, dynamicBlockers, false);
+    const prep1 = prepareScreen(layer1, tileContext, dynamicBlockers, true); // skip cliffs on layer 1
+
+    grid = prep0.grid;
+    ledges = prep0.ledges;
+    dynamicBlockerCells = prep0.dynamicBlockerCells;
+
+    const startLayer = options.startLayer ?? 0;
+    const startGrid = startLayer === 0 ? prep0.grid : prep1.grid;
+    const start = findStartPosition(startGrid, startPos);
+
+    const inv = inventory ?? new Set<TileReq>();
+
+    // Determine entrance positions before BFS (needed by both paths)
+    const { screenEntrances: sEnts, entrancePositions: ePos } = findEntrancePositions(
+      tileContext, entrances, screenIndex, grid, exitScreenByRoom, options.dualLayerGrids, quadrantBounds,
+    );
+
+    const bfsResult = floodFillBFSDualLayer(
+      [prep0.grid.tiles, prep1.grid.tiles],
+      [prep0.grid.rawAttr, prep1.grid.rawAttr],
+      start.row, start.col, startLayer,
+      ePos, inv, tileContext, quadrantBounds,
+    );
+
+    reachable = bfsResult.reachable;
+    transitions = bfsResult.transitions;
+    reachableCount = bfsResult.reachableCount;
+    reqGrid = bfsResult.reqGrid;
+    hookTargets = bfsResult.hookTargets;
+    tileLayer = bfsResult.tileLayer;
+    reachableByLayer = bfsResult.reachableByLayer;
+
+    // Filter ledges, build borders, return
+    const reachableLedges = ledges.filter(l => reachable[l.startRow]?.[l.startCol]);
+    const borders = buildBorders(transitions, reachable, grid, inv, quadrantBounds);
+
+    return {
+      screenIndex, tileContext, startPos: start,
+      reachable, transitions, reachableCount,
+      totalTiles: quadrantBounds
+        ? (quadrantBounds.maxRow - quadrantBounds.minRow + 1) * (quadrantBounds.maxCol - quadrantBounds.minCol + 1)
+        : GRID_SIZE * GRID_SIZE,
+      entrances: sEnts, ledges: reachableLedges, hookTargets,
+      attrGrid: grid.rawAttr, reqGrid, dynamicBlockerCells, borders, variant,
+      tileLayer, reachableByLayer, dualLayerGrids: options.dualLayerGrids,
+    };
+  }
+
+  // ─── Single-layer path (overworld or rooms without dual-layer data) ─────────
   {
-    // For indoor rooms with both grids available, merge layer 1's walls into layer 0.
-    // Layer 1 has structural wall data (pillars, boundaries) that constrain the room.
-    // Tiles where layer 1 has a non-zero non-passable attr should be blocked even if
-    // layer 0 says ground (0x00).
-    let mergedGrid = rawAttrGrid;
-    if (isIndoors && options.dualLayerGrids) {
-      const { layer0, layer1 } = options.dualLayerGrids;
-      mergedGrid = Array.from({ length: GRID_SIZE }, (_, r) =>
-        Array.from({ length: GRID_SIZE }, (_, c) => {
-          const a0 = layer0[r][c];
-          const a1 = layer1[r][c];
-          // If layer 0 is passable but layer 1 has a non-zero wall attr, use layer 1's wall
-          if (a1 !== 0x00 && PASSABLE_ATTRS.has(a0) && !PASSABLE_ATTRS.has(a1)) {
-            return a1;
-          }
-          return a0;
-        }),
-      );
-      // Compute bothLayersPassable for display (tiles walkable on both levels)
-      bothLayersPassable = Array.from({ length: GRID_SIZE }, (_, r) =>
-        Array.from({ length: GRID_SIZE }, (_, c) =>
-          PASSABLE_ATTRS.has(layer0[r][c]) && PASSABLE_ATTRS.has(layer1[r][c])
-        ),
-      );
-    }
-    const prep = prepareScreen(mergedGrid, tileContext, dynamicBlockers);
+    const prep = prepareScreen(rawAttrGrid, tileContext, dynamicBlockers);
+    grid = prep.grid;
     ledges = prep.ledges;
     dynamicBlockerCells = prep.dynamicBlockerCells;
-    layer0Grid = prep.grid;
   }
-
-  const grid = layer0Grid!;
 
   // Determine entrance positions (from the starting layer's grid)
-  let screenEntrances: OverworldEntrance[];
-  let entrancePositions: { row: number; col: number; idx: number }[];
-
-  if (tileContext === 'overworld') {
-    screenEntrances = entrances.filter(e => e.area === screenIndex);
-    entrancePositions = screenEntrances.map(e => ({ row: e.gridRow, col: e.gridCol, idx: e.id }));
-  } else {
-    // Interior rooms: detect entrance/staircase tiles from the attr grid.
-    // 0x8E/0x8F are TileBehavior_Entrance tiles (stairs between rooms/floors).
-    screenEntrances = [];
-    entrancePositions = [];
-    const entranceTiles: GridPos[] = [];
-    for (let r = 0; r < GRID_SIZE; r++) {
-      for (let c = 0; c < GRID_SIZE; c++) {
-        const attr = grid.rawAttr[r][c];
-        if (attr === 0x8E || attr === 0x8F) {
-          entranceTiles.push({ row: r, col: c });
-        }
-      }
-    }
-    // Also check both layers for entrances when dual-layer data is available
-    if (options.dualLayerGrids) {
-      const { layer0, layer1 } = options.dualLayerGrids;
-      for (let r = 0; r < GRID_SIZE; r++) {
-        for (let c = 0; c < GRID_SIZE; c++) {
-          const a0 = layer0[r][c];
-          const a1 = layer1[r][c];
-          if ((a0 === 0x8E || a0 === 0x8F || a1 === 0x8E || a1 === 0x8F) &&
-              !entranceTiles.some(t => t.row === r && t.col === c)) {
-            entranceTiles.push({ row: r, col: c });
-          }
-        }
-      }
-    }
-    // Cluster entrance tiles: merge any tiles within 4 sub-tiles of each other
-    const clustered = new Set<number>();
-    let syntheticIdx = 1000;
-    for (let i = 0; i < entranceTiles.length; i++) {
-      if (clustered.has(i)) continue;
-      const cluster: GridPos[] = [entranceTiles[i]];
-      clustered.add(i);
-      for (let qi = 0; qi < cluster.length; qi++) {
-        const cur = cluster[qi];
-        for (let j = i + 1; j < entranceTiles.length; j++) {
-          if (clustered.has(j)) continue;
-          const other = entranceTiles[j];
-          if (Math.abs(cur.row - other.row) <= 4 && Math.abs(cur.col - other.col) <= 4) {
-            clustered.add(j);
-            cluster.push(other);
-          }
-        }
-      }
-      const avgRow = Math.round(cluster.reduce((s, p) => s + p.row, 0) / cluster.length);
-      const minCol = Math.min(...cluster.map(p => p.col));
-      const id = syntheticIdx++;
-      const exitScreen = exitScreenByRoom?.get(screenIndex) ?? 0;
-      screenEntrances.push({ area: exitScreen, pos: 0, id, gridRow: avgRow, gridCol: minCol, roomId: screenIndex });
-      entrancePositions.push({ row: avgRow, col: minCol, idx: id });
-    }
-  }
+  const { screenEntrances, entrancePositions } = findEntrancePositions(
+    tileContext, entrances, screenIndex, grid, exitScreenByRoom, options.dualLayerGrids, quadrantBounds,
+  );
 
   const start = findStartPosition(grid, startPos);
   const inv = inventory ?? new Set<TileReq>();
 
-  // Single-layer BFS (merged grid handles both layers)
+  // Single-layer BFS
   const bfsResult = floodFillBFS(
     grid.tiles, start.row, start.col, entrancePositions, inv, grid.rawAttr, tileContext,
     undefined, quadrantBounds,
   );
-  const reachable = bfsResult.reachable;
-  const transitions = bfsResult.transitions;
-  const reachableCount = bfsResult.reachableCount;
-  const reqGrid = bfsResult.reqGrid;
-  const hookTargets = bfsResult.hookTargets;
-  const tileLayer: (0 | 1 | 2)[][] | undefined = undefined;
 
-  // Compute layer1 reachability: only tiles inside ENCLOSED regions (real upper floor).
-  // Void areas on BG1 (layer1) default to 0x00 and extend to room boundaries.
-  // Real upper-floor content is enclosed by walls and does NOT touch the grid edge.
-  // We flood through 0x00 tiles only — other passable attrs (ledges, stairs) can bridge
-  // enclosed areas to the boundary, but 0x00-only connectivity correctly separates
-  // real ground from void.
-  let layer1Reachable: boolean[][] | undefined;
-  if (isIndoors && options.dualLayerGrids) {
-    const { layer1 } = options.dualLayerGrids;
-    layer1Reachable = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(false));
-    const visited = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(false));
+  // Filter ledges to only reachable ones
+  const reachableLedges = ledges.filter(l => bfsResult.reachable[l.startRow]?.[l.startCol]);
+  const borders = buildBorders(bfsResult.transitions, bfsResult.reachable, grid, inv, quadrantBounds);
 
+  return {
+    screenIndex, tileContext, startPos: start,
+    reachable: bfsResult.reachable,
+    transitions: bfsResult.transitions,
+    reachableCount: bfsResult.reachableCount,
+    totalTiles: quadrantBounds
+      ? (quadrantBounds.maxRow - quadrantBounds.minRow + 1) * (quadrantBounds.maxCol - quadrantBounds.minCol + 1)
+      : GRID_SIZE * GRID_SIZE,
+    entrances: screenEntrances, ledges: reachableLedges,
+    hookTargets: bfsResult.hookTargets,
+    attrGrid: grid.rawAttr, reqGrid: bfsResult.reqGrid,
+    dynamicBlockerCells, borders, variant,
+    dualLayerGrids: options.dualLayerGrids,
+  };
+}
+
+// ─── Extracted Helpers ───────────────────────────────────────────────────────
+
+function findEntrancePositions(
+  tileContext: TileAttrContext,
+  entrances: OverworldEntrance[],
+  screenIndex: number,
+  grid: CollisionGrid,
+  exitScreenByRoom?: Map<number, number>,
+  dualLayerGrids?: { layer0: number[][]; layer1: number[][] },
+  quadrantBounds?: QuadrantBounds,
+): { screenEntrances: OverworldEntrance[]; entrancePositions: { row: number; col: number; idx: number }[] } {
+  if (tileContext === 'overworld') {
+    const screenEntrances = entrances.filter(e => e.area === screenIndex);
+    const entrancePositions = screenEntrances.map(e => ({ row: e.gridRow, col: e.gridCol, idx: e.id }));
+    return { screenEntrances, entrancePositions };
+  }
+
+  // Interior rooms: detect entrance/staircase tiles from the attr grid.
+  const screenEntrances: OverworldEntrance[] = [];
+  const entrancePositions: { row: number; col: number; idx: number }[] = [];
+  const entranceTiles: GridPos[] = [];
+  for (let r = 0; r < GRID_SIZE; r++) {
+    for (let c = 0; c < GRID_SIZE; c++) {
+      const attr = grid.rawAttr[r][c];
+      if (attr === 0x8E || attr === 0x8F) {
+        entranceTiles.push({ row: r, col: c });
+      }
+    }
+  }
+  // Also check both layers for entrances when dual-layer data is available
+  if (dualLayerGrids) {
+    const { layer0, layer1 } = dualLayerGrids;
     for (let r = 0; r < GRID_SIZE; r++) {
       for (let c = 0; c < GRID_SIZE; c++) {
-        if (visited[r][c]) continue;
-        if (layer1[r][c] !== 0x00) { visited[r][c] = true; continue; }
-
-        // BFS to find the connected component of 0x00 tiles on layer1
-        const component: GridPos[] = [];
-        const queue: GridPos[] = [{ row: r, col: c }];
-        visited[r][c] = true;
-        let touchesBoundary = false;
-
-        while (queue.length > 0) {
-          const { row: qr, col: qc } = queue.shift()!;
-          component.push({ row: qr, col: qc });
-          if (qr === 0 || qr === GRID_SIZE - 1 || qc === 0 || qc === GRID_SIZE - 1) {
-            touchesBoundary = true;
-          }
-          for (const [dr, dc] of [[-1, 0], [1, 0], [0, -1], [0, 1]] as const) {
-            const nr = qr + dr, nc = qc + dc;
-            if (nr < 0 || nr >= GRID_SIZE || nc < 0 || nc >= GRID_SIZE) continue;
-            if (visited[nr][nc]) continue;
-            if (layer1[nr][nc] !== 0x00) continue;
-            visited[nr][nc] = true;
-            queue.push({ row: nr, col: nc });
-          }
-        }
-
-        // Enclosed components (don't touch boundary) are real upper-floor ground.
-        // Boundary-touching components are void/filler.
-        if (!touchesBoundary) {
-          for (const pos of component) {
-            layer1Reachable[pos.row][pos.col] = true;
-          }
+        const a0 = layer0[r][c];
+        const a1 = layer1[r][c];
+        if ((a0 === 0x8E || a0 === 0x8F || a1 === 0x8E || a1 === 0x8F) &&
+            !entranceTiles.some(t => t.row === r && t.col === c)) {
+          entranceTiles.push({ row: r, col: c });
         }
       }
     }
   }
+  // Cluster entrance tiles: merge any tiles within 4 sub-tiles of each other
+  const clustered = new Set<number>();
+  let syntheticIdx = 1000;
+  for (let i = 0; i < entranceTiles.length; i++) {
+    if (clustered.has(i)) continue;
+    const cluster: GridPos[] = [entranceTiles[i]];
+    clustered.add(i);
+    for (let qi = 0; qi < cluster.length; qi++) {
+      const cur = cluster[qi];
+      for (let j = i + 1; j < entranceTiles.length; j++) {
+        if (clustered.has(j)) continue;
+        const other = entranceTiles[j];
+        if (Math.abs(cur.row - other.row) <= 4 && Math.abs(cur.col - other.col) <= 4) {
+          clustered.add(j);
+          cluster.push(other);
+        }
+      }
+    }
+    const avgRow = Math.round(cluster.reduce((s, p) => s + p.row, 0) / cluster.length);
+    const minCol = Math.min(...cluster.map(p => p.col));
+    const id = syntheticIdx++;
+    const exitScreen = exitScreenByRoom?.get(screenIndex) ?? 0;
+    screenEntrances.push({ area: exitScreen, pos: 0, id, gridRow: avgRow, gridCol: minCol, roomId: screenIndex });
+    entrancePositions.push({ row: avgRow, col: minCol, idx: id });
+  }
+  return { screenEntrances, entrancePositions };
+}
 
-  // Filter ledges to only reachable ones
-  const reachableLedges = ledges.filter(l => reachable[l.startRow]?.[l.startCol]);
-
-  // Summarize borders (interior rooms don't have border transitions)
+function buildBorders(
+  transitions: TransitionPoint[],
+  reachable: ReachState[][],
+  grid: CollisionGrid,
+  inv: Set<TileReq>,
+  quadrantBounds?: QuadrantBounds,
+): FloodFillResult['borders'] {
   const borders: FloodFillResult['borders'] = {
     north: { freeTiles: [], itemTiles: [] },
     south: { freeTiles: [], itemTiles: [] },
@@ -341,10 +340,7 @@ export function floodFillScreen(
 
   for (const t of transitions) {
     if (t.edge === 'entrance') continue;
-    // Skip traversal-only tiles (uncontrolled movement) from border connections
     if (reachable[t.row][t.col] >= 2) continue;
-    // Skip door/entrance tiles (0x80-0x8F) at the actual room edge — those are entrance
-    // transitions, not scroll borders. But allow them at quadrant boundaries (intra-room).
     const attr = grid.rawAttr[t.row]?.[t.col] ?? 0;
     const isAtRoomEdge = t.row === 0 || t.row === GRID_SIZE - 1 || t.col === 0 || t.col === GRID_SIZE - 1;
     if (attr >= 0x80 && attr <= 0x8F && isAtRoomEdge) continue;
@@ -356,30 +352,7 @@ export function floodFillScreen(
       borders[t.edge].itemTiles.push({ pos, requirements: unmet });
     }
   }
-
-  return {
-    screenIndex,
-    tileContext,
-    startPos: start,
-    reachable,
-    transitions,
-    reachableCount,
-    totalTiles: quadrantBounds
-      ? (quadrantBounds.maxRow - quadrantBounds.minRow + 1) * (quadrantBounds.maxCol - quadrantBounds.minCol + 1)
-      : GRID_SIZE * GRID_SIZE,
-    entrances: screenEntrances,
-    ledges: reachableLedges,
-    hookTargets,
-    attrGrid: grid.rawAttr,
-    reqGrid,
-    dynamicBlockerCells,
-    borders,
-    variant,
-    tileLayer,
-    bothLayersPassable,
-    layer1Reachable,
-    dualLayerGrids: options.dualLayerGrids,
-  };
+  return borders;
 }
 
 // ─── Connection Helpers ──────────────────────────────────────────────────────

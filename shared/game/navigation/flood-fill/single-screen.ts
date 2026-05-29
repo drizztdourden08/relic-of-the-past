@@ -27,6 +27,8 @@ interface SingleScreenResult {
 
 interface DualLayerResult extends SingleScreenResult {
   tileLayer: (0 | 1 | 2)[][];
+  /** Per-layer reachable grids: [layer0, layer1]. */
+  reachableByLayer: [ReachState[][], ReachState[][]];
 }
 
 /**
@@ -232,8 +234,11 @@ export function floodFillBFS(
 
 // ─── Dual-Layer BFS ──────────────────────────────────────────────────────────
 
-/** Swap-layer stair tile attrs (0x1E/0x1F). */
-const SWAP_STAIR_ATTRS = new Set([0x1E, 0x1F]);
+/** Swap-layer stair tile attrs (bidirectional layer transitions). */
+const SWAP_STAIR_ATTRS = new Set([0x1E, 0x1F, 0x3E, 0x3F]);
+
+/** Ledge tile attrs that cause a one-way layer transition (layer 0 → 1 only). */
+const LEDGE_LAYER_ATTRS = new Set([0x28, 0x29, 0x2A, 0x2B]);
 
 /**
  * Dual-layer BFS flood-fill for indoor rooms with layer-swap stairs.
@@ -309,17 +314,25 @@ export function floodFillBFSDualLayer(
       }
     }
 
-    // Check if current body position sits on any swap-stair tiles
+    // Check if current body position sits on layer-transition tiles
     let hasStairTile = false;
+    let hasLedgeTile = false;
     for (const [r, c] of bodyTiles(row, col)) {
-      if (SWAP_STAIR_ATTRS.has(rawAttr[r]?.[c])) {
-        hasStairTile = true;
-        break;
-      }
+      const attr = rawAttr[r]?.[c];
+      if (SWAP_STAIR_ATTRS.has(attr)) { hasStairTile = true; break; }
+      if (LEDGE_LAYER_ATTRS.has(attr)) { hasLedgeTile = true; }
     }
 
-    // Expand in 4 directions — on current layer, plus other layer if on stairs
-    const layersToExpand: (0 | 1)[] = hasStairTile ? [layer, (1 - layer) as 0 | 1] : [layer];
+    // Expand in 4 directions — on current layer, plus other layer at transitions.
+    // Swap-stairs: bidirectional. Ledges: one-way layer 0 → 1 only.
+    let layersToExpand: (0 | 1)[];
+    if (hasStairTile) {
+      layersToExpand = [layer, (1 - layer) as 0 | 1];
+    } else if (hasLedgeTile && layer === 0) {
+      layersToExpand = [0, 1];
+    } else {
+      layersToExpand = [layer];
+    }
 
     for (const targetLayer of layersToExpand) {
       const targetGrid = grids[targetLayer];
@@ -392,10 +405,14 @@ export function floodFillBFSDualLayer(
     }
   }
 
-  // Build merged reachable grid + tileLayer info
+  // Build merged reachable grid + tileLayer info + per-layer grids
   let reachableCount = 0;
   const reachable: ReachState[][] = Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(0));
   const tileLayer: (0 | 1 | 2)[][] = Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(0));
+  const reachableByLayer: [ReachState[][], ReachState[][]] = [
+    Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(0)),
+    Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(0)),
+  ];
 
   for (let r = 0; r < GRID_SIZE; r++) {
     for (let c = 0; c < GRID_SIZE; c++) {
@@ -412,14 +429,21 @@ export function floodFillBFSDualLayer(
 
       if (tile.type === 'blocked') continue;
 
+      let state: ReachState;
       if (tile.type === 'ledge') {
-        reachable[r][c] = TRAVERSAL_DIR_OFFSET[tile.dir];
+        state = TRAVERSAL_DIR_OFFSET[tile.dir];
       } else if (tile.type === 'stairs') {
-        reachable[r][c] = STAIRS_TRAVERSAL_STATE;
+        state = STAIRS_TRAVERSAL_STATE;
       } else {
-        reachable[r][c] = 1;
+        state = 1;
         reachableCount++;
       }
+
+      reachable[r][c] = state;
+
+      // Per-layer reachable grids
+      if (r0 !== null) reachableByLayer[0][r][c] = state;
+      if (r1 !== null) reachableByLayer[1][r][c] = state;
 
       // Track which layer(s) reached this tile
       if (r0 !== null && r1 !== null) tileLayer[r][c] = 2;
@@ -451,7 +475,7 @@ export function floodFillBFSDualLayer(
     }
   }
 
-  return { reachable, transitions, reachableCount, reqGrid, hookTargets, tileLayer };
+  return { reachable, transitions, reachableCount, reqGrid, hookTargets, tileLayer, reachableByLayer };
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
