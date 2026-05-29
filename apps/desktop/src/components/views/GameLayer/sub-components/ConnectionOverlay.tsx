@@ -710,7 +710,11 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
         // Only show entrances that BFS reached (have a matching transition)
         if (!drawResult.transitions.some(t => t.entranceIdx === ent.id)) continue;
         // Entrance trigger is a single Map16 tile = 2×2 sub-tiles (16×16 game px)
-        const worldX = origin.x + ent.gridCol * TILE_PX;
+        // On overworld DOORS (id < 200), the game triggers on Link's LEFT edge,
+        // so shift +8px to center the marker on Link's visual center when entering.
+        // Fall holes (id >= 200) and indoor markers use tile-exact positions.
+        const xOffset = (!isIndoors && ent.id < 200) ? 8 : 0;
+        const worldX = origin.x + ent.gridCol * TILE_PX + xOffset;
         const worldY = origin.y + ent.gridRow * TILE_PX;
         const screenX = worldX - viewLeft;
         const screenY = worldY - viewTop;

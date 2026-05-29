@@ -102,15 +102,15 @@ export function floodFillBFS(
       recordBorderTransition(r, c, requirements, foundBorders, transitions, minR, maxR, minC, maxC);
     }
 
-    // Record entrance reachability from body center
-    const bodyCenterRow = row + 0.5;
-    const bodyCenterCol = col + 0.5;
+    // Record entrance reachability from body center (2×2 body center is at +1,+1)
+    const bodyCenterRow = row + 1;
+    const bodyCenterCol = col + 1;
     for (const ent of entrancePositions) {
       const key = `entrance-${ent.idx}`;
       if (foundBorders.has(key)) continue;
       const nearby =
-        bodyCenterRow >= ent.row - 3.5 && bodyCenterRow <= ent.row + 4.5 &&
-        bodyCenterCol >= ent.col - 3.5 && bodyCenterCol <= ent.col + 4.5;
+        bodyCenterRow >= ent.row - 3 && bodyCenterRow <= ent.row + 5 &&
+        bodyCenterCol >= ent.col - 3 && bodyCenterCol <= ent.col + 5;
       if (nearby) {
         foundBorders.add(key);
         transitions.push({ row: ent.row, col: ent.col, edge: 'entrance', requirements: [...requirements], entranceIdx: ent.idx });
