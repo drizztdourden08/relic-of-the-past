@@ -475,7 +475,12 @@ function NavigationWidgetContent() {
           if (quadrantX === 0) { maxCol = halfC - 1; } // left
           else { minCol = halfC; }                      // right
         }
-        quadrantBounds = { minRow, maxRow, minCol, maxCol };
+        // Validate: if start position falls outside bounds, the layout byte is misleading
+        // (e.g. Link's House reports 2×2 but functions as 1×1). Discard bounds.
+        if (startPos && startPos.row >= minRow && startPos.row <= maxRow &&
+            startPos.col >= minCol && startPos.col <= maxCol) {
+          quadrantBounds = { minRow, maxRow, minCol, maxCol };
+        }
       }
 
       // Helper to run flood fill for one screen directly via orchestrator
@@ -590,7 +595,11 @@ function NavigationWidgetContent() {
         const shape = roomLayout?.shape ?? '1x1';
         const roomGridCols = (shape === '2x2' || shape === '2x1') ? 2 : 1;
         const roomGridRows = (shape === '2x2' || shape === '1x2') ? 2 : 1;
-        const hasIntraEdges = intraEdges.length > 0;
+        // Only treat as multi-quadrant if BFS actually found transitions crossing intra-room boundaries
+        const intraEdgeSet = new Set(intraEdges);
+        const hasIntraEdges = primaryResult.transitions.some(
+          t => t.edge !== 'entrance' && intraEdgeSet.has(t.edge as typeof intraEdges[number]),
+        );
 
         // If room has intra-room boundaries, use the room's own grid shape
         const bundleCols = hasIntraEdges ? roomGridCols : 1;

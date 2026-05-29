@@ -328,11 +328,9 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       const drawResults = results.length > 0 ? results : [result];
       const getScreenWorldOrigin = (screenIndex: number) => {
         if (isIndoors) {
-          // Indoor rooms are on a 16-wide grid; each room = 512×512 game pixels
-          return {
-            x: (screenIndex % 16) * 512,
-            y: Math.floor(screenIndex / 16) * 512,
-          };
+          // Indoor: derive origin from Link's position (room index doesn't map
+          // directly to BG coordinates for house/cave rooms 0x100+)
+          return { x: screenWorldX, y: screenWorldY };
         }
         return {
           x: (screenIndex & 7) * 512,
