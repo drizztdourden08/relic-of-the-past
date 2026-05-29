@@ -292,6 +292,7 @@ function NavigationWidgetContent() {
       map16Row,
       map16Col,
       liveScreenIndex,
+      linkLayer: wasmGetLinkLayer?.() ?? null,
     };
   })();
 
@@ -898,6 +899,14 @@ function NavigationWidgetContent() {
               <div style={S.infoRow}>
                 <span style={S.infoLabel}>Live Screen</span>
                 <span style={{ color: '#7f7' }}>0x{linkDebug.liveScreenIndex.toString(16).toUpperCase()}</span>
+              </div>
+            )}
+            {linkDebug.linkLayer !== null && (
+              <div style={S.infoRow}>
+                <span style={S.infoLabel}>Layer</span>
+                <span style={{ color: linkDebug.linkLayer === 0 ? '#7ff' : '#ff7' }}>
+                  {linkDebug.linkLayer === 0 ? '0 (upper/BG2)' : '1 (lower/BG1)'}
+                </span>
               </div>
             )}
           </div>
