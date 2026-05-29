@@ -414,6 +414,9 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
 
       // Draw reachable tiles as dots (skip ledge/traversal/stairs tiles — those get arrows instead)
       const LEDGE_ATTRS = new Set([0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x01, 0x02, 0x03, 0x1a, 0x12, 0x11, 0x13, 0x19, 0x1b, 0x3d]);
+      // Overlay dot colors: consistent across regular dots and split circle halves
+      const DOT_COLOR_REACHABLE = 'rgba(80, 200, 255, 0.6)';
+      const DOT_COLOR_REQ = 'rgba(255, 100, 180, 0.35)';
       ctx.globalAlpha = 0.55;
       for (const drawResult of drawResults) {
         const origin = getScreenWorldOrigin(drawResult.screenIndex);
@@ -451,29 +454,25 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
 
             if (layersDisagree) {
               // Split circle: left = ground/layer1, right = above/layer0
+              // Same color rules as regular dots: cyan=reachable, pink=has req, transparent=not reachable
               const splitAlpha = ctx.globalAlpha;
               ctx.globalAlpha = 0.85;
 
-              const l1Attr = result?.dualLayerGrids?.layer1?.[r]?.[c] ?? 0;
-              const l0Attr = result?.dualLayerGrids?.layer0?.[r]?.[c] ?? 0;
-              const l1Free = classifyTileAttr(l1Attr, 'indoor').type !== 'blocked';
-              const l0Free = classifyTileAttr(l0Attr, 'indoor').type !== 'blocked';
+              // Left half = GROUND (layer1): drawn only if merged flood fill reached it
+              if (mergedReachable) {
+                ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
+                ctx.beginPath();
+                ctx.arc(dx, dy, radius, Math.PI * 0.5, Math.PI * 1.5);
+                ctx.fill();
+              }
 
-              // Left half = GROUND (layer1): red if blocked, cyan if passable
-              ctx.fillStyle = l1Free
-                ? (hasReq ? 'rgba(255, 100, 180, 0.8)' : 'rgba(80, 200, 255, 0.9)')
-                : 'rgba(255, 80, 80, 0.7)';
-              ctx.beginPath();
-              ctx.arc(dx, dy, radius, Math.PI * 0.5, Math.PI * 1.5);
-              ctx.fill();
-
-              // Right half = ABOVE (layer0): green if reachable/free, red if blocked
-              ctx.fillStyle = l0Free
-                ? (hasReq ? 'rgba(255, 100, 180, 0.8)' : 'rgba(80, 255, 130, 0.9)')
-                : 'rgba(255, 80, 80, 0.7)';
-              ctx.beginPath();
-              ctx.arc(dx, dy, radius, -Math.PI * 0.5, Math.PI * 0.5);
-              ctx.fill();
+              // Right half = ABOVE (layer0): drawn only if upper-floor BFS reached it
+              if (layer1Reach) {
+                ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
+                ctx.beginPath();
+                ctx.arc(dx, dy, radius, -Math.PI * 0.5, Math.PI * 0.5);
+                ctx.fill();
+              }
 
               // Black border around full circle
               ctx.strokeStyle = '#000';
@@ -484,7 +483,7 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
               ctx.globalAlpha = splitAlpha;
             } else if (mergedReachable) {
               // Regular dot (layers agree — both reachable)
-              ctx.fillStyle = hasReq ? 'rgba(255, 100, 180, 0.35)' : 'rgba(80, 200, 255, 0.6)';
+              ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
               ctx.beginPath();
               ctx.arc(dx, dy, radius, 0, Math.PI * 2);
               ctx.fill();
@@ -530,9 +529,7 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
           const dy = screenY * scaleY;
 
           const hasReq = drawResult.reqGrid && drawResult.reqGrid[ht.row]?.[ht.col] !== '';
-          ctx.fillStyle = hasReq
-            ? 'rgba(255, 100, 180, 0.35)'
-            : 'rgba(80, 200, 255, 0.6)';
+          ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
           ctx.beginPath();
           ctx.arc(dx, dy, dotRadius * 0.6, 0, Math.PI * 2);
           ctx.fill();
