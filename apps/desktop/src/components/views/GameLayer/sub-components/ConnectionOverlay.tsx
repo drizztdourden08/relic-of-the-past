@@ -453,18 +453,28 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
               // Split circle: left = ground/layer1, right = above/layer0
               const splitAlpha = ctx.globalAlpha;
               ctx.globalAlpha = 0.85;
-              if (layer1Reach) {
-                ctx.fillStyle = hasReq ? 'rgba(255, 100, 180, 0.8)' : 'rgba(80, 200, 255, 0.9)';
-                ctx.beginPath();
-                ctx.arc(dx, dy, radius, Math.PI * 0.5, Math.PI * 1.5);
-                ctx.fill();
-              }
-              if (mergedReachable) {
-                ctx.fillStyle = hasReq ? 'rgba(255, 100, 180, 0.8)' : 'rgba(80, 200, 255, 0.9)';
-                ctx.beginPath();
-                ctx.arc(dx, dy, radius, -Math.PI * 0.5, Math.PI * 0.5);
-                ctx.fill();
-              }
+
+              const l1Attr = result?.dualLayerGrids?.layer1?.[r]?.[c] ?? 0;
+              const l0Attr = result?.dualLayerGrids?.layer0?.[r]?.[c] ?? 0;
+              const l1Free = classifyTileAttr(l1Attr, 'indoor').type !== 'blocked';
+              const l0Free = classifyTileAttr(l0Attr, 'indoor').type !== 'blocked';
+
+              // Left half = GROUND (layer1): red if blocked, cyan if passable
+              ctx.fillStyle = l1Free
+                ? (hasReq ? 'rgba(255, 100, 180, 0.8)' : 'rgba(80, 200, 255, 0.9)')
+                : 'rgba(255, 80, 80, 0.7)';
+              ctx.beginPath();
+              ctx.arc(dx, dy, radius, Math.PI * 0.5, Math.PI * 1.5);
+              ctx.fill();
+
+              // Right half = ABOVE (layer0): green if reachable/free, red if blocked
+              ctx.fillStyle = l0Free
+                ? (hasReq ? 'rgba(255, 100, 180, 0.8)' : 'rgba(80, 255, 130, 0.9)')
+                : 'rgba(255, 80, 80, 0.7)';
+              ctx.beginPath();
+              ctx.arc(dx, dy, radius, -Math.PI * 0.5, Math.PI * 0.5);
+              ctx.fill();
+
               // Black border around full circle
               ctx.strokeStyle = '#000';
               ctx.lineWidth = Math.max(1, Math.min(scaleX, scaleY) * 0.6);
