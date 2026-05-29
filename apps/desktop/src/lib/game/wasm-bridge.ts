@@ -310,6 +310,13 @@ function wasmGetOverworldVariant(screenIndex: number): OverworldVariantInfo | nu
  * Read current indoor room collision attrs (64x64) from dung_bg2_attr_table.
  * Uses Link's active layer (upper/lower) to pick the proper 0x1000-page.
  */
+// Standard indoor wall attribute values used for dual-layer collision merging.
+// When Link is on one level, walls from the other level are overlaid onto free tiles
+// to prevent the BFS from pathfinding into areas with different collision.
+const INDOOR_WALL_ATTRS: ReadonlySet<number> = new Set([
+  0x01, 0x02, 0x03, 0x04, 0x0C, 0x26, 0x43, 0x46, 0xC0,
+]);
+
 function wasmGetIndoorAttrGrid(): number[][] | null {
   const mod = currentModule;
   if (!mod || currentState.status !== 'running') return null;
@@ -318,12 +325,22 @@ function wasmGetIndoorAttrGrid(): number[][] | null {
     if (!ptr) return null;
     const lower = (mod.ccall('WasmGetLinkIsOnLowerLevel', 'number', [], []) as number) !== 0;
     const base = ptr + (lower ? 0x1000 : 0);
+    const otherBase = ptr + (lower ? 0 : 0x1000);
     const heap = mod.HEAPU8;
     const out: number[][] = Array.from({ length: 64 }, () => new Array<number>(64));
     for (let r = 0; r < 64; r++) {
       const rowBase = base + r * 64;
+      const otherRowBase = otherBase + r * 64;
       for (let c = 0; c < 64; c++) {
-        out[r][c] = heap[rowBase + c];
+        const val = heap[rowBase + c];
+        if (val === 0x00) {
+          const otherVal = heap[otherRowBase + c];
+          if (INDOOR_WALL_ATTRS.has(otherVal)) {
+            out[r][c] = otherVal;
+            continue;
+          }
+        }
+        out[r][c] = val;
       }
     }
     return out;
@@ -667,6 +684,29 @@ function wasmGetEntranceRooms(): Uint16Array | null {
   }
 }
 
+/** Get entrance spawn positions (playerX, playerY) for all entrances. */
+function wasmGetEntranceSpawns(): Array<{ x: number; y: number }> | null {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return null;
+  try {
+    const ptr = mod.ccall('WasmGetEntranceSpawns', 'number', [], []) as number;
+    if (!ptr) return null;
+    const heap = mod.HEAPU8;
+    const count = heap[ptr] | (heap[ptr + 1] << 8);
+    const out: Array<{ x: number; y: number }> = [];
+    for (let i = 0; i < count; i++) {
+      const o = ptr + 2 + i * 4;
+      out.push({
+        x: heap[o] | (heap[o + 1] << 8),
+        y: heap[o + 2] | (heap[o + 3] << 8),
+      });
+    }
+    return out;
+  } catch {
+    return null;
+  }
+}
+
 export {
   getGameState,
   getModule,
@@ -682,6 +722,7 @@ export {
   wasmCheat,
   wasmGetAreaHeads,
   wasmGetEntranceRooms,
+  wasmGetEntranceSpawns,
   wasmGetExitScreenMap,
   wasmGetFallHoles,
   wasmGetGameUIState,

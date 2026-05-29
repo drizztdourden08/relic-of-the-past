@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { FloodFillResult, ConnectionInfo } from '@shared/game/navigation';
 
 interface PathTile { row: number; col: number; attr: number; }
+export interface FallHoleSpawn { gridRow: number; gridCol: number; entranceId: number; }
 
 interface ConnectionOverlayState {
   /** Whether the overlay is visible */
@@ -12,6 +13,8 @@ interface ConnectionOverlayState {
   results: FloodFillResult[];
   /** Detected connections */
   connections: ConnectionInfo[];
+  /** Fall hole landing positions for current room */
+  fallHoleSpawns: FallHoleSpawn[];
   /** Locked target tile from overlay path debug */
   lockedTarget: { row: number; col: number } | null;
   /** Last computed A* path (with tile attrs) when target is locked */
@@ -19,7 +22,7 @@ interface ConnectionOverlayState {
   /** Toggle overlay visibility */
   setVisible: (visible: boolean) => void;
   /** Update with new flood fill data */
-  setData: (result: FloodFillResult, connections: ConnectionInfo[], results?: FloodFillResult[]) => void;
+  setData: (result: FloodFillResult, connections: ConnectionInfo[], results?: FloodFillResult[], fallHoleSpawns?: FallHoleSpawn[]) => void;
   /** Set locked target */
   setLockedTarget: (tile: { row: number; col: number } | null) => void;
   /** Set locked path */
@@ -33,11 +36,12 @@ export const useConnectionOverlayStore = create<ConnectionOverlayState>((set) =>
   result: null,
   results: [],
   connections: [],
+  fallHoleSpawns: [],
   lockedTarget: null,
   lockedPath: null,
   setVisible: (visible) => set({ visible }),
-  setData: (result, connections, results) => set({ result, connections, results: results ?? [result], visible: true }),
+  setData: (result, connections, results, fallHoleSpawns) => set({ result, connections, results: results ?? [result], fallHoleSpawns: fallHoleSpawns ?? [], visible: true }),
   setLockedTarget: (tile) => set({ lockedTarget: tile }),
   setLockedPath: (path) => set({ lockedPath: path }),
-  clear: () => set({ result: null, results: [], connections: [], visible: false, lockedTarget: null, lockedPath: null }),
+  clear: () => set({ result: null, results: [], connections: [], fallHoleSpawns: [], visible: false, lockedTarget: null, lockedPath: null }),
 }));

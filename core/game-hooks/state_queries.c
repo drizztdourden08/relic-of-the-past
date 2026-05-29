@@ -549,6 +549,28 @@ int WasmGetEntranceRooms(void) {
   return (int)g_entrance_rooms_buf;
 }
 
+// Entrance spawn positions: playerX(u16) + playerY(u16) per entry, count prefix.
+// 133 entries max → 2 + 133*4 = 534 bytes.
+static uint8 g_entrance_spawn_buf[2 + 133 * 4];
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetEntranceSpawns(void) {
+  uint16 count = kEntranceData_playerX_SIZE / 2;
+  if (count > 133) count = 133;
+  g_entrance_spawn_buf[0] = count & 0xFF;
+  g_entrance_spawn_buf[1] = (count >> 8) & 0xFF;
+  for (uint16 i = 0; i < count; i++) {
+    int o = 2 + i * 4;
+    uint16 px = kEntranceData_playerX[i];
+    uint16 py = kEntranceData_playerY[i];
+    g_entrance_spawn_buf[o + 0] = px & 0xFF;
+    g_entrance_spawn_buf[o + 1] = (px >> 8) & 0xFF;
+    g_entrance_spawn_buf[o + 2] = py & 0xFF;
+    g_entrance_spawn_buf[o + 3] = (py >> 8) & 0xFF;
+  }
+  return (int)g_entrance_spawn_buf;
+}
+
 // ─── Room Layout Info (for intra-room screen boundaries) ───
 
 static uint8 g_room_layout_buf[8];

@@ -223,7 +223,7 @@ function findPath2x2FromLink(
 function ConnectionOverlay({ width, height, gameRunning }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
-  const { visible, result, results, connections, setLockedPath } = useConnectionOverlayStore();
+  const { visible, result, results, connections, fallHoleSpawns, setLockedPath } = useConnectionOverlayStore();
   const { overworldScreenIndex, roomIndex, isIndoors } = useGameUIStore(s => s.map);
   const activeScreenIndex = isIndoors ? roomIndex : overworldScreenIndex;
 
@@ -737,6 +737,49 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
         }
       }
 
+      // ─── Fall hole landing markers (construction stripe pattern) ───
+      if (fallHoleSpawns.length > 0 && isIndoors) {
+        const origin = getScreenWorldOrigin(drawResults[0]?.screenIndex ?? activeScreenIndex);
+        for (const fh of fallHoleSpawns) {
+          const worldX = origin.x + fh.gridCol * TILE_PX;
+          const worldY = origin.y + fh.gridRow * TILE_PX;
+          const screenX = worldX - viewLeft;
+          const screenY = worldY - viewTop;
+          if (screenX < -TILE_PX * 4 || screenX > snesW + TILE_PX * 4) continue;
+          if (screenY < -TILE_PX * 4 || screenY > snesH + TILE_PX * 4) continue;
+
+          // Draw a 2×2 tile (16×16 game px) marker with diagonal stripes
+          const dx = screenX * scaleX;
+          const dy = screenY * scaleY;
+          const dw = TILE_PX * 2 * scaleX;
+          const dh = TILE_PX * 2 * scaleY;
+
+          // Yellow diagonal stripes (construction/hazard pattern)
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(dx, dy, dw, dh);
+          ctx.clip();
+          ctx.globalAlpha = 0.6;
+          ctx.strokeStyle = '#ffcc44';
+          const stripe = Math.max(3, 4 * Math.min(scaleX, scaleY));
+          ctx.lineWidth = stripe * 0.6;
+          const steps = Math.ceil((dw + dh) / stripe) + 2;
+          for (let s = -steps; s <= steps; s++) {
+            const offset = s * stripe;
+            ctx.beginPath();
+            ctx.moveTo(dx + offset, dy);
+            ctx.lineTo(dx + offset + dh, dy + dh);
+            ctx.stroke();
+          }
+          // Border
+          ctx.globalAlpha = 0.9;
+          ctx.strokeStyle = '#ffcc44';
+          ctx.lineWidth = Math.max(1.5, 2 * Math.min(scaleX, scaleY));
+          ctx.strokeRect(dx, dy, dw, dh);
+          ctx.restore();
+        }
+      }
+
       // ─── Fall zone hazard stripes (pit tiles: 0x20) ───
       // Diagonal yellow/transparent pattern on pit tiles that BFS reached
       ctx.globalAlpha = 0.45;
@@ -851,7 +894,7 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
 
     rafRef.current = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [visible, result, results, connections, width, height, gameRunning, activeScreenIndex, isIndoors, overworldScreenIndex]);
+  }, [visible, result, results, connections, fallHoleSpawns, width, height, gameRunning, activeScreenIndex, isIndoors, overworldScreenIndex]);
 
   if (!visible || !result) return null;
 

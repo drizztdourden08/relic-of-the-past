@@ -3,7 +3,7 @@
 export type { EmscriptenFS, EmscriptenModule, GameStatus, GameState } from './types';
 export { getGameState, getModule, subscribeGameState } from './wasm-bridge';
 export { getProfileId as getActiveProfileId } from './wasm-bridge';
-export { wasmSetPaused, wasmTogglePause, wasmReset, wasmCheat, wasmGetViewportInfo, wasmRenderCleanFrame, wasmGetMenuState, wasmGetOverworldVariant, wasmGetIndoorAttrGrid, wasmGetIndoorUncleBlockers, wasmGetNavigationBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmBuildRoomAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetRoomLayoutInfo, wasmGetRoomDoorBoundaryTiles } from './wasm-bridge';
+export { wasmSetPaused, wasmTogglePause, wasmReset, wasmCheat, wasmGetViewportInfo, wasmRenderCleanFrame, wasmGetMenuState, wasmGetOverworldVariant, wasmGetIndoorAttrGrid, wasmGetIndoorUncleBlockers, wasmGetNavigationBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmBuildRoomAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetRoomDoorBoundaryTiles } from './wasm-bridge';
 export type { DoorBoundaryTile, FallHole, LiveSpriteInfo, OverworldVariantInfo, RoomLayoutInfo, ViewportInfo } from './wasm-bridge';
 export { startGame, resetGame } from './lifecycle';
 export { setMsuData, setAutoSaveConfig } from './lifecycle';

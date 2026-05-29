@@ -24,7 +24,7 @@ import type { FloodFillOptions, QuadrantBounds } from '@shared/game/navigation';
 import type { ScreenBundle, OverworldEntrance } from '@shared/game/navigation';
 import { getRegionLookup, REGION_BY_ID } from '@shared/game/data/regions';
 import { ALL_CONNECTIONS } from '@shared/game/data/connections';
-import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetIndoorAttrGrid, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetRoomLayoutInfo, wasmGetRoomDoorBoundaryTiles } from '../../lib/game';
+import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetIndoorAttrGrid, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetRoomDoorBoundaryTiles } from '../../lib/game';
 import { getCompletedChecks } from '../../lib/game/tracker';
 import type { OverworldVariantInfo } from '../../lib/game';
 import type { TileAttrContext } from '@shared/game/navigation/tile-attrs';
@@ -192,6 +192,7 @@ function NavigationWidgetContent() {
   const [reviewData, setReviewData] = useState<ReviewData>({});
   const [result, setResult] = useState<FloodFillResult | null>(null);
   const [connections, setConnections] = useState<ConnectionInfo[]>([]);
+  const [fallHoleLandings, setFallHoleLandings] = useState<Array<{ gridRow: number; gridCol: number; entranceId: number }>>([]);
 
   const [running, setRunning] = useState(false);
   const [autoRun, setAutoRun] = useState(window.api.autoFlood ?? false);
@@ -612,7 +613,33 @@ function NavigationWidgetContent() {
       setResult(primaryResult);
       setConnections(allConnections);
 
-      overlayStore.setData(primaryResult, allConnections, fillResults);
+      // Compute fall hole landing positions for indoor rooms
+      const fallHoleSpawns: Array<{ gridRow: number; gridCol: number; entranceId: number }> = [];
+      if (isIndoors) {
+        const spawns = wasmGetEntranceSpawns();
+        const rooms = wasmGetEntranceRooms();
+        const holes = wasmGetFallHoles();
+        if (spawns && rooms && holes) {
+          const roomOriginX = (primaryScreenIndex % 16) * 512;
+          const roomOriginY = Math.floor(primaryScreenIndex / 16) * 512;
+          for (const h of holes) {
+            if (rooms[h.entranceId] === primaryScreenIndex) {
+              const spawn = spawns[h.entranceId];
+              if (spawn) {
+                // playerX/Y is Link's top-left sprite corner; offset +8px to center on feet
+                const gridCol = Math.floor((spawn.x - roomOriginX + 8) / 8);
+                const gridRow = Math.floor((spawn.y - roomOriginY + 8) / 8);
+                if (gridRow >= 0 && gridRow < 64 && gridCol >= 0 && gridCol < 64) {
+                  fallHoleSpawns.push({ gridRow, gridCol, entranceId: h.entranceId });
+                }
+              }
+            }
+          }
+        }
+      }
+      setFallHoleLandings(fallHoleSpawns);
+
+      overlayStore.setData(primaryResult, allConnections, fillResults, fallHoleSpawns);
     } catch (e) { console.error(e); }
     finally {
       setRunning(false);
@@ -716,7 +743,7 @@ function NavigationWidgetContent() {
   // Toggle overlay
   const toggleOverlay = useCallback(() => {
     if (overlayStore.visible) overlayStore.setVisible(false);
-    else if (result) overlayStore.setData(result, connections, renderResults);
+    else if (result) overlayStore.setData(result, connections, renderResults, overlayStore.fallHoleSpawns);
   }, [result, connections, renderResults]);
 
   // Review helpers
@@ -988,6 +1015,24 @@ function NavigationWidgetContent() {
           <>
             <div style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Internal ({internalConnections.length})</div>
             <InternalEdgeDiamond connections={internalConnections} screenBundle={screenBundle} />
+          </>
+        )}
+
+        {/* ─── Fall Hole Landings ─── */}
+        {fallHoleLandings.length > 0 && (
+          <>
+            <div style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Fall Holes ({fallHoleLandings.length})</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {fallHoleLandings.map((fh, i) => (
+                <div key={`fh-${i}`} style={S.card}>
+                  <div style={{ ...S.cardGraphic, background: 'repeating-linear-gradient(45deg, #ffcc44 0px, #ffcc44 2px, transparent 2px, transparent 4px)', borderRadius: 4 }}>
+                    <span style={{ fontSize: 18 }}>⬇</span>
+                  </div>
+                  <span style={S.cardTitle}>Landing Zone</span>
+                  <span style={S.cardSub}>r{fh.gridRow} c{fh.gridCol}</span>
+                </div>
+              ))}
+            </div>
           </>
         )}
       </div>
@@ -1327,6 +1372,7 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
   // Separate intra-room connections from external ones for rendering
   const intraConns = connections.filter(c => c.isIntraRoom);
   const externalConns = connections.filter(c => !c.isIntraRoom);
+  const fallHoleSpawns = useConnectionOverlayStore(s => s.fallHoleSpawns);
 
   // Group external connections by edge
   const byEdge: Record<string, ConnectionInfo[]> = { north: [], south: [], east: [], west: [] };
@@ -1452,6 +1498,42 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
           }} />
         );
       }))}
+
+      {/* Fall hole landing markers — yellow diagonal stripes */}
+      {fallHoleSpawns.map((fh, i) => {
+        let cellCol: number, cellRow: number, localX: number, localY: number;
+        if (quadrantCells.length > 0) {
+          const qRow = gridRows > 1 ? (fh.gridRow >= 32 ? 1 : 0) : 0;
+          const qCol = gridCols > 1 ? (fh.gridCol >= 32 ? 1 : 0) : 0;
+          cellCol = qCol;
+          cellRow = qRow;
+          const qRows = gridRows > 1 ? 32 : 64;
+          const qCols = gridCols > 1 ? 32 : 64;
+          localX = ((fh.gridCol - qCol * 32) / qCols) * cellW;
+          localY = ((fh.gridRow - qRow * 32) / qRows) * cellH;
+        } else {
+          cellCol = 0;
+          cellRow = 0;
+          localX = (fh.gridCol / 64) * cellW;
+          localY = (fh.gridRow / 64) * cellH;
+        }
+        const cellLeft = EDGE_PAD + cellCol * (cellW + GAP);
+        const cellTop = EDGE_PAD + cellRow * (cellH + GAP);
+        const sz = Math.max(6, cellW * 4 / 64);
+        return (
+          <div key={`fh-${i}`} style={{
+            position: 'absolute',
+            left: cellLeft + localX - 1,
+            top: cellTop + localY - 1,
+            width: sz, height: sz,
+            border: '1.5px solid #ffcc44',
+            borderRadius: 1,
+            pointerEvents: 'none',
+            background: 'repeating-linear-gradient(45deg, #ffcc44 0px, #ffcc44 2px, transparent 2px, transparent 4px)',
+            opacity: 0.8,
+          }} />
+        );
+      })}
 
       {/* Link position — green dot */}
       {linkPos && bundle.screens.includes(linkPos.screen) && (() => {
