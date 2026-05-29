@@ -225,6 +225,11 @@ contextBridge.exposeInMainWorld('api', {
   getTestArgs: () => ipcRenderer.invoke('test:getArgs') as Promise<{ autoState: number | null; screenshot: string | null }>,
   takeScreenshot: (name: string) => ipcRenderer.invoke('test:screenshot', name) as Promise<string>,
 
+  // Debug: dump layers
+  getDumpLayersSlot: () => ipcRenderer.invoke('debug:getDumpLayersSlot') as Promise<number | null>,
+  getHoverTile: () => ipcRenderer.invoke('debug:getHoverTile') as Promise<{ col: number; row: number } | null>,
+  writeDumpLayers: (data: unknown) => ipcRenderer.invoke('debug:dumpLayers', data) as Promise<string>,
+
   // Shadow casting (dev-only write, always-available read)
   shadowCasting: {
     load: () => ipcRenderer.invoke('shadow-casting:load'),

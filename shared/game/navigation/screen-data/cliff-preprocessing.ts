@@ -148,7 +148,7 @@ export function processSouthCliffs(
   rawAttr: number[][],
   ledges: LedgeTraversal[],
 ): void {
-  const DIAG_EDGE_ATTRS = new Set([0x2c, 0x2d, 0x2e, 0x2f, 0x1a]);
+  const DIAG_EDGE_ATTRS = new Set([0x2c, 0x2d, 0x2e, 0x1a]);
   const CLIFF_BORDER_ATTRS = new Set([0x10, 0x18]);
 
   const isSouthCliffTile = (r: number, c: number) =>

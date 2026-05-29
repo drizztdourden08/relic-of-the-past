@@ -24,7 +24,7 @@ import type { FloodFillOptions, QuadrantBounds } from '@shared/game/navigation';
 import type { ScreenBundle, OverworldEntrance } from '@shared/game/navigation';
 import { getRegionLookup, REGION_BY_ID } from '@shared/game/data/regions';
 import { ALL_CONNECTIONS } from '@shared/game/data/connections';
-import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetIndoorAttrGrid, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetRoomDoorBoundaryTiles } from '../../lib/game';
+import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetIndoorDualLayerGrids, wasmGetLinkLayer, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetRoomDoorBoundaryTiles } from '../../lib/game';
 import { getCompletedChecks } from '../../lib/game/tracker';
 import type { OverworldVariantInfo } from '../../lib/game';
 import type { TileAttrContext } from '@shared/game/navigation/tile-attrs';
@@ -330,6 +330,8 @@ function NavigationWidgetContent() {
       let startPos: { row: number; col: number } | undefined;
       let tileContext: TileAttrContext = isIndoors ? 'interior-house' : 'overworld';
       let rawAttrGrid: number[][] | undefined;
+      let dualLayerGrids: { layer0: number[][]; layer1: number[][]; stairTiles: Array<{ row: number; col: number }> } | undefined;
+      let linkLayer: 0 | 1 | undefined;
       let blockerWorldPoints: Array<{ x: number; y: number }> = [];
 
       // Build overworld dynamic blockers from live sprite data independently of viewport
@@ -377,7 +379,9 @@ function NavigationWidgetContent() {
         if (isIndoors) {
           // TileDetect only branches on indoors, but we keep cave/house and dungeon contexts separate for future tuning.
           tileContext = vp.locationType === 2 ? 'interior-dungeon' : 'interior-house';
-          rawAttrGrid = wasmGetIndoorAttrGrid() ?? undefined;
+          dualLayerGrids = wasmGetIndoorDualLayerGrids() ?? undefined;
+          rawAttrGrid = dualLayerGrids?.layer0;
+          linkLayer = wasmGetLinkLayer() ?? undefined;
 
           // Early-game indoor variant: Uncle at house / in-passage physically blocks tiles.
           // We stamp his live sprite footprint into the attr grid so flood-fill reflects state.
@@ -411,9 +415,9 @@ function NavigationWidgetContent() {
           : (((primaryScreenIndex >> 3) & 7) * 512);
 
         const relPixelX = vp.linkX - screenWorldX;
-        const relPixelY = vp.linkY - screenWorldY;
+        const relPixelY = (vp.linkY + 8) - screenWorldY; // collision hitbox starts 8px below sprite top
 
-        // Match overlay debug footprint: Link covers linkX..linkX+15 and linkY..linkY+15.
+        // Match overlay debug footprint: Link's hitbox is the lower 16x16 (skip head).
         const tileMinCol = Math.floor(relPixelX / 8);
         const tileMaxCol = Math.floor((relPixelX + 15) / 8);
         const tileMinRow = Math.floor(relPixelY / 8);
@@ -504,6 +508,9 @@ function NavigationWidgetContent() {
           entrances: allEntrances,
           exitScreenByRoom,
           quadrantBounds: isIndoors ? quadrantBounds : undefined,
+          dualLayerGrids: isIndoors ? dualLayerGrids : undefined,
+          stairTiles: isIndoors ? dualLayerGrids?.stairTiles : undefined,
+          startLayer: isIndoors ? linkLayer : undefined,
           variant: runVariant ? {
             progressTier: runVariant.progressIndicator,
             eventOverlay: runVariant.eventOverlayActive,
@@ -901,7 +908,7 @@ function NavigationWidgetContent() {
       <div style={S.section}>
         <div style={S.sectionTitle}>Functions</div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-          <button style={{ ...S.btn, ...(running ? S.btnDisabled : {}) }} onClick={handleRun} disabled={running}>
+          <button data-testid="nav-flood-btn" style={{ ...S.btn, ...(running ? S.btnDisabled : {}) }} onClick={handleRun} disabled={running}>
             {running ? '⏳' : '▶'} Flood Fill
           </button>
           <button style={{ ...S.btn, ...(result ? {} : S.btnDisabled) }} onClick={toggleOverlay} disabled={!result}>

@@ -361,6 +361,13 @@ interface ElectronAPI {
   saveConnectionReview(data: unknown): Promise<void>;
   loadNavReview(): Promise<unknown>;
   saveNavReview(data: unknown): Promise<void>;
+
+  // Debug: dump layers CLI
+  getDumpLayersSlot(): Promise<number | null>;
+  getHoverTile(): Promise<{ col: number; row: number } | null>;
+  writeDumpLayers(data: unknown): Promise<string>;
+  getTestArgs(): Promise<{ autoState: number | null; screenshot: string | null }>;
+  takeScreenshot(name: string): Promise<string>;
 }
 
 declare function Zelda3(config: Record<string, unknown>): Promise<unknown>;

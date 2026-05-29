@@ -369,7 +369,10 @@ int WasmBuildRoomAttrGrid(int room_id) {
   // Build the room tilemap (draws tiles into dung_bg2/bg1)
   Dungeon_LoadRoom();
 
-  // Load custom tile attributes for this room's theme
+  // Load BASE tile attributes (entries 0x000-0x13F, 0x1C0-0x1FF)
+  Init_LoadDefaultTileAttr();
+
+  // Load custom tile attributes for this room's theme (entries 0x140-0x1BF)
   Dungeon_LoadCustomTileAttr();
 
   // Build collision attribute table from tilemap

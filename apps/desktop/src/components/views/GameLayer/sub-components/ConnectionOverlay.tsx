@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import { useConnectionOverlayStore } from '../../../../stores/connection-overlay-store';
 import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { wasmGetViewportInfo, wasmGetLiveSprites } from '../../../../lib/game';
@@ -227,6 +227,75 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
   const { overworldScreenIndex, roomIndex, isIndoors } = useGameUIStore(s => s.map);
   const activeScreenIndex = isIndoors ? roomIndex : overworldScreenIndex;
 
+  // Compute layer1 void detection for overlay circles.
+  // Tiles in enclosed 0x00 components on layer1 are real ground; boundary-touching = void.
+  // Step 1: find enclosed 0x00 regions (seeds). Step 2: BFS from seeds through passable tiles.
+  const layer1ReachableOverride = useMemo(() => {
+    const layer0 = result?.dualLayerGrids?.layer0;
+    const layer1 = result?.dualLayerGrids?.layer1;
+    if (!layer0 || !layer1) return null;
+    const grid: boolean[][] = Array.from({ length: 64 }, () => Array(64).fill(false));
+
+    // Step 1: Flood from boundary through 0x00 to find void-connected tiles
+    const boundaryConnected: boolean[][] = Array.from({ length: 64 }, () => Array(64).fill(false));
+    const bQueue: Array<[number, number]> = [];
+    for (let r = 0; r < 64; r++) {
+      for (let c = 0; c < 64; c++) {
+        if ((r === 0 || r === 63 || c === 0 || c === 63) && layer1[r]?.[c] === 0x00) {
+          boundaryConnected[r][c] = true;
+          bQueue.push([r, c]);
+        }
+      }
+    }
+    while (bQueue.length > 0) {
+      const [qr, qc] = bQueue.shift()!;
+      for (const [dr, dc] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
+        const nr = qr + dr, nc = qc + dc;
+        if (nr < 0 || nr >= 64 || nc < 0 || nc >= 64) continue;
+        if (boundaryConnected[nr][nc]) continue;
+        if (layer1[nr]?.[nc] !== 0x00) continue;
+        boundaryConnected[nr][nc] = true;
+        bQueue.push([nr, nc]);
+      }
+    }
+
+    // Step 2: Enclosed seeds = 0x00 tiles NOT boundary-connected
+    const seeds: Array<[number, number]> = [];
+    for (let r = 0; r < 64; r++) {
+      for (let c = 0; c < 64; c++) {
+        if (layer1[r]?.[c] === 0x00 && !boundaryConnected[r][c]) {
+          grid[r][c] = true;
+          seeds.push([r, c]);
+        }
+      }
+    }
+
+    // Step 3: BFS from seeds through ALL non-boundary-connected tiles
+    // Expand freely (including through walls and layers-agree tiles)
+    // Only mark grid=true where layers actually differ
+    const visited: boolean[][] = Array.from({ length: 64 }, () => Array(64).fill(false));
+    for (const [sr, sc] of seeds) visited[sr][sc] = true;
+    const queue = [...seeds];
+    while (queue.length > 0) {
+      const [qr, qc] = queue.shift()!;
+      for (const [dr, dc] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
+        const nr = qr + dr, nc = qc + dc;
+        if (nr < 0 || nr >= 64 || nc < 0 || nc >= 64) continue;
+        if (visited[nr][nc]) continue;
+        if (boundaryConnected[nr][nc]) continue;
+        visited[nr][nc] = true;
+        const attr = layer1[nr]?.[nc] ?? 0;
+        // Mark reachable only if layers disagree and layer1 has content
+        if (attr !== 0x00 && layer0[nr]?.[nc] !== attr) {
+          grid[nr][nc] = true;
+        }
+        queue.push([nr, nc]);
+      }
+    }
+
+    return grid;
+  }, [result?.dualLayerGrids?.layer0, result?.dualLayerGrids?.layer1]);
+
   // Mouse/path state
   const [mouseState, setMouseState] = useState({
     leftHeld: false,
@@ -348,10 +417,18 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       ctx.globalAlpha = 0.55;
       for (const drawResult of drawResults) {
         const origin = getScreenWorldOrigin(drawResult.screenIndex);
+        const hasDualLayer = !!layer1ReachableOverride || !!drawResult.layer1Reachable;
         for (let r = 0; r < 64; r++) {
           for (let c = 0; c < 64; c++) {
-            if (drawResult.reachable[r][c] !== 1) continue;
-            if (drawResult.attrGrid && LEDGE_ATTRS.has(drawResult.attrGrid[r][c])) continue;
+            const mergedReachable = drawResult.reachable[r][c] === 1;
+            const layer1Reach = hasDualLayer && (layer1ReachableOverride?.[r]?.[c] ?? drawResult.layer1Reachable?.[r]?.[c] ?? false);
+            if (!mergedReachable && !layer1Reach) continue;
+
+            // Split circle only for upper-floor-exclusive tiles (layer1 reachable, merged not)
+            const layersDisagree = hasDualLayer && !!layer1Reach && !mergedReachable;
+
+            // Skip ledge/traversal tiles (they get arrows) — but NOT split-circle tiles
+            if (!layersDisagree && drawResult.attrGrid && LEDGE_ATTRS.has(drawResult.attrGrid[r][c])) continue;
 
             // Tile center in world coordinates
             const worldX = origin.x + c * TILE_PX + TILE_PX / 2;
@@ -369,18 +446,39 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
             const dx = screenX * scaleX;
             const dy = screenY * scaleY;
 
-            // Pink = requires ANY item (including lift.1 — DO NOT remove lift.1 from this check, it IS a real requirement)
-            // Cyan = completely free, no items needed
             const hasReq = drawResult.reqGrid && drawResult.reqGrid[r][c] !== '';
+            const radius = dotRadius * 0.6;
 
-            if (hasReq) {
-              ctx.fillStyle = 'rgba(255, 100, 180, 0.35)';
-            } else {
-              ctx.fillStyle = 'rgba(80, 200, 255, 0.6)';
+            if (layersDisagree) {
+              // Split circle: left = ground/layer1, right = above/layer0
+              const splitAlpha = ctx.globalAlpha;
+              ctx.globalAlpha = 0.85;
+              if (layer1Reach) {
+                ctx.fillStyle = hasReq ? 'rgba(255, 100, 180, 0.8)' : 'rgba(80, 200, 255, 0.9)';
+                ctx.beginPath();
+                ctx.arc(dx, dy, radius, Math.PI * 0.5, Math.PI * 1.5);
+                ctx.fill();
+              }
+              if (mergedReachable) {
+                ctx.fillStyle = hasReq ? 'rgba(255, 100, 180, 0.8)' : 'rgba(80, 200, 255, 0.9)';
+                ctx.beginPath();
+                ctx.arc(dx, dy, radius, -Math.PI * 0.5, Math.PI * 0.5);
+                ctx.fill();
+              }
+              // Black border around full circle
+              ctx.strokeStyle = '#000';
+              ctx.lineWidth = Math.max(1, Math.min(scaleX, scaleY) * 0.6);
+              ctx.beginPath();
+              ctx.arc(dx, dy, radius, 0, Math.PI * 2);
+              ctx.stroke();
+              ctx.globalAlpha = splitAlpha;
+            } else if (mergedReachable) {
+              // Regular dot (layers agree — both reachable)
+              ctx.fillStyle = hasReq ? 'rgba(255, 100, 180, 0.35)' : 'rgba(80, 200, 255, 0.6)';
+              ctx.beginPath();
+              ctx.arc(dx, dy, radius, 0, Math.PI * 2);
+              ctx.fill();
             }
-            ctx.beginPath();
-            ctx.arc(dx, dy, dotRadius * 0.6, 0, Math.PI * 2);
-            ctx.fill();
           }
         }
       }
@@ -447,7 +545,7 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
         // Snap cursor tile to nearest valid 2×2 top-left corner
         const goal2x2 = findNearest2x2Goal(activeTarget.row, activeTarget.col, result.reachable);
         const path = goal2x2
-          ? findPath2x2FromLink(vp.linkX, vp.linkY, screenWorldX, screenWorldY, goal2x2, result.reachable)
+          ? findPath2x2FromLink(vp.linkX, vp.linkY + 8, screenWorldX, screenWorldY, goal2x2, result.reachable)
           : null;
 
         // Push path to store when locked so the widget can copy it
@@ -530,21 +628,33 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       }
 
       // Draw cliff jump arrows as continuous lines from start to end
-      ctx.globalAlpha = 0.7;
+      ctx.globalAlpha = 1.0;
       ctx.strokeStyle = '#cc5555';
       ctx.fillStyle = '#cc5555';
       for (const drawResult of drawResults) {
         const origin = getScreenWorldOrigin(drawResult.screenIndex);
         for (const ledge of drawResult.ledges ?? []) {
-        // Start position (center of trigger tile)
+        // Start position (edge of trigger tile facing away from direction)
         const startWorldX = origin.x + ledge.startCol * TILE_PX + TILE_PX / 2;
         const startWorldY = origin.y + ledge.startRow * TILE_PX + TILE_PX / 2;
         // End position (center of landing tile)
         const endWorldX = origin.x + ledge.endCol * TILE_PX + TILE_PX / 2;
         const endWorldY = origin.y + ledge.endRow * TILE_PX + TILE_PX / 2;
 
-        const startSX = startWorldX - viewLeft;
-        const startSY = startWorldY - viewTop;
+        // Compute direction to determine start edge offset
+        const dirX = endWorldX - startWorldX;
+        const dirY = endWorldY - startWorldY;
+        const dirLen = Math.hypot(dirX, dirY);
+        if (dirLen === 0) continue;
+        const normX = dirX / dirLen;
+        const normY = dirY / dirLen;
+
+        // Start at the near edge of the trigger tile (half tile back from center)
+        const edgeStartX = startWorldX - normX * (TILE_PX / 2);
+        const edgeStartY = startWorldY - normY * (TILE_PX / 2);
+
+        const startSX = edgeStartX - viewLeft;
+        const startSY = edgeStartY - viewTop;
         const endSX = endWorldX - viewLeft;
         const endSY = endWorldY - viewTop;
 
@@ -559,20 +669,25 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
         const x2 = endSX * scaleX;
         const y2 = endSY * scaleY;
 
-        // Arrow shaft
-        ctx.lineWidth = Math.max(1.5, 2 * Math.min(scaleX, scaleY));
+        const angle = Math.atan2(y2 - y1, x2 - x1);
+        const headLen = TILE_PX * Math.min(scaleX, scaleY) * 0.5;
+        const spread = 0.5;
+        const shaftWidth = Math.max(1.5, 2 * Math.min(scaleX, scaleY));
+
+        // Shaft — stop at arrowhead base, not tip
+        ctx.lineWidth = shaftWidth;
+        const dx = Math.cos(angle) * headLen * 0.85;
+        const dy = Math.sin(angle) * headLen * 0.85;
         ctx.beginPath();
         ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
+        ctx.lineTo(x2 - dx, y2 - dy);
         ctx.stroke();
 
-        // Arrowhead at end
-        const angle = Math.atan2(y2 - y1, x2 - x1);
-        const headLen = TILE_PX * Math.min(scaleX, scaleY) * 0.6;
+        // Arrowhead at end (filled triangle)
         ctx.beginPath();
         ctx.moveTo(x2, y2);
-        ctx.lineTo(x2 - headLen * Math.cos(angle - 0.4), y2 - headLen * Math.sin(angle - 0.4));
-        ctx.lineTo(x2 - headLen * Math.cos(angle + 0.4), y2 - headLen * Math.sin(angle + 0.4));
+        ctx.lineTo(x2 - headLen * Math.cos(angle - spread), y2 - headLen * Math.sin(angle - spread));
+        ctx.lineTo(x2 - headLen * Math.cos(angle + spread), y2 - headLen * Math.sin(angle + spread));
         ctx.closePath();
         ctx.fill();
         }
@@ -838,7 +953,7 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       // ─── Debug: Link's position and tile coverage ───
       ctx.globalAlpha = 1.0;
       const linkWorldX = vp.linkX;
-      const linkWorldY = vp.linkY;
+      const linkWorldY = vp.linkY + 8; // collision hitbox starts 8px below sprite top (skip head)
       // Link's hitbox in SNES pixels relative to viewport
       const linkSX = (linkWorldX - viewLeft) * scaleX;
       const linkSY = (linkWorldY - viewTop) * scaleY;
@@ -896,7 +1011,7 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
 
     rafRef.current = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [visible, result, results, connections, fallHoleSpawns, width, height, gameRunning, activeScreenIndex, isIndoors, overworldScreenIndex]);
+  }, [visible, result, results, connections, fallHoleSpawns, width, height, gameRunning, activeScreenIndex, isIndoors, overworldScreenIndex, layer1ReachableOverride]);
 
   if (!visible || !result) return null;
 
@@ -1027,6 +1142,10 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
     pathReqs: string;
     bfsBlocked: boolean;
     spriteInfo: string[];
+    /** Layer info for dual-layer rooms */
+    layer0Attr?: number;
+    layer1Attr?: number;
+    layer1Reach?: boolean;
   } | null>(null);
   const vpRef = useRef<ReturnType<typeof wasmGetViewportInfo>>(null);
 
@@ -1037,6 +1156,74 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
     active: boolean;
   } | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // Compute layer1 void detection: tiles in enclosed 0x00 components are real ground,
+  // tiles in boundary-touching 0x00 components are void. Used to suppress false split tooltips.
+  const layer1ReachableLocal = useMemo(() => {
+    const layer0 = result.dualLayerGrids?.layer0;
+    const layer1 = result.dualLayerGrids?.layer1;
+    if (!layer0 || !layer1) return undefined;
+    const grid: boolean[][] = Array.from({ length: 64 }, () => Array(64).fill(false));
+
+    // Step 1: Flood from boundary through 0x00 to find void-connected tiles
+    const boundaryConnected: boolean[][] = Array.from({ length: 64 }, () => Array(64).fill(false));
+    const bQueue: Array<[number, number]> = [];
+    for (let r = 0; r < 64; r++) {
+      for (let c = 0; c < 64; c++) {
+        if ((r === 0 || r === 63 || c === 0 || c === 63) && layer1[r]?.[c] === 0x00) {
+          boundaryConnected[r][c] = true;
+          bQueue.push([r, c]);
+        }
+      }
+    }
+    while (bQueue.length > 0) {
+      const [qr, qc] = bQueue.shift()!;
+      for (const [dr, dc] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
+        const nr = qr + dr, nc = qc + dc;
+        if (nr < 0 || nr >= 64 || nc < 0 || nc >= 64) continue;
+        if (boundaryConnected[nr][nc]) continue;
+        if (layer1[nr]?.[nc] !== 0x00) continue;
+        boundaryConnected[nr][nc] = true;
+        bQueue.push([nr, nc]);
+      }
+    }
+
+    // Step 2: Enclosed seeds = 0x00 tiles NOT boundary-connected
+    const seeds: Array<[number, number]> = [];
+    for (let r = 0; r < 64; r++) {
+      for (let c = 0; c < 64; c++) {
+        if (layer1[r]?.[c] === 0x00 && !boundaryConnected[r][c]) {
+          grid[r][c] = true;
+          seeds.push([r, c]);
+        }
+      }
+    }
+
+    // Step 3: BFS from seeds through ALL non-boundary-connected tiles
+    // Expand freely (including through walls and layers-agree tiles)
+    // Only mark grid=true where layers actually differ
+    const visited: boolean[][] = Array.from({ length: 64 }, () => Array(64).fill(false));
+    for (const [sr, sc] of seeds) visited[sr][sc] = true;
+    const queue = [...seeds];
+    while (queue.length > 0) {
+      const [qr, qc] = queue.shift()!;
+      for (const [dr, dc] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
+        const nr = qr + dr, nc = qc + dc;
+        if (nr < 0 || nr >= 64 || nc < 0 || nc >= 64) continue;
+        if (visited[nr][nc]) continue;
+        if (boundaryConnected[nr][nc]) continue;
+        visited[nr][nc] = true;
+        const attr = layer1[nr]?.[nc] ?? 0;
+        // Mark reachable only if layers disagree and layer1 has content
+        if (attr !== 0x00 && layer0[nr]?.[nc] !== attr) {
+          grid[nr][nc] = true;
+        }
+        queue.push([nr, nc]);
+      }
+    }
+
+    return grid;
+  }, [result.dualLayerGrids?.layer0, result.dualLayerGrids?.layer1]);
 
   // Keep viewport info fresh
   useEffect(() => {
@@ -1049,6 +1236,41 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
     raf = requestAnimationFrame(update);
     return () => cancelAnimationFrame(raf);
   }, []);
+
+  // Debug: expose function to programmatically trigger tooltip from CLI tools
+  useEffect(() => {
+    (window as any).__debugHoverTile = (col: number, row: number) => {
+      const vp = vpRef.current;
+      if (!vp || !result.attrGrid) return false;
+      if (row < 0 || row >= 64 || col < 0 || col >= 64) return false;
+
+      const attr = result.attrGrid[row][col];
+      const reachable = result.reachable[row][col];
+      const context = result.tileContext ?? 'overworld';
+      const label = getAttrLabel(attr, context);
+      const classification = classifyTileAttr(attr, context);
+      const tileDef = getTileAttrsMap(context)[attr];
+
+      setTooltip({
+        x: width / 2, y: 40,
+        row, col,
+        attr, label,
+        type: classification.type === 'ledge' ? `ledge (${classification.dir})` : classification.type,
+        req: tileDef?.req ?? null,
+        canPass: null,
+        reachable,
+        hookTarget: tileDef?.hookTarget ?? false,
+        pathReqs: result.reqGrid?.[row]?.[col] ?? '',
+        bfsBlocked: false,
+        spriteInfo: [],
+        layer0Attr: result.dualLayerGrids?.layer0[row]?.[col],
+        layer1Attr: result.dualLayerGrids?.layer1[row]?.[col],
+        layer1Reach: layer1ReachableLocal?.[row]?.[col] ?? result.layer1Reachable?.[row]?.[col],
+      });
+      return true;
+    };
+    return () => { delete (window as any).__debugHoverTile; };
+  }, [result, width, height, layer1ReachableLocal]);
 
   /** Convert mouse event to tile [row, col] or null if out of bounds */
   const mouseToTile = useCallback((e: React.MouseEvent<HTMLDivElement>): GridPos | null => {
@@ -1245,7 +1467,7 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
     if (activeTarget) {
       const goal2x2 = findNearest2x2Goal(activeTarget.row, activeTarget.col, result.reachable);
       const path = goal2x2
-        ? findPath2x2FromLink(vp.linkX, vp.linkY, screenWorldX, screenWorldY, goal2x2, result.reachable)
+        ? findPath2x2FromLink(vp.linkX, vp.linkY + 8, screenWorldX, screenWorldY, goal2x2, result.reachable)
         : null;
 
       if (path && path.length > 1) {
@@ -1319,6 +1541,9 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
       pathReqs: result.reqGrid?.[tileRow]?.[tileCol] ?? '',
       bfsBlocked,
       spriteInfo,
+      layer0Attr: result.dualLayerGrids?.layer0[tileRow]?.[tileCol],
+      layer1Attr: result.dualLayerGrids?.layer1[tileRow]?.[tileCol],
+      layer1Reach: layer1ReachableLocal?.[tileRow]?.[tileCol] ?? result.layer1Reachable?.[tileRow]?.[tileCol],
     });
     if (onHoverTile) onHoverTile(tileRow, tileCol);
   }, [
@@ -1334,6 +1559,7 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
     pathPreviewState,
     rectSel?.active,
     handleRectMouseMove,
+    layer1ReachableLocal,
   ]);
 
   // Compute selection rectangle in display pixels for the visual overlay
@@ -1366,6 +1592,7 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
 
   return (
     <div
+      data-testid="tile-inspector"
       onMouseMove={handleMouseMove}
       onMouseDown={handleRectMouseDown}
       onMouseUp={handleRectMouseUp}
@@ -1440,23 +1667,62 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
               {tooltip.reachable === 1 ? '✓ reachable' : tooltip.reachable >= 2 ? '➔ traversal' : '✗ blocked'}
             </span>
           </div>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
-            <span style={{ color: '#6cf' }}>0x{tooltip.attr.toString(16).padStart(2, '0')}</span>
-            <span style={{ color: '#fff' }}>{tooltip.label}</span>
-          </div>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
-            <span style={{ color: '#aaa' }}>type:</span>
-            <span style={{ color: '#fc6' }}>{tooltip.type}</span>
-            {tooltip.req && <>
-              <span style={{ color: '#aaa' }}>req:</span>
-              <span style={{ color: tooltip.canPass ? '#4f8' : '#f66' }}>
-                {tooltip.req} {tooltip.canPass ? '✓' : '✗'}
-              </span>
-            </>}
-            {tooltip.hookTarget && (
-              <span style={{ color: '#00ff88', fontWeight: 'bold' }}>⎆ hookshottable</span>
-            )}
-          </div>
+          {tooltip.layer0Attr !== undefined && tooltip.layer0Attr !== (tooltip.layer1Attr ?? 0) && (tooltip.layer1Reach || (tooltip.layer1Attr ?? 0) !== 0x00) ? (() => {
+            const ctx0 = result.tileContext ?? 'overworld';
+            const a0 = tooltip.layer0Attr!;
+            const a1 = tooltip.layer1Attr ?? 0;
+            const cls0 = classifyTileAttr(a0, ctx0);
+            const cls1 = classifyTileAttr(a1, ctx0);
+            const lbl0 = getAttrLabel(a0, ctx0);
+            const lbl1 = getAttrLabel(a1, ctx0);
+            const def0 = getTileAttrsMap(ctx0)[a0];
+            const def1 = getTileAttrsMap(ctx0)[a1];
+            const l1Reach = tooltip.layer1Reach;
+            const l0Passable = cls0.type === 'free' || cls0.type === 'ledge';
+            const l1Passable = cls1.type === 'free' || cls1.type === 'ledge';
+            return (
+              <div style={{ display: 'flex', gap: 0 }}>
+                {/* Ground layer (layer1) */}
+                <div style={{ flex: 1, borderRight: '1px solid rgba(255,255,255,0.15)', paddingRight: 6, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <div style={{ color: '#66ccff', fontWeight: 'bold', fontSize: 10 }}>▼ GROUND</div>
+                  <div><span style={{ color: '#6cf' }}>0x{a1.toString(16).padStart(2, '0')}</span> <span style={{ color: '#fff' }}>{lbl1}</span></div>
+                  <div><span style={{ color: '#aaa' }}>type:</span> <span style={{ color: '#fc6' }}>{cls1.type === 'ledge' ? `ledge (${cls1.dir})` : cls1.type}</span></div>
+                  {def1?.req && <div><span style={{ color: '#aaa' }}>req:</span> <span style={{ color: '#fc6' }}>{def1.req}</span></div>}
+                  <div style={{ color: (l1Reach || l1Passable) ? '#4f8' : '#f66', fontWeight: 'bold' }}>
+                    {l1Reach ? '✓ reachable' : l1Passable ? '~ passable' : '✗ wall'}
+                  </div>
+                </div>
+                {/* Above layer (layer0) */}
+                <div style={{ flex: 1, paddingLeft: 6, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <div style={{ color: '#ff9966', fontWeight: 'bold', fontSize: 10 }}>▲ ABOVE</div>
+                  <div><span style={{ color: '#6cf' }}>0x{a0.toString(16).padStart(2, '0')}</span> <span style={{ color: '#fff' }}>{lbl0}</span></div>
+                  <div><span style={{ color: '#aaa' }}>type:</span> <span style={{ color: '#fc6' }}>{cls0.type === 'ledge' ? `ledge (${cls0.dir})` : cls0.type}</span></div>
+                  {def0?.req && <div><span style={{ color: '#aaa' }}>req:</span> <span style={{ color: '#fc6' }}>{def0.req}</span></div>}
+                  <div style={{ color: (tooltip.reachable === 1 || l0Passable) ? '#4f8' : '#f66', fontWeight: 'bold' }}>
+                    {tooltip.reachable === 1 ? '✓ reachable' : l0Passable ? '~ passable' : '✗ wall'}
+                  </div>
+                </div>
+              </div>
+            );
+          })() : (<>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
+              <span style={{ color: '#6cf' }}>0x{tooltip.attr.toString(16).padStart(2, '0')}</span>
+              <span style={{ color: '#fff' }}>{tooltip.label}</span>
+            </div>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
+              <span style={{ color: '#aaa' }}>type:</span>
+              <span style={{ color: '#fc6' }}>{tooltip.type}</span>
+              {tooltip.req && <>
+                <span style={{ color: '#aaa' }}>req:</span>
+                <span style={{ color: tooltip.canPass ? '#4f8' : '#f66' }}>
+                  {tooltip.req} {tooltip.canPass ? '✓' : '✗'}
+                </span>
+              </>}
+              {tooltip.hookTarget && (
+                <span style={{ color: '#00ff88', fontWeight: 'bold' }}>⎆ hookshottable</span>
+              )}
+            </div>
+          </>)}
           {tooltip.reachable && (
             <div style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
               <span style={{ color: '#aaa' }}>path reqs:</span>

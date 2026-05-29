@@ -10,12 +10,23 @@ interface FloodCell {
   requirements: Set<string>;
 }
 
+interface DualLayerFloodCell {
+  row: number;
+  col: number;
+  layer: 0 | 1;
+  requirements: Set<string>;
+}
+
 interface SingleScreenResult {
   reachable: ReachState[][];
   transitions: TransitionPoint[];
   reachableCount: number;
   reqGrid: string[][];
   hookTargets: GridPos[];
+}
+
+interface DualLayerResult extends SingleScreenResult {
+  tileLayer: (0 | 1 | 2)[][];
 }
 
 /**
@@ -190,6 +201,7 @@ export function floodFillBFS(
     Array.from({ length: GRID_SIZE }, (_, c) => {
       if (reached[r][c] === null) return 0;
       const tile = grid[r][c];
+      if (tile.type === 'blocked') return 0;
       if (tile.type === 'ledge') return TRAVERSAL_DIR_OFFSET[tile.dir];
       if (tile.type === 'stairs') return STAIRS_TRAVERSAL_STATE;
       reachableCount++;
@@ -216,6 +228,230 @@ export function floodFillBFS(
   }
 
   return { reachable, transitions, reachableCount, reqGrid, hookTargets };
+}
+
+// ─── Dual-Layer BFS ──────────────────────────────────────────────────────────
+
+/** Swap-layer stair tile attrs (0x1E/0x1F). */
+const SWAP_STAIR_ATTRS = new Set([0x1E, 0x1F]);
+
+/**
+ * Dual-layer BFS flood-fill for indoor rooms with layer-swap stairs.
+ * Tracks which layer each body position is on.  When the body occupies a
+ * 0x1E/0x1F stair tile, expansion also tries the OTHER layer's grid.
+ */
+export function floodFillBFSDualLayer(
+  grids: [TilePassability[][], TilePassability[][]],
+  rawAttrs: [number[][], number[][]],
+  startRow: number,
+  startCol: number,
+  startLayer: 0 | 1,
+  entrancePositions: { row: number; col: number; idx: number }[],
+  inventory: Set<string>,
+  tileContext: TileAttrContext,
+  quadrantBounds?: QuadrantBounds,
+): DualLayerResult {
+  const minR = quadrantBounds?.minRow ?? 0;
+  const maxR = quadrantBounds?.maxRow ?? GRID_SIZE - 1;
+  const minC = quadrantBounds?.minCol ?? 0;
+  const maxC = quadrantBounds?.maxCol ?? GRID_SIZE - 1;
+
+  // Body reached state: [layer][row][col]
+  const bodyReached: [(Set<string> | null)[][], (Set<string> | null)[][]] = [
+    Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(null)),
+    Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(null)),
+  ];
+
+  const transitions: TransitionPoint[] = [];
+  const foundBorders = new Set<string>();
+
+  const deque: DualLayerFloodCell[] = [];
+
+  // Find valid starting body position on the starting layer
+  const startBody = findStartBody(startRow, startCol, grids[startLayer], inventory, minR, maxR, minC, maxC);
+  if (startBody) {
+    const startReqs = new Set<string>();
+    for (const [r, c] of bodyTiles(startBody.row, startBody.col)) {
+      const t = grids[startLayer][r][c];
+      if (t.type === 'obstacle' && inventory.has(t.req!)) startReqs.add(t.req!);
+      if (t.type === 'water' && inventory.has('flippers')) startReqs.add('flippers');
+    }
+    deque.push({ row: startBody.row, col: startBody.col, layer: startLayer, requirements: startReqs });
+    bodyReached[startLayer][startBody.row][startBody.col] = startReqs;
+  }
+
+  while (deque.length > 0) {
+    const cell = deque.shift()!;
+    const { row, col, layer, requirements } = cell;
+    const grid = grids[layer];
+    const rawAttr = rawAttrs[layer];
+
+    const existing = bodyReached[layer][row][col]!;
+    if (existing.size < requirements.size) continue;
+
+    // Record border transitions
+    for (const [r, c] of bodyTiles(row, col)) {
+      recordBorderTransition(r, c, requirements, foundBorders, transitions, minR, maxR, minC, maxC);
+    }
+
+    // Record entrance reachability
+    const bodyCenterRow = row + 1;
+    const bodyCenterCol = col + 1;
+    for (const ent of entrancePositions) {
+      const key = `entrance-${ent.idx}`;
+      if (foundBorders.has(key)) continue;
+      const nearby =
+        bodyCenterRow >= ent.row - 3 && bodyCenterRow <= ent.row + 5 &&
+        bodyCenterCol >= ent.col - 3 && bodyCenterCol <= ent.col + 5;
+      if (nearby) {
+        foundBorders.add(key);
+        transitions.push({ row: ent.row, col: ent.col, edge: 'entrance', requirements: [...requirements], entranceIdx: ent.idx });
+      }
+    }
+
+    // Check if current body position sits on any swap-stair tiles
+    let hasStairTile = false;
+    for (const [r, c] of bodyTiles(row, col)) {
+      if (SWAP_STAIR_ATTRS.has(rawAttr[r]?.[c])) {
+        hasStairTile = true;
+        break;
+      }
+    }
+
+    // Expand in 4 directions — on current layer, plus other layer if on stairs
+    const layersToExpand: (0 | 1)[] = hasStairTile ? [layer, (1 - layer) as 0 | 1] : [layer];
+
+    for (const targetLayer of layersToExpand) {
+      const targetGrid = grids[targetLayer];
+
+      for (const [dr, dc] of DIRECTIONS) {
+        const nr = row + dr;
+        const nc = col + dc;
+
+        if (nr < minR || nr + 1 > maxR || nc < minC || nc + 1 > maxC) continue;
+
+        // Ledge exit restriction (only applies on current layer)
+        let ledgeBlocked = false;
+        if (targetLayer === layer) {
+          for (const [r, c] of bodyTiles(row, col)) {
+            const t = grid[r][c];
+            if (t.type === 'ledge' && !canLeaveLedge(t.dir, dr, dc)) {
+              ledgeBlocked = true;
+              break;
+            }
+          }
+        }
+        if (ledgeBlocked) continue;
+
+        // Check new tiles on the TARGET layer
+        const newTiles = getNewTiles(nr, nc, dr, dc);
+        let canMove = true;
+        let newReqs = requirements;
+        for (const [tr, tc] of newTiles) {
+          const tile = targetGrid[tr][tc];
+          const entry = evaluateEntry(tile, dr, dc, requirements, inventory);
+          if (!entry.canEnter) { canMove = false; break; }
+          if (entry.newReqs !== newReqs) {
+            newReqs = newReqs === requirements ? new Set(entry.newReqs) : newReqs;
+            for (const req of entry.newReqs) newReqs.add(req);
+          }
+        }
+        if (!canMove) continue;
+
+        const existingReqs = bodyReached[targetLayer][nr][nc];
+        if (existingReqs !== null && existingReqs.size <= newReqs.size) continue;
+
+        bodyReached[targetLayer][nr][nc] = newReqs;
+        if (newReqs === requirements) {
+          deque.unshift({ row: nr, col: nc, layer: targetLayer, requirements: newReqs });
+        } else {
+          deque.push({ row: nr, col: nc, layer: targetLayer, requirements: newReqs });
+        }
+      }
+    }
+  }
+
+  // ─── Convert body positions to per-tile reachability (merge both layers) ────
+  const reached: [(Set<string> | null)[][], (Set<string> | null)[][]] = [
+    Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(null)),
+    Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(null)),
+  ];
+
+  for (let layer = 0; layer < 2; layer++) {
+    for (let r = minR; r < GRID_SIZE - 1 && r <= maxR; r++) {
+      for (let c = minC; c < GRID_SIZE - 1 && c <= maxC; c++) {
+        const reqs = bodyReached[layer][r][c];
+        if (reqs === null) continue;
+        for (const [tr, tc] of bodyTiles(r, c)) {
+          const existing = reached[layer][tr][tc];
+          if (existing === null || existing.size > reqs.size) {
+            reached[layer][tr][tc] = reqs;
+          }
+        }
+      }
+    }
+  }
+
+  // Build merged reachable grid + tileLayer info
+  let reachableCount = 0;
+  const reachable: ReachState[][] = Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(0));
+  const tileLayer: (0 | 1 | 2)[][] = Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(0));
+
+  for (let r = 0; r < GRID_SIZE; r++) {
+    for (let c = 0; c < GRID_SIZE; c++) {
+      const r0 = reached[0][r][c];
+      const r1 = reached[1][r][c];
+      if (r0 === null && r1 === null) continue;
+
+      // Pick the layer with the best (fewest) requirements
+      const bestLayer = r0 !== null && r1 !== null
+        ? (r0.size <= r1.size ? 0 : 1)
+        : (r0 !== null ? 0 : 1);
+      const grid = grids[bestLayer];
+      const tile = grid[r][c];
+
+      if (tile.type === 'blocked') continue;
+
+      if (tile.type === 'ledge') {
+        reachable[r][c] = TRAVERSAL_DIR_OFFSET[tile.dir];
+      } else if (tile.type === 'stairs') {
+        reachable[r][c] = STAIRS_TRAVERSAL_STATE;
+      } else {
+        reachable[r][c] = 1;
+        reachableCount++;
+      }
+
+      // Track which layer(s) reached this tile
+      if (r0 !== null && r1 !== null) tileLayer[r][c] = 2;
+      else if (r1 !== null) tileLayer[r][c] = 1;
+      else tileLayer[r][c] = 0;
+    }
+  }
+
+  // Req grid (merge both layers, pick fewest requirements)
+  const reqGrid: string[][] = Array.from({ length: GRID_SIZE }, (_, r) =>
+    Array.from({ length: GRID_SIZE }, (_, c) => {
+      const r0 = reached[0][r][c];
+      const r1 = reached[1][r][c];
+      const best = r0 !== null && r1 !== null ? (r0.size <= r1.size ? r0 : r1)
+        : (r0 ?? r1);
+      return best && best.size > 0 ? [...best].join(',') : '';
+    }),
+  );
+
+  // Hookshot targets from both layers
+  const hookSet = getHookshotTargetTiles(tileContext);
+  const hookTargets: GridPos[] = [];
+  for (let r = 0; r < GRID_SIZE; r++) {
+    for (let c = 0; c < GRID_SIZE; c++) {
+      if (!reachable[r][c]) continue;
+      if (hookSet.has(rawAttrs[0][r][c]) || hookSet.has(rawAttrs[1][r][c])) {
+        hookTargets.push({ row: r, col: c });
+      }
+    }
+  }
+
+  return { reachable, transitions, reachableCount, reqGrid, hookTargets, tileLayer };
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

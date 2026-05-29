@@ -21,6 +21,7 @@ import { useSaveOverlay } from './behavior/useSaveOverlay';
 import { useSaveStateSettings } from './behavior/useSaveStateSettings';
 import { useStartup } from './behavior/useStartup';
 import { useAutoTest } from './behavior/useAutoTest';
+import { useDumpLayers } from './behavior/useDumpLayers';
 import { getInputManager, primeLiveSettings } from '../lib/game';
 import './App.css';
 
@@ -94,6 +95,7 @@ const App = () => {
 
   useStartup(profileMgmt, nav);
   useAutoTest({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame });
+  useDumpLayers({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame, openNavWidget: () => widgets.open('navigation') });
   useIpcLogBridge();
 
   // Auto-open navigation widget when --auto-flood CLI flag is set

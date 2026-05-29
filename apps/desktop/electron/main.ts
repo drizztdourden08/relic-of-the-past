@@ -16,6 +16,7 @@ import { registerSessionHandlers } from './sessions/ipc-handlers';
 import { registerSpriteProtocol } from './protocol/sprite-protocol';
 import { registerInputHandlers, stopInputHandlers, initCalibrationStore, initProfileStore } from './input';
 import { registerTestHandlers } from './test/ipc-handlers';
+import { registerDumpLayersHandler } from './debug/dump-layers-handler';
 import { registerConnectionHandlers } from './connections/ipc-handlers';
 import { registerShadowCastingHandlers } from './shadow-casting';
 import { ipcMain } from 'electron';
@@ -64,6 +65,7 @@ app.whenReady().then(async () => {
   registerLanguageHandlers();
   registerSessionHandlers();
   registerTestHandlers();
+  registerDumpLayersHandler();
   registerConnectionHandlers();
   registerShadowCastingHandlers();
 
@@ -74,6 +76,13 @@ app.whenReady().then(async () => {
   createWindow();
 
   const mainWindow = getMainWindow()!;
+
+  // Forward renderer console to stdout when --dump-layers is active
+  if (process.argv.some(a => a.startsWith('--dump-layers='))) {
+    mainWindow.webContents.on('console-message', (_ev, _level, message) => {
+      console.log(`[renderer] ${message}`);
+    });
+  }
 
   // Initialize input subsystem (HID, USB, calibration, profiles)
   initCalibrationStore(dataPath);

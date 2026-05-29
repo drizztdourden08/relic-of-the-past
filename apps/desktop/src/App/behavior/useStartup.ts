@@ -17,7 +17,8 @@ const useStartup = (
           window.api.getTestArgs(),
         ]);
 
-        const isAutoTest = testArgs.autoState !== null || !!testArgs.screenshot;
+        const dumpSlot = await window.api.getDumpLayersSlot();
+        const isAutoTest = testArgs.autoState !== null || !!testArgs.screenshot || dumpSlot !== null;
 
         profileMgmt.setProfiles(profileList);
         profileMgmt.setRomStatuses(romStatusList);

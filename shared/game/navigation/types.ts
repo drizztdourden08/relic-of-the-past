@@ -110,6 +110,14 @@ export interface FloodFillResult {
   hookTargets?: GridPos[];
   /** Variant state at time of analysis (null = base ROM, no runtime state) */
   variant?: ScreenVariant;
+  /** Per-tile layer reached: 0=layer0 only, 1=layer1 only, 2=both. Only for dual-layer indoor rooms. */
+  tileLayer?: (0 | 1 | 2)[][];
+  /** Tiles where both raw layer grids are passable (for blue border rendering). */
+  bothLayersPassable?: boolean[][];
+  /** Layer 1 reachability (simple BFS on ground layer). For split-circle rendering. */
+  layer1Reachable?: boolean[][];
+  /** Raw per-layer attr grids for dual-layer rooms (for tooltip display). */
+  dualLayerGrids?: { layer0: number[][]; layer1: number[][] };
   borders: {
     north: BorderSummary;
     south: BorderSummary;

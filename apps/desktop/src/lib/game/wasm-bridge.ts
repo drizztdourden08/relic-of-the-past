@@ -307,43 +307,63 @@ function wasmGetOverworldVariant(screenIndex: number): OverworldVariantInfo | nu
 }
 
 /**
- * Read current indoor room collision attrs (64x64) from dung_bg2_attr_table.
- * Uses Link's active layer (upper/lower) to pick the proper 0x1000-page.
+ * Read both indoor room collision attr layers (64×64 each) from dung_bg2_attr_table.
+ * Layer 0 = offset 0 (upper, link_is_on_lower_level=0) — main walkable floor, has cliffs/ledges.
+ * Layer 1 = offset 0x1000 (lower, link_is_on_lower_level=1) — underneath overlapping areas.
+ * Returns raw data with no modifications. Works with live game state.
  */
-// Standard indoor wall attribute values used for dual-layer collision merging.
-// When Link is on one level, walls from the other level are overlaid onto free tiles
-// to prevent the BFS from pathfinding into areas with different collision.
-const INDOOR_WALL_ATTRS: ReadonlySet<number> = new Set([
-  0x01, 0x02, 0x03, 0x04, 0x0C, 0x26, 0x43, 0x46, 0xC0,
-]);
-
-function wasmGetIndoorAttrGrid(): number[][] | null {
+function wasmGetIndoorDualLayerGrids(): { layer0: number[][]; layer1: number[][]; stairTiles: Array<{ row: number; col: number }> } | null {
   const mod = currentModule;
   if (!mod || currentState.status !== 'running') return null;
   try {
     const ptr = mod.ccall('WasmGetIndoorAttrTable', 'number', [], []) as number;
     if (!ptr) return null;
-    const lower = (mod.ccall('WasmGetLinkIsOnLowerLevel', 'number', [], []) as number) !== 0;
-    const base = ptr + (lower ? 0x1000 : 0);
-    const otherBase = ptr + (lower ? 0 : 0x1000);
     const heap = mod.HEAPU8;
-    const out: number[][] = Array.from({ length: 64 }, () => new Array<number>(64));
+    const layer0: number[][] = Array.from({ length: 64 }, () => new Array<number>(64));
+    const layer1: number[][] = Array.from({ length: 64 }, () => new Array<number>(64));
+    const stairTiles: Array<{ row: number; col: number }> = [];
+    let hasDifference = false;
     for (let r = 0; r < 64; r++) {
-      const rowBase = base + r * 64;
-      const otherRowBase = otherBase + r * 64;
+      const row0 = ptr + r * 64;
+      const row1 = ptr + 0x1000 + r * 64;
       for (let c = 0; c < 64; c++) {
-        const val = heap[rowBase + c];
-        if (val === 0x00) {
-          const otherVal = heap[otherRowBase + c];
-          if (INDOOR_WALL_ATTRS.has(otherVal)) {
-            out[r][c] = otherVal;
-            continue;
-          }
+        let a0 = heap[row0 + c];
+        let a1 = heap[row1 + c];
+        // Record upper-floor stair positions (raw 0x1C on BG1/layer1) before normalization.
+        // Only layer1 stairs are valid BFS seeds — layer0-only stairs (ground-floor transitions)
+        // have BG1=0x00 (void) and would seed into the void area.
+        if (a1 === 0x1C) {
+          stairTiles.push({ row: r, col: c });
         }
-        out[r][c] = val;
+        // 0x1C is a filler/stair-detection value that appears on both BG2 and BG1
+        // when a layer has no real content at that position. Normalize it away
+        // by copying from the other layer so it never causes a false split display.
+        if (a0 === 0x1C && a1 !== 0x1C) a0 = a1;
+        if (a1 === 0x1C && a0 !== 0x1C) a1 = a0;
+        // If both are 0x1C, they're equal — no split (both filler).
+        layer0[r][c] = a0;
+        layer1[r][c] = a1;
+        if (a0 !== a1) hasDifference = true;
       }
     }
-    return out;
+    // If layers are identical after normalization, this room doesn't have
+    // meaningful dual-layer collision — discard.
+    if (!hasDifference) return null;
+    return { layer0, layer1, stairTiles };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Get Link's current layer from live game state.
+ * Returns 0 (upper/layer0) or 1 (lower/layer1), or null if game not running.
+ */
+function wasmGetLinkLayer(): 0 | 1 | null {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return null;
+  try {
+    return (mod.ccall('WasmGetLinkIsOnLowerLevel', 'number', [], []) as number) !== 0 ? 1 : 0;
   } catch {
     return null;
   }
@@ -726,7 +746,8 @@ export {
   wasmGetExitScreenMap,
   wasmGetFallHoles,
   wasmGetGameUIState,
-  wasmGetIndoorAttrGrid,
+  wasmGetIndoorDualLayerGrids,
+  wasmGetLinkLayer,
   wasmGetIndoorUncleBlockers,
   wasmGetLiveSprites,
   wasmGetMenuState,
