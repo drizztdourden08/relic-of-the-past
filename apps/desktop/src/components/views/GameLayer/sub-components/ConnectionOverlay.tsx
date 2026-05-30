@@ -357,23 +357,26 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       const DOT_COLOR_REQ = 'rgba(255, 100, 180, 0.35)';
       const DOT_COLOR_LAYER1 = 'rgba(255, 220, 80, 0.6)';
       ctx.globalAlpha = 0.55;
+      const l0Grid = result?.dualLayerGrids?.layer0;
+      const l1Grid = result?.dualLayerGrids?.layer1;
       for (const drawResult of drawResults) {
         const origin = getScreenWorldOrigin(drawResult.screenIndex);
         const perLayer = layer1ReachableOverride; // [layer0ReachState[][], layer1ReachState[][]] or null
-        const hasDualLayer = !!perLayer;
         for (let r = 0; r < 64; r++) {
           for (let c = 0; c < 64; c++) {
-            const mergedReachable = drawResult.reachable[r][c] === 1;
             // Per-layer reachability from dual-layer BFS
-            const layer0Reach = perLayer ? perLayer[0][r][c] !== 0 : mergedReachable;
+            const layer0Reach = perLayer ? perLayer[0][r][c] !== 0 : false;
             const layer1Reach = perLayer ? perLayer[1][r][c] !== 0 : false;
-            if (!layer0Reach && !layer1Reach) continue;
+            const mergedReachable = perLayer ? (layer0Reach || layer1Reach) : drawResult.reachable[r][c] === 1;
+            if (!mergedReachable) continue;
 
-            // Split circle when reachability differs between layers
-            const layersDiffer = hasDualLayer && (layer0Reach !== layer1Reach);
+            // Overlap = both raw layer grids have non-void data at this tile.
+            // Only show split circle where both layers physically have content.
+            const hasOverlap = !!l0Grid && !!l1Grid &&
+              l0Grid[r]?.[c] !== 0x00 && l1Grid[r]?.[c] !== 0x00;
 
             // Skip ledge/traversal tiles (they get arrows) — but NOT split-circle tiles
-            if (!layersDiffer && drawResult.attrGrid && LEDGE_ATTRS.has(drawResult.attrGrid[r][c])) continue;
+            if (!hasOverlap && drawResult.attrGrid && LEDGE_ATTRS.has(drawResult.attrGrid[r][c])) continue;
 
             // Tile center in world coordinates
             const worldX = origin.x + c * TILE_PX + TILE_PX / 2;
@@ -394,37 +397,39 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
             const hasReq = drawResult.reqGrid && drawResult.reqGrid[r][c] !== '';
             const radius = dotRadius * 0.6;
 
-            if (layersDiffer) {
-              // Split circle: two independent halves
-              // Left = Layer 0 (upper/BG2), Right = Layer 1 (lower/BG1)
+            if (hasOverlap) {
+              // Split circle: both layers have content at this tile
+              // Left = Lower (layer 1/BG1), Right = Upper (layer 0/BG2)
               const splitAlpha = ctx.globalAlpha;
               ctx.globalAlpha = 0.85;
 
-              // Left half = Layer 0: cyan/pink if BFS reached on layer 0
-              if (layer0Reach) {
-                ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
+              // Left half = Lower (layer 1): yellow if BFS reached on layer 1
+              if (layer1Reach) {
+                ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_LAYER1;
                 ctx.beginPath();
                 ctx.arc(dx, dy, radius, Math.PI * 0.5, Math.PI * 1.5);
                 ctx.fill();
               }
 
-              // Right half = Layer 1: yellow/pink if BFS reached on layer 1
-              if (layer1Reach) {
-                ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_LAYER1;
+              // Right half = Upper (layer 0): cyan if BFS reached on layer 0
+              if (layer0Reach) {
+                ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
                 ctx.beginPath();
                 ctx.arc(dx, dy, radius, -Math.PI * 0.5, Math.PI * 0.5);
                 ctx.fill();
               }
 
-              // Black border around full circle
-              ctx.strokeStyle = '#000';
-              ctx.lineWidth = Math.max(1, Math.min(scaleX, scaleY) * 0.6);
-              ctx.beginPath();
-              ctx.arc(dx, dy, radius, 0, Math.PI * 2);
-              ctx.stroke();
+              // Black border around full circle (only if at least one half is visible)
+              if (layer0Reach || layer1Reach) {
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = Math.max(1, Math.min(scaleX, scaleY) * 0.6);
+                ctx.beginPath();
+                ctx.arc(dx, dy, radius, 0, Math.PI * 2);
+                ctx.stroke();
+              }
               ctx.globalAlpha = splitAlpha;
-            } else if (mergedReachable) {
-              // Regular dot — layers agree or single layer
+            } else {
+              // Regular dot — no overlap between layers, single-layer tile
               ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
               ctx.beginPath();
               ctx.arc(dx, dy, radius, 0, Math.PI * 2);
