@@ -1103,6 +1103,7 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
     /** Layer info for dual-layer rooms */
     layer0Attr?: number;
     layer1Attr?: number;
+    layer0Reach?: boolean;
     layer1Reach?: boolean;
   } | null>(null);
   const vpRef = useRef<ReturnType<typeof wasmGetViewportInfo>>(null);
@@ -1116,9 +1117,15 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
   const [copied, setCopied] = useState(false);
 
   // Per-layer reachability for tooltip display (from dual-layer BFS)
+  const layer0ReachableLocal = useMemo(() => {
+    if (!result.reachableByLayer) return undefined;
+    const grid: boolean[][] = Array.from({ length: 64 }, (_, r) =>
+      Array.from({ length: 64 }, (_, c) => result.reachableByLayer![0][r][c] !== 0),
+    );
+    return grid;
+  }, [result.reachableByLayer]);
   const layer1ReachableLocal = useMemo(() => {
     if (!result.reachableByLayer) return undefined;
-    // Convert layer 1 ReachState grid to boolean grid for tooltip compatibility
     const grid: boolean[][] = Array.from({ length: 64 }, (_, r) =>
       Array.from({ length: 64 }, (_, c) => result.reachableByLayer![1][r][c] !== 0),
     );
@@ -1165,12 +1172,13 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
         spriteInfo: [],
         layer0Attr: result.dualLayerGrids?.layer0[row]?.[col],
         layer1Attr: result.dualLayerGrids?.layer1[row]?.[col],
+        layer0Reach: layer0ReachableLocal?.[row]?.[col],
         layer1Reach: layer1ReachableLocal?.[row]?.[col],
       });
       return true;
     };
     return () => { delete (window as any).__debugHoverTile; };
-  }, [result, width, height, layer1ReachableLocal]);
+  }, [result, width, height, layer0ReachableLocal, layer1ReachableLocal]);
 
   /** Convert mouse event to tile [row, col] or null if out of bounds */
   const mouseToTile = useCallback((e: React.MouseEvent<HTMLDivElement>): GridPos | null => {
@@ -1443,7 +1451,8 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
       spriteInfo,
       layer0Attr: result.dualLayerGrids?.layer0[tileRow]?.[tileCol],
       layer1Attr: result.dualLayerGrids?.layer1[tileRow]?.[tileCol],
-      layer1Reach: layer1ReachableLocal?.[tileRow]?.[tileCol],
+        layer0Reach: layer0ReachableLocal?.[tileRow]?.[tileCol],
+        layer1Reach: layer1ReachableLocal?.[tileRow]?.[tileCol],
     });
     if (onHoverTile) onHoverTile(tileRow, tileCol);
   }, [
@@ -1459,6 +1468,7 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
     pathPreviewState,
     rectSel?.active,
     handleRectMouseMove,
+    layer0ReachableLocal,
     layer1ReachableLocal,
   ]);
 
@@ -1567,19 +1577,22 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
               {tooltip.reachable === 1 ? '✓ reachable' : tooltip.reachable >= 2 ? '➔ traversal' : '✗ blocked'}
             </span>
           </div>
-          {tooltip.layer0Attr !== undefined && tooltip.layer0Attr !== (tooltip.layer1Attr ?? 0) && (tooltip.layer1Reach || (tooltip.layer1Attr ?? 0) !== 0x00) ? (() => {
+          {(tooltip.layer0Attr !== undefined && (() => {
             const ctx0 = result.tileContext ?? 'overworld';
             const a0 = tooltip.layer0Attr!;
             const a1 = tooltip.layer1Attr ?? 0;
+            // Same overlap logic as dot rendering: content = non-0x00 OR BFS-reached
+            const l0HasContent = a0 !== 0x00 || !!tooltip.layer0Reach;
+            const l1HasContent = a1 !== 0x00 || !!tooltip.layer1Reach;
+            if (!l0HasContent || !l1HasContent) return null;
             const cls0 = classifyTileAttr(a0, ctx0);
             const cls1 = classifyTileAttr(a1, ctx0);
             const lbl0 = getAttrLabel(a0, ctx0);
             const lbl1 = getAttrLabel(a1, ctx0);
             const def0 = getTileAttrsMap(ctx0)[a0];
             const def1 = getTileAttrsMap(ctx0)[a1];
+            const l0Reach = tooltip.layer0Reach;
             const l1Reach = tooltip.layer1Reach;
-            const l0Passable = cls0.type === 'free' || cls0.type === 'ledge';
-            const l1Passable = cls1.type === 'free' || cls1.type === 'ledge';
             return (
               <div style={{ display: 'flex', gap: 0 }}>
                 {/* Ground layer (layer1) */}
@@ -1588,8 +1601,8 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
                   <div><span style={{ color: '#6cf' }}>0x{a1.toString(16).padStart(2, '0')}</span> <span style={{ color: '#fff' }}>{lbl1}</span></div>
                   <div><span style={{ color: '#aaa' }}>type:</span> <span style={{ color: '#fc6' }}>{cls1.type === 'ledge' ? `ledge (${cls1.dir})` : cls1.type}</span></div>
                   {def1?.req && <div><span style={{ color: '#aaa' }}>req:</span> <span style={{ color: '#fc6' }}>{def1.req}</span></div>}
-                  <div style={{ color: l1Passable ? '#4f8' : '#f66', fontWeight: 'bold' }}>
-                    {l1Passable ? '~ passable' : '✗ wall'}
+                  <div style={{ color: l1Reach ? '#4f8' : '#f66', fontWeight: 'bold' }}>
+                    {l1Reach ? '✓ reachable' : '✗ wall'}
                   </div>
                 </div>
                 {/* Above layer (layer0) */}
@@ -1598,13 +1611,13 @@ function TileInspector({ width, height, result, overworldScreenIndex, roomIndex:
                   <div><span style={{ color: '#6cf' }}>0x{a0.toString(16).padStart(2, '0')}</span> <span style={{ color: '#fff' }}>{lbl0}</span></div>
                   <div><span style={{ color: '#aaa' }}>type:</span> <span style={{ color: '#fc6' }}>{cls0.type === 'ledge' ? `ledge (${cls0.dir})` : cls0.type}</span></div>
                   {def0?.req && <div><span style={{ color: '#aaa' }}>req:</span> <span style={{ color: '#fc6' }}>{def0.req}</span></div>}
-                  <div style={{ color: (tooltip.reachable === 1 || l1Reach || l0Passable) ? '#4f8' : '#f66', fontWeight: 'bold' }}>
-                    {(tooltip.reachable === 1 || l1Reach) ? '✓ reachable' : l0Passable ? '~ passable' : '✗ wall'}
+                  <div style={{ color: l0Reach ? '#4f8' : '#f66', fontWeight: 'bold' }}>
+                    {l0Reach ? '✓ reachable' : '✗ wall'}
                   </div>
                 </div>
               </div>
             );
-          })() : (<>
+          })()) ?? (<>
             <div style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
               <span style={{ color: '#6cf' }}>0x{tooltip.attr.toString(16).padStart(2, '0')}</span>
               <span style={{ color: '#fff' }}>{tooltip.label}</span>
