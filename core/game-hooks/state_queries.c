@@ -652,3 +652,52 @@ int WasmGetRoomDoorBoundaryTiles(void) {
   g_room_doors_buf[1] = 0;
   return (int)g_room_doors_buf;
 }
+
+// ─── Room Inter-Room Stair Info (destinations + positions from attr table) ───
+// Max 4 inter-room stairs per room.
+// Each entry: [destRoom(1), tileRow(1), tileCol(1), direction(1)]
+// direction: 0=up, 4=down (matches attr bit 2)
+// Stair index tiles have attr = 0x30..0x37 where bits 0-1 = stair index, bit 2 = direction.
+
+static uint8 g_room_stairs_buf[2 + 4 * 4];
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetRoomStairInfo(void) {
+  memset(g_room_stairs_buf, 0, sizeof(g_room_stairs_buf));
+
+  if (!player_is_indoors) {
+    return (int)g_room_stairs_buf;
+  }
+
+  uint8 found[4] = {0, 0, 0, 0};
+  uint8 count = 0;
+
+  // Scan both pages of the attr table for stair index tiles.
+  // Page 0 = upper layer (offset 0), Page 1 = lower layer (offset 0x1000).
+  for (int page = 0; page < 2 && count < 4; page++) {
+    int base = page * 0x1000;
+    for (int pos = 0; pos < 0x1000 && count < 4; pos++) {
+      uint8 attr = dung_bg2_attr_table[base + pos];
+      if ((attr & 0xF8) != 0x30) continue;
+
+      uint8 stair_idx = attr & 3;
+      if (found[stair_idx]) continue;  // already found this stair
+      found[stair_idx] = 1;
+
+      uint8 dest = dung_hdr_travel_destinations[stair_idx + 1];
+      uint8 row = (uint8)(pos / 64);
+      uint8 col = (uint8)(pos % 64);
+
+      int o = 2 + count * 4;
+      g_room_stairs_buf[o + 0] = dest;
+      g_room_stairs_buf[o + 1] = row;
+      g_room_stairs_buf[o + 2] = col;
+      g_room_stairs_buf[o + 3] = attr & 4;
+      count++;
+    }
+  }
+
+  g_room_stairs_buf[0] = count;
+  g_room_stairs_buf[1] = 0;
+  return (int)g_room_stairs_buf;
+}

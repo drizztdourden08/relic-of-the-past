@@ -18,6 +18,7 @@ import { registerInputHandlers, stopInputHandlers, initCalibrationStore, initPro
 import { registerTestHandlers } from './test/ipc-handlers';
 import { registerDumpLayersHandler } from './debug/dump-layers-handler';
 import { registerConnectionHandlers } from './connections/ipc-handlers';
+import { registerRegionEditorHandlers } from './region-editor/ipc-handlers';
 import { registerShadowCastingHandlers } from './shadow-casting';
 import { ipcMain } from 'electron';
 import { extractAllItemSprites } from '../../../shared/asset-extraction/item-sprites/extract-items';
@@ -67,6 +68,7 @@ app.whenReady().then(async () => {
   registerTestHandlers();
   registerDumpLayersHandler();
   registerConnectionHandlers();
+  registerRegionEditorHandlers();
   registerShadowCastingHandlers();
 
   // App info handler

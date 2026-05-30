@@ -236,4 +236,12 @@ contextBridge.exposeInMainWorld('api', {
     save: (data: unknown) => ipcRenderer.invoke('shadow-casting:save', data),
     getScreen: (screenId: number) => ipcRenderer.invoke('shadow-casting:get-screen', screenId),
   },
+
+  // Region editor (dev-only: write region/connection data to source files)
+  regionEditor: {
+    writeRegion: (args: { filePath: string; code: string; regionId: string | null }) =>
+      ipcRenderer.invoke('regionEditor:writeRegion', args) as Promise<{ success: boolean; error?: string }>,
+    writeConnections: (args: { filePath: string; code: string }) =>
+      ipcRenderer.invoke('regionEditor:writeConnections', args) as Promise<{ success: boolean; error?: string }>,
+  },
 });

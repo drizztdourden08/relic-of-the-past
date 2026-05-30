@@ -356,6 +356,12 @@ interface ElectronAPI {
     getScreen(screenId: number): Promise<import('@shared/types/shadow-casting').ScreenShadowData | null>;
   };
 
+  // Region editor (dev-only: write region/connection data to source files)
+  regionEditor: {
+    writeRegion(args: { filePath: string; code: string; regionId: string | null }): Promise<{ success: boolean; error?: string }>;
+    writeConnections(args: { filePath: string; code: string }): Promise<{ success: boolean; error?: string }>;
+  };
+
   // Connection/navigation review data
   loadConnectionReview(): Promise<unknown>;
   saveConnectionReview(data: unknown): Promise<void>;

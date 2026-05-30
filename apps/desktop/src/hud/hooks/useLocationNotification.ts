@@ -55,6 +55,7 @@ function useLocationNotification() {
         map.palaceIndex,
         map.roomIndex,
         map.overworldScreenIndex,
+        map.whichEntrance,
       );
 
       if (!region) return;

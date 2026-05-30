@@ -22,13 +22,17 @@ import { useConnectionOverlayStore } from '../../stores/connection-overlay-store
 import { buildScreenBundle, floodFillScreen, getConnections } from '@shared/game/navigation';
 import type { FloodFillOptions, QuadrantBounds } from '@shared/game/navigation';
 import type { ScreenBundle, OverworldEntrance } from '@shared/game/navigation';
-import { getRegionLookup, REGION_BY_ID } from '@shared/game/data/regions';
+import { getRegionLookup, resolveCurrentRegionDetailed, REGION_BY_ID } from '@shared/game/data/regions';
+import type { RegionMatchResult } from '@shared/game/data/regions';
 import { ALL_CONNECTIONS } from '@shared/game/data/connections';
-import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetIndoorDualLayerGrids, wasmGetLinkLayer, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetRoomDoorBoundaryTiles } from '../../lib/game';
+import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetIndoorDualLayerGrids, wasmGetLinkLayer, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetRoomDoorBoundaryTiles, wasmGetRoomStairInfo } from '../../lib/game';
 import { getCompletedChecks } from '../../lib/game/tracker';
 import type { OverworldVariantInfo } from '../../lib/game';
 import type { TileAttrContext } from '@shared/game/navigation/tile-attrs';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
+import { useRegionStatus, useConnectionStatus } from './useDatasetStatus';
+import { RegionEditorDialog } from './RegionEditorDialog';
+import { ConnectionEditorDialog } from './ConnectionEditorDialog';
 
 type EntranceType = 'door' | 'cave' | 'hole' | 'well' | 'dungeon' | 'fairy' | 'shop' | 'house' | 'unknown';
 
@@ -185,7 +189,7 @@ function getVisibleOverworldScreenIndices(vp: NonNullable<ReturnType<typeof wasm
 }
 
 function NavigationWidgetContent() {
-  const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex } = useGameUIStore(s => s.map);
+  const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex, whichEntrance, linkLayer, linkX, linkY } = useGameUIStore(s => s.map);
   const equipment = useGameUIStore(s => s.equipment);
   const inventoryItems = useGameUIStore(s => s.inventory.items);
   const overlayStore = useConnectionOverlayStore();
@@ -234,13 +238,15 @@ function NavigationWidgetContent() {
   const locationKey = isIndoors
     ? `room-${roomIndex.toString(16).padStart(3, '0')}`
     : `${isDarkWorld ? 'dw' : 'lw'}-${overworldScreenIndex.toString(16).padStart(2, '0')}`;
-  const screenName = isIndoors
-    ? (getRegionLookup().byCaveRoom.get(roomIndex)?.subtitle
-      ?? getRegionLookup().byCaveRoom.get(roomIndex)?.name
-      ?? getRegionLookup().byDungeonRoom.get(`${palaceIndex}:${roomIndex}`)?.subtitle
-      ?? getRegionLookup().byDungeonRoom.get(`${palaceIndex}:${roomIndex}`)?.name
-      ?? `Room 0x${roomIndex.toString(16).toUpperCase()}`)
-    : (getRegionLookup().byOverworldScreen.get(overworldScreenIndex)?.name ?? `Screen 0x${overworldScreenIndex.toString(16).toUpperCase()}`);
+  // ─── Region detection: single source of truth ───
+  // resolveCurrentRegionDetailed uses: isIndoors → palaceIndex (dungeon vs cave) → whichEntrance (disambiguates duplicates) → roomIndex
+  const detectionResult = useMemo<RegionMatchResult | null>(
+    () => resolveCurrentRegionDetailed(isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance),
+    [isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance],
+  );
+  const detectedRegion = detectionResult?.region ?? null;
+  const screenName = detectedRegion?.subtitle ?? detectedRegion?.name
+    ?? (isIndoors ? `Room 0x${roomIndex.toString(16).toUpperCase().padStart(4, '0')}` : `Screen 0x${overworldScreenIndex.toString(16).toUpperCase().padStart(2, '0')}`);
   const locationReview = reviewData[locationKey] ?? { status: 'neutral' as ReviewStatus, connections: {} };
   const displayedVariant = !isIndoors
     ? (result ? wasmGetOverworldVariant(result.screenIndex) : variant)
@@ -251,6 +257,41 @@ function NavigationWidgetContent() {
   const reachableSum = renderResults.reduce((sum, r) => sum + r.reachableCount, 0);
   const totalTilesSum = renderResults.reduce((sum, r) => sum + r.totalTiles, 0);
   const entranceSum = renderResults.reduce((sum, r) => sum + r.entrances.filter(e => r.transitions.some(t => t.entranceIdx === e.id)).length, 0);
+
+  // ─── Dataset status badges & editor dialogs ───
+  const [regionEditorOpen, setRegionEditorOpen] = useState(false);
+  const [connEditorOpen, setConnEditorOpen] = useState(false);
+
+  const regionStatus = useRegionStatus(detectionResult, isIndoors);
+
+  // Gather detected entrance screens + stairs for connection status
+  const detectedEntranceScreens = useMemo(() => {
+    if (!isIndoors) return [];
+    const rooms = wasmGetEntranceRooms();
+    const exitMap = wasmGetExitScreenMap();
+    const exitScreen = exitMap.get(roomIndex);
+    if (!rooms || exitScreen == null) return [];
+    const screens: number[] = [exitScreen];
+    return screens;
+  }, [isIndoors, roomIndex]);
+
+  const detectedStairs = useMemo(() => {
+    if (!isIndoors) return [];
+    return wasmGetRoomStairInfo();
+  }, [isIndoors, roomIndex]);
+
+  const exitScreen = useMemo(() => {
+    if (!isIndoors) return null;
+    return wasmGetExitScreenMap().get(roomIndex) ?? null;
+  }, [isIndoors, roomIndex]);
+
+  const connStatus = useConnectionStatus(
+    regionStatus.region?.id ?? null,
+    detectedEntranceScreens,
+    detectedStairs,
+    exitScreen,
+  );
+
   // Force a lightweight periodic rerender so live debug values update while moving.
   useEffect(() => {
     const id = setInterval(() => setDebugTick(t => (t + 1) & 1023), 200);
@@ -463,30 +504,51 @@ function NavigationWidgetContent() {
       // For indoor rooms: add entrance spawn positions from the kEntranceData tables.
       // Any entrance ID whose destination room matches the current screen gets a marker
       // at its actual spawn position (where Link appears when using that entrance).
+      // Only add if the room has an overworld exit (otherwise it's a one-way drop-in).
       if (isIndoors) {
-        const spawns = wasmGetEntranceSpawns();
-        const rooms = wasmGetEntranceRooms();
-        if (spawns && rooms) {
-          const roomOriginX = (primaryScreenIndex % 16) * 512;
-          const roomOriginY = Math.floor(primaryScreenIndex / 16) * 512;
-          for (let id = 0; id < rooms.length; id++) {
-            if (rooms[id] !== primaryScreenIndex) continue;
-            const spawn = spawns[id];
-            if (!spawn) continue;
-            const gridCol = Math.floor((spawn.x - roomOriginX + 8) / 8);
-            const gridRow = Math.floor((spawn.y - roomOriginY + 8) / 8);
-            if (gridRow < 0 || gridRow >= 64 || gridCol < 0 || gridCol >= 64) continue;
-            // Avoid duplicates with overworld entrances
-            if (allEntrances.some(e => e.id === id)) continue;
-            allEntrances.push({
-              area: primaryScreenIndex,
-              pos: 0,
-              id,
-              gridRow,
-              gridCol,
-              roomId: primaryScreenIndex,
-            });
+        const exitScreen = exitScreenByRoom.get(primaryScreenIndex);
+        if (exitScreen != null) {
+          const spawns = wasmGetEntranceSpawns();
+          const rooms = wasmGetEntranceRooms();
+          if (spawns && rooms) {
+            const roomOriginX = (primaryScreenIndex % 16) * 512;
+            const roomOriginY = Math.floor(primaryScreenIndex / 16) * 512;
+            for (let id = 0; id < rooms.length; id++) {
+              if (rooms[id] !== primaryScreenIndex) continue;
+              const spawn = spawns[id];
+              if (!spawn) continue;
+              const gridCol = Math.floor((spawn.x - roomOriginX + 8) / 8);
+              const gridRow = Math.floor((spawn.y - roomOriginY + 8) / 8);
+              if (gridRow < 0 || gridRow >= 64 || gridCol < 0 || gridCol >= 64) continue;
+              // Avoid duplicates with overworld entrances
+              if (allEntrances.some(e => e.id === id)) continue;
+              allEntrances.push({
+                area: primaryScreenIndex,
+                pos: 0,
+                id,
+                gridRow,
+                gridCol,
+                roomId: exitScreen,
+              });
+            }
           }
+        }
+
+        // Add inter-room stair connections from room header data.
+        // These are room-to-room transitions via stair tiles (0x22/0x34).
+        const stairs = wasmGetRoomStairInfo();
+        for (let i = 0; i < stairs.length; i++) {
+          const stair = stairs[i];
+          if (stair.destRoom === 0) continue;
+          const syntheticId = 1000 + i;
+          allEntrances.push({
+            area: primaryScreenIndex,
+            pos: 0,
+            id: syntheticId,
+            gridRow: stair.row,
+            gridCol: stair.col,
+            roomId: stair.destRoom,
+          });
         }
       }
 
@@ -875,6 +937,137 @@ function NavigationWidgetContent() {
         )}
       </div>
 
+      {/* ═══ 1a. IN-GAME STATE ═══ */}
+      <div style={S.section}>
+        <div style={S.sectionTitle}>In Game</div>
+        <div style={S.infoBox}>
+          {isIndoors ? (
+            <>
+              <div style={S.infoRow}>
+                <span style={S.infoLabel}>Room</span>
+                <span>0x{roomIndex.toString(16).toUpperCase().padStart(4, '0')}</span>
+              </div>
+              <div style={S.infoRow}>
+                <span style={S.infoLabel}>Entrance</span>
+                <span style={{ color: whichEntrance ? '#7cf' : '#666' }}>{whichEntrance ? `0x${whichEntrance.toString(16).toUpperCase().padStart(2, '0')} (${whichEntrance})` : '—'}</span>
+              </div>
+              <div style={S.infoRow}>
+                <span style={S.infoLabel}>Palace</span>
+                <span>{palaceIndex === 0xFF ? 'Cave/House' : `${palaceIndex >> 1} (0x${palaceIndex.toString(16).toUpperCase()})`}</span>
+              </div>
+              <div style={S.infoRow}>
+                <span style={S.infoLabel}>Layer</span>
+                <span>{linkLayer === 0 ? 'Upper (BG1)' : 'Lower (BG2)'}</span>
+              </div>
+              <div style={S.infoRow}>
+                <span style={S.infoLabel}>Link Pos</span>
+                <span style={{ color: '#aac' }}>{linkX}, {linkY}</span>
+              </div>
+            </>
+          ) : (
+            <>
+              <div style={S.infoRow}>
+                <span style={S.infoLabel}>Screen</span>
+                <span>0x{overworldScreenIndex.toString(16).toUpperCase().padStart(2, '0')} (R{(overworldScreenIndex >> 3) & 7} C{overworldScreenIndex & 7})</span>
+              </div>
+              <div style={S.infoRow}>
+                <span style={S.infoLabel}>World</span>
+                <span style={{ color: isDarkWorld ? '#c8a' : '#8c8' }}>{isDarkWorld ? 'Dark World' : 'Light World'}</span>
+              </div>
+              <div style={S.infoRow}>
+                <span style={S.infoLabel}>Link Pos</span>
+                <span style={{ color: '#aac' }}>{linkX}, {linkY}</span>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* ═══ 1b. DATASET STATUS (Game vs Dataset) ═══ */}
+      <div style={S.section}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+            <div style={S.sectionTitle}>Dataset</div>
+            <span style={{
+              fontSize: 9,
+              padding: '1px 5px',
+              borderRadius: 3,
+              background: regionStatus.status === 'mapped' ? '#1a3a1a' : regionStatus.status === 'incomplete' ? '#3a3a1a' : '#3a1a1a',
+              color: regionStatus.status === 'mapped' ? '#4f8' : regionStatus.status === 'incomplete' ? '#fc6' : '#f66',
+              fontWeight: 600,
+            }}>
+              {regionStatus.status === 'mapped' ? '✓ Region' : regionStatus.status === 'incomplete' ? '⚠ Region' : '✗ Region'}
+            </span>
+            <span style={{
+              fontSize: 9,
+              padding: '1px 5px',
+              borderRadius: 3,
+              background: connStatus.status === 'complete' ? '#1a3a1a' : connStatus.status === 'partial' ? '#3a3a1a' : '#2a2a2a',
+              color: connStatus.status === 'complete' ? '#4f8' : connStatus.status === 'partial' ? '#fc6' : '#666',
+              fontWeight: 600,
+            }}>
+              {connStatus.status === 'complete' ? '✓ Conns' : connStatus.status === 'partial' ? `⚠ ${connStatus.missingCount} missing` : '— Conns'}
+            </span>
+          </div>
+          <div style={S.infoBox}>
+            <div style={S.infoRow}>
+              <span style={S.infoLabel}>Region</span>
+              <span style={{ color: regionStatus.region ? '#7f7' : '#f66' }}>
+                {regionStatus.region ? regionStatus.region.id : 'Not mapped'}
+              </span>
+            </div>
+            {detectionResult && (
+              <div style={S.infoRow}>
+                <span style={S.infoLabel}>Match</span>
+                <span style={{ color: detectionResult.method === 'exact' || detectionResult.method === 'overworld' ? '#4f8' : detectionResult.method === 'entrance' ? '#8cf' : '#fc6' }}>
+                  {detectionResult.method}
+                </span>
+              </div>
+            )}
+            {regionStatus.region && (
+              <div style={S.infoRow}>
+                <span style={S.infoLabel}>Name</span>
+                <span>{regionStatus.region.name}</span>
+              </div>
+            )}
+            {regionStatus.region && (
+              <div style={S.infoRow}>
+                <span style={S.infoLabel}>Status</span>
+                <span style={{ color: regionStatus.region.status === 'verified' ? '#4f8' : regionStatus.region.status === 'mapped' ? '#8cf' : '#fc6' }}>
+                  {regionStatus.region.status ?? 'draft'}
+                </span>
+              </div>
+            )}
+            {regionStatus.issues.length > 0 && (
+              <div style={S.infoRow}>
+                <span style={S.infoLabel}>Issues</span>
+                <span style={{ color: '#fc6', fontSize: 10 }}>{regionStatus.issues.join(', ')}</span>
+              </div>
+            )}
+            {regionStatus.corrections.length > 0 && (
+              <div style={{ padding: '3px 6px', marginTop: 2, borderRadius: 3, background: 'rgba(255,180,0,0.08)', border: '1px solid rgba(255,180,0,0.2)' }}>
+                <div style={{ fontSize: 9, color: '#fa0', fontWeight: 600, marginBottom: 2 }}>⚠ Suggested Corrections</div>
+                {regionStatus.corrections.map((c, i) => (
+                  <div key={i} style={{ fontSize: 10, color: '#dda', lineHeight: '14px' }}>
+                    <span style={{ color: '#8cf' }}>{c.field}</span>: {c.message}
+                  </div>
+                ))}
+              </div>
+            )}
+            <div style={S.infoRow}>
+              <span style={S.infoLabel}>Connections</span>
+              <span>{connStatus.existingConnections.length} in dataset{connStatus.missingCount > 0 ? `, ${connStatus.missingCount} detected not mapped` : ''}</span>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: 4, marginTop: 4 }}>
+            <button style={S.btn} onClick={() => setRegionEditorOpen(true)}>
+              ✏️ Edit Region
+            </button>
+            <button style={S.btn} onClick={() => setConnEditorOpen(true)}>
+              ✏️ Edit Connections
+            </button>
+          </div>
+      </div>
+
       {/* ═══ 2. PROGRESS / FLAGS ═══ */}
       {displayedVariant && (
         <div style={S.section}>
@@ -1004,13 +1197,23 @@ function NavigationWidgetContent() {
                 {reachableEntrances.map(ent => {
                   const t = r.transitions.find(t => t.entranceIdx === ent.id);
                   const isSyntheticIndoor = ent.id >= 1000 && isIndoors;
+                  const isIndoorOverworldEntrance = isIndoors && ent.id < 1000;
                   const entType = ent.id >= 1000
                     ? classifyEntranceFromRegion(roomIndex)
                     : classifyEntranceFromRegion(ent.roomId);
-                  const displayName = isSyntheticIndoor
-                    ? (REGION_BY_ID.get(`${isDarkWorld ? 'dw' : 'lw'}-${ent.area.toString(16).padStart(2, '0')}`)?.name ?? 'Overworld')
-                    : (getConnectionDestinationName(screenRegionId, ent.roomId)
-                      ?? `Room 0x${ent.roomId.toString(16).toUpperCase()}`);
+                  let displayName: string;
+                  if (isSyntheticIndoor) {
+                    // Stair connection — show destination room name
+                    displayName = `Room 0x${ent.roomId.toString(16).toUpperCase()}`;
+                  } else if (isIndoorOverworldEntrance) {
+                    // Overworld entrance spawn — show the overworld exit screen name
+                    displayName = ent.roomId >= 0
+                      ? (getScreenDisplayName(ent.roomId))
+                      : 'Overworld';
+                  } else {
+                    displayName = getConnectionDestinationName(screenRegionId, ent.roomId)
+                      ?? `Room 0x${ent.roomId.toString(16).toUpperCase()}`;
+                  }
                   const iconData = isSyntheticIndoor ? exitDoorIcon : ENTRANCE_ICONS[entType];
                   return (
                     <div key={`entrance-${ent.id}`} style={S.card}>
@@ -1094,6 +1297,22 @@ function NavigationWidgetContent() {
 
       {/* Review */}
       <StatusRow status={locationReview.status} comment={locationReview.comment} onStatus={setLocStatus} onComment={setLocComment} />
+
+      {/* ═══ Editor Dialogs ═══ */}
+      <RegionEditorDialog
+        open={regionEditorOpen}
+        onClose={() => setRegionEditorOpen(false)}
+        existingRegion={regionStatus.region}
+        gameState={{ roomIndex, palaceIndex, isIndoors, isDarkWorld }}
+      />
+      <ConnectionEditorDialog
+        open={connEditorOpen}
+        onClose={() => setConnEditorOpen(false)}
+        regionId={regionStatus.region?.id ?? null}
+        regionMeta={regionStatus.region ? { type: regionStatus.region.type, dungeon: regionStatus.region.dungeon, isDarkWorld } : null}
+        existingConnections={connStatus.existingConnections}
+        unmatchedConnections={connStatus.unmatched}
+      />
     </div>
   );
 }

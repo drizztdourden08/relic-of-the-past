@@ -488,6 +488,37 @@ function wasmGetRoomDoorBoundaryTiles(): DoorBoundaryTile[] {
   }
 }
 
+export interface RoomStairInfo {
+  destRoom: number;
+  row: number;
+  col: number;
+  direction: 'up' | 'down';
+}
+
+function wasmGetRoomStairInfo(): RoomStairInfo[] {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return [];
+  try {
+    const ptr = mod.ccall('WasmGetRoomStairInfo', 'number', [], []) as number;
+    if (!ptr) return [];
+    const heap = mod.HEAPU8;
+    const count = Math.min(heap[ptr], 4);
+    const out: RoomStairInfo[] = [];
+    for (let i = 0; i < count; i++) {
+      const o = ptr + 2 + i * 4;
+      out.push({
+        destRoom: heap[o + 0],
+        row: heap[o + 1],
+        col: heap[o + 2],
+        direction: heap[o + 3] ? 'down' : 'up',
+      });
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+
 /** Get active Uncle sprite blocker coordinates for indoor early-game variants. */
 function wasmGetIndoorUncleBlockers(): Array<{ x: number; y: number }> {
   const mod = currentModule;
@@ -758,6 +789,7 @@ export {
   wasmGetPaused,
   wasmGetRoomDoorBoundaryTiles,
   wasmGetRoomLayoutInfo,
+  wasmGetRoomStairInfo,
   wasmGetUIOverlayMode,
   wasmGetViewportInfo,
   wasmRenderCleanFrame,

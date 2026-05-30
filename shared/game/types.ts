@@ -16,13 +16,153 @@ type CheckType =
   | 'bonk'
   | 'event';
 
-type RegionType = 'lightWorld' | 'darkWorld' | 'dungeon' | 'cave';
+// ═══════════════════════════════════════════════════════════════════════════════
+// SCREEN DATA MODEL
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ─── Screen Types ───
+
+/**
+ * The three fundamental screen contexts in ALttP:
+ * - overworld: outdoor OW screens (64 per world, indexed 0x00–0x3F)
+ * - dungeon: indoor rooms belonging to a dungeon (keyed by palace index + room)
+ * - interior: all other indoor rooms (caves, houses, shops, fairy, etc.)
+ */
+type ScreenType = 'overworld' | 'dungeon' | 'interior';
+
+/** Which game world this screen belongs to */
+type World = 'light' | 'dark';
+
+/** Sub-category for interior screens */
+type InteriorKind =
+  | 'house'
+  | 'cave'
+  | 'shop'
+  | 'fairy'
+  | 'well'
+  | 'passage'
+  | 'hint'
+  | 'gamble'
+  | 'special';
+
+// ─── Type-Specific Context ───
+
+interface OverworldContext {
+  /** Column in 8×8 OW grid */
+  gridX: number;
+  /** Row in 8×8 OW grid */
+  gridY: number;
+  /** Bundle ID — links screens that form one logical area */
+  bundle?: string;
+}
+
+interface DungeonContext {
+  /** Dungeon name — drives game mechanics (keys, map, compass, boss) */
+  name: string;
+  /** Runtime cur_palace_index_x2 (0x00–0x1A) */
+  palaceIndex?: number;
+  /** Floor level (-2, -1, 0, 1, 2...) */
+  floor?: number;
+  /** Column in dungeon room grid */
+  gridX?: number;
+  /** Row in dungeon room grid */
+  gridY?: number;
+}
+
+interface InteriorContext {
+  /** What kind of interior this is */
+  kind: InteriorKind;
+}
+
+// ─── Bundle Definition ───
+
+/**
+ * Groups multiple screens that are logically "one area" in the game.
+ * OW bundles: Lost Woods (4 screens). Interior bundles: Two Brothers House (2 rooms).
+ * Dungeon bundles: large rooms spanning multiple supertiles.
+ */
+interface ScreenBundle {
+  id: string;
+  name: string;
+  /** IDs of screens that form this bundle (ordered) */
+  screens: readonly string[];
+  layout?: BundleLayout;
+}
+
+type BundleLayout =
+  | { type: 'grid'; columns: number }
+  | { type: 'linear'; direction: 'horizontal' | 'vertical' }
+  | { type: 'stacked' };
+
+// ─── Screen Definition (discriminated union) ───
+
+interface ScreenBase {
+  id: string;
+  /** Screen-specific label ("Dark Cross", "Chest Area", "Lost Woods NW") */
+  name: string;
+  /** Which game world */
+  world: World;
+  /** Structural parent — all screens sharing a location are "one place" */
+  location: string;
+  /** Broad zone for notification line 2 ("Death Mountain", "Kakariko", "East Hyrule") */
+  area: string;
+
+  // ─── Game Values ───
+  /** Native game room/screen index */
+  roomIndex?: number;
+  /** Entrance ID (RAM $010E) — disambiguates shared room indices */
+  entranceId?: number;
+
+  // ─── Workflow ───
+  status?: 'draft' | 'mapped' | 'verified';
+
+  // ─── Metadata ───
+  tags: readonly RegionTag[];
+  nav?: RegionNavData;
+}
+
+interface OverworldScreen extends ScreenBase {
+  type: 'overworld';
+  overworld: OverworldContext;
+}
+
+interface DungeonScreen extends ScreenBase {
+  type: 'dungeon';
+  dungeon: DungeonContext;
+}
+
+interface InteriorScreen extends ScreenBase {
+  type: 'interior';
+  interior: InteriorContext;
+}
+
+type ScreenDefinition = OverworldScreen | DungeonScreen | InteriorScreen;
+
+// ─── Connection ───
+
+interface ScreenConnection {
+  from: string;
+  to: string;
+  tags: readonly ConnectionTag[];
+  /** Entrance ID for OW → indoor transitions */
+  entranceId?: number;
+  /** Stair index (0-3) for inter-room connections */
+  stairIndex?: number;
+  /** Exit data index for indoor → OW transitions */
+  exitId?: number;
+  status?: 'draft' | 'mapped' | 'verified';
+  nav?: ConnectionNavData;
+}
+
+// ─── Check (belongs-to: check → screen) ───
 
 interface CheckDefinition {
   id: string;
   name: string;
   type: CheckType;
-  region: string;
+  /** Screen ID this check lives in */
+  screen: string;
+  /** Dungeon name (for key/prize logic) */
   dungeon?: string;
   vanillaItem?: string | string[];
   /** SRAM room index for chest-open flag tracking */
@@ -31,56 +171,42 @@ interface CheckDefinition {
   chestIndex?: number;
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// LEGACY ALIASES (kept during migration — remove once all data files are updated)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/** @deprecated Use ScreenType */
+type RegionType = 'lightWorld' | 'darkWorld' | 'dungeon' | 'cave';
+
+/** @deprecated Use ScreenDefinition */
 interface RegionDefinition {
-  /** Unique ID: lw-XX for light world OW, dw-XX for dark world OW, room-XXX for indoor rooms */
   id: string;
-  /** Specific name of this screen/room */
   name: string;
-  type: RegionType;
-  /** Whether this region is indoors (caves, dungeons, houses) vs outdoors (overworld).
-   *  Determines TileAttrContext for navigation. */
+  type: ScreenType | RegionType;
   indoor: boolean;
-  /** Native game screen/room index (unique within its type context).
-   *  Required for overworld screens and dungeon rooms (used for detection).
-   *  Optional for caves/houses where room index isn't yet mapped. */
   inGameIndex?: number;
-  /** Dungeon name (for dungeon rooms) */
+  gamePalace?: number;
+  entranceId?: number;
   dungeon?: string;
-
-  // ─── Notification Grouping ───
-  /** Area name shown in notifications. Shared across screens in the same zone.
-   *  Notification only fires when this changes between screens. */
-  displayName: string;
-  /** Room-specific detail shown smaller (e.g. "B1", "Entrance Hall") */
+  displayName?: string;
+  location?: string;
+  area?: string;
+  darkWorld?: boolean;
+  roomIndex?: number;
+  palaceIndex?: number;
+  status?: 'draft' | 'mapped' | 'verified';
   subtitle?: string;
-
-  // ─── Grid / Layout ───
-  /** Column in the 8×8 (OW) or 16×16 (dungeon) grid */
   gridX?: number;
-  /** Row in the grid */
   gridY?: number;
-  /** Dungeon floor (-1, 0, 1, 2...) */
   floor?: number;
-  /** Overworld: is this a 2×2 merged "big" screen? */
   big?: boolean;
-
-  /** Namespaced tags for categorization (e.g. 'world:light', 'type:cave', 'area:kakariko') */
   tags: readonly RegionTag[];
-
-  // ─── Navigation (populated by analysis script) ───
-  /** Tile-level navigation data. Added by scripts/analyze-navigation.ts. */
+  checks?: readonly string[];
   nav?: RegionNavData;
 }
 
-interface RegionConnection {
-  from: string;
-  to: string;
-  tags: readonly ConnectionTag[];
-
-  // ─── Navigation (populated by analysis script) ───
-  /** Tile-level navigation data. Added by scripts/analyze-navigation.ts. */
-  nav?: ConnectionNavData;
-}
+/** @deprecated Use ScreenConnection */
+type RegionConnection = ScreenConnection;
 
 // ─── Requirement Expression Tree ───
 
@@ -231,6 +357,10 @@ interface MapState {
   overworldAreaIndex: number;
   isIndoors: boolean;
   isDarkWorld: boolean;
+  whichEntrance: number;
+  linkLayer: number;
+  linkX: number;
+  linkY: number;
 }
 
 interface FloorIndicatorState {
@@ -265,9 +395,29 @@ interface GameUIState {
 }
 
 export type {
+  // ─── Screen Data Model ───
+  BundleLayout,
   CheckDefinition,
-  CheckState,
   CheckType,
+  DungeonContext,
+  DungeonScreen,
+  InteriorContext,
+  InteriorKind,
+  InteriorScreen,
+  OverworldContext,
+  OverworldScreen,
+  ScreenBase,
+  ScreenBundle,
+  ScreenConnection,
+  ScreenDefinition,
+  ScreenType,
+  World,
+  // ─── Legacy (migration) ───
+  RegionConnection,
+  RegionDefinition,
+  RegionType,
+  // ─── Game State ───
+  CheckState,
   DungeonProgressState,
   EquipmentState,
   FloorIndicatorState,
@@ -279,13 +429,10 @@ export type {
   LogicConfig,
   LogicMode,
   MapState,
-  RegionConnection,
-  RegionDefinition,
-  RegionType,
   Requirement,
   SaveMenuState,
   SwordMode,
   TextState,
   TrackerState,
-  UIMode
+  UIMode,
 };

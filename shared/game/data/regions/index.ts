@@ -17,7 +17,7 @@ const REGION_BY_ID = new Map<string, RegionDefinition>(
 );
 
 export { ALL_REGIONS, REGION_BY_ID };
-export { getRegionLookup, resolveCurrentRegion } from './detection';
-export type { RegionLookup } from './detection';
+export { getRegionLookup, resolveCurrentRegion, resolveCurrentRegionDetailed } from './detection';
+export type { RegionLookup, RegionMatchResult, RegionMatchMethod } from './detection';
 export { buildScreenBundle } from './bundles';
 export type { ScreenBundle } from './bundles';

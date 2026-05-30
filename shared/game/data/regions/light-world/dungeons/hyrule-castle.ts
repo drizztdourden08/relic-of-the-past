@@ -225,15 +225,15 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   },
   {
     id: 'hc-0x51',
-    name: 'Uncle\'s Passage',
+    name: 'Throne Room',
     type: 'dungeon', indoor: true,
     inGameIndex: 0x51,
     dungeon: 'Hyrule Castle',
     displayName: 'Hyrule Castle',
-    subtitle: 'Basement B1',
+    subtitle: '1F',
     gridX: 1,
     gridY: 5,
-    floor: -1,
+    floor: 0,
     tags: [
       'world:light',
       'env:underground',
@@ -285,7 +285,7 @@ export const HYRULE_CASTLE_DUNGEON: RegionDefinition[] = [
   },
   {
     id: 'hc-0x61',
-    name: 'Throne Room',
+    name: 'Main Hall',
     type: 'dungeon', indoor: true,
     inGameIndex: 0x61,
     dungeon: 'Hyrule Castle',
