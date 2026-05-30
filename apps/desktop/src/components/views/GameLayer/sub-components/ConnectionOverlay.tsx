@@ -355,10 +355,7 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       // Overlay dot colors: consistent across regular dots and split circle halves
       const DOT_COLOR_REACHABLE = 'rgba(80, 200, 255, 0.6)';
       const DOT_COLOR_REQ = 'rgba(255, 100, 180, 0.35)';
-      const DOT_COLOR_LAYER1 = 'rgba(255, 220, 80, 0.6)';
       ctx.globalAlpha = 0.55;
-      const cL0 = result?.dualLayerGrids?.constrainedLayer0;
-      const cL1 = result?.dualLayerGrids?.constrainedLayer1;
       const rawL0 = result?.dualLayerGrids?.layer0;
       const rawL1 = result?.dualLayerGrids?.layer1;
       for (const drawResult of drawResults) {
@@ -373,14 +370,14 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
             const mergedReachable = perLayer ? (layer0Reach || layer1Reach) : drawResult.reachable[r][c] === 1;
             if (!mergedReachable) continue;
 
-            // Overlap = both layers have real content (not structural void).
-            // Void: raw == 0x00 AND constrained == 0x01 (boundary-connected, converted by constrainVoidTiles).
-            // Content: anything else (real floor, walls, stairs, etc).
-            const l0HasContent = !!cL0 && !!rawL0 &&
-              !(rawL0[r][c] === 0x00 && cL0[r][c] === 0x01);
-            const l1HasContent = !!cL1 && !!rawL1 &&
-              !(rawL1[r][c] === 0x00 && cL1[r][c] === 0x01);
-            const hasOverlap = isDualLayer && l0HasContent && l1HasContent;
+            // Overlap = both layers have real content at this tile.
+            // A layer has content if: non-0x00 attr (wall/stair/etc) OR BFS reached it (real ground).
+            // 0x00 + not-reached = void/architectural opening = no content.
+            const l0HasContent = isDualLayer && rawL0 != null &&
+              (rawL0[r][c] !== 0x00 || layer0Reach);
+            const l1HasContent = isDualLayer && rawL1 != null &&
+              (rawL1[r][c] !== 0x00 || layer1Reach);
+            const hasOverlap = l0HasContent && l1HasContent;
 
             // Skip ledge/traversal tiles (they get arrows) — but NOT split-circle tiles
             if (!hasOverlap && drawResult.attrGrid && LEDGE_ATTRS.has(drawResult.attrGrid[r][c])) continue;
@@ -410,9 +407,9 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
               const splitAlpha = ctx.globalAlpha;
               ctx.globalAlpha = 0.85;
 
-              // Left half = Lower (layer 1): yellow if BFS reached on layer 1
+              // Left half = Lower (layer 1): cyan if BFS reached on layer 1
               if (layer1Reach) {
-                ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_LAYER1;
+                ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
                 ctx.beginPath();
                 ctx.arc(dx, dy, radius, Math.PI * 0.5, Math.PI * 1.5);
                 ctx.fill();
