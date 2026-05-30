@@ -354,6 +354,8 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       const LEDGE_ATTRS = new Set([0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x01, 0x02, 0x03, 0x1a, 0x12, 0x11, 0x13, 0x19, 0x1b, 0x3d]);
       // Overlay dot colors: consistent across regular dots and split circle halves
       const DOT_COLOR_REACHABLE = 'rgba(80, 200, 255, 0.6)';
+      const DOT_COLOR_UPPER = 'rgba(100, 215, 255, 0.65)';   // layer 0 / ABOVE — brighter
+      const DOT_COLOR_LOWER = 'rgba(50, 165, 215, 0.55)';    // layer 1 / GROUND — darker shade
       const DOT_COLOR_REQ = 'rgba(255, 100, 180, 0.35)';
       ctx.globalAlpha = 0.55;
       const rawL0 = result?.dualLayerGrids?.layer0;
@@ -409,17 +411,17 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
               const splitAlpha = ctx.globalAlpha;
               ctx.globalAlpha = 0.85;
 
-              // Left half = Lower (layer 1): cyan if BFS reached on layer 1
+              // Left half = Lower (layer 1): darker shade if BFS reached on layer 1
               if (layer1Reach) {
-                ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
+                ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_LOWER;
                 ctx.beginPath();
                 ctx.arc(dx, dy, radius, Math.PI * 0.5, Math.PI * 1.5);
                 ctx.fill();
               }
 
-              // Right half = Upper (layer 0): cyan if BFS reached on layer 0
+              // Right half = Upper (layer 0): brighter shade if BFS reached on layer 0
               if (layer0Reach) {
-                ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
+                ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_UPPER;
                 ctx.beginPath();
                 ctx.arc(dx, dy, radius, -Math.PI * 0.5, Math.PI * 0.5);
                 ctx.fill();
@@ -436,7 +438,10 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
               ctx.globalAlpha = splitAlpha;
             } else {
               // Regular dot — single-layer content or overworld
-              ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
+              const layerColor = isDualLayer
+                ? (layer0Reach ? DOT_COLOR_UPPER : DOT_COLOR_LOWER)
+                : DOT_COLOR_REACHABLE;
+              ctx.fillStyle = hasReq ? DOT_COLOR_REQ : layerColor;
               ctx.beginPath();
               ctx.arc(dx, dy, radius, 0, Math.PI * 2);
               ctx.fill();

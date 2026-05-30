@@ -1332,7 +1332,7 @@ function PathCopyBtn() {
 
 // ─── ScreenMapWithConnections ──────────────────────────────────────────
 
-function ReachabilityCanvas({ reachable, size, bounds }: { reachable: number[][]; size: number; bounds?: { minRow: number; maxRow: number; minCol: number; maxCol: number } }) {
+function ReachabilityCanvas({ reachable, size, bounds, tileLayer }: { reachable: number[][]; size: number; bounds?: { minRow: number; maxRow: number; minCol: number; maxCol: number }; tileLayer?: (0 | 1 | 2)[][] }) {
   const ref = useCallback((canvas: HTMLCanvasElement | null) => {
     if (!canvas) return;
     const r0 = bounds?.minRow ?? 0, r1 = bounds?.maxRow ?? 63;
@@ -1348,7 +1348,17 @@ function ReachabilityCanvas({ reachable, size, bounds }: { reachable: number[][]
         const state = reachable[r]?.[c] ?? 0;
         const off = ((r - r0) * cols + (c - c0)) * 4;
         if (state === 1) {
-          img.data[off] = 90; img.data[off + 1] = 90; img.data[off + 2] = 90; img.data[off + 3] = 255;
+          const layer = tileLayer?.[r]?.[c];
+          if (layer === 0) {
+            // Upper layer (ABOVE) — brighter
+            img.data[off] = 105; img.data[off + 1] = 105; img.data[off + 2] = 105; img.data[off + 3] = 255;
+          } else if (layer === 1) {
+            // Lower layer (GROUND) — darker
+            img.data[off] = 65; img.data[off + 1] = 65; img.data[off + 2] = 65; img.data[off + 3] = 255;
+          } else {
+            // Both layers or no layer info
+            img.data[off] = 90; img.data[off + 1] = 90; img.data[off + 2] = 90; img.data[off + 3] = 255;
+          }
         } else if (state >= 2) {
           img.data[off] = 50; img.data[off + 1] = 50; img.data[off + 2] = 50; img.data[off + 3] = 255;
         } else {
@@ -1357,7 +1367,7 @@ function ReachabilityCanvas({ reachable, size, bounds }: { reachable: number[][]
       }
     }
     ctx.putImageData(img, 0, 0);
-  }, [reachable, bounds]);
+  }, [reachable, bounds, tileLayer]);
 
   return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', borderRadius: 3, imageRendering: 'pixelated' }} />;
 }
@@ -1447,7 +1457,7 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
             color: qc.isActive ? '#8f8' : '#666',
             overflow: 'hidden',
           }}>
-            {scrResult && qc.isActive && <ReachabilityCanvas reachable={scrResult.reachable} size={cellW} bounds={{
+            {scrResult && qc.isActive && <ReachabilityCanvas reachable={scrResult.reachable} size={cellW} tileLayer={scrResult.tileLayer} bounds={{
               minRow: gridRows > 1 ? qc.row * 32 : 0,
               maxRow: gridRows > 1 ? qc.row * 32 + 31 : 63,
               minCol: gridCols > 1 ? qc.col * 32 : 0,
@@ -1477,7 +1487,7 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
             color: isActive ? '#8f8' : analyzed ? '#8cf' : '#666',
             overflow: 'hidden',
           }}>
-            {scrResult && <ReachabilityCanvas reachable={scrResult.reachable} size={cellW} />}
+            {scrResult && <ReachabilityCanvas reachable={scrResult.reachable} size={cellW} tileLayer={scrResult.tileLayer} />}
             <div style={{ fontWeight: 700, fontSize: 11, position: 'relative' }}>{bundle.subNames[scr] || bundle.screenNames[scr]}</div>
             <div style={{ color: '#555', fontSize: 9, position: 'relative' }}>0x{scr.toString(16).toUpperCase()}</div>
             {scrResult && <div style={{ fontSize: 9, color: '#999', position: 'relative' }}>{scrResult.reachableCount}/{scrResult.totalTiles}</div>}
