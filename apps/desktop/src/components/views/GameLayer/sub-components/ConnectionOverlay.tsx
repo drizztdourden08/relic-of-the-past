@@ -381,6 +381,8 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
 
             // Skip ledge/traversal tiles (they get arrows) — but NOT split-circle tiles
             if (!hasOverlap && drawResult.attrGrid && LEDGE_ATTRS.has(drawResult.attrGrid[r][c])) continue;
+            // Skip stair tiles — they get bidirectional arrows, never dots
+            if (perLayer && (perLayer[0][r][c] === STAIRS_TRAVERSAL_STATE || perLayer[1][r][c] === STAIRS_TRAVERSAL_STATE)) continue;
 
             // Tile center in world coordinates
             const worldX = origin.x + c * TILE_PX + TILE_PX / 2;

@@ -209,6 +209,7 @@ describe('Room 0x51 (Throne Room) Layer Data', () => {
         tileContext,
         startPos: { row: 46, col: 31 },
         dualLayerGrids: { layer0, layer1 },
+        startLayer: 1,
       });
       // totalTiles should be 64*64 = 4096 (no quadrant restriction)
       expect(result.totalTiles).toBe(64 * 64);
@@ -220,6 +221,7 @@ describe('Room 0x51 (Throne Room) Layer Data', () => {
         tileContext,
         startPos: { row: 46, col: 31 },
         dualLayerGrids: { layer0, layer1 },
+        startLayer: 1,
       });
       const borderEdges = result.transitions.filter(t => t.edge !== 'entrance');
       // Enclosed room: void at boundaries is constrained to wall, no border exits
@@ -232,6 +234,7 @@ describe('Room 0x51 (Throne Room) Layer Data', () => {
         tileContext,
         startPos: { row: 46, col: 31 },
         dualLayerGrids: { layer0, layer1 },
+        startLayer: 1,
       });
       const borderEdges = result.transitions.filter(t => t.edge !== 'entrance');
       expect(borderEdges.length).toBe(0);
@@ -243,6 +246,7 @@ describe('Room 0x51 (Throne Room) Layer Data', () => {
         tileContext,
         startPos: { row: 46, col: 31 },
         dualLayerGrids: { layer0, layer1 },
+        startLayer: 1,
       });
       // Should have reachableByLayer for dual-layer rooms
       expect(result.reachableByLayer).toBeDefined();
@@ -256,6 +260,7 @@ describe('Room 0x51 (Throne Room) Layer Data', () => {
         tileContext,
         startPos: { row: 46, col: 31 },
         dualLayerGrids: { layer0, layer1 },
+        startLayer: 1,
       });
 
       // These tiles have non-passable attrs on layer 0 (0x01, 0x02, 0x6f)
@@ -278,6 +283,7 @@ describe('Room 0x51 (Throne Room) Layer Data', () => {
         tileContext,
         startPos: { row: 46, col: 31 },
         dualLayerGrids: { layer0, layer1 },
+        startLayer: 1,
       });
 
       const walkableTiles: [number, number][] = [

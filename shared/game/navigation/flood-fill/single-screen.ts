@@ -266,6 +266,8 @@ export function floodFillBFSDualLayer(
 
   const transitions: TransitionPoint[] = [];
   const foundBorders = new Set<string>();
+  // Stair tiles that were successfully traversed — marked after body→tile conversion
+  const traversedStairTiles: { layer: 0 | 1; row: number; col: number; reqs: Set<string> }[] = [];
 
   const deque: DualLayerFloodCell[] = [];
 
@@ -309,13 +311,6 @@ export function floodFillBFSDualLayer(
         foundBorders.add(key);
         transitions.push({ row: ent.row, col: ent.col, edge: 'entrance', requirements: [...requirements], entranceIdx: ent.idx });
       }
-    }
-
-    // Check if current body position sits on stair transition tiles
-    let hasStairTile = false;
-    for (const [r, c] of bodyTiles(row, col)) {
-      const attr = rawAttr[r]?.[c];
-      if (SWAP_STAIR_ATTRS.has(attr)) { hasStairTile = true; break; }
     }
 
     for (const [dr, dc] of DIRECTIONS) {
@@ -391,6 +386,74 @@ export function floodFillBFSDualLayer(
         continue;
       }
 
+      // ─── Stair detection: entering stair tiles triggers auto-traverse ───
+      // Stair tiles are an auto-traverse corridor. Link enters one end, animates
+      // through, exits the other end on the opposite layer. BFS cannot stand on
+      // stair tiles — it scans past them and lands at the first free 2×2 on the
+      // other layer. Stairs can only be entered vertically (north/south).
+      let hitStair = false;
+      for (const [tr, tc] of newTiles) {
+        const attr = rawAttr[tr]?.[tc];
+        if (SWAP_STAIR_ATTRS.has(attr)) { hitStair = true; break; }
+      }
+
+      if (hitStair) {
+        // Side entry (east/west) is blocked — stair corridor has walls on sides
+        if (dc !== 0) continue;
+
+        const otherLayer = (1 - layer) as 0 | 1;
+        const targetGrid = grids[otherLayer];
+        // Scan forward in movement direction. Skip positions where body overlaps
+        // stair tiles (Link can't stand on stairs — they're auto-traverse).
+        // Keep scanning through impassable tiles (void corridor between stair
+        // and floor). Land at first position that's both off-stairs AND passable.
+        const stairTiles: [number, number][] = [];
+        for (let step = 0; step < GRID_SIZE; step++) {
+          const lr = nr + step * dr;
+          const lc = nc + step * dc;
+          if (lr < minR || lr + 1 > maxR || lc < minC || lc + 1 > maxC) break;
+          // Body must not overlap any stair tile (check both layers' raw attrs)
+          let onStair = false;
+          for (const [br, bc] of bodyTiles(lr, lc)) {
+            if (SWAP_STAIR_ATTRS.has(rawAttrs[0][br]?.[bc]) || SWAP_STAIR_ATTRS.has(rawAttrs[1][br]?.[bc])) {
+              onStair = true;
+              stairTiles.push([br, bc]);
+            }
+          }
+          if (onStair) continue;
+          // Check passability on other layer at this position
+          let canLand = true;
+          let newReqs = requirements;
+          for (const [br, bc] of bodyTiles(lr, lc)) {
+            const tile = targetGrid[br][bc];
+            const entry = evaluateEntry(tile, dr, dc, requirements, inventory);
+            if (!entry.canEnter) { canLand = false; break; }
+            if (entry.newReqs !== newReqs) {
+              newReqs = newReqs === requirements ? new Set(entry.newReqs) : newReqs;
+              for (const req of entry.newReqs) newReqs.add(req);
+            }
+          }
+          if (canLand) {
+            const existingReqs = bodyReached[otherLayer][lr][lc];
+            if (existingReqs === null || existingReqs.size > newReqs.size) {
+              bodyReached[otherLayer][lr][lc] = newReqs;
+              if (newReqs === requirements) {
+                deque.unshift({ row: lr, col: lc, layer: otherLayer, requirements: newReqs });
+              } else {
+                deque.push({ row: lr, col: lc, layer: otherLayer, requirements: newReqs });
+              }
+              // Record stair tiles for arrow rendering (marked in reached after BFS)
+              for (const [sr, sc] of stairTiles) {
+                traversedStairTiles.push({ layer: otherLayer, row: sr, col: sc, reqs: requirements });
+              }
+            }
+            break;
+          }
+          // Not passable here — keep scanning (void corridor between stair and floor)
+        }
+        continue; // Stair blocks normal same-layer expansion in this direction
+      }
+
       // ─── Same-layer expansion ───
       {
         const targetGrid = grids[layer];
@@ -417,34 +480,6 @@ export function floodFillBFSDualLayer(
           }
         }
       }
-
-      // ─── Stair-based cross-layer expansion (bidirectional) ───
-      if (hasStairTile) {
-        const otherLayer = (1 - layer) as 0 | 1;
-        const targetGrid = grids[otherLayer];
-        let canMove = true;
-        let newReqs = requirements;
-        for (const [tr, tc] of newTiles) {
-          const tile = targetGrid[tr][tc];
-          const entry = evaluateEntry(tile, dr, dc, requirements, inventory);
-          if (!entry.canEnter) { canMove = false; break; }
-          if (entry.newReqs !== newReqs) {
-            newReqs = newReqs === requirements ? new Set(entry.newReqs) : newReqs;
-            for (const req of entry.newReqs) newReqs.add(req);
-          }
-        }
-        if (canMove) {
-          const existingReqs = bodyReached[otherLayer][nr][nc];
-          if (existingReqs === null || existingReqs.size > newReqs.size) {
-            bodyReached[otherLayer][nr][nc] = newReqs;
-            if (newReqs === requirements) {
-              deque.unshift({ row: nr, col: nc, layer: otherLayer, requirements: newReqs });
-            } else {
-              deque.push({ row: nr, col: nc, layer: otherLayer, requirements: newReqs });
-            }
-          }
-        }
-      }
     }
   }
 
@@ -466,6 +501,15 @@ export function floodFillBFSDualLayer(
           }
         }
       }
+    }
+  }
+
+  // Mark traversed stair tiles on the TARGET layer only (for arrow rendering).
+  // These are actual tile coords, not body positions, so no 2×2 expansion bleed.
+  for (const { layer, row, col, reqs } of traversedStairTiles) {
+    const existing = reached[layer][row]?.[col];
+    if (existing === null || existing.size > reqs.size) {
+      reached[layer][row][col] = reqs;
     }
   }
 
