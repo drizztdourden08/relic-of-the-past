@@ -56,6 +56,47 @@ function prepareScreen(
   return { grid, ledges, dynamicBlockerCells };
 }
 
+/**
+ * Constrain void (0x00) tiles on a layer to prevent BFS from flooding through
+ * structural void. A 0x00 tile is "void" if it belongs to a connected region
+ * of 0x00 tiles that touches the grid boundary. Enclosed 0x00 regions are
+ * legitimate ground (e.g. floor inside walls).
+ *
+ * Void tiles are replaced with 0x01 (solid wall) so BFS can't pass through.
+ */
+function constrainVoidTiles(thisLayer: number[][], _otherLayer: number[][]): number[][] {
+  // Step 1: Flood from boundary through 0x00 tiles to find void-connected regions
+  const isVoid: boolean[][] = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(false));
+  const queue: Array<[number, number]> = [];
+
+  for (let r = 0; r < GRID_SIZE; r++) {
+    for (let c = 0; c < GRID_SIZE; c++) {
+      if ((r === 0 || r === GRID_SIZE - 1 || c === 0 || c === GRID_SIZE - 1) && thisLayer[r][c] === 0x00) {
+        isVoid[r][c] = true;
+        queue.push([r, c]);
+      }
+    }
+  }
+  while (queue.length > 0) {
+    const [qr, qc] = queue.shift()!;
+    for (const [dr, dc] of [[-1, 0], [1, 0], [0, -1], [0, 1]] as const) {
+      const nr = qr + dr, nc = qc + dc;
+      if (nr < 0 || nr >= GRID_SIZE || nc < 0 || nc >= GRID_SIZE) continue;
+      if (isVoid[nr][nc]) continue;
+      if (thisLayer[nr][nc] !== 0x00) continue;
+      isVoid[nr][nc] = true;
+      queue.push([nr, nc]);
+    }
+  }
+
+  // Step 2: Copy grid, replacing void tiles with solid wall (0x01)
+  return Array.from({ length: GRID_SIZE }, (_, r) =>
+    Array.from({ length: GRID_SIZE }, (_, c) =>
+      isVoid[r][c] ? 0x01 : thisLayer[r][c]
+    ),
+  );
+}
+
 function findStartPosition(grid: CollisionGrid, startPos?: GridPos): GridPos {
   const row = Math.max(0, Math.min(GRID_SIZE - 1, startPos?.row ?? 32));
   const col = Math.max(0, Math.min(GRID_SIZE - 1, startPos?.col ?? 32));
@@ -161,9 +202,17 @@ export function floodFillScreen(
 
   if (useDualLayer) {
     const { layer0, layer1 } = options.dualLayerGrids!;
+
+    // Mark boundary-connected void as blocked on each layer.
+    // In dungeon rooms, 0x00 on a layer means either "real ground" or "structural void"
+    // (empty space belonging to the other layer). Void regions always touch the grid edge.
+    // Real ground is enclosed by walls on that layer.
+    const constrainedLayer0 = constrainVoidTiles(layer0, layer1);
+    const constrainedLayer1 = constrainVoidTiles(layer1, layer0);
+
     // Build separate collision grids for each layer
-    const prep0 = prepareScreen(layer0, tileContext, dynamicBlockers, false);
-    const prep1 = prepareScreen(layer1, tileContext, dynamicBlockers, true); // skip cliffs on layer 1
+    const prep0 = prepareScreen(constrainedLayer0, tileContext, dynamicBlockers, false);
+    const prep1 = prepareScreen(constrainedLayer1, tileContext, dynamicBlockers, true); // skip cliffs on layer 1
 
     grid = prep0.grid;
     ledges = prep0.ledges;
