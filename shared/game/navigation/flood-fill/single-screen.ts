@@ -343,7 +343,7 @@ export function floodFillBFSDualLayer(
 
         if (nr < minR || nr + 1 > maxR || nc < minC || nc + 1 > maxC) continue;
 
-        // Ledge exit restriction (only applies on current layer)
+        // Ledge exit restriction on current layer: can only leave in the fall direction
         let ledgeBlocked = false;
         if (targetLayer === layer) {
           for (const [r, c] of bodyTiles(row, col)) {
@@ -352,6 +352,20 @@ export function floodFillBFSDualLayer(
               ledgeBlocked = true;
               break;
             }
+          }
+        }
+        // Ledge layer transition: only allowed in the ledge's fall direction
+        if (targetLayer !== layer && hasLedgeTile && !hasStairTile) {
+          let matchesFallDir = false;
+          for (const [r, c] of bodyTiles(row, col)) {
+            const t = grid[r][c];
+            if (t.type === 'ledge' && canLeaveLedge(t.dir, dr, dc)) {
+              matchesFallDir = true;
+              break;
+            }
+          }
+          if (!matchesFallDir) {
+            ledgeBlocked = true;
           }
         }
         if (ledgeBlocked) continue;
