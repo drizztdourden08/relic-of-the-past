@@ -256,7 +256,11 @@ export function floodFillScreen(
         : GRID_SIZE * GRID_SIZE,
       entrances: sEnts, ledges: reachableLedges, hookTargets,
       attrGrid: grid.rawAttr, reqGrid, dynamicBlockerCells, borders, variant,
-      tileLayer, reachableByLayer, dualLayerGrids: options.dualLayerGrids,
+      tileLayer, reachableByLayer, dualLayerGrids: {
+        layer0: options.dualLayerGrids!.layer0,
+        layer1: options.dualLayerGrids!.layer1,
+        constrainedLayer0, constrainedLayer1,
+      },
     };
   }
 

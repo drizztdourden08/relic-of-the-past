@@ -357,6 +357,10 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
       const DOT_COLOR_REQ = 'rgba(255, 100, 180, 0.35)';
       const DOT_COLOR_LAYER1 = 'rgba(255, 220, 80, 0.6)';
       ctx.globalAlpha = 0.55;
+      const cL0 = result?.dualLayerGrids?.constrainedLayer0;
+      const cL1 = result?.dualLayerGrids?.constrainedLayer1;
+      const rawL0 = result?.dualLayerGrids?.layer0;
+      const rawL1 = result?.dualLayerGrids?.layer1;
       for (const drawResult of drawResults) {
         const origin = getScreenWorldOrigin(drawResult.screenIndex);
         const perLayer = layer1ReachableOverride; // [layer0ReachState[][], layer1ReachState[][]] or null
@@ -369,8 +373,17 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
             const mergedReachable = perLayer ? (layer0Reach || layer1Reach) : drawResult.reachable[r][c] === 1;
             if (!mergedReachable) continue;
 
-            // Skip ledge/traversal tiles (they get arrows) — but NOT in dual-layer mode
-            if (!isDualLayer && drawResult.attrGrid && LEDGE_ATTRS.has(drawResult.attrGrid[r][c])) continue;
+            // Overlap = both layers have real content (not structural void).
+            // Void: raw == 0x00 AND constrained == 0x01 (boundary-connected, converted by constrainVoidTiles).
+            // Content: anything else (real floor, walls, stairs, etc).
+            const l0HasContent = !!cL0 && !!rawL0 &&
+              !(rawL0[r][c] === 0x00 && cL0[r][c] === 0x01);
+            const l1HasContent = !!cL1 && !!rawL1 &&
+              !(rawL1[r][c] === 0x00 && cL1[r][c] === 0x01);
+            const hasOverlap = isDualLayer && l0HasContent && l1HasContent;
+
+            // Skip ledge/traversal tiles (they get arrows) — but NOT split-circle tiles
+            if (!hasOverlap && drawResult.attrGrid && LEDGE_ATTRS.has(drawResult.attrGrid[r][c])) continue;
 
             // Tile center in world coordinates
             const worldX = origin.x + c * TILE_PX + TILE_PX / 2;
@@ -391,8 +404,8 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
             const hasReq = drawResult.reqGrid && drawResult.reqGrid[r][c] !== '';
             const radius = dotRadius * 0.6;
 
-            if (isDualLayer) {
-              // Split circle: shows per-layer classification for all indoor tiles
+            if (hasOverlap) {
+              // Split circle: both layers have content at this tile
               // Left = Lower (layer 1/BG1), Right = Upper (layer 0/BG2)
               const splitAlpha = ctx.globalAlpha;
               ctx.globalAlpha = 0.85;
@@ -413,15 +426,17 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
                 ctx.fill();
               }
 
-              // Black border around full circle
-              ctx.strokeStyle = '#000';
-              ctx.lineWidth = Math.max(1, Math.min(scaleX, scaleY) * 0.6);
-              ctx.beginPath();
-              ctx.arc(dx, dy, radius, 0, Math.PI * 2);
-              ctx.stroke();
+              // Black border around full circle (only if at least one half is visible)
+              if (layer0Reach || layer1Reach) {
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = Math.max(1, Math.min(scaleX, scaleY) * 0.6);
+                ctx.beginPath();
+                ctx.arc(dx, dy, radius, 0, Math.PI * 2);
+                ctx.stroke();
+              }
               ctx.globalAlpha = splitAlpha;
             } else {
-              // Regular dot — overworld / single-layer
+              // Regular dot — single-layer content or overworld
               ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
               ctx.beginPath();
               ctx.arc(dx, dy, radius, 0, Math.PI * 2);

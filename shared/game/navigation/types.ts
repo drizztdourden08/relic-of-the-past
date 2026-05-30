@@ -115,7 +115,7 @@ export interface FloodFillResult {
   /** Per-layer reachable grids: [layer0, layer1]. For dual-layer indoor rooms. */
   reachableByLayer?: [ReachState[][], ReachState[][]];
   /** Raw per-layer attr grids for dual-layer rooms (for tooltip display). */
-  dualLayerGrids?: { layer0: number[][]; layer1: number[][] };
+  dualLayerGrids?: { layer0: number[][]; layer1: number[][]; constrainedLayer0?: number[][]; constrainedLayer1?: number[][] };
   borders: {
     north: BorderSummary;
     south: BorderSummary;
