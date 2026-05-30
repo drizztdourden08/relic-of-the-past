@@ -460,6 +460,36 @@ function NavigationWidgetContent() {
       const allEntrances = enrichEntrances();
       const exitScreenByRoom = wasmGetExitScreenMap();
 
+      // For indoor rooms: add entrance spawn positions from the kEntranceData tables.
+      // Any entrance ID whose destination room matches the current screen gets a marker
+      // at its actual spawn position (where Link appears when using that entrance).
+      if (isIndoors) {
+        const spawns = wasmGetEntranceSpawns();
+        const rooms = wasmGetEntranceRooms();
+        if (spawns && rooms) {
+          const roomOriginX = (primaryScreenIndex % 16) * 512;
+          const roomOriginY = Math.floor(primaryScreenIndex / 16) * 512;
+          for (let id = 0; id < rooms.length; id++) {
+            if (rooms[id] !== primaryScreenIndex) continue;
+            const spawn = spawns[id];
+            if (!spawn) continue;
+            const gridCol = Math.floor((spawn.x - roomOriginX + 8) / 8);
+            const gridRow = Math.floor((spawn.y - roomOriginY + 8) / 8);
+            if (gridRow < 0 || gridRow >= 64 || gridCol < 0 || gridCol >= 64) continue;
+            // Avoid duplicates with overworld entrances
+            if (allEntrances.some(e => e.id === id)) continue;
+            allEntrances.push({
+              area: primaryScreenIndex,
+              pos: 0,
+              id,
+              gridRow,
+              gridCol,
+              roomId: primaryScreenIndex,
+            });
+          }
+        }
+      }
+
       // Get room layout info for intra-room edge detection (indoor only)
       const roomLayout = isIndoors ? wasmGetRoomLayoutInfo() : null;
       const intraEdges = roomLayout?.intraEdges ?? [];

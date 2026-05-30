@@ -236,7 +236,7 @@ export function floodFillScreen(
 
     // Determine entrance positions before BFS (needed by both paths)
     const { screenEntrances: sEnts, entrancePositions: ePos } = findEntrancePositions(
-      tileContext, entrances, screenIndex, grid, exitScreenByRoom, options.dualLayerGrids, quadrantBounds,
+      tileContext, entrances, screenIndex,
     );
 
     const bfsResult = floodFillBFSDualLayer(
@@ -288,7 +288,7 @@ export function floodFillScreen(
 
   // Determine entrance positions (from the starting layer's grid)
   const { screenEntrances, entrancePositions } = findEntrancePositions(
-    tileContext, entrances, screenIndex, grid, exitScreenByRoom, options.dualLayerGrids, quadrantBounds,
+    tileContext, entrances, screenIndex,
   );
 
   const start = findStartPosition(grid, startPos);
@@ -326,10 +326,6 @@ function findEntrancePositions(
   tileContext: TileAttrContext,
   entrances: OverworldEntrance[],
   screenIndex: number,
-  grid: CollisionGrid,
-  exitScreenByRoom?: Map<number, number>,
-  dualLayerGrids?: { layer0: number[][]; layer1: number[][] },
-  quadrantBounds?: QuadrantBounds,
 ): { screenEntrances: OverworldEntrance[]; entrancePositions: { row: number; col: number; idx: number }[] } {
   if (tileContext === 'overworld') {
     const screenEntrances = entrances.filter(e => e.area === screenIndex);
@@ -337,57 +333,11 @@ function findEntrancePositions(
     return { screenEntrances, entrancePositions };
   }
 
-  // Interior rooms: detect entrance/staircase tiles from the attr grid.
-  const screenEntrances: OverworldEntrance[] = [];
-  const entrancePositions: { row: number; col: number; idx: number }[] = [];
-  const entranceTiles: GridPos[] = [];
-  for (let r = 0; r < GRID_SIZE; r++) {
-    for (let c = 0; c < GRID_SIZE; c++) {
-      const attr = grid.rawAttr[r][c];
-      if (attr === 0x8E || attr === 0x8F) {
-        entranceTiles.push({ row: r, col: c });
-      }
-    }
-  }
-  // Also check both layers for entrances when dual-layer data is available
-  if (dualLayerGrids) {
-    const { layer0, layer1 } = dualLayerGrids;
-    for (let r = 0; r < GRID_SIZE; r++) {
-      for (let c = 0; c < GRID_SIZE; c++) {
-        const a0 = layer0[r][c];
-        const a1 = layer1[r][c];
-        if ((a0 === 0x8E || a0 === 0x8F || a1 === 0x8E || a1 === 0x8F) &&
-            !entranceTiles.some(t => t.row === r && t.col === c)) {
-          entranceTiles.push({ row: r, col: c });
-        }
-      }
-    }
-  }
-  // Cluster entrance tiles: merge any tiles within 4 sub-tiles of each other
-  const clustered = new Set<number>();
-  let syntheticIdx = 1000;
-  for (let i = 0; i < entranceTiles.length; i++) {
-    if (clustered.has(i)) continue;
-    const cluster: GridPos[] = [entranceTiles[i]];
-    clustered.add(i);
-    for (let qi = 0; qi < cluster.length; qi++) {
-      const cur = cluster[qi];
-      for (let j = i + 1; j < entranceTiles.length; j++) {
-        if (clustered.has(j)) continue;
-        const other = entranceTiles[j];
-        if (Math.abs(cur.row - other.row) <= 4 && Math.abs(cur.col - other.col) <= 4) {
-          clustered.add(j);
-          cluster.push(other);
-        }
-      }
-    }
-    const avgRow = Math.round(cluster.reduce((s, p) => s + p.row, 0) / cluster.length);
-    const minCol = Math.min(...cluster.map(p => p.col));
-    const id = syntheticIdx++;
-    const exitScreen = exitScreenByRoom?.get(screenIndex) ?? 0;
-    screenEntrances.push({ area: exitScreen, pos: 0, id, gridRow: avgRow, gridCol: minCol, roomId: screenIndex });
-    entrancePositions.push({ row: avgRow, col: minCol, idx: id });
-  }
+  // Interior rooms: use entrance spawn data from ROM tables (passed via entrances array).
+  // The widget computes entrance positions from kEntranceData_playerX/Y for all entrance IDs
+  // whose destination room matches the current screen.
+  const screenEntrances = entrances.filter(e => e.roomId === screenIndex);
+  const entrancePositions = screenEntrances.map(e => ({ row: e.gridRow, col: e.gridCol, idx: e.id }));
   return { screenEntrances, entrancePositions };
 }
 

@@ -172,6 +172,62 @@ describe('Room 0x51 layer reachability diagnostic', () => {
     }
     console.log(`\n=== TOTAL REACHABLE: layer0=${l0count}, layer1=${l1count} ===`);
 
+    // Scan for entrance tiles (0x8E/0x8F) on both layers
+    console.log('\n=== ENTRANCE TILES (0x8E/0x8F) ===');
+    for (let r = 0; r < 64; r++) {
+      for (let c = 0; c < 64; c++) {
+        if (layer0[r][c] === 0x8E || layer0[r][c] === 0x8F)
+          console.log(`  layer0[${r}][${c}] = 0x${layer0[r][c].toString(16)}`);
+        if (layer1[r][c] === 0x8E || layer1[r][c] === 0x8F)
+          console.log(`  layer1[${r}][${c}] = 0x${layer1[r][c].toString(16)}`);
+      }
+    }
+
+    // Scan for stair-labeled tiles (0x22, 0x34) — potential inter-room stairs
+    console.log('\n=== INTER-ROOM STAIR TILES (0x22/0x34) ===');
+    for (let r = 0; r < 64; r++) {
+      for (let c = 0; c < 64; c++) {
+        if (layer0[r][c] === 0x22 || layer0[r][c] === 0x34)
+          console.log(`  layer0[${r}][${c}] = 0x${layer0[r][c].toString(16)}`);
+        if (layer1[r][c] === 0x22 || layer1[r][c] === 0x34)
+          console.log(`  layer1[${r}][${c}] = 0x${layer1[r][c].toString(16)}`);
+      }
+    }
+
+    // Scan for ALL tiles >= 0x30 that aren't common walls (looking for inter-room triggers)
+    console.log('\n=== UNIQUE TILE ATTRS (both layers) ===');
+    const attrCounts = new Map<number, number>();
+    for (let r = 0; r < 64; r++) {
+      for (let c = 0; c < 64; c++) {
+        attrCounts.set(layer0[r][c], (attrCounts.get(layer0[r][c]) ?? 0) + 1);
+        attrCounts.set(layer1[r][c], (attrCounts.get(layer1[r][c]) ?? 0) + 1);
+      }
+    }
+    const sorted = [...attrCounts.entries()].sort((a, b) => a[0] - b[0]);
+    for (const [attr, count] of sorted) {
+      console.log(`  0x${attr.toString(16).padStart(2, '0')}: ${count} tiles`);
+    }
+
+    // Look at rows 54-57 around col 30 (potential stair1 area)
+    console.log('\n=== ATTRS near expected stair1 (rows 52-60, cols 28-36) ===');
+    for (let r = 52; r <= 60; r++) {
+      let line = `r${r.toString().padStart(2)}: `;
+      for (let c = 28; c <= 36; c++) {
+        line += ` L0=${layer0[r][c].toString(16).padStart(2,'0')} L1=${layer1[r][c].toString(16).padStart(2,'0')} |`;
+      }
+      console.log(line);
+    }
+
+    // Print entrances and transitions from BFS result
+    console.log('\n=== ENTRANCES ===');
+    for (const e of result.entrances) {
+      console.log(`  id=${e.id} area=0x${e.area.toString(16)} gridRow=${e.gridRow} gridCol=${e.gridCol}`);
+    }
+    console.log('\n=== TRANSITIONS (entrance type) ===');
+    for (const t of result.transitions.filter(t => t.edge === 'entrance')) {
+      console.log(`  entranceIdx=${t.entranceIdx} row=${t.row} col=${t.col} reqs=[${t.requirements}]`);
+    }
+
     // The assertion: (45,30) should NOT be reachable on layer 0
     expect(result.reachableByLayer![0][TARGET_ROW][TARGET_COL], '(45,30) should NOT be reachable on layer 0').toBe(0);
   });

@@ -495,6 +495,8 @@ export function floodFillBFSDualLayer(
         const reqs = bodyReached[layer][r][c];
         if (reqs === null) continue;
         for (const [tr, tc] of bodyTiles(r, c)) {
+          // Skip stair tiles — they're only marked via traversedStairTiles on the target layer
+          if (SWAP_STAIR_ATTRS.has(rawAttrs[0][tr]?.[tc]) || SWAP_STAIR_ATTRS.has(rawAttrs[1][tr]?.[tc])) continue;
           const existing = reached[layer][tr][tc];
           if (existing === null || existing.size > reqs.size) {
             reached[layer][tr][tc] = reqs;
