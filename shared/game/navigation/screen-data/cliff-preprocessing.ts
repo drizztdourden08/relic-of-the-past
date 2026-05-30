@@ -16,13 +16,13 @@ export function processStraightCliffs(
   isIndoors = false,
 ): void {
   const CLIFF_TRIGGERS = new Set([0x28, 0x29, 0x2a, 0x2b, 0x2f]);
-  // Indoor: directions are reversed (ledge trigger is above cliff face, not below)
+  // Horizontal ledge attrs (0x2a/0x2b) — direction inferred from surrounding walls
+  const HORIZ_LEDGE_ATTRS = new Set([0x2a, 0x2b]);
+  // Indoor: N/S directions are reversed (ledge trigger is above cliff face, not below)
   const CLIFF_DIRS: Record<number, { dr: number; dc: number; dir: 'n' | 's' | 'e' | 'w' }> = isIndoors
     ? {
         0x28: { dr: 1, dc: 0, dir: 's' },
         0x29: { dr: -1, dc: 0, dir: 'n' },
-        0x2a: { dr: 0, dc: 1, dir: 'e' },
-        0x2b: { dr: 0, dc: -1, dir: 'w' },
         0x2f: { dr: 0, dc: -1, dir: 'w' },
       }
     : {
@@ -42,7 +42,40 @@ export function processStraightCliffs(
       const attr = rawAttr[row][col];
       if (!CLIFF_TRIGGERS.has(attr)) continue;
 
-      const { dr, dc, dir } = CLIFF_DIRS[attr];
+      let dr: number, dc: number, dir: 'n' | 's' | 'e' | 'w';
+
+      if (isIndoors && HORIZ_LEDGE_ATTRS.has(attr)) {
+        // 0x2a/0x2b indoor: direction inferred from which side has the cliff face (walls).
+        // The jump goes TOWARD the wall/cliff face and over it.
+        const hasWallEast = col < 63 && CLIFF_WALL.has(rawAttr[row][col + 1]);
+        const hasWallWest = col > 0 && CLIFF_WALL.has(rawAttr[row][col - 1]);
+        if (hasWallEast && !hasWallWest) {
+          dr = 0; dc = 1; dir = 'e';
+        } else if (hasWallWest && !hasWallEast) {
+          dr = 0; dc = -1; dir = 'w';
+        } else {
+          // Ambiguous — check further for walls
+          let wallsEast = 0, wallsWest = 0;
+          for (let d = 1; d <= 3 && col + d < GRID_SIZE; d++) {
+            if (CLIFF_WALL.has(rawAttr[row][col + d])) wallsEast++;
+          }
+          for (let d = 1; d <= 3 && col - d >= 0; d++) {
+            if (CLIFF_WALL.has(rawAttr[row][col - d])) wallsWest++;
+          }
+          if (wallsEast > wallsWest) {
+            dr = 0; dc = 1; dir = 'e';
+          } else if (wallsWest > wallsEast) {
+            dr = 0; dc = -1; dir = 'w';
+          } else {
+            // Default fallback: east
+            dr = 0; dc = 1; dir = 'e';
+          }
+        }
+      } else {
+        const fixed = CLIFF_DIRS[attr];
+        if (!fixed) continue;
+        ({ dr, dc, dir } = fixed);
+      }
 
       // Check 2-tile perpendicular width
       let has2Wide = false;
