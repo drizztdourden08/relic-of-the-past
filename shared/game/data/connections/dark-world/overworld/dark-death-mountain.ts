@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_CONNECTIONS: RegionConnection[] = [
+export const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_CONNECTIONS: ScreenConnection[] = [
   // West
   { from: 'dark-death-mountain-west-bottom', to: 'dark-death-mountain-top', tags: ['transit:walk', 'dir:one-way', 'ctx:overworld'] },
 

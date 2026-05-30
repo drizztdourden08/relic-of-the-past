@@ -9,7 +9,7 @@
 
 import type { ConnectionNavData, ConnectionTransitType, RequirementSet, ConnectionPointData, TraversalRequirement } from '../nav-data.types';
 import type { ConnectionTag } from '../../data/connections/tags';
-import type { RegionConnection } from '../../types';
+import type { ScreenConnection } from '../../types';
 import type { ResolvedEntrance } from './entrance-resolver';
 import type { BorderBundle } from './border-bundles';
 
@@ -90,7 +90,7 @@ function isBidirectional(tags: readonly ConnectionTag[]): boolean {
 }
 
 export interface ConnectionUpdaterInput {
-  connections: RegionConnection[];
+  connections: ScreenConnection[];
   /** Border bundles indexed by screen: Map<screenIndex, BorderBundle[]> */
   borderBundles: Map<number, BorderBundle[]>;
   /** Overlap tiles for walk connections: Map<"from|to", number[]> */

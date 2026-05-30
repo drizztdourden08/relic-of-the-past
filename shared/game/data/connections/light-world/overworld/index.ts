@@ -1,4 +1,4 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 import { LW_OVERWORLD_CENTRAL_CONNECTIONS } from './central-hyrule';
 import { LW_OVERWORLD_DEATH_MOUNTAIN_CONNECTIONS } from './death-mountain';
 import { LW_OVERWORLD_DESERT_CONNECTIONS } from './desert';
@@ -11,7 +11,7 @@ import { LW_OVERWORLD_SOUTH_HYRULE_CONNECTIONS } from './south-hyrule';
 import { LW_SCREEN_ADJACENCY_CONNECTIONS } from './screen-adjacency';
 import { LW_SCREEN_AREA_CONNECTIONS } from './screen-areas';
 
-export const LW_OVERWORLD_CONNECTIONS: RegionConnection[] = [
+export const LW_OVERWORLD_CONNECTIONS: ScreenConnection[] = [
   ...LW_OVERWORLD_CENTRAL_CONNECTIONS,
   ...LW_OVERWORLD_DEATH_MOUNTAIN_CONNECTIONS,
   ...LW_OVERWORLD_DESERT_CONNECTIONS,

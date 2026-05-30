@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const DW_SKULL_WOODS_CONNECTIONS: RegionConnection[] = [
+export const DW_SKULL_WOODS_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-00', to: 'sw-0x59', tags: ['transit:hole', 'dir:one-way', 'ctx:dungeon-enter'] },
   { from: 'dw-00', to: 'sw-0x57', tags: ['transit:hole', 'dir:one-way', 'ctx:dungeon-enter'] },
   { from: 'dw-00', to: 'sw-0x58', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },

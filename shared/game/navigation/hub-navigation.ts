@@ -1,4 +1,4 @@
-import type { RegionConnection, RegionDefinition } from '../types';
+import type { ScreenConnection, ScreenDefinition } from '../types';
 import type { NavigationStep, NavigationResult, PathfindingOptions } from './types';
 import { ALL_CONNECTIONS, DUNGEON_CONNECTIONS } from '../data/connections';
 import { REGION_BY_ID } from '../data/regions';
@@ -28,7 +28,7 @@ function getPreciseAdjacencyList(options: PathfindingOptions = {}): AdjacencyLis
 
 // ─── Graph Construction ──────────────────────────────────────────────────────
 
-function buildAdjacencyList(connections: RegionConnection[], options: PathfindingOptions = {}): AdjacencyList {
+function buildAdjacencyList(connections: ScreenConnection[], options: PathfindingOptions = {}): AdjacencyList {
   const { allowGlitches = false } = options;
   const adj: AdjacencyList = new Map();
 
@@ -59,14 +59,14 @@ function isLogicalArea(id: string): boolean {
   if (SCREEN_PATTERN.test(id)) return false;
   const region = REGION_BY_ID.get(id);
   if (!region) return false;
-  return region.type === 'lightWorld' || region.type === 'darkWorld';
+  return region.type === 'overworld';
 }
 
 /**
  * Build adjacency list with logical area hubs eliminated.
  * Bridges physical neighbors directly (screen↔interior only).
  */
-function buildPreciseAdjacencyList(connections: RegionConnection[], options: PathfindingOptions = {}): AdjacencyList {
+function buildPreciseAdjacencyList(connections: ScreenConnection[], options: PathfindingOptions = {}): AdjacencyList {
   const fullAdj = buildAdjacencyList(connections, options);
   const logicalAreas = new Set<string>();
   for (const [id] of fullAdj) {

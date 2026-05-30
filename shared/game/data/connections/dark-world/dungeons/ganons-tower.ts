@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const DW_GANONS_TOWER_CONNECTIONS: RegionConnection[] = [
+export const DW_GANONS_TOWER_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-03', to: 'gt-0x9b', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter', 'barrier:crystals'] },
   { from: 'gt-0x05', to: 'gt-0xa5', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'gt-0x0c', to: 'gt-0x0d', tags: ['transit:walk', 'dir:two-way', 'ctx:boss'] },

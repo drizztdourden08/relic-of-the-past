@@ -1,7 +1,7 @@
-import type { RegionDefinition } from '../../types';
+import type { ScreenDefinition } from '../../../types';
 
-export const DW_HOUSES: RegionDefinition[] = [
-  { id: 'mire-shed', name: 'Mire Shed', type: 'cave', indoor: true, displayName: 'Swamp of Evil', inGameIndex: 0x0112, subtitle: 'Mire Shed', tags: ['world:dark', 'env:inside', 'type:house', 'area:dark_mire', 'role:treasure'] },
-  { id: 'brewery', name: 'Brewery', type: 'cave', indoor: true, displayName: 'Village of Outcasts', inGameIndex: 0x0113, subtitle: 'Brewery', tags: ['world:dark', 'env:inside', 'type:house', 'area:village_of_outcasts', 'role:treasure'] },
-  { id: 'c-shaped-house', name: 'C-Shaped House', type: 'cave', indoor: true, displayName: 'Village of Outcasts', inGameIndex: 0x0112, subtitle: 'C-Shaped House', tags: ['world:dark', 'env:inside', 'type:house', 'area:village_of_outcasts', 'role:treasure'] },
+export const DW_HOUSES: ScreenDefinition[] = [
+  { id: 'mire-shed', name: 'Mire Shed', type: 'interior', world: 'dark', location: 'Swamp of Evil', area: 'Dark Mire', roomIndex: 0x0112, interior: { kind: 'house' }, tags: ['world:dark', 'env:inside', 'type:house', 'area:dark_mire', 'role:treasure'] },
+  { id: 'brewery', name: 'Brewery', type: 'interior', world: 'dark', location: 'Village of Outcasts', area: 'Village Of Outcasts', roomIndex: 0x0113, interior: { kind: 'house' }, tags: ['world:dark', 'env:inside', 'type:house', 'area:village_of_outcasts', 'role:treasure'] },
+  { id: 'c-shaped-house', name: 'C-Shaped House', type: 'interior', world: 'dark', location: 'Village of Outcasts', area: 'Village Of Outcasts', roomIndex: 0x0112, interior: { kind: 'house' }, tags: ['world:dark', 'env:inside', 'type:house', 'area:village_of_outcasts', 'role:treasure'] },
 ];

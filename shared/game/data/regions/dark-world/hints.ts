@@ -1,10 +1,10 @@
-import type { RegionDefinition } from '../../types';
+import type { ScreenDefinition } from '../../../types';
 
-export const DW_HINTS: RegionDefinition[] = [
-  { id: 'dark-desert-hint', name: 'Dark Desert Hint', type: 'cave', indoor: true, displayName: 'Swamp of Evil', inGameIndex: 0x010e, subtitle: 'Hint Cave', tags: ['world:dark', 'env:underground', 'type:hint', 'area:dark_mire'] },
-  { id: 'fortune-teller-dark', name: 'Fortune Teller (Dark)', type: 'cave', indoor: true, displayName: 'Village of Outcasts', inGameIndex: 0x011b, subtitle: 'Fortune Teller', tags: ['world:dark', 'env:inside', 'type:hint', 'area:village_of_outcasts'] },
-  { id: 'dark-sanctuary-hint', name: 'Dark Sanctuary Hint', type: 'cave', indoor: true, displayName: 'Village of Outcasts', inGameIndex: 0x011c, subtitle: 'Dark Sanctuary', tags: ['world:dark', 'env:inside', 'type:hint', 'area:village_of_outcasts'] },
-  { id: 'palace-of-darkness-hint', name: 'Palace of Darkness Hint', type: 'cave', indoor: true, displayName: 'Dark Eastern', inGameIndex: 0x0122, subtitle: 'Hint Cave', tags: ['world:dark', 'env:underground', 'type:hint', 'area:dark_east'] },
-  { id: 'east-dark-world-hint', name: 'East Dark World Hint', type: 'cave', indoor: true, displayName: 'Dark Eastern', inGameIndex: 0x0122, subtitle: 'Hint Cave', tags: ['world:dark', 'env:underground', 'type:hint', 'area:dark_east'] },
-  { id: 'dark-lake-hylia-ledge-hint', name: 'Dark Lake Hylia Ledge Hint', type: 'cave', indoor: true, displayName: 'Dark Lake', inGameIndex: 0x011a, subtitle: 'Hint Cave', tags: ['world:dark', 'env:underground', 'type:hint', 'area:dark_lake_hylia'] },
+export const DW_HINTS: ScreenDefinition[] = [
+  { id: 'dark-desert-hint', name: 'Dark Desert Hint', type: 'interior', world: 'dark', location: 'Swamp of Evil', area: 'Dark Mire', roomIndex: 0x010E, interior: { kind: 'hint' }, tags: ['world:dark', 'env:underground', 'type:hint', 'area:dark_mire'] },
+  { id: 'fortune-teller-dark', name: 'Fortune Teller (Dark)', type: 'interior', world: 'dark', location: 'Village of Outcasts', area: 'Village Of Outcasts', roomIndex: 0x011B, interior: { kind: 'hint' }, tags: ['world:dark', 'env:inside', 'type:hint', 'area:village_of_outcasts'] },
+  { id: 'dark-sanctuary-hint', name: 'Dark Sanctuary Hint', type: 'interior', world: 'dark', location: 'Village of Outcasts', area: 'Village Of Outcasts', roomIndex: 0x011C, interior: { kind: 'hint' }, tags: ['world:dark', 'env:inside', 'type:hint', 'area:village_of_outcasts'] },
+  { id: 'palace-of-darkness-hint', name: 'Palace of Darkness Hint', type: 'interior', world: 'dark', location: 'Dark Eastern', area: 'Dark East', roomIndex: 0x0122, interior: { kind: 'hint' }, tags: ['world:dark', 'env:underground', 'type:hint', 'area:dark_east'] },
+  { id: 'east-dark-world-hint', name: 'East Dark World Hint', type: 'interior', world: 'dark', location: 'Dark Eastern', area: 'Dark East', roomIndex: 0x0122, interior: { kind: 'hint' }, tags: ['world:dark', 'env:underground', 'type:hint', 'area:dark_east'] },
+  { id: 'dark-lake-hylia-ledge-hint', name: 'Dark Lake Hylia Ledge Hint', type: 'interior', world: 'dark', location: 'Dark Lake', area: 'Dark Lake Hylia', roomIndex: 0x011A, interior: { kind: 'hint' }, tags: ['world:dark', 'env:underground', 'type:hint', 'area:dark_lake_hylia'] },
 ];

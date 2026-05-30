@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../types';
+import type { ScreenConnection } from '../../../types';
 
-export const LW_CAVE_CONNECTIONS: RegionConnection[] = [
+export const LW_CAVE_CONNECTIONS: ScreenConnection[] = [
   // Desert area
   { from: 'lw-30', to: 'aginahs-cave', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'desert-northern-cliffs', to: 'checkerboard-cave', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },

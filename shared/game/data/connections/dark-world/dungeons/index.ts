@@ -1,4 +1,4 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
 import { DW_PALACE_OF_DARKNESS_CONNECTIONS } from './palace-of-darkness';
 import { DW_SWAMP_PALACE_CONNECTIONS } from './swamp-palace';
@@ -18,7 +18,7 @@ export { DW_MISERY_MIRE_CONNECTIONS } from './misery-mire';
 export { DW_TURTLE_ROCK_CONNECTIONS } from './turtle-rock';
 export { DW_GANONS_TOWER_CONNECTIONS } from './ganons-tower';
 
-export const DW_DUNGEON_CONNECTIONS: RegionConnection[] = [
+export const DW_DUNGEON_CONNECTIONS: ScreenConnection[] = [
   ...DW_PALACE_OF_DARKNESS_CONNECTIONS,
   ...DW_SWAMP_PALACE_CONNECTIONS,
   ...DW_SKULL_WOODS_CONNECTIONS,

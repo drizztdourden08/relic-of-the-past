@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 import { getRegionLookup } from '@shared/game/data/regions';
 import type { RegionMatchResult } from '@shared/game/data/regions';
 import { ALL_CONNECTIONS } from '@shared/game/data/connections';
-import type { RegionDefinition, RegionConnection } from '@shared/game/types';
+import type { ScreenDefinition, ScreenConnection } from '@shared/game/types';
 import type { RoomStairInfo } from '../../lib/game';
 import { getPalaceName } from '@shared/game/data/regions/game-values';
 
@@ -17,7 +17,7 @@ type RegionStatus = 'mapped' | 'incomplete' | 'missing';
 
 interface RegionStatusResult {
   status: RegionStatus;
-  region: RegionDefinition | null;
+  region: ScreenDefinition | null;
   issues: string[];
   /** Data correction suggestions (shown in editor wizard) */
   corrections: DataCorrection[];
@@ -42,14 +42,14 @@ function useRegionStatus(
     const issues: string[] = [];
     const corrections: DataCorrection[] = [];
 
-    // Palace mismatch: data has wrong/missing gamePalace
+    // Palace mismatch: data has wrong/missing palaceIndex
     if (method === 'palace-scan' && palaceMismatch) {
       const actual = palaceMismatch.actual;
       const expected = palaceMismatch.expected;
       issues.push(`Palace mismatch: game reports ${getPalaceName(actual)} (0x${actual.toString(16).toUpperCase()}) but data has 0x${expected.toString(16).toUpperCase()}`);
       corrections.push({
-        field: 'gamePalace',
-        message: `Set gamePalace to 0x${actual.toString(16).toUpperCase()} (${getPalaceName(actual)})`,
+        field: 'dungeon.palaceIndex',
+        message: `Set palaceIndex to 0x${actual.toString(16).toUpperCase()} (${getPalaceName(actual)})`,
         suggestedValue: actual,
       });
     }
@@ -65,17 +65,16 @@ function useRegionStatus(
     }
 
     // Check required fields
-    if (!region.displayName) issues.push('Missing displayName');
-    if (isIndoors && region.inGameIndex == null) issues.push('Missing inGameIndex');
+    if (!region.location) issues.push('Missing location');
+    if (isIndoors && region.roomIndex == null) issues.push('Missing roomIndex');
     if (isIndoors && region.type === 'dungeon') {
-      if (!region.dungeon) issues.push('Missing dungeon name');
-      if (region.floor == null) issues.push('Missing floor');
-      if (!region.subtitle) issues.push('Missing subtitle');
-      if (region.gamePalace == null && method === 'exact') {
-        // Matched via DUNGEON_PALACE_VALUES derivation — suggest explicit gamePalace
+      if (!region.dungeon.name) issues.push('Missing dungeon name');
+      if (region.dungeon.floor == null) issues.push('Missing floor');
+      if (region.dungeon.palaceIndex == null && method === 'exact') {
+        // Matched via DUNGEON_PALACE_VALUES derivation — suggest explicit palaceIndex
         corrections.push({
-          field: 'gamePalace',
-          message: 'Add explicit gamePalace for reliable detection',
+          field: 'dungeon.palaceIndex',
+          message: 'Add explicit palaceIndex for reliable detection',
           suggestedValue: null, // widget will fill from runtime
         });
       }
@@ -104,7 +103,7 @@ interface DetectedConnection {
 interface ConnectionStatusResult {
   status: ConnectionStatus;
   missingCount: number;
-  existingConnections: RegionConnection[];
+  existingConnections: ScreenConnection[];
   detectedConnections: DetectedConnection[];
   unmatched: DetectedConnection[];
 }
@@ -174,7 +173,7 @@ function useConnectionStatus(
         const otherRegionId = conn.from === regionId ? conn.to : conn.from;
         const otherRegion = lookup.byOverworldScreen.get(det.targetRoomOrScreen)
           ?? lookup.byCaveRoom.get(det.targetRoomOrScreen)
-          ?? [...lookup.byDungeonRoom.values()].find(r => r.inGameIndex === det.targetRoomOrScreen);
+          ?? [...lookup.byDungeonRoom.values()].find(r => r.roomIndex === det.targetRoomOrScreen);
 
         if (otherRegion && otherRegionId === otherRegion.id) {
           found = true;

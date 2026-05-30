@@ -7,7 +7,7 @@
 
 import { ALL_LIGHT_WORLD_REGIONS } from './light-world';
 import { ALL_DARK_WORLD_REGIONS } from './dark-world';
-import type { RegionDefinition } from '../types';
+import type { ScreenDefinition } from '../../types';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -45,10 +45,10 @@ const QUAD_POSITIONS: Record<number, string> = {
 
 // ─── Region Lookup ───────────────────────────────────────────────────────────
 
-const regionByIndex = new Map<number, RegionDefinition>(
+const regionByIndex = new Map<number, ScreenDefinition>(
   [...ALL_LIGHT_WORLD_REGIONS, ...ALL_DARK_WORLD_REGIONS]
-    .filter(r => r.inGameIndex != null && (r.type === 'lightWorld' || r.type === 'darkWorld'))
-    .map(r => [r.inGameIndex!, r])
+    .filter(r => r.roomIndex != null && r.type === 'overworld')
+    .map(r => [r.roomIndex!, r])
 );
 
 // ─── Bundle Construction ─────────────────────────────────────────────────────
@@ -61,9 +61,7 @@ export function buildScreenBundle(group: number[]): ScreenBundle {
   if (group.length === 1) {
     const screenIndex = group[0];
     const region = regionByIndex.get(screenIndex);
-    const name = region?.type === 'cave'
-      ? (region.subtitle ?? region.name)
-      : (region?.displayName ?? region?.name ?? `Screen 0x${screenIndex.toString(16).toUpperCase()}`);
+    const name = region?.location ?? region?.name ?? `Screen 0x${screenIndex.toString(16).toUpperCase()}`;
     const screenName = region?.name ?? name;
     return {
       name,
@@ -80,7 +78,7 @@ export function buildScreenBundle(group: number[]): ScreenBundle {
   // Multi-screen (2×2)
   const head = group[0];
   const headRegion = regionByIndex.get(head);
-  const bundleName = headRegion?.displayName ?? `Area 0x${head.toString(16).toUpperCase()}`;
+  const bundleName = headRegion?.location ?? `Area 0x${head.toString(16).toUpperCase()}`;
 
   const subNames: Record<number, string> = {};
   const screenNames: Record<number, string> = {};

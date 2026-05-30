@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../types';
+import type { ScreenConnection } from '../../../types';
 
-export const DW_SPECIAL_CONNECTIONS: RegionConnection[] = [
+export const DW_SPECIAL_CONNECTIONS: ScreenConnection[] = [
   { from: 'pyramid-ledge', to: 'pyramid', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'pyramid', to: 'bottom-of-pyramid', tags: ['transit:stairs', 'dir:one-way', 'ctx:internal'] },
   { from: 'bottom-of-pyramid', to: 'dw-1b', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },

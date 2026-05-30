@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const LW_OVERWORLD_EAST_HYRULE_CONNECTIONS: RegionConnection[] = [
+export const LW_OVERWORLD_EAST_HYRULE_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-15', to: 'zoras-river', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld', 'barrier:gloves'] },
   { from: 'lw-14', to: 'kings-grave-area', tags: ['transit:grave', 'dir:one-way', 'ctx:overworld', 'barrier:gloves'] },
   { from: 'lw-14', to: 'kings-grave-area', tags: ['transit:rock', 'dir:two-way', 'ctx:overworld', 'barrier:gloves'] },

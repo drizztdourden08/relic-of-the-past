@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const LW_OVERWORLD_DEATH_MOUNTAIN_CONNECTIONS: RegionConnection[] = [
+export const LW_OVERWORLD_DEATH_MOUNTAIN_CONNECTIONS: ScreenConnection[] = [
   // West side area transitions
   { from: 'death-mountain-entrance', to: 'death-mountain', tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'] },
   { from: 'death-mountain', to: 'death-mountain-return-ledge', tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'] },

@@ -1,4 +1,4 @@
-import type { LogicConfig, Requirement, RegionConnection } from '../types';
+import type { LogicConfig, Requirement, ScreenConnection } from '../types';
 import { REGION_RULES } from './region-rules';
 import { CHECK_RULES } from './check-rules';
 import { ALL_CONNECTIONS } from '../data/connections';
@@ -7,7 +7,7 @@ import {
 } from './helpers';
 
 // ─── Vanilla-only intro connection ───
-const VANILLA_INTRO_CONNECTION: RegionConnection =
+const VANILLA_INTRO_CONNECTION: ScreenConnection =
   { from: 'menu', to: 'links-house', tags: [] };
 
 // ─── Rule Resolution ───
@@ -15,7 +15,7 @@ const VANILLA_INTRO_CONNECTION: RegionConnection =
 interface ResolvedRules {
   regionRules: Record<string, Requirement>;
   checkRules: Record<string, Requirement>;
-  connections: RegionConnection[];
+  connections: ScreenConnection[];
   startInventory: Set<string>;
 }
 

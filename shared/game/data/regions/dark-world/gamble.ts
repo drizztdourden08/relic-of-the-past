@@ -1,6 +1,6 @@
-import type { RegionDefinition } from '../../types';
+import type { ScreenDefinition } from '../../../types';
 
-export const DW_GAMBLE: RegionDefinition[] = [
-  { id: 'chest-game', name: 'Chest Game', type: 'cave', indoor: true, displayName: 'Village of Outcasts', inGameIndex: 0x0111, subtitle: 'Chest Game', tags: ['world:dark', 'env:inside', 'type:gamble', 'area:village_of_outcasts', 'role:treasure'] },
-  { id: 'archery-game', name: 'Archery Game', type: 'cave', indoor: true, displayName: 'Dark South', inGameIndex: 0x0110, subtitle: 'Archery Game', tags: ['world:dark', 'env:inside', 'type:gamble', 'area:dark_south'] },
+export const DW_GAMBLE: ScreenDefinition[] = [
+  { id: 'chest-game', name: 'Chest Game', type: 'interior', world: 'dark', location: 'Village of Outcasts', area: 'Village Of Outcasts', roomIndex: 0x0111, interior: { kind: 'gamble' }, tags: ['world:dark', 'env:inside', 'type:gamble', 'area:village_of_outcasts', 'role:treasure'] },
+  { id: 'archery-game', name: 'Archery Game', type: 'interior', world: 'dark', location: 'Dark South', area: 'Dark South', roomIndex: 0x0110, interior: { kind: 'gamble' }, tags: ['world:dark', 'env:inside', 'type:gamble', 'area:dark_south'] },
 ];

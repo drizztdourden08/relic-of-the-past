@@ -1,4 +1,4 @@
-import type { RegionDefinition } from '../../types';
+import type { ScreenDefinition } from '../../../types';
 
 import { LIGHT_WORLD_OVERWORLD_REGIONS } from './overworld';
 import { LW_HOUSES } from './houses';
@@ -26,17 +26,6 @@ export { LW_SPECIAL } from './special';
 export { LW_GAMBLE } from './gamble';
 export { LW_DUNGEON_REGIONS } from './dungeons';
 
-export const ALL_LIGHT_WORLD_REGIONS: RegionDefinition[] = [
-  ...LIGHT_WORLD_OVERWORLD_REGIONS,
-  ...LW_HOUSES,
-  ...LW_CAVES,
-  ...LW_SHOPS,
-  ...LW_FAIRY,
-  ...LW_HINTS,
-  ...LW_PASSAGES,
-  ...LW_WELLS,
-  ...LW_SPECIAL,
-  ...LW_GAMBLE,
-  ...LW_DUNGEON_REGIONS,
-  ...LW_OVERWORLD_AREAS,
+export const ALL_LIGHT_WORLD_REGIONS: ScreenDefinition[] = [
+
 ];

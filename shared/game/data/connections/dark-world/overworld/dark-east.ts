@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const DW_OVERWORLD_DARK_EAST_CONNECTIONS: RegionConnection[] = [
+export const DW_OVERWORLD_DARK_EAST_CONNECTIONS: ScreenConnection[] = [
   { from: 'east-dark-world', to: 'south-dark-world', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'east-dark-world', to: 'dark-lake-hylia', tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'] },
   { from: 'east-dark-world', to: 'northeast-dark-world', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld', 'barrier:hammer'] },

@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const LW_OVERWORLD_SOUTH_HYRULE_CONNECTIONS: RegionConnection[] = [
+export const LW_OVERWORLD_SOUTH_HYRULE_CONNECTIONS: ScreenConnection[] = [
   { from: 'cave-45-ledge', to: 'lw-32', tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'] },
   { from: 'bombos-tablet-ledge', to: 'lw-30', tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'] },
 

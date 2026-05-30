@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const LW_HYRULE_CASTLE_CONNECTIONS: RegionConnection[] = [
+export const LW_HYRULE_CASTLE_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-13', to: 'hc-0x12', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'lw-1b', to: 'hc-0x60', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'lw-1b', to: 'hc-0x61', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },

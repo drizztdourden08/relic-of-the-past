@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const DW_SWAMP_PALACE_CONNECTIONS: RegionConnection[] = [
+export const DW_SWAMP_PALACE_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-3b', to: 'sp-0x28', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'sp-0x06', to: 'sp-0x16', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'sp-0x16', to: 'sp-0x26', tags: ['transit:walk', 'dir:two-way', 'ctx:internal', 'barrier:big-key'] },

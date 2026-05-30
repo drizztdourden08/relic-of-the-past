@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: RegionConnection[] = [
+export const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ScreenConnection[] = [
   { from: 'dark-lake-hylia', to: 'dark-lake-hylia-central-island', tags: ['transit:warp', 'dir:one-way', 'ctx:overworld'] },
   { from: 'dark-lake-hylia', to: 'dark-lake-hylia-ledge', tags: ['transit:swim', 'dir:two-way', 'ctx:overworld', 'barrier:swim'] },
   { from: 'dark-lake-hylia-ledge', to: 'dark-lake-hylia', tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'] },

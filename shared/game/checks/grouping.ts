@@ -17,7 +17,7 @@ type GroupDimension =
   | 'area'        // kakariko, death_mountain, etc.
   | 'location'    // cave, house, dungeon, overworld
   | 'dungeon'     // specific dungeon name
-  | 'region'      // the existing check.region field
+  | 'screen'      // the existing check.screen field
   | 'type'        // check type (chest, npc, boss, etc.)
   | 'content';    // key, map_compass, boss_item, progression, junk
 
@@ -32,7 +32,7 @@ const GROUP_DIMENSIONS: GroupDimensionDef[] = [
   { id: 'area', label: 'Area', description: 'Geographic region (Kakariko, Death Mountain, etc.)' },
   { id: 'location', label: 'Location Type', description: 'Cave, House, Dungeon, Overworld' },
   { id: 'dungeon', label: 'Dungeon', description: 'Specific dungeon' },
-  { id: 'region', label: 'Region', description: 'Detailed sub-location' },
+  { id: 'screen', label: 'Screen', description: 'Detailed sub-location' },
   { id: 'type', label: 'Check Type', description: 'Chest, NPC, Key Drop, Boss, etc.' },
   { id: 'content', label: 'Content', description: 'Key, Map/Compass, Boss Item, etc.' },
 ];
@@ -74,8 +74,8 @@ function getGroupValue(check: CheckDefinition, dimension: GroupDimension, tags: 
     }
     case 'dungeon':
       return check.dungeon ?? 'Overworld';
-    case 'region':
-      return check.region;
+    case 'screen':
+      return check.screen;
     case 'type':
       return check.type.charAt(0).toUpperCase() + check.type.slice(1);
     case 'content': {
@@ -205,7 +205,7 @@ function filterChecks(
     result = result.filter(c =>
       c.id.toLowerCase().includes(q) ||
       c.name.toLowerCase().includes(q) ||
-      c.region.toLowerCase().includes(q) ||
+      c.screen.toLowerCase().includes(q) ||
       (c.dungeon?.toLowerCase().includes(q) ?? false) ||
       (Array.isArray(c.vanillaItem)
         ? c.vanillaItem.some(i => i.toLowerCase().includes(q))

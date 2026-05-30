@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const DW_TURTLE_ROCK_CONNECTIONS: RegionConnection[] = [
+export const DW_TURTLE_ROCK_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-07', to: 'tr-0xd5', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter', 'barrier:medallion'] },
   { from: 'dw-07', to: 'tr-0xc5', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'dw-07', to: 'tr-0xc7', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },

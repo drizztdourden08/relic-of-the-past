@@ -47,8 +47,8 @@ interface ResolvedLocation {
 /**
  * Resolve a Location to a concrete overworld screen + tile position.
  *
- * - Overworld regions (type lightWorld/darkWorld): use inGameIndex directly as screen
- * - Interior regions (type cave/house/shop/dungeon): find the entrance on the overworld
+ * - Overworld regions (type 'overworld'): use roomIndex directly as screen
+ * - Interior regions (type 'dungeon'/'interior'): find the entrance on the overworld
  *   and use that entrance's tile as the position
  */
 function resolveLocation(loc: Location, rom: RomData, inventory: Set<string>): ResolvedLocation | null {
@@ -58,10 +58,10 @@ function resolveLocation(loc: Location, rom: RomData, inventory: Set<string>): R
   let screenIndex: number;
   let tile: GridPos | undefined = loc.tile;
 
-  if (region.type === 'lightWorld' || region.type === 'darkWorld') {
-    // Overworld screen — inGameIndex IS the screen index
-    if (region.inGameIndex === undefined) return null;
-    screenIndex = region.inGameIndex;
+  if (region.type === 'overworld') {
+    // Overworld screen — roomIndex IS the screen index
+    if (region.roomIndex === undefined) return null;
+    screenIndex = region.roomIndex;
   } else {
     // Interior region — use connection graph to find the correct overworld screen
     const owScreen = findOverworldScreenFromConnections(loc.regionId);
@@ -72,7 +72,7 @@ function resolveLocation(loc: Location, rom: RomData, inventory: Set<string>): R
     if (!tile) {
       const entrances = getEntrances(rom);
       const matchingEntrance = entrances.find(
-        e => (e.area & 0x3f) === screenIndex && e.roomId === region.inGameIndex,
+        e => (e.area & 0x3f) === screenIndex && e.roomId === region.roomIndex,
       );
       if (matchingEntrance) {
         tile = { row: matchingEntrance.gridRow, col: matchingEntrance.gridCol };
@@ -104,8 +104,8 @@ function findOverworldScreenFromConnections(regionId: string): number | null {
     if (conn.to !== regionId) continue;
     const fromRegion = REGION_BY_ID.get(conn.from);
     if (!fromRegion) continue;
-    if ((fromRegion.type === 'lightWorld' || fromRegion.type === 'darkWorld') && fromRegion.inGameIndex !== undefined) {
-      return fromRegion.inGameIndex;
+    if (fromRegion.type === 'overworld' && fromRegion.roomIndex !== undefined) {
+      return fromRegion.roomIndex;
     }
   }
   return null;

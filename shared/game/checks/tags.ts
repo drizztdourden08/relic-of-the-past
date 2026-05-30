@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Tag system for checks — enables filtering, searching, and grouping.
  *
  * Tags are assigned via rules (by type, region patterns, dungeon, etc.)
@@ -206,16 +206,16 @@ function computeCheckTags(check: CheckDefinition): CheckTag[] {
     if (dungTag) tags.add(dungTag);
   } else {
     // Overworld check — determine world from region/id
-    const isDark = /Dark|Catfish|Stumpy|Pyramid|Hype Cave|Brewery|C-Shaped|Chest Game|Bumper|Mire|Superbunny|Hookshot Cave|Frog|Missing Smith|Hammer Peg/.test(check.region) ||
+    const isDark = /Dark|Catfish|Stumpy|Pyramid|Hype Cave|Brewery|C-Shaped|Chest Game|Bumper|Mire|Superbunny|Hookshot Cave|Frog|Missing Smith|Hammer Peg/.test(check.screen) ||
       /Dark|Catfish|Stumpy|Pyramid|Digging Game|Bombos Tablet|Frog|Missing Smith/.test(check.id);
     tags.add(isDark ? 'dark_world' : 'light_world');
   }
 
   // ── Location type (for non-dungeon checks) ──
   if (!check.dungeon) {
-    if (CAVE_REGIONS.has(check.region)) {
+    if (CAVE_REGIONS.has(check.screen)) {
       tags.add('cave');
-    } else if (HOUSE_REGIONS.has(check.region)) {
+    } else if (HOUSE_REGIONS.has(check.screen)) {
       tags.add('house');
     } else {
       tags.add('overworld');
@@ -226,12 +226,12 @@ function computeCheckTags(check: CheckDefinition): CheckTag[] {
   if (!check.dungeon) {
     for (const rule of AREA_RULES) {
       if (rule.pattern instanceof Set) {
-        if (rule.pattern.has(check.region)) {
+        if (rule.pattern.has(check.screen)) {
           tags.add(rule.tag);
           break;
         }
       } else {
-        if (rule.pattern.test(check.region) || rule.pattern.test(check.id)) {
+        if (rule.pattern.test(check.screen) || rule.pattern.test(check.id)) {
           tags.add(rule.tag);
           break;
         }

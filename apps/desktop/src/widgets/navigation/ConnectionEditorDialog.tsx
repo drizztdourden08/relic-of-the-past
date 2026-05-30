@@ -8,7 +8,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Button, Badge, TextInput, Select } from '../../components/primitives';
 import type { SelectOption } from '../../components/primitives';
-import type { RegionConnection } from '@shared/game/types';
+import type { ScreenConnection } from '@shared/game/types';
 import type { ConnectionTag } from '@shared/game/data/connections/tags';
 import { CONNECTION_TAG_METADATA } from '@shared/game/data/connections/tags';
 import { serializeConnection, resolveConnectionFile } from '@shared/game/data/region-codegen';
@@ -24,7 +24,7 @@ interface ConnectionEditorDialogProps {
   /** Region metadata for file resolution */
   regionMeta: { type: string; dungeon?: string; isDarkWorld: boolean } | null;
   /** Existing connections from the dataset */
-  existingConnections: RegionConnection[];
+  existingConnections: ScreenConnection[];
   /** Detected connections from game state not yet in dataset */
   unmatchedConnections: DetectedConnection[];
 }

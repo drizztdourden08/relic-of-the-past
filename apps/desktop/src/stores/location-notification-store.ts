@@ -4,10 +4,10 @@
  */
 
 import { create } from 'zustand';
-import type { RegionDefinition } from '@shared/game/types';
+import type { ScreenDefinition } from '@shared/game/types';
 
 interface LocationNotification {
-  region: RegionDefinition;
+  region: ScreenDefinition;
   timestamp: number;
 }
 
@@ -26,7 +26,7 @@ interface LocationNotificationStore {
   /** Whether transition notifications are enabled */
   showTransition: boolean;
 
-  setRegion: (region: RegionDefinition) => void;
+  setRegion: (region: ScreenDefinition) => void;
   setTransition: (entrance: string) => void;
   clearRegion: () => void;
   clearTransition: () => void;

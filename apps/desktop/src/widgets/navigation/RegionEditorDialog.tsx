@@ -8,20 +8,19 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Button, Badge, TextInput, Select } from '../../components/primitives';
 import type { SelectOption } from '../../components/primitives';
-import type { RegionDefinition, ScreenType } from '@shared/game/types';
-import { getScreenRoomIndex, getScreenDisplayName } from '@shared/game/types';
+import type { ScreenDefinition, ScreenType } from '@shared/game/types';
 import type { RegionTag } from '@shared/game/data/regions/tags';
 import { TAG_METADATA } from '@shared/game/data/regions/tags';
-import { serializeRegion, resolveRegionFile, DUNGEON_FILE_MAP } from '@shared/game/data/region-codegen';
-import type { RegionCodegenInput } from '@shared/game/data/region-codegen';
+import { serializeScreen, resolveScreenFile, DUNGEON_FILE_MAP } from '@shared/game/data/region-codegen';
+import type { ScreenCodegenInput } from '@shared/game/data/region-codegen';
 import { PALACE_INDEX_NAMES, DUNGEON_PALACE_VALUES } from '@shared/game/data/regions/game-values';
 import './RegionEditorDialog.css';
 
 interface RegionEditorDialogProps {
   open: boolean;
   onClose: () => void;
-  /** Existing region (edit mode) or null (create mode) */
-  existingRegion: RegionDefinition | null;
+  /** Existing screen (edit mode) or null (create mode) */
+  existingRegion: ScreenDefinition | null;
   /** Game state for pre-filling */
   gameState: {
     roomIndex: number;
@@ -77,23 +76,19 @@ function RegionEditorDialog({ open, onClose, existingRegion, gameState }: Region
     if (existingRegion) {
       setId(existingRegion.id);
       setName(existingRegion.name);
-      // Map legacy type values to new ones
-      const t = existingRegion.type;
-      if (t === 'lightWorld' || t === 'darkWorld') setType('overworld');
-      else if (t === 'cave') setType('interior');
-      else setType(t as ScreenTypeValue);
-      setIndoor(existingRegion.indoor);
-      setDarkWorld(existingRegion.darkWorld ?? (existingRegion.type === 'darkWorld'));
-      setLocation(existingRegion.location ?? getScreenDisplayName(existingRegion));
-      setSubtitle(existingRegion.subtitle ?? '');
-      setDungeon(existingRegion.dungeon ?? '');
-      const pi = existingRegion.palaceIndex ?? existingRegion.gamePalace;
+      setType(existingRegion.type);
+      setIndoor(existingRegion.type !== 'overworld');
+      setDarkWorld(existingRegion.world === 'dark');
+      setLocation(existingRegion.location);
+      setSubtitle('');
+      setDungeon(existingRegion.type === 'dungeon' ? existingRegion.dungeon.name : '');
+      const pi = existingRegion.type === 'dungeon' ? existingRegion.dungeon.palaceIndex : undefined;
       setPalaceIdx(pi != null ? String(pi) : '');
-      setFloor(existingRegion.floor != null ? String(existingRegion.floor) : '');
-      setGridX(existingRegion.gridX != null ? String(existingRegion.gridX) : '');
-      setGridY(existingRegion.gridY != null ? String(existingRegion.gridY) : '');
+      setFloor(existingRegion.type === 'dungeon' && existingRegion.dungeon.floor != null ? String(existingRegion.dungeon.floor) : '');
+      setGridX(existingRegion.type === 'dungeon' && existingRegion.dungeon.gridX != null ? String(existingRegion.dungeon.gridX) : existingRegion.type === 'overworld' ? String(existingRegion.overworld.gridX) : '');
+      setGridY(existingRegion.type === 'dungeon' && existingRegion.dungeon.gridY != null ? String(existingRegion.dungeon.gridY) : existingRegion.type === 'overworld' ? String(existingRegion.overworld.gridY) : '');
       setSelectedTags([...existingRegion.tags]);
-      setChecks(existingRegion.checks?.join(', ') ?? '');
+      setChecks('');
     } else {
       // Auto-generate from game state
       const hex = gameState.roomIndex.toString(16).padStart(2, '0');
@@ -121,27 +116,22 @@ function RegionEditorDialog({ open, onClose, existingRegion, gameState }: Region
   const roomIndex = gameState.roomIndex;
 
   // Build the codegen input
-  const codegenInput = useMemo((): RegionCodegenInput => ({
+  const codegenInput = useMemo((): ScreenCodegenInput => ({
     id,
     name,
     type,
-    indoor,
-    darkWorld,
-    roomIndex,
-    palaceIndex: palaceIdx ? Number(palaceIdx) : undefined,
+    world: darkWorld ? 'dark' : 'light',
     location,
-    dungeon: type === 'dungeon' ? dungeon : undefined,
-    displayName: location, // For codegen backward compat
-    subtitle: subtitle || undefined,
-    gridX: gridX ? Number(gridX) : undefined,
-    gridY: gridY ? Number(gridY) : undefined,
-    floor: floor ? Number(floor) : undefined,
+    area: location, // derive from tags later
+    roomIndex,
+    overworld: type === 'overworld' ? { gridX: gridX ? Number(gridX) : 0, gridY: gridY ? Number(gridY) : 0 } : undefined,
+    dungeon: type === 'dungeon' ? { name: dungeon, palaceIndex: palaceIdx ? Number(palaceIdx) : undefined, floor: floor ? Number(floor) : undefined, gridX: gridX ? Number(gridX) : undefined, gridY: gridY ? Number(gridY) : undefined } : undefined,
+    interior: type === 'interior' ? { kind: 'cave' } : undefined,
     tags: selectedTags,
-    checks: checks ? checks.split(',').map(s => s.trim()).filter(Boolean) : undefined,
-  }), [id, name, type, indoor, darkWorld, roomIndex, palaceIdx, location, dungeon, subtitle, gridX, gridY, floor, selectedTags, checks]);
+  }), [id, name, type, darkWorld, roomIndex, palaceIdx, location, dungeon, gridX, gridY, floor, selectedTags]);
 
-  const generatedCode = useMemo(() => serializeRegion(codegenInput), [codegenInput]);
-  const targetFile = useMemo(() => resolveRegionFile(codegenInput), [codegenInput]);
+  const generatedCode = useMemo(() => serializeScreen(codegenInput), [codegenInput]);
+  const targetFile = useMemo(() => resolveScreenFile(codegenInput), [codegenInput]);
 
   const toggleTag = (tag: RegionTag) => {
     setSelectedTags(prev =>

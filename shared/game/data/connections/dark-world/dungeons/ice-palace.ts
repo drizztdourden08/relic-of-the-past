@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const DW_ICE_PALACE_CONNECTIONS: RegionConnection[] = [
+export const DW_ICE_PALACE_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-35', to: 'ip-0x9e', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'ip-0x0e', to: 'ip-0x1e', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'ip-0x1e', to: 'ip-0x1f', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },

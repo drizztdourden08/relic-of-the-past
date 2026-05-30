@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: RegionConnection[] = [
+export const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: ScreenConnection[] = [
   { from: 'skull-woods-forest', to: 'skull-woods-forest-west', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
 
   // Mirror spots

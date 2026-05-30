@@ -1,4 +1,4 @@
-import type { RegionDefinition } from '../../types';
+import type { ScreenDefinition } from '../../../types';
 
 import { DARK_WORLD_OVERWORLD_REGIONS } from './overworld';
 import { DW_HOUSES } from './houses';
@@ -24,16 +24,6 @@ export { DW_SPECIAL } from './special';
 export { DW_GAMBLE } from './gamble';
 export { DW_DUNGEON_REGIONS } from './dungeons';
 
-export const ALL_DARK_WORLD_REGIONS: RegionDefinition[] = [
-  ...DARK_WORLD_OVERWORLD_REGIONS,
-  ...DW_HOUSES,
-  ...DW_CAVES,
-  ...DW_SHOPS,
-  ...DW_FAIRY,
-  ...DW_HINTS,
-  ...DW_PASSAGES,
-  ...DW_SPECIAL,
-  ...DW_GAMBLE,
-  ...DW_DUNGEON_REGIONS,
-  ...DW_OVERWORLD_AREAS,
+export const ALL_DARK_WORLD_REGIONS: ScreenDefinition[] = [
+
 ];

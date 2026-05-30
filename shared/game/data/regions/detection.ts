@@ -3,66 +3,64 @@
  * Given a game index (overworld screen or dungeon room), returns the full region data.
  */
 
-import type { RegionDefinition } from '../types';
-import { getScreenRoomIndex, getScreenPalaceIndex, isOverworld } from '../types';
+import type { ScreenDefinition } from '../../types';
 import { ALL_REGIONS } from './index';
 import { DUNGEON_PALACE_VALUES } from './game-values';
 
 export interface RegionLookup {
   /** Overworld screen index → region */
-  byOverworldScreen: Map<number, RegionDefinition>;
+  byOverworldScreen: Map<number, ScreenDefinition>;
   /** Dungeon room index → region (keyed by `palaceIndex:roomIndex`) */
-  byDungeonRoom: Map<string, RegionDefinition>;
+  byDungeonRoom: Map<string, ScreenDefinition>;
   /** Cave/interior room index → region (first match only — lossy for duplicates) */
-  byCaveRoom: Map<number, RegionDefinition>;
+  byCaveRoom: Map<number, ScreenDefinition>;
   /** Entrance ID → region (disambiguates caves with shared room indices) */
-  byEntranceId: Map<number, RegionDefinition>;
+  byEntranceId: Map<number, ScreenDefinition>;
   /** Cave room index → all regions sharing that room (for fallback matching) */
-  byCaveRoomAll: Map<number, RegionDefinition[]>;
+  byCaveRoomAll: Map<number, ScreenDefinition[]>;
 }
 
 /**
- * Get the palace index values for a dungeon region.
- * Uses the region's explicit palaceIndex/gamePalace field first, then derives from dungeon name.
+ * Get the palace index values for a dungeon screen.
+ * Uses the screen's explicit palaceIndex field first, then derives from dungeon name.
  */
-function getPalaceIndicesForRegion(region: RegionDefinition): number[] {
-  const explicit = getScreenPalaceIndex(region);
-  if (explicit != null) return [explicit];
-  if (region.dungeon) {
-    return DUNGEON_PALACE_VALUES[region.dungeon] ?? [];
+function getPalaceIndicesForScreen(screen: ScreenDefinition): number[] {
+  if (screen.type === 'dungeon') {
+    if (screen.dungeon.palaceIndex != null) return [screen.dungeon.palaceIndex];
+    return DUNGEON_PALACE_VALUES[screen.dungeon.name] ?? [];
   }
   return [];
 }
 
-function buildRegionLookup(regions: RegionDefinition[] = ALL_REGIONS): RegionLookup {
-  const byOverworldScreen = new Map<number, RegionDefinition>();
-  const byDungeonRoom = new Map<string, RegionDefinition>();
-  const byCaveRoom = new Map<number, RegionDefinition>();
-  const byEntranceId = new Map<number, RegionDefinition>();
-  const byCaveRoomAll = new Map<number, RegionDefinition[]>();
+function buildRegionLookup(regions: ScreenDefinition[] = ALL_REGIONS): RegionLookup {
+  const byOverworldScreen = new Map<number, ScreenDefinition>();
+  const byDungeonRoom = new Map<string, ScreenDefinition>();
+  const byCaveRoom = new Map<number, ScreenDefinition>();
+  const byEntranceId = new Map<number, ScreenDefinition>();
+  const byCaveRoomAll = new Map<number, ScreenDefinition[]>();
 
-  for (const region of regions) {
-    const idx = getScreenRoomIndex(region);
+  for (const screen of regions) {
+    const idx = screen.roomIndex;
     if (idx == null) continue;
 
-    if (isOverworld(region)) {
-      byOverworldScreen.set(idx, region);
-    } else if (region.type === 'dungeon') {
-      const palaces = getPalaceIndicesForRegion(region);
+    if (screen.type === 'overworld') {
+      byOverworldScreen.set(idx, screen);
+    } else if (screen.type === 'dungeon') {
+      const palaces = getPalaceIndicesForScreen(screen);
       for (const palace of palaces) {
-        byDungeonRoom.set(`${palace}:${idx}`, region);
+        byDungeonRoom.set(`${palace}:${idx}`, screen);
       }
     } else {
       // interior / cave — anything else that's indoor
-      byCaveRoom.set(idx, region);
+      byCaveRoom.set(idx, screen);
       let list = byCaveRoomAll.get(idx);
       if (!list) { list = []; byCaveRoomAll.set(idx, list); }
-      list.push(region);
+      list.push(screen);
     }
 
     // Entrance ID lookup (works for any indoor type)
-    if (region.entranceId != null) {
-      byEntranceId.set(region.entranceId, region);
+    if (screen.entranceId != null) {
+      byEntranceId.set(screen.entranceId, screen);
     }
   }
 
@@ -82,14 +80,14 @@ export function getRegionLookup(): RegionLookup {
 export type RegionMatchMethod = 'exact' | 'entrance' | 'palace-scan' | 'cave-single' | 'cave-ambiguous' | 'overworld';
 
 export interface RegionMatchResult {
-  region: RegionDefinition;
+  region: ScreenDefinition;
   method: RegionMatchMethod;
   /** When method is 'palace-scan', the expected palace from data vs actual runtime value */
   palaceMismatch?: { expected: number; actual: number };
 }
 
 /**
- * Resolve current game state to a RegionDefinition with match metadata.
+ * Resolve current game state to a ScreenDefinition with match metadata.
  * Returns null if no region is mapped for the current index.
  * @param whichEntrance — the entrance ID from RAM $010E (optional, improves cave detection)
  */
@@ -99,7 +97,7 @@ export function resolveCurrentRegion(
   roomIndex: number,
   overworldScreenIndex: number,
   whichEntrance?: number,
-): RegionDefinition | null {
+): ScreenDefinition | null {
   return resolveCurrentRegionDetailed(isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance)?.region ?? null;
 }
 

@@ -1,13 +1,13 @@
-import type { RegionConnection } from '../types';
+import type { ScreenConnection } from '../../types';
 import { LIGHT_WORLD_CONNECTIONS, LW_DUNGEON_CONNECTIONS } from './light-world';
 import { DARK_WORLD_CONNECTIONS, DW_DUNGEON_CONNECTIONS } from './dark-world';
 
-export const ALL_CONNECTIONS: RegionConnection[] = [
+export const ALL_CONNECTIONS: ScreenConnection[] = [
   ...LIGHT_WORLD_CONNECTIONS,
   ...DARK_WORLD_CONNECTIONS,
 ];
 
-export const DUNGEON_CONNECTIONS: RegionConnection[] = [
+export const DUNGEON_CONNECTIONS: ScreenConnection[] = [
   ...LW_DUNGEON_CONNECTIONS,
   ...DW_DUNGEON_CONNECTIONS,
 ];

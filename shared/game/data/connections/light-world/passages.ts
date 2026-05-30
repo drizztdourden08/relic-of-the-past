@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../types';
+import type { ScreenConnection } from '../../../types';
 
-export const LW_PASSAGE_CONNECTIONS: RegionConnection[] = [
+export const LW_PASSAGE_CONNECTIONS: ScreenConnection[] = [
   // Hyrule Castle Secret Entrance
   { from: 'lw-1b', to: 'hyrule-castle-secret-entrance', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance'] },
   { from: 'light-world-rain', to: 'hyrule-castle-secret-entrance', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance', 'barrier:event'] },

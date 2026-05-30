@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../types';
+import type { ScreenConnection } from '../../../types';
 
-export const DW_CAVE_CONNECTIONS: RegionConnection[] = [
+export const DW_CAVE_CONNECTIONS: ScreenConnection[] = [
   // Hammer Peg Cave
   { from: 'hammer-peg-area', to: 'dark-world-hammer-peg-cave', tags: ['transit:door', 'dir:two-way', 'ctx:entrance', 'barrier:hammer'] },
 

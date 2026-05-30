@@ -1,10 +1,10 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
 /**
  * Light World overworld screen-to-screen adjacency connections.
  * Auto-generated from grid layout. Every adjacent screen pair is connected.
  */
-export const LW_SCREEN_ADJACENCY_CONNECTIONS: RegionConnection[] = [
+export const LW_SCREEN_ADJACENCY_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-00', to: 'lw-01', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'lw-00', to: 'lw-08', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'lw-01', to: 'lw-02', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },

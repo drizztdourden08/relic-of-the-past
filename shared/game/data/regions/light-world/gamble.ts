@@ -1,6 +1,6 @@
-import type { RegionDefinition } from '../../types';
+import type { ScreenDefinition } from '../../../types';
 
-export const LW_GAMBLE: RegionDefinition[] = [
-  { id: 'kakariko-gamble-game', name: 'Kakariko Gamble Game', type: 'cave', indoor: true, displayName: 'Kakariko Village', inGameIndex: 0x011b, subtitle: 'Gambling House', tags: ['world:light', 'env:inside', 'type:gamble', 'area:kakariko'] },
-  { id: 'lost-woods-gamble', name: 'Lost Woods Gamble', type: 'cave', indoor: true, displayName: 'Lost Woods', inGameIndex: 0x010c, subtitle: 'Gambling House', tags: ['world:light', 'env:underground', 'type:gamble', 'area:lost_woods'] },
+export const LW_GAMBLE: ScreenDefinition[] = [
+  { id: 'kakariko-gamble-game', name: 'Kakariko Gamble Game', type: 'interior', world: 'light', location: 'Kakariko Village', area: 'Kakariko', roomIndex: 0x011B, interior: { kind: 'gamble' }, tags: ['world:light', 'env:inside', 'type:gamble', 'area:kakariko'] },
+  { id: 'lost-woods-gamble', name: 'Lost Woods Gamble', type: 'interior', world: 'light', location: 'Lost Woods', area: 'Lost Woods', roomIndex: 0x010C, interior: { kind: 'gamble' }, tags: ['world:light', 'env:underground', 'type:gamble', 'area:lost_woods'] },
 ];

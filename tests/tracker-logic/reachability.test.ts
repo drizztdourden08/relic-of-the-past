@@ -102,7 +102,7 @@ describe('Tracker Reachability — Empty Inventory', () => {
     const dwChecks = accessible.filter(c => [
       'east-dark-world', 'south-dark-world', 'west-dark-world',
       'northeast-dark-world', 'catfish', 'dark-desert',
-    ].includes(c.region));
+    ].includes(c.screen));
     expect(dwChecks.length).toBe(0);
 
     // Log for debugging

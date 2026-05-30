@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const LW_OVERWORLD_CENTRAL_CONNECTIONS: RegionConnection[] = [
+export const LW_OVERWORLD_CENTRAL_CONNECTIONS: ScreenConnection[] = [
   // Save & Quit → overworld
   { from: 'menu', to: 'links-house', tags: ['transit:warp', 'dir:one-way', 'ctx:save-quit'] },
 

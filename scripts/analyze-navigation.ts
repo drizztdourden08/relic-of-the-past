@@ -83,8 +83,8 @@ async function main() {
 
   // 2. Determine screen set
   const allScreenIndices = ALL_REGIONS
-    .filter(r => r.inGameIndex != null && (r.type === 'lightWorld' || r.type === 'darkWorld'))
-    .map(r => r.inGameIndex!);
+    .filter(r => r.type === 'overworld' && r.roomIndex != null)
+    .map(r => r.roomIndex!);
 
   const screenSet = singleScreen != null ? [singleScreen] : allScreenIndices;
   console.log(`Analyzing ${screenSet.length} screens...`);

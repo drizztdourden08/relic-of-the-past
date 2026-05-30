@@ -45,7 +45,7 @@ const ItemsTab = () => {
   const filteredChecks = useMemo(() => {
     if (!search) return ALL_CHECKS;
     const q = search.toLowerCase();
-    return ALL_CHECKS.filter(c => c.name.toLowerCase().includes(q) || c.region.toLowerCase().includes(q));
+    return ALL_CHECKS.filter(c => c.name.toLowerCase().includes(q) || c.screen.toLowerCase().includes(q));
   }, [search]);
 
   const handleGrantCheck = (check: CheckDefinition) => {
@@ -133,7 +133,7 @@ const ItemsTab = () => {
                 || (check.roomId != null && check.chestIndex != null);
               return (
                 <div key={check.id} className={`cheats-checks__entry ${done ? 'cheats-checks__entry--completed' : ''}`}>
-                  <span className="cheats-checks__name" title={`${check.region} • ${check.type}`}>
+                  <span className="cheats-checks__name" title={`${check.screen} • ${check.type}`}>
                     {check.name}
                   </span>
                   <button

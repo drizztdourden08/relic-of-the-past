@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../types';
+import type { ScreenConnection } from '../../../types';
 
-export const DW_FAIRY_CONNECTIONS: RegionConnection[] = [
+export const DW_FAIRY_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-1b', to: 'pyramid-fairy', tags: ['transit:bomb', 'dir:two-way', 'ctx:entrance', 'barrier:bomb'] },
   { from: 'dw-2b', to: 'bonk-fairy-dark', tags: ['transit:bonk', 'dir:two-way', 'ctx:entrance', 'barrier:dash'] },
   { from: 'dw-35', to: 'dark-lake-hylia-healer-fairy', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },

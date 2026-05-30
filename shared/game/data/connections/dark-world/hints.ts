@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../types';
+import type { ScreenConnection } from '../../../types';
 
-export const DW_HINT_CONNECTIONS: RegionConnection[] = [
+export const DW_HINT_CONNECTIONS: ScreenConnection[] = [
   { from: 'dark-desert', to: 'dark-desert-hint', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'dw-11', to: 'fortune-teller-dark', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'dw-12', to: 'dark-sanctuary-hint', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },

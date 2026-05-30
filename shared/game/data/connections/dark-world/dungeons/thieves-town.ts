@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const DW_THIEVES_TOWN_CONNECTIONS: RegionConnection[] = [
+export const DW_THIEVES_TOWN_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-18', to: 'tt-0xdc', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'tt-0x44', to: 'tt-0x45', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
   { from: 'tt-0x44', to: 'tt-0x64', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },

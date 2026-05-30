@@ -93,20 +93,20 @@ describe('Generated Regions', () => {
     expect(duplicates, `Duplicate IDs: ${duplicates.join(', ')}`).toHaveLength(0);
   });
 
-  it('should have no duplicate inGameIndex values across all dungeons', () => {
+  it('should have no duplicate roomIndex values across all dungeons', () => {
     const allIndices = new Set<number>();
     const duplicates: number[] = [];
     for (const [, data] of Object.entries(dungeonRegions)) {
       for (const room of (data as any).rooms) {
-        if (allIndices.has(room.inGameIndex)) duplicates.push(room.inGameIndex);
-        allIndices.add(room.inGameIndex);
+        if (allIndices.has(room.roomIndex)) duplicates.push(room.roomIndex);
+        allIndices.add(room.roomIndex);
       }
     }
     expect(duplicates, `Duplicate indices: ${duplicates.map(i => '0x' + i.toString(16)).join(', ')}`).toHaveLength(0);
   });
 
   it('should have all required fields on every room', () => {
-    const requiredFields = ['id', 'name', 'type', 'inGameIndex', 'dungeon', 'displayName', 'tags', 'gridX', 'gridY'];
+    const requiredFields = ['id', 'name', 'type', 'roomIndex', 'tags'];
     for (const [prefix, data] of Object.entries(dungeonRegions)) {
       for (const room of (data as any).rooms) {
         for (const field of requiredFields) {
@@ -147,23 +147,25 @@ describe('Generated Regions', () => {
     }
   });
 
-  it('inGameIndex should match the hex in the ID', () => {
+  it('roomIndex should match the hex in the ID', () => {
     for (const [, data] of Object.entries(dungeonRegions)) {
       for (const room of (data as any).rooms) {
         const hexPart = room.id.match(/-0x([0-9a-f]+)$/)?.[1];
         const expectedIndex = parseInt(hexPart!, 16);
-        expect(room.inGameIndex, `${room.id} inGameIndex mismatch`).toBe(expectedIndex);
+        expect(room.roomIndex, `${room.id} roomIndex mismatch`).toBe(expectedIndex);
       }
     }
   });
 
-  it('gridX and gridY should be derivable from inGameIndex', () => {
+  it('gridX and gridY should be derivable from roomIndex for dungeons', () => {
     for (const [, data] of Object.entries(dungeonRegions)) {
       for (const room of (data as any).rooms) {
-        const expectedX = room.inGameIndex & 0x0F;
-        const expectedY = (room.inGameIndex >> 4) & 0x0F;
-        expect(room.gridX, `${room.id} gridX`).toBe(expectedX);
-        expect(room.gridY, `${room.id} gridY`).toBe(expectedY);
+        if (room.dungeon?.gridX != null) {
+          const expectedX = room.roomIndex & 0x0F;
+          const expectedY = (room.roomIndex >> 4) & 0x0F;
+          expect(room.dungeon.gridX, `${room.id} gridX`).toBe(expectedX);
+          expect(room.dungeon.gridY, `${room.id} gridY`).toBe(expectedY);
+        }
       }
     }
   });

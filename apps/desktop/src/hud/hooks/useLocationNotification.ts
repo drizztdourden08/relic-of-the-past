@@ -10,14 +10,14 @@ import { useEffect, useRef } from 'react';
 import { useGameUIStore } from '../../stores/game-ui-store';
 import { useLocationNotificationStore } from '../../stores/location-notification-store';
 import { resolveCurrentRegion } from '@shared/game/data/regions/detection';
-import type { RegionDefinition } from '@shared/game/types';
+import type { ScreenDefinition } from '@shared/game/types';
 
 /** Auto-dismiss delay in ms */
 const REGION_DISMISS_MS = 3000;
 const TRANSITION_DISMISS_MS = 2000;
 
 function useLocationNotification() {
-  const prevRegionRef = useRef<RegionDefinition | null>(null);
+  const prevRegionRef = useRef<ScreenDefinition | null>(null);
   const prevRoomRef = useRef<number>(-1);
   const prevScreenRef = useRef<number>(-1);
   const regionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -67,8 +67,8 @@ function useLocationNotification() {
       if (prev && prev.id === region.id) return;
 
       // ─── Region notification ───
-      // Only fire if displayName changed (same zone = no notification)
-      if (store.showRegion && (!prev || prev.displayName !== region.displayName)) {
+      // Only fire if location changed (same zone = no notification)
+      if (store.showRegion && (!prev || prev.location !== region.location)) {
         store.setRegion(region);
 
         // Auto-dismiss
@@ -78,9 +78,9 @@ function useLocationNotification() {
         }, REGION_DISMISS_MS);
       }
 
-      // ─── Transition notification (subtitle change within same area) ───
-      if (store.showTransition && prev && prev.displayName === region.displayName && prev.subtitle !== region.subtitle) {
-        const entrance = region.subtitle ?? region.name;
+      // ─── Transition notification (name change within same location) ───
+      if (store.showTransition && prev && prev.location === region.location && prev.name !== region.name) {
+        const entrance = region.name;
         store.setTransition(entrance);
 
         if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);

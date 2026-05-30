@@ -1,10 +1,10 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
 /**
  * Connections between Light World overworld screens and logical area nodes.
  * Each logical area connects to a representative screen in its zone.
  */
-export const LW_SCREEN_AREA_CONNECTIONS: RegionConnection[] = [
+export const LW_SCREEN_AREA_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-2b', to: 'light-world', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'lw-2b', to: 'light-world-rain', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'lw-27', to: 'zoras-river', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },

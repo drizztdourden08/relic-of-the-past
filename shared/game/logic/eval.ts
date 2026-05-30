@@ -1,4 +1,4 @@
-import type { Requirement, CheckDefinition, RegionConnection } from '../types';
+import type { Requirement, CheckDefinition, ScreenConnection } from '../types';
 import { ITEM_GROUPS } from '../items/groups';
 
 // ─── Requirement Evaluation ───
@@ -46,7 +46,7 @@ function evaluateRequirement(
  */
 function getReachableRegions(
   inventory: Set<string>,
-  connections: RegionConnection[],
+  connections: ScreenConnection[],
   regionRules: Record<string, Requirement>,
 ): Set<string> {
   const reachable = new Set<string>();
@@ -112,7 +112,7 @@ function getAccessibleChecks(
   inventory: Set<string>,
   completedChecks: Set<string>,
   checks: CheckDefinition[],
-  connections: RegionConnection[],
+  connections: ScreenConnection[],
   regionRules: Record<string, Requirement>,
   checkRules: Record<string, Requirement>,
 ): CheckDefinition[] {
@@ -120,7 +120,7 @@ function getAccessibleChecks(
 
   return checks.filter(check => {
     if (completedChecks.has(check.id)) return false;
-    if (!reachable.has(check.region)) return false;
+    if (!reachable.has(check.screen)) return false;
 
     const localRule = checkRules[check.id];
     if (localRule && !evaluateRequirement(localRule, inventory)) return false;
@@ -137,7 +137,7 @@ function getCheckStatus(
   inventory: Set<string>,
   completedChecks: Set<string>,
   checks: CheckDefinition[],
-  connections: RegionConnection[],
+  connections: ScreenConnection[],
   regionRules: Record<string, Requirement>,
   checkRules: Record<string, Requirement>,
 ): CheckStatus {
@@ -147,7 +147,7 @@ function getCheckStatus(
   if (!check) return 'blocked';
 
   const reachable = getReachableRegions(inventory, connections, regionRules);
-  if (!reachable.has(check.region)) return 'blocked';
+  if (!reachable.has(check.screen)) return 'blocked';
 
   const localRule = checkRules[checkId];
   if (localRule && !evaluateRequirement(localRule, inventory)) return 'blocked';
@@ -208,7 +208,7 @@ function computeTrackerSnapshot(
   inventory: Set<string>,
   completedChecks: Set<string>,
   checks: CheckDefinition[],
-  connections: RegionConnection[],
+  connections: ScreenConnection[],
   regionRules: Record<string, Requirement>,
   checkRules: Record<string, Requirement>,
 ): Map<string, CheckStatus> {
@@ -221,7 +221,7 @@ function computeTrackerSnapshot(
       continue;
     }
 
-    if (!reachable.has(check.region)) {
+    if (!reachable.has(check.screen)) {
       result.set(check.id, 'blocked');
       continue;
     }

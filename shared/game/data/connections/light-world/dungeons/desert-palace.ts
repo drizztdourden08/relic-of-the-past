@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const LW_DESERT_PALACE_CONNECTIONS: RegionConnection[] = [
+export const LW_DESERT_PALACE_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-30', to: 'dp-0x84', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'lw-30', to: 'dp-0x83', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'lw-30', to: 'dp-0x85', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },

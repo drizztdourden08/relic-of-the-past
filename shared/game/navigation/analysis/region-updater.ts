@@ -11,7 +11,7 @@
 
 import type { RegionNavData, ConnectionPointData, NavObstacle } from '../nav-data.types';
 import type { FloodFillResult } from '../types';
-import type { RegionDefinition } from '../../types';
+import type { ScreenDefinition } from '../../types';
 import { findBorderBundles } from './border-bundles';
 import type { ResolvedEntrance } from './entrance-resolver';
 
@@ -22,7 +22,7 @@ export interface RegionNavUpdate {
 }
 
 export interface RegionUpdaterInput {
-  regions: RegionDefinition[];
+  regions: ScreenDefinition[];
   tileStats: Map<number, { totalTiles: number; freeTileCount: number; maxReachableTileCount: number }>;
   floodResults: Map<number, FloodFillResult>;
   resolvedEntrances: ResolvedEntrance[];
@@ -44,8 +44,8 @@ export function buildRegionNavUpdates(input: RegionUpdaterInput): RegionNavUpdat
   }
 
   for (const region of regions) {
-    if (region.inGameIndex === undefined) continue;
-    const screenIndex = region.inGameIndex;
+    if (region.roomIndex === undefined) continue;
+    const screenIndex = region.roomIndex;
     const stats = tileStats.get(screenIndex);
     if (!stats) continue;
 

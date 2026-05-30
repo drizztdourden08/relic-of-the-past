@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../types';
+import type { ScreenConnection } from '../../../types';
 
-export const LW_HOUSE_CONNECTIONS: RegionConnection[] = [
+export const LW_HOUSE_CONNECTIONS: ScreenConnection[] = [
   // Kakariko houses (all on lw-18: Kakariko NW)
   { from: 'lw-18', to: 'blinds-hideout', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'lw-18', to: 'elder-house', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },

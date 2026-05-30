@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const DW_PALACE_OF_DARKNESS_CONNECTIONS: RegionConnection[] = [
+export const DW_PALACE_OF_DARKNESS_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-0a', to: 'pod-0x4a', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'pod-0x09', to: 'pod-0x4b', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'pod-0x09', to: 'pod-0x4a', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },

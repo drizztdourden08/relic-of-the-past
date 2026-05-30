@@ -1,4 +1,4 @@
-import type { RegionDefinition } from '../../../types';
+import type { ScreenDefinition } from '../../../../types';
 
 import { PALACE_OF_DARKNESS_DUNGEON } from './palace-of-darkness';
 import { SWAMP_PALACE_DUNGEON } from './swamp-palace';
@@ -18,13 +18,6 @@ export { MISERY_MIRE_DUNGEON } from './misery-mire';
 export { TURTLE_ROCK_DUNGEON } from './turtle-rock';
 export { GANONS_TOWER_DUNGEON } from './ganons-tower';
 
-export const DW_DUNGEON_REGIONS: RegionDefinition[] = [
-  ...PALACE_OF_DARKNESS_DUNGEON,
-  ...SWAMP_PALACE_DUNGEON,
-  ...SKULL_WOODS_DUNGEON,
-  ...THIEVES_TOWN_DUNGEON,
-  ...ICE_PALACE_DUNGEON,
-  ...MISERY_MIRE_DUNGEON,
-  ...TURTLE_ROCK_DUNGEON,
-  ...GANONS_TOWER_DUNGEON,
+export const DW_DUNGEON_REGIONS: ScreenDefinition[] = [
+
 ];

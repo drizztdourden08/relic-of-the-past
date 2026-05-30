@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../types';
+import type { ScreenConnection } from '../../../types';
 
-export const LW_FAIRY_CONNECTIONS: RegionConnection[] = [
+export const LW_FAIRY_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-14', to: 'bonk-fairy-light', tags: ['transit:bonk', 'dir:two-way', 'ctx:entrance', 'barrier:dash'] },
   { from: 'lake-hylia-central-island', to: 'capacity-upgrade', tags: ['transit:waterfall', 'dir:two-way', 'ctx:entrance'] },
   { from: 'lw-0f', to: 'waterfall-of-wishing', tags: ['transit:waterfall', 'dir:two-way', 'ctx:entrance', 'barrier:swim'] },

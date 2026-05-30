@@ -1,6 +1,6 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
-export const LW_OVERWORLD_DESERT_CONNECTIONS: RegionConnection[] = [
+export const LW_OVERWORLD_DESERT_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-38', to: 'desert-palace-stairs', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'desert-palace-stairs', to: 'desert-palace-entrance-north-spot', tags: ['transit:stairs', 'dir:one-way', 'ctx:overworld', 'barrier:book'] },
   { from: 'desert-palace-stairs', to: 'lw-38', tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'] },

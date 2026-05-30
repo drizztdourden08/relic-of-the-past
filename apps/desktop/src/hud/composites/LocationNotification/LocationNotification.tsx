@@ -21,8 +21,8 @@ function LocationNotification() {
       {region && (
         <NotificationBanner
           key={`region-${region.timestamp}`}
-          title={region.region.displayName}
-          subtitle={region.region.subtitle}
+          title={region.region.location}
+          subtitle={region.region.name}
           dismissMs={REGION_DISMISS_MS}
           variant="region"
         />

@@ -171,43 +171,6 @@ interface CheckDefinition {
   chestIndex?: number;
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// LEGACY ALIASES (kept during migration — remove once all data files are updated)
-// ═══════════════════════════════════════════════════════════════════════════════
-
-/** @deprecated Use ScreenType */
-type RegionType = 'lightWorld' | 'darkWorld' | 'dungeon' | 'cave';
-
-/** @deprecated Use ScreenDefinition */
-interface RegionDefinition {
-  id: string;
-  name: string;
-  type: ScreenType | RegionType;
-  indoor: boolean;
-  inGameIndex?: number;
-  gamePalace?: number;
-  entranceId?: number;
-  dungeon?: string;
-  displayName?: string;
-  location?: string;
-  area?: string;
-  darkWorld?: boolean;
-  roomIndex?: number;
-  palaceIndex?: number;
-  status?: 'draft' | 'mapped' | 'verified';
-  subtitle?: string;
-  gridX?: number;
-  gridY?: number;
-  floor?: number;
-  big?: boolean;
-  tags: readonly RegionTag[];
-  checks?: readonly string[];
-  nav?: RegionNavData;
-}
-
-/** @deprecated Use ScreenConnection */
-type RegionConnection = ScreenConnection;
-
 // ─── Requirement Expression Tree ───
 
 type Requirement =
@@ -412,10 +375,6 @@ export type {
   ScreenDefinition,
   ScreenType,
   World,
-  // ─── Legacy (migration) ───
-  RegionConnection,
-  RegionDefinition,
-  RegionType,
   // ─── Game State ───
   CheckState,
   DungeonProgressState,

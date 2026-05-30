@@ -1,10 +1,10 @@
-import type { RegionConnection } from '../../../types';
+import type { ScreenConnection } from '../../../../types';
 
 /**
  * Dark World overworld screen-to-screen adjacency connections.
  * Auto-generated from grid layout. Every adjacent screen pair is connected.
  */
-export const DW_SCREEN_ADJACENCY_CONNECTIONS: RegionConnection[] = [
+export const DW_SCREEN_ADJACENCY_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-00', to: 'dw-01', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'dw-00', to: 'dw-08', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'dw-01', to: 'dw-02', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },

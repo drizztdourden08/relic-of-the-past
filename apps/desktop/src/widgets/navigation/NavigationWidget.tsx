@@ -51,7 +51,7 @@ for (const conn of ALL_CONNECTIONS) {
 
 /**
  * Resolve display name for an entrance/connection destination.
- * Given the current region ID and the target room's inGameIndex,
+ * Given the current region ID and the target room's roomIndex,
  * finds the matching connection and returns the destination region's name.
  */
 function getConnectionDestinationName(currentRegionId: string, targetRoomId: number): string | null {
@@ -59,8 +59,8 @@ function getConnectionDestinationName(currentRegionId: string, targetRoomId: num
   if (!destinations) return null;
   for (const toId of destinations) {
     const region = REGION_BY_ID.get(toId);
-    if (region && region.inGameIndex === targetRoomId) {
-      return region.subtitle ?? region.name;
+    if (region && region.roomIndex === targetRoomId) {
+      return region.name;
     }
   }
   return null;
@@ -245,7 +245,7 @@ function NavigationWidgetContent() {
     [isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance],
   );
   const detectedRegion = detectionResult?.region ?? null;
-  const screenName = detectedRegion?.subtitle ?? detectedRegion?.name
+  const screenName = detectedRegion?.name
     ?? (isIndoors ? `Room 0x${roomIndex.toString(16).toUpperCase().padStart(4, '0')}` : `Screen 0x${overworldScreenIndex.toString(16).toUpperCase().padStart(2, '0')}`);
   const locationReview = reviewData[locationKey] ?? { status: 'neutral' as ReviewStatus, connections: {} };
   const displayedVariant = !isIndoors
@@ -1309,7 +1309,7 @@ function NavigationWidgetContent() {
         open={connEditorOpen}
         onClose={() => setConnEditorOpen(false)}
         regionId={regionStatus.region?.id ?? null}
-        regionMeta={regionStatus.region ? { type: regionStatus.region.type, dungeon: regionStatus.region.dungeon, isDarkWorld } : null}
+        regionMeta={regionStatus.region ? { type: regionStatus.region.type, dungeon: regionStatus.region.type === 'dungeon' ? regionStatus.region.dungeon.name : undefined, isDarkWorld } : null}
         existingConnections={connStatus.existingConnections}
         unmatchedConnections={connStatus.unmatched}
       />
