@@ -51,6 +51,16 @@ function prepareScreen(
     processStraightCliffs(grid.tiles, grid.rawAttr, ledges, isIndoors);
     processDiagonalCliffs(grid.tiles, grid.rawAttr, ledges);
     processSouthCliffs(grid.tiles, grid.rawAttr, ledges);
+  } else {
+    // On layer 1 (lower floor), cliff-trigger tiles are normal ground.
+    for (let r = 0; r < GRID_SIZE; r++) {
+      for (let c = 0; c < GRID_SIZE; c++) {
+        const attr = grid.rawAttr[r][c];
+        if (attr >= 0x28 && attr <= 0x2B) {
+          grid.tiles[r][c] = { type: 'free' };
+        }
+      }
+    }
   }
 
   return { grid, ledges, dynamicBlockerCells };
@@ -244,8 +254,16 @@ export function floodFillScreen(
     tileLayer = bfsResult.tileLayer;
     reachableByLayer = bfsResult.reachableByLayer;
 
-    // Filter ledges, build borders, return
-    const reachableLedges = ledges.filter(l => reachable[l.startRow]?.[l.startCol]);
+    // Filter ledges: show arrow only if the approach tile is reachable on layer 0.
+    // Ledges only function on the upper layer; layer 1 reachability is irrelevant.
+    const layer0Reach = bfsResult.reachableByLayer![0];
+    const reachableLedges = ledges.filter(l => {
+      const dr = Math.sign(l.endRow - l.startRow);
+      const dc = Math.sign(l.endCol - l.startCol);
+      const approachRow = l.startRow - dr;
+      const approachCol = l.startCol - dc;
+      return layer0Reach[approachRow]?.[approachCol] != null && layer0Reach[approachRow][approachCol] !== 0;
+    });
     const borders = buildBorders(transitions, reachable, grid, inv, quadrantBounds);
 
     return {

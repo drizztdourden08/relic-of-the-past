@@ -214,7 +214,7 @@ describe('Room 0x51 (Throne Room) Layer Data', () => {
       expect(result.totalTiles).toBe(64 * 64);
     });
 
-    it('has border edges (layer 0 void tiles are passable at boundaries)', () => {
+    it('has no border edges (enclosed room — void constrained at boundaries)', () => {
       const tileContext: TileAttrContext = 'interior-dungeon';
       const result = floodFillScreen(layer0, 0x51, {
         tileContext,
@@ -222,11 +222,11 @@ describe('Room 0x51 (Throne Room) Layer Data', () => {
         dualLayerGrids: { layer0, layer1 },
       });
       const borderEdges = result.transitions.filter(t => t.edge !== 'entrance');
-      // With dual-layer BFS on layer 0, void (0x00) at boundaries is passable
-      expect(borderEdges.length).toBeGreaterThan(0);
+      // Enclosed room: void at boundaries is constrained to wall, no border exits
+      expect(borderEdges.length).toBe(0);
     });
 
-    it('has border edges from dual-layer BFS', () => {
+    it('has no border edges from dual-layer BFS (enclosed room)', () => {
       const tileContext: TileAttrContext = 'interior-dungeon';
       const result = floodFillScreen(layer0, 0x51, {
         tileContext,
@@ -234,7 +234,7 @@ describe('Room 0x51 (Throne Room) Layer Data', () => {
         dualLayerGrids: { layer0, layer1 },
       });
       const borderEdges = result.transitions.filter(t => t.edge !== 'entrance');
-      expect(borderEdges.length).toBeGreaterThan(0);
+      expect(borderEdges.length).toBe(0);
     });
 
     it('dual-layer BFS produces per-layer reachability', () => {

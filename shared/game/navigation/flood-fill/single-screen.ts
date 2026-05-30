@@ -237,9 +237,6 @@ export function floodFillBFS(
 /** Swap-layer stair tile attrs (bidirectional layer transitions). */
 const SWAP_STAIR_ATTRS = new Set([0x1E, 0x1F, 0x3E, 0x3F]);
 
-/** Ledge tile attrs that cause a one-way layer transition (layer 0 → 1 only). */
-const LEDGE_LAYER_ATTRS = new Set([0x28, 0x29, 0x2A, 0x2B]);
-
 /**
  * Dual-layer BFS flood-fill for indoor rooms with layer-swap stairs.
  * Tracks which layer each body position is on.  When the body occupies a
@@ -314,64 +311,89 @@ export function floodFillBFSDualLayer(
       }
     }
 
-    // Check if current body position sits on layer-transition tiles
+    // Check if current body position sits on stair transition tiles
     let hasStairTile = false;
-    let hasLedgeTile = false;
     for (const [r, c] of bodyTiles(row, col)) {
       const attr = rawAttr[r]?.[c];
       if (SWAP_STAIR_ATTRS.has(attr)) { hasStairTile = true; break; }
-      if (LEDGE_LAYER_ATTRS.has(attr)) { hasLedgeTile = true; }
     }
 
-    // Expand in 4 directions — on current layer, plus other layer at transitions.
-    // Swap-stairs: bidirectional. Ledges: one-way layer 0 → 1 only.
-    let layersToExpand: (0 | 1)[];
-    if (hasStairTile) {
-      layersToExpand = [layer, (1 - layer) as 0 | 1];
-    } else if (hasLedgeTile && layer === 0) {
-      layersToExpand = [0, 1];
-    } else {
-      layersToExpand = [layer];
-    }
+    for (const [dr, dc] of DIRECTIONS) {
+      const nr = row + dr;
+      const nc = col + dc;
 
-    for (const targetLayer of layersToExpand) {
-      const targetGrid = grids[targetLayer];
+      if (nr < minR || nr + 1 > maxR || nc < minC || nc + 1 > maxC) continue;
 
-      for (const [dr, dc] of DIRECTIONS) {
-        const nr = row + dr;
-        const nc = col + dc;
+      const newTiles = getNewTiles(nr, nc, dr, dc);
 
-        if (nr < minR || nr + 1 > maxR || nc < minC || nc + 1 > maxC) continue;
-
-        // Ledge exit restriction on current layer: can only leave in the fall direction
-        let ledgeBlocked = false;
-        if (targetLayer === layer) {
-          for (const [r, c] of bodyTiles(row, col)) {
-            const t = grid[r][c];
-            if (t.type === 'ledge' && !canLeaveLedge(t.dir, dr, dc)) {
-              ledgeBlocked = true;
-              break;
+      // ─── Ledge detection: new tiles on layer 0 hitting a ledge ───
+      // Ledge tiles are NEVER reachable on layer 0. They block entry and
+      // trigger an immediate layer transition to layer 1 in the fall direction.
+      let hitLedge = false;
+      let ledgeFallMatch = false;
+      if (layer === 0) {
+        for (const [tr, tc] of newTiles) {
+          const t = grids[0][tr][tc];
+          if (t.type === 'ledge') {
+            hitLedge = true;
+            if (canLeaveLedge(t.dir, dr, dc)) {
+              ledgeFallMatch = true;
             }
+            break;
           }
         }
-        // Ledge layer transition: only allowed in the ledge's fall direction
-        if (targetLayer !== layer && hasLedgeTile && !hasStairTile) {
-          let matchesFallDir = false;
-          for (const [r, c] of bodyTiles(row, col)) {
-            const t = grid[r][c];
-            if (t.type === 'ledge' && canLeaveLedge(t.dir, dr, dc)) {
-              matchesFallDir = true;
-              break;
+      }
+
+      // Ledge from non-fall direction → blocked
+      if (hitLedge && !ledgeFallMatch) continue;
+
+      // Ledge in fall direction → cross-layer transition to layer 1.
+      // Scan forward past the cliff face until the body no longer overlaps any
+      // ledge tile on layer 0, and all body tiles are passable on layer 1.
+      if (hitLedge && ledgeFallMatch) {
+        const targetGrid = grids[1];
+        const layer0Grid = grids[0];
+        for (let step = 0; step < GRID_SIZE; step++) {
+          const lr = nr + step * dr;
+          const lc = nc + step * dc;
+          if (lr < minR || lr + 1 > maxR || lc < minC || lc + 1 > maxC) break;
+          // Body must be fully past the cliff on layer 0
+          let stillOnCliff = false;
+          for (const [br, bc] of bodyTiles(lr, lc)) {
+            if (layer0Grid[br][bc].type === 'ledge') { stillOnCliff = true; break; }
+          }
+          if (stillOnCliff) continue;
+          // Check passability on layer 1
+          let canLand = true;
+          let newReqs = requirements;
+          for (const [br, bc] of bodyTiles(lr, lc)) {
+            const tile = targetGrid[br][bc];
+            const entry = evaluateEntry(tile, dr, dc, requirements, inventory);
+            if (!entry.canEnter) { canLand = false; break; }
+            if (entry.newReqs !== newReqs) {
+              newReqs = newReqs === requirements ? new Set(entry.newReqs) : newReqs;
+              for (const req of entry.newReqs) newReqs.add(req);
             }
           }
-          if (!matchesFallDir) {
-            ledgeBlocked = true;
+          if (canLand) {
+            const existingReqs = bodyReached[1][lr][lc];
+            if (existingReqs === null || existingReqs.size > newReqs.size) {
+              bodyReached[1][lr][lc] = newReqs;
+              if (newReqs === requirements) {
+                deque.unshift({ row: lr, col: lc, layer: 1, requirements: newReqs });
+              } else {
+                deque.push({ row: lr, col: lc, layer: 1, requirements: newReqs });
+              }
+            }
+            break;
           }
         }
-        if (ledgeBlocked) continue;
+        continue;
+      }
 
-        // Check new tiles on the TARGET layer
-        const newTiles = getNewTiles(nr, nc, dr, dc);
+      // ─── Same-layer expansion ───
+      {
+        const targetGrid = grids[layer];
         let canMove = true;
         let newReqs = requirements;
         for (const [tr, tc] of newTiles) {
@@ -383,16 +405,44 @@ export function floodFillBFSDualLayer(
             for (const req of entry.newReqs) newReqs.add(req);
           }
         }
-        if (!canMove) continue;
+        if (canMove) {
+          const existingReqs = bodyReached[layer][nr][nc];
+          if (existingReqs === null || existingReqs.size > newReqs.size) {
+            bodyReached[layer][nr][nc] = newReqs;
+            if (newReqs === requirements) {
+              deque.unshift({ row: nr, col: nc, layer, requirements: newReqs });
+            } else {
+              deque.push({ row: nr, col: nc, layer, requirements: newReqs });
+            }
+          }
+        }
+      }
 
-        const existingReqs = bodyReached[targetLayer][nr][nc];
-        if (existingReqs !== null && existingReqs.size <= newReqs.size) continue;
-
-        bodyReached[targetLayer][nr][nc] = newReqs;
-        if (newReqs === requirements) {
-          deque.unshift({ row: nr, col: nc, layer: targetLayer, requirements: newReqs });
-        } else {
-          deque.push({ row: nr, col: nc, layer: targetLayer, requirements: newReqs });
+      // ─── Stair-based cross-layer expansion (bidirectional) ───
+      if (hasStairTile) {
+        const otherLayer = (1 - layer) as 0 | 1;
+        const targetGrid = grids[otherLayer];
+        let canMove = true;
+        let newReqs = requirements;
+        for (const [tr, tc] of newTiles) {
+          const tile = targetGrid[tr][tc];
+          const entry = evaluateEntry(tile, dr, dc, requirements, inventory);
+          if (!entry.canEnter) { canMove = false; break; }
+          if (entry.newReqs !== newReqs) {
+            newReqs = newReqs === requirements ? new Set(entry.newReqs) : newReqs;
+            for (const req of entry.newReqs) newReqs.add(req);
+          }
+        }
+        if (canMove) {
+          const existingReqs = bodyReached[otherLayer][nr][nc];
+          if (existingReqs === null || existingReqs.size > newReqs.size) {
+            bodyReached[otherLayer][nr][nc] = newReqs;
+            if (newReqs === requirements) {
+              deque.unshift({ row: nr, col: nc, layer: otherLayer, requirements: newReqs });
+            } else {
+              deque.push({ row: nr, col: nc, layer: otherLayer, requirements: newReqs });
+            }
+          }
         }
       }
     }
