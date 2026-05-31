@@ -373,6 +373,11 @@ interface ElectronAPI {
   getDumpLayersSlot(): Promise<number | null>;
   getHoverTile(): Promise<{ col: number; row: number } | null>;
   writeDumpLayers(data: unknown): Promise<string>;
+
+  // Debug: dump navigation CLI
+  getDumpNavSlot(): Promise<number | null>;
+  writeDumpNav(data: unknown): Promise<string>;
+
   getTestArgs(): Promise<{ autoState: number | null; screenshot: string | null }>;
   takeScreenshot(name: string): Promise<string>;
 }

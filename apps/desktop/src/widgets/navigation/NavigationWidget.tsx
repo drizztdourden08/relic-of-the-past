@@ -17,6 +17,8 @@ import shopIcon from '@iconify-icons/game-icons/shop';
 import houseIcon from '@iconify-icons/game-icons/house';
 import unknownIcon from '@iconify-icons/game-icons/perspective-dice-six-faces-random';
 import exitDoorIcon from '@iconify-icons/game-icons/exit-door';
+import respawnIcon from '@iconify-icons/game-icons/player-time';
+import forestEntranceIcon from '@iconify-icons/game-icons/hills';
 import { useGameUIStore } from '../../stores/game-ui-store';
 import { useConnectionOverlayStore } from '../../stores/connection-overlay-store';
 import { buildScreenBundle, floodFillScreen, getConnections } from '@shared/game/navigation';
@@ -36,7 +38,7 @@ import { ScreenEditorDialog } from './ScreenEditorDialog';
 import { ConnectionEditorDialog } from './ConnectionEditorDialog';
 import { StatusBadge } from '../../components/primitives';
 
-type EntranceType = 'door' | 'cave' | 'hole' | 'well' | 'dungeon' | 'fairy' | 'shop' | 'house' | 'unknown';
+type EntranceType = 'door' | 'cave' | 'hole' | 'well' | 'dungeon' | 'fairy' | 'shop' | 'house' | 'overworld' | 'respawn' | 'unknown';
 
 /** Get overworld screen display name from screen index */
 function getScreenDisplayName(screenIndex: number): string {
@@ -125,7 +127,7 @@ function enrichEntrances(): OverworldEntrance[] {
     };
   });
   // Merge fall holes (pits that lead to rooms) — use id offset 200+ to avoid collision
-  // Fall hole pos encodes row as ((y_map16 - 8) & 0x3f) — add 8 back to recover true row
+  // Fall hole pos stores row offset by -8 relative to the actual overworld position; add 8 back.
   for (const h of holes) {
     const bigRow = ((h.pos >> 7) + 8) * 2;
     const bigCol = ((h.pos & 0x7F) >> 1) * 2;
@@ -199,6 +201,7 @@ function NavigationWidgetContent() {
   const [result, setResult] = useState<FloodFillResult | null>(null);
   const [connections, setConnections] = useState<ConnectionInfo[]>([]);
   const [fallHoleLandings, setFallHoleLandings] = useState<Array<{ gridRow: number; gridCol: number; entranceId: number }>>([]);
+  const [respawnEntIds, setRespawnEntIds] = useState<Set<number>>(new Set());
 
   const [running, setRunning] = useState(false);
   const [autoRun, setAutoRun] = useState(window.api.autoFlood ?? false);
@@ -529,10 +532,25 @@ function NavigationWidgetContent() {
       const allEntrances = enrichEntrances();
       const exitScreenByRoom = wasmGetExitScreenMap();
 
+      // Collect fall-hole entrance IDs to exclude from regular entrance markers
+      const fallHoleEntIds = new Set<number>();
+      {
+        const holes = wasmGetFallHoles();
+        for (const h of holes) fallHoleEntIds.add(h.entranceId);
+      }
+
+      // Collect overworld door entrance IDs — only these represent physical doors.
+      // Entrance IDs NOT in this set are file-load respawn points or special spawns.
+      const overworldDoorEntIds = new Set<number>();
+      {
+        const owEntrances = wasmGetOverworldEntrances();
+        for (const e of owEntrances) overworldDoorEntIds.add(e.id);
+      }
+
       // For indoor rooms: add entrance spawn positions from the kEntranceData tables.
-      // Any entrance ID whose destination room matches the current screen gets a marker
-      // at its actual spawn position (where Link appears when using that entrance).
-      // Only add if the room has an overworld exit (otherwise it's a one-way drop-in).
+      // Physical overworld doors and respawn/special spawns are both shown (with different icons).
+      // Exclude fall-hole entrance IDs (handled separately as fall hole landings).
+      const currentRespawnIds = new Set<number>();
       if (isIndoors) {
         const exitScreen = exitScreenByRoom.get(primaryScreenIndex);
         if (exitScreen != null) {
@@ -543,13 +561,19 @@ function NavigationWidgetContent() {
             const roomOriginY = Math.floor(primaryScreenIndex / 16) * 512;
             for (let id = 0; id < rooms.length; id++) {
               if (rooms[id] !== primaryScreenIndex) continue;
+              if (fallHoleEntIds.has(id)) continue; // fall-hole landings shown separately
+              if (!overworldDoorEntIds.has(id)) currentRespawnIds.add(id); // track respawn IDs
               const spawn = spawns[id];
               if (!spawn) continue;
-              const gridCol = Math.floor((spawn.x - roomOriginX + 8) / 8);
-              const gridRow = Math.floor((spawn.y - roomOriginY + 8) / 8);
+              const gridCol = Math.floor((spawn.x - roomOriginX) / 8);
+              const gridRow = Math.floor((spawn.y - roomOriginY) / 8);
               if (gridRow < 0 || gridRow >= 64 || gridCol < 0 || gridCol >= 64) continue;
-              // Avoid duplicates with overworld entrances
-              if (allEntrances.some(e => e.id === id)) continue;
+              // Replace overworld entry (wrong grid coords) with correct indoor spawn position
+              const existingIdx = allEntrances.findIndex(e => e.id === id);
+              if (existingIdx !== -1) {
+                allEntrances[existingIdx] = { area: primaryScreenIndex, pos: 0, id, gridRow, gridCol, roomId: exitScreen };
+                continue;
+              }
               allEntrances.push({
                 area: primaryScreenIndex,
                 pos: 0,
@@ -764,9 +788,9 @@ function NavigationWidgetContent() {
             if (rooms[h.entranceId] === primaryScreenIndex) {
               const spawn = spawns[h.entranceId];
               if (spawn) {
-                // playerX/Y is Link's top-left sprite corner; offset +8px to center on feet
-                const gridCol = Math.floor((spawn.x - roomOriginX + 8) / 8);
-                const gridRow = Math.floor((spawn.y - roomOriginY + 8) / 8);
+                // +1 col / +2 row: spawn is Link's sprite top-left; offset to center on hitbox (bottom 2×2)
+                const gridCol = Math.floor((spawn.x - roomOriginX) / 8) + 1;
+                const gridRow = Math.floor((spawn.y - roomOriginY) / 8) + 2;
                 if (gridRow >= 0 && gridRow < 64 && gridCol >= 0 && gridCol < 64) {
                   fallHoleSpawns.push({ gridRow, gridCol, entranceId: h.entranceId });
                 }
@@ -776,8 +800,9 @@ function NavigationWidgetContent() {
         }
       }
       setFallHoleLandings(fallHoleSpawns);
+      setRespawnEntIds(currentRespawnIds);
 
-      overlayStore.setData(primaryResult, allConnections, fillResults, fallHoleSpawns);
+      overlayStore.setData(primaryResult, allConnections, fillResults, fallHoleSpawns, currentRespawnIds);
     } catch (e) { console.error(e); }
     finally {
       setRunning(false);
@@ -881,7 +906,7 @@ function NavigationWidgetContent() {
   // Toggle overlay
   const toggleOverlay = useCallback(() => {
     if (overlayStore.visible) overlayStore.setVisible(false);
-    else if (result) overlayStore.setData(result, connections, renderResults, overlayStore.fallHoleSpawns);
+    else if (result) overlayStore.setData(result, connections, renderResults, overlayStore.fallHoleSpawns, respawnEntIds);
   }, [result, connections, renderResults]);
 
   // Review helpers
@@ -962,7 +987,7 @@ function NavigationWidgetContent() {
 
         {/* Screen map with edge connection indicators */}
         {screenBundle && (
-          <ScreenMapWithConnections bundle={screenBundle} connections={externalConnections} renderResults={renderResults} linkScreenIndex={linkDebug?.liveScreenIndex ?? null} linkPos={linkDebug ? { screen: linkDebug.liveScreenIndex, row: linkDebug.tileMinRow, col: linkDebug.tileMinCol } : null} />
+          <ScreenMapWithConnections bundle={screenBundle} connections={externalConnections} renderResults={renderResults} linkScreenIndex={linkDebug?.liveScreenIndex ?? null} linkPos={linkDebug ? { screen: linkDebug.liveScreenIndex, row: linkDebug.tileMinRow, col: linkDebug.tileMinCol } : null} respawnEntIds={respawnEntIds} />
         )}
       </div>
 
@@ -1236,11 +1261,18 @@ function NavigationWidgetContent() {
                   const t = r.transitions.find(t => t.entranceIdx === ent.id);
                   const isSyntheticIndoor = ent.id >= 1000 && isIndoors;
                   const isIndoorOverworldEntrance = isIndoors && ent.id < 1000;
-                  const entType = ent.id >= 1000
-                    ? classifyEntranceFromScreen(roomIndex)
-                    : classifyEntranceFromScreen(ent.roomId);
+                  const isRespawn = respawnEntIds.has(ent.id);
+                  const entType = isRespawn
+                    ? 'respawn' as EntranceType
+                    : (ent.id >= 200 && ent.id < 1000)
+                      ? 'hole' as EntranceType
+                      : ent.id >= 1000
+                        ? classifyEntranceFromScreen(roomIndex)
+                        : classifyEntranceFromScreen(ent.roomId, isIndoors);
                   let displayName: string;
-                  if (isSyntheticIndoor) {
+                  if (isRespawn) {
+                    displayName = 'Respawn Point';
+                  } else if (isSyntheticIndoor) {
                     // Stair connection — show destination room name
                     displayName = `Room 0x${ent.roomId.toString(16).toUpperCase()}`;
                   } else if (isIndoorOverworldEntrance) {
@@ -1384,13 +1416,17 @@ const ENTRANCE_ICONS: Record<EntranceType, typeof woodenDoor> = {
   fairy: fairyIcon,
   shop: shopIcon,
   house: houseIcon,
+  overworld: forestEntranceIcon,
+  respawn: respawnIcon,
   unknown: unknownIcon,
 };
 
 /** Classify entrance type from the room's screen definition (for synthetic IDs ≥ 1000) */
-function classifyEntranceFromScreen(roomIndex: number): EntranceType {
+function classifyEntranceFromScreen(roomIndex: number, isIndoors?: boolean): EntranceType {
+  // When indoors, non-stair entrances always lead to the overworld
+  if (isIndoors) return 'overworld';
   const screen = getScreenLookup().byCaveRoom.get(roomIndex);
-  if (!screen) return 'unknown';
+  if (!screen) return 'overworld';
   if (screen.type === 'dungeon') return 'dungeon';
   if (screen.type === 'interior') {
     const kind = screen.interior.kind;
@@ -1661,13 +1697,15 @@ function ReachabilityCanvas({ reachable, size, bounds, tileLayer }: { reachable:
   return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', borderRadius: 3, imageRendering: 'pixelated' }} />;
 }
 
-function ScreenMapWithConnections({ bundle, connections, renderResults, linkScreenIndex, linkPos }: {
+function ScreenMapWithConnections({ bundle, connections, renderResults, linkScreenIndex, linkPos, respawnEntIds }: {
   bundle: ScreenBundle;
   connections: ConnectionInfo[];
   renderResults: FloodFillResult[];
   linkScreenIndex: number | null;
   linkPos: { screen: number; row: number; col: number } | null;
+  respawnEntIds: Set<number>;
 }) {
+  const { roomIndex, isIndoors } = useGameUIStore(s => s.map);
   // Fill available width; cells are square (1:1 aspect like 512×512 screens)
   const EDGE_PAD = 18; // space for connection indicators + padding
   const GAP = 2;
@@ -1810,18 +1848,29 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
         const cellLeft = EDGE_PAD + cellCol * (cellW + GAP);
         const cellTop = EDGE_PAD + cellRow * (cellH + GAP);
         const sz = Math.max(6, cellW * 4 / 64); // 4 tiles wide
+        const isRespawnMarker = respawnEntIds.has(ent.id);
+        const markerEntType: EntranceType = isRespawnMarker
+          ? 'respawn'
+          : (ent.id >= 200 && ent.id < 1000)
+            ? 'hole'
+            : ent.id >= 1000
+              ? classifyEntranceFromScreen(roomIndex)
+              : classifyEntranceFromScreen(ent.roomId, isIndoors);
+        const markerIcon = ent.id >= 1000 && isIndoors ? exitDoorIcon : ENTRANCE_ICONS[markerEntType];
         return (
           <div key={`ent-${r.screenIndex}-${ent.id}`} style={{
             position: 'absolute',
-            left: cellLeft + localX - 1,
-            top: cellTop + localY - 1,
+            left: cellLeft + localX - sz / 2,
+            top: cellTop + localY - sz / 2,
             width: sz, height: sz,
-            border: '1.5px solid #ffcc44',
-            borderRadius: 1,
             pointerEvents: 'none',
-          }} />
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <Icon icon={markerIcon} width={sz} height={sz} style={{ color: '#ffcc44', filter: 'drop-shadow(0 0 1px #000)' }} />
+          </div>
         );
       }))}
+
 
       {/* Fall hole landing markers — yellow diagonal stripes */}
       {fallHoleSpawns.map((fh, i) => {

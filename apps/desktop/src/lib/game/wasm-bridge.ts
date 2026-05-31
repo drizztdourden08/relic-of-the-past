@@ -569,6 +569,20 @@ function wasmGetRoomStairInfo(): RoomStairInfo[] {
   }
 }
 
+/** Get the 5 room travel destination bytes from the current room header. */
+function wasmGetRoomTravelDestinations(): number[] | null {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return null;
+  try {
+    const ptr = mod.ccall('WasmGetRoomTravelDestinations', 'number', [], []) as number;
+    if (!ptr) return null;
+    const heap = mod.HEAPU8;
+    return [heap[ptr], heap[ptr + 1], heap[ptr + 2], heap[ptr + 3], heap[ptr + 4]];
+  } catch {
+    return null;
+  }
+}
+
 /** Get active Uncle sprite blocker coordinates for indoor early-game variants. */
 function wasmGetIndoorUncleBlockers(): Array<{ x: number; y: number }> {
   const mod = currentModule;
@@ -842,6 +856,7 @@ export {
   wasmGetRoomDoorBoundaryTiles,
   wasmGetRoomLayoutInfo,
   wasmGetRoomStairInfo,
+  wasmGetRoomTravelDestinations,
   wasmGetUIOverlayMode,
   wasmGetViewportInfo,
   wasmRenderCleanFrame,

@@ -17,6 +17,7 @@ import { registerSpriteProtocol } from './protocol/sprite-protocol';
 import { registerInputHandlers, stopInputHandlers, initCalibrationStore, initProfileStore } from './input';
 import { registerTestHandlers } from './test/ipc-handlers';
 import { registerDumpLayersHandler } from './debug/dump-layers-handler';
+import { registerDumpNavHandler } from './debug/dump-nav-handler';
 import { registerConnectionHandlers } from './connections/ipc-handlers';
 import { registerScreenEditorHandlers } from './screen-editor/ipc-handlers';
 import { registerShadowCastingHandlers } from './shadow-casting';
@@ -67,6 +68,7 @@ app.whenReady().then(async () => {
   registerSessionHandlers();
   registerTestHandlers();
   registerDumpLayersHandler();
+  registerDumpNavHandler();
   registerConnectionHandlers();
   registerScreenEditorHandlers();
   registerShadowCastingHandlers();

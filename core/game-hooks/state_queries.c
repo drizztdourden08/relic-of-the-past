@@ -494,6 +494,19 @@ int WasmGetFallHoles(void) {
   return (int)g_fall_holes_buf;
 }
 
+// Area heads: fixed 64-byte array (kOverworldAreaHeads).
+// Duplicated here because it's static const in overworld.c.
+static const uint8 g_area_heads[64] = {
+  0,  0,  2,  3,  3,  5,  5,  7,
+  0,  0, 10,  3,  3,  5,  5, 15,
+  16, 17, 18, 19, 20, 21, 22, 23,
+  24, 24, 26, 27, 27, 29, 30, 30,
+  24, 24, 34, 27, 27, 37, 30, 30,
+  40, 41, 42, 43, 44, 45, 46, 47,
+  48, 48, 50, 51, 52, 53, 53, 55,
+  48, 48, 58, 59, 60, 53, 53, 63,
+};
+
 // Exit screen map: roomId(u16) + screenIndex(u8) per entry, count prefix.
 // Max ~79 exits → 2 + 79*3 = 239 bytes. Use 128 for safety.
 static uint8 g_exit_screen_buf[2 + 128 * 3];
@@ -508,6 +521,22 @@ int WasmGetExitScreenMap(void) {
     int o = 2 + i * 3;
     uint16 room = kExitDataRooms[i];
     uint8  scr  = kExitData_ScreenIndex[i];
+    // For big screens, resolve area head to correct sub-screen using exit coordinates
+    if (scr < 64 && g_area_heads[scr] == scr) {
+      int is_big = 0;
+      for (int j = 0; j < 64; j++) {
+        if (g_area_heads[j] == scr && j != scr) { is_big = 1; break; }
+      }
+      if (is_big) {
+        uint16 exit_x = kExitData_XCoord[i];
+        uint16 exit_y = kExitData_YCoord[i];
+        uint8 head_col = scr & 7;
+        uint8 head_row = scr >> 3;
+        uint8 sub_col = (exit_x >= (uint16)((head_col + 1) * 512)) ? 1 : 0;
+        uint8 sub_row = (exit_y >= (uint16)((head_row + 1) * 512)) ? 1 : 0;
+        scr = ((head_row + sub_row) << 3) | (head_col + sub_col);
+      }
+    }
     g_exit_screen_buf[o + 0] = room & 0xFF;
     g_exit_screen_buf[o + 1] = (room >> 8) & 0xFF;
     g_exit_screen_buf[o + 2] = scr;
@@ -515,18 +544,6 @@ int WasmGetExitScreenMap(void) {
   return (int)g_exit_screen_buf;
 }
 
-// Area heads: fixed 64-byte array (kOverworldAreaHeads).
-// Duplicated here because it's static const in overworld.c.
-static const uint8 g_area_heads[64] = {
-  0,  0,  2,  3,  3,  5,  5,  7,
-  0,  0, 10,  3,  3,  5,  5, 15,
-  16, 17, 18, 19, 20, 21, 22, 23,
-  24, 24, 26, 27, 27, 29, 30, 30,
-  24, 24, 34, 27, 27, 37, 30, 30,
-  40, 41, 42, 43, 44, 45, 46, 47,
-  48, 48, 50, 51, 52, 53, 53, 55,
-  48, 48, 58, 59, 60, 53, 53, 63,
-};
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetAreaHeads(void) {
@@ -700,4 +717,18 @@ int WasmGetRoomStairInfo(void) {
   g_room_stairs_buf[0] = count;
   g_room_stairs_buf[1] = 0;
   return (int)g_room_stairs_buf;
+}
+
+// ─── Room Travel Destinations (from room header) ───
+// Returns the 5 travel destination bytes for the current room.
+// [0] = pit/block destination, [1..4] = stair destinations for stair indices 0-3.
+// Format: [dest0, dest1, dest2, dest3, dest4]
+static uint8 g_travel_dest_buf[5];
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetRoomTravelDestinations(void) {
+  for (int i = 0; i < 5; i++) {
+    g_travel_dest_buf[i] = player_is_indoors ? dung_hdr_travel_destinations[i] : 0;
+  }
+  return (int)g_travel_dest_buf;
 }

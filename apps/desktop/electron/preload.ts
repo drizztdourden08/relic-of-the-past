@@ -230,6 +230,10 @@ contextBridge.exposeInMainWorld('api', {
   getHoverTile: () => ipcRenderer.invoke('debug:getHoverTile') as Promise<{ col: number; row: number } | null>,
   writeDumpLayers: (data: unknown) => ipcRenderer.invoke('debug:dumpLayers', data) as Promise<string>,
 
+  // Debug: dump navigation state
+  getDumpNavSlot: () => ipcRenderer.invoke('debug:getDumpNavSlot') as Promise<number | null>,
+  writeDumpNav: (data: unknown) => ipcRenderer.invoke('debug:dumpNav', data) as Promise<string>,
+
   // Shadow casting (dev-only write, always-available read)
   shadowCasting: {
     load: () => ipcRenderer.invoke('shadow-casting:load'),

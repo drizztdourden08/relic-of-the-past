@@ -333,10 +333,9 @@ function findEntrancePositions(
     return { screenEntrances, entrancePositions };
   }
 
-  // Interior rooms: use entrance spawn data from ROM tables (passed via entrances array).
-  // The widget computes entrance positions from kEntranceData_playerX/Y for all entrance IDs
-  // whose destination room matches the current screen.
-  const screenEntrances = entrances.filter(e => e.roomId === screenIndex);
+  // Interior rooms: filter entrances physically placed in this room (area === screenIndex).
+  // The widget adds indoor spawn positions and stairs with area = roomIndex.
+  const screenEntrances = entrances.filter(e => e.area === screenIndex);
   const entrancePositions = screenEntrances.map(e => ({ row: e.gridRow, col: e.gridCol, idx: e.id }));
   return { screenEntrances, entrancePositions };
 }
