@@ -1,7 +1,7 @@
 ﻿/**
  * Tag system for checks — enables filtering, searching, and grouping.
  *
- * Tags are assigned via rules (by type, region patterns, dungeon, etc.)
+ * Tags are assigned via rules (by type, screen patterns, dungeon, etc.)
  * rather than manually on each check. This keeps the check data clean
  * and makes it easy to adjust tagging logic.
  */
@@ -132,8 +132,8 @@ const LIGHT_WORLD_DUNGEONS = new Set([
   'Hyrule Castle', 'Castle Tower', 'Eastern Palace', 'Desert Palace', 'Tower of Hera',
 ]);
 
-// ─── Cave regions (overworld checks in caves) ───
-const CAVE_REGIONS = new Set([
+// ─── Cave screens (overworld checks in caves) ───
+const CAVE_SCREENS = new Set([
   'Blinds Hideout', 'Kakariko Well (top)', 'Waterfall of Wishing', 'Kings Grave',
   'Aginahs Cave', 'Sahasrahlas Hut', 'Mini Moldorm Cave', 'Ice Rod Cave',
   'Bonk Rock Cave', 'Checkerboard Cave', 'Graveyard Cave', 'Cave 45',
@@ -143,8 +143,8 @@ const CAVE_REGIONS = new Set([
   'Old Man Cave', 'Lost Woods Hideout (top)', 'Lumberjack Tree (top)',
 ]);
 
-// ─── House regions ───
-const HOUSE_REGIONS = new Set([
+// ─── House screens ───
+const HOUSE_SCREENS = new Set([
   'Links House', 'Tavern', 'Chicken House', 'Library', 'Sick Kids House',
   'Blacksmiths Hut', 'Brewery', 'C-Shaped House', 'Chest Game',
   'Pyramid Fairy', 'Potion Shop',
@@ -205,7 +205,7 @@ function computeCheckTags(check: CheckDefinition): CheckTag[] {
     const dungTag = DUNGEON_TAG_MAP[check.dungeon];
     if (dungTag) tags.add(dungTag);
   } else {
-    // Overworld check — determine world from region/id
+    // Overworld check — determine world from screen/id
     const isDark = /Dark|Catfish|Stumpy|Pyramid|Hype Cave|Brewery|C-Shaped|Chest Game|Bumper|Mire|Superbunny|Hookshot Cave|Frog|Missing Smith|Hammer Peg/.test(check.screen) ||
       /Dark|Catfish|Stumpy|Pyramid|Digging Game|Bombos Tablet|Frog|Missing Smith/.test(check.id);
     tags.add(isDark ? 'dark_world' : 'light_world');
@@ -213,9 +213,9 @@ function computeCheckTags(check: CheckDefinition): CheckTag[] {
 
   // ── Location type (for non-dungeon checks) ──
   if (!check.dungeon) {
-    if (CAVE_REGIONS.has(check.screen)) {
+    if (CAVE_SCREENS.has(check.screen)) {
       tags.add('cave');
-    } else if (HOUSE_REGIONS.has(check.screen)) {
+    } else if (HOUSE_SCREENS.has(check.screen)) {
       tags.add('house');
     } else {
       tags.add('overworld');

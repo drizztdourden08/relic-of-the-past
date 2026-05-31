@@ -1,6 +1,6 @@
 /**
  * Grouping engine for the tracker — allows users to nest checks by
- * world, area, location type, dungeon, region, etc.
+ * world, area, location type, dungeon, screen, etc.
  *
  * Supports 0-5 levels of nesting. Each level is a "grouping dimension".
  */

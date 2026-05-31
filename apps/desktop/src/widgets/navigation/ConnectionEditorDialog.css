@@ -35,7 +35,7 @@
   margin: 0;
 }
 
-.conn-editor__region-id {
+.conn-editor__screen-id {
   font-size: var(--text-xs);
   color: var(--color-text-tertiary);
   font-family: var(--font-mono);

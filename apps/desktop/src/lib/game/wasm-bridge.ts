@@ -277,6 +277,32 @@ export interface OverworldVariantInfo {
 
 const PHASE_LABELS = ['intro', 'rain (pre-Sanctuary)', 'post-Sanctuary', 'post-Agahnim'];
 
+// ─── Universal Progress Indicator ───
+
+interface GameProgressInfo {
+  /** Raw sram_progress_indicator value (0-3) */
+  tier: number;
+  /** Human-readable phase label */
+  label: string;
+}
+
+/**
+ * Read the game's progress indicator from WRAM — works indoors or outdoors.
+ * Returns null only when game is not running.
+ */
+function wasmGetProgressIndicator(): GameProgressInfo | null {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return null;
+  try {
+    const progPtr = mod.ccall('WasmGetProgressFlags', 'number', [], []) as number;
+    if (!progPtr) return null;
+    const tier = mod.HEAPU8[progPtr];
+    return { tier, label: PHASE_LABELS[tier] ?? `unknown (${tier})` };
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Read the current overworld variant state: progress tier + per-screen event flags.
  */
@@ -350,6 +376,30 @@ function wasmGetIndoorDualLayerGrids(): { layer0: number[][]; layer1: number[][]
     // meaningful dual-layer collision — discard.
     if (!hasDifference) return null;
     return { layer0, layer1, stairTiles };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Get the raw indoor layer0 collision grid from live game state.
+ * Unlike wasmGetIndoorDualLayerGrids, this ALWAYS returns layer0 when game is running
+ * indoors, regardless of whether layers differ. Returns null only when truly unavailable.
+ */
+function wasmGetIndoorLayer0Grid(): number[][] | null {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return null;
+  try {
+    const ptr = mod.ccall('WasmGetIndoorAttrTable', 'number', [], []) as number;
+    if (!ptr) return null;
+    const heap = mod.HEAPU8;
+    const grid: number[][] = Array.from({ length: 64 }, () => new Array<number>(64));
+    for (let r = 0; r < 64; r++) {
+      for (let c = 0; c < 64; c++) {
+        grid[r][c] = heap[ptr + r * 64 + c];
+      }
+    }
+    return grid;
   } catch {
     return null;
   }
@@ -778,6 +828,7 @@ export {
   wasmGetFallHoles,
   wasmGetGameUIState,
   wasmGetIndoorDualLayerGrids,
+  wasmGetIndoorLayer0Grid,
   wasmGetLinkLayer,
   wasmGetIndoorUncleBlockers,
   wasmGetLiveSprites,
@@ -787,6 +838,7 @@ export {
   wasmGetOverworldGuardSpawns,
   wasmGetOverworldVariant,
   wasmGetPaused,
+  wasmGetProgressIndicator,
   wasmGetRoomDoorBoundaryTiles,
   wasmGetRoomLayoutInfo,
   wasmGetRoomStairInfo,
@@ -799,4 +851,4 @@ export {
   wasmSetUIOverlayMode,
   wasmTogglePause
 };
-export type { DoorBoundaryTile, EntranceData, ExitData, FallHole, LiveSpriteInfo, OverworldEntrance, OverworldVariantInfo, RoomHeader, RoomLayoutInfo, ViewportInfo };
+export type { DoorBoundaryTile, EntranceData, ExitData, FallHole, GameProgressInfo, LiveSpriteInfo, OverworldEntrance, OverworldVariantInfo, RoomHeader, RoomLayoutInfo, ViewportInfo };

@@ -2,7 +2,7 @@
  * analyze-navigation.ts — Offline navigation data analysis script.
  *
  * Runs WASM headlessly (no Electron) to compute tile-level navigation data
- * for every overworld screen. Populates RegionNavData and ConnectionNavData
+ * for every overworld screen. Populates ScreenNavData and ConnectionNavData
  * fields on the data model.
  *
  * Usage: npx tsx scripts/analyze-navigation.ts [--output <path>] [--screen <hex>]
@@ -31,12 +31,12 @@ import {
   detectRequirements,
   findBorderBundles,
   computeOverlap,
-  buildRegionNavUpdates,
+  buildScreenNavUpdates,
   buildConnectionNavUpdates,
 } from '../shared/game/navigation/analysis';
 
 // ─── Data model imports ──────────────────────────────────────────────────────
-import { ALL_REGIONS } from '../shared/game/data/regions';
+import { ALL_SCREENS } from '../shared/game/data/screens';
 import { ALL_CONNECTIONS } from '../shared/game/data/connections';
 import type { RegionNavData, ConnectionNavData } from '../shared/game/navigation/nav-data.types';
 
@@ -82,7 +82,7 @@ async function main() {
   const wasm = await loadWasm();
 
   // 2. Determine screen set
-  const allScreenIndices = ALL_REGIONS
+  const allScreenIndices = ALL_SCREENS
     .filter(r => r.type === 'overworld' && r.roomIndex != null)
     .map(r => r.roomIndex!);
 
@@ -124,7 +124,7 @@ async function main() {
   // TODO: Implement progressive inventory BFS per screen
 
   // 7. Build nav data updates
-  const regionUpdates = buildRegionNavUpdates(
+  const screenUpdates = buildScreenNavUpdates(
     new Map(Array.from(globalResult.screens.entries()).map(([idx, stats]) => [
       idx,
       { ...stats, connectionPointIds: [], obstacles: [], features: [] } as RegionNavData,
@@ -136,12 +136,12 @@ async function main() {
   // 8. Write output
   const output = {
     generatedAt: new Date().toISOString(),
-    regions: regionUpdates,
+    screens: screenUpdates,
     connections: connectionUpdates,
   };
 
   writeFileSync(outputPath, JSON.stringify(output, null, 2));
-  console.log(`Wrote ${regionUpdates.length} region updates, ${connectionUpdates.length} connection updates`);
+  console.log(`Wrote ${screenUpdates.length} screen updates, ${connectionUpdates.length} connection updates`);
   console.log('Done.');
 }
 

@@ -6,8 +6,8 @@ export type { QuadrantBounds } from './flood-fill';
 // ─── Entry Point #2: Multi-Screen Flood Fill ─────────────────────────────────
 export { floodFillWorld } from './flood-fill';
 
-// ─── Entry Point #3: Hub/Region Graph Navigation ─────────────────────────────
-export { findShortestPath, findPrecisePath, findUnreachableRegions, getGraphStats } from './hub-navigation';
+// ─── Entry Point #3: Hub/Screen Graph Navigation ─────────────────────────────
+export { findShortestPath, findPrecisePath, findUnreachableScreens, getGraphStats } from './hub-navigation';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 export type {

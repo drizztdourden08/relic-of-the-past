@@ -1,10 +1,10 @@
 /**
- * LocationNotification — renders animated region/transition banners.
+ * LocationNotification — renders animated screen/transition banners.
  * Positioned at bottom-center of the game overlay.
  */
 
 import { useLocationNotificationStore } from '../../../stores/location-notification-store';
-import { REGION_DISMISS_MS, TRANSITION_DISMISS_MS } from '../../hooks/useLocationNotification';
+import { SCREEN_DISMISS_MS, TRANSITION_DISMISS_MS } from '../../hooks/useLocationNotification';
 import { useEffect, useState } from 'react';
 
 /** Slide-in animation duration */
@@ -13,18 +13,18 @@ const ANIMATE_IN_MS = 300;
 const ANIMATE_OUT_MS = 400;
 
 function LocationNotification() {
-  const region = useLocationNotificationStore((s) => s.region);
+  const screen = useLocationNotificationStore((s) => s.screen);
   const transition = useLocationNotificationStore((s) => s.transition);
 
   return (
     <div className="location-notification-container">
-      {region && (
+      {screen && (
         <NotificationBanner
-          key={`region-${region.timestamp}`}
-          title={region.region.location}
-          subtitle={region.region.name}
-          dismissMs={REGION_DISMISS_MS}
-          variant="region"
+          key={`screen-${screen.timestamp}`}
+          title={screen.screen.location}
+          subtitle={screen.screen.name}
+          dismissMs={SCREEN_DISMISS_MS}
+          variant="screen"
         />
       )}
       {transition && (
@@ -43,7 +43,7 @@ interface NotificationBannerProps {
   title: string;
   subtitle?: string;
   dismissMs: number;
-  variant: 'region' | 'transition';
+  variant: 'screen' | 'transition';
 }
 
 function NotificationBanner({ title, subtitle, dismissMs, variant }: NotificationBannerProps) {

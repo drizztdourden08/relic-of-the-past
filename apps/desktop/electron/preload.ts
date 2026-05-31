@@ -237,11 +237,13 @@ contextBridge.exposeInMainWorld('api', {
     getScreen: (screenId: number) => ipcRenderer.invoke('shadow-casting:get-screen', screenId),
   },
 
-  // Region editor (dev-only: write region/connection data to source files)
-  regionEditor: {
-    writeRegion: (args: { filePath: string; code: string; regionId: string | null }) =>
-      ipcRenderer.invoke('regionEditor:writeRegion', args) as Promise<{ success: boolean; error?: string }>,
+  // Screen editor (dev-only: write screen/connection data to source files)
+  screenEditor: {
+    writeRegion: (args: { filePath: string; code: string; screenId: string | null }) =>
+      ipcRenderer.invoke('screenEditor:writeScreen', args) as Promise<{ success: boolean; error?: string }>,
     writeConnections: (args: { filePath: string; code: string }) =>
-      ipcRenderer.invoke('regionEditor:writeConnections', args) as Promise<{ success: boolean; error?: string }>,
+      ipcRenderer.invoke('screenEditor:writeConnections', args) as Promise<{ success: boolean; error?: string }>,
+    appendRegistry: (args: { type: 'area' | 'location'; entries: Array<{ id: string; name: string; world?: string; areaId?: string }> }) =>
+      ipcRenderer.invoke('screenEditor:appendRegistry', args) as Promise<{ success: boolean; error?: string }>,
   },
 });

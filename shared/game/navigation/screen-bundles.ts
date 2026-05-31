@@ -1,3 +1,3 @@
 // Re-export from canonical data layer location
-export { buildScreenBundle } from '../data/regions/bundles';
-export type { ScreenBundle } from '../data/regions/bundles';
+export { buildScreenBundle } from '../data/screens/bundles';
+export type { ScreenBundle } from '../data/screens/bundles';

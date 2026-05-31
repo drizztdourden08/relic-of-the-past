@@ -1,4 +1,4 @@
-import type { RegionTag } from './data/regions/tags';
+import type { ScreenTag } from './data/screens/tags';
 import type { ConnectionTag } from './data/connections/tags';
 import type { RegionNavData, ConnectionNavData } from './navigation/nav-data.types';
 
@@ -52,26 +52,48 @@ interface OverworldContext {
   gridX: number;
   /** Row in 8×8 OW grid */
   gridY: number;
-  /** Bundle ID — links screens that form one logical area */
-  bundle?: string;
 }
 
 interface DungeonContext {
-  /** Dungeon name — drives game mechanics (keys, map, compass, boss) */
-  name: string;
-  /** Runtime cur_palace_index_x2 (0x00–0x1A) */
-  palaceIndex?: number;
+  /** Runtime cur_palace_index_x2 (0x00–0x1A) — the canonical dungeon identifier.
+   *  Name is derived via getDungeonName(palaceIndex). */
+  palaceIndex: number;
   /** Floor level (-2, -1, 0, 1, 2...) */
   floor?: number;
-  /** Column in dungeon room grid */
+  /** Column in dungeon room grid (for map rendering) */
   gridX?: number;
-  /** Row in dungeon room grid */
+  /** Row in dungeon room grid (for map rendering) */
   gridY?: number;
 }
 
 interface InteriorContext {
   /** What kind of interior this is */
   kind: InteriorKind;
+}
+
+// ─── Variant Conditions ───
+
+/**
+ * Conditions that determine when a screen variant is active.
+ * Multiple variants of the same roomIndex can coexist — the first
+ * whose condition evaluates to true at runtime wins.
+ */
+type VariantCondition =
+  | { type: 'flag'; address: number; bit: number; value: boolean }
+  | { type: 'check'; name: string; collected: boolean }
+  | { type: 'entrance'; id: number }
+  | { type: 'progress'; min?: number; max?: number }
+  | { type: 'always' };
+
+interface ScreenVariantInfo {
+  /** Unique key identifying this variant (e.g., 'intro', 'post-boss') */
+  key: string;
+  /** Human-readable label */
+  label?: string;
+  /** The raw sram_progress_indicator byte value(s) this variant corresponds to */
+  progressTier?: number | [number, number];
+  /** Condition that makes this variant active at runtime */
+  condition: VariantCondition;
 }
 
 // ─── Bundle Definition ───
@@ -113,11 +135,17 @@ interface ScreenBase {
   /** Entrance ID (RAM $010E) — disambiguates shared room indices */
   entranceId?: number;
 
+  // ─── Variant ───
+  /** When present, this screen definition is conditional on game state.
+   *  Multiple definitions can share the same roomIndex with different variants.
+   *  The variant with a matching condition takes priority; omitted = default/fallback. */
+  variant?: ScreenVariantInfo;
+
   // ─── Workflow ───
   status?: 'draft' | 'mapped' | 'verified';
 
   // ─── Metadata ───
-  tags: readonly RegionTag[];
+  tags: readonly ScreenTag[];
   nav?: RegionNavData;
 }
 
@@ -201,11 +229,11 @@ type Goal = 'ganon' | 'pedestal' | 'triforce-hunt' | 'crystals' | 'bosses';
 
 interface LogicConfig {
   mode: LogicMode;
-  /** Region ID where the game starts (default: 'menu') */
-  startingRegion: string;
+  /** Screen ID where the game starts (default: 'menu') */
+  startingScreen: string;
   /** Items the player has at game start (e.g. open mode gives Bombs free) */
   startingItems: string[];
-  /** S&Q destinations freely available from Menu (region IDs) */
+  /** S&Q destinations freely available from Menu (screen IDs) */
   saveQuitDestinations: string[];
   /** Whether Moon Pearl is required to be human in DW */
   moonPearlRequired: boolean;
@@ -374,6 +402,8 @@ export type {
   ScreenConnection,
   ScreenDefinition,
   ScreenType,
+  ScreenVariantInfo,
+  VariantCondition,
   World,
   // ─── Game State ───
   CheckState,

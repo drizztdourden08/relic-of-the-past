@@ -22,26 +22,28 @@ import { useConnectionOverlayStore } from '../../stores/connection-overlay-store
 import { buildScreenBundle, floodFillScreen, getConnections } from '@shared/game/navigation';
 import type { FloodFillOptions, QuadrantBounds } from '@shared/game/navigation';
 import type { ScreenBundle, OverworldEntrance } from '@shared/game/navigation';
-import { getRegionLookup, resolveCurrentRegionDetailed, REGION_BY_ID } from '@shared/game/data/regions';
-import type { RegionMatchResult } from '@shared/game/data/regions';
+import { getScreenLookup, resolveCurrentScreenDetailed, SCREEN_BY_ID } from '@shared/game/data/screens';
+import type { ScreenMatchResult, VariantGameState } from '@shared/game/data/screens';
+import { getDungeonName } from '@shared/game/data/screens/game-values';
 import { ALL_CONNECTIONS } from '@shared/game/data/connections';
-import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetIndoorDualLayerGrids, wasmGetLinkLayer, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetRoomDoorBoundaryTiles, wasmGetRoomStairInfo } from '../../lib/game';
+import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetProgressIndicator, wasmGetIndoorDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetRoomDoorBoundaryTiles, wasmGetRoomStairInfo } from '../../lib/game';
 import { getCompletedChecks } from '../../lib/game/tracker';
 import type { OverworldVariantInfo } from '../../lib/game';
 import type { TileAttrContext } from '@shared/game/navigation/tile-attrs';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
-import { useRegionStatus, useConnectionStatus } from './useDatasetStatus';
-import { RegionEditorDialog } from './RegionEditorDialog';
+import { useScreenDataStatus, useConnectionStatus } from './useDatasetStatus';
+import { ScreenEditorDialog } from './ScreenEditorDialog';
 import { ConnectionEditorDialog } from './ConnectionEditorDialog';
+import { StatusBadge } from '../../components/primitives';
 
 type EntranceType = 'door' | 'cave' | 'hole' | 'well' | 'dungeon' | 'fairy' | 'shop' | 'house' | 'unknown';
 
 /** Get overworld screen display name from screen index */
 function getScreenDisplayName(screenIndex: number): string {
-  return getRegionLookup().byOverworldScreen.get(screenIndex)?.name ?? `0x${screenIndex.toString(16).toUpperCase()}`;
+  return getScreenLookup().byOverworldScreen.get(screenIndex)?.name ?? `0x${screenIndex.toString(16).toUpperCase()}`;
 }
 
-/** Pre-built map: fromRegionId → array of destination region IDs */
+/** Pre-built map: fromRegionId → array of destination screen IDs */
 const connectionsByFrom = new Map<string, string[]>();
 for (const conn of ALL_CONNECTIONS) {
   let list = connectionsByFrom.get(conn.from);
@@ -51,16 +53,16 @@ for (const conn of ALL_CONNECTIONS) {
 
 /**
  * Resolve display name for an entrance/connection destination.
- * Given the current region ID and the target room's roomIndex,
- * finds the matching connection and returns the destination region's name.
+ * Given the current screen ID and the target room's roomIndex,
+ * finds the matching connection and returns the destination screen's name.
  */
-function getConnectionDestinationName(currentRegionId: string, targetRoomId: number): string | null {
-  const destinations = connectionsByFrom.get(currentRegionId);
+function getConnectionDestinationName(currentScreenId: string, targetRoomId: number): string | null {
+  const destinations = connectionsByFrom.get(currentScreenId);
   if (!destinations) return null;
   for (const toId of destinations) {
-    const region = REGION_BY_ID.get(toId);
-    if (region && region.roomIndex === targetRoomId) {
-      return region.name;
+    const screen = SCREEN_BY_ID.get(toId);
+    if (screen && screen.roomIndex === targetRoomId) {
+      return screen.name;
     }
   }
   return null;
@@ -238,14 +240,21 @@ function NavigationWidgetContent() {
   const locationKey = isIndoors
     ? `room-${roomIndex.toString(16).padStart(3, '0')}`
     : `${isDarkWorld ? 'dw' : 'lw'}-${overworldScreenIndex.toString(16).padStart(2, '0')}`;
-  // ─── Region detection: single source of truth ───
-  // resolveCurrentRegionDetailed uses: isIndoors → palaceIndex (dungeon vs cave) → whichEntrance (disambiguates duplicates) → roomIndex
-  const detectionResult = useMemo<RegionMatchResult | null>(
-    () => resolveCurrentRegionDetailed(isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance),
-    [isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance],
+  // ─── Screen detection: single source of truth ───
+  // resolveCurrentScreenDetailed uses: isIndoors → palaceIndex (dungeon vs cave) → whichEntrance (disambiguates duplicates) → roomIndex
+  // Variant state allows multiple definitions per roomIndex, resolved by game progress.
+  const progressInfo = wasmGetProgressIndicator();
+  const variantState = useMemo<VariantGameState>(() => ({
+    completedChecks: getCompletedChecks(),
+    entranceId: whichEntrance ?? undefined,
+    progressTier: progressInfo?.tier,
+  }), [whichEntrance, progressInfo?.tier, debugTick]); // debugTick ensures checks are re-evaluated periodically
+  const detectionResult = useMemo<ScreenMatchResult | null>(
+    () => resolveCurrentScreenDetailed(isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance, variantState),
+    [isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance, variantState],
   );
-  const detectedRegion = detectionResult?.region ?? null;
-  const screenName = detectedRegion?.name
+  const detectedScreen = detectionResult?.screen ?? null;
+  const screenName = detectedScreen?.name
     ?? (isIndoors ? `Room 0x${roomIndex.toString(16).toUpperCase().padStart(4, '0')}` : `Screen 0x${overworldScreenIndex.toString(16).toUpperCase().padStart(2, '0')}`);
   const locationReview = reviewData[locationKey] ?? { status: 'neutral' as ReviewStatus, connections: {} };
   const displayedVariant = !isIndoors
@@ -259,10 +268,10 @@ function NavigationWidgetContent() {
   const entranceSum = renderResults.reduce((sum, r) => sum + r.entrances.filter(e => r.transitions.some(t => t.entranceIdx === e.id)).length, 0);
 
   // ─── Dataset status badges & editor dialogs ───
-  const [regionEditorOpen, setRegionEditorOpen] = useState(false);
+  const [screenEditorOpen, setScreenEditorOpen] = useState(false);
   const [connEditorOpen, setConnEditorOpen] = useState(false);
 
-  const regionStatus = useRegionStatus(detectionResult, isIndoors);
+  const screenStatus = useScreenDataStatus(detectionResult, isIndoors);
 
   // Gather detected entrance screens + stairs for connection status
   const detectedEntranceScreens = useMemo(() => {
@@ -286,7 +295,7 @@ function NavigationWidgetContent() {
   }, [isIndoors, roomIndex]);
 
   const connStatus = useConnectionStatus(
-    regionStatus.region?.id ?? null,
+    screenStatus.screen?.id ?? null,
     detectedEntranceScreens,
     detectedStairs,
     exitScreen,
@@ -337,18 +346,37 @@ function NavigationWidgetContent() {
     };
   })();
 
-  // Clear overlay when screen changes
+  // Clear overlay and screen bundle when screen changes
   useEffect(() => {
     if (result && result.screenIndex !== activeScreenIndex) {
       setResult(null);
       setConnections([]);
       overlayStore.clear();
     }
+    // Always clear stale screen bundle when active screen changes
+    setScreenBundle(prev => {
+      if (!prev) return prev;
+      // Keep bundle if it still matches current screen
+      if (prev.screens.includes(activeScreenIndex) || prev.head === activeScreenIndex) return prev;
+      return null;
+    });
   }, [activeScreenIndex]);
 
   // Run flood fill
   const handleRun = useCallback(async () => {
     if (running) return;
+
+    // For indoor rooms, bail early if tile data isn't available yet (transition in progress).
+    // wasmGetIndoorLayer0Grid returns null ONLY when game isn't running or room not loaded.
+    // (wasmGetIndoorDualLayerGrids returns null for single-layer rooms too, which is valid.)
+    if (isIndoors) {
+      const layer0 = wasmGetIndoorLayer0Grid();
+      if (!layer0) {
+        pendingGroundedRunRef.current = true;
+        return;
+      }
+    }
+
     setRunning(true);
     try {
       const vp = wasmGetViewportInfo?.();
@@ -422,7 +450,7 @@ function NavigationWidgetContent() {
           // TileDetect only branches on indoors, but we keep cave/house and dungeon contexts separate for future tuning.
           tileContext = vp.locationType === 2 ? 'interior-dungeon' : 'interior-house';
           dualLayerGrids = wasmGetIndoorDualLayerGrids() ?? undefined;
-          rawAttrGrid = dualLayerGrids?.layer0;
+          rawAttrGrid = dualLayerGrids?.layer0 ?? wasmGetIndoorLayer0Grid() ?? undefined;
           linkLayer = wasmGetLinkLayer() ?? undefined;
 
           // Early-game indoor variant: Uncle at house / in-passage physically blocks tiles.
@@ -584,7 +612,8 @@ function NavigationWidgetContent() {
       const runOneScreen = (screenIndex: number, sp?: { row: number; col: number }) => {
         let grid: number[][];
         if (isIndoors) {
-          grid = rawAttrGrid!;
+          if (!rawAttrGrid) return null;
+          grid = rawAttrGrid;
         } else {
           const raw = wasmBuildOverworldAttrGrid(screenIndex);
           if (!raw) return null;
@@ -991,11 +1020,11 @@ function NavigationWidgetContent() {
               fontSize: 9,
               padding: '1px 5px',
               borderRadius: 3,
-              background: regionStatus.status === 'mapped' ? '#1a3a1a' : regionStatus.status === 'incomplete' ? '#3a3a1a' : '#3a1a1a',
-              color: regionStatus.status === 'mapped' ? '#4f8' : regionStatus.status === 'incomplete' ? '#fc6' : '#f66',
+              background: screenStatus.status === 'mapped' ? '#1a3a1a' : screenStatus.status === 'incomplete' ? '#3a3a1a' : '#3a1a1a',
+              color: screenStatus.status === 'mapped' ? '#4f8' : screenStatus.status === 'incomplete' ? '#fc6' : '#f66',
               fontWeight: 600,
             }}>
-              {regionStatus.status === 'mapped' ? '✓ Region' : regionStatus.status === 'incomplete' ? '⚠ Region' : '✗ Region'}
+              {screenStatus.status === 'mapped' ? '✓ Screen' : screenStatus.status === 'incomplete' ? '⚠ Screen' : '✗ Screen'}
             </span>
             <span style={{
               fontSize: 9,
@@ -1010,9 +1039,9 @@ function NavigationWidgetContent() {
           </div>
           <div style={S.infoBox}>
             <div style={S.infoRow}>
-              <span style={S.infoLabel}>Region</span>
-              <span style={{ color: regionStatus.region ? '#7f7' : '#f66' }}>
-                {regionStatus.region ? regionStatus.region.id : 'Not mapped'}
+              <span style={S.infoLabel}>Screen</span>
+              <span style={{ color: screenStatus.screen ? '#7f7' : '#f66' }}>
+                {screenStatus.screen ? screenStatus.screen.id : 'Not mapped'}
               </span>
             </div>
             {detectionResult && (
@@ -1023,30 +1052,34 @@ function NavigationWidgetContent() {
                 </span>
               </div>
             )}
-            {regionStatus.region && (
+            {screenStatus.screen && (
               <div style={S.infoRow}>
                 <span style={S.infoLabel}>Name</span>
-                <span>{regionStatus.region.name}</span>
+                <span>{screenStatus.screen.name}</span>
               </div>
             )}
-            {regionStatus.region && (
+            {screenStatus.screen && (
               <div style={S.infoRow}>
                 <span style={S.infoLabel}>Status</span>
-                <span style={{ color: regionStatus.region.status === 'verified' ? '#4f8' : regionStatus.region.status === 'mapped' ? '#8cf' : '#fc6' }}>
-                  {regionStatus.region.status ?? 'draft'}
-                </span>
+                <StatusBadge status={screenStatus.screen.status} />
               </div>
             )}
-            {regionStatus.issues.length > 0 && (
+            {screenStatus.screen && !screenStatus.screen.variant && detectionResult?.method === 'cave-ambiguous' && progressInfo && (
+              <div style={S.infoRow}>
+                <span style={S.infoLabel}>⚠️</span>
+                <span style={{ color: '#fa0', fontSize: 10 }}>Default entry — no variant for "{progressInfo.label}"</span>
+              </div>
+            )}
+            {screenStatus.issues.length > 0 && (
               <div style={S.infoRow}>
                 <span style={S.infoLabel}>Issues</span>
-                <span style={{ color: '#fc6', fontSize: 10 }}>{regionStatus.issues.join(', ')}</span>
+                <span style={{ color: '#fc6', fontSize: 10 }}>{screenStatus.issues.join(', ')}</span>
               </div>
             )}
-            {regionStatus.corrections.length > 0 && (
+            {screenStatus.corrections.length > 0 && (
               <div style={{ padding: '3px 6px', marginTop: 2, borderRadius: 3, background: 'rgba(255,180,0,0.08)', border: '1px solid rgba(255,180,0,0.2)' }}>
                 <div style={{ fontSize: 9, color: '#fa0', fontWeight: 600, marginBottom: 2 }}>⚠ Suggested Corrections</div>
-                {regionStatus.corrections.map((c, i) => (
+                {screenStatus.corrections.map((c, i) => (
                   <div key={i} style={{ fontSize: 10, color: '#dda', lineHeight: '14px' }}>
                     <span style={{ color: '#8cf' }}>{c.field}</span>: {c.message}
                   </div>
@@ -1059,8 +1092,8 @@ function NavigationWidgetContent() {
             </div>
           </div>
           <div style={{ display: 'flex', gap: 4, marginTop: 4 }}>
-            <button style={S.btn} onClick={() => setRegionEditorOpen(true)}>
-              ✏️ Edit Region
+            <button style={S.btn} onClick={() => setScreenEditorOpen(true)}>
+              ✏️ Edit Screen
             </button>
             <button style={S.btn} onClick={() => setConnEditorOpen(true)}>
               ✏️ Edit Connections
@@ -1069,28 +1102,33 @@ function NavigationWidgetContent() {
       </div>
 
       {/* ═══ 2. PROGRESS / FLAGS ═══ */}
-      {displayedVariant && (
+      {progressInfo && (
         <div style={S.section}>
           <div style={S.sectionTitle}>Progress</div>
           <div style={S.infoBox}>
             <div style={S.infoRow}>
               <span style={S.infoLabel}>Phase</span>
-              <span style={{ color: '#fc6' }}>{displayedVariant.phaseLabel}</span>
+              <span style={{ color: '#fc6' }}>{progressInfo.label}</span>
+              <span style={{ color: '#888', marginLeft: 4, fontSize: 10 }}>0x{progressInfo.tier.toString(16).padStart(2, '0')}</span>
             </div>
-            <div style={S.infoRow}>
-              <span style={S.infoLabel}>Tile Patch</span>
-              {displayedVariant.eventOverlayActive
-                ? <span style={{ color: '#4f8' }}>active</span>
-                : <span style={{ color: '#666' }}>none</span>}
-            </div>
-            <div style={S.infoRow}>
-              <span style={S.infoLabel}>Flags</span>
-              <span style={{ color: '#aac' }}>0x{displayedVariant.screenEventFlags.toString(16).padStart(2, '0')}</span>
-            </div>
-            <div style={S.infoRow}>
-              <span style={S.infoLabel}>NPC Blockers</span>
-              <span style={{ color: dynamicBlockerCount > 0 ? '#fc6' : '#666' }}>{dynamicBlockerCount}</span>
-            </div>
+            {displayedVariant && (
+              <>
+                <div style={S.infoRow}>
+                  <span style={S.infoLabel}>Tile Patch</span>
+                  {displayedVariant.eventOverlayActive
+                    ? <span style={{ color: '#4f8' }}>active</span>
+                    : <span style={{ color: '#666' }}>none</span>}
+                </div>
+                <div style={S.infoRow}>
+                  <span style={S.infoLabel}>Flags</span>
+                  <span style={{ color: '#aac' }}>0x{displayedVariant.screenEventFlags.toString(16).padStart(2, '0')}</span>
+                </div>
+                <div style={S.infoRow}>
+                  <span style={S.infoLabel}>NPC Blockers</span>
+                  <span style={{ color: dynamicBlockerCount > 0 ? '#fc6' : '#666' }}>{dynamicBlockerCount}</span>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
@@ -1189,7 +1227,7 @@ function NavigationWidgetContent() {
             const scrLabel = screenBundle?.isMulti
               ? (screenBundle.screenNames[r.screenIndex] ?? `0x${r.screenIndex.toString(16).toUpperCase()}`)
               : null;
-            const screenRegionId = `${isDarkWorld ? 'dw' : 'lw'}-${r.screenIndex.toString(16).padStart(2, '0')}`;
+            const screenNodeId = `${isDarkWorld ? 'dw' : 'lw'}-${r.screenIndex.toString(16).padStart(2, '0')}`;
             return (
               <div key={`ent-${r.screenIndex}`}>
                 {scrLabel && <div style={{ ...S.meta, color: '#8cf', marginTop: 2 }}>{scrLabel}</div>}
@@ -1199,8 +1237,8 @@ function NavigationWidgetContent() {
                   const isSyntheticIndoor = ent.id >= 1000 && isIndoors;
                   const isIndoorOverworldEntrance = isIndoors && ent.id < 1000;
                   const entType = ent.id >= 1000
-                    ? classifyEntranceFromRegion(roomIndex)
-                    : classifyEntranceFromRegion(ent.roomId);
+                    ? classifyEntranceFromScreen(roomIndex)
+                    : classifyEntranceFromScreen(ent.roomId);
                   let displayName: string;
                   if (isSyntheticIndoor) {
                     // Stair connection — show destination room name
@@ -1211,7 +1249,7 @@ function NavigationWidgetContent() {
                       ? (getScreenDisplayName(ent.roomId))
                       : 'Overworld';
                   } else {
-                    displayName = getConnectionDestinationName(screenRegionId, ent.roomId)
+                    displayName = getConnectionDestinationName(screenNodeId, ent.roomId)
                       ?? `Room 0x${ent.roomId.toString(16).toUpperCase()}`;
                   }
                   const iconData = isSyntheticIndoor ? exitDoorIcon : ENTRANCE_ICONS[entType];
@@ -1241,8 +1279,8 @@ function NavigationWidgetContent() {
         {externalConnections.length > 0 ? (
           externalConnections.map(conn => {
             const connKey = `${conn.edge}-${conn.sourceScreen?.toString(16)}-${conn.targetScreen.toString(16)}-${conn.positions[0]}`;
-            const targetRegionId = `${isDarkWorld ? 'dw' : 'lw'}-${conn.targetScreen.toString(16).padStart(2, '0')}`;
-            const targetName = REGION_BY_ID.get(targetRegionId)?.name ?? `0x${conn.targetScreen.toString(16).toUpperCase()}`;
+            const targetNodeId = `${isDarkWorld ? 'dw' : 'lw'}-${conn.targetScreen.toString(16).padStart(2, '0')}`;
+            const targetName = SCREEN_BY_ID.get(targetNodeId)?.name ?? `0x${conn.targetScreen.toString(16).toUpperCase()}`;
             const fromLabel = screenBundle?.isMulti && conn.sourceScreen != null
               ? ` (${screenBundle.subNames[conn.sourceScreen] ?? ''})`
               : '';
@@ -1299,17 +1337,17 @@ function NavigationWidgetContent() {
       <StatusRow status={locationReview.status} comment={locationReview.comment} onStatus={setLocStatus} onComment={setLocComment} />
 
       {/* ═══ Editor Dialogs ═══ */}
-      <RegionEditorDialog
-        open={regionEditorOpen}
-        onClose={() => setRegionEditorOpen(false)}
-        existingRegion={regionStatus.region}
+      <ScreenEditorDialog
+        open={screenEditorOpen}
+        onClose={() => setScreenEditorOpen(false)}
+        existingScreen={screenStatus.screen}
         gameState={{ roomIndex, palaceIndex, isIndoors, isDarkWorld }}
       />
       <ConnectionEditorDialog
         open={connEditorOpen}
         onClose={() => setConnEditorOpen(false)}
-        regionId={regionStatus.region?.id ?? null}
-        regionMeta={regionStatus.region ? { type: regionStatus.region.type, dungeon: regionStatus.region.type === 'dungeon' ? regionStatus.region.dungeon.name : undefined, isDarkWorld } : null}
+        screenId={screenStatus.screen?.id ?? null}
+        screenMeta={screenStatus.screen ? { type: screenStatus.screen.type, dungeon: screenStatus.screen.type === 'dungeon' ? getDungeonName(screenStatus.screen.dungeon.palaceIndex) : undefined, isDarkWorld } : null}
         existingConnections={connStatus.existingConnections}
         unmatchedConnections={connStatus.unmatched}
       />
@@ -1349,16 +1387,18 @@ const ENTRANCE_ICONS: Record<EntranceType, typeof woodenDoor> = {
   unknown: unknownIcon,
 };
 
-/** Classify entrance type from the room's region tags (for synthetic IDs ≥ 1000) */
-function classifyEntranceFromRegion(roomIndex: number): EntranceType {
-  const region = getRegionLookup().byCaveRoom.get(roomIndex);
-  if (!region) return 'unknown';
-  const tags = region.tags as readonly string[];
-  if (tags.some(t => t === 'type:dungeon')) return 'dungeon';
-  if (tags.some(t => t === 'type:shop')) return 'shop';
-  if (tags.some(t => t === 'type:fairy')) return 'fairy';
-  if (tags.some(t => t === 'type:house')) return 'house';
-  if (tags.some(t => t === 'type:cave')) return 'cave';
+/** Classify entrance type from the room's screen definition (for synthetic IDs ≥ 1000) */
+function classifyEntranceFromScreen(roomIndex: number): EntranceType {
+  const screen = getScreenLookup().byCaveRoom.get(roomIndex);
+  if (!screen) return 'unknown';
+  if (screen.type === 'dungeon') return 'dungeon';
+  if (screen.type === 'interior') {
+    const kind = screen.interior.kind;
+    if (kind === 'shop') return 'shop';
+    if (kind === 'fairy') return 'fairy';
+    if (kind === 'house') return 'house';
+    if (kind === 'cave') return 'cave';
+  }
   return 'door';
 }
 

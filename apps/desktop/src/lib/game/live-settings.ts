@@ -149,7 +149,7 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'hudPauseStyle',
   'hudPauseHighlight',
   // Notification settings (React-only, no WASM restart needed)
-  'showRegionNotification',
+  'showScreenNotification',
   'showTransitionNotification',
   // Haptics (JS-only, no WASM restart needed)
   'haptics',

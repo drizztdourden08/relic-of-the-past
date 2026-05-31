@@ -2,7 +2,7 @@ import type { LogicConfig } from '../../types';
 
 const OPEN_CONFIG: LogicConfig = {
   mode: 'open',
-  startingRegion: 'menu',
+  startingScreen: 'menu',
   startingItems: [],
   saveQuitDestinations: ['light-world', 'sanctuary', 'old-man-cave'],
   moonPearlRequired: true,

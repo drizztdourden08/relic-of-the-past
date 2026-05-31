@@ -11,18 +11,18 @@ import type { SelectOption } from '../../components/primitives';
 import type { ScreenConnection } from '@shared/game/types';
 import type { ConnectionTag } from '@shared/game/data/connections/tags';
 import { CONNECTION_TAG_METADATA } from '@shared/game/data/connections/tags';
-import { serializeConnection, resolveConnectionFile } from '@shared/game/data/region-codegen';
-import type { ConnectionCodegenInput } from '@shared/game/data/region-codegen';
+import { serializeConnection, resolveConnectionFile } from '@shared/game/data/screen-codegen';
+import type { ConnectionCodegenInput } from '@shared/game/data/screen-codegen';
 import type { DetectedConnection } from './useDatasetStatus';
 import './ConnectionEditorDialog.css';
 
 interface ConnectionEditorDialogProps {
   open: boolean;
   onClose: () => void;
-  /** Current region ID */
-  regionId: string | null;
-  /** Region metadata for file resolution */
-  regionMeta: { type: string; dungeon?: string; isDarkWorld: boolean } | null;
+  /** Current screen ID */
+  screenId: string | null;
+  /** Screen metadata for file resolution */
+  screenMeta: { type: string; dungeon?: string; isDarkWorld: boolean } | null;
   /** Existing connections from the dataset */
   existingConnections: ScreenConnection[];
   /** Detected connections from game state not yet in dataset */
@@ -38,7 +38,7 @@ interface EditableConnection {
 }
 
 function ConnectionEditorDialog({
-  open, onClose, regionId, regionMeta,
+  open, onClose, screenId, screenMeta,
   existingConnections, unmatchedConnections,
 }: ConnectionEditorDialogProps) {
   const [step, setStep] = useState(0);
@@ -67,7 +67,7 @@ function ConnectionEditorDialog({
 
   // New connections to add (from detected unmatched)
   const suggestedConnections = useMemo((): EditableConnection[] => {
-    if (!regionId) return [];
+    if (!screenId) return [];
     return unmatchedConnections.map((det, i) => {
       const tags: ConnectionTag[] = [];
       // Infer tags from detection type
@@ -79,7 +79,7 @@ function ConnectionEditorDialog({
         tags.push('transit:walk', 'dir:two-way', 'ctx:internal');
       }
 
-      // Build a suggested region ID for the target
+      // Build a suggested screen ID for the target
       const targetHex = det.targetRoomOrScreen.toString(16).padStart(2, '0');
       const suggestedTo = det.type === 'entrance'
         ? `lw-${targetHex}` // overworld screen
@@ -87,13 +87,13 @@ function ConnectionEditorDialog({
 
       return {
         key: `suggested-${i}`,
-        from: regionId,
+        from: screenId,
         to: suggestedTo,
         tags,
         isNew: true,
       };
     });
-  }, [regionId, unmatchedConnections]);
+  }, [screenId, unmatchedConnections]);
 
   const addSuggested = (suggested: EditableConnection) => {
     setConnections(prev => [...prev, { ...suggested, key: `added-${Date.now()}-${Math.random()}` }]);
@@ -102,7 +102,7 @@ function ConnectionEditorDialog({
   const addBlank = () => {
     setConnections(prev => [...prev, {
       key: `new-${Date.now()}`,
-      from: regionId ?? '',
+      from: screenId ?? '',
       to: '',
       tags: ['transit:door', 'dir:two-way'],
       isNew: true,
@@ -135,21 +135,21 @@ function ConnectionEditorDialog({
   );
 
   const targetFile = useMemo(() => {
-    if (!regionMeta || newConnections.length === 0) return null;
+    if (!screenMeta || newConnections.length === 0) return null;
     return resolveConnectionFile(
       newConnections[0],
-      regionMeta.type,
-      regionMeta.dungeon,
-      regionMeta.isDarkWorld ? 'dark' : 'light',
+      screenMeta.type,
+      screenMeta.dungeon,
+      screenMeta.isDarkWorld ? 'dark' : 'light',
     );
-  }, [newConnections, regionMeta]);
+  }, [newConnections, screenMeta]);
 
   const handleWrite = async () => {
     if (!targetFile || !generatedCode) return;
     setWriting(true);
     setWriteError(null);
     try {
-      const result = await window.api.regionEditor.writeConnections({
+      const result = await window.api.screenEditor.writeConnections({
         filePath: targetFile.relativePath,
         code: generatedCode,
       });
@@ -172,7 +172,7 @@ function ConnectionEditorDialog({
       <div className="conn-editor" onClick={e => e.stopPropagation()}>
         <div className="conn-editor__header">
           <h3>Edit Connections</h3>
-          {regionId && <code className="conn-editor__region-id">{regionId}</code>}
+          {screenId && <code className="conn-editor__screen-id">{screenId}</code>}
         </div>
 
         {/* Step indicator */}
@@ -189,7 +189,7 @@ function ConnectionEditorDialog({
               <div key={conn.key} className={`conn-editor__item ${conn.isNew ? 'conn-editor__item--new' : ''}`}>
                 <div className="conn-editor__item-header">
                   <span className="conn-editor__item-dir">
-                    {conn.from === regionId ? '→' : '←'}
+                    {conn.from === screenId ? '→' : '←'}
                   </span>
                   {editingIdx === idx ? (
                     <div className="conn-editor__item-edit">

@@ -38,16 +38,16 @@ function evaluateRequirement(
   return false;
 }
 
-// ─── Region Reachability (BFS) ───
+// ─── Screen Reachability (BFS) ───
 
 /**
- * Starting from 'Menu', BFS through the region graph following connections
+ * Starting from 'Menu', BFS through the screen graph following connections
  * whose entrance rules are satisfied by the current inventory.
  */
-function getReachableRegions(
+function getReachableScreens(
   inventory: Set<string>,
   connections: ScreenConnection[],
-  regionRules: Record<string, Requirement>,
+  screenRules: Record<string, Requirement>,
 ): Set<string> {
   const reachable = new Set<string>();
   const queue: string[] = ['menu'];
@@ -72,7 +72,7 @@ function getReachableRegions(
     for (const to of neighbors) {
       if (reachable.has(to)) continue;
 
-      const rule = regionRules[`${current}|${to}`];
+      const rule = screenRules[`${current}|${to}`];
       if (rule && !evaluateRequirement(rule, inventory)) continue;
 
       reachable.add(to);
@@ -80,16 +80,16 @@ function getReachableRegions(
     }
   }
 
-  // Fixed-point: re-traverse until no new regions found.
+  // Fixed-point: re-traverse until no new screens found.
   let changed = true;
   while (changed) {
     changed = false;
-    for (const region of reachable) {
-      const neighbors = adj.get(region);
+    for (const screenId of reachable) {
+      const neighbors = adj.get(screenId);
       if (!neighbors) continue;
       for (const to of neighbors) {
         if (reachable.has(to)) continue;
-        const rule = regionRules[`${region}|${to}`];
+        const rule = screenRules[`${screenId}|${to}`];
         if (rule && !evaluateRequirement(rule, inventory)) continue;
         reachable.add(to);
         queue.push(to);
@@ -106,17 +106,17 @@ function getReachableRegions(
 type CheckStatus = 'completed' | 'reachable' | 'blocked';
 
 /**
- * Get all accessible checks: those in reachable regions whose local rules are satisfied.
+ * Get all accessible checks: those in reachable screens whose local rules are satisfied.
  */
 function getAccessibleChecks(
   inventory: Set<string>,
   completedChecks: Set<string>,
   checks: CheckDefinition[],
   connections: ScreenConnection[],
-  regionRules: Record<string, Requirement>,
+  screenRules: Record<string, Requirement>,
   checkRules: Record<string, Requirement>,
 ): CheckDefinition[] {
-  const reachable = getReachableRegions(inventory, connections, regionRules);
+  const reachable = getReachableScreens(inventory, connections, screenRules);
 
   return checks.filter(check => {
     if (completedChecks.has(check.id)) return false;
@@ -138,7 +138,7 @@ function getCheckStatus(
   completedChecks: Set<string>,
   checks: CheckDefinition[],
   connections: ScreenConnection[],
-  regionRules: Record<string, Requirement>,
+  screenRules: Record<string, Requirement>,
   checkRules: Record<string, Requirement>,
 ): CheckStatus {
   if (completedChecks.has(checkId)) return 'completed';
@@ -146,7 +146,7 @@ function getCheckStatus(
   const check = checks.find(c => c.id === checkId);
   if (!check) return 'blocked';
 
-  const reachable = getReachableRegions(inventory, connections, regionRules);
+  const reachable = getReachableScreens(inventory, connections, screenRules);
   if (!reachable.has(check.screen)) return 'blocked';
 
   const localRule = checkRules[checkId];
@@ -209,10 +209,10 @@ function computeTrackerSnapshot(
   completedChecks: Set<string>,
   checks: CheckDefinition[],
   connections: ScreenConnection[],
-  regionRules: Record<string, Requirement>,
+  screenRules: Record<string, Requirement>,
   checkRules: Record<string, Requirement>,
 ): Map<string, CheckStatus> {
-  const reachable = getReachableRegions(inventory, connections, regionRules);
+  const reachable = getReachableScreens(inventory, connections, screenRules);
   const result = new Map<string, CheckStatus>();
 
   for (const check of checks) {
@@ -244,6 +244,6 @@ export {
   getAccessibleChecks,
   getBlockingItems,
   getCheckStatus,
-  getReachableRegions
+  getReachableScreens
 };
 export type { CheckStatus };

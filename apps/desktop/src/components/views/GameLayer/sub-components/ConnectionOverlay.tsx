@@ -949,8 +949,10 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
         }
       }
 
-      // Draw live sprite 16x16 footprints for navigation-relevant sprites only.
+      // Draw live sprite blocker footprints for navigation-relevant sprites only.
       // Only show sprites that affect pathfinding (blocker/guard types).
+      // Actual blocked area is 4×4 tiles (32×32 px) centered on sprite origin
+      // matching the 3×3 base grid + 2×2 expansion used in flood fill.
       const liveSprites = wasmGetLiveSprites();
       if (liveSprites.length > 0) {
         ctx.globalAlpha = 1;
@@ -959,12 +961,12 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
         for (const s of liveSprites) {
           // Only highlight navigation blockers (guards/barriers + uncle)
           if (s.type !== 0x3f && s.type !== 0x40 && !(s.type === 0x73 && s.e === 0)) continue;
-          const worldX = s.x;
-          const worldY = s.y;
+          const worldX = s.x - 8;
+          const worldY = s.y - 8;
           const sx = (worldX - viewLeft) * scaleX;
           const sy = (worldY - viewTop) * scaleY;
-          const sw = 16 * scaleX;
-          const sh = 16 * scaleY;
+          const sw = 32 * scaleX;
+          const sh = 32 * scaleY;
 
           if (sx + sw < 0 || sy + sh < 0 || sx > width || sy > height) continue;
           ctx.strokeRect(sx, sy, sw, sh);

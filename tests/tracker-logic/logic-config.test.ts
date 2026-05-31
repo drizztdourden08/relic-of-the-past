@@ -5,7 +5,7 @@
  * while open mode allows free roaming as before.
  */
 import { describe, it, expect } from 'vitest';
-import { getReachableRegions, getAccessibleChecks } from '../../shared/game/logic/eval';
+import { getReachableScreens, getAccessibleChecks } from '../../shared/game/logic/eval';
 import { resolveRules, VANILLA_CONFIG, OPEN_CONFIG } from '../../shared/game/logic/presets';
 import { ALL_CHECKS } from '../../shared/game/checks';
 
@@ -15,7 +15,7 @@ describe('LogicConfig — Vanilla Mode', () => {
   const noCompletedChecks = new Set<string>();
 
   it('should reach only menu before Link Wakes Up', () => {
-    const reachable = getReachableRegions(emptyInventory, resolved.connections, resolved.regionRules);
+    const reachable = getReachableScreens(emptyInventory, resolved.connections, resolved.screenRules);
 
     // Only menu is reachable — Vanilla Intro is gated behind 'Link Wakes Up'
     expect(reachable.has('menu')).toBe(true);
@@ -29,21 +29,21 @@ describe('LogicConfig — Vanilla Mode', () => {
       noCompletedChecks,
       ALL_CHECKS,
       resolved.connections,
-      resolved.regionRules,
+      resolved.screenRules,
       resolved.checkRules,
     );
 
     console.log(`Vanilla true start checks: ${accessible.length}`);
     console.log('Checks:', accessible.map(c => c.id).sort());
 
-    // Only the 'Link Wakes Up' event check is in the menu region
+    // Only the 'Link Wakes Up' event check is in the menu screen
     expect(accessible.length).toBe(1);
     expect(accessible[0].id).toBe('event-link-wakes-up');
   });
 
   it('should reach Links House + rain overworld + HC courtyard after Link Wakes Up (but NOT castle interior)', () => {
     const inventory = new Set([...emptyInventory, 'Link Wakes Up']);
-    const reachable = getReachableRegions(inventory, resolved.connections, resolved.regionRules);
+    const reachable = getReachableScreens(inventory, resolved.connections, resolved.screenRules);
 
     // Vanilla intro: Menu → Link's House → Rain Overworld → Secret Entrance + Courtyard
     expect(reachable.has('menu')).toBe(true);
@@ -70,7 +70,7 @@ describe('LogicConfig — Vanilla Mode', () => {
       noCompletedChecks,
       ALL_CHECKS,
       resolved.connections,
-      resolved.regionRules,
+      resolved.screenRules,
       resolved.checkRules,
     );
 
@@ -103,7 +103,7 @@ describe('LogicConfig — Vanilla Mode', () => {
 
   it('should open castle interior after Zelda Rescue Started (uncle done)', () => {
     const inventory = new Set([...emptyInventory, 'Link Wakes Up', 'Zelda Rescue Started']);
-    const reachable = getReachableRegions(inventory, resolved.connections, resolved.regionRules);
+    const reachable = getReachableScreens(inventory, resolved.connections, resolved.screenRules);
 
     // Castle interior now accessible
     expect(reachable.has('hyrule-castle')).toBe(true);
@@ -117,7 +117,7 @@ describe('LogicConfig — Vanilla Mode', () => {
 
   it('should NOT reach Death Mountain without progression', () => {
     const inventory = new Set([...emptyInventory, 'Link Wakes Up']);
-    const reachable = getReachableRegions(inventory, resolved.connections, resolved.regionRules);
+    const reachable = getReachableScreens(inventory, resolved.connections, resolved.screenRules);
 
     expect(reachable.has('death-mountain')).toBe(false);
     expect(reachable.has('death-mountain-top')).toBe(false);
@@ -126,7 +126,7 @@ describe('LogicConfig — Vanilla Mode', () => {
 
   it('should unlock full Light World after Rescued Zelda', () => {
     const inventory = new Set([...emptyInventory, 'Link Wakes Up', 'Rescued Zelda']);
-    const reachable = getReachableRegions(inventory, resolved.connections, resolved.regionRules);
+    const reachable = getReachableScreens(inventory, resolved.connections, resolved.screenRules);
 
     // Full Light World now accessible (Links House Exit ungated)
     expect(reachable.has('light-world')).toBe(true);
@@ -139,14 +139,14 @@ describe('LogicConfig — Vanilla Mode', () => {
 
   it('should reach Old Man Cave after rescuing Old Man', () => {
     const inventory = new Set([...emptyInventory, 'Link Wakes Up', 'Rescued Zelda', 'Rescued Old Man']);
-    const reachable = getReachableRegions(inventory, resolved.connections, resolved.regionRules);
+    const reachable = getReachableScreens(inventory, resolved.connections, resolved.screenRules);
 
     expect(reachable.has('old-man-cave')).toBe(true);
   });
 
   it('should reach Death Mountain with Power Glove after Rescued Zelda', () => {
     const inventory = new Set([...emptyInventory, 'Link Wakes Up', 'Rescued Zelda', 'Power Glove']);
-    const reachable = getReachableRegions(inventory, resolved.connections, resolved.regionRules);
+    const reachable = getReachableScreens(inventory, resolved.connections, resolved.screenRules);
 
     expect(reachable.has('death-mountain')).toBe(true);
   });
@@ -158,7 +158,7 @@ describe('LogicConfig — Open Mode', () => {
   const noCompletedChecks = new Set<string>();
 
   it('should reach Sanctuary and Old Man Cave freely via S&Q', () => {
-    const reachable = getReachableRegions(emptyInventory, resolved.connections, resolved.regionRules);
+    const reachable = getReachableScreens(emptyInventory, resolved.connections, resolved.screenRules);
 
     expect(reachable.has('light-world')).toBe(true);
     expect(reachable.has('sanctuary')).toBe(true);
@@ -166,7 +166,7 @@ describe('LogicConfig — Open Mode', () => {
   });
 
   it('should reach Death Mountain via Old Man S&Q chain', () => {
-    const reachable = getReachableRegions(emptyInventory, resolved.connections, resolved.regionRules);
+    const reachable = getReachableScreens(emptyInventory, resolved.connections, resolved.screenRules);
 
     expect(reachable.has('death-mountain')).toBe(true);
     expect(reachable.has('death-mountain-top')).toBe(true);
@@ -178,7 +178,7 @@ describe('LogicConfig — Open Mode', () => {
       noCompletedChecks,
       ALL_CHECKS,
       resolved.connections,
-      resolved.regionRules,
+      resolved.screenRules,
       resolved.checkRules,
     );
 
@@ -192,7 +192,7 @@ describe('LogicConfig — Open Mode', () => {
   it('should allow Castle Tower with Cape OR Sword in open mode', () => {
     // With Cape (no sword)
     const capeInventory = new Set([...emptyInventory, 'Cape']);
-    const reachable = getReachableRegions(capeInventory, resolved.connections, resolved.regionRules);
+    const reachable = getReachableScreens(capeInventory, resolved.connections, resolved.screenRules);
     expect(reachable.has('agahnims-tower')).toBe(true);
   });
 });
@@ -204,12 +204,12 @@ describe('LogicConfig — Custom Medallion Requirements', () => {
 
     // Ether should NOT work for Misery Mire
     const etherInventory = new Set(['Moon Pearl', 'Titans Mitts', 'Activated Flute', 'Fighter Sword', 'Ether']);
-    const reachable1 = getReachableRegions(etherInventory, resolved.connections, resolved.regionRules);
+    const reachable1 = getReachableScreens(etherInventory, resolved.connections, resolved.screenRules);
     expect(reachable1.has('misery-mire-entrance')).toBe(false);
 
     // Bombos SHOULD work for Misery Mire
     const bombosInventory = new Set(['Moon Pearl', 'Titans Mitts', 'Activated Flute', 'Fighter Sword', 'Bombos']);
-    const reachable2 = getReachableRegions(bombosInventory, resolved.connections, resolved.regionRules);
+    const reachable2 = getReachableScreens(bombosInventory, resolved.connections, resolved.screenRules);
     expect(reachable2.has('misery-mire-entrance')).toBe(true);
   });
 
@@ -222,7 +222,7 @@ describe('LogicConfig — Custom Medallion Requirements', () => {
       'Moon Pearl', 'Power Glove',
       'Crystal 1', 'Crystal 2', 'Crystal 3', 'Crystal 4',
     ]);
-    const reachable = getReachableRegions(inventory, resolved.connections, resolved.regionRules);
+    const reachable = getReachableScreens(inventory, resolved.connections, resolved.screenRules);
     expect(reachable.has('ganons-tower-entrance')).toBe(true);
   });
 });
@@ -233,9 +233,9 @@ describe('LogicConfig — No Logic Mode', () => {
     const resolved = resolveRules(config);
     const emptyInventory = new Set<string>();
 
-    const reachable = getReachableRegions(emptyInventory, resolved.connections, resolved.regionRules);
+    const reachable = getReachableScreens(emptyInventory, resolved.connections, resolved.screenRules);
 
-    // Every region should be reachable (no rules)
+    // Every screen should be reachable (no rules)
     expect(reachable.has('dark-death-mountain-top')).toBe(true);
     expect(reachable.has('ganons-tower-entrance')).toBe(true);
     expect(reachable.has('misery-mire-entrance')).toBe(true);

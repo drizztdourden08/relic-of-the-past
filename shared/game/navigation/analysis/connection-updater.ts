@@ -97,15 +97,15 @@ export interface ConnectionUpdaterInput {
   overlapByKey: Map<string, number[]>;
   /** Resolved entrance points from entrance-resolver */
   resolvedEntrances: ResolvedEntrance[];
-  /** Region screen index lookup: Map<regionId, screenIndex> */
-  regionScreenIndex: Map<string, number>;
+  /** Screen index lookup: Map<screenId, screenIndex> */
+  screenIndexMap: Map<string, number>;
 }
 
 /**
  * Build connection nav updates from analysis results.
  */
 export function buildConnectionNavUpdates(input: ConnectionUpdaterInput): ConnectionNavUpdate[] {
-  const { connections, borderBundles, overlapByKey, resolvedEntrances, regionScreenIndex } = input;
+  const { connections, borderBundles, overlapByKey, resolvedEntrances, screenIndexMap } = input;
   const updates: ConnectionNavUpdate[] = [];
 
   // Index entrances by screen+id for fast lookup
@@ -127,8 +127,8 @@ export function buildConnectionNavUpdates(input: ConnectionUpdaterInput): Connec
     if (transitType === 'walk') {
       // Walk connections use border bundles and overlap
       overlapTiles = overlapByKey.get(connKey);
-      const fromScreen = regionScreenIndex.get(conn.from);
-      const toScreen = regionScreenIndex.get(conn.to);
+      const fromScreen = screenIndexMap.get(conn.from);
+      const toScreen = screenIndexMap.get(conn.to);
 
       if (fromScreen !== undefined) {
         const bundles = borderBundles.get(fromScreen);

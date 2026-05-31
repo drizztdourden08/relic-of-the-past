@@ -204,8 +204,8 @@ export interface Route {
 // ─── Hub Navigation ──────────────────────────────────────────────────────────
 
 export interface NavigationStep {
-  regionId: string;
-  regionName: string;
+  screenId: string;
+  screenName: string;
 }
 
 export interface NavigationResult {

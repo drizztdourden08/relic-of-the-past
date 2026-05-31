@@ -1,23 +1,23 @@
 /**
- * Hooks for computing region/connection data completeness badges.
+ * Hooks for computing screen/connection data completeness badges.
  * Compares live game state against the static dataset.
  */
 
 import { useMemo } from 'react';
-import { getRegionLookup } from '@shared/game/data/regions';
-import type { RegionMatchResult } from '@shared/game/data/regions';
+import { getScreenLookup } from '@shared/game/data/screens';
+import type { ScreenMatchResult } from '@shared/game/data/screens';
 import { ALL_CONNECTIONS } from '@shared/game/data/connections';
 import type { ScreenDefinition, ScreenConnection } from '@shared/game/types';
 import type { RoomStairInfo } from '../../lib/game';
-import { getPalaceName } from '@shared/game/data/regions/game-values';
+import { getPalaceName } from '@shared/game/data/screens/game-values';
 
-// ─── Region Status ───
+// ─── Screen Status ───
 
-type RegionStatus = 'mapped' | 'incomplete' | 'missing';
+type ScreenDataStatus = 'mapped' | 'incomplete' | 'missing';
 
-interface RegionStatusResult {
-  status: RegionStatus;
-  region: ScreenDefinition | null;
+interface ScreenDataStatusResult {
+  status: ScreenDataStatus;
+  screen: ScreenDefinition | null;
   issues: string[];
   /** Data correction suggestions (shown in editor wizard) */
   corrections: DataCorrection[];
@@ -29,16 +29,16 @@ interface DataCorrection {
   suggestedValue: unknown;
 }
 
-function useRegionStatus(
-  matchResult: RegionMatchResult | null,
+function useScreenDataStatus(
+  matchResult: ScreenMatchResult | null,
   isIndoors: boolean,
-): RegionStatusResult {
+): ScreenDataStatusResult {
   return useMemo(() => {
     if (!matchResult) {
-      return { status: 'missing', region: null, issues: ['No region definition for this room'], corrections: [] };
+      return { status: 'missing', screen: null, issues: ['No screen definition for this room'], corrections: [] };
     }
 
-    const { region, method, palaceMismatch } = matchResult;
+    const { screen, method, palaceMismatch } = matchResult;
     const issues: string[] = [];
     const corrections: DataCorrection[] = [];
 
@@ -65,25 +65,16 @@ function useRegionStatus(
     }
 
     // Check required fields
-    if (!region.location) issues.push('Missing location');
-    if (isIndoors && region.roomIndex == null) issues.push('Missing roomIndex');
-    if (isIndoors && region.type === 'dungeon') {
-      if (!region.dungeon.name) issues.push('Missing dungeon name');
-      if (region.dungeon.floor == null) issues.push('Missing floor');
-      if (region.dungeon.palaceIndex == null && method === 'exact') {
-        // Matched via DUNGEON_PALACE_VALUES derivation — suggest explicit palaceIndex
-        corrections.push({
-          field: 'dungeon.palaceIndex',
-          message: 'Add explicit palaceIndex for reliable detection',
-          suggestedValue: null, // widget will fill from runtime
-        });
-      }
+    if (!screen.location) issues.push('Missing location');
+    if (isIndoors && screen.roomIndex == null) issues.push('Missing roomIndex');
+    if (isIndoors && screen.type === 'dungeon') {
+      if (screen.dungeon.floor == null) issues.push('Missing floor');
     }
-    if (region.tags.length === 0) issues.push('No tags');
+    if (screen.tags.length === 0) issues.push('No tags');
 
     return {
       status: issues.length > 0 ? 'incomplete' : 'mapped',
-      region,
+      screen,
       issues,
       corrections,
     };
@@ -109,13 +100,13 @@ interface ConnectionStatusResult {
 }
 
 function useConnectionStatus(
-  regionId: string | null,
+  screenId: string | null,
   detectedEntranceScreens: number[],
   detectedStairs: RoomStairInfo[],
   exitScreen: number | null,
 ): ConnectionStatusResult {
   return useMemo(() => {
-    if (!regionId) {
+    if (!screenId) {
       return {
         status: 'none',
         missingCount: 0,
@@ -125,9 +116,9 @@ function useConnectionStatus(
       };
     }
 
-    // Find all existing connections involving this region
+    // Find all existing connections involving this screen
     const existing = ALL_CONNECTIONS.filter(
-      c => c.from === regionId || c.to === regionId,
+      c => c.from === screenId || c.to === screenId,
     );
 
     // Build detected connections from game state
@@ -135,11 +126,11 @@ function useConnectionStatus(
 
     // Entrances: each entrance that leads to this room from an overworld screen
     for (const screen of detectedEntranceScreens) {
-      const owRegion = getRegionLookup().byOverworldScreen.get(screen);
+      const owScreen = getScreenLookup().byOverworldScreen.get(screen);
       detected.push({
         type: 'entrance',
         targetRoomOrScreen: screen,
-        label: owRegion?.name ?? `OW 0x${screen.toString(16).toUpperCase()}`,
+        label: owScreen?.name ?? `OW 0x${screen.toString(16).toUpperCase()}`,
       });
     }
 
@@ -155,27 +146,27 @@ function useConnectionStatus(
 
     // Exit screen
     if (exitScreen != null) {
-      const owRegion = getRegionLookup().byOverworldScreen.get(exitScreen);
+      const owScreen = getScreenLookup().byOverworldScreen.get(exitScreen);
       detected.push({
         type: 'entrance',
         targetRoomOrScreen: exitScreen,
-        label: `Exit → ${owRegion?.name ?? `OW 0x${exitScreen.toString(16).toUpperCase()}`}`,
+        label: `Exit → ${owScreen?.name ?? `OW 0x${exitScreen.toString(16).toUpperCase()}`}`,
       });
     }
 
     // Compare: for each detected connection, check if a matching one exists
     const unmatched: DetectedConnection[] = [];
-    const lookup = getRegionLookup();
+    const lookup = getScreenLookup();
 
     for (const det of detected) {
       let found = false;
       for (const conn of existing) {
-        const otherRegionId = conn.from === regionId ? conn.to : conn.from;
-        const otherRegion = lookup.byOverworldScreen.get(det.targetRoomOrScreen)
+        const otherScreenId = conn.from === screenId ? conn.to : conn.from;
+        const otherScreen = lookup.byOverworldScreen.get(det.targetRoomOrScreen)
           ?? lookup.byCaveRoom.get(det.targetRoomOrScreen)
           ?? [...lookup.byDungeonRoom.values()].find(r => r.roomIndex === det.targetRoomOrScreen);
 
-        if (otherRegion && otherRegionId === otherRegion.id) {
+        if (otherScreen && otherScreenId === otherScreen.id) {
           found = true;
           break;
         }
@@ -190,8 +181,8 @@ function useConnectionStatus(
     else status = 'partial';
 
     return { status, missingCount, existingConnections: existing, detectedConnections: detected, unmatched };
-  }, [regionId, detectedEntranceScreens, detectedStairs, exitScreen]);
+  }, [screenId, detectedEntranceScreens, detectedStairs, exitScreen]);
 }
 
-export { useRegionStatus, useConnectionStatus };
-export type { RegionStatus, RegionStatusResult, ConnectionStatus, ConnectionStatusResult, DetectedConnection, DataCorrection };
+export { useScreenDataStatus, useConnectionStatus };
+export type { ScreenDataStatus, ScreenDataStatusResult, ConnectionStatus, ConnectionStatusResult, DetectedConnection, DataCorrection };

@@ -88,7 +88,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   saveHoldDuration: 2,
 
   // Notifications
-  showRegionNotification: true,
+  showScreenNotification: true,
   showTransitionNotification: true,
 
   // Haptics

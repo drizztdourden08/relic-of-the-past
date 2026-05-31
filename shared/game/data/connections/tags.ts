@@ -1,7 +1,7 @@
 /**
  * Connection Tag System — Categorizes how regions are connected.
  *
- * Tags use the same namespaced "namespace:value" format as region tags.
+ * Tags use the same namespaced "namespace:value" format as screen tags.
  */
 
 // ─── Tag Namespace Definitions ───

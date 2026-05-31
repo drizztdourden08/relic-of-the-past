@@ -1,7 +1,7 @@
 import type { ScreenConnection, ScreenDefinition } from '../types';
 import type { NavigationStep, NavigationResult, PathfindingOptions } from './types';
 import { ALL_CONNECTIONS, DUNGEON_CONNECTIONS } from '../data/connections';
-import { REGION_BY_ID } from '../data/regions';
+import { SCREEN_BY_ID } from '../data/screens';
 
 type AdjacencyList = Map<string, string[]>;
 
@@ -57,9 +57,9 @@ const SCREEN_PATTERN = /^(lw|dw)-[0-9a-f]{2}$/;
 
 function isLogicalArea(id: string): boolean {
   if (SCREEN_PATTERN.test(id)) return false;
-  const region = REGION_BY_ID.get(id);
-  if (!region) return false;
-  return region.type === 'overworld';
+  const screen = SCREEN_BY_ID.get(id);
+  if (!screen) return false;
+  return screen.type === 'overworld';
 }
 
 /**
@@ -106,7 +106,7 @@ function buildPreciseAdjacencyList(connections: ScreenConnection[], options: Pat
     }
   }
 
-  for (const [id] of REGION_BY_ID) {
+  for (const [id] of SCREEN_BY_ID) {
     if (!logicalAreas.has(id) && !adj.has(id)) adj.set(id, []);
   }
 
@@ -123,8 +123,8 @@ function bfsPath(adj: AdjacencyList, sourceId: string, targetId: string): Naviga
   if (!adj.has(targetId)) return { found: false, path: [], distance: -1, visited: 0, totalNodes, totalEdges };
 
   if (sourceId === targetId) {
-    const region = REGION_BY_ID.get(sourceId);
-    return { found: true, path: [{ regionId: sourceId, regionName: region?.name ?? sourceId }], distance: 0, visited: 1, totalNodes, totalEdges };
+    const screen = SCREEN_BY_ID.get(sourceId);
+    return { found: true, path: [{ screenId: sourceId, screenName: screen?.name ?? sourceId }], distance: 0, visited: 1, totalNodes, totalEdges };
   }
 
   const visited = new Set<string>();
@@ -146,12 +146,12 @@ function bfsPath(adj: AdjacencyList, sourceId: string, targetId: string): Naviga
         const path: NavigationStep[] = [];
         let node = targetId;
         while (node !== sourceId) {
-          const region = REGION_BY_ID.get(node);
-          path.unshift({ regionId: node, regionName: region?.name ?? node });
+          const screen = SCREEN_BY_ID.get(node);
+          path.unshift({ screenId: node, screenName: screen?.name ?? node });
           node = parent.get(node)!;
         }
-        const sourceRegion = REGION_BY_ID.get(sourceId);
-        path.unshift({ regionId: sourceId, regionName: sourceRegion?.name ?? sourceId });
+        const sourceScreen = SCREEN_BY_ID.get(sourceId);
+        path.unshift({ screenId: sourceId, screenName: sourceScreen?.name ?? sourceId });
         return { found: true, path, distance: path.length - 1, visited: visited.size, totalNodes, totalEdges };
       }
 
@@ -166,7 +166,7 @@ function bfsPath(adj: AdjacencyList, sourceId: string, targetId: string): Naviga
 
 /**
  * Hub-level BFS shortest path (allows logical area shortcuts).
- * Entry point #4: region-graph navigation.
+ * Entry point #4: screen-graph navigation.
  */
 export function findShortestPath(sourceId: string, targetId: string, options: PathfindingOptions = {}): NavigationResult {
   const adj = getFullAdjacencyList(options);
@@ -182,8 +182,8 @@ export function findPrecisePath(sourceId: string, targetId: string, options: Pat
   return bfsPath(adj, sourceId, targetId);
 }
 
-/** Find all regions unreachable from source (disconnected nodes). */
-export function findUnreachableRegions(sourceId: string = 'menu'): { id: string; name: string; type: string }[] {
+/** Find all screens unreachable from source (disconnected nodes). */
+export function findUnreachableScreens(sourceId: string = 'menu'): { id: string; name: string; type: string }[] {
   const adj = getFullAdjacencyList();
 
   const visited = new Set<string>();
@@ -200,8 +200,8 @@ export function findUnreachableRegions(sourceId: string = 'menu'): { id: string;
   }
 
   const unreachable: { id: string; name: string; type: string }[] = [];
-  for (const [id, region] of REGION_BY_ID) {
-    if (!visited.has(id)) unreachable.push({ id, name: region.name, type: region.type });
+  for (const [id, screen] of SCREEN_BY_ID) {
+    if (!visited.has(id)) unreachable.push({ id, name: screen.name, type: screen.type });
   }
   return unreachable;
 }
@@ -227,11 +227,11 @@ export function getGraphStats() {
   }
 
   return {
-    totalRegions: REGION_BY_ID.size,
+    totalScreens: SCREEN_BY_ID.size,
     totalNodesInGraph: adj.size,
     totalConnections: allConnections.length,
     deadEnds,
     entryOnlyNodes: entryOnly,
-    orphanedRegions: [...REGION_BY_ID.keys()].filter(id => !adj.has(id)),
+    orphanedScreens: [...SCREEN_BY_ID.keys()].filter(id => !adj.has(id)),
   };
 }

@@ -64,10 +64,10 @@ export type ConnectionTransitType =
   | 'warp_tile'       // Dungeon warp pad
   ;
 
-// ─── Region Nav Data (goes into RegionDefinition.nav) ───────────────────────
+// ─── Screen Nav Data (goes into ScreenDefinition.nav) ───────────────────────
 
 /**
- * Navigation data for a single screen/region.
+ * Navigation data for a single screen.
  * Populated by the analysis script, read by the pathfinder.
  */
 export interface RegionNavData {

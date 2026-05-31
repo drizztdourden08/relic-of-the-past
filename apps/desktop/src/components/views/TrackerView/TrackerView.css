@@ -781,7 +781,7 @@
    LEGACY (kept for TrackerRegionSection if still referenced)
    ═══════════════════════════════════════════════════════════════ */
 
-.tracker-region__header {
+.tracker-area__header {
   display: flex;
   align-items: center;
   width: 100%;
@@ -795,10 +795,10 @@
   text-align: left;
 }
 
-.tracker-region__header:hover { background: rgba(255, 255, 255, 0.04); }
-.tracker-region__chevron { width: 16px; flex-shrink: 0; font-size: 10px; color: var(--color-text-secondary, #999); }
-.tracker-region__name { flex: 1; font-weight: var(--weight-semi, 600); }
-.tracker-region__counts { font-size: var(--text-xs, 11px); color: var(--color-text-secondary, #999); }
-.tracker-region__count--completed { color: #4caf50; }
-.tracker-region__count--reachable { color: #ffc107; }
-.tracker-region__checks { padding-left: var(--space-md, 12px); }
+.tracker-area__header:hover { background: rgba(255, 255, 255, 0.04); }
+.tracker-area__chevron { width: 16px; flex-shrink: 0; font-size: 10px; color: var(--color-text-secondary, #999); }
+.tracker-area__name { flex: 1; font-weight: var(--weight-semi, 600); }
+.tracker-area__counts { font-size: var(--text-xs, 11px); color: var(--color-text-secondary, #999); }
+.tracker-area__count--completed { color: #4caf50; }
+.tracker-area__count--reachable { color: #ffc107; }
+.tracker-area__checks { padding-left: var(--space-md, 12px); }

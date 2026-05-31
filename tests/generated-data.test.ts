@@ -1,14 +1,14 @@
 /**
- * Validation test for generated dungeon region + connection data.
+ * Validation test for generated dungeon screen + connection data.
  *
  * Verifies:
  * - All expected dungeons are present
  * - Room counts match expected ranges (from kDungMap_FloorLayout + supplementals)
  * - No duplicate room IDs across dungeons
  * - No duplicate inGameIndex values across dungeons
- * - Every connection references a valid region ID
+ * - Every connection references a valid screen ID
  * - Every room has required fields (id, name, type, inGameIndex, dungeon, tags)
- * - Entrance/exit transitions reference valid region IDs
+ * - Entrance/exit transitions reference valid screen IDs
  * - Total room count matches expected ~193
  */
 import { describe, it, expect } from 'vitest';
@@ -16,18 +16,18 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 const GENERATED_DIR = join(import.meta.dirname, '..', 'temp-scripts', 'generated');
-const REGIONS_DIR = join(GENERATED_DIR, 'regions');
+const SCREENS_DIR = join(GENERATED_DIR, 'regions');
 const CONNECTIONS_DIR = join(GENERATED_DIR, 'connections');
 
 // Load generated data
-const regionSummary = JSON.parse(readFileSync(join(REGIONS_DIR, '_summary.json'), 'utf8'));
+const screenSummary = JSON.parse(readFileSync(join(SCREENS_DIR, '_summary.json'), 'utf8'));
 const connectionSummary = JSON.parse(readFileSync(join(CONNECTIONS_DIR, '_summary.json'), 'utf8'));
 const transitions = JSON.parse(readFileSync(join(CONNECTIONS_DIR, '_transitions.json'), 'utf8'));
 
-// Load individual dungeon region files
-const dungeonRegions: Record<string, any> = {};
-for (const dg of regionSummary.dungeons) {
-  dungeonRegions[dg.prefix] = JSON.parse(readFileSync(join(REGIONS_DIR, `${dg.prefix}.json`), 'utf8'));
+// Load individual dungeon screen files
+const dungeonScreens: Record<string, any> = {};
+for (const dg of screenSummary.dungeons) {
+  dungeonScreens[dg.prefix] = JSON.parse(readFileSync(join(SCREENS_DIR, `${dg.prefix}.json`), 'utf8'));
 }
 
 // Load individual dungeon connection files
@@ -59,9 +59,9 @@ const EXPECTED_ROOM_COUNTS: Record<string, { min: number; max: number }> = {
 
 // ─── Tests ───
 
-describe('Generated Regions', () => {
+describe('Generated Screens', () => {
   it('should have all 13 expected dungeons', () => {
-    const generatedPrefixes = regionSummary.dungeons.map((d: any) => d.prefix);
+    const generatedPrefixes = screenSummary.dungeons.map((d: any) => d.prefix);
     for (const expected of EXPECTED_DUNGEONS) {
       expect(generatedPrefixes).toContain(expected);
     }
@@ -69,7 +69,7 @@ describe('Generated Regions', () => {
   });
 
   it('should have expected room counts per dungeon', () => {
-    for (const dg of regionSummary.dungeons) {
+    for (const dg of screenSummary.dungeons) {
       const expected = EXPECTED_ROOM_COUNTS[dg.prefix];
       expect(dg.roomCount, `${dg.prefix} room count`).toBeGreaterThanOrEqual(expected.min);
       expect(dg.roomCount, `${dg.prefix} room count`).toBeLessThanOrEqual(expected.max);
@@ -77,14 +77,14 @@ describe('Generated Regions', () => {
   });
 
   it('should have total rooms in the 185-200 range', () => {
-    expect(regionSummary.totalDungeonRooms).toBeGreaterThanOrEqual(185);
-    expect(regionSummary.totalDungeonRooms).toBeLessThanOrEqual(200);
+    expect(screenSummary.totalDungeonRooms).toBeGreaterThanOrEqual(185);
+    expect(screenSummary.totalDungeonRooms).toBeLessThanOrEqual(200);
   });
 
   it('should have no duplicate room IDs across all dungeons', () => {
     const allIds = new Set<string>();
     const duplicates: string[] = [];
-    for (const dg of regionSummary.dungeons) {
+    for (const dg of screenSummary.dungeons) {
       for (const id of dg.rooms) {
         if (allIds.has(id)) duplicates.push(id);
         allIds.add(id);
@@ -96,7 +96,7 @@ describe('Generated Regions', () => {
   it('should have no duplicate roomIndex values across all dungeons', () => {
     const allIndices = new Set<number>();
     const duplicates: number[] = [];
-    for (const [, data] of Object.entries(dungeonRegions)) {
+    for (const [, data] of Object.entries(dungeonScreens)) {
       for (const room of (data as any).rooms) {
         if (allIndices.has(room.roomIndex)) duplicates.push(room.roomIndex);
         allIndices.add(room.roomIndex);
@@ -107,7 +107,7 @@ describe('Generated Regions', () => {
 
   it('should have all required fields on every room', () => {
     const requiredFields = ['id', 'name', 'type', 'roomIndex', 'tags'];
-    for (const [prefix, data] of Object.entries(dungeonRegions)) {
+    for (const [prefix, data] of Object.entries(dungeonScreens)) {
       for (const room of (data as any).rooms) {
         for (const field of requiredFields) {
           expect(room[field], `${prefix} room ${room.id} missing '${field}'`).not.toBeUndefined();
@@ -118,7 +118,7 @@ describe('Generated Regions', () => {
 
   it('should use correct ID format (prefix-0xHH)', () => {
     const idPattern = /^[a-z]+-0x[0-9a-f]{2}$/;
-    for (const [prefix, data] of Object.entries(dungeonRegions)) {
+    for (const [prefix, data] of Object.entries(dungeonScreens)) {
       for (const room of (data as any).rooms) {
         expect(room.id, `Invalid ID format: ${room.id}`).toMatch(idPattern);
         expect(room.id.startsWith(prefix), `ID ${room.id} doesn't start with ${prefix}`).toBe(true);
@@ -131,7 +131,7 @@ describe('Generated Regions', () => {
     const validEnvTags = ['env:underground', 'env:inside', 'env:outside', 'env:water'];
     const validTypeTags = ['type:dungeon'];
 
-    for (const [, data] of Object.entries(dungeonRegions)) {
+    for (const [, data] of Object.entries(dungeonScreens)) {
       for (const room of (data as any).rooms) {
         expect(room.tags.some((t: string) => validWorldTags.includes(t)),
           `${room.id} missing world tag`).toBe(true);
@@ -148,7 +148,7 @@ describe('Generated Regions', () => {
   });
 
   it('roomIndex should match the hex in the ID', () => {
-    for (const [, data] of Object.entries(dungeonRegions)) {
+    for (const [, data] of Object.entries(dungeonScreens)) {
       for (const room of (data as any).rooms) {
         const hexPart = room.id.match(/-0x([0-9a-f]+)$/)?.[1];
         const expectedIndex = parseInt(hexPart!, 16);
@@ -158,7 +158,7 @@ describe('Generated Regions', () => {
   });
 
   it('gridX and gridY should be derivable from roomIndex for dungeons', () => {
-    for (const [, data] of Object.entries(dungeonRegions)) {
+    for (const [, data] of Object.entries(dungeonScreens)) {
       for (const room of (data as any).rooms) {
         if (room.dungeon?.gridX != null) {
           const expectedX = room.roomIndex & 0x0F;
@@ -172,10 +172,10 @@ describe('Generated Regions', () => {
 });
 
 describe('Generated Connections', () => {
-  // Build set of all valid region IDs
-  const allRegionIds = new Set<string>();
-  for (const dg of regionSummary.dungeons) {
-    for (const id of dg.rooms) allRegionIds.add(id);
+  // Build set of all valid screen IDs
+  const allScreenIds = new Set<string>();
+  for (const dg of screenSummary.dungeons) {
+    for (const id of dg.rooms) allScreenIds.add(id);
   }
 
   it('should have connections for all 13 dungeons', () => {
@@ -191,12 +191,12 @@ describe('Generated Connections', () => {
     }
   });
 
-  it('all internal connection "from" and "to" should reference valid region IDs', () => {
+  it('all internal connection "from" and "to" should reference valid screen IDs', () => {
     const invalidRefs: string[] = [];
     for (const [prefix, data] of Object.entries(dungeonConnections)) {
       for (const conn of (data as any).connections) {
-        if (!allRegionIds.has(conn.from)) invalidRefs.push(`${prefix}: from=${conn.from}`);
-        if (!allRegionIds.has(conn.to)) invalidRefs.push(`${prefix}: to=${conn.to}`);
+        if (!allScreenIds.has(conn.from)) invalidRefs.push(`${prefix}: from=${conn.from}`);
+        if (!allScreenIds.has(conn.to)) invalidRefs.push(`${prefix}: to=${conn.to}`);
       }
     }
     expect(invalidRefs, `Invalid refs:\n${invalidRefs.slice(0, 20).join('\n')}`).toHaveLength(0);
@@ -234,14 +234,14 @@ describe('Generated Connections', () => {
   it('should have dungeon entrance transitions', () => {
     expect(transitions.entranceCount).toBeGreaterThan(20);
     for (const ent of transitions.entrances) {
-      expect(allRegionIds.has(ent.to), `Entrance target ${ent.to} not in regions`).toBe(true);
+      expect(allScreenIds.has(ent.to), `Entrance target ${ent.to} not in screens`).toBe(true);
     }
   });
 
   it('should have dungeon exit transitions', () => {
     expect(transitions.exitCount).toBeGreaterThan(15);
     for (const exit of transitions.exits) {
-      expect(allRegionIds.has(exit.from), `Exit source ${exit.from} not in regions`).toBe(true);
+      expect(allScreenIds.has(exit.from), `Exit source ${exit.from} not in screens`).toBe(true);
     }
   });
 
@@ -283,7 +283,7 @@ describe('Cross-validation', () => {
     for (const exit of transitions.exits) connectedRooms.add(exit.from);
 
     const unreachable: string[] = [];
-    for (const dg of regionSummary.dungeons) {
+    for (const dg of screenSummary.dungeons) {
       for (const id of dg.rooms) {
         if (!connectedRooms.has(id)) unreachable.push(id);
       }

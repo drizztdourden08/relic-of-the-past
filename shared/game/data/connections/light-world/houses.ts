@@ -19,6 +19,9 @@ export const LW_HOUSE_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-2c', to: 'links-house', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'links-house', to: 'lw-2c', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
 
+  // Links House — intro variant (passage to Secret Passage / Uncle)
+  { from: 'links-house--intro', to: 'hyrule-castle-secret-passage', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
+
   // Central / South
   { from: 'lw-3b', to: 'dam', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'lw-1e', to: 'sahasrahlas-hut', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },

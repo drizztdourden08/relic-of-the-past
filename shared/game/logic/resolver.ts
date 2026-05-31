@@ -1,5 +1,5 @@
 import type { LogicConfig, Requirement, ScreenConnection } from '../types';
-import { REGION_RULES } from './region-rules';
+import { SCREEN_RULES } from './screen-rules';
 import { CHECK_RULES } from './check-rules';
 import { ALL_CONNECTIONS } from '../data/connections';
 import {
@@ -13,7 +13,7 @@ const VANILLA_INTRO_CONNECTION: ScreenConnection =
 // ─── Rule Resolution ───
 
 interface ResolvedRules {
-  regionRules: Record<string, Requirement>;
+  screenRules: Record<string, Requirement>;
   checkRules: Record<string, Requirement>;
   connections: ScreenConnection[];
   startInventory: Set<string>;
@@ -30,7 +30,7 @@ interface ResolvedRules {
 function resolveRules(config: LogicConfig): ResolvedRules {
   if (config.mode === 'no-logic') {
     return {
-      regionRules: {},
+      screenRules: {},
       checkRules: {},
       connections: ALL_CONNECTIONS,
       startInventory: new Set(config.startingItems),
@@ -38,19 +38,19 @@ function resolveRules(config: LogicConfig): ResolvedRules {
   }
 
   // Start with the base rules
-  const regionRules: Record<string, Requirement> = { ...REGION_RULES };
+  const screenRules: Record<string, Requirement> = { ...SCREEN_RULES };
   const checkRules: Record<string, Requirement> = { ...CHECK_RULES };
 
   // --- Medallion requirements (config-driven) ---
-  regionRules['Misery Mire'] = {
+  screenRules['Misery Mire'] = {
     and: [hasSword, config.medallionRequirements.miseryMire],
   };
-  regionRules['Turtle Rock'] = {
+  screenRules['Turtle Rock'] = {
     and: [hasSword, config.medallionRequirements.turtleRock, 'Moon Pearl'],
   };
 
   // --- Crystal requirements (config-driven) ---
-  regionRules['Ganons Tower'] = hasCrystals(config.crystalsForGT);
+  screenRules['Ganons Tower'] = hasCrystals(config.crystalsForGT);
 
   // --- Pedestal requirement ---
   checkRules['Master Sword Pedestal'] = { count: ['Pendants', config.pendantsForPedestal] };
@@ -64,7 +64,7 @@ function resolveRules(config: LogicConfig): ResolvedRules {
 
   for (const [dest, key] of Object.entries(sqDestinations)) {
     if (!config.saveQuitDestinations.includes(dest)) {
-      regionRules[key] = getSQGateRequirement(dest, config);
+      screenRules[key] = getSQGateRequirement(dest, config);
     }
   }
 
@@ -72,30 +72,30 @@ function resolveRules(config: LogicConfig): ResolvedRules {
   if (config.mode === 'vanilla') {
     // Vanilla intro gate (combined with any S&Q rule on same key)
     const introKey = 'menu|links-house';
-    const existingSQRule = regionRules[introKey];
+    const existingSQRule = screenRules[introKey];
     if (existingSQRule) {
-      regionRules[introKey] = { or: ['Link Wakes Up', existingSQRule] };
+      screenRules[introKey] = { or: ['Link Wakes Up', existingSQRule] };
     } else {
-      regionRules[introKey] = 'Link Wakes Up';
+      screenRules[introKey] = 'Link Wakes Up';
     }
 
-    regionRules['hyrule-castle-secret-entrance|lw-1b'] = 'Zelda Rescue Started';
-    regionRules['links-house|lw-2c'] = 'Rescued Zelda';
+    screenRules['hyrule-castle-secret-entrance|lw-1b'] = 'Zelda Rescue Started';
+    screenRules['links-house|lw-2c'] = 'Rescued Zelda';
     // TODO: these rules need matching connections to function:
-    regionRules['lw-1b|hc-south'] = 'Zelda Rescue Started';
-    regionRules['lw-1b|hc-east'] = 'Zelda Rescue Started';
-    regionRules['lw-1b|hc-west'] = 'Zelda Rescue Started';
-    regionRules['lw-1b|ct-0x20'] = hasBeamSword;
+    screenRules['lw-1b|hc-south'] = 'Zelda Rescue Started';
+    screenRules['lw-1b|hc-east'] = 'Zelda Rescue Started';
+    screenRules['lw-1b|hc-west'] = 'Zelda Rescue Started';
+    screenRules['lw-1b|ct-0x20'] = hasBeamSword;
   }
 
   // --- Swordless mode: remove sword requirements from Castle Tower ---
   if (config.swordMode === 'swordless') {
-    delete regionRules['lw-1b|ct-0x20'];
+    delete screenRules['lw-1b|ct-0x20'];
   }
 
   // --- Open mode: Castle Tower accessible with Cape OR Sword ---
   if (config.mode === 'open') {
-    regionRules['lw-1b|ct-0x20'] = { or: [hasSword, 'Cape'] };
+    screenRules['lw-1b|ct-0x20'] = { or: [hasSword, 'Cape'] };
   }
 
   // --- Build connections ---
@@ -105,7 +105,7 @@ function resolveRules(config: LogicConfig): ResolvedRules {
   }
 
   return {
-    regionRules,
+    screenRules,
     checkRules,
     connections,
     startInventory: new Set(config.startingItems),
