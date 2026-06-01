@@ -15,17 +15,12 @@ import type { FloodFillOptions, QuadrantBounds } from '@shared/game/navigation';
 import type { ScreenBundle, OverworldEntrance } from '@shared/game/navigation';
 import { getScreenLookup, resolveCurrentScreenDetailed, SCREEN_BY_ID } from '@shared/game/data/screens';
 import type { ScreenMatchResult, VariantGameState } from '@shared/game/data/screens';
-import { getDungeonName } from '@shared/game/data/screens/game-values';
 import { ALL_CONNECTIONS } from '@shared/game/data/connections';
-import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetProgressIndicator, wasmGetIndoorDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetRoomDoorBoundaryTiles, wasmGetRoomExitDoors, wasmGetRoomStairInfo, wasmGetRoomWalkBoundaries } from '../../lib/game';
+import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetProgressIndicator, wasmGetIndoorDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetRoomCollisionType, wasmGetStaircaseType, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetRoomDoorBoundaryTiles, wasmGetRoomExitDoors, wasmGetRoomStairInfo, wasmGetRoomWalkBoundaries } from '../../lib/game';
 import { getCompletedChecks } from '../../lib/game/tracker';
 import type { OverworldVariantInfo } from '../../lib/game';
 import type { TileAttrContext } from '@shared/game/navigation/tile-attrs';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
-import { useScreenDataStatus, useConnectionStatus } from './useDatasetStatus';
-import { ScreenEditorDialog } from './ScreenEditorDialog';
-import { ConnectionEditorDialog } from './ConnectionEditorDialog';
-import { StatusBadge } from '../../components/primitives';
 
 /** Get overworld screen display name from screen index */
 function getScreenDisplayName(screenIndex: number): string {
@@ -144,20 +139,9 @@ function computeBigScreenGroup(screenIndex: number): number[] {
   return group.length > 0 ? group : [screenIndex];
 }
 
-type ReviewStatus = 'neutral' | 'good' | 'bad' | 'yellow';
-interface ReviewEntry { status: ReviewStatus; comment?: string; }
-interface LocationReview { status: ReviewStatus; comment?: string; connections: Record<string, ReviewEntry>; }
-type ReviewData = Record<string, LocationReview>;
-
 const EDGE_COLORS: Record<string, string> = {
   north: '#4488ff', south: '#44ff88', east: '#ff8844', west: '#bb44ff', entrance: '#ffcc44',
 };
-const STATUS_BTNS: { key: ReviewStatus; label: string; color: string }[] = [
-  { key: 'neutral', label: '—', color: '#666' },
-  { key: 'good', label: '✓', color: '#4c4' },
-  { key: 'bad', label: '✗', color: '#f44' },
-  { key: 'yellow', label: '⚠', color: '#fc4' },
-];
 
 function getVisibleOverworldScreenIndices(vp: NonNullable<ReturnType<typeof wasmGetViewportInfo>>): number[] {
   const viewLeft = vp.cameraX - vp.extraLeftRight;
@@ -180,11 +164,10 @@ function getVisibleOverworldScreenIndices(vp: NonNullable<ReturnType<typeof wasm
 }
 
 function NavigationWidgetContent() {
-  const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex, whichEntrance, linkLayer, linkX, linkY } = useGameUIStore(s => s.map);
+  const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex, whichEntrance, linkX, linkY } = useGameUIStore(s => s.map);
   const equipment = useGameUIStore(s => s.equipment);
   const inventoryItems = useGameUIStore(s => s.inventory.items);
   const overlayStore = useConnectionOverlayStore();
-  const [reviewData, setReviewData] = useState<ReviewData>({});
   const [result, setResult] = useState<FloodFillResult | null>(null);
   const [connections, setConnections] = useState<ConnectionInfo[]>([]);
   const [fallHoleLandings, setFallHoleLandings] = useState<Array<{ gridRow: number; gridCol: number; entranceId: number }>>([]);
@@ -197,7 +180,6 @@ function NavigationWidgetContent() {
   const [visibleScreenIndices, setVisibleScreenIndices] = useState<number[]>([]);
   const [screenBundle, setScreenBundle] = useState<ScreenBundle | null>(null);
   const [debugTick, setDebugTick] = useState(0);
-  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prevScreenRef = useRef<number | null>(null);
   const prevLiveOverworldScreenRef = useRef<number | null>(null);
   const prevQuadrantKeyRef = useRef<string | null>(null);
@@ -206,6 +188,18 @@ function NavigationWidgetContent() {
   const handleRunRef = useRef<(() => Promise<void>) | null>(null);
   const pendingAutoSecondPassRef = useRef(false);
   const autoSecondPassTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Capture Link's layer at the moment a room loads (the "starting layer" for this room visit)
+  const [roomStartLayer, setRoomStartLayer] = useState<number | null>(null);
+  const prevRoomForLayerRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (!isIndoors) { setRoomStartLayer(null); return; }
+    if (prevRoomForLayerRef.current !== roomIndex) {
+      prevRoomForLayerRef.current = roomIndex;
+      const layer = wasmGetLinkLayer?.() ?? null;
+      setRoomStartLayer(layer);
+    }
+  }, [isIndoors, roomIndex, debugTick]);
 
   // Use room index indoors; overworld screen index outside.
   const activeScreenIndex = isIndoors ? roomIndex : overworldScreenIndex;
@@ -217,19 +211,6 @@ function NavigationWidgetContent() {
     setVariant(v);
   }, [overworldScreenIndex, isIndoors]);
 
-  // Load review data
-  useEffect(() => {
-    window.api.loadConnectionReview().then((d: unknown) => setReviewData((d ?? {}) as ReviewData));
-  }, []);
-
-  const persist = useCallback((next: ReviewData) => {
-    if (saveTimer.current) clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => window.api.saveConnectionReview(next), 300);
-  }, []);
-
-  const locationKey = isIndoors
-    ? `room-${roomIndex.toString(16).padStart(3, '0')}`
-    : `${isDarkWorld ? 'dw' : 'lw'}-${overworldScreenIndex.toString(16).padStart(2, '0')}`;
   // ─── Screen detection: single source of truth ───
   // resolveCurrentScreenDetailed uses: isIndoors → palaceIndex (dungeon vs cave) → whichEntrance (disambiguates duplicates) → roomIndex
   // Variant state allows multiple definitions per roomIndex, resolved by game progress.
@@ -246,7 +227,6 @@ function NavigationWidgetContent() {
   const detectedScreen = detectionResult?.screen ?? null;
   const screenName = detectedScreen?.name
     ?? (isIndoors ? `Room 0x${roomIndex.toString(16).toUpperCase().padStart(4, '0')}` : `Screen 0x${overworldScreenIndex.toString(16).toUpperCase().padStart(2, '0')}`);
-  const locationReview = reviewData[locationKey] ?? { status: 'neutral' as ReviewStatus, connections: {} };
   const displayedVariant = !isIndoors
     ? (result ? wasmGetOverworldVariant(result.screenIndex) : variant)
     : null;
@@ -256,40 +236,6 @@ function NavigationWidgetContent() {
   const reachableSum = renderResults.reduce((sum, r) => sum + r.reachableCount, 0);
   const totalTilesSum = renderResults.reduce((sum, r) => sum + r.totalTiles, 0);
   const entranceSum = renderResults.reduce((sum, r) => sum + r.entrances.filter(e => r.transitions.some(t => t.entranceIdx === e.id)).length, 0);
-
-  // ─── Dataset status badges & editor dialogs ───
-  const [screenEditorOpen, setScreenEditorOpen] = useState(false);
-  const [connEditorOpen, setConnEditorOpen] = useState(false);
-
-  const screenStatus = useScreenDataStatus(detectionResult, isIndoors);
-
-  // Gather detected entrance screens + stairs for connection status
-  const detectedEntranceScreens = useMemo(() => {
-    if (!isIndoors) return [];
-    const rooms = wasmGetEntranceRooms();
-    const exitMap = wasmGetExitScreenMap();
-    const exitScreen = exitMap.get(roomIndex);
-    if (!rooms || exitScreen == null) return [];
-    const screens: number[] = [exitScreen];
-    return screens;
-  }, [isIndoors, roomIndex]);
-
-  const detectedStairs = useMemo(() => {
-    if (!isIndoors) return [];
-    return wasmGetRoomStairInfo();
-  }, [isIndoors, roomIndex]);
-
-  const exitScreen = useMemo(() => {
-    if (!isIndoors) return null;
-    return wasmGetExitScreenMap().get(roomIndex) ?? null;
-  }, [isIndoors, roomIndex]);
-
-  const connStatus = useConnectionStatus(
-    screenStatus.screen?.id ?? null,
-    detectedEntranceScreens,
-    detectedStairs,
-    exitScreen,
-  );
 
   // Force a lightweight periodic rerender so live debug values update while moving.
   useEffect(() => {
@@ -333,6 +279,8 @@ function NavigationWidgetContent() {
       map16Col,
       liveScreenIndex,
       linkLayer: wasmGetLinkLayer?.() ?? null,
+      collisionType: wasmGetRoomCollisionType?.() ?? null,
+      staircaseType: wasmGetStaircaseType?.() ?? null,
     };
   })();
 
@@ -969,42 +917,6 @@ function NavigationWidgetContent() {
     else if (result) overlayStore.setData(result, connections, renderResults, overlayStore.fallHoleSpawns, respawnEntIds);
   }, [result, connections, renderResults]);
 
-  // Review helpers
-  const setLocStatus = (status: ReviewStatus) => {
-    setReviewData(prev => {
-      const entry = prev[locationKey] ?? { status: 'neutral', connections: {} };
-      const next = { ...prev, [locationKey]: { ...entry, status } };
-      persist(next);
-      return next;
-    });
-  };
-  const setLocComment = (comment: string) => {
-    setReviewData(prev => {
-      const entry = prev[locationKey] ?? { status: 'neutral' as ReviewStatus, connections: {} };
-      const next = { ...prev, [locationKey]: { ...entry, comment } };
-      persist(next);
-      return next;
-    });
-  };
-  const setConnStatus = (connKey: string, status: ReviewStatus) => {
-    setReviewData(prev => {
-      const loc = prev[locationKey] ?? { status: 'neutral' as ReviewStatus, connections: {} };
-      const conn = loc.connections[connKey] ?? { status: 'neutral' };
-      const next = { ...prev, [locationKey]: { ...loc, connections: { ...loc.connections, [connKey]: { ...conn, status } } } };
-      persist(next);
-      return next;
-    });
-  };
-  const setConnComment = (connKey: string, comment: string) => {
-    setReviewData(prev => {
-      const loc = prev[locationKey] ?? { status: 'neutral' as ReviewStatus, connections: {} };
-      const conn = loc.connections[connKey] ?? { status: 'neutral' as ReviewStatus };
-      const next = { ...prev, [locationKey]: { ...loc, connections: { ...loc.connections, [connKey]: { ...conn, comment } } } };
-      persist(next);
-      return next;
-    });
-  };
-
   // Derived: classify connections as internal (between bundle screens) vs external
   const bundleScreenSet = useMemo(() => new Set(screenBundle?.screens ?? []), [screenBundle]);
   const sortConn = (a: ConnectionInfo, b: ConnectionInfo) => {
@@ -1032,6 +944,9 @@ function NavigationWidgetContent() {
     return [...bestByPair.values()];
   }, [connections, bundleScreenSet]);
 
+  // Entrance spawn data for showing starting layer per entrance
+  const entranceSpawns = wasmGetEntranceSpawns();
+
   return (
     <div style={S.root}>
       {/* ═══ 1. BUNDLE TITLE + SCREEN MAP ═══ */}
@@ -1041,7 +956,7 @@ function NavigationWidgetContent() {
           {screenBundle?.isMulti && <span style={{ fontSize: 9, color: '#888', marginLeft: 6 }}>({screenBundle.screens.length} {isIndoors ? 'rooms' : 'screens'})</span>}
         </div>
         <div style={S.meta}>
-          {locationKey} · {isIndoors ? 'INDOOR' : (isDarkWorld ? 'DW' : 'LW')}
+          {isIndoors ? `room-${roomIndex.toString(16).padStart(3, '0')}` : `${isDarkWorld ? 'dw' : 'lw'}-${overworldScreenIndex.toString(16).padStart(2, '0')}`} · {isIndoors ? 'INDOOR' : (isDarkWorld ? 'DW' : 'LW')}
           {!isIndoors && ` · R${(overworldScreenIndex >> 3) & 7} C${overworldScreenIndex & 7}`}
         </div>
 
@@ -1051,209 +966,121 @@ function NavigationWidgetContent() {
         )}
       </div>
 
-      {/* ═══ 1a. IN-GAME STATE ═══ */}
+      {/* ═══ 1a. GAME STATE ═══ */}
       <div style={S.section}>
-        <div style={S.sectionTitle}>In Game</div>
+        <div style={S.sectionTitle}>Game State</div>
         <div style={S.infoBox}>
+          <DescRow label="Mode" desc="Whether Link is currently indoors (dungeon/cave/house) or outdoors on the overworld.">
+            <span style={{ color: isIndoors ? '#fc6' : '#8c8' }}>{isIndoors ? 'Indoor' : 'Outdoor'}</span>
+          </DescRow>
           {isIndoors ? (
             <>
-              <div style={S.infoRow}>
-                <span style={S.infoLabel}>Room</span>
+              <DescRow label="Type" desc="The type of interior: Dungeon (palace index 0–13, has maps/keys/bosses), or Cave/House (palace 0xFF, standalone interiors with no dungeon logic).">
+                <span style={{ color: palaceIndex === 0xFF ? '#8c8' : '#f8a' }}>{palaceIndex === 0xFF ? 'Cave / House' : 'Dungeon'}</span>
+              </DescRow>
+              <DescRow label="Room" desc="The current room ID in the indoor tilemap (0x0000–0x0127). Each indoor room is a 512×512 pixel area.">
                 <span>0x{roomIndex.toString(16).toUpperCase().padStart(4, '0')}</span>
-              </div>
-              <div style={S.infoRow}>
-                <span style={S.infoLabel}>Entrance</span>
+              </DescRow>
+              <DescRow label="Grid Pos" desc="The room's position in the 16×16 indoor room grid. Row = roomIndex >> 4, Col = roomIndex & 0xF. Adjacent rooms in the grid can scroll between each other.">
+                <span style={{ color: '#aac' }}>R{roomIndex >> 4} C{roomIndex & 0xF}</span>
+              </DescRow>
+              <DescRow label="Last Entrance" desc="The entrance ID Link last used to enter from the overworld. Determines spawn position, starting layer, and palace assignment. Does NOT update for indoor-to-indoor transitions.">
                 <span style={{ color: whichEntrance ? '#7cf' : '#666' }}>{whichEntrance ? `0x${whichEntrance.toString(16).toUpperCase().padStart(2, '0')} (${whichEntrance})` : '—'}</span>
-              </div>
-              <div style={S.infoRow}>
-                <span style={S.infoLabel}>Palace</span>
+              </DescRow>
+              <DescRow label="Palace Index" desc="Identifies which dungeon Link is in (0–13). 0xFF = cave/house (non-dungeon interior). Used for dungeon-specific logic like boss keys and maps.">
                 <span>{palaceIndex === 0xFF ? 'Cave/House' : `${palaceIndex >> 1} (0x${palaceIndex.toString(16).toUpperCase()})`}</span>
-              </div>
-              <div style={S.infoRow}>
-                <span style={S.infoLabel}>Layer</span>
-                <span>{linkLayer === 0 ? 'Upper (BG1)' : 'Lower (BG2)'}</span>
-              </div>
-              <div style={S.infoRow}>
-                <span style={S.infoLabel}>Link Pos</span>
-                <span style={{ color: '#aac' }}>{linkX}, {linkY}</span>
-              </div>
+              </DescRow>
+              <DescRow label="Starting Layer" desc="The layer Link was on when this room was first entered. Captured at room load. In rooms with staircase type 2 (Blocked), Link stays locked to this layer. Layer toggles are caused by door type 22 (kDoorType_PlayerBgChange).">
+                {roomStartLayer !== null ? (
+                  <span style={{ color: roomStartLayer === 0 ? '#7ff' : '#ff7' }}>
+                    {roomStartLayer === 0 ? 'Upper (BG2)' : 'Lower (BG1)'}
+                  </span>
+                ) : (
+                  <span style={{ color: '#666' }}>—</span>
+                )}
+              </DescRow>
             </>
           ) : (
             <>
-              <div style={S.infoRow}>
-                <span style={S.infoLabel}>Screen</span>
+              <DescRow label="Screen" desc="The overworld screen index (0x00–0x3F). Grid position: row = upper bits, col = lower bits. Each screen is 512×512 pixels.">
                 <span>0x{overworldScreenIndex.toString(16).toUpperCase().padStart(2, '0')} (R{(overworldScreenIndex >> 3) & 7} C{overworldScreenIndex & 7})</span>
-              </div>
-              <div style={S.infoRow}>
-                <span style={S.infoLabel}>World</span>
+              </DescRow>
+              <DescRow label="World" desc="Light World or Dark World. The two 8×8 overworld grids occupy the same coordinate space but are separate maps.">
                 <span style={{ color: isDarkWorld ? '#c8a' : '#8c8' }}>{isDarkWorld ? 'Dark World' : 'Light World'}</span>
-              </div>
-              <div style={S.infoRow}>
-                <span style={S.infoLabel}>Link Pos</span>
-                <span style={{ color: '#aac' }}>{linkX}, {linkY}</span>
-              </div>
+              </DescRow>
+            </>
+          )}
+          {progressInfo && (
+            <DescRow label="Phase" desc="The game's progress indicator byte. Controls NPC dialogue, event triggers, and overworld tile patches. Advances as you complete key objectives.">
+              <span style={{ color: '#fc6' }}>{progressInfo.label}</span>
+              <span style={{ color: '#888', marginLeft: 4, fontSize: 10 }}>0x{progressInfo.tier.toString(16).padStart(2, '0')}</span>
+            </DescRow>
+          )}
+          {displayedVariant && (
+            <>
+              <DescRow label="Tile Patch" desc="Whether this screen has an active event overlay that modifies walkable tiles (e.g. rocks removed after an event).">
+                {displayedVariant.eventOverlayActive
+                  ? <span style={{ color: '#4f8' }}>active</span>
+                  : <span style={{ color: '#666' }}>none</span>}
+              </DescRow>
+              <DescRow label="Flags" desc="Screen-specific event flags from SRAM. Track permanent world changes like opened chests, pulled levers, and destroyed barriers.">
+                <span style={{ color: '#aac' }}>0x{displayedVariant.screenEventFlags.toString(16).padStart(2, '0')}</span>
+              </DescRow>
+              <DescRow label="NPC Blockers" desc="Number of sprites currently blocking BFS pathfinding (tutorial guards, barriers). These physically prevent Link from passing.">
+                <span style={{ color: dynamicBlockerCount > 0 ? '#fc6' : '#666' }}>{dynamicBlockerCount}</span>
+              </DescRow>
             </>
           )}
         </div>
       </div>
 
-      {/* ═══ 1b. DATASET STATUS (Game vs Dataset) ═══ */}
-      <div style={S.section}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-            <div style={S.sectionTitle}>Dataset</div>
-            <span style={{
-              fontSize: 9,
-              padding: '1px 5px',
-              borderRadius: 3,
-              background: screenStatus.status === 'mapped' ? '#1a3a1a' : screenStatus.status === 'incomplete' ? '#3a3a1a' : '#3a1a1a',
-              color: screenStatus.status === 'mapped' ? '#4f8' : screenStatus.status === 'incomplete' ? '#fc6' : '#f66',
-              fontWeight: 600,
-            }}>
-              {screenStatus.status === 'mapped' ? '✓ Screen' : screenStatus.status === 'incomplete' ? '⚠ Screen' : '✗ Screen'}
-            </span>
-            <span style={{
-              fontSize: 9,
-              padding: '1px 5px',
-              borderRadius: 3,
-              background: connStatus.status === 'complete' ? '#1a3a1a' : connStatus.status === 'partial' ? '#3a3a1a' : '#2a2a2a',
-              color: connStatus.status === 'complete' ? '#4f8' : connStatus.status === 'partial' ? '#fc6' : '#666',
-              fontWeight: 600,
-            }}>
-              {connStatus.status === 'complete' ? '✓ Conns' : connStatus.status === 'partial' ? `⚠ ${connStatus.missingCount} missing` : '— Conns'}
-            </span>
-          </div>
-          <div style={S.infoBox}>
-            <div style={S.infoRow}>
-              <span style={S.infoLabel}>Screen</span>
-              <span style={{ color: screenStatus.screen ? '#7f7' : '#f66' }}>
-                {screenStatus.screen ? screenStatus.screen.id : 'Not mapped'}
-              </span>
-            </div>
-            {detectionResult && (
-              <div style={S.infoRow}>
-                <span style={S.infoLabel}>Match</span>
-                <span style={{ color: detectionResult.method === 'exact' || detectionResult.method === 'overworld' ? '#4f8' : detectionResult.method === 'entrance' ? '#8cf' : '#fc6' }}>
-                  {detectionResult.method}
-                </span>
-              </div>
-            )}
-            {screenStatus.screen && (
-              <div style={S.infoRow}>
-                <span style={S.infoLabel}>Name</span>
-                <span>{screenStatus.screen.name}</span>
-              </div>
-            )}
-            {screenStatus.screen && (
-              <div style={S.infoRow}>
-                <span style={S.infoLabel}>Status</span>
-                <StatusBadge status={screenStatus.screen.status} />
-              </div>
-            )}
-            {screenStatus.screen && !screenStatus.screen.variant && detectionResult?.method === 'cave-ambiguous' && progressInfo && (
-              <div style={S.infoRow}>
-                <span style={S.infoLabel}>⚠️</span>
-                <span style={{ color: '#fa0', fontSize: 10 }}>Default entry — no variant for "{progressInfo.label}"</span>
-              </div>
-            )}
-            {screenStatus.issues.length > 0 && (
-              <div style={S.infoRow}>
-                <span style={S.infoLabel}>Issues</span>
-                <span style={{ color: '#fc6', fontSize: 10 }}>{screenStatus.issues.join(', ')}</span>
-              </div>
-            )}
-            {screenStatus.corrections.length > 0 && (
-              <div style={{ padding: '3px 6px', marginTop: 2, borderRadius: 3, background: 'rgba(255,180,0,0.08)', border: '1px solid rgba(255,180,0,0.2)' }}>
-                <div style={{ fontSize: 9, color: '#fa0', fontWeight: 600, marginBottom: 2 }}>⚠ Suggested Corrections</div>
-                {screenStatus.corrections.map((c, i) => (
-                  <div key={i} style={{ fontSize: 10, color: '#dda', lineHeight: '14px' }}>
-                    <span style={{ color: '#8cf' }}>{c.field}</span>: {c.message}
-                  </div>
-                ))}
-              </div>
-            )}
-            <div style={S.infoRow}>
-              <span style={S.infoLabel}>Connections</span>
-              <span>{connStatus.existingConnections.length} in dataset{connStatus.missingCount > 0 ? `, ${connStatus.missingCount} detected not mapped` : ''}</span>
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: 4, marginTop: 4 }}>
-            <button style={S.btn} onClick={() => setScreenEditorOpen(true)}>
-              ✏️ Edit Screen
-            </button>
-            <button style={S.btn} onClick={() => setConnEditorOpen(true)}>
-              ✏️ Edit Connections
-            </button>
-          </div>
-      </div>
-
-      {/* ═══ 2. PROGRESS / FLAGS ═══ */}
-      {progressInfo && (
-        <div style={S.section}>
-          <div style={S.sectionTitle}>Progress</div>
-          <div style={S.infoBox}>
-            <div style={S.infoRow}>
-              <span style={S.infoLabel}>Phase</span>
-              <span style={{ color: '#fc6' }}>{progressInfo.label}</span>
-              <span style={{ color: '#888', marginLeft: 4, fontSize: 10 }}>0x{progressInfo.tier.toString(16).padStart(2, '0')}</span>
-            </div>
-            {displayedVariant && (
-              <>
-                <div style={S.infoRow}>
-                  <span style={S.infoLabel}>Tile Patch</span>
-                  {displayedVariant.eventOverlayActive
-                    ? <span style={{ color: '#4f8' }}>active</span>
-                    : <span style={{ color: '#666' }}>none</span>}
-                </div>
-                <div style={S.infoRow}>
-                  <span style={S.infoLabel}>Flags</span>
-                  <span style={{ color: '#aac' }}>0x{displayedVariant.screenEventFlags.toString(16).padStart(2, '0')}</span>
-                </div>
-                <div style={S.infoRow}>
-                  <span style={S.infoLabel}>NPC Blockers</span>
-                  <span style={{ color: dynamicBlockerCount > 0 ? '#fc6' : '#666' }}>{dynamicBlockerCount}</span>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ═══ 3. LINK POSITION ═══ */}
+      {/* ═══ 2. LINK STATE ═══ */}
       {linkDebug && (
         <div style={S.section}>
-          <div style={S.sectionTitle}>Link</div>
+          <div style={S.sectionTitle}>Link State</div>
           <div style={S.infoBox}>
+            <DescRow label="Link Pos" desc="Link's absolute world position in pixels. Indoor: relative to room origin. Outdoor: relative to overworld origin (0,0 = top-left of screen 0x00).">
+              <span style={{ color: '#aac' }}>{linkX}, {linkY}</span>
+            </DescRow>
             {!isIndoors && (
-              <div style={S.infoRow}>
-                <span style={S.infoLabel}>World</span>
+              <DescRow label="World Pos" desc="Link's full world coordinates in pixels (same as Link Pos for outdoor). Used to calculate which overworld screen Link is actually standing on.">
                 <span style={{ color: '#7f7' }}>({linkDebug.linkX}, {linkDebug.linkY})</span>
-              </div>
+              </DescRow>
             )}
-            <div style={S.infoRow}>
-              <span style={S.infoLabel}>Relative</span>
+            <DescRow label="Relative" desc="Link's position relative to the current 512×512 screen/room origin in pixels.">
               <span style={{ color: '#7f7' }}>({linkDebug.relX}, {linkDebug.relY})</span>
-            </div>
-            <div style={S.infoRow}>
-              <span style={S.infoLabel}>Sub-tile</span>
+            </DescRow>
+            <DescRow label="Sub-tile" desc="The 8×8 tile range Link's hitbox currently overlaps. Row and column are in tile coordinates (0–63 per screen).">
               <span style={{ color: '#7f7' }}>r{linkDebug.tileMinRow}–{linkDebug.tileMaxRow} c{linkDebug.tileMinCol}–{linkDebug.tileMaxCol}</span>
-            </div>
-            <div style={S.infoRow}>
-              <span style={S.infoLabel}>Map16</span>
+            </DescRow>
+            <DescRow label="Map16" desc="The 16×16 metatile coordinate Link occupies. Map16 tiles are the collision unit — each contains four 8×8 sub-tiles.">
               <span style={{ color: '#7f7' }}>({linkDebug.map16Row}, {linkDebug.map16Col})</span>
-            </div>
+            </DescRow>
             {!isIndoors && (
-              <div style={S.infoRow}>
-                <span style={S.infoLabel}>Live Screen</span>
+              <DescRow label="Live Screen" desc="The overworld screen Link is physically standing on right now (may differ from the 'Screen' in Game State during scrolling transitions).">
                 <span style={{ color: '#7f7' }}>0x{linkDebug.liveScreenIndex.toString(16).toUpperCase()}</span>
-              </div>
+              </DescRow>
             )}
             {linkDebug.linkLayer !== null && (
-              <div style={S.infoRow}>
-                <span style={S.infoLabel}>Layer</span>
+              <DescRow label="Layer" desc="Link's current collision layer (link_is_on_lower_level). 0=Upper/BG2 (drawn behind BG1), 1=Lower/BG1 (drawn in front). Can change via staircases if not blocked.">
                 <span style={{ color: linkDebug.linkLayer === 0 ? '#7ff' : '#ff7' }}>
                   {linkDebug.linkLayer === 0 ? '0 (upper/BG2)' : '1 (lower/BG1)'}
                 </span>
-              </div>
+              </DescRow>
+            )}
+            {linkDebug.collisionType !== null && linkDebug.collisionType >= 0 && (
+              <DescRow label="Collision" desc="Room collision type (room_is_dark byte bits). 0=single layer, 1=both layers active, 2=both+scroll, 3=moving floor, 4=water/swim. Determines which BG layers have collision.">
+                <span style={{ color: '#f9a' }}>
+                  {linkDebug.collisionType} ({['One','Both','Both+Scroll','MovFloor','Swim'][linkDebug.collisionType] ?? '?'})
+                </span>
+              </DescRow>
+            )}
+            {linkDebug.staircaseType !== null && linkDebug.staircaseType >= 0 && (
+              <DescRow label="Staircase" desc="Controls layer-change behavior (kind_of_in_room_staircase). 0=intra-room stairs (layer+room shift), 1=layer stairs (changes allowed), 2=pseudo/water stairs (ALL layer changes BLOCKED).">
+                <span style={{ color: linkDebug.staircaseType === 2 ? '#f55' : '#5f5' }}>
+                  {linkDebug.staircaseType} ({['IntraRoom','Layer','Blocked'][linkDebug.staircaseType] ?? '?'})
+                </span>
+              </DescRow>
             )}
           </div>
         </div>
@@ -1343,6 +1170,11 @@ function NavigationWidgetContent() {
                       </div>
                       <span style={S.cardTitle}>{displayName}</span>
                       <span style={S.cardSub}>#{ent.id}</span>
+                      {entranceSpawns && ent.id < entranceSpawns.length && (
+                        <span style={{ fontSize: 8, color: entranceSpawns[ent.id].startingLayer === 0 ? '#7ff' : '#ff7', marginTop: 1 }}>
+                          {entranceSpawns[ent.id].startingLayer === 0 ? '▲ Upper' : '▼ Lower'}
+                        </span>
+                      )}
                       {t?.requirements && t.requirements.length > 0 && (
                         <div style={{ display: 'flex', gap: 2, marginTop: 2 }}>{t.requirements.map(r => <ReqIcon key={r} req={r} />)}</div>
                       )}
@@ -1415,25 +1247,6 @@ function NavigationWidgetContent() {
           </>
         )}
       </div>
-
-      {/* Review */}
-      <StatusRow status={locationReview.status} comment={locationReview.comment} onStatus={setLocStatus} onComment={setLocComment} />
-
-      {/* ═══ Editor Dialogs ═══ */}
-      <ScreenEditorDialog
-        open={screenEditorOpen}
-        onClose={() => setScreenEditorOpen(false)}
-        existingScreen={screenStatus.screen}
-        gameState={{ roomIndex, palaceIndex, isIndoors, isDarkWorld }}
-      />
-      <ConnectionEditorDialog
-        open={connEditorOpen}
-        onClose={() => setConnEditorOpen(false)}
-        screenId={screenStatus.screen?.id ?? null}
-        screenMeta={screenStatus.screen ? { type: screenStatus.screen.type, dungeon: screenStatus.screen.type === 'dungeon' ? getDungeonName(screenStatus.screen.dungeon.palaceIndex) : undefined, isDarkWorld } : null}
-        existingConnections={connStatus.existingConnections}
-        unmatchedConnections={connStatus.unmatched}
-      />
     </div>
   );
 }
@@ -1585,25 +1398,6 @@ function ReqIcon({ req }: { req: string }) {
     return <span title={req} style={{ fontSize: 12, marginRight: 2 }}>{info.icon}</span>;
   }
   return <span style={{ fontSize: 10, color: '#fc6', marginRight: 4, background: 'rgba(255,200,0,0.12)', padding: '0 3px', borderRadius: 2 }}>{req}</span>;
-}
-
-// ─── StatusRow ─────────────────────────────────────────────────────────
-
-function StatusRow({ status, comment, onStatus, onComment }: { status: ReviewStatus; comment?: string; onStatus: (s: ReviewStatus) => void; onComment: (c: string) => void }) {
-  return (
-    <div>
-      <div style={S.statusRow}>
-        {STATUS_BTNS.map(b => (
-          <button key={b.key} onClick={() => onStatus(b.key)} style={{ ...S.statusBtn, ...(status === b.key ? { color: b.color, borderColor: b.color } : {}) }}>
-            {b.label}
-          </button>
-        ))}
-      </div>
-      {(status === 'bad' || status === 'yellow') && (
-        <input style={S.commentInput} placeholder="Note..." value={comment ?? ''} onChange={e => onComment(e.target.value)} />
-      )}
-    </div>
-  );
 }
 
 // ─── TileRecorderBtn (compact) ─────────────────────────────────────────
@@ -2116,16 +1910,23 @@ const S: Record<string, React.CSSProperties> = {
   connHeader: { display: 'flex', alignItems: 'center', gap: 5 },
   connTitle: { fontSize: 11, fontWeight: 600, color: '#ddd' },
   dimBadge: { fontSize: 9, padding: '0 4px', borderRadius: 3, background: 'rgba(255,255,255,0.06)', color: '#888', marginLeft: 'auto', fontFamily: "'JetBrains Mono', monospace" },
-  statusRow: { display: 'flex', gap: 3, marginTop: 3 },
-  statusBtn: {
-    padding: '1px 6px', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 3,
-    fontSize: 10, cursor: 'pointer', background: 'rgba(255,255,255,0.04)', color: '#888', fontFamily: 'inherit',
-  },
-  commentInput: {
-    width: '100%', padding: '2px 6px', background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.12)', borderRadius: 3, color: '#ccc',
-    fontSize: 10, fontFamily: 'inherit', outline: 'none', marginTop: 3,
-  },
 };
+
+// ─── DescRow — clickable label that expands a description ──────────────
+
+function DescRow({ label, desc, children }: { label: string; desc: string; children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div>
+      <div style={S.infoRow}>
+        <span style={{ ...S.infoLabel, cursor: 'pointer', textDecoration: 'underline', textDecorationStyle: 'dotted', textUnderlineOffset: '2px' } as React.CSSProperties} onClick={() => setOpen(o => !o)}>{label}</span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>{children}</span>
+      </div>
+      {open && (
+        <div style={{ fontSize: 9, color: '#999', lineHeight: '12px', padding: '2px 0 4px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>{desc}</div>
+      )}
+    </div>
+  );
+}
 
 export { NavigationWidgetContent };

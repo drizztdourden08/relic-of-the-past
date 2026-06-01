@@ -160,6 +160,20 @@ int WasmGetLinkIsOnLowerLevel(void) {
   return link_is_on_lower_level ? 1 : 0;
 }
 
+EMSCRIPTEN_KEEPALIVE
+int WasmGetRoomCollisionType(void) {
+  if (!player_is_indoors) return -1;
+  return (int)dung_hdr_collision;
+}
+
+// Headless-safe: read collision type directly from ROM header for any room
+EMSCRIPTEN_KEEPALIVE
+int WasmGetRoomCollisionTypeForRoom(int room_id) {
+  if (room_id < 0 || room_id > 0x127) return -1;
+  const uint8 *hdr = GetRoomHeaderPtr(room_id);
+  return (int)((hdr[0] >> 2) & 7);
+}
+
 // ─── Indoor Dynamic Blockers (Early-game Uncle) ───
 
 static uint8 g_indoor_uncle_blockers_buf[1 + 2 * 4];
@@ -571,7 +585,7 @@ int WasmGetEntranceRooms(void) {
 
 // Entrance spawn positions: playerX(u16) + playerY(u16) per entry, count prefix.
 // 133 entries max → 2 + 133*4 = 534 bytes.
-static uint8 g_entrance_spawn_buf[2 + 133 * 4];
+static uint8 g_entrance_spawn_buf[2 + 133 * 5];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetEntranceSpawns(void) {
@@ -580,13 +594,14 @@ int WasmGetEntranceSpawns(void) {
   g_entrance_spawn_buf[0] = count & 0xFF;
   g_entrance_spawn_buf[1] = (count >> 8) & 0xFF;
   for (uint16 i = 0; i < count; i++) {
-    int o = 2 + i * 4;
+    int o = 2 + i * 5;
     uint16 px = kEntranceData_playerX[i];
     uint16 py = kEntranceData_playerY[i];
     g_entrance_spawn_buf[o + 0] = px & 0xFF;
     g_entrance_spawn_buf[o + 1] = (px >> 8) & 0xFF;
     g_entrance_spawn_buf[o + 2] = py & 0xFF;
     g_entrance_spawn_buf[o + 3] = (py >> 8) & 0xFF;
+    g_entrance_spawn_buf[o + 4] = kEntranceData_startingBg[i];
   }
   return (int)g_entrance_spawn_buf;
 }
@@ -795,6 +810,19 @@ int WasmGetRoomTravelDestinations(void) {
     g_travel_dest_buf[i] = player_is_indoors ? dung_hdr_travel_destinations[i] : 0;
   }
   return (int)g_travel_dest_buf;
+}
+
+// ─── Room Staircase Type (gate variable for layer changes) ───
+// Returns the current value of kind_of_in_room_staircase (g_ram+0x44A).
+// 0 = intra-room stairs (layer changes allowed + room index shift)
+// 1 = layer stairs (layer changes allowed)
+// 2 = pseudo/water stairs or none (layer changes BLOCKED)
+// Returns -1 if outdoors.
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetStaircaseType(void) {
+  if (!player_is_indoors) return -1;
+  return *(uint16*)(g_ram + 0x44A);
 }
 
 // ─── Room Walk Boundaries (palace toggle doors + open edges) ───

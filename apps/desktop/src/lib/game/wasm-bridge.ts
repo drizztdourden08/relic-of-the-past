@@ -419,6 +419,28 @@ function wasmGetLinkLayer(): 0 | 1 | null {
   }
 }
 
+/** Room collision type: 0=None, 1=One(both layers), 2=Moving, 3=Horiz, 4=Swimming. -1 if outdoors. */
+function wasmGetRoomCollisionType(): number | null {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return null;
+  try {
+    return mod.ccall('WasmGetRoomCollisionType', 'number', [], []) as number;
+  } catch {
+    return null;
+  }
+}
+
+/** Staircase type (layer change gate): 0=intra-room stairs, 1=layer stairs, 2=blocked. -1 if outdoors. */
+function wasmGetStaircaseType(): number | null {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return null;
+  try {
+    return mod.ccall('WasmGetStaircaseType', 'number', [], []) as number;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Build a 64×64 collision attr grid for any overworld screen (headless, no game state dependency).
  * Returns a flat Uint8Array of 4096 bytes (row-major), or null if WASM unavailable.
@@ -859,8 +881,8 @@ function wasmGetEntranceRooms(): Uint16Array | null {
   }
 }
 
-/** Get entrance spawn positions (playerX, playerY) for all entrances. */
-function wasmGetEntranceSpawns(): Array<{ x: number; y: number }> | null {
+/** Get entrance spawn positions (playerX, playerY, startingBg) for all entrances. */
+function wasmGetEntranceSpawns(): Array<{ x: number; y: number; startingLayer: number }> | null {
   const mod = currentModule;
   if (!mod || currentState.status !== 'running') return null;
   try {
@@ -868,12 +890,13 @@ function wasmGetEntranceSpawns(): Array<{ x: number; y: number }> | null {
     if (!ptr) return null;
     const heap = mod.HEAPU8;
     const count = heap[ptr] | (heap[ptr + 1] << 8);
-    const out: Array<{ x: number; y: number }> = [];
+    const out: Array<{ x: number; y: number; startingLayer: number }> = [];
     for (let i = 0; i < count; i++) {
-      const o = ptr + 2 + i * 4;
+      const o = ptr + 2 + i * 5;
       out.push({
         x: heap[o] | (heap[o + 1] << 8),
         y: heap[o + 2] | (heap[o + 3] << 8),
+        startingLayer: heap[o + 4] >> 4,
       });
     }
     return out;
@@ -904,6 +927,8 @@ export {
   wasmGetIndoorDualLayerGrids,
   wasmGetIndoorLayer0Grid,
   wasmGetLinkLayer,
+  wasmGetRoomCollisionType,
+  wasmGetStaircaseType,
   wasmGetIndoorUncleBlockers,
   wasmGetLiveSprites,
   wasmGetMenuState,

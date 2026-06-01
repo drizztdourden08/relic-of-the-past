@@ -55,6 +55,14 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultFloatingSize: { width: 340, height: 460 },
   },
   {
+    id: 'dataset',
+    label: 'Dataset & Mapping',
+    defaultVisibility: 'game-only' as WidgetVisibility,
+    defaultSide: 'left' as SnapSide,
+    defaultDockedSize: 300,
+    defaultFloatingSize: { width: 320, height: 400 },
+  },
+  {
     id: 'cheats',
     label: 'Cheats',
     defaultVisibility: 'game-only' as WidgetVisibility,

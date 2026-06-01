@@ -3,7 +3,7 @@ import { TitleBar } from '../components/views/TitleBar';
 import { GameLayer } from '../components/views/GameLayer';
 import { SaveStateOverlay } from '../components/views/SaveStateOverlay/SaveStateOverlay';
 import { WidgetManager, useWidgetLayout } from '../components/composites/Widget';
-import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, CheatsWidgetContent } from '../widgets';
+import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, DatasetWidgetContent, CheatsWidgetContent } from '../widgets';
 import { SpriteDebug } from '../components/views/SpriteDebug';
 import { useShadowEditorStore } from '../stores/shadow-editor-store';
 import { Dialog } from '../components/composites/Dialog';
@@ -161,6 +161,7 @@ const App = () => {
         onShowCredits={() => nav.setActivePage('credits')}
         onShowSpriteDebug={toggleSpriteDebug}
         onShowConnectionDebug={() => widgets.toggle('navigation')}
+        onToggleDataset={() => widgets.toggle('dataset')}
         onShowShadowEditor={handleShowShadowEditor}
         activeProfile={profileMgmt.activeProfile}
         gameRunning={game.isRunning}
@@ -219,6 +220,7 @@ const App = () => {
             logs: <LogsWidgetContent />,
             debug: <DebugWidgetContent />,
             navigation: <NavigationWidgetContent />,
+            dataset: <DatasetWidgetContent />,
             cheats: <CheatsWidgetContent />,
           }}
         </WidgetManager>
