@@ -13,14 +13,14 @@ import { getEntranceIcon } from '../../lib/entrance-icons';
 import { buildScreenBundle, floodFillScreen, getConnections } from '@shared/game/navigation';
 import type { FloodFillOptions, QuadrantBounds } from '@shared/game/navigation';
 import type { ScreenBundle, OverworldEntrance } from '@shared/game/navigation';
-import { getScreenLookup, resolveCurrentScreenDetailed, SCREEN_BY_ID } from '@shared/game/data/screens';
-import type { ScreenMatchResult, VariantGameState } from '@shared/game/data/screens';
+import { getScreenLookup, SCREEN_BY_ID } from '@shared/game/data/screens';
 import { ALL_CONNECTIONS } from '@shared/game/data/connections';
-import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetProgressIndicator, wasmGetIndoorDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetRoomCollisionType, wasmGetStaircaseType, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetRoomDoorBoundaryTiles, wasmGetRoomExitDoors, wasmGetRoomStairInfo, wasmGetRoomWalkBoundaries } from '../../lib/game';
+import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetProgressIndicator, wasmGetIndoorDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetStaircaseType, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetRoomDoorBoundaryTiles, wasmGetRoomExitDoors, wasmGetRoomStairInfo, wasmGetRoomWalkBoundaries } from '../../lib/game';
 import { getCompletedChecks } from '../../lib/game/tracker';
 import type { OverworldVariantInfo } from '../../lib/game';
 import type { TileAttrContext } from '@shared/game/navigation/tile-attrs';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
+import { useScreenDetection, useLinkDebugState, useAutoFloodTrigger } from './hooks';
 
 /** Get overworld screen display name from screen index */
 function getScreenDisplayName(screenIndex: number): string {
@@ -180,12 +180,8 @@ function NavigationWidgetContent() {
   const [visibleScreenIndices, setVisibleScreenIndices] = useState<number[]>([]);
   const [screenBundle, setScreenBundle] = useState<ScreenBundle | null>(null);
   const [debugTick, setDebugTick] = useState(0);
-  const prevScreenRef = useRef<number | null>(null);
-  const prevLiveOverworldScreenRef = useRef<number | null>(null);
-  const prevQuadrantKeyRef = useRef<string | null>(null);
-  const prevInventoryKeyRef = useRef<string | null>(null);
-  const pendingGroundedRunRef = useRef(false);
   const handleRunRef = useRef<(() => Promise<void>) | null>(null);
+  const prevInventoryKeyRef = useRef<string | null>(null);
   const pendingAutoSecondPassRef = useRef(false);
   const autoSecondPassTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -212,18 +208,8 @@ function NavigationWidgetContent() {
   }, [overworldScreenIndex, isIndoors]);
 
   // ─── Screen detection: single source of truth ───
-  // resolveCurrentScreenDetailed uses: isIndoors → palaceIndex (dungeon vs cave) → whichEntrance (disambiguates duplicates) → roomIndex
-  // Variant state allows multiple definitions per roomIndex, resolved by game progress.
+  const detectionResult = useScreenDetection(debugTick);
   const progressInfo = wasmGetProgressIndicator();
-  const variantState = useMemo<VariantGameState>(() => ({
-    completedChecks: getCompletedChecks(),
-    entranceId: whichEntrance ?? undefined,
-    progressTier: progressInfo?.tier,
-  }), [whichEntrance, progressInfo?.tier, debugTick]); // debugTick ensures checks are re-evaluated periodically
-  const detectionResult = useMemo<ScreenMatchResult | null>(
-    () => resolveCurrentScreenDetailed(isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance, variantState),
-    [isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance, variantState],
-  );
   const detectedScreen = detectionResult?.screen ?? null;
   const screenName = detectedScreen?.name
     ?? (isIndoors ? `Room 0x${roomIndex.toString(16).toUpperCase().padStart(4, '0')}` : `Screen 0x${overworldScreenIndex.toString(16).toUpperCase().padStart(2, '0')}`);
@@ -242,47 +228,7 @@ function NavigationWidgetContent() {
     const id = setInterval(() => setDebugTick(t => (t + 1) & 1023), 200);
     return () => clearInterval(id);
   }, []);
-  const vpDebug = wasmGetViewportInfo?.();
-  const linkDebug = (() => {
-    void debugTick;
-    if (!vpDebug) return null;
-    const liveScreenCol = (vpDebug.linkX >> 9) & 7;
-    const liveScreenRow = (vpDebug.linkY >> 9) & 7;
-    const liveScreenIndex = (liveScreenRow << 3) | liveScreenCol;
-    const screenWorldX = liveScreenCol * 512;
-    const screenWorldY = liveScreenRow * 512;
-
-    const relX = vpDebug.linkX - screenWorldX;
-    const relY = vpDebug.linkY - screenWorldY;
-    const tileMinCol = Math.floor(relX / 8);
-    const tileMaxCol = Math.floor((relX + 15) / 8);
-    const tileMinRow = Math.floor(relY / 8);
-    const tileMaxRow = Math.floor((relY + 15) / 8);
-
-    const xc = vpDebug.linkX >> 3;
-    const baseX = screenWorldX >> 3;
-    const map16Col = ((xc - baseX) & 0x3E) >> 1;
-    const yc = vpDebug.linkY + 7;
-    const baseY = screenWorldY;
-    const map16Row = ((yc - baseY) & 0x1F0) >> 4;
-
-    return {
-      linkX: vpDebug.linkX,
-      linkY: vpDebug.linkY,
-      relX,
-      relY,
-      tileMinCol,
-      tileMaxCol,
-      tileMinRow,
-      tileMaxRow,
-      map16Row,
-      map16Col,
-      liveScreenIndex,
-      linkLayer: wasmGetLinkLayer?.() ?? null,
-      collisionType: wasmGetRoomCollisionType?.() ?? null,
-      staircaseType: wasmGetStaircaseType?.() ?? null,
-    };
-  })();
+  const linkDebug = useLinkDebugState(debugTick);
 
   // Clear overlay and screen bundle when screen changes
   useEffect(() => {
@@ -310,8 +256,7 @@ function NavigationWidgetContent() {
     if (isIndoors) {
       const layer0 = wasmGetIndoorLayer0Grid();
       if (!layer0) {
-        pendingGroundedRunRef.current = true;
-        return;
+        return; // Auto-trigger hook will retry on next tick
       }
     }
 
@@ -665,6 +610,7 @@ function NavigationWidgetContent() {
           dualLayerGrids: isIndoors ? dualLayerGrids : undefined,
           stairTiles: isIndoors ? dualLayerGrids?.stairTiles : undefined,
           startLayer: isIndoors ? linkLayer : undefined,
+          staircaseType: isIndoors ? (wasmGetStaircaseType?.() ?? undefined) : undefined,
           variant: runVariant ? {
             progressTier: runVariant.progressIndicator,
             eventOverlay: runVariant.eventOverlayActive,
@@ -856,67 +802,15 @@ function NavigationWidgetContent() {
     handleRunRef.current?.();
   }, [activeScreenIndex, running]);
 
-  // Auto-run flood fill on screen change
-  useEffect(() => {
-    if (!autoRun || running) return;
-    if (prevScreenRef.current !== null && prevScreenRef.current !== activeScreenIndex) {
-      // Delay flood fill until Link is grounded (submodule === 0).
-      // During transitions (falling, entering doors), submodule is non-zero.
-      const vp = wasmGetViewportInfo?.();
-      if (vp && vp.submodule !== 0) {
-        pendingGroundedRunRef.current = true;
-      } else {
-        pendingAutoSecondPassRef.current = true;
-        handleRunRef.current?.();
-      }
-    }
-    prevScreenRef.current = activeScreenIndex;
-  }, [autoRun, activeScreenIndex, running, handleRun]);
-
-  useEffect(() => {
-    if (!autoRun || running || isIndoors) return;
-    const vp = wasmGetViewportInfo?.();
-    if (!vp) return;
-    const liveScreen = (((vp.linkY >> 9) & 7) << 3) | ((vp.linkX >> 9) & 7);
-    if (prevLiveOverworldScreenRef.current !== null && prevLiveOverworldScreenRef.current !== liveScreen) {
-      if (vp.submodule !== 0) {
-        pendingGroundedRunRef.current = true;
-      } else {
-        pendingAutoSecondPassRef.current = true;
-        handleRunRef.current?.();
-      }
-    }
-    prevLiveOverworldScreenRef.current = liveScreen;
-  }, [autoRun, running, isIndoors, debugTick]);
-
-  // Check for pending grounded run on each tick (fires every 200ms via debugTick)
-  useEffect(() => {
-    if (!pendingGroundedRunRef.current || !autoRun || running) return;
-    const vp = wasmGetViewportInfo?.();
-    if (vp && vp.submodule === 0) {
-      pendingGroundedRunRef.current = false;
-      pendingAutoSecondPassRef.current = true;
-      handleRunRef.current?.();
-    }
-  }, [autoRun, running, debugTick]);
-
-  // Auto-run flood fill on indoor quadrant change (same room, different quadrant)
-  useEffect(() => {
-    if (!autoRun || running || !isIndoors) return;
-    const layout = wasmGetRoomLayoutInfo();
-    if (!layout || layout.intraEdges.length === 0) return;
-    const quadKey = `${layout.quadrantX},${layout.quadrantY}`;
-    if (prevQuadrantKeyRef.current !== null && prevQuadrantKeyRef.current !== quadKey) {
-      const vp = wasmGetViewportInfo?.();
-      if (vp && vp.submodule !== 0) {
-        pendingGroundedRunRef.current = true;
-      } else {
-        pendingAutoSecondPassRef.current = true;
-        handleRunRef.current?.();
-      }
-    }
-    prevQuadrantKeyRef.current = quadKey;
-  }, [autoRun, running, isIndoors, debugTick]);
+  // Auto-trigger: detect screen/quadrant changes and fire handleRun
+  useAutoFloodTrigger({
+    autoRun,
+    running,
+    isIndoors,
+    activeScreenIndex,
+    debugTick,
+    onTrigger: useCallback(() => { handleRunRef.current?.(); }, []),
+  });
 
   // Auto-run flood fill when inventory/equipment changes (affects reachability)
   useEffect(() => {

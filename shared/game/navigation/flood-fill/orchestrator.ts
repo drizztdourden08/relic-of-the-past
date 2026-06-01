@@ -7,10 +7,12 @@ import type { TileReq } from '../tile-attrs';
 import { GRID_SIZE } from '../types';
 import { unmetRequirements } from '../core/inventory';
 import { getAdjacentScreen } from '../core/grid-utils';
+import { runBFS } from '../core/bfs-engine';
 import { buildCollisionGridFromRawAttr } from '../screen-data/collision-grid';
 import { processStraightCliffs, processDiagonalCliffs, processSouthCliffs } from '../screen-data/cliff-preprocessing';
-import { floodFillBFS, floodFillBFSDualLayer } from './single-screen';
-import type { QuadrantBounds } from './single-screen';
+import { SingleLayerStrategy } from '../strategies/single-layer';
+import { DualLayerStrategy } from '../strategies/dual-layer';
+import type { QuadrantBounds } from '../strategies/layer-strategy';
 
 // ─── Screen Preparation ──────────────────────────────────────────────────────
 
@@ -169,6 +171,8 @@ export interface FloodFillOptions {
   stairTiles?: Array<{ row: number; col: number }>;
   /** Override start layer (from live game state). Only used when both layers passable at start. */
   startLayer?: 0 | 1;
+  /** kind_of_in_room_staircase value. When 2, layer changes are blocked — force single-layer BFS on startLayer. */
+  staircaseType?: number;
 }
 
 /**
@@ -208,7 +212,9 @@ export function floodFillScreen(
   let tileLayer: (0 | 1 | 2)[][] | undefined;
   let reachableByLayer: [ReachState[][], ReachState[][]] | undefined;
 
-  const useDualLayer = isIndoors && !!options.dualLayerGrids;
+  // staircaseType 2 = layer changes blocked. Force single-layer BFS on the starting layer only.
+  const layerBlocked = options.staircaseType === 2;
+  const useDualLayer = isIndoors && !!options.dualLayerGrids && !layerBlocked;
 
   if (useDualLayer) {
     const { layer0, layer1 } = options.dualLayerGrids!;
@@ -239,12 +245,15 @@ export function floodFillScreen(
       tileContext, entrances, screenIndex,
     );
 
-    const bfsResult = floodFillBFSDualLayer(
+    const bfsBounds: QuadrantBounds = quadrantBounds ?? { minRow: 0, maxRow: GRID_SIZE - 1, minCol: 0, maxCol: GRID_SIZE - 1 };
+    const strategy = new DualLayerStrategy(
       [prep0.grid.tiles, prep1.grid.tiles],
       [prep0.grid.rawAttr, prep1.grid.rawAttr],
-      start.row, start.col, startLayer,
-      ePos, inv, tileContext, quadrantBounds,
+      tileContext,
+      startLayer,
     );
+
+    const bfsResult = runBFS(strategy, start.row, start.col, ePos, inv, bfsBounds);
 
     reachable = bfsResult.reachable;
     transitions = bfsResult.transitions;
@@ -280,7 +289,12 @@ export function floodFillScreen(
 
   // ─── Single-layer path (overworld or rooms without dual-layer data) ─────────
   {
-    const prep = prepareScreen(rawAttrGrid, tileContext, dynamicBlockers);
+    // When layer changes are blocked (staircaseType 2) but dual grids exist,
+    // use the starting layer's grid instead of the raw attr grid.
+    const singleLayerGrid = layerBlocked && options.dualLayerGrids
+      ? (options.startLayer === 1 ? options.dualLayerGrids.layer1 : options.dualLayerGrids.layer0)
+      : rawAttrGrid;
+    const prep = prepareScreen(singleLayerGrid, tileContext, dynamicBlockers);
     grid = prep.grid;
     ledges = prep.ledges;
     dynamicBlockerCells = prep.dynamicBlockerCells;
@@ -294,11 +308,10 @@ export function floodFillScreen(
   const start = findStartPosition(grid, startPos);
   const inv = inventory ?? new Set<TileReq>();
 
-  // Single-layer BFS
-  const bfsResult = floodFillBFS(
-    grid.tiles, start.row, start.col, entrancePositions, inv, grid.rawAttr, tileContext,
-    undefined, quadrantBounds,
-  );
+  // Single-layer BFS (using unified engine with SingleLayerStrategy)
+  const singleBounds: QuadrantBounds = quadrantBounds ?? { minRow: 0, maxRow: GRID_SIZE - 1, minCol: 0, maxCol: GRID_SIZE - 1 };
+  const strategy = new SingleLayerStrategy(grid.tiles, grid.rawAttr, tileContext);
+  const bfsResult = runBFS(strategy, start.row, start.col, entrancePositions, inv, singleBounds);
 
   // Filter ledges to only reachable ones
   const reachableLedges = ledges.filter(l => bfsResult.reachable[l.startRow]?.[l.startCol]);

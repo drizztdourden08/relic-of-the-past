@@ -7,15 +7,13 @@
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useGameUIStore } from '../../stores/game-ui-store';
-import { resolveCurrentScreenDetailed } from '@shared/game/data/screens';
-import type { ScreenMatchResult, VariantGameState } from '@shared/game/data/screens';
 import { getDungeonName } from '@shared/game/data/screens/game-values';
 import { wasmGetProgressIndicator, wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetRoomStairInfo } from '../../lib/game';
-import { getCompletedChecks } from '../../lib/game/tracker';
 import { useScreenDataStatus, useConnectionStatus } from './useDatasetStatus';
 import { ScreenEditorDialog } from './ScreenEditorDialog';
 import { ConnectionEditorDialog } from './ConnectionEditorDialog';
 import { StatusBadge } from '../../components/primitives';
+import { useScreenDetection } from './hooks';
 
 type ReviewStatus = 'neutral' | 'good' | 'bad' | 'yellow';
 interface ReviewEntry { status: ReviewStatus; comment?: string; }
@@ -30,7 +28,7 @@ const STATUS_BTNS: { key: ReviewStatus; label: string; color: string }[] = [
 ];
 
 function DatasetWidgetContent() {
-  const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex, whichEntrance } = useGameUIStore(s => s.map);
+  const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex } = useGameUIStore(s => s.map);
 
   const [reviewData, setReviewData] = useState<ReviewData>({});
   const [screenEditorOpen, setScreenEditorOpen] = useState(false);
@@ -52,17 +50,8 @@ function DatasetWidgetContent() {
     : `${isDarkWorld ? 'dw' : 'lw'}-${overworldScreenIndex.toString(16).padStart(2, '0')}`;
 
   // Screen detection
+  const detectionResult = useScreenDetection();
   const progressInfo = wasmGetProgressIndicator();
-  const variantState = useMemo<VariantGameState>(() => ({
-    completedChecks: getCompletedChecks(),
-    entranceId: whichEntrance ?? undefined,
-    progressTier: progressInfo?.tier,
-  }), [whichEntrance, progressInfo?.tier]);
-
-  const detectionResult = useMemo<ScreenMatchResult | null>(
-    () => resolveCurrentScreenDetailed(isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance, variantState),
-    [isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance, variantState],
-  );
 
   // Dataset status
   const screenStatus = useScreenDataStatus(detectionResult, isIndoors);
