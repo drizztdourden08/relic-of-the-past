@@ -4,7 +4,7 @@ import type { FloodFillResult, ConnectionInfo } from '@shared/game/navigation';
 interface PathTile { row: number; col: number; attr: number; }
 export interface FallHoleSpawn { gridRow: number; gridCol: number; entranceId: number; }
 
-interface ConnectionOverlayState {
+interface NavigationOverlayState {
   /** Whether the overlay is visible */
   visible: boolean;
   /** Current flood fill result to render */
@@ -33,7 +33,7 @@ interface ConnectionOverlayState {
   clear: () => void;
 }
 
-export const useConnectionOverlayStore = create<ConnectionOverlayState>((set) => ({
+export const useNavigationOverlayStore = create<NavigationOverlayState>((set) => ({
   visible: false,
   result: null,
   results: [],
@@ -48,3 +48,6 @@ export const useConnectionOverlayStore = create<ConnectionOverlayState>((set) =>
   setLockedPath: (path) => set({ lockedPath: path }),
   clear: () => set({ result: null, results: [], connections: [], fallHoleSpawns: [], visible: false, lockedTarget: null, lockedPath: null }),
 }));
+
+/** @deprecated Use useNavigationOverlayStore instead */
+export const useConnectionOverlayStore = useNavigationOverlayStore;

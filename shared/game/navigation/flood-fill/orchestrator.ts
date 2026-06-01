@@ -284,6 +284,7 @@ export function floodFillScreen(
       entrances: sEnts, ledges: reachableLedges, hookTargets,
       attrGrid: grid.rawAttr, reqGrid, dynamicBlockerCells, borders, variant,
       tileLayer, reachableByLayer, dualLayerGrids: options.dualLayerGrids,
+      staircaseType: options.staircaseType, startLayer: options.startLayer,
     };
   }
 
@@ -330,6 +331,7 @@ export function floodFillScreen(
     attrGrid: grid.rawAttr, reqGrid: bfsResult.reqGrid,
     dynamicBlockerCells, borders, variant,
     dualLayerGrids: options.dualLayerGrids,
+    staircaseType: options.staircaseType, startLayer: options.startLayer,
   };
 }
 

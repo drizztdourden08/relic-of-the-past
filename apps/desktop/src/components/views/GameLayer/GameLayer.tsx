@@ -8,7 +8,7 @@ import { useCanvasFit } from '../../../hooks/useCanvasFit';
 import { useShadowEditorStore } from '../../../stores/shadow-editor-store';
 import { useExclusiveInsetsStore } from '../../composites/Widget/behavior/exclusiveInsetsStore';
 import { ControllerDisconnectOverlay } from './sub-components/ControllerDisconnectOverlay';
-import { ConnectionOverlay } from './sub-components/ConnectionOverlay';
+import { NavigationOverlay } from './sub-components/navigation-overlay';
 import { ShadowEditorOverlay } from './sub-components/ShadowEditorOverlay';
 import { ShadowEditorPanel } from './sub-components/ShadowEditorPanel';
 import { ShadowElementList } from './sub-components/ShadowElementList';
@@ -248,7 +248,7 @@ const GameLayer = (props: GameLayerProps) => {
           const screenRow = Math.floor((vp.cameraY + 112) / 512) & 7;
           screenId = screenRow * 8 + screenCol;
 
-          // Update viewport origin every frame (same coords as ConnectionOverlay)
+          // Update viewport origin every frame (same coords as NavigationOverlay)
           const viewLeft = vp.cameraX - vp.extraLeftRight;
           const viewTop = vp.cameraY;
           renderer.setScreenOrigin(viewLeft, viewTop, vp.snesWidth, vp.snesHeight);
@@ -390,7 +390,7 @@ const GameLayer = (props: GameLayerProps) => {
           </div>
         </div>
       )}
-      {status === 'running' && <ConnectionOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
+      {status === 'running' && <NavigationOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
       {status === 'running' && <ShadowEditorOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
       {status === 'running' && <ShadowEditorPanel />}
       {status === 'running' && <ShadowElementList />}

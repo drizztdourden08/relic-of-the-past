@@ -116,6 +116,10 @@ export interface FloodFillResult {
   reachableByLayer?: [ReachState[][], ReachState[][]];
   /** Raw per-layer attr grids for dual-layer rooms (for tooltip display). */
   dualLayerGrids?: { layer0: number[][]; layer1: number[][] };
+  /** kind_of_in_room_staircase value at BFS time. 2 = layer changes blocked. */
+  staircaseType?: number;
+  /** Which layer the BFS started on (0=upper/BG2, 1=lower/BG1). */
+  startLayer?: 0 | 1;
   borders: {
     north: BorderSummary;
     south: BorderSummary;

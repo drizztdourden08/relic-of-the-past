@@ -19,7 +19,7 @@ interface Props {
 
 /**
  * World-space canvas overlay for the shadow editor.
- * Uses the same viewport projection as ConnectionOverlay — game controls move the camera,
+ * Uses the same viewport projection as NavigationOverlay — game controls move the camera,
  * and all elements are positioned in world coordinates.
  */
 function ShadowEditorOverlay({ width, height, gameRunning }: Props) {

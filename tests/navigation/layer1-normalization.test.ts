@@ -144,7 +144,7 @@ describe('layer1 0x1C normalization', () => {
   });
 
   it('tooltip split condition: never triggers from 0x1C default fill after normalization', () => {
-    // Simulate the tooltip condition from ConnectionOverlay.tsx
+    // Simulate the tooltip condition from NavigationOverlay (TileTooltipContent)
     const tooltipShouldShowSplit = (layer0Attr: number | undefined, layer1Attr: number | undefined): boolean => {
       // Mirrors: tooltip.layer0Attr !== undefined && tooltip.layer0Attr !== (tooltip.layer1Attr ?? 0)
       return layer0Attr !== undefined && layer0Attr !== (layer1Attr ?? 0);

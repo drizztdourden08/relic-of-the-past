@@ -122,7 +122,7 @@ function createShadowRenderer(
 
   function rebuildHeightmap(): void {
     if (!screenData || screenData.heightmap.length === 0) return;
-    // Build heightmap in viewport-local space, exactly matching the ConnectionOverlay's coords.
+    // Build heightmap in viewport-local space, exactly matching the NavigationOverlay's coords.
     // offset = (viewLeft, viewTop) converts world coords → viewport-local coords.
     const texData = buildHeightmapTexture(screenData.heightmap, snesWidth, snesHeight, viewOriginX, viewOriginY);
     gl.bindTexture(gl.TEXTURE_2D, heightmapTex);
@@ -152,7 +152,7 @@ function createShadowRenderer(
       }
 
       // Rebuild heightmap every frame at current viewport position
-      // (matches ConnectionOverlay's coordinate approach exactly)
+      // (matches NavigationOverlay's coordinate approach exactly)
       rebuildHeightmap();
 
       // Upload game canvas as texture

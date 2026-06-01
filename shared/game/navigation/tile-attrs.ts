@@ -54,7 +54,10 @@ export type TileLabel =
   | 'bush' | 'sign' | 'pot'
   | 'light rock' | 'dark rock'
   | 'hammer peg'
-  | 'bonk rock' | 'dash target';
+  | 'bonk rock' | 'dash target'
+  // Doors / transitions (interior)
+  | 'door passage' | 'shutter door' | 'entrance'
+  | 'torch' | 'flaggable door';
 
 /** Navigation passability for flood fill */
 export type TilePass = 'free' | 'obstacle' | 'blocked' | 'water' | 'pit';
@@ -253,14 +256,37 @@ function buildInteriorAttrs(): Readonly<Record<number, TileAttrDef>> {
   // 0x8E-0x8F are interior entrance/staircase tiles (TileBehavior_Entrance).
   t[0x8E] = { pass: 'free', labels: ['entrance'], cat: 'ground' };
   t[0x8F] = { pass: 'free', labels: ['entrance'], cat: 'ground' };
-  for (let attr = 0x90; attr <= 0xAF; attr++) {
-    t[attr] = { pass: 'blocked', labels: ['wall'], cat: 'special' };
+  // 0x90-0x97: TileBehavior_LayerToggleShutterDoor — passable doors that toggle Link's layer.
+  // These are shutter doors (opened by killing enemies). They do NOT set collision bits.
+  for (let attr = 0x90; attr <= 0x97; attr++) {
+    t[attr] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
   }
+  // 0x98-0x9F, 0xA8-0xAF: TileBehavior_LayerAndDungeonToggleShutterDoor — toggles layer + dungeon.
+  for (let attr = 0x98; attr <= 0x9F; attr++) {
+    t[attr] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
+  }
+  // 0xA0-0xA1, 0xA4-0xA5: TileBehavior_DungeonToggleManualDoor — dungeon toggle only.
+  t[0xA0] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
+  t[0xA1] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
+  t[0xA4] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
+  t[0xA5] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
+  // 0xA2-0xA3: TileBehavior_DungeonToggleShutterDoor — dungeon shutter.
+  t[0xA2] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
+  t[0xA3] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
+  // 0xA6-0xA7: TileBehavior_NothingOW — completely inert indoors (no collision, no behavior).
+  t[0xA6] = { pass: 'free', labels: ['ground'], cat: 'ground' };
+  t[0xA7] = { pass: 'free', labels: ['ground'], cat: 'ground' };
+  // 0xA8-0xAF: LayerAndDungeonToggleShutterDoor (same as 0x98-0x9F).
+  for (let attr = 0xA8; attr <= 0xAF; attr++) {
+    t[attr] = { pass: 'free', labels: ['shutter door'], cat: 'ground' };
+  }
+  // 0xC0-0xCF: TileBehavior_LightableTorch — solid until lit (R14 |= bits).
   for (let attr = 0xC0; attr <= 0xCF; attr++) {
-    t[attr] = { pass: 'blocked', labels: ['wall'], cat: 'special' };
+    t[attr] = { pass: 'blocked', labels: ['torch'], cat: 'special' };
   }
+  // 0xF0-0xFF: TileBehavior_FlaggableDoor — solid until flag set (R14 |= bits).
   for (let attr = 0xF0; attr <= 0xFF; attr++) {
-    t[attr] = { pass: 'blocked', labels: ['wall'], cat: 'special' };
+    t[attr] = { pass: 'blocked', labels: ['flaggable door'], cat: 'special' };
   }
 
   return t;

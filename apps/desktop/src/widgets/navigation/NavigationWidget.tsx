@@ -8,7 +8,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { Icon } from '@iconify/react/offline';
 import { useGameUIStore } from '../../stores/game-ui-store';
-import { useConnectionOverlayStore } from '../../stores/connection-overlay-store';
+import { useNavigationOverlayStore } from '../../stores/navigation-overlay-store';
 import { getEntranceIcon } from '../../lib/entrance-icons';
 import { buildScreenBundle, floodFillScreen, getConnections } from '@shared/game/navigation';
 import type { FloodFillOptions, QuadrantBounds } from '@shared/game/navigation';
@@ -167,7 +167,7 @@ function NavigationWidgetContent() {
   const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex, whichEntrance, linkX, linkY } = useGameUIStore(s => s.map);
   const equipment = useGameUIStore(s => s.equipment);
   const inventoryItems = useGameUIStore(s => s.inventory.items);
-  const overlayStore = useConnectionOverlayStore();
+  const overlayStore = useNavigationOverlayStore();
   const [result, setResult] = useState<FloodFillResult | null>(null);
   const [connections, setConnections] = useState<ConnectionInfo[]>([]);
   const [fallHoleLandings, setFallHoleLandings] = useState<Array<{ gridRow: number; gridCol: number; entranceId: number }>>([]);
@@ -829,6 +829,8 @@ function NavigationWidgetContent() {
   }, [result, connections, renderResults]);
 
   // Derived: classify connections as internal (between bundle screens) vs external
+  // For indoor rooms, use `isIntraRoom` flag (set by getConnections for quadrant boundaries).
+  // For overworld, use bundle membership (adjacent screens in a 2×2 big-screen group).
   const bundleScreenSet = useMemo(() => new Set(screenBundle?.screens ?? []), [screenBundle]);
   const sortConn = (a: ConnectionInfo, b: ConnectionInfo) => {
     const edgeOrder = { north: 0, south: 1, west: 2, east: 3 };
@@ -838,10 +840,14 @@ function NavigationWidgetContent() {
     if (sa !== sb) return sa - sb;
     return a.targetScreen - b.targetScreen;
   };
-  const externalConnections = useMemo(() => connections.filter(c => !bundleScreenSet.has(c.targetScreen)).sort(sortConn), [connections, bundleScreenSet]);
+  const isInternalConn = useCallback((c: ConnectionInfo) => {
+    if (isIndoors) return !!c.isIntraRoom;
+    return bundleScreenSet.has(c.targetScreen);
+  }, [isIndoors, bundleScreenSet]);
+  const externalConnections = useMemo(() => connections.filter(c => !isInternalConn(c)).sort(sortConn), [connections, isInternalConn]);
   const internalConnections = useMemo(() => {
     // Deduplicate: A→east→B and B→west→A are the same border. Keep the spatially-correct one.
-    const internal = connections.filter(c => bundleScreenSet.has(c.targetScreen)).sort(sortConn);
+    const internal = connections.filter(c => isInternalConn(c)).sort(sortConn);
     const bestByPair = new Map<string, ConnectionInfo>();
     for (const c of internal) {
       const pair = [c.sourceScreen ?? 0, c.targetScreen].sort((a, b) => a - b);
@@ -853,7 +859,7 @@ function NavigationWidgetContent() {
       }
     }
     return [...bestByPair.values()];
-  }, [connections, bundleScreenSet]);
+  }, [connections, isInternalConn]);
 
   // Entrance spawn data for showing starting layer per entrance
   const entranceSpawns = wasmGetEntranceSpawns();
@@ -1387,7 +1393,7 @@ function TileRecorderBtn({ attrGrid, overworldScreenIndex }: { attrGrid: number[
 // ─── PathCopyBtn ───────────────────────────────────────────────────────
 
 function PathCopyBtn() {
-  const lockedPath = useConnectionOverlayStore(s => s.lockedPath);
+  const lockedPath = useNavigationOverlayStore(s => s.lockedPath);
   if (!lockedPath || lockedPath.length === 0) {
     return <button style={{ ...S.btn, ...S.btnDisabled }} disabled>📋 Path</button>;
   }
@@ -1477,7 +1483,7 @@ function ScreenMapWithConnections({ bundle, connections, renderResults, linkScre
   // Separate intra-room connections from external ones for rendering
   const intraConns = connections.filter(c => c.isIntraRoom);
   const externalConns = connections.filter(c => !c.isIntraRoom);
-  const fallHoleSpawns = useConnectionOverlayStore(s => s.fallHoleSpawns);
+  const fallHoleSpawns = useNavigationOverlayStore(s => s.fallHoleSpawns);
 
   // Group external connections by edge
   const byEdge: Record<string, ConnectionInfo[]> = { north: [], south: [], east: [], west: [] };
