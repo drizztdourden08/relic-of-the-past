@@ -6,87 +6,21 @@ import { classifyTileAttr } from '@shared/game/navigation/tile-classification';
 import { getTileAttrsMap, getAttrLabel } from '@shared/game/navigation/tile-attrs';
 import type { ReachState } from '@shared/game/navigation/types';
 import { STAIRS_TRAVERSAL_STATE } from '@shared/game/navigation/types';
-import { getScreenLookup } from '@shared/game/data/screens';
-import woodenDoor from '@iconify-icons/game-icons/wooden-door';
-import caveEntrance from '@iconify-icons/game-icons/cave-entrance';
-import dungeonGate from '@iconify-icons/game-icons/dungeon-gate';
-import fairyIcon from '@iconify-icons/game-icons/fairy';
-import shopIcon from '@iconify-icons/game-icons/shop';
-import houseIcon from '@iconify-icons/game-icons/house';
-import unknownIcon from '@iconify-icons/game-icons/perspective-dice-six-faces-random';
-import exitDoorIcon from '@iconify-icons/game-icons/exit-door';
-import respawnIcon from '@iconify-icons/game-icons/player-time';
-import forestEntranceIcon from '@iconify-icons/game-icons/hills';
-import holeIcon from '@iconify-icons/game-icons/hole';
-import wellIcon from '@iconify-icons/game-icons/well';
+import { getEntranceIcon, type IconData } from '../../../../lib/entrance-icons';
 
-type EntranceType = 'door' | 'cave' | 'hole' | 'well' | 'dungeon' | 'fairy' | 'shop' | 'house' | 'overworld' | 'respawn' | 'unknown';
+const iconImageCache = new Map<string, HTMLImageElement>();
 
-interface IconData { body: string; width?: number; height?: number; }
-
-const ENTRANCE_ICON_DATA: Record<EntranceType, IconData> = {
-  door: woodenDoor, cave: caveEntrance, hole: holeIcon, well: wellIcon,
-  dungeon: dungeonGate, fairy: fairyIcon, shop: shopIcon, house: houseIcon,
-  overworld: forestEntranceIcon, respawn: respawnIcon, unknown: unknownIcon,
-};
-
-const iconImageCache = new Map<EntranceType, HTMLImageElement>();
-
-function getIconImage(type: EntranceType): HTMLImageElement | null {
-  if (iconImageCache.has(type)) return iconImageCache.get(type)!;
-  const data = ENTRANCE_ICON_DATA[type];
-  if (!data) return null;
-  const w = data.width ?? 512;
-  const h = data.height ?? 512;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">${data.body.replace(/currentColor/g, '#ffcc44')}</svg>`;
+function getIconImageForEntrance(entId: number, roomId: number, roomIndex: number, isIndoors: boolean, respawnEntIds: Set<number>): HTMLImageElement | null {
+  const { icon, color } = getEntranceIcon(entId, roomId, roomIndex, isIndoors, respawnEntIds);
+  const key = `${icon.body.slice(0, 30)}_${color}`;
+  if (iconImageCache.has(key)) return iconImageCache.get(key)!;
+  const w = icon.width ?? 512;
+  const h = icon.height ?? 512;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">${icon.body.replace(/currentColor/g, color)}</svg>`;
   const img = new Image();
   img.src = 'data:image/svg+xml;base64,' + btoa(svg);
-  iconImageCache.set(type, img);
+  iconImageCache.set(key, img);
   return img;
-}
-
-// Also cache exitDoor icon image
-let exitDoorImg: HTMLImageElement | null = null;
-function getExitDoorImage(): HTMLImageElement {
-  if (exitDoorImg) return exitDoorImg;
-  const w = (exitDoorIcon as IconData).width ?? 512;
-  const h = (exitDoorIcon as IconData).height ?? 512;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">${(exitDoorIcon as IconData).body.replace(/currentColor/g, '#ffcc44')}</svg>`;
-  exitDoorImg = new Image();
-  exitDoorImg.src = 'data:image/svg+xml;base64,' + btoa(svg);
-  return exitDoorImg;
-}
-
-function classifyEntranceType(entId: number, roomId: number, roomIndex: number, isIndoors: boolean, respawnEntIds: Set<number>): EntranceType {
-  if (respawnEntIds.has(entId)) return 'respawn';
-  // Fall holes on overworld (id 200-999) are always pits
-  if (entId >= 200 && entId < 1000) return 'hole';
-  if (entId >= 1000) {
-    const screen = getScreenLookup().byCaveRoom.get(roomIndex);
-    if (!screen) return 'overworld';
-    if (screen.type === 'dungeon') return 'dungeon';
-    if (screen.type === 'interior') {
-      const kind = screen.interior.kind;
-      if (kind === 'shop') return 'shop';
-      if (kind === 'fairy') return 'fairy';
-      if (kind === 'house') return 'house';
-      if (kind === 'cave') return 'cave';
-    }
-    return 'door';
-  }
-  // When indoors, non-stair entrances always lead to the overworld
-  if (isIndoors) return 'overworld';
-  const screen = getScreenLookup().byCaveRoom.get(roomId);
-  if (!screen) return 'overworld';
-  if (screen.type === 'dungeon') return 'dungeon';
-  if (screen.type === 'interior') {
-    const kind = screen.interior.kind;
-    if (kind === 'shop') return 'shop';
-    if (kind === 'fairy') return 'fairy';
-    if (kind === 'house') return 'house';
-    if (kind === 'cave') return 'cave';
-  }
-  return 'door';
 }
 
 const EDGE_COLORS: Record<string, string> = {
@@ -900,8 +834,7 @@ function ConnectionOverlay({ width, height, gameRunning }: Props) {
         ctx.strokeRect(dx - 0.5, dy - 0.5, dw + 1, dh + 1);
 
         // Draw entrance type icon inside the square
-        const entType = classifyEntranceType(ent.id, ent.roomId, roomIndex, isIndoors, respawnEntIds);
-        const iconImg = (ent.id >= 1000 && isIndoors) ? getExitDoorImage() : getIconImage(entType);
+        const iconImg = getIconImageForEntrance(ent.id, ent.roomId, roomIndex, isIndoors, respawnEntIds);
         if (iconImg && iconImg.complete && iconImg.naturalWidth > 0) {
           const pad = Math.max(1, dw * 0.1);
           ctx.globalAlpha = 0.9;

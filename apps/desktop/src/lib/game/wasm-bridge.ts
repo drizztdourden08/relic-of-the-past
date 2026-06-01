@@ -569,6 +569,66 @@ function wasmGetRoomStairInfo(): RoomStairInfo[] {
   }
 }
 
+export interface RoomWalkBoundary {
+  destRoom: number;
+  row: number;
+  col: number;
+}
+
+/** Get inter-room walk-through boundaries (palace toggles like Castle→Sewer). */
+function wasmGetRoomWalkBoundaries(): RoomWalkBoundary[] {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return [];
+  try {
+    const ptr = mod.ccall('WasmGetRoomWalkBoundaries', 'number', [], []) as number;
+    if (!ptr) return [];
+    const heap = mod.HEAPU8;
+    const count = Math.min(heap[ptr], 4);
+    const out: RoomWalkBoundary[] = [];
+    for (let i = 0; i < count; i++) {
+      const o = ptr + 2 + i * 4;
+      out.push({
+        destRoom: heap[o + 0] | (heap[o + 1] << 8),
+        row: heap[o + 2],
+        col: heap[o + 3],
+      });
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+
+export interface RoomExitDoor {
+  col: number;
+  row: number;
+  direction: 'north' | 'south' | 'west' | 'east';
+}
+
+/** Get exit-to-overworld door positions for the current room. */
+function wasmGetRoomExitDoors(): RoomExitDoor[] {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return [];
+  try {
+    const ptr = mod.ccall('WasmGetRoomExitDoors', 'number', [], []) as number;
+    if (!ptr) return [];
+    const heap = mod.HEAPU8;
+    const count = Math.min(heap[ptr], 8);
+    const out: RoomExitDoor[] = [];
+    for (let i = 0; i < count; i++) {
+      const o = ptr + 2 + i * 3;
+      out.push({
+        col: heap[o + 0],
+        row: heap[o + 1],
+        direction: DIR_NAMES[heap[o + 2]] ?? 'south',
+      });
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+
 /** Get the 5 room travel destination bytes from the current room header. */
 function wasmGetRoomTravelDestinations(): number[] | null {
   const mod = currentModule;
@@ -855,7 +915,9 @@ export {
   wasmGetProgressIndicator,
   wasmGetRoomDoorBoundaryTiles,
   wasmGetRoomLayoutInfo,
+  wasmGetRoomExitDoors,
   wasmGetRoomStairInfo,
+  wasmGetRoomWalkBoundaries,
   wasmGetRoomTravelDestinations,
   wasmGetUIOverlayMode,
   wasmGetViewportInfo,
@@ -866,4 +928,4 @@ export {
   wasmSetUIOverlayMode,
   wasmTogglePause
 };
-export type { DoorBoundaryTile, EntranceData, ExitData, FallHole, GameProgressInfo, LiveSpriteInfo, OverworldEntrance, OverworldVariantInfo, RoomHeader, RoomLayoutInfo, ViewportInfo };
+export type { DoorBoundaryTile, EntranceData, ExitData, FallHole, GameProgressInfo, LiveSpriteInfo, OverworldEntrance, OverworldVariantInfo, RoomExitDoor, RoomHeader, RoomLayoutInfo, ViewportInfo };
