@@ -473,6 +473,30 @@ function wasmBuildRoomAttrGrid(roomId: number): Uint8Array | null {
   }
 }
 
+/** Debug: get dung_toggle_floor_pos entries (populated by WasmBuildRoomAttrGrid). */
+function wasmGetToggleFloorPositions(): Array<{ pos: number; row: number; col: number }> {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return [];
+  try {
+    const ptr = mod.ccall('WasmGetToggleFloorPositions', 'number', [], []) as number;
+    if (!ptr) return [];
+    const heap = mod.HEAPU8;
+    const count = heap[ptr];
+    const result: Array<{ pos: number; row: number; col: number }> = [];
+    for (let i = 0; i < count; i++) {
+      const o = ptr + 2 + i * 4;
+      const posLo = heap[o];
+      const posHi = heap[o + 1];
+      const row = heap[o + 2];
+      const col = heap[o + 3];
+      result.push({ pos: posLo | (posHi << 8), row, col });
+    }
+    return result;
+  } catch {
+    return [];
+  }
+}
+
 // ─── Room Layout & Door Boundary Info (intra-room screen transitions) ───
 
 export interface RoomLayoutInfo {
@@ -917,6 +941,7 @@ export {
   UI_STATE_BUFFER_SIZE,
   wasmBuildOverworldAttrGrid,
   wasmBuildRoomAttrGrid,
+  wasmGetToggleFloorPositions,
   wasmCheat,
   wasmGetAreaHeads,
   wasmGetEntranceRooms,

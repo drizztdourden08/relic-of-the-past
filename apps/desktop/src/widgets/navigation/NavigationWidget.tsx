@@ -15,7 +15,7 @@ import type { FloodFillOptions, QuadrantBounds } from '@shared/game/navigation';
 import type { ScreenBundle, OverworldEntrance } from '@shared/game/navigation';
 import { getScreenLookup, SCREEN_BY_ID } from '@shared/game/data/screens';
 import { ALL_CONNECTIONS } from '@shared/game/data/connections';
-import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetProgressIndicator, wasmGetIndoorDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetStaircaseType, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetRoomDoorBoundaryTiles, wasmGetRoomExitDoors, wasmGetRoomStairInfo, wasmGetRoomWalkBoundaries } from '../../lib/game';
+import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetProgressIndicator, wasmGetIndoorDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetStaircaseType, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetRoomExitDoors, wasmGetRoomStairInfo, wasmGetRoomWalkBoundaries, wasmGetToggleFloorPositions } from '../../lib/game';
 import { getCompletedChecks } from '../../lib/game/tracker';
 import type { OverworldVariantInfo } from '../../lib/game';
 import type { TileAttrContext } from '@shared/game/navigation/tile-attrs';
@@ -689,18 +689,30 @@ function NavigationWidgetContent() {
         }
       }
 
-      // Annotate all edges with layer toggle info from door data
+      // Annotate all edges with layer toggle info from toggle floor positions.
+      // dung_toggle_floor_pos is populated during room load for doors with type 22 (kDoorType_PlayerBgChange).
+      // These positions indicate tiles where crossing triggers link_is_on_lower_level ^= 1.
       if (isIndoors) {
-        const doors = wasmGetRoomDoorBoundaryTiles();
-        // Door type 22 = kDoorType_PlayerBgChange → layer toggle on crossing
-        const DOOR_TYPE_LAYER_TOGGLE = 22;
+        const togglePositions = wasmGetToggleFloorPositions();
+        // Threshold: how close a toggle position must be to the room edge to count for that edge
+        const EDGE_THRESHOLD = 8;
+        const GRID_MAX = 63;
         for (const conn of allConnections) {
-          // Find doors matching this connection's edge direction and overlapping tile positions
-          const matchingDoors = doors.filter(d =>
-            d.direction === conn.edge &&
-            conn.positions.some(p => Math.abs(p - d.row) <= 3) // doors span ~4 tiles
-          );
-          if (matchingDoors.some(d => d.doorType === DOOR_TYPE_LAYER_TOGGLE)) {
+          // For N/S edges, connection positions are column indices; for E/W edges, they are row indices
+          const useCol = conn.edge === 'north' || conn.edge === 'south';
+          const matchingToggles = togglePositions.filter(t => {
+            // Check toggle is near the correct edge
+            switch (conn.edge) {
+              case 'north': return t.row <= EDGE_THRESHOLD;
+              case 'south': return t.row >= GRID_MAX - EDGE_THRESHOLD;
+              case 'west': return t.col <= EDGE_THRESHOLD;
+              case 'east': return t.col >= GRID_MAX - EDGE_THRESHOLD;
+            }
+          });
+          // Check if any matching toggle position overlaps with connection positions
+          if (matchingToggles.some(t =>
+            conn.positions.some(p => Math.abs(p - (useCol ? t.col : t.row)) <= 3)
+          )) {
             conn.layerToggle = true;
           }
         }

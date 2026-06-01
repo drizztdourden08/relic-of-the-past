@@ -20,6 +20,12 @@ import {
   wasmGetFallHoles,
   wasmGetOverworldEntrances,
   wasmGetProgressIndicator,
+  wasmGetRoomDoorBoundaryTiles,
+  wasmGetRoomLayoutInfo,
+  wasmGetLinkLayer,
+  wasmGetStaircaseType,
+  wasmBuildRoomAttrGrid,
+  wasmGetToggleFloorPositions,
 } from '../../lib/game';
 import { resolveCurrentScreenDetailed } from '@shared/game/data/screens';
 import type { VariantGameState } from '@shared/game/data/screens';
@@ -164,6 +170,15 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
         label: i === 0 ? 'pit/block' : `stair${i - 1}`,
       })).filter(td => td.room !== 0) : null;
 
+      // ─── Door & room structure data ───
+      const doorBoundaryTiles = isIndoors ? wasmGetRoomDoorBoundaryTiles() : [];
+      const roomLayout = isIndoors ? wasmGetRoomLayoutInfo() : null;
+      const linkLayer = isIndoors ? wasmGetLinkLayer() : null;
+      const staircaseType = isIndoors ? wasmGetStaircaseType() : null;
+      const attrGrid = isIndoors ? wasmBuildRoomAttrGrid(roomIndex) : null;
+      // After WasmBuildRoomAttrGrid, toggle floor positions are populated
+      const toggleFloorPositions = isIndoors ? wasmGetToggleFloorPositions() : [];
+
       const dump = {
         slot,
         isIndoors,
@@ -199,6 +214,31 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
           fallHoleLandingCount: fallHoleLandings.length,
           excludedFallHoleIds: matchingEntrances.filter(e => e.isFallHole).map(e => e.id),
         },
+        doorBoundaryTiles: doorBoundaryTiles.map(d => {
+          const tileAttr = attrGrid ? attrGrid[d.row * 64 + d.col] : null;
+          return {
+            direction: d.direction,
+            col: d.col,
+            row: d.row,
+            doorType: d.doorType,
+            doorTypeHex: `0x${d.doorType.toString(16).padStart(2, '0')}`,
+            isOpen: d.isOpen,
+            isLayerToggle: d.doorType === 22,
+            tileAttr: tileAttr != null ? `0x${tileAttr.toString(16).padStart(2, '0')}` : null,
+            tileAttrIsLayerToggle: tileAttr != null && tileAttr >= 0x90 && tileAttr <= 0x97,
+          };
+        }),
+        roomLayout: roomLayout ? {
+          columns: roomLayout.columns,
+          rows: roomLayout.rows,
+        } : null,
+        linkLayer,
+        staircaseType,
+        toggleFloorPositions: toggleFloorPositions.map(p => ({
+          pos: `0x${p.pos.toString(16).padStart(4, '0')}`,
+          row: p.row,
+          col: p.col,
+        })),
       };
 
       console.log(`[DumpNav] Dumping navigation data...`);

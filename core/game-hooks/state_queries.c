@@ -406,6 +406,24 @@ int WasmBuildRoomAttrGrid(int room_id) {
   return (int)dung_bg2_attr_table;
 }
 
+// Debug: get layer toggle door positions populated during WasmBuildRoomAttrGrid
+static uint8 g_toggle_floor_debug[2 + 16 * 4];  // [count][pad] then per entry: [posLo, posHi, row, col]
+EMSCRIPTEN_KEEPALIVE
+int WasmGetToggleFloorPositions(void) {
+  uint8 count = (uint8)(dung_num_toggle_floor >> 1);
+  if (count > 16) count = 16;
+  g_toggle_floor_debug[0] = count;
+  g_toggle_floor_debug[1] = 0;
+  for (uint8 i = 0; i < count; i++) {
+    uint16 pos = dung_toggle_floor_pos[i];
+    g_toggle_floor_debug[2 + i * 4 + 0] = (uint8)(pos & 0xFF);
+    g_toggle_floor_debug[2 + i * 4 + 1] = (uint8)(pos >> 8);
+    g_toggle_floor_debug[2 + i * 4 + 2] = (uint8)(pos / 64);  // row
+    g_toggle_floor_debug[2 + i * 4 + 3] = (uint8)(pos % 64);  // col
+  }
+  return (int)g_toggle_floor_debug;
+}
+
 EMSCRIPTEN_KEEPALIVE
 int WasmGetOverworldGuardSpawns(void) {
   // Buffer format:
@@ -653,7 +671,7 @@ int WasmGetRoomDoorBoundaryTiles(void) {
   uint8 count = 0;
   for (uint8 i = 0; i < num_doors; i++) {
     uint8 dir = (uint8)(dung_door_direction[i] & 3);
-    uint8 type = (uint8)(door_type_and_slot[i] & 0xFF);
+    uint8 type = (uint8)(door_type_and_slot[i] & 0xFE);  // mask off slot bit (bit 0)
 
     // Decode tilemap address → row/col
     // Address is byte offset into 128-byte-wide tilemap.
