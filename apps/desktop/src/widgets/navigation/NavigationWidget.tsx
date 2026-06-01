@@ -743,6 +743,23 @@ function NavigationWidgetContent() {
         }
       }
 
+      // Annotate all edges with layer toggle info from door data
+      if (isIndoors) {
+        const doors = wasmGetRoomDoorBoundaryTiles();
+        // Door type 22 = kDoorType_PlayerBgChange → layer toggle on crossing
+        const DOOR_TYPE_LAYER_TOGGLE = 22;
+        for (const conn of allConnections) {
+          // Find doors matching this connection's edge direction and overlapping tile positions
+          const matchingDoors = doors.filter(d =>
+            d.direction === conn.edge &&
+            conn.positions.some(p => Math.abs(p - d.row) <= 3) // doors span ~4 tiles
+          );
+          if (matchingDoors.some(d => d.doorType === DOOR_TYPE_LAYER_TOGGLE)) {
+            conn.layerToggle = true;
+          }
+        }
+      }
+
       // Build indoor screen bundle now that we know which edges were found
       if (isIndoors) {
         const connectedRooms = new Set<number>([primaryScreenIndex]);
@@ -1194,8 +1211,13 @@ function NavigationWidgetContent() {
         {externalConnections.length > 0 ? (
           externalConnections.map(conn => {
             const connKey = `${conn.edge}-${conn.sourceScreen?.toString(16)}-${conn.targetScreen.toString(16)}-${conn.positions[0]}`;
-            const targetNodeId = `${isDarkWorld ? 'dw' : 'lw'}-${conn.targetScreen.toString(16).padStart(2, '0')}`;
-            const targetName = SCREEN_BY_ID.get(targetNodeId)?.name ?? `0x${conn.targetScreen.toString(16).toUpperCase()}`;
+            let targetName: string;
+            if (isIndoors) {
+              targetName = `Room 0x${conn.targetScreen.toString(16).toUpperCase().padStart(2, '0')}`;
+            } else {
+              const targetNodeId = `${isDarkWorld ? 'dw' : 'lw'}-${conn.targetScreen.toString(16).padStart(2, '0')}`;
+              targetName = SCREEN_BY_ID.get(targetNodeId)?.name ?? `0x${conn.targetScreen.toString(16).toUpperCase()}`;
+            }
             const fromLabel = screenBundle?.isMulti && conn.sourceScreen != null
               ? ` (${screenBundle.subNames[conn.sourceScreen] ?? ''})`
               : '';
@@ -1203,6 +1225,11 @@ function NavigationWidgetContent() {
             const posRange = conn.positions.length > 0
               ? `${posAxis}${conn.positions[0]}-${conn.positions[conn.positions.length - 1]}`
               : '';
+            // Compute target layer if this is a toggle door (XOR current layer)
+            const currentLayer = linkDebug?.linkLayer;
+            const targetLayerLabel = conn.layerToggle && currentLayer !== null
+              ? (currentLayer === 0 ? '→ Lower' : '→ Upper')
+              : null;
             return (
               <div key={connKey} style={S.connCard}>
                 <div style={S.connHeader}>
@@ -1211,6 +1238,13 @@ function NavigationWidgetContent() {
                   <span style={S.dimBadge}>{posRange}</span>
                   <span style={S.dimBadge}>{conn.freeTileCount}{conn.itemTileCount > 0 ? `+${conn.itemTileCount}` : ''}</span>
                 </div>
+                {isIndoors && (
+                  <div style={{ fontSize: 9, marginTop: 2, color: conn.layerToggle ? '#f8a' : '#6a8' }}>
+                    {conn.layerToggle
+                      ? <>▲▼ Layer Toggle {targetLayerLabel && <span style={{ color: targetLayerLabel.includes('Lower') ? '#ff7' : '#7ff' }}>{targetLayerLabel}</span>}</>
+                      : <>═ No Layer Change</>}
+                  </div>
+                )}
                 {conn.requirements.length > 0 && (
                   <div style={S.meta}>{conn.requirements.map(r => <ReqIcon key={r} req={r} />)}</div>
                 )}
@@ -1305,6 +1339,9 @@ function InternalEdgeDiamond({ connections, screenBundle }: { connections: Conne
           <InternalEdgeSvg edge={conn.edge} fromName={fromName} toName={toName} />
         </div>
         <span style={S.cardSub}>{conn.freeTileCount}{conn.itemTileCount > 0 ? `+${conn.itemTileCount}` : ''}</span>
+        <span style={{ fontSize: 8, color: conn.layerToggle ? '#f8a' : '#6a8', marginTop: 2 }}>
+          {conn.layerToggle ? '▲▼ Toggle' : '═ Same'}
+        </span>
         {conn.requirements.length > 0 && (
           <div style={{ display: 'flex', gap: 2, marginTop: 2 }}>{conn.requirements.map(r => <ReqIcon key={r} req={r} />)}</div>
         )}

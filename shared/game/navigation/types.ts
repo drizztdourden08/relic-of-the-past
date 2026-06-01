@@ -145,6 +145,8 @@ export interface ConnectionInfo {
   sourceScreen?: number;
   /** True if this connection is between quadrants of the same room (intra-room scroll boundary). */
   isIntraRoom?: boolean;
+  /** True if crossing this edge toggles Link's layer (door type 22 = kDoorType_PlayerBgChange). */
+  layerToggle?: boolean;
   freeTileCount: number;
   itemTileCount: number;
   positions: number[];

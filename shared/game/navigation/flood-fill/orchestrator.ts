@@ -358,8 +358,8 @@ function buildBorders(
     if (t.edge === 'entrance') continue;
     if (reachable[t.row][t.col] >= 2) continue;
     const attr = grid.rawAttr[t.row]?.[t.col] ?? 0;
-    const isAtRoomEdge = t.row === 0 || t.row === GRID_SIZE - 1 || t.col === 0 || t.col === GRID_SIZE - 1;
-    if (attr >= 0x80 && attr <= 0x8F && isAtRoomEdge) continue;
+    // Door passage tiles (0x80-0x8F) at room edges are valid inter-room transitions.
+    // BFS doesn't propagate past the grid boundary — these just get reported as exits.
     const pos = t.edge === 'north' || t.edge === 'south' ? t.col : t.row;
     const unmet = unmetRequirements(t.requirements, inv);
     if (unmet.length === 0) {
