@@ -173,6 +173,8 @@ export interface FloodFillOptions {
   startLayer?: 0 | 1;
   /** kind_of_in_room_staircase value. When 2, layer changes are blocked — force single-layer BFS on startLayer. */
   staircaseType?: number;
+  /** Additional seed positions for BFS (used when propagating from adjacent screens). */
+  extraSeeds?: GridPos[];
 }
 
 /**
@@ -253,7 +255,7 @@ export function floodFillScreen(
       startLayer,
     );
 
-    const bfsResult = runBFS(strategy, start.row, start.col, ePos, inv, bfsBounds);
+    const bfsResult = runBFS(strategy, start.row, start.col, ePos, inv, bfsBounds, options.extraSeeds);
 
     reachable = bfsResult.reachable;
     transitions = bfsResult.transitions;
@@ -312,7 +314,7 @@ export function floodFillScreen(
   // Single-layer BFS (using unified engine with SingleLayerStrategy)
   const singleBounds: QuadrantBounds = quadrantBounds ?? { minRow: 0, maxRow: GRID_SIZE - 1, minCol: 0, maxCol: GRID_SIZE - 1 };
   const strategy = new SingleLayerStrategy(grid.tiles, grid.rawAttr, tileContext);
-  const bfsResult = runBFS(strategy, start.row, start.col, entrancePositions, inv, singleBounds);
+  const bfsResult = runBFS(strategy, start.row, start.col, entrancePositions, inv, singleBounds, options.extraSeeds);
 
   // Filter ledges to only reachable ones
   const reachableLedges = ledges.filter(l => bfsResult.reachable[l.startRow]?.[l.startCol]);

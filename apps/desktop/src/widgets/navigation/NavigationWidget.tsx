@@ -568,7 +568,7 @@ function NavigationWidgetContent() {
       const quadrantBounds: QuadrantBounds | undefined = undefined;
 
       // Helper to run flood fill for one screen directly via orchestrator
-      const runOneScreen = (screenIndex: number, sp?: { row: number; col: number }) => {
+      const runOneScreen = (screenIndex: number, sp?: { row: number; col: number }, extraSeeds?: { row: number; col: number }[]) => {
         let grid: number[][];
         if (isIndoors) {
           if (!rawAttrGrid) return null;
@@ -593,6 +593,7 @@ function NavigationWidgetContent() {
           stairTiles: isIndoors ? dualLayerGrids?.stairTiles : undefined,
           startLayer: isIndoors ? linkLayer : undefined,
           staircaseType: isIndoors ? (wasmGetStaircaseType?.() ?? undefined) : undefined,
+          extraSeeds,
           variant: runVariant ? {
             progressTier: runVariant.progressIndicator,
             eventOverlay: runVariant.eventOverlayActive,
@@ -629,7 +630,7 @@ function NavigationWidgetContent() {
 
         for (const [screenIndex, seedList] of batch) {
           const sp = seedList[0];
-          const entry = runOneScreen(screenIndex, sp);
+          const entry = runOneScreen(screenIndex, sp, seedList.length > 1 ? seedList.slice(1) : undefined);
           if (!entry) continue;
           analyzed.set(screenIndex, entry);
 
