@@ -614,7 +614,7 @@ function NavigationWidgetContent() {
           } : undefined,
         };
         const result = floodFillScreen(grid, screenIndex, opts);
-        const connections = getConnections(result, undefined);
+        const connections = getConnections(result, isIndoors ? intraEdges : undefined);
         return { screenIndex, result, connections, dynamicBlockers };
       };
 
@@ -859,9 +859,12 @@ function NavigationWidgetContent() {
   const externalConnections = useMemo(() => connections.filter(c => !isInternalConn(c)).sort(sortConn), [connections, isInternalConn]);
   const internalConnections = useMemo(() => {
     // Deduplicate: A→east→B and B→west→A are the same border. Keep the spatially-correct one.
+    // For intra-room edges, keep all of them (south+north are two sides of the same boundary).
     const internal = connections.filter(c => isInternalConn(c)).sort(sortConn);
+    const intraRoom = internal.filter(c => c.isIntraRoom);
+    const interScreen = internal.filter(c => !c.isIntraRoom);
     const bestByPair = new Map<string, ConnectionInfo>();
-    for (const c of internal) {
+    for (const c of interScreen) {
       const pair = [c.sourceScreen ?? 0, c.targetScreen].sort((a, b) => a - b);
       const key = `${pair[0]}-${pair[1]}`;
       const existing = bestByPair.get(key);
@@ -870,7 +873,7 @@ function NavigationWidgetContent() {
         bestByPair.set(key, c);
       }
     }
-    return [...bestByPair.values()];
+    return [...intraRoom, ...bestByPair.values()];
   }, [connections, isInternalConn]);
 
   // Entrance spawn data for showing starting layer per entrance
@@ -1080,7 +1083,7 @@ function NavigationWidgetContent() {
             </div>
             <div style={S.infoRow}>
               <span style={S.infoLabel}>Edges</span>
-              <span>{externalConnections.length}{internalConnections.length > 0 ? ` + ${internalConnections.length} int` : ''}</span>
+              <span>{externalConnections.length}{internalConnections.length > 0 ? ` + ${internalConnections.filter(c => !c.isIntraRoom || c.edge === 'south' || c.edge === 'east').length} int` : ''}</span>
             </div>
           </div>
         )}
@@ -1198,11 +1201,72 @@ function NavigationWidgetContent() {
           <div style={{ ...S.meta, color: '#666' }}>None</div>
         )}
 
-        {/* ─── Internal Edges (multi-screen only) ─── */}
-        {screenBundle?.isMulti && internalConnections.length > 0 && (
+        {/* ─── Internal Edges ─── */}
+        {internalConnections.length > 0 && (
           <>
-            <div style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Internal ({internalConnections.length})</div>
-            <InternalEdgeDiamond connections={internalConnections} screenBundle={screenBundle} />
+            {(() => {
+              // Group intra-room connections into boundary pairs (south↔north, east↔west).
+              // Each contiguous run on one side matches a run on the opposite side.
+              const opposites: Record<string, string> = { north: 'south', south: 'north', east: 'west', west: 'east' };
+              // Pick one side per axis (prefer south/east as "from")
+              const fromEdges = internalConnections.filter(c =>
+                c.isIntraRoom ? (c.edge === 'south' || c.edge === 'east') : true
+              );
+              // For overworld inter-screen internals, keep as-is
+              const interScreen = internalConnections.filter(c => !c.isIntraRoom);
+              const intraFrom = fromEdges.filter(c => c.isIntraRoom);
+
+              const cards: { conn: ConnectionInfo; paired: ConnectionInfo | undefined }[] = [];
+              for (const conn of intraFrom) {
+                // Find the matching opposite run (same positions overlap)
+                const opp = internalConnections.find(c =>
+                  c.edge === opposites[conn.edge] && c.isIntraRoom &&
+                  c.positions[0] === conn.positions[0]
+                );
+                cards.push({ conn, paired: opp });
+              }
+              // Add inter-screen internals as unpaired
+              for (const conn of interScreen) {
+                cards.push({ conn, paired: undefined });
+              }
+
+              const count = cards.length;
+              return (
+                <>
+                  <div style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Internal ({count})</div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center' }}>
+                    {cards.map(({ conn, paired }, i) => {
+                      if (screenBundle?.isMulti && !conn.isIntraRoom) {
+                        const fromName = screenBundle.subNames[conn.sourceScreen!] ?? '?';
+                        const toName = screenBundle.subNames[conn.targetScreen] ?? '?';
+                        return (
+                          <div key={`int-${i}`} style={S.card}>
+                            <div style={S.cardGraphic}>
+                              <InternalEdgeSvg edge={conn.edge} fromName={fromName} toName={toName} />
+                            </div>
+                            <span style={{ fontSize: 8, color: conn.layerToggle ? '#f8a' : '#6a8', marginTop: 2 }}>
+                              {conn.layerToggle ? '▲▼ Toggle' : '═ Same'}
+                            </span>
+                          </div>
+                        );
+                      }
+                      const fromCount = String(conn.freeTileCount);
+                      const toCount = String(paired?.freeTileCount ?? conn.freeTileCount);
+                      return (
+                        <div key={`int-${i}`} style={S.card}>
+                          <div style={S.cardGraphic}>
+                            <InternalEdgeSvg edge={conn.edge} fromName={fromCount} toName={toCount} />
+                          </div>
+                          <span style={{ fontSize: 8, color: '#6a8', marginTop: 2 }}>
+                            ═ Same
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              );
+            })()}
           </>
         )}
 
@@ -1535,6 +1599,47 @@ function IndoorMinimap({ bundle, connections, renderResults, linkScreenIndex, li
   const externalConns = connections.filter(c => !c.isIntraRoom);
   const fallHoleSpawns = useNavigationOverlayStore(s => s.fallHoleSpawns);
 
+  const primaryResult = renderResults.find(r => r.screenIndex === bundle.head) ?? renderResults[0];
+
+  // Detect internal scroll boundaries from room layout
+  const layoutInfo = wasmGetRoomLayoutInfo();
+  const scrollBoundaries = useMemo(() => {
+    if (!layoutInfo) return { horizontal: false, vertical: false };
+    const { shape, quadrantFullsizeX, quadrantFullsizeY } = layoutInfo;
+    // Horizontal boundary (row 32) exists if room has vertical extent and axis not merged
+    const horizontal = (shape === '2x2' || shape === '1x2') && quadrantFullsizeY === 0;
+    // Vertical boundary (col 32) exists if room has horizontal extent and axis not merged
+    const vertical = (shape === '2x2' || shape === '2x1') && quadrantFullsizeX === 0;
+    return { horizontal, vertical };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [layoutInfo?.shape, layoutInfo?.quadrantFullsizeX, layoutInfo?.quadrantFullsizeY]);
+
+  // Find walkable tiles at the scroll boundary positions from flood fill data
+  const boundaryTiles = useMemo(() => {
+    const result: { x: number; y: number; color: string }[] = [];
+    if (!primaryResult) return result;
+    const reachable = primaryResult.reachable;
+    if (scrollBoundaries.horizontal) {
+      // Draw dots on both sides of the boundary (row 31 = south/green side, row 32 = north/blue side)
+      for (let col = 0; col < 64; col++) {
+        if (reachable[31]?.[col] && reachable[32]?.[col]) {
+          result.push({ x: mapLeft + ((col + 0.5) / 64) * mapW, y: mapTop + (31.5 / 64) * mapH, color: EDGE_COLORS.south });
+          result.push({ x: mapLeft + ((col + 0.5) / 64) * mapW, y: mapTop + (32.5 / 64) * mapH, color: EDGE_COLORS.north });
+        }
+      }
+    }
+    if (scrollBoundaries.vertical) {
+      // Draw dots on both sides of the boundary (col 31 = east/orange side, col 32 = west/purple side)
+      for (let row = 0; row < 64; row++) {
+        if (reachable[row]?.[31] && reachable[row]?.[32]) {
+          result.push({ x: mapLeft + (31.5 / 64) * mapW, y: mapTop + ((row + 0.5) / 64) * mapH, color: EDGE_COLORS.east });
+          result.push({ x: mapLeft + (32.5 / 64) * mapW, y: mapTop + ((row + 0.5) / 64) * mapH, color: EDGE_COLORS.west });
+        }
+      }
+    }
+    return result;
+  }, [primaryResult, scrollBoundaries, mapLeft, mapTop, mapW, mapH]);
+
   const byEdge: Record<string, ConnectionInfo[]> = { north: [], south: [], east: [], west: [] };
   for (const c of externalConns) {
     if (byEdge[c.edge]) byEdge[c.edge].push(c);
@@ -1544,8 +1649,6 @@ function IndoorMinimap({ bundle, connections, renderResults, linkScreenIndex, li
     if (edge === 'north' || edge === 'west') return '#fff';
     return '#000';
   };
-
-  const primaryResult = renderResults.find(r => r.screenIndex === bundle.head) ?? renderResults[0];
 
   return (
     <div style={{ position: 'relative', width: '100%', maxWidth: totalW, height: totalH, marginTop: 4, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -1680,6 +1783,21 @@ function IndoorMinimap({ bundle, connections, renderResults, linkScreenIndex, li
           </div>
         );
       })}
+
+      {/* Internal scroll boundary dots */}
+      {boundaryTiles.map((pt, i) => (
+        <div key={`scroll-boundary-${i}`} style={{
+          position: 'absolute',
+          left: pt.x - 1.5,
+          top: pt.y - 1.5,
+          width: 3,
+          height: 3,
+          borderRadius: '50%',
+          background: pt.color,
+          opacity: 0.8,
+          pointerEvents: 'none',
+        }} />
+      ))}
     </div>
   );
 }

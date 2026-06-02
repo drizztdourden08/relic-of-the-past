@@ -26,7 +26,10 @@ import {
   wasmGetStaircaseType,
   wasmBuildRoomAttrGrid,
   wasmGetToggleFloorPositions,
+  wasmGetIndoorDualLayerGrids,
 } from '../../lib/game';
+import { floodFillScreen, getConnections } from '@shared/game/navigation';
+import type { FloodFillOptions } from '@shared/game/navigation';
 import { resolveCurrentScreenDetailed } from '@shared/game/data/screens';
 import type { VariantGameState } from '@shared/game/data/screens';
 
@@ -179,6 +182,75 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
       // After WasmBuildRoomAttrGrid, toggle floor positions are populated
       const toggleFloorPositions = isIndoors ? wasmGetToggleFloorPositions() : [];
 
+      // ─── Flood fill + connections (for internal edge verification) ───
+      let floodFillData: { reachableCount: number; totalTiles: number; connections: unknown[]; scrollBoundary: unknown } | null = null;
+      if (isIndoors && attrGrid) {
+        // Convert flat Uint8Array to 64x64 grid
+        const grid: number[][] = [];
+        for (let r = 0; r < 64; r++) {
+          grid.push(Array.from(attrGrid.slice(r * 64, (r + 1) * 64)));
+        }
+        const dualLayerGrids = wasmGetIndoorDualLayerGrids();
+        const opts: FloodFillOptions = {
+          tileContext: 'indoor',
+          inventory: new Set(),
+          startPos: undefined,
+          dualLayerGrids: dualLayerGrids ?? undefined,
+          stairTiles: dualLayerGrids?.stairTiles,
+          startLayer: linkLayer ?? undefined,
+          staircaseType: staircaseType ?? undefined,
+        };
+        const result = floodFillScreen(grid, roomIndex, opts);
+        const connections = getConnections(result, roomLayout?.intraEdges);
+
+        // Detect scroll boundaries
+        const shape = roomLayout?.shape ?? '1x1';
+        const qfx = roomLayout?.quadrantFullsizeX ?? 0;
+        const qfy = roomLayout?.quadrantFullsizeY ?? 0;
+        const hasHorizontalBoundary = (shape === '2x2' || shape === '1x2') && qfy === 0;
+        const hasVerticalBoundary = (shape === '2x2' || shape === '2x1') && qfx === 0;
+
+        // Find tiles crossing the boundary
+        const crossingTiles: { axis: string; pos: number }[] = [];
+        if (hasHorizontalBoundary) {
+          for (let col = 0; col < 64; col++) {
+            if (result.reachable[31]?.[col] && result.reachable[32]?.[col]) {
+              crossingTiles.push({ axis: 'horizontal', pos: col });
+            }
+          }
+        }
+        if (hasVerticalBoundary) {
+          for (let row = 0; row < 64; row++) {
+            if (result.reachable[row]?.[31] && result.reachable[row]?.[32]) {
+              crossingTiles.push({ axis: 'vertical', pos: row });
+            }
+          }
+        }
+
+        floodFillData = {
+          reachableCount: result.reachableCount,
+          totalTiles: result.totalTiles,
+          connections: connections.map(c => ({
+            edge: c.edge,
+            targetScreen: c.targetScreen,
+            targetScreenHex: `0x${c.targetScreen.toString(16).padStart(4, '0')}`,
+            isIntraRoom: c.isIntraRoom ?? false,
+            layerToggle: c.layerToggle ?? false,
+            freeTileCount: c.freeTileCount,
+            itemTileCount: c.itemTileCount,
+            positions: c.positions,
+          })),
+          scrollBoundary: {
+            shape,
+            quadrantFullsizeX: qfx,
+            quadrantFullsizeY: qfy,
+            hasHorizontalBoundary,
+            hasVerticalBoundary,
+            crossingTiles,
+          },
+        };
+      }
+
       const dump = {
         slot,
         isIndoors,
@@ -229,8 +301,13 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
           };
         }),
         roomLayout: roomLayout ? {
-          columns: roomLayout.columns,
-          rows: roomLayout.rows,
+          layout: roomLayout.layout,
+          shape: roomLayout.shape,
+          quadrantFullsizeX: roomLayout.quadrantFullsizeX,
+          quadrantFullsizeY: roomLayout.quadrantFullsizeY,
+          quadrantX: roomLayout.quadrantX,
+          quadrantY: roomLayout.quadrantY,
+          intraEdges: roomLayout.intraEdges,
         } : null,
         linkLayer,
         staircaseType,
@@ -239,6 +316,7 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
           row: p.row,
           col: p.col,
         })),
+        floodFill: floodFillData,
       };
 
       console.log(`[DumpNav] Dumping navigation data...`);

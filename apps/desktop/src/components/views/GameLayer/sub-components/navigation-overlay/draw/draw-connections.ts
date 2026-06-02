@@ -10,7 +10,7 @@ export function drawConnections(
 
   ctx.globalAlpha = 0.85;
   for (const conn of connections) {
-    ctx.fillStyle = conn.isIntraRoom ? '#66eebb' : (EDGE_COLORS[conn.edge] ?? '#fff');
+    ctx.fillStyle = EDGE_COLORS[conn.edge] ?? '#fff';
     const connOrigin = conn.sourceScreen != null
       ? getScreenWorldOrigin(conn.sourceScreen)
       : { x: screenWorldX, y: screenWorldY };
