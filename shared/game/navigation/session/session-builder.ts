@@ -175,25 +175,13 @@ export function buildFloodFillSession(input: SessionBuilderInput): FloodFillSess
     startPos = best ?? { row: clamp(Math.floor(centerRow)), col: clamp(Math.floor(centerCol)) };
   }
 
-  // Compute quadrant bounds for indoor multi-screen rooms
+  // Indoor multi-screen rooms: do NOT restrict BFS with quadrant bounds.
+  // constrainVoidTiles already prevents flooding through structural void into
+  // genuinely disconnected halves. Quadrant bounds would incorrectly prevent
+  // BFS from reaching connected halves (e.g. room 60 top/bottom).
   const roomLayout = isIndoors ? wasm.getRoomLayoutInfo() : null;
   const intraEdges = roomLayout?.intraEdges ?? [];
-  let quadrantBounds: QuadrantBounds | undefined;
-  if (roomLayout && intraEdges.length > 0) {
-    const { shape, quadrantX, quadrantY } = roomLayout;
-    const halfR = 32, halfC = 32;
-    let minRow = 0, maxRow = 63, minCol = 0, maxCol = 63;
-    if (shape === '1x2' || shape === '2x2') {
-      if (quadrantY === 0) { maxRow = halfR - 1; } else { minRow = halfR; }
-    }
-    if (shape === '2x1' || shape === '2x2') {
-      if (quadrantX === 0) { maxCol = halfC - 1; } else { minCol = halfC; }
-    }
-    if (startPos && startPos.row >= minRow && startPos.row <= maxRow &&
-        startPos.col >= minCol && startPos.col <= maxCol) {
-      quadrantBounds = { minRow, maxRow, minCol, maxCol };
-    }
-  }
+  const quadrantBounds: QuadrantBounds | undefined = undefined;
 
   // Compute group screens
   const groupScreens = isIndoors ? [primaryScreenIndex] : computeBigScreenGroupFromHeads(wasm.getAreaHeads(), primaryScreenIndex);
