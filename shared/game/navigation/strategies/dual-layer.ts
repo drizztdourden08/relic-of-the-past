@@ -19,6 +19,7 @@ export class DualLayerStrategy implements LayerStrategy {
   private readonly tileContext: TileAttrContext;
   private readonly startLayer: 0 | 1;
   private readonly traversedStairTiles: { layer: 0 | 1; row: number; col: number; reqs: Set<string> }[] = [];
+  private readonly traversedLedgeTiles: { row: number; col: number; reqs: Set<string> }[] = [];
 
   constructor(
     grids: [TilePassability[][], TilePassability[][]],
@@ -68,7 +69,8 @@ export class DualLayerStrategy implements LayerStrategy {
     if (hitLedge && !ledgeFallMatch) return [];
 
     if (hitLedge && ledgeFallMatch) {
-      return this.expandLedgeCross(nr, nc, dr, dc, requirements, inventory, bounds);
+      const results = this.expandLedgeCross(nr, nc, dr, dc, requirements, inventory, bounds);
+      return results;
     }
 
     // ─── Stair detection ───
@@ -111,6 +113,8 @@ export class DualLayerStrategy implements LayerStrategy {
     const targetGrid = this.grids[1];
     const layer0Grid = this.grids[0];
 
+    const ledgeTiles: [number, number][] = [];
+
     for (let step = 0; step < GRID_SIZE; step++) {
       const lr = nr + step * dr;
       const lc = nc + step * dc;
@@ -118,7 +122,10 @@ export class DualLayerStrategy implements LayerStrategy {
 
       let stillOnCliff = false;
       for (const [br, bc] of bodyTiles(lr, lc)) {
-        if (layer0Grid[br][bc].type === 'ledge') { stillOnCliff = true; break; }
+        if (layer0Grid[br][bc].type === 'ledge') {
+          stillOnCliff = true;
+          ledgeTiles.push([br, bc]);
+        }
       }
       if (stillOnCliff) continue;
 
@@ -134,7 +141,10 @@ export class DualLayerStrategy implements LayerStrategy {
         }
       }
       if (canLand) {
-        return [{ row: lr, col: lc, layer: 1, requirements: newReqs }];
+        for (const [lr2, lc2] of ledgeTiles) {
+          this.traversedLedgeTiles.push({ row: lr2, col: lc2, reqs: requirements });
+        }
+        return [];
       }
     }
     return [];
@@ -223,6 +233,14 @@ export class DualLayerStrategy implements LayerStrategy {
       const existing = reached[layer][row]?.[col];
       if (existing === null || existing.size > reqs.size) {
         reached[layer][row][col] = reqs;
+      }
+    }
+
+    // Mark traversed ledge tiles on layer 0
+    for (const { row, col, reqs } of this.traversedLedgeTiles) {
+      const existing = reached[0][row]?.[col];
+      if (existing === null || existing.size > reqs.size) {
+        reached[0][row][col] = reqs;
       }
     }
 

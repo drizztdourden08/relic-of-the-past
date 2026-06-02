@@ -47,6 +47,12 @@ export function drawReachableDots(
 
         if (!hasOverlap && drawResult.attrGrid && LEDGE_ATTRS.has(drawResult.attrGrid[r][c])) continue;
         if (perLayer && (perLayer[0][r][c] === STAIRS_TRAVERSAL_STATE || perLayer[1][r][c] === STAIRS_TRAVERSAL_STATE)) continue;
+        // Skip dots for ledge traversal tiles (states 2-9) — arrows are drawn separately
+        if (perLayer) {
+          const s0 = perLayer[0][r][c];
+          const s1 = perLayer[1][r][c];
+          if ((s0 >= 2 && s0 <= 9) || (s1 >= 2 && s1 <= 9)) continue;
+        }
 
         const worldX = origin.x + c * TILE_PX + TILE_PX / 2;
         const worldY = origin.y + r * TILE_PX + TILE_PX / 2;
