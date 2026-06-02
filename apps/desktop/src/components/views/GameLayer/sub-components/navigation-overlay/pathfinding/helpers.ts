@@ -84,3 +84,19 @@ export function isValidMove2x2(
   }
   return true;
 }
+
+/** Check if the body at (row,col) can leave in direction (dr,dc) — ledge tiles restrict exit direction. */
+export function canLeave2x2(
+  row: number, col: number, dr: number, dc: number,
+  reachable: ReachState[][],
+): boolean {
+  const positions: [number, number][] = [[row, col], [row, col + 1], [row + 1, col], [row + 1, col + 1]];
+  for (const [r, c] of positions) {
+    const state = reachable[r]?.[c] ?? 0;
+    // Ledge tiles (2-9) only allow leaving in their direction; stairs (10) allow any
+    if (state >= 2 && state <= 9) {
+      if (!isTraversalDirCompatible(state, dr, dc)) return false;
+    }
+  }
+  return true;
+}

@@ -19,9 +19,14 @@ export function drawPathPreview(
 
   if (!activeTarget) return;
 
+  // Goal-finding uses merged grid (can target either layer)
   const goal2x2 = findNearest2x2Goal(activeTarget.row, activeTarget.col, result.reachable);
+  // Pathfinding uses layer-aware routing when dual-layer data exists
   const path = goal2x2
-    ? findPath2x2FromLink(vp.linkX, vp.linkY + 8, screenWorldX, screenWorldY, goal2x2, result.reachable)
+    ? findPath2x2FromLink(
+        vp.linkX, vp.linkY + 8, screenWorldX, screenWorldY, goal2x2,
+        result.reachable, result.reachableByLayer, result.startLayer,
+      )
     : null;
 
   // Push path to store when locked
