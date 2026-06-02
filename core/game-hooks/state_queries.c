@@ -648,6 +648,84 @@ int WasmGetRoomLayoutInfo(void) {
   return (int)g_room_layout_buf;
 }
 
+// ─── Dungeon Map Position (room's position in the 5x5 dungeon map grid) ───
+
+// Floor count table per palace (palace index 0–13):
+// Low nibble = number of basement floors, bits 4-7 = number of above-ground floors
+static const uint16 kDungFloorInfo[14] = {0x21, 0x23, 0x20, 0x21, 0x70, 0x12, 0x11, 0x212, 2, 0x217, 0x160, 0x12, 0x113, 0x171};
+
+// Room substitution table for map display (some rooms alias to others)
+static const uint16 kDungMapRoomSubst_From[3] = {137, 167, 79};
+static const uint16 kDungMapRoomSubst_To[3] = {169, 119, 190};
+
+static uint8 g_dungmap_pos_buf[12];
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetDungeonMapPosition(void) {
+  // Returns: [mapCol(1), mapRow(1), floorIndex(1), numAboveFloors(1), numBasementFloors(1), found(1),
+  //           effWidth(1), effHeight(1), originCol(1), originRow(1), pad(2)]
+  // mapCol/mapRow: top-left position of the room in the 5x5 dungeon map grid
+  // effWidth/effHeight: how many cells this room occupies (bounding box) in the map grid
+  // originCol/originRow: same as mapCol/mapRow (top-left of the bounding box)
+  memset(g_dungmap_pos_buf, 0, sizeof(g_dungmap_pos_buf));
+
+  if (!player_is_indoors) {
+    return (int)g_dungmap_pos_buf;
+  }
+
+  uint8 palace = (uint8)(cur_palace_index_x2 >> 1);
+  if (palace >= 14) {
+    // Cave/House (0xFF palace) - no dungeon map
+    return (int)g_dungmap_pos_buf;
+  }
+
+  uint16 floorInfo = kDungFloorInfo[palace];
+  uint8 numBasement = (uint8)(floorInfo & 0xF);
+  uint8 numAbove = (uint8)((floorInfo >> 4) & 0xF);
+  uint8 floorIdx = (uint8)(numBasement + dung_cur_floor); // index into layout array
+
+  // Get room, applying substitutions
+  uint16 room = dungeon_room_index;
+  for (int i = 0; i < 3; i++) {
+    if (room == kDungMapRoomSubst_From[i])
+      room = kDungMapRoomSubst_To[i];
+  }
+
+  // Scan the floor layout (5x5 grid) for ALL cells occupied by this room
+  const uint8 *layout = GetDungmapFloorLayout();
+  const uint8 *floorGrid = &layout[floorIdx * 25];
+  uint8 found = 0;
+  uint8 minCol = 4, maxCol = 0, minRow = 4, maxRow = 0;
+  for (int i = 0; i < 25; i++) {
+    if (floorGrid[i] == (uint8)room) {
+      uint8 c = (uint8)(i % 5);
+      uint8 r = (uint8)(i / 5);
+      if (!found || c < minCol) minCol = c;
+      if (!found || c > maxCol) maxCol = c;
+      if (!found || r < minRow) minRow = r;
+      if (!found || r > maxRow) maxRow = r;
+      found = 1;
+    }
+  }
+
+  if (found) {
+    g_dungmap_pos_buf[0] = minCol;
+    g_dungmap_pos_buf[1] = minRow;
+    g_dungmap_pos_buf[6] = (uint8)(maxCol - minCol + 1); // effective width
+    g_dungmap_pos_buf[7] = (uint8)(maxRow - minRow + 1); // effective height
+    g_dungmap_pos_buf[8] = minCol; // origin col (same as mapCol)
+    g_dungmap_pos_buf[9] = minRow; // origin row (same as mapRow)
+  }
+
+  g_dungmap_pos_buf[2] = dung_cur_floor;
+  g_dungmap_pos_buf[3] = numAbove;
+  g_dungmap_pos_buf[4] = numBasement;
+  g_dungmap_pos_buf[5] = found;
+  g_dungmap_pos_buf[10] = 0;
+  g_dungmap_pos_buf[11] = 0;
+  return (int)g_dungmap_pos_buf;
+}
+
 // ─── Room Door Boundary Tiles (decoded door positions for flood fill) ───
 // Max 16 doors per room. Each entry: [direction(1), tileCol(1), tileRow(1), doorType(1), isOpen(1)]
 // direction: 0=N, 1=S, 2=W, 3=E

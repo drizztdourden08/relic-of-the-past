@@ -69,6 +69,17 @@ export class DualLayerStrategy implements LayerStrategy {
     if (hitLedge && !ledgeFallMatch) return [];
 
     if (hitLedge && ledgeFallMatch) {
+      // Full 2x2 body must be ledge tiles for Link to jump — 1-wide ledges are invalid
+      let fullBodyLedge = true;
+      for (const [br, bc] of bodyTiles(nr, nc)) {
+        const t = this.grids[0][br][bc];
+        if (t.type !== 'ledge' || !canLeaveLedge(t.dir, dr, dc)) {
+          fullBodyLedge = false;
+          break;
+        }
+      }
+      if (!fullBodyLedge) return [];
+
       const results = this.expandLedgeCross(nr, nc, dr, dc, requirements, inventory, bounds);
       return results;
     }

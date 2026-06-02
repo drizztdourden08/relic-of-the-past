@@ -32,6 +32,8 @@ export interface ScreenBundle {
   roomShape?: '2x2' | '2x1' | '1x2' | '1x1';
   /** Which quadrant Link is currently in (for multi-screen rooms) */
   activeQuadrant?: { x: number; y: number };
+  /** Effective layout from dungeon map data (WxH cells this room occupies on the map) */
+  effectiveLayout?: { width: number; height: number };
 }
 
 // ─── Positional Sub-Names ────────────────────────────────────────────────────

@@ -13,6 +13,7 @@
 #include "src/overworld.h"
 #include "src/dungeon.h"
 #include "src/misc.h"
+#include "src/messaging.h"
 #include "snes/ppu.h"
 
 // Forward-declare Link_ReceiveItem from player.c

@@ -559,6 +559,62 @@ function wasmGetRoomLayoutInfo(): RoomLayoutInfo | null {
   }
 }
 
+export interface DungeonMapPosition {
+  mapCol: number;
+  mapRow: number;
+  /** Raw floor value: 0=1F, 1=2F, 0xFF=B1, 0xFE=B2, etc. */
+  floorRaw: number;
+  /** Human-readable floor label */
+  floorLabel: string;
+  numAboveFloors: number;
+  numBasementFloors: number;
+  found: boolean;
+  /** Effective room width in map cells (from bounding box of all cells containing this room) */
+  effectiveWidth: number;
+  /** Effective room height in map cells */
+  effectiveHeight: number;
+  /** Effective layout as WxH string */
+  effectiveLayout: string;
+}
+
+function floorRawToLabel(raw: number): string {
+  if (raw === 0) return '1F';
+  if (raw < 128) return `${raw + 1}F`;
+  // Negative floors (stored as unsigned): 0xFF = -1 = B1, 0xFE = -2 = B2, etc.
+  const basement = 256 - raw;
+  return `B${basement}`;
+}
+
+function wasmGetDungeonMapPosition(): DungeonMapPosition | null {
+  const mod = currentModule;
+  if (!mod || currentState.status !== 'running') return null;
+  try {
+    const ptr = mod.ccall('WasmGetDungeonMapPosition', 'number', [], []) as number;
+    if (!ptr) return null;
+    const heap = mod.HEAPU8;
+    const mapCol = heap[ptr];
+    const mapRow = heap[ptr + 1];
+    const floorRaw = heap[ptr + 2];
+    const numAbove = heap[ptr + 3];
+    const numBasement = heap[ptr + 4];
+    const found = heap[ptr + 5] !== 0;
+    const effectiveWidth = heap[ptr + 6] || 1;
+    const effectiveHeight = heap[ptr + 7] || 1;
+    return {
+      mapCol, mapRow, floorRaw,
+      floorLabel: floorRawToLabel(floorRaw),
+      numAboveFloors: numAbove,
+      numBasementFloors: numBasement,
+      found,
+      effectiveWidth,
+      effectiveHeight,
+      effectiveLayout: `${effectiveWidth}×${effectiveHeight}`,
+    };
+  } catch {
+    return null;
+  }
+}
+
 function wasmGetRoomDoorBoundaryTiles(): DoorBoundaryTile[] {
   const mod = currentModule;
   if (!mod || currentState.status !== 'running') return [];
@@ -965,6 +1021,7 @@ export {
   wasmGetProgressIndicator,
   wasmGetRoomDoorBoundaryTiles,
   wasmGetRoomLayoutInfo,
+  wasmGetDungeonMapPosition,
   wasmGetRoomExitDoors,
   wasmGetRoomStairInfo,
   wasmGetRoomWalkBoundaries,
@@ -978,4 +1035,4 @@ export {
   wasmSetUIOverlayMode,
   wasmTogglePause
 };
-export type { DoorBoundaryTile, EntranceData, ExitData, FallHole, GameProgressInfo, LiveSpriteInfo, OverworldEntrance, OverworldVariantInfo, RoomExitDoor, RoomHeader, RoomLayoutInfo, ViewportInfo };
+export type { DoorBoundaryTile, DungeonMapPosition, EntranceData, ExitData, FallHole, GameProgressInfo, LiveSpriteInfo, OverworldEntrance, OverworldVariantInfo, RoomExitDoor, RoomHeader, RoomLayoutInfo, ViewportInfo };
