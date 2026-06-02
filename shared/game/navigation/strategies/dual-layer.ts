@@ -50,7 +50,6 @@ export class DualLayerStrategy implements LayerStrategy {
     if (nr < bounds.minRow || nr + 1 > bounds.maxRow || nc < bounds.minCol || nc + 1 > bounds.maxCol) return [];
 
     const newTiles = getNewTiles(nr, nc, dr, dc);
-    const rawAttr = this.rawAttrs[layer];
 
     // ─── Ledge detection: new tiles on layer 0 hitting a ledge ───
     let hitLedge = false;
@@ -73,10 +72,13 @@ export class DualLayerStrategy implements LayerStrategy {
     }
 
     // ─── Stair detection ───
+    // Check BOTH layers' raw attrs (consistent with onStair check in expandStairCross).
+    // If a tile is a swap-stair on either layer, it blocks normal same-layer expansion.
     let hitStair = false;
     for (const [tr, tc] of newTiles) {
-      const attr = rawAttr[tr]?.[tc];
-      if (SWAP_STAIR_ATTRS.has(attr)) { hitStair = true; break; }
+      if (SWAP_STAIR_ATTRS.has(this.rawAttrs[0][tr]?.[tc]) || SWAP_STAIR_ATTRS.has(this.rawAttrs[1][tr]?.[tc])) {
+        hitStair = true; break;
+      }
     }
 
     if (hitStair) {
@@ -179,15 +181,6 @@ export class DualLayerStrategy implements LayerStrategy {
       }
     }
     return [];
-  }
-
-  markTraversedTiles(bodyReached: [(Set<string> | null)[][], (Set<string> | null)[][]]): void {
-    for (const { layer, row, col, reqs } of this.traversedStairTiles) {
-      const existing = bodyReached[layer][row]?.[col];
-      if (existing === null || existing.size > reqs.size) {
-        bodyReached[layer][row][col] = reqs;
-      }
-    }
   }
 
   buildTileResult(

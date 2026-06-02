@@ -106,8 +106,7 @@ export function runBFS(
     }
   }
 
-  // ─── Post-BFS: mark traversed tiles and build result ─────────────────────────
-  strategy.markTraversedTiles?.(bodyReached);
+  // ─── Post-BFS: build result ─────────────────────────────────────────────────
   const tileResult = strategy.buildTileResult(bodyReached, bounds, '');
 
   return {

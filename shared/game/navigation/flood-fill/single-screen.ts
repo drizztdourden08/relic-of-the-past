@@ -393,8 +393,9 @@ export function floodFillBFSDualLayer(
       // other layer. Stairs can only be entered vertically (north/south).
       let hitStair = false;
       for (const [tr, tc] of newTiles) {
-        const attr = rawAttr[tr]?.[tc];
-        if (SWAP_STAIR_ATTRS.has(attr)) { hitStair = true; break; }
+        if (SWAP_STAIR_ATTRS.has(rawAttrs[0][tr]?.[tc]) || SWAP_STAIR_ATTRS.has(rawAttrs[1][tr]?.[tc])) {
+          hitStair = true; break;
+        }
       }
 
       if (hitStair) {

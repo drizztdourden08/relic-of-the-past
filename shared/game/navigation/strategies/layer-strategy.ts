@@ -83,10 +83,4 @@ export interface LayerStrategy {
     tileLayer?: (0 | 1 | 2)[][];
     reachableByLayer?: [ReachState[][], ReachState[][]];
   };
-
-  /**
-   * Post-BFS hook for strategies that need to mark extra tiles (e.g. stair tiles).
-   * Called before buildTileResult.
-   */
-  markTraversedTiles?(bodyReached: [(Set<string> | null)[][], (Set<string> | null)[][]]): void;
 }
