@@ -6,8 +6,9 @@ import { GRID_SIZE } from '../types';
  * Converts cliff triggers (0x28-0x2b, 0x2f) into directional ledge tiles
  * when they have 2-tile perpendicular width (overworld) or unconditionally (indoor).
  *
- * Indoor ledges have flipped geometry: 0x28 (ledge north outdoors) becomes
- * a southward hop indoors because the cliff face is BELOW the trigger tile.
+ * Indoor ledges infer direction from surrounding walls:
+ * - 0x28/0x29 (y-axis): direction inferred from walls above or below
+ * - 0x2a/0x2b (x-axis): direction inferred from walls left or right
  */
 export function processStraightCliffs(
   grid: TilePassability[][],
@@ -18,11 +19,11 @@ export function processStraightCliffs(
   const CLIFF_TRIGGERS = new Set([0x28, 0x29, 0x2a, 0x2b, 0x2f]);
   // Horizontal ledge attrs (0x2a/0x2b) — direction inferred from surrounding walls
   const HORIZ_LEDGE_ATTRS = new Set([0x2a, 0x2b]);
-  // Indoor: N/S directions are reversed (ledge trigger is above cliff face, not below)
+  // Vertical ledge attrs (0x28/0x29) — direction inferred from surrounding walls
+  const VERT_LEDGE_ATTRS = new Set([0x28, 0x29]);
+  // Outdoors: fixed directions; Indoors: 0x28/0x29/0x2a/0x2b use wall inference, only 0x2f is hardcoded
   const CLIFF_DIRS: Record<number, { dr: number; dc: number; dir: 'n' | 's' | 'e' | 'w' }> = isIndoors
     ? {
-        0x28: { dr: 1, dc: 0, dir: 's' },
-        0x29: { dr: -1, dc: 0, dir: 'n' },
         0x2f: { dr: 0, dc: -1, dir: 'w' },
       }
     : {
@@ -69,6 +70,33 @@ export function processStraightCliffs(
           } else {
             // Default fallback: east
             dr = 0; dc = 1; dir = 'e';
+          }
+        }
+      } else if (isIndoors && VERT_LEDGE_ATTRS.has(attr)) {
+        // 0x28/0x29 indoor: direction inferred from which side has the cliff face (walls).
+        // The jump goes TOWARD the wall/cliff face and over it.
+        const hasWallSouth = row < 63 && CLIFF_WALL.has(rawAttr[row + 1][col]);
+        const hasWallNorth = row > 0 && CLIFF_WALL.has(rawAttr[row - 1][col]);
+        if (hasWallSouth && !hasWallNorth) {
+          dr = 1; dc = 0; dir = 's';
+        } else if (hasWallNorth && !hasWallSouth) {
+          dr = -1; dc = 0; dir = 'n';
+        } else {
+          // Ambiguous — check further for walls
+          let wallsSouth = 0, wallsNorth = 0;
+          for (let d = 1; d <= 3 && row + d < GRID_SIZE; d++) {
+            if (CLIFF_WALL.has(rawAttr[row + d][col])) wallsSouth++;
+          }
+          for (let d = 1; d <= 3 && row - d >= 0; d++) {
+            if (CLIFF_WALL.has(rawAttr[row - d][col])) wallsNorth++;
+          }
+          if (wallsSouth > wallsNorth) {
+            dr = 1; dc = 0; dir = 's';
+          } else if (wallsNorth > wallsSouth) {
+            dr = -1; dc = 0; dir = 'n';
+          } else {
+            // Default fallback: south
+            dr = 1; dc = 0; dir = 's';
           }
         }
       } else {

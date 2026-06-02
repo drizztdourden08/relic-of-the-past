@@ -42,6 +42,7 @@ export type TileLabel =
   // Cliffs
   | 'cliff face south' | 'cliff face north' | 'cliff face east' | 'cliff face west'
   // Ledges (directional jump triggers)
+  | 'ledge y axis' | 'ledge x axis'
   | 'ledge north' | 'ledge south' | 'ledge east' | 'ledge west'
   | 'ledge NE' | 'ledge SE' | 'ledge NW' | 'ledge SW'
   // Water
@@ -181,10 +182,10 @@ export const OVERWORLD_TILE_ATTRS: Readonly<Record<number, TileAttrDef>> = {
   0x1A: { pass: 'blocked', labels: ['cliff face west'],               cat: 'cliff-face' },
 
   // ═══ Cliff Triggers (blocked — directional ledge jump tiles) ════════════════
-  0x28: { pass: 'blocked', labels: ['ledge north'],                   cat: 'cliff-trigger' },
-  0x29: { pass: 'blocked', labels: ['ledge south'],                   cat: 'cliff-trigger' },
-  0x2A: { pass: 'blocked', labels: ['ledge east'],                    cat: 'cliff-trigger' },
-  0x2B: { pass: 'blocked', labels: ['ledge west'],                    cat: 'cliff-trigger' },
+  0x28: { pass: 'blocked', labels: ['ledge y axis'],                  cat: 'cliff-trigger' },
+  0x29: { pass: 'blocked', labels: ['ledge y axis'],                  cat: 'cliff-trigger' },
+  0x2A: { pass: 'blocked', labels: ['ledge x axis'],                  cat: 'cliff-trigger' },
+  0x2B: { pass: 'blocked', labels: ['ledge x axis'],                  cat: 'cliff-trigger' },
   0x2C: { pass: 'blocked', labels: ['ledge NE'],                      cat: 'cliff-trigger' },
   0x2D: { pass: 'blocked', labels: ['ledge SE'],                      cat: 'cliff-trigger' },
   0x2E: { pass: 'blocked', labels: ['ledge NW'],                      cat: 'cliff-trigger' },
