@@ -35,7 +35,15 @@ export function drawReachableDots(
           (rawL0[r][c] !== 0x00 || layer0Reach);
         const l1HasContent = isDualLayer && rawL1 != null &&
           (rawL1[r][c] !== 0x00 || layer1Reach);
-        const hasOverlap = l0HasContent && l1HasContent;
+        let hasOverlap = l0HasContent && l1HasContent;
+
+        // Suppress overlap at door passages: when only one layer is reached and both
+        // raw attrs are identical but NOT 0x1C, the non-reached layer was filler (0x1C)
+        // that got normalized by copying the other layer's value — not real content.
+        if (hasOverlap && !(layer0Reach && layer1Reach) && rawL0 && rawL1) {
+          const a0 = rawL0[r][c];
+          if (a0 === rawL1[r][c] && a0 !== 0x1C) hasOverlap = false;
+        }
 
         if (!hasOverlap && drawResult.attrGrid && LEDGE_ATTRS.has(drawResult.attrGrid[r][c])) continue;
         if (perLayer && (perLayer[0][r][c] === STAIRS_TRAVERSAL_STATE || perLayer[1][r][c] === STAIRS_TRAVERSAL_STATE)) continue;
