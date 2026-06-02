@@ -96,24 +96,7 @@ export function processStraightCliffs(
         r += dr;
         c += dc;
       }
-
-      // For indoor N/S cliffs, also scan BACKWARD (against hop direction) through wall tiles.
-      // The cliff face extends above/below the trigger tile. Including these walls in the ledge
-      // ensures the approach check finds the free tile at the top/bottom of the cliff face.
-      let startR = row, startC = col;
-      if (isIndoors && (attr === 0x28 || attr === 0x29)) {
-        let br = row - dr;
-        let bc = col - dc;
-        while (br >= 0 && br < GRID_SIZE && bc >= 0 && bc < GRID_SIZE && CLIFF_WALL.has(rawAttr[br][bc])) {
-          grid[br][bc] = { type: 'ledge', dir };
-          startR = br;
-          startC = bc;
-          br -= dr;
-          bc -= dc;
-        }
-      }
-
-      ledges.push({ startRow: startR, startCol: startC, endRow: r, endCol: c });
+      ledges.push({ startRow: row, startCol: col, endRow: r, endCol: c });
     }
   }
 }
