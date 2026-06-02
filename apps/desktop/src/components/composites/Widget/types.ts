@@ -30,6 +30,9 @@ interface WidgetState {
 
   // Docked size: width for left/right, height for top/bottom
   dockedSize: number;
+
+  /** When true AND docked, the game viewport shrinks to avoid this widget's space */
+  exclusive: boolean;
 }
 
 // ─── Registry (full layout) ───

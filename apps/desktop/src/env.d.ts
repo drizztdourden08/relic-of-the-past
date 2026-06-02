@@ -193,6 +193,7 @@ interface RomDisplayInfo extends RomInfo {
 interface ElectronAPI {
   // Dev mode flag
   isDev: boolean;
+  autoFlood: boolean;
 
   // Sprites base URL (per-ROM: file:// path to userData/Data/sprites/{romStem}/)
   getSpritesBaseUrl(romFile: string): string;
@@ -368,6 +369,31 @@ interface ElectronAPI {
     onDownloadComplete(callback: () => void): () => void;
     onError(callback: (error: string) => void): () => void;
   };
+
+  // Screen editor (dev-only: write screen/connection data to source files)
+  screenEditor: {
+    writeRegion(args: { filePath: string; code: string; screenId: string | null }): Promise<{ success: boolean; error?: string }>;
+    writeConnections(args: { filePath: string; code: string }): Promise<{ success: boolean; error?: string }>;
+    appendRegistry(args: { type: 'area' | 'location'; entries: Array<{ id: string; name: string; world?: string; areaId?: string }> }): Promise<{ success: boolean; error?: string }>;
+  };
+
+  // Connection/navigation review data
+  loadConnectionReview(): Promise<unknown>;
+  saveConnectionReview(data: unknown): Promise<void>;
+  loadNavReview(): Promise<unknown>;
+  saveNavReview(data: unknown): Promise<void>;
+
+  // Debug: dump layers CLI
+  getDumpLayersSlot(): Promise<number | null>;
+  getHoverTile(): Promise<{ col: number; row: number } | null>;
+  writeDumpLayers(data: unknown): Promise<string>;
+
+  // Debug: dump navigation CLI
+  getDumpNavSlot(): Promise<number | null>;
+  writeDumpNav(data: unknown): Promise<string>;
+
+  getTestArgs(): Promise<{ autoState: number | null; screenshot: string | null }>;
+  takeScreenshot(name: string): Promise<string>;
 }
 
 declare function Zelda3(config: Record<string, unknown>): Promise<unknown>;

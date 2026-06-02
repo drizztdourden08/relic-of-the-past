@@ -16,3 +16,7 @@ export type { SegmentOption } from './SegmentedControl';
 export type { TabItem } from './TabBar';
 export type { PortalLayer } from './Portal';
 export type { ToastItem, ToastVariant } from './Toast';
+export { TagPicker } from './TagPicker';
+export type { TagPickerGroup, TagPickerOption, TagPickerProps } from './TagPicker';
+export { StatusBadge } from './StatusBadge';
+export type { ScreenStatus } from './StatusBadge';

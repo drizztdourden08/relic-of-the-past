@@ -3,8 +3,8 @@
 export type { EmscriptenFS, EmscriptenModule, GameStatus, GameState } from './types';
 export { getGameState, getModule, subscribeGameState } from './wasm-bridge';
 export { getProfileId as getActiveProfileId } from './wasm-bridge';
-export { wasmSetPaused, wasmTogglePause, wasmReset, wasmCheat, wasmGetViewportInfo, wasmRenderCleanFrame, wasmGetMenuState } from './wasm-bridge';
-export type { ViewportInfo } from './wasm-bridge';
+export { wasmSetPaused, wasmTogglePause, wasmReset, wasmCheat, wasmGetViewportInfo, wasmRenderCleanFrame, wasmGetMenuState, wasmGetOverworldVariant, wasmGetProgressIndicator, wasmGetIndoorDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetRoomCollisionType, wasmGetStaircaseType, wasmGetIndoorUncleBlockers, wasmGetNavigationBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmBuildRoomAttrGrid, wasmGetToggleFloorPositions, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetDungeonMapPosition, wasmGetRoomDoorBoundaryTiles, wasmGetRoomExitDoors, wasmGetRoomStairInfo, wasmGetRoomWalkBoundaries, wasmGetRoomTravelDestinations, wasmGetGameUIState } from './wasm-bridge';
+export type { DoorBoundaryTile, DungeonMapPosition, FallHole, LiveSpriteInfo, OverworldVariantInfo, RoomExitDoor, RoomLayoutInfo, RoomStairInfo, RoomWalkBoundary, ViewportInfo } from './wasm-bridge';
 export { startGame, resetGame } from './lifecycle';
 export { setMsuData, setAutoSaveConfig } from './lifecycle';
 export type { MsuTrackData, AutoSaveConfig } from './lifecycle';
@@ -32,3 +32,5 @@ export {
 export { deliveryQueue } from './delivery-queue';
 export type { DeliveryEntry, DeliveryAction, DeliveryQueueState } from './delivery-queue';
 export { deliverItem, deliverCheck, deliverNpcCheck, deliverCustom } from './delivery-api';
+export { liveDataSource } from './navigation-data-source';
+export type { NavigationDataSource } from './navigation-data-source';

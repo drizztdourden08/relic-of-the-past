@@ -1,4 +1,4 @@
-export { REGION_RULES, LIGHT_WORLD_REGION_RULES, DARK_WORLD_REGION_RULES, DUNGEON_REGION_RULES } from './region-rules';
+export { SCREEN_RULES, LIGHT_WORLD_SCREEN_RULES, DARK_WORLD_SCREEN_RULES, DUNGEON_SCREEN_RULES } from './screen-rules';
 export { CHECK_RULES, LIGHT_WORLD_CHECK_RULES, DARK_WORLD_CHECK_RULES, DUNGEON_CHECK_RULES } from './check-rules';
 export {
   hasSword, hasBeamSword, hasMeleeWeapon,
@@ -11,7 +11,7 @@ export {
 } from './helpers';
 export {
   evaluateRequirement,
-  getReachableRegions,
+  getReachableScreens,
   getAccessibleChecks,
   getCheckStatus,
   getBlockingItems,

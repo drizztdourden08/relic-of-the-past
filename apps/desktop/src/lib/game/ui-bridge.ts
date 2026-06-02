@@ -155,6 +155,12 @@ function parseGameUIBuffer(heap: Uint8Array, ptr: number): GameUIState {
   const overworldAreaIndex = b[p + 113];
   const heartPieces = b[p + 114];
 
+  // Extended location (bytes 119–124)
+  const whichEntrance = b[p + 119];
+  const linkLayer = b[p + 120];
+  const linkX = b[p + 121] | (b[p + 122] << 8);
+  const linkY = b[p + 123] | (b[p + 124] << 8);
+
   // Derive mode
   const mode = deriveUIMode(mainModule, subModule, subSubModule, floorTimer);
 
@@ -183,6 +189,7 @@ function parseGameUIBuffer(heap: Uint8Array, ptr: number): GameUIState {
     overworldMapState, dungeonFloor, dungeonIdx, dungeonInitState,
     palaceIndex, roomIndex, currentFloor,
     overworldScreenIndex, overworldAreaIndex, isIndoors, isDarkWorld,
+    whichEntrance, linkLayer, linkX, linkY,
   };
 
   const floorIndicator: FloorIndicatorState = {
@@ -238,6 +245,8 @@ function stateChanged(a: GameUIState, b: GameUIState): boolean {
   if (am.currentFloor !== bm.currentFloor || am.dungeonInitState !== bm.dungeonInitState) return true;
   if (am.overworldScreenIndex !== bm.overworldScreenIndex || am.isIndoors !== bm.isIndoors) return true;
   if (am.isDarkWorld !== bm.isDarkWorld || am.overworldAreaIndex !== bm.overworldAreaIndex) return true;
+  if (am.whichEntrance !== bm.whichEntrance || am.linkLayer !== bm.linkLayer) return true;
+  if (am.linkX !== bm.linkX || am.linkY !== bm.linkY) return true;
 
   const af = a.floorIndicator, bf = b.floorIndicator;
   if (af.timer !== bf.timer || af.isVisible !== bf.isVisible) return true;

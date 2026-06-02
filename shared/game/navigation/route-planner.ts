@@ -6,14 +6,14 @@ import { aStarOnGrid } from './point-navigation';
 import { floodFillScreen, getEntrances } from './flood-fill';
 import { classifyTileAttr } from './tile-classification';
 import { getScreenName } from './screen-names';
-import { REGION_BY_ID } from '../regions';
-import { ALL_CONNECTIONS, DUNGEON_CONNECTIONS } from '../connections';
+import { SCREEN_BY_ID } from '../data/screens';
+import { ALL_CONNECTIONS, DUNGEON_CONNECTIONS } from '../data/connections';
 
 // ─── Location Type ───────────────────────────────────────────────────────────
 
 export interface Location {
-  /** Region ID (e.g. 'kakariko-shop', 'lw-2c', 'links-house') */
-  regionId: string;
+  /** Screen ID (e.g. 'kakariko-shop', 'lw-2c', 'links-house') */
+  screenId: string;
   /** Optional tile position (row, col in 64×64 grid). If omitted, uses closest valid tile to center. */
   tile?: GridPos;
 }
@@ -47,24 +47,24 @@ interface ResolvedLocation {
 /**
  * Resolve a Location to a concrete overworld screen + tile position.
  *
- * - Overworld regions (type lightWorld/darkWorld): use inGameIndex directly as screen
- * - Interior regions (type cave/house/shop/dungeon): find the entrance on the overworld
+ * - Overworld screens (type 'overworld'): use roomIndex directly as screen
+ * - Interior screens (type 'dungeon'/'interior'): find the entrance on the overworld
  *   and use that entrance's tile as the position
  */
 function resolveLocation(loc: Location, rom: RomData, inventory: Set<string>): ResolvedLocation | null {
-  const region = REGION_BY_ID.get(loc.regionId);
-  if (!region) return null;
+  const screen = SCREEN_BY_ID.get(loc.screenId);
+  if (!screen) return null;
 
   let screenIndex: number;
   let tile: GridPos | undefined = loc.tile;
 
-  if (region.type === 'lightWorld' || region.type === 'darkWorld') {
-    // Overworld screen — inGameIndex IS the screen index
-    if (region.inGameIndex === undefined) return null;
-    screenIndex = region.inGameIndex;
+  if (screen.type === 'overworld') {
+    // Overworld screen — roomIndex IS the screen index
+    if (screen.roomIndex === undefined) return null;
+    screenIndex = screen.roomIndex;
   } else {
-    // Interior region — use connection graph to find the correct overworld screen
-    const owScreen = findOverworldScreenFromConnections(loc.regionId);
+    // Interior screen — use connection graph to find the correct overworld screen
+    const owScreen = findOverworldScreenFromConnections(loc.screenId);
     if (owScreen === null) return null;
     screenIndex = owScreen;
 
@@ -72,7 +72,7 @@ function resolveLocation(loc: Location, rom: RomData, inventory: Set<string>): R
     if (!tile) {
       const entrances = getEntrances(rom);
       const matchingEntrance = entrances.find(
-        e => (e.area & 0x3f) === screenIndex && e.roomId === region.inGameIndex,
+        e => (e.area & 0x3f) === screenIndex && e.roomId === screen.roomIndex,
       );
       if (matchingEntrance) {
         tile = { row: matchingEntrance.gridRow, col: matchingEntrance.gridCol };
@@ -94,18 +94,18 @@ function resolveLocation(loc: Location, rom: RomData, inventory: Set<string>): R
 }
 
 /**
- * Use connection graph to find which overworld screen connects to an interior region.
+ * Use connection graph to find which overworld screen connects to an interior screen.
  * Returns the screen index or null.
  */
-function findOverworldScreenFromConnections(regionId: string): number | null {
+function findOverworldScreenFromConnections(screenId: string): number | null {
   const allConns = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
-  // Find a connection FROM an overworld screen TO this region
+  // Find a connection FROM an overworld screen TO this screen
   for (const conn of allConns) {
-    if (conn.to !== regionId) continue;
-    const fromRegion = REGION_BY_ID.get(conn.from);
-    if (!fromRegion) continue;
-    if ((fromRegion.type === 'lightWorld' || fromRegion.type === 'darkWorld') && fromRegion.inGameIndex !== undefined) {
-      return fromRegion.inGameIndex;
+    if (conn.to !== screenId) continue;
+    const fromScreen = SCREEN_BY_ID.get(conn.from);
+    if (!fromScreen) continue;
+    if (fromScreen.type === 'overworld' && fromScreen.roomIndex !== undefined) {
+      return fromScreen.roomIndex;
     }
   }
   return null;
@@ -119,7 +119,7 @@ function findClosestValidTile(rom: RomData, screenIndex: number, inventory: Set<
   const center = { row: 32, col: 32 };
 
   // If center is reachable, use it
-  if (result.reachable[center.row]?.[center.col]) return center;
+  if (result.reachable[center.row]?.[center.col] === 1) return center;
 
   // Spiral outward from center
   let best: GridPos = center;
@@ -127,7 +127,7 @@ function findClosestValidTile(rom: RomData, screenIndex: number, inventory: Set<
 
   for (let r = 0; r < GRID_SIZE; r++) {
     for (let c = 0; c < GRID_SIZE; c++) {
-      if (!result.reachable[r]?.[c]) continue;
+      if (result.reachable[r]?.[c] !== 1) continue;
       const dist = Math.abs(r - 32) + Math.abs(c - 32);
       if (dist < bestDist) {
         bestDist = dist;

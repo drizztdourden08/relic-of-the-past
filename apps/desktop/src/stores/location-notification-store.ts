@@ -1,13 +1,13 @@
 /**
- * Location Notification Store — manages region/transition notification state.
+ * Location Notification Store — manages screen/transition notification state.
  * Fed by a subscription to game-ui-store map changes.
  */
 
 import { create } from 'zustand';
-import type { RegionDefinition } from '@shared/game/types';
+import type { ScreenDefinition } from '@shared/game/types';
 
 interface LocationNotification {
-  region: RegionDefinition;
+  screen: ScreenDefinition;
   timestamp: number;
 }
 
@@ -17,33 +17,33 @@ interface TransitionNotification {
 }
 
 interface LocationNotificationStore {
-  /** Currently visible region notification (null = hidden) */
-  region: LocationNotification | null;
+  /** Currently visible screen notification (null = hidden) */
+  screen: LocationNotification | null;
   /** Currently visible transition notification (null = hidden) */
   transition: TransitionNotification | null;
-  /** Whether region notifications are enabled */
-  showRegion: boolean;
+  /** Whether screen notifications are enabled */
+  showScreen: boolean;
   /** Whether transition notifications are enabled */
   showTransition: boolean;
 
-  setRegion: (region: RegionDefinition) => void;
+  setScreen: (screen: ScreenDefinition) => void;
   setTransition: (entrance: string) => void;
-  clearRegion: () => void;
+  clearScreen: () => void;
   clearTransition: () => void;
-  setSettings: (showRegion: boolean, showTransition: boolean) => void;
+  setSettings: (showScreen: boolean, showTransition: boolean) => void;
 }
 
 const useLocationNotificationStore = create<LocationNotificationStore>()((set) => ({
-  region: null,
+  screen: null,
   transition: null,
-  showRegion: true,
+  showScreen: true,
   showTransition: true,
 
-  setRegion: (region) => set({ region: { region, timestamp: Date.now() } }),
+  setScreen: (screen) => set({ screen: { screen, timestamp: Date.now() } }),
   setTransition: (entrance) => set({ transition: { entrance, timestamp: Date.now() } }),
-  clearRegion: () => set({ region: null }),
+  clearScreen: () => set({ screen: null }),
   clearTransition: () => set({ transition: null }),
-  setSettings: (showRegion, showTransition) => set({ showRegion, showTransition }),
+  setSettings: (showScreen, showTransition) => set({ showScreen, showTransition }),
 }));
 
 export { useLocationNotificationStore };

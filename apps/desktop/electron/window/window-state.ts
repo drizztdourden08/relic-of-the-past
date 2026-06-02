@@ -1,4 +1,4 @@
-import { BrowserWindow, screen } from 'electron';
+import { BrowserWindow, screen, Rectangle } from 'electron';
 import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { dirname } from 'path';
 import { getUserDataPath } from '../lib/paths';
@@ -18,6 +18,11 @@ const DEFAULT_STATE: WindowState = {
   isMaximized: false,
   isFullscreen: false,
 };
+
+// Cached normal-mode bounds, updated via move/resize events.
+// This avoids relying on getNormalBounds() which is unreliable on Windows
+// with titleBarStyle: 'hidden' (returns coordinates including invisible frame).
+let cachedNormalBounds: Rectangle | null = null;
 
 function getStatePath(): string {
   return getUserDataPath('config', 'window-state.json');
@@ -61,12 +66,31 @@ function loadWindowState(): WindowState {
   }
 }
 
+/**
+ * Attach event listeners to track the window's normal (non-maximized) bounds.
+ * Must be called right after window creation.
+ */
+function trackWindowState(win: BrowserWindow): void {
+  function updateNormalBounds(): void {
+    if (!win.isMaximized() && !win.isFullScreen() && !win.isMinimized()) {
+      cachedNormalBounds = win.getContentBounds();
+    }
+  }
+
+  win.on('move', updateNormalBounds);
+  win.on('resize', updateNormalBounds);
+
+  // Initialize cache with current bounds
+  updateNormalBounds();
+}
+
 function saveWindowState(win: BrowserWindow): void {
   const isMaximized = win.isMaximized();
   const isFullscreen = win.isFullScreen();
 
-  // Save the non-maximized/non-fullscreen bounds so restoring returns to the windowed size
-  const bounds = isMaximized || isFullscreen ? win.getNormalBounds() : win.getBounds();
+  // Use the manually-tracked normal bounds to avoid getNormalBounds() bugs
+  // on Windows with titleBarStyle: 'hidden'.
+  const bounds = cachedNormalBounds ?? win.getContentBounds();
 
   const state: WindowState = {
     x: bounds.x,
@@ -86,4 +110,4 @@ function saveWindowState(win: BrowserWindow): void {
   }
 }
 
-export { loadWindowState, saveWindowState };
+export { loadWindowState, trackWindowState, saveWindowState };

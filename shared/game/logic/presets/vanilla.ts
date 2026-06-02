@@ -2,7 +2,7 @@ import type { LogicConfig } from '../../types';
 
 const VANILLA_CONFIG: LogicConfig = {
   mode: 'vanilla',
-  startingRegion: 'menu',
+  startingScreen: 'menu',
   startingItems: [],
   saveQuitDestinations: [],
   moonPearlRequired: true,

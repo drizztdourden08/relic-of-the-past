@@ -237,7 +237,7 @@ void Follower_Main() {  // 899fc4
     return;
   }
   int j = FindInByteArray(kTagalong_Tab0, follower_indicator, 3);
-  if (j >= 0 && submodule_index == 0 && !(j == 2 && overworld_screen_index & 0x40) && sign16(--word_7E02CD)) {
+  if (j >= 0 && !(enhanced_features0 & kFeatures0_DisableTelepathy) && submodule_index == 0 && !(j == 2 && overworld_screen_index & 0x40) && sign16(--word_7E02CD)) {
     if (!Follower_ValidateMessageFreedom()) {
       word_7E02CD = 0;
     } else {

@@ -24,6 +24,19 @@ export function manhattan(a: GridPos, b: GridPos): number {
   return Math.abs(a.row - b.row) + Math.abs(a.col - b.col);
 }
 
+/** Get the adjacent overworld screen index for a given edge. Overworld is 8×8 grid; LW = 0x00–0x3F, DW = 0x40–0x7F. */
+export function getAdjacentScreen(screenIdx: number, edge: 'north' | 'south' | 'east' | 'west'): number | null {
+  const col = screenIdx & 7;
+  const row = (screenIdx >> 3) & 7;
+  const world = screenIdx & 0x40;
+  switch (edge) {
+    case 'north': return row > 0 ? world | ((row - 1) << 3) | col : null;
+    case 'south': return row < 7 ? world | ((row + 1) << 3) | col : null;
+    case 'west': return col > 0 ? world | (row << 3) | (col - 1) : null;
+    case 'east': return col < 7 ? world | (row << 3) | (col + 1) : null;
+  }
+}
+
 /**
  * Check 2-tile perpendicular clearance for Link's 16px width.
  * Returns true if at least one adjacent perpendicular tile is passable.

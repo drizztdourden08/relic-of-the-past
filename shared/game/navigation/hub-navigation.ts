@@ -1,13 +1,34 @@
-import type { RegionConnection, RegionDefinition } from '../types';
+import type { ScreenConnection, ScreenDefinition } from '../types';
 import type { NavigationStep, NavigationResult, PathfindingOptions } from './types';
-import { ALL_CONNECTIONS, DUNGEON_CONNECTIONS } from '../connections';
-import { REGION_BY_ID } from '../regions';
+import { ALL_CONNECTIONS, DUNGEON_CONNECTIONS } from '../data/connections';
+import { SCREEN_BY_ID } from '../data/screens';
 
-type AdjacencyList = Map<string, { to: string; entrance: string }[]>;
+type AdjacencyList = Map<string, string[]>;
+
+// ─── Memoized Graph Instances ────────────────────────────────────────────────
+
+let cachedFullAdj: AdjacencyList | null = null;
+let cachedPreciseAdj: AdjacencyList | null = null;
+
+function getFullAdjacencyList(options: PathfindingOptions = {}): AdjacencyList {
+  if (!options.allowGlitches && cachedFullAdj) return cachedFullAdj;
+  const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
+  const adj = buildAdjacencyList(allConnections, options);
+  if (!options.allowGlitches) cachedFullAdj = adj;
+  return adj;
+}
+
+function getPreciseAdjacencyList(options: PathfindingOptions = {}): AdjacencyList {
+  if (!options.allowGlitches && cachedPreciseAdj) return cachedPreciseAdj;
+  const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
+  const adj = buildPreciseAdjacencyList(allConnections, options);
+  if (!options.allowGlitches) cachedPreciseAdj = adj;
+  return adj;
+}
 
 // ─── Graph Construction ──────────────────────────────────────────────────────
 
-function buildAdjacencyList(connections: RegionConnection[], options: PathfindingOptions = {}): AdjacencyList {
+function buildAdjacencyList(connections: ScreenConnection[], options: PathfindingOptions = {}): AdjacencyList {
   const { allowGlitches = false } = options;
   const adj: AdjacencyList = new Map();
 
@@ -16,12 +37,12 @@ function buildAdjacencyList(connections: RegionConnection[], options: Pathfindin
 
     let edges = adj.get(conn.from);
     if (!edges) { edges = []; adj.set(conn.from, edges); }
-    edges.push({ to: conn.to, entrance: conn.entrance });
+    edges.push(conn.to);
 
     if (conn.tags.includes('dir:two-way')) {
       let reverseEdges = adj.get(conn.to);
       if (!reverseEdges) { reverseEdges = []; adj.set(conn.to, reverseEdges); }
-      reverseEdges.push({ to: conn.from, entrance: `${conn.entrance} (return)` });
+      reverseEdges.push(conn.from);
     }
 
     if (!adj.has(conn.to)) adj.set(conn.to, []);
@@ -36,16 +57,16 @@ const SCREEN_PATTERN = /^(lw|dw)-[0-9a-f]{2}$/;
 
 function isLogicalArea(id: string): boolean {
   if (SCREEN_PATTERN.test(id)) return false;
-  const region = REGION_BY_ID.get(id);
-  if (!region) return false;
-  return region.type === 'lightWorld' || region.type === 'darkWorld';
+  const screen = SCREEN_BY_ID.get(id);
+  if (!screen) return false;
+  return screen.type === 'overworld';
 }
 
 /**
  * Build adjacency list with logical area hubs eliminated.
  * Bridges physical neighbors directly (screen↔interior only).
  */
-function buildPreciseAdjacencyList(connections: RegionConnection[], options: PathfindingOptions = {}): AdjacencyList {
+function buildPreciseAdjacencyList(connections: ScreenConnection[], options: PathfindingOptions = {}): AdjacencyList {
   const fullAdj = buildAdjacencyList(connections, options);
   const logicalAreas = new Set<string>();
   for (const [id] of fullAdj) {
@@ -56,36 +77,36 @@ function buildPreciseAdjacencyList(connections: RegionConnection[], options: Pat
 
   for (const [node, edges] of fullAdj) {
     if (logicalAreas.has(node)) continue;
-    adj.set(node, edges.filter(e => !logicalAreas.has(e.to)));
+    adj.set(node, edges.filter(to => !logicalAreas.has(to)));
   }
 
   for (const areaId of logicalAreas) {
     const areaEdges = fullAdj.get(areaId) ?? [];
-    const incomingNodes: { from: string; entrance: string }[] = [];
+    const incomingNodes: string[] = [];
     for (const [node, edges] of fullAdj) {
       if (logicalAreas.has(node)) continue;
-      for (const edge of edges) {
-        if (edge.to === areaId) incomingNodes.push({ from: node, entrance: edge.entrance });
+      for (const to of edges) {
+        if (to === areaId) incomingNodes.push(node);
       }
     }
 
-    const outgoingNodes = areaEdges.filter(e => !logicalAreas.has(e.to));
+    const outgoingNodes = areaEdges.filter(to => !logicalAreas.has(to));
 
-    for (const incoming of incomingNodes) {
-      for (const outgoing of outgoingNodes) {
-        if (incoming.from === outgoing.to) continue;
-        const fromIsScreen = SCREEN_PATTERN.test(incoming.from);
-        const toIsScreen = SCREEN_PATTERN.test(outgoing.to);
+    for (const incomingFrom of incomingNodes) {
+      for (const outgoingTo of outgoingNodes) {
+        if (incomingFrom === outgoingTo) continue;
+        const fromIsScreen = SCREEN_PATTERN.test(incomingFrom);
+        const toIsScreen = SCREEN_PATTERN.test(outgoingTo);
         if (!fromIsScreen && !toIsScreen) continue;
 
-        let edges = adj.get(incoming.from);
-        if (!edges) { edges = []; adj.set(incoming.from, edges); }
-        edges.push({ to: outgoing.to, entrance: outgoing.entrance });
+        let edges = adj.get(incomingFrom);
+        if (!edges) { edges = []; adj.set(incomingFrom, edges); }
+        edges.push(outgoingTo);
       }
     }
   }
 
-  for (const [id] of REGION_BY_ID) {
+  for (const [id] of SCREEN_BY_ID) {
     if (!logicalAreas.has(id) && !adj.has(id)) adj.set(id, []);
   }
 
@@ -102,12 +123,12 @@ function bfsPath(adj: AdjacencyList, sourceId: string, targetId: string): Naviga
   if (!adj.has(targetId)) return { found: false, path: [], distance: -1, visited: 0, totalNodes, totalEdges };
 
   if (sourceId === targetId) {
-    const region = REGION_BY_ID.get(sourceId);
-    return { found: true, path: [{ regionId: sourceId, regionName: region?.name ?? sourceId, entrance: null }], distance: 0, visited: 1, totalNodes, totalEdges };
+    const screen = SCREEN_BY_ID.get(sourceId);
+    return { found: true, path: [{ screenId: sourceId, screenName: screen?.name ?? sourceId }], distance: 0, visited: 1, totalNodes, totalEdges };
   }
 
   const visited = new Set<string>();
-  const parent = new Map<string, { from: string; entrance: string }>();
+  const parent = new Map<string, string>();
   const queue: string[] = [sourceId];
   visited.add(sourceId);
 
@@ -116,22 +137,21 @@ function bfsPath(adj: AdjacencyList, sourceId: string, targetId: string): Naviga
     const edges = adj.get(current);
     if (!edges) continue;
 
-    for (const { to, entrance } of edges) {
+    for (const to of edges) {
       if (visited.has(to)) continue;
       visited.add(to);
-      parent.set(to, { from: current, entrance });
+      parent.set(to, current);
 
       if (to === targetId) {
         const path: NavigationStep[] = [];
         let node = targetId;
         while (node !== sourceId) {
-          const p = parent.get(node)!;
-          const region = REGION_BY_ID.get(node);
-          path.unshift({ regionId: node, regionName: region?.name ?? node, entrance: p.entrance });
-          node = p.from;
+          const screen = SCREEN_BY_ID.get(node);
+          path.unshift({ screenId: node, screenName: screen?.name ?? node });
+          node = parent.get(node)!;
         }
-        const sourceRegion = REGION_BY_ID.get(sourceId);
-        path.unshift({ regionId: sourceId, regionName: sourceRegion?.name ?? sourceId, entrance: null });
+        const sourceScreen = SCREEN_BY_ID.get(sourceId);
+        path.unshift({ screenId: sourceId, screenName: sourceScreen?.name ?? sourceId });
         return { found: true, path, distance: path.length - 1, visited: visited.size, totalNodes, totalEdges };
       }
 
@@ -146,11 +166,10 @@ function bfsPath(adj: AdjacencyList, sourceId: string, targetId: string): Naviga
 
 /**
  * Hub-level BFS shortest path (allows logical area shortcuts).
- * Entry point #4: region-graph navigation.
+ * Entry point #4: screen-graph navigation.
  */
 export function findShortestPath(sourceId: string, targetId: string, options: PathfindingOptions = {}): NavigationResult {
-  const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
-  const adj = buildAdjacencyList(allConnections, options);
+  const adj = getFullAdjacencyList(options);
   return bfsPath(adj, sourceId, targetId);
 }
 
@@ -159,15 +178,13 @@ export function findShortestPath(sourceId: string, targetId: string, options: Pa
  * Logical area hubs are eliminated, forcing screen-by-screen routing.
  */
 export function findPrecisePath(sourceId: string, targetId: string, options: PathfindingOptions = {}): NavigationResult {
-  const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
-  const adj = buildPreciseAdjacencyList(allConnections, options);
+  const adj = getPreciseAdjacencyList(options);
   return bfsPath(adj, sourceId, targetId);
 }
 
-/** Find all regions unreachable from source (disconnected nodes). */
-export function findUnreachableRegions(sourceId: string = 'menu'): { id: string; name: string; type: string }[] {
-  const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
-  const adj = buildAdjacencyList(allConnections);
+/** Find all screens unreachable from source (disconnected nodes). */
+export function findUnreachableScreens(sourceId: string = 'menu'): { id: string; name: string; type: string }[] {
+  const adj = getFullAdjacencyList();
 
   const visited = new Set<string>();
   const queue: string[] = [sourceId];
@@ -177,29 +194,29 @@ export function findUnreachableRegions(sourceId: string = 'menu'): { id: string;
     const current = queue.shift()!;
     const edges = adj.get(current);
     if (!edges) continue;
-    for (const { to } of edges) {
+    for (const to of edges) {
       if (!visited.has(to)) { visited.add(to); queue.push(to); }
     }
   }
 
   const unreachable: { id: string; name: string; type: string }[] = [];
-  for (const [id, region] of REGION_BY_ID) {
-    if (!visited.has(id)) unreachable.push({ id, name: region.name, type: region.type });
+  for (const [id, screen] of SCREEN_BY_ID) {
+    if (!visited.has(id)) unreachable.push({ id, name: screen.name, type: screen.type });
   }
   return unreachable;
 }
 
 /** Get graph statistics for debugging. */
 export function getGraphStats() {
+  const adj = getFullAdjacencyList();
   const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
-  const adj = buildAdjacencyList(allConnections);
 
   const deadEnds: string[] = [];
   const incomingCount = new Map<string, number>();
 
   for (const [node, edges] of adj) {
     if (edges.length === 0) deadEnds.push(node);
-    for (const { to } of edges) {
+    for (const to of edges) {
       incomingCount.set(to, (incomingCount.get(to) ?? 0) + 1);
     }
   }
@@ -210,11 +227,11 @@ export function getGraphStats() {
   }
 
   return {
-    totalRegions: REGION_BY_ID.size,
+    totalScreens: SCREEN_BY_ID.size,
     totalNodesInGraph: adj.size,
     totalConnections: allConnections.length,
     deadEnds,
     entryOnlyNodes: entryOnly,
-    orphanedRegions: [...REGION_BY_ID.keys()].filter(id => !adj.has(id)),
+    orphanedScreens: [...SCREEN_BY_ID.keys()].filter(id => !adj.has(id)),
   };
 }

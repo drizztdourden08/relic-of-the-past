@@ -48,6 +48,7 @@ const FEATURE_FLAGS = {
   gameChangingBugFixes:   16384,
   switchLRLimit:          32768,
   dimFlashes:             65536,
+  disableTelepathy:       131072,
 } as const;
 
 // PPU render flag values — must match ppu.h
@@ -78,6 +79,7 @@ function buildFeatureFlags(s: GameSettings): number {
   if (s.gameChangingBugFixes) flags |= FEATURE_FLAGS.gameChangingBugFixes;
   if (s.cancelBirdTravel) flags |= FEATURE_FLAGS.cancelBirdTravel;
   if (s.dimFlashes) flags |= FEATURE_FLAGS.dimFlashes;
+  if (s.disableTelepathy) flags |= FEATURE_FLAGS.disableTelepathy;
   return flags;
 }
 
@@ -109,6 +111,7 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'gameChangingBugFixes',
   'cancelBirdTravel',
   'dimFlashes',
+  'disableTelepathy',
   // PPU flags (read every frame)
   'noSpriteLimits',
   'newRenderer',
@@ -146,7 +149,7 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'hudPauseStyle',
   'hudPauseHighlight',
   // Notification settings (React-only, no WASM restart needed)
-  'showRegionNotification',
+  'showScreenNotification',
   'showTransitionNotification',
   // Haptics (JS-only, no WASM restart needed)
   'haptics',

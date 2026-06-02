@@ -144,6 +144,14 @@ int WasmGetGameUIState(void) {
   b[117] = link_dash_ctr;
   b[118] = link_animation_steps;
 
+  // ─── Bytes 119–124: Extended Location (for region detection) ───
+  b[119] = which_entrance;
+  b[120] = link_is_on_lower_level;
+  b[121] = (uint8)(link_x_coord & 0xFF);
+  b[122] = (uint8)((link_x_coord >> 8) & 0xFF);
+  b[123] = (uint8)(link_y_coord & 0xFF);
+  b[124] = (uint8)((link_y_coord >> 8) & 0xFF);
+
   return (int)g_ui_state_buf;
 }
 

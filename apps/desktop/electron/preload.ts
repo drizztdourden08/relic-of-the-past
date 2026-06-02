@@ -7,9 +7,12 @@ function romStem(romFile: string): string {
   return parse(romFile).name;
 }
 
+const autoFlood = process.argv.includes('--auto-flood');
+
 contextBridge.exposeInMainWorld('api', {
   // Dev mode flag
   isDev,
+  autoFlood,
 
   // Sprites base URL — per-ROM: uses custom protocol to serve from userData
   getSpritesBaseUrl: (romFile: string) =>
@@ -207,7 +210,10 @@ contextBridge.exposeInMainWorld('api', {
   // Connection review (overworld connectivity)
   loadConnectionReview: () => ipcRenderer.invoke('connectionReview:load'),
   saveConnectionReview: (data: unknown) => ipcRenderer.invoke('connectionReview:save', data),
-  runFloodFill: (romFile: string, screenIndex: number, items?: string[]) => ipcRenderer.invoke('connectionReview:floodFill', romFile, screenIndex, items),
+
+  // Nav review (per-screen connection point documentation)
+  loadNavReview: () => ipcRenderer.invoke('navReview:load'),
+  saveNavReview: (data: unknown) => ipcRenderer.invoke('navReview:save', data),
 
   // Sprite extraction (per-ROM)
   extractSprites: (romFile: string) => ipcRenderer.invoke('sprites:extract', romFile),
@@ -218,6 +224,15 @@ contextBridge.exposeInMainWorld('api', {
   // Test automation
   getTestArgs: () => ipcRenderer.invoke('test:getArgs') as Promise<{ autoState: number | null; screenshot: string | null }>,
   takeScreenshot: (name: string) => ipcRenderer.invoke('test:screenshot', name) as Promise<string>,
+
+  // Debug: dump layers
+  getDumpLayersSlot: () => ipcRenderer.invoke('debug:getDumpLayersSlot') as Promise<number | null>,
+  getHoverTile: () => ipcRenderer.invoke('debug:getHoverTile') as Promise<{ col: number; row: number } | null>,
+  writeDumpLayers: (data: unknown) => ipcRenderer.invoke('debug:dumpLayers', data) as Promise<string>,
+
+  // Debug: dump navigation state
+  getDumpNavSlot: () => ipcRenderer.invoke('debug:getDumpNavSlot') as Promise<number | null>,
+  writeDumpNav: (data: unknown) => ipcRenderer.invoke('debug:dumpNav', data) as Promise<string>,
 
   // Shadow casting (dev-only write, always-available read)
   shadowCasting: {
@@ -259,5 +274,15 @@ contextBridge.exposeInMainWorld('api', {
       ipcRenderer.on('updater:error', handler);
       return () => ipcRenderer.removeListener('updater:error', handler);
     },
+  },
+
+  // Screen editor (dev-only: write screen/connection data to source files)
+  screenEditor: {
+    writeRegion: (args: { filePath: string; code: string; screenId: string | null }) =>
+      ipcRenderer.invoke('screenEditor:writeScreen', args) as Promise<{ success: boolean; error?: string }>,
+    writeConnections: (args: { filePath: string; code: string }) =>
+      ipcRenderer.invoke('screenEditor:writeConnections', args) as Promise<{ success: boolean; error?: string }>,
+    appendRegistry: (args: { type: 'area' | 'location'; entries: Array<{ id: string; name: string; world?: string; areaId?: string }> }) =>
+      ipcRenderer.invoke('screenEditor:appendRegistry', args) as Promise<{ success: boolean; error?: string }>,
   },
 });

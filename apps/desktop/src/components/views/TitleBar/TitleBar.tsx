@@ -25,6 +25,7 @@ const TitleBar = (props: TitleBarProps) => {
     onShowCredits,
     onShowSpriteDebug,
     onShowConnectionDebug,
+    onToggleDataset,
     onShowShadowEditor,
     onShowAbout,
     activeProfile,
@@ -132,6 +133,7 @@ const TitleBar = (props: TitleBarProps) => {
         { key: 'logs', icon: '📋', label: 'Logs', onClick: () => { closeMenu(); onShowLogs(); } },
         { key: 'debug', icon: '🐛', label: 'Debug State', onClick: () => { closeMenu(); onToggleDebug(); } },
         { key: 'navigation', icon: '🔗', label: 'Location & Navigation', onClick: () => { closeMenu(); onShowConnectionDebug(); } },
+        { key: 'dataset', icon: '📊', label: 'Dataset & Mapping', onClick: () => { closeMenu(); onToggleDataset(); } },
       ],
     },
     {

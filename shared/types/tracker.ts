@@ -1,10 +1,10 @@
 // Re-export all tracker types from their canonical location in shared/game/types
 export type {
   CheckType,
-  RegionType,
+  ScreenType,
   CheckDefinition,
-  RegionDefinition,
-  RegionConnection,
+  ScreenDefinition,
+  ScreenConnection,
   Requirement,
   CheckState,
   TrackerState,

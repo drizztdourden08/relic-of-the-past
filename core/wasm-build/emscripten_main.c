@@ -261,6 +261,18 @@ MemBlk FindInAssetArray(int asset, int idx) {
 }
 
 // ---------------------------------------------------------------------------
+// Headless initialization — loads assets + initializes game core without SDL.
+// Used by Node.js scripts that only need grid building (no rendering/audio).
+// Call with noInitialRun:true, then ccall('WasmInitHeadless') from JS.
+// ---------------------------------------------------------------------------
+EMSCRIPTEN_KEEPALIVE
+int WasmInitHeadless(void) {
+  LoadAssets();
+  WasmZeldaInitialize();
+  return 1;
+}
+
+// ---------------------------------------------------------------------------
 // WASM-exported save/load state functions (called from JS via ccall)
 // ---------------------------------------------------------------------------
 EMSCRIPTEN_KEEPALIVE

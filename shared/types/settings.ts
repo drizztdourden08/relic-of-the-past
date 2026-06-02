@@ -54,6 +54,7 @@ interface GameSettings {
   breakPotsWithSword: boolean;
   disableLowHealthBeep: boolean;
   skipIntroOnKeypress: boolean;
+  disableTelepathy: boolean;
   showMaxItemsInYellow: boolean;
   moreActiveBombs: boolean;
   carryMoreRupees: boolean;
@@ -98,7 +99,7 @@ interface GameSettings {
   saveHoldDuration: number; // seconds, 1-5
 
   // ─── Notifications ───
-  showRegionNotification: boolean;
+  showScreenNotification: boolean;
   showTransitionNotification: boolean;
 
   // ─── Haptics ───

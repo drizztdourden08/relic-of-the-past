@@ -1,21 +1,21 @@
 import { describe, it, expect } from 'vitest';
-import { findShortestPath, findUnreachableRegions, getGraphStats } from '../../shared/game/navigation';
+import { findShortestPath, findUnreachableScreens, getGraphStats } from '../../shared/game/navigation';
 
 describe('Navigation Graph', () => {
   describe('getGraphStats', () => {
     it('reports graph structure', () => {
       const stats = getGraphStats();
       console.log('=== GRAPH STATS ===');
-      console.log(`Total regions defined: ${stats.totalRegions}`);
+      console.log(`Total regions defined: ${stats.totalScreens}`);
       console.log(`Total nodes in connection graph: ${stats.totalNodesInGraph}`);
       console.log(`Total connections: ${stats.totalConnections}`);
       console.log(`Dead ends (no outgoing): ${stats.deadEnds.length}`);
       console.log(`Entry-only (no incoming): ${stats.entryOnlyNodes.length}`);
-      console.log(`Orphaned (not in any connection): ${stats.orphanedRegions.length}`);
+      console.log(`Orphaned (not in any connection): ${stats.orphanedScreens.length}`);
 
-      if (stats.orphanedRegions.length > 0) {
-        console.log('\n--- Orphaned Regions (defined but never connected) ---');
-        for (const id of stats.orphanedRegions) {
+      if (stats.orphanedScreens.length > 0) {
+        console.log('\n--- Orphaned Screens (defined but never connected) ---');
+        for (const id of stats.orphanedScreens) {
           console.log(`  ${id}`);
         }
       }
@@ -28,14 +28,14 @@ describe('Navigation Graph', () => {
         if (stats.deadEnds.length > 30) console.log(`  ... and ${stats.deadEnds.length - 30} more`);
       }
 
-      expect(stats.totalRegions).toBeGreaterThan(0);
+      expect(stats.totalScreens).toBeGreaterThan(0);
       expect(stats.totalConnections).toBeGreaterThan(0);
     });
   });
 
-  describe('findUnreachableRegions', () => {
-    it('finds regions unreachable from menu', () => {
-      const unreachable = findUnreachableRegions('menu');
+  describe('findUnreachableScreens', () => {
+    it('finds screens unreachable from menu', () => {
+      const unreachable = findUnreachableScreens('menu');
       console.log(`\n=== UNREACHABLE FROM "menu" ===`);
       console.log(`Unreachable: ${unreachable.length}`);
 
@@ -47,12 +47,12 @@ describe('Navigation Graph', () => {
           byType.set(r.type, list);
         }
 
-        for (const [type, regions] of byType) {
-          console.log(`\n--- ${type} (${regions.length}) ---`);
-          for (const r of regions.slice(0, 20)) {
+        for (const [type, screens] of byType) {
+          console.log(`\n--- ${type} (${screens.length}) ---`);
+          for (const r of screens.slice(0, 20)) {
             console.log(`  ${r.id} — ${r.name}`);
           }
-          if (regions.length > 20) console.log(`  ... and ${regions.length - 20} more`);
+          if (screens.length > 20) console.log(`  ... and ${screens.length - 20} more`);
         }
       }
 
@@ -60,8 +60,8 @@ describe('Navigation Graph', () => {
       expect(unreachable).toBeDefined();
     });
 
-    it('finds regions unreachable from links-house', () => {
-      const unreachable = findUnreachableRegions('links-house');
+    it('finds screens unreachable from links-house', () => {
+      const unreachable = findUnreachableScreens('links-house');
       console.log(`\n=== UNREACHABLE FROM "links-house" ===`);
       console.log(`Unreachable: ${unreachable.length}`);
       expect(unreachable).toBeDefined();
@@ -75,8 +75,7 @@ describe('Navigation Graph', () => {
       console.log(`Found: ${result.found}, Distance: ${result.distance}, Visited: ${result.visited}`);
       if (result.found) {
         for (const step of result.path) {
-          const via = step.entrance ? ` via "${step.entrance}"` : ' (start)';
-          console.log(`  → ${step.regionId} (${step.regionName})${via}`);
+          console.log(`  → ${step.screenId} (${step.regionName})`);
         }
       }
       expect(result.found).toBe(true);
@@ -88,8 +87,7 @@ describe('Navigation Graph', () => {
       console.log(`Found: ${result.found}, Distance: ${result.distance}, Visited: ${result.visited}`);
       if (result.found) {
         for (const step of result.path) {
-          const via = step.entrance ? ` via "${step.entrance}"` : ' (start)';
-          console.log(`  → ${step.regionId} (${step.regionName})${via}`);
+          console.log(`  → ${step.screenId} (${step.regionName})`);
         }
       }
     });
@@ -100,8 +98,7 @@ describe('Navigation Graph', () => {
       console.log(`Found: ${result.found}, Distance: ${result.distance}, Visited: ${result.visited}`);
       if (result.found) {
         for (const step of result.path) {
-          const via = step.entrance ? ` via "${step.entrance}"` : ' (start)';
-          console.log(`  → ${step.regionId} (${step.regionName})${via}`);
+          console.log(`  → ${step.screenId} (${step.regionName})`);
         }
       }
     });
@@ -112,13 +109,12 @@ describe('Navigation Graph', () => {
       console.log(`Found: ${result.found}, Distance: ${result.distance}, Visited: ${result.visited}`);
       if (result.found) {
         for (const step of result.path) {
-          const via = step.entrance ? ` via "${step.entrance}"` : ' (start)';
-          console.log(`  → ${step.regionId} (${step.regionName})${via}`);
+          console.log(`  → ${step.screenId} (${step.regionName})`);
         }
       }
     });
 
-    it('returns not-found for invalid region', () => {
+    it('returns not-found for invalid screen', () => {
       const result = findShortestPath('links-house', 'nonexistent-region');
       expect(result.found).toBe(false);
       expect(result.distance).toBe(-1);

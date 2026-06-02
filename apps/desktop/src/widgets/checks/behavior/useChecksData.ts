@@ -29,7 +29,7 @@ const useChecksData = () => {
     return merged;
   }, [inventory, resolvedLogic]);
   const snapshot = useMemo(
-    () => computeTrackerSnapshot(effectiveInventory, completedChecks, ALL_CHECKS, resolvedLogic.connections, resolvedLogic.regionRules, resolvedLogic.checkRules),
+    () => computeTrackerSnapshot(effectiveInventory, completedChecks, ALL_CHECKS, resolvedLogic.connections, resolvedLogic.screenRules, resolvedLogic.checkRules),
     [effectiveInventory, completedChecks, resolvedLogic],
   );
 

@@ -1,7 +1,9 @@
-import type { RomData } from '../../../asset-extraction/rom/rom-types';
+import type { TileAttrContext, TileReq } from '../tile-attrs';
 import type { WorldFloodResult, ScreenCoverage, GridPos } from '../types';
-import { getAdjacentScreen } from '../screen-hop';
 import { floodFillScreen } from './orchestrator';
+import { getAdjacentScreen } from '../core/grid-utils';
+
+
 
 const LW_SCREENS = 64;
 
@@ -24,9 +26,10 @@ function mirrorEntry(pos: number, edge: 'north' | 'south' | 'east' | 'west'): Gr
  * reachable from a different direction on the same screen).
  */
 export function floodFillWorld(
-  rom: RomData,
+  getGrid: (screenIndex: number) => number[][],
+  tileContext: TileAttrContext,
   startScreen: number,
-  inventory: Set<string>,
+  inventory: Set<TileReq>,
   startPos?: GridPos,
 ): WorldFloodResult {
   const startTime = performance.now();
@@ -54,7 +57,8 @@ export function floodFillWorld(
 
     let result;
     try {
-      result = floodFillScreen(rom, screenIdx, inventory, { row: entryRow, col: entryCol });
+      const grid = getGrid(screenIdx);
+      result = floodFillScreen(grid, screenIdx, { tileContext, inventory, startPos: { row: entryRow, col: entryCol } });
     } catch { continue; }
     bfsRuns++;
 
@@ -80,7 +84,7 @@ export function floodFillWorld(
       for (let r = 0; r < 64; r++) {
         for (let c = 0; c < 64; c++) {
           if (result.reachable[r][c] && !state.reachable[r][c]) {
-            state.reachable[r][c] = true;
+            state.reachable[r][c] = result.reachable[r][c];
             newTiles++;
           }
         }

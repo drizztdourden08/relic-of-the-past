@@ -1,21 +1,21 @@
-import type { LogicConfig, Requirement, RegionConnection } from '../types';
-import { REGION_RULES } from './region-rules';
+import type { LogicConfig, Requirement, ScreenConnection } from '../types';
+import { SCREEN_RULES } from './screen-rules';
 import { CHECK_RULES } from './check-rules';
-import { ALL_CONNECTIONS } from '../connections';
+import { ALL_CONNECTIONS } from '../data/connections';
 import {
   hasSword, hasBeamSword, hasCrystals,
 } from './helpers';
 
 // ─── Vanilla-only intro connection ───
-const VANILLA_INTRO_CONNECTION: RegionConnection =
-  { from: 'menu', to: 'links-house', entrance: 'Vanilla Intro', tags: [] };
+const VANILLA_INTRO_CONNECTION: ScreenConnection =
+  { from: 'menu', to: 'links-house', tags: [] };
 
 // ─── Rule Resolution ───
 
 interface ResolvedRules {
-  regionRules: Record<string, Requirement>;
+  screenRules: Record<string, Requirement>;
   checkRules: Record<string, Requirement>;
-  connections: RegionConnection[];
+  connections: ScreenConnection[];
   startInventory: Set<string>;
 }
 
@@ -30,7 +30,7 @@ interface ResolvedRules {
 function resolveRules(config: LogicConfig): ResolvedRules {
   if (config.mode === 'no-logic') {
     return {
-      regionRules: {},
+      screenRules: {},
       checkRules: {},
       connections: ALL_CONNECTIONS,
       startInventory: new Set(config.startingItems),
@@ -38,58 +38,64 @@ function resolveRules(config: LogicConfig): ResolvedRules {
   }
 
   // Start with the base rules
-  const regionRules: Record<string, Requirement> = { ...REGION_RULES };
+  const screenRules: Record<string, Requirement> = { ...SCREEN_RULES };
   const checkRules: Record<string, Requirement> = { ...CHECK_RULES };
 
   // --- Medallion requirements (config-driven) ---
-  regionRules['Misery Mire'] = {
+  screenRules['Misery Mire'] = {
     and: [hasSword, config.medallionRequirements.miseryMire],
   };
-  regionRules['Turtle Rock'] = {
+  screenRules['Turtle Rock'] = {
     and: [hasSword, config.medallionRequirements.turtleRock, 'Moon Pearl'],
   };
 
   // --- Crystal requirements (config-driven) ---
-  regionRules['Ganons Tower'] = hasCrystals(config.crystalsForGT);
+  screenRules['Ganons Tower'] = hasCrystals(config.crystalsForGT);
 
   // --- Pedestal requirement ---
   checkRules['Master Sword Pedestal'] = { count: ['Pendants', config.pendantsForPedestal] };
 
-  // --- S&Q destination gating ---
-  const allSQEntrances = ['Links House S&Q', 'Sanctuary S&Q', 'Old Man S&Q'];
-  const sqEntranceToRegion: Record<string, string> = {
-    'Links House S&Q': 'light-world',
-    'Sanctuary S&Q': 'sanctuary',
-    'Old Man S&Q': 'old-man-cave',
+  // --- S&Q destination gating (keyed by from|to) ---
+  const sqDestinations: Record<string, string> = {
+    'links-house': 'menu|links-house',
+    'sanctuary': 'menu|sanctuary',
+    'old-man-cave': 'menu|old-man-cave',
   };
 
-  for (const entrance of allSQEntrances) {
-    const targetRegion = sqEntranceToRegion[entrance];
-    if (!config.saveQuitDestinations.includes(targetRegion)) {
-      regionRules[entrance] = getSQGateRequirement(entrance, config);
+  for (const [dest, key] of Object.entries(sqDestinations)) {
+    if (!config.saveQuitDestinations.includes(dest)) {
+      screenRules[key] = getSQGateRequirement(dest, config);
     }
   }
 
   // --- Vanilla mode: gate progression ---
   if (config.mode === 'vanilla') {
-    regionRules['Vanilla Intro'] = 'Link Wakes Up';
-    regionRules['Secret Passage to Castle'] = 'Zelda Rescue Started';
-    regionRules['Hyrule Castle Entrance (South)'] = 'Zelda Rescue Started';
-    regionRules['Hyrule Castle Entrance (East)'] = 'Zelda Rescue Started';
-    regionRules['Hyrule Castle Entrance (West)'] = 'Zelda Rescue Started';
-    regionRules['Throne Room'] = 'Zelda Rescue Started';
-    regionRules['Agahnims Tower'] = hasBeamSword;
-    regionRules['Links House Exit'] = 'Rescued Zelda';
+    // Vanilla intro gate (combined with any S&Q rule on same key)
+    const introKey = 'menu|links-house';
+    const existingSQRule = screenRules[introKey];
+    if (existingSQRule) {
+      screenRules[introKey] = { or: ['Link Wakes Up', existingSQRule] };
+    } else {
+      screenRules[introKey] = 'Link Wakes Up';
+    }
+
+    screenRules['hyrule-castle-secret-entrance|lw-1b'] = 'Zelda Rescue Started';
+    screenRules['links-house|lw-2c'] = 'Rescued Zelda';
+    // TODO: these rules need matching connections to function:
+    screenRules['lw-1b|hc-south'] = 'Zelda Rescue Started';
+    screenRules['lw-1b|hc-east'] = 'Zelda Rescue Started';
+    screenRules['lw-1b|hc-west'] = 'Zelda Rescue Started';
+    screenRules['lw-1b|ct-0x20'] = hasBeamSword;
   }
 
   // --- Swordless mode: remove sword requirements from Castle Tower ---
   if (config.swordMode === 'swordless') {
-    delete regionRules['Agahnims Tower'];
+    delete screenRules['lw-1b|ct-0x20'];
   }
 
   // --- Open mode: Castle Tower accessible with Cape OR Sword ---
   if (config.mode === 'open') {
-    regionRules['Agahnims Tower'] = { or: [hasSword, 'Cape'] };
+    screenRules['lw-1b|ct-0x20'] = { or: [hasSword, 'Cape'] };
   }
 
   // --- Build connections ---
@@ -99,20 +105,20 @@ function resolveRules(config: LogicConfig): ResolvedRules {
   }
 
   return {
-    regionRules,
+    screenRules,
     checkRules,
     connections,
     startInventory: new Set(config.startingItems),
   };
 }
 
-function getSQGateRequirement(entrance: string, _config: LogicConfig): Requirement {
-  switch (entrance) {
-    case 'Links House S&Q':
+function getSQGateRequirement(dest: string, _config: LogicConfig): Requirement {
+  switch (dest) {
+    case 'links-house':
       return 'Rescued Zelda';
-    case 'Sanctuary S&Q':
+    case 'sanctuary':
       return 'Rescued Zelda';
-    case 'Old Man S&Q':
+    case 'old-man-cave':
       return 'Rescued Old Man';
     default:
       return 'Impossible';

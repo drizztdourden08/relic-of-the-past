@@ -1,7 +1,11 @@
-export { globalFlood } from './global-flood';
 export { findBorderBundles, computeOverlap } from './border-bundles';
+export { runGlobalFlood } from './global-flood';
+export type { GlobalFloodOptions, GlobalFloodResult } from './global-flood';
 export { resolveEntrances } from './entrance-resolver';
-export { floodInterior } from './interior-flood';
-export { detectRequirements } from './requirement-detector';
-export { updateRegions } from './region-updater';
-export { updateConnections } from './connection-updater';
+export type { EntranceResolverInput, ResolvedEntrance } from './entrance-resolver';
+export { detectRequirements, INVENTORY_PROGRESSION } from './requirement-detector';
+export type { RequirementDetectorInput, DetectedRequirement } from './requirement-detector';
+export { buildScreenNavUpdates, writeScreenNavData } from './screen-updater';
+export type { ScreenNavUpdate, ScreenUpdaterInput } from './screen-updater';
+export { transitTypeFromTags, buildConnectionNavUpdates, writeConnectionNavData } from './connection-updater';
+export type { ConnectionNavUpdate, ConnectionUpdaterInput } from './connection-updater';

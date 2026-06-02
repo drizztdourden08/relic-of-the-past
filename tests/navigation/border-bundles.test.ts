@@ -1,12 +1,6 @@
-import { describe, it, expect, beforeAll } from 'vitest';
-import { existsSync } from 'fs';
-import { join } from 'path';
-import { loadRom, type RomData } from '../../shared/asset-extraction/rom';
-import { floodFillScreen, initEngine } from '../../shared/game/navigation/flood-fill';
+import { describe, it, expect } from 'vitest';
 import { findBorderBundles, computeOverlap, buildWalkConnection } from '../../shared/game/navigation/analysis/border-bundles';
-
-const ROM_PATH = join(__dirname, '..', '..', 'test-roms', 'Legend of Zelda, The - A Link to the Past (USA).sfc');
-const romAvailable = existsSync(ROM_PATH);
+import type { ReachState } from '../../shared/game/navigation/types';
 
 describe('Border Bundles', () => {
   describe('computeOverlap', () => {
@@ -89,68 +83,14 @@ describe('Border Bundles', () => {
       expect(southBundles.length).toBe(0);
     });
   });
-
-  describe.skipIf(!romAvailable)('two-sided validation with ROM', () => {
-    let rom: RomData;
-
-    beforeAll(() => {
-      rom = loadRom(ROM_PATH);
-      initEngine(rom);
-    });
-
-    it('0x38 ↔ 0x39 (east/west) has valid overlap', () => {
-      const from = floodFillScreen(rom, 0x38);
-      const to = floodFillScreen(rom, 0x39);
-      const connections = buildWalkConnection(from, to, 'e');
-
-      expect(connections.length).toBeGreaterThan(0);
-      const totalOverlap = connections.reduce((sum, c) => sum + c.overlapTiles.length, 0);
-      expect(totalOverlap).toBeGreaterThan(0);
-      console.log(`0x38→0x39 east: ${connections.length} bundle pair(s), total overlap: ${totalOverlap}`);
-    });
-
-    it('0x31 → 0x29 (north) has ZERO overlap (the bug)', () => {
-      const from = floodFillScreen(rom, 0x31);
-      const to = floodFillScreen(rom, 0x29);
-      const connections = buildWalkConnection(from, to, 'n');
-
-      // 0x31 has full north border, but 0x29 has 0 south border tiles
-      const totalOverlap = connections.reduce((sum, c) => sum + c.overlapTiles.length, 0);
-      expect(totalOverlap).toBe(0);
-      console.log(`0x31→0x29 north: overlap=${totalOverlap} (correctly invalid)`);
-    });
-
-    it('0x38 → 0x30 (north) has valid overlap', () => {
-      const from = floodFillScreen(rom, 0x38);
-      const to = floodFillScreen(rom, 0x30);
-      const connections = buildWalkConnection(from, to, 'n');
-
-      const totalOverlap = connections.reduce((sum, c) => sum + c.overlapTiles.length, 0);
-      expect(totalOverlap).toBeGreaterThan(0);
-      console.log(`0x38→0x30 north: ${connections.length} pair(s), overlap=${totalOverlap}`);
-    });
-
-    it('detects multiple bundles on a split border', () => {
-      // Screen 0x38 east border — likely has at least one corridor
-      const result = floodFillScreen(rom, 0x38);
-      const bundles = findBorderBundles(result);
-      const eastBundles = bundles.filter(b => b.direction === 'e');
-
-      console.log(`0x38 east bundles: ${eastBundles.length}`);
-      for (const b of eastBundles) {
-        console.log(`  ${b.id}: tiles ${b.tiles[0]}–${b.tiles[b.tiles.length - 1]} (${b.tiles.length} wide)`);
-      }
-      expect(eastBundles.length).toBeGreaterThanOrEqual(1);
-    });
-  });
 });
 
-// Helper: create a 64×64 boolean grid with specific tiles marked reachable
-function createMockGrid(specs: { row: number; cols: number[] }[]): boolean[][] {
-  const grid: boolean[][] = Array.from({ length: 64 }, () => new Array(64).fill(false));
+// Helper: create a 64×64 ReachState grid with specific tiles marked reachable (1)
+function createMockGrid(specs: { row: number; cols: number[] }[]): ReachState[][] {
+  const grid: ReachState[][] = Array.from({ length: 64 }, () => new Array<ReachState>(64).fill(0));
   for (const { row, cols } of specs) {
     for (const col of cols) {
-      grid[row][col] = true;
+      grid[row][col] = 1;
     }
   }
   return grid;

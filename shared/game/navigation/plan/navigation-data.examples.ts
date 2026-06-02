@@ -6,7 +6,7 @@
 import type { RegionNavData, ConnectionNavData } from './navigation-data.types';
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// REGION EXAMPLE: Screen 0x2C (Link's House area)
+// SCREEN EXAMPLE: Screen 0x2C (Link's House area)
 // ═══════════════════════════════════════════════════════════════════════════════
 
 // BEFORE (current data in regions/light-world/overworld/index.ts):
@@ -52,7 +52,7 @@ const regionAfter = {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// REGION EXAMPLE: Screen 0x38 (Desert SW) — multiple bundles on one border
+// SCREEN EXAMPLE: Screen 0x38 (Desert SW) — multiple bundles on one border
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const desertRegion = {
@@ -342,7 +342,7 @@ const invalidConnection = {
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// INTERIOR REGION EXAMPLE: Two Brothers House
+// INTERIOR SCREEN EXAMPLE: Two Brothers House
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const interiorRegion = {

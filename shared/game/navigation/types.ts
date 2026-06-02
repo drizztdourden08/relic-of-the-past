@@ -1,4 +1,4 @@
-import type { RomData } from '../../asset-extraction/rom/rom-types';
+import type { TileAttrContext } from './tile-attrs';
 
 // ─── Grid Constants ──────────────────────────────────────────────────────────
 
@@ -7,6 +7,19 @@ export const TOTAL_TILES = GRID_SIZE * GRID_SIZE;
 
 // ─── Tile Types ──────────────────────────────────────────────────────────────
 
+/**
+ * BFS reachability state for a tile:
+ * - 0: unreachable
+ * - 1: reachable (player has full control)
+ * - >=2: traversal (uncontrolled pass-through) with encoded direction:
+ *   2=s, 3=n, 4=e, 5=w, 6=se, 7=sw, 8=ne, 9=nw
+ */
+export type ReachState = number;
+
+/** Direction encoding for traversal states (state = 2 + index). */
+export const TRAVERSAL_DIRS: readonly LedgeDir[] = ['s', 'n', 'e', 'w', 'se', 'sw', 'ne', 'nw'] as const;
+export const TRAVERSAL_DIR_OFFSET: Record<LedgeDir, number> = { s: 2, n: 3, e: 4, w: 5, se: 6, sw: 7, ne: 8, nw: 9 };
+
 export type LedgeDir = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
 
 export type TilePassability =
@@ -14,8 +27,12 @@ export type TilePassability =
   | { type: 'obstacle'; req: string }
   | { type: 'blocked' }
   | { type: 'ledge'; dir: LedgeDir }
+  | { type: 'stairs' }
   | { type: 'pit' }
   | { type: 'water' };
+
+/** Traversal state for bidirectional stairs (no fixed direction). */
+export const STAIRS_TRAVERSAL_STATE = 10;
 
 // ─── Position ────────────────────────────────────────────────────────────────
 
@@ -76,7 +93,10 @@ export interface BorderSummary {
 
 export interface FloodFillResult {
   screenIndex: number;
-  reachable: boolean[][];
+  tileContext: TileAttrContext;
+  /** Grid position where the BFS started (top-left of Link's 2×2 at flood-fill time) */
+  startPos: GridPos;
+  reachable: ReachState[][];
   transitions: TransitionPoint[];
   reachableCount: number;
   totalTiles: number;
@@ -84,6 +104,22 @@ export interface FloodFillResult {
   ledges: LedgeTraversal[];
   attrGrid?: number[][];
   reqGrid?: string[][];
+  /** Dynamic blocker tiles applied to this BFS snapshot (runtime sprite blockers). */
+  dynamicBlockerCells?: GridPos[];
+  /** Grid positions of hookshot targets reachable from walked tiles */
+  hookTargets?: GridPos[];
+  /** Variant state at time of analysis (null = base ROM, no runtime state) */
+  variant?: ScreenVariant;
+  /** Per-tile layer reached: 0=layer0 only, 1=layer1 only, 2=both. Only for dual-layer indoor rooms. */
+  tileLayer?: (0 | 1 | 2)[][];
+  /** Per-layer reachable grids: [layer0, layer1]. For dual-layer indoor rooms. */
+  reachableByLayer?: [ReachState[][], ReachState[][]];
+  /** Raw per-layer attr grids for dual-layer rooms (for tooltip display). */
+  dualLayerGrids?: { layer0: number[][]; layer1: number[][] };
+  /** kind_of_in_room_staircase value at BFS time. 2 = layer changes blocked. */
+  staircaseType?: number;
+  /** Which layer the BFS started on (0=upper/BG2, 1=lower/BG1). */
+  startLayer?: 0 | 1;
   borders: {
     north: BorderSummary;
     south: BorderSummary;
@@ -92,9 +128,29 @@ export interface FloodFillResult {
   };
 }
 
+/**
+ * Overworld screen variant state.
+ * Determined by progress tier + per-screen event flags.
+ * Affects tile layout via overlay patches applied to the base tilemap.
+ */
+export interface ScreenVariant {
+  /** sram_progress_indicator: 0=intro, 1=post-uncle, 2=zelda-rescued, 3=agahnim-defeated */
+  progressTier: number;
+  /** save_ow_event_info[screen] & 0x20 — event overlay applied */
+  eventOverlay: boolean;
+  /** Full event flags byte for the screen */
+  eventFlags: number;
+}
+
 export interface ConnectionInfo {
   edge: 'north' | 'south' | 'east' | 'west';
   targetScreen: number;
+  /** Screen index this connection originates from (set during aggregation) */
+  sourceScreen?: number;
+  /** True if this connection is between quadrants of the same room (intra-room scroll boundary). */
+  isIntraRoom?: boolean;
+  /** True if crossing this edge toggles Link's layer (door type 22 = kDoorType_PlayerBgChange). */
+  layerToggle?: boolean;
   freeTileCount: number;
   itemTileCount: number;
   positions: number[];
@@ -107,7 +163,7 @@ export interface ScreenCoverage {
   screenIndex: number;
   entries: GridPos[];
   reachableCount: number;
-  reachable: boolean[][];
+  reachable: ReachState[][];
   borderFree: { north: Set<number>; south: Set<number>; east: Set<number>; west: Set<number> };
 }
 
@@ -154,9 +210,8 @@ export interface Route {
 // ─── Hub Navigation ──────────────────────────────────────────────────────────
 
 export interface NavigationStep {
-  regionId: string;
-  regionName: string;
-  entrance: string | null;
+  screenId: string;
+  screenName: string;
 }
 
 export interface NavigationResult {
@@ -172,11 +227,3 @@ export interface PathfindingOptions {
   allowGlitches?: boolean;
 }
 
-// ─── Engine Cache ────────────────────────────────────────────────────────────
-
-export interface EngineCache {
-  map32: Map32Tables;
-  map16ToMap8: Uint16Array;
-  map8ToAttr: Uint8Array;
-  entrances: OverworldEntrance[];
-}

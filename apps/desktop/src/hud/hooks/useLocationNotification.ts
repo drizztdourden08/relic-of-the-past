@@ -1,6 +1,6 @@
 /**
  * useLocationNotification — subscribes to game-ui-store map changes
- * and fires region/transition notifications via location-notification-store.
+ * and fires screen/transition notifications via location-notification-store.
  *
  * Call this once in GameOverlay (or a top-level provider) so the subscription
  * lives for the entire game session.
@@ -9,18 +9,18 @@
 import { useEffect, useRef } from 'react';
 import { useGameUIStore } from '../../stores/game-ui-store';
 import { useLocationNotificationStore } from '../../stores/location-notification-store';
-import { resolveCurrentRegion } from '@shared/game/regions/detection';
-import type { RegionDefinition } from '@shared/game/types';
+import { resolveCurrentScreen } from '@shared/game/data/screens/detection';
+import type { ScreenDefinition } from '@shared/game/types';
 
 /** Auto-dismiss delay in ms */
-const REGION_DISMISS_MS = 3000;
+const SCREEN_DISMISS_MS = 3000;
 const TRANSITION_DISMISS_MS = 2000;
 
 function useLocationNotification() {
-  const prevRegionRef = useRef<RegionDefinition | null>(null);
+  const prevDetectedRef = useRef<ScreenDefinition | null>(null);
   const prevRoomRef = useRef<number>(-1);
-  const prevScreenRef = useRef<number>(-1);
-  const regionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const prevOwScreenRef = useRef<number>(-1);
+  const screenTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -38,48 +38,49 @@ function useLocationNotification() {
       }
 
       // Deduplicate against ref (for initial mount / rapid re-renders)
-      if (map.roomIndex === prevRoomRef.current && map.overworldScreenIndex === prevScreenRef.current) {
+      if (map.roomIndex === prevRoomRef.current && map.overworldScreenIndex === prevOwScreenRef.current) {
         return;
       }
       prevRoomRef.current = map.roomIndex;
-      prevScreenRef.current = map.overworldScreenIndex;
+      prevOwScreenRef.current = map.overworldScreenIndex;
 
       const store = useLocationNotificationStore.getState();
 
       // Skip if notifications are disabled
-      if (!store.showRegion && !store.showTransition) return;
+      if (!store.showScreen && !store.showTransition) return;
 
-      // Resolve current region from game state
-      const region = resolveCurrentRegion(
+      // Resolve current screen from game state
+      const detected = resolveCurrentScreen(
         map.isIndoors,
         map.palaceIndex,
         map.roomIndex,
         map.overworldScreenIndex,
+        map.whichEntrance,
       );
 
-      if (!region) return;
+      if (!detected) return;
 
-      const prev = prevRegionRef.current;
-      prevRegionRef.current = region;
+      const prev = prevDetectedRef.current;
+      prevDetectedRef.current = detected;
 
-      // Skip if same region
-      if (prev && prev.id === region.id) return;
+      // Skip if same screen
+      if (prev && prev.id === detected.id) return;
 
-      // ─── Region notification ───
-      // Only fire if displayName changed (same zone = no notification)
-      if (store.showRegion && (!prev || prev.displayName !== region.displayName)) {
-        store.setRegion(region);
+      // ─── Screen notification ───
+      // Only fire if location changed (same zone = no notification)
+      if (store.showScreen && (!prev || prev.location !== detected.location)) {
+        store.setScreen(detected);
 
         // Auto-dismiss
-        if (regionTimerRef.current) clearTimeout(regionTimerRef.current);
-        regionTimerRef.current = setTimeout(() => {
-          useLocationNotificationStore.getState().clearRegion();
-        }, REGION_DISMISS_MS);
+        if (screenTimerRef.current) clearTimeout(screenTimerRef.current);
+        screenTimerRef.current = setTimeout(() => {
+          useLocationNotificationStore.getState().clearScreen();
+        }, SCREEN_DISMISS_MS);
       }
 
-      // ─── Transition notification (subtitle change within same area) ───
-      if (store.showTransition && prev && prev.displayName === region.displayName && prev.subtitle !== region.subtitle) {
-        const entrance = region.subtitle ?? region.name;
+      // ─── Transition notification (name change within same location) ───
+      if (store.showTransition && prev && prev.location === detected.location && prev.name !== detected.name) {
+        const entrance = detected.name;
         store.setTransition(entrance);
 
         if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
@@ -91,10 +92,10 @@ function useLocationNotification() {
 
     return () => {
       unsub();
-      if (regionTimerRef.current) clearTimeout(regionTimerRef.current);
+      if (screenTimerRef.current) clearTimeout(screenTimerRef.current);
       if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     };
   }, []);
 }
 
-export { useLocationNotification, REGION_DISMISS_MS, TRANSITION_DISMISS_MS };
+export { useLocationNotification, SCREEN_DISMISS_MS, TRANSITION_DISMISS_MS };

@@ -438,19 +438,21 @@ class InputManager {
   private pollLoop = (): void => {
     if (!this.running) return;
 
+    const windowFocused = document.hasFocus();
+
     this.currentGamepads = snapshotGamepads();
 
-    if (!this.pauseManager.isPaused && !this.inputSuppressed) {
+    if (windowFocused && !this.pauseManager.isPaused && !this.inputSuppressed) {
       const mask = computeBitmask(this.keyStates, this.keyboardMap, this.gamepadButtonMap, this.gamepadAxisMap, this.hidStates);
       this.setInputFn?.(mask);
     }
 
-    if (this.rawDispatcher.hasListeners) {
+    if (windowFocused && this.rawDispatcher.hasListeners) {
       this.rawDispatcher.emitGamepadEvents(this.gamepadVidPid);
       this.rawDispatcher.emitHidEvents(this.hidStates);
     }
 
-    if (!this.inputSuppressed && this.functionActions.hasMappedGamepadButtons) {
+    if (windowFocused && !this.inputSuppressed && this.functionActions.hasMappedGamepadButtons) {
       this.functionActions.checkGamepads(this.hidStates);
     }
 
