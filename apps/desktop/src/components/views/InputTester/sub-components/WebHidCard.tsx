@@ -6,7 +6,7 @@
 import { useState } from 'react';
 import { webHidReader } from '../../../../lib/input/hid-reader';
 import type { WebHidInputState, DeviceStickCalibration } from '../../../../lib/input/hid-reader';
-import { DEVICE_PROFILES } from '@shared/input';
+import type { DEVICE_PROFILES } from '@shared/input';
 import { getButtonIconUrl } from '../data/button-icons';
 import { StickCalibrationWizard } from './StickCalibrationWizard';
 import { TriggerCalibrationWizard } from './TriggerCalibrationWizard';

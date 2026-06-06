@@ -2,7 +2,7 @@
  * HID device discovery — filtering and selection of gamepad HID interfaces.
  */
 
-import HID from 'node-hid';
+import type HID from 'node-hid';
 import {
   XBOX_VID,
   GAMEPAD_USAGE_PAGES,

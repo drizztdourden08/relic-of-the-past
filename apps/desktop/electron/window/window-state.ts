@@ -1,4 +1,5 @@
-import { BrowserWindow, screen, Rectangle } from 'electron';
+import type { BrowserWindow, Rectangle } from 'electron';
+import { screen } from 'electron';
 import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { dirname } from 'path';
 import { getUserDataPath } from '../lib/paths';

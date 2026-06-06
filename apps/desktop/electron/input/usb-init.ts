@@ -10,7 +10,8 @@
  * Reference: procon2tool (HandHeldLegend), NSO-GameCube-Controller-Pairing-App
  */
 
-import { findByIds, Interface, OutEndpoint } from 'usb';
+import type { Interface, OutEndpoint } from 'usb';
+import { findByIds } from 'usb';
 
 const NINTENDO_VID = 0x057e;
 

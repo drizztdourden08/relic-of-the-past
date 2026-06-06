@@ -2,7 +2,7 @@
  * HID constants, types, and utilities shared across HID modules.
  */
 
-import HID from 'node-hid';
+import type HID from 'node-hid';
 
 // Xbox VID — excluded because Windows XInput driver claims exclusive access
 const XBOX_VID = 0x045e;

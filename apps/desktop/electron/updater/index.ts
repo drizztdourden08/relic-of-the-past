@@ -1,5 +1,6 @@
 import { autoUpdater } from 'electron-updater';
-import { ipcMain, BrowserWindow } from 'electron';
+import type { BrowserWindow } from 'electron';
+import { ipcMain } from 'electron';
 import { is } from '@electron-toolkit/utils';
 
 export interface UpdateInfo {
