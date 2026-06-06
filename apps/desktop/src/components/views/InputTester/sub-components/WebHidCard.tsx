@@ -29,7 +29,7 @@ type CalibrationTarget =
   | { type: 'trigger'; axisIndex: number; label: string }
   | null;
 
-function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, onStickCalibrationComplete, onTriggerCalibrationComplete }: WebHidCardProps) {
+const WebHidCard = ({ deviceKey, state, profile, hasStickCal, existingStickCal, onStickCalibrationComplete, onTriggerCalibrationComplete }: WebHidCardProps) => {
   const [vidHex, pidHex] = deviceKey.split(':');
   const name = profile?.name ?? resolveDeviceName(vidHex, pidHex);
   const buttons = profile?.buttons ?? [];
@@ -242,7 +242,7 @@ function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, 
       </details>
     </div>
   );
-}
+};
 
 export { WebHidCard };
 export type { WebHidCardProps };

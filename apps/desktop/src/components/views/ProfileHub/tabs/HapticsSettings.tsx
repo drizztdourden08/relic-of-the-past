@@ -57,23 +57,22 @@ const SECTIONS: Section[] = [
   },
 ];
 
-function isDisabled(key: string, settings: GameSettings): boolean {
+const isDisabled = (key: string, settings: GameSettings): boolean => {
   if (key === 'haptics.enabled') return false;
   // All other haptic settings are disabled when haptics is off
   return !settings.haptics?.enabled;
-}
+};
 
-/** Helper to create a partial GameSettings with nested haptics update */
-function hapticPatch(settings: GameSettings, field: keyof HapticSettings, value: boolean | number): Partial<GameSettings> {
+const hapticPatch = (settings: GameSettings, field: keyof HapticSettings, value: boolean | number): Partial<GameSettings> => {
   return {
     haptics: {
       ...settings.haptics,
       [field]: value,
     },
   };
-}
+};
 
-function renderControl(key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null {
+const renderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
   const haptics = settings.haptics;
   if (!haptics) return null;
 
@@ -185,7 +184,7 @@ function renderControl(key: string, settings: GameSettings, onChange: (patch: Pa
     default:
       return null;
   }
-}
+};
 
 const HapticsSettings = (props: HapticsSettingsProps) => {
   const { settings, onChange } = props;

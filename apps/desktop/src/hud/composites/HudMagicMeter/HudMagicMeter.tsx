@@ -67,8 +67,7 @@ const HudMagicMeter = (props: HudMagicMeterProps) => {
   );
 };
 
-/** Determine fill sprite for each of the 4 interior rows. Fill grows from bottom (index 3) up. */
-function getFillSprites(fillLevel: number): string[] {
+const getFillSprites = (fillLevel: number): string[] => {
   const fills: string[] = ['hud-magic-fill-empty', 'hud-magic-fill-empty', 'hud-magic-fill-empty', 'hud-magic-fill-empty'];
 
   for (let row = 3; row >= 0; row--) {
@@ -89,9 +88,9 @@ function getFillSprites(fillLevel: number): string[] {
   }
 
   return fills;
-}
+};
 
-function MagicOriginal(props: { tile: number; spritesBase: string; fillLevel: number }) {
+const MagicOriginal = (props: { tile: number; spritesBase: string; fillLevel: number }) => {
   const { tile, spritesBase, fillLevel } = props;
   const fills = getFillSprites(fillLevel);
 
@@ -126,9 +125,9 @@ function MagicOriginal(props: { tile: number; spritesBase: string; fillLevel: nu
         style={{ position: 'absolute', left: tile * 2, top: tile * 5, imageRendering: 'pixelated' }} />
     </>
   );
-}
+};
 
-function MagicAccurate(props: { tile: number; scale: number; spritesBase: string; value: number }) {
+const MagicAccurate = (props: { tile: number; scale: number; spritesBase: string; value: number }) => {
   const { tile, scale, spritesBase, value } = props;
 
   const inset = tile * 0.8;
@@ -190,7 +189,7 @@ function MagicAccurate(props: { tile: number; scale: number; spritesBase: string
       )}
     </>
   );
-}
+};
 
 export { HudMagicMeter };
 export type { MagicMeterMode, HudMagicMeterProps };

@@ -9,12 +9,7 @@ import { webHidReader } from './hid-reader';
 
 type ControllerEntry = { controller: ReturnType<typeof findController>; ctx: ControllerContext };
 
-async function initController(
-  deviceKey: string,
-  vendorId: string,
-  productId: string,
-  activeControllers: Map<string, ControllerEntry>,
-): Promise<void> {
+const initController = async (deviceKey: string, vendorId: string, productId: string, activeControllers: Map<string, ControllerEntry>): Promise<void> => {
   const controller = findController(vendorId, productId);
   if (!controller) return;
   const ctx: ControllerContext = {
@@ -38,12 +33,9 @@ async function initController(
   } catch (e: any) {
     webHidReader.addDiag(`⚠ Controller init failed (${deviceKey}): ${e.message}`);
   }
-}
+};
 
-async function resetController(
-  deviceKey: string,
-  activeControllers: Map<string, ControllerEntry>,
-): Promise<void> {
+const resetController = async (deviceKey: string, activeControllers: Map<string, ControllerEntry>): Promise<void> => {
   const entry = activeControllers.get(deviceKey);
   if (!entry || !entry.controller) return;
   try {
@@ -52,7 +44,7 @@ async function resetController(
   } catch (e: any) {
     webHidReader.addDiag(`⚠ Controller reset failed (${deviceKey}): ${e.message}`);
   }
-}
+};
 
 export { initController, resetController };
 export type { ControllerEntry };

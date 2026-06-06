@@ -18,7 +18,7 @@ const STATUS_CONFIG: Record<string, { label: string; className: string }> = {
 
 const STATUS_CYCLE: ScreenStatus[] = [undefined, 'draft', 'mapped', 'verified'];
 
-function StatusBadge({ status, interactive = false, onChange }: StatusBadgeProps) {
+const StatusBadge = ({ status, interactive = false, onChange }: StatusBadgeProps) => {
   const key = status ?? 'unsaved';
   const config = STATUS_CONFIG[key];
 
@@ -38,7 +38,7 @@ function StatusBadge({ status, interactive = false, onChange }: StatusBadgeProps
       {config.label}
     </span>
   );
-}
+};
 
 export { StatusBadge };
 export type { ScreenStatus };

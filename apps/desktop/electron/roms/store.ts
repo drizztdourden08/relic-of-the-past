@@ -1,7 +1,7 @@
 import { readFile, readdir, stat, mkdir } from 'fs/promises';
 import { getUserDataPath } from '../lib/paths';
 
-async function listRoms(): Promise<string[]> {
+const listRoms = async (): Promise<string[]> => {
   const romsDir = getUserDataPath('roms');
   await mkdir(romsDir, { recursive: true });
 
@@ -11,9 +11,9 @@ async function listRoms(): Promise<string[]> {
   } catch {
     return [];
   }
-}
+};
 
-async function hasAssetForRom(romFile: string): Promise<boolean> {
+const hasAssetForRom = async (romFile: string): Promise<boolean> => {
   const assetFile = getAssetFileName(romFile);
   try {
     const s = await stat(getUserDataPath('assets', assetFile));
@@ -21,10 +21,10 @@ async function hasAssetForRom(romFile: string): Promise<boolean> {
   } catch {
     return false;
   }
-}
+};
 
-function getAssetFileName(romFile: string): string {
+const getAssetFileName = (romFile: string): string => {
   return romFile.replace(/\.(sfc|smc)$/i, '.dat');
-}
+};
 
 export { getAssetFileName, hasAssetForRom, listRoms };

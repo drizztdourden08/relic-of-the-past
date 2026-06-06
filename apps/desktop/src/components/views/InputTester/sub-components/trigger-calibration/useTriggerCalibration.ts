@@ -28,7 +28,7 @@ const DEFAULT_DEADZONE = 0.05;
 
 // ── Hook ──
 
-function useTriggerCalibration(options: UseTriggerCalibrationOptions) {
+const useTriggerCalibration = (options: UseTriggerCalibrationOptions) => {
   const { axisIndex, deviceKey, existingCalibration } = options;
 
   const [step, setStep] = useState<Step>('rest');
@@ -120,7 +120,7 @@ function useTriggerCalibration(options: UseTriggerCalibrationOptions) {
     resetRest,
     advanceToMax,
   };
-}
+};
 
 export { useTriggerCalibration, DEFAULT_DEADZONE };
 export type { TriggerCalibrationData, Step };

@@ -14,11 +14,7 @@ import {
   type StickCalibrationStore,
 } from './calibration-store';
 
-/**
- * Register all input-related IPC handlers and set up device permissions.
- * Call once after the main window is created.
- */
-function registerInputHandlers(mainWindow: BrowserWindow): void {
+const registerInputHandlers = (mainWindow: BrowserWindow): void => {
   // ── Device permission handlers ──
 
   mainWindow.webContents.session.on('select-hid-device', (event, details, callback) => {
@@ -106,13 +102,10 @@ function registerInputHandlers(mainWindow: BrowserWindow): void {
   // ── Start HID reader ──
 
   hidInputReader.start(mainWindow);
-}
+};
 
-/**
- * Stop input subsystem. Call on app quit.
- */
-function stopInputHandlers(): void {
+const stopInputHandlers = (): void => {
   hidInputReader.stop();
-}
+};
 
 export { registerInputHandlers, stopInputHandlers };

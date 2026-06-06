@@ -30,9 +30,9 @@ const ICONS: Record<string, ButtonIcon> = {
   'generic-home':   icon('generic-home', 'Home'),
 };
 
-function btn(snesButton: ButtonMapping['snesButton'], index: number, iconData: ButtonIcon | null): ButtonMapping {
+const btn = (snesButton: ButtonMapping['snesButton'], index: number, iconData: ButtonIcon | null): ButtonMapping => {
   return { snesButton, binding: { type: 'gamepad-button', index }, icon: iconData };
-}
+};
 
 const DEFAULT_MAPPINGS: ButtonMapping[] = [
   btn('B',      0,  ICONS['generic-a']),

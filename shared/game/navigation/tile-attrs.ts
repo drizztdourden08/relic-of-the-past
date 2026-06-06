@@ -219,11 +219,7 @@ for (let attr = 0xD0; attr <= 0xEF; attr++) {
   (OVERWORLD_TILE_ATTRS as Record<number, TileAttrDef>)[attr] = { pass: 'free', labels: ['floor'], cat: 'ground' };
 }
 
-/**
- * Indoors use different behavior for a subset of attrs (from tile_detect.c is_indoors branch).
- * House/cave/dungeon currently share tile behavior semantics at this attr level.
- */
-function buildInteriorAttrs(): Readonly<Record<number, TileAttrDef>> {
+const buildInteriorAttrs = (): Readonly<Record<number, TileAttrDef>> => {
   const t = { ...(OVERWORLD_TILE_ATTRS as Record<number, TileAttrDef>) };
 
   // Indoors overrides (reverse-engineered from TileDetect_ExecuteInner is_indoors logic)
@@ -294,7 +290,7 @@ function buildInteriorAttrs(): Readonly<Record<number, TileAttrDef>> {
   }
 
   return t;
-}
+};
 
 // Shared instance — all interior contexts use the same map until they diverge.
 const INTERIOR_ATTRS: Readonly<Record<number, TileAttrDef>> = buildInteriorAttrs();
@@ -305,7 +301,7 @@ const INTERIOR_DUNGEON_TILE_ATTRS = INTERIOR_ATTRS;
 /** Backward-compat alias; prefer OVERWORLD_TILE_ATTRS. */
 const TILE_ATTRS = OVERWORLD_TILE_ATTRS;
 
-function getTileAttrsMap(context: TileAttrContext = 'overworld'): Readonly<Record<number, TileAttrDef>> {
+const getTileAttrsMap = (context: TileAttrContext = 'overworld'): Readonly<Record<number, TileAttrDef>> => {
   switch (context) {
     case 'interior-house': return INTERIOR_HOUSE_TILE_ATTRS;
     case 'interior-cave': return INTERIOR_CAVE_TILE_ATTRS;
@@ -313,34 +309,31 @@ function getTileAttrsMap(context: TileAttrContext = 'overworld'): Readonly<Recor
     case 'overworld':
     default: return OVERWORLD_TILE_ATTRS;
   }
-}
+};
 
 // ─── Derived Helpers ────────────────────────────────────────────────────────
 
-/** Get the primary human-readable label for a tile attribute byte. */
-function getAttrLabel(attr: number, context: TileAttrContext = 'overworld'): string {
+const getAttrLabel = (attr: number, context: TileAttrContext = 'overworld'): string => {
   return getTileAttrsMap(context)[attr]?.labels[0] ?? 'unknown';
-}
+};
 
-/** Get the requirement key for a tile, or undefined if none. */
-function getAttrReq(attr: number, context: TileAttrContext = 'overworld'): TileReq | undefined {
+const getAttrReq = (attr: number, context: TileAttrContext = 'overworld'): TileReq | undefined => {
   return getTileAttrsMap(context)[attr]?.req;
-}
+};
 
-/** Check if a tile belongs to a specific category. */
-function isCategory(attr: number, cat: TileCat, context: TileAttrContext = 'overworld'): boolean {
+const isCategory = (attr: number, cat: TileCat, context: TileAttrContext = 'overworld'): boolean => {
   return getTileAttrsMap(context)[attr]?.cat === cat;
-}
+};
 
 // ─── Category Sets (derived from the map) ───────────────────────────────────
 
-function attrsOfCat(map: Readonly<Record<number, TileAttrDef>>, cat: TileCat): ReadonlySet<number> {
+const attrsOfCat = (map: Readonly<Record<number, TileAttrDef>>, cat: TileCat): ReadonlySet<number> => {
   const s = new Set<number>();
   for (const [k, v] of Object.entries(map)) {
     if (v.cat === cat) s.add(Number(k));
   }
   return s;
-}
+};
 
 const WATER_TILES: ReadonlySet<number> = attrsOfCat(OVERWORLD_TILE_ATTRS, 'water');
 const CLIFF_TRIGGER_TILES: ReadonlySet<number> = attrsOfCat(OVERWORLD_TILE_ATTRS, 'cliff-trigger');
@@ -356,14 +349,13 @@ const HOOKSHOT_TARGET_TILES: ReadonlySet<number> = (() => {
   return s;
 })();
 
-/** Context-aware hookshot target set. */
-function getHookshotTargetTiles(context: TileAttrContext = 'overworld'): ReadonlySet<number> {
+const getHookshotTargetTiles = (context: TileAttrContext = 'overworld'): ReadonlySet<number> => {
   const s = new Set<number>();
   for (const [k, v] of Object.entries(getTileAttrsMap(context))) {
     if (v.hookTarget) s.add(Number(k));
   }
   return s;
-}
+};
 
 export { OVERWORLD_TILE_ATTRS, INTERIOR_HOUSE_TILE_ATTRS, INTERIOR_CAVE_TILE_ATTRS, INTERIOR_DUNGEON_TILE_ATTRS, TILE_ATTRS, getTileAttrsMap, getAttrLabel, getAttrReq, isCategory, WATER_TILES, CLIFF_TRIGGER_TILES, CLIFF_FACE_TILES, PIT_TILES, HOOKSHOT_TARGET_TILES, getHookshotTargetTiles };
 export type { TileReq, TileLabel, TilePass, TileCat, TileAttrContext, TileAttrDef };

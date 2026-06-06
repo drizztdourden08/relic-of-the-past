@@ -59,8 +59,7 @@ const PPU_FLAGS = {
   noSpriteLimits: 8,
 } as const;
 
-/** Build features0 bitmask from GameSettings. */
-function buildFeatureFlags(s: GameSettings): number {
+const buildFeatureFlags = (s: GameSettings): number => {
   let flags = 0;
   if (s.aspectRatio !== '4:3' && !s.unchangedSprites) flags |= FEATURE_FLAGS.extendScreen64;
   if (s.aspectRatio !== '4:3' && !s.noVisualFixes) flags |= FEATURE_FLAGS.widescreenVisualFixes;
@@ -81,17 +80,16 @@ function buildFeatureFlags(s: GameSettings): number {
   if (s.dimFlashes) flags |= FEATURE_FLAGS.dimFlashes;
   if (s.disableTelepathy) flags |= FEATURE_FLAGS.disableTelepathy;
   return flags;
-}
+};
 
-/** Build PPU render flags from GameSettings. */
-function buildPpuFlags(s: GameSettings): number {
+const buildPpuFlags = (s: GameSettings): number => {
   let flags = 0;
   if (s.newRenderer) flags |= PPU_FLAGS.newRenderer;
   if (s.enhancedMode7) flags |= PPU_FLAGS.mode7_4x4;
   if (s.extendY) flags |= PPU_FLAGS.height240;
   if (s.noSpriteLimits) flags |= PPU_FLAGS.noSpriteLimits;
   return flags;
-}
+};
 
 /** Settings keys that can be live-updated while the game runs. */
 const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
@@ -155,8 +153,7 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'haptics',
 ]);
 
-/** Push live-updatable settings to the running WASM module. Returns true if successful. */
-function pushLiveSettings(settings: GameSettings): boolean {
+const pushLiveSettings = (settings: GameSettings): boolean => {
   const mod = getModule();
   if (!mod) {
     log.app('Live settings: no WASM module available', 'warn');
@@ -218,69 +215,46 @@ function pushLiveSettings(settings: GameSettings): boolean {
     log.app(`Live settings push failed: ${e}`, 'error');
     return false;
   }
-}
+};
 
-/**
- * Re-assert the current forceBackdropBlack state to WASM.
- * Called after state loads to ensure the flag isn't lost.
- * Uses the last value pushed via pushLiveSettings as source of truth.
- */
-function reassertBackdropBlack(): void {
+const reassertBackdropBlack = (): void => {
   const mod = getModule();
   if (!mod) return;
   try {
     mod.ccall('WasmSetForceBackdropBlack', null, ['number'], [lastBackdropBlack ? 1 : 0]);
   } catch { /* ignore — WASM may not have this export */ }
-}
+};
 
-/**
- * Re-assert the current hudHidden state to WASM.
- * Called after state loads to ensure the flag isn't lost.
- */
-function reassertHudHidden(): void {
+const reassertHudHidden = (): void => {
   const mod = getModule();
   if (!mod) return;
   try {
     mod.ccall('WasmSetHudHidden', null, ['number'], [lastHudHidden ? 1 : 0]);
   } catch { /* ignore — WASM may not have this export */ }
-}
+};
 
-/**
- * Re-assert the current pauseHidden state to WASM.
- * Called after state loads to ensure the flag isn't lost.
- */
-function reassertPauseHidden(): void {
+const reassertPauseHidden = (): void => {
   const mod = getModule();
   if (!mod) return;
   try {
     mod.ccall('WasmSetPauseHidden', null, ['number'], [lastPauseHidden ? 1 : 0]);
   } catch { /* ignore — WASM may not have this export */ }
-}
+};
 
-/**
- * Re-assert all volume settings.
- * Called after state loads and on initial game start to ensure volumes are correct.
- */
-function reassertVolumes(): void {
+const reassertVolumes = (): void => {
   const mod = getModule();
   if (!mod) return;
   setMasterVolume(lastMasterVolume);
   try { mod.ccall('WasmSetAppMasterVolume', null, ['number'], [Math.round(lastMasterVolume * 1.28)]); } catch {}
   try { mod.ccall('WasmSetMusicVolume', null, ['number'], [lastMusicVol]); } catch {}
   try { mod.ccall('WasmSetSfxVolume', null, ['number'], [lastSfxVol]); } catch {}
-}
+};
 
-/** Check if a setting change requires a game restart (i.e. it's NOT live-updatable). */
-function requiresRestart(changedKeys: (keyof GameSettings)[]): boolean {
+const requiresRestart = (changedKeys: (keyof GameSettings)[]): boolean => {
   return changedKeys.some((k) => !LIVE_SETTINGS.has(k));
-}
+};
 
-/**
- * Prime tracked live-setting values from known-good settings.
- * Call this early (e.g. in onProfileLoaded) so reassert* functions
- * have correct values even if pushLiveSettings hasn't fired yet.
- */
-function primeLiveSettings(settings: GameSettings): void {
+const primeLiveSettings = (settings: GameSettings): void => {
   lastBackdropBlack = !!settings.forceBackdropBlack;
   const hideHud = settings.hudMode === 'enhanced' && settings.hudEnhancedParts.includes('main');
   lastHudHidden = hideHud;
@@ -289,6 +263,6 @@ function primeLiveSettings(settings: GameSettings): void {
   lastMasterVolume = settings.masterVolume;
   lastMusicVol = settings.musicMuted ? 0 : Math.round(settings.musicVolume * 1.28);
   lastSfxVol = settings.sfxMuted ? 0 : Math.round(settings.sfxVolume * 1.28);
-}
+};
 
 export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, reassertHudHidden, reassertPauseHidden, reassertVolumes, requiresRestart, primeLiveSettings };

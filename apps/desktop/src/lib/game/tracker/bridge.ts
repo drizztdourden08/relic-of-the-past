@@ -31,49 +31,46 @@ let pollIntervalId: ReturnType<typeof setInterval> | null = null;
 
 // ─── Public API ───
 
-function onItemReceived(fn: ItemReceivedListener): () => void {
+const onItemReceived = (fn: ItemReceivedListener): () => void => {
   itemListeners.add(fn);
   return () => itemListeners.delete(fn);
-}
+};
 
-function onInventoryChanged(fn: InventoryChangedListener): () => void {
+const onInventoryChanged = (fn: InventoryChangedListener): () => void => {
   inventoryListeners.add(fn);
   return () => inventoryListeners.delete(fn);
-}
+};
 
-function getCurrentInventory(): Set<string> {
+const getCurrentInventory = (): Set<string> => {
   return currentInventory;
-}
+};
 
-function onUnknownItem(fn: UnknownItemListener): () => void {
+const onUnknownItem = (fn: UnknownItemListener): () => void => {
   unknownItemListeners.add(fn);
   return () => unknownItemListeners.delete(fn);
-}
+};
 
-function getUnknownItems(): UnknownItemEntry[] {
+const getUnknownItems = (): UnknownItemEntry[] => {
   return unknownItems;
-}
+};
 
-function loadUnknownItems(items: UnknownItemEntry[]): void {
+const loadUnknownItems = (items: UnknownItemEntry[]): void => {
   unknownItems = items;
   for (const fn of unknownItemListeners) {
     try { fn(unknownItems); } catch { /* ignore */ }
   }
-}
+};
 
-function onCompletedChecksChanged(fn: CompletedChecksListener): () => void {
+const onCompletedChecksChanged = (fn: CompletedChecksListener): () => void => {
   completedChecksListeners.add(fn);
   return () => completedChecksListeners.delete(fn);
-}
+};
 
-function getCompletedChecks(): Set<string> {
+const getCompletedChecks = (): Set<string> => {
   return currentCompletedChecks;
-}
+};
 
-/**
- * Poll WASM room flags to determine which checks are completed.
- */
-function pollRoomFlags(force = false): void {
+const pollRoomFlags = (force = false): void => {
   const mod = getModule();
   if (!mod) return;
 
@@ -91,13 +88,9 @@ function pollRoomFlags(force = false): void {
   } catch {
     // Module may not be ready yet
   }
-}
+};
 
-/**
- * Poll the WASM module for current inventory state and update the tracker.
- * When `force` is true, always notify listeners even if unchanged (e.g. after save state load).
- */
-function pollInventoryState(force = false): void {
+const pollInventoryState = (force = false): void => {
   const mod = getModule();
   if (!mod) return;
 
@@ -146,13 +139,9 @@ function pollInventoryState(force = false): void {
   } catch {
     // Module may not be ready yet
   }
-}
+};
 
-/**
- * Initialize the tracker bridge. Sets up the item received callback
- * and starts polling inventory state.
- */
-function initTrackerBridge(): void {
+const initTrackerBridge = (): void => {
   log.app('Initializing tracker bridge');
 
   (window as any).__onItemReceived = (itemId: number, method: number) => {
@@ -185,14 +174,9 @@ function initTrackerBridge(): void {
   pollIntervalId = setInterval(pollInventoryState, 2000);
   // Force-poll so tracker immediately reflects current game state
   pollInventoryState(true);
-}
+};
 
-/**
- * Clean up the tracker bridge.
- * Only clears polling and window callback — listeners persist across
- * bridge re-initializations so components don't need to re-register.
- */
-function destroyTrackerBridge(): void {
+const destroyTrackerBridge = (): void => {
   if (pollIntervalId !== null) {
     clearInterval(pollIntervalId);
     pollIntervalId = null;
@@ -200,7 +184,7 @@ function destroyTrackerBridge(): void {
   (window as any).__onItemReceived = null;
   currentInventory = new Set();
   currentCompletedChecks = new Set();
-}
+};
 
 export {
   destroyTrackerBridge,

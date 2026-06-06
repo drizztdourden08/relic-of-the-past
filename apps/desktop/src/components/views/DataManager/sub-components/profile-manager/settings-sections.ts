@@ -67,11 +67,11 @@ const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label
   },
 ];
 
-function formatSettingValue(value: unknown, format?: (v: unknown) => string): string {
+const formatSettingValue = (value: unknown, format?: (v: unknown) => string): string => {
   if (format) return format(value);
   if (typeof value === 'boolean') return value ? 'Yes' : 'No';
   if (value == null) return '—';
   return String(value);
-}
+};
 
 export { formatSettingValue, SETTINGS_SECTIONS };

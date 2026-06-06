@@ -5,22 +5,7 @@ interface FitSize {
   height: number;
 }
 
-/**
- * useCanvasFit — computes CSS width/height to fit a buffer (bufW×bufH)
- * inside a container while maintaining aspect ratio.
- *
- * Formula: scale = min(containerW/bufW, containerH/bufH)
- *          cssW = floor(bufW * scale), cssH = floor(bufH * scale)
- *
- * This is the same formula used for the game canvas and FX canvas.
- * When stretch=true, fills the container ignoring aspect ratio.
- */
-function useCanvasFit(
-  containerRef: RefObject<HTMLElement | null>,
-  bufW: number,
-  bufH: number,
-  stretch = false,
-): FitSize {
+const useCanvasFit = (containerRef: RefObject<HTMLElement | null>, bufW: number, bufH: number, stretch = false): FitSize => {
   const [size, setSize] = useState<FitSize>({ width: bufW, height: bufH });
 
   const compute = useCallback(() => {
@@ -55,7 +40,7 @@ function useCanvasFit(
   }, [compute]);
 
   return size;
-}
+};
 
 export { useCanvasFit };
 export type { FitSize };

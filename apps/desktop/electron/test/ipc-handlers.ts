@@ -18,7 +18,7 @@ import { ipcMain, BrowserWindow, app } from 'electron';
 import { join } from 'path';
 import { writeFile, mkdir } from 'fs/promises';
 
-function parseTestArgs(): { autoState: number | null; screenshot: string | null } {
+const parseTestArgs = (): { autoState: number | null; screenshot: string | null } => {
   let autoState: number | null = null;
   let screenshot: string | null = null;
 
@@ -31,9 +31,9 @@ function parseTestArgs(): { autoState: number | null; screenshot: string | null 
   }
 
   return { autoState, screenshot };
-}
+};
 
-function registerTestHandlers(): void {
+const registerTestHandlers = (): void => {
   ipcMain.handle('test:getArgs', () => parseTestArgs());
 
   ipcMain.handle('test:screenshot', async (_event, name: string) => {
@@ -53,6 +53,6 @@ function registerTestHandlers(): void {
     await writeFile(outPath, buffer);
     return outPath;
   });
-}
+};
 
 export { registerTestHandlers };

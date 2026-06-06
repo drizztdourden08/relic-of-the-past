@@ -11,7 +11,7 @@ import { formatEntity } from './format-entities';
 import { printAllSfx } from './decode-sfx';
 import { dumpBrrAndInfo } from './dump-brr-info';
 
-function extractSoundData(rom: RomData): MusicExtractionResult {
+const extractSoundData = (rom: RomData): MusicExtractionResult => {
   const ctx = new SoundBankContext();
   const songTexts: Record<string, string> = {};
   let sfxText = '';
@@ -60,7 +60,7 @@ function extractSoundData(rom: RomData): MusicExtractionResult {
   }
 
   return { songTexts, sfxText, brrSamples, pcmSamples, musicInfoYaml };
-}
+};
 
 export { extractSoundData };
 export type { MusicExtractionResult };

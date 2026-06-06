@@ -125,7 +125,7 @@ const WINDOW_MODE_OPTIONS = [
   { value: 'borderless', label: 'Borderless' },
 ];
 
-function renderControl(key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null {
+const renderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
   switch (key) {
     case 'aspectRatio':
       return (
@@ -157,7 +157,7 @@ function renderControl(key: string, settings: GameSettings, onChange: (patch: Pa
     default:
       return null;
   }
-}
+};
 
 const SettingsView = (props: SettingsViewProps) => {
   const { settings, onChange } = props;

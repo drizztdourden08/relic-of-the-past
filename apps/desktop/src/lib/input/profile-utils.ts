@@ -6,8 +6,7 @@
 import type { InputProfile, FunctionMapping, ButtonIcon, DevicePreset } from '@shared/types/controls';
 import { findDeviceProfileByVidPid } from '@shared/input';
 
-/** Create an InputProfile from a DevicePreset for use as defaults. */
-function profileFromPreset(preset: DevicePreset): InputProfile {
+const profileFromPreset = (preset: DevicePreset): InputProfile => {
   return {
     id: `default-${preset.id}`,
     name: preset.name,
@@ -19,12 +18,9 @@ function profileFromPreset(preset: DevicePreset): InputProfile {
     createdAt: Date.now(),
     modifiedAt: Date.now(),
   };
-}
+};
 
-/**
- * Resolve the display icon for a FunctionMapping's gamepad binding.
- */
-function resolveFunctionMappingIcon(m: FunctionMapping): ButtonIcon | null {
+const resolveFunctionMappingIcon = (m: FunctionMapping): ButtonIcon | null => {
   if (m.icon) return m.icon;
   if (m.binding.type === 'none' || m.binding.type === 'keyboard') return null;
   const vid = m.sourceVid?.toLowerCase().padStart(4, '0');
@@ -44,6 +40,6 @@ function resolveFunctionMappingIcon(m: FunctionMapping): ButtonIcon | null {
     }
   }
   return null;
-}
+};
 
 export { profileFromPreset, resolveFunctionMappingIcon };

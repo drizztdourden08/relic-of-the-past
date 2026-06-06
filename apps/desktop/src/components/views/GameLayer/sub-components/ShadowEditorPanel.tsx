@@ -29,7 +29,7 @@ const POLYGON_OPTIONS = [
   { value: '8', label: '◯' },
 ];
 
-function ShadowEditorPanel() {
+const ShadowEditorPanel = () => {
   const store = useShadowEditorStore();
   const {
     open,
@@ -306,6 +306,6 @@ function ShadowEditorPanel() {
       </div>
     </div>
   );
-}
+};
 
 export { ShadowEditorPanel };

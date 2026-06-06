@@ -4,7 +4,7 @@
 import type { RomData } from '../rom/rom-types';
 import * as tables from './tables-data';
 
-function getEntranceInfo(rom: RomData, set: 0 | 1): Map<number, Record<string, unknown>[]> {
+const getEntranceInfo = (rom: RomData, set: 0 | 1): Map<number, Record<string, unknown>[]> => {
   const r = new Map<number, Record<string, unknown>[]>();
   const count = set === 0 ? 133 : 7;
   const kQuadrantNames: Record<number, string> = { 0: 'upper_left', 2: 'lower_left', 16: 'upper_right', 18: 'lower_right' };
@@ -84,6 +84,6 @@ function getEntranceInfo(rom: RomData, set: 0 | 1): Map<number, Record<string, u
     r.get(room)!.push(y);
   }
   return r;
-}
+};
 
 export { getEntranceInfo };

@@ -18,23 +18,23 @@ import { ipcMain, app } from 'electron';
 import { join } from 'path';
 import { writeFile, mkdir } from 'fs/promises';
 
-function parseDumpLayersSlot(): number | null {
+const parseDumpLayersSlot = (): number | null => {
   for (const arg of process.argv) {
     const match = arg.match(/^--dump-layers=(\d+)$/);
     if (match) return parseInt(match[1], 10);
   }
   return null;
-}
+};
 
-function parseHoverTile(): { col: number; row: number } | null {
+const parseHoverTile = (): { col: number; row: number } | null => {
   for (const arg of process.argv) {
     const match = arg.match(/^--hover-tile=(\d+),(\d+)$/);
     if (match) return { col: parseInt(match[1], 10), row: parseInt(match[2], 10) };
   }
   return null;
-}
+};
 
-function registerDumpLayersHandler(): void {
+const registerDumpLayersHandler = (): void => {
   const slot = parseDumpLayersSlot();
   const hoverTile = parseHoverTile();
 
@@ -52,6 +52,6 @@ function registerDumpLayersHandler(): void {
     console.log(`[dump-layers] Written to: ${outPath}`);
     return outPath;
   });
-}
+};
 
 export { registerDumpLayersHandler };

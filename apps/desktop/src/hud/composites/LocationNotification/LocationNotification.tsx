@@ -12,7 +12,7 @@ const ANIMATE_IN_MS = 300;
 /** Fade-out duration (overlaps with dismiss) */
 const ANIMATE_OUT_MS = 400;
 
-function LocationNotification() {
+const LocationNotification = () => {
   const screen = useLocationNotificationStore((s) => s.screen);
   const transition = useLocationNotificationStore((s) => s.transition);
 
@@ -37,7 +37,7 @@ function LocationNotification() {
       )}
     </div>
   );
-}
+};
 
 interface NotificationBannerProps {
   title: string;
@@ -46,7 +46,7 @@ interface NotificationBannerProps {
   variant: 'screen' | 'transition';
 }
 
-function NotificationBanner({ title, subtitle, dismissMs, variant }: NotificationBannerProps) {
+const NotificationBanner = ({ title, subtitle, dismissMs, variant }: NotificationBannerProps) => {
   const [phase, setPhase] = useState<'enter' | 'visible' | 'exit'>('enter');
 
   useEffect(() => {
@@ -72,6 +72,6 @@ function NotificationBanner({ title, subtitle, dismissMs, variant }: Notificatio
       {subtitle && <span className="location-notification-subtitle">{subtitle}</span>}
     </div>
   );
-}
+};
 
 export { LocationNotification };

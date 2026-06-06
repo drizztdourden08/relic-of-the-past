@@ -11,16 +11,14 @@ const HAPTIC_MEDIUM: number[] = [0x75, 0x19, 0x41, 0x9b, 0x03];
 const HAPTIC_LIGHT:  number[] = [0x48, 0x71, 0x20, 0x5a, 0x02];
 const HAPTIC_SILENT: number[] = [0x3f, 0x01, 0xf0, 0x19, 0x00];
 
-/** Map intensity (0–1) to a haptic data array. */
-function hapticForIntensity(intensity: number): number[] {
+const hapticForIntensity = (intensity: number): number[] => {
   const clamped = Math.max(0, Math.min(1, intensity));
   return clamped >= 0.7 ? HAPTIC_STRONG
     : clamped >= 0.3 ? HAPTIC_MEDIUM
     : HAPTIC_LIGHT;
-}
+};
 
-/** Build frames for a single vibration segment with attack/release envelope. */
-function buildSegmentFrames(durationMs: number, intensity: number): number[][] {
+const buildSegmentFrames = (durationMs: number, intensity: number): number[][] => {
   const clamped = Math.max(0, Math.min(1, intensity));
   const sustain = hapticForIntensity(clamped);
   const frameCount = Math.max(1, Math.ceil(durationMs / 4));
@@ -36,10 +34,9 @@ function buildSegmentFrames(durationMs: number, intensity: number): number[][] {
   if (releaseCount >= 2 && clamped >= 0.3) frames.push(HAPTIC_LIGHT);
   frames.push(HAPTIC_SILENT);
   return frames;
-}
+};
 
-/** Build frames for a multi-segment pattern with gaps between segments. */
-function buildPatternFrames(pattern: { durationMs: number; intensity: number }[], gapMs: number): number[][] {
+const buildPatternFrames = (pattern: { durationMs: number; intensity: number }[], gapMs: number): number[][] => {
   const frames: number[][] = [];
   const gapFrames = Math.max(0, Math.ceil(gapMs / 4));
 
@@ -54,10 +51,9 @@ function buildPatternFrames(pattern: { durationMs: number; intensity: number }[]
   }
   frames.push(HAPTIC_SILENT);
   return frames;
-}
+};
 
-/** Write haptic frames directly from the reader handle (pause → write → resume). */
-function writeFramesDirect(dev: OpenDevice, frames: number[][]): void {
+const writeFramesDirect = (dev: OpenDevice, frames: number[][]): void => {
   dev.hid.pause();
   let counter = 0;
   for (const hapticData of frames) {
@@ -75,10 +71,9 @@ function writeFramesDirect(dev: OpenDevice, frames: number[][]): void {
     counter = (counter + 1) & 0x0F;
   }
   dev.hid.resume();
-}
+};
 
-/** Build a 64-byte silent haptic buffer (used for stop/wake frames). */
-function buildSilentFrame(counterByte: number = 0x50): number[] {
+const buildSilentFrame = (counterByte: number = 0x50): number[] => {
   const buf = new Array(64).fill(0);
   buf[0] = 0x02;
   buf[1] = counterByte;
@@ -88,7 +83,7 @@ function buildSilentFrame(counterByte: number = 0x50): number[] {
     buf[18 + i] = HAPTIC_SILENT[i];
   }
   return buf;
-}
+};
 
 export {
   HAPTIC_STRONG,

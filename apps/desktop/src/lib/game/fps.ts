@@ -4,8 +4,7 @@
 
 import { getModule } from './wasm-bridge';
 
-/** Get current FPS from the WASM module. Returns 0 if not running or display perf is off. */
-function getFps(): number {
+const getFps = (): number => {
   const mod = getModule();
   if (!mod) return 0;
   try {
@@ -13,6 +12,6 @@ function getFps(): number {
   } catch {
     return 0;
   }
-}
+};
 
 export { getFps };

@@ -7,13 +7,13 @@ import { readFile, writeFile } from 'fs/promises';
 
 let userDataPath = '';
 
-function initCalibrationStore(dataPath: string): void {
+const initCalibrationStore = (dataPath: string): void => {
   userDataPath = dataPath;
-}
+};
 
-function path(...segments: string[]): string {
+const path = (...segments: string[]): string => {
   return join(userDataPath, 'Data', ...segments);
-}
+};
 
 // ── Stick calibration ──
 
@@ -39,40 +39,37 @@ type StickCalibrationStore = Record<string, DeviceStickCalibration>;
 
 const STICK_CAL_FILE = 'stick-calibration.json';
 
-async function readStickCalibration(): Promise<StickCalibrationStore> {
+const readStickCalibration = async (): Promise<StickCalibrationStore> => {
   try {
     const data = await readFile(path(STICK_CAL_FILE), 'utf-8');
     return JSON.parse(data);
   } catch {
     return {};
   }
-}
+};
 
-async function writeStickCalibration(store: StickCalibrationStore): Promise<void> {
+const writeStickCalibration = async (store: StickCalibrationStore): Promise<void> => {
   await writeFile(path(STICK_CAL_FILE), JSON.stringify(store, null, 2), 'utf-8');
-}
+};
 
 // ── Trigger calibration ──
 
 const TRIGGER_CAL_FILE = 'trigger-calibration.json';
 
-async function readTriggerCalibration(): Promise<Record<string, { base: number; max: number; deadzone: number }>> {
+const readTriggerCalibration = async (): Promise<Record<string, { base: number; max: number; deadzone: number }>> => {
   try {
     const data = await readFile(path(TRIGGER_CAL_FILE), 'utf-8');
     return JSON.parse(data);
   } catch {
     return {};
   }
-}
+};
 
-async function writeTriggerCalibration(
-  deviceKey: string, axisIndex: number,
-  cal: { base: number; max: number; deadzone: number },
-): Promise<void> {
+const writeTriggerCalibration = async (deviceKey: string, axisIndex: number, cal: { base: number; max: number; deadzone: number }): Promise<void> => {
   const store = await readTriggerCalibration();
   store[`${deviceKey}:${axisIndex}`] = cal;
   await writeFile(path(TRIGGER_CAL_FILE), JSON.stringify(store, null, 2), 'utf-8');
-}
+};
 
 export {
   initCalibrationStore,

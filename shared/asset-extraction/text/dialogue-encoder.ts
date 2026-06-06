@@ -8,8 +8,7 @@ import { kLanguages } from './language-data';
 
 // ─── Command encoding ───
 
-/** Original format encoder (US-style ROMs) */
-function orgEncoder(cmd: string, param: number | null, info: LanguageConfig): number[] {
+const orgEncoder = (cmd: string, param: number | null, info: LanguageConfig): number[] => {
   const cmdIndex = info.commandNames.indexOf(cmd);
   if (cmdIndex < 0) throw new Error(`Invalid cmd: ${cmd}`);
   const expectedLen = info.commandLengths[cmdIndex];
@@ -20,7 +19,7 @@ function orgEncoder(cmd: string, param: number | null, info: LanguageConfig): nu
     return [cmdIndex + info.commandStart];
   }
   return [cmdIndex + info.commandStart, param];
-}
+};
 
 /** Command info table for the "new" encoder format */
 const kCmdInfo: Record<string, [number] | [number, number | Record<number, number | null>]> = {
@@ -46,8 +45,7 @@ const kCmdInfo: Record<string, [number] | [number, number | Record<number, numbe
   ScrollSpd: [0, { 0: null } as Record<number, number | null>],
 };
 
-/** New format encoder (EU-style ROMs, PT) */
-function newEncoder(cmd: string, param: number | null): number[] {
+const newEncoder = (cmd: string, param: number | null): number[] => {
   const info = kCmdInfo[cmd];
   if (!info) throw new Error(`Invalid cmd: ${cmd}`);
   if (info.length <= 1 || typeof info[1] === 'number') {
@@ -60,19 +58,13 @@ function newEncoder(cmd: string, param: number | null): number[] {
     const r = (info[1] as Record<number, number | null>)[param];
     return r !== null ? [info[0], r] : [];
   }
-}
+};
 
 const kEncoders = { org: orgEncoder, new: newEncoder };
 
 // ─── Greedy compression ───
 
-function encodeGreedyFromDict(
-  s: string,
-  i: number,
-  rev: Map<string, Map<string, number>>,
-  a2i: Map<string, number>,
-  info: LanguageConfig,
-): { bytes: number[]; consumed: number } {
+const encodeGreedyFromDict = (s: string, i: number, rev: Map<string, Map<string, number>>, a2i: Map<string, number>, info: LanguageConfig): { bytes: number[]; consumed: number } => {
   const a = s.slice(i);
 
   // Try dictionary match first (longest match via first-char lookup)
@@ -118,16 +110,9 @@ function encodeGreedyFromDict(
     throw new Error(`Character '${a[0]}' not found in alphabet for language ${info.id}`);
   }
   return { bytes: [idx], consumed: 1 };
-}
+};
 
-/**
- * Compress an array of dialogue strings using greedy dictionary matching.
- *
- * @param strings - Array of dialogue strings (text format with [Command] tokens)
- * @param lang - Language code
- * @returns Array of compressed byte arrays (one per string)
- */
-function compressStrings(strings: string[], lang = 'us'): Uint8Array[] {
+const compressStrings = (strings: string[], lang = 'us'): Uint8Array[] => {
   const info = kLanguages[lang];
   if (!info) throw new Error(`Unknown language: ${lang}`);
 
@@ -155,13 +140,9 @@ function compressStrings(strings: string[], lang = 'us'): Uint8Array[] {
     }
     return new Uint8Array(r);
   });
-}
+};
 
-/**
- * Encode a language's dictionary as byte arrays (one per entry).
- * Each dictionary entry becomes an array of alphabet indices.
- */
-function encodeDictionary(lang = 'us'): Uint8Array[] {
+const encodeDictionary = (lang = 'us'): Uint8Array[] => {
   const info = kLanguages[lang];
   if (!info) throw new Error(`Unknown language: ${lang}`);
 
@@ -179,6 +160,6 @@ function encodeDictionary(lang = 'us'): Uint8Array[] {
     }
     return new Uint8Array(bytes);
   });
-}
+};
 
 export { compressStrings, encodeDictionary };

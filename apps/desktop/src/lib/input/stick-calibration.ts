@@ -26,11 +26,7 @@ interface TriggerCalibration {
   deadzone: number;
 }
 
-/** Apply stick calibration: asymmetric normalize → circular clamp → deadzone rescaling */
-function applySticksCalibration(
-  lxRaw: number, lyRaw: number, rxRaw: number, ryRaw: number,
-  cal: DeviceStickCalibration,
-): number[] {
+const applySticksCalibration = (lxRaw: number, lyRaw: number, rxRaw: number, ryRaw: number, cal: DeviceStickCalibration): number[] => {
   const applyOne = (rawX: number, rawY: number, s: StickCalibrationData) => {
     const rnx = s.centerX - s.minX || 1;
     const rpx = s.maxX - s.centerX || 1;
@@ -61,15 +57,14 @@ function applySticksCalibration(
   const l = applyOne(lxRaw, lyRaw, cal.left);
   const r = applyOne(rxRaw, ryRaw, cal.right);
   return [l.x, l.y, r.x, r.y];
-}
+};
 
-/** Apply trigger calibration: normalize raw value to 0–1 with deadzone */
-function applyTriggerCalibration(rawValue: number, cal: TriggerCalibration): number {
+const applyTriggerCalibration = (rawValue: number, cal: TriggerCalibration): number => {
   const range = cal.max - cal.base;
   if (range <= 0) return 0;
   const normalized = Math.max(0, Math.min(1, (rawValue - cal.base) / range));
   return normalized < cal.deadzone ? 0 : (normalized - cal.deadzone) / (1 - cal.deadzone);
-}
+};
 
 export { applySticksCalibration, applyTriggerCalibration };
 export type { StickCalibrationData, DeviceStickCalibration, TriggerCalibration };

@@ -396,16 +396,14 @@ const kLanguages: Record<string, LanguageConfig> = {
   sv: langSV,
 };
 
-/** Get the dialogue filename for a language code. */
-function dialogueFilename(lang: string): string {
+const dialogueFilename = (lang: string): string => {
   if (lang === 'us') return 'dialogue.txt';
   return `dialogue_${lang.replace('-', '_')}.txt`;
-}
+};
 
-/** Check if a language uses the newer encoder format. */
-function usesNewFormat(lang: string): boolean {
+const usesNewFormat = (lang: string): boolean => {
   return kLanguages[lang].encoder === 'new';
-}
+};
 
 export { dialogueFilename, kLanguages, usesNewFormat };
 export type { LanguageConfig };

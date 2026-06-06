@@ -191,7 +191,7 @@ const AREA_RULES: Array<{ pattern: RegExp | Set<string>; tag: CheckTag }> = [
 
 import type { CheckDefinition } from '../types';
 
-function computeCheckTags(check: CheckDefinition): CheckTag[] {
+const computeCheckTags = (check: CheckDefinition): CheckTag[] => {
   const tags: Set<CheckTag> = new Set();
 
   // ── World tag ──
@@ -262,23 +262,23 @@ function computeCheckTags(check: CheckDefinition): CheckTag[] {
   if (name.includes('big key chest')) tags.add('big_key');
 
   return [...tags];
-}
+};
 
 // ─── Pre-computed tag lookup ───
 let _tagCache: Map<string, CheckTag[]> | null = null;
 
-function getCheckTags(checks: CheckDefinition[]): Map<string, CheckTag[]> {
+const getCheckTags = (checks: CheckDefinition[]): Map<string, CheckTag[]> => {
   if (_tagCache) return _tagCache;
   _tagCache = new Map();
   for (const check of checks) {
     _tagCache.set(check.id, computeCheckTags(check));
   }
   return _tagCache;
-}
+};
 
-function getTagsForCheck(checkId: string, allChecks: CheckDefinition[]): CheckTag[] {
+const getTagsForCheck = (checkId: string, allChecks: CheckDefinition[]): CheckTag[] => {
   return getCheckTags(allChecks).get(checkId) ?? [];
-}
+};
 
 export {
   TAG_DEFINITIONS,

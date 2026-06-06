@@ -13,9 +13,9 @@ import HID from 'node-hid';
 /** Blocking sleep for inter-frame pacing (safe in worker threads). */
 const sleepSab = new SharedArrayBuffer(4);
 const sleepView = new Int32Array(sleepSab);
-function sleepMs(ms: number): void {
+const sleepMs = (ms: number): void => {
   Atomics.wait(sleepView, 0, 0, ms);
-}
+};
 
 /** Frame interval in ms — SPC2 haptic endpoint runs at ~250Hz */
 const FRAME_INTERVAL_MS = 5;
@@ -45,16 +45,16 @@ parentPort!.on('message', (msg: WorkerMsg) => {
   }
 });
 
-function handleEnumerate(id: number): void {
+const handleEnumerate = (id: number): void => {
   try {
     const devices = HID.devices();
     parentPort!.postMessage({ id, ok: true, devices });
   } catch (err: any) {
     parentPort!.postMessage({ id, ok: false, error: err?.message ?? 'enumerate failed' });
   }
-}
+};
 
-function handleVibrate(id: number, devicePath: string, frames: number[][]): void {
+const handleVibrate = (id: number, devicePath: string, frames: number[][]): void => {
   parentPort!.postMessage({ type: 'log', msg: `vibrate: path=${devicePath}, frames=${frames.length}` });
   try {
     const dev = new HID.HID(devicePath);
@@ -86,4 +86,4 @@ function handleVibrate(id: number, devicePath: string, frames: number[][]): void
     parentPort!.postMessage({ type: 'log', msg: `open/fatal error: ${err?.message}` });
     parentPort!.postMessage({ id, ok: false, error: err?.message ?? 'vibrate failed' });
   }
-}
+};

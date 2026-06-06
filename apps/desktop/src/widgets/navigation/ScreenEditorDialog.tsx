@@ -79,7 +79,7 @@ const TAG_GROUPS: TagPickerGroup<ScreenTag>[] = TAG_NAMESPACES.map(ns => ({
 
 // ─── Component ───
 
-function ScreenEditorDialog({ open, onClose, existingScreen, gameState }: ScreenEditorDialogProps) {
+const ScreenEditorDialog = ({ open, onClose, existingScreen, gameState }: ScreenEditorDialogProps) => {
   const [step, setStep] = useState(0);
 
   // Form state
@@ -727,17 +727,17 @@ function ScreenEditorDialog({ open, onClose, existingScreen, gameState }: Screen
       </div>
     </div>
   );
-}
+};
 
 // ─── Helpers ───
 
-function getDungeonPrefix(palaceIndex: number): string {
+const getDungeonPrefix = (palaceIndex: number): string => {
   const map: Record<number, string> = {
     0x00: 'hc', 0x02: 'hc', 0x04: 'ep', 0x06: 'dp', 0x08: 'th',
     0x0A: 'pod', 0x0C: 'sp', 0x0E: 'sw', 0x10: 'tt',
     0x12: 'ip', 0x14: 'mm', 0x16: 'tr', 0x18: 'gt', 0x1A: 'ct',
   };
   return map[palaceIndex] ?? 'room';
-}
+};
 
 export { ScreenEditorDialog };

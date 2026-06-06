@@ -6,8 +6,7 @@ import { HudCount } from '../../composites/HudCount';
 import { HudLife } from '../../compounds/HudLife';
 import { useRef, useEffect, useState, useCallback } from 'react';
 
-/** Convert a ratio setting string to a numeric width/height value */
-function ratioToNumeric(ratio: string): number {
+const ratioToNumeric = (ratio: string): number => {
   switch (ratio) {
     case '4:3': return 4 / 3;
     case '3:2': return 3 / 2;
@@ -16,7 +15,7 @@ function ratioToNumeric(ratio: string): number {
     case '18:9': return 18 / 9;
     default: return 0; // 'match' — use full container width
   }
-}
+};
 
 const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string; slideTransition?: string } = {}) => {
   const { heartMode, magicMode, countLayout, ratio: hudRatio } = useHudSettingsStore();

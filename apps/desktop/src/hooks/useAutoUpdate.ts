@@ -7,7 +7,7 @@ interface UpdateState {
   error: string | null;
 }
 
-function useAutoUpdate() {
+const useAutoUpdate = () => {
   const [state, setState] = useState<UpdateState>({
     status: 'idle',
     info: null,
@@ -74,7 +74,7 @@ function useAutoUpdate() {
   }, []);
 
   return { ...state, portable, check, download, install };
-}
+};
 
 export { useAutoUpdate };
 export type { UpdateState };

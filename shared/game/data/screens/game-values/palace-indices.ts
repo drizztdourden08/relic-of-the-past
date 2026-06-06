@@ -45,15 +45,13 @@ const DUNGEON_PALACE_VALUES: Record<string, number[]> = {
   'Castle Tower': [0x1A],
 };
 
-/** Get display name for a runtime palace index value */
-function getPalaceName(palaceIndex: number): string {
+const getPalaceName = (palaceIndex: number): string => {
   return PALACE_INDEX_NAMES[palaceIndex] ?? `Unknown (0x${palaceIndex.toString(16).toUpperCase()})`;
-}
+};
 
-/** Check if a palace index belongs to a named dungeon */
-function isDungeonPalace(palaceIndex: number): boolean {
+const isDungeonPalace = (palaceIndex: number): boolean => {
   return palaceIndex !== 0xFF && palaceIndex <= 0x1A;
-}
+};
 
 /** Reverse lookup: palaceIndex → logical dungeon name (for game mechanics: keys, map, compass) */
 const PALACE_TO_DUNGEON: Record<number, string> = Object.fromEntries(
@@ -62,10 +60,9 @@ const PALACE_TO_DUNGEON: Record<number, string> = Object.fromEntries(
   )
 );
 
-/** Get the logical dungeon name from a palace index (e.g. 0x04 → "Eastern Palace") */
-function getDungeonName(palaceIndex: number): string {
+const getDungeonName = (palaceIndex: number): string => {
   return PALACE_TO_DUNGEON[palaceIndex] ?? `Unknown Dungeon (0x${palaceIndex.toString(16).toUpperCase()})`;
-}
+};
 
 /**
  * Canonical dungeon metadata — maps dungeon name to its fixed area, location, and world.

@@ -9,25 +9,25 @@ interface OverworldContext {
   awrite: (arr: number[], area: number, key: number, value: number) => void;
 }
 
-function buildOverworldContext(rom: RomData): OverworldContext {
+const buildOverworldContext = (rom: RomData): OverworldContext => {
   const areaHeadTable: number[] = [];
   for (let i = 0; i < 64; i++) areaHeadTable.push(rom.getByte(0x82A5EC + i));
 
   const isSmall = new Array(192).fill(0);
   for (let i = 0; i < 192; i++) isSmall[i] = rom.getByte(0x82f88d + i);
 
-  function isAreaHead(i: number): boolean {
-    return i >= 128 || areaHeadTable[i & 63] === (i & 63);
-  }
+  const isAreaHead = (i: number): boolean => {
+        return i >= 128 || areaHeadTable[i & 63] === (i & 63);
+      };
 
-  function awrite(arr: number[], area: number, key: number, value: number): void {
-    arr[key] = value;
-    if (area < 128 && !isSmall[area]) {
-      arr[key + 1] = value;
-      arr[key + 8] = value;
-      arr[key + 9] = value;
-    }
-  }
+  const awrite = (arr: number[], area: number, key: number, value: number): void => {
+        arr[key] = value;
+        if (area < 128 && !isSmall[area]) {
+          arr[key + 1] = value;
+          arr[key + 8] = value;
+          arr[key + 9] = value;
+        }
+      };
 
   for (let i = 0; i < 160; i++) {
     if (!isAreaHead(i)) continue;
@@ -35,7 +35,7 @@ function buildOverworldContext(rom: RomData): OverworldContext {
   }
 
   return { isAreaHead, isSmall, awrite };
-}
+};
 
 export type { OverworldContext };
 export { buildOverworldContext };

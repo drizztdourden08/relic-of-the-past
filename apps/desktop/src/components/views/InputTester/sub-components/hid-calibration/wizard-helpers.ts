@@ -6,13 +6,7 @@ import { AXIS_LABELS } from './constants';
 
 // ── Byte Status Computation ─────────────────────────────────────────────────
 
-function computeByteStatuses(
-  len: number,
-  excluded: Set<number>,
-  capturedStickBytes: Set<number>,
-  capturedTriggerBytes: Set<number>,
-  items: InputItem[],
-): ByteStatus[] {
+const computeByteStatuses = (len: number, excluded: Set<number>, capturedStickBytes: Set<number>, capturedTriggerBytes: Set<number>, items: InputItem[]): ByteStatus[] => {
   const statuses: ByteStatus[] = new Array(len).fill('unknown');
   for (const i of excluded) {
     if (i < len) statuses[i] = 'gyro';
@@ -30,17 +24,11 @@ function computeByteStatuses(
     }
   }
   return statuses;
-}
+};
 
 // ── Instruction Text ────────────────────────────────────────────────────────
 
-function getInstructionText(
-  inputPhaseActive: boolean,
-  items: InputItem[],
-  activeIndex: number,
-  captureState: CaptureState,
-  axisSubStep: AxisSubStep,
-): string {
+const getInstructionText = (inputPhaseActive: boolean, items: InputItem[], activeIndex: number, captureState: CaptureState, axisSubStep: AxisSubStep): string => {
   if (!inputPhaseActive) return '';
   const item = items[activeIndex];
   if (!item) return '';
@@ -51,7 +39,7 @@ function getInstructionText(
   const info = AXIS_LABELS[item.id];
   if (axisSubStep === 'pos') return info?.pos ?? 'Push axis to positive extreme';
   return info?.neg ?? 'Push axis to negative extreme';
-}
+};
 
 // ── Byte Color ──────────────────────────────────────────────────────────────
 
@@ -61,12 +49,7 @@ interface ByteColorResult {
   text: string;
 }
 
-function getByteColor(
-  idx: number,
-  byteStatuses: ByteStatus[],
-  gyroState: GyroState,
-  gyroChangedBytes: Set<number>,
-): ByteColorResult {
+const getByteColor = (idx: number, byteStatuses: ByteStatus[], gyroState: GyroState, gyroChangedBytes: Set<number>): ByteColorResult => {
   if (gyroState === 'recording' && gyroChangedBytes.has(idx)) {
     return { bg: '#3b1a1a', border: '#f87171', text: '#f87171' };
   }
@@ -78,7 +61,7 @@ function getByteColor(
     case 'button': return { bg: '#0f2e1a', border: '#4ade80', text: '#4ade80' };
     default: return { bg: '#1e1e2e', border: '#4a5568', text: '#c9d1d9' };
   }
-}
+};
 
 export { computeByteStatuses, getInstructionText, getByteColor };
 export type { ByteColorResult };

@@ -30,14 +30,7 @@ interface ViewportInfo {
   isGameplay: boolean;
 }
 
-function buildDrawContext(
-  ctx: CanvasRenderingContext2D,
-  vp: ViewportInfo,
-  width: number,
-  height: number,
-  result: FloodFillResult,
-  isIndoors: boolean,
-): DrawContext {
+const buildDrawContext = (ctx: CanvasRenderingContext2D, vp: ViewportInfo, width: number, height: number, result: FloodFillResult, isIndoors: boolean): DrawContext => {
   const camX = vp.cameraX;
   const camY = vp.cameraY;
   const snesW = vp.snesWidth;
@@ -72,7 +65,7 @@ function buildDrawContext(
     TILE_PX, dotRadius, screenWorldX, screenWorldY, width, height,
     getScreenWorldOrigin,
   };
-}
+};
 
 export { buildDrawContext };
 export type { DrawContext, ViewportInfo };

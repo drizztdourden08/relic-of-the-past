@@ -13,7 +13,7 @@ let updateAvailable: UpdateInfo | null = null;
 
 const isPortable = !!process.env.PORTABLE_EXECUTABLE_DIR;
 
-function initAutoUpdater(mainWindow: BrowserWindow): void {
+const initAutoUpdater = (mainWindow: BrowserWindow): void => {
   if (is.dev || isPortable) return;
 
   autoUpdater.setFeedURL({
@@ -76,9 +76,9 @@ function initAutoUpdater(mainWindow: BrowserWindow): void {
       console.error('[updater] check failed:', err);
     });
   }, 5000);
-}
+};
 
-function registerUpdaterHandlers(): void {
+const registerUpdaterHandlers = (): void => {
   ipcMain.handle('updater:isPortable', () => isPortable);
 
   ipcMain.handle('updater:check', async () => {
@@ -108,7 +108,7 @@ function registerUpdaterHandlers(): void {
     const { app } = require('electron');
     return app.getVersion();
   });
-}
+};
 
 export { isPortable, initAutoUpdater, registerUpdaterHandlers };
 export type { UpdateInfo };

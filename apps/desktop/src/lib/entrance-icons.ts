@@ -44,17 +44,7 @@ const ENTRANCE_COLOR = '#ffcc44';
 /** Color for walk-boundary (palace toggle) icons */
 const WALK_BOUNDARY_COLOR = '#cc88ff';
 
-/**
- * Classify an entrance by its ID and context.
- * Single source of truth — used by both overlay canvas and React widget.
- */
-function classifyEntranceType(
-  entId: number,
-  roomId: number,
-  roomIndex: number,
-  isIndoors: boolean,
-  respawnEntIds?: Set<number>,
-): EntranceType {
+const classifyEntranceType = (entId: number, roomId: number, roomIndex: number, isIndoors: boolean, respawnEntIds?: Set<number>): EntranceType => {
   if (respawnEntIds?.has(entId)) return 'respawn';
   if (entId >= 200 && entId < 1000) return 'hole';
   if (entId >= 1000) {
@@ -82,24 +72,14 @@ function classifyEntranceType(
     if (kind === 'cave') return 'cave';
   }
   return 'door';
-}
+};
 
-/**
- * Get the icon data and color for a given entrance.
- * Handles synthetic IDs (stairs, walk boundaries) automatically.
- */
-function getEntranceIcon(
-  entId: number,
-  roomId: number,
-  roomIndex: number,
-  isIndoors: boolean,
-  respawnEntIds?: Set<number>,
-): { icon: IconData; color: string } {
+const getEntranceIcon = (entId: number, roomId: number, roomIndex: number, isIndoors: boolean, respawnEntIds?: Set<number>): { icon: IconData; color: string } => {
   if (entId >= 2000 && isIndoors) return { icon: WALK_BOUNDARY_ICON, color: WALK_BOUNDARY_COLOR };
   if (entId >= 1000 && isIndoors) return { icon: STAIR_ICON, color: ENTRANCE_COLOR };
   const type = classifyEntranceType(entId, roomId, roomIndex, isIndoors, respawnEntIds);
   return { icon: ENTRANCE_ICONS[type], color: ENTRANCE_COLOR };
-}
+};
 
 export { ENTRANCE_ICONS, STAIR_ICON, WALK_BOUNDARY_ICON, ENTRANCE_COLOR, WALK_BOUNDARY_COLOR, classifyEntranceType, getEntranceIcon };
 export type { EntranceType, IconData };

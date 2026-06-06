@@ -60,28 +60,24 @@ const SET_PLAYER_LED = Buffer.from([
   0x00, 0x00, 0x00, 0x00,
 ]);
 
-function log(msg: string): void {
+const log = (msg: string): void => {
   console.log(`[USB-INIT] ${msg}`);
-}
+};
 
-function transferOut(endpoint: OutEndpoint, data: Buffer): Promise<void> {
+const transferOut = (endpoint: OutEndpoint, data: Buffer): Promise<void> => {
   return new Promise((resolve, reject) => {
     endpoint.transfer(data, (err) => {
       if (err) reject(err);
       else resolve();
     });
   });
-}
+};
 
-function sleep(ms: number): Promise<void> {
+const sleep = (ms: number): Promise<void> => {
   return new Promise(r => setTimeout(r, ms));
-}
+};
 
-/**
- * Send USB init commands to a Nintendo controller to start HID streaming.
- * Returns true if commands were sent successfully.
- */
-async function sendUsbInit(vid: number, pid: number): Promise<boolean> {
+const sendUsbInit = async (vid: number, pid: number): Promise<boolean> => {
   if (vid !== NINTENDO_VID || !NEEDS_USB_INIT.has(pid)) {
     return false;
   }
@@ -145,19 +141,16 @@ async function sendUsbInit(vid: number, pid: number): Promise<boolean> {
     try { device.close(); } catch { /* ignore */ }
     return false;
   }
-}
+};
 
-async function releaseAndClose(iface: Interface, device: ReturnType<typeof findByIds>): Promise<void> {
+const releaseAndClose = async (iface: Interface, device: ReturnType<typeof findByIds>): Promise<void> => {
   await new Promise<void>((resolve) => {
     iface.release(true, () => resolve());
   });
   device!.close();
-}
+};
 
-/**
- * Run USB init for all connected Nintendo controllers that need it.
- */
-async function initAllNintendoControllers(): Promise<void> {
+const initAllNintendoControllers = async (): Promise<void> => {
   for (const pid of NEEDS_USB_INIT) {
     try {
       await sendUsbInit(NINTENDO_VID, pid);
@@ -165,6 +158,6 @@ async function initAllNintendoControllers(): Promise<void> {
       log(`Init failed for PID ${pid.toString(16)}: ${(err as Error).message}`);
     }
   }
-}
+};
 
 export { initAllNintendoControllers, sendUsbInit };

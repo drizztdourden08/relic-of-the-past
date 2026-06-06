@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { TrackerPanelProps } from './types';
 
-function TrackerPanel({ panelSettings, children, className = '', onDragStart }: TrackerPanelProps) {
+const TrackerPanel = ({ panelSettings, children, className = '', onDragStart }: TrackerPanelProps) => {
   const [hovered, setHovered] = useState(false);
   const { mode, side, opacity } = panelSettings;
 
@@ -29,6 +29,6 @@ function TrackerPanel({ panelSettings, children, className = '', onDragStart }: 
       {children}
     </div>
   );
-}
+};
 
 export { TrackerPanel };

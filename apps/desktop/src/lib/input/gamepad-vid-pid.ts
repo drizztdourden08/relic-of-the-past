@@ -14,15 +14,7 @@ interface HidDeviceInfo {
   serialNumber: string | null;
 }
 
-/**
- * Attempt to resolve a Web Gamepad's vendor/product IDs by matching against
- * HID device cache. Returns { vid, pid } or null if unable to resolve.
- */
-function resolveGamepadVidPid(
-  gp: Gamepad,
-  hidDeviceCache: HidDeviceInfo[],
-  alreadyMapped: Set<string>,
-): { vid: string; pid: string } | null {
+const resolveGamepadVidPid = (gp: Gamepad, hidDeviceCache: HidDeviceInfo[], alreadyMapped: Set<string>): { vid: string; pid: string } | null => {
   const parsed = parseGamepadId(gp.id);
   if (parsed && parsed.vid !== '0000') {
     return {
@@ -68,7 +60,7 @@ function resolveGamepadVidPid(
   }
 
   return null;
-}
+};
 
 export { resolveGamepadVidPid };
 export type { HidDeviceInfo };

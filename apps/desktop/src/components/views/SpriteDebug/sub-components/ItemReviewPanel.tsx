@@ -10,7 +10,7 @@ const ALL_ITEMS = Object.entries(ITEM_SPRITE_MAP).map(([name, file]) => ({
   file,
 }));
 
-function ItemReviewPanel({ baseUrl }: { baseUrl: string }) {
+const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
   const [data, setData] = useState<ReviewData>({});
   const [loaded, setLoaded] = useState(false);
   const [filter, setFilter] = useState<'all' | ReviewStatus>('all');
@@ -80,6 +80,6 @@ function ItemReviewPanel({ baseUrl }: { baseUrl: string }) {
       </div>
     </>
   );
-}
+};
 
 export { ItemReviewPanel };

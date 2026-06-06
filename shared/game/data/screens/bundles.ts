@@ -55,11 +55,7 @@ const screenByIndex = new Map<number, ScreenDefinition>(
 
 // ─── Bundle Construction ─────────────────────────────────────────────────────
 
-/**
- * Build a ScreenBundle from a big-screen group (as returned by getBigScreenGroup).
- * @param group Array of screen indices — [head, head+1, head+8, head+9] for big, [single] for small
- */
-function buildScreenBundle(group: number[]): ScreenBundle {
+const buildScreenBundle = (group: number[]): ScreenBundle => {
   if (group.length === 1) {
     const screenIndex = group[0];
     const screen = screenByIndex.get(screenIndex);
@@ -101,7 +97,7 @@ function buildScreenBundle(group: number[]): ScreenBundle {
     isMulti: true,
     head,
   };
-}
+};
 
 export { buildScreenBundle };
 export type { ScreenBundle };

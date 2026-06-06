@@ -31,7 +31,7 @@ interface ButtonCallbacks {
   doAdvance: () => void;
 }
 
-function processButtonFrame(bytes: Uint8Array, refs: ButtonRefs, cb: ButtonCallbacks): void {
+const processButtonFrame = (bytes: Uint8Array, refs: ButtonRefs, cb: ButtonCallbacks): void => {
   if (!refs.inputPhaseActiveRef.current) return;
   const idx = refs.activeIdxRef.current;
   const item = refs.itemsRef.current[idx];
@@ -43,12 +43,9 @@ function processButtonFrame(bytes: Uint8Array, refs: ButtonRefs, cb: ButtonCallb
   if (captureState === 'waiting-press') processWaitingPress(bytes, bl, excl, item, refs, cb);
   else if (captureState === 'confirming-press') processConfirmingPress(bytes, bl, excl, item, idx, refs, cb);
   else if (captureState === 'waiting-release') processWaitingRelease(bytes, bl, excl, item, idx, refs, cb);
-}
+};
 
-function processWaitingPress(
-  bytes: Uint8Array, bl: Uint8Array, excl: Set<number>,
-  item: InputItem, refs: ButtonRefs, cb: ButtonCallbacks,
-): void {
+const processWaitingPress = (bytes: Uint8Array, bl: Uint8Array, excl: Set<number>, item: InputItem, refs: ButtonRefs, cb: ButtonCallbacks): void => {
   refs.releaseCountRef.current = 0;
   refs.confirmCountRef.current = 0;
   refs.detectedBtnRef.current = null;
@@ -83,12 +80,9 @@ function processWaitingPress(
       cb.setCaptureState('confirming-press');
     }
   }
-}
+};
 
-function processConfirmingPress(
-  bytes: Uint8Array, bl: Uint8Array, excl: Set<number>,
-  item: InputItem, idx: number, refs: ButtonRefs, cb: ButtonCallbacks,
-): void {
+const processConfirmingPress = (bytes: Uint8Array, bl: Uint8Array, excl: Set<number>, item: InputItem, idx: number, refs: ButtonRefs, cb: ButtonCallbacks): void => {
   if (item.kind === 'button') {
     const prev = refs.detectedBtnRef.current;
     let stillHeld = false;
@@ -139,12 +133,9 @@ function processConfirmingPress(
       cb.setCaptureState('waiting-press');
     }
   }
-}
+};
 
-function processWaitingRelease(
-  bytes: Uint8Array, bl: Uint8Array, excl: Set<number>,
-  item: InputItem, idx: number, refs: ButtonRefs, cb: ButtonCallbacks,
-): void {
+const processWaitingRelease = (bytes: Uint8Array, bl: Uint8Array, excl: Set<number>, item: InputItem, idx: number, refs: ButtonRefs, cb: ButtonCallbacks): void => {
   let released = false;
   if (item.kind === 'button') {
     const m = refs.detectedBtnRef.current;
@@ -177,12 +168,9 @@ function processWaitingRelease(
       finalizeAxisCapture(bytes, bl, excl, item, idx, refs, cb);
     }
   }
-}
+};
 
-function finalizeAxisCapture(
-  bytes: Uint8Array, bl: Uint8Array, excl: Set<number>,
-  item: InputItem, idx: number, refs: ButtonRefs, cb: ButtonCallbacks,
-): void {
+const finalizeAxisCapture = (bytes: Uint8Array, bl: Uint8Array, excl: Set<number>, item: InputItem, idx: number, refs: ButtonRefs, cb: ButtonCallbacks): void => {
   const ac = refs.axisCapRef.current[item.id];
   if (ac?.posBytes && ac?.negBytes) {
     const posD = findAxisBytes(bl, ac.posBytes, excl, 5);
@@ -213,7 +201,7 @@ function finalizeAxisCapture(
   } else {
     cb.setCaptureState('waiting-press');
   }
-}
+};
 
 export { processButtonFrame };
 export type { ButtonRefs, ButtonCallbacks };

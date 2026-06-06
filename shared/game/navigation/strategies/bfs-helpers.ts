@@ -1,25 +1,18 @@
 import type { TilePassability } from '../types';
 import { GRID_SIZE } from '../types';
 
-/** Get the 4 tiles occupied by a 2×2 body with top-left at (r, c). */
-function bodyTiles(r: number, c: number): [number, number][] {
+const bodyTiles = (r: number, c: number): [number, number][] => {
   return [[r, c], [r, c + 1], [r + 1, c], [r + 1, c + 1]];
-}
+};
 
-/** Get the 2 NEW tiles exposed when moving from body (row, col) in direction (dr, dc). */
-function getNewTiles(nr: number, nc: number, dr: number, dc: number): [number, number][] {
+const getNewTiles = (nr: number, nc: number, dr: number, dc: number): [number, number][] => {
   if (dr === -1) return [[nr, nc], [nr, nc + 1]];       // north: new top row
   if (dr === 1) return [[nr + 1, nc], [nr + 1, nc + 1]]; // south: new bottom row
   if (dc === -1) return [[nr, nc], [nr + 1, nc]];       // west: new left column
   return [[nr, nc + 1], [nr + 1, nc + 1]];              // east: new right column
-}
+};
 
-/** Find a valid 2×2 body position containing or near (row, col). */
-function findStartBody(
-  row: number, col: number,
-  grid: TilePassability[][], inventory: Set<string>,
-  minR: number, maxR: number, minC: number, maxC: number,
-): { row: number; col: number } | null {
+const findStartBody = (row: number, col: number, grid: TilePassability[][], inventory: Set<string>, minR: number, maxR: number, minC: number, maxC: number): { row: number; col: number } | null => {
   const candidates: [number, number][] = [
     [row, col], [row, col - 1], [row - 1, col], [row - 1, col - 1],
   ];
@@ -39,10 +32,9 @@ function findStartBody(
     }
   }
   return null;
-}
+};
 
-/** Check if all 4 tiles of a body position are passable. */
-function isBodyPassable(r: number, c: number, grid: TilePassability[][], inventory: Set<string>): boolean {
+const isBodyPassable = (r: number, c: number, grid: TilePassability[][], inventory: Set<string>): boolean => {
   for (const [tr, tc] of bodyTiles(r, c)) {
     const t = grid[tr][tc];
     if (t.type === 'blocked') return false;
@@ -50,10 +42,9 @@ function isBodyPassable(r: number, c: number, grid: TilePassability[][], invento
     if (t.type === 'water' && !inventory.has('flippers')) return false;
   }
   return true;
-}
+};
 
-/** Check if movement direction is blocked by a ledge. */
-function canLeaveLedge(dir: string, dr: number, dc: number): boolean {
+const canLeaveLedge = (dir: string, dr: number, dc: number): boolean => {
   return (
     (dir === 's' && dr === 1) ||
     (dir === 'n' && dr === -1) ||
@@ -64,15 +55,9 @@ function canLeaveLedge(dir: string, dr: number, dc: number): boolean {
     (dir === 'se' && (dr === 1 || dc === 1)) ||
     (dir === 'sw' && (dr === 1 || dc === -1))
   );
-}
+};
 
-/** Evaluate whether a tile can be entered from direction (dr, dc) given inventory. */
-function evaluateEntry(
-  tile: TilePassability,
-  dr: number, dc: number,
-  requirements: Set<string>,
-  inventory: Set<string>,
-): { canEnter: boolean; newReqs: Set<string> } {
+const evaluateEntry = (tile: TilePassability, dr: number, dc: number, requirements: Set<string>, inventory: Set<string>): { canEnter: boolean; newReqs: Set<string> } => {
   let newReqs = requirements;
 
   switch (tile.type) {
@@ -105,6 +90,6 @@ function evaluateEntry(
     case 'blocked':
       return { canEnter: false, newReqs };
   }
-}
+};
 
 export { bodyTiles, getNewTiles, findStartBody, isBodyPassable, canLeaveLedge, evaluateEntry };

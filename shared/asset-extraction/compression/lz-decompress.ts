@@ -51,14 +51,14 @@ function decompress(
 
   // Inline reader with bank-crossing logic (matches Python's Reader class)
   let addr = ea;
-  function nextByte(): number {
-    const r = getByte(addr);
-    addr += 1;
-    if ((addr & 0xffff) === 0) {
-      addr += 0x8000;
-    }
-    return r;
-  }
+  const nextByte = (): number => {
+        const r = getByte(addr);
+        addr += 1;
+        if ((addr & 0xffff) === 0) {
+          addr += 0x8000;
+        }
+        return r;
+      };
 
   while (true) {
     const b = nextByte();
@@ -126,27 +126,13 @@ function decompress(
   }
 }
 
-/**
- * Convenience wrapper: decompress from a RomData instance.
- */
-function decompressFromRom(
-  rom: RomData,
-  ea: number,
-  offsetIsBe = true,
-): Buffer {
+const decompressFromRom = (rom: RomData, ea: number, offsetIsBe = true): Buffer => {
   return decompress(ea, (addr) => rom.getByte(addr), offsetIsBe);
-}
+};
 
-/**
- * Convenience wrapper that also returns compressed stream length.
- */
-function decompressFromRomWithLength(
-  rom: RomData,
-  ea: number,
-  offsetIsBe = true,
-): [Buffer, number] {
+const decompressFromRomWithLength = (rom: RomData, ea: number, offsetIsBe = true): [Buffer, number] => {
   return decompress(ea, (addr) => rom.getByte(addr), offsetIsBe, true);
-}
+};
 
 export { decompress, decompressFromRom, decompressFromRomWithLength };
 export type { GetByteFn };

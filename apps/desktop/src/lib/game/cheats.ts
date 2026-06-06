@@ -30,122 +30,99 @@ const BottleContents = {
 } as const;
 type BottleContentsValue = (typeof BottleContents)[keyof typeof BottleContents];
 
-function isReady(): boolean {
+const isReady = (): boolean => {
   return getGameState().status === 'running' && getModule() != null;
-}
+};
 
-function ccall(fn: string, args: number[]): void {
+const ccall = (fn: string, args: number[]): void => {
   const mod = getModule();
   if (!mod) return;
   mod.ccall(fn, null, args.map(() => 'number'), args);
-}
+};
 
 // ─── Item Giving (routed through delivery queue) ───
 
-/** Give item by ID with hold-up animation. Queued until Link can receive. */
-function cheatGiveItem(itemId: number): void {
+const cheatGiveItem = (itemId: number): void => {
   if (!isReady()) return;
   const action: DeliveryAction = { type: 'give_item', itemId };
   const name = ITEM_ID_TO_NAME[itemId] ?? `Unknown Item #${itemId}`;
   enqueue(name, 'cheat', action);
-}
+};
 
-/**
- * Trigger a chest-type check: sets room flag, plays animation, marks as completed.
- * Queued until Link can receive.
- */
-function cheatTriggerCheck(roomId: number, chestIndex: number, itemId: number): void {
+const cheatTriggerCheck = (roomId: number, chestIndex: number, itemId: number): void => {
   if (!isReady()) return;
   const action: DeliveryAction = { type: 'trigger_check', roomId, chestIndex, itemId };
   const name = ITEM_ID_TO_NAME[itemId] ?? `Unknown Item #${itemId}`;
   enqueue(name, 'cheat', action);
-}
+};
 
-/**
- * Trigger an NPC-type check: sets progress flags, gives item with animation.
- * Queued until Link can receive.
- */
-function cheatTriggerNpcCheck(
-  flagType: number, flagMask: number, itemId: number,
-  spriteType: number, postGfx: number
-): void {
+const cheatTriggerNpcCheck = (flagType: number, flagMask: number, itemId: number, spriteType: number, postGfx: number): void => {
   if (!isReady()) return;
   const action: DeliveryAction = { type: 'trigger_npc_check', flagType, flagMask, itemId, spriteType, postGfx };
   const name = ITEM_ID_TO_NAME[itemId] ?? `Unknown Item #${itemId}`;
   enqueue(name, 'cheat', action);
-}
+};
 
 // ─── Stats ───
 
-/** Set Link's current health. Each heart = 8 units. */
-function cheatSetHealth(value: number): void {
+const cheatSetHealth = (value: number): void => {
   if (!isReady()) return;
   ccall('WasmCheatSetHealth', [value]);
-}
+};
 
-/** Set Link's max health capacity. Each heart = 8 units. Max 20 hearts (160). */
-function cheatSetMaxHealth(value: number): void {
+const cheatSetMaxHealth = (value: number): void => {
   if (!isReady()) return;
   ccall('WasmCheatSetMaxHealth', [value]);
-}
+};
 
-/** Set rupee goal (game animates counter toward target). Max 999. */
-function cheatSetRupees(amount: number): void {
+const cheatSetRupees = (amount: number): void => {
   if (!isReady()) return;
   ccall('WasmCheatSetRupees', [amount]);
-}
+};
 
-/** Set bomb count. Max 99. */
-function cheatSetBombs(count: number): void {
+const cheatSetBombs = (count: number): void => {
   if (!isReady()) return;
   ccall('WasmCheatSetBombs', [count]);
-}
+};
 
-/** Set arrow count. Max 99. */
-function cheatSetArrows(count: number): void {
+const cheatSetArrows = (count: number): void => {
   if (!isReady()) return;
   ccall('WasmCheatSetArrows', [count]);
-}
+};
 
-/** Refill magic to full. */
-function cheatRefillMagic(): void {
+const cheatRefillMagic = (): void => {
   if (!isReady()) return;
   ccall('WasmCheatRefillMagic', []);
-}
+};
 
 // ─── Bottles ───
 
-/** Fill a bottle slot (0-3) with specified contents. */
-function cheatFillBottle(slot: 0 | 1 | 2 | 3, contents: BottleContentsValue): void {
+const cheatFillBottle = (slot: 0 | 1 | 2 | 3, contents: BottleContentsValue): void => {
   if (!isReady()) return;
   ccall('WasmCheatFillBottle', [slot, contents]);
-}
+};
 
 // ─── Combat ───
 
-/** Kill all hostile enemies on screen. */
-function cheatKillAllEnemies(): void {
+const cheatKillAllEnemies = (): void => {
   if (!isReady()) return;
   ccall('WasmCheatKillAllEnemies', []);
-}
+};
 
-/** Set outgoing damage multiplier (1 = normal). */
-function cheatSetDamageMultiplier(mult: number): void {
+const cheatSetDamageMultiplier = (mult: number): void => {
   if (!isReady()) return;
   ccall('WasmCheatSetDamageMultiplier', [Math.max(1, Math.min(255, mult))]);
-}
+};
 
-/** Set extra armor damage reduction percentage (0-100). Stacks with equipped armor. */
-function cheatSetExtraArmorPct(pct: number): void {
+const cheatSetExtraArmorPct = (pct: number): void => {
   if (!isReady()) return;
   ccall('WasmCheatSetExtraArmorPct', [Math.max(0, Math.min(100, pct))]);
-}
+};
 
-/** Start debug trace for N frames (default 120). Output goes to browser console. */
-function cheatStartTrace(frames = 120): void {
+const cheatStartTrace = (frames = 120): void => {
   if (!isReady()) return;
   ccall('WasmCheatStartTrace', [frames]);
-}
+};
 
 export { BottleContents, cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck, cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows, cheatRefillMagic, cheatFillBottle, cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct, cheatStartTrace };
 export type { BottleContentsValue };

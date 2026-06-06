@@ -63,24 +63,24 @@ const HapticItemId = {
 
 const lastFireTime = new Map<string, number>();
 
-function checkCooldown(patternId: string, cooldownMs: number): boolean {
+const checkCooldown = (patternId: string, cooldownMs: number): boolean => {
   if (cooldownMs <= 0) return true;
   const now = performance.now();
   const last = lastFireTime.get(patternId) ?? 0;
   if (now - last < cooldownMs) return false;
   lastFireTime.set(patternId, now);
   return true;
-}
+};
 
 // ─── Pattern Selection Logic ───
 
-function getDamagePatternId(damageAmount: number): HapticPatternId {
+const getDamagePatternId = (damageAmount: number): HapticPatternId => {
   if (damageAmount >= 40) return 'damageHigh';
   if (damageAmount >= 24) return 'damageMedium';
   return 'damageLow';
-}
+};
 
-function getItemPatternId(itemId: number): HapticPatternId | null {
+const getItemPatternId = (itemId: number): HapticPatternId | null => {
   switch (itemId) {
     case HapticItemId.BOMBS: return 'itemBomb';
     case HapticItemId.BOOMERANG: return null; // catch handled by separate event
@@ -99,9 +99,9 @@ function getItemPatternId(itemId: number): HapticPatternId | null {
     case HapticItemId.SHOVEL: return 'itemShovel';
     default: return null;
   }
-}
+};
 
-function getEnvironmentalPatternId(subEvent: number): HapticPatternId | null {
+const getEnvironmentalPatternId = (subEvent: number): HapticPatternId | null => {
   switch (subEvent) {
     case EnvironmentalEvent.FALL_INTO_PIT: return 'fallIntoPit';
     case EnvironmentalEvent.LAND_FROM_LEDGE: return 'landFromLedge';
@@ -113,7 +113,7 @@ function getEnvironmentalPatternId(subEvent: number): HapticPatternId | null {
     case EnvironmentalEvent.BOSS_DEFEATED: return 'bossDefeated';
     default: return null;
   }
-}
+};
 
 // ─── Service State ───
 
@@ -149,28 +149,25 @@ const DASH_PULSE_INTERVAL_MS = 125; // ~8Hz
 
 // ─── Public API ───
 
-function updateHapticSettings(settings: HapticSettings): void {
+const updateHapticSettings = (settings: HapticSettings): void => {
   currentSettings = { ...settings };
-}
+};
 
-function setVibrateFunction(fn: VibrateFunction | null): void {
+const setVibrateFunction = (fn: VibrateFunction | null): void => {
   vibrateFn = fn;
-}
+};
 
 // ─── Internal Dispatch ───
 
-function scalePattern(segments: VibrationSegment[]): VibrationSegment[] {
+const scalePattern = (segments: VibrationSegment[]): VibrationSegment[] => {
   const scale = currentSettings.intensity / 100;
   return segments.map(seg => ({
     durationMs: seg.durationMs,
     intensity: Math.min(1.0, seg.intensity * scale),
   }));
-}
+};
 
-/**
- * Fire a pattern by ID. Handles cooldown checking and delayed dispatch.
- */
-function firePattern(patternId: HapticPatternId): void {
+const firePattern = (patternId: HapticPatternId): void => {
   if (!vibrateFn || !currentSettings.enabled) return;
 
   const entry: HapticPatternEntry = HAPTIC_PATTERNS[patternId];
@@ -192,12 +189,11 @@ function firePattern(patternId: HapticPatternId): void {
   } else {
     vibrateFn(scaled, gapMs);
   }
-}
+};
 
 // ─── Event Handlers ───
 
-/** Handle a haptic event from the C game hooks */
-function handleHapticEvent(eventType: number, param: number): void {
+const handleHapticEvent = (eventType: number, param: number): void => {
   if (!currentSettings.enabled || !vibrateFn) return;
 
   switch (eventType) {
@@ -239,47 +235,41 @@ function handleHapticEvent(eventType: number, param: number): void {
       if (currentSettings.itemUse) firePattern('itemBoomerangCatch');
       break;
   }
-}
+};
 
-/** Handle dash vibration (called from polling loop when Link is running) */
-function handleDashPulse(): void {
+const handleDashPulse = (): void => {
   if (!currentSettings.enabled || !currentSettings.dashVibration || !vibrateFn) return;
 
   const now = performance.now();
   if (now - lastDashPulseTime < DASH_PULSE_INTERVAL_MS) return;
   lastDashPulseTime = now;
   firePattern('dashStep');
-}
+};
 
-/** Reset dash timer (call when dash ends) */
-function resetDashState(): void {
+const resetDashState = (): void => {
   lastDashPulseTime = 0;
-}
+};
 
-/** Trigger death vibration pattern */
-function handleDeath(): void {
+const handleDeath = (): void => {
   if (!currentSettings.enabled || !currentSettings.damageTaken || !vibrateFn) return;
   firePattern('death');
-}
+};
 
-/** Trigger spin attack release vibration */
-function handleSpinAttack(): void {
+const handleSpinAttack = (): void => {
   if (!currentSettings.enabled || !currentSettings.swordSwing || !vibrateFn) return;
   firePattern('spinAttackRelease');
-}
+};
 
-/** Trigger environmental event from JS polling */
-function handleEnvironmental(subEvent: number): void {
+const handleEnvironmental = (subEvent: number): void => {
   if (!currentSettings.enabled || !currentSettings.environmentalEffects || !vibrateFn) return;
   const id = getEnvironmentalPatternId(subEvent);
   if (id) firePattern(id);
-}
+};
 
-/** Trigger pickup vibration */
-function handlePickup(type: 'heartPiece' | 'pendantCrystal' | 'largeRupee'): void {
+const handlePickup = (type: 'heartPiece' | 'pendantCrystal' | 'largeRupee'): void => {
   if (!currentSettings.enabled || !currentSettings.environmentalEffects || !vibrateFn) return;
   firePattern(type);
-}
+};
 
 export { HapticEventType, EnvironmentalEvent, HapticItemId, updateHapticSettings, setVibrateFunction, handleHapticEvent, handleDashPulse, resetDashState, handleDeath, handleSpinAttack, handleEnvironmental, handlePickup };
 export type { HapticEventTypeValue, HapticSettings };

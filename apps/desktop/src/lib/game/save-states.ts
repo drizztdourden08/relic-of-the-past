@@ -7,7 +7,7 @@ import { getModule, getProfileId } from './wasm-bridge';
 import { pollInventoryState } from './tracker';
 import { reassertBackdropBlack, reassertHudHidden, reassertPauseHidden, reassertVolumes } from './live-settings';
 
-function captureScreenshot(): Promise<Blob | null> {
+const captureScreenshot = (): Promise<Blob | null> => {
   const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
   if (!canvas) return Promise.resolve(null);
   return new Promise((resolve) => {
@@ -17,9 +17,9 @@ function captureScreenshot(): Promise<Blob | null> {
       resolve(null);
     }
   });
-}
+};
 
-async function saveState(slot: number): Promise<boolean> {
+const saveState = async (slot: number): Promise<boolean> => {
   const mod = getModule();
   const profileId = getProfileId();
   log.app(`[SaveState] saveState(${slot}) called — module=${!!mod}, profileId=${profileId}`);
@@ -65,9 +65,9 @@ async function saveState(slot: number): Promise<boolean> {
     if (err instanceof Error && err.stack) log.error(`[SaveState] ${err.stack}`);
     return false;
   }
-}
+};
 
-async function loadState(slot: number): Promise<boolean> {
+const loadState = async (slot: number): Promise<boolean> => {
   const mod = getModule();
   const profileId = getProfileId();
   log.app(`[LoadState] loadState(${slot}) called — module=${!!mod}, profileId=${profileId}`);
@@ -111,7 +111,7 @@ async function loadState(slot: number): Promise<boolean> {
     if (err instanceof Error && err.stack) log.error(`[LoadState] ${err.stack}`);
     return false;
   }
-}
+};
 
 /**
  * Capture the current game state into a temp slot and return its raw bytes.

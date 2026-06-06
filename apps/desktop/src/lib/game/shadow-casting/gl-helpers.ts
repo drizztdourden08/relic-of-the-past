@@ -8,7 +8,7 @@ interface FBO {
   texture: WebGLTexture;
 }
 
-function createShader(gl: WebGLRenderingContext, type: number, source: string): WebGLShader | null {
+const createShader = (gl: WebGLRenderingContext, type: number, source: string): WebGLShader | null => {
   const shader = gl.createShader(type);
   if (!shader) return null;
   gl.shaderSource(shader, source);
@@ -19,9 +19,9 @@ function createShader(gl: WebGLRenderingContext, type: number, source: string): 
     return null;
   }
   return shader;
-}
+};
 
-function createProgram(gl: WebGLRenderingContext, vertSrc: string, fragSrc: string): WebGLProgram | null {
+const createProgram = (gl: WebGLRenderingContext, vertSrc: string, fragSrc: string): WebGLProgram | null => {
   const vert = createShader(gl, gl.VERTEX_SHADER, vertSrc);
   const frag = createShader(gl, gl.FRAGMENT_SHADER, fragSrc);
   if (!vert || !frag) return null;
@@ -43,9 +43,9 @@ function createProgram(gl: WebGLRenderingContext, vertSrc: string, fragSrc: stri
   gl.deleteShader(vert);
   gl.deleteShader(frag);
   return program;
-}
+};
 
-function createTexture(gl: WebGLRenderingContext, filter: number = gl.LINEAR): WebGLTexture {
+const createTexture = (gl: WebGLRenderingContext, filter: number = gl.LINEAR): WebGLTexture => {
   const tex = gl.createTexture()!;
   gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -53,9 +53,9 @@ function createTexture(gl: WebGLRenderingContext, filter: number = gl.LINEAR): W
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filter);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filter);
   return tex;
-}
+};
 
-function createFBO(gl: WebGLRenderingContext, width: number, height: number, filter: number = gl.LINEAR): FBO {
+const createFBO = (gl: WebGLRenderingContext, width: number, height: number, filter: number = gl.LINEAR): FBO => {
   const texture = createTexture(gl, filter);
   gl.bindTexture(gl.TEXTURE_2D, texture);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
@@ -65,20 +65,20 @@ function createFBO(gl: WebGLRenderingContext, width: number, height: number, fil
   gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
   return { framebuffer, texture };
-}
+};
 
-function destroyFBO(gl: WebGLRenderingContext, fbo: FBO): void {
+const destroyFBO = (gl: WebGLRenderingContext, fbo: FBO): void => {
   gl.deleteFramebuffer(fbo.framebuffer);
   gl.deleteTexture(fbo.texture);
-}
+};
 
-function drawQuad(gl: WebGLRenderingContext, program: WebGLProgram, buffer: WebGLBuffer): void {
+const drawQuad = (gl: WebGLRenderingContext, program: WebGLProgram, buffer: WebGLBuffer): void => {
   const posLoc = gl.getAttribLocation(program, 'a_position');
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.enableVertexAttribArray(posLoc);
   gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-}
+};
 
 export type { FBO };
 export { createShader, createProgram, createTexture, createFBO, destroyFBO, drawQuad };

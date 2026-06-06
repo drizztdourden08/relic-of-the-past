@@ -13,17 +13,7 @@ const BRR_FILTERS = [
   (old: number, older: number) => old * 2 + ((-old * 13) >> 6) - older + ((older * 3) >> 4),
 ];
 
-/**
- * Decode a BRR-encoded audio block.
- *
- * @param getByte - Byte accessor (typically reads from a buffer)
- * @param olds - Initial filter state [old, older] (default [0, 0])
- * @returns Int16Array of decoded PCM samples
- */
-function decodeBrr(
-  getByte: (offset: number) => number,
-  olds: [number, number] = [0, 0],
-): Int16Array {
+const decodeBrr = (getByte: (offset: number) => number, olds: [number, number] = [0, 0]): Int16Array => {
   let ea = 0;
   const r: number[] = [];
   let [old, older] = olds;
@@ -69,32 +59,17 @@ function decodeBrr(
   }
 
   return new Int16Array(r);
-}
+};
 
-/** Helper for BRR encoding: compute one decoded sample */
-function brrGetOne(old: number, rs: number, r: number): number {
+const brrGetOne = (old: number, rs: number, r: number): number => {
   let s = r <= 12 ? (rs << r) >> 1 : (rs >> 3) << 12;
   s += old;
   if (s < -0x8000) s = -0x8000;
   else if (s > 0x7fff) s = 0x7fff;
   return (s & 0x3fff) - (s & 0x4000); // wrap to 15 bits
-}
+};
 
-/**
- * Encode PCM data to BRR format.
- *
- * @param data - Int16 PCM samples (length must be multiple of 16)
- * @param brrRepeat - Loop point sample offset (0 = no loop)
- * @param olds - Initial filter state [old, older]
- * @param lossless - If true, asserts zero encoding error (throws on lossy encode)
- * @returns BRR-encoded byte array
- */
-function encodeBrr(
-  data: Int16Array | number[],
-  brrRepeat: number,
-  olds: [number, number] = [0, 0],
-  lossless = true,
-): number[] {
+const encodeBrr = (data: Int16Array | number[], brrRepeat: number, olds: [number, number] = [0, 0], lossless = true): number[] => {
   if (data.length % 16 !== 0) {
     throw new Error(`BRR input length ${data.length} not a multiple of 16`);
   }
@@ -182,6 +157,6 @@ function encodeBrr(
   }
 
   return result;
-}
+};
 
 export { decodeBrr, encodeBrr };

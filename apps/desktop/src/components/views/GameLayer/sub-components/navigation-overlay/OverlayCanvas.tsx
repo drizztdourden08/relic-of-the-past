@@ -17,7 +17,7 @@ interface OverlayCanvasProps extends Props {
   mouseStateRef: React.RefObject<MouseState>;
 }
 
-function OverlayCanvas({ width, height, gameRunning, mouseStateRef }: OverlayCanvasProps) {
+const OverlayCanvas = ({ width, height, gameRunning, mouseStateRef }: OverlayCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
   const { visible, result, results, connections, fallHoleSpawns, respawnEntIds, setLockedPath } = useNavigationOverlayStore();
@@ -94,6 +94,6 @@ function OverlayCanvas({ width, height, gameRunning, mouseStateRef }: OverlayCan
       }}
     />
   );
-}
+};
 
 export { OverlayCanvas };

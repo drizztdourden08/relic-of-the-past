@@ -14,7 +14,7 @@ interface UseProfileActionsArgs {
   profileId: string;
 }
 
-function useProfileActions({ settings, onChange, profileId }: UseProfileActionsArgs) {
+const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsArgs) => {
   const [profiles, setProfiles] = useState<InputProfile[]>([]);
   const [activeProfile, setActiveProfile] = useState<InputProfile | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<InputProfile | null>(null);
@@ -132,6 +132,6 @@ function useProfileActions({ settings, onChange, profileId }: UseProfileActionsA
     handleRename,
     handleDeleteConfirm,
   };
-}
+};
 
 export { useProfileActions };

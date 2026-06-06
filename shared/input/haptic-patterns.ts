@@ -39,30 +39,30 @@ interface HapticPatternEntry {
 
 // ─── Helper Builders ───
 
-function pulse(durationMs: number, intensity: number): VibrationSegment[] {
+const pulse = (durationMs: number, intensity: number): VibrationSegment[] => {
   return [{ durationMs, intensity }];
-}
+};
 
-function doubleTap(durationMs: number, intensity: number): VibrationSegment[] {
+const doubleTap = (durationMs: number, intensity: number): VibrationSegment[] => {
   const half = Math.floor(durationMs / 2);
   return [{ durationMs: half, intensity }, { durationMs: half, intensity }];
-}
+};
 
-function crescendo(durationMs: number, maxIntensity: number, steps = 4): VibrationSegment[] {
+const crescendo = (durationMs: number, maxIntensity: number, steps = 4): VibrationSegment[] => {
   const stepDuration = Math.floor(durationMs / steps);
   return Array.from({ length: steps }, (_, i) => ({
     durationMs: stepDuration,
     intensity: (maxIntensity / steps) * (i + 1),
   }));
-}
+};
 
-function fadeOut(durationMs: number, startIntensity: number, steps = 4): VibrationSegment[] {
+const fadeOut = (durationMs: number, startIntensity: number, steps = 4): VibrationSegment[] => {
   const stepDuration = Math.floor(durationMs / steps);
   return Array.from({ length: steps }, (_, i) => ({
     durationMs: stepDuration,
     intensity: startIntensity * (1 - i / steps),
   }));
-}
+};
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // PATTERN DEFINITIONS — Edit these to tune vibration feel

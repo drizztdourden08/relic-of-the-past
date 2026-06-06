@@ -4,9 +4,9 @@
 
 import type { DevicePreset, ButtonMapping } from '../../types/controls';
 
-function kb(snesButton: ButtonMapping['snesButton'], code: string, label: string): ButtonMapping {
+const kb = (snesButton: ButtonMapping['snesButton'], code: string, label: string): ButtonMapping => {
   return { snesButton, binding: { type: 'keyboard', code, label }, icon: null };
-}
+};
 
 const KEYBOARD_DEFAULT: DevicePreset = {
   id: 'keyboard-default',

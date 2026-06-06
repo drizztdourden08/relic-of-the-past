@@ -86,7 +86,7 @@ describe('Border Bundles', () => {
 });
 
 // Helper: create a 64×64 ReachState grid with specific tiles marked reachable (1)
-function createMockGrid(specs: { row: number; cols: number[] }[]): ReachState[][] {
+const createMockGrid = (specs: { row: number; cols: number[] }[]): ReachState[][] => {
   const grid: ReachState[][] = Array.from({ length: 64 }, () => new Array<ReachState>(64).fill(0));
   for (const { row, cols } of specs) {
     for (const col of cols) {
@@ -94,4 +94,4 @@ function createMockGrid(specs: { row: number; cols: number[] }[]): ReachState[][
     }
   }
   return grid;
-}
+};

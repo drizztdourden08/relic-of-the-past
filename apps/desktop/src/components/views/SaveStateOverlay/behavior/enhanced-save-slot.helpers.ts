@@ -10,11 +10,7 @@ import { getBindingLabel, getBindingIconUrl } from '../../../views/ProfileHub/ta
 import { keyCodeToIconId, getButtonIconUrl } from '../../../views/InputTester/data/button-icons';
 import type { SlotHint } from './enhanced-save-slot.types';
 
-/**
- * Wrap a save/load action with pause handling: if game is paused, unpause first,
- * do the action, then re-pause.
- */
-async function withPauseGuard(action: () => Promise<boolean>): Promise<boolean> {
+const withPauseGuard = async (action: () => Promise<boolean>): Promise<boolean> => {
   const inputMgr = getInputManager();
   const wasPaused = inputMgr.isPaused();
   if (wasPaused) {
@@ -27,10 +23,9 @@ async function withPauseGuard(action: () => Promise<boolean>): Promise<boolean> 
     inputMgr.togglePause();
   }
   return result;
-}
+};
 
-/** Look up the binding for a slot's load action from function mappings */
-function getSlotBinding(mappings: FunctionMapping[], slot: number): { label: string; iconUrl: string | null } {
+const getSlotBinding = (mappings: FunctionMapping[], slot: number): { label: string; iconUrl: string | null } => {
   const loadAction = `load-state-${slot + 1}` as FunctionAction;
   const loadMapping = mappings.find(m => m.action === loadAction && m.binding.type !== 'none');
   if (loadMapping) {
@@ -50,19 +45,17 @@ function getSlotBinding(mappings: FunctionMapping[], slot: number): { label: str
     };
   }
   return { label: `Slot ${slot + 1}`, iconUrl: null };
-}
+};
 
-/** Get ESC key icon */
-function getEscBinding(): { label: string; iconUrl: string | null } {
+const getEscBinding = (): { label: string; iconUrl: string | null } => {
   const iconId = keyCodeToIconId('Escape');
   return {
     label: 'Esc',
     iconUrl: iconId ? getButtonIconUrl(iconId) : null,
   };
-}
+};
 
-/** Build idle hints from actual bindings */
-function buildIdleHints(mappings: FunctionMapping[], slot: number): SlotHint[] {
+const buildIdleHints = (mappings: FunctionMapping[], slot: number): SlotHint[] => {
   const slotInfo = getSlotBinding(mappings, slot);
   const escInfo = getEscBinding();
   return [
@@ -70,14 +63,13 @@ function buildIdleHints(mappings: FunctionMapping[], slot: number): SlotHint[] {
     { action: 'hold-save', keyLabel: slotInfo.label, iconUrl: slotInfo.iconUrl },
     { action: 'esc-cancel', keyLabel: escInfo.label, iconUrl: escInfo.iconUrl },
   ];
-}
+};
 
-/** Hints while holding */
-function buildHoldingHints(mappings: FunctionMapping[], slot: number): SlotHint[] {
+const buildHoldingHints = (mappings: FunctionMapping[], slot: number): SlotHint[] => {
   const slotInfo = getSlotBinding(mappings, slot);
   return [
     { action: 'holding-save', keyLabel: slotInfo.label, iconUrl: slotInfo.iconUrl },
   ];
-}
+};
 
 export { withPauseGuard, getSlotBinding, getEscBinding, buildIdleHints, buildHoldingHints };

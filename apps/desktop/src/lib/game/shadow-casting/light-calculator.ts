@@ -15,10 +15,7 @@ interface LightUniforms {
 
 const MAX_LIGHTS = 16;
 
-function computeLightUniforms(
-  lights: LightSource[],
-  gameCanvas: HTMLCanvasElement | null,
-): LightUniforms {
+const computeLightUniforms = (lights: LightSource[], gameCanvas: HTMLCanvasElement | null): LightUniforms => {
   const numLights = Math.min(lights.length, MAX_LIGHTS);
   const positions = new Float32Array(MAX_LIGHTS * 3);
   const colors = new Float32Array(MAX_LIGHTS * 3);
@@ -43,23 +40,16 @@ function computeLightUniforms(
   }
 
   return { numLights, positions, colors, intensities, castShadows };
-}
+};
 
-function resolveColor(
-  light: LightSource,
-  gameCanvas: HTMLCanvasElement | null,
-): [number, number, number] {
+const resolveColor = (light: LightSource, gameCanvas: HTMLCanvasElement | null): [number, number, number] => {
   if (light.color === 'sample') {
     return sampleGameColor(light.x, light.y, gameCanvas);
   }
   return parseHexColor(light.color);
-}
+};
 
-function sampleGameColor(
-  x: number,
-  y: number,
-  canvas: HTMLCanvasElement | null,
-): [number, number, number] {
+const sampleGameColor = (x: number, y: number, canvas: HTMLCanvasElement | null): [number, number, number] => {
   if (!canvas) return [1, 1, 1];
 
   try {
@@ -75,16 +65,16 @@ function sampleGameColor(
   } catch {
     return [1, 1, 1];
   }
-}
+};
 
-function parseHexColor(hex: string): [number, number, number] {
+const parseHexColor = (hex: string): [number, number, number] => {
   const clean = hex.replace('#', '');
   if (clean.length !== 6) return [1, 1, 1];
   const r = parseInt(clean.slice(0, 2), 16) / 255;
   const g = parseInt(clean.slice(2, 4), 16) / 255;
   const b = parseInt(clean.slice(4, 6), 16) / 255;
   return [r, g, b];
-}
+};
 
 export type { LightUniforms };
 export { computeLightUniforms, MAX_LIGHTS };

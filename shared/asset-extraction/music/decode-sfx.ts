@@ -17,7 +17,7 @@ interface SfxLine {
 
 // ─── Decoding ───
 
-function decodeSfx(ctx: SoundBankContext, ea: number, nextAddr: number): SfxLine[] {
+const decodeSfx = (ctx: SoundBankContext, ea: number, nextAddr: number): SfxLine[] => {
   const r: SfxLine[] = [];
   while (true) {
     if (ea === nextAddr) {
@@ -73,11 +73,11 @@ function decodeSfx(ctx: SoundBankContext, ea: number, nextAddr: number): SfxLine
       r.push({ kind: 'note', note: noteToStr(b & 0x7f), noteLength, volumeLeft, volumeRight });
     }
   }
-}
+};
 
 // ─── Formatting ───
 
-function formatSfxLine(line: SfxLine): string {
+const formatSfxLine = (line: SfxLine): string => {
   if (line.kind === 'fallthrough') return 'Fallthrough';
   if (line.kind === 'restart') return 'Restart';
   if (line.kind === 'effect') return line.effectName!;
@@ -88,35 +88,35 @@ function formatSfxLine(line: SfxLine): string {
   const dd = line.volumeRight === null ? '---' : String(line.volumeRight).padStart(3);
   const r0 = line.effectName ? ' ' + line.effectName : '';
   return `${aa} ${bb} ${cc} ${dd}${r0}`;
-}
+};
 
 // ─── Print all SFX ───
 
-function printAllSfx(ctx: SoundBankContext): string {
+const printAllSfx = (ctx: SoundBankContext): string => {
   const items = new Set<number>();
   let output = '';
 
-  function addSfxTop(base: number, num: number, name: string): void {
-    output += `[${name}_0x${base.toString(16)}]\n`;
-    const nextEa = base + num * 2;
-    const echoEa = nextEa + num;
-    for (let i = 0; i < num; i++) {
-      const ea = ctx.getWord(base + i * 2);
-      let t: string;
-      if (ea === 0) {
-        t = 'None';
-      } else {
-        items.add(ea);
-        t = `Sfx_0x${ea.toString(16)}`;
-      }
-      if (name === 'SfxPort1') {
-        output += `${t},${ctx.getByte(nextEa + i) ?? 0}\n`;
-      } else {
-        output += `${t},${ctx.getByte(nextEa + i) ?? 0},${ctx.getByte(echoEa + i) ?? 0}\n`;
-      }
-    }
-    output += '\n';
-  }
+  const addSfxTop = (base: number, num: number, name: string): void => {
+        output += `[${name}_0x${base.toString(16)}]\n`;
+        const nextEa = base + num * 2;
+        const echoEa = nextEa + num;
+        for (let i = 0; i < num; i++) {
+          const ea = ctx.getWord(base + i * 2);
+          let t: string;
+          if (ea === 0) {
+            t = 'None';
+          } else {
+            items.add(ea);
+            t = `Sfx_0x${ea.toString(16)}`;
+          }
+          if (name === 'SfxPort1') {
+            output += `${t},${ctx.getByte(nextEa + i) ?? 0}\n`;
+          } else {
+            output += `${t},${ctx.getByte(nextEa + i) ?? 0},${ctx.getByte(echoEa + i) ?? 0}\n`;
+          }
+        }
+        output += '\n';
+      };
 
   addSfxTop(0x17c0, 32, 'SfxPort1');
   addSfxTop(0x1820, 63, 'SfxPort2');
@@ -139,6 +139,6 @@ function printAllSfx(ctx: SoundBankContext): string {
   }
 
   return output;
-}
+};
 
 export { printAllSfx };

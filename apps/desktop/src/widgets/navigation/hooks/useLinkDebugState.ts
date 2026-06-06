@@ -17,11 +17,7 @@ interface LinkDebugState {
   staircaseType: number | null;
 }
 
-/**
- * Compute Link's debug/display state from WASM viewport info.
- * Recalculates every render tick — expects caller to trigger re-renders via debugTick.
- */
-function useLinkDebugState(_debugTick: number): LinkDebugState | null {
+const useLinkDebugState = (_debugTick: number): LinkDebugState | null => {
   const vpDebug = wasmGetViewportInfo?.();
   if (!vpDebug) return null;
 
@@ -61,7 +57,7 @@ function useLinkDebugState(_debugTick: number): LinkDebugState | null {
     collisionType: wasmGetRoomCollisionType?.() ?? null,
     staircaseType: wasmGetStaircaseType?.() ?? null,
   };
-}
+};
 
 export { useLinkDebugState };
 export type { LinkDebugState };

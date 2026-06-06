@@ -23,7 +23,7 @@ interface UseBindingStateArgs {
   updateActiveProfile: (profile: InputProfile) => void;
 }
 
-function useBindingState({ settings, onChange, activeProfile, updateActiveProfile }: UseBindingStateArgs) {
+const useBindingState = ({ settings, onChange, activeProfile, updateActiveProfile }: UseBindingStateArgs) => {
   const [listeningFor, setListeningFor] = useState<
     | { type: 'snes'; button: SnesButton }
     | { type: 'function'; action: FunctionAction }
@@ -141,6 +141,6 @@ function useBindingState({ settings, onChange, activeProfile, updateActiveProfil
     handleFunctionClear,
     handleCapture,
   };
-}
+};
 
 export { useBindingState };

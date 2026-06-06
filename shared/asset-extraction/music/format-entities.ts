@@ -4,7 +4,7 @@
 import type { MusicEntity, Pattern, Phrase, Song, SongList } from './extract-types';
 import { toStr } from './extract-types';
 
-function formatPattern(p: Pattern): string {
+const formatPattern = (p: Pattern): string => {
   let r = `[Pattern_0x${p.ea.toString(16)}]\n`;
   for (const line of p.lines) {
     if (line.kind === 'fallthrough') {
@@ -33,40 +33,40 @@ function formatPattern(p: Pattern): string {
     }
   }
   return r;
-}
+};
 
-function formatPhrase(p: Phrase): string {
+const formatPhrase = (p: Phrase): string => {
   let s = `[Phrase_0x${p.ea.toString(16)}]\n`;
   for (const pat of p.patterns) {
     s += (pat ? pat.name : 'None') + '\n';
   }
   return s;
-}
+};
 
-function formatSong(s: Song): string {
+const formatSong = (s: Song): string => {
   let r = `# Song index ${s.index}\n`;
   r += `[Song_0x${s.ea.toString(16)}]\n`;
   for (const phrase of s.phrases) {
     r += phrase.name + '\n';
   }
   return r;
-}
+};
 
-function formatSongList(sl: SongList): string {
+const formatSongList = (sl: SongList): string => {
   let s = `[SongList_0x${sl.ea.toString(16)}]\n`;
   for (const song of sl.songs) {
     s += (song ? song.name : 'None') + '\n';
   }
   return s;
-}
+};
 
-function formatEntity(e: MusicEntity): string {
+const formatEntity = (e: MusicEntity): string => {
   switch (e.type) {
     case 'Song': return formatSong(e as Song);
     case 'SongList': return formatSongList(e as SongList);
     case 'Phrase': return formatPhrase(e as Phrase);
     case 'Pattern': return formatPattern(e as Pattern);
   }
-}
+};
 
 export { formatEntity };

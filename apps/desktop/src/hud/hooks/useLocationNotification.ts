@@ -16,7 +16,7 @@ import type { ScreenDefinition } from '@shared/game/types';
 const SCREEN_DISMISS_MS = 3000;
 const TRANSITION_DISMISS_MS = 2000;
 
-function useLocationNotification() {
+const useLocationNotification = () => {
   const prevDetectedRef = useRef<ScreenDefinition | null>(null);
   const prevRoomRef = useRef<number>(-1);
   const prevOwScreenRef = useRef<number>(-1);
@@ -96,6 +96,6 @@ function useLocationNotification() {
       if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     };
   }, []);
-}
+};
 
 export { useLocationNotification, SCREEN_DISMISS_MS, TRANSITION_DISMISS_MS };

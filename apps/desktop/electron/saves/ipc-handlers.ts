@@ -31,7 +31,7 @@ import {
 } from './auto-store';
 import type { GameSettings } from '../../../../shared/types/settings';
 
-function registerSaveHandlers(): void {
+const registerSaveHandlers = (): void => {
   // ─── SRAM ───
   ipcMain.handle('saves:writeSram', async (_event, profileId: string, data: ArrayBuffer) => {
     await writeSramFile(profileId, Buffer.from(data));
@@ -142,6 +142,6 @@ function registerSaveHandlers(): void {
     await mkdir(profileDir, { recursive: true });
     await writeFile(join(profileDir, 'config.json'), JSON.stringify(settings, null, 2), 'utf-8');
   });
-}
+};
 
 export { registerSaveHandlers };

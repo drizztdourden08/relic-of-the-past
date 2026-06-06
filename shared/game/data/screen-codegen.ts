@@ -35,13 +35,11 @@ interface ConnectionCodegenInput {
   tags: readonly ConnectionTag[];
 }
 
-/** Format a number as hex (e.g., 0x51) */
-function hex(n: number): string {
+const hex = (n: number): string => {
   return `0x${n.toString(16).padStart(n > 0xff ? 4 : 2, '0').toUpperCase()}`;
-}
+};
 
-/** Serialize a ScreenDefinition to TS object literal source text */
-function serializeScreen(screen: ScreenCodegenInput, indent = '  '): string {
+const serializeScreen = (screen: ScreenCodegenInput, indent = '  '): string => {
   const lines: string[] = [];
   lines.push(`${indent}{`);
   lines.push(`${indent}  id: '${escapeSingleQuote(screen.id)}',`);
@@ -76,19 +74,18 @@ function serializeScreen(screen: ScreenCodegenInput, indent = '  '): string {
   }
   lines.push(`${indent}},`);
   return lines.join('\n');
-}
+};
 
-/** Serialize a ScreenConnection to TS object literal source text */
-function serializeConnection(conn: ConnectionCodegenInput, indent = '  '): string {
+const serializeConnection = (conn: ConnectionCodegenInput, indent = '  '): string => {
   const tagStr = conn.tags.map(t => `'${t}'`).join(', ');
   return `${indent}{ from: '${conn.from}', to: '${conn.to}', tags: [${tagStr}] },`;
-}
+};
 
-function escapeSingleQuote(s: string): string {
+const escapeSingleQuote = (s: string): string => {
   return s.replace(/'/g, "\\'");
-}
+};
 
-function serializeCondition(cond: VariantCondition): string {
+const serializeCondition = (cond: VariantCondition): string => {
   switch (cond.type) {
     case 'always': return `{ type: 'always' }`;
     case 'check': return `{ type: 'check', name: '${escapeSingleQuote(cond.name)}', collected: ${cond.collected} }`;
@@ -101,7 +98,7 @@ function serializeCondition(cond: VariantCondition): string {
       return `{ ${parts.join(', ')} }`;
     }
   }
-}
+};
 
 // ─── File Path Resolution ───
 
@@ -128,8 +125,7 @@ const DUNGEON_FILE_MAP: Record<string, string> = {
   "Ganon's Tower": 'ganons-tower',
 };
 
-/** Resolve which source file a screen belongs in */
-function resolveScreenFile(screen: { type: string; dungeon?: { palaceIndex: number }; interior?: { kind: string }; world: string; tags: readonly string[] }): FileTarget {
+const resolveScreenFile = (screen: { type: string; dungeon?: { palaceIndex: number }; interior?: { kind: string }; world: string; tags: readonly string[] }): FileTarget => {
   const world = screen.world === 'dark' ? 'dark-world' : 'light-world';
 
   if (screen.type === 'dungeon' && screen.dungeon) {
@@ -154,10 +150,9 @@ function resolveScreenFile(screen: { type: string; dungeon?: { palaceIndex: numb
     relativePath: `regions/${world}/${fileName}.ts`,
     arrayName: '',
   };
-}
+};
 
-/** Resolve which source file a connection belongs in */
-function resolveConnectionFile(conn: { from: string; to: string; tags: readonly string[] }, screenType?: string, dungeon?: string, world?: 'light' | 'dark'): FileTarget {
+const resolveConnectionFile = (conn: { from: string; to: string; tags: readonly string[] }, screenType?: string, dungeon?: string, world?: 'light' | 'dark'): FileTarget => {
   const w = world === 'dark' ? 'dark-world' : 'light-world';
 
   if (screenType === 'dungeon' && dungeon) {
@@ -181,7 +176,7 @@ function resolveConnectionFile(conn: { from: string; to: string; tags: readonly 
     relativePath: `connections/${w}/caves.ts`,
     arrayName: '',
   };
-}
+};
 
 export {
   serializeScreen,

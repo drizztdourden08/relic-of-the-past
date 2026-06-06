@@ -2,11 +2,7 @@ import type { ReachState } from '@shared/game/navigation/types';
 import type { GridPos } from '../types';
 import { manhattan, keyOf, isValid2x2, isValidMove2x2, canLeave2x2, isTraversalDirCompatible, PATH_DIRS } from './helpers';
 
-/**
- * Snap a cursor tile to the nearest valid 2×2 top-left corner.
- * Checks the 4 squares that contain the cursor tile first, then spirals out.
- */
-function findNearest2x2Goal(cursorRow: number, cursorCol: number, reachable: ReachState[][]): GridPos | null {
+const findNearest2x2Goal = (cursorRow: number, cursorCol: number, reachable: ReachState[][]): GridPos | null => {
   const seeds: GridPos[] = [
     { row: cursorRow, col: cursorCol },
     { row: cursorRow - 1, col: cursorCol },
@@ -26,12 +22,9 @@ function findNearest2x2Goal(cursorRow: number, cursorCol: number, reachable: Rea
     }
   }
   return null;
-}
+};
 
-/** A* where each node is the top-left of a 2×2 block — allows traversal tiles in their permitted direction. */
-function findPath2x2AStar(
-  start: GridPos, goal: GridPos, reachable: ReachState[][],
-): GridPos[] | null {
+const findPath2x2AStar = (start: GridPos, goal: GridPos, reachable: ReachState[][]): GridPos[] | null => {
   if (!isValid2x2(start.row, start.col, reachable) || !isValid2x2(goal.row, goal.col, reachable)) return null;
 
   const open: GridPos[] = [start];
@@ -84,20 +77,9 @@ function findPath2x2AStar(
     }
   }
   return null;
-}
+};
 
-/**
- * Layer-aware A* for dual-layer rooms. Tracks (row, col, layer) as state.
- * Moves stay on the same layer unless:
- *   - Stair tiles (state=10): bidirectional layer swap (stay in place)
- *   - Ledge tiles (state=2-9) on layer 0: one-way fall to layer 1 (scan past ledge tiles to landing)
- */
-function findPath2x2LayerAware(
-  start: GridPos, goal: GridPos,
-  startLayer: 0 | 1,
-  layerGrids: [ReachState[][], ReachState[][]],
-  merged: ReachState[][],
-): GridPos[] | null {
+const findPath2x2LayerAware = (start: GridPos, goal: GridPos, startLayer: 0 | 1, layerGrids: [ReachState[][], ReachState[][]], merged: ReachState[][]): GridPos[] | null => {
   // Validate start on its layer, goal on either layer
   if (!isValid2x2(start.row, start.col, layerGrids[startLayer])) return null;
   if (!isValid2x2(goal.row, goal.col, layerGrids[0]) && !isValid2x2(goal.row, goal.col, layerGrids[1])) return null;
@@ -202,23 +184,20 @@ function findPath2x2LayerAware(
     }
   }
   return null;
-}
+};
 
-/** Check if any tile in a 2×2 body is a stair (state=10). */
-function hasStairInBody(row: number, col: number, reachable: ReachState[][]): boolean {
+const hasStairInBody = (row: number, col: number, reachable: ReachState[][]): boolean => {
   return reachable[row][col] === 10 || reachable[row][col + 1] === 10 ||
          reachable[row + 1][col] === 10 || reachable[row + 1][col + 1] === 10;
-}
+};
 
-/** Check if a 2×2 body is fully reachable (any non-zero state) — used for stair transitions. */
-function isReachable2x2(row: number, col: number, reachable: ReachState[][]): boolean {
+const isReachable2x2 = (row: number, col: number, reachable: ReachState[][]): boolean => {
   if (row < 0 || row + 1 >= 64 || col < 0 || col + 1 >= 64) return false;
   return reachable[row][col] !== 0 && reachable[row][col + 1] !== 0 &&
          reachable[row + 1][col] !== 0 && reachable[row + 1][col + 1] !== 0;
-}
+};
 
-/** Check if any tile in a 2×2 body at (nr,nc) is a ledge compatible with direction (dr,dc). */
-function hasLedgeInBody(nr: number, nc: number, grid: ReachState[][], dr: number, dc: number): boolean {
+const hasLedgeInBody = (nr: number, nc: number, grid: ReachState[][], dr: number, dc: number): boolean => {
   if (nr < 0 || nr + 1 >= 64 || nc < 0 || nc + 1 >= 64) return false;
   const positions: [number, number][] = [[nr, nc], [nr, nc + 1], [nr + 1, nc], [nr + 1, nc + 1]];
   for (const [r, c] of positions) {
@@ -226,20 +205,9 @@ function hasLedgeInBody(nr: number, nc: number, grid: ReachState[][], dr: number
     if (state >= 2 && state <= 9 && isTraversalDirCompatible(state, dr, dc)) return true;
   }
   return false;
-}
+};
 
-/**
- * Scan past ledge tiles in direction (dr,dc) starting at (startRow,startCol).
- * Skips positions where layer 0 still has ledge tiles (states 2-9), then
- * returns the first valid 2×2 landing position on layer 1 (any non-zero state).
- * Mirrors BFS expandLedgeCross behavior.
- */
-function findLedgeLanding(
-  startRow: number, startCol: number,
-  dr: number, dc: number,
-  layer0Grid: ReachState[][],
-  layer1Grid: ReachState[][],
-): GridPos | null {
+const findLedgeLanding = (startRow: number, startCol: number, dr: number, dc: number, layer0Grid: ReachState[][], layer1Grid: ReachState[][]): GridPos | null => {
   for (let step = 0; step < 64; step++) {
     const lr = startRow + step * dr;
     const lc = startCol + step * dc;
@@ -260,20 +228,9 @@ function findLedgeLanding(
     }
   }
   return null;
-}
+};
 
-/**
- * Find a 2×2 path from Link to goal.
- * Snaps Link's top-left to the nearest valid 2×2 start position.
- */
-function findPath2x2FromLink(
-  linkX: number, linkY: number,
-  screenWorldX: number, screenWorldY: number,
-  goal: GridPos,
-  reachable: ReachState[][],
-  layerGrids?: [ReachState[][], ReachState[][]],
-  startLayer?: 0 | 1,
-): GridPos[] | null {
+const findPath2x2FromLink = (linkX: number, linkY: number, screenWorldX: number, screenWorldY: number, goal: GridPos, reachable: ReachState[][], layerGrids?: [ReachState[][], ReachState[][]], startLayer?: 0 | 1): GridPos[] | null => {
   const startRow = Math.floor((linkY - screenWorldY) / 8);
   const startCol = Math.floor((linkX - screenWorldX) / 8);
 
@@ -293,6 +250,6 @@ function findPath2x2FromLink(
     : findNearest2x2Goal(startRow, startCol, reachable);
   if (!start) return null;
   return findPath2x2AStar(start, goal, reachable);
-}
+};
 
 export { findNearest2x2Goal, findPath2x2AStar, findPath2x2LayerAware, findPath2x2FromLink };

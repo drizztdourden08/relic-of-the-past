@@ -66,10 +66,7 @@ interface SpritePalettes {
   palettes: RGBA[][];
 }
 
-/**
- * Load all sprite palettes from ROM.
- */
-function loadSpritePalettes(rom: RomData): SpritePalettes {
+const loadSpritePalettes = (rom: RomData): SpritePalettes => {
   const palettes: RGBA[][] = Array.from({ length: 8 }, () =>
     new Array(16).fill(TRANSPARENT) as RGBA[]
   );
@@ -120,12 +117,9 @@ function loadSpritePalettes(rom: RomData): SpritePalettes {
   }
 
   return { palettes };
-}
+};
 
-/**
- * Build palette 5 with specific sword/shield type colors.
- */
-function buildPal5(rom: RomData, base: RGBA[], swordType: number, shieldType: number): RGBA[] {
+const buildPal5 = (rom: RomData, base: RGBA[], swordType: number, shieldType: number): RGBA[] => {
   const pal = [...base];
   const swordPal = rom.getWords(ADDR_SWORD_PALETTE, 12);
   const shieldPal = rom.getWords(ADDR_SHIELD_PALETTE, 12);
@@ -136,7 +130,7 @@ function buildPal5(rom: RomData, base: RGBA[], swordType: number, shieldType: nu
     pal[12 + i] = snesToRgba(shieldPal[shieldType * 4 + i]);
   }
   return pal;
-}
+};
 
 /**
  * Load receipt sprite sheets (0x5A - 0x5D combined).
@@ -148,7 +142,7 @@ interface ReceiptSheets {
   sheet5D: Buffer;  // sheet 0x5D
 }
 
-function loadReceiptSheets(rom: RomData): ReceiptSheets {
+const loadReceiptSheets = (rom: RomData): ReceiptSheets => {
   const getByte = (addr: number) => rom.getByte(addr);
   return {
     base: decompress(kCompSpritePtrs[0x5a], getByte, false),
@@ -156,9 +150,9 @@ function loadReceiptSheets(rom: RomData): ReceiptSheets {
     sheet5C: decompress(kCompSpritePtrs[0x5c], getByte, false),
     sheet5D: decompress(kCompSpritePtrs[0x5d], getByte, false),
   };
-}
+};
 
-function getCombined(sheets: ReceiptSheets, gfxSheet: number): Buffer {
+const getCombined = (sheets: ReceiptSheets, gfxSheet: number): Buffer => {
   let secondary: Buffer;
   if (gfxSheet === 0x23 || gfxSheet >= 0x37) {
     secondary = sheets.sheet5D;
@@ -168,17 +162,9 @@ function getCombined(sheets: ReceiptSheets, gfxSheet: number): Buffer {
     secondary = sheets.sheet5B;
   }
   return Buffer.concat([sheets.base, secondary]);
-}
+};
 
-/**
- * Decode a single 8×8 tile from 3bpp format.
- */
-function decode3bppTile(
-  raw: Buffer,
-  offset: number,
-  palette: RGBA[],
-  high: boolean,
-): ImageBuffer {
+const decode3bppTile = (raw: Buffer, offset: number, palette: RGBA[], high: boolean): ImageBuffer => {
   const img = new ImageBuffer(8, 8);
   for (let y = 0; y < 8; y++) {
     const d0 = raw[offset + y * 2];
@@ -193,12 +179,9 @@ function decode3bppTile(
     }
   }
   return img;
-}
+};
 
-/**
- * Extract a 16×16 receipt sprite (4 tiles in 2×2 grid).
- */
-function extractReceipt16x16(raw: Buffer, offset: number, palette: RGBA[]): ImageBuffer {
+const extractReceipt16x16 = (raw: Buffer, offset: number, palette: RGBA[]): ImageBuffer => {
   const img = new ImageBuffer(16, 16);
   const tl = decode3bppTile(raw, offset, palette, true);
   const tr = decode3bppTile(raw, offset + 0x18, palette, true);
@@ -209,29 +192,18 @@ function extractReceipt16x16(raw: Buffer, offset: number, palette: RGBA[]): Imag
   img.paste(bl, 0, 8);
   img.paste(br, 8, 8);
   return img;
-}
+};
 
-/**
- * Extract an 8×16 receipt sprite (2 tiles stacked, centered in 16×16).
- */
-function extractReceipt8x16(raw: Buffer, offset: number, palette: RGBA[]): ImageBuffer {
+const extractReceipt8x16 = (raw: Buffer, offset: number, palette: RGBA[]): ImageBuffer => {
   const img = new ImageBuffer(16, 16);
   const top = decode3bppTile(raw, offset, palette, true);
   const bot = decode3bppTile(raw, offset + 0x180, palette, true);
   img.paste(top, 4, 0);
   img.paste(bot, 4, 8);
   return img;
-}
+};
 
-/**
- * Extract a receipt sprite by ID.
- */
-function extractReceipt(
-  receiptId: number,
-  rom: RomData,
-  sheets: ReceiptSheets,
-  spritePalettes: SpritePalettes,
-): ImageBuffer | null {
+const extractReceipt = (receiptId: number, rom: RomData, sheets: ReceiptSheets, spritePalettes: SpritePalettes): ImageBuffer | null => {
   const gfx = kReceiveItemGfx[receiptId];
   if (gfx >= kDecodeTab.length) return null;
 
@@ -268,18 +240,9 @@ function extractReceipt(
   } else {
     return extractReceipt8x16(combined, offset, palette);
   }
-}
+};
 
-/**
- * Extract a receipt sprite with a different palette (recolor variant).
- */
-function extractReceiptRecolor(
-  receiptId: number,
-  palIdx: number,
-  rom: RomData,
-  sheets: ReceiptSheets,
-  spritePalettes: SpritePalettes,
-): ImageBuffer | null {
+const extractReceiptRecolor = (receiptId: number, palIdx: number, rom: RomData, sheets: ReceiptSheets, spritePalettes: SpritePalettes): ImageBuffer | null => {
   const gfx = kReceiveItemGfx[receiptId];
   if (gfx >= kDecodeTab.length) return null;
 
@@ -293,7 +256,7 @@ function extractReceiptRecolor(
   } else {
     return extractReceipt8x16(combined, offset, palette);
   }
-}
+};
 
 // Re-export decode3bppTile for use by drop-decoder
 

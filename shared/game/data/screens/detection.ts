@@ -24,11 +24,7 @@ interface VariantGameState {
   progressTier?: number;
 }
 
-/**
- * Evaluate a variant condition against game state.
- * Returns true if the condition is met (variant is active).
- */
-function evaluateCondition(condition: VariantCondition, state: VariantGameState): boolean {
+const evaluateCondition = (condition: VariantCondition, state: VariantGameState): boolean => {
   switch (condition.type) {
     case 'always':
       return true;
@@ -48,14 +44,9 @@ function evaluateCondition(condition: VariantCondition, state: VariantGameState)
       if (condition.max != null && state.progressTier > condition.max) return false;
       return true;
   }
-}
+};
 
-/**
- * From a list of candidate screens sharing the same roomIndex,
- * pick the best match given current game state.
- * Priority: specific conditions evaluated first, 'always'/no-variant last.
- */
-function resolveVariant(candidates: ScreenDefinition[], state?: VariantGameState): ScreenDefinition {
+const resolveVariant = (candidates: ScreenDefinition[], state?: VariantGameState): ScreenDefinition => {
   if (candidates.length === 1) return candidates[0];
   if (!state) {
     // No game state available — return the default (no variant or 'always')
@@ -71,7 +62,7 @@ function resolveVariant(candidates: ScreenDefinition[], state?: VariantGameState
 
   // Fall back to default (no variant field or 'always')
   return candidates.find(c => !c.variant || c.variant.condition.type === 'always') ?? candidates[0];
-}
+};
 
 // ─── Lookup Tables ───────────────────────────────────────────────────────────
 
@@ -88,18 +79,14 @@ interface ScreenLookup {
   byCaveRoomAll: Map<number, ScreenDefinition[]>;
 }
 
-/**
- * Get the palace index for a dungeon screen.
- * palaceIndex is now the required canonical field.
- */
-function getPalaceIndicesForScreen(screen: ScreenDefinition): number[] {
+const getPalaceIndicesForScreen = (screen: ScreenDefinition): number[] => {
   if (screen.type === 'dungeon') {
     return [screen.dungeon.palaceIndex];
   }
   return [];
-}
+};
 
-function buildScreenLookup(regions: ScreenDefinition[] = ALL_SCREENS): ScreenLookup {
+const buildScreenLookup = (regions: ScreenDefinition[] = ALL_SCREENS): ScreenLookup => {
   const byOverworldScreen = new Map<number, ScreenDefinition>();
   const byDungeonRoom = new Map<string, ScreenDefinition>();
   const byCaveRoom = new Map<number, ScreenDefinition>();
@@ -132,17 +119,14 @@ function buildScreenLookup(regions: ScreenDefinition[] = ALL_SCREENS): ScreenLoo
   }
 
   return { byOverworldScreen, byDungeonRoom, byCaveRoom, byEntranceId, byCaveRoomAll };
-}
+};
 
 let cachedLookup: ScreenLookup | null = null;
 
-/**
- * Get or build the screen lookup tables (cached on first call).
- */
-function getScreenLookup(): ScreenLookup {
+const getScreenLookup = (): ScreenLookup => {
   if (!cachedLookup) cachedLookup = buildScreenLookup();
   return cachedLookup;
-}
+};
 
 type ScreenMatchMethod = 'exact' | 'entrance' | 'palace-scan' | 'cave-single' | 'cave-ambiguous' | 'variant' | 'overworld';
 
@@ -155,35 +139,11 @@ interface ScreenMatchResult {
   progressTier?: number;
 }
 
-/**
- * Resolve current game state to a ScreenDefinition with match metadata.
- * Returns null if no screen is mapped for the current index.
- * @param whichEntrance — the entrance ID from RAM $010E (optional, improves cave detection)
- * @param variantState — game state for variant resolution (optional, improves multi-variant rooms)
- */
-function resolveCurrentScreen(
-  isIndoors: boolean,
-  palaceIndex: number,
-  roomIndex: number,
-  overworldScreenIndex: number,
-  whichEntrance?: number,
-  variantState?: VariantGameState,
-): ScreenDefinition | null {
+const resolveCurrentScreen = (isIndoors: boolean, palaceIndex: number, roomIndex: number, overworldScreenIndex: number, whichEntrance?: number, variantState?: VariantGameState): ScreenDefinition | null => {
   return resolveCurrentScreenDetailed(isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance, variantState)?.screen ?? null;
-}
+};
 
-/**
- * Detailed screen resolution — returns match metadata alongside the screen.
- * Use this when you need to know HOW the match was found (for warnings/corrections).
- */
-function resolveCurrentScreenDetailed(
-  isIndoors: boolean,
-  palaceIndex: number,
-  roomIndex: number,
-  overworldScreenIndex: number,
-  whichEntrance?: number,
-  variantState?: VariantGameState,
-): ScreenMatchResult | null {
+const resolveCurrentScreenDetailed = (isIndoors: boolean, palaceIndex: number, roomIndex: number, overworldScreenIndex: number, whichEntrance?: number, variantState?: VariantGameState): ScreenMatchResult | null => {
   const lookup = getScreenLookup();
 
   if (isIndoors) {
@@ -243,7 +203,7 @@ function resolveCurrentScreenDetailed(
   // Overworld — variant-aware (e.g., post-Aga DW access from same screen)
   const ow = lookup.byOverworldScreen.get(overworldScreenIndex);
   return ow ? { screen: ow, method: 'overworld' } : null;
-}
+};
 
 export { getScreenLookup, resolveCurrentScreen, resolveCurrentScreenDetailed };
 export type { VariantGameState, ScreenLookup, ScreenMatchMethod, ScreenMatchResult };

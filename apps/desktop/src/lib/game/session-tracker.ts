@@ -8,11 +8,11 @@ import { log } from '../log-bus';
 
 let activeSession: { id: string; profileId: string; startedAt: number } | null = null;
 
-function generateId(): string {
+const generateId = (): string => {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-}
+};
 
-function startSession(profileId: string): void {
+const startSession = (profileId: string): void => {
   if (activeSession) {
     endSession();
   }
@@ -22,9 +22,9 @@ function startSession(profileId: string): void {
     startedAt: Date.now(),
   };
   log.app(`[Session] Started session ${activeSession.id} for profile ${profileId}`);
-}
+};
 
-async function endSession(): Promise<PlaySession | null> {
+const endSession = async (): Promise<PlaySession | null> => {
   if (!activeSession) return null;
 
   const now = Date.now();
@@ -47,19 +47,19 @@ async function endSession(): Promise<PlaySession | null> {
   }
 
   return session;
-}
+};
 
-function getActiveSession() {
+const getActiveSession = () => {
   return activeSession;
-}
+};
 
-async function listSessions(profileId: string): Promise<PlaySession[]> {
+const listSessions = async (profileId: string): Promise<PlaySession[]> => {
   try {
     return await window.api.listSessions(profileId);
   } catch {
     return [];
   }
-}
+};
 
 export {
   endSession,

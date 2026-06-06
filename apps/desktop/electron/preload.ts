@@ -3,9 +3,9 @@ import { parse } from 'path';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
-function romStem(romFile: string): string {
+const romStem = (romFile: string): string => {
   return parse(romFile).name;
-}
+};
 
 const autoFlood = process.argv.includes('--auto-flood');
 

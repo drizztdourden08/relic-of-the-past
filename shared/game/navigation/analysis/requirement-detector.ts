@@ -44,14 +44,7 @@ interface DetectedRequirement {
   requirements: RequirementSet;
 }
 
-/**
- * Determine minimum requirements for each target position on a screen.
- *
- * Strategy: run BFS at each inventory level. For each target tile, record
- * the FIRST (smallest) inventory set that reaches it. That set becomes
- * the AND requirements. If multiple disjoint sets reach it, they form OR alternatives.
- */
-function detectRequirements(input: RequirementDetectorInput): DetectedRequirement[] {
+const detectRequirements = (input: RequirementDetectorInput): DetectedRequirement[] => {
   const { screenIndex, getGrid, tileContext, targetPositions } = input;
 
   let grid: number[][];
@@ -104,7 +97,7 @@ function detectRequirements(input: RequirementDetectorInput): DetectedRequiremen
   }
 
   return results;
-}
+};
 
 export { INVENTORY_PROGRESSION, detectRequirements };
 export type { RequirementDetectorInput, DetectedRequirement };

@@ -19,7 +19,7 @@ import { KEYBOARD_DEFAULT } from '@shared/input';
 import type { DetectedDevice } from '@shared/types/controls';
 import { detectAllDevices, markActivated, updateActivationState } from './device-detector';
 import { webHidReader } from './hid-reader';
-import type { WebHidInputState } from './hid-reader';
+import type { WebHidInputState, DeviceStickCalibration } from './hid-reader';
 import { wasmSetPaused } from '../game/wasm-bridge';
 import { suspendAudio, resumeAudio } from '../game/audio-volume';
 import { PauseManager } from './pause-manager';
@@ -213,7 +213,7 @@ class InputManager {
       this.calibrationLoaded = true;
       window.api.readStickCalibration()
         .then((store) => {
-          webHidReader.loadStickCalibrations(store as Record<string, import('./hid-reader').DeviceStickCalibration>);
+          webHidReader.loadStickCalibrations(store as Record<string, DeviceStickCalibration>);
         })
         .catch(() => {});
       window.api.readTriggerCalibration()
@@ -472,25 +472,25 @@ class InputManager {
 
 // ─── Helpers ───
 
-function isTextInput(target: EventTarget | null): boolean {
+const isTextInput = (target: EventTarget | null): boolean => {
   if (!target) return false;
   const tag = (target as HTMLElement).tagName;
   return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' ||
          (target as HTMLElement).isContentEditable;
-}
+};
 
 // ─── Singleton ───
 
 let instance: InputManager | null = null;
 
-function getInputManager(): InputManager {
+const getInputManager = (): InputManager => {
   if (!instance) {
     instance = new InputManager();
     instance.start();
   }
   if (typeof window !== 'undefined') (window as any).__inputManager = instance;
   return instance;
-}
+};
 
 export { InputManager, getInputManager, profileFromPreset, resolveFunctionMappingIcon };
 export type { DeviceChangeListener, InputStateListener, PauseListener, RawInputEvent, RawInputListener, GamepadSnapshot };

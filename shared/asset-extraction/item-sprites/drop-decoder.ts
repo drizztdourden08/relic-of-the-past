@@ -18,15 +18,7 @@ import {
   kNumChar, kNumExt, kNumX, kNumY, kDecodeTab,
 } from './drop-tables';
 
-/**
- * Extract a standard drop sprite by sprite type.
- */
-function extractDropStandard(
-  spriteType: number,
-  paletteIdx: number,
-  spritePalettes: SpritePalettes,
-  dropSheets: DropSheets,
-): ImageBuffer {
+const extractDropStandard = (spriteType: number, paletteIdx: number, spritePalettes: SpritePalettes, dropSheets: DropSheets): ImageBuffer => {
   const idx = spriteType - 0xd8;
   const base = kTab1Sprite[spriteType];
   const cid = kTab2Sprite[base];
@@ -36,18 +28,9 @@ function extractDropStandard(
   if (dm === 0) return extractSmallCentered(cid, palette, dropSheets);
   if (dm === 1) return extractTall(cid, palette, dropSheets);
   return extractLarge(cid, palette, dropSheets);
-}
+};
 
-/**
- * Extract a numbered drop sprite (e.g., bomb count, arrow count).
- */
-function extractDropNumbered(
-  _spriteType: number,
-  paletteIdx: number,
-  group: number,
-  spritePalettes: SpritePalettes,
-  dropSheets: DropSheets,
-): ImageBuffer {
+const extractDropNumbered = (_spriteType: number, paletteIdx: number, group: number, spritePalettes: SpritePalettes, dropSheets: DropSheets): ImageBuffer => {
   const a = (group - 1) * 3;
   const palette = spritePalettes.palettes[paletteIdx];
   const img = new ImageBuffer(16, 16);
@@ -70,16 +53,9 @@ function extractDropNumbered(
     }
   }
   return img;
-}
+};
 
-/**
- * Extract a rupee drop sprite from sheet 96.
- */
-function extractDropRupee(
-  paletteIdx: number,
-  spritePalettes: SpritePalettes,
-  dropSheets: DropSheets,
-): ImageBuffer {
+const extractDropRupee = (paletteIdx: number, spritePalettes: SpritePalettes, dropSheets: DropSheets): ImageBuffer => {
   const palette = spritePalettes.palettes[paletteIdx];
   const img = new ImageBuffer(16, 16);
   const top = decode3bppTile(dropSheets.sheet96, 0, palette, true);
@@ -87,16 +63,9 @@ function extractDropRupee(
   img.paste(top, 4, 0);
   img.paste(bot, 4, 8);
   return img;
-}
+};
 
-/**
- * Extract a big key drop sprite.
- */
-function extractDropBigkey(
-  paletteIdx: number,
-  spritePalettes: SpritePalettes,
-  receiptSheets: ReceiptSheets,
-): ImageBuffer {
+const extractDropBigkey = (paletteIdx: number, spritePalettes: SpritePalettes, receiptSheets: ReceiptSheets): ImageBuffer => {
   const palette = spritePalettes.palettes[paletteIdx];
   const combined = Buffer.concat([receiptSheets.base, receiptSheets.sheet5B]);
   const offset = kDecodeTab[0x22];
@@ -110,18 +79,9 @@ function extractDropBigkey(
   img.paste(bl, 0, 8);
   img.paste(br, 8, 8);
   return img;
-}
+};
 
-/**
- * Extract a fighter's shield drop sprite (tall/2-tile from specific sheet).
- */
-function extractDropShieldFighters(
-  sheetId: number,
-  tileIds: number[],
-  paletteIdx: number,
-  spritePalettes: SpritePalettes,
-  dropSheets: DropSheets,
-): ImageBuffer {
+const extractDropShieldFighters = (sheetId: number, tileIds: number[], paletteIdx: number, spritePalettes: SpritePalettes, dropSheets: DropSheets): ImageBuffer => {
   const sheet = dropSheets.sheets.get(sheetId)!;
   const palette = spritePalettes.palettes[paletteIdx];
   const img = new ImageBuffer(16, 16);
@@ -130,18 +90,9 @@ function extractDropShieldFighters(
   img.paste(top, 4, 0);
   img.paste(bot, 4, 8);
   return img;
-}
+};
 
-/**
- * Extract a fire shield drop sprite (16×16 from 4 tiles).
- */
-function extractDropShieldFire(
-  sheetId: number,
-  tileIds: number[],
-  paletteIdx: number,
-  spritePalettes: SpritePalettes,
-  dropSheets: DropSheets,
-): ImageBuffer {
+const extractDropShieldFire = (sheetId: number, tileIds: number[], paletteIdx: number, spritePalettes: SpritePalettes, dropSheets: DropSheets): ImageBuffer => {
   const sheet = dropSheets.sheets.get(sheetId)!;
   const palette = spritePalettes.palettes[paletteIdx];
   const img = new ImageBuffer(16, 16);
@@ -151,16 +102,9 @@ function extractDropShieldFire(
     img.paste(tile, pos[i][0], pos[i][1]);
   }
   return img;
-}
+};
 
-/**
- * Extract the Super Bomb follower sprite.
- */
-function extractFollowerBomb(
-  paletteIdx: number,
-  rom: RomData,
-  spritePalettes: SpritePalettes,
-): ImageBuffer {
+const extractFollowerBomb = (paletteIdx: number, rom: RomData, spritePalettes: SpritePalettes): ImageBuffer => {
   const data = decompress(kCompSpritePtrs[0x58], (addr) => rom.getByte(addr), false);
   const source = data.subarray(0x300);
   const palette = spritePalettes.palettes[paletteIdx];
@@ -173,7 +117,7 @@ function extractFollowerBomb(
     img.paste(tile, pos[i][0], pos[i][1]);
   }
   return img;
-}
+};
 
 export {
   extractDropBigkey,

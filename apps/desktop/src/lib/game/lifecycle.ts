@@ -31,10 +31,9 @@ interface MsuTrackData {
 
 let pendingMsuData: MsuTrackData[] | null = null;
 
-/** Stage MSU track data to be written to MEMFS during game start. */
-function setMsuData(data: MsuTrackData[] | null): void {
+const setMsuData = (data: MsuTrackData[] | null): void => {
   pendingMsuData = data;
-}
+};
 
 // ─── Auto-save config (set before game start, used during stop) ───
 interface AutoSaveConfig {
@@ -46,14 +45,14 @@ interface AutoSaveConfig {
 
 let activeAutoSaveConfig: AutoSaveConfig | null = null;
 
-function setAutoSaveConfig(config: AutoSaveConfig | null): void {
+const setAutoSaveConfig = (config: AutoSaveConfig | null): void => {
   activeAutoSaveConfig = config;
-}
+};
 
 let activeCrashHandler: ((e: ErrorEvent) => void) | null = null;
 let startGeneration = 0;
 
-async function resetGame(): Promise<void> {
+const resetGame = async (): Promise<void> => {
   // Save-on-quit: create auto-save before teardown
   if (activeAutoSaveConfig?.saveOnQuit) {
     try {
@@ -106,14 +105,9 @@ async function resetGame(): Promise<void> {
   setProfileId(null);
   (window as any).__zelda3Module = null;
   setState({ status: 'idle', error: null });
-}
+};
 
-async function startGame(
-  canvas: HTMLCanvasElement,
-  assetData: Uint8Array,
-  configIni?: string,
-  profileId?: string,
-): Promise<void> {
+const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, configIni?: string, profileId?: string): Promise<void> => {
   const { getGameState } = await import('./wasm-bridge');
   const currentState = getGameState();
 
@@ -240,7 +234,7 @@ async function startGame(
     setState({ status: 'error', error: msg });
     window.removeEventListener('error', onWasmCrash);
   }
-}
+};
 
 export { resetGame, setAutoSaveConfig, setMsuData, startGame };
 export type { AutoSaveConfig, MsuTrackData };

@@ -19,7 +19,7 @@ const TrackerInventory = (props: TrackerInventoryProps) => {
 
 // ─── Default view (categorized) ───
 
-function DefaultInventory({ inventory }: { inventory: Set<string> }) {
+const DefaultInventory = ({ inventory }: { inventory: Set<string> }) => {
   return (
     <div className="tracker-inventory">
       {INVENTORY_LAYOUT.map((category) => (
@@ -27,9 +27,9 @@ function DefaultInventory({ inventory }: { inventory: Set<string> }) {
       ))}
     </div>
   );
-}
+};
 
-function TrackerInventoryCategory({ category, inventory }: { category: InventoryCategory; inventory: Set<string> }) {
+const TrackerInventoryCategory = ({ category, inventory }: { category: InventoryCategory; inventory: Set<string> }) => {
   return (
     <div className="tracker-inventory__category">
       <span className="tracker-inventory__category-label">{category.label}</span>
@@ -40,11 +40,11 @@ function TrackerInventoryCategory({ category, inventory }: { category: Inventory
       </div>
     </div>
   );
-}
+};
 
 // ─── In-game view (matches SNES pause screen layout) ───
 
-function IngameInventory({ inventory }: { inventory: Set<string> }) {
+const IngameInventory = ({ inventory }: { inventory: Set<string> }) => {
   return (
     <div className="tracker-inventory tracker-inventory--ingame">
       <div className="tracker-inventory__ingame-main">
@@ -68,11 +68,11 @@ function IngameInventory({ inventory }: { inventory: Set<string> }) {
       </div>
     </div>
   );
-}
+};
 
 // ─── Compact view (flat grid, upgrades broken down) ───
 
-function CompactInventory({ inventory }: { inventory: Set<string> }) {
+const CompactInventory = ({ inventory }: { inventory: Set<string> }) => {
   return (
     <div className="tracker-inventory tracker-inventory--compact">
       <div className="tracker-inventory__grid tracker-inventory__grid--compact">
@@ -82,11 +82,11 @@ function CompactInventory({ inventory }: { inventory: Set<string> }) {
       </div>
     </div>
   );
-}
+};
 
 // ─── Shared slot renderer ───
 
-function TrackerInventorySlot({ slot, inventory }: { slot: InventorySlot; inventory: Set<string> }) {
+const TrackerInventorySlot = ({ slot, inventory }: { slot: InventorySlot; inventory: Set<string> }) => {
   const { obtained, sprite } = resolveItemSprite(slot, inventory);
   return (
     <div className={`tracker-inventory__slot ${obtained ? 'tracker-inventory__slot--obtained' : 'tracker-inventory__slot--missing'}`}>
@@ -99,6 +99,6 @@ function TrackerInventorySlot({ slot, inventory }: { slot: InventorySlot; invent
       <span className="tracker-inventory__name">{slot.displayName}</span>
     </div>
   );
-}
+};
 
 export { TrackerInventory };

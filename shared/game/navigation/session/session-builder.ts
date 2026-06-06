@@ -60,11 +60,7 @@ interface SessionBuilderInput {
   isCheckCompleted: (checkName: string) => boolean;
 }
 
-/**
- * Build a flood fill session: gather all necessary data for BFS execution.
- * Pure function — no side effects, no state mutations.
- */
-function buildFloodFillSession(input: SessionBuilderInput): FloodFillSession | null {
+const buildFloodFillSession = (input: SessionBuilderInput): FloodFillSession | null => {
   const { isIndoors, primaryScreenIndex, wasm, items, isCheckCompleted } = input;
 
   const vp = wasm.getViewportInfo();
@@ -218,11 +214,11 @@ function buildFloodFillSession(input: SessionBuilderInput): FloodFillSession | n
     blockerWorldPoints,
     items,
   };
-}
+};
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function uint8ToGrid(raw: Uint8Array): number[][] {
+const uint8ToGrid = (raw: Uint8Array): number[][] => {
   const grid: number[][] = new Array(64);
   for (let r = 0; r < 64; r++) {
     grid[r] = new Array(64);
@@ -231,9 +227,9 @@ function uint8ToGrid(raw: Uint8Array): number[][] {
     }
   }
   return grid;
-}
+};
 
-function computeBigScreenGroupFromHeads(heads: number[] | null, screenIndex: number): number[] {
+const computeBigScreenGroupFromHeads = (heads: number[] | null, screenIndex: number): number[] => {
   if (!heads) return [screenIndex];
   const myHead = heads[screenIndex];
   if (myHead === undefined) return [screenIndex];
@@ -242,7 +238,7 @@ function computeBigScreenGroupFromHeads(heads: number[] | null, screenIndex: num
     if (heads[i] === myHead) group.push(i);
   }
   return group.length > 0 ? group : [screenIndex];
-}
+};
 
 export { buildFloodFillSession };
 export type { FloodFillSession, SessionBuilderInput };

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useShadowEditorStore } from '../../../../../stores/shadow-editor-store';
 import './HeightLevelEditor.css';
 
-function HeightLevelEditor() {
+const HeightLevelEditor = () => {
   const { heightLevels, addHeightLevel, removeHeightLevel, updateHeightLevel } = useShadowEditorStore();
   const [newLabel, setNewLabel] = useState('');
   const [newValue, setNewValue] = useState('0.5');
@@ -81,6 +81,6 @@ function HeightLevelEditor() {
       </div>
     </div>
   );
-}
+};
 
 export { HeightLevelEditor };

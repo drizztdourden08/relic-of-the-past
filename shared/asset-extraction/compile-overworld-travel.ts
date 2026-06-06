@@ -5,7 +5,7 @@ import type { RomData } from './rom/rom-types';
 import type { AssetBuilder } from './asset-builder';
 import type { OverworldContext } from './compile-overworld-utils';
 
-function buildOverworldTravel(rom: RomData, A: AssetBuilder, ctx: OverworldContext): void {
+const buildOverworldTravel = (rom: RomData, A: AssetBuilder, ctx: OverworldContext): void => {
   const { isAreaHead } = ctx;
 
   const travelScreenIdx = new Array(17).fill(0);
@@ -77,6 +77,6 @@ function buildOverworldTravel(rom: RomData, A: AssetBuilder, ctx: OverworldConte
   A.addInt8('kBirdTravel_Unk1', travelUnk1);
   A.addInt8('kBirdTravel_Unk3', travelUnk3);
   A.addUint16('kWhirlpoolAreas', whirlpoolAreas);
-}
+};
 
 export { buildOverworldTravel };

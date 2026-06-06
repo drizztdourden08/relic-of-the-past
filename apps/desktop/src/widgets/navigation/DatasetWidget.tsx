@@ -27,7 +27,7 @@ const STATUS_BTNS: { key: ReviewStatus; label: string; color: string }[] = [
   { key: 'yellow', label: '⚠', color: '#fc4' },
 ];
 
-function DatasetWidgetContent() {
+const DatasetWidgetContent = () => {
   const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex } = useGameUIStore(s => s.map);
 
   const [reviewData, setReviewData] = useState<ReviewData>({});
@@ -216,11 +216,11 @@ function DatasetWidgetContent() {
       />
     </div>
   );
-}
+};
 
 // ─── StatusRow ─────────────────────────────────────────────────────────
 
-function StatusRow({ status, comment, onStatus, onComment }: { status: ReviewStatus; comment?: string; onStatus: (s: ReviewStatus) => void; onComment: (c: string) => void }) {
+const StatusRow = ({ status, comment, onStatus, onComment }: { status: ReviewStatus; comment?: string; onStatus: (s: ReviewStatus) => void; onComment: (c: string) => void }) => {
   return (
     <div>
       <div style={S.statusRow}>
@@ -235,7 +235,7 @@ function StatusRow({ status, comment, onStatus, onComment }: { status: ReviewSta
       )}
     </div>
   );
-}
+};
 
 // ─── Styles ────────────────────────────────────────────────────────────
 

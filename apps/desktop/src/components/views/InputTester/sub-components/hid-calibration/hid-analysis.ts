@@ -11,7 +11,7 @@ const popcount = (n: number) => {
   return c;
 };
 
-function findButtonBits(bl: Uint8Array, pressed: Uint8Array, excluded: Set<number>): ButtonDiff[] {
+const findButtonBits = (bl: Uint8Array, pressed: Uint8Array, excluded: Set<number>): ButtonDiff[] => {
   const out: ButtonDiff[] = [];
   for (let i = 0; i < Math.min(bl.length, pressed.length); i++) {
     if (excluded.has(i)) continue;
@@ -22,9 +22,9 @@ function findButtonBits(bl: Uint8Array, pressed: Uint8Array, excluded: Set<numbe
     out.push({ byteIndex: i, bitMask: xor, analog: isAnalog, restValue: bl[i], pressedValue: pressed[i] });
   }
   return out;
-}
+};
 
-function findAxisBytes(bl: Uint8Array, s: Uint8Array, excluded: Set<number>, minDelta = 30) {
+const findAxisBytes = (bl: Uint8Array, s: Uint8Array, excluded: Set<number>, minDelta = 30) => {
   const out: { byteIndex: number; baseVal: number; sampleVal: number }[] = [];
   for (let i = 0; i < Math.min(bl.length, s.length); i++) {
     if (excluded.has(i)) continue;
@@ -33,9 +33,9 @@ function findAxisBytes(bl: Uint8Array, s: Uint8Array, excluded: Set<number>, min
     }
   }
   return out;
-}
+};
 
-function findCounterBytes(reports: Uint8Array[]): Set<number> {
+const findCounterBytes = (reports: Uint8Array[]): Set<number> => {
   const counters = new Set<number>();
   if (reports.length < 10) return counters;
   const len = reports[0].length;
@@ -55,7 +55,7 @@ function findCounterBytes(reports: Uint8Array[]): Set<number> {
     }
   }
   return counters;
-}
+};
 
 const hex = (b: number) => b.toString(16).padStart(2, '0');
 

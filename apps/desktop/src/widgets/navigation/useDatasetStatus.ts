@@ -29,10 +29,7 @@ interface DataCorrection {
   suggestedValue: unknown;
 }
 
-function useScreenDataStatus(
-  matchResult: ScreenMatchResult | null,
-  isIndoors: boolean,
-): ScreenDataStatusResult {
+const useScreenDataStatus = (matchResult: ScreenMatchResult | null, isIndoors: boolean): ScreenDataStatusResult => {
   return useMemo(() => {
     if (!matchResult) {
       return { status: 'missing', screen: null, issues: ['No screen definition for this room'], corrections: [] };
@@ -79,7 +76,7 @@ function useScreenDataStatus(
       corrections,
     };
   }, [matchResult, isIndoors]);
-}
+};
 
 // ─── Connection Status ───
 
@@ -99,12 +96,7 @@ interface ConnectionStatusResult {
   unmatched: DetectedConnection[];
 }
 
-function useConnectionStatus(
-  screenId: string | null,
-  detectedEntranceScreens: number[],
-  detectedStairs: RoomStairInfo[],
-  exitScreen: number | null,
-): ConnectionStatusResult {
+const useConnectionStatus = (screenId: string | null, detectedEntranceScreens: number[], detectedStairs: RoomStairInfo[], exitScreen: number | null): ConnectionStatusResult => {
   return useMemo(() => {
     if (!screenId) {
       return {
@@ -182,7 +174,7 @@ function useConnectionStatus(
 
     return { status, missingCount, existingConnections: existing, detectedConnections: detected, unmatched };
   }, [screenId, detectedEntranceScreens, detectedStairs, exitScreen]);
-}
+};
 
 export { useScreenDataStatus, useConnectionStatus };
 export type { ScreenDataStatus, ScreenDataStatusResult, ConnectionStatus, ConnectionStatusResult, DetectedConnection, DataCorrection };

@@ -29,9 +29,9 @@ const GAMEPAD_USAGES = new Set([
   0x08, // Multi-axis Controller
 ]);
 
-function toHex4(n: number): string {
+const toHex4 = (n: number): string => {
   return n.toString(16).padStart(4, '0');
-}
+};
 
 interface OpenDevice {
   hid: HID.HID;

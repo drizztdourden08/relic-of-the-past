@@ -158,20 +158,20 @@ export type { TagMetadata, TagNamespace };
 
 // ─── Utility: query screens by tags ───
 
-function hasAllTags(screenTags: readonly ScreenTag[], required: ScreenTag[]): boolean {
-  return required.every(t => screenTags.includes(t));
-}
+const hasAllTags = (screenTags: readonly ScreenTag[], required: ScreenTag[]): boolean => {
+      return required.every(t => screenTags.includes(t));
+    };
 
-function hasAnyTag(screenTags: readonly ScreenTag[], candidates: ScreenTag[]): boolean {
+const hasAnyTag = (screenTags: readonly ScreenTag[], candidates: ScreenTag[]): boolean => {
   return candidates.some(t => screenTags.includes(t));
-}
+};
 
-function getTagNamespace(tag: ScreenTag): string {
+const getTagNamespace = (tag: ScreenTag): string => {
   return tag.split(':')[0];
-}
+};
 
-function getTagValue(tag: ScreenTag): string {
+const getTagValue = (tag: ScreenTag): string => {
   return tag.split(':')[1];
-}
+};
 
 export { getTagNamespace, getTagValue, hasAllTags, hasAnyTag };

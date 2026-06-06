@@ -3,7 +3,7 @@ import { is } from '@electron-toolkit/utils';
 import type { ShadowCastingProject } from '../../../../shared/types/shadow-casting';
 import { loadShadowProject, saveShadowProject, getScreenData } from './store';
 
-function registerShadowCastingHandlers(): void {
+const registerShadowCastingHandlers = (): void => {
   ipcMain.handle('shadow-casting:load', async () => {
     return await loadShadowProject();
   });
@@ -19,6 +19,6 @@ function registerShadowCastingHandlers(): void {
   ipcMain.handle('shadow-casting:get-screen', async (_event, screenId: number) => {
     return await getScreenData(screenId);
   });
-}
+};
 
 export { registerShadowCastingHandlers };

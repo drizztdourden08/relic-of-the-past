@@ -26,7 +26,7 @@ interface TileTooltipContentProps {
   result: FloodFillResult;
 }
 
-function TileTooltipContent({ tooltip, result }: TileTooltipContentProps) {
+const TileTooltipContent = ({ tooltip, result }: TileTooltipContentProps) => {
   const ctx0 = result.tileContext ?? 'overworld';
   const mode = getLayerDisplayMode(result);
 
@@ -83,9 +83,9 @@ function TileTooltipContent({ tooltip, result }: TileTooltipContentProps) {
       ))}
     </div>
   );
-}
+};
 
-function renderDualLayer(tooltip: TooltipData, ctx0: TileAttrContext) {
+const renderDualLayer = (tooltip: TooltipData, ctx0: TileAttrContext) => {
   const a0 = tooltip.layer0Attr!;
   const a1 = tooltip.layer1Attr ?? 0;
   const l0HasContent = a0 !== 0x00 || !!tooltip.layer0Reach;
@@ -123,9 +123,9 @@ function renderDualLayer(tooltip: TooltipData, ctx0: TileAttrContext) {
       </div>
     </div>
   );
-}
+};
 
-function renderLockedLayer(tooltip: TooltipData, ctx0: TileAttrContext, result: FloodFillResult) {
+const renderLockedLayer = (tooltip: TooltipData, ctx0: TileAttrContext, result: FloodFillResult) => {
   const lockedLayer = getLockedLayer(result);
   const attr = lockedLayer === 0 ? (tooltip.layer0Attr ?? tooltip.attr) : (tooltip.layer1Attr ?? tooltip.attr);
   const reach = lockedLayer === 0 ? tooltip.layer0Reach : tooltip.layer1Reach;
@@ -149,9 +149,9 @@ function renderLockedLayer(tooltip: TooltipData, ctx0: TileAttrContext, result: 
       </div>
     </div>
   );
-}
+};
 
-function renderSingleLayer(tooltip: TooltipData) {
+const renderSingleLayer = (tooltip: TooltipData) => {
   return (
     <>
       <div style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
@@ -173,7 +173,7 @@ function renderSingleLayer(tooltip: TooltipData) {
       </div>
     </>
   );
-}
+};
 
 export { TileTooltipContent };
 export type { TooltipData };

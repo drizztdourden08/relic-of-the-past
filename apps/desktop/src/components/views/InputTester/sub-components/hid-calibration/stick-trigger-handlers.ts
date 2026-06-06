@@ -28,13 +28,7 @@ interface StickFinalizeCallbacks {
   setGyroExcluded: (s: Set<number>) => void;
 }
 
-function finalizeStickCalibration(
-  c1: StickCandidate,
-  c2: StickCandidate | null,
-  refs: StickFinalizeRefs,
-  gyroExcluded: Set<number>,
-  cb: StickFinalizeCallbacks,
-): void {
+const finalizeStickCalibration = (c1: StickCandidate, c2: StickCandidate | null, refs: StickFinalizeRefs, gyroExcluded: Set<number>, cb: StickFinalizeCallbacks): void => {
   const side = refs.activeStickRef.current ?? 'left';
   const label = side === 'left' ? 'LEFT' : 'RIGHT';
   const xId = side === 'left' ? 'leftX' : 'rightX';
@@ -103,21 +97,16 @@ function finalizeStickCalibration(
   cb.setStickLiveInfo('');
   cb.addLog(`${label} stick calibration done.`);
   cb.updateByteStatuses(mins.length);
-}
+};
 
 // ── Stick Reset ─────────────────────────────────────────────────────────────
 
-function resetStick(
-  side: StickSide,
-  refs: Pick<StickFinalizeRefs, 'excludedRef' | 'capturedStickBytesRef' | 'leftStickBytesRef' | 'rightStickBytesRef' | 'activeStickRef'>,
-  latestBytesLen: number,
-  cb: Pick<StickFinalizeCallbacks, 'addLog' | 'updateByteStatuses' | 'setItems' | 'setActiveStick' | 'setStickBusy' | 'setGyroExcluded'> & {
+const resetStick = (side: StickSide, refs: Pick<StickFinalizeRefs, 'excludedRef' | 'capturedStickBytesRef' | 'leftStickBytesRef' | 'rightStickBytesRef' | 'activeStickRef'>, latestBytesLen: number, cb: Pick<StickFinalizeCallbacks, 'addLog' | 'updateByteStatuses' | 'setItems' | 'setActiveStick' | 'setStickBusy' | 'setGyroExcluded'> & {
     setStickPickMode: (v: boolean) => void;
     setStickPickedBytes: (v: number[]) => void;
     setStickLiveInfo: (s: string) => void;
     stickRecordingRef: React.MutableRefObject<boolean>;
-  },
-): void {
+  }): void => {
   const label = side === 'left' ? 'LEFT' : 'RIGHT';
   const xId = side === 'left' ? 'leftX' : 'rightX';
   const yId = side === 'left' ? 'leftY' : 'rightY';
@@ -140,7 +129,7 @@ function resetStick(
   refs.activeStickRef.current = null;
   if (latestBytesLen > 0) cb.updateByteStatuses(latestBytesLen);
   cb.addLog(`${label} stick reset — ready to redo.`);
-}
+};
 
 // ── Trigger Finalization ────────────────────────────────────────────────────
 
@@ -163,11 +152,7 @@ interface TriggerFinalizeCallbacks {
   setGyroExcluded: (s: Set<number>) => void;
 }
 
-function finalizeTriggerCalibration(
-  c: StickCandidate,
-  refs: TriggerFinalizeRefs,
-  cb: TriggerFinalizeCallbacks,
-): void {
+const finalizeTriggerCalibration = (c: StickCandidate, refs: TriggerFinalizeRefs, cb: TriggerFinalizeCallbacks): void => {
   const side = refs.activeTriggerRef.current ?? 'left';
   const label = side === 'left' ? 'LEFT' : 'RIGHT';
   const axisId = side === 'left' ? 'leftTrigger' : 'rightTrigger';
@@ -193,21 +178,16 @@ function finalizeTriggerCalibration(
   cb.setTriggerLiveInfo('');
   cb.addLog(`${label} trigger calibration done.`);
   cb.updateByteStatuses(refs.baselineRef.current.length);
-}
+};
 
 // ── Trigger Reset ───────────────────────────────────────────────────────────
 
-function resetTrigger(
-  side: TriggerSide,
-  refs: Pick<TriggerFinalizeRefs, 'excludedRef' | 'capturedTriggerBytesRef' | 'leftTriggerByteRef' | 'rightTriggerByteRef' | 'activeTriggerRef'>,
-  latestBytesLen: number,
-  cb: Pick<TriggerFinalizeCallbacks, 'addLog' | 'updateByteStatuses' | 'setItems' | 'setActiveTrigger' | 'setTriggerBusy' | 'setGyroExcluded'> & {
+const resetTrigger = (side: TriggerSide, refs: Pick<TriggerFinalizeRefs, 'excludedRef' | 'capturedTriggerBytesRef' | 'leftTriggerByteRef' | 'rightTriggerByteRef' | 'activeTriggerRef'>, latestBytesLen: number, cb: Pick<TriggerFinalizeCallbacks, 'addLog' | 'updateByteStatuses' | 'setItems' | 'setActiveTrigger' | 'setTriggerBusy' | 'setGyroExcluded'> & {
     setTriggerPickMode: (v: boolean) => void;
     setTriggerPickedByte: (v: number | null) => void;
     setTriggerLiveInfo: (s: string) => void;
     triggerRecordingRef: React.MutableRefObject<boolean>;
-  },
-): void {
+  }): void => {
   const label = side === 'left' ? 'LEFT' : 'RIGHT';
   const axisId = side === 'left' ? 'leftTrigger' : 'rightTrigger';
   const prevByte = side === 'left' ? refs.leftTriggerByteRef.current : refs.rightTriggerByteRef.current;
@@ -230,7 +210,7 @@ function resetTrigger(
   refs.activeTriggerRef.current = null;
   if (latestBytesLen > 0) cb.updateByteStatuses(latestBytesLen);
   cb.addLog(`${label} trigger reset — ready to redo.`);
-}
+};
 
 export { finalizeStickCalibration, resetStick, finalizeTriggerCalibration, resetTrigger };
 export type { StickFinalizeRefs, StickFinalizeCallbacks, TriggerFinalizeRefs, TriggerFinalizeCallbacks };

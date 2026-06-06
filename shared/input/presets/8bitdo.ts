@@ -29,9 +29,9 @@ const ICONS: Record<string, ButtonIcon> = {
   '8bitdo-star':   icon('8bitdo-star', 'Star'),
 };
 
-function btn(snesButton: ButtonMapping['snesButton'], index: number, iconData: ButtonIcon | null): ButtonMapping {
+const btn = (snesButton: ButtonMapping['snesButton'], index: number, iconData: ButtonIcon | null): ButtonMapping => {
   return { snesButton, binding: { type: 'gamepad-button', index }, icon: iconData };
-}
+};
 
 const DEFAULT_MAPPINGS: ButtonMapping[] = [
   btn('B',      0,  ICONS['8bitdo-b']),

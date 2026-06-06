@@ -7,9 +7,9 @@ import { hitTestGizmo, renderGizmo, buildGizmoContext, getGizmoCursor } from './
 import type { GizmoPart } from './shadow-editor/gizmos';
 
 let nextId = 1;
-function genId(prefix: string): string {
+const genId = (prefix: string): string => {
   return `${prefix}_${Date.now()}_${nextId++}`;
-}
+};
 
 interface Props {
   width: number;
@@ -17,12 +17,7 @@ interface Props {
   gameRunning: boolean;
 }
 
-/**
- * World-space canvas overlay for the shadow editor.
- * Uses the same viewport projection as NavigationOverlay — game controls move the camera,
- * and all elements are positioned in world coordinates.
- */
-function ShadowEditorOverlay({ width, height, gameRunning }: Props) {
+const ShadowEditorOverlay = ({ width, height, gameRunning }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
   const vpRef = useRef<ReturnType<typeof wasmGetViewportInfo>>(null);
@@ -968,6 +963,6 @@ function ShadowEditorOverlay({ width, height, gameRunning }: Props) {
       }}
     />
   );
-}
+};
 
 export { ShadowEditorOverlay };

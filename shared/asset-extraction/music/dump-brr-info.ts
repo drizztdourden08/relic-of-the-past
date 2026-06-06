@@ -7,7 +7,7 @@ import type { SoundBankContext } from './sound-bank-context';
 
 const kDupSamples: Record<number, number> = { 10: 9, 20: 19 };
 
-function addSustainDecay(ctx: SoundBankContext, ea: number, info: Record<string, number>): void {
+const addSustainDecay = (ctx: SoundBankContext, ea: number, info: Record<string, number>): void => {
   const adsr1 = ctx.getByte(ea) ?? 0;
   const adsr2 = ctx.getByte(ea + 1) ?? 0;
   const gain = ctx.getByte(ea + 2) ?? 0;
@@ -16,9 +16,9 @@ function addSustainDecay(ctx: SoundBankContext, ea: number, info: Record<string,
   info.sustain_level = adsr2 >> 5;
   info.sustain_rate = adsr2 & 0x1f;
   info.vxgain = gain;
-}
+};
 
-function dumpBrrAndInfo(ctx: SoundBankContext): { brr: Buffer[]; pcm: Buffer[]; infoYaml: string } {
+const dumpBrrAndInfo = (ctx: SoundBankContext): { brr: Buffer[]; pcm: Buffer[]; infoYaml: string } => {
   const brr: Buffer[] = [];
   const pcm: Buffer[] = [];
 
@@ -89,6 +89,6 @@ function dumpBrrAndInfo(ctx: SoundBankContext): { brr: Buffer[]; pcm: Buffer[]; 
 
   const infoYaml = yaml.dump(musicInfo, { flowLevel: -1, sortKeys: false });
   return { brr, pcm, infoYaml };
-}
+};
 
 export { dumpBrrAndInfo };

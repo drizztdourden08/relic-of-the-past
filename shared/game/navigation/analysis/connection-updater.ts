@@ -19,10 +19,7 @@ interface ConnectionNavUpdate {
   nav: ConnectionNavData;
 }
 
-/**
- * Derive ConnectionTransitType from connection tags.
- */
-function transitTypeFromTags(tags: readonly ConnectionTag[]): ConnectionTransitType {
+const transitTypeFromTags = (tags: readonly ConnectionTag[]): ConnectionTransitType => {
   for (const tag of tags) {
     if (tag.startsWith('transit:')) {
       const t = tag.slice(8);
@@ -47,12 +44,9 @@ function transitTypeFromTags(tags: readonly ConnectionTag[]): ConnectionTransitT
     }
   }
   return 'walk';
-}
+};
 
-/**
- * Derive requirements from barrier tags.
- */
-function requirementsFromTags(tags: readonly ConnectionTag[]): RequirementSet {
+const requirementsFromTags = (tags: readonly ConnectionTag[]): RequirementSet => {
   const reqs: string[] = [];
   for (const tag of tags) {
     if (!tag.startsWith('barrier:') || tag === 'barrier:none') continue;
@@ -72,12 +66,9 @@ function requirementsFromTags(tags: readonly ConnectionTag[]): RequirementSet {
     if (req) reqs.push(req);
   }
   return reqs.length > 0 ? [reqs as TraversalRequirement[]] : [];
-}
+};
 
-/**
- * Check if connection is bidirectional from tags.
- */
-function isBidirectional(tags: readonly ConnectionTag[]): boolean {
+const isBidirectional = (tags: readonly ConnectionTag[]): boolean => {
   for (const tag of tags) {
     if (tag === 'dir:one-way') return false;
     if (tag === 'dir:two-way') return true;
@@ -87,7 +78,7 @@ function isBidirectional(tags: readonly ConnectionTag[]): boolean {
     if (tag === 'transit:hole' || tag === 'transit:ledge') return false;
   }
   return true;
-}
+};
 
 interface ConnectionUpdaterInput {
   connections: ScreenConnection[];
@@ -101,10 +92,7 @@ interface ConnectionUpdaterInput {
   screenIndexMap: Map<string, number>;
 }
 
-/**
- * Build connection nav updates from analysis results.
- */
-function buildConnectionNavUpdates(input: ConnectionUpdaterInput): ConnectionNavUpdate[] {
+const buildConnectionNavUpdates = (input: ConnectionUpdaterInput): ConnectionNavUpdate[] => {
   const { connections, borderBundles, overlapByKey, resolvedEntrances, screenIndexMap } = input;
   const updates: ConnectionNavUpdate[] = [];
 
@@ -169,9 +157,9 @@ function buildConnectionNavUpdates(input: ConnectionUpdaterInput): ConnectionNav
   }
 
   return updates;
-}
+};
 
-function bundleToConnectionPoint(bundle: BorderBundle): ConnectionPointData {
+const bundleToConnectionPoint = (bundle: BorderBundle): ConnectionPointData => {
   return {
     id: bundle.id,
     direction: bundle.direction,
@@ -179,15 +167,9 @@ function bundleToConnectionPoint(bundle: BorderBundle): ConnectionPointData {
     requirements: bundle.requirements.map(r => typeof r === 'string' ? [r] : r) as RequirementSet,
     oneWay: null,
   };
-}
+};
 
-/**
- * Write connection nav data to a JSON output file.
- */
-function writeConnectionNavData(
-  updates: ConnectionNavUpdate[],
-  outputPath: string
-): void {
+const writeConnectionNavData = (updates: ConnectionNavUpdate[], outputPath: string): void => {
   const fs = require('fs');
   const path = require('path');
   const dir = path.dirname(outputPath);
@@ -197,7 +179,7 @@ function writeConnectionNavData(
     updates.map(u => [`${u.from}|${u.to}`, u.nav])
   );
   fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
-}
+};
 
 export { transitTypeFromTags, buildConnectionNavUpdates, writeConnectionNavData };
 export type { ConnectionNavUpdate, ConnectionUpdaterInput };

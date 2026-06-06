@@ -24,13 +24,7 @@ interface ResolvedEntrance {
   point: ConnectionPointData;
 }
 
-/**
- * Resolve entrance positions into typed connection points.
- *
- * Each entrance becomes a ConnectionPointData with position and direction info.
- * The entrance is placed on the overworld screen at (gridRow, gridCol) in 64×64 space.
- */
-function resolveEntrances(input: EntranceResolverInput): ResolvedEntrance[] {
+const resolveEntrances = (input: EntranceResolverInput): ResolvedEntrance[] => {
   const { entrances, exitScreenByRoom } = input;
   const results: ResolvedEntrance[] = [];
 
@@ -65,7 +59,7 @@ function resolveEntrances(input: EntranceResolverInput): ResolvedEntrance[] {
   }
 
   return results;
-}
+};
 
 export { resolveEntrances };
 export type { EntranceResolverInput, ResolvedEntrance };

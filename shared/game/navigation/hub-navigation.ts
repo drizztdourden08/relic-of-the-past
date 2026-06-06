@@ -10,25 +10,25 @@ type AdjacencyList = Map<string, string[]>;
 let cachedFullAdj: AdjacencyList | null = null;
 let cachedPreciseAdj: AdjacencyList | null = null;
 
-function getFullAdjacencyList(options: PathfindingOptions = {}): AdjacencyList {
+const getFullAdjacencyList = (options: PathfindingOptions = {}): AdjacencyList => {
   if (!options.allowGlitches && cachedFullAdj) return cachedFullAdj;
   const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
   const adj = buildAdjacencyList(allConnections, options);
   if (!options.allowGlitches) cachedFullAdj = adj;
   return adj;
-}
+};
 
-function getPreciseAdjacencyList(options: PathfindingOptions = {}): AdjacencyList {
+const getPreciseAdjacencyList = (options: PathfindingOptions = {}): AdjacencyList => {
   if (!options.allowGlitches && cachedPreciseAdj) return cachedPreciseAdj;
   const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
   const adj = buildPreciseAdjacencyList(allConnections, options);
   if (!options.allowGlitches) cachedPreciseAdj = adj;
   return adj;
-}
+};
 
 // ─── Graph Construction ──────────────────────────────────────────────────────
 
-function buildAdjacencyList(connections: ScreenConnection[], options: PathfindingOptions = {}): AdjacencyList {
+const buildAdjacencyList = (connections: ScreenConnection[], options: PathfindingOptions = {}): AdjacencyList => {
   const { allowGlitches = false } = options;
   const adj: AdjacencyList = new Map();
 
@@ -49,24 +49,20 @@ function buildAdjacencyList(connections: ScreenConnection[], options: Pathfindin
   }
 
   return adj;
-}
+};
 
 // ─── Logical Area Filtering ──────────────────────────────────────────────────
 
 const SCREEN_PATTERN = /^(lw|dw)-[0-9a-f]{2}$/;
 
-function isLogicalArea(id: string): boolean {
+const isLogicalArea = (id: string): boolean => {
   if (SCREEN_PATTERN.test(id)) return false;
   const screen = SCREEN_BY_ID.get(id);
   if (!screen) return false;
   return screen.type === 'overworld';
-}
+};
 
-/**
- * Build adjacency list with logical area hubs eliminated.
- * Bridges physical neighbors directly (screen↔interior only).
- */
-function buildPreciseAdjacencyList(connections: ScreenConnection[], options: PathfindingOptions = {}): AdjacencyList {
+const buildPreciseAdjacencyList = (connections: ScreenConnection[], options: PathfindingOptions = {}): AdjacencyList => {
   const fullAdj = buildAdjacencyList(connections, options);
   const logicalAreas = new Set<string>();
   for (const [id] of fullAdj) {
@@ -111,11 +107,11 @@ function buildPreciseAdjacencyList(connections: ScreenConnection[], options: Pat
   }
 
   return adj;
-}
+};
 
 // ─── BFS Pathfinding ─────────────────────────────────────────────────────────
 
-function bfsPath(adj: AdjacencyList, sourceId: string, targetId: string): NavigationResult {
+const bfsPath = (adj: AdjacencyList, sourceId: string, targetId: string): NavigationResult => {
   const totalNodes = adj.size;
   const totalEdges = [...adj.values()].reduce((s, e) => s + e.length, 0);
 
@@ -160,30 +156,21 @@ function bfsPath(adj: AdjacencyList, sourceId: string, targetId: string): Naviga
   }
 
   return { found: false, path: [], distance: -1, visited: visited.size, totalNodes, totalEdges };
-}
+};
 
 // ─── Public API ──────────────────────────────────────────────────────────────
 
-/**
- * Hub-level BFS shortest path (allows logical area shortcuts).
- * Entry point #4: screen-graph navigation.
- */
-function findShortestPath(sourceId: string, targetId: string, options: PathfindingOptions = {}): NavigationResult {
+const findShortestPath = (sourceId: string, targetId: string, options: PathfindingOptions = {}): NavigationResult => {
   const adj = getFullAdjacencyList(options);
   return bfsPath(adj, sourceId, targetId);
-}
+};
 
-/**
- * Precise BFS shortest path through physical locations only.
- * Logical area hubs are eliminated, forcing screen-by-screen routing.
- */
-function findPrecisePath(sourceId: string, targetId: string, options: PathfindingOptions = {}): NavigationResult {
+const findPrecisePath = (sourceId: string, targetId: string, options: PathfindingOptions = {}): NavigationResult => {
   const adj = getPreciseAdjacencyList(options);
   return bfsPath(adj, sourceId, targetId);
-}
+};
 
-/** Find all screens unreachable from source (disconnected nodes). */
-function findUnreachableScreens(sourceId: string = 'menu'): { id: string; name: string; type: string }[] {
+const findUnreachableScreens = (sourceId: string = 'menu'): { id: string; name: string; type: string }[] => {
   const adj = getFullAdjacencyList();
 
   const visited = new Set<string>();
@@ -204,10 +191,9 @@ function findUnreachableScreens(sourceId: string = 'menu'): { id: string; name: 
     if (!visited.has(id)) unreachable.push({ id, name: screen.name, type: screen.type });
   }
   return unreachable;
-}
+};
 
-/** Get graph statistics for debugging. */
-function getGraphStats() {
+const getGraphStats = () => {
   const adj = getFullAdjacencyList();
   const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
 
@@ -234,6 +220,6 @@ function getGraphStats() {
     entryOnlyNodes: entryOnly,
     orphanedScreens: [...SCREEN_BY_ID.keys()].filter(id => !adj.has(id)),
   };
-}
+};
 
 export { findShortestPath, findPrecisePath, findUnreachableScreens, getGraphStats };

@@ -2,11 +2,7 @@ import type { TilePassability, CollisionGrid } from '../types';
 import { classifyTileAttr } from '../tile-classification';
 import type { TileAttrContext } from '../tile-attrs';
 
-/** Build a 64x64 collision grid directly from raw attr bytes. */
-function buildCollisionGridFromRawAttr(
-  rawAttr: number[][],
-  context: TileAttrContext = 'overworld',
-): CollisionGrid {
+const buildCollisionGridFromRawAttr = (rawAttr: number[][], context: TileAttrContext = 'overworld'): CollisionGrid => {
   const tiles: TilePassability[][] = [];
   const outAttr: number[][] = [];
 
@@ -21,6 +17,6 @@ function buildCollisionGridFromRawAttr(
   }
 
   return { tiles, rawAttr: outAttr };
-}
+};
 
 export { buildCollisionGridFromRawAttr };

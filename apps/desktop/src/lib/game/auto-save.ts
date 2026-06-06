@@ -9,7 +9,7 @@ import { getModule, getProfileId } from './wasm-bridge';
 let autoSaveInterval: ReturnType<typeof setInterval> | null = null;
 let autoSaveSlot = 99; // Dedicated MEMFS slot for auto-save (not user-visible)
 
-function captureScreenshot(): Promise<ArrayBuffer | undefined> {
+const captureScreenshot = (): Promise<ArrayBuffer | undefined> => {
   const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
   if (!canvas) return Promise.resolve(undefined);
   return new Promise((resolve) => {
@@ -25,9 +25,9 @@ function captureScreenshot(): Promise<ArrayBuffer | undefined> {
       resolve(undefined);
     }
   });
-}
+};
 
-async function performAutoSave(trigger: 'timer' | 'quit'): Promise<boolean> {
+const performAutoSave = async (trigger: 'timer' | 'quit'): Promise<boolean> => {
   const mod = getModule();
   const profileId = getProfileId();
   if (!mod || !profileId) return false;
@@ -63,9 +63,9 @@ async function performAutoSave(trigger: 'timer' | 'quit'): Promise<boolean> {
     log.error(`[AutoSave] EXCEPTION: ${err instanceof Error ? err.message : String(err)}`);
     return false;
   }
-}
+};
 
-async function pruneIfNeeded(maxEntries: number): Promise<void> {
+const pruneIfNeeded = async (maxEntries: number): Promise<void> => {
   const profileId = getProfileId();
   if (!profileId) return;
   try {
@@ -73,9 +73,9 @@ async function pruneIfNeeded(maxEntries: number): Promise<void> {
   } catch {
     // Best effort
   }
-}
+};
 
-function startAutoSave(intervalSeconds: number, maxEntries: number): void {
+const startAutoSave = (intervalSeconds: number, maxEntries: number): void => {
   stopAutoSave();
   const intervalMs = Math.max(60, Math.min(1800, intervalSeconds)) * 1000;
   log.app(`[AutoSave] Starting timer (interval=${intervalSeconds}s, max=${maxEntries})`);
@@ -86,17 +86,17 @@ function startAutoSave(intervalSeconds: number, maxEntries: number): void {
       await pruneIfNeeded(maxEntries);
     }
   }, intervalMs);
-}
+};
 
-function stopAutoSave(): void {
+const stopAutoSave = (): void => {
   if (autoSaveInterval) {
     clearInterval(autoSaveInterval);
     autoSaveInterval = null;
   }
-}
+};
 
-async function saveOnQuit(): Promise<boolean> {
+const saveOnQuit = async (): Promise<boolean> => {
   return performAutoSave('quit');
-}
+};
 
 export { performAutoSave, saveOnQuit, startAutoSave, stopAutoSave };

@@ -28,10 +28,7 @@ interface ScreenUpdaterInput {
   resolvedEntrances: ResolvedEntrance[];
 }
 
-/**
- * Build RegionNavData for each screen that has an inGameIndex with flood data.
- */
-function buildScreenNavUpdates(input: ScreenUpdaterInput): ScreenNavUpdate[] {
+const buildScreenNavUpdates = (input: ScreenUpdaterInput): ScreenNavUpdate[] => {
   const { regions, tileStats, floodResults, resolvedEntrances } = input;
   const updates: ScreenNavUpdate[] = [];
 
@@ -103,9 +100,9 @@ function buildScreenNavUpdates(input: ScreenUpdaterInput): ScreenNavUpdate[] {
   }
 
   return updates;
-}
+};
 
-function obstacleTypeFromAttr(attr: number): NavObstacle['type'] | null {
+const obstacleTypeFromAttr = (attr: number): NavObstacle['type'] | null => {
   // Map ROM attr bytes to obstacle types
   if (attr >= 0x50 && attr <= 0x57) return 'light_rock';  // lift.1 rocks
   if (attr >= 0x58 && attr <= 0x5F) return 'dark_rock';   // lift.2 rocks
@@ -115,15 +112,9 @@ function obstacleTypeFromAttr(attr: number): NavObstacle['type'] | null {
   if (attr === 0x62 || attr === 0x63) return 'bombable_wall';
   if (attr === 0x6C) return 'spike_floor';
   return null;
-}
+};
 
-/**
- * Write screen nav data to a JSON output file.
- */
-function writeScreenNavData(
-  updates: ScreenNavUpdate[],
-  outputPath: string
-): void {
+const writeScreenNavData = (updates: ScreenNavUpdate[], outputPath: string): void => {
   const fs = require('fs');
   const path = require('path');
   const dir = path.dirname(outputPath);
@@ -133,7 +124,7 @@ function writeScreenNavData(
     updates.map(u => [u.screenId, { screenIndex: u.screenIndex, ...u.nav }])
   );
   fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
-}
+};
 
 export { buildScreenNavUpdates, writeScreenNavData };
 export type { ScreenNavUpdate, ScreenUpdaterInput };

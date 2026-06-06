@@ -27,14 +27,7 @@ interface GlobalFloodResult {
   floodResults: Map<number, FloodFillResult>;
 }
 
-/**
- * Run flood fill across all specified screens and collect tile statistics.
- *
- * For each screen:
- *   - BFS with empty inventory → freeTileCount
- *   - BFS with full inventory → maxReachableTileCount
- */
-function runGlobalFlood(options: GlobalFloodOptions): GlobalFloodResult {
+const runGlobalFlood = (options: GlobalFloodOptions): GlobalFloodResult => {
   const { getGrid, tileContext, screenIndices } = options;
   const screens = new Map<number, Pick<RegionNavData, 'totalTiles' | 'freeTileCount' | 'maxReachableTileCount'>>();
   const floodResults = new Map<number, FloodFillResult>();
@@ -73,7 +66,7 @@ function runGlobalFlood(options: GlobalFloodOptions): GlobalFloodResult {
   }
 
   return { screens, floodResults };
-}
+};
 
 export { runGlobalFlood };
 export type { GlobalFloodOptions, GlobalFloodResult };

@@ -5,11 +5,7 @@ import type { ScreenMatchResult, VariantGameState } from '@shared/game/data/scre
 import { wasmGetProgressIndicator } from '../../../lib/game';
 import { getCompletedChecks } from '../../../lib/game/tracker';
 
-/**
- * Shared screen-detection hook used by both NavigationWidget and DatasetWidget.
- * Resolves current game state to the best matching screen definition.
- */
-function useScreenDetection(debugTick?: number): ScreenMatchResult | null {
+const useScreenDetection = (debugTick?: number): ScreenMatchResult | null => {
   const { overworldScreenIndex, roomIndex, isIndoors, palaceIndex, whichEntrance } = useGameUIStore(s => s.map);
 
   const progressInfo = wasmGetProgressIndicator();
@@ -24,6 +20,6 @@ function useScreenDetection(debugTick?: number): ScreenMatchResult | null {
     () => resolveCurrentScreenDetailed(isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance, variantState),
     [isIndoors, palaceIndex, roomIndex, overworldScreenIndex, whichEntrance, variantState],
   );
-}
+};
 
 export { useScreenDetection };

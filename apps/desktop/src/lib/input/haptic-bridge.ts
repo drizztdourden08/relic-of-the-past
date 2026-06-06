@@ -34,7 +34,7 @@ let debugMergedCount = 0;
 let debugCHookCount = 0;
 let debugLogTimer: ReturnType<typeof setInterval> | null = null;
 
-function startDebugLog(): void {
+const startDebugLog = (): void => {
   if (debugLogTimer) return;
   debugLogTimer = setInterval(() => {
     if (debugCHookCount === 0 && debugEventCount === 0) return;
@@ -44,22 +44,9 @@ function startDebugLog(): void {
     debugDispatchCount = 0;
     debugMergedCount = 0;
   }, 1000);
-}
+};
 
-/**
- * The dispatch function passed to the haptic service.
- * Prevents flooding the HID worker while ensuring every distinct event is felt.
- *
- * Strategy:
- *  - Motor OFF → send immediately
- *  - Motor ON + stronger event → interrupt (send immediately)
- *  - Motor ON + same/weaker → drop (motor is already vibrating; let it finish naturally)
- *
- * No extending — each pattern plays once and stops. The next event after
- * the motor finishes triggers a fresh send. This prevents the "lag queue" where
- * the HID worker piles up dozens of sequential patterns.
- */
-function dispatchVibration(pattern: VibrationSegment[], gapMs?: number): void {
+const dispatchVibration = (pattern: VibrationSegment[], gapMs?: number): void => {
   const now = performance.now();
   debugEventCount++;
 
@@ -89,26 +76,26 @@ function dispatchVibration(pattern: VibrationSegment[], gapMs?: number): void {
     // Motor already vibrating at this intensity — drop to prevent queue buildup
     debugMergedCount++;
   }
-}
+};
 
-function sendToController(pattern: VibrationSegment[], gapMs?: number): void {
+const sendToController = (pattern: VibrationSegment[], gapMs?: number): void => {
   const keys = webHidReader.getConnectedDeviceKeys();
   if (keys.length === 0) return;
   window.api.vibratePattern(keys[0], pattern, gapMs ?? 0);
-}
+};
 
-function scheduleDecay(ms: number): void {
+const scheduleDecay = (ms: number): void => {
   if (decayTimer !== null) clearTimeout(decayTimer);
   decayTimer = setTimeout(() => {
     activeIntensity = 0;
     activeUntil = 0;
     decayTimer = null;
   }, ms);
-}
+};
 
 // ─── Bridge Lifecycle ───
 
-function initHapticBridge(settings: HapticSettings): void {
+const initHapticBridge = (settings: HapticSettings): void => {
   if (initialized) return;
   initialized = true;
 
@@ -120,13 +107,13 @@ function initHapticBridge(settings: HapticSettings): void {
     debugCHookCount++;
     handleHapticEvent(eventType, param);
   };
-}
+};
 
-function updateHapticBridgeSettings(settings: HapticSettings): void {
+const updateHapticBridgeSettings = (settings: HapticSettings): void => {
   updateHapticSettings(settings);
-}
+};
 
-function destroyHapticBridge(): void {
+const destroyHapticBridge = (): void => {
   (window as any).__onHapticEvent = null;
   setVibrateFunction(null);
   if (decayTimer !== null) clearTimeout(decayTimer);
@@ -135,7 +122,7 @@ function destroyHapticBridge(): void {
   activeIntensity = 0;
   activeUntil = 0;
   initialized = false;
-}
+};
 
 export {
   destroyHapticBridge,

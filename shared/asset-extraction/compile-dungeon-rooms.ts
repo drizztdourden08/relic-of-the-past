@@ -4,7 +4,7 @@
 import type { RomData } from './rom/rom-types';
 import type { AssetBuilder } from './asset-builder';
 
-function buildDungeonRooms(rom: RomData, A: AssetBuilder): void {
+const buildDungeonRooms = (rom: RomData, A: AssetBuilder): void => {
   const data: number[] = [];
   const offsets = new Array(320).fill(0);
   const doorOffsets = new Array(320).fill(0);
@@ -101,10 +101,9 @@ function buildDungeonRooms(rom: RomData, A: AssetBuilder): void {
   A.addUint8('kDungeonRoomChests', chests);
   A.addUint16('kDungeonRoomTeleMsg', signTexts);
   A.addUint16('kDungeonPitsHurtPlayer', pitsHurt);
-}
+};
 
-/** Append bytes to a growing array using scan-match deduplication */
-function appendScanBytes(big: number[], little: number[]): number {
+const appendScanBytes = (big: number[], little: number[]): number => {
   for (let n = little.length; n >= 0; n--) {
     if (n === 0) {
       const offset = big.length;
@@ -124,6 +123,6 @@ function appendScanBytes(big: number[], little: number[]): number {
   const offset = big.length;
   big.push(...little);
   return offset;
-}
+};
 
 export { buildDungeonRooms };

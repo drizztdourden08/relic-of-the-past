@@ -14,11 +14,7 @@ interface GyroRefs {
   gyroBufferRef: React.MutableRefObject<Uint8Array[]>;
 }
 
-function processGyroFrame(
-  bytes: Uint8Array,
-  refs: GyroRefs,
-  onChangedUpdate: (changed: Set<number>) => void,
-): void {
+const processGyroFrame = (bytes: Uint8Array, refs: GyroRefs, onChangedUpdate: (changed: Set<number>) => void): void => {
   const len = bytes.length;
   const mins = refs.gyroMinsRef.current;
   const maxs = refs.gyroMaxsRef.current;
@@ -36,7 +32,7 @@ function processGyroFrame(
     }
     onChangedUpdate(changed);
   }
-}
+};
 
 // ── Stick Processing ────────────────────────────────────────────────────────
 
@@ -53,13 +49,7 @@ interface StickRefs {
   baselineRef: React.MutableRefObject<Uint8Array>;
 }
 
-function processStickFrame(
-  bytes: Uint8Array,
-  refs: StickRefs,
-  onLiveInfo: (info: string) => void,
-  onFinalize: (c1: StickCandidate, c2: StickCandidate | null) => void,
-  onStopRecording: () => void,
-): void {
+const processStickFrame = (bytes: Uint8Array, refs: StickRefs, onLiveInfo: (info: string) => void, onFinalize: (c1: StickCandidate, c2: StickCandidate | null) => void, onStopRecording: () => void): void => {
   const len = bytes.length;
   const mins = refs.stickMinsRef.current;
   const maxs = refs.stickMaxsRef.current;
@@ -110,7 +100,7 @@ function processStickFrame(
     onStopRecording();
     onFinalize(top2[0], top2[1]);
   }
-}
+};
 
 // ── Trigger Processing ──────────────────────────────────────────────────────
 
@@ -127,13 +117,7 @@ interface TriggerRefs {
   baselineRef: React.MutableRefObject<Uint8Array>;
 }
 
-function processTriggerFrame(
-  bytes: Uint8Array,
-  refs: TriggerRefs,
-  onLiveInfo: (info: string) => void,
-  onFinalize: (c: StickCandidate) => void,
-  onStopRecording: () => void,
-): void {
+const processTriggerFrame = (bytes: Uint8Array, refs: TriggerRefs, onLiveInfo: (info: string) => void, onFinalize: (c: StickCandidate) => void, onStopRecording: () => void): void => {
   const len = bytes.length;
   const mins = refs.triggerMinsRef.current;
   const maxs = refs.triggerMaxsRef.current;
@@ -176,6 +160,6 @@ function processTriggerFrame(
     onStopRecording();
     onFinalize(top1);
   }
-}
+};
 
 export { processGyroFrame, processStickFrame, processTriggerFrame };

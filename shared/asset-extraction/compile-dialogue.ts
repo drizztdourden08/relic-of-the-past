@@ -8,7 +8,7 @@ import { decodeStrings } from './text/dialogue-decoder';
 import { compressStrings, encodeDictionary } from './text/dialogue-encoder';
 import { usesNewFormat } from './text/language-data';
 
-function buildDialogue(rom: RomData, A: AssetBuilder): void {
+const buildDialogue = (rom: RomData, A: AssetBuilder): void => {
   const lang = 'us';
 
   // 1. Decode dialogue strings from ROM
@@ -45,6 +45,6 @@ function buildDialogue(rom: RomData, A: AssetBuilder): void {
   A.addPacked('kDialogue', [langData]);
   A.addPacked('kDialogueFont', [fontPacked]);
   A.addPacked('kDialogueMap', [mappingData]);
-}
+};
 
 export { buildDialogue };

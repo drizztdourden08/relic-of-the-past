@@ -18,7 +18,7 @@ interface BindingRowProps {
   onClear?: () => void;
 }
 
-function formatKeyCode(code: string): string {
+const formatKeyCode = (code: string): string => {
   if (code.startsWith('Key')) return code.slice(3);
   if (code.startsWith('Digit')) return code.slice(5);
   const map: Record<string, string> = {
@@ -30,16 +30,16 @@ function formatKeyCode(code: string): string {
     Tab: 'Tab', Escape: 'Esc', CapsLock: 'Caps',
   };
   return map[code] ?? code;
-}
+};
 
-function formatKeyBinding(b: KeyboardBinding): string {
+const formatKeyBinding = (b: KeyboardBinding): string => {
   const parts: string[] = [];
   if (b.modifiers?.ctrl) parts.push('Ctrl');
   if (b.modifiers?.shift) parts.push('Shift');
   if (b.modifiers?.alt) parts.push('Alt');
   parts.push(b.label ?? formatKeyCode(b.code));
   return parts.join(' + ');
-}
+};
 
 const getBindingLabel = (binding: InputBinding, icon?: ButtonIcon | null): string => {
   if (binding.type === 'none') return '—';

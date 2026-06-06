@@ -25,13 +25,7 @@ const ZELDA3_SHA1: RomHashTable = {
   '43CD3438469B2C3FE879EA2F410B3EF3CB3F1CA4': { language: 'sv', description: 'Swedish - https://www.romhacking.net/translations/982/' },
 };
 
-/**
- * Load a ROM file and return a RomData instance.
- *
- * @param path - Absolute path to the .sfc/.smc ROM file
- * @param supportMultilanguage - If true, accepts any known ROM. If false (default), US-only.
- */
-function loadRom(path: string, supportMultilanguage = false): RomData {
+const loadRom = (path: string, supportMultilanguage = false): RomData => {
   let romBytes = Buffer.from(readFileSync(path));
 
   // Strip SMC header (512 bytes) if present
@@ -69,12 +63,9 @@ function loadRom(path: string, supportMultilanguage = false): RomData {
   const description = entry!.description;
 
   return createRomData(romBytes, language, description);
-}
+};
 
-/**
- * Load ROM from a Buffer (useful when the file is already in memory, e.g. from Electron IPC).
- */
-function loadRomFromBuffer(buffer: Buffer, supportMultilanguage = false): RomData {
+const loadRomFromBuffer = (buffer: Buffer, supportMultilanguage = false): RomData => {
   let romBytes = buffer;
 
   // Strip SMC header if present
@@ -100,9 +91,9 @@ function loadRomFromBuffer(buffer: Buffer, supportMultilanguage = false): RomDat
   }
 
   return createRomData(romBytes, entry!.language, entry!.description);
-}
+};
 
-function createRomData(bytes: Buffer, language: RomLanguage, description: string): RomData {
+const createRomData = (bytes: Buffer, language: RomLanguage, description: string): RomData => {
   return {
     bytes,
     language,

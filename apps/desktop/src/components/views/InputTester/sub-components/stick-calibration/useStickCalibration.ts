@@ -17,7 +17,7 @@ interface Options {
   deviceKey?: string;
 }
 
-function useStickCalibration(options: Options) {
+const useStickCalibration = (options: Options) => {
   const { existingCalibration, target, deviceKey } = options;
   const [step, setStep] = useState<Step>('center');
   const calibrateLeft = target !== 'right';
@@ -152,6 +152,6 @@ function useStickCalibration(options: Options) {
     buildCalibration,
     goToRange, restart,
   };
-}
+};
 
 export { useStickCalibration };

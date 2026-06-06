@@ -14,7 +14,7 @@ const STEPS: { key: Step; label: string }[] = [
   { key: 'review', label: 'Review' },
 ];
 
-function StepIndicator(props: StepIndicatorProps) {
+const StepIndicator = (props: StepIndicatorProps) => {
   const { currentStep } = props;
 
   return (
@@ -39,6 +39,6 @@ function StepIndicator(props: StepIndicatorProps) {
       ))}
     </div>
   );
-}
+};
 
 export { StepIndicator };

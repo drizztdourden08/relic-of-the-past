@@ -2,12 +2,7 @@ import type { FloodFillResult } from '@shared/game/navigation';
 import type { DrawContext } from './draw-context';
 import type { FallHoleSpawn } from '../../../../../../stores/navigation-overlay-store';
 
-function drawFallHoleSpawns(
-  dc: DrawContext,
-  fallHoleSpawns: FallHoleSpawn[],
-  activeScreenIndex: number,
-  drawResults: FloodFillResult[],
-): void {
+const drawFallHoleSpawns = (dc: DrawContext, fallHoleSpawns: FallHoleSpawn[], activeScreenIndex: number, drawResults: FloodFillResult[]): void => {
   if (fallHoleSpawns.length === 0) return;
   const { ctx, scaleX, scaleY, viewLeft, viewTop, snesW, snesH, TILE_PX, getScreenWorldOrigin } = dc;
 
@@ -47,9 +42,9 @@ function drawFallHoleSpawns(
     ctx.strokeRect(dx, dy, dw, dh);
     ctx.restore();
   }
-}
+};
 
-function drawPitStripes(dc: DrawContext, drawResults: FloodFillResult[]): void {
+const drawPitStripes = (dc: DrawContext, drawResults: FloodFillResult[]): void => {
   const { ctx, scaleX, scaleY, viewLeft, viewTop, snesW, snesH, TILE_PX, getScreenWorldOrigin } = dc;
 
   ctx.globalAlpha = 0.45;
@@ -99,6 +94,6 @@ function drawPitStripes(dc: DrawContext, drawResults: FloodFillResult[]): void {
       }
     }
   }
-}
+};
 
 export { drawFallHoleSpawns, drawPitStripes };

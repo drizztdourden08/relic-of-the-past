@@ -44,14 +44,7 @@ interface ResolvedLocation {
   tile: GridPos;
 }
 
-/**
- * Resolve a Location to a concrete overworld screen + tile position.
- *
- * - Overworld screens (type 'overworld'): use roomIndex directly as screen
- * - Interior screens (type 'dungeon'/'interior'): find the entrance on the overworld
- *   and use that entrance's tile as the position
- */
-function resolveLocation(loc: Location, rom: RomData, inventory: Set<string>): ResolvedLocation | null {
+const resolveLocation = (loc: Location, rom: RomData, inventory: Set<string>): ResolvedLocation | null => {
   const screen = SCREEN_BY_ID.get(loc.screenId);
   if (!screen) return null;
 
@@ -91,13 +84,9 @@ function resolveLocation(loc: Location, rom: RomData, inventory: Set<string>): R
   }
 
   return { screenIndex, tile };
-}
+};
 
-/**
- * Use connection graph to find which overworld screen connects to an interior screen.
- * Returns the screen index or null.
- */
-function findOverworldScreenFromConnections(screenId: string): number | null {
+const findOverworldScreenFromConnections = (screenId: string): number | null => {
   const allConns = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
   // Find a connection FROM an overworld screen TO this screen
   for (const conn of allConns) {
@@ -109,12 +98,9 @@ function findOverworldScreenFromConnections(screenId: string): number | null {
     }
   }
   return null;
-}
+};
 
-/**
- * Flood fill a screen and find the closest reachable tile to center (32,32).
- */
-function findClosestValidTile(rom: RomData, screenIndex: number, inventory: Set<string>): GridPos {
+const findClosestValidTile = (rom: RomData, screenIndex: number, inventory: Set<string>): GridPos => {
   const result = floodFillScreen(rom, screenIndex, inventory);
   const center = { row: 32, col: 32 };
 
@@ -137,11 +123,11 @@ function findClosestValidTile(rom: RomData, screenIndex: number, inventory: Set<
   }
 
   return best;
-}
+};
 
 // ─── Grid Extraction ─────────────────────────────────────────────────────────
 
-function getScreenGrid(rom: RomData, screenIndex: number, inventory: Set<string>): TilePassability[][] | null {
+const getScreenGrid = (rom: RomData, screenIndex: number, inventory: Set<string>): TilePassability[][] | null => {
   const result = floodFillScreen(rom, screenIndex, inventory);
   if (!result.attrGrid) return null;
 
@@ -153,26 +139,11 @@ function getScreenGrid(rom: RomData, screenIndex: number, inventory: Set<string>
     }
   }
   return grid;
-}
+};
 
 // ─── Route Planning ──────────────────────────────────────────────────────────
 
-/**
- * Plan the shortest route between two locations.
- * Entry point #6: full route planning.
- *
- * Algorithm:
- * 1. Resolve both locations to (screen, tile)
- * 2. If same screen: A* between tiles
- * 3. If different screens: screen-hop (Dijkstra) for screen path,
- *    then A* within each screen for tile-level routing
- */
-function planRoute(
-  rom: RomData,
-  source: Location,
-  target: Location,
-  inventory: Set<string> = new Set(),
-): RoutePlanResult | null {
+const planRoute = (rom: RomData, source: Location, target: Location, inventory: Set<string> = new Set()): RoutePlanResult | null => {
   const from = resolveLocation(source, rom, inventory);
   const to = resolveLocation(target, rom, inventory);
   if (!from || !to) return null;
@@ -259,31 +230,31 @@ function planRoute(
     totalScreens: screenPath.screens.length,
     requirements: [...allRequirements],
   };
-}
+};
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function mirrorBorderPos(pos: number, edge: 'north' | 'south' | 'east' | 'west'): GridPos {
+const mirrorBorderPos = (pos: number, edge: 'north' | 'south' | 'east' | 'west'): GridPos => {
   switch (edge) {
     case 'north': return { row: 63, col: pos };
     case 'south': return { row: 0, col: pos };
     case 'west': return { row: pos, col: 63 };
     case 'east': return { row: pos, col: 0 };
   }
-}
+};
 
-function borderExitPos(pos: number, edge: 'north' | 'south' | 'east' | 'west'): GridPos {
+const borderExitPos = (pos: number, edge: 'north' | 'south' | 'east' | 'west'): GridPos => {
   switch (edge) {
     case 'north': return { row: 0, col: pos };
     case 'south': return { row: 63, col: pos };
     case 'west': return { row: pos, col: 0 };
     case 'east': return { row: pos, col: 63 };
   }
-}
+};
 
-function manhattan(a: GridPos, b: GridPos): number {
+const manhattan = (a: GridPos, b: GridPos): number => {
   return Math.abs(a.row - b.row) + Math.abs(a.col - b.col);
-}
+};
 
 export { planRoute };
 export type { Location, RoutePlanResult, RoutePlanStep };

@@ -340,7 +340,7 @@ const kSpriteDropToNameIdx = [
   0x41, 0xd4, 0xd9, 0xe3, 0xd8, 0,
 ];
 
-function buildSecretNames(): Record<number, string> {
+const buildSecretNames = (): Record<number, string> => {
   const r: Record<number, string> = {};
   for (let i = 1; i <= 22; i++) {
     const nameIdx = kSpriteDropToNameIdx[i - 1];
@@ -354,7 +354,7 @@ function buildSecretNames(): Record<number, string> {
     r[ki] = `${ki.toString(16).toUpperCase().padStart(2, '0')}-${v}`;
   }
   return r;
-}
+};
 
 const kSecretNames: Record<number, string> = buildSecretNames();
 

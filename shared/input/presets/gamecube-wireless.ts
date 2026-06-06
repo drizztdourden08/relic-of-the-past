@@ -22,25 +22,22 @@ import type { ButtonMapping, ButtonIcon } from '../../types/controls';
 
 // ── Helpers ──
 
-/** Asymmetric 8-bit stick normalization: center→0, min→-1, max→+1 */
-function normalizeStick8(val: number, center: number, min: number, max: number): number {
+const normalizeStick8 = (val: number, center: number, min: number, max: number): number => {
   if (val <= center) return Math.max(-1, (val - center) / (center - min));
   return Math.min(1, (val - center) / (max - center));
-}
+};
 
-/** 12-bit stick normalization: center→0, symmetric range to ±1 */
-function normalizeStick12(val: number, center: number, range: number): number {
+const normalizeStick12 = (val: number, center: number, range: number): number => {
   return Math.max(-1, Math.min(1, (val - center) / Math.max(range, 1)));
-}
+};
 
-/** Scaled deadzone: values below threshold→0, above rescaled to full range (no jump at edge) */
-function applyDeadzone(value: number, deadzone: number): number {
+const applyDeadzone = (value: number, deadzone: number): number => {
   if (deadzone <= 0) return value;
   const mag = Math.abs(value);
   if (mag < deadzone) return 0;
   const scaled = (mag - deadzone) / (1 - deadzone);
   return Math.min(1, Math.max(-1, value > 0 ? scaled : -scaled));
-}
+};
 
 // ── Icons ──
 
@@ -78,13 +75,13 @@ const HAPTIC_SILENT: number[] = [0x3f, 0x01, 0xf0, 0x19, 0x00];
 
 // ── SNES Button Mappings ──
 
-function btn(snesButton: ButtonMapping['snesButton'], index: number, iconData: ButtonIcon | null): ButtonMapping {
+const btn = (snesButton: ButtonMapping['snesButton'], index: number, iconData: ButtonIcon | null): ButtonMapping => {
   return { snesButton, binding: { type: 'gamepad-button', index }, icon: iconData };
-}
+};
 
-function axis(snesButton: ButtonMapping['snesButton'], axisIndex: number, direction: '+' | '-', iconData: ButtonIcon | null): ButtonMapping {
+const axis = (snesButton: ButtonMapping['snesButton'], axisIndex: number, direction: '+' | '-', iconData: ButtonIcon | null): ButtonMapping => {
   return { snesButton, binding: { type: 'gamepad-axis', axisIndex, direction }, icon: iconData };
-}
+};
 
 const DEFAULT_MAPPINGS: ButtonMapping[] = [
   btn('B',      1,  ICONS['gc-b']),

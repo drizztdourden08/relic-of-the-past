@@ -34,11 +34,7 @@ let prevIsRunning = 0;
 let prevMainModule = 0;
 let wasDashing = false;
 
-/**
- * Called every frame from the rAF loop with the raw UI state buffer.
- * Bytes 115-118 are the player action state data we added.
- */
-function pollHapticState(heap: Uint8Array, ptr: number): void {
+const pollHapticState = (heap: Uint8Array, ptr: number): void => {
   const mainModule = heap[ptr + 0];
   const handlerState = heap[ptr + 115];
   const isRunning = heap[ptr + 116];
@@ -96,15 +92,14 @@ function pollHapticState(heap: Uint8Array, ptr: number): void {
   prevHandlerState = handlerState;
   prevIsRunning = isRunning;
   prevMainModule = mainModule;
-}
+};
 
-/** Reset polling state (call on game stop/restart) */
-function resetHapticPolling(): void {
+const resetHapticPolling = (): void => {
   prevHandlerState = 0;
   prevIsRunning = 0;
   prevMainModule = 0;
   wasDashing = false;
   resetDashState();
-}
+};
 
 export { pollHapticState, resetHapticPolling };

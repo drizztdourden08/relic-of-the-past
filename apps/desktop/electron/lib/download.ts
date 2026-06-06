@@ -3,8 +3,7 @@ import { createWriteStream } from 'fs';
 import { pipeline } from 'stream/promises';
 import { app, net } from 'electron';
 
-/** Download a URL to a temp file and return its path. */
-async function downloadToTemp(url: string, suffix = '.zip'): Promise<string> {
+const downloadToTemp = async (url: string, suffix = '.zip'): Promise<string> => {
   const parsed = new URL(url);
   if (!['http:', 'https:'].includes(parsed.protocol)) {
     throw new Error('Only HTTP/HTTPS URLs are supported');
@@ -17,6 +16,6 @@ async function downloadToTemp(url: string, suffix = '.zip'): Promise<string> {
   const fileStream = createWriteStream(tempFile);
   await pipeline(body, fileStream);
   return tempFile;
-}
+};
 
 export { downloadToTemp };

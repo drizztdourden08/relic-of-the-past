@@ -18,7 +18,7 @@ interface DropSheets {
 
 // ── Sheet loading ──
 
-function loadDropSheets(rom: RomData): DropSheets {
+const loadDropSheets = (rom: RomData): DropSheets => {
   const getByte = (addr: number) => rom.getByte(addr);
   const sheetIds = [0, 6, 7, 10, 27];
   const sheets = new Map<number, Buffer>();
@@ -34,11 +34,11 @@ function loadDropSheets(rom: RomData): DropSheets {
   const sheet96 = decompress(kCompSpritePtrs[96], getByte, false);
 
   return { sheets, sheet96 };
-}
+};
 
 // ── Tile lookup ──
 
-function getSheetForChar(charId: number, dropSheets: DropSheets): { sheet: Buffer; offset: number; high: boolean } {
+const getSheetForChar = (charId: number, dropSheets: DropSheets): { sheet: Buffer; offset: number; high: boolean } => {
   const slot = charId >>> 6;
   const tile = charId & 0x3f;
   const offset = tile * 24;
@@ -57,19 +57,19 @@ function getSheetForChar(charId: number, dropSheets: DropSheets): { sheet: Buffe
   }
 
   return { sheet: dropSheets.sheets.get(sheetId)!, offset, high };
-}
+};
 
 // ── Sprite assembly ──
 
-function extractSmallCentered(charId: number, palette: RGBA[], dropSheets: DropSheets): ImageBuffer {
+const extractSmallCentered = (charId: number, palette: RGBA[], dropSheets: DropSheets): ImageBuffer => {
   const { sheet, offset, high } = getSheetForChar(charId, dropSheets);
   const img = new ImageBuffer(16, 16);
   const tile = decode3bppTile(sheet, offset, palette, high);
   img.paste(tile, 4, 4);
   return img;
-}
+};
 
-function extractLarge(charId: number, palette: RGBA[], dropSheets: DropSheets): ImageBuffer {
+const extractLarge = (charId: number, palette: RGBA[], dropSheets: DropSheets): ImageBuffer => {
   const img = new ImageBuffer(16, 16);
   const chars = [charId, charId + 1, charId + 16, charId + 17];
   const pos: [number, number][] = [[0, 0], [8, 0], [0, 8], [8, 8]];
@@ -81,9 +81,9 @@ function extractLarge(charId: number, palette: RGBA[], dropSheets: DropSheets): 
     }
   }
   return img;
-}
+};
 
-function extractTall(charId: number, palette: RGBA[], dropSheets: DropSheets): ImageBuffer {
+const extractTall = (charId: number, palette: RGBA[], dropSheets: DropSheets): ImageBuffer => {
   const img = new ImageBuffer(16, 16);
   const { sheet: s1, offset: o1, high: h1 } = getSheetForChar(charId & 0xff, dropSheets);
   if (o1 + 24 <= s1.length) {
@@ -97,7 +97,7 @@ function extractTall(charId: number, palette: RGBA[], dropSheets: DropSheets): I
     img.paste(t, 4, 8);
   }
   return img;
-}
+};
 
 export { loadDropSheets, getSheetForChar, extractSmallCentered, extractLarge, extractTall };
 export type { DropSheets };

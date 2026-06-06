@@ -37,10 +37,10 @@ interface EditableConnection {
   isNew: boolean;
 }
 
-function ConnectionEditorDialog({
+const ConnectionEditorDialog = ({
   open, onClose, screenId, screenMeta,
   existingConnections, unmatchedConnections,
-}: ConnectionEditorDialogProps) {
+}: ConnectionEditorDialogProps) => {
   const [step, setStep] = useState(0);
   const [connections, setConnections] = useState<EditableConnection[]>([]);
   const [editingIdx, setEditingIdx] = useState<number | null>(null);
@@ -302,6 +302,6 @@ function ConnectionEditorDialog({
       </div>
     </div>
   );
-}
+};
 
 export { ConnectionEditorDialog };

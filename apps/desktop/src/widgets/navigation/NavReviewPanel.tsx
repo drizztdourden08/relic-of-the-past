@@ -85,7 +85,7 @@ const REQUIREMENT_OPTIONS = [
 
 // ─── Component ──────────────────────────────────────────────────────────────
 
-function NavReviewPanel({ locationKey, bundles, entrances, transitions, borders, reachableCount, totalTiles }: NavReviewPanelProps) {
+const NavReviewPanel = ({ locationKey, bundles, entrances, transitions, borders, reachableCount, totalTiles }: NavReviewPanelProps) => {
   const [reviewData, setReviewData] = useState<NavReviewData>({});
   const [expandedPoints, setExpandedPoints] = useState<Set<string>>(new Set());
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -296,11 +296,11 @@ function NavReviewPanel({ locationKey, bundles, entrances, transitions, borders,
       )}
     </div>
   );
-}
+};
 
 // ─── Sub-components ─────────────────────────────────────────────────────────
 
-function StatusRow({ status, comment, onStatus, onComment }: { status: ReviewStatus; comment?: string; onStatus: (s: ReviewStatus) => void; onComment: (c: string) => void }) {
+const StatusRow = ({ status, comment, onStatus, onComment }: { status: ReviewStatus; comment?: string; onStatus: (s: ReviewStatus) => void; onComment: (c: string) => void }) => {
   return (
     <div style={S.reviewRow}>
       <div style={S.statusRow}>
@@ -315,9 +315,9 @@ function StatusRow({ status, comment, onStatus, onComment }: { status: ReviewSta
       )}
     </div>
   );
-}
+};
 
-function RequirementEditor({ current, onChange }: { current: string[][]; onChange: (reqs: string[][]) => void }) {
+const RequirementEditor = ({ current, onChange }: { current: string[][]; onChange: (reqs: string[][]) => void }) => {
   const [editing, setEditing] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set(current.flat()));
 
@@ -356,16 +356,16 @@ function RequirementEditor({ current, onChange }: { current: string[][]; onChang
       </div>
     </div>
   );
-}
+};
 
-function TransitTypePicker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+const TransitTypePicker = ({ value, onChange }: { value: string; onChange: (v: string) => void }) => {
   const options = ['door', 'passage', 'hole', 'ledge', 'staircase', 'dungeon_enter', 'whirlpool', 'warp_tile'];
   return (
     <select style={S.selectInput} value={value} onChange={e => onChange(e.target.value)}>
       {options.map(o => <option key={o} value={o}>{o}</option>)}
     </select>
   );
-}
+};
 
 // ─── Styles ─────────────────────────────────────────────────────────────────
 

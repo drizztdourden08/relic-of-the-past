@@ -43,17 +43,7 @@ interface QuadrantBounds {
   maxCol: number;
 }
 
-function floodFillBFS(
-  grid: TilePassability[][],
-  startRow: number,
-  startCol: number,
-  entrancePositions: { row: number; col: number; idx: number }[],
-  inventory: Set<string>,
-  rawAttr: number[][],
-  tileContext: TileAttrContext,
-  extraSeeds?: { row: number; col: number }[],
-  quadrantBounds?: QuadrantBounds,
-): SingleScreenResult {
+const floodFillBFS = (grid: TilePassability[][], startRow: number, startCol: number, entrancePositions: { row: number; col: number; idx: number }[], inventory: Set<string>, rawAttr: number[][], tileContext: TileAttrContext, extraSeeds?: { row: number; col: number }[], quadrantBounds?: QuadrantBounds): SingleScreenResult => {
   const minR = quadrantBounds?.minRow ?? 0;
   const maxR = quadrantBounds?.maxRow ?? GRID_SIZE - 1;
   const minC = quadrantBounds?.minCol ?? 0;
@@ -230,29 +220,14 @@ function floodFillBFS(
   }
 
   return { reachable, transitions, reachableCount, reqGrid, hookTargets };
-}
+};
 
 // ─── Dual-Layer BFS ──────────────────────────────────────────────────────────
 
 /** Swap-layer stair tile attrs (bidirectional layer transitions). */
 const SWAP_STAIR_ATTRS = new Set([0x1E, 0x1F, 0x3E, 0x3F]);
 
-/**
- * Dual-layer BFS flood-fill for indoor rooms with layer-swap stairs.
- * Tracks which layer each body position is on.  When the body occupies a
- * 0x1E/0x1F stair tile, expansion also tries the OTHER layer's grid.
- */
-function floodFillBFSDualLayer(
-  grids: [TilePassability[][], TilePassability[][]],
-  rawAttrs: [number[][], number[][]],
-  startRow: number,
-  startCol: number,
-  startLayer: 0 | 1,
-  entrancePositions: { row: number; col: number; idx: number }[],
-  inventory: Set<string>,
-  tileContext: TileAttrContext,
-  quadrantBounds?: QuadrantBounds,
-): DualLayerResult {
+const floodFillBFSDualLayer = (grids: [TilePassability[][], TilePassability[][]], rawAttrs: [number[][], number[][]], startRow: number, startCol: number, startLayer: 0 | 1, entrancePositions: { row: number; col: number; idx: number }[], inventory: Set<string>, tileContext: TileAttrContext, quadrantBounds?: QuadrantBounds): DualLayerResult => {
   const minR = quadrantBounds?.minRow ?? 0;
   const maxR = quadrantBounds?.maxRow ?? GRID_SIZE - 1;
   const minC = quadrantBounds?.minCol ?? 0;
@@ -587,29 +562,22 @@ function floodFillBFSDualLayer(
   }
 
   return { reachable, transitions, reachableCount, reqGrid, hookTargets, tileLayer, reachableByLayer };
-}
+};
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-/** Get the 4 tiles occupied by a 2×2 body with top-left at (r, c). */
-function bodyTiles(r: number, c: number): [number, number][] {
+const bodyTiles = (r: number, c: number): [number, number][] => {
   return [[r, c], [r, c + 1], [r + 1, c], [r + 1, c + 1]];
-}
+};
 
-/** Get the 2 NEW tiles exposed when moving from body (row, col) in direction (dr, dc). */
-function getNewTiles(nr: number, nc: number, dr: number, dc: number): [number, number][] {
+const getNewTiles = (nr: number, nc: number, dr: number, dc: number): [number, number][] => {
   if (dr === -1) return [[nr, nc], [nr, nc + 1]];       // north: new top row
   if (dr === 1) return [[nr + 1, nc], [nr + 1, nc + 1]]; // south: new bottom row
   if (dc === -1) return [[nr, nc], [nr + 1, nc]];       // west: new left column
   return [[nr, nc + 1], [nr + 1, nc + 1]];              // east: new right column
-}
+};
 
-/** Find a valid 2×2 body position containing or near (row, col). */
-function findStartBody(
-  row: number, col: number,
-  grid: TilePassability[][], inventory: Set<string>,
-  minR: number, maxR: number, minC: number, maxC: number,
-): { row: number; col: number } | null {
+const findStartBody = (row: number, col: number, grid: TilePassability[][], inventory: Set<string>, minR: number, maxR: number, minC: number, maxC: number): { row: number; col: number } | null => {
   // Try all 4 possible body positions that include (row, col)
   const candidates: [number, number][] = [
     [row, col], [row, col - 1], [row - 1, col], [row - 1, col - 1],
@@ -631,10 +599,9 @@ function findStartBody(
     }
   }
   return null;
-}
+};
 
-/** Check if all 4 tiles of a body position are passable. */
-function isBodyPassable(r: number, c: number, grid: TilePassability[][], inventory: Set<string>): boolean {
+const isBodyPassable = (r: number, c: number, grid: TilePassability[][], inventory: Set<string>): boolean => {
   for (const [tr, tc] of bodyTiles(r, c)) {
     const t = grid[tr][tc];
     if (t.type === 'blocked') return false;
@@ -642,15 +609,9 @@ function isBodyPassable(r: number, c: number, grid: TilePassability[][], invento
     if (t.type === 'water' && !inventory.has('flippers')) return false;
   }
   return true;
-}
+};
 
-function recordBorderTransition(
-  row: number, col: number,
-  requirements: Set<string>,
-  foundBorders: Set<string>,
-  transitions: TransitionPoint[],
-  minR: number, maxR: number, minC: number, maxC: number,
-): void {
+const recordBorderTransition = (row: number, col: number, requirements: Set<string>, foundBorders: Set<string>, transitions: TransitionPoint[], minR: number, maxR: number, minC: number, maxC: number): void => {
   if (row === minR) {
     const key = `north-${col}`;
     if (!foundBorders.has(key)) { foundBorders.add(key); transitions.push({ row, col, edge: 'north', requirements: [...requirements] }); }
@@ -667,9 +628,9 @@ function recordBorderTransition(
     const key = `east-${row}`;
     if (!foundBorders.has(key)) { foundBorders.add(key); transitions.push({ row, col, edge: 'east', requirements: [...requirements] }); }
   }
-}
+};
 
-function canLeaveLedge(dir: string, dr: number, dc: number): boolean {
+const canLeaveLedge = (dir: string, dr: number, dc: number): boolean => {
   return (
     (dir === 's' && dr === 1) ||
     (dir === 'n' && dr === -1) ||
@@ -680,14 +641,9 @@ function canLeaveLedge(dir: string, dr: number, dc: number): boolean {
     (dir === 'se' && (dr === 1 || dc === 1)) ||
     (dir === 'sw' && (dr === 1 || dc === -1))
   );
-}
+};
 
-function evaluateEntry(
-  tile: TilePassability,
-  dr: number, dc: number,
-  requirements: Set<string>,
-  inventory: Set<string>,
-): { canEnter: boolean; newReqs: Set<string> } {
+const evaluateEntry = (tile: TilePassability, dr: number, dc: number, requirements: Set<string>, inventory: Set<string>): { canEnter: boolean; newReqs: Set<string> } => {
   let newReqs = requirements;
 
   switch (tile.type) {
@@ -719,7 +675,7 @@ function evaluateEntry(
     case 'blocked':
       return { canEnter: false, newReqs };
   }
-}
+};
 
 export { floodFillBFS, floodFillBFSDualLayer };
 export type { QuadrantBounds };

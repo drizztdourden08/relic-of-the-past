@@ -44,28 +44,28 @@ let cooldownFrames = 0;
 
 const DELIVERY_COOLDOWN = 30; // frames between deliveries (~0.5s at 60fps)
 
-function generateId(): string {
+const generateId = (): string => {
   return `dlv_${Date.now()}_${nextId++}`;
-}
+};
 
-function getState(): DeliveryQueueState {
+const getState = (): DeliveryQueueState => {
   return { pending: [...queue], delivering };
-}
+};
 
-function notify(): void {
+const notify = (): void => {
   const state = getState();
   for (const listener of listeners) {
     try { listener(state); } catch { /* ignore */ }
   }
-}
+};
 
-function canReceive(): boolean {
+const canReceive = (): boolean => {
   const mod = getModule();
   if (!mod) return false;
   return mod.ccall('WasmCanReceiveItem', 'number', [], []) === 1;
-}
+};
 
-function executeAction(action: DeliveryAction): void {
+const executeAction = (action: DeliveryAction): void => {
   const mod = getModule();
   if (!mod) return;
 
@@ -85,9 +85,9 @@ function executeAction(action: DeliveryAction): void {
       action.execute();
       break;
   }
-}
+};
 
-function tick(): void {
+const tick = (): void => {
   rafId = requestAnimationFrame(tick);
 
   if (cooldownFrames > 0) {
@@ -113,15 +113,11 @@ function tick(): void {
   delivering = entry;
   notify();
   executeAction(entry.action);
-}
+};
 
 // ─── Public API ───
 
-function enqueue(
-  message: string,
-  source: string,
-  action: DeliveryAction
-): string {
+const enqueue = (message: string, source: string, action: DeliveryAction): string => {
   const entry: DeliveryEntry = {
     id: generateId(),
     message,
@@ -132,47 +128,47 @@ function enqueue(
   queue.push(entry);
   notify();
   return entry.id;
-}
+};
 
-function remove(id: string): boolean {
+const remove = (id: string): boolean => {
   const idx = queue.findIndex((e) => e.id === id);
   if (idx === -1) return false;
   queue.splice(idx, 1);
   notify();
   return true;
-}
+};
 
-function clear(): void {
+const clear = (): void => {
   queue = [];
   delivering = null;
   cooldownFrames = 0;
   notify();
-}
+};
 
-function peek(): DeliveryEntry | undefined {
+const peek = (): DeliveryEntry | undefined => {
   return queue[0];
-}
+};
 
-function size(): number {
+const size = (): number => {
   return queue.length;
-}
+};
 
-function subscribe(listener: StateListener): () => void {
+const subscribe = (listener: StateListener): () => void => {
   listeners.add(listener);
   return () => listeners.delete(listener);
-}
+};
 
-function startProcessing(): void {
+const startProcessing = (): void => {
   if (rafId != null) return;
   rafId = requestAnimationFrame(tick);
-}
+};
 
-function stopProcessing(): void {
+const stopProcessing = (): void => {
   if (rafId != null) {
     cancelAnimationFrame(rafId);
     rafId = null;
   }
-}
+};
 
 const deliveryQueue = {
   enqueue,

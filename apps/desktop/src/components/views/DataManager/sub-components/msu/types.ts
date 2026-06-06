@@ -37,10 +37,10 @@ interface TrackRowProps {
   onAssign: (trackNum: number, fileName: string) => void;
 }
 
-function getTrackNumber(filename: string): number | null {
+const getTrackNumber = (filename: string): number | null => {
   const match = filename.match(/(\d+)\.(pcm|opuz)$/i);
   return match ? parseInt(match[1], 10) : null;
-}
+};
 
 export { getTrackNumber };
 export type { MsuPack, MsuFile, TrackInfo, MatchedTrack, MsuManagerProps, TrackRowProps };

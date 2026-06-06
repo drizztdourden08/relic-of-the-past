@@ -40,9 +40,9 @@ const USAGE_LABELS: Record<UsageLevel, string> = {
   'inspiration': 'Inspiration',
 };
 
-function getUsageLabel(usage: UsageLevel): string {
+const getUsageLabel = (usage: UsageLevel): string => {
   return USAGE_LABELS[usage];
-}
+};
 
 const CREDITS: CreditCategory[] = [
   {

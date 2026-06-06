@@ -10,13 +10,7 @@ const DOT_COLOR_UPPER = 'rgba(100, 215, 255, 0.65)';
 const DOT_COLOR_LOWER = 'rgba(50, 165, 215, 0.55)';
 const DOT_COLOR_REQ = 'rgba(255, 100, 180, 0.35)';
 
-function drawReachableDots(
-  dc: DrawContext,
-  drawResults: FloodFillResult[],
-  layer1ReachableOverride: [ReachState[][], ReachState[][]] | null,
-  rawL0: number[][] | undefined,
-  rawL1: number[][] | undefined,
-): void {
+const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], layer1ReachableOverride: [ReachState[][], ReachState[][]] | null, rawL0: number[][] | undefined, rawL1: number[][] | undefined): void => {
   const { ctx, scaleX, scaleY, viewLeft, viewTop, snesW, snesH, TILE_PX, dotRadius, getScreenWorldOrigin } = dc;
 
   ctx.globalAlpha = 0.55;
@@ -148,6 +142,6 @@ function drawReachableDots(
       ctx.stroke();
     }
   }
-}
+};
 
 export { drawReachableDots };

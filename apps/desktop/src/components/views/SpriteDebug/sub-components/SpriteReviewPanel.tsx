@@ -10,7 +10,7 @@ import { CategoryButton, FilterBtns, Stats } from './ReviewControls';
 import { SpriteImageCard } from './ReviewCards';
 import { S } from '../styles';
 
-function SpriteReviewPanel({ baseUrl }: { baseUrl: string }) {
+const SpriteReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
   const [data, setData] = useState<ReviewData>({});
   const [loaded, setLoaded] = useState(false);
   const [filter, setFilter] = useState<'all' | ReviewStatus>('all');
@@ -94,6 +94,6 @@ function SpriteReviewPanel({ baseUrl }: { baseUrl: string }) {
       </div>
     </>
   );
-}
+};
 
 export { SpriteReviewPanel };

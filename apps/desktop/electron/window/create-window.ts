@@ -5,11 +5,11 @@ import { loadWindowState, trackWindowState } from './window-state';
 
 let mainWindow: BrowserWindow | null = null;
 
-function getMainWindow(): BrowserWindow | null {
+const getMainWindow = (): BrowserWindow | null => {
   return mainWindow;
-}
+};
 
-function createWindow(): BrowserWindow {
+const createWindow = (): BrowserWindow => {
   const noFocus = process.argv.includes('--no-focus');
   const saved = loadWindowState();
 
@@ -94,6 +94,6 @@ function createWindow(): BrowserWindow {
   }
 
   return mainWindow;
-}
+};
 
 export { createWindow, getMainWindow };

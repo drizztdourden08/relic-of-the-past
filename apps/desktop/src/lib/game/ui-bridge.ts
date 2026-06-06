@@ -40,7 +40,7 @@ const INTERFACE_SUBMODULE_MODES: Record<number, UIMode> = {
   11: 'save_menu',
 };
 
-function deriveUIMode(mainModule: number, subModule: number, _subSubModule: number, floorTimer: number): UIMode {
+const deriveUIMode = (mainModule: number, subModule: number, _subSubModule: number, floorTimer: number): UIMode => {
   switch (mainModule) {
     case 0:
     case 1:
@@ -67,9 +67,9 @@ function deriveUIMode(mainModule: number, subModule: number, _subSubModule: numb
     default:
       return 'gameplay';
   }
-}
+};
 
-function parseGameUIBuffer(heap: Uint8Array, ptr: number): GameUIState {
+const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
   const b = heap;
   const p = ptr;
 
@@ -208,11 +208,11 @@ function parseGameUIBuffer(heap: Uint8Array, ptr: number): GameUIState {
   };
 
   return { mode, gameMode, hud, inventory: inventoryState, equipment, dungeonProgress, text, map, floorIndicator, saveMenu };
-}
+};
 
 // ─── Shallow comparison ───
 
-function stateChanged(a: GameUIState, b: GameUIState): boolean {
+const stateChanged = (a: GameUIState, b: GameUIState): boolean => {
   if (a.mode !== b.mode) return true;
   if (a.gameMode.mainModule !== b.gameMode.mainModule) return true;
   if (a.gameMode.subModule !== b.gameMode.subModule) return true;
@@ -269,7 +269,7 @@ function stateChanged(a: GameUIState, b: GameUIState): boolean {
   }
 
   return false;
-}
+};
 
 // ─── Map pause control ───
 // Previously paused the game when the map reached idle state, but this created a
@@ -277,13 +277,13 @@ function stateChanged(a: GameUIState, b: GameUIState): boolean {
 // the player can never close the map. The game's own submodule system already
 // handles map idle state correctly without external intervention.
 
-function checkMapPause(_state: GameUIState): void {
+const checkMapPause = (_state: GameUIState): void => {
   // no-op — map pause removed to fix input deadlock
-}
+};
 
 // ─── rAF Loop ───
 
-function pollFrame(): void {
+const pollFrame = (): void => {
   const result = wasmGetGameUIState();
   if (result) {
     // Haptic polling runs every frame (even if UI state hasn't changed)
@@ -297,23 +297,18 @@ function pollFrame(): void {
     }
   }
   rafId = requestAnimationFrame(pollFrame);
-}
+};
 
 // ─── Public API ───
 
-/**
- * Start the UI bridge polling loop.
- * @param updater — callback invoked with new GameUIState on every change
- */
-function initUIBridge(updater: (state: GameUIState) => void): void {
+const initUIBridge = (updater: (state: GameUIState) => void): void => {
   storeUpdater = updater;
   if (rafId === null) {
     rafId = requestAnimationFrame(pollFrame);
   }
-}
+};
 
-/** Stop the UI bridge polling loop. */
-function stopUIBridge(): void {
+const stopUIBridge = (): void => {
   if (rafId !== null) {
     cancelAnimationFrame(rafId);
     rafId = null;
@@ -322,6 +317,6 @@ function stopUIBridge(): void {
   prevState = null;
   storeUpdater = null;
   resetHapticPolling();
-}
+};
 
 export { initUIBridge, parseGameUIBuffer, stopUIBridge };

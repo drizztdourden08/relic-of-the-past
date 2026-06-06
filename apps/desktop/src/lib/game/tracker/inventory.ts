@@ -41,7 +41,7 @@ interface RawInventoryState {
   healthCapacity: number;
 }
 
-function parseInventoryBuffer(heapU8: Uint8Array, ptr: number): RawInventoryState {
+const parseInventoryBuffer = (heapU8: Uint8Array, ptr: number): RawInventoryState => {
   return {
     bow: heapU8[ptr],
     boomerang: heapU8[ptr + 1],
@@ -78,9 +78,9 @@ function parseInventoryBuffer(heapU8: Uint8Array, ptr: number): RawInventoryStat
     heartPieces: heapU8[ptr + 32],
     healthCapacity: heapU8[ptr + 33],
   };
-}
+};
 
-function inventoryToItemSet(raw: RawInventoryState): Set<string> {
+const inventoryToItemSet = (raw: RawInventoryState): Set<string> => {
   const items = new Set<string>();
 
   // Sword progression
@@ -167,18 +167,9 @@ function inventoryToItemSet(raw: RawInventoryState): Set<string> {
   }
 
   return items;
-}
+};
 
-/**
- * Derive progression events from the WASM progress flags buffer.
- * These events are injected into the inventory set to gate vanilla logic.
- *
- * Progress buffer layout (from WasmGetProgressFlags):
- *   [0]  = sram_progress_indicator (0xF3C5): 0=intro, 1=post-uncle, 2=rescued-zelda, 3=post-escape
- *   [1]  = sram_progress_flags (0xF3C6): bit 0x01 = uncle passage done
- *   [12] = player_sleep_in_bed_state: 0=asleep, 1=uncle woke Link, 2=Link out of bed
- */
-function progressToEvents(heapU8: Uint8Array, progPtr: number): string[] {
+const progressToEvents = (heapU8: Uint8Array, progPtr: number): string[] => {
   const events: string[] = [];
   const progressIndicator = heapU8[progPtr];       // index 0
   const sleepState = heapU8[progPtr + 12];         // index 12
@@ -194,15 +185,15 @@ function progressToEvents(heapU8: Uint8Array, progPtr: number): string[] {
   if (progressIndicator >= 3) events.push('Rescued Old Man');
 
   return events;
-}
+};
 
-function setsEqual(a: Set<string>, b: Set<string>): boolean {
+const setsEqual = (a: Set<string>, b: Set<string>): boolean => {
   if (a.size !== b.size) return false;
   for (const item of a) {
     if (!b.has(item)) return false;
   }
   return true;
-}
+};
 
 export {
   inventoryToItemSet,

@@ -4,9 +4,9 @@ import { randomUUID } from 'crypto';
 import { getProfileSavesDir } from './store';
 import type { NormalSaveInfo } from '../../../../shared/types/saves';
 
-function getNormalSavesDir(profileId: string): string {
+const getNormalSavesDir = (profileId: string): string => {
   return join(getProfileSavesDir(profileId), 'normal');
-}
+};
 
 interface NormalSaveManifestEntry {
   id: string;
@@ -14,27 +14,22 @@ interface NormalSaveManifestEntry {
   timestamp: number;
 }
 
-async function readManifest(profileId: string): Promise<NormalSaveManifestEntry[]> {
+const readManifest = async (profileId: string): Promise<NormalSaveManifestEntry[]> => {
   try {
     const data = await readFile(join(getNormalSavesDir(profileId), 'manifest.json'), 'utf-8');
     return JSON.parse(data);
   } catch {
     return [];
   }
-}
+};
 
-async function writeManifest(profileId: string, entries: NormalSaveManifestEntry[]): Promise<void> {
+const writeManifest = async (profileId: string, entries: NormalSaveManifestEntry[]): Promise<void> => {
   const dir = getNormalSavesDir(profileId);
   await mkdir(dir, { recursive: true });
   await writeFile(join(dir, 'manifest.json'), JSON.stringify(entries, null, 2), 'utf-8');
-}
+};
 
-async function createNormalSave(
-  profileId: string,
-  name: string,
-  data: Buffer,
-  screenshot?: Buffer,
-): Promise<NormalSaveInfo> {
+const createNormalSave = async (profileId: string, name: string, data: Buffer, screenshot?: Buffer): Promise<NormalSaveInfo> => {
   const dir = getNormalSavesDir(profileId);
   await mkdir(dir, { recursive: true });
 
@@ -57,9 +52,9 @@ async function createNormalSave(
     size: data.byteLength,
     hasScreenshot: !!screenshot,
   };
-}
+};
 
-async function listNormalSaves(profileId: string): Promise<NormalSaveInfo[]> {
+const listNormalSaves = async (profileId: string): Promise<NormalSaveInfo[]> => {
   const dir = getNormalSavesDir(profileId);
   const manifest = await readManifest(profileId);
   const results: NormalSaveInfo[] = [];
@@ -87,30 +82,25 @@ async function listNormalSaves(profileId: string): Promise<NormalSaveInfo[]> {
 
   // Return newest first
   return results.sort((a, b) => b.timestamp - a.timestamp);
-}
+};
 
-async function loadNormalSave(profileId: string, id: string): Promise<Buffer | null> {
+const loadNormalSave = async (profileId: string, id: string): Promise<Buffer | null> => {
   try {
     return await readFile(join(getNormalSavesDir(profileId), `${id}.sav`));
   } catch {
     return null;
   }
-}
+};
 
-async function loadNormalScreenshot(profileId: string, id: string): Promise<Buffer | null> {
+const loadNormalScreenshot = async (profileId: string, id: string): Promise<Buffer | null> => {
   try {
     return await readFile(join(getNormalSavesDir(profileId), `${id}.png`));
   } catch {
     return null;
   }
-}
+};
 
-async function overwriteNormalSave(
-  profileId: string,
-  id: string,
-  data: Buffer,
-  screenshot?: Buffer,
-): Promise<NormalSaveInfo | null> {
+const overwriteNormalSave = async (profileId: string, id: string, data: Buffer, screenshot?: Buffer): Promise<NormalSaveInfo | null> => {
   const dir = getNormalSavesDir(profileId);
   const manifest = await readManifest(profileId);
   const entry = manifest.find((e) => e.id === id);
@@ -132,9 +122,9 @@ async function overwriteNormalSave(
     size: data.byteLength,
     hasScreenshot: !!screenshot,
   };
-}
+};
 
-async function deleteNormalSave(profileId: string, id: string): Promise<void> {
+const deleteNormalSave = async (profileId: string, id: string): Promise<void> => {
   const dir = getNormalSavesDir(profileId);
   const manifest = await readManifest(profileId);
   const filtered = manifest.filter((e) => e.id !== id);
@@ -142,9 +132,9 @@ async function deleteNormalSave(profileId: string, id: string): Promise<void> {
 
   try { await unlink(join(dir, `${id}.sav`)); } catch { /* ignore */ }
   try { await unlink(join(dir, `${id}.png`)); } catch { /* ignore */ }
-}
+};
 
-async function renameNormalSave(profileId: string, id: string, newName: string): Promise<NormalSaveInfo | null> {
+const renameNormalSave = async (profileId: string, id: string, newName: string): Promise<NormalSaveInfo | null> => {
   const dir = getNormalSavesDir(profileId);
   const manifest = await readManifest(profileId);
   const entry = manifest.find((e) => e.id === id);
@@ -164,7 +154,7 @@ async function renameNormalSave(profileId: string, id: string, newName: string):
   } catch {
     return null;
   }
-}
+};
 
 export {
   createNormalSave,

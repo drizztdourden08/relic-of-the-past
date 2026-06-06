@@ -13,11 +13,7 @@ interface WasmModule {
   HEAPU8?: Uint8Array;
 }
 
-/**
- * Read all flag sources from WASM memory and return a set of completed check IDs.
- * Returns null if the module/heap is not ready.
- */
-function readCompletedChecks(mod: WasmModule): Set<string> | null {
+const readCompletedChecks = (mod: WasmModule): Set<string> | null => {
   const heap = (mod as any).HEAPU8 as Uint8Array | undefined;
   if (!heap) return null;
 
@@ -102,6 +98,6 @@ function readCompletedChecks(mod: WasmModule): Set<string> | null {
   }
 
   return newCompleted;
-}
+};
 
 export { readCompletedChecks };

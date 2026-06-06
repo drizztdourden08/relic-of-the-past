@@ -49,10 +49,7 @@ beforeAll(async () => {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/**
- * Replicate the EXACT normalization logic from wasm-bridge.ts wasmGetIndoorDualLayerGrids()
- */
-function getNormalizedDualLayers(ptr: number): { layer0: number[][]; layer1: number[][] } | null {
+const getNormalizedDualLayers = (ptr: number): { layer0: number[][]; layer1: number[][] } | null => {
   const layer0: number[][] = Array.from({ length: 64 }, () => new Array(64));
   const layer1: number[][] = Array.from({ length: 64 }, () => new Array(64));
   let hasDifference = false;
@@ -69,7 +66,7 @@ function getNormalizedDualLayers(ptr: number): { layer0: number[][]; layer1: num
   }
   if (!hasDifference) return null;
   return { layer0, layer1 };
-}
+};
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 

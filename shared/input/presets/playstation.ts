@@ -35,9 +35,9 @@ const PS_ICONS: Record<string, ButtonIcon> = {
   'ps-mute':     icon('ps-mute', 'Mute'),
 };
 
-function btn(snesButton: ButtonMapping['snesButton'], index: number, iconData: ButtonIcon | null): ButtonMapping {
+const btn = (snesButton: ButtonMapping['snesButton'], index: number, iconData: ButtonIcon | null): ButtonMapping => {
   return { snesButton, binding: { type: 'gamepad-button', index }, icon: iconData };
-}
+};
 
 const PS_MAPPINGS: ButtonMapping[] = [
   btn('B',      0,  PS_ICONS['ps-cross']),

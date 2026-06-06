@@ -17,7 +17,7 @@ interface Door {
   dir: number;
 }
 
-function decodeRoomObjects(rom: RomData, p: number): { end: number; objs: RoomObject[]; doors: Door[] | null } {
+const decodeRoomObjects = (rom: RomData, p: number): { end: number; objs: RoomObject[]; doors: Door[] | null } => {
   const objs: RoomObject[] = [];
   while (true) {
     const p0 = rom.getByte(p);
@@ -59,7 +59,7 @@ function decodeRoomObjects(rom: RomData, p: number): { end: number; objs: RoomOb
     doors.push({ type: rom.getByte(p + 1), pos: rom.getByte(p) >> 4, dir: A & 3 });
     p += 2;
   }
-}
+};
 
 export { decodeRoomObjects };
 export type { Door, RoomObject };

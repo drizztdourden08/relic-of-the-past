@@ -2,10 +2,7 @@ import type { ConnectionInfo } from '@shared/game/navigation';
 import type { DrawContext } from './draw-context';
 import { EDGE_COLORS } from '../types';
 
-function drawConnections(
-  dc: DrawContext,
-  connections: ConnectionInfo[],
-): void {
+const drawConnections = (dc: DrawContext, connections: ConnectionInfo[]): void => {
   const { ctx, scaleX, scaleY, viewLeft, viewTop, snesW, snesH, TILE_PX, dotRadius, screenWorldX, screenWorldY, getScreenWorldOrigin } = dc;
 
   ctx.globalAlpha = 0.85;
@@ -48,6 +45,6 @@ function drawConnections(
       ctx.fill();
     }
   }
-}
+};
 
 export { drawConnections };

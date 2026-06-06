@@ -3,10 +3,10 @@ import type { SpriteManifestEntry } from '@shared/game/sprites';
 import { StatusBtns } from './ReviewControls';
 import { S } from '../styles';
 
-function SpriteImageCard({ sprite, entry, baseUrl, onSetStatus, onSetComment }: {
+const SpriteImageCard = ({ sprite, entry, baseUrl, onSetStatus, onSetComment }: {
   sprite: SpriteManifestEntry; entry: ReviewEntry; baseUrl: string;
   onSetStatus: (s: ReviewStatus) => void; onSetComment: (c: string) => void;
-}) {
+}) => {
   const border = entry.status === 'good' ? '#4caf50' : entry.status === 'bad' ? '#f44336' : entry.status === 'yellow' ? '#f5c542' : 'rgba(255,255,255,0.08)';
   const bg = entry.status === 'good' ? 'rgba(76,175,80,0.06)' : entry.status === 'bad' ? 'rgba(244,67,54,0.06)' : entry.status === 'yellow' ? 'rgba(245,197,66,0.06)' : 'rgba(255,255,255,0.02)';
   const catColor = sprite.category === 'hud' || sprite.category === 'hud-pause' || sprite.category === 'hud-item' ? '#8bb4e0' : sprite.category === 'fonts' ? '#b89de0' : sprite.category === 'receipt' ? '#c4a862' : '#82c487';
@@ -32,12 +32,12 @@ function SpriteImageCard({ sprite, entry, baseUrl, onSetStatus, onSetComment }: 
       )}
     </div>
   );
-}
+};
 
-function ItemAssocCard({ item, entry, baseUrl, onSetStatus, onSetComment }: {
+const ItemAssocCard = ({ item, entry, baseUrl, onSetStatus, onSetComment }: {
   item: { name: string; file: string }; entry: ReviewEntry; baseUrl: string;
   onSetStatus: (s: ReviewStatus) => void; onSetComment: (c: string) => void;
-}) {
+}) => {
   const border = entry.status === 'good' ? '#4caf50' : entry.status === 'bad' ? '#f44336' : entry.status === 'yellow' ? '#f5c542' : 'rgba(255,255,255,0.08)';
   const bg = entry.status === 'good' ? 'rgba(76,175,80,0.06)' : entry.status === 'bad' ? 'rgba(244,67,54,0.06)' : entry.status === 'yellow' ? 'rgba(245,197,66,0.06)' : 'rgba(255,255,255,0.02)';
 
@@ -65,6 +65,6 @@ function ItemAssocCard({ item, entry, baseUrl, onSetStatus, onSetComment }: {
       )}
     </div>
   );
-}
+};
 
 export { ItemAssocCard, SpriteImageCard };

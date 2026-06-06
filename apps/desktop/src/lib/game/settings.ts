@@ -105,12 +105,11 @@ const DEFAULT_SETTINGS: GameSettings = {
   },
 };
 
-function boolToIni(v: boolean): string {
+const boolToIni = (v: boolean): string => {
   return v ? '1' : '0';
-}
+};
 
-/** Serialize GameSettings to a zelda3.ini string for WASM consumption. */
-function serializeToIni(settings: GameSettings, msuPath?: string): string {
+const serializeToIni = (settings: GameSettings, msuPath?: string): string => {
   // Build ExtendedAspectRatio value with modifiers
   const parts: string[] = [];
   if (settings.extendY) parts.push('extend_y');
@@ -163,10 +162,9 @@ GameChangingBugFixes = ${boolToIni(settings.gameChangingBugFixes)}
 CancelBirdTravel = ${boolToIni(settings.cancelBirdTravel)}
 DisableTelepathy = ${boolToIni(settings.disableTelepathy)}
 `;
-}
+};
 
-/** Merge partial settings over defaults, producing a complete GameSettings. */
-function mergeSettings(partial: Partial<GameSettings>): GameSettings {
+const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
   const merged = { ...DEFAULT_SETTINGS, ...partial };
 
   // Migrate old windowMode values from previous schema
@@ -204,6 +202,6 @@ function mergeSettings(partial: Partial<GameSettings>): GameSettings {
   merged.enableAudio = true;
 
   return merged;
-}
+};
 
 export { DEFAULT_SETTINGS, mergeSettings, serializeToIni };

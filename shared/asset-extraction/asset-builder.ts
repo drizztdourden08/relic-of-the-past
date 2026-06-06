@@ -5,10 +5,9 @@ import { createHash } from 'crypto';
 import type { RomData } from './rom/rom-types';
 import { decompress as lzDecompress } from './compression/lz-decompress';
 
-/** Convert Buffer to number array (avoids downlevelIteration issues) */
-function bufToArr(buf: Buffer): number[] {
+const bufToArr = (buf: Buffer): number[] => {
   return Array.from(buf);
-}
+};
 
 type AssetType = 'uint8' | 'uint16' | 'int8' | 'int16' | 'packed';
 
@@ -79,12 +78,11 @@ class AssetBuilder {
   }
 }
 
-function totalLen(bufs: Buffer[]): number {
+const totalLen = (bufs: Buffer[]): number => {
   return bufs.reduce((s, b) => s + b.length, 0);
-}
+};
 
-/** Pack multiple byte arrays with index table (matches C engine's FindInAssetArray) */
-function packArrays(arr: Buffer[]): Buffer {
+const packArrays = (arr: Buffer[]): Buffer => {
   if (arr.length === 0) return Buffer.alloc(0);
   const offsets: number[] = [];
   let offs = 0;
@@ -104,13 +102,12 @@ function packArrays(arr: Buffer[]): Buffer {
     trailer.writeUInt16LE(8192 + arr.length - 1, 0);
     return Buffer.concat([idxBuf, ...arr, trailer]);
   }
-}
+};
 
-/** LZ decompress with compressed length tracking */
-function lzDecompressWithLen(rom: RomData, addr: number): { data: Buffer; compressedLength: number } {
+const lzDecompressWithLen = (rom: RomData, addr: number): { data: Buffer; compressedLength: number } => {
   const [data, compressedLength] = lzDecompress(addr, (a) => rom.getByte(a), false, true);
   return { data, compressedLength };
-}
+};
 
 export { AssetBuilder, bufToArr, lzDecompressWithLen, packArrays };
 export type { AssetEntry, AssetType };

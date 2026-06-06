@@ -11,11 +11,7 @@ import { decodeRoomObjects } from './room-object-decoder';
 import type { RoomObject } from './room-object-decoder';
 import { extractRoom } from './room-extractor';
 
-/**
- * Extract all 320 dungeon rooms from ROM.
- * @returns Map of filename → YAML content
- */
-function extractAllDungeonRooms(rom: RomData): Map<string, string> {
+const extractAllDungeonRooms = (rom: RomData): Map<string, string> => {
   const entrances0 = getEntranceInfo(rom, 0);
   const entrances1 = getEntranceInfo(rom, 1);
   const chestInfoMap = getChestInfo(rom);
@@ -26,12 +22,9 @@ function extractAllDungeonRooms(rom: RomData): Map<string, string> {
     results.set(`dungeon/dungeon-${i}.yaml`, extractRoom(rom, i, entrances0, entrances1, chestInfoMap, pitsHurt));
   }
   return results;
-}
+};
 
-/**
- * Extract default rooms (8 entries).
- */
-function extractDefaultRooms(rom: RomData): string {
+const extractDefaultRooms = (rom: RomData): string => {
   const defaultRooms: Record<string, RoomObject[]> = {};
   for (let i = 0; i < 8; i++) {
     const p = 0x84ef2f + i * 3;
@@ -40,12 +33,9 @@ function extractDefaultRooms(rom: RomData): string {
     defaultRooms[`Default${i}`] = objs;
   }
   return yaml.dump(defaultRooms, { flowLevel: -1, sortKeys: false });
-}
+};
 
-/**
- * Extract overlay rooms (19 entries).
- */
-function extractOverlayRooms(rom: RomData): string {
+const extractOverlayRooms = (rom: RomData): string => {
   const overlayRooms: Record<string, RoomObject[]> = {};
   for (let i = 0; i < 19; i++) {
     const p = 0x84ecc0 + i * 3;
@@ -54,12 +44,9 @@ function extractOverlayRooms(rom: RomData): string {
     overlayRooms[`Overlay${i}`] = objs;
   }
   return yaml.dump(overlayRooms, { flowLevel: -1, sortKeys: false });
-}
+};
 
-/**
- * Extract map32_to_map16 data.
- */
-function extractMap32ToMap16(rom: RomData): string {
+const extractMap32ToMap16 = (rom: RomData): string => {
   const lines: string[] = [];
   const getit = (ea: number): number[] => {
     const ov = [0, 1, 2, 3, 4, 5].map(j => rom.getByte(ea + j));
@@ -80,7 +67,7 @@ function extractMap32ToMap16(rom: RomData): string {
     }
   }
   return lines.join('\n') + '\n';
-}
+};
 
 export {
   extractAllDungeonRooms,

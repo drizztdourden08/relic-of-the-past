@@ -44,7 +44,7 @@ const USER_DATA_PATH = join(
 
 // ─── App lifecycle ───
 
-async function launchApp(opts?: { muted?: boolean; noFocus?: boolean }): Promise<{ app: ElectronApplication; window: Page }> {
+const launchApp = async (opts?: { muted?: boolean; noFocus?: boolean }): Promise<{ app: ElectronApplication; window: Page }> => {
   const args = [MAIN_JS];
   if (opts?.muted) args.push('--muted');
   if (opts?.noFocus) args.push('--no-focus');
@@ -57,9 +57,9 @@ async function launchApp(opts?: { muted?: boolean; noFocus?: boolean }): Promise
   await window.waitForLoadState('domcontentloaded');
   await window.waitForTimeout(1500);
   return { app, window };
-}
+};
 
-async function clearAppData(): Promise<void> {
+const clearAppData = async (): Promise<void> => {
   // Delete subdirectories we manage, skip Chromium internals (DIPS, etc.) that may be locked
   const managedDirs = ['assets', 'roms', 'profiles', 'config'];
   const managedFiles = ['app.json'];
@@ -70,13 +70,13 @@ async function clearAppData(): Promise<void> {
   for (const file of managedFiles) {
     await rm(join(USER_DATA_PATH, file), { force: true });
   }
-}
+};
 
 // ─── Screen detection ───
 
 type ScreenName = 'loading' | 'picker' | 'profile' | 'game';
 
-async function getScreen(window: Page): Promise<ScreenName> {
+const getScreen = async (window: Page): Promise<ScreenName> => {
   return window.evaluate(() => {
     // Only consider visible fullscreen layers (not hidden/persistent ones)
     const visible = (sel: string) => {
@@ -88,9 +88,9 @@ async function getScreen(window: Page): Promise<ScreenName> {
     if (document.querySelector('.game-layer__canvas')) return 'game';
     return 'loading';
   }) as Promise<ScreenName>;
-}
+};
 
-async function waitForScreen(window: Page, screen: ScreenName, timeoutMs = 15_000): Promise<void> {
+const waitForScreen = async (window: Page, screen: ScreenName, timeoutMs = 15_000): Promise<void> => {
   if (screen === 'picker') {
     await window.waitForSelector('.fullscreen-layer .picker', { timeout: timeoutMs });
   } else if (screen === 'profile') {
@@ -107,96 +107,77 @@ async function waitForScreen(window: Page, screen: ScreenName, timeoutMs = 15_00
   }
   // Extra settle time for async state updates
   await window.waitForTimeout(500);
-}
+};
 
 // ─── ROM operations ───
 
-async function importRom(
-  window: Page,
-  romPath: string,
-): Promise<{ success: boolean; romFile: string; alreadyExists?: boolean; error?: string }> {
+const importRom = async (window: Page, romPath: string): Promise<{ success: boolean; romFile: string; alreadyExists?: boolean; error?: string }> => {
   return window.evaluate(
     (path) => window.api.importRom(path),
     romPath,
   );
-}
+};
 
-async function deleteRom(window: Page, romFile: string): Promise<void> {
+const deleteRom = async (window: Page, romFile: string): Promise<void> => {
   return window.evaluate(
     (rf) => window.api.deleteRom(rf),
     romFile,
   );
-}
+};
 
-async function extractAssets(
-  window: Page,
-  romFile: string,
-): Promise<{ success: boolean; error?: string }> {
+const extractAssets = async (window: Page, romFile: string): Promise<{ success: boolean; error?: string }> => {
   return window.evaluate(
     (rf) => window.api.extractAssets(rf),
     romFile,
   );
-}
+};
 
-async function checkAssets(window: Page, romFile: string): Promise<boolean> {
+const checkAssets = async (window: Page, romFile: string): Promise<boolean> => {
   return window.evaluate(
     (rf) => window.api.checkAssets(rf),
     romFile,
   );
-}
+};
 
-async function listRoms(window: Page): Promise<string[]> {
+const listRoms = async (window: Page): Promise<string[]> => {
   return window.evaluate(() => window.api.listRoms());
-}
+};
 
-async function listRomsWithStatus(
-  window: Page,
-): Promise<Array<{ romFile: string; hasAssets: boolean; assetSize: number | null }>> {
+const listRomsWithStatus = async (window: Page): Promise<Array<{ romFile: string; hasAssets: boolean; assetSize: number | null }>> => {
   return window.evaluate(() => window.api.listRomsWithStatus());
-}
+};
 
-async function loadAssetSize(window: Page, romFile: string): Promise<number> {
+const loadAssetSize = async (window: Page, romFile: string): Promise<number> => {
   return window.evaluate(
     (rf) => window.api.loadAssets(rf).then((b: ArrayBuffer | null) => b?.byteLength ?? 0),
     romFile,
   );
-}
+};
 
 // ─── Profile operations ───
 
-async function listProfiles(
-  window: Page,
-): Promise<Array<{ id: string; name: string; romFile: string; created: number; lastPlayed: number }>> {
+const listProfiles = async (window: Page): Promise<Array<{ id: string; name: string; romFile: string; created: number; lastPlayed: number }>> => {
   return window.evaluate(() => window.api.listProfiles());
-}
+};
 
-async function createProfile(
-  window: Page,
-  name: string,
-  romFile: string,
-): Promise<{ id: string; name: string; romFile: string; created: number; lastPlayed: number }> {
+const createProfile = async (window: Page, name: string, romFile: string): Promise<{ id: string; name: string; romFile: string; created: number; lastPlayed: number }> => {
   return window.evaluate(
     ({ n, r }) => window.api.createProfile(n, r),
     { n: name, r: romFile },
   );
-}
+};
 
-async function deleteProfile(window: Page, id: string): Promise<void> {
+const deleteProfile = async (window: Page, id: string): Promise<void> => {
   return window.evaluate((pid) => window.api.deleteProfile(pid), id);
-}
+};
 
-async function getAppState(window: Page): Promise<{ lastProfileId: string | null }> {
+const getAppState = async (window: Page): Promise<{ lastProfileId: string | null }> => {
   return window.evaluate(() => window.api.getAppState());
-}
+};
 
 // ─── Compound helpers (seed state) ───
 
-/** Import a ROM, extract assets, create one profile → app will auto-load on next launch. */
-async function seedSingleProfile(
-  window: Page,
-  romPath: string,
-  profileName: string,
-): Promise<{ romFile: string; profileId: string }> {
+const seedSingleProfile = async (window: Page, romPath: string, profileName: string): Promise<{ romFile: string; profileId: string }> => {
   const imp = await importRom(window, romPath);
   if (!imp.success) throw new Error(`Import failed: ${imp.error}`);
 
@@ -205,14 +186,9 @@ async function seedSingleProfile(
 
   const profile = await createProfile(window, profileName, imp.romFile);
   return { romFile: imp.romFile, profileId: profile.id };
-}
+};
 
-/** Seed two profiles for the same ROM → app shows picker on next launch. */
-async function seedMultiProfile(
-  window: Page,
-  romPath: string,
-  names: [string, string],
-): Promise<{ romFile: string; profileIds: [string, string] }> {
+const seedMultiProfile = async (window: Page, romPath: string, names: [string, string]): Promise<{ romFile: string; profileIds: [string, string] }> => {
   const imp = await importRom(window, romPath);
   if (!imp.success) throw new Error(`Import failed: ${imp.error}`);
 
@@ -222,11 +198,11 @@ async function seedMultiProfile(
   const p1 = await createProfile(window, names[0], imp.romFile);
   const p2 = await createProfile(window, names[1], imp.romFile);
   return { romFile: imp.romFile, profileIds: [p1.id, p2.id] };
-}
+};
 
 // ─── UI interactions ───
 
-async function navigateToPicker(window: Page): Promise<void> {
+const navigateToPicker = async (window: Page): Promise<void> => {
   await window.click('[aria-label="Menu"]');
   await window.waitForTimeout(300);
   const switchBtn = window.locator('.dropdown__item', { hasText: /Switch Profile|New Profile/ });
@@ -238,20 +214,19 @@ async function navigateToPicker(window: Page): Promise<void> {
     await window.waitForTimeout(300);
   }
   await waitForScreen(window, 'picker');
-}
+};
 
-async function openMenu(window: Page): Promise<void> {
+const openMenu = async (window: Page): Promise<void> => {
   await window.click('[aria-label="Menu"]');
   await window.waitForTimeout(300);
-}
+};
 
-/** From the profile page, click "Start Game" and wait for game screen. */
-async function startGameFromProfile(window: Page, timeoutMs = 15_000): Promise<void> {
+const startGameFromProfile = async (window: Page, timeoutMs = 15_000): Promise<void> => {
   await waitForScreen(window, 'profile', timeoutMs);
   const startBtn = window.locator('.profile-hub .btn--primary', { hasText: /Play/ });
   await startBtn.click();
   await waitForScreen(window, 'game', timeoutMs);
-}
+};
 
 // ─── Logging ───
 
@@ -261,21 +236,21 @@ interface LogEntry {
   message: string;
 }
 
-async function getLogEntries(window: Page): Promise<LogEntry[]> {
+const getLogEntries = async (window: Page): Promise<LogEntry[]> => {
   return window.evaluate(() => (window as any).__logEntries?.() ?? []);
-}
+};
 
-function printLogs(entries: LogEntry[]): void {
+const printLogs = (entries: LogEntry[]): void => {
   for (const e of entries) {
     console.log(`  [${e.channel}/${e.level}] ${e.message}`);
   }
-}
+};
 
 // ─── Screenshot helper ───
 
-async function screenshot(window: Page, name: string): Promise<void> {
+const screenshot = async (window: Page, name: string): Promise<void> => {
   await window.screenshot({ path: join(SCREENSHOTS_DIR, `${name}.png`) });
-}
+};
 
 export { PROJECT_ROOT, MAIN_JS, TEST_ROMS_DIR, SCREENSHOTS_DIR, TEST_ROMS, ROM_FILES, launchApp, clearAppData, getScreen, waitForScreen, importRom, deleteRom, extractAssets, checkAssets, listRoms, listRomsWithStatus, loadAssetSize, listProfiles, createProfile, deleteProfile, getAppState, seedSingleProfile, seedMultiProfile, navigateToPicker, openMenu, startGameFromProfile, getLogEntries, printLogs, screenshot };
 export type { ScreenName, LogEntry };

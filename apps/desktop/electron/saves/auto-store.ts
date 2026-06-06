@@ -6,9 +6,9 @@ import type { AutoSaveInfo } from '../../../../shared/types/saves';
 const DEFAULT_MAX_ENTRIES = 5;
 const ABSOLUTE_MAX_ENTRIES = 20;
 
-function getAutoSavesDir(profileId: string): string {
+const getAutoSavesDir = (profileId: string): string => {
   return join(getProfileSavesDir(profileId), 'auto');
-}
+};
 
 interface AutoSaveManifestEntry {
   id: string;
@@ -16,27 +16,22 @@ interface AutoSaveManifestEntry {
   trigger: 'timer' | 'quit';
 }
 
-async function readManifest(profileId: string): Promise<AutoSaveManifestEntry[]> {
+const readManifest = async (profileId: string): Promise<AutoSaveManifestEntry[]> => {
   try {
     const data = await readFile(join(getAutoSavesDir(profileId), 'manifest.json'), 'utf-8');
     return JSON.parse(data);
   } catch {
     return [];
   }
-}
+};
 
-async function writeManifest(profileId: string, entries: AutoSaveManifestEntry[]): Promise<void> {
+const writeManifest = async (profileId: string, entries: AutoSaveManifestEntry[]): Promise<void> => {
   const dir = getAutoSavesDir(profileId);
   await mkdir(dir, { recursive: true });
   await writeFile(join(dir, 'manifest.json'), JSON.stringify(entries, null, 2), 'utf-8');
-}
+};
 
-async function createAutoSave(
-  profileId: string,
-  trigger: 'timer' | 'quit',
-  data: Buffer,
-  screenshot?: Buffer,
-): Promise<AutoSaveInfo> {
+const createAutoSave = async (profileId: string, trigger: 'timer' | 'quit', data: Buffer, screenshot?: Buffer): Promise<AutoSaveInfo> => {
   const dir = getAutoSavesDir(profileId);
   await mkdir(dir, { recursive: true });
 
@@ -59,9 +54,9 @@ async function createAutoSave(
     trigger,
     hasScreenshot: !!screenshot,
   };
-}
+};
 
-async function listAutoSaves(profileId: string): Promise<AutoSaveInfo[]> {
+const listAutoSaves = async (profileId: string): Promise<AutoSaveInfo[]> => {
   const dir = getAutoSavesDir(profileId);
   const manifest = await readManifest(profileId);
   const results: AutoSaveInfo[] = [];
@@ -89,25 +84,25 @@ async function listAutoSaves(profileId: string): Promise<AutoSaveInfo[]> {
 
   // Newest first
   return results.sort((a, b) => b.timestamp - a.timestamp);
-}
+};
 
-async function loadAutoSave(profileId: string, id: string): Promise<Buffer | null> {
+const loadAutoSave = async (profileId: string, id: string): Promise<Buffer | null> => {
   try {
     return await readFile(join(getAutoSavesDir(profileId), `${id}.sav`));
   } catch {
     return null;
   }
-}
+};
 
-async function loadAutoScreenshot(profileId: string, id: string): Promise<Buffer | null> {
+const loadAutoScreenshot = async (profileId: string, id: string): Promise<Buffer | null> => {
   try {
     return await readFile(join(getAutoSavesDir(profileId), `${id}.png`));
   } catch {
     return null;
   }
-}
+};
 
-async function deleteAutoSave(profileId: string, id: string): Promise<void> {
+const deleteAutoSave = async (profileId: string, id: string): Promise<void> => {
   const dir = getAutoSavesDir(profileId);
   const manifest = await readManifest(profileId);
   const filtered = manifest.filter((e) => e.id !== id);
@@ -115,9 +110,9 @@ async function deleteAutoSave(profileId: string, id: string): Promise<void> {
 
   try { await unlink(join(dir, `${id}.sav`)); } catch { /* ignore */ }
   try { await unlink(join(dir, `${id}.png`)); } catch { /* ignore */ }
-}
+};
 
-async function pruneAutoSaves(profileId: string, maxEntries?: number): Promise<void> {
+const pruneAutoSaves = async (profileId: string, maxEntries?: number): Promise<void> => {
   const max = Math.min(maxEntries ?? DEFAULT_MAX_ENTRIES, ABSOLUTE_MAX_ENTRIES);
   const manifest = await readManifest(profileId);
   if (manifest.length <= max) return;
@@ -129,7 +124,7 @@ async function pruneAutoSaves(profileId: string, maxEntries?: number): Promise<v
   for (const entry of toRemove) {
     await deleteAutoSave(profileId, entry.id);
   }
-}
+};
 
 export {
   ABSOLUTE_MAX_ENTRIES,

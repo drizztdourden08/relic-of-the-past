@@ -37,13 +37,13 @@ const ICONS: Record<string, ButtonIcon> = {
   'xbox-share':  icon('xbox-share', 'Share'),
 };
 
-function btn(snesButton: ButtonMapping['snesButton'], index: number, iconData: ButtonIcon | null): ButtonMapping {
+const btn = (snesButton: ButtonMapping['snesButton'], index: number, iconData: ButtonIcon | null): ButtonMapping => {
   return { snesButton, binding: { type: 'gamepad-button', index }, icon: iconData };
-}
+};
 
-function axis(snesButton: ButtonMapping['snesButton'], axisIndex: number, direction: '+' | '-', iconData: ButtonIcon | null): ButtonMapping {
+const axis = (snesButton: ButtonMapping['snesButton'], axisIndex: number, direction: '+' | '-', iconData: ButtonIcon | null): ButtonMapping => {
   return { snesButton, binding: { type: 'gamepad-axis', axisIndex, direction }, icon: iconData };
-}
+};
 
 const DEFAULT_MAPPINGS: ButtonMapping[] = [
   btn('A',      0,  ICONS['xbox-a']),

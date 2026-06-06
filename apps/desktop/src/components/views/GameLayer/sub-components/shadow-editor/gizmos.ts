@@ -58,14 +58,7 @@ const CENTER_RADIUS = 7;       // Center move handle size
 const VERTEX_RADIUS = 4;       // Vertex point radius
 const RADIUS_HANDLE_DIST = 16; // Distance from vertex to radius handle
 
-/**
- * Hit-test gizmo parts. Returns the part under the cursor, or null.
- */
-function hitTestGizmo(
-  mouseX: number,
-  mouseY: number,
-  ctx: GizmoContext,
-): GizmoHit | null {
+const hitTestGizmo = (mouseX: number, mouseY: number, ctx: GizmoContext): GizmoHit | null => {
   const { cx, cy, rotation } = ctx;
 
   // Transform mouse into gizmo-local space (undo rotation)
@@ -130,17 +123,9 @@ function hitTestGizmo(
   }
 
   return null;
-}
+};
 
-/**
- * Render gizmo for the selected element.
- */
-function renderGizmo(
-  drawCtx: CanvasRenderingContext2D,
-  gizmoCtx: GizmoContext,
-  hoveredPart: GizmoPart | null,
-  activePart: GizmoPart | null,
-): void {
+const renderGizmo = (drawCtx: CanvasRenderingContext2D, gizmoCtx: GizmoContext, hoveredPart: GizmoPart | null, activePart: GizmoPart | null): void => {
   const { cx, cy, rotation } = gizmoCtx;
 
   drawCtx.save();
@@ -261,23 +246,9 @@ function renderGizmo(
   }
 
   drawCtx.restore();
-}
+};
 
-/**
- * Build the GizmoContext from a selected heightmap element.
- */
-function buildGizmoContext(
-  shapeX: number,
-  shapeY: number,
-  shapeWidth: number,
-  shapeHeight: number,
-  rotation: number,
-  scaleX: number,
-  scaleY: number,
-  worldToDisplay: (wx: number, wy: number) => { x: number; y: number } | null,
-  points?: { x: number; y: number }[],
-  sides?: number,
-): GizmoContext | null {
+const buildGizmoContext = (shapeX: number, shapeY: number, shapeWidth: number, shapeHeight: number, rotation: number, scaleX: number, scaleY: number, worldToDisplay: (wx: number, wy: number) => { x: number; y: number } | null, points?: { x: number; y: number }[], sides?: number): GizmoContext | null => {
   const center = worldToDisplay(shapeX, shapeY);
   if (!center) return null;
 
@@ -315,16 +286,13 @@ function buildGizmoContext(
     vertices,
     isFreehand: !!points && points.length > 0,
   };
-}
+};
 
-/**
- * Get the cursor for a given gizmo part.
- */
-function getGizmoCursor(part: GizmoPart | null): string {
+const getGizmoCursor = (part: GizmoPart | null): string => {
   if (!part) return 'default';
   const hit = CURSOR_MAP[part];
   return hit ?? 'default';
-}
+};
 
 const CURSOR_MAP: Record<string, string> = {
   'move-x': 'e-resize',

@@ -13,32 +13,32 @@ import type {
 import { kEffectNamesDict, kKeysDict } from './compile-types';
 import type { NameRegistry } from './name-registry';
 
-function parseFile(text: string, registry: NameRegistry): Entity[] {
+const parseFile = (text: string, registry: NameRegistry): Entity[] => {
   const sortedEnts: Entity[] = [];
   let heading: string | null = null;
   let collect: string[] = [];
 
-  function addCollect(h: string, c: string[]): void {
-    const caption = h.replace(/[\[\]]/g, '').split(' ')[0];
+  const addCollect = (h: string, c: string[]): void => {
+        const caption = h.replace(/[\[\]]/g, '').split(' ')[0];
 
-    let entity: Entity;
-    if (caption.startsWith('Song_')) {
-      entity = processSong(caption, c, registry);
-    } else if (caption.startsWith('Phrase_')) {
-      entity = processPhrase(caption, c, registry);
-    } else if (caption.startsWith('Pattern_')) {
-      entity = processPattern(caption, c, registry);
-    } else if (caption.startsWith('SongList_')) {
-      entity = processSongList(caption, c, registry);
-    } else if (caption.startsWith('Sfx_')) {
-      entity = processSfxPattern(caption, c, registry);
-    } else if (caption.startsWith('SfxPort')) {
-      entity = processSfxList(caption, c, registry);
-    } else {
-      throw new Error(`Unknown section: ${caption}`);
-    }
-    sortedEnts.push(entity);
-  }
+        let entity: Entity;
+        if (caption.startsWith('Song_')) {
+          entity = processSong(caption, c, registry);
+        } else if (caption.startsWith('Phrase_')) {
+          entity = processPhrase(caption, c, registry);
+        } else if (caption.startsWith('Pattern_')) {
+          entity = processPattern(caption, c, registry);
+        } else if (caption.startsWith('SongList_')) {
+          entity = processSongList(caption, c, registry);
+        } else if (caption.startsWith('Sfx_')) {
+          entity = processSfxPattern(caption, c, registry);
+        } else if (caption.startsWith('SfxPort')) {
+          entity = processSfxList(caption, c, registry);
+        } else {
+          throw new Error(`Unknown section: ${caption}`);
+        }
+        sortedEnts.push(entity);
+      };
 
   for (const rawLine of text.split('\n')) {
     const line = rawLine.trim();
@@ -54,9 +54,9 @@ function parseFile(text: string, registry: NameRegistry): Entity[] {
   if (heading !== null) addCollect(heading, collect);
 
   return sortedEnts;
-}
+};
 
-function processSong(caption: string, lines: string[], registry: NameRegistry): Entity {
+const processSong = (caption: string, lines: string[], registry: NameRegistry): Entity => {
   const song = registry.getOrCreate<CompiledSong>(caption, 'Song', true)!;
   song.phrases = [];
   for (const line of lines) {
@@ -68,21 +68,21 @@ function processSong(caption: string, lines: string[], registry: NameRegistry): 
     }
   }
   return song as unknown as Entity;
-}
+};
 
-function processSongList(caption: string, lines: string[], registry: NameRegistry): Entity {
+const processSongList = (caption: string, lines: string[], registry: NameRegistry): Entity => {
   const songList = registry.getOrCreate<CompiledSongList>(caption, 'SongList', true)!;
   songList.songs = lines.map(l => registry.getOrCreate<CompiledSong>(l, 'Song', false));
   return songList as unknown as Entity;
-}
+};
 
-function processPhrase(caption: string, lines: string[], registry: NameRegistry): Entity {
+const processPhrase = (caption: string, lines: string[], registry: NameRegistry): Entity => {
   const phrase = registry.getOrCreate<CompiledPhrase>(caption, 'Phrase', true)!;
   phrase.patterns = lines.map(l => registry.getOrCreate<CompiledPattern>(l, 'Pattern', false));
   return phrase as unknown as Entity;
-}
+};
 
-function processPattern(caption: string, lines: string[], registry: NameRegistry): Entity {
+const processPattern = (caption: string, lines: string[], registry: NameRegistry): Entity => {
   const pattern = registry.getOrCreate<CompiledPattern>(caption, 'Pattern', true)!;
   pattern.lines = [];
   pattern.fallthrough = false;
@@ -103,15 +103,15 @@ function processPattern(caption: string, lines: string[], registry: NameRegistry
     }
   }
   return pattern as unknown as Entity;
-}
+};
 
-function processSfxPattern(caption: string, lines: string[], registry: NameRegistry): Entity {
+const processSfxPattern = (caption: string, lines: string[], registry: NameRegistry): Entity => {
   const pattern = registry.getOrCreate<CompiledSfxPattern>(caption, 'SfxPattern', true)!;
   pattern.lines = lines;
   return pattern as unknown as Entity;
-}
+};
 
-function processSfxList(caption: string, lines: string[], registry: NameRegistry): Entity {
+const processSfxList = (caption: string, lines: string[], registry: NameRegistry): Entity => {
   const sfxList = registry.getOrCreate<CompiledSfxList>(caption, 'SfxList', true)!;
   sfxList.patterns = [];
   sfxList.next = [];
@@ -123,6 +123,6 @@ function processSfxList(caption: string, lines: string[], registry: NameRegistry
     if (parts.length >= 3) sfxList.echo.push(parseInt(parts[2]));
   }
   return sfxList as unknown as Entity;
-}
+};
 
 export { parseFile };

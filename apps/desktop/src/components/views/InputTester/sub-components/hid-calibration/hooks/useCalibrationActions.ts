@@ -5,7 +5,7 @@
 import { useCallback } from 'react';
 import { DEVICE_PROFILES, findDeviceProfileByVidPid } from '@shared/input';
 import type { DeviceProfile } from '@shared/input';
-import type { HidAxisMapping, HidButtonMapping, HidControllerMap, IdleRecordResult, InputItem, StickCandidate, StickSide, TriggerSide } from '../types';
+import type { AxisSubStep, CaptureState, GyroState, HidAxisMapping, HidButtonMapping, HidControllerMap, IdleRecordResult, IdleState, InputItem, Phase, StickCandidate, StickSide, TriggerSide } from '../types';
 import { ANALOG_THRESHOLD_DELTA, STICK_IDS, TRIGGER_IDS } from '../constants';
 import { findCounterBytes, hex, popcount } from '../hid-analysis';
 import { finalizeStickCalibration, resetStick, finalizeTriggerCalibration, resetTrigger } from '../stick-trigger-handlers';
@@ -67,14 +67,14 @@ interface ActionDeps {
   doAdvance: () => void;
   setItems: (u: InputItem[] | ((prev: InputItem[]) => InputItem[])) => void;
   setActiveIndex: (i: number) => void;
-  setCaptureState: (s: import('../types').CaptureState) => void;
-  setAxisSubStep: (s: import('../types').AxisSubStep) => void;
+  setCaptureState: (s: CaptureState) => void;
+  setAxisSubStep: (s: AxisSubStep) => void;
   setAutoAdvanceWrapped: (v: boolean) => void;
   setInputPhaseActiveWrapped: (v: boolean) => void;
-  setGyroState: (s: import('../types').GyroState) => void;
+  setGyroState: (s: GyroState) => void;
   setGyroChangedBytes: (s: Set<number>) => void;
   setGyroExcluded: (s: Set<number>) => void;
-  setIdleState: (s: import('../types').IdleState) => void;
+  setIdleState: (s: IdleState) => void;
   setActiveStick: (s: StickSide | null) => void;
   setStickBusy: (v: boolean) => void;
   setStickLiveInfo: (s: string) => void;
@@ -86,11 +86,11 @@ interface ActionDeps {
   setTriggerPickMode: (v: boolean) => void;
   setTriggerPickedByte: (v: number | null | ((prev: number | null) => number | null)) => void;
   setProfile: (p: DeviceProfile | null) => void;
-  setPhase: (p: import('../types').Phase) => void;
+  setPhase: (p: Phase) => void;
   onComplete: (map: HidControllerMap) => void;
 }
 
-function useCalibrationActions(d: ActionDeps) {
+const useCalibrationActions = (d: ActionDeps) => {
   const handleProfileConfirm = useCallback(() => {
     const p = DEVICE_PROFILES.find(pr => pr.id === d.selectedProfileId); if (!p) return;
     d.setProfile(p);
@@ -291,7 +291,7 @@ function useCalibrationActions(d: ActionDeps) {
     handleStartButtons, handleClearItem, handleManualByteAssign, handleSkip, handleGoBack, handleClickItem,
     handleByteClick, handleCopyJson, handleFinish,
   };
-}
+};
 
 export { useCalibrationActions };
 export type { ActionDeps };
