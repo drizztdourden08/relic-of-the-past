@@ -29,6 +29,17 @@ let storeUpdater: ((state: GameUIState) => void) | null = null;
 
 // ─── Buffer Parser ───
 
+// Module 0x0E (Interface) sub-module → UI mode. Data-driven lookup instead of a
+// nested switch; missing entries fall back to 'gameplay' (potions etc — overlay).
+const INTERFACE_SUBMODULE_MODES: Record<number, UIMode> = {
+  1: 'paused_menu',
+  2: 'text',
+  3: 'dungeon_map',
+  7: 'overworld_map',
+  10: 'flute_menu',
+  11: 'save_menu',
+};
+
 function deriveUIMode(mainModule: number, subModule: number, _subSubModule: number, floorTimer: number): UIMode {
   switch (mainModule) {
     case 0:
@@ -48,15 +59,7 @@ function deriveUIMode(mainModule: number, subModule: number, _subSubModule: numb
       if (floorTimer > 0) return 'gameplay'; // floor indicator is just a HUD element during gameplay
       return 'gameplay';
     case 14: // Module0E_Interface
-      switch (subModule) {
-        case 1: return 'paused_menu';
-        case 2: return 'text';
-        case 3: return 'dungeon_map';
-        case 7: return 'overworld_map';
-        case 10: return 'flute_menu';
-        case 11: return 'save_menu';
-        default: return 'gameplay'; // potions etc — gameplay with overlay
-      }
+      return INTERFACE_SUBMODULE_MODES[subModule] ?? 'gameplay';
     case 18: // Module12_GameOver (0x12)
       return 'game_over';
     case 23: // Module17_SaveAndQuit (0x17)

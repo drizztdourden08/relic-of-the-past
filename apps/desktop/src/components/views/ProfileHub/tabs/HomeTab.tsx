@@ -8,7 +8,7 @@ import { HeroSaveCard } from '../../../compounds/HeroSaveCard';
 import { PlaySessionCard } from '../../../compounds/PlaySessionCard';
 import { Dialog } from '../../../composites/Dialog';
 import { listSessions } from '../../../../lib/game/session-tracker';
-import { saveState, loadState, subscribeGameState, reassertBackdropBlack, reassertHudHidden, reassertPauseHidden } from '../../../../lib/game';
+import { saveState, loadState, subscribeGameState, captureStateBuffer, loadStateFromBuffer } from '../../../../lib/game';
 import { log } from '../../../../lib/log-bus';
 import './HomeTab.css';
 
@@ -195,18 +195,10 @@ const HomeTab = (props: HomeTabProps) => {
     setBusyNormal('__creating__');
     log.app(`Creating normal save: "${name}"`);
 
-    const mod = (window as any).__zelda3Module;
-    if (!mod) return;
-    // Use slot 98 as temp for capturing state
-    mod.ccall('WasmSaveState', null, ['number'], [98]);
-    const savePath = `/saves/save98.sav`;
-    const { exists } = mod.FS.analyzePath(savePath);
-    if (!exists) { setBusyNormal(null); return; }
+    const ab = captureStateBuffer();
+    if (!ab) { setBusyNormal(null); return; }
 
-    const data = mod.FS.readFile(savePath);
-    const ab = (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength);
-
-    // Capture screenshot
+    // Capture screenshot (DOM concern — stays in the view)
     let screenshot: ArrayBuffer | undefined;
     const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
     if (canvas) {
@@ -217,7 +209,6 @@ const HomeTab = (props: HomeTabProps) => {
     }
 
     await window.api.createNormalSave(profileId, name, ab, screenshot);
-    try { mod.FS.unlink(savePath); } catch { /* ignore */ }
     await loadNormalSaves();
     setBusyNormal(null);
   }, [profileId, newSaveName]);
@@ -237,17 +228,7 @@ const HomeTab = (props: HomeTabProps) => {
       });
     }
     const buffer = await window.api.loadNormalSave(profileId, id);
-    if (buffer) {
-      const mod = (window as any).__zelda3Module;
-      if (mod) {
-        mod.FS.writeFile('/saves/save98.sav', new Uint8Array(buffer));
-        mod.ccall('WasmLoadState', null, ['number'], [98]);
-        reassertBackdropBlack();
-        reassertHudHidden();
-        reassertPauseHidden();
-        try { mod.FS.unlink('/saves/save98.sav'); } catch { /* ignore */ }
-      }
-    }
+    if (buffer) loadStateFromBuffer(buffer);
     setBusyNormal(null);
   }, [profileId, isGameRunning, onStartGame]);
 
@@ -263,15 +244,8 @@ const HomeTab = (props: HomeTabProps) => {
     setBusyNormal(id);
     log.app(`Overwriting normal save: ${id}`);
 
-    const mod = (window as any).__zelda3Module;
-    if (!mod) { setBusyNormal(null); return; }
-    mod.ccall('WasmSaveState', null, ['number'], [98]);
-    const savePath = `/saves/save98.sav`;
-    const { exists } = mod.FS.analyzePath(savePath);
-    if (!exists) { setBusyNormal(null); return; }
-
-    const data = mod.FS.readFile(savePath);
-    const ab = (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength);
+    const ab = captureStateBuffer();
+    if (!ab) { setBusyNormal(null); return; }
 
     let screenshot: ArrayBuffer | undefined;
     const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
@@ -283,7 +257,6 @@ const HomeTab = (props: HomeTabProps) => {
     }
 
     await window.api.overwriteNormalSave(profileId, id, ab, screenshot);
-    try { mod.FS.unlink(savePath); } catch { /* ignore */ }
     await loadNormalSaves();
     setBusyNormal(null);
   }, [profileId, dialog]);
@@ -324,17 +297,7 @@ const HomeTab = (props: HomeTabProps) => {
       });
     }
     const buffer = await window.api.loadAutoSave(profileId, id);
-    if (buffer) {
-      const mod = (window as any).__zelda3Module;
-      if (mod) {
-        mod.FS.writeFile('/saves/save98.sav', new Uint8Array(buffer));
-        mod.ccall('WasmLoadState', null, ['number'], [98]);
-        reassertBackdropBlack();
-        reassertHudHidden();
-        reassertPauseHidden();
-        try { mod.FS.unlink('/saves/save98.sav'); } catch { /* ignore */ }
-      }
-    }
+    if (buffer) loadStateFromBuffer(buffer);
     setBusyAuto(null);
   }, [profileId, isGameRunning, onStartGame]);
 

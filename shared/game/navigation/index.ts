@@ -9,6 +9,9 @@ export { floodFillWorld } from './flood-fill';
 // ─── Entry Point #3: Hub/Screen Graph Navigation ─────────────────────────────
 export { findShortestPath, findPrecisePath, findUnreachableScreens, getGraphStats } from './hub-navigation';
 
+// ─── Connection destination naming ───────────────────────────────────────────
+export { getConnectionDestinationName } from './connection-names';
+
 // ─── Types ───────────────────────────────────────────────────────────────────
 export type {
   TilePassability, LedgeDir, GridPos, WorldPos,

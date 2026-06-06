@@ -10,11 +10,10 @@ import { Icon } from '@iconify/react/offline';
 import { useGameUIStore } from '../../stores/game-ui-store';
 import { useNavigationOverlayStore } from '../../stores/navigation-overlay-store';
 import { getEntranceIcon } from '../../lib/entrance-icons';
-import { buildScreenBundle, floodFillScreen, getConnections } from '@shared/game/navigation';
+import { buildScreenBundle, floodFillScreen, getConnections, getConnectionDestinationName } from '@shared/game/navigation';
 import type { FloodFillOptions, QuadrantBounds } from '@shared/game/navigation';
 import type { ScreenBundle, OverworldEntrance } from '@shared/game/navigation';
 import { getScreenLookup, SCREEN_BY_ID } from '@shared/game/data/screens';
-import { ALL_CONNECTIONS } from '@shared/game/data/connections';
 import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetProgressIndicator, wasmGetIndoorDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetStaircaseType, wasmGetIndoorUncleBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetDungeonMapPosition, wasmGetRoomExitDoors, wasmGetRoomStairInfo, wasmGetRoomWalkBoundaries, wasmGetToggleFloorPositions } from '../../lib/game';
 import { getCompletedChecks } from '../../lib/game/tracker';
 import type { OverworldVariantInfo } from '../../lib/game';
@@ -25,31 +24,6 @@ import { useScreenDetection, useLinkDebugState, useAutoFloodTrigger } from './ho
 /** Get overworld screen display name from screen index */
 function getScreenDisplayName(screenIndex: number): string {
   return getScreenLookup().byOverworldScreen.get(screenIndex)?.name ?? `0x${screenIndex.toString(16).toUpperCase()}`;
-}
-
-/** Pre-built map: fromRegionId → array of destination screen IDs */
-const connectionsByFrom = new Map<string, string[]>();
-for (const conn of ALL_CONNECTIONS) {
-  let list = connectionsByFrom.get(conn.from);
-  if (!list) { list = []; connectionsByFrom.set(conn.from, list); }
-  list.push(conn.to);
-}
-
-/**
- * Resolve display name for an entrance/connection destination.
- * Given the current screen ID and the target room's roomIndex,
- * finds the matching connection and returns the destination screen's name.
- */
-function getConnectionDestinationName(currentScreenId: string, targetRoomId: number): string | null {
-  const destinations = connectionsByFrom.get(currentScreenId);
-  if (!destinations) return null;
-  for (const toId of destinations) {
-    const screen = SCREEN_BY_ID.get(toId);
-    if (screen && screen.roomIndex === targetRoomId) {
-      return screen.name;
-    }
-  }
-  return null;
 }
 
 import type { FloodFillResult, ConnectionInfo } from '@shared/game/navigation';

@@ -8,7 +8,7 @@ export type { DoorBoundaryTile, DungeonMapPosition, FallHole, LiveSpriteInfo, Ov
 export { startGame, resetGame } from './lifecycle';
 export { setMsuData, setAutoSaveConfig } from './lifecycle';
 export type { MsuTrackData, AutoSaveConfig } from './lifecycle';
-export { saveState, loadState } from './save-states';
+export { saveState, loadState, captureStateBuffer, loadStateFromBuffer } from './save-states';
 export { setItemOverride, clearItemOverrides } from './randomizer';
 export { pushLiveSettings, reassertBackdropBlack, reassertHudHidden, reassertPauseHidden, reassertVolumes, requiresRestart, primeLiveSettings, LIVE_SETTINGS } from './live-settings';
 export { initMasterVolume, setMasterVolume, suspendAudio, resumeAudio } from './audio-volume';

@@ -24,6 +24,7 @@ import { useSaveStateSettings } from './behavior/useSaveStateSettings';
 import { useStartup } from './behavior/useStartup';
 import { useAutoTest } from './behavior/useAutoTest';
 import { useAutoUpdate } from '../hooks/useAutoUpdate';
+import { useAppVersion } from '../hooks/useAppVersion';
 import { useDumpLayers } from './behavior/useDumpLayers';
 import { useDumpNav } from './behavior/useDumpNav';
 import { getInputManager, primeLiveSettings } from '../lib/game';
@@ -32,6 +33,7 @@ import './App.css';
 const App = () => {
   const [dataTab, setDataTab] = useState<string>('profiles');
   const [profileHubTab, setProfileHubTab] = useState<ProfileHubTab>('home');
+  const appVersion = useAppVersion();
 
   const { dialog, showDialog, dismissDialog, handleDeleteConfirm } = useConfirmDialog();
   const game = useGameLifecycle();
@@ -258,6 +260,7 @@ const App = () => {
 
       <AboutDialog
         open={showAbout}
+        version={appVersion}
         onClose={() => setShowAbout(false)}
       />
     </div>

@@ -1,21 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Button } from '../../primitives/Button';
 import './AboutDialog.css';
 
 interface AboutDialogProps {
   open: boolean;
+  version: string;
   onClose: () => void;
 }
 
-const AboutDialog = ({ open, onClose }: AboutDialogProps) => {
-  const [version, setVersion] = useState('');
-
-  useEffect(() => {
-    if (open) {
-      window.api.updater.getVersion().then(setVersion);
-    }
-  }, [open]);
-
+const AboutDialog = ({ open, version, onClose }: AboutDialogProps) => {
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {

@@ -4,6 +4,7 @@ interface EmscriptenFS {
   readdir(path: string): string[];
   readFile(path: string): Uint8Array;
   analyzePath(path: string): { exists: boolean };
+  unlink(path: string): void;
 }
 
 interface EmscriptenModule {

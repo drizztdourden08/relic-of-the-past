@@ -1,6 +1,4 @@
-const formatRomName = (romFile: string): string => {
-  return romFile.replace(/\.(sfc|smc)$/i, '');
-};
+import { formatRomName } from '../../../../utils/formatRomName';
 
 const formatSize = (bytes: number | null): string => {
   if (bytes == null) return '';

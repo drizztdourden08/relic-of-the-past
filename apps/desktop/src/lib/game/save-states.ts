@@ -113,4 +113,39 @@ async function loadState(slot: number): Promise<boolean> {
   }
 }
 
-export { loadState, saveState };
+/**
+ * Capture the current game state into a temp slot and return its raw bytes.
+ * Encapsulates the WASM/MEMFS dance so views never touch the module directly.
+ */
+const captureStateBuffer = (slot = 98): ArrayBuffer | null => {
+  const mod = getModule();
+  if (!mod) return null;
+  mod.ccall('WasmSaveState', null, ['number'], [slot]);
+  const savePath = `/saves/save${slot}.sav`;
+  if (!mod.FS.analyzePath(savePath).exists) return null;
+  const data = mod.FS.readFile(savePath);
+  const ab = (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength);
+  try { mod.FS.unlink(savePath); } catch { /* ignore */ }
+  return ab;
+};
+
+/**
+ * Load a previously-captured state buffer, re-asserting live settings and
+ * refreshing the tracker. Mirrors loadState() for buffers not on disk.
+ */
+const loadStateFromBuffer = (buffer: ArrayBuffer, slot = 98): boolean => {
+  const mod = getModule();
+  if (!mod) return false;
+  const savePath = `/saves/save${slot}.sav`;
+  mod.FS.writeFile(savePath, new Uint8Array(buffer));
+  mod.ccall('WasmLoadState', null, ['number'], [slot]);
+  reassertBackdropBlack();
+  reassertHudHidden();
+  reassertPauseHidden();
+  reassertVolumes();
+  pollInventoryState(true);
+  try { mod.FS.unlink(savePath); } catch { /* ignore */ }
+  return true;
+};
+
+export { captureStateBuffer, loadState, loadStateFromBuffer, saveState };
