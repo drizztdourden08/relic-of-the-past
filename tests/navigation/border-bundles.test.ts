@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import { findBorderBundles, computeOverlap, buildWalkConnection } from '../../shared/game/navigation/analysis/border-bundles';
 import type { ReachState } from '../../shared/game/navigation/types';

@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Coding Standards — ALttP Port
 
 > Canonical coding-style reference for this repo. Both Claude Code (`/CLAUDE.md`)

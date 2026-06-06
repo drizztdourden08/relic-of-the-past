@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 /**
  * Debug CLI: --dump-layers=N [--hover-tile=col,row]
  *

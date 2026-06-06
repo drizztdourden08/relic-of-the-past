@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Profiles
 
 Profiles are isolated containers that let you maintain completely separate configurations of the game. Each profile has its own:

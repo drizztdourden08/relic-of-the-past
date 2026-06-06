@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Cheats Bridge — typed wrappers for all WasmCheat* exports.
  * Calls into the running WASM module via ccall.

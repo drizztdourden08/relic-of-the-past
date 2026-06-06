@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind barrel */
 export { useAppNavigation } from './useAppNavigation';
 export { useAudioSettings } from './useAudioSettings';
 export { useConfirmDialog } from './useConfirmDialog';

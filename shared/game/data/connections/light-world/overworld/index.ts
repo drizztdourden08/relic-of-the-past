@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../../types';
 import { LW_OVERWORLD_CENTRAL_CONNECTIONS } from './central-hyrule';
 import { LW_OVERWORLD_DEATH_MOUNTAIN_CONNECTIONS } from './death-mountain';

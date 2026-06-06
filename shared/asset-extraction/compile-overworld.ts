@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Overworld asset compilation — orchestrator for compressed map data, travel tables, entrances, exits, sprites, secrets.
  */

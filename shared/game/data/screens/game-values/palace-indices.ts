@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 /**
  * Palace Indices — canonical map of cur_palace_index_x2 runtime values.
  *

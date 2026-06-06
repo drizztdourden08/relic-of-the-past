@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * HUD tile decoder — extracts 2bpp HUD item graphics.
  *

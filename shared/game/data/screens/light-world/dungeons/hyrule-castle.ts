@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
 const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [

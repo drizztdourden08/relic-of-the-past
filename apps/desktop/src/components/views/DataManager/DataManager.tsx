@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback } from 'react';
 import { ProfileManager } from './sub-components/ProfileManager';
 import { RomManager } from './sub-components/RomManager';

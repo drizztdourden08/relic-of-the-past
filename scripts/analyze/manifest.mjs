@@ -9,7 +9,9 @@
 import fs from 'fs';
 import path from 'path';
 
-const stripJsonc = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1');
+// Strip only whole-line `//` comments. Globs contain `/*` and `*/` (e.g.
+// `**/*.json`), so block-comment stripping would corrupt them — don't do it.
+const stripJsonc = (s) => s.split('\n').filter((l) => !/^\s*\/\//.test(l)).join('\n');
 
 const globToRegex = (glob) => {
   let re = '^';

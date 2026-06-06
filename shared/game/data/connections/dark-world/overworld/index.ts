@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../../types';
 import { DW_OVERWORLD_DARK_DEATH_MOUNTAIN_CONNECTIONS } from './dark-death-mountain';
 import { DW_OVERWORLD_DARK_EAST_CONNECTIONS } from './dark-east';

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 import { classifyTileAttr } from '@shared/game/navigation/tile-classification';
 import { getTileAttrsMap, getAttrLabel } from '@shared/game/navigation/tile-attrs';
 import type { FloodFillResult } from '@shared/game/navigation';

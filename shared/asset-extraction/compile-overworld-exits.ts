@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Overworld exit and special exit data compilation.
  */

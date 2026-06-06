@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * GameOverlay — sized to match the game canvas exactly.
  * pointer-events: none so it doesn't interfere with input.

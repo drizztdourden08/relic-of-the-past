@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { LogicConfig, Requirement, ScreenConnection } from '../types';
 import { SCREEN_RULES } from './screen-rules';
 import { CHECK_RULES } from './check-rules';

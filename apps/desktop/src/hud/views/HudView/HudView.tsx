@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 import { useHud, SNES_HEIGHT } from '../../hooks/useHud';
 import { useHudSettingsStore } from '../../../stores/hud-settings-store';
 import { HudMagicMeter } from '../../composites/HudMagicMeter';

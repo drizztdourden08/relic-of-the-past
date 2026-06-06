@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import definitions from './definitions.json';
 
 type SpriteCategory = 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop';

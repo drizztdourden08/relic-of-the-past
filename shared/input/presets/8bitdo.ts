@@ -1,3 +1,4 @@
+/* @layer shared-input @kind data */
 /**
  * 8BitDo Controllers (Pro 2, SN30 Pro, SN30 Pro+)
  * VID: 0x2DC8  PIDs: various

@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Tracker Bridge — connects WASM item/check notifications to the tracker.
  * Manages window.__onItemReceived callback and inventory state polling.

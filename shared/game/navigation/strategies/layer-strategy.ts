@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { TilePassability, TransitionPoint, GridPos, ReachState } from '../types';
 
 // ─── BFS Engine Types ────────────────────────────────────────────────────────

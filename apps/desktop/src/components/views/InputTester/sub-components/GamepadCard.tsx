@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * GamepadCard — Standard Gamepad API controller display with buttons, sticks, triggers.
  */

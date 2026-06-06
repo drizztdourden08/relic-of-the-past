@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import { useGameUIStore } from '../../../../../stores/game-ui-store';
 import { wasmGetViewportInfo, wasmGetLiveSprites } from '../../../../../lib/game';

@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Haptic Polling — frame-by-frame detection of game state changes for haptics.
  *

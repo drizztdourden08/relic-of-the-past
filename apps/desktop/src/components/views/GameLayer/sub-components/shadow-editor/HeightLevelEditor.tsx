@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState } from 'react';
 import { useShadowEditorStore } from '../../../../../stores/shadow-editor-store';
 import './HeightLevelEditor.css';

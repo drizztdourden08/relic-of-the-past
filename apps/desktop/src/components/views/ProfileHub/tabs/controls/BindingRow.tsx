@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * BindingRow — a single input mapping row (SNES buttons, shortcuts, cheats).
  * Shows: action label | optional middle icon | optional middle label | binding icon | binding label

@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Delivery Queue — manages item deliveries that must wait until Link can receive them.
  * Polls WasmCanReceiveItem each frame; when ready, delivers the next item in FIFO order.

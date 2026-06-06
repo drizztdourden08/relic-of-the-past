@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind logic */
 /** Data-prep helpers for the Navigation widget (pure + wasm-backed). */
 import { getScreenLookup } from '@shared/game/data/screens';
 import type { OverworldEntrance } from '@shared/game/navigation';

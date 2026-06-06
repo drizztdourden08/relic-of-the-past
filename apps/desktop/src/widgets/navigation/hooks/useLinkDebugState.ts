@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind hook */
 import { wasmGetViewportInfo, wasmGetLinkLayer, wasmGetRoomCollisionType, wasmGetStaircaseType } from '../../../lib/game';
 
 interface LinkDebugState {

@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Extracts dungeon entrance and starting-point data from ROM.
  */

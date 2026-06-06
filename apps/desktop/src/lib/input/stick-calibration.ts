@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * Stick & Trigger Calibration — types and math for normalizing raw
  * analog stick and trigger values using user-recorded calibration data.

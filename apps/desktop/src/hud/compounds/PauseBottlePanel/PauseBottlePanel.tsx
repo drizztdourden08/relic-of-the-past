@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind data */
 /**
  * PauseBottlePanel — shown when cursor is on the bottle slot.
  * Replaces the progress + equipment panels on the right side.

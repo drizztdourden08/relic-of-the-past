@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../../types';
 
 const LW_OVERWORLD_LOST_WOODS_CONNECTIONS: ScreenConnection[] = [

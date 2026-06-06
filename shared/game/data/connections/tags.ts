@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 /**
  * Connection Tag System — Categorizes how regions are connected.
  *

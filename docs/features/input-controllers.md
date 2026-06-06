@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Input & Controllers
 
 Full controller and keyboard support with complete rebinding.

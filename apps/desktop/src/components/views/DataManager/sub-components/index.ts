@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind barrel */
 export { ImportForm } from './ImportForm';
 export { LanguageManager } from './LanguageManager';
 export { MsuManager } from './MsuManager';

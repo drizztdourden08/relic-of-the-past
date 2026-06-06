@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useDeviceSync — detect and track connected input devices.
  */

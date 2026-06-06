@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 /**
  * Settings section definitions for profile detail display.
  */

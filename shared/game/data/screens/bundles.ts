@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 /**
  * Screen Bundle — groups overworld screens into logical areas.
  *

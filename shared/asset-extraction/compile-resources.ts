@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Compile resources — produces zelda3_assets.dat from ROM data.
  * This is the final pipeline stage that assembles all game assets into a binary file.

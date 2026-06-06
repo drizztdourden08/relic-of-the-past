@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 ﻿interface SaveSlotProps {
   slot: number;
   screenshotUrl: string | null;

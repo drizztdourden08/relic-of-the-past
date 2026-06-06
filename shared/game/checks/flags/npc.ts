@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 /**
  * NPC Check Configuration — single source of truth for NPC-type checks.
  *

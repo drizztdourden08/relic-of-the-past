@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 /**
  * Helper utilities for the HID Calibration Wizard rendering and state.
  */

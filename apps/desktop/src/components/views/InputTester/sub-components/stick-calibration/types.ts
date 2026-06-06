@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 /**
  * Stick calibration types, constants, and helpers.
  */

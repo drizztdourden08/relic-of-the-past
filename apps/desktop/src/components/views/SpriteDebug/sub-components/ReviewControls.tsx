@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import type { ReviewStatus } from '../types';
 import { S } from '../styles';
 

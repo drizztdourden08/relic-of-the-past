@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 /**
  * Tests for LogicConfig and resolveRules.
  *

@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Relic of the Past — Documentation
 
 A modern desktop wrapper for the A Link to the Past PC port, built to make the experience accessible, polished, and ready for randomizer support.

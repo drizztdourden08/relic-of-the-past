@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Haptics
 
 Vibration feedback for supported controllers, triggered by in-game events.

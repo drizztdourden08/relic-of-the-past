@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * Profile Utilities — create InputProfiles from presets and resolve
  * function mapping display icons.

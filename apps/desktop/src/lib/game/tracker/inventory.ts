@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Inventory state parsing — reads the 34-byte WASM buffer from
  * WasmGetInventoryState() and converts it into a Set<string> of

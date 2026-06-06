@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 import type { ConnectionInfo, ScreenBundle } from '@shared/game/navigation';
 import { S } from '../styles';
 import { InternalEdgeSvg } from './InternalEdgeSvg';

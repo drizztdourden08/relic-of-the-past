@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 /**
  * Verification tests for the ROM layer and compression codecs.
  * 

@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * Type definitions for the HID Input Reader module.
  */

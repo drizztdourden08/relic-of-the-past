@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 interface ProfilePageProps {
   profile: Profile;
   romStatus: RomDisplayInfo | null;

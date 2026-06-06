@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useRef, useEffect, useMemo } from 'react';
 import { useNavigationOverlayStore } from '../../../../../stores/navigation-overlay-store';
 import { useGameUIStore } from '../../../../../stores/game-ui-store';

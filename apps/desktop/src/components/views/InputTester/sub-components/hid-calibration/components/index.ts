@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind barrel */
 export { ProfileSelector } from './ProfileSelector';
 export { PrereqCards } from './PrereqCards';
 export { StickCards } from './StickCards';

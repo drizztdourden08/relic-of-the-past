@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useWidgetDrag — Hook for dragging floating widgets by their titlebar.
  */

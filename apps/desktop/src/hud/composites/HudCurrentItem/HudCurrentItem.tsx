@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind data */
 /**
  * Maps equippedY slot ID (1-20) to sprite filename.
  */

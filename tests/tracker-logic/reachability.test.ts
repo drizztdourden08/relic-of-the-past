@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 /**
  * Tracker logic reachability tests.
  *

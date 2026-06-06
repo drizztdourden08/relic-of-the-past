@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Session Tracker — records play sessions (start/end/duration).
  * Foundation for future per-session stats tracking.

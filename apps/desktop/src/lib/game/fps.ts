@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * FPS — read the current frame rate from the running WASM module.
  */

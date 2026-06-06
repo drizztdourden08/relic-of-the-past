@@ -1,3 +1,4 @@
+/* @layer tooling-scripts @kind logic */
 /**
  * Project file classifier. Walks the repo, classifies every source file by
  * language, architectural role, and type (Data is one type), and reports line

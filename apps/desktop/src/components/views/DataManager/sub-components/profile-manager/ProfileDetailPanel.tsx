@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * Profile detail panel — right-side display of selected profile info + settings.
  */

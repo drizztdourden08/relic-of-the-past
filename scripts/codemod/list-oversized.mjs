@@ -1,3 +1,4 @@
+/* @layer tooling-scripts @kind logic */
 import fs from 'fs';
 const r = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
 const cwd = process.cwd();

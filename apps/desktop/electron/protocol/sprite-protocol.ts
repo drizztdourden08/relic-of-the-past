@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import { app, net, protocol } from 'electron';
 import { join } from 'path';
 

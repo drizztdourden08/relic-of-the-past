@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 /**
  * Calibration persistence — stick and trigger calibration data per device.
  */

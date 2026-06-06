@@ -1,3 +1,4 @@
+/* @layer shared-input @kind data */
 /**
  * Generic / fallback controller.
  * Matches any device not claimed by a specific implementation.

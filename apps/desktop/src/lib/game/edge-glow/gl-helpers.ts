@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * WebGL helper utilities for the edge-glow pipeline.
  * Shader compilation, program linking, texture/FBO management, and quad drawing.

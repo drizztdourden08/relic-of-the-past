@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * Polling Engine — computes the SNES bitmask each frame by reading
  * keyboard state, Gamepad API, and HID device state.

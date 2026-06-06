@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /**
  * Unified tile attribute map — single source of truth for collision behavior,
  * equipment requirements, semantic labels, and category grouping.

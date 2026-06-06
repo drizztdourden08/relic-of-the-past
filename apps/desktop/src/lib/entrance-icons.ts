@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 import woodenDoor from '@iconify-icons/game-icons/wooden-door';
 import caveEntrance from '@iconify-icons/game-icons/cave-entrance';
 import dungeonGate from '@iconify-icons/game-icons/dungeon-gate';

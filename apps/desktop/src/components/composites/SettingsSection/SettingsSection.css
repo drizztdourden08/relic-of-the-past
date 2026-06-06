@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind style */
 .settings-section {
   display: flex;
   flex-direction: column;

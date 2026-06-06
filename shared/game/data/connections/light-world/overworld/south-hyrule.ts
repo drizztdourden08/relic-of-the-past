@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../../types';
 
 const LW_OVERWORLD_SOUTH_HYRULE_CONNECTIONS: ScreenConnection[] = [

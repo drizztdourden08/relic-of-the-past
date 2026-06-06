@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { TransitionPoint, GridPos } from '../types';
 import { GRID_SIZE } from '../types';
 import { DIRECTIONS } from '../core';

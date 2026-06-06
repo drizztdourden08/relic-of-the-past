@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * Gyro and Idle prerequisite cards for the HID Calibration Wizard.
  */

@@ -1,3 +1,4 @@
+/* @layer tests @kind logic */
 /**
  * Shared Playwright helpers for Electron app testing.
  *

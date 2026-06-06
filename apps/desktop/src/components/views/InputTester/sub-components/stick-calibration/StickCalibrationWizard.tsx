@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 /**
  * StickCalibrationWizard — 3-step analog stick calibration orchestrator.
  *

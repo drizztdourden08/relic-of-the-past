@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 ﻿import type { PlaySession } from '@shared/types/session';
 import { formatSessionDate, formatDuration } from './behavior/formatters';
 import './PlaySessionCard.css';

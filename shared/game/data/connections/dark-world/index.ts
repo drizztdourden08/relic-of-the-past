@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../types';
 import { DW_OVERWORLD_CONNECTIONS } from './overworld';
 import { DW_DUNGEON_CONNECTIONS } from './dungeons';

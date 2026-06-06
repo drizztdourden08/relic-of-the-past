@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 /**
  * BottlesTab — Manage 4 bottle slots with content selection.
  */

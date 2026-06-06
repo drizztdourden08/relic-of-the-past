@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import './ToggleGroup.css';
 
 interface ToggleOption<T extends string = string> {

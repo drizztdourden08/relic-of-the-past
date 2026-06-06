@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import type { InventoryCategory, InventorySlot, InventoryViewMode } from '@shared/game/items/sprites';
 import {
   INVENTORY_LAYOUT, INGAME_ITEMS_GRID, INGAME_EQUIPMENT, INGAME_PASSIVES, COMPACT_LAYOUT,

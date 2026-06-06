@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 /**
  * HudSprite — renders a single sprite image with pixel-perfect scaling.
  * Optionally adds a 1px (scaled) drop-shadow outline following the alpha shape.

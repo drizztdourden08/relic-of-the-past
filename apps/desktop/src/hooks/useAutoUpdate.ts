@@ -1,3 +1,4 @@
+/* @layer renderer-other @kind hook */
 import { useState, useEffect, useCallback } from 'react';
 
 interface UpdateState {

@@ -1,3 +1,4 @@
+<!-- @layer claude-config @kind doc -->
 ---
 name: test-app
 description: Drive and verify the running game using the project's BUILT-IN automation (CLI flags + IPC) instead of writing Playwright tests — load a save state, screenshot the window, or dump the collision/navigation state to JSON. Use when asked to test, verify, screenshot, or reproduce app behavior, to check a navigation/overlay change, or whenever you'd otherwise write a Playwright spec. Prefer these built-ins; keep any Playwright use ephemeral.

@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 /**
  * Screen Tag System — Single source of truth for categorizing every location
  * in A Link to the Past.

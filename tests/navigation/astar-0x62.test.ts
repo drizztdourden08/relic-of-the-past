@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 /**
  * A* pathfinding test on room 0x62 — validates layer-aware routing
  * and ledge traversal (south-facing 0x28 ledges between Link and target).

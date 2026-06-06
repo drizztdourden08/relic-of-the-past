@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { ITEM_SPRITE_MAP } from '@shared/game/items/sprites';
 import type { ReviewStatus, ReviewData } from '../types';

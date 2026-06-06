@@ -1,3 +1,4 @@
+/* @layer shared-types @kind logic */
 import type { FunctionMapping } from './controls';
 
 /** Haptic feedback configuration — controls vibration/rumble for game events */

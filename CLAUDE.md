@@ -1,3 +1,4 @@
+<!-- @layer root-config @kind doc -->
 # Relic of the Past — Project Guide
 
 A desktop port of *The Legend of Zelda: A Link to the Past*, built by wrapping a

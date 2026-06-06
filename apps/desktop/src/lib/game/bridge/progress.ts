@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /** Universal progress indicator + overworld variant state. */
 import { getGameState, getModule } from '../wasm-bridge';
 

@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Shadow Casting Renderer — WebGL post-processing pipeline.
  *

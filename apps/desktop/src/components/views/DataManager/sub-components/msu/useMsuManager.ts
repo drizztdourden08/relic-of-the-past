@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import type { SelectOption } from '../../../../primitives/Select';
 import { formatBytes } from '../../../../../utils/formatBytes';

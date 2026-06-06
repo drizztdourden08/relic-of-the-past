@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 import type { PanelSide, PanelSettings, TrackerLayoutSettings } from './types';
 import { STORAGE_KEY } from './constants';
 

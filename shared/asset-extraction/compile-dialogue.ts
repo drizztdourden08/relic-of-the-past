@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Dialogue asset compilation — text encoding, dictionary, and font data.
  */

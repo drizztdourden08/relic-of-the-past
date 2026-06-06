@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 import { Icon } from '@iconify/react/offline';
 import type { ConnectionInfo } from '@shared/game/navigation';
 import { getConnectionDestinationName } from '@shared/game/navigation';

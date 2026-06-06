@@ -1,3 +1,4 @@
+/* @layer renderer-stores @kind logic */
 /**
  * Game UI Store — zustand store for real-time game UI state.
  * Updated every frame by the ui-bridge polling loop.

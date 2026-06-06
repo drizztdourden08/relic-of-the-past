@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 ﻿import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import './Button.css';
 import { type ButtonVariant, type ButtonSize, type ButtonProps } from './types';

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 import { Portal } from '../Portal';
 import { useSelectDropdown } from './behavior/useSelectDropdown';
 import { SelectItem } from './sub-components/SelectItem';

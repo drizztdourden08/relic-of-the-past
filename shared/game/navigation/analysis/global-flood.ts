@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /**
  * Global Flood Fill — Orchestrates BFS across all overworld screens.
  *

@@ -1,3 +1,4 @@
+/* @layer shared-input @kind logic */
 /**
  * Input device preset registry — lookup by VID/PID, list all, find by ID.
  */

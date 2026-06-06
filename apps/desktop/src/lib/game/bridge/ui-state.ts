@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /** Game UI state buffer + overlay/menu mode (for the React overlay). */
 import { getGameState, getModule } from '../wasm-bridge';
 

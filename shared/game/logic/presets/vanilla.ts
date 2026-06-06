@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { LogicConfig } from '../../types';
 
 const VANILLA_CONFIG: LogicConfig = {

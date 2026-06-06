@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * SRAM Sync — periodic persistence of SRAM from WASM MEMFS to disk.
  */

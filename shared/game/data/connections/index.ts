@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../types';
 import { LIGHT_WORLD_CONNECTIONS, LW_DUNGEON_CONNECTIONS } from './light-world';
 import { DARK_WORLD_CONNECTIONS, DW_DUNGEON_CONNECTIONS } from './dark-world';

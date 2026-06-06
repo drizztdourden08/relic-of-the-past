@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * Action handlers for the HID Calibration Wizard.
  * Separated from useHidCalibration for file-size compliance.

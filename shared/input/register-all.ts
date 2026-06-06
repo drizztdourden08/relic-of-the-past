@@ -1,3 +1,4 @@
+/* @layer shared-input @kind logic */
 /**
  * Controller registration entry point.
  * Import this file to populate the registry with all known controllers.

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import {
   SPRITE_MANIFEST,

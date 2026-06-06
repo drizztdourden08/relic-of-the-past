@@ -1,3 +1,4 @@
+/* @layer tooling-scripts @kind logic */
 /**
  * analyze-navigation.ts — Offline navigation data analysis script.
  *

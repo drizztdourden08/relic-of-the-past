@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Music extraction — orchestrator that loads SPC sound banks from ROM,
  * decodes songs/phrases/patterns/SFX, and produces text + sample output.

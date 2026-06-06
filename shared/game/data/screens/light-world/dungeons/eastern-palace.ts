@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
 const EASTERN_PALACE_DUNGEON: ScreenDefinition[] = [

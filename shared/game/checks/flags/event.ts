@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /**
  * Event Check Completion Flags — defines how progression events are detected
  * from the WasmGetProgressFlags() buffer.

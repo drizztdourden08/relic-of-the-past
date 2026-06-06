@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * ROM loading with SHA1 validation and version detection.
  * Returns a RomData instance (dependency-injected, no global state).

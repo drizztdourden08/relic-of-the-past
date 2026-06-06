@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import { join } from 'path';
 import { createWriteStream } from 'fs';
 import { pipeline } from 'stream/promises';

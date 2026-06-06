@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Save States — save/load game state snapshots + screenshot capture.
  */

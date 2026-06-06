@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import { ipcMain } from 'electron';
 import { is } from '@electron-toolkit/utils';
 import type { ShadowCastingProject } from '../../../../shared/types/shadow-casting';

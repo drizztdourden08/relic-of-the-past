@@ -1,3 +1,4 @@
+/* @layer shared-input @kind logic */
 /**
  * Controller registry — self-registration pattern.
  * Each controller implementation imports this and calls registerController().

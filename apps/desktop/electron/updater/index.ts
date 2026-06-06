@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import { autoUpdater } from 'electron-updater';
 import type { BrowserWindow } from 'electron';
 import { ipcMain } from 'electron';

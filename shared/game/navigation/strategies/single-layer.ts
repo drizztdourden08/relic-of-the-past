@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { TilePassability, GridPos, ReachState } from '../types';
 import type { TileAttrContext } from '../tile-attrs';
 import { getHookshotTargetTiles } from '../tile-attrs';

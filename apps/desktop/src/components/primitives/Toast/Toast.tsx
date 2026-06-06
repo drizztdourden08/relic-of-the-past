@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback } from 'react';
 import type { ToastProps } from './types';
 import './Toast.css';

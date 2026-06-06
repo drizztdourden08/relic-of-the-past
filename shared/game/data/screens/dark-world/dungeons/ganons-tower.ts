@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
 const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [

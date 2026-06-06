@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useTriggerCalibration — state management hook for 2-step analog trigger calibration.
  */

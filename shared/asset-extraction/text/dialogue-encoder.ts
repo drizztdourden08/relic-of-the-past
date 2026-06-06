@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Dialogue encoder — compresses dialogue strings back to ROM format.
  *

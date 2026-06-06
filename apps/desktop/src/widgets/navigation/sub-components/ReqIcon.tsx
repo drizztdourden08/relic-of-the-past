@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 const REQ_ICONS: Record<string, { icon: string; color: string }> = {
   flippers: { icon: '🏊', color: '#48f' },
   hammer: { icon: '🔨', color: '#fa4' },

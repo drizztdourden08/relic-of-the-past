@@ -1,3 +1,4 @@
+/* @layer shared-game @kind generated */
 import type { ScreenConnection } from '../../../../types';
 
 /**

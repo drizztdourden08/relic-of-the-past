@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind hook */
 /**
  * Hooks for computing screen/connection data completeness badges.
  * Compares live game state against the static dataset.

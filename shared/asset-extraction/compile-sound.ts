@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Sound bank asset compilation — extract and compile music/SFX data.
  */

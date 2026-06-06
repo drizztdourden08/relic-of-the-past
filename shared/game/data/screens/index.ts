@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../types';
 import { ALL_LIGHT_WORLD_SCREENS } from './light-world';
 import { ALL_DARK_WORLD_SCREENS } from './dark-world';

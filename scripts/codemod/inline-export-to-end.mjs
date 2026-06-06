@@ -1,3 +1,4 @@
+/* @layer tooling-scripts @kind logic */
 // Codemod: convert inline `export const/function/class/interface/type/enum NAME`
 // into a bare declaration + a grouped `export { ... }` / `export type { ... }` at
 // the end of the file. Declarations are NOT reordered, so there is no hoisting risk.

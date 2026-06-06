@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { SegmentedControl, Slider } from '../../primitives';
 import { MODE_OPTIONS } from './constants';
 import type { PanelHeaderProps } from './types';

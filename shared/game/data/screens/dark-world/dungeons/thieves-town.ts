@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
 const THIEVES_TOWN_DUNGEON: ScreenDefinition[] = [

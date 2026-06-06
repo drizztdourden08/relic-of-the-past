@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 /**
  * PauseCrystalIcon — renders a single crystal (empty or filled).
  * Crystals are 16×16 (2×2 tiles).

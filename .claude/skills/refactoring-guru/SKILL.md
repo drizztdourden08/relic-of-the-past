@@ -1,3 +1,4 @@
+<!-- @layer claude-config @kind doc -->
 ---
 name: refactoring-guru
 description: Be an expert at clean code — recognize code smells, apply the right refactoring, choose and explain design patterns, and uphold SOLID. Use whenever writing, reviewing, modifying, or planning code: actively spot smells and pattern opportunities in existing code, suggest (or perform) refactors as you touch code, and explain the reasoning. Mirrors refactoring.guru's Refactoring + Design Patterns catalogs plus SOLID. Bundled reference catalogs load on demand; cite refactoring.guru links when explaining.

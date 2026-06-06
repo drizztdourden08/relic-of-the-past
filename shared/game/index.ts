@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 // shared/game — All game domain data, logic, and types
 
 export * from './types';

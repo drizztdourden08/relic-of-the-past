@@ -1,3 +1,4 @@
+/* @layer tooling-scripts @kind logic */
 /**
  * Classification rules: language (by extension), architectural role (by path),
  * and file type (by path + content heuristics). Tags in a file header, when

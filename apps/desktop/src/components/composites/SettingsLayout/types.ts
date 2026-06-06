@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 ﻿import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 

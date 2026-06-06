@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 ﻿import './RadioGroup.css';
 import { type RadioOption, type RadioGroupProps } from './types';
 

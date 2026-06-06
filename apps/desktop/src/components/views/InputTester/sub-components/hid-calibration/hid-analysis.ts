@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 /**
  * HID byte-level analysis algorithms — detect buttons, axes, counters from raw reports.
  */

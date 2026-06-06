@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 /**
  * LocationNotification — renders animated screen/transition banners.
  * Positioned at bottom-center of the game overlay.

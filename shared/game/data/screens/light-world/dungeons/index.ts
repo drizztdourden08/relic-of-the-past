@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
 import { HYRULE_CASTLE_DUNGEON } from './hyrule-castle';

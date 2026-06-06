@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Heightmap Builder — Rasterizes HeightmapElement shapes into a pixel buffer
  * that gets uploaded as a texture to the shadow shader.

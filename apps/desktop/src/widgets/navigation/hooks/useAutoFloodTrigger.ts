@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind hook */
 import { useEffect, useRef } from 'react';
 import { wasmGetViewportInfo, wasmGetRoomLayoutInfo } from '../../../lib/game';
 

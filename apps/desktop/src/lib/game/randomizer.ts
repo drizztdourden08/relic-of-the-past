@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Randomizer — JS-side item override hooks that talk to the WASM core.
  */

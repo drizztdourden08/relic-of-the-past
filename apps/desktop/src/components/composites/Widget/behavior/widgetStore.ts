@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 /**
  * Widget Store — localStorage + profile-based persistence for widget layouts.
  *

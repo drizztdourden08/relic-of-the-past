@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * Widget — Generic container shell.
  * Renders: titlebar with settings, frame (affected by opacity), content (fully opaque).

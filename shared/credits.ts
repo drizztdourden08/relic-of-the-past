@@ -1,3 +1,4 @@
+/* @layer shared-other @kind data */
 /**
  * Project credits — single source of truth.
  * Keep in sync with CREDITS.md in the repository root.

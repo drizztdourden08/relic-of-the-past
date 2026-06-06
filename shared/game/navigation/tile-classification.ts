@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { TilePassability } from './types';
 import { getTileAttrsMap, type TileAttrContext } from './tile-attrs';
 

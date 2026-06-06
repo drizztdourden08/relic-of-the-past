@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * Pause Manager — handles game pause/resume state triggered by
  * controller disconnect, manual toggle, or other sources.

@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 /**
  * ItemsTab — Give items freely or trigger checks.
  * "Free Give" shows all items grouped by category.

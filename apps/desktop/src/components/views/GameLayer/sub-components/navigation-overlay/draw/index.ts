@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind barrel */
 export { buildDrawContext } from './draw-context';
 export type { DrawContext, ViewportInfo } from './draw-context';
 export { drawReachableDots } from './draw-dots';

@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 /**
  * PauseLabel — renders a multi-tile label strip (condensed HUD text).
  * Labels are pre-composed sprites where each 8×8 tile contains ~2 characters.

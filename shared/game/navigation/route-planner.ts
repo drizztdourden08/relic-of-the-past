@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { RomData } from '../../asset-extraction/rom/rom-types';
 import type { Route, RouteStep, GridPos, TilePassability, FloodFillResult } from './types';
 import { GRID_SIZE } from './types';

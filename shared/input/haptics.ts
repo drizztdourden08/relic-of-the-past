@@ -1,3 +1,4 @@
+/* @layer shared-input @kind logic */
 /**
  * Haptic Feedback Service — maps game events to vibration patterns.
  * All pattern definitions live in ./haptic-patterns.ts (the config file).

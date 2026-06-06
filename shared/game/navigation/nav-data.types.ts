@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /**
  * Navigation Data Types
  *

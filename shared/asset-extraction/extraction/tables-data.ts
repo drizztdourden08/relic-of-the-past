@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind data */
 /**
  * Lookup tables for room/overworld/sprite name resolution.
  * Ported from: core/zelda3/assets/tables.py

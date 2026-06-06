@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Save System
 
 Relic of the Past provides three save mechanisms, all operating independently and per-profile.

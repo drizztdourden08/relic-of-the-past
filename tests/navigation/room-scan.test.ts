@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 /**
  * Scan rooms to find ones where layer1 has BOTH 0x1C AND wall data.
  * These are the rooms where the wasm-bridge normalization matters most.

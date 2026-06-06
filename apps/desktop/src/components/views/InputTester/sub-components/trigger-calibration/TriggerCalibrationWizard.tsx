@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 /**
  * TriggerCalibrationWizard — 2-step analog trigger calibration UI.
  *

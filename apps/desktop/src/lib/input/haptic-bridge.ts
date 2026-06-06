@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * Haptic Bridge — connects C game events to the haptic service and controller vibration.
  *

@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 /**
  * ConnectionEditorDialog — Wizard for creating/editing connections.
  *

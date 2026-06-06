@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 /**
  * HID Input Reader — reads raw HID reports from game controllers
  * using node-hid in the main process.

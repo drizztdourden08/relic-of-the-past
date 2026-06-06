@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind types */
 import type { ScreenShadowData } from '@shared/types/shadow-casting';
 
 interface ShadowRenderer {

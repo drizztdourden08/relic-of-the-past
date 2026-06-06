@@ -1,3 +1,4 @@
+/* @layer shared-game @kind barrel */
 export { findBorderBundles, computeOverlap } from './border-bundles';
 export { runGlobalFlood } from './global-flood';
 export type { GlobalFloodOptions, GlobalFloodResult } from './global-flood';

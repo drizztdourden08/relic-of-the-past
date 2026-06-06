@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../types';
 
 const LW_CAVE_CONNECTIONS: ScreenConnection[] = [

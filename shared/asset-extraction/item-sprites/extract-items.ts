@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Item sprite extraction orchestrator.
  * Replaces scripts/extract-item-sprites.py — same JSON definitions, same output.

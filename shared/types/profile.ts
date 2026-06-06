@@ -1,3 +1,4 @@
+/* @layer shared-types @kind logic */
 interface Profile {
   id: string;
   name: string;

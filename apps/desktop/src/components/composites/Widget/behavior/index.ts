@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind barrel */
 export { computeDockedStyles } from './computeDockedStyles';
 export { createDefaultLayout, createDefaultWidgetState, getWidgetDefinition } from './createWidgetState';
 export { useWidgetDrag } from './useWidgetDrag';

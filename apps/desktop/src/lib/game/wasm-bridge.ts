@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * WASM Bridge — the singleton core holding the Emscripten module reference and
  * game state, plus a re-export hub for the per-concern bridge facades (bridge/*).

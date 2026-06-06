@@ -1,3 +1,4 @@
+/* @layer shared-input @kind data */
 /**
  * Nintendo Switch Pro Controller (Original)
  * VID: 0x057E  PID: 0x2009

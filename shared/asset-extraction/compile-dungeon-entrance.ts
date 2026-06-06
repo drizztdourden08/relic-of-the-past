@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind data */
 /**
  * Dungeon entrance data compilation — entrance positions, cameras, blocksets, starting points.
  */

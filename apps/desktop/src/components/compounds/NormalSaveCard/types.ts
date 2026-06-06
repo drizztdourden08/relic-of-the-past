@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 interface NormalSaveCardProps {
   id: string;
   name: string;

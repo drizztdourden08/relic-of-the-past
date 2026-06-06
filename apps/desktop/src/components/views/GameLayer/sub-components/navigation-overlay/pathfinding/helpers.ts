@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 import type { ReachState } from '@shared/game/navigation/types';
 import type { GridPos, Rect } from '../types';
 

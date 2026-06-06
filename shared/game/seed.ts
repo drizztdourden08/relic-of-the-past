@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /** Seed data structure for randomizer */
 interface SeedData {
   version: string;

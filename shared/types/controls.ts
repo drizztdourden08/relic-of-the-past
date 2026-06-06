@@ -1,3 +1,4 @@
+/* @layer shared-types @kind types */
 // ── SNES Buttons ──
 
 const SNES_BUTTONS = [

@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind data */
 import { S } from '../styles';
 import { DescRow } from './DescRow';
 import type { useNavigation } from '../useNavigation';

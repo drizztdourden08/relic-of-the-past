@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 /**
  * Signal processing for gyro, stick, and trigger calibration frames.
  * Called from the report subscription effect in useHidCalibration.

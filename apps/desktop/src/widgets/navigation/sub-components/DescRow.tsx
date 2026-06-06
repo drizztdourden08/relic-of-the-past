@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 import { useState } from 'react';
 import type { ReactNode, CSSProperties } from 'react';
 import { S } from '../styles';

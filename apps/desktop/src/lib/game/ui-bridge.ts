@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * UI Bridge — high-frequency polling of game UI state from WASM.
  * Runs a requestAnimationFrame loop that reads the UI state buffer every frame,

@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 /**
  * DatasetWidgetContent — "Dataset & Mapping" widget.
  *

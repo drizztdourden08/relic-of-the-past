@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import type { BrowserWindow, Rectangle } from 'electron';
 import { screen } from 'electron';
 import { readFileSync, writeFileSync, mkdirSync } from 'fs';

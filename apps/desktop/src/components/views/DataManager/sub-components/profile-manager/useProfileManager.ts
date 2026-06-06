@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * State and logic hook for ProfileManager.
  */

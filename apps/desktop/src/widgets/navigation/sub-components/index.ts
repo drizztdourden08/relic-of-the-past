@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind barrel */
 export { EdgeArrowSvg } from './EdgeArrowSvg';
 export { InternalEdgeSvg } from './InternalEdgeSvg';
 export { InternalEdgeDiamond } from './InternalEdgeDiamond';

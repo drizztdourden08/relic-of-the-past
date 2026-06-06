@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useGameState } from './behavior/useGameState';
 import { getInputManager, wasmGetViewportInfo, wasmRenderCleanFrame } from '../../../lib/game';

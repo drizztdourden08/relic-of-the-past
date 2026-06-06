@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * InputCalibration — Controller input visualization & calibration page.
  *

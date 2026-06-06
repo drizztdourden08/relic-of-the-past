@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /**
  * Generic binary min-heap priority queue.
  * Used by A* and Dijkstra pathfinding.

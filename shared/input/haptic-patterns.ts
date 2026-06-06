@@ -1,3 +1,4 @@
+/* @layer shared-input @kind data */
 /**
  * Haptic Pattern Configuration
  *

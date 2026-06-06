@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /** Live sprites + dynamic/static navigation blockers. */
 import { getGameState, getModule } from '../wasm-bridge';
 

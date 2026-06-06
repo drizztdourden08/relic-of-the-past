@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import { readFile, writeFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join, dirname } from 'path';

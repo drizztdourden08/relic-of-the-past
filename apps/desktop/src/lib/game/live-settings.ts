@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Live Settings — push settings changes to the running WASM module.
  *

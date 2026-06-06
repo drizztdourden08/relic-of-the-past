@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # How to Present a Plan
 
 Every implementation plan for this project follows this format. Keep it **concise** —

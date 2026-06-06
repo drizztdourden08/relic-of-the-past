@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 ﻿import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import './IconButton.css';
 import { type IconButtonVariant, type IconButtonProps } from './types';

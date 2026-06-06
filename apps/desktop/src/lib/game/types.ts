@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind types */
 interface EmscriptenFS {
   writeFile(path: string, data: Uint8Array | string): void;
   mkdir(path: string): void;

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import './StatusBadge.css';
 
 type ScreenStatus = 'draft' | 'mapped' | 'verified' | undefined;

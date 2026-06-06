@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind hook */
 import { useEffect } from 'react';
 import { log } from '../../lib/log-bus';
 import { setSpritesBase } from '@shared/game/items/sprites';

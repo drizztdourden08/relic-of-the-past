@@ -1,3 +1,4 @@
+/* @layer root-config @kind config */
 // Flat ESLint config (ESLint 9). Enforces the project's hard coding standards
 // mechanically — see docs/coding-standards.md. Scoped to OUR TypeScript only
 // (core/ is vendored C, dist/out/release are build output).

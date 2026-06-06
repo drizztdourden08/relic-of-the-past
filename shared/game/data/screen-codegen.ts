@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 /**
  * Code generation for ScreenDefinition and ScreenConnection objects.
  * Serializes data objects into formatted TypeScript source text

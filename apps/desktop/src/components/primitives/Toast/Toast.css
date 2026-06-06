@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind style */
 .toast-container {
   position: fixed;
   bottom: var(--space-lg);

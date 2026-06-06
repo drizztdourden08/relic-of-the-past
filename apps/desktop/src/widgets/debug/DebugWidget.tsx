@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 /**
  * DebugWidgetContent — dumps all synced game UI state as formatted text.
  * Rendered inside the widget frame.

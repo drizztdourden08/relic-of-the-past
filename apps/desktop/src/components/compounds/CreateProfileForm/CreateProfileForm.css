@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind style */
 .create-profile-form {
   display: flex;
   flex-direction: column;

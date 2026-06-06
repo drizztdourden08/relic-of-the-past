@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useEffect } from 'react';
 import { Button } from '../../primitives/Button';
 import './AboutDialog.css';

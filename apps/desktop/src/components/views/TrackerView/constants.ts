@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind constants */
 const STORAGE_KEY = 'tracker-layout';
 
 const MODE_OPTIONS = [

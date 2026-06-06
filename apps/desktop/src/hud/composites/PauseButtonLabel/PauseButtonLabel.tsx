@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 /**
  * PauseButtonLabel — Y/X button indicator with label text.
  * Shows the button letter sprite in its associated color.

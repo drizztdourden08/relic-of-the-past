@@ -1,3 +1,4 @@
+/* @layer core-wasm-build @kind native */
 // emscripten_main.c — Replaces zelda3's native main.c for WASM builds.
 // Provides SDL2 init, asset loading, and an emscripten_set_main_loop frame callback
 // instead of the blocking while(running) game loop.

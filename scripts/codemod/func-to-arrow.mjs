@@ -1,3 +1,4 @@
+/* @layer tooling-scripts @kind logic */
 // Codemod: convert named `function NAME(...) {}` declarations to arrow consts
 // `const NAME = (...) => {}`. Guards skip cases where conversion would change
 // behavior or break:

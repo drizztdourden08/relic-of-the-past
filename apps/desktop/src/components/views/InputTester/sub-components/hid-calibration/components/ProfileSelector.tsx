@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * Profile selection screen for the HID Calibration Wizard.
  */

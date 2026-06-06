@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 import { outlineFilter } from '../../primitives/HudSprite';
 
 type MagicMeterMode = 'original' | 'accurate';

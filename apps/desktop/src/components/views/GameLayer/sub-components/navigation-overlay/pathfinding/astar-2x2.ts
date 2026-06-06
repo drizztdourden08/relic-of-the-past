@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 import type { ReachState } from '@shared/game/navigation/types';
 import type { GridPos } from '../types';
 import { manhattan, keyOf, isValid2x2, isValidMove2x2, canLeave2x2, isTraversalDirCompatible, PATH_DIRS } from './helpers';

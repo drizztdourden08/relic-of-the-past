@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind data */
 /**
  * PauseBorderBox — renders a bordered box using 8 tiled DOM elements:
  * 4 corner images + 4 edge divs with background-repeat.

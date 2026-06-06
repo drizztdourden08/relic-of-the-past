@@ -1,3 +1,4 @@
+/* @layer shared-input @kind logic */
 /**
  * Base controller class — abstract definition for all controller implementations.
  * Each concrete controller class self-registers and becomes the single source of truth

@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * AssetBuilder — accumulates named assets and serializes to zelda3_assets.dat format.
  */

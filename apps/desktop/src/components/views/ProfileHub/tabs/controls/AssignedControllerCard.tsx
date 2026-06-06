@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 /**
  * AssignedDeviceCard — shows the controller assigned to the active profile.
  * Displays connection/activation status, controller info, and an unassign button.

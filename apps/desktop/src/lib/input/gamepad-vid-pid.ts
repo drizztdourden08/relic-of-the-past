@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * Gamepad VID/PID Resolution — heuristic matching of Web Gamepad API
  * controllers to their HID vendor/product IDs using available HID cache data.

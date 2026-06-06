@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind data */
 /**
  * Sprite lookup tables from extract-item-sprites.py — used by drop decoder.
  */

@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type {
   FloodFillResult, OverworldEntrance, LedgeTraversal,
   GridPos, CollisionGrid, ScreenVariant, ReachState, TransitionPoint,

@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 // Public API — re-exports from all game modules
 
 export type { EmscriptenFS, EmscriptenModule, GameStatus, GameState } from './types';

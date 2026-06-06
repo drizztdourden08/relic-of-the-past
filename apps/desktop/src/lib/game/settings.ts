@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind data */
 /**
  * Game Settings — defaults, serialization to INI, and merge logic.
  */

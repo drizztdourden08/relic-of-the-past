@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 export {
   SPRITE_MANIFEST,
   CATEGORY_LABELS,

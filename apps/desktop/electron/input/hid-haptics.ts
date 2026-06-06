@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 /**
  * HID haptic frame building — converts vibration parameters into
  * raw haptic data frames for Switch Pro Controller 2 (SPC2).

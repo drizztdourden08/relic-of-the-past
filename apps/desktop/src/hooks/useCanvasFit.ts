@@ -1,3 +1,4 @@
+/* @layer renderer-other @kind hook */
 import { useState, useCallback, useEffect, type RefObject } from 'react';
 
 interface FitSize {

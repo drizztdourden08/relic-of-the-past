@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 export { ITEMS, type ItemDefinition } from './definitions';
 export { ITEM_GROUPS } from './groups';
 export { ITEM_ID_TO_NAME } from './id-map';

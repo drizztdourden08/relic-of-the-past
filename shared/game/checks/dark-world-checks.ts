@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 ﻿import type { CheckDefinition } from '../types';
 
 const DARK_WORLD_CHECKS: CheckDefinition[] = [

@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # HUD
 
 The heads-up display shows health, magic, rupees, and equipped items during gameplay.

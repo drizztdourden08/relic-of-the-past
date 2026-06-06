@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useCallback, useRef, useState, useEffect } from 'react';
 import './NumberField.css';
 

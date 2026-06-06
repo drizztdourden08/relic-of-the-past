@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import { app, ipcMain } from 'electron';
 import { getMainWindow } from './create-window';
 

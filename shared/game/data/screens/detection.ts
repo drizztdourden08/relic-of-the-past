@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 /**
  * Screen Detection — builds reverse lookup maps from screen/screen definitions.
  * Given a game index (overworld screen or dungeon room), returns the full screen data.

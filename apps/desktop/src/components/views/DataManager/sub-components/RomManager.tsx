@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback } from 'react';
 import { ImportForm } from './ImportForm';
 import { IconButton } from '../../../primitives/IconButton';

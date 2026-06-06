@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { Portal } from '../Portal';
 import { Toast } from './Toast';
 import type { ToastContainerProps } from './types';

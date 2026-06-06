@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * ControlsSettings — full input mapping UI.
  *

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useBindingState — rebind listening, capture, and clear logic for
  * SNES button mappings and function-action mappings.

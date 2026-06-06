@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import type { SelectItemProps } from '../types';
 
 const SelectItem = (props: SelectItemProps) => {

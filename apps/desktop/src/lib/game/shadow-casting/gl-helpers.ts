@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * WebGL helper utilities for the shadow-casting pipeline.
  * Reusable shader compilation, program linking, texture/FBO management.

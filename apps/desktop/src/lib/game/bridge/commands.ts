@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /** Game commands — pause, reset, cheats, backdrop. */
 import { getGameState, getModule } from '../wasm-bridge';
 

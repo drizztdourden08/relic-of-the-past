@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /** Navigation table bridges — entrances, fall holes, exit map, area heads, rooms/spawns. */
 import { getGameState, getModule } from '../wasm-bridge';
 

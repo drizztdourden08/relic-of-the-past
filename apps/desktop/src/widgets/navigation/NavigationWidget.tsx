@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind data */
 import { S } from './styles';
 import { ScreenMapWithConnections, DescRow, TileRecorderBtn, PathCopyBtn } from './sub-components';
 import { GameStatePanel } from './sub-components/GameStatePanel';

@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Flag Polling — reads WASM memory to determine which game checks are completed.
  * Pure computation: takes heap + pointers, returns a set of completed check IDs.

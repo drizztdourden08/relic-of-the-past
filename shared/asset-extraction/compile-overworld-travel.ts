@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Overworld bird travel and whirlpool data compilation.
  */

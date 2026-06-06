@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../types';
 
 import { LIGHT_WORLD_OVERWORLD_SCREENS } from './overworld';

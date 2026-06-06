@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 /**
  * ╔══════════════════════════════════════════════════════════╗
  * ║  THIS TEST MUST NEVER BE MODIFIED BY THE AI             ║

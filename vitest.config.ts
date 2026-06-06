@@ -1,3 +1,4 @@
+/* @layer root-config @kind config */
 import { defineConfig } from 'vitest/config';
 import { resolve } from 'path';
 

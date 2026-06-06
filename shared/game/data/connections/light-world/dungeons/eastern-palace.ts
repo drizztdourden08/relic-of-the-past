@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../../types';
 
 const LW_EASTERN_PALACE_CONNECTIONS: ScreenConnection[] = [

@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Edge Glow Renderer — WebGL post-processing pipeline.
  *

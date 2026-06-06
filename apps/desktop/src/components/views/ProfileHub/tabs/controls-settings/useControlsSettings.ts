@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useControlsSettings — thin orchestrator composing focused sub-hooks.
  */

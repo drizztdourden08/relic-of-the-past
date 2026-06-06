@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 import { useState, useEffect, type RefObject } from 'react';
 import { subscribe, getEntries, type LogEntry } from '../../../../lib/log-bus';
 

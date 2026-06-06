@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Extracts a single dungeon room's full data (header, sprites, secrets, chests, layers).
  */

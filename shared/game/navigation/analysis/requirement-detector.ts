@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /**
  * Requirement Detector — Determines which items gate which connection points.
  *

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 /**
  * HID Calibration Wizard v6 — enhanced byte-level visualization.
  *

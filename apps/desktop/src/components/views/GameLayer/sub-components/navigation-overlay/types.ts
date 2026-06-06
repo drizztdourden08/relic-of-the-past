@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 type GridPos = { row: number; col: number };
 type Rect = { x: number; y: number; w: number; h: number };
 

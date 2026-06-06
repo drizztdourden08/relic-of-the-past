@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 ﻿import './TabBar.css';
 import { type TabItem, type TabBarProps } from './types';
 

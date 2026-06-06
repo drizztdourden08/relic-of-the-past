@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind constants */
 const TITLEBAR_HEIGHT = 38;
 
 export { TITLEBAR_HEIGHT };

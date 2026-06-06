@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 import { Button } from '../../primitives/Button';
 import { Badge } from '../../primitives/Badge';
 import { formatDate, formatRomName } from './behavior/formatters';

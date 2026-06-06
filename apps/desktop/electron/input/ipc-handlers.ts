@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 /**
  * Input IPC handlers — registers all input-related IPC handlers on the main process.
  */

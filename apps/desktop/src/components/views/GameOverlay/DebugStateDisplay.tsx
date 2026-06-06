@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * DebugStateDisplay — dumps all synced game UI state as formatted text.
  * Purely for verification that the data pipeline works end-to-end.

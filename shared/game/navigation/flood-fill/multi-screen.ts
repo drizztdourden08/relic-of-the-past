@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { TileAttrContext, TileReq } from '../tile-attrs';
 import type { WorldFloodResult, ScreenCoverage, GridPos } from '../types';
 import { floodFillScreen } from './orchestrator';

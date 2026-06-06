@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import { ALL_CONNECTIONS } from '../data/connections';
 import { SCREEN_BY_ID } from '../data/screens';
 

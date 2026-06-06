@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 // ─── Entry Point #1: Single Screen Flood Fill ────────────────────────────────
 export { floodFillScreen, getConnections } from './flood-fill';
 export type { FloodFillOptions } from './flood-fill';

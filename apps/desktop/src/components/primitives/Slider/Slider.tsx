@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 ﻿import { useRef } from 'react';
 import './Slider.css';
 import { type SliderProps } from './types';

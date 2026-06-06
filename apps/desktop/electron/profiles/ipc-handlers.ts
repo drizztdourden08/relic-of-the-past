@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import { ipcMain } from 'electron';
 import type { Profile } from '../../../../shared/types/profile';
 import { listProfiles, createProfile, loadProfile, updateProfile, deleteProfile } from './store';

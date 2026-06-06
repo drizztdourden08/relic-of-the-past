@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 /**
  * HID constants, types, and utilities shared across HID modules.
  */

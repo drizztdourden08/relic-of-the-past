@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind data */
 /**
  * PauseAbilitiesPanel — displays Link's abilities and equipment.
  *

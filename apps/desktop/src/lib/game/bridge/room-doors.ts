@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /** Room door/stair/walk/exit boundaries + travel destinations. */
 import { getGameState, getModule } from '../wasm-bridge';
 

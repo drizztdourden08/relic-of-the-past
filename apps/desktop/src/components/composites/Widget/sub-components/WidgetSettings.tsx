@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * WidgetSettings — Settings popover for a widget.
  * Default options (position, opacity) + widget-specific options via children.

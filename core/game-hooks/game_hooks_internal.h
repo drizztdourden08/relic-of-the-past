@@ -1,3 +1,4 @@
+/* @layer core-game-hooks @kind native */
 #ifndef GAME_HOOKS_INTERNAL_H
 #define GAME_HOOKS_INTERNAL_H
 

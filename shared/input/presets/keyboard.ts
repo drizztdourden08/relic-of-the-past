@@ -1,3 +1,4 @@
+/* @layer shared-input @kind data */
 /**
  * Keyboard preset — default key mappings for keyboard input.
  */

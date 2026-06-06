@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Extracts chest data and pit-hurt-player room sets from ROM.
  */

@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../../types';
 
 import { LW_HYRULE_CASTLE_CONNECTIONS } from './hyrule-castle';

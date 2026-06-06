@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Formatters — produce text output from decoded music entities.
  */

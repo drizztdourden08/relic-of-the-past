@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 /**
  * Room 0x51 (King's Grave / Throne Room) — layer merge validation.
  *

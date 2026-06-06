@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 import { EDGE_COLORS } from '../constants';
 
 /** A small directional arrow glyph colored by edge direction. */

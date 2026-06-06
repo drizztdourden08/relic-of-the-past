@@ -1,3 +1,4 @@
+/* @layer shared-input @kind data */
 /**
  * Xbox Controllers (360, One, Series X|S, Elite, Adaptive)
  * VID: 0x045E  PIDs: various

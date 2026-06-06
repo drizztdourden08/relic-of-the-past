@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind data */
 /**
  * PauseItemGrid — the Y-button item grid (5 columns × 4 rows = 20 slots).
  * Enclosed in a green border box with the Y-button indicator.

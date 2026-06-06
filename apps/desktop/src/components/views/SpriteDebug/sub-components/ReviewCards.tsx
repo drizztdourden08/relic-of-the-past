@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import type { ReviewEntry, ReviewStatus } from '../types';
 import type { SpriteManifestEntry } from '@shared/game/sprites';
 import { StatusBtns } from './ReviewControls';

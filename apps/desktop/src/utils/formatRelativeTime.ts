@@ -1,3 +1,4 @@
+/* @layer renderer-other @kind logic */
 const formatRelativeTime = (ts: number | undefined): string => {
   if (!ts) return 'Never';
   const diffMs = Date.now() - ts;

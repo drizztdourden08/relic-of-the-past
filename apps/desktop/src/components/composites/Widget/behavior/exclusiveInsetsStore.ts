@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 /**
  * Tiny Zustand store to broadcast exclusive insets from the widget layout system
  * to the game layer and overlays.

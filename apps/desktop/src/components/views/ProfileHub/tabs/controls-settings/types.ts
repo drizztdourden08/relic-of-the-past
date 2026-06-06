@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 /**
  * Types & utilities for controls-settings sub-hooks.
  */

@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * Global controller vibration API.
  *

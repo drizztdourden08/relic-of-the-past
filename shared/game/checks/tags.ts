@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 ﻿/**
  * Tag system for checks — enables filtering, searching, and grouping.
  *

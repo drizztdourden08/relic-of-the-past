@@ -12,6 +12,25 @@
   "core/wasm-build/**/*.c":   { "layer": "core-wasm-build", "kind": "native" },
 
   "**/*.json":                { "kind": "config-data" },
+  "**/*.jsonc":               { "kind": "config" },
+  "**/*.html":                { "kind": "config" },
+  "**/*.txt":                 { "kind": "doc" },
+
+  // Binary / non-text assets (cannot carry a header comment).
+  "**/*.png":   { "kind": "asset" },
+  "**/*.jpg":   { "kind": "asset" },
+  "**/*.jpeg":  { "kind": "asset" },
+  "**/*.gif":   { "kind": "asset" },
+  "**/*.ico":   { "kind": "asset" },
+  "**/*.svg":   { "kind": "asset" },
+  "**/*.icns":  { "kind": "asset" },
+  "**/*.wav":   { "kind": "asset" },
+  "**/*.ttf":   { "kind": "asset" },
+  "**/*.woff":  { "kind": "asset" },
+  "**/*.woff2": { "kind": "asset" },
+  "**/*.dat":   { "kind": "asset" },
+  "**/*.sfc":   { "kind": "asset" },
+
   "apps/desktop/public/**":   { "kind": "asset" },
 
   "shared/game/data/**":      { "kind": "data" },

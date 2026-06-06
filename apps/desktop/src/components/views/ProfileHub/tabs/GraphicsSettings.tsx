@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import type { GameSettings } from '@shared/types/settings';
 import { Toggle } from '../../../primitives/Toggle';
 import { RadioGroup } from '../../../primitives/RadioGroup';

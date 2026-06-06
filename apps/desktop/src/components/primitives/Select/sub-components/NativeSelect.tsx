@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import type { NativeSelectProps } from '../types';
 
 const NativeSelect = (props: NativeSelectProps) => {

@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Graphics asset compilation — sprites, backgrounds, link graphics, misc data, tilemaps, map32.
  */

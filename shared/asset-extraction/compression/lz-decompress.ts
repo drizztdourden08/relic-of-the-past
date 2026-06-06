@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * SNES LZ decompression — 7-mode format used by Zelda 3 for compressed assets.
  *

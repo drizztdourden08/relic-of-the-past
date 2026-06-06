@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 /**
  * ╔══════════════════════════════════════════════════════════╗
  * ║  THIS TEST MUST NEVER BE MODIFIED BY THE AI             ║

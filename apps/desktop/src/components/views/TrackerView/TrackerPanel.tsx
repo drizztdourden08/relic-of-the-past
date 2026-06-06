@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState } from 'react';
 import type { TrackerPanelProps } from './types';
 

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 import type { FloodFillResult } from '@shared/game/navigation';
 import { STAIRS_TRAVERSAL_STATE } from '@shared/game/navigation/types';
 import type { DrawContext } from './draw-context';

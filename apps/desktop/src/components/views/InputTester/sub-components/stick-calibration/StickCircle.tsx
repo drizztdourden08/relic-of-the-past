@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 /**
  * StickCircle — SVG analog stick position visualizer.
  */

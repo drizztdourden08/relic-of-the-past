@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 /**
  * Layer1 normalization — verifies that 0x1C (default BG1 floor fill) is
  * correctly normalised to 0x00, and that the split tooltip never triggers

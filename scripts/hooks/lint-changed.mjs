@@ -1,3 +1,4 @@
+/* @layer tooling-scripts @kind logic */
 // PostToolUse hook: lint the single file just written/edited and feed any
 // coding-standard violations straight back into the model's context so they get
 // fixed immediately (not at some later "lint pass"). Non-blocking by design.

@@ -1,3 +1,4 @@
+<!-- @layer claude-config @kind doc -->
 ---
 name: interpret-game-screenshot
 description: Correctly read a screenshot of the running ALttP game — overlays, pathfinding/navigation grids, Link's position, HUD, sprites, tiles. Use whenever the user shares a game screenshot to explain a bug or state, especially "X is offset / wrong / not where it should be", overlay alignment issues, or any visual that's been hard to convey. Reads low-res pixel art at scale and compares against extracted reference sprites instead of guessing.

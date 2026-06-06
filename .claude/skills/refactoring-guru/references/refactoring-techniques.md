@@ -1,3 +1,4 @@
+<!-- @layer claude-config @kind doc -->
 # Refactoring Techniques Catalog
 
 Catalog: https://refactoring.guru/refactoring/techniques — link a technique as

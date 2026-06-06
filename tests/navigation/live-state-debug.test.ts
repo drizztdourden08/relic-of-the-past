@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 /**
  * Live-data debug test — uses headless WASM with rooms matching the user's
  * observed tile data (layer0=0x00, layer1=0x1C at floor tiles) to verify

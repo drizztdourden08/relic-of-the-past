@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import { readFile, writeFile } from 'fs/promises';
 import type { AppState } from '../../../../shared/types/profile';
 import { getUserDataPath } from '../lib/paths';

@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind data */
 /**
  * PauseEquipmentPanel — displays equipped sword, shield, armor + heart pieces/dungeon items.
  *

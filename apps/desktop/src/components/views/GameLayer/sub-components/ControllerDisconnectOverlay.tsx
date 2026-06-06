@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * ControllerDisconnectOverlay — shown when the active controller disconnects
  * during gameplay. Blocks input and shows resume instructions.

@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /**
  * Connection Updater — Writes computed ConnectionNavData back into connections.
  *

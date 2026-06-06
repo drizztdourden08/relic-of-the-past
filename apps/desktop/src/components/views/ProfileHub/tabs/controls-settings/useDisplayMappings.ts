@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useDisplayMappings — derived display data: requiredInputs & displayMappings.
  */

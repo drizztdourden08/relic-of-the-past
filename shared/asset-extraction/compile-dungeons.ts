@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Dungeon asset compilation — orchestrator for rooms, sprites, secrets, headers, attributes, entrances.
  */

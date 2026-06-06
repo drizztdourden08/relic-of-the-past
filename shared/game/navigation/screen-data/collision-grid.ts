@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { TilePassability, CollisionGrid } from '../types';
 import { classifyTileAttr } from '../tile-classification';
 import type { TileAttrContext } from '../tile-attrs';

@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import { ipcMain } from 'electron';
 import { readFile, writeFile } from 'fs/promises';
 import { getUserDataPath } from '../lib/paths';

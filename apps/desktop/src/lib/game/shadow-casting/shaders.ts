@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * GLSL shader sources for the shadow-casting post-processing pipeline.
  *

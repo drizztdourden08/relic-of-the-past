@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 import type { SlotHint } from './behavior/useEnhancedSaveSlot';
 
 interface SlotInfo {

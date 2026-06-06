@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { InventorySlot } from './inventory-types';
 
 const INGAME_ITEMS_GRID: InventorySlot[][] = [

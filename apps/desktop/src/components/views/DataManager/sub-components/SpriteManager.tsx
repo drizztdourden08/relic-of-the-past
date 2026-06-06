@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Select } from '../../../primitives/Select';
 import {

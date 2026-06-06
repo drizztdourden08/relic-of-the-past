@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Overworld area extraction — ROM → YAML data for all 160 overworld areas.
  *

@@ -1,3 +1,4 @@
+/* @layer shared-input @kind data */
 /**
  * Nintendo GameCube Wireless Controller
  * VID: 0x057E  PID: 0x2073

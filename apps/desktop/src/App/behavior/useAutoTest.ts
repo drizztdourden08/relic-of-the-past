@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind hook */
 /**
  * ╔══════════════════════════════════════════════════════════╗
  * ║  THIS TEST MUST NEVER BE MODIFIED BY THE AI             ║

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useRef, useEffect, useCallback, useState } from 'react';
 import { useShadowEditorStore } from '../../../../stores/shadow-editor-store';
 import { wasmGetViewportInfo } from '../../../../lib/game';

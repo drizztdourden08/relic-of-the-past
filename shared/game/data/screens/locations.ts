@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 /**
  * Location registry — structural groups within areas.
  * Each location belongs to exactly one area.

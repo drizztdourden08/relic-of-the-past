@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback } from 'react';
 import type { PlaySession } from '@shared/types/session';
 import type { NormalSaveInfo, AutoSaveInfo } from '@shared/types/saves';

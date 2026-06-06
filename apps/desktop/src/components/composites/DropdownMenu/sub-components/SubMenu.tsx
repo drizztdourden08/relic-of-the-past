@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
 import type { MenuItem } from '../types';
 

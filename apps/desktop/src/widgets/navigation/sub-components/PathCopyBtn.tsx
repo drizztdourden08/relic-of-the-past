@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 import { useNavigationOverlayStore } from '../../../stores/navigation-overlay-store';
 import { S } from '../styles';
 

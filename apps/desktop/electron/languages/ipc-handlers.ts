@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import { ipcMain } from 'electron';
 import { join, extname } from 'path';
 import { readFile, writeFile, mkdir, readdir, access, rm } from 'fs/promises';

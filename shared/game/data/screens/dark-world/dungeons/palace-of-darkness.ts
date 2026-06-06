@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
 const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [

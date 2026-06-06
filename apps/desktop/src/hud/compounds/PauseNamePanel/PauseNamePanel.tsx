@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 /**
  * PauseNamePanel — shows the selected item's name.
  *

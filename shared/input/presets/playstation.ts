@@ -1,3 +1,4 @@
+/* @layer shared-input @kind data */
 /**
  * PlayStation Controllers (DualShock 3/4, DualSense, DualSense Edge)
  * VID: 0x054C  PIDs: various

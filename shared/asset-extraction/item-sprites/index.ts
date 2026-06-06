@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 export { extractAllItemSprites, extractAllItemSpritesFromRom } from './extract-items';
 export type { ExtractionResult } from './extract-items';
 export { loadHudPalette, loadHudSheets, decodeHudTile, extractHudStandard, extractHudSpecial } from './hud-decoder';

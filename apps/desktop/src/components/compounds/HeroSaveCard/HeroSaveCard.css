@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind style */
 .hero-save-card {
   display: flex;
   gap: var(--space-md);

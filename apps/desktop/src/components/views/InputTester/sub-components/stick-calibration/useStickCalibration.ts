@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useStickCalibration — state machine hook for 3-step stick calibration.
  */

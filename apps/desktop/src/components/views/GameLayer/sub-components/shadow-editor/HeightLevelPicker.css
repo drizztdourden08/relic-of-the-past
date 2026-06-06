@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind style */
 .height-level-picker {
   display: flex;
   flex-direction: column;

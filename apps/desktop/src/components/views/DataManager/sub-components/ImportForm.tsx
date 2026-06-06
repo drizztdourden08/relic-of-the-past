@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState, useCallback } from 'react';
 import { DropZone } from '../../../primitives/DropZone';
 

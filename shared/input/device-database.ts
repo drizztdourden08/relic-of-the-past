@@ -1,3 +1,4 @@
+/* @layer shared-input @kind generated */
 /**
  * Device database — known controller/gamepad names and capabilities.
  * Source: https://github.com/mdqinc/SDL_GameControllerDB

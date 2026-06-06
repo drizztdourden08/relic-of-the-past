@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind hook */
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useGameUIStore } from '../../stores/game-ui-store';
 import { useNavigationOverlayStore } from '../../stores/navigation-overlay-store';

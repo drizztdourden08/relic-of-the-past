@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 const PathControlsLegend = () => {
   return (
     <div style={{

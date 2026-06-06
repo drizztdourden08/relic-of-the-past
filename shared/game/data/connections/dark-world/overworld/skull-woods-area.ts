@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../../types';
 
 const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: ScreenConnection[] = [

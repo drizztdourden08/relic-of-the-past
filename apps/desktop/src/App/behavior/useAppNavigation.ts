@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind hook */
 import { useState, useCallback } from 'react';
 import type { PageId } from '../types';
 

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 /**
  * Live byte grid visualization for the HID Calibration Wizard.
  */

@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 /**
  * DeliveryQueueIndicator — bottom-right overlay showing the full delivery queue.
  * Visible only when items are queued. Shows up to 20 items individually,

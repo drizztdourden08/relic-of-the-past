@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 import type { DrawContext, ViewportInfo } from './draw-context';
 
 interface LiveSprite {

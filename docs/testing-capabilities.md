@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Testing the App — Built-in Capabilities (no Playwright needed)
 
 The app has **CLI flags and IPC channels** that let it drive itself — load a save

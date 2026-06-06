@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import type { SelectOption } from '../../../../primitives/Select';
 import { formatBytes } from '../../../../../utils/formatBytes';
 import { TrackRow } from './TrackRow';

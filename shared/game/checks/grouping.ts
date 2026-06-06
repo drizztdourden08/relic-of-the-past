@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /**
  * Grouping engine for the tracker — allows users to nest checks by
  * world, area, location type, dungeon, screen, etc.

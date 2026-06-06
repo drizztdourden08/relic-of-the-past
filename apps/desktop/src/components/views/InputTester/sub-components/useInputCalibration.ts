@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useInputCalibration — State management hook for the InputCalibration page.
  *

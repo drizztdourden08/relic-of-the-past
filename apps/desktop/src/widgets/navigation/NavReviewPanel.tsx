@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 /**
  * NavReviewPanel — per-screen connection point review with comments.
  *

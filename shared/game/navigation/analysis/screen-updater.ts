@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /**
  * Screen Updater — Writes computed RegionNavData back into screen definitions.
  *

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState } from 'react';
 import type { CheckDefinition } from '@shared/game/types';
 import type { CheckStatus } from '@shared/game/logic/eval';

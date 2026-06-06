@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useShadowEditorStore } from '../../../../../stores/shadow-editor-store';
 import './HeightLevelPicker.css';
 

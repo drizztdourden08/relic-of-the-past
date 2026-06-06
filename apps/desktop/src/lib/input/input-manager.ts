@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * InputManager — Orchestrator for the renderer input engine.
  *

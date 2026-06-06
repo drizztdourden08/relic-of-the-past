@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 /**
  * Diagnostic: Run BFS on room 0x51 offline and check (45,30) reachability per layer.
  * Usage: npx vitest run temp-scripts/diagnose-0x51.ts

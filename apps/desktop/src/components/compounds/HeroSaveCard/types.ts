@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 interface HeroSaveCardProps {
   name: string;
   timestamp: number;

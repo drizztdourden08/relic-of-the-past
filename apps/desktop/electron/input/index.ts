@@ -1,3 +1,4 @@
+/* @layer electron-main @kind barrel */
 /**
  * Input subsystem — main process entry point.
  */

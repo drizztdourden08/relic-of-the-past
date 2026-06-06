@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind constants */
 import type { PortalLayer } from './types';
 
 const LAYERS: Record<PortalLayer, number> = {

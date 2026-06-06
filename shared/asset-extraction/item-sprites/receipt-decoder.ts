@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Receipt/chest-getter sprite decoder — extracts 3bpp item sprites
  * shown when Link receives items from chests or NPCs.

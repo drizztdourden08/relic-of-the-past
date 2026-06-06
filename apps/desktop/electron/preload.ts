@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
 import { parse } from 'path';
 

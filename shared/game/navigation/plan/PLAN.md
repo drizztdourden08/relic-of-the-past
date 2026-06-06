@@ -1,3 +1,4 @@
+<!-- @layer shared-game @kind doc -->
 # Navigation System Overhaul Plan
 
 ## Goal

@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { Requirement } from '../../types';
 import { LIGHT_WORLD_CHECK_RULES } from './light-world';
 import { DARK_WORLD_CHECK_RULES } from './dark-world';

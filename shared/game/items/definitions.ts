@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 interface ItemDefinition {
   id: number;
   name: string;

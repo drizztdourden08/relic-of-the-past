@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind hook */
 import { useMemo } from 'react';
 import { useGameUIStore } from '../../../stores/game-ui-store';
 import { resolveCurrentScreenDetailed } from '@shared/game/data/screens';

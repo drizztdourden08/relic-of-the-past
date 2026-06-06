@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 import type { Profile } from '@shared/types/profile';
 import type { RomDisplayInfo } from '../../../App/types';
 

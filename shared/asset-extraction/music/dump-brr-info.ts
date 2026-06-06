@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * BRR sample dumping and music_info.yaml generation.
  */

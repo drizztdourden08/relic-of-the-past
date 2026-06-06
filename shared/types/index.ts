@@ -1,3 +1,4 @@
+/* @layer shared-types @kind logic */
 // Shared type definitions for Relic of the Past
 
 /** Events emitted by the game core */

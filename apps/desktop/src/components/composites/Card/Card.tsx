@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 ﻿import type { ReactNode, HTMLAttributes } from 'react';
 import './Card.css';
 import { type CardProps } from './types';

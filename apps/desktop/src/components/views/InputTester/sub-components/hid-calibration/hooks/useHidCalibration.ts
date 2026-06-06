@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * Core state machine hook for the HID Calibration Wizard.
  * Declares state/refs and delegates action handlers to useCalibrationActions.

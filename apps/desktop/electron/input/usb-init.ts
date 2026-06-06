@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 /**
  * Nintendo Switch 2 Controller USB Initialization
  *

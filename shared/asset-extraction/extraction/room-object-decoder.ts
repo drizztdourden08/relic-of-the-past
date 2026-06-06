@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Decodes room objects (tiles) and doors from ROM data for dungeon rooms.
  */

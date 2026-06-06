@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../../types';
 
 const DW_SKULL_WOODS_CONNECTIONS: ScreenConnection[] = [

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 /**
  * Button and axis detection from raw HID report frames.
  * Handles the waiting-press / confirming-press / waiting-release state machine.

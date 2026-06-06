@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 /**
  * Area registry — broad geographic zones.
  * Each area groups multiple locations under one filterable region.

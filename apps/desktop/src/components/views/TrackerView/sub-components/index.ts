@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind barrel */
 export { TrackerCheckRow } from './TrackerCheckRow';
 export { TrackerFilters } from './TrackerFilters';
 export { TrackerGroupTree } from './TrackerGroupTree';

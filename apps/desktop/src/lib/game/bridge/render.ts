@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /** Viewport info (edge-glow shader) + clean-frame render. */
 import { getGameState, getModule } from '../wasm-bridge';
 

@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 /**
  * Persistent HID Worker Thread
  *

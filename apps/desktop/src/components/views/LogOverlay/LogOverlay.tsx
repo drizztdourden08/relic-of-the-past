@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useRef } from 'react';
 import { IconButton } from '../../primitives/IconButton';
 import { useLogOverlay } from './behavior/useLogOverlay';

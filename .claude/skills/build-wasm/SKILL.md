@@ -1,3 +1,4 @@
+<!-- @layer claude-config @kind doc -->
 ---
 name: build-wasm
 description: Compile the zelda3 C core to WebAssembly with Emscripten. Use when C code under core/ (game-hooks, zelda3, emscripten_main.c) changed and the running app needs the rebuilt zelda3.{js,wasm,data}, or when the user asks to "rebuild WASM", "compile the C", or reports that a C-side change isn't taking effect.

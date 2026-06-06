@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 /**
  * InputTester — Raw gamepad input visualization page.
  *

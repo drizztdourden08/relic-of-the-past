@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Dungeon extraction orchestration — extracts all 320 rooms, defaults, overlays, and map32 data.
  *

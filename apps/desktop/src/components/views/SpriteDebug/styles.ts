@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind style */
 import type React from 'react';
 
 const S: Record<string, React.CSSProperties> = {

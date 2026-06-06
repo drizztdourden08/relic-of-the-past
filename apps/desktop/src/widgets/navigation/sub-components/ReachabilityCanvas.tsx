@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 import { useCallback } from 'react';
 
 /** Pixel canvas rendering a flood-fill reachability grid (one px per tile). */

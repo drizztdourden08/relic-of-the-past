@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 ﻿import { useRef, useState, useEffect, useCallback } from 'react';
 import './SegmentedControl.css';
 import { type SegmentOption, type SegmentedControlProps } from './types';

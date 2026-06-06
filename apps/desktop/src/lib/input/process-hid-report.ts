@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * IPC HID Report Processing — parses raw HID reports received from
  * the main process (node-hid via IPC), applies calibration, and

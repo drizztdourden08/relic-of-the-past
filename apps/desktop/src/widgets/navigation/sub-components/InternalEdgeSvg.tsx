@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 import { EDGE_COLORS } from '../constants';
 
 /** Two-square connector glyph showing an internal room-edge transition. */

@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 /**
  * Validation test for generated dungeon screen + connection data.
  *

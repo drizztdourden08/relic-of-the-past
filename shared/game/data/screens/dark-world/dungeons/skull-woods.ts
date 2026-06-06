@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
 const SKULL_WOODS_DUNGEON: ScreenDefinition[] = [

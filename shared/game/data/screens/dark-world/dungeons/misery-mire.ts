@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
 const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [

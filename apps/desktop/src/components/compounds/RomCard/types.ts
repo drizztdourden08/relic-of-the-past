@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 ﻿interface RomCardProps {
   rom: RomDisplayInfo;
   onExtract: (romFile: string) => void;

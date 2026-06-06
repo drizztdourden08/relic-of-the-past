@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 import { useMemo } from 'react';
 import { Icon } from '@iconify/react/offline';
 import type { ConnectionInfo, ScreenBundle, FloodFillResult } from '@shared/game/navigation';

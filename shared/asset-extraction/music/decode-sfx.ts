@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * SFX decoding — decodes SPC sound effects and formats them to text.
  */

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind barrel */
 export { AudioSettings } from './AudioSettings';
 export { ControlsSettings } from './ControlsSettings';
 export { CreditsPage } from './CreditsTab';

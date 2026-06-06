@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /**
  * Border Bundle Detection — identifies contiguous groups of reachable border tiles
  * and validates two-sided overlap between adjacent screens.

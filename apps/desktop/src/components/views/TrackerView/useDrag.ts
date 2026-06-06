@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 import { useCallback, useRef } from 'react';
 
 const useDrag = (pos: { x: number; y: number }, onMove: (x: number, y: number) => void) => {

@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind hook */
 /**
  * usePauseMenu — provides pause menu state from the game UI store.
  * Mirrors useHud pattern: extracts relevant data, provides sprite config.

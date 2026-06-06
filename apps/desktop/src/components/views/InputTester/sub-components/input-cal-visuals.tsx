@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * Visual sub-components for Input Calibration.
  * AxisRecordButton, TriggerBar, StickCircle, and utility helpers.

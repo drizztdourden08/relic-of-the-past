@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 /**
  * IPC handlers for the Screen/Connection editor wizards.
  * Reads/writes to the shared/game/data/ source files.

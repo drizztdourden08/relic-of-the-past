@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { InventorySlot } from './inventory-types';
 
 const COMPACT_LAYOUT: InventorySlot[] = [

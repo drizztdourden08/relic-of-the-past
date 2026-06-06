@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { DrawContext } from './draw-context';
 import type { FallHoleSpawn } from '../../../../../../stores/navigation-overlay-store';

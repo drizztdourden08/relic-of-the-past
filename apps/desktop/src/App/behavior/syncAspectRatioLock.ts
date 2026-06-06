@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind logic */
 import type { GameSettings } from '@shared/types/settings';
 import { TITLEBAR_HEIGHT } from '../constants';
 import { getGameRatio } from './getGameRatio';

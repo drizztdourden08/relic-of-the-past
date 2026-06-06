@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * TriggerBar — vertical fill bar showing analog trigger value.
  */

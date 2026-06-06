@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import { readFile, readdir, stat, mkdir } from 'fs/promises';
 import { getUserDataPath } from '../lib/paths';
 

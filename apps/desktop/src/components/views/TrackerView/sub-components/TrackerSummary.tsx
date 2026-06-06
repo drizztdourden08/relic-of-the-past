@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 ﻿import '../TrackerView.css';
 
 interface TrackerSummaryProps {

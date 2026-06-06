@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Droppable sprite decoder — orchestrates extraction of item drop sprites.
  *

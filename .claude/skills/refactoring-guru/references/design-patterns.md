@@ -1,3 +1,4 @@
+<!-- @layer claude-config @kind doc -->
 # Design Patterns Catalog (GoF)
 
 What is a pattern: https://refactoring.guru/design-patterns/what-is-pattern ·

@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /** Indoor/room collision grids, layer state, and attr-grid builders. */
 import { getGameState, getModule } from '../wasm-bridge';
 

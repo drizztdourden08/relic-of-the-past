@@ -1,3 +1,4 @@
+/* @layer renderer-other @kind hook */
 import { useEffect, useState } from 'react';
 
 /**

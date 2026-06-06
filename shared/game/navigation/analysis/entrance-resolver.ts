@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 /**
  * Entrance Resolver — Maps WASM entrance tables to connection points.
  *

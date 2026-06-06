@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /** Room layout shape + dungeon map position. */
 import { getGameState, getModule } from '../wasm-bridge';
 

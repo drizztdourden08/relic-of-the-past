@@ -1,3 +1,4 @@
+/* @layer shared-game @kind types */
 import type { ScreenTag } from './data/screens/tags';
 import type { ConnectionTag } from './data/connections/tags';
 import type { RegionNavData, ConnectionNavData } from './navigation/nav-data.types';

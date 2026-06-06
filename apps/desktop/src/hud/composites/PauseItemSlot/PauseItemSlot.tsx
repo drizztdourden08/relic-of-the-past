@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 /**
  * PauseItemSlot — a single item in the pause menu item grid.
  * Displays 16×16 item sprite or empty. Highlights the currently selected item.

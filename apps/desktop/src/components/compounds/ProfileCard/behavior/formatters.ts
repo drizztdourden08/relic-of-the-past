@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 import { formatRomName } from '../../../../utils/formatRomName';
 
 const formatDate = (ts: number): string => {

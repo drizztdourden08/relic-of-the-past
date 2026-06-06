@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 /**
  * PauseMenuView — Enhanced pause menu rendering using extracted sprite tiles.
  *

@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /**
  * FloodFillSessionBuilder — encapsulates the data preparation for a flood fill run.
  *

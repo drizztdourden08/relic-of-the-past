@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * WebHidCard — Shows a connected WebHID controller with buttons, sticks, triggers,
  * vibration controls, calibration wizard, and raw byte debug.

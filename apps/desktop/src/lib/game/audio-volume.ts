@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Master volume control via Web Audio GainNode.
  * Inserts a gain node between SDL2's ScriptProcessorNode and the AudioContext destination.

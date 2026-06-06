@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 import type { ReactNode, SelectHTMLAttributes } from 'react';
 
 interface SelectOption {

@@ -1,3 +1,4 @@
+/* @layer shared-types @kind logic */
 // Re-export all tracker types from their canonical location in shared/game/types
 export type {
   CheckType,

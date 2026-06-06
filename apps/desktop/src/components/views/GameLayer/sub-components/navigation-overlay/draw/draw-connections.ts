@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 import type { ConnectionInfo } from '@shared/game/navigation';
 import type { DrawContext } from './draw-context';
 import { EDGE_COLORS } from '../types';

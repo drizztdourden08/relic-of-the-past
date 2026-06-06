@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 import { useState, useCallback, useRef } from 'react';
 import {
   startGame,

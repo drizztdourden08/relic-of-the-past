@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 /**
  * GamepadCard — Renders a single standard gamepad's button/axis state.
  */

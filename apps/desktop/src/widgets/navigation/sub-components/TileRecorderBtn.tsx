@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 import { useState, useEffect, useRef } from 'react';
 import { wasmGetViewportInfo } from '../../../lib/game';
 import { S } from '../styles';

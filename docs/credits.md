@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Credits
 
 This project builds on the incredible work of the original [zelda3 PC port](https://github.com/snesrev/zelda3) by snesrev.

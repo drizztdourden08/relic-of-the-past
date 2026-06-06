@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 type LogChannel = 'core' | 'app' | 'randomizer' | 'wasm' | 'ipc' | 'error';
 type LogLevel = 'info' | 'warn' | 'error';
 

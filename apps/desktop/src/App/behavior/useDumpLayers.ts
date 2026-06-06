@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind hook */
 /**
  * Debug hook: reacts to --dump-layers=N [--hover-tile=col,row] CLI flags.
  *

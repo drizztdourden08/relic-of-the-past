@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { Requirement, CheckDefinition, ScreenConnection } from '../types';
 import { ITEM_GROUPS } from '../items/groups';
 

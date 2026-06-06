@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 /**
  * HID Device Enumeration — uses node-hid in the main process to get
  * accurate VID/PID/product name.

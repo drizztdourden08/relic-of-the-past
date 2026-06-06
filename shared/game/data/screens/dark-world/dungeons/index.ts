@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
 import { PALACE_OF_DARKNESS_DUNGEON } from './palace-of-darkness';

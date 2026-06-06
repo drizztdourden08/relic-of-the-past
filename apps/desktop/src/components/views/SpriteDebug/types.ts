@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 type ReviewStatus = 'neutral' | 'good' | 'bad' | 'yellow';
 type ReviewMode = 'sprites' | 'items';
 

@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { TilePassability, LedgeTraversal } from '../types';
 import { GRID_SIZE } from '../types';
 

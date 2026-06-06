@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Design System — Structure & Rules
 
 The strict, organized foundation for the app's UI: **design tokens** plus a

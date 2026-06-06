@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Audio & MSU
 
 ## Volume Controls

@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 /**
  * HID device discovery — filtering and selection of gamepad HID interfaces.
  */

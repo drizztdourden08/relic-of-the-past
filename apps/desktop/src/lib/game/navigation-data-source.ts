@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * NavigationDataSource — Facade wrapping all WASM game state queries
  * used by the navigation system.

@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../../types';
 
 import { DW_PALACE_OF_DARKNESS_CONNECTIONS } from './palace-of-darkness';

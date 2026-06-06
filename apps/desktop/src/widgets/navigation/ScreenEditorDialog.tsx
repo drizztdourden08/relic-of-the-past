@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 /**
  * ScreenEditorDialog — Wizard for creating/editing screen definitions.
  *

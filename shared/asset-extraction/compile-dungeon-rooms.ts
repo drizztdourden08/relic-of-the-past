@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Dungeon room data compilation — room objects, chests, pits, headers.
  */

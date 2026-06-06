@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Game Lifecycle — startGame / resetGame orchestration.
  * Composes wasm-bridge, sram-sync, save-states, and randomizer.

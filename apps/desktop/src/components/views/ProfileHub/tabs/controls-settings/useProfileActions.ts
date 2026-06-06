@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useProfileActions — profile loading, CRUD, selection, persistence.
  */

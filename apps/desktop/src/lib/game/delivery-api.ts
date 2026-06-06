@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Delivery API — non-cheat entry points for the delivery queue.
  * Used by randomizer, networking, and other systems that need to give items.

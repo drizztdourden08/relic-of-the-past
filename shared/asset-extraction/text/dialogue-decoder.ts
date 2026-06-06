@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Dialogue decoder — reads compressed dialogue strings from ROM.
  *

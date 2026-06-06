@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 /**
  * Types for the HID Calibration Wizard.
  */

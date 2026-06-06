@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useInputTester — State and subscriptions for the InputTester view.
  */

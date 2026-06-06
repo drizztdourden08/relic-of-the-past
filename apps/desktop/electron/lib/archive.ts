@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import { join, extname } from 'path';
 import { mkdir, readdir, rm } from 'fs/promises';
 import { app } from 'electron';

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 ﻿interface SliderProps {
   value: number;
   min: number;

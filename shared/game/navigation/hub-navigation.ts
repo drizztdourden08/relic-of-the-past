@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { ScreenConnection, ScreenDefinition } from '../types';
 import type { NavigationStep, NavigationResult, PathfindingOptions } from './types';
 import { ALL_CONNECTIONS, DUNGEON_CONNECTIONS } from '../data/connections';

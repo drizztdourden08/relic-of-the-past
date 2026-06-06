@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 ﻿import type { ReactNode } from 'react';
 
 interface SettingsSectionProps {

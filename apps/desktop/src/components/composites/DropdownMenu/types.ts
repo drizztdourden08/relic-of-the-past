@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 import type { RefObject } from 'react';
 
 interface MenuItem {

@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Drop sprite sheet loading and tile assembly primitives.
  */

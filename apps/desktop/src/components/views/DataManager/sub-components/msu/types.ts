@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 import type { SelectOption } from '../../../../primitives/Select';
 
 interface MsuPack {

@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 import type { ConnectionInfo, ScreenBundle, FloodFillResult } from '@shared/game/navigation';
 import { useGameUIStore } from '../../../stores/game-ui-store';
 import { IndoorMinimap } from './IndoorMinimap';

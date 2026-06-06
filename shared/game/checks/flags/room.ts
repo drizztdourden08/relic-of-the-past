@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 /**
  * Maps check IDs to their SRAM room flag location in save_dung_info[].
  * save_dung_info is uint16[320], indexed by room ID.

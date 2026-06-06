@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useEffect, useRef, useMemo } from 'react';
 import { marked } from 'marked';
 import { Button } from '../../primitives/Button';

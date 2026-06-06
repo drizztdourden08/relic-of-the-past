@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * BRR (Bit Rate Reduction) audio codec — SNES DSP sample format.
  *

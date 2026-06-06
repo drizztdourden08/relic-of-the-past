@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { InventorySlot } from './inventory-types';
 
 let _spritesBase = '/sprites/items/';

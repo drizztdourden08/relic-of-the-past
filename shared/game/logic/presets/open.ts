@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { LogicConfig } from '../../types';
 
 const OPEN_CONFIG: LogicConfig = {

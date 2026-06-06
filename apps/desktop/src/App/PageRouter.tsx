@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind component */
 import { useCallback } from 'react';
 import { ProfilePicker } from '../components/views/ProfilePicker';
 import { ProfileHub } from '../components/views/ProfileHub';

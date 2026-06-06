@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * Controller Lifecycle — manages init/reset of HID controllers
  * via the controller registry and main-process IPC.

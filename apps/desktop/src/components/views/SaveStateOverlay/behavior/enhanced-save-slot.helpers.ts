@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 /**
  * Pure helper functions for the enhanced save slot state machine.
  *

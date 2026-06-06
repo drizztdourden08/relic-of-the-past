@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind component */
 import { useState, useCallback, useEffect } from 'react';
 import { TitleBar } from '../components/views/TitleBar';
 import { GameLayer } from '../components/views/GameLayer';

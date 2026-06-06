@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { InventoryCategory } from './inventory-types';
 
 const INVENTORY_LAYOUT: InventoryCategory[] = [

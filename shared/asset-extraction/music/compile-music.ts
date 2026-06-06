@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Music compiler — orchestrator that compiles extracted music text back to SPC sound bank binary.
  *

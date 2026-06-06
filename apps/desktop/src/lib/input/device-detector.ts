@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * Controller Detection — merges node-hid (main process) for accurate
  * device identification with Web Gamepad API for activation status.

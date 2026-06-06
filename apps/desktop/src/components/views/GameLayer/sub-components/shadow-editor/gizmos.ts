@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 /**
  * Gizmo system for the shadow editor.
  * Handles rendering, hit testing, and interaction for transform gizmos.

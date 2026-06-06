@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind data */
 /**
  * Types, constants, and helpers for SPC music compilation.
  */

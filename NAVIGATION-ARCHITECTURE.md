@@ -1,3 +1,4 @@
+<!-- @layer root-config @kind doc -->
 # Navigation Architecture Plan — Unified Engine
 
 ## Executive Summary

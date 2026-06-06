@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 /**
  * Stick and trigger calibration handler logic.
  * Pure functions that implement the finalization and control flow for analog axes.

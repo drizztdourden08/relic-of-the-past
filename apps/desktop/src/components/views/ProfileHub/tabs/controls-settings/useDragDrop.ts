@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useDragDrop — drag-over/drop handling and preset application.
  */

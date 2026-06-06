@@ -1,3 +1,4 @@
+<!-- @layer claude-config @kind doc -->
 # SOLID Principles
 
 Five object-oriented design principles (Robert C. Martin) that keep code flexible

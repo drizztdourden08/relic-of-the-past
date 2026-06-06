@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind hook */
 /**
  * useLocationNotification — subscribes to game-ui-store map changes
  * and fires screen/transition notifications via location-notification-store.

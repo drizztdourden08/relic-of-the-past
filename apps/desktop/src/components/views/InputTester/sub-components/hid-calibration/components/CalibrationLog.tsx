@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * Log display for the HID Calibration Wizard.
  */

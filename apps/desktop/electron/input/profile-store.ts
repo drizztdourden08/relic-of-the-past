@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 /**
  * Input profile persistence — per-game-profile input bindings.
  */
