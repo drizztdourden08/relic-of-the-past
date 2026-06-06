@@ -98,8 +98,10 @@ these are gitignored and never committed. Same for `test-roms/` and `saves/`.
   `components/{primitives,composites,compounds,views}/` — primitive/composite/compound
   are bare & presentational; **view** is the only tier with logic/data. Use the
   `design-system` skill.
-- **Testing: @docs/testing-capabilities.md.** Prefer built-in automation flags
-  (`--auto-state`, `--screenshot`, `--dump-layers`, `--dump-nav`) over Playwright.
+- **Testing: @docs/testing-capabilities.md.** **Always launch the app for tests
+  with `--no-focus --muted`** so it never steals focus (dev: `npm run dev -- -- --no-focus --muted`).
+  Prefer built-in automation flags (`--auto-state`, `--screenshot`, `--dump-layers`,
+  `--dump-nav`) over Playwright.
   Playwright is **ephemeral** — throwaway specs in `tests/scratch/`, deleted after
   use. Files marked "NEVER MODIFIED BY THE AI" are protected — **modify only with
   the user's explicit permission** (stop and ask). Use the `test-app` skill.
