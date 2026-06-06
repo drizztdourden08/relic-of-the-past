@@ -1,0 +1,13 @@
+{
+  // Doc quality rules. Disabled: line-length (our docs intentionally exceed 80),
+  // inline-HTML (we use HTML comments for @layer/@kind tags), first-line-heading,
+  // and duplicate-heading (common in structured docs).
+  "config": {
+    "MD013": false,
+    "MD033": false,
+    "MD041": false,
+    "MD024": false
+  },
+  "globs": ["**/*.md"],
+  "ignores": ["node_modules/**", "dist/**", "release/**", "core/zelda3/**"]
+}

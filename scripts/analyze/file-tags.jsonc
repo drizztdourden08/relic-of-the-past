@@ -1,0 +1,21 @@
+{
+  // Central tag manifest. Authoritative over in-file headers and heuristics.
+  // Use for: (1) files that cannot hold a comment (JSON, binaries, asm),
+  //          (2) bulk-tagging trees we must not edit (vendored upstream).
+  // Format: "<glob>": { "layer"?, "kind"?, "vendored"? }   later/more matches merge.
+
+  "core/zelda3/**":           { "layer": "core-zelda3", "vendored": true },
+  "core/zelda3/**/*.c":       { "kind": "native" },
+  "core/zelda3/**/*.h":       { "kind": "native" },
+
+  "core/game-hooks/**":       { "layer": "core-game-hooks", "kind": "native" },
+  "core/wasm-build/**/*.c":   { "layer": "core-wasm-build", "kind": "native" },
+
+  "**/*.json":                { "kind": "config-data" },
+  "apps/desktop/public/**":   { "kind": "asset" },
+
+  "shared/game/data/**":      { "kind": "data" },
+  "shared/input/data/**":     { "kind": "data" },
+  "shared/asset-extraction/**/data/**": { "kind": "data" },
+  "**/*.data.ts":             { "kind": "data" }
+}
