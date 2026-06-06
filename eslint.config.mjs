@@ -7,6 +7,7 @@
 // PostToolUse hook (scripts/hooks/lint-changed.mjs) enforces on the file you edit.
 
 import tseslint from 'typescript-eslint';
+import reactHooks from 'eslint-plugin-react-hooks';
 
 export default tseslint.config(
   {
@@ -38,6 +39,7 @@ export default tseslint.config(
     },
     plugins: {
       '@typescript-eslint': tseslint.plugin,
+      'react-hooks': reactHooks,
     },
     rules: {
       // ── Hard file-size cap: split before exceeding 200 lines of code ──
@@ -63,6 +65,11 @@ export default tseslint.config(
         'error',
         { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
       ],
+
+      // ── React hooks correctness (defines the rules referenced by existing
+      //    eslint-disable comments; rules-of-hooks catches real bugs) ──
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
     },
   },
 );
