@@ -48,6 +48,8 @@ playwright-report/
 test-results/
 tests/test-results/
 tests/screenshots/
+# Ephemeral Playwright specs (write, run, delete — never committed)
+tests/scratch/
 
 # Temporary/throwaway scripts (not tracked)
 temp-scripts/
