@@ -21,7 +21,7 @@ interface TileInspectorProps {
   pathPreviewState?: MouseState;
 }
 
-export function TileInspector({ width, height, result, overworldScreenIndex, roomIndex: _roomIndex, isIndoors, onHoverTile, pathPreviewState }: TileInspectorProps) {
+function TileInspector({ width, height, result, overworldScreenIndex, roomIndex: _roomIndex, isIndoors, onHoverTile, pathPreviewState }: TileInspectorProps) {
   const equipment = useGameUIStore(s => s.equipment);
   const inventoryItems = useGameUIStore(s => s.inventory.items);
   const spriteRef = useRef<ReturnType<typeof wasmGetLiveSprites>>([]);
@@ -414,3 +414,5 @@ export function TileInspector({ width, height, result, overworldScreenIndex, roo
     </div>
   );
 }
+
+export { TileInspector };

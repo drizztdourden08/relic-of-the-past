@@ -1,6 +1,6 @@
 import type { ScreenConnection } from '../../../types';
 
-export const DW_CAVE_CONNECTIONS: ScreenConnection[] = [
+const DW_CAVE_CONNECTIONS: ScreenConnection[] = [
   // Hammer Peg Cave
   { from: 'hammer-peg-area', to: 'dark-world-hammer-peg-cave', tags: ['transit:door', 'dir:two-way', 'ctx:entrance', 'barrier:hammer'] },
 
@@ -26,3 +26,5 @@ export const DW_CAVE_CONNECTIONS: ScreenConnection[] = [
   // Mimic Cave (destination is LW cave but accessed from DW)
   { from: 'mimic-cave-ledge', to: 'mimic-cave', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
 ];
+
+export { DW_CAVE_CONNECTIONS };

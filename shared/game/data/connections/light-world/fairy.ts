@@ -1,6 +1,6 @@
 import type { ScreenConnection } from '../../../types';
 
-export const LW_FAIRY_CONNECTIONS: ScreenConnection[] = [
+const LW_FAIRY_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-14', to: 'bonk-fairy-light', tags: ['transit:bonk', 'dir:two-way', 'ctx:entrance', 'barrier:dash'] },
   { from: 'lake-hylia-central-island', to: 'capacity-upgrade', tags: ['transit:waterfall', 'dir:two-way', 'ctx:entrance'] },
   { from: 'lw-0f', to: 'waterfall-of-wishing', tags: ['transit:waterfall', 'dir:two-way', 'ctx:entrance', 'barrier:swim'] },
@@ -13,3 +13,5 @@ export const LW_FAIRY_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-34', to: 'long-fairy-cave', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'east-death-mountain-bottom', to: 'hookshot-fairy', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
 ];
+
+export { LW_FAIRY_CONNECTIONS };

@@ -1,6 +1,6 @@
 import type { ScreenDefinition } from '../../../../types';
 
-export const TOWER_OF_HERA_DUNGEON: ScreenDefinition[] = [
+const TOWER_OF_HERA_DUNGEON: ScreenDefinition[] = [
   {
     id: 'toh-0x07',
     name: 'Moldorm',
@@ -87,3 +87,5 @@ export const TOWER_OF_HERA_DUNGEON: ScreenDefinition[] = [
     ],
   },
 ];
+
+export { TOWER_OF_HERA_DUNGEON };

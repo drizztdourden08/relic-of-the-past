@@ -1,6 +1,6 @@
 import type { ScreenConnection } from '../../../../types';
 
-export const LW_EASTERN_PALACE_CONNECTIONS: ScreenConnection[] = [
+const LW_EASTERN_PALACE_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-1e', to: 'ep-0xc9', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'ep-0x89', to: 'ep-0xa9', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal', 'barrier:big-key'] },
   { from: 'ep-0x89', to: 'ep-0x99', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
@@ -22,3 +22,5 @@ export const LW_EASTERN_PALACE_CONNECTIONS: ScreenConnection[] = [
   { from: 'ep-0xd9', to: 'ep-0xda', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
   { from: 'ep-0xc9', to: 'lw-1e', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
 ];
+
+export { LW_EASTERN_PALACE_CONNECTIONS };

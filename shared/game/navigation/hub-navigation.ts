@@ -168,7 +168,7 @@ function bfsPath(adj: AdjacencyList, sourceId: string, targetId: string): Naviga
  * Hub-level BFS shortest path (allows logical area shortcuts).
  * Entry point #4: screen-graph navigation.
  */
-export function findShortestPath(sourceId: string, targetId: string, options: PathfindingOptions = {}): NavigationResult {
+function findShortestPath(sourceId: string, targetId: string, options: PathfindingOptions = {}): NavigationResult {
   const adj = getFullAdjacencyList(options);
   return bfsPath(adj, sourceId, targetId);
 }
@@ -177,13 +177,13 @@ export function findShortestPath(sourceId: string, targetId: string, options: Pa
  * Precise BFS shortest path through physical locations only.
  * Logical area hubs are eliminated, forcing screen-by-screen routing.
  */
-export function findPrecisePath(sourceId: string, targetId: string, options: PathfindingOptions = {}): NavigationResult {
+function findPrecisePath(sourceId: string, targetId: string, options: PathfindingOptions = {}): NavigationResult {
   const adj = getPreciseAdjacencyList(options);
   return bfsPath(adj, sourceId, targetId);
 }
 
 /** Find all screens unreachable from source (disconnected nodes). */
-export function findUnreachableScreens(sourceId: string = 'menu'): { id: string; name: string; type: string }[] {
+function findUnreachableScreens(sourceId: string = 'menu'): { id: string; name: string; type: string }[] {
   const adj = getFullAdjacencyList();
 
   const visited = new Set<string>();
@@ -207,7 +207,7 @@ export function findUnreachableScreens(sourceId: string = 'menu'): { id: string;
 }
 
 /** Get graph statistics for debugging. */
-export function getGraphStats() {
+function getGraphStats() {
   const adj = getFullAdjacencyList();
   const allConnections = [...ALL_CONNECTIONS, ...DUNGEON_CONNECTIONS];
 
@@ -235,3 +235,5 @@ export function getGraphStats() {
     orphanedScreens: [...SCREEN_BY_ID.keys()].filter(id => !adj.has(id)),
   };
 }
+
+export { findShortestPath, findPrecisePath, findUnreachableScreens, getGraphStats };

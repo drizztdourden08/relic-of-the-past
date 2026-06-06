@@ -13,12 +13,12 @@ import holeIcon from '@iconify-icons/game-icons/hole';
 import wellIcon from '@iconify-icons/game-icons/well';
 import { getScreenLookup } from '@shared/game/data/screens';
 
-export type EntranceType = 'door' | 'cave' | 'hole' | 'well' | 'dungeon' | 'fairy' | 'shop' | 'house' | 'overworld' | 'respawn' | 'unknown';
+type EntranceType = 'door' | 'cave' | 'hole' | 'well' | 'dungeon' | 'fairy' | 'shop' | 'house' | 'overworld' | 'respawn' | 'unknown';
 
-export interface IconData { body: string; width?: number; height?: number; }
+interface IconData { body: string; width?: number; height?: number; }
 
 /** Icon data for each entrance type */
-export const ENTRANCE_ICONS: Record<EntranceType, IconData> = {
+const ENTRANCE_ICONS: Record<EntranceType, IconData> = {
   door: woodenDoor,
   cave: caveEntrance,
   hole: holeIcon,
@@ -33,22 +33,22 @@ export const ENTRANCE_ICONS: Record<EntranceType, IconData> = {
 };
 
 /** Icon for inter-room stair connections (exit door, gold) */
-export const STAIR_ICON: IconData = exitDoorIcon;
+const STAIR_ICON: IconData = exitDoorIcon;
 
 /** Icon for palace-toggle walk boundaries (secret door, purple) */
-export const WALK_BOUNDARY_ICON: IconData = secretDoorIcon;
+const WALK_BOUNDARY_ICON: IconData = secretDoorIcon;
 
 /** Color for standard entrance icons */
-export const ENTRANCE_COLOR = '#ffcc44';
+const ENTRANCE_COLOR = '#ffcc44';
 
 /** Color for walk-boundary (palace toggle) icons */
-export const WALK_BOUNDARY_COLOR = '#cc88ff';
+const WALK_BOUNDARY_COLOR = '#cc88ff';
 
 /**
  * Classify an entrance by its ID and context.
  * Single source of truth — used by both overlay canvas and React widget.
  */
-export function classifyEntranceType(
+function classifyEntranceType(
   entId: number,
   roomId: number,
   roomIndex: number,
@@ -88,7 +88,7 @@ export function classifyEntranceType(
  * Get the icon data and color for a given entrance.
  * Handles synthetic IDs (stairs, walk boundaries) automatically.
  */
-export function getEntranceIcon(
+function getEntranceIcon(
   entId: number,
   roomId: number,
   roomIndex: number,
@@ -100,3 +100,6 @@ export function getEntranceIcon(
   const type = classifyEntranceType(entId, roomId, roomIndex, isIndoors, respawnEntIds);
   return { icon: ENTRANCE_ICONS[type], color: ENTRANCE_COLOR };
 }
+
+export { ENTRANCE_ICONS, STAIR_ICON, WALK_BOUNDARY_ICON, ENTRANCE_COLOR, WALK_BOUNDARY_COLOR, classifyEntranceType, getEntranceIcon };
+export type { EntranceType, IconData };

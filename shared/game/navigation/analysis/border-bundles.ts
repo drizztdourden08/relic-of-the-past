@@ -12,7 +12,7 @@
 import type { FloodFillResult } from '../types';
 import type { ConnectionPointData } from '../nav-data.types';
 
-export interface BorderBundle {
+interface BorderBundle {
   /** Unique ID: "lw-{screen:hex}-edge-{dir}-{index}" */
   id: string;
   /** Which border */
@@ -27,7 +27,7 @@ export interface BorderBundle {
  * Find all border bundles for a flood-filled screen.
  * Groups contiguous reachable border tiles into bundles.
  */
-export function findBorderBundles(result: FloodFillResult): BorderBundle[] {
+function findBorderBundles(result: FloodFillResult): BorderBundle[] {
   const screen = result.screenIndex;
   const prefix = `lw-${screen.toString(16).padStart(2, '0')}`;
   const bundles: BorderBundle[] = [];
@@ -55,7 +55,7 @@ export function findBorderBundles(result: FloodFillResult): BorderBundle[] {
  * Compute the overlap (intersection) between two tile position arrays.
  * Returns the positions present in BOTH arrays — the valid crossing corridor.
  */
-export function computeOverlap(tilesA: number[], tilesB: number[]): number[] {
+function computeOverlap(tilesA: number[], tilesB: number[]): number[] {
   const setB = new Set(tilesB);
   return tilesA.filter(t => setB.has(t));
 }
@@ -63,7 +63,7 @@ export function computeOverlap(tilesA: number[], tilesB: number[]): number[] {
 /**
  * Given two screens' flood results, build the full two-sided connection data.
  */
-export function buildWalkConnection(
+function buildWalkConnection(
   fromResult: FloodFillResult,
   toResult: FloodFillResult,
   direction: 'n' | 's' | 'e' | 'w',
@@ -144,3 +144,6 @@ function splitIntoBundles(
 function oppositeDirection(dir: 'n' | 's' | 'e' | 'w'): 'n' | 's' | 'e' | 'w' {
   switch (dir) { case 'n': return 's'; case 's': return 'n'; case 'e': return 'w'; case 'w': return 'e'; }
 }
+
+export { findBorderBundles, computeOverlap, buildWalkConnection };
+export type { BorderBundle };

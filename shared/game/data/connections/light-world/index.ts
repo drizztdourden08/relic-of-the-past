@@ -11,7 +11,7 @@ import { LW_SHOP_CONNECTIONS } from './shops';
 import { LW_SPECIAL_CONNECTIONS } from './special';
 import { LW_WELL_CONNECTIONS } from './wells';
 
-export const LIGHT_WORLD_CONNECTIONS: ScreenConnection[] = [
+const LIGHT_WORLD_CONNECTIONS: ScreenConnection[] = [
   ...LW_OVERWORLD_CONNECTIONS,
   ...LW_DUNGEON_CONNECTIONS,
   ...LW_CAVE_CONNECTIONS,
@@ -26,3 +26,4 @@ export const LIGHT_WORLD_CONNECTIONS: ScreenConnection[] = [
 ];
 
 export { LW_OVERWORLD_CONNECTIONS, LW_DUNGEON_CONNECTIONS };
+export { LIGHT_WORLD_CONNECTIONS };

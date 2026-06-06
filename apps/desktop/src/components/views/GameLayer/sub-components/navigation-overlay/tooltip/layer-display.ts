@@ -1,6 +1,6 @@
 import type { FloodFillResult } from '@shared/game/navigation';
 
-export type LayerDisplayMode = 'single' | 'dual' | 'locked';
+type LayerDisplayMode = 'single' | 'dual' | 'locked';
 
 /**
  * Determine how to display layer info in the tooltip:
@@ -8,7 +8,7 @@ export type LayerDisplayMode = 'single' | 'dual' | 'locked';
  * - 'dual': dual-layer room with free layer transitions
  * - 'locked': dual-layer room but staircaseType===2 (only active layer matters)
  */
-export function getLayerDisplayMode(result: FloodFillResult): LayerDisplayMode {
+function getLayerDisplayMode(result: FloodFillResult): LayerDisplayMode {
   if (!result.dualLayerGrids) return 'single';
   if (result.staircaseType === 2) return 'locked';
   return 'dual';
@@ -18,6 +18,9 @@ export function getLayerDisplayMode(result: FloodFillResult): LayerDisplayMode {
  * For 'locked' mode, return which layer is the active one.
  * 0 = upper/BG2 (ABOVE), 1 = lower/BG1 (GROUND).
  */
-export function getLockedLayer(result: FloodFillResult): 0 | 1 {
+function getLockedLayer(result: FloodFillResult): 0 | 1 {
   return result.startLayer ?? 0;
 }
+
+export { getLayerDisplayMode, getLockedLayer };
+export type { LayerDisplayMode };

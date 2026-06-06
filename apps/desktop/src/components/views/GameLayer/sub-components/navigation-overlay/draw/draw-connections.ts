@@ -2,7 +2,7 @@ import type { ConnectionInfo } from '@shared/game/navigation';
 import type { DrawContext } from './draw-context';
 import { EDGE_COLORS } from '../types';
 
-export function drawConnections(
+function drawConnections(
   dc: DrawContext,
   connections: ConnectionInfo[],
 ): void {
@@ -49,3 +49,5 @@ export function drawConnections(
     }
   }
 }
+
+export { drawConnections };

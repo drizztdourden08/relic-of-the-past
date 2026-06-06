@@ -26,7 +26,7 @@ import type { VibrationSegment } from './base';
 
 // ─── Types ───
 
-export interface HapticPatternEntry {
+interface HapticPatternEntry {
   /** Vibration segments: array of { durationMs, intensity } */
   segments: VibrationSegment[];
   /** Gap in ms between segments when played sequentially (default: 0) */
@@ -68,7 +68,7 @@ function fadeOut(durationMs: number, startIntensity: number, steps = 4): Vibrati
 // PATTERN DEFINITIONS — Edit these to tune vibration feel
 // ═══════════════════════════════════════════════════════════════════════════════
 
-export const HAPTIC_PATTERNS = {
+const HAPTIC_PATTERNS = {
 
   // ─── Sword ───
 
@@ -295,4 +295,7 @@ export const HAPTIC_PATTERNS = {
 
 } as const;
 
-export type HapticPatternId = keyof typeof HAPTIC_PATTERNS;
+type HapticPatternId = keyof typeof HAPTIC_PATTERNS;
+
+export { HAPTIC_PATTERNS };
+export type { HapticPatternEntry, HapticPatternId };

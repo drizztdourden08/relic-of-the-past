@@ -1,6 +1,6 @@
 import type { ScreenDefinition } from '../../../types';
 
-export const LW_CAVES: ScreenDefinition[] = [
+const LW_CAVES: ScreenDefinition[] = [
   { id: 'aginahs-cave', name: 'Aginahs Cave', type: 'interior', world: 'light', location: 'Desert of Mystery', area: 'Desert', roomIndex: 0x08, interior: { kind: 'cave' }, tags: ['env:underground', 'loot:chest'] },
   { id: 'bat-cave-right', name: 'Bat Cave (right)', type: 'interior', world: 'light', location: 'Kakariko Village', area: 'Kakariko', roomIndex: 0xE4, interior: { kind: 'cave' }, tags: ['env:underground', 'loot:chest'] },
   { id: 'bat-cave-left', name: 'Bat Cave (left)', type: 'interior', world: 'light', location: 'Kakariko Village', area: 'Kakariko', roomIndex: 0xE5, interior: { kind: 'cave' }, tags: ['env:underground', 'role:connector'] },
@@ -24,3 +24,5 @@ export const LW_CAVES: ScreenDefinition[] = [
   { id: 'paradox-cave', name: 'Paradox Cave', type: 'interior', world: 'light', location: 'Death Mountain', area: 'Death Mountain', roomIndex: 0xEB, interior: { kind: 'cave' }, tags: ['env:underground', 'role:connector'] },
   { id: 'spiral-cave-top', name: 'Spiral Cave (Top)', type: 'interior', world: 'light', location: 'Death Mountain', area: 'Death Mountain', roomIndex: 0x23, interior: { kind: 'cave' }, tags: ['env:underground', 'loot:chest'] },
 ];
+
+export { LW_CAVES };

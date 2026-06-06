@@ -10,7 +10,7 @@ import type { TileReq } from '@shared/game/navigation/tile-attrs';
 import type { FloodFillOptions, QuadrantBounds } from '@shared/game/navigation';
 import type { OverworldEntrance } from '@shared/game/navigation';
 
-export interface FloodFillSession {
+interface FloodFillSession {
   screenIndex: number;
   isIndoors: boolean;
   tileContext: TileAttrContext;
@@ -27,7 +27,7 @@ export interface FloodFillSession {
   items: string[];
 }
 
-export interface SessionBuilderInput {
+interface SessionBuilderInput {
   isIndoors: boolean;
   primaryScreenIndex: number;
   linkX: number;
@@ -64,7 +64,7 @@ export interface SessionBuilderInput {
  * Build a flood fill session: gather all necessary data for BFS execution.
  * Pure function — no side effects, no state mutations.
  */
-export function buildFloodFillSession(input: SessionBuilderInput): FloodFillSession | null {
+function buildFloodFillSession(input: SessionBuilderInput): FloodFillSession | null {
   const { isIndoors, primaryScreenIndex, wasm, items, isCheckCompleted } = input;
 
   const vp = wasm.getViewportInfo();
@@ -243,3 +243,6 @@ function computeBigScreenGroupFromHeads(heads: number[] | null, screenIndex: num
   }
   return group.length > 0 ? group : [screenIndex];
 }
+
+export { buildFloodFillSession };
+export type { FloodFillSession, SessionBuilderInput };

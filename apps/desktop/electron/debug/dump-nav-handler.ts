@@ -20,7 +20,7 @@ function parseDumpNavSlot(): number | null {
   return null;
 }
 
-export function registerDumpNavHandler(): void {
+function registerDumpNavHandler(): void {
   const slot = parseDumpNavSlot();
 
   ipcMain.handle('debug:getDumpNavSlot', () => slot);
@@ -37,3 +37,5 @@ export function registerDumpNavHandler(): void {
     return outPath;
   });
 }
+
+export { registerDumpNavHandler };

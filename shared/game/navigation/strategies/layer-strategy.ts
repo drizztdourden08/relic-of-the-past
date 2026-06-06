@@ -2,28 +2,28 @@ import type { TilePassability, TransitionPoint, GridPos, ReachState } from '../t
 
 // ─── BFS Engine Types ────────────────────────────────────────────────────────
 
-export interface BFSCell {
+interface BFSCell {
   row: number;
   col: number;
   layer: 0 | 1;
   requirements: Set<string>;
 }
 
-export interface QuadrantBounds {
+interface QuadrantBounds {
   minRow: number;
   maxRow: number;
   minCol: number;
   maxCol: number;
 }
 
-export interface BFSExpansionResult {
+interface BFSExpansionResult {
   row: number;
   col: number;
   layer: 0 | 1;
   requirements: Set<string>;
 }
 
-export interface BFSResult {
+interface BFSResult {
   reachable: ReachState[][];
   transitions: TransitionPoint[];
   reachableCount: number;
@@ -39,7 +39,7 @@ export interface BFSResult {
  * Defines how the BFS engine handles layer transitions during expansion.
  * Each strategy determines what happens when the body tries to move in a direction.
  */
-export interface LayerStrategy {
+interface LayerStrategy {
   /** Number of layers tracked by this strategy. */
   readonly layerCount: 1 | 2;
 
@@ -84,3 +84,5 @@ export interface LayerStrategy {
     reachableByLayer?: [ReachState[][], ReachState[][]];
   };
 }
+
+export type { BFSCell, QuadrantBounds, BFSExpansionResult, BFSResult, LayerStrategy };

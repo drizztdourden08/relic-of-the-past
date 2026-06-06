@@ -3,7 +3,7 @@
  *
  * Two layers:
  *  1. localStorage ("widget-layout"): current in-memory layout for fast restore on reload.
- *  2. Per-profile IPC: saved/loaded via window.api (tracker state path) for cross-session persistence.
+ *  2. Per-profile persistence: saved/loaded via lib/tracker-state-io (typed IPC wrapper) for cross-session persistence.
  */
 
 import type { WidgetLayout, WidgetState } from '../types';

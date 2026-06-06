@@ -14,7 +14,7 @@ interface AutoFloodTriggerOptions {
  * Hook that detects when a new flood fill should be triggered automatically.
  * Monitors screen changes, quadrant changes, and grounded-state transitions.
  */
-export function useAutoFloodTrigger(opts: AutoFloodTriggerOptions): void {
+function useAutoFloodTrigger(opts: AutoFloodTriggerOptions): void {
   const { autoRun, running, isIndoors, activeScreenIndex, debugTick, onTrigger } = opts;
 
   const prevScreenRef = useRef<number | null>(null);
@@ -103,3 +103,5 @@ export function useAutoFloodTrigger(opts: AutoFloodTriggerOptions): void {
     prevQuadrantKeyRef.current = quadKey;
   }, [autoRun, running, isIndoors, debugTick]);
 }
+
+export { useAutoFloodTrigger };

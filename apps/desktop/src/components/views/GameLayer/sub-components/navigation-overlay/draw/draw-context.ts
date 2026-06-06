@@ -2,7 +2,7 @@ import type { FloodFillResult } from '@shared/game/navigation';
 import type { ReachState } from '@shared/game/navigation/types';
 
 /** Shared drawing context passed to all draw functions. */
-export interface DrawContext {
+interface DrawContext {
   ctx: CanvasRenderingContext2D;
   scaleX: number;
   scaleY: number;
@@ -19,7 +19,7 @@ export interface DrawContext {
   getScreenWorldOrigin: (screenIndex: number) => { x: number; y: number };
 }
 
-export interface ViewportInfo {
+interface ViewportInfo {
   cameraX: number;
   cameraY: number;
   snesWidth: number;
@@ -30,7 +30,7 @@ export interface ViewportInfo {
   isGameplay: boolean;
 }
 
-export function buildDrawContext(
+function buildDrawContext(
   ctx: CanvasRenderingContext2D,
   vp: ViewportInfo,
   width: number,
@@ -73,3 +73,6 @@ export function buildDrawContext(
     getScreenWorldOrigin,
   };
 }
+
+export { buildDrawContext };
+export type { DrawContext, ViewportInfo };

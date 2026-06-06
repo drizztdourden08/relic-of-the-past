@@ -10,7 +10,7 @@ import { DW_PASSAGE_CONNECTIONS } from './passages';
 import { DW_SHOP_CONNECTIONS } from './shops';
 import { DW_SPECIAL_CONNECTIONS } from './special';
 
-export const DARK_WORLD_CONNECTIONS: ScreenConnection[] = [
+const DARK_WORLD_CONNECTIONS: ScreenConnection[] = [
   ...DW_OVERWORLD_CONNECTIONS,
   ...DW_DUNGEON_CONNECTIONS,
   ...DW_CAVE_CONNECTIONS,
@@ -24,3 +24,4 @@ export const DARK_WORLD_CONNECTIONS: ScreenConnection[] = [
 ];
 
 export { DW_OVERWORLD_CONNECTIONS, DW_DUNGEON_CONNECTIONS };
+export { DARK_WORLD_CONNECTIONS };

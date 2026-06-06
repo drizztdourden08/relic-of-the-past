@@ -15,7 +15,7 @@
  * Modify this union to add/remove supported requirements —
  * the compiler will flag all incomplete consumers.
  */
-export type TileReq =
+type TileReq =
   | 'lift.1'     // bare hands — bush, pot, sign
   | 'lift.2'     // Power Glove — light rocks
   | 'lift.3'     // Titan's Mitt — dark rocks
@@ -28,7 +28,7 @@ export type TileReq =
  * Semantic labels — exhaustive set describing what a tile "is" or "does".
  * A single tile byte can map to multiple labels (equivalences).
  */
-export type TileLabel =
+type TileLabel =
   // Ground / walkable
   | 'ground' | 'floor' | 'stair' | 'outdoor ground'
   | 'tall grass' | 'thick grass' | 'cuttable'
@@ -61,10 +61,10 @@ export type TileLabel =
   | 'torch' | 'flaggable door';
 
 /** Navigation passability for flood fill */
-export type TilePass = 'free' | 'obstacle' | 'blocked' | 'water' | 'pit';
+type TilePass = 'free' | 'obstacle' | 'blocked' | 'water' | 'pit';
 
 /** Semantic category for grouping / filtering */
-export type TileCat =
+type TileCat =
   | 'ground'
   | 'slope'
   | 'wall'
@@ -77,11 +77,11 @@ export type TileCat =
   | 'pit';
 
 /** Tile attribute context for classification rules. */
-export type TileAttrContext = 'overworld' | 'interior-house' | 'interior-cave' | 'interior-dungeon';
+type TileAttrContext = 'overworld' | 'interior-house' | 'interior-cave' | 'interior-dungeon';
 
 // ─── Tile Definition ────────────────────────────────────────────────────────
 
-export interface TileAttrDef {
+interface TileAttrDef {
   /** How the flood fill treats this tile */
   pass: TilePass;
   /** Equipment needed to traverse (only when pass !== 'free') */
@@ -96,7 +96,7 @@ export interface TileAttrDef {
 
 // ─── The Map ────────────────────────────────────────────────────────────────
 
-export const OVERWORLD_TILE_ATTRS: Readonly<Record<number, TileAttrDef>> = {
+const OVERWORLD_TILE_ATTRS: Readonly<Record<number, TileAttrDef>> = {
   // ═══ Ground / Walkable ═══════════════════════════════════════════════════════
   0x00: { pass: 'free', labels: ['ground'],                           cat: 'ground' },
   0x04: { pass: 'free', labels: ['tall grass', 'cuttable'],           cat: 'ground' },
@@ -298,14 +298,14 @@ function buildInteriorAttrs(): Readonly<Record<number, TileAttrDef>> {
 
 // Shared instance — all interior contexts use the same map until they diverge.
 const INTERIOR_ATTRS: Readonly<Record<number, TileAttrDef>> = buildInteriorAttrs();
-export const INTERIOR_HOUSE_TILE_ATTRS = INTERIOR_ATTRS;
-export const INTERIOR_CAVE_TILE_ATTRS = INTERIOR_ATTRS;
-export const INTERIOR_DUNGEON_TILE_ATTRS = INTERIOR_ATTRS;
+const INTERIOR_HOUSE_TILE_ATTRS = INTERIOR_ATTRS;
+const INTERIOR_CAVE_TILE_ATTRS = INTERIOR_ATTRS;
+const INTERIOR_DUNGEON_TILE_ATTRS = INTERIOR_ATTRS;
 
 /** Backward-compat alias; prefer OVERWORLD_TILE_ATTRS. */
-export const TILE_ATTRS = OVERWORLD_TILE_ATTRS;
+const TILE_ATTRS = OVERWORLD_TILE_ATTRS;
 
-export function getTileAttrsMap(context: TileAttrContext = 'overworld'): Readonly<Record<number, TileAttrDef>> {
+function getTileAttrsMap(context: TileAttrContext = 'overworld'): Readonly<Record<number, TileAttrDef>> {
   switch (context) {
     case 'interior-house': return INTERIOR_HOUSE_TILE_ATTRS;
     case 'interior-cave': return INTERIOR_CAVE_TILE_ATTRS;
@@ -318,17 +318,17 @@ export function getTileAttrsMap(context: TileAttrContext = 'overworld'): Readonl
 // ─── Derived Helpers ────────────────────────────────────────────────────────
 
 /** Get the primary human-readable label for a tile attribute byte. */
-export function getAttrLabel(attr: number, context: TileAttrContext = 'overworld'): string {
+function getAttrLabel(attr: number, context: TileAttrContext = 'overworld'): string {
   return getTileAttrsMap(context)[attr]?.labels[0] ?? 'unknown';
 }
 
 /** Get the requirement key for a tile, or undefined if none. */
-export function getAttrReq(attr: number, context: TileAttrContext = 'overworld'): TileReq | undefined {
+function getAttrReq(attr: number, context: TileAttrContext = 'overworld'): TileReq | undefined {
   return getTileAttrsMap(context)[attr]?.req;
 }
 
 /** Check if a tile belongs to a specific category. */
-export function isCategory(attr: number, cat: TileCat, context: TileAttrContext = 'overworld'): boolean {
+function isCategory(attr: number, cat: TileCat, context: TileAttrContext = 'overworld'): boolean {
   return getTileAttrsMap(context)[attr]?.cat === cat;
 }
 
@@ -342,13 +342,13 @@ function attrsOfCat(map: Readonly<Record<number, TileAttrDef>>, cat: TileCat): R
   return s;
 }
 
-export const WATER_TILES: ReadonlySet<number> = attrsOfCat(OVERWORLD_TILE_ATTRS, 'water');
-export const CLIFF_TRIGGER_TILES: ReadonlySet<number> = attrsOfCat(OVERWORLD_TILE_ATTRS, 'cliff-trigger');
-export const CLIFF_FACE_TILES: ReadonlySet<number> = attrsOfCat(OVERWORLD_TILE_ATTRS, 'cliff-face');
-export const PIT_TILES: ReadonlySet<number> = attrsOfCat(OVERWORLD_TILE_ATTRS, 'pit');
+const WATER_TILES: ReadonlySet<number> = attrsOfCat(OVERWORLD_TILE_ATTRS, 'water');
+const CLIFF_TRIGGER_TILES: ReadonlySet<number> = attrsOfCat(OVERWORLD_TILE_ATTRS, 'cliff-trigger');
+const CLIFF_FACE_TILES: ReadonlySet<number> = attrsOfCat(OVERWORLD_TILE_ATTRS, 'cliff-face');
+const PIT_TILES: ReadonlySet<number> = attrsOfCat(OVERWORLD_TILE_ATTRS, 'pit');
 
 /** Tiles the hookshot can grab onto (pulls Link to them from range). */
-export const HOOKSHOT_TARGET_TILES: ReadonlySet<number> = (() => {
+const HOOKSHOT_TARGET_TILES: ReadonlySet<number> = (() => {
   const s = new Set<number>();
   for (const [k, v] of Object.entries(OVERWORLD_TILE_ATTRS)) {
     if (v.hookTarget) s.add(Number(k));
@@ -357,10 +357,13 @@ export const HOOKSHOT_TARGET_TILES: ReadonlySet<number> = (() => {
 })();
 
 /** Context-aware hookshot target set. */
-export function getHookshotTargetTiles(context: TileAttrContext = 'overworld'): ReadonlySet<number> {
+function getHookshotTargetTiles(context: TileAttrContext = 'overworld'): ReadonlySet<number> {
   const s = new Set<number>();
   for (const [k, v] of Object.entries(getTileAttrsMap(context))) {
     if (v.hookTarget) s.add(Number(k));
   }
   return s;
 }
+
+export { OVERWORLD_TILE_ATTRS, INTERIOR_HOUSE_TILE_ATTRS, INTERIOR_CAVE_TILE_ATTRS, INTERIOR_DUNGEON_TILE_ATTRS, TILE_ATTRS, getTileAttrsMap, getAttrLabel, getAttrReq, isCategory, WATER_TILES, CLIFF_TRIGGER_TILES, CLIFF_FACE_TILES, PIT_TILES, HOOKSHOT_TARGET_TILES, getHookshotTargetTiles };
+export type { TileReq, TileLabel, TilePass, TileCat, TileAttrContext, TileAttrDef };

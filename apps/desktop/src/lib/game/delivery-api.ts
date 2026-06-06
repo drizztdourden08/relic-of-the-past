@@ -13,7 +13,7 @@ function isReady(): boolean {
 }
 
 /** Enqueue an item delivery from a randomizer source. */
-export function deliverItem(itemId: number, message?: string, source = 'randomizer'): string | null {
+function deliverItem(itemId: number, message?: string, source = 'randomizer'): string | null {
   if (!isReady()) return null;
   const action: DeliveryAction = { type: 'give_item', itemId };
   const label = message ?? ITEM_ID_TO_NAME[itemId] ?? `Unknown Item #${itemId}`;
@@ -21,7 +21,7 @@ export function deliverItem(itemId: number, message?: string, source = 'randomiz
 }
 
 /** Enqueue a chest check delivery from a randomizer source. */
-export function deliverCheck(
+function deliverCheck(
   roomId: number, chestIndex: number, itemId: number,
   message?: string, source = 'randomizer'
 ): string | null {
@@ -32,7 +32,7 @@ export function deliverCheck(
 }
 
 /** Enqueue an NPC check delivery from a randomizer source. */
-export function deliverNpcCheck(
+function deliverNpcCheck(
   flagType: number, flagMask: number, itemId: number,
   spriteType: number, postGfx: number,
   message?: string, source = 'randomizer'
@@ -44,8 +44,10 @@ export function deliverNpcCheck(
 }
 
 /** Enqueue a custom delivery action (for arbitrary effects). */
-export function deliverCustom(execute: () => void, message: string, source: string): string | null {
+function deliverCustom(execute: () => void, message: string, source: string): string | null {
   if (!isReady()) return null;
   const action: DeliveryAction = { type: 'custom', execute };
   return enqueue(message, source, action);
 }
+
+export { deliverItem, deliverCheck, deliverNpcCheck, deliverCustom };

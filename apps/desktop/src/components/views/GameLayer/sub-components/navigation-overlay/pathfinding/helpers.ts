@@ -1,26 +1,26 @@
 import type { ReachState } from '@shared/game/navigation/types';
 import type { GridPos, Rect } from '../types';
 
-export const PATH_DIRS: ReadonlyArray<readonly [number, number]> = [
+const PATH_DIRS: ReadonlyArray<readonly [number, number]> = [
   [-1, 0],
   [1, 0],
   [0, -1],
   [0, 1],
 ];
 
-export function manhattan(a: GridPos, b: GridPos): number {
+function manhattan(a: GridPos, b: GridPos): number {
   return Math.abs(a.row - b.row) + Math.abs(a.col - b.col);
 }
 
-export function keyOf(pos: GridPos): string {
+function keyOf(pos: GridPos): string {
   return `${pos.row},${pos.col}`;
 }
 
-export function rectsOverlap(a: Rect, b: Rect): boolean {
+function rectsOverlap(a: Rect, b: Rect): boolean {
   return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 }
 
-export function segmentOverlapsRect(a: { x: number; y: number }, b: { x: number; y: number }, rect: Rect, margin: number): boolean {
+function segmentOverlapsRect(a: { x: number; y: number }, b: { x: number; y: number }, rect: Rect, margin: number): boolean {
   const minX = rect.x - margin;
   const maxX = rect.x + rect.w + margin;
   const minY = rect.y - margin;
@@ -46,14 +46,14 @@ export function segmentOverlapsRect(a: { x: number; y: number }, b: { x: number;
 }
 
 /** Check whether a 2×2 block (top-left at row,col) is fully reachable (player can stop here). */
-export function isValid2x2(row: number, col: number, reachable: ReachState[][]): boolean {
+function isValid2x2(row: number, col: number, reachable: ReachState[][]): boolean {
   if (row < 0 || row + 1 >= 64 || col < 0 || col + 1 >= 64) return false;
   return reachable[row][col] === 1 && reachable[row][col + 1] === 1 &&
          reachable[row + 1][col] === 1 && reachable[row + 1][col + 1] === 1;
 }
 
 /** Check if movement direction (dr,dc) is compatible with an encoded traversal state (>=2). */
-export function isTraversalDirCompatible(state: number, dr: number, dc: number): boolean {
+function isTraversalDirCompatible(state: number, dr: number, dc: number): boolean {
   switch (state) {
     case 2: return dr === 1 && dc === 0;   // south
     case 3: return dr === -1 && dc === 0;  // north
@@ -69,7 +69,7 @@ export function isTraversalDirCompatible(state: number, dr: number, dc: number):
 }
 
 /** Check if a 2×2 move in direction (dr,dc) is valid — allows traversal tiles in their permitted direction. */
-export function isValidMove2x2(
+function isValidMove2x2(
   nr: number, nc: number, dr: number, dc: number,
   reachable: ReachState[][],
 ): boolean {
@@ -86,7 +86,7 @@ export function isValidMove2x2(
 }
 
 /** Check if the body at (row,col) can leave in direction (dr,dc) — ledge tiles restrict exit direction. */
-export function canLeave2x2(
+function canLeave2x2(
   row: number, col: number, dr: number, dc: number,
   reachable: ReachState[][],
 ): boolean {
@@ -100,3 +100,5 @@ export function canLeave2x2(
   }
   return true;
 }
+
+export { PATH_DIRS, manhattan, keyOf, rectsOverlap, segmentOverlapsRect, isValid2x2, isTraversalDirCompatible, isValidMove2x2, canLeave2x2 };

@@ -10,7 +10,7 @@ import { GRID_SIZE } from '../types';
  * - 0x28/0x29 (y-axis): direction inferred from walls above or below
  * - 0x2a/0x2b (x-axis): direction inferred from walls left or right
  */
-export function processStraightCliffs(
+function processStraightCliffs(
   grid: TilePassability[][],
   rawAttr: number[][],
   ledges: LedgeTraversal[],
@@ -133,7 +133,7 @@ export function processStraightCliffs(
  * Diagonal cliff-jump preprocessing.
  * Converts zigzag cliff paths (0x2c=NW, 0x2d=SE, 0x2e=NE) into diagonal ledges.
  */
-export function processDiagonalCliffs(
+function processDiagonalCliffs(
   grid: TilePassability[][],
   rawAttr: number[][],
   ledges: LedgeTraversal[],
@@ -204,7 +204,7 @@ export function processDiagonalCliffs(
  * South-cliff scan from diagonal edge tiles and cliff borders.
  * Detects southward cliff jumps where edge tiles have cliff face below.
  */
-export function processSouthCliffs(
+function processSouthCliffs(
   grid: TilePassability[][],
   rawAttr: number[][],
   ledges: LedgeTraversal[],
@@ -242,3 +242,5 @@ export function processSouthCliffs(
     }
   }
 }
+
+export { processStraightCliffs, processDiagonalCliffs, processSouthCliffs };

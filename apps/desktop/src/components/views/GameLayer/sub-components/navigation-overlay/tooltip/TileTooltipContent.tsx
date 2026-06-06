@@ -4,7 +4,7 @@ import type { FloodFillResult } from '@shared/game/navigation';
 import type { TileAttrContext } from '@shared/game/navigation/tile-attrs';
 import { getLayerDisplayMode, getLockedLayer } from './layer-display';
 
-export interface TooltipData {
+interface TooltipData {
   x: number; y: number;
   row: number; col: number;
   attr: number; label: string;
@@ -26,7 +26,7 @@ interface TileTooltipContentProps {
   result: FloodFillResult;
 }
 
-export function TileTooltipContent({ tooltip, result }: TileTooltipContentProps) {
+function TileTooltipContent({ tooltip, result }: TileTooltipContentProps) {
   const ctx0 = result.tileContext ?? 'overworld';
   const mode = getLayerDisplayMode(result);
 
@@ -174,3 +174,6 @@ function renderSingleLayer(tooltip: TooltipData) {
     </>
   );
 }
+
+export { TileTooltipContent };
+export type { TooltipData };

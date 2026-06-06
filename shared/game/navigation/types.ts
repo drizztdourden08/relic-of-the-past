@@ -2,8 +2,8 @@ import type { TileAttrContext } from './tile-attrs';
 
 // ─── Grid Constants ──────────────────────────────────────────────────────────
 
-export const GRID_SIZE = 64;
-export const TOTAL_TILES = GRID_SIZE * GRID_SIZE;
+const GRID_SIZE = 64;
+const TOTAL_TILES = GRID_SIZE * GRID_SIZE;
 
 // ─── Tile Types ──────────────────────────────────────────────────────────────
 
@@ -14,15 +14,15 @@ export const TOTAL_TILES = GRID_SIZE * GRID_SIZE;
  * - >=2: traversal (uncontrolled pass-through) with encoded direction:
  *   2=s, 3=n, 4=e, 5=w, 6=se, 7=sw, 8=ne, 9=nw
  */
-export type ReachState = number;
+type ReachState = number;
 
 /** Direction encoding for traversal states (state = 2 + index). */
-export const TRAVERSAL_DIRS: readonly LedgeDir[] = ['s', 'n', 'e', 'w', 'se', 'sw', 'ne', 'nw'] as const;
-export const TRAVERSAL_DIR_OFFSET: Record<LedgeDir, number> = { s: 2, n: 3, e: 4, w: 5, se: 6, sw: 7, ne: 8, nw: 9 };
+const TRAVERSAL_DIRS: readonly LedgeDir[] = ['s', 'n', 'e', 'w', 'se', 'sw', 'ne', 'nw'] as const;
+const TRAVERSAL_DIR_OFFSET: Record<LedgeDir, number> = { s: 2, n: 3, e: 4, w: 5, se: 6, sw: 7, ne: 8, nw: 9 };
 
-export type LedgeDir = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
+type LedgeDir = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
 
-export type TilePassability =
+type TilePassability =
   | { type: 'free' }
   | { type: 'obstacle'; req: string }
   | { type: 'blocked' }
@@ -32,16 +32,16 @@ export type TilePassability =
   | { type: 'water' };
 
 /** Traversal state for bidirectional stairs (no fixed direction). */
-export const STAIRS_TRAVERSAL_STATE = 10;
+const STAIRS_TRAVERSAL_STATE = 10;
 
 // ─── Position ────────────────────────────────────────────────────────────────
 
-export interface GridPos {
+interface GridPos {
   row: number;
   col: number;
 }
 
-export interface WorldPos {
+interface WorldPos {
   screen: number;
   row: number;
   col: number;
@@ -49,18 +49,18 @@ export interface WorldPos {
 
 // ─── Screen Data ─────────────────────────────────────────────────────────────
 
-export interface CollisionGrid {
+interface CollisionGrid {
   tiles: TilePassability[][];
   rawAttr: number[][];
 }
 
-export interface Map32Tables {
+interface Map32Tables {
   t0: Buffer; t1: Buffer; t2: Buffer; t3: Buffer;
 }
 
 // ─── Entrances ───────────────────────────────────────────────────────────────
 
-export interface OverworldEntrance {
+interface OverworldEntrance {
   area: number;
   pos: number;
   id: number;
@@ -71,7 +71,7 @@ export interface OverworldEntrance {
 
 // ─── Flood Fill ──────────────────────────────────────────────────────────────
 
-export interface TransitionPoint {
+interface TransitionPoint {
   row: number;
   col: number;
   edge: 'north' | 'south' | 'east' | 'west' | 'entrance';
@@ -79,19 +79,19 @@ export interface TransitionPoint {
   entranceIdx?: number;
 }
 
-export interface LedgeTraversal {
+interface LedgeTraversal {
   startRow: number;
   startCol: number;
   endRow: number;
   endCol: number;
 }
 
-export interface BorderSummary {
+interface BorderSummary {
   freeTiles: number[];
   itemTiles: { pos: number; requirements: string[] }[];
 }
 
-export interface FloodFillResult {
+interface FloodFillResult {
   screenIndex: number;
   tileContext: TileAttrContext;
   /** Grid position where the BFS started (top-left of Link's 2×2 at flood-fill time) */
@@ -133,7 +133,7 @@ export interface FloodFillResult {
  * Determined by progress tier + per-screen event flags.
  * Affects tile layout via overlay patches applied to the base tilemap.
  */
-export interface ScreenVariant {
+interface ScreenVariant {
   /** sram_progress_indicator: 0=intro, 1=post-uncle, 2=zelda-rescued, 3=agahnim-defeated */
   progressTier: number;
   /** save_ow_event_info[screen] & 0x20 — event overlay applied */
@@ -142,7 +142,7 @@ export interface ScreenVariant {
   eventFlags: number;
 }
 
-export interface ConnectionInfo {
+interface ConnectionInfo {
   edge: 'north' | 'south' | 'east' | 'west';
   targetScreen: number;
   /** Screen index this connection originates from (set during aggregation) */
@@ -159,7 +159,7 @@ export interface ConnectionInfo {
 
 // ─── Multi-Screen ────────────────────────────────────────────────────────────
 
-export interface ScreenCoverage {
+interface ScreenCoverage {
   screenIndex: number;
   entries: GridPos[];
   reachableCount: number;
@@ -167,7 +167,7 @@ export interface ScreenCoverage {
   borderFree: { north: Set<number>; south: Set<number>; east: Set<number>; west: Set<number> };
 }
 
-export interface WorldFloodResult {
+interface WorldFloodResult {
   screens: Map<number, ScreenCoverage>;
   totalReachable: number;
   totalPossible: number;
@@ -177,7 +177,7 @@ export interface WorldFloodResult {
 
 // ─── Screen Hop ──────────────────────────────────────────────────────────────
 
-export interface ScreenPath {
+interface ScreenPath {
   screens: number[];
   crossings: { fromScreen: number; toScreen: number; edge: 'north' | 'south' | 'east' | 'west'; borderPos: number }[];
   totalCost: number;
@@ -185,7 +185,7 @@ export interface ScreenPath {
 
 // ─── Point Navigation ────────────────────────────────────────────────────────
 
-export interface TilePath {
+interface TilePath {
   tiles: GridPos[];
   cost: number;
   requirements: string[];
@@ -193,14 +193,14 @@ export interface TilePath {
 
 // ─── Route Planning ──────────────────────────────────────────────────────────
 
-export interface RouteStep {
+interface RouteStep {
   screen: number;
   path: GridPos[];
   entryEdge?: 'north' | 'south' | 'east' | 'west';
   exitEdge?: 'north' | 'south' | 'east' | 'west';
 }
 
-export interface Route {
+interface Route {
   steps: RouteStep[];
   totalCost: number;
   screens: number[];
@@ -209,12 +209,12 @@ export interface Route {
 
 // ─── Hub Navigation ──────────────────────────────────────────────────────────
 
-export interface NavigationStep {
+interface NavigationStep {
   screenId: string;
   screenName: string;
 }
 
-export interface NavigationResult {
+interface NavigationResult {
   found: boolean;
   path: NavigationStep[];
   distance: number;
@@ -223,7 +223,9 @@ export interface NavigationResult {
   totalEdges: number;
 }
 
-export interface PathfindingOptions {
+interface PathfindingOptions {
   allowGlitches?: boolean;
 }
 
+export { GRID_SIZE, TOTAL_TILES, TRAVERSAL_DIRS, TRAVERSAL_DIR_OFFSET, STAIRS_TRAVERSAL_STATE };
+export type { ReachState, LedgeDir, TilePassability, GridPos, WorldPos, CollisionGrid, Map32Tables, OverworldEntrance, TransitionPoint, LedgeTraversal, BorderSummary, FloodFillResult, ScreenVariant, ConnectionInfo, ScreenCoverage, WorldFloodResult, ScreenPath, TilePath, RouteStep, Route, NavigationStep, NavigationResult, PathfindingOptions };

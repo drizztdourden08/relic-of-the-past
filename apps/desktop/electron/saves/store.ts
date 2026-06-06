@@ -2,7 +2,7 @@ import { join } from 'path';
 import { readFile, mkdir, writeFile, readdir, stat, rename as fsRename } from 'fs/promises';
 import { getUserDataPath } from '../lib/paths';
 
-export const QUICK_SAVE_SLOTS = 12;
+const QUICK_SAVE_SLOTS = 12;
 
 function getProfileSavesDir(profileId: string): string {
   return getUserDataPath('profiles', profileId, 'saves');
@@ -159,3 +159,4 @@ export {
   writeStateScreenshot,
 };
 export type { SaveSlotInfo };
+export { QUICK_SAVE_SLOTS };

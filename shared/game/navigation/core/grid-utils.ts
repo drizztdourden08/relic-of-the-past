@@ -1,15 +1,15 @@
 import type { GridPos } from '../types';
 import { GRID_SIZE } from '../types';
 
-export const DIRECTIONS: readonly [number, number][] = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+const DIRECTIONS: readonly [number, number][] = [[-1, 0], [1, 0], [0, -1], [0, 1]];
 
 /** Check if a position is within the 64x64 grid bounds. */
-export function inBounds(row: number, col: number): boolean {
+function inBounds(row: number, col: number): boolean {
   return row >= 0 && row < GRID_SIZE && col >= 0 && col < GRID_SIZE;
 }
 
 /** Get valid 4-directional neighbors within bounds. */
-export function getNeighbors(row: number, col: number): GridPos[] {
+function getNeighbors(row: number, col: number): GridPos[] {
   const neighbors: GridPos[] = [];
   for (const [dr, dc] of DIRECTIONS) {
     const nr = row + dr;
@@ -20,12 +20,12 @@ export function getNeighbors(row: number, col: number): GridPos[] {
 }
 
 /** Manhattan distance between two grid positions. */
-export function manhattan(a: GridPos, b: GridPos): number {
+function manhattan(a: GridPos, b: GridPos): number {
   return Math.abs(a.row - b.row) + Math.abs(a.col - b.col);
 }
 
 /** Get the adjacent overworld screen index for a given edge. Overworld is 8×8 grid; LW = 0x00–0x3F, DW = 0x40–0x7F. */
-export function getAdjacentScreen(screenIdx: number, edge: 'north' | 'south' | 'east' | 'west'): number | null {
+function getAdjacentScreen(screenIdx: number, edge: 'north' | 'south' | 'east' | 'west'): number | null {
   const col = screenIdx & 7;
   const row = (screenIdx >> 3) & 7;
   const world = screenIdx & 0x40;
@@ -41,7 +41,7 @@ export function getAdjacentScreen(screenIdx: number, edge: 'north' | 'south' | '
  * Check 2-tile perpendicular clearance for Link's 16px width.
  * Returns true if at least one adjacent perpendicular tile is passable.
  */
-export function has2TileClearance(
+function has2TileClearance(
   row: number,
   col: number,
   dr: number,
@@ -59,3 +59,5 @@ export function has2TileClearance(
   }
   return false;
 }
+
+export { DIRECTIONS, inBounds, getNeighbors, manhattan, getAdjacentScreen, has2TileClearance };

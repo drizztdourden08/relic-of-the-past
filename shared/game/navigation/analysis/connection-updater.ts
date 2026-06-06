@@ -13,7 +13,7 @@ import type { ScreenConnection } from '../../types';
 import type { ResolvedEntrance } from './entrance-resolver';
 import type { BorderBundle } from './border-bundles';
 
-export interface ConnectionNavUpdate {
+interface ConnectionNavUpdate {
   from: string;
   to: string;
   nav: ConnectionNavData;
@@ -22,7 +22,7 @@ export interface ConnectionNavUpdate {
 /**
  * Derive ConnectionTransitType from connection tags.
  */
-export function transitTypeFromTags(tags: readonly ConnectionTag[]): ConnectionTransitType {
+function transitTypeFromTags(tags: readonly ConnectionTag[]): ConnectionTransitType {
   for (const tag of tags) {
     if (tag.startsWith('transit:')) {
       const t = tag.slice(8);
@@ -89,7 +89,7 @@ function isBidirectional(tags: readonly ConnectionTag[]): boolean {
   return true;
 }
 
-export interface ConnectionUpdaterInput {
+interface ConnectionUpdaterInput {
   connections: ScreenConnection[];
   /** Border bundles indexed by screen: Map<screenIndex, BorderBundle[]> */
   borderBundles: Map<number, BorderBundle[]>;
@@ -104,7 +104,7 @@ export interface ConnectionUpdaterInput {
 /**
  * Build connection nav updates from analysis results.
  */
-export function buildConnectionNavUpdates(input: ConnectionUpdaterInput): ConnectionNavUpdate[] {
+function buildConnectionNavUpdates(input: ConnectionUpdaterInput): ConnectionNavUpdate[] {
   const { connections, borderBundles, overlapByKey, resolvedEntrances, screenIndexMap } = input;
   const updates: ConnectionNavUpdate[] = [];
 
@@ -184,7 +184,7 @@ function bundleToConnectionPoint(bundle: BorderBundle): ConnectionPointData {
 /**
  * Write connection nav data to a JSON output file.
  */
-export function writeConnectionNavData(
+function writeConnectionNavData(
   updates: ConnectionNavUpdate[],
   outputPath: string
 ): void {
@@ -198,3 +198,6 @@ export function writeConnectionNavData(
   );
   fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
 }
+
+export { transitTypeFromTags, buildConnectionNavUpdates, writeConnectionNavData };
+export type { ConnectionNavUpdate, ConnectionUpdaterInput };

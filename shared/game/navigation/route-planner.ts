@@ -11,14 +11,14 @@ import { ALL_CONNECTIONS, DUNGEON_CONNECTIONS } from '../data/connections';
 
 // ─── Location Type ───────────────────────────────────────────────────────────
 
-export interface Location {
+interface Location {
   /** Screen ID (e.g. 'kakariko-shop', 'lw-2c', 'links-house') */
   screenId: string;
   /** Optional tile position (row, col in 64×64 grid). If omitted, uses closest valid tile to center. */
   tile?: GridPos;
 }
 
-export interface RoutePlanResult {
+interface RoutePlanResult {
   /** Screen-by-screen breakdown */
   steps: RoutePlanStep[];
   /** Total tile steps across all screens */
@@ -29,7 +29,7 @@ export interface RoutePlanResult {
   requirements: string[];
 }
 
-export interface RoutePlanStep {
+interface RoutePlanStep {
   screenIndex: number;
   screenName: string;
   entry: GridPos;
@@ -167,7 +167,7 @@ function getScreenGrid(rom: RomData, screenIndex: number, inventory: Set<string>
  * 3. If different screens: screen-hop (Dijkstra) for screen path,
  *    then A* within each screen for tile-level routing
  */
-export function planRoute(
+function planRoute(
   rom: RomData,
   source: Location,
   target: Location,
@@ -285,4 +285,5 @@ function manhattan(a: GridPos, b: GridPos): number {
   return Math.abs(a.row - b.row) + Math.abs(a.col - b.col);
 }
 
-
+export { planRoute };
+export type { Location, RoutePlanResult, RoutePlanStep };

@@ -34,7 +34,7 @@ function parseHoverTile(): { col: number; row: number } | null {
   return null;
 }
 
-export function registerDumpLayersHandler(): void {
+function registerDumpLayersHandler(): void {
   const slot = parseDumpLayersSlot();
   const hoverTile = parseHoverTile();
 
@@ -53,3 +53,5 @@ export function registerDumpLayersHandler(): void {
     return outPath;
   });
 }
+
+export { registerDumpLayersHandler };

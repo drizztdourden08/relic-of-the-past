@@ -11,7 +11,7 @@ interface LiveSprite {
   e: number;
 }
 
-export function drawLinkDebug(
+function drawLinkDebug(
   dc: DrawContext,
   vp: ViewportInfo,
   liveSprites: LiveSprite[],
@@ -64,3 +64,5 @@ export function drawLinkDebug(
     }
   }
 }
+
+export { drawLinkDebug };

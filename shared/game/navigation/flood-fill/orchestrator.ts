@@ -155,7 +155,7 @@ function findStartPosition(grid: CollisionGrid, startPos?: GridPos): GridPos {
 
 // ─── Public API ──────────────────────────────────────────────────────────────
 
-export interface FloodFillOptions {
+interface FloodFillOptions {
   tileContext: TileAttrContext;
   inventory?: Set<TileReq>;
   startPos?: GridPos;
@@ -184,7 +184,7 @@ export interface FloodFillOptions {
  * @param screenIndex  Screen/room index (for entrance filtering)
  * @param options      Configuration for the flood fill
  */
-export function floodFillScreen(
+function floodFillScreen(
   rawAttrGrid: number[][],
   screenIndex: number,
   options: FloodFillOptions,
@@ -405,7 +405,7 @@ function getAdjacentRoom(roomIdx: number, edge: 'north' | 'south' | 'east' | 'we
 }
 
 /** Extract border connection info from a flood fill result. */
-export function getConnections(result: FloodFillResult, intraEdges?: ('north' | 'south' | 'east' | 'west')[]): ConnectionInfo[] {
+function getConnections(result: FloodFillResult, intraEdges?: ('north' | 'south' | 'east' | 'west')[]): ConnectionInfo[] {
   const connections: ConnectionInfo[] = [];
   const edges: ('north' | 'south' | 'east' | 'west')[] = ['north', 'south', 'east', 'west'];
   const isIndoor = result.tileContext !== 'overworld';
@@ -496,3 +496,6 @@ export function getConnections(result: FloodFillResult, intraEdges?: ('north' | 
 
   return connections;
 }
+
+export { floodFillScreen, getConnections };
+export type { FloodFillOptions };

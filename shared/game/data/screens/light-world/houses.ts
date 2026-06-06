@@ -1,6 +1,6 @@
 import type { ScreenDefinition } from '../../../types';
 
-export const LW_HOUSES: ScreenDefinition[] = [
+const LW_HOUSES: ScreenDefinition[] = [
   { id: 'blinds-hideout', name: 'Blinds Hideout', type: 'interior', world: 'light', location: 'Kakariko Village', area: 'Kakariko', roomIndex: 0x0108, interior: { kind: 'house' }, tags: ['env:indoor', 'loot:chest'] },
   { id: 'chicken-house', name: 'Chicken House', type: 'interior', world: 'light', location: 'Kakariko Village', area: 'Kakariko', roomIndex: 0x0101, interior: { kind: 'house' }, tags: ['env:indoor', 'loot:chest'] },
   { id: 'sick-kids-house', name: 'Sick Kids House', type: 'interior', world: 'light', location: 'Kakariko Village', area: 'Kakariko', roomIndex: 0x0102, interior: { kind: 'house' }, tags: ['env:indoor'] },
@@ -22,3 +22,5 @@ export const LW_HOUSES: ScreenDefinition[] = [
   { id: 'old-man-house-back', name: 'Old Man House Back', type: 'interior', world: 'light', location: 'Death Mountain', area: 'Death Mountain', roomIndex: 0xF5, interior: { kind: 'house' }, tags: ['env:indoor', 'role:connector'] },
   { id: 'two-brothers-house', name: 'Two Brothers House', type: 'interior', world: 'light', location: 'Kakariko Village', area: 'Kakariko', roomIndex: 0x011F, interior: { kind: 'house' }, tags: ['env:indoor', 'role:connector'] },
 ];
+
+export { LW_HOUSES };

@@ -1,4 +1,4 @@
-export function PathControlsLegend() {
+function PathControlsLegend() {
   return (
     <div style={{
       position: 'absolute', bottom: 90, right: 6, zIndex: 7,
@@ -15,3 +15,5 @@ export function PathControlsLegend() {
     </div>
   );
 }
+
+export { PathControlsLegend };

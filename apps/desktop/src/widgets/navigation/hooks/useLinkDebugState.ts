@@ -1,6 +1,6 @@
 import { wasmGetViewportInfo, wasmGetLinkLayer, wasmGetRoomCollisionType, wasmGetStaircaseType } from '../../../lib/game';
 
-export interface LinkDebugState {
+interface LinkDebugState {
   linkX: number;
   linkY: number;
   relX: number;
@@ -21,7 +21,7 @@ export interface LinkDebugState {
  * Compute Link's debug/display state from WASM viewport info.
  * Recalculates every render tick — expects caller to trigger re-renders via debugTick.
  */
-export function useLinkDebugState(_debugTick: number): LinkDebugState | null {
+function useLinkDebugState(_debugTick: number): LinkDebugState | null {
   const vpDebug = wasmGetViewportInfo?.();
   if (!vpDebug) return null;
 
@@ -62,3 +62,6 @@ export function useLinkDebugState(_debugTick: number): LinkDebugState | null {
     staircaseType: wasmGetStaircaseType?.() ?? null,
   };
 }
+
+export { useLinkDebugState };
+export type { LinkDebugState };

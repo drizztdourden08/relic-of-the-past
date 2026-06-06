@@ -1,6 +1,6 @@
 import type { ScreenDefinition } from '../../../../types';
 
-export const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [
+const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [
   {
     id: 'pod-0x09',
     name: 'Dark Maze',
@@ -172,3 +172,5 @@ export const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [
     ],
   },
 ];
+
+export { PALACE_OF_DARKNESS_DUNGEON };

@@ -1,6 +1,6 @@
 import type { ScreenDefinition } from '../../../../types';
 
-export const ICE_PALACE_DUNGEON: ScreenDefinition[] = [
+const ICE_PALACE_DUNGEON: ScreenDefinition[] = [
   {
     id: 'ip-0x0e',
     name: 'Kholdstare',
@@ -267,3 +267,5 @@ export const ICE_PALACE_DUNGEON: ScreenDefinition[] = [
     ],
   },
 ];
+
+export { ICE_PALACE_DUNGEON };

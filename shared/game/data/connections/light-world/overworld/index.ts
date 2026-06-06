@@ -11,7 +11,7 @@ import { LW_OVERWORLD_SOUTH_HYRULE_CONNECTIONS } from './south-hyrule';
 import { LW_SCREEN_ADJACENCY_CONNECTIONS } from './screen-adjacency';
 import { LW_SCREEN_AREA_CONNECTIONS } from './screen-areas';
 
-export const LW_OVERWORLD_CONNECTIONS: ScreenConnection[] = [
+const LW_OVERWORLD_CONNECTIONS: ScreenConnection[] = [
   ...LW_OVERWORLD_CENTRAL_CONNECTIONS,
   ...LW_OVERWORLD_DEATH_MOUNTAIN_CONNECTIONS,
   ...LW_OVERWORLD_DESERT_CONNECTIONS,
@@ -24,3 +24,5 @@ export const LW_OVERWORLD_CONNECTIONS: ScreenConnection[] = [
   ...LW_SCREEN_ADJACENCY_CONNECTIONS,
   ...LW_SCREEN_AREA_CONNECTIONS,
 ];
+
+export { LW_OVERWORLD_CONNECTIONS };

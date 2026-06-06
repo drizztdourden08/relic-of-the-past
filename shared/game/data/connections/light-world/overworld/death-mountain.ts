@@ -1,6 +1,6 @@
 import type { ScreenConnection } from '../../../../types';
 
-export const LW_OVERWORLD_DEATH_MOUNTAIN_CONNECTIONS: ScreenConnection[] = [
+const LW_OVERWORLD_DEATH_MOUNTAIN_CONNECTIONS: ScreenConnection[] = [
   // West side area transitions
   { from: 'death-mountain-entrance', to: 'death-mountain', tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'] },
   { from: 'death-mountain', to: 'death-mountain-return-ledge', tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'] },
@@ -30,3 +30,5 @@ export const LW_OVERWORLD_DEATH_MOUNTAIN_CONNECTIONS: ScreenConnection[] = [
   { from: 'light-world', to: 'death-mountain-entrance', tags: ['transit:warp', 'dir:one-way', 'ctx:overworld'] },
   { from: 'lw-0a', to: 'death-mountain-entrance', tags: ['transit:rock', 'dir:two-way', 'ctx:overworld', 'barrier:gloves'] },
 ];
+
+export { LW_OVERWORLD_DEATH_MOUNTAIN_CONNECTIONS };

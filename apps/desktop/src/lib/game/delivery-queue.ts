@@ -8,7 +8,7 @@ import { getModule } from './wasm-bridge';
 
 // ─── Types ───
 
-export interface DeliveryEntry {
+interface DeliveryEntry {
   id: string;
   /** Human-readable message shown in the queue indicator */
   message: string;
@@ -20,13 +20,13 @@ export interface DeliveryEntry {
   enqueuedAt: number;
 }
 
-export type DeliveryAction =
+type DeliveryAction =
   | { type: 'give_item'; itemId: number }
   | { type: 'trigger_check'; roomId: number; chestIndex: number; itemId: number }
   | { type: 'trigger_npc_check'; flagType: number; flagMask: number; itemId: number; spriteType: number; postGfx: number }
   | { type: 'custom'; execute: () => void };
 
-export interface DeliveryQueueState {
+interface DeliveryQueueState {
   pending: DeliveryEntry[];
   delivering: DeliveryEntry | null;
 }
@@ -117,7 +117,7 @@ function tick(): void {
 
 // ─── Public API ───
 
-export function enqueue(
+function enqueue(
   message: string,
   source: string,
   action: DeliveryAction
@@ -134,7 +134,7 @@ export function enqueue(
   return entry.id;
 }
 
-export function remove(id: string): boolean {
+function remove(id: string): boolean {
   const idx = queue.findIndex((e) => e.id === id);
   if (idx === -1) return false;
   queue.splice(idx, 1);
@@ -142,39 +142,39 @@ export function remove(id: string): boolean {
   return true;
 }
 
-export function clear(): void {
+function clear(): void {
   queue = [];
   delivering = null;
   cooldownFrames = 0;
   notify();
 }
 
-export function peek(): DeliveryEntry | undefined {
+function peek(): DeliveryEntry | undefined {
   return queue[0];
 }
 
-export function size(): number {
+function size(): number {
   return queue.length;
 }
 
-export function subscribe(listener: StateListener): () => void {
+function subscribe(listener: StateListener): () => void {
   listeners.add(listener);
   return () => listeners.delete(listener);
 }
 
-export function startProcessing(): void {
+function startProcessing(): void {
   if (rafId != null) return;
   rafId = requestAnimationFrame(tick);
 }
 
-export function stopProcessing(): void {
+function stopProcessing(): void {
   if (rafId != null) {
     cancelAnimationFrame(rafId);
     rafId = null;
   }
 }
 
-export const deliveryQueue = {
+const deliveryQueue = {
   enqueue,
   remove,
   clear,
@@ -185,3 +185,6 @@ export const deliveryQueue = {
   startProcessing,
   stopProcessing,
 };
+
+export { enqueue, remove, clear, peek, size, subscribe, startProcessing, stopProcessing, deliveryQueue };
+export type { DeliveryEntry, DeliveryAction, DeliveryQueueState };

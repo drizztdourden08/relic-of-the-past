@@ -10,7 +10,7 @@ const DOT_COLOR_UPPER = 'rgba(100, 215, 255, 0.65)';
 const DOT_COLOR_LOWER = 'rgba(50, 165, 215, 0.55)';
 const DOT_COLOR_REQ = 'rgba(255, 100, 180, 0.35)';
 
-export function drawReachableDots(
+function drawReachableDots(
   dc: DrawContext,
   drawResults: FloodFillResult[],
   layer1ReachableOverride: [ReachState[][], ReachState[][]] | null,
@@ -149,3 +149,5 @@ export function drawReachableDots(
     }
   }
 }
+
+export { drawReachableDots };

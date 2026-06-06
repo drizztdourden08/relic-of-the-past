@@ -1,6 +1,6 @@
 import type { ScreenConnection } from '../../../types';
 
-export const LW_PASSAGE_CONNECTIONS: ScreenConnection[] = [
+const LW_PASSAGE_CONNECTIONS: ScreenConnection[] = [
   // Hyrule Castle Secret Entrance
   { from: 'lw-1b', to: 'hyrule-castle-secret-entrance', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance'] },
   { from: 'light-world-rain', to: 'hyrule-castle-secret-entrance', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance', 'barrier:event'] },
@@ -37,3 +37,5 @@ export const LW_PASSAGE_CONNECTIONS: ScreenConnection[] = [
   { from: 'fairy-ascension-cave-top', to: 'fairy-ascension-cave-drop', tags: ['transit:hole', 'dir:one-way', 'ctx:internal'] },
   { from: 'fairy-ascension-cave-drop', to: 'fairy-ascension-plateau', tags: ['transit:door', 'dir:one-way', 'ctx:exit'] },
 ];
+
+export { LW_PASSAGE_CONNECTIONS };

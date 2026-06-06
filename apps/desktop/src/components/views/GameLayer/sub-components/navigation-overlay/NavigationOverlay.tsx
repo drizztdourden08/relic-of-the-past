@@ -7,7 +7,7 @@ import { TileInspector } from './TileInspector';
 import { PathControlsLegend } from './PathControlsLegend';
 import { OverlayLegend } from './OverlayLegend';
 
-export function NavigationOverlay({ width, height, gameRunning }: Props) {
+function NavigationOverlay({ width, height, gameRunning }: Props) {
   const { visible, result } = useNavigationOverlayStore();
   const { overworldScreenIndex, roomIndex, isIndoors } = useGameUIStore(s => s.map);
 
@@ -85,3 +85,5 @@ export function NavigationOverlay({ width, height, gameRunning }: Props) {
     </div>
   );
 }
+
+export { NavigationOverlay };

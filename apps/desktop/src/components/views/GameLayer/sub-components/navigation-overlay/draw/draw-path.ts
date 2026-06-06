@@ -4,7 +4,7 @@ import type { DrawContext } from './draw-context';
 import type { MouseState } from '../types';
 import { findNearest2x2Goal, findPath2x2FromLink } from '../pathfinding';
 
-export function drawPathPreview(
+function drawPathPreview(
   dc: DrawContext,
   mouseState: MouseState,
   result: FloodFillResult,
@@ -101,3 +101,5 @@ export function drawPathPreview(
     ctx.restore();
   }
 }
+
+export { drawPathPreview };

@@ -2,7 +2,7 @@ import type { FloodFillResult } from '@shared/game/navigation';
 import type { DrawContext } from './draw-context';
 import type { FallHoleSpawn } from '../../../../../../stores/navigation-overlay-store';
 
-export function drawFallHoleSpawns(
+function drawFallHoleSpawns(
   dc: DrawContext,
   fallHoleSpawns: FallHoleSpawn[],
   activeScreenIndex: number,
@@ -49,7 +49,7 @@ export function drawFallHoleSpawns(
   }
 }
 
-export function drawPitStripes(dc: DrawContext, drawResults: FloodFillResult[]): void {
+function drawPitStripes(dc: DrawContext, drawResults: FloodFillResult[]): void {
   const { ctx, scaleX, scaleY, viewLeft, viewTop, snesW, snesH, TILE_PX, getScreenWorldOrigin } = dc;
 
   ctx.globalAlpha = 0.45;
@@ -100,3 +100,5 @@ export function drawPitStripes(dc: DrawContext, drawResults: FloodFillResult[]):
     }
   }
 }
+
+export { drawFallHoleSpawns, drawPitStripes };

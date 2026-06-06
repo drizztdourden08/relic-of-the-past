@@ -18,7 +18,7 @@ export { DW_MISERY_MIRE_CONNECTIONS } from './misery-mire';
 export { DW_TURTLE_ROCK_CONNECTIONS } from './turtle-rock';
 export { DW_GANONS_TOWER_CONNECTIONS } from './ganons-tower';
 
-export const DW_DUNGEON_CONNECTIONS: ScreenConnection[] = [
+const DW_DUNGEON_CONNECTIONS: ScreenConnection[] = [
   ...DW_PALACE_OF_DARKNESS_CONNECTIONS,
   ...DW_SWAMP_PALACE_CONNECTIONS,
   ...DW_SKULL_WOODS_CONNECTIONS,
@@ -28,3 +28,5 @@ export const DW_DUNGEON_CONNECTIONS: ScreenConnection[] = [
   ...DW_TURTLE_ROCK_CONNECTIONS,
   ...DW_GANONS_TOWER_CONNECTIONS,
 ];
+
+export { DW_DUNGEON_CONNECTIONS };

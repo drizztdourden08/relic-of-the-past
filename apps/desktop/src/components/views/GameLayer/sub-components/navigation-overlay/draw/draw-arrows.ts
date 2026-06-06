@@ -2,7 +2,7 @@ import type { FloodFillResult } from '@shared/game/navigation';
 import { STAIRS_TRAVERSAL_STATE } from '@shared/game/navigation/types';
 import type { DrawContext } from './draw-context';
 
-export function drawCliffArrows(dc: DrawContext, drawResults: FloodFillResult[]): void {
+function drawCliffArrows(dc: DrawContext, drawResults: FloodFillResult[]): void {
   const { ctx, scaleX, scaleY, viewLeft, viewTop, snesW, snesH, TILE_PX, getScreenWorldOrigin } = dc;
 
   ctx.globalAlpha = 1.0;
@@ -64,7 +64,7 @@ export function drawCliffArrows(dc: DrawContext, drawResults: FloodFillResult[])
   }
 }
 
-export function drawStairArrows(dc: DrawContext, drawResults: FloodFillResult[]): void {
+function drawStairArrows(dc: DrawContext, drawResults: FloodFillResult[]): void {
   const { ctx, scaleX, scaleY, viewLeft, viewTop, snesH, TILE_PX, getScreenWorldOrigin } = dc;
 
   ctx.globalAlpha = 0.8;
@@ -138,3 +138,5 @@ export function drawStairArrows(dc: DrawContext, drawResults: FloodFillResult[])
     }
   }
 }
+
+export { drawCliffArrows, drawStairArrows };

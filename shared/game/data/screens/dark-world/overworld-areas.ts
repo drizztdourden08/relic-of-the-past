@@ -6,7 +6,7 @@ import type { ScreenDefinition } from '../../../types';
  * logically distinct for connection/reachability purposes.
  * They do NOT have inGameIndex (detection uses the per-screen entries).
  */
-export const DW_OVERWORLD_AREAS: ScreenDefinition[] = [
+const DW_OVERWORLD_AREAS: ScreenDefinition[] = [
   { id: 'east-dark-world', name: 'East Dark World', type: 'overworld', world: 'dark', location: 'Dark Eastern', area: 'Dark East', overworld: { gridX: 0, gridY: 0 }, tags: ['env:outdoor'] },
   { id: 'west-dark-world', name: 'West Dark World', type: 'overworld', world: 'dark', location: 'Village of Outcasts', area: 'Village Of Outcasts', overworld: { gridX: 0, gridY: 0 }, tags: ['env:outdoor'] },
   { id: 'south-dark-world', name: 'South Dark World', type: 'overworld', world: 'dark', location: 'Swamp of Evil', area: 'Dark South', overworld: { gridX: 0, gridY: 0 }, tags: ['env:outdoor'] },
@@ -32,3 +32,5 @@ export const DW_OVERWORLD_AREAS: ScreenDefinition[] = [
   { id: 'catfish', name: 'Catfish', type: 'overworld', world: 'dark', location: 'Dark Eastern', area: 'Dark East', overworld: { gridX: 0, gridY: 0 }, tags: ['env:outdoor'] },
   { id: 'hammer-peg-area', name: 'Hammer Peg Area', type: 'overworld', world: 'dark', location: 'Village of Outcasts', area: 'Village Of Outcasts', overworld: { gridX: 0, gridY: 0 }, tags: ['env:outdoor'] },
 ];
+
+export { DW_OVERWORLD_AREAS };

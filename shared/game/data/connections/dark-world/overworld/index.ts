@@ -10,7 +10,7 @@ import { DW_OVERWORLD_VILLAGE_CONNECTIONS } from './village-of-outcasts';
 import { DW_SCREEN_ADJACENCY_CONNECTIONS } from './screen-adjacency';
 import { DW_SCREEN_AREA_CONNECTIONS } from './screen-areas';
 
-export const DW_OVERWORLD_CONNECTIONS: ScreenConnection[] = [
+const DW_OVERWORLD_CONNECTIONS: ScreenConnection[] = [
   ...DW_OVERWORLD_DARK_DEATH_MOUNTAIN_CONNECTIONS,
   ...DW_OVERWORLD_DARK_EAST_CONNECTIONS,
   ...DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS,
@@ -22,3 +22,5 @@ export const DW_OVERWORLD_CONNECTIONS: ScreenConnection[] = [
   ...DW_SCREEN_ADJACENCY_CONNECTIONS,
   ...DW_SCREEN_AREA_CONNECTIONS,
 ];
+
+export { DW_OVERWORLD_CONNECTIONS };

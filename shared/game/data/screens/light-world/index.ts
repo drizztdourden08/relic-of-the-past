@@ -26,7 +26,7 @@ export { LW_SPECIAL } from './special';
 export { LW_GAMBLE } from './gamble';
 export { LW_DUNGEON_SCREENS } from './dungeons';
 
-export const ALL_LIGHT_WORLD_SCREENS: ScreenDefinition[] = [
+const ALL_LIGHT_WORLD_SCREENS: ScreenDefinition[] = [
   ...LIGHT_WORLD_OVERWORLD_SCREENS,
   ...LW_OVERWORLD_AREAS,
   ...LW_HOUSES,
@@ -40,3 +40,5 @@ export const ALL_LIGHT_WORLD_SCREENS: ScreenDefinition[] = [
   ...LW_GAMBLE,
   ...LW_DUNGEON_SCREENS,
 ];
+
+export { ALL_LIGHT_WORLD_SCREENS };

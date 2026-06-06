@@ -15,13 +15,13 @@ import type { ScreenDefinition } from '../../types';
 import { findBorderBundles } from './border-bundles';
 import type { ResolvedEntrance } from './entrance-resolver';
 
-export interface ScreenNavUpdate {
+interface ScreenNavUpdate {
   screenId: string;
   screenIndex: number;
   nav: RegionNavData;
 }
 
-export interface ScreenUpdaterInput {
+interface ScreenUpdaterInput {
   regions: ScreenDefinition[];
   tileStats: Map<number, { totalTiles: number; freeTileCount: number; maxReachableTileCount: number }>;
   floodResults: Map<number, FloodFillResult>;
@@ -31,7 +31,7 @@ export interface ScreenUpdaterInput {
 /**
  * Build RegionNavData for each screen that has an inGameIndex with flood data.
  */
-export function buildScreenNavUpdates(input: ScreenUpdaterInput): ScreenNavUpdate[] {
+function buildScreenNavUpdates(input: ScreenUpdaterInput): ScreenNavUpdate[] {
   const { regions, tileStats, floodResults, resolvedEntrances } = input;
   const updates: ScreenNavUpdate[] = [];
 
@@ -120,7 +120,7 @@ function obstacleTypeFromAttr(attr: number): NavObstacle['type'] | null {
 /**
  * Write screen nav data to a JSON output file.
  */
-export function writeScreenNavData(
+function writeScreenNavData(
   updates: ScreenNavUpdate[],
   outputPath: string
 ): void {
@@ -134,3 +134,6 @@ export function writeScreenNavData(
   );
   fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
 }
+
+export { buildScreenNavUpdates, writeScreenNavData };
+export type { ScreenNavUpdate, ScreenUpdaterInput };

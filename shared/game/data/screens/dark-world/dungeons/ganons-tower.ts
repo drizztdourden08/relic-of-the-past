@@ -1,6 +1,6 @@
 import type { ScreenDefinition } from '../../../../types';
 
-export const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
+const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
   {
     id: 'gt-0x05',
     name: 'Wizzrobes Room',
@@ -338,3 +338,5 @@ export const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     ],
   },
 ];
+
+export { GANONS_TOWER_DUNGEON };

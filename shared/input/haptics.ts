@@ -9,7 +9,7 @@ import { HAPTIC_PATTERNS, type HapticPatternEntry, type HapticPatternId } from '
 
 // ─── Event Types (must match C-side enum in haptic_events.c) ───
 
-export const HapticEventType = {
+const HapticEventType = {
   SWORD_SWING: 0,
   SWORD_HIT_ENEMY: 1,
   SWORD_CLINK: 2,
@@ -20,10 +20,10 @@ export const HapticEventType = {
   BOOMERANG_CATCH: 7,
 } as const;
 
-export type HapticEventTypeValue = (typeof HapticEventType)[keyof typeof HapticEventType];
+type HapticEventTypeValue = (typeof HapticEventType)[keyof typeof HapticEventType];
 
 // Environmental sub-events (param value when event_type = ENVIRONMENTAL)
-export const EnvironmentalEvent = {
+const EnvironmentalEvent = {
   FALL_INTO_PIT: 0,
   LAND_FROM_LEDGE: 1,
   CHEST_OPEN: 2,
@@ -35,7 +35,7 @@ export const EnvironmentalEvent = {
 } as const;
 
 // Item IDs (from the game's item switch in player.c)
-export const HapticItemId = {
+const HapticItemId = {
   BOMBS: 1,
   BOOMERANG: 2,
   BOW: 3,
@@ -117,7 +117,7 @@ function getEnvironmentalPatternId(subEvent: number): HapticPatternId | null {
 
 // ─── Service State ───
 
-export interface HapticSettings {
+interface HapticSettings {
   enabled: boolean;
   intensity: number;
   swordSwing: boolean;
@@ -149,11 +149,11 @@ const DASH_PULSE_INTERVAL_MS = 125; // ~8Hz
 
 // ─── Public API ───
 
-export function updateHapticSettings(settings: HapticSettings): void {
+function updateHapticSettings(settings: HapticSettings): void {
   currentSettings = { ...settings };
 }
 
-export function setVibrateFunction(fn: VibrateFunction | null): void {
+function setVibrateFunction(fn: VibrateFunction | null): void {
   vibrateFn = fn;
 }
 
@@ -197,7 +197,7 @@ function firePattern(patternId: HapticPatternId): void {
 // ─── Event Handlers ───
 
 /** Handle a haptic event from the C game hooks */
-export function handleHapticEvent(eventType: number, param: number): void {
+function handleHapticEvent(eventType: number, param: number): void {
   if (!currentSettings.enabled || !vibrateFn) return;
 
   switch (eventType) {
@@ -242,7 +242,7 @@ export function handleHapticEvent(eventType: number, param: number): void {
 }
 
 /** Handle dash vibration (called from polling loop when Link is running) */
-export function handleDashPulse(): void {
+function handleDashPulse(): void {
   if (!currentSettings.enabled || !currentSettings.dashVibration || !vibrateFn) return;
 
   const now = performance.now();
@@ -252,31 +252,34 @@ export function handleDashPulse(): void {
 }
 
 /** Reset dash timer (call when dash ends) */
-export function resetDashState(): void {
+function resetDashState(): void {
   lastDashPulseTime = 0;
 }
 
 /** Trigger death vibration pattern */
-export function handleDeath(): void {
+function handleDeath(): void {
   if (!currentSettings.enabled || !currentSettings.damageTaken || !vibrateFn) return;
   firePattern('death');
 }
 
 /** Trigger spin attack release vibration */
-export function handleSpinAttack(): void {
+function handleSpinAttack(): void {
   if (!currentSettings.enabled || !currentSettings.swordSwing || !vibrateFn) return;
   firePattern('spinAttackRelease');
 }
 
 /** Trigger environmental event from JS polling */
-export function handleEnvironmental(subEvent: number): void {
+function handleEnvironmental(subEvent: number): void {
   if (!currentSettings.enabled || !currentSettings.environmentalEffects || !vibrateFn) return;
   const id = getEnvironmentalPatternId(subEvent);
   if (id) firePattern(id);
 }
 
 /** Trigger pickup vibration */
-export function handlePickup(type: 'heartPiece' | 'pendantCrystal' | 'largeRupee'): void {
+function handlePickup(type: 'heartPiece' | 'pendantCrystal' | 'largeRupee'): void {
   if (!currentSettings.enabled || !currentSettings.environmentalEffects || !vibrateFn) return;
   firePattern(type);
 }
+
+export { HapticEventType, EnvironmentalEvent, HapticItemId, updateHapticSettings, setVibrateFunction, handleHapticEvent, handleDashPulse, resetDashState, handleDeath, handleSpinAttack, handleEnvironmental, handlePickup };
+export type { HapticEventTypeValue, HapticSettings };

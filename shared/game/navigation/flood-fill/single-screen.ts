@@ -36,14 +36,14 @@ interface DualLayerResult extends SingleScreenResult {
  * Uses 0-1 deque: free tiles cost 0, obstacles cost 1.
  * Records all reachable border tiles and entrance positions.
  */
-export interface QuadrantBounds {
+interface QuadrantBounds {
   minRow: number;
   maxRow: number;
   minCol: number;
   maxCol: number;
 }
 
-export function floodFillBFS(
+function floodFillBFS(
   grid: TilePassability[][],
   startRow: number,
   startCol: number,
@@ -242,7 +242,7 @@ const SWAP_STAIR_ATTRS = new Set([0x1E, 0x1F, 0x3E, 0x3F]);
  * Tracks which layer each body position is on.  When the body occupies a
  * 0x1E/0x1F stair tile, expansion also tries the OTHER layer's grid.
  */
-export function floodFillBFSDualLayer(
+function floodFillBFSDualLayer(
   grids: [TilePassability[][], TilePassability[][]],
   rawAttrs: [number[][], number[][]],
   startRow: number,
@@ -720,3 +720,6 @@ function evaluateEntry(
       return { canEnter: false, newReqs };
   }
 }
+
+export { floodFillBFS, floodFillBFSDualLayer };
+export type { QuadrantBounds };

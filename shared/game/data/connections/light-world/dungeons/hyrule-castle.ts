@@ -1,6 +1,6 @@
 import type { ScreenConnection } from '../../../../types';
 
-export const LW_HYRULE_CASTLE_CONNECTIONS: ScreenConnection[] = [
+const LW_HYRULE_CASTLE_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-13', to: 'hc-0x12', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'lw-1b', to: 'hc-0x60', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'lw-1b', to: 'hc-0x61', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
@@ -55,3 +55,5 @@ export const LW_HYRULE_CASTLE_CONNECTIONS: ScreenConnection[] = [
   { from: 'hc-0x61', to: 'lw-1b', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
   { from: 'hc-0x62', to: 'lw-1b', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
 ];
+
+export { LW_HYRULE_CASTLE_CONNECTIONS };

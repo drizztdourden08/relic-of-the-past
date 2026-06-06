@@ -67,7 +67,7 @@ interface ControllerAxis {
 
 // ── Abstract base class ──
 
-export abstract class BaseController {
+abstract class BaseController {
   // ── Identity & Matching ──
   abstract readonly id: string;
   abstract readonly name: string;
@@ -141,3 +141,4 @@ export type {
   StickDefaults,
   VibrationSegment
 };
+export { BaseController };

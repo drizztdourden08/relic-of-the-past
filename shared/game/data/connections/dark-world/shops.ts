@@ -1,6 +1,6 @@
 import type { ScreenConnection } from '../../../types';
 
-export const DW_SHOP_CONNECTIONS: ScreenConnection[] = [
+const DW_SHOP_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-18', to: 'village-of-outcasts-shop', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'dw-35', to: 'dark-lake-hylia-shop', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'dw-02', to: 'dark-world-lumberjack-shop', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
@@ -9,3 +9,5 @@ export const DW_SHOP_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-2c', to: 'big-bomb-shop', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'dark-death-mountain-top', to: 'cave-shop-dark-death-mountain', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
 ];
+
+export { DW_SHOP_CONNECTIONS };

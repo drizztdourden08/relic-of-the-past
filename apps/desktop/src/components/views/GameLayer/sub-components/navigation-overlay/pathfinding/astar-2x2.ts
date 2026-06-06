@@ -6,7 +6,7 @@ import { manhattan, keyOf, isValid2x2, isValidMove2x2, canLeave2x2, isTraversalD
  * Snap a cursor tile to the nearest valid 2×2 top-left corner.
  * Checks the 4 squares that contain the cursor tile first, then spirals out.
  */
-export function findNearest2x2Goal(cursorRow: number, cursorCol: number, reachable: ReachState[][]): GridPos | null {
+function findNearest2x2Goal(cursorRow: number, cursorCol: number, reachable: ReachState[][]): GridPos | null {
   const seeds: GridPos[] = [
     { row: cursorRow, col: cursorCol },
     { row: cursorRow - 1, col: cursorCol },
@@ -29,7 +29,7 @@ export function findNearest2x2Goal(cursorRow: number, cursorCol: number, reachab
 }
 
 /** A* where each node is the top-left of a 2×2 block — allows traversal tiles in their permitted direction. */
-export function findPath2x2AStar(
+function findPath2x2AStar(
   start: GridPos, goal: GridPos, reachable: ReachState[][],
 ): GridPos[] | null {
   if (!isValid2x2(start.row, start.col, reachable) || !isValid2x2(goal.row, goal.col, reachable)) return null;
@@ -92,7 +92,7 @@ export function findPath2x2AStar(
  *   - Stair tiles (state=10): bidirectional layer swap (stay in place)
  *   - Ledge tiles (state=2-9) on layer 0: one-way fall to layer 1 (scan past ledge tiles to landing)
  */
-export function findPath2x2LayerAware(
+function findPath2x2LayerAware(
   start: GridPos, goal: GridPos,
   startLayer: 0 | 1,
   layerGrids: [ReachState[][], ReachState[][]],
@@ -266,7 +266,7 @@ function findLedgeLanding(
  * Find a 2×2 path from Link to goal.
  * Snaps Link's top-left to the nearest valid 2×2 start position.
  */
-export function findPath2x2FromLink(
+function findPath2x2FromLink(
   linkX: number, linkY: number,
   screenWorldX: number, screenWorldY: number,
   goal: GridPos,
@@ -294,3 +294,5 @@ export function findPath2x2FromLink(
   if (!start) return null;
   return findPath2x2AStar(start, goal, reachable);
 }
+
+export { findNearest2x2Goal, findPath2x2AStar, findPath2x2LayerAware, findPath2x2FromLink };

@@ -12,7 +12,7 @@
  * - radius-N: Yellow circle handles on vertices for corner radius
  */
 
-export type GizmoPart =
+type GizmoPart =
   | 'move-x'
   | 'move-y'
   | 'move-center'
@@ -23,7 +23,7 @@ export type GizmoPart =
   | `vertex-${number}`
   | `radius-${number}`;
 
-export interface GizmoHit {
+interface GizmoHit {
   part: GizmoPart;
   cursor: string;
 }
@@ -61,7 +61,7 @@ const RADIUS_HANDLE_DIST = 16; // Distance from vertex to radius handle
 /**
  * Hit-test gizmo parts. Returns the part under the cursor, or null.
  */
-export function hitTestGizmo(
+function hitTestGizmo(
   mouseX: number,
   mouseY: number,
   ctx: GizmoContext,
@@ -135,7 +135,7 @@ export function hitTestGizmo(
 /**
  * Render gizmo for the selected element.
  */
-export function renderGizmo(
+function renderGizmo(
   drawCtx: CanvasRenderingContext2D,
   gizmoCtx: GizmoContext,
   hoveredPart: GizmoPart | null,
@@ -266,7 +266,7 @@ export function renderGizmo(
 /**
  * Build the GizmoContext from a selected heightmap element.
  */
-export function buildGizmoContext(
+function buildGizmoContext(
   shapeX: number,
   shapeY: number,
   shapeWidth: number,
@@ -320,7 +320,7 @@ export function buildGizmoContext(
 /**
  * Get the cursor for a given gizmo part.
  */
-export function getGizmoCursor(part: GizmoPart | null): string {
+function getGizmoCursor(part: GizmoPart | null): string {
   if (!part) return 'default';
   const hit = CURSOR_MAP[part];
   return hit ?? 'default';
@@ -335,3 +335,6 @@ const CURSOR_MAP: Record<string, string> = {
   'resize-uniform': 'nwse-resize',
   'rotate': 'grab',
 };
+
+export { hitTestGizmo, renderGizmo, buildGizmoContext, getGizmoCursor };
+export type { GizmoPart, GizmoHit };

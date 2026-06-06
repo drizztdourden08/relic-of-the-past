@@ -18,7 +18,7 @@ function getIconImageForEntrance(entId: number, roomId: number, roomIndex: numbe
   return img;
 }
 
-export function drawEntrances(
+function drawEntrances(
   dc: DrawContext,
   drawResults: FloodFillResult[],
   isIndoors: boolean,
@@ -65,3 +65,5 @@ export function drawEntrances(
     }
   }
 }
+
+export { drawEntrances };

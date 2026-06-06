@@ -12,10 +12,12 @@ export { EASTERN_PALACE_DUNGEON } from './eastern-palace';
 export { DESERT_PALACE_DUNGEON } from './desert-palace';
 export { TOWER_OF_HERA_DUNGEON } from './tower-of-hera';
 
-export const LW_DUNGEON_SCREENS: ScreenDefinition[] = [
+const LW_DUNGEON_SCREENS: ScreenDefinition[] = [
   ...HYRULE_CASTLE_DUNGEON,
   ...CASTLE_TOWER_DUNGEON,
   ...EASTERN_PALACE_DUNGEON,
   ...DESERT_PALACE_DUNGEON,
   ...TOWER_OF_HERA_DUNGEON,
 ];
+
+export { LW_DUNGEON_SCREENS };

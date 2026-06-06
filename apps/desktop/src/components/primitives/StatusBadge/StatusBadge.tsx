@@ -1,6 +1,6 @@
 import './StatusBadge.css';
 
-export type ScreenStatus = 'draft' | 'mapped' | 'verified' | undefined;
+type ScreenStatus = 'draft' | 'mapped' | 'verified' | undefined;
 
 interface StatusBadgeProps {
   status: ScreenStatus;
@@ -41,3 +41,4 @@ function StatusBadge({ status, interactive = false, onChange }: StatusBadgeProps
 }
 
 export { StatusBadge };
+export type { ScreenStatus };

@@ -5,7 +5,7 @@ import { getTileAttrsMap, type TileAttrContext } from './tile-attrs';
  * Classify a raw Map8 collision attribute into a TilePassability.
  * Thin lookup into TILE_ATTRS — the unified source of truth.
  */
-export function classifyTileAttr(attr: number, context: TileAttrContext = 'overworld'): TilePassability {
+function classifyTileAttr(attr: number, context: TileAttrContext = 'overworld'): TilePassability {
   const def = getTileAttrsMap(context)[attr];
   if (!def) return { type: 'blocked' };
 
@@ -20,3 +20,4 @@ export function classifyTileAttr(attr: number, context: TileAttrContext = 'overw
   }
 }
 
+export { classifyTileAttr };

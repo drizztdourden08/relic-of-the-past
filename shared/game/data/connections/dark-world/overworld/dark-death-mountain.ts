@@ -1,6 +1,6 @@
 import type { ScreenConnection } from '../../../../types';
 
-export const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_CONNECTIONS: ScreenConnection[] = [
+const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_CONNECTIONS: ScreenConnection[] = [
   // West
   { from: 'dark-death-mountain-west-bottom', to: 'dark-death-mountain-top', tags: ['transit:walk', 'dir:one-way', 'ctx:overworld'] },
 
@@ -33,3 +33,5 @@ export const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_CONNECTIONS: ScreenConnection[] = 
   { from: 'death-mountain-floating-island-dw', to: 'death-mountain-floating-island-lw', tags: ['transit:mirror', 'dir:one-way', 'ctx:cross-world'] },
   { from: 'dark-death-mountain-top', to: 'east-death-mountain-top', tags: ['transit:mirror', 'dir:one-way', 'ctx:cross-world'] },
 ];
+
+export { DW_OVERWORLD_DARK_DEATH_MOUNTAIN_CONNECTIONS };

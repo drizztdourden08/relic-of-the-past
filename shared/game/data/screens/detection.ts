@@ -13,7 +13,7 @@ import { ALL_SCREENS } from './index';
  * Game state snapshot used to evaluate variant conditions.
  * Passed into the resolver to select the correct variant.
  */
-export interface VariantGameState {
+interface VariantGameState {
   /** Set of check names that have been collected */
   completedChecks?: ReadonlySet<string>;
   /** WRAM flag reader: (address, bit) → boolean */
@@ -75,7 +75,7 @@ function resolveVariant(candidates: ScreenDefinition[], state?: VariantGameState
 
 // ─── Lookup Tables ───────────────────────────────────────────────────────────
 
-export interface ScreenLookup {
+interface ScreenLookup {
   /** Overworld screen index → screen */
   byOverworldScreen: Map<number, ScreenDefinition>;
   /** Dungeon room index → screen (keyed by `palaceIndex:roomIndex`) */
@@ -139,14 +139,14 @@ let cachedLookup: ScreenLookup | null = null;
 /**
  * Get or build the screen lookup tables (cached on first call).
  */
-export function getScreenLookup(): ScreenLookup {
+function getScreenLookup(): ScreenLookup {
   if (!cachedLookup) cachedLookup = buildScreenLookup();
   return cachedLookup;
 }
 
-export type ScreenMatchMethod = 'exact' | 'entrance' | 'palace-scan' | 'cave-single' | 'cave-ambiguous' | 'variant' | 'overworld';
+type ScreenMatchMethod = 'exact' | 'entrance' | 'palace-scan' | 'cave-single' | 'cave-ambiguous' | 'variant' | 'overworld';
 
-export interface ScreenMatchResult {
+interface ScreenMatchResult {
   screen: ScreenDefinition;
   method: ScreenMatchMethod;
   /** When method is 'palace-scan', the expected palace from data vs actual runtime value */
@@ -161,7 +161,7 @@ export interface ScreenMatchResult {
  * @param whichEntrance — the entrance ID from RAM $010E (optional, improves cave detection)
  * @param variantState — game state for variant resolution (optional, improves multi-variant rooms)
  */
-export function resolveCurrentScreen(
+function resolveCurrentScreen(
   isIndoors: boolean,
   palaceIndex: number,
   roomIndex: number,
@@ -176,7 +176,7 @@ export function resolveCurrentScreen(
  * Detailed screen resolution — returns match metadata alongside the screen.
  * Use this when you need to know HOW the match was found (for warnings/corrections).
  */
-export function resolveCurrentScreenDetailed(
+function resolveCurrentScreenDetailed(
   isIndoors: boolean,
   palaceIndex: number,
   roomIndex: number,
@@ -244,3 +244,6 @@ export function resolveCurrentScreenDetailed(
   const ow = lookup.byOverworldScreen.get(overworldScreenIndex);
   return ow ? { screen: ow, method: 'overworld' } : null;
 }
+
+export { getScreenLookup, resolveCurrentScreen, resolveCurrentScreenDetailed };
+export type { VariantGameState, ScreenLookup, ScreenMatchMethod, ScreenMatchResult };

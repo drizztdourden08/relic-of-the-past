@@ -8,7 +8,7 @@ import { bodyTiles, findStartBody } from '../strategies/bfs-helpers';
  * Unified BFS flood-fill engine using strategy injection for layer handling.
  * Operates on a 2×2 body moving through a 64×64 grid.
  */
-export function runBFS(
+function runBFS(
   strategy: LayerStrategy,
   startRow: number,
   startCol: number,
@@ -146,3 +146,5 @@ function recordBorderTransition(
     if (!foundBorders.has(key)) { foundBorders.add(key); transitions.push({ row, col, edge: 'east', requirements: [...requirements] }); }
   }
 }
+
+export { runBFS };

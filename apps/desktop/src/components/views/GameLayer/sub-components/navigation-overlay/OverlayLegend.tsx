@@ -1,4 +1,4 @@
-export function OverlayLegend() {
+function OverlayLegend() {
   return (
     <div style={{
       position: 'absolute', bottom: 6, right: 6, zIndex: 7,
@@ -32,3 +32,5 @@ function LegendItem({ color, label, border, isArrow }: { color: string; label: s
     </div>
   );
 }
+
+export { OverlayLegend };

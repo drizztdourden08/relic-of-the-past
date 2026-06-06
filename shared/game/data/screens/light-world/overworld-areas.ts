@@ -6,7 +6,7 @@ import type { ScreenDefinition } from '../../../types';
  * logically distinct for connection/reachability purposes.
  * They do NOT have inGameIndex (detection uses the per-screen entries).
  */
-export const LW_OVERWORLD_AREAS: ScreenDefinition[] = [
+const LW_OVERWORLD_AREAS: ScreenDefinition[] = [
   { id: 'light-world', name: 'Light World', type: 'overworld', world: 'light', location: 'Hyrule', area: 'Central Hyrule', overworld: { gridX: 0, gridY: 0 }, tags: ['env:outdoor', 'role:spawn'] },
   { id: 'light-world-rain', name: 'Light World (Rain)', type: 'overworld', world: 'light', location: 'Hyrule', area: 'Central Hyrule', overworld: { gridX: 0, gridY: 0 }, tags: ['env:outdoor'] },
   { id: 'zoras-river', name: 'Zora\'s River', type: 'overworld', world: 'light', location: 'Eastern Hyrule', area: 'East Hyrule', overworld: { gridX: 0, gridY: 0 }, tags: ['env:outdoor'] },
@@ -41,3 +41,5 @@ export const LW_OVERWORLD_AREAS: ScreenDefinition[] = [
   { id: 'lake-hylia-island', name: 'Lake Hylia Island', type: 'overworld', world: 'light', location: 'Lake Hylia', area: 'Lake Hylia', overworld: { gridX: 0, gridY: 0 }, tags: ['env:outdoor', 'loot:chest'] },
   { id: 'pyramid-ledge-lw', name: 'Pyramid Ledge (LW side)', type: 'overworld', world: 'light', location: 'Hyrule Castle', area: 'Hyrule Castle', overworld: { gridX: 0, gridY: 0 }, tags: ['env:outdoor'] },
 ];
+
+export { LW_OVERWORLD_AREAS };

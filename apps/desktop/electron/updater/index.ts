@@ -3,7 +3,7 @@ import type { BrowserWindow } from 'electron';
 import { ipcMain } from 'electron';
 import { is } from '@electron-toolkit/utils';
 
-export interface UpdateInfo {
+interface UpdateInfo {
   version: string;
   releaseNotes: string;
   releaseDate: string;
@@ -11,9 +11,9 @@ export interface UpdateInfo {
 
 let updateAvailable: UpdateInfo | null = null;
 
-export const isPortable = !!process.env.PORTABLE_EXECUTABLE_DIR;
+const isPortable = !!process.env.PORTABLE_EXECUTABLE_DIR;
 
-export function initAutoUpdater(mainWindow: BrowserWindow): void {
+function initAutoUpdater(mainWindow: BrowserWindow): void {
   if (is.dev || isPortable) return;
 
   autoUpdater.setFeedURL({
@@ -78,7 +78,7 @@ export function initAutoUpdater(mainWindow: BrowserWindow): void {
   }, 5000);
 }
 
-export function registerUpdaterHandlers(): void {
+function registerUpdaterHandlers(): void {
   ipcMain.handle('updater:isPortable', () => isPortable);
 
   ipcMain.handle('updater:check', async () => {
@@ -109,3 +109,6 @@ export function registerUpdaterHandlers(): void {
     return app.getVersion();
   });
 }
+
+export { isPortable, initAutoUpdater, registerUpdaterHandlers };
+export type { UpdateInfo };

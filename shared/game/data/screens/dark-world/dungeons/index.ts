@@ -18,7 +18,7 @@ export { MISERY_MIRE_DUNGEON } from './misery-mire';
 export { TURTLE_ROCK_DUNGEON } from './turtle-rock';
 export { GANONS_TOWER_DUNGEON } from './ganons-tower';
 
-export const DW_DUNGEON_SCREENS: ScreenDefinition[] = [
+const DW_DUNGEON_SCREENS: ScreenDefinition[] = [
   ...PALACE_OF_DARKNESS_DUNGEON,
   ...SWAMP_PALACE_DUNGEON,
   ...SKULL_WOODS_DUNGEON,
@@ -28,3 +28,5 @@ export const DW_DUNGEON_SCREENS: ScreenDefinition[] = [
   ...TURTLE_ROCK_DUNGEON,
   ...GANONS_TOWER_DUNGEON,
 ];
+
+export { DW_DUNGEON_SCREENS };

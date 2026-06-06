@@ -2,7 +2,7 @@
  * Generic binary min-heap priority queue.
  * Used by A* and Dijkstra pathfinding.
  */
-export class PriorityQueue<T> {
+class PriorityQueue<T> {
   private heap: T[] = [];
   private compare: (a: T, b: T) => number;
 
@@ -54,3 +54,5 @@ export class PriorityQueue<T> {
     }
   }
 }
+
+export { PriorityQueue };

@@ -25,7 +25,7 @@ function mirrorEntry(pos: number, edge: 'north' | 'south' | 'east' | 'west'): Gr
  * reachable areas are discovered. Handles multi-entry (areas only
  * reachable from a different direction on the same screen).
  */
-export function floodFillWorld(
+function floodFillWorld(
   getGrid: (screenIndex: number) => number[][],
   tileContext: TileAttrContext,
   startScreen: number,
@@ -133,3 +133,5 @@ export function floodFillWorld(
     bfsRuns,
   };
 }
+
+export { floodFillWorld };
