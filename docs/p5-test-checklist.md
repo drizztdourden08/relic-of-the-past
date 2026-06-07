@@ -154,3 +154,18 @@ flood tests — additionally confirm:
 - ☐ **staircaseType 2** rooms: layer changes blocked → single-layer BFS on the start layer.
 - ☐ **Connections widget**: inter-screen, inter-room, and intra-room (scroll-boundary)
   connections all derive correctly; contiguous-run bundling + item-gap splitting unchanged.
+
+---
+
+## NavReviewPanel.tsx (was 335) → `nav-review/`
+Connection-review panel. Split into: `types`, `nav-review-styles` (dir labels/colors,
+status buttons, requirement options, styles), `nav-review-controls` (StatusRow /
+RequirementEditor / TransitTypePicker), `useNavReview` (load/persist + screen/point
+review state). Main component keeps the render. Open the Nav Review panel for a screen:
+- ☐ Summary (reviewed/total, tiles, bundle/entrance counts) correct.
+- ☐ **Screen-level** status (✓/✗/⚠) + comment persist (debounced save) and reload.
+- ☐ **Border bundles** grouped by N/S/E/W with free/gated counts; expand shows tiles +
+  requirements; **Edit requirements** toggles chips and applies; corrected badge shows.
+- ☐ **Entrances** list: position/room/requirements; **Transit type** picker persists;
+  requirement editor persists.
+- ☐ Point-level status + comment persist per bundle/entrance and reload after reopen.

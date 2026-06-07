@@ -1,149 +1,21 @@
 /* @layer renderer-widgets @kind component */
 /**
  * NavReviewPanel — per-screen connection point review with comments.
- *
- * Shows:
- *  - Border bundles (contiguous walkable corridors per edge)
- *  - Requirements for each bundle (lift, hammer, etc.)
- *  - Entrances with room IDs and positions
- *  - Obstacles detected on this screen
- *  - Review status + comment for each item (like sprite review)
+ * State/handlers live in nav-review/useNavReview; styles, types, and input
+ * controls live in nav-review/*.
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-
-// ─── Types ─────────────────────────────────────────────────────────────────
-
-type ReviewStatus = 'neutral' | 'good' | 'bad' | 'yellow';
-
-interface PointReview {
-  status: ReviewStatus;
-  comment?: string;
-  /** User-corrected requirements (overrides auto-detected) */
-  correctedRequirements?: string[][];
-  /** User-corrected transit type */
-  correctedTransitType?: string;
-}
-
-interface ScreenReview {
-  status: ReviewStatus;
-  comment?: string;
-  points: Record<string, PointReview>;
-}
-
-type NavReviewData = Record<string, ScreenReview>;
-
-interface BorderBundle {
-  id: string;
-  direction: 'n' | 's' | 'e' | 'w';
-  tiles: number[];
-  requirements: string[][];
-}
-
-interface EntranceInfo {
-  id: number;
-  roomId: number;
-  gridRow: number;
-  gridCol: number;
-}
-
-interface TransitionInfo {
-  entranceIdx: number;
-  requirements: string[];
-}
-
-interface NavReviewPanelProps {
-  locationKey: string;
-  bundles: BorderBundle[];
-  entrances: EntranceInfo[];
-  transitions: TransitionInfo[];
-  borders: {
-    north: { freeTiles: number[]; itemTiles: { pos: number; requirements: string[] }[] };
-    south: { freeTiles: number[]; itemTiles: { pos: number; requirements: string[] }[] };
-    east: { freeTiles: number[]; itemTiles: { pos: number; requirements: string[] }[] };
-    west: { freeTiles: number[]; itemTiles: { pos: number; requirements: string[] }[] };
-  };
-  reachableCount: number;
-  totalTiles: number;
-}
-
-// ─── Constants ──────────────────────────────────────────────────────────────
-
-const DIR_LABELS: Record<string, string> = { n: '⬆ North', s: '⬇ South', e: '➡ East', w: '⬅ West' };
-const DIR_COLORS: Record<string, string> = { n: '#4488ff', s: '#44ff88', e: '#ff8844', w: '#bb44ff' };
-
-const STATUS_BTNS: { key: ReviewStatus; label: string; color: string }[] = [
-  { key: 'neutral', label: '—', color: '#666' },
-  { key: 'good', label: '✓', color: '#4c4' },
-  { key: 'bad', label: '✗', color: '#f44' },
-  { key: 'yellow', label: '⚠', color: '#fc4' },
-];
-
-const REQUIREMENT_OPTIONS = [
-  'lift.1', 'lift.2', 'lift.3', 'hammer', 'boots', 'flippers', 'hookshot',
-  'bombs', 'sword', 'boomerang', 'mirror', 'moonpearl', 'firerod', 'lamp',
-];
-
-// ─── Component ──────────────────────────────────────────────────────────────
+import type { NavReviewPanelProps, BorderBundle } from './nav-review/types';
+import { DIR_LABELS, DIR_COLORS, STATUS_BTNS, S } from './nav-review/nav-review-styles';
+import { StatusRow, RequirementEditor, TransitTypePicker } from './nav-review/nav-review-controls';
+import { useNavReview } from './nav-review/useNavReview';
 
 const NavReviewPanel = ({ locationKey, bundles, entrances, transitions, borders, reachableCount, totalTiles }: NavReviewPanelProps) => {
-  const [reviewData, setReviewData] = useState<NavReviewData>({});
-  const [expandedPoints, setExpandedPoints] = useState<Set<string>>(new Set());
-  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Load review data
-  useEffect(() => {
-    window.api.loadNavReview().then((d: unknown) => setReviewData((d ?? {}) as NavReviewData));
-  }, []);
-
-  const persist = useCallback((next: NavReviewData) => {
-    setReviewData(next);
-    if (saveTimer.current) clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => window.api.saveNavReview(next), 400);
-  }, []);
-
-  const screenReview = reviewData[locationKey] ?? { status: 'neutral' as ReviewStatus, comment: '', points: {} };
-
-  // Screen-level review
-  const setScreenStatus = (status: ReviewStatus) => {
-    const next = { ...reviewData, [locationKey]: { ...screenReview, status } };
-    persist(next);
-  };
-  const setScreenComment = (comment: string) => {
-    const next = { ...reviewData, [locationKey]: { ...screenReview, comment } };
-    persist(next);
-  };
-
-  // Point-level review
-  const getPointReview = (pointId: string): PointReview => screenReview.points[pointId] ?? { status: 'neutral' };
-  const setPointStatus = (pointId: string, status: ReviewStatus) => {
-    const points = { ...screenReview.points, [pointId]: { ...getPointReview(pointId), status } };
-    const next = { ...reviewData, [locationKey]: { ...screenReview, points } };
-    persist(next);
-  };
-  const setPointComment = (pointId: string, comment: string) => {
-    const points = { ...screenReview.points, [pointId]: { ...getPointReview(pointId), comment } };
-    const next = { ...reviewData, [locationKey]: { ...screenReview, points } };
-    persist(next);
-  };
-  const setPointRequirements = (pointId: string, reqs: string[][]) => {
-    const points = { ...screenReview.points, [pointId]: { ...getPointReview(pointId), correctedRequirements: reqs } };
-    const next = { ...reviewData, [locationKey]: { ...screenReview, points } };
-    persist(next);
-  };
-  const setPointTransitType = (pointId: string, transitType: string) => {
-    const points = { ...screenReview.points, [pointId]: { ...getPointReview(pointId), correctedTransitType: transitType } };
-    const next = { ...reviewData, [locationKey]: { ...screenReview, points } };
-    persist(next);
-  };
-
-  const toggleExpand = (id: string) => {
-    setExpandedPoints(prev => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id); else next.add(id);
-      return next;
-    });
-  };
+  const {
+    screenReview, expandedPoints, toggleExpand,
+    setScreenStatus, setScreenComment, getPointReview,
+    setPointStatus, setPointComment, setPointRequirements, setPointTransitType,
+  } = useNavReview(locationKey);
 
   // Group bundles by direction
   const bundlesByDir = { n: [] as BorderBundle[], s: [] as BorderBundle[], e: [] as BorderBundle[], w: [] as BorderBundle[] };
@@ -299,112 +171,5 @@ const NavReviewPanel = ({ locationKey, bundles, entrances, transitions, borders,
   );
 };
 
-// ─── Sub-components ─────────────────────────────────────────────────────────
-
-const StatusRow = ({ status, comment, onStatus, onComment }: { status: ReviewStatus; comment?: string; onStatus: (s: ReviewStatus) => void; onComment: (c: string) => void }) => {
-  return (
-    <div style={S.reviewRow}>
-      <div style={S.statusRow}>
-        {STATUS_BTNS.map(b => (
-          <button key={b.key} onClick={() => onStatus(b.key)} style={{ ...S.statusBtn, ...(status === b.key ? { color: b.color, borderColor: b.color } : {}) }}>
-            {b.label}
-          </button>
-        ))}
-      </div>
-      {(status === 'bad' || status === 'yellow' || comment) && (
-        <input style={S.commentInput} placeholder="Note..." value={comment ?? ''} onChange={e => onComment(e.target.value)} />
-      )}
-    </div>
-  );
-};
-
-const RequirementEditor = ({ current, onChange }: { current: string[][]; onChange: (reqs: string[][]) => void }) => {
-  const [editing, setEditing] = useState(false);
-  const [selected, setSelected] = useState<Set<string>>(new Set(current.flat()));
-
-  if (!editing) {
-    return (
-      <button style={S.editBtn} onClick={() => { setSelected(new Set(current.flat())); setEditing(true); }}>
-        ✏️ Edit requirements
-      </button>
-    );
-  }
-
-  const toggle = (req: string) => {
-    const next = new Set(selected);
-    if (next.has(req)) next.delete(req); else next.add(req);
-    setSelected(next);
-  };
-
-  const apply = () => {
-    const reqs = selected.size > 0 ? [Array.from(selected)] : [];
-    onChange(reqs);
-    setEditing(false);
-  };
-
-  return (
-    <div style={S.reqEditor}>
-      <div style={S.reqGrid}>
-        {REQUIREMENT_OPTIONS.map(req => (
-          <button key={req} onClick={() => toggle(req)} style={{ ...S.reqChip, ...(selected.has(req) ? S.reqChipActive : {}) }}>
-            {req}
-          </button>
-        ))}
-      </div>
-      <div style={S.reqActions}>
-        <button style={S.editBtn} onClick={apply}>Apply</button>
-        <button style={S.editBtn} onClick={() => setEditing(false)}>Cancel</button>
-      </div>
-    </div>
-  );
-};
-
-const TransitTypePicker = ({ value, onChange }: { value: string; onChange: (v: string) => void }) => {
-  const options = ['door', 'passage', 'hole', 'ledge', 'staircase', 'dungeon_enter', 'whirlpool', 'warp_tile'];
-  return (
-    <select style={S.selectInput} value={value} onChange={e => onChange(e.target.value)}>
-      {options.map(o => <option key={o} value={o}>{o}</option>)}
-    </select>
-  );
-};
-
-// ─── Styles ─────────────────────────────────────────────────────────────────
-
-const S: Record<string, React.CSSProperties> = {
-  panel: { display: 'flex', flexDirection: 'column', gap: 4 },
-  header: { display: 'flex', alignItems: 'center', gap: 6, paddingTop: 4 },
-  headerTitle: { fontSize: 10, fontWeight: 700, color: '#aaf', textTransform: 'uppercase', letterSpacing: 1 },
-  badge: { fontSize: 9, padding: '1px 5px', borderRadius: 8, background: 'rgba(100,100,255,0.15)', color: '#aaf' },
-  summary: { fontSize: 9, color: '#777' },
-  screenReview: { marginBottom: 2 },
-  dirSection: { display: 'flex', flexDirection: 'column', gap: 2, marginTop: 4 },
-  dirHeader: { display: 'flex', alignItems: 'center', gap: 5 },
-  dirDot: { width: 6, height: 6, borderRadius: 2, flexShrink: 0 },
-  dirLabel: { fontSize: 10, fontWeight: 600, color: '#ccc' },
-  dirMeta: { fontSize: 9, color: '#666', marginLeft: 'auto' },
-  pointCard: { display: 'flex', flexDirection: 'column', gap: 2, padding: '3px 6px', marginLeft: 8, borderLeft: '2px solid', borderRadius: 2, background: 'rgba(255,255,255,0.02)' },
-  pointHeader: { display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer' },
-  expandIcon: { fontSize: 8, color: '#888', width: 10 },
-  pointTitle: { fontSize: 9, fontWeight: 500, color: '#bbb', fontFamily: "'JetBrains Mono', monospace" },
-  tileBadge: { fontSize: 8, padding: '0 4px', borderRadius: 4, background: 'rgba(255,255,255,0.06)', color: '#888', marginLeft: 'auto' },
-  statusIcon: { fontSize: 10, fontWeight: 700 },
-  pointBody: { display: 'flex', flexDirection: 'column', gap: 3, paddingLeft: 14, paddingTop: 2 },
-  fieldRow: { display: 'flex', gap: 6, alignItems: 'baseline' },
-  fieldLabel: { fontSize: 9, color: '#666', minWidth: 70 },
-  fieldValue: { fontSize: 9, color: '#aaa', fontFamily: "'JetBrains Mono', monospace" },
-  correctedBadge: { fontSize: 8, marginLeft: 4, padding: '0 3px', borderRadius: 3, background: 'rgba(255,200,0,0.15)', color: '#fc4' },
-  reviewRow: { marginTop: 3 },
-  statusRow: { display: 'flex', gap: 3 },
-  statusBtn: { padding: '1px 6px', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 3, fontSize: 9, cursor: 'pointer', background: 'rgba(255,255,255,0.04)', color: '#888', fontFamily: 'inherit' },
-  commentInput: { width: '100%', padding: '2px 6px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 3, color: '#ccc', fontSize: 9, fontFamily: 'inherit', outline: 'none', marginTop: 3 },
-  editBtn: { fontSize: 9, padding: '2px 6px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 3, color: '#aaa', cursor: 'pointer', fontFamily: 'inherit' },
-  reqEditor: { display: 'flex', flexDirection: 'column', gap: 4, padding: 4, border: '1px solid rgba(255,255,255,0.08)', borderRadius: 4, marginTop: 2 },
-  reqGrid: { display: 'flex', flexWrap: 'wrap', gap: 3 },
-  reqChip: { fontSize: 8, padding: '1px 5px', borderRadius: 3, border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.04)', color: '#888', cursor: 'pointer', fontFamily: 'inherit' },
-  reqChipActive: { background: 'rgba(100,200,100,0.15)', borderColor: 'rgba(100,200,100,0.4)', color: '#8f8' },
-  reqActions: { display: 'flex', gap: 4 },
-  selectInput: { fontSize: 9, padding: '1px 4px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 3, color: '#ccc', fontFamily: 'inherit' },
-};
-
 export { NavReviewPanel };
-export type { NavReviewData, ScreenReview, PointReview, BorderBundle };
+export type { NavReviewData, ScreenReview, PointReview, BorderBundle } from './nav-review/types';
