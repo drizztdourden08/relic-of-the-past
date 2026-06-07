@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { CheckDefinition } from '../types';
 import { OVERWORLD_CHECKS } from './overworld';
 import { DUNGEON_CHECKS } from './dungeons';

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useInputTester — State and subscriptions for the InputTester view.
  */
@@ -25,7 +26,7 @@ interface HidDevice {
   serialNumber: string | null;
 }
 
-function useInputTester() {
+const useInputTester = () => {
   const [gamepads, setGamepads] = useState<GamepadSnapshot[]>([]);
   const [events, setEvents] = useState<EventEntry[]>([]);
   const [hidDevices, setHidDevices] = useState<HidDevice[]>([]);
@@ -113,7 +114,7 @@ function useInputTester() {
     lastCalibration,
     handleCalibrationComplete,
   };
-}
+};
 
 export type { EventEntry, HidDevice };
 export { useInputTester };

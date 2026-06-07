@@ -1,22 +1,11 @@
+/* @layer shared-game @kind logic */
 import type { TransitionPoint, GridPos } from '../types';
 import { GRID_SIZE } from '../types';
 import { DIRECTIONS } from '../core';
 import type { LayerStrategy, BFSCell, BFSResult, QuadrantBounds } from '../strategies/layer-strategy';
 import { bodyTiles, findStartBody } from '../strategies/bfs-helpers';
 
-/**
- * Unified BFS flood-fill engine using strategy injection for layer handling.
- * Operates on a 2×2 body moving through a 64×64 grid.
- */
-export function runBFS(
-  strategy: LayerStrategy,
-  startRow: number,
-  startCol: number,
-  entrancePositions: { row: number; col: number; idx: number }[],
-  inventory: Set<string>,
-  bounds: QuadrantBounds,
-  extraSeeds?: { row: number; col: number }[],
-): BFSResult {
+const runBFS = (strategy: LayerStrategy, startRow: number, startCol: number, entrancePositions: { row: number; col: number; idx: number }[], inventory: Set<string>, bounds: QuadrantBounds, extraSeeds?: { row: number; col: number }[]): BFSResult => {
   const { minRow, maxRow, minCol, maxCol } = bounds;
   const startLayer = strategy.findStartLayer();
   const startGrid = strategy.getGrid(startLayer);
@@ -118,17 +107,11 @@ export function runBFS(
     tileLayer: tileResult.tileLayer,
     reachableByLayer: tileResult.reachableByLayer,
   };
-}
+};
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function recordBorderTransition(
-  row: number, col: number,
-  requirements: Set<string>,
-  foundBorders: Set<string>,
-  transitions: TransitionPoint[],
-  minR: number, maxR: number, minC: number, maxC: number,
-): void {
+const recordBorderTransition = (row: number, col: number, requirements: Set<string>, foundBorders: Set<string>, transitions: TransitionPoint[], minR: number, maxR: number, minC: number, maxC: number): void => {
   if (row === minR) {
     const key = `north-${col}`;
     if (!foundBorders.has(key)) { foundBorders.add(key); transitions.push({ row, col, edge: 'north', requirements: [...requirements] }); }
@@ -145,4 +128,6 @@ function recordBorderTransition(
     const key = `east-${row}`;
     if (!foundBorders.has(key)) { foundBorders.add(key); transitions.push({ row, col, edge: 'east', requirements: [...requirements] }); }
   }
-}
+};
+
+export { runBFS };

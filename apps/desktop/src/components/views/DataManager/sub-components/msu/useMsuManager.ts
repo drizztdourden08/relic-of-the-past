@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import type { SelectOption } from '../../../../primitives/Select';
 import { formatBytes } from '../../../../../utils/formatBytes';
@@ -5,7 +6,7 @@ import { MSU_TRACK_DESCRIPTIONS } from './msu-track-descriptions';
 import { getTrackNumber } from './types';
 import type { MsuPack, MsuFile, TrackInfo, MatchedTrack } from './types';
 
-function useMsuManager(onRefresh: () => void) {
+const useMsuManager = (onRefresh: () => void) => {
   const [packs, setPacks] = useState<MsuPack[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [files, setFiles] = useState<MsuFile[]>([]);
@@ -142,6 +143,6 @@ function useMsuManager(onRefresh: () => void) {
     handleFileImport,
     refresh,
   };
-}
+};
 
 export { useMsuManager };

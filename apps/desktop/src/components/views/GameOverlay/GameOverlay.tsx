@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * GameOverlay — sized to match the game canvas exactly.
  * pointer-events: none so it doesn't interfere with input.
@@ -28,7 +29,7 @@ const MENU_TRANSITION_MS = 483;
 
 type MenuPhase = 'gameplay' | 'opening' | 'open' | 'closing';
 
-function GameOverlay({ width, height }: GameOverlayProps) {
+const GameOverlay = ({ width, height }: GameOverlayProps) => {
   const { mode, enhancedParts } = useHudSettingsStore();
   const isEnhanced = mode === 'enhanced';
   const showMainHud = isEnhanced && enhancedParts.includes('main');
@@ -101,6 +102,6 @@ function GameOverlay({ width, height }: GameOverlayProps) {
       <DeliveryQueueIndicator />
     </div>
   );
-}
+};
 
 export { GameOverlay };

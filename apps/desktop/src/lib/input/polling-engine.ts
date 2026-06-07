@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * Polling Engine — computes the SNES bitmask each frame by reading
  * keyboard state, Gamepad API, and HID device state.
@@ -19,16 +20,7 @@ interface GamepadSnapshot {
   axes: number[];
 }
 
-/**
- * Compute the SNES bitmask from all input sources for this frame.
- */
-function computeBitmask(
-  keyStates: Map<string, boolean>,
-  keyboardMap: Map<string, SnesButton>,
-  gamepadButtonMap: Map<number, SnesButton>,
-  gamepadAxisMap: Map<string, SnesButton>,
-  hidStates: Map<string, { buttons: boolean[]; axes: number[] }>,
-): number {
+const computeBitmask = (keyStates: Map<string, boolean>, keyboardMap: Map<string, SnesButton>, gamepadButtonMap: Map<number, SnesButton>, gamepadAxisMap: Map<string, SnesButton>, hidStates: Map<string, { buttons: boolean[]; axes: number[] }>): number => {
   let mask = 0;
 
   // Keyboard
@@ -102,12 +94,9 @@ function computeBitmask(
   }
 
   return mask;
-}
+};
 
-/**
- * Snapshot all connected gamepads, filtering out those already handled by WebHID.
- */
-function snapshotGamepads(): GamepadSnapshot[] {
+const snapshotGamepads = (): GamepadSnapshot[] => {
   const raw = navigator.getGamepads();
   const snaps: GamepadSnapshot[] = [];
   const hidIds = new Set(webHidReader.getConnectedDeviceKeys());
@@ -134,7 +123,7 @@ function snapshotGamepads(): GamepadSnapshot[] {
     });
   }
   return snaps;
-}
+};
 
 export { computeBitmask, snapshotGamepads };
 export type { GamepadSnapshot };

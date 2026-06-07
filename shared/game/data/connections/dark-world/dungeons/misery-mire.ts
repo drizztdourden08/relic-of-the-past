@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../../types';
 
-export const DW_MISERY_MIRE_CONNECTIONS: ScreenConnection[] = [
+const DW_MISERY_MIRE_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-30', to: 'mm-0x98', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter', 'barrier:medallion'] },
   { from: 'mm-0x90', to: 'mm-0xa0', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'mm-0x91', to: 'mm-0xa1', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
@@ -33,3 +34,5 @@ export const DW_MISERY_MIRE_CONNECTIONS: ScreenConnection[] = [
   { from: 'mm-0x98', to: 'dw-30', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
   { from: 'mm-0x97', to: 'dw-30', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
 ];
+
+export { DW_MISERY_MIRE_CONNECTIONS };

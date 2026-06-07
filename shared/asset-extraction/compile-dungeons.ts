@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Dungeon asset compilation — orchestrator for rooms, sprites, secrets, headers, attributes, entrances.
  */
@@ -8,7 +9,7 @@ import { decompress as lzDecompress } from './compression/lz-decompress';
 import { buildDungeonRooms } from './compile-dungeon-rooms';
 import { buildEntranceData } from './compile-dungeon-entrance';
 
-function buildDungeonMap(rom: RomData, A: AssetBuilder): void {
+const buildDungeonMap = (rom: RomData, A: AssetBuilder): void => {
   const kSizes = [75, 125, 50, 75, 175, 75, 50, 75, 50, 200, 150, 75, 100, 200];
   const layouts: Buffer[] = [];
   const tiles: Buffer[] = [];
@@ -22,9 +23,9 @@ function buildDungeonMap(rom: RomData, A: AssetBuilder): void {
   }
   A.addPacked('kDungMap_FloorLayout', layouts);
   A.addPacked('kDungMap_Tiles', tiles);
-}
+};
 
-function buildDungeonSprites(rom: RomData, A: AssetBuilder): void {
+const buildDungeonSprites = (rom: RomData, A: AssetBuilder): void => {
   const offsets = new Array(320).fill(0);
   const data: number[] = [0, 0xff];
   for (let i = 0; i < 320; i++) {
@@ -46,9 +47,9 @@ function buildDungeonSprites(rom: RomData, A: AssetBuilder): void {
   }
   A.addUint8('kDungeonSprites', data);
   A.addUint16('kDungeonSpriteOffs', offsets);
-}
+};
 
-function buildDungeonSecrets(rom: RomData, A: AssetBuilder): void {
+const buildDungeonSecrets = (rom: RomData, A: AssetBuilder): void => {
   const result = new Array(640).fill(0);
   for (let i = 0; i < 320; i++) {
     let ea = 0x810000 | rom.getWord(0x81db69 + i * 2);
@@ -74,22 +75,22 @@ function buildDungeonSecrets(rom: RomData, A: AssetBuilder): void {
     }
   }
   A.addUint8('kDungeonSecrets', result);
-}
+};
 
-function buildEnemyDamageData(rom: RomData, A: AssetBuilder): void {
+const buildEnemyDamageData = (rom: RomData, A: AssetBuilder): void => {
   const [data] = lzDecompress(0x83e800, (a) => rom.getByte(a), true, true);
   A.addUint8('kEnemyDamageData', Array.from(data));
-}
+};
 
-function buildDungeonAttrs(rom: RomData, A: AssetBuilder): void {
+const buildDungeonAttrs = (rom: RomData, A: AssetBuilder): void => {
   A.addUint16('kDungAttrsForTile_Offs', rom.getWords(0x8e9000, 21));
   A.addUint8('kDungAttrsForTile', bufToArr(rom.getBytes(0x8e902a, 1024)));
   A.addUint16('kMovableBlockDataInit', rom.getWords(0x84f1de, 198));
   A.addUint16('kTorchDataInit', rom.getWords(0x84F36A, 144));
   A.addUint16('kTorchDataJunk', rom.getWords(0x84F48a, 48));
-}
+};
 
-function buildDefaultAndOverlayRooms(rom: RomData, A: AssetBuilder): void {
+const buildDefaultAndOverlayRooms = (rom: RomData, A: AssetBuilder): void => {
   // Entrance data must come first (matches C code asset order in assets.h)
   buildEntranceData(rom, A, 0, 133, 'kEntranceData_');
   buildEntranceData(rom, A, 1, 7, 'kStartingPoint_');
@@ -115,9 +116,9 @@ function buildDefaultAndOverlayRooms(rom: RomData, A: AssetBuilder): void {
   }
   A.addUint8('kDungeonRoomOverlay', overlayData);
   A.addUint16('kDungeonRoomOverlayOffs', overlayOffs);
-}
+};
 
-function copyRoomLayer(rom: RomData, addr: number, out: number[]): void {
+const copyRoomLayer = (rom: RomData, addr: number, out: number[]): void => {
   let p = addr;
   while (true) {
     const w = rom.getByte(p) | (rom.getByte(p + 1) << 8);
@@ -126,7 +127,7 @@ function copyRoomLayer(rom: RomData, addr: number, out: number[]): void {
     out.push(rom.getByte(p), rom.getByte(p + 1), rom.getByte(p + 2));
     p += 3;
   }
-}
+};
 
 export {
   buildDefaultAndOverlayRooms,

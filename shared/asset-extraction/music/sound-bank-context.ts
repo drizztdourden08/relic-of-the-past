@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * SoundBankContext — manages SPC memory state and decodes song/phrase/pattern structures.
  */

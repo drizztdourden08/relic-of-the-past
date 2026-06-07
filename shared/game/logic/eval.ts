@@ -1,16 +1,10 @@
+/* @layer shared-game @kind logic */
 import type { Requirement, CheckDefinition, ScreenConnection } from '../types';
 import { ITEM_GROUPS } from '../items/groups';
 
 // ─── Requirement Evaluation ───
 
-/**
- * Evaluate a Requirement expression tree against an inventory set.
- * Returns true if the requirement is satisfied.
- */
-function evaluateRequirement(
-  req: Requirement,
-  inventory: Set<string>,
-): boolean {
+const evaluateRequirement = (req: Requirement, inventory: Set<string>): boolean => {
   if (typeof req === 'string') {
     return inventory.has(req);
   }
@@ -36,19 +30,11 @@ function evaluateRequirement(
   }
 
   return false;
-}
+};
 
 // ─── Screen Reachability (BFS) ───
 
-/**
- * Starting from 'Menu', BFS through the screen graph following connections
- * whose entrance rules are satisfied by the current inventory.
- */
-function getReachableScreens(
-  inventory: Set<string>,
-  connections: ScreenConnection[],
-  screenRules: Record<string, Requirement>,
-): Set<string> {
+const getReachableScreens = (inventory: Set<string>, connections: ScreenConnection[], screenRules: Record<string, Requirement>): Set<string> => {
   const reachable = new Set<string>();
   const queue: string[] = ['menu'];
   reachable.add('menu');
@@ -99,23 +85,13 @@ function getReachableScreens(
   }
 
   return reachable;
-}
+};
 
 // ─── Check Status ───
 
 type CheckStatus = 'completed' | 'reachable' | 'blocked';
 
-/**
- * Get all accessible checks: those in reachable screens whose local rules are satisfied.
- */
-function getAccessibleChecks(
-  inventory: Set<string>,
-  completedChecks: Set<string>,
-  checks: CheckDefinition[],
-  connections: ScreenConnection[],
-  screenRules: Record<string, Requirement>,
-  checkRules: Record<string, Requirement>,
-): CheckDefinition[] {
+const getAccessibleChecks = (inventory: Set<string>, completedChecks: Set<string>, checks: CheckDefinition[], connections: ScreenConnection[], screenRules: Record<string, Requirement>, checkRules: Record<string, Requirement>): CheckDefinition[] => {
   const reachable = getReachableScreens(inventory, connections, screenRules);
 
   return checks.filter(check => {
@@ -127,20 +103,9 @@ function getAccessibleChecks(
 
     return true;
   });
-}
+};
 
-/**
- * Get the status of a single check.
- */
-function getCheckStatus(
-  checkId: string,
-  inventory: Set<string>,
-  completedChecks: Set<string>,
-  checks: CheckDefinition[],
-  connections: ScreenConnection[],
-  screenRules: Record<string, Requirement>,
-  checkRules: Record<string, Requirement>,
-): CheckStatus {
+const getCheckStatus = (checkId: string, inventory: Set<string>, completedChecks: Set<string>, checks: CheckDefinition[], connections: ScreenConnection[], screenRules: Record<string, Requirement>, checkRules: Record<string, Requirement>): CheckStatus => {
   if (completedChecks.has(checkId)) return 'completed';
 
   const check = checks.find(c => c.id === checkId);
@@ -153,15 +118,9 @@ function getCheckStatus(
   if (localRule && !evaluateRequirement(localRule, inventory)) return 'blocked';
 
   return 'reachable';
-}
+};
 
-/**
- * For a blocked check, find the immediate missing items from its requirement tree.
- */
-function getBlockingItems(
-  req: Requirement,
-  inventory: Set<string>,
-): string[] {
+const getBlockingItems = (req: Requirement, inventory: Set<string>): string[] => {
   if (typeof req === 'string') {
     return inventory.has(req) ? [] : [req];
   }
@@ -199,19 +158,9 @@ function getBlockingItems(
   }
 
   return [];
-}
+};
 
-/**
- * Full tracker snapshot: compute status for every check.
- */
-function computeTrackerSnapshot(
-  inventory: Set<string>,
-  completedChecks: Set<string>,
-  checks: CheckDefinition[],
-  connections: ScreenConnection[],
-  screenRules: Record<string, Requirement>,
-  checkRules: Record<string, Requirement>,
-): Map<string, CheckStatus> {
+const computeTrackerSnapshot = (inventory: Set<string>, completedChecks: Set<string>, checks: CheckDefinition[], connections: ScreenConnection[], screenRules: Record<string, Requirement>, checkRules: Record<string, Requirement>): Map<string, CheckStatus> => {
   const reachable = getReachableScreens(inventory, connections, screenRules);
   const result = new Map<string, CheckStatus>();
 
@@ -236,7 +185,7 @@ function computeTrackerSnapshot(
   }
 
   return result;
-}
+};
 
 export {
   computeTrackerSnapshot,

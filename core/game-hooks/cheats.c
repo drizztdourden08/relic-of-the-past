@@ -1,3 +1,4 @@
+/* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
 
 // ─── Debug trace (read by Link_ControlHandler in player.c) ───

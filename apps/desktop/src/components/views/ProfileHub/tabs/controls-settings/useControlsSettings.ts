@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useControlsSettings — thin orchestrator composing focused sub-hooks.
  */
@@ -10,7 +11,7 @@ import { useBindingState } from './useBindingState';
 import { useDragDrop } from './useDragDrop';
 import { useDisplayMappings } from './useDisplayMappings';
 
-function useControlsSettings({ settings, onChange, profileId }: UseControlsSettingsArgs) {
+const useControlsSettings = ({ settings, onChange, profileId }: UseControlsSettingsArgs) => {
   const [activeTab, setActiveTab] = useState<'controls' | 'enhanced' | 'shortcuts' | 'cheats'>('controls');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [devicesCollapsed, setDevicesCollapsed] = useState(false);
@@ -89,6 +90,6 @@ function useControlsSettings({ settings, onChange, profileId }: UseControlsSetti
     handleDrop,
     handleApplyPreset,
   };
-}
+};
 
 export { useControlsSettings };

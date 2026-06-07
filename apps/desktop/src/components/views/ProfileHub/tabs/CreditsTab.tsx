@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 import { CREDITS, getUsageLabel } from '@shared/credits';
 import './CreditsTab.css';
 

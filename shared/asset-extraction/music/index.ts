@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind barrel */
 export { extractSoundData } from './extract-music';
 export type { MusicExtractionResult } from './extract-music';
 export { compileSoundBank, produceLoadableSeq } from './compile-music';

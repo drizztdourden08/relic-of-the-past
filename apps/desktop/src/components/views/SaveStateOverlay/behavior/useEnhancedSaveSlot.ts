@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useEnhancedSaveSlot — state machine for the enhanced save slot shortcut flow.
  *

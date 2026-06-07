@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind style */
 .log-overlay {
   position: fixed;
   bottom: var(--space-md);

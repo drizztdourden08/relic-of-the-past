@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../../types';
 
-export const DW_THIEVES_TOWN_CONNECTIONS: ScreenConnection[] = [
+const DW_THIEVES_TOWN_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-18', to: 'tt-0xdc', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'tt-0x44', to: 'tt-0x45', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
   { from: 'tt-0x44', to: 'tt-0x64', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
@@ -19,3 +20,5 @@ export const DW_THIEVES_TOWN_CONNECTIONS: ScreenConnection[] = [
   { from: 'tt-0xdc', to: 'tt-0x44', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal', 'barrier:small-key'] },
   { from: 'tt-0xdc', to: 'dw-18', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
 ];
+
+export { DW_THIEVES_TOWN_CONNECTIONS };

@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 /**
  * StatsTab — Health, rupees, bombs, arrows, magic controls.
  */

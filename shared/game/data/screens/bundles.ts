@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 /**
  * Screen Bundle — groups overworld screens into logical areas.
  *
@@ -11,7 +12,7 @@ import type { ScreenDefinition } from '../../types';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-export interface ScreenBundle {
+interface ScreenBundle {
   /** Bundle display name (e.g. "Hyrule Castle") — from screen displayName */
   name: string;
   /** All screen indices in this bundle, layout order: [NW, NE, SW, SE] for 2×2 */
@@ -55,11 +56,7 @@ const screenByIndex = new Map<number, ScreenDefinition>(
 
 // ─── Bundle Construction ─────────────────────────────────────────────────────
 
-/**
- * Build a ScreenBundle from a big-screen group (as returned by getBigScreenGroup).
- * @param group Array of screen indices — [head, head+1, head+8, head+9] for big, [single] for small
- */
-export function buildScreenBundle(group: number[]): ScreenBundle {
+const buildScreenBundle = (group: number[]): ScreenBundle => {
   if (group.length === 1) {
     const screenIndex = group[0];
     const screen = screenByIndex.get(screenIndex);
@@ -101,4 +98,7 @@ export function buildScreenBundle(group: number[]): ScreenBundle {
     isMulti: true,
     head,
   };
-}
+};
+
+export { buildScreenBundle };
+export type { ScreenBundle };

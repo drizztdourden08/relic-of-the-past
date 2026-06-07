@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * SRAM Sync — periodic persistence of SRAM from WASM MEMFS to disk.
  */
@@ -8,15 +9,15 @@ import { getModule, getProfileId } from './wasm-bridge';
 let sramSyncInterval: ReturnType<typeof setInterval> | null = null;
 let lastSramHash: string | null = null;
 
-function simpleHash(data: Uint8Array): string {
+const simpleHash = (data: Uint8Array): string => {
   let h = 0;
   for (let i = 0; i < data.length; i++) {
     h = ((h << 5) - h + data[i]) | 0;
   }
   return h.toString(36);
-}
+};
 
-async function syncSramToDisk(): Promise<void> {
+const syncSramToDisk = async (): Promise<void> => {
   const mod = getModule();
   const profileId = getProfileId();
   if (!mod || !profileId) return;
@@ -36,20 +37,20 @@ async function syncSramToDisk(): Promise<void> {
   } catch {
     // Silently ignore — may happen during shutdown
   }
-}
+};
 
-function startSramSync(): void {
+const startSramSync = (): void => {
   stopSramSync();
   lastSramHash = null;
   sramSyncInterval = setInterval(syncSramToDisk, 5000);
-}
+};
 
-function stopSramSync(): void {
+const stopSramSync = (): void => {
   if (sramSyncInterval) {
     clearInterval(sramSyncInterval);
     sramSyncInterval = null;
   }
   syncSramToDisk();
-}
+};
 
 export { startSramSync, stopSramSync };

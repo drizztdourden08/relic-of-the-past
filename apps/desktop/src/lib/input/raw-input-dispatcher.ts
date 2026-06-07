@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * Raw Input Dispatcher — rising-edge detection and event emission
  * for any button/key/axis press on any device. Used by rebinding UI,

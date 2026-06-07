@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 export type { RGBA } from './palette';
 export { snesToRgba, TRANSPARENT, loadPalette } from './palette';
 export {

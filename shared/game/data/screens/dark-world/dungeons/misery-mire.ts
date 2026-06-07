@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
-export const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
+const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
   {
     id: 'mm-0x90',
     name: 'Vitreous',
@@ -219,3 +220,5 @@ export const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     ],
   },
 ];
+
+export { MISERY_MIRE_DUNGEON };

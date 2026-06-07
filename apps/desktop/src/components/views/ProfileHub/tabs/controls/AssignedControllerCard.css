@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind style */
 .assigned-controller {
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-md, 6px);

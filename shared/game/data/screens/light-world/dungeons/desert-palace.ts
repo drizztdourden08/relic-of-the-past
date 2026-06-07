@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
-export const DESERT_PALACE_DUNGEON: ScreenDefinition[] = [
+const DESERT_PALACE_DUNGEON: ScreenDefinition[] = [
   {
     id: 'dp-0x33',
     name: 'Lanmolas',
@@ -123,3 +124,5 @@ export const DESERT_PALACE_DUNGEON: ScreenDefinition[] = [
     ],
   },
 ];
+
+export { DESERT_PALACE_DUNGEON };

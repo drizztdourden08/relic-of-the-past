@@ -1,15 +1,16 @@
+/* @layer renderer-components @kind logic */
 import type { PanelSide, PanelSettings, TrackerLayoutSettings } from './types';
 import { STORAGE_KEY } from './constants';
 
-function defaultPanel(side: PanelSide = 'right', x = 100, y = 100): PanelSettings {
+const defaultPanel = (side: PanelSide = 'right', x = 100, y = 100): PanelSettings => {
   return { mode: 'docked', side, opacity: 1.0, x, y };
-}
+};
 
-function defaultLayout(): TrackerLayoutSettings {
+const defaultLayout = (): TrackerLayoutSettings => {
   return { combined: true, inventory: defaultPanel('right'), checks: defaultPanel('right', 150, 150) };
-}
+};
 
-function loadLayout(): TrackerLayoutSettings {
+const loadLayout = (): TrackerLayoutSettings => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
@@ -23,10 +24,10 @@ function loadLayout(): TrackerLayoutSettings {
     }
   } catch {}
   return defaultLayout();
-}
+};
 
-function saveLayout(s: TrackerLayoutSettings): void {
+const saveLayout = (s: TrackerLayoutSettings): void => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
-}
+};
 
 export { defaultPanel, defaultLayout, loadLayout, saveLayout };

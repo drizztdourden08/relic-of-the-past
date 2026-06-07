@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 /**
  * Room 0x51 (King's Grave / Throne Room) — layer merge validation.
  *
@@ -30,7 +31,7 @@ interface WasmModule {
 
 let wasmModule: WasmModule;
 
-async function loadWasmHeadless(): Promise<WasmModule> {
+const loadWasmHeadless = async (): Promise<WasmModule> => {
   // Load the Emscripten factory using createRequire (it uses CJS internally)
   const nodeRequire = createRequire(import.meta.url);
   const Zelda3 = nodeRequire(join(WASM_DIR, 'zelda3.js'));
@@ -51,10 +52,9 @@ async function loadWasmHeadless(): Promise<WasmModule> {
   // Initialize headless mode (loads assets, inits game core without SDL)
   mod.ccall('WasmInitHeadless', 'number', [], []);
   return mod;
-}
+};
 
-/** Read 64×64 grid from WASM heap at given pointer */
-function readGrid(mod: WasmModule, ptr: number, offset: number): number[][] {
+const readGrid = (mod: WasmModule, ptr: number, offset: number): number[][] => {
   const grid: number[][] = Array.from({ length: 64 }, () => new Array(64));
   for (let r = 0; r < 64; r++) {
     for (let c = 0; c < 64; c++) {
@@ -62,7 +62,7 @@ function readGrid(mod: WasmModule, ptr: number, offset: number): number[][] {
     }
   }
   return grid;
-}
+};
 
 // ─── Test Data ────────────────────────────────────────────────────────────────
 
@@ -93,30 +93,27 @@ describe('Room 0x51 (Throne Room) Layer Data', () => {
     0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F,
   ]);
 
-  function isPassable(attr: number): boolean {
-    return PASSABLE_ATTRS.has(attr);
-  }
+  const isPassable = (attr: number): boolean => {
+        return PASSABLE_ATTRS.has(attr);
+      };
 
-  /** Check if a tile is effectively blocked after merge (blocked on EITHER layer) */
-  function isMergedBlocked(row: number, col: number): boolean {
-    const a0 = layer0[row][col];
-    const a1 = layer1[row][col];
-    // Current merge logic: if layer 0 is passable but layer 1 has non-zero wall, use layer 1
-    if (a1 !== 0x00 && isPassable(a0) && !isPassable(a1)) return true;
-    // If layer 0 itself is blocked
-    if (!isPassable(a0)) return true;
-    return false;
-  }
+  const isMergedBlocked = (row: number, col: number): boolean => {
+        const a0 = layer0[row][col];
+        const a1 = layer1[row][col];
+        // Current merge logic: if layer 0 is passable but layer 1 has non-zero wall, use layer 1
+        if (a1 !== 0x00 && isPassable(a0) && !isPassable(a1)) return true;
+        // If layer 0 itself is blocked
+        if (!isPassable(a0)) return true;
+        return false;
+      };
 
-  /** Check if a tile is passable on layer 0 (upper level) */
-  function isPassableOnLayer0(row: number, col: number): boolean {
-    return isPassable(layer0[row][col]);
-  }
+  const isPassableOnLayer0 = (row: number, col: number): boolean => {
+        return isPassable(layer0[row][col]);
+      };
 
-  /** Check if a tile is passable on layer 1 (lower level) */
-  function isPassableOnLayer1(row: number, col: number): boolean {
-    return isPassable(layer1[row][col]);
-  }
+  const isPassableOnLayer1 = (row: number, col: number): boolean => {
+        return isPassable(layer1[row][col]);
+      };
 
   describe('raw layer data sanity', () => {
     it('layer 0 has some non-zero tiles (walls exist)', () => {

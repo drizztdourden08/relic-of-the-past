@@ -1,3 +1,4 @@
+<!-- @layer claude-config @kind doc -->
 # Patterns in THIS Codebase
 
 Where each pattern already fits or should be applied in Relic of the Past. Pattern

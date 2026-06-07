@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 /**
  * CheatsWidget — Widget content providing cheat controls for the game.
  * Tabs: Items, Stats, Combat, Bottles

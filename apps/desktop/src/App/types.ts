@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind types */
 import type { GameSettings } from '@shared/types/settings';
 
 type PageId = 'none' | 'picker' | 'profile' | 'data' | 'input-tester' | 'credits';

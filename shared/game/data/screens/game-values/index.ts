@@ -1,3 +1,4 @@
+/* @layer shared-game @kind barrel */
 /**
  * Game Values — canonical reference data for in-game runtime values.
  * These map raw RAM values to human-readable names for tooling and detection.

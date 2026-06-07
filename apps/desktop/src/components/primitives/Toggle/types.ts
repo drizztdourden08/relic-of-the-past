@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 ﻿interface ToggleProps {
   checked: boolean;
   onChange: (checked: boolean) => void;

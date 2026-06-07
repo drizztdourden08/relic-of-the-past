@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useRef, useState, useEffect, useCallback } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { DropdownMenu } from '../../composites/DropdownMenu';

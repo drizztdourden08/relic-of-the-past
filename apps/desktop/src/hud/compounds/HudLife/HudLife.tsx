@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 import { HudHeart } from '../../primitives/HudHeart';
 import type { HeartState, HeartMode } from '../../primitives/HudHeart';
 

@@ -1,3 +1,4 @@
+REM @layer core-wasm-build @kind build
 @echo off
 REM Build zelda3 as WebAssembly using Emscripten
 REM Usage: build.bat

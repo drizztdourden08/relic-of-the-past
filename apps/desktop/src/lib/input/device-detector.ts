@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * Controller Detection — merges node-hid (main process) for accurate
  * device identification with Web Gamepad API for activation status.
@@ -9,7 +10,7 @@
 
 import type { DetectedDevice, InputApi } from '@shared/types/controls';
 import { resolvePreset, parseGamepadId, findPresetByVidPid, KEYBOARD_DEFAULT } from '@shared/input';
-import { DEVICE_DATABASE } from '@shared/input/device-database';
+import { DEVICE_DATABASE } from '@shared/input/data/devices';
 
 interface HidDeviceInfo {
   vendorId: string;
@@ -20,11 +21,7 @@ interface HidDeviceInfo {
   serialNumber: string | null;
 }
 
-/**
- * Build a DetectedDevice from HID info (main process).
- * No button press needed — always detects connected devices.
- */
-function detectFromHid(hid: HidDeviceInfo, index: number, webApiActivated: boolean): DetectedDevice {
+const detectFromHid = (hid: HidDeviceInfo, index: number, webApiActivated: boolean): DetectedDevice => {
   const preset = findPresetByVidPid(hid.vendorId, hid.productId);
   // If a device was found via HID enumeration, it should use HID by default.
   // Only Xbox (xinput) controllers need the Gamepad API since Windows claims exclusive HID access.
@@ -59,13 +56,9 @@ function detectFromHid(hid: HidDeviceInfo, index: number, webApiActivated: boole
     brandLogoKey: preset?.brandLogoKey ?? null,
     inputApi: api,
   };
-}
+};
 
-/**
- * Build a DetectedDevice from a Web Gamepad API Gamepad object.
- * Only available after the user presses a button.
- */
-function detectGamepad(gp: Gamepad): DetectedDevice {
+const detectGamepad = (gp: Gamepad): DetectedDevice => {
   const preset = resolvePreset(gp.id, gp.mapping);
   const parsed = parseGamepadId(gp.id);
 
@@ -84,12 +77,9 @@ function detectGamepad(gp: Gamepad): DetectedDevice {
     brandLogoKey: preset.brandLogoKey,
     inputApi: preset.inputApi,
   };
-}
+};
 
-/**
- * Build a DetectedDevice for a keyboard.
- */
-function detectKeyboard(index = 0): DetectedDevice {
+const detectKeyboard = (index = 0): DetectedDevice => {
   return {
     id: `keyboard-${index}`,
     type: 'keyboard',
@@ -105,7 +95,7 @@ function detectKeyboard(index = 0): DetectedDevice {
     brandLogoKey: 'keyboard',
     inputApi: 'webapi',
   };
-}
+};
 
 /**
  * Track which gamepad indices have been activated (received gamepadconnected event).
@@ -113,13 +103,11 @@ function detectKeyboard(index = 0): DetectedDevice {
  */
 const activatedIndices = new Set<number>();
 
-/** Mark a gamepad index as activated. Call from gamepadconnected handler. */
-function markActivated(index: number): void {
+const markActivated = (index: number): void => {
   activatedIndices.add(index);
-}
+};
 
-/** Also check current input state as a fallback (e.g. if event was missed). */
-function updateActivationState(): void {
+const updateActivationState = (): void => {
   const gamepads = navigator.getGamepads();
   for (const gp of gamepads) {
     if (!gp || !gp.connected) continue;
@@ -128,24 +116,13 @@ function updateActivationState(): void {
     // Mark it as activated unconditionally.
     activatedIndices.add(gp.index);
   }
-}
+};
 
-/**
- * Check if at least one gamepad has been activated (user pressed a button).
- * We don't try to match VIDs between Gamepad API and HID — the ID format
- * is unreliable across Chromium versions (XInput often omits Vendor/Product).
- */
-function hasAnyActivation(): boolean {
+const hasAnyActivation = (): boolean => {
   return activatedIndices.size > 0;
-}
+};
 
-/**
- * Snapshot all devices: HID devices (always visible) merged with
- * Web Gamepad API activation state.
- *
- * @param hidDevices — from window.api.enumerateHidDevices()
- */
-function detectAllDevices(hidDevices?: HidDeviceInfo[]): DetectedDevice[] {
+const detectAllDevices = (hidDevices?: HidDeviceInfo[]): DetectedDevice[] => {
   const devices: DetectedDevice[] = [];
 
   // Always include keyboard
@@ -173,7 +150,7 @@ function detectAllDevices(hidDevices?: HidDeviceInfo[]): DetectedDevice[] {
   }
 
   return devices;
-}
+};
 
 export {
   detectAllDevices,

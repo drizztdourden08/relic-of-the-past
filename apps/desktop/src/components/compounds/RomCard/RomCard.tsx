@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 ﻿import { Badge } from '../../primitives/Badge';
 import { Button } from '../../primitives/Button';
 import { IconButton } from '../../primitives/IconButton';

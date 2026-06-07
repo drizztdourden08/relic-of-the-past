@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Pixel Art & Rendering — How to Read This Game's Screen
 
 This doc exists so screenshots of the running game can be interpreted **correctly**.

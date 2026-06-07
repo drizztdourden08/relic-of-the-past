@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /**
  * Overworld event flags for checks tracked via save_ow_event_info[].
  * save_ow_event_info is uint8[128], indexed by overworld screen number.

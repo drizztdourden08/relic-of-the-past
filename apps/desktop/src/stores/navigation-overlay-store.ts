@@ -1,8 +1,9 @@
+/* @layer renderer-stores @kind logic */
 import { create } from 'zustand';
 import type { FloodFillResult, ConnectionInfo } from '@shared/game/navigation';
 
 interface PathTile { row: number; col: number; attr: number; }
-export interface FallHoleSpawn { gridRow: number; gridCol: number; entranceId: number; }
+interface FallHoleSpawn { gridRow: number; gridCol: number; entranceId: number; }
 
 interface NavigationOverlayState {
   /** Whether the overlay is visible */
@@ -33,7 +34,7 @@ interface NavigationOverlayState {
   clear: () => void;
 }
 
-export const useNavigationOverlayStore = create<NavigationOverlayState>((set) => ({
+const useNavigationOverlayStore = create<NavigationOverlayState>((set) => ({
   visible: false,
   result: null,
   results: [],
@@ -50,4 +51,7 @@ export const useNavigationOverlayStore = create<NavigationOverlayState>((set) =>
 }));
 
 /** @deprecated Use useNavigationOverlayStore instead */
-export const useConnectionOverlayStore = useNavigationOverlayStore;
+const useConnectionOverlayStore = useNavigationOverlayStore;
+
+export { useNavigationOverlayStore, useConnectionOverlayStore };
+export type { FallHoleSpawn };

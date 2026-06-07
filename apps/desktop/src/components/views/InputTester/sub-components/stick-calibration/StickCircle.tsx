@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 /**
  * StickCircle — SVG analog stick position visualizer.
  */
@@ -12,7 +13,7 @@ interface StickCircleProps {
   showDeadzones?: boolean;
 }
 
-function StickCircle(props: StickCircleProps) {
+const StickCircle = (props: StickCircleProps) => {
   const { x, y, label, size = 100, innerDeadzone = 0, outerDeadzone = 1, showDeadzones = false } = props;
   const r = (size - 12) / 2;
   const cx = size / 2;
@@ -49,7 +50,7 @@ function StickCircle(props: StickCircleProps) {
       </span>
     </div>
   );
-}
+};
 
 export { StickCircle };
 export type { StickCircleProps };

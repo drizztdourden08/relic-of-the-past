@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useDisplayMappings — derived display data: requiredInputs & displayMappings.
  */
@@ -13,7 +14,7 @@ interface UseDisplayMappingsArgs {
   devices: DetectedDevice[];
 }
 
-function useDisplayMappings({ activeProfile, devices }: UseDisplayMappingsArgs) {
+const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) => {
   const requiredInputs = useMemo(() => {
     if (!activeProfile) return [];
     const inputs: Array<{ type: 'keyboard' | 'gamepad'; label: string; iconSrc: string; connected: boolean }> = [];
@@ -115,6 +116,6 @@ function useDisplayMappings({ activeProfile, devices }: UseDisplayMappingsArgs) 
   }, [activeProfile]);
 
   return { requiredInputs, displayMappings };
-}
+};
 
 export { useDisplayMappings };

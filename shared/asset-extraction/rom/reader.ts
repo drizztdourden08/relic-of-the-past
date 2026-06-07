@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Sequential byte reader with SNES bank-aware auto-advancement.
  * Replaces Python's `Reader` class and the `get_byte` callback pattern.

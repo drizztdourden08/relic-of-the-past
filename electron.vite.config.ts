@@ -1,3 +1,4 @@
+/* @layer root-config @kind config */
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';

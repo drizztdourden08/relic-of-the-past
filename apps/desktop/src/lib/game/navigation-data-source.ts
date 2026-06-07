@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * NavigationDataSource — Facade wrapping all WASM game state queries
  * used by the navigation system.
@@ -33,7 +34,7 @@ import {
 } from '../game';
 import type { OverworldVariantInfo } from '../game';
 
-export interface NavigationDataSource {
+interface NavigationDataSource {
   // Viewport & positioning
   getViewportInfo(): ReturnType<typeof wasmGetViewportInfo>;
   getOverworldVariant(screenIndex: number): OverworldVariantInfo | null;
@@ -73,7 +74,7 @@ export interface NavigationDataSource {
 /**
  * Live implementation backed by actual WASM bridge calls.
  */
-export const liveDataSource: NavigationDataSource = {
+const liveDataSource: NavigationDataSource = {
   getViewportInfo: () => wasmGetViewportInfo?.() ?? null,
   getOverworldVariant: (screenIndex) => wasmGetOverworldVariant(screenIndex),
   getProgressIndicator: () => wasmGetProgressIndicator(),
@@ -98,3 +99,6 @@ export const liveDataSource: NavigationDataSource = {
   getRoomStairInfo: () => wasmGetRoomStairInfo(),
   getRoomWalkBoundaries: () => wasmGetRoomWalkBoundaries(),
 };
+
+export { liveDataSource };
+export type { NavigationDataSource };

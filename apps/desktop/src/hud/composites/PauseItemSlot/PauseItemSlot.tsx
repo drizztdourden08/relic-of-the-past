@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 /**
  * PauseItemSlot — a single item in the pause menu item grid.
  * Displays 16×16 item sprite or empty. Highlights the currently selected item.
@@ -5,11 +6,7 @@
 import { useMemo } from 'react';
 import { HudSprite } from '../../primitives/HudSprite';
 
-/**
- * Generate a pixel-art circle at native SNES resolution (32×32).
- * Rendered without anti-aliasing so it scales up cleanly with image-rendering: pixelated.
- */
-function generateCircleDataUrl(): string {
+const generateCircleDataUrl = (): string => {
   const canvas = document.createElement('canvas');
   canvas.width = 32;
   canvas.height = 32;
@@ -27,13 +24,13 @@ function generateCircleDataUrl(): string {
     }
   }
   return canvas.toDataURL();
-}
+};
 
 let _circleDataUrl: string | null = null;
-function getCircleDataUrl(): string {
+const getCircleDataUrl = (): string => {
   if (!_circleDataUrl) _circleDataUrl = generateCircleDataUrl();
   return _circleDataUrl;
-}
+};
 
 /**
  * Per-slot sprite mapping: save slot index → { value → sprite filename }.
@@ -62,13 +59,12 @@ const SLOT_SPRITES: Record<number, Record<number, string>> = {
   19: { 1: 'hud-magic-mirror', 2: 'hud-magic-mirror' },
 };
 
-/** Resolve sprite name for a given save slot + value */
-function getSlotSprite(saveSlotIndex: number, value: number): string | null {
+const getSlotSprite = (saveSlotIndex: number, value: number): string | null => {
   if (value <= 0) return null;
   const slotMap = SLOT_SPRITES[saveSlotIndex];
   if (!slotMap) return null;
   return slotMap[value] ?? slotMap[1] ?? null;
-}
+};
 
 interface PauseItemSlotProps {
   saveSlotIndex: number;

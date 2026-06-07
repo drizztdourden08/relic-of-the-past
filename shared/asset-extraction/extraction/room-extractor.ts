@@ -1,14 +1,13 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Extracts a single dungeon room's full data (header, sprites, secrets, chests, layers).
  */
 import * as yaml from 'js-yaml';
 import type { RomData } from '../rom/rom-types';
 import { decodeRoomObjects } from './room-object-decoder';
-import * as tables from './tables-data';
+import * as tables from './data/tables-data';
 
-function extractRoom(rom: RomData, roomIndex: number, entrances0: Map<number, Record<string, unknown>[]>,
-  entrances1: Map<number, Record<string, unknown>[]>, chestInfo: Map<number, [number, boolean][]>,
-  pitsHurt: Set<number>): string {
+const extractRoom = (rom: RomData, roomIndex: number, entrances0: Map<number, Record<string, unknown>[]>, entrances1: Map<number, Record<string, unknown>[]>, chestInfo: Map<number, [number, boolean][]>, pitsHurt: Set<number>): string => {
 
   let p = 0x1f8000 + roomIndex * 3;
   const roomAddr = rom.getByte(p) | (rom.getByte(p + 1) << 8) | (rom.getByte(p + 2) << 16);
@@ -124,6 +123,6 @@ function extractRoom(rom: RomData, roomIndex: number, entrances0: Map<number, Re
   if (layer3.doors) data['Layer3.doors'] = layer3.doors;
 
   return yaml.dump(data, { flowLevel: -1, sortKeys: false });
-}
+};
 
 export { extractRoom };

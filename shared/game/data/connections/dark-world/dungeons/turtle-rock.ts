@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../../types';
 
-export const DW_TURTLE_ROCK_CONNECTIONS: ScreenConnection[] = [
+const DW_TURTLE_ROCK_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-07', to: 'tr-0xd5', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter', 'barrier:medallion'] },
   { from: 'dw-07', to: 'tr-0xc5', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'dw-07', to: 'tr-0xc7', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
@@ -34,3 +35,5 @@ export const DW_TURTLE_ROCK_CONNECTIONS: ScreenConnection[] = [
   { from: 'tr-0xc7', to: 'dw-07', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
   { from: 'tr-0x04', to: 'dw-07', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
 ];
+
+export { DW_TURTLE_ROCK_CONNECTIONS };

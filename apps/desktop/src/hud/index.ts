@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind barrel */
 // Primitives
 export { HudSprite } from './primitives/HudSprite';
 export { HudNumber } from './primitives/HudNumber';

@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 /**
  * Entrance Resolver — Maps WASM entrance tables to connection points.
  *
@@ -12,25 +13,19 @@ import type { ConnectionPointData } from '../nav-data.types';
 import type { OverworldEntrance } from '../types';
 import { GRID_SIZE } from '../types';
 
-export interface EntranceResolverInput {
+interface EntranceResolverInput {
   entrances: OverworldEntrance[];
   exitScreenByRoom: Map<number, number>;
   entranceRooms: Uint16Array;
 }
 
-export interface ResolvedEntrance {
+interface ResolvedEntrance {
   screenIndex: number;
   entranceId: number;
   point: ConnectionPointData;
 }
 
-/**
- * Resolve entrance positions into typed connection points.
- *
- * Each entrance becomes a ConnectionPointData with position and direction info.
- * The entrance is placed on the overworld screen at (gridRow, gridCol) in 64×64 space.
- */
-export function resolveEntrances(input: EntranceResolverInput): ResolvedEntrance[] {
+const resolveEntrances = (input: EntranceResolverInput): ResolvedEntrance[] => {
   const { entrances, exitScreenByRoom } = input;
   const results: ResolvedEntrance[] = [];
 
@@ -65,4 +60,7 @@ export function resolveEntrances(input: EntranceResolverInput): ResolvedEntrance
   }
 
   return results;
-}
+};
+
+export { resolveEntrances };
+export type { EntranceResolverInput, ResolvedEntrance };

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * Button and axis mapping grid for the HID Calibration Wizard.
  */

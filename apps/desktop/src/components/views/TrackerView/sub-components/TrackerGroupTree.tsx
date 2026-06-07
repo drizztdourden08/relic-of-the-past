@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState } from 'react';
 import type { CheckDefinition } from '@shared/game/types';
 import type { CheckStatus } from '@shared/game/logic/eval';
@@ -39,7 +40,7 @@ const TrackerGroupTree = (props: TrackerGroupTreeProps) => {
   return null;
 }
 
-function TrackerGroupSection({ node, statuses, viewMode, depth }: TrackerGroupTreeProps & { depth: number }) {
+const TrackerGroupSection = ({ node, statuses, viewMode, depth }: TrackerGroupTreeProps & { depth: number }) => {
   const [expanded, setExpanded] = useState(false);
   const { completed, reachable, total } = node.stats;
 
@@ -68,9 +69,9 @@ function TrackerGroupSection({ node, statuses, viewMode, depth }: TrackerGroupTr
       )}
     </div>
   );
-}
+};
 
-function CheckList({ checks, statuses, viewMode }: { checks: CheckDefinition[]; statuses: Map<string, CheckStatus>; viewMode: ViewMode }) {
+const CheckList = ({ checks, statuses, viewMode }: { checks: CheckDefinition[]; statuses: Map<string, CheckStatus>; viewMode: ViewMode }) => {
   if (viewMode === 'visual') {
     return (
       <div className="tracker-checks--visual">
@@ -113,9 +114,9 @@ function CheckList({ checks, statuses, viewMode }: { checks: CheckDefinition[]; 
       })}
     </div>
   );
-}
+};
 
-function CheckCard({ check, status, itemOverride }: { check: CheckDefinition; status: CheckStatus; itemOverride?: string }) {
+const CheckCard = ({ check, status, itemOverride }: { check: CheckDefinition; status: CheckStatus; itemOverride?: string }) => {
   const displayItem = itemOverride ?? (Array.isArray(check.vanillaItem) ? check.vanillaItem.join(', ') : check.vanillaItem);
   const sprite = displayItem ? getItemSprite(displayItem) : undefined;
 
@@ -131,6 +132,6 @@ function CheckCard({ check, status, itemOverride }: { check: CheckDefinition; st
       </div>
     </div>
   );
-}
+};
 
 export { TrackerGroupTree };

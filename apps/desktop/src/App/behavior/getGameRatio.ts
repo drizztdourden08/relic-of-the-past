@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind logic */
 import type { GameSettings } from '@shared/types/settings';
 
 const getGameRatio = (aspectRatio: GameSettings['aspectRatio']): number => {

@@ -1,14 +1,15 @@
+/* @layer renderer-components @kind component */
 import { useEffect, useRef, useMemo } from 'react';
 import { marked } from 'marked';
 import { Button } from '../../primitives/Button';
 import type { UpdateState } from '../../../hooks/useAutoUpdate';
 import './UpdateDialog.css';
 
-function renderNotes(md: string): string {
+const renderNotes = (md: string): string => {
   const html = marked.parse(md, { async: false }) as string;
   // Strip <a> tags to plain text so links aren't clickable
   return html.replace(/<a[^>]*>(.*?)<\/a>/g, '$1');
-}
+};
 
 interface UpdateDialogProps {
   open: boolean;
@@ -122,10 +123,10 @@ const UpdateDialog = ({ open, state, onDownload, onInstall, onClose }: UpdateDia
   );
 };
 
-function formatBytes(bytes: number): string {
+const formatBytes = (bytes: number): string => {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
+};
 
 export { UpdateDialog };

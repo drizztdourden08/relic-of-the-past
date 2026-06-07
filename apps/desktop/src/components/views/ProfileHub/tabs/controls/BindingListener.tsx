@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * BindingListener — modal overlay that captures the next key or gamepad button press.
  * Uses the shared InputManager's raw input events so every input source

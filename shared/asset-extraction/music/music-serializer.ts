@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * MusicSerializer — writes compiled music entities into SPC memory layout.
  */

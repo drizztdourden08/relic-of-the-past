@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 /**
  * DeliveryQueueIndicator — bottom-right overlay showing the full delivery queue.
  * Visible only when items are queued. Shows up to 20 items individually,
@@ -17,7 +18,7 @@ const SOURCE_COLORS: Record<string, string> = {
   system: '#6b7280',      // gray
 };
 
-function getSourceColor(source: string): string {
+const getSourceColor = (source: string): string => {
   // Check known types first
   const lower = source.toLowerCase();
   for (const [key, color] of Object.entries(SOURCE_COLORS)) {
@@ -27,13 +28,13 @@ function getSourceColor(source: string): string {
   if (lower.startsWith('player')) return '#14b8a6';
   // Unknown sources get soft blue
   return '#60a5fa';
-}
+};
 
-function getSourceLabel(source: string): string {
+const getSourceLabel = (source: string): string => {
   // "player:Alice" → "Alice"
   if (source.includes(':')) return source.split(':').slice(1).join(':');
   return source;
-}
+};
 
 // ─── Individual Queue Entry ───
 
@@ -42,7 +43,7 @@ interface QueueEntryProps {
   isActive: boolean;
 }
 
-function QueueEntry({ entry, isActive }: QueueEntryProps) {
+const QueueEntry = ({ entry, isActive }: QueueEntryProps) => {
   const color = getSourceColor(entry.source);
   const label = getSourceLabel(entry.source);
 
@@ -58,11 +59,11 @@ function QueueEntry({ entry, isActive }: QueueEntryProps) {
       <span className="dq-entry-tag">{label}</span>
     </div>
   );
-}
+};
 
 // ─── Main Container ───
 
-function DeliveryQueueIndicator() {
+const DeliveryQueueIndicator = () => {
   const pending = useDeliveryQueueStore((s) => s.pending);
   const delivering = useDeliveryQueueStore((s) => s.delivering);
 
@@ -94,6 +95,6 @@ function DeliveryQueueIndicator() {
       </div>
     </div>
   );
-}
+};
 
 export { DeliveryQueueIndicator };

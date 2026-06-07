@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 ﻿interface ProfileCardProps {
   profile: Profile;
   onSelect: (profile: Profile) => void;

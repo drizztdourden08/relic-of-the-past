@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind style */
 /* ─── Legacy native select (kept for backward compat) ─── */
 .select {
   width: 100%;

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 /**
  * Stick calibration types, constants, and helpers.
  */
@@ -41,10 +42,7 @@ const DEFAULT_OUTER_DEADZONE = 0.95;
 
 // ── Helpers ──
 
-function applyCalibration(
-  rawX: number, rawY: number,
-  cal: StickCalibrationData,
-): { x: number; y: number } {
+const applyCalibration = (rawX: number, rawY: number, cal: StickCalibrationData): { x: number; y: number } => {
   const rangeNegX = cal.centerX - cal.minX || 1;
   const rangePosX = cal.maxX - cal.centerX || 1;
   const rangeNegY = cal.centerY - cal.minY || 1;
@@ -69,7 +67,7 @@ function applyCalibration(
   );
   const scale = mag > 0 ? rescaled / mag : 0;
   return { x: cx * scale, y: cy * scale };
-}
+};
 
 export {
   applyCalibration,

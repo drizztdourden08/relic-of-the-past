@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useWidgetResize — Hook for resizing floating widgets from edges/corners.
  * For docked widgets, only the "thickness" edge is resizable.

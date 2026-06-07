@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * NameRegistry — tracks compiled music entities by name for cross-referencing.
  */

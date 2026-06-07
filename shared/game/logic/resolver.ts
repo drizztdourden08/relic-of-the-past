@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { LogicConfig, Requirement, ScreenConnection } from '../types';
 import { SCREEN_RULES } from './screen-rules';
 import { CHECK_RULES } from './check-rules';
@@ -19,15 +20,7 @@ interface ResolvedRules {
   startInventory: Set<string>;
 }
 
-/**
- * Resolve the logic rules based on a LogicConfig.
- *
- * This transforms the static rule/connection data based on the mode:
- * - vanilla: only Link's House S&Q, Sanctuary/Old Man gated behind progression
- * - open: free S&Q to Link's House, Sanctuary, Old Man Cave
- * - no-logic: no rules at all (everything reachable)
- */
-function resolveRules(config: LogicConfig): ResolvedRules {
+const resolveRules = (config: LogicConfig): ResolvedRules => {
   if (config.mode === 'no-logic') {
     return {
       screenRules: {},
@@ -110,9 +103,9 @@ function resolveRules(config: LogicConfig): ResolvedRules {
     connections,
     startInventory: new Set(config.startingItems),
   };
-}
+};
 
-function getSQGateRequirement(dest: string, _config: LogicConfig): Requirement {
+const getSQGateRequirement = (dest: string, _config: LogicConfig): Requirement => {
   switch (dest) {
     case 'links-house':
       return 'Rescued Zelda';
@@ -123,7 +116,7 @@ function getSQGateRequirement(dest: string, _config: LogicConfig): Requirement {
     default:
       return 'Impossible';
   }
-}
+};
 
 export { resolveRules };
 export type { ResolvedRules };

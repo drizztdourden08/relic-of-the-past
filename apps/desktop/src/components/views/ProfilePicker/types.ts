@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 interface ProfilePickerProps {
   profiles: Profile[];
   romStatuses: RomDisplayInfo[];

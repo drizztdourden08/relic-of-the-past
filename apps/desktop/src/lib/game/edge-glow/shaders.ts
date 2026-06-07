@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * GLSL shader sources for the edge-glow post-processing pipeline.
  *

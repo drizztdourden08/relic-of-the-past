@@ -1,3 +1,4 @@
+/* @layer shared-input @kind logic */
 /**
  * Controller registration entry point.
  * Import this file to populate the registry with all known controllers.
@@ -5,18 +6,18 @@
  */
 
 // Specific controllers (matched by VID:PID)
-import './presets/gamecube-wireless';
-import './presets/switch-pro-2';
-import './presets/switch-pro';
-import './presets/xbox';
-import './presets/playstation';
-import './presets/8bitdo';
+import './data/presets/gamecube-wireless';
+import './data/presets/switch-pro-2';
+import './data/presets/switch-pro';
+import './data/presets/xbox';
+import './data/presets/playstation';
+import './data/presets/8bitdo';
 
 // Keyboard
-import './presets/keyboard';
+import './data/presets/keyboard';
 
 // Generic fallback (matches anything) — must be last
-import './presets/generic';
+import './data/presets/generic';
 
 // Re-export registry API for consumers
 export { findController, findControllerById, getAllControllers } from './registry';

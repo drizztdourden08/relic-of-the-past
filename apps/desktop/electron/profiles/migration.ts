@@ -1,13 +1,14 @@
+/* @layer electron-main @kind logic */
 import { join } from 'path';
 import { readFile, mkdir, writeFile, readdir, rm, rename, access, cp } from 'fs/promises';
 import type { Profile } from '../../../../shared/types/profile';
 import { getUserDataPath, getLegacyPath } from '../lib/paths';
 
-async function exists(p: string): Promise<boolean> {
+const exists = async (p: string): Promise<boolean> => {
   try { await access(p); return true; } catch { return false; }
-}
+};
 
-async function migrateDataFolder(): Promise<void> {
+const migrateDataFolder = async (): Promise<void> => {
   const dataDir = getUserDataPath();
   const migrationDirs = ['roms', 'profiles', 'assets', 'config'];
 
@@ -55,9 +56,9 @@ async function migrateDataFolder(): Promise<void> {
   }
 
   await migrateMsuPacks();
-}
+};
 
-async function migrateMsuPacks(): Promise<void> {
+const migrateMsuPacks = async (): Promise<void> => {
   const profilesDir = getUserDataPath('profiles');
   let entries: string[];
   try { entries = await readdir(profilesDir); } catch { return; }
@@ -96,6 +97,6 @@ async function migrateMsuPacks(): Promise<void> {
 
     await rm(profileMsuDir, { recursive: true, force: true });
   }
-}
+};
 
 export { migrateDataFolder };

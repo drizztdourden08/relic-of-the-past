@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../../types';
 
-export const LW_DESERT_PALACE_CONNECTIONS: ScreenConnection[] = [
+const LW_DESERT_PALACE_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-30', to: 'dp-0x84', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'lw-30', to: 'dp-0x83', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'lw-30', to: 'dp-0x85', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
@@ -19,3 +20,5 @@ export const LW_DESERT_PALACE_CONNECTIONS: ScreenConnection[] = [
   { from: 'dp-0x83', to: 'lw-30', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
   { from: 'dp-0x85', to: 'lw-30', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
 ];
+
+export { LW_DESERT_PALACE_CONNECTIONS };

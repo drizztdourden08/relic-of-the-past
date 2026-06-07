@@ -1,4 +1,5 @@
-export function PathControlsLegend() {
+/* @layer renderer-components @kind component */
+const PathControlsLegend = () => {
   return (
     <div style={{
       position: 'absolute', bottom: 90, right: 6, zIndex: 7,
@@ -14,4 +15,6 @@ export function PathControlsLegend() {
       <div style={{ color: '#ffee00' }}>Shift+drag: select tiles → clipboard</div>
     </div>
   );
-}
+};
+
+export { PathControlsLegend };

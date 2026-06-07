@@ -1,3 +1,4 @@
+/* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
 
 // ─── Inventory State Query ───

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useWidgetLayout — React hook that manages widget layout state.
  * Handles local persistence + profile-based save/load.

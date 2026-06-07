@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 const ITEM_GROUPS: Record<string, string[]> = {
   Swords: ['Fighter Sword', 'Master Sword', 'Tempered Sword', 'Golden Sword'],
   Bottles: [

@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 interface InventorySlot {
   displayName: string;
   /** The tracker item name(s) to check in the inventory set — first match wins */

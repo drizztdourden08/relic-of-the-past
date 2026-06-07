@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 import type { ReactNode, MouseEvent } from 'react';
 
 type PanelSide = 'left' | 'right';

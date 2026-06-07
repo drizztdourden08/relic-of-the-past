@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback } from 'react';
 import type { PlaySession } from '@shared/types/session';
 import type { NormalSaveInfo, AutoSaveInfo } from '@shared/types/saves';
@@ -8,13 +9,13 @@ import { HeroSaveCard } from '../../../compounds/HeroSaveCard';
 import { PlaySessionCard } from '../../../compounds/PlaySessionCard';
 import { Dialog } from '../../../composites/Dialog';
 import { listSessions } from '../../../../lib/game/session-tracker';
-import { saveState, loadState, subscribeGameState, reassertBackdropBlack, reassertHudHidden, reassertPauseHidden } from '../../../../lib/game';
+import { saveState, loadState, subscribeGameState, captureStateBuffer, loadStateFromBuffer } from '../../../../lib/game';
 import { log } from '../../../../lib/log-bus';
 import './HomeTab.css';
 
 const QUICK_SAVE_SLOTS = 12;
 
-function formatRelativeTime(ts: number | undefined): string {
+const formatRelativeTime = (ts: number | undefined): string => {
   if (!ts) return 'Never';
   const diffMs = Date.now() - ts;
   const diffMins = Math.floor(diffMs / 60000);
@@ -25,13 +26,13 @@ function formatRelativeTime(ts: number | undefined): string {
   const diffDays = Math.floor(diffHours / 24);
   if (diffDays < 30) return `${diffDays}d ago`;
   return new Date(ts).toLocaleDateString();
-}
+};
 
-function defaultSaveName(): string {
+const defaultSaveName = (): string => {
   return `Save - ${new Date().toLocaleString(undefined, {
     month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
   })}`;
-}
+};
 
 interface HomeTabProps {
   profileId: string;
@@ -97,64 +98,64 @@ const HomeTab = (props: HomeTabProps) => {
     loadSessions();
   }, [profileId]);
 
-  async function loadQuickSlots() {
-    try {
-      const infos = await window.api.getSlotInfos(profileId);
-      const loaded: SlotInfo[] = [];
-      for (let i = 0; i < QUICK_SAVE_SLOTS; i++) {
-        const info = infos?.find((s: { slot: number }) => s.slot === i);
-        let screenshot: string | null = null;
-        if (info?.hasScreenshot) {
-          try {
-            const b64 = await window.api.readScreenshot(profileId, i);
-            if (b64) screenshot = `data:image/png;base64,${b64}`;
-          } catch { /* ignore */ }
-        }
-        loaded.push({ slot: i, timestamp: info?.timestamp ?? null, screenshot });
-      }
-      setSlots(loaded);
-    } catch { /* ignore */ }
-  }
+  const loadQuickSlots = async () => {
+        try {
+          const infos = await window.api.getSlotInfos(profileId);
+          const loaded: SlotInfo[] = [];
+          for (let i = 0; i < QUICK_SAVE_SLOTS; i++) {
+            const info = infos?.find((s: { slot: number }) => s.slot === i);
+            let screenshot: string | null = null;
+            if (info?.hasScreenshot) {
+              try {
+                const b64 = await window.api.readScreenshot(profileId, i);
+                if (b64) screenshot = `data:image/png;base64,${b64}`;
+              } catch { /* ignore */ }
+            }
+            loaded.push({ slot: i, timestamp: info?.timestamp ?? null, screenshot });
+          }
+          setSlots(loaded);
+        } catch { /* ignore */ }
+      };
 
-  async function loadNormalSaves() {
-    try {
-      const list: NormalSaveInfo[] = await window.api.listNormalSaves(profileId);
-      setNormalSaves(list);
-      // Load screenshots
-      const screenshots: Record<string, string> = {};
-      for (const save of list) {
-        if (save.hasScreenshot) {
-          try {
-            const b64 = await window.api.loadNormalScreenshot(profileId, save.id);
-            if (b64) screenshots[save.id] = `data:image/png;base64,${b64}`;
-          } catch { /* ignore */ }
-        }
-      }
-      setNormalScreenshots(screenshots);
-    } catch { /* ignore */ }
-  }
+  const loadNormalSaves = async () => {
+        try {
+          const list: NormalSaveInfo[] = await window.api.listNormalSaves(profileId);
+          setNormalSaves(list);
+          // Load screenshots
+          const screenshots: Record<string, string> = {};
+          for (const save of list) {
+            if (save.hasScreenshot) {
+              try {
+                const b64 = await window.api.loadNormalScreenshot(profileId, save.id);
+                if (b64) screenshots[save.id] = `data:image/png;base64,${b64}`;
+              } catch { /* ignore */ }
+            }
+          }
+          setNormalScreenshots(screenshots);
+        } catch { /* ignore */ }
+      };
 
-  async function loadAutoSaves() {
-    try {
-      const list = await window.api.listAutoSaves(profileId) as AutoSaveInfo[];
-      setAutoSaves(list);
-      const screenshots: Record<string, string> = {};
-      for (const save of list) {
-        if (save.hasScreenshot) {
-          try {
-            const b64 = await window.api.loadAutoScreenshot(profileId, save.id);
-            if (b64) screenshots[save.id] = `data:image/png;base64,${b64}`;
-          } catch { /* ignore */ }
-        }
-      }
-      setAutoScreenshots(screenshots);
-    } catch { /* ignore */ }
-  }
+  const loadAutoSaves = async () => {
+        try {
+          const list = await window.api.listAutoSaves(profileId) as AutoSaveInfo[];
+          setAutoSaves(list);
+          const screenshots: Record<string, string> = {};
+          for (const save of list) {
+            if (save.hasScreenshot) {
+              try {
+                const b64 = await window.api.loadAutoScreenshot(profileId, save.id);
+                if (b64) screenshots[save.id] = `data:image/png;base64,${b64}`;
+              } catch { /* ignore */ }
+            }
+          }
+          setAutoScreenshots(screenshots);
+        } catch { /* ignore */ }
+      };
 
-  async function loadSessions() {
-    const list = await listSessions(profileId);
-    setSessions(list.slice(0, 20));
-  }
+  const loadSessions = async () => {
+        const list = await listSessions(profileId);
+        setSessions(list.slice(0, 20));
+      };
 
   // ─── Quick save handlers ───
   const handleQuickSave = useCallback(async (slot: number) => {
@@ -195,18 +196,10 @@ const HomeTab = (props: HomeTabProps) => {
     setBusyNormal('__creating__');
     log.app(`Creating normal save: "${name}"`);
 
-    const mod = (window as any).__zelda3Module;
-    if (!mod) return;
-    // Use slot 98 as temp for capturing state
-    mod.ccall('WasmSaveState', null, ['number'], [98]);
-    const savePath = `/saves/save98.sav`;
-    const { exists } = mod.FS.analyzePath(savePath);
-    if (!exists) { setBusyNormal(null); return; }
+    const ab = captureStateBuffer();
+    if (!ab) { setBusyNormal(null); return; }
 
-    const data = mod.FS.readFile(savePath);
-    const ab = (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength);
-
-    // Capture screenshot
+    // Capture screenshot (DOM concern — stays in the view)
     let screenshot: ArrayBuffer | undefined;
     const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
     if (canvas) {
@@ -217,7 +210,6 @@ const HomeTab = (props: HomeTabProps) => {
     }
 
     await window.api.createNormalSave(profileId, name, ab, screenshot);
-    try { mod.FS.unlink(savePath); } catch { /* ignore */ }
     await loadNormalSaves();
     setBusyNormal(null);
   }, [profileId, newSaveName]);
@@ -237,17 +229,7 @@ const HomeTab = (props: HomeTabProps) => {
       });
     }
     const buffer = await window.api.loadNormalSave(profileId, id);
-    if (buffer) {
-      const mod = (window as any).__zelda3Module;
-      if (mod) {
-        mod.FS.writeFile('/saves/save98.sav', new Uint8Array(buffer));
-        mod.ccall('WasmLoadState', null, ['number'], [98]);
-        reassertBackdropBlack();
-        reassertHudHidden();
-        reassertPauseHidden();
-        try { mod.FS.unlink('/saves/save98.sav'); } catch { /* ignore */ }
-      }
-    }
+    if (buffer) loadStateFromBuffer(buffer);
     setBusyNormal(null);
   }, [profileId, isGameRunning, onStartGame]);
 
@@ -263,15 +245,8 @@ const HomeTab = (props: HomeTabProps) => {
     setBusyNormal(id);
     log.app(`Overwriting normal save: ${id}`);
 
-    const mod = (window as any).__zelda3Module;
-    if (!mod) { setBusyNormal(null); return; }
-    mod.ccall('WasmSaveState', null, ['number'], [98]);
-    const savePath = `/saves/save98.sav`;
-    const { exists } = mod.FS.analyzePath(savePath);
-    if (!exists) { setBusyNormal(null); return; }
-
-    const data = mod.FS.readFile(savePath);
-    const ab = (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength);
+    const ab = captureStateBuffer();
+    if (!ab) { setBusyNormal(null); return; }
 
     let screenshot: ArrayBuffer | undefined;
     const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
@@ -283,7 +258,6 @@ const HomeTab = (props: HomeTabProps) => {
     }
 
     await window.api.overwriteNormalSave(profileId, id, ab, screenshot);
-    try { mod.FS.unlink(savePath); } catch { /* ignore */ }
     await loadNormalSaves();
     setBusyNormal(null);
   }, [profileId, dialog]);
@@ -324,17 +298,7 @@ const HomeTab = (props: HomeTabProps) => {
       });
     }
     const buffer = await window.api.loadAutoSave(profileId, id);
-    if (buffer) {
-      const mod = (window as any).__zelda3Module;
-      if (mod) {
-        mod.FS.writeFile('/saves/save98.sav', new Uint8Array(buffer));
-        mod.ccall('WasmLoadState', null, ['number'], [98]);
-        reassertBackdropBlack();
-        reassertHudHidden();
-        reassertPauseHidden();
-        try { mod.FS.unlink('/saves/save98.sav'); } catch { /* ignore */ }
-      }
-    }
+    if (buffer) loadStateFromBuffer(buffer);
     setBusyAuto(null);
   }, [profileId, isGameRunning, onStartGame]);
 

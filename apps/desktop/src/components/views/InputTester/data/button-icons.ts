@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 /**
  * Maps controller profile icon IDs to SVG file paths in /buttons/.
  */

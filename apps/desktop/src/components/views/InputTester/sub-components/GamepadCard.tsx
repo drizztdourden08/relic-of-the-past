@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * GamepadCard — Standard Gamepad API controller display with buttons, sticks, triggers.
  */
@@ -22,8 +23,7 @@ const VENDOR_PATTERNS: [RegExp, string][] = [
   [/switch|nintendo|pro controller/i, '057e'],
 ];
 
-/** Try to find the best Xbox device from HID list (skip keyboard/mouse interfaces) */
-function findBestXboxDevice(hidDevices: HidDeviceInfo[]): HidDeviceInfo | undefined {
+const findBestXboxDevice = (hidDevices: HidDeviceInfo[]): HidDeviceInfo | undefined => {
   const msDevices = hidDevices.filter(d => d.vendorId === '045e');
   for (const d of msDevices) {
     if (findPresetByVidPid(d.vendorId, d.productId)) return d;
@@ -31,9 +31,9 @@ function findBestXboxDevice(hidDevices: HidDeviceInfo[]): HidDeviceInfo | undefi
   const controller = msDevices.find(d => /xbox|controller/i.test(d.product));
   if (controller) return controller;
   return msDevices[0];
-}
+};
 
-function GamepadCard({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDevices: HidDeviceInfo[] }) {
+const GamepadCard = ({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDevices: HidDeviceInfo[] }) => {
   const { displayName, detectedVidPid } = (() => {
     const parsed = parseGamepadId(gamepad.id);
 
@@ -194,7 +194,7 @@ function GamepadCard({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
       )}
     </div>
   );
-}
+};
 
 export { GamepadCard };
 export type { HidDeviceInfo };

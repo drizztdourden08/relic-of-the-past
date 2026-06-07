@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import definitions from './definitions.json';
 
 type SpriteCategory = 'hud' | 'hud-pause' | 'hud-item' | 'fonts' | 'receipt' | 'drop';
@@ -13,17 +14,17 @@ interface SpriteManifestEntry {
 
 let _spritesBase = '/sprites/items/';
 
-function setSpritesBase(base: string): void {
+const setSpritesBase = (base: string): void => {
   _spritesBase = base;
-}
+};
 
-function getSpritesBase(): string {
+const getSpritesBase = (): string => {
   return _spritesBase;
-}
+};
 
-function getSpritePath(file: string): string {
+const getSpritePath = (file: string): string => {
   return `${getSpritesBase()}${file}.png`;
-}
+};
 
 const SPRITE_MANIFEST: SpriteManifestEntry[] = definitions.sprites.map(s => ({
   file: s.file,

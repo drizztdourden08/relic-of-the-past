@@ -1,6 +1,7 @@
+/* @layer renderer-components @kind hook */
 import { useCallback, useRef } from 'react';
 
-function useDrag(pos: { x: number; y: number }, onMove: (x: number, y: number) => void) {
+const useDrag = (pos: { x: number; y: number }, onMove: (x: number, y: number) => void) => {
   const dragging = useRef(false);
   const offset = useRef({ x: 0, y: 0 });
 
@@ -21,6 +22,6 @@ function useDrag(pos: { x: number; y: number }, onMove: (x: number, y: number) =
   }, [pos.x, pos.y, onMove]);
 
   return startDrag;
-}
+};
 
 export { useDrag };

@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind barrel */
 export { useScreenDetection } from './useScreenDetection';
 export { useLinkDebugState } from './useLinkDebugState';
 export type { LinkDebugState } from './useLinkDebugState';

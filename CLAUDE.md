@@ -1,3 +1,4 @@
+<!-- @layer root-config @kind doc -->
 # Relic of the Past — Project Guide
 
 A desktop port of *The Legend of Zelda: A Link to the Past*, built by wrapping a
@@ -68,6 +69,7 @@ Path aliases: `@shared/*` → `shared/`, `@app/*` → `apps/desktop/src/`.
 | Run the app (dev) | `npm run dev` | electron-vite dev server + Electron. |
 | Build the app | `npm run build` | electron-vite production build. |
 | Lint + typecheck | `npm run lint` | `tsc --noEmit && eslint .` |
+| **Analyze whole project** | `npm run analyze` | Classifies + lints **all** file types; `analyze:diff`/`:ci`/`:tag`. See @docs/file-tagging.md. |
 | **Build WASM** | see `build-wasm` skill | Needs Emscripten SDK at `E:\GameProjects\emsdk`. Run `core/wasm-build/build.bat`. |
 | Unit tests | `npx vitest run tests/<file>` | Run only the relevant file, not the whole suite. |
 | E2E / screenshots | `npx playwright test` | |
@@ -82,6 +84,12 @@ these are gitignored and never committed. Same for `test-roms/` and `saves/`.
   one-thing-per-file, deep logical folders, `import type`. Enforced by
   `eslint.config.mjs` + a PostToolUse lint hook that flags violations on every
   edit. Run the `coding-standards` skill's checkup after every change.
+- **Every file is tagged & analyzed: @docs/file-tagging.md.** Each file carries
+  `@layer`/`@kind` (header or `file-tags.jsonc` manifest). `npm run analyze` runs
+  one harness over **all** languages (line-policy + eslint + tsc + stylelint +
+  markdownlint + clang-format); vendored `core/zelda3` is hint-only. Size is
+  per-kind (baseline 200; data/generated/asset exempt). A Stop hook gates changed
+  files each turn (`analyze:ci`). New file → tag it (`npm run analyze:tag`).
 - **Clean code — `refactoring-guru` skill.** Be an expert: recognize code smells,
   apply the right refactoring, choose/explain design patterns, uphold SOLID. Spot
   smells and pattern opportunities as you touch code and suggest/perform refactors.
@@ -98,8 +106,10 @@ these are gitignored and never committed. Same for `test-roms/` and `saves/`.
   `components/{primitives,composites,compounds,views}/` — primitive/composite/compound
   are bare & presentational; **view** is the only tier with logic/data. Use the
   `design-system` skill.
-- **Testing: @docs/testing-capabilities.md.** Prefer built-in automation flags
-  (`--auto-state`, `--screenshot`, `--dump-layers`, `--dump-nav`) over Playwright.
+- **Testing: @docs/testing-capabilities.md.** **Always launch the app for tests
+  with `--no-focus --muted`** so it never steals focus (dev: `npm run dev -- -- --no-focus --muted`).
+  Prefer built-in automation flags (`--auto-state`, `--screenshot`, `--dump-layers`,
+  `--dump-nav`) over Playwright.
   Playwright is **ephemeral** — throwaway specs in `tests/scratch/`, deleted after
   use. Files marked "NEVER MODIFIED BY THE AI" are protected — **modify only with
   the user's explicit permission** (stop and ask). Use the `test-app` skill.

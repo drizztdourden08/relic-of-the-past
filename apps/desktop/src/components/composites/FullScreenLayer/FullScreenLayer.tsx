@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 ﻿import { IconButton } from '../../primitives/IconButton';
 import './FullScreenLayer.css';
 import { type FullScreenLayerProps } from './types';

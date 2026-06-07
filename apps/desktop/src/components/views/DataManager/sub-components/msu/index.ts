@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind barrel */
 export { useMsuManager } from './useMsuManager';
 export { TrackRow } from './TrackRow';
 export { MsuPackList } from './MsuPackList';

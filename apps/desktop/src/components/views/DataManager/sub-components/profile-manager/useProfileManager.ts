@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * State and logic hook for ProfileManager.
  */
@@ -11,7 +12,7 @@ interface UseProfileManagerParams {
   onRefresh: () => void;
 }
 
-function useProfileManager({ profiles, romStatuses, onCreateProfile, onRefresh }: UseProfileManagerParams) {
+const useProfileManager = ({ profiles, romStatuses, onCreateProfile, onRefresh }: UseProfileManagerParams) => {
   const [selected, setSelected] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [formName, setFormName] = useState('');
@@ -65,6 +66,6 @@ function useProfileManager({ profiles, romStatuses, onCreateProfile, onRefresh }
     handleCreate,
     handleKeyDown,
   };
-}
+};
 
 export { useProfileManager };

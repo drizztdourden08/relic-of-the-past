@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * TriggerCalibrationWizard — barrel re-export from split module.
  */

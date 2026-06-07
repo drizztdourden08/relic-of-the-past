@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 ﻿interface TabItem {
   id: string;
   label: string;

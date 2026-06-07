@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { useShadowEditorStore } from '../../../../stores/shadow-editor-store';
 import type { EditorTool } from '../../../../stores/shadow-editor-store';
@@ -29,7 +30,7 @@ const POLYGON_OPTIONS = [
   { value: '8', label: '◯' },
 ];
 
-function ShadowEditorPanel() {
+const ShadowEditorPanel = () => {
   const store = useShadowEditorStore();
   const {
     open,
@@ -306,6 +307,6 @@ function ShadowEditorPanel() {
       </div>
     </div>
   );
-}
+};
 
 export { ShadowEditorPanel };

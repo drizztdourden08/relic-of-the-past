@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 ﻿interface DialogProps {
   open: boolean;
   title: string;

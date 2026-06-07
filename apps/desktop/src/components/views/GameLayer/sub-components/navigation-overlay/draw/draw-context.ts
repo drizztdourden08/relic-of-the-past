@@ -1,8 +1,9 @@
+/* @layer renderer-components @kind logic */
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { ReachState } from '@shared/game/navigation/types';
 
 /** Shared drawing context passed to all draw functions. */
-export interface DrawContext {
+interface DrawContext {
   ctx: CanvasRenderingContext2D;
   scaleX: number;
   scaleY: number;
@@ -19,7 +20,7 @@ export interface DrawContext {
   getScreenWorldOrigin: (screenIndex: number) => { x: number; y: number };
 }
 
-export interface ViewportInfo {
+interface ViewportInfo {
   cameraX: number;
   cameraY: number;
   snesWidth: number;
@@ -30,14 +31,7 @@ export interface ViewportInfo {
   isGameplay: boolean;
 }
 
-export function buildDrawContext(
-  ctx: CanvasRenderingContext2D,
-  vp: ViewportInfo,
-  width: number,
-  height: number,
-  result: FloodFillResult,
-  isIndoors: boolean,
-): DrawContext {
+const buildDrawContext = (ctx: CanvasRenderingContext2D, vp: ViewportInfo, width: number, height: number, result: FloodFillResult, isIndoors: boolean): DrawContext => {
   const camX = vp.cameraX;
   const camY = vp.cameraY;
   const snesW = vp.snesWidth;
@@ -72,4 +66,7 @@ export function buildDrawContext(
     TILE_PX, dotRadius, screenWorldX, screenWorldY, width, height,
     getScreenWorldOrigin,
   };
-}
+};
+
+export { buildDrawContext };
+export type { DrawContext, ViewportInfo };

@@ -1,4 +1,6 @@
-import { BrowserWindow, screen, Rectangle } from 'electron';
+/* @layer electron-main @kind logic */
+import type { BrowserWindow, Rectangle } from 'electron';
+import { screen } from 'electron';
 import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { dirname } from 'path';
 import { getUserDataPath } from '../lib/paths';
@@ -24,11 +26,11 @@ const DEFAULT_STATE: WindowState = {
 // with titleBarStyle: 'hidden' (returns coordinates including invisible frame).
 let cachedNormalBounds: Rectangle | null = null;
 
-function getStatePath(): string {
+const getStatePath = (): string => {
   return getUserDataPath('config', 'window-state.json');
-}
+};
 
-function loadWindowState(): WindowState {
+const loadWindowState = (): WindowState => {
   try {
     const raw = readFileSync(getStatePath(), 'utf-8');
     const saved = JSON.parse(raw) as Partial<WindowState>;
@@ -64,27 +66,23 @@ function loadWindowState(): WindowState {
   } catch {
     return DEFAULT_STATE;
   }
-}
+};
 
-/**
- * Attach event listeners to track the window's normal (non-maximized) bounds.
- * Must be called right after window creation.
- */
-function trackWindowState(win: BrowserWindow): void {
-  function updateNormalBounds(): void {
-    if (!win.isMaximized() && !win.isFullScreen() && !win.isMinimized()) {
-      cachedNormalBounds = win.getContentBounds();
-    }
-  }
+const trackWindowState = (win: BrowserWindow): void => {
+  const updateNormalBounds = (): void => {
+        if (!win.isMaximized() && !win.isFullScreen() && !win.isMinimized()) {
+          cachedNormalBounds = win.getContentBounds();
+        }
+      };
 
   win.on('move', updateNormalBounds);
   win.on('resize', updateNormalBounds);
 
   // Initialize cache with current bounds
   updateNormalBounds();
-}
+};
 
-function saveWindowState(win: BrowserWindow): void {
+const saveWindowState = (win: BrowserWindow): void => {
   const isMaximized = win.isMaximized();
   const isFullscreen = win.isFullScreen();
 
@@ -108,6 +106,6 @@ function saveWindowState(win: BrowserWindow): void {
   } catch (err) {
     console.error('[window-state] Failed to save:', err);
   }
-}
+};
 
 export { loadWindowState, trackWindowState, saveWindowState };

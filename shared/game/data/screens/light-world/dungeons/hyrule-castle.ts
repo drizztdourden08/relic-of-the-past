@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
-export const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
+const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
   {
     id: 'hc-0x01',
     name: 'Dark Cross',
@@ -269,3 +270,5 @@ export const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
     ],
   },
 ];
+
+export { HYRULE_CASTLE_DUNGEON };

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { ImportForm } from './ImportForm';
 import { useMsuManager } from './msu/useMsuManager';

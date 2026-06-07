@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 ﻿interface RadioOption<T extends string = string> {
   value: T;
   label: string;

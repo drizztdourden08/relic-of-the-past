@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind hook */
 /**
  * usePauseMenu — provides pause menu state from the game UI store.
  * Mirrors useHud pattern: extracts relevant data, provides sprite config.
@@ -63,7 +64,7 @@ interface UsePauseMenuResult {
   spriteUrl: (filename: string) => string;
 }
 
-function usePauseMenu(scale: number): UsePauseMenuResult {
+const usePauseMenu = (scale: number): UsePauseMenuResult => {
   const inventory = useGameUIStore((s) => s.inventory);
   const equipment = useGameUIStore((s) => s.equipment);
   const dungeon = useGameUIStore((s) => s.dungeonProgress);
@@ -102,7 +103,7 @@ function usePauseMenu(scale: number): UsePauseMenuResult {
   const spriteUrl = (filename: string) => `${spritesBase}${filename}.png`;
 
   return { data, config, spriteUrl };
-}
+};
 
 export { usePauseMenu };
 export type { PauseMenuData, PauseMenuConfig, UsePauseMenuResult };

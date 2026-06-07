@@ -1,9 +1,10 @@
+/* @layer electron-main @kind logic */
 import { ipcMain } from 'electron';
 import type { Profile } from '../../../../shared/types/profile';
 import { listProfiles, createProfile, loadProfile, updateProfile, deleteProfile } from './store';
 import { loadAppState, saveAppState } from './app-state';
 
-function registerProfileHandlers(): void {
+const registerProfileHandlers = (): void => {
   ipcMain.handle('profiles:list', () => listProfiles());
 
   ipcMain.handle('profiles:create', async (_event, name: string, romFile: string, language?: string, msuPack?: string) => {
@@ -48,6 +49,6 @@ function registerProfileHandlers(): void {
     await updateProfile(profile);
     return profile;
   });
-}
+};
 
 export { registerProfileHandlers };

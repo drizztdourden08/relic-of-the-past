@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * DebugStateDisplay — dumps all synced game UI state as formatted text.
  * Purely for verification that the data pipeline works end-to-end.
@@ -14,18 +15,18 @@ const ITEM_NAMES = [
 
 const BOTTLE_NAMES = ['Empty', 'Mushroom', 'Green Potion', 'Red Potion', 'Blue Potion', 'Fairy', 'Bee', 'Good Bee'];
 
-function formatHearts(current: number, capacity: number): string {
+const formatHearts = (current: number, capacity: number): string => {
   const full = Math.floor(current / 8);
   const partial = current % 8;
   const max = Math.floor(capacity / 8);
   return `${full}${partial > 0 ? `+${partial}/8` : ''}/${max}`;
-}
+};
 
-function formatBitmask(value: number, bits: number): string {
+const formatBitmask = (value: number, bits: number): string => {
   return value.toString(2).padStart(bits, '0');
-}
+};
 
-function DebugStateDisplay() {
+const DebugStateDisplay = () => {
   const state = useGameUIStore();
 
   const { mode, gameMode, hud, inventory, equipment, dungeonProgress, text, map, floorIndicator, saveMenu } = state;
@@ -95,6 +96,6 @@ Cursor: ${saveMenu.cursorPosition} | From Module: ${saveMenu.sourceModule}
 Progress: ${saveMenu.progressIndicator}`}
     </div>
   );
-}
+};
 
 export { DebugStateDisplay };

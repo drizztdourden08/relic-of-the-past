@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind constants */
 import type { InventoryViewMode } from '@shared/game/items/sprites';
 
 const STORAGE_KEY = 'inventory-view-mode';

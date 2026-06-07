@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../types';
 
-export const LW_HOUSE_CONNECTIONS: ScreenConnection[] = [
+const LW_HOUSE_CONNECTIONS: ScreenConnection[] = [
   // Kakariko houses (all on lw-18: Kakariko NW)
   { from: 'lw-18', to: 'blinds-hideout', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'lw-18', to: 'elder-house', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
@@ -36,3 +37,5 @@ export const LW_HOUSE_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-28', to: 'two-brothers-house', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'two-brothers-house', to: 'maze-race-ledge', tags: ['transit:door', 'dir:one-way', 'ctx:exit'] },
 ];
+
+export { LW_HOUSE_CONNECTIONS };

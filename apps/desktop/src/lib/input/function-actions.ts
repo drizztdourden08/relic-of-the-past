@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * Function Actions — manages shortcut/cheat key bindings and fires callbacks
  * on rising-edge detection from keyboard, gamepad, and HID sources.

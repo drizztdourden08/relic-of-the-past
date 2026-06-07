@@ -1,8 +1,10 @@
+/* @layer electron-main @kind logic */
 import { autoUpdater } from 'electron-updater';
-import { ipcMain, BrowserWindow } from 'electron';
+import type { BrowserWindow } from 'electron';
+import { ipcMain } from 'electron';
 import { is } from '@electron-toolkit/utils';
 
-export interface UpdateInfo {
+interface UpdateInfo {
   version: string;
   releaseNotes: string;
   releaseDate: string;
@@ -10,9 +12,9 @@ export interface UpdateInfo {
 
 let updateAvailable: UpdateInfo | null = null;
 
-export const isPortable = !!process.env.PORTABLE_EXECUTABLE_DIR;
+const isPortable = !!process.env.PORTABLE_EXECUTABLE_DIR;
 
-export function initAutoUpdater(mainWindow: BrowserWindow): void {
+const initAutoUpdater = (mainWindow: BrowserWindow): void => {
   if (is.dev || isPortable) return;
 
   autoUpdater.setFeedURL({
@@ -75,9 +77,9 @@ export function initAutoUpdater(mainWindow: BrowserWindow): void {
       console.error('[updater] check failed:', err);
     });
   }, 5000);
-}
+};
 
-export function registerUpdaterHandlers(): void {
+const registerUpdaterHandlers = (): void => {
   ipcMain.handle('updater:isPortable', () => isPortable);
 
   ipcMain.handle('updater:check', async () => {
@@ -107,4 +109,7 @@ export function registerUpdaterHandlers(): void {
     const { app } = require('electron');
     return app.getVersion();
   });
-}
+};
+
+export { isPortable, initAutoUpdater, registerUpdaterHandlers };
+export type { UpdateInfo };

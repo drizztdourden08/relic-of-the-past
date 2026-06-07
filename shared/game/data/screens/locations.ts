@@ -1,16 +1,17 @@
+/* @layer shared-game @kind data */
 /**
  * Location registry — structural groups within areas.
  * Each location belongs to exactly one area.
  * New locations can be added via the Screen Editor wizard.
  */
 
-export interface LocationDef {
+interface LocationDef {
   id: string;
   name: string;
   areaId: string;
 }
 
-export const LOCATIONS: LocationDef[] = [
+const LOCATIONS: LocationDef[] = [
   // Central Hyrule
   { id: 'central-hyrule', name: 'Central Hyrule', areaId: 'central-hyrule' },
   { id: 'sanctuary', name: 'Sanctuary', areaId: 'central-hyrule' },
@@ -74,3 +75,6 @@ export const LOCATIONS: LocationDef[] = [
   { id: 'village-of-outcasts', name: 'Village of Outcasts', areaId: 'village-of-outcasts' },
   { id: 'thieves-town', name: "Thieves' Town", areaId: 'village-of-outcasts' },
 ];
+
+export { LOCATIONS };
+export type { LocationDef };

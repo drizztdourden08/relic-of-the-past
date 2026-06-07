@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind hook */
 import { useState, useCallback } from 'react';
 
 const useSaveStateSettings = () => {

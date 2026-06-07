@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 /**
  * HID Input Reader — reads raw HID reports from game controllers
  * using node-hid in the main process.
@@ -13,11 +14,12 @@
  */
 
 import HID from 'node-hid';
-import { BrowserWindow } from 'electron';
+import type { BrowserWindow } from 'electron';
 import { Worker } from 'worker_threads';
 import path from 'path';
 import { sendUsbInit } from './usb-init';
-import { NINTENDO_VID, NINTENDO_PIDS, toHex4, OpenDevice } from './hid-constants';
+import type { OpenDevice } from './hid-constants';
+import { NINTENDO_VID, NINTENDO_PIDS, toHex4 } from './hid-constants';
 import { filterGamepadCandidates, groupByVidPid, selectBestInterface } from './hid-discovery';
 import { buildSegmentFrames, buildPatternFrames, writeFramesDirect, buildSilentFrame } from './hid-haptics';
 

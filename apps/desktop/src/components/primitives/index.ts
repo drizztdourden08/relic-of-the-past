@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind barrel */
 export { Button } from './Button';
 export { IconButton } from './IconButton';
 export { Badge } from './Badge';

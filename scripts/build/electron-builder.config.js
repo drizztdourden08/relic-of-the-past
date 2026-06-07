@@ -1,3 +1,4 @@
+/* @layer tooling-scripts @kind config */
 /** @type {import('electron-builder').Configuration} */
 module.exports = {
   appId: 'com.relicofthepast.app',

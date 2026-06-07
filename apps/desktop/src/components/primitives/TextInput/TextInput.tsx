@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 ﻿import type { InputHTMLAttributes } from 'react';
 import './TextInput.css';
 import { type TextInputProps } from './types';

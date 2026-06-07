@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind hook */
 import { useEffect } from 'react';
 import { log } from '../../lib/log-bus';
 import type { LogChannel, LogLevel } from '../../lib/log-bus';

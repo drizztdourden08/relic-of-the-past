@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { saveState, loadState, getActiveProfileId } from '../../../lib/game';
 import { SaveSlot } from '../../compounds/SaveSlot';

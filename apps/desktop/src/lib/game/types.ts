@@ -1,9 +1,11 @@
+/* @layer bridge-wasm @kind types */
 interface EmscriptenFS {
   writeFile(path: string, data: Uint8Array | string): void;
   mkdir(path: string): void;
   readdir(path: string): string[];
   readFile(path: string): Uint8Array;
   analyzePath(path: string): { exists: boolean };
+  unlink(path: string): void;
 }
 
 interface EmscriptenModule {

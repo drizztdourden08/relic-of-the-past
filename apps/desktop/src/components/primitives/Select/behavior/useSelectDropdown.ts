@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 import { useState, useRef, useCallback, useEffect } from 'react';
 import type { SelectOption } from '../types';
 

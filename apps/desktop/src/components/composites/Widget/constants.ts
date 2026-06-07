@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 import type { WidgetDefinition, WidgetVisibility, SnapSide } from './types';
 
 /** Pixels reserved for the app titlebar */

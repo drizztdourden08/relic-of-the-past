@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * Core state machine hook for the HID Calibration Wizard.
  * Declares state/refs and delegates action handlers to useCalibrationActions.
@@ -7,10 +8,10 @@ import { webHidReader } from '../../../../../../lib/input/hid-reader';
 import type { WebHidRawReport } from '../../../../../../lib/input/hid-reader';
 import { findDeviceProfileByVidPid } from '@shared/input';
 import type { DeviceProfile } from '@shared/input';
-import { DEVICE_DATABASE } from '@shared/input/device-database';
+import { DEVICE_DATABASE } from '@shared/input/data/devices';
 import type { SelectOption } from '../../../../../primitives';
 import type {
-  AxisSubStep, CaptureState, GyroState, HidButtonMapping,
+  AxisSubStep, ByteStatus, CaptureState, GyroState, HidButtonMapping, HidControllerMap,
   IdleRecordResult, IdleState, InputItem, Phase,
   StickCandidate, StickSide, TriggerSide,
 } from '../types';
@@ -22,12 +23,12 @@ import type { ByteColorResult } from '../wizard-helpers';
 import { useCalibrationActions } from './useCalibrationActions';
 
 interface UseHidCalibrationProps {
-  onComplete: (map: import('../types').HidControllerMap) => void;
+  onComplete: (map: HidControllerMap) => void;
   onCancel: () => void;
   deviceKey?: string;
 }
 
-function useHidCalibration(props: UseHidCalibrationProps) {
+const useHidCalibration = (props: UseHidCalibrationProps) => {
   const { onComplete, deviceKey } = props;
 
   // ── State ──
@@ -56,7 +57,7 @@ function useHidCalibration(props: UseHidCalibrationProps) {
   const [inputPhaseActive, setInputPhaseActive] = useState(false);
   const [autoAdvance, setAutoAdvance] = useState(false);
   const [latestBytes, setLatestBytes] = useState<Uint8Array>(new Uint8Array(0));
-  const [byteStatuses, setByteStatuses] = useState<import('../types').ByteStatus[]>([]);
+  const [byteStatuses, setByteStatuses] = useState<ByteStatus[]>([]);
   const [gyroChangedBytes, setGyroChangedBytes] = useState<Set<number>>(new Set());
   const [log, setLog] = useState<string[]>([]);
   const [idleRecording, setIdleRecording] = useState<string | null>(null);
@@ -108,7 +109,7 @@ function useHidCalibration(props: UseHidCalibrationProps) {
   const leftTriggerByteRef = useRef<number | null>(null);
   const rightTriggerByteRef = useRef<number | null>(null);
   const finalizeTriggerRef = useRef<(c: StickCandidate) => void>(() => {});
-  const byteStatusesRef = useRef<import('../types').ByteStatus[]>([]);
+  const byteStatusesRef = useRef<ByteStatus[]>([]);
   const idleRecordBufRef = useRef<{ byteIndices: number[]; frames: number[][] }>({ byteIndices: [], frames: [] });
   const idleRecordTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const latestBytesRef = useRef<Uint8Array>(new Uint8Array(0));
@@ -230,6 +231,6 @@ function useHidCalibration(props: UseHidCalibrationProps) {
     getInstruction: () => getInstructionText(inputPhaseActive, items, activeIndex, captureState, axisSubStep),
     getByteColor: (idx: number): ByteColorResult => getByteColor(idx, byteStatuses, gyroState, gyroChangedBytes),
   };
-}
+};
 
 export { useHidCalibration };

@@ -1,3 +1,4 @@
+/* @layer shared-types @kind logic */
 interface PlaySession {
   id: string;
   profileId: string;

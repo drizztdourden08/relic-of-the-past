@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Architecture — Zones, Boundaries & Where Code Goes
 
 The map for keeping this project structured: the zones, the **dependency invariants**

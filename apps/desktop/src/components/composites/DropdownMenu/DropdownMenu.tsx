@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState, useLayoutEffect } from 'react';
 import { Portal } from '../../primitives/Portal';
 import { SubMenu } from './sub-components/SubMenu';

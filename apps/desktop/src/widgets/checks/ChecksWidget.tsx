@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 /**
  * ChecksWidget — Content for the Checks widget.
  * Wraps TrackerSummary + TrackerFilters + TrackerGroupTree with data subscriptions.

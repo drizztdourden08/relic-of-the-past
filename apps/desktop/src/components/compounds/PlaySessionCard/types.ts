@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 ﻿import type { PlaySession } from '@shared/types/session';
 
 interface PlaySessionCardProps {

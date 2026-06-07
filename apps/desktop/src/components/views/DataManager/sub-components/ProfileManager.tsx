@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * Profile Manager — list, create, and inspect game profiles.
  */

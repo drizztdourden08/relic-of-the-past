@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../types';
 
-export const LW_PASSAGES: ScreenDefinition[] = [
+const LW_PASSAGES: ScreenDefinition[] = [
   { id: 'hyrule-castle-secret-passage', name: 'Secret Passage', type: 'interior', world: 'light', location: 'Hyrule Castle', area: 'Hyrule Castle', roomIndex: 0x55, interior: { kind: 'passage' }, tags: ['env:underground', 'role:connector'] },
   { id: 'hyrule-castle-secret-entrance', name: 'Hyrule Castle Secret Entrance', type: 'interior', world: 'light', location: 'Hyrule Castle', area: 'Hyrule Castle', roomIndex: 0x0126, interior: { kind: 'passage' }, tags: ['env:underground', 'role:connector'] },
   { id: 'old-man-cave', name: 'Old Man Cave', type: 'interior', world: 'light', location: 'Death Mountain', area: 'Death Mountain', roomIndex: 0xF0, interior: { kind: 'passage' }, tags: ['env:underground', 'role:connector'] },
@@ -12,3 +13,5 @@ export const LW_PASSAGES: ScreenDefinition[] = [
   { id: 'fairy-ascension-cave-drop', name: 'Fairy Ascension Cave (Drop)', type: 'interior', world: 'light', location: 'Death Mountain', area: 'Death Mountain', roomIndex: 0xF8, interior: { kind: 'passage' }, tags: ['env:underground', 'traverse:fall'] },
   { id: 'fairy-ascension-cave-top', name: 'Fairy Ascension Cave (Top)', type: 'interior', world: 'light', location: 'Death Mountain', area: 'Death Mountain', roomIndex: 0xE8, interior: { kind: 'passage' }, tags: ['env:underground', 'role:connector'] },
 ];
+
+export { LW_PASSAGES };

@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 // Event name constants for the game core ↔ React bridge
 
 const GameplayEvents = {

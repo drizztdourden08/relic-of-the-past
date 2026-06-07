@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
-export const CASTLE_TOWER_DUNGEON: ScreenDefinition[] = [
+const CASTLE_TOWER_DUNGEON: ScreenDefinition[] = [
   {
     id: 'ct-0x20',
     name: 'Agahnim',
@@ -87,3 +88,5 @@ export const CASTLE_TOWER_DUNGEON: ScreenDefinition[] = [
     ],
   },
 ];
+
+export { CASTLE_TOWER_DUNGEON };

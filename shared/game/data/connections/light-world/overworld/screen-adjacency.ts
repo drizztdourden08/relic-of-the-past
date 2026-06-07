@@ -1,10 +1,11 @@
+/* @layer shared-game @kind generated */
 import type { ScreenConnection } from '../../../../types';
 
 /**
  * Light World overworld screen-to-screen adjacency connections.
  * Auto-generated from grid layout. Every adjacent screen pair is connected.
  */
-export const LW_SCREEN_ADJACENCY_CONNECTIONS: ScreenConnection[] = [
+const LW_SCREEN_ADJACENCY_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-00', to: 'lw-01', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'lw-00', to: 'lw-08', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'lw-01', to: 'lw-02', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
@@ -117,3 +118,5 @@ export const LW_SCREEN_ADJACENCY_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-3d', to: 'lw-3e', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'lw-3e', to: 'lw-3f', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
 ];
+
+export { LW_SCREEN_ADJACENCY_CONNECTIONS };

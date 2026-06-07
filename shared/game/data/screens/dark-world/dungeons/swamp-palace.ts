@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
-export const SWAMP_PALACE_DUNGEON: ScreenDefinition[] = [
+const SWAMP_PALACE_DUNGEON: ScreenDefinition[] = [
   {
     id: 'sp-0x06',
     name: 'Arrghus',
@@ -171,3 +172,5 @@ export const SWAMP_PALACE_DUNGEON: ScreenDefinition[] = [
     ],
   },
 ];
+
+export { SWAMP_PALACE_DUNGEON };

@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 export type { InventorySlot, InventoryCategory, InventoryViewMode } from './inventory-types';
 export {
   ITEM_SPRITE_MAP, INVENTORY_ITEMS,

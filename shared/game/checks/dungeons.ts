@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 ﻿import type { CheckDefinition } from '../types';
 
 const DUNGEON_CHECKS: CheckDefinition[] = [

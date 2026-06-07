@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import './TagPicker.css';
 
 interface TagPickerOption<T extends string = string> {

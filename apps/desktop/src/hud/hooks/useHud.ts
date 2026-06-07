@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind hook */
 import { useGameUIStore } from '../../stores/game-ui-store';
 import { getSpritesBase } from '@shared/game/items/sprites';
 
@@ -36,7 +37,7 @@ interface UseHudResult {
   spriteUrl: (filename: string) => string;
 }
 
-function useHud(scale: number): UseHudResult {
+const useHud = (scale: number): UseHudResult => {
   const hud = useGameUIStore((s) => s.hud);
   const spritesBase = getSpritesBase();
 
@@ -56,7 +57,7 @@ function useHud(scale: number): UseHudResult {
   const spriteUrl = (filename: string) => `${spritesBase}${filename}.png`;
 
   return { data, config, spriteUrl };
-}
+};
 
 export { useHud, SNES_WIDTH, SNES_HEIGHT, SNES_TILE, HUD_BAR_HEIGHT };
 export type { HudData, HudConfig, UseHudResult };

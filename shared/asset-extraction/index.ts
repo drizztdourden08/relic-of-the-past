@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Asset extraction pipeline — TypeScript port of core/zelda3/assets/ Python tools.
  * Eliminates the Python runtime dependency for end users.

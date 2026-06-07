@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Master volume control via Web Audio GainNode.
  * Inserts a gain node between SDL2's ScriptProcessorNode and the AudioContext destination.
@@ -9,25 +10,23 @@ let gainNode: GainNode | null = null;
 let pendingVolume: number | null = null;
 let pendingPollId: ReturnType<typeof setInterval> | null = null;
 
-function getSDL2Audio(): { audioContext: AudioContext; scriptProcessorNode: AudioNode } | null {
+const getSDL2Audio = (): { audioContext: AudioContext; scriptProcessorNode: AudioNode } | null => {
   const mod = getModule();
   const sdl2 = (mod as any)?.SDL2 as
     | { audioContext?: AudioContext; audio?: { scriptProcessorNode?: AudioNode } }
     | undefined;
   if (!sdl2?.audioContext || !sdl2?.audio?.scriptProcessorNode) return null;
   return { audioContext: sdl2.audioContext, scriptProcessorNode: sdl2.audio.scriptProcessorNode };
-}
+};
 
-/** Stop any active pending-volume poll. */
-function clearPendingPoll(): void {
+const clearPendingPoll = (): void => {
   if (pendingPollId !== null) {
     clearInterval(pendingPollId);
     pendingPollId = null;
   }
-}
+};
 
-/** Start polling for SDL2 readiness so we can apply the pending volume. */
-function startPendingPoll(): void {
+const startPendingPoll = (): void => {
   clearPendingPoll();
   pendingPollId = setInterval(() => {
     if (pendingVolume === null) {
@@ -42,13 +41,9 @@ function startPendingPoll(): void {
       initMasterVolume(vol);
     }
   }, 50);
-}
+};
 
-/**
- * Hook into the SDL2 audio pipeline to insert a master gain node.
- * Must be called after the WASM module is running and audio is initialized.
- */
-function initMasterVolume(volume: number): void {
+const initMasterVolume = (volume: number): void => {
   const sdl2 = getSDL2Audio();
   if (!sdl2) {
     pendingVolume = volume;
@@ -70,55 +65,39 @@ function initMasterVolume(volume: number): void {
   source.disconnect();
   source.connect(gainNode);
   gainNode.connect(ctx.destination);
-}
+};
 
-/**
- * Set the master volume (0–100). Works whether or not audio is initialized.
- */
-function setMasterVolume(volume: number): void {
+const setMasterVolume = (volume: number): void => {
   if (gainNode) {
     gainNode.gain.value = volume / 100;
   } else {
     initMasterVolume(volume);
   }
-}
+};
 
-/**
- * Get pending volume if audio wasn't ready when first set.
- */
-function getPendingVolume(): number | null {
+const getPendingVolume = (): number | null => {
   return pendingVolume;
-}
+};
 
-/**
- * Reset state when game stops.
- */
-function resetMasterVolume(): void {
+const resetMasterVolume = (): void => {
   gainNode = null;
   pendingVolume = null;
   clearPendingPoll();
-}
+};
 
-/**
- * Suspend audio output (mute by suspending AudioContext).
- * Used when game is paused to silence music.
- */
-function suspendAudio(): void {
+const suspendAudio = (): void => {
   const sdl2 = getSDL2Audio();
   if (sdl2?.audioContext.state === 'running') {
     sdl2.audioContext.suspend();
   }
-}
+};
 
-/**
- * Resume audio output after pause.
- */
-function resumeAudio(): void {
+const resumeAudio = (): void => {
   const sdl2 = getSDL2Audio();
   if (sdl2?.audioContext.state === 'suspended') {
     sdl2.audioContext.resume();
   }
-}
+};
 
 export {
   getPendingVolume,

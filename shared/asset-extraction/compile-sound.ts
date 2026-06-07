@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Sound bank asset compilation — extract and compile music/SFX data.
  */
@@ -7,7 +8,7 @@ import { bufToArr } from './asset-builder';
 import { extractSoundData } from './music/extract-music';
 import { compileSoundBank, produceLoadableSeq } from './music/compile-music';
 
-function buildSoundBanks(rom: RomData, A: AssetBuilder): void {
+const buildSoundBanks = (rom: RomData, A: AssetBuilder): void => {
   const extracted = extractSoundData(rom);
 
   for (const song of ['intro', 'indoor', 'ending']) {
@@ -20,6 +21,6 @@ function buildSoundBanks(rom: RomData, A: AssetBuilder): void {
     const loadableSeq = produceLoadableSeq(compiled.memory);
     A.addUint8(`kSoundBank_${song}`, bufToArr(loadableSeq));
   }
-}
+};
 
 export { buildSoundBanks };

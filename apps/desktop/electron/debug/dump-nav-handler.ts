@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 /**
  * Debug CLI: --dump-nav=N
  *
@@ -12,15 +13,15 @@ import { ipcMain, app } from 'electron';
 import { join } from 'path';
 import { writeFile, mkdir } from 'fs/promises';
 
-function parseDumpNavSlot(): number | null {
+const parseDumpNavSlot = (): number | null => {
   for (const arg of process.argv) {
     const match = arg.match(/^--dump-nav=(\d+)$/);
     if (match) return parseInt(match[1], 10);
   }
   return null;
-}
+};
 
-export function registerDumpNavHandler(): void {
+const registerDumpNavHandler = (): void => {
   const slot = parseDumpNavSlot();
 
   ipcMain.handle('debug:getDumpNavSlot', () => slot);
@@ -36,4 +37,6 @@ export function registerDumpNavHandler(): void {
     console.log(`[dump-nav] Written to: ${outPath}`);
     return outPath;
   });
-}
+};
+
+export { registerDumpNavHandler };

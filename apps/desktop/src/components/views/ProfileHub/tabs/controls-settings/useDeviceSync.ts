@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useDeviceSync — detect and track connected input devices.
  */
@@ -6,7 +7,7 @@ import { useState, useEffect } from 'react';
 import type { DetectedDevice } from '@shared/types/controls';
 import { getInputManager } from '../../../../../lib/input/input-manager';
 
-function useDeviceSync() {
+const useDeviceSync = () => {
   const [devices, setDevices] = useState<DetectedDevice[]>([]);
 
   useEffect(() => {
@@ -21,6 +22,6 @@ function useDeviceSync() {
   const filteredDevices = devices.filter(d => !d.displayName.toLowerCase().includes('mouse'));
 
   return { devices, filteredDevices };
-}
+};
 
 export { useDeviceSync };

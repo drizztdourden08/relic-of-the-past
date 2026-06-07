@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /**
  * Global Flood Fill — Orchestrates BFS across all overworld screens.
  *
@@ -15,26 +16,19 @@ import type { FloodFillResult } from '../types';
 import { floodFillScreen } from '../flood-fill/orchestrator';
 import { INVENTORY_PROGRESSION } from './requirement-detector';
 
-export interface GlobalFloodOptions {
+interface GlobalFloodOptions {
   getGrid: (screenIndex: number) => number[][];
   tileContext: TileAttrContext;
   screenIndices: number[];
 }
 
-export interface GlobalFloodResult {
+interface GlobalFloodResult {
   screens: Map<number, Pick<RegionNavData, 'totalTiles' | 'freeTileCount' | 'maxReachableTileCount'>>;
   /** Full flood results per screen (no-inventory run), for downstream analysis */
   floodResults: Map<number, FloodFillResult>;
 }
 
-/**
- * Run flood fill across all specified screens and collect tile statistics.
- *
- * For each screen:
- *   - BFS with empty inventory → freeTileCount
- *   - BFS with full inventory → maxReachableTileCount
- */
-export function runGlobalFlood(options: GlobalFloodOptions): GlobalFloodResult {
+const runGlobalFlood = (options: GlobalFloodOptions): GlobalFloodResult => {
   const { getGrid, tileContext, screenIndices } = options;
   const screens = new Map<number, Pick<RegionNavData, 'totalTiles' | 'freeTileCount' | 'maxReachableTileCount'>>();
   const floodResults = new Map<number, FloodFillResult>();
@@ -73,4 +67,7 @@ export function runGlobalFlood(options: GlobalFloodOptions): GlobalFloodResult {
   }
 
   return { screens, floodResults };
-}
+};
+
+export { runGlobalFlood };
+export type { GlobalFloodOptions, GlobalFloodResult };

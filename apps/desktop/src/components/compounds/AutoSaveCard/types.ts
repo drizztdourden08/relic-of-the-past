@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 interface AutoSaveCardProps {
   id: string;
   timestamp: number;

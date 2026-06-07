@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState, useRef } from 'react';
 import type { NormalSaveCardProps } from './types';
 import './NormalSaveCard.css';

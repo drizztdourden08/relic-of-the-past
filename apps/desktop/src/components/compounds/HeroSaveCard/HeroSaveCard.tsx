@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import type { HeroSaveCardProps } from './types';
 import './HeroSaveCard.css';
 

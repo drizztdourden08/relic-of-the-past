@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind hook */
 import { useEffect } from 'react';
 import type { PageId, ConfirmDialog } from '../types';
 

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 // ─── ALttP MSU-1 Track Descriptions ───
 // Standard tracks (1-36) + Deluxe tracks (37-112)
 const MSU_TRACK_DESCRIPTIONS: Record<number, string> = {

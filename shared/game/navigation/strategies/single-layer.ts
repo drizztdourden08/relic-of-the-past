@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { TilePassability, GridPos, ReachState } from '../types';
 import type { TileAttrContext } from '../tile-attrs';
 import { getHookshotTargetTiles } from '../tile-attrs';
@@ -9,7 +10,7 @@ import { bodyTiles, getNewTiles, canLeaveLedge, evaluateEntry } from './bfs-help
  * Single-layer BFS strategy. No cross-layer transitions.
  * Used for overworld, single-layer indoor rooms, and staircaseType 2 (layer locked).
  */
-export class SingleLayerStrategy implements LayerStrategy {
+class SingleLayerStrategy implements LayerStrategy {
   readonly layerCount = 1 as const;
   private readonly grid: TilePassability[][];
   private readonly rawAttr: number[][];
@@ -123,3 +124,5 @@ export class SingleLayerStrategy implements LayerStrategy {
     return { reachable, reachableCount, reqGrid, hookTargets };
   }
 }
+
+export { SingleLayerStrategy };

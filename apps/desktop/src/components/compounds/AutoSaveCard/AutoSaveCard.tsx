@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 import type { AutoSaveCardProps } from './types';
 import './AutoSaveCard.css';
 

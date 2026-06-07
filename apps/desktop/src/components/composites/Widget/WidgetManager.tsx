@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * WidgetManager — Layout engine for all widgets.
  *

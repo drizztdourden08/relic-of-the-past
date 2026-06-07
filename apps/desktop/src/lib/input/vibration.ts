@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * Global controller vibration API.
  *
@@ -17,11 +18,7 @@ interface VibrateOptions {
   intensity?: number;
 }
 
-/**
- * Vibrate a Gamepad-API controller (Xbox, generic) using the standard
- * vibrationActuator API available in Chromium.
- */
-function vibrateGamepad(gamepadIndex: number, durationMs: number, opts?: VibrateOptions): void {
+const vibrateGamepad = (gamepadIndex: number, durationMs: number, opts?: VibrateOptions): void => {
   const intensity = opts?.intensity ?? 0.7;
   try {
     const gp = navigator.getGamepads()[gamepadIndex];
@@ -37,64 +34,39 @@ function vibrateGamepad(gamepadIndex: number, durationMs: number, opts?: Vibrate
       });
     }
   } catch { /* ignore — not all browsers/drivers support this */ }
-}
+};
 
-/**
- * Vibrate a Gamepad-API controller with a multi-segment pattern.
- * Each segment has a duration and intensity, with gapMs silence between segments.
- */
-function vibrateGamepadPattern(
-  gamepadIndex: number,
-  pattern: { durationMs: number; intensity: number }[],
-  gapMs: number = 0,
-): void {
+const vibrateGamepadPattern = (gamepadIndex: number, pattern: { durationMs: number; intensity: number }[], gapMs: number = 0): void => {
   let delay = 0;
   for (let i = 0; i < pattern.length; i++) {
     const seg = pattern[i];
     setTimeout(() => vibrateGamepad(gamepadIndex, seg.durationMs, { intensity: seg.intensity }), delay);
     delay += seg.durationMs + (i < pattern.length - 1 ? gapMs : 0);
   }
-}
+};
 
-/**
- * Vibrate an HID controller via the main-process batch pipeline (worker thread).
- */
-function vibrateHid(deviceKey: string, durationMs: number, opts?: VibrateOptions): void {
+const vibrateHid = (deviceKey: string, durationMs: number, opts?: VibrateOptions): void => {
   const intensity = opts?.intensity ?? 0.7;
   window.api.vibratePattern(deviceKey, [{ durationMs, intensity }], 0);
-}
+};
 
-/**
- * Convenience: vibrate whatever controller type, by key.
- *   - "gamepad-N" → Gamepad API
- *   - "xxxx:yyyy" → HID
- */
-function vibrate(target: string, durationMs: number, opts?: VibrateOptions): void {
+const vibrate = (target: string, durationMs: number, opts?: VibrateOptions): void => {
   if (target.startsWith('gamepad-')) {
     const idx = parseInt(target.replace('gamepad-', ''), 10);
     if (!isNaN(idx)) vibrateGamepad(idx, durationMs, opts);
   } else {
     vibrateHid(target, durationMs, opts);
   }
-}
+};
 
-/**
- * Convenience: vibrate a pattern on whatever controller type, by key.
- *   - "gamepad-N" → Gamepad API pattern
- *   - "xxxx:yyyy" → HID pattern via IPC
- */
-function vibratePattern(
-  target: string,
-  pattern: { durationMs: number; intensity: number }[],
-  gapMs: number = 0,
-): void {
+const vibratePattern = (target: string, pattern: { durationMs: number; intensity: number }[], gapMs: number = 0): void => {
   if (target.startsWith('gamepad-')) {
     const idx = parseInt(target.replace('gamepad-', ''), 10);
     if (!isNaN(idx)) vibrateGamepadPattern(idx, pattern, gapMs);
   } else {
     window.api.vibratePattern(target, pattern, gapMs);
   }
-}
+};
 
 export {
   vibrate,

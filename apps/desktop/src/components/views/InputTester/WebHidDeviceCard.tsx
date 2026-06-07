@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 /**
  * WebHidDeviceCard — Renders a single WebHID device's button/axis/raw state.
  */

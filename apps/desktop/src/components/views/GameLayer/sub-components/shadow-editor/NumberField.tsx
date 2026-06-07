@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useCallback, useRef, useState, useEffect } from 'react';
 import './NumberField.css';
 
@@ -12,7 +13,7 @@ interface NumberFieldProps {
   suffix?: string;
 }
 
-function NumberField({ value, onChange, label, icon, min, max, step = 1, suffix }: NumberFieldProps) {
+const NumberField = ({ value, onChange, label, icon, min, max, step = 1, suffix }: NumberFieldProps) => {
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -95,6 +96,6 @@ function NumberField({ value, onChange, label, icon, min, max, step = 1, suffix 
       )}
     </div>
   );
-}
+};
 
 export { NumberField };

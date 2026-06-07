@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 import type { WidgetDefinition, WidgetState, WidgetLayout } from '../types';
 import { WIDGET_DEFINITIONS } from '../constants';
 

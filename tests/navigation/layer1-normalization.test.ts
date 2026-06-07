@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 /**
  * Layer1 normalization — verifies that 0x1C (default BG1 floor fill) is
  * correctly normalised to 0x00, and that the split tooltip never triggers
@@ -47,11 +48,7 @@ beforeAll(async () => {
   mod.ccall('WasmInitHeadless', 'number', [], []);
 }, 30000);
 
-/**
- * Replicate the wasm-bridge's normalization logic for dual layers.
- * 0x1C is treated as filler on either layer — normalized to the other layer's value.
- */
-function readNormalizedDualLayers(ptr: number): { layer0: number[][]; layer1: number[][] } | null {
+const readNormalizedDualLayers = (ptr: number): { layer0: number[][]; layer1: number[][] } | null => {
   const layer0: number[][] = Array.from({ length: 64 }, () => new Array(64));
   const layer1: number[][] = Array.from({ length: 64 }, () => new Array(64));
   let hasDifference = false;
@@ -68,7 +65,7 @@ function readNormalizedDualLayers(ptr: number): { layer0: number[][]; layer1: nu
   }
   if (!hasDifference) return null;
   return { layer0, layer1 };
-}
+};
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 

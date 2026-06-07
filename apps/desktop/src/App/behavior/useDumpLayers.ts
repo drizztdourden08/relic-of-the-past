@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind hook */
 /**
  * Debug hook: reacts to --dump-layers=N [--hover-tile=col,row] CLI flags.
  *
@@ -231,7 +232,7 @@ const useDumpLayers = ({ activeProfile, loadProfileForGame, openNavWidget }: Dum
   }, [activeProfile]);
 };
 
-function waitForElement(selector: string, timeoutMs: number): Promise<Element | null> {
+const waitForElement = (selector: string, timeoutMs: number): Promise<Element | null> => {
   return new Promise((resolve) => {
     const existing = document.querySelector(selector);
     if (existing) { resolve(existing); return; }
@@ -250,9 +251,9 @@ function waitForElement(selector: string, timeoutMs: number): Promise<Element | 
       resolve(null);
     }, timeoutMs);
   });
-}
+};
 
-function findSplitTiles(grids: { layer0: number[][]; layer1: number[][] }): Array<{ col: number; row: number; layer0: number; layer1: number }> {
+const findSplitTiles = (grids: { layer0: number[][]; layer1: number[][] }): Array<{ col: number; row: number; layer0: number; layer1: number }> => {
   const splits: Array<{ col: number; row: number; layer0: number; layer1: number }> = [];
   for (let r = 0; r < 64; r++) {
     for (let c = 0; c < 64; c++) {
@@ -262,6 +263,6 @@ function findSplitTiles(grids: { layer0: number[][]; layer1: number[][] }): Arra
     }
   }
   return splits;
-}
+};
 
 export { useDumpLayers };

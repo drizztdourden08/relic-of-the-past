@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 ﻿import './Toggle.css';
 import { type ToggleProps } from './types';
 

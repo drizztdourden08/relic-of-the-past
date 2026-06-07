@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 import { HudNumber } from '../../primitives/HudNumber';
 import { HudSprite } from '../../primitives/HudSprite';
 

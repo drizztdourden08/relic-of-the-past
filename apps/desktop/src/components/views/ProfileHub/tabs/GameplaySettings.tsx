@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout, type Section } from '../../../composites/SettingsLayout';
@@ -111,15 +112,15 @@ const SECTIONS: Section[] = [
   },
 ];
 
-function isDisabled(key: string, settings: GameSettings): boolean {
+const isDisabled = (key: string, settings: GameSettings): boolean => {
   if (key === 'itemSwitchLRLimit') return !settings.itemSwitchLR;
   if (key === 'saveHoldDuration') return !settings.enhancedSaveSlotShortcut;
   if (key === 'autoSaveIntervalSeconds') return !settings.autoSaveEnabled;
   if (key === 'autoSaveMaxEntries') return !settings.autoSaveEnabled;
   return false;
-}
+};
 
-function renderControl(key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null {
+const renderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
   if (key === 'autoSaveEnabled') {
     return (
       <Toggle
@@ -196,7 +197,7 @@ function renderControl(key: string, settings: GameSettings, onChange: (patch: Pa
     );
   }
   return null;
-}
+};
 
 const GameplaySettings = (props: GameplaySettingsProps) => {
   const { settings, onChange } = props;

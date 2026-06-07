@@ -1,3 +1,4 @@
+<!-- @layer claude-config @kind doc -->
 ---
 name: electron
 description: Work on this project's Electron layer — main process, preload, IPC between renderer and main, custom protocols, window management, native modules (HID/USB), and the electron-vite build. Use when adding/changing an IPC channel, a main-process handler, preload API surface, window behavior, file/userData access, or anything in apps/desktop/electron/. Also when a renderer feature needs Node/OS access it can't do itself.

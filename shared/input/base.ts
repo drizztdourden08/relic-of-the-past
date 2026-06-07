@@ -1,3 +1,4 @@
+/* @layer shared-input @kind logic */
 /**
  * Base controller class — abstract definition for all controller implementations.
  * Each concrete controller class self-registers and becomes the single source of truth
@@ -67,7 +68,7 @@ interface ControllerAxis {
 
 // ── Abstract base class ──
 
-export abstract class BaseController {
+abstract class BaseController {
   // ── Identity & Matching ──
   abstract readonly id: string;
   abstract readonly name: string;
@@ -141,3 +142,4 @@ export type {
   StickDefaults,
   VibrationSegment
 };
+export { BaseController };

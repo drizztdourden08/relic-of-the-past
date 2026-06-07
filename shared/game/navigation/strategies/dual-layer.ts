@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { TilePassability, GridPos, ReachState } from '../types';
 import type { TileAttrContext } from '../tile-attrs';
 import { getHookshotTargetTiles } from '../tile-attrs';
@@ -12,7 +13,7 @@ const SWAP_STAIR_ATTRS = new Set([0x1E, 0x1F, 0x3E, 0x3F]);
  * Dual-layer BFS strategy for indoor rooms with layer-swap stairs and ledge transitions.
  * Tracks reachability on both layers and handles cross-layer movement via stairs and ledges.
  */
-export class DualLayerStrategy implements LayerStrategy {
+class DualLayerStrategy implements LayerStrategy {
   readonly layerCount = 2 as const;
   private readonly grids: [TilePassability[][], TilePassability[][]];
   private readonly rawAttrs: [number[][], number[][]];
@@ -324,3 +325,5 @@ export class DualLayerStrategy implements LayerStrategy {
     return { reachable, reachableCount, reqGrid, hookTargets, tileLayer, reachableByLayer };
   }
 }
+
+export { DualLayerStrategy };

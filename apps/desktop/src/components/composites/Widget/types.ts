@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 /**
  * Widget Window System — Type definitions.
  */

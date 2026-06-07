@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 type ToastVariant = 'danger' | 'warning' | 'info';
 
 interface ToastItem {

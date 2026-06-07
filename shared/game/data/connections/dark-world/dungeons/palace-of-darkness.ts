@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../../types';
 
-export const DW_PALACE_OF_DARKNESS_CONNECTIONS: ScreenConnection[] = [
+const DW_PALACE_OF_DARKNESS_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-0a', to: 'pod-0x4a', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'pod-0x09', to: 'pod-0x4b', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'pod-0x09', to: 'pod-0x4a', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
@@ -31,3 +32,5 @@ export const DW_PALACE_OF_DARKNESS_CONNECTIONS: ScreenConnection[] = [
   { from: 'pod-0x4a', to: 'dw-0a', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
   { from: 'pod-0x6a', to: 'dw-0a', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
 ];
+
+export { DW_PALACE_OF_DARKNESS_CONNECTIONS };

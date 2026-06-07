@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 /**
  * Zelda3 receive-item index → tracker item name mapping.
  *

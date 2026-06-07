@@ -1,14 +1,17 @@
+/* @layer renderer-components @kind logic */
 /**
  * Widget Store — localStorage + profile-based persistence for widget layouts.
  *
  * Two layers:
  *  1. localStorage ("widget-layout"): current in-memory layout for fast restore on reload.
- *  2. Per-profile IPC: saved/loaded via window.api (tracker state path) for cross-session persistence.
+ *  2. Per-profile persistence: saved/loaded via lib/tracker-state-io (typed IPC wrapper) for cross-session persistence.
  */
 
 import type { WidgetLayout, WidgetState } from '../types';
 import { WIDGET_DEFINITIONS } from '../constants';
 import { createDefaultLayout, createDefaultWidgetState } from './createWidgetState';
+import { loadTrackerStateBlob, saveTrackerStateBlob } from '../../../../lib/tracker-state-io';
+import type { TrackerStateBlob } from '../../../../lib/tracker-state-io';
 
 const STORAGE_KEY = 'widget-layout';
 
@@ -34,24 +37,23 @@ const saveLayoutLocal = (layout: WidgetLayout): void => {
 
 const loadLayoutForProfile = async (profileId: string): Promise<WidgetLayout> => {
   try {
-    const state: any = await window.api.loadTrackerState(profileId);
-    if (state?.widgetLayout) {
-      return ensureAllWidgets(state.widgetLayout);
-    }
+    const state = await loadTrackerStateBlob(profileId);
+    const layout = state?.widgetLayout as WidgetLayout | undefined;
+    if (layout) return ensureAllWidgets(layout);
   } catch { /* fall through */ }
   return loadLayoutLocal(); // Fallback to local layout
 }
 
 const saveLayoutForProfile = async (profileId: string, layout: WidgetLayout): Promise<void> => {
   // Load existing tracker state and merge widget layout into it
-  let existing: any = {};
+  let existing: TrackerStateBlob = {};
   try {
-    const raw = await window.api.loadTrackerState(profileId);
-    if (raw && typeof raw === 'object') existing = raw;
+    const raw = await loadTrackerStateBlob(profileId);
+    if (raw) existing = raw;
   } catch { /* new state */ }
 
   existing.widgetLayout = layout;
-  await window.api.saveTrackerState(profileId, existing);
+  await saveTrackerStateBlob(profileId, existing);
 }
 
 // ─── Helpers ───

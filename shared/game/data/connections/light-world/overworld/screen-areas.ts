@@ -1,10 +1,11 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../../types';
 
 /**
  * Connections between Light World overworld screens and logical area nodes.
  * Each logical area connects to a representative screen in its zone.
  */
-export const LW_SCREEN_AREA_CONNECTIONS: ScreenConnection[] = [
+const LW_SCREEN_AREA_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-2b', to: 'light-world', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'lw-2b', to: 'light-world-rain', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'lw-27', to: 'zoras-river', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
@@ -38,3 +39,5 @@ export const LW_SCREEN_AREA_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-3b', to: 'lake-hylia-island', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'lw-1c', to: 'pyramid-ledge-lw', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
 ];
+
+export { LW_SCREEN_AREA_CONNECTIONS };

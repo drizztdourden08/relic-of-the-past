@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import { findShortestPath, findUnreachableScreens, getGraphStats } from '../../shared/game/navigation';
 

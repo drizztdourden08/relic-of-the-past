@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 /**
  * DeviceCard — shows a detected input device (gamepad or keyboard).
  * Two-column layout: left = controller icon (acts as status light + click to assign),

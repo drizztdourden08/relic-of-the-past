@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../../types';
 
-export const DW_ICE_PALACE_CONNECTIONS: ScreenConnection[] = [
+const DW_ICE_PALACE_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-35', to: 'ip-0x9e', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'ip-0x0e', to: 'ip-0x1e', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
   { from: 'ip-0x1e', to: 'ip-0x1f', tags: ['transit:walk', 'dir:two-way', 'ctx:internal'] },
@@ -39,3 +40,5 @@ export const DW_ICE_PALACE_CONNECTIONS: ScreenConnection[] = [
   { from: 'ip-0x5e', to: 'ip-0x4e', tags: ['transit:hole', 'dir:one-way', 'ctx:internal'] },
   { from: 'ip-0x4f', to: 'ip-0x3f', tags: ['transit:hole', 'dir:one-way', 'ctx:internal'] },
 ];
+
+export { DW_ICE_PALACE_CONNECTIONS };

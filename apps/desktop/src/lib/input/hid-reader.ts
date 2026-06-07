@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * HID Input Reader — parses raw HID reports received from the main process
  * (node-hid via IPC) into structured button/axis state.

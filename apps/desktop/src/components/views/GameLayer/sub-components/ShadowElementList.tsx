@@ -1,9 +1,10 @@
+/* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { useShadowEditorStore } from '../../../../stores/shadow-editor-store';
 import { wasmGetViewportInfo } from '../../../../lib/game';
 import './ShadowElementList.css';
 
-function ShadowElementList() {
+const ShadowElementList = () => {
   const {
     open,
     selectedElementId,
@@ -113,6 +114,6 @@ function ShadowElementList() {
       )}
     </div>
   );
-}
+};
 
 export { ShadowElementList };

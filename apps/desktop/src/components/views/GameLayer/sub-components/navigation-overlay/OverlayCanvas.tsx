@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useRef, useEffect, useMemo } from 'react';
 import { useNavigationOverlayStore } from '../../../../../stores/navigation-overlay-store';
 import { useGameUIStore } from '../../../../../stores/game-ui-store';
@@ -17,7 +18,7 @@ interface OverlayCanvasProps extends Props {
   mouseStateRef: React.RefObject<MouseState>;
 }
 
-export function OverlayCanvas({ width, height, gameRunning, mouseStateRef }: OverlayCanvasProps) {
+const OverlayCanvas = ({ width, height, gameRunning, mouseStateRef }: OverlayCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
   const { visible, result, results, connections, fallHoleSpawns, respawnEntIds, setLockedPath } = useNavigationOverlayStore();
@@ -94,4 +95,6 @@ export function OverlayCanvas({ width, height, gameRunning, mouseStateRef }: Ove
       }}
     />
   );
-}
+};
+
+export { OverlayCanvas };

@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
-export const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
+const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
   {
     id: 'tr-0x04',
     name: 'Trinexx',
@@ -207,3 +208,5 @@ export const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     ],
   },
 ];
+
+export { TURTLE_ROCK_DUNGEON };

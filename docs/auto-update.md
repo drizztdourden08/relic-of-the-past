@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Auto-Update
 
 The app includes a built-in update system that checks for new releases and can download and apply them automatically.

@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 /**
  * A* pathfinding test on room 0x62 — validates layer-aware routing
  * and ledge traversal (south-facing 0x28 ledges between Link and target).
@@ -28,7 +29,7 @@ let wasmModule: WasmModule;
 let layer0: number[][];
 let layer1: number[][];
 
-function readGrid(mod: WasmModule, ptr: number, offset: number): number[][] {
+const readGrid = (mod: WasmModule, ptr: number, offset: number): number[][] => {
   const grid: number[][] = Array.from({ length: 64 }, () => new Array(64));
   for (let r = 0; r < 64; r++) {
     for (let c = 0; c < 64; c++) {
@@ -36,7 +37,7 @@ function readGrid(mod: WasmModule, ptr: number, offset: number): number[][] {
     }
   }
   return grid;
-}
+};
 
 beforeAll(async () => {
   const nodeRequire = createRequire(import.meta.url);

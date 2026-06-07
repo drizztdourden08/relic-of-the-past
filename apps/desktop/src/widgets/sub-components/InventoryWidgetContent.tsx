@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 /**
  * InventoryWidgetContent — Content for the Inventory widget.
  * Wraps TrackerInventory with data subscription + view mode state.

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useShadowEditorStore } from '../../../../../stores/shadow-editor-store';
 import './HeightLevelPicker.css';
 
@@ -6,7 +7,7 @@ interface HeightLevelPickerProps {
   onChange: (value: number) => void;
 }
 
-function HeightLevelPicker({ value, onChange }: HeightLevelPickerProps) {
+const HeightLevelPicker = ({ value, onChange }: HeightLevelPickerProps) => {
   const heightLevels = useShadowEditorStore((s) => s.heightLevels);
 
   return (
@@ -31,6 +32,6 @@ function HeightLevelPicker({ value, onChange }: HeightLevelPickerProps) {
       })}
     </div>
   );
-}
+};
 
 export { HeightLevelPicker };

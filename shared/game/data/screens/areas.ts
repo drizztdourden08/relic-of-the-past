@@ -1,16 +1,17 @@
+/* @layer shared-game @kind data */
 /**
  * Area registry — broad geographic zones.
  * Each area groups multiple locations under one filterable region.
  * New areas can be added via the Screen Editor wizard.
  */
 
-export interface AreaDef {
+interface AreaDef {
   id: string;
   name: string;
   world: 'light' | 'dark' | 'both';
 }
 
-export const AREAS: AreaDef[] = [
+const AREAS: AreaDef[] = [
   // Light World
   { id: 'central-hyrule', name: 'Central Hyrule', world: 'light' },
   { id: 'hyrule-castle', name: 'Hyrule Castle', world: 'light' },
@@ -31,3 +32,6 @@ export const AREAS: AreaDef[] = [
   { id: 'skull-woods-area', name: 'Skull Woods Area', world: 'dark' },
   { id: 'village-of-outcasts', name: 'Village Of Outcasts', world: 'dark' },
 ];
+
+export { AREAS };
+export type { AreaDef };

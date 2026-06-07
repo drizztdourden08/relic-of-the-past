@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /**
  * Grouping engine for the tracker — allows users to nest checks by
  * world, area, location type, dungeon, screen, etc.
@@ -50,7 +51,7 @@ interface GroupNode {
 
 // ─── Resolve group value for a check at a given dimension ───
 
-function getGroupValue(check: CheckDefinition, dimension: GroupDimension, tags: CheckTag[]): string {
+const getGroupValue = (check: CheckDefinition, dimension: GroupDimension, tags: CheckTag[]): string => {
   switch (dimension) {
     case 'world':
       return tags.includes('dark_world') ? 'Dark World' : 'Light World';
@@ -86,16 +87,11 @@ function getGroupValue(check: CheckDefinition, dimension: GroupDimension, tags: 
       return 'Other';
     }
   }
-}
+};
 
 // ─── Build grouped tree ───
 
-function buildGroupTree(
-  checks: CheckDefinition[],
-  statuses: Map<string, CheckStatus>,
-  dimensions: GroupDimension[],
-  tagMap: Map<string, CheckTag[]>,
-): GroupNode {
+const buildGroupTree = (checks: CheckDefinition[], statuses: Map<string, CheckStatus>, dimensions: GroupDimension[], tagMap: Map<string, CheckTag[]>): GroupNode => {
   const root: GroupNode = {
     key: 'root',
     label: 'All Checks',
@@ -116,15 +112,9 @@ function buildGroupTree(
   root.children = grouped;
   root.stats = computeStats(checks, statuses);
   return root;
-}
+};
 
-function groupRecursive(
-  checks: CheckDefinition[],
-  dimensions: GroupDimension[],
-  depth: number,
-  tagMap: Map<string, CheckTag[]>,
-  statuses: Map<string, CheckStatus>,
-): GroupNode[] {
+const groupRecursive = (checks: CheckDefinition[], dimensions: GroupDimension[], depth: number, tagMap: Map<string, CheckTag[]>, statuses: Map<string, CheckStatus>): GroupNode[] => {
   if (depth >= dimensions.length) return [];
 
   const dim = dimensions[depth];
@@ -159,12 +149,9 @@ function groupRecursive(
   });
 
   return nodes;
-}
+};
 
-function computeStats(
-  checks: CheckDefinition[],
-  statuses: Map<string, CheckStatus>,
-): GroupNode['stats'] {
+const computeStats = (checks: CheckDefinition[], statuses: Map<string, CheckStatus>): GroupNode['stats'] => {
   let completed = 0, reachable = 0, blocked = 0;
   for (const c of checks) {
     const s = statuses.get(c.id) ?? 'blocked';
@@ -173,7 +160,7 @@ function computeStats(
     else blocked++;
   }
   return { total: checks.length, completed, reachable, blocked };
-}
+};
 
 // ─── Filter checks by tags and search query ───
 
@@ -191,12 +178,7 @@ interface FilterState {
   statusFilter?: StatusFilter;
 }
 
-function filterChecks(
-  checks: CheckDefinition[],
-  filter: FilterState,
-  tagMap: Map<string, CheckTag[]>,
-  statuses?: Map<string, CheckStatus>,
-): CheckDefinition[] {
+const filterChecks = (checks: CheckDefinition[], filter: FilterState, tagMap: Map<string, CheckTag[]>, statuses?: Map<string, CheckStatus>): CheckDefinition[] => {
   let result = checks;
 
   // Filter by search query
@@ -241,7 +223,7 @@ function filterChecks(
   }
 
   return result;
-}
+};
 
 export { GROUP_DIMENSIONS, buildGroupTree, filterChecks };
 export type {

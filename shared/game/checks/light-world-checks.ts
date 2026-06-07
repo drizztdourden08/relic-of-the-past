@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 ﻿import type { CheckDefinition } from '../types';
 
 const LIGHT_WORLD_CHECKS: CheckDefinition[] = [

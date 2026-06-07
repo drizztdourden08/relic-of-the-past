@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../types';
 
 import { DARK_WORLD_OVERWORLD_SCREENS } from './overworld';
@@ -24,7 +25,7 @@ export { DW_SPECIAL } from './special';
 export { DW_GAMBLE } from './gamble';
 export { DW_DUNGEON_SCREENS } from './dungeons';
 
-export const ALL_DARK_WORLD_SCREENS: ScreenDefinition[] = [
+const ALL_DARK_WORLD_SCREENS: ScreenDefinition[] = [
   ...DARK_WORLD_OVERWORLD_SCREENS,
   ...DW_OVERWORLD_AREAS,
   ...DW_HOUSES,
@@ -37,3 +38,5 @@ export const ALL_DARK_WORLD_SCREENS: ScreenDefinition[] = [
   ...DW_GAMBLE,
   ...DW_DUNGEON_SCREENS,
 ];
+
+export { ALL_DARK_WORLD_SCREENS };

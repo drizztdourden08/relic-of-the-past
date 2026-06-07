@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 /**
  * Types & utilities for controls-settings sub-hooks.
  */
@@ -11,10 +12,9 @@ interface UseControlsSettingsArgs {
   profileId: string;
 }
 
-/** Pad a hex VID/PID to 4 chars lowercase, e.g. "57e" → "057e" */
-function padHex(v: string): string {
+const padHex = (v: string): string => {
   return v.toLowerCase().padStart(4, '0');
-}
+};
 
 export type { UseControlsSettingsArgs };
 export { padHex };

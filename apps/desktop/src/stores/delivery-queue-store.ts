@@ -1,3 +1,4 @@
+/* @layer renderer-stores @kind logic */
 import { create } from 'zustand';
 import type { DeliveryEntry, DeliveryQueueState } from '../lib/game/delivery-queue';
 

@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 import { useEffect, useRef, useState } from 'react';
 
 type HeartMode = 'original' | 'smooth';

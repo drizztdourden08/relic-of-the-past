@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 import type { DrawContext, ViewportInfo } from './draw-context';
 
 interface LiveSprite {
@@ -11,11 +12,7 @@ interface LiveSprite {
   e: number;
 }
 
-export function drawLinkDebug(
-  dc: DrawContext,
-  vp: ViewportInfo,
-  liveSprites: LiveSprite[],
-): void {
+const drawLinkDebug = (dc: DrawContext, vp: ViewportInfo, liveSprites: LiveSprite[]): void => {
   const { ctx, scaleX, scaleY, viewLeft, viewTop, TILE_PX, screenWorldX, screenWorldY, width, height } = dc;
 
   ctx.globalAlpha = 1.0;
@@ -63,4 +60,6 @@ export function drawLinkDebug(
       ctx.strokeRect(sx, sy, sw, sh);
     }
   }
-}
+};
+
+export { drawLinkDebug };

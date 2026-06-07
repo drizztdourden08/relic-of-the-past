@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Delivery Queue — manages item deliveries that must wait until Link can receive them.
  * Polls WasmCanReceiveItem each frame; when ready, delivers the next item in FIFO order.
@@ -8,7 +9,7 @@ import { getModule } from './wasm-bridge';
 
 // ─── Types ───
 
-export interface DeliveryEntry {
+interface DeliveryEntry {
   id: string;
   /** Human-readable message shown in the queue indicator */
   message: string;
@@ -20,13 +21,13 @@ export interface DeliveryEntry {
   enqueuedAt: number;
 }
 
-export type DeliveryAction =
+type DeliveryAction =
   | { type: 'give_item'; itemId: number }
   | { type: 'trigger_check'; roomId: number; chestIndex: number; itemId: number }
   | { type: 'trigger_npc_check'; flagType: number; flagMask: number; itemId: number; spriteType: number; postGfx: number }
   | { type: 'custom'; execute: () => void };
 
-export interface DeliveryQueueState {
+interface DeliveryQueueState {
   pending: DeliveryEntry[];
   delivering: DeliveryEntry | null;
 }
@@ -44,28 +45,28 @@ let cooldownFrames = 0;
 
 const DELIVERY_COOLDOWN = 30; // frames between deliveries (~0.5s at 60fps)
 
-function generateId(): string {
+const generateId = (): string => {
   return `dlv_${Date.now()}_${nextId++}`;
-}
+};
 
-function getState(): DeliveryQueueState {
+const getState = (): DeliveryQueueState => {
   return { pending: [...queue], delivering };
-}
+};
 
-function notify(): void {
+const notify = (): void => {
   const state = getState();
   for (const listener of listeners) {
     try { listener(state); } catch { /* ignore */ }
   }
-}
+};
 
-function canReceive(): boolean {
+const canReceive = (): boolean => {
   const mod = getModule();
   if (!mod) return false;
   return mod.ccall('WasmCanReceiveItem', 'number', [], []) === 1;
-}
+};
 
-function executeAction(action: DeliveryAction): void {
+const executeAction = (action: DeliveryAction): void => {
   const mod = getModule();
   if (!mod) return;
 
@@ -85,9 +86,9 @@ function executeAction(action: DeliveryAction): void {
       action.execute();
       break;
   }
-}
+};
 
-function tick(): void {
+const tick = (): void => {
   rafId = requestAnimationFrame(tick);
 
   if (cooldownFrames > 0) {
@@ -113,15 +114,11 @@ function tick(): void {
   delivering = entry;
   notify();
   executeAction(entry.action);
-}
+};
 
 // ─── Public API ───
 
-export function enqueue(
-  message: string,
-  source: string,
-  action: DeliveryAction
-): string {
+const enqueue = (message: string, source: string, action: DeliveryAction): string => {
   const entry: DeliveryEntry = {
     id: generateId(),
     message,
@@ -132,49 +129,49 @@ export function enqueue(
   queue.push(entry);
   notify();
   return entry.id;
-}
+};
 
-export function remove(id: string): boolean {
+const remove = (id: string): boolean => {
   const idx = queue.findIndex((e) => e.id === id);
   if (idx === -1) return false;
   queue.splice(idx, 1);
   notify();
   return true;
-}
+};
 
-export function clear(): void {
+const clear = (): void => {
   queue = [];
   delivering = null;
   cooldownFrames = 0;
   notify();
-}
+};
 
-export function peek(): DeliveryEntry | undefined {
+const peek = (): DeliveryEntry | undefined => {
   return queue[0];
-}
+};
 
-export function size(): number {
+const size = (): number => {
   return queue.length;
-}
+};
 
-export function subscribe(listener: StateListener): () => void {
+const subscribe = (listener: StateListener): () => void => {
   listeners.add(listener);
   return () => listeners.delete(listener);
-}
+};
 
-export function startProcessing(): void {
+const startProcessing = (): void => {
   if (rafId != null) return;
   rafId = requestAnimationFrame(tick);
-}
+};
 
-export function stopProcessing(): void {
+const stopProcessing = (): void => {
   if (rafId != null) {
     cancelAnimationFrame(rafId);
     rafId = null;
   }
-}
+};
 
-export const deliveryQueue = {
+const deliveryQueue = {
   enqueue,
   remove,
   clear,
@@ -185,3 +182,6 @@ export const deliveryQueue = {
   startProcessing,
   stopProcessing,
 };
+
+export { enqueue, remove, clear, peek, size, subscribe, startProcessing, stopProcessing, deliveryQueue };
+export type { DeliveryEntry, DeliveryAction, DeliveryQueueState };

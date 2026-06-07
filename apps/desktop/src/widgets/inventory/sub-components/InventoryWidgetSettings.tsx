@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 import { useState } from 'react';
 import type { InventoryViewMode } from '@shared/game/items/sprites';
 import { SegmentedControl } from '../../../components/primitives';

@@ -1,10 +1,11 @@
+/* @layer shared-asset-extraction @kind data */
 /**
  * Dungeon entrance data compilation — entrance positions, cameras, blocksets, starting points.
  */
 import type { RomData } from './rom/rom-types';
 import type { AssetBuilder } from './asset-builder';
 
-function buildEntranceData(rom: RomData, A: AssetBuilder, set: 0 | 1, count: number, prefix: string): void {
+const buildEntranceData = (rom: RomData, A: AssetBuilder, set: 0 | 1, count: number, prefix: string): void => {
   const rooms: number[] = [];
   const relCoords: number[] = [];
   const scrollX: number[] = [];
@@ -74,6 +75,6 @@ function buildEntranceData(rom: RomData, A: AssetBuilder, set: 0 | 1, count: num
   A.addUint16(prefix + 'doorSettings', doorSettings);
   if (set === 1) A.addUint8(prefix + 'entrance', entrance);
   A.addUint8(prefix + 'musicTrack', music);
-}
+};
 
 export { buildEntranceData };

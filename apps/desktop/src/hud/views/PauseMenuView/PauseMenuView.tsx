@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 /**
  * PauseMenuView — Enhanced pause menu rendering using extracted sprite tiles.
  *
@@ -51,8 +52,7 @@ const SAVE_SLOT_NAMES = [
   'BOTTLE', 'SOMARIA', 'BYRNA', 'CAPE', 'MIRROR',
 ];
 
-/** Get item name for a save slot, considering upgrade values */
-function getItemNameForSlot(saveIdx: number, items: number[]): string {
+const getItemNameForSlot = (saveIdx: number, items: number[]): string => {
   if (saveIdx < 0 || saveIdx >= 20) return '';
   const value = items[saveIdx];
   if (!value) return '';
@@ -63,9 +63,9 @@ function getItemNameForSlot(saveIdx: number, items: number[]): string {
   if (saveIdx === 12 && value >= 2) return 'FLUTE';
   if (saveIdx === 12 && value === 1) return 'SHOVEL';
   return SAVE_SLOT_NAMES[saveIdx];
-}
+};
 
-function PauseMenuView({ slideTransform, slideTransition }: { slideTransform?: string; slideTransition?: string } = {}) {
+const PauseMenuView = ({ slideTransform, slideTransition }: { slideTransform?: string; slideTransition?: string } = {}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
@@ -252,6 +252,6 @@ function PauseMenuView({ slideTransform, slideTransition }: { slideTransform?: s
       </div>
     </div>
   );
-}
+};
 
 export { PauseMenuView, GRID_TO_SAVE, SAVE_SLOT_NAMES, getItemNameForSlot };

@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 /**
  * LogsWidgetContent — Content for the Logs widget.
  * Adapts the existing log-bus subscription into widget content form.

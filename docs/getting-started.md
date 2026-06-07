@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Getting Started
 
 ## First Launch

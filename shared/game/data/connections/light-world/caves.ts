@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../types';
 
-export const LW_CAVE_CONNECTIONS: ScreenConnection[] = [
+const LW_CAVE_CONNECTIONS: ScreenConnection[] = [
   // Desert area
   { from: 'lw-30', to: 'aginahs-cave', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'desert-northern-cliffs', to: 'checkerboard-cave', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
@@ -47,3 +48,5 @@ export const LW_CAVE_CONNECTIONS: ScreenConnection[] = [
   { from: 'paradox-cave', to: 'east-death-mountain-top', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
   { from: 'paradox-cave', to: 'paradox-cave-chest-area', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
 ];
+
+export { LW_CAVE_CONNECTIONS };

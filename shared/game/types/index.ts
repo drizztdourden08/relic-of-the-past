@@ -1,0 +1,43 @@
+/* @layer shared-game @kind barrel */
+export type {
+  BundleLayout,
+  CheckDefinition,
+  CheckType,
+  DungeonContext,
+  DungeonScreen,
+  InteriorContext,
+  InteriorKind,
+  InteriorScreen,
+  OverworldContext,
+  OverworldScreen,
+  Requirement,
+  ScreenBase,
+  ScreenBundle,
+  ScreenConnection,
+  ScreenDefinition,
+  ScreenType,
+  ScreenVariantInfo,
+  VariantCondition,
+  World,
+} from './screen';
+export type {
+  DungeonProgressState,
+  EquipmentState,
+  FloorIndicatorState,
+  GameModeState,
+  GameUIState,
+  HUDState,
+  InventoryState,
+  MapState,
+  SaveMenuState,
+  TextState,
+  UIMode,
+} from './game-state';
+export type {
+  CheckState,
+  Goal,
+  LogicConfig,
+  LogicMode,
+  SwordMode,
+  TrackerState,
+} from './logic';

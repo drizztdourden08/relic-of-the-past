@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 import { useState, useEffect, type RefObject } from 'react';
 
 const useTitleBar = (menuRef: RefObject<HTMLDivElement | null>) => {

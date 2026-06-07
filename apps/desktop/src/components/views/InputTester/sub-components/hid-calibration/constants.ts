@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind constants */
 /**
  * Constants for the HID Calibration Wizard.
  */

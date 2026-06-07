@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 /**
  * Diagnostic: Run BFS on room 0x51 offline and check (45,30) reachability per layer.
  * Usage: npx vitest run temp-scripts/diagnose-0x51.ts
@@ -26,7 +27,7 @@ let wasmModule: WasmModule;
 let layer0: number[][];
 let layer1: number[][];
 
-function readGrid(mod: WasmModule, ptr: number, offset: number): number[][] {
+const readGrid = (mod: WasmModule, ptr: number, offset: number): number[][] => {
   const grid: number[][] = Array.from({ length: 64 }, () => new Array(64));
   for (let r = 0; r < 64; r++) {
     for (let c = 0; c < 64; c++) {
@@ -34,7 +35,7 @@ function readGrid(mod: WasmModule, ptr: number, offset: number): number[][] {
     }
   }
   return grid;
-}
+};
 
 beforeAll(async () => {
   const nodeRequire = createRequire(import.meta.url);

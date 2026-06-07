@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * InputProfileList — left column showing saved input profiles.
  * Active profile is highlighted. Supports create/delete/select/rename.

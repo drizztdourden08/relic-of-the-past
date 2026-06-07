@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 interface GameLayerProps {
   assetData: Uint8Array | null;
   configIni?: string;

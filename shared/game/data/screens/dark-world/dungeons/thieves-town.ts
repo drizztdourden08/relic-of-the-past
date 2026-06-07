@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
-export const THIEVES_TOWN_DUNGEON: ScreenDefinition[] = [
+const THIEVES_TOWN_DUNGEON: ScreenDefinition[] = [
   {
     id: 'tt-0x44',
     name: 'Big Key Room',
@@ -147,3 +148,5 @@ export const THIEVES_TOWN_DUNGEON: ScreenDefinition[] = [
     ],
   },
 ];
+
+export { THIEVES_TOWN_DUNGEON };

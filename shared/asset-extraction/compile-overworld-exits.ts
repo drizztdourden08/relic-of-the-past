@@ -1,10 +1,11 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Overworld exit and special exit data compilation.
  */
 import type { RomData } from './rom/rom-types';
 import type { AssetBuilder } from './asset-builder';
 
-function buildOverworldExits(rom: RomData, A: AssetBuilder): void {
+const buildOverworldExits = (rom: RomData, A: AssetBuilder): void => {
   const exitScreen = new Array(79).fill(0);
   const exitRooms = new Array(79).fill(0);
   const exitLoadOff = new Array(79).fill(0);
@@ -97,6 +98,6 @@ function buildOverworldExits(rom: RomData, A: AssetBuilder): void {
   A.addUint8('kSpExit_AuxGfx', spAuxGfx);
   A.addUint8('kSpExit_PalBg', spPalBg);
   A.addUint8('kSpExit_PalSpr', spPalSpr);
-}
+};
 
 export { buildOverworldExits };

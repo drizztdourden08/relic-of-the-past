@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind types */
 /**
  * Edge Glow Renderer types.
  */

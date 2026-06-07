@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Developer Tools
 
 Debugging and diagnostic tools available from Menu → Advanced.

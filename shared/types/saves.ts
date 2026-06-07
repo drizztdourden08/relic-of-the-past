@@ -1,3 +1,4 @@
+/* @layer shared-types @kind logic */
 /** Quick save slot info (slots 0-11) */
 interface QuickSaveSlotInfo {
   slot: number;

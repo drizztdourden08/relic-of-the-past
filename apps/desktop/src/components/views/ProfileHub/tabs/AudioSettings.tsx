@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SegmentedControl } from '../../../primitives/SegmentedControl';
@@ -33,14 +34,14 @@ const MSU_OPTIONS = [
 
 const BUFFER_STEPS = [512, 1024, 2048, 4096];
 
-function bufferToStep(val: number): number {
+const bufferToStep = (val: number): number => {
   const idx = BUFFER_STEPS.indexOf(val);
   return idx >= 0 ? idx : 2;
-}
+};
 
-function stepToBuffer(step: number): number {
+const stepToBuffer = (step: number): number => {
   return BUFFER_STEPS[step] ?? 2048;
-}
+};
 
 const SECTIONS: Section[] = [
   {
@@ -103,7 +104,7 @@ const SECTIONS: Section[] = [
   },
 ];
 
-function renderControl(key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null {
+const renderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
   switch (key) {
     case 'msuImport':
       return null; // handled by AudioSettings component directly
@@ -211,12 +212,12 @@ function renderControl(key: string, settings: GameSettings, onChange: (patch: Pa
     default:
       return null;
   }
-}
+};
 
-function isDisabled(key: string, settings: GameSettings): boolean {
+const isDisabled = (key: string, settings: GameSettings): boolean => {
   if (key === 'resumeMSU') return settings.enableMSU === 'false';
   return false;
-}
+};
 
 const AudioSettings = (props: AudioSettingsProps) => {
   const { profileId, settings, onChange } = props;

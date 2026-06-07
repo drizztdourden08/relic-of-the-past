@@ -1,8 +1,9 @@
+/* @layer electron-main @kind logic */
 /**
  * HID constants, types, and utilities shared across HID modules.
  */
 
-import HID from 'node-hid';
+import type HID from 'node-hid';
 
 // Xbox VID — excluded because Windows XInput driver claims exclusive access
 const XBOX_VID = 0x045e;
@@ -29,9 +30,9 @@ const GAMEPAD_USAGES = new Set([
   0x08, // Multi-axis Controller
 ]);
 
-function toHex4(n: number): string {
+const toHex4 = (n: number): string => {
   return n.toString(16).padStart(4, '0');
-}
+};
 
 interface OpenDevice {
   hid: HID.HID;

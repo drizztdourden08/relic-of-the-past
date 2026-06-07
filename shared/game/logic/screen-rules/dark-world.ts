@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { Requirement } from '../../types';
 import {
   hasSword,

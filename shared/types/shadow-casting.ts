@@ -1,3 +1,4 @@
+/* @layer shared-types @kind data */
 // ─── Shadow Casting & Lighting System Types ───
 
 /** Unified shape definition — N-sided polygon with radius/stretch/rotation */

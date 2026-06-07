@@ -1,4 +1,5 @@
-export function OverlayLegend() {
+/* @layer renderer-components @kind component */
+const OverlayLegend = () => {
   return (
     <div style={{
       position: 'absolute', bottom: 6, right: 6, zIndex: 7,
@@ -14,9 +15,9 @@ export function OverlayLegend() {
       <LegendItem color="rgba(80,200,255,0.8)" border="#00ff88" label="hookshot target" />
     </div>
   );
-}
+};
 
-function LegendItem({ color, label, border, isArrow }: { color: string; label: string; border?: string; isArrow?: boolean }) {
+const LegendItem = ({ color, label, border, isArrow }: { color: string; label: string; border?: string; isArrow?: boolean }) => {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
       {isArrow ? (
@@ -31,4 +32,6 @@ function LegendItem({ color, label, border, isArrow }: { color: string; label: s
       <span style={{ color: '#ccc' }}>{label}</span>
     </div>
   );
-}
+};
+
+export { OverlayLegend };

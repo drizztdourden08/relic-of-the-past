@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useDragDrop — drag-over/drop handling and preset application.
  */
@@ -14,7 +15,7 @@ interface UseDragDropArgs {
   updateActiveProfile: (profile: InputProfile) => void;
 }
 
-function useDragDrop({ devices, activeProfile, updateActiveProfile }: UseDragDropArgs) {
+const useDragDrop = ({ devices, activeProfile, updateActiveProfile }: UseDragDropArgs) => {
   const [dragOverBindings, setDragOverBindings] = useState(false);
   const [confirmPreset, setConfirmPreset] = useState<{ presetId: string; deviceName: string; vid: string; pid: string } | null>(null);
 
@@ -98,6 +99,6 @@ function useDragDrop({ devices, activeProfile, updateActiveProfile }: UseDragDro
     handleDrop,
     handleApplyPreset,
   };
-}
+};
 
 export { useDragDrop };

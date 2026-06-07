@@ -2,19 +2,19 @@ import { join } from 'path';
 import { readFile, mkdir, writeFile, readdir, stat, rename as fsRename } from 'fs/promises';
 import { getUserDataPath } from '../lib/paths';
 
-export const QUICK_SAVE_SLOTS = 12;
+const QUICK_SAVE_SLOTS = 12;
 
-function getProfileSavesDir(profileId: string): string {
+const getProfileSavesDir = (profileId: string): string => {
   return getUserDataPath('profiles', profileId, 'saves');
-}
+};
 
-function getQuickSavesDir(profileId: string): string {
+const getQuickSavesDir = (profileId: string): string => {
   return join(getProfileSavesDir(profileId), 'quick');
-}
+};
 
 // ─── Migration: move legacy save{N}.sav from root saves/ to saves/quick/ ───
 
-async function migrateQuickSaves(profileId: string): Promise<void> {
+const migrateQuickSaves = async (profileId: string): Promise<void> => {
   const savesDir = getProfileSavesDir(profileId);
   const quickDir = getQuickSavesDir(profileId);
   try {
@@ -35,11 +35,11 @@ async function migrateQuickSaves(profileId: string): Promise<void> {
   } catch {
     // saves dir doesn't exist yet — nothing to migrate
   }
-}
+};
 
 // ─── SRAM ───
 
-async function writeSramFile(profileId: string, data: Buffer): Promise<void> {
+const writeSramFile = async (profileId: string, data: Buffer): Promise<void> => {
   const savesDir = getProfileSavesDir(profileId);
   await mkdir(savesDir, { recursive: true });
   const sramPath = join(savesDir, 'sram.dat');
@@ -49,33 +49,33 @@ async function writeSramFile(profileId: string, data: Buffer): Promise<void> {
     await fsRename(sramPath, bakPath);
   } catch { /* no existing file */ }
   await writeFile(sramPath, data);
-}
+};
 
-async function readSramFile(profileId: string): Promise<Buffer | null> {
+const readSramFile = async (profileId: string): Promise<Buffer | null> => {
   try {
     return await readFile(join(getProfileSavesDir(profileId), 'sram.dat'));
   } catch {
     return null;
   }
-}
+};
 
 // ─── Quick Save States (slots 0-11) ───
 
-async function writeQuickState(profileId: string, slot: number, data: Buffer): Promise<void> {
+const writeQuickState = async (profileId: string, slot: number, data: Buffer): Promise<void> => {
   const quickDir = getQuickSavesDir(profileId);
   await mkdir(quickDir, { recursive: true });
   await writeFile(join(quickDir, `save${slot}.sav`), data);
-}
+};
 
-async function readQuickState(profileId: string, slot: number): Promise<Buffer | null> {
+const readQuickState = async (profileId: string, slot: number): Promise<Buffer | null> => {
   try {
     return await readFile(join(getQuickSavesDir(profileId), `save${slot}.sav`));
   } catch {
     return null;
   }
-}
+};
 
-async function listQuickStates(profileId: string): Promise<number[]> {
+const listQuickStates = async (profileId: string): Promise<number[]> => {
   const quickDir = getQuickSavesDir(profileId);
   try {
     const files = await readdir(quickDir);
@@ -86,21 +86,21 @@ async function listQuickStates(profileId: string): Promise<number[]> {
   } catch {
     return [];
   }
-}
+};
 
-async function writeQuickScreenshot(profileId: string, slot: number, pngData: Buffer): Promise<void> {
+const writeQuickScreenshot = async (profileId: string, slot: number, pngData: Buffer): Promise<void> => {
   const quickDir = getQuickSavesDir(profileId);
   await mkdir(quickDir, { recursive: true });
   await writeFile(join(quickDir, `save${slot}.png`), pngData);
-}
+};
 
-async function readQuickScreenshot(profileId: string, slot: number): Promise<Buffer | null> {
+const readQuickScreenshot = async (profileId: string, slot: number): Promise<Buffer | null> => {
   try {
     return await readFile(join(getQuickSavesDir(profileId), `save${slot}.png`));
   } catch {
     return null;
   }
-}
+};
 
 interface SaveSlotInfo {
   slot: number;
@@ -109,7 +109,7 @@ interface SaveSlotInfo {
   hasScreenshot: boolean;
 }
 
-async function getQuickSlotInfos(profileId: string): Promise<SaveSlotInfo[]> {
+const getQuickSlotInfos = async (profileId: string): Promise<SaveSlotInfo[]> => {
   await migrateQuickSaves(profileId);
   const quickDir = getQuickSavesDir(profileId);
   const results: SaveSlotInfo[] = [];
@@ -128,7 +128,7 @@ async function getQuickSlotInfos(profileId: string): Promise<SaveSlotInfo[]> {
     }
   }
   return results;
-}
+};
 
 // ─── Legacy aliases (backward compat) ───
 
@@ -159,3 +159,4 @@ export {
   writeStateScreenshot,
 };
 export type { SaveSlotInfo };
+export { QUICK_SAVE_SLOTS };

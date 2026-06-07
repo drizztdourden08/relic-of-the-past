@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Overworld area extraction — ROM → YAML data for all 160 overworld areas.
  *
@@ -5,11 +6,11 @@
  */
 import * as yaml from 'js-yaml';
 import type { RomData } from '../rom/rom-types';
-import * as tables from './tables-data';
+import * as tables from './data/tables-data';
 
 // ─── Helper functions ───
 
-function getExitDatas(rom: RomData): Map<number, Record<string, unknown>[]> {
+const getExitDatas = (rom: RomData): Map<number, Record<string, unknown>[]> => {
   const r = new Map<number, Record<string, unknown>[]>();
   for (let i = 0; i < 79; i++) {
     const room = rom.getWord(0x82dd8a + i * 2);
@@ -71,9 +72,9 @@ function getExitDatas(rom: RomData): Map<number, Record<string, unknown>[]> {
     r.get(screenIndex)!.push(y);
   }
   return r;
-}
+};
 
-function getOwTravelInfos(rom: RomData): Map<number, Record<string, unknown>[]> {
+const getOwTravelInfos = (rom: RomData): Map<number, Record<string, unknown>[]> => {
   const r = new Map<number, Record<string, unknown>[]>();
   for (let i = 0; i < 17; i++) {
     const screenIndex = rom.getWord(0x82eae5 + i * 2);
@@ -106,9 +107,9 @@ function getOwTravelInfos(rom: RomData): Map<number, Record<string, unknown>[]> 
     r.get(screenIndex)!.push(y);
   }
   return r;
-}
+};
 
-function getOwEntranceInfo(rom: RomData): Map<number, Record<string, unknown>[]> {
+const getOwEntranceInfo = (rom: RomData): Map<number, Record<string, unknown>[]> => {
   const r = new Map<number, Record<string, unknown>[]>();
   for (let i = 0; i < 129; i++) {
     const area = rom.getWord(0x9bb96f + i * 2);
@@ -118,9 +119,9 @@ function getOwEntranceInfo(rom: RomData): Map<number, Record<string, unknown>[]>
     r.get(area)!.push({ index: i, x: (pos >> 1) & 0x3f, y: (pos >> 7) & 0x3f, entrance_id: entranceId });
   }
   return r;
-}
+};
 
-function getHoleInfos(rom: RomData): Map<number, Record<string, unknown>[]> {
+const getHoleInfos = (rom: RomData): Map<number, Record<string, unknown>[]> => {
   const r = new Map<number, Record<string, unknown>[]>();
   for (let i = 0; i < 19; i++) {
     const pos = rom.getWord(0x9bb800 + i * 2) + 0x400;
@@ -130,45 +131,38 @@ function getHoleInfos(rom: RomData): Map<number, Record<string, unknown>[]> {
     r.get(area)!.push({ x: (pos >> 1) & 0x3f, y: (pos >> 7) & 0x3f, entrance_id: entranceId });
   }
   return r;
-}
+};
 
-function extractOverworldArea(
-  rom: RomData,
-  overworldArea: number,
-  exitDatas: Map<number, Record<string, unknown>[]>,
-  travelInfos: Map<number, Record<string, unknown>[]>,
-  entranceInfo: Map<number, Record<string, unknown>[]>,
-  holeInfos: Map<number, Record<string, unknown>[]>,
-): string {
+const extractOverworldArea = (rom: RomData, overworldArea: number, exitDatas: Map<number, Record<string, unknown>[]>, travelInfos: Map<number, Record<string, unknown>[]>, entranceInfo: Map<number, Record<string, unknown>[]>, holeInfos: Map<number, Record<string, unknown>[]>): string => {
   const isSmall = rom.getBytes(0x82f88d, 192);
 
-  function getMusic(ambient: boolean): Record<string, string> {
-    const fn = (x: number) => ambient ? tables.kAmbientSoundName[x >> 4] : tables.kMusicNames[x & 0xf];
-    if (overworldArea < 64) {
-      return {
-        beginning: fn(rom.getByte(0x82c303 + overworldArea)),
-        zelda: fn(rom.getByte(0x82c303 + overworldArea + 64)),
-        sword: fn(rom.getByte(0x82c303 + overworldArea + 128)),
-        agahnim: fn(rom.getByte(0x82c303 + overworldArea + 192)),
+  const getMusic = (ambient: boolean): Record<string, string> => {
+        const fn = (x: number) => ambient ? tables.kAmbientSoundName[x >> 4] : tables.kMusicNames[x & 0xf];
+        if (overworldArea < 64) {
+          return {
+            beginning: fn(rom.getByte(0x82c303 + overworldArea)),
+            zelda: fn(rom.getByte(0x82c303 + overworldArea + 64)),
+            sword: fn(rom.getByte(0x82c303 + overworldArea + 128)),
+            agahnim: fn(rom.getByte(0x82c303 + overworldArea + 192)),
+          };
+        } else {
+          return { agahnim: fn(rom.getByte(0x82c403 + overworldArea - 64)) };
+        }
       };
-    } else {
-      return { agahnim: fn(rom.getByte(0x82c403 + overworldArea - 64)) };
-    }
-  }
 
-  function getItems(): unknown[] {
-    if (overworldArea >= 128) return [];
-    let ea = 0x9b0000 | rom.getWord(0x9bc2f9 + overworldArea * 2);
-    const xs: unknown[] = [];
-    while (rom.getWord(ea) !== 0xffff) {
-      const pos = rom.getWord(ea);
-      const x = (pos / 2 | 0) % 64;
-      const y = (pos / 2 | 0) / 64 | 0;
-      xs.push([x, y, tables.kSecretNames[rom.getByte(ea + 2)]]);
-      ea += 3;
-    }
-    return xs;
-  }
+  const getItems = (): unknown[] => {
+        if (overworldArea >= 128) return [];
+        let ea = 0x9b0000 | rom.getWord(0x9bc2f9 + overworldArea * 2);
+        const xs: unknown[] = [];
+        while (rom.getWord(ea) !== 0xffff) {
+          const pos = rom.getWord(ea);
+          const x = (pos / 2 | 0) % 64;
+          const y = (pos / 2 | 0) / 64 | 0;
+          xs.push([x, y, tables.kSecretNames[rom.getByte(ea + 2)]]);
+          ea += 3;
+        }
+        return xs;
+      };
 
   const header: Record<string, unknown> = {
     name: tables.kAreaNames[overworldArea],
@@ -190,27 +184,27 @@ function extractOverworldArea(
   y.Exits = exitDatas.get(overworldArea) ?? [];
   y.Items = getItems();
 
-  function decodeSprites(baseAddr: number): unknown[] {
-    const r: unknown[] = [];
-    let ea = 0x890000 + rom.getWord(baseAddr + overworldArea * 2);
-    while (rom.getByte(ea) !== 0xff) {
-      const sy = rom.getByte(ea);
-      const sx = rom.getByte(ea + 1);
-      const w = rom.getByte(ea + 2);
-      r.push([sx, sy, tables.kSpriteNames[w]]);
-      ea += 3;
-    }
-    return r;
-  }
+  const decodeSprites = (baseAddr: number): unknown[] => {
+        const r: unknown[] = [];
+        let ea = 0x890000 + rom.getWord(baseAddr + overworldArea * 2);
+        while (rom.getByte(ea) !== 0xff) {
+          const sy = rom.getByte(ea);
+          const sx = rom.getByte(ea + 1);
+          const w = rom.getByte(ea + 2);
+          r.push([sx, sy, tables.kSpriteNames[w]]);
+          ea += 3;
+        }
+        return r;
+      };
 
-  function getInfo(stage: number): Record<string, number> {
-    if (overworldArea >= 128) return {};
-    const s = overworldArea >= 64 ? 3 : stage;
-    return {
-      gfx: rom.getByte(0x80fa41 + (overworldArea & 63) + s * 64),
-      palette: rom.getByte(0x80fb41 + (overworldArea & 63) + s * 64),
-    };
-  }
+  const getInfo = (stage: number): Record<string, number> => {
+        if (overworldArea >= 128) return {};
+        const s = overworldArea >= 64 ? 3 : stage;
+        return {
+          gfx: rom.getByte(0x80fa41 + (overworldArea & 63) + s * 64),
+          palette: rom.getByte(0x80fb41 + (overworldArea & 63) + s * 64),
+        };
+      };
 
   if (overworldArea < 64) {
     y['Sprites.Beginning'] = { info: getInfo(0), sprites: decodeSprites(0x89c881) };
@@ -221,13 +215,9 @@ function extractOverworldArea(
   }
 
   return yaml.dump(y, { flowLevel: -1, sortKeys: false });
-}
+};
 
-/**
- * Extract all overworld areas from ROM.
- * @returns Map of filename → YAML content
- */
-function extractAllOverworldAreas(rom: RomData): Map<string, string> {
+const extractAllOverworldAreas = (rom: RomData): Map<string, string> => {
   const exitDatas = getExitDatas(rom);
   const travelInfos = getOwTravelInfos(rom);
   const entranceInfo = getOwEntranceInfo(rom);
@@ -242,6 +232,6 @@ function extractAllOverworldAreas(rom: RomData): Map<string, string> {
     }
   }
   return results;
-}
+};
 
 export { extractAllOverworldAreas };

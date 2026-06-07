@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * Trigger calibration cards for the HID Calibration Wizard.
  */

@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Game Settings
 
 All game settings are configurable in-app through the Profile Settings panel. No `.ini` file editing required.

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * DiagnosticsLog — Displays controller event log and HID diagnostics.
  */

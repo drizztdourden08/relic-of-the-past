@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 ﻿import { useState } from 'react';
 import { Button } from '../../primitives/Button';
 import { TextInput } from '../../primitives/TextInput';

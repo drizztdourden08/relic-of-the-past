@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 /**
  * IPC handlers for the Screen/Connection editor wizards.
  * Reads/writes to the shared/game/data/ source files.
@@ -7,17 +8,16 @@ import { ipcMain, app } from 'electron';
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 
-/** Resolve workspace root (parent of apps/) */
-function getWorkspaceRoot(): string {
+const getWorkspaceRoot = (): string => {
   // In dev: __dirname = apps/desktop/electron/screen-editor
   // In prod: this feature is dev-only, but fallback to app path
   if (app.isPackaged) {
     return join(app.getAppPath(), '../../..');
   }
   return join(__dirname, '../../../..');
-}
+};
 
-function registerScreenEditorHandlers(): void {
+const registerScreenEditorHandlers = (): void => {
   // Write a screen definition to source file
   ipcMain.handle('screenEditor:writeScreen', async (_e, args: {
     filePath: string; // relative to shared/game/data/
@@ -113,14 +113,14 @@ function registerScreenEditorHandlers(): void {
       return { success: false, error: e instanceof Error ? e.message : 'Unknown error' };
     }
   });
-}
+};
 
-function escapeRegex(s: string): string {
+const escapeRegex = (s: string): string => {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
+};
 
-function escapeSingleQuote(s: string): string {
+const escapeSingleQuote = (s: string): string => {
   return s.replace(/'/g, "\\'");
-}
+};
 
 export { registerScreenEditorHandlers };

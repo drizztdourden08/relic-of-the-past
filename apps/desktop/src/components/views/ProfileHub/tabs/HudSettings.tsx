@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout, type Section } from '../../../composites/SettingsLayout';
@@ -74,13 +75,12 @@ const ASPECT_OPTIONS = [
   { value: '18:9', label: '18:9' },
 ];
 
-/** Convert ratio string to numeric value for comparison */
-function ratioToNum(r: string): number {
+const ratioToNum = (r: string): number => {
   const [w, h] = r.split(':').map(Number);
   return w / h;
-}
+};
 
-function getHudRatioOptions(screenRatio: GameSettings['aspectRatio']) {
+const getHudRatioOptions = (screenRatio: GameSettings['aspectRatio']) => {
   const screenVal = ratioToNum(screenRatio);
   return [
     { value: 'match' as const, label: 'Match' },
@@ -89,7 +89,7 @@ function getHudRatioOptions(screenRatio: GameSettings['aspectRatio']) {
       disabled: ratioToNum(opt.value) > screenVal,
     })),
   ];
-}
+};
 
 const HEART_OPTIONS = [
   { value: 'original', label: 'Original' },
@@ -117,7 +117,7 @@ const PAUSE_HIGHLIGHT_OPTIONS = [
   { value: 'none', label: 'None' },
 ];
 
-function renderControl(key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null {
+const renderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
   switch (key) {
     case 'hudMode':
       return (
@@ -202,7 +202,7 @@ function renderControl(key: string, settings: GameSettings, onChange: (patch: Pa
     default:
       return null;
   }
-}
+};
 
 const HudSettings = ({ settings, onChange }: HudSettingsProps) => {
   return (

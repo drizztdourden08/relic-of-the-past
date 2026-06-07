@@ -1,3 +1,4 @@
+/* @layer shared-other @kind data */
 /**
  * Project credits — single source of truth.
  * Keep in sync with CREDITS.md in the repository root.
@@ -40,9 +41,9 @@ const USAGE_LABELS: Record<UsageLevel, string> = {
   'inspiration': 'Inspiration',
 };
 
-function getUsageLabel(usage: UsageLevel): string {
+const getUsageLabel = (usage: UsageLevel): string => {
   return USAGE_LABELS[usage];
-}
+};
 
 const CREDITS: CreditCategory[] = [
   {

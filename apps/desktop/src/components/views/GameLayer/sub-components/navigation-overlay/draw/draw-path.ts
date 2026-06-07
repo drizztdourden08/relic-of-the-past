@@ -1,16 +1,11 @@
+/* @layer renderer-components @kind logic */
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { ReachState } from '@shared/game/navigation/types';
 import type { DrawContext } from './draw-context';
 import type { MouseState } from '../types';
 import { findNearest2x2Goal, findPath2x2FromLink } from '../pathfinding';
 
-export function drawPathPreview(
-  dc: DrawContext,
-  mouseState: MouseState,
-  result: FloodFillResult,
-  vp: { linkX: number; linkY: number },
-  setLockedPath: (path: { row: number; col: number; attr: number }[] | null) => void,
-): void {
+const drawPathPreview = (dc: DrawContext, mouseState: MouseState, result: FloodFillResult, vp: { linkX: number; linkY: number }, setLockedPath: (path: { row: number; col: number; attr: number }[] | null) => void): void => {
   const { ctx, scaleX, scaleY, viewLeft, viewTop, TILE_PX, screenWorldX, screenWorldY } = dc;
 
   const activeTarget = mouseState.lockTarget && mouseState.lockedTile
@@ -100,4 +95,6 @@ export function drawPathPreview(
 
     ctx.restore();
   }
-}
+};
+
+export { drawPathPreview };

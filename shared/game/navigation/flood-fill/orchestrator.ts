@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type {
   FloodFillResult, OverworldEntrance, LedgeTraversal,
   GridPos, CollisionGrid, ScreenVariant, ReachState, TransitionPoint,
@@ -16,12 +17,7 @@ import type { QuadrantBounds } from '../strategies/layer-strategy';
 
 // ─── Screen Preparation ──────────────────────────────────────────────────────
 
-function prepareScreen(
-  rawAttrGrid: number[][],
-  tileContext: TileAttrContext,
-  dynamicBlockers?: GridPos[],
-  skipCliffs = false,
-): { grid: CollisionGrid; ledges: LedgeTraversal[]; dynamicBlockerCells: GridPos[] } {
+const prepareScreen = (rawAttrGrid: number[][], tileContext: TileAttrContext, dynamicBlockers?: GridPos[], skipCliffs = false): { grid: CollisionGrid; ledges: LedgeTraversal[]; dynamicBlockerCells: GridPos[] } => {
   const dynamicBlockerCells: GridPos[] = [];
   const grid = buildCollisionGridFromRawAttr(rawAttrGrid, tileContext);
 
@@ -66,17 +62,9 @@ function prepareScreen(
   }
 
   return { grid, ledges, dynamicBlockerCells };
-}
+};
 
-/**
- * Constrain void (0x00) tiles on a layer to prevent BFS from flooding through
- * structural void. A 0x00 tile is "void" if it belongs to a connected region
- * of 0x00 tiles that touches the grid boundary. Enclosed 0x00 regions are
- * legitimate ground (e.g. floor inside walls).
- *
- * Void tiles are replaced with 0x01 (solid wall) so BFS can't pass through.
- */
-function constrainVoidTiles(thisLayer: number[][], _otherLayer: number[][]): number[][] {
+const constrainVoidTiles = (thisLayer: number[][], _otherLayer: number[][]): number[][] => {
   // Step 1: Flood from boundary through 0x00 tiles to find void-connected regions
   const isVoid: boolean[][] = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(false));
   const queue: Array<[number, number]> = [];
@@ -107,9 +95,9 @@ function constrainVoidTiles(thisLayer: number[][], _otherLayer: number[][]): num
       isVoid[r][c] ? 0x01 : thisLayer[r][c]
     ),
   );
-}
+};
 
-function findStartPosition(grid: CollisionGrid, startPos?: GridPos): GridPos {
+const findStartPosition = (grid: CollisionGrid, startPos?: GridPos): GridPos => {
   const row = Math.max(0, Math.min(GRID_SIZE - 1, startPos?.row ?? 32));
   const col = Math.max(0, Math.min(GRID_SIZE - 1, startPos?.col ?? 32));
 
@@ -151,11 +139,11 @@ function findStartPosition(grid: CollisionGrid, startPos?: GridPos): GridPos {
   if (best) return best;
 
   return { row, col };
-}
+};
 
 // ─── Public API ──────────────────────────────────────────────────────────────
 
-export interface FloodFillOptions {
+interface FloodFillOptions {
   tileContext: TileAttrContext;
   inventory?: Set<TileReq>;
   startPos?: GridPos;
@@ -177,18 +165,7 @@ export interface FloodFillOptions {
   extraSeeds?: GridPos[];
 }
 
-/**
- * Run flood fill on a single screen.
- *
- * @param rawAttrGrid  64×64 collision attribute grid (primary layer for indoor, full for overworld)
- * @param screenIndex  Screen/room index (for entrance filtering)
- * @param options      Configuration for the flood fill
- */
-export function floodFillScreen(
-  rawAttrGrid: number[][],
-  screenIndex: number,
-  options: FloodFillOptions,
-): FloodFillResult {
+const floodFillScreen = (rawAttrGrid: number[][], screenIndex: number, options: FloodFillOptions): FloodFillResult => {
   const {
     tileContext,
     inventory,
@@ -335,15 +312,11 @@ export function floodFillScreen(
     dualLayerGrids: options.dualLayerGrids,
     staircaseType: options.staircaseType, startLayer: options.startLayer,
   };
-}
+};
 
 // ─── Extracted Helpers ───────────────────────────────────────────────────────
 
-function findEntrancePositions(
-  tileContext: TileAttrContext,
-  entrances: OverworldEntrance[],
-  screenIndex: number,
-): { screenEntrances: OverworldEntrance[]; entrancePositions: { row: number; col: number; idx: number }[] } {
+const findEntrancePositions = (tileContext: TileAttrContext, entrances: OverworldEntrance[], screenIndex: number): { screenEntrances: OverworldEntrance[]; entrancePositions: { row: number; col: number; idx: number }[] } => {
   if (tileContext === 'overworld') {
     const screenEntrances = entrances.filter(e => e.area === screenIndex);
     const entrancePositions = screenEntrances.map(e => ({ row: e.gridRow, col: e.gridCol, idx: e.id }));
@@ -355,15 +328,9 @@ function findEntrancePositions(
   const screenEntrances = entrances.filter(e => e.area === screenIndex);
   const entrancePositions = screenEntrances.map(e => ({ row: e.gridRow, col: e.gridCol, idx: e.id }));
   return { screenEntrances, entrancePositions };
-}
+};
 
-function buildBorders(
-  transitions: TransitionPoint[],
-  reachable: ReachState[][],
-  grid: CollisionGrid,
-  inv: Set<TileReq>,
-  quadrantBounds?: QuadrantBounds,
-): FloodFillResult['borders'] {
+const buildBorders = (transitions: TransitionPoint[], reachable: ReachState[][], grid: CollisionGrid, inv: Set<TileReq>, quadrantBounds?: QuadrantBounds): FloodFillResult['borders'] => {
   const borders: FloodFillResult['borders'] = {
     north: { freeTiles: [], itemTiles: [] },
     south: { freeTiles: [], itemTiles: [] },
@@ -386,14 +353,13 @@ function buildBorders(
     }
   }
   return borders;
-}
+};
 
 // ─── Connection Helpers ──────────────────────────────────────────────────────
 
 import type { ConnectionInfo } from '../types';
 
-/** Get adjacent room for indoor rooms (16-wide grid, 20 rows). */
-function getAdjacentRoom(roomIdx: number, edge: 'north' | 'south' | 'east' | 'west'): number | null {
+const getAdjacentRoom = (roomIdx: number, edge: 'north' | 'south' | 'east' | 'west'): number | null => {
   const col = roomIdx % 16;
   const row = Math.floor(roomIdx / 16);
   switch (edge) {
@@ -402,10 +368,9 @@ function getAdjacentRoom(roomIdx: number, edge: 'north' | 'south' | 'east' | 'we
     case 'west': return col > 0 ? roomIdx - 1 : null;
     case 'east': return col < 15 ? roomIdx + 1 : null;
   }
-}
+};
 
-/** Extract border connection info from a flood fill result. */
-export function getConnections(result: FloodFillResult, intraEdges?: ('north' | 'south' | 'east' | 'west')[]): ConnectionInfo[] {
+const getConnections = (result: FloodFillResult, intraEdges?: ('north' | 'south' | 'east' | 'west')[]): ConnectionInfo[] => {
   const connections: ConnectionInfo[] = [];
   const edges: ('north' | 'south' | 'east' | 'west')[] = ['north', 'south', 'east', 'west'];
   const isIndoor = result.tileContext !== 'overworld';
@@ -495,4 +460,7 @@ export function getConnections(result: FloodFillResult, intraEdges?: ('north' | 
   }
 
   return connections;
-}
+};
+
+export { floodFillScreen, getConnections };
+export type { FloodFillOptions };

@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * IPC HID Report Processing — parses raw HID reports received from
  * the main process (node-hid via IPC), applies calibration, and
@@ -37,14 +38,7 @@ interface IpcPerf {
 
 const reportIdCounts = new Map<number, number>();
 
-function processIpcReport(
-  host: ReportHost,
-  perf: IpcPerf,
-  deviceKey: string,
-  vendorId: number,
-  productId: number,
-  data: Buffer | number[],
-): void {
+const processIpcReport = (host: ReportHost, perf: IpcPerf, deviceKey: string, vendorId: number, productId: number, data: Buffer | number[]): void => {
   if (data.length === 0) return;
 
   // IPC timing instrumentation
@@ -130,7 +124,7 @@ function processIpcReport(
   } else if (count <= 3) {
     host.log(`No parser matched IPC reportId=0x${reportId.toString(16)} len=${buf.byteLength - 1}`);
   }
-}
+};
 
 export { processIpcReport };
 export type { IpcPerf, ReportHost };

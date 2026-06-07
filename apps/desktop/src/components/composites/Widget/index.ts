@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind barrel */
 export { Widget } from './Widget';
 export { WidgetManager } from './WidgetManager';
 export { WidgetSettings } from './sub-components/WidgetSettings';

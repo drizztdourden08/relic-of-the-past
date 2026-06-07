@@ -1,21 +1,8 @@
+/* @layer shared-game @kind logic */
 import type { TilePassability, LedgeTraversal } from '../types';
 import { GRID_SIZE } from '../types';
 
-/**
- * Straight cliff-jump preprocessing.
- * Converts cliff triggers (0x28-0x2b, 0x2f) into directional ledge tiles
- * when they have 2-tile perpendicular width (overworld) or unconditionally (indoor).
- *
- * Indoor ledges infer direction from surrounding walls:
- * - 0x28/0x29 (y-axis): direction inferred from walls above or below
- * - 0x2a/0x2b (x-axis): direction inferred from walls left or right
- */
-export function processStraightCliffs(
-  grid: TilePassability[][],
-  rawAttr: number[][],
-  ledges: LedgeTraversal[],
-  isIndoors = false,
-): void {
+const processStraightCliffs = (grid: TilePassability[][], rawAttr: number[][], ledges: LedgeTraversal[], isIndoors = false): void => {
   const CLIFF_TRIGGERS = new Set([0x28, 0x29, 0x2a, 0x2b, 0x2f]);
   // Horizontal ledge attrs (0x2a/0x2b) — direction inferred from surrounding walls
   const HORIZ_LEDGE_ATTRS = new Set([0x2a, 0x2b]);
@@ -127,17 +114,9 @@ export function processStraightCliffs(
       ledges.push({ startRow: row, startCol: col, endRow: r, endCol: c });
     }
   }
-}
+};
 
-/**
- * Diagonal cliff-jump preprocessing.
- * Converts zigzag cliff paths (0x2c=NW, 0x2d=SE, 0x2e=NE) into diagonal ledges.
- */
-export function processDiagonalCliffs(
-  grid: TilePassability[][],
-  rawAttr: number[][],
-  ledges: LedgeTraversal[],
-): void {
+const processDiagonalCliffs = (grid: TilePassability[][], rawAttr: number[][], ledges: LedgeTraversal[]): void => {
   const DIAG_CLIFF_TILES = new Set([0x2c, 0x2d, 0x2e, 0x1a, 0x12, 0x13, 0x1b]);
   const DIAG_TRIGGERS: Record<number, { dir: 'ne' | 'nw' | 'se' | 'sw'; d1: [number, number]; d2: [number, number] }> = {
     0x2c: { dir: 'nw', d1: [-1, 0], d2: [0, -1] },
@@ -198,17 +177,9 @@ export function processDiagonalCliffs(
       }
     }
   }
-}
+};
 
-/**
- * South-cliff scan from diagonal edge tiles and cliff borders.
- * Detects southward cliff jumps where edge tiles have cliff face below.
- */
-export function processSouthCliffs(
-  grid: TilePassability[][],
-  rawAttr: number[][],
-  ledges: LedgeTraversal[],
-): void {
+const processSouthCliffs = (grid: TilePassability[][], rawAttr: number[][], ledges: LedgeTraversal[]): void => {
   const DIAG_EDGE_ATTRS = new Set([0x2c, 0x2d, 0x2e, 0x1a]);
   const CLIFF_BORDER_ATTRS = new Set([0x10, 0x18]);
 
@@ -241,4 +212,6 @@ export function processSouthCliffs(
       }
     }
   }
-}
+};
+
+export { processStraightCliffs, processDiagonalCliffs, processSouthCliffs };

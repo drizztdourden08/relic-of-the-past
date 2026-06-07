@@ -1,3 +1,4 @@
+/* @layer renderer-stores @kind logic */
 import { create } from 'zustand';
 import type {
   ShadowCastingProject,
@@ -101,7 +102,7 @@ interface ShadowEditorStore {
   getScreenData: (screenId: number) => ScreenShadowData;
 }
 
-function ensureScreenData(project: ShadowCastingProject, screenId: number): ScreenShadowData {
+const ensureScreenData = (project: ShadowCastingProject, screenId: number): ScreenShadowData => {
   if (project.screens[screenId]) return project.screens[screenId];
   return {
     screenId,
@@ -109,15 +110,15 @@ function ensureScreenData(project: ShadowCastingProject, screenId: number): Scre
     lights: [],
     lighting: { ...project.globalDefaults },
   };
-}
+};
 
-function pushUndo(state: ShadowEditorStore, screenId: number): { undoStack: ScreenShadowData[]; redoStack: ScreenShadowData[] } {
+const pushUndo = (state: ShadowEditorStore, screenId: number): { undoStack: ScreenShadowData[]; redoStack: ScreenShadowData[] } => {
   const current = ensureScreenData(state.project, screenId);
   return {
     undoStack: [...state.undoStack.slice(-20), current],
     redoStack: [],
   };
-}
+};
 
 const useShadowEditorStore = create<ShadowEditorStore>((set, get) => ({
   open: false,

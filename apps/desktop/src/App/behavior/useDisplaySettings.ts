@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind hook */
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { syncAspectRatioLock } from './syncAspectRatioLock';

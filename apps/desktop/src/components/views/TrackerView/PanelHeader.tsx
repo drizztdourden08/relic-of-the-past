@@ -1,8 +1,9 @@
+/* @layer renderer-components @kind component */
 import { SegmentedControl, Slider } from '../../primitives';
 import { MODE_OPTIONS } from './constants';
 import type { PanelHeaderProps } from './types';
 
-function PanelHeader({ title, panelSettings, onSettingsChange, onClose, onPopOut, onDock, showPopOut, onMouseDown }: PanelHeaderProps) {
+const PanelHeader = ({ title, panelSettings, onSettingsChange, onClose, onPopOut, onDock, showPopOut, onMouseDown }: PanelHeaderProps) => {
   const modeValue = panelSettings.mode === 'floating' ? 'float' : panelSettings.side;
 
   return (
@@ -35,6 +36,6 @@ function PanelHeader({ title, panelSettings, onSettingsChange, onClose, onPopOut
       </div>
     </div>
   );
-}
+};
 
 export { PanelHeader };

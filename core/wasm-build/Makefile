@@ -1,3 +1,4 @@
+# @layer core-wasm-build @kind build
 # Emscripten WASM Build for zelda3
 #
 # Prerequisites:

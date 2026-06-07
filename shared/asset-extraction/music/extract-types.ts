@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Types, constants, and helpers for SPC music extraction.
  */
@@ -69,7 +70,7 @@ const kKeys = ['C-', 'C#', 'D-', 'D#', 'E-', 'F-', 'F#', 'G-', 'G#', 'A-', 'A#',
 
 // ─── Helpers ───
 
-function noteToStr(note: number): string {
+const noteToStr = (note: number): string => {
   if (note >= 72) {
     if (note === 72) return '-+-';
     if (note === 73) return '---';
@@ -78,14 +79,14 @@ function noteToStr(note: number): string {
   const octave = Math.floor(note / 12);
   const key = note % 12;
   return `${kKeys[key]}${octave + 1}`;
-}
+};
 
-function toStr(s: unknown): string {
+const toStr = (s: unknown): string => {
   if (typeof s === 'string') return s;
   if (typeof s === 'number') return String(s);
   if (s && typeof s === 'object' && 'name' in s) return (s as { name: string }).name;
   return String(s);
-}
+};
 
 // ─── Result type ───
 

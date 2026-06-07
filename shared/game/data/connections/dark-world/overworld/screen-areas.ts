@@ -1,10 +1,11 @@
+/* @layer shared-game @kind data */
 import type { ScreenConnection } from '../../../../types';
 
 /**
  * Connections between Dark World overworld screens and logical area nodes.
  * Each logical area connects to a representative screen in its zone.
  */
-export const DW_SCREEN_AREA_CONNECTIONS: ScreenConnection[] = [
+const DW_SCREEN_AREA_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-27', to: 'east-dark-world', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'dw-20', to: 'west-dark-world', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'dw-2c', to: 'south-dark-world', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
@@ -30,3 +31,5 @@ export const DW_SCREEN_AREA_CONNECTIONS: ScreenConnection[] = [
   { from: 'dw-27', to: 'catfish', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
   { from: 'dw-20', to: 'hammer-peg-area', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
 ];
+
+export { DW_SCREEN_AREA_CONNECTIONS };

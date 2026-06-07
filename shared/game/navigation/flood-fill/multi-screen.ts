@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 import type { TileAttrContext, TileReq } from '../tile-attrs';
 import type { WorldFloodResult, ScreenCoverage, GridPos } from '../types';
 import { floodFillScreen } from './orchestrator';
@@ -7,31 +8,16 @@ import { getAdjacentScreen } from '../core/grid-utils';
 
 const LW_SCREENS = 64;
 
-/** Mirror a border position to the entry point on the adjacent screen. */
-function mirrorEntry(pos: number, edge: 'north' | 'south' | 'east' | 'west'): GridPos {
+const mirrorEntry = (pos: number, edge: 'north' | 'south' | 'east' | 'west'): GridPos => {
   switch (edge) {
     case 'north': return { row: 63, col: pos };
     case 'south': return { row: 0, col: pos };
     case 'west': return { row: pos, col: 63 };
     case 'east': return { row: pos, col: 0 };
   }
-}
+};
 
-/**
- * Propagate BFS across all reachable overworld screens.
- * Entry point #2: world-wide flood fill.
- *
- * Starts from a screen/position and crosses borders until no new
- * reachable areas are discovered. Handles multi-entry (areas only
- * reachable from a different direction on the same screen).
- */
-export function floodFillWorld(
-  getGrid: (screenIndex: number) => number[][],
-  tileContext: TileAttrContext,
-  startScreen: number,
-  inventory: Set<TileReq>,
-  startPos?: GridPos,
-): WorldFloodResult {
+const floodFillWorld = (getGrid: (screenIndex: number) => number[][], tileContext: TileAttrContext, startScreen: number, inventory: Set<TileReq>, startPos?: GridPos): WorldFloodResult => {
   const startTime = performance.now();
   const screens = new Map<number, ScreenCoverage>();
   const queue: [number, number, number][] = [];
@@ -132,4 +118,6 @@ export function floodFillWorld(
     elapsedMs: performance.now() - startTime,
     bfsRuns,
   };
-}
+};
+
+export { floodFillWorld };

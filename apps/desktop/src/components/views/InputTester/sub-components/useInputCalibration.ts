@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 /**
  * useInputCalibration — State management hook for the InputCalibration page.
  *
@@ -20,7 +21,7 @@ interface EventEntry {
   id: string;
 }
 
-function useInputCalibration() {
+const useInputCalibration = () => {
   const [gamepads, setGamepads] = useState<GamepadSnapshot[]>([]);
   const [events, setEvents] = useState<EventEntry[]>([]);
   const logRef = useRef<HTMLDivElement>(null);
@@ -142,7 +143,7 @@ function useInputCalibration() {
     handleStickCalibrationComplete,
     handleTriggerCalibrationComplete,
   };
-}
+};
 
 export { useInputCalibration };
 export type { EventEntry };

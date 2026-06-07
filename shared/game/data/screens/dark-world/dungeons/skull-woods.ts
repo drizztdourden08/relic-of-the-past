@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
-export const SKULL_WOODS_DUNGEON: ScreenDefinition[] = [
+const SKULL_WOODS_DUNGEON: ScreenDefinition[] = [
   {
     id: 'sw-0x29',
     name: 'Mothula',
@@ -111,3 +112,5 @@ export const SKULL_WOODS_DUNGEON: ScreenDefinition[] = [
     ],
   },
 ];
+
+export { SKULL_WOODS_DUNGEON };

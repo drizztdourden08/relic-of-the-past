@@ -1,3 +1,4 @@
+/* @layer renderer-stores @kind logic */
 import { create } from 'zustand';
 
 interface HudSettings {

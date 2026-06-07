@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Heightmap Builder — Rasterizes HeightmapElement shapes into a pixel buffer
  * that gets uploaded as a texture to the shadow shader.
@@ -5,20 +6,7 @@
 
 import type { HeightmapElement, ShapeDefinition } from '@shared/types/shadow-casting';
 
-/**
- * Build a heightmap texture from a list of heightmap elements.
- * Returns a Uint8Array (single channel, R = height * 255) sized width × height.
- *
- * @param offsetX World X origin of the current screen (subtracted from shape coords)
- * @param offsetY World Y origin of the current screen (subtracted from shape coords)
- */
-function buildHeightmapTexture(
-  elements: HeightmapElement[],
-  width: number,
-  height: number,
-  offsetX: number = 0,
-  offsetY: number = 0,
-): Uint8Array {
+const buildHeightmapTexture = (elements: HeightmapElement[], width: number, height: number, offsetX: number = 0, offsetY: number = 0): Uint8Array => {
   const buffer = new Uint8Array(width * height);
 
   for (const element of elements) {
@@ -26,16 +14,9 @@ function buildHeightmapTexture(
   }
 
   return buffer;
-}
+};
 
-function rasterizeElement(
-  buffer: Uint8Array,
-  bufWidth: number,
-  bufHeight: number,
-  element: HeightmapElement,
-  offsetX: number,
-  offsetY: number,
-): void {
+const rasterizeElement = (buffer: Uint8Array, bufWidth: number, bufHeight: number, element: HeightmapElement, offsetX: number, offsetY: number): void => {
   const { shape, height } = element;
 
   // Convert world-space shape to screen-local coordinates
@@ -69,13 +50,9 @@ function rasterizeElement(
       }
     }
   }
-}
+};
 
-/**
- * Compute signed distance from a pixel to a shape.
- * Negative = inside, positive = outside.
- */
-function distanceToShape(px: number, py: number, shape: ShapeDefinition): number {
+const distanceToShape = (px: number, py: number, shape: ShapeDefinition): number => {
   if (shape.type === 'freehand' && shape.points && shape.points.length >= 3) {
     return distanceToPolygonPoints(px, py, shape.points);
   }
@@ -116,16 +93,9 @@ function distanceToShape(px: number, py: number, shape: ShapeDefinition): number
 
   // N-sided polygon SDF with corner radius
   return distanceToNGon(lx, ly, halfW, halfH, sides, cornerRadius);
-}
+};
 
-function distanceToNGon(
-  lx: number,
-  ly: number,
-  halfW: number,
-  halfH: number,
-  sides: number,
-  cornerRadius: number,
-): number {
+const distanceToNGon = (lx: number, ly: number, halfW: number, halfH: number, sides: number, cornerRadius: number): number => {
   // Normalize to unit space
   const nx = lx / halfW;
   const ny = ly / halfH;
@@ -149,13 +119,9 @@ function distanceToNGon(
 
   // Scale back to pixel space
   return dist * Math.min(halfW, halfH);
-}
+};
 
-function distanceToPolygonPoints(
-  px: number,
-  py: number,
-  points: { x: number; y: number }[],
-): number {
+const distanceToPolygonPoints = (px: number, py: number, points: { x: number; y: number }[]): number => {
   const n = points.length;
   let minDist = Infinity;
   let inside = false;
@@ -182,6 +148,6 @@ function distanceToPolygonPoints(
   }
 
   return inside ? -minDist : minDist;
-}
+};
 
 export { buildHeightmapTexture };

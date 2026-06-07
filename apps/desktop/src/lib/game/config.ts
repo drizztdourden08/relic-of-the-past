@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind config */
 // Default config for WASM builds
 const DEFAULT_ZELDA3_INI = `[General]
 Autosave = 0

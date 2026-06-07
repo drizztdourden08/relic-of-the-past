@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * HUD tile decoder — extracts 2bpp HUD item graphics.
  *
@@ -18,11 +19,7 @@ import { kCompSpritePtrs } from '../data/tables';
 import { ADDR_HUD_PALETTE } from '../data/constants';
 import { ImageBuffer } from '../graphics/png-writer';
 
-/**
- * Load HUD palettes from ROM.
- * Returns a Map keyed by (palIdx, colorIdx) → RGBA.
- */
-function loadHudPalette(rom: RomData): Map<number, RGBA> {
+const loadHudPalette = (rom: RomData): Map<number, RGBA> => {
   const words = rom.getWords(ADDR_HUD_PALETTE, 64);
   const palette = new Map<number, RGBA>();
   for (let p = 0; p < 16; p++) {
@@ -33,27 +30,16 @@ function loadHudPalette(rom: RomData): Map<number, RGBA> {
     }
   }
   return palette;
-}
+};
 
-/**
- * Load raw HUD tile sheets from ROM (decompressed).
- * Returns 3 sheets in order: [sheet106, sheet107, sheet105]
- */
-function loadHudSheets(rom: RomData): Buffer[] {
+const loadHudSheets = (rom: RomData): Buffer[] => {
   const sheetIds = [106, 107, 105];
   return sheetIds.map(id =>
     decompress(kCompSpritePtrs[id], (addr) => rom.getByte(addr), false)
   );
-}
+};
 
-/**
- * Decode a single 8×8 HUD tile from its tile ID.
- */
-function decodeHudTile(
-  tileId: number,
-  sheets: Buffer[],
-  palette: Map<number, RGBA>,
-): ImageBuffer {
+const decodeHudTile = (tileId: number, sheets: Buffer[], palette: Map<number, RGBA>): ImageBuffer => {
   const tileNum = tileId & 0x3ff;
   const palIdx = (tileId >>> 10) & 7;
   const flipX = !!(tileId & 0x4000);
@@ -81,16 +67,9 @@ function decodeHudTile(
   if (flipX) result = result.flipX();
   if (flipY) result = result.flipY();
   return result;
-}
+};
 
-/**
- * Extract a standard 16×16 HUD sprite from 4 tile IDs (TL, TR, BL, BR).
- */
-function extractHudStandard(
-  tileIds: number[],
-  sheets: Buffer[],
-  palette: Map<number, RGBA>,
-): ImageBuffer {
+const extractHudStandard = (tileIds: number[], sheets: Buffer[], palette: Map<number, RGBA>): ImageBuffer => {
   const img = new ImageBuffer(16, 16);
   const positions: [number, number][] = [[0, 0], [8, 0], [0, 8], [8, 8]];
   for (let i = 0; i < tileIds.length; i++) {
@@ -98,17 +77,9 @@ function extractHudStandard(
     img.paste(tile, positions[i][0], positions[i][1]);
   }
   return img;
-}
+};
 
-/**
- * Extract a special HUD sprite with custom layout.
- */
-function extractHudSpecial(
-  tileIds: number[],
-  layout: string,
-  sheets: Buffer[],
-  palette: Map<number, RGBA>,
-): ImageBuffer {
+const extractHudSpecial = (tileIds: number[], layout: string, sheets: Buffer[], palette: Map<number, RGBA>): ImageBuffer => {
   if (layout === '8x16-centered') {
     const img = new ImageBuffer(16, 16);
     for (let i = 0; i < tileIds.length; i++) {
@@ -118,29 +89,13 @@ function extractHudSpecial(
     return img;
   }
   throw new Error(`Unknown HUD special layout: ${layout}`);
-}
+};
 
-/**
- * Extract a single 8×8 HUD tile, returned as 8×8 (scaled later by caller).
- */
-function extractHudSingle(
-  tileId: number,
-  sheets: Buffer[],
-  palette: Map<number, RGBA>,
-): ImageBuffer {
+const extractHudSingle = (tileId: number, sheets: Buffer[], palette: Map<number, RGBA>): ImageBuffer => {
   return decodeHudTile(tileId, sheets, palette);
-}
+};
 
-/**
- * Extract a horizontal strip of HUD tiles at 8px each.
- * Returns a (count×8) × 8 image, optionally cropped to `cropWidth` pixels.
- */
-function extractHudStrip(
-  tileIds: number[],
-  sheets: Buffer[],
-  palette: Map<number, RGBA>,
-  cropWidth?: number,
-): ImageBuffer {
+const extractHudStrip = (tileIds: number[], sheets: Buffer[], palette: Map<number, RGBA>, cropWidth?: number): ImageBuffer => {
   const fullW = tileIds.length * 8;
   const img = new ImageBuffer(fullW, 8);
   for (let i = 0; i < tileIds.length; i++) {
@@ -162,17 +117,9 @@ function extractHudStrip(
     return cropped;
   }
   return img;
-}
+};
 
-/**
- * Extract a vertical strip of HUD tiles at 8px each.
- * Returns a 8 × (count×8) image.
- */
-function extractHudVStrip(
-  tileIds: number[],
-  sheets: Buffer[],
-  palette: Map<number, RGBA>,
-): ImageBuffer {
+const extractHudVStrip = (tileIds: number[], sheets: Buffer[], palette: Map<number, RGBA>): ImageBuffer => {
   const h = tileIds.length * 8;
   const img = new ImageBuffer(8, h);
   for (let i = 0; i < tileIds.length; i++) {
@@ -180,7 +127,7 @@ function extractHudVStrip(
     img.paste(tile, 0, i * 8);
   }
   return img;
-}
+};
 
 export {
   decodeHudTile,

@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind component */
 /**
  * CombatTab — Kill enemies, damage multiplier, extra armor reduction.
  */

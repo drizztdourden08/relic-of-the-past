@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 ﻿import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
 type IconButtonVariant = 'ghost' | 'danger';

@@ -1,7 +1,8 @@
+/* @layer renderer-components @kind component */
 import type { ReviewStatus } from '../types';
 import { S } from '../styles';
 
-function Stats({ counts, total }: { counts: { good: number; neutral: number; bad: number; yellow: number }; total: number }) {
+const Stats = ({ counts, total }: { counts: { good: number; neutral: number; bad: number; yellow: number }; total: number }) => {
   return (
     <div style={S.stats}>
       <span style={{ color: '#4caf50' }}>{counts.good} good</span>
@@ -11,9 +12,9 @@ function Stats({ counts, total }: { counts: { good: number; neutral: number; bad
       <span style={{ color: '#666' }}>/ {total}</span>
     </div>
   );
-}
+};
 
-function FilterBtns({ filter, setFilter }: { filter: 'all' | ReviewStatus; setFilter: (v: 'all' | ReviewStatus) => void }) {
+const FilterBtns = ({ filter, setFilter }: { filter: 'all' | ReviewStatus; setFilter: (v: 'all' | ReviewStatus) => void }) => {
   return (
     <>
       {(['all', 'neutral', 'good', 'yellow', 'bad'] as const).map(v => {
@@ -27,20 +28,20 @@ function FilterBtns({ filter, setFilter }: { filter: 'all' | ReviewStatus; setFi
       })}
     </>
   );
-}
+};
 
-function CategoryButton({ label, value, current, onClick, count }: {
+const CategoryButton = ({ label, value, current, onClick, count }: {
   label: string; value: string; current: string; onClick: (v: string) => void; count: number;
-}) {
+}) => {
   const active = current === value;
   return (
     <button onClick={() => onClick(value)} style={{ ...S.catTab, ...(active ? S.catTabActive : {}) }}>
       {label} <span style={{ opacity: 0.5, fontSize: 10 }}>({count})</span>
     </button>
   );
-}
+};
 
-function StatusBtns({ current, onClick }: { current: ReviewStatus; onClick: (s: ReviewStatus) => void }) {
+const StatusBtns = ({ current, onClick }: { current: ReviewStatus; onClick: (s: ReviewStatus) => void }) => {
   return (
     <div style={S.statusBtns}>
       {([['✓', 'good', '#4caf50'], ['●', 'yellow', '#f5c542'], ['—', 'neutral', '#888'], ['✗', 'bad', '#f44336']] as const).map(([icon, st, color]) => {
@@ -58,6 +59,6 @@ function StatusBtns({ current, onClick }: { current: ReviewStatus; onClick: (s: 
       })}
     </div>
   );
-}
+};
 
 export { CategoryButton, FilterBtns, Stats, StatusBtns };

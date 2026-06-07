@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
 /**
@@ -5,7 +6,7 @@ import type { ScreenDefinition } from '../../../../types';
  * Each entry is 1:1 with a native game screen index.
  * Grid: 8 columns × 8 rows. Big areas span 2×2.
  */
-export const DARK_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
+const DARK_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
   {
     id: 'dw-00', name: 'Skull Woods NW',
     type: 'overworld', world: 'dark',
@@ -519,3 +520,5 @@ export const DARK_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
 ];
+
+export { DARK_WORLD_OVERWORLD_SCREENS };

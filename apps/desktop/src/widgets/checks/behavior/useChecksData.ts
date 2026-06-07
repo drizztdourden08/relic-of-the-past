@@ -1,3 +1,4 @@
+/* @layer renderer-widgets @kind hook */
 import { useState, useEffect, useMemo } from 'react';
 import { computeTrackerSnapshot } from '@shared/game/logic/eval';
 import { resolveRules, VANILLA_CONFIG } from '@shared/game/logic/presets';

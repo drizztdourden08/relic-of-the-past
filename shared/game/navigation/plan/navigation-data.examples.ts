@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 /**
  * EXAMPLES — What the enriched data looks like after the analysis script runs.
  * This file is for review only. Delete after approval.

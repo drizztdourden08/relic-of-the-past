@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind constants */
 /**
  * Named ROM addresses used by asset extraction.
  * Replaces magic numbers scattered throughout the Python code.

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { Button } from '../../primitives/Button';

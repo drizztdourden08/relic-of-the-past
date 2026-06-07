@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 type LogChannel = 'core' | 'app' | 'randomizer' | 'wasm' | 'ipc' | 'error';
 type LogLevel = 'info' | 'warn' | 'error';
 
@@ -17,7 +18,7 @@ let nextId = 0;
 const entries: LogEntry[] = [];
 const listeners = new Set<LogListener>();
 
-function emit(channel: LogChannel, level: LogLevel, message: string): void {
+const emit = (channel: LogChannel, level: LogLevel, message: string): void => {
   const entry: LogEntry = {
     id: nextId++,
     timestamp: Date.now(),
@@ -38,7 +39,7 @@ function emit(channel: LogChannel, level: LogLevel, message: string): void {
       // Don't let a bad listener break the bus
     }
   }
-}
+};
 
 const log = {
   core(msg: string, level: LogLevel = 'info'): void { emit('core', level, msg); },
@@ -49,14 +50,14 @@ const log = {
   error(msg: string): void { emit('error', 'error', msg); },
 };
 
-function subscribe(listener: LogListener): () => void {
+const subscribe = (listener: LogListener): () => void => {
   listeners.add(listener);
   return () => listeners.delete(listener);
-}
+};
 
-function getEntries(): LogEntry[] {
+const getEntries = (): LogEntry[] => {
   return [...entries];
-}
+};
 
 const CHANNEL_COLORS: Record<LogChannel, string> = {
   core: '#4a9',
@@ -68,7 +69,7 @@ const CHANNEL_COLORS: Record<LogChannel, string> = {
 };
 
 // Intercept global errors and unhandled rejections
-function installGlobalHandlers(): void {
+const installGlobalHandlers = (): void => {
   window.addEventListener('error', (e) => {
     // WASM RuntimeErrors are handled exclusively by the lifecycle crash handler.
     // Never log them here — they would flood during the game loop.
@@ -81,7 +82,7 @@ function installGlobalHandlers(): void {
   window.addEventListener('unhandledrejection', (e) => {
     log.error(`Unhandled rejection: ${e.reason}`);
   });
-}
+};
 
 installGlobalHandlers();
 

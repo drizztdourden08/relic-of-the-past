@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState, useMemo, useCallback } from 'react';
 import { ALL_CHECKS } from '@shared/game/checks';
 import type { GroupDimension, FilterState } from '@shared/game/checks/grouping';

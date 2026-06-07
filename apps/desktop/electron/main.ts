@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import { app, BrowserWindow, Menu, session, protocol } from 'electron';
 import { is } from '@electron-toolkit/utils';
 

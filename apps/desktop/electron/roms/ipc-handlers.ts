@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import { ipcMain } from 'electron';
 import { basename, extname } from 'path';
 import { readFile, access, copyFile, rm, stat } from 'fs/promises';
@@ -10,7 +11,7 @@ import { loadAppState, saveAppState } from '../profiles/app-state';
 
 const ROM_EXTENSIONS = new Set(['.sfc', '.smc']);
 
-function registerRomHandlers(): void {
+const registerRomHandlers = (): void => {
   ipcMain.handle('roms:list', () => listRoms());
 
   ipcMain.handle('roms:listWithStatus', async () => {
@@ -162,6 +163,6 @@ function registerRomHandlers(): void {
       };
     } catch { return null; }
   });
-}
+};
 
 export { registerRomHandlers };

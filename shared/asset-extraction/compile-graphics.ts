@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Graphics asset compilation — sprites, backgrounds, link graphics, misc data, tilemaps, map32.
  */
@@ -6,7 +7,7 @@ import type { AssetBuilder } from './asset-builder';
 import { bufToArr, lzDecompressWithLen } from './asset-builder';
 import { kCompSpritePtrs, kCompBgPtrs } from './data/tables';
 
-function buildSpriteGfx(rom: RomData, A: AssetBuilder): void {
+const buildSpriteGfx = (rom: RomData, A: AssetBuilder): void => {
   const all: Buffer[] = [];
   for (let i = 0; i < 108; i++) {
     if (i < 12) {
@@ -17,18 +18,18 @@ function buildSpriteGfx(rom: RomData, A: AssetBuilder): void {
     }
   }
   A.addPacked('kSprGfx', all);
-}
+};
 
-function buildBgGfx(rom: RomData, A: AssetBuilder): void {
+const buildBgGfx = (rom: RomData, A: AssetBuilder): void => {
   const all: Buffer[] = [];
   for (let i = 0; i < kCompBgPtrs.length; i++) {
     const { compressedLength } = lzDecompressWithLen(rom, kCompBgPtrs[i]);
     all.push(Buffer.from(rom.getBytes(kCompBgPtrs[i], compressedLength)));
   }
   A.addPacked('kBgGfx', all);
-}
+};
 
-function buildLinkGraphics(rom: RomData, A: AssetBuilder): void {
+const buildLinkGraphics = (rom: RomData, A: AssetBuilder): void => {
   const height = 448;
   const raw = rom.getBytes(0x108000, 0x800 * height / 32);
   const result: number[] = [];
@@ -37,9 +38,9 @@ function buildLinkGraphics(rom: RomData, A: AssetBuilder): void {
     for (let b = 0; b < 32; b++) result.push(raw[srcOff + b]);
   }
   A.addUint8('kLinkGraphics', result);
-}
+};
 
-function buildMisc(rom: RomData, A: AssetBuilder): void {
+const buildMisc = (rom: RomData, A: AssetBuilder): void => {
   A.addUint8('kOverworldMapGfx', bufToArr(rom.getBytes(0x18c000, 0x4000)));
   A.addUint8('kLightOverworldTilemap', bufToArr(rom.getBytes(0xac727, 4096)));
   A.addUint8('kDarkOverworldTilemap', bufToArr(rom.getBytes(0xaD727, 1024)));
@@ -68,16 +69,16 @@ function buildMisc(rom: RomData, A: AssetBuilder): void {
   A.addUint16('kPalette_PalaceMapSpr', rom.getWords(0x9BD70A, 21));
   A.addUint16('kHudPalData', rom.getWords(0x9BD660, 64));
   A.addUint16('kOverworldMapPaletteData', rom.getWords(0x8ADB27, 256));
-}
+};
 
-function buildMap32ToMap16(rom: RomData, A: AssetBuilder): void {
+const buildMap32ToMap16 = (rom: RomData, A: AssetBuilder): void => {
   A.addUint8('kMap32ToMap16_0', bufToArr(rom.getBytes(0x838000, 2218 * 6)));
   A.addUint8('kMap32ToMap16_1', bufToArr(rom.getBytes(0x83b400, 2218 * 6)));
   A.addUint8('kMap32ToMap16_2', bufToArr(rom.getBytes(0x848000, 2218 * 6)));
   A.addUint8('kMap32ToMap16_3', bufToArr(rom.getBytes(0x84b400, 2218 * 6)));
-}
+};
 
-function buildTilemaps(rom: RomData, A: AssetBuilder): void {
+const buildTilemaps = (rom: RomData, A: AssetBuilder): void => {
   const kSrcs = [0xcdd6d, 0xce7bf, 0xce2a8, 0xce63c, 0xce456, 0xeda9c];
   for (let i = 0; i < kSrcs.length; i++) {
     let p = kSrcs[i];
@@ -91,6 +92,6 @@ function buildTilemaps(rom: RomData, A: AssetBuilder): void {
     const totalLen = p - pOrg + 1;
     A.addUint8(`kBgTilemap_${i}`, bufToArr(rom.getBytes(pOrg, totalLen)));
   }
-}
+};
 
 export { buildBgGfx, buildLinkGraphics, buildMap32ToMap16, buildMisc, buildSpriteGfx, buildTilemaps };

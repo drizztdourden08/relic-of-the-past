@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Testing the App — Built-in Capabilities (no Playwright needed)
 
 The app has **CLI flags and IPC channels** that let it drive itself — load a save
@@ -24,6 +25,15 @@ Otherwise, use the capabilities; don't touch the harness that provides them.
 
 Launch form: `npx electron dist/electron/main.js <flags>`
 
+> ⚠️ **ALWAYS launch with `--no-focus` (and `--muted`)** when starting the app for
+> any test/verification, so the window opens **inactive** and does **not** steal
+> focus or interrupt what the user is doing. This is mandatory, not optional.
+>
+> - **Built app:** `npx electron dist/electron/main.js --no-focus --muted <flags>`
+> - **Dev server:** `npm run dev -- -- --no-focus --muted` — the double `--` is
+>   required (first for npm → the script, second for electron-vite → Electron).
+>   Verified: this forwards `--no-focus` to the Electron process.
+
 ## CLI flags
 
 | Flag | Effect | Output |
@@ -41,17 +51,20 @@ Launch form: `npx electron dist/electron/main.js <flags>`
 
 ```bash
 # Screenshot of save slot 2 (then inspect tests/screenshots/snapshot.png)
-npx electron dist/electron/main.js --muted --auto-state=2 --screenshot=snapshot
+npx electron dist/electron/main.js --no-focus --muted --auto-state=2 --screenshot=snapshot
 
 # Dump the collision grid for slot 6 and read the JSON
-npx electron dist/electron/main.js --muted --dump-layers=6
+npx electron dist/electron/main.js --no-focus --muted --dump-layers=6
 # → read debug-output/dump-layers.json
 
 # Dump grid + hover a specific tile's tooltip + screenshot
-npx electron dist/electron/main.js --muted --dump-layers=6 --hover-tile=45,31
+npx electron dist/electron/main.js --no-focus --muted --dump-layers=6 --hover-tile=45,31
 
 # Dump navigation state for slot 1
-npx electron dist/electron/main.js --muted --dump-nav=1
+npx electron dist/electron/main.js --no-focus --muted --dump-nav=1
+
+# Quick boot check via the dev server (no focus stolen)
+npm run dev -- -- --no-focus --muted
 ```
 
 ## IPC channels behind the flags

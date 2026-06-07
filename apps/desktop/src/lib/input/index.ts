@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind barrel */
 /**
  * Input engine — public API for the renderer input subsystem.
  */

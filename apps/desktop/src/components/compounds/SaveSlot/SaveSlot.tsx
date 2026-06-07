@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 ﻿import './SaveSlot.css';
 import { type SaveSlotProps } from './types';
 

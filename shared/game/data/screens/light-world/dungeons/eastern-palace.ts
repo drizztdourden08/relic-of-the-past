@@ -1,6 +1,7 @@
+/* @layer shared-game @kind data */
 import type { ScreenDefinition } from '../../../../types';
 
-export const EASTERN_PALACE_DUNGEON: ScreenDefinition[] = [
+const EASTERN_PALACE_DUNGEON: ScreenDefinition[] = [
   {
     id: 'ep-0x89',
     name: 'Eyegore Key Room',
@@ -158,3 +159,5 @@ export const EASTERN_PALACE_DUNGEON: ScreenDefinition[] = [
     ],
   },
 ];
+
+export { EASTERN_PALACE_DUNGEON };

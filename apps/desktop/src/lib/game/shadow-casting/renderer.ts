@@ -1,3 +1,4 @@
+/* @layer bridge-wasm @kind logic */
 /**
  * Shadow Casting Renderer — WebGL post-processing pipeline.
  *
@@ -16,10 +17,7 @@ import { createProgram, createFBO, destroyFBO, drawQuad, type FBO } from './gl-h
 import { buildHeightmapTexture } from './heightmap-builder';
 import { computeLightUniforms, MAX_LIGHTS } from './light-calculator';
 
-function createShadowRenderer(
-  canvas: HTMLCanvasElement,
-  _options: ShadowRendererOptions = {},
-): ShadowRenderer | null {
+const createShadowRenderer = (canvas: HTMLCanvasElement, _options: ShadowRendererOptions = {}): ShadowRenderer | null => {
   const glOrNull = canvas.getContext('webgl', {
     alpha: true,
     antialias: false,
@@ -120,27 +118,27 @@ function createShadowRenderer(
   let snesWidth = 512;
   let snesHeight = 240;
 
-  function rebuildHeightmap(): void {
-    if (!screenData || screenData.heightmap.length === 0) return;
-    // Build heightmap in viewport-local space, exactly matching the NavigationOverlay's coords.
-    // offset = (viewLeft, viewTop) converts world coords → viewport-local coords.
-    const texData = buildHeightmapTexture(screenData.heightmap, snesWidth, snesHeight, viewOriginX, viewOriginY);
-    gl.bindTexture(gl.TEXTURE_2D, heightmapTex);
-    // LUMINANCE = 1 byte/pixel; width may not be multiple of 4, so disable row alignment
-    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, snesWidth, snesHeight, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, texData);
-  }
+  const rebuildHeightmap = (): void => {
+        if (!screenData || screenData.heightmap.length === 0) return;
+        // Build heightmap in viewport-local space, exactly matching the NavigationOverlay's coords.
+        // offset = (viewLeft, viewTop) converts world coords → viewport-local coords.
+        const texData = buildHeightmapTexture(screenData.heightmap, snesWidth, snesHeight, viewOriginX, viewOriginY);
+        gl.bindTexture(gl.TEXTURE_2D, heightmapTex);
+        // LUMINANCE = 1 byte/pixel; width may not be multiple of 4, so disable row alignment
+        gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, snesWidth, snesHeight, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, texData);
+      };
 
-  function resizeFBOs(w: number, h: number): void {
-    destroyFBO(gl, shadowFBO);
-    destroyFBO(gl, blurFBO1);
-    destroyFBO(gl, blurFBO2);
-    shadowFBO = createFBO(gl, w, h);
-    blurFBO1 = createFBO(gl, w, h);
-    blurFBO2 = createFBO(gl, w, h);
-    width = w;
-    height = h;
-  }
+  const resizeFBOs = (w: number, h: number): void => {
+        destroyFBO(gl, shadowFBO);
+        destroyFBO(gl, blurFBO1);
+        destroyFBO(gl, blurFBO2);
+        shadowFBO = createFBO(gl, w, h);
+        blurFBO1 = createFBO(gl, w, h);
+        blurFBO2 = createFBO(gl, w, h);
+        width = w;
+        height = h;
+      };
 
   const renderer: ShadowRenderer = {
     render(gameCanvas: HTMLCanvasElement, time: number): void {
@@ -295,6 +293,6 @@ function createShadowRenderer(
   };
 
   return renderer;
-}
+};
 
 export { createShadowRenderer };

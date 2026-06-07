@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind hook */
 import { useState, useCallback, useEffect } from 'react';
 import { subscribeGameState, resetGame } from '../../lib/game';
 

@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind component */
 /**
  * HudSprite — renders a single sprite image with pixel-perfect scaling.
  * Optionally adds a 1px (scaled) drop-shadow outline following the alpha shape.
@@ -11,12 +12,7 @@ interface HudSpriteProps {
   scale: number;
 }
 
-/**
- * Generates a CSS filter using an inline SVG with two feMorphology passes
- * (horizontal + vertical dilate merged) to create a cross-shaped outline.
- * No diagonal spread. Radius = scale (1 SNES pixel thick).
- */
-function outlineFilter(s: number): string {
+const outlineFilter = (s: number): string => {
   const svg = [
     `<svg xmlns='http://www.w3.org/2000/svg'>`,
     `<filter id='o' x='-10%' y='-10%' width='120%' height='120%' color-interpolation-filters='sRGB'>`,
@@ -29,7 +25,7 @@ function outlineFilter(s: number): string {
     `</filter></svg>`,
   ].join('');
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}#o")`;
-}
+};
 
 const HudSprite = (props: HudSpriteProps) => {
   const { src, width, height, outline = false, scale } = props;

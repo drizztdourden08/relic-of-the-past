@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind hook */
 import { useState, useEffect, useMemo } from 'react';
 import { computeTrackerSnapshot } from '@shared/game/logic/eval';
 import { resolveRules, VANILLA_CONFIG } from '@shared/game/logic/presets';
@@ -11,7 +12,7 @@ import {
 import type { UnknownItemEntry } from '../../../lib/game';
 import type { CheckStatus } from '@shared/game/logic/eval';
 
-function useTrackerState() {
+const useTrackerState = () => {
   const [inventory, setInventory] = useState<Set<string>>(() => getCurrentInventory());
   const [completedChecks, setCompletedChecks] = useState<Set<string>>(() => getCompletedChecks());
   const [unknownItems, setUnknownItems] = useState<UnknownItemEntry[]>(() => getUnknownItems());
@@ -62,6 +63,6 @@ function useTrackerState() {
   }, [snapshot]);
 
   return { inventory, completedChecks, snapshot, tagMap, stats };
-}
+};
 
 export { useTrackerState };

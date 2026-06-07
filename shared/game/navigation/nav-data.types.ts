@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /**
  * Navigation Data Types
  *
@@ -26,7 +27,7 @@
  *   flute, cape, byrna, somaria, book, firerod, icerod, lamp,
  *   bow, bombos, ether, quake
  */
-export type TraversalRequirement =
+type TraversalRequirement =
   | 'lift.1' | 'lift.2' | 'lift.3'
   | 'sword' | 'boomerang' | 'bombs' | 'hammer' | 'powder'
   | 'boots' | 'flippers' | 'hookshot' | 'mirror' | 'moonpearl'
@@ -45,11 +46,11 @@ export type TraversalRequirement =
  *   [['hammer', 'lift.1']]       → needs BOTH
  *   []                           → no requirements
  */
-export type RequirementSet = TraversalRequirement[][];
+type RequirementSet = TraversalRequirement[][];
 
 // ─── Connection Transit Types ───────────────────────────────────────────────
 
-export type ConnectionTransitType =
+type ConnectionTransitType =
   | 'walk'            // Screen border crossing (positional 1:1)
   | 'door'            // Enter/exit building
   | 'passage'         // Through-building connecting two overworld areas
@@ -70,7 +71,7 @@ export type ConnectionTransitType =
  * Navigation data for a single screen.
  * Populated by the analysis script, read by the pathfinder.
  */
-export interface RegionNavData {
+interface RegionNavData {
   /** Total tiles in grid (4096 for overworld 64×64) */
   totalTiles: number;
 
@@ -99,7 +100,7 @@ export interface RegionNavData {
  * Navigation data for a single connection.
  * Populated by the analysis script, read by the pathfinder.
  */
-export interface ConnectionNavData {
+interface ConnectionNavData {
   /** Physical traversal type */
   transitType: ConnectionTransitType;
 
@@ -137,7 +138,7 @@ export interface ConnectionNavData {
  * A connection point is a bundle of tiles that forms one logical entry/exit.
  * If a cliff splits a border into two gaps, that's two separate connection points.
  */
-export interface ConnectionPointData {
+interface ConnectionPointData {
   /**
    * Unique ID.
    * Convention: "{world}-{screen:hex}-{type}-{dir}-{index}"
@@ -170,7 +171,7 @@ export interface ConnectionPointData {
 
 // ─── Nav Obstacle ───────────────────────────────────────────────────────────
 
-export interface NavObstacle {
+interface NavObstacle {
   /** Position on the 64×64 grid */
   position: { row: number; col: number };
 
@@ -190,7 +191,7 @@ export interface NavObstacle {
 
 // ─── Nav Feature ────────────────────────────────────────────────────────────
 
-export interface NavFeature {
+interface NavFeature {
   type: 'hookshot_target' | 'ledge_drop' | 'fairy_fountain' | 'flute_landing'
     | 'torch' | 'switch_crystal' | 'push_block' | 'warp_pad' | 'signpost'
     | 'npc' | 'chest' | 'heart_piece';
@@ -203,7 +204,7 @@ export interface NavFeature {
 
 // ─── Nav Variant ────────────────────────────────────────────────────────────
 
-export interface NavVariant {
+interface NavVariant {
   /** What game event triggers this layout change */
   trigger: 'agahnim.0' | 'agahnim.1' | 'rain_ended' | 'flute_activated'
     | 'smith_rescued' | 'castle_opened';
@@ -217,3 +218,5 @@ export interface NavVariant {
   /** Additional description for debugging */
   description?: string;
 }
+
+export type { TraversalRequirement, RequirementSet, ConnectionTransitType, RegionNavData, ConnectionNavData, ConnectionPointData, NavObstacle, NavFeature, NavVariant };

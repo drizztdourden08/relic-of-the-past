@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 import { useState } from 'react';
 import { ProfileCard } from '../../compounds/ProfileCard';
 import { RomCard } from '../../compounds/RomCard';

@@ -1,3 +1,4 @@
+/* @layer renderer-appshell @kind hook */
 /**
  * Debug hook: reacts to --dump-nav=N CLI flag.
  *

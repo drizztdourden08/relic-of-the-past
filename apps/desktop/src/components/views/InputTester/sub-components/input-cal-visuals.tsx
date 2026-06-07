@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * Visual sub-components for Input Calibration.
  * AxisRecordButton, TriggerBar, StickCircle, and utility helpers.
@@ -5,7 +6,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { getButtonIconUrl } from '../data/button-icons';
-import { DEVICE_DATABASE } from '@shared/input/device-database';
+import { DEVICE_DATABASE } from '@shared/input/data/devices';
 import { findPresetByVidPid } from '@shared/input';
 
 // ── Controller silhouette icons ──
@@ -17,7 +18,7 @@ const CONTROLLER_ICON_MAP: Record<string, string> = {
 
 // ── Axis Record Button ──
 
-function AxisRecordButton({ getValues, label }: { getValues: () => number[]; label: string }) {
+const AxisRecordButton = ({ getValues, label }: { getValues: () => number[]; label: string }) => {
   const [recording, setRecording] = useState(false);
   const [done, setDone] = useState(false);
   const bufRef = useRef<{ t: number; v: number[] }[]>([]);
@@ -65,11 +66,11 @@ function AxisRecordButton({ getValues, label }: { getValues: () => number[]; lab
       </svg>
     </button>
   );
-}
+};
 
 // ── Trigger Bar Component ──
 
-function TriggerBar({ value, label }: { value: number; label: string }) {
+const TriggerBar = ({ value, label }: { value: number; label: string }) => {
   const clamped = Math.max(0, Math.min(1, value));
   const fillH = clamped * 60; // 60px tall bar
   return (
@@ -92,11 +93,11 @@ function TriggerBar({ value, label }: { value: number; label: string }) {
       <span className="input-cal__stick-values">{clamped.toFixed(2)}</span>
     </div>
   );
-}
+};
 
 // ── Joystick Circle Component ──
 
-function getStickDirectionIcon(x: number, y: number, prefix: string): string | null {
+const getStickDirectionIcon = (x: number, y: number, prefix: string): string | null => {
   const threshold = 0.4;
   const ax = Math.abs(x);
   const ay = Math.abs(y);
@@ -108,9 +109,9 @@ function getStickDirectionIcon(x: number, y: number, prefix: string): string | n
     if (ax > threshold && ay > threshold) return getButtonIconUrl(`${prefix}-vertical`);
     return getButtonIconUrl(y > 0 ? `${prefix}-down` : `${prefix}-up`);
   }
-}
+};
 
-function StickCircle({ x, y, label, iconPrefix }: { x: number; y: number; label: string; iconPrefix?: string }) {
+const StickCircle = ({ x, y, label, iconPrefix }: { x: number; y: number; label: string; iconPrefix?: string }) => {
   const clampX = Math.max(-1, Math.min(1, x));
   const clampY = Math.max(-1, Math.min(1, y));
   const dotX = 40 + clampX * 36;
@@ -138,16 +139,15 @@ function StickCircle({ x, y, label, iconPrefix }: { x: number; y: number; label:
       })()}
     </div>
   );
-}
+};
 
-/** Resolve a friendly controller name from SDL database, preset, or HID product string */
-function resolveDeviceName(vid: string, pid: string, hidProduct?: string): string {
+const resolveDeviceName = (vid: string, pid: string, hidProduct?: string): string => {
   const vidPid = `${vid.padStart(4, '0')}:${pid.padStart(4, '0')}`;
   const sdlEntry = DEVICE_DATABASE.find(e => e.vidPid === vidPid);
   if (sdlEntry) return sdlEntry.name;
   const preset = findPresetByVidPid(vid, pid);
   if (preset && preset.id !== 'generic') return preset.name;
   return hidProduct || `HID ${vidPid}`;
-}
+};
 
 export { AxisRecordButton, CONTROLLER_ICON_MAP, StickCircle, TriggerBar, resolveDeviceName };

@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Item sprite extraction orchestrator.
  * Replaces scripts/extract-item-sprites.py — same JSON definitions, same output.
@@ -10,7 +11,8 @@ import { readFileSync, readdirSync, unlinkSync } from 'fs';
 import { join, basename } from 'path';
 import type { RomData } from '../rom/rom-types';
 import { loadRom } from '../rom/rom-loader';
-import { ImageBuffer } from '../graphics/png-writer';
+import type { ImageBuffer } from '../graphics/png-writer';
+import type { RGBA } from '../graphics/palette';
 import {
   loadHudPalette, loadHudSheets,
   extractHudStandard, extractHudSpecial,
@@ -60,7 +62,7 @@ interface SpriteDefsJson {
 interface ExtractionContext {
   rom: RomData;
   hudSheets: Buffer[];
-  hudPalette: Map<number, import('../graphics/palette').RGBA>;
+  hudPalette: Map<number, RGBA>;
   spritePalettes: SpritePalettes;
   receiptSheets: ReceiptSheets;
   dropSheets: DropSheets;
@@ -69,56 +71,31 @@ interface ExtractionContext {
 /**
  * Extract a single sprite given its definition.
  */
-function extractOne(def: SpriteExtractDef, ctx: ExtractionContext): ImageBuffer | null {
-  const { method } = def;
+/** One extractor per method (Strategy/Factory map — add a method by adding an entry). */
+type Extractor = (def: SpriteExtractDef, ctx: ExtractionContext) => ImageBuffer | null;
 
-  switch (method) {
-    case 'hud-tiles':
-      return extractHudStandard(def.tiles!, ctx.hudSheets, ctx.hudPalette);
+const EXTRACTORS: Record<string, Extractor> = {
+  'hud-tiles': (def, ctx) => extractHudStandard(def.tiles!, ctx.hudSheets, ctx.hudPalette),
+  'hud-special': (def, ctx) => extractHudSpecial(def.tiles!, def.layout!, ctx.hudSheets, ctx.hudPalette),
+  'hud-single': (def, ctx) => extractHudSingle(def.tiles![0], ctx.hudSheets, ctx.hudPalette),
+  'hud-strip': (def, ctx) => extractHudStrip(def.tiles!, ctx.hudSheets, ctx.hudPalette, def.width),
+  'hud-vstrip': (def, ctx) => extractHudVStrip(def.tiles!, ctx.hudSheets, ctx.hudPalette),
+  'receipt': (def, ctx) => extractReceipt(def.receiptId!, ctx.rom, ctx.receiptSheets, ctx.spritePalettes),
+  'receipt-recolor': (def, ctx) => extractReceiptRecolor(def.receiptId!, def.palette!, ctx.rom, ctx.receiptSheets, ctx.spritePalettes),
+  'drop-standard': (def, ctx) => extractDropStandard(def.spriteType!, def.palette!, ctx.spritePalettes, ctx.dropSheets),
+  'drop-numbered': (def, ctx) => extractDropNumbered(def.spriteType!, def.palette!, def.group!, ctx.spritePalettes, ctx.dropSheets),
+  'drop-rupee': (def, ctx) => extractDropRupee(def.palette!, ctx.spritePalettes, ctx.dropSheets),
+  'drop-bigkey': (def, ctx) => extractDropBigkey(def.palette!, ctx.spritePalettes, ctx.receiptSheets),
+  'drop-shield-fighters': (def, ctx) => extractDropShieldFighters(def.sheet!, def.tiles!, def.palette!, ctx.spritePalettes, ctx.dropSheets),
+  'drop-shield-fire': (def, ctx) => extractDropShieldFire(def.sheet!, def.tiles!, def.palette!, ctx.spritePalettes, ctx.dropSheets),
+  'follower-bomb': (def, ctx) => extractFollowerBomb(def.palette!, ctx.rom, ctx.spritePalettes),
+};
 
-    case 'hud-special':
-      return extractHudSpecial(def.tiles!, def.layout!, ctx.hudSheets, ctx.hudPalette);
-
-    case 'hud-single':
-      return extractHudSingle(def.tiles![0], ctx.hudSheets, ctx.hudPalette);
-
-    case 'hud-strip':
-      return extractHudStrip(def.tiles!, ctx.hudSheets, ctx.hudPalette, def.width);
-
-    case 'hud-vstrip':
-      return extractHudVStrip(def.tiles!, ctx.hudSheets, ctx.hudPalette);
-
-    case 'receipt':
-      return extractReceipt(def.receiptId!, ctx.rom, ctx.receiptSheets, ctx.spritePalettes);
-
-    case 'drop-standard':
-      return extractDropStandard(def.spriteType!, def.palette!, ctx.spritePalettes, ctx.dropSheets);
-
-    case 'drop-numbered':
-      return extractDropNumbered(def.spriteType!, def.palette!, def.group!, ctx.spritePalettes, ctx.dropSheets);
-
-    case 'drop-rupee':
-      return extractDropRupee(def.palette!, ctx.spritePalettes, ctx.dropSheets);
-
-    case 'drop-bigkey':
-      return extractDropBigkey(def.palette!, ctx.spritePalettes, ctx.receiptSheets);
-
-    case 'drop-shield-fighters':
-      return extractDropShieldFighters(def.sheet!, def.tiles!, def.palette!, ctx.spritePalettes, ctx.dropSheets);
-
-    case 'drop-shield-fire':
-      return extractDropShieldFire(def.sheet!, def.tiles!, def.palette!, ctx.spritePalettes, ctx.dropSheets);
-
-    case 'receipt-recolor':
-      return extractReceiptRecolor(def.receiptId!, def.palette!, ctx.rom, ctx.receiptSheets, ctx.spritePalettes);
-
-    case 'follower-bomb':
-      return extractFollowerBomb(def.palette!, ctx.rom, ctx.spritePalettes);
-
-    default:
-      throw new Error(`Unknown extraction method: ${method}`);
-  }
-}
+const extractOne = (def: SpriteExtractDef, ctx: ExtractionContext): ImageBuffer | null => {
+  const extractor = EXTRACTORS[def.method];
+  if (!extractor) throw new Error(`Unknown extraction method: ${def.method}`);
+  return extractor(def, ctx);
+};
 
 interface ExtractionResult {
   total: number;
@@ -127,19 +104,7 @@ interface ExtractionResult {
   removedStale: number;
 }
 
-/**
- * Extract all item sprites from ROM to output directory.
- *
- * @param romPath - Path to the .sfc ROM file
- * @param outputDir - Directory for output PNGs (created if needed)
- * @param defsOrPath - Sprites array, path to sprite-definitions.json, or omit for auto-detect
- * @returns Extraction result summary
- */
-function extractAllItemSprites(
-  romPath: string,
-  outputDir: string,
-  defsOrPath?: string | SpriteDef[],
-): ExtractionResult {
+const extractAllItemSprites = (romPath: string, outputDir: string, defsOrPath?: string | SpriteDef[]): ExtractionResult => {
   // Load definitions
   const allSprites: SpriteDef[] = Array.isArray(defsOrPath)
     ? defsOrPath
@@ -202,21 +167,9 @@ function extractAllItemSprites(
     errors,
     removedStale,
   };
-}
+};
 
-/**
- * Extract all item sprites from a ROM already loaded in memory.
- * Used by Electron main process when ROM is already available as a Buffer.
- *
- * @param rom - Loaded ROM data
- * @param outputDir - Directory for output PNGs
- * @param defsOrPath - Either a path to sprite-definitions.json, or the sprites array directly
- */
-function extractAllItemSpritesFromRom(
-  rom: RomData,
-  outputDir: string,
-  defsOrPath: string | SpriteDef[],
-): ExtractionResult {
+const extractAllItemSpritesFromRom = (rom: RomData, outputDir: string, defsOrPath: string | SpriteDef[]): ExtractionResult => {
   const allSprites: SpriteDef[] = Array.isArray(defsOrPath)
     ? defsOrPath
     : (JSON.parse(readFileSync(defsOrPath, 'utf-8')) as SpriteDefsJson).sprites;
@@ -266,7 +219,7 @@ function extractAllItemSpritesFromRom(
     errors,
     removedStale,
   };
-}
+};
 
 export { extractAllItemSprites, extractAllItemSpritesFromRom };
 export type { ExtractionResult };

@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 /**
  * HID Device Enumeration — uses node-hid in the main process to get
  * accurate VID/PID/product name.
@@ -47,17 +48,11 @@ const GAMEPAD_USAGES = new Set([
   0x08, // Multi-axis Controller
 ]);
 
-function toHex4(n: number): string {
+const toHex4 = (n: number): string => {
   return n.toString(16).padStart(4, '0');
-}
+};
 
-/**
- * Enumerate all connected HID devices that look like game controllers.
- * De-duplicates by VID:PID (multiple HID interfaces per physical device).
- * Accepts an optional pre-fetched device list (e.g. from a worker thread)
- * to avoid blocking the main thread with HID.devices().
- */
-function enumerateControllers(rawDevices?: HID.Device[]): HidDeviceInfo[] {
+const enumerateControllers = (rawDevices?: HID.Device[]): HidDeviceInfo[] => {
   const raw = rawDevices ?? HID.devices();
   const seen = new Map<string, HidDeviceInfo>();
 
@@ -87,7 +82,7 @@ function enumerateControllers(rawDevices?: HID.Device[]): HidDeviceInfo[] {
   }
 
   return Array.from(seen.values());
-}
+};
 
 export { enumerateControllers };
 export type { HidDeviceInfo };

@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Music compiler — orchestrator that compiles extracted music text back to SPC sound bank binary.
  *
@@ -9,11 +10,7 @@ import { NameRegistry } from './name-registry';
 import { MusicSerializer } from './music-serializer';
 import { parseFile } from './parse-music-file';
 
-/**
- * Compile a sound bank from extracted text files.
- * Returns the loadable data sequence matching what the SNES SPC700 expects.
- */
-function compileSoundBank(songName: string, input: MusicCompileInput): CompiledSoundBank {
+const compileSoundBank = (songName: string, input: MusicCompileInput): CompiledSoundBank => {
   const registry = new NameRegistry();
   const serializer = new MusicSerializer();
 
@@ -53,9 +50,9 @@ function compileSoundBank(songName: string, input: MusicCompileInput): CompiledS
     data[i] = mem[i] ?? 0;
   }
   return { data, memory: mem };
-}
+};
 
-function writeIntroBank(serializer: MusicSerializer, input: MusicCompileInput): void {
+const writeIntroBank = (serializer: MusicSerializer, input: MusicCompileInput): void => {
   serializer.addr = 0x4000;
   const musicInfo = yaml.load(input.musicInfoYaml) as Record<string, unknown>;
   const samples = musicInfo.samples as { file: string; repeat?: number }[];
@@ -106,13 +103,9 @@ function writeIntroBank(serializer: MusicSerializer, input: MusicCompileInput): 
     serializer.memory[ea + 7] = info.vxgain;
     serializer.memory[ea + 8] = info.pitch_base;
   }
-}
+};
 
-/**
- * Produce a loadable sequence (the format used in zelda3_assets.dat).
- * Groups consecutive non-null bytes into chunks with (length, target) headers.
- */
-function produceLoadableSeq(serializer_memory: (number | null)[]): Buffer {
+const produceLoadableSeq = (serializer_memory: (number | null)[]): Buffer => {
   const chunks: Buffer[] = [];
   let start = 0;
 
@@ -139,7 +132,7 @@ function produceLoadableSeq(serializer_memory: (number | null)[]): Buffer {
 
   chunks.push(Buffer.alloc(2));
   return Buffer.concat(chunks);
-}
+};
 
 export { compileSoundBank, produceLoadableSeq };
 export type { CompiledSoundBank, MusicCompileInput };

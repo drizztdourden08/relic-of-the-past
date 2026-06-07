@@ -1,3 +1,4 @@
+/* @layer tooling-scripts @kind logic */
 /**
  * analyze-navigation.ts — Offline navigation data analysis script.
  *
@@ -50,28 +51,23 @@ const singleScreen = screenIdx >= 0 ? parseInt(args[screenIdx + 1], 16) : null;
 
 // ─── WASM Loading (stub — requires headless WASM loader) ─────────────────────
 
-/**
- * TODO: Implement headless WASM loading.
- * This needs to instantiate the zelda3 WASM module in Node.js
- * and expose the same bridge functions as the Electron renderer.
- */
-async function loadWasm(): Promise<{
+const loadWasm = async (): Promise<{
   buildOverworldAttrGrid: (screenIndex: number) => number[][];
   getOverworldEntrances: () => { area: number; pos: number; id: number }[];
   getExitScreenMap: () => Map<number, number>;
   getAreaHeads: () => Uint8Array;
   getEntranceRooms: () => Uint16Array;
-}> {
+}> => {
   // Stub — will load WASM and return bridge functions
   throw new Error(
     'Headless WASM loader not yet implemented. ' +
     'Requires node-compatible WASM instantiation of zelda3.wasm'
   );
-}
+};
 
 // ─── Main ────────────────────────────────────────────────────────────────────
 
-async function main() {
+const main = async () => {
   console.log('=== Navigation Analysis ===');
   console.log(`Output: ${outputPath}`);
   if (singleScreen != null) {
@@ -143,7 +139,7 @@ async function main() {
   writeFileSync(outputPath, JSON.stringify(output, null, 2));
   console.log(`Wrote ${screenUpdates.length} screen updates, ${connectionUpdates.length} connection updates`);
   console.log('Done.');
-}
+};
 
 main().catch((err) => {
   console.error('Analysis failed:', err.message);

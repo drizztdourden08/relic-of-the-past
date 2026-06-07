@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Music extraction — orchestrator that loads SPC sound banks from ROM,
  * decodes songs/phrases/patterns/SFX, and produces text + sample output.
@@ -11,7 +12,7 @@ import { formatEntity } from './format-entities';
 import { printAllSfx } from './decode-sfx';
 import { dumpBrrAndInfo } from './dump-brr-info';
 
-function extractSoundData(rom: RomData): MusicExtractionResult {
+const extractSoundData = (rom: RomData): MusicExtractionResult => {
   const ctx = new SoundBankContext();
   const songTexts: Record<string, string> = {};
   let sfxText = '';
@@ -60,7 +61,7 @@ function extractSoundData(rom: RomData): MusicExtractionResult {
   }
 
   return { songTexts, sfxText, brrSamples, pcmSamples, musicInfoYaml };
-}
+};
 
 export { extractSoundData };
 export type { MusicExtractionResult };

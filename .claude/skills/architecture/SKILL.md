@@ -1,3 +1,4 @@
+<!-- @layer claude-config @kind doc -->
 ---
 name: architecture
 description: Guard the project's structure — decide where new code belongs and keep the architecture clean. Use at the START of any feature, new file, or non-trivial change, and when reviewing whether code sits in the right place. Decomposes a feature into pieces, places each in the correct zone/tier, verifies the dependency invariants, and produces a placement plan. Tailored to this repo's layers (C/WASM core, bridge, shared domain, Electron main, renderer tiers).

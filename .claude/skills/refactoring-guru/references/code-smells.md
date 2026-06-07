@@ -1,3 +1,4 @@
+<!-- @layer claude-config @kind doc -->
 # Code Smells Catalog
 
 Catalog: https://refactoring.guru/refactoring/smells — link a smell as

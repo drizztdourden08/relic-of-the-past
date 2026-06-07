@@ -1,3 +1,4 @@
+/* @layer renderer-hud @kind data */
 /**
  * PauseProgressPanel — displays pendants OR crystals depending on game progress.
  *

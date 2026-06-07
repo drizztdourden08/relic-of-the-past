@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { DrawContext } from './draw-context';
 import { EDGE_COLORS } from '../types';
@@ -5,7 +6,7 @@ import { getEntranceIcon } from '../../../../../../lib/entrance-icons';
 
 const iconImageCache = new Map<string, HTMLImageElement>();
 
-function getIconImageForEntrance(entId: number, roomId: number, roomIndex: number, isIndoors: boolean, respawnEntIds: Set<number>): HTMLImageElement | null {
+const getIconImageForEntrance = (entId: number, roomId: number, roomIndex: number, isIndoors: boolean, respawnEntIds: Set<number>): HTMLImageElement | null => {
   const { icon, color } = getEntranceIcon(entId, roomId, roomIndex, isIndoors, respawnEntIds);
   const key = `${icon.body.slice(0, 30)}_${color}`;
   if (iconImageCache.has(key)) return iconImageCache.get(key)!;
@@ -16,15 +17,9 @@ function getIconImageForEntrance(entId: number, roomId: number, roomIndex: numbe
   img.src = 'data:image/svg+xml;base64,' + btoa(svg);
   iconImageCache.set(key, img);
   return img;
-}
+};
 
-export function drawEntrances(
-  dc: DrawContext,
-  drawResults: FloodFillResult[],
-  isIndoors: boolean,
-  roomIndex: number,
-  respawnEntIds: Set<number>,
-): void {
+const drawEntrances = (dc: DrawContext, drawResults: FloodFillResult[], isIndoors: boolean, roomIndex: number, respawnEntIds: Set<number>): void => {
   const { ctx, scaleX, scaleY, viewLeft, viewTop, snesW, snesH, TILE_PX, getScreenWorldOrigin } = dc;
 
   ctx.globalAlpha = 0.95;
@@ -64,4 +59,6 @@ export function drawEntrances(
       }
     }
   }
-}
+};
+
+export { drawEntrances };

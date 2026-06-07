@@ -1,3 +1,4 @@
+<!-- @layer claude-config @kind doc -->
 ---
 name: coding-standards
 description: Enforce this project's strict coding standards on every change — arrow functions, exports-at-end, ≤200 lines/file, one-thing-per-file, logical folder structure, type-only imports, and applying the right design pattern. Use when writing or editing any TS/TSX in this repo, when planning a feature (the plan must state design patterns + final filetree), when doing CRUD on files/components, or when reviewing whether code is clean. Run the post-change checkup before declaring any change done.

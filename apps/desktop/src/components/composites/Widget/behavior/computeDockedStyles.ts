@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 import type { WidgetState, SnapSide } from '../types';
 import { TITLEBAR_HEIGHT } from '../constants';
 

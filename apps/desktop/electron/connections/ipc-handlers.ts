@@ -1,8 +1,9 @@
+/* @layer electron-main @kind logic */
 import { ipcMain } from 'electron';
 import { readFile, writeFile } from 'fs/promises';
 import { getUserDataPath } from '../lib/paths';
 
-function registerConnectionHandlers(): void {
+const registerConnectionHandlers = (): void => {
   ipcMain.handle('connectionReview:load', async () => {
     try {
       const data = await readFile(getUserDataPath('connection-review.json'), 'utf-8');
@@ -25,6 +26,6 @@ function registerConnectionHandlers(): void {
   ipcMain.handle('navReview:save', async (_e, data: unknown) => {
     await writeFile(getUserDataPath('nav-review.json'), JSON.stringify(data, null, 2), 'utf-8');
   });
-}
+};
 
 export { registerConnectionHandlers };

@@ -1,3 +1,4 @@
+/* @layer shared-game @kind data */
 /**
  * Palace Indices — canonical map of cur_palace_index_x2 runtime values.
  *
@@ -10,7 +11,7 @@
  * (e.g. HC main entrance sets 2, sewers entrance sets 0).
  */
 
-export const PALACE_INDEX_NAMES: Record<number, string> = {
+const PALACE_INDEX_NAMES: Record<number, string> = {
   0x00: 'Hyrule Castle (Sewers)',
   0x02: 'Hyrule Castle (Castle)',
   0x04: 'Eastern Palace',
@@ -29,7 +30,7 @@ export const PALACE_INDEX_NAMES: Record<number, string> = {
 };
 
 /** Reverse lookup: dungeon name → possible palace index values */
-export const DUNGEON_PALACE_VALUES: Record<string, number[]> = {
+const DUNGEON_PALACE_VALUES: Record<string, number[]> = {
   'Hyrule Castle': [0x00, 0x02],
   'Eastern Palace': [0x04],
   'Desert Palace': [0x06],
@@ -45,15 +46,13 @@ export const DUNGEON_PALACE_VALUES: Record<string, number[]> = {
   'Castle Tower': [0x1A],
 };
 
-/** Get display name for a runtime palace index value */
-export function getPalaceName(palaceIndex: number): string {
+const getPalaceName = (palaceIndex: number): string => {
   return PALACE_INDEX_NAMES[palaceIndex] ?? `Unknown (0x${palaceIndex.toString(16).toUpperCase()})`;
-}
+};
 
-/** Check if a palace index belongs to a named dungeon */
-export function isDungeonPalace(palaceIndex: number): boolean {
+const isDungeonPalace = (palaceIndex: number): boolean => {
   return palaceIndex !== 0xFF && palaceIndex <= 0x1A;
-}
+};
 
 /** Reverse lookup: palaceIndex → logical dungeon name (for game mechanics: keys, map, compass) */
 const PALACE_TO_DUNGEON: Record<number, string> = Object.fromEntries(
@@ -62,22 +61,21 @@ const PALACE_TO_DUNGEON: Record<number, string> = Object.fromEntries(
   )
 );
 
-/** Get the logical dungeon name from a palace index (e.g. 0x04 → "Eastern Palace") */
-export function getDungeonName(palaceIndex: number): string {
+const getDungeonName = (palaceIndex: number): string => {
   return PALACE_TO_DUNGEON[palaceIndex] ?? `Unknown Dungeon (0x${palaceIndex.toString(16).toUpperCase()})`;
-}
+};
 
 /**
  * Canonical dungeon metadata — maps dungeon name to its fixed area, location, and world.
  * Used by the wizard to auto-derive locked fields when dungeon is selected.
  */
-export interface DungeonMeta {
+interface DungeonMeta {
   locationId: string;
   areaId: string;
   world: 'light' | 'dark';
 }
 
-export const DUNGEON_META: Record<string, DungeonMeta> = {
+const DUNGEON_META: Record<string, DungeonMeta> = {
   'Hyrule Castle': { locationId: 'hyrule-castle', areaId: 'hyrule-castle', world: 'light' },
   'Eastern Palace': { locationId: 'eastern-palace', areaId: 'east-hyrule', world: 'light' },
   'Desert Palace': { locationId: 'desert-palace', areaId: 'desert', world: 'light' },
@@ -92,3 +90,6 @@ export const DUNGEON_META: Record<string, DungeonMeta> = {
   'Turtle Rock': { locationId: 'turtle-rock', areaId: 'dark-death-mountain', world: 'dark' },
   "Ganon's Tower": { locationId: 'ganons-tower', areaId: 'dark-death-mountain', world: 'dark' },
 };
+
+export { PALACE_INDEX_NAMES, DUNGEON_PALACE_VALUES, getPalaceName, isDungeonPalace, getDungeonName, DUNGEON_META };
+export type { DungeonMeta };

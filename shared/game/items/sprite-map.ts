@@ -1,14 +1,15 @@
+/* @layer shared-game @kind logic */
 import type { InventorySlot } from './inventory-types';
 
 let _spritesBase = '/sprites/items/';
 
-function setSpritesBase(base: string): void {
+const setSpritesBase = (base: string): void => {
   _spritesBase = base;
-}
+};
 
-function getSpritesBase(): string {
+const getSpritesBase = (): string => {
   return _spritesBase;
-}
+};
 
 /** Direct item name → sprite filename mapping */
 const ITEM_SPRITE_MAP: Record<string, string> = {
@@ -126,13 +127,7 @@ const ITEM_SPRITE_MAP: Record<string, string> = {
 /** All known inventory item names that have sprites. */
 const INVENTORY_ITEMS = Object.keys(ITEM_SPRITE_MAP);
 
-/**
- * Get the sprite path for a given item name.
- * Returns undefined if no sprite is mapped.
- * Handles dungeon-specific names like "Small Key (Hyrule Castle)" by
- * stripping the parenthetical suffix.
- */
-function getItemSprite(itemName: string): string | undefined {
+const getItemSprite = (itemName: string): string | undefined => {
   let filename = ITEM_SPRITE_MAP[itemName];
   if (!filename) {
     const base = itemName.replace(/\s*\(.*\)$/, '');
@@ -142,13 +137,9 @@ function getItemSprite(itemName: string): string | undefined {
   }
   if (!filename) return undefined;
   return `${getSpritesBase()}${filename}.png`;
-}
+};
 
-/**
- * Resolve which sprite to show for a tiered item, given the current inventory.
- * E.g. if inventory has 'Tempered Sword', show tempered-sword.png.
- */
-function resolveItemSprite(slot: InventorySlot, inventory: Set<string>): { obtained: boolean; sprite: string } {
+const resolveItemSprite = (slot: InventorySlot, inventory: Set<string>): { obtained: boolean; sprite: string } => {
   for (const name of slot.trackerNames) {
     if (inventory.has(name)) {
       const sprite = ITEM_SPRITE_MAP[name];
@@ -156,7 +147,7 @@ function resolveItemSprite(slot: InventorySlot, inventory: Set<string>): { obtai
     }
   }
   return { obtained: false, sprite: slot.sprite };
-}
+};
 
 export {
   INVENTORY_ITEMS,

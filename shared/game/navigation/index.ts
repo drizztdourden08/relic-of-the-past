@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 // ─── Entry Point #1: Single Screen Flood Fill ────────────────────────────────
 export { floodFillScreen, getConnections } from './flood-fill';
 export type { FloodFillOptions } from './flood-fill';
@@ -8,6 +9,9 @@ export { floodFillWorld } from './flood-fill';
 
 // ─── Entry Point #3: Hub/Screen Graph Navigation ─────────────────────────────
 export { findShortestPath, findPrecisePath, findUnreachableScreens, getGraphStats } from './hub-navigation';
+
+// ─── Connection destination naming ───────────────────────────────────────────
+export { getConnectionDestinationName } from './connection-names';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 export type {

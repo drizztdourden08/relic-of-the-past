@@ -1,3 +1,4 @@
+/* @layer electron-main @kind logic */
 import { join, basename, extname } from 'path';
 import { ipcMain } from 'electron';
 import { readFile, readdir, mkdir, copyFile, rm, stat } from 'fs/promises';
@@ -7,11 +8,11 @@ import { downloadToTemp } from '../lib/download';
 
 const MSU_EXTENSIONS = new Set(['.pcm', '.opuz', '.msu']);
 
-function getMsuDir(packName: string): string {
+const getMsuDir = (packName: string): string => {
   return getUserDataPath('msu', packName);
-}
+};
 
-async function extractArchiveToMsu(archivePath: string, msuDir: string): Promise<number> {
+const extractArchiveToMsu = async (archivePath: string, msuDir: string): Promise<number> => {
   const tempDir = await extractArchiveToTemp(archivePath);
   try {
     await mkdir(msuDir, { recursive: true });
@@ -23,9 +24,9 @@ async function extractArchiveToMsu(archivePath: string, msuDir: string): Promise
   } finally {
     await rm(tempDir, { recursive: true, force: true }).catch(() => {});
   }
-}
+};
 
-function registerMsuHandlers(): void {
+const registerMsuHandlers = (): void => {
   ipcMain.handle('msu:import', async (_event, packName: string, url: string) => {
     let tempFile: string | undefined;
     try {
@@ -131,6 +132,6 @@ function registerMsuHandlers(): void {
     const buf = await readFile(filePath);
     return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
   });
-}
+};
 
 export { registerMsuHandlers };

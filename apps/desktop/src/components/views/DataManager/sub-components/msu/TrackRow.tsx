@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState } from 'react';
 import { Select } from '../../../../primitives/Select';
 import { formatBytes } from '../../../../../utils/formatBytes';

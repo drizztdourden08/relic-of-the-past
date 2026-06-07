@@ -1,3 +1,4 @@
+/* @layer renderer-lib @kind logic */
 /**
  * Manages HID device calibration data — stick and trigger profiles.
  */

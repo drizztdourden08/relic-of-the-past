@@ -1,8 +1,9 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Decodes room objects (tiles) and doors from ROM data for dungeon rooms.
  */
 import type { RomData } from '../rom/rom-types';
-import * as tables from './tables-data';
+import * as tables from './data/tables-data';
 
 interface RoomObject {
   x: number;
@@ -17,7 +18,7 @@ interface Door {
   dir: number;
 }
 
-function decodeRoomObjects(rom: RomData, p: number): { end: number; objs: RoomObject[]; doors: Door[] | null } {
+const decodeRoomObjects = (rom: RomData, p: number): { end: number; objs: RoomObject[]; doors: Door[] | null } => {
   const objs: RoomObject[] = [];
   while (true) {
     const p0 = rom.getByte(p);
@@ -59,7 +60,7 @@ function decodeRoomObjects(rom: RomData, p: number): { end: number; objs: RoomOb
     doors.push({ type: rom.getByte(p + 1), pos: rom.getByte(p) >> 4, dir: A & 3 });
     p += 2;
   }
-}
+};
 
 export { decodeRoomObjects };
 export type { Door, RoomObject };

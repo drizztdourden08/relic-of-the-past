@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind data */
 /**
  * StickCalibrationWizard — 3-step analog stick calibration orchestrator.
  *
@@ -13,7 +14,7 @@ import { useStickCalibration } from './useStickCalibration';
 import { StickCircle } from './StickCircle';
 import { StepIndicator } from './StepIndicator';
 
-function StickCalibrationWizard(props: StickCalibrationWizardProps) {
+const StickCalibrationWizard = (props: StickCalibrationWizardProps) => {
   const { onComplete, onCancel, existingCalibration, target, deviceKey } = props;
 
   const cal = useStickCalibration({ existingCalibration, target, deviceKey });
@@ -159,6 +160,6 @@ function StickCalibrationWizard(props: StickCalibrationWizardProps) {
       )}
     </div>
   );
-}
+};
 
 export { StickCalibrationWizard };

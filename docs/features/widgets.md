@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Widgets
 
 In-game overlay panels that provide information and tools while playing.

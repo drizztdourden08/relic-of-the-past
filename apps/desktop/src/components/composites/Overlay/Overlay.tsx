@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 ﻿import type { ReactNode } from 'react';
 import './Overlay.css';
 import { type OverlayProps } from './types';

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind logic */
 /**
  * Types and constants for the enhanced save slot state machine.
  */

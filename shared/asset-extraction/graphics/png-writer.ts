@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * PNG image creation using pngjs.
  * Replaces Python's PIL Image for sprite/tile output.

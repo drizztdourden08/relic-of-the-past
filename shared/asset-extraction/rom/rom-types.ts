@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Core ROM types for SNES ROM loading and access.
  */

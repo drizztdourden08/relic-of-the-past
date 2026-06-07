@@ -1,13 +1,14 @@
+/* @layer renderer-other @kind hook */
 import { useState, useEffect, useCallback } from 'react';
 
-export interface UpdateState {
+interface UpdateState {
   status: 'idle' | 'checking' | 'available' | 'downloading' | 'ready' | 'error';
   info: { version: string; releaseNotes: string; releaseDate: string } | null;
   progress: { percent: number; bytesPerSecond: number; transferred: number; total: number } | null;
   error: string | null;
 }
 
-export function useAutoUpdate() {
+const useAutoUpdate = () => {
   const [state, setState] = useState<UpdateState>({
     status: 'idle',
     info: null,
@@ -74,4 +75,7 @@ export function useAutoUpdate() {
   }, []);
 
   return { ...state, portable, check, download, install };
-}
+};
+
+export { useAutoUpdate };
+export type { UpdateState };

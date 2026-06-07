@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 /**
  * WebHidCard — Shows a connected WebHID controller with buttons, sticks, triggers,
  * vibration controls, calibration wizard, and raw byte debug.
@@ -6,7 +7,7 @@
 import { useState } from 'react';
 import { webHidReader } from '../../../../lib/input/hid-reader';
 import type { WebHidInputState, DeviceStickCalibration } from '../../../../lib/input/hid-reader';
-import { DEVICE_PROFILES } from '@shared/input';
+import type { DEVICE_PROFILES } from '@shared/input';
 import { getButtonIconUrl } from '../data/button-icons';
 import { StickCalibrationWizard } from './StickCalibrationWizard';
 import { TriggerCalibrationWizard } from './TriggerCalibrationWizard';
@@ -29,7 +30,7 @@ type CalibrationTarget =
   | { type: 'trigger'; axisIndex: number; label: string }
   | null;
 
-function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, onStickCalibrationComplete, onTriggerCalibrationComplete }: WebHidCardProps) {
+const WebHidCard = ({ deviceKey, state, profile, hasStickCal, existingStickCal, onStickCalibrationComplete, onTriggerCalibrationComplete }: WebHidCardProps) => {
   const [vidHex, pidHex] = deviceKey.split(':');
   const name = profile?.name ?? resolveDeviceName(vidHex, pidHex);
   const buttons = profile?.buttons ?? [];
@@ -242,7 +243,7 @@ function WebHidCard({ deviceKey, state, profile, hasStickCal, existingStickCal, 
       </details>
     </div>
   );
-}
+};
 
 export { WebHidCard };
 export type { WebHidCardProps };

@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Visual Enhancements
 
 Optional graphical improvements that go beyond the original SNES presentation.

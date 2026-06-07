@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { IconButton } from '../../../../primitives/IconButton';
 import { formatBytes } from '../../../../../utils/formatBytes';

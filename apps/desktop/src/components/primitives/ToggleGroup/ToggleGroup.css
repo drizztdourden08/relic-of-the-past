@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind style */
 .toggle-group {
   display: flex;
   align-items: center;

@@ -1,3 +1,4 @@
+/* @layer renderer-other @kind config */
 /// <reference types="vite/client" />
 
 // WebHID API type declarations (Chromium/Electron)

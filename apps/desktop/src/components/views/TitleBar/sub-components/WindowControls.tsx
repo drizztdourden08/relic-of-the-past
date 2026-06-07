@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 import { useState, useEffect } from 'react';
 
 interface WindowControlsProps {

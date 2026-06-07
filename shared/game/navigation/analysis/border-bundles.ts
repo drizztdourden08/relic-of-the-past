@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /**
  * Border Bundle Detection — identifies contiguous groups of reachable border tiles
  * and validates two-sided overlap between adjacent screens.
@@ -12,7 +13,7 @@
 import type { FloodFillResult } from '../types';
 import type { ConnectionPointData } from '../nav-data.types';
 
-export interface BorderBundle {
+interface BorderBundle {
   /** Unique ID: "lw-{screen:hex}-edge-{dir}-{index}" */
   id: string;
   /** Which border */
@@ -23,11 +24,7 @@ export interface BorderBundle {
   requirements: string[][];
 }
 
-/**
- * Find all border bundles for a flood-filled screen.
- * Groups contiguous reachable border tiles into bundles.
- */
-export function findBorderBundles(result: FloodFillResult): BorderBundle[] {
+const findBorderBundles = (result: FloodFillResult): BorderBundle[] => {
   const screen = result.screenIndex;
   const prefix = `lw-${screen.toString(16).padStart(2, '0')}`;
   const bundles: BorderBundle[] = [];
@@ -49,25 +46,14 @@ export function findBorderBundles(result: FloodFillResult): BorderBundle[] {
   splitIntoBundles(westTiles, 'w', prefix, bundles);
 
   return bundles;
-}
+};
 
-/**
- * Compute the overlap (intersection) between two tile position arrays.
- * Returns the positions present in BOTH arrays — the valid crossing corridor.
- */
-export function computeOverlap(tilesA: number[], tilesB: number[]): number[] {
+const computeOverlap = (tilesA: number[], tilesB: number[]): number[] => {
   const setB = new Set(tilesB);
   return tilesA.filter(t => setB.has(t));
-}
+};
 
-/**
- * Given two screens' flood results, build the full two-sided connection data.
- */
-export function buildWalkConnection(
-  fromResult: FloodFillResult,
-  toResult: FloodFillResult,
-  direction: 'n' | 's' | 'e' | 'w',
-): { fromBundle: BorderBundle; toBundle: BorderBundle; overlapTiles: number[] }[] {
+const buildWalkConnection = (fromResult: FloodFillResult, toResult: FloodFillResult, direction: 'n' | 's' | 'e' | 'w'): { fromBundle: BorderBundle; toBundle: BorderBundle; overlapTiles: number[] }[] => {
   const fromBundles = findBorderBundles(fromResult).filter(b => b.direction === direction);
   const oppositeDir = oppositeDirection(direction);
   const toBundles = findBorderBundles(toResult).filter(b => b.direction === oppositeDir);
@@ -84,11 +70,11 @@ export function buildWalkConnection(
   }
 
   return connections;
-}
+};
 
 // ─── Internal Helpers ────────────────────────────────────────────────────────
 
-function getReachableBorderTiles(result: FloodFillResult, direction: 'n' | 's' | 'e' | 'w'): number[] {
+const getReachableBorderTiles = (result: FloodFillResult, direction: 'n' | 's' | 'e' | 'w'): number[] => {
   const tiles: number[] = [];
   const grid = result.reachable;
 
@@ -108,18 +94,9 @@ function getReachableBorderTiles(result: FloodFillResult, direction: 'n' | 's' |
   }
 
   return tiles;
-}
+};
 
-/**
- * Split a sorted array of positions into contiguous bundles.
- * e.g. [3,4,5, 20,21,22,23] → [[3,4,5], [20,21,22,23]]
- */
-function splitIntoBundles(
-  tiles: number[],
-  direction: 'n' | 's' | 'e' | 'w',
-  prefix: string,
-  output: BorderBundle[],
-): void {
+const splitIntoBundles = (tiles: number[], direction: 'n' | 's' | 'e' | 'w', prefix: string, output: BorderBundle[]): void => {
   if (tiles.length === 0) return;
 
   let bundleStart = 0;
@@ -139,8 +116,11 @@ function splitIntoBundles(
       bundleStart = i;
     }
   }
-}
+};
 
-function oppositeDirection(dir: 'n' | 's' | 'e' | 'w'): 'n' | 's' | 'e' | 'w' {
+const oppositeDirection = (dir: 'n' | 's' | 'e' | 'w'): 'n' | 's' | 'e' | 'w' => {
   switch (dir) { case 'n': return 's'; case 's': return 'n'; case 'e': return 'w'; case 'w': return 'e'; }
-}
+};
+
+export { findBorderBundles, computeOverlap, buildWalkConnection };
+export type { BorderBundle };

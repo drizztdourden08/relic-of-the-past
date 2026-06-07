@@ -1,3 +1,4 @@
+/* @layer shared-game @kind barrel */
 export { floodFillBFS } from './single-screen';
 export type { QuadrantBounds } from '../strategies/layer-strategy';
 export { floodFillScreen, getConnections } from './orchestrator';

@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind types */
 ﻿interface DropZoneProps {
   accept?: string[];
   label?: string;

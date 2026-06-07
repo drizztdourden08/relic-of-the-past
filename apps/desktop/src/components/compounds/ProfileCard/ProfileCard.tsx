@@ -1,3 +1,4 @@
+/* @layer renderer-components @kind component */
 ﻿import { Card } from '../../composites/Card';
 import { IconButton } from '../../primitives/IconButton';
 import { formatDate, formatRomName } from './behavior/formatters';

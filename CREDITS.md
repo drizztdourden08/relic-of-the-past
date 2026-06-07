@@ -1,3 +1,4 @@
+<!-- @layer root-config @kind doc -->
 # Credits
 
 > Keep in sync with `shared/data/credits.ts`

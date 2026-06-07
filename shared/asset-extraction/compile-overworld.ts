@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Overworld asset compilation — orchestrator for compressed map data, travel tables, entrances, exits, sprites, secrets.
  */
@@ -9,7 +10,7 @@ import { buildOverworldExits } from './compile-overworld-exits';
 import { buildOverworldTravel } from './compile-overworld-travel';
 import { buildOverworldSprites } from './compile-overworld-sprites';
 
-function buildOverworldCompressed(rom: RomData, A: AssetBuilder): void {
+const buildOverworldCompressed = (rom: RomData, A: AssetBuilder): void => {
   const hi: Buffer[] = [];
   for (let i = 0; i < 160; i++) {
     const addr = rom.get24(0x82F94D + i * 3);
@@ -25,9 +26,9 @@ function buildOverworldCompressed(rom: RomData, A: AssetBuilder): void {
     lo.push(Buffer.from(rom.getBytes(addr, compressedLength)));
   }
   A.addPacked('kOverworld_Lobytes_Comp', lo);
-}
+};
 
-function buildOverworldTables(rom: RomData, A: AssetBuilder): void {
+const buildOverworldTables = (rom: RomData, A: AssetBuilder): void => {
   const ctx = buildOverworldContext(rom);
   const { isAreaHead, isSmall, awrite } = ctx;
 
@@ -122,6 +123,6 @@ function buildOverworldTables(rom: RomData, A: AssetBuilder): void {
 
   A.addUint8('kMap8DataToTileAttr', bufToArr(rom.getBytes(0x8E9459, 512)));
   A.addUint8('kSomeTileAttr', bufToArr(rom.getBytes(0x9bf110, 3824)));
-}
+};
 
 export { buildOverworldCompressed, buildOverworldTables };

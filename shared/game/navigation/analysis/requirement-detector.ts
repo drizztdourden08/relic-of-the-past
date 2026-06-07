@@ -1,3 +1,4 @@
+/* @layer shared-game @kind logic */
 /**
  * Requirement Detector — Determines which items gate which connection points.
  *
@@ -16,7 +17,7 @@ import { GRID_SIZE } from '../types';
 import { floodFillScreen } from '../flood-fill/orchestrator';
 
 /** Inventory levels to test, from no items to all items */
-export const INVENTORY_PROGRESSION: TraversalRequirement[][] = [
+const INVENTORY_PROGRESSION: TraversalRequirement[][] = [
   [],
   ['boots'],
   ['lift.1'],
@@ -29,7 +30,7 @@ export const INVENTORY_PROGRESSION: TraversalRequirement[][] = [
   ['lift.1', 'lift.2', 'boots', 'flippers', 'hammer', 'hookshot', 'bombs', 'sword', 'mirror'],
 ];
 
-export interface RequirementDetectorInput {
+interface RequirementDetectorInput {
   screenIndex: number;
   getGrid: (screenIndex: number) => number[][];
   tileContext: TileAttrContext;
@@ -37,21 +38,14 @@ export interface RequirementDetectorInput {
   targetPositions: GridPos[];
 }
 
-export interface DetectedRequirement {
+interface DetectedRequirement {
   /** Grid position of the target tile */
   position: GridPos;
   /** Minimum requirements (OR-of-AND) to reach this tile */
   requirements: RequirementSet;
 }
 
-/**
- * Determine minimum requirements for each target position on a screen.
- *
- * Strategy: run BFS at each inventory level. For each target tile, record
- * the FIRST (smallest) inventory set that reaches it. That set becomes
- * the AND requirements. If multiple disjoint sets reach it, they form OR alternatives.
- */
-export function detectRequirements(input: RequirementDetectorInput): DetectedRequirement[] {
+const detectRequirements = (input: RequirementDetectorInput): DetectedRequirement[] => {
   const { screenIndex, getGrid, tileContext, targetPositions } = input;
 
   let grid: number[][];
@@ -104,4 +98,7 @@ export function detectRequirements(input: RequirementDetectorInput): DetectedReq
   }
 
   return results;
-}
+};
+
+export { INVENTORY_PROGRESSION, detectRequirements };
+export type { RequirementDetectorInput, DetectedRequirement };

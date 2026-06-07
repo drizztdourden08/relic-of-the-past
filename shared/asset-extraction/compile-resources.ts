@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind logic */
 /**
  * Compile resources — produces zelda3_assets.dat from ROM data.
  * This is the final pipeline stage that assembles all game assets into a binary file.
@@ -19,11 +20,7 @@ interface CompileOptions {
   skipMusic?: boolean;
 }
 
-/**
- * Compile all game assets from ROM into the zelda3_assets.dat binary format.
- * @returns Buffer containing the complete asset file
- */
-function compileResources(rom: RomData, options: CompileOptions = {}): Buffer {
+const compileResources = (rom: RomData, options: CompileOptions = {}): Buffer => {
   const A = new AssetBuilder();
 
   if (!options.skipMusic) buildSoundBanks(rom, A);
@@ -45,7 +42,7 @@ function compileResources(rom: RomData, options: CompileOptions = {}): Buffer {
   buildOverworldTables(rom, A);
 
   return A.serialize();
-}
+};
 
 export { compileResources };
 export type { CompileOptions };
