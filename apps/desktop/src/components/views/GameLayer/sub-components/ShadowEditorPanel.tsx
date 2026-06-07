@@ -4,13 +4,12 @@ import { useShadowEditorStore } from '../../../../stores/shadow-editor-store';
 import type { EditorTool } from '../../../../stores/shadow-editor-store';
 import { SegmentedControl } from '../../../primitives/SegmentedControl';
 import { Slider } from '../../../primitives/Slider';
-import { Toggle } from '../../../primitives/Toggle';
 import { Button } from '../../../primitives/Button';
 import { IconButton } from '../../../primitives/IconButton';
-import { SettingsSection } from '../../../composites/SettingsSection';
-import { NumberField } from './shadow-editor/NumberField';
 import { HeightLevelPicker } from './shadow-editor/HeightLevelPicker';
-import { HeightLevelEditor } from './shadow-editor/HeightLevelEditor';
+import { ShadowShapeInspector } from './shadow-editor/ShadowShapeInspector';
+import { ShadowLightInspector } from './shadow-editor/ShadowLightInspector';
+import { ShadowGlobalSettings } from './shadow-editor/ShadowGlobalSettings';
 import { wasmGetViewportInfo } from '../../../../lib/game';
 import './ShadowEditorPanel.css';
 
@@ -163,141 +162,17 @@ const ShadowEditorPanel = () => {
       <div className="shadow-editor-panel__body">
         {/* ─── Selected Shape Inspector ─── */}
         {selectedHm && (
-          <SettingsSection title="Shape">
-            {/* Position */}
-            <div className="shadow-editor-panel__field-row">
-              <NumberField icon="X" value={selectedHm.shape.x} step={1} onChange={(v) => updateHeightmapElement(screenId, selectedHm.id, { shape: { ...selectedHm.shape, x: v } })} />
-              <NumberField icon="Y" value={selectedHm.shape.y} step={1} onChange={(v) => updateHeightmapElement(screenId, selectedHm.id, { shape: { ...selectedHm.shape, y: v } })} />
-            </div>
-
-            {/* Size */}
-            <div className="shadow-editor-panel__field-row">
-              <NumberField icon="W" value={selectedHm.shape.width} step={1} min={1} onChange={(v) => updateHeightmapElement(screenId, selectedHm.id, { shape: { ...selectedHm.shape, width: v } })} />
-              <NumberField icon="H" value={selectedHm.shape.height} step={1} min={1} onChange={(v) => updateHeightmapElement(screenId, selectedHm.id, { shape: { ...selectedHm.shape, height: v } })} />
-            </div>
-
-            {/* Rotation */}
-            <NumberField icon="⟳" value={selectedHm.shape.rotation ?? 0} step={1} min={0} max={360} suffix="°" onChange={(v) => updateHeightmapElement(screenId, selectedHm.id, { shape: { ...selectedHm.shape, rotation: v } })} />
-
-            {/* Sides & Corner Radius (for polygons) */}
-            {selectedHm.shape.type === 'polygon' && (
-              <div className="shadow-editor-panel__field-row">
-                <NumberField icon="◇" value={selectedHm.shape.sides ?? 4} step={1} min={3} max={64} onChange={(v) => updateHeightmapElement(screenId, selectedHm.id, { shape: { ...selectedHm.shape, sides: v } })} />
-                <NumberField icon="⌒" value={selectedHm.shape.cornerRadius ?? 0} step={1} min={0} max={32} onChange={(v) => updateHeightmapElement(screenId, selectedHm.id, { shape: { ...selectedHm.shape, cornerRadius: v } })} />
-              </div>
-            )}
-
-            {/* Height Level */}
-            <div className="shadow-editor-panel__subsection">
-              <span className="shadow-editor-panel__sublabel">Height</span>
-              <HeightLevelPicker
-                value={selectedHm.height}
-                onChange={(v) => updateHeightmapElement(screenId, selectedHm.id, { height: v })}
-              />
-            </div>
-
-            <Button size="sm" variant="danger" onClick={handleDelete}>Delete Shape</Button>
-          </SettingsSection>
+          <ShadowShapeInspector screenId={screenId} selectedHm={selectedHm} updateHeightmapElement={updateHeightmapElement} handleDelete={handleDelete} />
         )}
 
         {/* ─── Selected Light Inspector ─── */}
         {selectedLight && (
-          <SettingsSection title="Light">
-            {/* Position */}
-            <div className="shadow-editor-panel__field-row">
-              <NumberField icon="X" value={selectedLight.x} step={1} onChange={(v) => updateLight(screenId, selectedLight.id, { x: v })} />
-              <NumberField icon="Y" value={selectedLight.y} step={1} onChange={(v) => updateLight(screenId, selectedLight.id, { y: v })} />
-            </div>
-
-            {/* Radius & Intensity */}
-            <NumberField icon="R" value={selectedLight.radius} step={4} min={4} max={512} onChange={(v) => updateLight(screenId, selectedLight.id, { radius: v })} />
-            <Slider
-              value={selectedLight.intensity}
-              min={0}
-              max={2}
-              step={0.05}
-              label="Intensity"
-              onChange={(v) => updateLight(screenId, selectedLight.id, { intensity: v })}
-              showValue
-            />
-            <Toggle
-              checked={selectedLight.castShadows}
-              onChange={(v) => updateLight(screenId, selectedLight.id, { castShadows: v })}
-              label="Cast Shadows"
-            />
-            <Button size="sm" variant="danger" onClick={handleDelete}>Delete Light</Button>
-          </SettingsSection>
+          <ShadowLightInspector screenId={screenId} selectedLight={selectedLight} updateLight={updateLight} handleDelete={handleDelete} />
         )}
 
         {/* ─── Global Settings (only when nothing selected) ─── */}
         {!hasSelection && (
-          <>
-            <SettingsSection title="Sun">
-              <Toggle
-                checked={screenData.lighting.sunEnabled}
-                onChange={(v) => updateLighting(screenId, { sunEnabled: v })}
-                label="Enabled"
-              />
-              {screenData.lighting.sunEnabled && (
-                <>
-                  <div className="shadow-editor-panel__field-row">
-                    <NumberField icon="∠" value={screenData.lighting.sunAngle} step={5} min={0} max={360} suffix="°" onChange={(v) => updateLighting(screenId, { sunAngle: v })} />
-                    <NumberField icon="↗" value={screenData.lighting.sunElevation} step={5} min={15} max={85} suffix="°" onChange={(v) => updateLighting(screenId, { sunElevation: v })} />
-                  </div>
-                  <Slider
-                    value={screenData.lighting.sunIntensity}
-                    min={0}
-                    max={2}
-                    step={0.05}
-                    label="Intensity"
-                    onChange={(v) => updateLighting(screenId, { sunIntensity: v })}
-                    showValue
-                  />
-                </>
-              )}
-            </SettingsSection>
-
-            <SettingsSection title="Atmosphere">
-              <Slider
-                value={screenData.lighting.ambientIntensity}
-                min={0}
-                max={1}
-                step={0.05}
-                label="Ambient"
-                onChange={(v) => updateLighting(screenId, { ambientIntensity: v })}
-                showValue
-              />
-              <Slider
-                value={screenData.lighting.shadowSoftness}
-                min={0}
-                max={1}
-                step={0.05}
-                label="Shadow Softness"
-                onChange={(v) => updateLighting(screenId, { shadowSoftness: v })}
-                showValue
-              />
-              <Toggle
-                checked={screenData.lighting.dayNightCycle}
-                onChange={(v) => updateLighting(screenId, { dayNightCycle: v })}
-                label="Day/Night Cycle"
-              />
-              {screenData.lighting.dayNightCycle && (
-                <Slider
-                  value={screenData.lighting.cycleSpeed}
-                  min={10}
-                  max={600}
-                  step={10}
-                  label="Cycle (sec)"
-                  onChange={(v) => updateLighting(screenId, { cycleSpeed: v })}
-                  showValue
-                />
-              )}
-            </SettingsSection>
-
-            <SettingsSection title="Height Levels">
-              <HeightLevelEditor />
-            </SettingsSection>
-          </>
+          <ShadowGlobalSettings screenId={screenId} screenData={screenData} updateLighting={updateLighting} />
         )}
       </div>
 

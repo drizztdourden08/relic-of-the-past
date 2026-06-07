@@ -208,3 +208,21 @@ a profile:
 - ☐ Function-mapping changes push to InputManager.
 - ☐ On mount, saved config loads and applies to all of the above; external `settings:change`
   events (debug widget) are handled.
+
+---
+
+## ShadowEditorPanel.tsx (was 285) → shadow-editor/ inspectors
+Dev shadow-casting editor panel. The three body sections were extracted into
+`shadow-editor/ShadowShapeInspector`, `ShadowLightInspector`, and
+`ShadowGlobalSettings` (prop names kept identical to the JSX, so render is verbatim).
+Panel keeps header/toolbar/tool-options/footer. **Dev-only tool** (open via TitleBar →
+Advanced → Shadow Editor in dev). Verify:
+- ☐ Tool select (Select/Shape/Draw/Light/Area); shape-creation options (sides/corner-radius/
+  height) and light-creation options (intensity/radius) show for the right tools.
+- ☐ **Select a shape** → inspector edits X/Y/W/H/rotation, polygon sides/corner-radius,
+  height level; Delete removes it.
+- ☐ **Select a light** → inspector edits X/Y/radius/intensity/cast-shadows; Delete removes it.
+- ☐ **Nothing selected** → Sun (enable/angle/elevation/intensity), Atmosphere (ambient/
+  softness/day-night + cycle speed), Height Levels editor all work.
+- ☐ Header: preview/debug toggles, undo/redo, Save (enabled only when dirty), close.
+- ☐ Footer shows current screen # + shape/light counts; edits reflect live in the overlay.
