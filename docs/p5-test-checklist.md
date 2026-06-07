@@ -169,3 +169,21 @@ review state). Main component keeps the render. Open the Nav Review panel for a 
 - ☐ **Entrances** list: position/room/requirements; **Transit type** picker persists;
   requirement editor persists.
 - ☐ Point-level status + comment persist per bundle/entrance and reload after reopen.
+
+---
+
+## GameLayer.tsx (was 326) → render-loop hooks
+The two ~100-line WebGL render loops were extracted into `behavior/useEdgeGlowLoop`
+and `behavior/useShadowCastingLoop` (each a useEffect-hook taking the component's
+canvas/renderer refs + status/canvasKey). Component keeps canvas elements, fit/style
+effects, controller-pause/dbl-click effects, and render. Verbatim relocation
+(deps stay [status, canvasKey], eslint-disable added on the relocated effects).
+Run the game and verify:
+- ☐ Game canvas renders; resize/aspect changes refit canvas + overlays.
+- ☐ **Edge glow** (overworld, extended viewport / widescreen): mirror glow on black
+  bars; freezes during text/dialogue; fades out on screen transition and back in.
+- ☐ **Shadow casting** (when enabled, postProcessingShadows): per-screen heightmap/light
+  shadows render; debug mode toggles; live edits in Shadow Editor reflect immediately.
+- ☐ Toggling edgeEffect / shadowCasting settings enables/disables the respective loop.
+- ☐ Controller-disconnect pause overlay + double-click-to-resume still work.
+- ☐ Crash/reset → idle remounts the canvas (canvasKey bump) and restarts cleanly.
