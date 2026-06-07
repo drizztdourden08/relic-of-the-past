@@ -9,57 +9,8 @@
 import type { TileAttrContext } from '@shared/game/navigation/tile-attrs';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
 import type { FloodFillOptions, QuadrantBounds } from '@shared/game/navigation';
-import type { OverworldEntrance } from '@shared/game/navigation';
-
-interface FloodFillSession {
-  screenIndex: number;
-  isIndoors: boolean;
-  tileContext: TileAttrContext;
-  rawAttrGrid: number[][] | undefined;
-  startPos: { row: number; col: number } | undefined;
-  options: Omit<FloodFillOptions, 'tileContext' | 'startPos'>;
-  allEntrances: OverworldEntrance[];
-  groupScreens: number[];
-  intraEdges: Array<{ edge: string; screens: [number, number] }>;
-  quadrantBounds: QuadrantBounds | undefined;
-  dualLayerGrids: { layer0: number[][]; layer1: number[][]; stairTiles: Array<{ row: number; col: number }> } | undefined;
-  linkLayer: 0 | 1 | undefined;
-  blockerWorldPoints: Array<{ x: number; y: number }>;
-  items: string[];
-}
-
-interface SessionBuilderInput {
-  isIndoors: boolean;
-  primaryScreenIndex: number;
-  linkX: number;
-  linkY: number;
-  items: string[];
-  /** WASM data access functions */
-  wasm: {
-    getViewportInfo: () => { linkX: number; linkY: number; locationType: number } | null;
-    getIndoorDualLayerGrids: () => { layer0: number[][]; layer1: number[][]; stairTiles: Array<{ row: number; col: number }> } | null;
-    getIndoorLayer0Grid: () => Uint8Array | null;
-    getLinkLayer: () => number | null;
-    getStaircaseType: () => number | null;
-    getOverworldVariant: (screenIndex: number) => { progressIndicator: number; eventOverlayActive: boolean; screenEventFlags: number } | null;
-    buildOverworldAttrGrid: (screenIndex: number) => Uint8Array | null;
-    getExitScreenMap: () => Map<number, number>;
-    getRoomLayoutInfo: () => { shape: string; quadrantX: number; quadrantY: number; intraEdges: Array<{ edge: string; screens: [number, number] }> } | null;
-    getRoomStairInfo: () => Array<{ row: number; col: number; destRoom: number }>;
-    getRoomWalkBoundaries: () => Array<{ row: number; col: number; destRoom: number }>;
-    getAreaHeads: () => number[] | null;
-    getLiveSprites: () => Array<{ type: number; e: number; x: number; y: number }>;
-    getOverworldGuardSpawns: () => Array<{ x: number; y: number }>;
-    getIndoorUncleBlockers: () => Array<{ x: number; y: number }>;
-    getFallHoles: () => Array<{ area: number; pos: number; entranceId: number }>;
-    getOverworldEntrances: () => Array<{ area: number; pos: number; id: number }>;
-    getEntranceRooms: () => number[] | null;
-    getEntranceSpawns: () => Array<{ x: number; y: number; startingLayer: number }> | null;
-    getRoomExitDoors: () => Array<{ row: number; col: number; direction: string }>;
-  };
-  /** Check if a tracker check is completed */
-  isCheckCompleted: (checkName: string) => boolean;
-}
+import type { FloodFillSession, SessionBuilderInput } from './session-types';
+import { uint8ToGrid, computeBigScreenGroupFromHeads } from './session-helpers';
 
 const buildFloodFillSession = (input: SessionBuilderInput): FloodFillSession | null => {
   const { isIndoors, primaryScreenIndex, wasm, items, isCheckCompleted } = input;
@@ -215,30 +166,6 @@ const buildFloodFillSession = (input: SessionBuilderInput): FloodFillSession | n
     blockerWorldPoints,
     items,
   };
-};
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
-const uint8ToGrid = (raw: Uint8Array): number[][] => {
-  const grid: number[][] = new Array(64);
-  for (let r = 0; r < 64; r++) {
-    grid[r] = new Array(64);
-    for (let c = 0; c < 64; c++) {
-      grid[r][c] = raw[r * 64 + c];
-    }
-  }
-  return grid;
-};
-
-const computeBigScreenGroupFromHeads = (heads: number[] | null, screenIndex: number): number[] => {
-  if (!heads) return [screenIndex];
-  const myHead = heads[screenIndex];
-  if (myHead === undefined) return [screenIndex];
-  const group: number[] = [];
-  for (let i = 0; i < 64; i++) {
-    if (heads[i] === myHead) group.push(i);
-  }
-  return group.length > 0 ? group : [screenIndex];
 };
 
 export { buildFloodFillSession };
