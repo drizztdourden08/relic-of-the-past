@@ -1,3 +1,4 @@
+/* @layer shared-asset-extraction @kind data */
 /**
  * Language definitions for ALTTP text compression/decompression.
  * Data-driven — each language is a config object, not a class.

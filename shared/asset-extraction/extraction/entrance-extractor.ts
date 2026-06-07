@@ -2,7 +2,7 @@
  * Extracts dungeon entrance and starting-point data from ROM.
  */
 import type { RomData } from '../rom/rom-types';
-import * as tables from './tables-data';
+import * as tables from './data/tables-data';
 
 function getEntranceInfo(rom: RomData, set: 0 | 1): Map<number, Record<string, unknown>[]> {
   const r = new Map<number, Record<string, unknown>[]>();

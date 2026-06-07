@@ -2,7 +2,7 @@
  * Decodes room objects (tiles) and doors from ROM data for dungeon rooms.
  */
 import type { RomData } from '../rom/rom-types';
-import * as tables from './tables-data';
+import * as tables from './data/tables-data';
 
 interface RoomObject {
   x: number;

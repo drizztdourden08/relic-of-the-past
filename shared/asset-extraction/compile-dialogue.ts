@@ -6,7 +6,7 @@ import type { AssetBuilder } from './asset-builder';
 import { packArrays } from './asset-builder';
 import { decodeStrings } from './text/dialogue-decoder';
 import { compressStrings, encodeDictionary } from './text/dialogue-encoder';
-import { usesNewFormat } from './text/language-data';
+import { usesNewFormat } from './text/data/language-data';
 
 function buildDialogue(rom: RomData, A: AssetBuilder): void {
   const lang = 'us';

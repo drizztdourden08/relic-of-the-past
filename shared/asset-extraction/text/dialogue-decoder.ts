@@ -3,8 +3,8 @@
  *
  * Ported from: core/zelda3/assets/text_compression.py decode_strings_generic()
  */
-import type { LanguageConfig } from './language-data';
-import { kLanguages } from './language-data';
+import type { LanguageConfig } from './data/language-data';
+import { kLanguages } from './data/language-data';
 
 interface DecodedString {
   text: string;
