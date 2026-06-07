@@ -32,5 +32,13 @@ the loop's "every iteration ends green" contract safe, I'm sequencing **logic +
 simple files first** (fully tsc-verifiable) and saving these forms for last, where
 each gets a careful dedicated pass. Not skipped — just ordered for safety.
 
+## High-risk core-navigation logic (careful pass, not unattended)
+`single-screen.ts` (536) — the dual-layer flood-fill BFS (335-line function) needs
+extracting **deque/bodyReached-mutating inner blocks** (ledge & stair cross-layer
+transitions) to get under cap. It's core, actively-developed pathfinding with **no
+runtime tests**, so a slip breaks navigation silently. Same caution for
+`orchestrator.ts` (366) and `strategies/dual-layer.ts` (271). I'll do these in a
+focused pass (ideally with a nav smoke-check), not in the unattended loop.
+
 ## Files split (P4 progress log)
 <!-- appended as each file lands -->
