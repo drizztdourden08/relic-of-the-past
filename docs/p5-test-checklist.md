@@ -37,3 +37,31 @@ Open via Dataset & Mapping widget → "✏️ Edit Screen":
 - ☐ **Mismatch warnings** appear when an existing dungeon's location/world differs from meta.
 - ☐ Reopen the dialog → fields re-prefill cleanly (no stale carry-over from prior open
   except the known unused condition fields).
+
+---
+
+## useNavigation (was 579) → `nav-flood/`
+The 537-line `handleRun` flood-fill closure was extracted into pure/context helpers:
+`nav-flood/prepare` (inventory set, overworld blockers, Link start-context + uncle stamping),
+`nav-flood/indoor-entrances` (entrance/stair/walk-boundary collection + respawn IDs),
+`nav-flood/propagate` (per-screen run + border-transition BFS, returns responses + overworld
+bundle), `nav-flood/finalize` (layer-toggle annotation, indoor screen bundle, fall-hole
+landings), and `nav-flood/use-nav-connections` (internal/external classification + dedup).
+`handleRun` is now a thin orchestrator. **This is the highest-behavior-risk split** — drive
+the Navigation widget with `--auto-flood` and exercise:
+- ☐ **Overworld screen** (light & dark world): flood overlay fills the reachable area;
+  reachable/total tile counts look right; the big-screen group (2×2) propagates.
+- ☐ **Overworld with guards/barriers** (e.g. tutorial guards, the uncle): those tiles
+  block the flood; regular enemies do NOT block.
+- ☐ **Indoor room** (cave/house): flood fills; Link's start tile is correct.
+- ☐ **Indoor dungeon, dual-layer room**: layer-aware flood; upper/lower correct;
+  layer-toggle doors annotated (▲▼) on the connection edges.
+- ☐ **Entrances panel**: doors/respawns/stairs listed with correct names & icons;
+  starting-layer (▲ Upper / ▼ Lower) shown per entrance.
+- ☐ **Edges / Internal / Fall-hole** sections populate as before.
+- ☐ **Early-game uncle** (Link's Uncle not yet collected): his footprint blocks tiles;
+  after collecting, he no longer blocks.
+- ☐ **Auto-run on item/equipment change** (gloves/boots/flippers/hookshot/hammer):
+  re-floods and reachability updates.
+- ☐ **Screen change** clears stale overlay/bundle; **auto-second-pass** fires on transitions.
+- ☐ Multi-screen indoor room bundle (2×2 / shape) renders the right grid dimensions.
