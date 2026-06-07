@@ -65,3 +65,26 @@ the Navigation widget with `--auto-flood` and exercise:
   re-floods and reachability updates.
 - ☐ **Screen change** clears stale overlay/bundle; **auto-second-pass** fires on transitions.
 - ☐ Multi-screen indoor room bundle (2×2 / shape) renders the right grid dimensions.
+
+---
+
+## single-screen.ts (was 536) → flood-fill BFS split
+Core pathfinding BFS (deterministic). Split into: `bfs-helpers` (2×2 body
+primitives: bodyTiles/getNewTiles/findStartBody/isBodyPassable/recordBorderTransition/
+canLeaveLedge/evaluateEntry + QuadrantBounds + SWAP_STAIR_ATTRS), `single-layer`
+(floodFillBFS), `dual-layer-steps` (ledge-fall + stair-traverse cross-layer handlers),
+`dual-layer-result` (body→tile merge + per-layer grids), `dual-layer`
+(floodFillBFSDualLayer orchestrator). `single-screen.ts` is now a re-export barrel.
+**Note:** two dead locals (`grid`/`rawAttr` at the dual-layer loop top, never read)
+were dropped — behavior-identical. Exercise via the flood overlay:
+- ☐ **Single-layer overworld/cave flood** matches pre-split (same reachable area,
+  same border/entrance transitions, same req markers, hookshot targets).
+- ☐ **Ledges** block from the wrong side; falling in the ledge direction lands you
+  on layer 1 correctly (dual-layer rooms).
+- ☐ **Stairs** auto-traverse to the other layer (vertical entry only; side entry blocked);
+  stair-tile arrows render on the target layer.
+- ☐ **Dual-layer dungeon room**: merged reachability + per-layer grids correct;
+  tile-layer (upper/lower/both) classification matches what TileInspector shows.
+- ☐ **Obstacles/water** require the right item (gloves/hammer/flippers) and the req
+  set propagates (reqGrid path requirements unchanged).
+- ☐ Quadrant-bounded runs (multi-screen rooms) still confine the flood correctly.
