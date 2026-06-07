@@ -6,29 +6,13 @@
 
 import { useState } from 'react';
 import { webHidReader } from '../../../../lib/input/hid-reader';
-import type { WebHidInputState, DeviceStickCalibration } from '../../../../lib/input/hid-reader';
-import type { DEVICE_PROFILES } from '@shared/input';
 import { getButtonIconUrl } from '../data/button-icons';
 import { StickCalibrationWizard } from './StickCalibrationWizard';
 import { TriggerCalibrationWizard } from './TriggerCalibrationWizard';
-import type { TriggerCalibrationData } from './TriggerCalibrationWizard';
-import { AxisRecordButton, CONTROLLER_ICON_MAP, StickCircle, TriggerBar, resolveDeviceName } from './input-cal-visuals';
-
-interface WebHidCardProps {
-  deviceKey: string;
-  state: WebHidInputState;
-  profile: (typeof DEVICE_PROFILES)[number] | null;
-  hasStickCal?: boolean;
-  existingStickCal?: DeviceStickCalibration | null;
-  onStickCalibrationComplete?: (cal: DeviceStickCalibration) => void;
-  onTriggerCalibrationComplete?: (axisIndex: number, cal: TriggerCalibrationData) => void;
-}
-
-/** What's being calibrated — null means nothing open */
-type CalibrationTarget =
-  | { type: 'stick'; side: 'left' | 'right' | 'both' }
-  | { type: 'trigger'; axisIndex: number; label: string }
-  | null;
+import { CONTROLLER_ICON_MAP, resolveDeviceName } from './input-cal-visuals';
+import type { WebHidCardProps, CalibrationTarget } from './web-hid-card-types';
+import { WebHidAxes } from './WebHidAxes';
+import { WebHidRawBytes } from './WebHidRawBytes';
 
 const WebHidCard = ({ deviceKey, state, profile, hasStickCal, existingStickCal, onStickCalibrationComplete, onTriggerCalibrationComplete }: WebHidCardProps) => {
   const [vidHex, pidHex] = deviceKey.split(':');
@@ -88,79 +72,7 @@ const WebHidCard = ({ deviceKey, state, profile, hasStickCal, existingStickCal, 
       </div>
 
       {/* Sticks and triggers — dynamically derived from profile axes */}
-      {(() => {
-        const axesDef = profile?.axes ?? [];
-        const stickPairs: { label: string; xIdx: number; yIdx: number }[] = [];
-        const triggerAxes: { label: string; idx: number }[] = [];
-        let i = 0;
-        while (i < axesDef.length) {
-          if (axesDef[i].category === 'stick' && i + 1 < axesDef.length && axesDef[i + 1].category === 'stick') {
-            stickPairs.push({
-              label: axesDef[i].label.replace(/ X$/, ''),
-              xIdx: i,
-              yIdx: i + 1,
-            });
-            i += 2;
-          } else if (axesDef[i].category === 'trigger') {
-            triggerAxes.push({ label: axesDef[i].label, idx: i });
-            i++;
-          } else {
-            i++;
-          }
-        }
-        if (stickPairs.length === 0 && triggerAxes.length === 0) return null;
-        const stickIconPrefixes = profile?.id === 'gamecube-wireless'
-          ? ['gc-stick-l', 'gc-stick-c']
-          : profile?.id === 'switch-pro-2'
-            ? ['switch-stick-l', 'switch-stick-r']
-            : [];
-        return (
-          <div className="input-cal__sticks">
-            {stickPairs.map((s, pairIdx) => (
-              <div key={s.xIdx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-                <StickCircle
-                  x={state.axes[s.xIdx] ?? 0}
-                  y={state.axes[s.yIdx] ?? 0}
-                  label={s.label}
-                  iconPrefix={stickIconPrefixes[pairIdx]}
-                />
-                <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-                  <AxisRecordButton
-                    getValues={() => [state.axes[s.xIdx] ?? 0, state.axes[s.yIdx] ?? 0]}
-                    label={s.label}
-                  />
-                  <button
-                    className="input-cal__btn"
-                    style={{ fontSize: 9, padding: '1px 5px', lineHeight: 1.2 }}
-                    onClick={() => setCalibrationTarget({ type: 'stick', side: pairIdx === 0 ? 'left' : 'right' })}
-                    title={`Calibrate ${s.label}`}
-                  >Cal</button>
-                </div>
-              </div>
-            ))}
-            {triggerAxes.map(t => (
-              <div key={t.idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-                <TriggerBar
-                  value={state.axes[t.idx] ?? 0}
-                  label={t.label}
-                />
-                <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-                  <AxisRecordButton
-                    getValues={() => [state.axes[t.idx] ?? 0]}
-                    label={t.label}
-                  />
-                  <button
-                    className="input-cal__btn"
-                    style={{ fontSize: 9, padding: '1px 5px', lineHeight: 1.2 }}
-                    onClick={() => setCalibrationTarget({ type: 'trigger', axisIndex: t.idx, label: t.label })}
-                    title={`Calibrate ${t.label}`}
-                  >Cal</button>
-                </div>
-              </div>
-            ))}
-          </div>
-        );
-      })()}
+      <WebHidAxes state={state} profile={profile} onCalibrate={setCalibrationTarget} />
 
       {/* Actions */}
       <div style={{ marginTop: 'var(--space-md)', display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>
@@ -219,28 +131,7 @@ const WebHidCard = ({ deviceKey, state, profile, hasStickCal, existingStickCal, 
       )}
 
       {/* Collapsible raw bytes debug */}
-      <details style={{ marginTop: 'var(--space-sm)' }}>
-        <summary style={{ fontSize: 11, color: 'var(--color-text-muted)', cursor: 'pointer', userSelect: 'none' }}>
-          Raw Bytes {state.reportId != null ? `(0x${state.reportId.toString(16).padStart(2, '0')})` : ''} — {state.rawBytes ? state.rawBytes.length : 0}B
-        </summary>
-        {state.rawBytes && (
-          <div style={{
-            display: 'flex', flexWrap: 'wrap', gap: 2, marginTop: 6,
-            fontFamily: 'monospace', fontSize: 10, lineHeight: 1,
-          }}>
-            {Array.from(state.rawBytes).map((b, i) => (
-              <div key={i} style={{
-                width: 22, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: b > 0 ? `rgba(129,140,248,${Math.min(1, b / 255 * 0.8 + 0.2)})` : '#2a2a3a',
-                color: b > 0 ? '#fff' : '#555',
-                borderRadius: 2, border: '1px solid #3a3a4a',
-              }}>
-                {b.toString(16).padStart(2, '0')}
-              </div>
-            ))}
-          </div>
-        )}
-      </details>
+      <WebHidRawBytes state={state} />
     </div>
   );
 };
