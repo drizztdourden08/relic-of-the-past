@@ -40,6 +40,16 @@ runtime tests**, so a slip breaks navigation silently. Same caution for
 `orchestrator.ts` (366) and `strategies/dual-layer.ts` (271). I'll do these in a
 focused pass (ideally with a nav smoke-check), not in the unattended loop.
 
+`apps/desktop/src/widgets/navigation/useNavigation.ts` (579) — the renderer-side
+orchestrator hook. ~537 of its lines are a single `handleRun` callback that builds
+blockers, collects entrance/stair/spawn data, runs the multi-screen flood-fill
+propagation loop, annotates layer-toggle edges, and writes 8+ pieces of state. The
+inner blocks close over many locals and mutate shared arrays (`allEntrances`,
+`pendingSeeds`, `analyzed`), so getting under cap requires parameterizing them into
+pure helpers — not a verbatim extraction. Same no-runtime-test silent-break risk as
+the core BFS it drives. Do this in the same focused nav pass with a flood-fill
+smoke-check (`--auto-state` + `--dump-nav`), not unattended.
+
 ## Invasive class/stateful refactors (careful pass)
 `input-manager.ts` (391) is a stateful **class** (the live renderer input engine,
 no runtime tests). Splitting it cleanly means moving listener-wiring / device-refresh

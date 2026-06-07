@@ -29,10 +29,9 @@ import {
   wasmGetToggleFloorPositions,
   wasmGetIndoorDualLayerGrids,
 } from '../../lib/game';
-import { floodFillScreen, getConnections } from '@shared/game/navigation';
-import type { FloodFillOptions } from '@shared/game/navigation';
 import { resolveCurrentScreenDetailed } from '@shared/game/data/screens';
 import type { VariantGameState } from '@shared/game/data/screens';
+import { collectEntranceData, formatStairs, formatTravelDests, computeFloodFill } from './dump-nav/builders';
 
 interface DumpNavDeps {
   activeProfile: Profile | null;
@@ -109,70 +108,19 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
       const entranceSpawns = wasmGetEntranceSpawns();
       const stairs = wasmGetRoomStairInfo();
       const fallHoles = wasmGetFallHoles();
+      const owEntrances = wasmGetOverworldEntrances();
 
       const exitScreen = exitScreenMap.get(roomIndex) ?? null;
 
-      // Fall hole entrance IDs (these are excluded from regular entrance markers in the widget)
-      const fallHoleEntIds = new Set<number>();
-      for (const h of fallHoles) fallHoleEntIds.add(h.entranceId);
-
-      // Overworld door entrance IDs (physical doors on overworld)
-      const owEntrances = wasmGetOverworldEntrances();
-      const overworldDoorEntIds = new Set<number>();
-      for (const e of owEntrances) overworldDoorEntIds.add(e.id);
-
-      // Find all entrance IDs whose destination room matches current room
-      const matchingEntrances: Array<{ id: number; spawnX: number; spawnY: number; gridRow: number; gridCol: number; isFallHole: boolean; isOverworldDoor: boolean; classification: string }> = [];
-      if (entranceRooms && entranceSpawns) {
-        const roomOriginX = (roomIndex % 16) * 512;
-        const roomOriginY = Math.floor(roomIndex / 16) * 512;
-        for (let id = 0; id < entranceRooms.length; id++) {
-          if (entranceRooms[id] !== roomIndex) continue;
-          const spawn = entranceSpawns[id];
-          if (!spawn) continue;
-          const gridCol = Math.floor((spawn.x - roomOriginX) / 8);
-          const gridRow = Math.floor((spawn.y - roomOriginY) / 8);
-          const isFallHole = fallHoleEntIds.has(id);
-          const isOverworldDoor = overworldDoorEntIds.has(id);
-          const classification = isFallHole ? 'fall-hole' : isOverworldDoor ? 'overworld-door' : 'respawn/special';
-          matchingEntrances.push({ id, spawnX: spawn.x, spawnY: spawn.y, gridRow, gridCol, isFallHole, isOverworldDoor, classification });
-        }
-      }
-
-      // Fall hole landings in this room
-      const fallHoleLandings: Array<{ entranceId: number; gridRow: number; gridCol: number; fromArea: number; fromAreaHex: string }> = [];
-      if (entranceRooms && entranceSpawns) {
-        const roomOriginX = (roomIndex % 16) * 512;
-        const roomOriginY = Math.floor(roomIndex / 16) * 512;
-        for (const h of fallHoles) {
-          if (entranceRooms[h.entranceId] === roomIndex) {
-            const spawn = entranceSpawns[h.entranceId];
-            if (spawn) {
-              const gridCol = Math.floor((spawn.x - roomOriginX) / 8);
-              const gridRow = Math.floor((spawn.y - roomOriginY) / 8);
-              fallHoleLandings.push({ entranceId: h.entranceId, gridRow, gridCol, fromArea: h.area, fromAreaHex: `0x${h.area.toString(16).padStart(2, '0')}` });
-            }
-          }
-        }
-      }
+      const { matchingEntrances, fallHoleLandings } = collectEntranceData({
+        roomIndex, entranceRooms, entranceSpawns, fallHoles, owEntrances,
+      });
 
       // Stair info
-      const stairInfo = stairs.map((s, i) => ({
-        index: i,
-        destRoom: s.destRoom,
-        row: s.row,
-        col: s.col,
-        destRoomHex: `0x${s.destRoom.toString(16).padStart(4, '0')}`,
-      })).filter(s => s.destRoom !== 0);
+      const stairInfo = formatStairs(stairs);
 
       // Travel destinations from room header
-      const travelDests = wasmGetRoomTravelDestinations();
-      const travelDestsFormatted = travelDests ? travelDests.map((d, i) => ({
-        index: i,
-        room: d,
-        roomHex: `0x${d.toString(16).padStart(2, '0')}`,
-        label: i === 0 ? 'pit/block' : `stair${i - 1}`,
-      })).filter(td => td.room !== 0) : null;
+      const travelDestsFormatted = formatTravelDests(wasmGetRoomTravelDestinations());
 
       // ─── Door & room structure data ───
       const doorBoundaryTiles = isIndoors ? wasmGetRoomDoorBoundaryTiles() : [];
@@ -184,73 +132,11 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
       const toggleFloorPositions = isIndoors ? wasmGetToggleFloorPositions() : [];
 
       // ─── Flood fill + connections (for internal edge verification) ───
-      let floodFillData: { reachableCount: number; totalTiles: number; connections: unknown[]; scrollBoundary: unknown } | null = null;
-      if (isIndoors && attrGrid) {
-        // Convert flat Uint8Array to 64x64 grid
-        const grid: number[][] = [];
-        for (let r = 0; r < 64; r++) {
-          grid.push(Array.from(attrGrid.slice(r * 64, (r + 1) * 64)));
-        }
-        const dualLayerGrids = wasmGetIndoorDualLayerGrids();
-        const opts: FloodFillOptions = {
-          tileContext: 'indoor',
-          inventory: new Set(),
-          startPos: undefined,
-          dualLayerGrids: dualLayerGrids ?? undefined,
-          stairTiles: dualLayerGrids?.stairTiles,
-          startLayer: linkLayer ?? undefined,
-          staircaseType: staircaseType ?? undefined,
-        };
-        const result = floodFillScreen(grid, roomIndex, opts);
-        const connections = getConnections(result, roomLayout?.intraEdges);
-
-        // Detect scroll boundaries
-        const shape = roomLayout?.shape ?? '1x1';
-        const qfx = roomLayout?.quadrantFullsizeX ?? 0;
-        const qfy = roomLayout?.quadrantFullsizeY ?? 0;
-        const hasHorizontalBoundary = (shape === '2x2' || shape === '1x2') && qfy === 0;
-        const hasVerticalBoundary = (shape === '2x2' || shape === '2x1') && qfx === 0;
-
-        // Find tiles crossing the boundary
-        const crossingTiles: { axis: string; pos: number }[] = [];
-        if (hasHorizontalBoundary) {
-          for (let col = 0; col < 64; col++) {
-            if (result.reachable[31]?.[col] && result.reachable[32]?.[col]) {
-              crossingTiles.push({ axis: 'horizontal', pos: col });
-            }
-          }
-        }
-        if (hasVerticalBoundary) {
-          for (let row = 0; row < 64; row++) {
-            if (result.reachable[row]?.[31] && result.reachable[row]?.[32]) {
-              crossingTiles.push({ axis: 'vertical', pos: row });
-            }
-          }
-        }
-
-        floodFillData = {
-          reachableCount: result.reachableCount,
-          totalTiles: result.totalTiles,
-          connections: connections.map(c => ({
-            edge: c.edge,
-            targetScreen: c.targetScreen,
-            targetScreenHex: `0x${c.targetScreen.toString(16).padStart(4, '0')}`,
-            isIntraRoom: c.isIntraRoom ?? false,
-            layerToggle: c.layerToggle ?? false,
-            freeTileCount: c.freeTileCount,
-            itemTileCount: c.itemTileCount,
-            positions: c.positions,
-          })),
-          scrollBoundary: {
-            shape,
-            quadrantFullsizeX: qfx,
-            quadrantFullsizeY: qfy,
-            hasHorizontalBoundary,
-            hasVerticalBoundary,
-            crossingTiles,
-          },
-        };
-      }
+      const floodFillData = isIndoors
+        ? computeFloodFill({
+            roomIndex, attrGrid, dualLayerGrids: wasmGetIndoorDualLayerGrids(), linkLayer, staircaseType, roomLayout,
+          })
+        : null;
 
       const dump = {
         slot,
