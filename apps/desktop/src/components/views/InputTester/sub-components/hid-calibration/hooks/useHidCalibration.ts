@@ -3,13 +3,10 @@
  * Core state machine hook for the HID Calibration Wizard.
  * Declares state/refs and delegates action handlers to useCalibrationActions.
  */
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { webHidReader } from '../../../../../../lib/input/hid-reader';
 import type { WebHidRawReport } from '../../../../../../lib/input/hid-reader';
-import { findDeviceProfileByVidPid } from '@shared/input';
 import type { DeviceProfile } from '@shared/input';
-import { DEVICE_DATABASE } from '@shared/input/data/devices';
-import type { SelectOption } from '../../../../../primitives';
 import type {
   AxisSubStep, ByteStatus, CaptureState, GyroState, HidButtonMapping, HidControllerMap,
   IdleRecordResult, IdleState, InputItem, Phase,
@@ -21,6 +18,7 @@ import { processButtonFrame } from '../button-detection';
 import { computeByteStatuses, getInstructionText, getByteColor } from '../wizard-helpers';
 import type { ByteColorResult } from '../wizard-helpers';
 import { useCalibrationActions } from './useCalibrationActions';
+import { useDeviceAutoDetect } from './useDeviceAutoDetect';
 
 interface UseHidCalibrationProps {
   onComplete: (map: HidControllerMap) => void;
@@ -32,9 +30,6 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
   const { onComplete, deviceKey } = props;
 
   // ── State ──
-  const [selectedProfileId, setSelectedProfileId] = useState('');
-  const [selectedSdlVidPid, setSelectedSdlVidPid] = useState('');
-  const [hasGyro, setHasGyro] = useState(true);
   const [profile, setProfile] = useState<DeviceProfile | null>(null);
   const [phase, setPhase] = useState<Phase>('select-profile');
   const [gyroState, setGyroState] = useState<GyroState>('idle');
@@ -129,6 +124,9 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
   const addLog = useCallback((msg: string) => setLog(prev => [...prev.slice(-199), msg]), []);
   useEffect(() => { if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight; }, [log]);
 
+  // ── Device auto-detect + SDL selection ──
+  const { selectedProfileId, selectedSdlVidPid, hasGyro, sdlOptions, handleSdlSelect } = useDeviceAutoDetect(addLog);
+
   // ── Core callbacks ──
   const updateByteStatuses = useCallback((len: number) => {
     const statuses = computeByteStatuses(len, excludedRef.current, capturedStickBytesRef.current, capturedTriggerBytesRef.current, itemsRef.current);
@@ -159,25 +157,6 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
       addLog(`✓ Idle recorded for ${label}: ${frames.length} frames. Copied to clipboard.`); setIdleRecording(null);
     }, 3000);
   }, [addLog]);
-
-  // ── Auto-detect ──
-  useEffect(() => {
-    const keys = webHidReader.getConnectedDeviceKeys(); if (keys.length === 0) return;
-    const [vid, pid] = keys[0].split(':'); const vidPid = `${vid}:${pid}`;
-    const sdlMatch = DEVICE_DATABASE.find(e => e.vidPid === vidPid);
-    if (sdlMatch) { setSelectedSdlVidPid(vidPid); setHasGyro(sdlMatch.hasGyro); addLog(`SDL match: ${sdlMatch.name} (${vidPid})${sdlMatch.hasGyro ? ' [gyro]' : ''}`); }
-    else { addLog(`No SDL match for ${vidPid} — pick manually or use Generic`); }
-    const profileMatch = findDeviceProfileByVidPid(vid, pid);
-    if (profileMatch) { setSelectedProfileId(profileMatch.id); addLog(`Auto-detected profile: ${profileMatch.name} (${vid}:${pid})`); }
-    else { addLog(`No profile for ${vid}:${pid} — select from SDL list or use Generic`); }
-  }, [addLog]);
-
-  // ── SDL options ──
-  const sdlOptions: SelectOption[] = useMemo(() => DEVICE_DATABASE.filter(e => e.vidPid).map(e => ({ value: e.vidPid!, label: `${e.name} (${e.vidPid})${e.hasGyro ? ' 🔄' : ''}` })), []);
-  const handleSdlSelect = useCallback((vidPid: string) => {
-    setSelectedSdlVidPid(vidPid); const entry = DEVICE_DATABASE.find(e => e.vidPid === vidPid); if (entry) setHasGyro(entry.hasGyro);
-    if (vidPid) { const [vid, pid] = vidPid.split(':'); const m = findDeviceProfileByVidPid(vid, pid); if (m) setSelectedProfileId(m.id); }
-  }, []);
 
   // ── Actions (delegated) ──
   const actions = useCalibrationActions({
