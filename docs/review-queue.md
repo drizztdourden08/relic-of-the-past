@@ -23,5 +23,14 @@ until you decide. Tackle at the end.
   `build-wasm` skill) to verify — `tsc`/eslint can't validate C. Will split + sync
   build files, then flag here for you to run/confirm the rebuild.
 
+## Autonomous-ordering note (not a rule change)
+The big stateful React forms — `ScreenEditorDialog` (638), `HomeTab` (435),
+`NavReviewPanel` (335), `GameLayer` (326), `ProfileHub` (302), `ShadowEditorPanel`
+(285), `ControlsSettings` (280), … — have **no runtime tests**, so an unattended
+decomposition can only be verified by `tsc` (types/wiring), not behavior. To keep
+the loop's "every iteration ends green" contract safe, I'm sequencing **logic +
+simple files first** (fully tsc-verifiable) and saving these forms for last, where
+each gets a careful dedicated pass. Not skipped — just ordered for safety.
+
 ## Files split (P4 progress log)
 <!-- appended as each file lands -->
