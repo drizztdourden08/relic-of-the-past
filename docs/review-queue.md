@@ -4,6 +4,25 @@
 Logged during the P4 grind. None of these change the ruleset; they're parked here
 until you decide. Tackle at the end.
 
+## ✅ P5 UPDATE — all splittable files are now done
+Every behavior-risky file that was parked for a "careful pass" has been split
+(verbatim extraction, one offender per commit, all local, `tsc=21` + `analyze:ci`
+green per file): the 7 stateful forms (ScreenEditorDialog, HomeTab, NavReviewPanel,
+GameLayer, ProfileHub, ShadowEditorPanel, ControlsSettings), `useNavigation`, the
+core-nav trio (single-screen, orchestrator, dual-layer), and the two stateful classes
+(input-manager, hid-reader). **None are runtime-tested**, so each has a manual-test
+entry in `docs/p5-test-checklist.md` — please walk that before pushing.
+
+**Only 5 files remain over the line cap**, and all need a decision you must make:
+- **3 CSS files** — `TrackerView.css` (662), `InputCalibration.css` (575),
+  `DataManager.css` (372). Need stylelint rule choices before any reflow.
+- **2 C files** — `state_queries.c` (686), `emscripten_main.c` (465). Splitting them
+  requires `build.bat`/`Makefile` source-list sync + a **WASM rebuild** to verify
+  (tsc/eslint can't validate C). I can split + sync, but you must run/confirm the build.
+
+The rule-decision items below (exhaustive-deps / markdownlint / stylelint) are still
+untouched and still need your call.
+
 ## Potential rule / process decisions
 - **`react-hooks/exhaustive-deps` (70 warnings).** Auto-"fixing" these is unsafe —
   adding deps can cause render loops or change effect timing (behavior risk, no
