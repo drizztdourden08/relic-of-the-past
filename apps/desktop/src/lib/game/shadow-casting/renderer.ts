@@ -12,10 +12,10 @@
 import type { ShadowRenderer, ShadowRendererOptions } from './types';
 import type { ScreenShadowData } from '@shared/types/shadow-casting';
 import { DEFAULT_LIGHTING_CONFIG } from '@shared/types/shadow-casting';
-import { FULLSCREEN_VERT, SHADOW_FRAG, BLUR_FRAG, COMPOSITE_FRAG } from './shaders';
-import { createProgram, createFBO, destroyFBO, drawQuad, type FBO } from './gl-helpers';
+import { createFBO, destroyFBO, drawQuad, type FBO } from './gl-helpers';
 import { buildHeightmapTexture } from './heightmap-builder';
 import { computeLightUniforms, MAX_LIGHTS } from './light-calculator';
+import { compilePrograms, getUniformLocations } from './shadow-programs';
 
 const createShadowRenderer = (canvas: HTMLCanvasElement, _options: ShadowRendererOptions = {}): ShadowRenderer | null => {
   const glOrNull = canvas.getContext('webgl', {
@@ -33,48 +33,15 @@ const createShadowRenderer = (canvas: HTMLCanvasElement, _options: ShadowRendere
   const gl: WebGLRenderingContext = glOrNull;
 
   // ─── Compile shaders ───
-  const shadowProg = createProgram(gl, FULLSCREEN_VERT, SHADOW_FRAG);
-  const blurProg = createProgram(gl, FULLSCREEN_VERT, BLUR_FRAG);
-  const compositeProg = createProgram(gl, FULLSCREEN_VERT, COMPOSITE_FRAG);
-
-  if (!shadowProg || !blurProg || !compositeProg) {
+  const progs = compilePrograms(gl);
+  if (!progs) {
     console.error('[ShadowCasting] Failed to compile shader programs');
     return null;
   }
+  const { shadow: shadowProg, blur: blurProg, composite: compositeProg } = progs;
 
   // ─── Uniform locations ───
-  const shadowUniforms = {
-    heightmap: gl.getUniformLocation(shadowProg, 'u_heightmap'),
-    gameTexture: gl.getUniformLocation(shadowProg, 'u_gameTexture'),
-    resolution: gl.getUniformLocation(shadowProg, 'u_resolution'),
-    sunEnabled: gl.getUniformLocation(shadowProg, 'u_sunEnabled'),
-    sunAngle: gl.getUniformLocation(shadowProg, 'u_sunAngle'),
-    sunElevation: gl.getUniformLocation(shadowProg, 'u_sunElevation'),
-    sunIntensity: gl.getUniformLocation(shadowProg, 'u_sunIntensity'),
-    ambientIntensity: gl.getUniformLocation(shadowProg, 'u_ambientIntensity'),
-    time: gl.getUniformLocation(shadowProg, 'u_time'),
-    dayNightCycle: gl.getUniformLocation(shadowProg, 'u_dayNightCycle'),
-    cycleSpeed: gl.getUniformLocation(shadowProg, 'u_cycleSpeed'),
-    debugMode: gl.getUniformLocation(shadowProg, 'u_debugMode'),
-    numLights: gl.getUniformLocation(shadowProg, 'u_numLights'),
-    lightPos: gl.getUniformLocation(shadowProg, 'u_lightPos'),
-    lightColor: gl.getUniformLocation(shadowProg, 'u_lightColor'),
-    lightIntensity: gl.getUniformLocation(shadowProg, 'u_lightIntensity'),
-    lightCastShadow: gl.getUniformLocation(shadowProg, 'u_lightCastShadow'),
-  };
-
-  const blurUniforms = {
-    texture: gl.getUniformLocation(blurProg, 'u_texture'),
-    heightmap: gl.getUniformLocation(blurProg, 'u_heightmap'),
-    resolution: gl.getUniformLocation(blurProg, 'u_resolution'),
-    radius: gl.getUniformLocation(blurProg, 'u_radius'),
-    direction: gl.getUniformLocation(blurProg, 'u_direction'),
-  };
-
-  const compositeUniforms = {
-    gameTexture: gl.getUniformLocation(compositeProg, 'u_gameTexture'),
-    lightTexture: gl.getUniformLocation(compositeProg, 'u_lightTexture'),
-  };
+  const { shadow: shadowUniforms, blur: blurUniforms, composite: compositeUniforms } = getUniformLocations(gl, progs);
 
   // ─── Quad buffer ───
   const quadBuffer = gl.createBuffer()!;
