@@ -12,8 +12,8 @@
  */
 
 import type { EdgeGlowRenderer, EdgeGlowOptions } from './types';
-import { FULLSCREEN_VERT, MIRROR_FRAG, BLUR_H_FRAG, BLUR_V_FRAG, COMPOSITE_FRAG } from './shaders';
-import { createProgram, createTextureNearest, createFBO, createFBONearest, destroyFBO, drawQuad } from './gl-helpers';
+import { createTextureNearest, createFBO, createFBONearest, destroyFBO, drawQuad } from './gl-helpers';
+import { compilePrograms, getUniformLocations } from './edge-glow-programs';
 
 const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOptions = {}): EdgeGlowRenderer | null => {
   const glOrNull = glCanvas.getContext('webgl', {
@@ -40,64 +40,16 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
 
   // ─── Compile shaders & link programs ───
 
-  const mirrorProgOrNull = createProgram(gl, FULLSCREEN_VERT, MIRROR_FRAG);
-  const blurHProgOrNull = createProgram(gl, FULLSCREEN_VERT, BLUR_H_FRAG);
-  const blurVProgOrNull = createProgram(gl, FULLSCREEN_VERT, BLUR_V_FRAG);
-  const compositeProgOrNull = createProgram(gl, FULLSCREEN_VERT, COMPOSITE_FRAG);
-
-  if (!mirrorProgOrNull || !blurHProgOrNull || !blurVProgOrNull || !compositeProgOrNull) {
+  const progs = compilePrograms(gl);
+  if (!progs) {
     console.error('[EdgeGlow] Failed to compile shader programs');
     return null;
   }
-
-  const mirrorProg = mirrorProgOrNull;
-  const blurHProg = blurHProgOrNull;
-  const blurVProg = blurVProgOrNull;
-  const compositeProg = compositeProgOrNull;
+  const { mirror: mirrorProg, blurH: blurHProg, blurV: blurVProg, composite: compositeProg } = progs;
 
   // ─── Uniform locations ───
 
-  const mirrorUniforms = {
-    gameTexture: gl.getUniformLocation(mirrorProg, 'u_gameTexture'),
-    resolution: gl.getUniformLocation(mirrorProg, 'u_resolution'),
-    blackLeft: gl.getUniformLocation(mirrorProg, 'u_blackLeft'),
-    blackRight: gl.getUniformLocation(mirrorProg, 'u_blackRight'),
-    blackBottom: gl.getUniformLocation(mirrorProg, 'u_blackBottom'),
-    swizzleBR: gl.getUniformLocation(mirrorProg, 'u_swizzleBR'),
-  };
-
-  const blurHUniforms = {
-    texture: gl.getUniformLocation(blurHProg, 'u_texture'),
-    resolution: gl.getUniformLocation(blurHProg, 'u_resolution'),
-    radius: gl.getUniformLocation(blurHProg, 'u_radius'),
-  };
-
-  const blurVUniforms = {
-    texture: gl.getUniformLocation(blurVProg, 'u_texture'),
-    resolution: gl.getUniformLocation(blurVProg, 'u_resolution'),
-    radius: gl.getUniformLocation(blurVProg, 'u_radius'),
-  };
-
-  const compositeUniforms = {
-    gameTexture: gl.getUniformLocation(compositeProg, 'u_gameTexture'),
-    mirrorTexture: gl.getUniformLocation(compositeProg, 'u_mirrorTexture'),
-    blurTexture: gl.getUniformLocation(compositeProg, 'u_blurTexture'),
-    time: gl.getUniformLocation(compositeProg, 'u_time'),
-    resolution: gl.getUniformLocation(compositeProg, 'u_resolution'),
-    glowIntensity: gl.getUniformLocation(compositeProg, 'u_glowIntensity'),
-    noiseSpeed: gl.getUniformLocation(compositeProg, 'u_noiseSpeed'),
-    noiseScale: gl.getUniformLocation(compositeProg, 'u_noiseScale'),
-    blackLeft: gl.getUniformLocation(compositeProg, 'u_blackLeft'),
-    blackRight: gl.getUniformLocation(compositeProg, 'u_blackRight'),
-    blackBottom: gl.getUniformLocation(compositeProg, 'u_blackBottom'),
-    dynLeft: gl.getUniformLocation(compositeProg, 'u_dynLeft'),
-    dynRight: gl.getUniformLocation(compositeProg, 'u_dynRight'),
-    dynBottom: gl.getUniformLocation(compositeProg, 'u_dynBottom'),
-    effectOpacity: gl.getUniformLocation(compositeProg, 'u_effectOpacity'),
-    pixelSize: gl.getUniformLocation(compositeProg, 'u_pixelSize'),
-    pixelDivisor: gl.getUniformLocation(compositeProg, 'u_pixelDivisor'),
-    pixelExponent: gl.getUniformLocation(compositeProg, 'u_pixelExponent'),
-  };
+  const { mirror: mirrorUniforms, blurH: blurHUniforms, blurV: blurVUniforms, composite: compositeUniforms } = getUniformLocations(gl, progs);
 
   // ─── Fullscreen quad geometry ───
 

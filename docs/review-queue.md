@@ -40,5 +40,11 @@ runtime tests**, so a slip breaks navigation silently. Same caution for
 `orchestrator.ts` (366) and `strategies/dual-layer.ts` (271). I'll do these in a
 focused pass (ideally with a nav smoke-check), not in the unattended loop.
 
+## Invasive class/stateful refactors (careful pass)
+`input-manager.ts` (391) is a stateful **class** (the live renderer input engine,
+no runtime tests). Splitting it cleanly means moving listener-wiring / device-refresh
+out as free functions that touch many `private` fields — an encapsulation change,
+not a verbatim extraction. Deferred to a careful pass (ideally with input testing).
+
 ## Files split (P4 progress log)
 <!-- appended as each file lands -->
