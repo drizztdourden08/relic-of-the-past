@@ -69,6 +69,7 @@ Path aliases: `@shared/*` → `shared/`, `@app/*` → `apps/desktop/src/`.
 | Run the app (dev) | `npm run dev` | electron-vite dev server + Electron. |
 | Build the app | `npm run build` | electron-vite production build. |
 | Lint + typecheck | `npm run lint` | `tsc --noEmit && eslint .` |
+| **Analyze whole project** | `npm run analyze` | Classifies + lints **all** file types; `analyze:diff`/`:ci`/`:tag`. See @docs/file-tagging.md. |
 | **Build WASM** | see `build-wasm` skill | Needs Emscripten SDK at `E:\GameProjects\emsdk`. Run `core/wasm-build/build.bat`. |
 | Unit tests | `npx vitest run tests/<file>` | Run only the relevant file, not the whole suite. |
 | E2E / screenshots | `npx playwright test` | |
@@ -83,6 +84,12 @@ these are gitignored and never committed. Same for `test-roms/` and `saves/`.
   one-thing-per-file, deep logical folders, `import type`. Enforced by
   `eslint.config.mjs` + a PostToolUse lint hook that flags violations on every
   edit. Run the `coding-standards` skill's checkup after every change.
+- **Every file is tagged & analyzed: @docs/file-tagging.md.** Each file carries
+  `@layer`/`@kind` (header or `file-tags.jsonc` manifest). `npm run analyze` runs
+  one harness over **all** languages (line-policy + eslint + tsc + stylelint +
+  markdownlint + clang-format); vendored `core/zelda3` is hint-only. Size is
+  per-kind (baseline 200; data/generated/asset exempt). A Stop hook gates changed
+  files each turn (`analyze:ci`). New file → tag it (`npm run analyze:tag`).
 - **Clean code — `refactoring-guru` skill.** Be an expert: recognize code smells,
   apply the right refactoring, choose/explain design patterns, uphold SOLID. Spot
   smells and pattern opportunities as you touch code and suggest/perform refactors.

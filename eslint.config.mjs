@@ -73,4 +73,23 @@ export default tseslint.config(
       'react-hooks/exhaustive-deps': 'warn',
     },
   },
+  {
+    // ── Data exemption (@kind data) ──
+    // Data tables are organized by category, not held to the logic line-cap.
+    // Canonical: anything under a `data/` folder or named `*.data.ts`.
+    // The trailing entries are current data files pending the P2 move into
+    // `data/` folders — collapse them once that lands.
+    files: [
+      '**/data/**/*.{ts,tsx}',
+      '**/*.data.ts',
+      'shared/input/presets/**/*.ts',
+      'shared/input/device-database.ts',
+      'shared/input/haptic-patterns.ts',
+      'shared/asset-extraction/text/language-data.ts',
+      'shared/asset-extraction/extraction/tables-data.ts',
+      'shared/game/checks/flags/room.ts',
+      'shared/game/navigation/plan/navigation-data.examples.ts',
+    ],
+    rules: { 'max-lines': 'off' },
+  },
 );

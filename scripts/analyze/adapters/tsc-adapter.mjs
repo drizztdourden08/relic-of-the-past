@@ -9,8 +9,11 @@ import { sh } from './_run.mjs';
 
 const LINE = /^(.+?)\((\d+),\d+\):\s+error\s+(TS\d+):\s+(.*)$/;
 
-const run = async (_records, ctx) => {
-  const { root } = ctx;
+const run = async (records, ctx) => {
+  const { root, mode } = ctx;
+  // Perf: in diff mode the facade passes only changed TS files; if none changed,
+  // skip the full project typecheck entirely (keeps the per-prompt gate fast).
+  if (mode === 'diff' && records.length === 0) return [];
   const { stdout } = sh('npx tsc --noEmit --pretty false', root);
   const out = [];
   for (const raw of stdout.split('\n')) {

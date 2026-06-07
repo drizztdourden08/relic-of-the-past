@@ -13,6 +13,18 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/analyze/analyze.mjs --diff --ci",
+            "statusMessage": "Analyzing changed files (analyze:ci)",
+            "timeout": 180
+          }
+        ]
+      }
     ]
   }
 }
