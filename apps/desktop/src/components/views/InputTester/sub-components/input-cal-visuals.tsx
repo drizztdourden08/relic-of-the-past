@@ -5,7 +5,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { getButtonIconUrl } from '../data/button-icons';
-import { DEVICE_DATABASE } from '@shared/input/device-database';
+import { DEVICE_DATABASE } from '@shared/input/data/devices';
 import { findPresetByVidPid } from '@shared/input';
 
 // ── Controller silhouette icons ──
