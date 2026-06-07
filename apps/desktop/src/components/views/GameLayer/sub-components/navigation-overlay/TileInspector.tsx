@@ -6,10 +6,11 @@ import { classifyTileAttr } from '@shared/game/navigation/tile-classification';
 import { getTileAttrsMap, getAttrLabel } from '@shared/game/navigation/tile-attrs';
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { ReachState } from '@shared/game/navigation/types';
-import type { GridPos, Rect, MouseState } from './types';
-import { rectsOverlap, segmentOverlapsRect } from './pathfinding/helpers';
-import { findNearest2x2Goal, findPath2x2FromLink } from './pathfinding/astar-2x2';
+import type { MouseState } from './types';
 import { TileTooltipContent, type TooltipData } from './tooltip';
+import { mouseEventToTile } from './tile-inspector-coords';
+import { useRectSelection } from './tile-inspector-rect-selection';
+import { computeCanPass, buildSpriteInfo, computePathTooltipPosition } from './tile-inspector-tooltip';
 
 interface TileInspectorProps {
   width: number;
@@ -28,13 +29,6 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex:
   const spriteRef = useRef<ReturnType<typeof wasmGetLiveSprites>>([]);
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
   const vpRef = useRef<ReturnType<typeof wasmGetViewportInfo>>(null);
-
-  const [rectSel, setRectSel] = useState<{
-    startRow: number; startCol: number;
-    endRow: number; endCol: number;
-    active: boolean;
-  } | null>(null);
-  const [copied, setCopied] = useState(false);
 
   const layer0ReachableLocal = useMemo(() => {
     if (!result.reachableByLayer) return undefined;
@@ -88,93 +82,14 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex:
     return () => { delete (window as any).__debugHoverTile; };
   }, [result, width, height, layer0ReachableLocal, layer1ReachableLocal]);
 
-  const mouseToTile = useCallback((e: React.MouseEvent<HTMLDivElement>): GridPos | null => {
-    const vp = vpRef.current;
-    if (!vp || !result.attrGrid) return null;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
-    const snesW = vp.snesWidth;
-    const snesH = vp.snesHeight;
-    const scaleX = width / snesW;
-    const scaleY = height / snesH;
-    const snesX = mx / scaleX;
-    const snesY = my / scaleY;
-    const viewLeft = vp.cameraX - vp.extraLeftRight;
-    const viewTop = vp.cameraY;
-    const worldX = snesX + viewLeft;
-    const worldY = snesY + viewTop;
-    const screenWorldX = isIndoors
-      ? (Math.floor(vp.linkX / 512) * 512)
-      : ((result.screenIndex & 7) * 512);
-    const screenWorldY = isIndoors
-      ? (Math.floor(vp.linkY / 512) * 512)
-      : (((result.screenIndex >> 3) & 7) * 512);
-    const col = Math.floor((worldX - screenWorldX) / 8);
-    const row = Math.floor((worldY - screenWorldY) / 8);
-    if (row < 0 || row >= 64 || col < 0 || col >= 64) return null;
-    return { row, col };
-  }, [width, height, result, isIndoors]);
+  const mouseToTile = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => mouseEventToTile(e, vpRef.current, result, width, height, isIndoors),
+    [width, height, result, isIndoors],
+  );
 
-  const handleRectMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!e.shiftKey || e.button !== 0) return;
-    const tile = mouseToTile(e);
-    if (!tile) return;
-    e.preventDefault();
-    e.stopPropagation();
-    setRectSel({ startRow: tile.row, startCol: tile.col, endRow: tile.row, endCol: tile.col, active: true });
-    setCopied(false);
-  }, [mouseToTile]);
-
-  const handleRectMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!rectSel?.active) return;
-    const tile = mouseToTile(e);
-    if (!tile) return;
-    setRectSel(s => s ? { ...s, endRow: tile.row, endCol: tile.col } : s);
-  }, [rectSel?.active, mouseToTile]);
-
-  const handleRectMouseUp = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!rectSel?.active || e.button !== 0) return;
-    const tile = mouseToTile(e);
-    if (tile) {
-      setRectSel(s => s ? { ...s, endRow: tile.row, endCol: tile.col, active: false } : s);
-    } else {
-      setRectSel(s => s ? { ...s, active: false } : s);
-    }
-
-    const sel = rectSel;
-    const endRow = tile?.row ?? sel.endRow;
-    const endCol = tile?.col ?? sel.endCol;
-    const r0 = Math.min(sel.startRow, endRow);
-    const r1 = Math.max(sel.startRow, endRow);
-    const c0 = Math.min(sel.startCol, endCol);
-    const c1 = Math.max(sel.startCol, endCol);
-
-    if (!result.attrGrid) return;
-
-    const context = result.tileContext ?? 'overworld';
-    const rows: string[] = [];
-    for (let r = r0; r <= r1; r++) {
-      const cells: string[] = [];
-      for (let c = c0; c <= c1; c++) {
-        const attr = result.attrGrid[r][c];
-        const reach = result.reachable[r][c];
-        const ch = reach === 0 ? '-' : reach === 1 ? '+' : '~';
-        cells.push(`${attr.toString(16).padStart(2, '0')}${ch}`);
-      }
-      rows.push(cells.join(' '));
-    }
-
-    const header = [
-      `Tile Selection [${r0},${c0}] to [${r1},${c1}] (${(r1 - r0 + 1)}×${(c1 - c0 + 1)} = ${(r1 - r0 + 1) * (c1 - c0 + 1)} tiles)`,
-      `Context: ${context} | Screen: 0x${result.screenIndex.toString(16).padStart(2, '0')}`,
-      `Format: <hex_attr><+reachable|~traversal|-blocked>`,
-      ``,
-    ];
-
-    const text = header.join('\n') + rows.join('\n');
-    navigator.clipboard.writeText(text).then(() => setCopied(true));
-  }, [rectSel, result, mouseToTile]);
+  const { rectSel, copied, handleRectMouseDown, handleRectMouseMove, handleRectMouseUp, selectionRect } = useRectSelection({
+    mouseToTile, result, width, height, isIndoors, vpRef,
+  });
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (rectSel?.active) {
@@ -202,12 +117,8 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex:
     const viewTop = vp.cameraY;
     const worldX = snesX + viewLeft;
     const worldY = snesY + viewTop;
-    const screenWorldX = isIndoors
-      ? (Math.floor(vp.linkX / 512) * 512)
-      : ((result.screenIndex & 7) * 512);
-    const screenWorldY = isIndoors
-      ? (Math.floor(vp.linkY / 512) * 512)
-      : (((result.screenIndex >> 3) & 7) * 512);
+    const screenWorldX = isIndoors ? (Math.floor(vp.linkX / 512) * 512) : ((result.screenIndex & 7) * 512);
+    const screenWorldY = isIndoors ? (Math.floor(vp.linkY / 512) * 512) : (((result.screenIndex >> 3) & 7) * 512);
 
     const tileCol = Math.floor((worldX - screenWorldX) / 8);
     const tileRow = Math.floor((worldY - screenWorldY) / 8);
@@ -228,37 +139,8 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex:
     const hookTarget = tileDef?.hookTarget ?? false;
     const bfsBlocked = !!result.dynamicBlockerCells?.some(p => p.row === tileRow && p.col === tileCol);
 
-    const spriteInfo = spriteRef.current
-      .map(s => {
-        const c0 = Math.floor((s.x - screenWorldX) / 8);
-        const r0 = Math.floor((s.y - screenWorldY) / 8);
-        const dr = Math.max(0, Math.abs(tileRow - r0) - 1);
-        const dc2 = Math.max(0, Math.abs(tileCol - c0) - 1);
-        const dist = dr + dc2;
-        return { s, r0, c0, dist };
-      })
-      .filter(x => x.r0 >= -1 && x.r0 < 65 && x.c0 >= -1 && x.c0 < 65 && x.dist === 0)
-      .sort((a, b) => a.s.slot - b.s.slot)
-      .map(({ s, r0, c0, dist }) => {
-        const hex2 = (v: number) => v.toString(16).padStart(2, '0');
-        const near = dist === 0 ? 'on' : `d${dist}`;
-        return `#${s.slot} type 0x${hex2(s.type)} st 0x${hex2(s.state)} sub ${s.subtype}/${s.subtype2} e${s.e} @${c0},${r0} ${near}`;
-      });
-
-    let canPass: boolean | null = null;
-    if (req) {
-      switch (req) {
-        case 'lift.1': canPass = true; break;
-        case 'lift.2': canPass = equipment.gloves >= 1; break;
-        case 'lift.3': canPass = equipment.gloves >= 2; break;
-        case 'hammer': canPass = inventoryItems[11] >= 1; break;
-        case 'boots': canPass = !!equipment.boots; break;
-        case 'flippers': canPass = !!equipment.flippers; break;
-      }
-    }
-
-    let tipX = mx + 14;
-    let tipY = my - 60;
+    const spriteInfo = buildSpriteInfo(spriteRef.current, tileRow, tileCol, screenWorldX, screenWorldY);
+    const canPass = computeCanPass(req, equipment, inventoryItems);
 
     const activeTarget = pathPreviewState
       ? (pathPreviewState.lockTarget && pathPreviewState.lockedTile
@@ -266,70 +148,13 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex:
         : pathPreviewState.leftHeld ? pathPreviewState.hoverTile : null)
       : null;
 
-    if (activeTarget) {
-      // Goal-finding uses merged grid (can target either layer)
-      const goal2x2 = findNearest2x2Goal(activeTarget.row, activeTarget.col, result.reachable);
-      // Pathfinding uses layer-aware routing when dual-layer data exists
-      const path = goal2x2
-        ? findPath2x2FromLink(
-            vp.linkX, vp.linkY + 8, screenWorldX, screenWorldY, goal2x2,
-            result.reachable, result.reachableByLayer, result.startLayer,
-          )
-        : null;
-
-      if (path && path.length > 1) {
-        const points = path.map((p: GridPos) => ({
-          x: (screenWorldX + p.col * 8 + 8 - viewLeft) * scaleX,
-          y: (screenWorldY + p.row * 8 + 8 - viewTop) * scaleY,
-        }));
-
-        const reqSet = new Set<string>();
-        for (const p of path) {
-          const reqStr = result.reqGrid?.[p.row]?.[p.col] ?? '';
-          if (!reqStr) continue;
-          for (const reqName of reqStr.split(',')) reqSet.add(reqName);
-        }
-        const reqText = reqSet.size > 0 ? [...reqSet].sort().join(', ') : 'none';
-        const debugLabel = `A* path req: ${reqText}${pathPreviewState?.lockTarget ? ' (locked)' : ''}`;
-
-        const endPt = points[points.length - 1];
-        const pathTextRect: Rect = {
-          x: endPt.x + 10, y: endPt.y - 22,
-          w: Math.max(120, debugLabel.length * 7), h: 18,
-        };
-
-        const tipW = 320;
-        const tipH = 58;
-        const clampRect = (r: Rect): Rect => ({
-          x: Math.max(4, Math.min(width - r.w - 4, r.x)),
-          y: Math.max(4, Math.min(height - r.h - 4, r.y)),
-          w: r.w, h: r.h,
-        });
-
-        const candidates: Rect[] = [
-          { x: mx + 14, y: my - 60, w: tipW, h: tipH },
-          { x: mx + 14, y: my + 18, w: tipW, h: tipH },
-          { x: mx - tipW - 14, y: my - 60, w: tipW, h: tipH },
-          { x: mx - tipW - 14, y: my + 18, w: tipW, h: tipH },
-          { x: 6, y: 6, w: tipW, h: tipH },
-          { x: width - tipW - 6, y: 6, w: tipW, h: tipH },
-          { x: 6, y: height - tipH - 6, w: tipW, h: tipH },
-          { x: width - tipW - 6, y: height - tipH - 6, w: tipW, h: tipH },
-        ].map(clampRect);
-
-        const overlapsPath = (r: Rect): boolean => {
-          for (let i = 1; i < points.length; i++) {
-            if (segmentOverlapsRect(points[i - 1], points[i], r, 7)) return true;
-          }
-          return false;
-        };
-
-        const best = candidates.find(c => !rectsOverlap(c, pathTextRect) && !overlapsPath(c));
-        const chosen = best ?? candidates[0];
-        tipX = chosen.x;
-        tipY = chosen.y;
-      }
-    }
+    const { tipX, tipY } = activeTarget
+      ? computePathTooltipPosition({
+          activeTarget, vp, screenWorldX, screenWorldY, viewLeft, viewTop,
+          scaleX, scaleY, mx, my, width, height, result,
+          lockTarget: !!pathPreviewState?.lockTarget,
+        })
+      : { tipX: mx + 14, tipY: my - 60 };
 
     setTooltip({
       x: tipX, y: tipY,
@@ -345,32 +170,7 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex:
       layer1Reach: layer1ReachableLocal?.[tileRow]?.[tileCol],
     });
     if (onHoverTile) onHoverTile(tileRow, tileCol);
-  }, [width, height, result, overworldScreenIndex, equipment.gloves, equipment.boots, equipment.flippers, inventoryItems, onHoverTile, pathPreviewState, rectSel?.active, handleRectMouseMove, layer0ReachableLocal, layer1ReachableLocal]);
-
-  const selectionRect = (() => {
-    if (!rectSel) return null;
-    const vp = vpRef.current;
-    if (!vp) return null;
-    const scaleX = width / vp.snesWidth;
-    const scaleY = height / vp.snesHeight;
-    const viewLeft = vp.cameraX - vp.extraLeftRight;
-    const viewTop = vp.cameraY;
-    const screenWorldX = isIndoors
-      ? (Math.floor(vp.linkX / 512) * 512)
-      : ((result.screenIndex & 7) * 512);
-    const screenWorldY = isIndoors
-      ? (Math.floor(vp.linkY / 512) * 512)
-      : (((result.screenIndex >> 3) & 7) * 512);
-    const r0 = Math.min(rectSel.startRow, rectSel.endRow);
-    const r1 = Math.max(rectSel.startRow, rectSel.endRow);
-    const c0 = Math.min(rectSel.startCol, rectSel.endCol);
-    const c1 = Math.max(rectSel.startCol, rectSel.endCol);
-    const x = (screenWorldX + c0 * 8 - viewLeft) * scaleX;
-    const y = (screenWorldY + r0 * 8 - viewTop) * scaleY;
-    const w = (c1 - c0 + 1) * 8 * scaleX;
-    const h = (r1 - r0 + 1) * 8 * scaleY;
-    return { x, y, w, h, tileCount: (r1 - r0 + 1) * (c1 - c0 + 1) };
-  })();
+  }, [width, height, result, overworldScreenIndex, equipment, inventoryItems, onHoverTile, pathPreviewState, rectSel?.active, handleRectMouseMove, layer0ReachableLocal, layer1ReachableLocal]);
 
   return (
     <div
