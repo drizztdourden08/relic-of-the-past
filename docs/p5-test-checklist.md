@@ -256,3 +256,21 @@ dual-layer flood tests (single-screen / useNavigation entries) — additionally:
   tileLayer upper/lower/both, reqGrid) to pre-split.
 - ☐ Stair-swap + ledge-fall cross-layer transitions still mark traversed tiles and
   produce the same reachable set.
+
+---
+
+## hid-reader.ts (was 244) → scan loop extracted
+Main-process node-hid reader (stateful class, no tests). The ~86-line `scanAndOpen`
+device discovery/open loop moved verbatim into `hid-reader-scan.ts`
+(`scanAndOpenReader(reader)`); the class keeps start/stop, write/vibrate, worker
+management, report forwarding. **Note:** a few members made non-private
+(compile-time only — zero runtime change) so the scan fn can operate on the instance.
+Plug in an HID controller (non-Xbox) and verify:
+- ☐ Controller is detected and opened (appears in Input Calibration / drives the game);
+  unplugging removes it and fires hid:disconnect.
+- ☐ Nintendo Switch controllers: USB init handshake runs on open; SPC2 (pid 0x2069)
+  wake-up haptic frame sent.
+- ☐ Vibration: single (`vibrate`) and pattern (`vibratePattern`, worker path with
+  direct-write fallback) both rumble; stop() sends the silent frame and closes cleanly.
+- ☐ Periodic re-scan (every 3s) picks up newly plugged controllers; main→renderer
+  report forwarding stays smooth (perf log no excessive gaps/bursts).

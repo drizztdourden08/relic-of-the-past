@@ -13,18 +13,17 @@
  * in webhid-input-reader.ts handle the decoding.
  */
 
-import HID from 'node-hid';
+import type HID from 'node-hid';
 import type { BrowserWindow } from 'electron';
 import { Worker } from 'worker_threads';
 import path from 'path';
-import { sendUsbInit } from './usb-init';
 import type { OpenDevice } from './hid-constants';
-import { NINTENDO_VID, NINTENDO_PIDS, toHex4 } from './hid-constants';
-import { filterGamepadCandidates, groupByVidPid, selectBestInterface } from './hid-discovery';
 import { buildSegmentFrames, buildPatternFrames, writeFramesDirect, buildSilentFrame } from './hid-haptics';
+import { scanAndOpenReader } from './hid-reader-scan';
 
 class HidInputReader {
-  private devices: OpenDevice[] = [];
+  // Non-private so hid-reader-scan can operate on the instance (compile-time only).
+  devices: OpenDevice[] = [];
   private scanInterval: ReturnType<typeof setInterval> | null = null;
   private window: BrowserWindow | null = null;
   private worker: Worker | null = null;
@@ -173,96 +172,13 @@ class HidInputReader {
 
   // ── Device scanning & connection ──
 
-  private async scanAndOpen(): Promise<void> {
-    let allDevices: HID.Device[];
-    try {
-      allDevices = await this.enumerateDevicesAsync();
-    } catch {
-      return;
-    }
-
-    const candidates = filterGamepadCandidates(allDevices);
-    const groups = groupByVidPid(candidates);
-
-    // Remove devices that disappeared from enumeration (unplugged)
-    const enumeratedKeys = new Set(groups.keys());
-    for (const dev of [...this.devices]) {
-      if (!enumeratedKeys.has(dev.key)) {
-        this.log(`Device ${dev.key} (${dev.product}) no longer enumerated — removing`);
-        this.removeDevice(dev);
-        this.send('hid:disconnect', { deviceKey: dev.key, product: dev.product });
-      }
-    }
-
-    for (const [key, interfaces] of groups) {
-      if (this.devices.some(d => d.key === key)) continue;
-
-      const target = selectBestInterface(interfaces);
-      if (!target || !target.path) continue;
-
-      this.log(`Opening ${key} (${target.product || 'Unknown'}) usagePage=0x${(target.usagePage ?? 0).toString(16)} usage=0x${(target.usage ?? 0).toString(16)}`);
-
-      try {
-        if (target.vendorId === NINTENDO_VID && NINTENDO_PIDS.has(target.productId)) {
-          try {
-            const ok = await sendUsbInit(target.vendorId, target.productId);
-            if (ok) this.log(`USB init succeeded for ${key}`);
-          } catch (err) {
-            this.log(`USB init attempt for ${key}: ${(err as Error).message}`);
-          }
-        }
-
-        const hid = new HID.HID(target.path);
-        const dev: OpenDevice = {
-          hid,
-          vid: target.vendorId,
-          pid: target.productId,
-          key,
-          path: target.path,
-          product: target.product || 'Unknown Controller',
-        };
-        this.devices.push(dev);
-
-        hid.on('data', (data: Buffer) => this.forwardReport(dev, data));
-        hid.on('error', (err: Error) => {
-          this.log(`Device error ${key}: ${err.message}`);
-          this.removeDevice(dev);
-          this.send('hid:disconnect', { deviceKey: key, product: dev.product, error: err.message });
-        });
-
-        this.log(`Opened ${key} (${dev.product})`);
-
-        // SPC2 wake-up haptic poke
-        if (target.vendorId === NINTENDO_VID && target.productId === 0x2069) {
-          try {
-            const wake = buildSilentFrame(0x50);
-            hid.pause();
-            try {
-              hid.write(wake);
-              this.log(`Sent wake-up haptic frame to ${key}`);
-            } finally {
-              hid.resume();
-            }
-          } catch (err) {
-            this.log(`Wake-up write failed for ${key}: ${(err as Error).message}`);
-          }
-        }
-
-        this.send('hid:device-opened', {
-          deviceKey: key,
-          vendorId: toHex4(target.vendorId),
-          productId: toHex4(target.productId),
-          product: dev.product,
-        });
-      } catch (err) {
-        this.log(`Failed to open ${key}: ${(err as Error).message}`);
-      }
-    }
+  private scanAndOpen(): Promise<void> {
+    return scanAndOpenReader(this);
   }
 
   // ── Report forwarding ──
 
-  private forwardReport(dev: OpenDevice, data: Buffer): void {
+  forwardReport(dev: OpenDevice, data: Buffer): void {
     if (!this.window || this.window.isDestroyed()) return;
 
     const now = performance.now();
@@ -287,18 +203,18 @@ class HidInputReader {
 
   // ── Utilities ──
 
-  private removeDevice(dev: OpenDevice): void {
+  removeDevice(dev: OpenDevice): void {
     try { dev.hid.close(); } catch { /* ignore */ }
     this.devices = this.devices.filter(d => d !== dev);
   }
 
-  private send(channel: string, data: unknown): void {
+  send(channel: string, data: unknown): void {
     if (this.window && !this.window.isDestroyed()) {
       this.window.webContents.send(channel, data);
     }
   }
 
-  private log(msg: string): void {
+  log(msg: string): void {
     console.log(`[HID] ${msg}`);
   }
 }
