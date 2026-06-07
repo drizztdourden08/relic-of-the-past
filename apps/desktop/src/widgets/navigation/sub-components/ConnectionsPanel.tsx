@@ -1,6 +1,5 @@
 /* @layer renderer-widgets @kind component */
 import { Icon } from '@iconify/react/offline';
-import type { ConnectionInfo } from '@shared/game/navigation';
 import { getConnectionDestinationName } from '@shared/game/navigation';
 import { SCREEN_BY_ID } from '@shared/game/data/screens';
 import { getEntranceIcon } from '../../../lib/entrance-icons';
@@ -8,7 +7,7 @@ import { S } from '../styles';
 import { getScreenDisplayName } from '../widget-helpers';
 import { ReqIcon } from './ReqIcon';
 import { EdgeArrowSvg } from './EdgeArrowSvg';
-import { InternalEdgeSvg } from './InternalEdgeSvg';
+import { InternalEdgesSection } from './InternalEdgesSection';
 import type { useNavigation } from '../useNavigation';
 
 type Props = Pick<ReturnType<typeof useNavigation>, 'entranceSum' | 'renderResults' | 'screenBundle' | 'isDarkWorld' | 'roomIndex' | 'isIndoors' | 'respawnEntIds' | 'entranceSpawns' | 'externalConnections' | 'internalConnections' | 'fallHoleLandings' | 'linkDebug'>;
@@ -131,73 +130,7 @@ const ConnectionsPanel = (props: Props) => {
         )}
 
         {/* ─── Internal Edges ─── */}
-        {internalConnections.length > 0 && (
-          <>
-            {(() => {
-              // Group intra-room connections into boundary pairs (south↔north, east↔west).
-              // Each contiguous run on one side matches a run on the opposite side.
-              const opposites: Record<string, string> = { north: 'south', south: 'north', east: 'west', west: 'east' };
-              // Pick one side per axis (prefer south/east as "from")
-              const fromEdges = internalConnections.filter(c =>
-                c.isIntraRoom ? (c.edge === 'south' || c.edge === 'east') : true
-              );
-              // For overworld inter-screen internals, keep as-is
-              const interScreen = internalConnections.filter(c => !c.isIntraRoom);
-              const intraFrom = fromEdges.filter(c => c.isIntraRoom);
-
-              const cards: { conn: ConnectionInfo; paired: ConnectionInfo | undefined }[] = [];
-              for (const conn of intraFrom) {
-                // Find the matching opposite run (same positions overlap)
-                const opp = internalConnections.find(c =>
-                  c.edge === opposites[conn.edge] && c.isIntraRoom &&
-                  c.positions[0] === conn.positions[0]
-                );
-                cards.push({ conn, paired: opp });
-              }
-              // Add inter-screen internals as unpaired
-              for (const conn of interScreen) {
-                cards.push({ conn, paired: undefined });
-              }
-
-              const count = cards.length;
-              return (
-                <>
-                  <div style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Internal ({count})</div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center' }}>
-                    {cards.map(({ conn, paired }, i) => {
-                      if (screenBundle?.isMulti && !conn.isIntraRoom) {
-                        const fromName = screenBundle.subNames[conn.sourceScreen!] ?? '?';
-                        const toName = screenBundle.subNames[conn.targetScreen] ?? '?';
-                        return (
-                          <div key={`int-${i}`} style={S.card}>
-                            <div style={S.cardGraphic}>
-                              <InternalEdgeSvg edge={conn.edge} fromName={fromName} toName={toName} />
-                            </div>
-                            <span style={{ fontSize: 8, color: conn.layerToggle ? '#f8a' : '#6a8', marginTop: 2 }}>
-                              {conn.layerToggle ? '▲▼ Toggle' : '═ Same'}
-                            </span>
-                          </div>
-                        );
-                      }
-                      const fromCount = String(conn.freeTileCount);
-                      const toCount = String(paired?.freeTileCount ?? conn.freeTileCount);
-                      return (
-                        <div key={`int-${i}`} style={S.card}>
-                          <div style={S.cardGraphic}>
-                            <InternalEdgeSvg edge={conn.edge} fromName={fromCount} toName={toCount} />
-                          </div>
-                          <span style={{ fontSize: 8, color: '#6a8', marginTop: 2 }}>
-                            ═ Same
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </>
-              );
-            })()}
-          </>
-        )}
+        <InternalEdgesSection internalConnections={internalConnections} screenBundle={screenBundle} />
 
         {/* ─── Fall Hole Landings ─── */}
         {fallHoleLandings.length > 0 && (
