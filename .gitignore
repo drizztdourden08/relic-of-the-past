@@ -61,3 +61,4 @@ seeds/
 config/
 scripts/utils/classification-report.csv
 scripts/analyze/report.json
+.claude/worktrees/
