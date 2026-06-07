@@ -5,7 +5,7 @@
 import * as yaml from 'js-yaml';
 import type { RomData } from '../rom/rom-types';
 import { decodeRoomObjects } from './room-object-decoder';
-import * as tables from './tables-data';
+import * as tables from './data/tables-data';
 
 const extractRoom = (rom: RomData, roomIndex: number, entrances0: Map<number, Record<string, unknown>[]>, entrances1: Map<number, Record<string, unknown>[]>, chestInfo: Map<number, [number, boolean][]>, pitsHurt: Set<number>): string => {
 

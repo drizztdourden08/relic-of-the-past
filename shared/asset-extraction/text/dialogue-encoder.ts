@@ -4,8 +4,8 @@
  *
  * Ported from: core/zelda3/assets/text_compression.py compress_strings() + encoders
  */
-import type { LanguageConfig } from './language-data';
-import { kLanguages } from './language-data';
+import type { LanguageConfig } from './data/language-data';
+import { kLanguages } from './data/language-data';
 
 // ─── Command encoding ───
 

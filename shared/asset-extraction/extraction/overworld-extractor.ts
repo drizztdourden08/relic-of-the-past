@@ -6,7 +6,7 @@
  */
 import * as yaml from 'js-yaml';
 import type { RomData } from '../rom/rom-types';
-import * as tables from './tables-data';
+import * as tables from './data/tables-data';
 
 // ─── Helper functions ───
 

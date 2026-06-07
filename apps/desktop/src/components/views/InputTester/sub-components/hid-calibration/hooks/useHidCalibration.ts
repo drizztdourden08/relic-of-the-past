@@ -8,7 +8,7 @@ import { webHidReader } from '../../../../../../lib/input/hid-reader';
 import type { WebHidRawReport } from '../../../../../../lib/input/hid-reader';
 import { findDeviceProfileByVidPid } from '@shared/input';
 import type { DeviceProfile } from '@shared/input';
-import { DEVICE_DATABASE } from '@shared/input/device-database';
+import { DEVICE_DATABASE } from '@shared/input/data/devices';
 import type { SelectOption } from '../../../../../primitives';
 import type {
   AxisSubStep, ByteStatus, CaptureState, GyroState, HidButtonMapping, HidControllerMap,

@@ -82,11 +82,7 @@ export default tseslint.config(
     files: [
       '**/data/**/*.{ts,tsx}',
       '**/*.data.ts',
-      'shared/input/presets/**/*.ts',
-      'shared/input/device-database.ts',
-      'shared/input/haptic-patterns.ts',
-      'shared/asset-extraction/text/language-data.ts',
-      'shared/asset-extraction/extraction/tables-data.ts',
+      // Two data tables not under a data/ folder (not part of the P2 move):
       'shared/game/checks/flags/room.ts',
       'shared/game/navigation/plan/navigation-data.examples.ts',
     ],

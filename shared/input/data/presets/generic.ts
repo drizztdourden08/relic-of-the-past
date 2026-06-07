@@ -5,9 +5,9 @@
  * Uses Web Gamepad API standard mapping.
  */
 
-import { BaseController, type ControllerButton, type ControllerAxis } from '../base';
-import { registerController } from '../registry';
-import type { ButtonMapping, ButtonIcon } from '../../types/controls';
+import { BaseController, type ControllerButton, type ControllerAxis } from '../../base';
+import { registerController } from '../../registry';
+import type { ButtonMapping, ButtonIcon } from '../../../types/controls';
 
 const icon = (key: string, label: string): ButtonIcon => ({ key, path: null, label });
 

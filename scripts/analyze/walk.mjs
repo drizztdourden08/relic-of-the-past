@@ -8,8 +8,8 @@
 import fs from 'fs';
 import path from 'path';
 
-const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'release', 'coverage', '.vite', 'out', 'build-output', 'saves', 'test-roms', 'assets', 'temp-scripts']);
-const SKIP_REL = ['apps/desktop/public/wasm'];
+const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'release', 'coverage', '.vite', 'out', 'build-output', 'saves', 'test-roms', 'assets', 'temp-scripts', 'worktrees']);
+const SKIP_REL = ['apps/desktop/public/wasm', '.claude/worktrees'];
 const SKIP_FILE = /(\.jsonl|\.vcxproj|\.filters|\.sln|\.bmp|\.map|\.csv|package-lock\.json)$/i;
 
 const walkFiles = (root, dir = root, acc = []) => {
@@ -20,8 +20,8 @@ const walkFiles = (root, dir = root, acc = []) => {
     if (entry.isDirectory()) {
       if (SKIP_DIRS.has(entry.name) || SKIP_REL.some((s) => rel.startsWith(s))) continue;
       walkFiles(root, full, acc);
-    } else if (!SKIP_FILE.test(rel)) {
-      acc.push(rel);
+    } else if (entry.isFile() && !SKIP_FILE.test(rel)) {
+      acc.push(rel); // isFile() excludes symlinks/junctions (e.g. worktree node_modules)
     }
   }
   return acc;

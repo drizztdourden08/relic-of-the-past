@@ -3,7 +3,7 @@
  * Keyboard preset — default key mappings for keyboard input.
  */
 
-import type { DevicePreset, ButtonMapping } from '../../types/controls';
+import type { DevicePreset, ButtonMapping } from '../../../types/controls';
 
 const kb = (snesButton: ButtonMapping['snesButton'], code: string, label: string): ButtonMapping => {
   return { snesButton, binding: { type: 'keyboard', code, label }, icon: null };

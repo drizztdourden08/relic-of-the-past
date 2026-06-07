@@ -6,7 +6,7 @@
  */
 
 import type { VibrationSegment } from './base';
-import { HAPTIC_PATTERNS, type HapticPatternEntry, type HapticPatternId } from './haptic-patterns';
+import { HAPTIC_PATTERNS, type HapticPatternEntry, type HapticPatternId } from './data/haptics';
 
 // ─── Event Types (must match C-side enum in haptic_events.c) ───
 

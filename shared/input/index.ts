@@ -6,7 +6,7 @@
 import type { DevicePreset } from '../types/controls';
 import { findController, findControllerById, getAllControllers } from './register-all';
 import type { BaseController, ControllerButton, ControllerAxis } from './base';
-import { KEYBOARD_DEFAULT } from './presets/keyboard';
+import { KEYBOARD_DEFAULT } from './data/presets/keyboard';
 
 const toPreset = (ctrl: BaseController): DevicePreset => {
   return {
@@ -80,7 +80,7 @@ const parseGamepadId = (id: string): { vid: string; pid: string } | null => {
   return null;
 };
 
-export { KEYBOARD_DEFAULT } from './presets/keyboard';
+export { KEYBOARD_DEFAULT } from './data/presets/keyboard';
 
 // ── Device Profile (replaces legacy profiles/ adapter) ──
 

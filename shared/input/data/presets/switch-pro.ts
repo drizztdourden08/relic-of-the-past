@@ -11,9 +11,9 @@
  * - 17 buttons
  */
 
-import { BaseController, type ControllerButton, type ControllerAxis, type ControllerContext, type ParsedInput, type StickDefaults, type VibrationSegment } from '../base';
-import { registerController } from '../registry';
-import type { ButtonMapping, ButtonIcon } from '../../types/controls';
+import { BaseController, type ControllerButton, type ControllerAxis, type ControllerContext, type ParsedInput, type StickDefaults, type VibrationSegment } from '../../base';
+import { registerController } from '../../registry';
+import type { ButtonMapping, ButtonIcon } from '../../../types/controls';
 
 // ── Icons ──
 

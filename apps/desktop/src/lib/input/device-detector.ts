@@ -10,7 +10,7 @@
 
 import type { DetectedDevice, InputApi } from '@shared/types/controls';
 import { resolvePreset, parseGamepadId, findPresetByVidPid, KEYBOARD_DEFAULT } from '@shared/input';
-import { DEVICE_DATABASE } from '@shared/input/device-database';
+import { DEVICE_DATABASE } from '@shared/input/data/devices';
 
 interface HidDeviceInfo {
   vendorId: string;
