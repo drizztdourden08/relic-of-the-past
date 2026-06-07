@@ -136,3 +136,21 @@ Exercise across input surfaces:
 - ☐ **Input Calibration / Tester** pages: per-frame HID/gamepad state + raw-input rebinding
   visualizations update live.
 - ☐ Stick/trigger calibration loads on first start; rebinding UI (RawInput) sees rising edges.
+
+---
+
+## orchestrator.ts (was 366) → flood-fill orchestration split
+Pure flood-fill orchestrator (deterministic). Split into: `screen-prep`
+(prepareScreen / constrainVoidTiles / findStartPosition), `flood-options`
+(FloodFillOptions type), `orchestrator-helpers` (findEntrancePositions / buildBorders),
+`flood-paths` (runDualLayerFlood + runSingleLayerFlood), `connections`
+(getAdjacentRoom + getConnections). `orchestrator.ts` is now a thin dispatcher
+(useDualLayer ? dual : single) + re-exports floodFillScreen / getConnections /
+FloodFillOptions. Verbatim. Largely covered by the single-screen/useNavigation
+flood tests — additionally confirm:
+- ☐ **Overworld single-layer** flood + connections (edge bundles, item-gated tiles) unchanged.
+- ☐ **Indoor dual-layer room** flood: void-constraint still blocks structural void;
+  ledge arrows only show when the layer-0 approach tile is reachable.
+- ☐ **staircaseType 2** rooms: layer changes blocked → single-layer BFS on the start layer.
+- ☐ **Connections widget**: inter-screen, inter-room, and intra-room (scroll-boundary)
+  connections all derive correctly; contiguous-run bundling + item-gap splitting unchanged.
