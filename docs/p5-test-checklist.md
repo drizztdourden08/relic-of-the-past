@@ -88,3 +88,25 @@ were dropped — behavior-identical. Exercise via the flood overlay:
 - ☐ **Obstacles/water** require the right item (gloves/hammer/flippers) and the req
   set propagates (reqGrid path requirements unchanged).
 - ☐ Quadrant-bounded runs (multi-screen rooms) still confine the flood correctly.
+
+---
+
+## HomeTab.tsx (was 435) → `home-tab/`
+Save-management form. Split into: `home-tab-helpers` (formatRelativeTime,
+defaultSaveName, plus de-duplicated `ensureGameRunning` and `captureCanvasScreenshot`),
+`home-tab-data` (fetchQuickSlots/fetchNormalSaves/fetchAutoSaves — return null on
+error to preserve "don't update state on failure"), `useHomeTabSaves` (all state +
+handlers), `HomeTabColumns` + `HomeTabDialogs` (render). Shell keeps info cards + hero.
+Open a profile's Home tab:
+- ☐ **Info cards** (ROM / Last Played / Created / Window) show correct values.
+- ☐ **Hero card** = most recent normal save; Load works.
+- ☐ **Quick saves** 1–12: Save (disabled until game running) writes + refreshes the
+  slot screenshot/timestamp; Load starts the game if needed, then loads.
+- ☐ **New Save** dialog: default name prefilled, Enter confirms, creates a save with
+  a canvas screenshot; list refreshes.
+- ☐ **Normal save** Load / Overwrite (confirm dialog) / Delete (confirm dialog) / Rename
+  all work and refresh.
+- ☐ **Auto-saves** list: Load + Delete work.
+- ☐ **Play sessions** list renders (up to 20).
+- ☐ Switching profiles reloads all four sections; an IPC error leaves prior data intact
+  (no flash to empty).
