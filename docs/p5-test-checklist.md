@@ -243,3 +243,16 @@ confirm-preset/delete modals. Open Profile → Controls:
 - ☐ **Devices column**: detected devices listed; click icon or drag onto bindings →
   confirm-preset dialog applies the controller preset (overwrites bindings); collapse toggle.
 - ☐ Delete-profile confirm dialog works; changes persist to the active input profile.
+
+---
+
+## strategies/dual-layer.ts (was 271) → build-result extracted
+Core-nav `DualLayerStrategy` (deterministic). The 119-line `buildTileResult` body
+moved verbatim into `dual-layer-build-result.ts` (`buildDualLayerTileResult`, which
+also owns `SWAP_STAIR_ATTRS` to avoid a cycle); the class keeps `expand` + the
+ledge/stair cross-layer handlers + a thin delegate. Largely covered by the
+dual-layer flood tests (single-screen / useNavigation entries) — additionally:
+- ☐ Dual-layer dungeon room reachability identical (merged grid, per-layer grids,
+  tileLayer upper/lower/both, reqGrid) to pre-split.
+- ☐ Stair-swap + ledge-fall cross-layer transitions still mark traversed tiles and
+  produce the same reachable set.
