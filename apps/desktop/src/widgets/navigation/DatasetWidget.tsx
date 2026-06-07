@@ -15,18 +15,9 @@ import { ScreenEditorDialog } from './ScreenEditorDialog';
 import { ConnectionEditorDialog } from './ConnectionEditorDialog';
 import { StatusBadge } from '../../components/primitives';
 import { useScreenDetection } from './hooks';
-
-type ReviewStatus = 'neutral' | 'good' | 'bad' | 'yellow';
-interface ReviewEntry { status: ReviewStatus; comment?: string; }
-interface LocationReview { status: ReviewStatus; comment?: string; connections: Record<string, ReviewEntry>; }
-type ReviewData = Record<string, LocationReview>;
-
-const STATUS_BTNS: { key: ReviewStatus; label: string; color: string }[] = [
-  { key: 'neutral', label: '—', color: '#666' },
-  { key: 'good', label: '✓', color: '#4c4' },
-  { key: 'bad', label: '✗', color: '#f44' },
-  { key: 'yellow', label: '⚠', color: '#fc4' },
-];
+import type { ReviewStatus, ReviewData } from './dataset-widget-types';
+import { S } from './dataset-widget-styles';
+import { StatusRow } from './StatusRow';
 
 const DatasetWidgetContent = () => {
   const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex } = useGameUIStore(s => s.map);
@@ -217,55 +208,6 @@ const DatasetWidgetContent = () => {
       />
     </div>
   );
-};
-
-// ─── StatusRow ─────────────────────────────────────────────────────────
-
-const StatusRow = ({ status, comment, onStatus, onComment }: { status: ReviewStatus; comment?: string; onStatus: (s: ReviewStatus) => void; onComment: (c: string) => void }) => {
-  return (
-    <div>
-      <div style={S.statusRow}>
-        {STATUS_BTNS.map(b => (
-          <button key={b.key} onClick={() => onStatus(b.key)} style={{ ...S.statusBtn, ...(status === b.key ? { color: b.color, borderColor: b.color } : {}) }}>
-            {b.label}
-          </button>
-        ))}
-      </div>
-      {(status === 'bad' || status === 'yellow') && (
-        <input style={S.commentInput} placeholder="Note..." value={comment ?? ''} onChange={e => onComment(e.target.value)} />
-      )}
-    </div>
-  );
-};
-
-// ─── Styles ────────────────────────────────────────────────────────────
-
-const S: Record<string, React.CSSProperties> = {
-  root: {
-    padding: 8, display: 'flex', flexDirection: 'column', gap: 8,
-    fontSize: 11, color: '#ddd', overflow: 'auto', height: '100%',
-  },
-  section: { padding: '6px 8px', background: 'rgba(255,255,255,0.03)', borderRadius: 6, border: '1px solid rgba(255,255,255,0.06)' },
-  sectionTitle: { fontSize: 10, fontWeight: 700, color: '#aaa', textTransform: 'uppercase' as const, letterSpacing: 1, marginBottom: 4 },
-  infoBox: { display: 'flex', flexDirection: 'column' as const, gap: 2 },
-  infoRow: { display: 'flex', alignItems: 'center', gap: 6, minHeight: 18 },
-  infoLabel: { width: 80, fontSize: 10, color: '#888', flexShrink: 0 },
-  btn: {
-    padding: '3px 8px', fontSize: 10, background: 'rgba(255,255,255,0.06)',
-    border: '1px solid rgba(255,255,255,0.12)', borderRadius: 4, color: '#ccc',
-    cursor: 'pointer', whiteSpace: 'nowrap' as const,
-  },
-  statusRow: { display: 'flex', gap: 4, marginTop: 4 },
-  statusBtn: {
-    width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center',
-    fontSize: 14, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)',
-    borderRadius: 4, cursor: 'pointer', color: '#666',
-  },
-  commentInput: {
-    width: '100%', padding: '2px 6px', background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.12)', borderRadius: 3, color: '#ccc',
-    fontSize: 10, fontFamily: 'inherit', outline: 'none', marginTop: 3,
-  },
 };
 
 export { DatasetWidgetContent };
