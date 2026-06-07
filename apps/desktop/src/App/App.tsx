@@ -1,18 +1,18 @@
 /* @layer renderer-appshell @kind component */
-import { useState, useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { TitleBar } from '../components/views/TitleBar';
 import { GameLayer } from '../components/views/GameLayer';
 import { SaveStateOverlay } from '../components/views/SaveStateOverlay/SaveStateOverlay';
 import { WidgetManager, useWidgetLayout } from '../components/composites/Widget';
 import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, DatasetWidgetContent, CheatsWidgetContent } from '../widgets';
 import { SpriteDebug } from '../components/views/SpriteDebug';
-import { useShadowEditorStore } from '../stores/shadow-editor-store';
 import { Dialog } from '../components/composites/Dialog';
 import { UpdateDialog } from '../components/composites/UpdateDialog';
 import { AboutDialog } from '../components/composites/AboutDialog';
 import { PageRouter } from './PageRouter';
-import type { ProfileHubTab } from '../components/views/ProfileHub/types';
 import { useAppNavigation } from './behavior/useAppNavigation';
+import { useAppOverlays } from './behavior/useAppOverlays';
+import { useAppViewCallbacks } from './behavior/useAppViewCallbacks';
 import { useAudioSettings } from './behavior/useAudioSettings';
 import { useConfirmDialog } from './behavior/useConfirmDialog';
 import { useDisplaySettings } from './behavior/useDisplaySettings';
@@ -32,8 +32,6 @@ import { getInputManager, primeLiveSettings } from '../lib/game';
 import './App.css';
 
 const App = () => {
-  const [dataTab, setDataTab] = useState<string>('profiles');
-  const [profileHubTab, setProfileHubTab] = useState<ProfileHubTab>('home');
   const appVersion = useAppVersion();
 
   const { dialog, showDialog, dismissDialog, handleDeleteConfirm } = useConfirmDialog();
@@ -66,42 +64,20 @@ const App = () => {
   const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null);
   const saveOverlay = useSaveOverlay(saveState, game.isRunning);
   const update = useAutoUpdate();
-  const [showUpdateDialog, setShowUpdateDialog] = useState(false);
-  const [showAbout, setShowAbout] = useState(false);
-  const [showSpriteDebug, setShowSpriteDebug] = useState(false);
-  const toggleSpriteDebug = useCallback(() => setShowSpriteDebug(v => !v), []);
-  const [shadowEditorWarningShown, setShadowEditorWarningShown] = useState(
-    () => localStorage.getItem('shadowEditor.warningDismissed') === 'true',
-  );
-  const handleShowShadowEditor = useCallback(() => {
-    if (!shadowEditorWarningShown) {
-      showDialog({
-        title: 'Shadow Editor — Developer Tool',
-        message: 'This tool modifies shadow casting data that is committed directly to the project source code. Any changes you make here will affect the game\'s lighting for ALL builds.\n\nThis tool is only available in development mode.',
-        confirmLabel: 'I understand, open editor',
-        variant: 'default',
-        onConfirm: () => {
-          dismissDialog();
-          localStorage.setItem('shadowEditor.warningDismissed', 'true');
-          setShadowEditorWarningShown(true);
-          useShadowEditorStore.getState().setOpen(true);
-        },
-      });
-    } else {
-      useShadowEditorStore.getState().setOpen(true);
-    }
-  }, [shadowEditorWarningShown, showDialog, dismissDialog]);
-  useKeyboardShortcuts(nav, dialog, dismissDialog, profileMgmt.activeProfile);
 
-  // Dev-only sprite debug toggle (Ctrl+Shift+D)
-  useEffect(() => {
-    if (!window.api.isDev) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'D') { e.preventDefault(); setShowSpriteDebug(v => !v); }
-    };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
-  }, []);
+  const {
+    showUpdateDialog, setShowUpdateDialog,
+    showAbout, setShowAbout,
+    showSpriteDebug, toggleSpriteDebug,
+    handleShowShadowEditor,
+  } = useAppOverlays({ showDialog, dismissDialog });
+
+  const {
+    dataTab, profileHubTab, setProfileHubTab,
+    handleShowPicker, handleShowProfile, handleShowDataManager,
+  } = useAppViewCallbacks({ game, showDialog, dismissDialog, profileMgmt, nav });
+
+  useKeyboardShortcuts(nav, dialog, dismissDialog, profileMgmt.activeProfile);
 
   useStartup(profileMgmt, nav);
   useAutoTest({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame });
@@ -119,39 +95,6 @@ const App = () => {
     const gameActive = game.isRunning && nav.activePage === 'none' && !showSpriteDebug;
     getInputManager().setInputSuppressed(!gameActive);
   }, [game.isRunning, nav.activePage, showSpriteDebug]);
-
-  // ─── Navigation with game-running confirmation ───
-  const handleShowPicker = useCallback(async () => {
-    if (game.isRunning) {
-      showDialog({
-        title: 'Switch Profile',
-        message: 'This will close the currently running game. Any unsaved progress will be lost.',
-        confirmLabel: 'Switch Profile',
-        variant: 'default',
-        onConfirm: async () => {
-          dismissDialog();
-          game.clearGame();
-          profileMgmt.setActiveProfile(null);
-          await nav.handleShowPicker();
-        },
-      });
-    } else {
-      await nav.handleShowPicker();
-    }
-  }, [game, showDialog, dismissDialog, profileMgmt, nav]);
-
-  const handleShowProfile = useCallback(async () => {
-    if (profileMgmt.activeProfile) {
-      await profileMgmt.refreshProfilesAndRoms();
-      nav.setActivePage('profile');
-    }
-  }, [profileMgmt, nav]);
-
-  const handleShowDataManager = useCallback(async (tab?: string) => {
-    if (tab) setDataTab(tab);
-    await profileMgmt.refreshProfilesAndRoms();
-    nav.setActivePage('data');
-  }, [profileMgmt, nav]);
 
   return (
     <div className="app">
