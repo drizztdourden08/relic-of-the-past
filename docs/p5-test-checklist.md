@@ -187,3 +187,24 @@ Run the game and verify:
 - ☐ Toggling edgeEffect / shadowCasting settings enables/disables the respective loop.
 - ☐ Controller-disconnect pause overlay + double-click-to-resume still work.
 - ☐ Crash/reset → idle remounts the canvas (canvasKey bump) and restarts cleanly.
+
+---
+
+## ProfileHub.tsx (was 302) → `profile-hub/`
+Profile settings hub. Split into: `apply-settings-effects` (persist + parent
+notifications + HUD-store sync + live push + restart toast; `syncHudStore`),
+`useProfileSettings` (settings load/persist, pause tracking, toasts), `ProfileHubBody`
+(tab nav + content panels). Shell keeps the header (Play/Pause/Stop/Reset). Open
+a profile:
+- ☐ Header actions: Play starts; while running Pause/Resume toggles, Stop, Reset work;
+  pause state reflects InputManager.
+- ☐ All 7 tabs (Home/Settings/Audio/Gameplay/HUD/Controls/Haptics) switch and render;
+  controlled-tab (from titlebar Home) + internal tab both work.
+- ☐ Changing a setting persists to disk; **live** settings apply immediately while running;
+  **restart-required** settings show the danger toast once (dismissable, cleared on stop).
+- ☐ HUD settings changes sync to the live HUD store (mode/style/ratio/parts/etc).
+- ☐ Parent notifications fire: window mode, viewport/aspect, master volume (+ titlebar mute
+  override), perf-in-title, save-slot shortcut, edge effect, shadow casting, fullscreen toggle.
+- ☐ Function-mapping changes push to InputManager.
+- ☐ On mount, saved config loads and applies to all of the above; external `settings:change`
+  events (debug widget) are handled.
