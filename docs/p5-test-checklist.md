@@ -226,3 +226,20 @@ Advanced → Shadow Editor in dev). Verify:
   softness/day-night + cycle speed), Height Levels editor all work.
 - ☐ Header: preview/debug toggles, undo/redo, Save (enabled only when dirty), close.
 - ☐ Footer shows current screen # + shape/light counts; edits reflect live in the overlay.
+
+---
+
+## ControlsSettings.tsx (was 280) → controls/ columns
+Render-only split (logic already in useControlsSettings). Extracted the three
+columns into `controls/ControlsSidebar`, `ControlsMain`, `ControlsDevices`
+(each takes the `ctrl` bundle; JSX verbatim). Shell keeps the rebind-listener +
+confirm-preset/delete modals. Open Profile → Controls:
+- ☐ **Profiles sidebar**: list + icon strip; select/rename/delete/create input profiles;
+  collapse/expand toggle.
+- ☐ **Game Controls tab**: SNES button mappings list; rebind (listener modal captures
+  key/gamepad/HID) + clear; Required Inputs summary with connected/disconnected dots.
+- ☐ **Shortcuts & Functions** + **Cheats** tabs: function-action bindings rebind/clear;
+  reserved "Open Menu = Esc" row shown.
+- ☐ **Devices column**: detected devices listed; click icon or drag onto bindings →
+  confirm-preset dialog applies the controller preset (overwrites bindings); collapse toggle.
+- ☐ Delete-profile confirm dialog works; changes persist to the active input profile.
