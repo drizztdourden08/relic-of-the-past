@@ -1,3 +1,4 @@
+/* @layer tooling-scripts @kind logic */
 /* Throwaway codemod: partition DEVICE_DATABASE entries into per-vendor chunks. */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
