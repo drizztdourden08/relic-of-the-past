@@ -110,3 +110,29 @@ Open a profile's Home tab:
 - ☐ **Play sessions** list renders (up to 20).
 - ☐ Switching profiles reloads all four sections; an IPC error leaves prior data intact
   (no flash to empty).
+
+---
+
+## input-manager.ts (was 391) → lifecycle + events helpers
+Live renderer input engine (stateful class, no tests). Method bodies relocated
+**verbatim** into `input-manager-lifecycle.ts` (startInput/stopInput/refreshDevicesImpl)
+and `input-manager-events.ts` (key/gamepad handlers, rebuildMaps, gamepad VID/PID
+resolve, poll frame, text-input guard); types → `input-manager-types.ts`. The class
+keeps fields, constructor, public API, and thin delegators; arrow-field handlers keep
+stable identity for add/removeEventListener. **Note:** fields were made non-private
+(compile-time only — zero runtime change) so the helpers can operate on the instance.
+Exercise across input surfaces:
+- ☐ **Keyboard** game input works (movement/buttons) in-game; bindings from the active profile.
+- ☐ **Gamepad** connect/disconnect detected; buttons/axes drive the game; VID/PID resolves
+  (controller shows correct name in Input Calibration).
+- ☐ **HID controller** (WebHID/IPC path) input works; connect/disconnect updates device list.
+- ☐ **Function actions** (save/load-state shortcuts, cheats, pause toggle) fire on keydown;
+  key-up handlers work (enhanced save-slot hold).
+- ☐ **Input suppression**: opening a menu/overlay zeroes game input; closing restores it.
+- ☐ **Pause**: auto-pause on controller disconnect; auto-resume on input; manual toggle;
+  audio suspends/resumes with pause.
+- ☐ **Text inputs** (rename, search fields) don't trigger game/function input; Escape always
+  reaches the app menu.
+- ☐ **Input Calibration / Tester** pages: per-frame HID/gamepad state + raw-input rebinding
+  visualizations update live.
+- ☐ Stick/trigger calibration loads on first start; rebinding UI (RawInput) sees rising edges.
