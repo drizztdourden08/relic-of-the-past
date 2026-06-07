@@ -59,4 +59,33 @@ not a verbatim extraction. Deferred to a careful pass (ideally with input testin
 class (node-hid devices + worker threads) whose methods all close over `this`.
 
 ## Files split (P4 progress log)
-<!-- appended as each file lands -->
+
+**P4 doable-grind COMPLETE (32 commits, all local).** Every oversized file that
+could be split by behavior-preserving verbatim extraction — verified `tsc=21`
+(baseline) + `analyze:ci` green, one offender per commit — has been done. The
+only files still over the line cap are the parked items listed above, which need
+your decisions (rule changes, a WASM rebuild, or careful behavior-risk passes).
+
+Split this run (logic/data/setup → then hooks → then components):
+ShadowEditorOverlay (820), controls.ts (256), tile-attrs (252), ui-bridge (232),
+gizmos (230), tags (224), haptics (213), receipt-decoder (211), overworld-extractor (206),
+astar-2x2 (210), edge-glow/renderer (234) + shaders (201), shadow-casting/renderer (220),
+session-builder (205), live-settings (204), preload (206), shadow-editor-store (263);
+useDumpNav (280), useCalibrationActions (255), useProfileManagement (239),
+useEnhancedSaveSlot (215), useHidCalibration (204); TileInspector (379),
+ConnectionEditorDialog (265), App (246), TitleBar (238), DatasetWidget (234),
+WebHidCard (231), AudioSettings (228), GameplaySettings (208), HudSettings (202),
+ConnectionsPanel (206).
+
+### Remaining over-cap files = the parked items above (18)
+- **Stateful React forms (7):** ScreenEditorDialog (638), HomeTab (435),
+  NavReviewPanel (335), GameLayer (326), ProfileHub (302), ShadowEditorPanel (285),
+  ControlsSettings (280) — no runtime tests; need careful behavior-verified passes.
+- **Renderer nav hook (1):** useNavigation (579) — 537-line closure-captured
+  `handleRun`; needs parameterized helpers + a flood-fill smoke check.
+- **Core-nav BFS (3):** single-screen (536), orchestrator (366), dual-layer (271).
+- **Stateful classes (2):** input-manager (391), hid-reader (244).
+- **Our C (2):** state_queries.c (686), emscripten_main.c (465) — split needs
+  build.bat/Makefile source-list sync + a WASM rebuild to verify.
+- **CSS (3):** TrackerView.css (662), InputCalibration.css (575), DataManager.css (372)
+  — stylelint rule choices to confirm before reflow.
