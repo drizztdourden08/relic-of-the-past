@@ -44,7 +44,9 @@ focused pass (ideally with a nav smoke-check), not in the unattended loop.
 `input-manager.ts` (391) is a stateful **class** (the live renderer input engine,
 no runtime tests). Splitting it cleanly means moving listener-wiring / device-refresh
 out as free functions that touch many `private` fields — an encapsulation change,
-not a verbatim extraction. Deferred to a careful pass (ideally with input testing).
+not a verbatim extraction. Deferred to a careful pass (ideally with input testing). Same for
+`apps/desktop/electron/input/hid-reader.ts` (244) — a stateful `HidInputReader`
+class (node-hid devices + worker threads) whose methods all close over `this`.
 
 ## Files split (P4 progress log)
 <!-- appended as each file lands -->

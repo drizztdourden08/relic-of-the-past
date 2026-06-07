@@ -1,6 +1,8 @@
 /* @layer electron-main @kind logic */
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
 import { parse } from 'path';
+import { savesApi } from './preload-saves';
+import { updaterApi } from './preload-updater';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -76,35 +78,8 @@ contextBridge.exposeInMainWorld('api', {
     return () => ipcRenderer.removeListener('log:entry', handler);
   },
 
-  // Saves — Quick States
-  writeSram: (profileId: string, data: ArrayBuffer) => ipcRenderer.invoke('saves:writeSram', profileId, data),
-  readSram: (profileId: string) => ipcRenderer.invoke('saves:readSram', profileId),
-  writeState: (profileId: string, slot: number, data: ArrayBuffer) => ipcRenderer.invoke('saves:writeState', profileId, slot, data),
-  readState: (profileId: string, slot: number) => ipcRenderer.invoke('saves:readState', profileId, slot),
-  listStates: (profileId: string) => ipcRenderer.invoke('saves:listStates', profileId),
-  writeScreenshot: (profileId: string, slot: number, data: ArrayBuffer) => ipcRenderer.invoke('saves:writeScreenshot', profileId, slot, data),
-  readScreenshot: (profileId: string, slot: number) => ipcRenderer.invoke('saves:readScreenshot', profileId, slot) as Promise<string | null>,
-  getSlotInfos: (profileId: string) => ipcRenderer.invoke('saves:getSlotInfos', profileId),
-
-  // Saves — Normal (named saves)
-  createNormalSave: (profileId: string, name: string, data: ArrayBuffer, screenshot?: ArrayBuffer) =>
-    ipcRenderer.invoke('saves:normal:create', profileId, name, data, screenshot),
-  listNormalSaves: (profileId: string) => ipcRenderer.invoke('saves:normal:list', profileId),
-  loadNormalSave: (profileId: string, id: string) => ipcRenderer.invoke('saves:normal:load', profileId, id),
-  loadNormalScreenshot: (profileId: string, id: string) => ipcRenderer.invoke('saves:normal:screenshot', profileId, id) as Promise<string | null>,
-  overwriteNormalSave: (profileId: string, id: string, data: ArrayBuffer, screenshot?: ArrayBuffer) =>
-    ipcRenderer.invoke('saves:normal:overwrite', profileId, id, data, screenshot),
-  deleteNormalSave: (profileId: string, id: string) => ipcRenderer.invoke('saves:normal:delete', profileId, id),
-  renameNormalSave: (profileId: string, id: string, newName: string) => ipcRenderer.invoke('saves:normal:rename', profileId, id, newName),
-
-  // Saves — Auto-saves
-  createAutoSave: (profileId: string, trigger: 'timer' | 'quit', data: ArrayBuffer, screenshot?: ArrayBuffer) =>
-    ipcRenderer.invoke('saves:auto:create', profileId, trigger, data, screenshot),
-  listAutoSaves: (profileId: string) => ipcRenderer.invoke('saves:auto:list', profileId),
-  loadAutoSave: (profileId: string, id: string) => ipcRenderer.invoke('saves:auto:load', profileId, id),
-  loadAutoScreenshot: (profileId: string, id: string) => ipcRenderer.invoke('saves:auto:screenshot', profileId, id) as Promise<string | null>,
-  deleteAutoSave: (profileId: string, id: string) => ipcRenderer.invoke('saves:auto:delete', profileId, id),
-  pruneAutoSaves: (profileId: string, maxEntries: number) => ipcRenderer.invoke('saves:auto:prune', profileId, maxEntries),
+  // Saves (quick states / normal / auto) — see preload-saves.ts
+  ...savesApi,
 
   // Config (per-profile settings)
   readConfig: (profileId: string) => ipcRenderer.invoke('config:read', profileId),
@@ -242,40 +217,8 @@ contextBridge.exposeInMainWorld('api', {
     getScreen: (screenId: number) => ipcRenderer.invoke('shadow-casting:get-screen', screenId),
   },
 
-  // Auto-updater
-  updater: {
-    isPortable: () => ipcRenderer.invoke('updater:isPortable') as Promise<boolean>,
-    check: () => ipcRenderer.invoke('updater:check'),
-    getAvailable: () => ipcRenderer.invoke('updater:getAvailable'),
-    download: () => ipcRenderer.invoke('updater:download'),
-    install: () => ipcRenderer.invoke('updater:install'),
-    getVersion: () => ipcRenderer.invoke('updater:getVersion') as Promise<string>,
-    onUpdateAvailable: (callback: (info: { version: string; releaseNotes: string; releaseDate: string }) => void) => {
-      const handler = (_event: Electron.IpcRendererEvent, info: { version: string; releaseNotes: string; releaseDate: string }) => callback(info);
-      ipcRenderer.on('updater:update-available', handler);
-      return () => ipcRenderer.removeListener('updater:update-available', handler);
-    },
-    onUpToDate: (callback: () => void) => {
-      const handler = () => callback();
-      ipcRenderer.on('updater:up-to-date', handler);
-      return () => ipcRenderer.removeListener('updater:up-to-date', handler);
-    },
-    onDownloadProgress: (callback: (progress: { percent: number; bytesPerSecond: number; transferred: number; total: number }) => void) => {
-      const handler = (_event: Electron.IpcRendererEvent, progress: { percent: number; bytesPerSecond: number; transferred: number; total: number }) => callback(progress);
-      ipcRenderer.on('updater:download-progress', handler);
-      return () => ipcRenderer.removeListener('updater:download-progress', handler);
-    },
-    onDownloadComplete: (callback: () => void) => {
-      const handler = () => callback();
-      ipcRenderer.on('updater:download-complete', handler);
-      return () => ipcRenderer.removeListener('updater:download-complete', handler);
-    },
-    onError: (callback: (error: string) => void) => {
-      const handler = (_event: Electron.IpcRendererEvent, error: string) => callback(error);
-      ipcRenderer.on('updater:error', handler);
-      return () => ipcRenderer.removeListener('updater:error', handler);
-    },
-  },
+  // Auto-updater — see preload-updater.ts
+  updater: updaterApi,
 
   // Screen editor (dev-only: write screen/connection data to source files)
   screenEditor: {
