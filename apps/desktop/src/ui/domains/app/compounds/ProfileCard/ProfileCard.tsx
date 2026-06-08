@@ -1,22 +1,23 @@
 /* @layer renderer-components @kind component */
-﻿import { Card } from '../../../../design-system/primitives/Card';
+import { Box } from '../../../../design-system/primitives/Box';
+import { Flex } from '../../../../design-system/primitives/Flex';
+import { Text } from '../../../../design-system/primitives/Text';
 import { IconButton } from '../../../../design-system/primitives/IconButton';
 import { formatDate, formatRomName } from './behavior/formatters';
 import './ProfileCard.css';
 import { type ProfileCardProps } from './ProfileCard.type';
 
-
 const ProfileCard = (props: ProfileCardProps) => {
   const { profile, onSelect, onDelete } = props;
 
   return (
-    <button className="profile-card" onClick={() => onSelect(profile)}>
-      <div className="profile-card__main">
-        <span className="profile-card__name">{profile.name}</span>
-        <span className="profile-card__rom">{formatRomName(profile.romFile)}</span>
-      </div>
-      <div className="profile-card__meta">
-        <span className="profile-card__date">{formatDate(profile.lastPlayed)}</span>
+    <Box as="button" className="profile-card" onClick={() => onSelect(profile)}>
+      <Flex direction="column" className="profile-card__main">
+        <Text className="profile-card__name">{profile.name}</Text>
+        <Text className="profile-card__rom">{formatRomName(profile.romFile)}</Text>
+      </Flex>
+      <Flex align="center" className="profile-card__meta">
+        <Text className="profile-card__date">{formatDate(profile.lastPlayed)}</Text>
         <IconButton
           variant="danger"
           label={`Delete ${profile.name}`}
@@ -24,8 +25,8 @@ const ProfileCard = (props: ProfileCardProps) => {
         >
           ✕
         </IconButton>
-      </div>
-    </button>
+      </Flex>
+    </Box>
   );
 };
 

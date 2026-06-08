@@ -1,11 +1,12 @@
 /* @layer renderer-components @kind component */
-﻿import { useState } from 'react';
+import { useState } from 'react';
+import { Box } from '../../../../design-system/primitives/Box';
+import { Flex } from '../../../../design-system/primitives/Flex';
 import { Button } from '../../../../design-system/primitives/Button';
 import { TextInput } from '../../../../design-system/primitives/TextInput';
-import { NativeSelect } from '../../../../design-system/primitives/Select';
+import { Select } from '../../../../design-system/primitives/Select';
 import './CreateProfileForm.css';
 import { type CreateProfileFormProps } from './CreateProfileForm.type';
-
 
 const CreateProfileForm = (props: CreateProfileFormProps) => {
   const { readyRoms, onCreate, onCancel } = props;
@@ -15,13 +16,15 @@ const CreateProfileForm = (props: CreateProfileFormProps) => {
   const formatRomName = (romFile: string): string =>
     romFile.replace(/\.(sfc|smc)$/i, '');
 
+  const romOptions = readyRoms.map((r) => ({ value: r.romFile, label: formatRomName(r.romFile) }));
+
   const handleSubmit = () => {
     if (!name.trim() || !rom) return;
     onCreate(name.trim(), rom);
   };
 
   return (
-    <div className="create-profile-form">
+    <Box className="create-profile-form">
       <TextInput
         type="text"
         placeholder="Profile name..."
@@ -31,19 +34,13 @@ const CreateProfileForm = (props: CreateProfileFormProps) => {
         autoFocus
       />
       {readyRoms.length > 0 && (
-        <NativeSelect value={rom} onChange={(e) => setRom(e.target.value)}>
-          {readyRoms.map((r) => (
-            <option key={r.romFile} value={r.romFile}>
-              {formatRomName(r.romFile)}
-            </option>
-          ))}
-        </NativeSelect>
+        <Select value={rom} onChange={setRom} options={romOptions} />
       )}
-      <div className="create-profile-form__actions">
+      <Flex className="create-profile-form__actions">
         <Button variant="primary" onClick={handleSubmit}>Create</Button>
         <Button variant="secondary" onClick={onCancel}>Cancel</Button>
-      </div>
-    </div>
+      </Flex>
+    </Box>
   );
 };
 
