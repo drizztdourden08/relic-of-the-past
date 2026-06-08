@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { SegmentedControl, Slider } from '../../../../design-system/primitives';
+import { SegmentedControl, Slider, Box, Text } from '../../../../design-system/primitives';
 import { MODE_OPTIONS } from './TrackerView.constants';
 import type { PanelHeaderProps } from './TrackerView.type';
 
@@ -7,9 +7,9 @@ const PanelHeader = ({ title, panelSettings, onSettingsChange, onClose, onPopOut
   const modeValue = panelSettings.mode === 'floating' ? 'float' : panelSettings.side;
 
   return (
-    <div className="tracker-panel__header" onMouseDown={onMouseDown}>
-      <span className="tracker-panel__title">{title}</span>
-      <div className="tracker-panel__controls">
+    <Box className="tracker-panel__header" onMouseDown={onMouseDown}>
+      <Text className="tracker-panel__title">{title}</Text>
+      <Box className="tracker-panel__controls">
         <SegmentedControl
           value={modeValue}
           options={MODE_OPTIONS}
@@ -27,14 +27,14 @@ const PanelHeader = ({ title, panelSettings, onSettingsChange, onClose, onPopOut
           showValue={false}
         />
         {showPopOut && onPopOut && (
-          <button className="tracker-panel__icon-btn" onClick={onPopOut} title="Pop out">⎋</button>
+          <Box as="button" className="tracker-panel__icon-btn" onClick={onPopOut} title="Pop out">⎋</Box>
         )}
         {onDock && (
-          <button className="tracker-panel__icon-btn" onClick={onDock} title="Dock back">⎌</button>
+          <Box as="button" className="tracker-panel__icon-btn" onClick={onDock} title="Dock back">⎌</Box>
         )}
-        <button className="tracker-panel__icon-btn" onClick={onClose} title="Close">×</button>
-      </div>
-    </div>
+        <Box as="button" className="tracker-panel__icon-btn" onClick={onClose} title="Close">×</Box>
+      </Box>
+    </Box>
   );
 };
 

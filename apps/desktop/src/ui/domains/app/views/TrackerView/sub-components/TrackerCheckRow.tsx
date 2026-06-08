@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { Box, Text } from '../../../../../design-system/primitives';
 import type { CheckDefinition } from '@shared/game/types';
 import type { CheckStatus } from '@shared/game/logic/eval';
 import '../TrackerView.css';
@@ -21,14 +22,14 @@ const TrackerCheckRow = (props: TrackerCheckRowProps) => {
   const { check, status, detailed, itemOverride } = props;
   const displayItem = itemOverride ?? (Array.isArray(check.vanillaItem) ? check.vanillaItem.join(', ') : check.vanillaItem);
   return (
-    <div className={`tracker-check tracker-check--${status}`}>
-      <span className="tracker-check__icon">{STATUS_ICONS[status]}</span>
-      <span className="tracker-check__name">{check.name}</span>
+    <Box className={`tracker-check tracker-check--${status}`}>
+      <Text className="tracker-check__icon">{STATUS_ICONS[status]}</Text>
+      <Text className="tracker-check__name">{check.name}</Text>
       {detailed && (
-        <span className="tracker-check__item">{displayItem ?? '—'}</span>
+        <Text className="tracker-check__item">{displayItem ?? '—'}</Text>
       )}
-      <span className="tracker-check__type">{check.type}</span>
-    </div>
+      <Text className="tracker-check__type">{check.type}</Text>
+    </Box>
   );
 }
 

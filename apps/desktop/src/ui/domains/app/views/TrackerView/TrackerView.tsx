@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState, useMemo, useCallback } from 'react';
+import { Box, Text } from '../../../../design-system/primitives';
 import { ALL_CHECKS } from '@shared/game/checks';
 import type { GroupDimension, FilterState } from '@shared/game/checks/grouping';
 import { buildGroupTree, filterChecks } from '@shared/game/checks/grouping';
@@ -58,12 +59,12 @@ const TrackerView = (props: TrackerViewProps) => {
   const hasActiveFilter = filter.searchQuery || filter.activeTags.length > 0 || (filter.statusFilter && filter.statusFilter !== 'all');
 
   const filterStats = hasActiveFilter && (
-    <div className="tracker-view__filtered-stats">
+    <Box className="tracker-view__filtered-stats">
       Showing {groupTree.stats.total} checks:
-      <span className="tracker-summary__stat--completed"> {groupTree.stats.completed} done</span>,
-      <span className="tracker-summary__stat--reachable"> {groupTree.stats.reachable} available</span>,
-      <span className="tracker-summary__stat--blocked"> {groupTree.stats.blocked} blocked</span>
-    </div>
+      <Text className="tracker-summary__stat--completed"> {groupTree.stats.completed} done</Text>,
+      <Text className="tracker-summary__stat--reachable"> {groupTree.stats.reachable} available</Text>,
+      <Text className="tracker-summary__stat--blocked"> {groupTree.stats.blocked} blocked</Text>
+    </Box>
   );
 
   const filtersBlock = (
@@ -78,9 +79,9 @@ const TrackerView = (props: TrackerViewProps) => {
   );
 
   const checksBlock = (
-    <div className="tracker-view__checks">
+    <Box className="tracker-view__checks">
       <TrackerGroupTree node={groupTree} statuses={snapshot} viewMode={viewMode} />
-    </div>
+    </Box>
   );
 
   if (combined) {
