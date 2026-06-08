@@ -5,6 +5,8 @@ import { TAG_DEFINITIONS } from '@shared/game/checks/tags';
 import type { GroupDimension, StatusFilter } from '@shared/game/checks/grouping';
 import { GROUP_DIMENSIONS } from '@shared/game/checks/grouping';
 import type { FilterState } from '@shared/game/checks/grouping';
+import { TextInput } from '../../../primitives/TextInput';
+import { NativeSelect } from '../../../primitives/Select';
 import '../TrackerView.css';
 
 type ViewMode = 'compact' | 'detailed' | 'visual';
@@ -44,7 +46,7 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
     <div className="tracker-filters">
       {/* Search */}
       <div className="tracker-filters__search">
-        <input
+        <TextInput
           type="text"
           className="tracker-filters__input"
           placeholder="Search checks..."
@@ -69,7 +71,7 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
         </div>
 
         {/* Item reward filter */}
-        <select
+        <NativeSelect
           className={`tracker-filters__select ${filter.itemFilter && filter.itemFilter !== 'all' ? 'tracker-filters__select--active' : ''}`}
           value={filter.itemFilter ?? 'all'}
           onChange={(e) => onFilterChange({ ...filter, itemFilter: e.target.value as 'all' | 'rewards' | 'non-rewards' })}
@@ -77,7 +79,7 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
           <option value="all">All checks</option>
           <option value="rewards">Rewards</option>
           <option value="non-rewards">Non-rewards</option>
-        </select>
+        </NativeSelect>
 
         {/* Status filter */}
         <div className="tracker-filters__status-group">

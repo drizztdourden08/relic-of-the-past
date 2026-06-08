@@ -3,6 +3,7 @@
  * StatsTab — Health, rupees, bombs, arrows, magic controls.
  */
 import { useState } from 'react';
+import { NumberInput } from '../../../components/primitives/NumberInput';
 import {
   cheatSetHealth, cheatSetMaxHealth, cheatSetRupees,
   cheatSetBombs, cheatSetArrows, cheatRefillMagic,
@@ -76,10 +77,10 @@ const StatsTab = () => {
         <div className="cheats-row">
           <span className="cheats-row__label">Rupees</span>
           <div className="cheats-row__controls">
-            <input
-              type="number" className="cheats-input"
+            <NumberInput
+              className="cheats-input"
               min={0} max={999} value={rupees}
-              onChange={e => setRupees(Math.min(999, Math.max(0, Number(e.target.value))))}
+              onChange={v => setRupees(Math.min(999, Math.max(0, v)))}
             />
             <button className="cheats-btn" onClick={() => cheatSetRupees(rupees)}>Set</button>
           </div>
@@ -87,10 +88,10 @@ const StatsTab = () => {
         <div className="cheats-row">
           <span className="cheats-row__label">Bombs</span>
           <div className="cheats-row__controls">
-            <input
-              type="number" className="cheats-input"
+            <NumberInput
+              className="cheats-input"
               min={0} max={99} value={bombs}
-              onChange={e => setBombs(Math.min(99, Math.max(0, Number(e.target.value))))}
+              onChange={v => setBombs(Math.min(99, Math.max(0, v)))}
             />
             <button className="cheats-btn" onClick={() => cheatSetBombs(bombs)}>Set</button>
           </div>
@@ -98,10 +99,10 @@ const StatsTab = () => {
         <div className="cheats-row">
           <span className="cheats-row__label">Arrows</span>
           <div className="cheats-row__controls">
-            <input
-              type="number" className="cheats-input"
+            <NumberInput
+              className="cheats-input"
               min={0} max={99} value={arrows}
-              onChange={e => setArrows(Math.min(99, Math.max(0, Number(e.target.value))))}
+              onChange={v => setArrows(Math.min(99, Math.max(0, v)))}
             />
             <button className="cheats-btn" onClick={() => cheatSetArrows(arrows)}>Set</button>
           </div>
