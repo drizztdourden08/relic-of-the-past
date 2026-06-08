@@ -6,6 +6,8 @@
  */
 import { useRef, useLayoutEffect, useState, useEffect, type ReactNode } from 'react';
 import { Portal } from '../../../primitives/Portal';
+import { Box } from '../../../primitives/Box';
+import { Text } from '../../../primitives/Text';
 import { Checkbox } from '../../../primitives/Checkbox';
 import { SegmentedControl } from '../../../primitives/SegmentedControl';
 import { Slider } from '../../../primitives/Slider';
@@ -74,15 +76,15 @@ const WidgetSettings = (props: WidgetSettingsProps) => {
 
   return (
     <Portal layer="popover">
-      <div
+      <Box
         ref={panelRef}
         className="widget-settings"
         style={{ position: 'fixed', top: pos.top, left: pos.left, pointerEvents: 'auto' }}
         onMouseDown={(e) => e.stopPropagation()}
       >
         {/* Default: position */}
-        <div className="widget-settings__row">
-          <span className="widget-settings__label">Position</span>
+        <Box className="widget-settings__row">
+          <Text className="widget-settings__label">Position</Text>
           <SegmentedControl
             value={posValue}
             options={POSITION_OPTIONS}
@@ -95,11 +97,11 @@ const WidgetSettings = (props: WidgetSettingsProps) => {
               onClose();
             }}
           />
-        </div>
+        </Box>
 
         {/* Default: opacity */}
-        <div className="widget-settings__row">
-          <span className="widget-settings__label">Opacity</span>
+        <Box className="widget-settings__row">
+          <Text className="widget-settings__label">Opacity</Text>
           <Slider
             value={Math.round(widget.opacity * 100)}
             min={0}
@@ -109,29 +111,29 @@ const WidgetSettings = (props: WidgetSettingsProps) => {
             showValue
             formatValue={(v) => `${v}%`}
           />
-        </div>
+        </Box>
 
         {/* Default: exclusive (only when docked) */}
         {widget.mode === 'docked' && (
-          <div className="widget-settings__row">
-            <span className="widget-settings__label">Exclusive</span>
+          <Box className="widget-settings__row">
+            <Text className="widget-settings__label">Exclusive</Text>
             <Checkbox
               className="widget-settings__toggle"
               checked={widget.exclusive ?? false}
               onChange={(c) => onChange({ exclusive: c })}
               label="Shrink game area"
             />
-          </div>
+          </Box>
         )}
 
         {/* Widget-specific options */}
         {children && (
           <>
-            <div className="widget-settings__separator" />
+            <Box className="widget-settings__separator" />
             {children}
           </>
         )}
-      </div>
+      </Box>
     </Portal>
   );
 }

@@ -23,7 +23,7 @@
   pointer-events: auto;
   font-family: var(--font-mono, 'JetBrains Mono', monospace);
   font-size: var(--text-sm, 13px);
-  color: var(--color-text-primary, #e0e0e0);
+  color: var(--color-text-primary);
   overflow: hidden;
 
   /* Frame uses variable opacity */
@@ -99,7 +99,7 @@
 .widget__btn {
   background: none;
   border: 1px solid transparent;
-  color: var(--color-text-secondary, #888);
+  color: var(--color-text-secondary);
   font-size: 12px;
   width: 20px;
   height: 20px;
@@ -113,7 +113,7 @@
 
 .widget__btn:hover {
   background: rgb(255, 255, 255, 0.08);
-  color: var(--color-text-primary, #e0e0e0);
+  color: var(--color-text-primary);
 }
 
 /* ─── Content (always full opacity) ─── */
@@ -197,7 +197,7 @@
 .widget-settings__label {
   font-size: 11px;
   font-weight: 500;
-  color: var(--color-text-secondary, #999);
+  color: var(--color-text-secondary);
   min-width: 52px;
   flex-shrink: 0;
 }
@@ -225,13 +225,13 @@
   gap: 6px;
   cursor: pointer;
   font-size: 11px;
-  color: var(--color-text-secondary, #999);
+  color: var(--color-text-secondary);
 }
 
 .widget-settings__toggle input[type="checkbox"] {
   width: 14px;
   height: 14px;
-  accent-color: #6a6;
+  accent-color: var(--color-green-base);
   cursor: pointer;
 }
 

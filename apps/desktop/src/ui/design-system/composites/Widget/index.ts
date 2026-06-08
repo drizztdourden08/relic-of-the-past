@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind barrel */
 export { Widget } from './Widget';
-export { WidgetManager } from './WidgetManager';
+export { WidgetManager } from './sub-components/WidgetManager';
 export { WidgetSettings } from './sub-components/WidgetSettings';
 export type { WidgetState, WidgetLayout, WidgetDefinition, SnapSide, WidgetMode, WidgetVisibility } from './Widget.type';
 export { WIDGET_DEFINITIONS, TITLEBAR_HEIGHT } from './Widget.constants';
@@ -12,4 +12,4 @@ export { useWidgetLayout } from './behavior/useWidgetLayout';
 export { useWidgetDrag } from './behavior/useWidgetDrag';
 export { useExclusiveInsetsStore } from './behavior/exclusiveInsetsStore';
 export { useWidgetResize, getDockedResizeEdge } from './behavior/useWidgetResize';
-import './widgets.css';
+import './Widget.css';

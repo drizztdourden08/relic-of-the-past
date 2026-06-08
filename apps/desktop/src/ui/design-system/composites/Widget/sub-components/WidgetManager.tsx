@@ -8,11 +8,12 @@
  *  - Filter widgets by visibility mode vs current app state (game-only vs always)
  *  - Provide update/close callbacks that propagate to store
  */
-import { useMemo, useCallback, useEffect } from 'react';
-import type { WidgetLayout, WidgetState } from './Widget.type';
-import { Widget } from './Widget';
-import { computeDockedStyles } from './behavior/computeDockedStyles';
-import { useExclusiveInsetsStore } from './behavior/exclusiveInsetsStore';
+import { useMemo, useEffect } from 'react';
+import { Box } from '../../../primitives/Box';
+import type { WidgetLayout, WidgetState } from '../Widget.type';
+import { Widget } from '../Widget';
+import { computeDockedStyles } from '../behavior/computeDockedStyles';
+import { useExclusiveInsetsStore } from '../behavior/exclusiveInsetsStore';
 
 interface WidgetManagerProps {
   layout: WidgetLayout;
@@ -46,7 +47,7 @@ const WidgetManager = (props: WidgetManagerProps) => {
   }, [exclusiveInsets, setInsets]);
 
   return (
-    <div className="widget-manager">
+    <Box className="widget-manager">
       {activeWidgets.map((w) => {
         const content = children[w.id];
         if (!content) return null;
@@ -64,7 +65,7 @@ const WidgetManager = (props: WidgetManagerProps) => {
           </Widget>
         );
       })}
-    </div>
+    </Box>
   );
 }
 

@@ -5,7 +5,9 @@
  * Handles: docking, floating, drag, resize, hover-to-reveal-frame.
  */
 import { useState, useCallback, useRef, useMemo } from 'react';
-import type { WidgetState, SnapSide } from './Widget.type';
+import { Box } from '../../primitives/Box';
+import { Text } from '../../primitives/Text';
+import type { WidgetState } from './Widget.type';
 import { getWidgetDefinition } from './behavior/createWidgetState';
 import { useWidgetDrag } from './behavior/useWidgetDrag';
 import { useWidgetResize, getDockedResizeEdge } from './behavior/useWidgetResize';
@@ -86,51 +88,52 @@ const Widget = (props: WidgetProps) => {
   }, [state.mode, state.x, state.y, state.width, state.height, frameOpacity, dockedStyle]);
 
   return (
-    <div
+    <Box
       className={cls}
       style={style}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
       {/* Titlebar */}
-      <div
+      <Box
         className="widget__titlebar"
         onMouseDown={state.mode === 'floating' ? dragMouseDown : undefined}
       >
-        <span className="widget__title">{label}</span>
-        <div className="widget__titlebar-actions">
-          <button
+        <Text className="widget__title">{label}</Text>
+        <Box className="widget__titlebar-actions">
+          <Box
+            as="button"
             ref={gearRef}
             className="widget__btn"
             onClick={() => setSettingsOpen((v) => !v)}
             title="Settings"
-          >⚙</button>
-          <button className="widget__btn" onClick={onClose} title="Close">×</button>
-        </div>
-      </div>
+          >⚙</Box>
+          <Box as="button" className="widget__btn" onClick={onClose} title="Close">×</Box>
+        </Box>
+      </Box>
 
       {/* Content (always fully opaque) */}
-      <div className="widget__content">
+      <Box className="widget__content">
         {children}
-      </div>
+      </Box>
 
       {/* Resize handles */}
       {state.mode === 'floating' && (
         <>
-          <div className="widget__resize widget__resize--n" onMouseDown={onEdgeMouseDown('n')} />
-          <div className="widget__resize widget__resize--s" onMouseDown={onEdgeMouseDown('s')} />
-          <div className="widget__resize widget__resize--e" onMouseDown={onEdgeMouseDown('e')} />
-          <div className="widget__resize widget__resize--w" onMouseDown={onEdgeMouseDown('w')} />
-          <div className="widget__resize widget__resize--ne" onMouseDown={onEdgeMouseDown('ne')} />
-          <div className="widget__resize widget__resize--nw" onMouseDown={onEdgeMouseDown('nw')} />
-          <div className="widget__resize widget__resize--se" onMouseDown={onEdgeMouseDown('se')} />
-          <div className="widget__resize widget__resize--sw" onMouseDown={onEdgeMouseDown('sw')} />
+          <Box className="widget__resize widget__resize--n" onMouseDown={onEdgeMouseDown('n')} />
+          <Box className="widget__resize widget__resize--s" onMouseDown={onEdgeMouseDown('s')} />
+          <Box className="widget__resize widget__resize--e" onMouseDown={onEdgeMouseDown('e')} />
+          <Box className="widget__resize widget__resize--w" onMouseDown={onEdgeMouseDown('w')} />
+          <Box className="widget__resize widget__resize--ne" onMouseDown={onEdgeMouseDown('ne')} />
+          <Box className="widget__resize widget__resize--nw" onMouseDown={onEdgeMouseDown('nw')} />
+          <Box className="widget__resize widget__resize--se" onMouseDown={onEdgeMouseDown('se')} />
+          <Box className="widget__resize widget__resize--sw" onMouseDown={onEdgeMouseDown('sw')} />
         </>
       )}
 
       {/* Docked resize handle (thickness edge only) */}
       {state.mode === 'docked' && (
-        <div
+        <Box
           className={`widget__resize widget__resize--${getDockedResizeEdge(state.side)}`}
           onMouseDown={onEdgeMouseDown(getDockedResizeEdge(state.side))}
         />
@@ -147,7 +150,7 @@ const Widget = (props: WidgetProps) => {
           {settingsContent}
         </WidgetSettings>
       )}
-    </div>
+    </Box>
   );
 }
 
