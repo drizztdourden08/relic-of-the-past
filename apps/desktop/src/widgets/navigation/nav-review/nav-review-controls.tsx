@@ -1,6 +1,7 @@
 /* @layer renderer-widgets @kind component */
 /** Reusable input controls for NavReviewPanel: status row, requirement editor, transit picker. */
 import { useState } from 'react';
+import { TextInput, NativeSelect } from '../../../components/primitives';
 import type { ReviewStatus } from './types';
 import { STATUS_BTNS, REQUIREMENT_OPTIONS, S } from './nav-review-styles';
 
@@ -15,7 +16,7 @@ const StatusRow = ({ status, comment, onStatus, onComment }: { status: ReviewSta
         ))}
       </div>
       {(status === 'bad' || status === 'yellow' || comment) && (
-        <input style={S.commentInput} placeholder="Note..." value={comment ?? ''} onChange={e => onComment(e.target.value)} />
+        <TextInput style={S.commentInput} placeholder="Note..." value={comment ?? ''} onChange={e => onComment(e.target.value)} />
       )}
     </div>
   );
@@ -65,9 +66,9 @@ const RequirementEditor = ({ current, onChange }: { current: string[][]; onChang
 const TransitTypePicker = ({ value, onChange }: { value: string; onChange: (v: string) => void }) => {
   const options = ['door', 'passage', 'hole', 'ledge', 'staircase', 'dungeon_enter', 'whirlpool', 'warp_tile'];
   return (
-    <select style={S.selectInput} value={value} onChange={e => onChange(e.target.value)}>
+    <NativeSelect style={S.selectInput} value={value} onChange={e => onChange(e.target.value)}>
       {options.map(o => <option key={o} value={o}>{o}</option>)}
-    </select>
+    </NativeSelect>
   );
 };
 

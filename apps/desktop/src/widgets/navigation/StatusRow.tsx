@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import { TextInput } from '../../components/primitives';
 import type { ReviewStatus } from './dataset-widget-types';
 import { STATUS_BTNS, S } from './dataset-widget-styles';
 
@@ -20,7 +21,7 @@ const StatusRow = ({ status, comment, onStatus, onComment }: StatusRowProps) => 
         ))}
       </div>
       {(status === 'bad' || status === 'yellow') && (
-        <input style={S.commentInput} placeholder="Note..." value={comment ?? ''} onChange={e => onComment(e.target.value)} />
+        <TextInput style={S.commentInput} placeholder="Note..." value={comment ?? ''} onChange={e => onComment(e.target.value)} />
       )}
     </div>
   );

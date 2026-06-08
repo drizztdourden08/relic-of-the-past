@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { TextInput } from '../../../primitives';
 import type { ReviewEntry, ReviewStatus } from '../types';
 import type { SpriteManifestEntry } from '@shared/game/sprites';
 import { StatusBtns } from './ReviewControls';
@@ -27,7 +28,7 @@ const SpriteImageCard = ({ sprite, entry, baseUrl, onSetStatus, onSetComment }: 
         <StatusBtns current={entry.status} onClick={onSetStatus} />
       </div>
       {(entry.status === 'bad' || entry.status === 'yellow') && (
-        <input style={S.commentInput} placeholder="What's wrong with this sprite?"
+        <TextInput style={S.commentInput} placeholder="What's wrong with this sprite?"
           value={entry.comment ?? ''} onChange={e => onSetComment(e.target.value)}
           onClick={e => e.stopPropagation()} />
       )}
@@ -60,7 +61,7 @@ const ItemAssocCard = ({ item, entry, baseUrl, onSetStatus, onSetComment }: {
         <StatusBtns current={entry.status} onClick={onSetStatus} />
       </div>
       {(entry.status === 'bad' || entry.status === 'yellow') && (
-        <input style={S.commentInput} placeholder="Which sprite should this item use?"
+        <TextInput style={S.commentInput} placeholder="Which sprite should this item use?"
           value={entry.comment ?? ''} onChange={e => onSetComment(e.target.value)}
           onClick={e => e.stopPropagation()} />
       )}
