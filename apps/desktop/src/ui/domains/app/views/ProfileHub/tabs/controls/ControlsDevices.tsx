@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind component */
 /** ControlsSettings right column: detected input devices (draggable / clickable to assign). */
+import { Box } from '../../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../../design-system/primitives/Text';
 import { DeviceCard } from './DeviceCard';
 import type { useControlsSettings } from '../useControlsSettings';
 
@@ -7,18 +9,19 @@ type Ctrl = ReturnType<typeof useControlsSettings>;
 
 const ControlsDevices = ({ ctrl }: { ctrl: Ctrl }) => {
   return (
-    <div className={`controls-settings__devices-column ${ctrl.devicesCollapsed ? 'controls-settings__devices-column--collapsed' : ''}`}>
-      <div className="controls-settings__col-header">
-        <button
+    <Box className={`controls-settings__devices-column ${ctrl.devicesCollapsed ? 'controls-settings__devices-column--collapsed' : ''}`}>
+      <Box className="controls-settings__col-header">
+        <Box
+          as="button"
           className="controls-settings__col-toggle"
           onClick={() => ctrl.setDevicesCollapsed(!ctrl.devicesCollapsed)}
           title={ctrl.devicesCollapsed ? 'Expand' : 'Collapse'}
         >
           {ctrl.devicesCollapsed ? '◀' : '▶'}
-        </button>
-        <span className="controls-settings__col-title">Devices</span>
-      </div>
-      <div className="controls-settings__device-list">
+        </Box>
+        <Text className="controls-settings__col-title">Devices</Text>
+      </Box>
+      <Box className="controls-settings__device-list">
         {ctrl.filteredDevices.map(device => (
           <DeviceCard
             key={device.id}
@@ -35,13 +38,13 @@ const ControlsDevices = ({ ctrl }: { ctrl: Ctrl }) => {
           />
         ))}
         {ctrl.filteredDevices.length === 0 && (
-          <p className="controls-settings__no-devices">No devices detected</p>
+          <Text as="p" className="controls-settings__no-devices">No devices detected</Text>
         )}
-      </div>
-      <p className="controls-settings__devices-column-expanded controls-settings__device-hint">
+      </Box>
+      <Text as="p" className="controls-settings__devices-column-expanded controls-settings__device-hint">
         Click controller icon or drag onto bindings to assign.
-      </p>
-    </div>
+      </Text>
+    </Box>
   );
 };
 

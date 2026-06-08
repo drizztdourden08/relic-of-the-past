@@ -7,6 +7,9 @@ import {
   CHEAT_ACTIONS,
   FUNCTION_ACTION_LABELS,
 } from '@shared/types/controls';
+import { Box } from '../../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../../design-system/primitives/Text';
+import { Image } from '../../../../../../design-system/primitives/Image';
 import { BindingRow } from './BindingRow';
 import { getSnesIconUrl, getButtonIconUrl } from '../../../InputTester/data/button-icons';
 import type { useControlsSettings } from '../useControlsSettings';
@@ -15,52 +18,56 @@ type Ctrl = ReturnType<typeof useControlsSettings>;
 
 const ControlsMain = ({ ctrl }: { ctrl: Ctrl }) => {
   return (
-    <div className="controls-settings__main">
+    <Box className="controls-settings__main">
       {/* Tab bar */}
-      <div className="controls-settings__tabs">
-        <button
+      <Box className="controls-settings__tabs">
+        <Box
+          as="button"
           className={`controls-settings__tab ${ctrl.activeTab === 'controls' ? 'controls-settings__tab--active' : ''}`}
           onClick={() => ctrl.setActiveTab('controls')}
-        >Game Controls</button>
-        <button
+        >Game Controls</Box>
+        <Box
+          as="button"
           className={`controls-settings__tab ${ctrl.activeTab === 'enhanced' ? 'controls-settings__tab--active' : ''}`}
           onClick={() => ctrl.setActiveTab('enhanced')}
-        >Enhanced Controls</button>
-        <button
+        >Enhanced Controls</Box>
+        <Box
+          as="button"
           className={`controls-settings__tab ${ctrl.activeTab === 'shortcuts' ? 'controls-settings__tab--active' : ''}`}
           onClick={() => ctrl.setActiveTab('shortcuts')}
-        >Shortcuts &amp; Functions</button>
-        <button
+        >Shortcuts &amp; Functions</Box>
+        <Box
+          as="button"
           className={`controls-settings__tab ${ctrl.activeTab === 'cheats' ? 'controls-settings__tab--active' : ''}`}
           onClick={() => ctrl.setActiveTab('cheats')}
-        >Cheats</button>
-      </div>
+        >Cheats</Box>
+      </Box>
 
       {/* Tab content */}
       {ctrl.activeTab === 'controls' && (
         <>
-          <div
+          <Box
             className={`controls-settings__bindings ${ctrl.dragOverBindings ? 'controls-settings__bindings--drag-over' : ''}`}
             onDragOver={ctrl.handleDragOver}
             onDragLeave={ctrl.handleDragLeave}
             onDrop={ctrl.handleDrop}
           >
-            <div className="controls-settings__section-header">
+            <Box className="controls-settings__section-header">
               Button Mappings
               {ctrl.activeProfile && (
-                <span className="controls-settings__profile-badge">
+                <Text className="controls-settings__profile-badge">
                   {ctrl.activeProfile.name}
-                </span>
+                </Text>
               )}
-            </div>
-            <div className="controls-settings__binding-list">
-              <div className="binding-row binding-row--header">
-                <span className="binding-row__action-label">Action</span>
-                <div className="binding-row__icon-slot" />
-                <span className="binding-row__snes-label">SNES</span>
-                <div className="binding-row__icon-slot" />
-                <span className="binding-row__binding-label">Binding</span>
-              </div>
+            </Box>
+            <Box className="controls-settings__binding-list">
+              <Box className="binding-row binding-row--header">
+                <Text className="binding-row__action-label">Action</Text>
+                <Box className="binding-row__icon-slot" />
+                <Text className="binding-row__snes-label">SNES</Text>
+                <Box className="binding-row__icon-slot" />
+                <Text className="binding-row__binding-label">Binding</Text>
+              </Box>
               {ctrl.displayMappings.map(mapping => (
                 <BindingRow
                   key={mapping.snesButton}
@@ -73,52 +80,52 @@ const ControlsMain = ({ ctrl }: { ctrl: Ctrl }) => {
                   onClear={() => ctrl.handleSnesClear(mapping.snesButton)}
                 />
               ))}
-            </div>
-          </div>
+            </Box>
+          </Box>
 
           {/* Used inputs summary */}
-          <div className="controls-settings__used-inputs">
-            <div className="controls-settings__used-inputs-header">Required Inputs</div>
-            <div className="controls-settings__used-inputs-list">
+          <Box className="controls-settings__used-inputs">
+            <Box className="controls-settings__used-inputs-header">Required Inputs</Box>
+            <Box className="controls-settings__used-inputs-list">
               {ctrl.requiredInputs.map((input, idx) => (
-                <div key={`${input.type}-${idx}`} className="controls-settings__used-input">
-                  <span className={`controls-settings__used-input-dot ${input.connected ? 'controls-settings__used-input-dot--active' : 'controls-settings__used-input-dot--disconnected'}`} />
-                  <img src={input.iconSrc} alt={input.label} className="controls-settings__used-input-icon" />
-                  <span className={input.connected ? '' : 'controls-settings__used-input-label--dim'}>{input.label}</span>
-                </div>
+                <Box key={`${input.type}-${idx}`} className="controls-settings__used-input">
+                  <Box className={`controls-settings__used-input-dot ${input.connected ? 'controls-settings__used-input-dot--active' : 'controls-settings__used-input-dot--disconnected'}`} />
+                  <Image src={input.iconSrc} alt={input.label} className="controls-settings__used-input-icon" />
+                  <Text className={input.connected ? '' : 'controls-settings__used-input-label--dim'}>{input.label}</Text>
+                </Box>
               ))}
-            </div>
-          </div>
+            </Box>
+          </Box>
         </>
       )}
 
       {ctrl.activeTab === 'enhanced' && (
-        <div className="controls-settings__placeholder">
-          <p className="controls-settings__placeholder-text">Enhanced controls coming soon.</p>
-        </div>
+        <Box className="controls-settings__placeholder">
+          <Text as="p" className="controls-settings__placeholder-text">Enhanced controls coming soon.</Text>
+        </Box>
       )}
 
       {ctrl.activeTab === 'shortcuts' && (
-        <div className="controls-settings__bindings">
-          <div className="controls-settings__section-header">Keyboard Shortcuts</div>
-          <div className="controls-settings__binding-list">
-            <div className="binding-row binding-row--header">
-              <span className="binding-row__action-label">Action</span>
-              <div className="binding-row__icon-slot" />
-              <span className="binding-row__snes-label" />
-              <div className="binding-row__icon-slot" />
-              <span className="binding-row__binding-label">Binding</span>
-            </div>
+        <Box className="controls-settings__bindings">
+          <Box className="controls-settings__section-header">Keyboard Shortcuts</Box>
+          <Box className="controls-settings__binding-list">
+            <Box className="binding-row binding-row--header">
+              <Text className="binding-row__action-label">Action</Text>
+              <Box className="binding-row__icon-slot" />
+              <Text className="binding-row__snes-label" />
+              <Box className="binding-row__icon-slot" />
+              <Text className="binding-row__binding-label">Binding</Text>
+            </Box>
             {/* Reserved system shortcut */}
-            <div className="binding-row binding-row--reserved" title="Reserved — cannot be rebound">
-              <span className="binding-row__action-label">Open Menu</span>
-              <div className="binding-row__icon-slot" />
-              <span className="binding-row__snes-label" />
-              <div className="binding-row__icon-slot">
-                <img src={getButtonIconUrl('kb-escape')!} alt="Esc" className="binding-row__icon-img" />
-              </div>
-              <span className="binding-row__binding-label">Esc</span>
-            </div>
+            <Box className="binding-row binding-row--reserved" title="Reserved — cannot be rebound">
+              <Text className="binding-row__action-label">Open Menu</Text>
+              <Box className="binding-row__icon-slot" />
+              <Text className="binding-row__snes-label" />
+              <Box className="binding-row__icon-slot">
+                <Image src={getButtonIconUrl('kb-escape')!} alt="Esc" className="binding-row__icon-img" />
+              </Box>
+              <Text className="binding-row__binding-label">Esc</Text>
+            </Box>
             {ctrl.displayFunctionMappings
               .filter(m => (SHORTCUT_ACTIONS as readonly string[]).includes(m.action))
               .map(mapping => (
@@ -131,21 +138,21 @@ const ControlsMain = ({ ctrl }: { ctrl: Ctrl }) => {
                   onClear={() => ctrl.handleFunctionClear(mapping.action)}
                 />
               ))}
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
 
       {ctrl.activeTab === 'cheats' && (
-        <div className="controls-settings__bindings">
-          <div className="controls-settings__section-header">Cheat Bindings</div>
-          <div className="controls-settings__binding-list">
-            <div className="binding-row binding-row--header">
-              <span className="binding-row__action-label">Action</span>
-              <div className="binding-row__icon-slot" />
-              <span className="binding-row__snes-label" />
-              <div className="binding-row__icon-slot" />
-              <span className="binding-row__binding-label">Binding</span>
-            </div>
+        <Box className="controls-settings__bindings">
+          <Box className="controls-settings__section-header">Cheat Bindings</Box>
+          <Box className="controls-settings__binding-list">
+            <Box className="binding-row binding-row--header">
+              <Text className="binding-row__action-label">Action</Text>
+              <Box className="binding-row__icon-slot" />
+              <Text className="binding-row__snes-label" />
+              <Box className="binding-row__icon-slot" />
+              <Text className="binding-row__binding-label">Binding</Text>
+            </Box>
             {ctrl.displayFunctionMappings
               .filter(m => (CHEAT_ACTIONS as readonly string[]).includes(m.action))
               .map(mapping => (
@@ -158,10 +165,10 @@ const ControlsMain = ({ ctrl }: { ctrl: Ctrl }) => {
                   onClear={() => ctrl.handleFunctionClear(mapping.action)}
                 />
               ))}
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
 

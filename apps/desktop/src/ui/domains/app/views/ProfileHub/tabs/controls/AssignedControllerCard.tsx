@@ -4,6 +4,8 @@
  * Displays connection/activation status, controller info, and an unassign button.
  */
 
+import { Box } from '../../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../../design-system/primitives/Text';
 import type { AssignedDevice, DetectedDevice } from '@shared/types/controls';
 import './AssignedControllerCard.css';
 
@@ -42,24 +44,24 @@ const AssignedDeviceCard = (props: AssignedDeviceCardProps) => {
       : 'assigned-controller__status--detected';
 
   return (
-    <div className={`assigned-controller ${!isConnected ? 'assigned-controller--disconnected' : ''}`}>
-      <div className="assigned-controller__header">
-        <span className="assigned-controller__label">Assigned Controller</span>
-        <button className="assigned-controller__unassign" onClick={onUnassign} title="Unassign controller">
+    <Box className={`assigned-controller ${!isConnected ? 'assigned-controller--disconnected' : ''}`}>
+      <Box className="assigned-controller__header">
+        <Text className="assigned-controller__label">Assigned Controller</Text>
+        <Box as="button" className="assigned-controller__unassign" onClick={onUnassign} title="Unassign controller">
           ✕
-        </button>
-      </div>
-      <div className="assigned-controller__body">
-        <span className={`assigned-controller__status-dot ${statusClass}`} />
-        <span className="assigned-controller__icon">{emoji}</span>
-        <div className="assigned-controller__info">
-          <span className="assigned-controller__name">{assigned.displayName}</span>
-          <span className="assigned-controller__detail">
+        </Box>
+      </Box>
+      <Box className="assigned-controller__body">
+        <Box className={`assigned-controller__status-dot ${statusClass}`} />
+        <Text className="assigned-controller__icon">{emoji}</Text>
+        <Box className="assigned-controller__info">
+          <Text className="assigned-controller__name">{assigned.displayName}</Text>
+          <Text className="assigned-controller__detail">
             {assigned.vendorId}:{assigned.productId} · {statusLabel}
-          </span>
-        </div>
-      </div>
-    </div>
+          </Text>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 

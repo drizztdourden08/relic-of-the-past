@@ -6,6 +6,9 @@
  * Draggable: drop onto the binding editor to apply that device's preset.
  */
 
+import { Box } from '../../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../../design-system/primitives/Text';
+import { Image } from '../../../../../../design-system/primitives/Image';
 import type { DetectedDevice } from '@shared/types/controls';
 import './DeviceCard.css';
 
@@ -63,28 +66,28 @@ const DeviceCard = (props: DeviceCardProps) => {
     : 'WebAPI';
 
   return (
-    <div
+    <Box
       className={`device-card ${device.connected ? '' : 'device-card--disconnected'} ${device.stale ? 'device-card--stale' : ''}`}
       draggable
       onDragStart={handleDragStart}
       data-device-id={device.id}
     >
-      <div className="device-card__left">
-        <button
+      <Box className="device-card__left">
+        <Box
+          as="button"
           className={`device-card__icon-btn ${statusClass}`}
           onClick={() => onAssign?.(device)}
           title={statusTitle}
-          type="button"
         >
-          <img src={iconSrc} alt={device.deviceFamily} className="device-card__icon" />
-        </button>
-        {apiLabel && <span className={`device-card__api device-card__api--${device.inputApi}`}>{apiLabel}</span>}
-        {device.stale && <span className="device-card__api device-card__api--stale">STALE</span>}
-      </div>
-      <div className="device-card__info">
-        <span className="device-card__name">{device.displayName}</span>
-      </div>
-    </div>
+          <Image src={iconSrc} alt={device.deviceFamily} className="device-card__icon" />
+        </Box>
+        {apiLabel && <Text className={`device-card__api device-card__api--${device.inputApi}`}>{apiLabel}</Text>}
+        {device.stale && <Text className="device-card__api device-card__api--stale">STALE</Text>}
+      </Box>
+      <Box className="device-card__info">
+        <Text className="device-card__name">{device.displayName}</Text>
+      </Box>
+    </Box>
   );
 }
 

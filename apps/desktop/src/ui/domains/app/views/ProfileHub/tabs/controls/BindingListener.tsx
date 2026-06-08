@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import type { InputBinding } from '@shared/types/controls';
 import { getInputManager } from '../../../../../../../lib/input/input-manager';
 import { Portal } from '../../../../../../design-system/primitives/Portal';
+import { Box } from '../../../../../../design-system/primitives/Box';
 import './BindingListener.css';
 
 const MODIFIER_CODES = new Set([
@@ -87,17 +88,17 @@ const BindingListener = (props: BindingListenerProps) => {
 
   return (
     <Portal layer="modal">
-      <div className="binding-listener-backdrop" onClick={() => canCancel && onCancel()}>
-        <div className="binding-listener" onClick={(e) => e.stopPropagation()}>
-          <div className="binding-listener__prompt">
+      <Box className="binding-listener-backdrop" onClick={() => canCancel && onCancel()}>
+        <Box className="binding-listener" onClick={(e) => e.stopPropagation()}>
+          <Box className="binding-listener__prompt">
             Press a key, button, or move a stick for
-          </div>
-          <div className="binding-listener__label">{actionLabel}</div>
-          <div className="binding-listener__hint">
+          </Box>
+          <Box className="binding-listener__label">{actionLabel}</Box>
+          <Box className="binding-listener__hint">
             Press Escape to cancel · Delete to clear
-          </div>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Box>
     </Portal>
   );
 }

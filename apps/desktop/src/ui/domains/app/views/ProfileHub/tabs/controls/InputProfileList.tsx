@@ -8,6 +8,8 @@ import { useState, useRef, useEffect } from 'react';
 import type { InputProfile } from '@shared/types/controls';
 import { Button } from '../../../../../../design-system/primitives/Button';
 import { TextInput } from '../../../../../../design-system/primitives/TextInput';
+import { Box } from '../../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../../design-system/primitives/Text';
 import './InputProfileList.css';
 
 interface InputProfileListProps {
@@ -61,25 +63,26 @@ const InputProfileList = (props: InputProfileListProps) => {
   };
 
   return (
-    <div className="input-profile-list">
-      <div className="input-profile-list__header">
-        <span className="input-profile-list__title">Input Profiles</span>
-      </div>
+    <Box className="input-profile-list">
+      <Box className="input-profile-list__header">
+        <Text className="input-profile-list__title">Input Profiles</Text>
+      </Box>
 
-      <div className="input-profile-list__items">
+      <Box className="input-profile-list__items">
         {profiles.length === 0 && (
-          <p className="input-profile-list__empty">No profiles yet</p>
+          <Text as="p" className="input-profile-list__empty">No profiles yet</Text>
         )}
         {profiles.map((profile) => (
-          <button
+          <Box
+            as="button"
             key={profile.id}
             className={`input-profile-list__item ${profile.id === activeId ? 'input-profile-list__item--active' : ''}`}
             onClick={() => onSelect(profile)}
             onDoubleClick={() => startEditing(profile)}
           >
-            <span className="input-profile-list__item-icon">
+            <Text className="input-profile-list__item-icon">
               {profile.deviceType === 'keyboard' ? '⌨️' : '🎮'}
-            </span>
+            </Text>
             {editingId === profile.id ? (
               <TextInput
                 ref={inputRef}
@@ -94,36 +97,36 @@ const InputProfileList = (props: InputProfileListProps) => {
                 onClick={(e) => e.stopPropagation()}
               />
             ) : (
-              <span className="input-profile-list__item-name">{profile.name}</span>
+              <Text className="input-profile-list__item-name">{profile.name}</Text>
             )}
             {editingId !== profile.id && (
-              <span
+              <Text
                 className="input-profile-list__item-edit"
                 title="Rename profile"
                 onClick={(e) => { e.stopPropagation(); startEditing(profile); }}
               >
                 ✏️
-              </span>
+              </Text>
             )}
             {!profile.isDefault && editingId !== profile.id && (
-              <span
+              <Text
                 className="input-profile-list__item-delete"
                 title="Delete profile"
                 onClick={(e) => { e.stopPropagation(); onDelete(profile); }}
               >
                 ✕
-              </span>
+              </Text>
             )}
-          </button>
+          </Box>
         ))}
-      </div>
+      </Box>
 
-      <div className="input-profile-list__footer">
+      <Box className="input-profile-list__footer">
         <Button variant="secondary" size="sm" onClick={onCreate}>
           + New Profile
         </Button>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
 

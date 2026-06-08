@@ -5,6 +5,9 @@
  * Entire row is clickable to initiate rebinding.
  */
 
+import { Box } from '../../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../../design-system/primitives/Text';
+import { Image } from '../../../../../../design-system/primitives/Image';
 import type { InputBinding, ButtonIcon, KeyboardBinding } from '@shared/types/controls';
 import { getButtonIconUrl, keyCodeToIconId } from '../../../InputTester/data/button-icons';
 import './BindingRow.css';
@@ -76,7 +79,7 @@ const BindingRow = (props: BindingRowProps) => {
   const isNone = binding.type === 'none';
 
   return (
-    <div
+    <Box
       className="binding-row"
       role="button"
       tabIndex={0}
@@ -85,39 +88,40 @@ const BindingRow = (props: BindingRowProps) => {
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onRebind(); } }}
     >
       {/* Action name */}
-      <span className="binding-row__action-label">{actionLabel}</span>
+      <Text className="binding-row__action-label">{actionLabel}</Text>
 
       {/* Middle icon (e.g. SNES button icon) */}
-      <div className="binding-row__icon-slot">
+      <Box className="binding-row__icon-slot">
         {middleIconUrl ? (
-          <img src={middleIconUrl} alt={middleLabel ?? ''} className="binding-row__icon-img" />
+          <Image src={middleIconUrl} alt={middleLabel ?? ''} className="binding-row__icon-img" />
         ) : null}
-      </div>
+      </Box>
 
       {/* Middle label (e.g. SNES button name) */}
-      <span className="binding-row__snes-label">{middleLabel ?? ''}</span>
+      <Text className="binding-row__snes-label">{middleLabel ?? ''}</Text>
 
       {/* Bound input icon */}
-      <div className="binding-row__icon-slot">
+      <Box className="binding-row__icon-slot">
         {bindingIconSrc ? (
-          <img src={bindingIconSrc} alt={bindingLabel} className="binding-row__icon-img" />
+          <Image src={bindingIconSrc} alt={bindingLabel} className="binding-row__icon-img" />
         ) : null}
-      </div>
+      </Box>
 
       {/* Bound input label */}
-      <span className={`binding-row__binding-label ${isNone ? 'binding-row__binding-label--none' : ''}`}>{bindingLabel}</span>
+      <Text className={`binding-row__binding-label ${isNone ? 'binding-row__binding-label--none' : ''}`}>{bindingLabel}</Text>
 
       {/* Clear button */}
       {onClear && !isNone && (
-        <button
+        <Box
+          as="button"
           className="binding-row__clear"
           title="Clear binding"
           onClick={(e) => { e.stopPropagation(); onClear(); }}
         >
           ✕
-        </button>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }
 
