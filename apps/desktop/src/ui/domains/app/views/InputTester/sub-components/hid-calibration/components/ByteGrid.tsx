@@ -2,6 +2,8 @@
 /**
  * Live byte grid visualization for the HID Calibration Wizard.
  */
+import { Box } from '../../../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../../../design-system/primitives/Text';
 import type { ByteStatus, GyroState } from '../hid-calibration.type';
 import { hex } from '../hid-analysis';
 import type { ByteColorResult } from '../wizard-helpers';
@@ -34,9 +36,9 @@ const ByteGrid = (props: ByteGridProps) => {
   } = props;
 
   return (
-    <div className="hid-cal__step">
-      <div className="hid-cal__step-title">Live Bytes — Report 0x{lastReportId.toString(16)}</div>
-      <div className="hid-cal__byte-grid">
+    <Box className="hid-cal__step">
+      <Box className="hid-cal__step-title">Live Bytes — Report 0x{lastReportId.toString(16)}</Box>
+      <Box className="hid-cal__byte-grid">
         {Array.from(latestBytes).map((b, i) => {
           const colors = getByteColor(i);
           const isChanged = baselineRef.current.length > i && baselineRef.current[i] !== b && !excludedRef.current.has(i);
@@ -44,7 +46,7 @@ const ByteGrid = (props: ByteGridProps) => {
           const pickHighlight = (stickPickMode || triggerPickMode) && !isPicked;
           const activeItem = itemsRef.current[activeIdxRef.current];
           return (
-            <div key={i} className="hid-cal__byte-box" style={{
+            <Box key={i} className="hid-cal__byte-box" style={{
               background: isPicked ? '#1a1a3d' : isChanged ? '#332200' : colors.bg,
               borderColor: isPicked ? '#c084fc' : isChanged ? '#fbbf24' : colors.border,
               color: isPicked ? '#c084fc' : isChanged ? '#fbbf24' : colors.text,
@@ -59,31 +61,31 @@ const ByteGrid = (props: ByteGridProps) => {
                 ? `byte[${i}] = 0x${hex(b)} (${b}) — click to assign to "${activeItem?.label}"`
                 : `byte[${i}] = 0x${hex(b)} (${b}) — ${byteStatuses[i] ?? 'unknown'}\nClick to toggle exclusion`)}
               onClick={() => onByteClick(i)}>
-              <span className="hid-cal__byte-idx">{i}</span>
-              <span className="hid-cal__byte-val">{hex(b)}</span>
-            </div>
+              <Text className="hid-cal__byte-idx">{i}</Text>
+              <Text className="hid-cal__byte-val">{hex(b)}</Text>
+            </Box>
           );
         })}
-      </div>
-      {latestBytes.length === 0 && <div className="hid-cal__desc">Waiting for HID reports...</div>}
-      <div className="hid-cal__byte-legend">
-        <span><span className="hid-cal__legend-swatch" style={{ background: '#4a5568' }} /> Unknown</span>
-        <span><span className="hid-cal__legend-swatch" style={{ background: '#555' }} /> Excluded</span>
-        <span><span className="hid-cal__legend-swatch" style={{ background: '#38bdf8' }} /> Stick</span>
-        <span><span className="hid-cal__legend-swatch" style={{ background: '#fb923c' }} /> Trigger</span>
-        <span><span className="hid-cal__legend-swatch" style={{ background: '#4ade80' }} /> Button</span>
-        <span><span className="hid-cal__legend-swatch" style={{ background: '#fbbf24' }} /> Changed</span>
+      </Box>
+      {latestBytes.length === 0 && <Box className="hid-cal__desc">Waiting for HID reports...</Box>}
+      <Box className="hid-cal__byte-legend">
+        <Text><Text className="hid-cal__legend-swatch" style={{ background: '#4a5568' }} /> Unknown</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={{ background: '#555' }} /> Excluded</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={{ background: '#38bdf8' }} /> Stick</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={{ background: '#fb923c' }} /> Trigger</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={{ background: '#4ade80' }} /> Button</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={{ background: '#fbbf24' }} /> Changed</Text>
         {gyroState === 'recording' && (
-          <span><span className="hid-cal__legend-swatch" style={{ background: '#f87171' }} /> Gyro</span>
+          <Text><Text className="hid-cal__legend-swatch" style={{ background: '#f87171' }} /> Gyro</Text>
         )}
         {stickPickMode && (
-          <span><span className="hid-cal__legend-swatch" style={{ background: '#c084fc' }} /> Selected</span>
+          <Text><Text className="hid-cal__legend-swatch" style={{ background: '#c084fc' }} /> Selected</Text>
         )}
         {triggerPickMode && (
-          <span><span className="hid-cal__legend-swatch" style={{ background: '#c084fc' }} /> Selected</span>
+          <Text><Text className="hid-cal__legend-swatch" style={{ background: '#c084fc' }} /> Selected</Text>
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

@@ -2,6 +2,8 @@
 /**
  * Trigger calibration cards for the HID Calibration Wizard.
  */
+import { Box } from '../../../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../../../design-system/primitives/Text';
 import type { InputItem, IdleRecordResult, TriggerSide } from '../hid-calibration.type';
 import { TRIGGER_IDS } from '../hid-calibration.constants';
 
@@ -30,7 +32,7 @@ const TriggerCards = (props: TriggerCardsProps) => {
   if (!items.some(it => TRIGGER_IDS.has(it.id))) return null;
 
   return (
-    <div className="hid-cal__prereqs">
+    <Box className="hid-cal__prereqs">
       {(['left', 'right'] as const).map(side => {
         const axisId = side === 'left' ? 'leftTrigger' : 'rightTrigger';
         const item = items.find(it => it.id === axisId);
@@ -43,36 +45,37 @@ const TriggerCards = (props: TriggerCardsProps) => {
         const otherBusy = activeTrigger !== null && activeTrigger !== side;
 
         return (
-          <div key={side} className={`hid-cal__prereq-card${isDone ? ' hid-cal__prereq-card--done' : ''}`}>
-            <div className="hid-cal__prereq-title">
-              <span>{isDone ? '✓' : '⊳'} {label}</span>
-              {isDone && item.result && <span className="hid-cal__prereq-badge">{item.result.split(' ')[0]}</span>}
-            </div>
+          <Box key={side} className={`hid-cal__prereq-card${isDone ? ' hid-cal__prereq-card--done' : ''}`}>
+            <Box className="hid-cal__prereq-title">
+              <Text>{isDone ? '✓' : '⊳'} {label}</Text>
+              {isDone && item.result && <Text className="hid-cal__prereq-badge">{item.result.split(' ')[0]}</Text>}
+            </Box>
 
             {isPicking && (
-              <p className="hid-cal__desc">
+              <Text as="p" className="hid-cal__desc">
                 Click 1 byte box below, then Confirm. [{triggerPickedByte ?? '—'}]
-              </p>
+              </Text>
             )}
-            {isRecording && triggerLiveInfo && <div className="hid-cal__stick-info">{triggerLiveInfo}</div>}
-            {isRecording && !triggerLiveInfo && <p className="hid-cal__desc">Press the trigger fully and release...</p>}
+            {isRecording && triggerLiveInfo && <Box className="hid-cal__stick-info">{triggerLiveInfo}</Box>}
+            {isRecording && !triggerLiveInfo && <Text as="p" className="hid-cal__desc">Press the trigger fully and release...</Text>}
             {!isActive && isDone && (
-              <p className="hid-cal__desc" style={{ fontSize: 10 }}>{item.result ?? '—'}</p>
+              <Text as="p" className="hid-cal__desc" style={{ fontSize: 10 }}>{item.result ?? '—'}</Text>
             )}
 
-            <div className="hid-cal__prereq-actions">
+            <Box className="hid-cal__prereq-actions">
               {isPicking ? (
                 <>
-                  <button onClick={onConfirmTriggerPick} disabled={triggerPickedByte === null}
-                    className="input-cal__btn input-cal__btn--primary" style={{ fontSize: 11 }}>Confirm</button>
-                  <button onClick={onCancelTriggerPick} className="input-cal__btn input-cal__btn--danger" style={{ fontSize: 11 }}>Cancel</button>
+                  <Box as="button" onClick={onConfirmTriggerPick} disabled={triggerPickedByte === null}
+                    className="input-cal__btn input-cal__btn--primary" style={{ fontSize: 11 }}>Confirm</Box>
+                  <Box as="button" onClick={onCancelTriggerPick} className="input-cal__btn input-cal__btn--danger" style={{ fontSize: 11 }}>Cancel</Box>
                 </>
               ) : isRecording ? (
-                <button onClick={onStopTrigger} className="input-cal__btn input-cal__btn--danger" style={{ fontSize: 11 }}>Stop</button>
+                <Box as="button" onClick={onStopTrigger} className="input-cal__btn input-cal__btn--danger" style={{ fontSize: 11 }}>Stop</Box>
               ) : isDone ? (
                 <>
-                  <button onClick={() => onTriggerRedo(side)} disabled={otherBusy} className="input-cal__btn" style={{ fontSize: 11 }}>Redo</button>
-                  <button
+                  <Box as="button" onClick={() => onTriggerRedo(side)} disabled={otherBusy} className="input-cal__btn" style={{ fontSize: 11 }}>Redo</Box>
+                  <Box
+                    as="button"
                     disabled={idleRecording !== null}
                     className={`input-cal__btn${idleResults[label] ? ' input-cal__btn--done' : ''}`}
                     style={{ fontSize: 11 }}
@@ -82,23 +85,23 @@ const TriggerCards = (props: TriggerCardsProps) => {
                       if (byteIndices.length > 0) onIdleRecord(label, byteIndices);
                     }}>
                     {idleRecording === label ? 'Recording...' : idleResults[label] ? '✓ Idle' : 'Idle'}
-                  </button>
+                  </Box>
                 </>
               ) : (
                 <>
-                  <button onClick={() => onStartTrigger(side)} disabled={otherBusy}
-                    className="input-cal__btn input-cal__btn--primary" style={{ fontSize: 11 }}>Start</button>
-                  <button onClick={() => onTriggerPickMode(side)} disabled={otherBusy}
-                    className="input-cal__btn" style={{ fontSize: 11 }}>Pick</button>
-                  <button onClick={() => onSkipTrigger(side)} disabled={otherBusy}
-                    className="input-cal__btn" style={{ fontSize: 11 }}>Skip</button>
+                  <Box as="button" onClick={() => onStartTrigger(side)} disabled={otherBusy}
+                    className="input-cal__btn input-cal__btn--primary" style={{ fontSize: 11 }}>Start</Box>
+                  <Box as="button" onClick={() => onTriggerPickMode(side)} disabled={otherBusy}
+                    className="input-cal__btn" style={{ fontSize: 11 }}>Pick</Box>
+                  <Box as="button" onClick={() => onSkipTrigger(side)} disabled={otherBusy}
+                    className="input-cal__btn" style={{ fontSize: 11 }}>Skip</Box>
                 </>
               )}
-            </div>
-          </div>
+            </Box>
+          </Box>
         );
       })}
-    </div>
+    </Box>
   );
 };
 
