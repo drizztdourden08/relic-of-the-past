@@ -116,6 +116,7 @@ const AppMain = () => {
         onShowDataManager={handleShowDataManager}
         onShowInputTester={() => nav.setActivePage('input-tester')}
         onShowCredits={() => nav.setActivePage('credits')}
+        onShowDesignGallery={() => nav.setActivePage('design-gallery')}
         onShowSpriteDebug={toggleSpriteDebug}
         onShowConnectionDebug={() => widgets.toggle('navigation')}
         onToggleDataset={() => widgets.toggle('dataset')}

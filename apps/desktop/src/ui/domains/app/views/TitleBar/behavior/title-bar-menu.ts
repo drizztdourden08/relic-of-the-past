@@ -9,7 +9,7 @@ type MenuBuilderDeps = Pick<TitleBarProps,
   'activeProfile' | 'gameRunning' | 'onShowProfile' | 'onToggleSaveStates' | 'onShowDataManager'
   | 'onToggleInventory' | 'onToggleChecks' | 'onToggleCheats' | 'onShowLogs' | 'onToggleDebug'
   | 'onShowConnectionDebug' | 'onToggleDataset' | 'onShowInputTester' | 'onShowSpriteDebug'
-  | 'onShowShadowEditor' | 'onCheckForUpdates' | 'onShowCredits' | 'onShowAbout'
+  | 'onShowShadowEditor' | 'onCheckForUpdates' | 'onShowCredits' | 'onShowDesignGallery' | 'onShowAbout'
 > & { closeMenu: () => void };
 
 const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
@@ -17,7 +17,7 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
     closeMenu, activeProfile, gameRunning,
     onShowProfile, onToggleSaveStates, onShowDataManager, onToggleInventory, onToggleChecks,
     onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset,
-    onShowInputTester, onShowSpriteDebug, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowAbout,
+    onShowInputTester, onShowSpriteDebug, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout,
   } = deps;
 
   return [
@@ -70,6 +70,7 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
         { key: 'input-tester', icon: '🎮', label: 'Input Calibration', onClick: () => { closeMenu(); onShowInputTester(); } },
         { key: 'dev-console', icon: '🛠️', label: 'Dev Console', onClick: () => { closeMenu(); window.api.openDevTools(); } },
         { key: 'sprite-debug', icon: '🖼️', label: 'Sprite Debug', onClick: () => { closeMenu(); onShowSpriteDebug(); } },
+        { key: 'design-gallery', icon: '🎨', label: 'Design Gallery', onClick: () => { closeMenu(); onShowDesignGallery(); } },
         ...(window.api.isDev ? [{ key: 'shadow-editor', icon: '🌓', label: 'Shadow Editor', onClick: () => { closeMenu(); onShowShadowEditor(); } }] : []),
       ],
     },

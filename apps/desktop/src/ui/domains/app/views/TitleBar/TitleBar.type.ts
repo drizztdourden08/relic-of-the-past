@@ -15,6 +15,7 @@ interface TitleBarProps {
   onShowDataManager: (tab?: string) => void;
   onShowInputTester: () => void;
   onShowCredits: () => void;
+  onShowDesignGallery: () => void;
   onShowSpriteDebug: () => void;
   onShowConnectionDebug: () => void;
   onToggleDataset: () => void;

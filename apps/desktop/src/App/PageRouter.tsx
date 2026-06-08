@@ -5,6 +5,7 @@ import { ProfileHub } from '../ui/domains/app/views/ProfileHub';
 import { DataManager } from '../ui/domains/app/views/DataManager';
 import { InputCalibration } from '../ui/domains/app/views/InputTester';
 import { CreditsPage } from '../ui/domains/app/views/ProfileHub/sub-components/CreditsTab';
+import { DesignGallery } from '../ui/domains/app/views/DesignGallery';
 import { FullScreenLayer } from '../ui/design-system/composites/FullScreenLayer';
 import type { PageId, RomDisplayInfo } from './types';
 import type { GameSettings } from '@shared/types/settings';
@@ -124,6 +125,12 @@ const PageRouter = (props: PageRouterProps) => {
     otherPage = (
       <FullScreenLayer onClose={nav.closePage}>
         <CreditsPage />
+      </FullScreenLayer>
+    );
+  } else if (nav.activePage === 'design-gallery') {
+    otherPage = (
+      <FullScreenLayer onClose={nav.closePage}>
+        <DesignGallery />
       </FullScreenLayer>
     );
   }

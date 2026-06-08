@@ -3,6 +3,7 @@
 /* Design tokens — single entry point. Import this once (in main.tsx). */
 @import url('./reset.css');
 @import url('./color.css');
+@import url('./canonical.css');
 @import url('./space.css');
 @import url('./size.css');
 @import url('./radius.css');

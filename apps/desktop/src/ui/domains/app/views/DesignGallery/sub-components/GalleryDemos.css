@@ -1,0 +1,188 @@
+/* @layer renderer-app @kind style */
+
+.dg-demos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.dg-demo-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.dg-note {
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+  font-style: italic;
+}
+
+.dg-btn {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--c-text-dim);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.dg-btn:hover {
+  background: var(--c-hover);
+  color: var(--c-text);
+  border-color: var(--c-border-strong);
+}
+
+.dg-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.dg-btn--primary {
+  background: var(--c-gold-dim);
+  border-color: var(--c-gold);
+  color: var(--c-gold-bright);
+}
+
+.dg-btn--primary:hover {
+  background: var(--c-gold);
+  color: var(--c-bg);
+}
+
+.dg-btn--positive {
+  background: var(--c-green-dim);
+  border-color: var(--c-green);
+  color: var(--c-green-bright);
+}
+
+.dg-btn--positive:hover {
+  background: var(--c-green);
+  color: var(--c-bg);
+}
+
+.dg-btn--danger {
+  background: var(--c-danger-dim);
+  border-color: var(--c-danger);
+  color: var(--c-danger);
+}
+
+.dg-btn--ghost {
+  background: none;
+  border-color: transparent;
+}
+
+.dg-btn--ghost:hover {
+  background: var(--c-hover);
+}
+
+.dg-tabs {
+  display: flex;
+  gap: var(--space-xs);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.dg-tab {
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+
+.dg-tab:hover {
+  color: var(--c-text);
+}
+
+.dg-tab--active {
+  color: var(--c-gold-bright);
+  border-bottom-color: var(--c-gold);
+}
+
+.dg-chip {
+  padding: 2px var(--space-sm);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-pill);
+  cursor: pointer;
+}
+
+.dg-chip--active {
+  background: var(--c-gold-soft);
+  border-color: var(--c-gold);
+  color: var(--c-gold-bright);
+}
+
+.dg-demo-row--status {
+  font-size: var(--text-sm);
+}
+
+.dg-status {
+  font-weight: var(--weight-medium);
+}
+
+.dg-status--ok {
+  color: var(--c-green-bright);
+}
+
+.dg-status--pending {
+  color: var(--c-warning);
+}
+
+.dg-status--blocked {
+  color: var(--c-danger);
+}
+
+.dg-status--info {
+  color: var(--c-info);
+}
+
+.dg-demo-row--cards {
+  align-items: stretch;
+}
+
+.dg-card {
+  flex: 1;
+  min-width: 160px;
+  padding: var(--space-md);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-1);
+}
+
+.dg-card--selected {
+  border-color: var(--c-gold);
+  background: var(--c-gold-soft);
+}
+
+.dg-card__title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  color: var(--c-text);
+}
+
+.dg-card__body {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  margin-top: 2px;
+}
+
+.dg-glass {
+  flex: 1;
+  min-width: 160px;
+  padding: var(--space-md);
+  background: var(--c-glass);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-2);
+}
