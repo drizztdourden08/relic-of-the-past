@@ -6,6 +6,9 @@
  * proper SVG icons, joystick circle testers, and vibration testing.
  */
 
+import { Box } from '../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../design-system/primitives/Text';
+import { Image } from '../../../../../design-system/primitives/Image';
 import { webHidReader } from '../../../../../../lib/input/hid-reader';
 import { HidCalibrationWizard } from './HidCalibrationWizard';
 import { DEVICE_PROFILES, findPresetByVidPid } from '@shared/input';
@@ -29,76 +32,78 @@ const InputCalibration = () => {
   const anyHidConnected = webHidConnected || webHidReader.getConnectedDeviceKeys().length > 0;
 
   return (
-    <div className="input-cal">
+    <Box className="input-cal">
       {/* Header */}
-      <div className="input-cal__header">
-        <span className="input-cal__title">Input Calibration</span>
-        <span className={`input-cal__status ${anyHidConnected ? 'input-cal__status--connected' : 'input-cal__status--disconnected'}`}>
+      <Box className="input-cal__header">
+        <Text className="input-cal__title">Input Calibration</Text>
+        <Text className={`input-cal__status ${anyHidConnected ? 'input-cal__status--connected' : 'input-cal__status--disconnected'}`}>
           {anyHidConnected
             ? `Connected ${'\u2022'} ${gamepads.length + webHidReader.getConnectedDeviceKeys().length} controller(s)`
             : `${gamepads.length} controller(s) detected`}
-        </span>
-      </div>
+        </Text>
+      </Box>
 
       {/* Actions */}
-      <div className="input-cal__actions">
-        <span style={{ fontSize: 'var(--text-sm)', opacity: 0.6 }}>
+      <Box className="input-cal__actions">
+        <Text style={{ fontSize: 'var(--text-sm)', opacity: 0.6 }}>
           Controllers auto-connect via node-hid
-        </span>
-        <button
+        </Text>
+        <Box
+          as="button"
           className="input-cal__btn"
           onClick={() => setCalibrating(true)}
           disabled={!anyHidConnected}
         >
           Calibrate
-        </button>
-      </div>
+        </Box>
+      </Box>
 
       {/* Calibration Wizard */}
       {calibrating && (
-        <div className="input-cal__section">
+        <Box className="input-cal__section">
           <HidCalibrationWizard
             onComplete={handleCalibrationComplete}
             onCancel={() => setCalibrating(false)}
             deviceKey={webHidReader.getConnectedDeviceKeys()[0]}
           />
-        </div>
+        </Box>
       )}
 
       {/* Calibration Result */}
       {lastCalibration && !calibrating && (
-        <div className="input-cal__section">
-          <div className="input-cal__result">
-            <div className="input-cal__result-header">
-              <span className="input-cal__result-title">Calibration Complete</span>
-              <span style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}>
+        <Box className="input-cal__section">
+          <Box className="input-cal__result">
+            <Box className="input-cal__result-header">
+              <Text className="input-cal__result-title">Calibration Complete</Text>
+              <Text style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}>
                 {lastCalibration.name} {'\u2014'} {Object.keys(lastCalibration.buttons).length} buttons, {Object.keys(lastCalibration.axes).length} axes
-              </span>
-            </div>
-            <pre>{JSON.stringify(lastCalibration, null, 2)}</pre>
-            <button
+              </Text>
+            </Box>
+            <Box as="pre">{JSON.stringify(lastCalibration, null, 2)}</Box>
+            <Box
+              as="button"
               className="input-cal__btn"
               onClick={() => navigator.clipboard.writeText(JSON.stringify(lastCalibration, null, 2))}
               style={{ marginTop: 'var(--space-sm)' }}
             >
               Copy JSON
-            </button>
-          </div>
-        </div>
+            </Box>
+          </Box>
+        </Box>
       )}
 
       {/* Controller Cards */}
-      <div className="input-cal__section">
-        <div className="input-cal__section-title">Controllers</div>
+      <Box className="input-cal__section">
+        <Box className="input-cal__section-title">Controllers</Box>
 
         {gamepads.length === 0 && !anyHidConnected && hidDeviceInfo.filter(d => d.vendorId !== '046d').length === 0 && (
-          <div className="input-cal__empty">
-            <p>No controllers detected.</p>
-            <p style={{ fontSize: 'var(--text-sm)' }}>Press a button on your gamepad to activate it.</p>
-          </div>
+          <Box className="input-cal__empty">
+            <Text as="p">No controllers detected.</Text>
+            <Text as="p" style={{ fontSize: 'var(--text-sm)' }}>Press a button on your gamepad to activate it.</Text>
+          </Box>
         )}
 
-        <div className="input-cal__cards">
+        <Box className="input-cal__cards">
           {/* HID Controller Cards */}
           {anyHidConnected && (() => {
             const keys = new Set(webHidReader.getConnectedDeviceKeys());
@@ -158,35 +163,35 @@ const InputCalibration = () => {
               const name = resolveDeviceName(d.vendorId, d.productId, d.product);
               const isGeneric = !preset || preset.id === 'generic';
               return (
-                <div key={`inactive-${key}`} className="input-cal__card" style={{ opacity: 0.5 }}>
-                  <div className="input-cal__card-header">
+                <Box key={`inactive-${key}`} className="input-cal__card" style={{ opacity: 0.5 }}>
+                  <Box className="input-cal__card-header">
                     {icon && (
-                      <img src={icon} alt="" draggable={false} style={{ width: 28, height: 28, opacity: 0.5, flexShrink: 0 }} />
+                      <Image src={icon} alt="" draggable={false} style={{ width: 28, height: 28, opacity: 0.5, flexShrink: 0 }} />
                     )}
-                    <span className="input-cal__card-badge" style={{ background: 'var(--color-bg-tertiary, #333)' }}>
+                    <Text className="input-cal__card-badge" style={{ background: 'var(--color-bg-tertiary, #333)' }}>
                       INACTIVE
-                    </span>
-                    <span className="input-cal__card-badge" style={{ background: '#1e40af', marginLeft: 4 }}>
+                    </Text>
+                    <Text className="input-cal__card-badge" style={{ background: '#1e40af', marginLeft: 4 }}>
                       HID
-                    </span>
-                    <span className="input-cal__card-name">{name}</span>
-                    <span className="input-cal__card-meta">{key}</span>
-                  </div>
-                  <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', margin: 'var(--space-sm) 0 0' }}>
+                    </Text>
+                    <Text className="input-cal__card-name">{name}</Text>
+                    <Text className="input-cal__card-meta">{key}</Text>
+                  </Box>
+                  <Text as="p" style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', margin: 'var(--space-sm) 0 0' }}>
                     {isGeneric
                       ? 'Press a button to activate, then use Calibrate to map this controller.'
                       : 'Press a button to activate this controller.'}
-                  </p>
-                </div>
+                  </Text>
+                </Box>
               );
             })
           }
-        </div>
-      </div>
+        </Box>
+      </Box>
 
       {/* Diagnostics */}
       <DiagnosticsLog events={events} webHidDiag={webHidDiag} logRef={logRef} />
-    </div>
+    </Box>
   );
 };
 

@@ -9,6 +9,8 @@
  *  4. STICKS: rotate each stick in full circle → auto-detect 2 bytes with largest range.
  *  5. BUTTONS: auto-detect presses using only non-excluded bytes.
  */
+import { Box } from '../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../design-system/primitives/Text';
 import type { HidAxisMapping, HidButtonMapping, HidControllerMap } from './hid-calibration/hid-calibration.type';
 import { useHidCalibration } from './hid-calibration/hooks';
 import {
@@ -43,20 +45,20 @@ const HidCalibrationWizard = (props: Props) => {
   }
 
   return (
-    <div className="hid-cal">
+    <Box className="hid-cal">
       {/* Header */}
-      <div className="hid-cal__header">
-        <h3 className="hid-cal__title">HID Calibration — {wiz.profile?.name ?? 'Controller'}</h3>
-        <div className="hid-cal__header-actions">
-          <button onClick={wiz.handleCopyJson} className="input-cal__btn" title="Copy partial or complete calibration JSON">
+      <Box className="hid-cal__header">
+        <Text as="h3" className="hid-cal__title">HID Calibration — {wiz.profile?.name ?? 'Controller'}</Text>
+        <Box className="hid-cal__header-actions">
+          <Box as="button" onClick={wiz.handleCopyJson} className="input-cal__btn" title="Copy partial or complete calibration JSON">
             Copy JSON
-          </button>
-          <button onClick={wiz.handleFinish} className="input-cal__btn input-cal__btn--primary" disabled={wiz.capturedCount === 0}>
+          </Box>
+          <Box as="button" onClick={wiz.handleFinish} className="input-cal__btn input-cal__btn--primary" disabled={wiz.capturedCount === 0}>
             Finish
-          </button>
-          <button onClick={onCancel} className="input-cal__btn input-cal__btn--danger">Cancel</button>
-        </div>
-      </div>
+          </Box>
+          <Box as="button" onClick={onCancel} className="input-cal__btn input-cal__btn--danger">Cancel</Box>
+        </Box>
+      </Box>
 
       {/* Prereqs: Gyro + Idle */}
       <PrereqCards
@@ -160,7 +162,7 @@ const HidCalibrationWizard = (props: Props) => {
 
       {/* Log */}
       <CalibrationLog log={wiz.log} logRef={wiz.logRef} />
-    </div>
+    </Box>
   );
 };
 
