@@ -2,7 +2,7 @@
 import { useState, useLayoutEffect } from 'react';
 import { Portal } from '../../primitives/Portal';
 import { SubMenu } from './sub-components/SubMenu';
-import type { DropdownMenuProps } from './types';
+import type { DropdownMenuProps } from './DropdownMenu.type';
 import './DropdownMenu.css';
 
 const DropdownMenu = (props: DropdownMenuProps) => {
@@ -45,6 +45,6 @@ const DropdownMenu = (props: DropdownMenuProps) => {
   return <Portal layer="overlay">{menu}</Portal>;
 };
 
-export type { MenuItem, MenuEntry } from './types';
+export type { MenuItem, MenuEntry } from './DropdownMenu.type';
 
 export { DropdownMenu };

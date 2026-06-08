@@ -9,8 +9,8 @@
  */
 
 import { RangeInput } from '../../../../../../design-system/primitives';
-import { applyCalibration } from './types';
-import type { StickCalibrationWizardProps } from './types';
+import { applyCalibration } from './stick-calibration.type';
+import type { StickCalibrationWizardProps } from './stick-calibration.type';
 import { useStickCalibration } from './useStickCalibration';
 import { StickCircle } from './StickCircle';
 import { StepIndicator } from './StepIndicator';

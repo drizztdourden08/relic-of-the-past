@@ -2,8 +2,8 @@
 /**
  * HID byte-level analysis algorithms — detect buttons, axes, counters from raw reports.
  */
-import type { ButtonDiff } from './types';
-import { ANALOG_THRESHOLD_DELTA } from './constants';
+import type { ButtonDiff } from './hid-calibration.type';
+import { ANALOG_THRESHOLD_DELTA } from './hid-calibration.constants';
 
 const popcount = (n: number) => {
   let c = 0;

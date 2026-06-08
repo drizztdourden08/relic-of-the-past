@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import type { HeroSaveCardProps } from './types';
+import type { HeroSaveCardProps } from './HeroSaveCard.type';
 import './HeroSaveCard.css';
 
 const HeroSaveCard = (props: HeroSaveCardProps) => {

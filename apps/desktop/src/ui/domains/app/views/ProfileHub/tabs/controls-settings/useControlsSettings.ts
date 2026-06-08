@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react';
-import type { UseControlsSettingsArgs } from './types';
+import type { UseControlsSettingsArgs } from './controls-settings.type';
 import { useProfileActions } from './useProfileActions';
 import { useDeviceSync } from './useDeviceSync';
 import { useBindingState } from './useBindingState';

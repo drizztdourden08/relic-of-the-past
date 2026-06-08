@@ -3,7 +3,7 @@
 import { Button } from '../../primitives/Button';
 import { Portal } from '../../primitives/Portal';
 import './Dialog.css';
-import { type DialogProps } from './types';
+import { type DialogProps } from './Dialog.type';
 
 
 const Dialog = (props: DialogProps) => {

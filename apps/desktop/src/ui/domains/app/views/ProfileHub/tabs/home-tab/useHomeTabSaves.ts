@@ -6,7 +6,7 @@ import type { PlaySession } from '@shared/types/session';
 import { saveState, loadState, captureStateBuffer, loadStateFromBuffer } from '../../../../../../../lib/game';
 import { listSessions } from '../../../../../../../lib/game/session-tracker';
 import { log } from '../../../../../../../lib/log-bus';
-import type { SlotInfo, DialogState } from './types';
+import type { SlotInfo, DialogState } from './home-tab.type';
 import { QUICK_SAVE_SLOTS, defaultSaveName, ensureGameRunning, captureCanvasScreenshot } from './home-tab-helpers';
 import { fetchQuickSlots, fetchNormalSaves, fetchAutoSaves } from './home-tab-data';
 

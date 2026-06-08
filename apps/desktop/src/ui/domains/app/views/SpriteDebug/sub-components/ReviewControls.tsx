@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import type { ReviewStatus } from '../types';
+import type { ReviewStatus } from '../SpriteDebug.type';
 import { S } from '../styles';
 
 const Stats = ({ counts, total }: { counts: { good: number; neutral: number; bad: number; yellow: number }; total: number }) => {

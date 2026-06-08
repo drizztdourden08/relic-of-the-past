@@ -5,7 +5,7 @@
  * Handles: docking, floating, drag, resize, hover-to-reveal-frame.
  */
 import { useState, useCallback, useRef, useMemo } from 'react';
-import type { WidgetState, SnapSide } from './types';
+import type { WidgetState, SnapSide } from './Widget.type';
 import { getWidgetDefinition } from './behavior/createWidgetState';
 import { useWidgetDrag } from './behavior/useWidgetDrag';
 import { useWidgetResize, getDockedResizeEdge } from './behavior/useWidgetResize';

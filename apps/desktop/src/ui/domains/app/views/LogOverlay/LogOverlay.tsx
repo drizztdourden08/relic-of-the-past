@@ -5,7 +5,7 @@ import { useLogOverlay } from './behavior/useLogOverlay';
 import { formatTime } from './behavior/formatTime';
 import { CHANNEL_COLORS } from '../../../../../lib/log-bus';
 import './LogOverlay.css';
-import type { LogOverlayProps } from './types';
+import type { LogOverlayProps } from './LogOverlay.type';
 
 
 const LogOverlay = (props: LogOverlayProps) => {

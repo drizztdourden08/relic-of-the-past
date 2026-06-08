@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import './MasterDetailLayout.css';
-import type { MasterDetailLayoutProps } from './types';
+import type { MasterDetailLayoutProps } from './MasterDetailLayout.type';
 
 /** Two-column master/detail: a scrollable left list and a right detail panel. */
 const MasterDetailLayout = (props: MasterDetailLayoutProps) => {

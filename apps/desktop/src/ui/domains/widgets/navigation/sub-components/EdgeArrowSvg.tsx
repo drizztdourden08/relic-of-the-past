@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { EDGE_COLORS } from '../constants';
+import { EDGE_COLORS } from '../navigation.constants';
 
 /** A small directional arrow glyph colored by edge direction. */
 const EdgeArrowSvg = ({ edge, size }: { edge: string; size: number }) => {

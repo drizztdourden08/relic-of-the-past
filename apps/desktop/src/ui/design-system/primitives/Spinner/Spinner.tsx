@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import './Spinner.css';
-import type { SpinnerProps } from './types';
+import type { SpinnerProps } from './Spinner.type';
 
 const Spinner = (props: SpinnerProps) => {
   const { size = 'md', className = '' } = props;

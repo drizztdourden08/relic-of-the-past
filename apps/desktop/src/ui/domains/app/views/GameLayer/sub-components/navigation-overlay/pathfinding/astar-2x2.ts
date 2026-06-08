@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { ReachState } from '@shared/game/navigation/types';
-import type { GridPos } from '../types';
+import type { GridPos } from '../navigation-overlay.type';
 import { manhattan, keyOf, isValid2x2, isValidMove2x2, canLeave2x2, PATH_DIRS } from './helpers';
 import { hasStairInBody, isReachable2x2, hasLedgeInBody, findLedgeLanding } from './astar-layer-helpers';
 

@@ -2,7 +2,7 @@
 /**
  * Stick calibration cards for the HID Calibration Wizard.
  */
-import type { InputItem, IdleRecordResult, StickSide } from '../types';
+import type { InputItem, IdleRecordResult, StickSide } from '../hid-calibration.type';
 
 interface StickCardsProps {
   items: InputItem[];

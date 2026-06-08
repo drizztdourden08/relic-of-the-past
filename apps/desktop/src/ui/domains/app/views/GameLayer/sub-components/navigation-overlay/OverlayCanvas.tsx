@@ -4,7 +4,7 @@ import { useNavigationOverlayStore } from '../../../../../../../stores/navigatio
 import { useGameUIStore } from '../../../../../../../stores/game-ui-store';
 import { wasmGetViewportInfo, wasmGetLiveSprites } from '../../../../../../../lib/game';
 import type { ReachState } from '@shared/game/navigation/types';
-import type { Props, MouseState } from './types';
+import type { Props, MouseState } from './navigation-overlay.type';
 import { buildDrawContext } from './draw/draw-context';
 import { drawReachableDots } from './draw/draw-dots';
 import { drawPathPreview } from './draw/draw-path';

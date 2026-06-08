@@ -6,7 +6,7 @@ import { classifyTileAttr } from '@shared/game/navigation/tile-classification';
 import { getTileAttrsMap, getAttrLabel } from '@shared/game/navigation/tile-attrs';
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { ReachState } from '@shared/game/navigation/types';
-import type { MouseState } from './types';
+import type { MouseState } from './navigation-overlay.type';
 import { TileTooltipContent, type TooltipData } from './tooltip';
 import { mouseEventToTile } from './tile-inspector-coords';
 import { useRectSelection } from './tile-inspector-rect-selection';

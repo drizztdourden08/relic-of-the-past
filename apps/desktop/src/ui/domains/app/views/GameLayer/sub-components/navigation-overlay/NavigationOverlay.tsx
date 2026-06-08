@@ -2,7 +2,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useNavigationOverlayStore } from '../../../../../../../stores/navigation-overlay-store';
 import { useGameUIStore } from '../../../../../../../stores/game-ui-store';
-import type { Props, MouseState } from './types';
+import type { Props, MouseState } from './navigation-overlay.type';
 import { OverlayCanvas } from './OverlayCanvas';
 import { TileInspector } from './TileInspector';
 import { PathControlsLegend } from './PathControlsLegend';

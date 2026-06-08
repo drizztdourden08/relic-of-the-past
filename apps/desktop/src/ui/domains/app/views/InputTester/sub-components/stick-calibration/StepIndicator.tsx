@@ -3,7 +3,7 @@
  * StepIndicator — numbered step progress for the calibration wizard.
  */
 
-import type { Step } from './types';
+import type { Step } from './stick-calibration.type';
 
 interface StepIndicatorProps {
   currentStep: Step;

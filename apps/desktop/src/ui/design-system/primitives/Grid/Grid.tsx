@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import './Grid.css';
 import type { CSSProperties } from 'react';
-import type { GridProps } from './types';
+import type { GridProps } from './Grid.type';
 
 const Grid = (props: GridProps) => {
   const { columns, minColWidth, gap, className = '', style, children, ...rest } = props;

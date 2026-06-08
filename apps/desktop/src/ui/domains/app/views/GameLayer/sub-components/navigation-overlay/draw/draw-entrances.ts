@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { DrawContext } from './draw-context';
-import { EDGE_COLORS } from '../types';
+import { EDGE_COLORS } from '../navigation-overlay.type';
 import { getEntranceIcon } from '../../../../../../../../lib/entrance-icons';
 
 const iconImageCache = new Map<string, HTMLImageElement>();

@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind hook */
 /** Load/persist + screen- and point-level review state for NavReviewPanel. */
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { NavReviewData, ScreenReview, PointReview, ReviewStatus } from './types';
+import type { NavReviewData, ScreenReview, PointReview, ReviewStatus } from './nav-review.type';
 
 const useNavReview = (locationKey: string) => {
   const [reviewData, setReviewData] = useState<NavReviewData>({});

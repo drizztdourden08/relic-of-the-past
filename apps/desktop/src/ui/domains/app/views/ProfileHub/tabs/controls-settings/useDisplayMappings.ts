@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 import type { InputProfile, DetectedDevice } from '@shared/types/controls';
 import { SNES_BUTTONS } from '@shared/types/controls';
 import { findDeviceProfileByVidPid } from '@shared/input';
-import { padHex } from './types';
+import { padHex } from './controls-settings.type';
 
 interface UseDisplayMappingsArgs {
   activeProfile: InputProfile | null;

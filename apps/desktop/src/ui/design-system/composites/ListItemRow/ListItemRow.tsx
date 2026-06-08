@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import './ListItemRow.css';
-import type { ListItemRowProps } from './types';
+import type { ListItemRowProps } from './ListItemRow.type';
 
 const ListItemRow = (props: ListItemRowProps) => {
   const { name, icon, meta, action, selected, onClick, onDoubleClick, className = '' } = props;

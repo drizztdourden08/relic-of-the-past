@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind constants */
-import type { PortalLayer } from './types';
+import type { PortalLayer } from './Portal.type';
 
 const LAYERS: Record<PortalLayer, number> = {
   overlay: 100,

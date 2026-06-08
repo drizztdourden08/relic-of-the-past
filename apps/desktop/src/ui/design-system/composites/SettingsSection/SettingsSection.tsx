@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 ﻿import type { ReactNode } from 'react';
 import './SettingsSection.css';
-import { type SettingsSectionProps } from './types';
+import { type SettingsSectionProps } from './SettingsSection.type';
 
 
 const SettingsSection = (props: SettingsSectionProps) => {

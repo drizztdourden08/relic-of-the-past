@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import '../TextInput/TextInput.css';
-import type { NumberInputProps } from './types';
+import type { NumberInputProps } from './NumberInput.type';
 
 const NumberInput = (props: NumberInputProps) => {
   const { onChange, className = '', ...rest } = props;

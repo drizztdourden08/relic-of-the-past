@@ -3,7 +3,7 @@
 import type React from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import type { ToastItem } from '../../../../../design-system/primitives/Toast';
-import type { ProfileHubProps } from '../types';
+import type { ProfileHubProps } from '../ProfileHub.type';
 import { pushLiveSettings, LIVE_SETTINGS, getInputManager } from '../../../../../../lib/game';
 import { useHudSettingsStore } from '../../../../../../stores/hud-settings-store';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';

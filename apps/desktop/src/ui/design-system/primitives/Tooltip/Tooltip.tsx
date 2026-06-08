@@ -2,7 +2,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { Portal } from '../Portal';
 import './Tooltip.css';
-import type { TooltipProps } from './types';
+import type { TooltipProps } from './Tooltip.type';
 
 const Tooltip = (props: TooltipProps) => {
   const { content, placement = 'top', children, className = '' } = props;

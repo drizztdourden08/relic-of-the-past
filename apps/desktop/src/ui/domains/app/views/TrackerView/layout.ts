@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import type { PanelSide, PanelSettings, TrackerLayoutSettings } from './types';
-import { STORAGE_KEY } from './constants';
+import type { PanelSide, PanelSettings, TrackerLayoutSettings } from './TrackerView.type';
+import { STORAGE_KEY } from './TrackerView.constants';
 
 const defaultPanel = (side: PanelSide = 'right', x = 100, y = 100): PanelSettings => {
   return { mode: 'docked', side, opacity: 1.0, x, y };

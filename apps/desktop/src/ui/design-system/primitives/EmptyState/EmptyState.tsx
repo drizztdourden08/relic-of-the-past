@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import './EmptyState.css';
-import type { EmptyStateProps } from './types';
+import type { EmptyStateProps } from './EmptyState.type';
 
 const EmptyState = (props: EmptyStateProps) => {
   const { message, icon, action, className = '' } = props;

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind data */
-import type { WidgetDefinition, WidgetVisibility, SnapSide } from './types';
+import type { WidgetDefinition, WidgetVisibility, SnapSide } from './Widget.type';
 
 /** Pixels reserved for the app titlebar */
 const TITLEBAR_HEIGHT = 38;

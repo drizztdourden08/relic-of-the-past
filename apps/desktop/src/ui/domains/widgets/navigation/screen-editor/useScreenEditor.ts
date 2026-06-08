@@ -2,7 +2,7 @@
 /** Composes the ScreenEditor form-state and derived/codegen hooks into one bundle. */
 import { useScreenEditorForm } from './useScreenEditorForm';
 import { useScreenEditorDerived } from './useScreenEditorDerived';
-import type { ScreenEditorProps } from './types';
+import type { ScreenEditorProps } from './screen-editor.type';
 
 const useScreenEditor = (props: ScreenEditorProps) => {
   const form = useScreenEditorForm(props);

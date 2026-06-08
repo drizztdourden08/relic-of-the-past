@@ -5,9 +5,9 @@
  */
 import { useCallback } from 'react';
 import { DEVICE_PROFILES, findDeviceProfileByVidPid } from '@shared/input';
-import type { HidAxisMapping, HidButtonMapping, HidControllerMap, StickCandidate, StickSide, TriggerSide } from '../types';
+import type { HidAxisMapping, HidButtonMapping, HidControllerMap, StickCandidate, StickSide, TriggerSide } from '../hid-calibration.type';
 import type { ActionDeps } from './action-deps';
-import { ANALOG_THRESHOLD_DELTA, STICK_IDS, TRIGGER_IDS } from '../constants';
+import { ANALOG_THRESHOLD_DELTA, STICK_IDS, TRIGGER_IDS } from '../hid-calibration.constants';
 import { findCounterBytes, hex, popcount } from '../hid-analysis';
 import { finalizeStickCalibration, resetStick, finalizeTriggerCalibration, resetTrigger } from '../stick-trigger-handlers';
 

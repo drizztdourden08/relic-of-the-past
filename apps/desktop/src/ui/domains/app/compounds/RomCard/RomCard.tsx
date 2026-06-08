@@ -4,7 +4,7 @@ import { Button } from '../../../../design-system/primitives/Button';
 import { IconButton } from '../../../../design-system/primitives/IconButton';
 import { formatRomName, formatSize } from './behavior/formatters';
 import './RomCard.css';
-import { type RomCardProps } from './types';
+import { type RomCardProps } from './RomCard.type';
 
 
 const RomCard = (props: RomCardProps) => {

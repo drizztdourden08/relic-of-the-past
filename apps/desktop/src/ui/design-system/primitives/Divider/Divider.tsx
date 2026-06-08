@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import './Divider.css';
-import type { DividerProps } from './types';
+import type { DividerProps } from './Divider.type';
 
 const Divider = (props: DividerProps) => {
   const { orientation = 'horizontal', className = '' } = props;

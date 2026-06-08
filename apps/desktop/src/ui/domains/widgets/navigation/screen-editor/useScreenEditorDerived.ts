@@ -8,7 +8,7 @@ import type { ScreenCodegenInput } from '@shared/game/data/screen-codegen';
 import { AREAS } from '@shared/game/data/screens/areas';
 import { LOCATIONS } from '@shared/game/data/screens/locations';
 import { getDungeonPrefix } from './screen-editor-constants';
-import type { ScreenEditorProps } from './types';
+import type { ScreenEditorProps } from './screen-editor.type';
 import type { useScreenEditorForm } from './useScreenEditorForm';
 
 type Form = ReturnType<typeof useScreenEditorForm>;

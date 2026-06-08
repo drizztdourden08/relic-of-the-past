@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import './Flex.css';
-import type { FlexProps } from './types';
+import type { FlexProps } from './Flex.type';
 
 const Flex = (props: FlexProps) => {
   const { direction = 'row', gap, align, justify, wrap, inline, as: Tag = 'div', className = '', children, ...rest } = props;

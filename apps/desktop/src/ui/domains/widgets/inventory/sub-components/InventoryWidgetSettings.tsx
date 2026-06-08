@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import type { InventoryViewMode } from '@shared/game/items/sprites';
 import { SegmentedControl } from '../../../../design-system/primitives';
-import { STORAGE_KEY, VIEW_OPTIONS } from '../constants';
+import { STORAGE_KEY, VIEW_OPTIONS } from '../inventory.constants';
 
 const InventoryWidgetSettings = () => {
   const [viewMode, setViewMode] = useState<InventoryViewMode>(() => {

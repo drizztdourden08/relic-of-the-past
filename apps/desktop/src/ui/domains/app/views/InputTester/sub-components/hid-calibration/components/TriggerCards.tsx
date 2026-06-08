@@ -2,8 +2,8 @@
 /**
  * Trigger calibration cards for the HID Calibration Wizard.
  */
-import type { InputItem, IdleRecordResult, TriggerSide } from '../types';
-import { TRIGGER_IDS } from '../constants';
+import type { InputItem, IdleRecordResult, TriggerSide } from '../hid-calibration.type';
+import { TRIGGER_IDS } from '../hid-calibration.constants';
 
 interface TriggerCardsProps {
   items: InputItem[];

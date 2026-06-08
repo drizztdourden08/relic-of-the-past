@@ -2,7 +2,7 @@
 /** Reusable input controls for NavReviewPanel: status row, requirement editor, transit picker. */
 import { useState } from 'react';
 import { TextInput, NativeSelect } from '../../../../design-system/primitives';
-import type { ReviewStatus } from './types';
+import type { ReviewStatus } from './nav-review.type';
 import { STATUS_BTNS, REQUIREMENT_OPTIONS, S } from './nav-review-styles';
 
 const StatusRow = ({ status, comment, onStatus, onComment }: { status: ReviewStatus; comment?: string; onStatus: (s: ReviewStatus) => void; onComment: (c: string) => void }) => {

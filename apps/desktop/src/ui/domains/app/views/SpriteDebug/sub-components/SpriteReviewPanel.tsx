@@ -6,7 +6,7 @@ import {
   CATEGORY_ORDER,
 } from '@shared/game/sprites';
 import type { SpriteCategory } from '@shared/game/sprites';
-import type { ReviewStatus, ReviewData } from '../types';
+import type { ReviewStatus, ReviewData } from '../SpriteDebug.type';
 import { CategoryButton, FilterBtns, Stats } from './ReviewControls';
 import { SpriteImageCard } from './ReviewCards';
 import { S } from '../styles';

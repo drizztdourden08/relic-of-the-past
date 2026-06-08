@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import type { WidgetDefinition, WidgetState, WidgetLayout } from '../types';
-import { WIDGET_DEFINITIONS } from '../constants';
+import type { WidgetDefinition, WidgetState, WidgetLayout } from '../Widget.type';
+import { WIDGET_DEFINITIONS } from '../Widget.constants';
 
 const createDefaultWidgetState = (def: WidgetDefinition, order = 0): WidgetState => {
   return {

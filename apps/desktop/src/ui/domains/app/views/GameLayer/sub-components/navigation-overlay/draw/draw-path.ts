@@ -2,7 +2,7 @@
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { ReachState } from '@shared/game/navigation/types';
 import type { DrawContext } from './draw-context';
-import type { MouseState } from '../types';
+import type { MouseState } from '../navigation-overlay.type';
 import { findNearest2x2Goal, findPath2x2FromLink } from '../pathfinding';
 
 const drawPathPreview = (dc: DrawContext, mouseState: MouseState, result: FloodFillResult, vp: { linkX: number; linkY: number }, setLockedPath: (path: { row: number; col: number; attr: number }[] | null) => void): void => {

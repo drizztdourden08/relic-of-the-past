@@ -3,7 +3,7 @@
 import { IconButton } from '../../../../design-system/primitives/IconButton';
 import { formatDate, formatRomName } from './behavior/formatters';
 import './ProfileCard.css';
-import { type ProfileCardProps } from './types';
+import { type ProfileCardProps } from './ProfileCard.type';
 
 
 const ProfileCard = (props: ProfileCardProps) => {

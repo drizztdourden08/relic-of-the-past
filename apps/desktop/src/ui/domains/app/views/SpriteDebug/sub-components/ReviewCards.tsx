@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { TextInput } from '../../../../../design-system/primitives';
-import type { ReviewEntry, ReviewStatus } from '../types';
+import type { ReviewEntry, ReviewStatus } from '../SpriteDebug.type';
 import type { SpriteManifestEntry } from '@shared/game/sprites';
 import { StatusBtns } from './ReviewControls';
 import { S } from '../styles';

@@ -3,8 +3,8 @@
  * Signal processing for gyro, stick, and trigger calibration frames.
  * Called from the report subscription effect in useHidCalibration.
  */
-import type { StickCandidate } from './types';
-import { STICK_RANGE_THRESHOLD, STICK_STABLE_FRAMES, TRIGGER_RANGE_THRESHOLD, TRIGGER_STABLE_FRAMES } from './constants';
+import type { StickCandidate } from './hid-calibration.type';
+import { STICK_RANGE_THRESHOLD, STICK_STABLE_FRAMES, TRIGGER_RANGE_THRESHOLD, TRIGGER_STABLE_FRAMES } from './hid-calibration.constants';
 import { findCounterBytes } from './hid-analysis';
 
 // ── Gyro Processing ─────────────────────────────────────────────────────────

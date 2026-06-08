@@ -9,7 +9,7 @@
  *  4. STICKS: rotate each stick in full circle → auto-detect 2 bytes with largest range.
  *  5. BUTTONS: auto-detect presses using only non-excluded bytes.
  */
-import type { HidAxisMapping, HidButtonMapping, HidControllerMap } from './hid-calibration/types';
+import type { HidAxisMapping, HidButtonMapping, HidControllerMap } from './hid-calibration/hid-calibration.type';
 import { useHidCalibration } from './hid-calibration/hooks';
 import {
   ProfileSelector, PrereqCards, StickCards, TriggerCards,
@@ -169,5 +169,5 @@ export type {
   HidAxisMapping,
   HidButtonMapping,
   HidControllerMap,
-} from './hid-calibration/types';
-export type { IdleByteAnalysis, IdleRecordResult } from './hid-calibration/types';
+} from './hid-calibration/hid-calibration.type';
+export type { IdleByteAnalysis, IdleRecordResult } from './hid-calibration/hid-calibration.type';

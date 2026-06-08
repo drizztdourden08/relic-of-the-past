@@ -1,3 +1,3 @@
 /* @layer renderer-components @kind barrel */
 export { StatRow } from './StatRow';
-export type { StatRowProps } from './types';
+export type { StatRowProps } from './StatRow.type';

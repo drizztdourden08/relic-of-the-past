@@ -13,7 +13,7 @@ import { Button, StatusBadge } from '../../../design-system/primitives';
 import { useScreenEditor } from './screen-editor/useScreenEditor';
 import { ScreenEditorFieldsTop } from './screen-editor/ScreenEditorFieldsTop';
 import { ScreenEditorFieldsBottom } from './screen-editor/ScreenEditorFieldsBottom';
-import type { ScreenEditorProps } from './screen-editor/types';
+import type { ScreenEditorProps } from './screen-editor/screen-editor.type';
 import './ScreenEditorDialog.css';
 
 const ScreenEditorDialog = (props: ScreenEditorProps) => {

@@ -4,7 +4,7 @@ import { IconButton } from '../../../../../../design-system/primitives/IconButto
 import { EmptyState } from '../../../../../../design-system/primitives/EmptyState';
 import { ListItemRow } from '../../../../../../design-system/composites/ListItemRow';
 import { formatBytes } from '../../../../../../../utils/formatBytes';
-import type { MsuPack } from './types';
+import type { MsuPack } from './msu.type';
 
 interface MsuPackListProps {
   packs: MsuPack[];

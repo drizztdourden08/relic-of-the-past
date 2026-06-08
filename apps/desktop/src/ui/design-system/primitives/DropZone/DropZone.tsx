@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 ﻿import { useState, useRef, useCallback, type DragEvent } from 'react';
 import './DropZone.css';
-import { type DropZoneProps } from './types';
+import { type DropZoneProps } from './DropZone.type';
 
 
 const DropZone = (props: DropZoneProps) => {

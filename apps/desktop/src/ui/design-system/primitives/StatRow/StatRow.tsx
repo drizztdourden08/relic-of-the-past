@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import './StatRow.css';
-import type { StatRowProps } from './types';
+import type { StatRowProps } from './StatRow.type';
 
 const StatRow = (props: StatRowProps) => {
   const { label, value, mono, className = '' } = props;

@@ -5,7 +5,7 @@
  */
 import { useState, useEffect, useRef } from 'react';
 import { subscribe, getEntries, CHANNEL_COLORS, type LogEntry } from '../../../../lib/log-bus';
-import { MAX_ENTRIES } from './constants';
+import { MAX_ENTRIES } from './logs.constants';
 import { formatTime } from './behavior/formatTime';
 
 const LogsWidgetContent = () => {

@@ -8,8 +8,8 @@
  *     (provided by the View tier) so this bare composite never imports IPC directly.
  */
 
-import type { WidgetLayout, WidgetState } from '../types';
-import { WIDGET_DEFINITIONS } from '../constants';
+import type { WidgetLayout, WidgetState } from '../Widget.type';
+import { WIDGET_DEFINITIONS } from '../Widget.constants';
 import { createDefaultLayout, createDefaultWidgetState } from './createWidgetState';
 
 /** Persistence round-trip injected by the View tier (keeps IPC out of the composite). */

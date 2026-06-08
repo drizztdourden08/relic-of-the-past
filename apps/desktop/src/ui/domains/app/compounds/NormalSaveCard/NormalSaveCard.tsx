@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState, useRef } from 'react';
 import { TextInput } from '../../../../design-system/primitives/TextInput';
-import type { NormalSaveCardProps } from './types';
+import type { NormalSaveCardProps } from './NormalSaveCard.type';
 import './NormalSaveCard.css';
 
 const NormalSaveCard = (props: NormalSaveCardProps) => {

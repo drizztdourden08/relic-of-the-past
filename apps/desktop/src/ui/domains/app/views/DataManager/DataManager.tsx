@@ -9,7 +9,7 @@ import { Spinner } from '../../../../design-system/primitives/Spinner';
 import { ListItemRow } from '../../../../design-system/composites/ListItemRow';
 import './DataManager.css';
 import './DataManager.detail.css';
-import type { DataTab, DataManagerProps } from './types';
+import type { DataTab, DataManagerProps } from './DataManager.type';
 
 
 

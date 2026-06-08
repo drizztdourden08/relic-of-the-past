@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Select } from '../../../../../../design-system/primitives/Select';
 import { formatBytes } from '../../../../../../../utils/formatBytes';
-import type { TrackRowProps } from './types';
+import type { TrackRowProps } from './msu.type';
 
 const TrackRow = (props: TrackRowProps) => {
   const { trackNum, description, fileName, fileSize, options, onAssign } = props;

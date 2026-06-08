@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import './Spacer.css';
-import type { SpacerProps } from './types';
+import type { SpacerProps } from './Spacer.type';
 
 /** Fixed gap (when `size` given) or a flexible filler (default) inside a flex container. */
 const Spacer = (props: SpacerProps) => {

@@ -9,8 +9,8 @@ import { Portal } from '../../../primitives/Portal';
 import { Checkbox } from '../../../primitives/Checkbox';
 import { SegmentedControl } from '../../../primitives/SegmentedControl';
 import { Slider } from '../../../primitives/Slider';
-import type { WidgetState, SnapSide, WidgetMode } from '../types';
-import { POSITION_OPTIONS } from '../constants';
+import type { WidgetState, SnapSide, WidgetMode } from '../Widget.type';
+import { POSITION_OPTIONS } from '../Widget.constants';
 
 type PositionValue = 'left' | 'right' | 'top' | 'bottom' | 'float';
 

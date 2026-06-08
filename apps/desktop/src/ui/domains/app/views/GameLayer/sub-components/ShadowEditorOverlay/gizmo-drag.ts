@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { HeightmapElement, LightSource } from '@shared/types/shadow-casting';
 import type { GizmoPart } from '../shadow-editor/gizmos';
-import type { GizmoStart } from './types';
+import type { GizmoStart } from './ShadowEditorOverlay.type';
 
 type Point = { x: number; y: number };
 type UpdateHeightmap = (screenId: number, id: string, patch: Partial<HeightmapElement>) => void;

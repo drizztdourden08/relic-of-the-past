@@ -2,7 +2,7 @@
 /**
  * Live byte grid visualization for the HID Calibration Wizard.
  */
-import type { ByteStatus, GyroState } from '../types';
+import type { ByteStatus, GyroState } from '../hid-calibration.type';
 import { hex } from '../hid-analysis';
 import type { ByteColorResult } from '../wizard-helpers';
 

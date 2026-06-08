@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind data */
 ﻿import './Toggle.css';
-import { type ToggleProps } from './types';
+import { type ToggleProps } from './Toggle.type';
 
 
 const Toggle = (props: ToggleProps) => {

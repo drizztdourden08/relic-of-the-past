@@ -4,7 +4,7 @@
  * Handles local persistence + profile-based save/load.
  */
 import { useState, useCallback, useEffect, useRef } from 'react';
-import type { WidgetLayout, WidgetState } from '../types';
+import type { WidgetLayout, WidgetState } from '../Widget.type';
 import { loadLayoutLocal, saveLayoutLocal, loadLayoutForProfile, saveLayoutForProfile, updateWidget } from './widgetStore';
 import type { WidgetPersistenceIO } from './widgetStore';
 import { createDefaultWidgetState, getWidgetDefinition } from './createWidgetState';

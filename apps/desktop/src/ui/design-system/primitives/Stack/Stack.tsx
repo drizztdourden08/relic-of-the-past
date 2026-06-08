@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Flex } from '../Flex';
-import type { StackProps } from './types';
+import type { StackProps } from './Stack.type';
 
 /** Vertical stack — a Flex preset (direction=column, gap defaults to md). */
 const Stack = (props: StackProps) => {

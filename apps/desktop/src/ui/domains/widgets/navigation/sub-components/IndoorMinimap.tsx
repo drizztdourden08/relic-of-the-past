@@ -5,7 +5,7 @@ import type { ConnectionInfo, ScreenBundle, FloodFillResult } from '@shared/game
 import { getEntranceIcon } from '../../../../../lib/entrance-icons';
 import { wasmGetRoomLayoutInfo } from '../../../../../lib/game';
 import { useNavigationOverlayStore } from '../../../../../stores/navigation-overlay-store';
-import { EDGE_COLORS } from '../constants';
+import { EDGE_COLORS } from '../navigation.constants';
 import { getScreenDisplayName } from '../widget-helpers';
 import { ReachabilityCanvas } from './ReachabilityCanvas';
 

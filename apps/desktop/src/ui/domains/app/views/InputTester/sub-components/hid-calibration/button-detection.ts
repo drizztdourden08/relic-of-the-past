@@ -3,8 +3,8 @@
  * Button and axis detection from raw HID report frames.
  * Handles the waiting-press / confirming-press / waiting-release state machine.
  */
-import type { AxisSubStep, ButtonDiff, CaptureState, HidAxisMapping, HidButtonMapping, InputItem } from './types';
-import { ANALOG_THRESHOLD_DELTA, CONFIRM_FRAMES } from './constants';
+import type { AxisSubStep, ButtonDiff, CaptureState, HidAxisMapping, HidButtonMapping, InputItem } from './hid-calibration.type';
+import { ANALOG_THRESHOLD_DELTA, CONFIRM_FRAMES } from './hid-calibration.constants';
 import { findAxisBytes, findButtonBits, popcount } from './hid-analysis';
 
 interface ButtonRefs {

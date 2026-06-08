@@ -11,8 +11,8 @@ import type {
   AxisSubStep, ByteStatus, CaptureState, GyroState, HidButtonMapping, HidControllerMap,
   IdleRecordResult, IdleState, InputItem, Phase,
   StickCandidate, StickSide, TriggerSide,
-} from '../types';
-import { STICK_IDS, TRIGGER_IDS } from '../constants';
+} from '../hid-calibration.type';
+import { STICK_IDS, TRIGGER_IDS } from '../hid-calibration.constants';
 import { processGyroFrame, processStickFrame, processTriggerFrame } from '../report-processing';
 import { processButtonFrame } from '../button-detection';
 import { computeByteStatuses, getInstructionText, getByteColor } from '../wizard-helpers';

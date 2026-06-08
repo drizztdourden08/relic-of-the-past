@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 /** IPC data fetchers for the Home tab. Each returns null on error (caller keeps prior state). */
 import type { NormalSaveInfo, AutoSaveInfo } from '@shared/types/saves';
-import type { SlotInfo } from './types';
+import type { SlotInfo } from './home-tab.type';
 import { QUICK_SAVE_SLOTS } from './home-tab-helpers';
 
 const fetchQuickSlots = async (profileId: string): Promise<SlotInfo[] | null> => {

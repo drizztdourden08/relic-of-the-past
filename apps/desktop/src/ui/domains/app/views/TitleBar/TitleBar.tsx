@@ -8,7 +8,7 @@ import { buildTitleBarMenuItems } from './title-bar-menu';
 import { WindowControls } from './sub-components/WindowControls';
 import { getFps } from '../../../../../lib/game';
 import './TitleBar.css';
-import type { TitleBarProps } from './types';
+import type { TitleBarProps } from './TitleBar.type';
 
 
 const TitleBar = (props: TitleBarProps) => {

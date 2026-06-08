@@ -2,8 +2,8 @@
 /**
  * Button and axis mapping grid for the HID Calibration Wizard.
  */
-import type { AxisSubStep, CaptureState, InputItem } from '../types';
-import { STICK_IDS, TRIGGER_IDS } from '../constants';
+import type { AxisSubStep, CaptureState, InputItem } from '../hid-calibration.type';
+import { STICK_IDS, TRIGGER_IDS } from '../hid-calibration.constants';
 
 interface ButtonMappingProps {
   items: InputItem[];

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import type { WidgetState, SnapSide } from '../types';
-import { TITLEBAR_HEIGHT } from '../constants';
+import type { WidgetState, SnapSide } from '../Widget.type';
+import { TITLEBAR_HEIGHT } from '../Widget.constants';
 
 /** Insets claimed by exclusive docked widgets (pixels) */
 interface ExclusiveInsets {

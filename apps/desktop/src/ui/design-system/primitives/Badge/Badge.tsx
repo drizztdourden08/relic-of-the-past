@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 ﻿import type { ReactNode } from 'react';
 import './Badge.css';
-import { type BadgeVariant, type BadgeProps } from './types';
+import { type BadgeVariant, type BadgeProps } from './Badge.type';
 
 
 

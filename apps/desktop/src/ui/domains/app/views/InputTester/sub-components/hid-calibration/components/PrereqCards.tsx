@@ -2,7 +2,7 @@
 /**
  * Gyro and Idle prerequisite cards for the HID Calibration Wizard.
  */
-import type { GyroState, IdleState } from '../types';
+import type { GyroState, IdleState } from '../hid-calibration.type';
 
 interface PrereqCardsProps {
   hasGyro: boolean;

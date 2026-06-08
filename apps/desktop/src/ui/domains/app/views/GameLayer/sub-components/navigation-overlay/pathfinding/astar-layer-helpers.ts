@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 /** Pure helpers for layer-aware 2×2 pathfinding (stair/ledge body checks). */
 import type { ReachState } from '@shared/game/navigation/types';
-import type { GridPos } from '../types';
+import type { GridPos } from '../navigation-overlay.type';
 import { isTraversalDirCompatible } from './helpers';
 
 const hasStairInBody = (row: number, col: number, reachable: ReachState[][]): boolean => {

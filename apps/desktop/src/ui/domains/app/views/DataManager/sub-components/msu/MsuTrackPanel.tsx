@@ -2,7 +2,7 @@
 import type { SelectOption } from '../../../../../../design-system/primitives/Select';
 import { formatBytes } from '../../../../../../../utils/formatBytes';
 import { TrackRow } from './TrackRow';
-import type { MsuFile, TrackInfo, MatchedTrack } from './types';
+import type { MsuFile, TrackInfo, MatchedTrack } from './msu.type';
 
 interface MsuTrackPanelProps {
   selected: string;

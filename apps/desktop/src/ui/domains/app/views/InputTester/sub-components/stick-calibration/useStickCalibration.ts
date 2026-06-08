@@ -9,8 +9,8 @@ import {
   CENTER_SAMPLE_FRAMES,
   DEFAULT_INNER_DEADZONE,
   DEFAULT_OUTER_DEADZONE,
-} from './types';
-import type { DeviceStickCalibration, Step, StickCalibrationData } from './types';
+} from './stick-calibration.type';
+import type { DeviceStickCalibration, Step, StickCalibrationData } from './stick-calibration.type';
 
 interface Options {
   existingCalibration?: DeviceStickCalibration | null;

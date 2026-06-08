@@ -5,7 +5,7 @@ import { ToastContainer } from '../../../../design-system/primitives/Toast';
 import { useProfileSettings } from './profile-hub/useProfileSettings';
 import { ProfileHubBody } from './profile-hub/ProfileHubBody';
 import './ProfileHub.css';
-import type { ProfileHubProps, ProfileHubTab } from './types';
+import type { ProfileHubProps, ProfileHubTab } from './ProfileHub.type';
 
 const ProfileHub = (props: ProfileHubProps) => {
   const { profile, isGameRunning, onStartGame, onStopGame, onResetGame, activeTab: controlledTab, onTabChange } = props;

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import type { SelectItemProps } from '../types';
+import type { SelectItemProps } from '../Select.type';
 
 const SelectItem = (props: SelectItemProps) => {
   const { option, selected, highlighted, idx, onSelect, renderOption } = props;

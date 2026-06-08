@@ -8,7 +8,7 @@ import { GameplaySettings } from '../tabs/GameplaySettings';
 import { HudSettings } from '../tabs/HudSettings';
 import { ControlsSettings } from '../tabs/ControlsSettings';
 import { HapticsSettings } from '../tabs/HapticsSettings';
-import type { ProfileHubProps, ProfileHubTab } from '../types';
+import type { ProfileHubProps, ProfileHubTab } from '../ProfileHub.type';
 
 interface ProfileHubBodyProps {
   activeTab: ProfileHubTab;

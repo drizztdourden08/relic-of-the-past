@@ -4,7 +4,7 @@ import { formatRelativeTime } from './home-tab/home-tab-helpers';
 import { useHomeTabSaves } from './home-tab/useHomeTabSaves';
 import { HomeTabColumns } from './home-tab/HomeTabColumns';
 import { HomeTabDialogs } from './home-tab/HomeTabDialogs';
-import type { HomeTabProps } from './home-tab/types';
+import type { HomeTabProps } from './home-tab/home-tab.type';
 import './HomeTab.css';
 
 const HomeTab = (props: HomeTabProps) => {

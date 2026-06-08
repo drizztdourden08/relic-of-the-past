@@ -10,7 +10,7 @@ import type { ScreenData } from './hittest';
 import { genId, createShapeFromDrag, finalizeFreehand } from './shapes';
 import { applyHeightmapGizmo, applyLightGizmo } from './gizmo-drag';
 import { detectHover } from './hover';
-import type { GizmoStart } from './types';
+import type { GizmoStart } from './ShadowEditorOverlay.type';
 import type { GizmoPart } from '../shadow-editor/gizmos';
 
 type Tool = 'select' | 'polygon' | 'shape-light' | 'point-light' | 'freehand';

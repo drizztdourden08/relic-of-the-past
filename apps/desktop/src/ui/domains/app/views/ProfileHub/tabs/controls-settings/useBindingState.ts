@@ -15,7 +15,7 @@ import type {
 } from '@shared/types/controls';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { resolveFunctionMappingIcon } from '../../../../../../../lib/input/input-manager';
-import { padHex } from './types';
+import { padHex } from './controls-settings.type';
 
 interface UseBindingStateArgs {
   settings: GameSettings;

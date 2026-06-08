@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import './Checkbox.css';
-import type { CheckboxProps } from './types';
+import type { CheckboxProps } from './Checkbox.type';
 
 const Checkbox = (props: CheckboxProps) => {
   const { checked, onChange, label, disabled, className = '' } = props;

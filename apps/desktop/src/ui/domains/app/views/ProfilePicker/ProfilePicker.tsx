@@ -5,7 +5,7 @@ import { RomCard } from '../../compounds/RomCard';
 import { CreateProfileForm } from '../../compounds/CreateProfileForm';
 import { Button } from '../../../../design-system/primitives/Button';
 import './ProfilePicker.css';
-import type { ProfilePickerProps } from './types';
+import type { ProfilePickerProps } from './ProfilePicker.type';
 
 
 const ProfilePicker = (props: ProfilePickerProps) => {

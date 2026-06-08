@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Flex } from '../Flex';
-import type { CenterProps } from './types';
+import type { CenterProps } from './Center.type';
 
 /** Centers its children on both axes — a Flex preset. */
 const Center = (props: CenterProps) => {

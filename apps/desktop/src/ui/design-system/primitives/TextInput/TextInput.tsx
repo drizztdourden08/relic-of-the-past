@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { forwardRef } from 'react';
 import './TextInput.css';
-import { type TextInputProps } from './types';
+import { type TextInputProps } from './TextInput.type';
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, ref) => {
   const { className = '', ...rest } = props;

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import './ProgressBar.css';
-import type { ProgressBarProps } from './types';
+import type { ProgressBarProps } from './ProgressBar.type';
 
 const pct = (value: number, max: number): string => `${Math.max(0, Math.min(100, (value / max) * 100))}%`;
 

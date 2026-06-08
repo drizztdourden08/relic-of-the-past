@@ -3,7 +3,7 @@
  * Stick and trigger calibration handler logic.
  * Pure functions that implement the finalization and control flow for analog axes.
  */
-import type { HidAxisMapping, InputItem, InputStatus, StickCandidate, StickSide, TriggerSide } from './types';
+import type { HidAxisMapping, InputItem, InputStatus, StickCandidate, StickSide, TriggerSide } from './hid-calibration.type';
 import { findCounterBytes } from './hid-analysis';
 
 // ── Stick Finalization ──────────────────────────────────────────────────────

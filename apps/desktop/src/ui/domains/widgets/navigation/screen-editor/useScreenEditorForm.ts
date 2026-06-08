@@ -9,7 +9,7 @@ import { LOCATIONS } from '@shared/game/data/screens/locations';
 import { DUNGEON_META, getDungeonName } from '@shared/game/data/screens/game-values';
 import { slugify } from './screen-editor-constants';
 import { applyPrefill } from './screen-editor-prefill';
-import type { ScreenEditorProps } from './types';
+import type { ScreenEditorProps } from './screen-editor.type';
 
 const useScreenEditorForm = (props: ScreenEditorProps) => {
   const { open, existingScreen, gameState } = props;

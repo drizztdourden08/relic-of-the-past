@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { ReachState } from '@shared/game/navigation/types';
-import type { GridPos, Rect } from '../types';
+import type { GridPos, Rect } from '../navigation-overlay.type';
 
 const PATH_DIRS: ReadonlyArray<readonly [number, number]> = [
   [-1, 0],

@@ -2,7 +2,7 @@
 import { Portal } from '../Portal';
 import { useSelectDropdown } from './behavior/useSelectDropdown';
 import { SelectItem } from './sub-components/SelectItem';
-import type { SelectProps, SelectOption } from './types';
+import type { SelectProps, SelectOption } from './Select.type';
 import './Select.css';
 
 const Select = (props: SelectProps) => {

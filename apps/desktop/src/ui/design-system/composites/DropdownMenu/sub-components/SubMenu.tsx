@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
-import type { MenuItem } from '../types';
+import type { MenuItem } from '../DropdownMenu.type';
 
 interface SubMenuProps {
   item: MenuItem;

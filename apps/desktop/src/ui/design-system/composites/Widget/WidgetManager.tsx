@@ -9,7 +9,7 @@
  *  - Provide update/close callbacks that propagate to store
  */
 import { useMemo, useCallback, useEffect } from 'react';
-import type { WidgetLayout, WidgetState } from './types';
+import type { WidgetLayout, WidgetState } from './Widget.type';
 import { Widget } from './Widget';
 import { computeDockedStyles } from './behavior/computeDockedStyles';
 import { useExclusiveInsetsStore } from './behavior/exclusiveInsetsStore';

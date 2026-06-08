@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react/offline';
 import type { ConnectionInfo } from '@shared/game/navigation';
 import { getEntranceIcon } from '../../../../../lib/entrance-icons';
 import { useNavigationOverlayStore } from '../../../../../stores/navigation-overlay-store';
-import { EDGE_COLORS } from '../constants';
+import { EDGE_COLORS } from '../navigation.constants';
 import { getScreenDisplayName } from '../widget-helpers';
 import { ReachabilityCanvas } from './ReachabilityCanvas';
 import type { MinimapProps } from './IndoorMinimap';

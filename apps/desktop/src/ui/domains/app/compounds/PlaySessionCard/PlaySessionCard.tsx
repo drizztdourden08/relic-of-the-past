@@ -2,7 +2,7 @@
 ﻿import type { PlaySession } from '@shared/types/session';
 import { formatSessionDate, formatDuration } from './behavior/formatters';
 import './PlaySessionCard.css';
-import { type PlaySessionCardProps } from './types';
+import { type PlaySessionCardProps } from './PlaySessionCard.type';
 
 
 const PlaySessionCard = (props: PlaySessionCardProps) => {

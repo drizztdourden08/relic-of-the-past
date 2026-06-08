@@ -7,7 +7,7 @@ import { MasterDetailLayout } from '../../../../../design-system/composites/Mast
 import { useMsuManager } from './msu/useMsuManager';
 import { MsuPackList } from './msu/MsuPackList';
 import { MsuTrackPanel } from './msu/MsuTrackPanel';
-import type { MsuManagerProps } from './msu/types';
+import type { MsuManagerProps } from './msu/msu.type';
 
 const MsuManager = (props: MsuManagerProps) => {
   const { onDeleteConfirm, onRefresh } = props;

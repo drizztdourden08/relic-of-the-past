@@ -15,7 +15,7 @@ import type {
   StickCandidate,
   StickSide,
   TriggerSide,
-} from '../types';
+} from '../hid-calibration.type';
 
 interface ActionDeps {
   // State

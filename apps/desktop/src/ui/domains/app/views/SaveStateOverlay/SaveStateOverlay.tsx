@@ -5,8 +5,8 @@ import { SaveSlot } from '../../compounds/SaveSlot';
 import { log } from '../../../../../lib/log-bus';
 import type { SlotHint } from './behavior/useEnhancedSaveSlot';
 import './SaveStateOverlay.css';
-import type { SaveStateOverlayProps, SlotInfo } from './types';
-import { SLOT_COUNT, SHORTCUT_KEYS, ANIM_MS } from './constants';
+import type { SaveStateOverlayProps, SlotInfo } from './SaveStateOverlay.type';
+import { SLOT_COUNT, SHORTCUT_KEYS, ANIM_MS } from './SaveStateOverlay.constants';
 
 
 const SaveStateOverlay = (props: SaveStateOverlayProps) => {

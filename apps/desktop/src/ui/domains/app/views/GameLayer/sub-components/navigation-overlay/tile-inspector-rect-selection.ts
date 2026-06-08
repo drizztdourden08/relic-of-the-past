@@ -4,7 +4,7 @@ import type React from 'react';
 import { useState, useCallback } from 'react';
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { wasmGetViewportInfo } from '../../../../../../../lib/game';
-import type { GridPos } from './types';
+import type { GridPos } from './navigation-overlay.type';
 
 interface RectSelectionParams {
   mouseToTile: (e: React.MouseEvent<HTMLDivElement>) => GridPos | null;

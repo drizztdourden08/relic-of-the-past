@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 ﻿import { IconButton } from '../../primitives/IconButton';
 import './FullScreenLayer.css';
-import { type FullScreenLayerProps } from './types';
+import { type FullScreenLayerProps } from './FullScreenLayer.type';
 
 
 const FullScreenLayer = (props: FullScreenLayerProps) => {

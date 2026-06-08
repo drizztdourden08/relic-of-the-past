@@ -3,7 +3,7 @@
 import type React from 'react';
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { wasmGetViewportInfo } from '../../../../../../../lib/game';
-import type { GridPos } from './types';
+import type { GridPos } from './navigation-overlay.type';
 
 const mouseEventToTile = (
   e: React.MouseEvent<HTMLDivElement>,

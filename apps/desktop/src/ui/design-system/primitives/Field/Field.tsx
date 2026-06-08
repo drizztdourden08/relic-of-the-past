@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import './Field.css';
-import type { FieldProps } from './types';
+import type { FieldProps } from './Field.type';
 
 const Field = (props: FieldProps) => {
   const { label, hint, error, htmlFor, required, inline, className = '', children } = props;

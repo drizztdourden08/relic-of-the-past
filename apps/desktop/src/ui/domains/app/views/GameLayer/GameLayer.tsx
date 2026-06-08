@@ -17,7 +17,7 @@ import { GameOverlay } from '../GameOverlay';
 import { useEdgeGlowLoop } from './behavior/useEdgeGlowLoop';
 import { useShadowCastingLoop } from './behavior/useShadowCastingLoop';
 import './GameLayer.css';
-import type { GameLayerProps } from './types';
+import type { GameLayerProps } from './GameLayer.type';
 
 const GameLayer = (props: GameLayerProps) => {
   const { assetData, configIni, profileId, stretch, edgeEffect = true, shadowCasting = false } = props;

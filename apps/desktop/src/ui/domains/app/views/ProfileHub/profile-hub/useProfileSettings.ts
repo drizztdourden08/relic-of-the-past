@@ -7,7 +7,7 @@ import { DEFAULT_SETTINGS, mergeSettings } from '../../../../../../lib/game/sett
 import { pushLiveSettings, LIVE_SETTINGS, getInputManager } from '../../../../../../lib/game';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { log } from '../../../../../../lib/log-bus';
-import type { ProfileHubProps } from '../types';
+import type { ProfileHubProps } from '../ProfileHub.type';
 import { applySettingsSideEffects, syncHudStore } from './apply-settings-effects';
 
 const useProfileSettings = (props: ProfileHubProps) => {

@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { useShadowEditorStore } from '../../../../../../../stores/shadow-editor-store';
 import type { GizmoPart } from '../shadow-editor/gizmos';
 import type { Vp, Point } from './coords';
-import type { GizmoStart, ShadowEditorOverlayProps } from './types';
+import type { GizmoStart, ShadowEditorOverlayProps } from './ShadowEditorOverlay.type';
 import { useOverlayKeyboard } from './useOverlayKeyboard';
 import { useOverlayInteractions } from './useOverlayInteractions';
 import { useOverlayRender } from './useOverlayRender';

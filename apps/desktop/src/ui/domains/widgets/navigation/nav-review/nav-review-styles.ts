@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind logic */
 /** Direction labels/colors, status buttons, requirement options, and styles for NavReviewPanel. */
 import type React from 'react';
-import type { ReviewStatus } from './types';
+import type { ReviewStatus } from './nav-review.type';
 
 const DIR_LABELS: Record<string, string> = { n: '⬆ North', s: '⬇ South', e: '➡ East', w: '⬅ West' };
 const DIR_COLORS: Record<string, string> = { n: '#4488ff', s: '#44ff88', e: '#ff8844', w: '#bb44ff' };

@@ -1,3 +1,3 @@
 /* @layer renderer-components @kind barrel */
 export { HeroSaveCard } from './HeroSaveCard';
-export type { HeroSaveCardProps } from './types';
+export type { HeroSaveCardProps } from './HeroSaveCard.type';

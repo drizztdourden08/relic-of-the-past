@@ -4,7 +4,7 @@ import type { GameSettings } from '@shared/types/settings';
 import { Toggle } from '../../../../design-system/primitives/Toggle';
 import { TextInput } from '../../../../design-system/primitives/TextInput';
 import './SettingsLayout.css';
-import { type SettingItem, type SubSection, type Section, type SettingsLayoutProps } from './types';
+import { type SettingItem, type SubSection, type Section, type SettingsLayoutProps } from './SettingsLayout.type';
 
 // ─── Shared types for section-based settings layouts ───
 

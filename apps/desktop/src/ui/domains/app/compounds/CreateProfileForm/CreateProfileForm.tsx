@@ -4,7 +4,7 @@ import { Button } from '../../../../design-system/primitives/Button';
 import { TextInput } from '../../../../design-system/primitives/TextInput';
 import { NativeSelect } from '../../../../design-system/primitives/Select';
 import './CreateProfileForm.css';
-import { type CreateProfileFormProps } from './types';
+import { type CreateProfileFormProps } from './CreateProfileForm.type';
 
 
 const CreateProfileForm = (props: CreateProfileFormProps) => {

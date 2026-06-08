@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import './SectionHeader.css';
-import type { SectionHeaderProps } from './types';
+import type { SectionHeaderProps } from './SectionHeader.type';
 
 const SectionHeader = (props: SectionHeaderProps) => {
   const { title, subtitle, action, className = '' } = props;

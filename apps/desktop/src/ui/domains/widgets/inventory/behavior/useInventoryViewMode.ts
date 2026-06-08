@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind hook */
 import { useState, useEffect } from 'react';
 import type { InventoryViewMode } from '@shared/game/items/sprites';
-import { STORAGE_KEY } from '../constants';
+import { STORAGE_KEY } from '../inventory.constants';
 
 const useInventoryViewMode = () => {
   const [viewMode, setViewMode] = useState<InventoryViewMode>(() => {

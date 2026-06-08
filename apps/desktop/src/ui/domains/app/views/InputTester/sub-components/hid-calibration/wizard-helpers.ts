@@ -2,8 +2,8 @@
 /**
  * Helper utilities for the HID Calibration Wizard rendering and state.
  */
-import type { AxisSubStep, ByteStatus, CaptureState, GyroState, InputItem } from './types';
-import { AXIS_LABELS } from './constants';
+import type { AxisSubStep, ByteStatus, CaptureState, GyroState, InputItem } from './hid-calibration.type';
+import { AXIS_LABELS } from './hid-calibration.constants';
 
 // ── Byte Status Computation ─────────────────────────────────────────────────
 

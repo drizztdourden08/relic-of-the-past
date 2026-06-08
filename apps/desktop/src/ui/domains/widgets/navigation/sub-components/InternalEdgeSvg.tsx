@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { EDGE_COLORS } from '../constants';
+import { EDGE_COLORS } from '../navigation.constants';
 
 /** Two-square connector glyph showing an internal room-edge transition. */
 const InternalEdgeSvg = ({ edge, fromName, toName }: { edge: string; fromName: string; toName: string }) => {

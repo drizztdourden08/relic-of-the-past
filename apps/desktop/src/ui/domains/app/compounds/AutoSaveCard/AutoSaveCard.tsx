@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind data */
-import type { AutoSaveCardProps } from './types';
+import type { AutoSaveCardProps } from './AutoSaveCard.type';
 import './AutoSaveCard.css';
 
 const AutoSaveCard = (props: AutoSaveCardProps) => {

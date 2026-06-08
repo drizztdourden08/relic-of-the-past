@@ -8,7 +8,7 @@ import { CreditsPage } from '../ui/domains/app/views/ProfileHub/tabs/CreditsTab'
 import { FullScreenLayer } from '../ui/design-system/composites/FullScreenLayer';
 import type { PageId, RomDisplayInfo } from './types';
 import type { GameSettings } from '@shared/types/settings';
-import type { ProfileHubTab } from '../ui/domains/app/views/ProfileHub/types';
+import type { ProfileHubTab } from '../ui/domains/app/views/ProfileHub/ProfileHub.type';
 
 interface PageRouterProps {
   nav: {

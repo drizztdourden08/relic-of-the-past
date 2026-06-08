@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { Portal } from '../Portal';
 import { Toast } from './Toast';
-import type { ToastContainerProps } from './types';
+import type { ToastContainerProps } from './Toast.type';
 
 const ToastContainer = (props: ToastContainerProps) => {
   const { toasts, onDismiss } = props;

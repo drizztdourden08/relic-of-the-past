@@ -2,8 +2,8 @@
 export { Widget } from './Widget';
 export { WidgetManager } from './WidgetManager';
 export { WidgetSettings } from './sub-components/WidgetSettings';
-export type { WidgetState, WidgetLayout, WidgetDefinition, SnapSide, WidgetMode, WidgetVisibility } from './types';
-export { WIDGET_DEFINITIONS, TITLEBAR_HEIGHT } from './constants';
+export type { WidgetState, WidgetLayout, WidgetDefinition, SnapSide, WidgetMode, WidgetVisibility } from './Widget.type';
+export { WIDGET_DEFINITIONS, TITLEBAR_HEIGHT } from './Widget.constants';
 export { createDefaultLayout, getWidgetDefinition, createDefaultWidgetState } from './behavior/createWidgetState';
 export { computeDockedStyles } from './behavior/computeDockedStyles';
 export type { ExclusiveInsets } from './behavior/computeDockedStyles';

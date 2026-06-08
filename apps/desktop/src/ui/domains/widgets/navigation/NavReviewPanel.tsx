@@ -5,7 +5,7 @@
  * controls live in nav-review/*.
  */
 
-import type { NavReviewPanelProps, BorderBundle } from './nav-review/types';
+import type { NavReviewPanelProps, BorderBundle } from './nav-review/nav-review.type';
 import { DIR_LABELS, DIR_COLORS, STATUS_BTNS, S } from './nav-review/nav-review-styles';
 import { StatusRow, RequirementEditor, TransitTypePicker } from './nav-review/nav-review-controls';
 import { useNavReview } from './nav-review/useNavReview';
@@ -172,4 +172,4 @@ const NavReviewPanel = ({ locationKey, bundles, entrances, transitions, borders,
 };
 
 export { NavReviewPanel };
-export type { NavReviewData, ScreenReview, PointReview, BorderBundle } from './nav-review/types';
+export type { NavReviewData, ScreenReview, PointReview, BorderBundle } from './nav-review/nav-review.type';

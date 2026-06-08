@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind component */
 ﻿import { useLayoutEffect, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { type PortalLayer, type PortalProps } from './types';
-import { LAYERS } from './constants';
+import { type PortalLayer, type PortalProps } from './Portal.type';
+import { LAYERS } from './Portal.constants';
 
 
 const getPortalRoot = (): HTMLElement => {

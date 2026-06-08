@@ -7,7 +7,7 @@ import { useState, useCallback } from 'react';
 import type { InputProfile, DetectedDevice } from '@shared/types/controls';
 import { findPresetById } from '@shared/input';
 import { getInputManager } from '../../../../../../../lib/input/input-manager';
-import { padHex } from './types';
+import { padHex } from './controls-settings.type';
 
 interface UseDragDropArgs {
   devices: DetectedDevice[];

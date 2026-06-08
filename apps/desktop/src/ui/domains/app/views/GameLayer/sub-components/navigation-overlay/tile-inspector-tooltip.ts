@@ -2,7 +2,7 @@
 /** Pure tooltip-data helpers for TileInspector (can-pass, sprite list, path-aware placement). */
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { wasmGetViewportInfo, wasmGetLiveSprites } from '../../../../../../../lib/game';
-import type { GridPos, Rect } from './types';
+import type { GridPos, Rect } from './navigation-overlay.type';
 import { findNearest2x2Goal, findPath2x2FromLink } from './pathfinding/astar-2x2';
 import { rectsOverlap, segmentOverlapsRect } from './pathfinding/helpers';
 

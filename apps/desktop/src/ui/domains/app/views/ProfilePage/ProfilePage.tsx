@@ -3,7 +3,7 @@ import { Button } from '../../../../design-system/primitives/Button';
 import { Badge } from '../../../../design-system/primitives/Badge';
 import { formatDate, formatRomName } from './behavior/formatters';
 import './ProfilePage.css';
-import type { ProfilePageProps } from './types';
+import type { ProfilePageProps } from './ProfilePage.type';
 
 
 const ProfilePage = (props: ProfilePageProps) => {

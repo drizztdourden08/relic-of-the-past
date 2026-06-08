@@ -4,7 +4,7 @@
  * For docked widgets, only the "thickness" edge is resizable.
  */
 import { useRef, useCallback } from 'react';
-import type { SnapSide } from '../types';
+import type { SnapSide } from '../Widget.type';
 
 interface Size {
   width: number;
