@@ -13,11 +13,12 @@ import { wasmGetProgressIndicator, wasmGetEntranceRooms, wasmGetExitScreenMap, w
 import { useScreenDataStatus, useConnectionStatus } from './useDatasetStatus';
 import { ScreenEditorDialog } from './ScreenEditorDialog';
 import { ConnectionEditorDialog } from './ConnectionEditorDialog';
-import { StatusBadge } from '../../../design-system/primitives';
+import { Box, Text, StatusBadge } from '../../../design-system/primitives';
 import { useScreenDetection } from './hooks';
 import type { ReviewStatus, ReviewData } from './dataset-widget-types';
 import { S } from './dataset-widget-styles';
 import { StatusRow } from './StatusRow';
+import { DatasetStatusPill } from './DatasetStatusPill';
 
 const DatasetWidgetContent = () => {
   const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex } = useGameUIStore(s => s.map);
@@ -95,101 +96,93 @@ const DatasetWidgetContent = () => {
   };
 
   return (
-    <div style={S.root}>
+    <Box style={S.root}>
       {/* ═══ DATASET STATUS ═══ */}
-      <div style={S.section}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-          <div style={S.sectionTitle}>Dataset</div>
-          <span style={{
-            fontSize: 9,
-            padding: '1px 5px',
-            borderRadius: 3,
-            background: screenStatus.status === 'mapped' ? '#1a3a1a' : screenStatus.status === 'incomplete' ? '#3a3a1a' : '#3a1a1a',
-            color: screenStatus.status === 'mapped' ? '#4f8' : screenStatus.status === 'incomplete' ? '#fc6' : '#f66',
-            fontWeight: 600,
-          }}>
+      <Box style={S.section}>
+        <Box style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+          <Box style={S.sectionTitle}>Dataset</Box>
+          <DatasetStatusPill
+            background={screenStatus.status === 'mapped' ? '#1a3a1a' : screenStatus.status === 'incomplete' ? '#3a3a1a' : '#3a1a1a'}
+            color={screenStatus.status === 'mapped' ? '#4f8' : screenStatus.status === 'incomplete' ? '#fc6' : '#f66'}
+          >
             {screenStatus.status === 'mapped' ? '✓ Screen' : screenStatus.status === 'incomplete' ? '⚠ Screen' : '✗ Screen'}
-          </span>
-          <span style={{
-            fontSize: 9,
-            padding: '1px 5px',
-            borderRadius: 3,
-            background: connStatus.status === 'complete' ? '#1a3a1a' : connStatus.status === 'partial' ? '#3a3a1a' : '#2a2a2a',
-            color: connStatus.status === 'complete' ? '#4f8' : connStatus.status === 'partial' ? '#fc6' : '#666',
-            fontWeight: 600,
-          }}>
+          </DatasetStatusPill>
+          <DatasetStatusPill
+            background={connStatus.status === 'complete' ? '#1a3a1a' : connStatus.status === 'partial' ? '#3a3a1a' : '#2a2a2a'}
+            color={connStatus.status === 'complete' ? '#4f8' : connStatus.status === 'partial' ? '#fc6' : '#666'}
+          >
             {connStatus.status === 'complete' ? '✓ Conns' : connStatus.status === 'partial' ? `⚠ ${connStatus.missingCount} missing` : '— Conns'}
-          </span>
-        </div>
-        <div style={S.infoBox}>
-          <div style={S.infoRow}>
-            <span style={S.infoLabel}>Screen</span>
-            <span style={{ color: screenStatus.screen ? '#7f7' : '#f66' }}>
+          </DatasetStatusPill>
+        </Box>
+        <Box style={S.infoBox}>
+          <Box style={S.infoRow}>
+            <Text style={S.infoLabel}>Screen</Text>
+            <Text style={{ color: screenStatus.screen ? '#7f7' : '#f66' }}>
               {screenStatus.screen ? screenStatus.screen.id : 'Not mapped'}
-            </span>
-          </div>
+            </Text>
+          </Box>
           {detectionResult && (
-            <div style={S.infoRow}>
-              <span style={S.infoLabel}>Match</span>
-              <span style={{ color: detectionResult.method === 'exact' || detectionResult.method === 'overworld' ? '#4f8' : detectionResult.method === 'entrance' ? '#8cf' : '#fc6' }}>
+            <Box style={S.infoRow}>
+              <Text style={S.infoLabel}>Match</Text>
+              <Text style={{ color: detectionResult.method === 'exact' || detectionResult.method === 'overworld' ? '#4f8' : detectionResult.method === 'entrance' ? '#8cf' : '#fc6' }}>
                 {detectionResult.method}
-              </span>
-            </div>
+              </Text>
+            </Box>
           )}
           {screenStatus.screen && (
-            <div style={S.infoRow}>
-              <span style={S.infoLabel}>Name</span>
-              <span>{screenStatus.screen.name}</span>
-            </div>
+            <Box style={S.infoRow}>
+              <Text style={S.infoLabel}>Name</Text>
+              <Text>{screenStatus.screen.name}</Text>
+            </Box>
           )}
           {screenStatus.screen && (
-            <div style={S.infoRow}>
-              <span style={S.infoLabel}>Status</span>
+            <Box style={S.infoRow}>
+              <Text style={S.infoLabel}>Status</Text>
               <StatusBadge status={screenStatus.screen.status} />
-            </div>
+            </Box>
           )}
           {screenStatus.screen && !screenStatus.screen.variant && detectionResult?.method === 'cave-ambiguous' && progressInfo && (
-            <div style={S.infoRow}>
-              <span style={S.infoLabel}>⚠️</span>
-              <span style={{ color: '#fa0', fontSize: 10 }}>Default entry — no variant for "{progressInfo.label}"</span>
-            </div>
+            <Box style={S.infoRow}>
+              <Text style={S.infoLabel}>⚠️</Text>
+              <Text style={{ color: '#fa0', fontSize: 10 }}>Default entry — no variant for "{progressInfo.label}"</Text>
+            </Box>
           )}
           {screenStatus.issues.length > 0 && (
-            <div style={S.infoRow}>
-              <span style={S.infoLabel}>Issues</span>
-              <span style={{ color: '#fc6', fontSize: 10 }}>{screenStatus.issues.join(', ')}</span>
-            </div>
+            <Box style={S.infoRow}>
+              <Text style={S.infoLabel}>Issues</Text>
+              <Text style={{ color: '#fc6', fontSize: 10 }}>{screenStatus.issues.join(', ')}</Text>
+            </Box>
           )}
           {screenStatus.corrections.length > 0 && (
-            <div style={{ padding: '3px 6px', marginTop: 2, borderRadius: 3, background: 'rgba(255,180,0,0.08)', border: '1px solid rgba(255,180,0,0.2)' }}>
-              <div style={{ fontSize: 9, color: '#fa0', fontWeight: 600, marginBottom: 2 }}>⚠ Suggested Corrections</div>
+            <Box style={{ padding: '3px 6px', marginTop: 2, borderRadius: 3, background: 'rgba(255,180,0,0.08)', border: '1px solid rgba(255,180,0,0.2)' }}>
+              <Box style={{ fontSize: 9, color: '#fa0', fontWeight: 600, marginBottom: 2 }}>⚠ Suggested Corrections</Box>
               {screenStatus.corrections.map((c, i) => (
-                <div key={i} style={{ fontSize: 10, color: '#dda', lineHeight: '14px' }}>
-                  <span style={{ color: '#8cf' }}>{c.field}</span>: {c.message}
-                </div>
+                <Box key={i} style={{ fontSize: 10, color: '#dda', lineHeight: '14px' }}>
+                  <Text style={{ color: '#8cf' }}>{c.field}</Text>: {c.message}
+                </Box>
               ))}
-            </div>
+            </Box>
           )}
-          <div style={S.infoRow}>
-            <span style={S.infoLabel}>Connections</span>
-            <span>{connStatus.existingConnections.length} in dataset{connStatus.missingCount > 0 ? `, ${connStatus.missingCount} detected not mapped` : ''}</span>
-          </div>
-        </div>
-        <div style={{ display: 'flex', gap: 4, marginTop: 4 }}>
-          <button style={S.btn} onClick={() => setScreenEditorOpen(true)}>
+          <Box style={S.infoRow}>
+            <Text style={S.infoLabel}>Connections</Text>
+            <Text>{connStatus.existingConnections.length} in dataset{connStatus.missingCount > 0 ? `, ${connStatus.missingCount} detected not mapped` : ''}</Text>
+          </Box>
+        </Box>
+        <Box style={{ display: 'flex', gap: 4, marginTop: 4 }}>
+          <Box as="button" style={S.btn} onClick={() => setScreenEditorOpen(true)}>
             ✏️ Edit Screen
-          </button>
-          <button style={S.btn} onClick={() => setConnEditorOpen(true)}>
+          </Box>
+          <Box as="button" style={S.btn} onClick={() => setConnEditorOpen(true)}>
             ✏️ Edit Connections
-          </button>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Box>
 
       {/* ═══ REVIEW ═══ */}
-      <div style={S.section}>
-        <div style={S.sectionTitle}>Review</div>
+      <Box style={S.section}>
+        <Box style={S.sectionTitle}>Review</Box>
         <StatusRow status={locationReview.status} comment={locationReview.comment} onStatus={setLocStatus} onComment={setLocComment} />
-      </div>
+      </Box>
 
       {/* ═══ Editor Dialogs ═══ */}
       <ScreenEditorDialog
@@ -206,7 +199,7 @@ const DatasetWidgetContent = () => {
         existingConnections={connStatus.existingConnections}
         unmatchedConnections={connStatus.unmatched}
       />
-    </div>
+    </Box>
   );
 };
 

@@ -5,9 +5,11 @@
  * controls live in nav-review/*.
  */
 
+import { Box, Text } from '../../../design-system/primitives';
 import type { NavReviewPanelProps, BorderBundle } from './nav-review/nav-review.type';
 import { DIR_LABELS, DIR_COLORS, STATUS_BTNS, S } from './nav-review/nav-review-styles';
 import { StatusRow, RequirementEditor, TransitTypePicker } from './nav-review/nav-review-controls';
+import { NavFieldRow } from './nav-review/NavFieldRow';
 import { useNavReview } from './nav-review/useNavReview';
 
 const NavReviewPanel = ({ locationKey, bundles, entrances, transitions, borders, reachableCount, totalTiles }: NavReviewPanelProps) => {
@@ -27,21 +29,21 @@ const NavReviewPanel = ({ locationKey, bundles, entrances, transitions, borders,
   const totalPoints = bundles.length + entrances.length;
 
   return (
-    <div style={S.panel}>
+    <Box style={S.panel}>
       {/* Screen summary */}
-      <div style={S.header}>
-        <span style={S.headerTitle}>Nav Review</span>
-        <span style={S.badge}>{reviewedCount}/{totalPoints}</span>
-      </div>
+      <Box style={S.header}>
+        <Text style={S.headerTitle}>Nav Review</Text>
+        <Text style={S.badge}>{reviewedCount}/{totalPoints}</Text>
+      </Box>
 
-      <div style={S.summary}>
+      <Box style={S.summary}>
         {reachableCount}/{totalTiles} tiles · {totalBundles} border bundle{totalBundles !== 1 ? 's' : ''} · {entrances.length} entrance{entrances.length !== 1 ? 's' : ''}
-      </div>
+      </Box>
 
       {/* Screen-level review */}
-      <div style={S.screenReview}>
+      <Box style={S.screenReview}>
         <StatusRow status={screenReview.status} comment={screenReview.comment} onStatus={setScreenStatus} onComment={setScreenComment} />
-      </div>
+      </Box>
 
       {/* Border Bundles by direction */}
       {(['n', 's', 'e', 'w'] as const).map(dir => {
@@ -52,15 +54,15 @@ const NavReviewPanel = ({ locationKey, bundles, entrances, transitions, borders,
         const gatedCount = borderData.itemTiles.length;
 
         return (
-          <div key={dir} style={S.dirSection}>
-            <div style={S.dirHeader}>
-              <span style={{ ...S.dirDot, background: DIR_COLORS[dir] }} />
-              <span style={S.dirLabel}>{DIR_LABELS[dir]}</span>
-              <span style={S.dirMeta}>
+          <Box key={dir} style={S.dirSection}>
+            <Box style={S.dirHeader}>
+              <Box style={{ ...S.dirDot, background: DIR_COLORS[dir] }} />
+              <Text style={S.dirLabel}>{DIR_LABELS[dir]}</Text>
+              <Text style={S.dirMeta}>
                 {borderData.freeTiles.length} free{gatedCount > 0 ? ` + ${gatedCount} gated` : ''}
                 · {dirBundles.length} bundle{dirBundles.length !== 1 ? 's' : ''}
-              </span>
-            </div>
+              </Text>
+            </Box>
 
             {dirBundles.map(bundle => {
               const review = getPointReview(bundle.id);
@@ -68,29 +70,23 @@ const NavReviewPanel = ({ locationKey, bundles, entrances, transitions, borders,
               const effectiveReqs = review.correctedRequirements ?? bundle.requirements;
 
               return (
-                <div key={bundle.id} style={{ ...S.pointCard, borderLeftColor: DIR_COLORS[dir] }}>
-                  <div style={S.pointHeader} onClick={() => toggleExpand(bundle.id)}>
-                    <span style={S.expandIcon}>{expanded ? '▾' : '▸'}</span>
-                    <span style={S.pointTitle}>{bundle.id}</span>
-                    <span style={S.tileBadge}>
+                <Box key={bundle.id} style={{ ...S.pointCard, borderLeftColor: DIR_COLORS[dir] }}>
+                  <Box style={S.pointHeader} onClick={() => toggleExpand(bundle.id)}>
+                    <Text style={S.expandIcon}>{expanded ? '▾' : '▸'}</Text>
+                    <Text style={S.pointTitle}>{bundle.id}</Text>
+                    <Text style={S.tileBadge}>
                       {dir === 'n' || dir === 's' ? `${bundle.tiles.length}×1` : `1×${bundle.tiles.length}`}
-                    </span>
-                    {review.status !== 'neutral' && <span style={{ ...S.statusIcon, color: STATUS_BTNS.find(b => b.key === review.status)?.color }}>{STATUS_BTNS.find(b => b.key === review.status)?.label}</span>}
-                  </div>
+                    </Text>
+                    {review.status !== 'neutral' && <Text style={{ ...S.statusIcon, color: STATUS_BTNS.find(b => b.key === review.status)?.color }}>{STATUS_BTNS.find(b => b.key === review.status)?.label}</Text>}
+                  </Box>
 
                   {expanded && (
-                    <div style={S.pointBody}>
-                      <div style={S.fieldRow}>
-                        <span style={S.fieldLabel}>Tiles:</span>
-                        <span style={S.fieldValue}>[{bundle.tiles[0]}–{bundle.tiles[bundle.tiles.length - 1]}]</span>
-                      </div>
-                      <div style={S.fieldRow}>
-                        <span style={S.fieldLabel}>Requirements:</span>
-                        <span style={S.fieldValue}>
-                          {effectiveReqs.length === 0 ? 'none (free)' : effectiveReqs.map(r => r.join(' + ')).join(' OR ')}
-                          {review.correctedRequirements && <span style={S.correctedBadge}>corrected</span>}
-                        </span>
-                      </div>
+                    <Box style={S.pointBody}>
+                      <NavFieldRow label="Tiles:">[{bundle.tiles[0]}–{bundle.tiles[bundle.tiles.length - 1]}]</NavFieldRow>
+                      <NavFieldRow label="Requirements:">
+                        {effectiveReqs.length === 0 ? 'none (free)' : effectiveReqs.map(r => r.join(' + ')).join(' OR ')}
+                        {review.correctedRequirements && <Text style={S.correctedBadge}>corrected</Text>}
+                      </NavFieldRow>
 
                       {/* Requirement editor */}
                       <RequirementEditor
@@ -99,23 +95,23 @@ const NavReviewPanel = ({ locationKey, bundles, entrances, transitions, borders,
                       />
 
                       <StatusRow status={review.status} comment={review.comment} onStatus={s => setPointStatus(bundle.id, s)} onComment={c => setPointComment(bundle.id, c)} />
-                    </div>
+                    </Box>
                   )}
-                </div>
+                </Box>
               );
             })}
-          </div>
+          </Box>
         );
       })}
 
       {/* Entrances */}
       {entrances.length > 0 && (
-        <div style={S.dirSection}>
-          <div style={S.dirHeader}>
-            <span style={{ ...S.dirDot, background: '#ffcc44' }} />
-            <span style={S.dirLabel}>Entrances</span>
-            <span style={S.dirMeta}>{entrances.length} door{entrances.length !== 1 ? 's' : ''}</span>
-          </div>
+        <Box style={S.dirSection}>
+          <Box style={S.dirHeader}>
+            <Box style={{ ...S.dirDot, background: '#ffcc44' }} />
+            <Text style={S.dirLabel}>Entrances</Text>
+            <Text style={S.dirMeta}>{entrances.length} door{entrances.length !== 1 ? 's' : ''}</Text>
+          </Box>
 
           {entrances.map(ent => {
             const pointId = `entrance-${ent.id}`;
@@ -124,35 +120,26 @@ const NavReviewPanel = ({ locationKey, bundles, entrances, transitions, borders,
             const transition = transitions.find(t => t.entranceIdx === ent.id);
 
             return (
-              <div key={pointId} style={{ ...S.pointCard, borderLeftColor: '#ffcc44' }}>
-                <div style={S.pointHeader} onClick={() => toggleExpand(pointId)}>
-                  <span style={S.expandIcon}>{expanded ? '▾' : '▸'}</span>
-                  <span style={S.pointTitle}>Room 0x{ent.roomId.toString(16).toUpperCase()} (#{ent.id})</span>
-                  <span style={S.tileBadge}>2×2</span>
-                  {review.status !== 'neutral' && <span style={{ ...S.statusIcon, color: STATUS_BTNS.find(b => b.key === review.status)?.color }}>{STATUS_BTNS.find(b => b.key === review.status)?.label}</span>}
-                </div>
+              <Box key={pointId} style={{ ...S.pointCard, borderLeftColor: '#ffcc44' }}>
+                <Box style={S.pointHeader} onClick={() => toggleExpand(pointId)}>
+                  <Text style={S.expandIcon}>{expanded ? '▾' : '▸'}</Text>
+                  <Text style={S.pointTitle}>Room 0x{ent.roomId.toString(16).toUpperCase()} (#{ent.id})</Text>
+                  <Text style={S.tileBadge}>2×2</Text>
+                  {review.status !== 'neutral' && <Text style={{ ...S.statusIcon, color: STATUS_BTNS.find(b => b.key === review.status)?.color }}>{STATUS_BTNS.find(b => b.key === review.status)?.label}</Text>}
+                </Box>
 
                 {expanded && (
-                  <div style={S.pointBody}>
-                    <div style={S.fieldRow}>
-                      <span style={S.fieldLabel}>Position:</span>
-                      <span style={S.fieldValue}>row {ent.gridRow}, col {ent.gridCol}</span>
-                    </div>
-                    <div style={S.fieldRow}>
-                      <span style={S.fieldLabel}>Room ID:</span>
-                      <span style={S.fieldValue}>0x{ent.roomId.toString(16).toUpperCase()}</span>
-                    </div>
-                    <div style={S.fieldRow}>
-                      <span style={S.fieldLabel}>Requirements:</span>
-                      <span style={S.fieldValue}>{transition?.requirements.length ? transition.requirements.join(', ') : 'none (free)'}</span>
-                    </div>
-                    <div style={S.fieldRow}>
-                      <span style={S.fieldLabel}>Transit type:</span>
+                  <Box style={S.pointBody}>
+                    <NavFieldRow label="Position:">row {ent.gridRow}, col {ent.gridCol}</NavFieldRow>
+                    <NavFieldRow label="Room ID:">0x{ent.roomId.toString(16).toUpperCase()}</NavFieldRow>
+                    <NavFieldRow label="Requirements:">{transition?.requirements.length ? transition.requirements.join(', ') : 'none (free)'}</NavFieldRow>
+                    <Box style={S.fieldRow}>
+                      <Text style={S.fieldLabel}>Transit type:</Text>
                       <TransitTypePicker
                         value={review.correctedTransitType ?? 'door'}
                         onChange={t => setPointTransitType(pointId, t)}
                       />
-                    </div>
+                    </Box>
 
                     <RequirementEditor
                       current={review.correctedRequirements ?? (transition?.requirements.length ? [transition.requirements] : [])}
@@ -160,14 +147,14 @@ const NavReviewPanel = ({ locationKey, bundles, entrances, transitions, borders,
                     />
 
                     <StatusRow status={review.status} comment={review.comment} onStatus={s => setPointStatus(pointId, s)} onComment={c => setPointComment(pointId, c)} />
-                  </div>
+                  </Box>
                 )}
-              </div>
+              </Box>
             );
           })}
-        </div>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
 

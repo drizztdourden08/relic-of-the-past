@@ -9,7 +9,7 @@
  * the dialog shell (chrome, step routing, actions).
  */
 
-import { Button, StatusBadge } from '../../../design-system/primitives';
+import { Box, Text, Button, StatusBadge } from '../../../design-system/primitives';
 import { useScreenEditor } from './screen-editor/useScreenEditor';
 import { ScreenEditorFieldsTop } from './screen-editor/ScreenEditorFieldsTop';
 import { ScreenEditorFieldsBottom } from './screen-editor/ScreenEditorFieldsBottom';
@@ -27,52 +27,52 @@ const ScreenEditorDialog = (props: ScreenEditorProps) => {
   if (!open) return null;
 
   return (
-    <div className="screen-editor-backdrop" onClick={onClose}>
-      <div className="screen-editor" onClick={e => e.stopPropagation()}>
-        <div className="screen-editor__header">
-          <h3>{existingScreen ? 'Edit Screen' : 'Create Screen'}</h3>
-          <span className="screen-editor__room-id">
+    <Box className="screen-editor-backdrop" onClick={onClose}>
+      <Box className="screen-editor" onClick={e => e.stopPropagation()}>
+        <Box className="screen-editor__header">
+          <Text as="h3">{existingScreen ? 'Edit Screen' : 'Create Screen'}</Text>
+          <Text className="screen-editor__room-id">
             Room 0x{roomIndex.toString(16).toUpperCase().padStart(roomIndex > 0xFF ? 4 : 2, '0')}
-          </span>
-          <code className="screen-editor__generated-id">{generatedId}</code>
+          </Text>
+          <Text as="code" className="screen-editor__generated-id">{generatedId}</Text>
           <StatusBadge status={status} interactive onChange={setStatus} />
-        </div>
+        </Box>
 
         {/* Mismatch warnings */}
         {mismatches.length > 0 && (
-          <div className="screen-editor__warnings">
-            {mismatches.map((w, i) => <p key={i}>{w}</p>)}
-          </div>
+          <Box className="screen-editor__warnings">
+            {mismatches.map((w, i) => <Text as="p" key={i}>{w}</Text>)}
+          </Box>
         )}
 
         {/* Step indicator */}
-        <div className="screen-editor__steps">
-          <button className={step === 0 ? 'active' : ''} onClick={() => setStep(0)}>1. Fields</button>
-          <button className={step === 1 ? 'active' : ''} onClick={() => setStep(1)}>2. Preview</button>
-        </div>
+        <Box className="screen-editor__steps">
+          <Box as="button" className={step === 0 ? 'active' : ''} onClick={() => setStep(0)}>1. Fields</Box>
+          <Box as="button" className={step === 1 ? 'active' : ''} onClick={() => setStep(1)}>2. Preview</Box>
+        </Box>
 
         {/* Step 1: Fields */}
         {step === 0 && (
-          <div className="screen-editor__form">
+          <Box className="screen-editor__form">
             <ScreenEditorFieldsTop editor={editor} />
             <ScreenEditorFieldsBottom editor={editor} />
-          </div>
+          </Box>
         )}
 
         {/* Step 2: Preview */}
         {step === 1 && (
-          <div className="screen-editor__preview">
-            <div className="screen-editor__file-target">
-              <span>Target: </span>
-              <code>{targetFile.relativePath}</code>
-            </div>
-            <pre className="screen-editor__code">{generatedCode}</pre>
-            {writeError && <p className="screen-editor__error">{writeError}</p>}
-          </div>
+          <Box className="screen-editor__preview">
+            <Box className="screen-editor__file-target">
+              <Text>Target: </Text>
+              <Text as="code">{targetFile.relativePath}</Text>
+            </Box>
+            <Box as="pre" className="screen-editor__code">{generatedCode}</Box>
+            {writeError && <Text as="p" className="screen-editor__error">{writeError}</Text>}
+          </Box>
         )}
 
         {/* Actions */}
-        <div className="screen-editor__actions">
+        <Box className="screen-editor__actions">
           <Button variant="secondary" onClick={onClose}>Cancel</Button>
           {step === 0 && (
             <Button variant="primary" onClick={() => setStep(1)}>Preview →</Button>
@@ -85,9 +85,9 @@ const ScreenEditorDialog = (props: ScreenEditorProps) => {
               </Button>
             </>
           )}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
