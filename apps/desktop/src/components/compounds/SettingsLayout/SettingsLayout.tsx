@@ -2,6 +2,7 @@
 ﻿import { useState, useRef, useCallback, useMemo, type ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { Toggle } from '../../primitives/Toggle';
+import { TextInput } from '../../primitives/TextInput';
 import './SettingsLayout.css';
 import { type SettingItem, type SubSection, type Section, type SettingsLayoutProps } from './types';
 
@@ -68,7 +69,7 @@ const SettingsLayout = (props: SettingsLayoutProps) => {
     <div className="settings-view">
       <nav className="settings-view__sidebar">
         <div className="settings-view__search">
-          <input
+          <TextInput
             type="text"
             className="settings-view__search-input"
             placeholder="Search settings…"

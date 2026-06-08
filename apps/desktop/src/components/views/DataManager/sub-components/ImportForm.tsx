@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState, useCallback } from 'react';
 import { DropZone } from '../../../primitives/DropZone';
+import { TextInput } from '../../../primitives/TextInput';
 
 interface ImportFormProps {
   placeholder?: string;
@@ -71,7 +72,7 @@ const ImportForm = (props: ImportFormProps) => {
   return (
     <div className="import-form">
       <div className="import-form__url-row">
-        <input
+        <TextInput
           className="import-form__url-input"
           type="text"
           placeholder={placeholder}

@@ -53,3 +53,5 @@ export { Spinner } from './Spinner';
 export type { SpinnerProps } from './Spinner';
 export { Tooltip } from './Tooltip';
 export type { TooltipProps } from './Tooltip';
+export { RangeInput } from './RangeInput';
+export type { RangeInputProps } from './RangeInput';

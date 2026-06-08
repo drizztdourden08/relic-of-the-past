@@ -6,6 +6,7 @@
  */
 import { useRef, useLayoutEffect, useState, useEffect, type ReactNode } from 'react';
 import { Portal } from '../../../primitives/Portal';
+import { Checkbox } from '../../../primitives/Checkbox';
 import { SegmentedControl } from '../../../primitives/SegmentedControl';
 import { Slider } from '../../../primitives/Slider';
 import type { WidgetState, SnapSide, WidgetMode } from '../types';
@@ -114,14 +115,12 @@ const WidgetSettings = (props: WidgetSettingsProps) => {
         {widget.mode === 'docked' && (
           <div className="widget-settings__row">
             <span className="widget-settings__label">Exclusive</span>
-            <label className="widget-settings__toggle">
-              <input
-                type="checkbox"
-                checked={widget.exclusive ?? false}
-                onChange={(e) => onChange({ exclusive: e.target.checked })}
-              />
-              <span className="widget-settings__toggle-hint">Shrink game area</span>
-            </label>
+            <Checkbox
+              className="widget-settings__toggle"
+              checked={widget.exclusive ?? false}
+              onChange={(c) => onChange({ exclusive: c })}
+              label="Shrink game area"
+            />
           </div>
         )}
 

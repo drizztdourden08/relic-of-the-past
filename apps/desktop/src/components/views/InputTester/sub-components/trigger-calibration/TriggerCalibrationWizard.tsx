@@ -9,6 +9,7 @@
  * Saves per-axis trigger calibration (base, max, deadzone).
  */
 
+import { RangeInput } from '../../../../primitives';
 import { useTriggerCalibration } from './useTriggerCalibration';
 import { TriggerBar } from './TriggerBar';
 import type { TriggerCalibrationData, Step } from './useTriggerCalibration';
@@ -161,7 +162,7 @@ const TriggerCalibrationWizard = (props: Props) => {
                 <span>Deadzone</span>
                 <span style={{ fontFamily: 'monospace', color: 'var(--color-text-muted)' }}>{(cal.deadzone * 100).toFixed(0)}%</span>
               </span>
-              <input type="range" min={0} max={20} value={cal.deadzone * 100}
+              <RangeInput min={0} max={20} value={cal.deadzone * 100}
                 style={{ width: '100%' }}
                 onChange={(e) => cal.setDeadzone(Number(e.target.value) / 100)}
               />

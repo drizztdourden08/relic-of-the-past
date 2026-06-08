@@ -8,6 +8,7 @@
  *   3. Review:  Adjust deadzones, test live output, save
  */
 
+import { RangeInput } from '../../../../primitives';
 import { applyCalibration } from './types';
 import type { StickCalibrationWizardProps } from './types';
 import { useStickCalibration } from './useStickCalibration';
@@ -135,7 +136,7 @@ const StickCalibrationWizard = (props: StickCalibrationWizardProps) => {
                 <span>Inner Deadzone</span>
                 <span style={{ fontFamily: 'monospace', color: 'var(--color-text-muted)' }}>{(innerDz * 100).toFixed(0)}%</span>
               </span>
-              <input type="range" min={0} max={30} value={innerDz * 100} style={{ width: '100%' }} onChange={(e) => setInnerDz(Number(e.target.value) / 100)} />
+              <RangeInput min={0} max={30} value={innerDz * 100} style={{ width: '100%' }} onChange={(e) => setInnerDz(Number(e.target.value) / 100)} />
               <span style={{ fontSize: 10, color: 'var(--color-text-muted)' }}>Eliminates stick drift near center</span>
             </label>
             <label style={{ fontSize: 12 }}>
@@ -143,7 +144,7 @@ const StickCalibrationWizard = (props: StickCalibrationWizardProps) => {
                 <span>Outer Deadzone</span>
                 <span style={{ fontFamily: 'monospace', color: 'var(--color-text-muted)' }}>{(outerDz * 100).toFixed(0)}%</span>
               </span>
-              <input type="range" min={70} max={100} value={outerDz * 100} style={{ width: '100%' }} onChange={(e) => setOuterDz(Number(e.target.value) / 100)} />
+              <RangeInput min={70} max={100} value={outerDz * 100} style={{ width: '100%' }} onChange={(e) => setOuterDz(Number(e.target.value) / 100)} />
               <span style={{ fontSize: 10, color: 'var(--color-text-muted)' }}>Reach full tilt before physical edge</span>
             </label>
           </div>

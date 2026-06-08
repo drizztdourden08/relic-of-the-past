@@ -7,6 +7,7 @@
 import { useState, useRef, useEffect } from 'react';
 import type { InputProfile } from '@shared/types/controls';
 import { Button } from '../../../../primitives/Button';
+import { TextInput } from '../../../../primitives/TextInput';
 import './InputProfileList.css';
 
 interface InputProfileListProps {
@@ -80,7 +81,7 @@ const InputProfileList = (props: InputProfileListProps) => {
               {profile.deviceType === 'keyboard' ? '⌨️' : '🎮'}
             </span>
             {editingId === profile.id ? (
-              <input
+              <TextInput
                 ref={inputRef}
                 className="input-profile-list__item-input"
                 value={editValue}

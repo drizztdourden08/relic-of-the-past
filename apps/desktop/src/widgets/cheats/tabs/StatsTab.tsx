@@ -3,7 +3,7 @@
  * StatsTab — Health, rupees, bombs, arrows, magic controls.
  */
 import { useState } from 'react';
-import { NumberInput } from '../../../components/primitives/NumberInput';
+import { NumberInput, RangeInput } from '../../../components/primitives';
 import {
   cheatSetHealth, cheatSetMaxHealth, cheatSetRupees,
   cheatSetBombs, cheatSetArrows, cheatRefillMagic,
@@ -49,8 +49,8 @@ const StatsTab = () => {
         <div className="cheats-row">
           <span className="cheats-row__label">Current</span>
           <div className="cheats-row__controls">
-            <input
-              type="range" className="cheats-slider"
+            <RangeInput
+              className="cheats-slider"
               min={0} max={maxHealth} step={8} value={health}
               onChange={e => setHealth(Number(e.target.value))}
             />
@@ -61,8 +61,8 @@ const StatsTab = () => {
         <div className="cheats-row">
           <span className="cheats-row__label">Max</span>
           <div className="cheats-row__controls">
-            <input
-              type="range" className="cheats-slider"
+            <RangeInput
+              className="cheats-slider"
               min={8} max={160} step={8} value={maxHealth}
               onChange={e => setMaxHealth(Number(e.target.value))}
             />
