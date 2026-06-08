@@ -2,6 +2,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ImportForm } from './ImportForm';
 import { IconButton } from '../../../primitives/IconButton';
+import { Button } from '../../../primitives/Button';
+import { EmptyState } from '../../../primitives/EmptyState';
+import { MasterDetailLayout } from '../../../composites/MasterDetailLayout';
+import { ListItemRow } from '../../../composites/ListItemRow';
 import { formatBytes } from '../../../../utils/formatBytes';
 
 interface RomManagerProps {
@@ -66,50 +70,48 @@ const RomManager = (props: RomManagerProps) => {
 
   const selectedRom = romStatuses.find((r) => r.romFile === selected);
 
-  return (
-    <div className="data-columns">
-      <div className="data-columns__left">
-        <ImportForm
-          placeholder="Paste ROM download URL…"
-          accept={['.sfc', '.smc', '.zip', '.7z', '.rar']}
-          dropLabel="Drop ROM file here"
-          dropHint=".sfc, .smc, or compressed archive (.zip, .7z, .rar)"
-          onUrlImport={handleUrlImport}
-          onFileImport={handleFileImport}
-        />
+  const list = (
+    <>
+      <ImportForm
+        placeholder="Paste ROM download URL…"
+        accept={['.sfc', '.smc', '.zip', '.7z', '.rar']}
+        dropLabel="Drop ROM file here"
+        dropHint=".sfc, .smc, or compressed archive (.zip, .7z, .rar)"
+        onUrlImport={handleUrlImport}
+        onFileImport={handleFileImport}
+      />
 
-        <div className="data-list">
-          {romStatuses.length === 0 && (
-            <div className="data-list-empty">No ROMs imported yet</div>
-          )}
-          {romStatuses.map((rom) => (
-            <div
-              key={rom.romFile}
-              className={`data-list-item ${selected === rom.romFile ? 'data-list-item--selected' : ''}`}
-              onClick={() => setSelected(rom.romFile)}
-            >
-              <span className="data-list-item__icon">🎮</span>
-              <div className="data-list-item__info">
-                <div className="data-list-item__name">{rom.romFile}</div>
-                <div className="data-list-item__meta">
-                  {rom.extractionStatus === 'ready' ? '✓ Assets extracted' :
-                   rom.extractionStatus === 'extracting' ? '⟳ Extracting…' :
-                   rom.extractionStatus === 'failed' ? '✗ Extraction failed' :
-                   'No assets'}
-                  {rom.assetSize ? ` · ${formatBytes(rom.assetSize)}` : ''}
-                </div>
-              </div>
-              <div className="data-list-item__action">
-                <IconButton variant="ghost" size="sm" label="Delete" onClick={(e) => { e.stopPropagation(); onDeleteRom(rom.romFile); }}>
-                  ✕
-                </IconButton>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="data-list">
+        {romStatuses.length === 0 && <EmptyState message="No ROMs imported yet" />}
+        {romStatuses.map((rom) => (
+          <ListItemRow
+            key={rom.romFile}
+            icon="🎮"
+            name={rom.romFile}
+            selected={selected === rom.romFile}
+            onClick={() => setSelected(rom.romFile)}
+            meta={
+              <>
+                {rom.extractionStatus === 'ready' ? '✓ Assets extracted' :
+                 rom.extractionStatus === 'extracting' ? '⟳ Extracting…' :
+                 rom.extractionStatus === 'failed' ? '✗ Extraction failed' :
+                 'No assets'}
+                {rom.assetSize ? ` · ${formatBytes(rom.assetSize)}` : ''}
+              </>
+            }
+            action={
+              <IconButton variant="ghost" size="sm" label="Delete" onClick={(e) => { e.stopPropagation(); onDeleteRom(rom.romFile); }}>
+                ✕
+              </IconButton>
+            }
+          />
+        ))}
       </div>
+    </>
+  );
 
-      <div className={`data-columns__right ${!selected ? 'data-columns__right--empty' : ''}`}>
+  const detailContent = (
+    <>
         {!selected ? (
           <span>Select a ROM to view details</span>
         ) : loadingDetail ? (
@@ -137,13 +139,9 @@ const RomManager = (props: RomManagerProps) => {
                 ) : selectedRom?.extractionStatus === 'extracting' ? (
                   <span style={{ color: 'var(--color-gold-base)' }}>⟳ Extracting…</span>
                 ) : (
-                  <button
-                    className="import-form__download-btn"
-                    onClick={() => selected && onExtractAssets(selected)}
-                    style={{ fontSize: 'var(--text-xs)', padding: '2px 8px' }}
-                  >
+                  <Button variant="primary" size="sm" onClick={() => selected && onExtractAssets(selected)}>
                     Extract Assets
-                  </button>
+                  </Button>
                 )}
               </span>
             </div>
@@ -151,9 +149,10 @@ const RomManager = (props: RomManagerProps) => {
         ) : (
           <span>ROM info not available</span>
         )}
-      </div>
-    </div>
+    </>
   );
+
+  return <MasterDetailLayout list={list} detail={detailContent} detailEmpty={!selected} />;
 };
 
 export { RomManager };
