@@ -61,6 +61,22 @@ export default tseslint.config(
           message:
             'No inline export. Declare locally, then group `export { ... }` / `export type { ... }` at the END of the file.',
         },
+        // ── Raw HTML form controls are allowed ONLY in primitives ──
+        // Everywhere else, compose the design-system primitive. (The
+        // primitives/ override below re-allows them.) Bespoke <button>s are not
+        // yet banned — that's a documented follow-up once they're migrated.
+        {
+          selector: "JSXOpeningElement[name.name='input']",
+          message: 'No raw <input> outside primitives — use TextInput / NumberInput / Checkbox / RangeInput.',
+        },
+        {
+          selector: "JSXOpeningElement[name.name='select']",
+          message: 'No raw <select> outside primitives — use Select / NativeSelect.',
+        },
+        {
+          selector: "JSXOpeningElement[name.name='textarea']",
+          message: 'No raw <textarea> outside primitives — add a TextArea primitive instead.',
+        },
       ],
 
       // ── Type-only imports must use `import type` ──
@@ -78,6 +94,21 @@ export default tseslint.config(
       // Re-enable as 'warn' anytime if you want the advisory back.
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'off',
+    },
+  },
+  {
+    // ── Primitives are the ONE place raw HTML is allowed ──
+    // Re-allow raw form controls here; keep the inline-export ban.
+    files: ['**/components/primitives/**/*.tsx', '**/hud/primitives/**/*.tsx'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'ExportNamedDeclaration[declaration]',
+          message:
+            'No inline export. Declare locally, then group `export { ... }` / `export type { ... }` at the END of the file.',
+        },
+      ],
     },
   },
 );
