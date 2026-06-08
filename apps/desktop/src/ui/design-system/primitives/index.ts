@@ -71,4 +71,4 @@ export { ProgressRing } from './ProgressRing';
 export type { ProgressRingProps } from './ProgressRing';
 export { Canvas } from './Canvas';
 export type { CanvasProps } from './Canvas';
-export { Svg, SvgLine, SvgCircle } from './Svg';
+export { Svg, SvgLine, SvgCircle, SvgRect, SvgPath, SvgText, SvgPolygon, SvgGroup } from './Svg';

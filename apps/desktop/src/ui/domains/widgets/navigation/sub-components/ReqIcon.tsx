@@ -1,4 +1,6 @@
 /* @layer renderer-widgets @kind component */
+import { Text } from '../../../../design-system/primitives';
+
 const REQ_ICONS: Record<string, { icon: string; color: string }> = {
   flippers: { icon: '🏊', color: '#48f' },
   hammer: { icon: '🔨', color: '#fa4' },
@@ -18,9 +20,9 @@ const REQ_ICONS: Record<string, { icon: string; color: string }> = {
 const ReqIcon = ({ req }: { req: string }) => {
   const info = REQ_ICONS[req];
   if (info) {
-    return <span title={req} style={{ fontSize: 12, marginRight: 2 }}>{info.icon}</span>;
+    return <Text title={req} style={{ fontSize: 12, marginRight: 2 }}>{info.icon}</Text>;
   }
-  return <span style={{ fontSize: 10, color: '#fc6', marginRight: 4, background: 'rgba(255,200,0,0.12)', padding: '0 3px', borderRadius: 2 }}>{req}</span>;
+  return <Text style={{ fontSize: 10, color: '#fc6', marginRight: 4, background: 'rgba(255,200,0,0.12)', padding: '0 3px', borderRadius: 2 }}>{req}</Text>;
 };
 
 export { ReqIcon };

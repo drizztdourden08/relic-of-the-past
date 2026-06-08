@@ -1,5 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import type { ConnectionInfo } from '@shared/game/navigation';
+import { Box, Text } from '../../../../design-system/primitives';
 import { S } from '../styles';
 import { InternalEdgeSvg } from './InternalEdgeSvg';
 import type { useNavigation } from '../useNavigation';
@@ -39,37 +40,37 @@ const InternalEdgesSection = (props: Props) => {
   const count = cards.length;
   return (
     <>
-      <div style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Internal ({count})</div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center' }}>
+      <Box style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Internal ({count})</Box>
+      <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center' }}>
         {cards.map(({ conn, paired }, i) => {
           if (screenBundle?.isMulti && !conn.isIntraRoom) {
             const fromName = screenBundle.subNames[conn.sourceScreen!] ?? '?';
             const toName = screenBundle.subNames[conn.targetScreen] ?? '?';
             return (
-              <div key={`int-${i}`} style={S.card}>
-                <div style={S.cardGraphic}>
+              <Box key={`int-${i}`} style={S.card}>
+                <Box style={S.cardGraphic}>
                   <InternalEdgeSvg edge={conn.edge} fromName={fromName} toName={toName} />
-                </div>
-                <span style={{ fontSize: 8, color: conn.layerToggle ? '#f8a' : '#6a8', marginTop: 2 }}>
+                </Box>
+                <Text style={{ fontSize: 8, color: conn.layerToggle ? '#f8a' : '#6a8', marginTop: 2 }}>
                   {conn.layerToggle ? '▲▼ Toggle' : '═ Same'}
-                </span>
-              </div>
+                </Text>
+              </Box>
             );
           }
           const fromCount = String(conn.freeTileCount);
           const toCount = String(paired?.freeTileCount ?? conn.freeTileCount);
           return (
-            <div key={`int-${i}`} style={S.card}>
-              <div style={S.cardGraphic}>
+            <Box key={`int-${i}`} style={S.card}>
+              <Box style={S.cardGraphic}>
                 <InternalEdgeSvg edge={conn.edge} fromName={fromCount} toName={toCount} />
-              </div>
-              <span style={{ fontSize: 8, color: '#6a8', marginTop: 2 }}>
+              </Box>
+              <Text style={{ fontSize: 8, color: '#6a8', marginTop: 2 }}>
                 ═ Same
-              </span>
-            </div>
+              </Text>
+            </Box>
           );
         })}
-      </div>
+      </Box>
     </>
   );
 };

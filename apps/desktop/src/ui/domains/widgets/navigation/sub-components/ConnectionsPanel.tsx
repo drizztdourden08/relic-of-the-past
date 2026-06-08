@@ -2,6 +2,7 @@
 import { Icon } from '@iconify/react/offline';
 import { getConnectionDestinationName } from '@shared/game/navigation';
 import { SCREEN_BY_ID } from '@shared/game/data/screens';
+import { Box, Text } from '../../../../design-system/primitives';
 import { getEntranceIcon } from '../../../../../lib/entrance-icons';
 import { S } from '../styles';
 import { getScreenDisplayName } from '../widget-helpers';
@@ -18,11 +19,11 @@ const ConnectionsPanel = (props: Props) => {
   return (
     <>
       {/* ═══ 5. CONNECTIONS (unified) ═══ */}
-      <div style={S.section}>
-        <div style={S.sectionTitle}>Connections</div>
+      <Box style={S.section}>
+        <Box style={S.sectionTitle}>Connections</Box>
 
         {/* ─── Entrances sub-section ─── */}
-        <div style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 2, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Entrances ({entranceSum})</div>
+        <Box style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 2, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Entrances ({entranceSum})</Box>
         {renderResults.some(r => r.entrances.some(e => r.transitions.some(t => t.entranceIdx === e.id))) ? (
           renderResults.map(r => {
             const reachableEntrances = r.entrances.filter(e => r.transitions.some(t => t.entranceIdx === e.id));
@@ -32,9 +33,9 @@ const ConnectionsPanel = (props: Props) => {
               : null;
             const screenNodeId = `${isDarkWorld ? 'dw' : 'lw'}-${r.screenIndex.toString(16).padStart(2, '0')}`;
             return (
-              <div key={`ent-${r.screenIndex}`}>
-                {scrLabel && <div style={{ ...S.meta, color: '#8cf', marginTop: 2 }}>{scrLabel}</div>}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              <Box key={`ent-${r.screenIndex}`}>
+                {scrLabel && <Box style={{ ...S.meta, color: '#8cf', marginTop: 2 }}>{scrLabel}</Box>}
+                <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {reachableEntrances.map(ent => {
                   const t = r.transitions.find(t => t.entranceIdx === ent.id);
                   const isRespawn = respawnEntIds.has(ent.id);
@@ -55,33 +56,33 @@ const ConnectionsPanel = (props: Props) => {
                       ?? `Room 0x${ent.roomId.toString(16).toUpperCase()}`;
                   }
                   return (
-                    <div key={`entrance-${ent.id}`} style={S.card}>
-                      <div style={S.cardGraphic}>
+                    <Box key={`entrance-${ent.id}`} style={S.card}>
+                      <Box style={S.cardGraphic}>
                         <Icon icon={iconData} width={28} height={28} style={{ color: iconColor }} />
-                      </div>
-                      <span style={S.cardTitle}>{displayName}</span>
-                      <span style={S.cardSub}>#{ent.id}</span>
+                      </Box>
+                      <Text style={S.cardTitle}>{displayName}</Text>
+                      <Text style={S.cardSub}>#{ent.id}</Text>
                       {entranceSpawns && ent.id < entranceSpawns.length && (
-                        <span style={{ fontSize: 8, color: entranceSpawns[ent.id].startingLayer === 0 ? '#7ff' : '#ff7', marginTop: 1 }}>
+                        <Text style={{ fontSize: 8, color: entranceSpawns[ent.id].startingLayer === 0 ? '#7ff' : '#ff7', marginTop: 1 }}>
                           {entranceSpawns[ent.id].startingLayer === 0 ? '▲ Upper' : '▼ Lower'}
-                        </span>
+                        </Text>
                       )}
                       {t?.requirements && t.requirements.length > 0 && (
-                        <div style={{ display: 'flex', gap: 2, marginTop: 2 }}>{t.requirements.map(r => <ReqIcon key={r} req={r} />)}</div>
+                        <Box style={{ display: 'flex', gap: 2, marginTop: 2 }}>{t.requirements.map(r => <ReqIcon key={r} req={r} />)}</Box>
                       )}
-                    </div>
+                    </Box>
                   );
                 })}
-                </div>
-              </div>
+                </Box>
+              </Box>
             );
           })
         ) : (
-          <div style={{ ...S.meta, color: '#666' }}>None</div>
+          <Box style={{ ...S.meta, color: '#666' }}>None</Box>
         )}
 
         {/* ─── Edges sub-section ─── */}
-        <div style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Edges ({externalConnections.length})</div>
+        <Box style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Edges ({externalConnections.length})</Box>
         {externalConnections.length > 0 ? (
           externalConnections.map(conn => {
             const connKey = `${conn.edge}-${conn.sourceScreen?.toString(16)}-${conn.targetScreen.toString(16)}-${conn.positions[0]}`;
@@ -105,28 +106,28 @@ const ConnectionsPanel = (props: Props) => {
               ? (currentLayer === 0 ? '→ Lower' : '→ Upper')
               : null;
             return (
-              <div key={connKey} style={S.connCard}>
-                <div style={S.connHeader}>
+              <Box key={connKey} style={S.connCard}>
+                <Box style={S.connHeader}>
                   <EdgeArrowSvg edge={conn.edge} size={16} />
-                  <span style={S.connTitle}>{targetName}{fromLabel}</span>
-                  <span style={S.dimBadge}>{posRange}</span>
-                  <span style={S.dimBadge}>{conn.freeTileCount}{conn.itemTileCount > 0 ? `+${conn.itemTileCount}` : ''}</span>
-                </div>
+                  <Text style={S.connTitle}>{targetName}{fromLabel}</Text>
+                  <Text style={S.dimBadge}>{posRange}</Text>
+                  <Text style={S.dimBadge}>{conn.freeTileCount}{conn.itemTileCount > 0 ? `+${conn.itemTileCount}` : ''}</Text>
+                </Box>
                 {isIndoors && (
-                  <div style={{ fontSize: 9, marginTop: 2, color: conn.layerToggle ? '#f8a' : '#6a8' }}>
+                  <Box style={{ fontSize: 9, marginTop: 2, color: conn.layerToggle ? '#f8a' : '#6a8' }}>
                     {conn.layerToggle
-                      ? <>▲▼ Layer Toggle {targetLayerLabel && <span style={{ color: targetLayerLabel.includes('Lower') ? '#ff7' : '#7ff' }}>{targetLayerLabel}</span>}</>
+                      ? <>▲▼ Layer Toggle {targetLayerLabel && <Text style={{ color: targetLayerLabel.includes('Lower') ? '#ff7' : '#7ff' }}>{targetLayerLabel}</Text>}</>
                       : <>═ No Layer Change</>}
-                  </div>
+                  </Box>
                 )}
                 {conn.requirements.length > 0 && (
-                  <div style={S.meta}>{conn.requirements.map(r => <ReqIcon key={r} req={r} />)}</div>
+                  <Box style={S.meta}>{conn.requirements.map(r => <ReqIcon key={r} req={r} />)}</Box>
                 )}
-              </div>
+              </Box>
             );
           })
         ) : (
-          <div style={{ ...S.meta, color: '#666' }}>None</div>
+          <Box style={{ ...S.meta, color: '#666' }}>None</Box>
         )}
 
         {/* ─── Internal Edges ─── */}
@@ -135,21 +136,21 @@ const ConnectionsPanel = (props: Props) => {
         {/* ─── Fall Hole Landings ─── */}
         {fallHoleLandings.length > 0 && (
           <>
-            <div style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Fall Holes ({fallHoleLandings.length})</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            <Box style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Fall Holes ({fallHoleLandings.length})</Box>
+            <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {fallHoleLandings.map((fh, i) => (
-                <div key={`fh-${i}`} style={S.card}>
-                  <div style={{ ...S.cardGraphic, background: 'repeating-linear-gradient(45deg, #ffcc44 0px, #ffcc44 2px, transparent 2px, transparent 4px)', borderRadius: 4 }}>
-                    <span style={{ fontSize: 18 }}>⬇</span>
-                  </div>
-                  <span style={S.cardTitle}>Landing Zone</span>
-                  <span style={S.cardSub}>r{fh.gridRow} c{fh.gridCol}</span>
-                </div>
+                <Box key={`fh-${i}`} style={S.card}>
+                  <Box style={{ ...S.cardGraphic, background: 'repeating-linear-gradient(45deg, #ffcc44 0px, #ffcc44 2px, transparent 2px, transparent 4px)', borderRadius: 4 }}>
+                    <Text style={{ fontSize: 18 }}>⬇</Text>
+                  </Box>
+                  <Text style={S.cardTitle}>Landing Zone</Text>
+                  <Text style={S.cardSub}>r{fh.gridRow} c{fh.gridCol}</Text>
+                </Box>
               ))}
-            </div>
+            </Box>
           </>
         )}
-      </div>
+      </Box>
     </>
   );
 };

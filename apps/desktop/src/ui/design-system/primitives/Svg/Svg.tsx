@@ -2,9 +2,10 @@
 import type { SVGProps } from 'react';
 
 /**
- * Raw inline-SVG escape hatch for dynamic/computed drawings (plots, gizmos)
- * that can't be expressed as a static Icon glyph. Raw <svg>/<line>/<circle>
- * live here, in the primitive.
+ * Raw inline-SVG escape hatch for dynamic/computed drawings (plots, gizmos,
+ * minimaps) that can't be expressed as a static Icon glyph. Raw SVG elements
+ * (<svg>/<line>/<circle>/<rect>/<path>/<text>/<polygon>/<g>) live here, in the
+ * primitive.
  */
 const Svg = (props: SVGProps<SVGSVGElement>) => <svg {...props} />;
 
@@ -12,4 +13,14 @@ const SvgLine = (props: SVGProps<SVGLineElement>) => <line {...props} />;
 
 const SvgCircle = (props: SVGProps<SVGCircleElement>) => <circle {...props} />;
 
-export { Svg, SvgLine, SvgCircle };
+const SvgRect = (props: SVGProps<SVGRectElement>) => <rect {...props} />;
+
+const SvgPath = (props: SVGProps<SVGPathElement>) => <path {...props} />;
+
+const SvgText = (props: SVGProps<SVGTextElement>) => <text {...props} />;
+
+const SvgPolygon = (props: SVGProps<SVGPolygonElement>) => <polygon {...props} />;
+
+const SvgGroup = (props: SVGProps<SVGGElement>) => <g {...props} />;
+
+export { Svg, SvgLine, SvgCircle, SvgRect, SvgPath, SvgText, SvgPolygon, SvgGroup };

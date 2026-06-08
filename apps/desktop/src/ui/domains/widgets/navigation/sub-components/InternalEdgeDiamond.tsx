@@ -1,5 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import type { ConnectionInfo, ScreenBundle } from '@shared/game/navigation';
+import { Box, Text } from '../../../../design-system/primitives';
 import { S } from '../styles';
 import { InternalEdgeSvg } from './InternalEdgeSvg';
 import { ReqIcon } from './ReqIcon';
@@ -24,34 +25,34 @@ const InternalEdgeDiamond = ({ connections, screenBundle }: { connections: Conne
   }
 
   const renderCard = (conn: ConnectionInfo | null) => {
-    if (!conn) return <div style={{ ...S.card, visibility: 'hidden' }} />;
+    if (!conn) return <Box style={{ ...S.card, visibility: 'hidden' }} />;
     const fromName = screenBundle.subNames[conn.sourceScreen!] ?? '?';
     const toName = screenBundle.subNames[conn.targetScreen] ?? '?';
     return (
-      <div style={S.card}>
-        <div style={S.cardGraphic}>
+      <Box style={S.card}>
+        <Box style={S.cardGraphic}>
           <InternalEdgeSvg edge={conn.edge} fromName={fromName} toName={toName} />
-        </div>
-        <span style={S.cardSub}>{conn.freeTileCount}{conn.itemTileCount > 0 ? `+${conn.itemTileCount}` : ''}</span>
-        <span style={{ fontSize: 8, color: conn.layerToggle ? '#f8a' : '#6a8', marginTop: 2 }}>
+        </Box>
+        <Text style={S.cardSub}>{conn.freeTileCount}{conn.itemTileCount > 0 ? `+${conn.itemTileCount}` : ''}</Text>
+        <Text style={{ fontSize: 8, color: conn.layerToggle ? '#f8a' : '#6a8', marginTop: 2 }}>
           {conn.layerToggle ? '▲▼ Toggle' : '═ Same'}
-        </span>
+        </Text>
         {conn.requirements.length > 0 && (
-          <div style={{ display: 'flex', gap: 2, marginTop: 2 }}>{conn.requirements.map(r => <ReqIcon key={r} req={r} />)}</div>
+          <Box style={{ display: 'flex', gap: 2, marginTop: 2 }}>{conn.requirements.map(r => <ReqIcon key={r} req={r} />)}</Box>
         )}
-      </div>
+      </Box>
     );
   };
 
   return (
-    <div style={S.diamond}>
-      {(slots.top) && <div style={S.diamondRow}>{renderCard(slots.top)}</div>}
-      <div style={S.diamondMid}>
+    <Box style={S.diamond}>
+      {(slots.top) && <Box style={S.diamondRow}>{renderCard(slots.top)}</Box>}
+      <Box style={S.diamondMid}>
         {renderCard(slots.left)}
         {renderCard(slots.right)}
-      </div>
-      {(slots.bottom) && <div style={S.diamondRow}>{renderCard(slots.bottom)}</div>}
-    </div>
+      </Box>
+      {(slots.bottom) && <Box style={S.diamondRow}>{renderCard(slots.bottom)}</Box>}
+    </Box>
   );
 };
 

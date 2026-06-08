@@ -1,5 +1,5 @@
 /* @layer renderer-widgets @kind component */
-import { TextInput } from '../../../design-system/primitives';
+import { Box, TextInput } from '../../../design-system/primitives';
 import type { ReviewStatus } from './dataset-widget-types';
 import { STATUS_BTNS, S } from './dataset-widget-styles';
 
@@ -12,18 +12,18 @@ interface StatusRowProps {
 
 const StatusRow = ({ status, comment, onStatus, onComment }: StatusRowProps) => {
   return (
-    <div>
-      <div style={S.statusRow}>
+    <Box>
+      <Box style={S.statusRow}>
         {STATUS_BTNS.map(b => (
-          <button key={b.key} onClick={() => onStatus(b.key)} style={{ ...S.statusBtn, ...(status === b.key ? { color: b.color, borderColor: b.color } : {}) }}>
+          <Box as="button" key={b.key} onClick={() => onStatus(b.key)} style={{ ...S.statusBtn, ...(status === b.key ? { color: b.color, borderColor: b.color } : {}) }}>
             {b.label}
-          </button>
+          </Box>
         ))}
-      </div>
+      </Box>
       {(status === 'bad' || status === 'yellow') && (
         <TextInput style={S.commentInput} placeholder="Note..." value={comment ?? ''} onChange={e => onComment(e.target.value)} />
       )}
-    </div>
+    </Box>
   );
 };
 

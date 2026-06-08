@@ -1,2 +1,2 @@
 /* @layer renderer-components @kind barrel */
-export { Svg, SvgLine, SvgCircle } from './Svg';
+export { Svg, SvgLine, SvgCircle, SvgRect, SvgPath, SvgText, SvgPolygon, SvgGroup } from './Svg';
