@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback } from 'react';
 import { ImportForm } from './ImportForm';
+import { Box } from '../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../design-system/primitives/Text';
 import { IconButton } from '../../../../../design-system/primitives/IconButton';
 import { Button } from '../../../../../design-system/primitives/Button';
 import { EmptyState } from '../../../../../design-system/primitives/EmptyState';
@@ -81,7 +83,7 @@ const RomManager = (props: RomManagerProps) => {
         onFileImport={handleFileImport}
       />
 
-      <div className="data-list">
+      <Box className="data-list">
         {romStatuses.length === 0 && <EmptyState message="No ROMs imported yet" />}
         {romStatuses.map((rom) => (
           <ListItemRow
@@ -106,48 +108,48 @@ const RomManager = (props: RomManagerProps) => {
             }
           />
         ))}
-      </div>
+      </Box>
     </>
   );
 
   const detailContent = (
     <>
         {!selected ? (
-          <span>Select a ROM to view details</span>
+          <Text>Select a ROM to view details</Text>
         ) : loadingDetail ? (
-          <span>Loading…</span>
+          <Text>Loading…</Text>
         ) : detail ? (
-          <div>
-            <h3 className="detail-panel__title">{detail.name}</h3>
-            <div className="detail-panel__grid">
-              <span className="detail-panel__label">Size</span>
-              <span className="detail-panel__value">{formatBytes(detail.size)}</span>
+          <Box>
+            <Text as="h3" className="detail-panel__title">{detail.name}</Text>
+            <Box className="detail-panel__grid">
+              <Text className="detail-panel__label">Size</Text>
+              <Text className="detail-panel__value">{formatBytes(detail.size)}</Text>
 
-              <span className="detail-panel__label">Hash</span>
-              <span className="detail-panel__value" style={{ fontFamily: 'var(--font-mono)' }}>{detail.hash}</span>
+              <Text className="detail-panel__label">Hash</Text>
+              <Text className="detail-panel__value" style={{ fontFamily: 'var(--font-mono)' }}>{detail.hash}</Text>
 
-              <span className="detail-panel__label">Added</span>
-              <span className="detail-panel__value">{new Date(detail.created).toLocaleDateString()}</span>
+              <Text className="detail-panel__label">Added</Text>
+              <Text className="detail-panel__value">{new Date(detail.created).toLocaleDateString()}</Text>
 
-              <span className="detail-panel__label">Modified</span>
-              <span className="detail-panel__value">{new Date(detail.modified).toLocaleDateString()}</span>
+              <Text className="detail-panel__label">Modified</Text>
+              <Text className="detail-panel__value">{new Date(detail.modified).toLocaleDateString()}</Text>
 
-              <span className="detail-panel__label">Assets</span>
-              <span className="detail-panel__value">
+              <Text className="detail-panel__label">Assets</Text>
+              <Text className="detail-panel__value">
                 {selectedRom?.extractionStatus === 'ready' ? (
-                  <span style={{ color: 'var(--color-success)' }}>✓ Extracted{selectedRom.assetSize ? ` (${formatBytes(selectedRom.assetSize)})` : ''}</span>
+                  <Text style={{ color: 'var(--color-success)' }}>✓ Extracted{selectedRom.assetSize ? ` (${formatBytes(selectedRom.assetSize)})` : ''}</Text>
                 ) : selectedRom?.extractionStatus === 'extracting' ? (
-                  <span style={{ color: 'var(--color-gold-base)' }}>⟳ Extracting…</span>
+                  <Text style={{ color: 'var(--color-gold-base)' }}>⟳ Extracting…</Text>
                 ) : (
                   <Button variant="primary" size="sm" onClick={() => selected && onExtractAssets(selected)}>
                     Extract Assets
                   </Button>
                 )}
-              </span>
-            </div>
-          </div>
+              </Text>
+            </Box>
+          </Box>
         ) : (
-          <span>ROM info not available</span>
+          <Text>ROM info not available</Text>
         )}
     </>
   );

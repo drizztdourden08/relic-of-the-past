@@ -1,5 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { Box } from '../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../design-system/primitives/Text';
+import { Image } from '../../../../../design-system/primitives/Image';
 import { Select } from '../../../../../design-system/primitives/Select';
 import { Button } from '../../../../../design-system/primitives/Button';
 import { Field } from '../../../../../design-system/primitives/Field';
@@ -90,7 +93,7 @@ const SpriteManager = (props: SpriteManagerProps) => {
   const list = (
     <>
       {/* Extraction form */}
-      <div className="import-form">
+      <Box className="import-form">
         <Field label="ROM Source">
           <Select
             value={selectedRom}
@@ -113,14 +116,14 @@ const SpriteManager = (props: SpriteManagerProps) => {
           )}
         </ButtonRow>
         {message && (
-          <div className={`sprite-manager__message sprite-manager__message--${message.type}`}>
+          <Box className={`sprite-manager__message sprite-manager__message--${message.type}`}>
             {message.text}
-          </div>
+          </Box>
         )}
-      </div>
+      </Box>
 
       {/* Status */}
-      <div className="data-list">
+      <Box className="data-list">
         <ListItemRow
           icon="🖼️"
           selected={status.extracted}
@@ -133,29 +136,29 @@ const SpriteManager = (props: SpriteManagerProps) => {
                 : 'Select a ROM first'
           }
         />
-      </div>
+      </Box>
     </>
   );
 
   const detail = !status.extracted ? (
-    <span>{selectedRom ? 'Extract sprites from this ROM to view them here' : 'Select a ROM first'}</span>
+    <Text>{selectedRom ? 'Extract sprites from this ROM to view them here' : 'Select a ROM first'}</Text>
   ) : (
-    <div className="sprite-manager__panel">
+    <Box className="sprite-manager__panel">
             {/* Category filter */}
-            <div className="sprite-manager__filters">
+            <Box className="sprite-manager__filters">
               <CatButton label="All" value="all" current={catFilter} onClick={setCatFilter} count={catCounts.all} />
               {CATEGORY_ORDER.map(c => (
                 <CatButton key={c} label={CATEGORY_LABELS[c]} value={c} current={catFilter} onClick={setCatFilter} count={catCounts[c]} />
               ))}
-            </div>
+            </Box>
 
             {/* Sprite grid */}
-            <div className="sprite-manager__grid">
+            <Box className="sprite-manager__grid">
               {filtered.map(sprite => (
                 <SpriteCard key={sprite.file} file={sprite.file} label={sprite.label} category={sprite.category} baseUrl={spriteBaseUrl} />
               ))}
-            </div>
-    </div>
+            </Box>
+    </Box>
   );
 
   return <MasterDetailLayout list={list} detail={detail} detailEmpty={!status.extracted} />;
@@ -169,29 +172,30 @@ const CatButton = ({ label, value, current, onClick, count }: {
   count: number;
 }) => {
   return (
-    <button
+    <Box
+      as="button"
       className={`sprite-manager__cat-btn ${current === value ? 'sprite-manager__cat-btn--active' : ''}`}
       onClick={() => onClick(value)}
     >
-      {label} <span className="sprite-manager__cat-count">{count}</span>
-    </button>
+      {label} <Text className="sprite-manager__cat-count">{count}</Text>
+    </Box>
   );
 };
 
 const SpriteCard = ({ file, label, category, baseUrl }: { file: string; label: string; category: SpriteCategory; baseUrl: string }) => {
   return (
-    <div className="sprite-card">
-      <img
+    <Box className="sprite-card">
+      <Image
         className="sprite-card__img"
         src={`${baseUrl}${file}.png`}
         alt={label}
         draggable={false}
       />
-      <div className="sprite-card__info">
-        <span className="sprite-card__label">{label}</span>
-        <span className="sprite-card__category">{CATEGORY_LABELS[category]}</span>
-      </div>
-    </div>
+      <Box className="sprite-card__info">
+        <Text className="sprite-card__label">{label}</Text>
+        <Text className="sprite-card__category">{CATEGORY_LABELS[category]}</Text>
+      </Box>
+    </Box>
   );
 };
 
