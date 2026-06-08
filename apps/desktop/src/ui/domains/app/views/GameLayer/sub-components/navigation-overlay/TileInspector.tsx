@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import { Box } from '../../../../../../design-system/primitives/Box';
 import { useGameUIStore } from '../../../../../../../stores/game-ui-store';
 import { wasmGetViewportInfo, wasmGetLiveSprites } from '../../../../../../../lib/game';
 import { classifyTileAttr } from '@shared/game/navigation/tile-classification';
@@ -173,7 +174,7 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex:
   }, [width, height, result, overworldScreenIndex, equipment, inventoryItems, onHoverTile, pathPreviewState, rectSel?.active, handleRectMouseMove, layer0ReachableLocal, layer1ReachableLocal]);
 
   return (
-    <div
+    <Box
       data-testid="tile-inspector"
       onMouseMove={handleMouseMove}
       onMouseDown={handleRectMouseDown}
@@ -190,7 +191,7 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex:
       }}
     >
       {selectionRect && (
-        <div style={{
+        <Box style={{
           position: 'absolute',
           left: selectionRect.x, top: selectionRect.y,
           width: selectionRect.w, height: selectionRect.h,
@@ -200,7 +201,7 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex:
         }} />
       )}
       {copied && rectSel && !rectSel.active && (
-        <div style={{
+        <Box style={{
           position: 'absolute', left: '50%', top: 8,
           transform: 'translateX(-50%)',
           background: 'rgba(20,180,60,0.92)', color: '#fff',
@@ -209,10 +210,10 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex:
           pointerEvents: 'none', zIndex: 8,
         }}>
           Tile data copied to clipboard! ({selectionRect?.tileCount} tiles)
-        </div>
+        </Box>
       )}
       {tooltip && !rectSel?.active && <TileTooltipContent tooltip={tooltip} result={result} />}
-    </div>
+    </Box>
   );
 };
 

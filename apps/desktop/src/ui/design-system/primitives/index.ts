@@ -69,3 +69,5 @@ export { Icon } from './Icon';
 export type { IconProps } from './Icon';
 export { ProgressRing } from './ProgressRing';
 export type { ProgressRingProps } from './ProgressRing';
+export { Canvas } from './Canvas';
+export type { CanvasProps } from './Canvas';

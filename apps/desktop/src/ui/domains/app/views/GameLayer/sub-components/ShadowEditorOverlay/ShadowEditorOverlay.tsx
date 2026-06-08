@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef } from 'react';
+import { Canvas } from '../../../../../../design-system/primitives/Canvas';
 import { useShadowEditorStore } from '../../../../../../../stores/shadow-editor-store';
 import type { GizmoPart } from '../shadow-editor/gizmos';
 import type { Vp, Point } from './coords';
@@ -66,7 +67,7 @@ const ShadowEditorOverlay = (props: ShadowEditorOverlayProps) => {
   const interactive = !s.previewMode && (s.activeTool === 'select' || s.activeTool === 'polygon' || s.activeTool === 'freehand' || s.activeTool === 'point-light' || s.activeTool === 'shape-light');
 
   return (
-    <canvas
+    <Canvas
       ref={canvasRef}
       width={width}
       height={height}

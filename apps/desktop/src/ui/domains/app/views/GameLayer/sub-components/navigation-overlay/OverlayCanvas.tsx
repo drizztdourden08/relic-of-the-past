@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useEffect, useMemo } from 'react';
+import { Canvas } from '../../../../../../design-system/primitives/Canvas';
 import { useNavigationOverlayStore } from '../../../../../../../stores/navigation-overlay-store';
 import { useGameUIStore } from '../../../../../../../stores/game-ui-store';
 import { wasmGetViewportInfo, wasmGetLiveSprites } from '../../../../../../../lib/game';
@@ -79,7 +80,7 @@ const OverlayCanvas = ({ width, height, gameRunning, mouseStateRef }: OverlayCan
   }, [visible, result, results, connections, fallHoleSpawns, respawnEntIds, width, height, gameRunning, activeScreenIndex, isIndoors, roomIndex, layer1ReachableOverride, mouseStateRef, setLockedPath]);
 
   return (
-    <canvas
+    <Canvas
       ref={canvasRef}
       width={width}
       height={height}

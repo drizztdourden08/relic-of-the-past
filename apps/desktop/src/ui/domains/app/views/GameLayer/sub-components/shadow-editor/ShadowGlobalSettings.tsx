@@ -2,6 +2,7 @@
 /** Global lighting settings (Sun / Atmosphere / Height Levels) for the Shadow Editor panel. */
 import { Slider } from '../../../../../../design-system/primitives/Slider';
 import { Toggle } from '../../../../../../design-system/primitives/Toggle';
+import { Box } from '../../../../../../design-system/primitives/Box';
 import { SettingsSection } from '../../../../../../design-system/composites/SettingsSection';
 import { NumberField } from './NumberField';
 import { HeightLevelEditor } from './HeightLevelEditor';
@@ -24,10 +25,10 @@ const ShadowGlobalSettings = ({ screenId, screenData, updateLighting }: ShadowGl
         />
         {screenData.lighting.sunEnabled && (
           <>
-            <div className="shadow-editor-panel__field-row">
+            <Box className="shadow-editor-panel__field-row">
               <NumberField icon="∠" value={screenData.lighting.sunAngle} step={5} min={0} max={360} suffix="°" onChange={(v) => updateLighting(screenId, { sunAngle: v })} />
               <NumberField icon="↗" value={screenData.lighting.sunElevation} step={5} min={15} max={85} suffix="°" onChange={(v) => updateLighting(screenId, { sunElevation: v })} />
-            </div>
+            </Box>
             <Slider
               value={screenData.lighting.sunIntensity}
               min={0}

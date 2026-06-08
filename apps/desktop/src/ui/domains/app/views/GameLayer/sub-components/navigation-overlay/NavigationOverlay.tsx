@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useEffect, useState, useCallback } from 'react';
+import { Box } from '../../../../../../design-system/primitives/Box';
 import { useNavigationOverlayStore } from '../../../../../../../stores/navigation-overlay-store';
 import { useGameUIStore } from '../../../../../../../stores/game-ui-store';
 import type { Props, MouseState } from './navigation-overlay.type';
@@ -57,7 +58,7 @@ const NavigationOverlay = ({ width, height, gameRunning }: Props) => {
   if (!visible || !result) return null;
 
   return (
-    <div
+    <Box
       style={{ position: 'absolute', inset: 0, zIndex: 6 }}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
@@ -83,7 +84,7 @@ const NavigationOverlay = ({ width, height, gameRunning }: Props) => {
       )}
       <PathControlsLegend />
       <OverlayLegend />
-    </div>
+    </Box>
   );
 };
 

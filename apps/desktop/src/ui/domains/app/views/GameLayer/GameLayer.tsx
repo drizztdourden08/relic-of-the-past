@@ -1,5 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useRef, useEffect, useState } from 'react';
+import { Box } from '../../../../design-system/primitives/Box';
+import { Text } from '../../../../design-system/primitives/Text';
+import { Canvas } from '../../../../design-system/primitives/Canvas';
 import { useGameState } from './behavior/useGameState';
 import { getInputManager } from '../../../../../lib/game';
 import type { EdgeGlowRenderer } from '../../../../../lib/game/edge-glow';
@@ -138,7 +141,7 @@ const GameLayer = (props: GameLayerProps) => {
   }, [status, canvasKey]);
 
   return (
-    <div
+    <Box
       className="game-layer"
       ref={containerRef}
       style={
@@ -148,16 +151,16 @@ const GameLayer = (props: GameLayerProps) => {
       }
     >
       {status === 'loading' && (
-        <div className="game-layer__status-overlay">
-          <span className="game-layer__status-text game-layer__status-text--loading">Loading WASM core...</span>
-        </div>
+        <Box className="game-layer__status-overlay">
+          <Text className="game-layer__status-text game-layer__status-text--loading">Loading WASM core...</Text>
+        </Box>
       )}
       {status === 'error' && (
-        <div className="game-layer__status-overlay">
-          <span className="game-layer__status-text game-layer__status-text--error">Error: {error}</span>
-        </div>
+        <Box className="game-layer__status-overlay">
+          <Text className="game-layer__status-text game-layer__status-text--error">Error: {error}</Text>
+        </Box>
       )}
-      <canvas
+      <Canvas
         key={canvasKey}
         ref={canvasRef}
         id="canvas"
@@ -166,14 +169,14 @@ const GameLayer = (props: GameLayerProps) => {
         height={448}
         tabIndex={0}
       />
-      <canvas
+      <Canvas
         key={`fx-${canvasKey}`}
         ref={fxCanvasRef}
         className={`game-layer__fx-canvas${status !== 'running' ? ' game-layer__fx-canvas--hidden' : ''}`}
         width={512}
         height={448}
       />
-      <canvas
+      <Canvas
         key={`shadow-${canvasKey}`}
         ref={shadowCanvasRef}
         className={`game-layer__shadow-canvas${status !== 'running' ? ' game-layer__shadow-canvas--hidden' : ''}`}
@@ -186,19 +189,19 @@ const GameLayer = (props: GameLayerProps) => {
         <ControllerDisconnectOverlay controllerName={disconnectedName} />
       )}
       {controllerPaused && status === 'running' && (!disconnectedName || disconnectedName === 'Manual pause') && (
-        <div className="game-layer__pause-overlay">
-          <div className="game-layer__pause-icon">
-            <div className="game-layer__pause-bar" />
-            <div className="game-layer__pause-bar" />
-          </div>
-        </div>
+        <Box className="game-layer__pause-overlay">
+          <Box className="game-layer__pause-icon">
+            <Box className="game-layer__pause-bar" />
+            <Box className="game-layer__pause-bar" />
+          </Box>
+        </Box>
       )}
       {status === 'running' && <NavigationOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
       {status === 'running' && <ShadowEditorOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
       {status === 'running' && <ShadowEditorPanel />}
       {status === 'running' && <ShadowElementList />}
       {status === 'running' && <GameOverlay width={fitSize.width} height={fitSize.height} />}
-    </div>
+    </Box>
   );
 };
 

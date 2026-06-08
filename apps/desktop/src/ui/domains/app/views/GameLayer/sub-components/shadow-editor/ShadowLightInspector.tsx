@@ -3,6 +3,7 @@
 import { Slider } from '../../../../../../design-system/primitives/Slider';
 import { Toggle } from '../../../../../../design-system/primitives/Toggle';
 import { Button } from '../../../../../../design-system/primitives/Button';
+import { Box } from '../../../../../../design-system/primitives/Box';
 import { SettingsSection } from '../../../../../../design-system/composites/SettingsSection';
 import { NumberField } from './NumberField';
 import type { LightSource } from '@shared/types/shadow-casting';
@@ -18,10 +19,10 @@ const ShadowLightInspector = ({ screenId, selectedLight, updateLight, handleDele
   return (
     <SettingsSection title="Light">
       {/* Position */}
-      <div className="shadow-editor-panel__field-row">
+      <Box className="shadow-editor-panel__field-row">
         <NumberField icon="X" value={selectedLight.x} step={1} onChange={(v) => updateLight(screenId, selectedLight.id, { x: v })} />
         <NumberField icon="Y" value={selectedLight.y} step={1} onChange={(v) => updateLight(screenId, selectedLight.id, { y: v })} />
-      </div>
+      </Box>
 
       {/* Radius & Intensity */}
       <NumberField icon="R" value={selectedLight.radius} step={4} min={4} max={512} onChange={(v) => updateLight(screenId, selectedLight.id, { radius: v })} />
