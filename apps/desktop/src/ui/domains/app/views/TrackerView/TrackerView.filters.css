@@ -24,8 +24,8 @@
   transition: width 0.3s ease;
 }
 
-.tracker-summary__fill--completed { background: #4caf50; }
-.tracker-summary__fill--reachable { background: #ffc107; }
+.tracker-summary__fill--completed { background: var(--color-green-base); }
+.tracker-summary__fill--reachable { background: var(--color-warning-base); }
 
 .tracker-summary__stats {
   display: flex;
@@ -33,10 +33,10 @@
   font-size: var(--text-xs, 11px);
 }
 
-.tracker-summary__stat--completed { color: #4caf50; }
-.tracker-summary__stat--reachable { color: #ffc107; }
-.tracker-summary__stat--blocked { color: var(--color-text-secondary, #666); }
-.tracker-summary__stat--total { color: var(--color-text-primary, #e0e0e0); }
+.tracker-summary__stat--completed { color: var(--color-green-base); }
+.tracker-summary__stat--reachable { color: var(--color-warning-base); }
+.tracker-summary__stat--blocked { color: var(--color-text-secondary); }
+.tracker-summary__stat--total { color: var(--color-text-primary); }
 
 /* ═══════════════════════════════════════════════════════════════
    FILTERS & CONTROLS
@@ -58,7 +58,7 @@
   background: rgb(255, 255, 255, 0.06);
   border: 1px solid rgb(255, 255, 255, 0.12);
   border-radius: 3px;
-  color: var(--color-text-primary, #e0e0e0);
+  color: var(--color-text-primary);
   font-family: inherit;
   font-size: var(--text-xs, 11px);
   outline: none;
@@ -84,7 +84,7 @@
   background: rgb(255, 255, 255, 0.06);
   border: 1px solid rgb(255, 255, 255, 0.1);
   border-radius: 3px;
-  color: var(--color-text-secondary, #999);
+  color: var(--color-text-secondary);
   font-size: 12px;
   cursor: pointer;
 }
@@ -92,7 +92,7 @@
 .tracker-filters__mode-btn--active {
   background: rgb(100, 160, 255, 0.2);
   border-color: rgb(100, 160, 255, 0.5);
-  color: #e0e0e0;
+  color: var(--color-text-primary);
 }
 
 .tracker-filters__btn {
@@ -100,7 +100,7 @@
   background: rgb(255, 255, 255, 0.06);
   border: 1px solid rgb(255, 255, 255, 0.1);
   border-radius: 3px;
-  color: var(--color-text-secondary, #999);
+  color: var(--color-text-secondary);
   font-size: 10px;
   cursor: pointer;
   font-family: inherit;
@@ -109,7 +109,7 @@
 .tracker-filters__btn--active {
   background: rgb(100, 160, 255, 0.15);
   border-color: rgb(100, 160, 255, 0.4);
-  color: #b8d4ff;
+  color: var(--color-info-base);
 }
 
 .tracker-filters__select {
@@ -117,7 +117,7 @@
   background: rgb(255, 255, 255, 0.06);
   border: 1px solid rgb(255, 255, 255, 0.1);
   border-radius: 3px;
-  color: var(--color-text-secondary, #999);
+  color: var(--color-text-secondary);
   font-size: 10px;
   cursor: pointer;
   font-family: inherit;
@@ -127,7 +127,7 @@
 .tracker-filters__select--active {
   background: rgb(100, 160, 255, 0.15);
   border-color: rgb(100, 160, 255, 0.4);
-  color: #b8d4ff;
+  color: var(--color-info-base);
 }
 
 /* Status filter buttons */
@@ -141,7 +141,7 @@
   background: rgb(255, 255, 255, 0.06);
   border: 1px solid rgb(255, 255, 255, 0.1);
   border-radius: 3px;
-  color: var(--color-text-secondary, #999);
+  color: var(--color-text-secondary);
   font-size: 10px;
   cursor: pointer;
   font-family: inherit;
@@ -155,24 +155,24 @@
 
 .tracker-filters__status-btn--active {
   border-color: rgb(100, 160, 255, 0.5);
-  color: #e0e0e0;
+  color: var(--color-text-primary);
   background: rgb(100, 160, 255, 0.15);
 }
 
 .tracker-filters__status-btn--reachable.tracker-filters__status-btn--active {
-  color: #ffc107;
+  color: var(--color-warning-base);
   border-color: rgb(255, 193, 7, 0.5);
   background: rgb(255, 193, 7, 0.15);
 }
 
 .tracker-filters__status-btn--completed.tracker-filters__status-btn--active {
-  color: #4caf50;
+  color: var(--color-green-base);
   border-color: rgb(76, 175, 80, 0.5);
   background: rgb(76, 175, 80, 0.15);
 }
 
 .tracker-filters__status-btn--blocked.tracker-filters__status-btn--active {
-  color: #999;
+  color: var(--color-text-secondary);
   border-color: rgb(153, 153, 153, 0.5);
   background: rgb(153, 153, 153, 0.15);
 }
@@ -196,7 +196,7 @@
   background: rgb(255, 255, 255, 0.06);
   border: 1px solid rgb(255, 255, 255, 0.1);
   border-radius: 3px;
-  color: var(--color-text-secondary, #999);
+  color: var(--color-text-secondary);
   font-size: 10px;
   cursor: pointer;
   font-family: inherit;
@@ -210,7 +210,7 @@
   font-size: 9px;
   font-weight: 600;
   text-transform: uppercase;
-  color: var(--color-text-secondary, #777);
+  color: var(--color-text-secondary);
   display: block;
   margin-bottom: 2px;
 }
@@ -227,7 +227,7 @@
   background: rgb(255, 255, 255, 0.06);
   border: 1px solid rgb(255, 255, 255, 0.08);
   border-radius: 10px;
-  color: var(--color-text-secondary, #999);
+  color: var(--color-text-secondary);
   cursor: pointer;
   font-family: inherit;
 }
@@ -235,7 +235,7 @@
 .tracker-filters__tag--active {
   background: rgb(100, 160, 255, 0.2);
   border-color: rgb(100, 160, 255, 0.5);
-  color: #b8d4ff;
+  color: var(--color-info-base);
 }
 
 /* Grouping config panel */
@@ -255,7 +255,7 @@
 
 .tracker-filters__group-empty {
   font-size: 10px;
-  color: var(--color-text-secondary, #666);
+  color: var(--color-text-secondary);
   font-style: italic;
 }
 
@@ -268,13 +268,13 @@
   border: 1px solid rgb(100, 160, 255, 0.3);
   border-radius: 10px;
   font-size: 10px;
-  color: #b8d4ff;
+  color: var(--color-info-base);
 }
 
 .tracker-filters__group-remove {
   background: none;
   border: none;
-  color: #b8d4ff;
+  color: var(--color-info-base);
   font-size: 12px;
   cursor: pointer;
   padding: 0;
@@ -293,7 +293,7 @@
   background: rgb(255, 255, 255, 0.04);
   border: 1px dashed rgb(255, 255, 255, 0.15);
   border-radius: 10px;
-  color: var(--color-text-secondary, #888);
+  color: var(--color-text-secondary);
   cursor: pointer;
   font-family: inherit;
 }
