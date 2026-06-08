@@ -20,6 +20,13 @@
   --color-border-default: #333340;
   --color-border-strong:  #444450;
 
+  /* ─── Surface Overlays (tint-on-surface for hover/selected/inset states) ─── */
+  --color-surface-hover:        rgb(255, 255, 255, 0.04);
+  --color-surface-hover-strong: rgb(255, 255, 255, 0.07);
+  --color-surface-inset:        rgb(255, 255, 255, 0.02);
+  --color-surface-selected:     rgb(200, 168, 78, 0.08);
+  --color-border-hover:         rgb(255, 255, 255, 0.1);
+
   /* ─── Text Colors ─── */
   --color-text-primary:   #e8e8ec;
   --color-text-secondary: #a0a0a8;
@@ -86,6 +93,24 @@
   /* ─── Transitions ─── */
   --transition-fast:   0.1s ease;
   --transition-normal: 0.15s ease;
+
+  /* ─── Opacity ─── */
+  --opacity-disabled: 0.4;
+  --opacity-faint:    0.5;
+  --opacity-muted:    0.6;
+
+  /* ─── Z-index scale (mirrors the Portal layer ladder) ─── */
+  --z-base:            1;
+  --z-sticky:          10;
+  --z-nav-overlay:     20;
+  --z-backdrop:        50;
+  --z-panel:           100;
+  --z-floating:        110;
+  --z-modal:           200;
+  --z-popover:         250;
+  --z-toast:           300;
+  --z-tooltip:         400;
+  --z-top:             9999;  /* escape-hatch for context-trapped popovers (pre-Portal) */
 
   /* ─── Layout ─── */
   --titlebar-height: 38px;

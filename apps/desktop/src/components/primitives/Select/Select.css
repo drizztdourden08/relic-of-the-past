@@ -84,7 +84,7 @@
 /* ─── Dropdown content (rendered in portal) ─── */
 .select-content {
   position: fixed;
-  z-index: 9999;
+  z-index: var(--z-popover);
   min-width: 180px;
   max-height: 280px;
   overflow-y: auto;
