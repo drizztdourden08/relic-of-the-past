@@ -1,55 +1,58 @@
 /* @layer renderer-components @kind data */
 import { CREDITS, getUsageLabel } from '@shared/credits';
+import { Box } from '../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../design-system/primitives/Text';
 import './CreditsTab.css';
 
 const CreditsPage = () => {
   return (
-    <div className="credits-tab">
-      <div className="credits-tab__header">
-        <h2 className="credits-tab__title">Credits & Attributions</h2>
-        <p className="credits-tab__subtitle">
+    <Box className="credits-tab">
+      <Box className="credits-tab__header">
+        <Text as="h2" className="credits-tab__title">Credits & Attributions</Text>
+        <Text as="p" className="credits-tab__subtitle">
           This project is built on the work of many talented people and communities.
-        </p>
-      </div>
+        </Text>
+      </Box>
 
       {CREDITS.map((category) => (
-        <section key={category.id} className="credits-tab__section">
-          <h3 className="credits-tab__section-title">{category.title}</h3>
-          <div className="credits-tab__entries">
+        <Box as="section" key={category.id} className="credits-tab__section">
+          <Text as="h3" className="credits-tab__section-title">{category.title}</Text>
+          <Box className="credits-tab__entries">
             {category.entries.map((entry) => (
-              <div key={`${category.id}-${entry.name}`} className="credits-tab__entry">
-                <div className="credits-tab__entry-header">
-                  <span className="credits-tab__entry-name">{entry.name}</span>
-                  <span className="credits-tab__entry-project">
+              <Box key={`${category.id}-${entry.name}`} className="credits-tab__entry">
+                <Box className="credits-tab__entry-header">
+                  <Text className="credits-tab__entry-name">{entry.name}</Text>
+                  <Text className="credits-tab__entry-project">
                     {entry.url ? (
-                      <a
+                      <Box
+                        as="a"
                         className="credits-tab__link"
                         href={entry.url}
                         onClick={(e) => { e.preventDefault(); window.open(entry.url); }}
                       >
                         {entry.project}
-                      </a>
+                      </Box>
                     ) : (
                       entry.project
                     )}
-                  </span>
+                  </Text>
                   {entry.license && (
-                    <span className="credits-tab__entry-license">{entry.license}</span>
+                    <Text className="credits-tab__entry-license">{entry.license}</Text>
                   )}
-                </div>
-                <p className="credits-tab__entry-description">{entry.description}</p>
-                <div className="credits-tab__entry-usage">
-                  <span className="credits-tab__usage-badge" data-level={entry.usage}>
+                </Box>
+                <Text as="p" className="credits-tab__entry-description">{entry.description}</Text>
+                <Box className="credits-tab__entry-usage">
+                  <Text className="credits-tab__usage-badge" data-level={entry.usage}>
                     {getUsageLabel(entry.usage)}
-                  </span>
-                  <span className="credits-tab__usage-note">{entry.usageNote}</span>
-                </div>
-              </div>
+                  </Text>
+                  <Text className="credits-tab__usage-note">{entry.usageNote}</Text>
+                </Box>
+              </Box>
             ))}
-          </div>
-        </section>
+          </Box>
+        </Box>
       ))}
-    </div>
+    </Box>
   );
 }
 

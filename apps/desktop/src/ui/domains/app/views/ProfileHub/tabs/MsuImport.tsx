@@ -2,6 +2,7 @@
 import { useState, useCallback } from 'react';
 import { DropZone } from '../../../../../design-system/primitives/DropZone';
 import { TextInput } from '../../../../../design-system/primitives/TextInput';
+import { Box } from '../../../../../design-system/primitives/Box';
 import './MsuImport.css';
 
 interface MsuImportProps {
@@ -76,8 +77,8 @@ const MsuImport = (props: MsuImportProps) => {
   const statusClass = status.variant ? `msu-import__status msu-import__status--${status.variant}` : 'msu-import__status';
 
   return (
-    <div className="msu-import">
-      <div className="msu-import__url-row">
+    <Box className="msu-import">
+      <Box className="msu-import__url-row">
         <TextInput
           className="msu-import__url-input"
           type="text"
@@ -87,15 +88,16 @@ const MsuImport = (props: MsuImportProps) => {
           onKeyDown={handleKeyDown}
           disabled={busy}
         />
-        <button
+        <Box
+          as="button"
           className="msu-import__download-btn"
           onClick={handleDownload}
           disabled={busy || !url.trim()}
         >
           {busy ? '…' : 'Download'}
-        </button>
-      </div>
-      <div className="msu-import__divider">or</div>
+        </Box>
+      </Box>
+      <Box className="msu-import__divider">or</Box>
       <DropZone
         accept={['.zip', '.7z', '.rar']}
         label="Drop MSU pack here"
@@ -103,8 +105,8 @@ const MsuImport = (props: MsuImportProps) => {
         disabled={busy}
         onDrop={handleDrop}
       />
-      {status.message && <div className={statusClass}>{status.message}</div>}
-    </div>
+      {status.message && <Box className={statusClass}>{status.message}</Box>}
+    </Box>
   );
 }
 

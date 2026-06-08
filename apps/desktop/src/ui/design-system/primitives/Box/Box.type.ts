@@ -6,6 +6,8 @@ interface BoxProps extends HTMLAttributes<HTMLElement> {
   as?: ElementType;
   /** Forwarded when rendering an interactive element (e.g. `as="button"`). */
   disabled?: boolean;
+  /** Forwarded when rendering an anchor (e.g. `as="a"`). */
+  href?: string;
   children?: ReactNode;
 }
 

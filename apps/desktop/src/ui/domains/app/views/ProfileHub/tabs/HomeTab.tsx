@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind component */
 import { HeroSaveCard } from '../../../compounds/HeroSaveCard';
+import { Box } from '../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../design-system/primitives/Text';
 import { formatRelativeTime } from './home-tab/home-tab-helpers';
 import { useHomeTabSaves } from './home-tab/useHomeTabSaves';
 import { HomeTabColumns } from './home-tab/HomeTabColumns';
@@ -13,28 +15,28 @@ const HomeTab = (props: HomeTabProps) => {
   const { heroSave, normalScreenshots, busyNormal, handleLoadNormal } = saves;
 
   return (
-    <div className="home-tab">
+    <Box className="home-tab">
       {/* Info cards */}
-      <div className="home-tab__info-cards">
-        <div className="home-tab__info-card">
-          <span className="home-tab__info-label">ROM</span>
-          <span className="home-tab__info-value">{romFile.replace(/\.(sfc|smc)$/i, '')}</span>
-        </div>
-        <div className="home-tab__info-card">
-          <span className="home-tab__info-label">Last Played</span>
-          <span className="home-tab__info-value">{formatRelativeTime(lastPlayed)}</span>
-        </div>
-        <div className="home-tab__info-card">
-          <span className="home-tab__info-label">Created</span>
-          <span className="home-tab__info-value">{formatRelativeTime(created)}</span>
-        </div>
+      <Box className="home-tab__info-cards">
+        <Box className="home-tab__info-card">
+          <Text className="home-tab__info-label">ROM</Text>
+          <Text className="home-tab__info-value">{romFile.replace(/\.(sfc|smc)$/i, '')}</Text>
+        </Box>
+        <Box className="home-tab__info-card">
+          <Text className="home-tab__info-label">Last Played</Text>
+          <Text className="home-tab__info-value">{formatRelativeTime(lastPlayed)}</Text>
+        </Box>
+        <Box className="home-tab__info-card">
+          <Text className="home-tab__info-label">Created</Text>
+          <Text className="home-tab__info-value">{formatRelativeTime(created)}</Text>
+        </Box>
         {windowMode && (
-          <div className="home-tab__info-card">
-            <span className="home-tab__info-label">Window</span>
-            <span className="home-tab__info-value" style={{ textTransform: 'capitalize' }}>{windowMode}</span>
-          </div>
+          <Box className="home-tab__info-card">
+            <Text className="home-tab__info-label">Window</Text>
+            <Text className="home-tab__info-value" style={{ textTransform: 'capitalize' }}>{windowMode}</Text>
+          </Box>
         )}
-      </div>
+      </Box>
 
       {/* Hero card — last normal save */}
       {heroSave && (
@@ -49,7 +51,7 @@ const HomeTab = (props: HomeTabProps) => {
 
       <HomeTabColumns saves={saves} isGameRunning={isGameRunning} />
       <HomeTabDialogs saves={saves} />
-    </div>
+    </Box>
   );
 };
 

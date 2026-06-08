@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind component */
 /** Home tab two-column layout: quick saves + sessions (left), normal + auto saves (right). */
+import { Box } from '../../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../../design-system/primitives/Text';
 import { SaveSlot } from '../../../../compounds/SaveSlot';
 import { NormalSaveCard } from '../../../../compounds/NormalSaveCard';
 import { AutoSaveCard } from '../../../../compounds/AutoSaveCard';
@@ -14,12 +16,12 @@ const HomeTabColumns = ({ saves, isGameRunning }: { saves: HomeTabSaves; isGameR
     autoSaves, autoScreenshots, busyAuto, handleLoadAuto, handleDeleteAuto,
   } = saves;
   return (
-    <div className="home-tab__columns">
+    <Box className="home-tab__columns">
       {/* Left column: Quick Saves + Play Sessions */}
-      <div className="home-tab__col-left">
-        <section className="home-tab__section">
-          <h3 className="home-tab__section-title">Quick Saves</h3>
-          <div className="home-tab__save-grid">
+      <Box className="home-tab__col-left">
+        <Box as="section" className="home-tab__section">
+          <Text as="h3" className="home-tab__section-title">Quick Saves</Text>
+          <Box className="home-tab__save-grid">
             {slots.map((s) => (
               <SaveSlot
                 key={s.slot}
@@ -33,41 +35,42 @@ const HomeTabColumns = ({ saves, isGameRunning }: { saves: HomeTabSaves; isGameR
                 onLoad={handleQuickLoad}
               />
             ))}
-          </div>
-        </section>
+          </Box>
+        </Box>
 
-        <section className="home-tab__section">
-          <h3 className="home-tab__section-title">Play Sessions</h3>
+        <Box as="section" className="home-tab__section">
+          <Text as="h3" className="home-tab__section-title">Play Sessions</Text>
           {sessions.length === 0 ? (
-            <p className="home-tab__empty">No play sessions yet</p>
+            <Text as="p" className="home-tab__empty">No play sessions yet</Text>
           ) : (
-            <div className="home-tab__sessions">
+            <Box className="home-tab__sessions">
               {sessions.map((s) => (
                 <PlaySessionCard key={s.id} session={s} />
               ))}
-            </div>
+            </Box>
           )}
-        </section>
-      </div>
+        </Box>
+      </Box>
 
       {/* Right column: Normal Saves + Auto Saves */}
-      <div className="home-tab__col-right">
-        <section className="home-tab__section">
-          <div className="home-tab__section-header">
-            <h3 className="home-tab__section-title">Saves</h3>
-            <button
+      <Box className="home-tab__col-right">
+        <Box as="section" className="home-tab__section">
+          <Box className="home-tab__section-header">
+            <Text as="h3" className="home-tab__section-title">Saves</Text>
+            <Box
+              as="button"
               className="home-tab__new-save-btn"
               onClick={handleCreateNormalSave}
               disabled={!isGameRunning}
               title={isGameRunning ? 'Create a new save' : 'Start game to save'}
             >
               + New Save
-            </button>
-          </div>
+            </Box>
+          </Box>
           {normalSaves.length === 0 ? (
-            <p className="home-tab__empty">No saves yet</p>
+            <Text as="p" className="home-tab__empty">No saves yet</Text>
           ) : (
-            <div className="home-tab__save-list">
+            <Box className="home-tab__save-list">
               {normalSaves.map((s) => (
                 <NormalSaveCard
                   key={s.id}
@@ -83,16 +86,16 @@ const HomeTabColumns = ({ saves, isGameRunning }: { saves: HomeTabSaves; isGameR
                   onRename={handleRenameNormal}
                 />
               ))}
-            </div>
+            </Box>
           )}
-        </section>
+        </Box>
 
-        <section className="home-tab__section">
-          <h3 className="home-tab__section-title">Auto-Saves</h3>
+        <Box as="section" className="home-tab__section">
+          <Text as="h3" className="home-tab__section-title">Auto-Saves</Text>
           {autoSaves.length === 0 ? (
-            <p className="home-tab__empty">No auto-saves yet</p>
+            <Text as="p" className="home-tab__empty">No auto-saves yet</Text>
           ) : (
-            <div className="home-tab__save-list">
+            <Box className="home-tab__save-list">
               {autoSaves.map((s) => (
                 <AutoSaveCard
                   key={s.id}
@@ -105,11 +108,11 @@ const HomeTabColumns = ({ saves, isGameRunning }: { saves: HomeTabSaves; isGameR
                   onDelete={handleDeleteAuto}
                 />
               ))}
-            </div>
+            </Box>
           )}
-        </section>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
