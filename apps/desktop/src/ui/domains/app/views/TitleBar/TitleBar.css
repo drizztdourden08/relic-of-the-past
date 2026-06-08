@@ -78,8 +78,8 @@
 .titlebar__update-badge {
   margin-left: var(--space-xs, 4px);
   background: rgb(76, 175, 80, 0.15);
-  border: 1px solid #4caf50;
-  color: #4caf50;
+  border: 1px solid var(--color-green-base);
+  color: var(--color-green-base);
   font-size: var(--text-xs, 11px);
   font-weight: var(--weight-semibold, 600);
   cursor: pointer;

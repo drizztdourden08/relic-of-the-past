@@ -16,7 +16,7 @@
 
 .number-field__value {
   font-size: 12px;
-  color: var(--color-text-primary, #fff);
+  color: var(--color-text-primary);
   background: var(--color-input-bg, rgb(255, 255, 255, 0.06));
   border: 1px solid var(--color-border-subtle, rgb(255, 255, 255, 0.1));
   border-radius: 4px;
@@ -34,9 +34,9 @@
 
 .number-field__input {
   font-size: 12px;
-  color: var(--color-text-primary, #fff);
+  color: var(--color-text-primary);
   background: var(--color-input-bg, rgb(255, 255, 255, 0.1));
-  border: 1px solid var(--color-accent, #4a9eff);
+  border: 1px solid var(--color-gold-base);
   border-radius: 4px;
   padding: 3px 6px;
   min-width: 40px;

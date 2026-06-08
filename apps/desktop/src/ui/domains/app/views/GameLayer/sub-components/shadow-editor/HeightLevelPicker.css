@@ -26,15 +26,15 @@
 
 .height-level-picker__btn--active {
   background: var(--color-accent-bg, rgb(74, 158, 255, 0.15));
-  border-color: var(--color-accent, #4a9eff);
-  color: var(--color-text-primary, #fff);
+  border-color: var(--color-gold-base);
+  color: var(--color-text-primary);
 }
 
 .height-level-picker__swatch {
   width: 12px;
   height: 12px;
   border-radius: 2px;
-  background: #fff;
+  background: var(--color-text-primary);
   flex-shrink: 0;
 }
 

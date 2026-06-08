@@ -35,7 +35,7 @@
   border: 1px solid rgb(220, 80, 80, 0.3);
   border-radius: var(--radius-md);
   background: rgb(220, 80, 80, 0.1);
-  color: #dc5050;
+  color: var(--color-danger-base);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   cursor: pointer;
@@ -59,12 +59,12 @@
 }
 
 .sprite-manager__message--success {
-  color: #4caf50;
+  color: var(--color-green-base);
   background: rgb(76, 175, 80, 0.08);
 }
 
 .sprite-manager__message--error {
-  color: #f44336;
+  color: var(--color-danger-base);
   background: rgb(244, 67, 54, 0.08);
 }
 

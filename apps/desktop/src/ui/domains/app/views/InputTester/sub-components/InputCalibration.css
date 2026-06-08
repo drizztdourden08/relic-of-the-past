@@ -163,13 +163,13 @@
 
 /* ─── Stale device overlay ─── */
 .input-cal__card--stale {
-  border-color: #dc2626;
+  border-color: var(--color-danger-base);
   animation: stale-card-pulse 1.5s ease-in-out infinite;
 }
 
 @keyframes stale-card-pulse {
-  0%, 100% { border-color: #dc2626; }
-  50% { border-color: #991b1b; }
+  0%, 100% { border-color: var(--color-danger-base); }
+  50% { border-color: var(--color-danger-border); }
 }
 
 .input-cal__stale-overlay {
@@ -189,13 +189,13 @@
   font-size: 20px;
   font-weight: 900;
   letter-spacing: 3px;
-  color: #fca5a5;
+  color: var(--color-danger-text);
   text-shadow: 0 0 8px rgb(220, 38, 38, 0.8);
 }
 
 .input-cal__stale-sub {
   font-size: 11px;
-  color: #fecaca;
+  color: var(--color-danger-text);
   margin-top: 4px;
 }
 

@@ -16,8 +16,8 @@
 }
 
 .controller-disconnect-overlay__card {
-  background: var(--color-bg-surface, #1a1a2e);
-  border: 2px solid var(--color-danger-base, #e94560);
+  background: var(--color-bg-raised);
+  border: 2px solid var(--color-danger-base);
   border-radius: var(--radius-lg, 8px);
   padding: 32px 40px;
   text-align: center;
@@ -34,19 +34,19 @@
 .controller-disconnect-overlay__title {
   font-size: 20px;
   font-weight: 700;
-  color: var(--color-danger-base, #e94560);
+  color: var(--color-danger-base);
   margin: 0 0 8px;
 }
 
 .controller-disconnect-overlay__message {
   font-size: 14px;
-  color: var(--color-text-primary, #e4e4e7);
+  color: var(--color-text-primary);
   margin: 0 0 16px;
 }
 
 .controller-disconnect-overlay__actions {
   font-size: 13px;
-  color: var(--color-text-secondary, #a1a1aa);
+  color: var(--color-text-secondary);
   text-align: left;
 }
 
@@ -66,11 +66,11 @@
 
 .controller-disconnect-overlay__actions kbd {
   display: inline-block;
-  background: var(--color-bg-deep, #0f0f23);
-  border: 1px solid var(--color-border-subtle, #333);
+  background: var(--color-bg-deep);
+  border: 1px solid var(--color-border-subtle);
   border-radius: 3px;
   padding: 1px 6px;
   font-family: monospace;
   font-size: 12px;
-  color: var(--color-gold-base, #c8a84e);
+  color: var(--color-gold-base);
 }

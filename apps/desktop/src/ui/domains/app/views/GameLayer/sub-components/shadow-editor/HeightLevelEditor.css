@@ -22,7 +22,7 @@
   width: 10px;
   height: 10px;
   border-radius: 2px;
-  background: #fff;
+  background: var(--color-text-primary);
   flex-shrink: 0;
 }
 
@@ -30,7 +30,7 @@
   flex: 1;
   min-width: 0;
   font-size: 11px;
-  color: var(--color-text-primary, #fff);
+  color: var(--color-text-primary);
   background: var(--color-input-bg, rgb(255, 255, 255, 0.06));
   border: 1px solid var(--color-border-subtle, rgb(255, 255, 255, 0.1));
   border-radius: 3px;
@@ -40,7 +40,7 @@
 .height-level-editor__value {
   width: 48px;
   font-size: 11px;
-  color: var(--color-text-primary, #fff);
+  color: var(--color-text-primary);
   background: var(--color-input-bg, rgb(255, 255, 255, 0.06));
   border: 1px solid var(--color-border-subtle, rgb(255, 255, 255, 0.1));
   border-radius: 3px;
@@ -66,10 +66,10 @@
 
 .height-level-editor__remove:hover {
   background: rgb(255, 80, 80, 0.2);
-  color: #ff5050;
+  color: var(--color-danger-base);
 }
 
 .height-level-editor__add-btn:hover {
   background: rgb(74, 158, 255, 0.2);
-  color: var(--color-accent, #4a9eff);
+  color: var(--color-gold-base);
 }

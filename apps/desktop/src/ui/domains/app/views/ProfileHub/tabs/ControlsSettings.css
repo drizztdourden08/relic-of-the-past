@@ -320,13 +320,13 @@
 }
 
 .controls-settings__used-input-dot--active {
-  background: #22c55e;
-  box-shadow: 0 0 4px #22c55e80;
+  background: var(--color-green-bright);
+  box-shadow: 0 0 4px var(--color-green-base);
 }
 
 .controls-settings__used-input-dot--disconnected {
-  background: #ef4444;
-  box-shadow: 0 0 4px #ef444480;
+  background: var(--color-danger-base);
+  box-shadow: 0 0 4px var(--color-danger-base);
 }
 
 .controls-settings__used-input-icon {

@@ -13,13 +13,13 @@
   font-size: 1.4rem;
   font-weight: 600;
   margin: 0 0 6px;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .credits-tab__subtitle {
   margin: 0;
   font-size: 0.85rem;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
 }
 
 .credits-tab__section {
@@ -31,10 +31,10 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   margin: 0 0 12px;
   padding-bottom: 6px;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .credits-tab__entries {
@@ -44,8 +44,8 @@
 }
 
 .credits-tab__entry {
-  background: var(--surface-raised);
-  border: 1px solid var(--border-subtle);
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border-subtle);
   border-radius: 8px;
   padding: 14px 16px;
 }
@@ -61,16 +61,16 @@
 .credits-tab__entry-name {
   font-weight: 600;
   font-size: 0.95rem;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .credits-tab__entry-project {
   font-size: 0.85rem;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
 }
 
 .credits-tab__link {
-  color: var(--accent);
+  color: var(--color-gold-base);
   text-decoration: none;
   cursor: pointer;
 }
@@ -83,15 +83,15 @@
   font-size: 0.75rem;
   padding: 2px 6px;
   border-radius: 4px;
-  background: var(--surface-inset);
-  color: var(--text-secondary);
+  background: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
   font-weight: 500;
 }
 
 .credits-tab__entry-description {
   margin: 0 0 8px;
   font-size: 0.82rem;
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   line-height: 1.4;
 }
 
@@ -113,39 +113,39 @@
 }
 
 .credits-tab__usage-badge[data-level="original-work"] {
-  background: #3b2d0a;
-  color: #f5c542;
+  background: var(--color-gold-dim);
+  color: var(--color-gold-bright);
 }
 
 .credits-tab__usage-badge[data-level="core-dependency"] {
-  background: #1a2e1a;
-  color: #6fcf6f;
+  background: var(--color-green-dim);
+  color: var(--color-green-bright);
 }
 
 .credits-tab__usage-badge[data-level="data-direct"],
 .credits-tab__usage-badge[data-level="assets-direct"] {
-  background: #1a2536;
-  color: #6fb3cf;
+  background: var(--color-bg-elevated);
+  color: var(--color-info-base);
 }
 
 .credits-tab__usage-badge[data-level="assets-modified"] {
-  background: #2d1a36;
-  color: #b06fcf;
+  background: var(--color-bg-elevated);
+  color: var(--color-gold-base);
 }
 
 .credits-tab__usage-badge[data-level="logic-reference"],
 .credits-tab__usage-badge[data-level="reference"] {
-  background: #1f2533;
-  color: #8fa4c4;
+  background: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
 }
 
 .credits-tab__usage-badge[data-level="inspiration"] {
-  background: #2a2020;
-  color: #c49090;
+  background: var(--color-danger-dim);
+  color: var(--color-danger-text);
 }
 
 .credits-tab__usage-note {
   font-size: 0.78rem;
-  color: var(--text-tertiary);
+  color: var(--color-text-muted);
   font-style: italic;
 }

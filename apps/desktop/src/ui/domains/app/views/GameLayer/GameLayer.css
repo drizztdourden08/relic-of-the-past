@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #000;
+  background: var(--color-bg-deep);
   z-index: 0;
   overflow: hidden;
 }
@@ -44,11 +44,11 @@
 }
 
 .game-layer__status-text--loading {
-  color: #c8a84e;
+  color: var(--color-gold-base);
 }
 
 .game-layer__status-text--error {
-  color: #e94560;
+  color: var(--color-danger-base);
   font-size: 16px;
 }
 

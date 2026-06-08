@@ -16,12 +16,12 @@
 
 /* ─── Stale state ─── */
 .device-card--stale {
-  border-color: #dc2626;
+  border-color: var(--color-danger-base);
 }
 
 .device-card__api--stale {
   background: rgb(220, 38, 38, 0.15);
-  color: #f87171;
+  color: var(--color-danger-text);
   border: 1px solid rgb(220, 38, 38, 0.4);
   animation: stale-badge-pulse 1.5s ease-in-out infinite;
 }
@@ -129,18 +129,18 @@
 
 .device-card__api--xinput {
   background: rgb(74, 222, 128, 0.15);
-  color: #4ade80;
+  color: var(--color-green-bright);
   border: 1px solid rgb(74, 222, 128, 0.3);
 }
 
 .device-card__api--hid {
   background: rgb(99, 102, 241, 0.15);
-  color: #818cf8;
+  color: var(--color-info-base);
   border: 1px solid rgb(99, 102, 241, 0.3);
 }
 
 .device-card__api--webapi {
   background: rgb(250, 204, 21, 0.15);
-  color: #facc15;
+  color: var(--color-warning-base);
   border: 1px solid rgb(250, 204, 21, 0.3);
 }
