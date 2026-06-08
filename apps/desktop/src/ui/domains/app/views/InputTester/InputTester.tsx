@@ -7,6 +7,8 @@
  * whether the browser/Electron actually receives input.
  */
 
+import { Box } from '../../../../design-system/primitives/Box';
+import { Text } from '../../../../design-system/primitives/Text';
 import { useInputTester } from './useInputTester';
 import { GamepadCard } from './GamepadCard';
 import { WebHidDeviceCard } from './WebHidDeviceCard';
@@ -21,38 +23,38 @@ const InputTester = () => {
   } = useInputTester();
 
   return (
-    <div className="input-tester">
-      <div className="input-tester__header">
-        <span className="input-tester__title">Input Tester</span>
-        <span className="input-tester__status input-tester__status--polling">
+    <Box className="input-tester">
+      <Box className="input-tester__header">
+        <Text className="input-tester__title">Input Tester</Text>
+        <Text className="input-tester__status input-tester__status--polling">
           Polling @ 60fps • {gamepads.length} gamepad(s)
-        </span>
-      </div>
+        </Text>
+      </Box>
 
       {/* Event log */}
-      <div className="input-tester__event-log" ref={eventLogRef}>
-        <h3>Event Log (gamepadconnected / gamepaddisconnected)</h3>
+      <Box className="input-tester__event-log" ref={eventLogRef}>
+        <Text as="h3">Event Log (gamepadconnected / gamepaddisconnected)</Text>
         {events.length === 0 && (
-          <div className="input-tester__event-entry">
+          <Box className="input-tester__event-entry">
             Waiting for events... Press a button on any controller.
-          </div>
+          </Box>
         )}
         {events.map((ev, i) => (
-          <div key={i} className={`input-tester__event-entry input-tester__event-entry--${ev.type}`}>
+          <Box key={i} className={`input-tester__event-entry input-tester__event-entry--${ev.type}`}>
             [{new Date(ev.time).toLocaleTimeString()}] {ev.type.toUpperCase()} idx={ev.index} — {ev.id}
-          </div>
+          </Box>
         ))}
-      </div>
+      </Box>
 
       {/* Live gamepad state */}
       {gamepads.length === 0 && (
-        <div className="input-tester__no-gamepads">
-          <p>No gamepads detected by navigator.getGamepads()</p>
-          <p>Press any button on your controller to wake it up.</p>
-          <p style={{ fontSize: 11, color: '#555' }}>
+        <Box className="input-tester__no-gamepads">
+          <Text as="p">No gamepads detected by navigator.getGamepads()</Text>
+          <Text as="p">Press any button on your controller to wake it up.</Text>
+          <Text as="p" style={{ fontSize: 11, color: '#555' }}>
             Chromium requires at least one button press before a gamepad appears in the API.
-          </p>
-        </div>
+          </Text>
+        </Box>
       )}
 
       {gamepads.map(gp => (
@@ -69,33 +71,35 @@ const InputTester = () => {
 
       {/* Last calibration result */}
       {lastCalibration && !calibrating && (
-        <div className="input-tester__hid-section" style={{ border: '2px solid #4ade80' }}>
-          <h3 style={{ color: '#4ade80' }}>Calibration Result</h3>
-          <div style={{ fontSize: 11, color: '#888', marginBottom: 8 }}>
+        <Box className="input-tester__hid-section" style={{ border: '2px solid #4ade80' }}>
+          <Text as="h3" style={{ color: '#4ade80' }}>Calibration Result</Text>
+          <Box style={{ fontSize: 11, color: '#888', marginBottom: 8 }}>
             {lastCalibration.name} — {Object.keys(lastCalibration.buttons).length} buttons, {Object.keys(lastCalibration.axes).length} axes
-          </div>
-          <pre style={{ fontSize: 10, background: '#1e1e2e', padding: 8, borderRadius: 4, maxHeight: 300, overflow: 'auto', color: '#e2e8f0' }}>
+          </Box>
+          <Box as="pre" style={{ fontSize: 10, background: '#1e1e2e', padding: 8, borderRadius: 4, maxHeight: 300, overflow: 'auto', color: '#e2e8f0' }}>
             {JSON.stringify(lastCalibration, null, 2)}
-          </pre>
-          <button
+          </Box>
+          <Box
+            as="button"
             onClick={() => {
               navigator.clipboard.writeText(JSON.stringify(lastCalibration, null, 2));
             }}
             style={{ padding: '4px 12px', fontSize: 11, marginTop: 8, background: '#4ade80', color: '#000', border: 'none', borderRadius: 4, cursor: 'pointer' }}
           >
             Copy JSON
-          </button>
-        </div>
+          </Box>
+        </Box>
       )}
 
       {/* HID Controller Input (Switch Pro, etc.) */}
-      <div className="input-tester__hid-section">
-        <h3>HID Controller Input</h3>
-        <div style={{ marginBottom: 8, display: 'flex', gap: 8, alignItems: 'center' }}>
-          <span style={{ fontSize: 12, opacity: 0.7 }}>
+      <Box className="input-tester__hid-section">
+        <Text as="h3">HID Controller Input</Text>
+        <Box style={{ marginBottom: 8, display: 'flex', gap: 8, alignItems: 'center' }}>
+          <Text style={{ fontSize: 12, opacity: 0.7 }}>
             Controllers auto-connect via node-hid
-          </span>
-          <button
+          </Text>
+          <Box
+            as="button"
             onClick={() => setCalibrating(true)}
             disabled={!webHidConnected}
             style={{
@@ -106,52 +110,52 @@ const InputTester = () => {
             }}
           >
             Calibrate Controller
-          </button>
-          <span style={{ fontSize: 11, color: webHidConnected ? '#4ade80' : '#f87171' }}>
+          </Box>
+          <Text style={{ fontSize: 11, color: webHidConnected ? '#4ade80' : '#f87171' }}>
             {webHidConnected ? '● Connected' : '○ Not connected'}
-          </span>
-        </div>
+          </Text>
+        </Box>
 
         {webHidStates.size === 0 && webHidConnected && (
-          <div style={{ color: '#666', fontSize: 11 }}>Device opened. Press buttons to see input.</div>
+          <Box style={{ color: '#666', fontSize: 11 }}>Device opened. Press buttons to see input.</Box>
         )}
         {webHidStates.size === 0 && !webHidConnected && (
-          <div style={{ color: '#666', fontSize: 11 }}>Click "Connect HID Controller" to pair your Switch Pro Controller via WebHID.</div>
+          <Box style={{ color: '#666', fontSize: 11 }}>Click "Connect HID Controller" to pair your Switch Pro Controller via WebHID.</Box>
         )}
 
         {[...webHidStates.entries()].map(([key, state]) => (
           <WebHidDeviceCard key={key} deviceKey={key} state={state} />
         ))}
-      </div>
+      </Box>
 
       {/* HID enumeration (from node-hid via main process) */}
-      <div className="input-tester__hid-section">
-        <h3>HID Enumeration (node-hid, reference)</h3>
+      <Box className="input-tester__hid-section">
+        <Text as="h3">HID Enumeration (node-hid, reference)</Text>
         {hidDevices.length === 0 && (
-          <div style={{ color: '#666', fontSize: 11 }}>No HID controller devices found.</div>
+          <Box style={{ color: '#666', fontSize: 11 }}>No HID controller devices found.</Box>
         )}
         {hidDevices.map((d, i) => (
-          <div key={i} className="input-tester__hid-device">
-            <strong>{d.product || '(no name)'}</strong> — {d.manufacturer || '?'} | VID: {d.vendorId} PID: {d.productId} | Serial: {d.serialNumber || 'n/a'}
-          </div>
+          <Box key={i} className="input-tester__hid-device">
+            <Text as="strong">{d.product || '(no name)'}</Text> — {d.manufacturer || '?'} | VID: {d.vendorId} PID: {d.productId} | Serial: {d.serialNumber || 'n/a'}
+          </Box>
         ))}
-      </div>
+      </Box>
 
       {/* WebHID Diagnostic Log */}
-      <div className="input-tester__hid-section">
-        <h3>WebHID Diagnostics</h3>
-        <div className="input-tester__event-log" style={{ maxHeight: 200 }}>
+      <Box className="input-tester__hid-section">
+        <Text as="h3">WebHID Diagnostics</Text>
+        <Box className="input-tester__event-log" style={{ maxHeight: 200 }}>
           {webHidDiag.length === 0 && (
-            <div className="input-tester__event-entry">No WebHID activity yet.</div>
+            <Box className="input-tester__event-entry">No WebHID activity yet.</Box>
           )}
           {webHidDiag.map((entry, i) => (
-            <div key={i} className="input-tester__event-entry input-tester__event-entry--connect">
+            <Box key={i} className="input-tester__event-entry input-tester__event-entry--connect">
               {entry}
-            </div>
+            </Box>
           ))}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
