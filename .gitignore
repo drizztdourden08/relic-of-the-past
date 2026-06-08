@@ -62,3 +62,6 @@ config/
 scripts/utils/classification-report.csv
 scripts/analyze/report.json
 .claude/worktrees/
+
+# Loop scheduler transient lock
+.claude/scheduled_tasks.lock
