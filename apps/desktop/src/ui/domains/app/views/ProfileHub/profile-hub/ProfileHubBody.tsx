@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind component */
 /** ProfileHub tab nav + active-tab content panel. */
 import type { GameSettings } from '@shared/types/settings';
+import { Box } from '../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../design-system/primitives/Text';
 import { HomeTab } from '../tabs/HomeTab';
 import { SettingsView } from '../sub-components/SettingsView';
 import { AudioSettings } from '../tabs/AudioSettings';
@@ -33,21 +35,22 @@ const TABS: { id: ProfileHubTab; icon: string; label: string }[] = [
 const ProfileHubBody = (props: ProfileHubBodyProps) => {
   const { activeTab, setActiveTab, settings, onChange, profile, isGameRunning, onStartGame } = props;
   return (
-    <div className="profile-hub__body">
-      <div className="profile-hub__tabs">
+    <Box className="profile-hub__body">
+      <Box className="profile-hub__tabs">
         {TABS.map((t) => (
-          <button
+          <Box
+            as="button"
             key={t.id}
             className={`profile-hub__tab ${activeTab === t.id ? 'profile-hub__tab--active' : ''}`}
             onClick={() => setActiveTab(t.id)}
           >
-            <span className="profile-hub__tab-icon">{t.icon}</span>
-            <span className="profile-hub__tab-label">{t.label}</span>
-          </button>
+            <Text className="profile-hub__tab-icon">{t.icon}</Text>
+            <Text className="profile-hub__tab-label">{t.label}</Text>
+          </Box>
         ))}
-      </div>
+      </Box>
 
-      <div className="profile-hub__content">
+      <Box className="profile-hub__content">
         {activeTab === 'home' && (
           <HomeTab
             profileId={profile.id}
@@ -77,8 +80,8 @@ const ProfileHubBody = (props: ProfileHubBodyProps) => {
         {activeTab === 'haptics' && (
           <HapticsSettings settings={settings} onChange={onChange} />
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

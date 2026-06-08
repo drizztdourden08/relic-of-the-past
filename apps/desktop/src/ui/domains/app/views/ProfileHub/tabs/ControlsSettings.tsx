@@ -14,6 +14,7 @@ import { ControlsSidebar } from './controls/ControlsSidebar';
 import { ControlsMain } from './controls/ControlsMain';
 import { ControlsDevices } from './controls/ControlsDevices';
 import { Dialog } from '../../../../../design-system/composites/Dialog/Dialog';
+import { Box } from '../../../../../design-system/primitives/Box';
 import { useControlsSettings } from './useControlsSettings';
 import './ControlsSettings.css';
 
@@ -28,7 +29,7 @@ const ControlsSettings = (props: ControlsSettingsProps) => {
   const ctrl = useControlsSettings({ settings, onChange, profileId });
 
   return (
-    <div className="controls-settings">
+    <Box className="controls-settings">
       <ControlsSidebar ctrl={ctrl} />
       <ControlsMain ctrl={ctrl} />
       <ControlsDevices ctrl={ctrl} />
@@ -68,7 +69,7 @@ const ControlsSettings = (props: ControlsSettingsProps) => {
         onConfirm={ctrl.handleDeleteConfirm}
         onCancel={() => ctrl.setDeleteTarget(null)}
       />
-    </div>
+    </Box>
   );
 };
 

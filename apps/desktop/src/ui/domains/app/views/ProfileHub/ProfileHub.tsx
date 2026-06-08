@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
 import { Button } from '../../../../design-system/primitives/Button';
+import { Box } from '../../../../design-system/primitives/Box';
+import { Text } from '../../../../design-system/primitives/Text';
 import { ToastContainer } from '../../../../design-system/primitives/Toast';
 import { useProfileSettings } from './profile-hub/useProfileSettings';
 import { ProfileHubBody } from './profile-hub/ProfileHubBody';
@@ -16,12 +18,12 @@ const ProfileHub = (props: ProfileHubProps) => {
   const { settings, handleSettingsChange, gamePaused, handleTogglePause, toasts, dismissToast } = useProfileSettings(props);
 
   return (
-    <div className="profile-hub">
+    <Box className="profile-hub">
       {/* Profile Header — always visible */}
-      <div className="profile-hub__header">
-        <div className="profile-hub__title-row">
-          <h1 className="profile-hub__name">{profile.name}</h1>
-          <div className="profile-hub__actions">
+      <Box className="profile-hub__header">
+        <Box className="profile-hub__title-row">
+          <Text as="h1" className="profile-hub__name">{profile.name}</Text>
+          <Box className="profile-hub__actions">
             {!isGameRunning ? (
               <Button variant="primary" size="md" onClick={onStartGame}>▶ Play</Button>
             ) : (
@@ -33,9 +35,9 @@ const ProfileHub = (props: ProfileHubProps) => {
                 <Button variant="secondary" size="md" onClick={onResetGame}>↻ Reset</Button>
               </>
             )}
-          </div>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Box>
 
       {/* Body: left tabs + content */}
       <ProfileHubBody
@@ -48,7 +50,7 @@ const ProfileHub = (props: ProfileHubProps) => {
         onStartGame={onStartGame}
       />
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
-    </div>
+    </Box>
   );
 };
 

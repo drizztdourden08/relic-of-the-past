@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import type { GameSettings } from '@shared/types/settings';
+import { Box } from '../../../../../design-system/primitives/Box';
 import { Toggle } from '../../../../../design-system/primitives/Toggle';
 import { RadioGroup } from '../../../../../design-system/primitives/RadioGroup';
 import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
@@ -34,7 +35,7 @@ const OUTPUT_OPTIONS = [
 const GraphicsSettings = (props: GraphicsSettingsProps) => {
   const { settings, onChange } = props;
   return (
-    <div className="settings-tab">
+    <Box className="settings-tab">
       <SettingsSection title="Display">
         <RadioGroup
           label="Aspect Ratio"
@@ -136,7 +137,7 @@ const GraphicsSettings = (props: GraphicsSettingsProps) => {
           onChange={(v) => onChange({ postProcessingShadows: v })}
         />
       </SettingsSection>
-    </div>
+    </Box>
   );
 }
 
