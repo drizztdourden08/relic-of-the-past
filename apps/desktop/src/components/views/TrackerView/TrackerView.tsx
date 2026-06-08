@@ -8,6 +8,8 @@ import { TrackerInventory } from './sub-components/TrackerInventory';
 import { TrackerFilters, type ViewMode } from './sub-components/TrackerFilters';
 import { TrackerGroupTree } from './sub-components/TrackerGroupTree';
 import './TrackerView.css';
+import './TrackerView.filters.css';
+import './TrackerView.checks.css';
 import type { PanelSettings, TrackerLayoutSettings, TrackerViewProps } from './types';
 import { useTrackerState } from './useTrackerState';
 import { useDrag } from './useDrag';

@@ -1,0 +1,246 @@
+/* @layer renderer-components @kind style */
+
+/* ═══════════════════════════════════════════════════════════════
+   GROUP TREE (collapsible nested sections)
+   ═══════════════════════════════════════════════════════════════ */
+
+.tracker-groups {
+  padding: 0;
+}
+
+.tracker-group {
+  border-bottom: 1px solid rgb(255, 255, 255, 0.03);
+}
+
+.tracker-group__header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 5px 12px;
+  background: none;
+  border: none;
+  color: var(--color-text-primary, #e0e0e0);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--text-sm, 13px);
+  text-align: left;
+}
+
+.tracker-group__header:hover {
+  background: rgb(255, 255, 255, 0.04);
+}
+
+.tracker-group--depth-1 .tracker-group__header {
+  padding-left: 12px;
+  font-size: 12px;
+}
+
+.tracker-group--depth-2 .tracker-group__header {
+  padding-left: 24px;
+  font-size: 11px;
+}
+
+.tracker-group--depth-3 .tracker-group__header {
+  padding-left: 36px;
+  font-size: 11px;
+}
+
+.tracker-group--depth-4 .tracker-group__header {
+  padding-left: 48px;
+  font-size: 10px;
+}
+
+.tracker-group__chevron {
+  width: 14px;
+  flex-shrink: 0;
+  font-size: 9px;
+  color: var(--color-text-secondary, #999);
+}
+
+.tracker-group__name {
+  flex: 1;
+  font-weight: 600;
+}
+
+.tracker-group__counts {
+  font-size: 10px;
+  color: var(--color-text-secondary, #999);
+}
+
+.tracker-group__count--completed { color: #4caf50; }
+.tracker-group__count--reachable { color: #ffc107; }
+.tracker-group__count--total { color: var(--color-text-secondary, #777); }
+
+.tracker-group__content {
+  /* nested content */
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CHECK ROWS (compact & detailed)
+   ═══════════════════════════════════════════════════════════════ */
+
+.tracker-checks--list {
+  padding-left: 8px;
+}
+
+.tracker-check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs, 6px);
+  padding: 3px var(--space-md, 12px) 3px 28px;
+  font-size: var(--text-xs, 11px);
+}
+
+.tracker-check__icon {
+  width: 14px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.tracker-check__name {
+  flex: 1;
+}
+
+.tracker-check__item {
+  color: rgb(180, 160, 255, 0.85);
+  font-size: 10px;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-style: italic;
+}
+
+.tracker-check__type {
+  color: var(--color-text-secondary, #666);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.tracker-check--completed {
+  color: #4caf50;
+  opacity: 0.6;
+}
+
+.tracker-check--reachable { color: #ffc107; }
+.tracker-check--blocked { color: var(--color-text-secondary, #555); }
+
+/* ═══════════════════════════════════════════════════════════════
+   VISUAL CHECK CARDS
+   ═══════════════════════════════════════════════════════════════ */
+
+.tracker-checks--visual {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  padding: 6px 12px;
+}
+
+.tracker-card {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 6px;
+  border-radius: 4px;
+  border-left: 3px solid transparent;
+  background: rgb(255, 255, 255, 0.03);
+  transition: border-color 0.2s, opacity 0.2s;
+  min-width: 0;
+}
+
+.tracker-card--completed {
+  border-left-color: #4caf50;
+  background: rgb(76, 175, 80, 0.08);
+}
+
+.tracker-card--reachable {
+  border-left-color: #ffc107;
+  background: rgb(255, 193, 7, 0.06);
+}
+
+.tracker-card--blocked {
+  border-left-color: rgb(100, 100, 100, 0.3);
+  opacity: 0.45;
+}
+
+.tracker-card__sprite {
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+
+.tracker-card__sprite-placeholder {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  background: rgb(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.tracker-card__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1px;
+}
+
+.tracker-card__item-name {
+  font-size: 9px;
+  color: var(--color-text-primary, #ddd);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.tracker-card__check-name {
+  font-size: 8px;
+  color: var(--color-text-secondary, #777);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LEGACY (kept for TrackerRegionSection if still referenced)
+   ═══════════════════════════════════════════════════════════════ */
+
+.tracker-area__header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-xs, 6px) var(--space-md, 12px);
+  background: none;
+  border: none;
+  color: var(--color-text-primary, #e0e0e0);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--text-sm, 13px);
+  text-align: left;
+}
+
+.tracker-area__header:hover { background: rgb(255, 255, 255, 0.04); }
+
+.tracker-area__chevron {
+  width: 16px;
+  flex-shrink: 0;
+  font-size: 10px;
+  color: var(--color-text-secondary, #999);
+}
+
+.tracker-area__name {
+  flex: 1;
+  font-weight: var(--weight-semi, 600);
+}
+
+.tracker-area__counts {
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-secondary, #999);
+}
+.tracker-area__count--completed { color: #4caf50; }
+.tracker-area__count--reachable { color: #ffc107; }
+.tracker-area__checks { padding-left: var(--space-md, 12px); }
