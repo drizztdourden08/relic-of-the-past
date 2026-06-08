@@ -67,3 +67,5 @@ export { Image } from './Image';
 export type { ImageProps } from './Image';
 export { Icon } from './Icon';
 export type { IconProps } from './Icon';
+export { ProgressRing } from './ProgressRing';
+export type { ProgressRingProps } from './ProgressRing';

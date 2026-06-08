@@ -2,6 +2,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { saveState, loadState, getActiveProfileId } from '../../../../../lib/game';
 import { SaveSlot } from '../../compounds/SaveSlot';
+import { Box } from '../../../../design-system/primitives/Box';
+import { Text } from '../../../../design-system/primitives/Text';
+import { Image } from '../../../../design-system/primitives/Image';
+import { ProgressRing } from '../../../../design-system/primitives/ProgressRing';
 import { log } from '../../../../../lib/log-bus';
 import type { SlotHint } from './behavior/useEnhancedSaveSlot';
 import './SaveStateOverlay.css';
@@ -87,8 +91,8 @@ const SaveStateOverlay = (props: SaveStateOverlayProps) => {
   const panelClass = `save-overlay ${animating === 'in' ? 'save-overlay--enter' : ''} ${animating === 'out' ? 'save-overlay--exit' : ''}`;
 
   return (
-    <div className="save-overlay-backdrop" onClick={onClose}>
-      <div className={panelClass} onClick={(e) => e.stopPropagation()}>
+    <Box className="save-overlay-backdrop" onClick={onClose}>
+      <Box className={panelClass} onClick={(e) => e.stopPropagation()}>
         {Array.from({ length: SLOT_COUNT }, (_, i) => {
           const slot = slots.find((s) => s.slot === i);
           const isEmpty = !slot || slot.timestamp === 0;
@@ -96,7 +100,7 @@ const SaveStateOverlay = (props: SaveStateOverlayProps) => {
           const isHighlighted = highlightedSlot === i;
 
           return (
-            <div key={i} className="save-overlay__slot-wrapper">
+            <Box key={i} className="save-overlay__slot-wrapper">
               <SaveSlot
                 slot={i}
                 screenshotUrl={slot?.screenshotUrl ?? null}
@@ -110,51 +114,37 @@ const SaveStateOverlay = (props: SaveStateOverlayProps) => {
                 onLoad={handleLoad}
               />
               {isHighlighted && hints && hints.length > 0 && (
-                <div className="save-overlay__hints">
+                <Box className="save-overlay__hints">
                   {hints.map((hint) => (
-                    <div key={hint.action} className={`save-overlay__hint save-overlay__hint--${hint.action}`}>
-                      <span className="save-overlay__hint-icon-wrap">
+                    <Box key={hint.action} className={`save-overlay__hint save-overlay__hint--${hint.action}`}>
+                      <Box className="save-overlay__hint-icon-wrap">
                         {hint.iconUrl ? (
-                          <img src={hint.iconUrl} alt={hint.keyLabel} className="save-overlay__hint-icon" />
+                          <Image src={hint.iconUrl} alt={hint.keyLabel} className="save-overlay__hint-icon" />
                         ) : (
-                          <span className="save-overlay__hint-key-text">{hint.keyLabel}</span>
+                          <Text className="save-overlay__hint-key-text">{hint.keyLabel}</Text>
                         )}
                         {(hint.action === 'hold-save' || hint.action === 'holding-save') && (
-                          <svg className="save-overlay__hint-ring" viewBox="0 0 36 36">
-                            <circle
-                              className="save-overlay__hint-ring-bg"
-                              cx="18" cy="18" r="15"
-                              fill="none"
-                              strokeWidth="2.5"
-                            />
-                            {hint.action === 'holding-save' && (
-                              <circle
-                                className="save-overlay__hint-ring-progress"
-                                cx="18" cy="18" r="15"
-                                fill="none"
-                                strokeWidth="2.5"
-                                strokeDasharray={`${15 * 2 * Math.PI}`}
-                                strokeDashoffset={`${15 * 2 * Math.PI * (1 - (holdProgress ?? 0))}`}
-                              />
-                            )}
-                          </svg>
+                          <ProgressRing
+                            className="save-overlay__hint-ring"
+                            progress={hint.action === 'holding-save' ? (holdProgress ?? 0) : undefined}
+                          />
                         )}
-                      </span>
-                      <span className="save-overlay__hint-label">
+                      </Box>
+                      <Text className="save-overlay__hint-label">
                         {hint.action === 'tap-load' && 'Tap to load'}
                         {hint.action === 'hold-save' && 'Hold to save'}
                         {hint.action === 'holding-save' && 'Saving…'}
                         {hint.action === 'esc-cancel' && 'Cancel'}
-                      </span>
-                    </div>
+                      </Text>
+                    </Box>
                   ))}
-                </div>
+                </Box>
               )}
-            </div>
+            </Box>
           );
         })}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

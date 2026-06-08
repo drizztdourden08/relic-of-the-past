@@ -3,11 +3,18 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { DropdownMenu } from '../../../../design-system/composites/DropdownMenu';
 import { IconButton } from '../../../../design-system/primitives/IconButton';
+import { Box } from '../../../../design-system/primitives/Box';
+import { Text } from '../../../../design-system/primitives/Text';
+import { Image } from '../../../../design-system/primitives/Image';
+import { Icon } from '../../../../design-system/primitives/Icon';
 import { useTitleBar } from './behavior/useTitleBar';
 import { buildTitleBarMenuItems } from './title-bar-menu';
 import { WindowControls } from './sub-components/WindowControls';
 import { getFps } from '../../../../../lib/game';
 import './TitleBar.css';
+import {
+  MENU_ICON_CIRCLES, PIN_ICON_PATHS, MUTE_ICON_PATHS, VOLUME_ICON_PATHS, SAVE_ICON_PATHS,
+} from './TitleBar.constants';
 import type { TitleBarProps } from './TitleBar.type';
 
 
@@ -112,23 +119,14 @@ const TitleBar = (props: TitleBarProps) => {
   ].filter(Boolean).join(' ');
 
   return (
-    <div
+    <Box
       ref={titlebarRef}
       className={titlebarClass}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="titlebar__left" ref={menuRef}>
-        <IconButton
-          variant="ghost"
-          size="md"
-          label="Menu"
-          onClick={toggleMenu}
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-            <circle cx="8" cy="3" r="1.5" />
-            <circle cx="8" cy="8" r="1.5" />
-            <circle cx="8" cy="13" r="1.5" />
-          </svg>
+      <Box className="titlebar__left" ref={menuRef}>
+        <IconButton variant="ghost" size="md" label="Menu" onClick={toggleMenu}>
+          <Icon circles={MENU_ICON_CIRCLES} />
         </IconButton>
         <IconButton
           variant="ghost"
@@ -136,9 +134,7 @@ const TitleBar = (props: TitleBarProps) => {
           label={pinned ? 'Unpin window' : 'Pin window on top'}
           onClick={togglePin}
         >
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style={{ opacity: pinned ? 1 : 0.4 }}>
-            <path d="M4.146.146A.5.5 0 0 1 4.5 0h7a.5.5 0 0 1 .5.5c0 .68-.342 1.174-.646 1.479-.126.125-.25.224-.354.298v4.431l.078.048c.203.127.476.314.751.555C12.36 7.775 13 8.527 13 9.5a.5.5 0 0 1-.5.5H8.5v5.5a.5.5 0 0 1-1 0V10H3.5a.5.5 0 0 1-.5-.5c0-.973.64-1.725 1.17-2.189A6 6 0 0 1 5 6.708V2.277a3 3 0 0 1-.354-.298C4.342 1.674 4 1.179 4 .5a.5.5 0 0 1 .146-.354" />
-          </svg>
+          <Icon paths={PIN_ICON_PATHS} size={14} style={{ opacity: pinned ? 1 : 0.4 }} />
         </IconButton>
         <IconButton
           variant="ghost"
@@ -147,48 +143,35 @@ const TitleBar = (props: TitleBarProps) => {
           onClick={toggleMute}
         >
           {isMuted ? (
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style={{ opacity: 1 }}>
-              <path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06M14.354 4.646a.5.5 0 0 1 0 .708L12.707 7l1.647 1.646a.5.5 0 0 1-.708.708L12 7.707l-1.646 1.647a.5.5 0 0 1-.708-.708L11.293 7 9.646 5.354a.5.5 0 1 1 .708-.708L12 6.293l1.646-1.647a.5.5 0 0 1 .708 0" />
-            </svg>
+            <Icon paths={MUTE_ICON_PATHS} size={14} />
           ) : (
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style={{ opacity: 0.4 }}>
-              <path d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303z" />
-              <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.48 5.48 0 0 1 11.025 8a5.48 5.48 0 0 1-1.611 3.889z" />
-              <path d="M8.707 11.182A4.5 4.5 0 0 0 10.025 8a4.5 4.5 0 0 0-1.318-3.182L8 5.525A3.5 3.5 0 0 1 9.025 8 3.5 3.5 0 0 1 8 10.475zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06" />
-            </svg>
+            <Icon paths={VOLUME_ICON_PATHS} size={14} style={{ opacity: 0.4 }} />
           )}
         </IconButton>
         {gameRunning && (
-          <IconButton
-            variant="ghost"
-            size="md"
-            label="Save States"
-            onClick={onToggleSaveStates}
-          >
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" style={{ opacity: 0.7 }}>
-              <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4.414A1 1 0 0 0 14.707 4L12 1.293A1 1 0 0 0 11.293 1H2zm0 1h1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2.414L14 5.414V14H2V2zm3 0v3h4V2H5z" />
-            </svg>
+          <IconButton variant="ghost" size="md" label="Save States" onClick={onToggleSaveStates}>
+            <Icon paths={SAVE_ICON_PATHS} size={14} style={{ opacity: 0.7 }} />
           </IconButton>
         )}
         {updateAvailable && (
-          <button className="titlebar__update-badge" onClick={onUpdateClick}>
+          <Box as="button" className="titlebar__update-badge" onClick={onUpdateClick}>
             Update available
-          </button>
+          </Box>
         )}
         {menuOpen && <DropdownMenu items={menuItems} anchorRef={menuRef} />}
         {showFps && fps > 0 && (
-          <span className="titlebar__fps">{fps} FPS</span>
+          <Text className="titlebar__fps">{fps} FPS</Text>
         )}
-      </div>
+      </Box>
 
-      <div className="titlebar__center">
-        <img className="titlebar__logo" src="./logos/logo-128.png" alt="" />
-        <span className="titlebar__title">Relic of the Past</span>
-        <img className="titlebar__logo" src="./logos/logo-128.png" alt="" />
-      </div>
+      <Box className="titlebar__center">
+        <Image className="titlebar__logo" src="./logos/logo-128.png" alt="" />
+        <Text className="titlebar__title">Relic of the Past</Text>
+        <Image className="titlebar__logo" src="./logos/logo-128.png" alt="" />
+      </Box>
 
       <WindowControls isMaximized={isMaximized} />
-    </div>
+    </Box>
   );
 };
 

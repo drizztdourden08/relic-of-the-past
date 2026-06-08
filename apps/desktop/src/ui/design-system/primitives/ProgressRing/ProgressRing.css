@@ -1,0 +1,17 @@
+/* @layer renderer-components @kind style */
+
+.progress-ring {
+  display: block;
+}
+
+.progress-ring__track {
+  stroke: var(--color-surface-hover-strong);
+}
+
+.progress-ring__fill {
+  stroke: var(--color-gold-base);
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 60ms linear;
+}
