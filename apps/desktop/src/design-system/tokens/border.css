@@ -1,0 +1,7 @@
+/* @layer renderer-design-system @kind style */
+
+/* Border widths. (Border colors live in color.css as --color-border-*.) */
+:root {
+  --border-width-thin:  1px;
+  --border-width-thick: 2px;
+}

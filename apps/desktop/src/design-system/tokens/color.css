@@ -1,0 +1,53 @@
+/* @layer renderer-design-system @kind style */
+
+/* Color tokens — ALttP-inspired dark palette (gold/green on black). */
+:root {
+  /* ─── Surface Colors ─── */
+  --color-bg-deep:        #0a0a0f;
+  --color-bg-base:        #111116;
+  --color-bg-raised:      #1a1a20;
+  --color-bg-elevated:    #222228;
+  --color-bg-overlay:     rgb(10, 10, 15, 0.88);
+
+  /* ─── Border Colors ─── */
+  --color-border-subtle:  #2a2a30;
+  --color-border-default: #333340;
+  --color-border-strong:  #444450;
+
+  /* ─── Surface Overlays (tint-on-surface for hover/selected/inset states) ─── */
+  --color-surface-hover:        rgb(255, 255, 255, 0.04);
+  --color-surface-hover-strong: rgb(255, 255, 255, 0.07);
+  --color-surface-inset:        rgb(255, 255, 255, 0.02);
+  --color-surface-selected:     rgb(200, 168, 78, 0.08);
+  --color-border-hover:         rgb(255, 255, 255, 0.1);
+
+  /* ─── Text Colors ─── */
+  --color-text-primary:   #e8e8ec;
+  --color-text-secondary: #a0a0a8;
+  --color-text-muted:     #666670;
+  --color-text-faint:     #44444c;
+
+  /* ─── Accent: Gold (Triforce) ─── */
+  --color-gold-dim:       #2a2418;
+  --color-gold-base:      #c8a84e;
+  --color-gold-bright:    #e4c65a;
+  --color-gold-glow:      rgb(200, 168, 78, 0.15);
+
+  /* ─── Accent: Green (Hyrule) ─── */
+  --color-green-dim:      #1a2a1e;
+  --color-green-base:     #4a9966;
+  --color-green-bright:   #5cb87a;
+  --color-green-glow:     rgb(74, 153, 102, 0.12);
+
+  /* ─── Semantic: Danger ─── */
+  --color-danger-dim:     #2a1a1a;
+  --color-danger-base:    #e94560;
+  --color-danger-bright:  #f57;
+
+  /* ─── Semantic: Warning ─── */
+  --color-warning-base:   #ffd54f;
+  --color-warning-dim:    #2a2618;
+
+  /* ─── Semantic: Info ─── */
+  --color-info-base:      #5b9bd5;
+}

@@ -1,0 +1,9 @@
+/* @layer renderer-design-system @kind style */
+
+/* Corner radii. */
+:root {
+  --radius-sm:  4px;
+  --radius-md:  6px;
+  --radius-lg:  8px;
+  --radius-xl:  12px;
+}

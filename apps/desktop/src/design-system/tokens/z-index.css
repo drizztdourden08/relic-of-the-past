@@ -1,0 +1,16 @@
+/* @layer renderer-design-system @kind style */
+
+/* Z-index scale — mirrors the Portal layer ladder. */
+:root {
+  --z-base:        1;
+  --z-sticky:      10;
+  --z-nav-overlay: 20;
+  --z-backdrop:    50;
+  --z-panel:       100;
+  --z-floating:    110;
+  --z-modal:       200;
+  --z-popover:     250;
+  --z-toast:       300;
+  --z-tooltip:     400;
+  --z-top:         9999;  /* escape-hatch for context-trapped popovers */
+}

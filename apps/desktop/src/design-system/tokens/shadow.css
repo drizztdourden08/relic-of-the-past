@@ -1,0 +1,8 @@
+/* @layer renderer-design-system @kind style */
+
+/* Elevation shadows. */
+:root {
+  --shadow-dropdown: 0 8px 24px rgb(0, 0, 0, 0.5);
+  --shadow-overlay:  0 4px 16px rgb(0, 0, 0, 0.4);
+  --shadow-lg:       0 12px 32px rgb(0, 0, 0, 0.6);
+}

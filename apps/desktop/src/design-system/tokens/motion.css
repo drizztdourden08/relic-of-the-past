@@ -1,0 +1,10 @@
+/* @layer renderer-design-system @kind style */
+
+/* Motion — durations, easings, and the composed transition shorthands. */
+:root {
+  --duration-fast:   0.1s;
+  --duration-normal: 0.15s;
+  --ease-standard:   ease;
+  --transition-fast:   0.1s ease;
+  --transition-normal: 0.15s ease;
+}

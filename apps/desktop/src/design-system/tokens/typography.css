@@ -1,0 +1,17 @@
+/* @layer renderer-design-system @kind style */
+
+/* Typography — families, sizes, weights, line-heights. */
+:root {
+  --font-sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:  'Consolas', 'Courier New', monospace;
+  --text-xs:    10px;
+  --text-sm:    11px;
+  --text-base:  13px;
+  --text-lg:    16px;
+  --text-xl:    20px;
+  --weight-normal:  400;
+  --weight-medium:  500;
+  --weight-semi:    600;
+  --leading-tight:  1.3;
+  --leading-normal: 1.5;
+}

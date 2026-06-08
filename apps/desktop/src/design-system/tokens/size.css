@@ -1,0 +1,7 @@
+/* @layer renderer-design-system @kind style */
+
+/* Fixed sizes — control heights, chrome dimensions. */
+:root {
+  --titlebar-height: 38px;
+  --titlebar-btn-width: 46px;
+}
