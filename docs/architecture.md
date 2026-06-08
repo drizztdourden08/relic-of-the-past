@@ -74,10 +74,10 @@ If a change would break an invariant, the code is in the wrong zone — re-place
 | Pure game rule/algorithm/data, no React/Node | `shared/game/` (navigation / checks / items / data / logic / seed) | Must stay pure & testable. |
 | Parses a ROM / builds assets | `shared/asset-extraction/` | One `compile-*` per domain. |
 | Type shared by renderer + electron | `shared/types/` | Otherwise a local `types.ts`. |
-| Generic UI atom (Button, Select) | `components/primitives/` | presentational, no data |
-| Generic structural combo (Card, Dialog, Overlay) | `components/composites/` | presentational, no data |
-| Domain-specific presentational card/form (ProfileCard, SaveSlot) | `components/compounds/` | takes a domain prop, fetches nothing |
-| Feature/page with logic + data | `components/views/` or `widgets/` | owns stores/IPC/game; logic in `behavior/` |
+| Generic UI atom (Button, Select) | `ui/design-system/primitives/` | presentational, no data |
+| Generic structural combo (Card, Dialog, Overlay) | `ui/design-system/composites/` | presentational, no data |
+| Domain-specific presentational card/form (ProfileCard, SaveSlot) | `ui/domains/app/compounds/` | takes a domain prop, fetches nothing |
+| Feature/page with logic + data | `ui/domains/app/views/` or `ui/domains/widgets/` | owns stores/IPC/game; logic in `behavior/` |
 | Renderer UI state | `apps/desktop/src/stores/` | Zustand |
 | Shared renderer hook | `apps/desktop/src/hooks/` | non-feature-specific |
 | Pure renderer helper | `apps/desktop/src/utils/` | no side effects |

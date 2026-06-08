@@ -144,15 +144,22 @@ Each non-trivial component lives in its own folder:
 
 ```
 ComponentName/
-├── ComponentName.tsx    — main component
-├── types.ts            — shared types/interfaces for this component
-├── constants.ts        — static data, configs, magic values
-├── behavior/           — custom hooks (useXyz.ts)
-├── sub-components/     — child components only used here
-└── index.ts            — barrel re-export
+├── ComponentName.tsx        — main component
+├── ComponentName.css        — scoped styles
+├── ComponentName.type.ts    — shared types/interfaces for this component
+├── ComponentName.constants.ts — static data, configs, magic values
+├── behavior/                — custom hooks (useXyz.ts), one per file
+├── sub-components/          — child components only used here (recursive shape)
+└── index.ts                 — barrel re-export
 ```
 
-- `types.ts` imports React/shared types as needed, exports with `export type { ... }` at end.
+Root files are **name-prefixed** and the root holds ONLY those five — enforced
+mechanically by the **structure-policy** (analyze adapter). Plus: **no raw HTML
+outside `ui/design-system/primitives/`** (`local/no-raw-html`, ESLint) and
+**no raw hex/named colors in component CSS** (`color-no-hex`, stylelint). All
+three are warnings today (work toward error); `npm run report` lists them.
+
+- `ComponentName.type.ts` imports React/shared types as needed, exports with `export type { ... }` at end.
 - `index.ts` re-exports the main component and any types consumers need.
 - Small components (single file, no hooks) don't need a folder — just `Component.tsx`.
 
