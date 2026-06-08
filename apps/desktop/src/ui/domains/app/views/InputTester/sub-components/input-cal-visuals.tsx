@@ -5,6 +5,10 @@
  */
 
 import { useState, useRef, useCallback } from 'react';
+import { Box } from '../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../design-system/primitives/Text';
+import { Image } from '../../../../../design-system/primitives/Image';
+import { Svg, SvgLine, SvgCircle } from '../../../../../design-system/primitives/Svg';
 import { getButtonIconUrl } from '../data/button-icons';
 import { DEVICE_DATABASE } from '@shared/input/data/devices';
 import { findPresetByVidPid } from '@shared/input';
@@ -51,7 +55,8 @@ const AxisRecordButton = ({ getValues, label }: { getValues: () => number[]; lab
   const color = done ? '#4ade80' : recording ? '#ef4444' : 'var(--color-text-muted)';
 
   return (
-    <button
+    <Box
+      as="button"
       onClick={recording ? stopRecording : startRecording}
       title={recording ? 'Stop recording & copy to clipboard' : `Record ${label} axis data`}
       style={{
@@ -60,11 +65,11 @@ const AxisRecordButton = ({ getValues, label }: { getValues: () => number[]; lab
         animation: recording ? 'axis-rec-flash 0.6s ease-in-out infinite' : undefined,
       }}
     >
-      <svg width="14" height="14" viewBox="0 0 14 14">
-        <circle cx="7" cy="7" r="6" fill="none" stroke={color} strokeWidth="1.5" />
-        <circle cx="7" cy="7" r="3" fill={color} />
-      </svg>
-    </button>
+      <Svg width="14" height="14" viewBox="0 0 14 14">
+        <SvgCircle cx="7" cy="7" r="6" fill="none" stroke={color} strokeWidth="1.5" />
+        <SvgCircle cx="7" cy="7" r="3" fill={color} />
+      </Svg>
+    </Box>
   );
 };
 
@@ -74,24 +79,24 @@ const TriggerBar = ({ value, label }: { value: number; label: string }) => {
   const clamped = Math.max(0, Math.min(1, value));
   const fillH = clamped * 60; // 60px tall bar
   return (
-    <div className="input-cal__stick-container">
-      <span className="input-cal__stick-label">{label}</span>
-      <div style={{
+    <Box className="input-cal__stick-container">
+      <Text className="input-cal__stick-label">{label}</Text>
+      <Box style={{
         width: 24, height: 60, borderRadius: 4,
         border: '1px solid var(--color-border-subtle)',
         background: 'var(--color-bg-secondary, #1a1a2e)',
         position: 'relative', overflow: 'hidden',
       }}>
-        <div style={{
+        <Box style={{
           position: 'absolute', bottom: 0, left: 0, right: 0,
           height: fillH,
           background: 'var(--color-gold-bright)',
           borderRadius: '0 0 3px 3px',
           transition: 'height 0.05s linear',
         }} />
-      </div>
-      <span className="input-cal__stick-values">{clamped.toFixed(2)}</span>
-    </div>
+      </Box>
+      <Text className="input-cal__stick-values">{clamped.toFixed(2)}</Text>
+    </Box>
   );
 };
 
@@ -118,26 +123,26 @@ const StickCircle = ({ x, y, label, iconPrefix }: { x: number; y: number; label:
   const dotY = 40 + clampY * 36;
 
   return (
-    <div className="input-cal__stick-container">
-      <span className="input-cal__stick-label">{label}</span>
-      <div className="input-cal__stick-circle">
-        <svg width="80" height="80" style={{ position: 'absolute', top: 0, left: 0 }}>
-          <line x1="0" y1="40" x2="80" y2="40" stroke="var(--color-border-subtle)" strokeWidth="1" />
-          <line x1="40" y1="0" x2="40" y2="80" stroke="var(--color-border-subtle)" strokeWidth="1" />
-          <line x1="40" y1="40" x2={dotX} y2={dotY} stroke="var(--color-gold-base)" strokeWidth="2" strokeLinecap="round" />
-          <circle cx={dotX} cy={dotY} r="5" fill="var(--color-gold-bright)" />
-        </svg>
-      </div>
-      <span className="input-cal__stick-values">
+    <Box className="input-cal__stick-container">
+      <Text className="input-cal__stick-label">{label}</Text>
+      <Box className="input-cal__stick-circle">
+        <Svg width="80" height="80" style={{ position: 'absolute', top: 0, left: 0 }}>
+          <SvgLine x1="0" y1="40" x2="80" y2="40" stroke="var(--color-border-subtle)" strokeWidth="1" />
+          <SvgLine x1="40" y1="0" x2="40" y2="80" stroke="var(--color-border-subtle)" strokeWidth="1" />
+          <SvgLine x1="40" y1="40" x2={dotX} y2={dotY} stroke="var(--color-gold-base)" strokeWidth="2" strokeLinecap="round" />
+          <SvgCircle cx={dotX} cy={dotY} r="5" fill="var(--color-gold-bright)" />
+        </Svg>
+      </Box>
+      <Text className="input-cal__stick-values">
         {clampX.toFixed(2)}, {clampY.toFixed(2)}
-      </span>
+      </Text>
       {iconPrefix && (() => {
         const iconUrl = getStickDirectionIcon(clampX, clampY, iconPrefix);
         return iconUrl ? (
-          <img src={iconUrl} alt="" draggable={false} style={{ width: 32, height: 32, marginTop: 2, opacity: 0.85 }} />
+          <Image src={iconUrl} alt="" draggable={false} style={{ width: 32, height: 32, marginTop: 2, opacity: 0.85 }} />
         ) : null;
       })()}
-    </div>
+    </Box>
   );
 };
 
