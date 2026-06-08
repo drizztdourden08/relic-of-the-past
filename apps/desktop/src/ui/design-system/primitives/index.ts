@@ -65,3 +65,5 @@ export { Thumbnail } from './Thumbnail';
 export type { ThumbnailProps } from './Thumbnail';
 export { Image } from './Image';
 export type { ImageProps } from './Image';
+export { Icon } from './Icon';
+export type { IconProps } from './Icon';
