@@ -6,6 +6,7 @@ import { LanguageManager } from './sub-components/LanguageManager';
 import { MsuManager } from './sub-components/MsuManager';
 import { SpriteManager } from './sub-components/SpriteManager';
 import './DataManager.css';
+import './DataManager.detail.css';
 import type { DataTab, DataManagerProps } from './types';
 
 
