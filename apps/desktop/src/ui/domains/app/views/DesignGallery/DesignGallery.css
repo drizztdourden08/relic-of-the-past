@@ -1,60 +1,151 @@
 /* @layer renderer-app @kind style */
 
 .dg-root {
+  display: flex;
   height: 100%;
-  overflow-y: auto;
-  padding: var(--space-xl);
   background: var(--c-bg);
   color: var(--c-text);
   font-family: var(--font-sans);
   font-size: var(--text-base);
 }
 
-.dg-header {
-  margin-bottom: var(--space-xl);
+/* ─── Sidebar nav ─── */
+.dg-nav {
+  width: 220px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  padding: var(--space-lg) var(--space-sm);
+  background: var(--c-surface);
+  border-right: 1px solid var(--c-border);
 }
 
-.dg-header__title {
-  font-size: var(--text-xl);
+.dg-nav__brand {
+  display: block;
+  font-size: var(--text-sm);
   font-weight: var(--weight-semi);
+  color: var(--c-gold-bright);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0 var(--space-sm) var(--space-md);
+}
+
+.dg-nav__group {
+  margin-bottom: var(--space-md);
+}
+
+.dg-nav__group-title {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.dg-nav__item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+  background: none;
+  border: none;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+}
+
+.dg-nav__item:hover {
+  background: var(--c-hover);
+  color: var(--c-text);
+}
+
+.dg-nav__item--active {
+  background: var(--c-selected);
   color: var(--c-gold-bright);
 }
 
-.dg-header__sub {
-  font-size: var(--text-sm);
-  color: var(--c-text-dim);
-  margin-top: var(--space-xs);
-  max-width: 720px;
-  line-height: var(--leading-normal);
+/* ─── Canvas ─── */
+.dg-canvas {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-xl);
 }
 
-.dg-header__sub b {
-  color: var(--c-gold);
+.dg-canvas__head {
+  margin-bottom: var(--space-lg);
+}
+
+.dg-canvas__group {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.dg-canvas__title {
+  font-size: var(--text-xl);
   font-weight: var(--weight-semi);
+  color: var(--c-text);
 }
 
-.dg-section {
-  margin-bottom: var(--space-xl);
-  padding-bottom: var(--space-lg);
+/* ─── Layout helpers ─── */
+.dg-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.dg-stack-sm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  width: 100%;
+  max-width: 320px;
+}
+
+.dg-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.dg-row--cards {
+  align-items: stretch;
+}
+
+/* ─── Specimen ─── */
+.dg-specimen {
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  background: var(--c-surface);
+  overflow: hidden;
+}
+
+.dg-specimen__head {
+  padding: var(--space-sm) var(--space-md);
   border-bottom: 1px solid var(--c-border);
 }
 
-.dg-section__title {
-  font-size: var(--text-base);
+.dg-specimen__label {
+  font-size: var(--text-sm);
   font-weight: var(--weight-semi);
   color: var(--c-text);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 
-.dg-section__desc {
-  font-size: var(--text-sm);
+.dg-specimen__hint {
+  display: block;
+  font-size: var(--text-xs);
   color: var(--c-text-muted);
-  margin: var(--space-xs) 0 var(--space-md);
-  max-width: 720px;
-  line-height: var(--leading-normal);
+  margin-top: 2px;
 }
 
+.dg-specimen__demo {
+  padding: var(--space-md);
+}
+
+/* ─── Swatches ─── */
 .dg-swatch-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
@@ -65,10 +156,6 @@
   display: flex;
   gap: var(--space-sm);
   align-items: center;
-  padding: var(--space-sm);
-  background: var(--c-surface);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-md);
 }
 
 .dg-swatch__chip {
@@ -88,7 +175,6 @@
 .dg-swatch__name {
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
-  color: var(--c-text);
 }
 
 .dg-swatch__var {
@@ -109,6 +195,7 @@
   line-height: 1.3;
 }
 
+/* ─── Scales ─── */
 .dg-type {
   display: flex;
   flex-direction: column;
@@ -149,6 +236,106 @@
 .dg-radius-box {
   width: 56px;
   height: 56px;
-  background: var(--c-surface);
+  background: var(--c-bg);
   border: 1px solid var(--c-border-strong);
+}
+
+/* ─── Demo buttons (canonical target hierarchy) ─── */
+.dg-btn {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--c-text-dim);
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.dg-btn:hover {
+  background: var(--c-hover);
+  color: var(--c-text);
+  border-color: var(--c-border-strong);
+}
+
+.dg-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.dg-btn--primary {
+  background: var(--c-gold-dim);
+  border-color: var(--c-gold);
+  color: var(--c-gold-bright);
+}
+
+.dg-btn--primary:hover {
+  background: var(--c-gold);
+  color: var(--c-bg);
+}
+
+.dg-btn--positive {
+  background: var(--c-green-dim);
+  border-color: var(--c-green);
+  color: var(--c-green-bright);
+}
+
+.dg-btn--positive:hover {
+  background: var(--c-green);
+  color: var(--c-bg);
+}
+
+.dg-btn--danger {
+  background: var(--c-danger-dim);
+  border-color: var(--c-danger);
+  color: var(--c-danger);
+}
+
+.dg-btn--ghost {
+  background: none;
+  border-color: transparent;
+}
+
+.dg-btn--ghost:hover {
+  background: var(--c-hover);
+}
+
+/* ─── Demo cards ─── */
+.dg-card {
+  flex: 1;
+  min-width: 160px;
+  padding: var(--space-md);
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-1);
+}
+
+.dg-card--selected {
+  border-color: var(--c-gold);
+  background: var(--c-gold-soft);
+}
+
+.dg-card__title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  color: var(--c-text);
+}
+
+.dg-card__body {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  margin-top: 2px;
+}
+
+.dg-glass {
+  flex: 1;
+  min-width: 160px;
+  padding: var(--space-md);
+  background: var(--c-glass);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-2);
 }
