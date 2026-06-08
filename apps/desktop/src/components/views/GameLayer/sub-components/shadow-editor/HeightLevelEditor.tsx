@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
+import { TextInput } from '../../../../primitives/TextInput';
+import { NumberInput } from '../../../../primitives/NumberInput';
 import { useShadowEditorStore } from '../../../../../stores/shadow-editor-store';
 import './HeightLevelEditor.css';
 
@@ -26,20 +28,18 @@ const HeightLevelEditor = () => {
               className="height-level-editor__swatch"
               style={{ opacity: level.value }}
             />
-            <input
+            <TextInput
               className="height-level-editor__name"
               value={level.label}
               onChange={(e) => updateHeightLevel(i, { label: e.target.value })}
             />
-            <input
+            <NumberInput
               className="height-level-editor__value"
-              type="number"
               value={level.value}
               min={0}
               max={1}
               step={0.05}
-              onChange={(e) => {
-                const v = parseFloat(e.target.value);
+              onChange={(v) => {
                 if (!isNaN(v)) updateHeightLevel(i, { value: Math.min(1, Math.max(0, v)) });
               }}
             />
@@ -55,13 +55,13 @@ const HeightLevelEditor = () => {
         ))}
       </div>
       <div className="height-level-editor__add">
-        <input
+        <TextInput
           className="height-level-editor__name"
           placeholder="Label"
           value={newLabel}
           onChange={(e) => setNewLabel(e.target.value)}
         />
-        <input
+        <TextInput
           className="height-level-editor__value"
           type="number"
           placeholder="0.5"

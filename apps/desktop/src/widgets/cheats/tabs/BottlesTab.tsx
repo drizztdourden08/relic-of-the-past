@@ -3,6 +3,7 @@
  * BottlesTab — Manage 4 bottle slots with content selection.
  */
 import { useState } from 'react';
+import { NativeSelect } from '../../../components/primitives';
 import { cheatFillBottle, BottleContents } from '../../../lib/game';
 import type { BottleContentsValue } from '../../../lib/game';
 
@@ -65,7 +66,7 @@ const BottlesTab = () => {
         {([0, 1, 2, 3] as const).map(slot => (
           <div key={slot} className="cheats-bottles__slot">
             <span className="cheats-bottles__slot-label">Slot {slot + 1}</span>
-            <select
+            <NativeSelect
               className="cheats-bottles__select"
               value={slots[slot]}
               onChange={e => handleChange(slot, Number(e.target.value) as BottleContentsValue)}
@@ -73,7 +74,7 @@ const BottlesTab = () => {
               {BOTTLE_OPTIONS.map(opt => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
-            </select>
+            </NativeSelect>
           </div>
         ))}
       </div>
