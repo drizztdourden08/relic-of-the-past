@@ -1,29 +1,32 @@
 /* @layer renderer-components @kind data */
-﻿import { Badge } from '../../../../design-system/primitives/Badge';
+import { Card } from '../../../../design-system/primitives/Card';
+import { Box } from '../../../../design-system/primitives/Box';
+import { Flex } from '../../../../design-system/primitives/Flex';
+import { Text } from '../../../../design-system/primitives/Text';
+import { Badge } from '../../../../design-system/primitives/Badge';
 import { Button } from '../../../../design-system/primitives/Button';
 import { IconButton } from '../../../../design-system/primitives/IconButton';
 import { formatRomName, formatSize } from './behavior/formatters';
 import './RomCard.css';
 import { type RomCardProps } from './RomCard.type';
 
-
 const RomCard = (props: RomCardProps) => {
   const { rom, onExtract, onDelete } = props;
   const isFailed = rom.extractionStatus === 'failed';
 
   return (
-    <div className={`rom-card ${isFailed ? 'rom-card--failed' : ''}`}>
-      <div className="rom-card__main">
-        <span className="rom-card__name">{formatRomName(rom.romFile)}</span>
-        <span className="rom-card__file">{rom.romFile}</span>
-      </div>
+    <Card variant={isFailed ? 'danger' : 'default'} className="rom-card">
+      <Flex direction="column" className="rom-card__main">
+        <Text className="rom-card__name">{formatRomName(rom.romFile)}</Text>
+        <Text className="rom-card__file">{rom.romFile}</Text>
+      </Flex>
 
-      <div className="rom-card__status">
+      <Box className="rom-card__status">
         {rom.extractionStatus === 'ready' && (
           <Badge variant="success">
             ✓ Ready
             {rom.assetSize != null && (
-              <span className="rom-card__size">{formatSize(rom.assetSize)}</span>
+              <Text className="rom-card__size">{formatSize(rom.assetSize)}</Text>
             )}
           </Badge>
         )}
@@ -31,36 +34,24 @@ const RomCard = (props: RomCardProps) => {
           <Badge variant="warning">⟳ Extracting…</Badge>
         )}
         {rom.extractionStatus === 'failed' && (
-          <div className="rom-card__failed-group">
+          <Flex direction="column" align="end" gap="xs" className="rom-card__failed-group">
             <Badge variant="danger">✗ Incompatible ROM</Badge>
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={() => onExtract(rom.romFile)}
-            >
+            <Button variant="danger" size="sm" onClick={() => onExtract(rom.romFile)}>
               Retry Extract
             </Button>
-          </div>
+          </Flex>
         )}
         {rom.extractionStatus === 'idle' && (
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => onExtract(rom.romFile)}
-          >
+          <Button variant="primary" size="sm" onClick={() => onExtract(rom.romFile)}>
             Extract Assets
           </Button>
         )}
-      </div>
+      </Box>
 
-      <IconButton
-        variant="danger"
-        label={`Remove ${rom.romFile}`}
-        onClick={() => onDelete(rom.romFile)}
-      >
+      <IconButton variant="danger" label={`Remove ${rom.romFile}`} onClick={() => onDelete(rom.romFile)}>
         ✕
       </IconButton>
-    </div>
+    </Card>
   );
 };
 

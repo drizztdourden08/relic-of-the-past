@@ -1,23 +1,12 @@
 /* @layer renderer-components @kind style */
+
+/* Chrome (bg/border/radius/padding + danger variant) comes from the Card primitive. */
 .rom-card {
-  display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-sm) var(--space-md);
-  background: var(--color-bg-raised);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-lg);
-  transition: border-color var(--transition-normal);
-}
-
-.rom-card--failed {
-  border-color: #5a2020;
-  background: #1e1618;
 }
 
 .rom-card__main {
-  display: flex;
-  flex-direction: column;
   gap: 2px;
   min-width: 0;
 }
@@ -47,11 +36,4 @@
 .rom-card__size {
   font-size: var(--text-xs);
   color: var(--color-text-faint);
-}
-
-.rom-card__failed-group {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: var(--space-xs);
 }
