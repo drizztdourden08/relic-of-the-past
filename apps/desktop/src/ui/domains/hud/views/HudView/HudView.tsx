@@ -1,4 +1,5 @@
 /* @layer renderer-hud @kind component */
+import { HudBox } from '../../primitives/HudBox';
 import { useHud, SNES_HEIGHT } from '../../hooks/useHud';
 import { useHudSettingsStore } from '../../../../../stores/hud-settings-store';
 import { HudMagicMeter } from '../../composites/HudMagicMeter';
@@ -79,7 +80,7 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
   );
 
   return (
-    <div
+    <HudBox
       ref={containerRef}
       style={{
         position: 'absolute',
@@ -91,7 +92,7 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
       }}
     >
       {/* HUD content — centered at chosen ratio width */}
-      <div style={{
+      <HudBox style={{
         position: 'relative',
         display: 'flex',
         justifyContent: 'space-between',
@@ -102,7 +103,7 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
         margin: hudWidth != null ? '0 auto' : undefined,
       }}>
           {/* Left group: magic meter + item box + counts (original mode) */}
-          <div style={{ display: 'flex', alignItems: 'flex-start', marginLeft: 2 * tile }}>
+          <HudBox style={{ display: 'flex', alignItems: 'flex-start', marginLeft: 2 * tile }}>
             <HudMagicMeter
               value={data.magicPower}
               halfMagic={data.halfMagic}
@@ -110,29 +111,29 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
               scale={scale}
               spritesBase={spritesBase}
             />
-            <div style={{ marginLeft: -tile }}>
+            <HudBox style={{ marginLeft: -tile }}>
               <HudCurrentItem
                 itemId={data.equippedY}
                 scale={scale}
                 spritesBase={spritesBase}
               />
-            </div>
+            </HudBox>
             {countLayout === 'original' && (
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: tile }}>
+              <HudBox style={{ display: 'flex', alignItems: 'flex-start', gap: tile }}>
                 {counts}
-              </div>
+              </HudBox>
             )}
-          </div>
+          </HudBox>
 
           {/* Middle group: counts (centered mode only) */}
           {countLayout === 'centered' && (
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: tile }}>
+            <HudBox style={{ display: 'flex', alignItems: 'flex-start', gap: tile }}>
               {counts}
-            </div>
+            </HudBox>
           )}
 
           {/* Right group: life */}
-          <div style={{ marginRight: 2 * tile }}>
+          <HudBox style={{ marginRight: 2 * tile }}>
             <HudLife
               healthCurrent={data.healthCurrent}
               healthCapacity={data.healthCapacity}
@@ -140,9 +141,9 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
               scale={scale}
               spritesBase={spritesBase}
             />
-          </div>
-      </div>
-    </div>
+          </HudBox>
+      </HudBox>
+    </HudBox>
   );
 };
 

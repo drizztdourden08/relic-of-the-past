@@ -10,6 +10,8 @@
  *   Row 4: "EQUIP." label (in dungeon) or blank (overworld)
  *   Row 5-6: Heart pieces (overworld) or Map/Compass/BigKey (dungeon)
  */
+import { HudBox } from '../../primitives/HudBox';
+import { HudImage } from '../../primitives/HudImage';
 import { PauseBorderBox } from '../../primitives/PauseBorderBox';
 import { PauseLabel } from '../../primitives/PauseLabel';
 import { PauseEquipSlot } from '../../composites/PauseEquipSlot';
@@ -43,23 +45,23 @@ const PauseEquipmentPanel = ({ sword, shield, armor, heartPieces, isInDungeon, b
   return (
     <PauseBorderBox color="yellow" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} style={style}>
       {/* "EQUIP" label — aligned left */}
-      <div style={{ position: 'absolute', top: 0, left: 0 }}>
+      <HudBox style={{ position: 'absolute', top: 0, left: 0 }}>
         <PauseLabel name="equipment" tiles={5} scale={scale} spritesBase={spritesBase} />
-      </div>
+      </HudBox>
 
       {/* Equipment items: sword(0,1), shield(3,1), armor(6,1) */}
-      <div style={{ position: 'absolute', top: tile, left: 0 }}>
+      <HudBox style={{ position: 'absolute', top: tile, left: 0 }}>
         <PauseEquipSlot type="sword" level={sword} scale={scale} spritesBase={spritesBase} />
-      </div>
-      <div style={{ position: 'absolute', top: tile, left: tile * 3 }}>
+      </HudBox>
+      <HudBox style={{ position: 'absolute', top: tile, left: tile * 3 }}>
         <PauseEquipSlot type="shield" level={shield} scale={scale} spritesBase={spritesBase} />
-      </div>
-      <div style={{ position: 'absolute', top: tile, left: tile * 6 }}>
+      </HudBox>
+      <HudBox style={{ position: 'absolute', top: tile, left: tile * 6 }}>
         <PauseEquipSlot type="armor" level={armor} scale={scale} spritesBase={spritesBase} />
-      </div>
+      </HudBox>
 
       {/* Dashed separator at row 3 */}
-      <div style={{
+      <HudBox style={{
         position: 'absolute',
         top: tile * 3,
         left: 0,
@@ -68,46 +70,45 @@ const PauseEquipmentPanel = ({ sword, shield, armor, heartPieces, isInDungeon, b
         display: 'flex',
       }}>
         {Array.from({length: 8}, (_, i) => (
-          <img
+          <HudImage
             key={i}
             src={`${spritesBase}font-dot.png`}
             width={tile}
             height={tile}
-            draggable={false}
             style={{ display: 'block', imageRendering: 'pixelated' }}
           />
         ))}
-      </div>
+      </HudBox>
 
       {/* Bottom section: heart pieces (overworld) or dungeon items */}
       {!isInDungeon ? (
         <>
           {/* Heart piece indicator at (3,5) */}
-          <div style={{ position: 'absolute', top: tile * 5, left: tile * 3 }}>
+          <HudBox style={{ position: 'absolute', top: tile * 5, left: tile * 3 }}>
             <PauseEquipSlot type="heartPiece" level={heartPieces} scale={scale} spritesBase={spritesBase} />
-          </div>
+          </HudBox>
         </>
       ) : (
         <>
           {/* "D.ITEMS" label — only in dungeons, at row 4 */}
-          <div style={{ position: 'absolute', top: tile * 4, left: 0 }}>
+          <HudBox style={{ position: 'absolute', top: tile * 4, left: 0 }}>
             <PauseLabel name="dungeon-item" tiles={7} scale={scale} spritesBase={spritesBase} />
-          </div>
+          </HudBox>
           {/* Dungeon items: map(0,5), compass(3,5), bigkey(6,5) */}
           {hasMap && (
-            <div style={{ position: 'absolute', top: tile * 5, left: 0 }}>
+            <HudBox style={{ position: 'absolute', top: tile * 5, left: 0 }}>
               <PauseEquipSlot type="dungeonMap" level={1} scale={scale} spritesBase={spritesBase} />
-            </div>
+            </HudBox>
           )}
           {hasCompass && (
-            <div style={{ position: 'absolute', top: tile * 5, left: tile * 3 }}>
+            <HudBox style={{ position: 'absolute', top: tile * 5, left: tile * 3 }}>
               <PauseEquipSlot type="compass" level={1} scale={scale} spritesBase={spritesBase} />
-            </div>
+            </HudBox>
           )}
           {hasBigKey && (
-            <div style={{ position: 'absolute', top: tile * 5, left: tile * 6 }}>
+            <HudBox style={{ position: 'absolute', top: tile * 5, left: tile * 6 }}>
               <PauseEquipSlot type="bigKey" level={1} scale={scale} spritesBase={spritesBase} />
-            </div>
+            </HudBox>
           )}
         </>
       )}

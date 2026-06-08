@@ -9,6 +9,7 @@
  * link_which_pendants bits: 0=Power(red), 1=Wisdom(blue), 2=Courage(green)
  * link_has_crystals bits: 0-6 for each crystal
  */
+import { HudBox } from '../../primitives/HudBox';
 import { PauseBorderBox } from '../../primitives/PauseBorderBox';
 import { PauseLabel } from '../../primitives/PauseLabel';
 import { PausePendantIcon } from '../../composites/PausePendantIcon';
@@ -47,7 +48,7 @@ const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBa
 
         {/* Crystal icons */}
         {crystalPositions.map((pos, idx) => (
-          <div key={idx} style={{
+          <HudBox key={idx} style={{
             position: 'absolute',
             left: pos.x * tile,
             top: (pos.y + 1) * tile,
@@ -57,7 +58,7 @@ const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBa
               scale={scale}
               spritesBase={spritesBase}
             />
-          </div>
+          </HudBox>
         ))}
       </PauseBorderBox>
     );
@@ -70,31 +71,31 @@ const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBa
       <PauseLabel name="pendants" tiles={5} scale={scale} spritesBase={spritesBase} />
 
       {/* Green/Courage pendant — top center (bit 2) */}
-      <div style={{ position: 'absolute', left: 3 * tile, top: 2 * tile }}>
+      <HudBox style={{ position: 'absolute', left: 3 * tile, top: 2 * tile }}>
         <PausePendantIcon
           variant={(pendants & 4) ? 'green' : 'empty'}
           scale={scale}
           spritesBase={spritesBase}
         />
-      </div>
+      </HudBox>
 
       {/* Blue/Wisdom pendant — bottom left (bit 1) */}
-      <div style={{ position: 'absolute', left: 1 * tile, top: 5 * tile }}>
+      <HudBox style={{ position: 'absolute', left: 1 * tile, top: 5 * tile }}>
         <PausePendantIcon
           variant={(pendants & 2) ? 'blue' : 'empty'}
           scale={scale}
           spritesBase={spritesBase}
         />
-      </div>
+      </HudBox>
 
       {/* Red/Power pendant — bottom right (bit 0) */}
-      <div style={{ position: 'absolute', left: 5 * tile, top: 5 * tile }}>
+      <HudBox style={{ position: 'absolute', left: 5 * tile, top: 5 * tile }}>
         <PausePendantIcon
           variant={(pendants & 1) ? 'red' : 'empty'}
           scale={scale}
           spritesBase={spritesBase}
         />
-      </div>
+      </HudBox>
     </PauseBorderBox>
   );
 };

@@ -6,6 +6,8 @@
  * Displays the item name using font sprites,
  * with the item's icon sprite above the text.
  */
+import { HudBox } from '../../primitives/HudBox';
+import { HudImage } from '../../primitives/HudImage';
 import { PauseBorderBox } from '../../primitives/PauseBorderBox';
 
 interface PauseNamePanelProps {
@@ -26,7 +28,7 @@ const PauseNamePanel = ({ itemName, itemSprite, borderColor = 'green', scale, sp
   return (
     <PauseBorderBox color={borderColor} cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase} style={style}>
       {/* Item icon + name */}
-      <div style={{
+      <HudBox style={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
@@ -35,46 +37,44 @@ const PauseNamePanel = ({ itemName, itemSprite, borderColor = 'green', scale, sp
       }}>
         {/* Item icon (16×16 SNES pixels) */}
         {itemSprite && (
-          <img
+          <HudImage
             src={`${spritesBase}${itemSprite}.png`}
             width={tile * 2}
             height={tile * 2}
-            draggable={false}
             style={{ display: 'block', imageRendering: 'pixelated', alignSelf: 'center' }}
           />
         )}
 
         {/* Item name rendered as font sprites */}
-        <div style={{
+        <HudBox style={{
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'flex-start',
         }}>
           {itemName.split('').map((char, idx) => {
             if (char === ' ') {
-              return <div key={idx} style={{ width: tile, height: tile }} />;
+              return <HudBox key={idx} style={{ width: tile, height: tile }} />;
             }
             const code = char.toUpperCase();
             const isLetter = /[A-Z]/.test(code);
             const isDigit = /[0-9]/.test(code);
-            if (!isLetter && !isDigit) return <div key={idx} style={{ width: tile, height: tile }} />;
+            if (!isLetter && !isDigit) return <HudBox key={idx} style={{ width: tile, height: tile }} />;
 
             const prefix = isDigit ? 'font-digit' : 'font-letter';
             const suffix = isDigit ? code : code.toLowerCase();
 
             return (
-              <img
+              <HudImage
                 key={idx}
                 src={`${spritesBase}${prefix}-${suffix}.png`}
                 width={tile}
                 height={tile}
-                draggable={false}
                 style={{ display: 'block', imageRendering: 'pixelated' }}
               />
             );
           })}
-        </div>
-      </div>
+        </HudBox>
+      </HudBox>
     </PauseBorderBox>
   );
 };

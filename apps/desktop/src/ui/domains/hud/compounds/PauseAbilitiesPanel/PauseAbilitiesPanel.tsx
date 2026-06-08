@@ -13,6 +13,8 @@
  * Equipment sprites at bottom row (y=27):
  *   col 4=boots, col 8=gloves, col 12=flippers, col 16=moon pearl
  */
+import { HudBox } from '../../primitives/HudBox';
+import { HudImage } from '../../primitives/HudImage';
 import { PauseBorderBox } from '../../primitives/PauseBorderBox';
 import { PauseButtonLabel } from '../../composites/PauseButtonLabel';
 import { PauseEquipSlot } from '../../composites/PauseEquipSlot';
@@ -56,15 +58,15 @@ const PauseAbilitiesPanel = (props: PauseAbilitiesPanelProps) => {
   const gridWidth = tile * 14;
 
   return (
-    <div style={{ position: 'relative', ...style }}>
+    <HudBox style={{ position: 'relative', ...style }}>
     <PauseBorderBox color="red" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase}>
       {/* A-button indicator */}
-      <div style={{ position: 'absolute', top: 0, left: 0 }}>
+      <HudBox style={{ position: 'absolute', top: 0, left: 0 }}>
         <PauseButtonLabel button="a" scale={scale} spritesBase={spritesBase} />
-      </div>
+      </HudBox>
 
       {/* Abilities grid: 3 cols × 2 rows with equal spacing */}
-      <div style={{
+      <HudBox style={{
         position: 'absolute',
         top: tile * 2 / 3,
         left: gridLeft,
@@ -75,36 +77,34 @@ const PauseAbilitiesPanel = (props: PauseAbilitiesPanelProps) => {
         height: tile * 4,
       }}>
         {abilityGrid.map(({ label, bit }) => (
-          <div key={label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+          <HudBox key={label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             {(abilityFlags & (1 << bit)) ? (
               <>
                 {label.split('').map((ch, i) => (
-                  <img
+                  <HudImage
                     key={i}
                     src={`${spritesBase}font-letter-${ch.toLowerCase()}.png`}
                     width={tile}
                     height={tile}
-                    draggable={false}
                     style={{ display: 'block', imageRendering: 'pixelated' }}
                   />
                 ))}
                 {label === 'LIFT' && (
-                  <img
+                  <HudImage
                     src={`${spritesBase}font-level-${liftLevel}.png`}
                     width={tile}
                     height={tile}
-                    draggable={false}
                     style={{ display: 'block', imageRendering: 'pixelated' }}
                   />
                 )}
               </>
             ) : null}
-          </div>
+          </HudBox>
         ))}
-      </div>
+      </HudBox>
 
       {/* Equipment items: flex with equal spacing, aligned with item grid */}
-      <div style={{
+      <HudBox style={{
         position: 'absolute',
         top: tile * 5,
         left: gridLeft,
@@ -116,13 +116,13 @@ const PauseAbilitiesPanel = (props: PauseAbilitiesPanelProps) => {
         <PauseEquipSlot type="gloves" level={gloves} scale={scale} spritesBase={spritesBase} />
         <PauseEquipSlot type="flippers" level={flippers} scale={scale} spritesBase={spritesBase} />
         <PauseEquipSlot type="moonPearl" level={moonPearl} scale={scale} spritesBase={spritesBase} />
-      </div>
+      </HudBox>
     </PauseBorderBox>
     {/* "DO" label on top border, col 2 */}
-    <div style={{ position: 'absolute', top: 0, left: tile * 2, zIndex: 1, background: 'black' }}>
+    <HudBox style={{ position: 'absolute', top: 0, left: tile * 2, zIndex: 1, background: 'black' }}>
       <PauseLabel name="do" tiles={2} scale={scale} spritesBase={spritesBase} />
-    </div>
-    </div>
+    </HudBox>
+    </HudBox>
   );
 };
 

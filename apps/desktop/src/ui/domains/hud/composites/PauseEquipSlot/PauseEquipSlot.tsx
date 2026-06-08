@@ -3,6 +3,8 @@
  * PauseEquipSlot — renders an equipment item (sword, shield, armor, etc.)
  * with its level-dependent sprite. 16×16 SNES pixels.
  */
+import { HudBox } from '../../primitives/HudBox';
+import { HudImage } from '../../primitives/HudImage';
 
 /** Maps equipment type + level to sprite filename */
 const EQUIP_SPRITES: Record<string, Record<number, string>> = {
@@ -29,7 +31,7 @@ interface PauseEquipSlotProps {
 const PauseEquipSlot = ({ type, level, scale, spritesBase }: PauseEquipSlotProps) => {
   const size = 16 * scale;
   const sprites = EQUIP_SPRITES[type];
-  if (!sprites) return <div style={{ width: size, height: size }} />;
+  if (!sprites) return <HudBox style={{ width: size, height: size }} />;
 
   // heartPiece and armor always render (including level 0)
   const alwaysRender = type === 'heartPiece' || type === 'armor';
@@ -37,14 +39,13 @@ const PauseEquipSlot = ({ type, level, scale, spritesBase }: PauseEquipSlotProps
     ? sprites[Math.min(level, Math.max(...Object.keys(sprites).map(Number)))]
     : (level > 0 ? sprites[Math.min(level, Math.max(...Object.keys(sprites).map(Number)))] : null);
 
-  if (!sprite) return <div style={{ width: size, height: size }} />;
+  if (!sprite) return <HudBox style={{ width: size, height: size }} />;
 
   return (
-    <img
+    <HudImage
       src={`${spritesBase}${sprite}.png`}
       width={size}
       height={size}
-      draggable={false}
       style={{ display: 'block', imageRendering: 'pixelated' }}
     />
   );

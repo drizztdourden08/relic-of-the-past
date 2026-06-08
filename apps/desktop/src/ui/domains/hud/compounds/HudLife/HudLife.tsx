@@ -1,4 +1,6 @@
 /* @layer renderer-hud @kind component */
+import { HudBox } from '../../primitives/HudBox';
+import { HudImage } from '../../primitives/HudImage';
 import { HudHeart } from '../../primitives/HudHeart';
 import type { HeartState, HeartMode } from '../../primitives/HudHeart';
 
@@ -48,24 +50,24 @@ const HudLife = (props: HudLifeProps) => {
   const allHearts = hearts.filter((s): s is HeartState => s !== null);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: 10 * tile }}>
+    <HudBox style={{ display: 'flex', flexDirection: 'column', width: 10 * tile }}>
       {/* LIFE label — centered */}
-      <div style={{ display: 'flex', justifyContent: 'center', height: tile + shadow }}>
-        <img src={`${spritesBase}hud-life-dash-left.png`} height={tile} draggable={false}
+      <HudBox style={{ display: 'flex', justifyContent: 'center', height: tile + shadow }}>
+        <HudImage src={`${spritesBase}hud-life-dash-left.png`} height={tile}
           style={{ imageRendering: 'pixelated', filter: `drop-shadow(0 ${shadow}px 0 black) drop-shadow(${-shadow}px 0 0 black) drop-shadow(${shadow}px 0 0 black)` }} />
-        <img src={`${spritesBase}hud-life-text.png`} height={tile} draggable={false}
+        <HudImage src={`${spritesBase}hud-life-text.png`} height={tile}
           style={{ imageRendering: 'pixelated', filter: `drop-shadow(${shadow}px 0 0 black) drop-shadow(0 ${shadow}px 0 black)` }} />
-        <img src={`${spritesBase}hud-life-dash-right.png`} height={tile} draggable={false}
+        <HudImage src={`${spritesBase}hud-life-dash-right.png`} height={tile}
           style={{ imageRendering: 'pixelated', filter: `drop-shadow(0 ${shadow}px 0 black) drop-shadow(${-shadow}px 0 0 black) drop-shadow(${shadow}px 0 0 black)` }} />
-      </div>
+      </HudBox>
 
       {/* Hearts — wrap naturally (10 per row at tile width) */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', width: 10 * tile }}>
+      <HudBox style={{ display: 'flex', flexWrap: 'wrap', width: 10 * tile }}>
         {allHearts.map((state, i) => (
           <HudHeart key={i} state={state} mode={heartMode} scale={scale} spritesBase={spritesBase} />
         ))}
-      </div>
-    </div>
+      </HudBox>
+    </HudBox>
   );
 };
 

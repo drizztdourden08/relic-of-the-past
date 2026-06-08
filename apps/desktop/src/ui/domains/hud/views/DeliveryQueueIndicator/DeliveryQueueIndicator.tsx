@@ -5,6 +5,7 @@
  * with a "...N more" overflow indicator beyond that.
  */
 
+import { HudBox } from '../../primitives/HudBox';
 import { useDeliveryQueueStore } from '../../../../../stores/delivery-queue-store';
 import type { DeliveryEntry } from '../../../../../lib/game/delivery-queue';
 
@@ -48,16 +49,16 @@ const QueueEntry = ({ entry, isActive }: QueueEntryProps) => {
   const label = getSourceLabel(entry.source);
 
   return (
-    <div
+    <HudBox
       className={`dq-entry ${isActive ? 'dq-entry--active' : 'dq-entry--pending'}`}
       style={{ '--source-color': color } as React.CSSProperties}
     >
-      <div className="dq-entry-indicator" />
-      <div className="dq-entry-content">
-        <span className="dq-entry-message">{entry.message}</span>
-      </div>
-      <span className="dq-entry-tag">{label}</span>
-    </div>
+      <HudBox className="dq-entry-indicator" />
+      <HudBox className="dq-entry-content">
+        <HudBox as="span" className="dq-entry-message">{entry.message}</HudBox>
+      </HudBox>
+      <HudBox as="span" className="dq-entry-tag">{label}</HudBox>
+    </HudBox>
   );
 };
 
@@ -74,13 +75,13 @@ const DeliveryQueueIndicator = () => {
   const overflow = pending.length - visiblePending.length;
 
   return (
-    <div className="dq-container">
-      <div className="dq-header">
-        <span className="dq-header-icon">▼</span>
-        <span className="dq-header-title">Incoming</span>
-        <span className="dq-header-count">{total}</span>
-      </div>
-      <div className="dq-list">
+    <HudBox className="dq-container">
+      <HudBox className="dq-header">
+        <HudBox as="span" className="dq-header-icon">▼</HudBox>
+        <HudBox as="span" className="dq-header-title">Incoming</HudBox>
+        <HudBox as="span" className="dq-header-count">{total}</HudBox>
+      </HudBox>
+      <HudBox className="dq-list">
         {delivering && (
           <QueueEntry entry={delivering} isActive={true} />
         )}
@@ -88,12 +89,12 @@ const DeliveryQueueIndicator = () => {
           <QueueEntry key={entry.id} entry={entry} isActive={false} />
         ))}
         {overflow > 0 && (
-          <div className="dq-overflow">
+          <HudBox className="dq-overflow">
             …{overflow} more in queue
-          </div>
+          </HudBox>
         )}
-      </div>
-    </div>
+      </HudBox>
+    </HudBox>
   );
 };
 

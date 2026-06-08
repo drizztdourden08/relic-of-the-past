@@ -1,4 +1,5 @@
 /* @layer renderer-hud @kind component */
+import { HudBox } from '../../primitives/HudBox';
 import { HudNumber } from '../../primitives/HudNumber';
 import { HudSprite } from '../../primitives/HudSprite';
 
@@ -24,7 +25,7 @@ const HudCount = (props: HudCountProps) => {
   const iconH = 8 * scale;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
+    <HudBox style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}>
       <HudSprite
         src={`${spritesBase}${icon}.png`}
         width={iconW}
@@ -33,7 +34,7 @@ const HudCount = (props: HudCountProps) => {
         scale={scale}
       />
       <HudNumber value={value} digits={digits} scale={scale} spritesBase={spritesBase} />
-    </div>
+    </HudBox>
   );
 };
 

@@ -4,6 +4,8 @@
  * Displays 16×16 item sprite or empty. Highlights the currently selected item.
  */
 import { useMemo } from 'react';
+import { HudBox } from '../../primitives/HudBox';
+import { HudImage } from '../../primitives/HudImage';
 import { HudSprite } from '../../primitives/HudSprite';
 
 const generateCircleDataUrl = (): string => {
@@ -86,18 +88,17 @@ const PauseItemSlot = ({ saveSlotIndex, itemValue, selected, animate = true, sca
   const sprite = getSlotSprite(saveSlotIndex, itemValue);
 
   return (
-    <div style={{
+    <HudBox style={{
       width: size,
       height: size,
       position: 'relative',
     }}>
       {/* Pixel-art selection circle — native 32×32 scaled up with pixelated rendering */}
       {selected && (
-        <img
+        <HudImage
           src={circleUrl}
           width={circleSize}
           height={circleSize}
-          draggable={false}
           style={{
             position: 'absolute',
             top: circleOffset,
@@ -117,7 +118,7 @@ const PauseItemSlot = ({ saveSlotIndex, itemValue, selected, animate = true, sca
           outline={false}
         />
       )}
-    </div>
+    </HudBox>
   );
 };
 

@@ -14,6 +14,7 @@
  */
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { HudBox } from '../../primitives/HudBox';
 import { usePauseMenu } from '../../hooks/usePauseMenu';
 import { PauseItemGrid } from '../../compounds/PauseItemGrid';
 import { PauseNamePanel } from '../../compounds/PauseNamePanel';
@@ -155,7 +156,7 @@ const PauseMenuView = ({ slideTransform, slideTransition }: { slideTransform?: s
   // CSS Grid: 32 columns × 28 rows (each cell = 1 SNES tile).
   // BG3 scroll offset: tile row 5 in BG space = visual row 2 (offset = 3 tiles).
   return (
-    <div
+    <HudBox
       ref={containerRef}
       className="pause-menu"
       style={{
@@ -169,7 +170,7 @@ const PauseMenuView = ({ slideTransform, slideTransition }: { slideTransform?: s
         justifyContent: 'center',
       }}
     >
-      <div className="pause-grid" style={{
+      <HudBox className="pause-grid" style={{
         display: 'grid',
         gridTemplateColumns: `repeat(32, ${tile}px)`,
         gridTemplateRows: `repeat(28, ${tile}px)`,
@@ -196,7 +197,7 @@ const PauseMenuView = ({ slideTransform, slideTransition }: { slideTransform?: s
 
       {/* Right side: bottle panel when on bottle slot, otherwise progress + equipment */}
       {showBottlePanel && (
-        <div
+        <HudBox
           style={{ gridColumn: '22 / 32', gridRow: '8 / 27', ...bottlePanelStyle }}
           onAnimationEnd={handleBottleAnimEnd}
         >
@@ -206,7 +207,7 @@ const PauseMenuView = ({ slideTransform, slideTransition }: { slideTransform?: s
             scale={scale}
             spritesBase={spritesBase}
           />
-        </div>
+        </HudBox>
       )}
       {showNormalPanels && (
         <>
@@ -249,8 +250,8 @@ const PauseMenuView = ({ slideTransform, slideTransition }: { slideTransform?: s
         scale={scale}
         style={{ gridColumn: '2 / 21', gridRow: '18 / 27' }}
       />
-      </div>
-    </div>
+      </HudBox>
+    </HudBox>
   );
 };
 

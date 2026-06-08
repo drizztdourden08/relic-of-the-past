@@ -4,6 +4,7 @@
  * Positioned at bottom-center of the game overlay.
  */
 
+import { HudBox } from '../../primitives/HudBox';
 import { useLocationNotificationStore } from '../../../../../stores/location-notification-store';
 import { SCREEN_DISMISS_MS, TRANSITION_DISMISS_MS } from '../../hooks/useLocationNotification';
 import { useEffect, useState } from 'react';
@@ -18,7 +19,7 @@ const LocationNotification = () => {
   const transition = useLocationNotificationStore((s) => s.transition);
 
   return (
-    <div className="location-notification-container">
+    <HudBox className="location-notification-container">
       {screen && (
         <NotificationBanner
           key={`screen-${screen.timestamp}`}
@@ -36,7 +37,7 @@ const LocationNotification = () => {
           variant="transition"
         />
       )}
-    </div>
+    </HudBox>
   );
 };
 
@@ -68,10 +69,10 @@ const NotificationBanner = ({ title, subtitle, dismissMs, variant }: Notificatio
   ].join(' ');
 
   return (
-    <div className={className}>
-      <span className="location-notification-title">{title}</span>
-      {subtitle && <span className="location-notification-subtitle">{subtitle}</span>}
-    </div>
+    <HudBox className={className}>
+      <HudBox as="span" className="location-notification-title">{title}</HudBox>
+      {subtitle && <HudBox as="span" className="location-notification-subtitle">{subtitle}</HudBox>}
+    </HudBox>
   );
 };
 

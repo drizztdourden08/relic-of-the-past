@@ -1,4 +1,6 @@
 /* @layer renderer-hud @kind component */
+import { HudBox } from '../../primitives/HudBox';
+import { HudImage } from '../../primitives/HudImage';
 import { outlineFilter } from '../../primitives/HudSprite';
 
 type MagicMeterMode = 'original' | 'accurate';
@@ -38,7 +40,7 @@ const HudMagicMeter = (props: HudMagicMeterProps) => {
   // Black interior fill: inset 0.8 tiles from each edge of the 3×6 frame
   const inset = tile * 0.8;
   const interiorFill = (
-    <div style={{
+    <HudBox style={{
       position: 'absolute',
       left: inset,
       top: inset,
@@ -51,20 +53,20 @@ const HudMagicMeter = (props: HudMagicMeterProps) => {
 
   if (mode === 'original') {
     return (
-      <div style={{ width: frameW, height: frameH, position: 'relative', imageRendering: 'pixelated' as const }}>
+      <HudBox style={{ width: frameW, height: frameH, position: 'relative', imageRendering: 'pixelated' as const }}>
         {interiorFill}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 2, filter: outlineFilter(scale) }}>
+        <HudBox style={{ position: 'absolute', inset: 0, zIndex: 2, filter: outlineFilter(scale) }}>
           <MagicOriginal tile={tile} spritesBase={spritesBase} fillLevel={fillLevel} />
-        </div>
-      </div>
+        </HudBox>
+      </HudBox>
     );
   }
 
   return (
-    <div style={{ width: frameW, height: frameH, position: 'relative', imageRendering: 'pixelated' as const }}>
+    <HudBox style={{ width: frameW, height: frameH, position: 'relative', imageRendering: 'pixelated' as const }}>
       {interiorFill}
       <MagicAccurate tile={tile} scale={scale} spritesBase={spritesBase} value={value} />
-    </div>
+    </HudBox>
   );
 };
 
@@ -98,31 +100,31 @@ const MagicOriginal = (props: { tile: number; spritesBase: string; fillLevel: nu
   return (
     <>
       {/* Row 0: TL | Top | TR */}
-      <img src={`${spritesBase}hud-magic-tl.png`} width={tile} height={tile} draggable={false}
+      <HudImage src={`${spritesBase}hud-magic-tl.png`} width={tile} height={tile}
         style={{ position: 'absolute', left: 0, top: 0, imageRendering: 'pixelated' }} />
-      <img src={`${spritesBase}hud-magic-top.png`} width={tile} height={tile} draggable={false}
+      <HudImage src={`${spritesBase}hud-magic-top.png`} width={tile} height={tile}
         style={{ position: 'absolute', left: tile, top: 0, imageRendering: 'pixelated' }} />
-      <img src={`${spritesBase}hud-magic-tr.png`} width={tile} height={tile} draggable={false}
+      <HudImage src={`${spritesBase}hud-magic-tr.png`} width={tile} height={tile}
         style={{ position: 'absolute', left: tile * 2, top: 0, imageRendering: 'pixelated' }} />
 
       {/* Rows 1-4: Left | Fill | Right */}
       {fills.map((fill, i) => (
-        <div key={i} style={{ position: 'absolute', left: 0, top: tile * (i + 1), width: tile * 3, height: tile }}>
-          <img src={`${spritesBase}hud-magic-left.png`} width={tile} height={tile} draggable={false}
+        <HudBox key={i} style={{ position: 'absolute', left: 0, top: tile * (i + 1), width: tile * 3, height: tile }}>
+          <HudImage src={`${spritesBase}hud-magic-left.png`} width={tile} height={tile}
             style={{ position: 'absolute', left: 0, top: 0, imageRendering: 'pixelated' }} />
-          <img src={`${spritesBase}${fill}.png`} width={tile} height={tile} draggable={false}
+          <HudImage src={`${spritesBase}${fill}.png`} width={tile} height={tile}
             style={{ position: 'absolute', left: tile, top: 0, imageRendering: 'pixelated' }} />
-          <img src={`${spritesBase}hud-magic-right.png`} width={tile} height={tile} draggable={false}
+          <HudImage src={`${spritesBase}hud-magic-right.png`} width={tile} height={tile}
             style={{ position: 'absolute', left: tile * 2, top: 0, imageRendering: 'pixelated' }} />
-        </div>
+        </HudBox>
       ))}
 
       {/* Row 5: BL | Bottom | BR */}
-      <img src={`${spritesBase}hud-magic-bl.png`} width={tile} height={tile} draggable={false}
+      <HudImage src={`${spritesBase}hud-magic-bl.png`} width={tile} height={tile}
         style={{ position: 'absolute', left: 0, top: tile * 5, imageRendering: 'pixelated' }} />
-      <img src={`${spritesBase}hud-magic-bottom.png`} width={tile} height={tile} draggable={false}
+      <HudImage src={`${spritesBase}hud-magic-bottom.png`} width={tile} height={tile}
         style={{ position: 'absolute', left: tile, top: tile * 5, imageRendering: 'pixelated' }} />
-      <img src={`${spritesBase}hud-magic-br.png`} width={tile} height={tile} draggable={false}
+      <HudImage src={`${spritesBase}hud-magic-br.png`} width={tile} height={tile}
         style={{ position: 'absolute', left: tile * 2, top: tile * 5, imageRendering: 'pixelated' }} />
     </>
   );
@@ -141,32 +143,32 @@ const MagicAccurate = (props: { tile: number; scale: number; spritesBase: string
   return (
     <>
       {/* Frame border tiles (z:2 — above black bg and green fill) */}
-      <div style={{ position: 'absolute', inset: 0, zIndex: 2, filter: outlineFilter(scale) }}>
-        <img src={`${spritesBase}hud-magic-tl.png`} width={tile} height={tile} draggable={false}
+      <HudBox style={{ position: 'absolute', inset: 0, zIndex: 2, filter: outlineFilter(scale) }}>
+        <HudImage src={`${spritesBase}hud-magic-tl.png`} width={tile} height={tile}
           style={{ position: 'absolute', left: 0, top: 0, imageRendering: 'pixelated' }} />
-        <img src={`${spritesBase}hud-magic-top.png`} width={tile} height={tile} draggable={false}
+        <HudImage src={`${spritesBase}hud-magic-top.png`} width={tile} height={tile}
           style={{ position: 'absolute', left: tile, top: 0, imageRendering: 'pixelated' }} />
-        <img src={`${spritesBase}hud-magic-tr.png`} width={tile} height={tile} draggable={false}
+        <HudImage src={`${spritesBase}hud-magic-tr.png`} width={tile} height={tile}
           style={{ position: 'absolute', left: tile * 2, top: 0, imageRendering: 'pixelated' }} />
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i}>
-            <img src={`${spritesBase}hud-magic-left.png`} width={tile} height={tile} draggable={false}
+          <HudBox key={i}>
+            <HudImage src={`${spritesBase}hud-magic-left.png`} width={tile} height={tile}
               style={{ position: 'absolute', left: 0, top: tile * (i + 1), imageRendering: 'pixelated' }} />
-            <img src={`${spritesBase}hud-magic-right.png`} width={tile} height={tile} draggable={false}
+            <HudImage src={`${spritesBase}hud-magic-right.png`} width={tile} height={tile}
               style={{ position: 'absolute', left: tile * 2, top: tile * (i + 1), imageRendering: 'pixelated' }} />
-          </div>
+          </HudBox>
         ))}
-        <img src={`${spritesBase}hud-magic-bl.png`} width={tile} height={tile} draggable={false}
+        <HudImage src={`${spritesBase}hud-magic-bl.png`} width={tile} height={tile}
           style={{ position: 'absolute', left: 0, top: tile * 5, imageRendering: 'pixelated' }} />
-        <img src={`${spritesBase}hud-magic-bottom.png`} width={tile} height={tile} draggable={false}
+        <HudImage src={`${spritesBase}hud-magic-bottom.png`} width={tile} height={tile}
           style={{ position: 'absolute', left: tile, top: tile * 5, imageRendering: 'pixelated' }} />
-        <img src={`${spritesBase}hud-magic-br.png`} width={tile} height={tile} draggable={false}
+        <HudImage src={`${spritesBase}hud-magic-br.png`} width={tile} height={tile}
           style={{ position: 'absolute', left: tile * 2, top: tile * 5, imageRendering: 'pixelated' }} />
-      </div>
+      </HudBox>
 
       {/* Green fill — percentage-based, grows from bottom */}
       {fillFraction > 0 && (
-        <div style={{
+        <HudBox style={{
           position: 'absolute',
           left: inset,
           bottom: inset,
@@ -177,7 +179,7 @@ const MagicAccurate = (props: { tile: number; scale: number; spritesBase: string
         }}>
           {/* White cap line at top of green fill */}
           {fillFraction < 1 && (
-            <div style={{
+            <HudBox style={{
               position: 'absolute',
               left: whiteInset,
               top: 0,
@@ -186,7 +188,7 @@ const MagicAccurate = (props: { tile: number; scale: number; spritesBase: string
               backgroundColor: MAGIC_WHITE,
             }} />
           )}
-        </div>
+        </HudBox>
       )}
     </>
   );

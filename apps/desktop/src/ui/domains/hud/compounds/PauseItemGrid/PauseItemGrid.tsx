@@ -6,6 +6,7 @@
  * Game layout: tiles (1,5)→(19,19) = 19×15 tiles
  * Inner grid: 5 items × 4 rows, each item is 2×2 tiles with 1-tile gaps.
  */
+import { HudBox } from '../../primitives/HudBox';
 import { PauseBorderBox } from '../../primitives/PauseBorderBox';
 import { PauseItemSlot } from '../../composites/PauseItemSlot';
 import { PauseButtonLabel } from '../../composites/PauseButtonLabel';
@@ -31,15 +32,15 @@ const PauseItemGrid = ({ items, selectedIndex, staticSelection, scale, spritesBa
   const innerRows = 13;
 
   return (
-    <div style={{ position: 'relative', ...style }}>
+    <HudBox style={{ position: 'relative', ...style }}>
     <PauseBorderBox color="green" cols={innerCols} rows={innerRows} scale={scale} spritesBase={spritesBase}>
       {/* Y-button indicator */}
-      <div style={{ position: 'absolute', top: 0, left: 0 }}>
+      <HudBox style={{ position: 'absolute', top: 0, left: 0 }}>
         <PauseButtonLabel button="y" scale={scale} spritesBase={spritesBase} />
-      </div>
+      </HudBox>
 
       {/* Item grid: 5 cols × 4 rows — positioned to match SNES BG3 layout */}
-      <div style={{
+      <HudBox style={{
         display: 'grid',
         gridTemplateColumns: `repeat(5, ${tile * 2}px)`,
         gridTemplateRows: `repeat(4, ${tile * 2}px)`,
@@ -59,13 +60,13 @@ const PauseItemGrid = ({ items, selectedIndex, staticSelection, scale, spritesBa
             spritesBase={spritesBase}
           />
         ))}
-      </div>
+      </HudBox>
     </PauseBorderBox>
     {/* "ITEM" label on top border, col 2 */}
-    <div style={{ position: 'absolute', top: 0, left: tile * 2, zIndex: 1, background: 'black' }}>
+    <HudBox style={{ position: 'absolute', top: 0, left: tile * 2, zIndex: 1, background: 'black' }}>
       <PauseLabel name="item" tiles={2} scale={scale} spritesBase={spritesBase} />
-    </div>
-    </div>
+    </HudBox>
+    </HudBox>
   );
 };
 
