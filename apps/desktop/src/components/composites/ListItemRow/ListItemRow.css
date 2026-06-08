@@ -1,0 +1,56 @@
+/* @layer renderer-components @kind style */
+.list-item-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-surface-hover);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.list-item-row:hover {
+  background: var(--color-surface-hover-strong);
+  border-color: var(--color-border-hover);
+}
+
+.list-item-row--selected {
+  border-color: var(--color-gold-base);
+  background: var(--color-surface-selected);
+}
+
+.list-item-row__icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.list-item-row__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.list-item-row__name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.list-item-row__meta {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.list-item-row__action {
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.list-item-row:hover .list-item-row__action {
+  opacity: 1;
+}

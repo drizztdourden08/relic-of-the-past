@@ -1,6 +1,10 @@
 /* @layer renderer-components @kind barrel */
 export { Card } from './Card';
 export { Dialog } from './Dialog';
+export { ListItemRow } from './ListItemRow';
+export type { ListItemRowProps } from './ListItemRow';
+export { MasterDetailLayout } from './MasterDetailLayout';
+export type { MasterDetailLayoutProps } from './MasterDetailLayout';
 export { DropdownMenu } from './DropdownMenu';
 export { FullScreenLayer } from './FullScreenLayer';
 export { Overlay } from './Overlay';
