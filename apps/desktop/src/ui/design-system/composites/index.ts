@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind barrel */
 export { Dialog } from './Dialog';
+export { DialogShell } from './DialogShell';
+export type { DialogShellProps } from './DialogShell';
 export { ListItemRow } from './ListItemRow';
 export type { ListItemRowProps } from './ListItemRow';
 export { MasterDetailLayout } from './MasterDetailLayout';

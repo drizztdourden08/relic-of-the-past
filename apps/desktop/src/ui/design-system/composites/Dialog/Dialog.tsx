@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind component */
-﻿import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Button } from '../../primitives/Button';
-import { Portal } from '../../primitives/Portal';
+import { Text } from '../../primitives/Text';
+import { DialogShell } from '../DialogShell';
 import './Dialog.css';
 import { type DialogProps } from './Dialog.type';
-
 
 const Dialog = (props: DialogProps) => {
   const {
@@ -21,40 +21,20 @@ const Dialog = (props: DialogProps) => {
 
   const confirmRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') { e.preventDefault(); onCancel(); }
-    };
-    document.addEventListener('keydown', handler);
-    confirmRef.current?.focus();
-    return () => document.removeEventListener('keydown', handler);
-  }, [open, onCancel]);
-
-  if (!open) return null;
+  const actions = (
+    <>
+      <Button variant="secondary" onClick={onCancel}>{cancelLabel}</Button>
+      <Button ref={confirmRef} variant={variant === 'danger' ? 'danger' : 'primary'} onClick={onConfirm}>
+        {confirmLabel}
+      </Button>
+    </>
+  );
 
   return (
-    <Portal layer="modal">
-      <div className="dialog-backdrop" onClick={onCancel}>
-        <div className="dialog" onClick={(e) => e.stopPropagation()}>
-          <h3 className="dialog__title">{title}</h3>
-          {message && <p className="dialog__message">{message}</p>}
-          {children}
-          <div className="dialog__actions">
-            <Button variant="secondary" onClick={onCancel}>
-              {cancelLabel}
-            </Button>
-            <Button
-              ref={confirmRef}
-              variant={variant === 'danger' ? 'danger' : 'primary'}
-              onClick={onConfirm}
-            >
-              {confirmLabel}
-            </Button>
-          </div>
-        </div>
-      </div>
-    </Portal>
+    <DialogShell open={open} onClose={onCancel} title={title} actions={actions} initialFocusRef={confirmRef}>
+      {message && <Text as="p" className="dialog__message">{message}</Text>}
+      {children}
+    </DialogShell>
   );
 };
 

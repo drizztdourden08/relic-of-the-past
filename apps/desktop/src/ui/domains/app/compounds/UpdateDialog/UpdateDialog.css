@@ -16,7 +16,7 @@
 
 .update-dialog__notes {
   margin-top: var(--space-md);
-  border: 1px solid var(--color-gold-base, #c8a84b);
+  border: 1px solid var(--color-gold-base);
   border-radius: var(--radius-md);
   overflow: hidden;
 }
@@ -24,11 +24,11 @@
 .update-dialog__notes h4 {
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold, 600);
-  color: var(--color-gold-base, #c8a84b);
+  color: var(--color-gold-base);
   padding: var(--space-sm) var(--space-md);
   margin: 0;
   background: rgb(200, 168, 75, 0.08);
-  border-bottom: 1px solid var(--color-gold-base, #c8a84b);
+  border-bottom: 1px solid var(--color-gold-base);
 }
 
 .update-dialog__notes-content {
@@ -87,7 +87,7 @@
 
 .update-dialog__notes-content hr {
   border: none;
-  border-top: 1px solid var(--color-border-default, #333);
+  border-top: 1px solid var(--color-border-default);
   margin: 0.8em 0;
 }
 
@@ -99,7 +99,7 @@
 }
 
 .update-dialog__notes-content blockquote {
-  border-left: 3px solid var(--color-gold-base, #c8a84b);
+  border-left: 3px solid var(--color-gold-base);
   padding-left: var(--space-sm);
   margin: 0.5em 0;
   color: var(--color-text-muted);
@@ -114,7 +114,7 @@
 
 .update-dialog__notes-content th,
 .update-dialog__notes-content td {
-  border: 1px solid var(--color-border-default, #333);
+  border: 1px solid var(--color-border-default);
   padding: 0.3em 0.6em;
   text-align: left;
 }
@@ -128,19 +128,7 @@
   margin: var(--space-md) 0;
 }
 
-.update-dialog__progress-bar {
-  height: 6px;
-  background: var(--color-bg-sunken);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.update-dialog__progress-fill {
-  height: 100%;
-  background: var(--color-gold-base);
-  transition: width 0.3s ease;
-}
-
+/* Bar chrome comes from the ProgressBar primitive. */
 .update-dialog__progress-text {
   display: block;
   margin-top: var(--space-xs);
@@ -151,12 +139,12 @@
 
 .update-dialog__ready {
   font-size: var(--text-sm);
-  color: var(--color-success, #4caf50);
+  color: var(--color-green-base);
   margin: var(--space-md) 0;
 }
 
 .update-dialog__error {
   font-size: var(--text-sm);
-  color: var(--color-danger, #f44336);
+  color: var(--color-danger-base);
   margin: var(--space-md) 0;
 }

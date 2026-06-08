@@ -63,3 +63,5 @@ export { RangeInput } from './RangeInput';
 export type { RangeInputProps } from './RangeInput';
 export { Thumbnail } from './Thumbnail';
 export type { ThumbnailProps } from './Thumbnail';
+export { Image } from './Image';
+export type { ImageProps } from './Image';
