@@ -23,8 +23,9 @@ import { adapter as tsc } from './adapters/tsc-adapter.mjs';
 import { adapter as stylelint } from './adapters/stylelint-adapter.mjs';
 import { adapter as clangFormat } from './adapters/clang-format-adapter.mjs';
 import { adapter as markdownlint } from './adapters/markdownlint-adapter.mjs';
+import { adapter as structurePolicy } from './adapters/structure-policy.mjs';
 
-const ADAPTERS = [linePolicy, eslint, tsc, stylelint, clangFormat, markdownlint];
+const ADAPTERS = [linePolicy, eslint, tsc, stylelint, clangFormat, markdownlint, structurePolicy];
 const ROOT = process.cwd();
 const args = new Set(process.argv.slice(2));
 

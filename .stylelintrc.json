@@ -9,5 +9,21 @@
     "color-function-notation": null,
     "value-keyword-case": null
   },
+  "overrides": [
+    {
+      "files": ["apps/desktop/src/ui/**/*.css"],
+      "rules": {
+        "color-no-hex": [true, { "severity": "warning" }],
+        "color-named": ["never", { "severity": "warning" }]
+      }
+    },
+    {
+      "files": ["apps/desktop/src/ui/design-system/tokens/**/*.css"],
+      "rules": {
+        "color-no-hex": null,
+        "color-named": null
+      }
+    }
+  ],
   "ignoreFiles": ["**/node_modules/**", "dist/**", "release/**", "apps/desktop/public/**"]
 }
