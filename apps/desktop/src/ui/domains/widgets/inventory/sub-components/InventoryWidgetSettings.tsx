@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 import { useState } from 'react';
 import type { InventoryViewMode } from '@shared/game/items/sprites';
-import { SegmentedControl } from '../../../../design-system/primitives';
+import { Box, Text, SegmentedControl } from '../../../../design-system/primitives';
 import { STORAGE_KEY, VIEW_OPTIONS } from '../inventory.constants';
 
 const InventoryWidgetSettings = () => {
@@ -16,10 +16,10 @@ const InventoryWidgetSettings = () => {
   };
 
   return (
-    <div className="widget-settings__row">
-      <span className="widget-settings__label">View</span>
+    <Box className="widget-settings__row">
+      <Text className="widget-settings__label">View</Text>
       <SegmentedControl value={viewMode} options={VIEW_OPTIONS} onChange={handleChange} />
-    </div>
+    </Box>
   );
 };
 
