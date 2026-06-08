@@ -30,12 +30,12 @@
 /* ─── Primary (green/Hyrule) ─── */
 .btn--primary {
   background: var(--color-green-dim);
-  border-color: #2a4a2e;
+  border-color: var(--color-green-border);
   color: var(--color-green-base);
 }
 
 .btn--primary:hover:not(:disabled) {
-  background: #223a26;
+  background: var(--color-green-surface);
   border-color: var(--color-green-base);
 }
 
@@ -65,12 +65,12 @@
 /* ─── Danger ─── */
 .btn--danger {
   background: var(--color-danger-dim);
-  border-color: #4a2a2a;
-  color: #e0a0a0;
+  border-color: var(--color-danger-border-dim);
+  color: var(--color-danger-text);
 }
 
 .btn--danger:hover:not(:disabled) {
-  background: #3a2020;
+  background: var(--color-danger-surface-hover);
   border-color: var(--color-danger-base);
   color: var(--color-text-primary);
 }

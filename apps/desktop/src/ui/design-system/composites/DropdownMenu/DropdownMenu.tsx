@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useState, useLayoutEffect } from 'react';
 import { Portal } from '../../primitives/Portal';
+import { Box } from '../../primitives/Box';
+import { Text } from '../../primitives/Text';
 import { SubMenu } from './sub-components/SubMenu';
 import type { DropdownMenuProps } from './DropdownMenu.type';
 import './DropdownMenu.css';
@@ -16,30 +18,31 @@ const DropdownMenu = (props: DropdownMenuProps) => {
   }, [anchorRef]);
 
   const menu = (
-    <div
+    <Box
       className="dropdown-menu"
       style={pos ? { position: 'fixed', top: pos.top, left: pos.left } : undefined}
     >
       {items.map((item, i) => {
         if (item === 'separator') {
-          return <div key={`sep-${i}`} className="dropdown__separator" />;
+          return <Box key={`sep-${i}`} className="dropdown__separator" />;
         }
         if (item.children) {
           return <SubMenu key={item.key} item={item} />;
         }
         return (
-          <button
+          <Box
+            as="button"
             key={item.key}
             className="dropdown__item"
             onClick={item.onClick}
             disabled={item.disabled}
           >
-            {item.icon && <span className="dropdown__icon">{item.icon}</span>}
-            <span className="dropdown__label">{item.label}</span>
-          </button>
+            {item.icon && <Text className="dropdown__icon">{item.icon}</Text>}
+            <Text className="dropdown__label">{item.label}</Text>
+          </Box>
         );
       })}
-    </div>
+    </Box>
   );
 
   return <Portal layer="overlay">{menu}</Portal>;

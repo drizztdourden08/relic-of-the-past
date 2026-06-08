@@ -38,6 +38,8 @@
   --color-green-base:     #4a9966;
   --color-green-bright:   #5cb87a;
   --color-green-glow:     rgb(74, 153, 102, 0.12);
+  --color-green-border:   #2a4a2e;
+  --color-green-surface:  #223a26;
 
   /* ─── Semantic: Danger ─── */
   --color-danger-dim:     #2a1a1a;
@@ -45,6 +47,9 @@
   --color-danger-bright:  #f57;
   --color-danger-surface: #1e1618;
   --color-danger-border:  #5a2020;
+  --color-danger-border-dim: #4a2a2a;
+  --color-danger-surface-hover: #3a2020;
+  --color-danger-text:    #e0a0a0;
 
   /* ─── Semantic: Warning ─── */
   --color-warning-base:   #ffd54f;

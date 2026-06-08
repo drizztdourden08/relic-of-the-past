@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { Box } from '../../primitives/Box';
 import './MasterDetailLayout.css';
 import type { MasterDetailLayoutProps } from './MasterDetailLayout.type';
 
@@ -6,12 +7,12 @@ import type { MasterDetailLayoutProps } from './MasterDetailLayout.type';
 const MasterDetailLayout = (props: MasterDetailLayoutProps) => {
   const { list, detail, detailEmpty, className = '' } = props;
   return (
-    <div className={`master-detail${className ? ` ${className}` : ''}`}>
-      <div className="master-detail__list">{list}</div>
-      <div className={`master-detail__detail${detailEmpty ? ' master-detail__detail--empty' : ''}`}>
+    <Box className={`master-detail${className ? ` ${className}` : ''}`}>
+      <Box className="master-detail__list">{list}</Box>
+      <Box className={`master-detail__detail${detailEmpty ? ' master-detail__detail--empty' : ''}`}>
         {detail}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

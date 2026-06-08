@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
+import { Box } from '../../../primitives/Box';
+import { Text } from '../../../primitives/Text';
 import type { MenuItem } from '../DropdownMenu.type';
 
 interface SubMenuProps {
@@ -26,41 +28,42 @@ const SubMenu = (props: SubMenuProps) => {
   };
 
   return (
-    <div
+    <Box
       ref={ref}
       className="dropdown__submenu-trigger"
       onMouseEnter={handleEnter}
       onMouseLeave={() => setOpen(false)}
     >
-      <div className="dropdown__item dropdown__item--parent">
-        {item.icon && <span className="dropdown__icon">{item.icon}</span>}
-        <span className="dropdown__label">{item.label}</span>
-        <span className="dropdown__chevron">›</span>
-      </div>
+      <Box className="dropdown__item dropdown__item--parent">
+        {item.icon && <Text className="dropdown__icon">{item.icon}</Text>}
+        <Text className="dropdown__label">{item.label}</Text>
+        <Text className="dropdown__chevron">›</Text>
+      </Box>
       {open && subPos && (
-        <div
+        <Box
           className="dropdown-menu dropdown-menu--sub"
           style={{ position: 'fixed', top: subPos.top, left: subPos.left }}
         >
           {item.children!.map((child, i) => {
             if (child === ('separator' as unknown)) {
-              return <div key={`sep-${i}`} className="dropdown__separator" />;
+              return <Box key={`sep-${i}`} className="dropdown__separator" />;
             }
             return (
-              <button
+              <Box
+                as="button"
                 key={child.key}
                 className="dropdown__item"
                 onClick={child.onClick}
                 disabled={child.disabled}
               >
-                {child.icon && <span className="dropdown__icon">{child.icon}</span>}
-                <span className="dropdown__label">{child.label}</span>
-              </button>
+                {child.icon && <Text className="dropdown__icon">{child.icon}</Text>}
+                <Text className="dropdown__label">{child.label}</Text>
+              </Box>
             );
           })}
-        </div>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
 

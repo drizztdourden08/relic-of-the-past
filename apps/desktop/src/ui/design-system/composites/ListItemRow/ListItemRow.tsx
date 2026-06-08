@@ -1,22 +1,24 @@
 /* @layer renderer-components @kind component */
+import { Box } from '../../primitives/Box';
+import { Text } from '../../primitives/Text';
 import './ListItemRow.css';
 import type { ListItemRowProps } from './ListItemRow.type';
 
 const ListItemRow = (props: ListItemRowProps) => {
   const { name, icon, meta, action, selected, onClick, onDoubleClick, className = '' } = props;
   return (
-    <div
+    <Box
       className={`list-item-row${selected ? ' list-item-row--selected' : ''}${className ? ` ${className}` : ''}`}
       onClick={onClick}
       onDoubleClick={onDoubleClick}
     >
-      {icon != null && <span className="list-item-row__icon">{icon}</span>}
-      <div className="list-item-row__info">
-        <div className="list-item-row__name">{name}</div>
-        {meta != null && <div className="list-item-row__meta">{meta}</div>}
-      </div>
-      {action != null && <div className="list-item-row__action">{action}</div>}
-    </div>
+      {icon != null && <Text className="list-item-row__icon">{icon}</Text>}
+      <Box className="list-item-row__info">
+        <Box className="list-item-row__name">{name}</Box>
+        {meta != null && <Box className="list-item-row__meta">{meta}</Box>}
+      </Box>
+      {action != null && <Box className="list-item-row__action">{action}</Box>}
+    </Box>
   );
 };
 
