@@ -69,10 +69,15 @@ export default tseslint.config(
         { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
       ],
 
-      // ── React hooks correctness (defines the rules referenced by existing
-      //    eslint-disable comments; rules-of-hooks catches real bugs) ──
+      // ── React hooks correctness ──
+      // rules-of-hooks (real hook-ordering bugs) stays an error.
+      // exhaustive-deps is OFF: every one of its findings here was an intentional
+      // pattern (mount-only effects, stable refs/setters, the deps-object handler
+      // pattern in useCalibrationActions) — never a real bug, and with no runtime
+      // tests, auto-adding deps risks render loops. Deps are managed by hand.
+      // Re-enable as 'warn' anytime if you want the advisory back.
       'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/exhaustive-deps': 'off',
     },
   },
 );

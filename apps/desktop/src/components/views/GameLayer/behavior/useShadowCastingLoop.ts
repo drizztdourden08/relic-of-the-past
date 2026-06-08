@@ -119,7 +119,6 @@ const useShadowCastingLoop = (params: ShadowLoopParams): void => {
         shadowRendererRef.current = null;
       }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, canvasKey]);
 };
 

@@ -119,7 +119,6 @@ const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
         glowRendererRef.current = null;
       }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, canvasKey]);
 };
 

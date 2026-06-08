@@ -63,7 +63,7 @@ const SaveStateOverlay = (props: SaveStateOverlayProps) => {
       }, ANIM_MS);
     }
     return () => clearTimeout(timeoutRef.current);
-  }, [open, loadSlots]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [open, loadSlots]);
 
   const handleSave = useCallback(async (slot: number) => {
     setBusy(slot);

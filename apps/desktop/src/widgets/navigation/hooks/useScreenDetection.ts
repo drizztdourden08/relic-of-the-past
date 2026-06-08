@@ -14,7 +14,6 @@ const useScreenDetection = (debugTick?: number): ScreenMatchResult | null => {
     completedChecks: getCompletedChecks(),
     entranceId: whichEntrance ?? undefined,
     progressTier: progressInfo?.tier,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [whichEntrance, progressInfo?.tier, debugTick]);
 
   return useMemo<ScreenMatchResult | null>(

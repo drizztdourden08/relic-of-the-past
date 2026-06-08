@@ -88,7 +88,6 @@ const useScreenEditorForm = (props: ScreenEditorProps) => {
         setCondFlagValue, setCondEntranceId, setCondProgressMin, setCondProgressMax,
       },
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   // ─── Palace selection handler (cascade area/location/world from meta) ───

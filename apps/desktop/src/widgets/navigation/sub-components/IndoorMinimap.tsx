@@ -49,7 +49,6 @@ const IndoorMinimap = ({ bundle, connections, renderResults, linkPos, respawnEnt
     const horizontal = (shape === '2x2' || shape === '1x2') && quadrantFullsizeY === 0;
     const vertical = (shape === '2x2' || shape === '2x1') && quadrantFullsizeX === 0;
     return { horizontal, vertical };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [layoutInfo?.shape, layoutInfo?.quadrantFullsizeX, layoutInfo?.quadrantFullsizeY]);
 
   const boundaryTiles = useMemo(() => {

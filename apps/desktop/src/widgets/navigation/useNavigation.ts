@@ -52,13 +52,11 @@ const useNavigation = () => {
   const dungeonMapPos = useMemo(() => {
     if (!isIndoors || palaceIndex === 0xFF) return null;
     return wasmGetDungeonMapPosition();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isIndoors, roomIndex, palaceIndex, debugTick]);
 
   const roomLayoutInfo = useMemo(() => {
     if (!isIndoors) return null;
     return wasmGetRoomLayoutInfo();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isIndoors, roomIndex, debugTick]);
 
   // Use room index indoors; overworld screen index outside.
