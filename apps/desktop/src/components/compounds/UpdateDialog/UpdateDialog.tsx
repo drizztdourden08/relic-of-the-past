@@ -2,6 +2,7 @@
 import { useEffect, useRef, useMemo } from 'react';
 import { marked } from 'marked';
 import { Button } from '../../primitives/Button';
+import { Portal } from '../../primitives/Portal';
 import type { UpdateState } from '../../../hooks/useAutoUpdate';
 import './UpdateDialog.css';
 
@@ -42,8 +43,9 @@ const UpdateDialog = ({ open, state, onDownload, onInstall, onClose }: UpdateDia
   const { info, status, progress } = state;
 
   return (
-    <div className="dialog-backdrop" onClick={onClose}>
-      <div className="dialog update-dialog" onClick={(e) => e.stopPropagation()}>
+    <Portal layer="modal">
+      <div className="dialog-backdrop" onClick={onClose}>
+        <div className="dialog update-dialog" onClick={(e) => e.stopPropagation()}>
         <h3 className="dialog__title">
           {status === 'checking' ? 'Checking for Updates' : status === 'idle' && !info ? 'No Updates Available' : 'Update Available'}
         </h3>
@@ -119,7 +121,8 @@ const UpdateDialog = ({ open, state, onDownload, onInstall, onClose }: UpdateDia
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </Portal>
   );
 };
 

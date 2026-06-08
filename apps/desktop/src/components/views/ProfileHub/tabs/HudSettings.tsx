@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import type { GameSettings } from '@shared/types/settings';
-import { SettingsLayout } from '../../../composites/SettingsLayout';
+import { SettingsLayout } from '../../../compounds/SettingsLayout';
 import { SECTIONS } from './hud-settings-sections';
 import { renderControl } from './hud-settings-controls';
 

@@ -6,17 +6,20 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { WidgetLayout, WidgetState } from '../types';
 import { loadLayoutLocal, saveLayoutLocal, loadLayoutForProfile, saveLayoutForProfile, updateWidget } from './widgetStore';
+import type { WidgetPersistenceIO } from './widgetStore';
 import { createDefaultWidgetState, getWidgetDefinition } from './createWidgetState';
 
-const useWidgetLayout = (profileId: string | null) => {
+const useWidgetLayout = (profileId: string | null, io: WidgetPersistenceIO) => {
   const [layout, setLayoutRaw] = useState<WidgetLayout>(loadLayoutLocal);
   const profileIdRef = useRef(profileId);
   profileIdRef.current = profileId;
+  const ioRef = useRef(io);
+  ioRef.current = io;
 
   // Load layout when profile changes
   useEffect(() => {
     if (!profileId) return;
-    loadLayoutForProfile(profileId).then((loaded) => {
+    loadLayoutForProfile(profileId, ioRef.current).then((loaded) => {
       setLayoutRaw(loaded);
       saveLayoutLocal(loaded);
     });
@@ -29,7 +32,7 @@ const useWidgetLayout = (profileId: string | null) => {
       saveLayoutLocal(next);
       // Debounced profile save (fire-and-forget)
       if (profileIdRef.current) {
-        saveLayoutForProfile(profileIdRef.current, next);
+        saveLayoutForProfile(profileIdRef.current, next, ioRef.current);
       }
       return next;
     });

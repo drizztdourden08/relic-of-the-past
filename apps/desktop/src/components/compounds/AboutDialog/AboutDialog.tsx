@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useEffect } from 'react';
 import { Button } from '../../primitives/Button';
+import { Portal } from '../../primitives/Portal';
 import './AboutDialog.css';
 
 interface AboutDialogProps {
@@ -22,8 +23,9 @@ const AboutDialog = ({ open, version, onClose }: AboutDialogProps) => {
   if (!open) return null;
 
   return (
-    <div className="dialog-backdrop" onClick={onClose}>
-      <div className="dialog about-dialog" onClick={(e) => e.stopPropagation()}>
+    <Portal layer="modal">
+      <div className="dialog-backdrop" onClick={onClose}>
+        <div className="dialog about-dialog" onClick={(e) => e.stopPropagation()}>
         <div className="about-dialog__header">
           <img className="about-dialog__logo" src="./logos/logo-256.png" alt="Relic of the Past" />
           <h2 className="about-dialog__title">Relic of the Past</h2>
@@ -58,7 +60,8 @@ const AboutDialog = ({ open, version, onClose }: AboutDialogProps) => {
           </Button>
         </div>
       </div>
-    </div>
+      </div>
+    </Portal>
   );
 };
 

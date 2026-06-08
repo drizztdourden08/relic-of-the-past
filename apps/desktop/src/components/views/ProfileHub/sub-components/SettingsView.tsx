@@ -2,7 +2,7 @@
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SegmentedControl } from '../../../primitives/SegmentedControl';
-import { SettingsLayout, type Section } from '../../../composites/SettingsLayout';
+import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
 
 interface SettingsViewProps {
   settings: GameSettings;

@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 /** Section/subsection config for the Gameplay settings tab. */
-import type { Section } from '../../../composites/SettingsLayout';
+import type { Section } from '../../../compounds/SettingsLayout';
 
 const SECTIONS: Section[] = [
   {

@@ -2,7 +2,7 @@
 import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { MsuImport } from './MsuImport';
-import { SettingsLayout } from '../../../composites/SettingsLayout';
+import { SettingsLayout } from '../../../compounds/SettingsLayout';
 import { SECTIONS } from './audio-settings-sections';
 import { renderControl, isDisabled } from './audio-settings-controls';
 

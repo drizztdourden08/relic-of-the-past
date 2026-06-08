@@ -16,7 +16,7 @@ export { PausePendantIcon } from './composites/PausePendantIcon';
 export { PauseCrystalIcon } from './composites/PauseCrystalIcon';
 export { PauseEquipSlot } from './composites/PauseEquipSlot';
 export { PauseButtonLabel } from './composites/PauseButtonLabel';
-export { LocationNotification } from './composites/LocationNotification';
+export { LocationNotification } from './views/LocationNotification';
 
 // Compounds
 export { HudLife } from './compounds/HudLife';

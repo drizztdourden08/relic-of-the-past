@@ -11,8 +11,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { HudView, PauseMenuView } from '../../../hud';
-import { LocationNotification } from '../../../hud/composites/LocationNotification';
-import { DeliveryQueueIndicator } from '../../../hud/composites/DeliveryQueueIndicator';
+import { LocationNotification } from '../../../hud/views/LocationNotification';
+import { DeliveryQueueIndicator } from '../../../hud/views/DeliveryQueueIndicator';
 import { useLocationNotification } from '../../../hud/hooks/useLocationNotification';
 import { useHudSettingsStore } from '../../../stores/hud-settings-store';
 import { useDeliveryQueueStore } from '../../../stores/delivery-queue-store';

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import type { ReactNode } from 'react';
 import type { GameSettings, HapticSettings } from '@shared/types/settings';
-import { SettingsLayout, type Section } from '../../../composites/SettingsLayout';
+import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
 import { Toggle } from '../../../primitives/Toggle';
 import { Slider } from '../../../primitives/Slider';
 

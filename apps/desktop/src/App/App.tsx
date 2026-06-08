@@ -4,11 +4,12 @@ import { TitleBar } from '../components/views/TitleBar';
 import { GameLayer } from '../components/views/GameLayer';
 import { SaveStateOverlay } from '../components/views/SaveStateOverlay/SaveStateOverlay';
 import { WidgetManager, useWidgetLayout } from '../components/composites/Widget';
+import { loadTrackerStateBlob, saveTrackerStateBlob } from '../lib/tracker-state-io';
 import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, DatasetWidgetContent, CheatsWidgetContent } from '../widgets';
 import { SpriteDebug } from '../components/views/SpriteDebug';
 import { Dialog } from '../components/composites/Dialog';
-import { UpdateDialog } from '../components/composites/UpdateDialog';
-import { AboutDialog } from '../components/composites/AboutDialog';
+import { UpdateDialog } from '../components/compounds/UpdateDialog';
+import { AboutDialog } from '../components/compounds/AboutDialog';
 import { PageRouter } from './PageRouter';
 import { useAppNavigation } from './behavior/useAppNavigation';
 import { useAppOverlays } from './behavior/useAppOverlays';
@@ -30,6 +31,9 @@ import { useDumpLayers } from './behavior/useDumpLayers';
 import { useDumpNav } from './behavior/useDumpNav';
 import { getInputManager, primeLiveSettings } from '../lib/game';
 import './App.css';
+
+// Profile-layout persistence injected into the bare Widget composite (keeps IPC out of it).
+const widgetIO = { load: loadTrackerStateBlob, save: saveTrackerStateBlob };
 
 const App = () => {
   const appVersion = useAppVersion();
@@ -61,7 +65,7 @@ const App = () => {
     onGameClear: () => game.clearGame(),
   });
   const nav = useAppNavigation({ activeProfile: profileMgmt.activeProfile, refreshLists: profileMgmt.refreshProfilesAndRoms });
-  const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null);
+  const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null, widgetIO);
   const saveOverlay = useSaveOverlay(saveState, game.isRunning);
   const update = useAutoUpdate();
 

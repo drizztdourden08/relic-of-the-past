@@ -4,14 +4,19 @@
  *
  * Two layers:
  *  1. localStorage ("widget-layout"): current in-memory layout for fast restore on reload.
- *  2. Per-profile persistence: saved/loaded via lib/tracker-state-io (typed IPC wrapper) for cross-session persistence.
+ *  2. Per-profile persistence: round-tripped through an injected WidgetPersistenceIO
+ *     (provided by the View tier) so this bare composite never imports IPC directly.
  */
 
 import type { WidgetLayout, WidgetState } from '../types';
 import { WIDGET_DEFINITIONS } from '../constants';
 import { createDefaultLayout, createDefaultWidgetState } from './createWidgetState';
-import { loadTrackerStateBlob, saveTrackerStateBlob } from '../../../../lib/tracker-state-io';
-import type { TrackerStateBlob } from '../../../../lib/tracker-state-io';
+
+/** Persistence round-trip injected by the View tier (keeps IPC out of the composite). */
+interface WidgetPersistenceIO {
+  load: (profileId: string) => Promise<Record<string, unknown> | null>;
+  save: (profileId: string, blob: Record<string, unknown>) => Promise<void>;
+}
 
 const STORAGE_KEY = 'widget-layout';
 
@@ -33,27 +38,27 @@ const saveLayoutLocal = (layout: WidgetLayout): void => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
 }
 
-// ─── Profile persistence (via IPC) ───
+// ─── Profile persistence (via injected IO) ───
 
-const loadLayoutForProfile = async (profileId: string): Promise<WidgetLayout> => {
+const loadLayoutForProfile = async (profileId: string, io: WidgetPersistenceIO): Promise<WidgetLayout> => {
   try {
-    const state = await loadTrackerStateBlob(profileId);
+    const state = await io.load(profileId);
     const layout = state?.widgetLayout as WidgetLayout | undefined;
     if (layout) return ensureAllWidgets(layout);
   } catch { /* fall through */ }
   return loadLayoutLocal(); // Fallback to local layout
 }
 
-const saveLayoutForProfile = async (profileId: string, layout: WidgetLayout): Promise<void> => {
+const saveLayoutForProfile = async (profileId: string, layout: WidgetLayout, io: WidgetPersistenceIO): Promise<void> => {
   // Load existing tracker state and merge widget layout into it
-  let existing: TrackerStateBlob = {};
+  let existing: Record<string, unknown> = {};
   try {
-    const raw = await loadTrackerStateBlob(profileId);
+    const raw = await io.load(profileId);
     if (raw) existing = raw;
   } catch { /* new state */ }
 
   existing.widgetLayout = layout;
-  await saveTrackerStateBlob(profileId, existing);
+  await io.save(profileId, existing);
 }
 
 // ─── Helpers ───
@@ -91,3 +96,4 @@ export {
   saveLayoutLocal,
   updateWidget
 };
+export type { WidgetPersistenceIO };
