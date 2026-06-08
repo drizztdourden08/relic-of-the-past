@@ -43,6 +43,8 @@
   --color-danger-dim:     #2a1a1a;
   --color-danger-base:    #e94560;
   --color-danger-bright:  #f57;
+  --color-danger-surface: #1e1618;
+  --color-danger-border:  #5a2020;
 
   /* ─── Semantic: Warning ─── */
   --color-warning-base:   #ffd54f;

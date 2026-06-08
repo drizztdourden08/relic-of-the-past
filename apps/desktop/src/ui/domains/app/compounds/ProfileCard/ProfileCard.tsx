@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-﻿import { Card } from '../../../../design-system/composites/Card';
+﻿import { Card } from '../../../../design-system/primitives/Card';
 import { IconButton } from '../../../../design-system/primitives/IconButton';
 import { formatDate, formatRomName } from './behavior/formatters';
 import './ProfileCard.css';

@@ -18,6 +18,6 @@
 }
 
 .card--danger {
-  border-color: #5a2020;
-  background: #1e1618;
+  border-color: var(--color-danger-border);
+  background: var(--color-danger-surface);
 }

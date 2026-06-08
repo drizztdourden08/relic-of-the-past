@@ -1,5 +1,4 @@
 /* @layer renderer-components @kind barrel */
-export { Card } from './Card';
 export { Dialog } from './Dialog';
 export { ListItemRow } from './ListItemRow';
 export type { ListItemRowProps } from './ListItemRow';
