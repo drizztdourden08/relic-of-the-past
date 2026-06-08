@@ -364,7 +364,7 @@
   line-height: 1.6;
   color: var(--color-text-secondary);
   white-space: pre-wrap;
-  word-break: break-word;
+  overflow-wrap: break-word;
   max-height: 100%;
   overflow-y: auto;
 }

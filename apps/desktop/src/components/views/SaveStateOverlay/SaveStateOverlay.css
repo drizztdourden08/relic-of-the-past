@@ -29,13 +29,27 @@
 }
 
 @keyframes saveSlideIn {
-  from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
-  to   { transform: translateX(-50%) translateY(0);     opacity: 1; }
+  from {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes saveSlideOut {
-  from { transform: translateX(-50%) translateY(0);     opacity: 1; }
-  to   { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+  from {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+  }
 }
 
 /* ─── Slot wrapper (for hints positioning) ─── */

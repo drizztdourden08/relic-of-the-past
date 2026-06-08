@@ -594,11 +594,27 @@
   transition: all 0.1s;
 }
 
-.hid-cal__input-item--pending  { background: var(--color-bg-deep); color: #666; }
-.hid-cal__input-item--active   { background: #2d2456; color: #818cf8; }
-.hid-cal__input-item--captured { background: #0f2e1a; color: #4ade80; }
-.hid-cal__input-item--skipped  { background: #2a2a1a; color: #fbbf24; }
-.hid-cal__input-item--focus    { border-color: #818cf8; }
+.hid-cal__input-item--pending {
+  background: var(--color-bg-deep);
+  color: #666;
+}
+
+.hid-cal__input-item--active {
+  background: #2d2456;
+  color: #818cf8;
+}
+
+.hid-cal__input-item--captured {
+  background: #0f2e1a;
+  color: #4ade80;
+}
+
+.hid-cal__input-item--skipped {
+  background: #2a2a1a;
+  color: #fbbf24;
+}
+
+.hid-cal__input-item--focus { border-color: #818cf8; }
 
 .hid-cal__input-icon {
   width: 14px;

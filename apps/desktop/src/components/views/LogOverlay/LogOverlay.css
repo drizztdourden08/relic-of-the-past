@@ -64,7 +64,7 @@
 
 .log-entry__message {
   color: var(--color-text-primary);
-  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .log-entry--error .log-entry__message {
