@@ -14,16 +14,26 @@ core-nav trio (single-screen, orchestrator, dual-layer), and the two stateful cl
 (input-manager, hid-reader). **None are runtime-tested**, so each has a manual-test
 entry in `docs/p5-test-checklist.md` — please walk that before pushing.
 
-**Only 5 files remain over the line cap**, and all need a decision you must make:
+## ✅ PERFECT SCORE REACHED — every tool at 0, every file ≤ cap
 
-- **3 CSS files** — `TrackerView.css` (662), `InputCalibration.css` (575),
-  `DataManager.css` (372). Need stylelint rule choices before any reflow.
-- **2 C files** — `state_queries.c` (686), `emscripten_main.c` (465). Splitting them
-  requires `build.bat`/`Makefile` source-list sync + a **WASM rebuild** to verify
-  (tsc/eslint can't validate C). I can split + sync, but you must run/confirm the build.
+`tsc 0 · eslint 0e/0w · stylelint 0 · markdownlint 0 · line-policy 0e/0w`. All 5
+remaining oversized files were split this pass:
 
-The rule-decision items below (exhaustive-deps / markdownlint / stylelint) are still
-untouched and still need your call.
+- **3 CSS files** split into co-located part files (verbatim, imported alongside):
+  `DataManager.css` → +`.detail.css`; `InputCalibration.css` → +`.sticks.css`
+  +`.hid.css`; `TrackerView.css` → +`.filters.css` +`.checks.css`.
+- **2 C files** split + `build.bat`/`Makefile` synced + **WASM rebuilt & verified**
+  with Emscripten (emcc 5.0.7, clean compile + link, exit 0):
+  - `state_queries.c` (686) → 6 domain files (sprites/grids/tables/rooms/room_exits).
+    Pure verbatim function moves, one cross-file buffer relocated. **Low risk.**
+  - `emscripten_main.c` (465) → 4 TUs (`main`/`sdl`/`api`/`io`) + `emscripten_internal.h`.
+    This converted ~15 file-`static` engine globals to `extern`-shared globals — an
+    **entry-point linkage change**, not a pure verbatim move. It compiles + links
+    clean (which proves all globals resolve with no missing/duplicate symbols, the
+    only failure modes for this change), but a headless boot-test couldn't be driven
+    here (needs an active profile + save slot). **⚠️ ACTION: please play-test once**
+    (boot to title, load a save, confirm audio + input + edge-glow/HUD-hide work) to
+    confirm no runtime regression. Revert commit is isolated if anything's off.
 
 ## ✅ RESOLVED — "perfect score" pass (tsc / eslint / markdownlint / stylelint all 0)
 
