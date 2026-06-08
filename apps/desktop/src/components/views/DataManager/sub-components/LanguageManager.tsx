@@ -3,6 +3,10 @@ import { useState, useEffect, useCallback } from 'react';
 import { ImportForm } from './ImportForm';
 import { IconButton } from '../../../primitives/IconButton';
 import { Select } from '../../../primitives/Select';
+import { Field } from '../../../primitives/Field';
+import { EmptyState } from '../../../primitives/EmptyState';
+import { MasterDetailLayout } from '../../../composites/MasterDetailLayout';
+import { ListItemRow } from '../../../composites/ListItemRow';
 
 interface LanguageInfo {
   code: string;
@@ -86,80 +90,70 @@ const LanguageManager = (props: LanguageManagerProps) => {
     });
   }, [selected, refresh, onDeleteConfirm]);
 
-  return (
-    <div className="data-columns">
-      <div className="data-columns__left">
-        {/* Language selector + ROM import form */}
-        <div className="import-form" style={{ marginBottom: 0, paddingBottom: 'var(--space-xs)' }}>
-          <div className="profile-form__field">
-            <span className="profile-form__label">Language</span>
-            <Select
-              value={extractLang}
-              onChange={(val) => setExtractLang(val)}
-              options={[
-                { value: '', label: 'Select language…' },
-                ...Object.entries(LANGUAGE_NAMES).map(([code, name]) => ({
-                  value: code,
-                  label: `${name} (${code})`,
-                })),
-              ]}
-              placeholder="Select language…"
-            />
-          </div>
-        </div>
-        <ImportForm
-          placeholder="Paste ROM download URL…"
-          accept={['.sfc', '.smc', '.zip', '.7z', '.rar']}
-          dropLabel="Drop a ROM file to extract language"
-          dropHint="The ROM is used temporarily and not saved"
-          disabled={!extractLang}
-          onUrlImport={handleUrlImport}
-          onFileImport={handleFileImport}
-        />
-
-        <div className="data-list">
-          {languages.length === 0 && (
-            <div className="data-list-empty" style={{ padding: 'var(--space-lg)', textAlign: 'center', color: 'var(--color-text-faint)', fontSize: 'var(--text-sm)' }}>
-              No languages extracted yet
-            </div>
-          )}
-          {languages.map((lang) => (
-            <div
-              key={lang.code}
-              className={`data-list-item ${selected === lang.code ? 'data-list-item--selected' : ''}`}
-              onClick={() => setSelected(lang.code)}
-            >
-              <span className="data-list-item__icon">🌐</span>
-              <div className="data-list-item__info">
-                <div className="data-list-item__name">{LANGUAGE_NAMES[lang.code] ?? lang.code}</div>
-                <div className="data-list-item__meta">{lang.fileCount} file{lang.fileCount !== 1 ? 's' : ''}</div>
-              </div>
-              <div className="data-list-item__action">
-                <IconButton variant="ghost" size="sm" label="Delete" onClick={(e) => { e.stopPropagation(); handleDelete(lang.code); }}>
-                  ✕
-                </IconButton>
-              </div>
-            </div>
-          ))}
-        </div>
+  const list = (
+    <>
+      {/* Language selector + ROM import form */}
+      <div className="import-form" style={{ marginBottom: 0, paddingBottom: 'var(--space-xs)' }}>
+        <Field label="Language">
+          <Select
+            value={extractLang}
+            onChange={(val) => setExtractLang(val)}
+            options={[
+              { value: '', label: 'Select language…' },
+              ...Object.entries(LANGUAGE_NAMES).map(([code, name]) => ({
+                value: code,
+                label: `${name} (${code})`,
+              })),
+            ]}
+            placeholder="Select language…"
+          />
+        </Field>
       </div>
+      <ImportForm
+        placeholder="Paste ROM download URL…"
+        accept={['.sfc', '.smc', '.zip', '.7z', '.rar']}
+        dropLabel="Drop a ROM file to extract language"
+        dropHint="The ROM is used temporarily and not saved"
+        disabled={!extractLang}
+        onUrlImport={handleUrlImport}
+        onFileImport={handleFileImport}
+      />
 
-      <div className={`data-columns__right ${!selected ? 'data-columns__right--empty' : ''}`}>
-        {!selected ? (
-          <span>Select a language to view dialogue entries</span>
-        ) : loadingDialogue ? (
-          <span>Loading…</span>
-        ) : dialogue ? (
-          <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-            <h3 className="detail-panel__title">{LANGUAGE_NAMES[selected] ?? selected}</h3>
-            <div className="dialogue-viewer">{dialogue}</div>
-          </div>
-        ) : (
-          <span>No dialogue data available</span>
-        )}
+      <div className="data-list">
+        {languages.length === 0 && <EmptyState message="No languages extracted yet" />}
+        {languages.map((lang) => (
+          <ListItemRow
+            key={lang.code}
+            icon="🌐"
+            name={LANGUAGE_NAMES[lang.code] ?? lang.code}
+            meta={`${lang.fileCount} file${lang.fileCount !== 1 ? 's' : ''}`}
+            selected={selected === lang.code}
+            onClick={() => setSelected(lang.code)}
+            action={
+              <IconButton variant="ghost" size="sm" label="Delete" onClick={(e) => { e.stopPropagation(); handleDelete(lang.code); }}>
+                ✕
+              </IconButton>
+            }
+          />
+        ))}
       </div>
-    </div>
+    </>
   );
+
+  const detail = !selected ? (
+    <span>Select a language to view dialogue entries</span>
+  ) : loadingDialogue ? (
+    <span>Loading…</span>
+  ) : dialogue ? (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <h3 className="detail-panel__title">{LANGUAGE_NAMES[selected] ?? selected}</h3>
+      <div className="dialogue-viewer">{dialogue}</div>
+    </div>
+  ) : (
+    <span>No dialogue data available</span>
+  );
+
+  return <MasterDetailLayout list={list} detail={detail} detailEmpty={!selected} />;
 };
 
 export { LanguageManager };
