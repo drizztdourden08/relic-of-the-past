@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 /** Create / overwrite / delete confirmation dialogs for the Home tab. */
 import { Dialog } from '../../../../composites/Dialog';
+import { TextInput } from '../../../../primitives/TextInput';
 import type { HomeTabSaves } from './useHomeTabSaves';
 
 const HomeTabDialogs = ({ saves }: { saves: HomeTabSaves }) => {
@@ -16,7 +17,7 @@ const HomeTabDialogs = ({ saves }: { saves: HomeTabSaves }) => {
         onConfirm={handleConfirmCreate}
         onCancel={() => setDialog({ type: null })}
       >
-        <input
+        <TextInput
           className="home-tab__save-name-input"
           value={newSaveName}
           onChange={(e) => setNewSaveName(e.target.value)}

@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState, useRef } from 'react';
+import { TextInput } from '../../primitives/TextInput';
 import type { NormalSaveCardProps } from './types';
 import './NormalSaveCard.css';
 
@@ -39,7 +40,7 @@ const NormalSaveCard = (props: NormalSaveCardProps) => {
       </div>
       <div className="normal-save-card__info">
         {editing ? (
-          <input
+          <TextInput
             ref={inputRef}
             className="normal-save-card__name-input"
             value={editValue}

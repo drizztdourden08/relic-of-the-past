@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState, useCallback } from 'react';
 import { DropZone } from '../../../primitives/DropZone';
+import { TextInput } from '../../../primitives/TextInput';
 import './MsuImport.css';
 
 interface MsuImportProps {
@@ -77,7 +78,7 @@ const MsuImport = (props: MsuImportProps) => {
   return (
     <div className="msu-import">
       <div className="msu-import__url-row">
-        <input
+        <TextInput
           className="msu-import__url-input"
           type="text"
           placeholder="Paste MSU pack download URL…"

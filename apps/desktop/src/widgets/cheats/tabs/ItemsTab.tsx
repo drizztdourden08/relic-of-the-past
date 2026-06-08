@@ -5,6 +5,7 @@
  * "From Check" shows the check list with grant buttons.
  */
 import { useState, useMemo, useEffect } from 'react';
+import { TextInput } from '../../../components/primitives';
 import { ITEMS } from '@shared/game/items';
 import { ALL_CHECKS } from '@shared/game/checks';
 import { CHECK_NPC_FLAGS } from '@shared/game/checks/flags';
@@ -118,7 +119,7 @@ const ItemsTab = () => {
 
       {mode === 'checks' && (
         <div>
-          <input
+          <TextInput
             type="text"
             className="cheats-input"
             style={{ width: '100%', marginBottom: 8, textAlign: 'left' }}

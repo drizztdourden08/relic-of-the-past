@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useRef, useState, useEffect } from 'react';
+import { TextInput } from '../../../../primitives/TextInput';
 import './NumberField.css';
 
 interface NumberFieldProps {
@@ -72,7 +73,7 @@ const NumberField = ({ value, onChange, label, icon, min, max, step = 1, suffix 
         <span className="number-field__label">{icon || label}</span>
       )}
       {editing ? (
-        <input
+        <TextInput
           ref={inputRef}
           className="number-field__input"
           value={text}
