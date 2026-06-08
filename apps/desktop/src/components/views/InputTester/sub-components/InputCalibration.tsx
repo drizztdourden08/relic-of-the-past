@@ -15,6 +15,8 @@ import { CONTROLLER_ICON_MAP, resolveDeviceName } from './input-cal-visuals';
 import { useInputCalibration } from './useInputCalibration';
 import { DiagnosticsLog } from './DiagnosticsLog';
 import './InputCalibration.css';
+import './InputCalibration.sticks.css';
+import './InputCalibration.hid.css';
 
 const InputCalibration = () => {
   const {

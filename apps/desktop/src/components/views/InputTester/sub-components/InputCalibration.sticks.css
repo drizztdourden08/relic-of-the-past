@@ -1,0 +1,171 @@
+/* @layer renderer-components @kind style */
+
+/* ─── Joystick Circle Tester ─── */
+
+.input-cal__sticks {
+  display: flex;
+  gap: var(--space-xl);
+  margin-top: var(--space-md);
+}
+
+.input-cal__stick-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.input-cal__stick-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+
+.input-cal__stick-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--color-bg-deep);
+  box-shadow: inset 0 0 0 1px var(--color-border-default);
+  position: relative;
+  overflow: hidden;
+}
+
+.input-cal__stick-crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+}
+
+.input-cal__stick-crosshair::before,
+.input-cal__stick-crosshair::after {
+  content: '';
+  position: absolute;
+  background: var(--color-border-subtle);
+}
+
+.input-cal__stick-crosshair::before {
+  /* Horizontal line */
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+}
+
+.input-cal__stick-crosshair::after {
+  /* Vertical line */
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+
+.input-cal__stick-line {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  background: var(--color-gold-base);
+  border-radius: 1px;
+  transform-origin: top center;
+  transition: none;
+}
+
+.input-cal__stick-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-gold-bright);
+  box-shadow: 0 0 6px var(--color-gold-glow);
+  transform: translate(-50%, -50%);
+  transition: none;
+}
+
+.input-cal__stick-values {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ─── Vibration ─── */
+
+.input-cal__vibrate-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+/* ─── Log Section ─── */
+
+.input-cal__log {
+  padding: var(--space-md);
+  background: var(--color-bg-deep);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  max-height: 200px;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.input-cal__log-entry {
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.input-cal__log-entry--connect {
+  color: var(--color-green-base);
+}
+
+.input-cal__log-entry--disconnect {
+  color: var(--color-danger-base);
+}
+
+/* ─── Calibration Result ─── */
+
+.input-cal__result {
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-green-dim);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+}
+
+.input-cal__result-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.input-cal__result-title {
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  color: var(--color-green-bright);
+}
+
+.input-cal__result pre {
+  font-size: var(--text-xs);
+  background: var(--color-bg-deep);
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
+  max-height: 240px;
+  overflow: auto;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-subtle);
+}
+
+/* ─── No controllers ─── */
+
+.input-cal__empty {
+  text-align: center;
+  padding: var(--space-2xl);
+  color: var(--color-text-muted);
+}
+
+.input-cal__empty p {
+  margin: var(--space-xs) 0;
+}
