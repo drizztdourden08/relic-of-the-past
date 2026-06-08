@@ -1,4 +1,6 @@
 /* @layer renderer-components @kind component */
+import { Box } from '../../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../../design-system/primitives/Text';
 import { useShadowEditorStore } from '../../../../../../../stores/shadow-editor-store';
 import './HeightLevelPicker.css';
 
@@ -11,26 +13,26 @@ const HeightLevelPicker = ({ value, onChange }: HeightLevelPickerProps) => {
   const heightLevels = useShadowEditorStore((s) => s.heightLevels);
 
   return (
-    <div className="height-level-picker">
+    <Box className="height-level-picker">
       {heightLevels.map((level, i) => {
         const active = Math.abs(value - level.value) < 0.005;
         return (
-          <button
+          <Box
+            as="button"
             key={i}
-            type="button"
             className={`height-level-picker__btn${active ? ' height-level-picker__btn--active' : ''}`}
             onClick={() => onChange(level.value)}
             title={`${level.label} (${level.value})`}
           >
-            <span
+            <Box
               className="height-level-picker__swatch"
               style={{ opacity: level.value }}
             />
-            <span className="height-level-picker__label">{level.label}</span>
-          </button>
+            <Text className="height-level-picker__label">{level.label}</Text>
+          </Box>
         );
       })}
-    </div>
+    </Box>
   );
 };
 

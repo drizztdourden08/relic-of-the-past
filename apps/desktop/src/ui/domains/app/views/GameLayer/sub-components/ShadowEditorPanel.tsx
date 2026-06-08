@@ -2,6 +2,8 @@
 import { useCallback } from 'react';
 import { useShadowEditorStore } from '../../../../../../stores/shadow-editor-store';
 import type { EditorTool } from '../../../../../../stores/shadow-editor-store';
+import { Box } from '../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../design-system/primitives/Text';
 import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
 import { Slider } from '../../../../../design-system/primitives/Slider';
 import { Button } from '../../../../../design-system/primitives/Button';
@@ -83,35 +85,35 @@ const ShadowEditorPanel = () => {
   const handleClose = () => useShadowEditorStore.getState().setOpen(false);
 
   return (
-    <div className="shadow-editor-panel">
+    <Box className="shadow-editor-panel">
       {/* ─── Header ─── */}
-      <div className="shadow-editor-panel__header">
-        <span className="shadow-editor-panel__title">
+      <Box className="shadow-editor-panel__header">
+        <Text className="shadow-editor-panel__title">
           Shadows
-          {dirty && <span className="shadow-editor-panel__dirty">●</span>}
-        </span>
-        <div className="shadow-editor-panel__actions">
+          {dirty && <Text className="shadow-editor-panel__dirty">●</Text>}
+        </Text>
+        <Box className="shadow-editor-panel__actions">
           <IconButton label="Preview" onClick={() => setPreviewMode(!previewMode)} className={previewMode ? 'icon-btn--active' : ''}>👁</IconButton>
           <IconButton label="Debug" onClick={() => setDebugMode(!debugMode)} className={debugMode ? 'icon-btn--active' : ''}>🔍</IconButton>
           <IconButton label="Undo" onClick={() => undo(screenId)}>↶</IconButton>
           <IconButton label="Redo" onClick={() => redo(screenId)}>↷</IconButton>
           <Button size="sm" variant="primary" onClick={() => save()} disabled={!dirty}>Save</Button>
           <IconButton label="Close" onClick={handleClose}>✕</IconButton>
-        </div>
-      </div>
+        </Box>
+      </Box>
 
       {/* ─── Toolbar ─── */}
-      <div className="shadow-editor-panel__toolbar">
+      <Box className="shadow-editor-panel__toolbar">
         <SegmentedControl
           value={activeTool}
           options={TOOL_OPTIONS}
           onChange={(v) => setActiveTool(v as EditorTool)}
         />
-      </div>
+      </Box>
 
       {/* ─── Shape Creation Options (shown when polygon/shape-light tool active) ─── */}
       {(activeTool === 'polygon' || activeTool === 'shape-light') && !hasSelection && (
-        <div className="shadow-editor-panel__tool-opts">
+        <Box className="shadow-editor-panel__tool-opts">
           <SegmentedControl
             value={String(polygonSides)}
             options={POLYGON_OPTIONS}
@@ -125,19 +127,19 @@ const ShadowEditorPanel = () => {
             label="Corner Radius"
             onChange={setPolygonCornerRadius}
           />
-          <div className="shadow-editor-panel__subsection">
-            <span className="shadow-editor-panel__sublabel">Height</span>
+          <Box className="shadow-editor-panel__subsection">
+            <Text className="shadow-editor-panel__sublabel">Height</Text>
             <HeightLevelPicker
               value={store.getEffectiveHeight()}
               onChange={(v) => store.setCustomHeight(v)}
             />
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
 
       {/* ─── Light Creation Options ─── */}
       {(activeTool === 'point-light') && !hasSelection && (
-        <div className="shadow-editor-panel__tool-opts">
+        <Box className="shadow-editor-panel__tool-opts">
           <Slider
             value={store.defaultLightIntensity}
             min={0}
@@ -156,10 +158,10 @@ const ShadowEditorPanel = () => {
             onChange={store.setDefaultLightRadius}
             showValue
           />
-        </div>
+        </Box>
       )}
 
-      <div className="shadow-editor-panel__body">
+      <Box className="shadow-editor-panel__body">
         {/* ─── Selected Shape Inspector ─── */}
         {selectedHm && (
           <ShadowShapeInspector screenId={screenId} selectedHm={selectedHm} updateHeightmapElement={updateHeightmapElement} handleDelete={handleDelete} />
@@ -174,13 +176,13 @@ const ShadowEditorPanel = () => {
         {!hasSelection && (
           <ShadowGlobalSettings screenId={screenId} screenData={screenData} updateLighting={updateLighting} />
         )}
-      </div>
+      </Box>
 
       {/* ─── Footer ─── */}
-      <div className="shadow-editor-panel__footer">
+      <Box className="shadow-editor-panel__footer">
         Screen #{screenId} · {screenData.heightmap.length} shapes · {screenData.lights.length} lights
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

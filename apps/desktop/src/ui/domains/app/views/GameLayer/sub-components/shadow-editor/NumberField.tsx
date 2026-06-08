@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useCallback, useRef, useState, useEffect } from 'react';
 import { TextInput } from '../../../../../../design-system/primitives/TextInput';
+import { Box } from '../../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../../design-system/primitives/Text';
 import './NumberField.css';
 
 interface NumberFieldProps {
@@ -68,9 +70,9 @@ const NumberField = ({ value, onChange, label, icon, min, max, step = 1, suffix 
   }, []);
 
   return (
-    <div className="number-field">
+    <Box className="number-field">
       {(icon || label) && (
-        <span className="number-field__label">{icon || label}</span>
+        <Text className="number-field__label">{icon || label}</Text>
       )}
       {editing ? (
         <TextInput
@@ -85,7 +87,7 @@ const NumberField = ({ value, onChange, label, icon, min, max, step = 1, suffix 
           }}
         />
       ) : (
-        <span
+        <Text
           className="number-field__value"
           onDoubleClick={startEdit}
           onPointerDown={onPointerDown}
@@ -93,9 +95,9 @@ const NumberField = ({ value, onChange, label, icon, min, max, step = 1, suffix 
           onPointerUp={onPointerUp}
         >
           {displayValue}
-        </span>
+        </Text>
       )}
-    </div>
+    </Box>
   );
 };
 

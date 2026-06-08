@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
+import { Box } from '../../../../../../design-system/primitives/Box';
 import { TextInput } from '../../../../../../design-system/primitives/TextInput';
 import { NumberInput } from '../../../../../../design-system/primitives/NumberInput';
 import { useShadowEditorStore } from '../../../../../../../stores/shadow-editor-store';
@@ -20,11 +21,11 @@ const HeightLevelEditor = () => {
   };
 
   return (
-    <div className="height-level-editor">
-      <div className="height-level-editor__list">
+    <Box className="height-level-editor">
+      <Box className="height-level-editor__list">
         {heightLevels.map((level, i) => (
-          <div key={i} className="height-level-editor__item">
-            <span
+          <Box key={i} className="height-level-editor__item">
+            <Box
               className="height-level-editor__swatch"
               style={{ opacity: level.value }}
             />
@@ -43,18 +44,18 @@ const HeightLevelEditor = () => {
                 if (!isNaN(v)) updateHeightLevel(i, { value: Math.min(1, Math.max(0, v)) });
               }}
             />
-            <button
-              type="button"
+            <Box
+              as="button"
               className="height-level-editor__remove"
               onClick={() => removeHeightLevel(i)}
               title="Remove"
             >
               ✕
-            </button>
-          </div>
+            </Box>
+          </Box>
         ))}
-      </div>
-      <div className="height-level-editor__add">
+      </Box>
+      <Box className="height-level-editor__add">
         <TextInput
           className="height-level-editor__name"
           placeholder="Label"
@@ -71,16 +72,16 @@ const HeightLevelEditor = () => {
           step={0.05}
           onChange={(e) => setNewValue(e.target.value)}
         />
-        <button
-          type="button"
+        <Box
+          as="button"
           className="height-level-editor__add-btn"
           onClick={handleAdd}
           title="Add level"
         >
           +
-        </button>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

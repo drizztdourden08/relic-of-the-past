@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
+import { Box } from '../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../design-system/primitives/Text';
 import { useShadowEditorStore } from '../../../../../../stores/shadow-editor-store';
 import { wasmGetViewportInfo } from '../../../../../../lib/game';
 import './ShadowElementList.css';
@@ -44,75 +46,75 @@ const ShadowElementList = () => {
   };
 
   return (
-    <div className="shadow-element-list">
+    <Box className="shadow-element-list">
       {/* Shapes */}
       {screenData.heightmap.length > 0 && (
-        <div className="shadow-element-list__group">
-          <div className="shadow-element-list__group-header">
-            <span className="shadow-element-list__group-icon">⬡</span>
-            <span>Shapes</span>
-            <span className="shadow-element-list__count">{screenData.heightmap.length}</span>
-          </div>
-          <div className="shadow-element-list__items">
+        <Box className="shadow-element-list__group">
+          <Box className="shadow-element-list__group-header">
+            <Text className="shadow-element-list__group-icon">⬡</Text>
+            <Text>Shapes</Text>
+            <Text className="shadow-element-list__count">{screenData.heightmap.length}</Text>
+          </Box>
+          <Box className="shadow-element-list__items">
             {screenData.heightmap.map((el) => (
-              <button
+              <Box
+                as="button"
                 key={el.id}
-                type="button"
                 className={`shadow-element-list__item${el.id === selectedElementId ? ' shadow-element-list__item--active' : ''}`}
                 onClick={() => setSelectedElement(el.id, 'heightmap')}
               >
-                <span className="shadow-element-list__item-icon">
+                <Text className="shadow-element-list__item-icon">
                   {getShapeIcon(el.shape.type, el.shape.sides)}
-                </span>
-                <span className="shadow-element-list__item-name">
+                </Text>
+                <Text className="shadow-element-list__item-name">
                   {el.shape.type === 'freehand' ? 'Freehand' : `${el.shape.sides ?? 4}-gon`}
-                </span>
-                <span className="shadow-element-list__item-tag">
+                </Text>
+                <Text className="shadow-element-list__item-tag">
                   {getHeightLabel(el.height)}
-                </span>
-              </button>
+                </Text>
+              </Box>
             ))}
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
 
       {/* Lights */}
       {screenData.lights.length > 0 && (
-        <div className="shadow-element-list__group">
-          <div className="shadow-element-list__group-header">
-            <span className="shadow-element-list__group-icon">💡</span>
-            <span>Lights</span>
-            <span className="shadow-element-list__count">{screenData.lights.length}</span>
-          </div>
-          <div className="shadow-element-list__items">
+        <Box className="shadow-element-list__group">
+          <Box className="shadow-element-list__group-header">
+            <Text className="shadow-element-list__group-icon">💡</Text>
+            <Text>Lights</Text>
+            <Text className="shadow-element-list__count">{screenData.lights.length}</Text>
+          </Box>
+          <Box className="shadow-element-list__items">
             {screenData.lights.map((light) => (
-              <button
+              <Box
+                as="button"
                 key={light.id}
-                type="button"
                 className={`shadow-element-list__item${light.id === selectedElementId ? ' shadow-element-list__item--active' : ''}`}
                 onClick={() => setSelectedElement(light.id, 'light')}
               >
-                <span className="shadow-element-list__item-icon">
+                <Text className="shadow-element-list__item-icon">
                   {light.type === 'point' ? '💡' : '🔦'}
-                </span>
-                <span className="shadow-element-list__item-name">
+                </Text>
+                <Text className="shadow-element-list__item-name">
                   {light.type === 'point' ? 'Point' : 'Area'} Light
-                </span>
-                <span className="shadow-element-list__item-tag">
+                </Text>
+                <Text className="shadow-element-list__item-tag">
                   r{light.radius}
-                </span>
-              </button>
+                </Text>
+              </Box>
             ))}
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
 
       {screenData.heightmap.length === 0 && screenData.lights.length === 0 && (
-        <div className="shadow-element-list__empty">
+        <Box className="shadow-element-list__empty">
           No elements on this screen
-        </div>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
 
