@@ -6,7 +6,7 @@
 
 .hid-cal {
   background: var(--color-bg-raised);
-  border: 2px solid #818cf8;
+  border: 2px solid var(--color-info-base);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
 }
@@ -27,7 +27,7 @@
 .hid-cal__title {
   font-size: var(--text-base);
   font-weight: var(--weight-semi);
-  color: #818cf8;
+  color: var(--color-info-base);
   margin: 0;
 }
 
@@ -115,14 +115,14 @@
 
 .hid-cal__axis-sub {
   font-size: var(--text-xs);
-  color: #818cf8;
+  color: var(--color-info-base);
   margin-left: var(--space-xs);
 }
 
 .hid-cal__stick-info {
   font-size: var(--text-xs);
   font-family: var(--font-mono);
-  color: #38bdf8;
+  color: var(--color-info-base);
   margin-bottom: var(--space-sm);
 }
 
@@ -148,25 +148,25 @@
 
 .hid-cal__input-item--pending {
   background: var(--color-bg-deep);
-  color: #666;
+  color: var(--color-text-muted);
 }
 
 .hid-cal__input-item--active {
-  background: #2d2456;
-  color: #818cf8;
+  background: var(--color-bg-elevated);
+  color: var(--color-info-base);
 }
 
 .hid-cal__input-item--captured {
-  background: #0f2e1a;
-  color: #4ade80;
+  background: var(--color-green-dim);
+  color: var(--color-green-bright);
 }
 
 .hid-cal__input-item--skipped {
-  background: #2a2a1a;
-  color: #fbbf24;
+  background: var(--color-warning-dim);
+  color: var(--color-warning-base);
 }
 
-.hid-cal__input-item--focus { border-color: #818cf8; }
+.hid-cal__input-item--focus { border-color: var(--color-info-base); }
 
 .hid-cal__input-icon {
   width: 14px;
@@ -180,7 +180,7 @@
 
 .hid-cal__input-result {
   font-size: 9px;
-  color: #888;
+  color: var(--color-text-muted);
   font-family: var(--font-mono);
 }
 
@@ -193,7 +193,7 @@
   justify-content: center;
   border: none;
   background: transparent;
-  color: #888;
+  color: var(--color-text-muted);
   font-size: 14px;
   line-height: 1;
   cursor: pointer;
@@ -203,14 +203,14 @@
 }
 
 .hid-cal__input-clear:hover {
-  background: #3a1a1a;
-  color: #f87171;
+  background: var(--color-danger-surface-hover);
+  color: var(--color-danger-base);
 }
 
 .hid-cal__input-item--pending:hover,
 .hid-cal__input-item--captured:hover,
 .hid-cal__input-item--skipped:hover {
-  border-color: #555;
+  border-color: var(--color-border-strong);
 }
 
 /* ── Byte grid ── */
@@ -239,7 +239,7 @@
 
 .hid-cal__byte-box:hover {
   opacity: 0.8;
-  outline: 1px solid #818cf8;
+  outline: 1px solid var(--color-info-base);
   outline-offset: 1px;
 }
 

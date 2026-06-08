@@ -4,13 +4,13 @@
   flex-direction: column;
   height: 100%;
   font-size: 12px;
-  color: var(--text-primary, #e0e0e0);
+  color: var(--color-text-primary);
 }
 
 .cheats-widget__tabs {
   display: flex;
   gap: 0;
-  border-bottom: 1px solid var(--border-color, #333);
+  border-bottom: 1px solid var(--color-border-subtle);
   flex-shrink: 0;
 }
 
@@ -19,7 +19,7 @@
   padding: 6px 8px;
   background: transparent;
   border: none;
-  color: var(--text-secondary, #999);
+  color: var(--color-text-secondary);
   cursor: pointer;
   font-size: 11px;
   font-weight: 500;
@@ -30,12 +30,12 @@
 }
 
 .cheats-widget__tab:hover {
-  color: var(--text-primary, #e0e0e0);
+  color: var(--color-text-primary);
 }
 
 .cheats-widget__tab--active {
-  color: var(--accent-color, #7cb3ff);
-  border-bottom-color: var(--accent-color, #7cb3ff);
+  color: var(--color-green-base);
+  border-bottom-color: var(--color-green-base);
 }
 
 .cheats-widget__content {
@@ -54,7 +54,7 @@
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--text-secondary, #999);
+  color: var(--color-text-secondary);
   margin-bottom: 6px;
 }
 
@@ -68,7 +68,7 @@
 .cheats-row__label {
   flex: 0 0 70px;
   font-size: 11px;
-  color: var(--text-secondary, #aaa);
+  color: var(--color-text-secondary);
 }
 
 .cheats-row__controls {
@@ -80,61 +80,61 @@
 
 .cheats-btn {
   padding: 3px 8px;
-  background: var(--btn-bg, #2a2a2a);
-  border: 1px solid var(--border-color, #444);
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border-default);
   border-radius: 3px;
-  color: var(--text-primary, #e0e0e0);
+  color: var(--color-text-primary);
   cursor: pointer;
   font-size: 11px;
   transition: background 0.1s;
 }
 
 .cheats-btn:hover {
-  background: var(--btn-hover-bg, #3a3a3a);
+  background: var(--color-bg-elevated);
 }
 
 .cheats-btn:active {
-  background: var(--btn-active-bg, #4a4a4a);
+  background: var(--color-bg-elevated);
 }
 
 .cheats-btn--danger {
-  border-color: #a33;
-  color: #f88;
+  border-color: var(--color-danger-border);
+  color: var(--color-danger-text);
 }
 
 .cheats-btn--danger:hover {
-  background: #3a1a1a;
+  background: var(--color-danger-surface-hover);
 }
 
 .cheats-btn--primary {
-  border-color: var(--accent-color, #7cb3ff);
-  color: var(--accent-color, #7cb3ff);
+  border-color: var(--color-green-border);
+  color: var(--color-green-base);
 }
 
 .cheats-btn--primary:hover {
-  background: #1a2a3a;
+  background: var(--color-green-surface);
 }
 
 .cheats-input {
   width: 60px;
   padding: 2px 6px;
-  background: var(--input-bg, #1a1a1a);
-  border: 1px solid var(--border-color, #444);
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border-default);
   border-radius: 3px;
-  color: var(--text-primary, #e0e0e0);
+  color: var(--color-text-primary);
   font-size: 11px;
   text-align: center;
 }
 
 .cheats-input:focus {
   outline: none;
-  border-color: var(--accent-color, #7cb3ff);
+  border-color: var(--color-green-base);
 }
 
 .cheats-slider {
   flex: 1;
   height: 4px;
-  accent-color: var(--accent-color, #7cb3ff);
+  accent-color: var(--color-green-base);
 }
 
 .cheats-radio-group {
@@ -145,19 +145,19 @@
 
 .cheats-radio {
   padding: 3px 8px;
-  background: var(--btn-bg, #2a2a2a);
-  border: 1px solid var(--border-color, #444);
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border-default);
   border-radius: 3px;
-  color: var(--text-secondary, #aaa);
+  color: var(--color-text-secondary);
   cursor: pointer;
   font-size: 10px;
   transition: all 0.1s;
 }
 
 .cheats-radio--active {
-  background: var(--accent-color, #7cb3ff);
-  color: #000;
-  border-color: var(--accent-color, #7cb3ff);
+  background: var(--color-green-base);
+  color: var(--color-bg-deep);
+  border-color: var(--color-green-base);
 }
 
 /* ─── Items Tab ─── */
@@ -178,10 +178,10 @@
 
 .cheats-items__item {
   padding: 4px 6px;
-  background: var(--btn-bg, #2a2a2a);
-  border: 1px solid var(--border-color, #333);
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border-subtle);
   border-radius: 3px;
-  color: var(--text-primary, #ccc);
+  color: var(--color-text-primary);
   cursor: pointer;
   font-size: 10px;
   white-space: nowrap;
@@ -191,14 +191,14 @@
 }
 
 .cheats-items__item:hover {
-  background: var(--btn-hover-bg, #3a3a3a);
-  color: #fff;
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
 }
 
 .cheats-items__category {
   font-size: 10px;
   text-transform: uppercase;
-  color: var(--text-secondary, #888);
+  color: var(--color-text-muted);
   margin: 8px 0 4px;
   letter-spacing: 0.5px;
 }
@@ -215,7 +215,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 3px 6px;
-  border-bottom: 1px solid var(--border-color, #222);
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .cheats-checks__entry--completed {
@@ -233,10 +233,10 @@
 .cheats-checks__grant-btn {
   padding: 2px 6px;
   font-size: 9px;
-  background: var(--btn-bg, #2a2a2a);
-  border: 1px solid var(--accent-color, #7cb3ff);
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-green-border);
   border-radius: 2px;
-  color: var(--accent-color, #7cb3ff);
+  color: var(--color-green-base);
   cursor: pointer;
 }
 
@@ -253,23 +253,23 @@
   gap: 8px;
   margin-bottom: 8px;
   padding: 6px 8px;
-  background: var(--btn-bg, #2a2a2a);
-  border: 1px solid var(--border-color, #333);
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border-subtle);
   border-radius: 4px;
 }
 
 .cheats-bottles__slot-label {
   font-size: 11px;
-  color: var(--text-secondary, #aaa);
+  color: var(--color-text-secondary);
   flex: 0 0 50px;
 }
 
 .cheats-bottles__select {
   flex: 1;
   padding: 3px 6px;
-  background: var(--input-bg, #1a1a1a);
-  border: 1px solid var(--border-color, #444);
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border-default);
   border-radius: 3px;
-  color: var(--text-primary, #e0e0e0);
+  color: var(--color-text-primary);
   font-size: 11px;
 }

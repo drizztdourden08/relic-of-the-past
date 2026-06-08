@@ -3,7 +3,7 @@
   padding: 24px;
   height: 100%;
   overflow-y: auto;
-  color: #e0e0e0;
+  color: var(--color-text-primary);
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
   font-size: 13px;
 }
@@ -20,31 +20,31 @@
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--color-text-primary);
 }
 
 .input-tester__status {
   font-size: 12px;
   padding: 4px 10px;
   border-radius: 4px;
-  background: #1a1a2e;
+  background: var(--color-bg-raised);
 }
 
 .input-tester__status--polling {
-  color: #4cff4c;
-  border: 1px solid #4cff4c44;
+  color: var(--color-green-bright);
+  border: 1px solid var(--color-green-border);
 }
 
 .input-tester__status--idle {
-  color: #fc0;
-  border: 1px solid #fc04;
+  color: var(--color-warning-base);
+  border: 1px solid var(--color-warning-dim);
 }
 
 .input-tester__event-log {
   margin-bottom: 20px;
   padding: 12px;
-  background: #0d0d1a;
-  border: 1px solid #333;
+  background: var(--color-bg-deep);
+  border: 1px solid var(--color-border-default);
   border-radius: 6px;
   max-height: 120px;
   overflow-y: auto;
@@ -54,28 +54,28 @@
   margin: 0 0 8px;
   font-size: 11px;
   text-transform: uppercase;
-  color: #888;
+  color: var(--color-text-muted);
   letter-spacing: 0.5px;
 }
 
 .input-tester__event-entry {
   font-size: 11px;
   line-height: 1.6;
-  color: #aaa;
+  color: var(--color-text-secondary);
 }
 
 .input-tester__event-entry--connect {
-  color: #4cff4c;
+  color: var(--color-green-bright);
 }
 
 .input-tester__event-entry--disconnect {
-  color: #ff4c4c;
+  color: var(--color-danger-base);
 }
 
 .input-tester__no-gamepads {
   text-align: center;
   padding: 40px;
-  color: #888;
+  color: var(--color-text-muted);
   font-size: 14px;
 }
 
@@ -86,8 +86,8 @@
 .input-tester__gamepad {
   margin-bottom: 20px;
   padding: 16px;
-  background: #112;
-  border: 1px solid #333;
+  background: var(--color-bg-base);
+  border: 1px solid var(--color-border-default);
   border-radius: 8px;
 }
 
@@ -102,19 +102,19 @@
   font-size: 11px;
   padding: 2px 6px;
   border-radius: 3px;
-  background: #2a2a4a;
-  color: #aaa;
+  background: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
 }
 
 .input-tester__gamepad-id {
   font-size: 12px;
-  color: #ccc;
+  color: var(--color-text-primary);
   word-break: break-all;
 }
 
 .input-tester__gamepad-mapping {
   font-size: 11px;
-  color: #666;
+  color: var(--color-text-muted);
   margin-left: auto;
 }
 
@@ -122,7 +122,7 @@
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #666;
+  color: var(--color-text-muted);
   margin-bottom: 6px;
 }
 
@@ -146,22 +146,22 @@
 }
 
 .input-tester__button--idle {
-  background: #1a1a2e;
-  color: #555;
-  border: 1px solid #333;
+  background: var(--color-bg-raised);
+  color: var(--color-text-faint);
+  border: 1px solid var(--color-border-default);
 }
 
 .input-tester__button--pressed {
-  background: #4cff4c;
-  color: #000;
-  border: 1px solid #4cff4c;
-  box-shadow: 0 0 8px #4cff4c88;
+  background: var(--color-green-bright);
+  color: var(--color-bg-deep);
+  border: 1px solid var(--color-green-bright);
+  box-shadow: 0 0 8px var(--color-green-glow);
 }
 
 .input-tester__button--touched {
-  background: #2a4a2a;
-  color: #4cff4c;
-  border: 1px solid #4cff4c66;
+  background: var(--color-green-surface);
+  color: var(--color-green-bright);
+  border: 1px solid var(--color-green-border);
 }
 
 .input-tester__axes {
@@ -179,15 +179,15 @@
 
 .input-tester__axis-label {
   font-size: 10px;
-  color: #666;
+  color: var(--color-text-muted);
   width: 20px;
 }
 
 .input-tester__axis-bar {
   width: 100px;
   height: 12px;
-  background: #1a1a2e;
-  border: 1px solid #333;
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-border-default);
   border-radius: 6px;
   position: relative;
   overflow: hidden;
@@ -197,14 +197,14 @@
   position: absolute;
   top: 0;
   height: 100%;
-  background: #6c6cff;
+  background: var(--color-info-base);
   border-radius: 6px;
   transition: width 0.02s, left 0.02s;
 }
 
 .input-tester__axis-value {
   font-size: 10px;
-  color: #888;
+  color: var(--color-text-muted);
   width: 50px;
   text-align: right;
 }
@@ -212,11 +212,11 @@
 .input-tester__raw {
   margin-top: 8px;
   padding: 8px;
-  background: #0d0d1a;
-  border: 1px solid #222;
+  background: var(--color-bg-deep);
+  border: 1px solid var(--color-border-subtle);
   border-radius: 4px;
   font-size: 10px;
-  color: #666;
+  color: var(--color-text-muted);
   max-height: 60px;
   overflow-y: auto;
   word-break: break-all;
@@ -225,8 +225,8 @@
 .input-tester__hid-section {
   margin-top: 20px;
   padding: 16px;
-  background: #112;
-  border: 1px solid #333;
+  background: var(--color-bg-base);
+  border: 1px solid var(--color-border-default);
   border-radius: 8px;
 }
 
@@ -234,12 +234,12 @@
   margin: 0 0 12px;
   font-size: 12px;
   text-transform: uppercase;
-  color: #888;
+  color: var(--color-text-muted);
 }
 
 .input-tester__hid-device {
   padding: 6px 0;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid var(--color-border-subtle);
   font-size: 11px;
 }
 

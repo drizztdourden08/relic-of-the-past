@@ -23,6 +23,14 @@
         "color-no-hex": null,
         "color-named": null
       }
+    },
+    {
+      "comment": "HUD replicates the in-game interface using the exact SNES palette; its colors are game-accurate, not design tokens, so the color rules do not apply (see CLAUDE.md HUD exception).",
+      "files": ["apps/desktop/src/ui/domains/hud/**/*.css"],
+      "rules": {
+        "color-no-hex": null,
+        "color-named": null
+      }
     }
   ],
   "ignoreFiles": ["**/node_modules/**", "dist/**", "release/**", "apps/desktop/public/**"]
