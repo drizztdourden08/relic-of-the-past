@@ -359,6 +359,7 @@ interface ElectronAPI {
 
   // Auto-updater
   updater: {
+    isPortable(): Promise<boolean>;
     check(): Promise<unknown>;
     getAvailable(): Promise<{ version: string; releaseNotes: string; releaseDate: string } | null>;
     download(): Promise<void>;

@@ -90,7 +90,7 @@ const serializeCondition = (cond: VariantCondition): string => {
   switch (cond.type) {
     case 'always': return `{ type: 'always' }`;
     case 'check': return `{ type: 'check', name: '${escapeSingleQuote(cond.name)}', collected: ${cond.collected} }`;
-    case 'flag': return `{ type: 'flag', address: '${escapeSingleQuote(cond.address)}', bit: ${cond.bit}, value: ${cond.value} }`;
+    case 'flag': return `{ type: 'flag', address: ${hex(cond.address)}, bit: ${cond.bit}, value: ${cond.value} }`;
     case 'entrance': return `{ type: 'entrance', id: ${hex(cond.id)} }`;
     case 'progress': {
       const parts = [`type: 'progress'`];

@@ -103,7 +103,7 @@ const computeFloodFill = (input: FloodFillDumpInput): FloodFillDump | null => {
     grid.push(Array.from(attrGrid.slice(r * 64, (r + 1) * 64)));
   }
   const opts: FloodFillOptions = {
-    tileContext: 'indoor',
+    tileContext: 'interior-dungeon',
     inventory: new Set(),
     startPos: undefined,
     dualLayerGrids: dualLayerGrids ?? undefined,

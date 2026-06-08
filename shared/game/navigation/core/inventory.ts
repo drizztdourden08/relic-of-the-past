@@ -15,6 +15,10 @@ const canPass = (tile: TilePassability, inventory: Set<TileReq>): boolean => {
     case 'blocked':
       return false;
   }
+  // 'stairs' was previously unhandled (fell through to undefined ≈ false at
+  // runtime). Preserved as-is; see docs/review-queue.md for the open question
+  // of whether stairs should be passable here.
+  return false;
 };
 
 const isPassableForClearance = (tile: TilePassability, inventory: Set<TileReq>): boolean => {

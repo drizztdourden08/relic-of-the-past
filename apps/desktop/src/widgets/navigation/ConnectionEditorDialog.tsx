@@ -64,12 +64,12 @@ const ConnectionEditorDialog = (props: ConnectionEditorDialogProps) => {
                     <div className="conn-editor__item-edit">
                       <TextInput
                         value={conn.from}
-                        onChange={v => updateConnection(idx, { from: v })}
+                        onChange={e => updateConnection(idx, { from: e.target.value })}
                         placeholder="from"
                       />
                       <TextInput
                         value={conn.to}
-                        onChange={v => updateConnection(idx, { to: v })}
+                        onChange={e => updateConnection(idx, { to: e.target.value })}
                         placeholder="to"
                       />
                     </div>

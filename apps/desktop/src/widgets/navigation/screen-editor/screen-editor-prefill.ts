@@ -90,7 +90,7 @@ const applyPrefill = (args: ApplyPrefillArgs) => {
       const cond = existingScreen.variant.condition;
       set.setConditionType(cond.type);
       if (cond.type === 'check') { set.setCondCheckName(cond.name); set.setCondCheckCollected(cond.collected); }
-      if (cond.type === 'flag') { set.setCondFlagAddr(cond.address); set.setCondFlagBit(String(cond.bit)); set.setCondFlagValue(cond.value); }
+      if (cond.type === 'flag') { set.setCondFlagAddr(String(cond.address)); set.setCondFlagBit(String(cond.bit)); set.setCondFlagValue(cond.value); }
       if (cond.type === 'entrance') { set.setCondEntranceId(String(cond.id)); }
       if (cond.type === 'progress') { set.setCondProgressMin(cond.min != null ? String(cond.min) : ''); set.setCondProgressMax(cond.max != null ? String(cond.max) : ''); }
     } else {

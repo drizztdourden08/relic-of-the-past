@@ -96,7 +96,7 @@ const resetGame = async (): Promise<void> => {
     if (sdl2?.audioContext) sdl2.audioContext.close().catch(() => {});
 
     // Free GPU resources — safe because the FX renderer guards with isContextLost()
-    const canvas = mod.canvas as HTMLCanvasElement | undefined;
+    const canvas = (mod as any).canvas as HTMLCanvasElement | undefined;
     if (canvas) {
       const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
       gl?.getExtension('WEBGL_lose_context')?.loseContext();

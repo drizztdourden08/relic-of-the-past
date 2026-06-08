@@ -91,7 +91,7 @@ const useScreenEditorDerived = (props: ScreenEditorProps, form: Form) => {
     let condition: VariantCondition;
     switch (conditionType) {
       case 'check': condition = { type: 'check', name: condCheckName, collected: condCheckCollected }; break;
-      case 'flag': condition = { type: 'flag', address: condFlagAddr, bit: Number(condFlagBit) || 0, value: condFlagValue }; break;
+      case 'flag': condition = { type: 'flag', address: Number(condFlagAddr) || 0, bit: Number(condFlagBit) || 0, value: condFlagValue }; break;
       case 'entrance': condition = { type: 'entrance', id: Number(condEntranceId) || 0 }; break;
       case 'progress': condition = { type: 'progress', min: condProgressMin ? Number(condProgressMin) : undefined, max: condProgressMax ? Number(condProgressMax) : undefined }; break;
       default: condition = { type: 'always' }; break;
