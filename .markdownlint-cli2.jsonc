@@ -1,12 +1,26 @@
 {
-  // Doc quality rules. Disabled: line-length (our docs intentionally exceed 80),
-  // inline-HTML (we use HTML comments for @layer/@kind tags), first-line-heading,
-  // and duplicate-heading (common in structured docs).
+  // Doc quality rules. We keep substantive rules (broken structure, list spacing,
+  // trailing punctuation, etc.) and disable the purely-stylistic ones that conflict
+  // with this repo's house style. Disabled, with reasons:
+  //   MD013 line-length        — docs intentionally exceed 80 cols
+  //   MD033 inline-HTML         — we use HTML comments for @layer/@kind tags
+  //   MD041 first-line-heading  — many docs start with the @layer/@kind comment
+  //   MD024 duplicate-heading   — common in structured/section-repeated docs
+  //   MD003 heading-style       — mixed atx/setext across authored + bundled skill docs
+  //   MD060 table-column-style  — pedantic table-pipe spacing; zero doc-quality value
+  //   MD040 fenced-code-language— many fences are ASCII diagrams / filetrees, not code
+  //   MD029 ol-prefix           — ordered-list numbering style is left to the author
+  //   MD036 no-emphasis-as-heading — intentional bold "labels" in places
   "config": {
     "MD013": false,
     "MD033": false,
     "MD041": false,
-    "MD024": false
+    "MD024": false,
+    "MD003": false,
+    "MD060": false,
+    "MD040": false,
+    "MD029": false,
+    "MD036": false
   },
   "globs": ["**/*.md"],
   "ignores": ["node_modules/**", "dist/**", "release/**", "core/zelda3/**"]
