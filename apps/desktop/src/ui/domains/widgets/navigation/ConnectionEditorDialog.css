@@ -1,70 +1,13 @@
 /* @layer renderer-widgets @kind style */
-.conn-editor-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgb(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 300;
-  animation: dialog-fade-in 0.15s ease-out;
-}
 
-.conn-editor {
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg);
-  max-width: 600px;
-  width: 95%;
-  max-height: 85vh;
-  overflow-y: auto;
-  box-shadow: var(--shadow-lg);
-}
-
-.conn-editor__header {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-md);
-}
-
-.conn-editor__header h3 {
-  font-size: var(--text-base);
-  font-weight: var(--weight-semi);
-  color: var(--color-text-primary);
-  margin: 0;
-}
+/* Chrome (backdrop / panel / header / steps / actions) is owned by
+   WizardDialogShell. These rules style only the connection-editor body slots. */
 
 .conn-editor__screen-id {
   font-size: var(--text-xs);
-  color: var(--color-text-tertiary);
+  color: var(--color-text-muted);
   font-family: var(--font-mono);
   margin-left: auto;
-}
-
-.conn-editor__steps {
-  display: flex;
-  gap: var(--space-xs);
-  margin-bottom: var(--space-md);
-  border-bottom: 1px solid var(--color-border-subtle);
-  padding-bottom: var(--space-sm);
-}
-
-.conn-editor__steps button {
-  background: none;
-  border: none;
-  padding: var(--space-xs) var(--space-sm);
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-}
-
-.conn-editor__steps button.active {
-  background: var(--color-bg-active);
-  color: var(--color-text-primary);
-  font-weight: var(--weight-medium);
 }
 
 .conn-editor__list {
@@ -80,8 +23,8 @@
 }
 
 .conn-editor__item--new {
-  border-color: var(--color-accent-default);
-  background: var(--color-accent-subtle);
+  border-color: var(--color-gold-base);
+  background: var(--color-gold-glow);
 }
 
 .conn-editor__item-header {
@@ -92,7 +35,7 @@
 
 .conn-editor__item-dir {
   font-size: var(--text-sm);
-  color: var(--color-text-tertiary);
+  color: var(--color-text-muted);
   width: 16px;
 }
 
@@ -120,7 +63,7 @@
 .conn-editor__btn-remove {
   background: none;
   border: none;
-  color: var(--color-danger-default);
+  color: var(--color-danger-base);
   cursor: pointer;
   font-size: 16px;
   padding: 0 4px;
@@ -140,7 +83,7 @@
 
 .conn-editor__tag-ns {
   font-size: 10px;
-  color: var(--color-text-tertiary);
+  color: var(--color-text-muted);
   width: 48px;
   flex-shrink: 0;
 }
@@ -150,20 +93,20 @@
   padding: 1px 5px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border-subtle);
-  background: var(--color-bg-surface);
+  background: var(--color-bg-raised);
   color: var(--color-text-secondary);
   cursor: pointer;
 }
 
 .conn-editor__tag.active {
-  background: var(--color-accent-subtle);
-  border-color: var(--color-accent-default);
-  color: var(--color-accent-text);
+  background: var(--color-gold-glow);
+  border-color: var(--color-gold-base);
+  color: var(--color-gold-bright);
 }
 
 .conn-editor__item-tag-summary {
   font-size: 10px;
-  color: var(--color-text-tertiary);
+  color: var(--color-text-muted);
   padding-left: 20px;
   cursor: pointer;
 }
@@ -190,7 +133,7 @@
 }
 
 .conn-editor__suggested-tags {
-  color: var(--color-text-tertiary);
+  color: var(--color-text-muted);
   flex: 1;
 }
 
@@ -206,12 +149,12 @@
 }
 
 .conn-editor__file-target code {
-  color: var(--color-accent-default);
+  color: var(--color-gold-base);
   font-family: var(--font-mono);
 }
 
 .conn-editor__code {
-  background: var(--color-bg-sunken);
+  background: var(--color-bg-base);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-sm);
   padding: var(--space-sm);
@@ -225,21 +168,12 @@
 
 .conn-editor__empty {
   font-size: var(--text-sm);
-  color: var(--color-text-tertiary);
+  color: var(--color-text-muted);
   text-align: center;
   padding: var(--space-lg);
 }
 
 .conn-editor__error {
-  color: var(--color-danger-default);
+  color: var(--color-danger-base);
   font-size: var(--text-xs);
-}
-
-.conn-editor__actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--space-sm);
-  margin-top: var(--space-md);
-  padding-top: var(--space-sm);
-  border-top: 1px solid var(--color-border-subtle);
 }

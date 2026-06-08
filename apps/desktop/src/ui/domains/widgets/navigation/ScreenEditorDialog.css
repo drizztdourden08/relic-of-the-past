@@ -1,70 +1,22 @@
 /* @layer renderer-widgets @kind style */
-.screen-editor-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgb(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 300;
-  animation: dialog-fade-in 0.15s ease-out;
-}
 
-.screen-editor {
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-lg);
-  padding: var(--space-lg);
-  max-width: 560px;
-  width: 95%;
-  max-height: 85vh;
-  overflow-y: auto;
-  box-shadow: var(--shadow-lg);
-}
-
-.screen-editor__header {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-md);
-}
-
-.screen-editor__header h3 {
-  font-size: var(--text-base);
-  font-weight: var(--weight-semi);
-  color: var(--color-text-primary);
-  margin: 0;
-}
+/* Chrome (backdrop / panel / header / steps / actions) is owned by
+   WizardDialogShell. These rules style only the screen-editor body slots. */
 
 .screen-editor__room-id {
   margin-left: auto;
   font-size: var(--text-xs);
-  color: var(--color-text-tertiary);
+  color: var(--color-text-muted);
   font-family: var(--font-mono);
 }
 
-.screen-editor__steps {
-  display: flex;
-  gap: var(--space-xs);
-  margin-bottom: var(--space-md);
-  border-bottom: 1px solid var(--color-border-subtle);
-  padding-bottom: var(--space-sm);
-}
-
-.screen-editor__steps button {
-  background: none;
-  border: none;
-  padding: var(--space-xs) var(--space-sm);
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
-  cursor: pointer;
+.screen-editor__generated-id {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  background: var(--color-bg-base);
+  padding: 1px 6px;
   border-radius: var(--radius-sm);
-}
-
-.screen-editor__steps button.active {
-  background: var(--color-bg-active);
-  color: var(--color-text-primary);
-  font-weight: var(--weight-medium);
+  font-family: var(--font-mono);
 }
 
 .screen-editor__form {
@@ -86,14 +38,14 @@
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-md);
   padding: var(--space-sm) var(--space-md);
-  background: var(--color-bg-sunken);
+  background: var(--color-bg-base);
   position: relative;
 }
 
 .screen-editor__panel-label {
   font-size: var(--text-xs);
   font-weight: var(--weight-semi);
-  color: var(--color-accent-default);
+  color: var(--color-gold-base);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   margin-bottom: 2px;
@@ -117,35 +69,6 @@
 
 .screen-editor__inline-create .text-input {
   flex: 1;
-}
-
-.screen-editor__row--locked {
-  flex-direction: column;
-  gap: 2px;
-}
-
-.screen-editor__locked-value {
-  font-size: var(--text-sm);
-  color: var(--color-text-tertiary);
-  background: var(--color-bg-sunken);
-  padding: 4px 8px;
-  border-radius: var(--radius-sm);
-  border: 1px dashed var(--color-border-subtle);
-  font-style: italic;
-}
-
-.screen-editor__warnings {
-  background: hsl(40deg 60% 10%);
-  border: 1px solid hsl(40deg 50% 30%);
-  border-radius: var(--radius-sm);
-  padding: var(--space-xs) var(--space-sm);
-  margin-bottom: var(--space-sm);
-}
-
-.screen-editor__warnings p {
-  font-size: 11px;
-  color: hsl(40deg 90% 70%);
-  margin: 2px 0;
 }
 
 .screen-editor__row {
@@ -172,13 +95,33 @@
   gap: 2px;
 }
 
-.screen-editor__generated-id {
-  font-size: var(--text-xs);
-  color: var(--color-text-tertiary);
-  background: var(--color-bg-sunken);
-  padding: 1px 6px;
+.screen-editor__row--locked {
+  flex-direction: column;
+  gap: 2px;
+}
+
+.screen-editor__locked-value {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  background: var(--color-bg-base);
+  padding: 4px 8px;
   border-radius: var(--radius-sm);
-  font-family: var(--font-mono);
+  border: 1px dashed var(--color-border-subtle);
+  font-style: italic;
+}
+
+.screen-editor__warnings {
+  background: var(--color-warning-dim);
+  border: 1px solid var(--color-warning-base);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xs) var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.screen-editor__warnings p {
+  font-size: 11px;
+  color: var(--color-warning-base);
+  margin: 2px 0;
 }
 
 .screen-editor__preview {
@@ -193,12 +136,12 @@
 }
 
 .screen-editor__file-target code {
-  color: var(--color-accent-default);
+  color: var(--color-gold-base);
   font-family: var(--font-mono);
 }
 
 .screen-editor__code {
-  background: var(--color-bg-sunken);
+  background: var(--color-bg-base);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-sm);
   padding: var(--space-sm);
@@ -211,15 +154,6 @@
 }
 
 .screen-editor__error {
-  color: var(--color-danger-default);
+  color: var(--color-danger-base);
   font-size: var(--text-xs);
-}
-
-.screen-editor__actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--space-sm);
-  margin-top: var(--space-md);
-  padding-top: var(--space-sm);
-  border-top: 1px solid var(--color-border-subtle);
 }

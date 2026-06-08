@@ -1,0 +1,54 @@
+/* @layer renderer-components @kind style */
+
+/* Wide, scrollable wizard panel — overrides DialogShell's narrow .dialog box.
+   Higher specificity (.dialog.wizard-dialog) so it wins regardless of import order. */
+.dialog.wizard-dialog {
+  max-width: 600px;
+  width: 95%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: var(--space-lg);
+}
+
+.wizard-dialog__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.wizard-dialog__title {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semi);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.wizard-dialog__steps {
+  display: flex;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: var(--space-sm);
+}
+
+.wizard-dialog__step {
+  background: none;
+  border: none;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.wizard-dialog__step:hover {
+  color: var(--color-text-primary);
+}
+
+.wizard-dialog__step--active {
+  background: var(--color-surface-selected);
+  color: var(--color-gold-bright);
+  font-weight: var(--weight-medium);
+}

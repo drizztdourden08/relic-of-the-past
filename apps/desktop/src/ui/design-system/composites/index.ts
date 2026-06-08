@@ -2,6 +2,8 @@
 export { Dialog } from './Dialog';
 export { DialogShell } from './DialogShell';
 export type { DialogShellProps } from './DialogShell';
+export { WizardDialogShell } from './WizardDialogShell';
+export type { WizardStep, WizardDialogShellProps } from './WizardDialogShell';
 export { ListItemRow } from './ListItemRow';
 export type { ListItemRowProps } from './ListItemRow';
 export { MasterDetailLayout } from './MasterDetailLayout';

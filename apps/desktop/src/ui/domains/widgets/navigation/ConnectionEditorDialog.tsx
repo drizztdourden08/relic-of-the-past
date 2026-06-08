@@ -10,6 +10,7 @@
  */
 
 import { Box, Text, Button, Badge, TextInput } from '../../../design-system/primitives';
+import { WizardDialogShell } from '../../../design-system/composites/WizardDialogShell';
 import type { ScreenConnection } from '@shared/game/types';
 import { CONNECTION_TAG_METADATA } from '@shared/game/data/connections/tags';
 import type { DetectedConnection } from './useDatasetStatus';
@@ -37,22 +38,43 @@ const ConnectionEditorDialog = (props: ConnectionEditorDialogProps) => {
     addSuggested, addBlank, removeConnection, updateConnection, toggleTag, handleWrite,
   } = useConnectionEditor(props);
 
-  if (!open) return null;
+  const headerExtra = screenId
+    ? <Text as="code" className="conn-editor__screen-id">{screenId}</Text>
+    : null;
+
+  const actions = (
+    <>
+      <Button variant="secondary" onClick={onClose}>Cancel</Button>
+      {step === 0 && (
+        <Button variant="primary" onClick={() => setStep(1)}>Preview →</Button>
+      )}
+      {step === 1 && (
+        <>
+          <Button variant="secondary" onClick={() => setStep(0)}>← Back</Button>
+          <Button
+            variant="primary"
+            onClick={handleWrite}
+            disabled={writing || newConnections.length === 0}
+          >
+            {writing ? 'Writing...' : 'Accept & Write'}
+          </Button>
+        </>
+      )}
+    </>
+  );
 
   return (
-    <Box className="conn-editor-backdrop" onClick={onClose}>
-      <Box className="conn-editor" onClick={e => e.stopPropagation()}>
-        <Box className="conn-editor__header">
-          <Text as="h3">Edit Connections</Text>
-          {screenId && <Text as="code" className="conn-editor__screen-id">{screenId}</Text>}
-        </Box>
-
-        {/* Step indicator */}
-        <Box className="conn-editor__steps">
-          <Box as="button" className={step === 0 ? 'active' : ''} onClick={() => setStep(0)}>1. Connections</Box>
-          <Box as="button" className={step === 1 ? 'active' : ''} onClick={() => setStep(1)}>2. Preview</Box>
-        </Box>
-
+    <WizardDialogShell
+      open={open}
+      onClose={onClose}
+      title="Edit Connections"
+      headerExtra={headerExtra}
+      steps={[{ label: 'Connections' }, { label: 'Preview' }]}
+      activeStep={step}
+      onStepChange={setStep}
+      actions={actions}
+      className="conn-editor"
+    >
         {/* Step 1: Connection list */}
         {step === 0 && (
           <Box className="conn-editor__list">
@@ -152,28 +174,7 @@ const ConnectionEditorDialog = (props: ConnectionEditorDialogProps) => {
             {writeError && <Text as="p" className="conn-editor__error">{writeError}</Text>}
           </Box>
         )}
-
-        {/* Actions */}
-        <Box className="conn-editor__actions">
-          <Button variant="secondary" onClick={onClose}>Cancel</Button>
-          {step === 0 && (
-            <Button variant="primary" onClick={() => setStep(1)}>Preview →</Button>
-          )}
-          {step === 1 && (
-            <>
-              <Button variant="secondary" onClick={() => setStep(0)}>← Back</Button>
-              <Button
-                variant="primary"
-                onClick={handleWrite}
-                disabled={writing || newConnections.length === 0}
-              >
-                {writing ? 'Writing...' : 'Accept & Write'}
-              </Button>
-            </>
-          )}
-        </Box>
-      </Box>
-    </Box>
+    </WizardDialogShell>
   );
 };
 
