@@ -63,6 +63,11 @@ OPUS_SRC := $(ZELDA3)/third_party/opus-1.3.1-stripped/opus_decoder_amalgam.c
 HOOK_SRCS := ../game-hooks/game_hooks.c \
              ../game-hooks/item_overrides.c \
              ../game-hooks/state_queries.c \
+             ../game-hooks/state_queries_sprites.c \
+             ../game-hooks/state_queries_grids.c \
+             ../game-hooks/state_queries_tables.c \
+             ../game-hooks/state_queries_rooms.c \
+             ../game-hooks/state_queries_room_exits.c \
              ../game-hooks/check_triggers.c \
              ../game-hooks/ui_state.c \
              ../game-hooks/cheats.c \
