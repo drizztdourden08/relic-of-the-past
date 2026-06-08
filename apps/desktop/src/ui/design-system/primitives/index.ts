@@ -1,4 +1,8 @@
 /* @layer renderer-components @kind barrel */
+export { Box } from './Box';
+export type { BoxProps } from './Box';
+export { Text } from './Text';
+export type { TextProps, TextVariant } from './Text';
 export { Flex } from './Flex';
 export type { FlexProps, SpaceToken, FlexAlign, FlexJustify } from './Flex';
 export { Stack } from './Stack';

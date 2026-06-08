@@ -1,0 +1,31 @@
+/* @layer renderer-components @kind style */
+.text {
+  color: var(--color-text-primary);
+  font-size: var(--text-base);
+}
+
+.text--body {
+  font-size: var(--text-base);
+}
+
+.text--label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.text--title {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semi);
+}
+
+.text--subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.text--caption {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
