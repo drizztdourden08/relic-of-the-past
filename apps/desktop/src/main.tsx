@@ -3,7 +3,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import { pollInventoryState, getCompletedChecks, getCurrentInventory } from './lib/game/tracker';
-import './design-system/tokens/index.css';
+import './ui/design-system/tokens/index.css';
 
 // Expose tracker bridge functions for live integration tests
 (window as any).__trackerBridge = { pollInventoryState, getCompletedChecks, getCurrentInventory };

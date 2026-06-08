@@ -33,6 +33,8 @@ export default defineConfig({
       alias: {
         '@shared': resolve(__dirname, 'shared'),
         '@app': resolve(__dirname, 'apps/desktop/src'),
+        '@ds': resolve(__dirname, 'apps/desktop/src/ui/design-system'),
+        '@domains': resolve(__dirname, 'apps/desktop/src/ui/domains'),
       },
     },
     build: {

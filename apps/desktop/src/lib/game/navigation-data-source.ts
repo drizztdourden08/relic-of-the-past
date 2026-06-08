@@ -31,8 +31,8 @@ import {
   wasmGetRoomExitDoors,
   wasmGetRoomStairInfo,
   wasmGetRoomWalkBoundaries,
-} from '../game';
-import type { OverworldVariantInfo } from '../game';
+} from './';
+import type { OverworldVariantInfo } from './';
 
 interface NavigationDataSource {
   // Viewport & positioning

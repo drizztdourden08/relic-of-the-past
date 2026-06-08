@@ -1,15 +1,15 @@
 /* @layer renderer-appshell @kind component */
 import { useEffect } from 'react';
-import { TitleBar } from '../components/views/TitleBar';
-import { GameLayer } from '../components/views/GameLayer';
-import { SaveStateOverlay } from '../components/views/SaveStateOverlay/SaveStateOverlay';
-import { WidgetManager, useWidgetLayout } from '../components/composites/Widget';
+import { TitleBar } from '../ui/domains/app/views/TitleBar';
+import { GameLayer } from '../ui/domains/app/views/GameLayer';
+import { SaveStateOverlay } from '../ui/domains/app/views/SaveStateOverlay/SaveStateOverlay';
+import { WidgetManager, useWidgetLayout } from '../ui/design-system/composites/Widget';
 import { loadTrackerStateBlob, saveTrackerStateBlob } from '../lib/tracker-state-io';
-import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, DatasetWidgetContent, CheatsWidgetContent } from '../widgets';
-import { SpriteDebug } from '../components/views/SpriteDebug';
-import { Dialog } from '../components/composites/Dialog';
-import { UpdateDialog } from '../components/compounds/UpdateDialog';
-import { AboutDialog } from '../components/compounds/AboutDialog';
+import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, DatasetWidgetContent, CheatsWidgetContent } from '../ui/domains/widgets';
+import { SpriteDebug } from '../ui/domains/app/views/SpriteDebug';
+import { Dialog } from '../ui/design-system/composites/Dialog';
+import { UpdateDialog } from '../ui/domains/app/compounds/UpdateDialog';
+import { AboutDialog } from '../ui/domains/app/compounds/AboutDialog';
 import { PageRouter } from './PageRouter';
 import { useAppNavigation } from './behavior/useAppNavigation';
 import { useAppOverlays } from './behavior/useAppOverlays';

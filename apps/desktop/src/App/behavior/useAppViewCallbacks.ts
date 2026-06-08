@@ -2,7 +2,7 @@
 /** App-level view-navigation glue: data/profile-hub tab state + page-switch callbacks. */
 import { useState, useCallback } from 'react';
 import type { ConfirmDialog } from '../types';
-import type { ProfileHubTab } from '../../components/views/ProfileHub/types';
+import type { ProfileHubTab } from '../../ui/domains/app/views/ProfileHub/types';
 import type { useGameLifecycle } from './useGameLifecycle';
 import type { useProfileManagement } from './useProfileManagement';
 import type { useAppNavigation } from './useAppNavigation';

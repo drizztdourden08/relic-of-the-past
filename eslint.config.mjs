@@ -99,7 +99,7 @@ export default tseslint.config(
   {
     // ── Primitives are the ONE place raw HTML is allowed ──
     // Re-allow raw form controls here; keep the inline-export ban.
-    files: ['**/components/primitives/**/*.tsx', '**/hud/primitives/**/*.tsx'],
+    files: ['**/ui/design-system/primitives/**/*.tsx', '**/ui/domains/hud/primitives/**/*.tsx'],
     rules: {
       'no-restricted-syntax': [
         'error',

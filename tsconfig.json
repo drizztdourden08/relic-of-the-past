@@ -15,7 +15,9 @@
     "sourceMap": true,
     "paths": {
       "@shared/*": ["./shared/*"],
-      "@app/*": ["./apps/desktop/src/*"]
+      "@app/*": ["./apps/desktop/src/*"],
+      "@ds/*": ["./apps/desktop/src/ui/design-system/*"],
+      "@domains/*": ["./apps/desktop/src/ui/domains/*"]
     }
   },
   "include": [

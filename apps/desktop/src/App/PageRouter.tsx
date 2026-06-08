@@ -1,14 +1,14 @@
 /* @layer renderer-appshell @kind component */
 import { useCallback } from 'react';
-import { ProfilePicker } from '../components/views/ProfilePicker';
-import { ProfileHub } from '../components/views/ProfileHub';
-import { DataManager } from '../components/views/DataManager';
-import { InputCalibration } from '../components/views/InputTester';
-import { CreditsPage } from '../components/views/ProfileHub/tabs/CreditsTab';
-import { FullScreenLayer } from '../components/composites/FullScreenLayer';
+import { ProfilePicker } from '../ui/domains/app/views/ProfilePicker';
+import { ProfileHub } from '../ui/domains/app/views/ProfileHub';
+import { DataManager } from '../ui/domains/app/views/DataManager';
+import { InputCalibration } from '../ui/domains/app/views/InputTester';
+import { CreditsPage } from '../ui/domains/app/views/ProfileHub/tabs/CreditsTab';
+import { FullScreenLayer } from '../ui/design-system/composites/FullScreenLayer';
 import type { PageId, RomDisplayInfo } from './types';
 import type { GameSettings } from '@shared/types/settings';
-import type { ProfileHubTab } from '../components/views/ProfileHub/types';
+import type { ProfileHubTab } from '../ui/domains/app/views/ProfileHub/types';
 
 interface PageRouterProps {
   nav: {

@@ -1,6 +1,6 @@
 /* @layer renderer-appshell @kind hook */
 import { useState, useCallback } from 'react';
-import { useEnhancedSaveSlot } from '../../components/views/SaveStateOverlay/behavior/useEnhancedSaveSlot';
+import { useEnhancedSaveSlot } from '../../ui/domains/app/views/SaveStateOverlay/behavior/useEnhancedSaveSlot';
 
 const useSaveOverlay = (saveState: { enhancedSaveSlot: boolean; saveHoldDuration: number }, isRunning: boolean) => {
   const [showSaveStates, setShowSaveStates] = useState(false);
