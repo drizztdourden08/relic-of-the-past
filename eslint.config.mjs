@@ -43,8 +43,10 @@ export default tseslint.config(
       'react-hooks': reactHooks,
     },
     rules: {
-      // ── Hard file-size cap: split before exceeding 200 lines of code ──
-      'max-lines': ['error', { max: 200, skipBlankLines: true, skipComments: true }],
+      // ── File-size cap is owned solely by the per-kind line-policy ──
+      // (scripts/analyze/policy.mjs). ESLint's flat `max-lines` is intentionally
+      // NOT used here: it can't see @layer/@kind, so it disagreed with the policy
+      // on tests (cap 300), style, and data files. One source of truth = line-policy.
 
       // ── Arrow functions only: no `function foo() {}` declarations ──
       'func-style': ['error', 'expression', { allowArrowFunctions: true }],
@@ -72,20 +74,5 @@ export default tseslint.config(
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
     },
-  },
-  {
-    // ── Data exemption (@kind data) ──
-    // Data tables are organized by category, not held to the logic line-cap.
-    // Canonical: anything under a `data/` folder or named `*.data.ts`.
-    // The trailing entries are current data files pending the P2 move into
-    // `data/` folders — collapse them once that lands.
-    files: [
-      '**/data/**/*.{ts,tsx}',
-      '**/*.data.ts',
-      // Two data tables not under a data/ folder (not part of the P2 move):
-      'shared/game/checks/flags/room.ts',
-      'shared/game/navigation/plan/navigation-data.examples.ts',
-    ],
-    rules: { 'max-lines': 'off' },
   },
 );
