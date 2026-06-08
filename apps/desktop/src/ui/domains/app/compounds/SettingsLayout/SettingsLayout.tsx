@@ -1,16 +1,12 @@
 /* @layer renderer-components @kind component */
-﻿import { useState, useRef, useCallback, useMemo, type ReactNode } from 'react';
+﻿import { useState, useRef, useCallback, useMemo } from 'react';
 import type { GameSettings } from '@shared/types/settings';
+import { Box } from '../../../../design-system/primitives/Box';
+import { Text } from '../../../../design-system/primitives/Text';
 import { Toggle } from '../../../../design-system/primitives/Toggle';
 import { TextInput } from '../../../../design-system/primitives/TextInput';
 import './SettingsLayout.css';
-import { type SettingItem, type SubSection, type Section, type SettingsLayoutProps } from './SettingsLayout.type';
-
-// ─── Shared types for section-based settings layouts ───
-
-
-
-
+import { type SettingItem, type SettingsLayoutProps } from './SettingsLayout.type';
 
 const SettingsLayout = (props: SettingsLayoutProps) => {
   const {
@@ -66,9 +62,9 @@ const SettingsLayout = (props: SettingsLayoutProps) => {
   };
 
   return (
-    <div className="settings-view">
-      <nav className="settings-view__sidebar">
-        <div className="settings-view__search">
+    <Box className="settings-view">
+      <Box as="nav" className="settings-view__sidebar">
+        <Box className="settings-view__search">
           <TextInput
             type="text"
             className="settings-view__search-input"
@@ -77,63 +73,66 @@ const SettingsLayout = (props: SettingsLayoutProps) => {
             onChange={(e) => setFilter(e.target.value)}
           />
           {filter && (
-            <button
+            <Box
+              as="button"
               className="settings-view__search-clear"
               onClick={() => setFilter('')}
               aria-label="Clear search"
             >
               ×
-            </button>
+            </Box>
           )}
-        </div>
-        <div className="settings-view__toc">
+        </Box>
+        <Box className="settings-view__toc">
           {filteredSections.map((section) => (
-            <div key={section.id} className="settings-view__toc-section">
-              <button
+            <Box key={section.id} className="settings-view__toc-section">
+              <Box
+                as="button"
                 className="settings-view__toc-heading"
                 onClick={() => scrollTo(section.id)}
               >
                 {section.title}
-              </button>
+              </Box>
               {section.subsections.map((sub) => (
-                <button
+                <Box
+                  as="button"
                   key={sub.id}
                   className="settings-view__toc-sub"
                   onClick={() => scrollTo(sub.id)}
                 >
                   {sub.title}
-                </button>
+                </Box>
               ))}
-            </div>
+            </Box>
           ))}
-        </div>
-      </nav>
+        </Box>
+      </Box>
 
-      <div className="settings-view__content" ref={contentRef}>
+      <Box className="settings-view__content" ref={contentRef}>
         {filteredSections.length === 0 && (
-          <div className="settings-view__empty">
+          <Box className="settings-view__empty">
             No settings match "{filter}"
-          </div>
+          </Box>
         )}
         {filteredSections.map((section) => (
-          <div key={section.id} className="settings-view__section" data-section={section.id}>
-            <h2 className="settings-view__section-title">{section.title}</h2>
+          <Box key={section.id} className="settings-view__section" data-section={section.id}>
+            <Text as="h2" className="settings-view__section-title">{section.title}</Text>
             {section.subsections.map((sub) => (
-              <div key={sub.id} className="settings-view__subsection" data-section={sub.id}>
-                <h3 className="settings-view__subsection-title">{sub.title}</h3>
-                <div className="settings-view__group">
+              <Box key={sub.id} className="settings-view__subsection" data-section={sub.id}>
+                <Text as="h3" className="settings-view__subsection-title">{sub.title}</Text>
+                <Box className="settings-view__group">
                   {sub.items.map((item) => {
                     const custom = renderControl?.(item.key, settings, onChange);
-                    if (custom) return <div key={item.key}>{custom}</div>;
-                    return <div key={item.key}>{renderToggle(item.key, item)}</div>;
+                    if (custom) return <Box key={item.key}>{custom}</Box>;
+                    return <Box key={item.key}>{renderToggle(item.key, item)}</Box>;
                   })}
-                </div>
-              </div>
+                </Box>
+              </Box>
             ))}
-          </div>
+          </Box>
         ))}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
