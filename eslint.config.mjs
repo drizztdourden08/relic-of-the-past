@@ -10,6 +10,24 @@
 import tseslint from 'typescript-eslint';
 import reactHooks from 'eslint-plugin-react-hooks';
 
+// ── R11: no raw HTML outside primitives (warn — work toward error) ──
+// Any lowercase JSX element is an intrinsic HTML tag; PascalCase = a component.
+// Compose a design-system primitive (Box/Text/Flex/Button/…) instead. The
+// primitives/ override turns this off (raw HTML is allowed there).
+const noRawHtml = {
+  meta: { type: 'problem', docs: { description: 'No raw HTML elements outside primitives' }, schema: [] },
+  create(context) {
+    return {
+      JSXOpeningElement(node) {
+        const n = node.name;
+        if (n.type === 'JSXIdentifier' && /^[a-z]/.test(n.name)) {
+          context.report({ node, message: `No raw <${n.name}> outside primitives — use a design-system primitive (Box/Text/Flex/Button/…).` });
+        }
+      },
+    };
+  },
+};
+
 export default tseslint.config(
   {
     ignores: [
@@ -41,8 +59,12 @@ export default tseslint.config(
     plugins: {
       '@typescript-eslint': tseslint.plugin,
       'react-hooks': reactHooks,
+      local: { rules: { 'no-raw-html': noRawHtml } },
     },
     rules: {
+      // ── R11: raw HTML only in primitives (warn — work toward error) ──
+      'local/no-raw-html': 'warn',
+
       // ── File-size cap is owned solely by the per-kind line-policy ──
       // (scripts/analyze/policy.mjs). ESLint's flat `max-lines` is intentionally
       // NOT used here: it can't see @layer/@kind, so it disagreed with the policy
@@ -101,6 +123,7 @@ export default tseslint.config(
     // Re-allow raw form controls here; keep the inline-export ban.
     files: ['**/ui/design-system/primitives/**/*.tsx', '**/ui/domains/hud/primitives/**/*.tsx'],
     rules: {
+      'local/no-raw-html': 'off',
       'no-restricted-syntax': [
         'error',
         {
