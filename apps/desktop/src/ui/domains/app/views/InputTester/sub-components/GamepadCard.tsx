@@ -3,6 +3,9 @@
  * GamepadCard — Standard Gamepad API controller display with buttons, sticks, triggers.
  */
 
+import { Box } from '../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../design-system/primitives/Text';
+import { Image } from '../../../../../design-system/primitives/Image';
 import { DEVICE_PROFILES, findPresetByVidPid, parseGamepadId } from '@shared/input';
 import type { GamepadSnapshot } from '../../../../../../lib/input/input-manager';
 import { getButtonIconUrl } from '../data/button-icons';
@@ -75,45 +78,45 @@ const GamepadCard = ({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
   const controllerIcon = isXbox ? CONTROLLER_ICON_MAP['xbox'] : null;
 
   return (
-    <div className="input-cal__card">
-      <div className="input-cal__card-header">
+    <Box className="input-cal__card">
+      <Box className="input-cal__card-header">
         {controllerIcon && (
-          <img src={controllerIcon} alt="" draggable={false} style={{ width: 28, height: 28, opacity: 0.7, flexShrink: 0 }} />
+          <Image src={controllerIcon} alt="" draggable={false} style={{ width: 28, height: 28, opacity: 0.7, flexShrink: 0 }} />
         )}
-        <span className="input-cal__card-badge">#{gamepad.index}</span>
-        <span className="input-cal__card-badge" style={{ background: isXbox ? '#166534' : '#7c3aed', marginLeft: 4 }}>
+        <Text className="input-cal__card-badge">#{gamepad.index}</Text>
+        <Text className="input-cal__card-badge" style={{ background: isXbox ? '#166534' : '#7c3aed', marginLeft: 4 }}>
           {isXbox ? 'XInput' : 'WebAPI'}
-        </span>
-        <span className="input-cal__card-name">{displayName}</span>
-        <span className="input-cal__card-meta">{detectedVidPid ?? (gamepad.mapping || 'unmapped')}</span>
-      </div>
+        </Text>
+        <Text className="input-cal__card-name">{displayName}</Text>
+        <Text className="input-cal__card-meta">{detectedVidPid ?? (gamepad.mapping || 'unmapped')}</Text>
+      </Box>
 
       {/* Buttons — with Xbox icons if recognized, otherwise numbered */}
-      <div className="input-cal__btn-grid">
+      <Box className="input-cal__btn-grid">
         {gamepad.buttons.map((btn, i) => {
           const profileBtn = xboxProfile?.buttons[i];
           const iconUrl = profileBtn ? getButtonIconUrl(profileBtn.icon) : null;
           const pressed = btn.pressed;
           return (
-            <div
+            <Box
               key={i}
               className={`input-cal__btn-cell ${pressed ? 'input-cal__btn-cell--pressed' : ''}`}
               title={profileBtn ? `${profileBtn.label} (${profileBtn.id})` : `B${i} value=${btn.value.toFixed(2)}`}
             >
               {iconUrl ? (
-                <img src={iconUrl} alt={profileBtn!.label} draggable={false} />
+                <Image src={iconUrl} alt={profileBtn!.label} draggable={false} />
               ) : (
-                <span style={{ fontSize: 11, fontWeight: 600, color: pressed ? 'var(--color-green-bright)' : 'var(--color-text-muted)' }}>
+                <Text style={{ fontSize: 11, fontWeight: 600, color: pressed ? 'var(--color-green-bright)' : 'var(--color-text-muted)' }}>
                   {profileBtn?.label ?? i}
-                </span>
+                </Text>
               )}
               {profileBtn && (
-                <span className="input-cal__btn-cell-label">{profileBtn.label}</span>
+                <Text className="input-cal__btn-cell-label">{profileBtn.label}</Text>
               )}
-            </div>
+            </Box>
           );
         })}
-      </div>
+      </Box>
 
       {/* Sticks and triggers — dynamically derived from profile or generic */}
       {(() => {
@@ -135,9 +138,9 @@ const GamepadCard = ({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
           }
           const stickIconPrefixes = isXbox ? ['xbox-stick-l', 'xbox-stick-r'] : [];
           return (
-            <div className="input-cal__sticks">
+            <Box className="input-cal__sticks">
               {stickPairs.map((s, pairIdx) => (
-                <div key={s.xIdx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                <Box key={s.xIdx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
                   <StickCircle
                     x={gamepad.axes[s.xIdx] ?? 0}
                     y={gamepad.axes[s.yIdx] ?? 0}
@@ -148,14 +151,14 @@ const GamepadCard = ({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
                     getValues={() => [gamepad.axes[s.xIdx] ?? 0, gamepad.axes[s.yIdx] ?? 0]}
                     label={s.label}
                   />
-                </div>
+                </Box>
               ))}
               {triggerAxes.map((t, ti) => {
                 const triggerBtnIdx = 6 + ti;
                 const value = gamepad.buttons[triggerBtnIdx]?.value ?? gamepad.axes[t.idx] ?? 0;
                 return <TriggerBar key={t.idx} value={value} label={t.label} />;
               })}
-            </div>
+            </Box>
           );
         }
         const pairs: { xIdx: number; yIdx: number }[] = [];
@@ -164,35 +167,35 @@ const GamepadCard = ({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
         }
         if (pairs.length === 0) return null;
         return (
-          <div className="input-cal__sticks">
+          <Box className="input-cal__sticks">
             {pairs.map((p, k) => (
               <StickCircle key={p.xIdx} x={gamepad.axes[p.xIdx] ?? 0} y={gamepad.axes[p.yIdx] ?? 0} label={`Stick ${k + 1}`} />
             ))}
-          </div>
+          </Box>
         );
       })()}
 
       {/* Vibration tests */}
       {xboxProfile?.supportsVibration && (
-      <div style={{ marginTop: 'var(--space-md)', display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>
-        <button className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 100, { intensity: 1.0 })}>
+      <Box style={{ marginTop: 'var(--space-md)', display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>
+        <Box as="button" className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 100, { intensity: 1.0 })}>
           100ms
-        </button>
-        <button className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 250, { intensity: 1.0 })}>
+        </Box>
+        <Box as="button" className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 250, { intensity: 1.0 })}>
           250ms
-        </button>
-        <button className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 1000, { intensity: 1.0 })}>
+        </Box>
+        <Box as="button" className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 1000, { intensity: 1.0 })}>
           1000ms
-        </button>
-        <button className="input-cal__btn" onClick={() => vibrateGamepadPattern(gamepad.index, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50)}>
+        </Box>
+        <Box as="button" className="input-cal__btn" onClick={() => vibrateGamepadPattern(gamepad.index, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50)}>
           3×100ms
-        </button>
-        <button className="input-cal__btn" onClick={() => vibrateGamepadPattern(gamepad.index, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 1000, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50)}>
+        </Box>
+        <Box as="button" className="input-cal__btn" onClick={() => vibrateGamepadPattern(gamepad.index, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 1000, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50)}>
           2-long-2
-        </button>
-      </div>
+        </Box>
+      </Box>
       )}
-    </div>
+    </Box>
   );
 };
 

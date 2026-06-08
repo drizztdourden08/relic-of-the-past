@@ -5,6 +5,9 @@
  */
 
 import { useState } from 'react';
+import { Box } from '../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../design-system/primitives/Text';
+import { Image } from '../../../../../design-system/primitives/Image';
 import { webHidReader } from '../../../../../../lib/input/hid-reader';
 import { getButtonIconUrl } from '../data/button-icons';
 import { StickCalibrationWizard } from './StickCalibrationWizard';
@@ -24,85 +27,85 @@ const WebHidCard = ({ deviceKey, state, profile, hasStickCal, existingStickCal, 
   const isStale = webHidReader.isDeviceStale(deviceKey);
 
   return (
-    <div className={`input-cal__card ${isStale ? 'input-cal__card--stale' : ''}`}>
+    <Box className={`input-cal__card ${isStale ? 'input-cal__card--stale' : ''}`}>
       {isStale && (
-        <div className="input-cal__stale-overlay">
-          <span className="input-cal__stale-label">STALE</span>
-          <span className="input-cal__stale-sub">No HID data</span>
-        </div>
+        <Box className="input-cal__stale-overlay">
+          <Text className="input-cal__stale-label">STALE</Text>
+          <Text className="input-cal__stale-sub">No HID data</Text>
+        </Box>
       )}
-      <div className="input-cal__card-header">
+      <Box className="input-cal__card-header">
         {controllerIcon && (
-          <img src={controllerIcon} alt="" draggable={false} style={{ width: 28, height: 28, opacity: 0.7, flexShrink: 0 }} />
+          <Image src={controllerIcon} alt="" draggable={false} style={{ width: 28, height: 28, opacity: 0.7, flexShrink: 0 }} />
         )}
-        <span className="input-cal__card-badge">HID</span>
-        <span className="input-cal__card-name">{name}</span>
-        <span className="input-cal__card-meta">{deviceKey}</span>
+        <Text className="input-cal__card-badge">HID</Text>
+        <Text className="input-cal__card-name">{name}</Text>
+        <Text className="input-cal__card-meta">{deviceKey}</Text>
         {hasStickCal && (
-          <span style={{
+          <Text style={{
             fontSize: 10, padding: '1px 6px', borderRadius: 4,
             background: 'var(--color-success-bg, #1a3a2a)', color: 'var(--color-success-text, #4ade80)',
             fontWeight: 600,
           }}>
             Sticks Calibrated
-          </span>
+          </Text>
         )}
-      </div>
+      </Box>
 
       {/* Buttons with icons */}
-      <div className="input-cal__btn-grid">
+      <Box className="input-cal__btn-grid">
         {buttons.map((btn, i) => {
           const pressed = state.buttons[i] ?? false;
           const iconUrl = getButtonIconUrl(btn.icon);
           return (
-            <div
+            <Box
               key={btn.id}
               className={`input-cal__btn-cell ${pressed ? 'input-cal__btn-cell--pressed' : ''}`}
               title={`${btn.label} (${btn.id})`}
             >
               {iconUrl ? (
-                <img src={iconUrl} alt={btn.label} draggable={false} />
+                <Image src={iconUrl} alt={btn.label} draggable={false} />
               ) : (
-                <span style={{ fontSize: 10, color: 'var(--color-text-secondary)' }}>{btn.label}</span>
+                <Text style={{ fontSize: 10, color: 'var(--color-text-secondary)' }}>{btn.label}</Text>
               )}
-              <span className="input-cal__btn-cell-label">{btn.label}</span>
-            </div>
+              <Text className="input-cal__btn-cell-label">{btn.label}</Text>
+            </Box>
           );
         })}
-      </div>
+      </Box>
 
       {/* Sticks and triggers — dynamically derived from profile axes */}
       <WebHidAxes state={state} profile={profile} onCalibrate={setCalibrationTarget} />
 
       {/* Actions */}
-      <div style={{ marginTop: 'var(--space-md)', display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>
+      <Box style={{ marginTop: 'var(--space-md)', display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>
         {profile?.supportsVibration && <>
-        <button className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 100, intensity: 1.0 }], 0).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); }).catch(e => webHidReader.addDiag(`⚠ Vibrate IPC error: ${e}`))}>
+        <Box as="button" className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 100, intensity: 1.0 }], 0).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); }).catch(e => webHidReader.addDiag(`⚠ Vibrate IPC error: ${e}`))}>
           100ms
-        </button>
-        <button className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 250, intensity: 1.0 }], 0).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); }).catch(e => webHidReader.addDiag(`⚠ Vibrate IPC error: ${e}`))}>
+        </Box>
+        <Box as="button" className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 250, intensity: 1.0 }], 0).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); }).catch(e => webHidReader.addDiag(`⚠ Vibrate IPC error: ${e}`))}>
           250ms
-        </button>
-        <button className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 1000, intensity: 1.0 }], 0).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); }).catch(e => webHidReader.addDiag(`⚠ Vibrate IPC error: ${e}`))}>
+        </Box>
+        <Box as="button" className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 1000, intensity: 1.0 }], 0).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); }).catch(e => webHidReader.addDiag(`⚠ Vibrate IPC error: ${e}`))}>
           1000ms
-        </button>
-        <button className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); }).catch(e => webHidReader.addDiag(`⚠ Vibrate IPC error: ${e}`))}>
+        </Box>
+        <Box as="button" className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); }).catch(e => webHidReader.addDiag(`⚠ Vibrate IPC error: ${e}`))}>
           3×100ms
-        </button>
-        <button className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 1000, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); }).catch(e => webHidReader.addDiag(`⚠ Vibrate IPC error: ${e}`))}>
+        </Box>
+        <Box as="button" className="input-cal__btn" onClick={() => window.api.vibratePattern(deviceKey, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 1000, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50).then(r => { if (!r.ok) webHidReader.addDiag(`⚠ Vibrate failed (${deviceKey}): ${r.error}`); }).catch(e => webHidReader.addDiag(`⚠ Vibrate IPC error: ${e}`))}>
           2-long-2
-        </button>
+        </Box>
         </>}
-        <span className="input-cal__debug-state" style={{ fontSize: 10, color: 'var(--color-text-muted)', fontFamily: 'monospace' }}>
+        <Text className="input-cal__debug-state" style={{ fontSize: 10, color: 'var(--color-text-muted)', fontFamily: 'monospace' }}>
           t={state.timestamp > 0 ? state.timestamp.toFixed(0) : '—'}
           {' '}btn={state.buttons.filter(Boolean).length}/{state.buttons.length}
           {' '}axes={state.axes.map(a => a.toFixed(1)).join(',')}
-        </span>
-      </div>
+        </Text>
+      </Box>
 
       {/* Calibration Wizard (inline) */}
       {calibrationTarget?.type === 'stick' && (
-        <div style={{ marginTop: 'var(--space-md)' }}>
+        <Box style={{ marginTop: 'var(--space-md)' }}>
           <StickCalibrationWizard
             target={calibrationTarget.side === 'both' ? undefined : calibrationTarget.side}
             onComplete={(cal) => {
@@ -113,10 +116,10 @@ const WebHidCard = ({ deviceKey, state, profile, hasStickCal, existingStickCal, 
             existingCalibration={existingStickCal}
             deviceKey={deviceKey}
           />
-        </div>
+        </Box>
       )}
       {calibrationTarget?.type === 'trigger' && (
-        <div style={{ marginTop: 'var(--space-md)' }}>
+        <Box style={{ marginTop: 'var(--space-md)' }}>
           <TriggerCalibrationWizard
             axisIndex={calibrationTarget.axisIndex}
             label={calibrationTarget.label}
@@ -127,12 +130,12 @@ const WebHidCard = ({ deviceKey, state, profile, hasStickCal, existingStickCal, 
             onCancel={() => setCalibrationTarget(null)}
             deviceKey={deviceKey}
           />
-        </div>
+        </Box>
       )}
 
       {/* Collapsible raw bytes debug */}
       <WebHidRawBytes state={state} />
-    </div>
+    </Box>
   );
 };
 
