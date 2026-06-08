@@ -7,9 +7,10 @@ import {
 } from '@shared/game/sprites';
 import type { SpriteCategory } from '@shared/game/sprites';
 import type { ReviewStatus, ReviewData } from '../SpriteDebug.type';
+import { Box } from '../../../../../design-system/primitives';
 import { CategoryButton, FilterBtns, Stats } from './ReviewControls';
 import { SpriteImageCard } from './ReviewCards';
-import { S } from '../styles';
+import { S } from '../SpriteDebug.constants';
 
 const SpriteReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
   const [data, setData] = useState<ReviewData>({});
@@ -68,20 +69,20 @@ const SpriteReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
 
   return (
     <>
-      <div style={S.header}>
-        <div style={S.tabGroup}>
+      <Box style={S.header}>
+        <Box style={S.tabGroup}>
           <CategoryButton label="All" value="all" current={catFilter} onClick={v => setCatFilter(v as never)} count={catCounts.all} />
           {CATEGORY_ORDER.map(c => (
             <CategoryButton key={c} label={CATEGORY_LABELS[c]} value={c} current={catFilter} onClick={v => setCatFilter(v as never)} count={catCounts[c]} />
           ))}
-        </div>
+        </Box>
         <Stats counts={counts} total={SPRITE_MANIFEST.length} />
-        <div style={S.headerButtons}>
+        <Box style={S.headerButtons}>
           <FilterBtns filter={filter} setFilter={setFilter} />
-          <button onClick={() => { setData({}); window.api.saveSpriteReview({}); }} style={S.resetBtn}>Reset</button>
-        </div>
-      </div>
-      <div style={S.grid}>
+          <Box as="button" onClick={() => { setData({}); window.api.saveSpriteReview({}); }} style={S.resetBtn}>Reset</Box>
+        </Box>
+      </Box>
+      <Box style={S.grid}>
         {filtered.map(sprite => (
           <SpriteImageCard
             key={sprite.file}
@@ -92,7 +93,7 @@ const SpriteReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
             onSetComment={c => setComment(sprite.file, c)}
           />
         ))}
-      </div>
+      </Box>
     </>
   );
 };

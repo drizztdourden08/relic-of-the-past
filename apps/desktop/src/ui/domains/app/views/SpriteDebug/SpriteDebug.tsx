@@ -1,9 +1,11 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
+import { Box } from '../../../../design-system/primitives/Box';
+import { Text } from '../../../../design-system/primitives/Text';
 import type { SpriteDebugProps, ReviewMode } from './SpriteDebug.type';
 import { SpriteReviewPanel } from './sub-components/SpriteReviewPanel';
 import { ItemReviewPanel } from './sub-components/ItemReviewPanel';
-import { S } from './styles';
+import { S } from './SpriteDebug.constants';
 
 const SpriteDebug = (props: SpriteDebugProps) => {
   const { onClose, romFile } = props;
@@ -11,32 +13,34 @@ const SpriteDebug = (props: SpriteDebugProps) => {
   const baseUrl = romFile ? window.api.getSpritesBaseUrl(romFile) : '';
 
   return (
-    <div style={S.overlay}>
-      <div style={S.topBar}>
-        <div style={S.modeToggle}>
-          <button
+    <Box style={S.overlay}>
+      <Box style={S.topBar}>
+        <Box style={S.modeToggle}>
+          <Box
+            as="button"
             onClick={() => setMode('sprites')}
             style={{ ...S.modeBtn, ...(mode === 'sprites' ? S.modeBtnActive : {}) }}
           >
             Sprite Review
-          </button>
-          <button
+          </Box>
+          <Box
+            as="button"
             onClick={() => setMode('items')}
             style={{ ...S.modeBtn, ...(mode === 'items' ? S.modeBtnActive : {}) }}
           >
             Item Association
-          </button>
-        </div>
-        <span style={S.modeHint}>
+          </Box>
+        </Box>
+        <Text style={S.modeHint}>
           {mode === 'sprites'
             ? 'Does each extracted image look correct?'
             : 'Is each item mapped to the right sprite?'}
-        </span>
-        <button onClick={onClose} style={S.closeBtn}>✕</button>
-      </div>
+        </Text>
+        <Box as="button" onClick={onClose} style={S.closeBtn}>✕</Box>
+      </Box>
 
       {mode === 'sprites' ? <SpriteReviewPanel baseUrl={baseUrl} /> : <ItemReviewPanel baseUrl={baseUrl} />}
-    </div>
+    </Box>
   );
 };
 

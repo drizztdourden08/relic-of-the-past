@@ -2,9 +2,10 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { ITEM_SPRITE_MAP } from '@shared/game/items/sprites';
 import type { ReviewStatus, ReviewData } from '../SpriteDebug.type';
+import { Box } from '../../../../../design-system/primitives';
 import { FilterBtns, Stats } from './ReviewControls';
 import { ItemAssocCard } from './ReviewCards';
-import { S } from '../styles';
+import { S } from '../SpriteDebug.constants';
 
 const ALL_ITEMS = Object.entries(ITEM_SPRITE_MAP).map(([name, file]) => ({
   name,
@@ -60,14 +61,14 @@ const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
 
   return (
     <>
-      <div style={S.header}>
+      <Box style={S.header}>
         <Stats counts={counts} total={ALL_ITEMS.length} />
-        <div style={S.headerButtons}>
+        <Box style={S.headerButtons}>
           <FilterBtns filter={filter} setFilter={setFilter} />
-          <button onClick={() => { setData({}); window.api.saveSpriteDebug({}); }} style={S.resetBtn}>Reset</button>
-        </div>
-      </div>
-      <div style={S.grid}>
+          <Box as="button" onClick={() => { setData({}); window.api.saveSpriteDebug({}); }} style={S.resetBtn}>Reset</Box>
+        </Box>
+      </Box>
+      <Box style={S.grid}>
         {filtered.map(item => (
           <ItemAssocCard
             key={item.name}
@@ -78,7 +79,7 @@ const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
             onSetComment={c => setComment(item.name, c)}
           />
         ))}
-      </div>
+      </Box>
     </>
   );
 };
