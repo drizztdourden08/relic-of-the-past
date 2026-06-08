@@ -81,14 +81,14 @@ compiled (imported non-existent modules). Deleting was the only path to tsc 0:
   *"This file is for review only. Delete after approval."*; imported a non-existent
   `./navigation-data.types`.
 
-### ⚠️ Open correctness question — `canPass` and `stairs`
+### ✅ RESOLVED — `canPass` / `stairs` (deleted as dead code)
 
-`shared/game/navigation/core/inventory.ts` `canPass()` had no `case 'stairs'`, so it
-fell through to `undefined` (≈ false) at runtime. To get tsc to 0 **behavior was
-preserved exactly** with an explicit trailing `return false` + a comment. **Decide:**
-should `stairs` be *passable* in `canPass`? (`isPassableForClearance` also returns
-false for stairs.) Likely stairs are handled by the dual-layer BFS cross-layer
-logic instead, but worth a glance during the core-nav careful pass.
+The open question was whether `canPass()` should treat `stairs` as passable.
+Investigation showed `canPass()` had **zero callers** (the live BFS uses
+`evaluateEntry()` in `flood-fill/bfs-helpers.ts`, which already treats stairs as
+walkable), and `isPassableForClearance()` was also unused. Both were deleted from
+`core/inventory.ts` (only `unmetRequirements`, used by `orchestrator-helpers.ts`,
+remains) and dropped from the `core/` + `navigation/` barrels. No behavior change.
 
 ## Needs special handling (not a rule change, but a heads-up)
 

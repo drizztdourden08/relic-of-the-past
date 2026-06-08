@@ -44,7 +44,7 @@ export {
   HOOKSHOT_TARGET_TILES,
 } from './tile-attrs';
 export type { TileReq, TileLabel, TilePass, TileCat, TileAttrDef, TileAttrContext } from './tile-attrs';
-export { canPass, isPassableForClearance, unmetRequirements } from './core/inventory';
+export { unmetRequirements } from './core/inventory';
 export { PriorityQueue } from './core/priority-queue';
 
 // ─── Screen Bundles ──────────────────────────────────────────────────────────
