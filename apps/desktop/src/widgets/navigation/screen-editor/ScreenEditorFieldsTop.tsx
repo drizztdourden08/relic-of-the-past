@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 /** ScreenEditor step-1 top: classification (type/world) + type-specific detail panel. */
-import { Select, SegmentedControl } from '../../../components/primitives';
+import { Select, SegmentedControl, TextInput } from '../../../components/primitives';
 import type { InteriorKind } from '@shared/game/types';
 import { TYPE_SEGMENTS, WORLD_SEGMENTS, PALACE_OPTIONS, INTERIOR_KIND_OPTIONS } from './screen-editor-constants';
 import type { ScreenEditor } from './useScreenEditor';
@@ -60,13 +60,13 @@ const ScreenEditorFieldsTop = ({ editor }: { editor: ScreenEditor }) => {
             <div className="screen-editor__row screen-editor__row--half">
               <div>
                 <label>Floor</label>
-                <input className="text-input" value={floor} onChange={e => setFloor(e.target.value)} placeholder="-1, 0, 1..." />
+                <TextInput value={floor} onChange={e => setFloor(e.target.value)} placeholder="-1, 0, 1..." />
               </div>
               <div>
                 <label>Grid X, Y</label>
                 <div style={{ display: 'flex', gap: '4px' }}>
-                  <input className="text-input" value={gridX} onChange={e => setGridX(e.target.value)} placeholder="X" />
-                  <input className="text-input" value={gridY} onChange={e => setGridY(e.target.value)} placeholder="Y" />
+                  <TextInput value={gridX} onChange={e => setGridX(e.target.value)} placeholder="X" />
+                  <TextInput value={gridY} onChange={e => setGridY(e.target.value)} placeholder="Y" />
                 </div>
               </div>
             </div>

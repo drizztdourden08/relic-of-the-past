@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 /** ScreenEditor step-1 bottom: identity/metadata + optional variant condition. */
-import { Button, Select, TagPicker } from '../../../components/primitives';
+import { Button, Select, TagPicker, TextInput, Checkbox } from '../../../components/primitives';
 import type { VariantCondition } from '@shared/game/types';
 import { CONDITION_TYPE_OPTIONS, TAG_GROUPS } from './screen-editor-constants';
 import type { ScreenEditor } from './useScreenEditor';
@@ -22,7 +22,7 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
       <div className="screen-editor__section">
         <div className="screen-editor__row">
           <label>Name</label>
-          <input className="text-input" value={name} onChange={e => setName(e.target.value)} placeholder="Screen name" />
+          <TextInput value={name} onChange={e => setName(e.target.value)} placeholder="Screen name" />
         </div>
 
         {/* Area — editable for all types (dungeon defaults from meta) */}
@@ -43,7 +43,7 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
             </div>
           ) : (
             <div className="screen-editor__inline-create">
-              <input className="text-input" value={newAreaName} onChange={e => setNewAreaName(e.target.value)} placeholder="New area name" autoFocus />
+              <TextInput value={newAreaName} onChange={e => setNewAreaName(e.target.value)} placeholder="New area name" autoFocus />
               <Button variant="primary" onClick={handleCreateArea} disabled={!newAreaName.trim()}>Add</Button>
               <Button variant="secondary" onClick={() => setCreatingArea(false)}>Cancel</Button>
             </div>
@@ -74,7 +74,7 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
               </div>
             ) : (
               <div className="screen-editor__inline-create">
-                <input className="text-input" value={newLocationName} onChange={e => setNewLocationName(e.target.value)} placeholder="New location name" autoFocus />
+                <TextInput value={newLocationName} onChange={e => setNewLocationName(e.target.value)} placeholder="New location name" autoFocus />
                 <Button variant="primary" onClick={handleCreateLocation} disabled={!newLocationName.trim() || !areaId}>Add</Button>
                 <Button variant="secondary" onClick={() => setCreatingLocation(false)}>Cancel</Button>
               </div>
@@ -85,7 +85,7 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
         {type === 'interior' && (
           <div className="screen-editor__row">
             <label>Entrance ID</label>
-            <input className="text-input" value={entranceId} onChange={e => setEntranceId(e.target.value)} placeholder="Optional hex — disambiguates shared rooms" />
+            <TextInput value={entranceId} onChange={e => setEntranceId(e.target.value)} placeholder="Optional hex — disambiguates shared rooms" />
           </div>
         )}
         <TagPicker
@@ -99,21 +99,18 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
       {/* ── Section 4: Variant (optional) ── */}
       <div className="screen-editor__section">
         <div className="screen-editor__row">
-          <label>
-            <input type="checkbox" checked={hasVariant} onChange={e => setHasVariant(e.target.checked)} />
-            {' '}Has Variant
-          </label>
+          <Checkbox checked={hasVariant} onChange={setHasVariant} label="Has Variant" />
         </div>
         {hasVariant && (
           <>
             <div className="screen-editor__row screen-editor__row--half">
               <div>
                 <label>Key</label>
-                <input className="text-input" value={variantKey} onChange={e => setVariantKey(e.target.value)} placeholder="e.g. intro" />
+                <TextInput value={variantKey} onChange={e => setVariantKey(e.target.value)} placeholder="e.g. intro" />
               </div>
               <div>
                 <label>Label (optional)</label>
-                <input className="text-input" value={variantLabel} onChange={e => setVariantLabel(e.target.value)} placeholder="Display label" />
+                <TextInput value={variantLabel} onChange={e => setVariantLabel(e.target.value)} placeholder="Display label" />
               </div>
             </div>
             <div className="screen-editor__row">
@@ -128,13 +125,10 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
               <div className="screen-editor__row screen-editor__row--half">
                 <div>
                   <label>Check Name</label>
-                  <input className="text-input" value={condCheckName} onChange={e => setCondCheckName(e.target.value)} placeholder="e.g. Link's Uncle" />
+                  <TextInput value={condCheckName} onChange={e => setCondCheckName(e.target.value)} placeholder="e.g. Link's Uncle" />
                 </div>
                 <div>
-                  <label>
-                    <input type="checkbox" checked={condCheckCollected} onChange={e => setCondCheckCollected(e.target.checked)} />
-                    {' '}Collected
-                  </label>
+                  <Checkbox checked={condCheckCollected} onChange={setCondCheckCollected} label="Collected" />
                 </div>
               </div>
             )}
@@ -142,35 +136,32 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
               <div className="screen-editor__row screen-editor__row--half">
                 <div>
                   <label>WRAM Address</label>
-                  <input className="text-input" value={condFlagAddr} onChange={e => setCondFlagAddr(e.target.value)} placeholder="0x7EF..." />
+                  <TextInput value={condFlagAddr} onChange={e => setCondFlagAddr(e.target.value)} placeholder="0x7EF..." />
                 </div>
                 <div>
                   <label>Bit</label>
-                  <input className="text-input" value={condFlagBit} onChange={e => setCondFlagBit(e.target.value)} placeholder="0-7" />
+                  <TextInput value={condFlagBit} onChange={e => setCondFlagBit(e.target.value)} placeholder="0-7" />
                 </div>
                 <div>
-                  <label>
-                    <input type="checkbox" checked={condFlagValue} onChange={e => setCondFlagValue(e.target.checked)} />
-                    {' '}Value (set)
-                  </label>
+                  <Checkbox checked={condFlagValue} onChange={setCondFlagValue} label="Value (set)" />
                 </div>
               </div>
             )}
             {conditionType === 'entrance' && (
               <div className="screen-editor__row">
                 <label>Entrance ID</label>
-                <input className="text-input" value={condEntranceId} onChange={e => setCondEntranceId(e.target.value)} placeholder="Entrance ID to match" />
+                <TextInput value={condEntranceId} onChange={e => setCondEntranceId(e.target.value)} placeholder="Entrance ID to match" />
               </div>
             )}
             {conditionType === 'progress' && (
               <div className="screen-editor__row screen-editor__row--half">
                 <div>
                   <label>Min Tier</label>
-                  <input className="text-input" value={condProgressMin} onChange={e => setCondProgressMin(e.target.value)} placeholder="Optional" />
+                  <TextInput value={condProgressMin} onChange={e => setCondProgressMin(e.target.value)} placeholder="Optional" />
                 </div>
                 <div>
                   <label>Max Tier</label>
-                  <input className="text-input" value={condProgressMax} onChange={e => setCondProgressMax(e.target.value)} placeholder="Optional" />
+                  <TextInput value={condProgressMax} onChange={e => setCondProgressMax(e.target.value)} placeholder="Optional" />
                 </div>
               </div>
             )}
