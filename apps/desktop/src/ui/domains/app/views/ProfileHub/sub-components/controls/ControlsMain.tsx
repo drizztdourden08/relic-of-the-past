@@ -11,7 +11,7 @@ import { Box } from '../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../../design-system/primitives/Image';
 import { BindingRow } from './BindingRow';
-import { getSnesIconUrl, getButtonIconUrl } from '../../../InputTester/data/button-icons';
+import { getSnesIconUrl, getButtonIconUrl } from '@app/lib/input/button-icons';
 import type { useControlsSettings } from '../useControlsSettings';
 
 type Ctrl = ReturnType<typeof useControlsSettings>;

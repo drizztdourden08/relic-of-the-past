@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind logic */
-import type { wasmGetViewportInfo } from '../../../../../../../lib/game';
+import type { wasmGetViewportInfo } from '@app/lib/game';
 
 type Vp = NonNullable<ReturnType<typeof wasmGetViewportInfo>>;
 type Point = { x: number; y: number };

@@ -3,8 +3,8 @@
 /* Pull in the split-out sections so any importer of TrackerView.css (incl. the
    checks-widget sub-components, which don't render TrackerView.tsx) gets the
    full stylesheet. Class sets are disjoint, so cascade order is unaffected. */
-@import url('./TrackerView.filters.css');
-@import url('./TrackerView.checks.css');
+@import url('./sub-components/TrackerView.filters.css');
+@import url('./sub-components/TrackerView.checks.css');
 
 /* ─── TrackerView (overlay panel) ─── */
 

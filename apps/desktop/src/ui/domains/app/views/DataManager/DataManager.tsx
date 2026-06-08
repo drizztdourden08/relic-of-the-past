@@ -10,7 +10,7 @@ import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';
 import { ListItemRow } from '../../../../design-system/composites/ListItemRow';
 import './DataManager.css';
-import './DataManager.detail.css';
+import './sub-components/DataManager.detail.css';
 import type { DataTab, DataManagerProps } from './DataManager.type';
 
 

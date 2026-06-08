@@ -9,7 +9,7 @@ import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../design-system/primitives/Image';
 import { Svg, SvgLine, SvgCircle } from '../../../../../design-system/primitives/Svg';
-import { getButtonIconUrl } from '../data/button-icons';
+import { getButtonIconUrl } from '@app/lib/input/button-icons';
 import { DEVICE_DATABASE } from '@shared/input/data/devices';
 import { findPresetByVidPid } from '@shared/input';
 

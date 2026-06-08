@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
-import { hitTestGizmo, buildGizmoContext } from '../shadow-editor/gizmos';
-import type { GizmoPart } from '../shadow-editor/gizmos';
+import { hitTestGizmo, buildGizmoContext } from '../../shadow-editor/gizmos';
+import type { GizmoPart } from '../../shadow-editor/gizmos';
 import { worldToDisplay } from './coords';
 import type { Vp, Point } from './coords';
 import type { ScreenData } from './hittest';

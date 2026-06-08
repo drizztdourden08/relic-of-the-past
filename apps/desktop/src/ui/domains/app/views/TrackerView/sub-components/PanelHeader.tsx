@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
-import { SegmentedControl, Slider, Box, Text } from '../../../../design-system/primitives';
-import { MODE_OPTIONS } from './TrackerView.constants';
-import type { PanelHeaderProps } from './TrackerView.type';
+import { SegmentedControl, Slider, Box, Text } from '../../../../../design-system/primitives';
+import { MODE_OPTIONS } from '../TrackerView.constants';
+import type { PanelHeaderProps } from '../TrackerView.type';
 
 const PanelHeader = ({ title, panelSettings, onSettingsChange, onClose, onPopOut, onDock, showPopOut, onMouseDown }: PanelHeaderProps) => {
   const modeValue = panelSettings.mode === 'floating' ? 'float' : panelSettings.side;

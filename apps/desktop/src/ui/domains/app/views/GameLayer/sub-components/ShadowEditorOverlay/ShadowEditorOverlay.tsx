@@ -3,11 +3,11 @@ import { useRef } from 'react';
 import { Canvas } from '../../../../../../design-system/primitives/Canvas';
 import { useShadowEditorStore } from '../../../../../../../stores/shadow-editor-store';
 import type { GizmoPart } from '../shadow-editor/gizmos';
-import type { Vp, Point } from './coords';
+import type { Vp, Point } from './behavior/coords';
 import type { GizmoStart, ShadowEditorOverlayProps } from './ShadowEditorOverlay.type';
-import { useOverlayKeyboard } from './useOverlayKeyboard';
-import { useOverlayInteractions } from './useOverlayInteractions';
-import { useOverlayRender } from './useOverlayRender';
+import { useOverlayKeyboard } from './behavior/useOverlayKeyboard';
+import { useOverlayInteractions } from './behavior/useOverlayInteractions';
+import { useOverlayRender } from './behavior/useOverlayRender';
 
 const ShadowEditorOverlay = (props: ShadowEditorOverlayProps) => {
   const { width, height, gameRunning } = props;

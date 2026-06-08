@@ -8,7 +8,7 @@ import { Text } from '../../../../design-system/primitives/Text';
 import { Image } from '../../../../design-system/primitives/Image';
 import { Icon } from '../../../../design-system/primitives/Icon';
 import { useTitleBar } from './behavior/useTitleBar';
-import { buildTitleBarMenuItems } from './title-bar-menu';
+import { buildTitleBarMenuItems } from './behavior/title-bar-menu';
 import { WindowControls } from './sub-components/WindowControls';
 import { getFps } from '../../../../../lib/game';
 import './TitleBar.css';

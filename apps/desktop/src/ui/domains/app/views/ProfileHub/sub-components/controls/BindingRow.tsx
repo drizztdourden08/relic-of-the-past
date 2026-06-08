@@ -9,7 +9,7 @@ import { Box } from '../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../../design-system/primitives/Image';
 import type { InputBinding, ButtonIcon, KeyboardBinding } from '@shared/types/controls';
-import { getButtonIconUrl, keyCodeToIconId } from '../../../InputTester/data/button-icons';
+import { getButtonIconUrl, keyCodeToIconId } from '@app/lib/input/button-icons';
 import './BindingRow.css';
 
 interface BindingRowProps {

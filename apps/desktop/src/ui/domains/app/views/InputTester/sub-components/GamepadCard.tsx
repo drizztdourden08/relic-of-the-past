@@ -8,7 +8,7 @@ import { Text } from '../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../design-system/primitives/Image';
 import { DEVICE_PROFILES, findPresetByVidPid, parseGamepadId } from '@shared/input';
 import type { GamepadSnapshot } from '../../../../../../lib/input/input-manager';
-import { getButtonIconUrl } from '../data/button-icons';
+import { getButtonIconUrl } from '@app/lib/input/button-icons';
 import { vibrateGamepad, vibrateGamepadPattern } from '../../../../../../lib/input/vibration';
 import { AxisRecordButton, CONTROLLER_ICON_MAP, StickCircle, TriggerBar } from './input-cal-visuals';
 

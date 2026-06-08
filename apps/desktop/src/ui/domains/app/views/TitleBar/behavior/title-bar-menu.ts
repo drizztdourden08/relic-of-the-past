@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 /** Builds the TitleBar dropdown menu item tree from props + closeMenu. */
-import type { DropdownMenu } from '../../../../design-system/composites/DropdownMenu';
-import type { TitleBarProps } from './TitleBar.type';
+import type { DropdownMenu } from '../../../../../design-system/composites/DropdownMenu';
+import type { TitleBarProps } from '../TitleBar.type';
 
 type MenuItems = Parameters<typeof DropdownMenu>[0]['items'];
 

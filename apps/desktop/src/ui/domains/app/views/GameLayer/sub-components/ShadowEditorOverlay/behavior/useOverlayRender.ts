@@ -1,11 +1,11 @@
 /* @layer renderer-components @kind hook */
 import { useEffect, useRef } from 'react';
 import type { MutableRefObject, RefObject } from 'react';
-import { useShadowEditorStore } from '../../../../../../../stores/shadow-editor-store';
-import { wasmGetViewportInfo } from '../../../../../../../lib/game';
+import { useShadowEditorStore } from '@app/stores/shadow-editor-store';
+import { wasmGetViewportInfo } from '@app/lib/game';
 import { drawOverlay } from './render';
 import type { Vp, Point } from './coords';
-import type { GizmoPart } from '../shadow-editor/gizmos';
+import type { GizmoPart } from '../../shadow-editor/gizmos';
 import type { ScreenData } from './hittest';
 
 interface Args {

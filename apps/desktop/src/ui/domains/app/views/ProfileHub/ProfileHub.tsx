@@ -4,8 +4,8 @@ import { Button } from '../../../../design-system/primitives/Button';
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';
 import { ToastContainer } from '../../../../design-system/primitives/Toast';
-import { useProfileSettings } from './profile-hub/useProfileSettings';
-import { ProfileHubBody } from './profile-hub/ProfileHubBody';
+import { useProfileSettings } from './behavior/useProfileSettings';
+import { ProfileHubBody } from './sub-components/ProfileHubBody';
 import './ProfileHub.css';
 import type { ProfileHubProps, ProfileHubTab } from './ProfileHub.type';
 

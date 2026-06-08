@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
-import { useShadowEditorStore } from '../../../../../../../stores/shadow-editor-store';
-import { buildGizmoContext, renderGizmo } from '../shadow-editor/gizmos';
-import type { GizmoPart } from '../shadow-editor/gizmos';
+import { useShadowEditorStore } from '@app/stores/shadow-editor-store';
+import { buildGizmoContext, renderGizmo } from '../../shadow-editor/gizmos';
+import type { GizmoPart } from '../../shadow-editor/gizmos';
 import { screenIdFromVp, displayToWorld, worldToDisplay } from './coords';
 import type { Vp, Point } from './coords';
 import type { ScreenData } from './hittest';

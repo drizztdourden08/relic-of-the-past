@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box } from '../../../../design-system/primitives';
-import type { TrackerPanelProps } from './TrackerView.type';
+import { Box } from '../../../../../design-system/primitives';
+import type { TrackerPanelProps } from '../TrackerView.type';
 
 const TrackerPanel = ({ panelSettings, children, className = '', onDragStart }: TrackerPanelProps) => {
   const [hovered, setHovered] = useState(false);

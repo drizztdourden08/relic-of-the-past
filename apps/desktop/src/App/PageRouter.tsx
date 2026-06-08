@@ -4,7 +4,7 @@ import { ProfilePicker } from '../ui/domains/app/views/ProfilePicker';
 import { ProfileHub } from '../ui/domains/app/views/ProfileHub';
 import { DataManager } from '../ui/domains/app/views/DataManager';
 import { InputCalibration } from '../ui/domains/app/views/InputTester';
-import { CreditsPage } from '../ui/domains/app/views/ProfileHub/tabs/CreditsTab';
+import { CreditsPage } from '../ui/domains/app/views/ProfileHub/sub-components/CreditsTab';
 import { FullScreenLayer } from '../ui/design-system/composites/FullScreenLayer';
 import type { PageId, RomDisplayInfo } from './types';
 import type { GameSettings } from '@shared/types/settings';

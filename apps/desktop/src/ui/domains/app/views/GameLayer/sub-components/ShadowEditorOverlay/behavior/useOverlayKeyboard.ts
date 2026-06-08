@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind hook */
 import { useEffect } from 'react';
 import type { MutableRefObject } from 'react';
-import { useShadowEditorStore } from '../../../../../../../stores/shadow-editor-store';
+import { useShadowEditorStore } from '@app/stores/shadow-editor-store';
 import { EMPTY_SHADOW_PROJECT } from '@shared/types/shadow-casting';
 import type { ShadowCastingProject } from '@shared/types/shadow-casting';
 import { screenIdFromVp } from './coords';

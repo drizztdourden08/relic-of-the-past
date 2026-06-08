@@ -3,13 +3,13 @@
 import type { GameSettings } from '@shared/types/settings';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
-import { HomeTab } from '../tabs/HomeTab';
-import { SettingsView } from '../sub-components/SettingsView';
-import { AudioSettings } from '../tabs/AudioSettings';
-import { GameplaySettings } from '../tabs/GameplaySettings';
-import { HudSettings } from '../tabs/HudSettings';
-import { ControlsSettings } from '../tabs/ControlsSettings';
-import { HapticsSettings } from '../tabs/HapticsSettings';
+import { HomeTab } from './HomeTab';
+import { SettingsView } from './SettingsView';
+import { AudioSettings } from './AudioSettings';
+import { GameplaySettings } from './GameplaySettings';
+import { HudSettings } from './HudSettings';
+import { ControlsSettings } from './ControlsSettings';
+import { HapticsSettings } from './HapticsSettings';
 import type { ProfileHubProps, ProfileHubTab } from '../ProfileHub.type';
 
 interface ProfileHubBodyProps {

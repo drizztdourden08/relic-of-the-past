@@ -8,8 +8,8 @@ import {
   onInventoryChanged, onUnknownItem, onCompletedChecksChanged,
   getCurrentInventory, getCompletedChecks, getUnknownItems, loadUnknownItems,
   getActiveProfileId,
-} from '../../../../../lib/game';
-import type { UnknownItemEntry } from '../../../../../lib/game';
+} from '../../../../../../lib/game';
+import type { UnknownItemEntry } from '../../../../../../lib/game';
 import type { CheckStatus } from '@shared/game/logic/eval';
 
 const useTrackerState = () => {

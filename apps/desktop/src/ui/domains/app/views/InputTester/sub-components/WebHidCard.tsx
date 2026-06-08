@@ -9,7 +9,7 @@ import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../design-system/primitives/Image';
 import { webHidReader } from '../../../../../../lib/input/hid-reader';
-import { getButtonIconUrl } from '../data/button-icons';
+import { getButtonIconUrl } from '@app/lib/input/button-icons';
 import { StickCalibrationWizard } from './StickCalibrationWizard';
 import { TriggerCalibrationWizard } from './TriggerCalibrationWizard';
 import { CONTROLLER_ICON_MAP, resolveDeviceName } from './input-cal-visuals';

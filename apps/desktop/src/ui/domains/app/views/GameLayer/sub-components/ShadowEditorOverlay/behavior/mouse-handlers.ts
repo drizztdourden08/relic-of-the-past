@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { MouseEvent } from 'react';
 import type { MutableRefObject, RefObject } from 'react';
-import { useShadowEditorStore } from '../../../../../../../stores/shadow-editor-store';
+import { useShadowEditorStore } from '@app/stores/shadow-editor-store';
 import type { HeightmapElement, LightSource } from '@shared/types/shadow-casting';
 import { screenIdFromVp, displayToWorld, getCanvasPos } from './coords';
 import type { Vp, Point } from './coords';
@@ -10,8 +10,8 @@ import type { ScreenData } from './hittest';
 import { genId, createShapeFromDrag, finalizeFreehand } from './shapes';
 import { applyHeightmapGizmo, applyLightGizmo } from './gizmo-drag';
 import { detectHover } from './hover';
-import type { GizmoStart } from './ShadowEditorOverlay.type';
-import type { GizmoPart } from '../shadow-editor/gizmos';
+import type { GizmoStart } from '../ShadowEditorOverlay.type';
+import type { GizmoPart } from '../../shadow-editor/gizmos';
 
 type Tool = 'select' | 'polygon' | 'shape-light' | 'point-light' | 'freehand';
 

@@ -7,8 +7,8 @@
 
 import { getInputManager, resolveFunctionMappingIcon } from '../../../../../../lib/game';
 import type { FunctionAction, FunctionMapping } from '@shared/types/controls';
-import { getBindingLabel, getBindingIconUrl } from '../../ProfileHub/tabs/controls/BindingRow';
-import { keyCodeToIconId, getButtonIconUrl } from '../../InputTester/data/button-icons';
+import { getBindingLabel, getBindingIconUrl } from '../../ProfileHub/sub-components/controls/BindingRow';
+import { keyCodeToIconId, getButtonIconUrl } from '@app/lib/input/button-icons';
 import type { SlotHint } from './enhanced-save-slot.types';
 
 const withPauseGuard = async (action: () => Promise<boolean>): Promise<boolean> => {

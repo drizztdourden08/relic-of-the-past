@@ -10,11 +10,11 @@ import { TrackerFilters, type ViewMode } from './sub-components/TrackerFilters';
 import { TrackerGroupTree } from './sub-components/TrackerGroupTree';
 import './TrackerView.css';
 import type { PanelSettings, TrackerLayoutSettings, TrackerViewProps } from './TrackerView.type';
-import { useTrackerState } from './useTrackerState';
-import { useDrag } from './useDrag';
-import { loadLayout, saveLayout } from './layout';
-import { PanelHeader } from './PanelHeader';
-import { TrackerPanel } from './TrackerPanel';
+import { useTrackerState } from './behavior/useTrackerState';
+import { useDrag } from './behavior/useDrag';
+import { loadLayout, saveLayout } from './behavior/layout';
+import { PanelHeader } from './sub-components/PanelHeader';
+import { TrackerPanel } from './sub-components/TrackerPanel';
 
 const TrackerView = (props: TrackerViewProps) => {
   const { visible, onClose } = props;
