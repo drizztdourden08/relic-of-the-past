@@ -1,0 +1,24 @@
+/* @layer renderer-components @kind style */
+.stat-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+  font-size: var(--text-sm);
+}
+
+.stat-row__label {
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.stat-row__value {
+  color: var(--color-text-primary);
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+.stat-row__value[data-mono] {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}

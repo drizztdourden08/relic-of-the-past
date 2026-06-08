@@ -1,0 +1,24 @@
+/* @layer renderer-components @kind style */
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+}
+
+.checkbox--disabled {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
+
+.checkbox__input {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--color-gold-base);
+  cursor: inherit;
+}
+
+.checkbox__label {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}

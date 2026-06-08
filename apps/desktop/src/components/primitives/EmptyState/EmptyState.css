@@ -1,0 +1,20 @@
+/* @layer renderer-components @kind style */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  text-align: center;
+  color: var(--color-text-faint);
+  font-size: var(--text-sm);
+}
+
+.empty-state__icon {
+  font-size: var(--text-xl);
+  opacity: var(--opacity-faint);
+}
+
+.empty-state__action {
+  margin-top: var(--space-xs);
+}

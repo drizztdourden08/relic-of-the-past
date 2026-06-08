@@ -1,0 +1,27 @@
+/* @layer renderer-components @kind style */
+.tooltip-anchor {
+  display: inline-flex;
+}
+
+.tooltip {
+  position: fixed;
+  max-width: 240px;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-default);
+  box-shadow: var(--shadow-overlay);
+  color: var(--color-text-primary);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.tooltip[data-placement='top'] {
+  transform: translate(-50%, calc(-100% - 6px));
+}
+
+.tooltip[data-placement='bottom'] {
+  transform: translate(-50%, 6px);
+}

@@ -1,0 +1,27 @@
+/* @layer renderer-components @kind style */
+.spinner {
+  border-radius: 50%;
+  border: 2px solid var(--color-surface-hover-strong);
+  border-top-color: var(--color-gold-base);
+  animation: spinner-rotate 0.7s linear infinite;
+}
+
+.spinner[data-size='sm'] {
+  width: 12px;
+  height: 12px;
+}
+
+.spinner[data-size='md'] {
+  width: 18px;
+  height: 18px;
+}
+
+.spinner[data-size='lg'] {
+  width: 28px;
+  height: 28px;
+  border-width: 3px;
+}
+
+@keyframes spinner-rotate {
+  to { transform: rotate(360deg); }
+}

@@ -1,0 +1,31 @@
+/* @layer renderer-components @kind style */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.section-header__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.section-header__title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.section-header__subtitle {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+
+.section-header__action {
+  flex-shrink: 0;
+}
