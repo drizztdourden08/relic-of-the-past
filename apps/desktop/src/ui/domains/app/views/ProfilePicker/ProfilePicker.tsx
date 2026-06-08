@@ -4,6 +4,8 @@ import { ProfileCard } from '../../compounds/ProfileCard';
 import { RomCard } from '../../compounds/RomCard';
 import { CreateProfileForm } from '../../compounds/CreateProfileForm';
 import { Button } from '../../../../design-system/primitives/Button';
+import { Box } from '../../../../design-system/primitives/Box';
+import { Text } from '../../../../design-system/primitives/Text';
 import './ProfilePicker.css';
 import type { ProfilePickerProps } from './ProfilePicker.type';
 
@@ -25,31 +27,31 @@ const ProfilePicker = (props: ProfilePickerProps) => {
   const readyRoms = romStatuses.filter((r) => r.hasAssets);
 
   return (
-    <div className="picker">
-      <div className="picker__header">
-        <h2 className="picker__title">Relic of the Past</h2>
-        <p className="picker__subtitle">
+    <Box className="picker">
+      <Box className="picker__header">
+        <Text as="h2" className="picker__title">Relic of the Past</Text>
+        <Text as="p" className="picker__subtitle">
           Import ROMs and create profiles with isolated saves and settings
-        </p>
-      </div>
+        </Text>
+      </Box>
 
       {loadingProfile && (
-        <div className="picker__loading">
-          <span className="picker__loading-spinner">⟳</span>
+        <Box className="picker__loading">
+          <Text className="picker__loading-spinner">⟳</Text>
           Loading profile: {loadingProfile}…
-        </div>
+        </Box>
       )}
 
-      <div className="picker__columns">
+      <Box className="picker__columns">
         {/* ─── Left: Profiles ─── */}
-        <div className="picker__col">
-          <h3 className="picker__col-title">Profiles</h3>
+        <Box className="picker__col">
+          <Text as="h3" className="picker__col-title">Profiles</Text>
 
-          <div className="picker__list">
+          <Box className="picker__list">
             {profiles.length === 0 && (
-              <div className="picker__empty">
+              <Box className="picker__empty">
                 No profiles yet — import a ROM to get started
-              </div>
+              </Box>
             )}
             {profiles.map((profile) => (
               <ProfileCard
@@ -59,7 +61,7 @@ const ProfilePicker = (props: ProfilePickerProps) => {
                 onDelete={onDeleteProfile}
               />
             ))}
-          </div>
+          </Box>
 
           {creating ? (
             <CreateProfileForm
@@ -82,15 +84,15 @@ const ProfilePicker = (props: ProfilePickerProps) => {
               </Button>
             )
           )}
-        </div>
+        </Box>
 
         {/* ─── Right: ROM Library ─── */}
-        <div className="picker__col">
-          <h3 className="picker__col-title">ROM Library</h3>
+        <Box className="picker__col">
+          <Text as="h3" className="picker__col-title">ROM Library</Text>
 
-          <div className="picker__list">
+          <Box className="picker__list">
             {romStatuses.length === 0 && (
-              <div className="picker__empty">No ROMs imported yet</div>
+              <Box className="picker__empty">No ROMs imported yet</Box>
             )}
             {romStatuses.map((rom) => (
               <RomCard
@@ -100,7 +102,7 @@ const ProfilePicker = (props: ProfilePickerProps) => {
                 onDelete={onDeleteRom}
               />
             ))}
-          </div>
+          </Box>
 
           <Button
             variant="secondary"
@@ -111,9 +113,9 @@ const ProfilePicker = (props: ProfilePickerProps) => {
           >
             {importingRom ? 'Importing ROM…' : 'Import ROM'}
           </Button>
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

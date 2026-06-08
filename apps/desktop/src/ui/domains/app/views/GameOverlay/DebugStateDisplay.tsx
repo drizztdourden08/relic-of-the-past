@@ -4,6 +4,7 @@
  * Purely for verification that the data pipeline works end-to-end.
  */
 
+import { Box } from '../../../../design-system/primitives/Box';
 import { useGameUIStore } from '../../../../../stores/game-ui-store';
 
 const ITEM_NAMES = [
@@ -32,7 +33,7 @@ const DebugStateDisplay = () => {
   const { mode, gameMode, hud, inventory, equipment, dungeonProgress, text, map, floorIndicator, saveMenu } = state;
 
   return (
-    <div
+    <Box
       style={{
         position: 'absolute',
         top: 4,
@@ -94,7 +95,7 @@ Visible: ${floorIndicator.isVisible} | Timer: ${floorIndicator.timer} | Floor: $
 ── SAVE MENU ──
 Cursor: ${saveMenu.cursorPosition} | From Module: ${saveMenu.sourceModule}
 Progress: ${saveMenu.progressIndicator}`}
-    </div>
+    </Box>
   );
 };
 

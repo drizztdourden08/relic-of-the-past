@@ -10,6 +10,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
+import { Box } from '../../../../design-system/primitives/Box';
 import { HudView, PauseMenuView } from '../../../hud';
 import { LocationNotification } from '../../../hud/views/LocationNotification';
 import { DeliveryQueueIndicator } from '../../../hud/views/DeliveryQueueIndicator';
@@ -69,7 +70,7 @@ const GameOverlay = ({ width, height }: GameOverlayProps) => {
   const transition = isTransitioning ? `transform ${MENU_TRANSITION_MS}ms linear` : 'none';
 
   return (
-    <div
+    <Box
       className="game-overlay"
       style={{
         position: 'absolute',
@@ -100,7 +101,7 @@ const GameOverlay = ({ width, height }: GameOverlayProps) => {
       <LocationNotification />
       {/* Delivery queue indicator (bottom-right) */}
       <DeliveryQueueIndicator />
-    </div>
+    </Box>
   );
 };
 
