@@ -36,8 +36,8 @@
 }
 
 .input-tester__status--idle {
-  color: #ffcc00;
-  border: 1px solid #ffcc0044;
+  color: #fc0;
+  border: 1px solid #fc04;
 }
 
 .input-tester__event-log {
@@ -86,7 +86,7 @@
 .input-tester__gamepad {
   margin-bottom: 20px;
   padding: 16px;
-  background: #111122;
+  background: #112;
   border: 1px solid #333;
   border-radius: 8px;
 }
@@ -225,7 +225,7 @@
 .input-tester__hid-section {
   margin-top: 20px;
   padding: 16px;
-  background: #111122;
+  background: #112;
   border: 1px solid #333;
   border-radius: 8px;
 }

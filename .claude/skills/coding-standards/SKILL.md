@@ -1,7 +1,8 @@
 <!-- @layer claude-config @kind doc -->
 ---
+
 name: coding-standards
-description: Enforce this project's strict coding standards on every change — arrow functions, exports-at-end, ≤200 lines/file, one-thing-per-file, logical folder structure, type-only imports, and applying the right design pattern. Use when writing or editing any TS/TSX in this repo, when planning a feature (the plan must state design patterns + final filetree), when doing CRUD on files/components, or when reviewing whether code is clean. Run the post-change checkup before declaring any change done.
+description: Enforce this project's strict coding standards on every change — arrow functions, exports-at-end, ≤200 lines/file, one-thing-per-file, logical folder structure, type-only imports, and applying the right design pattern. Use when writing or editing any TS/TSX in this repo, when planning a feature (the plan must state design patterns + final filetree), when doing CRUD on files/components, or when reviewing whether code is clean. Run the post-change checkup before declaring any change done
 ---
 
 # Coding standards — apply & verify, every change
@@ -15,6 +16,7 @@ alone**; the structural and design-pattern judgment is yours.
 
 Follow the full plan format: @docs/plan-format.md. Be **concise — show, don't
 narrate.** Every plan includes:
+
 1. **Goal** (1–2 sentences).
 2. **Design pattern(s)** chosen and *why* (or explicit "no pattern needed"). Reach
    for a pattern the moment its smell appears — see the catalog.
@@ -26,6 +28,7 @@ narrate.** Every plan includes:
    generate it with the **asciiflow** MCP server and paste the export inline.
 
 Example plan tail:
+
 ```
 Patterns: Strategy (per-screen pathfinding), Facade (lib/game API).
 Filetree:

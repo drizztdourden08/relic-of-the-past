@@ -85,6 +85,7 @@ If a change would break an invariant, the code is in the wrong zone — re-place
 ## The rule: analyze before building
 
 Before writing a feature, run the **architecture analysis** (the `architecture` skill):
+
 1. **Decompose** the feature into pieces (UI, state, domain logic, data/IO, bridge, C).
 2. **Place** each piece via the guide above.
 3. **Verify** the dependency invariants hold for every placement.

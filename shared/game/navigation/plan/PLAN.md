@@ -494,6 +494,7 @@ The updater scripts follow these rules:
 ## Execution Order
 
 ### Phase 1: Foundation (no user input needed)
+
 - [ ] Delete `shared/game/flood-fill.ts`, update imports
 - [ ] Extract `screen-names.ts` from `index.ts`
 - [ ] Update `shared/game/types.ts` with `nav?` fields on RegionDefinition + RegionConnection
@@ -504,6 +505,7 @@ The updater scripts follow these rules:
 - [ ] Write tests: `tile-classification.test.ts`, `border-bundles.test.ts`
 
 ### Phase 2: Per-Screen Analysis (partial user input)
+
 - [ ] Implement `global-flood.ts` (overworld only, no interiors yet)
 - [ ] Implement `requirement-detector.ts`
 - [ ] Write tests: `lift.test.ts`, `water.test.ts`, `boots.test.ts`, `ledges.test.ts`
@@ -512,6 +514,7 @@ The updater scripts follow these rules:
 - [ ] **USER TEST**: sword/boomerang as bush-cutting alternatives
 
 ### Phase 3: Interior Rooms (user input needed)
+
 - [ ] **USER TEST**: how interior room collision data is stored in ROM
 - [ ] Implement `entrance-resolver.ts`
 - [ ] Implement `interior-flood.ts`
@@ -519,18 +522,21 @@ The updater scripts follow these rules:
 - [ ] **USER TEST**: dungeon key doors, big key doors
 
 ### Phase 4: Updater Scripts
+
 - [ ] Implement `region-updater.ts`
 - [ ] Implement `connection-updater.ts`
 - [ ] Run full analysis → update all region and connection files
 - [ ] Review diffs (human review of auto-discovered connections)
 
 ### Phase 5: Runtime Pathfinder
+
 - [ ] Implement `pathfinder/graph-builder.ts` (reads enriched data)
 - [ ] Implement `pathfinder/pathfinder.ts` (BFS/Dijkstra on connection graph)
 - [ ] Replace `screen-hop.ts` + `route-planner.ts` with new pathfinder
 - [ ] **USER TEST**: validate paths match in-game experience
 
 ### Phase 6: Advanced Traversal
+
 - [ ] **USER TEST**: mirror warp mechanics
 - [ ] **USER TEST**: flute destinations
 - [ ] Progression variants (post-Agahnim, rain state)
@@ -543,6 +549,7 @@ The updater scripts follow these rules:
 ### Test Session Format
 
 For each requirement that needs verification, we'll:
+
 1. I provide a test file in `tests/navigation/traversal/`
 2. The test dumps tile attrs for a specific screen
 3. User verifies in-game: "yes this tile at row X col Y is a hammer peg"

@@ -51,6 +51,7 @@ with business logic; logic lives in its `behavior/` hooks.
 > container/presentational split is what keeps the library reusable and testable.
 
 ### Choosing the tier
+
 - Touches stores / IPC / game / navigation, or owns state? → **View**.
 - Tied to a specific domain concept but purely presentational? → **Compound**.
 - Generic structural combo of primitives, domain-agnostic? → **Composite**.
@@ -71,6 +72,7 @@ components/<tier>/<Name>/
 ## Rules
 
 **Tokens**
+
 1. `tokens.css` is the **single source of truth**. Use `var(--token)` — **no raw
    hex, no magic px**.
 2. New design value? Add a token first, then use it.

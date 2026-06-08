@@ -33,6 +33,7 @@
   border-color: #2a4a2e;
   color: var(--color-green-base);
 }
+
 .btn--primary:hover:not(:disabled) {
   background: #223a26;
   border-color: var(--color-green-base);
@@ -43,6 +44,7 @@
   background: var(--color-bg-raised);
   color: var(--color-text-secondary);
 }
+
 .btn--secondary:hover:not(:disabled) {
   background: var(--color-bg-elevated);
   border-color: var(--color-border-strong);
@@ -54,6 +56,7 @@
   border-color: transparent;
   color: var(--color-text-secondary);
 }
+
 .btn--ghost:hover:not(:disabled) {
   background: var(--color-bg-elevated);
   color: var(--color-text-primary);
@@ -65,6 +68,7 @@
   border-color: #4a2a2a;
   color: #e0a0a0;
 }
+
 .btn--danger:hover:not(:disabled) {
   background: #3a2020;
   border-color: var(--color-danger-base);

@@ -46,6 +46,7 @@ Each event can be individually toggled on or off in Profile Settings → Haptics
 ## Troubleshooting
 
 If vibration doesn't work:
+
 1. Verify your controller supports rumble
 2. Check that the controller is properly connected (not just keyboard-mapped)
 3. Use the **Input Calibration** tool (Menu → Advanced → Input Calibration) — it has a vibration tester that sends a test pulse

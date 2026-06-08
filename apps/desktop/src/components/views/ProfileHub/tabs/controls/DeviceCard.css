@@ -20,9 +20,9 @@
 }
 
 .device-card__api--stale {
-  background: rgba(220, 38, 38, 0.15);
+  background: rgb(220, 38, 38, 0.15);
   color: #f87171;
-  border: 1px solid rgba(220, 38, 38, 0.4);
+  border: 1px solid rgb(220, 38, 38, 0.4);
   animation: stale-badge-pulse 1.5s ease-in-out infinite;
 }
 
@@ -75,11 +75,11 @@
 }
 
 .device-card__icon-btn--active .device-card__icon {
-  filter: drop-shadow(0 0 6px rgba(74, 222, 128, 0.8)) drop-shadow(0 0 12px rgba(74, 222, 128, 0.4));
+  filter: drop-shadow(0 0 6px rgb(74, 222, 128, 0.8)) drop-shadow(0 0 12px rgb(74, 222, 128, 0.4));
 }
 
 .device-card__icon-btn--detected .device-card__icon {
-  filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.6)) drop-shadow(0 0 10px rgba(250, 204, 21, 0.3));
+  filter: drop-shadow(0 0 6px rgb(250, 204, 21, 0.6)) drop-shadow(0 0 10px rgb(250, 204, 21, 0.3));
   animation: pulse-icon 2s ease-in-out infinite;
 }
 
@@ -128,19 +128,19 @@
 }
 
 .device-card__api--xinput {
-  background: rgba(74, 222, 128, 0.15);
+  background: rgb(74, 222, 128, 0.15);
   color: #4ade80;
-  border: 1px solid rgba(74, 222, 128, 0.3);
+  border: 1px solid rgb(74, 222, 128, 0.3);
 }
 
 .device-card__api--hid {
-  background: rgba(99, 102, 241, 0.15);
+  background: rgb(99, 102, 241, 0.15);
   color: #818cf8;
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  border: 1px solid rgb(99, 102, 241, 0.3);
 }
 
 .device-card__api--webapi {
-  background: rgba(250, 204, 21, 0.15);
+  background: rgb(250, 204, 21, 0.15);
   color: #facc15;
-  border: 1px solid rgba(250, 204, 21, 0.3);
+  border: 1px solid rgb(250, 204, 21, 0.3);
 }

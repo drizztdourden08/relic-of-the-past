@@ -38,6 +38,7 @@ The pack is copied into the app's data directory.
 ### MSU Pack Format
 
 A valid MSU pack contains:
+
 - A `.msu` file (metadata)
 - Numbered `.pcm` files (one per track)
 

@@ -44,7 +44,6 @@
   position: relative;
   z-index: 1;
   padding: var(--space-xs) var(--space-md);
-  border: none;
   background: transparent;
   color: var(--color-text-secondary);
   font-size: var(--text-sm);

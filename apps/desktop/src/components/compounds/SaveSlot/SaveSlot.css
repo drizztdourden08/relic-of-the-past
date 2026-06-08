@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind style */
+
 /* ─── Save Slot ─── */
 
 .save-slot {
@@ -21,22 +22,22 @@
   height: 84px;
   border-radius: 3px;
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgb(0, 0, 0, 0.35);
+  border: 1px solid rgb(255, 255, 255, 0.08);
   cursor: default;
 }
 
 .save-slot__card:hover {
-  border-color: rgba(255, 255, 255, 0.18);
+  border-color: rgb(255, 255, 255, 0.18);
 }
 
 .save-slot__card--highlighted {
-  border-color: rgba(220, 50, 50, 0.85);
-  box-shadow: 0 0 8px rgba(220, 50, 50, 0.5), inset 0 0 6px rgba(220, 50, 50, 0.15);
+  border-color: rgb(220, 50, 50, 0.85);
+  box-shadow: 0 0 8px rgb(220, 50, 50, 0.5), inset 0 0 6px rgb(220, 50, 50, 0.15);
 }
 
 .save-slot__card--highlighted:hover {
-  border-color: rgba(220, 50, 50, 0.95);
+  border-color: rgb(220, 50, 50, 0.95);
 }
 
 /* Hold-to-save fill overlay — rises from bottom */
@@ -45,7 +46,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(200, 168, 78, 0.45);
+  background: rgb(200, 168, 78, 0.45);
   z-index: 1;
   pointer-events: none;
   transition: height 60ms linear;
@@ -72,8 +73,8 @@
   left: 4px;
   font-size: 10px;
   font-weight: var(--weight-semi);
-  color: rgba(255, 255, 255, 0.85);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  color: rgb(255, 255, 255, 0.85);
+  text-shadow: 0 1px 3px rgb(0, 0, 0, 0.8);
   z-index: 1;
   pointer-events: none;
 }
@@ -85,8 +86,8 @@
   right: 4px;
   font-size: 8px;
   font-family: var(--font-mono);
-  color: rgba(255, 255, 255, 0.55);
-  background: rgba(0, 0, 0, 0.45);
+  color: rgb(255, 255, 255, 0.55);
+  background: rgb(0, 0, 0, 0.45);
   padding: 0 4px;
   border-radius: 2px;
   line-height: 1.6;
@@ -117,10 +118,10 @@
   justify-content: center;
   width: 26px;
   height: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgb(255, 255, 255, 0.15);
   border-radius: 3px;
-  background: rgba(0, 0, 0, 0.55);
-  color: rgba(255, 255, 255, 0.75);
+  background: rgb(0, 0, 0, 0.55);
+  color: rgb(255, 255, 255, 0.75);
   cursor: pointer;
   transition: all var(--transition-fast);
   backdrop-filter: blur(4px);
@@ -128,17 +129,17 @@
 
 .save-slot__btn:hover:not(:disabled) {
   color: #fff;
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: rgb(255, 255, 255, 0.3);
 }
 
 .save-slot__btn--save:hover:not(:disabled) {
-  background: rgba(200, 168, 78, 0.5);
+  background: rgb(200, 168, 78, 0.5);
   border-color: var(--color-gold-base);
   color: var(--color-gold-bright);
 }
 
 .save-slot__btn--load:hover:not(:disabled) {
-  background: rgba(74, 153, 102, 0.5);
+  background: rgb(74, 153, 102, 0.5);
   border-color: var(--color-green-base);
   color: var(--color-green-bright);
 }
@@ -151,7 +152,7 @@
 /* Timestamp below card */
 .save-slot__time {
   font-size: 8px;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgb(255, 255, 255, 0.4);
   text-align: center;
   white-space: nowrap;
 }

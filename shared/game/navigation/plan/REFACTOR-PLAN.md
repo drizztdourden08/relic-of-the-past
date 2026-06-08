@@ -50,6 +50,7 @@ Rewrite `shared/game/navigation/flood-fill/orchestrator.ts`:
 - `getBigScreenGroup()` uses WASM area heads (passed in or called directly)
 
 New signature:
+
 ```ts
 floodFillScreen(rawAttrGrid: number[][], screenIndex: number, options: {
   tileContext: TileAttrContext;
@@ -102,7 +103,7 @@ The types `RegionNavData` and `ConnectionNavData` already exist in
 field on both `RegionDefinition` and `RegionConnection`). But the analysis script that
 **populates** these fields was never implemented.
 
-### What to build:
+### What to build
 
 | Component | Location | Purpose |
 |-----------|----------|---------|
@@ -114,7 +115,7 @@ field on both `RegionDefinition` and `RegionConnection`). But the analysis scrip
 | `analysis/region-updater.ts` | `shared/game/navigation/analysis/` | Writes computed `RegionNavData` back into region `.ts` files |
 | `analysis/connection-updater.ts` | `shared/game/navigation/analysis/` | Writes computed `ConnectionNavData` back into connection `.ts` files |
 
-### Output format:
+### Output format
 
 Each region gets `nav: { totalTiles, freeTileCount, maxReachableTileCount, connectionPointIds, obstacles, features, variants }`.
 
@@ -122,7 +123,7 @@ Each connection gets `nav: { transitType, requirements, bidirectional, fromPoint
 
 See `plan/navigation-data.examples.ts` for concrete before/after examples.
 
-### Constraint:
+### Constraint
 
 This phase runs WASM headlessly (no Electron). The analysis script is node + WASM only.
 It reads game data from the live WASM build, not from ROM. The offline analysis is the ONE
@@ -132,15 +133,18 @@ place where we exercise the full game simulation to extract navigation truth.
 
 ## Phase 6: Delete Dead Code
 
-### Delete entire folders:
+### Delete entire folders
+
 - `temp-scripts/` (10 dead debug files)
 - `shared/game/navigation/providers/` (5 files — rom-grid-provider, cached-grid-provider, grid-provider interface, headless-wasm-provider, index)
 
 ### KEEP: `shared/game/navigation/plan/`
+
 This folder is the plan archive. Keep PLAN.md (old plan), REFACTOR-PLAN.md (this plan), and the
 type/example files as reference for the data model enrichment work (Phase 5.5).
 
-### Delete from `scripts/`:
+### Delete from `scripts/`
+
 - `debug-flood.ts`
 - `extract-screen-connectivity.ts`
 - `extract-sprites.ts`
@@ -155,28 +159,33 @@ type/example files as reference for the data model enrichment work (Phase 5.5).
 - `trace-output.txt`
 (Keep only `analyze-navigation.ts`)
 
-### Delete from `shared/game/navigation/analysis/`:
+### Delete from `shared/game/navigation/analysis/`
+
 - `interior-flood.ts` (dead stub)
 - `region-updater.ts` (dead stub)
 - `connection-updater.ts` (dead stub)
 - `requirement-detector.ts` (never called)
 
-### Move to `shared/game/navigation/analysis/` (offline-only, ROM ok for scripts):
+### Move to `shared/game/navigation/analysis/` (offline-only, ROM ok for scripts)
+
 - `screen-data/decompression.ts`
 - `screen-data/rom-addresses.ts`
 
-### Remove from `shared/game/navigation/screen-data/collision-grid.ts`:
+### Remove from `shared/game/navigation/screen-data/collision-grid.ts`
+
 - Delete `buildCollisionGrid()` (ROM Map16 decompression path)
 - Keep only `buildCollisionGridFromRawAttr()`
 
-### Remove from `shared/game/navigation/index.ts` exports:
+### Remove from `shared/game/navigation/index.ts` exports
+
 - `initEngine`
 - `RomGridProvider`
 - `CachedGridProvider`
 - `MetadataProvider` type
 - `buildGridFromRawAttr` (providers-only helper)
 
-### Remove from `apps/desktop/src/lib/navigation/`:
+### Remove from `apps/desktop/src/lib/navigation/`
+
 - `wasm-grid-provider.ts` (provider pattern is dead — WASM bridge is called directly)
 
 ---
@@ -184,11 +193,13 @@ type/example files as reference for the data model enrichment work (Phase 5.5).
 ## Phase 7: Rewrite Tests
 
 11 of 14 navigation tests use `loadRom()`. Rewrite them to use:
+
 - Headless WASM (`WasmBuildOverworldAttrGrid`/`WasmBuildRoomAttrGrid`) for integration tests
 - Inline mock grids (number[][]) for unit tests
 - No `loadRom()` anywhere
 
 Delete diagnostic tests that are just one-off explorations:
+
 - `entrance-area-decoding.test.ts`
 - `entrance-table-decoder-diag.test.ts`
 - `entrance-tile-diag.test.ts`
@@ -196,6 +207,7 @@ Delete diagnostic tests that are just one-off explorations:
 - `desert-internal.test.ts`
 
 Keep and rewrite:
+
 - `tile-classification.test.ts` (no ROM, already clean)
 - `event-overlays.test.ts` (no ROM, already clean)
 - `navigation.test.ts` (uses data/, already clean)

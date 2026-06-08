@@ -52,7 +52,7 @@
 }
 
 .slider__input {
-  -webkit-appearance: none;
+  appearance: none;
   appearance: none;
   flex: 1;
   height: 6px;
@@ -69,14 +69,14 @@
 }
 
 .slider__input::-webkit-slider-thumb {
-  -webkit-appearance: none;
+  appearance: none;
   appearance: none;
   width: 16px;
   height: 16px;
   border-radius: 50%;
   background: var(--color-gold-bright);
   border: 2px solid var(--color-bg-base);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 1px 3px rgb(0, 0, 0, 0.4);
   cursor: pointer;
   transition: transform var(--transition-fast);
 }
@@ -119,9 +119,9 @@
 .slider__mute--muted {
   color: var(--color-danger);
   border-color: var(--color-danger);
-  background: rgba(220, 50, 50, 0.1);
+  background: rgb(220, 50, 50, 0.1);
 }
 
 .slider__mute--muted:hover {
-  background: rgba(220, 50, 50, 0.2);
+  background: rgb(220, 50, 50, 0.2);
 }

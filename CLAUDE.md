@@ -99,7 +99,7 @@ these are gitignored and never committed. Same for `test-roms/` and `saves/`.
   **data model in real TS code**, key code blocks, and a **flow/preview diagram
   generated with the asciiflow MCP server** (pasted inline). Show, don't narrate.
 - **Architecture: @docs/architecture.md.** The zone map + **dependency invariants**
-  + a placement guide. **Analyze every feature before building** — decompose, place
+  - a placement guide. **Analyze every feature before building** — decompose, place
   each piece in the right zone, verify boundaries, then plan. Use the `architecture` skill.
 - **Design system: @docs/design-system.md.** Tokens (`design-system/`) are the single
   source of truth (no raw hex / magic px). Four component tiers live in

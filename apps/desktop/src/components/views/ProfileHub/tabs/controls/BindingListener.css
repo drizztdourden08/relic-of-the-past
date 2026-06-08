@@ -2,7 +2,7 @@
 .binding-listener-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgb(0, 0, 0, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,7 +15,7 @@
   border-radius: var(--radius-lg, 8px);
   padding: 32px 48px;
   text-align: center;
-  box-shadow: 0 0 30px rgba(200, 168, 78, 0.15);
+  box-shadow: 0 0 30px rgb(200, 168, 78, 0.15);
   animation: binding-listener-pulse 1.5s ease-in-out infinite;
 }
 

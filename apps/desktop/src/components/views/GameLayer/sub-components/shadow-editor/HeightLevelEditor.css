@@ -31,8 +31,8 @@
   min-width: 0;
   font-size: 11px;
   color: var(--color-text-primary, #fff);
-  background: var(--color-input-bg, rgba(255, 255, 255, 0.06));
-  border: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.1));
+  background: var(--color-input-bg, rgb(255, 255, 255, 0.06));
+  border: 1px solid var(--color-border-subtle, rgb(255, 255, 255, 0.1));
   border-radius: 3px;
   padding: 2px 5px;
 }
@@ -41,8 +41,8 @@
   width: 48px;
   font-size: 11px;
   color: var(--color-text-primary, #fff);
-  background: var(--color-input-bg, rgba(255, 255, 255, 0.06));
-  border: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.1));
+  background: var(--color-input-bg, rgb(255, 255, 255, 0.06));
+  border: 1px solid var(--color-border-subtle, rgb(255, 255, 255, 0.1));
   border-radius: 3px;
   padding: 2px 5px;
   text-align: center;
@@ -57,19 +57,19 @@
   justify-content: center;
   border: none;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--color-text-secondary, rgba(255, 255, 255, 0.5));
+  background: rgb(255, 255, 255, 0.06);
+  color: var(--color-text-secondary, rgb(255, 255, 255, 0.5));
   font-size: 12px;
   cursor: pointer;
   flex-shrink: 0;
 }
 
 .height-level-editor__remove:hover {
-  background: rgba(255, 80, 80, 0.2);
+  background: rgb(255, 80, 80, 0.2);
   color: #ff5050;
 }
 
 .height-level-editor__add-btn:hover {
-  background: rgba(74, 158, 255, 0.2);
+  background: rgb(74, 158, 255, 0.2);
   color: var(--color-accent, #4a9eff);
 }

@@ -11,6 +11,7 @@ Legend: ☐ = to verify.
 ---
 
 ## ScreenEditorDialog (was 638) → `screen-editor/`
+
 Split into: `screen-editor-constants` (options + id/slug helpers), `screen-editor-prefill`
 (`applyPrefill`), `useScreenEditorForm` (field state + prefill/overworld effects + create
 handlers), `useScreenEditorDerived` (mismatches/id/options/codegen/`handleWrite`),
@@ -20,6 +21,7 @@ flag `address` stored as string vs `number` in `VariantCondition`) were preserve
 verbatim — not introduced, not fixed. Flag for a separate fix if you want.
 
 Open via Dataset & Mapping widget → "✏️ Edit Screen":
+
 - ☐ **Open on a dungeon room** → Type=Dungeon, Palace Index preselected, Dungeon name
   locked, World locked to meta, Area/Location auto-filled from meta.
 - ☐ **Open on an interior** (non-dungeon) → Type=Interior, World editable, Area/Location empty.
@@ -41,6 +43,7 @@ Open via Dataset & Mapping widget → "✏️ Edit Screen":
 ---
 
 ## useNavigation (was 579) → `nav-flood/`
+
 The 537-line `handleRun` flood-fill closure was extracted into pure/context helpers:
 `nav-flood/prepare` (inventory set, overworld blockers, Link start-context + uncle stamping),
 `nav-flood/indoor-entrances` (entrance/stair/walk-boundary collection + respawn IDs),
@@ -49,6 +52,7 @@ bundle), `nav-flood/finalize` (layer-toggle annotation, indoor screen bundle, fa
 landings), and `nav-flood/use-nav-connections` (internal/external classification + dedup).
 `handleRun` is now a thin orchestrator. **This is the highest-behavior-risk split** — drive
 the Navigation widget with `--auto-flood` and exercise:
+
 - ☐ **Overworld screen** (light & dark world): flood overlay fills the reachable area;
   reachable/total tile counts look right; the big-screen group (2×2) propagates.
 - ☐ **Overworld with guards/barriers** (e.g. tutorial guards, the uncle): those tiles
@@ -69,6 +73,7 @@ the Navigation widget with `--auto-flood` and exercise:
 ---
 
 ## single-screen.ts (was 536) → flood-fill BFS split
+
 Core pathfinding BFS (deterministic). Split into: `bfs-helpers` (2×2 body
 primitives: bodyTiles/getNewTiles/findStartBody/isBodyPassable/recordBorderTransition/
 canLeaveLedge/evaluateEntry + QuadrantBounds + SWAP_STAIR_ATTRS), `single-layer`
@@ -77,6 +82,7 @@ canLeaveLedge/evaluateEntry + QuadrantBounds + SWAP_STAIR_ATTRS), `single-layer`
 (floodFillBFSDualLayer orchestrator). `single-screen.ts` is now a re-export barrel.
 **Note:** two dead locals (`grid`/`rawAttr` at the dual-layer loop top, never read)
 were dropped — behavior-identical. Exercise via the flood overlay:
+
 - ☐ **Single-layer overworld/cave flood** matches pre-split (same reachable area,
   same border/entrance transitions, same req markers, hookshot targets).
 - ☐ **Ledges** block from the wrong side; falling in the ledge direction lands you
@@ -92,12 +98,14 @@ were dropped — behavior-identical. Exercise via the flood overlay:
 ---
 
 ## HomeTab.tsx (was 435) → `home-tab/`
+
 Save-management form. Split into: `home-tab-helpers` (formatRelativeTime,
 defaultSaveName, plus de-duplicated `ensureGameRunning` and `captureCanvasScreenshot`),
 `home-tab-data` (fetchQuickSlots/fetchNormalSaves/fetchAutoSaves — return null on
 error to preserve "don't update state on failure"), `useHomeTabSaves` (all state +
 handlers), `HomeTabColumns` + `HomeTabDialogs` (render). Shell keeps info cards + hero.
 Open a profile's Home tab:
+
 - ☐ **Info cards** (ROM / Last Played / Created / Window) show correct values.
 - ☐ **Hero card** = most recent normal save; Load works.
 - ☐ **Quick saves** 1–12: Save (disabled until game running) writes + refreshes the
@@ -114,6 +122,7 @@ Open a profile's Home tab:
 ---
 
 ## input-manager.ts (was 391) → lifecycle + events helpers
+
 Live renderer input engine (stateful class, no tests). Method bodies relocated
 **verbatim** into `input-manager-lifecycle.ts` (startInput/stopInput/refreshDevicesImpl)
 and `input-manager-events.ts` (key/gamepad handlers, rebuildMaps, gamepad VID/PID
@@ -122,6 +131,7 @@ keeps fields, constructor, public API, and thin delegators; arrow-field handlers
 stable identity for add/removeEventListener. **Note:** fields were made non-private
 (compile-time only — zero runtime change) so the helpers can operate on the instance.
 Exercise across input surfaces:
+
 - ☐ **Keyboard** game input works (movement/buttons) in-game; bindings from the active profile.
 - ☐ **Gamepad** connect/disconnect detected; buttons/axes drive the game; VID/PID resolves
   (controller shows correct name in Input Calibration).
@@ -140,6 +150,7 @@ Exercise across input surfaces:
 ---
 
 ## orchestrator.ts (was 366) → flood-fill orchestration split
+
 Pure flood-fill orchestrator (deterministic). Split into: `screen-prep`
 (prepareScreen / constrainVoidTiles / findStartPosition), `flood-options`
 (FloodFillOptions type), `orchestrator-helpers` (findEntrancePositions / buildBorders),
@@ -148,6 +159,7 @@ Pure flood-fill orchestrator (deterministic). Split into: `screen-prep`
 (useDualLayer ? dual : single) + re-exports floodFillScreen / getConnections /
 FloodFillOptions. Verbatim. Largely covered by the single-screen/useNavigation
 flood tests — additionally confirm:
+
 - ☐ **Overworld single-layer** flood + connections (edge bundles, item-gated tiles) unchanged.
 - ☐ **Indoor dual-layer room** flood: void-constraint still blocks structural void;
   ledge arrows only show when the layer-0 approach tile is reachable.
@@ -158,10 +170,12 @@ flood tests — additionally confirm:
 ---
 
 ## NavReviewPanel.tsx (was 335) → `nav-review/`
+
 Connection-review panel. Split into: `types`, `nav-review-styles` (dir labels/colors,
 status buttons, requirement options, styles), `nav-review-controls` (StatusRow /
 RequirementEditor / TransitTypePicker), `useNavReview` (load/persist + screen/point
 review state). Main component keeps the render. Open the Nav Review panel for a screen:
+
 - ☐ Summary (reviewed/total, tiles, bundle/entrance counts) correct.
 - ☐ **Screen-level** status (✓/✗/⚠) + comment persist (debounced save) and reload.
 - ☐ **Border bundles** grouped by N/S/E/W with free/gated counts; expand shows tiles +
@@ -173,12 +187,14 @@ review state). Main component keeps the render. Open the Nav Review panel for a 
 ---
 
 ## GameLayer.tsx (was 326) → render-loop hooks
+
 The two ~100-line WebGL render loops were extracted into `behavior/useEdgeGlowLoop`
 and `behavior/useShadowCastingLoop` (each a useEffect-hook taking the component's
 canvas/renderer refs + status/canvasKey). Component keeps canvas elements, fit/style
 effects, controller-pause/dbl-click effects, and render. Verbatim relocation
 (deps stay [status, canvasKey], eslint-disable added on the relocated effects).
 Run the game and verify:
+
 - ☐ Game canvas renders; resize/aspect changes refit canvas + overlays.
 - ☐ **Edge glow** (overworld, extended viewport / widescreen): mirror glow on black
   bars; freezes during text/dialogue; fades out on screen transition and back in.
@@ -191,11 +207,13 @@ Run the game and verify:
 ---
 
 ## ProfileHub.tsx (was 302) → `profile-hub/`
+
 Profile settings hub. Split into: `apply-settings-effects` (persist + parent
 notifications + HUD-store sync + live push + restart toast; `syncHudStore`),
 `useProfileSettings` (settings load/persist, pause tracking, toasts), `ProfileHubBody`
 (tab nav + content panels). Shell keeps the header (Play/Pause/Stop/Reset). Open
 a profile:
+
 - ☐ Header actions: Play starts; while running Pause/Resume toggles, Stop, Reset work;
   pause state reflects InputManager.
 - ☐ All 7 tabs (Home/Settings/Audio/Gameplay/HUD/Controls/Haptics) switch and render;
@@ -212,11 +230,13 @@ a profile:
 ---
 
 ## ShadowEditorPanel.tsx (was 285) → shadow-editor/ inspectors
+
 Dev shadow-casting editor panel. The three body sections were extracted into
 `shadow-editor/ShadowShapeInspector`, `ShadowLightInspector`, and
 `ShadowGlobalSettings` (prop names kept identical to the JSX, so render is verbatim).
 Panel keeps header/toolbar/tool-options/footer. **Dev-only tool** (open via TitleBar →
 Advanced → Shadow Editor in dev). Verify:
+
 - ☐ Tool select (Select/Shape/Draw/Light/Area); shape-creation options (sides/corner-radius/
   height) and light-creation options (intensity/radius) show for the right tools.
 - ☐ **Select a shape** → inspector edits X/Y/W/H/rotation, polygon sides/corner-radius,
@@ -230,10 +250,12 @@ Advanced → Shadow Editor in dev). Verify:
 ---
 
 ## ControlsSettings.tsx (was 280) → controls/ columns
+
 Render-only split (logic already in useControlsSettings). Extracted the three
 columns into `controls/ControlsSidebar`, `ControlsMain`, `ControlsDevices`
 (each takes the `ctrl` bundle; JSX verbatim). Shell keeps the rebind-listener +
 confirm-preset/delete modals. Open Profile → Controls:
+
 - ☐ **Profiles sidebar**: list + icon strip; select/rename/delete/create input profiles;
   collapse/expand toggle.
 - ☐ **Game Controls tab**: SNES button mappings list; rebind (listener modal captures
@@ -247,11 +269,13 @@ confirm-preset/delete modals. Open Profile → Controls:
 ---
 
 ## strategies/dual-layer.ts (was 271) → build-result extracted
+
 Core-nav `DualLayerStrategy` (deterministic). The 119-line `buildTileResult` body
 moved verbatim into `dual-layer-build-result.ts` (`buildDualLayerTileResult`, which
 also owns `SWAP_STAIR_ATTRS` to avoid a cycle); the class keeps `expand` + the
 ledge/stair cross-layer handlers + a thin delegate. Largely covered by the
 dual-layer flood tests (single-screen / useNavigation entries) — additionally:
+
 - ☐ Dual-layer dungeon room reachability identical (merged grid, per-layer grids,
   tileLayer upper/lower/both, reqGrid) to pre-split.
 - ☐ Stair-swap + ledge-fall cross-layer transitions still mark traversed tiles and
@@ -260,12 +284,14 @@ dual-layer flood tests (single-screen / useNavigation entries) — additionally:
 ---
 
 ## hid-reader.ts (was 244) → scan loop extracted
+
 Main-process node-hid reader (stateful class, no tests). The ~86-line `scanAndOpen`
 device discovery/open loop moved verbatim into `hid-reader-scan.ts`
 (`scanAndOpenReader(reader)`); the class keeps start/stop, write/vibrate, worker
 management, report forwarding. **Note:** a few members made non-private
 (compile-time only — zero runtime change) so the scan fn can operate on the instance.
 Plug in an HID controller (non-Xbox) and verify:
+
 - ☐ Controller is detected and opened (appears in Input Calibration / drives the game);
   unplugging removes it and fires hid:disconnect.
 - ☐ Nintendo Switch controllers: USB init handshake runs on open; SPC2 (pid 0x2069)

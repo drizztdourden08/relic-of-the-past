@@ -2,7 +2,7 @@
 .screen-editor-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgb(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,8 +135,8 @@
 }
 
 .screen-editor__warnings {
-  background: hsl(40 60% 10%);
-  border: 1px solid hsl(40 50% 30%);
+  background: hsl(40deg 60% 10%);
+  border: 1px solid hsl(40deg 50% 30%);
   border-radius: var(--radius-sm);
   padding: var(--space-xs) var(--space-sm);
   margin-bottom: var(--space-sm);
@@ -144,7 +144,7 @@
 
 .screen-editor__warnings p {
   font-size: 11px;
-  color: hsl(40 90% 70%);
+  color: hsl(40deg 90% 70%);
   margin: 2px 0;
 }
 

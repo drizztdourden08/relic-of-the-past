@@ -15,6 +15,7 @@ When you open Relic of the Past for the first time, you'll see an empty state â€
 4. Select your `.sfc` or `.smc` file
 
 The app supports:
+
 - US (NTSC) ROM
 - European (PAL) ROM
 - Japanese ROM
@@ -36,6 +37,7 @@ When a ROM is imported, the app automatically extracts all game assets (graphics
 4. Choose a language
 
 A profile is an isolated container that holds:
+
 - ROM reference
 - Language setting
 - Save data (auto-saves, quick saves, named saves)
@@ -75,6 +77,7 @@ Click **Play** or press your configured start button. The game launches immediat
 ### Widgets
 
 While playing, you can open overlay widgets from Menu â†’ Widgets:
+
 - Inventory Tracker
 - Checks Tracker
 - Cheats

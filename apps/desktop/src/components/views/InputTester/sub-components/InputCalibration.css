@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind style */
+
 /* Input Calibration — uses design tokens from tokens.css */
 
 .input-cal {
@@ -142,7 +143,7 @@
   left: -100%;
   width: 50%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.6), transparent);
+  background: linear-gradient(90deg, transparent, rgb(99, 102, 241, 0.6), transparent);
   animation: card-shimmer 2s linear infinite;
 }
 
@@ -178,7 +179,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(127, 29, 29, 0.85);
+  background: rgb(127, 29, 29, 0.85);
   z-index: 10;
   border-radius: inherit;
   pointer-events: none;
@@ -189,7 +190,7 @@
   font-weight: 900;
   letter-spacing: 3px;
   color: #fca5a5;
-  text-shadow: 0 0 8px rgba(220, 38, 38, 0.8);
+  text-shadow: 0 0 8px rgb(220, 38, 38, 0.8);
 }
 
 .input-cal__stale-sub {
@@ -632,6 +633,7 @@
   padding: 0;
   margin-left: 2px;
 }
+
 .hid-cal__input-clear:hover {
   background: #3a1a1a;
   color: #f87171;

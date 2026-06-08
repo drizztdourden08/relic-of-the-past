@@ -77,7 +77,7 @@
 
 .titlebar__update-badge {
   margin-left: var(--space-xs, 4px);
-  background: rgba(76, 175, 80, 0.15);
+  background: rgb(76, 175, 80, 0.15);
   border: 1px solid #4caf50;
   color: #4caf50;
   font-size: var(--text-xs, 11px);
@@ -91,7 +91,7 @@
 }
 
 .titlebar__update-badge:hover {
-  background: rgba(76, 175, 80, 0.3);
+  background: rgb(76, 175, 80, 0.3);
 }
 
 @keyframes update-pulse {

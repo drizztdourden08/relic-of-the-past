@@ -26,6 +26,7 @@ Hold the configured button (default: `Select`) for the configured duration. A sl
 ### Loading
 
 Access quick save slots from the save state overlay. Each slot shows:
+
 - A **screenshot** captured at the moment of saving
 - Timestamp
 - In-game location

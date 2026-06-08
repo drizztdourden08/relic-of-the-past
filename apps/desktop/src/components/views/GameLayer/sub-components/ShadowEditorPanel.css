@@ -6,8 +6,8 @@
   bottom: 8px;
   width: 260px;
   z-index: 100;
-  background: var(--color-surface-overlay, rgba(20, 20, 30, 0.95));
-  border: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.08));
+  background: var(--color-surface-overlay, rgb(20, 20, 30, 0.95));
+  border: 1px solid var(--color-border-subtle, rgb(255, 255, 255, 0.08));
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -21,7 +21,7 @@
   align-items: center;
   gap: 6px;
   padding: 8px 10px;
-  border-bottom: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.08));
+  border-bottom: 1px solid var(--color-border-subtle, rgb(255, 255, 255, 0.08));
   flex-shrink: 0;
 }
 
@@ -36,7 +36,7 @@
 }
 
 .shadow-editor-panel__dirty {
-  color: var(--color-accent, #ff8800);
+  color: var(--color-accent, #f80);
   font-size: 14px;
 }
 
@@ -49,14 +49,14 @@
 /* ─── Toolbar ─── */
 .shadow-editor-panel__toolbar {
   padding: 6px 10px;
-  border-bottom: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.06));
+  border-bottom: 1px solid var(--color-border-subtle, rgb(255, 255, 255, 0.06));
   flex-shrink: 0;
 }
 
 /* ─── Tool Options (between toolbar and body) ─── */
 .shadow-editor-panel__tool-opts {
   padding: 8px 10px;
-  border-bottom: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.06));
+  border-bottom: 1px solid var(--color-border-subtle, rgb(255, 255, 255, 0.06));
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -66,11 +66,10 @@
 /* ─── Scrollable Body ─── */
 .shadow-editor-panel__body {
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden auto;
   padding: 8px 10px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  scrollbar-color: rgb(255, 255, 255, 0.15) transparent;
 }
 
 .shadow-editor-panel__body::-webkit-scrollbar {
@@ -78,7 +77,7 @@
 }
 
 .shadow-editor-panel__body::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgb(255, 255, 255, 0.15);
   border-radius: 2px;
 }
 
@@ -103,7 +102,7 @@
 .shadow-editor-panel__sublabel {
   font-size: 11px;
   font-weight: 500;
-  color: var(--color-text-secondary, rgba(255, 255, 255, 0.6));
+  color: var(--color-text-secondary, rgb(255, 255, 255, 0.6));
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -111,15 +110,15 @@
 /* ─── Footer ─── */
 .shadow-editor-panel__footer {
   font-size: 10px;
-  color: var(--color-text-secondary, rgba(255, 255, 255, 0.4));
+  color: var(--color-text-secondary, rgb(255, 255, 255, 0.4));
   text-align: center;
   padding: 6px 10px;
-  border-top: 1px solid var(--color-border-subtle, rgba(255, 255, 255, 0.06));
+  border-top: 1px solid var(--color-border-subtle, rgb(255, 255, 255, 0.06));
   flex-shrink: 0;
 }
 
 /* ─── Active icon button state ─── */
 .icon-btn--active {
-  background: var(--color-accent-bg, rgba(74, 158, 255, 0.2)) !important;
+  background: var(--color-accent-bg, rgb(74, 158, 255, 0.2)) !important;
   color: var(--color-accent, #4a9eff) !important;
 }

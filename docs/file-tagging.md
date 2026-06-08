@@ -18,9 +18,11 @@ Each file carries two tags:
 ### Two tag channels (precedence: manifest → header → heuristic)
 
 1. **In-file header** — for any file that can hold a comment:
+
    ```ts
    /* @layer shared-input @kind data */
    ```
+
    (CSS/C use `/* */`, Markdown `<!-- -->`, shell/yaml `#`.)
 2. **Manifest** — `scripts/analyze/file-tags.jsonc` — for files that *can't* hold a
    comment (JSON, binaries, asm) and to bulk-tag trees we must not edit (vendored

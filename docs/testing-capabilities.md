@@ -8,6 +8,7 @@ test. Prefer these for LLM/manual verification.
 ## ⚠️ Protected files — modify only with explicit permission
 
 Files marked `THIS TEST MUST NEVER BE MODIFIED BY THE AI` are protected:
+
 - `apps/desktop/electron/test/ipc-handlers.ts`
 - `apps/desktop/src/App/behavior/useAutoTest.ts`
 - `tests/snapshot.spec.ts`
@@ -91,6 +92,7 @@ The software changes fast, so Playwright specs deprecate almost immediately. We 
 Playwright only for one-off **LLM-driven verification**, not a maintained suite.
 
 **Rules:**
+
 - **Do not accumulate spec files.** The only permanent specs are the protected ones
   above (`tests/snapshot.spec.ts`).
 - Write any new throwaway spec under **`tests/scratch/`** (gitignored), run it, then

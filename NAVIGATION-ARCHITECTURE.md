@@ -54,7 +54,9 @@ This plan eliminates the `.sfc` ROM dependency from the navigation engine by usi
 ```
 
 ### Problem 1: ROM as Data Source
+
 The TS navigation engine reads from SNES addresses:
+
 - `ADDR_MAP32_0..3` (0x838000) — Map32→Map16 lookup
 - `ADDR_MAP16_TO_MAP8` (0x8F8000) — Map16→Map8 lookup
 - `ADDR_MAP8_TO_ATTR` (0x8E9459) — Map8→collision attribute
@@ -63,6 +65,7 @@ The TS navigation engine reads from SNES addresses:
 - `ADDR_EXIT_*` — exit tables
 
 ### Problem 2: Two Divergent Paths
+
 - **Widget** (live): Gets `dung_bg2_attr_table` from WASM memory via `WasmGetIndoorAttrTable()`
 - **Offline** (IPC): Has NO way to get indoor attr grids — can only do overworld
 
@@ -99,6 +102,7 @@ The TS navigation engine reads from SNES addresses:
 | Compressed tilemaps | via pointer tables | ~160 screens | Per-screen Map32 layout |
 
 ### D. Compiled Binary (`zelda3_assets.dat`)
+
 Already contains ALL of the above baked into a single file — this is what the WASM module loads.
 Built by `compile_resources.py` (Python) or `compile-resources.ts` (TS port).
 
@@ -107,6 +111,7 @@ Built by `compile_resources.py` (Python) or `compile-resources.ts` (TS port).
 ## Key Insight: What Can Never Be Pure TypeScript
 
 **Indoor room attr grids** (`dung_bg2_attr_table[4096]`) are built by `Dungeon_LoadRoom()` in `dungeon.c`:
+
 - Processes room objects (Layer1, Layer2, Layer3) through 500+ lines of draw handlers
 - Applies floor layouts, door configurations, torch positions, movable blocks
 - Uses lookup tables (`kDungAttrsForTile`, offsets) for object-to-tile-attr conversion
@@ -116,9 +121,11 @@ This logic is **deeply embedded in the C code** (~2000 lines of `dungeon.c`). Re
 in TypeScript would be massive, fragile, and a maintenance nightmare.
 
 **Overworld attr grids** ARE pure functions:
+
 ```
 compressed_tilemap → Map32 IDs → Map16 tiles → Map8 tiles → collision attr
 ```
+
 Each step is a simple table lookup. This is already implemented in TS (`decompressScreen()` + `buildCollisionGrid()`).
 
 ---
@@ -204,6 +211,7 @@ Each step is a simple table lookup. This is already implemented in TS (`decompre
 #### 1a. `WasmBuildOverworldAttrGrid(screenIdx)` in `core/game-hooks/state_queries.c`
 
 The C code already has the full pipeline:
+
 - `Overworld_DecompressAndDrawScreen()` → builds `overworld_tileattr[]` (the Map16 buffer)
 - `GetMap16toMap8Table()` → `kMap16ToMap8` (Map16 → 4 Map8 tiles)
 - `GetMap8toTileAttr()` → `kMap8DataToTileAttr` (Map8 → collision byte)
@@ -251,7 +259,7 @@ int WasmBuildRoomAttrGrid(int room_id) {
 }
 ```
 
-#### 1c. Rebuild WASM, verify both exports work.
+#### 1c. Rebuild WASM, verify both exports work
 
 ---
 
@@ -315,6 +323,7 @@ export function floodFillScreen(
 ```
 
 The function:
+
 1. Calls `gridProvider.getGrid(...)` to get the 64×64 attr grid
 2. Runs BFS flood fill on it (existing logic, unchanged)
 3. Uses `metadata` for entrance/exit positions
@@ -585,6 +594,7 @@ tests/navigation/
 ```
 
 Data flows:
+
 ```
 WASM (game truth) → navigation engine (computes) → data/ (stores) → randomizer (reads)
                                                   ↑
@@ -681,54 +691,61 @@ the compiled `zelda3_assets.dat` through the WASM module.
 ## Implementation Order
 
 ### Stage 1: WASM Exports (unblocks everything)
+
 1. Add `WasmBuildOverworldAttrGrid()` + `WasmBuildRoomAttrGrid()` to C
 2. Rebuild WASM
 3. Add TS bridge functions, verify grids match current output byte-for-byte
 
 ### Stage 2: Move regions + connections → data/ (source of truth)
+
 4. Create `shared/game/data/` with `regions/` and `connections/` subfolders
-5. Move all existing region files under `data/regions/` (preserve internal structure)
-6. Move all existing connection files under `data/connections/` (preserve internal structure)
-7. Move `screen-bundles.ts` → `data/regions/bundles.ts`
-8. Update all imports across the codebase (widget, tests, scripts, navigation)
-9. Create `data/index.ts` barrel
+2. Move all existing region files under `data/regions/` (preserve internal structure)
+3. Move all existing connection files under `data/connections/` (preserve internal structure)
+4. Move `screen-bundles.ts` → `data/regions/bundles.ts`
+5. Update all imports across the codebase (widget, tests, scripts, navigation)
+6. Create `data/index.ts` barrel
 
 ### Stage 3: Provider Interfaces (decouples engine from data source)
+
 10. Create `navigation/providers/grid-provider.ts` — `GridProvider` interface
-11. Create `navigation/providers/metadata-provider.ts` — `MetadataProvider` interface
-12. Create `WasmGridProvider` in `apps/desktop/`
-13. Create `navigation/providers/yaml-metadata.ts` — parses YAML for entrances/exits
+2. Create `navigation/providers/metadata-provider.ts` — `MetadataProvider` interface
+3. Create `WasmGridProvider` in `apps/desktop/`
+4. Create `navigation/providers/yaml-metadata.ts` — parses YAML for entrances/exits
 
 ### Stage 4: Reorganize navigation/ internals
+
 14. Create `navigation/util/` — move `priority-queue.ts`, `grid-utils.ts → grid.ts`, `path-reconstruct.ts`
-15. Create `navigation/tiles/` — merge `tile-attrs.ts` + `tile-classification.ts` + `core/inventory.ts`
-16. Move `cliff-preprocessing.ts` → `navigation/tiles/cliff-edges.ts`
-17. Rename `flood-fill/` → `flood/` — keep `single-screen.ts`, `multi-screen.ts`
-18. Move `analysis/global-flood.ts` → `flood/global.ts`
-19. Create `flood/interior.ts` (real implementation using GridProvider)
-20. Create `navigation/pathfinding/` — move and rename: `point-navigation → tile-astar`, `screen-hop → screen-dijkstra`, `hub-navigation → region-bfs`, keep `route-planner`
-21. Slim `navigation/analysis/` — keep only `border-bundles`, `entrance-resolver`, `requirement-detector`
-22. Dissolve `orchestrator.ts` — provider wiring goes to callers, flood dispatch goes to `flood/`
+2. Create `navigation/tiles/` — merge `tile-attrs.ts` + `tile-classification.ts` + `core/inventory.ts`
+3. Move `cliff-preprocessing.ts` → `navigation/tiles/cliff-edges.ts`
+4. Rename `flood-fill/` → `flood/` — keep `single-screen.ts`, `multi-screen.ts`
+5. Move `analysis/global-flood.ts` → `flood/global.ts`
+6. Create `flood/interior.ts` (real implementation using GridProvider)
+7. Create `navigation/pathfinding/` — move and rename: `point-navigation → tile-astar`, `screen-hop → screen-dijkstra`, `hub-navigation → region-bfs`, keep `route-planner`
+8. Slim `navigation/analysis/` — keep only `border-bundles`, `entrance-resolver`, `requirement-detector`
+9. Dissolve `orchestrator.ts` — provider wiring goes to callers, flood dispatch goes to `flood/`
 
 ### Stage 5: Refactor floodFillScreen() to use providers
-23. Change signature: `(gridProvider, metadata, screenIndex, ...)` 
-24. Update IPC handler to create `WasmGridProvider`
-25. Update widget to use same path
+
+23. Change signature: `(gridProvider, metadata, screenIndex, ...)`
+2. Update IPC handler to create `WasmGridProvider`
+3. Update widget to use same path
 
 ### Stage 6: Delete dead code
+
 26. Delete `navigation/screen-data/` folder entirely
-27. Delete `navigation/plan/` folder
-28. Delete `navigation/core/` folder (contents moved)
-29. Delete `temp-scripts/` folder entirely
-30. Delete output artifacts from `scripts/` (`.json`, `.html`, `.svg`)
-31. Merge visualization scripts → `scripts/visualize-flood.ts`
-32. Delete superseded scripts (`debug-flood`, `extract-screen-connectivity`, `flood-fill-connectivity`)
-33. Move connection-updater + region-updater logic into `scripts/analyze-navigation.ts`
+2. Delete `navigation/plan/` folder
+3. Delete `navigation/core/` folder (contents moved)
+4. Delete `temp-scripts/` folder entirely
+5. Delete output artifacts from `scripts/` (`.json`, `.html`, `.svg`)
+6. Merge visualization scripts → `scripts/visualize-flood.ts`
+7. Delete superseded scripts (`debug-flood`, `extract-screen-connectivity`, `flood-fill-connectivity`)
+8. Move connection-updater + region-updater logic into `scripts/analyze-navigation.ts`
 
 ### Stage 7: Tests
+
 34. Create `CachedGridProvider` + fixture snapshots
-35. Migrate navigation tests to use providers
-36. Verify all pass
+2. Migrate navigation tests to use providers
+3. Verify all pass
 
 ---
 

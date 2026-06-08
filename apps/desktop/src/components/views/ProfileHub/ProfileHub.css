@@ -58,9 +58,9 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgb(255, 255, 255, 0.06);
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgb(255, 255, 255, 0.04);
   color: var(--color-text-secondary);
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -68,14 +68,14 @@
 
 .profile-hub__tab:hover {
   color: var(--color-text-primary);
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.1);
+  background: rgb(255, 255, 255, 0.07);
+  border-color: rgb(255, 255, 255, 0.1);
 }
 
 .profile-hub__tab--active {
   color: var(--color-gold-base);
   border-color: var(--color-gold-base);
-  background: rgba(200, 168, 78, 0.08);
+  background: rgb(200, 168, 78, 0.08);
 }
 
 .profile-hub__tab-icon {

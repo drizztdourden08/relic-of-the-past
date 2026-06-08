@@ -27,7 +27,7 @@
   color: var(--color-gold-base, #c8a84b);
   padding: var(--space-sm) var(--space-md);
   margin: 0;
-  background: rgba(200, 168, 75, 0.08);
+  background: rgb(200, 168, 75, 0.08);
   border-bottom: 1px solid var(--color-gold-base, #c8a84b);
 }
 
@@ -79,7 +79,7 @@
 }
 
 .update-dialog__notes-content code {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgb(255, 255, 255, 0.06);
   padding: 0.1em 0.3em;
   border-radius: 3px;
   font-size: 0.9em;
@@ -120,7 +120,7 @@
 }
 
 .update-dialog__notes-content th {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgb(255, 255, 255, 0.04);
   font-weight: var(--weight-semibold, 600);
 }
 

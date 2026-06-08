@@ -1,7 +1,8 @@
 <!-- @layer claude-config @kind doc -->
 ---
+
 name: add-wasm-function
-description: Scaffold a new function that crosses the C↔TypeScript WASM boundary in this ALttP port — either a TS→C call (Wasm* export) or a C→TS callback (GameHook_*/window.__on*). Use when adding a new bridge call, exposing a game value/state to the UI, sending a new game event to JS, or when a newly added Wasm function "isn't found"/throws at ccall (usually a missing export-list entry). Touches C, both build files, and the TS bridge together.
+description: Scaffold a new function that crosses the C↔TypeScript WASM boundary in this ALttP port — either a TS→C call (Wasm* export) or a C→TS callback (GameHook_*/window.__on*). Use when adding a new bridge call, exposing a game value/state to the UI, sending a new game event to JS, or when a newly added Wasm function "isn't found"/throws at ccall (usually a missing export-list entry). Touches C, both build files, and the TS bridge together
 ---
 
 # Add a WASM bridge function
@@ -50,6 +51,7 @@ void WasmSetMyThing(int value) { /* ... */ }
 
 Add `'_WasmGetMyFlag'` (leading underscore) to the `-sEXPORTED_FUNCTIONS=[...]`
 array in **both**:
+
 - `core/wasm-build/build.bat`  ← canonical (used by the app)
 - `core/wasm-build/Makefile`   ← keep in sync
 

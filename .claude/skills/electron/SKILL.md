@@ -1,7 +1,8 @@
 <!-- @layer claude-config @kind doc -->
 ---
+
 name: electron
-description: Work on this project's Electron layer — main process, preload, IPC between renderer and main, custom protocols, window management, native modules (HID/USB), and the electron-vite build. Use when adding/changing an IPC channel, a main-process handler, preload API surface, window behavior, file/userData access, or anything in apps/desktop/electron/. Also when a renderer feature needs Node/OS access it can't do itself.
+description: Work on this project's Electron layer — main process, preload, IPC between renderer and main, custom protocols, window management, native modules (HID/USB), and the electron-vite build. Use when adding/changing an IPC channel, a main-process handler, preload API surface, window behavior, file/userData access, or anything in apps/desktop/electron/. Also when a renderer feature needs Node/OS access it can't do itself
 ---
 
 # Electron layer
@@ -13,6 +14,7 @@ Follow @docs/coding-standards.md for all code here too.
 ## Process model & security (do not weaken)
 
 `apps/desktop/electron/window/create-window.ts` sets:
+
 - `contextIsolation: true`, `nodeIntegration: false`, `sandbox: false`.
 
 **Never** enable `nodeIntegration` or disable `contextIsolation` to "make something

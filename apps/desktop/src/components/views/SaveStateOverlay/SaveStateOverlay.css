@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind style */
+
 /* ─── Save State Overlay ─── */
 
 .save-overlay-backdrop {
@@ -15,7 +16,7 @@
   display: flex;
   gap: 4px;
   padding: 4px 5px;
-  background: rgba(10, 10, 15, 0.20);
+  background: rgb(10, 10, 15, 0.20);
   border-radius: 0 0 var(--radius-md) var(--radius-md);
 }
 
@@ -66,15 +67,15 @@
   align-items: center;
   gap: 6px;
   font-size: 10px;
-  color: rgba(255, 255, 255, 0.8);
-  background: rgba(0, 0, 0, 0.7);
+  color: rgb(255, 255, 255, 0.8);
+  background: rgb(0, 0, 0, 0.7);
   padding: 3px 8px 3px 4px;
   border-radius: 3px;
   backdrop-filter: blur(4px);
 }
 
 .save-overlay__hint--holding-save {
-  color: rgba(255, 210, 80, 0.95);
+  color: rgb(255, 210, 80, 0.95);
 }
 
 /* Icon wrapper — positions the SVG ring around the icon */
@@ -100,9 +101,9 @@
   font-size: 9px;
   font-family: var(--font-mono);
   font-weight: var(--weight-semi);
-  color: rgba(255, 255, 255, 0.9);
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgb(255, 255, 255, 0.9);
+  background: rgb(255, 255, 255, 0.1);
+  border: 1px solid rgb(255, 255, 255, 0.2);
   border-radius: 3px;
   padding: 1px 4px;
   line-height: 1.4;
@@ -117,11 +118,11 @@
 }
 
 .save-overlay__hint-ring-bg {
-  stroke: rgba(255, 255, 255, 0.15);
+  stroke: rgb(255, 255, 255, 0.15);
 }
 
 .save-overlay__hint-ring-progress {
-  stroke: rgba(200, 168, 78, 0.9);
+  stroke: rgb(200, 168, 78, 0.9);
   stroke-linecap: round;
   transform: rotate(-90deg);
   transform-origin: 50% 50%;

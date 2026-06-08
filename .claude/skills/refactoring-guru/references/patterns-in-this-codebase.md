@@ -5,6 +5,7 @@ Where each pattern already fits or should be applied in Relic of the Past. Patte
 definitions/examples live in `design-patterns.md`; this maps them to our code.
 
 ## Governing rules
+
 1. **Pattern follows smell.** Apply when its problem appears — never preemptively
    (that's Speculative Generality).
 2. **Every plan names its patterns + shows the filetree** — see @docs/plan-format.md.
@@ -12,6 +13,7 @@ definitions/examples live in `design-patterns.md`; this maps them to our code.
    fns, exports at end) — see @docs/coding-standards.md. Never a monolith.
 
 ## Creational
+
 | Pattern | Where in this project |
 |---------|-----------------------|
 | Factory Method | navigation strategy per screen type; tile-attr decoder selection |
@@ -20,6 +22,7 @@ definitions/examples live in `design-patterns.md`; this maps them to our code.
 | Singleton | `wasm-bridge.ts` module singleton (Emscripten module ref) — module scope, not a class |
 
 ## Structural
+
 | Pattern | Where |
 |---------|-------|
 | Adapter | typed wrappers over raw `ccall`/`HEAPU8`; `node-hid` events → input model |
@@ -30,6 +33,7 @@ definitions/examples live in `design-patterns.md`; this maps them to our code.
 | Decorator | cheats/feature flags layered over base game behavior |
 
 ## Behavioral
+
 | Pattern | Where |
 |---------|-------|
 | Strategy | pathfinding/flood-fill (`navigation/strategies/`); per-controller mapping |

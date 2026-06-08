@@ -209,7 +209,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--color-text-secondary);
-  padding: 0 0 8px 0;
+  padding: 0 0 8px;
   display: flex;
   align-items: center;
   gap: 8px;

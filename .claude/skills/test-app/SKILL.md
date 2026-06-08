@@ -1,7 +1,8 @@
 <!-- @layer claude-config @kind doc -->
 ---
+
 name: test-app
-description: Drive and verify the running game using the project's BUILT-IN automation (CLI flags + IPC) instead of writing Playwright tests — load a save state, screenshot the window, or dump the collision/navigation state to JSON. Use when asked to test, verify, screenshot, or reproduce app behavior, to check a navigation/overlay change, or whenever you'd otherwise write a Playwright spec. Prefer these built-ins; keep any Playwright use ephemeral.
+description: Drive and verify the running game using the project's BUILT-IN automation (CLI flags + IPC) instead of writing Playwright tests — load a save state, screenshot the window, or dump the collision/navigation state to JSON. Use when asked to test, verify, screenshot, or reproduce app behavior, to check a navigation/overlay change, or whenever you'd otherwise write a Playwright spec. Prefer these built-ins; keep any Playwright use ephemeral
 ---
 
 # Test the app with built-ins (not Playwright)
@@ -19,6 +20,7 @@ your own; if a change seems needed, **stop and ask the user** for permission fir
 
 Any time you start the app for testing, the window must open **inactive** so it
 never steals focus or interrupts the user. This is mandatory.
+
 - **Built app:** `npx electron dist/electron/main.js --no-focus --muted <flags>`
 - **Dev server (quick boot check):** `npm run dev -- -- --no-focus --muted`
   (double `--` required: npm → script, electron-vite → Electron — verified to forward).

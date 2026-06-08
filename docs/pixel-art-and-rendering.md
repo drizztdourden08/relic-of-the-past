@@ -42,6 +42,7 @@ pixels crisp.** If the window is a non-integer multiple, the upscaler blurs —
 and a blurred edge can look like a real sub-pixel feature that isn't there.
 
 **Implication when reading a screenshot:**
+
 - Decide first whether pixels look **crisp (integer-scaled)** or **blurry
   (fractional / bilinear)**. If blurry, do **not** infer fine detail from edges —
   reason in whole tiles, and ask for an integer-scaled or 1× capture if detail matters.

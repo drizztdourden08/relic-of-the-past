@@ -49,18 +49,18 @@
   align-items: center;
   padding: 6px 16px;
   border-radius: 4px;
-  background: rgba(0, 0, 0, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgb(0, 0, 0, 0.75);
+  border: 1px solid rgb(255, 255, 255, 0.15);
   white-space: nowrap;
   will-change: transform, opacity;
 }
 
 .location-notification-banner--screen {
-  border-color: rgba(255, 215, 0, 0.3);
+  border-color: rgb(255, 215, 0, 0.3);
 }
 
 .location-notification-banner--transition {
-  border-color: rgba(150, 200, 255, 0.3);
+  border-color: rgb(150, 200, 255, 0.3);
 }
 
 .location-notification-banner--enter {
@@ -80,14 +80,14 @@
   font-size: 13px;
   font-weight: 600;
   color: #fff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 1px 2px rgb(0, 0, 0, 0.8);
   letter-spacing: 0.5px;
 }
 
 .location-notification-subtitle {
   font-size: 10px;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgb(255, 255, 255, 0.7);
   margin-top: 1px;
 }
 
@@ -96,6 +96,7 @@
     opacity: 0;
     transform: translateY(12px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -107,6 +108,7 @@
     opacity: 1;
     transform: translateY(0);
   }
+
   to {
     opacity: 0;
     transform: translateY(-8px);
@@ -133,22 +135,22 @@
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  background: rgba(0, 0, 0, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgb(0, 0, 0, 0.85);
+  border: 1px solid rgb(255, 255, 255, 0.12);
   border-bottom: none;
   border-radius: 5px 5px 0 0;
 }
 
 .dq-header-icon {
   font-size: 8px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgb(255, 255, 255, 0.5);
   animation: dq-pulse 1.5s ease-in-out infinite;
 }
 
 .dq-header-title {
   font-size: 10px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgb(255, 255, 255, 0.7);
   text-transform: uppercase;
   letter-spacing: 0.8px;
   flex: 1;
@@ -158,7 +160,7 @@
   font-size: 10px;
   font-weight: 700;
   color: #fff;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgb(255, 255, 255, 0.12);
   padding: 1px 6px;
   border-radius: 8px;
   min-width: 18px;
@@ -169,8 +171,8 @@
   display: flex;
   flex-direction: column;
   gap: 1px;
-  background: rgba(0, 0, 0, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgb(0, 0, 0, 0.75);
+  border: 1px solid rgb(255, 255, 255, 0.1);
   border-top: none;
   border-radius: 0 0 5px 5px;
   padding: 3px;
@@ -183,12 +185,12 @@
   gap: 6px;
   padding: 4px 8px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgb(255, 255, 255, 0.03);
   transition: background 200ms ease;
 }
 
 .dq-entry--active {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgb(255, 255, 255, 0.08);
   animation: dq-deliver 600ms ease-out;
 }
 
@@ -219,7 +221,7 @@
   font-size: 11px;
   font-weight: 500;
   color: #fff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 2px rgb(0, 0, 0, 0.6);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -241,7 +243,7 @@
 
 .dq-overflow {
   font-size: 9px;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgb(255, 255, 255, 0.45);
   text-align: center;
   padding: 3px 0;
   font-style: italic;
@@ -254,11 +256,12 @@
 
 @keyframes dq-deliver {
   from {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgb(255, 255, 255, 0.2);
     transform: translateX(4px);
   }
+
   to {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgb(255, 255, 255, 0.08);
     transform: translateX(0);
   }
 }

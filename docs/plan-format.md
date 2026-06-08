@@ -100,6 +100,7 @@ Use plain text (not the tool) for: the **CRUD filetree** (it's a text tree, abov
 
 Example (a Save-Manager flow + wireframe) is produced by `canvas_batch` and pasted as
 a fenced block, e.g.:
+
 ```
 ┌──SaveManager───┐    ┌──useSaveSlots──┐    ┌───saveStore────┐
 │                │────►                │────►                │

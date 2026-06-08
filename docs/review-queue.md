@@ -5,6 +5,7 @@ Logged during the P4 grind. None of these change the ruleset; they're parked her
 until you decide. Tackle at the end.
 
 ## ✅ P5 UPDATE — all splittable files are now done
+
 Every behavior-risky file that was parked for a "careful pass" has been split
 (verbatim extraction, one offender per commit, all local, `tsc=21` + `analyze:ci`
 green per file): the 7 stateful forms (ScreenEditorDialog, HomeTab, NavReviewPanel,
@@ -14,6 +15,7 @@ core-nav trio (single-screen, orchestrator, dual-layer), and the two stateful cl
 entry in `docs/p5-test-checklist.md` — please walk that before pushing.
 
 **Only 5 files remain over the line cap**, and all need a decision you must make:
+
 - **3 CSS files** — `TrackerView.css` (662), `InputCalibration.css` (575),
   `DataManager.css` (372). Need stylelint rule choices before any reflow.
 - **2 C files** — `state_queries.c` (686), `emscripten_main.c` (465). Splitting them
@@ -24,6 +26,7 @@ The rule-decision items below (exhaustive-deps / markdownlint / stylelint) are s
 untouched and still need your call.
 
 ## Potential rule / process decisions
+
 - **`react-hooks/exhaustive-deps` (70 warnings).** Auto-"fixing" these is unsafe —
   adding deps can cause render loops or change effect timing (behavior risk, no
   runtime tests to catch it). Options to decide: (a) fix case-by-case with manual
@@ -36,6 +39,7 @@ untouched and still need your call.
   ones, list anything that changes rendering here before applying.
 
 ## Needs special handling (not a rule change, but a heads-up)
+
 - **Our C splits need a WASM rebuild.** `core/game-hooks/state_queries.c` (686) and
   `core/wasm-build/emscripten_main.c` (465) exceed the 200 cap. Splitting them means
   updating `build.bat` + `Makefile` source lists and **rebuilding WASM** (Emscripten,
@@ -43,6 +47,7 @@ untouched and still need your call.
   build files, then flag here for you to run/confirm the rebuild.
 
 ## Autonomous-ordering note (not a rule change)
+
 The big stateful React forms — `ScreenEditorDialog` (638), `HomeTab` (435),
 `NavReviewPanel` (335), `GameLayer` (326), `ProfileHub` (302), `ShadowEditorPanel`
 (285), `ControlsSettings` (280), … — have **no runtime tests**, so an unattended
@@ -52,6 +57,7 @@ simple files first** (fully tsc-verifiable) and saving these forms for last, whe
 each gets a careful dedicated pass. Not skipped — just ordered for safety.
 
 ## High-risk core-navigation logic (careful pass, not unattended)
+
 `single-screen.ts` (536) — the dual-layer flood-fill BFS (335-line function) needs
 extracting **deque/bodyReached-mutating inner blocks** (ledge & stair cross-layer
 transitions) to get under cap. It's core, actively-developed pathfinding with **no
@@ -70,6 +76,7 @@ the core BFS it drives. Do this in the same focused nav pass with a flood-fill
 smoke-check (`--auto-state` + `--dump-nav`), not unattended.
 
 ## Invasive class/stateful refactors (careful pass)
+
 `input-manager.ts` (391) is a stateful **class** (the live renderer input engine,
 no runtime tests). Splitting it cleanly means moving listener-wiring / device-refresh
 out as free functions that touch many `private` fields — an encapsulation change,
@@ -97,6 +104,7 @@ WebHidCard (231), AudioSettings (228), GameplaySettings (208), HudSettings (202)
 ConnectionsPanel (206).
 
 ### Remaining over-cap files = the parked items above (18)
+
 - **Stateful React forms (7):** ScreenEditorDialog (638), HomeTab (435),
   NavReviewPanel (335), GameLayer (326), ProfileHub (302), ShadowEditorPanel (285),
   ControlsSettings (280) — no runtime tests; need careful behavior-verified passes.

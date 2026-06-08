@@ -132,6 +132,7 @@ apps/desktop/src/
 ```
 
 Additional rules:
+
 - Path aliases: `@shared/*` → `shared/` folder.
 - Barrel files (`index.ts`) only re-export — no logic.
 - File name matches what it exports (e.g., `useGameLifecycle.ts`, `SlotCard.tsx`, `serializeToIni.ts`).
