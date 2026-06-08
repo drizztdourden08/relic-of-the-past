@@ -2,6 +2,7 @@
 import { useState, useCallback } from 'react';
 import { DropZone } from '../../../../../design-system/primitives/DropZone';
 import { TextInput } from '../../../../../design-system/primitives/TextInput';
+import { Box } from '../../../../../design-system/primitives/Box';
 
 interface ImportFormProps {
   placeholder?: string;
@@ -70,8 +71,8 @@ const ImportForm = (props: ImportFormProps) => {
   const statusClass = status.variant ? `import-form__status import-form__status--${status.variant}` : 'import-form__status';
 
   return (
-    <div className="import-form">
-      <div className="import-form__url-row">
+    <Box className="import-form">
+      <Box className="import-form__url-row">
         <TextInput
           className="import-form__url-input"
           type="text"
@@ -81,15 +82,16 @@ const ImportForm = (props: ImportFormProps) => {
           onKeyDown={handleKeyDown}
           disabled={isDisabled}
         />
-        <button
+        <Box
+          as="button"
           className="import-form__download-btn"
           onClick={handleDownload}
           disabled={isDisabled || !url.trim()}
         >
           {busy ? '…' : 'Download'}
-        </button>
-      </div>
-      <div className="import-form__divider">or</div>
+        </Box>
+      </Box>
+      <Box className="import-form__divider">or</Box>
       <DropZone
         accept={accept}
         label={dropLabel}
@@ -97,8 +99,8 @@ const ImportForm = (props: ImportFormProps) => {
         disabled={isDisabled}
         onDrop={handleDrop}
       />
-      {status.message && <div className={statusClass}>{status.message}</div>}
-    </div>
+      {status.message && <Box className={statusClass}>{status.message}</Box>}
+    </Box>
   );
 };
 

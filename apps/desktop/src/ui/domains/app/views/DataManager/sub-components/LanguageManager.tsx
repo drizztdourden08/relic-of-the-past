@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback } from 'react';
 import { ImportForm } from './ImportForm';
+import { Box } from '../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../design-system/primitives/Text';
 import { IconButton } from '../../../../../design-system/primitives/IconButton';
 import { Select } from '../../../../../design-system/primitives/Select';
 import { Field } from '../../../../../design-system/primitives/Field';
@@ -93,7 +95,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
   const list = (
     <>
       {/* Language selector + ROM import form */}
-      <div className="import-form" style={{ marginBottom: 0, paddingBottom: 'var(--space-xs)' }}>
+      <Box className="import-form" style={{ marginBottom: 0, paddingBottom: 'var(--space-xs)' }}>
         <Field label="Language">
           <Select
             value={extractLang}
@@ -108,7 +110,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
             placeholder="Select language…"
           />
         </Field>
-      </div>
+      </Box>
       <ImportForm
         placeholder="Paste ROM download URL…"
         accept={['.sfc', '.smc', '.zip', '.7z', '.rar']}
@@ -119,7 +121,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
         onFileImport={handleFileImport}
       />
 
-      <div className="data-list">
+      <Box className="data-list">
         {languages.length === 0 && <EmptyState message="No languages extracted yet" />}
         {languages.map((lang) => (
           <ListItemRow
@@ -136,21 +138,21 @@ const LanguageManager = (props: LanguageManagerProps) => {
             }
           />
         ))}
-      </div>
+      </Box>
     </>
   );
 
   const detail = !selected ? (
-    <span>Select a language to view dialogue entries</span>
+    <Text>Select a language to view dialogue entries</Text>
   ) : loadingDialogue ? (
-    <span>Loading…</span>
+    <Text>Loading…</Text>
   ) : dialogue ? (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <h3 className="detail-panel__title">{LANGUAGE_NAMES[selected] ?? selected}</h3>
-      <div className="dialogue-viewer">{dialogue}</div>
-    </div>
+    <Box style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <Text as="h3" className="detail-panel__title">{LANGUAGE_NAMES[selected] ?? selected}</Text>
+      <Box className="dialogue-viewer">{dialogue}</Box>
+    </Box>
   ) : (
-    <span>No dialogue data available</span>
+    <Text>No dialogue data available</Text>
   );
 
   return <MasterDetailLayout list={list} detail={detail} detailEmpty={!selected} />;

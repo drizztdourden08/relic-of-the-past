@@ -6,6 +6,8 @@ import { LanguageManager } from './sub-components/LanguageManager';
 import { MsuManager } from './sub-components/MsuManager';
 import { SpriteManager } from './sub-components/SpriteManager';
 import { Spinner } from '../../../../design-system/primitives/Spinner';
+import { Box } from '../../../../design-system/primitives/Box';
+import { Text } from '../../../../design-system/primitives/Text';
 import { ListItemRow } from '../../../../design-system/composites/ListItemRow';
 import './DataManager.css';
 import './DataManager.detail.css';
@@ -66,33 +68,34 @@ const DataManager = (props: DataManagerProps) => {
   ];
 
   return (
-    <div className="data-manager">
-      <div className="data-manager__header">
-        <h2 className="data-manager__title">Data Manager</h2>
-      </div>
+    <Box className="data-manager">
+      <Box className="data-manager__header">
+        <Text as="h2" className="data-manager__title">Data Manager</Text>
+      </Box>
 
       {loadingProfile && (
-        <div className="data-manager__loading">
+        <Box className="data-manager__loading">
           <ListItemRow selected icon={<Spinner size="sm" />} name={`Loading profile: ${loadingProfile}…`} />
-        </div>
+        </Box>
       )}
 
-      <div className="data-manager__body">
-        <div className="data-manager__tabs">
+      <Box className="data-manager__body">
+        <Box className="data-manager__tabs">
           {tabs.map((tab) => (
-            <button
+            <Box
+              as="button"
               key={tab.id}
               className={`data-manager__tab ${activeTab === tab.id ? 'data-manager__tab--active' : ''}`}
               onClick={() => setActiveTab(tab.id)}
             >
-              <span className="data-manager__tab-icon">{tab.icon}</span>
-              <span className="data-manager__tab-label">{tab.label}</span>
-              <span className="data-manager__tab-count">{tab.count}</span>
-            </button>
+              <Text className="data-manager__tab-icon">{tab.icon}</Text>
+              <Text className="data-manager__tab-label">{tab.label}</Text>
+              <Text className="data-manager__tab-count">{tab.count}</Text>
+            </Box>
           ))}
-        </div>
+        </Box>
 
-        <div className="data-manager__content">
+        <Box className="data-manager__content">
           {activeTab === 'profiles' && (
             <ProfileManager
               profiles={profiles}
@@ -131,9 +134,9 @@ const DataManager = (props: DataManagerProps) => {
               romStatuses={romStatuses}
             />
           )}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

@@ -3,6 +3,8 @@
  * Profile Manager — list, create, and inspect game profiles.
  */
 
+import { Box } from '../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../design-system/primitives/Text';
 import { Button } from '../../../../../design-system/primitives/Button';
 import { IconButton } from '../../../../../design-system/primitives/IconButton';
 import { Select } from '../../../../../design-system/primitives/Select';
@@ -48,7 +50,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
   const list = (
     <>
       {creating ? (
-        <div className="profile-form" onKeyDown={handleKeyDown}>
+        <Box className="profile-form" onKeyDown={handleKeyDown}>
           <Field label="Profile Name">
             <TextInput type="text" placeholder="My Profile" value={formName} onChange={(e) => setFormName(e.target.value)} autoFocus />
           </Field>
@@ -86,7 +88,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
             <Button variant="ghost" size="sm" onClick={() => setCreating(false)}>Cancel</Button>
             <Button variant="primary" size="sm" onClick={handleCreate} disabled={!formName.trim() || !formRom}>Create</Button>
           </ButtonRow>
-        </div>
+        </Box>
       ) : (
         readyRoms.length > 0 && (
           <Button variant="primary" fullWidth icon="+" onClick={() => setCreating(true)}>
@@ -95,7 +97,7 @@ const ProfileManager = (props: ProfileManagerProps) => {
         )
       )}
 
-      <div className="data-list">
+      <Box className="data-list">
         {profiles.length === 0 && <EmptyState message="No profiles yet — import a ROM to get started" />}
         {profiles.map((profile) => (
           <ListItemRow
@@ -113,12 +115,12 @@ const ProfileManager = (props: ProfileManagerProps) => {
             }
           />
         ))}
-      </div>
+      </Box>
     </>
   );
 
   const detail = !selectedProfile ? (
-    <span>Select a profile to view details · Double-click to open</span>
+    <Text>Select a profile to view details · Double-click to open</Text>
   ) : (
     <ProfileDetailPanel
       profile={selectedProfile}

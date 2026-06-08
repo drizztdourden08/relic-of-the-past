@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
+import { Box } from '../../../../../../design-system/primitives/Box';
 import { IconButton } from '../../../../../../design-system/primitives/IconButton';
 import { EmptyState } from '../../../../../../design-system/primitives/EmptyState';
 import { ListItemRow } from '../../../../../../design-system/composites/ListItemRow';
@@ -23,14 +24,14 @@ const MsuPackList = (props: MsuPackListProps) => {
 
   if (packs.length === 0) {
     return (
-      <div className="data-list">
+      <Box className="data-list">
         <EmptyState message="No MSU packs imported yet" />
-      </div>
+      </Box>
     );
   }
 
   return (
-    <div className="data-list">
+    <Box className="data-list">
       {packs.map((pack) => (
         <ListItemRow
           key={pack.name}
@@ -46,7 +47,7 @@ const MsuPackList = (props: MsuPackListProps) => {
           }
         />
       ))}
-    </div>
+    </Box>
   );
 };
 

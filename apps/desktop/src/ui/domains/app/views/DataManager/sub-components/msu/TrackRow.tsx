@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
 import { Select } from '../../../../../../design-system/primitives/Select';
+import { Box } from '../../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../../design-system/primitives/Text';
 import { formatBytes } from '../../../../../../../utils/formatBytes';
 import type { TrackRowProps } from './msu.type';
 
@@ -9,11 +11,11 @@ const TrackRow = (props: TrackRowProps) => {
   const [editing, setEditing] = useState(false);
 
   return (
-    <div className="track-list__item">
-      <span className="track-list__num">#{trackNum}</span>
-      <span className="track-list__name">{description}</span>
+    <Box className="track-list__item">
+      <Text className="track-list__num">#{trackNum}</Text>
+      <Text className="track-list__name">{description}</Text>
       {editing ? (
-        <div style={{ minWidth: 200, maxWidth: 280 }}>
+        <Box style={{ minWidth: 200, maxWidth: 280 }}>
           <Select
             value={fileName ?? ''}
             onChange={(val) => { onAssign(trackNum, val); setEditing(false); }}
@@ -22,10 +24,10 @@ const TrackRow = (props: TrackRowProps) => {
             searchable
             size="sm"
           />
-        </div>
+        </Box>
       ) : (
         <>
-          <span
+          <Text
             className="track-list__file"
             style={{
               color: fileName ? 'var(--color-text-secondary)' : 'var(--color-text-faint)',
@@ -41,13 +43,13 @@ const TrackRow = (props: TrackRowProps) => {
             onClick={() => setEditing(true)}
           >
             {fileName ? fileName : '—'}
-          </span>
+          </Text>
           {fileSize != null && (
-            <span className="track-list__size">{formatBytes(fileSize)}</span>
+            <Text className="track-list__size">{formatBytes(fileSize)}</Text>
           )}
         </>
       )}
-    </div>
+    </Box>
   );
 };
 

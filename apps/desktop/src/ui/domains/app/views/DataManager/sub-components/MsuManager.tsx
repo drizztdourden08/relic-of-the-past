@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { ImportForm } from './ImportForm';
+import { Box } from '../../../../../design-system/primitives/Box';
+import { Text } from '../../../../../design-system/primitives/Text';
 import { TextInput } from '../../../../../design-system/primitives/TextInput';
 import { Field } from '../../../../../design-system/primitives/Field';
 import { MasterDetailLayout } from '../../../../../design-system/composites/MasterDetailLayout';
@@ -42,11 +44,11 @@ const MsuManager = (props: MsuManagerProps) => {
 
   const list = (
     <>
-      <div className="import-form">
+      <Box className="import-form">
         <Field label="Pack Name">
           <TextInput type="text" placeholder="My MSU Pack" value={newPackName} onChange={(e) => setNewPackName(e.target.value)} />
         </Field>
-      </div>
+      </Box>
       <ImportForm
         placeholder="Paste MSU pack download URL…"
         accept={['.zip', '.7z', '.rar']}
@@ -65,9 +67,9 @@ const MsuManager = (props: MsuManagerProps) => {
   );
 
   const detail = !selected ? (
-    <span>Select an MSU pack to view tracks</span>
+    <Text>Select an MSU pack to view tracks</Text>
   ) : loadingFiles ? (
-    <span>Loading…</span>
+    <Text>Loading…</Text>
   ) : (
     <MsuTrackPanel
       selected={selected}
