@@ -3,6 +3,7 @@
  * PausePendantIcon — renders a single pendant (empty or colored).
  * Pendants are 16×16 (2×2 tiles).
  */
+import { HudImage } from '../../primitives/HudImage';
 
 interface PausePendantIconProps {
   variant: 'empty' | 'green' | 'blue' | 'red';
@@ -15,11 +16,10 @@ const PausePendantIcon = ({ variant, scale, spritesBase }: PausePendantIconProps
   const src = `${spritesBase}pause-pendant-${variant}.png`;
 
   return (
-    <img
+    <HudImage
       src={src}
       width={size}
       height={size}
-      draggable={false}
       style={{ display: 'block', imageRendering: 'pixelated' }}
     />
   );

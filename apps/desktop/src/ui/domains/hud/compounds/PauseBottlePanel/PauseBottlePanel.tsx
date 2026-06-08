@@ -4,6 +4,8 @@
  * Replaces the progress + equipment panels on the right side.
  * Yellow-bordered panel displaying all 4 bottle slots vertically.
  */
+import { HudBox } from '../../primitives/HudBox';
+import { HudImage } from '../../primitives/HudImage';
 import { PauseBorderBox } from '../../primitives/PauseBorderBox';
 import { getCircleDataUrl } from '../../composites/PauseItemSlot';
 
@@ -39,7 +41,7 @@ const PauseBottlePanel = ({ bottles, selectedIndex, scale, spritesBase, style }:
       {bottles.map((content, i) => {
         const sprite = BOTTLE_SPRITES[content];
         return (
-          <div
+          <HudBox
             key={i}
             style={{
               position: 'absolute',
@@ -49,11 +51,10 @@ const PauseBottlePanel = ({ bottles, selectedIndex, scale, spritesBase, style }:
           >
             {/* Blinking selection circle for active bottle */}
             {i === selectedIndex && (
-              <img
+              <HudImage
                 src={getCircleDataUrl()}
                 width={circleSize}
                 height={circleSize}
-                draggable={false}
                 style={{
                   position: 'absolute',
                   top: -tile,
@@ -65,15 +66,14 @@ const PauseBottlePanel = ({ bottles, selectedIndex, scale, spritesBase, style }:
               />
             )}
             {sprite && (
-              <img
+              <HudImage
                 src={`${spritesBase}${sprite}.png`}
                 width={itemSize}
                 height={itemSize}
-                draggable={false}
                 style={{ display: 'block', imageRendering: 'pixelated' }}
               />
             )}
-          </div>
+          </HudBox>
         );
       })}
     </PauseBorderBox>

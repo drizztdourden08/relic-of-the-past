@@ -3,6 +3,7 @@
  * PauseButtonLabel — Y/X button indicator with label text.
  * Shows the button letter sprite in its associated color.
  */
+import { HudImage } from '../../primitives/HudImage';
 
 interface PauseButtonLabelProps {
   button: 'y' | 'x' | 'a';
@@ -16,11 +17,10 @@ const PauseButtonLabel = ({ button, scale, spritesBase }: PauseButtonLabelProps)
 
   // Button sprites are vertical strips: 8px wide × 16px tall (2 tiles)
   return (
-    <img
+    <HudImage
       src={src}
       width={tile}
       height={tile * 2}
-      draggable={false}
       style={{ display: 'block', imageRendering: 'pixelated' }}
     />
   );

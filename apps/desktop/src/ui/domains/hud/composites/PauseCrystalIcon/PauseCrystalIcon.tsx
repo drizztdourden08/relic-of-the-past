@@ -3,6 +3,7 @@
  * PauseCrystalIcon — renders a single crystal (empty or filled).
  * Crystals are 16×16 (2×2 tiles).
  */
+import { HudImage } from '../../primitives/HudImage';
 
 interface PauseCrystalIconProps {
   filled: boolean;
@@ -15,11 +16,10 @@ const PauseCrystalIcon = ({ filled, scale, spritesBase }: PauseCrystalIconProps)
   const src = `${spritesBase}pause-crystal-${filled ? 'filled' : 'empty'}.png`;
 
   return (
-    <img
+    <HudImage
       src={src}
       width={size}
       height={size}
-      draggable={false}
       style={{ display: 'block', imageRendering: 'pixelated' }}
     />
   );
