@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { IconButton } from '../../../../primitives/IconButton';
+import { EmptyState } from '../../../../primitives/EmptyState';
+import { ListItemRow } from '../../../../composites/ListItemRow';
 import { formatBytes } from '../../../../../utils/formatBytes';
 import type { MsuPack } from './types';
 
@@ -22,9 +24,7 @@ const MsuPackList = (props: MsuPackListProps) => {
   if (packs.length === 0) {
     return (
       <div className="data-list">
-        <div className="data-list-empty" style={{ padding: 'var(--space-lg)', textAlign: 'center', color: 'var(--color-text-faint)', fontSize: 'var(--text-sm)' }}>
-          No MSU packs imported yet
-        </div>
+        <EmptyState message="No MSU packs imported yet" />
       </div>
     );
   }
@@ -32,24 +32,19 @@ const MsuPackList = (props: MsuPackListProps) => {
   return (
     <div className="data-list">
       {packs.map((pack) => (
-        <div
+        <ListItemRow
           key={pack.name}
-          className={`data-list-item ${selected === pack.name ? 'data-list-item--selected' : ''}`}
+          icon="🎵"
+          name={pack.name}
+          meta={`${pack.fileCount} track${pack.fileCount !== 1 ? 's' : ''} · ${formatBytes(pack.totalSize)}`}
+          selected={selected === pack.name}
           onClick={() => onSelect(pack.name)}
-        >
-          <span className="data-list-item__icon">🎵</span>
-          <div className="data-list-item__info">
-            <div className="data-list-item__name">{pack.name}</div>
-            <div className="data-list-item__meta">
-              {pack.fileCount} track{pack.fileCount !== 1 ? 's' : ''} · {formatBytes(pack.totalSize)}
-            </div>
-          </div>
-          <div className="data-list-item__action">
+          action={
             <IconButton variant="ghost" size="sm" label="Delete" onClick={(e) => handleDeleteClick(e, pack.name)}>
               ✕
             </IconButton>
-          </div>
-        </div>
+          }
+        />
       ))}
     </div>
   );

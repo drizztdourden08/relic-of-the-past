@@ -1,6 +1,9 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { ImportForm } from './ImportForm';
+import { TextInput } from '../../../primitives/TextInput';
+import { Field } from '../../../primitives/Field';
+import { MasterDetailLayout } from '../../../composites/MasterDetailLayout';
 import { useMsuManager } from './msu/useMsuManager';
 import { MsuPackList } from './msu/MsuPackList';
 import { MsuTrackPanel } from './msu/MsuTrackPanel';
@@ -37,58 +40,49 @@ const MsuManager = (props: MsuManagerProps) => {
     });
   }, [selected, refresh, onDeleteConfirm, setSelected]);
 
-  return (
-    <div className="data-columns">
-      <div className="data-columns__left">
-        <div className="import-form">
-          <div className="profile-form__field">
-            <span className="profile-form__label">Pack Name</span>
-            <input
-              className="profile-form__input"
-              type="text"
-              placeholder="My MSU Pack"
-              value={newPackName}
-              onChange={(e) => setNewPackName(e.target.value)}
-            />
-          </div>
-        </div>
-        <ImportForm
-          placeholder="Paste MSU pack download URL…"
-          accept={['.zip', '.7z', '.rar']}
-          dropLabel="Drop MSU pack here"
-          dropHint=".zip, .7z, or .rar archive"
-          onUrlImport={handleUrlImport}
-          onFileImport={handleFileImport}
-        />
-        <MsuPackList
-          packs={packs}
-          selected={selected}
-          onSelect={setSelected}
-          onDelete={handleDelete}
-        />
+  const list = (
+    <>
+      <div className="import-form">
+        <Field label="Pack Name">
+          <TextInput type="text" placeholder="My MSU Pack" value={newPackName} onChange={(e) => setNewPackName(e.target.value)} />
+        </Field>
       </div>
-
-      <div className={`data-columns__right ${!selected ? 'data-columns__right--empty' : ''}`}>
-        {!selected ? (
-          <span>Select an MSU pack to view tracks</span>
-        ) : loadingFiles ? (
-          <span>Loading…</span>
-        ) : (
-          <MsuTrackPanel
-            selected={selected}
-            files={files}
-            trackInfos={trackInfos}
-            isDeluxe={isDeluxe}
-            hasOpuz={hasOpuz}
-            matchedTracks={matchedTracks}
-            unmatchedFiles={unmatchedFiles}
-            fileOptions={fileOptions}
-            onTrackAssign={handleTrackAssign}
-          />
-        )}
-      </div>
-    </div>
+      <ImportForm
+        placeholder="Paste MSU pack download URL…"
+        accept={['.zip', '.7z', '.rar']}
+        dropLabel="Drop MSU pack here"
+        dropHint=".zip, .7z, or .rar archive"
+        onUrlImport={handleUrlImport}
+        onFileImport={handleFileImport}
+      />
+      <MsuPackList
+        packs={packs}
+        selected={selected}
+        onSelect={setSelected}
+        onDelete={handleDelete}
+      />
+    </>
   );
+
+  const detail = !selected ? (
+    <span>Select an MSU pack to view tracks</span>
+  ) : loadingFiles ? (
+    <span>Loading…</span>
+  ) : (
+    <MsuTrackPanel
+      selected={selected}
+      files={files}
+      trackInfos={trackInfos}
+      isDeluxe={isDeluxe}
+      hasOpuz={hasOpuz}
+      matchedTracks={matchedTracks}
+      unmatchedFiles={unmatchedFiles}
+      fileOptions={fileOptions}
+      onTrackAssign={handleTrackAssign}
+    />
+  );
+
+  return <MasterDetailLayout list={list} detail={detail} detailEmpty={!selected} />;
 };
 
 export { MsuManager };

@@ -1,6 +1,11 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Select } from '../../../primitives/Select';
+import { Button } from '../../../primitives/Button';
+import { Field } from '../../../primitives/Field';
+import { ButtonRow } from '../../../primitives/ButtonRow';
+import { MasterDetailLayout } from '../../../composites/MasterDetailLayout';
+import { ListItemRow } from '../../../composites/ListItemRow';
 import {
   SPRITE_MANIFEST,
   CATEGORY_LABELS,
@@ -82,73 +87,60 @@ const SpriteManager = (props: SpriteManagerProps) => {
     return cc;
   }, []);
 
-  return (
-    <div className="data-columns">
-      <div className="data-columns__left">
-        {/* Extraction form */}
-        <div className="import-form">
-          <div className="profile-form__field">
-            <span className="profile-form__label">ROM Source</span>
-            <Select
-              value={selectedRom}
-              onChange={setSelectedRom}
-              options={[
-                { value: '', label: 'Select a ROM…' },
-                ...romsWithAssets.map(r => ({ value: r.romFile, label: r.romFile })),
-              ]}
-              placeholder="Select a ROM…"
-            />
-          </div>
-          <div className="sprite-manager__actions">
-            <button
-              className="sprite-manager__extract-btn"
-              onClick={handleExtract}
-              disabled={!selectedRom || extracting || deleting}
-            >
-              {extracting ? '⟳ Extracting…' : '🖼️ Extract Sprites'}
-            </button>
-            {status.extracted && (
-              <button
-                className="sprite-manager__delete-btn"
-                onClick={handleDelete}
-                disabled={!selectedRom || extracting || deleting}
-              >
-                {deleting ? '⟳ Deleting…' : '🗑️ Delete Sprites'}
-              </button>
-            )}
-          </div>
-          {message && (
-            <div className={`sprite-manager__message sprite-manager__message--${message.type}`}>
-              {message.text}
-            </div>
+  const list = (
+    <>
+      {/* Extraction form */}
+      <div className="import-form">
+        <Field label="ROM Source">
+          <Select
+            value={selectedRom}
+            onChange={setSelectedRom}
+            options={[
+              { value: '', label: 'Select a ROM…' },
+              ...romsWithAssets.map(r => ({ value: r.romFile, label: r.romFile })),
+            ]}
+            placeholder="Select a ROM…"
+          />
+        </Field>
+        <ButtonRow align="start">
+          <Button variant="primary" size="sm" onClick={handleExtract} disabled={!selectedRom || extracting || deleting}>
+            {extracting ? '⟳ Extracting…' : '🖼️ Extract Sprites'}
+          </Button>
+          {status.extracted && (
+            <Button variant="danger" size="sm" onClick={handleDelete} disabled={!selectedRom || extracting || deleting}>
+              {deleting ? '⟳ Deleting…' : '🗑️ Delete Sprites'}
+            </Button>
           )}
-        </div>
-
-        {/* Status */}
-        <div className="data-list">
-          <div className={`data-list-item ${status.extracted ? 'data-list-item--selected' : ''}`}>
-            <span className="data-list-item__icon">🖼️</span>
-            <div className="data-list-item__info">
-              <div className="data-list-item__name">
-                {status.extracted ? 'Sprites Extracted' : 'No Sprites'}
-              </div>
-              <div className="data-list-item__meta">
-                {status.extracted
-                  ? `${status.count} sprite images for ${selectedRom}`
-                  : selectedRom
-                    ? 'Extract from this ROM to use in tracker'
-                    : 'Select a ROM first'}
-              </div>
-            </div>
+        </ButtonRow>
+        {message && (
+          <div className={`sprite-manager__message sprite-manager__message--${message.type}`}>
+            {message.text}
           </div>
-        </div>
+        )}
       </div>
 
-      <div className={`data-columns__right ${!status.extracted ? 'data-columns__right--empty' : ''}`}>
-        {!status.extracted ? (
-          <span>{selectedRom ? 'Extract sprites from this ROM to view them here' : 'Select a ROM first'}</span>
-        ) : (
-          <div className="sprite-manager__panel">
+      {/* Status */}
+      <div className="data-list">
+        <ListItemRow
+          icon="🖼️"
+          selected={status.extracted}
+          name={status.extracted ? 'Sprites Extracted' : 'No Sprites'}
+          meta={
+            status.extracted
+              ? `${status.count} sprite images for ${selectedRom}`
+              : selectedRom
+                ? 'Extract from this ROM to use in tracker'
+                : 'Select a ROM first'
+          }
+        />
+      </div>
+    </>
+  );
+
+  const detail = !status.extracted ? (
+    <span>{selectedRom ? 'Extract sprites from this ROM to view them here' : 'Select a ROM first'}</span>
+  ) : (
+    <div className="sprite-manager__panel">
             {/* Category filter */}
             <div className="sprite-manager__filters">
               <CatButton label="All" value="all" current={catFilter} onClick={setCatFilter} count={catCounts.all} />
@@ -163,11 +155,10 @@ const SpriteManager = (props: SpriteManagerProps) => {
                 <SpriteCard key={sprite.file} file={sprite.file} label={sprite.label} category={sprite.category} baseUrl={spriteBaseUrl} />
               ))}
             </div>
-          </div>
-        )}
-      </div>
     </div>
   );
+
+  return <MasterDetailLayout list={list} detail={detail} detailEmpty={!status.extracted} />;
 };
 
 const CatButton = ({ label, value, current, onClick, count }: {

@@ -5,6 +5,8 @@ import { RomManager } from './sub-components/RomManager';
 import { LanguageManager } from './sub-components/LanguageManager';
 import { MsuManager } from './sub-components/MsuManager';
 import { SpriteManager } from './sub-components/SpriteManager';
+import { Spinner } from '../../primitives/Spinner';
+import { ListItemRow } from '../../composites/ListItemRow';
 import './DataManager.css';
 import './DataManager.detail.css';
 import type { DataTab, DataManagerProps } from './types';
@@ -70,11 +72,8 @@ const DataManager = (props: DataManagerProps) => {
       </div>
 
       {loadingProfile && (
-        <div style={{ padding: '0 var(--space-sm) var(--space-md)' }}>
-          <div className="data-list-item" style={{ background: 'rgba(200, 168, 78, 0.08)', borderColor: 'var(--color-gold-dim)' }}>
-            <span style={{ animation: 'spin 1s linear infinite', display: 'inline-block' }}>⟳</span>
-            <span style={{ color: 'var(--color-gold-bright)', fontSize: 'var(--text-sm)' }}>Loading profile: {loadingProfile}…</span>
-          </div>
+        <div className="data-manager__loading">
+          <ListItemRow selected icon={<Spinner size="sm" />} name={`Loading profile: ${loadingProfile}…`} />
         </div>
       )}
 
