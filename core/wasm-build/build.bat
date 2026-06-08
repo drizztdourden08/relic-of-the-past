@@ -68,7 +68,7 @@ set HOOK_SRCS=^
  ..\game-hooks\cheats.c^
  ..\game-hooks\haptic_events.c
 
-set EM_MAIN=emscripten_main.c
+set EM_MAIN=emscripten_main.c emscripten_sdl.c emscripten_api.c emscripten_io.c
 
 echo ============================================
 echo Building zelda3 WASM...

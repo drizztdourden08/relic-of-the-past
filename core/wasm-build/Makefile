@@ -74,7 +74,7 @@ HOOK_SRCS := ../game-hooks/game_hooks.c \
              ../game-hooks/haptic_events.c
 
 # Our Emscripten-specific main
-EM_MAIN := emscripten_main.c
+EM_MAIN := emscripten_main.c emscripten_sdl.c emscripten_api.c emscripten_io.c
 
 ALL_SRCS := $(EM_MAIN) $(GAME_SRCS) $(SNES_SRCS) $(OPUS_SRC) $(HOOK_SRCS)
 
