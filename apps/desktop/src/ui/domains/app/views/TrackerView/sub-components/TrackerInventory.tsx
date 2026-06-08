@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind component */
+import { Box, Text, Image } from '../../../../../design-system/primitives';
 import type { InventoryCategory, InventorySlot, InventoryViewMode } from '@shared/game/items/sprites';
 import {
   INVENTORY_LAYOUT, INGAME_ITEMS_GRID, INGAME_EQUIPMENT, INGAME_PASSIVES, COMPACT_LAYOUT,
@@ -22,24 +23,24 @@ const TrackerInventory = (props: TrackerInventoryProps) => {
 
 const DefaultInventory = ({ inventory }: { inventory: Set<string> }) => {
   return (
-    <div className="tracker-inventory">
+    <Box className="tracker-inventory">
       {INVENTORY_LAYOUT.map((category) => (
         <TrackerInventoryCategory key={category.label} category={category} inventory={inventory} />
       ))}
-    </div>
+    </Box>
   );
 };
 
 const TrackerInventoryCategory = ({ category, inventory }: { category: InventoryCategory; inventory: Set<string> }) => {
   return (
-    <div className="tracker-inventory__category">
-      <span className="tracker-inventory__category-label">{category.label}</span>
-      <div className="tracker-inventory__grid">
+    <Box className="tracker-inventory__category">
+      <Text className="tracker-inventory__category-label">{category.label}</Text>
+      <Box className="tracker-inventory__grid">
         {category.items.map((slot) => (
           <TrackerInventorySlot key={slot.displayName} slot={slot} inventory={inventory} />
         ))}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
@@ -47,27 +48,27 @@ const TrackerInventoryCategory = ({ category, inventory }: { category: Inventory
 
 const IngameInventory = ({ inventory }: { inventory: Set<string> }) => {
   return (
-    <div className="tracker-inventory tracker-inventory--ingame">
-      <div className="tracker-inventory__ingame-main">
+    <Box className="tracker-inventory tracker-inventory--ingame">
+      <Box className="tracker-inventory__ingame-main">
         {INGAME_ITEMS_GRID.map((row, ri) => (
-          <div key={ri} className="tracker-inventory__ingame-row">
+          <Box key={ri} className="tracker-inventory__ingame-row">
             {row.map((slot) => (
               <TrackerInventorySlot key={slot.displayName} slot={slot} inventory={inventory} />
             ))}
-          </div>
+          </Box>
         ))}
-      </div>
-      <div className="tracker-inventory__ingame-side">
+      </Box>
+      <Box className="tracker-inventory__ingame-side">
         {INGAME_EQUIPMENT.map((slot) => (
           <TrackerInventorySlot key={slot.displayName} slot={slot} inventory={inventory} />
         ))}
-      </div>
-      <div className="tracker-inventory__ingame-bottom">
+      </Box>
+      <Box className="tracker-inventory__ingame-bottom">
         {INGAME_PASSIVES.map((slot) => (
           <TrackerInventorySlot key={slot.displayName} slot={slot} inventory={inventory} />
         ))}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
@@ -75,13 +76,13 @@ const IngameInventory = ({ inventory }: { inventory: Set<string> }) => {
 
 const CompactInventory = ({ inventory }: { inventory: Set<string> }) => {
   return (
-    <div className="tracker-inventory tracker-inventory--compact">
-      <div className="tracker-inventory__grid tracker-inventory__grid--compact">
+    <Box className="tracker-inventory tracker-inventory--compact">
+      <Box className="tracker-inventory__grid tracker-inventory__grid--compact">
         {COMPACT_LAYOUT.map((slot, i) => (
           <TrackerInventorySlot key={`${slot.displayName}-${i}`} slot={slot} inventory={inventory} />
         ))}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
@@ -90,15 +91,15 @@ const CompactInventory = ({ inventory }: { inventory: Set<string> }) => {
 const TrackerInventorySlot = ({ slot, inventory }: { slot: InventorySlot; inventory: Set<string> }) => {
   const { obtained, sprite } = resolveItemSprite(slot, inventory);
   return (
-    <div className={`tracker-inventory__slot ${obtained ? 'tracker-inventory__slot--obtained' : 'tracker-inventory__slot--missing'}`}>
-      <img
+    <Box className={`tracker-inventory__slot ${obtained ? 'tracker-inventory__slot--obtained' : 'tracker-inventory__slot--missing'}`}>
+      <Image
         className="tracker-inventory__sprite"
         src={`${getSpritesBase()}${sprite}.png`}
         alt={slot.displayName}
         draggable={false}
       />
-      <span className="tracker-inventory__name">{slot.displayName}</span>
-    </div>
+      <Text className="tracker-inventory__name">{slot.displayName}</Text>
+    </Box>
   );
 };
 

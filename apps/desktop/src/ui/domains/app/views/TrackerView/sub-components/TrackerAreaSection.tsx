@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
+import { Box, Text } from '../../../../../design-system/primitives';
 import type { CheckDefinition } from '@shared/game/types';
 import type { CheckStatus } from '@shared/game/logic/eval';
 import { TrackerCheckRow } from './TrackerCheckRow';
@@ -19,26 +20,26 @@ const TrackerAreaSection = (props: TrackerAreaSectionProps) => {
   const reachable = checks.filter(c => statuses.get(c.id) === 'reachable').length;
 
   return (
-    <div className="tracker-area">
-      <button className="tracker-area__header" onClick={() => setExpanded(!expanded)}>
-        <span className="tracker-area__chevron">{expanded ? '▼' : '▶'}</span>
-        <span className="tracker-area__name">{area}</span>
-        <span className="tracker-area__counts">
-          <span className="tracker-area__count tracker-area__count--completed">{completed}</span>
+    <Box className="tracker-area">
+      <Box as="button" className="tracker-area__header" onClick={() => setExpanded(!expanded)}>
+        <Text className="tracker-area__chevron">{expanded ? '▼' : '▶'}</Text>
+        <Text className="tracker-area__name">{area}</Text>
+        <Text className="tracker-area__counts">
+          <Text className="tracker-area__count tracker-area__count--completed">{completed}</Text>
           /
-          <span className="tracker-area__count tracker-area__count--reachable">{reachable}</span>
+          <Text className="tracker-area__count tracker-area__count--reachable">{reachable}</Text>
           /
-          <span className="tracker-area__count">{checks.length}</span>
-        </span>
-      </button>
+          <Text className="tracker-area__count">{checks.length}</Text>
+        </Text>
+      </Box>
       {expanded && (
-        <div className="tracker-area__checks">
+        <Box className="tracker-area__checks">
           {checks.map(check => (
             <TrackerCheckRow key={check.id} check={check} status={statuses.get(check.id) ?? 'blocked'} />
           ))}
-        </div>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }
 
