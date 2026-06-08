@@ -1,0 +1,26 @@
+/* @layer renderer-components @kind style */
+.flex { display: flex; }
+.flex--inline { display: inline-flex; }
+
+.flex[data-dir='row'] { flex-direction: row; }
+.flex[data-dir='column'] { flex-direction: column; }
+.flex[data-wrap] { flex-wrap: wrap; }
+
+.flex[data-gap='xs'] { gap: var(--space-xs); }
+.flex[data-gap='sm'] { gap: var(--space-sm); }
+.flex[data-gap='md'] { gap: var(--space-md); }
+.flex[data-gap='lg'] { gap: var(--space-lg); }
+.flex[data-gap='xl'] { gap: var(--space-xl); }
+.flex[data-gap='2xl'] { gap: var(--space-2xl); }
+
+.flex[data-align='start'] { align-items: flex-start; }
+.flex[data-align='center'] { align-items: center; }
+.flex[data-align='end'] { align-items: flex-end; }
+.flex[data-align='stretch'] { align-items: stretch; }
+.flex[data-align='baseline'] { align-items: baseline; }
+
+.flex[data-justify='start'] { justify-content: flex-start; }
+.flex[data-justify='center'] { justify-content: center; }
+.flex[data-justify='end'] { justify-content: flex-end; }
+.flex[data-justify='between'] { justify-content: space-between; }
+.flex[data-justify='around'] { justify-content: space-around; }

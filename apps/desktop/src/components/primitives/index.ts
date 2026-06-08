@@ -1,4 +1,16 @@
 /* @layer renderer-components @kind barrel */
+export { Flex } from './Flex';
+export type { FlexProps, SpaceToken, FlexAlign, FlexJustify } from './Flex';
+export { Stack } from './Stack';
+export type { StackProps } from './Stack';
+export { Grid } from './Grid';
+export type { GridProps } from './Grid';
+export { Center } from './Center';
+export type { CenterProps } from './Center';
+export { Divider } from './Divider';
+export type { DividerProps } from './Divider';
+export { Spacer } from './Spacer';
+export type { SpacerProps } from './Spacer';
 export { Button } from './Button';
 export { IconButton } from './IconButton';
 export { Badge } from './Badge';
