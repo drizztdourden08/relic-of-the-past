@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 200;
+  pointer-events: auto; /* opt in — Portal layer is click-through */
   animation: dialog-fade-in 0.15s ease-out;
 }
 

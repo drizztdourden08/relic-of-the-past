@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: var(--z-top);
+  pointer-events: auto; /* opt in — Portal layer is click-through */
 }
 
 .binding-listener {
