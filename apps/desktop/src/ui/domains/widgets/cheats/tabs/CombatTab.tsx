@@ -3,6 +3,7 @@
  * CombatTab — Kill enemies, damage multiplier, extra armor reduction.
  */
 import { useState } from 'react';
+import { Box, Text } from '../../../../design-system/primitives';
 import { cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct } from '../../../../../lib/game';
 
 const DAMAGE_OPTIONS = [
@@ -37,49 +38,51 @@ const CombatTab = () => {
   };
 
   return (
-    <div className="cheats-tab-combat">
-      <div className="cheats-section">
-        <div className="cheats-section__title">Enemies</div>
-        <div className="cheats-row">
-          <button className="cheats-btn cheats-btn--danger" onClick={cheatKillAllEnemies}>
+    <Box className="cheats-tab-combat">
+      <Box className="cheats-section">
+        <Box className="cheats-section__title">Enemies</Box>
+        <Box className="cheats-row">
+          <Box as="button" className="cheats-btn cheats-btn--danger" onClick={cheatKillAllEnemies}>
             Kill All Enemies
-          </button>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Box>
 
-      <div className="cheats-section">
-        <div className="cheats-section__title">Outgoing Damage</div>
-        <div className="cheats-radio-group">
+      <Box className="cheats-section">
+        <Box className="cheats-section__title">Outgoing Damage</Box>
+        <Box className="cheats-radio-group">
           {DAMAGE_OPTIONS.map(opt => (
-            <button
+            <Box
+              as="button"
               key={opt.value}
               className={`cheats-radio ${damageMult === opt.value ? 'cheats-radio--active' : ''}`}
               onClick={() => handleDamage(opt.value)}
             >
               {opt.label}
-            </button>
+            </Box>
           ))}
-        </div>
-      </div>
+        </Box>
+      </Box>
 
-      <div className="cheats-section">
-        <div className="cheats-section__title">Extra Damage Reduction</div>
-        <p style={{ fontSize: 10, color: '#888', margin: '0 0 6px' }}>
+      <Box className="cheats-section">
+        <Box className="cheats-section__title">Extra Damage Reduction</Box>
+        <Text as="p" style={{ fontSize: 10, color: '#888', margin: '0 0 6px' }}>
           Stacks with armor. Blue Mail = 50% base, Red Mail = 75% base.
-        </p>
-        <div className="cheats-radio-group">
+        </Text>
+        <Box className="cheats-radio-group">
           {ARMOR_OPTIONS.map(opt => (
-            <button
+            <Box
+              as="button"
               key={opt.value}
               className={`cheats-radio ${extraArmor === opt.value ? 'cheats-radio--active' : ''}`}
               onClick={() => handleArmor(opt.value)}
             >
               {opt.label}
-            </button>
+            </Box>
           ))}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

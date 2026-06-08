@@ -3,7 +3,7 @@
  * StatsTab — Health, rupees, bombs, arrows, magic controls.
  */
 import { useState } from 'react';
-import { NumberInput, RangeInput } from '../../../../design-system/primitives';
+import { NumberInput, RangeInput, Box, Text } from '../../../../design-system/primitives';
 import {
   cheatSetHealth, cheatSetMaxHealth, cheatSetRupees,
   cheatSetBombs, cheatSetArrows, cheatRefillMagic,
@@ -17,98 +17,98 @@ const StatsTab = () => {
   const [arrows, setArrows] = useState(99);
 
   return (
-    <div className="cheats-tab-stats">
-      <div className="cheats-section">
-        <div className="cheats-section__title">Quick Actions</div>
-        <div className="cheats-row">
-          <button className="cheats-btn cheats-btn--primary" onClick={() => { cheatSetHealth(160); cheatSetMaxHealth(160); }}>
+    <Box className="cheats-tab-stats">
+      <Box className="cheats-section">
+        <Box className="cheats-section__title">Quick Actions</Box>
+        <Box className="cheats-row">
+          <Box as="button" className="cheats-btn cheats-btn--primary" onClick={() => { cheatSetHealth(160); cheatSetMaxHealth(160); }}>
             Full Heal (20♥)
-          </button>
-          <button className="cheats-btn cheats-btn--primary" onClick={() => cheatSetRupees(999)}>
+          </Box>
+          <Box as="button" className="cheats-btn cheats-btn--primary" onClick={() => cheatSetRupees(999)}>
             999 Rupees
-          </button>
-          <button className="cheats-btn cheats-btn--primary" onClick={() => cheatRefillMagic()}>
+          </Box>
+          <Box as="button" className="cheats-btn cheats-btn--primary" onClick={() => cheatRefillMagic()}>
             Fill Magic
-          </button>
-        </div>
-        <div className="cheats-row">
-          <button className="cheats-btn" onClick={() => { cheatSetBombs(99); cheatSetArrows(99); }}>
+          </Box>
+        </Box>
+        <Box className="cheats-row">
+          <Box as="button" className="cheats-btn" onClick={() => { cheatSetBombs(99); cheatSetArrows(99); }}>
             Max Bombs & Arrows
-          </button>
-          <button className="cheats-btn cheats-btn--danger" onClick={() => cheatSetHealth(8)}>
+          </Box>
+          <Box as="button" className="cheats-btn cheats-btn--danger" onClick={() => cheatSetHealth(8)}>
             Set 1♥
-          </button>
-          <button className="cheats-btn cheats-btn--danger" onClick={() => cheatSetHealth(0)}>
+          </Box>
+          <Box as="button" className="cheats-btn cheats-btn--danger" onClick={() => cheatSetHealth(0)}>
             Kill Link
-          </button>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Box>
 
-      <div className="cheats-section">
-        <div className="cheats-section__title">Health</div>
-        <div className="cheats-row">
-          <span className="cheats-row__label">Current</span>
-          <div className="cheats-row__controls">
+      <Box className="cheats-section">
+        <Box className="cheats-section__title">Health</Box>
+        <Box className="cheats-row">
+          <Text className="cheats-row__label">Current</Text>
+          <Box className="cheats-row__controls">
             <RangeInput
               className="cheats-slider"
               min={0} max={maxHealth} step={8} value={health}
               onChange={e => setHealth(Number(e.target.value))}
             />
-            <span style={{ fontSize: 11, minWidth: 30 }}>{health / 8}♥</span>
-            <button className="cheats-btn" onClick={() => cheatSetHealth(health)}>Set</button>
-          </div>
-        </div>
-        <div className="cheats-row">
-          <span className="cheats-row__label">Max</span>
-          <div className="cheats-row__controls">
+            <Text style={{ fontSize: 11, minWidth: 30 }}>{health / 8}♥</Text>
+            <Box as="button" className="cheats-btn" onClick={() => cheatSetHealth(health)}>Set</Box>
+          </Box>
+        </Box>
+        <Box className="cheats-row">
+          <Text className="cheats-row__label">Max</Text>
+          <Box className="cheats-row__controls">
             <RangeInput
               className="cheats-slider"
               min={8} max={160} step={8} value={maxHealth}
               onChange={e => setMaxHealth(Number(e.target.value))}
             />
-            <span style={{ fontSize: 11, minWidth: 30 }}>{maxHealth / 8}♥</span>
-            <button className="cheats-btn" onClick={() => cheatSetMaxHealth(maxHealth)}>Set</button>
-          </div>
-        </div>
-      </div>
+            <Text style={{ fontSize: 11, minWidth: 30 }}>{maxHealth / 8}♥</Text>
+            <Box as="button" className="cheats-btn" onClick={() => cheatSetMaxHealth(maxHealth)}>Set</Box>
+          </Box>
+        </Box>
+      </Box>
 
-      <div className="cheats-section">
-        <div className="cheats-section__title">Resources</div>
-        <div className="cheats-row">
-          <span className="cheats-row__label">Rupees</span>
-          <div className="cheats-row__controls">
+      <Box className="cheats-section">
+        <Box className="cheats-section__title">Resources</Box>
+        <Box className="cheats-row">
+          <Text className="cheats-row__label">Rupees</Text>
+          <Box className="cheats-row__controls">
             <NumberInput
               className="cheats-input"
               min={0} max={999} value={rupees}
               onChange={v => setRupees(Math.min(999, Math.max(0, v)))}
             />
-            <button className="cheats-btn" onClick={() => cheatSetRupees(rupees)}>Set</button>
-          </div>
-        </div>
-        <div className="cheats-row">
-          <span className="cheats-row__label">Bombs</span>
-          <div className="cheats-row__controls">
+            <Box as="button" className="cheats-btn" onClick={() => cheatSetRupees(rupees)}>Set</Box>
+          </Box>
+        </Box>
+        <Box className="cheats-row">
+          <Text className="cheats-row__label">Bombs</Text>
+          <Box className="cheats-row__controls">
             <NumberInput
               className="cheats-input"
               min={0} max={99} value={bombs}
               onChange={v => setBombs(Math.min(99, Math.max(0, v)))}
             />
-            <button className="cheats-btn" onClick={() => cheatSetBombs(bombs)}>Set</button>
-          </div>
-        </div>
-        <div className="cheats-row">
-          <span className="cheats-row__label">Arrows</span>
-          <div className="cheats-row__controls">
+            <Box as="button" className="cheats-btn" onClick={() => cheatSetBombs(bombs)}>Set</Box>
+          </Box>
+        </Box>
+        <Box className="cheats-row">
+          <Text className="cheats-row__label">Arrows</Text>
+          <Box className="cheats-row__controls">
             <NumberInput
               className="cheats-input"
               min={0} max={99} value={arrows}
               onChange={v => setArrows(Math.min(99, Math.max(0, v)))}
             />
-            <button className="cheats-btn" onClick={() => cheatSetArrows(arrows)}>Set</button>
-          </div>
-        </div>
-      </div>
-    </div>
+            <Box as="button" className="cheats-btn" onClick={() => cheatSetArrows(arrows)}>Set</Box>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

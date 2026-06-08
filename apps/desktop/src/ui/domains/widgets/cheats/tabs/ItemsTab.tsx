@@ -5,7 +5,7 @@
  * "From Check" shows the check list with grant buttons.
  */
 import { useState, useMemo, useEffect } from 'react';
-import { TextInput } from '../../../../design-system/primitives';
+import { TextInput, Box, Text } from '../../../../design-system/primitives';
 import { ITEMS } from '@shared/game/items';
 import { ALL_CHECKS } from '@shared/game/checks';
 import { CHECK_NPC_FLAGS } from '@shared/game/checks/flags';
@@ -75,50 +75,53 @@ const ItemsTab = () => {
   };
 
   return (
-    <div className="cheats-tab-items">
-      <div className="cheats-items__mode-toggle">
-        <button
+    <Box className="cheats-tab-items">
+      <Box className="cheats-items__mode-toggle">
+        <Box
+          as="button"
           className={`cheats-radio ${mode === 'free' ? 'cheats-radio--active' : ''}`}
           onClick={() => setMode('free')}
         >
           Free Give
-        </button>
-        <button
+        </Box>
+        <Box
+          as="button"
           className={`cheats-radio ${mode === 'checks' ? 'cheats-radio--active' : ''}`}
           onClick={() => setMode('checks')}
         >
           From Check
-        </button>
-      </div>
+        </Box>
+      </Box>
 
       {mode === 'free' && (
-        <div>
+        <Box>
           {CATEGORY_ORDER.map(cat => {
             const items = itemsByCategory.get(cat);
             if (!items || items.length === 0) return null;
             return (
-              <div key={cat}>
-                <div className="cheats-items__category">{CATEGORY_LABELS[cat]}</div>
-                <div className="cheats-items__grid">
+              <Box key={cat}>
+                <Box className="cheats-items__category">{CATEGORY_LABELS[cat]}</Box>
+                <Box className="cheats-items__grid">
                   {items.map(item => (
-                    <button
+                    <Box
+                      as="button"
                       key={item.id}
                       className="cheats-items__item"
                       onClick={() => cheatGiveItem(item.id)}
                       title={`ID: 0x${item.id.toString(16).padStart(2, '0')}`}
                     >
                       {item.name}
-                    </button>
+                    </Box>
                   ))}
-                </div>
-              </div>
+                </Box>
+              </Box>
             );
           })}
-        </div>
+        </Box>
       )}
 
       {mode === 'checks' && (
-        <div>
+        <Box>
           <TextInput
             type="text"
             className="cheats-input"
@@ -127,31 +130,32 @@ const ItemsTab = () => {
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
-          <div className="cheats-checks__list">
+          <Box className="cheats-checks__list">
             {filteredChecks.map(check => {
               const done = completedChecks.has(check.id);
               const canTrigger = (check.type === 'chest' && check.roomId != null && check.chestIndex != null)
                 || (check.type === 'npc' && CHECK_NPC_FLAGS[check.name] != null)
                 || (check.roomId != null && check.chestIndex != null);
               return (
-                <div key={check.id} className={`cheats-checks__entry ${done ? 'cheats-checks__entry--completed' : ''}`}>
-                  <span className="cheats-checks__name" title={`${check.screen} • ${check.type}`}>
+                <Box key={check.id} className={`cheats-checks__entry ${done ? 'cheats-checks__entry--completed' : ''}`}>
+                  <Text className="cheats-checks__name" title={`${check.screen} • ${check.type}`}>
                     {check.name}
-                  </span>
-                  <button
+                  </Text>
+                  <Box
+                    as="button"
                     className="cheats-checks__grant-btn"
                     disabled={done || !canTrigger}
                     onClick={() => handleGrantCheck(check)}
                   >
                     Grant
-                  </button>
-                </div>
+                  </Box>
+                </Box>
               );
             })}
-          </div>
-        </div>
+          </Box>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
 

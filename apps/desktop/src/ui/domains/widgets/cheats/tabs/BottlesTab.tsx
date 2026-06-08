@@ -3,7 +3,7 @@
  * BottlesTab — Manage 4 bottle slots with content selection.
  */
 import { useState } from 'react';
-import { NativeSelect } from '../../../../design-system/primitives';
+import { Select, Box, Text } from '../../../../design-system/primitives';
 import { cheatFillBottle, BottleContents } from '../../../../../lib/game';
 import type { BottleContentsValue } from '../../../../../lib/game';
 
@@ -42,43 +42,40 @@ const BottlesTab = () => {
   };
 
   return (
-    <div className="cheats-tab-bottles">
-      <div className="cheats-section">
-        <div className="cheats-section__title">Quick Fill All</div>
-        <div className="cheats-row">
-          <button className="cheats-btn cheats-btn--primary" onClick={() => fillAll(BottleContents.Fairy)}>
+    <Box className="cheats-tab-bottles">
+      <Box className="cheats-section">
+        <Box className="cheats-section__title">Quick Fill All</Box>
+        <Box className="cheats-row">
+          <Box as="button" className="cheats-btn cheats-btn--primary" onClick={() => fillAll(BottleContents.Fairy)}>
             All Fairies
-          </button>
-          <button className="cheats-btn" onClick={() => fillAll(BottleContents.RedPotion)}>
+          </Box>
+          <Box as="button" className="cheats-btn" onClick={() => fillAll(BottleContents.RedPotion)}>
             All Red
-          </button>
-          <button className="cheats-btn" onClick={() => fillAll(BottleContents.BluePotion)}>
+          </Box>
+          <Box as="button" className="cheats-btn" onClick={() => fillAll(BottleContents.BluePotion)}>
             All Blue
-          </button>
-          <button className="cheats-btn" onClick={() => fillAll(BottleContents.Bee)}>
+          </Box>
+          <Box as="button" className="cheats-btn" onClick={() => fillAll(BottleContents.Bee)}>
             All Bees
-          </button>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Box>
 
-      <div className="cheats-section">
-        <div className="cheats-section__title">Individual Slots</div>
+      <Box className="cheats-section">
+        <Box className="cheats-section__title">Individual Slots</Box>
         {([0, 1, 2, 3] as const).map(slot => (
-          <div key={slot} className="cheats-bottles__slot">
-            <span className="cheats-bottles__slot-label">Slot {slot + 1}</span>
-            <NativeSelect
+          <Box key={slot} className="cheats-bottles__slot">
+            <Text className="cheats-bottles__slot-label">Slot {slot + 1}</Text>
+            <Select
               className="cheats-bottles__select"
-              value={slots[slot]}
-              onChange={e => handleChange(slot, Number(e.target.value) as BottleContentsValue)}
-            >
-              {BOTTLE_OPTIONS.map(opt => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
-              ))}
-            </NativeSelect>
-          </div>
+              value={String(slots[slot])}
+              options={BOTTLE_OPTIONS.map(opt => ({ value: String(opt.value), label: opt.label }))}
+              onChange={(v) => handleChange(slot, Number(v) as BottleContentsValue)}
+            />
+          </Box>
         ))}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
