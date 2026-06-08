@@ -4,6 +4,42 @@
 Logged during the P4 grind. None of these change the ruleset; they're parked here
 until you decide. Tackle at the end.
 
+## 🎨 Design-system overhaul (P0–P7) — status
+
+Done & committed (all tools at a perfect score throughout):
+
+- **P0 tokens** — added `--z-*`, `--opacity-*`, `--color-surface-*` scales; killed magic `z-index:9999`.
+- **P1 layout primitives** — `Flex`, `Stack`, `Grid`, `Center`, `Divider`, `Spacer` (facades over flexbox/grid + tokens).
+- **P2 atom primitives** — `Field`, `NumberInput`, `Checkbox`, `RangeInput`, `SectionHeader`, `EmptyState`, `ButtonRow`, `StatRow`, `ProgressBar`, `Spinner`, `Tooltip` (portal-based). `TextInput` now `forwardRef`.
+- **P3 portal** — Dialog / AboutDialog / UpdateDialog / BindingListener route through the shared `Portal`; one layer ladder; SubMenu kept inside the parent portal (hover bridge).
+- **P4 re-tiers** — AboutDialog / UpdateDialog / SettingsLayout composites → compounds; hud DeliveryQueueIndicator / LocationNotification → hud/views; Widget composite no longer does IPC (persistence injected as `WidgetPersistenceIO`).
+- **P5 composites** — `MasterDetailLayout` + `ListItemRow` extracted; DataManager (all 5 managers) migrated onto them; ~95 lines of dead CSS removed.
+- **P6 form controls** — **all raw `<input>`/`<select>`/`<textarea>` outside `primitives/` eliminated** (TrackerFilters, cheats, screen-editor, shadow-editor, nav-review, ProfileHub, Widget, ImportForm, …).
+- **P7 enforcement** — ESLint bans raw `input`/`select`/`textarea` JSX outside primitives (primitives override re-allows). Codebase at zero violations.
+
+### ⚠️ Remaining follow-up (NOT done — needs visual review, no runtime tests)
+
+These were deliberately deferred because converting them blind risks visual
+regressions the automated tools can't catch:
+
+1. **Bespoke `<button>`s (~140) → `Button`/`IconButton`/`SegmentedControl`/`ToggleGroup`.**
+   Many are heavily custom-styled toggles/pills (TrackerFilters mode/status/tag
+   pills, cheats `cheats-btn`, sprite category buttons, calibration-wizard buttons,
+   nav-review/dataset status buttons, ProfileHub controls). The lint rule does NOT
+   yet ban `<button>` — extend it once these are migrated.
+2. **Inline `style={{display:flex}}` (~110) + CSS-class flex/grid → `Flex`/`Grid`/`Stack`.**
+   The primitives exist (P1); adopting them across views/widgets is the long tail.
+3. **`DeviceCard` + `WizardChrome` composites** — deferred from P5; extract when
+   migrating the InputTester calibration wizards (their bespoke buttons + repeated
+   chrome) so the API matches real markup.
+4. **Editor dialogs (ScreenEditor / ConnectionEditor)** — still hand-roll a modal;
+   route through `Dialog` during their button migration.
+5. **Broader hex→token** — ~80 UI-chrome hex values could still move to tokens
+   (folds in naturally as the above files are touched).
+
+Each of these is best done view-by-view with a visual check after. Re-run
+`/loop` to grind them out, or tackle interactively.
+
 ## ✅ P5 UPDATE — all splittable files are now done
 
 Every behavior-risky file that was parked for a "careful pass" has been split
