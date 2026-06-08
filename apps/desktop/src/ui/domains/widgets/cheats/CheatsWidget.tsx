@@ -4,6 +4,7 @@
  * Tabs: Items, Stats, Combat, Bottles
  */
 import { useState } from 'react';
+import { Box } from '../../../design-system/primitives/Box';
 import { ItemsTab } from './tabs/ItemsTab';
 import { StatsTab } from './tabs/StatsTab';
 import { CombatTab } from './tabs/CombatTab';
@@ -23,25 +24,26 @@ const CheatsWidgetContent = () => {
   const [tab, setTab] = useState<CheatTab>('stats');
 
   return (
-    <div className="cheats-widget">
-      <div className="cheats-widget__tabs">
+    <Box className="cheats-widget">
+      <Box className="cheats-widget__tabs">
         {TABS.map(t => (
-          <button
+          <Box
+            as="button"
             key={t.key}
             className={`cheats-widget__tab ${tab === t.key ? 'cheats-widget__tab--active' : ''}`}
             onClick={() => setTab(t.key)}
           >
             {t.label}
-          </button>
+          </Box>
         ))}
-      </div>
-      <div className="cheats-widget__content">
+      </Box>
+      <Box className="cheats-widget__content">
         {tab === 'items' && <ItemsTab />}
         {tab === 'stats' && <StatsTab />}
         {tab === 'combat' && <CombatTab />}
         {tab === 'bottles' && <BottlesTab />}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

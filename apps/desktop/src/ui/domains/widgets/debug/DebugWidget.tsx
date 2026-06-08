@@ -4,6 +4,7 @@
  * Rendered inside the widget frame.
  */
 
+import { Box } from '../../../design-system/primitives/Box';
 import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { useHudSettingsStore } from '../../../../stores/hud-settings-store';
 
@@ -57,7 +58,7 @@ const DebugWidgetContent = () => {
   };
 
   return (
-    <div
+    <Box
       style={{
         background: 'rgba(0, 0, 0, 0.75)',
         color: '#0f0',
@@ -71,14 +72,14 @@ const DebugWidgetContent = () => {
         whiteSpace: 'pre',
       }}
     >
-      <div style={{ display: 'flex', gap: '4px', marginBottom: '4px', whiteSpace: 'normal' }}>
-        <button style={btnStyle} onClick={toggleMainPart}>
+      <Box style={{ display: 'flex', gap: '4px', marginBottom: '4px', whiteSpace: 'normal' }}>
+        <Box as="button" style={btnStyle} onClick={toggleMainPart}>
           Main: {hudSettings.enhancedParts.includes('main') ? 'enhanced' : 'original'}
-        </button>
-        <button style={btnStyle} onClick={togglePausePart}>
+        </Box>
+        <Box as="button" style={btnStyle} onClick={togglePausePart}>
           Pause: {hudSettings.enhancedParts.includes('pause') ? 'enhanced' : 'original'}
-        </button>
-      </div>
+        </Box>
+      </Box>
 {`── MODE ──
 UI Mode: ${mode}
 Module: ${gameMode.mainModule} / Sub: ${gameMode.subModule} / SubSub: ${gameMode.subSubModule}
@@ -122,7 +123,7 @@ Visible: ${floorIndicator.isVisible} | Timer: ${floorIndicator.timer} | Floor: $
 ── SAVE MENU ──
 Cursor: ${saveMenu.cursorPosition} | From Module: ${saveMenu.sourceModule}
 Progress: ${saveMenu.progressIndicator}`}
-    </div>
+    </Box>
   );
 };
 

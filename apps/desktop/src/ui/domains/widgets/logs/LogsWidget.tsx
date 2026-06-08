@@ -4,6 +4,8 @@
  * Adapts the existing log-bus subscription into widget content form.
  */
 import { useState, useEffect, useRef } from 'react';
+import { Box } from '../../../design-system/primitives/Box';
+import { Text } from '../../../design-system/primitives/Text';
 import { subscribe, getEntries, CHANNEL_COLORS, type LogEntry } from '../../../../lib/log-bus';
 import { MAX_ENTRIES } from './logs.constants';
 import { formatTime } from './behavior/formatTime';
@@ -27,18 +29,18 @@ const LogsWidgetContent = () => {
   }, [entries]);
 
   return (
-    <div className="logs-widget-content">
+    <Box className="logs-widget-content">
       {entries.map((entry, i) => (
-        <div key={`${entry.id}-${i}`} className={`log-entry log-entry--${entry.level}`}>
-          <span className="log-entry__time">{formatTime(entry.timestamp)}</span>
-          <span className="log-entry__channel" style={{ color: CHANNEL_COLORS[entry.channel] }}>
+        <Box key={`${entry.id}-${i}`} className={`log-entry log-entry--${entry.level}`}>
+          <Text className="log-entry__time">{formatTime(entry.timestamp)}</Text>
+          <Text className="log-entry__channel" style={{ color: CHANNEL_COLORS[entry.channel] }}>
             {entry.channel}:
-          </span>
-          <span className="log-entry__message">{entry.message}</span>
-        </div>
+          </Text>
+          <Text className="log-entry__message">{entry.message}</Text>
+        </Box>
       ))}
-      <div ref={bottomRef} />
-    </div>
+      <Box ref={bottomRef} />
+    </Box>
   );
 }
 
