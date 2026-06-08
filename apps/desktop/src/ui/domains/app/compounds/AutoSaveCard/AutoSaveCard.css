@@ -1,49 +1,9 @@
 /* @layer renderer-components @kind style */
-.auto-save-card {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--radius-md);
-  transition: background 0.15s;
-}
 
-.auto-save-card:hover {
-  background: rgb(255, 255, 255, 0.04);
-}
-
-.auto-save-card--busy {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
+/* Thumb frame/placeholder chrome comes from the Thumbnail primitive. */
 .auto-save-card__thumb {
   width: 56px;
   height: 38px;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  flex-shrink: 0;
-  background: rgb(255, 255, 255, 0.03);
-}
-
-.auto-save-card__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.auto-save-card__empty-thumb {
-  width: 100%;
-  height: 100%;
-  background: rgb(255, 255, 255, 0.03);
-}
-
-.auto-save-card__info {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  flex: 1;
-  min-width: 0;
 }
 
 .auto-save-card__time {
@@ -68,36 +28,4 @@
 .auto-save-card__badge--quit {
   background: rgb(255, 180, 80, 0.12);
   color: rgb(255, 180, 80, 0.9);
-}
-
-.auto-save-card__actions {
-  display: flex;
-  gap: 4px;
-  flex-shrink: 0;
-}
-
-.auto-save-card__btn {
-  font-size: var(--text-xs);
-  padding: 3px 8px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border-subtle);
-  background: rgb(255, 255, 255, 0.04);
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-}
-
-.auto-save-card__btn:hover:not(:disabled) {
-  background: rgb(255, 255, 255, 0.08);
-  color: var(--color-text-primary);
-}
-
-.auto-save-card__btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.auto-save-card__btn--delete:hover:not(:disabled) {
-  color: var(--color-danger);
-  border-color: var(--color-danger);
 }

@@ -1,0 +1,58 @@
+/* @layer renderer-components @kind style */
+
+/* Shared save-entry shell. `row` = compact list item, `feature` = bordered card. */
+.save-card {
+  display: flex;
+  gap: var(--space-sm);
+  transition: background var(--transition-normal);
+}
+
+.save-card--busy {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ─── Row variant (compact list item) ─── */
+.save-card--row {
+  align-items: center;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-md);
+}
+
+.save-card--row:hover {
+  background: var(--color-surface-hover);
+}
+
+/* ─── Feature variant (standalone hero card) ─── */
+.save-card--feature {
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--color-surface-inset);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.save-card--feature:hover {
+  background: var(--color-surface-hover);
+}
+
+/* ─── Info column ─── */
+.save-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.save-card--feature .save-card__info {
+  gap: 4px;
+  justify-content: center;
+}
+
+/* ─── Actions ─── */
+.save-card__actions {
+  display: flex;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+}

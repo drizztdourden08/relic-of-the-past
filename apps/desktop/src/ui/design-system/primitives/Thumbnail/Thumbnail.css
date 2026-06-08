@@ -1,0 +1,24 @@
+/* @layer renderer-components @kind style */
+
+/* Fixed-frame image holder. Consumers set width/height/radius via className. */
+.thumbnail {
+  overflow: hidden;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-inset);
+}
+
+.thumbnail__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbnail__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: var(--color-surface-inset);
+}

@@ -61,3 +61,5 @@ export { Tooltip } from './Tooltip';
 export type { TooltipProps } from './Tooltip';
 export { RangeInput } from './RangeInput';
 export type { RangeInputProps } from './RangeInput';
+export { Thumbnail } from './Thumbnail';
+export type { ThumbnailProps } from './Thumbnail';
