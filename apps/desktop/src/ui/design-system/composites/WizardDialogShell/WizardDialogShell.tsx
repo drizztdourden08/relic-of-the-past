@@ -1,6 +1,5 @@
 /* @layer renderer-components @kind component */
 import { Box } from '../../primitives/Box';
-import { Text } from '../../primitives/Text';
 import { DialogShell } from '../DialogShell';
 import type { WizardDialogShellProps } from './WizardDialogShell.type';
 import './WizardDialogShell.css';
@@ -14,11 +13,7 @@ import './WizardDialogShell.css';
 const WizardDialogShell = (props: WizardDialogShellProps) => {
   const { open, onClose, title, headerExtra, steps, activeStep, onStepChange, actions, className = '', children } = props;
   return (
-    <DialogShell open={open} onClose={onClose} actions={actions} className={`wizard-dialog${className ? ` ${className}` : ''}`}>
-      <Box className="wizard-dialog__header">
-        <Text as="h3" className="wizard-dialog__title">{title}</Text>
-        {headerExtra}
-      </Box>
+    <DialogShell open={open} onClose={onClose} title={title} headerExtra={headerExtra} actions={actions} className={`wizard-dialog${className ? ` ${className}` : ''}`}>
       <Box className="wizard-dialog__steps">
         {steps.map((s, i) => (
           <Box

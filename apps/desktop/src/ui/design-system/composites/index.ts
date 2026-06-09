@@ -14,6 +14,8 @@ export { SettingsShell } from './SettingsShell';
 export type { SettingsShellProps } from './SettingsShell';
 export { DropdownMenu } from './DropdownMenu';
 export { FullScreenLayer } from './FullScreenLayer';
+export { WindowHeader } from './WindowHeader';
+export type { WindowHeaderProps } from './WindowHeader';
 export { Overlay } from './Overlay';
 export { Widget, WidgetManager, WidgetSettings, useWidgetLayout } from './Widget';
 export type { WidgetState, WidgetLayout, WidgetDefinition, SnapSide } from './Widget';

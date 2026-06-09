@@ -10,20 +10,6 @@
   padding: var(--space-lg);
 }
 
-.wizard-dialog__header {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-md);
-}
-
-.wizard-dialog__title {
-  font-size: var(--text-base);
-  font-weight: var(--weight-semi);
-  color: var(--color-text-primary);
-  margin: 0;
-}
-
 .wizard-dialog__steps {
   display: flex;
   gap: var(--space-xs);

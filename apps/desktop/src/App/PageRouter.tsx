@@ -79,7 +79,7 @@ const PageRouter = (props: PageRouterProps) => {
 
   if (nav.activePage === 'picker') {
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage}>
+      <FullScreenLayer onClose={nav.closePage} title="Profiles">
         <ProfilePicker
           profiles={profileMgmt.profiles}
           romStatuses={profileMgmt.romDisplayInfos}
@@ -96,7 +96,7 @@ const PageRouter = (props: PageRouterProps) => {
     );
   } else if (nav.activePage === 'data') {
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage}>
+      <FullScreenLayer onClose={nav.closePage} title="Data Manager">
         <DataManager
           profiles={profileMgmt.profiles}
           romStatuses={profileMgmt.romDisplayInfos}
@@ -117,19 +117,19 @@ const PageRouter = (props: PageRouterProps) => {
     );
   } else if (nav.activePage === 'input-tester') {
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage}>
+      <FullScreenLayer onClose={nav.closePage} title="Input Calibration">
         <InputCalibration />
       </FullScreenLayer>
     );
   } else if (nav.activePage === 'credits') {
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage}>
+      <FullScreenLayer onClose={nav.closePage} title="Credits">
         <CreditsPage />
       </FullScreenLayer>
     );
   } else if (nav.activePage === 'design-gallery') {
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage}>
+      <FullScreenLayer onClose={nav.closePage} title="Design Gallery">
         <DesignGallery />
       </FullScreenLayer>
     );
@@ -141,7 +141,8 @@ const PageRouter = (props: PageRouterProps) => {
     <>
       {otherPage}
       {profileMgmt.activeProfile && (
-        <FullScreenLayer onClose={nav.closePage} hidden={!profileHubVisible}>
+        <FullScreenLayer onClose={nav.closePage} hidden={!profileHubVisible} title="Home">
+
           <ProfileHub
             profile={profileMgmt.activeProfile}
             isGameRunning={game.isRunning}

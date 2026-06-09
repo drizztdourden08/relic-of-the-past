@@ -6,8 +6,10 @@ interface DialogShellProps {
   open: boolean;
   /** Invoked on backdrop click or Escape. */
   onClose: () => void;
-  /** Optional heading rendered as the dialog title (`h3`). */
+  /** Heading shown in the dialog header (gold, uppercase). Always rendered. */
   title?: ReactNode;
+  /** Optional content in the header row, between the title and the close ✕. */
+  headerExtra?: ReactNode;
   /** Optional footer action row (buttons). */
   actions?: ReactNode;
   /** Extra class for the panel (e.g. a per-dialog modifier). */

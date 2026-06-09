@@ -1,0 +1,31 @@
+/* @layer renderer-components @kind style */
+
+.window-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.window-header__title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: var(--weight-semi);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-gold-bright);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.window-header__extra {
+  flex-shrink: 0;
+}
+
+/* Bigger, easy-to-hit ✕ */
+.window-header__close {
+  flex-shrink: 0;
+  font-size: var(--text-lg);
+}

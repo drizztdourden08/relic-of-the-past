@@ -20,7 +20,7 @@ const AboutDialog = (props: AboutDialogProps) => {
   const actions = <Button variant="tertiary" onClick={onClose}>Close</Button>;
 
   return (
-    <DialogShell open={open} onClose={onClose} className="about-dialog" actions={actions}>
+    <DialogShell open={open} onClose={onClose} title="About" className="about-dialog" actions={actions}>
       <Box className="about-dialog__header">
         <Image className="about-dialog__logo" src="./logos/logo-256.png" alt="Relic of the Past" />
         <Text as="h2" className="about-dialog__title">Relic of the Past</Text>

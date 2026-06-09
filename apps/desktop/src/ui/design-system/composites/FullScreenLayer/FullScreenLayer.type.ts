@@ -4,6 +4,8 @@
 interface FullScreenLayerProps {
   children: ReactNode;
   onClose: () => void;
+  /** Window title — shown gold + uppercase in the header bar. */
+  title?: ReactNode;
   hidden?: boolean;
 }
 
