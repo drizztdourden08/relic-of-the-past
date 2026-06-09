@@ -26,7 +26,7 @@
 }
 
 .controller-disconnect-overlay__icon {
-  font-size: var(--text-xl);
+  font-size: var(--text-display);
   margin-bottom: var(--space-md);
   opacity: 0.8;
 }

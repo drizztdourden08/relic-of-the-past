@@ -31,7 +31,7 @@
 }
 
 .dropzone__icon {
-  font-size: var(--text-xl);
+  font-size: var(--text-2xl);
   opacity: 0.6;
 }
 

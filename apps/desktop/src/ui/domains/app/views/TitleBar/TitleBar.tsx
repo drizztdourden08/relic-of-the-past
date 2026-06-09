@@ -128,12 +128,12 @@ const TitleBar = (props: TitleBarProps) => {
       onMouseLeave={handleMouseLeave}
     >
       <Box className="titlebar__left" ref={menuRef}>
-        <IconButton variant="ghost" size="md" label="Menu" onClick={toggleMenu}>
+        <IconButton variant="ghost" size="sm" label="Menu" onClick={toggleMenu}>
           <Icon circles={MENU_ICON_CIRCLES} />
         </IconButton>
         <IconButton
           variant="ghost"
-          size="md"
+          size="sm"
           active={pinned}
           label={pinned ? 'Unpin window' : 'Pin window on top'}
           onClick={togglePin}
@@ -142,7 +142,7 @@ const TitleBar = (props: TitleBarProps) => {
         </IconButton>
         <IconButton
           variant="ghost"
-          size="md"
+          size="sm"
           active={isMuted}
           label={isMuted ? 'Unmute' : 'Mute'}
           onClick={toggleMute}
@@ -154,7 +154,7 @@ const TitleBar = (props: TitleBarProps) => {
           )}
         </IconButton>
         {gameRunning && (
-          <IconButton variant="ghost" size="md" label="Save States" onClick={onToggleSaveStates}>
+          <IconButton variant="ghost" size="sm" label="Save States" onClick={onToggleSaveStates}>
             <Icon paths={SAVE_ICON_PATHS} size={14} />
           </IconButton>
         )}

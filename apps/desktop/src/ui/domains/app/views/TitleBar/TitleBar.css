@@ -38,6 +38,7 @@
 .titlebar__left {
   display: flex;
   align-items: center;
+  gap: var(--space-xs);
   padding-left: var(--space-sm);
   -webkit-app-region: no-drag;
   position: relative;
