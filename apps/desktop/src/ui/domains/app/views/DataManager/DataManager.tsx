@@ -69,10 +69,6 @@ const DataManager = (props: DataManagerProps) => {
 
   return (
     <Box className="data-manager">
-      <Box className="data-manager__header">
-        <Text as="h2" className="data-manager__title">Data Manager</Text>
-      </Box>
-
       {loadingProfile && (
         <Box className="data-manager__loading">
           <ListItemRow selected icon={<Spinner size="sm" />} name={`Loading profile: ${loadingProfile}…`} />

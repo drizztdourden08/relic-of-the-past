@@ -35,7 +35,6 @@ const InputCalibration = () => {
     <Box className="input-cal">
       {/* Header */}
       <Box className="input-cal__header">
-        <Text className="input-cal__title">Input Calibration</Text>
         <Text className={`input-cal__status ${anyHidConnected ? 'input-cal__status--connected' : 'input-cal__status--disconnected'}`}>
           {anyHidConnected
             ? `Connected ${'\u2022'} ${gamepads.length + webHidReader.getConnectedDeviceKeys().length} controller(s)`

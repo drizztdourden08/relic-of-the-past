@@ -7,20 +7,6 @@
   overflow: hidden;
 }
 
-/* ─── Header ─── */
-
-.data-manager__header {
-  flex-shrink: 0;
-  padding: 0 var(--space-sm) var(--space-md);
-}
-
-.data-manager__title {
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semi);
-  color: var(--color-gold-bright);
-  margin: 0;
-}
-
 /* ─── Body: left tabs + content ─── */
 
 .data-manager__body {

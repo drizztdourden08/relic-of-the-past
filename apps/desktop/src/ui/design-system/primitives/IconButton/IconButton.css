@@ -5,6 +5,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
+  line-height: 1;
   background: var(--c-surface);
   border: 1px solid var(--c-border);
   border-radius: var(--r-md);

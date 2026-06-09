@@ -20,12 +20,6 @@
   margin-bottom: var(--space-xl);
 }
 
-.input-cal__title {
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semi);
-  color: var(--color-gold-bright);
-}
-
 .input-cal__status {
   font-size: var(--text-sm);
   padding: var(--space-xs) var(--space-sm);

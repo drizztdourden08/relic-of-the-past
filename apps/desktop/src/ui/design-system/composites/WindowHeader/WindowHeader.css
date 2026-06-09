@@ -10,7 +10,7 @@
   flex: 1;
   min-width: 0;
   margin: 0;
-  font-size: var(--text-base);
+  font-size: var(--text-lg);
   font-weight: var(--weight-semi);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -28,6 +28,7 @@
    `.icon-btn--md`'s font-size so the glyph is actually large. */
 .window-header .window-header__close {
   flex-shrink: 0;
-  font-size: var(--text-2xl);
+  font-size: var(--text-xl);
+  line-height: 1;
   color: var(--c-text-dim);
 }

@@ -29,6 +29,11 @@
   padding: var(--space-md) var(--space-xl);
 }
 
+/* Window titles read like page titles — bigger than dialog titles. */
+.fullscreen-layer__header .window-header__title {
+  font-size: var(--text-xl);
+}
+
 .fullscreen-layer__content {
   flex: 1;
   min-height: 0;
