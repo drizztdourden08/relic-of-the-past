@@ -5,6 +5,7 @@
    ═══════════════════════════════════════════════════════════════ */
 
 .tracker-summary {
+  container-type: inline-size;
   padding: var(--space-sm) var(--space-md);
   border-bottom: 1px solid var(--c-border);
   flex-shrink: 0;
@@ -29,14 +30,32 @@
 
 .tracker-summary__stats {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-sm);
   font-size: var(--text-xs);
+}
+
+.tracker-summary__stat {
+  white-space: nowrap;
 }
 
 .tracker-summary__stat--completed { color: var(--c-green); }
 .tracker-summary__stat--reachable { color: var(--c-warning); }
 .tracker-summary__stat--blocked { color: var(--c-text-dim); }
 .tracker-summary__stat--total { color: var(--c-text); }
+
+.tracker-summary__stat--pct {
+  color: var(--c-text-dim);
+  margin-left: auto;
+}
+
+/* Labels by default; swap to compact icons when the widget gets narrow. */
+.tracker-summary__stat-icon { display: none; }
+
+@container (max-width: 340px) {
+  .tracker-summary__stat-label { display: none; }
+  .tracker-summary__stat-icon { display: inline; }
+}
 
 /* ═══════════════════════════════════════════════════════════════
    FILTERS & CONTROLS
