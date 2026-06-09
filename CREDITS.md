@@ -37,6 +37,12 @@
 | **Kenney** | [Input Prompts](https://kenney.nl/assets/input-prompts) | Assets Used Directly — Switch, Xbox, PlayStation, GameCube, Keyboard, and Generic SVG icons used as-is for button prompts | CC0 |
 | **Tiago Alexander** | [SNES Controller in Sketch](https://www.sketchappsources.com/free-source/4788-snes-controller-sketch-freebie-resource.html) | Assets Modified — Sketch file converted to Figma, individual button SVGs exported and heavily modified for SNES button prompts | — |
 
+## Map & Entrance Icons
+
+| Who | Project | Use | License |
+|-----|---------|-----|---------|
+| **Lorc, Delapouite & contributors** | [game-icons.net](https://game-icons.net) | Assets Used Directly — entrance/map icons (door, cave, dungeon, fairy, shop…) via `@iconify-icons/game-icons` | CC BY 3.0 |
+
 ## Randomizer Logic
 
 | Who | Project | Use | License |

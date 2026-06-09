@@ -147,6 +147,21 @@ const CREDITS: CreditCategory[] = [
     ],
   },
   {
+    id: 'map-icons',
+    title: 'Map & Entrance Icons',
+    entries: [
+      {
+        name: 'Lorc, Delapouite & contributors',
+        project: 'game-icons.net',
+        description: 'Open icon set; door, cave, dungeon, fairy, shop and other entrance/map markers.',
+        usage: 'assets-direct',
+        usageNote: 'SVG icons used via @iconify-icons/game-icons for navigation/minimap entrance markers. Attribution required by license.',
+        url: 'https://game-icons.net',
+        license: 'CC BY 3.0',
+      },
+    ],
+  },
+  {
     id: 'randomizer',
     title: 'Randomizer Logic',
     entries: [
