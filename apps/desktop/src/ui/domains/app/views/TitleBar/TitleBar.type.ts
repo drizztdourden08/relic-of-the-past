@@ -23,6 +23,8 @@ interface TitleBarProps {
   onShowAbout: () => void;
   activeProfile: Profile | null;
   gameRunning: boolean;
+  /** Visibility of each toggleable widget, keyed by widget id, for menu checkmarks. */
+  widgetVisibility?: Record<string, boolean>;
   windowMode?: GameSettings['windowMode'];
   isMuted?: boolean;
   onToggleMute?: () => void;

@@ -7,6 +7,8 @@ interface MenuItem {
   label: string;
   description?: string;
   disabled?: boolean;
+  /** When true, renders a trailing checkmark (e.g. an enabled widget). */
+  checked?: boolean;
   onClick?: () => void;
   children?: MenuItem[];
 }

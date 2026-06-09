@@ -13,7 +13,7 @@
  */
 :root {
   /* ─── Surfaces — ONE background family (depth via border + shadow, not hue) ─── */
-  --c-bg:            #0e0e12;             /* THE background: canvas, pages, panels, docked widgets */
+  --c-bg:            #000;                /* THE background: canvas, pages, panels, docked widgets — pure black */
   --c-surface:       #17171d;            /* one step up: cards, inputs, dialogs, dropdowns, popovers */
   --c-sunken:        #08080b;            /* wells, code blocks, deep insets */
   --c-glass:         rgb(14 14 18 / 0.92); /* floating-over-game panels (+ --blur) */

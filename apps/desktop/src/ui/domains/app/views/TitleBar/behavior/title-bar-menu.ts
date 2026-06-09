@@ -10,6 +10,7 @@ type MenuBuilderDeps = Pick<TitleBarProps,
   | 'onToggleInventory' | 'onToggleChecks' | 'onToggleCheats' | 'onShowLogs' | 'onToggleDebug'
   | 'onShowConnectionDebug' | 'onToggleDataset' | 'onShowInputTester' | 'onShowSpriteDebug'
   | 'onShowShadowEditor' | 'onCheckForUpdates' | 'onShowCredits' | 'onShowDesignGallery' | 'onShowAbout'
+  | 'widgetVisibility'
 > & { closeMenu: () => void };
 
 const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
@@ -18,6 +19,7 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
     onShowProfile, onToggleSaveStates, onShowDataManager, onToggleInventory, onToggleChecks,
     onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset,
     onShowInputTester, onShowSpriteDebug, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout,
+    widgetVisibility = {},
   } = deps;
 
   return [
@@ -53,13 +55,13 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
       icon: '🔧',
       label: 'Widgets',
       children: [
-        { key: 'inventory', icon: '🎒', label: 'Inventory Tracker', onClick: () => { closeMenu(); onToggleInventory(); } },
-        { key: 'checks', icon: '🗺️', label: 'Checks Tracker', onClick: () => { closeMenu(); onToggleChecks(); } },
-        { key: 'cheats', icon: '⚡', label: 'Cheats', onClick: () => { closeMenu(); onToggleCheats(); } },
-        { key: 'logs', icon: '📋', label: 'Logs', onClick: () => { closeMenu(); onShowLogs(); } },
-        { key: 'debug', icon: '🐛', label: 'Debug State', onClick: () => { closeMenu(); onToggleDebug(); } },
-        { key: 'navigation', icon: '🔗', label: 'Location & Navigation', onClick: () => { closeMenu(); onShowConnectionDebug(); } },
-        { key: 'dataset', icon: '📊', label: 'Dataset & Mapping', onClick: () => { closeMenu(); onToggleDataset(); } },
+        { key: 'inventory', icon: '🎒', label: 'Inventory Tracker', checked: widgetVisibility.inventory, onClick: () => { closeMenu(); onToggleInventory(); } },
+        { key: 'checks', icon: '🗺️', label: 'Checks Tracker', checked: widgetVisibility.checks, onClick: () => { closeMenu(); onToggleChecks(); } },
+        { key: 'cheats', icon: '⚡', label: 'Cheats', checked: widgetVisibility.cheats, onClick: () => { closeMenu(); onToggleCheats(); } },
+        { key: 'logs', icon: '📋', label: 'Logs', checked: widgetVisibility.logs, onClick: () => { closeMenu(); onShowLogs(); } },
+        { key: 'debug', icon: '🐛', label: 'Debug State', checked: widgetVisibility.debug, onClick: () => { closeMenu(); onToggleDebug(); } },
+        { key: 'navigation', icon: '🔗', label: 'Location & Navigation', checked: widgetVisibility.navigation, onClick: () => { closeMenu(); onShowConnectionDebug(); } },
+        { key: 'dataset', icon: '📊', label: 'Dataset & Mapping', checked: widgetVisibility.dataset, onClick: () => { closeMenu(); onToggleDataset(); } },
       ],
     },
     {

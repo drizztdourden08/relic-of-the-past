@@ -39,6 +39,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
           >
             {item.icon && <Text className="dropdown__icon">{item.icon}</Text>}
             <Text className="dropdown__label">{item.label}</Text>
+            {item.checked && <Text className="dropdown__check">✓</Text>}
           </Box>
         );
       })}

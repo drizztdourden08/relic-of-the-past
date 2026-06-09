@@ -26,10 +26,10 @@
   color: var(--color-text-primary);
   overflow: hidden;
 
-  /* Frame uses variable opacity */
-  background: rgb(20, 20, 30, calc(0.96 * var(--widget-frame-opacity)));
-  border: 1px solid rgb(255, 255, 255, calc(0.08 * var(--widget-frame-opacity)));
-  box-shadow: 0 4px 20px rgb(0, 0, 0, calc(0.4 * var(--widget-frame-opacity)));
+  /* Frame uses variable opacity — neutral (NOT bluish), matches the one bg family */
+  background: rgb(14 14 18 / calc(0.96 * var(--widget-frame-opacity)));
+  border: 1px solid rgb(255 255 255 / calc(0.06 * var(--widget-frame-opacity)));
+  box-shadow: 0 4px 20px rgb(0 0 0 / calc(0.4 * var(--widget-frame-opacity)));
   transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
 }
 
@@ -67,7 +67,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 4px 8px;
-  border-bottom: 1px solid rgb(255, 255, 255, calc(0.06 * var(--widget-frame-opacity)));
+  border-bottom: 1px solid rgb(255 255 255 / calc(0.06 * var(--widget-frame-opacity)));
   flex-shrink: 0;
   user-select: none;
   min-height: 26px;
@@ -112,7 +112,7 @@
 }
 
 .widget__btn:hover {
-  background: rgb(255, 255, 255, 0.08);
+  background: var(--c-hover);
   color: var(--color-text-primary);
 }
 
@@ -176,11 +176,11 @@
 /* ─── Widget Settings Popover ─── */
 
 .widget-settings {
-  background: rgb(30, 30, 45, 0.98);
-  border: 1px solid rgb(255, 255, 255, 0.12);
-  border-radius: 8px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-hairline);
+  border-radius: var(--r-lg);
   padding: 10px 12px;
-  box-shadow: 0 8px 32px rgb(0, 0, 0, 0.6);
+  box-shadow: var(--shadow-3);
   min-width: 200px;
   z-index: 200;
   display: flex;
@@ -204,7 +204,7 @@
 
 .widget-settings__separator {
   height: 1px;
-  background: rgb(255, 255, 255, 0.08);
+  background: var(--c-border);
   margin: 2px 0;
 }
 

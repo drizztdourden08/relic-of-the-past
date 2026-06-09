@@ -58,6 +58,7 @@ const SubMenu = (props: SubMenuProps) => {
               >
                 {child.icon && <Text className="dropdown__icon">{child.icon}</Text>}
                 <Text className="dropdown__label">{child.label}</Text>
+                {child.checked && <Text className="dropdown__check">✓</Text>}
               </Box>
             );
           })}

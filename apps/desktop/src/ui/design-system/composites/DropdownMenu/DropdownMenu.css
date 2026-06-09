@@ -44,9 +44,9 @@
 .dropdown__item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
   width: 100%;
-  padding: 5px 12px;
+  padding: var(--space-xs) var(--space-md);
   background: none;
   border: none;
   color: var(--color-text-secondary);
@@ -58,8 +58,8 @@
 }
 
 .dropdown__item:hover:not(:disabled) {
-  background: var(--color-bg-raised);
-  color: var(--color-text-primary);
+  background: var(--c-selected);
+  color: var(--c-gold-bright);
 }
 
 .dropdown__item:disabled {
@@ -84,8 +84,15 @@
 
 .dropdown__chevron {
   margin-left: auto;
-  font-size: 14px;
+  font-size: var(--text-base);
   color: var(--color-text-faint);
+}
+
+.dropdown__check {
+  margin-left: auto;
+  padding-left: var(--space-sm);
+  font-size: var(--text-sm);
+  color: var(--c-gold-bright);
 }
 
 .dropdown__separator {

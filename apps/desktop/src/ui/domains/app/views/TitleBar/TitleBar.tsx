@@ -40,6 +40,7 @@ const TitleBar = (props: TitleBarProps) => {
     onShowAbout,
     activeProfile,
     gameRunning,
+    widgetVisibility,
     windowMode = 'default',
     isMuted = false,
     onToggleMute,
@@ -109,6 +110,7 @@ const TitleBar = (props: TitleBarProps) => {
     onShowProfile, onToggleSaveStates, onShowDataManager, onToggleInventory, onToggleChecks,
     onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset,
     onShowInputTester, onShowSpriteDebug, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout,
+    widgetVisibility,
   });
 
 
@@ -132,26 +134,28 @@ const TitleBar = (props: TitleBarProps) => {
         <IconButton
           variant="ghost"
           size="md"
+          active={pinned}
           label={pinned ? 'Unpin window' : 'Pin window on top'}
           onClick={togglePin}
         >
-          <Icon paths={PIN_ICON_PATHS} size={14} style={{ opacity: pinned ? 1 : 0.4 }} />
+          <Icon paths={PIN_ICON_PATHS} size={14} />
         </IconButton>
         <IconButton
           variant="ghost"
           size="md"
+          active={isMuted}
           label={isMuted ? 'Unmute' : 'Mute'}
           onClick={toggleMute}
         >
           {isMuted ? (
             <Icon paths={MUTE_ICON_PATHS} size={14} />
           ) : (
-            <Icon paths={VOLUME_ICON_PATHS} size={14} style={{ opacity: 0.4 }} />
+            <Icon paths={VOLUME_ICON_PATHS} size={14} />
           )}
         </IconButton>
         {gameRunning && (
           <IconButton variant="ghost" size="md" label="Save States" onClick={onToggleSaveStates}>
-            <Icon paths={SAVE_ICON_PATHS} size={14} style={{ opacity: 0.7 }} />
+            <Icon paths={SAVE_ICON_PATHS} size={14} />
           </IconButton>
         )}
         {updateAvailable && (

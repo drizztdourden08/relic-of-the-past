@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind component */
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Box, Image } from '@ds/primitives';
 import { WidgetManager, useWidgetLayout } from '@ds/composites/Widget';
 import { Dialog } from '@ds/composites/Dialog';
@@ -101,6 +101,8 @@ const AppMain = () => {
     getInputManager().setInputSuppressed(!gameActive);
   }, [game.isRunning, nav.activePage, showSpriteDebug]);
 
+  const widgetVisibility = useMemo(() => Object.fromEntries(widgets.layout.widgets.map((w) => [w.id, w.visible])), [widgets.layout]);
+
   return (
     <Box className="app">
       <TitleBar
@@ -123,6 +125,7 @@ const AppMain = () => {
         onShowShadowEditor={handleShowShadowEditor}
         onShowAbout={() => setShowAbout(true)}
         activeProfile={profileMgmt.activeProfile}
+        widgetVisibility={widgetVisibility}
         gameRunning={game.isRunning}
         windowMode={display.windowMode}
         isMuted={audio.isMuted}

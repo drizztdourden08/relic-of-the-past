@@ -6,6 +6,8 @@ type IconButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'dange
 interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: IconButtonVariant;
   size?: 'sm' | 'md';
+  /** Toggled-on state — renders a clear gold active treatment. */
+  active?: boolean;
   label: string;
   children: ReactNode;
 }
