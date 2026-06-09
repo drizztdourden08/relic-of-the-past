@@ -253,3 +253,31 @@ And **delete/alias the ghost tokens** components reference but that don't exist
 `--color-text-tertiary`→`text-muted`, `--color-danger/-default`→`danger-base`,
 `--color-success`→`green-base`, `--color-error`→`danger-base`,
 `--color-border-focus`→`gold-base`, `--radius-full`→`radius-pill`.
+
+## Token enforcement — colors are tokens-only (mechanically blocked)
+
+Raw colors are **gating errors**, not conventions. Two blockers:
+
+1. **CSS** (`.stylelintrc.json`): `color-no-hex` + `color-named` (error) and a
+   `function-disallowed-list` banning `rgb() / rgba() / hsl() / hsla() / hwb()` in
+   all `apps/desktop/src/ui/**/*.css`. Use `var(--c-*)` / `var(--color-*)`.
+2. **Inline styles / TS** (`eslint.config.mjs` → `local/no-raw-color`, error): bans
+   hex/rgb/hsl literals assigned to colour-ish style properties (`color`,
+   `background`, `borderColor`, `fill`, `stroke`, `boxShadow`, …). Dynamic values
+   (`color: cond ? a : b`, `fn()`) and canvas `ctx.fillStyle = …` assignments do
+   **not** match — those are the legitimate escape hatches below.
+
+### Documented exceptions (where raw colors are allowed)
+
+| Where | Why |
+|-------|-----|
+| `tokens/**` | The token definitions themselves. |
+| `domains/hud/**` | Replicates the in-game HUD with the exact SNES palette — game-accurate, not design tokens. |
+| Canvas rendering (`navigation-overlay/draw/*`, shadow `render*`, `gizmo-render`) | `ctx.fillStyle`/`ImageData` need real colour strings; a CSS `var()` can't be used. |
+| Categorical data-viz palettes (`EDGE_COLORS`, `DIR_COLORS`, `ReqIcon`, HID byte-roles in `ByteGrid`/`wizard-helpers`, sprite-category hues, driver-type badge, log `CHANNEL_COLORS`) | Fixed distinct hues that **encode categories** (like chart colours), not theme accents. Centralised constants, not scattered literals. |
+| Dynamic frame opacity (`Widget`/`TrackerView` frames) | `rgb(… / calc(α * var(--frame-opacity)))` — per-instance runtime opacity, not a flat token. Opted out per-line with `/* stylelint-disable-line function-disallowed-list */`. |
+| `DebugWidget` | Deliberate retro green-on-black terminal. |
+| Electron main process (`electron/**`) | Native `BrowserWindow` options (e.g. window `backgroundColor`) — not renderer CSS. |
+
+Sub-10px font sizes in dense debug widgets are left as-is (the type scale floors
+at `--text-xs` = 10px).
