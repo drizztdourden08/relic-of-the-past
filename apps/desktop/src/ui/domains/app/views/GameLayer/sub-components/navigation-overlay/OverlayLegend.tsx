@@ -5,9 +5,9 @@ import { Text } from '../../../../../../design-system/primitives/Text';
 const OverlayLegend = () => {
   return (
     <Box style={{
-      position: 'absolute', bottom: 6, right: 6, zIndex: 7,
-      background: 'var(--c-glass)', border: '1px solid var(--c-info)',
-      borderRadius: 'var(--r-sm)', padding: '4px 8px', pointerEvents: 'none',
+      background: 'var(--c-glass)', border: '1px solid var(--c-hairline)',
+      borderRadius: 'var(--r-sm)', padding: '4px 8px',
+      boxShadow: 'var(--shadow-1)',
       fontFamily: 'monospace', fontSize: 10, lineHeight: '15px',
       display: 'flex', flexDirection: 'column', gap: 2,
     }}>

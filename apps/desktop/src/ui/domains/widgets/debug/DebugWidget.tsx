@@ -7,6 +7,7 @@
 import { Box, Button } from '../../../design-system/primitives';
 import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { useHudSettingsStore } from '../../../../stores/hud-settings-store';
+import { getFps } from '../../../../lib/game';
 import { buildStateSections } from './behavior/build-state-sections';
 import { StateSection } from './sub-components/StateSection';
 import './DebugWidget.css';
@@ -16,7 +17,7 @@ type EnhancedPart = 'main' | 'pause';
 const DebugWidgetContent = () => {
   const state = useGameUIStore();
   const hudSettings = useHudSettingsStore();
-  const sections = buildStateSections(state);
+  const sections = buildStateSections(state, getFps());
 
   const parts = hudSettings.enhancedParts;
   const mainOn = parts.includes('main');

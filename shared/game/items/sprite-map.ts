@@ -83,7 +83,10 @@ const ITEM_SPRITE_MAP: Record<string, string> = {
 
   // Collectibles
   'Heart Piece':       'receipt-heart-piece',
+  'Piece of Heart':    'receipt-heart-piece',
   'Heart Container':   'receipt-heart-container',
+  'Boss Heart Container':      'receipt-heart-container',
+  'Sanctuary Heart Container': 'receipt-heart-container',
   'Small Key':         'receipt-small-key',
 
   // Pendants & crystals

@@ -27,14 +27,27 @@ const formatHearts = (current: number, capacity: number): string => {
 };
 
 const bin = (value: number, bits: number): string => value.toString(2).padStart(bits, '0');
+const hex = (value: number, pad = 2): string => `0x${value.toString(16).padStart(pad, '0')}`;
 const yn = (v: boolean | number): string => (v ? '✓' : '—');
 
-const buildStateSections = (state: GameUIState): StateSectionData[] => {
+const buildStateSections = (state: GameUIState, fps?: number): StateSectionData[] => {
   const { mode, gameMode, hud, inventory, equipment, dungeonProgress, text, map, floorIndicator, saveMenu } = state;
   return [
     { title: 'Mode', rows: [
       { label: 'UI Mode', value: String(mode) },
-      { label: 'Module', value: `${gameMode.mainModule} / ${gameMode.subModule} / ${gameMode.subSubModule}`, mono: true },
+      { label: 'Module / Sub / SubSub', value: `${gameMode.mainModule} / ${gameMode.subModule} / ${gameMode.subSubModule}`, mono: true },
+      ...(fps !== undefined ? [{ label: 'FPS', value: String(fps) }] : []),
+    ] },
+    { title: 'Location', rows: [
+      { label: 'World', value: map.isDarkWorld ? 'Dark' : 'Light' },
+      { label: 'Indoors', value: yn(map.isIndoors) },
+      { label: 'OW Screen / Area', value: `${map.overworldScreenIndex} / ${map.overworldAreaIndex}` },
+      { label: 'Room', value: hex(map.roomIndex, 3), mono: true },
+      { label: 'Palace', value: map.palaceIndex === 0xff ? '—' : String(map.palaceIndex >> 1) },
+      { label: 'Entrance', value: hex(map.whichEntrance), mono: true },
+      { label: 'Floor', value: String(map.currentFloor) },
+      { label: 'Layer', value: map.linkLayer === 0 ? 'Upper' : 'Lower' },
+      { label: 'Link X / Y', value: `${map.linkX}, ${map.linkY}`, mono: true },
     ] },
     { title: 'HUD', rows: [
       { label: 'Hearts', value: formatHearts(hud.healthCurrent, hud.healthCapacity), mono: true },
@@ -50,6 +63,8 @@ const buildStateSections = (state: GameUIState): StateSectionData[] => {
       { label: 'Armor', value: String(equipment.armor) },
       { label: 'Gloves', value: String(equipment.gloves) },
       { label: 'Boots / Flippers / Pearl', value: `${yn(equipment.boots)} ${yn(equipment.flippers)} ${yn(equipment.moonPearl)}`, mono: true },
+      { label: 'Heart Pieces', value: `${equipment.heartPieces}/4` },
+      { label: 'Ability Flags', value: hex(equipment.abilityFlags), mono: true },
     ] },
     { title: 'Inventory', rows: [
       ...inventory.items
@@ -70,11 +85,10 @@ const buildStateSections = (state: GameUIState): StateSectionData[] => {
       { label: 'Phase', value: String(text.renderPhase) },
       { label: 'Incr / Choice / Wait', value: `${text.incrementalState} / ${text.choice} / ${text.waitTimer}`, mono: true },
     ] },
-    { title: 'Map', rows: [
+    { title: 'Map Menu', rows: [
       { label: 'Overworld State', value: String(map.overworldMapState) },
-      { label: 'Room', value: `0x${map.roomIndex.toString(16).padStart(3, '0')}`, mono: true },
-      { label: 'Dungeon Idx / Floor', value: `${map.dungeonIdx} / ${map.dungeonFloor}` },
-      { label: 'Palace / Cur Floor', value: `${map.palaceIndex >> 1} / ${map.currentFloor}` },
+      { label: 'Dungeon Idx', value: String(map.dungeonIdx) },
+      { label: 'Dungeon Floor', value: String(map.dungeonFloor) },
       { label: 'Init State', value: String(map.dungeonInitState) },
     ] },
     { title: 'Floor Indicator', rows: [

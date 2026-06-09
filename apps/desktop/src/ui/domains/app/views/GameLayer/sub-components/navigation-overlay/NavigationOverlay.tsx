@@ -82,8 +82,10 @@ const NavigationOverlay = ({ width, height, gameRunning }: Props) => {
           pathPreviewState={mouseState}
         />
       )}
-      <PathControlsLegend />
-      <OverlayLegend />
+      <Box style={{ position: 'absolute', bottom: 6, right: 6, zIndex: 7, display: 'flex', gap: 8, alignItems: 'flex-end', pointerEvents: 'none' }}>
+        <PathControlsLegend />
+        <OverlayLegend />
+      </Box>
     </Box>
   );
 };
