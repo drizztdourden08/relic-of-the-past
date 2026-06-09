@@ -8,23 +8,29 @@ import './SideNav.css';
 
 /** Searchable, grouped left navigation. Active item is gold. */
 const SideNav = (props: SideNavProps) => {
-  const { groups, activeId, onSelect, searchable = false, searchPlaceholder = 'Filter…', header } = props;
-  const [query, setQuery] = useState('');
-  const q = query.trim().toLowerCase();
+  const { groups, activeId, onSelect, searchable = false, searchPlaceholder = 'Filter…', header, query, onQueryChange } = props;
+  const controlled = query !== undefined;
+  const [innerQuery, setInnerQuery] = useState('');
+  const value = controlled ? query : innerQuery;
+  const q = value.trim().toLowerCase();
 
+  // Controlled: the parent owns the query and pre-filters `groups`, so SideNav
+  // must not filter again (the nav labels rarely contain the content query).
   const filtered = useMemo(() => {
-    if (!q) return groups;
+    if (controlled || !q) return groups;
     return groups
       .map(g => ({ ...g, items: g.items.filter(i => i.label.toLowerCase().includes(q)) }))
       .filter(g => g.items.length > 0);
-  }, [groups, q]);
+  }, [controlled, groups, q]);
+
+  const onInput = (next: string) => (controlled ? onQueryChange?.(next) : setInnerQuery(next));
 
   return (
     <Box as="nav" className="side-nav">
       {header && <Box className="side-nav__header">{header}</Box>}
       {searchable && (
         <Box className="side-nav__search">
-          <TextInput value={query} onChange={e => setQuery(e.target.value)} placeholder={searchPlaceholder} />
+          <TextInput value={value} onChange={e => onInput(e.target.value)} placeholder={searchPlaceholder} />
         </Box>
       )}
       <Box className="side-nav__list">

@@ -21,6 +21,13 @@ interface SideNavProps {
   searchPlaceholder?: string;
   /** Optional content above the list (title, etc.). */
   header?: ReactNode;
+  /**
+   * Controlled search value. When provided, the parent owns the query (and is
+   * responsible for filtering `groups`); SideNav stops filtering internally.
+   * Omit for the uncontrolled mode where SideNav filters by item label itself.
+   */
+  query?: string;
+  onQueryChange?: (value: string) => void;
 }
 
 export type { SideNavItem, SideNavGroup, SideNavProps };

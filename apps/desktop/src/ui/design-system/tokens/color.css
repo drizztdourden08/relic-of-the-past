@@ -1,60 +1,66 @@
 /* @layer renderer-design-system @kind style */
 
-/* Color tokens — ALttP-inspired dark palette (gold/green on black). */
+/*
+ * Color tokens — now ALIASES to the canonical design-language tokens (--c-*,
+ * defined in canonical.css). The whole app references these legacy --color-*
+ * names, so aliasing them re-skins everything onto the one canonical palette:
+ * ONE background family, gold=primary / green=secondary / grey=tertiary.
+ * (HUD is unaffected — it uses its own SNES palette, not these.)
+ */
 :root {
-  /* ─── Surface Colors ─── */
-  --color-bg-deep:        #0a0a0f;
-  --color-bg-base:        #111116;
-  --color-bg-raised:      #1a1a20;
-  --color-bg-elevated:    #222228;
-  --color-bg-overlay:     rgb(10, 10, 15, 0.88);
+  /* ─── Surfaces (collapse 4 levels → one bg + one raised surface) ─── */
+  --color-bg-deep:        var(--c-bg);
+  --color-bg-base:        var(--c-bg);
+  --color-bg-raised:      var(--c-surface);
+  --color-bg-elevated:    var(--c-surface);
+  --color-bg-overlay:     var(--c-glass);
 
-  /* ─── Border Colors ─── */
-  --color-border-subtle:  #2a2a30;
-  --color-border-default: #333340;
-  --color-border-strong:  #444450;
+  /* ─── Borders ─── */
+  --color-border-subtle:  var(--c-border);
+  --color-border-default: var(--c-border);
+  --color-border-strong:  var(--c-border-strong);
 
-  /* ─── Surface Overlays (tint-on-surface for hover/selected/inset states) ─── */
-  --color-surface-hover:        rgb(255, 255, 255, 0.04);
-  --color-surface-hover-strong: rgb(255, 255, 255, 0.07);
-  --color-surface-inset:        rgb(255, 255, 255, 0.02);
-  --color-surface-selected:     rgb(200, 168, 78, 0.08);
-  --color-border-hover:         rgb(255, 255, 255, 0.1);
+  /* ─── Surface overlays / state fills ─── */
+  --color-surface-hover:        var(--c-hover);
+  --color-surface-hover-strong: var(--c-hover);
+  --color-surface-inset:        var(--c-hover);
+  --color-surface-selected:     var(--c-selected);
+  --color-border-hover:         var(--c-border-strong);
 
-  /* ─── Text Colors ─── */
-  --color-text-primary:   #e8e8ec;
-  --color-text-secondary: #a0a0a8;
-  --color-text-muted:     #666670;
-  --color-text-faint:     #44444c;
+  /* ─── Text ─── */
+  --color-text-primary:   var(--c-text);
+  --color-text-secondary: var(--c-text-dim);
+  --color-text-muted:     var(--c-text-muted);
+  --color-text-faint:     var(--c-text-faint);
 
-  /* ─── Accent: Gold (Triforce) ─── */
-  --color-gold-dim:       #2a2418;
-  --color-gold-base:      #c8a84e;
-  --color-gold-bright:    #e4c65a;
-  --color-gold-glow:      rgb(200, 168, 78, 0.15);
+  /* ─── Accent: Gold (primary) ─── */
+  --color-gold-dim:       var(--c-gold-dim);
+  --color-gold-base:      var(--c-gold);
+  --color-gold-bright:    var(--c-gold-bright);
+  --color-gold-glow:      var(--c-gold-soft);
 
-  /* ─── Accent: Green (Hyrule) ─── */
-  --color-green-dim:      #1a2a1e;
-  --color-green-base:     #4a9966;
-  --color-green-bright:   #5cb87a;
-  --color-green-glow:     rgb(74, 153, 102, 0.12);
-  --color-green-border:   #2a4a2e;
-  --color-green-surface:  #223a26;
+  /* ─── Accent: Green (secondary) ─── */
+  --color-green-dim:      var(--c-green-dim);
+  --color-green-base:     var(--c-green);
+  --color-green-bright:   var(--c-green-bright);
+  --color-green-glow:     var(--c-green-soft);
+  --color-green-border:   var(--c-green);
+  --color-green-surface:  var(--c-green-dim);
 
   /* ─── Semantic: Danger ─── */
-  --color-danger-dim:     #2a1a1a;
-  --color-danger-base:    #e94560;
-  --color-danger-bright:  #f57;
-  --color-danger-surface: #1e1618;
-  --color-danger-border:  #5a2020;
-  --color-danger-border-dim: #4a2a2a;
-  --color-danger-surface-hover: #3a2020;
-  --color-danger-text:    #e0a0a0;
+  --color-danger-dim:     var(--c-danger-dim);
+  --color-danger-base:    var(--c-danger);
+  --color-danger-bright:  var(--c-danger);
+  --color-danger-surface: var(--c-danger-dim);
+  --color-danger-border:  var(--c-danger);
+  --color-danger-border-dim: var(--c-danger-dim);
+  --color-danger-surface-hover: var(--c-danger-dim);
+  --color-danger-text:    var(--c-danger);
 
   /* ─── Semantic: Warning ─── */
-  --color-warning-base:   #ffd54f;
-  --color-warning-dim:    #2a2618;
+  --color-warning-base:   var(--c-warning);
+  --color-warning-dim:    var(--c-warning-dim);
 
   /* ─── Semantic: Info ─── */
-  --color-info-base:      #5b9bd5;
+  --color-info-base:      var(--c-info);
 }
