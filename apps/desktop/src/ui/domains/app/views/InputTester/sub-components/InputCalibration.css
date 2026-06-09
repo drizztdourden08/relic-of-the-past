@@ -187,7 +187,7 @@
 
 .input-cal__stale-label {
   font-size: 20px;
-  font-weight: 900;
+  font-weight: var(--weight-black);
   letter-spacing: 3px;
   color: var(--color-danger-text);
   text-shadow: 0 0 8px var(--c-danger);

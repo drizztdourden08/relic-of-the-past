@@ -208,7 +208,7 @@
 
 .tracker-filters__tag-group-label {
   font-size: 9px;
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   text-transform: uppercase;
   color: var(--color-text-secondary);
   display: block;

@@ -16,7 +16,10 @@
       "rules": {
         "color-no-hex": true,
         "color-named": "never",
-        "function-disallowed-list": ["rgb", "rgba", "hsl", "hsla", "hwb"]
+        "function-disallowed-list": ["rgb", "rgba", "hsl", "hsla", "hwb"],
+        "declaration-property-value-disallowed-list": {
+          "font-weight": ["/^[0-9]+$/"]
+        }
       }
     },
     {
@@ -25,7 +28,8 @@
       "rules": {
         "color-no-hex": null,
         "color-named": null,
-        "function-disallowed-list": null
+        "function-disallowed-list": null,
+        "declaration-property-value-disallowed-list": null
       }
     },
     {
@@ -34,7 +38,8 @@
       "rules": {
         "color-no-hex": null,
         "color-named": null,
-        "function-disallowed-list": null
+        "function-disallowed-list": null,
+        "declaration-property-value-disallowed-list": null
       }
     }
   ],

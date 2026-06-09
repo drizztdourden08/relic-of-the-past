@@ -27,7 +27,7 @@
 
 .binding-listener__label {
   font-size: 22px;
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   color: var(--color-gold-bright);
   margin-bottom: 16px;
 }

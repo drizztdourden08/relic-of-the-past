@@ -12,6 +12,8 @@
   --weight-normal:  400;
   --weight-medium:  500;
   --weight-semi:    600;
+  --weight-bold:    700;
+  --weight-black:   900;
   --leading-tight:  1.3;
   --leading-normal: 1.5;
 }

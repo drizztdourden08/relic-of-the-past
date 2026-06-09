@@ -13,7 +13,7 @@
 
 .input-profile-list__title {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--color-text-secondary);

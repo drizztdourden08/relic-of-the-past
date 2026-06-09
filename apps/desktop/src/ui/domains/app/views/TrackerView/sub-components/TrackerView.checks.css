@@ -59,7 +59,7 @@
 
 .tracker-group__name {
   flex: 1;
-  font-weight: 600;
+  font-weight: var(--weight-semi);
 }
 
 .tracker-group__counts {

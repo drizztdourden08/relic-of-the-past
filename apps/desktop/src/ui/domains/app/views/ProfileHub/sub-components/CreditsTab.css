@@ -11,7 +11,7 @@
 
 .credits-tab__title {
   font-size: 1.4rem;
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   margin: 0 0 6px;
   color: var(--color-text-primary);
 }
@@ -28,7 +28,7 @@
 
 .credits-tab__section-title {
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--color-text-secondary);
@@ -59,7 +59,7 @@
 }
 
 .credits-tab__entry-name {
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   font-size: 0.95rem;
   color: var(--color-text-primary);
 }
@@ -85,7 +85,7 @@
   border-radius: 4px;
   background: var(--color-bg-elevated);
   color: var(--color-text-secondary);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
 }
 
 .credits-tab__entry-description {
@@ -104,7 +104,7 @@
 
 .credits-tab__usage-badge {
   font-size: 0.72rem;
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   padding: 2px 8px;
   border-radius: 10px;
   text-transform: uppercase;

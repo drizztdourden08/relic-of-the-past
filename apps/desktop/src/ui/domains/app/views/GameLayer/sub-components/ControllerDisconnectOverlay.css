@@ -33,7 +33,7 @@
 
 .controller-disconnect-overlay__title {
   font-size: 20px;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   color: var(--color-danger-base);
   margin: 0 0 8px;
 }

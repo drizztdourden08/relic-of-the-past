@@ -178,7 +178,7 @@
 .tracker-inventory__category-label {
   display: block;
   font-size: 9px;
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--color-text-secondary);

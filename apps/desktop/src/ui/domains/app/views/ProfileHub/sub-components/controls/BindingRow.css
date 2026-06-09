@@ -14,7 +14,7 @@
 .binding-row--header {
   cursor: default;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--color-text-muted);
@@ -48,7 +48,7 @@
 .binding-row__action-label {
   width: 90px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   color: var(--color-text-primary);
   flex-shrink: 0;
 }
@@ -57,7 +57,7 @@
 .binding-row__snes-label {
   width: 80px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   color: var(--color-text-secondary);
   flex-shrink: 0;
 }

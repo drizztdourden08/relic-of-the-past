@@ -108,7 +108,7 @@
 
 .device-card__name {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   color: var(--color-text-primary);
   overflow-wrap: break-word;
   line-height: 1.3;
@@ -118,7 +118,7 @@
 .device-card__api {
   display: inline-block;
   font-size: 9px;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   padding: 1px 5px;

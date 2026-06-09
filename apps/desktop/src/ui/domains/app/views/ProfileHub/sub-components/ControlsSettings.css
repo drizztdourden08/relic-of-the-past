@@ -74,7 +74,7 @@
 
 .controls-settings__col-title {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.8px;
   color: var(--color-text-secondary);
@@ -179,7 +179,7 @@
 /* ─── Section headers ─── */
 .controls-settings__section-header {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--color-text-secondary);
@@ -192,7 +192,7 @@
 
 .controls-settings__profile-badge {
   font-size: 11px;
-  font-weight: 400;
+  font-weight: var(--weight-normal);
   text-transform: none;
   letter-spacing: normal;
   color: var(--color-gold-base);
@@ -266,7 +266,7 @@
 
 .controls-settings__used-inputs-header {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--color-text-secondary);
