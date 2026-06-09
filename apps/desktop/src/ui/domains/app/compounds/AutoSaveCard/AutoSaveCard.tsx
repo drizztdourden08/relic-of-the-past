@@ -13,7 +13,7 @@ const AutoSaveCard = (props: AutoSaveCardProps) => {
 
   const actions = (
     <>
-      <Button variant="secondary" size="sm" onClick={() => onLoad(id)} disabled={busy} title="Load auto-save">
+      <Button variant="tertiary" size="sm" onClick={() => onLoad(id)} disabled={busy} title="Load auto-save">
         Load
       </Button>
       <IconButton variant="danger" label="Delete auto-save" onClick={() => onDelete(id)} disabled={busy}>

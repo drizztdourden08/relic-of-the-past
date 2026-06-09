@@ -6,7 +6,7 @@ import { type ButtonVariant, type ButtonSize, type ButtonProps } from './Button.
 
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-  const { variant = 'secondary', size = 'md', fullWidth = false, icon, children, className = '', ...rest } = props;
+  const { variant = 'tertiary', size = 'md', fullWidth = false, icon, children, className = '', ...rest } = props;
 
   const cls = [
     'btn',

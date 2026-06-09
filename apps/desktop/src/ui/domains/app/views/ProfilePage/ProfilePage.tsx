@@ -60,7 +60,7 @@ const ProfilePage = (props: ProfilePageProps) => {
         >
           {isGameRunning ? '⟳ Game Running…' : '▶ Start Game'}
         </Button>
-        <Button variant="secondary" size="md" onClick={onSwitchProfile}>
+        <Button variant="tertiary" size="md" onClick={onSwitchProfile}>
           Switch Profile
         </Button>
         <Button variant="danger" size="md" onClick={onDeleteProfile}>

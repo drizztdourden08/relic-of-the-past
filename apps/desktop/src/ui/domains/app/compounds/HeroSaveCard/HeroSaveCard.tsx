@@ -28,7 +28,7 @@ const HeroSaveCard = (props: HeroSaveCardProps) => {
           hour: '2-digit', minute: '2-digit',
         })}
       </Text>
-      <Button variant="secondary" size="sm" className="hero-save-card__load-btn" onClick={onLoad} disabled={busy}>
+      <Button variant="tertiary" size="sm" className="hero-save-card__load-btn" onClick={onLoad} disabled={busy}>
         Load Save
       </Button>
     </SaveCard>

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 ﻿import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
-type IconButtonVariant = 'ghost' | 'danger';
+type IconButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'danger';
 
 interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: IconButtonVariant;

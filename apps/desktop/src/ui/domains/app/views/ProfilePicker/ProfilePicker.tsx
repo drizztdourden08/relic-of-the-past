@@ -105,7 +105,7 @@ const ProfilePicker = (props: ProfilePickerProps) => {
           </Box>
 
           <Button
-            variant="secondary"
+            variant="tertiary"
             fullWidth
             icon={importingRom ? '⟳' : '📁'}
             onClick={onImportRom}

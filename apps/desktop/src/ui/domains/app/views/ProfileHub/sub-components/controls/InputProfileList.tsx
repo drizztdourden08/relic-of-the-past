@@ -122,7 +122,7 @@ const InputProfileList = (props: InputProfileListProps) => {
       </Box>
 
       <Box className="input-profile-list__footer">
-        <Button variant="secondary" size="sm" onClick={onCreate}>
+        <Button variant="tertiary" size="sm" onClick={onCreate}>
           + New Profile
         </Button>
       </Box>

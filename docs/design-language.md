@@ -66,22 +66,22 @@ This is the rule that fixes most of today's inconsistency:
 | Role | Hue | Tokens | Where it's allowed |
 |---|---|---|---|
 | **Selection / active / "you are here"** | **Gold** | `--color-gold-base/-bright`, bg `--color-surface-selected` (or `--color-gold-glow`), border `--color-gold-base` | active tab, selected segment, toggle-on, selected filter/chip, focus ring, selected list row |
-| **Primary action (the CTA)** | **Gold** | gold tokens | the one primary `Button` in a view; primary emphasis |
-| **Positive / "go" action** | **Green** | `--color-green-*` | ONLY affirmative actions: Start, Resume, Connect, Download, Confirm-safe; success status |
-| **Secondary / utility action** | **Neutral** | surface + border + dim text; gold on hover/focus | every other button (tools, toggles of panels, filters' container) — *not* an accent color |
+| **Primary action** | **Gold** | gold tokens | the most important action / CTA; also = selection/active/focus |
+| **Secondary action** | **Green** | green tokens | the second action, shown right next to the primary |
+| **Tertiary / utility** | **Grey** | surface + border + dim text | Cancel, Back, tools — the common neutral button |
+| **Ghost** | transparent | none + grey text | low-emphasis inline actions; grey hover fill |
 | **Destructive** | **Red** | `--color-danger-*` | delete/remove, error text, close-on-hover |
 | **Warning / pending** | **Amber** | `--color-warning-base/-dim` | "reachable but not done", caution banners |
 | **Informational only** | **Blue** | `--color-info-base` | neutral status/info text & icons — **never** a selection state |
 | **Status: complete/success** | Green | `--color-green-base/-bright` | done/obtained |
 
-> **Hard rule:** *gold is the primary accent (selection, active, focus, the primary
-> action). Green is the SECONDARY accent — used ONLY for genuinely positive/"go"
-> meaning (Start/Resume/Connect/Download, success/complete status). It is NOT a
-> generic "active", "primary", or "utility-button" color.* Blue is **info text only**.
-> Ordinary/utility buttons are **secondary-neutral** (surface + border, no accent).
-> (Drift today: tracker uses blue for active filters; cheats + the Navigation
-> FUNCTIONS buttons (Flood Fill/Show/Auto/Rec/Path) use green for plain utilities —
-> all should be gold-selection or secondary-neutral. See the audit.)
+> **Hard rule — three action tiers, side by side:** **gold = primary**, **green =
+> secondary**, **grey = tertiary/ghost**. Gold is also the selection/active/focus
+> color. Green is *not* "positive-only" and *not* a generic active state — it is the
+> second-most-prominent **action** sitting next to a gold primary. Plain utility
+> buttons (Cancel, Back, tools like the Navigation FUNCTIONS row) are **tertiary
+> (grey)**. Red = destructive · amber = warning · blue = info **text/icons only**
+> (never an action or selection color).
 
 ---
 

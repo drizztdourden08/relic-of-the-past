@@ -36,11 +36,11 @@ const NormalSaveCard = (props: NormalSaveCardProps) => {
 
   const actions = (
     <>
-      <Button variant="secondary" size="sm" onClick={() => onLoad(id)} disabled={busy} title="Load save">
+      <Button variant="tertiary" size="sm" onClick={() => onLoad(id)} disabled={busy} title="Load save">
         Load
       </Button>
       <Button
-        variant="secondary"
+        variant="tertiary"
         size="sm"
         onClick={() => onOverwrite(id)}
         disabled={busy || !isGameRunning}

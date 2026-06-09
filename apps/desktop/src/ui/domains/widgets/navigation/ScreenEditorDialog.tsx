@@ -37,13 +37,13 @@ const ScreenEditorDialog = (props: ScreenEditorProps) => {
 
   const actions = (
     <>
-      <Button variant="secondary" onClick={onClose}>Cancel</Button>
+      <Button variant="tertiary" onClick={onClose}>Cancel</Button>
       {step === 0 && (
         <Button variant="primary" onClick={() => setStep(1)}>Preview →</Button>
       )}
       {step === 1 && (
         <>
-          <Button variant="secondary" onClick={() => setStep(0)}>← Back</Button>
+          <Button variant="tertiary" onClick={() => setStep(0)}>← Back</Button>
           <Button variant="primary" onClick={handleWrite} disabled={writing}>
             {writing ? 'Writing...' : 'Accept & Write'}
           </Button>

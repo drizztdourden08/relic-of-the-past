@@ -45,7 +45,7 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
             <Box className="screen-editor__inline-create">
               <TextInput value={newAreaName} onChange={e => setNewAreaName(e.target.value)} placeholder="New area name" autoFocus />
               <Button variant="primary" onClick={handleCreateArea} disabled={!newAreaName.trim()}>Add</Button>
-              <Button variant="secondary" onClick={() => setCreatingArea(false)}>Cancel</Button>
+              <Button variant="tertiary" onClick={() => setCreatingArea(false)}>Cancel</Button>
             </Box>
           )}
         </EditorField>
@@ -74,7 +74,7 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
               <Box className="screen-editor__inline-create">
                 <TextInput value={newLocationName} onChange={e => setNewLocationName(e.target.value)} placeholder="New location name" autoFocus />
                 <Button variant="primary" onClick={handleCreateLocation} disabled={!newLocationName.trim() || !areaId}>Add</Button>
-                <Button variant="secondary" onClick={() => setCreatingLocation(false)}>Cancel</Button>
+                <Button variant="tertiary" onClick={() => setCreatingLocation(false)}>Cancel</Button>
               </Box>
             )}
           </EditorField>

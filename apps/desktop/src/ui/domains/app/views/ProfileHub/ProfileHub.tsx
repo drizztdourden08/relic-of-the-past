@@ -28,11 +28,11 @@ const ProfileHub = (props: ProfileHubProps) => {
               <Button variant="primary" size="md" onClick={onStartGame}>▶ Play</Button>
             ) : (
               <>
-                <Button variant="secondary" size="md" onClick={handleTogglePause}>
+                <Button variant="tertiary" size="md" onClick={handleTogglePause}>
                   {gamePaused ? '▶ Resume' : '⏸ Pause'}
                 </Button>
                 <Button variant="danger" size="md" onClick={onStopGame}>■ Stop</Button>
-                <Button variant="secondary" size="md" onClick={onResetGame}>↻ Reset</Button>
+                <Button variant="tertiary" size="md" onClick={onResetGame}>↻ Reset</Button>
               </>
             )}
           </Box>

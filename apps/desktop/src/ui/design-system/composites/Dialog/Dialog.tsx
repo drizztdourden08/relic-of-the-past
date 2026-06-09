@@ -23,7 +23,7 @@ const Dialog = (props: DialogProps) => {
 
   const actions = (
     <>
-      <Button variant="secondary" onClick={onCancel}>{cancelLabel}</Button>
+      <Button variant="tertiary" onClick={onCancel}>{cancelLabel}</Button>
       <Button ref={confirmRef} variant={variant === 'danger' ? 'danger' : 'primary'} onClick={onConfirm}>
         {confirmLabel}
       </Button>

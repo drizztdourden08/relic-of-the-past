@@ -17,7 +17,7 @@ const rows = (version: string) => [
 const AboutDialog = (props: AboutDialogProps) => {
   const { open, version, onClose } = props;
 
-  const actions = <Button variant="secondary" onClick={onClose}>Close</Button>;
+  const actions = <Button variant="tertiary" onClick={onClose}>Close</Button>;
 
   return (
     <DialogShell open={open} onClose={onClose} className="about-dialog" actions={actions}>

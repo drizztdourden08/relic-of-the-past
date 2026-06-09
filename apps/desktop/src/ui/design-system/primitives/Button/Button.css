@@ -3,14 +3,15 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border-subtle);
-  background: var(--color-bg-raised);
-  color: var(--color-text-secondary);
+  border-radius: var(--r-md);
+  border: 1px solid var(--c-border);
+  background: var(--c-surface);
+  color: var(--c-text-dim);
   text-align: left;
-  transition: background var(--transition-normal),
-              border-color var(--transition-normal),
-              color var(--transition-normal);
+  cursor: pointer;
+  transition: background var(--transition-fast),
+              border-color var(--transition-fast),
+              color var(--transition-fast);
 }
 
 .btn--md {
@@ -27,52 +28,68 @@
   width: 100%;
 }
 
-/* ─── Primary (green/Hyrule) ─── */
+/* ─── Primary (gold) ─── */
 .btn--primary {
-  background: var(--color-green-dim);
-  border-color: var(--color-green-border);
-  color: var(--color-green-base);
+  background: var(--c-gold-dim);
+  border-color: var(--c-gold);
+  color: var(--c-gold-bright);
 }
 
 .btn--primary:hover:not(:disabled) {
-  background: var(--color-green-surface);
-  border-color: var(--color-green-base);
+  background: var(--c-gold);
+  border-color: var(--c-gold-bright);
+  color: var(--c-bg);
 }
 
-/* ─── Secondary ─── */
+/* ─── Secondary (green) ─── */
 .btn--secondary {
-  background: var(--color-bg-raised);
-  color: var(--color-text-secondary);
+  background: var(--c-green-dim);
+  border-color: var(--c-green);
+  color: var(--c-green-bright);
 }
 
 .btn--secondary:hover:not(:disabled) {
-  background: var(--color-bg-elevated);
-  border-color: var(--color-border-strong);
+  background: var(--c-green);
+  border-color: var(--c-green-bright);
+  color: var(--c-bg);
 }
 
-/* ─── Ghost ─── */
+/* ─── Tertiary (grey / neutral) ─── */
+.btn--tertiary {
+  background: var(--c-surface);
+  border-color: var(--c-border);
+  color: var(--c-text-dim);
+}
+
+.btn--tertiary:hover:not(:disabled) {
+  background: var(--c-hover);
+  border-color: var(--c-border-strong);
+  color: var(--c-text);
+}
+
+/* ─── Ghost (transparent) ─── */
 .btn--ghost {
   background: none;
   border-color: transparent;
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
 }
 
 .btn--ghost:hover:not(:disabled) {
-  background: var(--color-bg-elevated);
-  color: var(--color-text-primary);
+  background: var(--c-hover);
+  color: var(--c-text);
 }
 
-/* ─── Danger ─── */
+/* ─── Danger (red) ─── */
 .btn--danger {
-  background: var(--color-danger-dim);
-  border-color: var(--color-danger-border-dim);
-  color: var(--color-danger-text);
+  background: var(--c-danger-dim);
+  border-color: var(--c-danger);
+  color: var(--c-danger);
 }
 
 .btn--danger:hover:not(:disabled) {
-  background: var(--color-danger-surface-hover);
-  border-color: var(--color-danger-base);
-  color: var(--color-text-primary);
+  background: var(--c-danger);
+  border-color: var(--c-danger);
+  color: var(--c-bg);
 }
 
 .btn:disabled {

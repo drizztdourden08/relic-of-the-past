@@ -38,7 +38,7 @@ const UpdateDialog = (props: UpdateDialogProps) => {
 
   const actions = (
     <>
-      <Button variant="secondary" onClick={onClose}>{status === 'ready' ? 'Later' : 'Cancel'}</Button>
+      <Button variant="tertiary" onClick={onClose}>{status === 'ready' ? 'Later' : 'Cancel'}</Button>
       {status === 'available' && (
         <Button ref={confirmRef} variant="primary" onClick={onDownload}>Update</Button>
       )}

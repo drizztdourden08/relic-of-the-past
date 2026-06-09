@@ -44,13 +44,13 @@ const ConnectionEditorDialog = (props: ConnectionEditorDialogProps) => {
 
   const actions = (
     <>
-      <Button variant="secondary" onClick={onClose}>Cancel</Button>
+      <Button variant="tertiary" onClick={onClose}>Cancel</Button>
       {step === 0 && (
         <Button variant="primary" onClick={() => setStep(1)}>Preview →</Button>
       )}
       {step === 1 && (
         <>
-          <Button variant="secondary" onClick={() => setStep(0)}>← Back</Button>
+          <Button variant="tertiary" onClick={() => setStep(0)}>← Back</Button>
           <Button
             variant="primary"
             onClick={handleWrite}
@@ -147,13 +147,13 @@ const ConnectionEditorDialog = (props: ConnectionEditorDialogProps) => {
                       <Text className="conn-editor__suggested-tags">
                         {s.tags.map(t => t.split(':')[1]).join(', ')}
                       </Text>
-                      <Button variant="secondary" onClick={() => addSuggested(s)}>+ Add</Button>
+                      <Button variant="tertiary" onClick={() => addSuggested(s)}>+ Add</Button>
                     </Box>
                   ))}
               </Box>
             )}
 
-            <Button variant="secondary" onClick={addBlank}>+ Add Connection</Button>
+            <Button variant="tertiary" onClick={addBlank}>+ Add Connection</Button>
           </Box>
         )}
 

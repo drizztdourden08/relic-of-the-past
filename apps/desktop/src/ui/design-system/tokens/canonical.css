@@ -7,8 +7,9 @@
  * whole app onto these and delete the old names.
  *
  * Rules in one line:
- *   ONE background family · ONE blur · GOLD = primary accent · GREEN = secondary
- *   (positive/success/go) · red=danger · amber=warning · blue=info-text-only.
+ *   ONE background family · ONE blur · THREE action tiers side by side —
+ *   GOLD = primary (& selection/active) · GREEN = secondary · GREY = tertiary/ghost ·
+ *   red=danger · amber=warning · blue=info-text-only.
  */
 :root {
   /* ─── Surfaces — ONE background family (depth via border + shadow, not hue) ─── */

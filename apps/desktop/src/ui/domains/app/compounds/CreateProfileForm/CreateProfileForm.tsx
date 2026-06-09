@@ -38,7 +38,7 @@ const CreateProfileForm = (props: CreateProfileFormProps) => {
       )}
       <Flex className="create-profile-form__actions">
         <Button variant="primary" onClick={handleSubmit}>Create</Button>
-        <Button variant="secondary" onClick={onCancel}>Cancel</Button>
+        <Button variant="tertiary" onClick={onCancel}>Cancel</Button>
       </Flex>
     </Box>
   );

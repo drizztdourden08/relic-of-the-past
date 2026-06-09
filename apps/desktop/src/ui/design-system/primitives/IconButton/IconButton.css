@@ -1,36 +1,88 @@
 /* @layer renderer-components @kind style */
+
+/* Icon-only Button: same tiers/colors as Button, square footprint. */
 .icon-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: none;
-  border: none;
-  border-radius: var(--radius-sm);
-  color: var(--color-text-muted);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  color: var(--c-text-dim);
   cursor: pointer;
-  transition: background var(--transition-normal),
-              color var(--transition-normal);
+  transition: background var(--transition-fast),
+              border-color var(--transition-fast),
+              color var(--transition-fast);
 }
 
 .icon-btn--sm {
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   font-size: var(--text-sm);
 }
 
 .icon-btn--md {
-  width: 36px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
+  font-size: var(--text-base);
 }
 
-/* ─── Ghost ─── */
-.icon-btn--ghost:hover {
-  background: var(--color-bg-elevated);
-  color: var(--color-text-primary);
+/* ─── Primary (gold) ─── */
+.icon-btn--primary {
+  background: var(--c-gold-dim);
+  border-color: var(--c-gold);
+  color: var(--c-gold-bright);
 }
 
-/* ─── Danger ─── */
-.icon-btn--danger:hover {
-  background: var(--color-danger-base);
-  color: var(--color-text-primary);
+.icon-btn--primary:hover:not(:disabled) {
+  background: var(--c-gold);
+  color: var(--c-bg);
+}
+
+/* ─── Secondary (green) ─── */
+.icon-btn--secondary {
+  background: var(--c-green-dim);
+  border-color: var(--c-green);
+  color: var(--c-green-bright);
+}
+
+.icon-btn--secondary:hover:not(:disabled) {
+  background: var(--c-green);
+  color: var(--c-bg);
+}
+
+/* ─── Tertiary (grey) ─── */
+.icon-btn--tertiary:hover:not(:disabled) {
+  background: var(--c-hover);
+  border-color: var(--c-border-strong);
+  color: var(--c-text);
+}
+
+/* ─── Ghost (transparent) ─── */
+.icon-btn--ghost {
+  background: none;
+  border-color: transparent;
+  color: var(--c-text-muted);
+}
+
+.icon-btn--ghost:hover:not(:disabled) {
+  background: var(--c-hover);
+  color: var(--c-text);
+}
+
+/* ─── Danger (red) ─── */
+.icon-btn--danger {
+  background: var(--c-danger-dim);
+  border-color: var(--c-danger);
+  color: var(--c-danger);
+}
+
+.icon-btn--danger:hover:not(:disabled) {
+  background: var(--c-danger);
+  color: var(--c-bg);
+}
+
+.icon-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
