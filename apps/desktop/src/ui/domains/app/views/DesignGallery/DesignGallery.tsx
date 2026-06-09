@@ -27,7 +27,7 @@ const DesignGallery = () => {
   const header = <Text className="dg-brand">Design Language</Text>;
 
   return (
-    <SettingsShell nav={{ groups: navGroups, activeId, onSelect: setActiveId, searchable: true, searchPlaceholder: 'Filter…', header }}>
+    <SettingsShell className="dg-shell" nav={{ groups: navGroups, activeId, onSelect: setActiveId, searchable: true, searchPlaceholder: 'Filter…', header }}>
       <Box className="dg-canvas-head">
         <Text className="dg-canvas-head__group">{active.group}</Text>
         <Text as="h1" className="dg-canvas-head__title">{active.label}</Text>

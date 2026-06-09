@@ -3,6 +3,12 @@
 /* Chrome (sidebar + scroll panel) is the real SettingsShell/SideNav. These
    styles are only the gallery-internal layout helpers + token specimens. */
 
+/* Gallery sits inside the padded FullScreenLayer — drop the shell's own padding
+   so the nav/content align with the window title. */
+.settings-shell.dg-shell {
+  padding: 0;
+}
+
 .dg-brand {
   font-size: var(--text-sm);
   font-weight: var(--weight-semi);
