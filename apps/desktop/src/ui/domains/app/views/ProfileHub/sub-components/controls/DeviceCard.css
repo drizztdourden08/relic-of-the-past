@@ -20,9 +20,9 @@
 }
 
 .device-card__api--stale {
-  background: rgb(220, 38, 38, 0.15);
+  background: var(--c-danger-soft);
   color: var(--color-danger-text);
-  border: 1px solid rgb(220, 38, 38, 0.4);
+  border: 1px solid var(--c-danger);
   animation: stale-badge-pulse 1.5s ease-in-out infinite;
 }
 
@@ -75,11 +75,11 @@
 }
 
 .device-card__icon-btn--active .device-card__icon {
-  filter: drop-shadow(0 0 6px rgb(74, 222, 128, 0.8)) drop-shadow(0 0 12px rgb(74, 222, 128, 0.4));
+  filter: drop-shadow(0 0 6px var(--c-green)) drop-shadow(0 0 12px var(--c-green));
 }
 
 .device-card__icon-btn--detected .device-card__icon {
-  filter: drop-shadow(0 0 6px rgb(250, 204, 21, 0.6)) drop-shadow(0 0 10px rgb(250, 204, 21, 0.3));
+  filter: drop-shadow(0 0 6px var(--c-warning)) drop-shadow(0 0 10px var(--c-warning));
   animation: pulse-icon 2s ease-in-out infinite;
 }
 
@@ -128,19 +128,19 @@
 }
 
 .device-card__api--xinput {
-  background: rgb(74, 222, 128, 0.15);
+  background: var(--c-green-soft);
   color: var(--color-green-bright);
-  border: 1px solid rgb(74, 222, 128, 0.3);
+  border: 1px solid var(--c-green);
 }
 
 .device-card__api--hid {
-  background: rgb(99, 102, 241, 0.15);
+  background: var(--c-info-soft);
   color: var(--color-info-base);
-  border: 1px solid rgb(99, 102, 241, 0.3);
+  border: 1px solid var(--c-info);
 }
 
 .device-card__api--webapi {
-  background: rgb(250, 204, 21, 0.15);
+  background: var(--c-warning-soft);
   color: var(--color-warning-base);
-  border: 1px solid rgb(250, 204, 21, 0.3);
+  border: 1px solid var(--c-warning);
 }

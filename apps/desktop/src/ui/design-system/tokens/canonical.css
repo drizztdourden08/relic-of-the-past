@@ -55,7 +55,10 @@
   --c-danger-soft:   rgb(229 85 110 / 0.14);
   --c-warning:       #e0b341;
   --c-warning-dim:   #2a2418;
+  --c-warning-soft:  rgb(224 179 65 / 0.14);
   --c-info:          #5b9bd5;            /* info TEXT/icon only — never a selection state */
+  --c-info-dim:      #15212e;            /* dark blue fill */
+  --c-info-soft:     rgb(91 155 213 / 0.14);
 
   /* ─── Elevation: 3 shadows + ONE blur ─── */
   --shadow-1:        0 2px 8px rgb(0 0 0 / 0.4);

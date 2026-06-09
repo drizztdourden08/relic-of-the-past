@@ -10,22 +10,22 @@
   align-items: center;
   gap: 8px;
   padding: 4px 8px;
-  border: 1px solid var(--color-border-subtle, rgb(255, 255, 255, 0.08));
+  border: 1px solid var(--c-border);
   border-radius: 4px;
   background: transparent;
-  color: var(--color-text-secondary, rgb(255, 255, 255, 0.7));
+  color: var(--c-text-dim);
   font-size: 12px;
   cursor: pointer;
   transition: background 0.1s, border-color 0.1s;
 }
 
 .height-level-picker__btn:hover {
-  background: rgb(255, 255, 255, 0.04);
-  border-color: rgb(255, 255, 255, 0.15);
+  background: var(--c-hover);
+  border-color: var(--c-border-strong);
 }
 
 .height-level-picker__btn--active {
-  background: var(--color-accent-bg, rgb(74, 158, 255, 0.15));
+  background: var(--c-info-soft);
   border-color: var(--color-gold-base);
   color: var(--color-text-primary);
 }

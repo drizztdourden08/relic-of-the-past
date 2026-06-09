@@ -6,7 +6,7 @@
 
 .tracker-summary {
   padding: var(--space-sm, 8px) var(--space-md, 12px);
-  border-bottom: 1px solid var(--color-border, rgb(255, 255, 255, 0.08));
+  border-bottom: 1px solid var(--c-border);
   flex-shrink: 0;
 }
 
@@ -14,7 +14,7 @@
   display: flex;
   height: 6px;
   border-radius: 3px;
-  background: rgb(255, 255, 255, 0.06);
+  background: var(--c-hover);
   overflow: hidden;
   margin-bottom: var(--space-xs, 6px);
 }
@@ -44,7 +44,7 @@
 
 .tracker-filters {
   padding: var(--space-xs, 6px) var(--space-md, 12px);
-  border-bottom: 1px solid var(--color-border, rgb(255, 255, 255, 0.08));
+  border-bottom: 1px solid var(--c-border);
   flex-shrink: 0;
 }
 
@@ -55,8 +55,8 @@
 .tracker-filters__input {
   width: 100%;
   padding: 4px 8px;
-  background: rgb(255, 255, 255, 0.06);
-  border: 1px solid rgb(255, 255, 255, 0.12);
+  background: var(--c-hover);
+  border: 1px solid var(--c-border-strong);
   border-radius: 3px;
   color: var(--color-text-primary);
   font-family: inherit;
@@ -65,7 +65,7 @@
 }
 
 .tracker-filters__input:focus {
-  border-color: rgb(100, 160, 255, 0.5);
+  border-color: var(--c-info);
 }
 
 .tracker-filters__controls {
@@ -81,8 +81,8 @@
 
 .tracker-filters__mode-btn {
   padding: 3px 7px;
-  background: rgb(255, 255, 255, 0.06);
-  border: 1px solid rgb(255, 255, 255, 0.1);
+  background: var(--c-hover);
+  border: 1px solid var(--c-border-strong);
   border-radius: 3px;
   color: var(--color-text-secondary);
   font-size: 12px;
@@ -90,15 +90,15 @@
 }
 
 .tracker-filters__mode-btn--active {
-  background: rgb(100, 160, 255, 0.2);
-  border-color: rgb(100, 160, 255, 0.5);
+  background: var(--c-info-soft);
+  border-color: var(--c-info);
   color: var(--color-text-primary);
 }
 
 .tracker-filters__btn {
   padding: 3px 8px;
-  background: rgb(255, 255, 255, 0.06);
-  border: 1px solid rgb(255, 255, 255, 0.1);
+  background: var(--c-hover);
+  border: 1px solid var(--c-border-strong);
   border-radius: 3px;
   color: var(--color-text-secondary);
   font-size: 10px;
@@ -107,15 +107,15 @@
 }
 
 .tracker-filters__btn--active {
-  background: rgb(100, 160, 255, 0.15);
-  border-color: rgb(100, 160, 255, 0.4);
+  background: var(--c-info-soft);
+  border-color: var(--c-info);
   color: var(--color-info-base);
 }
 
 .tracker-filters__select {
   padding: 3px 6px;
-  background: rgb(255, 255, 255, 0.06);
-  border: 1px solid rgb(255, 255, 255, 0.1);
+  background: var(--c-hover);
+  border: 1px solid var(--c-border-strong);
   border-radius: 3px;
   color: var(--color-text-secondary);
   font-size: 10px;
@@ -125,8 +125,8 @@
 }
 
 .tracker-filters__select--active {
-  background: rgb(100, 160, 255, 0.15);
-  border-color: rgb(100, 160, 255, 0.4);
+  background: var(--c-info-soft);
+  border-color: var(--c-info);
   color: var(--color-info-base);
 }
 
@@ -138,8 +138,8 @@
 
 .tracker-filters__status-btn {
   padding: 3px 6px;
-  background: rgb(255, 255, 255, 0.06);
-  border: 1px solid rgb(255, 255, 255, 0.1);
+  background: var(--c-hover);
+  border: 1px solid var(--c-border-strong);
   border-radius: 3px;
   color: var(--color-text-secondary);
   font-size: 10px;
@@ -150,38 +150,38 @@
 }
 
 .tracker-filters__status-btn:hover {
-  background: rgb(255, 255, 255, 0.1);
+  background: var(--c-border-strong);
 }
 
 .tracker-filters__status-btn--active {
-  border-color: rgb(100, 160, 255, 0.5);
+  border-color: var(--c-info);
   color: var(--color-text-primary);
-  background: rgb(100, 160, 255, 0.15);
+  background: var(--c-info-soft);
 }
 
 .tracker-filters__status-btn--reachable.tracker-filters__status-btn--active {
   color: var(--color-warning-base);
-  border-color: rgb(255, 193, 7, 0.5);
-  background: rgb(255, 193, 7, 0.15);
+  border-color: var(--c-warning);
+  background: var(--c-warning-soft);
 }
 
 .tracker-filters__status-btn--completed.tracker-filters__status-btn--active {
   color: var(--color-green-base);
-  border-color: rgb(76, 175, 80, 0.5);
-  background: rgb(76, 175, 80, 0.15);
+  border-color: var(--c-green);
+  background: var(--c-green-soft);
 }
 
 .tracker-filters__status-btn--blocked.tracker-filters__status-btn--active {
   color: var(--color-text-secondary);
-  border-color: rgb(153, 153, 153, 0.5);
-  background: rgb(153, 153, 153, 0.15);
+  border-color: var(--c-text-muted);
+  background: var(--c-border-strong);
 }
 
 /* Tag filter panel */
 .tracker-filters__tags-panel {
   margin-top: 6px;
   padding: 6px;
-  background: rgb(0, 0, 0, 0.3);
+  background: var(--c-scrim-game);
   border-radius: 4px;
 }
 
@@ -193,8 +193,8 @@
 
 .tracker-filters__tag-mode button {
   padding: 2px 8px;
-  background: rgb(255, 255, 255, 0.06);
-  border: 1px solid rgb(255, 255, 255, 0.1);
+  background: var(--c-hover);
+  border: 1px solid var(--c-border-strong);
   border-radius: 3px;
   color: var(--color-text-secondary);
   font-size: 10px;
@@ -224,8 +224,8 @@
 .tracker-filters__tag {
   padding: 1px 6px;
   font-size: 9px;
-  background: rgb(255, 255, 255, 0.06);
-  border: 1px solid rgb(255, 255, 255, 0.08);
+  background: var(--c-hover);
+  border: 1px solid var(--c-border);
   border-radius: 10px;
   color: var(--color-text-secondary);
   cursor: pointer;
@@ -233,8 +233,8 @@
 }
 
 .tracker-filters__tag--active {
-  background: rgb(100, 160, 255, 0.2);
-  border-color: rgb(100, 160, 255, 0.5);
+  background: var(--c-info-soft);
+  border-color: var(--c-info);
   color: var(--color-info-base);
 }
 
@@ -242,7 +242,7 @@
 .tracker-filters__group-panel {
   margin-top: 6px;
   padding: 6px;
-  background: rgb(0, 0, 0, 0.3);
+  background: var(--c-scrim-game);
   border-radius: 4px;
 }
 
@@ -264,8 +264,8 @@
   align-items: center;
   gap: 3px;
   padding: 2px 6px;
-  background: rgb(100, 160, 255, 0.15);
-  border: 1px solid rgb(100, 160, 255, 0.3);
+  background: var(--c-info-soft);
+  border: 1px solid var(--c-info);
   border-radius: 10px;
   font-size: 10px;
   color: var(--color-info-base);
@@ -290,8 +290,8 @@
 .tracker-filters__group-add-btn {
   padding: 2px 6px;
   font-size: 9px;
-  background: rgb(255, 255, 255, 0.04);
-  border: 1px dashed rgb(255, 255, 255, 0.15);
+  background: var(--c-hover);
+  border: 1px dashed var(--c-border-strong);
   border-radius: 10px;
   color: var(--color-text-secondary);
   cursor: pointer;
@@ -299,7 +299,7 @@
 }
 
 .tracker-filters__group-add-btn:hover {
-  background: rgb(255, 255, 255, 0.08);
-  border-color: rgb(255, 255, 255, 0.3);
+  background: var(--c-hover);
+  border-color: var(--c-border-strong);
 }
 

@@ -22,20 +22,20 @@
   font-family: var(--font-mono, 'JetBrains Mono', monospace);
   font-size: var(--text-sm, 13px);
   overflow: hidden;
-  background: rgb(20, 20, 30, calc(0.96 * var(--tracker-frame-opacity)));
-  border-color: rgb(255, 255, 255, calc(0.08 * var(--tracker-frame-opacity)));
+  background: rgb(14 14 18 / calc(0.96 * var(--tracker-frame-opacity)));
+  border-color: rgb(255 255 255 / calc(0.08 * var(--tracker-frame-opacity)));
   transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
 /* Docked sides */
 .tracker-panel--docked.tracker-panel--right {
   right: 0;
-  border-left: 1px solid rgb(255, 255, 255, calc(0.08 * var(--tracker-frame-opacity)));
+  border-left: 1px solid rgb(255 255 255 / calc(0.08 * var(--tracker-frame-opacity)));
 }
 
 .tracker-panel--docked.tracker-panel--left {
   left: 0;
-  border-right: 1px solid rgb(255, 255, 255, calc(0.08 * var(--tracker-frame-opacity)));
+  border-right: 1px solid rgb(255 255 255 / calc(0.08 * var(--tracker-frame-opacity)));
 }
 
 /* Floating mode */
@@ -43,9 +43,9 @@
   top: auto;
   bottom: auto;
   right: auto;
-  border: 1px solid rgb(255, 255, 255, calc(0.12 * var(--tracker-frame-opacity)));
+  border: 1px solid rgb(255 255 255 / calc(0.12 * var(--tracker-frame-opacity)));
   border-radius: 8px;
-  box-shadow: 0 8px 32px rgb(0, 0, 0, calc(0.6 * var(--tracker-frame-opacity)));
+  box-shadow: 0 8px 32px rgb(0 0 0 / calc(0.6 * var(--tracker-frame-opacity)));
   resize: both;
   min-width: 280px;
   min-height: 200px;
@@ -68,7 +68,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 6px 10px;
-  border-bottom: 1px solid rgb(255, 255, 255, calc(0.08 * var(--tracker-frame-opacity)));
+  border-bottom: 1px solid rgb(255 255 255 / calc(0.08 * var(--tracker-frame-opacity)));
   flex-shrink: 0;
   gap: 8px;
   user-select: none;
@@ -137,7 +137,7 @@
 }
 
 .tracker-panel__icon-btn:hover {
-  background: rgb(255, 255, 255, 0.08);
+  background: var(--c-hover);
   color: var(--color-text-primary);
 }
 
@@ -155,7 +155,7 @@
   padding: 4px var(--space-md, 12px);
   font-size: var(--text-xs, 11px);
   color: var(--color-text-secondary);
-  border-bottom: 1px solid var(--color-border, rgb(255, 255, 255, 0.08));
+  border-bottom: 1px solid var(--c-border);
   flex-shrink: 0;
 }
 
@@ -165,7 +165,7 @@
 
 .tracker-inventory {
   padding: var(--space-sm, 8px) var(--space-md, 12px);
-  border-bottom: 1px solid var(--color-border, rgb(255, 255, 255, 0.08));
+  border-bottom: 1px solid var(--c-border);
   flex-shrink: 0;
   max-height: 220px;
   overflow-y: auto;
@@ -258,7 +258,7 @@
   flex-direction: column;
   gap: 4px;
   padding-left: 6px;
-  border-left: 1px solid rgb(255, 255, 255, 0.06);
+  border-left: 1px solid var(--c-border);
 }
 
 .tracker-inventory__ingame-bottom {
@@ -267,7 +267,7 @@
   display: flex;
   gap: 4px;
   padding-top: 4px;
-  border-top: 1px solid rgb(255, 255, 255, 0.06);
+  border-top: 1px solid var(--c-border);
 }
 
 /* ─── Compact layout ─── */

@@ -60,18 +60,18 @@
 
 .assigned-controller__status--connected {
   background: var(--color-green-bright);
-  box-shadow: 0 0 6px rgb(74, 222, 128, 0.6);
+  box-shadow: 0 0 6px var(--c-green);
 }
 
 .assigned-controller__status--detected {
   background: var(--color-warning-base);
-  box-shadow: 0 0 6px rgb(250, 204, 21, 0.4);
+  box-shadow: 0 0 6px var(--c-warning);
   animation: pulse-assigned 2s ease-in-out infinite;
 }
 
 .assigned-controller__status--disconnected {
   background: var(--color-danger-base);
-  box-shadow: 0 0 6px rgb(239, 68, 68, 0.4);
+  box-shadow: 0 0 6px var(--c-danger);
 }
 
 @keyframes pulse-assigned {

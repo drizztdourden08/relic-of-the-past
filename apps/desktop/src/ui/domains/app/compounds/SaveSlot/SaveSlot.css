@@ -22,22 +22,22 @@
   height: 84px;
   border-radius: 3px;
   overflow: hidden;
-  background: rgb(0, 0, 0, 0.35);
-  border: 1px solid rgb(255, 255, 255, 0.08);
+  background: var(--c-scrim-game);
+  border: 1px solid var(--c-border);
   cursor: default;
 }
 
 .save-slot__card:hover {
-  border-color: rgb(255, 255, 255, 0.18);
+  border-color: var(--c-border-strong);
 }
 
 .save-slot__card--highlighted {
-  border-color: rgb(220, 50, 50, 0.85);
-  box-shadow: 0 0 8px rgb(220, 50, 50, 0.5), inset 0 0 6px rgb(220, 50, 50, 0.15);
+  border-color: var(--c-danger);
+  box-shadow: 0 0 8px var(--c-danger), inset 0 0 6px var(--c-danger);
 }
 
 .save-slot__card--highlighted:hover {
-  border-color: rgb(220, 50, 50, 0.95);
+  border-color: var(--c-danger);
 }
 
 /* Hold-to-save fill overlay — rises from bottom */
@@ -46,7 +46,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgb(200, 168, 78, 0.45);
+  background: var(--c-gold-soft);
   z-index: 1;
   pointer-events: none;
   transition: height 60ms linear;
@@ -73,8 +73,8 @@
   left: 4px;
   font-size: 10px;
   font-weight: var(--weight-semi);
-  color: rgb(255, 255, 255, 0.85);
-  text-shadow: 0 1px 3px rgb(0, 0, 0, 0.8);
+  color: var(--c-text);
+  text-shadow: 0 1px 3px var(--c-scrim);
   z-index: 1;
   pointer-events: none;
 }
@@ -86,8 +86,8 @@
   right: 4px;
   font-size: 8px;
   font-family: var(--font-mono);
-  color: rgb(255, 255, 255, 0.55);
-  background: rgb(0, 0, 0, 0.45);
+  color: var(--c-text-muted);
+  background: var(--c-scrim-game);
   padding: 0 4px;
   border-radius: 2px;
   line-height: 1.6;
@@ -118,28 +118,28 @@
   justify-content: center;
   width: 26px;
   height: 22px;
-  border: 1px solid rgb(255, 255, 255, 0.15);
+  border: 1px solid var(--c-border-strong);
   border-radius: 3px;
-  background: rgb(0, 0, 0, 0.55);
-  color: rgb(255, 255, 255, 0.75);
+  background: var(--c-scrim);
+  color: var(--c-text);
   cursor: pointer;
   transition: all var(--transition-fast);
   backdrop-filter: blur(4px);
 }
 
 .save-slot__btn:hover:not(:disabled) {
-  color: rgb(255, 255, 255, 1);
-  border-color: rgb(255, 255, 255, 0.3);
+  color: var(--c-text);
+  border-color: var(--c-border-strong);
 }
 
 .save-slot__btn--save:hover:not(:disabled) {
-  background: rgb(200, 168, 78, 0.5);
+  background: var(--c-gold-soft);
   border-color: var(--color-gold-base);
   color: var(--color-gold-bright);
 }
 
 .save-slot__btn--load:hover:not(:disabled) {
-  background: rgb(74, 153, 102, 0.5);
+  background: var(--c-green-soft);
   border-color: var(--color-green-base);
   color: var(--color-green-bright);
 }
@@ -152,7 +152,7 @@
 /* Timestamp below card */
 .save-slot__time {
   font-size: 8px;
-  color: rgb(255, 255, 255, 0.4);
+  color: var(--c-text-muted);
   text-align: center;
   white-space: nowrap;
 }

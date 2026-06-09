@@ -8,7 +8,7 @@
 
 .number-field__label {
   font-size: 11px;
-  color: var(--color-text-secondary, rgb(255, 255, 255, 0.5));
+  color: var(--c-text-muted);
   flex-shrink: 0;
   width: 14px;
   text-align: center;
@@ -17,8 +17,8 @@
 .number-field__value {
   font-size: 12px;
   color: var(--color-text-primary);
-  background: var(--color-input-bg, rgb(255, 255, 255, 0.06));
-  border: 1px solid var(--color-border-subtle, rgb(255, 255, 255, 0.1));
+  background: var(--c-inset);
+  border: 1px solid var(--c-border-strong);
   border-radius: 4px;
   padding: 3px 6px;
   cursor: ew-resize;
@@ -29,13 +29,13 @@
 }
 
 .number-field__value:hover {
-  border-color: var(--color-border-hover, rgb(255, 255, 255, 0.2));
+  border-color: var(--c-border-strong);
 }
 
 .number-field__input {
   font-size: 12px;
   color: var(--color-text-primary);
-  background: var(--color-input-bg, rgb(255, 255, 255, 0.1));
+  background: var(--c-inset);
   border: 1px solid var(--color-gold-base);
   border-radius: 4px;
   padding: 3px 6px;

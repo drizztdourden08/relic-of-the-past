@@ -46,9 +46,9 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid rgb(255, 255, 255, 0.06);
+  border: 1px solid var(--c-border);
   border-radius: var(--radius-md);
-  background: rgb(255, 255, 255, 0.04);
+  background: var(--c-hover);
   color: var(--color-text-secondary);
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -56,14 +56,14 @@
 
 .data-manager__tab:hover {
   color: var(--color-text-primary);
-  background: rgb(255, 255, 255, 0.07);
-  border-color: rgb(255, 255, 255, 0.1);
+  background: var(--c-hover);
+  border-color: var(--c-border-strong);
 }
 
 .data-manager__tab--active {
   color: var(--color-gold-base);
   border-color: var(--color-gold-base);
-  background: rgb(200, 168, 78, 0.08);
+  background: var(--c-gold-soft);
 }
 
 .data-manager__tab-icon {

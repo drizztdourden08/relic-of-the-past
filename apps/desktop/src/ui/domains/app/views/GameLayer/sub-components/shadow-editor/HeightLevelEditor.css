@@ -31,8 +31,8 @@
   min-width: 0;
   font-size: 11px;
   color: var(--color-text-primary);
-  background: var(--color-input-bg, rgb(255, 255, 255, 0.06));
-  border: 1px solid var(--color-border-subtle, rgb(255, 255, 255, 0.1));
+  background: var(--c-inset);
+  border: 1px solid var(--c-border-strong);
   border-radius: 3px;
   padding: 2px 5px;
 }
@@ -41,8 +41,8 @@
   width: 48px;
   font-size: 11px;
   color: var(--color-text-primary);
-  background: var(--color-input-bg, rgb(255, 255, 255, 0.06));
-  border: 1px solid var(--color-border-subtle, rgb(255, 255, 255, 0.1));
+  background: var(--c-inset);
+  border: 1px solid var(--c-border-strong);
   border-radius: 3px;
   padding: 2px 5px;
   text-align: center;
@@ -57,19 +57,19 @@
   justify-content: center;
   border: none;
   border-radius: 3px;
-  background: rgb(255, 255, 255, 0.06);
-  color: var(--color-text-secondary, rgb(255, 255, 255, 0.5));
+  background: var(--c-hover);
+  color: var(--c-text-muted);
   font-size: 12px;
   cursor: pointer;
   flex-shrink: 0;
 }
 
 .height-level-editor__remove:hover {
-  background: rgb(255, 80, 80, 0.2);
+  background: var(--c-danger-soft);
   color: var(--color-danger-base);
 }
 
 .height-level-editor__add-btn:hover {
-  background: rgb(74, 158, 255, 0.2);
+  background: var(--c-info-soft);
   color: var(--color-gold-base);
 }

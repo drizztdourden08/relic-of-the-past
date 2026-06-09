@@ -6,8 +6,8 @@
   bottom: 8px;
   width: 180px;
   z-index: 100;
-  background: var(--color-surface-overlay, rgb(20, 20, 30, 0.95));
-  border: 1px solid var(--color-border-subtle, rgb(255, 255, 255, 0.08));
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -17,7 +17,7 @@
   gap: 4px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: rgb(255, 255, 255, 0.15) transparent;
+  scrollbar-color: var(--c-border-strong) transparent;
 }
 
 .shadow-element-list::-webkit-scrollbar {
@@ -25,7 +25,7 @@
 }
 
 .shadow-element-list::-webkit-scrollbar-thumb {
-  background: rgb(255, 255, 255, 0.15);
+  background: var(--c-border-strong);
   border-radius: 2px;
 }
 
@@ -42,7 +42,7 @@
   padding: 4px 10px;
   font-size: 11px;
   font-weight: 600;
-  color: var(--color-text-secondary, rgb(255, 255, 255, 0.6));
+  color: var(--c-text-dim);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -54,7 +54,7 @@
 .shadow-element-list__count {
   margin-left: auto;
   font-size: 10px;
-  background: rgb(255, 255, 255, 0.08);
+  background: var(--c-hover);
   border-radius: 8px;
   padding: 1px 5px;
   font-weight: 400;
@@ -74,7 +74,7 @@
   padding: 5px 10px;
   border: none;
   background: transparent;
-  color: var(--color-text-primary, rgb(255, 255, 255, 0.8));
+  color: var(--c-text);
   font-size: 12px;
   cursor: pointer;
   text-align: left;
@@ -82,16 +82,16 @@
 }
 
 .shadow-element-list__item:hover {
-  background: rgb(255, 255, 255, 0.04);
+  background: var(--c-hover);
 }
 
 .shadow-element-list__item--active {
-  background: var(--color-accent-bg, rgb(74, 158, 255, 0.15));
+  background: var(--c-info-soft);
   color: var(--color-text-primary);
 }
 
 .shadow-element-list__item--active:hover {
-  background: var(--color-accent-bg, rgb(74, 158, 255, 0.2));
+  background: var(--c-info-soft);
 }
 
 .shadow-element-list__item-icon {
@@ -111,8 +111,8 @@
 
 .shadow-element-list__item-tag {
   font-size: 10px;
-  color: var(--color-text-secondary, rgb(255, 255, 255, 0.5));
-  background: rgb(255, 255, 255, 0.06);
+  color: var(--c-text-muted);
+  background: var(--c-hover);
   border-radius: 3px;
   padding: 1px 4px;
   flex-shrink: 0;
@@ -123,5 +123,5 @@
   padding: 16px 10px;
   text-align: center;
   font-size: 11px;
-  color: var(--color-text-secondary, rgb(255, 255, 255, 0.4));
+  color: var(--c-text-muted);
 }

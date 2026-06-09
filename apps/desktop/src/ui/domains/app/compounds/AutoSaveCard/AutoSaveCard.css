@@ -21,11 +21,11 @@
 }
 
 .auto-save-card__badge--timer {
-  background: rgb(100, 180, 255, 0.12);
-  color: rgb(100, 180, 255, 0.9);
+  background: var(--c-info-soft);
+  color: var(--c-info);
 }
 
 .auto-save-card__badge--quit {
-  background: rgb(255, 180, 80, 0.12);
-  color: rgb(255, 180, 80, 0.9);
+  background: var(--c-warning-soft);
+  color: var(--c-warning);
 }

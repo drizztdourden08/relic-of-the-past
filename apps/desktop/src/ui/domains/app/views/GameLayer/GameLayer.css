@@ -92,7 +92,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgb(0, 0, 0, 0.35);
+  background: var(--c-scrim-game);
   backdrop-filter: blur(2px);
   z-index: 100;
   animation: pause-fade-in 0.25s ease-out;
@@ -112,5 +112,5 @@
   width: 36px;
   height: 120px;
   border-radius: 6px;
-  background: rgb(255, 255, 255, 0.25);
+  background: var(--c-border-strong);
 }
