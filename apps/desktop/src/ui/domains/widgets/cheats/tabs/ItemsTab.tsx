@@ -5,8 +5,9 @@
  * "From Check" shows the check list with grant buttons.
  */
 import { useState, useMemo, useEffect } from 'react';
-import { TextInput, Box, Text } from '../../../../design-system/primitives';
+import { TextInput, Box, Text, Image } from '../../../../design-system/primitives';
 import { ITEMS } from '@shared/game/items';
+import { getItemSprite } from '@shared/game/items/sprites';
 import { ALL_CHECKS } from '@shared/game/checks';
 import { CHECK_NPC_FLAGS } from '@shared/game/checks/flags';
 import { CHECK_ROOM_FLAGS } from '@shared/game/checks/flags';
@@ -102,17 +103,23 @@ const ItemsTab = () => {
               <Box key={cat}>
                 <Box className="cheats-items__category">{CATEGORY_LABELS[cat]}</Box>
                 <Box className="cheats-items__grid">
-                  {items.map(item => (
-                    <Box
-                      as="button"
-                      key={item.id}
-                      className="cheats-items__item"
-                      onClick={() => cheatGiveItem(item.id)}
-                      title={`ID: 0x${item.id.toString(16).padStart(2, '0')}`}
-                    >
-                      {item.name}
-                    </Box>
-                  ))}
+                  {items.map(item => {
+                    const sprite = getItemSprite(item.name);
+                    return (
+                      <Box
+                        as="button"
+                        key={item.id}
+                        className="cheats-item-btn"
+                        onClick={() => cheatGiveItem(item.id)}
+                        title={`${item.name} · 0x${item.id.toString(16).padStart(2, '0')}`}
+                      >
+                        {sprite
+                          ? <Image className="cheats-item-btn__icon" src={sprite} alt="" draggable={false} />
+                          : <Box as="span" className="cheats-item-btn__icon cheats-item-btn__icon--empty">?</Box>}
+                        <Text className="cheats-item-btn__label">{item.name}</Text>
+                      </Box>
+                    );
+                  })}
                 </Box>
               </Box>
             );

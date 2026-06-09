@@ -41,7 +41,7 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
   },
   {
     id: 'debug',
-    label: 'Debug',
+    label: 'Game State',
     defaultVisibility: 'game-only' as WidgetVisibility,
     defaultSide: 'right' as SnapSide,
     defaultDockedSize: 320,

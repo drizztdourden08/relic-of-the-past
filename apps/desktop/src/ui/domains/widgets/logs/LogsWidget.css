@@ -1,0 +1,53 @@
+/* @layer renderer-widgets @kind style */
+
+.logs-widget-content {
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--space-sm) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+}
+
+/* Each entry: time · channel · message, with room to breathe. */
+.logs-widget-content .log-entry {
+  display: flex;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--r-sm);
+  line-height: var(--leading-normal);
+}
+
+.logs-widget-content .log-entry:hover {
+  background: var(--c-hover);
+}
+
+.logs-widget-content .log-entry__time {
+  flex-shrink: 0;
+  color: var(--c-text-muted);
+}
+
+.logs-widget-content .log-entry__channel {
+  flex-shrink: 0;
+  font-weight: var(--weight-semi);
+}
+
+.logs-widget-content .log-entry__message {
+  flex: 1;
+  min-width: 0;
+  color: var(--c-text);
+  overflow-wrap: break-word;
+}
+
+.logs-widget-content .log-entry--error .log-entry__message {
+  color: var(--c-danger);
+}
+
+.logs-widget__empty {
+  padding: var(--space-lg);
+  text-align: center;
+  color: var(--c-text-muted);
+}

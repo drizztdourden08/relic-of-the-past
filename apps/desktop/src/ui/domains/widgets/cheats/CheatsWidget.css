@@ -139,29 +139,53 @@
 
 .cheats-items__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
   gap: var(--space-xs);
-  max-height: 300px;
-  overflow-y: auto;
 }
 
-.cheats-items__item {
-  padding: var(--space-xs) var(--space-sm);
-  background: var(--color-bg-raised);
-  border: 1px solid var(--color-border-subtle);
+/* Square item tile: sprite on top, label underneath */
+.cheats-item-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  background: var(--c-sunken);
+  border: 1px solid var(--c-border);
   border-radius: var(--r-sm);
-  color: var(--color-text-primary);
+  color: var(--c-text-dim);
   cursor: pointer;
+  font-family: inherit;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.cheats-item-btn:hover {
+  background: var(--c-hover);
+  border-color: var(--c-gold);
+}
+
+.cheats-item-btn__icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--c-text-muted);
+}
+
+.cheats-item-btn__label {
+  width: 100%;
   font-size: var(--text-xs);
-  white-space: nowrap;
+  line-height: var(--leading-tight);
+  text-align: center;
+  color: var(--c-text-dim);
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: background 0.1s;
-}
-
-.cheats-items__item:hover {
-  background: var(--color-bg-elevated);
-  color: var(--color-text-primary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .cheats-items__category {

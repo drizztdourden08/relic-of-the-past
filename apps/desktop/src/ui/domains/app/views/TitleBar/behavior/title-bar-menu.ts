@@ -59,7 +59,7 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
         { key: 'checks', icon: '🗺️', label: 'Checks Tracker', checked: widgetVisibility.checks, onClick: () => { closeMenu(); onToggleChecks(); } },
         { key: 'cheats', icon: '⚡', label: 'Cheats', checked: widgetVisibility.cheats, onClick: () => { closeMenu(); onToggleCheats(); } },
         { key: 'logs', icon: '📋', label: 'Logs', checked: widgetVisibility.logs, onClick: () => { closeMenu(); onShowLogs(); } },
-        { key: 'debug', icon: '🐛', label: 'Debug State', checked: widgetVisibility.debug, onClick: () => { closeMenu(); onToggleDebug(); } },
+        { key: 'debug', icon: '📡', label: 'Game State', checked: widgetVisibility.debug, onClick: () => { closeMenu(); onToggleDebug(); } },
         { key: 'navigation', icon: '🔗', label: 'Location & Navigation', checked: widgetVisibility.navigation, onClick: () => { closeMenu(); onShowConnectionDebug(); } },
         { key: 'dataset', icon: '📊', label: 'Dataset & Mapping', checked: widgetVisibility.dataset, onClick: () => { closeMenu(); onToggleDataset(); } },
       ],

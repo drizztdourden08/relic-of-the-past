@@ -9,6 +9,7 @@ import { Text } from '../../../design-system/primitives/Text';
 import { subscribe, getEntries, CHANNEL_COLORS, type LogEntry } from '../../../../lib/log-bus';
 import { MAX_ENTRIES } from './logs.constants';
 import { formatTime } from './behavior/formatTime';
+import './LogsWidget.css';
 
 const LogsWidgetContent = () => {
   const [entries, setEntries] = useState<LogEntry[]>(() => getEntries());
@@ -30,6 +31,7 @@ const LogsWidgetContent = () => {
 
   return (
     <Box className="logs-widget-content">
+      {entries.length === 0 && <Box className="logs-widget__empty">No log entries yet.</Box>}
       {entries.map((entry, i) => (
         <Box key={`${entry.id}-${i}`} className={`log-entry log-entry--${entry.level}`}>
           <Text className="log-entry__time">{formatTime(entry.timestamp)}</Text>
