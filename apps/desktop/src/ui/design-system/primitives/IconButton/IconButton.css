@@ -95,11 +95,11 @@
   color: var(--c-gold-bright);
 }
 
-/* Ghost active = gold icon ONLY — no fill / no border in any state (bare bars like the title bar) */
+/* Ghost active = gold border + gold icon, NO fill (bare bars like the title bar) */
 .icon-btn--ghost.icon-btn--active,
 .icon-btn--ghost.icon-btn--active:hover:not(:disabled) {
   background: none;
-  border-color: transparent;
+  border-color: var(--c-gold);
   color: var(--c-gold-bright);
 }
 
