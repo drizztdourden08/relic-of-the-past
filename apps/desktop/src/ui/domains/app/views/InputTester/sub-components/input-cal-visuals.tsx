@@ -52,7 +52,7 @@ const AxisRecordButton = ({ getValues, label }: { getValues: () => number[]; lab
     setTimeout(() => setDone(false), 2000);
   }, [label]);
 
-  const color = done ? '#4ade80' : recording ? '#ef4444' : 'var(--color-text-muted)';
+  const color = done ? 'var(--c-green-bright)' : recording ? 'var(--c-danger)' : 'var(--color-text-muted)';
 
   return (
     <Box

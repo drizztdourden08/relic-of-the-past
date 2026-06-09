@@ -90,7 +90,7 @@ const ButtonMapping = (props: ButtonMappingProps) => {
           </>
         ) : (
           <>
-            <Text style={{ fontSize: 11, color: '#9ca3af' }}>
+            <Text style={{ fontSize: 11, color: 'var(--c-text-dim)' }}>
               Click a button above to detect, or click a byte in the grid to assign manually.
             </Text>
             <Box as="button" onClick={() => setInputPhaseActiveWrapped(false)} className="input-cal__btn">Deselect</Box>

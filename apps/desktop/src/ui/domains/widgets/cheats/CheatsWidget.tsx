@@ -5,6 +5,7 @@
  */
 import { useState } from 'react';
 import { Box } from '../../../design-system/primitives/Box';
+import { TabBar } from '../../../design-system/primitives/TabBar';
 import { ItemsTab } from './tabs/ItemsTab';
 import { StatsTab } from './tabs/StatsTab';
 import { CombatTab } from './tabs/CombatTab';
@@ -13,11 +14,11 @@ import './CheatsWidget.css';
 
 type CheatTab = 'items' | 'stats' | 'combat' | 'bottles';
 
-const TABS: { key: CheatTab; label: string }[] = [
-  { key: 'items', label: 'Items' },
-  { key: 'stats', label: 'Stats' },
-  { key: 'combat', label: 'Combat' },
-  { key: 'bottles', label: 'Bottles' },
+const TABS = [
+  { id: 'items', label: 'Items' },
+  { id: 'stats', label: 'Stats' },
+  { id: 'combat', label: 'Combat' },
+  { id: 'bottles', label: 'Bottles' },
 ];
 
 const CheatsWidgetContent = () => {
@@ -25,18 +26,7 @@ const CheatsWidgetContent = () => {
 
   return (
     <Box className="cheats-widget">
-      <Box className="cheats-widget__tabs">
-        {TABS.map(t => (
-          <Box
-            as="button"
-            key={t.key}
-            className={`cheats-widget__tab ${tab === t.key ? 'cheats-widget__tab--active' : ''}`}
-            onClick={() => setTab(t.key)}
-          >
-            {t.label}
-          </Box>
-        ))}
-      </Box>
+      <TabBar tabs={TABS} activeTab={tab} onTabChange={(id) => setTab(id as CheatTab)} />
       <Box className="cheats-widget__content">
         {tab === 'items' && <ItemsTab />}
         {tab === 'stats' && <StatsTab />}

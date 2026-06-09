@@ -35,7 +35,7 @@ const ProfileSelector = (props: ProfileSelectorProps) => {
       </Text>
 
       <Box style={{ marginBottom: 12 }}>
-        <Text as="label" style={{ fontSize: 12, color: '#9ca3af', display: 'block', marginBottom: 4 }}>
+        <Text as="label" style={{ fontSize: 12, color: 'var(--c-text-dim)', display: 'block', marginBottom: 4 }}>
           Controller (SDL Database)
         </Text>
         <Select
@@ -48,12 +48,12 @@ const ProfileSelector = (props: ProfileSelectorProps) => {
       </Box>
 
       {selectedProfileId && (
-        <Text as="p" style={{ fontSize: 12, color: '#6ee7b7', margin: '0 0 12px' }}>
+        <Text as="p" style={{ fontSize: 12, color: 'var(--c-green-bright)', margin: '0 0 12px' }}>
           ✓ Profile auto-detected: <Text as="strong">{DEVICE_PROFILES.find(p => p.id === selectedProfileId)?.name ?? selectedProfileId}</Text>
         </Text>
       )}
       {!selectedProfileId && selectedSdlVidPid && (
-        <Text as="p" style={{ fontSize: 12, color: '#fbbf24', margin: '0 0 12px' }}>
+        <Text as="p" style={{ fontSize: 12, color: 'var(--c-warning)', margin: '0 0 12px' }}>
           ⚠ No built-in profile for this device — calibration will use a generic layout.
         </Text>
       )}

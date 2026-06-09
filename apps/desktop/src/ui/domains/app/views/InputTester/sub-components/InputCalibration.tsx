@@ -171,7 +171,7 @@ const InputCalibration = () => {
                     <Text className="input-cal__card-badge" style={{ background: 'var(--color-bg-tertiary, #333)' }}>
                       INACTIVE
                     </Text>
-                    <Text className="input-cal__card-badge" style={{ background: '#1e40af', marginLeft: 4 }}>
+                    <Text className="input-cal__card-badge" style={{ background: 'var(--c-info)', marginLeft: 4 }}>
                       HID
                     </Text>
                     <Text className="input-cal__card-name">{name}</Text>

@@ -6,11 +6,11 @@ import { S } from '../SpriteDebug.constants';
 const Stats = ({ counts, total }: { counts: { good: number; neutral: number; bad: number; yellow: number }; total: number }) => {
   return (
     <Box style={S.stats}>
-      <Text style={{ color: '#4caf50' }}>{counts.good} good</Text>
-      <Text style={{ color: '#f5c542' }}>{counts.yellow} re-review</Text>
-      <Text style={{ color: '#999' }}>{counts.neutral} unchecked</Text>
-      <Text style={{ color: '#f44336' }}>{counts.bad} bad</Text>
-      <Text style={{ color: '#666' }}>/ {total}</Text>
+      <Text style={{ color: 'var(--c-green-bright)' }}>{counts.good} good</Text>
+      <Text style={{ color: 'var(--c-warning)' }}>{counts.yellow} re-review</Text>
+      <Text style={{ color: 'var(--c-text-dim)' }}>{counts.neutral} unchecked</Text>
+      <Text style={{ color: 'var(--c-danger)' }}>{counts.bad} bad</Text>
+      <Text style={{ color: 'var(--c-text-muted)' }}>/ {total}</Text>
     </Box>
   );
 };
@@ -45,14 +45,14 @@ const CategoryButton = ({ label, value, current, onClick, count }: {
 const StatusBtns = ({ current, onClick }: { current: ReviewStatus; onClick: (s: ReviewStatus) => void }) => {
   return (
     <Box style={S.statusBtns}>
-      {([['✓', 'good', '#4caf50'], ['●', 'yellow', '#f5c542'], ['—', 'neutral', '#888'], ['✗', 'bad', '#f44336']] as const).map(([icon, st, color]) => {
+      {([['✓', 'good', 'var(--c-green-bright)'], ['●', 'yellow', 'var(--c-warning)'], ['—', 'neutral', 'var(--c-text-muted)'], ['✗', 'bad', 'var(--c-danger)']] as const).map(([icon, st, color]) => {
         const active = current === st;
         return (
           <Box as="button" key={st} onClick={() => onClick(st)} style={{
             ...S.statusBtn,
-            color: active ? '#fff' : color,
+            color: active ? 'var(--c-text)' : color,
             background: active ? color : 'transparent',
-            borderColor: active ? color : 'rgba(255,255,255,0.15)',
+            borderColor: active ? color : 'var(--c-border-strong)',
           }}>
             {icon}
           </Box>

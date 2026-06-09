@@ -20,9 +20,9 @@ const WebHidRawBytes = ({ state }: WebHidRawBytesProps) => (
         {Array.from(state.rawBytes).map((b, i) => (
           <Box key={i} style={{
             width: 22, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: b > 0 ? `rgba(129,140,248,${Math.min(1, b / 255 * 0.8 + 0.2)})` : '#2a2a3a',
-            color: b > 0 ? '#fff' : '#555',
-            borderRadius: 2, border: '1px solid #3a3a4a',
+            background: b > 0 ? `rgba(129,140,248,${Math.min(1, b / 255 * 0.8 + 0.2)})` : 'var(--c-hover)',
+            color: b > 0 ? 'var(--c-text)' : 'var(--c-text-muted)',
+            borderRadius: 2, border: '1px solid var(--c-border)',
           }}>
             {b.toString(16).padStart(2, '0')}
           </Box>
