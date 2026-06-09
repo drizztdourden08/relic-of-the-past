@@ -45,7 +45,7 @@ import type { RegionNavData, ConnectionNavData } from '../shared/game/navigation
 
 const args = process.argv.slice(2);
 const outputIdx = args.indexOf('--output');
-const outputPath = outputIdx >= 0 ? args[outputIdx + 1] : resolve(__dirname, '../public/data/nav-data.json');
+const outputPath = outputIdx >= 0 ? args[outputIdx + 1] : resolve(__dirname, '../apps/desktop/public/data/nav-data.json');
 const screenIdx = args.indexOf('--screen');
 const singleScreen = screenIdx >= 0 ? parseInt(args[screenIdx + 1], 16) : null;
 
