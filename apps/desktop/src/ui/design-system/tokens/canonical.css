@@ -18,6 +18,11 @@
   --c-sunken:        #08080b;            /* wells, code blocks, deep insets */
   --c-glass:         rgb(14 14 18 / 0.92); /* floating-over-game panels (+ --blur) */
 
+  /* ─── Floating panels — translucent cards that let the one bg show through (+ --blur) ─── */
+  --c-panel:         rgb(23 23 29 / 0.55); /* floating side-nav / content cards */
+  --c-inset:         rgb(8 8 11 / 0.45);   /* translucent well inside a floating card */
+  --c-hairline:      rgb(255 255 255 / 0.06); /* faint glass edge for floating cards */
+
   /* ─── Borders (2 tiers) ─── */
   --c-border:        #2a2a32;            /* hairline default */
   --c-border-strong: #3c3c46;            /* hover / emphasis */

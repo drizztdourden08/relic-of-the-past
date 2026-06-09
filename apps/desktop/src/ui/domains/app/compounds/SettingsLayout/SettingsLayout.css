@@ -56,8 +56,8 @@
 .settings-layout__group {
   display: flex;
   flex-direction: column;
-  background: var(--c-sunken);
-  border: 1px solid var(--c-border);
+  background: var(--c-inset);
+  border: 1px solid var(--c-hairline);
   border-radius: var(--r-lg);
   overflow: hidden;
 }

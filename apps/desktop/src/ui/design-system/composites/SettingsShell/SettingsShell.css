@@ -1,10 +1,17 @@
 /* @layer renderer-components @kind style */
 
+/*
+ * Two floating, translucent cards (side-nav + content) separated by a gap,
+ * letting the one app background show through. Depth comes from the faint glass
+ * edge + blur, not a solid block.
+ */
+
 .settings-shell {
   display: flex;
-  height: 100%;
+  flex: 1;
   min-height: 0;
-  background: var(--c-bg);
+  gap: var(--space-md);
+  padding: 0 var(--space-md) var(--space-md);
 }
 
 .settings-shell__content {
@@ -12,4 +19,8 @@
   min-width: 0;
   overflow-y: auto;
   padding: var(--space-xl);
+  background: var(--c-panel);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--c-hairline);
+  border-radius: var(--r-lg);
 }

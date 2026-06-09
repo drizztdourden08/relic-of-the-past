@@ -7,8 +7,10 @@
   flex-shrink: 0;
   height: 100%;
   overflow: hidden;
-  background: var(--c-surface);
-  border-right: 1px solid var(--c-border);
+  background: var(--c-panel);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--c-hairline);
+  border-radius: var(--r-lg);
 }
 
 .side-nav__header {
@@ -16,13 +18,19 @@
 }
 
 .side-nav__search {
-  padding: var(--space-sm) var(--space-sm) var(--space-xs);
+  padding: var(--space-sm);
+}
+
+/* Contrasty filter — sits darker than the translucent card around it. */
+.side-nav__search .text-input {
+  background: var(--c-sunken);
+  border-color: var(--c-border);
 }
 
 .side-nav__list {
   flex: 1;
   overflow-y: auto;
-  padding: var(--space-sm);
+  padding: var(--space-sm) var(--space-xs);
 }
 
 .side-nav__group {
@@ -32,7 +40,8 @@
 .side-nav__group-title {
   display: block;
   font-size: var(--text-xs);
-  color: var(--c-text-muted);
+  font-weight: var(--weight-semi);
+  color: var(--c-text-dim);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   padding: var(--space-xs) var(--space-sm);
@@ -44,24 +53,27 @@
   gap: var(--space-sm);
   width: 100%;
   text-align: left;
-  padding: var(--space-xs) var(--space-sm);
+  padding: var(--space-xs) var(--space-sm) var(--space-xs) var(--space-md);
   font-size: var(--text-sm);
   color: var(--c-text-dim);
   background: none;
   border: none;
-  border-radius: var(--r-sm);
+  border-left: 2px solid transparent;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
   cursor: pointer;
-  transition: background var(--transition-fast), color var(--transition-fast);
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .side-nav__item:hover {
   background: var(--c-hover);
   color: var(--c-text);
+  border-left-color: var(--c-gold-dim);
 }
 
 .side-nav__item--active {
   background: var(--c-selected);
   color: var(--c-gold-bright);
+  border-left-color: var(--c-gold);
 }
 
 .side-nav__icon {
