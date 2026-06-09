@@ -2,63 +2,10 @@
 import type React from 'react';
 
 const S: Record<string, React.CSSProperties> = {
-  overlay: {
-    position: 'fixed',
-    inset: 0,
-    background: 'var(--c-bg)',
-    zIndex: 9999,
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden',
-    fontFamily: "'JetBrains Mono', monospace",
-    // @ts-expect-error Electron-specific CSS property
-    WebkitAppRegion: 'no-drag',
-  },
-  topBar: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 16,
-    padding: '8px 20px',
-    borderBottom: '2px solid var(--c-border-strong)',
-    flexShrink: 0,
-    background: 'var(--c-sunken)',
-  },
-  modeToggle: {
-    display: 'flex',
-    gap: 0,
-    borderRadius: 6,
-    overflow: 'hidden',
-    border: '2px solid var(--c-info)',
-  },
-  modeBtn: {
-    padding: '5px 16px',
-    background: 'var(--c-hover)',
-    border: 'none',
-    color: 'var(--c-text-muted)',
-    fontSize: 12,
-    fontWeight: 600,
-    cursor: 'pointer',
-    fontFamily: 'inherit',
-    transition: 'all 0.15s',
-  },
-  modeBtnActive: {
-    background: 'var(--c-info-soft)',
-    color: 'var(--c-info)',
-  },
   modeHint: {
     fontSize: 11,
     color: 'var(--c-text-muted)',
     fontStyle: 'italic',
-  },
-  closeBtn: {
-    padding: '3px 8px',
-    background: 'none',
-    border: '1px solid var(--c-border-strong)',
-    borderRadius: 4,
-    color: 'var(--c-text-dim)',
-    fontSize: 14,
-    cursor: 'pointer',
-    marginLeft: 'auto',
   },
   header: {
     display: 'flex',
@@ -87,8 +34,8 @@ const S: Record<string, React.CSSProperties> = {
     transition: 'all 0.1s',
   },
   catTabActive: {
-    background: 'var(--c-info-soft)',
-    color: 'var(--c-info)',
+    background: 'var(--c-selected)',
+    color: 'var(--c-gold-bright)',
   },
   stats: {
     display: 'flex',
@@ -111,9 +58,9 @@ const S: Record<string, React.CSSProperties> = {
     fontFamily: 'inherit',
   },
   filterBtnActive: {
-    background: 'var(--c-info-soft)',
-    borderColor: 'var(--c-info)',
-    color: 'var(--c-info)',
+    background: 'var(--c-selected)',
+    borderColor: 'var(--c-gold)',
+    color: 'var(--c-gold-bright)',
   },
   resetBtn: {
     padding: '3px 10px',
