@@ -95,6 +95,19 @@
   color: var(--c-gold-bright);
 }
 
+/* Ghost active = gold icon ONLY (no fill / no border) — for bare bars like the title bar */
+.icon-btn--ghost.icon-btn--active {
+  background: none;
+  border-color: transparent;
+  color: var(--c-gold-bright);
+}
+
+.icon-btn--ghost.icon-btn--active:hover:not(:disabled) {
+  background: var(--c-hover);
+  border-color: transparent;
+  color: var(--c-gold-bright);
+}
+
 .icon-btn:disabled {
   opacity: 0.4;
   cursor: default;

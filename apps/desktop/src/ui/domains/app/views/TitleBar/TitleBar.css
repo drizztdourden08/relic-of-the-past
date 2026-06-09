@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   height: var(--titlebar-height);
-  background: var(--color-bg-base);
+  background: var(--c-surface);
   border-bottom: 1px solid var(--color-border-subtle);
   -webkit-app-region: drag;
   position: relative;
@@ -67,31 +67,31 @@
 }
 
 .titlebar__fps {
-  font-size: var(--text-xs, 11px);
+  font-size: var(--text-xs);
   font-family: var(--font-mono);
   color: var(--color-gold-base);
   opacity: 0.7;
-  margin-left: var(--space-xs, 4px);
+  margin-left: var(--space-xs);
   -webkit-app-region: no-drag;
 }
 
 .titlebar__update-badge {
-  margin-left: var(--space-xs, 4px);
-  background: rgb(76, 175, 80, 0.15);
-  border: 1px solid var(--color-green-base);
-  color: var(--color-green-base);
-  font-size: var(--text-xs, 11px);
-  font-weight: var(--weight-semibold, 600);
+  margin-left: var(--space-xs);
+  background: var(--c-green-soft);
+  border: 1px solid var(--c-green);
+  color: var(--c-green-bright);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semi);
   cursor: pointer;
   padding: 2px 8px;
-  border-radius: var(--radius-sm, 4px);
+  border-radius: var(--r-sm);
   -webkit-app-region: no-drag;
   animation: update-pulse 2s ease-in-out infinite;
   transition: background 0.2s;
 }
 
 .titlebar__update-badge:hover {
-  background: rgb(76, 175, 80, 0.3);
+  background: var(--c-green-dim);
 }
 
 @keyframes update-pulse {
@@ -121,7 +121,7 @@
 }
 
 .titlebar__control:hover {
-  background: var(--color-bg-elevated);
+  background: var(--c-hover);
   color: var(--color-text-primary);
 }
 
