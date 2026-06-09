@@ -52,6 +52,14 @@ npm run ci    # tsc + eslint + repo analysis + WASM export-drift check
 If you change C code in `core/`, keep the `EXPORTED_FUNCTIONS` lists in `build.bat` and `Makefile`
 in sync (`npm run check:exports` enforces this) and rebuild the WASM.
 
+## Copyright / media gate
+
+An automatic gate flags any **media** (images, audio, video, music, fonts, ROM/asset binaries) or
+**Nintendo trademark reference** you add — locally via a `commit-msg` hook and on GitHub via the
+**Copyright Gate** check. The project ships no game assets, so anything flagged needs explicit
+approval: add `[allow-copyright]` to your commit message, or (for PRs) a maintainer applies the
+`copyright-ok` label. Full details: [docs/copyright-gate.md](docs/copyright-gate.md).
+
 ## Tests
 
 Automated tests are intentionally minimal. Playwright is available as a **tool**, not a committed

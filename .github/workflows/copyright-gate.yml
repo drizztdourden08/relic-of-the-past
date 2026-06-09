@@ -1,0 +1,40 @@
+name: Copyright Gate
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+concurrency:
+  group: copyright-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Run copyright/media gate
+        env:
+          # Owner approval for PRs: the maintainer-only 'copyright-ok' label.
+          COPYRIGHT_APPROVED: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'copyright-ok') && '1' || '0' }}
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            RANGE="origin/${{ github.base_ref }}...HEAD"
+          else
+            BEFORE="${{ github.event.before }}"
+            if echo "$BEFORE" | grep -qE '^0+$' || ! git cat-file -e "$BEFORE" 2>/dev/null; then
+              RANGE="HEAD~1...HEAD"
+            else
+              RANGE="$BEFORE...HEAD"
+            fi
+          fi
+          echo "Scanning range: $RANGE"
+          node scripts/copyright-gate/scan.mjs --range "$RANGE"

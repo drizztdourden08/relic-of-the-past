@@ -45,5 +45,8 @@
   // GitHub community health files & workflows (issue templates carry YAML
   // frontmatter, so they cannot hold an in-file tag comment).
   ".github/**/*.md":          { "layer": "root-config", "kind": "doc" },
-  ".github/**/*.yml":         { "layer": "root-config", "kind": "config" }
+  ".github/**/*.yml":         { "layer": "root-config", "kind": "config" },
+
+  // Git hooks (shell scripts, no extension).
+  ".githooks/**":             { "layer": "tooling-scripts", "kind": "logic" }
 }

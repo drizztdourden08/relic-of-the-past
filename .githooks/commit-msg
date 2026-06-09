@@ -1,0 +1,15 @@
+#!/bin/sh
+# Copyright / media gate (local). Blocks commits that add media or Nintendo
+# references unless you acknowledge with [allow-copyright] in the message.
+# CI re-checks regardless, so this is your personal heads-up, not the hard wall.
+
+if grep -qi '\[allow-copyright\]' "$1"; then
+  exit 0
+fi
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "copyright-gate: node not found — skipping local check (CI will enforce)."
+  exit 0
+fi
+
+node scripts/copyright-gate/scan.mjs --staged
