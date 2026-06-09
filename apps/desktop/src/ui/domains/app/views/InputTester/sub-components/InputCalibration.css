@@ -3,7 +3,7 @@
 /* Input Calibration — uses design tokens from tokens.css */
 
 .input-cal {
-  padding: var(--space-xl);
+  padding: 0;
   height: 100%;
   overflow-y: auto;
   font-family: var(--font-sans);

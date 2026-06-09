@@ -22,7 +22,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
-  padding: 0 var(--space-sm);
   flex-shrink: 0;
   width: 120px;
 }
