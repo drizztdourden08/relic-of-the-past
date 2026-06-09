@@ -1,10 +1,10 @@
 name: CI
 
+# Runs on demand (manual "Run workflow") and on contributor PRs only.
+# Direct pushes to master do NOT auto-run — release/verify by asking explicitly.
 on:
+  workflow_dispatch:
   pull_request:
-  push:
-    branches:
-      - master
 
 concurrency:
   group: ci-${{ github.ref }}

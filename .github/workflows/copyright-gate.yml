@@ -1,9 +1,10 @@
 name: Copyright Gate
 
+# On-demand + contributor PRs. Your own commits are covered by the local
+# commit-msg hook, so direct pushes to master do not auto-run this.
 on:
+  workflow_dispatch:
   pull_request:
-  push:
-    branches: [master]
 
 concurrency:
   group: copyright-${{ github.ref }}
