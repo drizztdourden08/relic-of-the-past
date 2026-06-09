@@ -49,11 +49,15 @@
 }
 
 .tracker-filters__search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
   margin-bottom: var(--space-sm);
 }
 
 .tracker-filters__input {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   padding: var(--space-xs) var(--space-sm);
   background: var(--c-sunken);
   border: 1px solid var(--c-border);
@@ -62,6 +66,30 @@
   font-family: inherit;
   font-size: var(--text-xs);
   outline: none;
+}
+
+.tracker-filters__toggle {
+  flex-shrink: 0;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--c-sunken);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-sm);
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.tracker-filters__toggle:hover {
+  background: var(--c-hover);
+  color: var(--c-text);
+}
+
+.tracker-filters__toggle--active {
+  background: var(--c-selected);
+  border-color: var(--c-gold);
+  color: var(--c-gold-bright);
 }
 
 .tracker-filters__input::placeholder {
@@ -157,20 +185,6 @@
 
 .tracker-filters__btn--active {
   background: var(--c-selected);
-  border-color: var(--c-gold);
-  color: var(--c-gold-bright);
-}
-
-/* ─── Group-by select ─── */
-.tracker-filters__select {
-  background: var(--c-sunken);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-sm);
-  color: var(--c-text-dim);
-  font-size: var(--text-xs);
-}
-
-.tracker-filters__select--active {
   border-color: var(--c-gold);
   color: var(--c-gold-bright);
 }
