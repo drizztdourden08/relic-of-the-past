@@ -84,7 +84,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, linkScreenIndex,
           }}>
             {scrResult && <ReachabilityCanvas reachable={scrResult.reachable} size={cellW} tileLayer={scrResult.tileLayer} />}
             <Box style={{ fontWeight: 700, fontSize: 11, position: 'relative' }}>{bundle.subNames[scr] || bundle.screenNames[scr]}</Box>
-            <Box style={{ color: '#555', fontSize: 9, position: 'relative' }}>0x{scr.toString(16).toUpperCase()}</Box>
+            <Box style={{ color: 'var(--c-text-muted)', fontSize: 9, position: 'relative' }}>0x{scr.toString(16).toUpperCase()}</Box>
             {scrResult && <Box style={{ fontSize: 9, color: 'var(--c-text-dim)', position: 'relative' }}>{scrResult.reachableCount}/{scrResult.totalTiles}</Box>}
           </Box>
         );

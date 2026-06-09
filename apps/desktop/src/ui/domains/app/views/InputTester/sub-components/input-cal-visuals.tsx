@@ -84,7 +84,7 @@ const TriggerBar = ({ value, label }: { value: number; label: string }) => {
       <Box style={{
         width: 24, height: 60, borderRadius: 4,
         border: '1px solid var(--color-border-subtle)',
-        background: 'var(--color-bg-secondary, #1a1a2e)',
+        background: 'var(--c-surface)',
         position: 'relative', overflow: 'hidden',
       }}>
         <Box style={{

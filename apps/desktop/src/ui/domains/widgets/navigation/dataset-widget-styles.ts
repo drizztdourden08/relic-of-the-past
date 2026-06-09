@@ -4,10 +4,10 @@ import type React from 'react';
 import type { ReviewStatus } from './dataset-widget-types';
 
 const STATUS_BTNS: { key: ReviewStatus; label: string; color: string }[] = [
-  { key: 'neutral', label: '—', color: '#666' },
-  { key: 'good', label: '✓', color: '#4c4' },
-  { key: 'bad', label: '✗', color: '#f44' },
-  { key: 'yellow', label: '⚠', color: '#fc4' },
+  { key: 'neutral', label: '—', color: 'var(--c-text-muted)' },
+  { key: 'good', label: '✓', color: 'var(--c-green)' },
+  { key: 'bad', label: '✗', color: 'var(--c-danger)' },
+  { key: 'yellow', label: '⚠', color: 'var(--c-warning)' },
 ];
 
 const S: Record<string, React.CSSProperties> = {

@@ -44,7 +44,7 @@ const WebHidCard = ({ deviceKey, state, profile, hasStickCal, existingStickCal, 
         {hasStickCal && (
           <Text style={{
             fontSize: 10, padding: '1px 6px', borderRadius: 4,
-            background: 'var(--color-success-bg, #1a3a2a)', color: 'var(--color-success-text, #4ade80)',
+            background: 'var(--c-green-dim)', color: 'var(--c-green-bright)',
             fontWeight: 600,
           }}>
             Sticks Calibrated

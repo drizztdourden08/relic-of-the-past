@@ -28,6 +28,31 @@ const noRawHtml = {
   },
 };
 
+// ── R14: no raw color literals in inline-style objects (use design tokens) ──
+// Flags a hex/rgb()/rgba()/hsl() string assigned to a color-ish style property
+// (color, background, borderColor, fill, stroke, boxShadow, …). Use a token:
+// `var(--c-*)`. Targets object Properties only, so canvas `ctx.fillStyle = '#fff'`
+// (an assignment, not a property) and dynamic `color: cond ? a : b` / fn() values
+// are NOT flagged — those are the legitimate canvas / categorical exceptions.
+const COLOR_KEYS = /^(color|background|backgroundColor|border|borderColor|borderTopColor|borderBottomColor|borderLeftColor|borderRightColor|outline|outlineColor|fill|stroke|boxShadow|textShadow|caretColor|accentColor|columnRuleColor|textDecorationColor)$/;
+const RAW_COLOR = /#[0-9a-fA-F]{3,8}\b|\b(?:rgb|rgba|hsl|hsla|hwb)\(/;
+const noRawColor = {
+  meta: { type: 'problem', docs: { description: 'No raw color literals in inline styles — use design tokens' }, schema: [] },
+  create(context) {
+    return {
+      Property(node) {
+        const key = node.key;
+        const name = key.type === 'Identifier' ? key.name : (key.type === 'Literal' ? String(key.value) : '');
+        if (!COLOR_KEYS.test(name)) return;
+        const v = node.value;
+        if (v.type === 'Literal' && typeof v.value === 'string' && RAW_COLOR.test(v.value)) {
+          context.report({ node: v, message: `No raw color '${v.value}' in an inline style — use a design token, e.g. 'var(--c-*)'.` });
+        }
+      },
+    };
+  },
+};
+
 export default tseslint.config(
   {
     ignores: [
@@ -59,11 +84,14 @@ export default tseslint.config(
     plugins: {
       '@typescript-eslint': tseslint.plugin,
       'react-hooks': reactHooks,
-      local: { rules: { 'no-raw-html': noRawHtml } },
+      local: { rules: { 'no-raw-html': noRawHtml, 'no-raw-color': noRawColor } },
     },
     rules: {
       // ── R11: raw HTML only in primitives (warn — work toward error) ──
       'local/no-raw-html': 'warn',
+
+      // ── R14: no raw color literals in inline styles (error) ──
+      'local/no-raw-color': 'error',
 
       // ── File-size cap is owned solely by the per-kind line-policy ──
       // (scripts/analyze/policy.mjs). ESLint's flat `max-lines` is intentionally
@@ -117,6 +145,23 @@ export default tseslint.config(
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'off',
     },
+  },
+  {
+    // ── no-raw-color exceptions (documented) ──
+    // Categorical data-viz palettes: fixed, distinct hues that ENCODE categories
+    // (requirement icons, HID byte roles) — not theme colors, like chart palettes.
+    // DebugWidget: a deliberate retro green-on-black terminal. HUD: SNES palette.
+    files: [
+      '**/ui/domains/widgets/navigation/sub-components/ReqIcon.tsx',
+      '**/ui/domains/app/views/InputTester/sub-components/hid-calibration/components/ByteGrid.tsx',
+      '**/ui/domains/app/views/InputTester/sub-components/hid-calibration/wizard-helpers.ts',
+      '**/ui/domains/app/views/InputTester/sub-components/GamepadCard.tsx',
+      '**/ui/domains/app/views/SpriteDebug/sub-components/ReviewCards.tsx',
+      '**/ui/domains/widgets/debug/DebugWidget.tsx',
+      '**/ui/domains/hud/**/*.{ts,tsx}',
+      'apps/desktop/electron/**/*.{ts,tsx}',
+    ],
+    rules: { 'local/no-raw-color': 'off' },
   },
   {
     // ── Primitives are the ONE place raw HTML is allowed ──

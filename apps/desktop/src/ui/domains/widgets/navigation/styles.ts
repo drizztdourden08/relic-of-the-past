@@ -4,7 +4,7 @@ import type { CSSProperties } from 'react';
 /** Shared inline-style map for the Navigation widget + its sub-components. */
 const S: Record<string, CSSProperties> = {
   root: {
-    background: 'rgba(0,0,0,0.8)',
+    background: 'var(--c-glass)',
     color: 'var(--c-text-dim)',
     fontFamily: "'JetBrains Mono', monospace",
     fontSize: 12,

@@ -168,7 +168,7 @@ const InputCalibration = () => {
                     {icon && (
                       <Image src={icon} alt="" draggable={false} style={{ width: 28, height: 28, opacity: 0.5, flexShrink: 0 }} />
                     )}
-                    <Text className="input-cal__card-badge" style={{ background: 'var(--color-bg-tertiary, #333)' }}>
+                    <Text className="input-cal__card-badge" style={{ background: 'var(--c-surface)' }}>
                       INACTIVE
                     </Text>
                     <Text className="input-cal__card-badge" style={{ background: 'var(--c-info)', marginLeft: 4 }}>

@@ -7,10 +7,10 @@ const DIR_LABELS: Record<string, string> = { n: '⬆ North', s: '⬇ South', e: 
 const DIR_COLORS: Record<string, string> = { n: '#4488ff', s: '#44ff88', e: '#ff8844', w: '#bb44ff' };
 
 const STATUS_BTNS: { key: ReviewStatus; label: string; color: string }[] = [
-  { key: 'neutral', label: '—', color: '#666' },
-  { key: 'good', label: '✓', color: '#4c4' },
-  { key: 'bad', label: '✗', color: '#f44' },
-  { key: 'yellow', label: '⚠', color: '#fc4' },
+  { key: 'neutral', label: '—', color: 'var(--c-text-muted)' },
+  { key: 'good', label: '✓', color: 'var(--c-green)' },
+  { key: 'bad', label: '✗', color: 'var(--c-danger)' },
+  { key: 'yellow', label: '⚠', color: 'var(--c-warning)' },
 ];
 
 const REQUIREMENT_OPTIONS = [
@@ -33,7 +33,7 @@ const S: Record<string, React.CSSProperties> = {
   pointCard: { display: 'flex', flexDirection: 'column', gap: 2, padding: '3px 6px', marginLeft: 8, borderLeft: '2px solid', borderRadius: 'var(--r-sm)', background: 'var(--c-hover)' },
   pointHeader: { display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer' },
   expandIcon: { fontSize: 8, color: 'var(--c-text-muted)', width: 10 },
-  pointTitle: { fontSize: 9, fontWeight: 500, color: '#bbb', fontFamily: "'JetBrains Mono', monospace" },
+  pointTitle: { fontSize: 9, fontWeight: 500, color: 'var(--c-text-dim)', fontFamily: "'JetBrains Mono', monospace" },
   tileBadge: { fontSize: 8, padding: '0 4px', borderRadius: 'var(--r-sm)', background: 'var(--c-border)', color: 'var(--c-text-muted)', marginLeft: 'auto' },
   statusIcon: { fontSize: 10, fontWeight: 700 },
   pointBody: { display: 'flex', flexDirection: 'column', gap: 3, paddingLeft: 14, paddingTop: 2 },
