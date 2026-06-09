@@ -2,19 +2,19 @@
 .height-level-picker {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-xs);
 }
 
 .height-level-picker__btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 4px 8px;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
   border: 1px solid var(--c-border);
-  border-radius: 4px;
+  border-radius: var(--r-sm);
   background: transparent;
   color: var(--c-text-dim);
-  font-size: 12px;
+  font-size: var(--text-sm);
   cursor: pointer;
   transition: background 0.1s, border-color 0.1s;
 }
@@ -33,7 +33,7 @@
 .height-level-picker__swatch {
   width: 12px;
   height: 12px;
-  border-radius: 2px;
+  border-radius: var(--r-sm);
   background: var(--color-text-primary);
   flex-shrink: 0;
 }

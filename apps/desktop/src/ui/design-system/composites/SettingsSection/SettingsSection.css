@@ -8,7 +8,7 @@
 .settings-section__header {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-xs);
   padding-bottom: var(--space-xs);
 }
 

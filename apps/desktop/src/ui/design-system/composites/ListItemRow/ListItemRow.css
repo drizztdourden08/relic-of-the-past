@@ -22,7 +22,7 @@
 }
 
 .list-item-row__icon {
-  font-size: 20px;
+  font-size: var(--text-xl);
   flex-shrink: 0;
 }
 

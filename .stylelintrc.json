@@ -18,7 +18,11 @@
         "color-named": "never",
         "function-disallowed-list": ["rgb", "rgba", "hsl", "hsla", "hwb"],
         "declaration-property-value-disallowed-list": {
-          "font-weight": ["/^[0-9]+$/"]
+          "font-weight": ["/^[0-9]+$/"],
+          "font-size": ["/[0-9]/"],
+          "z-index": ["/^[1-9][0-9]*$/"],
+          "/^border(-[a-z]+)?-radius$/": ["/[0-9]+px/"],
+          "/^(padding|margin|gap|row-gap|column-gap)(-(top|right|bottom|left))?$/": ["/[0-9]+px/"]
         }
       }
     },

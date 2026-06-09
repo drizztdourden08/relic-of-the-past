@@ -79,7 +79,7 @@
 }
 
 .profile-hub__tab-icon {
-  font-size: 16px;
+  font-size: var(--text-lg);
   line-height: 1;
 }
 

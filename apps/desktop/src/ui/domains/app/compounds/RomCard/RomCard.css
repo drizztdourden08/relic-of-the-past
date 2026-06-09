@@ -7,7 +7,7 @@
 }
 
 .rom-card__main {
-  gap: 2px;
+  gap: var(--space-xs);
   min-width: 0;
 }
 

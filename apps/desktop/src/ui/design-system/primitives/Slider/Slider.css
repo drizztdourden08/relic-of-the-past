@@ -22,7 +22,7 @@
 .slider__text {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-xs);
 }
 
 .slider__label {
@@ -55,7 +55,7 @@
   appearance: none;
   flex: 1;
   height: 6px;
-  border-radius: 3px;
+  border-radius: var(--r-sm);
   background: linear-gradient(
     to right,
     var(--color-gold-base) 0%,
@@ -86,7 +86,7 @@
 .slider__input:focus-visible {
   outline: 2px solid var(--color-gold-base);
   outline-offset: 4px;
-  border-radius: 3px;
+  border-radius: var(--r-sm);
 }
 
 /* ─── Mute button ─── */
@@ -103,20 +103,20 @@
   border-radius: var(--radius-sm);
   background: var(--color-bg-elevated);
   color: var(--color-text-secondary);
-  font-size: 14px;
+  font-size: var(--text-base);
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
 .slider__mute:hover {
-  background: var(--color-bg-hover);
+  background: var(--c-hover);
   border-color: var(--color-gold-base);
   color: var(--color-text-primary);
 }
 
 .slider__mute--muted {
-  color: var(--color-danger);
-  border-color: var(--color-danger);
+  color: var(--color-danger-base);
+  border-color: var(--color-danger-base);
   background: var(--c-danger-dim);
 }
 

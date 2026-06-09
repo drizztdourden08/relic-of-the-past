@@ -24,7 +24,7 @@
 
 .field__required {
   color: var(--color-danger-base);
-  margin-left: 2px;
+  margin-left: var(--space-xs);
 }
 
 .field__hint {

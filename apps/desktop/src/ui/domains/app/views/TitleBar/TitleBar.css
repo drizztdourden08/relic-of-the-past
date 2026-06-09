@@ -7,7 +7,7 @@
   border-bottom: 1px solid var(--color-border-subtle);
   -webkit-app-region: drag;
   position: relative;
-  z-index: 100;
+  z-index: var(--z-panel);
   flex-shrink: 0;
   transition: height 0.25s ease, opacity 0.25s ease;
 }
@@ -83,7 +83,7 @@
   font-size: var(--text-xs);
   font-weight: var(--weight-semi);
   cursor: pointer;
-  padding: 2px 8px;
+  padding: var(--space-xs) var(--space-sm);
   border-radius: var(--r-sm);
   -webkit-app-region: no-drag;
   animation: update-pulse 2s ease-in-out infinite;

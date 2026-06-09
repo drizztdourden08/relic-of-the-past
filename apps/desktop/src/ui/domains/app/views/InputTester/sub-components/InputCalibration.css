@@ -180,13 +180,13 @@
   align-items: center;
   justify-content: center;
   background: var(--c-danger-dim);
-  z-index: 10;
+  z-index: var(--z-sticky);
   border-radius: inherit;
   pointer-events: none;
 }
 
 .input-cal__stale-label {
-  font-size: 20px;
+  font-size: var(--text-xl);
   font-weight: var(--weight-black);
   letter-spacing: 3px;
   color: var(--color-danger-text);
@@ -194,9 +194,9 @@
 }
 
 .input-cal__stale-sub {
-  font-size: 11px;
+  font-size: var(--text-sm);
   color: var(--color-danger-text);
-  margin-top: 4px;
+  margin-top: var(--space-xs);
 }
 
 .input-cal__card-header {
@@ -208,7 +208,7 @@
 
 .input-cal__card-badge {
   font-size: var(--text-xs);
-  padding: 2px var(--space-xs);
+  padding: var(--space-xs) var(--space-xs);
   border-radius: var(--radius-sm);
   background: var(--color-gold-dim);
   color: var(--color-gold-base);
@@ -241,7 +241,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: var(--space-xs);
   padding: var(--space-xs);
   border-radius: var(--radius-sm);
   background: var(--color-bg-elevated);
@@ -268,7 +268,7 @@
 }
 
 .input-cal__btn-cell-label {
-  font-size: 9px;
+  font-size: var(--text-xs);
   color: var(--color-text-muted);
   text-align: center;
   line-height: 1;

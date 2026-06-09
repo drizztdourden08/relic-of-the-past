@@ -5,10 +5,10 @@
   right: 8px;
   bottom: 8px;
   width: 260px;
-  z-index: 100;
+  z-index: var(--z-panel);
   background: var(--c-surface);
   border: 1px solid var(--c-border);
-  border-radius: 8px;
+  border-radius: var(--r-lg);
   display: flex;
   flex-direction: column;
   backdrop-filter: blur(8px);
@@ -19,47 +19,47 @@
 .shadow-editor-panel__header {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 10px;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-sm);
   border-bottom: 1px solid var(--c-border);
   flex-shrink: 0;
 }
 
 .shadow-editor-panel__title {
-  font-size: 12px;
+  font-size: var(--text-sm);
   font-weight: var(--weight-semi);
   color: var(--color-text-primary);
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-xs);
 }
 
 .shadow-editor-panel__dirty {
   color: var(--color-warning-base);
-  font-size: 14px;
+  font-size: var(--text-base);
 }
 
 .shadow-editor-panel__actions {
   display: flex;
-  gap: 2px;
+  gap: var(--space-xs);
   align-items: center;
 }
 
 /* ─── Toolbar ─── */
 .shadow-editor-panel__toolbar {
-  padding: 6px 10px;
+  padding: var(--space-sm) var(--space-sm);
   border-bottom: 1px solid var(--c-border);
   flex-shrink: 0;
 }
 
 /* ─── Tool Options (between toolbar and body) ─── */
 .shadow-editor-panel__tool-opts {
-  padding: 8px 10px;
+  padding: var(--space-sm) var(--space-sm);
   border-bottom: 1px solid var(--c-border);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-sm);
   flex-shrink: 0;
 }
 
@@ -67,7 +67,7 @@
 .shadow-editor-panel__body {
   flex: 1;
   overflow: hidden auto;
-  padding: 8px 10px;
+  padding: var(--space-sm) var(--space-sm);
   scrollbar-width: thin;
   scrollbar-color: var(--c-border-strong) transparent;
 }
@@ -78,13 +78,13 @@
 
 .shadow-editor-panel__body::-webkit-scrollbar-thumb {
   background: var(--c-border-strong);
-  border-radius: 2px;
+  border-radius: var(--r-sm);
 }
 
 /* ─── Field Rows ─── */
 .shadow-editor-panel__field-row {
   display: flex;
-  gap: 6px;
+  gap: var(--space-sm);
 }
 
 .shadow-editor-panel__field-row > * {
@@ -96,11 +96,11 @@
 .shadow-editor-panel__subsection {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-xs);
 }
 
 .shadow-editor-panel__sublabel {
-  font-size: 11px;
+  font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   color: var(--c-text-dim);
   text-transform: uppercase;
@@ -109,10 +109,10 @@
 
 /* ─── Footer ─── */
 .shadow-editor-panel__footer {
-  font-size: 10px;
+  font-size: var(--text-xs);
   color: var(--c-text-muted);
   text-align: center;
-  padding: 6px 10px;
+  padding: var(--space-sm) var(--space-sm);
   border-top: 1px solid var(--c-border);
   flex-shrink: 0;
 }

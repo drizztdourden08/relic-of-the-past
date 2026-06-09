@@ -80,7 +80,7 @@
 }
 
 .hid-cal__prereq-badge {
-  font-size: 10px;
+  font-size: var(--text-xs);
   color: var(--color-green-base);
   font-family: var(--font-mono);
 }
@@ -131,15 +131,15 @@
 .hid-cal__input-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 4px;
+  gap: var(--space-xs);
   margin-bottom: var(--space-sm);
 }
 
 .hid-cal__input-item {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-sm);
   font-size: var(--text-xs);
   border: 1px solid transparent;
@@ -179,7 +179,7 @@
 }
 
 .hid-cal__input-result {
-  font-size: 9px;
+  font-size: var(--text-xs);
   color: var(--color-text-muted);
   font-family: var(--font-mono);
 }
@@ -194,12 +194,12 @@
   border: none;
   background: transparent;
   color: var(--color-text-muted);
-  font-size: 14px;
+  font-size: var(--text-base);
   line-height: 1;
   cursor: pointer;
-  border-radius: 3px;
+  border-radius: var(--r-sm);
   padding: 0;
-  margin-left: 2px;
+  margin-left: var(--space-xs);
 }
 
 .hid-cal__input-clear:hover {
@@ -218,7 +218,7 @@
 .hid-cal__byte-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 3px;
+  gap: var(--space-xs);
   margin-bottom: var(--space-sm);
 }
 
@@ -244,13 +244,13 @@
 }
 
 .hid-cal__byte-idx {
-  font-size: 8px;
+  font-size: var(--text-xs);
   line-height: 1;
   opacity: 0.6;
 }
 
 .hid-cal__byte-val {
-  font-size: 13px;
+  font-size: var(--text-base);
   font-weight: var(--weight-semi);
   line-height: 1.2;
 }
@@ -259,7 +259,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-md);
-  font-size: 10px;
+  font-size: var(--text-xs);
   color: var(--color-text-muted);
   margin-top: var(--space-xs);
 }
@@ -268,7 +268,7 @@
   display: inline-block;
   width: 10px;
   height: 10px;
-  border-radius: 2px;
-  margin-right: 3px;
+  border-radius: var(--r-sm);
+  margin-right: var(--space-xs);
   vertical-align: middle;
 }

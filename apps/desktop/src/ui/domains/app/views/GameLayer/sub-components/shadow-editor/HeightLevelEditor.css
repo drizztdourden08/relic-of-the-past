@@ -2,26 +2,26 @@
 .height-level-editor {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-xs);
 }
 
 .height-level-editor__list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-xs);
 }
 
 .height-level-editor__item,
 .height-level-editor__add {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-xs);
 }
 
 .height-level-editor__swatch {
   width: 10px;
   height: 10px;
-  border-radius: 2px;
+  border-radius: var(--r-sm);
   background: var(--color-text-primary);
   flex-shrink: 0;
 }
@@ -29,22 +29,22 @@
 .height-level-editor__name {
   flex: 1;
   min-width: 0;
-  font-size: 11px;
+  font-size: var(--text-sm);
   color: var(--color-text-primary);
   background: var(--c-inset);
   border: 1px solid var(--c-border-strong);
-  border-radius: 3px;
-  padding: 2px 5px;
+  border-radius: var(--r-sm);
+  padding: var(--space-xs) var(--space-xs);
 }
 
 .height-level-editor__value {
   width: 48px;
-  font-size: 11px;
+  font-size: var(--text-sm);
   color: var(--color-text-primary);
   background: var(--c-inset);
   border: 1px solid var(--c-border-strong);
-  border-radius: 3px;
-  padding: 2px 5px;
+  border-radius: var(--r-sm);
+  padding: var(--space-xs) var(--space-xs);
   text-align: center;
 }
 
@@ -56,10 +56,10 @@
   align-items: center;
   justify-content: center;
   border: none;
-  border-radius: 3px;
+  border-radius: var(--r-sm);
   background: var(--c-hover);
   color: var(--c-text-muted);
-  font-size: 12px;
+  font-size: var(--text-sm);
   cursor: pointer;
   flex-shrink: 0;
 }

@@ -5,7 +5,7 @@
    ═══════════════════════════════════════════════════════════════ */
 
 .tracker-summary {
-  padding: var(--space-sm, 8px) var(--space-md, 12px);
+  padding: var(--space-sm) var(--space-md);
   border-bottom: 1px solid var(--c-border);
   flex-shrink: 0;
 }
@@ -13,10 +13,10 @@
 .tracker-summary__bar {
   display: flex;
   height: 6px;
-  border-radius: 3px;
+  border-radius: var(--r-sm);
   background: var(--c-hover);
   overflow: hidden;
-  margin-bottom: var(--space-xs, 6px);
+  margin-bottom: var(--space-xs);
 }
 
 .tracker-summary__fill {
@@ -29,8 +29,8 @@
 
 .tracker-summary__stats {
   display: flex;
-  gap: var(--space-sm, 8px);
-  font-size: var(--text-xs, 11px);
+  gap: var(--space-sm);
+  font-size: var(--text-xs);
 }
 
 .tracker-summary__stat--completed { color: var(--color-green-base); }
@@ -43,24 +43,24 @@
    ═══════════════════════════════════════════════════════════════ */
 
 .tracker-filters {
-  padding: var(--space-xs, 6px) var(--space-md, 12px);
+  padding: var(--space-xs) var(--space-md);
   border-bottom: 1px solid var(--c-border);
   flex-shrink: 0;
 }
 
 .tracker-filters__search {
-  margin-bottom: 6px;
+  margin-bottom: var(--space-sm);
 }
 
 .tracker-filters__input {
   width: 100%;
-  padding: 4px 8px;
+  padding: var(--space-xs) var(--space-sm);
   background: var(--c-hover);
   border: 1px solid var(--c-border-strong);
-  border-radius: 3px;
+  border-radius: var(--r-sm);
   color: var(--color-text-primary);
   font-family: inherit;
-  font-size: var(--text-xs, 11px);
+  font-size: var(--text-xs);
   outline: none;
 }
 
@@ -71,21 +71,21 @@
 .tracker-filters__controls {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-sm);
 }
 
 .tracker-filters__view-modes {
   display: flex;
-  gap: 2px;
+  gap: var(--space-xs);
 }
 
 .tracker-filters__mode-btn {
-  padding: 3px 7px;
+  padding: var(--space-xs) var(--space-sm);
   background: var(--c-hover);
   border: 1px solid var(--c-border-strong);
-  border-radius: 3px;
+  border-radius: var(--r-sm);
   color: var(--color-text-secondary);
-  font-size: 12px;
+  font-size: var(--text-sm);
   cursor: pointer;
 }
 
@@ -96,12 +96,12 @@
 }
 
 .tracker-filters__btn {
-  padding: 3px 8px;
+  padding: var(--space-xs) var(--space-sm);
   background: var(--c-hover);
   border: 1px solid var(--c-border-strong);
-  border-radius: 3px;
+  border-radius: var(--r-sm);
   color: var(--color-text-secondary);
-  font-size: 10px;
+  font-size: var(--text-xs);
   cursor: pointer;
   font-family: inherit;
 }
@@ -113,12 +113,12 @@
 }
 
 .tracker-filters__select {
-  padding: 3px 6px;
+  padding: var(--space-xs) var(--space-sm);
   background: var(--c-hover);
   border: 1px solid var(--c-border-strong);
-  border-radius: 3px;
+  border-radius: var(--r-sm);
   color: var(--color-text-secondary);
-  font-size: 10px;
+  font-size: var(--text-xs);
   cursor: pointer;
   font-family: inherit;
   appearance: auto;
@@ -133,16 +133,16 @@
 /* Status filter buttons */
 .tracker-filters__status-group {
   display: flex;
-  gap: 2px;
+  gap: var(--space-xs);
 }
 
 .tracker-filters__status-btn {
-  padding: 3px 6px;
+  padding: var(--space-xs) var(--space-sm);
   background: var(--c-hover);
   border: 1px solid var(--c-border-strong);
-  border-radius: 3px;
+  border-radius: var(--r-sm);
   color: var(--color-text-secondary);
-  font-size: 10px;
+  font-size: var(--text-xs);
   cursor: pointer;
   font-family: inherit;
   min-width: 20px;
@@ -179,54 +179,54 @@
 
 /* Tag filter panel */
 .tracker-filters__tags-panel {
-  margin-top: 6px;
-  padding: 6px;
+  margin-top: var(--space-sm);
+  padding: var(--space-sm);
   background: var(--c-scrim-game);
-  border-radius: 4px;
+  border-radius: var(--r-sm);
 }
 
 .tracker-filters__tag-mode {
   display: flex;
-  gap: 4px;
-  margin-bottom: 6px;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
 }
 
 .tracker-filters__tag-mode button {
-  padding: 2px 8px;
+  padding: var(--space-xs) var(--space-sm);
   background: var(--c-hover);
   border: 1px solid var(--c-border-strong);
-  border-radius: 3px;
+  border-radius: var(--r-sm);
   color: var(--color-text-secondary);
-  font-size: 10px;
+  font-size: var(--text-xs);
   cursor: pointer;
   font-family: inherit;
 }
 
 .tracker-filters__tag-group {
-  margin-bottom: 4px;
+  margin-bottom: var(--space-xs);
 }
 
 .tracker-filters__tag-group-label {
-  font-size: 9px;
+  font-size: var(--text-xs);
   font-weight: var(--weight-semi);
   text-transform: uppercase;
   color: var(--color-text-secondary);
   display: block;
-  margin-bottom: 2px;
+  margin-bottom: var(--space-xs);
 }
 
 .tracker-filters__tag-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 3px;
+  gap: var(--space-xs);
 }
 
 .tracker-filters__tag {
-  padding: 1px 6px;
-  font-size: 9px;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-xs);
   background: var(--c-hover);
   border: 1px solid var(--c-border);
-  border-radius: 10px;
+  border-radius: var(--r-lg);
   color: var(--color-text-secondary);
   cursor: pointer;
   font-family: inherit;
@@ -240,21 +240,21 @@
 
 /* Grouping config panel */
 .tracker-filters__group-panel {
-  margin-top: 6px;
-  padding: 6px;
+  margin-top: var(--space-sm);
+  padding: var(--space-sm);
   background: var(--c-scrim-game);
-  border-radius: 4px;
+  border-radius: var(--r-sm);
 }
 
 .tracker-filters__group-current {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  margin-bottom: 6px;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
 }
 
 .tracker-filters__group-empty {
-  font-size: 10px;
+  font-size: var(--text-xs);
   color: var(--color-text-secondary);
   font-style: italic;
 }
@@ -262,12 +262,12 @@
 .tracker-filters__group-chip {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding: 2px 6px;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
   background: var(--c-info-soft);
   border: 1px solid var(--c-info);
-  border-radius: 10px;
-  font-size: 10px;
+  border-radius: var(--r-lg);
+  font-size: var(--text-xs);
   color: var(--color-info-base);
 }
 
@@ -275,7 +275,7 @@
   background: none;
   border: none;
   color: var(--color-info-base);
-  font-size: 12px;
+  font-size: var(--text-sm);
   cursor: pointer;
   padding: 0;
   line-height: 1;
@@ -284,15 +284,15 @@
 .tracker-filters__group-add {
   display: flex;
   flex-wrap: wrap;
-  gap: 3px;
+  gap: var(--space-xs);
 }
 
 .tracker-filters__group-add-btn {
-  padding: 2px 6px;
-  font-size: 9px;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-xs);
   background: var(--c-hover);
   border: 1px dashed var(--c-border-strong);
-  border-radius: 10px;
+  border-radius: var(--r-lg);
   color: var(--color-text-secondary);
   cursor: pointer;
   font-family: inherit;

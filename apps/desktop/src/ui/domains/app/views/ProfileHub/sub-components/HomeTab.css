@@ -18,7 +18,7 @@
 .home-tab__info-card {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-xs);
   padding: var(--space-sm) var(--space-md);
   background: var(--c-hover);
   border: 1px solid var(--c-border);
@@ -104,7 +104,7 @@
 
 .home-tab__new-save-btn {
   font-size: var(--text-xs);
-  padding: 4px 12px;
+  padding: var(--space-xs) var(--space-md);
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border-subtle);
   background: var(--c-hover);
@@ -126,7 +126,7 @@
 
 .home-tab__save-name-input {
   width: 100%;
-  padding: 8px 12px;
+  padding: var(--space-sm) var(--space-md);
   font-size: var(--text-sm);
   color: var(--color-text-primary);
   background: var(--c-hover);
@@ -137,7 +137,7 @@
 }
 
 .home-tab__save-name-input:focus {
-  border-color: var(--color-border-focus);
+  border-color: var(--color-gold-base);
 }
 
 .home-tab__sessions {

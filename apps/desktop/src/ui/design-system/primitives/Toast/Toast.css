@@ -7,7 +7,7 @@
   flex-direction: column-reverse;
   gap: var(--space-sm);
   pointer-events: none;
-  z-index: 300;
+  z-index: var(--z-toast);
 }
 
 .toast {
@@ -53,9 +53,9 @@
   border: none;
   color: inherit;
   cursor: pointer;
-  padding: 2px;
+  padding: var(--space-xs);
   opacity: 0.6;
-  font-size: 14px;
+  font-size: var(--text-base);
   line-height: 1;
 }
 

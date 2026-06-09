@@ -5,9 +5,9 @@
   background: var(--color-bg-elevated);
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-md);
-  padding: 4px 0;
+  padding: var(--space-xs) 0;
   box-shadow: var(--shadow-dropdown);
-  z-index: 200;
+  z-index: var(--z-modal);
   animation: dropdown-in 0.12s ease-out;
   pointer-events: auto;
 }
@@ -74,7 +74,7 @@
 .dropdown__icon {
   width: 16px;
   text-align: center;
-  font-size: 12px;
+  font-size: var(--text-sm);
   flex-shrink: 0;
 }
 
@@ -98,7 +98,7 @@
 .dropdown__separator {
   height: 1px;
   background: var(--color-border-default);
-  margin: 4px 8px;
+  margin: var(--space-xs) var(--space-sm);
 }
 
 .dropdown__submenu-trigger {

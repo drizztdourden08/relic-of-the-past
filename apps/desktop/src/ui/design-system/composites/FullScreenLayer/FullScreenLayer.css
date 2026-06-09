@@ -2,12 +2,12 @@
 .fullscreen-layer {
   position: absolute;
   inset: 0;
-  z-index: 50;
+  z-index: var(--z-backdrop);
   animation: fsl-in 0.2s ease-out;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 48px;
+  padding: var(--space-2xl);
 }
 
 .fullscreen-layer__card {
@@ -28,7 +28,7 @@
   position: absolute;
   top: var(--space-sm);
   right: var(--space-sm);
-  z-index: 1;
+  z-index: var(--z-base);
 }
 
 .fullscreen-layer__content {
@@ -38,7 +38,7 @@
   flex-direction: column;
   overflow: hidden;
   padding: var(--space-xl) var(--space-xl) var(--space-lg);
-  padding-right: 48px; /* room for close button */
+  padding-right: var(--space-2xl); /* room for close button */
 }
 
 @keyframes fsl-in {

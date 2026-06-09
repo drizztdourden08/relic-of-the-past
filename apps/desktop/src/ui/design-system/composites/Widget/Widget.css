@@ -9,7 +9,7 @@
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 100;
+  z-index: var(--z-panel);
 }
 
 /* ─── Widget Shell ─── */
@@ -21,8 +21,8 @@
   display: flex;
   flex-direction: column;
   pointer-events: auto;
-  font-family: var(--font-mono, 'JetBrains Mono', monospace);
-  font-size: var(--text-sm, 13px);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
   color: var(--color-text-primary);
   overflow: hidden;
 
@@ -36,8 +36,8 @@
 
 /* Floating */
 .widget--floating {
-  border-radius: 8px;
-  z-index: 110;
+  border-radius: var(--r-lg);
+  z-index: var(--z-floating);
 }
 
 /* Docked — remove rounded corners on the docked edge */
@@ -67,7 +67,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 4px 8px;
+  padding: var(--space-xs) var(--space-sm);
   border-bottom: 1px solid rgb(255 255 255 / calc(0.06 * var(--widget-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
   flex-shrink: 0;
   user-select: none;
@@ -83,7 +83,7 @@
 }
 
 .widget__title {
-  font-size: 11px;
+  font-size: var(--text-sm);
   font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -94,20 +94,20 @@
 .widget__titlebar-actions {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: var(--space-xs);
 }
 
 .widget__btn {
   background: none;
   border: 1px solid transparent;
   color: var(--color-text-secondary);
-  font-size: 12px;
+  font-size: var(--text-sm);
   width: 20px;
   height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 3px;
+  border-radius: var(--r-sm);
   cursor: pointer;
   padding: 0;
 }
@@ -131,7 +131,7 @@
 
 .widget__resize {
   position: absolute;
-  z-index: 10;
+  z-index: var(--z-sticky);
 }
 
 .widget__resize--n {
@@ -180,23 +180,23 @@
   background: var(--c-surface);
   border: 1px solid var(--c-hairline);
   border-radius: var(--r-lg);
-  padding: 10px 12px;
+  padding: var(--space-sm) var(--space-md);
   box-shadow: var(--shadow-3);
   min-width: 200px;
-  z-index: 200;
+  z-index: var(--z-modal);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--space-sm);
 }
 
 .widget-settings__row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 .widget-settings__label {
-  font-size: 11px;
+  font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   color: var(--color-text-secondary);
   min-width: 52px;
@@ -206,13 +206,13 @@
 .widget-settings__separator {
   height: 1px;
   background: var(--c-border);
-  margin: 2px 0;
+  margin: var(--space-xs) 0;
 }
 
 /* Compact overrides for controls inside widget settings */
 .widget-settings .segmented__btn {
-  padding: 3px 7px;
-  font-size: 12px;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-sm);
 }
 
 .widget-settings .slider {
@@ -223,9 +223,9 @@
 .widget-settings__toggle {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-sm);
   cursor: pointer;
-  font-size: 11px;
+  font-size: var(--text-sm);
   color: var(--color-text-secondary);
 }
 
@@ -237,6 +237,6 @@
 }
 
 .widget-settings__toggle-hint {
-  font-size: 10px;
+  font-size: var(--text-xs);
   opacity: 0.7;
 }

@@ -156,7 +156,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: var(--space-xs);
   min-width: 0;
   width: 100%;
 }
@@ -172,6 +172,6 @@
 }
 
 .sprite-card__category {
-  font-size: 10px;
+  font-size: var(--text-xs);
   color: var(--color-text-faint);
 }

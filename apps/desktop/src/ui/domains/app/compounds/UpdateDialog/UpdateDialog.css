@@ -8,7 +8,7 @@
 }
 
 .update-dialog__version {
-  font-size: var(--text-base, 14px);
+  font-size: var(--text-base);
   color: var(--color-text-primary);
   text-align: center;
   margin-bottom: var(--space-md);
@@ -23,7 +23,7 @@
 
 .update-dialog__notes h4 {
   font-size: var(--text-sm);
-  font-weight: var(--weight-semibold, 600);
+  font-weight: var(--weight-semi);
   color: var(--color-gold-base);
   padding: var(--space-sm) var(--space-md);
   margin: 0;
@@ -36,7 +36,7 @@
   overflow-y: auto;
   font-size: var(--text-sm);
   color: var(--color-text-secondary);
-  background: var(--color-bg-sunken);
+  background: var(--c-sunken);
   padding: var(--space-md);
   line-height: 1.6;
   user-select: none;
@@ -47,13 +47,13 @@
 .update-dialog__notes-content h3,
 .update-dialog__notes-content h4 {
   color: var(--color-text-primary);
-  font-weight: var(--weight-semibold, 600);
+  font-weight: var(--weight-semi);
   margin: 0.8em 0 0.4em;
 }
 
-.update-dialog__notes-content h1 { font-size: 1.2em; }
-.update-dialog__notes-content h2 { font-size: 1.1em; }
-.update-dialog__notes-content h3 { font-size: 1em; }
+.update-dialog__notes-content h1 { font-size: var(--text-lg); }
+.update-dialog__notes-content h2 { font-size: var(--text-base); }
+.update-dialog__notes-content h3 { font-size: var(--text-base); }
 
 .update-dialog__notes-content p {
   margin: 0.4em 0;
@@ -71,7 +71,7 @@
 
 .update-dialog__notes-content strong {
   color: var(--color-text-primary);
-  font-weight: var(--weight-semibold, 600);
+  font-weight: var(--weight-semi);
 }
 
 .update-dialog__notes-content em {
@@ -81,8 +81,8 @@
 .update-dialog__notes-content code {
   background: var(--c-hover);
   padding: 0.1em 0.3em;
-  border-radius: 3px;
-  font-size: 0.9em;
+  border-radius: var(--r-sm);
+  font-size: var(--text-sm);
 }
 
 .update-dialog__notes-content hr {
@@ -109,7 +109,7 @@
   border-collapse: collapse;
   width: 100%;
   margin: 0.5em 0;
-  font-size: 0.9em;
+  font-size: var(--text-sm);
 }
 
 .update-dialog__notes-content th,
@@ -121,7 +121,7 @@
 
 .update-dialog__notes-content th {
   background: var(--c-hover);
-  font-weight: var(--weight-semibold, 600);
+  font-weight: var(--weight-semi);
 }
 
 .update-dialog__progress {

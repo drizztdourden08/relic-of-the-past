@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 50;
+  z-index: var(--z-backdrop);
   animation: overlay-in 0.2s ease-out;
 }
 

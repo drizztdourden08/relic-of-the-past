@@ -2,25 +2,25 @@
 .binding-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
   border-bottom: 1px solid var(--color-border-subtle);
   transition: background 0.12s;
   cursor: pointer;
   user-select: none;
-  border-radius: 4px;
+  border-radius: var(--r-sm);
 }
 
 .binding-row--header {
   cursor: default;
-  font-size: 11px;
+  font-size: var(--text-sm);
   font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--color-text-muted);
   border-bottom: 1px solid var(--color-border-default);
-  padding-bottom: 4px;
-  margin-bottom: 2px;
+  padding-bottom: var(--space-xs);
+  margin-bottom: var(--space-xs);
 }
 
 .binding-row--header:hover {
@@ -47,7 +47,7 @@
 /* Action label — first column */
 .binding-row__action-label {
   width: 90px;
-  font-size: 13px;
+  font-size: var(--text-base);
   font-weight: var(--weight-semi);
   color: var(--color-text-primary);
   flex-shrink: 0;
@@ -56,7 +56,7 @@
 /* SNES label — second column */
 .binding-row__snes-label {
   width: 80px;
-  font-size: 12px;
+  font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   color: var(--color-text-secondary);
   flex-shrink: 0;
@@ -81,7 +81,7 @@
 /* Binding label — right column */
 .binding-row__binding-label {
   flex: 1;
-  font-size: 13px;
+  font-size: var(--text-base);
   color: var(--color-text-secondary);
   min-width: 0;
   white-space: nowrap;
@@ -104,9 +104,9 @@
   flex-shrink: 0;
   background: transparent;
   border: 1px solid var(--color-border-subtle);
-  border-radius: 4px;
+  border-radius: var(--r-sm);
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: var(--text-sm);
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.12s, color 0.12s, border-color 0.12s;

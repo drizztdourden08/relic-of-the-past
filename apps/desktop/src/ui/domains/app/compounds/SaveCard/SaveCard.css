@@ -40,13 +40,13 @@
 .save-card__info {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-xs);
   flex: 1;
   min-width: 0;
 }
 
 .save-card--feature .save-card__info {
-  gap: 4px;
+  gap: var(--space-xs);
   justify-content: center;
 }
 

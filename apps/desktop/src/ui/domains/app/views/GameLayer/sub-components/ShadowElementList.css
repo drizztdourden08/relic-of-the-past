@@ -5,16 +5,16 @@
   left: 8px;
   bottom: 8px;
   width: 180px;
-  z-index: 100;
+  z-index: var(--z-panel);
   background: var(--c-surface);
   border: 1px solid var(--c-border);
-  border-radius: 8px;
+  border-radius: var(--r-lg);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   backdrop-filter: blur(8px);
-  padding: 6px 0;
-  gap: 4px;
+  padding: var(--space-sm) 0;
+  gap: var(--space-xs);
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--c-border-strong) transparent;
@@ -26,7 +26,7 @@
 
 .shadow-element-list::-webkit-scrollbar-thumb {
   background: var(--c-border-strong);
-  border-radius: 2px;
+  border-radius: var(--r-sm);
 }
 
 /* ─── Group ─── */
@@ -38,9 +38,9 @@
 .shadow-element-list__group-header {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  font-size: 11px;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-sm);
   font-weight: var(--weight-semi);
   color: var(--c-text-dim);
   text-transform: uppercase;
@@ -48,15 +48,15 @@
 }
 
 .shadow-element-list__group-icon {
-  font-size: 12px;
+  font-size: var(--text-sm);
 }
 
 .shadow-element-list__count {
   margin-left: auto;
-  font-size: 10px;
+  font-size: var(--text-xs);
   background: var(--c-hover);
-  border-radius: 8px;
-  padding: 1px 5px;
+  border-radius: var(--r-lg);
+  padding: var(--space-xs) var(--space-xs);
   font-weight: var(--weight-normal);
 }
 
@@ -64,18 +64,18 @@
 .shadow-element-list__items {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: var(--space-xs);
 }
 
 .shadow-element-list__item {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 10px;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
   border: none;
   background: transparent;
   color: var(--c-text);
-  font-size: 12px;
+  font-size: var(--text-sm);
   cursor: pointer;
   text-align: left;
   transition: background 0.1s;
@@ -95,7 +95,7 @@
 }
 
 .shadow-element-list__item-icon {
-  font-size: 13px;
+  font-size: var(--text-base);
   flex-shrink: 0;
   width: 16px;
   text-align: center;
@@ -110,18 +110,18 @@
 }
 
 .shadow-element-list__item-tag {
-  font-size: 10px;
+  font-size: var(--text-xs);
   color: var(--c-text-muted);
   background: var(--c-hover);
-  border-radius: 3px;
-  padding: 1px 4px;
+  border-radius: var(--r-sm);
+  padding: var(--space-xs) var(--space-xs);
   flex-shrink: 0;
 }
 
 /* ─── Empty State ─── */
 .shadow-element-list__empty {
-  padding: 16px 10px;
+  padding: var(--space-lg) var(--space-sm);
   text-align: center;
-  font-size: 11px;
+  font-size: var(--text-sm);
   color: var(--c-text-muted);
 }

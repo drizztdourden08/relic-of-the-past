@@ -10,12 +10,12 @@
 .about-dialog__logo {
   width: 80px;
   height: 80px;
-  border-radius: var(--radius-lg, 12px);
+  border-radius: var(--radius-lg);
 }
 
 .about-dialog__title {
-  font-size: var(--text-lg, 18px);
-  font-weight: var(--weight-semibold, 600);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semi);
   color: var(--color-text-primary);
   margin: 0;
 }
@@ -32,8 +32,8 @@
   justify-content: space-between;
   align-items: center;
   padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--radius-sm, 4px);
-  background: var(--color-bg-sunken);
+  border-radius: var(--radius-sm);
+  background: var(--c-sunken);
 }
 
 .about-dialog__label {

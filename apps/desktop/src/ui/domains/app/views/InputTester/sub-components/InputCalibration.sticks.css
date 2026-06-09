@@ -69,7 +69,7 @@
   left: 50%;
   width: 2px;
   background: var(--color-gold-base);
-  border-radius: 1px;
+  border-radius: var(--r-sm);
   transform-origin: top center;
   transition: none;
 }

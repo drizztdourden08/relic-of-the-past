@@ -1,71 +1,71 @@
 /* @layer renderer-components @kind style */
 .credits-tab {
-  padding: 24px;
+  padding: var(--space-xl);
   overflow-y: auto;
   max-height: 100%;
 }
 
 .credits-tab__header {
-  margin-bottom: 24px;
+  margin-bottom: var(--space-xl);
 }
 
 .credits-tab__title {
-  font-size: 1.4rem;
+  font-size: var(--text-xl);
   font-weight: var(--weight-semi);
-  margin: 0 0 6px;
+  margin: 0 0 var(--space-sm);
   color: var(--color-text-primary);
 }
 
 .credits-tab__subtitle {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: var(--text-base);
   color: var(--color-text-secondary);
 }
 
 .credits-tab__section {
-  margin-bottom: 28px;
+  margin-bottom: var(--space-xl);
 }
 
 .credits-tab__section-title {
-  font-size: 0.9rem;
+  font-size: var(--text-base);
   font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--color-text-secondary);
-  margin: 0 0 12px;
-  padding-bottom: 6px;
+  margin: 0 0 var(--space-md);
+  padding-bottom: var(--space-sm);
   border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .credits-tab__entries {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-md);
 }
 
 .credits-tab__entry {
   background: var(--color-bg-raised);
   border: 1px solid var(--color-border-subtle);
-  border-radius: 8px;
-  padding: 14px 16px;
+  border-radius: var(--r-lg);
+  padding: var(--space-md) var(--space-lg);
 }
 
 .credits-tab__entry-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 6px;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
   flex-wrap: wrap;
 }
 
 .credits-tab__entry-name {
   font-weight: var(--weight-semi);
-  font-size: 0.95rem;
+  font-size: var(--text-lg);
   color: var(--color-text-primary);
 }
 
 .credits-tab__entry-project {
-  font-size: 0.85rem;
+  font-size: var(--text-base);
   color: var(--color-text-secondary);
 }
 
@@ -80,17 +80,17 @@
 }
 
 .credits-tab__entry-license {
-  font-size: 0.75rem;
-  padding: 2px 6px;
-  border-radius: 4px;
+  font-size: var(--text-base);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--r-sm);
   background: var(--color-bg-elevated);
   color: var(--color-text-secondary);
   font-weight: var(--weight-medium);
 }
 
 .credits-tab__entry-description {
-  margin: 0 0 8px;
-  font-size: 0.82rem;
+  margin: 0 0 var(--space-sm);
+  font-size: var(--text-base);
   color: var(--color-text-secondary);
   line-height: 1.4;
 }
@@ -98,15 +98,15 @@
 .credits-tab__entry-usage {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
   flex-wrap: wrap;
 }
 
 .credits-tab__usage-badge {
-  font-size: 0.72rem;
+  font-size: var(--text-sm);
   font-weight: var(--weight-semi);
-  padding: 2px 8px;
-  border-radius: 10px;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--r-lg);
   text-transform: uppercase;
   letter-spacing: 0.03em;
   white-space: nowrap;
@@ -145,7 +145,7 @@
 }
 
 .credits-tab__usage-note {
-  font-size: 0.78rem;
+  font-size: var(--text-base);
   color: var(--color-text-muted);
   font-style: italic;
 }

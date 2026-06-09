@@ -2,10 +2,10 @@
 .status-badge {
   display: inline-flex;
   align-items: center;
-  font-size: 10px;
+  font-size: var(--text-xs);
   font-weight: var(--weight-semi);
-  padding: 2px 8px;
-  border-radius: var(--radius-full);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--r-pill);
   letter-spacing: 0.02em;
   text-transform: uppercase;
   user-select: none;
@@ -22,8 +22,8 @@
 }
 
 .status-badge--unsaved {
-  background: var(--color-bg-sunken);
-  color: var(--color-text-tertiary);
+  background: var(--c-sunken);
+  color: var(--color-text-muted);
   border: 1px dashed var(--color-border-subtle);
 }
 

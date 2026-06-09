@@ -16,7 +16,7 @@
 .toggle__text {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-xs);
   min-width: 0;
   flex: 1;
 }
@@ -62,7 +62,7 @@
   flex-shrink: 0;
   width: 36px;
   height: 20px;
-  border-radius: 10px;
+  border-radius: var(--r-lg);
   background: var(--color-bg-elevated);
   border: 1px solid var(--color-border-default);
   transition: background var(--transition-normal), border-color var(--transition-normal);

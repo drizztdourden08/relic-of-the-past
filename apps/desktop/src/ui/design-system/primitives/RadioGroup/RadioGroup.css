@@ -16,7 +16,7 @@
 .radio-group__header {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-xs);
 }
 
 .radio-group__label {
@@ -95,7 +95,7 @@
 .radio-group__option-text {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: var(--space-xs);
 }
 
 .radio-group__option-label {
