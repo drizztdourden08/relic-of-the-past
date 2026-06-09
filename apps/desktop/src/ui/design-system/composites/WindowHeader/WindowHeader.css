@@ -24,8 +24,10 @@
   flex-shrink: 0;
 }
 
-/* Bigger, easy-to-hit ✕ */
-.window-header__close {
+/* Bigger, easy-to-hit ✕ — the extra `.window-header` qualifier out-specifics
+   `.icon-btn--md`'s font-size so the glyph is actually large. */
+.window-header .window-header__close {
   flex-shrink: 0;
-  font-size: var(--text-lg);
+  font-size: var(--text-2xl);
+  color: var(--c-text-dim);
 }

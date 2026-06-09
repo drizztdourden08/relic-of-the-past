@@ -13,7 +13,7 @@ const WindowHeader = (props: WindowHeaderProps) => {
       <Text as="h3" className="window-header__title">{title}</Text>
       {extra && <Box className="window-header__extra">{extra}</Box>}
       {onClose && (
-        <IconButton variant="ghost" size="md" label="Close" className="window-header__close" onClick={onClose}>×</IconButton>
+        <IconButton variant="ghost" size="md" label="Close" className="window-header__close" onClick={onClose}>✕</IconButton>
       )}
     </Box>
   );

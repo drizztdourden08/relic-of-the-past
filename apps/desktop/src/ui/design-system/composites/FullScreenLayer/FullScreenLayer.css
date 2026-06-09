@@ -26,8 +26,7 @@
 
 .fullscreen-layer__header {
   flex-shrink: 0;
-  padding: var(--space-sm) var(--space-md);
-  border-bottom: 1px solid var(--c-hairline);
+  padding: var(--space-md) var(--space-xl);
 }
 
 .fullscreen-layer__content {
@@ -36,7 +35,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding: var(--space-lg) var(--space-xl);
+  padding: 0 var(--space-xl) var(--space-lg);
 }
 
 @keyframes fsl-in {
