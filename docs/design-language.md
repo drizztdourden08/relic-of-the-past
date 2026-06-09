@@ -281,3 +281,23 @@ Raw colors are **gating errors**, not conventions. Two blockers:
 
 Sub-10px font sizes in dense debug widgets are left as-is (the type scale floors
 at `--text-xs` = 10px).
+
+### Update — dimensional tokens are also forced now
+
+Beyond color, these are hard-blocked in `ui/**` CSS (stylelint
+`declaration-property-value-disallowed-list`), tokens + HUD exempt:
+
+| Property | Rule | Token |
+|----------|------|-------|
+| `font-size` | no numbers (px/rem/em) | `--text-*` |
+| `font-weight` | no raw numbers | `--weight-*` |
+| `border-radius` | no `px` (allows `%`, `0`) | `--r-*` / `--radius-xl` |
+| `z-index` | no positive integers (allows `0`) | `--z-*` ladder |
+| `padding` / `margin` / `gap` | no `px` | `--space-*` |
+
+Existing raw values were rounded to the nearest token. `var(--token, fallback)`
+fallbacks are banned (tokens-only) — use the token bare. Positioning offsets
+(`top/left/right/bottom`), `width/height`, and `border-width` are **not** forced
+(no positional token scale; these are layout, not design-scale values). Inline
+`style={{}}` dimensional values in dense debug widgets are not yet rule-enforced
+(the type scale floors at 10px; those widgets use 8–9px).
