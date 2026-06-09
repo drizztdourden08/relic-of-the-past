@@ -7,7 +7,7 @@ import { MsuManager } from './sub-components/MsuManager';
 import { SpriteManager } from './sub-components/SpriteManager';
 import { Spinner } from '../../../../design-system/primitives/Spinner';
 import { Box } from '../../../../design-system/primitives/Box';
-import { Text } from '../../../../design-system/primitives/Text';
+import { NavRail } from '../../../../design-system/composites/NavRail';
 import { ListItemRow } from '../../../../design-system/composites/ListItemRow';
 import './DataManager.css';
 import './sub-components/DataManager.detail.css';
@@ -33,38 +33,20 @@ const DataManager = (props: DataManagerProps) => {
     onSwitchProfile,
   } = props;
   const [activeTab, setActiveTab] = useState<DataTab>(initialTab ?? 'profiles');
-  const [msuCount, setMsuCount] = useState(0);
-  const [langCount, setLangCount] = useState(0);
-  const [spriteCount, setSpriteCount] = useState(0);
 
   // Sync tab when navigating from TitleBar
   useEffect(() => {
     if (initialTab) setActiveTab(initialTab);
   }, [initialTab]);
 
-  // Load counts for tab badges
-  const refreshCounts = useCallback(async () => {
-    const [msuPacks, langs] = await Promise.all([
-      window.api.listMsuPacks(),
-      window.api.listLanguages(),
-    ]);
-    setMsuCount(msuPacks.length);
-    setLangCount(langs.length);
-  }, []);
+  const handleRefresh = useCallback(() => { onRefresh(); }, [onRefresh]);
 
-  useEffect(() => { refreshCounts(); }, [refreshCounts]);
-
-  const handleRefresh = useCallback(() => {
-    onRefresh();
-    refreshCounts();
-  }, [onRefresh, refreshCounts]);
-
-  const tabs: { id: DataTab; icon: string; label: string; count: number }[] = [
-    { id: 'profiles', icon: '👤', label: 'Profiles', count: profiles.length },
-    { id: 'roms', icon: '🎮', label: 'ROMs', count: romStatuses.length },
-    { id: 'sprites', icon: '🖼️', label: 'Sprites', count: spriteCount },
-    { id: 'languages', icon: '🌐', label: 'Languages', count: langCount },
-    { id: 'msu', icon: '🎵', label: 'MSU', count: msuCount },
+  const tabs: { id: DataTab; icon: string; label: string }[] = [
+    { id: 'profiles', icon: '👤', label: 'Profiles' },
+    { id: 'roms', icon: '🎮', label: 'ROMs' },
+    { id: 'sprites', icon: '🖼️', label: 'Sprites' },
+    { id: 'languages', icon: '🌐', label: 'Languages' },
+    { id: 'msu', icon: '🎵', label: 'MSU' },
   ];
 
   return (
@@ -76,20 +58,12 @@ const DataManager = (props: DataManagerProps) => {
       )}
 
       <Box className="data-manager__body">
-        <Box className="data-manager__tabs">
-          {tabs.map((tab) => (
-            <Box
-              as="button"
-              key={tab.id}
-              className={`data-manager__tab ${activeTab === tab.id ? 'data-manager__tab--active' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              <Text className="data-manager__tab-icon">{tab.icon}</Text>
-              <Text className="data-manager__tab-label">{tab.label}</Text>
-              <Text className="data-manager__tab-count">{tab.count}</Text>
-            </Box>
-          ))}
-        </Box>
+        <NavRail
+          className="data-manager__tabs"
+          items={tabs}
+          activeId={activeTab}
+          onSelect={(id) => setActiveTab(id as DataTab)}
+        />
 
         <Box className="data-manager__content">
           {activeTab === 'profiles' && (

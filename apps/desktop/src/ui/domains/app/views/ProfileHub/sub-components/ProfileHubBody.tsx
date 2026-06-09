@@ -2,7 +2,7 @@
 /** ProfileHub tab nav + active-tab content panel. */
 import type { GameSettings } from '@shared/types/settings';
 import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
+import { NavRail } from '../../../../../design-system/composites/NavRail';
 import { HomeTab } from './HomeTab';
 import { SettingsView } from './SettingsView';
 import { AudioSettings } from './AudioSettings';
@@ -36,19 +36,12 @@ const ProfileHubBody = (props: ProfileHubBodyProps) => {
   const { activeTab, setActiveTab, settings, onChange, profile, isGameRunning, onStartGame } = props;
   return (
     <Box className="profile-hub__body">
-      <Box className="profile-hub__tabs">
-        {TABS.map((t) => (
-          <Box
-            as="button"
-            key={t.id}
-            className={`profile-hub__tab ${activeTab === t.id ? 'profile-hub__tab--active' : ''}`}
-            onClick={() => setActiveTab(t.id)}
-          >
-            <Text className="profile-hub__tab-icon">{t.icon}</Text>
-            <Text className="profile-hub__tab-label">{t.label}</Text>
-          </Box>
-        ))}
-      </Box>
+      <NavRail
+        className="profile-hub__tabs"
+        items={TABS}
+        activeId={activeTab}
+        onSelect={(id) => setActiveTab(id as ProfileHubTab)}
+      />
 
       <Box className="profile-hub__content">
         {activeTab === 'home' && (

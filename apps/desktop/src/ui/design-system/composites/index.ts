@@ -14,6 +14,8 @@ export { SettingsShell } from './SettingsShell';
 export type { SettingsShellProps } from './SettingsShell';
 export { DropdownMenu } from './DropdownMenu';
 export { FullScreenLayer } from './FullScreenLayer';
+export { NavRail } from './NavRail';
+export type { NavRailItem, NavRailProps } from './NavRail';
 export { WindowHeader } from './WindowHeader';
 export type { WindowHeaderProps } from './WindowHeader';
 export { Overlay } from './Overlay';

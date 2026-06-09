@@ -1,0 +1,65 @@
+/* @layer renderer-components @kind style */
+
+.nav-rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+  container-type: inline-size;
+}
+
+.nav-rail__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  background: var(--c-sunken);
+  color: var(--c-text-dim);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+/* Hover = green (secondary) */
+.nav-rail__item:hover {
+  border-color: var(--c-green);
+  background: var(--c-green-soft);
+  color: var(--c-green-bright);
+}
+
+/* Active = gold (primary) — wins over hover */
+.nav-rail__item--active,
+.nav-rail__item--active:hover {
+  border-color: var(--c-gold);
+  background: var(--c-gold-soft);
+  color: var(--c-gold-bright);
+}
+
+.nav-rail__icon {
+  flex-shrink: 0;
+  font-size: var(--text-lg);
+  line-height: 1;
+}
+
+.nav-rail__label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Collapse to icon-only when the rail is too narrow for labels. */
+@container (max-width: 96px) {
+  .nav-rail__label {
+    display: none;
+  }
+
+  .nav-rail__item {
+    justify-content: center;
+  }
+}

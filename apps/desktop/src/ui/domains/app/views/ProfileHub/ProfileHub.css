@@ -45,46 +45,7 @@
 }
 
 .profile-hub__tabs {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-  flex-shrink: 0;
   width: 120px;
-}
-
-.profile-hub__tab {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-md);
-  background: var(--c-hover);
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.profile-hub__tab:hover {
-  color: var(--color-text-primary);
-  background: var(--c-hover);
-  border-color: var(--c-border-strong);
-}
-
-.profile-hub__tab--active {
-  color: var(--color-gold-base);
-  border-color: var(--color-gold-base);
-  background: var(--c-gold-soft);
-}
-
-.profile-hub__tab-icon {
-  font-size: var(--text-lg);
-  line-height: 1;
-}
-
-.profile-hub__tab-label {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
 }
 
 .profile-hub__content {
