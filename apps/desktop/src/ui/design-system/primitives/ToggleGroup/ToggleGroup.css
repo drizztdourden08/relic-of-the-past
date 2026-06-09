@@ -33,6 +33,7 @@
 .toggle-group__track {
   position: relative;
   display: flex;
+  gap: 1px; /* stylelint-disable-line declaration-property-value-disallowed-list -- hairline separator, off the spacing scale */
   padding: var(--space-xs);
   border-radius: var(--radius-md);
   background: var(--color-bg-elevated);
