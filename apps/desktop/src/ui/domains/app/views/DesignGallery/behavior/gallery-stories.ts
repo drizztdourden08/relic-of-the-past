@@ -7,6 +7,8 @@ import { FormControlStory } from '../sub-components/stories/FormControlStory';
 import { InputStory } from '../sub-components/stories/InputStory';
 import { FeedbackStory } from '../sub-components/stories/FeedbackStory';
 import { ContainerStory } from '../sub-components/stories/ContainerStory';
+import { LayoutStory } from '../sub-components/stories/LayoutStory';
+import { DataStory } from '../sub-components/stories/DataStory';
 
 interface StoryMeta {
   id: string;
@@ -22,6 +24,8 @@ const STORIES: StoryMeta[] = [
   { id: 'form', label: 'Form controls', group: 'Components', Component: FormControlStory },
   { id: 'inputs', label: 'Inputs', group: 'Components', Component: InputStory },
   { id: 'feedback', label: 'Feedback', group: 'Components', Component: FeedbackStory },
+  { id: 'data', label: 'Data & headers', group: 'Components', Component: DataStory },
+  { id: 'layout', label: 'Layout', group: 'Components', Component: LayoutStory },
   { id: 'containers', label: 'Containers', group: 'Components', Component: ContainerStory },
 ];
 

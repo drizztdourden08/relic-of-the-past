@@ -54,6 +54,19 @@
   align-items: stretch;
 }
 
+.dg-cell {
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-sm);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+}
+
+.dg-center-demo {
+  height: 80px;
+}
+
 /* ─── Specimen ─── */
 .dg-specimen {
   border: 1px solid var(--c-border);
