@@ -22,20 +22,20 @@
   font-family: var(--font-mono, 'JetBrains Mono', monospace);
   font-size: var(--text-sm, 13px);
   overflow: hidden;
-  background: rgb(14 14 18 / calc(0.96 * var(--tracker-frame-opacity)));
-  border-color: rgb(255 255 255 / calc(0.08 * var(--tracker-frame-opacity)));
+  background: rgb(14 14 18 / calc(0.96 * var(--tracker-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
+  border-color: rgb(255 255 255 / calc(0.08 * var(--tracker-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
   transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
 /* Docked sides */
 .tracker-panel--docked.tracker-panel--right {
   right: 0;
-  border-left: 1px solid rgb(255 255 255 / calc(0.08 * var(--tracker-frame-opacity)));
+  border-left: 1px solid rgb(255 255 255 / calc(0.08 * var(--tracker-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
 }
 
 .tracker-panel--docked.tracker-panel--left {
   left: 0;
-  border-right: 1px solid rgb(255 255 255 / calc(0.08 * var(--tracker-frame-opacity)));
+  border-right: 1px solid rgb(255 255 255 / calc(0.08 * var(--tracker-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
 }
 
 /* Floating mode */
@@ -43,9 +43,9 @@
   top: auto;
   bottom: auto;
   right: auto;
-  border: 1px solid rgb(255 255 255 / calc(0.12 * var(--tracker-frame-opacity)));
+  border: 1px solid rgb(255 255 255 / calc(0.12 * var(--tracker-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
   border-radius: 8px;
-  box-shadow: 0 8px 32px rgb(0 0 0 / calc(0.6 * var(--tracker-frame-opacity)));
+  box-shadow: 0 8px 32px rgb(0 0 0 / calc(0.6 * var(--tracker-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
   resize: both;
   min-width: 280px;
   min-height: 200px;
@@ -68,7 +68,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 6px 10px;
-  border-bottom: 1px solid rgb(255 255 255 / calc(0.08 * var(--tracker-frame-opacity)));
+  border-bottom: 1px solid rgb(255 255 255 / calc(0.08 * var(--tracker-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
   flex-shrink: 0;
   gap: 8px;
   user-select: none;

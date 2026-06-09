@@ -26,10 +26,11 @@
   color: var(--color-text-primary);
   overflow: hidden;
 
-  /* Frame uses variable opacity — neutral (NOT bluish), matches the one bg family */
-  background: rgb(14 14 18 / calc(0.96 * var(--widget-frame-opacity)));
-  border: 1px solid rgb(255 255 255 / calc(0.06 * var(--widget-frame-opacity)));
-  box-shadow: 0 4px 20px rgb(0 0 0 / calc(0.4 * var(--widget-frame-opacity)));
+  /* Frame uses variable opacity — neutral (NOT bluish), matches the one bg family.
+     rgb() with a runtime opacity multiplier can't be a flat token (dynamic per-instance). */
+  background: rgb(14 14 18 / calc(0.96 * var(--widget-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
+  border: 1px solid rgb(255 255 255 / calc(0.06 * var(--widget-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
+  box-shadow: 0 4px 20px rgb(0 0 0 / calc(0.4 * var(--widget-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
   transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
 }
 
@@ -67,7 +68,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 4px 8px;
-  border-bottom: 1px solid rgb(255 255 255 / calc(0.06 * var(--widget-frame-opacity)));
+  border-bottom: 1px solid rgb(255 255 255 / calc(0.06 * var(--widget-frame-opacity))); /* stylelint-disable-line function-disallowed-list */
   flex-shrink: 0;
   user-select: none;
   min-height: 26px;

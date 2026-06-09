@@ -28,19 +28,19 @@
 }
 
 .status-badge--draft {
-  background: hsl(40deg 60% 15%);
-  color: hsl(40deg 90% 70%);
-  border: 1px solid hsl(40deg 50% 30%);
+  background: var(--c-warning-dim);
+  color: var(--c-warning);
+  border: 1px solid var(--c-warning-dim);
 }
 
 .status-badge--mapped {
-  background: hsl(210deg 50% 15%);
-  color: hsl(210deg 90% 70%);
-  border: 1px solid hsl(210deg 40% 30%);
+  background: var(--c-info-dim);
+  color: var(--c-info);
+  border: 1px solid var(--c-info-dim);
 }
 
 .status-badge--verified {
-  background: hsl(140deg 50% 12%);
-  color: hsl(140deg 80% 65%);
-  border: 1px solid hsl(140deg 40% 25%);
+  background: var(--c-green-dim);
+  color: var(--c-green-bright);
+  border: 1px solid var(--c-green-dim);
 }

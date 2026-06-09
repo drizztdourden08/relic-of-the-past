@@ -11,17 +11,21 @@
   },
   "overrides": [
     {
+      "comment": "App + design-system CSS must use design tokens only — no raw colors. hex/named/rgb()/rgba()/hsl() are all blocked; use var(--c-*)/var(--color-*). The few dynamic per-instance opacity frames (tracker/widget) opt out per-line with a stylelint-disable comment.",
       "files": ["apps/desktop/src/ui/**/*.css"],
       "rules": {
-        "color-no-hex": [true, { "severity": "warning" }],
-        "color-named": ["never", { "severity": "warning" }]
+        "color-no-hex": true,
+        "color-named": "never",
+        "function-disallowed-list": ["rgb", "rgba", "hsl", "hsla", "hwb"]
       }
     },
     {
+      "comment": "Token definition files are where raw color values are allowed to live.",
       "files": ["apps/desktop/src/ui/design-system/tokens/**/*.css"],
       "rules": {
         "color-no-hex": null,
-        "color-named": null
+        "color-named": null,
+        "function-disallowed-list": null
       }
     },
     {
@@ -29,7 +33,8 @@
       "files": ["apps/desktop/src/ui/domains/hud/**/*.css"],
       "rules": {
         "color-no-hex": null,
-        "color-named": null
+        "color-named": null,
+        "function-disallowed-list": null
       }
     }
   ],

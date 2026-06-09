@@ -16,11 +16,11 @@
   height: 90%;
   display: flex;
   flex-direction: column;
-  background: rgb(14, 14, 20, 0.88);
+  background: var(--c-glass);
   backdrop-filter: blur(16px);
-  border: 1px solid rgb(255, 255, 255, 0.08);
+  border: 1px solid var(--c-hairline);
   border-radius: var(--radius-xl);
-  box-shadow: 0 16px 48px rgb(0, 0, 0, 0.6);
+  box-shadow: var(--shadow-3);
   overflow: hidden;
 }
 
