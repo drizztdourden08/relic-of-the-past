@@ -100,7 +100,7 @@ const initHapticBridge = (settings: HapticSettings): void => {
   if (initialized) return;
   initialized = true;
 
-  startDebugLog();
+  if (window.api?.isDev) startDebugLog();
   setVibrateFunction(dispatchVibration);
   updateHapticSettings(settings);
 

@@ -42,8 +42,14 @@ const applySettingsSideEffects = (patch: Partial<GameSettings>, next: GameSettin
     onSaveSlotSettingsChange, onEdgeEffectChange, onShadowCastingChange,
   } = deps;
 
-  // Persist asynchronously — fire and forget
-  window.api.writeConfig(profileId, { ...next }).catch(() => {});
+  // Persist asynchronously; surface failures so settings never silently fail to save.
+  window.api.writeConfig(profileId, { ...next }).catch((e: unknown) => {
+    console.error('[settings] failed to persist config', e);
+    setToasts((prev) => [
+      ...prev.filter((t) => t.id !== 'config-save-failed'),
+      { id: 'config-save-failed', message: 'Failed to save settings', variant: 'danger' as const },
+    ]);
+  });
 
   // Notify parent of window mode changes
   if ('windowMode' in patch) {

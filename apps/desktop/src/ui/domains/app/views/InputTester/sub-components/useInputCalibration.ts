@@ -41,14 +41,14 @@ const useInputCalibration = () => {
   const refreshHidDevices = useCallback(() => {
     window.api.enumerateHidDevices()
       .then(devices => setHidDeviceInfo(devices))
-      .catch(() => {});
+      .catch((e: unknown) => console.warn('[input] failed to enumerate HID devices', e));
   }, []);
   useEffect(() => { refreshHidDevices(); }, [webHidConnected, refreshHidDevices]);
 
   useEffect(() => {
     window.api.readStickCalibration()
       .then((store) => setStickCalibrationStore(store as Record<string, DeviceStickCalibration>))
-      .catch(() => {});
+      .catch((e: unknown) => console.warn('[input] failed to load stick calibration', e));
   }, []);
 
   // Subscribe to InputManager for all input state

@@ -72,7 +72,9 @@ app.whenReady().then(async () => {
   registerDumpLayersHandler();
   registerDumpNavHandler();
   registerConnectionHandlers();
-  registerScreenEditorHandlers();
+  // Screen editor writes to source files — a dev authoring tool only. Never
+  // register its IPC channel in a packaged build (prevents renderer file writes).
+  if (is.dev) registerScreenEditorHandlers();
   registerShadowCastingHandlers();
 
   // App info handler

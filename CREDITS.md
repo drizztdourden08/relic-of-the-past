@@ -1,13 +1,17 @@
 <!-- @layer root-config @kind doc -->
 # Credits
 
-> Keep in sync with `shared/data/credits.ts`
+> Keep in sync with `shared/credits.ts`
+
+> **Disclaimer:** This is an unofficial fan-made/open-source project. It is not affiliated with,
+> endorsed by, sponsored by, or approved by Nintendo. Nintendo, The Legend of Zelda, and related
+> names, characters, music, artwork, and assets are trademarks and/or copyrights of Nintendo. No
+> Nintendo-owned game assets are included in this repository.
 
 ## Game & Core Engine
 
 | Who | Project | Use | License |
 |-----|---------|-----|---------|
-| **Nintendo** | The Legend of Zelda: A Link to the Past (1991) | Original Work — the entire project is built around their game | — |
 | **snesrev** | [zelda3](https://github.com/snesrev/zelda3) | Core Dependency — vendored C codebase compiled to WebAssembly; the game engine itself | MIT |
 | **elzo-d** | [LakeSnes](https://github.com/elzo-d/LakeSnes) | Core Dependency — PPU/DSP code included within snesrev/zelda3 | MIT |
 | **spannerism** | Zelda 3 JP Disassembly | Reference — function and variable naming reference used by snesrev | — |

@@ -20,7 +20,6 @@ type ControlsTab = 'controls' | 'enhanced' | 'shortcuts' | 'cheats';
 
 const CONTROLS_TABS = [
   { id: 'controls', label: 'Game Controls' },
-  { id: 'enhanced', label: 'Enhanced Controls' },
   { id: 'shortcuts', label: 'Shortcuts & Functions' },
   { id: 'cheats', label: 'Cheats' },
 ];
@@ -85,12 +84,6 @@ const ControlsMain = ({ ctrl }: { ctrl: Ctrl }) => {
             </Box>
           </Box>
         </>
-      )}
-
-      {ctrl.activeTab === 'enhanced' && (
-        <Box className="controls-settings__placeholder">
-          <Text as="p" className="controls-settings__placeholder-text">Enhanced controls coming soon.</Text>
-        </Box>
       )}
 
       {ctrl.activeTab === 'shortcuts' && (

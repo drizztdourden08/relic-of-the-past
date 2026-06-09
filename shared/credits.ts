@@ -51,13 +51,6 @@ const CREDITS: CreditCategory[] = [
     title: 'Game & Core Engine',
     entries: [
       {
-        name: 'Nintendo',
-        project: 'The Legend of Zelda: A Link to the Past',
-        description: 'The original 1991 SNES game that this entire project is a port/reimplementation of.',
-        usage: 'original-work',
-        usageNote: 'The entire project is built around their game.',
-      },
-      {
         name: 'snesrev',
         project: 'zelda3',
         description: 'A reverse-engineered C reimplementation of A Link to the Past (~70k+ lines of C).',

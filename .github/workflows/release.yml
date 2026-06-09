@@ -23,8 +23,11 @@ jobs:
           node-version: 24
           cache: npm
 
-      - name: Validate package-lock.json
-        run: npm ci --dry-run
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Quality gate (lint, typecheck, analyze, WASM export-drift)
+        run: npm run ci
 
       - name: Check required files exist
         run: |
@@ -74,7 +77,6 @@ jobs:
           mkdir -p ../../apps/desktop/public/wasm
           cp output/zelda3.js ../../apps/desktop/public/wasm/
           cp output/zelda3.wasm ../../apps/desktop/public/wasm/
-          cp output/zelda3.data ../../apps/desktop/public/wasm/ 2>/dev/null || true
         shell: bash
 
       - name: Install dependencies

@@ -23,12 +23,12 @@ const startInput = (m: InputManager): void => {
       .then((store) => {
         webHidReader.loadStickCalibrations(store as Record<string, DeviceStickCalibration>);
       })
-      .catch(() => {});
+      .catch((e: unknown) => console.warn('[input] failed to load stick calibration', e));
     window.api.readTriggerCalibration()
       .then((store) => {
         webHidReader.loadTriggerCalibrations(store);
       })
-      .catch(() => {});
+      .catch((e: unknown) => console.warn('[input] failed to load trigger calibration', e));
   }
 
   window.addEventListener('keydown', m.onKeyDown);
@@ -76,7 +76,7 @@ const startInput = (m: InputManager): void => {
     for (const key of keys) {
       webHidReader.markDeviceOpened(key);
     }
-  }).catch(() => {});
+  }).catch((e: unknown) => console.warn('[input] failed to read open HID keys', e));
 
   m.refreshDevices();
   m.devicePollId = setInterval(() => m.refreshDevices(), 2000);

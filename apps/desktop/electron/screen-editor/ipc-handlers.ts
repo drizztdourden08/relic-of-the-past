@@ -6,7 +6,7 @@
 
 import { ipcMain, app } from 'electron';
 import { readFile, writeFile } from 'fs/promises';
-import { join } from 'path';
+import { join, relative, isAbsolute } from 'path';
 
 const getWorkspaceRoot = (): string => {
   // In dev: __dirname = apps/desktop/electron/screen-editor
@@ -15,6 +15,18 @@ const getWorkspaceRoot = (): string => {
     return join(app.getAppPath(), '../../..');
   }
   return join(__dirname, '../../../..');
+};
+
+// Resolve a caller-supplied relative path inside shared/game/data, rejecting any
+// path that escapes that directory (traversal via '..' or absolute segments).
+const resolveDataFile = (root: string, relPath: string): string => {
+  const dataRoot = join(root, 'shared', 'game', 'data');
+  const full = join(dataRoot, relPath);
+  const rel = relative(dataRoot, full);
+  if (rel.startsWith('..') || isAbsolute(rel)) {
+    throw new Error(`Invalid file path: ${relPath}`);
+  }
+  return full;
 };
 
 const registerScreenEditorHandlers = (): void => {
@@ -26,7 +38,7 @@ const registerScreenEditorHandlers = (): void => {
   }) => {
     try {
       const root = getWorkspaceRoot();
-      const fullPath = join(root, 'shared', 'game', 'data', args.filePath);
+      const fullPath = resolveDataFile(root, args.filePath);
 
       const content = await readFile(fullPath, 'utf-8');
 
@@ -65,7 +77,7 @@ const registerScreenEditorHandlers = (): void => {
   }) => {
     try {
       const root = getWorkspaceRoot();
-      const fullPath = join(root, 'shared', 'game', 'data', args.filePath);
+      const fullPath = resolveDataFile(root, args.filePath);
 
       const content = await readFile(fullPath, 'utf-8');
 

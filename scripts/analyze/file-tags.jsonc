@@ -36,5 +36,9 @@
   "shared/game/data/**":      { "kind": "data" },
   "shared/input/data/**":     { "kind": "data" },
   "shared/asset-extraction/**/data/**": { "kind": "data" },
-  "**/*.data.ts":             { "kind": "data" }
+  "**/*.data.ts":             { "kind": "data" },
+
+  // Root files that cannot carry an in-file tag comment.
+  "LICENSE":                  { "layer": "root-config", "kind": "doc" },
+  ".nvmrc":                   { "layer": "root-config", "kind": "config" }
 }

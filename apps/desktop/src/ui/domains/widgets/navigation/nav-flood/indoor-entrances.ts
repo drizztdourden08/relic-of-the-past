@@ -25,7 +25,6 @@ const collectIndoorEntrances = (args: CollectArgs): Set<number> => {
     const spawns = wasmGetEntranceSpawns();
     const rooms = wasmGetEntranceRooms();
     const exitDoors = wasmGetRoomExitDoors();
-    console.log('[EXIT-DIAG] room=0x' + primaryScreenIndex.toString(16) + ' exitDoors=', JSON.stringify(exitDoors));
     if (spawns && rooms) {
       const roomOriginX = (primaryScreenIndex % 16) * 512;
       const roomOriginY = Math.floor(primaryScreenIndex / 16) * 512;
@@ -71,10 +70,7 @@ const collectIndoorEntrances = (args: CollectArgs): Set<number> => {
               gridCol = exitDoorPositions[bestIdx].col + 2;
               gridRow = exitDoorPositions[bestIdx].row + 1;
             }
-            console.log(`[EXIT-DIAG] ent id=${id} overworldDoor → exitDoor[${bestIdx}] row=${gridRow} col=${gridCol} dir=${doorDir} (spawn was row=${spawnRow} col=${spawnCol})`);
           }
-        } else {
-          console.log(`[EXIT-DIAG] ent id=${id} isOwDoor=${overworldDoorEntIds.has(id)} exitDoorsLen=${exitDoorPositions.length} → spawn row=${spawnRow} col=${spawnCol}`);
         }
         if (gridRow < 0 || gridRow >= 64 || gridCol < 0 || gridCol >= 64) continue;
         // Replace overworld entry (wrong grid coords) with correct indoor spawn position

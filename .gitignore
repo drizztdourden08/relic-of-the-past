@@ -43,6 +43,12 @@ test-roms/
 *.log
 npm-debug.log*
 
+# Debug dumps (--dump-layers / --dump-nav output, never committed)
+debug-output/
+
+# Session transcripts (never committed)
+transcript-*.jsonl
+
 # Playwright test artifacts
 playwright-report/
 test-results/
