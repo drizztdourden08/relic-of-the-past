@@ -10,38 +10,26 @@ import {
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../../design-system/primitives/Image';
+import { TabBar } from '../../../../../../design-system/primitives/TabBar';
 import { BindingRow } from './BindingRow';
 import { getSnesIconUrl, getButtonIconUrl } from '@app/lib/input/button-icons';
 import type { useControlsSettings } from '../useControlsSettings';
 
 type Ctrl = ReturnType<typeof useControlsSettings>;
+type ControlsTab = 'controls' | 'enhanced' | 'shortcuts' | 'cheats';
+
+const CONTROLS_TABS = [
+  { id: 'controls', label: 'Game Controls' },
+  { id: 'enhanced', label: 'Enhanced Controls' },
+  { id: 'shortcuts', label: 'Shortcuts & Functions' },
+  { id: 'cheats', label: 'Cheats' },
+];
 
 const ControlsMain = ({ ctrl }: { ctrl: Ctrl }) => {
   return (
     <Box className="controls-settings__main">
       {/* Tab bar */}
-      <Box className="controls-settings__tabs">
-        <Box
-          as="button"
-          className={`controls-settings__tab ${ctrl.activeTab === 'controls' ? 'controls-settings__tab--active' : ''}`}
-          onClick={() => ctrl.setActiveTab('controls')}
-        >Game Controls</Box>
-        <Box
-          as="button"
-          className={`controls-settings__tab ${ctrl.activeTab === 'enhanced' ? 'controls-settings__tab--active' : ''}`}
-          onClick={() => ctrl.setActiveTab('enhanced')}
-        >Enhanced Controls</Box>
-        <Box
-          as="button"
-          className={`controls-settings__tab ${ctrl.activeTab === 'shortcuts' ? 'controls-settings__tab--active' : ''}`}
-          onClick={() => ctrl.setActiveTab('shortcuts')}
-        >Shortcuts &amp; Functions</Box>
-        <Box
-          as="button"
-          className={`controls-settings__tab ${ctrl.activeTab === 'cheats' ? 'controls-settings__tab--active' : ''}`}
-          onClick={() => ctrl.setActiveTab('cheats')}
-        >Cheats</Box>
-      </Box>
+      <TabBar tabs={CONTROLS_TABS} activeTab={ctrl.activeTab} onTabChange={(id) => ctrl.setActiveTab(id as ControlsTab)} />
 
       {/* Tab content */}
       {ctrl.activeTab === 'controls' && (
