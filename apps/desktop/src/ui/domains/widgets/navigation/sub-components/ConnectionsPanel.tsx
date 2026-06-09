@@ -23,7 +23,7 @@ const ConnectionsPanel = (props: Props) => {
         <Box style={S.sectionTitle}>Connections</Box>
 
         {/* ─── Entrances sub-section ─── */}
-        <Box style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 2, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Entrances ({entranceSum})</Box>
+        <Box style={{ ...S.meta, color: 'var(--c-text-dim)', marginBottom: 4, marginTop: 2, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Entrances ({entranceSum})</Box>
         {renderResults.some(r => r.entrances.some(e => r.transitions.some(t => t.entranceIdx === e.id))) ? (
           renderResults.map(r => {
             const reachableEntrances = r.entrances.filter(e => r.transitions.some(t => t.entranceIdx === e.id));
@@ -34,7 +34,7 @@ const ConnectionsPanel = (props: Props) => {
             const screenNodeId = `${isDarkWorld ? 'dw' : 'lw'}-${r.screenIndex.toString(16).padStart(2, '0')}`;
             return (
               <Box key={`ent-${r.screenIndex}`}>
-                {scrLabel && <Box style={{ ...S.meta, color: '#8cf', marginTop: 2 }}>{scrLabel}</Box>}
+                {scrLabel && <Box style={{ ...S.meta, color: 'var(--c-info)', marginTop: 2 }}>{scrLabel}</Box>}
                 <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {reachableEntrances.map(ent => {
                   const t = r.transitions.find(t => t.entranceIdx === ent.id);
@@ -63,7 +63,7 @@ const ConnectionsPanel = (props: Props) => {
                       <Text style={S.cardTitle}>{displayName}</Text>
                       <Text style={S.cardSub}>#{ent.id}</Text>
                       {entranceSpawns && ent.id < entranceSpawns.length && (
-                        <Text style={{ fontSize: 8, color: entranceSpawns[ent.id].startingLayer === 0 ? '#7ff' : '#ff7', marginTop: 1 }}>
+                        <Text style={{ fontSize: 8, color: entranceSpawns[ent.id].startingLayer === 0 ? 'var(--c-info)' : 'var(--c-info)', marginTop: 1 }}>
                           {entranceSpawns[ent.id].startingLayer === 0 ? '▲ Upper' : '▼ Lower'}
                         </Text>
                       )}
@@ -78,11 +78,11 @@ const ConnectionsPanel = (props: Props) => {
             );
           })
         ) : (
-          <Box style={{ ...S.meta, color: '#666' }}>None</Box>
+          <Box style={{ ...S.meta, color: 'var(--c-text-muted)' }}>None</Box>
         )}
 
         {/* ─── Edges sub-section ─── */}
-        <Box style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Edges ({externalConnections.length})</Box>
+        <Box style={{ ...S.meta, color: 'var(--c-text-dim)', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Edges ({externalConnections.length})</Box>
         {externalConnections.length > 0 ? (
           externalConnections.map(conn => {
             const connKey = `${conn.edge}-${conn.sourceScreen?.toString(16)}-${conn.targetScreen.toString(16)}-${conn.positions[0]}`;
@@ -114,9 +114,9 @@ const ConnectionsPanel = (props: Props) => {
                   <Text style={S.dimBadge}>{conn.freeTileCount}{conn.itemTileCount > 0 ? `+${conn.itemTileCount}` : ''}</Text>
                 </Box>
                 {isIndoors && (
-                  <Box style={{ fontSize: 9, marginTop: 2, color: conn.layerToggle ? '#f8a' : '#6a8' }}>
+                  <Box style={{ fontSize: 9, marginTop: 2, color: conn.layerToggle ? 'var(--c-info)' : 'var(--c-green)' }}>
                     {conn.layerToggle
-                      ? <>▲▼ Layer Toggle {targetLayerLabel && <Text style={{ color: targetLayerLabel.includes('Lower') ? '#ff7' : '#7ff' }}>{targetLayerLabel}</Text>}</>
+                      ? <>▲▼ Layer Toggle {targetLayerLabel && <Text style={{ color: targetLayerLabel.includes('Lower') ? 'var(--c-info)' : 'var(--c-info)' }}>{targetLayerLabel}</Text>}</>
                       : <>═ No Layer Change</>}
                   </Box>
                 )}
@@ -127,7 +127,7 @@ const ConnectionsPanel = (props: Props) => {
             );
           })
         ) : (
-          <Box style={{ ...S.meta, color: '#666' }}>None</Box>
+          <Box style={{ ...S.meta, color: 'var(--c-text-muted)' }}>None</Box>
         )}
 
         {/* ─── Internal Edges ─── */}
@@ -136,11 +136,11 @@ const ConnectionsPanel = (props: Props) => {
         {/* ─── Fall Hole Landings ─── */}
         {fallHoleLandings.length > 0 && (
           <>
-            <Box style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Fall Holes ({fallHoleLandings.length})</Box>
+            <Box style={{ ...S.meta, color: 'var(--c-text-dim)', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Fall Holes ({fallHoleLandings.length})</Box>
             <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {fallHoleLandings.map((fh, i) => (
                 <Box key={`fh-${i}`} style={S.card}>
-                  <Box style={{ ...S.cardGraphic, background: 'repeating-linear-gradient(45deg, #ffcc44 0px, #ffcc44 2px, transparent 2px, transparent 4px)', borderRadius: 4 }}>
+                  <Box style={{ ...S.cardGraphic, background: 'repeating-linear-gradient(45deg, var(--c-gold) 0px, var(--c-gold) 2px, transparent 2px, transparent 4px)', borderRadius: 'var(--r-sm)' }}>
                     <Text style={{ fontSize: 18 }}>⬇</Text>
                   </Box>
                   <Text style={S.cardTitle}>Landing Zone</Text>

@@ -42,7 +42,7 @@ const ReachabilityCanvas = ({ reachable, bounds, tileLayer }: {
     ctx.putImageData(img, 0, 0);
   }, [reachable, bounds, tileLayer]);
 
-  return <Canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', borderRadius: 3, imageRendering: 'pixelated' }} />;
+  return <Canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', borderRadius: 'var(--r-sm)', imageRendering: 'pixelated' }} />;
 };
 
 export { ReachabilityCanvas };

@@ -40,7 +40,7 @@ const InternalEdgesSection = (props: Props) => {
   const count = cards.length;
   return (
     <>
-      <Box style={{ ...S.meta, color: '#aaa', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Internal ({count})</Box>
+      <Box style={{ ...S.meta, color: 'var(--c-text-dim)', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Internal ({count})</Box>
       <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center' }}>
         {cards.map(({ conn, paired }, i) => {
           if (screenBundle?.isMulti && !conn.isIntraRoom) {
@@ -51,7 +51,7 @@ const InternalEdgesSection = (props: Props) => {
                 <Box style={S.cardGraphic}>
                   <InternalEdgeSvg edge={conn.edge} fromName={fromName} toName={toName} />
                 </Box>
-                <Text style={{ fontSize: 8, color: conn.layerToggle ? '#f8a' : '#6a8', marginTop: 2 }}>
+                <Text style={{ fontSize: 8, color: conn.layerToggle ? 'var(--c-info)' : 'var(--c-green)', marginTop: 2 }}>
                   {conn.layerToggle ? '▲▼ Toggle' : '═ Same'}
                 </Text>
               </Box>
@@ -64,7 +64,7 @@ const InternalEdgesSection = (props: Props) => {
               <Box style={S.cardGraphic}>
                 <InternalEdgeSvg edge={conn.edge} fromName={fromCount} toName={toCount} />
               </Box>
-              <Text style={{ fontSize: 8, color: '#6a8', marginTop: 2 }}>
+              <Text style={{ fontSize: 8, color: 'var(--c-green)', marginTop: 2 }}>
                 ═ Same
               </Text>
             </Box>

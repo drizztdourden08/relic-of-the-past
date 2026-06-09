@@ -14,7 +14,7 @@ const DescRow = ({ label, desc, children }: { label: string; desc: string; child
         <Text style={{ display: 'flex', alignItems: 'center', gap: 4 }}>{children}</Text>
       </Box>
       {open && (
-        <Box style={{ fontSize: 9, color: '#999', lineHeight: '12px', padding: '2px 0 4px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>{desc}</Box>
+        <Box style={{ fontSize: 9, color: 'var(--c-text-dim)', lineHeight: '12px', padding: '2px 0 4px 0', borderBottom: '1px solid var(--c-hover)' }}>{desc}</Box>
       )}
     </Box>
   );

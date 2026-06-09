@@ -38,9 +38,9 @@ const TileTooltipContent = ({ tooltip, result }: TileTooltipContentProps) => {
       position: 'absolute',
       left: tooltip.x,
       top: tooltip.y,
-      background: 'rgba(10,10,20,0.92)',
-      border: '1px solid rgba(100,200,255,0.3)',
-      borderRadius: 4,
+      background: 'var(--c-glass)',
+      border: '1px solid var(--c-info)',
+      borderRadius: 'var(--r-sm)',
       padding: '5px 8px',
       pointerEvents: 'none',
       whiteSpace: 'normal',
@@ -53,8 +53,8 @@ const TileTooltipContent = ({ tooltip, result }: TileTooltipContentProps) => {
       gap: 2,
     }}>
       <Box style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-        <Text style={{ color: '#888' }}>[{tooltip.row},{tooltip.col}]</Text>
-        <Text style={{ color: tooltip.reachable === 1 ? '#4f8' : tooltip.reachable >= 2 ? '#fc0' : '#f66', fontWeight: 'bold' }}>
+        <Text style={{ color: 'var(--c-text-muted)' }}>[{tooltip.row},{tooltip.col}]</Text>
+        <Text style={{ color: tooltip.reachable === 1 ? 'var(--c-green-bright)' : tooltip.reachable >= 2 ? 'var(--c-warning)' : 'var(--c-danger)', fontWeight: 'bold' }}>
           {tooltip.reachable === 1 ? '✓ reachable' : tooltip.reachable >= 2 ? '➔ traversal' : '✗ blocked'}
         </Text>
       </Box>
@@ -65,24 +65,24 @@ const TileTooltipContent = ({ tooltip, result }: TileTooltipContentProps) => {
 
       {tooltip.reachable !== 0 && (
         <Box style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
-          <Text style={{ color: '#aaa' }}>path reqs:</Text>
-          <Text style={{ color: tooltip.pathReqs ? '#ff9944' : '#888' }}>
+          <Text style={{ color: 'var(--c-text-dim)' }}>path reqs:</Text>
+          <Text style={{ color: tooltip.pathReqs ? 'var(--c-gold)' : 'var(--c-text-muted)' }}>
             {tooltip.pathReqs || 'none'}
           </Text>
         </Box>
       )}
       <Box style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
-        <Text style={{ color: '#aaa' }}>live sprites:</Text>
-        <Text style={{ color: '#888' }}>{tooltip.spriteInfo.length}</Text>
+        <Text style={{ color: 'var(--c-text-dim)' }}>live sprites:</Text>
+        <Text style={{ color: 'var(--c-text-muted)' }}>{tooltip.spriteInfo.length}</Text>
       </Box>
       <Box style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
-        <Text style={{ color: '#aaa' }}>Blocked In Last Flood Fill:</Text>
-        <Text style={{ color: tooltip.bfsBlocked ? '#ff7777' : '#888' }}>
+        <Text style={{ color: 'var(--c-text-dim)' }}>Blocked In Last Flood Fill:</Text>
+        <Text style={{ color: tooltip.bfsBlocked ? 'var(--c-danger)' : 'var(--c-text-muted)' }}>
           {tooltip.bfsBlocked ? 'yes' : 'no'}
         </Text>
       </Box>
       {tooltip.spriteInfo.length > 0 && tooltip.spriteInfo.map((line, i) => (
-        <Box key={i} style={{ color: '#ffcc66' }}>{line}</Box>
+        <Box key={i} style={{ color: 'var(--c-warning)' }}>{line}</Box>
       ))}
     </Box>
   );
@@ -106,21 +106,21 @@ const renderDualLayer = (tooltip: TooltipData, ctx0: TileAttrContext) => {
 
   return (
     <Box style={{ display: 'flex', gap: 0 }}>
-      <Box style={{ flex: 1, borderRight: '1px solid rgba(255,255,255,0.15)', paddingRight: 6, display: 'flex', flexDirection: 'column', gap: 1 }}>
-        <Box style={{ color: '#66ccff', fontWeight: 'bold', fontSize: 10 }}>▼ GROUND</Box>
-        <Box><Text style={{ color: '#6cf' }}>0x{a1.toString(16).padStart(2, '0')}</Text> <Text style={{ color: '#fff' }}>{lbl1}</Text></Box>
-        <Box><Text style={{ color: '#aaa' }}>type:</Text> <Text style={{ color: '#fc6' }}>{cls1.type === 'ledge' ? `ledge (${cls1.dir})` : cls1.type}</Text></Box>
-        {def1?.req && <Box><Text style={{ color: '#aaa' }}>req:</Text> <Text style={{ color: '#fc6' }}>{def1.req}</Text></Box>}
-        <Box style={{ color: l1Reach ? '#4f8' : '#f66', fontWeight: 'bold' }}>
+      <Box style={{ flex: 1, borderRight: '1px solid var(--c-border)', paddingRight: 6, display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <Box style={{ color: 'var(--c-info)', fontWeight: 'bold', fontSize: 10 }}>▼ GROUND</Box>
+        <Box><Text style={{ color: 'var(--c-info)' }}>0x{a1.toString(16).padStart(2, '0')}</Text> <Text style={{ color: 'var(--c-text)' }}>{lbl1}</Text></Box>
+        <Box><Text style={{ color: 'var(--c-text-dim)' }}>type:</Text> <Text style={{ color: 'var(--c-warning)' }}>{cls1.type === 'ledge' ? `ledge (${cls1.dir})` : cls1.type}</Text></Box>
+        {def1?.req && <Box><Text style={{ color: 'var(--c-text-dim)' }}>req:</Text> <Text style={{ color: 'var(--c-warning)' }}>{def1.req}</Text></Box>}
+        <Box style={{ color: l1Reach ? 'var(--c-green-bright)' : 'var(--c-danger)', fontWeight: 'bold' }}>
           {l1Reach ? '✓ reachable' : '✗ wall'}
         </Box>
       </Box>
       <Box style={{ flex: 1, paddingLeft: 6, display: 'flex', flexDirection: 'column', gap: 1 }}>
-        <Box style={{ color: '#ff9966', fontWeight: 'bold', fontSize: 10 }}>▲ ABOVE</Box>
-        <Box><Text style={{ color: '#6cf' }}>0x{a0.toString(16).padStart(2, '0')}</Text> <Text style={{ color: '#fff' }}>{lbl0}</Text></Box>
-        <Box><Text style={{ color: '#aaa' }}>type:</Text> <Text style={{ color: '#fc6' }}>{cls0.type === 'ledge' ? `ledge (${cls0.dir})` : cls0.type}</Text></Box>
-        {def0?.req && <Box><Text style={{ color: '#aaa' }}>req:</Text> <Text style={{ color: '#fc6' }}>{def0.req}</Text></Box>}
-        <Box style={{ color: l0Reach ? '#4f8' : '#f66', fontWeight: 'bold' }}>
+        <Box style={{ color: 'var(--c-gold)', fontWeight: 'bold', fontSize: 10 }}>▲ ABOVE</Box>
+        <Box><Text style={{ color: 'var(--c-info)' }}>0x{a0.toString(16).padStart(2, '0')}</Text> <Text style={{ color: 'var(--c-text)' }}>{lbl0}</Text></Box>
+        <Box><Text style={{ color: 'var(--c-text-dim)' }}>type:</Text> <Text style={{ color: 'var(--c-warning)' }}>{cls0.type === 'ledge' ? `ledge (${cls0.dir})` : cls0.type}</Text></Box>
+        {def0?.req && <Box><Text style={{ color: 'var(--c-text-dim)' }}>req:</Text> <Text style={{ color: 'var(--c-warning)' }}>{def0.req}</Text></Box>}
+        <Box style={{ color: l0Reach ? 'var(--c-green-bright)' : 'var(--c-danger)', fontWeight: 'bold' }}>
           {l0Reach ? '✓ reachable' : '✗ wall'}
         </Box>
       </Box>
@@ -133,7 +133,7 @@ const renderLockedLayer = (tooltip: TooltipData, ctx0: TileAttrContext, result: 
   const attr = lockedLayer === 0 ? (tooltip.layer0Attr ?? tooltip.attr) : (tooltip.layer1Attr ?? tooltip.attr);
   const reach = lockedLayer === 0 ? tooltip.layer0Reach : tooltip.layer1Reach;
   const layerLabel = lockedLayer === 0 ? '▲ ABOVE' : '▼ GROUND';
-  const layerColor = lockedLayer === 0 ? '#ff9966' : '#66ccff';
+  const layerColor = lockedLayer === 0 ? 'var(--c-gold)' : 'var(--c-info)';
 
   const cls = classifyTileAttr(attr, ctx0);
   const lbl = getAttrLabel(attr, ctx0);
@@ -142,12 +142,12 @@ const renderLockedLayer = (tooltip: TooltipData, ctx0: TileAttrContext, result: 
   return (
     <Box style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
       <Box style={{ color: layerColor, fontWeight: 'bold', fontSize: 10 }}>
-        {layerLabel} <Text style={{ color: '#f88', fontSize: 9 }}>LAYER LOCKED</Text>
+        {layerLabel} <Text style={{ color: 'var(--c-danger)', fontSize: 9 }}>LAYER LOCKED</Text>
       </Box>
-      <Box><Text style={{ color: '#6cf' }}>0x{attr.toString(16).padStart(2, '0')}</Text> <Text style={{ color: '#fff' }}>{lbl}</Text></Box>
-      <Box><Text style={{ color: '#aaa' }}>type:</Text> <Text style={{ color: '#fc6' }}>{cls.type === 'ledge' ? `ledge (${cls.dir})` : cls.type}</Text></Box>
-      {def?.req && <Box><Text style={{ color: '#aaa' }}>req:</Text> <Text style={{ color: '#fc6' }}>{def.req}</Text></Box>}
-      <Box style={{ color: reach ? '#4f8' : '#f66', fontWeight: 'bold' }}>
+      <Box><Text style={{ color: 'var(--c-info)' }}>0x{attr.toString(16).padStart(2, '0')}</Text> <Text style={{ color: 'var(--c-text)' }}>{lbl}</Text></Box>
+      <Box><Text style={{ color: 'var(--c-text-dim)' }}>type:</Text> <Text style={{ color: 'var(--c-warning)' }}>{cls.type === 'ledge' ? `ledge (${cls.dir})` : cls.type}</Text></Box>
+      {def?.req && <Box><Text style={{ color: 'var(--c-text-dim)' }}>req:</Text> <Text style={{ color: 'var(--c-warning)' }}>{def.req}</Text></Box>}
+      <Box style={{ color: reach ? 'var(--c-green-bright)' : 'var(--c-danger)', fontWeight: 'bold' }}>
         {reach ? '✓ reachable' : '✗ wall'}
       </Box>
     </Box>
@@ -158,20 +158,20 @@ const renderSingleLayer = (tooltip: TooltipData) => {
   return (
     <>
       <Box style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
-        <Text style={{ color: '#6cf' }}>0x{tooltip.attr.toString(16).padStart(2, '0')}</Text>
-        <Text style={{ color: '#fff' }}>{tooltip.label}</Text>
+        <Text style={{ color: 'var(--c-info)' }}>0x{tooltip.attr.toString(16).padStart(2, '0')}</Text>
+        <Text style={{ color: 'var(--c-text)' }}>{tooltip.label}</Text>
       </Box>
       <Box style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
-        <Text style={{ color: '#aaa' }}>type:</Text>
-        <Text style={{ color: '#fc6' }}>{tooltip.type}</Text>
+        <Text style={{ color: 'var(--c-text-dim)' }}>type:</Text>
+        <Text style={{ color: 'var(--c-warning)' }}>{tooltip.type}</Text>
         {tooltip.req && <>
-          <Text style={{ color: '#aaa' }}>req:</Text>
-          <Text style={{ color: tooltip.canPass ? '#4f8' : '#f66' }}>
+          <Text style={{ color: 'var(--c-text-dim)' }}>req:</Text>
+          <Text style={{ color: tooltip.canPass ? 'var(--c-green-bright)' : 'var(--c-danger)' }}>
             {tooltip.req} {tooltip.canPass ? '✓' : '✗'}
           </Text>
         </>}
         {tooltip.hookTarget && (
-          <Text style={{ color: '#00ff88', fontWeight: 'bold' }}>⎆ hookshottable</Text>
+          <Text style={{ color: 'var(--c-green)', fontWeight: 'bold' }}>⎆ hookshottable</Text>
         )}
       </Box>
     </>

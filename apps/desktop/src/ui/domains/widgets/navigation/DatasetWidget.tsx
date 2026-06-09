@@ -103,13 +103,13 @@ const DatasetWidgetContent = () => {
           <Box style={S.sectionTitle}>Dataset</Box>
           <DatasetStatusPill
             background={screenStatus.status === 'mapped' ? '#1a3a1a' : screenStatus.status === 'incomplete' ? '#3a3a1a' : '#3a1a1a'}
-            color={screenStatus.status === 'mapped' ? '#4f8' : screenStatus.status === 'incomplete' ? '#fc6' : '#f66'}
+            color={screenStatus.status === 'mapped' ? 'var(--c-green)' : screenStatus.status === 'incomplete' ? 'var(--c-warning)' : 'var(--c-danger)'}
           >
             {screenStatus.status === 'mapped' ? '✓ Screen' : screenStatus.status === 'incomplete' ? '⚠ Screen' : '✗ Screen'}
           </DatasetStatusPill>
           <DatasetStatusPill
             background={connStatus.status === 'complete' ? '#1a3a1a' : connStatus.status === 'partial' ? '#3a3a1a' : '#2a2a2a'}
-            color={connStatus.status === 'complete' ? '#4f8' : connStatus.status === 'partial' ? '#fc6' : '#666'}
+            color={connStatus.status === 'complete' ? 'var(--c-green)' : connStatus.status === 'partial' ? 'var(--c-warning)' : 'var(--c-text-muted)'}
           >
             {connStatus.status === 'complete' ? '✓ Conns' : connStatus.status === 'partial' ? `⚠ ${connStatus.missingCount} missing` : '— Conns'}
           </DatasetStatusPill>
@@ -117,14 +117,14 @@ const DatasetWidgetContent = () => {
         <Box style={S.infoBox}>
           <Box style={S.infoRow}>
             <Text style={S.infoLabel}>Screen</Text>
-            <Text style={{ color: screenStatus.screen ? '#7f7' : '#f66' }}>
+            <Text style={{ color: screenStatus.screen ? 'var(--c-green-bright)' : 'var(--c-danger)' }}>
               {screenStatus.screen ? screenStatus.screen.id : 'Not mapped'}
             </Text>
           </Box>
           {detectionResult && (
             <Box style={S.infoRow}>
               <Text style={S.infoLabel}>Match</Text>
-              <Text style={{ color: detectionResult.method === 'exact' || detectionResult.method === 'overworld' ? '#4f8' : detectionResult.method === 'entrance' ? '#8cf' : '#fc6' }}>
+              <Text style={{ color: detectionResult.method === 'exact' || detectionResult.method === 'overworld' ? 'var(--c-green)' : detectionResult.method === 'entrance' ? 'var(--c-info)' : 'var(--c-warning)' }}>
                 {detectionResult.method}
               </Text>
             </Box>
@@ -144,21 +144,21 @@ const DatasetWidgetContent = () => {
           {screenStatus.screen && !screenStatus.screen.variant && detectionResult?.method === 'cave-ambiguous' && progressInfo && (
             <Box style={S.infoRow}>
               <Text style={S.infoLabel}>⚠️</Text>
-              <Text style={{ color: '#fa0', fontSize: 10 }}>Default entry — no variant for "{progressInfo.label}"</Text>
+              <Text style={{ color: 'var(--c-warning)', fontSize: 10 }}>Default entry — no variant for "{progressInfo.label}"</Text>
             </Box>
           )}
           {screenStatus.issues.length > 0 && (
             <Box style={S.infoRow}>
               <Text style={S.infoLabel}>Issues</Text>
-              <Text style={{ color: '#fc6', fontSize: 10 }}>{screenStatus.issues.join(', ')}</Text>
+              <Text style={{ color: 'var(--c-warning)', fontSize: 10 }}>{screenStatus.issues.join(', ')}</Text>
             </Box>
           )}
           {screenStatus.corrections.length > 0 && (
-            <Box style={{ padding: '3px 6px', marginTop: 2, borderRadius: 3, background: 'rgba(255,180,0,0.08)', border: '1px solid rgba(255,180,0,0.2)' }}>
-              <Box style={{ fontSize: 9, color: '#fa0', fontWeight: 600, marginBottom: 2 }}>⚠ Suggested Corrections</Box>
+            <Box style={{ padding: '3px 6px', marginTop: 2, borderRadius: 'var(--r-sm)', background: 'var(--c-warning-soft)', border: '1px solid var(--c-warning-soft)' }}>
+              <Box style={{ fontSize: 9, color: 'var(--c-warning)', fontWeight: 600, marginBottom: 2 }}>⚠ Suggested Corrections</Box>
               {screenStatus.corrections.map((c, i) => (
-                <Box key={i} style={{ fontSize: 10, color: '#dda', lineHeight: '14px' }}>
-                  <Text style={{ color: '#8cf' }}>{c.field}</Text>: {c.message}
+                <Box key={i} style={{ fontSize: 10, color: 'var(--c-text-dim)', lineHeight: '14px' }}>
+                  <Text style={{ color: 'var(--c-info)' }}>{c.field}</Text>: {c.message}
                 </Box>
               ))}
             </Box>

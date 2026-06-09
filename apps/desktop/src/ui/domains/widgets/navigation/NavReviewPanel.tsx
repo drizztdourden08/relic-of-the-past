@@ -108,7 +108,7 @@ const NavReviewPanel = ({ locationKey, bundles, entrances, transitions, borders,
       {entrances.length > 0 && (
         <Box style={S.dirSection}>
           <Box style={S.dirHeader}>
-            <Box style={{ ...S.dirDot, background: '#ffcc44' }} />
+            <Box style={{ ...S.dirDot, background: 'var(--c-gold)' }} />
             <Text style={S.dirLabel}>Entrances</Text>
             <Text style={S.dirMeta}>{entrances.length} door{entrances.length !== 1 ? 's' : ''}</Text>
           </Box>
@@ -120,7 +120,7 @@ const NavReviewPanel = ({ locationKey, bundles, entrances, transitions, borders,
             const transition = transitions.find(t => t.entranceIdx === ent.id);
 
             return (
-              <Box key={pointId} style={{ ...S.pointCard, borderLeftColor: '#ffcc44' }}>
+              <Box key={pointId} style={{ ...S.pointCard, borderLeftColor: 'var(--c-gold)' }}>
                 <Box style={S.pointHeader} onClick={() => toggleExpand(pointId)}>
                   <Text style={S.expandIcon}>{expanded ? '▾' : '▸'}</Text>
                   <Text style={S.pointTitle}>Room 0x{ent.roomId.toString(16).toUpperCase()} (#{ent.id})</Text>

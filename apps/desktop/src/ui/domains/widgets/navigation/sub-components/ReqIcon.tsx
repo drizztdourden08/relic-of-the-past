@@ -22,7 +22,7 @@ const ReqIcon = ({ req }: { req: string }) => {
   if (info) {
     return <Text title={req} style={{ fontSize: 12, marginRight: 2 }}>{info.icon}</Text>;
   }
-  return <Text style={{ fontSize: 10, color: '#fc6', marginRight: 4, background: 'rgba(255,200,0,0.12)', padding: '0 3px', borderRadius: 2 }}>{req}</Text>;
+  return <Text style={{ fontSize: 10, color: 'var(--c-warning)', marginRight: 4, background: 'var(--c-warning-soft)', padding: '0 3px', borderRadius: 'var(--r-sm)' }}>{req}</Text>;
 };
 
 export { ReqIcon };

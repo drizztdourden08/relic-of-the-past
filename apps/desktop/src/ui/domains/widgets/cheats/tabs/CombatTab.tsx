@@ -66,7 +66,7 @@ const CombatTab = () => {
 
       <Box className="cheats-section">
         <Box className="cheats-section__title">Extra Damage Reduction</Box>
-        <Text as="p" style={{ fontSize: 10, color: '#888', margin: '0 0 6px' }}>
+        <Text as="p" style={{ fontSize: 10, color: 'var(--c-text-muted)', margin: '0 0 6px' }}>
           Stacks with armor. Blue Mail = 50% base, Red Mail = 75% base.
         </Text>
         <Box className="cheats-radio-group">

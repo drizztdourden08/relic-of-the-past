@@ -4,9 +4,9 @@ import { EDGE_COLORS } from '../navigation.constants';
 
 /** Two-square connector glyph showing an internal room-edge transition. */
 const InternalEdgeSvg = ({ edge, fromName, toName }: { edge: string; fromName: string; toName: string }) => {
-  const fromColor = EDGE_COLORS[edge] ?? '#888';
+  const fromColor = EDGE_COLORS[edge] ?? 'var(--c-text-muted)';
   const opposites: Record<string, string> = { north: 'south', south: 'north', east: 'west', west: 'east' };
-  const toColor = EDGE_COLORS[opposites[edge] ?? 'south'] ?? '#888';
+  const toColor = EDGE_COLORS[opposites[edge] ?? 'south'] ?? 'var(--c-text-muted)';
   const isVertical = edge === 'north' || edge === 'south';
 
   const SQ = 20; // square size

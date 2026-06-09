@@ -33,7 +33,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, linkScreenIndex,
     if (byEdge[c.edge]) byEdge[c.edge].push(c);
   }
 
-  const textColor = (edge: string) => (edge === 'north' || edge === 'west' ? '#fff' : '#000');
+  const textColor = (edge: string) => (edge === 'north' || edge === 'west' ? 'var(--c-text)' : '#000');
 
   const renderHorizEdge = (list: ConnectionInfo[], prefix: string, top: number) => list.map((c, i) => {
     const scrIdx = bundle.screens.indexOf(c.sourceScreen!);
@@ -43,7 +43,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, linkScreenIndex,
     const x0 = (p0 / 64) * cellW;
     const spanW = Math.max(14, ((p1 - p0 + 1) / 64) * cellW);
     return (
-      <Box key={`${prefix}${i}`} style={{ position: 'absolute', top, left: colStart + x0, width: spanW, height: 14, borderRadius: 2, background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      <Box key={`${prefix}${i}`} style={{ position: 'absolute', top, left: colStart + x0, width: spanW, height: 14, borderRadius: 'var(--r-sm)', background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         title={`${getScreenDisplayName(c.targetScreen)} c${p0}-${p1} (${c.positions.length})`}>
         <Text style={{ fontSize: 9, fontWeight: 700, color: textColor(c.edge), lineHeight: 1 }}>{c.positions.length}</Text>
       </Box>
@@ -58,7 +58,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, linkScreenIndex,
     const y0 = (p0 / 64) * cellH;
     const spanH = Math.max(14, ((p1 - p0 + 1) / 64) * cellH);
     return (
-      <Box key={`${prefix}${i}`} style={{ position: 'absolute', left, top: rowStart + y0, width: 14, height: spanH, borderRadius: 2, background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      <Box key={`${prefix}${i}`} style={{ position: 'absolute', left, top: rowStart + y0, width: 14, height: spanH, borderRadius: 'var(--r-sm)', background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         title={`${getScreenDisplayName(c.targetScreen)} r${p0}-${p1} (${c.positions.length})`}>
         <Text style={{ fontSize: 9, fontWeight: 700, color: textColor(c.edge), lineHeight: 1 }}>{c.positions.length}</Text>
       </Box>
@@ -76,16 +76,16 @@ const OverworldMinimap = ({ bundle, connections, renderResults, linkScreenIndex,
         return (
           <Box key={scr} style={{
             position: 'absolute', left: EDGE_PAD + col * (cellW + GAP), top: EDGE_PAD + row * (cellH + GAP),
-            width: cellW, height: cellH, borderRadius: 3, fontSize: 10, textAlign: 'center',
+            width: cellW, height: cellH, borderRadius: 'var(--r-sm)', fontSize: 10, textAlign: 'center',
             display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-            background: isActive ? 'rgba(100,255,100,0.12)' : analyzed ? 'rgba(100,200,255,0.08)' : 'rgba(255,255,255,0.03)',
-            border: `1px solid ${isActive ? 'rgba(100,255,100,0.5)' : analyzed ? 'rgba(100,200,255,0.3)' : 'rgba(255,255,255,0.08)'}`,
-            color: isActive ? '#8f8' : analyzed ? '#8cf' : '#666', overflow: 'hidden',
+            background: isActive ? 'var(--c-green-soft)' : analyzed ? 'var(--c-info-soft)' : 'var(--c-hover)',
+            border: `1px solid ${isActive ? 'var(--c-green-soft)' : analyzed ? 'var(--c-info-soft)' : 'var(--c-border)'}`,
+            color: isActive ? 'var(--c-green-bright)' : analyzed ? 'var(--c-info)' : 'var(--c-text-muted)', overflow: 'hidden',
           }}>
             {scrResult && <ReachabilityCanvas reachable={scrResult.reachable} size={cellW} tileLayer={scrResult.tileLayer} />}
             <Box style={{ fontWeight: 700, fontSize: 11, position: 'relative' }}>{bundle.subNames[scr] || bundle.screenNames[scr]}</Box>
             <Box style={{ color: '#555', fontSize: 9, position: 'relative' }}>0x{scr.toString(16).toUpperCase()}</Box>
-            {scrResult && <Box style={{ fontSize: 9, color: '#999', position: 'relative' }}>{scrResult.reachableCount}/{scrResult.totalTiles}</Box>}
+            {scrResult && <Box style={{ fontSize: 9, color: 'var(--c-text-dim)', position: 'relative' }}>{scrResult.reachableCount}/{scrResult.totalTiles}</Box>}
           </Box>
         );
       })}
@@ -113,7 +113,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, linkScreenIndex,
         const localY = (fh.gridRow / 64) * cellH;
         const sz = Math.max(6, cellW * 4 / 64);
         return (
-          <Box key={`fh-${i}`} style={{ position: 'absolute', left: EDGE_PAD + localX - sz / 2, top: EDGE_PAD + localY - sz / 2, width: sz, height: sz, border: '1.5px solid #ffcc44', borderRadius: 1, pointerEvents: 'none', background: 'repeating-linear-gradient(45deg, #ffcc44 0px, #ffcc44 2px, transparent 2px, transparent 4px)', opacity: 0.8 }} />
+          <Box key={`fh-${i}`} style={{ position: 'absolute', left: EDGE_PAD + localX - sz / 2, top: EDGE_PAD + localY - sz / 2, width: sz, height: sz, border: '1.5px solid var(--c-gold)', borderRadius: 1, pointerEvents: 'none', background: 'repeating-linear-gradient(45deg, var(--c-gold) 0px, var(--c-gold) 2px, transparent 2px, transparent 4px)', opacity: 0.8 }} />
         );
       })}
 
@@ -125,7 +125,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, linkScreenIndex,
         const cellTop = EDGE_PAD + row * (cellH + GAP);
         const x = (linkPos.col / 64) * cellW;
         const y = (linkPos.row / 64) * cellH;
-        return <Box style={{ position: 'absolute', left: cellLeft + x - 3, top: cellTop + y - 3, width: 6, height: 6, borderRadius: '50%', background: '#4f8', boxShadow: '0 0 3px #4f8', pointerEvents: 'none' }} />;
+        return <Box style={{ position: 'absolute', left: cellLeft + x - 3, top: cellTop + y - 3, width: 6, height: 6, borderRadius: '50%', background: 'var(--c-green)', boxShadow: '0 0 3px var(--c-green)', pointerEvents: 'none' }} />;
       })()}
 
       {renderHorizEdge(byEdge.north, 'n', EDGE_PAD - 15)}

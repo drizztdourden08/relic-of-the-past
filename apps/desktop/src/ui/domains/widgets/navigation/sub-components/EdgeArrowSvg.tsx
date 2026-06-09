@@ -4,7 +4,7 @@ import { EDGE_COLORS } from '../navigation.constants';
 
 /** A small directional arrow glyph colored by edge direction. */
 const EdgeArrowSvg = ({ edge, size }: { edge: string; size: number }) => {
-  const color = EDGE_COLORS[edge] ?? '#888';
+  const color = EDGE_COLORS[edge] ?? 'var(--c-text-muted)';
   const paths: Record<string, string> = {
     north: 'M8 14 L8 4 M4 7 L8 3 L12 7',
     south: 'M8 2 L8 12 M4 9 L8 13 L12 9',

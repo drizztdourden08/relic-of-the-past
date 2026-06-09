@@ -80,14 +80,14 @@ const IndoorMinimap = ({ bundle, connections, renderResults, linkPos, respawnEnt
     if (byEdge[c.edge]) byEdge[c.edge].push(c);
   }
 
-  const textColor = (edge: string) => (edge === 'north' || edge === 'west' ? '#fff' : '#000');
+  const textColor = (edge: string) => (edge === 'north' || edge === 'west' ? 'var(--c-text)' : '#000');
 
   const renderHorizEdge = (list: ConnectionInfo[], prefix: string, top: number) => list.map((c, i) => {
     const p0 = c.positions[0], p1 = c.positions[c.positions.length - 1];
     const spanW = Math.max(14, ((p1 - p0 + 1) / 64) * mapW);
     const midX = mapLeft + ((p0 + p1 + 1) / 2 / 64) * mapW;
     return (
-      <Box key={`${prefix}${i}`} style={{ position: 'absolute', top, left: Math.round(midX - spanW / 2), width: spanW, height: 14, borderRadius: 2, background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      <Box key={`${prefix}${i}`} style={{ position: 'absolute', top, left: Math.round(midX - spanW / 2), width: spanW, height: 14, borderRadius: 'var(--r-sm)', background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         title={`${getScreenDisplayName(c.targetScreen)} c${p0}-${p1} (${c.positions.length})`}>
         <Text style={{ fontSize: 9, fontWeight: 700, color: textColor(c.edge), lineHeight: 1 }}>{c.positions.length}</Text>
       </Box>
@@ -99,7 +99,7 @@ const IndoorMinimap = ({ bundle, connections, renderResults, linkPos, respawnEnt
     const spanH = Math.max(14, ((p1 - p0 + 1) / 64) * mapH);
     const midY = mapTop + ((p0 + p1 + 1) / 2 / 64) * mapH;
     return (
-      <Box key={`${prefix}${i}`} style={{ position: 'absolute', left, top: Math.round(midY - spanH / 2) - 1, width: 14, height: spanH, borderRadius: 2, background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      <Box key={`${prefix}${i}`} style={{ position: 'absolute', left, top: Math.round(midY - spanH / 2) - 1, width: 14, height: spanH, borderRadius: 'var(--r-sm)', background: EDGE_COLORS[c.edge], display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         title={`${getScreenDisplayName(c.targetScreen)} r${p0}-${p1} (${c.positions.length})`}>
         <Text style={{ fontSize: 9, fontWeight: 700, color: textColor(c.edge), lineHeight: 1 }}>{c.positions.length}</Text>
       </Box>
@@ -108,10 +108,10 @@ const IndoorMinimap = ({ bundle, connections, renderResults, linkPos, respawnEnt
 
   return (
     <Box style={{ position: 'relative', width: '100%', maxWidth: totalW, height: totalH, marginTop: 4, marginLeft: 'auto', marginRight: 'auto' }}>
-      <Box style={{ position: 'absolute', left: mapDivLeft, top: mapDivTop, width: mapW, height: mapH, borderRadius: 3, background: 'rgba(100,255,100,0.08)', border: `${borderW}px solid rgba(100,255,100,0.4)`, overflow: 'hidden' }}>
+      <Box style={{ position: 'absolute', left: mapDivLeft, top: mapDivTop, width: mapW, height: mapH, borderRadius: 'var(--r-sm)', background: 'var(--c-green-soft)', border: `${borderW}px solid var(--c-green-soft)`, overflow: 'hidden' }}>
         {primaryResult && <ReachabilityCanvas reachable={primaryResult.reachable} size={mapW} tileLayer={primaryResult.tileLayer} bounds={{ minRow: 0, maxRow: 63, minCol: 0, maxCol: 63 }} />}
         {primaryResult && (
-          <Box style={{ position: 'absolute', bottom: 2, left: 0, right: 0, textAlign: 'center', fontSize: 9, color: '#999', pointerEvents: 'none' }}>
+          <Box style={{ position: 'absolute', bottom: 2, left: 0, right: 0, textAlign: 'center', fontSize: 9, color: 'var(--c-text-dim)', pointerEvents: 'none' }}>
             {primaryResult.reachableCount}/{primaryResult.totalTiles}
           </Box>
         )}
@@ -134,14 +134,14 @@ const IndoorMinimap = ({ bundle, connections, renderResults, linkPos, respawnEnt
         const y = mapTop + ((fh.gridRow + 0.5) / 64) * mapH;
         const sz = Math.max(6, mapW * 4 / 64);
         return (
-          <Box key={`fh-${i}`} style={{ position: 'absolute', left: x - sz / 2, top: y - sz / 2, width: sz, height: sz, border: '1.5px solid #ffcc44', borderRadius: 1, pointerEvents: 'none', background: 'repeating-linear-gradient(45deg, #ffcc44 0px, #ffcc44 2px, transparent 2px, transparent 4px)', opacity: 0.8 }} />
+          <Box key={`fh-${i}`} style={{ position: 'absolute', left: x - sz / 2, top: y - sz / 2, width: sz, height: sz, border: '1.5px solid var(--c-gold)', borderRadius: 1, pointerEvents: 'none', background: 'repeating-linear-gradient(45deg, var(--c-gold) 0px, var(--c-gold) 2px, transparent 2px, transparent 4px)', opacity: 0.8 }} />
         );
       })}
 
       {linkPos && bundle.screens.includes(linkPos.screen) && (() => {
         const x = mapLeft + ((linkPos.col + 0.5) / 64) * mapW;
         const y = mapTop + ((linkPos.row + 0.5) / 64) * mapH;
-        return <Box style={{ position: 'absolute', left: x - 3, top: y - 3, width: 6, height: 6, borderRadius: '50%', background: '#4f8', boxShadow: '0 0 3px #4f8', pointerEvents: 'none' }} />;
+        return <Box style={{ position: 'absolute', left: x - 3, top: y - 3, width: 6, height: 6, borderRadius: '50%', background: 'var(--c-green)', boxShadow: '0 0 3px var(--c-green)', pointerEvents: 'none' }} />;
       })()}
 
       {renderHorizEdge(byEdge.north, 'n', mapDivTop - 14 + borderW)}

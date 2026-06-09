@@ -13,27 +13,27 @@ const STATUS_BTNS: { key: ReviewStatus; label: string; color: string }[] = [
 const S: Record<string, React.CSSProperties> = {
   root: {
     padding: 8, display: 'flex', flexDirection: 'column', gap: 8,
-    fontSize: 11, color: '#ddd', overflow: 'auto', height: '100%',
+    fontSize: 11, color: 'var(--c-text-dim)', overflow: 'auto', height: '100%',
   },
-  section: { padding: '6px 8px', background: 'rgba(255,255,255,0.03)', borderRadius: 6, border: '1px solid rgba(255,255,255,0.06)' },
-  sectionTitle: { fontSize: 10, fontWeight: 700, color: '#aaa', textTransform: 'uppercase' as const, letterSpacing: 1, marginBottom: 4 },
+  section: { padding: '6px 8px', background: 'var(--c-hover)', borderRadius: 'var(--r-md)', border: '1px solid var(--c-border)' },
+  sectionTitle: { fontSize: 10, fontWeight: 700, color: 'var(--c-text-dim)', textTransform: 'uppercase' as const, letterSpacing: 1, marginBottom: 4 },
   infoBox: { display: 'flex', flexDirection: 'column' as const, gap: 2 },
   infoRow: { display: 'flex', alignItems: 'center', gap: 6, minHeight: 18 },
-  infoLabel: { width: 80, fontSize: 10, color: '#888', flexShrink: 0 },
+  infoLabel: { width: 80, fontSize: 10, color: 'var(--c-text-muted)', flexShrink: 0 },
   btn: {
-    padding: '3px 8px', fontSize: 10, background: 'rgba(255,255,255,0.06)',
-    border: '1px solid rgba(255,255,255,0.12)', borderRadius: 4, color: '#ccc',
+    padding: '3px 8px', fontSize: 10, background: 'var(--c-border)',
+    border: '1px solid var(--c-border)', borderRadius: 'var(--r-sm)', color: 'var(--c-text-dim)',
     cursor: 'pointer', whiteSpace: 'nowrap' as const,
   },
   statusRow: { display: 'flex', gap: 4, marginTop: 4 },
   statusBtn: {
     width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center',
-    fontSize: 14, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.12)',
-    borderRadius: 4, cursor: 'pointer', color: '#666',
+    fontSize: 14, background: 'var(--c-hover)', border: '1px solid var(--c-border)',
+    borderRadius: 'var(--r-sm)', cursor: 'pointer', color: 'var(--c-text-muted)',
   },
   commentInput: {
-    width: '100%', padding: '2px 6px', background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(255,255,255,0.12)', borderRadius: 3, color: '#ccc',
+    width: '100%', padding: '2px 6px', background: 'var(--c-hover)',
+    border: '1px solid var(--c-border)', borderRadius: 'var(--r-sm)', color: 'var(--c-text-dim)',
     fontSize: 10, fontFamily: 'inherit', outline: 'none', marginTop: 3,
   },
 };

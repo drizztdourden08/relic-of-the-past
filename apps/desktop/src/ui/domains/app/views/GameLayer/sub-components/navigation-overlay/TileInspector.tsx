@@ -195,8 +195,8 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex:
           position: 'absolute',
           left: selectionRect.x, top: selectionRect.y,
           width: selectionRect.w, height: selectionRect.h,
-          border: '2px solid #ffee00',
-          background: 'rgba(255, 238, 0, 0.12)',
+          border: '2px solid var(--c-gold)',
+          background: 'var(--c-gold-soft)',
           pointerEvents: 'none', zIndex: 7,
         }} />
       )}
@@ -204,8 +204,8 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex:
         <Box style={{
           position: 'absolute', left: '50%', top: 8,
           transform: 'translateX(-50%)',
-          background: 'rgba(20,180,60,0.92)', color: '#fff',
-          padding: '4px 12px', borderRadius: 4,
+          background: 'var(--c-green)', color: 'var(--c-text)',
+          padding: '4px 12px', borderRadius: 'var(--r-sm)',
           fontFamily: 'monospace', fontSize: 12, fontWeight: 'bold',
           pointerEvents: 'none', zIndex: 8,
         }}>

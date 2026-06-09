@@ -6,16 +6,16 @@ const OverlayLegend = () => {
   return (
     <Box style={{
       position: 'absolute', bottom: 6, right: 6, zIndex: 7,
-      background: 'rgba(10,10,20,0.85)', border: '1px solid rgba(100,200,255,0.2)',
-      borderRadius: 4, padding: '4px 8px', pointerEvents: 'none',
+      background: 'var(--c-glass)', border: '1px solid var(--c-info)',
+      borderRadius: 'var(--r-sm)', padding: '4px 8px', pointerEvents: 'none',
       fontFamily: 'monospace', fontSize: 10, lineHeight: '15px',
       display: 'flex', flexDirection: 'column', gap: 2,
     }}>
-      <LegendItem color="rgba(80,200,255,0.8)" label="reachable (free)" />
-      <LegendItem color="rgba(255,100,180,0.8)" label="reachable (needs item)" />
-      <LegendItem color="#cc5555" label="cliff jump" isArrow />
-      <LegendItem color="#aa44ff" label="stairs (bidirectional)" isArrow />
-      <LegendItem color="rgba(80,200,255,0.8)" border="#00ff88" label="hookshot target" />
+      <LegendItem color="var(--c-info)" label="reachable (free)" />
+      <LegendItem color="var(--c-danger)" label="reachable (needs item)" />
+      <LegendItem color="var(--c-danger)" label="cliff jump" isArrow />
+      <LegendItem color="var(--c-info)" label="stairs (bidirectional)" isArrow />
+      <LegendItem color="var(--c-info)" border="var(--c-green)" label="hookshot target" />
     </Box>
   );
 };
@@ -32,7 +32,7 @@ const LegendItem = ({ color, label, border, isArrow }: { color: string; label: s
           boxSizing: 'border-box', flexShrink: 0,
         }} />
       )}
-      <Text style={{ color: '#ccc' }}>{label}</Text>
+      <Text style={{ color: 'var(--c-text-dim)' }}>{label}</Text>
     </Box>
   );
 };

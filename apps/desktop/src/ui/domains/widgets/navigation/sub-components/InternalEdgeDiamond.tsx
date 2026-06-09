@@ -34,7 +34,7 @@ const InternalEdgeDiamond = ({ connections, screenBundle }: { connections: Conne
           <InternalEdgeSvg edge={conn.edge} fromName={fromName} toName={toName} />
         </Box>
         <Text style={S.cardSub}>{conn.freeTileCount}{conn.itemTileCount > 0 ? `+${conn.itemTileCount}` : ''}</Text>
-        <Text style={{ fontSize: 8, color: conn.layerToggle ? '#f8a' : '#6a8', marginTop: 2 }}>
+        <Text style={{ fontSize: 8, color: conn.layerToggle ? 'var(--c-info)' : 'var(--c-green)', marginTop: 2 }}>
           {conn.layerToggle ? '▲▼ Toggle' : '═ Same'}
         </Text>
         {conn.requirements.length > 0 && (
