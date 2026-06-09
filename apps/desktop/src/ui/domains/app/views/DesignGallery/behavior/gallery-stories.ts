@@ -9,6 +9,7 @@ import { FeedbackStory } from '../sub-components/stories/FeedbackStory';
 import { ContainerStory } from '../sub-components/stories/ContainerStory';
 import { LayoutStory } from '../sub-components/stories/LayoutStory';
 import { DataStory } from '../sub-components/stories/DataStory';
+import { CompositeStory } from '../sub-components/stories/CompositeStory';
 
 interface StoryMeta {
   id: string;
@@ -27,6 +28,7 @@ const STORIES: StoryMeta[] = [
   { id: 'data', label: 'Data & headers', group: 'Components', Component: DataStory },
   { id: 'layout', label: 'Layout', group: 'Components', Component: LayoutStory },
   { id: 'containers', label: 'Containers', group: 'Components', Component: ContainerStory },
+  { id: 'composites', label: 'Composites', group: 'Components', Component: CompositeStory },
 ];
 
 export type { StoryMeta };

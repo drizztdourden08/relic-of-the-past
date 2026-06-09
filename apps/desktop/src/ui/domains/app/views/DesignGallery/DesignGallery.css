@@ -67,6 +67,20 @@
   height: 80px;
 }
 
+.dg-shell-demo {
+  display: flex;
+  height: 220px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+.dg-doc {
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+  line-height: var(--leading-normal);
+}
+
 /* ─── Specimen ─── */
 .dg-specimen {
   border: 1px solid var(--c-border);
