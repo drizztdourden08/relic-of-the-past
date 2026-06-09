@@ -27,6 +27,8 @@ export { Toggle } from './Toggle';
 export { Slider } from './Slider';
 export { RadioGroup } from './RadioGroup';
 export { SegmentedControl } from './SegmentedControl';
+export { ToggleGroup } from './ToggleGroup';
+export type { ToggleOption, ToggleGroupProps } from './ToggleGroup';
 export { TabBar } from './TabBar';
 export { Portal } from './Portal';
 export { ToastContainer } from './Toast';

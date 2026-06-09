@@ -1,25 +1,36 @@
 /* @layer renderer-app @kind component */
-import { Box, IconButton, Badge, StatusBadge } from '../../../../../../design-system/primitives';
+import { Box, Button, IconButton, Badge, StatusBadge } from '../../../../../../design-system/primitives';
 import { Specimen } from '../Specimen';
 
-/** Components › buttons, icon buttons, badges. Demonstrates the gold/green rule. */
+/** Components › buttons, icon buttons, badges — the real primitives. */
 const ButtonStory = () => (
   <Box className="dg-stack">
-    <Specimen label="Buttons" hint="Gold = primary / CTA. Green = positive-go ONLY (Start, Connect, Resume). Plain utilities are secondary-neutral.">
+    <Specimen label="Button tiers" hint="gold primary · green secondary · grey tertiary · ghost · danger — primary & secondary sit next to each other">
       <Box className="dg-row">
-        <Box as="button" className="dg-btn dg-btn--primary">Primary</Box>
-        <Box as="button" className="dg-btn">Secondary</Box>
-        <Box as="button" className="dg-btn dg-btn--ghost">Ghost</Box>
-        <Box as="button" className="dg-btn dg-btn--positive">Start ▸</Box>
-        <Box as="button" className="dg-btn dg-btn--danger">Delete</Box>
-        <Box as="button" className="dg-btn" disabled>Disabled</Box>
+        <Button variant="primary">Primary</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="tertiary">Tertiary</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="danger">Delete</Button>
+        <Button variant="primary" disabled>Disabled</Button>
       </Box>
     </Specimen>
 
-    <Specimen label="IconButton" hint="ghost / danger">
+    <Specimen label="Button sizes">
       <Box className="dg-row">
-        <IconButton label="Close" variant="ghost">✕</IconButton>
-        <IconButton label="Remove" variant="danger">🗑</IconButton>
+        <Button variant="primary" size="sm">Small</Button>
+        <Button variant="primary" size="md">Medium</Button>
+        <Button variant="secondary" icon="▶">With icon</Button>
+      </Box>
+    </Specimen>
+
+    <Specimen label="IconButton" hint="same tiers as Button, square">
+      <Box className="dg-row">
+        <IconButton label="primary" variant="primary">★</IconButton>
+        <IconButton label="secondary" variant="secondary">✓</IconButton>
+        <IconButton label="tertiary" variant="tertiary">⚙</IconButton>
+        <IconButton label="ghost" variant="ghost">✕</IconButton>
+        <IconButton label="danger" variant="danger">🗑</IconButton>
       </Box>
     </Specimen>
 

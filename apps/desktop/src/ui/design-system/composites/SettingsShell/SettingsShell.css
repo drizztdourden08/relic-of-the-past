@@ -1,0 +1,15 @@
+/* @layer renderer-components @kind style */
+
+.settings-shell {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  background: var(--c-bg);
+}
+
+.settings-shell__content {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: var(--space-xl);
+}

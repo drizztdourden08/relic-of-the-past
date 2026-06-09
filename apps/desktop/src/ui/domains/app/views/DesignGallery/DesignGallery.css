@@ -1,89 +1,28 @@
 /* @layer renderer-app @kind style */
 
-.dg-root {
-  display: flex;
-  height: 100%;
-  background: var(--c-bg);
-  color: var(--c-text);
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-}
+/* Chrome (sidebar + scroll panel) is the real SettingsShell/SideNav. These
+   styles are only the gallery-internal layout helpers + token specimens. */
 
-/* ─── Sidebar nav ─── */
-.dg-nav {
-  width: 220px;
-  flex-shrink: 0;
-  overflow-y: auto;
-  padding: var(--space-lg) var(--space-sm);
-  background: var(--c-surface);
-  border-right: 1px solid var(--c-border);
-}
-
-.dg-nav__brand {
-  display: block;
+.dg-brand {
   font-size: var(--text-sm);
   font-weight: var(--weight-semi);
   color: var(--c-gold-bright);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  padding: 0 var(--space-sm) var(--space-md);
 }
 
-.dg-nav__group {
-  margin-bottom: var(--space-md);
-}
-
-.dg-nav__group-title {
-  display: block;
-  font-size: var(--text-xs);
-  color: var(--c-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: var(--space-xs) var(--space-sm);
-}
-
-.dg-nav__item {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: var(--space-xs) var(--space-sm);
-  font-size: var(--text-sm);
-  color: var(--c-text-dim);
-  background: none;
-  border: none;
-  border-radius: var(--r-sm);
-  cursor: pointer;
-}
-
-.dg-nav__item:hover {
-  background: var(--c-hover);
-  color: var(--c-text);
-}
-
-.dg-nav__item--active {
-  background: var(--c-selected);
-  color: var(--c-gold-bright);
-}
-
-/* ─── Canvas ─── */
-.dg-canvas {
-  flex: 1;
-  overflow-y: auto;
-  padding: var(--space-xl);
-}
-
-.dg-canvas__head {
+.dg-canvas-head {
   margin-bottom: var(--space-lg);
 }
 
-.dg-canvas__group {
+.dg-canvas-head__group {
   font-size: var(--text-xs);
   color: var(--c-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 
-.dg-canvas__title {
+.dg-canvas-head__title {
   font-size: var(--text-xl);
   font-weight: var(--weight-semi);
   color: var(--c-text);
@@ -240,68 +179,7 @@
   border: 1px solid var(--c-border-strong);
 }
 
-/* ─── Demo buttons (canonical target hierarchy) ─── */
-.dg-btn {
-  padding: var(--space-xs) var(--space-md);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  color: var(--c-text-dim);
-  background: var(--c-bg);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-md);
-  cursor: pointer;
-  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
-}
-
-.dg-btn:hover {
-  background: var(--c-hover);
-  color: var(--c-text);
-  border-color: var(--c-border-strong);
-}
-
-.dg-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.dg-btn--primary {
-  background: var(--c-gold-dim);
-  border-color: var(--c-gold);
-  color: var(--c-gold-bright);
-}
-
-.dg-btn--primary:hover {
-  background: var(--c-gold);
-  color: var(--c-bg);
-}
-
-.dg-btn--positive {
-  background: var(--c-green-dim);
-  border-color: var(--c-green);
-  color: var(--c-green-bright);
-}
-
-.dg-btn--positive:hover {
-  background: var(--c-green);
-  color: var(--c-bg);
-}
-
-.dg-btn--danger {
-  background: var(--c-danger-dim);
-  border-color: var(--c-danger);
-  color: var(--c-danger);
-}
-
-.dg-btn--ghost {
-  background: none;
-  border-color: transparent;
-}
-
-.dg-btn--ghost:hover {
-  background: var(--c-hover);
-}
-
-/* ─── Demo cards ─── */
+/* ─── Demo containers (no primitive for glass / selected card) ─── */
 .dg-card {
   flex: 1;
   min-width: 160px;
