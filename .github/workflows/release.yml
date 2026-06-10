@@ -26,7 +26,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       - name: Quality gate (lint, typecheck, analyze, WASM export-drift)
         run: npm run ci
@@ -82,7 +82,7 @@ jobs:
         shell: bash
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       - name: Build & Package
         shell: bash

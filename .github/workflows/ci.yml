@@ -22,7 +22,9 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        # npm install (not ci) — the lockfile resolves differently across npm
+        # versions/platforms with the ensure-electron auto-fetch setup; install is tolerant.
+        run: npm install --no-audit --no-fund
 
       - name: Lint, typecheck, analyze, and WASM export-drift check
         run: npm run ci
