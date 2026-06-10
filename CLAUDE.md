@@ -48,9 +48,14 @@ Path aliases: `@shared/*` → `shared/`, `@app/*` → `apps/desktop/src/`.
 
 ## Build & run
 
-> ⚠️ **The WASM build is a SEPARATE MANUAL STEP — it is NOT part of `npm` scripts.**
-> The TS app loads a prebuilt `apps/desktop/public/wasm/zelda3.{js,wasm,data}`.
-> You only rebuild WASM when you change C code in `core/`.
+> ⚠️ **The WASM core auto-builds.** `npm run dev` / `npm run build` run an
+> `ensure-wasm` pre-step (scripts/ensure-wasm.mjs) that (re)builds
+> `apps/desktop/public/wasm/zelda3.{js,wasm}` when it is **missing or any C source is
+> newer** than the last build — otherwise it's a fast no-op. The wasm is **gitignored**
+> (not committed); the build needs Emscripten (`$EMSDK`, default `E:\GameProjects\emsdk`).
+> `npm install` likewise auto-fetches the Electron binary (`ensure-electron`). C changes
+> take effect on the next `dev`/`build`; force a rebuild with `npm run ensure-wasm` or
+> the `build-wasm` skill.
 
 | Task | Command | Notes |
 |------|---------|-------|
@@ -58,7 +63,7 @@ Path aliases: `@shared/*` → `shared/`, `@app/*` → `apps/desktop/src/`.
 | Build the app | `npm run build` | electron-vite production build. |
 | Lint + typecheck | `npm run lint` | `tsc --noEmit && eslint .` |
 | **Analyze whole project** | `npm run analyze` | Classifies + lints **all** file types; `analyze:diff`/`:ci`/`:tag`. See @docs/contributing/file-tagging.md. |
-| **Build WASM** | see `build-wasm` skill | Needs Emscripten SDK at `E:\GameProjects\emsdk`. Run `core/wasm-build/build.bat`. |
+| **Build WASM** | auto on `dev`/`build`; force: `npm run ensure-wasm` | Rebuilds when missing/stale (needs emsdk). Explicit/manual: `build-wasm` skill → `core/wasm-build/build.bat`. |
 | Unit tests | `npx vitest run tests/<file>` | Run only the relevant file, not the whole suite. |
 | E2E / screenshots | `npx playwright test` | |
 

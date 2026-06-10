@@ -10,17 +10,19 @@
 - Emscripten SDK installed (the repo's setup expects it at `E:\GameProjects\emsdk`, providing `emcc`).
 - `emcc` on PATH — which means sourcing the emsdk env in the **same shell** as the build.
 
-## Build (canonical)
+## Build manually (`build.bat` — what `ensure-wasm` invokes)
 
 `core/wasm-build/build.bat` is the build the app actually uses; it writes straight to
-`apps/desktop/public/wasm/` (with debug info). Activate the Emscripten env first:
+`apps/desktop/public/wasm/` (with debug info). `ensure-wasm` calls it for you, but you can run it
+directly. Activate the Emscripten env first:
 
 ```bash
 cmd /c "E:\GameProjects\emsdk\emsdk_env.bat && cd /d <repo>\core\wasm-build && build.bat"
 ```
 
-On success it prints `Build successful!` and the three output files; on failure `BUILD FAILED` with
-the compiler error. After building, restart `npm run dev` (or reload the renderer) to pick up the new module.
+On success it prints `Build successful!` and the two output files (`zelda3.js`, `zelda3.wasm`); on
+failure `BUILD FAILED` with the compiler error. After building, restart `npm run dev` (or reload the
+renderer) to pick up the new module.
 
 ## Two build files
 

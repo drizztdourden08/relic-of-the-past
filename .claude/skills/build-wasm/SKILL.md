@@ -2,13 +2,17 @@
 ---
 
 name: build-wasm
-description: Compile the zelda3 C core to WebAssembly with Emscripten. Use when C code under core/ (game-hooks, zelda3, emscripten_main.c) changed and the running app needs the rebuilt zelda3.{js,wasm,data}, or when the user asks to "rebuild WASM", "compile the C", or reports that a C-side change isn't taking effect
+description: Compile the zelda3 C core to WebAssembly with Emscripten. Use when C code under core/ (game-hooks, zelda3, emscripten_main.c) changed and the running app needs the rebuilt zelda3.{js,wasm}, or when the user asks to "rebuild WASM", "compile the C", or reports that a C-side change isn't taking effect
 ---
 
 # Build the WASM core
 
-The TS app loads a **prebuilt** `apps/desktop/public/wasm/zelda3.{js,wasm,data}`.
-Any change to C code in `core/` has **no effect** until you run this build.
+The TS app loads `apps/desktop/public/wasm/zelda3.{js,wasm}` (gitignored, not committed).
+`npm run dev` / `npm run build` **auto-build it** via the `ensure-wasm` pre-step when it's
+missing or any C source changed (`scripts/ensure-wasm.mjs` — mtime check), so a C change
+takes effect on the next `dev`/`build`. `npm run ensure-wasm` forces a rebuild. Use this
+skill to build **explicitly** (e.g. to surface compiler errors now), or when the auto-build
+is unavailable (non-Windows). It runs the same `build.bat` the auto-build invokes.
 
 ## Prerequisites
 

@@ -5,17 +5,23 @@
 
 - **Node.js ≥ 24** (see [`.nvmrc`](https://github.com/drizztdourden08/relic-of-the-past/blob/master/.nvmrc)).
 - A legally obtained *A Link to the Past* ROM — supplied at runtime, **never committed**.
-- The WebAssembly core is committed **prebuilt**, so a normal build does **not** need the Emscripten
-  SDK. You only need it when changing C under `core/` — see [Building the WASM Core](building-wasm.md).
+- **Emscripten SDK** (Windows; repo expects it at `E:\GameProjects\emsdk` or `$EMSDK`). The WASM core
+  is **gitignored, not committed** — `npm run dev` / `npm run build` **auto-build it** on first run (and
+  whenever C under `core/` changes) via the `ensure-wasm` pre-step. See
+  [Building the WASM Core](building-wasm.md).
 
 ## Run & build
 
 ```bash
-npm install          # install dependencies
-npm run dev          # electron-vite dev server + Electron
-npm run build        # production build (electron-vite)
+npm install          # install deps; auto-fetches the Electron binary (ensure-electron)
+npm run dev          # electron-vite dev server + Electron (auto-builds WASM if missing/stale)
+npm run build        # production build (electron-vite) — also auto-builds WASM
 npm run build:win    # packaged build (see package.json for :mac / :linux)
 ```
+
+`npm install` runs `ensure-electron` (re-fetches Electron's native binary if a bare `node_modules`
+left it out), and `dev`/`build` run `ensure-wasm` first — a fast mtime check that rebuilds the WASM
+core only when it's missing or a C source changed. Force a WASM rebuild with `npm run ensure-wasm`.
 
 For testing, always launch so the app never steals focus or makes noise:
 
