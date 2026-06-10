@@ -3,9 +3,15 @@ import { defineConfig, externalizeDepsPlugin } from 'electron-vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 
+const nodeAlias = {
+  '@shared': resolve(__dirname, 'shared'),
+  '@app': resolve(__dirname, 'apps/desktop/src'),
+};
+
 export default defineConfig({
   main: {
     plugins: [externalizeDepsPlugin()],
+    resolve: { alias: nodeAlias },
     build: {
       outDir: 'dist/electron',
       lib: {
@@ -18,6 +24,7 @@ export default defineConfig({
   },
   preload: {
     plugins: [externalizeDepsPlugin()],
+    resolve: { alias: nodeAlias },
     build: {
       outDir: 'dist/preload',
       lib: {

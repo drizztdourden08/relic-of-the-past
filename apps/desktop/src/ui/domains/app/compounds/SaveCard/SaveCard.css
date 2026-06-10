@@ -20,20 +20,20 @@
 }
 
 .save-card--row:hover {
-  background: var(--color-surface-hover);
+  background: var(--c-hover);
 }
 
 /* ─── Feature variant (standalone hero card) ─── */
 .save-card--feature {
   gap: var(--space-md);
   padding: var(--space-md);
-  background: var(--color-surface-inset);
-  border: 1px solid var(--color-border-subtle);
+  background: var(--c-hover);
+  border: 1px solid var(--c-border);
   border-radius: var(--radius-lg);
 }
 
 .save-card--feature:hover {
-  background: var(--color-surface-hover);
+  background: var(--c-hover);
 }
 
 /* ─── Info column ─── */

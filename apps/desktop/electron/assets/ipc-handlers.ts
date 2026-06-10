@@ -1,27 +1,24 @@
-import { ipcMain } from 'electron';
+import { handle } from '../lib/ipc/handle';
 import { readFile, writeFile, access } from 'fs/promises';
 import { getUserDataPath } from '../lib/paths';
 import { hasAssetForRom, getAssetFileName } from '../roms/store';
-import { getMainWindow } from '../window';
-import { loadRom } from '../../../../shared/asset-extraction/rom/rom-loader';
-import { compileResources } from '../../../../shared/asset-extraction/compile-resources';
+import { logToRenderer } from '../lib/renderer-log';
+import { toArrayBufferOrNull } from '../lib/buffer';
+import { loadRom } from '@shared/asset-extraction/rom/rom-loader';
+import { compileResources } from '@shared/asset-extraction/compile-resources';
 
 const registerAssetHandlers = () => {
-  ipcMain.handle('assets:check', async (_event, romFile: string) => {
-    return hasAssetForRom(romFile);
-  });
+  handle('assets:check', (_event, romFile: string) => hasAssetForRom(romFile));
 
-  ipcMain.handle('assets:load', async (_event, romFile: string) => {
-    const assetFile = getAssetFileName(romFile);
+  handle('assets:load', async (_event, romFile: string) => {
     try {
-      const data = await readFile(getUserDataPath('assets', assetFile));
-      return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
+      return toArrayBufferOrNull(await readFile(getUserDataPath('assets', getAssetFileName(romFile))));
     } catch {
       return null;
     }
   });
 
-  ipcMain.handle('assets:extract', async (_event, romFile: string) => {
+  handle('assets:extract', async (_event, romFile: string) => {
     const localRomPath = getUserDataPath('roms', romFile);
     const assetFile = getAssetFileName(romFile);
     const cachedAssetsPath = getUserDataPath('assets', assetFile);
@@ -32,22 +29,18 @@ const registerAssetHandlers = () => {
       return { success: false, error: `ROM file not found: ${romFile}` };
     }
 
-    const sendLog = (channel: string, level: string, message: string) => {
-      getMainWindow()?.webContents.send('log:entry', { channel, level, message });
-    };
-
-    sendLog('app', 'info', `Compiling assets from ${romFile}...`);
+    logToRenderer('app', 'info', `Compiling assets from ${romFile}...`);
 
     try {
       const rom = loadRom(localRomPath);
-      sendLog('core', 'info', `ROM loaded: ${rom.language} (${rom.description})`);
+      logToRenderer('core', 'info', `ROM loaded: ${rom.language} (${rom.description})`);
       const dat = compileResources(rom);
       await writeFile(cachedAssetsPath, dat);
-      sendLog('app', 'info', `Assets cached as ${assetFile} (${(dat.length / 1024).toFixed(0)} KB)`);
+      logToRenderer('app', 'info', `Assets cached as ${assetFile} (${(dat.length / 1024).toFixed(0)} KB)`);
       return { success: true };
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      sendLog('error', 'error', `Asset compilation failed: ${msg}`);
+      logToRenderer('error', 'error', `Asset compilation failed: ${msg}`);
       return { success: false, error: msg };
     }
   });

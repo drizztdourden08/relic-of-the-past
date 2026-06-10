@@ -104,19 +104,17 @@ interface ExtractionResult {
   removedStale: number;
 }
 
-const extractAllItemSprites = (romPath: string, outputDir: string, defsOrPath?: string | SpriteDef[]): ExtractionResult => {
-  // Load definitions
-  const allSprites: SpriteDef[] = Array.isArray(defsOrPath)
-    ? defsOrPath
-    : (JSON.parse(readFileSync(
-        defsOrPath ?? join(__dirname, '..', '..', 'game', 'sprites', 'definitions.json'),
-        'utf-8',
-      )) as SpriteDefsJson).sprites;
+const DEFAULT_DEFS_PATH = join(__dirname, '..', '..', 'game', 'sprites', 'definitions.json');
 
-  // Load ROM
-  const rom = loadRom(romPath);
+/** Resolve sprite definitions from an array, an explicit JSON path, or the default path. */
+const resolveDefs = (defsOrPath?: string | SpriteDef[]): SpriteDef[] => {
+  if (Array.isArray(defsOrPath)) return defsOrPath;
+  const path = defsOrPath ?? DEFAULT_DEFS_PATH;
+  return (JSON.parse(readFileSync(path, 'utf-8')) as SpriteDefsJson).sprites;
+};
 
-  // Pre-load all needed data from ROM
+/** Shared extraction core: pre-load ROM data, extract every sprite, prune stale files. */
+const runExtraction = (rom: RomData, outputDir: string, allSprites: SpriteDef[]): ExtractionResult => {
   const ctx: ExtractionContext = {
     rom,
     hudSheets: loadHudSheets(rom),
@@ -169,57 +167,13 @@ const extractAllItemSprites = (romPath: string, outputDir: string, defsOrPath?: 
   };
 };
 
-const extractAllItemSpritesFromRom = (rom: RomData, outputDir: string, defsOrPath: string | SpriteDef[]): ExtractionResult => {
-  const allSprites: SpriteDef[] = Array.isArray(defsOrPath)
-    ? defsOrPath
-    : (JSON.parse(readFileSync(defsOrPath, 'utf-8')) as SpriteDefsJson).sprites;
+/** Extract from a ROM file path (loads the ROM, then runs extraction). */
+const extractAllItemSprites = (romPath: string, outputDir: string, defsOrPath?: string | SpriteDef[]): ExtractionResult =>
+  runExtraction(loadRom(romPath), outputDir, resolveDefs(defsOrPath));
 
-  const ctx: ExtractionContext = {
-    rom,
-    hudSheets: loadHudSheets(rom),
-    hudPalette: loadHudPalette(rom),
-    spritePalettes: loadSpritePalettes(rom),
-    receiptSheets: loadReceiptSheets(rom),
-    dropSheets: loadDropSheets(rom),
-  };
-
-  const counts = { hud: 0, 'hud-pause': 0, 'hud-item': 0, fonts: 0, receipt: 0, drop: 0 };
-  const errors: string[] = [];
-
-  for (const spriteDef of allSprites) {
-    try {
-      const img = extractOne(spriteDef.extract, ctx);
-      if (!img) {
-        errors.push(`${spriteDef.file}: extraction returned null`);
-        continue;
-      }
-      const scaled = img.scale(2);
-      scaled.savePng(join(outputDir, `${spriteDef.file}.png`));
-      counts[spriteDef.category]++;
-    } catch (e) {
-      errors.push(`${spriteDef.file}: ${e instanceof Error ? e.message : String(e)}`);
-    }
-  }
-
-  const expected = new Set(allSprites.map(s => `${s.file}.png`));
-  let removedStale = 0;
-  try {
-    const existing = readdirSync(outputDir).filter(f => f.endsWith('.png'));
-    for (const f of existing) {
-      if (!expected.has(f)) {
-        unlinkSync(join(outputDir, f));
-        removedStale++;
-      }
-    }
-  } catch { /* ok */ }
-
-  return {
-    total: counts.hud + counts['hud-pause'] + counts['hud-item'] + counts.fonts + counts.receipt + counts.drop,
-    counts,
-    errors,
-    removedStale,
-  };
-};
+/** Extract from an already-loaded ROM (no disk read for the ROM). */
+const extractAllItemSpritesFromRom = (rom: RomData, outputDir: string, defsOrPath: string | SpriteDef[]): ExtractionResult =>
+  runExtraction(rom, outputDir, resolveDefs(defsOrPath));
 
 export { extractAllItemSprites, extractAllItemSpritesFromRom };
 export type { ExtractionResult };

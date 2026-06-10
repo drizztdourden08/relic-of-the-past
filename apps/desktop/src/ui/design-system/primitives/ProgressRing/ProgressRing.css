@@ -5,11 +5,11 @@
 }
 
 .progress-ring__track {
-  stroke: var(--color-surface-hover-strong);
+  stroke: var(--c-hover);
 }
 
 .progress-ring__fill {
-  stroke: var(--color-gold-base);
+  stroke: var(--c-gold);
   stroke-linecap: round;
   transform: rotate(-90deg);
   transform-origin: 50% 50%;

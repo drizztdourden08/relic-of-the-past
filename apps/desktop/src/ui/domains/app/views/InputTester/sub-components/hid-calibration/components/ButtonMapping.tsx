@@ -2,10 +2,14 @@
 /**
  * Button and axis mapping grid for the HID Calibration Wizard.
  */
+import type { CSSProperties } from 'react';
 import { Box } from '../../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../../design-system/primitives/Text';
+import { Button } from '../../../../../../../design-system/primitives/Button';
 import type { AxisSubStep, CaptureState, InputItem } from '../hid-calibration.type';
 import { STICK_IDS, TRIGGER_IDS } from '../hid-calibration.constants';
+
+const MANUAL_HINT: CSSProperties = { fontSize: 11, color: 'var(--c-text-dim)' };
 
 interface ButtonMappingProps {
   items: InputItem[];
@@ -68,8 +72,8 @@ const ButtonMapping = (props: ButtonMappingProps) => {
               <Text className="hid-cal__input-name" onClick={() => prereqsDone && onClickItem(i)}>{item.label}{item.kind === 'axis' ? ' 🕹️' : ''}</Text>
               {item.result && <Text className="hid-cal__input-result">{item.result}</Text>}
               {canClear && (
-                <Box as="button" className="hid-cal__input-clear" title={`Clear ${item.label}`}
-                  onClick={(e) => { e.stopPropagation(); onClearItem(i); }}>×</Box>
+                <Button variant="bare" className="hid-cal__input-clear" title={`Clear ${item.label}`}
+                  onClick={(e) => { e.stopPropagation(); onClearItem(i); }}>×</Button>
               )}
             </Box>
           );
@@ -78,22 +82,22 @@ const ButtonMapping = (props: ButtonMappingProps) => {
 
       <Box className="hid-cal__prereq-actions">
         {!inputPhaseActive ? (
-          <Box as="button" onClick={onStartButtons} className="input-cal__btn input-cal__btn--primary">
+          <Button variant="primary" size="sm" onClick={onStartButtons}>
             Auto-Advance All
-          </Box>
+          </Button>
         ) : autoAdvance ? (
           <>
-            <Box as="button" onClick={onGoBack} disabled={activeIndex <= 0} className="input-cal__btn">← Back</Box>
-            <Box as="button" onClick={onSkip} className="input-cal__btn">Skip</Box>
-            <Box as="button" onClick={() => setAutoAdvanceWrapped(false)} className="input-cal__btn">Stop Auto</Box>
-            <Box as="button" onClick={() => setInputPhaseActiveWrapped(false)} className="input-cal__btn">Pause</Box>
+            <Button variant="tertiary" size="sm" onClick={onGoBack} disabled={activeIndex <= 0}>← Back</Button>
+            <Button variant="tertiary" size="sm" onClick={onSkip}>Skip</Button>
+            <Button variant="tertiary" size="sm" onClick={() => setAutoAdvanceWrapped(false)}>Stop Auto</Button>
+            <Button variant="tertiary" size="sm" onClick={() => setInputPhaseActiveWrapped(false)}>Pause</Button>
           </>
         ) : (
           <>
-            <Text style={{ fontSize: 11, color: 'var(--c-text-dim)' }}>
+            <Text style={MANUAL_HINT}>
               Click a button above to detect, or click a byte in the grid to assign manually.
             </Text>
-            <Box as="button" onClick={() => setInputPhaseActiveWrapped(false)} className="input-cal__btn">Deselect</Box>
+            <Button variant="tertiary" size="sm" onClick={() => setInputPhaseActiveWrapped(false)}>Deselect</Button>
           </>
         )}
       </Box>

@@ -1,16 +1,26 @@
 /* @layer renderer-components @kind component */
-import { Box, Text } from '../../../../../design-system/primitives';
+import type { CSSProperties } from 'react';
+import { Box, Text, Button } from '../../../../../design-system/primitives';
 import type { ReviewStatus } from '../SpriteDebug.type';
 import { S } from '../SpriteDebug.constants';
+
+const L: Record<string, CSSProperties> = {
+  good: { color: 'var(--c-green-bright)' },
+  warn: { color: 'var(--c-warning)' },
+  dim: { color: 'var(--c-text-dim)' },
+  danger: { color: 'var(--c-danger)' },
+  muted: { color: 'var(--c-text-muted)' },
+  count: { opacity: 0.5, fontSize: 10 },
+};
 
 const Stats = ({ counts, total }: { counts: { good: number; neutral: number; bad: number; yellow: number }; total: number }) => {
   return (
     <Box style={S.stats}>
-      <Text style={{ color: 'var(--c-green-bright)' }}>{counts.good} good</Text>
-      <Text style={{ color: 'var(--c-warning)' }}>{counts.yellow} re-review</Text>
-      <Text style={{ color: 'var(--c-text-dim)' }}>{counts.neutral} unchecked</Text>
-      <Text style={{ color: 'var(--c-danger)' }}>{counts.bad} bad</Text>
-      <Text style={{ color: 'var(--c-text-muted)' }}>/ {total}</Text>
+      <Text style={L.good}>{counts.good} good</Text>
+      <Text style={L.warn}>{counts.yellow} re-review</Text>
+      <Text style={L.dim}>{counts.neutral} unchecked</Text>
+      <Text style={L.danger}>{counts.bad} bad</Text>
+      <Text style={L.muted}>/ {total}</Text>
     </Box>
   );
 };
@@ -22,9 +32,9 @@ const FilterBtns = ({ filter, setFilter }: { filter: 'all' | ReviewStatus; setFi
         const label = v === 'all' ? 'All' : v === 'neutral' ? 'Unchecked' : v === 'good' ? 'Good' : v === 'yellow' ? 'Re-review' : 'Bad';
         const active = filter === v;
         return (
-          <Box as="button" key={v} onClick={() => setFilter(v)} style={{ ...S.filterBtn, ...(active ? S.filterBtnActive : {}) }}>
+          <Button variant="bare" key={v} onClick={() => setFilter(v)} style={{ ...S.filterBtn, ...(active ? S.filterBtnActive : {}) }}>
             {label}
-          </Box>
+          </Button>
         );
       })}
     </>
@@ -36,9 +46,9 @@ const CategoryButton = ({ label, value, current, onClick, count }: {
 }) => {
   const active = current === value;
   return (
-    <Box as="button" onClick={() => onClick(value)} style={{ ...S.catTab, ...(active ? S.catTabActive : {}) }}>
-      {label} <Text style={{ opacity: 0.5, fontSize: 10 }}>({count})</Text>
-    </Box>
+    <Button variant="bare" onClick={() => onClick(value)} style={{ ...S.catTab, ...(active ? S.catTabActive : {}) }}>
+      {label} <Text style={L.count}>({count})</Text>
+    </Button>
   );
 };
 
@@ -48,14 +58,14 @@ const StatusBtns = ({ current, onClick }: { current: ReviewStatus; onClick: (s: 
       {([['✓', 'good', 'var(--c-green-bright)'], ['●', 'yellow', 'var(--c-warning)'], ['—', 'neutral', 'var(--c-text-muted)'], ['✗', 'bad', 'var(--c-danger)']] as const).map(([icon, st, color]) => {
         const active = current === st;
         return (
-          <Box as="button" key={st} onClick={() => onClick(st)} style={{
+          <Button variant="bare" key={st} onClick={() => onClick(st)} style={{
             ...S.statusBtn,
             color: active ? 'var(--c-text)' : color,
             background: active ? color : 'transparent',
             borderColor: active ? color : 'var(--c-border-strong)',
           }}>
             {icon}
-          </Box>
+          </Button>
         );
       })}
     </Box>

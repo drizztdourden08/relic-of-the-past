@@ -2,6 +2,7 @@
 import { useState, useLayoutEffect } from 'react';
 import { Portal } from '../../primitives/Portal';
 import { Box } from '../../primitives/Box';
+import { Button } from '../../primitives/Button';
 import { Text } from '../../primitives/Text';
 import { SubMenu } from './sub-components/SubMenu';
 import type { DropdownMenuProps } from './DropdownMenu.type';
@@ -30,8 +31,8 @@ const DropdownMenu = (props: DropdownMenuProps) => {
           return <SubMenu key={item.key} item={item} />;
         }
         return (
-          <Box
-            as="button"
+          <Button
+            variant="bare"
             key={item.key}
             className="dropdown__item"
             onClick={item.onClick}
@@ -40,7 +41,7 @@ const DropdownMenu = (props: DropdownMenuProps) => {
             {item.icon && <Text className="dropdown__icon">{item.icon}</Text>}
             <Text className="dropdown__label">{item.label}</Text>
             {item.checked && <Text className="dropdown__check">✓</Text>}
-          </Box>
+          </Button>
         );
       })}
     </Box>

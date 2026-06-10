@@ -4,8 +4,9 @@
  * Reads/writes to the shared/game/data/ source files.
  */
 
-import { ipcMain, app } from 'electron';
+import { app } from 'electron';
 import { readFile, writeFile } from 'fs/promises';
+import { handle } from '../lib/ipc/handle';
 import { join, relative, isAbsolute } from 'path';
 
 const getWorkspaceRoot = (): string => {
@@ -31,7 +32,7 @@ const resolveDataFile = (root: string, relPath: string): string => {
 
 const registerScreenEditorHandlers = (): void => {
   // Write a screen definition to source file
-  ipcMain.handle('screenEditor:writeScreen', async (_e, args: {
+  handle('screenEditor:writeScreen', async (_e, args: {
     filePath: string; // relative to shared/game/data/
     code: string;
     screenId: string | null; // null = insert new, string = replace existing
@@ -71,7 +72,7 @@ const registerScreenEditorHandlers = (): void => {
   });
 
   // Write connections to source file
-  ipcMain.handle('screenEditor:writeConnections', async (_e, args: {
+  handle('screenEditor:writeConnections', async (_e, args: {
     filePath: string; // relative to shared/game/data/
     code: string;
   }) => {
@@ -96,7 +97,7 @@ const registerScreenEditorHandlers = (): void => {
   });
 
   // Append new area/location entries to registry files
-  ipcMain.handle('screenEditor:appendRegistry', async (_e, args: {
+  handle('screenEditor:appendRegistry', async (_e, args: {
     type: 'area' | 'location';
     entries: Array<{ id: string; name: string; world?: string; areaId?: string }>;
   }) => {

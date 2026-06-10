@@ -2,13 +2,13 @@
 ---
 
 name: add-wasm-function
-description: Scaffold a new function that crosses the C↔TypeScript WASM boundary in this ALttP port — either a TS→C call (Wasm* export) or a C→TS callback (GameHook_*/window.__on*). Use when adding a new bridge call, exposing a game value/state to the UI, sending a new game event to JS, or when a newly added Wasm function "isn't found"/throws at ccall (usually a missing export-list entry). Touches C, both build files, and the TS bridge together
+description: Scaffold a new function that crosses the C↔TypeScript WASM boundary in this ALttP port — either a TS→C call (Wasm* export) or a C→TS callback (GameHook_*/window.__on*). Use when adding a new bridge call, exposing a game value/state to the UI, sending a new game event to JS, or when a newly added Wasm function "isn't found"/throws at ccall (usually a missing EMSCRIPTEN_KEEPALIVE tag or un-rebuilt WASM). Touches the C impl and the TS bridge
 ---
 
 # Add a WASM bridge function
 
-Crossing the C↔TS boundary touches **three places**. Miss one and it fails
-silently (dead-code-stripped) or throws at the `ccall`. Do all of them, then
+Crossing the C↔TS boundary touches **two places**. Miss one and it fails
+silently (dead-code-stripped) or throws at the `ccall`. Do both, then
 rebuild WASM.
 
 Pick the direction first.
@@ -31,33 +31,32 @@ Choose the file by domain: `state_queries.c` (reads), `cheats.c`,
 EMSCRIPTEN_KEEPALIVE
 int WasmGetMyFlag(void) { return some_game_global ? 1 : 0; }
 
-// Bulk data: fill a static buffer, return its address as int.
-static uint8 g_my_buf[N];
+// Bulk data: fill a static buffer, return its address as int. Pack bytes with
+// the helpers in game-hooks/wasm_buf.h — never hand-roll `v & 0xFF`/`v >> 8`.
+static uint8 g_my_buf[2 + N * 3];
 EMSCRIPTEN_KEEPALIVE
 int WasmGetMyData(void) {
-  g_my_buf[0] = /* ... */;
+  BufW b = BufW_Init(g_my_buf);   // sequential append cursor (count-prefixed lists)
+  BufW_U16(&b, count);
+  for (int i = 0; i < count; i++) { BufW_U16(&b, room[i]); BufW_U8(&b, kind[i]); }
   return (int)g_my_buf;
+  // For a fixed-offset struct buffer, use PutU16(g_my_buf, at, v) instead.
 }
 
 // Taking args:
 EMSCRIPTEN_KEEPALIVE
-void WasmSetMyThing(int value) { /* ... */ }
+void WasmSetMyThing(int value) { /* clamp inputs with clampi() from num_util.h */ }
 ```
 
-- `EMSCRIPTEN_KEEPALIVE` is mandatory.
+- `EMSCRIPTEN_KEEPALIVE` is mandatory — it both **retains and exports** the
+  symbol, so there is **no** `EXPORTED_FUNCTIONS` list to edit in `build.bat` or
+  `Makefile`. That attribute is the single source of truth for what's callable.
 - Only add a declaration to `game_hooks.h` if other **C** code calls it.
+- Shared helpers live in `game-hooks/`: `wasm_buf.h` (`PutU16`/`BufW`),
+  `num_util.h` (`clampi`), `game_constants.h` (`MODULE_*`, `HAPTIC_*`, sprite ids).
+  Reuse them instead of re-deriving magic numbers or byte math.
 
-### Step 2 — export lists (BOTH files)
-
-Add `'_WasmGetMyFlag'` (leading underscore) to the `-sEXPORTED_FUNCTIONS=[...]`
-array in **both**:
-
-- `core/wasm-build/build.bat`  ← canonical (used by the app)
-- `core/wasm-build/Makefile`   ← keep in sync
-
-Use Grep to confirm the symbol now appears in both files.
-
-### Step 3 — TypeScript caller (`apps/desktop/src/lib/game/...`)
+### Step 2 — TypeScript caller (`apps/desktop/src/lib/game/...`)
 
 ```ts
 // scalar
@@ -75,7 +74,7 @@ const first = heap[ptr];   // read N bytes from ptr
 Guard on module readiness like the existing helpers in `wasm-bridge.ts`
 (`if (!mod || currentState.status !== 'running') return;`). Place reads in the
 matching module (`wasm-bridge.ts`, `tracker/`, `navigation-data-source.ts`, …)
-and follow @docs/coding-standards.md (exports at end, destructure first line).
+and follow @docs/contributing/coding-standards.md (exports at end, destructure first line).
 
 ---
 
@@ -114,5 +113,5 @@ this direction.
 1. Run the **build-wasm** skill (C changes don't take effect until rebuilt).
 2. Restart `npm run dev`.
 3. Verify: call the new function / trigger the event and confirm the value or
-   callback fires. If `ccall` throws "function not found", the export-list entry
-   (Step 2 of Direction A) is missing or the WASM wasn't rebuilt.
+   callback fires. If `ccall` throws "function not found", the C function is
+   missing its `EMSCRIPTEN_KEEPALIVE` tag or the WASM wasn't rebuilt.

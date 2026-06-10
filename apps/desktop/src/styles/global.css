@@ -17,12 +17,12 @@
 }
 
 *::-webkit-scrollbar-thumb {
-  background: var(--color-border-subtle, #2a2a30);
+  background: var(--c-border, #2a2a30);
   border-radius: 3px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-muted, #666670);
+  background: var(--c-text-muted, #666670);
 }
 
 *::-webkit-scrollbar-corner {

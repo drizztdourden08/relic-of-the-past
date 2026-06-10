@@ -10,8 +10,7 @@
 import { BaseController, type ControllerButton, type ControllerAxis } from '../../base';
 import { registerController } from '../../registry';
 import type { ButtonMapping, ButtonIcon } from '../../../types/controls';
-
-const icon = (key: string, label: string): ButtonIcon => ({ key, path: null, label });
+import { icon, btn } from './builders';
 
 const PS_ICONS: Record<string, ButtonIcon> = {
   'ps-cross':    icon('ps-cross', 'Cross Button'),
@@ -34,10 +33,6 @@ const PS_ICONS: Record<string, ButtonIcon> = {
   'ps-home':     icon('ps-home', 'PS Button'),
   'ps-touchpad': icon('ps-touchpad', 'Touchpad'),
   'ps-mute':     icon('ps-mute', 'Mute'),
-};
-
-const btn = (snesButton: ButtonMapping['snesButton'], index: number, iconData: ButtonIcon | null): ButtonMapping => {
-  return { snesButton, binding: { type: 'gamepad-button', index }, icon: iconData };
 };
 
 const PS_MAPPINGS: ButtonMapping[] = [

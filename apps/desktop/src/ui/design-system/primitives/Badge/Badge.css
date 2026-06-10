@@ -9,21 +9,21 @@
 }
 
 .badge--success {
-  color: var(--color-green-base);
+  color: var(--c-green);
 }
 
 .badge--warning {
-  color: var(--color-warning-base);
+  color: var(--c-warning);
   animation: badge-pulse 1.5s ease-in-out infinite;
 }
 
 .badge--danger {
-  color: var(--color-danger-base);
+  color: var(--c-danger);
   font-weight: var(--weight-semi);
 }
 
 .badge--neutral {
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
 }
 
 @keyframes badge-pulse {

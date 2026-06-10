@@ -10,6 +10,9 @@ import { webHidReader } from './hid-reader';
 
 type FunctionKeyUpListener = (action: FunctionAction) => void;
 
+/** Analog-stick deflection past this magnitude counts as a pressed direction. */
+const AXIS_THRESHOLD = 0.5;
+
 class FunctionActionEngine {
   private functionMappings: FunctionMapping[] = DEFAULT_FUNCTION_MAPPINGS;
   private functionKeyMap = new Map<string, FunctionAction>(); // "code:s:c:a" → action
@@ -110,76 +113,44 @@ class FunctionActionEngine {
       }
       if (isDuplicate) continue;
 
-      const deviceKey = `gamepad-${gp.index}`;
-
-      // Buttons
-      for (const [btnIndex, action] of this.functionGamepadButtonMap) {
-        if (btnIndex >= gp.buttons.length) continue;
-        const pressed = gp.buttons[btnIndex].pressed;
-        const holdKey = `${deviceKey}:btn:${btnIndex}`;
-        if (pressed && !this.heldFunctionGamepadButtons.has(holdKey)) {
-          this.heldFunctionGamepadButtons.add(holdKey);
-          this.fireAction(action);
-        } else if (!pressed && this.heldFunctionGamepadButtons.has(holdKey)) {
-          this.heldFunctionGamepadButtons.delete(holdKey);
-          this.fireKeyUp(action);
-        }
-      }
-
-      // Axes
-      for (const [axisKey, action] of this.functionGamepadAxisMap) {
-        const [axisStr, dir] = axisKey.split(':');
-        const axisIndex = parseInt(axisStr, 10);
-        if (axisIndex >= gp.axes.length) continue;
-        const val = gp.axes[axisIndex];
-        const active = (dir === '+' && val > 0.5) || (dir === '-' && val < -0.5);
-        const holdKey = `${deviceKey}:axis:${axisKey}`;
-        if (active && !this.heldFunctionGamepadButtons.has(holdKey)) {
-          this.heldFunctionGamepadButtons.add(holdKey);
-          this.fireAction(action);
-        } else if (!active && this.heldFunctionGamepadButtons.has(holdKey)) {
-          this.heldFunctionGamepadButtons.delete(holdKey);
-          this.fireKeyUp(action);
-        }
-      }
+      // Normalize Web Gamepad buttons (objects) to booleans, then share one code path.
+      this.processDeviceState(`gamepad-${gp.index}`, gp.buttons.map((b) => b.pressed), gp.axes);
     }
 
     // --- WebHID controllers (Switch Pro, PlayStation, 8BitDo) ---
     for (const [deviceKey, state] of hidStates) {
-      // Buttons
-      for (const [btnIndex, action] of this.functionGamepadButtonMap) {
-        if (btnIndex >= state.buttons.length) continue;
-        const pressed = state.buttons[btnIndex];
-        const holdKey = `${deviceKey}:btn:${btnIndex}`;
-        if (pressed && !this.heldFunctionGamepadButtons.has(holdKey)) {
-          this.heldFunctionGamepadButtons.add(holdKey);
-          this.fireAction(action);
-        } else if (!pressed && this.heldFunctionGamepadButtons.has(holdKey)) {
-          this.heldFunctionGamepadButtons.delete(holdKey);
-          this.fireKeyUp(action);
-        }
-      }
-
-      // Axes
-      for (const [axisKey, action] of this.functionGamepadAxisMap) {
-        const [axisStr, dir] = axisKey.split(':');
-        const axisIndex = parseInt(axisStr, 10);
-        if (axisIndex >= state.axes.length) continue;
-        const val = state.axes[axisIndex];
-        const active = (dir === '+' && val > 0.5) || (dir === '-' && val < -0.5);
-        const holdKey = `${deviceKey}:axis:${axisKey}`;
-        if (active && !this.heldFunctionGamepadButtons.has(holdKey)) {
-          this.heldFunctionGamepadButtons.add(holdKey);
-          this.fireAction(action);
-        } else if (!active && this.heldFunctionGamepadButtons.has(holdKey)) {
-          this.heldFunctionGamepadButtons.delete(holdKey);
-          this.fireKeyUp(action);
-        }
-      }
+      this.processDeviceState(deviceKey, state.buttons, state.axes);
     }
   }
 
   // ─── Private ───
+
+  /** Run rising/falling-edge detection over one device's buttons + axes. */
+  private processDeviceState(deviceKey: string, buttons: readonly boolean[], axes: readonly number[]): void {
+    for (const [btnIndex, action] of this.functionGamepadButtonMap) {
+      if (btnIndex >= buttons.length) continue;
+      this.edge(buttons[btnIndex], `${deviceKey}:btn:${btnIndex}`, action);
+    }
+    for (const [axisKey, action] of this.functionGamepadAxisMap) {
+      const [axisStr, dir] = axisKey.split(':');
+      const axisIndex = parseInt(axisStr, 10);
+      if (axisIndex >= axes.length) continue;
+      const val = axes[axisIndex];
+      const active = (dir === '+' && val > AXIS_THRESHOLD) || (dir === '-' && val < -AXIS_THRESHOLD);
+      this.edge(active, `${deviceKey}:axis:${axisKey}`, action);
+    }
+  }
+
+  /** Fire the action on a rising edge, the key-up listeners on a falling edge. */
+  private edge(active: boolean, holdKey: string, action: FunctionAction): void {
+    if (active && !this.heldFunctionGamepadButtons.has(holdKey)) {
+      this.heldFunctionGamepadButtons.add(holdKey);
+      this.fireAction(action);
+    } else if (!active && this.heldFunctionGamepadButtons.has(holdKey)) {
+      this.heldFunctionGamepadButtons.delete(holdKey);
+      this.fireKeyUp(action);
+    }
+  }
 
   private rebuild(): void {
     this.functionKeyMap.clear();

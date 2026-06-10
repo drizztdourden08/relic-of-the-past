@@ -26,15 +26,15 @@
 
 .height-level-picker__btn--active {
   background: var(--c-info-soft);
-  border-color: var(--color-gold-base);
-  color: var(--color-text-primary);
+  border-color: var(--c-gold);
+  color: var(--c-text);
 }
 
 .height-level-picker__swatch {
   width: 12px;
   height: 12px;
   border-radius: var(--r-sm);
-  background: var(--color-text-primary);
+  background: var(--c-text);
   flex-shrink: 0;
 }
 

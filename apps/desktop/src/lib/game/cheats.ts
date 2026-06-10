@@ -5,6 +5,7 @@
  */
 
 import { getModule, getGameState } from './wasm-bridge';
+import { voidCall } from './bridge/wasm-call';
 import { enqueue } from './delivery-queue';
 import type { DeliveryAction } from './delivery-queue';
 import { ITEM_ID_TO_NAME } from '@shared/game/items';
@@ -35,11 +36,8 @@ const isReady = (): boolean => {
   return getGameState().status === 'running' && getModule() != null;
 };
 
-const ccall = (fn: string, args: number[]): void => {
-  const mod = getModule();
-  if (!mod) return;
-  mod.ccall(fn, null, args.map(() => 'number'), args);
-};
+/** Pack numeric args into the {argTypes, args} shape voidCall expects. */
+const numArgs = (...args: number[]): { argTypes: string[]; args: unknown[] } => ({ argTypes: args.map(() => 'number'), args });
 
 // ─── Item Giving (routed through delivery queue) ───
 
@@ -66,64 +64,34 @@ const cheatTriggerNpcCheck = (flagType: number, flagMask: number, itemId: number
 
 // ─── Stats ───
 
-const cheatSetHealth = (value: number): void => {
-  if (!isReady()) return;
-  ccall('WasmCheatSetHealth', [value]);
-};
+const cheatSetHealth = (value: number): void => voidCall('WasmCheatSetHealth', numArgs(value));
 
-const cheatSetMaxHealth = (value: number): void => {
-  if (!isReady()) return;
-  ccall('WasmCheatSetMaxHealth', [value]);
-};
+const cheatSetMaxHealth = (value: number): void => voidCall('WasmCheatSetMaxHealth', numArgs(value));
 
-const cheatSetRupees = (amount: number): void => {
-  if (!isReady()) return;
-  ccall('WasmCheatSetRupees', [amount]);
-};
+const cheatSetRupees = (amount: number): void => voidCall('WasmCheatSetRupees', numArgs(amount));
 
-const cheatSetBombs = (count: number): void => {
-  if (!isReady()) return;
-  ccall('WasmCheatSetBombs', [count]);
-};
+const cheatSetBombs = (count: number): void => voidCall('WasmCheatSetBombs', numArgs(count));
 
-const cheatSetArrows = (count: number): void => {
-  if (!isReady()) return;
-  ccall('WasmCheatSetArrows', [count]);
-};
+const cheatSetArrows = (count: number): void => voidCall('WasmCheatSetArrows', numArgs(count));
 
-const cheatRefillMagic = (): void => {
-  if (!isReady()) return;
-  ccall('WasmCheatRefillMagic', []);
-};
+const cheatRefillMagic = (): void => voidCall('WasmCheatRefillMagic');
 
 // ─── Bottles ───
 
-const cheatFillBottle = (slot: 0 | 1 | 2 | 3, contents: BottleContentsValue): void => {
-  if (!isReady()) return;
-  ccall('WasmCheatFillBottle', [slot, contents]);
-};
+const cheatFillBottle = (slot: 0 | 1 | 2 | 3, contents: BottleContentsValue): void =>
+  voidCall('WasmCheatFillBottle', numArgs(slot, contents));
 
 // ─── Combat ───
 
-const cheatKillAllEnemies = (): void => {
-  if (!isReady()) return;
-  ccall('WasmCheatKillAllEnemies', []);
-};
+const cheatKillAllEnemies = (): void => voidCall('WasmCheatKillAllEnemies');
 
-const cheatSetDamageMultiplier = (mult: number): void => {
-  if (!isReady()) return;
-  ccall('WasmCheatSetDamageMultiplier', [Math.max(1, Math.min(255, mult))]);
-};
+const cheatSetDamageMultiplier = (mult: number): void =>
+  voidCall('WasmCheatSetDamageMultiplier', numArgs(Math.max(1, Math.min(255, mult))));
 
-const cheatSetExtraArmorPct = (pct: number): void => {
-  if (!isReady()) return;
-  ccall('WasmCheatSetExtraArmorPct', [Math.max(0, Math.min(100, pct))]);
-};
+const cheatSetExtraArmorPct = (pct: number): void =>
+  voidCall('WasmCheatSetExtraArmorPct', numArgs(Math.max(0, Math.min(100, pct))));
 
-const cheatStartTrace = (frames = 120): void => {
-  if (!isReady()) return;
-  ccall('WasmCheatStartTrace', [frames]);
-};
+const cheatStartTrace = (frames = 120): void => voidCall('WasmCheatStartTrace', numArgs(frames));
 
 export { BottleContents, cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck, cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows, cheatRefillMagic, cheatFillBottle, cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct, cheatStartTrace };
 export type { BottleContentsValue };

@@ -1,0 +1,40 @@
+# Mirrors the in-repo docs/ folder (the source of truth) to the GitHub Wiki.
+# Runs on pushes to master that touch docs/**. The repo's docs/Home.md is the
+# wiki landing page and docs/_Sidebar.md is the wiki navigation menu.
+#
+# One-time prerequisite: enable the Wiki in repo Settings and create one page so
+# the <repo>.wiki.git repository exists before the first sync.
+name: Sync docs → Wiki
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docs-wiki-sync.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+# Avoid concurrent pushes to the wiki repo clobbering each other.
+concurrency:
+  group: wiki-sync
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    # Only sync once the repo is public (wiki is unavailable on private repos
+    # without an org plan). Safe no-op while the project is still private.
+    if: ${{ !github.event.repository.private }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish docs/ to the wiki
+        uses: Andrew-Chen-Wang/github-wiki-action@v4
+        with:
+          path: docs
+          strategy: clone
+          # Keep our explicit Home.md as the landing page (don't auto-convert README.md).
+          preprocess: false
+          commit-message: 'docs: sync wiki from docs/ @ ${{ github.sha }}'

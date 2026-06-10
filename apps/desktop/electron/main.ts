@@ -15,20 +15,43 @@ import { registerSpriteHandlers } from './sprites/ipc-handlers';
 import { registerLanguageHandlers } from './languages/ipc-handlers';
 import { registerSessionHandlers } from './sessions/ipc-handlers';
 import { registerSpriteProtocol } from './protocol/sprite-protocol';
-import { registerInputHandlers, stopInputHandlers, initCalibrationStore, initProfileStore } from './input';
+import { registerInputHandlers, stopInputHandlers } from './input';
 import { registerTestHandlers } from './test/ipc-handlers';
 import { registerDumpLayersHandler } from './debug/dump-layers-handler';
 import { registerDumpNavHandler } from './debug/dump-nav-handler';
 import { registerConnectionHandlers } from './connections/ipc-handlers';
 import { registerScreenEditorHandlers } from './screen-editor/ipc-handlers';
 import { registerShadowCastingHandlers } from './shadow-casting';
+import { registerAppHandlers } from './app/ipc-handlers';
 import { initAutoUpdater, registerUpdaterHandlers } from './updater';
-import { ipcMain } from 'electron';
-import { extractAllItemSprites } from '../../../shared/asset-extraction/item-sprites/extract-items';
-import spriteDefinitions from '../../../shared/game/sprites/definitions.json';
-import { loadRom } from '../../../shared/asset-extraction/rom/rom-loader';
-import { compileResources } from '../../../shared/asset-extraction/compile-resources';
-import { decodeStrings, formatDialogueText } from '../../../shared/asset-extraction/text/dialogue-decoder';
+import { emit } from './lib/ipc/handle';
+
+// Every IPC domain's register fn, gated by environment. ipcMain.handle order is
+// irrelevant, so this list is declarative; window/input/updater wiring that needs
+// the live BrowserWindow stays inline below after createWindow().
+const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
+  { register: registerWindowHandlers },
+  { register: registerAspectRatioHandlers },
+  { register: registerDialogHandlers },
+  { register: registerProfileHandlers },
+  { register: registerRomHandlers },
+  { register: registerAssetHandlers },
+  { register: registerSaveHandlers },
+  { register: registerMsuHandlers },
+  { register: registerSpriteHandlers },
+  { register: registerLanguageHandlers },
+  { register: registerSessionHandlers },
+  { register: registerTestHandlers },
+  { register: registerDumpLayersHandler },
+  { register: registerDumpNavHandler },
+  { register: registerConnectionHandlers },
+  // Screen editor writes to source files — a dev authoring tool only. Never
+  // register its IPC channel in a packaged build (prevents renderer file writes).
+  { register: registerScreenEditorHandlers, devOnly: true },
+  { register: registerShadowCastingHandlers },
+  { register: registerUpdaterHandlers },
+  { register: registerAppHandlers },
+];
 
 // Ensure consistent userData path across dev and production
 app.setName('relic-of-the-past');
@@ -56,37 +79,17 @@ app.whenReady().then(async () => {
   await migrateDataFolder();
   await ensureDataDirectories();
 
-  // Register all IPC handlers
-  registerWindowHandlers();
-  registerAspectRatioHandlers();
-  registerDialogHandlers();
-  registerProfileHandlers();
-  registerRomHandlers();
-  registerAssetHandlers();
-  registerSaveHandlers();
-  registerMsuHandlers();
-  registerSpriteHandlers();
-  registerLanguageHandlers();
-  registerSessionHandlers();
-  registerTestHandlers();
-  registerDumpLayersHandler();
-  registerDumpNavHandler();
-  registerConnectionHandlers();
-  // Screen editor writes to source files — a dev authoring tool only. Never
-  // register its IPC channel in a packaged build (prevents renderer file writes).
-  if (is.dev) registerScreenEditorHandlers();
-  registerShadowCastingHandlers();
-
-  // App info handler
-  ipcMain.handle('app:getUserDataPath', () => app.getPath('userData'));
+  // Register all IPC handlers (see IPC_HANDLERS above)
+  for (const { register, devOnly } of IPC_HANDLERS) {
+    if (!devOnly || is.dev) register();
+  }
 
   // Create the main window
   createWindow();
 
   const mainWindow = getMainWindow()!;
 
-  // Initialize auto-updater
-  registerUpdaterHandlers();
+  // Initialize auto-updater (handlers registered above)
   initAutoUpdater(mainWindow);
 
   // Forward renderer console to stdout when --dump-layers is active
@@ -96,9 +99,8 @@ app.whenReady().then(async () => {
     });
   }
 
-  // Initialize input subsystem (HID, USB, calibration, profiles)
-  initCalibrationStore(dataPath);
-  initProfileStore(dataPath);
+  // Initialize input subsystem (HID, USB) — calibration/profile stores resolve
+  // their paths via the shared getUserDataPath (initialized by initPaths above).
   registerInputHandlers(mainWindow);
 
   // Set up application menu for clipboard shortcuts only (debug items moved to in-app Advanced menu)
@@ -118,10 +120,10 @@ app.whenReady().then(async () => {
   ]));
 
   // Forward window state events to renderer
-  mainWindow.on('maximize', () => mainWindow.webContents.send('window:maximized', true));
-  mainWindow.on('unmaximize', () => mainWindow.webContents.send('window:maximized', false));
-  mainWindow.on('enter-full-screen', () => mainWindow.webContents.send('window:fullscreen', true));
-  mainWindow.on('leave-full-screen', () => mainWindow.webContents.send('window:fullscreen', false));
+  mainWindow.on('maximize', () => emit(mainWindow, 'window:maximized', true));
+  mainWindow.on('unmaximize', () => emit(mainWindow, 'window:maximized', false));
+  mainWindow.on('enter-full-screen', () => emit(mainWindow, 'window:fullscreen', true));
+  mainWindow.on('leave-full-screen', () => emit(mainWindow, 'window:fullscreen', false));
 
   // Persist window size/position/mode on close
   mainWindow.on('close', () => {

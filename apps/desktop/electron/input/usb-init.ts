@@ -151,14 +151,4 @@ const releaseAndClose = async (iface: Interface, device: ReturnType<typeof findB
   device!.close();
 };
 
-const initAllNintendoControllers = async (): Promise<void> => {
-  for (const pid of NEEDS_USB_INIT) {
-    try {
-      await sendUsbInit(NINTENDO_VID, pid);
-    } catch (err) {
-      log(`Init failed for PID ${pid.toString(16)}: ${(err as Error).message}`);
-    }
-  }
-};
-
-export { initAllNintendoControllers, sendUsbInit };
+export { sendUsbInit };

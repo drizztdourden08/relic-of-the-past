@@ -3,9 +3,12 @@
  * DiagnosticsLog — Displays controller event log and HID diagnostics.
  */
 
-import { type RefObject } from 'react';
+import { type RefObject, type CSSProperties } from 'react';
 import { Box } from '../../../../../design-system/primitives/Box';
+import { Button } from '../../../../../design-system/primitives/Button';
 import type { EventEntry } from './useInputCalibration';
+
+const TITLE_ROW: CSSProperties = { display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' };
 
 interface DiagnosticsLogProps {
   events: EventEntry[];
@@ -18,12 +21,11 @@ const DiagnosticsLog = (props: DiagnosticsLogProps) => {
 
   return (
     <Box className="input-cal__section">
-      <Box className="input-cal__section-title" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
+      <Box className="input-cal__section-title" style={TITLE_ROW}>
         Diagnostics
-        <Box
-          as="button"
-          className="input-cal__btn"
-          style={{ fontSize: 'var(--text-xs)', padding: '2px 8px' }}
+        <Button
+          variant="tertiary"
+          size="sm"
           onClick={() => {
             const lines = [
               ...events.map(ev => `[${new Date(ev.time).toLocaleTimeString()}] ${ev.type.toUpperCase()} \u2014 ${ev.id}`),
@@ -33,7 +35,7 @@ const DiagnosticsLog = (props: DiagnosticsLogProps) => {
           }}
         >
           Copy
-        </Box>
+        </Button>
       </Box>
       <Box className="input-cal__log" ref={logRef}>
         {events.map((ev, i) => (

@@ -1,9 +1,15 @@
 /* @layer renderer-widgets @kind component */
+import type { CSSProperties } from 'react';
 import type { ConnectionInfo } from '@shared/game/navigation';
 import { Box, Text } from '../../../../design-system/primitives';
 import { S } from '../styles';
 import { InternalEdgeSvg } from './InternalEdgeSvg';
 import type { useNavigation } from '../useNavigation';
+
+const IL: Record<string, CSSProperties> = {
+  wrapRow: { display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center' },
+  same: { fontSize: 8, color: 'var(--c-green)', marginTop: 2 },
+};
 
 type Props = Pick<ReturnType<typeof useNavigation>, 'internalConnections' | 'screenBundle'>;
 
@@ -41,7 +47,7 @@ const InternalEdgesSection = (props: Props) => {
   return (
     <>
       <Box style={{ ...S.meta, color: 'var(--c-text-dim)', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Internal ({count})</Box>
-      <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center' }}>
+      <Box style={IL.wrapRow}>
         {cards.map(({ conn, paired }, i) => {
           if (screenBundle?.isMulti && !conn.isIntraRoom) {
             const fromName = screenBundle.subNames[conn.sourceScreen!] ?? '?';
@@ -64,7 +70,7 @@ const InternalEdgesSection = (props: Props) => {
               <Box style={S.cardGraphic}>
                 <InternalEdgeSvg edge={conn.edge} fromName={fromCount} toName={toCount} />
               </Box>
-              <Text style={{ fontSize: 8, color: 'var(--c-green)', marginTop: 2 }}>
+              <Text style={IL.same}>
                 ═ Same
               </Text>
             </Box>

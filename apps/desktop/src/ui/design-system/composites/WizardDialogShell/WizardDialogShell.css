@@ -14,7 +14,7 @@
   display: flex;
   gap: var(--space-xs);
   margin-bottom: var(--space-md);
-  border-bottom: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--c-border);
   padding-bottom: var(--space-sm);
 }
 
@@ -23,18 +23,18 @@
   border: none;
   padding: var(--space-xs) var(--space-sm);
   font-size: var(--text-sm);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   cursor: pointer;
   border-radius: var(--radius-sm);
   transition: background var(--transition-fast), color var(--transition-fast);
 }
 
 .wizard-dialog__step:hover {
-  color: var(--color-text-primary);
+  color: var(--c-text);
 }
 
 .wizard-dialog__step--active {
-  background: var(--color-surface-selected);
-  color: var(--color-gold-bright);
+  background: var(--c-selected);
+  color: var(--c-gold-bright);
   font-weight: var(--weight-medium);
 }

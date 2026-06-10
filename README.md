@@ -48,8 +48,8 @@ Download the latest build for your platform from the
 | macOS    | `.dmg` |
 | Linux    | `.AppImage` or `.deb` |
 
-Then launch the app and select your ROM when prompted. See [docs/getting-started.md](docs/getting-started.md)
-and [docs/installation.md](docs/installation.md) for details.
+Then launch the app and select your ROM when prompted. See the [Quick Start](docs/getting-started/quick-start.md)
+and [Installation](docs/getting-started/installation.md) guides for details.
 
 ## Build from source
 
@@ -65,7 +65,7 @@ npm run build:win  # produce a packaged build (see package.json for mac/linux)
 Quality checks (run by CI on every push/PR):
 
 ```bash
-npm run ci         # tsc + eslint + repo analysis + WASM export-drift check
+npm run ci         # tsc + eslint + repo analysis
 ```
 
 > Rebuilding the WebAssembly core is a separate manual step and is only needed when changing C code
@@ -73,21 +73,25 @@ npm run ci         # tsc + eslint + repo analysis + WASM export-drift check
 
 ## How it works
 
-```
-core/zelda3 (vendored C)  ──Emscripten──▶  zelda3.{js,wasm}  ◀──ccall──  React UI (Electron)
+```mermaid
+flowchart LR
+    C["core/zelda3<br/>vendored C decompilation"] -->|"Emscripten"| W["zelda3.js / .wasm<br/>our C↔JS hook layer"]
+    W -->|"ccall / EM_ASM"| UI["React UI in Electron<br/>renderer + main process"]
 ```
 
 A three-layer architecture: the vendored C decompilation, our C↔JS hook layer compiled to WASM, and
-the TypeScript/React renderer. See [docs/architecture.md](docs/architecture.md) and
+the TypeScript/React renderer. See the [Architecture overview](docs/architecture/overview.md) and
 [CLAUDE.md](CLAUDE.md) for the full picture.
 
 ## Documentation
 
-- [Getting started](docs/getting-started.md) · [Installation](docs/installation.md) · [Known limitations](docs/known-limitations.md)
-- [Architecture](docs/architecture.md) · [Coding standards](docs/coding-standards.md) · [Design system](docs/design-system.md)
-- Features: [profiles](docs/features/profiles.md), [saves](docs/features/saves.md),
-  [controllers](docs/features/input-controllers.md), [MSU audio](docs/features/audio-msu.md),
-  [HUD](docs/features/hud.md), and more under [docs/features/](docs/features).
+The full documentation lives in **[`docs/`](docs/)** (also published to the project Wiki):
+
+- **Start here:** [Quick Start](docs/getting-started/quick-start.md) · [Installation](docs/getting-started/installation.md) · [Known limitations](docs/project/known-limitations.md)
+- **User guide:** [profiles](docs/user-guide/profiles.md), [save system](docs/user-guide/save-system.md), [controllers](docs/user-guide/input-controllers.md), [MSU audio](docs/user-guide/audio-msu.md), [HUD](docs/user-guide/hud.md), and more under [docs/user-guide/](docs/user-guide/)
+- **Architecture:** [overview](docs/architecture/overview.md) · [the WASM bridge](docs/architecture/wasm-bridge.md) · [asset extraction](docs/architecture/asset-extraction.md)
+- **Game hooks reference:** [the C↔JS boundary](docs/hooks/overview.md) — every `Wasm*` export & callback
+- **Contributing:** [guide](docs/contributing/index.md) · [coding standards](docs/contributing/coding-standards.md) · [design system](docs/contributing/design-system.md)
 
 ## Credits & license
 

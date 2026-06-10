@@ -7,7 +7,10 @@ import { useHomeTabSaves } from './home-tab/useHomeTabSaves';
 import { HomeTabColumns } from './home-tab/HomeTabColumns';
 import { HomeTabDialogs } from './home-tab/HomeTabDialogs';
 import type { HomeTabProps } from './home-tab/home-tab.type';
+import type { CSSProperties } from 'react';
 import './HomeTab.css';
+
+const CAPITALIZE: CSSProperties = { textTransform: 'capitalize' };
 
 const HomeTab = (props: HomeTabProps) => {
   const { profileId, romFile, isGameRunning, onStartGame, lastPlayed, created, windowMode } = props;
@@ -33,7 +36,7 @@ const HomeTab = (props: HomeTabProps) => {
         {windowMode && (
           <Box className="home-tab__info-card">
             <Text className="home-tab__info-label">Window</Text>
-            <Text className="home-tab__info-value" style={{ textTransform: 'capitalize' }}>{windowMode}</Text>
+            <Text className="home-tab__info-value" style={CAPITALIZE}>{windowMode}</Text>
           </Box>
         )}
       </Box>

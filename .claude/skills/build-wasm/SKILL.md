@@ -33,15 +33,17 @@ error; do not claim success.
 ## After building
 
 - Restart `npm run dev` (or reload the renderer) so the new module is picked up.
-- If you added a new exported function, confirm its `_Wasm...` name is present in
-  the `EXPORTED_FUNCTIONS` list — a missing entry compiles fine but fails at the
-  `ccall` site at runtime. (See the `add-wasm-function` skill.)
+- If you added a new exported function, confirm it's tagged `EMSCRIPTEN_KEEPALIVE`
+  in its `.c` file — that attribute both retains and exports the symbol. There is
+  **no** `EXPORTED_FUNCTIONS` list to update; a missing `KEEPALIVE` compiles fine
+  but fails at the `ccall` site at runtime. (See the `add-wasm-function` skill.)
 
 ## Notes & gotchas
 
 - There is also a `Makefile` (`emmake make`) that writes to `output/` instead of
-  `public/wasm/`. Its `EXPORTED_FUNCTIONS` list has drifted from `build.bat`'s —
-  **prefer `build.bat`**. If you edit one export list, mirror the change in the other.
+  `public/wasm/` — **prefer `build.bat`**. Neither build carries a per-function
+  `EXPORTED_FUNCTIONS` list anymore (exports ride on `EMSCRIPTEN_KEEPALIVE`), so
+  there is nothing to keep in sync between them.
 - Win32-only sources (`opengl.c`, `glsl_shader.c`, `gl_core_3_1.c`,
   `volume_control.c`) and the native `main.c` are intentionally excluded;
   `emscripten_main.c` replaces `main.c`.

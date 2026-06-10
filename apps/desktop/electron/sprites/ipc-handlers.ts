@@ -1,11 +1,13 @@
 /* @layer electron-main @kind logic */
 import { join, basename, extname } from 'path';
-import { ipcMain } from 'electron';
-import { readFile, readdir, mkdir, writeFile, access, rm } from 'fs/promises';
+import { handle } from '../lib/ipc/handle';
+import { readdir, mkdir, access, rm } from 'fs/promises';
 import { getUserDataPath } from '../lib/paths';
-import { getMainWindow } from '../window';
-import { extractAllItemSprites } from '../../../../shared/asset-extraction/item-sprites/extract-items';
-import spriteDefinitions from '../../../../shared/game/sprites/definitions.json';
+import { readJson, writeJson } from '../lib/json-store';
+import { logToRenderer } from '../lib/renderer-log';
+import { makeImportReporter } from '../lib/import-progress';
+import { extractAllItemSprites } from '@shared/asset-extraction/item-sprites/extract-items';
+import spriteDefinitions from '@shared/game/sprites/definitions.json';
 
 const spriteDir = (romFile: string): string => {
   const stem = basename(romFile, extname(romFile));
@@ -13,44 +15,46 @@ const spriteDir = (romFile: string): string => {
 };
 
 const registerSpriteHandlers = (): void => {
-  ipcMain.handle('sprites:extract', async (_event, romFile: string) => {
+  handle('sprites:extract', async (_event, romFile: string) => {
     const localRomPath = getUserDataPath('roms', romFile);
     const outDir = spriteDir(romFile);
+    const report = makeImportReporter('sprite', basename(romFile, extname(romFile)));
 
     try {
       await access(localRomPath);
     } catch {
+      report('error', undefined, undefined, `ROM file not found: ${romFile}`);
       return { success: false, error: `ROM file not found: ${romFile}` };
     }
 
     await mkdir(outDir, { recursive: true });
 
-    const sendLog = (channel: string, level: string, message: string) => {
-      getMainWindow()?.webContents.send('log:entry', { channel, level, message });
-    };
-
-    sendLog('app', 'info', `Extracting sprites from ${romFile}...`);
+    logToRenderer('app', 'info', `Extracting sprites from ${romFile}...`);
+    // Extraction is synchronous and fast — report an indeterminate "decode" phase.
+    report('decode', undefined, undefined, 'Extracting sprites…');
 
     try {
       const result = extractAllItemSprites(localRomPath, outDir, spriteDefinitions.sprites as never);
       if (result.errors.length > 0) {
         for (const err of result.errors) {
-          sendLog('core', 'error', err);
+          logToRenderer('core', 'error', err);
         }
       }
-      sendLog('app', 'info', `Sprites extracted: ${result.total} files (${result.counts.hud} HUD, ${result.counts.receipt} receipt, ${result.counts.drop} drop)`);
+      logToRenderer('app', 'info', `Sprites extracted: ${result.total} files (${result.counts.hud} HUD, ${result.counts.receipt} receipt, ${result.counts.drop} drop)`);
       if (result.removedStale > 0) {
-        sendLog('app', 'info', `Removed ${result.removedStale} stale sprite files`);
+        logToRenderer('app', 'info', `Removed ${result.removedStale} stale sprite files`);
       }
+      report('done');
       return { success: true, count: result.total };
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
-      sendLog('error', 'error', `Sprite extraction failed: ${msg}`);
+      logToRenderer('error', 'error', `Sprite extraction failed: ${msg}`);
+      report('error', undefined, undefined, msg);
       return { success: false, error: msg };
     }
   });
 
-  ipcMain.handle('sprites:check', async (_e, romFile: string) => {
+  handle('sprites:check', async (_e, romFile: string) => {
     const outDir = spriteDir(romFile);
     try {
       const files = await readdir(outDir);
@@ -61,7 +65,7 @@ const registerSpriteHandlers = (): void => {
     }
   });
 
-  ipcMain.handle('sprites:delete', async (_e, romFile: string) => {
+  handle('sprites:delete', async (_e, romFile: string) => {
     const outDir = spriteDir(romFile);
     try {
       await rm(outDir, { recursive: true, force: true });
@@ -71,31 +75,19 @@ const registerSpriteHandlers = (): void => {
     }
   });
 
-  ipcMain.handle('sprites:getPath', async (_e, romFile: string, file: string) => {
+  handle('sprites:getPath', async (_e, romFile: string, file: string) => {
     return join(spriteDir(romFile), `${file}.png`);
   });
 
   // Sprite debug data
-  ipcMain.handle('spriteDebug:load', async () => {
-    try {
-      const data = await readFile(getUserDataPath('sprite-debug.json'), 'utf-8');
-      return JSON.parse(data);
-    } catch { return {}; }
-  });
-  ipcMain.handle('spriteDebug:save', async (_e, data: unknown) => {
-    await writeFile(getUserDataPath('sprite-debug.json'), JSON.stringify(data, null, 2), 'utf-8');
-  });
+  handle('spriteDebug:load', () => readJson(getUserDataPath('sprite-debug.json'), {}));
+  handle('spriteDebug:save', (_e, data: unknown) =>
+    writeJson(getUserDataPath('sprite-debug.json'), data));
 
   // Sprite review data
-  ipcMain.handle('spriteReview:load', async () => {
-    try {
-      const data = await readFile(getUserDataPath('sprite-review.json'), 'utf-8');
-      return JSON.parse(data);
-    } catch { return {}; }
-  });
-  ipcMain.handle('spriteReview:save', async (_e, data: unknown) => {
-    await writeFile(getUserDataPath('sprite-review.json'), JSON.stringify(data, null, 2), 'utf-8');
-  });
+  handle('spriteReview:load', () => readJson(getUserDataPath('sprite-review.json'), {}));
+  handle('spriteReview:save', (_e, data: unknown) =>
+    writeJson(getUserDataPath('sprite-review.json'), data));
 };
 
 export { registerSpriteHandlers };

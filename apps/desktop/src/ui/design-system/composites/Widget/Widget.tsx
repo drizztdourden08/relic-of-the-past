@@ -6,6 +6,7 @@
  */
 import { useState, useCallback, useRef, useMemo } from 'react';
 import { Box } from '../../primitives/Box';
+import { Button } from '../../primitives/Button';
 import { Text } from '../../primitives/Text';
 import type { WidgetState } from './Widget.type';
 import { getWidgetDefinition } from './behavior/createWidgetState';
@@ -101,14 +102,14 @@ const Widget = (props: WidgetProps) => {
       >
         <Text className="widget__title">{label}</Text>
         <Box className="widget__titlebar-actions">
-          <Box
-            as="button"
+          <Button
+            variant="bare"
             ref={gearRef}
             className="widget__btn"
             onClick={() => setSettingsOpen((v) => !v)}
             title="Settings"
-          >⚙</Box>
-          <Box as="button" className="widget__btn" onClick={onClose} title="Close">×</Box>
+          >⚙</Button>
+          <Button variant="bare" className="widget__btn" onClick={onClose} title="Close">×</Button>
         </Box>
       </Box>
 

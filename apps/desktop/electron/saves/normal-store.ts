@@ -1,12 +1,13 @@
+/* @layer electron-main @kind logic */
 import { join } from 'path';
-import { readFile, mkdir, writeFile, readdir, stat, unlink } from 'fs/promises';
 import { randomUUID } from 'crypto';
 import { getProfileSavesDir } from './store';
-import type { NormalSaveInfo } from '../../../../shared/types/saves';
+import { statSaveSlot } from './save-slot';
+import { createManifestStore } from './manifest-store';
+import type { NormalSaveInfo } from '@shared/types/saves';
 
-const getNormalSavesDir = (profileId: string): string => {
-  return join(getProfileSavesDir(profileId), 'normal');
-};
+const getNormalSavesDir = (profileId: string): string =>
+  join(getProfileSavesDir(profileId), 'normal');
 
 interface NormalSaveManifestEntry {
   id: string;
@@ -14,146 +15,46 @@ interface NormalSaveManifestEntry {
   timestamp: number;
 }
 
-const readManifest = async (profileId: string): Promise<NormalSaveManifestEntry[]> => {
-  try {
-    const data = await readFile(join(getNormalSavesDir(profileId), 'manifest.json'), 'utf-8');
-    return JSON.parse(data);
-  } catch {
-    return [];
-  }
-};
-
-const writeManifest = async (profileId: string, entries: NormalSaveManifestEntry[]): Promise<void> => {
-  const dir = getNormalSavesDir(profileId);
-  await mkdir(dir, { recursive: true });
-  await writeFile(join(dir, 'manifest.json'), JSON.stringify(entries, null, 2), 'utf-8');
-};
+const store = createManifestStore<NormalSaveManifestEntry, NormalSaveInfo>({
+  getDir: getNormalSavesDir,
+  toInfo: (e, slot) => ({ id: e.id, name: e.name, timestamp: e.timestamp, size: slot.size, hasScreenshot: slot.hasScreenshot }),
+});
 
 const createNormalSave = async (profileId: string, name: string, data: Buffer, screenshot?: Buffer): Promise<NormalSaveInfo> => {
-  const dir = getNormalSavesDir(profileId);
-  await mkdir(dir, { recursive: true });
-
-  const id = randomUUID().slice(0, 8);
-  const timestamp = Date.now();
-
-  await writeFile(join(dir, `${id}.sav`), data);
-  if (screenshot) {
-    await writeFile(join(dir, `${id}.png`), screenshot);
-  }
-
-  const manifest = await readManifest(profileId);
-  manifest.push({ id, name, timestamp });
-  await writeManifest(profileId, manifest);
-
-  return {
-    id,
-    name,
-    timestamp,
-    size: data.byteLength,
-    hasScreenshot: !!screenshot,
-  };
+  const entry: NormalSaveManifestEntry = { id: randomUUID().slice(0, 8), name, timestamp: Date.now() };
+  await store.append(profileId, entry, data, screenshot);
+  return { id: entry.id, name, timestamp: entry.timestamp, size: data.byteLength, hasScreenshot: !!screenshot };
 };
 
-const listNormalSaves = async (profileId: string): Promise<NormalSaveInfo[]> => {
-  const dir = getNormalSavesDir(profileId);
-  const manifest = await readManifest(profileId);
-  const results: NormalSaveInfo[] = [];
-
-  for (const entry of manifest) {
-    const savPath = join(dir, `${entry.id}.sav`);
-    try {
-      const s = await stat(savPath);
-      let hasScreenshot = false;
-      try {
-        await stat(join(dir, `${entry.id}.png`));
-        hasScreenshot = true;
-      } catch { /* no screenshot */ }
-      results.push({
-        id: entry.id,
-        name: entry.name,
-        timestamp: entry.timestamp,
-        size: s.size,
-        hasScreenshot,
-      });
-    } catch {
-      // File missing — skip orphaned manifest entry
-    }
-  }
-
-  // Return newest first
-  return results.sort((a, b) => b.timestamp - a.timestamp);
-};
-
-const loadNormalSave = async (profileId: string, id: string): Promise<Buffer | null> => {
-  try {
-    return await readFile(join(getNormalSavesDir(profileId), `${id}.sav`));
-  } catch {
-    return null;
-  }
-};
-
-const loadNormalScreenshot = async (profileId: string, id: string): Promise<Buffer | null> => {
-  try {
-    return await readFile(join(getNormalSavesDir(profileId), `${id}.png`));
-  } catch {
-    return null;
-  }
-};
+const listNormalSaves = (profileId: string): Promise<NormalSaveInfo[]> => store.list(profileId);
+const loadNormalSave = (profileId: string, id: string): Promise<Buffer | null> => store.load(profileId, id);
+const loadNormalScreenshot = (profileId: string, id: string): Promise<Buffer | null> => store.loadScreenshot(profileId, id);
+const deleteNormalSave = (profileId: string, id: string): Promise<void> => store.remove(profileId, id);
 
 const overwriteNormalSave = async (profileId: string, id: string, data: Buffer, screenshot?: Buffer): Promise<NormalSaveInfo | null> => {
-  const dir = getNormalSavesDir(profileId);
-  const manifest = await readManifest(profileId);
+  const manifest = await store.readManifest(profileId);
   const entry = manifest.find((e) => e.id === id);
   if (!entry) return null;
 
-  const timestamp = Date.now();
-  entry.timestamp = timestamp;
+  entry.timestamp = Date.now();
+  await store.writePair(profileId, id, data, screenshot);
+  await store.writeManifest(profileId, manifest);
 
-  await writeFile(join(dir, `${id}.sav`), data);
-  if (screenshot) {
-    await writeFile(join(dir, `${id}.png`), screenshot);
-  }
-  await writeManifest(profileId, manifest);
-
-  return {
-    id: entry.id,
-    name: entry.name,
-    timestamp,
-    size: data.byteLength,
-    hasScreenshot: !!screenshot,
-  };
-};
-
-const deleteNormalSave = async (profileId: string, id: string): Promise<void> => {
-  const dir = getNormalSavesDir(profileId);
-  const manifest = await readManifest(profileId);
-  const filtered = manifest.filter((e) => e.id !== id);
-  await writeManifest(profileId, filtered);
-
-  try { await unlink(join(dir, `${id}.sav`)); } catch { /* ignore */ }
-  try { await unlink(join(dir, `${id}.png`)); } catch { /* ignore */ }
+  return { id, name: entry.name, timestamp: entry.timestamp, size: data.byteLength, hasScreenshot: !!screenshot };
 };
 
 const renameNormalSave = async (profileId: string, id: string, newName: string): Promise<NormalSaveInfo | null> => {
-  const dir = getNormalSavesDir(profileId);
-  const manifest = await readManifest(profileId);
+  const manifest = await store.readManifest(profileId);
   const entry = manifest.find((e) => e.id === id);
   if (!entry) return null;
 
   entry.name = newName;
-  await writeManifest(profileId, manifest);
+  await store.writeManifest(profileId, manifest);
 
-  try {
-    const s = await stat(join(dir, `${entry.id}.sav`));
-    let hasScreenshot = false;
-    try {
-      await stat(join(dir, `${entry.id}.png`));
-      hasScreenshot = true;
-    } catch { /* no screenshot */ }
-    return { id: entry.id, name: newName, timestamp: entry.timestamp, size: s.size, hasScreenshot };
-  } catch {
-    return null;
-  }
+  const { sav, png } = store.savPaths(getNormalSavesDir(profileId), id);
+  const slot = await statSaveSlot(sav, png);
+  if (!slot) return null;
+  return { id, name: newName, timestamp: entry.timestamp, size: slot.size, hasScreenshot: slot.hasScreenshot };
 };
 
 export {

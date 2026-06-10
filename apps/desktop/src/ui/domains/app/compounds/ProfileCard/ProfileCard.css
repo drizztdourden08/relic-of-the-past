@@ -5,8 +5,8 @@
   justify-content: space-between;
   width: 100%;
   padding: var(--space-sm) var(--space-md);
-  background: var(--color-bg-raised);
-  border: 1px solid var(--color-border-subtle);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
   border-radius: var(--radius-lg);
   cursor: pointer;
   transition: background var(--transition-normal),
@@ -16,8 +16,8 @@
 }
 
 .profile-card:hover {
-  background: var(--color-bg-elevated);
-  border-color: var(--color-gold-base);
+  background: var(--c-surface);
+  border-color: var(--c-gold);
 }
 
 .profile-card__main {
@@ -29,12 +29,12 @@
 .profile-card__name {
   font-size: var(--text-base);
   font-weight: var(--weight-semi);
-  color: var(--color-text-primary);
+  color: var(--c-text);
 }
 
 .profile-card__rom {
   font-size: var(--text-sm);
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
 }
 
 .profile-card__meta {
@@ -45,5 +45,5 @@
 
 .profile-card__date {
   font-size: var(--text-sm);
-  color: var(--color-text-faint);
+  color: var(--c-text-faint);
 }

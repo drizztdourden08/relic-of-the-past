@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind data */
 import { Box } from '../../../../design-system/primitives/Box';
+import { Button } from '../../../../design-system/primitives/Button';
 import { Text } from '../../../../design-system/primitives/Text';
 import { Image } from '../../../../design-system/primitives/Image';
 import { Icon } from '../../../../design-system/primitives/Icon';
@@ -43,8 +44,8 @@ const SaveSlot = (props: SaveSlotProps) => {
         <Text className="save-slot__num">{slot + 1}</Text>
         {shortcutKey && <Text className="save-slot__key">{shortcutKey}</Text>}
         <Box className="save-slot__btns">
-          <Box
-            as="button"
+          <Button
+            variant="bare"
             className="save-slot__btn save-slot__btn--save"
             onClick={() => onSave(slot)}
             disabled={busy || disableSave}
@@ -52,9 +53,9 @@ const SaveSlot = (props: SaveSlotProps) => {
             aria-label={`Save slot ${slot + 1}`}
           >
             <Icon paths={SAVE_ICON_PATHS} size={12} />
-          </Box>
-          <Box
-            as="button"
+          </Button>
+          <Button
+            variant="bare"
             className="save-slot__btn save-slot__btn--load"
             onClick={() => onLoad(slot)}
             disabled={isEmpty || busy || disableLoad}
@@ -62,7 +63,7 @@ const SaveSlot = (props: SaveSlotProps) => {
             aria-label={`Load slot ${slot + 1}`}
           >
             <Icon paths={LOAD_ICON_PATHS} size={12} />
-          </Box>
+          </Button>
         </Box>
       </Box>
       {!isEmpty && (

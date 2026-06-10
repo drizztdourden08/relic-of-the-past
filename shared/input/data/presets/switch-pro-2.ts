@@ -14,10 +14,9 @@
 import { BaseController, type ControllerButton, type ControllerAxis, type ControllerContext, type ParsedInput, type StickDefaults, type VibrationSegment } from '../../base';
 import { registerController } from '../../registry';
 import type { ButtonMapping, ButtonIcon } from '../../../types/controls';
+import { icon, btn, axis } from './builders';
 
 // ── Icons ──
-
-const icon = (key: string, label: string): ButtonIcon => ({ key, path: null, label });
 
 const ICONS: Record<string, ButtonIcon> = {
   'switch-a':      icon('switch-a', 'A Button'),
@@ -161,14 +160,6 @@ const HAPTIC_LIGHT:  number[] = [0x48, 0x71, 0x20, 0x5a, 0x02];
 const HAPTIC_SILENT: number[] = [0x3f, 0x01, 0xf0, 0x19, 0x00];
 
 // ── SNES Button Mappings ──
-
-const btn = (snesButton: ButtonMapping['snesButton'], index: number, iconData: ButtonIcon | null): ButtonMapping => {
-  return { snesButton, binding: { type: 'gamepad-button', index }, icon: iconData };
-};
-
-const axis = (snesButton: ButtonMapping['snesButton'], axisIndex: number, direction: '+' | '-', iconData: ButtonIcon | null): ButtonMapping => {
-  return { snesButton, binding: { type: 'gamepad-axis', axisIndex, direction }, icon: iconData };
-};
 
 const DEFAULT_MAPPINGS: ButtonMapping[] = [
   btn('A',      0,  ICONS['switch-a']),

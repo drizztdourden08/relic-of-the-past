@@ -7,6 +7,7 @@
  */
 
 import { Box } from '../../../../../../design-system/primitives/Box';
+import { Button } from '../../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../../design-system/primitives/Image';
 import type { DetectedDevice } from '@shared/types/controls';
@@ -73,14 +74,14 @@ const DeviceCard = (props: DeviceCardProps) => {
       data-device-id={device.id}
     >
       <Box className="device-card__left">
-        <Box
-          as="button"
+        <Button
+          variant="bare"
           className={`device-card__icon-btn ${statusClass}`}
           onClick={() => onAssign?.(device)}
           title={statusTitle}
         >
           <Image src={iconSrc} alt={device.deviceFamily} className="device-card__icon" />
-        </Box>
+        </Button>
         {apiLabel && <Text className={`device-card__api device-card__api--${device.inputApi}`}>{apiLabel}</Text>}
         {device.stale && <Text className="device-card__api device-card__api--stale">STALE</Text>}
       </Box>

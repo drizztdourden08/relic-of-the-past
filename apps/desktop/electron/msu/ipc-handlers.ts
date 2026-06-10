@@ -1,75 +1,61 @@
 /* @layer electron-main @kind logic */
-import { join, basename, extname } from 'path';
-import { ipcMain } from 'electron';
+import { join, basename } from 'path';
+import { handle } from '../lib/ipc/handle';
 import { readFile, readdir, mkdir, copyFile, rm, stat } from 'fs/promises';
 import { getUserDataPath } from '../lib/paths';
-import { extractArchiveToTemp, walkFiles } from '../lib/archive';
-import { downloadToTemp } from '../lib/download';
+import { resolveSourceFiles, type ImportSource } from '../lib/import-source';
+import { MSU_EXTENSIONS } from '../lib/extensions';
+import { toArrayBuffer } from '../lib/buffer';
+import { fail, errMessage } from '../lib/result';
+import { makeImportReporter } from '../lib/import-progress';
 
-const MSU_EXTENSIONS = new Set(['.pcm', '.opuz', '.msu']);
+type MsuImportResult = { success: boolean; fileCount?: number; error?: string };
 
-const getMsuDir = (packName: string): string => {
-  return getUserDataPath('msu', packName);
-};
+const getMsuDir = (packName: string): string => getUserDataPath('msu', packName);
 
-const extractArchiveToMsu = async (archivePath: string, msuDir: string): Promise<number> => {
-  const tempDir = await extractArchiveToTemp(archivePath);
+const isMsuFile = (name: string): boolean => /\.(pcm|opuz|msu)$/i.test(name);
+
+// Resolve a source to its MSU tracks and copy them all into the pack dir.
+const installMsuTracks = async (source: ImportSource, packName: string): Promise<MsuImportResult> => {
+  const report = makeImportReporter('msu', packName);
+  let resolved;
   try {
-    await mkdir(msuDir, { recursive: true });
-    const msuFiles = await walkFiles(tempDir, MSU_EXTENSIONS);
-    for (const f of msuFiles) {
-      await copyFile(f, join(msuDir, basename(f)));
+    resolved = await resolveSourceFiles(source, MSU_EXTENSIONS, (s) => report(s.phase, s.loaded, s.total));
+  } catch (err) {
+    report('error', undefined, undefined, errMessage(err));
+    return fail(err);
+  }
+  try {
+    if (resolved.files.length === 0) {
+      const error = 'No audio tracks (.pcm/.opuz/.msu) found in the source. This may be a patch file, not an MSU audio pack.';
+      report('error', undefined, undefined, error);
+      return { success: false, error };
     }
-    return msuFiles.length;
+    const msuDir = getMsuDir(packName);
+    await mkdir(msuDir, { recursive: true });
+    let copied = 0;
+    for (const f of resolved.files) {
+      await copyFile(f, join(msuDir, basename(f)));
+      report('copy', ++copied, resolved.files.length);
+    }
+    report('done');
+    return { success: true, fileCount: resolved.files.length };
+  } catch (err) {
+    report('error', undefined, undefined, errMessage(err));
+    return fail(err);
   } finally {
-    await rm(tempDir, { recursive: true, force: true }).catch(() => {});
+    await resolved.cleanup();
   }
 };
 
 const registerMsuHandlers = (): void => {
-  ipcMain.handle('msu:import', async (_event, packName: string, url: string) => {
-    let tempFile: string | undefined;
-    try {
-      tempFile = await downloadToTemp(url, '.zip');
-      const msuDir = getMsuDir(packName);
-      const fileCount = await extractArchiveToMsu(tempFile, msuDir);
-      if (fileCount === 0) {
-        await rm(msuDir, { recursive: true, force: true }).catch(() => {});
-        return { success: false, error: 'No audio tracks (.pcm/.opuz/.msu) found in the archive. This may be a patch file, not an MSU audio pack.' };
-      }
-      return { success: true, fileCount };
-    } catch (e) {
-      return { success: false, error: `${e instanceof Error ? e.message : e}` };
-    } finally {
-      if (tempFile) await rm(tempFile, { force: true }).catch(() => {});
-    }
-  });
+  handle('msu:import', (_event, packName: string, url: string) =>
+    installMsuTracks({ kind: 'url', url }, packName));
 
-  ipcMain.handle('msu:importFile', async (_event, packName: string, filePath: string) => {
-    try {
-      const msuDir = getMsuDir(packName);
-      const ext = extname(filePath).toLowerCase();
+  handle('msu:importFile', (_event, packName: string, filePath: string) =>
+    installMsuTracks({ kind: 'path', path: filePath }, packName));
 
-      if (ext === '.zip' || ext === '.7z' || ext === '.rar') {
-        const fileCount = await extractArchiveToMsu(filePath, msuDir);
-        if (fileCount === 0) {
-          await rm(msuDir, { recursive: true, force: true }).catch(() => {});
-          return { success: false, error: 'No audio tracks (.pcm/.opuz/.msu) found in the archive. This may be a patch file, not an MSU audio pack.' };
-        }
-        return { success: true, fileCount };
-      } else if (MSU_EXTENSIONS.has(ext)) {
-        await mkdir(msuDir, { recursive: true });
-        await copyFile(filePath, join(msuDir, basename(filePath)));
-        return { success: true, fileCount: 1 };
-      } else {
-        return { success: false, error: 'Unsupported file type. Use .zip, .7z, .rar, .pcm, or .opuz files.' };
-      }
-    } catch (e) {
-      return { success: false, error: `${e instanceof Error ? e.message : e}` };
-    }
-  });
-
-  ipcMain.handle('msu:listPacks', async () => {
+  handle('msu:listPacks', async () => {
     const msuDir = getUserDataPath('msu');
     try {
       const entries = await readdir(msuDir, { withFileTypes: true });
@@ -77,8 +63,7 @@ const registerMsuHandlers = (): void => {
       for (const entry of entries) {
         if (!entry.isDirectory()) continue;
         const packDir = join(msuDir, entry.name);
-        const files = await readdir(packDir);
-        const msuFiles = files.filter((f) => /\.(pcm|opuz|msu)$/i.test(f));
+        const msuFiles = (await readdir(packDir)).filter(isMsuFile);
         let totalSize = 0;
         for (const f of msuFiles) {
           try { totalSize += (await stat(join(packDir, f))).size; } catch { /* skip */ }
@@ -89,29 +74,24 @@ const registerMsuHandlers = (): void => {
     } catch { return []; }
   });
 
-  ipcMain.handle('msu:getPackFiles', async (_event, packName: string) => {
-    const packDir = getUserDataPath('msu', packName);
+  handle('msu:getPackFiles', async (_event, packName: string) => {
+    const packDir = getMsuDir(packName);
     try {
-      const files = await readdir(packDir);
       const results: { name: string; size: number }[] = [];
-      for (const f of files) {
-        if (/\.(pcm|opuz|msu)$/i.test(f)) {
-          try {
-            const s = await stat(join(packDir, f));
-            results.push({ name: f, size: s.size });
-          } catch { /* skip */ }
-        }
+      for (const f of (await readdir(packDir)).filter(isMsuFile)) {
+        try {
+          results.push({ name: f, size: (await stat(join(packDir, f))).size });
+        } catch { /* skip */ }
       }
       return results;
     } catch { return []; }
   });
 
-  ipcMain.handle('msu:deletePack', async (_event, packName: string) => {
-    await rm(getUserDataPath('msu', packName), { recursive: true, force: true });
-  });
+  handle('msu:deletePack', (_event, packName: string) =>
+    rm(getMsuDir(packName), { recursive: true, force: true }));
 
-  ipcMain.handle('msu:getTrackList', async (_event, packName: string) => {
-    const packDir = getUserDataPath('msu', packName);
+  handle('msu:getTrackList', async (_event, packName: string) => {
+    const packDir = getMsuDir(packName);
     try {
       const files = await readdir(packDir);
       const tracks: { fileName: string; trackNum: number; ext: string }[] = [];
@@ -124,13 +104,11 @@ const registerMsuHandlers = (): void => {
     } catch { return []; }
   });
 
-  ipcMain.handle('msu:readTrackFile', async (_event, packName: string, fileName: string) => {
+  handle('msu:readTrackFile', async (_event, packName: string, fileName: string) => {
     if (fileName.includes('..') || fileName.includes('/') || fileName.includes('\\')) {
       throw new Error('Invalid filename');
     }
-    const filePath = join(getUserDataPath('msu', packName), fileName);
-    const buf = await readFile(filePath);
-    return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
+    return toArrayBuffer(await readFile(join(getMsuDir(packName), fileName)));
   });
 };
 

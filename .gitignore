@@ -65,7 +65,6 @@ saves/
 !apps/desktop/electron/saves/
 seeds/
 config/
-scripts/utils/classification-report.csv
 scripts/analyze/report.json
 .claude/worktrees/
 

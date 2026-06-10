@@ -25,21 +25,21 @@
 }
 
 .toast--danger {
-  background: var(--color-danger-dim);
-  border: 1px solid var(--color-danger-base);
-  color: var(--color-danger-bright);
+  background: var(--c-danger-dim);
+  border: 1px solid var(--c-danger);
+  color: var(--c-danger);
 }
 
 .toast--warning {
-  background: var(--color-warning-dim);
-  border: 1px solid var(--color-warning-base);
-  color: var(--color-warning-base);
+  background: var(--c-warning-dim);
+  border: 1px solid var(--c-warning);
+  color: var(--c-warning);
 }
 
 .toast--info {
-  background: color-mix(in srgb, var(--color-info-base) 12%, var(--color-bg-raised));
-  border: 1px solid color-mix(in srgb, var(--color-info-base) 40%, transparent);
-  color: var(--color-info-base);
+  background: color-mix(in srgb, var(--c-info) 12%, var(--c-surface));
+  border: 1px solid color-mix(in srgb, var(--c-info) 40%, transparent);
+  color: var(--c-info);
 }
 
 .toast__message {

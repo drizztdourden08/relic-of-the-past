@@ -32,6 +32,9 @@ uint8 GameHook_GetDamageMultiplier(void);
 // Returns extra armor reduction percentage (0-100). Stacks with armor.
 uint8 GameHook_GetExtraArmorPct(void);
 
+// Applies the extra-armor cheat to an incoming damage value (no-op at 0%).
+uint8 GameHook_ApplyExtraArmor(uint8 dmg);
+
 // ─── Haptic Events (haptic_events.c) ───
 
 // Called when Link starts a sword swing animation.

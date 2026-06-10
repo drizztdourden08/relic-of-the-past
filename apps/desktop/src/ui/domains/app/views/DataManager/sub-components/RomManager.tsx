@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback } from 'react';
+import type { CSSProperties } from 'react';
 import { ImportForm } from './ImportForm';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
@@ -9,6 +10,12 @@ import { EmptyState } from '../../../../../design-system/primitives/EmptyState';
 import { MasterDetailLayout } from '../../../../../design-system/composites/MasterDetailLayout';
 import { ListItemRow } from '../../../../../design-system/composites/ListItemRow';
 import { formatBytes } from '../../../../../../utils/formatBytes';
+
+const IL: Record<string, CSSProperties> = {
+  mono: { fontFamily: 'var(--font-mono)' },
+  green: { color: 'var(--c-green)' },
+  gold: { color: 'var(--c-gold)' },
+};
 
 interface RomManagerProps {
   romStatuses: RomDisplayInfo[];
@@ -75,6 +82,7 @@ const RomManager = (props: RomManagerProps) => {
   const list = (
     <>
       <ImportForm
+        kind="rom"
         placeholder="Paste ROM download URL…"
         accept={['.sfc', '.smc', '.zip', '.7z', '.rar']}
         dropLabel="Drop ROM file here"
@@ -126,7 +134,7 @@ const RomManager = (props: RomManagerProps) => {
               <Text className="detail-panel__value">{formatBytes(detail.size)}</Text>
 
               <Text className="detail-panel__label">Hash</Text>
-              <Text className="detail-panel__value" style={{ fontFamily: 'var(--font-mono)' }}>{detail.hash}</Text>
+              <Text className="detail-panel__value" style={IL.mono}>{detail.hash}</Text>
 
               <Text className="detail-panel__label">Added</Text>
               <Text className="detail-panel__value">{new Date(detail.created).toLocaleDateString()}</Text>
@@ -137,9 +145,9 @@ const RomManager = (props: RomManagerProps) => {
               <Text className="detail-panel__label">Assets</Text>
               <Text className="detail-panel__value">
                 {selectedRom?.extractionStatus === 'ready' ? (
-                  <Text style={{ color: 'var(--color-success)' }}>✓ Extracted{selectedRom.assetSize ? ` (${formatBytes(selectedRom.assetSize)})` : ''}</Text>
+                  <Text style={IL.green}>✓ Extracted{selectedRom.assetSize ? ` (${formatBytes(selectedRom.assetSize)})` : ''}</Text>
                 ) : selectedRom?.extractionStatus === 'extracting' ? (
-                  <Text style={{ color: 'var(--color-gold-base)' }}>⟳ Extracting…</Text>
+                  <Text style={IL.gold}>⟳ Extracting…</Text>
                 ) : (
                   <Button variant="primary" size="sm" onClick={() => selected && onExtractAssets(selected)}>
                     Extract Assets

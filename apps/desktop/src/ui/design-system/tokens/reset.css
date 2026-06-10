@@ -12,8 +12,8 @@
 
 html, body, #root {
   height: 100%;
-  background: var(--color-bg-deep);
-  color: var(--color-text-primary);
+  background: var(--c-bg);
+  color: var(--c-text);
   font-family: var(--font-sans);
   font-size: var(--text-base);
   line-height: var(--leading-normal);
@@ -45,12 +45,12 @@ input, select {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: var(--color-border-subtle);
+  background: var(--c-border);
   border-radius: 3px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-muted);
+  background: var(--c-text-muted);
 }
 
 *::-webkit-scrollbar-corner {

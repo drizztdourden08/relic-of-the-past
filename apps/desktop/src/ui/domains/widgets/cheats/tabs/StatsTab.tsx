@@ -3,7 +3,7 @@
  * StatsTab — Health, rupees, bombs, arrows, magic controls.
  */
 import { useState } from 'react';
-import { NumberInput, RangeInput, Box, Text } from '../../../../design-system/primitives';
+import { NumberInput, RangeInput, Box, Text, Button } from '../../../../design-system/primitives';
 import {
   cheatSetHealth, cheatSetMaxHealth, cheatSetRupees,
   cheatSetBombs, cheatSetArrows, cheatRefillMagic,
@@ -21,26 +21,26 @@ const StatsTab = () => {
       <Box className="cheats-section">
         <Box className="cheats-section__title">Quick Actions</Box>
         <Box className="cheats-row">
-          <Box as="button" className="cheats-btn cheats-btn--primary" onClick={() => { cheatSetHealth(160); cheatSetMaxHealth(160); }}>
+          <Button variant="secondary" size="sm" onClick={() => { cheatSetHealth(160); cheatSetMaxHealth(160); }}>
             Full Heal (20♥)
-          </Box>
-          <Box as="button" className="cheats-btn cheats-btn--primary" onClick={() => cheatSetRupees(999)}>
+          </Button>
+          <Button variant="secondary" size="sm" onClick={() => cheatSetRupees(999)}>
             999 Rupees
-          </Box>
-          <Box as="button" className="cheats-btn cheats-btn--primary" onClick={() => cheatRefillMagic()}>
+          </Button>
+          <Button variant="secondary" size="sm" onClick={() => cheatRefillMagic()}>
             Fill Magic
-          </Box>
+          </Button>
         </Box>
         <Box className="cheats-row">
-          <Box as="button" className="cheats-btn" onClick={() => { cheatSetBombs(99); cheatSetArrows(99); }}>
+          <Button variant="tertiary" size="sm" onClick={() => { cheatSetBombs(99); cheatSetArrows(99); }}>
             Max Bombs & Arrows
-          </Box>
-          <Box as="button" className="cheats-btn cheats-btn--danger" onClick={() => cheatSetHealth(8)}>
+          </Button>
+          <Button variant="danger" size="sm" onClick={() => cheatSetHealth(8)}>
             Set 1♥
-          </Box>
-          <Box as="button" className="cheats-btn cheats-btn--danger" onClick={() => cheatSetHealth(0)}>
+          </Button>
+          <Button variant="danger" size="sm" onClick={() => cheatSetHealth(0)}>
             Kill Link
-          </Box>
+          </Button>
         </Box>
       </Box>
 
@@ -54,8 +54,8 @@ const StatsTab = () => {
               min={0} max={maxHealth} step={8} value={health}
               onChange={e => setHealth(Number(e.target.value))}
             />
-            <Text style={{ fontSize: 11, minWidth: 30 }}>{health / 8}♥</Text>
-            <Box as="button" className="cheats-btn" onClick={() => cheatSetHealth(health)}>Set</Box>
+            <Text className="cheats-stat-val">{health / 8}♥</Text>
+            <Button variant="tertiary" size="sm" onClick={() => cheatSetHealth(health)}>Set</Button>
           </Box>
         </Box>
         <Box className="cheats-row">
@@ -66,8 +66,8 @@ const StatsTab = () => {
               min={8} max={160} step={8} value={maxHealth}
               onChange={e => setMaxHealth(Number(e.target.value))}
             />
-            <Text style={{ fontSize: 11, minWidth: 30 }}>{maxHealth / 8}♥</Text>
-            <Box as="button" className="cheats-btn" onClick={() => cheatSetMaxHealth(maxHealth)}>Set</Box>
+            <Text className="cheats-stat-val">{maxHealth / 8}♥</Text>
+            <Button variant="tertiary" size="sm" onClick={() => cheatSetMaxHealth(maxHealth)}>Set</Button>
           </Box>
         </Box>
       </Box>
@@ -82,7 +82,7 @@ const StatsTab = () => {
               min={0} max={999} value={rupees}
               onChange={v => setRupees(Math.min(999, Math.max(0, v)))}
             />
-            <Box as="button" className="cheats-btn" onClick={() => cheatSetRupees(rupees)}>Set</Box>
+            <Button variant="tertiary" size="sm" onClick={() => cheatSetRupees(rupees)}>Set</Button>
           </Box>
         </Box>
         <Box className="cheats-row">
@@ -93,7 +93,7 @@ const StatsTab = () => {
               min={0} max={99} value={bombs}
               onChange={v => setBombs(Math.min(99, Math.max(0, v)))}
             />
-            <Box as="button" className="cheats-btn" onClick={() => cheatSetBombs(bombs)}>Set</Box>
+            <Button variant="tertiary" size="sm" onClick={() => cheatSetBombs(bombs)}>Set</Button>
           </Box>
         </Box>
         <Box className="cheats-row">
@@ -104,7 +104,7 @@ const StatsTab = () => {
               min={0} max={99} value={arrows}
               onChange={v => setArrows(Math.min(99, Math.max(0, v)))}
             />
-            <Box as="button" className="cheats-btn" onClick={() => cheatSetArrows(arrows)}>Set</Box>
+            <Button variant="tertiary" size="sm" onClick={() => cheatSetArrows(arrows)}>Set</Button>
           </Box>
         </Box>
       </Box>

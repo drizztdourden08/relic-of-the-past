@@ -6,6 +6,7 @@
  */
 
 import { Box } from '../../../../../../design-system/primitives/Box';
+import { Button } from '../../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../../design-system/primitives/Image';
 import type { InputBinding, ButtonIcon, KeyboardBinding } from '@shared/types/controls';
@@ -112,14 +113,14 @@ const BindingRow = (props: BindingRowProps) => {
 
       {/* Clear button */}
       {onClear && !isNone && (
-        <Box
-          as="button"
+        <Button
+          variant="bare"
           className="binding-row__clear"
           title="Clear binding"
           onClick={(e) => { e.stopPropagation(); onClear(); }}
         >
           ✕
-        </Box>
+        </Button>
       )}
     </Box>
   );

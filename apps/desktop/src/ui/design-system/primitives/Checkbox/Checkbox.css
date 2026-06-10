@@ -14,11 +14,11 @@
 .checkbox__input {
   width: 14px;
   height: 14px;
-  accent-color: var(--color-gold-base);
+  accent-color: var(--c-gold);
   cursor: inherit;
 }
 
 .checkbox__label {
   font-size: var(--text-sm);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
 }

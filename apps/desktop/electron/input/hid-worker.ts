@@ -10,6 +10,7 @@
  */
 import { parentPort } from 'worker_threads';
 import HID from 'node-hid';
+import type { WorkerRequest } from './hid-worker-protocol';
 
 /** Blocking sleep for inter-frame pacing (safe in worker threads). */
 const sleepSab = new SharedArrayBuffer(4);
@@ -21,21 +22,7 @@ const sleepMs = (ms: number): void => {
 /** Frame interval in ms — SPC2 haptic endpoint runs at ~250Hz */
 const FRAME_INTERVAL_MS = 5;
 
-interface EnumerateMsg {
-  type: 'enumerate';
-  id: number;
-}
-
-interface VibrateMsg {
-  type: 'vibrate';
-  id: number;
-  devicePath: string;
-  frames: number[][];
-}
-
-type WorkerMsg = EnumerateMsg | VibrateMsg;
-
-parentPort!.on('message', (msg: WorkerMsg) => {
+parentPort!.on('message', (msg: WorkerRequest) => {
   switch (msg.type) {
     case 'enumerate':
       handleEnumerate(msg.id);

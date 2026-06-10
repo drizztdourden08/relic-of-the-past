@@ -1,6 +1,9 @@
 /* @layer renderer-widgets @kind component */
+import type { CSSProperties } from 'react';
 import { Svg, SvgPath } from '../../../../design-system/primitives';
 import { EDGE_COLORS } from '../navigation.constants';
+
+const SVG_STYLE: CSSProperties = { flexShrink: 0 };
 
 /** A small directional arrow glyph colored by edge direction. */
 const EdgeArrowSvg = ({ edge, size }: { edge: string; size: number }) => {
@@ -12,7 +15,7 @@ const EdgeArrowSvg = ({ edge, size }: { edge: string; size: number }) => {
     east: 'M2 8 L12 8 M9 4 L13 8 L9 12',
   };
   return (
-    <Svg width={size} height={size} viewBox="0 0 16 16" style={{ flexShrink: 0 }}>
+    <Svg width={size} height={size} viewBox="0 0 16 16" style={SVG_STYLE}>
       <SvgPath d={paths[edge] ?? paths.east} stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
     </Svg>
   );

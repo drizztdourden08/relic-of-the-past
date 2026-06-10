@@ -114,8 +114,7 @@ int WasmGetToggleFloorPositions(void) {
   g_toggle_floor_debug[1] = 0;
   for (uint8 i = 0; i < count; i++) {
     uint16 pos = dung_toggle_floor_pos[i];
-    g_toggle_floor_debug[2 + i * 4 + 0] = (uint8)(pos & 0xFF);
-    g_toggle_floor_debug[2 + i * 4 + 1] = (uint8)(pos >> 8);
+    PutU16(g_toggle_floor_debug, 2 + i * 4, pos);
     g_toggle_floor_debug[2 + i * 4 + 2] = (uint8)(pos / 64);  // row
     g_toggle_floor_debug[2 + i * 4 + 3] = (uint8)(pos % 64);  // col
   }

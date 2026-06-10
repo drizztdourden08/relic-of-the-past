@@ -1,5 +1,11 @@
 /* @layer renderer-widgets @kind component */
+import type { CSSProperties } from 'react';
 import { Text } from '../../../../design-system/primitives';
+
+const IL: Record<string, CSSProperties> = {
+  emoji: { fontSize: 12, marginRight: 2 },
+  chip: { fontSize: 10, color: 'var(--c-warning)', marginRight: 4, background: 'var(--c-warning-soft)', padding: '0 3px', borderRadius: 'var(--r-sm)' },
+};
 
 const REQ_ICONS: Record<string, { icon: string; color: string }> = {
   flippers: { icon: '🏊', color: '#48f' },
@@ -20,9 +26,9 @@ const REQ_ICONS: Record<string, { icon: string; color: string }> = {
 const ReqIcon = ({ req }: { req: string }) => {
   const info = REQ_ICONS[req];
   if (info) {
-    return <Text title={req} style={{ fontSize: 12, marginRight: 2 }}>{info.icon}</Text>;
+    return <Text title={req} style={IL.emoji}>{info.icon}</Text>;
   }
-  return <Text style={{ fontSize: 10, color: 'var(--c-warning)', marginRight: 4, background: 'var(--c-warning-soft)', padding: '0 3px', borderRadius: 'var(--r-sm)' }}>{req}</Text>;
+  return <Text style={IL.chip}>{req}</Text>;
 };
 
 export { ReqIcon };

@@ -20,29 +20,43 @@ import path from 'path';
 import type { OpenDevice } from './hid-constants';
 import { buildSegmentFrames, buildPatternFrames, writeFramesDirect, buildSilentFrame } from './hid-haptics';
 import { scanAndOpenReader } from './hid-reader-scan';
+import { ForwardStats } from './hid-forward-stats';
+import type { WorkerResult, WorkerMessage } from './hid-worker-protocol';
+import { emit } from '../lib/ipc/handle';
+import type { EventContract } from '@shared/ipc';
 
 class HidInputReader {
   // Non-private so hid-reader-scan can operate on the instance (compile-time only).
   devices: OpenDevice[] = [];
   private scanInterval: ReturnType<typeof setInterval> | null = null;
   private window: BrowserWindow | null = null;
+  /** True only while the renderer frame is alive and loaded. Gates report forwarding
+   *  so we never call webContents.send during a reload/navigation/crash — which would
+   *  make Electron log "Render frame was disposed…" for every (60-125Hz) HID report. */
+  private rendererReady = false;
   private worker: Worker | null = null;
   private workerReqId = 0;
-  private workerCallbacks = new Map<number, (result: any) => void>();
-
-  // ── Main-process send timing ──
-  private _fwdLastTime = 0;
-  private _fwdGapMax = 0;
-  private _fwdBursts = 0;
-  private _fwdCount = 0;
-  private _fwdLogTime = 0;
+  private workerCallbacks = new Map<number, (result: WorkerResult) => void>();
+  private fwdStats = new ForwardStats();
 
   /** Start scanning for controllers and reading input. */
   start(win: BrowserWindow): void {
     this.window = win;
+    this.trackRendererReadiness(win);
     this.log(`HID input reader starting...`);
     this.scanAndOpen();
     this.scanInterval = setInterval(() => this.scanAndOpen(), 3000);
+  }
+
+  /** Track when the renderer frame is safe to send to (loaded, not navigating/gone). */
+  private trackRendererReadiness(win: BrowserWindow): void {
+    const wc = win.webContents;
+    this.rendererReady = !wc.isLoading();
+    wc.on('did-stop-loading', () => { this.rendererReady = true; });
+    wc.on('did-finish-load', () => { this.rendererReady = true; });
+    wc.on('did-start-loading', () => { this.rendererReady = false; });
+    wc.on('render-process-gone', () => { this.rendererReady = false; });
+    wc.on('destroyed', () => { this.rendererReady = false; });
   }
 
   /** Stop all readers and close devices. Sends SILENT haptic frame before closing. */
@@ -117,9 +131,9 @@ class HidInputReader {
     const frames = buildPatternFrames(pattern, gapMs);
     this.log(`vibratePattern: dispatching ${frames.length} frames to worker for ${deviceKey} path=${dev.path}`);
     this.workerRequest({ type: 'vibrate', devicePath: dev.path, frames })
-      .then((result: any) => {
+      .then((result) => {
         this.log(`vibratePattern worker result: ${JSON.stringify(result)}`);
-        if (!result.ok || result.writeErrors > 0) {
+        if (!result.ok || (result.writeErrors ?? 0) > 0) {
           this.log(`Worker vibrate issue — falling back to direct write`);
           writeFramesDirect(dev, frames);
         }
@@ -137,35 +151,35 @@ class HidInputReader {
     if (!this.worker) {
       const workerPath = path.join(__dirname, 'hid-worker.js');
       this.worker = new Worker(workerPath);
-      this.worker.on('message', (msg: { id?: number; type?: string; msg?: string; [k: string]: any }) => {
+      this.worker.on('message', (msg: WorkerMessage) => {
         if (msg.type === 'log') {
           this.log(`[worker] ${msg.msg}`);
           return;
         }
-        const cb = this.workerCallbacks.get(msg.id!);
+        const cb = this.workerCallbacks.get(msg.id);
         if (cb) {
-          this.workerCallbacks.delete(msg.id!);
+          this.workerCallbacks.delete(msg.id);
           cb(msg);
         }
       });
-      this.worker.on('error', (err) => {
+      this.worker.on('error', (err: Error) => {
         this.log(`HID worker error: ${err.message}`);
       });
     }
     return this.worker;
   }
 
-  private workerRequest<T = any>(msg: Record<string, any>): Promise<T> {
+  private workerRequest(msg: Record<string, unknown>): Promise<WorkerResult> {
     const id = ++this.workerReqId;
     const w = this.ensureWorker();
-    return new Promise<T>((resolve) => {
+    return new Promise<WorkerResult>((resolve) => {
       this.workerCallbacks.set(id, resolve);
       w.postMessage({ ...msg, id });
     });
   }
 
   async enumerateDevicesAsync(): Promise<HID.Device[]> {
-    const result = await this.workerRequest<{ ok: boolean; devices?: HID.Device[]; error?: string }>({ type: 'enumerate' });
+    const result = await this.workerRequest({ type: 'enumerate' });
     if (result.ok && result.devices) return result.devices;
     throw new Error(result.error ?? 'enumerate failed');
   }
@@ -179,26 +193,12 @@ class HidInputReader {
   // ── Report forwarding ──
 
   forwardReport(dev: OpenDevice, data: Buffer): void {
-    if (!this.window || this.window.isDestroyed()) return;
+    if (!this.window || this.window.isDestroyed() || !this.rendererReady) return;
 
-    const now = performance.now();
-    if (this._fwdLastTime > 0) {
-      const gap = now - this._fwdLastTime;
-      if (gap > this._fwdGapMax) this._fwdGapMax = gap;
-      if (gap < 1) this._fwdBursts++;
-    }
-    this._fwdLastTime = now;
-    this._fwdCount++;
-    if (now - this._fwdLogTime > 2000 && this._fwdCount > 0) {
-      const msg = `[HID-MAIN] sent=${this._fwdCount} maxGap=${this._fwdGapMax.toFixed(1)}ms bursts=${this._fwdBursts}`;
-      this.send('hid:main-perf', msg);
-      this._fwdCount = 0;
-      this._fwdGapMax = 0;
-      this._fwdBursts = 0;
-      this._fwdLogTime = now;
-    }
+    const perf = this.fwdStats.record(performance.now());
+    if (perf) this.send('hid:main-perf', perf);
 
-    this.window.webContents.send('hid:report', dev.key, dev.vid, dev.pid, data);
+    this.send('hid:report', dev.key, dev.vid, dev.pid, data);
   }
 
   // ── Utilities ──
@@ -208,10 +208,8 @@ class HidInputReader {
     this.devices = this.devices.filter(d => d !== dev);
   }
 
-  send(channel: string, data: unknown): void {
-    if (this.window && !this.window.isDestroyed()) {
-      this.window.webContents.send(channel, data);
-    }
+  send<K extends keyof EventContract>(channel: K, ...args: Parameters<EventContract[K]>): void {
+    if (this.window) emit(this.window, channel, ...args);
   }
 
   log(msg: string): void {

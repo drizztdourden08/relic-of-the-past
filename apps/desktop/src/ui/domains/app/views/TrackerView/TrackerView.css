@@ -15,7 +15,7 @@
   top: 38px; /* below titlebar */
   bottom: 0;
   width: 380px;
-  color: var(--color-text-primary);
+  color: var(--c-text);
   display: flex;
   flex-direction: column;
   z-index: var(--z-panel);
@@ -124,7 +124,7 @@
 .tracker-panel__icon-btn {
   background: none;
   border: 1px solid transparent;
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   font-size: var(--text-base);
   width: 22px;
   height: 22px;
@@ -138,7 +138,7 @@
 
 .tracker-panel__icon-btn:hover {
   background: var(--c-hover);
-  color: var(--color-text-primary);
+  color: var(--c-text);
 }
 
 /* ─── Checks scrollable area ─── */
@@ -154,7 +154,7 @@
 .tracker-view__filtered-stats {
   padding: var(--space-xs) var(--space-md);
   font-size: var(--text-xs);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   border-bottom: 1px solid var(--c-border);
   flex-shrink: 0;
 }
@@ -181,7 +181,7 @@
   font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   margin-bottom: var(--space-xs);
 }
 
@@ -219,7 +219,7 @@
 .tracker-inventory__name {
   font-size: var(--text-xs);
   text-align: center;
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   line-height: 1.1;
   margin-top: var(--space-xs);
   max-width: 40px;

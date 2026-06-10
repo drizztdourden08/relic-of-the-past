@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react';
 import { DropZone } from '../../../../../design-system/primitives/DropZone';
 import { TextInput } from '../../../../../design-system/primitives/TextInput';
 import { Box } from '../../../../../design-system/primitives/Box';
+import { Button } from '../../../../../design-system/primitives/Button';
 import './MsuImport.css';
 
 interface MsuImportProps {
@@ -88,14 +89,14 @@ const MsuImport = (props: MsuImportProps) => {
           onKeyDown={handleKeyDown}
           disabled={busy}
         />
-        <Box
-          as="button"
+        <Button
+          variant="bare"
           className="msu-import__download-btn"
           onClick={handleDownload}
           disabled={busy || !url.trim()}
         >
           {busy ? '…' : 'Download'}
-        </Box>
+        </Button>
       </Box>
       <Box className="msu-import__divider">or</Box>
       <DropZone

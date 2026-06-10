@@ -24,7 +24,7 @@ interface PageRouterProps {
     importingRom: boolean;
     loadingProfile: string | null;
     loadProfileForGame: (profile: Profile) => Promise<void>;
-    refreshProfilesAndRoms: () => Promise<void>;
+    refreshProfilesAndRoms: () => Promise<unknown>;
     handleSelectProfile: (profile: Profile) => Promise<void>;
     handleCreateProfile: (name: string, romFile: string, language?: string, msuPack?: string) => Promise<void>;
     handleDeleteProfile: (id: string) => void;

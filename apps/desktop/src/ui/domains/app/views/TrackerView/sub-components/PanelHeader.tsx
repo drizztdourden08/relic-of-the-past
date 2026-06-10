@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { SegmentedControl, Slider, Box, Text } from '../../../../../design-system/primitives';
+import { SegmentedControl, Slider, Box, Text, Button } from '../../../../../design-system/primitives';
 import { MODE_OPTIONS } from '../TrackerView.constants';
 import type { PanelHeaderProps } from '../TrackerView.type';
 
@@ -27,12 +27,12 @@ const PanelHeader = ({ title, panelSettings, onSettingsChange, onClose, onPopOut
           showValue={false}
         />
         {showPopOut && onPopOut && (
-          <Box as="button" className="tracker-panel__icon-btn" onClick={onPopOut} title="Pop out">⎋</Box>
+          <Button variant="bare" className="tracker-panel__icon-btn" onClick={onPopOut} title="Pop out">⎋</Button>
         )}
         {onDock && (
-          <Box as="button" className="tracker-panel__icon-btn" onClick={onDock} title="Dock back">⎌</Box>
+          <Button variant="bare" className="tracker-panel__icon-btn" onClick={onDock} title="Dock back">⎌</Button>
         )}
-        <Box as="button" className="tracker-panel__icon-btn" onClick={onClose} title="Close">×</Box>
+        <Button variant="bare" className="tracker-panel__icon-btn" onClick={onClose} title="Close">×</Button>
       </Box>
     </Box>
   );

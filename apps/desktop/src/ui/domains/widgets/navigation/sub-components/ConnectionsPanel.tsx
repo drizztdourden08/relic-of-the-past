@@ -1,4 +1,5 @@
 /* @layer renderer-widgets @kind component */
+import type { CSSProperties } from 'react';
 import { Icon } from '@iconify/react/offline';
 import { getConnectionDestinationName } from '@shared/game/navigation';
 import { SCREEN_BY_ID } from '@shared/game/data/screens';
@@ -10,6 +11,12 @@ import { ReqIcon } from './ReqIcon';
 import { EdgeArrowSvg } from './EdgeArrowSvg';
 import { InternalEdgesSection } from './InternalEdgesSection';
 import type { useNavigation } from '../useNavigation';
+
+const IL: Record<string, CSSProperties> = {
+  wrapRow: { display: 'flex', flexWrap: 'wrap', gap: 6 },
+  reqRow: { display: 'flex', gap: 2, marginTop: 2 },
+  bigEmoji: { fontSize: 18 },
+};
 
 type Props = Pick<ReturnType<typeof useNavigation>, 'entranceSum' | 'renderResults' | 'screenBundle' | 'isDarkWorld' | 'roomIndex' | 'isIndoors' | 'respawnEntIds' | 'entranceSpawns' | 'externalConnections' | 'internalConnections' | 'fallHoleLandings' | 'linkDebug'>;
 
@@ -35,7 +42,7 @@ const ConnectionsPanel = (props: Props) => {
             return (
               <Box key={`ent-${r.screenIndex}`}>
                 {scrLabel && <Box style={{ ...S.meta, color: 'var(--c-info)', marginTop: 2 }}>{scrLabel}</Box>}
-                <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                <Box style={IL.wrapRow}>
                 {reachableEntrances.map(ent => {
                   const t = r.transitions.find(t => t.entranceIdx === ent.id);
                   const isRespawn = respawnEntIds.has(ent.id);
@@ -68,7 +75,7 @@ const ConnectionsPanel = (props: Props) => {
                         </Text>
                       )}
                       {t?.requirements && t.requirements.length > 0 && (
-                        <Box style={{ display: 'flex', gap: 2, marginTop: 2 }}>{t.requirements.map(r => <ReqIcon key={r} req={r} />)}</Box>
+                        <Box style={IL.reqRow}>{t.requirements.map(r => <ReqIcon key={r} req={r} />)}</Box>
                       )}
                     </Box>
                   );
@@ -137,11 +144,11 @@ const ConnectionsPanel = (props: Props) => {
         {fallHoleLandings.length > 0 && (
           <>
             <Box style={{ ...S.meta, color: 'var(--c-text-dim)', marginBottom: 4, marginTop: 8, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Fall Holes ({fallHoleLandings.length})</Box>
-            <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            <Box style={IL.wrapRow}>
               {fallHoleLandings.map((fh, i) => (
                 <Box key={`fh-${i}`} style={S.card}>
                   <Box style={{ ...S.cardGraphic, background: 'repeating-linear-gradient(45deg, var(--c-gold) 0px, var(--c-gold) 2px, transparent 2px, transparent 4px)', borderRadius: 'var(--r-sm)' }}>
-                    <Text style={{ fontSize: 18 }}>⬇</Text>
+                    <Text style={IL.bigEmoji}>⬇</Text>
                   </Box>
                   <Text style={S.cardTitle}>Landing Zone</Text>
                   <Text style={S.cardSub}>r{fh.gridRow} c{fh.gridCol}</Text>

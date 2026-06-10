@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { ITEM_SPRITE_MAP } from '@shared/game/items/sprites';
 import type { ReviewStatus, ReviewData } from '../SpriteDebug.type';
-import { Box } from '../../../../../design-system/primitives';
+import { Box, Button } from '../../../../../design-system/primitives';
 import { FilterBtns, Stats } from './ReviewControls';
 import { ItemAssocCard } from './ReviewCards';
 import { S } from '../SpriteDebug.constants';
@@ -65,7 +65,7 @@ const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
         <Stats counts={counts} total={ALL_ITEMS.length} />
         <Box style={S.headerButtons}>
           <FilterBtns filter={filter} setFilter={setFilter} />
-          <Box as="button" onClick={() => { setData({}); window.api.saveSpriteDebug({}); }} style={S.resetBtn}>Reset</Box>
+          <Button variant="bare" onClick={() => { setData({}); window.api.saveSpriteDebug({}); }} style={S.resetBtn}>Reset</Button>
         </Box>
       </Box>
       <Box style={S.grid}>

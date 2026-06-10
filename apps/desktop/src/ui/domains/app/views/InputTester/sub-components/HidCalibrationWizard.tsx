@@ -11,6 +11,7 @@
  */
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
+import { Button } from '../../../../../design-system/primitives/Button';
 import type { HidAxisMapping, HidButtonMapping, HidControllerMap } from './hid-calibration/hid-calibration.type';
 import { useHidCalibration } from './hid-calibration/hooks';
 import {
@@ -50,13 +51,13 @@ const HidCalibrationWizard = (props: Props) => {
       <Box className="hid-cal__header">
         <Text as="h3" className="hid-cal__title">HID Calibration — {wiz.profile?.name ?? 'Controller'}</Text>
         <Box className="hid-cal__header-actions">
-          <Box as="button" onClick={wiz.handleCopyJson} className="input-cal__btn" title="Copy partial or complete calibration JSON">
+          <Button variant="tertiary" size="sm" onClick={wiz.handleCopyJson} title="Copy partial or complete calibration JSON">
             Copy JSON
-          </Box>
-          <Box as="button" onClick={wiz.handleFinish} className="input-cal__btn input-cal__btn--primary" disabled={wiz.capturedCount === 0}>
+          </Button>
+          <Button variant="primary" size="sm" onClick={wiz.handleFinish} disabled={wiz.capturedCount === 0}>
             Finish
-          </Box>
-          <Box as="button" onClick={onCancel} className="input-cal__btn input-cal__btn--danger">Cancel</Box>
+          </Button>
+          <Button variant="danger" size="sm" onClick={onCancel}>Cancel</Button>
         </Box>
       </Box>
 

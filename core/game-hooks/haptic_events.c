@@ -3,80 +3,49 @@
 
 // ─── Haptic Event Hooks ───
 // Emit haptic feedback events to the JS layer via EM_ASM.
-// These are called from strategic points in the game logic (player.c, sprite.c, ancilla.c)
-// to notify the frontend about combat/action events that should produce vibration.
-//
-// Event type enum (must match HapticEventType in haptics.ts):
-//   0 = SWORD_SWING
-//   1 = SWORD_HIT_ENEMY
-//   2 = SWORD_CLINK
-//   3 = DAMAGE_TAKEN
-//   4 = ITEM_USED
-//   5 = ENVIRONMENTAL
-//   6 = HOOKSHOT_WALL
-//   7 = BOOMERANG_CATCH
+// These are called from strategic points in the game logic (player.c, sprite.c,
+// ancilla.c) to notify the frontend about combat/action events that should
+// produce vibration. Event-type constants (HAPTIC_*) live in game_constants.h
+// and must match HapticEventType in haptics.ts.
 
-void GameHook_NotifySwordSwing(int swing_type) {
+// Single JS-interop site: every notifier funnels through here so the
+// window-guard and the __onHapticEvent contract are defined exactly once.
+static void EmitHaptic(int type, int arg) {
   EM_ASM({
     if (typeof window !== 'undefined' && window.__onHapticEvent) {
-      window.__onHapticEvent(0, $0);
+      window.__onHapticEvent($0, $1);
     }
-  }, swing_type);
+  }, type, arg);
+}
+
+void GameHook_NotifySwordSwing(int swing_type) {
+  EmitHaptic(HAPTIC_SWORD_SWING, swing_type);
 }
 
 void GameHook_NotifySwordHitEnemy(uint8 damage_dealt) {
-  EM_ASM({
-    if (typeof window !== 'undefined' && window.__onHapticEvent) {
-      window.__onHapticEvent(1, $0);
-    }
-  }, damage_dealt);
+  EmitHaptic(HAPTIC_SWORD_HIT_ENEMY, damage_dealt);
 }
 
 void GameHook_NotifySwordClink(void) {
-  EM_ASM({
-    if (typeof window !== 'undefined' && window.__onHapticEvent) {
-      window.__onHapticEvent(2, 0);
-    }
-  });
+  EmitHaptic(HAPTIC_SWORD_CLINK, 0);
 }
 
 void GameHook_NotifyDamageTaken(uint8 damage_amount) {
-  EM_ASM({
-    if (typeof window !== 'undefined' && window.__onHapticEvent) {
-      window.__onHapticEvent(3, $0);
-    }
-  }, damage_amount);
+  EmitHaptic(HAPTIC_DAMAGE_TAKEN, damage_amount);
 }
 
 void GameHook_NotifyItemUsed(uint8 item_id) {
-  EM_ASM({
-    if (typeof window !== 'undefined' && window.__onHapticEvent) {
-      window.__onHapticEvent(4, $0);
-    }
-  }, item_id);
+  EmitHaptic(HAPTIC_ITEM_USED, item_id);
 }
 
 void GameHook_NotifyEnvironmentalEvent(uint8 event_type) {
-  EM_ASM({
-    if (typeof window !== 'undefined' && window.__onHapticEvent) {
-      window.__onHapticEvent(5, $0);
-    }
-  }, event_type);
+  EmitHaptic(HAPTIC_ENVIRONMENTAL, event_type);
 }
 
 void GameHook_NotifyHookshotWall(void) {
-  EM_ASM({
-    if (typeof window !== 'undefined' && window.__onHapticEvent) {
-      window.__onHapticEvent(6, 0);
-    }
-  });
+  EmitHaptic(HAPTIC_HOOKSHOT_WALL, 0);
 }
 
 void GameHook_NotifyBoomerangCatch(void) {
-  EM_ASM({
-    if (typeof window !== 'undefined' && window.__onHapticEvent) {
-      window.__onHapticEvent(7, 0);
-    }
-  });
+  EmitHaptic(HAPTIC_BOOMERANG_CATCH, 0);
 }
-

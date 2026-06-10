@@ -3,8 +3,14 @@ import { useState, useCallback } from 'react';
 import { DropZone } from '../../../../../design-system/primitives/DropZone';
 import { TextInput } from '../../../../../design-system/primitives/TextInput';
 import { Box } from '../../../../../design-system/primitives/Box';
+import { Button } from '../../../../../design-system/primitives/Button';
+import { ImportProgress } from './ImportProgress';
+import { useImportProgress } from '@app/hooks/useImportProgress';
+import type { ImportKind } from '@app/hooks/useImportProgress';
 
 interface ImportFormProps {
+  /** Which import this form drives — scopes the progress events it listens to. */
+  kind: ImportKind;
   placeholder?: string;
   accept?: string[];
   dropLabel?: string;
@@ -16,6 +22,7 @@ interface ImportFormProps {
 
 const ImportForm = (props: ImportFormProps) => {
   const {
+    kind,
     placeholder = 'Paste download URL…',
     accept = ['.zip'],
     dropLabel = 'Drop files here',
@@ -27,6 +34,7 @@ const ImportForm = (props: ImportFormProps) => {
   const [url, setUrl] = useState('');
   const [status, setStatus] = useState<{ message: string; variant: '' | 'error' | 'success' }>({ message: '', variant: '' });
   const [busy, setBusy] = useState(false);
+  const progress = useImportProgress(kind);
 
   const isDisabled = disabled || busy;
 
@@ -82,14 +90,14 @@ const ImportForm = (props: ImportFormProps) => {
           onKeyDown={handleKeyDown}
           disabled={isDisabled}
         />
-        <Box
-          as="button"
+        <Button
+          variant="bare"
           className="import-form__download-btn"
           onClick={handleDownload}
           disabled={isDisabled || !url.trim()}
         >
           {busy ? '…' : 'Download'}
-        </Box>
+        </Button>
       </Box>
       <Box className="import-form__divider">or</Box>
       <DropZone
@@ -99,7 +107,11 @@ const ImportForm = (props: ImportFormProps) => {
         disabled={isDisabled}
         onDrop={handleDrop}
       />
-      {status.message && <Box className={statusClass}>{status.message}</Box>}
+      {busy
+        ? <ImportProgress state={progress} fallbackLabel={status.message || undefined} />
+        : status.message
+          ? <Box className={statusClass}>{status.message}</Box>
+          : null}
     </Box>
   );
 };

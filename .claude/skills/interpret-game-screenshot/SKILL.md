@@ -9,7 +9,7 @@ description: Correctly read a screenshot of the running ALttP game — overlays,
 
 Reading pixel art at scale has a low accuracy ceiling if you just "look." Follow
 this protocol so something wrong is not read as fine. Background knowledge:
-@docs/pixel-art-and-rendering.md.
+@docs/architecture/rendering-pixel-art.md.
 
 ## Protocol
 

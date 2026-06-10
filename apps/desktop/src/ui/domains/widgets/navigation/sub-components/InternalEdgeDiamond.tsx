@@ -1,7 +1,10 @@
 /* @layer renderer-widgets @kind component */
+import type { CSSProperties } from 'react';
 import type { ConnectionInfo, ScreenBundle } from '@shared/game/navigation';
 import { Box, Text } from '../../../../design-system/primitives';
 import { S } from '../styles';
+
+const REQ_ROW: CSSProperties = { display: 'flex', gap: 2, marginTop: 2 };
 import { InternalEdgeSvg } from './InternalEdgeSvg';
 import { ReqIcon } from './ReqIcon';
 
@@ -38,7 +41,7 @@ const InternalEdgeDiamond = ({ connections, screenBundle }: { connections: Conne
           {conn.layerToggle ? '▲▼ Toggle' : '═ Same'}
         </Text>
         {conn.requirements.length > 0 && (
-          <Box style={{ display: 'flex', gap: 2, marginTop: 2 }}>{conn.requirements.map(r => <ReqIcon key={r} req={r} />)}</Box>
+          <Box style={REQ_ROW}>{conn.requirements.map(r => <ReqIcon key={r} req={r} />)}</Box>
         )}
       </Box>
     );

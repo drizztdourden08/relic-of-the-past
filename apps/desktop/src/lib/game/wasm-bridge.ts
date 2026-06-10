@@ -38,7 +38,11 @@ const subscribeGameState = (fn: GameStateListener): () => void => {
   return () => listeners.delete(fn);
 };
 
-/** Push a SNES input bitmask to the running WASM module. Called by InputManager each frame. */
+/** Push a SNES input bitmask to the running WASM module. Called by InputManager each frame.
+ *  Kept self-contained (no import from bridge/wasm-call) so wasm-bridge has no static edge
+ *  into wasm-call — that completed a bidirectional cycle which, combined with lifecycle's
+ *  dynamic import of this module, could be evaluated as a second instance under Vite dev,
+ *  desyncing the startGame re-entry guard (see lib/game/lifecycle.ts). */
 const setInput = (mask: number): void => {
   const mod = currentModule;
   if (!mod || currentState.status !== 'running') return;
@@ -46,7 +50,7 @@ const setInput = (mask: number): void => {
 };
 
 // ─── Re-export the per-concern bridge facades (external API unchanged) ───
-export { wasmSetPaused, wasmGetPaused, wasmTogglePause, wasmReset, wasmCheat, wasmSetForceBackdropBlack } from './bridge/commands';
+export { wasmSetPaused } from './bridge/commands';
 export { wasmGetViewportInfo, wasmRenderCleanFrame } from './bridge/render';
 export { wasmGetGameUIState, wasmSetUIOverlayMode, wasmGetUIOverlayMode, wasmGetMenuState } from './bridge/ui-state';
 export { wasmGetProgressIndicator, wasmGetOverworldVariant } from './bridge/progress';

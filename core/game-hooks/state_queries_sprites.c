@@ -18,7 +18,7 @@ int WasmGetIndoorUncleBlockers(void) {
   for (int k = 15; k >= 0 && count < 2; k--) {
     if (!sprite_state[k])
       continue;
-    if (sprite_type[k] != 0x73)
+    if (sprite_type[k] != SPRITE_UNCLE_PRIEST)
       continue; // UncleAndPriest family
     if (sprite_E[k] != 0)
       continue; // only Uncle variant, not priest/mantle
@@ -72,7 +72,7 @@ int WasmGetNavigationBlockers(void) {
 
     if (player_is_indoors) {
       // Uncle blocks paths in house/passage until sequence progression.
-      if (type == 0x73 && sprite_E[k] == 0) {
+      if (type == SPRITE_UNCLE_PRIEST && sprite_E[k] == 0) {
         include = true;
       }
     } else {

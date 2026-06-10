@@ -4,7 +4,7 @@
   width: 100%;
   height: 6px;
   border-radius: var(--radius-sm);
-  background: var(--color-surface-inset);
+  background: var(--c-hover);
   overflow: hidden;
 }
 
@@ -16,9 +16,9 @@
   transition: width var(--transition-normal);
 }
 
-.progress-bar[data-variant='gold'] .progress-bar__fill { background: var(--color-gold-base); }
-.progress-bar[data-variant='green'] .progress-bar__fill { background: var(--color-green-base); }
-.progress-bar[data-variant='danger'] .progress-bar__fill { background: var(--color-danger-base); }
+.progress-bar[data-variant='gold'] .progress-bar__fill { background: var(--c-gold); }
+.progress-bar[data-variant='green'] .progress-bar__fill { background: var(--c-green); }
+.progress-bar[data-variant='danger'] .progress-bar__fill { background: var(--c-danger); }
 
 .progress-bar__fill--secondary {
   opacity: var(--opacity-faint);

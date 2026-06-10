@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
 import { Box } from '../../../../../../design-system/primitives/Box';
+import { Button } from '../../../../../../design-system/primitives/Button';
 import { TextInput } from '../../../../../../design-system/primitives/TextInput';
 import { NumberInput } from '../../../../../../design-system/primitives/NumberInput';
 import { useShadowEditorStore } from '../../../../../../../stores/shadow-editor-store';
@@ -44,14 +45,14 @@ const HeightLevelEditor = () => {
                 if (!isNaN(v)) updateHeightLevel(i, { value: Math.min(1, Math.max(0, v)) });
               }}
             />
-            <Box
-              as="button"
+            <Button
+              variant="bare"
               className="height-level-editor__remove"
               onClick={() => removeHeightLevel(i)}
               title="Remove"
             >
               ✕
-            </Box>
+            </Button>
           </Box>
         ))}
       </Box>
@@ -72,14 +73,14 @@ const HeightLevelEditor = () => {
           step={0.05}
           onChange={(e) => setNewValue(e.target.value)}
         />
-        <Box
-          as="button"
+        <Button
+          variant="bare"
           className="height-level-editor__add-btn"
           onClick={handleAdd}
           title="Add level"
         >
           +
-        </Box>
+        </Button>
       </Box>
     </Box>
   );

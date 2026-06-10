@@ -28,18 +28,18 @@
 .slider__label {
   font-size: var(--text-base);
   font-weight: var(--weight-medium);
-  color: var(--color-text-primary);
+  color: var(--c-text);
 }
 
 .slider__description {
   font-size: var(--text-sm);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
 }
 
 .slider__value {
   font-size: var(--text-sm);
   font-family: var(--font-mono);
-  color: var(--color-gold-base);
+  color: var(--c-gold);
   flex-shrink: 0;
 }
 
@@ -58,10 +58,10 @@
   border-radius: var(--r-sm);
   background: linear-gradient(
     to right,
-    var(--color-gold-base) 0%,
-    var(--color-gold-base) var(--slider-pct),
-    var(--color-bg-elevated) var(--slider-pct),
-    var(--color-bg-elevated) 100%
+    var(--c-gold) 0%,
+    var(--c-gold) var(--slider-pct),
+    var(--c-surface) var(--slider-pct),
+    var(--c-surface) 100%
   );
   outline: none;
   cursor: pointer;
@@ -72,8 +72,8 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--color-gold-bright);
-  border: 2px solid var(--color-bg-base);
+  background: var(--c-gold-bright);
+  border: 2px solid var(--c-bg);
   box-shadow: var(--shadow-1);
   cursor: pointer;
   transition: transform var(--transition-fast);
@@ -84,7 +84,7 @@
 }
 
 .slider__input:focus-visible {
-  outline: 2px solid var(--color-gold-base);
+  outline: 2px solid var(--c-gold);
   outline-offset: 4px;
   border-radius: var(--r-sm);
 }
@@ -99,10 +99,10 @@
   width: 28px;
   height: 28px;
   padding: 0;
-  border: 1px solid var(--color-border-subtle);
+  border: 1px solid var(--c-border);
   border-radius: var(--radius-sm);
-  background: var(--color-bg-elevated);
-  color: var(--color-text-secondary);
+  background: var(--c-surface);
+  color: var(--c-text-dim);
   font-size: var(--text-base);
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -110,13 +110,13 @@
 
 .slider__mute:hover {
   background: var(--c-hover);
-  border-color: var(--color-gold-base);
-  color: var(--color-text-primary);
+  border-color: var(--c-gold);
+  color: var(--c-text);
 }
 
 .slider__mute--muted {
-  color: var(--color-danger-base);
-  border-color: var(--color-danger-base);
+  color: var(--c-danger);
+  border-color: var(--c-danger);
   background: var(--c-danger-dim);
 }
 

@@ -50,8 +50,5 @@ const useNavigationOverlayStore = create<NavigationOverlayState>((set) => ({
   clear: () => set({ result: null, results: [], connections: [], fallHoleSpawns: [], visible: false, lockedTarget: null, lockedPath: null }),
 }));
 
-/** @deprecated Use useNavigationOverlayStore instead */
-const useConnectionOverlayStore = useNavigationOverlayStore;
-
-export { useNavigationOverlayStore, useConnectionOverlayStore };
+export { useNavigationOverlayStore };
 export type { FallHoleSpawn };

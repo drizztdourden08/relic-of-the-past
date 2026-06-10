@@ -1,7 +1,9 @@
 /* @layer bridge-wasm @kind logic */
 /** Shader-program compilation + uniform-location gathering for the edge-glow renderer. */
 import { FULLSCREEN_VERT, MIRROR_FRAG, BLUR_H_FRAG, BLUR_V_FRAG, COMPOSITE_FRAG } from './shaders';
-import { createProgram } from './gl-helpers';
+import { createProgram } from '../webgl/gl-helpers';
+
+const LABEL = '[EdgeGlow]';
 
 interface EdgeGlowPrograms {
   mirror: WebGLProgram;
@@ -12,10 +14,10 @@ interface EdgeGlowPrograms {
 
 /** Compile + link all four passes. Returns null if any program fails. */
 const compilePrograms = (gl: WebGLRenderingContext): EdgeGlowPrograms | null => {
-  const mirror = createProgram(gl, FULLSCREEN_VERT, MIRROR_FRAG);
-  const blurH = createProgram(gl, FULLSCREEN_VERT, BLUR_H_FRAG);
-  const blurV = createProgram(gl, FULLSCREEN_VERT, BLUR_V_FRAG);
-  const composite = createProgram(gl, FULLSCREEN_VERT, COMPOSITE_FRAG);
+  const mirror = createProgram(gl, FULLSCREEN_VERT, MIRROR_FRAG, LABEL);
+  const blurH = createProgram(gl, FULLSCREEN_VERT, BLUR_H_FRAG, LABEL);
+  const blurV = createProgram(gl, FULLSCREEN_VERT, BLUR_V_FRAG, LABEL);
+  const composite = createProgram(gl, FULLSCREEN_VERT, COMPOSITE_FRAG, LABEL);
   if (!mirror || !blurH || !blurV || !composite) return null;
   return { mirror, blurH, blurV, composite };
 };

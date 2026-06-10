@@ -12,7 +12,7 @@
  */
 
 import type { EdgeGlowRenderer, EdgeGlowOptions } from './types';
-import { createTextureNearest, createFBO, createFBONearest, destroyFBO, drawQuad } from './gl-helpers';
+import { createTexture, createFBO, destroyFBO, drawQuad } from '../webgl/gl-helpers';
 import { compilePrograms, getUniformLocations } from './edge-glow-programs';
 
 const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOptions = {}): EdgeGlowRenderer | null => {
@@ -76,12 +76,14 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
   let pixelDivisor = 60.0;
   let pixelExponent = 1.45;
 
-  const gameTexture = createTextureNearest(gl);
-  const cleanTexture = createTextureNearest(gl);
-  let fboMirror = createFBONearest(gl, width, height);
+  const gameTexture = createTexture(gl, gl.NEAREST);
+  const cleanTexture = createTexture(gl, gl.NEAREST);
+  let fboMirror = createFBO(gl, width, height, gl.NEAREST);
   let fboA = createFBO(gl, width, height);
   let fboB = createFBO(gl, width, height);
 
+  // Edge-glow draws fullscreen quads as two triangles (6 verts).
+  const EDGE_DRAW = { mode: gl.TRIANGLES, count: 6 };
 
   // ─── Public API ───
 
@@ -109,7 +111,7 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
           gl.uniform1f(blurHUniforms.radius, 0.0);
           gl.activeTexture(gl.TEXTURE0);
           gl.bindTexture(gl.TEXTURE_2D, gameTexture);
-          drawQuad(gl, blurHProg, quadBuffer);
+          drawQuad(gl, blurHProg, quadBuffer, EDGE_DRAW);
           return;
         }
 
@@ -127,7 +129,7 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
         gl.uniform1f(mirrorUniforms.swizzleBR, cleanFrame ? 1.0 : 0.0);
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, mirrorSrcTexture);
-        drawQuad(gl, mirrorProg, quadBuffer);
+        drawQuad(gl, mirrorProg, quadBuffer, EDGE_DRAW);
 
         // Pass 2-N: Progressive blur
         let readTex = fboMirror.texture;
@@ -143,7 +145,7 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
           gl.uniform1f(blurHUniforms.radius, radius);
           gl.activeTexture(gl.TEXTURE0);
           gl.bindTexture(gl.TEXTURE_2D, readTex);
-          drawQuad(gl, blurHProg, quadBuffer);
+          drawQuad(gl, blurHProg, quadBuffer, EDGE_DRAW);
 
           gl.bindFramebuffer(gl.FRAMEBUFFER, fboB.framebuffer);
           gl.viewport(0, 0, width, height);
@@ -153,7 +155,7 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
           gl.uniform1f(blurVUniforms.radius, radius);
           gl.activeTexture(gl.TEXTURE0);
           gl.bindTexture(gl.TEXTURE_2D, fboA.texture);
-          drawQuad(gl, blurVProg, quadBuffer);
+          drawQuad(gl, blurVProg, quadBuffer, EDGE_DRAW);
 
           readTex = fboB.texture;
         }
@@ -192,7 +194,7 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
         gl.uniform1f(compositeUniforms.pixelDivisor, pixelDivisor);
         gl.uniform1f(compositeUniforms.pixelExponent, pixelExponent);
 
-        drawQuad(gl, compositeProg, quadBuffer);
+        drawQuad(gl, compositeProg, quadBuffer, EDGE_DRAW);
       };
 
   const resize = (w: number, h: number): void => {
@@ -204,7 +206,7 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
         destroyFBO(gl, fboMirror);
         destroyFBO(gl, fboA);
         destroyFBO(gl, fboB);
-        fboMirror = createFBONearest(gl, width, height);
+        fboMirror = createFBO(gl, width, height, gl.NEAREST);
         fboA = createFBO(gl, width, height);
         fboB = createFBO(gl, width, height);
       };

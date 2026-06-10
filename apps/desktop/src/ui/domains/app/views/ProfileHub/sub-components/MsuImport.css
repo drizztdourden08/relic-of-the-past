@@ -17,20 +17,20 @@
   padding: var(--space-sm) var(--space-md);
   font-size: var(--text-sm);
   font-family: var(--font-sans);
-  color: var(--color-text-primary);
-  background: var(--color-bg-base);
-  border: 1px solid var(--color-border-default);
+  color: var(--c-text);
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
   border-radius: var(--radius-md);
   outline: none;
   transition: border-color 0.15s;
 }
 
 .msu-import__url-input:focus {
-  border-color: var(--color-gold-base);
+  border-color: var(--c-gold);
 }
 
 .msu-import__url-input::placeholder {
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
 }
 
 .msu-import__url-input:disabled {
@@ -42,17 +42,17 @@
   padding: var(--space-sm) var(--space-md);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
-  color: var(--color-text-primary);
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border-default);
+  color: var(--c-text);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
 }
 
 .msu-import__download-btn:hover:not(:disabled) {
-  background: var(--color-gold-dim);
-  border-color: var(--color-gold-base);
+  background: var(--c-gold-dim);
+  border-color: var(--c-gold);
 }
 
 .msu-import__download-btn:disabled {
@@ -62,23 +62,23 @@
 
 .msu-import__status {
   font-size: var(--text-xs);
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
   text-align: center;
 }
 
 .msu-import__status--error {
-  color: var(--color-danger-base);
+  color: var(--c-danger);
 }
 
 .msu-import__status--success {
-  color: var(--color-green-base);
+  color: var(--c-green);
 }
 
 .msu-import__divider {
   display: flex;
   align-items: center;
   gap: var(--space-md);
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
   font-size: var(--text-xs);
 }
 
@@ -87,5 +87,5 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: var(--color-border-subtle);
+  background: var(--c-border);
 }

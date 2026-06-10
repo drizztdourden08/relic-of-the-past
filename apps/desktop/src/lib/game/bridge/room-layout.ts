@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /** Room layout shape + dungeon map position. */
-import { getGameState, getModule } from '../wasm-bridge';
+import { callPtr } from './wasm-call';
 
 interface RoomLayoutInfo {
   layout: number;
@@ -33,12 +33,8 @@ interface DungeonMapPosition {
 
 const LAYOUT_SHAPES: Array<'2x2' | '2x1' | '1x2' | '1x1'> = ['2x2', '2x2', '2x1', '2x1', '1x2', '1x2', '1x1', '1x1'];
 
-const wasmGetRoomLayoutInfo = (): RoomLayoutInfo | null => {
-  const mod = getModule();
-  if (!mod || getGameState().status !== 'running') return null;
-  try {
-    const ptr = mod.ccall('WasmGetRoomLayoutInfo', 'number', [], []) as number;
-    if (!ptr) return null;
+const wasmGetRoomLayoutInfo = (): RoomLayoutInfo | null =>
+  callPtr('WasmGetRoomLayoutInfo', (mod, ptr) => {
     const heap = mod.HEAPU8;
     const layout = heap[ptr];
     const qfx = heap[ptr + 1];
@@ -63,10 +59,7 @@ const wasmGetRoomLayoutInfo = (): RoomLayoutInfo | null => {
     }
 
     return { layout, shape, quadrantFullsizeX: qfx, quadrantFullsizeY: qfy, quadrantX: qx, quadrantY: qy, intraEdges };
-  } catch {
-    return null;
-  }
-};
+  });
 
 const floorRawToLabel = (raw: number): string => {
   if (raw === 0) return '1F';
@@ -76,12 +69,8 @@ const floorRawToLabel = (raw: number): string => {
   return `B${basement}`;
 };
 
-const wasmGetDungeonMapPosition = (): DungeonMapPosition | null => {
-  const mod = getModule();
-  if (!mod || getGameState().status !== 'running') return null;
-  try {
-    const ptr = mod.ccall('WasmGetDungeonMapPosition', 'number', [], []) as number;
-    if (!ptr) return null;
+const wasmGetDungeonMapPosition = (): DungeonMapPosition | null =>
+  callPtr('WasmGetDungeonMapPosition', (mod, ptr) => {
     const heap = mod.HEAPU8;
     const mapCol = heap[ptr];
     const mapRow = heap[ptr + 1];
@@ -101,10 +90,7 @@ const wasmGetDungeonMapPosition = (): DungeonMapPosition | null => {
       effectiveHeight,
       effectiveLayout: `${effectiveWidth}×${effectiveHeight}`,
     };
-  } catch {
-    return null;
-  }
-};
+  });
 
 export { wasmGetRoomLayoutInfo, wasmGetDungeonMapPosition };
 export type { RoomLayoutInfo, DungeonMapPosition };

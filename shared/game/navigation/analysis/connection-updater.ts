@@ -170,17 +170,5 @@ const bundleToConnectionPoint = (bundle: BorderBundle): ConnectionPointData => {
   };
 };
 
-const writeConnectionNavData = (updates: ConnectionNavUpdate[], outputPath: string): void => {
-  const fs = require('fs');
-  const path = require('path');
-  const dir = path.dirname(outputPath);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-
-  const data = Object.fromEntries(
-    updates.map(u => [`${u.from}|${u.to}`, u.nav])
-  );
-  fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
-};
-
-export { transitTypeFromTags, buildConnectionNavUpdates, writeConnectionNavData };
+export { transitTypeFromTags, buildConnectionNavUpdates };
 export type { ConnectionNavUpdate, ConnectionUpdaterInput };

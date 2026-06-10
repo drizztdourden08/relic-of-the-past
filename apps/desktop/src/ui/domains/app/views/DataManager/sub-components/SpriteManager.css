@@ -10,10 +10,10 @@
 .sprite-manager__extract-btn {
   flex: 1;
   padding: var(--space-sm) var(--space-lg);
-  border: 1px solid var(--color-gold-dim);
+  border: 1px solid var(--c-gold-dim);
   border-radius: var(--radius-md);
   background: var(--c-gold-soft);
-  color: var(--color-gold-bright);
+  color: var(--c-gold-bright);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   cursor: pointer;
@@ -22,7 +22,7 @@
 
 .sprite-manager__extract-btn:hover:not(:disabled) {
   background: var(--c-gold-dim);
-  border-color: var(--color-gold-base);
+  border-color: var(--c-gold);
 }
 
 .sprite-manager__extract-btn:disabled {
@@ -35,7 +35,7 @@
   border: 1px solid var(--c-danger);
   border-radius: var(--radius-md);
   background: var(--c-danger-soft);
-  color: var(--color-danger-base);
+  color: var(--c-danger);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   cursor: pointer;
@@ -59,12 +59,12 @@
 }
 
 .sprite-manager__message--success {
-  color: var(--color-green-base);
+  color: var(--c-green);
   background: var(--c-green-soft);
 }
 
 .sprite-manager__message--error {
-  color: var(--color-danger-base);
+  color: var(--c-danger);
   background: var(--c-danger-soft);
 }
 
@@ -92,7 +92,7 @@
   border: 1px solid var(--c-border);
   border-radius: var(--radius-md);
   background: var(--c-hover);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   font-size: var(--text-xs);
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -100,13 +100,13 @@
 
 .sprite-manager__cat-btn:hover {
   background: var(--c-hover);
-  color: var(--color-text-primary);
+  color: var(--c-text);
 }
 
 .sprite-manager__cat-btn--active {
-  border-color: var(--color-gold-base);
+  border-color: var(--c-gold);
   background: var(--c-gold-soft);
-  color: var(--color-gold-bright);
+  color: var(--c-gold-bright);
 }
 
 .sprite-manager__cat-count {
@@ -163,7 +163,7 @@
 
 .sprite-card__label {
   font-size: var(--text-xs);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -173,5 +173,5 @@
 
 .sprite-card__category {
   font-size: var(--text-xs);
-  color: var(--color-text-faint);
+  color: var(--c-text-faint);
 }

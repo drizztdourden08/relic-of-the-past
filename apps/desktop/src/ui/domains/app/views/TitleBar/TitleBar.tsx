@@ -4,6 +4,7 @@ import type { GameSettings } from '@shared/types/settings';
 import { DropdownMenu } from '../../../../design-system/composites/DropdownMenu';
 import { IconButton } from '../../../../design-system/primitives/IconButton';
 import { Box } from '../../../../design-system/primitives/Box';
+import { Button } from '../../../../design-system/primitives/Button';
 import { Text } from '../../../../design-system/primitives/Text';
 import { Image } from '../../../../design-system/primitives/Image';
 import { Icon } from '../../../../design-system/primitives/Icon';
@@ -159,9 +160,9 @@ const TitleBar = (props: TitleBarProps) => {
           </IconButton>
         )}
         {updateAvailable && (
-          <Box as="button" className="titlebar__update-badge" onClick={onUpdateClick}>
+          <Button variant="bare" className="titlebar__update-badge" onClick={onUpdateClick}>
             Update available
-          </Box>
+          </Button>
         )}
         {menuOpen && <DropdownMenu items={menuItems} anchorRef={menuRef} />}
         {showFps && fps > 0 && (

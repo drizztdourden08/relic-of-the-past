@@ -14,10 +14,9 @@
 import { BaseController, type ControllerButton, type ControllerAxis, type ControllerContext, type ParsedInput, type StickDefaults, type VibrationSegment } from '../../base';
 import { registerController } from '../../registry';
 import type { ButtonMapping, ButtonIcon } from '../../../types/controls';
+import { icon, btn } from './builders';
 
 // ── Icons ──
-
-const icon = (key: string, label: string): ButtonIcon => ({ key, path: null, label });
 
 const ICONS: Record<string, ButtonIcon> = {
   'switch-a':      icon('switch-a', 'A Button'),
@@ -51,10 +50,6 @@ const HAPTIC_SILENT: number[] = [0x3f, 0x01, 0xf0, 0x19, 0x00];
 // Handshake (0x80) is in base class. Only the subcmd 0x30 is controller-specific.
 
 // ── SNES Button Mappings ──
-
-const btn = (snesButton: ButtonMapping['snesButton'], index: number, iconData: ButtonIcon | null): ButtonMapping => {
-  return { snesButton, binding: { type: 'gamepad-button', index }, icon: iconData };
-};
 
 const DEFAULT_MAPPINGS: ButtonMapping[] = [
   btn('B',      0,  ICONS['switch-b']),

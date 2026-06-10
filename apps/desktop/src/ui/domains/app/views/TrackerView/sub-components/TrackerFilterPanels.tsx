@@ -4,7 +4,7 @@ import type { CheckTag } from '@shared/game/checks/tags';
 import { TAG_DEFINITIONS } from '@shared/game/checks/tags';
 import type { GroupDimension, FilterState } from '@shared/game/checks/grouping';
 import { GROUP_DIMENSIONS } from '@shared/game/checks/grouping';
-import { Box, Text } from '../../../../../design-system/primitives';
+import { Box, Text, Button } from '../../../../../design-system/primitives';
 
 interface TrackerFilterPanelsProps {
   filter: FilterState;
@@ -40,22 +40,22 @@ const TrackerFilterPanels = (props: TrackerFilterPanelsProps) => {
       {showTagFilter && (
         <Box className="tracker-filters__tags-panel">
           <Box className="tracker-filters__tag-mode">
-            <Box as="button" className={filter.tagMode === 'any' ? 'tracker-filters__mode-btn--active' : ''} onClick={() => onFilterChange({ ...filter, tagMode: 'any' })}>Any</Box>
-            <Box as="button" className={filter.tagMode === 'all' ? 'tracker-filters__mode-btn--active' : ''} onClick={() => onFilterChange({ ...filter, tagMode: 'all' })}>All</Box>
+            <Button variant="bare" className={filter.tagMode === 'any' ? 'tracker-filters__mode-btn--active' : ''} onClick={() => onFilterChange({ ...filter, tagMode: 'any' })}>Any</Button>
+            <Button variant="bare" className={filter.tagMode === 'all' ? 'tracker-filters__mode-btn--active' : ''} onClick={() => onFilterChange({ ...filter, tagMode: 'all' })}>All</Button>
           </Box>
           {TAG_CATEGORIES.map(cat => (
             <Box key={cat} className="tracker-filters__tag-group">
               <Text className="tracker-filters__tag-group-label">{cat}</Text>
               <Box className="tracker-filters__tag-list">
                 {TAG_DEFINITIONS.filter(t => t.category === cat).map(t => (
-                  <Box
-                    as="button"
+                  <Button
+                    variant="bare"
                     key={t.id}
                     className={`tracker-filters__tag ${filter.activeTags.includes(t.id) ? 'tracker-filters__tag--active' : ''}`}
                     onClick={() => toggleTag(t.id)}
                   >
                     {t.label}
-                  </Box>
+                  </Button>
                 ))}
               </Box>
             </Box>
@@ -70,16 +70,16 @@ const TrackerFilterPanels = (props: TrackerFilterPanelsProps) => {
             {grouping.map((dim, i) => (
               <Text key={dim} className="tracker-filters__group-chip">
                 {i + 1}. {GROUP_DIMENSIONS.find(d => d.id === dim)?.label}
-                <Box as="button" className="tracker-filters__group-remove" onClick={() => removeDimension(i)}>×</Box>
+                <Button variant="bare" className="tracker-filters__group-remove" onClick={() => removeDimension(i)}>×</Button>
               </Text>
             ))}
           </Box>
           {grouping.length < 5 && (
             <Box className="tracker-filters__group-add">
               {GROUP_DIMENSIONS.filter(d => !grouping.includes(d.id)).map(d => (
-                <Box as="button" key={d.id} className="tracker-filters__group-add-btn" onClick={() => addDimension(d.id)} title={d.description}>
+                <Button variant="bare" key={d.id} className="tracker-filters__group-add-btn" onClick={() => addDimension(d.id)} title={d.description}>
                   + {d.label}
-                </Box>
+                </Button>
               ))}
             </Box>
           )}

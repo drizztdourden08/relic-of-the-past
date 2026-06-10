@@ -17,6 +17,8 @@
 #include "src/hud.h"
 #include "src/spc_player.h"
 
+#include "game_constants.h"
+#include "num_util.h"
 #include "emscripten_internal.h"
 
 // Backdrop-black flag pairs with g_ppu_render_flags; only the API touches it.
@@ -56,7 +58,7 @@ void WasmSetPauseHidden(int hidden) {
   g_pause_hide_mask = hidden ? PAUSE_HIDE_ALL : 0;
   // Immediately filter existing VRAM if pause menu is currently active.
   // Handles save-state loads where NMI already uploaded tiles before mask was set.
-  if (g_pause_hide_mask && main_module_index == 14) {
+  if (g_pause_hide_mask && main_module_index == MODULE_MENU) {
     uint16 *vram = &g_zenv.vram[104 << 8]; // kNmiVramAddrs[0x22]=104
     for (int i = 0; i < 0x400; i++) {
       if (vram[i] != 0x207f)
@@ -74,7 +76,7 @@ int WasmGetPpuRenderFlags(void) {
 // 0 = gameplay, 1 = menu opening, 2 = menu open, 3 = menu closing
 EMSCRIPTEN_KEEPALIVE
 int WasmGetMenuState(void) {
-  if (main_module_index != 14 || submodule_index != 1)
+  if (main_module_index != MODULE_MENU || submodule_index != 1)
     return 0;
   // Inside Hud_Module_Run: overworld_map_state drives the sub-phase
   uint8 phase = overworld_map_state;
@@ -98,18 +100,13 @@ void WasmSetDisplayPerf(int enable) {
 // ---------------------------------------------------------------------------
 EMSCRIPTEN_KEEPALIVE
 void WasmSetAppMasterVolume(int volume) {
-  // volume: 0-128 scale. Maps to SDL_MIX_MAXVOLUME (128) range.
-  if (volume <= 0)
-    g_sdl_audio_mixer_volume = 0;
-  else if (volume >= 128)
-    g_sdl_audio_mixer_volume = SDL_MIX_MAXVOLUME;
-  else
-    g_sdl_audio_mixer_volume = volume;
+  // volume: 0-128 scale, where 128 == SDL_MIX_MAXVOLUME.
+  g_sdl_audio_mixer_volume = clampi(volume, 0, SDL_MIX_MAXVOLUME);
 }
 
 EMSCRIPTEN_KEEPALIVE
 void WasmSetMusicVolume(int volume) {
-  uint8_t v = (uint8_t)(volume > 128 ? 128 : (volume < 0 ? 0 : volume));
+  uint8_t v = (uint8_t)clampi(volume, 0, 128);
   if (g_zenv.player && g_zenv.player->dsp)
     dsp_setMusicVolume(g_zenv.player->dsp, v);
   else
@@ -118,7 +115,7 @@ void WasmSetMusicVolume(int volume) {
 
 EMSCRIPTEN_KEEPALIVE
 void WasmSetSfxVolume(int volume) {
-  uint8_t v = (uint8_t)(volume > 128 ? 128 : (volume < 0 ? 0 : volume));
+  uint8_t v = (uint8_t)clampi(volume, 0, 128);
   if (g_zenv.player && g_zenv.player->dsp)
     dsp_setSfxVolume(g_zenv.player->dsp, v);
   else

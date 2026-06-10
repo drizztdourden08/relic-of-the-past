@@ -13,13 +13,13 @@
   font-size: var(--text-xl);
   font-weight: var(--weight-semi);
   margin: 0 0 var(--space-sm);
-  color: var(--color-text-primary);
+  color: var(--c-text);
 }
 
 .credits-tab__subtitle {
   margin: 0;
   font-size: var(--text-base);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
 }
 
 .credits-tab__section {
@@ -31,10 +31,10 @@
   font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   margin: 0 0 var(--space-md);
   padding-bottom: var(--space-sm);
-  border-bottom: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--c-border);
 }
 
 .credits-tab__entries {
@@ -44,8 +44,8 @@
 }
 
 .credits-tab__entry {
-  background: var(--color-bg-raised);
-  border: 1px solid var(--color-border-subtle);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
   border-radius: var(--r-lg);
   padding: var(--space-md) var(--space-lg);
 }
@@ -61,16 +61,16 @@
 .credits-tab__entry-name {
   font-weight: var(--weight-semi);
   font-size: var(--text-lg);
-  color: var(--color-text-primary);
+  color: var(--c-text);
 }
 
 .credits-tab__entry-project {
   font-size: var(--text-base);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
 }
 
 .credits-tab__link {
-  color: var(--color-gold-base);
+  color: var(--c-gold);
   text-decoration: none;
   cursor: pointer;
 }
@@ -83,15 +83,15 @@
   font-size: var(--text-base);
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--r-sm);
-  background: var(--color-bg-elevated);
-  color: var(--color-text-secondary);
+  background: var(--c-surface);
+  color: var(--c-text-dim);
   font-weight: var(--weight-medium);
 }
 
 .credits-tab__entry-description {
   margin: 0 0 var(--space-sm);
   font-size: var(--text-base);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   line-height: 1.4;
 }
 
@@ -113,39 +113,39 @@
 }
 
 .credits-tab__usage-badge[data-level="original-work"] {
-  background: var(--color-gold-dim);
-  color: var(--color-gold-bright);
+  background: var(--c-gold-dim);
+  color: var(--c-gold-bright);
 }
 
 .credits-tab__usage-badge[data-level="core-dependency"] {
-  background: var(--color-green-dim);
-  color: var(--color-green-bright);
+  background: var(--c-green-dim);
+  color: var(--c-green-bright);
 }
 
 .credits-tab__usage-badge[data-level="data-direct"],
 .credits-tab__usage-badge[data-level="assets-direct"] {
-  background: var(--color-bg-elevated);
-  color: var(--color-info-base);
+  background: var(--c-surface);
+  color: var(--c-info);
 }
 
 .credits-tab__usage-badge[data-level="assets-modified"] {
-  background: var(--color-bg-elevated);
-  color: var(--color-gold-base);
+  background: var(--c-surface);
+  color: var(--c-gold);
 }
 
 .credits-tab__usage-badge[data-level="logic-reference"],
 .credits-tab__usage-badge[data-level="reference"] {
-  background: var(--color-bg-elevated);
-  color: var(--color-text-secondary);
+  background: var(--c-surface);
+  color: var(--c-text-dim);
 }
 
 .credits-tab__usage-badge[data-level="inspiration"] {
-  background: var(--color-danger-dim);
-  color: var(--color-danger-text);
+  background: var(--c-danger-dim);
+  color: var(--c-danger);
 }
 
 .credits-tab__usage-note {
   font-size: var(--text-base);
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
   font-style: italic;
 }

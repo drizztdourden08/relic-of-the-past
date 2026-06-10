@@ -1,5 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useMemo } from 'react';
+import type { CSSProperties } from 'react';
 import { Icon } from '@iconify/react/offline';
 import type { ConnectionInfo, ScreenBundle, FloodFillResult } from '@shared/game/navigation';
 import { Box, Text } from '../../../../design-system/primitives';
@@ -19,6 +20,8 @@ interface MinimapProps {
   respawnEntIds: Set<number>;
   roomIndex: number;
 }
+
+const COUNT_LABEL: CSSProperties = { position: 'absolute', bottom: 2, left: 0, right: 0, textAlign: 'center', fontSize: 9, color: 'var(--c-text-dim)', pointerEvents: 'none' };
 
 /** Indoor/dungeon minimap: a single full-size rectangle. */
 const IndoorMinimap = ({ bundle, connections, renderResults, linkPos, respawnEntIds, roomIndex }: MinimapProps) => {
@@ -111,7 +114,7 @@ const IndoorMinimap = ({ bundle, connections, renderResults, linkPos, respawnEnt
       <Box style={{ position: 'absolute', left: mapDivLeft, top: mapDivTop, width: mapW, height: mapH, borderRadius: 'var(--r-sm)', background: 'var(--c-green-soft)', border: `${borderW}px solid var(--c-green-soft)`, overflow: 'hidden' }}>
         {primaryResult && <ReachabilityCanvas reachable={primaryResult.reachable} size={mapW} tileLayer={primaryResult.tileLayer} bounds={{ minRow: 0, maxRow: 63, minCol: 0, maxCol: 63 }} />}
         {primaryResult && (
-          <Box style={{ position: 'absolute', bottom: 2, left: 0, right: 0, textAlign: 'center', fontSize: 9, color: 'var(--c-text-dim)', pointerEvents: 'none' }}>
+          <Box style={COUNT_LABEL}>
             {primaryResult.reachableCount}/{primaryResult.totalTiles}
           </Box>
         )}

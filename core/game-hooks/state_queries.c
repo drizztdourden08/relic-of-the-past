@@ -53,17 +53,15 @@ int WasmGetRoomFlags(void) {
 
 // ─── Live Room Flags Query ───
 
-static uint8 live_room_buf[4];
+static uint8 g_live_room_buf[4];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetLiveRoomFlags(void) {
   uint16 room = dungeon_room_index;
   uint16 flags = dung_savegame_state_bits >> 4;
-  live_room_buf[0] = room & 0xFF;
-  live_room_buf[1] = (room >> 8) & 0xFF;
-  live_room_buf[2] = flags & 0xFF;
-  live_room_buf[3] = (flags >> 8) & 0xFF;
-  return (int)live_room_buf;
+  PutU16(g_live_room_buf, 0, room);
+  PutU16(g_live_room_buf, 2, flags);
+  return (int)g_live_room_buf;
 }
 
 // ─── Overworld Event Flags Query ───
@@ -109,18 +107,17 @@ int WasmGetViewportInfo(void) {
   g_viewport_buf[5] = g_zenv.ppu->extraBottomCur;
   uint16 w = (uint16)(g_config.extended_aspect_ratio * 2 + 256);
   uint16 h = g_config.extend_y ? 240 : 224;
-  g_viewport_buf[6] = w & 0xFF;
-  g_viewport_buf[7] = (w >> 8) & 0xFF;
-  g_viewport_buf[8] = h & 0xFF;
-  g_viewport_buf[9] = (h >> 8) & 0xFF;
+  PutU16(g_viewport_buf, 6, w);
+  PutU16(g_viewport_buf, 8, h);
 
   // locationModule: the player's physical location regardless of UI overlays.
-  // Modules 14 (text/menu), 15 (spotlight close), 16 (spotlight open) are transient
-  // overlays — the player hasn't moved, so report saved_module_for_menu instead.
-  // Guard: if saved_module_for_menu is 0 while in module 14, this is a real menu
+  // The menu / spotlight modules are transient overlays — the player hasn't
+  // moved, so report saved_module_for_menu instead. Guard: if
+  // saved_module_for_menu is 0 while in the menu module, this is a real menu
   // screen (file select etc), not a gameplay overlay — report the actual module.
   uint8 mod = main_module_index;
-  if ((mod == 14 || mod == 15 || mod == 16) && saved_module_for_menu != 0) {
+  if ((mod == MODULE_MENU || mod == MODULE_SPOTLIGHT_CLOSE || mod == MODULE_SPOTLIGHT_OPEN) &&
+      saved_module_for_menu != 0) {
     g_viewport_buf[10] = saved_module_for_menu;
   } else {
     g_viewport_buf[10] = mod;
@@ -128,23 +125,15 @@ int WasmGetViewportInfo(void) {
 
   // locationType: 0=overworld/other, 1=house/cave, 2=dungeon
   uint8 locMod = g_viewport_buf[10];
-  g_viewport_buf[11] = (locMod == 7) ? (cur_palace_index_x2 == 0xff ? 1 : 2) : 0;
+  g_viewport_buf[11] = (locMod == MODULE_DUNGEON) ? (cur_palace_index_x2 == 0xff ? 1 : 2) : 0;
 
   // Camera world position (BG2 scroll = top-left of viewport in world coords)
-  uint16 camX = BG2HOFS_copy2;
-  uint16 camY = BG2VOFS_copy2;
-  g_viewport_buf[12] = camX & 0xFF;
-  g_viewport_buf[13] = (camX >> 8) & 0xFF;
-  g_viewport_buf[14] = camY & 0xFF;
-  g_viewport_buf[15] = (camY >> 8) & 0xFF;
+  PutU16(g_viewport_buf, 12, BG2HOFS_copy2);
+  PutU16(g_viewport_buf, 14, BG2VOFS_copy2);
 
   // Link's world position
-  uint16 lx = link_x_coord;
-  uint16 ly = link_y_coord;
-  g_viewport_buf[16] = lx & 0xFF;
-  g_viewport_buf[17] = (lx >> 8) & 0xFF;
-  g_viewport_buf[18] = ly & 0xFF;
-  g_viewport_buf[19] = (ly >> 8) & 0xFF;
+  PutU16(g_viewport_buf, 16, link_x_coord);
+  PutU16(g_viewport_buf, 18, link_y_coord);
   return (int)g_viewport_buf;
 }
 

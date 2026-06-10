@@ -3,7 +3,6 @@ export { AudioSettings } from './AudioSettings';
 export { ControlsSettings } from './ControlsSettings';
 export { CreditsPage } from './CreditsTab';
 export { GameplaySettings } from './GameplaySettings';
-export { GraphicsSettings } from './GraphicsSettings';
 export { HapticsSettings } from './HapticsSettings';
 export { HomeTab } from './HomeTab';
 export { HudSettings } from './HudSettings';

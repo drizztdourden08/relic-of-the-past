@@ -6,7 +6,7 @@
   gap: var(--space-sm);
   padding: var(--space-lg);
   text-align: center;
-  color: var(--color-text-faint);
+  color: var(--c-text-faint);
   font-size: var(--text-sm);
 }
 

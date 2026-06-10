@@ -4,7 +4,7 @@
   align-items: center;
   height: var(--titlebar-height);
   background: var(--c-surface);
-  border-bottom: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--c-border);
   -webkit-app-region: drag;
   position: relative;
   z-index: var(--z-panel);
@@ -31,7 +31,7 @@
   right: 0;
   height: var(--titlebar-height);
   opacity: 1;
-  border-bottom: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--c-border);
   pointer-events: auto;
 }
 
@@ -56,7 +56,7 @@
 .titlebar__title {
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   letter-spacing: 0.5px;
 }
 
@@ -70,7 +70,7 @@
 .titlebar__fps {
   font-size: var(--text-xs);
   font-family: var(--font-mono);
-  color: var(--color-gold-base);
+  color: var(--c-gold);
   opacity: 0.7;
   margin-left: var(--space-xs);
   -webkit-app-region: no-drag;
@@ -115,7 +115,7 @@
   height: var(--titlebar-height);
   background: none;
   border: none;
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   cursor: pointer;
   transition: background var(--transition-normal),
               color var(--transition-normal);
@@ -123,10 +123,10 @@
 
 .titlebar__control:hover {
   background: var(--c-hover);
-  color: var(--color-text-primary);
+  color: var(--c-text);
 }
 
 .titlebar__control--close:hover {
-  background: var(--color-danger-base);
-  color: var(--color-text-primary);
+  background: var(--c-danger);
+  color: var(--c-text);
 }

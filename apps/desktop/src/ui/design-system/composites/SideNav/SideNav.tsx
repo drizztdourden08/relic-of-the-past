@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState, useMemo } from 'react';
 import { Box } from '../../primitives/Box';
+import { Button } from '../../primitives/Button';
 import { Text } from '../../primitives/Text';
 import { TextInput } from '../../primitives/TextInput';
 import type { SideNavProps } from './SideNav.type';
@@ -38,15 +39,15 @@ const SideNav = (props: SideNavProps) => {
           <Box key={group.title ?? gi} className="side-nav__group">
             {group.title && <Text className="side-nav__group-title">{group.title}</Text>}
             {group.items.map(item => (
-              <Box
-                as="button"
+              <Button
+                variant="bare"
                 key={item.id}
                 className={`side-nav__item${item.id === activeId ? ' side-nav__item--active' : ''}`}
                 onClick={() => onSelect(item.id)}
               >
                 {item.icon && <Box as="span" className="side-nav__icon">{item.icon}</Box>}
                 {item.label}
-              </Box>
+              </Button>
             ))}
           </Box>
         ))}

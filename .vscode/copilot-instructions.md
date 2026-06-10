@@ -3,7 +3,7 @@
 The coding standards for this repository now live in a tool-neutral location so
 that GitHub Copilot and Claude Code share one source of truth:
 
-➡️ **[docs/coding-standards.md](../docs/coding-standards.md)**
+➡️ **[docs/contributing/coding-standards.md](../docs/contributing/coding-standards.md)**
 
 Read and follow that file when generating or editing code in this repo. It
 covers file organization, the export/destructuring patterns, naming, React

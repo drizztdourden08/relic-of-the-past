@@ -105,7 +105,7 @@ const ConnectionEditorDialog = (props: ConnectionEditorDialogProps) => {
                   )}
                   <Box className="conn-editor__item-actions">
                     {conn.isNew && <Badge variant="warning">new</Badge>}
-                    <Box as="button" className="conn-editor__btn-remove" onClick={() => removeConnection(idx)}>×</Box>
+                    <Button variant="bare" className="conn-editor__btn-remove" onClick={() => removeConnection(idx)}>×</Button>
                   </Box>
                 </Box>
                 {editingIdx === idx && (
@@ -114,14 +114,14 @@ const ConnectionEditorDialog = (props: ConnectionEditorDialogProps) => {
                       <Box key={ns} className="conn-editor__tag-group">
                         <Text className="conn-editor__tag-ns">{ns}</Text>
                         {CONNECTION_TAG_METADATA.filter(t => t.namespace === ns).map(t => (
-                          <Box
-                            as="button"
+                          <Button
+                            variant="bare"
                             key={t.id}
                             className={`conn-editor__tag ${conn.tags.includes(t.id) ? 'active' : ''}`}
                             onClick={() => toggleTag(idx, t.id)}
                           >
                             {t.label}
-                          </Box>
+                          </Button>
                         ))}
                       </Box>
                     ))}

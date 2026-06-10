@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback } from 'react';
+import type { CSSProperties } from 'react';
 import { ImportForm } from './ImportForm';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
@@ -9,6 +10,11 @@ import { Field } from '../../../../../design-system/primitives/Field';
 import { EmptyState } from '../../../../../design-system/primitives/EmptyState';
 import { MasterDetailLayout } from '../../../../../design-system/composites/MasterDetailLayout';
 import { ListItemRow } from '../../../../../design-system/composites/ListItemRow';
+
+const IL: Record<string, CSSProperties> = {
+  importForm: { marginBottom: 0, paddingBottom: 'var(--space-xs)' },
+  col: { display: 'flex', flexDirection: 'column', height: '100%' },
+};
 
 interface LanguageInfo {
   code: string;
@@ -95,7 +101,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
   const list = (
     <>
       {/* Language selector + ROM import form */}
-      <Box className="import-form" style={{ marginBottom: 0, paddingBottom: 'var(--space-xs)' }}>
+      <Box className="import-form" style={IL.importForm}>
         <Field label="Language">
           <Select
             value={extractLang}
@@ -112,6 +118,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
         </Field>
       </Box>
       <ImportForm
+        kind="language"
         placeholder="Paste ROM download URL…"
         accept={['.sfc', '.smc', '.zip', '.7z', '.rar']}
         dropLabel="Drop a ROM file to extract language"
@@ -147,7 +154,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
   ) : loadingDialogue ? (
     <Text>Loading…</Text>
   ) : dialogue ? (
-    <Box style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <Box style={IL.col}>
       <Text as="h3" className="detail-panel__title">{LANGUAGE_NAMES[selected] ?? selected}</Text>
       <Box className="dialogue-viewer">{dialogue}</Box>
     </Box>

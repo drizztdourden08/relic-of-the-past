@@ -12,7 +12,7 @@
 import type { ShadowRenderer, ShadowRendererOptions } from './types';
 import type { ScreenShadowData } from '@shared/types/shadow-casting';
 import { DEFAULT_LIGHTING_CONFIG } from '@shared/types/shadow-casting';
-import { createFBO, destroyFBO, drawQuad, type FBO } from './gl-helpers';
+import { createFBO, destroyFBO, drawQuad, type FBO } from '../webgl/gl-helpers';
 import { buildHeightmapTexture } from './heightmap-builder';
 import { computeLightUniforms, MAX_LIGHTS } from './light-calculator';
 import { compilePrograms, getUniformLocations } from './shadow-programs';

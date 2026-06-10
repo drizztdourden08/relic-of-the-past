@@ -1,7 +1,9 @@
 /* @layer bridge-wasm @kind logic */
 /** Shader-program compilation + uniform-location gathering for the shadow renderer. */
 import { FULLSCREEN_VERT, SHADOW_FRAG, BLUR_FRAG, COMPOSITE_FRAG } from './shaders';
-import { createProgram } from './gl-helpers';
+import { createProgram } from '../webgl/gl-helpers';
+
+const LABEL = '[ShadowCasting]';
 
 interface ShadowPrograms {
   shadow: WebGLProgram;
@@ -11,9 +13,9 @@ interface ShadowPrograms {
 
 /** Compile + link all three passes. Returns null if any program fails. */
 const compilePrograms = (gl: WebGLRenderingContext): ShadowPrograms | null => {
-  const shadow = createProgram(gl, FULLSCREEN_VERT, SHADOW_FRAG);
-  const blur = createProgram(gl, FULLSCREEN_VERT, BLUR_FRAG);
-  const composite = createProgram(gl, FULLSCREEN_VERT, COMPOSITE_FRAG);
+  const shadow = createProgram(gl, FULLSCREEN_VERT, SHADOW_FRAG, LABEL);
+  const blur = createProgram(gl, FULLSCREEN_VERT, BLUR_FRAG, LABEL);
+  const composite = createProgram(gl, FULLSCREEN_VERT, COMPOSITE_FRAG, LABEL);
   if (!shadow || !blur || !composite) return null;
   return { shadow, blur, composite };
 };

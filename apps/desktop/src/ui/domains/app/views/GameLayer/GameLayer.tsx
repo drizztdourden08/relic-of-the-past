@@ -10,7 +10,7 @@ import type { ShadowRenderer } from '../../../../../lib/game/shadow-casting';
 import type { ShadowCastingProject } from '@shared/types/shadow-casting';
 import { useCanvasFit } from '../../../../../hooks/useCanvasFit';
 import { useShadowEditorStore } from '../../../../../stores/shadow-editor-store';
-import { useExclusiveInsetsStore } from '../../../../design-system/composites/Widget/behavior/exclusiveInsetsStore';
+import { useExclusiveInsetsStore } from '../../../../../stores/exclusive-insets-store';
 import { ControllerDisconnectOverlay } from './sub-components/ControllerDisconnectOverlay';
 import { NavigationOverlay } from './sub-components/navigation-overlay';
 import { ShadowEditorOverlay } from './sub-components/ShadowEditorOverlay';
@@ -33,7 +33,6 @@ const GameLayer = (props: GameLayerProps) => {
   const shadowProjectRef = useRef<ShadowCastingProject | null>(null);
   const shadowCastingRef = useRef(shadowCasting);
   shadowCastingRef.current = shadowCasting;
-  const rafIdRef = useRef<number>(0);
   const edgeEffectRef = useRef(edgeEffect);
   edgeEffectRef.current = edgeEffect;
   const { status, error, start } = useGameState();
@@ -92,7 +91,7 @@ const GameLayer = (props: GameLayerProps) => {
   }, [status, canvasKey]);
 
   // Edge-glow + shadow-casting shader render loops (extracted to focused hooks)
-  useEdgeGlowLoop({ status, canvasKey, canvasRef, fxCanvasRef, glowRendererRef, rafIdRef, edgeEffectRef, setBufSize });
+  useEdgeGlowLoop({ status, canvasKey, canvasRef, fxCanvasRef, glowRendererRef, edgeEffectRef, setBufSize });
   useShadowCastingLoop({ status, canvasKey, canvasRef, shadowCanvasRef, shadowRendererRef, shadowProjectRef, shadowCastingRef });
 
   useEffect(() => {

@@ -7,8 +7,8 @@
   max-height: 260px;
   display: flex;
   flex-direction: column;
-  background: var(--color-bg-overlay);
-  border: 1px solid var(--color-border-default);
+  background: var(--c-glass);
+  border: 1px solid var(--c-border);
   border-radius: var(--radius-lg);
   z-index: var(--z-toast);
   font-family: var(--font-mono);
@@ -22,16 +22,16 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-xs) var(--space-sm);
-  border-bottom: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--c-border);
 }
 
 .log-overlay__title {
   font-weight: var(--weight-semi);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
 }
 
 .log-overlay__hint {
-  color: var(--color-text-faint);
+  color: var(--c-text-faint);
   margin-right: auto;
 }
 
@@ -49,11 +49,11 @@
 }
 
 .log-entry--error {
-  color: var(--color-danger-base);
+  color: var(--c-danger);
 }
 
 .log-entry__time {
-  color: var(--color-text-faint);
+  color: var(--c-text-faint);
   flex-shrink: 0;
 }
 
@@ -63,10 +63,10 @@
 }
 
 .log-entry__message {
-  color: var(--color-text-primary);
+  color: var(--c-text);
   overflow-wrap: break-word;
 }
 
 .log-entry--error .log-entry__message {
-  color: var(--color-danger-base);
+  color: var(--c-danger);
 }

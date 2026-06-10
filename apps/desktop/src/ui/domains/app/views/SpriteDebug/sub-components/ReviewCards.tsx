@@ -1,6 +1,9 @@
 /* @layer renderer-components @kind component */
+import type { CSSProperties } from 'react';
 import { Box, Text, Image, TextInput } from '../../../../../design-system/primitives';
 import type { ReviewEntry, ReviewStatus } from '../SpriteDebug.type';
+
+const NONE_LABEL: CSSProperties = { fontSize: 9, color: 'var(--c-text-muted)' };
 import type { SpriteManifestEntry } from '@shared/game/sprites';
 import { StatusBtns } from './ReviewControls';
 import { S } from '../SpriteDebug.constants';
@@ -51,7 +54,7 @@ const ItemAssocCard = ({ item, entry, baseUrl, onSetStatus, onSetComment }: {
             <Image src={`${baseUrl}${item.file}.png`} alt={item.name} style={S.sprite} draggable={false}
               onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
           ) : (
-            <Text style={{ fontSize: 9, color: 'var(--c-text-muted)' }}>none</Text>
+            <Text style={NONE_LABEL}>none</Text>
           )}
         </Box>
         <Box style={S.cardInfo}>

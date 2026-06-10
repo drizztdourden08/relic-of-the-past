@@ -11,8 +11,10 @@
 #
 # Output: output/zelda3.js, output/zelda3.wasm
 #
-# NOTE: EXPORTED_FUNCTIONS below MUST stay in sync with build.bat (the canonical
-# build used for the app). CI runs scripts/build/check-wasm-exports.mjs to enforce this.
+# NOTE: There is no explicit list of Wasm* exports to maintain. Every JS-callable
+# function is tagged EMSCRIPTEN_KEEPALIVE in its .c file, which both retains and
+# exports the symbol — that attribute is the single source of truth. Adding an
+# export touches only the C file + the ccall site, never this build (or build.bat).
 
 ZELDA3 := ../zelda3
 
@@ -100,8 +102,8 @@ EMFLAGS := -sUSE_SDL=2 \
 	-sMODULARIZE=1 \
 	-sEXPORT_NAME='Zelda3' \
 	-sENVIRONMENT=web,node \
-	-sEXPORTED_FUNCTIONS='["_main","_WasmSaveState","_WasmLoadState","_WasmSaveSram","_WasmLoadSram","_WasmSetItemOverride","_WasmClearItemOverrides","_WasmSetFeatures","_WasmGetFeatures","_WasmSetPpuRenderFlags","_WasmGetPpuRenderFlags","_WasmGetFps","_WasmSetDisplayPerf","_WasmGetInventoryState","_WasmGetRoomFlags","_WasmGetLiveRoomFlags","_WasmGetOverworldFlags","_WasmGetProgressFlags","_WasmSetInput","_WasmSetInputMode","_WasmTriggerCheck","_WasmTriggerNpcCheck","_WasmSetPaused","_WasmGetPaused","_WasmTogglePause","_WasmReset","_WasmCheat","_WasmGetViewportInfo","_WasmGetIndoorAttrTable","_WasmGetLinkIsOnLowerLevel","_WasmGetRoomCollisionType","_WasmGetRoomCollisionTypeForRoom","_WasmGetIndoorUncleBlockers","_WasmGetNavigationBlockers","_WasmGetLiveSprites","_WasmGetOverworldGuardSpawns","_WasmRenderCleanFrame","_WasmGetCleanFrameWidth","_WasmGetCleanFrameHeight","_WasmGetGameUIState","_WasmSetUIOverlayMode","_WasmGetUIOverlayMode","_WasmSetForceBackdropBlack","_WasmSetHudHidden","_WasmSetPauseHidden","_WasmSetAppMasterVolume","_WasmSetMusicVolume","_WasmSetSfxVolume","_WasmCheatGiveItem","_WasmCheatSetHealth","_WasmCheatSetMaxHealth","_WasmCheatSetRupees","_WasmCheatSetBombs","_WasmCheatSetArrows","_WasmCheatRefillMagic","_WasmCheatFillBottle","_WasmCheatKillAllEnemies","_WasmCheatSetDamageMultiplier","_WasmCheatSetExtraArmorPct","_WasmCheatStartTrace","_WasmCanReceiveItem","_WasmGetEntranceSpawns","_WasmGetStaircaseType","_WasmBuildOverworldAttrGrid","_WasmBuildRoomAttrGrid","_WasmInitHeadless","_WasmGetRoomLayoutInfo","_WasmGetRoomDoorBoundaryTiles"]' \
--sEXPORTED_RUNTIME_METHODS='["ccall","cwrap","FS","HEAPU8"]'
+	-sEXPORTED_FUNCTIONS='["_main","_malloc","_free"]' \
+	-sEXPORTED_RUNTIME_METHODS='["ccall","cwrap","FS","HEAPU8"]'
 
 LDFLAGS := $(EMFLAGS)
 

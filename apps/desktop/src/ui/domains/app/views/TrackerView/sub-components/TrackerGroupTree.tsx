@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box, Text, Image } from '../../../../../design-system/primitives';
+import { Box, Text, Image, Button } from '../../../../../design-system/primitives';
 import type { CheckDefinition } from '@shared/game/types';
 import type { CheckStatus } from '@shared/game/logic/eval';
 import type { GroupNode } from '@shared/game/checks/grouping';
@@ -47,7 +47,7 @@ const TrackerGroupSection = ({ node, statuses, viewMode, depth }: TrackerGroupTr
 
   return (
     <Box className={`tracker-group tracker-group--depth-${Math.min(depth, 4)}`}>
-      <Box as="button" className="tracker-group__header" onClick={() => setExpanded(!expanded)}>
+      <Button variant="bare" className="tracker-group__header" onClick={() => setExpanded(!expanded)}>
         <Text className="tracker-group__chevron">{expanded ? '▼' : '▶'}</Text>
         <Text className="tracker-group__name">{node.label}</Text>
         <Text className="tracker-group__counts">
@@ -57,7 +57,7 @@ const TrackerGroupSection = ({ node, statuses, viewMode, depth }: TrackerGroupTr
           /
           <Text className="tracker-group__count--total">{total}</Text>
         </Text>
-      </Box>
+      </Button>
       {expanded && (
         <Box className="tracker-group__content">
           {node.children.length > 0

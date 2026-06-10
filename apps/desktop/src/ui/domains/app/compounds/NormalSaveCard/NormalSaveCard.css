@@ -9,7 +9,7 @@
 .normal-save-card__name {
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -19,9 +19,9 @@
 .normal-save-card__name-input {
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
-  color: var(--color-text-primary);
-  background: var(--color-surface-hover-strong);
-  border: 1px solid var(--color-gold-base);
+  color: var(--c-text);
+  background: var(--c-hover);
+  border: 1px solid var(--c-gold);
   border-radius: var(--radius-sm);
   padding: var(--space-xs) var(--space-xs);
   outline: none;
@@ -30,5 +30,5 @@
 
 .normal-save-card__time {
   font-size: var(--text-xs);
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
 }

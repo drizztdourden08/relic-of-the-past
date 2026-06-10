@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
 import { Box } from '../../../../../design-system/primitives/Box';
+import { Button } from '../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { useShadowEditorStore } from '../../../../../../stores/shadow-editor-store';
 import { wasmGetViewportInfo } from '../../../../../../lib/game';
@@ -57,8 +58,8 @@ const ShadowElementList = () => {
           </Box>
           <Box className="shadow-element-list__items">
             {screenData.heightmap.map((el) => (
-              <Box
-                as="button"
+              <Button
+                variant="bare"
                 key={el.id}
                 className={`shadow-element-list__item${el.id === selectedElementId ? ' shadow-element-list__item--active' : ''}`}
                 onClick={() => setSelectedElement(el.id, 'heightmap')}
@@ -72,7 +73,7 @@ const ShadowElementList = () => {
                 <Text className="shadow-element-list__item-tag">
                   {getHeightLabel(el.height)}
                 </Text>
-              </Box>
+              </Button>
             ))}
           </Box>
         </Box>
@@ -88,8 +89,8 @@ const ShadowElementList = () => {
           </Box>
           <Box className="shadow-element-list__items">
             {screenData.lights.map((light) => (
-              <Box
-                as="button"
+              <Button
+                variant="bare"
                 key={light.id}
                 className={`shadow-element-list__item${light.id === selectedElementId ? ' shadow-element-list__item--active' : ''}`}
                 onClick={() => setSelectedElement(light.id, 'light')}
@@ -103,7 +104,7 @@ const ShadowElementList = () => {
                 <Text className="shadow-element-list__item-tag">
                   r{light.radius}
                 </Text>
-              </Box>
+              </Button>
             ))}
           </Box>
         </Box>

@@ -10,6 +10,5 @@ export type { ExclusiveInsets } from './behavior/computeDockedStyles';
 export { loadLayoutLocal, saveLayoutLocal, loadLayoutForProfile, saveLayoutForProfile, updateWidget, getWidgetState } from './behavior/widgetStore';
 export { useWidgetLayout } from './behavior/useWidgetLayout';
 export { useWidgetDrag } from './behavior/useWidgetDrag';
-export { useExclusiveInsetsStore } from './behavior/exclusiveInsetsStore';
 export { useWidgetResize, getDockedResizeEdge } from './behavior/useWidgetResize';
 import './Widget.css';

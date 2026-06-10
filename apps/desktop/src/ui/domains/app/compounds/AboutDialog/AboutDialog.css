@@ -16,7 +16,7 @@
 .about-dialog__title {
   font-size: var(--text-lg);
   font-weight: var(--weight-semi);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   margin: 0;
 }
 
@@ -38,18 +38,18 @@
 
 .about-dialog__label {
   font-size: var(--text-sm);
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
 }
 
 .about-dialog__value {
   font-size: var(--text-sm);
   font-family: var(--font-mono);
-  color: var(--color-text-primary);
+  color: var(--c-text);
 }
 
 .about-dialog__description {
   font-size: var(--text-sm);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   text-align: center;
   line-height: 1.5;
   margin: var(--space-md) 0;

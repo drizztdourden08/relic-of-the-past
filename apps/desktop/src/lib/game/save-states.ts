@@ -6,7 +6,7 @@
 import { log } from '../log-bus';
 import { getModule, getProfileId } from './wasm-bridge';
 import { pollInventoryState } from './tracker';
-import { reassertBackdropBlack, reassertHudHidden, reassertPauseHidden, reassertVolumes } from './live-settings';
+import { reassertLiveFlagsAfterLoad } from './live-settings';
 
 const captureScreenshot = (): Promise<Blob | null> => {
   const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
@@ -98,10 +98,7 @@ const loadState = async (slot: number): Promise<boolean> => {
     log.app(`[LoadState] ccall returned — state loaded ✓`);
 
     // Re-assert all WASM flags that state load resets
-    reassertBackdropBlack();
-    reassertHudHidden();
-    reassertPauseHidden();
-    reassertVolumes();
+    reassertLiveFlagsAfterLoad();
 
     // Force inventory poll so tracker reflects the loaded state
     pollInventoryState(true);
@@ -140,10 +137,7 @@ const loadStateFromBuffer = (buffer: ArrayBuffer, slot = 98): boolean => {
   const savePath = `/saves/save${slot}.sav`;
   mod.FS.writeFile(savePath, new Uint8Array(buffer));
   mod.ccall('WasmLoadState', null, ['number'], [slot]);
-  reassertBackdropBlack();
-  reassertHudHidden();
-  reassertPauseHidden();
-  reassertVolumes();
+  reassertLiveFlagsAfterLoad();
   pollInventoryState(true);
   try { mod.FS.unlink(savePath); } catch { /* ignore */ }
   return true;

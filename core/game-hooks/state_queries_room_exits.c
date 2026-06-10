@@ -178,8 +178,7 @@ int WasmGetRoomWalkBoundaries(void) {
     else dest = room + 1;                    // east → room right
 
     int o = 2 + count * 4;
-    g_walk_bounds_buf[o + 0] = (uint8)(dest & 0xFF);
-    g_walk_bounds_buf[o + 1] = (uint8)(dest >> 8);
+    PutU16(g_walk_bounds_buf, o, dest);
     g_walk_bounds_buf[o + 2] = row;
     g_walk_bounds_buf[o + 3] = col;
     count++;

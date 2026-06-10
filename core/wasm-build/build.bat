@@ -74,6 +74,12 @@ echo ============================================
 echo Building zelda3 WASM...
 echo ============================================
 
+REM NOTE: We do NOT maintain an explicit EXPORTED_FUNCTIONS list of Wasm* exports.
+REM Every JS-callable function is tagged EMSCRIPTEN_KEEPALIVE in its .c file, which
+REM both retains and exports the symbol. KEEPALIVE is the single source of truth, so
+REM adding a new export only touches the C file + the ccall site (no build edits).
+REM Only the runtime entry points that JS may call directly are listed below.
+
 emcc -O2 -g2 ^
   -I %ZELDA3% ^
   -I ..\game-hooks ^
@@ -93,7 +99,7 @@ emcc -O2 -g2 ^
   -sFORCE_FILESYSTEM=1 ^
   -sMODULARIZE=1 ^
   -sEXPORT_NAME="Zelda3" ^
-  -sEXPORTED_FUNCTIONS="['_main','_WasmSaveState','_WasmLoadState','_WasmSaveSram','_WasmLoadSram','_WasmSetItemOverride','_WasmClearItemOverrides','_WasmSetFeatures','_WasmGetFeatures','_WasmSetPpuRenderFlags','_WasmGetPpuRenderFlags','_WasmGetFps','_WasmSetDisplayPerf','_WasmGetInventoryState','_WasmGetRoomFlags','_WasmGetLiveRoomFlags','_WasmGetOverworldFlags','_WasmGetProgressFlags','_WasmSetInput','_WasmSetInputMode','_WasmTriggerCheck','_WasmTriggerNpcCheck','_WasmSetPaused','_WasmGetPaused','_WasmTogglePause','_WasmReset','_WasmCheat','_WasmGetViewportInfo','_WasmGetIndoorAttrTable','_WasmGetLinkIsOnLowerLevel','_WasmGetRoomCollisionType','_WasmGetRoomCollisionTypeForRoom','_WasmGetIndoorUncleBlockers','_WasmGetNavigationBlockers','_WasmGetLiveSprites','_WasmGetOverworldGuardSpawns','_WasmRenderCleanFrame','_WasmGetCleanFrameWidth','_WasmGetCleanFrameHeight','_WasmGetGameUIState','_WasmSetUIOverlayMode','_WasmGetUIOverlayMode','_WasmSetForceBackdropBlack','_WasmSetHudHidden','_WasmSetPauseHidden','_WasmSetAppMasterVolume','_WasmSetMusicVolume','_WasmSetSfxVolume','_WasmCheatGiveItem','_WasmCheatSetHealth','_WasmCheatSetMaxHealth','_WasmCheatSetRupees','_WasmCheatSetBombs','_WasmCheatSetArrows','_WasmCheatRefillMagic','_WasmCheatFillBottle','_WasmCheatKillAllEnemies','_WasmCheatSetDamageMultiplier','_WasmCheatSetExtraArmorPct','_WasmCheatStartTrace','_WasmCanReceiveItem','_WasmGetEntranceSpawns','_WasmGetStaircaseType','_WasmBuildOverworldAttrGrid','_WasmBuildRoomAttrGrid','_WasmInitHeadless','_WasmGetRoomLayoutInfo','_WasmGetRoomDoorBoundaryTiles']" ^
+  -sEXPORTED_FUNCTIONS="['_main','_malloc','_free']" ^
   -sEXPORTED_RUNTIME_METHODS="['ccall','cwrap','FS','HEAPU8']"
 
 if %ERRORLEVEL% NEQ 0 (

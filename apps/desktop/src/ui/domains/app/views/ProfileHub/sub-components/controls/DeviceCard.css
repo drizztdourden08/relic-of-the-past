@@ -4,8 +4,8 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  background: var(--color-bg-raised);
-  border: 1px solid var(--color-border-subtle);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
   border-radius: var(--radius-md);
   cursor: grab;
   user-select: none;
@@ -16,12 +16,12 @@
 
 /* ─── Stale state ─── */
 .device-card--stale {
-  border-color: var(--color-danger-base);
+  border-color: var(--c-danger);
 }
 
 .device-card__api--stale {
   background: var(--c-danger-soft);
-  color: var(--color-danger-text);
+  color: var(--c-danger);
   border: 1px solid var(--c-danger);
   animation: stale-badge-pulse 1.5s ease-in-out infinite;
 }
@@ -32,8 +32,8 @@
 }
 
 .device-card:hover {
-  border-color: var(--color-gold-base);
-  background: var(--color-bg-elevated);
+  border-color: var(--c-gold);
+  background: var(--c-surface);
 }
 
 .device-card:active {
@@ -109,7 +109,7 @@
 .device-card__name {
   font-size: var(--text-base);
   font-weight: var(--weight-medium);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   overflow-wrap: break-word;
   line-height: 1.3;
 }
@@ -129,18 +129,18 @@
 
 .device-card__api--xinput {
   background: var(--c-green-soft);
-  color: var(--color-green-bright);
+  color: var(--c-green-bright);
   border: 1px solid var(--c-green);
 }
 
 .device-card__api--hid {
   background: var(--c-info-soft);
-  color: var(--color-info-base);
+  color: var(--c-info);
   border: 1px solid var(--c-info);
 }
 
 .device-card__api--webapi {
   background: var(--c-warning-soft);
-  color: var(--color-warning-base);
+  color: var(--c-warning);
   border: 1px solid var(--c-warning);
 }

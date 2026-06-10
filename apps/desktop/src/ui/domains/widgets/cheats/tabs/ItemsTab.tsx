@@ -5,7 +5,7 @@
  * "From Check" shows the check list with grant buttons.
  */
 import { useState, useMemo, useEffect } from 'react';
-import { TextInput, Box, Text, Image } from '../../../../design-system/primitives';
+import { TextInput, Box, Text, Image, Button } from '../../../../design-system/primitives';
 import { ITEMS } from '@shared/game/items';
 import { getItemSprite } from '@shared/game/items/sprites';
 import { ALL_CHECKS } from '@shared/game/checks';
@@ -78,20 +78,12 @@ const ItemsTab = () => {
   return (
     <Box className="cheats-tab-items">
       <Box className="cheats-items__mode-toggle">
-        <Box
-          as="button"
-          className={`cheats-radio ${mode === 'free' ? 'cheats-radio--active' : ''}`}
-          onClick={() => setMode('free')}
-        >
+        <Button variant={mode === 'free' ? 'secondary' : 'tertiary'} size="sm" onClick={() => setMode('free')}>
           Free Give
-        </Box>
-        <Box
-          as="button"
-          className={`cheats-radio ${mode === 'checks' ? 'cheats-radio--active' : ''}`}
-          onClick={() => setMode('checks')}
-        >
+        </Button>
+        <Button variant={mode === 'checks' ? 'secondary' : 'tertiary'} size="sm" onClick={() => setMode('checks')}>
           From Check
-        </Box>
+        </Button>
       </Box>
 
       {mode === 'free' && (
@@ -106,8 +98,8 @@ const ItemsTab = () => {
                   {items.map(item => {
                     const sprite = getItemSprite(item.name);
                     return (
-                      <Box
-                        as="button"
+                      <Button
+                        variant="tile"
                         key={item.id}
                         className="cheats-item-btn"
                         onClick={() => cheatGiveItem(item.id)}
@@ -117,7 +109,7 @@ const ItemsTab = () => {
                           ? <Image className="cheats-item-btn__icon" src={sprite} alt="" draggable={false} />
                           : <Box as="span" className="cheats-item-btn__icon cheats-item-btn__icon--empty">?</Box>}
                         <Text className="cheats-item-btn__label">{item.name}</Text>
-                      </Box>
+                      </Button>
                     );
                   })}
                 </Box>
@@ -131,8 +123,7 @@ const ItemsTab = () => {
         <Box>
           <TextInput
             type="text"
-            className="cheats-input"
-            style={{ width: '100%', marginBottom: 8, textAlign: 'left' }}
+            className="cheats-input cheats-search"
             placeholder="Search checks..."
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -148,14 +139,14 @@ const ItemsTab = () => {
                   <Text className="cheats-checks__name" title={`${check.screen} • ${check.type}`}>
                     {check.name}
                   </Text>
-                  <Box
-                    as="button"
+                  <Button
+                    size="sm"
                     className="cheats-checks__grant-btn"
                     disabled={done || !canTrigger}
                     onClick={() => handleGrantCheck(check)}
                   >
                     Grant
-                  </Box>
+                  </Button>
                 </Box>
               );
             })}

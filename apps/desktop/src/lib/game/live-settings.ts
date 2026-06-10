@@ -96,41 +96,33 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
   }
 };
 
-const reassertBackdropBlack = (): void => {
+/** Guarded one-arg ccall — no-op if the module or export is unavailable. */
+const tryVoidCcall = (fn: string, value: number): void => {
   const mod = getModule();
   if (!mod) return;
-  try {
-    mod.ccall('WasmSetForceBackdropBlack', null, ['number'], [lastBackdropBlack ? 1 : 0]);
-  } catch { /* ignore — WASM may not have this export */ }
+  try { mod.ccall(fn, null, ['number'], [value]); } catch { /* ignore — WASM may not have this export */ }
 };
 
-const reassertHudHidden = (): void => {
-  const mod = getModule();
-  if (!mod) return;
-  try {
-    mod.ccall('WasmSetHudHidden', null, ['number'], [lastHudHidden ? 1 : 0]);
-  } catch { /* ignore — WASM may not have this export */ }
-};
+const reassertBackdropBlack = (): void => tryVoidCcall('WasmSetForceBackdropBlack', lastBackdropBlack ? 1 : 0);
 
-const reassertPauseHidden = (): void => {
-  const mod = getModule();
-  if (!mod) return;
-  try {
-    mod.ccall('WasmSetPauseHidden', null, ['number'], [lastPauseHidden ? 1 : 0]);
-  } catch { /* ignore — WASM may not have this export */ }
-};
+const reassertHudHidden = (): void => tryVoidCcall('WasmSetHudHidden', lastHudHidden ? 1 : 0);
+
+const reassertPauseHidden = (): void => tryVoidCcall('WasmSetPauseHidden', lastPauseHidden ? 1 : 0);
 
 const reassertVolumes = (): void => {
-  const mod = getModule();
-  if (!mod) return;
+  if (!getModule()) return;
   setMasterVolume(lastMasterVolume);
-  try { mod.ccall('WasmSetAppMasterVolume', null, ['number'], [Math.round(lastMasterVolume * 1.28)]); } catch {}
-  try { mod.ccall('WasmSetMusicVolume', null, ['number'], [lastMusicVol]); } catch {}
-  try { mod.ccall('WasmSetSfxVolume', null, ['number'], [lastSfxVol]); } catch {}
+  tryVoidCcall('WasmSetAppMasterVolume', Math.round(lastMasterVolume * 1.28));
+  tryVoidCcall('WasmSetMusicVolume', lastMusicVol);
+  tryVoidCcall('WasmSetSfxVolume', lastSfxVol);
 };
 
-const requiresRestart = (changedKeys: (keyof GameSettings)[]): boolean => {
-  return changedKeys.some((k) => !LIVE_SETTINGS.has(k));
+/** Re-assert every live flag after a save-state load clobbers WRAM. */
+const reassertLiveFlagsAfterLoad = (): void => {
+  reassertBackdropBlack();
+  reassertHudHidden();
+  reassertPauseHidden();
+  reassertVolumes();
 };
 
 const primeLiveSettings = (settings: GameSettings): void => {
@@ -144,4 +136,4 @@ const primeLiveSettings = (settings: GameSettings): void => {
   lastSfxVol = settings.sfxMuted ? 0 : Math.round(settings.sfxVolume * 1.28);
 };
 
-export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, reassertHudHidden, reassertPauseHidden, reassertVolumes, requiresRestart, primeLiveSettings };
+export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, primeLiveSettings };

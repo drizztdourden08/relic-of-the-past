@@ -7,18 +7,30 @@
  */
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import type { CSSProperties } from 'react';
 import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { getDungeonName } from '@shared/game/data/screens/game-values';
 import { wasmGetProgressIndicator, wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetRoomStairInfo } from '../../../../lib/game';
 import { useScreenDataStatus, useConnectionStatus } from './useDatasetStatus';
 import { ScreenEditorDialog } from './ScreenEditorDialog';
 import { ConnectionEditorDialog } from './ConnectionEditorDialog';
-import { Box, Text, StatusBadge } from '../../../design-system/primitives';
+import { Box, Text, StatusBadge, Button } from '../../../design-system/primitives';
 import { useScreenDetection } from './hooks';
 import type { ReviewStatus, ReviewData } from './dataset-widget-types';
 import { S } from './dataset-widget-styles';
 import { StatusRow } from './StatusRow';
 import { DatasetStatusPill } from './DatasetStatusPill';
+
+// Static inline-style literals (dynamic/conditional styles stay inline).
+const IL: Record<string, CSSProperties> = {
+  statusHead: { display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 },
+  warnText: { color: 'var(--c-warning)', fontSize: 10 },
+  corrBox: { padding: '3px 6px', marginTop: 2, borderRadius: 'var(--r-sm)', background: 'var(--c-warning-soft)', border: '1px solid var(--c-warning-soft)' },
+  corrTitle: { fontSize: 9, color: 'var(--c-warning)', fontWeight: 600, marginBottom: 2 },
+  corrItem: { fontSize: 10, color: 'var(--c-text-dim)', lineHeight: '14px' },
+  corrField: { color: 'var(--c-info)' },
+  btnRow: { display: 'flex', gap: 4, marginTop: 4 },
+};
 
 const DatasetWidgetContent = () => {
   const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex } = useGameUIStore(s => s.map);
@@ -99,7 +111,7 @@ const DatasetWidgetContent = () => {
     <Box style={S.root}>
       {/* ═══ DATASET STATUS ═══ */}
       <Box style={S.section}>
-        <Box style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+        <Box style={IL.statusHead}>
           <Box style={S.sectionTitle}>Dataset</Box>
           <DatasetStatusPill
             background={screenStatus.status === 'mapped' ? '#1a3a1a' : screenStatus.status === 'incomplete' ? '#3a3a1a' : '#3a1a1a'}
@@ -144,21 +156,21 @@ const DatasetWidgetContent = () => {
           {screenStatus.screen && !screenStatus.screen.variant && detectionResult?.method === 'cave-ambiguous' && progressInfo && (
             <Box style={S.infoRow}>
               <Text style={S.infoLabel}>⚠️</Text>
-              <Text style={{ color: 'var(--c-warning)', fontSize: 10 }}>Default entry — no variant for "{progressInfo.label}"</Text>
+              <Text style={IL.warnText}>Default entry — no variant for "{progressInfo.label}"</Text>
             </Box>
           )}
           {screenStatus.issues.length > 0 && (
             <Box style={S.infoRow}>
               <Text style={S.infoLabel}>Issues</Text>
-              <Text style={{ color: 'var(--c-warning)', fontSize: 10 }}>{screenStatus.issues.join(', ')}</Text>
+              <Text style={IL.warnText}>{screenStatus.issues.join(', ')}</Text>
             </Box>
           )}
           {screenStatus.corrections.length > 0 && (
-            <Box style={{ padding: '3px 6px', marginTop: 2, borderRadius: 'var(--r-sm)', background: 'var(--c-warning-soft)', border: '1px solid var(--c-warning-soft)' }}>
-              <Box style={{ fontSize: 9, color: 'var(--c-warning)', fontWeight: 600, marginBottom: 2 }}>⚠ Suggested Corrections</Box>
+            <Box style={IL.corrBox}>
+              <Box style={IL.corrTitle}>⚠ Suggested Corrections</Box>
               {screenStatus.corrections.map((c, i) => (
-                <Box key={i} style={{ fontSize: 10, color: 'var(--c-text-dim)', lineHeight: '14px' }}>
-                  <Text style={{ color: 'var(--c-info)' }}>{c.field}</Text>: {c.message}
+                <Box key={i} style={IL.corrItem}>
+                  <Text style={IL.corrField}>{c.field}</Text>: {c.message}
                 </Box>
               ))}
             </Box>
@@ -168,13 +180,13 @@ const DatasetWidgetContent = () => {
             <Text>{connStatus.existingConnections.length} in dataset{connStatus.missingCount > 0 ? `, ${connStatus.missingCount} detected not mapped` : ''}</Text>
           </Box>
         </Box>
-        <Box style={{ display: 'flex', gap: 4, marginTop: 4 }}>
-          <Box as="button" style={S.btn} onClick={() => setScreenEditorOpen(true)}>
+        <Box style={IL.btnRow}>
+          <Button variant="tertiary" size="sm" onClick={() => setScreenEditorOpen(true)}>
             ✏️ Edit Screen
-          </Box>
-          <Box as="button" style={S.btn} onClick={() => setConnEditorOpen(true)}>
+          </Button>
+          <Button variant="tertiary" size="sm" onClick={() => setConnEditorOpen(true)}>
             ✏️ Edit Connections
-          </Box>
+          </Button>
         </Box>
       </Box>
 

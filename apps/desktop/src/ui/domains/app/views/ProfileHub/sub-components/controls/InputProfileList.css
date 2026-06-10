@@ -3,12 +3,12 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  border-right: 1px solid var(--color-border-subtle);
+  border-right: 1px solid var(--c-border);
 }
 
 .input-profile-list__header {
   padding: var(--space-md) var(--space-lg);
-  border-bottom: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--c-border);
 }
 
 .input-profile-list__title {
@@ -16,7 +16,7 @@
   font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
 }
 
 .input-profile-list__items {
@@ -28,7 +28,7 @@
 .input-profile-list__empty {
   padding: var(--space-lg);
   font-size: var(--text-base);
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
   text-align: center;
 }
 
@@ -40,7 +40,7 @@
   padding: var(--space-sm) var(--space-lg);
   background: none;
   border: none;
-  color: var(--color-text-primary);
+  color: var(--c-text);
   cursor: pointer;
   text-align: left;
   font-size: var(--text-base);
@@ -48,12 +48,12 @@
 }
 
 .input-profile-list__item:hover {
-  background: var(--color-bg-elevated);
+  background: var(--c-surface);
 }
 
 .input-profile-list__item--active {
-  background: var(--color-gold-glow);
-  border-left: 2px solid var(--color-gold-base);
+  background: var(--c-gold-soft);
+  border-left: 2px solid var(--c-gold);
 }
 
 .input-profile-list__item-icon {
@@ -74,10 +74,10 @@
 .input-profile-list__item-input {
   flex: 1;
   min-width: 0;
-  background: var(--color-bg-deep);
-  border: 1px solid var(--color-gold-base);
+  background: var(--c-bg);
+  border: 1px solid var(--c-gold);
   border-radius: var(--r-sm);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   font-size: var(--text-base);
   padding: var(--space-xs) var(--space-sm);
   outline: none;
@@ -85,7 +85,7 @@
 
 .input-profile-list__item-edit {
   font-size: var(--text-sm);
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
   padding: var(--space-xs) var(--space-xs);
   border-radius: var(--r-sm);
   opacity: 0;
@@ -98,12 +98,12 @@
 }
 
 .input-profile-list__item-edit:hover {
-  color: var(--color-gold-base);
+  color: var(--c-gold);
 }
 
 .input-profile-list__item-delete {
   font-size: var(--text-sm);
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
   padding: var(--space-xs) var(--space-xs);
   border-radius: var(--r-sm);
   opacity: 0;
@@ -115,10 +115,10 @@
 }
 
 .input-profile-list__item-delete:hover {
-  color: var(--color-danger-base);
+  color: var(--c-danger);
 }
 
 .input-profile-list__footer {
   padding: var(--space-md) var(--space-lg);
-  border-top: 1px solid var(--color-border-subtle);
+  border-top: 1px solid var(--c-border);
 }

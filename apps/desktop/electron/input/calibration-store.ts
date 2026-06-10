@@ -3,18 +3,10 @@
  * Calibration persistence — stick and trigger calibration data per device.
  */
 
-import { join } from 'path';
-import { readFile, writeFile } from 'fs/promises';
+import { getUserDataPath } from '../lib/paths';
+import { readJson, writeJson } from '../lib/json-store';
 
-let userDataPath = '';
-
-const initCalibrationStore = (dataPath: string): void => {
-  userDataPath = dataPath;
-};
-
-const path = (...segments: string[]): string => {
-  return join(userDataPath, 'Data', ...segments);
-};
+const path = (...segments: string[]): string => getUserDataPath(...segments);
 
 // ── Stick calibration ──
 
@@ -40,40 +32,29 @@ type StickCalibrationStore = Record<string, DeviceStickCalibration>;
 
 const STICK_CAL_FILE = 'stick-calibration.json';
 
-const readStickCalibration = async (): Promise<StickCalibrationStore> => {
-  try {
-    const data = await readFile(path(STICK_CAL_FILE), 'utf-8');
-    return JSON.parse(data);
-  } catch {
-    return {};
-  }
-};
+const readStickCalibration = (): Promise<StickCalibrationStore> =>
+  readJson<StickCalibrationStore>(path(STICK_CAL_FILE), {});
 
-const writeStickCalibration = async (store: StickCalibrationStore): Promise<void> => {
-  await writeFile(path(STICK_CAL_FILE), JSON.stringify(store, null, 2), 'utf-8');
-};
+const writeStickCalibration = (store: StickCalibrationStore): Promise<void> =>
+  writeJson(path(STICK_CAL_FILE), store);
 
 // ── Trigger calibration ──
 
+type TriggerCalibration = { base: number; max: number; deadzone: number };
+type TriggerCalibrationStore = Record<string, TriggerCalibration>;
+
 const TRIGGER_CAL_FILE = 'trigger-calibration.json';
 
-const readTriggerCalibration = async (): Promise<Record<string, { base: number; max: number; deadzone: number }>> => {
-  try {
-    const data = await readFile(path(TRIGGER_CAL_FILE), 'utf-8');
-    return JSON.parse(data);
-  } catch {
-    return {};
-  }
-};
+const readTriggerCalibration = (): Promise<TriggerCalibrationStore> =>
+  readJson<TriggerCalibrationStore>(path(TRIGGER_CAL_FILE), {});
 
-const writeTriggerCalibration = async (deviceKey: string, axisIndex: number, cal: { base: number; max: number; deadzone: number }): Promise<void> => {
+const writeTriggerCalibration = async (deviceKey: string, axisIndex: number, cal: TriggerCalibration): Promise<void> => {
   const store = await readTriggerCalibration();
   store[`${deviceKey}:${axisIndex}`] = cal;
-  await writeFile(path(TRIGGER_CAL_FILE), JSON.stringify(store, null, 2), 'utf-8');
+  await writeJson(path(TRIGGER_CAL_FILE), store);
 };
 
 export {
-  initCalibrationStore,
   readStickCalibration,
   readTriggerCalibration,
   writeStickCalibration,

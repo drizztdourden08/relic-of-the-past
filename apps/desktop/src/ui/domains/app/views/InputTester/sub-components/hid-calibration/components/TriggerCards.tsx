@@ -2,10 +2,14 @@
 /**
  * Trigger calibration cards for the HID Calibration Wizard.
  */
+import type { CSSProperties } from 'react';
 import { Box } from '../../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../../design-system/primitives/Text';
+import { Button } from '../../../../../../../design-system/primitives/Button';
 import type { InputItem, IdleRecordResult, TriggerSide } from '../hid-calibration.type';
 import { TRIGGER_IDS } from '../hid-calibration.constants';
+
+const DESC_SMALL: CSSProperties = { fontSize: 10 };
 
 interface TriggerCardsProps {
   items: InputItem[];
@@ -59,42 +63,38 @@ const TriggerCards = (props: TriggerCardsProps) => {
             {isRecording && triggerLiveInfo && <Box className="hid-cal__stick-info">{triggerLiveInfo}</Box>}
             {isRecording && !triggerLiveInfo && <Text as="p" className="hid-cal__desc">Press the trigger fully and release...</Text>}
             {!isActive && isDone && (
-              <Text as="p" className="hid-cal__desc" style={{ fontSize: 10 }}>{item.result ?? '—'}</Text>
+              <Text as="p" className="hid-cal__desc" style={DESC_SMALL}>{item.result ?? '—'}</Text>
             )}
 
             <Box className="hid-cal__prereq-actions">
               {isPicking ? (
                 <>
-                  <Box as="button" onClick={onConfirmTriggerPick} disabled={triggerPickedByte === null}
-                    className="input-cal__btn input-cal__btn--primary" style={{ fontSize: 11 }}>Confirm</Box>
-                  <Box as="button" onClick={onCancelTriggerPick} className="input-cal__btn input-cal__btn--danger" style={{ fontSize: 11 }}>Cancel</Box>
+                  <Button variant="primary" size="sm" onClick={onConfirmTriggerPick} disabled={triggerPickedByte === null}>Confirm</Button>
+                  <Button variant="danger" size="sm" onClick={onCancelTriggerPick}>Cancel</Button>
                 </>
               ) : isRecording ? (
-                <Box as="button" onClick={onStopTrigger} className="input-cal__btn input-cal__btn--danger" style={{ fontSize: 11 }}>Stop</Box>
+                <Button variant="danger" size="sm" onClick={onStopTrigger}>Stop</Button>
               ) : isDone ? (
                 <>
-                  <Box as="button" onClick={() => onTriggerRedo(side)} disabled={otherBusy} className="input-cal__btn" style={{ fontSize: 11 }}>Redo</Box>
-                  <Box
-                    as="button"
+                  <Button variant="tertiary" size="sm" onClick={() => onTriggerRedo(side)} disabled={otherBusy}>Redo</Button>
+                  <Button
+                    variant="tertiary"
+                    size="sm"
                     disabled={idleRecording !== null}
-                    className={`input-cal__btn${idleResults[label] ? ' input-cal__btn--done' : ''}`}
-                    style={{ fontSize: 11 }}
+                    className={idleResults[label] ? 'input-cal__btn--done' : ''}
                     onClick={() => {
                       const byteIndices: number[] = [];
                       if (item?.axisMapping) byteIndices.push(item.axisMapping.byteIndex);
                       if (byteIndices.length > 0) onIdleRecord(label, byteIndices);
                     }}>
                     {idleRecording === label ? 'Recording...' : idleResults[label] ? '✓ Idle' : 'Idle'}
-                  </Box>
+                  </Button>
                 </>
               ) : (
                 <>
-                  <Box as="button" onClick={() => onStartTrigger(side)} disabled={otherBusy}
-                    className="input-cal__btn input-cal__btn--primary" style={{ fontSize: 11 }}>Start</Box>
-                  <Box as="button" onClick={() => onTriggerPickMode(side)} disabled={otherBusy}
-                    className="input-cal__btn" style={{ fontSize: 11 }}>Pick</Box>
-                  <Box as="button" onClick={() => onSkipTrigger(side)} disabled={otherBusy}
-                    className="input-cal__btn" style={{ fontSize: 11 }}>Skip</Box>
+                  <Button variant="primary" size="sm" onClick={() => onStartTrigger(side)} disabled={otherBusy}>Start</Button>
+                  <Button variant="tertiary" size="sm" onClick={() => onTriggerPickMode(side)} disabled={otherBusy}>Pick</Button>
+                  <Button variant="tertiary" size="sm" onClick={() => onSkipTrigger(side)} disabled={otherBusy}>Skip</Button>
                 </>
               )}
             </Box>

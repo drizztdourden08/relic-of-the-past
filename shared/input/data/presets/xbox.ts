@@ -10,8 +10,7 @@
 import { BaseController, type ControllerButton, type ControllerAxis } from '../../base';
 import { registerController } from '../../registry';
 import type { ButtonMapping, ButtonIcon } from '../../../types/controls';
-
-const icon = (key: string, label: string): ButtonIcon => ({ key, path: null, label });
+import { icon, btn, axis } from './builders';
 
 const ICONS: Record<string, ButtonIcon> = {
   'xbox-a':      icon('xbox-a', 'A Button'),
@@ -36,14 +35,6 @@ const ICONS: Record<string, ButtonIcon> = {
   'xbox-dright': icon('xbox-dright', 'D-Pad Right'),
   'xbox-home':   icon('xbox-home', 'Xbox Button'),
   'xbox-share':  icon('xbox-share', 'Share'),
-};
-
-const btn = (snesButton: ButtonMapping['snesButton'], index: number, iconData: ButtonIcon | null): ButtonMapping => {
-  return { snesButton, binding: { type: 'gamepad-button', index }, icon: iconData };
-};
-
-const axis = (snesButton: ButtonMapping['snesButton'], axisIndex: number, direction: '+' | '-', iconData: ButtonIcon | null): ButtonMapping => {
-  return { snesButton, binding: { type: 'gamepad-axis', axisIndex, direction }, icon: iconData };
 };
 
 const DEFAULT_MAPPINGS: ButtonMapping[] = [

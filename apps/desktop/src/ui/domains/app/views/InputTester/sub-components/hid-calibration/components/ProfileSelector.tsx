@@ -2,9 +2,19 @@
 /**
  * Profile selection screen for the HID Calibration Wizard.
  */
+import type { CSSProperties } from 'react';
 import { DEVICE_PROFILES } from '@shared/input';
-import { Select, Box, Text } from '../../../../../../../design-system/primitives';
+import { Select, Box, Text, Button } from '../../../../../../../design-system/primitives';
 import type { SelectOption } from '../../../../../../../design-system/primitives';
+
+const S: Record<string, CSSProperties> = {
+  mb12: { marginBottom: 12 },
+  label: { fontSize: 12, color: 'var(--c-text-dim)', display: 'block', marginBottom: 4 },
+  ok: { fontSize: 12, color: 'var(--c-green-bright)', margin: '0 0 12px' },
+  warn: { fontSize: 12, color: 'var(--c-warning)', margin: '0 0 12px' },
+  log: { maxHeight: 150 },
+  pre: { whiteSpace: 'pre-wrap' },
+};
 
 interface ProfileSelectorProps {
   selectedProfileId: string;
@@ -25,7 +35,7 @@ const ProfileSelector = (props: ProfileSelectorProps) => {
     <Box className="hid-cal">
       <Box className="hid-cal__header">
         <Text as="h3" className="hid-cal__title">HID Calibration — Select Controller</Text>
-        <Box as="button" onClick={onCancel} className="input-cal__btn input-cal__btn--danger">Cancel</Box>
+        <Button variant="danger" size="sm" onClick={onCancel}>Cancel</Button>
       </Box>
       <Text as="p" className="hid-cal__desc">
         Identify your controller from the SDL database (893+ controllers).
@@ -34,8 +44,8 @@ const ProfileSelector = (props: ProfileSelectorProps) => {
         {selectedSdlVidPid && hasGyro && ' 🔄 Gyro detected — gyro profiling will be available.'}
       </Text>
 
-      <Box style={{ marginBottom: 12 }}>
-        <Text as="label" style={{ fontSize: 12, color: 'var(--c-text-dim)', display: 'block', marginBottom: 4 }}>
+      <Box style={S.mb12}>
+        <Text as="label" style={S.label}>
           Controller (SDL Database)
         </Text>
         <Select
@@ -48,25 +58,24 @@ const ProfileSelector = (props: ProfileSelectorProps) => {
       </Box>
 
       {selectedProfileId && (
-        <Text as="p" style={{ fontSize: 12, color: 'var(--c-green-bright)', margin: '0 0 12px' }}>
+        <Text as="p" style={S.ok}>
           ✓ Profile auto-detected: <Text as="strong">{DEVICE_PROFILES.find(p => p.id === selectedProfileId)?.name ?? selectedProfileId}</Text>
         </Text>
       )}
       {!selectedProfileId && selectedSdlVidPid && (
-        <Text as="p" style={{ fontSize: 12, color: 'var(--c-warning)', margin: '0 0 12px' }}>
+        <Text as="p" style={S.warn}>
           ⚠ No built-in profile for this device — calibration will use a generic layout.
         </Text>
       )}
 
-      <Box as="button" onClick={onConfirm} disabled={!selectedProfileId}
-        className="input-cal__btn input-cal__btn--primary">
+      <Button variant="primary" size="sm" onClick={onConfirm} disabled={!selectedProfileId}>
         Start Calibration
-      </Box>
+      </Button>
 
-      <Box ref={logRef} className="input-cal__log" style={{ maxHeight: 150 }}>
+      <Box ref={logRef} className="input-cal__log" style={S.log}>
         {log.length === 0 && <Box className="input-cal__log-entry">Waiting...</Box>}
         {log.map((entry, i) => (
-          <Box key={i} className="input-cal__log-entry" style={{ whiteSpace: 'pre-wrap' }}>{entry}</Box>
+          <Box key={i} className="input-cal__log-entry" style={S.pre}>{entry}</Box>
         ))}
       </Box>
     </Box>

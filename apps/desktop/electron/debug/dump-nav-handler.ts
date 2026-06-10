@@ -9,8 +9,9 @@
  *   npx electron dist/electron/main.js --muted --dump-nav=1
  */
 
-import { ipcMain, app } from 'electron';
+import { app } from 'electron';
 import { join } from 'path';
+import { handle } from '../lib/ipc/handle';
 import { writeFile, mkdir } from 'fs/promises';
 
 const parseDumpNavSlot = (): number | null => {
@@ -24,9 +25,9 @@ const parseDumpNavSlot = (): number | null => {
 const registerDumpNavHandler = (): void => {
   const slot = parseDumpNavSlot();
 
-  ipcMain.handle('debug:getDumpNavSlot', () => slot);
+  handle('debug:getDumpNavSlot', () => slot);
 
-  ipcMain.handle('debug:dumpNav', async (_event, data: unknown) => {
+  handle('debug:dumpNav', async (_event, data: unknown) => {
     const appRoot = app.isPackaged
       ? join(app.getAppPath(), '../..')
       : join(__dirname, '../..');

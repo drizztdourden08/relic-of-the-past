@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { Box } from '../../primitives/Box';
+import { Button } from '../../primitives/Button';
 import { DialogShell } from '../DialogShell';
 import type { WizardDialogShellProps } from './WizardDialogShell.type';
 import './WizardDialogShell.css';
@@ -16,14 +17,14 @@ const WizardDialogShell = (props: WizardDialogShellProps) => {
     <DialogShell open={open} onClose={onClose} title={title} headerExtra={headerExtra} actions={actions} className={`wizard-dialog${className ? ` ${className}` : ''}`}>
       <Box className="wizard-dialog__steps">
         {steps.map((s, i) => (
-          <Box
-            as="button"
+          <Button
+            variant="bare"
             key={s.label}
             className={`wizard-dialog__step${i === activeStep ? ' wizard-dialog__step--active' : ''}`}
             onClick={() => onStepChange(i)}
           >
             {i + 1}. {s.label}
-          </Box>
+          </Button>
         ))}
       </Box>
       {children}

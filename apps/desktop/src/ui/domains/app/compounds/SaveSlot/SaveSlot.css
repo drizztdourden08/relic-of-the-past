@@ -134,14 +134,14 @@
 
 .save-slot__btn--save:hover:not(:disabled) {
   background: var(--c-gold-soft);
-  border-color: var(--color-gold-base);
-  color: var(--color-gold-bright);
+  border-color: var(--c-gold);
+  color: var(--c-gold-bright);
 }
 
 .save-slot__btn--load:hover:not(:disabled) {
   background: var(--c-green-soft);
-  border-color: var(--color-green-base);
-  color: var(--color-green-bright);
+  border-color: var(--c-green);
+  color: var(--c-green-bright);
 }
 
 .save-slot__btn:disabled {

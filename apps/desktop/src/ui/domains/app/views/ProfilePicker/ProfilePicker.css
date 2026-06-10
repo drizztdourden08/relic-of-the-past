@@ -17,13 +17,13 @@
 .picker__title {
   font-size: var(--text-xl);
   font-weight: var(--weight-semi);
-  color: var(--color-gold-bright);
+  color: var(--c-gold-bright);
   margin-bottom: var(--space-xs);
 }
 
 .picker__subtitle {
   font-size: var(--text-sm);
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
 }
 
 .picker__columns {
@@ -42,11 +42,11 @@
 .picker__col-title {
   font-size: var(--text-base);
   font-weight: var(--weight-semi);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   padding-bottom: var(--space-xs);
-  border-bottom: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--c-border);
 }
 
 .picker__list {
@@ -57,11 +57,11 @@
 
 .picker__empty {
   font-size: var(--text-sm);
-  color: var(--color-text-faint);
+  color: var(--c-text-faint);
   padding: var(--space-lg);
   text-align: center;
-  background: var(--color-bg-raised);
-  border: 1px dashed var(--color-border-subtle);
+  background: var(--c-surface);
+  border: 1px dashed var(--c-border);
   border-radius: var(--radius-lg);
 }
 
@@ -70,10 +70,10 @@
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
-  background: var(--color-bg-raised);
-  border: 1px solid var(--color-gold-dim);
+  background: var(--c-surface);
+  border: 1px solid var(--c-gold-dim);
   border-radius: var(--radius-lg);
-  color: var(--color-gold-bright);
+  color: var(--c-gold-bright);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
 }

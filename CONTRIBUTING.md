@@ -23,19 +23,20 @@ npm install
 npm run dev          # run the app in development
 ```
 
-See [docs/getting-started.md](docs/getting-started.md) for first-run details.
+See the [Quick Start](docs/getting-started/quick-start.md) for first-run details, and the
+[Contributing guide](docs/contributing/index.md) for the full contributor handbook.
 
 ## Project layout
 
 A three-layer architecture (C → WASM bridge → React/Electron). Read these before diving in:
 
 - [CLAUDE.md](CLAUDE.md) — the project guide and architecture overview
-- [docs/architecture.md](docs/architecture.md) — zone map and dependency invariants
-- [docs/design-system.md](docs/design-system.md) — component tiers and design tokens
+- [docs/architecture/overview.md](docs/architecture/overview.md) — zone map and dependency invariants
+- [docs/contributing/design-system.md](docs/contributing/design-system.md) — component tiers and design tokens
 
 ## Coding standards (enforced)
 
-Standards are **mechanically enforced** — see [docs/coding-standards.md](docs/coding-standards.md).
+Standards are **mechanically enforced** — see [docs/contributing/coding-standards.md](docs/contributing/coding-standards.md).
 The highlights:
 
 - **≤ 200 lines per file**, one thing per file, deep logical folders
@@ -46,11 +47,12 @@ The highlights:
 Before opening a PR, run the same gate CI runs:
 
 ```bash
-npm run ci    # tsc + eslint + repo analysis + WASM export-drift check
+npm run ci    # tsc + eslint + repo analysis
 ```
 
-If you change C code in `core/`, keep the `EXPORTED_FUNCTIONS` lists in `build.bat` and `Makefile`
-in sync (`npm run check:exports` enforces this) and rebuild the WASM.
+If you change C code in `core/`, rebuild the WASM. New `Wasm*` exports only need
+the `EMSCRIPTEN_KEEPALIVE` tag (which exports them) — there is no `EXPORTED_FUNCTIONS`
+list to maintain in `build.bat`/`Makefile`.
 
 ## Copyright / media gate
 
@@ -58,7 +60,7 @@ An automatic gate flags any **media** (images, audio, video, music, fonts, ROM/a
 **Nintendo trademark reference** you add — locally via a `commit-msg` hook and on GitHub via the
 **Copyright Gate** check. The project ships no game assets, so anything flagged needs explicit
 approval: add `[allow-copyright]` to your commit message, or (for PRs) a maintainer applies the
-`copyright-ok` label. Full details: [docs/copyright-gate.md](docs/copyright-gate.md).
+`copyright-ok` label. Full details: [docs/contributing/copyright-gate.md](docs/contributing/copyright-gate.md).
 
 ## Tests
 
@@ -66,7 +68,7 @@ Automated tests are intentionally minimal. Playwright is available as a **tool**
 suite — write throwaway specs in `tests/scratch/` (gitignored), run, then delete. The only permanent
 spec is `tests/snapshot.spec.ts` (the visual-snapshot harness). Prefer the app's built-in automation
 flags (`--auto-state`, `--screenshot`, `--dump-layers`, `--dump-nav`) — see
-[docs/testing-capabilities.md](docs/testing-capabilities.md).
+[docs/contributing/testing.md](docs/contributing/testing.md).
 
 ## Commits & pull requests
 

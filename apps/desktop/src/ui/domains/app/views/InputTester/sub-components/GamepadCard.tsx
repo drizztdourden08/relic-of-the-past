@@ -3,14 +3,22 @@
  * GamepadCard — Standard Gamepad API controller display with buttons, sticks, triggers.
  */
 
+import type { CSSProperties } from 'react';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../design-system/primitives/Image';
+import { Button } from '../../../../../design-system/primitives/Button';
 import { DEVICE_PROFILES, findPresetByVidPid, parseGamepadId } from '@shared/input';
 import type { GamepadSnapshot } from '../../../../../../lib/input/input-manager';
 import { getButtonIconUrl } from '@app/lib/input/button-icons';
 import { vibrateGamepad, vibrateGamepadPattern } from '../../../../../../lib/input/vibration';
 import { AxisRecordButton, CONTROLLER_ICON_MAP, StickCircle, TriggerBar } from './input-cal-visuals';
+
+const S: Record<string, CSSProperties> = {
+  icon: { width: 28, height: 28, opacity: 0.7, flexShrink: 0 },
+  col: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 },
+  actions: { marginTop: 'var(--space-md)', display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', flexWrap: 'wrap' },
+};
 
 interface HidDeviceInfo {
   vendorId: string;
@@ -81,7 +89,7 @@ const GamepadCard = ({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
     <Box className="input-cal__card">
       <Box className="input-cal__card-header">
         {controllerIcon && (
-          <Image src={controllerIcon} alt="" draggable={false} style={{ width: 28, height: 28, opacity: 0.7, flexShrink: 0 }} />
+          <Image src={controllerIcon} alt="" draggable={false} style={S.icon} />
         )}
         <Text className="input-cal__card-badge">#{gamepad.index}</Text>
         <Text className="input-cal__card-badge" style={{ background: isXbox ? '#166534' : '#7c3aed', marginLeft: 4 }}>
@@ -106,7 +114,7 @@ const GamepadCard = ({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
               {iconUrl ? (
                 <Image src={iconUrl} alt={profileBtn!.label} draggable={false} />
               ) : (
-                <Text style={{ fontSize: 11, fontWeight: 600, color: pressed ? 'var(--color-green-bright)' : 'var(--color-text-muted)' }}>
+                <Text style={{ fontSize: 11, fontWeight: 600, color: pressed ? 'var(--c-green-bright)' : 'var(--c-text-muted)' }}>
                   {profileBtn?.label ?? i}
                 </Text>
               )}
@@ -140,7 +148,7 @@ const GamepadCard = ({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
           return (
             <Box className="input-cal__sticks">
               {stickPairs.map((s, pairIdx) => (
-                <Box key={s.xIdx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                <Box key={s.xIdx} style={S.col}>
                   <StickCircle
                     x={gamepad.axes[s.xIdx] ?? 0}
                     y={gamepad.axes[s.yIdx] ?? 0}
@@ -177,22 +185,22 @@ const GamepadCard = ({ gamepad, hidDevices }: { gamepad: GamepadSnapshot; hidDev
 
       {/* Vibration tests */}
       {xboxProfile?.supportsVibration && (
-      <Box style={{ marginTop: 'var(--space-md)', display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>
-        <Box as="button" className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 100, { intensity: 1.0 })}>
+      <Box style={S.actions}>
+        <Button variant="tertiary" size="sm" onClick={() => vibrateGamepad(gamepad.index, 100, { intensity: 1.0 })}>
           100ms
-        </Box>
-        <Box as="button" className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 250, { intensity: 1.0 })}>
+        </Button>
+        <Button variant="tertiary" size="sm" onClick={() => vibrateGamepad(gamepad.index, 250, { intensity: 1.0 })}>
           250ms
-        </Box>
-        <Box as="button" className="input-cal__btn" onClick={() => vibrateGamepad(gamepad.index, 1000, { intensity: 1.0 })}>
+        </Button>
+        <Button variant="tertiary" size="sm" onClick={() => vibrateGamepad(gamepad.index, 1000, { intensity: 1.0 })}>
           1000ms
-        </Box>
-        <Box as="button" className="input-cal__btn" onClick={() => vibrateGamepadPattern(gamepad.index, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50)}>
+        </Button>
+        <Button variant="tertiary" size="sm" onClick={() => vibrateGamepadPattern(gamepad.index, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50)}>
           3×100ms
-        </Box>
-        <Box as="button" className="input-cal__btn" onClick={() => vibrateGamepadPattern(gamepad.index, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 1000, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50)}>
+        </Button>
+        <Button variant="tertiary" size="sm" onClick={() => vibrateGamepadPattern(gamepad.index, [{ durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 1000, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }, { durationMs: 100, intensity: 1.0 }], 50)}>
           2-long-2
-        </Box>
+        </Button>
       </Box>
       )}
     </Box>

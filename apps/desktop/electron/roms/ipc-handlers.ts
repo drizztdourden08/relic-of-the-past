@@ -1,20 +1,55 @@
 /* @layer electron-main @kind logic */
-import { ipcMain } from 'electron';
+import { handle } from '../lib/ipc/handle';
 import { basename, extname } from 'path';
 import { readFile, access, copyFile, rm, stat } from 'fs/promises';
 import { getUserDataPath } from '../lib/paths';
-import { extractArchiveToTemp, walkFiles } from '../lib/archive';
-import { downloadToTemp } from '../lib/download';
+import { resolveSourceFiles } from '../lib/import-source';
+import { ROM_EXTENSIONS } from '../lib/extensions';
+import { errMessage } from '../lib/result';
+import { makeImportReporter } from '../lib/import-progress';
 import { listRoms, hasAssetForRom, getAssetFileName } from './store';
 import { listProfiles, deleteProfile } from '../profiles/store';
 import { loadAppState, saveAppState } from '../profiles/app-state';
 
-const ROM_EXTENSIONS = new Set(['.sfc', '.smc']);
+const RAW_ROM_MAX_BYTES = 8 * 1024 * 1024;
+
+const fail = (err: unknown): ImportResult =>
+  ({ success: false, error: errMessage(err), romFile: '' });
+
+// Copy a resolved ROM into the roms dir, reporting whether it already existed.
+const importRomFile = async (romPath: string): Promise<ImportResult> => {
+  const romFile = basename(romPath);
+  const localRomPath = getUserDataPath('roms', romFile);
+  try {
+    await access(localRomPath);
+    return { success: true, romFile, alreadyExists: true };
+  } catch { /* not imported yet */ }
+  await copyFile(romPath, localRomPath);
+  return { success: true, romFile, alreadyExists: false };
+};
+
+const selectSingleRom = (files: string[]): string => {
+  if (files.length === 0) throw new Error('No ROM file (.sfc/.smc) found in the source');
+  if (files.length > 1) throw new Error(`Multiple ROM files found (${files.length}). Provide exactly one ROM.`);
+  return files[0];
+};
+
+// URL fallback: the download wasn't an archive — accept it as a raw ROM if plausible.
+const importRawDownload = async (downloadedPath: string, url: string): Promise<ImportResult> => {
+  const s = await stat(downloadedPath);
+  if (s.size === 0 || s.size > RAW_ROM_MAX_BYTES) {
+    return { success: false, error: 'Downloaded file is not a valid ROM or archive', romFile: '' };
+  }
+  let romFile = basename(new URL(url).pathname);
+  if (!ROM_EXTENSIONS.has(extname(romFile).toLowerCase())) romFile = `rom-${Date.now()}.sfc`;
+  await copyFile(downloadedPath, getUserDataPath('roms', romFile));
+  return { success: true, romFile, alreadyExists: false };
+};
 
 const registerRomHandlers = (): void => {
-  ipcMain.handle('roms:list', () => listRoms());
+  handle('roms:list', () => listRoms());
 
-  ipcMain.handle('roms:listWithStatus', async () => {
+  handle('roms:listWithStatus', async () => {
     const romFiles = await listRoms();
     const results = [];
     for (const romFile of romFiles) {
@@ -22,8 +57,7 @@ const registerRomHandlers = (): void => {
       let assetSize: number | null = null;
       if (hasAssets) {
         try {
-          const assetFile = getAssetFileName(romFile);
-          const s = await stat(getUserDataPath('assets', assetFile));
+          const s = await stat(getUserDataPath('assets', getAssetFileName(romFile)));
           assetSize = s.size;
         } catch { /* ignore */ }
       }
@@ -32,111 +66,60 @@ const registerRomHandlers = (): void => {
     return results;
   });
 
-  ipcMain.handle('roms:import', async (_event, romPath: string) => {
+  handle('roms:import', async (_event, romPath: string): Promise<ImportResult> => {
+    const report = makeImportReporter('rom', basename(romPath));
+    let resolved;
     try {
-      const ext = extname(romPath).toLowerCase();
-
-      if (ROM_EXTENSIONS.has(ext)) {
-        const romFileName = basename(romPath);
-        const localRomPath = getUserDataPath('roms', romFileName);
-        try {
-          await access(localRomPath);
-          return { success: true, romFile: romFileName, alreadyExists: true };
-        } catch { /* not imported yet */ }
-        await copyFile(romPath, localRomPath);
-        return { success: true, romFile: romFileName, alreadyExists: false };
-      }
-
-      if (ext === '.zip' || ext === '.7z' || ext === '.rar') {
-        const tempDir = await extractArchiveToTemp(romPath);
-        try {
-          const romFiles = await walkFiles(tempDir, ROM_EXTENSIONS);
-          if (romFiles.length === 0) {
-            return { success: false, error: 'No ROM file (.sfc/.smc) found inside the archive', romFile: '' };
-          }
-          if (romFiles.length > 1) {
-            return { success: false, error: `Multiple ROM files found inside the archive (${romFiles.length}). Archives must contain exactly one ROM.`, romFile: '' };
-          }
-          const foundRom = romFiles[0];
-          const romFileName = basename(foundRom);
-          const localRomPath = getUserDataPath('roms', romFileName);
-          try {
-            await access(localRomPath);
-            return { success: true, romFile: romFileName, alreadyExists: true };
-          } catch { /* not imported yet */ }
-          await copyFile(foundRom, localRomPath);
-          return { success: true, romFile: romFileName, alreadyExists: false };
-        } finally {
-          await rm(tempDir, { recursive: true, force: true }).catch(() => {});
-        }
-      }
-
-      return { success: false, error: 'Unsupported file type. Use .sfc, .smc, .zip, .7z, or .rar files.', romFile: '' };
+      resolved = await resolveSourceFiles({ kind: 'path', path: romPath }, ROM_EXTENSIONS, (s) => report(s.phase, s.loaded, s.total));
     } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      return { success: false, error: msg, romFile: '' };
+      report('error', undefined, undefined, errMessage(err));
+      return fail(err);
+    }
+    try {
+      const result = await importRomFile(selectSingleRom(resolved.files));
+      report('done');
+      return result;
+    } catch (err) {
+      report('error', undefined, undefined, errMessage(err));
+      return fail(err);
+    } finally {
+      await resolved.cleanup();
     }
   });
 
-  ipcMain.handle('roms:importUrl', async (_event, url: string) => {
+  handle('roms:importUrl', async (_event, url: string): Promise<ImportResult> => {
+    const report = makeImportReporter('rom', 'rom');
+    let resolved;
     try {
-      const tempFile = await downloadToTemp(url, '.zip');
-      try {
-        const tempDir = await extractArchiveToTemp(tempFile);
-        try {
-          const romFiles = await walkFiles(tempDir, ROM_EXTENSIONS);
-          if (romFiles.length === 0) {
-            return { success: false, error: 'No ROM file (.sfc/.smc) found in the downloaded archive', romFile: '' };
-          }
-          if (romFiles.length > 1) {
-            return { success: false, error: `Multiple ROM files found (${romFiles.length}). Archives must contain exactly one ROM.`, romFile: '' };
-          }
-          const foundRom = romFiles[0];
-          const romFileName = basename(foundRom);
-          const localRomPath = getUserDataPath('roms', romFileName);
-          try {
-            await access(localRomPath);
-            return { success: true, romFile: romFileName, alreadyExists: true };
-          } catch { /* not imported yet */ }
-          await copyFile(foundRom, localRomPath);
-          return { success: true, romFile: romFileName, alreadyExists: false };
-        } finally {
-          await rm(tempDir, { recursive: true, force: true }).catch(() => {});
-        }
-      } catch {
-        const s = await stat(tempFile);
-        if (s.size > 0 && s.size <= 8 * 1024 * 1024) {
-          const urlPath = new URL(url).pathname;
-          let romFileName = basename(urlPath);
-          if (!ROM_EXTENSIONS.has(extname(romFileName).toLowerCase())) {
-            romFileName = `rom-${Date.now()}.sfc`;
-          }
-          const localRomPath = getUserDataPath('roms', romFileName);
-          await copyFile(tempFile, localRomPath);
-          return { success: true, romFile: romFileName, alreadyExists: false };
-        }
-        return { success: false, error: 'Downloaded file is not a valid ROM or archive', romFile: '' };
-      } finally {
-        await rm(tempFile, { force: true }).catch(() => {});
-      }
+      resolved = await resolveSourceFiles({ kind: 'url', url }, ROM_EXTENSIONS, (s) => report(s.phase, s.loaded, s.total));
     } catch (err) {
-      return { success: false, error: `${err instanceof Error ? err.message : err}`, romFile: '' };
+      report('error', undefined, undefined, errMessage(err));
+      return fail(err);
+    }
+    try {
+      // The download wasn't an archive — accept it as a raw ROM. A real archive
+      // that simply contains no ROM falls through to selectSingleRom's error.
+      const result = (!resolved.extractedArchive && resolved.downloadedPath)
+        ? await importRawDownload(resolved.downloadedPath, url)
+        : await importRomFile(selectSingleRom(resolved.files));
+      if (result.success) report('done');
+      else report('error', undefined, undefined, result.error);
+      return result;
+    } catch (err) {
+      report('error', undefined, undefined, errMessage(err));
+      return fail(err);
+    } finally {
+      await resolved.cleanup();
     }
   });
 
-  ipcMain.handle('roms:delete', async (_event, romFile: string) => {
-    const romPath = getUserDataPath('roms', romFile);
-    const assetFile = getAssetFileName(romFile);
-    const assetPath = getUserDataPath('assets', assetFile);
-
-    await rm(romPath, { force: true });
-    await rm(assetPath, { force: true });
+  handle('roms:delete', async (_event, romFile: string) => {
+    await rm(getUserDataPath('roms', romFile), { force: true });
+    await rm(getUserDataPath('assets', getAssetFileName(romFile)), { force: true });
 
     const profiles = await listProfiles();
     for (const p of profiles) {
-      if (p.romFile === romFile) {
-        await deleteProfile(p.id);
-      }
+      if (p.romFile === romFile) await deleteProfile(p.id);
     }
 
     const appState = await loadAppState();
@@ -147,7 +130,7 @@ const registerRomHandlers = (): void => {
     }
   });
 
-  ipcMain.handle('roms:getInfo', async (_event, romFile: string) => {
+  handle('roms:getInfo', async (_event, romFile: string) => {
     const romPath = getUserDataPath('roms', romFile);
     try {
       const s = await stat(romPath);

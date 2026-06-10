@@ -21,9 +21,9 @@
   flex: 1;
   padding: var(--space-xs) var(--space-sm);
   background: var(--c-inset);
-  border: 1px solid var(--color-border-subtle);
+  border: 1px solid var(--c-border);
   border-radius: var(--radius-sm);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   font-size: var(--text-sm);
   font-family: inherit;
   outline: none;
@@ -31,19 +31,19 @@
 }
 
 .import-form__url-input:focus {
-  border-color: var(--color-gold-base);
+  border-color: var(--c-gold);
 }
 
 .import-form__url-input::placeholder {
-  color: var(--color-text-faint);
+  color: var(--c-text-faint);
 }
 
 .import-form__download-btn {
   padding: var(--space-xs) var(--space-md);
-  background: var(--color-gold-base);
+  background: var(--c-gold);
   border: none;
   border-radius: var(--radius-sm);
-  color: var(--color-bg-deep);
+  color: var(--c-bg);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   cursor: pointer;
@@ -52,7 +52,7 @@
 }
 
 .import-form__download-btn:hover:not(:disabled) {
-  background: var(--color-gold-bright);
+  background: var(--c-gold-bright);
 }
 
 .import-form__download-btn:disabled {
@@ -63,7 +63,7 @@
 .import-form__divider {
   text-align: center;
   font-size: var(--text-xs);
-  color: var(--color-text-faint);
+  color: var(--c-text-faint);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -76,12 +76,12 @@
 }
 
 .import-form__status--success {
-  color: var(--color-green-base);
+  color: var(--c-green);
   background: var(--c-green-soft);
 }
 
 .import-form__status--error {
-  color: var(--color-danger-base);
+  color: var(--c-danger);
   background: var(--c-danger-soft);
 }
 
@@ -90,7 +90,7 @@
 .detail-panel__title {
   font-size: var(--text-base);
   font-weight: var(--weight-semi);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   margin: 0 0 var(--space-md);
 }
 
@@ -102,13 +102,13 @@
 }
 
 .detail-panel__label {
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
   font-weight: var(--weight-medium);
   white-space: nowrap;
 }
 
 .detail-panel__value {
-  color: var(--color-text-primary);
+  color: var(--c-text);
   word-break: break-all;
 }
 
@@ -119,12 +119,12 @@
 .detail-panel__section-title {
   font-size: var(--text-sm);
   font-weight: var(--weight-semi);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 var(--space-sm);
   padding-bottom: var(--space-xs);
-  border-bottom: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--c-border);
 }
 
 /* ─── Track list (MSU) ─── */
@@ -149,18 +149,18 @@
 }
 
 .track-list__num {
-  color: var(--color-text-faint);
+  color: var(--c-text-faint);
   font-variant-numeric: tabular-nums;
   min-width: 28px;
 }
 
 .track-list__name {
-  color: var(--color-text-primary);
+  color: var(--c-text);
   flex: 1;
 }
 
 .track-list__size {
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
   font-size: var(--text-xs);
 }
 
@@ -170,7 +170,7 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   line-height: 1.6;
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   white-space: pre-wrap;
   overflow-wrap: break-word;
   max-height: 100%;
@@ -197,7 +197,7 @@
 
 .profile-form__label {
   font-size: var(--text-xs);
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -205,24 +205,24 @@
 .profile-form__input {
   padding: var(--space-xs) var(--space-sm);
   background: var(--c-inset);
-  border: 1px solid var(--color-border-subtle);
+  border: 1px solid var(--c-border);
   border-radius: var(--radius-sm);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   font-size: var(--text-sm);
   font-family: inherit;
   outline: none;
 }
 
 .profile-form__input:focus {
-  border-color: var(--color-gold-base);
+  border-color: var(--c-gold);
 }
 
 .profile-form__select {
   padding: var(--space-xs) var(--space-sm);
   background: var(--c-inset);
-  border: 1px solid var(--color-border-subtle);
+  border: 1px solid var(--c-border);
   border-radius: var(--radius-sm);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   font-size: var(--text-sm);
   font-family: inherit;
   outline: none;
@@ -230,7 +230,7 @@
 }
 
 .profile-form__select:focus {
-  border-color: var(--color-gold-base);
+  border-color: var(--c-gold);
 }
 
 .profile-form__actions {
@@ -258,10 +258,10 @@
 }
 
 .profile-overview__setting-label {
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
 }
 
 .profile-overview__setting-value {
-  color: var(--color-text-primary);
+  color: var(--c-text);
   font-weight: var(--weight-medium);
 }

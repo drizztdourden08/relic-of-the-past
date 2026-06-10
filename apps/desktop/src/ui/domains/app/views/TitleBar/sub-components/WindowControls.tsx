@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect } from 'react';
 import { Box } from '../../../../../design-system/primitives/Box';
+import { Button } from '../../../../../design-system/primitives/Button';
 import { Icon } from '../../../../../design-system/primitives/Icon';
 import {
   FULLSCREEN_EXIT_PATHS, FULLSCREEN_ENTER_PATHS, MINIMIZE_PATHS,
@@ -22,38 +23,38 @@ const WindowControls = (props: WindowControlsProps) => {
 
   return (
     <Box className="titlebar__right">
-      <Box
-        as="button"
+      <Button
+        variant="bare"
         className="titlebar__control"
         onClick={() => window.api.toggleFullscreen()}
         aria-label={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
       >
         <Icon paths={isFullscreen ? FULLSCREEN_EXIT_PATHS : FULLSCREEN_ENTER_PATHS} size={12} />
-      </Box>
-      <Box
-        as="button"
+      </Button>
+      <Button
+        variant="bare"
         className="titlebar__control"
         onClick={() => window.api.minimize()}
         aria-label="Minimize"
       >
         <Icon paths={MINIMIZE_PATHS} size={12} viewBox="0 0 12 12" />
-      </Box>
-      <Box
-        as="button"
+      </Button>
+      <Button
+        variant="bare"
         className="titlebar__control"
         onClick={() => window.api.maximize()}
         aria-label={isMaximized ? 'Restore' : 'Maximize'}
       >
         <Icon paths={isMaximized ? RESTORE_PATHS : MAXIMIZE_PATHS} size={12} viewBox="0 0 12 12" />
-      </Box>
-      <Box
-        as="button"
+      </Button>
+      <Button
+        variant="bare"
         className="titlebar__control titlebar__control--close"
         onClick={() => window.api.close()}
         aria-label="Close"
       >
         <Icon paths={CLOSE_PATHS} size={12} viewBox="0 0 12 12" />
-      </Box>
+      </Button>
     </Box>
   );
 };

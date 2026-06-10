@@ -3,7 +3,8 @@
 
 // ─── Navigation Table Exports ───
 // Expose static game tables for the navigation system (entrance positions,
-// exit mapping, area heads, entrance→room mapping).
+// exit mapping, area heads, entrance→room mapping). Each export packs a
+// count-prefixed list via the BufW append cursor (see wasm_buf.h).
 
 // Overworld entrances: area(u16) + pos(u16) + id(u8) per entry, count prefix.
 // 129 entries max → 2 + 129*5 = 647 bytes.
@@ -13,18 +14,12 @@ EMSCRIPTEN_KEEPALIVE
 int WasmGetOverworldEntrances(void) {
   uint16 count = kOverworld_Entrance_Area_SIZE / 2;
   if (count > 129) count = 129;
-  g_ow_entrances_buf[0] = count & 0xFF;
-  g_ow_entrances_buf[1] = (count >> 8) & 0xFF;
+  BufW b = BufW_Init(g_ow_entrances_buf);
+  BufW_U16(&b, count);
   for (uint16 i = 0; i < count; i++) {
-    int o = 2 + i * 5;
-    uint16 area = kOverworld_Entrance_Area[i];
-    uint16 pos  = kOverworld_Entrance_Pos[i];
-    uint8  id   = kOverworld_Entrance_Id[i];
-    g_ow_entrances_buf[o + 0] = area & 0xFF;
-    g_ow_entrances_buf[o + 1] = (area >> 8) & 0xFF;
-    g_ow_entrances_buf[o + 2] = pos & 0xFF;
-    g_ow_entrances_buf[o + 3] = (pos >> 8) & 0xFF;
-    g_ow_entrances_buf[o + 4] = id;
+    BufW_U16(&b, kOverworld_Entrance_Area[i]);
+    BufW_U16(&b, kOverworld_Entrance_Pos[i]);
+    BufW_U8(&b, kOverworld_Entrance_Id[i]);
   }
   return (int)g_ow_entrances_buf;
 }
@@ -37,18 +32,12 @@ EMSCRIPTEN_KEEPALIVE
 int WasmGetFallHoles(void) {
   uint16 count = kFallHole_Area_SIZE / 2;
   if (count > 19) count = 19;
-  g_fall_holes_buf[0] = count & 0xFF;
-  g_fall_holes_buf[1] = (count >> 8) & 0xFF;
+  BufW b = BufW_Init(g_fall_holes_buf);
+  BufW_U16(&b, count);
   for (uint16 i = 0; i < count; i++) {
-    int o = 2 + i * 5;
-    uint16 area = kFallHole_Area[i];
-    uint16 pos  = kFallHole_Pos[i];
-    uint8  eid  = kFallHole_Entrances[i];
-    g_fall_holes_buf[o + 0] = area & 0xFF;
-    g_fall_holes_buf[o + 1] = (area >> 8) & 0xFF;
-    g_fall_holes_buf[o + 2] = pos & 0xFF;
-    g_fall_holes_buf[o + 3] = (pos >> 8) & 0xFF;
-    g_fall_holes_buf[o + 4] = eid;
+    BufW_U16(&b, kFallHole_Area[i]);
+    BufW_U16(&b, kFallHole_Pos[i]);
+    BufW_U8(&b, kFallHole_Entrances[i]);
   }
   return (int)g_fall_holes_buf;
 }
@@ -74,10 +63,9 @@ EMSCRIPTEN_KEEPALIVE
 int WasmGetExitScreenMap(void) {
   uint16 count = kExitData_ScreenIndex_SIZE;
   if (count > 128) count = 128;
-  g_exit_screen_buf[0] = count & 0xFF;
-  g_exit_screen_buf[1] = (count >> 8) & 0xFF;
+  BufW b = BufW_Init(g_exit_screen_buf);
+  BufW_U16(&b, count);
   for (uint16 i = 0; i < count; i++) {
-    int o = 2 + i * 3;
     uint16 room = kExitDataRooms[i];
     uint8  scr  = kExitData_ScreenIndex[i];
     // For big screens, resolve area head to correct sub-screen using exit coordinates
@@ -96,9 +84,8 @@ int WasmGetExitScreenMap(void) {
         scr = ((head_row + sub_row) << 3) | (head_col + sub_col);
       }
     }
-    g_exit_screen_buf[o + 0] = room & 0xFF;
-    g_exit_screen_buf[o + 1] = (room >> 8) & 0xFF;
-    g_exit_screen_buf[o + 2] = scr;
+    BufW_U16(&b, room);
+    BufW_U8(&b, scr);
   }
   return (int)g_exit_screen_buf;
 }
@@ -117,36 +104,28 @@ EMSCRIPTEN_KEEPALIVE
 int WasmGetEntranceRooms(void) {
   uint16 count = kEntranceData_rooms_SIZE / 2;
   if (count > 133) count = 133;
-  g_entrance_rooms_buf[0] = count & 0xFF;
-  g_entrance_rooms_buf[1] = (count >> 8) & 0xFF;
+  BufW b = BufW_Init(g_entrance_rooms_buf);
+  BufW_U16(&b, count);
   for (uint16 i = 0; i < count; i++) {
-    int o = 2 + i * 2;
-    uint16 room = kEntranceData_rooms[i];
-    g_entrance_rooms_buf[o + 0] = room & 0xFF;
-    g_entrance_rooms_buf[o + 1] = (room >> 8) & 0xFF;
+    BufW_U16(&b, kEntranceData_rooms[i]);
   }
   return (int)g_entrance_rooms_buf;
 }
 
-// Entrance spawn positions: playerX(u16) + playerY(u16) per entry, count prefix.
-// 133 entries max → 2 + 133*4 = 534 bytes.
+// Entrance spawn positions: playerX(u16) + playerY(u16) + startingBg(u8) per
+// entry, count prefix. 133 entries max → 2 + 133*5 = 667 bytes.
 static uint8 g_entrance_spawn_buf[2 + 133 * 5];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetEntranceSpawns(void) {
   uint16 count = kEntranceData_playerX_SIZE / 2;
   if (count > 133) count = 133;
-  g_entrance_spawn_buf[0] = count & 0xFF;
-  g_entrance_spawn_buf[1] = (count >> 8) & 0xFF;
+  BufW b = BufW_Init(g_entrance_spawn_buf);
+  BufW_U16(&b, count);
   for (uint16 i = 0; i < count; i++) {
-    int o = 2 + i * 5;
-    uint16 px = kEntranceData_playerX[i];
-    uint16 py = kEntranceData_playerY[i];
-    g_entrance_spawn_buf[o + 0] = px & 0xFF;
-    g_entrance_spawn_buf[o + 1] = (px >> 8) & 0xFF;
-    g_entrance_spawn_buf[o + 2] = py & 0xFF;
-    g_entrance_spawn_buf[o + 3] = (py >> 8) & 0xFF;
-    g_entrance_spawn_buf[o + 4] = kEntranceData_startingBg[i];
+    BufW_U16(&b, kEntranceData_playerX[i]);
+    BufW_U16(&b, kEntranceData_playerY[i]);
+    BufW_U8(&b, kEntranceData_startingBg[i]);
   }
   return (int)g_entrance_spawn_buf;
 }

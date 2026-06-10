@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import { Box, Text } from '../../../../../design-system/primitives';
+import { Box, Text, Button } from '../../../../../design-system/primitives';
 import type { CheckDefinition } from '@shared/game/types';
 import type { CheckStatus } from '@shared/game/logic/eval';
 import { TrackerCheckRow } from './TrackerCheckRow';
@@ -21,7 +21,7 @@ const TrackerAreaSection = (props: TrackerAreaSectionProps) => {
 
   return (
     <Box className="tracker-area">
-      <Box as="button" className="tracker-area__header" onClick={() => setExpanded(!expanded)}>
+      <Button variant="bare" className="tracker-area__header" onClick={() => setExpanded(!expanded)}>
         <Text className="tracker-area__chevron">{expanded ? '▼' : '▶'}</Text>
         <Text className="tracker-area__name">{area}</Text>
         <Text className="tracker-area__counts">
@@ -31,7 +31,7 @@ const TrackerAreaSection = (props: TrackerAreaSectionProps) => {
           /
           <Text className="tracker-area__count">{checks.length}</Text>
         </Text>
-      </Box>
+      </Button>
       {expanded && (
         <Box className="tracker-area__checks">
           {checks.map(check => (

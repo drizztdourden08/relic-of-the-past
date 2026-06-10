@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useState, useEffect, useRef } from 'react';
-import { Box } from '../../../../design-system/primitives';
+import { Button } from '../../../../design-system/primitives';
 import { wasmGetViewportInfo } from '../../../../../lib/game';
 import { S } from '../styles';
 
@@ -44,13 +44,13 @@ const TileRecorderBtn = ({ attrGrid, overworldScreenIndex }: { attrGrid: number[
 
   return (
     <>
-      <Box as="button" style={{ ...S.btn, ...(attrGrid ? {} : S.btnDisabled) }} onClick={toggle} disabled={!attrGrid}>
+      <Button variant="bare" style={{ ...S.btn, ...(attrGrid ? {} : S.btnDisabled) }} onClick={toggle} disabled={!attrGrid}>
         {recording ? '⏹ Rec' : '⏺ Rec'}
-      </Box>
+      </Button>
       {tiles.length > 0 && !recording && (
-        <Box as="button" style={S.btn} onClick={() => navigator.clipboard.writeText(tiles.map(t => `[${t.row},${t.col}] 0x${t.attr.toString(16).padStart(2, '0')}`).join('\n'))}>
+        <Button variant="bare" style={S.btn} onClick={() => navigator.clipboard.writeText(tiles.map(t => `[${t.row},${t.col}] 0x${t.attr.toString(16).padStart(2, '0')}`).join('\n'))}>
           📋 Tiles
-        </Box>
+        </Button>
       )}
     </>
   );

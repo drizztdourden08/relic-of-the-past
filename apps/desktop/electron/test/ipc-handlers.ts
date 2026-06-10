@@ -15,8 +15,9 @@
  *   test:screenshot    → captures BrowserWindow to the given path, returns path
  */
 
-import { ipcMain, BrowserWindow, app } from 'electron';
+import { BrowserWindow, app } from 'electron';
 import { join } from 'path';
+import { handle } from '../lib/ipc/handle';
 import { writeFile, mkdir } from 'fs/promises';
 
 const parseTestArgs = (): { autoState: number | null; screenshot: string | null } => {
@@ -35,9 +36,9 @@ const parseTestArgs = (): { autoState: number | null; screenshot: string | null 
 };
 
 const registerTestHandlers = (): void => {
-  ipcMain.handle('test:getArgs', () => parseTestArgs());
+  handle('test:getArgs', () => parseTestArgs());
 
-  ipcMain.handle('test:screenshot', async (_event, name: string) => {
+  handle('test:screenshot', async (_event, name: string) => {
     const win = BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0];
     if (!win) throw new Error('No window available for screenshot');
 

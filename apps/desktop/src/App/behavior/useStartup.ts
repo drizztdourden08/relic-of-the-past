@@ -5,15 +5,17 @@ import { setSpritesBase } from '@shared/game/items/sprites';
 import type { PageId } from '../types';
 
 const useStartup = (
-  profileMgmt: { setProfiles: (p: Profile[]) => void; setRomStatuses: (r: RomInfo[]) => void; setActiveProfile: (p: Profile | null) => void },
+  profileMgmt: {
+    refreshProfilesAndRoms: () => Promise<{ profiles: Profile[]; romStatuses: RomInfo[] }>;
+    setActiveProfile: (p: Profile | null) => void;
+  },
   nav: { setActivePage: (page: PageId) => void },
 ) => {
   useEffect(() => {
     (async () => {
       try {
-        const [profileList, romStatusList, appState, testArgs] = await Promise.all([
-          window.api.listProfiles(),
-          window.api.listRomsWithStatus(),
+        const [{ profiles: profileList }, appState, testArgs] = await Promise.all([
+          profileMgmt.refreshProfilesAndRoms(),
           window.api.getAppState(),
           window.api.getTestArgs(),
         ]);
@@ -21,9 +23,6 @@ const useStartup = (
         const dumpSlot = await window.api.getDumpLayersSlot();
         const dumpNavSlot = await window.api.getDumpNavSlot();
         const isAutoTest = testArgs.autoState !== null || !!testArgs.screenshot || dumpSlot !== null || dumpNavSlot !== null;
-
-        profileMgmt.setProfiles(profileList);
-        profileMgmt.setRomStatuses(romStatusList);
 
         if (profileList.length === 0) {
           log.app('No profiles found, showing setup screen');

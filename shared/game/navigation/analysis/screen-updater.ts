@@ -115,17 +115,5 @@ const obstacleTypeFromAttr = (attr: number): NavObstacle['type'] | null => {
   return null;
 };
 
-const writeScreenNavData = (updates: ScreenNavUpdate[], outputPath: string): void => {
-  const fs = require('fs');
-  const path = require('path');
-  const dir = path.dirname(outputPath);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-
-  const data = Object.fromEntries(
-    updates.map(u => [u.screenId, { screenIndex: u.screenIndex, ...u.nav }])
-  );
-  fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
-};
-
-export { buildScreenNavUpdates, writeScreenNavData };
+export { buildScreenNavUpdates };
 export type { ScreenNavUpdate, ScreenUpdaterInput };

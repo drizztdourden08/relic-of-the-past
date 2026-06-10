@@ -4,14 +4,14 @@
 export type { EmscriptenFS, EmscriptenModule, GameStatus, GameState } from './types';
 export { getGameState, getModule, subscribeGameState } from './wasm-bridge';
 export { getProfileId as getActiveProfileId } from './wasm-bridge';
-export { wasmSetPaused, wasmTogglePause, wasmReset, wasmCheat, wasmGetViewportInfo, wasmRenderCleanFrame, wasmGetMenuState, wasmGetOverworldVariant, wasmGetProgressIndicator, wasmGetIndoorDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetRoomCollisionType, wasmGetStaircaseType, wasmGetIndoorUncleBlockers, wasmGetNavigationBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmBuildRoomAttrGrid, wasmGetToggleFloorPositions, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetDungeonMapPosition, wasmGetRoomDoorBoundaryTiles, wasmGetRoomExitDoors, wasmGetRoomStairInfo, wasmGetRoomWalkBoundaries, wasmGetRoomTravelDestinations, wasmGetGameUIState } from './wasm-bridge';
+export { wasmSetPaused, wasmGetViewportInfo, wasmRenderCleanFrame, wasmGetMenuState, wasmGetOverworldVariant, wasmGetProgressIndicator, wasmGetIndoorDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetRoomCollisionType, wasmGetStaircaseType, wasmGetIndoorUncleBlockers, wasmGetNavigationBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmBuildOverworldAttrGrid, wasmBuildRoomAttrGrid, wasmGetToggleFloorPositions, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetDungeonMapPosition, wasmGetRoomDoorBoundaryTiles, wasmGetRoomExitDoors, wasmGetRoomStairInfo, wasmGetRoomWalkBoundaries, wasmGetRoomTravelDestinations, wasmGetGameUIState } from './wasm-bridge';
 export type { DoorBoundaryTile, DungeonMapPosition, FallHole, LiveSpriteInfo, OverworldVariantInfo, RoomExitDoor, RoomLayoutInfo, RoomStairInfo, RoomWalkBoundary, ViewportInfo } from './wasm-bridge';
 export { startGame, resetGame } from './lifecycle';
 export { setMsuData, setAutoSaveConfig } from './lifecycle';
 export type { MsuTrackData, AutoSaveConfig } from './lifecycle';
 export { saveState, loadState, captureStateBuffer, loadStateFromBuffer } from './save-states';
 export { setItemOverride, clearItemOverrides } from './randomizer';
-export { pushLiveSettings, reassertBackdropBlack, reassertHudHidden, reassertPauseHidden, reassertVolumes, requiresRestart, primeLiveSettings, LIVE_SETTINGS } from './live-settings';
+export { pushLiveSettings, reassertBackdropBlack, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, primeLiveSettings, LIVE_SETTINGS } from './live-settings';
 export { initMasterVolume, setMasterVolume, suspendAudio, resumeAudio } from './audio-volume';
 export { getFps } from './fps';
 export {

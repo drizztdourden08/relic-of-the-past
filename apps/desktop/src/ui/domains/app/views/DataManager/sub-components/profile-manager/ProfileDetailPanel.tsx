@@ -3,11 +3,19 @@
  * Profile detail panel — right-side display of selected profile info + settings.
  */
 
+import type { CSSProperties } from 'react';
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { Select } from '../../../../../../design-system/primitives/Select';
 import { Button } from '../../../../../../design-system/primitives/Button';
 import { formatRelativeTime } from '../../../../../../../utils';
+
+const IL: Record<string, CSSProperties> = {
+  col: { display: 'flex', flexDirection: 'column', height: '100%' },
+  mbMd: { marginBottom: 'var(--space-md)' },
+  actionRow: { display: 'flex', gap: 'var(--space-sm)', marginBottom: 'var(--space-md)' },
+  scroll: { flex: 1, overflow: 'auto', marginTop: 'var(--space-xs)' },
+};
 import { formatSettingValue, SETTINGS_SECTIONS } from './settings-sections';
 
 interface ProfileDetailPanelProps {
@@ -25,10 +33,10 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
   const { profile, settings, languages, msuPacks, isGameRunning, onSelectProfile, onSwitchProfile, onRefresh } = props;
 
   return (
-    <Box style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <Box style={IL.col}>
       <Text as="h3" className="detail-panel__title">{profile.name}</Text>
 
-      <Box className="profile-form" style={{ marginBottom: 'var(--space-md)' }}>
+      <Box className="profile-form" style={IL.mbMd}>
         <Box className="profile-form__field">
           <Text className="profile-form__label">Language</Text>
           <Select
@@ -61,7 +69,7 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
         </Box>
       </Box>
 
-      <Box style={{ display: 'flex', gap: 'var(--space-sm)', marginBottom: 'var(--space-md)' }}>
+      <Box style={IL.actionRow}>
         <Button variant="primary" size="sm" onClick={() => onSelectProfile(profile)}>
           Open Profile
         </Button>
@@ -70,7 +78,7 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
         </Button>
       </Box>
 
-      <Box className="detail-panel__grid" style={{ marginBottom: 'var(--space-md)' }}>
+      <Box className="detail-panel__grid" style={IL.mbMd}>
         <Text className="detail-panel__label">ROM</Text>
         <Text className="detail-panel__value">{profile.romFile}</Text>
         <Text className="detail-panel__label">Language</Text>
@@ -84,7 +92,7 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
       </Box>
 
       {settings && (
-        <Box style={{ flex: 1, overflow: 'auto', marginTop: 'var(--space-xs)' }}>
+        <Box style={IL.scroll}>
           {SETTINGS_SECTIONS.map((section) => (
             <Box key={section.title} className="detail-panel__section">
               <Text as="h4" className="detail-panel__section-title">{section.title}</Text>

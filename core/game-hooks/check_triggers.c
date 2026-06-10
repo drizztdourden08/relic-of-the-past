@@ -128,7 +128,7 @@ void GameHook_TriggerNpcCheck(uint8 flag_type, uint8 flag_mask, uint8 item_id,
     }
   }
 
-  if (sprite_type_id == 0x73) {
+  if (sprite_type_id == SPRITE_UNCLE_PRIEST) {
     which_starting_point = 3;
     sram_progress_indicator = 1;
   } else if (sprite_type_id == 0x3A) {

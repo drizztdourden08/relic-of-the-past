@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /** Viewport info (edge-glow shader) + clean-frame render. */
-import { getGameState, getModule } from '../wasm-bridge';
+import { callPtr, callWhenRunning } from './wasm-call';
 
 interface ViewportInfo {
   /** Game module: 7=dungeon, 9=overworld, 14=menu, 0/1=intro/title */
@@ -44,12 +44,8 @@ interface ViewportInfo {
  * Read viewport/game-state info from WASM for shader edge detection.
  * Returns null if the module isn't running or the export doesn't exist yet.
  */
-const wasmGetViewportInfo = (): ViewportInfo | null => {
-  const mod = getModule();
-  if (!mod || getGameState().status !== 'running') return null;
-  try {
-    const ptr = mod.ccall('WasmGetViewportInfo', 'number', [], []) as number;
-    if (!ptr) return null;
+const wasmGetViewportInfo = (): ViewportInfo | null =>
+  callPtr('WasmGetViewportInfo', (mod, ptr) => {
     const heap = mod.HEAPU8;
     const mainModule = heap[ptr];
     const submodule = heap[ptr + 1];
@@ -80,19 +76,14 @@ const wasmGetViewportInfo = (): ViewportInfo | null => {
       extraBottomCur, snesWidth, snesHeight, blackLeft, blackRight, blackBottom,
       isGameplay, locationModule, locationType, cameraX, cameraY, linkX, linkY,
     };
-  } catch {
-    return null;
-  }
-};
+  });
 
 /**
  * Render a clean frame (no HUD/BG3) into WASM memory and return the pixel data.
  * Returns null if the module isn't running or the export doesn't exist.
  */
-const wasmRenderCleanFrame = (): { data: Uint8Array; width: number; height: number } | null => {
-  const mod = getModule();
-  if (!mod || getGameState().status !== 'running') return null;
-  try {
+const wasmRenderCleanFrame = (): { data: Uint8Array; width: number; height: number } | null =>
+  callWhenRunning<{ data: Uint8Array; width: number; height: number } | null>(null, (mod) => {
     const ptr = mod.ccall('WasmRenderCleanFrame', 'number', [], []) as number;
     if (!ptr) return null;
     const width = mod.ccall('WasmGetCleanFrameWidth', 'number', [], []) as number;
@@ -101,10 +92,7 @@ const wasmRenderCleanFrame = (): { data: Uint8Array; width: number; height: numb
     const byteLength = width * height * 4;
     const data = mod.HEAPU8.subarray(ptr, ptr + byteLength);
     return { data, width, height };
-  } catch {
-    return null;
-  }
-};
+  });
 
 export { wasmGetViewportInfo, wasmRenderCleanFrame };
 export type { ViewportInfo };

@@ -23,8 +23,8 @@
 
 .status-badge--unsaved {
   background: var(--c-sunken);
-  color: var(--color-text-muted);
-  border: 1px dashed var(--color-border-subtle);
+  color: var(--c-text-muted);
+  border: 1px dashed var(--c-border);
 }
 
 .status-badge--draft {

@@ -7,7 +7,7 @@
 import { log } from '../log-bus';
 import type { EmscriptenModule } from './types';
 import { DEFAULT_ZELDA3_INI } from './config';
-import { getModule, setModule, setProfileId, getProfileId, setState, setInput } from './wasm-bridge';
+import { getModule, setModule, setProfileId, getProfileId, setState, setInput, getGameState } from './wasm-bridge';
 import { startSramSync, stopSramSync } from './sram-sync';
 import { startAutoSave, stopAutoSave, saveOnQuit } from './auto-save';
 import { resetMasterVolume } from './audio-volume';
@@ -109,7 +109,10 @@ const resetGame = async (): Promise<void> => {
 };
 
 const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, configIni?: string, profileId?: string): Promise<void> => {
-  const { getGameState } = await import('./wasm-bridge');
+  // Re-entry guard MUST be synchronous (no await before setState('loading') below),
+  // or React StrictMode's rapid double-invoke in dev clears the guard twice before
+  // either sets 'loading' → two WASM loads → renderer crash / black screen. getGameState
+  // is statically imported (not awaited) precisely so this check can't yield first.
   const currentState = getGameState();
 
   if (currentState.status === 'loading' || currentState.status === 'running') {
@@ -191,6 +194,8 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
 
     setModule(module);
     setProfileId(profileId ?? null);
+    // Debug-only handle for devtools inspection; the canonical module ref is
+    // wasm-bridge's `currentModule` (set via setModule above) — never read this in code.
     (window as any).__zelda3Module = module;
     setState({ status: 'running', error: null });
     log.wasm('WASM module running');

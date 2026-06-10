@@ -1,12 +1,13 @@
 /* @layer electron-main @kind logic */
-import { app, ipcMain } from 'electron';
+import { app } from 'electron';
 import { getMainWindow } from './create-window';
+import { on } from '../lib/ipc/handle';
 
 let lockedRatio = 0;
 let lockedExtraHeight = 0;
 
 const registerAspectRatioHandlers = (): void => {
-  ipcMain.on('window:setAspectRatioLock', (_e, ratio: number, extraHeight: number) => {
+  on('window:setAspectRatioLock', (_e, ratio: number, extraHeight: number) => {
     const mainWindow = getMainWindow();
     if (!mainWindow) return;
     lockedRatio = ratio;

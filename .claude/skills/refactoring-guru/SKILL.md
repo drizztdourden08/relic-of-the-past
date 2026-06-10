@@ -46,9 +46,9 @@ As you write or modify code in this repo:
      the smell, the fix, and the payoff, and let the user decide (or flag a task).
 4. **Explain with a citation.** When you name a smell/pattern/principle, link its
    refactoring.guru page so the user can read more.
-5. **Respect the standards.** Every refactor still obeys @docs/coding-standards.md
+5. **Respect the standards.** Every refactor still obeys @docs/contributing/coding-standards.md
    (arrow fns, exports at end, ≤200 lines, one-thing-per-file) and the four UI tiers
-   (@docs/design-system.md). A pattern is realized as small, single-purpose files —
+   (@docs/contributing/design-system.md). A pattern is realized as small, single-purpose files —
    never a monolith.
 6. **Don't over-engineer.** No speculative patterns. Applying a pattern with no
    present smell is itself a smell (Speculative Generality). Prefer the simplest
@@ -56,7 +56,7 @@ As you write or modify code in this repo:
 
 ## In plans
 
-Per @docs/plan-format.md, every plan states the **design pattern(s)** used and why
+Per @docs/contributing/plan-format.md, every plan states the **design pattern(s)** used and why
 (or "none needed"). When a plan refactors existing code, also name the **smell(s)**
 being removed and the **refactoring technique(s)** applied, each with its link.
 

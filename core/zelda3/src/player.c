@@ -179,13 +179,7 @@ void Link_ControlHandler() {  // 87807f
         uint8 dmg = link_give_damage;
         link_give_damage = 0;
         // Cheat: apply extra armor reduction (stacks with normal armor)
-        {
-          uint8 extra_pct = GameHook_GetExtraArmorPct();
-          if (extra_pct > 0 && dmg > 0) {
-            uint8 reduced = (uint8)((uint16)dmg * (100 - extra_pct) / 100);
-            dmg = reduced < 1 ? (extra_pct >= 100 ? 0 : 1) : reduced;
-          }
-        }
+        dmg = GameHook_ApplyExtraArmor(dmg);
         if (dmg == 0) {
           link_auxiliary_state = 0;
           link_incapacitated_timer = 0;

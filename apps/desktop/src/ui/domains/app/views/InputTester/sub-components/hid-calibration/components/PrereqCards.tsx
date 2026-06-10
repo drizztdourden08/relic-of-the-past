@@ -4,6 +4,7 @@
  */
 import { Box } from '../../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../../design-system/primitives/Text';
+import { Button } from '../../../../../../../design-system/primitives/Button';
 import type { GyroState, IdleState } from '../hid-calibration.type';
 
 interface PrereqCardsProps {
@@ -39,16 +40,15 @@ const PrereqCards = (props: PrereqCardsProps) => {
           <Box className="hid-cal__prereq-actions">
             {gyroState === 'idle' && (
               <>
-                <Box as="button" onClick={onGyroStart} className="input-cal__btn input-cal__btn--primary"
-                  disabled={latestBytesLength === 0}>Start Recording</Box>
-                <Box as="button" onClick={onGyroSkip} className="input-cal__btn">Skip</Box>
+                <Button variant="primary" size="sm" onClick={onGyroStart} disabled={latestBytesLength === 0}>Start Recording</Button>
+                <Button variant="tertiary" size="sm" onClick={onGyroSkip}>Skip</Button>
               </>
             )}
             {gyroState === 'recording' && (
-              <Box as="button" onClick={onGyroStop} className="input-cal__btn input-cal__btn--danger">Stop Recording</Box>
+              <Button variant="danger" size="sm" onClick={onGyroStop}>Stop Recording</Button>
             )}
             {gyroState === 'done' && (
-              <Box as="button" onClick={onGyroRedo} className="input-cal__btn">Redo</Box>
+              <Button variant="tertiary" size="sm" onClick={onGyroRedo}>Redo</Button>
             )}
           </Box>
         </Box>
@@ -64,11 +64,10 @@ const PrereqCards = (props: PrereqCardsProps) => {
         </Text>
         <Box className="hid-cal__prereq-actions">
           {idleState === 'idle' && (
-            <Box as="button" onClick={onIdleCapture} className="input-cal__btn input-cal__btn--primary"
-              disabled={latestBytesLength === 0}>Capture Idle</Box>
+            <Button variant="primary" size="sm" onClick={onIdleCapture} disabled={latestBytesLength === 0}>Capture Idle</Button>
           )}
           {idleState === 'done' && (
-            <Box as="button" onClick={onIdleRedo} className="input-cal__btn">Redo</Box>
+            <Button variant="tertiary" size="sm" onClick={onIdleRedo}>Redo</Button>
           )}
         </Box>
       </Box>

@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /** Live sprites + dynamic/static navigation blockers. */
-import { getGameState, getModule } from '../wasm-bridge';
+import { decodeTable, readU16 } from './wasm-call';
 
 interface LiveSpriteInfo {
   slot: number;
@@ -13,103 +13,37 @@ interface LiveSpriteInfo {
   y: number;
 }
 
+type Point = { x: number; y: number };
+
+const decodePoint = (heap: Uint8Array, o: number): Point => ({ x: readU16(heap, o), y: readU16(heap, o + 2) });
+
 /** Get active Uncle sprite blocker coordinates for indoor early-game variants. */
-const wasmGetIndoorUncleBlockers = (): Array<{ x: number; y: number }> => {
-  const mod = getModule();
-  if (!mod || getGameState().status !== 'running') return [];
-  try {
-    const ptr = mod.ccall('WasmGetIndoorUncleBlockers', 'number', [], []) as number;
-    if (!ptr) return [];
-    const heap = mod.HEAPU8;
-    const count = Math.min(heap[ptr], 2);
-    const out: Array<{ x: number; y: number }> = [];
-    for (let i = 0; i < count; i++) {
-      const o = ptr + 1 + i * 4;
-      const x = heap[o + 0] | (heap[o + 1] << 8);
-      const y = heap[o + 2] | (heap[o + 3] << 8);
-      out.push({ x, y });
-    }
-    return out;
-  } catch {
-    return [];
-  }
-};
+const wasmGetIndoorUncleBlockers = (): Point[] =>
+  decodeTable('WasmGetIndoorUncleBlockers', { countBytes: 1, dataStart: 1, stride: 4, maxCount: 2 }, decodePoint);
 
 /** Get live dynamic blocker coordinates used by navigation flood fill. */
-const wasmGetNavigationBlockers = (): Array<{ x: number; y: number }> => {
-  const mod = getModule();
-  if (!mod || getGameState().status !== 'running') return [];
-  try {
-    const ptr = mod.ccall('WasmGetNavigationBlockers', 'number', [], []) as number;
-    if (!ptr) return [];
-    const heap = mod.HEAPU8;
-    const count = Math.min(heap[ptr], 16);
-    const out: Array<{ x: number; y: number }> = [];
-    for (let i = 0; i < count; i++) {
-      const o = ptr + 1 + i * 4;
-      const x = heap[o + 0] | (heap[o + 1] << 8);
-      const y = heap[o + 2] | (heap[o + 3] << 8);
-      out.push({ x, y });
-    }
-    return out;
-  } catch {
-    return [];
-  }
-};
+const wasmGetNavigationBlockers = (): Point[] =>
+  decodeTable('WasmGetNavigationBlockers', { countBytes: 1, dataStart: 1, stride: 4, maxCount: 16 }, decodePoint);
 
 /** Read all currently active live sprites with debug metadata. */
-const wasmGetLiveSprites = (): LiveSpriteInfo[] => {
-  const mod = getModule();
-  if (!mod || getGameState().status !== 'running') return [];
-  try {
-    const ptr = mod.ccall('WasmGetLiveSprites', 'number', [], []) as number;
-    if (!ptr) return [];
-    const heap = mod.HEAPU8;
-    const count = Math.min(heap[ptr], 16);
-    const out: LiveSpriteInfo[] = [];
-    for (let i = 0; i < count; i++) {
-      const o = ptr + 1 + i * 10;
-      out.push({
-        slot: heap[o + 0],
-        type: heap[o + 1],
-        state: heap[o + 2],
-        subtype: heap[o + 3],
-        subtype2: heap[o + 4],
-        e: heap[o + 5],
-        x: heap[o + 6] | (heap[o + 7] << 8),
-        y: heap[o + 8] | (heap[o + 9] << 8),
-      });
-    }
-    return out;
-  } catch {
-    return [];
-  }
-};
+const wasmGetLiveSprites = (): LiveSpriteInfo[] =>
+  decodeTable('WasmGetLiveSprites', { countBytes: 1, dataStart: 1, stride: 10, maxCount: 16 }, (heap, o) => ({
+    slot: heap[o + 0],
+    type: heap[o + 1],
+    state: heap[o + 2],
+    subtype: heap[o + 3],
+    subtype2: heap[o + 4],
+    e: heap[o + 5],
+    x: readU16(heap, o + 6),
+    y: readU16(heap, o + 8),
+  }));
 
 /**
  * Read static overworld tutorial guard spawn positions (0x3F/0x40) for the
  * current area, independent of camera proximity loading.
  */
-const wasmGetOverworldGuardSpawns = (): Array<{ x: number; y: number }> => {
-  const mod = getModule();
-  if (!mod || getGameState().status !== 'running') return [];
-  try {
-    const ptr = mod.ccall('WasmGetOverworldGuardSpawns', 'number', [], []) as number;
-    if (!ptr) return [];
-    const heap = mod.HEAPU8;
-    const count = Math.min(heap[ptr], 16);
-    const out: Array<{ x: number; y: number }> = [];
-    for (let i = 0; i < count; i++) {
-      const o = ptr + 1 + i * 4;
-      const x = heap[o + 0] | (heap[o + 1] << 8);
-      const y = heap[o + 2] | (heap[o + 3] << 8);
-      out.push({ x, y });
-    }
-    return out;
-  } catch {
-    return [];
-  }
-};
+const wasmGetOverworldGuardSpawns = (): Point[] =>
+  decodeTable('WasmGetOverworldGuardSpawns', { countBytes: 1, dataStart: 1, stride: 4, maxCount: 16 }, decodePoint);
 
 export { wasmGetIndoorUncleBlockers, wasmGetNavigationBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns };
 export type { LiveSpriteInfo };

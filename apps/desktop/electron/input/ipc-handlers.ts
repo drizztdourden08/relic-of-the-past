@@ -3,7 +3,8 @@
  * Input IPC handlers — registers all input-related IPC handlers on the main process.
  */
 
-import { ipcMain, type BrowserWindow } from 'electron';
+import type { BrowserWindow } from 'electron';
+import { handle } from '../lib/ipc/handle';
 import { hidInputReader } from './hid-reader';
 import { enumerateControllers } from './hid-devices';
 import { readInputProfiles, writeInputProfiles } from './profile-store';
@@ -47,35 +48,26 @@ const registerInputHandlers = (mainWindow: BrowserWindow): void => {
 
   // ── Input profile handlers ──
 
-  ipcMain.handle('inputProfiles:read', async (_event, profileId: string) => {
-    return readInputProfiles(profileId);
-  });
+  handle('inputProfiles:read', (_event, profileId: string) => readInputProfiles(profileId));
 
-  ipcMain.handle('inputProfiles:write', async (_event, profileId: string, profiles: unknown[]) => {
-    await writeInputProfiles(profileId, profiles);
-  });
+  handle('inputProfiles:write', (_event, profileId: string, profiles: unknown[]) =>
+    writeInputProfiles(profileId, profiles));
 
   // ── Calibration handlers ──
 
-  ipcMain.handle('stickCalibration:read', async () => {
-    return readStickCalibration();
-  });
+  handle('stickCalibration:read', () => readStickCalibration());
 
-  ipcMain.handle('stickCalibration:write', async (_event, store: Record<string, unknown>) => {
-    await writeStickCalibration(store as StickCalibrationStore);
-  });
+  handle('stickCalibration:write', (_event, store: Record<string, unknown>) =>
+    writeStickCalibration(store as StickCalibrationStore));
 
-  ipcMain.handle('triggerCalibration:read', async () => {
-    return readTriggerCalibration();
-  });
+  handle('triggerCalibration:read', () => readTriggerCalibration());
 
-  ipcMain.handle('triggerCalibration:write', async (_event, deviceKey: string, axisIndex: number, cal: { base: number; max: number; deadzone: number }) => {
-    await writeTriggerCalibration(deviceKey, axisIndex, cal);
-  });
+  handle('triggerCalibration:write', (_event, deviceKey: string, axisIndex: number, cal: { base: number; max: number; deadzone: number }) =>
+    writeTriggerCalibration(deviceKey, axisIndex, cal));
 
   // ── HID device handlers ──
 
-  ipcMain.handle('hid:enumerate', async () => {
+  handle('hid:enumerate', async () => {
     try {
       const rawDevices = await hidInputReader.enumerateDevicesAsync();
       return enumerateControllers(rawDevices);
@@ -84,19 +76,19 @@ const registerInputHandlers = (mainWindow: BrowserWindow): void => {
     }
   });
 
-  ipcMain.handle('hid:get-open-keys', () => {
+  handle('hid:get-open-keys', () => {
     return hidInputReader.getOpenDeviceKeys();
   });
 
-  ipcMain.handle('hid:write', (_event, deviceKey: string, data: number[]) => {
+  handle('hid:write', (_event, deviceKey: string, data: number[]) => {
     return hidInputReader.write(deviceKey, data);
   });
 
-  ipcMain.handle('hid:vibrate', (_event, deviceKey: string, durationMs: number, intensity: number) => {
+  handle('hid:vibrate', (_event, deviceKey: string, durationMs: number, intensity: number) => {
     return hidInputReader.vibrate(deviceKey, durationMs, intensity);
   });
 
-  ipcMain.handle('hid:vibrate-pattern', (_event, deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number) => {
+  handle('hid:vibrate-pattern', (_event, deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number) => {
     return hidInputReader.vibratePattern(deviceKey, pattern, gapMs);
   });
 

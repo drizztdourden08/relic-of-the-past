@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind component */
-import { Box, ProgressBar, Spinner, Tooltip, EmptyState, Divider } from '../../../../../../design-system/primitives';
+import { Box, Button, ProgressBar, Spinner, Tooltip, EmptyState, Divider } from '../../../../../../design-system/primitives';
 import { Specimen } from '../Specimen';
 
 /** Components › feedback & status. */
@@ -23,7 +23,7 @@ const FeedbackStory = () => (
 
     <Specimen label="Tooltip" hint="hover the button">
       <Tooltip content="Saved to profile">
-        <Box as="button" className="dg-btn">Hover me</Box>
+        <Button variant="bare" className="dg-btn">Hover me</Button>
       </Tooltip>
     </Specimen>
 

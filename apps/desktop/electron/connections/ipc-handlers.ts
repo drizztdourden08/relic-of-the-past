@@ -1,31 +1,21 @@
 /* @layer electron-main @kind logic */
-import { ipcMain } from 'electron';
-import { readFile, writeFile } from 'fs/promises';
+import { handle } from '../lib/ipc/handle';
 import { getUserDataPath } from '../lib/paths';
+import { readJson, writeJson } from '../lib/json-store';
 
 const registerConnectionHandlers = (): void => {
-  ipcMain.handle('connectionReview:load', async () => {
-    try {
-      const data = await readFile(getUserDataPath('connection-review.json'), 'utf-8');
-      return JSON.parse(data);
-    } catch { return {}; }
-  });
+  handle('connectionReview:load', () =>
+    readJson(getUserDataPath('connection-review.json'), {}));
 
-  ipcMain.handle('connectionReview:save', async (_e, data: unknown) => {
-    await writeFile(getUserDataPath('connection-review.json'), JSON.stringify(data, null, 2), 'utf-8');
-  });
+  handle('connectionReview:save', (_e, data: unknown) =>
+    writeJson(getUserDataPath('connection-review.json'), data));
 
   // Nav review data (per-screen connection point reviews with comments)
-  ipcMain.handle('navReview:load', async () => {
-    try {
-      const data = await readFile(getUserDataPath('nav-review.json'), 'utf-8');
-      return JSON.parse(data);
-    } catch { return {}; }
-  });
+  handle('navReview:load', () =>
+    readJson(getUserDataPath('nav-review.json'), {}));
 
-  ipcMain.handle('navReview:save', async (_e, data: unknown) => {
-    await writeFile(getUserDataPath('nav-review.json'), JSON.stringify(data, null, 2), 'utf-8');
-  });
+  handle('navReview:save', (_e, data: unknown) =>
+    writeJson(getUserDataPath('nav-review.json'), data));
 };
 
 export { registerConnectionHandlers };

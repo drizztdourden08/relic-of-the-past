@@ -9,7 +9,7 @@ description: Work on this project's Electron layer — main process, preload, IP
 
 This app is **Electron + electron-vite**. Three build targets (see
 `electron.vite.config.ts`): `main` (+ `hid-worker`), `preload`, `renderer`.
-Follow @docs/coding-standards.md for all code here too.
+Follow @docs/contributing/coding-standards.md for all code here too.
 
 ## Process model & security (do not weaken)
 
@@ -21,50 +21,52 @@ Follow @docs/coding-standards.md for all code here too.
 work." The renderer reaches Node/OS **only** through the preload bridge. If the
 renderer needs a new native/OS capability, add an IPC channel — don't open the sandbox.
 
-## The IPC contract — adding a channel touches 3 places
+## The IPC contract — typed end-to-end from one source
 
-Naming convention for channels: **`domain:action`** (e.g. `profiles:list`,
-`window:minimize`, `roms:import`). `invoke`/`handle` for request→response;
-`send`/`on` for fire-and-forget or main→renderer events.
+Every channel's signature lives **once** in a channel-keyed contract under
+`shared/ipc/`; the preload, the handlers, and the renderer's `window.api` are all
+type-checked against it. **Never** call `ipcMain`/`ipcRenderer`/`webContents.send`
+directly — use the typed wrappers in `electron/lib/ipc/` (the only files allowed to).
+Full procedure + checklist: @docs/contributing/adding-an-ipc-channel.md.
 
-### 1. Main-process handler — `apps/desktop/electron/<domain>/ipc-handlers.ts`
+Channels are named **`domain:action`**. Direction picks the contract + wrappers:
+`InvokeContract`→`handle`/`invoke` (request→response), `SendContract`→`on`/`send`
+(fire-and-forget), `EventContract`→`emit`/`subscribe` (main→renderer events).
 
-Each domain owns a file exporting a `register<Domain>Handlers()` function:
+### 1. Declare the channel — `shared/ipc/*-contract.ts` (single source of truth)
 
 ```ts
-import { ipcMain } from 'electron';
+// invoke-contract.ts
+'foo:get': (id: string) => Promise<FooResult>;
+```
 
-function registerFooHandlers(): void {
-  ipcMain.handle('foo:get', async (_event, id: string) => {
-    // ... main-process work (fs, native modules, etc.)
-    return result;
-  });
-}
+### 2. Map a friendly name — `shared/ipc/maps.ts`
+
+```ts
+getFoo: 'foo:get',   // satisfies-checked; window.api type + preload method DERIVE from this
+```
+
+`env.d.ts` is **not** edited — `IpcApi` is derived from the contracts + maps.
+
+### 3. Implement the handler — `apps/desktop/electron/<domain>/ipc-handlers.ts`
+
+```ts
+import { handle } from '../lib/ipc/handle';
+
+const registerFooHandlers = (): void => {
+  handle('foo:get', (_event, id) => getFoo(id)); // args + return inferred from the contract
+};
 
 export { registerFooHandlers };
 ```
 
-Then call `registerFooHandlers()` in `apps/desktop/electron/main.ts` alongside the
-other `register*Handlers()` calls.
+Register it in `main.ts` by adding to the `IPC_HANDLERS` list (`devOnly: true` for dev tools).
 
-### 2. Preload bridge — `apps/desktop/electron/preload.ts`
+### 4. Preload — usually nothing
 
-Expose a typed method on `window.api` (the single `contextBridge.exposeInMainWorld('api', {...})` object):
-
-```ts
-getFoo: (id: string) => ipcRenderer.invoke('foo:get', id),
-// event subscription pattern (return an unsubscribe fn):
-onFooChange: (cb: (v: T) => void) => {
-  const handler = (_e: Electron.IpcRendererEvent, v: T) => cb(v);
-  ipcRenderer.on('foo:change', handler);
-  return () => ipcRenderer.removeListener('foo:change', handler);
-},
-```
-
-### 3. Renderer types — `apps/desktop/src/env.d.ts`
-
-Add the method signature to the `window.api` type so the renderer is typed. Keep
-it in sync with what preload actually exposes.
+Flat methods are generated from the maps (`buildInvoke`/`buildSend`/`buildEvents`).
+Only nested namespaces (`updater`, `shadowCasting`, `screenEditor`) are wired by
+hand with the typed `invoke`/`subscribe`. Call it as `window.api.getFoo(id)`.
 
 ## Patterns already in use (match them)
 
@@ -91,10 +93,10 @@ it in sync with what preload actually exposes.
 
 ## Checklist for any Electron change
 
-- [ ] Channel named `domain:action`; `invoke/handle` vs `send/on` chosen correctly.
-- [ ] Handler in the right `<domain>/ipc-handlers.ts`, registered in `main.ts`.
-- [ ] Preload exposes a typed method; **no** new global beyond `window.api`.
-- [ ] `env.d.ts` updated to match.
-- [ ] Event subscriptions return an unsubscribe function and are cleaned up.
-- [ ] No native module imported into the renderer; no security flags weakened.
-- [ ] Files obey @docs/coding-standards.md (size, one-thing-per-file, exports at end).
+- [ ] Channel named `domain:action`; correct direction (invoke/send/event) → correct contract.
+- [ ] Signature in the `shared/ipc/` contract; method↔channel line in the join map
+      (flat) or wired in a nested namespace. **`env.d.ts` is not hand-edited.**
+- [ ] Handler uses the typed `handle`/`on`/`emit`; registered in `main.ts`'s `IPC_HANDLERS`.
+- [ ] No raw `ipcMain`/`ipcRenderer`/`webContents.send` outside `electron/lib/ipc/`.
+- [ ] No new global beyond `window.api`; no native module in the renderer; no security flags weakened.
+- [ ] Files obey @docs/contributing/coding-standards.md (size, one-thing-per-file, exports at end).

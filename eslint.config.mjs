@@ -1,6 +1,6 @@
 /* @layer root-config @kind config */
 // Flat ESLint config (ESLint 9). Enforces the project's hard coding standards
-// mechanically — see docs/coding-standards.md. Scoped to OUR TypeScript only
+// mechanically — see docs/contributing/coding-standards.md. Scoped to OUR TypeScript only
 // (core/ is vendored C, dist/out/release are build output).
 //
 // NOTE: existing monolithic files (e.g. NavigationWidget.tsx) will report
@@ -53,6 +53,61 @@ const noRawColor = {
   },
 };
 
+// ── no `as="<tag>"` when a design-system primitive exists ──
+// `<Box as="button">` (and friends) re-roll a primitive that already exists.
+// Compose the primitive instead. Allowed inside primitives (they implement `as`).
+const AS_PRIMITIVE = {
+  button: 'Button / IconButton',
+  input: 'TextInput / NumberInput / Checkbox / RangeInput',
+  select: 'Select',
+  textarea: 'TextArea',
+  img: 'Image',
+};
+const noAsElementWithPrimitive = {
+  meta: { type: 'problem', docs: { description: 'No `as="<tag>"` when a design-system primitive exists' }, schema: [] },
+  create(context) {
+    return {
+      JSXAttribute(node) {
+        if (node.name?.name !== 'as') return;
+        const v = node.value;
+        if (!v || v.type !== 'Literal' || typeof v.value !== 'string') return;
+        const prim = AS_PRIMITIVE[v.value];
+        if (prim) {
+          context.report({ node, message: `No \`as="${v.value}"\` — a primitive exists; use ${prim} instead of re-rolling a raw <${v.value}>.` });
+        }
+      },
+    };
+  },
+};
+
+// ── no fully-static inline style objects (use token-backed CSS) ──
+// Inline `style={{…}}` is only for DYNAMIC/animated/computed values. A style
+// object whose every value is a static literal belongs in a CSS class backed by
+// design tokens. Spreads / member exprs / template literals / conditionals / calls
+// count as dynamic and are NOT flagged (the legitimate animation/manipulation case).
+const isStaticStyleValue = (n) => {
+  if (!n) return false;
+  if (n.type === 'Literal') return true;
+  if (n.type === 'UnaryExpression') return n.argument.type === 'Literal'; // -1, +2
+  return false;
+};
+const noStaticInlineStyle = {
+  meta: { type: 'problem', docs: { description: 'No fully-static inline style — move to token-backed CSS' }, schema: [] },
+  create(context) {
+    return {
+      JSXAttribute(node) {
+        if (node.name?.name !== 'style') return;
+        const expr = node.value && node.value.type === 'JSXExpressionContainer' ? node.value.expression : null;
+        if (!expr || expr.type !== 'ObjectExpression' || expr.properties.length === 0) return;
+        const allStatic = expr.properties.every((p) => p.type === 'Property' && isStaticStyleValue(p.value));
+        if (allStatic) {
+          context.report({ node, message: 'No static inline style — move these values to a token-backed CSS class. Inline style is only for dynamic/animated/computed values.' });
+        }
+      },
+    };
+  },
+};
+
 export default tseslint.config(
   {
     ignores: [
@@ -84,7 +139,7 @@ export default tseslint.config(
     plugins: {
       '@typescript-eslint': tseslint.plugin,
       'react-hooks': reactHooks,
-      local: { rules: { 'no-raw-html': noRawHtml, 'no-raw-color': noRawColor } },
+      local: { rules: { 'no-raw-html': noRawHtml, 'no-raw-color': noRawColor, 'no-as-element-with-primitive': noAsElementWithPrimitive, 'no-static-inline-style': noStaticInlineStyle } },
     },
     rules: {
       // ── R11: raw HTML only in primitives (warn — work toward error) ──
@@ -92,6 +147,17 @@ export default tseslint.config(
 
       // ── R14: no raw color literals in inline styles (error) ──
       'local/no-raw-color': 'error',
+
+      // ── no `as="<tag>"` when a primitive exists (error) ──
+      // All ~159 `<Box as="button">` / etc. sites migrated to Button/Image/…;
+      // promoted to error to prevent regressions.
+      'local/no-as-element-with-primitive': 'error',
+
+      // ── no fully-static inline styles (error) ──
+      // Inline style is for dynamic/animation/computed values only; static values
+      // belong in a token-backed CSS class / style const. All sites migrated →
+      // promoted to error to prevent regressions.
+      'local/no-static-inline-style': 'error',
 
       // ── File-size cap is owned solely by the per-kind line-policy ──
       // (scripts/analyze/policy.mjs). ESLint's flat `max-lines` is intentionally
@@ -164,11 +230,25 @@ export default tseslint.config(
     rules: { 'local/no-raw-color': 'off' },
   },
   {
+    // ── HUD is a CSS-rule exception (SNES reproduction) ──
+    // The HUD reproduces the original in-game interface pixel-for-pixel using the
+    // exact SNES palette and layout; its styling is game-accurate, not part of the
+    // design-token system, so static inline styles are legitimate here (alongside
+    // the no-raw-color exemption above and the stylelint HUD override). Component-
+    // composition rules (no-raw-html / no-as-element-with-primitive) are NOT CSS
+    // rules and are intentionally left in force outside hud/primitives/.
+    files: ['**/ui/domains/hud/**/*.{ts,tsx}'],
+    rules: { 'local/no-static-inline-style': 'off' },
+  },
+  {
     // ── Primitives are the ONE place raw HTML is allowed ──
     // Re-allow raw form controls here; keep the inline-export ban.
     files: ['**/ui/design-system/primitives/**/*.tsx', '**/ui/domains/hud/primitives/**/*.tsx'],
     rules: {
       'local/no-raw-html': 'off',
+      // Primitives implement `as` and forward `style` — the two rules don't apply here.
+      'local/no-as-element-with-primitive': 'off',
+      'local/no-static-inline-style': 'off',
       'no-restricted-syntax': [
         'error',
         {

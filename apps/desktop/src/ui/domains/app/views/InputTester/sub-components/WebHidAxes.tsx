@@ -1,10 +1,17 @@
 /* @layer renderer-components @kind component */
 /** Sticks + triggers panel for a WebHID controller card, derived from profile axes. */
+import type { CSSProperties } from 'react';
 import { Box } from '../../../../../design-system/primitives/Box';
+import { Button } from '../../../../../design-system/primitives/Button';
 import type { WebHidInputState } from '../../../../../../lib/input/hid-reader';
 import type { DEVICE_PROFILES } from '@shared/input';
 import type { CalibrationTarget } from './web-hid-card-types';
 import { AxisRecordButton, StickCircle, TriggerBar } from './input-cal-visuals';
+
+const S: Record<string, CSSProperties> = {
+  col: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 },
+  row: { display: 'flex', gap: 4, alignItems: 'center' },
+};
 
 interface WebHidAxesProps {
   state: WebHidInputState;
@@ -41,46 +48,44 @@ const WebHidAxes = ({ state, profile, onCalibrate }: WebHidAxesProps) => {
   return (
     <Box className="input-cal__sticks">
       {stickPairs.map((s, pairIdx) => (
-        <Box key={s.xIdx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+        <Box key={s.xIdx} style={S.col}>
           <StickCircle
             x={state.axes[s.xIdx] ?? 0}
             y={state.axes[s.yIdx] ?? 0}
             label={s.label}
             iconPrefix={stickIconPrefixes[pairIdx]}
           />
-          <Box style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+          <Box style={S.row}>
             <AxisRecordButton
               getValues={() => [state.axes[s.xIdx] ?? 0, state.axes[s.yIdx] ?? 0]}
               label={s.label}
             />
-            <Box
-              as="button"
-              className="input-cal__btn"
-              style={{ fontSize: 9, padding: '1px 5px', lineHeight: 1.2 }}
+            <Button
+              variant="tertiary"
+              size="sm"
               onClick={() => onCalibrate({ type: 'stick', side: pairIdx === 0 ? 'left' : 'right' })}
               title={`Calibrate ${s.label}`}
-            >Cal</Box>
+            >Cal</Button>
           </Box>
         </Box>
       ))}
       {triggerAxes.map(t => (
-        <Box key={t.idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+        <Box key={t.idx} style={S.col}>
           <TriggerBar
             value={state.axes[t.idx] ?? 0}
             label={t.label}
           />
-          <Box style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+          <Box style={S.row}>
             <AxisRecordButton
               getValues={() => [state.axes[t.idx] ?? 0]}
               label={t.label}
             />
-            <Box
-              as="button"
-              className="input-cal__btn"
-              style={{ fontSize: 9, padding: '1px 5px', lineHeight: 1.2 }}
+            <Button
+              variant="tertiary"
+              size="sm"
               onClick={() => onCalibrate({ type: 'trigger', axisIndex: t.idx, label: t.label })}
               title={`Calibrate ${t.label}`}
-            >Cal</Box>
+            >Cal</Button>
           </Box>
         </Box>
       ))}

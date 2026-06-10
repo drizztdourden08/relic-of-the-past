@@ -85,7 +85,7 @@ const useSaveSlots = (src: SlotSource) => src.list();
 ```
 
 (In this project: presentational tiers depend on props/callbacks, not stores/IPC —
-that boundary is DIP in practice. See @docs/design-system.md.)
+that boundary is DIP in practice. See @docs/contributing/design-system.md.)
 
 ---
 

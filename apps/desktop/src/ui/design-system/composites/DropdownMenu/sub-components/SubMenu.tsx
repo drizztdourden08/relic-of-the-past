@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState } from 'react';
 import { Box } from '../../../primitives/Box';
+import { Button } from '../../../primitives/Button';
 import { Text } from '../../../primitives/Text';
 import type { MenuItem } from '../DropdownMenu.type';
 
@@ -49,8 +50,8 @@ const SubMenu = (props: SubMenuProps) => {
               return <Box key={`sep-${i}`} className="dropdown__separator" />;
             }
             return (
-              <Box
-                as="button"
+              <Button
+                variant="bare"
                 key={child.key}
                 className="dropdown__item"
                 onClick={child.onClick}
@@ -59,7 +60,7 @@ const SubMenu = (props: SubMenuProps) => {
                 {child.icon && <Text className="dropdown__icon">{child.icon}</Text>}
                 <Text className="dropdown__label">{child.label}</Text>
                 {child.checked && <Text className="dropdown__check">✓</Text>}
-              </Box>
+              </Button>
             );
           })}
         </Box>

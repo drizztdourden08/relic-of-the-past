@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind types */
 ﻿import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
-type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'danger';
+type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'danger' | 'tile' | 'bare';
 
 type ButtonSize = 'sm' | 'md';
 

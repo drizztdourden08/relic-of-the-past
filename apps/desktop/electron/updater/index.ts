@@ -1,8 +1,8 @@
 /* @layer electron-main @kind logic */
 import { autoUpdater } from 'electron-updater';
 import type { BrowserWindow } from 'electron';
-import { ipcMain } from 'electron';
 import { is } from '@electron-toolkit/utils';
+import { handle, emit } from '../lib/ipc/handle';
 
 interface UpdateInfo {
   version: string;
@@ -48,15 +48,15 @@ const initAutoUpdater = (mainWindow: BrowserWindow): void => {
       releaseDate: info.releaseDate ?? new Date().toISOString(),
     };
 
-    mainWindow.webContents.send('updater:update-available', updateAvailable);
+    emit(mainWindow, 'updater:update-available', updateAvailable);
   });
 
   autoUpdater.on('update-not-available', () => {
-    mainWindow.webContents.send('updater:up-to-date');
+    emit(mainWindow, 'updater:up-to-date');
   });
 
   autoUpdater.on('download-progress', (progress) => {
-    mainWindow.webContents.send('updater:download-progress', {
+    emit(mainWindow, 'updater:download-progress', {
       percent: progress.percent,
       bytesPerSecond: progress.bytesPerSecond,
       transferred: progress.transferred,
@@ -65,11 +65,11 @@ const initAutoUpdater = (mainWindow: BrowserWindow): void => {
   });
 
   autoUpdater.on('update-downloaded', () => {
-    mainWindow.webContents.send('updater:download-complete');
+    emit(mainWindow, 'updater:download-complete');
   });
 
   autoUpdater.on('error', (err) => {
-    mainWindow.webContents.send('updater:error', err.message);
+    emit(mainWindow, 'updater:error', err.message);
   });
 
   setTimeout(() => {
@@ -80,9 +80,9 @@ const initAutoUpdater = (mainWindow: BrowserWindow): void => {
 };
 
 const registerUpdaterHandlers = (): void => {
-  ipcMain.handle('updater:isPortable', () => isPortable);
+  handle('updater:isPortable', () => isPortable);
 
-  ipcMain.handle('updater:check', async () => {
+  handle('updater:check', async () => {
     if (is.dev || isPortable) return null;
     try {
       const result = await autoUpdater.checkForUpdates();
@@ -93,19 +93,19 @@ const registerUpdaterHandlers = (): void => {
     }
   });
 
-  ipcMain.handle('updater:getAvailable', () => {
+  handle('updater:getAvailable', () => {
     return updateAvailable;
   });
 
-  ipcMain.handle('updater:download', async () => {
+  handle('updater:download', async () => {
     await autoUpdater.downloadUpdate();
   });
 
-  ipcMain.handle('updater:install', () => {
+  handle('updater:install', () => {
     autoUpdater.quitAndInstall(false, true);
   });
 
-  ipcMain.handle('updater:getVersion', () => {
+  handle('updater:getVersion', () => {
     const { app } = require('electron');
     return app.getVersion();
   });

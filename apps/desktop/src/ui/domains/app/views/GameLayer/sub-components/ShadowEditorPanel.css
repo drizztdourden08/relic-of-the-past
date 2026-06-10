@@ -28,7 +28,7 @@
 .shadow-editor-panel__title {
   font-size: var(--text-sm);
   font-weight: var(--weight-semi);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   flex: 1;
   display: flex;
   align-items: center;
@@ -36,7 +36,7 @@
 }
 
 .shadow-editor-panel__dirty {
-  color: var(--color-warning-base);
+  color: var(--c-warning);
   font-size: var(--text-base);
 }
 
@@ -120,5 +120,5 @@
 /* ─── Active icon button state ─── */
 .icon-btn--active {
   background: var(--c-info-soft) !important;
-  color: var(--color-gold-base) !important;
+  color: var(--c-gold) !important;
 }

@@ -4,7 +4,7 @@
   flex-direction: column;
   height: 100%;
   font-size: var(--text-sm);
-  color: var(--color-text-primary);
+  color: var(--c-text);
 }
 
 .cheats-widget__content {
@@ -23,7 +23,7 @@
   font-size: var(--text-xs);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   margin-bottom: var(--space-sm);
 }
 
@@ -37,7 +37,7 @@
 .cheats-row__label {
   flex: 0 0 70px;
   font-size: var(--text-sm);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
 }
 
 .cheats-row__controls {
@@ -47,63 +47,80 @@
   flex: 1;
 }
 
+.cheats-stat-val {
+  font-size: var(--text-sm);
+  min-width: 30px;
+}
+
+.cheats-note {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  margin: 0 0 var(--space-sm);
+}
+
+.cheats-search {
+  width: 100%;
+  margin-bottom: var(--space-sm);
+  text-align: left;
+}
+
 .cheats-btn {
   padding: var(--space-xs) var(--space-sm);
-  background: var(--color-bg-raised);
-  border: 1px solid var(--color-border-default);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
   border-radius: var(--r-sm);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   cursor: pointer;
   font-size: var(--text-sm);
   transition: background 0.1s;
 }
 
 .cheats-btn:hover {
-  background: var(--color-bg-elevated);
+  background: var(--c-surface);
 }
 
 .cheats-btn:active {
-  background: var(--color-bg-elevated);
+  background: var(--c-surface);
 }
 
 .cheats-btn--danger {
-  border-color: var(--color-danger-border);
-  color: var(--color-danger-text);
+  border-color: var(--c-danger);
+  color: var(--c-danger);
 }
 
 .cheats-btn--danger:hover {
-  background: var(--color-danger-surface-hover);
+  background: var(--c-danger-dim);
 }
 
 .cheats-btn--primary {
-  border-color: var(--color-green-border);
-  color: var(--color-green-base);
+  border-color: var(--c-green);
+  color: var(--c-green);
 }
 
 .cheats-btn--primary:hover {
-  background: var(--color-green-surface);
+  background: var(--c-green-dim);
 }
 
 .cheats-input {
   width: 60px;
   padding: var(--space-xs) var(--space-sm);
-  background: var(--color-bg-raised);
-  border: 1px solid var(--color-border-default);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
   border-radius: var(--r-sm);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   font-size: var(--text-sm);
   text-align: center;
 }
 
 .cheats-input:focus {
   outline: none;
-  border-color: var(--color-green-base);
+  border-color: var(--c-green);
 }
 
 .cheats-slider {
   flex: 1;
   height: 4px;
-  accent-color: var(--color-green-base);
+  accent-color: var(--c-green);
 }
 
 .cheats-radio-group {
@@ -114,19 +131,19 @@
 
 .cheats-radio {
   padding: var(--space-xs) var(--space-sm);
-  background: var(--color-bg-raised);
-  border: 1px solid var(--color-border-default);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
   border-radius: var(--r-sm);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   cursor: pointer;
   font-size: var(--text-xs);
   transition: all 0.1s;
 }
 
 .cheats-radio--active {
-  background: var(--color-green-base);
-  color: var(--color-bg-deep);
-  border-color: var(--color-green-base);
+  background: var(--c-green);
+  color: var(--c-bg);
+  border-color: var(--c-green);
 }
 
 /* ─── Items Tab ─── */
@@ -191,7 +208,7 @@
 .cheats-items__category {
   font-size: var(--text-xs);
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
   margin: var(--space-sm) 0 var(--space-xs);
   letter-spacing: 0.5px;
 }
@@ -208,7 +225,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--space-xs) var(--space-sm);
-  border-bottom: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--c-border);
 }
 
 .cheats-checks__entry--completed {
@@ -226,10 +243,10 @@
 .cheats-checks__grant-btn {
   padding: var(--space-xs) var(--space-sm);
   font-size: var(--text-xs);
-  background: var(--color-bg-raised);
-  border: 1px solid var(--color-green-border);
+  background: var(--c-surface);
+  border: 1px solid var(--c-green);
   border-radius: var(--r-sm);
-  color: var(--color-green-base);
+  color: var(--c-green);
   cursor: pointer;
 }
 
@@ -246,23 +263,23 @@
   gap: var(--space-sm);
   margin-bottom: var(--space-sm);
   padding: var(--space-sm) var(--space-sm);
-  background: var(--color-bg-raised);
-  border: 1px solid var(--color-border-subtle);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
   border-radius: var(--r-sm);
 }
 
 .cheats-bottles__slot-label {
   font-size: var(--text-sm);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   flex: 0 0 50px;
 }
 
 .cheats-bottles__select {
   flex: 1;
   padding: var(--space-xs) var(--space-sm);
-  background: var(--color-bg-raised);
-  border: 1px solid var(--color-border-default);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
   border-radius: var(--r-sm);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   font-size: var(--text-sm);
 }

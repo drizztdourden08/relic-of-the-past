@@ -7,8 +7,8 @@ description: Build and maintain the app's design system — design tokens and re
 
 # Design system
 
-Rules & target structure: @docs/design-system.md. All code obeys
-@docs/coding-standards.md (arrow fns, exports at end, ≤200 lines, one-thing-per-file).
+Rules & target structure: @docs/contributing/design-system.md. All code obeys
+@docs/contributing/coding-standards.md (arrow fns, exports at end, ≤200 lines, one-thing-per-file).
 
 ## Step 0 — pick the right tier (do this first)
 

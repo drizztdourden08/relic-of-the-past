@@ -5,6 +5,7 @@
  */
 
 import { Box } from '../../../../../../design-system/primitives/Box';
+import { Button } from '../../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import type { AssignedDevice, DetectedDevice } from '@shared/types/controls';
 import './AssignedControllerCard.css';
@@ -47,9 +48,9 @@ const AssignedDeviceCard = (props: AssignedDeviceCardProps) => {
     <Box className={`assigned-controller ${!isConnected ? 'assigned-controller--disconnected' : ''}`}>
       <Box className="assigned-controller__header">
         <Text className="assigned-controller__label">Assigned Controller</Text>
-        <Box as="button" className="assigned-controller__unassign" onClick={onUnassign} title="Unassign controller">
+        <Button variant="bare" className="assigned-controller__unassign" onClick={onUnassign} title="Unassign controller">
           ✕
-        </Box>
+        </Button>
       </Box>
       <Box className="assigned-controller__body">
         <Box className={`assigned-controller__status-dot ${statusClass}`} />

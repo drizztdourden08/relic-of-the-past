@@ -1,7 +1,10 @@
 /* @layer renderer-widgets @kind component */
 /** ScreenEditor step-1 top: classification (type/world) + type-specific detail panel. */
+import type { CSSProperties } from 'react';
 import { Box, Text, Select, SegmentedControl, TextInput } from '../../../../design-system/primitives';
 import type { InteriorKind } from '@shared/game/types';
+
+const GAP4: CSSProperties = { display: 'flex', gap: '4px' };
 import { TYPE_SEGMENTS, WORLD_SEGMENTS, PALACE_OPTIONS, INTERIOR_KIND_OPTIONS } from './screen-editor-constants';
 import { EditorField } from './EditorField';
 import { LockedValue } from './LockedValue';
@@ -61,7 +64,7 @@ const ScreenEditorFieldsTop = ({ editor }: { editor: ScreenEditor }) => {
                 <TextInput value={floor} onChange={e => setFloor(e.target.value)} placeholder="-1, 0, 1..." />
               </EditorField>
               <EditorField label="Grid X, Y">
-                <Box style={{ display: 'flex', gap: '4px' }}>
+                <Box style={GAP4}>
                   <TextInput value={gridX} onChange={e => setGridX(e.target.value)} placeholder="X" />
                   <TextInput value={gridY} onChange={e => setGridY(e.target.value)} placeholder="Y" />
                 </Box>

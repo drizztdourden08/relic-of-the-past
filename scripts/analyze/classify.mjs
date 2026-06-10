@@ -4,11 +4,11 @@
  *
  * Builds a FileRecord per file by resolving its tags with precedence:
  *   manifest  >  in-file @layer/@kind header  >  heuristic.
- * Reuses the heuristic engine in scripts/utils/classify/rules.mjs.
+ * Reuses the heuristic engine in scripts/analyze/classify-rules.mjs.
  */
 import fs from 'fs';
 import path from 'path';
-import { classifyLang, classifyRole, classifyType, readLayerTag } from '../utils/classify/rules.mjs';
+import { classifyLang, classifyRole, classifyType, readLayerTag } from './classify-rules.mjs';
 import { matchManifest } from './manifest.mjs';
 import { isVendored } from './policy.mjs';
 

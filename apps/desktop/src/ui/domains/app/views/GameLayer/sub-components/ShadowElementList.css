@@ -87,7 +87,7 @@
 
 .shadow-element-list__item--active {
   background: var(--c-info-soft);
-  color: var(--color-text-primary);
+  color: var(--c-text);
 }
 
 .shadow-element-list__item--active:hover {

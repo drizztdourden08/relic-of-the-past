@@ -2,11 +2,24 @@
 /**
  * Live byte grid visualization for the HID Calibration Wizard.
  */
+import type { CSSProperties } from 'react';
 import { Box } from '../../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../../design-system/primitives/Text';
 import type { ByteStatus, GyroState } from '../hid-calibration.type';
 import { hex } from '../hid-analysis';
 import type { ByteColorResult } from '../wizard-helpers';
+
+// Categorical data-viz swatch colors (fixed hues that ENCODE byte roles, not theme colors).
+const SWATCH: Record<string, CSSProperties> = {
+  unknown: { background: '#4a5568' },
+  excluded: { background: '#555' },
+  stick: { background: '#38bdf8' },
+  trigger: { background: '#fb923c' },
+  button: { background: '#4ade80' },
+  changed: { background: '#fbbf24' },
+  gyro: { background: '#f87171' },
+  selected: { background: '#c084fc' },
+};
 
 interface ByteGridProps {
   latestBytes: Uint8Array;
@@ -69,20 +82,20 @@ const ByteGrid = (props: ByteGridProps) => {
       </Box>
       {latestBytes.length === 0 && <Box className="hid-cal__desc">Waiting for HID reports...</Box>}
       <Box className="hid-cal__byte-legend">
-        <Text><Text className="hid-cal__legend-swatch" style={{ background: '#4a5568' }} /> Unknown</Text>
-        <Text><Text className="hid-cal__legend-swatch" style={{ background: '#555' }} /> Excluded</Text>
-        <Text><Text className="hid-cal__legend-swatch" style={{ background: '#38bdf8' }} /> Stick</Text>
-        <Text><Text className="hid-cal__legend-swatch" style={{ background: '#fb923c' }} /> Trigger</Text>
-        <Text><Text className="hid-cal__legend-swatch" style={{ background: '#4ade80' }} /> Button</Text>
-        <Text><Text className="hid-cal__legend-swatch" style={{ background: '#fbbf24' }} /> Changed</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={SWATCH.unknown} /> Unknown</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={SWATCH.excluded} /> Excluded</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={SWATCH.stick} /> Stick</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={SWATCH.trigger} /> Trigger</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={SWATCH.button} /> Button</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={SWATCH.changed} /> Changed</Text>
         {gyroState === 'recording' && (
-          <Text><Text className="hid-cal__legend-swatch" style={{ background: '#f87171' }} /> Gyro</Text>
+          <Text><Text className="hid-cal__legend-swatch" style={SWATCH.gyro} /> Gyro</Text>
         )}
         {stickPickMode && (
-          <Text><Text className="hid-cal__legend-swatch" style={{ background: '#c084fc' }} /> Selected</Text>
+          <Text><Text className="hid-cal__legend-swatch" style={SWATCH.selected} /> Selected</Text>
         )}
         {triggerPickMode && (
-          <Text><Text className="hid-cal__legend-swatch" style={{ background: '#c084fc' }} /> Selected</Text>
+          <Text><Text className="hid-cal__legend-swatch" style={SWATCH.selected} /> Selected</Text>
         )}
       </Box>
     </Box>

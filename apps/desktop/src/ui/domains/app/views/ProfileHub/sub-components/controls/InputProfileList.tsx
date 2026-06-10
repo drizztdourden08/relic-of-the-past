@@ -73,8 +73,8 @@ const InputProfileList = (props: InputProfileListProps) => {
           <Text as="p" className="input-profile-list__empty">No profiles yet</Text>
         )}
         {profiles.map((profile) => (
-          <Box
-            as="button"
+          <Button
+            variant="bare"
             key={profile.id}
             className={`input-profile-list__item ${profile.id === activeId ? 'input-profile-list__item--active' : ''}`}
             onClick={() => onSelect(profile)}
@@ -117,7 +117,7 @@ const InputProfileList = (props: InputProfileListProps) => {
                 ✕
               </Text>
             )}
-          </Box>
+          </Button>
         ))}
       </Box>
 

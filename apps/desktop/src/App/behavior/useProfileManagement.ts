@@ -8,7 +8,6 @@ import { setSpritesBase } from '@shared/game/items/sprites';
 import { loadInputProfile, loadMsuPack } from './load-profile-helpers';
 
 const useProfileManagement = (params: {
-  refreshLists: () => Promise<void>;
   showDialog: (config: ConfirmDialog) => void;
   dismissDialog: () => void;
   onProfileLoaded: (data: {
@@ -18,7 +17,7 @@ const useProfileManagement = (params: {
   }) => void;
   onGameClear: () => void;
 }) => {
-  const { refreshLists, showDialog, dismissDialog, onProfileLoaded, onGameClear } = params;
+  const { showDialog, dismissDialog, onProfileLoaded, onGameClear } = params;
 
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [romStatuses, setRomStatuses] = useState<RomInfo[]>([]);
@@ -34,6 +33,7 @@ const useProfileManagement = (params: {
     ]);
     setProfiles(profileList);
     setRomStatuses(romStatusList);
+    return { profiles: profileList, romStatuses: romStatusList };
   }, []);
 
   const loadProfileForGame = useCallback(async (profile: Profile) => {
@@ -99,11 +99,11 @@ const useProfileManagement = (params: {
   const handleCreateProfile = useCallback(async (name: string, romFile: string, language?: string, msuPack?: string) => {
     const profile = await window.api.createProfile(name, romFile, language, msuPack);
     log.app(`Created profile: ${profile.name}`);
-    await refreshLists();
+    await refreshProfilesAndRoms();
     setActiveProfile(profile);
     setSpritesBase(window.api.getSpritesBaseUrl(profile.romFile));
     await window.api.setLastProfile(profile.id);
-  }, [refreshLists]);
+  }, [refreshProfilesAndRoms]);
 
   const handleDeleteProfile = useCallback((id: string) => {
     const profile = profiles.find((p) => p.id === id);
@@ -120,10 +120,10 @@ const useProfileManagement = (params: {
           setActiveProfile(null);
           onGameClear();
         }
-        await refreshLists();
+        await refreshProfilesAndRoms();
       },
     });
-  }, [profiles, activeProfile, refreshLists, showDialog, dismissDialog, onGameClear]);
+  }, [profiles, activeProfile, refreshProfilesAndRoms, showDialog, dismissDialog, onGameClear]);
 
   const handleImportRom = useCallback(async () => {
     const romPath = await window.api.openRomDialog();
@@ -204,9 +204,7 @@ const useProfileManagement = (params: {
 
   return {
     profiles,
-    setProfiles,
     romStatuses,
-    setRomStatuses,
     extractionStates,
     romDisplayInfos,
     activeProfile,

@@ -17,6 +17,7 @@
 
 import { useEffect, useRef } from 'react';
 import { subscribeGameState, loadState, wasmGetIndoorDualLayerGrids, wasmGetLinkLayer, wasmGetViewportInfo, wasmGetGameUIState } from '../../lib/game';
+import { waitForElement, findSplitTiles, isLayer1Reachable } from './dump-layers/dump-layers-helpers';
 
 interface DumpLayersDeps {
   activeProfile: Profile | null;
@@ -97,29 +98,10 @@ const useDumpLayers = ({ activeProfile, loadProfileForGame, openNavWidget }: Dum
           const l1 = dualLayerGrids.layer1[hoverTile.row]?.[hoverTile.col] ?? -1;
           const wouldSplit = l0 !== l1;
 
-          // Inline boundary-component check for layer1 reachability at this tile
-          let layer1Reachable = false;
-          if (l1 === 0x00 && wouldSplit) {
-            // BFS from this tile through 0x00 tiles on layer1; check if it reaches boundary
-            const visited = new Set<string>();
-            const queue = [{ row: hoverTile.row, col: hoverTile.col }];
-            visited.add(`${hoverTile.row},${hoverTile.col}`);
-            let touchesBoundary = false;
-            while (queue.length > 0 && !touchesBoundary) {
-              const { row: qr, col: qc } = queue.shift()!;
-              if (qr === 0 || qr === 63 || qc === 0 || qc === 63) { touchesBoundary = true; break; }
-              for (const [dr, dc] of [[-1,0],[1,0],[0,-1],[0,1]]) {
-                const nr = qr + dr, nc = qc + dc;
-                if (nr < 0 || nr >= 64 || nc < 0 || nc >= 64) continue;
-                const key = `${nr},${nc}`;
-                if (visited.has(key)) continue;
-                if (dualLayerGrids.layer1[nr]?.[nc] !== 0x00) continue;
-                visited.add(key);
-                queue.push({ row: nr, col: nc });
-              }
-            }
-            layer1Reachable = !touchesBoundary;
-          }
+          // Boundary-component check: is layer1 an enclosed, reachable interior here?
+          const layer1Reachable = l1 === 0x00 && wouldSplit
+            ? isLayer1Reachable(dualLayerGrids, hoverTile.row, hoverTile.col)
+            : false;
 
           const tooltipWouldShow = wouldSplit && (layer1Reachable || l1 !== 0x00);
           hoverVerification = { layer0: l0, layer1: l1, wouldSplit };
@@ -230,39 +212,6 @@ const useDumpLayers = ({ activeProfile, loadProfileForGame, openNavWidget }: Dum
 
     return () => { cancelled = true; };
   }, [activeProfile]);
-};
-
-const waitForElement = (selector: string, timeoutMs: number): Promise<Element | null> => {
-  return new Promise((resolve) => {
-    const existing = document.querySelector(selector);
-    if (existing) { resolve(existing); return; }
-
-    const observer = new MutationObserver(() => {
-      const el = document.querySelector(selector);
-      if (el) {
-        observer.disconnect();
-        resolve(el);
-      }
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    setTimeout(() => {
-      observer.disconnect();
-      resolve(null);
-    }, timeoutMs);
-  });
-};
-
-const findSplitTiles = (grids: { layer0: number[][]; layer1: number[][] }): Array<{ col: number; row: number; layer0: number; layer1: number }> => {
-  const splits: Array<{ col: number; row: number; layer0: number; layer1: number }> = [];
-  for (let r = 0; r < 64; r++) {
-    for (let c = 0; c < 64; c++) {
-      if (grids.layer0[r][c] !== grids.layer1[r][c]) {
-        splits.push({ col: c, row: r, layer0: grids.layer0[r][c], layer1: grids.layer1[r][c] });
-      }
-    }
-  }
-  return splits;
 };
 
 export { useDumpLayers };

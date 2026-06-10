@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 /** Home tab two-column layout: quick saves + sessions (left), normal + auto saves (right). */
 import { Box } from '../../../../../../design-system/primitives/Box';
+import { Button } from '../../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { SaveSlot } from '../../../../compounds/SaveSlot';
 import { NormalSaveCard } from '../../../../compounds/NormalSaveCard';
@@ -57,15 +58,15 @@ const HomeTabColumns = ({ saves, isGameRunning }: { saves: HomeTabSaves; isGameR
         <Box as="section" className="home-tab__section">
           <Box className="home-tab__section-header">
             <Text as="h3" className="home-tab__section-title">Saves</Text>
-            <Box
-              as="button"
+            <Button
+              variant="bare"
               className="home-tab__new-save-btn"
               onClick={handleCreateNormalSave}
               disabled={!isGameRunning}
               title={isGameRunning ? 'Create a new save' : 'Start game to save'}
             >
               + New Save
-            </Box>
+            </Button>
           </Box>
           {normalSaves.length === 0 ? (
             <Text as="p" className="home-tab__empty">No saves yet</Text>

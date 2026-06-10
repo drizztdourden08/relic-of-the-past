@@ -3,7 +3,7 @@
  * BottlesTab — Manage 4 bottle slots with content selection.
  */
 import { useState } from 'react';
-import { Select, Box, Text } from '../../../../design-system/primitives';
+import { Select, Box, Text, Button } from '../../../../design-system/primitives';
 import { cheatFillBottle, BottleContents } from '../../../../../lib/game';
 import type { BottleContentsValue } from '../../../../../lib/game';
 
@@ -46,18 +46,18 @@ const BottlesTab = () => {
       <Box className="cheats-section">
         <Box className="cheats-section__title">Quick Fill All</Box>
         <Box className="cheats-row">
-          <Box as="button" className="cheats-btn cheats-btn--primary" onClick={() => fillAll(BottleContents.Fairy)}>
+          <Button variant="secondary" size="sm" onClick={() => fillAll(BottleContents.Fairy)}>
             All Fairies
-          </Box>
-          <Box as="button" className="cheats-btn" onClick={() => fillAll(BottleContents.RedPotion)}>
+          </Button>
+          <Button variant="tertiary" size="sm" onClick={() => fillAll(BottleContents.RedPotion)}>
             All Red
-          </Box>
-          <Box as="button" className="cheats-btn" onClick={() => fillAll(BottleContents.BluePotion)}>
+          </Button>
+          <Button variant="tertiary" size="sm" onClick={() => fillAll(BottleContents.BluePotion)}>
             All Blue
-          </Box>
-          <Box as="button" className="cheats-btn" onClick={() => fillAll(BottleContents.Bee)}>
+          </Button>
+          <Button variant="tertiary" size="sm" onClick={() => fillAll(BottleContents.Bee)}>
             All Bees
-          </Box>
+          </Button>
         </Box>
       </Box>
 

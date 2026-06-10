@@ -22,12 +22,12 @@
 .segmented__label {
   font-size: var(--text-base);
   font-weight: var(--weight-medium);
-  color: var(--color-text-primary);
+  color: var(--c-text);
 }
 
 .segmented__description {
   font-size: var(--text-sm);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
 }
 
 .segmented__track {
@@ -35,8 +35,8 @@
   display: flex;
   padding: var(--space-xs);
   border-radius: var(--radius-md);
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border-subtle);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
   flex-shrink: 0;
 }
 
@@ -46,8 +46,8 @@
   left: 2px;
   height: calc(100% - 4px);
   border-radius: var(--radius-sm);
-  background: var(--color-gold-glow);
-  border: 1px solid var(--color-gold-base);
+  background: var(--c-gold-soft);
+  border: 1px solid var(--c-gold);
   transition: transform var(--transition-normal);
   pointer-events: none;
 }
@@ -58,7 +58,7 @@
   padding: var(--space-xs) var(--space-md);
   border: none;
   background: transparent;
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   cursor: pointer;
@@ -68,14 +68,14 @@
 }
 
 .segmented__btn:hover {
-  color: var(--color-text-primary);
+  color: var(--c-text);
 }
 
 .segmented__btn--active {
-  color: var(--color-gold-bright);
+  color: var(--c-gold-bright);
 }
 
 .segmented__btn:focus-visible {
-  outline: 2px solid var(--color-gold-base);
+  outline: 2px solid var(--c-gold);
   outline-offset: -2px;
 }

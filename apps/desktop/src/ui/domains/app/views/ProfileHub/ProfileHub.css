@@ -26,7 +26,7 @@
 .profile-hub__name {
   font-size: var(--text-xl);
   font-weight: var(--weight-semi);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   margin: 0;
 }
 

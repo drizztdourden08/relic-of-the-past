@@ -13,7 +13,7 @@
 .tag-picker__label {
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
-  color: var(--color-text-primary);
+  color: var(--c-text);
 }
 
 .tag-picker__group {
@@ -25,7 +25,7 @@
 .tag-picker__group-label {
   font-size: var(--text-xs);
   font-weight: var(--weight-medium);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   text-transform: capitalize;
 }
 
@@ -39,23 +39,23 @@
   font-size: var(--text-xs);
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border-subtle);
-  background: var(--color-bg-raised);
-  color: var(--color-text-secondary);
+  border: 1px solid var(--c-border);
+  background: var(--c-surface);
+  color: var(--c-text-dim);
   cursor: pointer;
   transition: all 0.1s;
   white-space: nowrap;
 }
 
 .tag-picker__tag:hover:not(:disabled) {
-  color: var(--color-text-primary);
-  border-color: var(--color-border-default);
+  color: var(--c-text);
+  border-color: var(--c-border);
 }
 
 .tag-picker__tag--active {
-  color: var(--color-gold-bright);
-  background: var(--color-gold-glow);
-  border-color: var(--color-gold-base);
+  color: var(--c-gold-bright);
+  background: var(--c-gold-soft);
+  border-color: var(--c-gold);
 }
 
 .tag-picker__tag:disabled {

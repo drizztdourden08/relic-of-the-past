@@ -1,9 +1,10 @@
 /* @layer electron-main @kind logic */
-import { ipcMain, dialog } from 'electron';
+import { dialog } from 'electron';
 import { getMainWindow } from '../window';
+import { handle } from '../lib/ipc/handle';
 
 const registerDialogHandlers = () => {
-  ipcMain.handle('dialog:openRom', async () => {
+  handle('dialog:openRom', async () => {
     const mainWindow = getMainWindow();
     if (!mainWindow) return null;
     const result = await dialog.showOpenDialog(mainWindow, {

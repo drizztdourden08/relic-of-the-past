@@ -25,10 +25,8 @@ int WasmGetGameUIState(void) {
   b[4] = link_health_capacity;
   b[5] = link_magic_power;
   b[6] = link_magic_consumption;
-  b[7] = (uint8)(link_rupees_actual & 0xFF);
-  b[8] = (uint8)((link_rupees_actual >> 8) & 0xFF);
-  b[9] = (uint8)(link_rupees_goal & 0xFF);
-  b[10] = (uint8)((link_rupees_goal >> 8) & 0xFF);
+  PutU16(b, 7, link_rupees_actual);
+  PutU16(b, 9, link_rupees_goal);
   b[11] = link_item_bombs;
   b[12] = link_num_arrows;
   b[13] = link_num_keys;
@@ -85,34 +83,25 @@ int WasmGetGameUIState(void) {
   // ─── Bytes 53–60: Dungeon Progress ───
   b[53] = link_which_pendants;
   b[54] = link_has_crystals;
-  b[55] = (uint8)(link_dungeon_map & 0xFF);
-  b[56] = (uint8)((link_dungeon_map >> 8) & 0xFF);
-  b[57] = (uint8)(link_compass & 0xFF);
-  b[58] = (uint8)((link_compass >> 8) & 0xFF);
-  b[59] = (uint8)(link_bigkey & 0xFF);
-  b[60] = (uint8)((link_bigkey >> 8) & 0xFF);
+  PutU16(b, 55, link_dungeon_map);
+  PutU16(b, 57, link_compass);
+  PutU16(b, 59, link_bigkey);
 
   // ─── Bytes 61–68: Text/Dialogue ───
-  b[61] = (uint8)(dialogue_message_index & 0xFF);
-  b[62] = (uint8)((dialogue_message_index >> 8) & 0xFF);
+  PutU16(b, 61, dialogue_message_index);
   b[63] = messaging_module;
   b[64] = text_render_state;
   b[65] = text_incremental_state;
   b[66] = choice_in_multiselect_box;
-  b[67] = (uint8)(text_wait_countdown & 0xFF);
-  b[68] = (uint8)((text_wait_countdown >> 8) & 0xFF);
+  PutU16(b, 67, text_wait_countdown);
 
   // ─── Bytes 69–78: Map State ───
   b[69] = overworld_map_state;
-  b[70] = (uint8)(dungmap_cur_floor & 0xFF);
-  b[71] = (uint8)((dungmap_cur_floor >> 8) & 0xFF);
-  b[72] = (uint8)(dungmap_idx & 0xFF);
-  b[73] = (uint8)((dungmap_idx >> 8) & 0xFF);
+  PutU16(b, 70, dungmap_cur_floor);
+  PutU16(b, 72, dungmap_idx);
   b[74] = dungmap_init_state;
-  b[75] = (uint8)(cur_palace_index_x2 & 0xFF);
-  b[76] = (uint8)((cur_palace_index_x2 >> 8) & 0xFF);
-  b[77] = (uint8)(dungeon_room_index & 0xFF);
-  b[78] = (uint8)((dungeon_room_index >> 8) & 0xFF);
+  PutU16(b, 75, cur_palace_index_x2);
+  PutU16(b, 77, dungeon_room_index);
   b[79] = dung_cur_floor;
 
   // ─── Bytes 80–81: Floor Indicator / Ability Flags ───
@@ -132,8 +121,7 @@ int WasmGetGameUIState(void) {
   b[108] = g_ui_overlay_mode;
 
   // ─── Bytes 109–114: Location State ───
-  b[109] = (uint8)(overworld_screen_index & 0xFF);
-  b[110] = (uint8)((overworld_screen_index >> 8) & 0xFF);
+  PutU16(b, 109, overworld_screen_index);
   b[111] = player_is_indoors;
   b[112] = is_in_dark_world;
   b[113] = (uint8)(overworld_area_index & 0xFF);
@@ -148,10 +136,8 @@ int WasmGetGameUIState(void) {
   // ─── Bytes 119–124: Extended Location (for region detection) ───
   b[119] = which_entrance;
   b[120] = link_is_on_lower_level;
-  b[121] = (uint8)(link_x_coord & 0xFF);
-  b[122] = (uint8)((link_x_coord >> 8) & 0xFF);
-  b[123] = (uint8)(link_y_coord & 0xFF);
-  b[124] = (uint8)((link_y_coord >> 8) & 0xFF);
+  PutU16(b, 121, link_x_coord);
+  PutU16(b, 123, link_y_coord);
 
   return (int)g_ui_state_buf;
 }

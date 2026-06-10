@@ -9,6 +9,14 @@ int g_cheat_trace_frames = 0;
 static uint8 g_cheat_damage_mult = 1;      // Outgoing damage multiplier (1-255)
 static uint8 g_cheat_extra_armor_pct = 0;   // Extra damage reduction % (0-100), stacks with armor
 
+// ─── Local helpers ───
+// clampi() comes from num_util.h (shared with the volume setters).
+
+// True when the engine is in normal interactive gameplay (overworld or indoor).
+static inline bool IsInGameplay(void) {
+  return main_module_index == MODULE_DUNGEON || main_module_index == MODULE_OVERWORLD;
+}
+
 // ─── Accessors (called from hooks in sprite.c / player.c) ───
 
 uint8 GameHook_GetDamageMultiplier(void) {
@@ -17,6 +25,18 @@ uint8 GameHook_GetDamageMultiplier(void) {
 
 uint8 GameHook_GetExtraArmorPct(void) {
   return g_cheat_extra_armor_pct;
+}
+
+// Apply the extra-armor cheat to an incoming damage value. No-op at 0%; otherwise
+// reduces by the configured percentage (clamped to a 1-point floor unless 100%),
+// stacking with the game's normal armor. Keeps this arithmetic out of vendored
+// zelda3 (player.c just calls this hook).
+uint8 GameHook_ApplyExtraArmor(uint8 dmg) {
+  uint8 pct = GameHook_GetExtraArmorPct();
+  if (pct == 0 || dmg == 0) return dmg;
+  uint8 reduced = (uint8)((uint16)dmg * (100 - pct) / 100);
+  if (reduced < 1) return pct >= 100 ? 0 : 1;
+  return reduced;
 }
 
 // ─── WASM Exports ───
@@ -33,7 +53,7 @@ void WasmCheatGiveItem(int item_id) {
     printf("[Cheat] GiveItem: blocked — item_id 0x%02x exceeds max valid receipt ID (0x4B)\n", item_id);
     return;
   }
-  if (main_module_index != 7 && main_module_index != 9) {
+  if (!IsInGameplay()) {
     printf("[Cheat] GiveItem: blocked — not in gameplay (module=%d)\n", main_module_index);
     return;
   }
@@ -45,7 +65,7 @@ void WasmCheatGiveItem(int item_id) {
 // Set Link's current health directly.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetHealth(int value) {
-  uint8 capped = (uint8)(value > link_health_capacity ? link_health_capacity : (value < 0 ? 0 : value));
+  uint8 capped = (uint8)clampi(value, 0, link_health_capacity);
   link_health_current = capped;
   link_hearts_filler = 0;  // Cancel any pending heal animation
   printf("[Cheat] SetHealth: %d/%d\n", capped, link_health_capacity);
@@ -54,7 +74,7 @@ void WasmCheatSetHealth(int value) {
 // Set Link's max hearts (capacity). Each heart = 8 units.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetMaxHealth(int value) {
-  uint8 capped = (uint8)(value > 160 ? 160 : (value < 8 ? 8 : value));  // 1-20 hearts
+  uint8 capped = (uint8)clampi(value, 8, 160);  // 1-20 hearts (8 units each)
   link_health_capacity = capped;
   if (link_health_current > capped)
     link_health_current = capped;
@@ -64,7 +84,7 @@ void WasmCheatSetMaxHealth(int value) {
 // Set rupee goal (game animates counter toward this value).
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetRupees(int value) {
-  uint16 capped = (uint16)(value > 999 ? 999 : (value < 0 ? 0 : value));
+  uint16 capped = (uint16)clampi(value, 0, 999);
   link_rupees_goal = capped;
   printf("[Cheat] SetRupees: %d\n", capped);
 }
@@ -72,7 +92,7 @@ void WasmCheatSetRupees(int value) {
 // Set bombs count.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetBombs(int value) {
-  uint8 capped = (uint8)(value > 99 ? 99 : (value < 0 ? 0 : value));
+  uint8 capped = (uint8)clampi(value, 0, 99);
   link_item_bombs = capped;
   printf("[Cheat] SetBombs: %d\n", capped);
 }
@@ -80,7 +100,7 @@ void WasmCheatSetBombs(int value) {
 // Set arrows count.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetArrows(int value) {
-  uint8 capped = (uint8)(value > 99 ? 99 : (value < 0 ? 0 : value));
+  uint8 capped = (uint8)clampi(value, 0, 99);
   link_num_arrows = capped;
   printf("[Cheat] SetArrows: %d\n", capped);
 }
@@ -134,14 +154,14 @@ void WasmCheatKillAllEnemies(void) {
 // Set outgoing damage multiplier (1 = normal, 2-255 = multiplied).
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetDamageMultiplier(int mult) {
-  g_cheat_damage_mult = (uint8)(mult < 1 ? 1 : (mult > 255 ? 255 : mult));
+  g_cheat_damage_mult = (uint8)clampi(mult, 1, 255);
   printf("[Cheat] SetDamageMultiplier: %dx\n", g_cheat_damage_mult);
 }
 
 // Set extra armor percentage (0-100). Stacks with existing armor reduction.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetExtraArmorPct(int pct) {
-  g_cheat_extra_armor_pct = (uint8)(pct < 0 ? 0 : (pct > 100 ? 100 : pct));
+  g_cheat_extra_armor_pct = (uint8)clampi(pct, 0, 100);
   printf("[Cheat] SetExtraArmorPct: %d%%\n", g_cheat_extra_armor_pct);
 }
 
@@ -156,8 +176,8 @@ void WasmCheatStartTrace(int frames) {
 // Returns 1 if safe to call Link_ReceiveItem, 0 otherwise.
 EMSCRIPTEN_KEEPALIVE
 int WasmCanReceiveItem(void) {
-  // Must be in dungeon (7) or overworld (9) gameplay
-  if (main_module_index != 7 && main_module_index != 9)
+  // Must be in dungeon or overworld gameplay
+  if (!IsInGameplay())
     return 0;
   // Must not be in a submodule (menu, transition, text, etc.)
   if (submodule_index != 0)

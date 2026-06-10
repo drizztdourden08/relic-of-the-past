@@ -1,38 +1,33 @@
 <!-- @layer docs @kind doc -->
-# Relic of the Past — Documentation
+# Documentation
 
-A modern desktop wrapper for the A Link to the Past PC port, built to make the experience accessible, polished, and ready for randomizer support.
+This folder is the **source of truth** for all project documentation. It is also published to the
+project **GitHub Wiki** automatically (see [Wiki sync](#wiki-sync) below) — so the same content
+reads well both when browsing the repo and on the Wiki tab.
 
-> **This application does not contain any copyrighted material.** You must provide your own ROM file.
+**👉 Start at [Home](Home.md)**, or jump straight in:
 
----
+| Section | What's inside |
+|---------|---------------|
+| [Getting Started](getting-started/quick-start.md) | Quick start, installation, importing a ROM, first launch |
+| [User Guide](user-guide/profiles.md) | Every user-facing feature — saves, display, audio, input, cheats, navigation… |
+| [Widgets](widgets/overview.md) | The floating panels (inventory, checks, cheats, navigation, debug, logs, dataset) |
+| [Architecture](architecture/overview.md) | Zones & invariants, the WASM bridge, asset extraction, navigation, Electron/IPC |
+| [Game Hooks Reference](hooks/overview.md) | Every `Wasm*` export and `GameHook_*` callback crossing the C↔JS boundary |
+| [Contributing](contributing/index.md) | Build from source, WASM build, coding standards, testing, design system |
+| [Project](project/known-limitations.md) | Known limitations, release notes, credits, security |
 
-## Table of Contents
+The full navigation menu is [`_Sidebar.md`](_Sidebar.md) (rendered as the Wiki sidebar).
 
-### Getting Started
+## Conventions
 
-- [Installation](installation.md) — platforms, portable vs installed, system requirements
-- [First Launch](getting-started.md) — ROM import, profile creation, initial setup
+- **Short, single-purpose files**, grouped into deep logical folders — same philosophy as the code
+  ([coding standards](contributing/coding-standards.md)).
+- Every doc starts with a `<!-- @layer docs @kind doc -->` tag (see [file tagging](contributing/file-tagging.md)).
+- Links are relative `.md` paths so they resolve both in-repo and on the Wiki.
 
-### Features
+## Wiki sync
 
-- [Profiles](features/profiles.md) — isolated containers for ROM, saves, settings, and bindings
-- [Game Settings](features/game-settings.md) — display, aspect ratio, window modes
-- [Audio & MSU](features/audio-msu.md) — music packs, volume controls, mute
-- [Save System](features/saves.md) — auto-save, quick saves, named saves, screenshots
-- [HUD](features/hud.md) — original vs enhanced overlay, animations
-- [Haptics](features/haptics.md) — vibration events, supported controllers
-- [Input & Controllers](features/input-controllers.md) — supported devices, rebinding, calibration
-- [Widgets](features/widgets.md) — inventory tracker, checks tracker, cheats, logs
-- [Visual Enhancements](features/enhancements.md) — edge effect, interior backgrounds
-
-### System
-
-- [Auto-Update](auto-update.md) — how updates are delivered and applied
-- [Developer Tools](developer-tools.md) — sprite debug, dev console
-- [Known Limitations](known-limitations.md)
-- [Credits](credits.md)
-
-### Release Notes
-
-- [v0.8.1](releases/v0.8.1.md) — First public build
+Pushes to `master` that touch `docs/**` mirror this folder to the `*.wiki` repo via
+`.github/workflows/docs-wiki-sync.yml`. **Edit docs here, never on the Wiki** (Wiki edits are
+overwritten on the next sync).

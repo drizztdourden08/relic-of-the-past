@@ -15,8 +15,9 @@
  * Output: writes to <project>/debug-output/dump-layers.json
  */
 
-import { ipcMain, app } from 'electron';
+import { app } from 'electron';
 import { join } from 'path';
+import { handle } from '../lib/ipc/handle';
 import { writeFile, mkdir } from 'fs/promises';
 
 const parseDumpLayersSlot = (): number | null => {
@@ -39,10 +40,10 @@ const registerDumpLayersHandler = (): void => {
   const slot = parseDumpLayersSlot();
   const hoverTile = parseHoverTile();
 
-  ipcMain.handle('debug:getDumpLayersSlot', () => slot);
-  ipcMain.handle('debug:getHoverTile', () => hoverTile);
+  handle('debug:getDumpLayersSlot', () => slot);
+  handle('debug:getHoverTile', () => hoverTile);
 
-  ipcMain.handle('debug:dumpLayers', async (_event, data: unknown) => {
+  handle('debug:dumpLayers', async (_event, data: unknown) => {
     const appRoot = app.isPackaged
       ? join(app.getAppPath(), '../..')
       : join(__dirname, '../..');

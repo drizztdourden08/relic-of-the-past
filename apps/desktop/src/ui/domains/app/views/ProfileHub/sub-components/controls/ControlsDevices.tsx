@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 /** ControlsSettings right column: detected input devices (draggable / clickable to assign). */
 import { Box } from '../../../../../../design-system/primitives/Box';
+import { Button } from '../../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { DeviceCard } from './DeviceCard';
 import type { useControlsSettings } from '../useControlsSettings';
@@ -11,14 +12,14 @@ const ControlsDevices = ({ ctrl }: { ctrl: Ctrl }) => {
   return (
     <Box className={`controls-settings__devices-column ${ctrl.devicesCollapsed ? 'controls-settings__devices-column--collapsed' : ''}`}>
       <Box className="controls-settings__col-header">
-        <Box
-          as="button"
+        <Button
+          variant="bare"
           className="controls-settings__col-toggle"
           onClick={() => ctrl.setDevicesCollapsed(!ctrl.devicesCollapsed)}
           title={ctrl.devicesCollapsed ? 'Expand' : 'Collapse'}
         >
           {ctrl.devicesCollapsed ? '◀' : '▶'}
-        </Box>
+        </Button>
         <Text className="controls-settings__col-title">Devices</Text>
       </Box>
       <Box className="controls-settings__device-list">

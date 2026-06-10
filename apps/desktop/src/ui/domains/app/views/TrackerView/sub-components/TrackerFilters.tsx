@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
 import type { GroupDimension, StatusFilter, FilterState } from '@shared/game/checks/grouping';
-import { Box, TextInput } from '../../../../../design-system/primitives';
+import { Box, TextInput, Button } from '../../../../../design-system/primitives';
 import { TrackerFilterPanels } from './TrackerFilterPanels';
 import '../TrackerView.css';
 
@@ -56,74 +56,74 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
           value={filter.searchQuery}
           onChange={(e) => onFilterChange({ ...filter, searchQuery: e.target.value })}
         />
-        <Box
-          as="button"
+        <Button
+          variant="bare"
           className={`tracker-filters__toggle ${showFilters ? 'tracker-filters__toggle--active' : ''}`}
           onClick={() => setShowFilters(v => !v)}
           title="Filters & view options"
         >
           ⚑{activeCount > 0 ? ` ${activeCount}` : ''}
-        </Box>
+        </Button>
       </Box>
 
       {showFilters && (
         <Box className="tracker-filters__controls">
           <Box className="tracker-filters__view-modes">
             {VIEW_MODES.map(({ mode, icon, title }) => (
-              <Box
-                as="button"
+              <Button
+                variant="bare"
                 key={mode}
                 title={title}
                 className={`tracker-filters__mode-btn ${viewMode === mode ? 'tracker-filters__mode-btn--active' : ''}`}
                 onClick={() => onViewModeChange(mode)}
               >
                 {icon}
-              </Box>
+              </Button>
             ))}
           </Box>
 
           <Box className="tracker-filters__view-modes">
             {ITEM_FILTERS.map(opt => (
-              <Box
-                as="button"
+              <Button
+                variant="bare"
                 key={opt.value}
                 className={`tracker-filters__mode-btn ${itemFilter === opt.value ? 'tracker-filters__mode-btn--active' : ''}`}
                 onClick={() => onFilterChange({ ...filter, itemFilter: opt.value })}
               >
                 {opt.label}
-              </Box>
+              </Button>
             ))}
           </Box>
 
           <Box className="tracker-filters__status-group">
             {STATUS_FILTERS.map(opt => (
-              <Box
-                as="button"
+              <Button
+                variant="bare"
                 key={opt.value}
                 className={`tracker-filters__status-btn ${opt.cls} ${statusFilter === opt.value ? 'tracker-filters__status-btn--active' : ''}`}
                 onClick={() => onFilterChange({ ...filter, statusFilter: opt.value as StatusFilter })}
                 title={opt.value.charAt(0).toUpperCase() + opt.value.slice(1)}
               >
                 {opt.label}
-              </Box>
+              </Button>
             ))}
           </Box>
 
-          <Box
-            as="button"
+          <Button
+            variant="bare"
             className={`tracker-filters__btn ${filter.activeTags.length > 0 ? 'tracker-filters__btn--active' : ''}`}
             onClick={() => setShowTagFilter(!showTagFilter)}
           >
             Tags{filter.activeTags.length > 0 ? ` (${filter.activeTags.length})` : ''}
-          </Box>
+          </Button>
 
-          <Box
-            as="button"
+          <Button
+            variant="bare"
             className={`tracker-filters__btn ${grouping.length > 0 ? 'tracker-filters__btn--active' : ''}`}
             onClick={() => setShowGroupConfig(!showGroupConfig)}
           >
             Group{grouping.length > 0 ? ` (${grouping.length})` : ''}
-          </Box>
+          </Button>
         </Box>
       )}
 

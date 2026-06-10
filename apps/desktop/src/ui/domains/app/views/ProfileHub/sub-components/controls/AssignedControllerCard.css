@@ -1,14 +1,14 @@
 /* @layer renderer-components @kind style */
 .assigned-controller {
-  border: 1px solid var(--color-border-subtle);
+  border: 1px solid var(--c-border);
   border-radius: var(--radius-md);
-  background: var(--color-bg-raised);
+  background: var(--c-surface);
   overflow: hidden;
   flex-shrink: 0;
 }
 
 .assigned-controller--disconnected {
-  border-color: var(--color-danger-base);
+  border-color: var(--c-danger);
   opacity: 0.7;
 }
 
@@ -17,8 +17,8 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--space-sm) var(--space-md);
-  background: var(--color-bg-elevated);
-  border-bottom: 1px solid var(--color-border-subtle);
+  background: var(--c-surface);
+  border-bottom: 1px solid var(--c-border);
 }
 
 .assigned-controller__label {
@@ -26,13 +26,13 @@
   font-weight: var(--weight-semi);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
 }
 
 .assigned-controller__unassign {
   background: none;
   border: none;
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
   cursor: pointer;
   font-size: var(--text-sm);
   padding: var(--space-xs) var(--space-xs);
@@ -41,7 +41,7 @@
 }
 
 .assigned-controller__unassign:hover {
-  color: var(--color-danger-base);
+  color: var(--c-danger);
 }
 
 .assigned-controller__body {
@@ -59,18 +59,18 @@
 }
 
 .assigned-controller__status--connected {
-  background: var(--color-green-bright);
+  background: var(--c-green-bright);
   box-shadow: 0 0 6px var(--c-green);
 }
 
 .assigned-controller__status--detected {
-  background: var(--color-warning-base);
+  background: var(--c-warning);
   box-shadow: 0 0 6px var(--c-warning);
   animation: pulse-assigned 2s ease-in-out infinite;
 }
 
 .assigned-controller__status--disconnected {
-  background: var(--color-danger-base);
+  background: var(--c-danger);
   box-shadow: 0 0 6px var(--c-danger);
 }
 
@@ -96,7 +96,7 @@
 .assigned-controller__name {
   font-size: var(--text-base);
   font-weight: var(--weight-medium);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -104,6 +104,6 @@
 
 .assigned-controller__detail {
   font-size: var(--text-sm);
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
   font-family: monospace;
 }

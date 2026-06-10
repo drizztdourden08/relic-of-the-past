@@ -13,13 +13,15 @@ import { Box } from '../../../primitives/Box';
 import type { WidgetLayout, WidgetState } from '../Widget.type';
 import { Widget } from '../Widget';
 import { computeDockedStyles } from '../behavior/computeDockedStyles';
-import { useExclusiveInsetsStore } from '../behavior/exclusiveInsetsStore';
+import type { ExclusiveInsets } from '../behavior/computeDockedStyles';
 
 interface WidgetManagerProps {
   layout: WidgetLayout;
   gameRunning: boolean;
   onUpdate: (id: string, patch: Partial<WidgetState>) => void;
   onClose: (id: string) => void;
+  /** Notified when docked-widget exclusive insets change (wired to a store by a view). */
+  onInsetsChange?: (insets: ExclusiveInsets) => void;
   /** Map of widget ID → content React node */
   children: Record<string, React.ReactNode>;
   /** Map of widget ID → settings content React node (optional, for widget-specific settings) */
@@ -27,7 +29,7 @@ interface WidgetManagerProps {
 }
 
 const WidgetManager = (props: WidgetManagerProps) => {
-  const { layout, gameRunning, onUpdate, onClose, children, settingsContent } = props;
+  const { layout, gameRunning, onUpdate, onClose, onInsetsChange, children, settingsContent } = props;
   // Filter: only show widgets that are visible AND match the current visibility mode
   const activeWidgets = useMemo(() => {
     return layout.widgets.filter((w) => {
@@ -40,11 +42,10 @@ const WidgetManager = (props: WidgetManagerProps) => {
   // Compute docked layout positions + exclusive insets
   const { styles: dockedStyles, exclusiveInsets } = useMemo(() => computeDockedStyles(activeWidgets), [activeWidgets]);
 
-  // Publish exclusive insets to global store so GameLayer can consume them
-  const setInsets = useExclusiveInsetsStore((s) => s.setInsets);
+  // Publish exclusive insets upward so a view can broadcast them (e.g. to GameLayer).
   useEffect(() => {
-    setInsets(exclusiveInsets);
-  }, [exclusiveInsets, setInsets]);
+    onInsetsChange?.(exclusiveInsets);
+  }, [exclusiveInsets, onInsetsChange]);
 
   return (
     <Box className="widget-manager">

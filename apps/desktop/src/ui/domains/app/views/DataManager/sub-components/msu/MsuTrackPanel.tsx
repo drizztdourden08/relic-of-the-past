@@ -1,7 +1,15 @@
 /* @layer renderer-components @kind component */
+import type { CSSProperties } from 'react';
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import type { SelectOption } from '../../../../../../design-system/primitives/Select';
+
+const IL: Record<string, CSSProperties> = {
+  col: { display: 'flex', flexDirection: 'column', height: '100%' },
+  gridMb: { marginBottom: 'var(--space-md)' },
+  muted: { color: 'var(--c-text-muted)' },
+  faint: { color: 'var(--c-text-faint)' },
+};
 import { formatBytes } from '../../../../../../../utils/formatBytes';
 import { TrackRow } from './TrackRow';
 import type { MsuFile, TrackInfo, MatchedTrack } from './msu.type';
@@ -25,9 +33,9 @@ const MsuTrackPanel = (props: MsuTrackPanelProps) => {
   const deluxeTracks = matchedTracks.filter((t) => t.trackNum > 36);
 
   return (
-    <Box style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <Box style={IL.col}>
       <Text as="h3" className="detail-panel__title">{selected}</Text>
-      <Box className="detail-panel__grid" style={{ marginBottom: 'var(--space-md)' }}>
+      <Box className="detail-panel__grid" style={IL.gridMb}>
         <Text className="detail-panel__label">Tracks</Text>
         <Text className="detail-panel__value">{trackInfos.length}</Text>
         <Text className="detail-panel__label">Total Size</Text>
@@ -79,14 +87,14 @@ const MsuTrackPanel = (props: MsuTrackPanelProps) => {
 
       {unmatchedFiles.length > 0 && (
         <Box className="detail-panel__section">
-          <Text as="h4" className="detail-panel__section-title" style={{ color: 'var(--color-text-muted)' }}>
+          <Text as="h4" className="detail-panel__section-title" style={IL.muted}>
             Unmatched Files ({unmatchedFiles.length})
           </Text>
           <Box className="track-list">
             {unmatchedFiles.map((f) => (
               <Box key={f.fileName} className="track-list__item">
-                <Text className="track-list__num" style={{ color: 'var(--color-text-faint)' }}>—</Text>
-                <Text className="track-list__name" style={{ color: 'var(--color-text-muted)' }}>{f.fileName}</Text>
+                <Text className="track-list__num" style={IL.faint}>—</Text>
+                <Text className="track-list__name" style={IL.muted}>{f.fileName}</Text>
                 <Text className="track-list__size">
                   {formatBytes(files.find((file) => file.name === f.fileName)?.size ?? 0)}
                 </Text>

@@ -4,7 +4,7 @@
 .dialog__message {
   display: block;
   font-size: var(--text-sm);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   line-height: var(--leading-normal);
   margin-bottom: var(--space-lg);
 }

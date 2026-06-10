@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind style */
 .card {
   padding: var(--space-sm) var(--space-md);
-  background: var(--color-bg-raised);
-  border: 1px solid var(--color-border-subtle);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
   border-radius: var(--radius-lg);
   transition: background var(--transition-normal),
               border-color var(--transition-normal);
@@ -13,11 +13,11 @@
 }
 
 .card--interactive:hover {
-  background: var(--color-bg-elevated);
-  border-color: var(--color-gold-base);
+  background: var(--c-surface);
+  border-color: var(--c-gold);
 }
 
 .card--danger {
-  border-color: var(--color-danger-border);
-  background: var(--color-danger-surface);
+  border-color: var(--c-danger);
+  background: var(--c-danger-dim);
 }

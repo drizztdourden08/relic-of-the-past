@@ -5,7 +5,6 @@ import type { OverworldEntrance } from '@shared/game/navigation';
 import {
   wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetEntranceRooms, wasmGetAreaHeads,
 } from '../../../../lib/game';
-import type { ViewportInfo } from '../../../../lib/game';
 
 /** Get overworld screen display name from screen index. */
 const getScreenDisplayName = (screenIndex: number): string =>
@@ -79,23 +78,4 @@ const computeBigScreenGroup = (screenIndex: number): number[] => {
   return group.length > 0 ? group : [screenIndex];
 };
 
-/** Overworld screen indices currently visible in the viewport. */
-const getVisibleOverworldScreenIndices = (vp: ViewportInfo): number[] => {
-  const viewLeft = vp.cameraX - vp.extraLeftRight;
-  const viewTop = vp.cameraY;
-  const viewRight = viewLeft + vp.snesWidth - 1;
-  const viewBottom = viewTop + vp.snesHeight - 1;
-  const minCol = Math.max(0, Math.min(7, Math.floor(viewLeft / 512)));
-  const maxCol = Math.max(0, Math.min(7, Math.floor(viewRight / 512)));
-  const minRow = Math.max(0, Math.min(7, Math.floor(viewTop / 512)));
-  const maxRow = Math.max(0, Math.min(7, Math.floor(viewBottom / 512)));
-  const out: number[] = [];
-  for (let r = minRow; r <= maxRow; r++) {
-    for (let c = minCol; c <= maxCol; c++) {
-      out.push((r << 3) | c);
-    }
-  }
-  return out;
-};
-
-export { getScreenDisplayName, uint8ToGrid, enrichEntrances, computeBigScreenGroup, getVisibleOverworldScreenIndices };
+export { getScreenDisplayName, uint8ToGrid, enrichEntrances, computeBigScreenGroup };

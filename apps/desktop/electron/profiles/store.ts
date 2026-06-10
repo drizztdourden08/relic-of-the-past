@@ -1,9 +1,12 @@
 /* @layer electron-main @kind logic */
 import { join } from 'path';
-import { readFile, mkdir, writeFile, readdir, rm, stat } from 'fs/promises';
+import { mkdir, readdir, rm } from 'fs/promises';
 import { randomUUID } from 'crypto';
-import type { Profile } from '../../../../shared/types/profile';
+import type { Profile } from '@shared/types/profile';
 import { getUserDataPath } from '../lib/paths';
+import { readJson, writeJson } from '../lib/json-store';
+
+const profilePath = (id: string): string => getUserDataPath('profiles', id, 'profile.json');
 
 const listProfiles = async (): Promise<Profile[]> => {
   const profilesDir = getUserDataPath('profiles');
@@ -18,13 +21,8 @@ const listProfiles = async (): Promise<Profile[]> => {
 
   const profiles: Profile[] = [];
   for (const entry of entries) {
-    try {
-      const profilePath = join(profilesDir, entry, 'profile.json');
-      const data = await readFile(profilePath, 'utf-8');
-      profiles.push(JSON.parse(data));
-    } catch {
-      // Skip invalid profile dirs
-    }
+    const profile = await readJson<Profile | null>(join(profilesDir, entry, 'profile.json'), null);
+    if (profile) profiles.push(profile);
   }
 
   return profiles.sort((a, b) => b.lastPlayed - a.lastPlayed);
@@ -37,34 +35,21 @@ const createProfile = async (name: string, romFile: string, language?: string, m
   if (language) profile.language = language;
   if (msuPack) profile.msuPack = msuPack;
 
-  const profileDir = getUserDataPath('profiles', id);
-  await mkdir(join(profileDir, 'saves'), { recursive: true });
-  await writeFile(join(profileDir, 'profile.json'), JSON.stringify(profile, null, 2), 'utf-8');
-  await writeFile(join(profileDir, 'config.json'), '{}', 'utf-8');
+  await mkdir(getUserDataPath('profiles', id, 'saves'), { recursive: true });
+  await writeJson(profilePath(id), profile);
+  await writeJson(getUserDataPath('profiles', id, 'config.json'), {});
 
   return profile;
 };
 
-const loadProfile = async (id: string): Promise<Profile | null> => {
-  try {
-    const data = await readFile(getUserDataPath('profiles', id, 'profile.json'), 'utf-8');
-    return JSON.parse(data);
-  } catch {
-    return null;
-  }
-};
+const loadProfile = (id: string): Promise<Profile | null> =>
+  readJson<Profile | null>(profilePath(id), null);
 
-const updateProfile = async (profile: Profile): Promise<void> => {
-  await writeFile(
-    getUserDataPath('profiles', profile.id, 'profile.json'),
-    JSON.stringify(profile, null, 2),
-    'utf-8',
-  );
-};
+const updateProfile = (profile: Profile): Promise<void> =>
+  writeJson(profilePath(profile.id), profile);
 
-const deleteProfile = async (id: string): Promise<void> => {
-  await rm(getUserDataPath('profiles', id), { recursive: true, force: true });
-};
+const deleteProfile = (id: string): Promise<void> =>
+  rm(getUserDataPath('profiles', id), { recursive: true, force: true });
 
 export {
   createProfile,

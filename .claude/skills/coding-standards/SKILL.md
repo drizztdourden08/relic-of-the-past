@@ -7,14 +7,14 @@ description: Enforce this project's strict coding standards on every change — 
 
 # Coding standards — apply & verify, every change
 
-Authoritative rules: @docs/coding-standards.md. For smells, refactoring techniques,
+Authoritative rules: @docs/contributing/coding-standards.md. For smells, refactoring techniques,
 design patterns, and SOLID, use the `refactoring-guru` skill. Mechanically backed by
 `eslint.config.mjs` + the PostToolUse lint hook — but **do not rely on the hook
 alone**; the structural and design-pattern judgment is yours.
 
 ## When planning (before writing)
 
-Follow the full plan format: @docs/plan-format.md. Be **concise — show, don't
+Follow the full plan format: @docs/contributing/plan-format.md. Be **concise — show, don't
 narrate.** Every plan includes:
 
 1. **Goal** (1–2 sentences).
@@ -77,4 +77,4 @@ summary. Don't mass-refactor unrelated files in the same change.
 
 Hooks `useXyz`; components `PascalCase`; types `PascalCase` (no `I`); utils
 `camelCase` verb-noun; handlers `handleXyz` (internal) / `onXyz` (props);
-booleans `isXyz`/`showXyz`. Full detail in @docs/coding-standards.md.
+booleans `isXyz`/`showXyz`. Full detail in @docs/contributing/coding-standards.md.

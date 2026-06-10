@@ -8,9 +8,9 @@ definitions/examples live in `design-patterns.md`; this maps them to our code.
 
 1. **Pattern follows smell.** Apply when its problem appears — never preemptively
    (that's Speculative Generality).
-2. **Every plan names its patterns + shows the filetree** — see @docs/plan-format.md.
+2. **Every plan names its patterns + shows the filetree** — see @docs/contributing/plan-format.md.
 3. **Patterns are realized as small one-thing-per-file units** (≤200 lines, arrow
-   fns, exports at end) — see @docs/coding-standards.md. Never a monolith.
+   fns, exports at end) — see @docs/contributing/coding-standards.md. Never a monolith.
 
 ## Creational
 

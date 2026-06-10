@@ -2,7 +2,7 @@
 import { useState, useCallback } from 'react';
 import type { PageId } from '../types';
 
-const useAppNavigation = (params: { activeProfile: Profile | null; refreshLists: () => Promise<void> }) => {
+const useAppNavigation = (params: { activeProfile: Profile | null; refreshLists: () => Promise<unknown> }) => {
   const { activeProfile, refreshLists } = params;
   const [activePage, setActivePage] = useState<PageId>('none');
 

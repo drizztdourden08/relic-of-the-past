@@ -8,12 +8,12 @@
 }
 
 .stat-row__label {
-  color: var(--color-text-muted);
+  color: var(--c-text-muted);
   white-space: nowrap;
 }
 
 .stat-row__value {
-  color: var(--color-text-primary);
+  color: var(--c-text);
   text-align: right;
   overflow-wrap: break-word;
 }

@@ -1,11 +1,7 @@
 /* @layer renderer-components @kind logic */
 import { formatRomName } from '../../../../../../utils/formatRomName';
+import { formatDate as fmtDate } from '../../../../../../utils/formatDate';
 
-const formatDate = (ts: number): string => {
-  if (!ts) return 'Never';
-  return new Date(ts).toLocaleDateString(undefined, {
-    month: 'short', day: 'numeric', year: 'numeric',
-  });
-};
+const formatDate = (ts: number): string => fmtDate(ts, 'short');
 
 export { formatDate, formatRomName };

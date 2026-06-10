@@ -2,19 +2,19 @@
 .text-input {
   width: 100%;
   padding: var(--space-sm) var(--space-md);
-  background: var(--color-bg-raised);
-  border: 1px solid var(--color-border-subtle);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
   border-radius: var(--radius-md);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   font-size: var(--text-base);
   outline: none;
   transition: border-color var(--transition-normal);
 }
 
 .text-input:focus {
-  border-color: var(--color-gold-base);
+  border-color: var(--c-gold);
 }
 
 .text-input::placeholder {
-  color: var(--color-text-faint);
+  color: var(--c-text-faint);
 }

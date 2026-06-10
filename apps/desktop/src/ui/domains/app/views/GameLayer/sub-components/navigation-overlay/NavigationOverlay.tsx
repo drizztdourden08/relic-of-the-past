@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useEffect, useState, useCallback } from 'react';
+import type { CSSProperties } from 'react';
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { useNavigationOverlayStore } from '../../../../../../../stores/navigation-overlay-store';
 import { useGameUIStore } from '../../../../../../../stores/game-ui-store';
@@ -8,6 +9,11 @@ import { OverlayCanvas } from './OverlayCanvas';
 import { TileInspector } from './TileInspector';
 import { PathControlsLegend } from './PathControlsLegend';
 import { OverlayLegend } from './OverlayLegend';
+
+const IL: Record<string, CSSProperties> = {
+  overlay: { position: 'absolute', inset: 0, zIndex: 6 },
+  legends: { position: 'absolute', bottom: 6, right: 6, zIndex: 7, display: 'flex', gap: 8, alignItems: 'flex-end', pointerEvents: 'none' },
+};
 
 const NavigationOverlay = ({ width, height, gameRunning }: Props) => {
   const { visible, result } = useNavigationOverlayStore();
@@ -59,7 +65,7 @@ const NavigationOverlay = ({ width, height, gameRunning }: Props) => {
 
   return (
     <Box
-      style={{ position: 'absolute', inset: 0, zIndex: 6 }}
+      style={IL.overlay}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onContextMenu={handleContextMenu}
@@ -82,7 +88,7 @@ const NavigationOverlay = ({ width, height, gameRunning }: Props) => {
           pathPreviewState={mouseState}
         />
       )}
-      <Box style={{ position: 'absolute', bottom: 6, right: 6, zIndex: 7, display: 'flex', gap: 8, alignItems: 'flex-end', pointerEvents: 'none' }}>
+      <Box style={IL.legends}>
         <PathControlsLegend />
         <OverlayLegend />
       </Box>

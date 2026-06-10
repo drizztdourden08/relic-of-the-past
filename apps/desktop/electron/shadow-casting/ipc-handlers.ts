@@ -1,15 +1,15 @@
 /* @layer electron-main @kind logic */
-import { ipcMain } from 'electron';
+import { handle } from '../lib/ipc/handle';
 import { is } from '@electron-toolkit/utils';
-import type { ShadowCastingProject } from '../../../../shared/types/shadow-casting';
+import type { ShadowCastingProject } from '@shared/types/shadow-casting';
 import { loadShadowProject, saveShadowProject, getScreenData } from './store';
 
 const registerShadowCastingHandlers = (): void => {
-  ipcMain.handle('shadow-casting:load', async () => {
+  handle('shadow-casting:load', async () => {
     return await loadShadowProject();
   });
 
-  ipcMain.handle('shadow-casting:save', async (_event, data: ShadowCastingProject) => {
+  handle('shadow-casting:save', async (_event, data: ShadowCastingProject) => {
     if (!is.dev) {
       throw new Error('Shadow casting data can only be saved in development mode');
     }
@@ -17,7 +17,7 @@ const registerShadowCastingHandlers = (): void => {
     return { success: true };
   });
 
-  ipcMain.handle('shadow-casting:get-screen', async (_event, screenId: number) => {
+  handle('shadow-casting:get-screen', async (_event, screenId: number) => {
     return await getScreenData(screenId);
   });
 };

@@ -7,7 +7,7 @@ import {
 } from '@shared/game/sprites';
 import type { SpriteCategory } from '@shared/game/sprites';
 import type { ReviewStatus, ReviewData } from '../SpriteDebug.type';
-import { Box } from '../../../../../design-system/primitives';
+import { Box, Button } from '../../../../../design-system/primitives';
 import { CategoryButton, FilterBtns, Stats } from './ReviewControls';
 import { SpriteImageCard } from './ReviewCards';
 import { S } from '../SpriteDebug.constants';
@@ -79,7 +79,7 @@ const SpriteReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
         <Stats counts={counts} total={SPRITE_MANIFEST.length} />
         <Box style={S.headerButtons}>
           <FilterBtns filter={filter} setFilter={setFilter} />
-          <Box as="button" onClick={() => { setData({}); window.api.saveSpriteReview({}); }} style={S.resetBtn}>Reset</Box>
+          <Button variant="bare" onClick={() => { setData({}); window.api.saveSpriteReview({}); }} style={S.resetBtn}>Reset</Button>
         </Box>
       </Box>
       <Box style={S.grid}>

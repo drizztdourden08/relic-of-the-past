@@ -28,15 +28,15 @@ const GameStatePanel = (props: Props) => {
               </DescRow>
               <DescRow label="Grid Pos" desc="The room's position in the dungeon's 5×5 map grid for the current floor (from the dungeon map layout data). 1-based row,col. Falls back to absolute room grid (16×16) for caves/houses.">
                 {dungeonMapPos?.found ? (
-                  <Text style={{ color: 'var(--c-text-dim)' }}>({dungeonMapPos.mapRow + 1}, {dungeonMapPos.mapCol + 1})</Text>
+                  <Text style={S.valDim}>({dungeonMapPos.mapRow + 1}, {dungeonMapPos.mapCol + 1})</Text>
                 ) : (
-                  <Text style={{ color: 'var(--c-text-muted)' }}>({(roomIndex >> 4) + 1}, {(roomIndex & 0xF) + 1})</Text>
+                  <Text style={S.valMuted}>({(roomIndex >> 4) + 1}, {(roomIndex & 0xF) + 1})</Text>
                 )}
               </DescRow>
               {dungeonMapPos && (
                 <DescRow label="Floor" desc="The current dungeon floor. Derived from dung_cur_floor: 0=1F, 1=2F, 0xFF=B1, 0xFE=B2, etc. The range shows all floors in this dungeon from highest to lowest.">
-                  <Text style={{ color: 'var(--c-warning)' }}>{dungeonMapPos.floorLabel}</Text>
-                  <Text style={{ color: 'var(--c-text-muted)', marginLeft: 4, fontSize: 10 }}>[{dungeonMapPos.numAboveFloors > 0 ? `${dungeonMapPos.numAboveFloors}F` : ''}{dungeonMapPos.numAboveFloors > 0 && dungeonMapPos.numBasementFloors > 0 ? ' … ' : ''}{dungeonMapPos.numBasementFloors > 0 ? `B${dungeonMapPos.numBasementFloors}` : ''}]</Text>
+                  <Text style={S.valWarning}>{dungeonMapPos.floorLabel}</Text>
+                  <Text style={S.valBadge}>[{dungeonMapPos.numAboveFloors > 0 ? `${dungeonMapPos.numAboveFloors}F` : ''}{dungeonMapPos.numAboveFloors > 0 && dungeonMapPos.numBasementFloors > 0 ? ' … ' : ''}{dungeonMapPos.numBasementFloors > 0 ? `B${dungeonMapPos.numBasementFloors}` : ''}]</Text>
                 </DescRow>
               )}
               {roomLayoutInfo && (() => {
@@ -49,15 +49,15 @@ const GameStatePanel = (props: Props) => {
                 const hasScrollBoundaries = roomLayoutInfo.intraEdges.length > 0;
                 return (
                   <DescRow label="Viewport" desc="Camera viewport of this room (width × height in screens). Based on the room's quadrant allocation + fullsize flags. 'open' = no internal camera scroll boundaries. 'scroll' = camera scrolls between quadrants.">
-                    <Text style={{ color: 'var(--c-info)' }}>{effectiveShape}</Text>
+                    <Text style={S.valInfo}>{effectiveShape}</Text>
                     <Text style={{ color: hasScrollBoundaries ? '#f84' : 'var(--c-green)', marginLeft: 4, fontSize: 10 }}>{hasScrollBoundaries ? 'scroll' : 'open'}</Text>
-                    <Text style={{ color: 'var(--c-text-muted)', marginLeft: 4, fontSize: 10 }}>raw={roomLayoutInfo.shape} idx={roomLayoutInfo.layout}</Text>
+                    <Text style={S.valBadge}>raw={roomLayoutInfo.shape} idx={roomLayoutInfo.layout}</Text>
                   </DescRow>
                 );
               })()}
               {dungeonMapPos?.found && (
                 <DescRow label="Effective Layout" desc="The room's actual footprint on the dungeon map grid, determined by counting how many cells this room occupies in the 5×5 map layout. This is what the in-game MAP screen shows.">
-                  <Text style={{ color: 'var(--c-info)' }}>{dungeonMapPos.effectiveLayout}</Text>
+                  <Text style={S.valInfo}>{dungeonMapPos.effectiveLayout}</Text>
                 </DescRow>
               )}
               <DescRow label="Last Entrance" desc="The entrance ID Link last used to enter from the overworld. Determines spawn position, starting layer, and palace assignment. Does NOT update for indoor-to-indoor transitions.">
@@ -72,7 +72,7 @@ const GameStatePanel = (props: Props) => {
                     {roomStartLayer === 0 ? 'Upper (BG2)' : 'Lower (BG1)'}
                   </Text>
                 ) : (
-                  <Text style={{ color: 'var(--c-text-muted)' }}>—</Text>
+                  <Text style={S.valMuted}>—</Text>
                 )}
               </DescRow>
             </>
@@ -88,19 +88,19 @@ const GameStatePanel = (props: Props) => {
           )}
           {progressInfo && (
             <DescRow label="Phase" desc="The game's progress indicator byte. Controls NPC dialogue, event triggers, and overworld tile patches. Advances as you complete key objectives.">
-              <Text style={{ color: 'var(--c-warning)' }}>{progressInfo.label}</Text>
-              <Text style={{ color: 'var(--c-text-muted)', marginLeft: 4, fontSize: 10 }}>0x{progressInfo.tier.toString(16).padStart(2, '0')}</Text>
+              <Text style={S.valWarning}>{progressInfo.label}</Text>
+              <Text style={S.valBadge}>0x{progressInfo.tier.toString(16).padStart(2, '0')}</Text>
             </DescRow>
           )}
           {displayedVariant && (
             <>
               <DescRow label="Tile Patch" desc="Whether this screen has an active event overlay that modifies walkable tiles (e.g. rocks removed after an event).">
                 {displayedVariant.eventOverlayActive
-                  ? <Text style={{ color: 'var(--c-green)' }}>active</Text>
-                  : <Text style={{ color: 'var(--c-text-muted)' }}>none</Text>}
+                  ? <Text style={S.valGreen}>active</Text>
+                  : <Text style={S.valMuted}>none</Text>}
               </DescRow>
               <DescRow label="Flags" desc="Screen-specific event flags from SRAM. Track permanent world changes like opened chests, pulled levers, and destroyed barriers.">
-                <Text style={{ color: 'var(--c-text-dim)' }}>0x{displayedVariant.screenEventFlags.toString(16).padStart(2, '0')}</Text>
+                <Text style={S.valDim}>0x{displayedVariant.screenEventFlags.toString(16).padStart(2, '0')}</Text>
               </DescRow>
               <DescRow label="NPC Blockers" desc="Number of sprites currently blocking BFS pathfinding (tutorial guards, barriers). These physically prevent Link from passing.">
                 <Text style={{ color: dynamicBlockerCount > 0 ? 'var(--c-warning)' : 'var(--c-text-muted)' }}>{dynamicBlockerCount}</Text>

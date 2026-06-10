@@ -6,6 +6,7 @@
  */
 
 import type { VibrationSegment } from './base';
+import type { HapticSettings } from '../types/settings';
 import { HAPTIC_PATTERNS, type HapticPatternEntry, type HapticPatternId } from './data/haptics';
 import {
   HapticEventType, EnvironmentalEvent, HapticItemId,
@@ -27,18 +28,6 @@ const checkCooldown = (patternId: string, cooldownMs: number): boolean => {
 };
 
 // ─── Service State ───
-
-interface HapticSettings {
-  enabled: boolean;
-  intensity: number;
-  swordSwing: boolean;
-  swordHitEnemy: boolean;
-  swordClink: boolean;
-  damageTaken: boolean;
-  itemUse: boolean;
-  dashVibration: boolean;
-  environmentalEffects: boolean;
-}
 
 type VibrateFunction = (pattern: VibrationSegment[], gapMs?: number) => void;
 

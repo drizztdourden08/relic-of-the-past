@@ -50,6 +50,7 @@ const MsuManager = (props: MsuManagerProps) => {
         </Field>
       </Box>
       <ImportForm
+        kind="msu"
         placeholder="Paste MSU pack download URL…"
         accept={['.zip', '.7z', '.rar']}
         dropLabel="Drop MSU pack here"

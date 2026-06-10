@@ -7,7 +7,7 @@ description: Drive and verify the running game using the project's BUILT-IN auto
 
 # Test the app with built-ins (not Playwright)
 
-Full reference: @docs/testing-capabilities.md. The app drives itself via CLI flags
+Full reference: @docs/contributing/testing.md. The app drives itself via CLI flags
 and writes artifacts you can read.
 
 ## ⚠️ Protected harness files — modify only with permission

@@ -1,5 +1,5 @@
 /* @layer renderer-components @kind component */
-import { Box } from '../../../../design-system/primitives/Box';
+import { Button } from '../../../../design-system/primitives/Button';
 import { Flex } from '../../../../design-system/primitives/Flex';
 import { Text } from '../../../../design-system/primitives/Text';
 import { IconButton } from '../../../../design-system/primitives/IconButton';
@@ -11,7 +11,7 @@ const ProfileCard = (props: ProfileCardProps) => {
   const { profile, onSelect, onDelete } = props;
 
   return (
-    <Box as="button" className="profile-card" onClick={() => onSelect(profile)}>
+    <Button variant="bare" className="profile-card" onClick={() => onSelect(profile)}>
       <Flex direction="column" className="profile-card__main">
         <Text className="profile-card__name">{profile.name}</Text>
         <Text className="profile-card__rom">{formatRomName(profile.romFile)}</Text>
@@ -26,7 +26,7 @@ const ProfileCard = (props: ProfileCardProps) => {
           ✕
         </IconButton>
       </Flex>
-    </Box>
+    </Button>
   );
 };
 

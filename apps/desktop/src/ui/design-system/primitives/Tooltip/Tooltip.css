@@ -8,10 +8,10 @@
   max-width: 240px;
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-sm);
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border-default);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
   box-shadow: var(--shadow-overlay);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   font-size: var(--text-xs);
   line-height: var(--leading-normal);
   pointer-events: none;

@@ -6,9 +6,11 @@
  * proper SVG icons, joystick circle testers, and vibration testing.
  */
 
+import type { CSSProperties } from 'react';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../design-system/primitives/Image';
+import { Button } from '../../../../../design-system/primitives/Button';
 import { webHidReader } from '../../../../../../lib/input/hid-reader';
 import { HidCalibrationWizard } from './HidCalibrationWizard';
 import { DEVICE_PROFILES, findPresetByVidPid } from '@shared/input';
@@ -20,6 +22,18 @@ import { DiagnosticsLog } from './DiagnosticsLog';
 import './InputCalibration.css';
 import './InputCalibration.sticks.css';
 import './InputCalibration.hid.css';
+
+const S: Record<string, CSSProperties> = {
+  hint: { fontSize: 'var(--text-sm)', opacity: 0.6 },
+  metaXs: { fontSize: 'var(--text-xs)', color: 'var(--c-text-muted)' },
+  mt: { marginTop: 'var(--space-sm)' },
+  sm: { fontSize: 'var(--text-sm)' },
+  dim50: { opacity: 0.5 },
+  iconDim: { width: 28, height: 28, opacity: 0.5, flexShrink: 0 },
+  badgeSurface: { background: 'var(--c-surface)' },
+  badgeInfo: { background: 'var(--c-info)', marginLeft: 4 },
+  cardNote: { fontSize: 'var(--text-sm)', color: 'var(--c-text-muted)', margin: 'var(--space-sm) 0 0' },
+};
 
 const InputCalibration = () => {
   const {
@@ -37,24 +51,24 @@ const InputCalibration = () => {
       <Box className="input-cal__header">
         <Text className={`input-cal__status ${anyHidConnected ? 'input-cal__status--connected' : 'input-cal__status--disconnected'}`}>
           {anyHidConnected
-            ? `Connected ${'\u2022'} ${gamepads.length + webHidReader.getConnectedDeviceKeys().length} controller(s)`
+            ? `Connected ${'•'} ${gamepads.length + webHidReader.getConnectedDeviceKeys().length} controller(s)`
             : `${gamepads.length} controller(s) detected`}
         </Text>
       </Box>
 
       {/* Actions */}
       <Box className="input-cal__actions">
-        <Text style={{ fontSize: 'var(--text-sm)', opacity: 0.6 }}>
+        <Text style={S.hint}>
           Controllers auto-connect via node-hid
         </Text>
-        <Box
-          as="button"
-          className="input-cal__btn"
+        <Button
+          variant="tertiary"
+          size="sm"
           onClick={() => setCalibrating(true)}
           disabled={!anyHidConnected}
         >
           Calibrate
-        </Box>
+        </Button>
       </Box>
 
       {/* Calibration Wizard */}
@@ -74,19 +88,19 @@ const InputCalibration = () => {
           <Box className="input-cal__result">
             <Box className="input-cal__result-header">
               <Text className="input-cal__result-title">Calibration Complete</Text>
-              <Text style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}>
-                {lastCalibration.name} {'\u2014'} {Object.keys(lastCalibration.buttons).length} buttons, {Object.keys(lastCalibration.axes).length} axes
+              <Text style={S.metaXs}>
+                {lastCalibration.name} {'—'} {Object.keys(lastCalibration.buttons).length} buttons, {Object.keys(lastCalibration.axes).length} axes
               </Text>
             </Box>
             <Box as="pre">{JSON.stringify(lastCalibration, null, 2)}</Box>
-            <Box
-              as="button"
-              className="input-cal__btn"
+            <Button
+              variant="tertiary"
+              size="sm"
               onClick={() => navigator.clipboard.writeText(JSON.stringify(lastCalibration, null, 2))}
-              style={{ marginTop: 'var(--space-sm)' }}
+              style={S.mt}
             >
               Copy JSON
-            </Box>
+            </Button>
           </Box>
         </Box>
       )}
@@ -98,7 +112,7 @@ const InputCalibration = () => {
         {gamepads.length === 0 && !anyHidConnected && hidDeviceInfo.filter(d => d.vendorId !== '046d').length === 0 && (
           <Box className="input-cal__empty">
             <Text as="p">No controllers detected.</Text>
-            <Text as="p" style={{ fontSize: 'var(--text-sm)' }}>Press a button on your gamepad to activate it.</Text>
+            <Text as="p" style={S.sm}>Press a button on your gamepad to activate it.</Text>
           </Box>
         )}
 
@@ -162,21 +176,21 @@ const InputCalibration = () => {
               const name = resolveDeviceName(d.vendorId, d.productId, d.product);
               const isGeneric = !preset || preset.id === 'generic';
               return (
-                <Box key={`inactive-${key}`} className="input-cal__card" style={{ opacity: 0.5 }}>
+                <Box key={`inactive-${key}`} className="input-cal__card" style={S.dim50}>
                   <Box className="input-cal__card-header">
                     {icon && (
-                      <Image src={icon} alt="" draggable={false} style={{ width: 28, height: 28, opacity: 0.5, flexShrink: 0 }} />
+                      <Image src={icon} alt="" draggable={false} style={S.iconDim} />
                     )}
-                    <Text className="input-cal__card-badge" style={{ background: 'var(--c-surface)' }}>
+                    <Text className="input-cal__card-badge" style={S.badgeSurface}>
                       INACTIVE
                     </Text>
-                    <Text className="input-cal__card-badge" style={{ background: 'var(--c-info)', marginLeft: 4 }}>
+                    <Text className="input-cal__card-badge" style={S.badgeInfo}>
                       HID
                     </Text>
                     <Text className="input-cal__card-name">{name}</Text>
                     <Text className="input-cal__card-meta">{key}</Text>
                   </Box>
-                  <Text as="p" style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', margin: 'var(--space-sm) 0 0' }}>
+                  <Text as="p" style={S.cardNote}>
                     {isGeneric
                       ? 'Press a button to activate, then use Calibrate to map this controller.'
                       : 'Press a button to activate this controller.'}

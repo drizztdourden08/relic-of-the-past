@@ -2,9 +2,13 @@
 /**
  * Stick calibration cards for the HID Calibration Wizard.
  */
+import type { CSSProperties } from 'react';
 import { Box } from '../../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../../design-system/primitives/Text';
+import { Button } from '../../../../../../../design-system/primitives/Button';
 import type { InputItem, IdleRecordResult, StickSide } from '../hid-calibration.type';
+
+const DESC_SMALL: CSSProperties = { fontSize: 10 };
 
 interface StickCardsProps {
   items: InputItem[];
@@ -60,7 +64,7 @@ const StickCards = (props: StickCardsProps) => {
             {isRecording && stickLiveInfo && <Box className="hid-cal__stick-info">{stickLiveInfo}</Box>}
             {isRecording && !stickLiveInfo && <Text as="p" className="hid-cal__desc">Rotate slowly in a full circle...</Text>}
             {!isActive && isDone && (
-              <Text as="p" className="hid-cal__desc" style={{ fontSize: 10 }}>
+              <Text as="p" className="hid-cal__desc" style={DESC_SMALL}>
                 X: {xItem?.result ?? '—'}<Box as="br" />Y: {yItem?.result ?? '—'}
               </Text>
             )}
@@ -68,22 +72,21 @@ const StickCards = (props: StickCardsProps) => {
             <Box className="hid-cal__prereq-actions">
               {isPicking ? (
                 <>
-                  <Box as="button" onClick={onConfirmPick} disabled={stickPickedBytes.length === 0}
-                    className="input-cal__btn input-cal__btn--primary" style={{ fontSize: 11 }}>
+                  <Button variant="primary" size="sm" onClick={onConfirmPick} disabled={stickPickedBytes.length === 0}>
                     Confirm ({stickPickedBytes.length})
-                  </Box>
-                  <Box as="button" onClick={onCancelPick} className="input-cal__btn input-cal__btn--danger" style={{ fontSize: 11 }}>Cancel</Box>
+                  </Button>
+                  <Button variant="danger" size="sm" onClick={onCancelPick}>Cancel</Button>
                 </>
               ) : isRecording ? (
-                <Box as="button" onClick={onStopCircle} className="input-cal__btn input-cal__btn--danger" style={{ fontSize: 11 }}>Stop</Box>
+                <Button variant="danger" size="sm" onClick={onStopCircle}>Stop</Button>
               ) : isDone ? (
                 <>
-                  <Box as="button" onClick={() => onStickRedo(side)} disabled={otherBusy} className="input-cal__btn" style={{ fontSize: 11 }}>Redo</Box>
-                  <Box
-                    as="button"
+                  <Button variant="tertiary" size="sm" onClick={() => onStickRedo(side)} disabled={otherBusy}>Redo</Button>
+                  <Button
+                    variant="tertiary"
+                    size="sm"
                     disabled={idleRecording !== null}
-                    className={`input-cal__btn${idleResults[`${label} Stick`] ? ' input-cal__btn--done' : ''}`}
-                    style={{ fontSize: 11 }}
+                    className={idleResults[`${label} Stick`] ? 'input-cal__btn--done' : ''}
                     onClick={() => {
                       const byteIndices: number[] = [];
                       if (xItem?.axisMapping) byteIndices.push(xItem.axisMapping.byteIndex);
@@ -91,16 +94,13 @@ const StickCards = (props: StickCardsProps) => {
                       if (byteIndices.length > 0) onIdleRecord(`${label} Stick`, byteIndices);
                     }}>
                     {idleRecording === `${label} Stick` ? 'Recording...' : idleResults[`${label} Stick`] ? '✓ Idle' : 'Idle'}
-                  </Box>
+                  </Button>
                 </>
               ) : (
                 <>
-                  <Box as="button" onClick={() => onStartCircle(side)} disabled={otherBusy}
-                    className="input-cal__btn input-cal__btn--primary" style={{ fontSize: 11 }}>Start</Box>
-                  <Box as="button" onClick={() => onStickPickMode(side)} disabled={otherBusy}
-                    className="input-cal__btn" style={{ fontSize: 11 }}>Pick</Box>
-                  <Box as="button" onClick={() => onSkipStick(side)} disabled={otherBusy}
-                    className="input-cal__btn" style={{ fontSize: 11 }}>Skip</Box>
+                  <Button variant="primary" size="sm" onClick={() => onStartCircle(side)} disabled={otherBusy}>Start</Button>
+                  <Button variant="tertiary" size="sm" onClick={() => onStickPickMode(side)} disabled={otherBusy}>Pick</Button>
+                  <Button variant="tertiary" size="sm" onClick={() => onSkipStick(side)} disabled={otherBusy}>Skip</Button>
                 </>
               )}
             </Box>

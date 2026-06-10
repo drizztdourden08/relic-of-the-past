@@ -1,6 +1,13 @@
 /* @layer renderer-widgets @kind component */
+import type { CSSProperties } from 'react';
 import { Icon } from '@iconify/react/offline';
 import type { ConnectionInfo } from '@shared/game/navigation';
+
+const IL: Record<string, CSSProperties> = {
+  cellName: { fontWeight: 700, fontSize: 11, position: 'relative' },
+  cellHex: { color: 'var(--c-text-muted)', fontSize: 9, position: 'relative' },
+  cellCount: { fontSize: 9, color: 'var(--c-text-dim)', position: 'relative' },
+};
 import { Box, Text } from '../../../../design-system/primitives';
 import { getEntranceIcon } from '../../../../../lib/entrance-icons';
 import { useNavigationOverlayStore } from '../../../../../stores/navigation-overlay-store';
@@ -83,9 +90,9 @@ const OverworldMinimap = ({ bundle, connections, renderResults, linkScreenIndex,
             color: isActive ? 'var(--c-green-bright)' : analyzed ? 'var(--c-info)' : 'var(--c-text-muted)', overflow: 'hidden',
           }}>
             {scrResult && <ReachabilityCanvas reachable={scrResult.reachable} size={cellW} tileLayer={scrResult.tileLayer} />}
-            <Box style={{ fontWeight: 700, fontSize: 11, position: 'relative' }}>{bundle.subNames[scr] || bundle.screenNames[scr]}</Box>
-            <Box style={{ color: 'var(--c-text-muted)', fontSize: 9, position: 'relative' }}>0x{scr.toString(16).toUpperCase()}</Box>
-            {scrResult && <Box style={{ fontSize: 9, color: 'var(--c-text-dim)', position: 'relative' }}>{scrResult.reachableCount}/{scrResult.totalTiles}</Box>}
+            <Box style={IL.cellName}>{bundle.subNames[scr] || bundle.screenNames[scr]}</Box>
+            <Box style={IL.cellHex}>0x{scr.toString(16).toUpperCase()}</Box>
+            {scrResult && <Box style={IL.cellCount}>{scrResult.reachableCount}/{scrResult.totalTiles}</Box>}
           </Box>
         );
       })}

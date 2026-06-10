@@ -1,6 +1,7 @@
 import { join } from 'path';
 import { readFile, mkdir, writeFile, readdir, stat, rename as fsRename } from 'fs/promises';
 import { getUserDataPath } from '../lib/paths';
+import { statSaveSlot } from './save-slot';
 
 const QUICK_SAVE_SLOTS = 12;
 
@@ -114,49 +115,25 @@ const getQuickSlotInfos = async (profileId: string): Promise<SaveSlotInfo[]> => 
   const quickDir = getQuickSavesDir(profileId);
   const results: SaveSlotInfo[] = [];
   for (let slot = 0; slot < QUICK_SAVE_SLOTS; slot++) {
-    const savPath = join(quickDir, `save${slot}.sav`);
-    try {
-      const s = await stat(savPath);
-      let hasScreenshot = false;
-      try {
-        await stat(join(quickDir, `save${slot}.png`));
-        hasScreenshot = true;
-      } catch { /* no screenshot */ }
-      results.push({ slot, timestamp: s.mtimeMs, size: s.size, hasScreenshot });
-    } catch {
-      // Slot doesn't exist
-    }
+    const info = await statSaveSlot(join(quickDir, `save${slot}.sav`), join(quickDir, `save${slot}.png`));
+    if (!info) continue; // slot doesn't exist
+    results.push({ slot, timestamp: info.mtimeMs, size: info.size, hasScreenshot: info.hasScreenshot });
   }
   return results;
 };
-
-// ─── Legacy aliases (backward compat) ───
-
-const writeStateFile = writeQuickState;
-const readStateFile = readQuickState;
-const listStateFiles = listQuickStates;
-const writeStateScreenshot = writeQuickScreenshot;
-const readStateScreenshot = readQuickScreenshot;
-const getStateSlotInfos = getQuickSlotInfos;
 
 export {
   getProfileSavesDir,
   getQuickSavesDir,
   getQuickSlotInfos,
-  getStateSlotInfos,
   listQuickStates,
-  listStateFiles,
   migrateQuickSaves,
   readQuickScreenshot,
   readQuickState,
   readSramFile,
-  readStateFile,
-  readStateScreenshot,
   writeQuickScreenshot,
   writeQuickState,
   writeSramFile,
-  writeStateFile,
-  writeStateScreenshot,
+  QUICK_SAVE_SLOTS,
 };
 export type { SaveSlotInfo };
-export { QUICK_SAVE_SLOTS };

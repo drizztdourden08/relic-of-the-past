@@ -7,38 +7,26 @@ React UI inside Electron.
 
 ## Architecture — three layers
 
-```
-┌──────────────────────────C layer  (core/)──────────────────────────┐
-│ core/zelda3/      Upstream ALttP decompilation (C).                │
-│                   Vendored - edit only to add hook call-sites.     │
-│ core/game-hooks/  OUR layer: C<->JS glue.                          │
-│                   All Wasm* and GameHook_* live here.              │
-│ core/wasm-build/  Emscripten entry (emscripten_main.c)             │
-│                   + build.bat / Makefile.                          │
-└────────────────────────────────────────────────────────────────────┘
-          │
-          │  Emscripten -> zelda3.{js,wasm,data}  (-> public/wasm/)
-          ▼
-┌─────────────────Bridge  (lib/game/wasm-bridge.ts)──────────────────┐
-│ singleton module ref (~65 exported fns)                            │
-│ TS -> C:  mod.ccall('Wasm...', ...)                                │
-│ C -> TS:  EM_ASM -> window.__onItemReceived(...)                   │
-└────────────────────────────────────────────────────────────────────┘
-          │
-          ▼
-┌───────────────────────────────TS app───────────────────────────────┐
-│ apps/desktop/src/       React 19 renderer (UI, HUD, widgets)       │
-│ apps/desktop/electron/  Main + preload: IPC, HID, ROMs,            │
-│                         MSU, profiles, saves, protocols            │
-│ shared/                 asset-extraction, game logic, nav          │
-└────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph CORE["C layer — core/"]
+        Z["core/zelda3/ — upstream ALttP decompilation (vendored; edit only to add hook call-sites)<br/>core/game-hooks/ — OUR C↔JS glue; all Wasm* and GameHook_* live here<br/>core/wasm-build/ — Emscripten entry (emscripten_main.c) + build.bat / Makefile"]
+    end
+    subgraph BRIDGE["Bridge — lib/game/wasm-bridge.ts"]
+        B["singleton module ref (~79 exported fns)<br/>TS → C: mod.ccall('Wasm...', ...)<br/>C → TS: EM_ASM → window.__onItemReceived(...)"]
+    end
+    subgraph APP["TS app"]
+        A["apps/desktop/src/ — React 19 renderer (UI, HUD, widgets)<br/>apps/desktop/electron/ — main + preload: IPC, HID, ROMs, MSU, profiles, saves, protocols<br/>shared/ — asset-extraction, game logic, nav"]
+    end
+    CORE -->|"Emscripten → zelda3.js/.wasm/.data → public/wasm/"| BRIDGE
+    BRIDGE --> APP
 ```
 
 The **WASM bridge is the trickiest part of the codebase**: any new function that
-crosses the C↔TS boundary touches **three places at once** — the C impl in
-`core/game-hooks/*.c` (with `EMSCRIPTEN_KEEPALIVE`), the `EXPORTED_FUNCTIONS` list
-in **both** `build.bat` and `Makefile`, and the `ccall` site in
-`apps/desktop/src/lib/game/`. C→JS events go the other way via `EM_ASM` →
+crosses the C↔TS boundary touches **two places** — the C impl in
+`core/game-hooks/*.c` (tagged `EMSCRIPTEN_KEEPALIVE`, which both retains *and*
+exports the symbol — there is **no** `EXPORTED_FUNCTIONS` list to maintain), and
+the `ccall` site in `apps/desktop/src/lib/game/`. C→JS events go the other way via `EM_ASM` →
 `window.__on*`. Full procedure: the `add-wasm-function` skill. Rebuild after any C
 change: the `build-wasm` skill (C edits don't take effect until rebuilt).
 
@@ -53,7 +41,7 @@ change: the `build-wasm` skill (C edits don't take effect until rebuilt).
 | `apps/desktop/electron/` | Electron main process + preload (Node-side: input, ROM loading, profiles, saves). |
 | `shared/` | Code shared between renderer & electron. `asset-extraction/` (ROM→.dat pipeline), `game/` (logic, navigation, checks, seeds), `types/`. |
 | `tests/` | `vitest` unit tests (`*.test.ts`) + `playwright` specs (`*.spec.ts`, screenshots). |
-| `scripts/` | Build helpers + `analyze-navigation.ts`. |
+| `scripts/` | Out-of-band tooling: `analyze/` (quality + tagging harness), `copyright-gate/`, `build/` (packaging config), `hooks/` (agent lint hook), `analyze-navigation.ts` (offline nav extraction). |
 | `docs/` | Project documentation. |
 
 Path aliases: `@shared/*` → `shared/`, `@app/*` → `apps/desktop/src/`.
@@ -69,7 +57,7 @@ Path aliases: `@shared/*` → `shared/`, `@app/*` → `apps/desktop/src/`.
 | Run the app (dev) | `npm run dev` | electron-vite dev server + Electron. |
 | Build the app | `npm run build` | electron-vite production build. |
 | Lint + typecheck | `npm run lint` | `tsc --noEmit && eslint .` |
-| **Analyze whole project** | `npm run analyze` | Classifies + lints **all** file types; `analyze:diff`/`:ci`/`:tag`. See @docs/file-tagging.md. |
+| **Analyze whole project** | `npm run analyze` | Classifies + lints **all** file types; `analyze:diff`/`:ci`/`:tag`. See @docs/contributing/file-tagging.md. |
 | **Build WASM** | see `build-wasm` skill | Needs Emscripten SDK at `E:\GameProjects\emsdk`. Run `core/wasm-build/build.bat`. |
 | Unit tests | `npx vitest run tests/<file>` | Run only the relevant file, not the whole suite. |
 | E2E / screenshots | `npx playwright test` | |
@@ -79,12 +67,12 @@ these are gitignored and never committed. Same for `test-roms/` and `saves/`.
 
 ## Conventions
 
-- **Coding standards are strict, documented, and enforced:** @docs/coding-standards.md
+- **Coding standards are strict, documented, and enforced:** @docs/contributing/coding-standards.md
   — arrow functions only, exports grouped at end, **≤200 lines/file**,
   one-thing-per-file, deep logical folders, `import type`. Enforced by
   `eslint.config.mjs` + a PostToolUse lint hook that flags violations on every
   edit. Run the `coding-standards` skill's checkup after every change.
-- **Every file is tagged & analyzed: @docs/file-tagging.md.** Each file carries
+- **Every file is tagged & analyzed: @docs/contributing/file-tagging.md.** Each file carries
   `@layer`/`@kind` (header or `file-tags.jsonc` manifest). `npm run analyze` runs
   one harness over **all** languages (line-policy + eslint + tsc + stylelint +
   markdownlint + clang-format); vendored `core/zelda3` is hint-only. Size is
@@ -94,19 +82,19 @@ these are gitignored and never committed. Same for `test-roms/` and `saves/`.
   apply the right refactoring, choose/explain design patterns, uphold SOLID. Spot
   smells and pattern opportunities as you touch code and suggest/perform refactors.
   Cite refactoring.guru pages when explaining.
-- **Plan format: @docs/plan-format.md.** Every implementation plan is concise and
+- **Plan format: @docs/contributing/plan-format.md.** Every implementation plan is concise and
   shows: design pattern(s) + why, a **CRUD filetree** (A/M/D/R markers), the
   **data model in real TS code**, key code blocks, and a **flow/preview diagram
   generated with the asciiflow MCP server** (pasted inline). Show, don't narrate.
-- **Architecture: @docs/architecture.md.** The zone map + **dependency invariants**
+- **Architecture: @docs/architecture/overview.md.** The zone map + **dependency invariants**
   - a placement guide. **Analyze every feature before building** — decompose, place
   each piece in the right zone, verify boundaries, then plan. Use the `architecture` skill.
-- **Design system: @docs/design-system.md.** Tokens (`design-system/`) are the single
+- **Design system: @docs/contributing/design-system.md.** Tokens (`design-system/`) are the single
   source of truth (no raw hex / magic px). Four component tiers live in
   `components/{primitives,composites,compounds,views}/` — primitive/composite/compound
   are bare & presentational; **view** is the only tier with logic/data. Use the
   `design-system` skill.
-- **Testing: @docs/testing-capabilities.md.** **Always launch the app for tests
+- **Testing: @docs/contributing/testing.md.** **Always launch the app for tests
   with `--no-focus --muted`** so it never steals focus (dev: `npm run dev -- -- --no-focus --muted`).
   Prefer built-in automation flags (`--auto-state`, `--screenshot`, `--dump-layers`,
   `--dump-nav`) over Playwright.
@@ -116,17 +104,30 @@ these are gitignored and never committed. Same for `test-roms/` and `saves/`.
 - Skills: `architecture`, `refactoring-guru`, `coding-standards`, `design-system`,
   `electron`, `test-app`, `build-wasm`, `add-wasm-function`, `interpret-game-screenshot`.
 - `core/` (C) is **excluded** from `tsconfig` — don't expect TS tooling there.
-- Don't edit upstream `core/zelda3/` files except to insert a `GameHook_*` call
-  at a game event; new logic belongs in `core/game-hooks/`.
-- Keep `build.bat` and `Makefile` `EXPORTED_FUNCTIONS` lists in sync (they have
-  drifted before — `build.bat` is the canonical build used for the app).
+- **`core/zelda3/` is OUT OF SCOPE** — it is the vendored upstream decompilation.
+  Never read it for review, refactor it, "clean it up", or include it in
+  consistency/dead-code/standards sweeps **unless the user explicitly asks you to
+  refactor it**. It does not follow this repo's coding standards and never will;
+  the analyzer treats it as hint-only by design. The **only** routine edit allowed
+  is inserting a single `GameHook_*` call-site at a game event — and the logic
+  behind that hook is **ours**, lives in `core/game-hooks/`, and *is* in scope. So:
+  a `GameHook_*` function or its wiring is fair game even though it sits next to
+  vendored code; the surrounding decompiled C is not.
+- **Before flagging code as dead, check the intentional-unused registry** in
+  @docs/architecture/codebase-audit.md. Headless/`--command` WASM exports and WIP
+  integration scaffolding (randomizer delivery, unwired navigation primitives) have
+  **no renderer caller by design** — that doc also holds the project health snapshot,
+  communication map, and remediation log; update it after any cross-cutting refactor.
+- WASM exports rely on `EMSCRIPTEN_KEEPALIVE` (the single source of truth), so
+  `build.bat` and `Makefile` carry no per-function `EXPORTED_FUNCTIONS` list to
+  keep in sync. `build.bat` is the canonical build used for the app.
 
 ## Reading game screenshots (overlays, pathfinding, sprites)
 
 The user frequently shares screenshots of the running game to explain bugs — and
 low-res pixel art at scale is easy to misread (something wrong gets read as fine).
 
-- Use the `interpret-game-screenshot` skill and @docs/pixel-art-and-rendering.md.
+- Use the `interpret-game-screenshot` skill and @docs/architecture/rendering-pixel-art.md.
 - Reason in **tiles** (8px base, 16px collision, 512px screen), not vague position.
 - When judging whether a sprite is right/placed correctly, **fetch the real
   extracted sprite** from `%AppData%\relic-of-the-past\sprites\<rom-stem>\*.png`
@@ -157,4 +158,4 @@ extractors) → `asset-builder.ts` (serializes the `.dat`). Public barrel: `inde
 - `core/game-hooks/state_queries.c` — pattern for returning data to JS via pointers + `HEAPU8`.
 - `core/game-hooks/game_hooks.h` — declared hook surface.
 - `core/wasm-build/build.bat` — the build everyone actually runs.
-- `NAVIGATION-ARCHITECTURE.md` — design of the pathfinding/minimap system (active area of work).
+- `docs/architecture/navigation.md` — design of the pathfinding/minimap system (active area of work).

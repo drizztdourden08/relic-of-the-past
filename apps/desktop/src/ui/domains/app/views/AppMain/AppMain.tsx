@@ -6,6 +6,7 @@ import { Dialog } from '@ds/composites/Dialog';
 import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, DatasetWidgetContent, CheatsWidgetContent } from '@domains/widgets';
 import { loadTrackerStateBlob, saveTrackerStateBlob } from '@app/lib/tracker-state-io';
 import { getInputManager, primeLiveSettings } from '@app/lib/game';
+import { useExclusiveInsetsStore } from '@app/stores/exclusive-insets-store';
 import { useAutoUpdate } from '@app/hooks/useAutoUpdate';
 import { useAppVersion } from '@app/hooks/useAppVersion';
 import { PageRouter } from '@app/App/PageRouter';
@@ -45,7 +46,6 @@ const AppMain = () => {
   const saveState = useSaveStateSettings();
   const display = useDisplaySettings({ isGameRunning: game.isRunning });
   const profileMgmt = useProfileManagement({
-    refreshLists: async () => { await profileMgmt.refreshProfilesAndRoms(); },
     showDialog,
     dismissDialog,
     onProfileLoaded: (data) => {
@@ -67,6 +67,7 @@ const AppMain = () => {
   });
   const nav = useAppNavigation({ activeProfile: profileMgmt.activeProfile, refreshLists: profileMgmt.refreshProfilesAndRoms });
   const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null, widgetIO);
+  const setExclusiveInsets = useExclusiveInsetsStore((s) => s.setInsets);
   const saveOverlay = useSaveOverlay(saveState, game.isRunning);
   const update = useAutoUpdate();
 
@@ -177,6 +178,7 @@ const AppMain = () => {
           gameRunning={game.isRunning && nav.activePage === 'none' && !showSpriteDebug}
           onUpdate={widgets.update}
           onClose={widgets.close}
+          onInsetsChange={setExclusiveInsets}
           settingsContent={{ inventory: <InventoryWidgetSettings /> }}
         >
           {{

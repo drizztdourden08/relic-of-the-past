@@ -1,8 +1,8 @@
 /* @layer renderer-components @kind style */
 .spinner {
   border-radius: 50%;
-  border: 2px solid var(--color-surface-hover-strong);
-  border-top-color: var(--color-gold-base);
+  border: 2px solid var(--c-hover);
+  border-top-color: var(--c-gold);
   animation: spinner-rotate 0.7s linear infinite;
 }
 

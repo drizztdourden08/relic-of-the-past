@@ -17,6 +17,10 @@
 #include "src/messaging.h"
 #include "snes/ppu.h"
 
+#include "game_constants.h"
+#include "num_util.h"
+#include "wasm_buf.h"
+
 // Forward-declare Link_ReceiveItem from player.c
 extern void Link_ReceiveItem(uint8 item, int chest_position);
 

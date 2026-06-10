@@ -10,8 +10,7 @@
 import { BaseController, type ControllerButton, type ControllerAxis } from '../../base';
 import { registerController } from '../../registry';
 import type { ButtonMapping, ButtonIcon } from '../../../types/controls';
-
-const icon = (key: string, label: string): ButtonIcon => ({ key, path: null, label });
+import { icon, btn } from './builders';
 
 const ICONS: Record<string, ButtonIcon> = {
   '8bitdo-b':      icon('8bitdo-b', 'B'),
@@ -28,10 +27,6 @@ const ICONS: Record<string, ButtonIcon> = {
   '8bitdo-dright': icon('8bitdo-dright', '→'),
   '8bitdo-home':   icon('8bitdo-home', 'Home'),
   '8bitdo-star':   icon('8bitdo-star', 'Star'),
-};
-
-const btn = (snesButton: ButtonMapping['snesButton'], index: number, iconData: ButtonIcon | null): ButtonMapping => {
-  return { snesButton, binding: { type: 'gamepad-button', index }, icon: iconData };
 };
 
 const DEFAULT_MAPPINGS: ButtonMapping[] = [

@@ -24,20 +24,20 @@
 .toggle__label {
   font-size: var(--text-base);
   font-weight: var(--weight-medium);
-  color: var(--color-text-primary);
+  color: var(--c-text);
   line-height: var(--leading-tight);
 }
 
 .toggle__description {
   font-size: var(--text-sm);
-  color: var(--color-text-secondary);
+  color: var(--c-text-dim);
   line-height: var(--leading-normal);
 }
 
 .toggle__link {
   display: inline-flex;
   margin-left: var(--space-xs);
-  color: var(--color-gold-base);
+  color: var(--c-gold);
   text-decoration: none;
   font-size: var(--text-sm);
   opacity: 0.6;
@@ -63,18 +63,18 @@
   width: 36px;
   height: 20px;
   border-radius: var(--r-lg);
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border-default);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
   transition: background var(--transition-normal), border-color var(--transition-normal);
 }
 
 .toggle__input:checked + .toggle__track {
-  background: var(--color-gold-base);
-  border-color: var(--color-gold-bright);
+  background: var(--c-gold);
+  border-color: var(--c-gold-bright);
 }
 
 .toggle__input:focus-visible + .toggle__track {
-  outline: 2px solid var(--color-gold-base);
+  outline: 2px solid var(--c-gold);
   outline-offset: 2px;
 }
 
@@ -85,11 +85,11 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: var(--color-text-secondary);
+  background: var(--c-text-dim);
   transition: transform var(--transition-normal), background var(--transition-normal);
 }
 
 .toggle__input:checked + .toggle__track .toggle__thumb {
   transform: translateX(16px);
-  background: var(--color-bg-base);
+  background: var(--c-bg);
 }

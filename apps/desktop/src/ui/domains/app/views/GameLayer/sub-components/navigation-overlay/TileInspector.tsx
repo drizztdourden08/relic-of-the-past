@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import type { CSSProperties } from 'react';
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { useGameUIStore } from '../../../../../../../stores/game-ui-store';
 import { wasmGetViewportInfo, wasmGetLiveSprites } from '../../../../../../../lib/game';
@@ -12,6 +13,8 @@ import { TileTooltipContent, type TooltipData } from './tooltip';
 import { mouseEventToTile } from './tile-inspector-coords';
 import { useRectSelection } from './tile-inspector-rect-selection';
 import { computeCanPass, buildSpriteInfo, computePathTooltipPosition } from './tile-inspector-tooltip';
+
+const COPIED_TOAST: CSSProperties = { position: 'absolute', left: '50%', top: 8, transform: 'translateX(-50%)', background: 'var(--c-green)', color: 'var(--c-text)', padding: '4px 12px', borderRadius: 'var(--r-sm)', fontFamily: 'monospace', fontSize: 12, fontWeight: 'bold', pointerEvents: 'none', zIndex: 8 };
 
 interface TileInspectorProps {
   width: number;
@@ -201,14 +204,7 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex:
         }} />
       )}
       {copied && rectSel && !rectSel.active && (
-        <Box style={{
-          position: 'absolute', left: '50%', top: 8,
-          transform: 'translateX(-50%)',
-          background: 'var(--c-green)', color: 'var(--c-text)',
-          padding: '4px 12px', borderRadius: 'var(--r-sm)',
-          fontFamily: 'monospace', fontSize: 12, fontWeight: 'bold',
-          pointerEvents: 'none', zIndex: 8,
-        }}>
+        <Box style={COPIED_TOAST}>
           Tile data copied to clipboard! ({selectionRect?.tileCount} tiles)
         </Box>
       )}
