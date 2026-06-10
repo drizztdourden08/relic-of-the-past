@@ -6,6 +6,7 @@ import { DataManager } from '../ui/domains/app/views/DataManager';
 import { InputCalibration } from '../ui/domains/app/views/InputTester';
 import { CreditsPage } from '../ui/domains/app/views/ProfileHub/sub-components/CreditsTab';
 import { DesignGallery } from '../ui/domains/app/views/DesignGallery';
+import { SpriteDebug } from '../ui/domains/app/views/SpriteDebug';
 import { FullScreenLayer } from '../ui/design-system/composites/FullScreenLayer';
 import type { PageId, RomDisplayInfo } from './types';
 import type { GameSettings } from '@shared/types/settings';
@@ -133,6 +134,9 @@ const PageRouter = (props: PageRouterProps) => {
         <DesignGallery />
       </FullScreenLayer>
     );
+  } else if (nav.activePage === 'sprite-debug') {
+    // SpriteDebug brings its own FullScreenLayer (title + close), so render it directly.
+    otherPage = <SpriteDebug onClose={nav.closePage} romFile={profileMgmt.activeProfile?.romFile ?? ''} />;
   }
 
   const profileHubVisible = nav.activePage === 'profile' && !!profileMgmt.activeProfile;

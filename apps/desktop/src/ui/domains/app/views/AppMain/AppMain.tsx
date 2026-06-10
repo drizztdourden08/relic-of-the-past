@@ -29,7 +29,6 @@ import { useDumpNav } from '@app/App/behavior/useDumpNav';
 import { TitleBar } from '../TitleBar';
 import { GameLayer } from '../GameLayer';
 import { SaveStateOverlay } from '../SaveStateOverlay/SaveStateOverlay';
-import { SpriteDebug } from '../SpriteDebug';
 import { UpdateDialog } from '../../compounds/UpdateDialog';
 import { AboutDialog } from '../../compounds/AboutDialog';
 import './AppMain.css';
@@ -74,7 +73,6 @@ const AppMain = () => {
   const {
     showUpdateDialog, setShowUpdateDialog,
     showAbout, setShowAbout,
-    showSpriteDebug, toggleSpriteDebug,
     handleShowShadowEditor,
   } = useAppOverlays({ showDialog, dismissDialog });
 
@@ -98,9 +96,9 @@ const AppMain = () => {
 
   // Input suppression: disable game input when menus/overlays are open
   useEffect(() => {
-    const gameActive = game.isRunning && nav.activePage === 'none' && !showSpriteDebug;
+    const gameActive = game.isRunning && nav.activePage === 'none';
     getInputManager().setInputSuppressed(!gameActive);
-  }, [game.isRunning, nav.activePage, showSpriteDebug]);
+  }, [game.isRunning, nav.activePage]);
 
   const widgetVisibility = useMemo(() => Object.fromEntries(widgets.layout.widgets.map((w) => [w.id, w.visible])), [widgets.layout]);
 
@@ -120,7 +118,7 @@ const AppMain = () => {
         onShowInputTester={() => nav.setActivePage('input-tester')}
         onShowCredits={() => nav.setActivePage('credits')}
         onShowDesignGallery={() => nav.setActivePage('design-gallery')}
-        onShowSpriteDebug={toggleSpriteDebug}
+        onShowSpriteDebug={() => nav.setActivePage('sprite-debug')}
         onShowConnectionDebug={() => widgets.toggle('navigation')}
         onToggleDataset={() => widgets.toggle('dataset')}
         onShowShadowEditor={handleShowShadowEditor}
@@ -175,7 +173,7 @@ const AppMain = () => {
 
         <WidgetManager
           layout={widgets.layout}
-          gameRunning={game.isRunning && nav.activePage === 'none' && !showSpriteDebug}
+          gameRunning={game.isRunning && nav.activePage === 'none'}
           onUpdate={widgets.update}
           onClose={widgets.close}
           onInsetsChange={setExclusiveInsets}
@@ -192,7 +190,6 @@ const AppMain = () => {
           }}
         </WidgetManager>
 
-        {showSpriteDebug && <SpriteDebug onClose={toggleSpriteDebug} romFile={profileMgmt.activeProfile?.romFile ?? ''} />}
       </Box>
 
       <Dialog

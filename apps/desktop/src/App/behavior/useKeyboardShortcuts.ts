@@ -15,6 +15,13 @@ const useKeyboardShortcuts = (
         window.api.toggleFullscreen();
         return;
       }
+      // Dev-only Sprite Debug toggle (Ctrl+Shift+D) — opens it as a full-window page,
+      // so it switches with / is dismissed by the same logic as every other page.
+      if (window.api.isDev && e.ctrlKey && e.shiftKey && e.key === 'D') {
+        e.preventDefault();
+        nav.setActivePage(nav.activePage === 'sprite-debug' ? 'none' : 'sprite-debug');
+        return;
+      }
       if (e.key !== 'Escape') return;
       e.preventDefault();
 

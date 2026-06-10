@@ -1,6 +1,7 @@
 /* @layer renderer-appshell @kind hook */
-/** App-level overlay/dialog UI state: update dialog, about, sprite debug, shadow editor. */
-import { useState, useCallback, useEffect } from 'react';
+/** App-level overlay/dialog UI state: update dialog, about, shadow editor.
+ *  (Sprite Debug is a nav page — see PageRouter / useKeyboardShortcuts.) */
+import { useState, useCallback } from 'react';
 import { useShadowEditorStore } from '../../stores/shadow-editor-store';
 import type { ConfirmDialog } from '../types';
 
@@ -12,8 +13,6 @@ interface AppOverlaysParams {
 const useAppOverlays = ({ showDialog, dismissDialog }: AppOverlaysParams) => {
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
-  const [showSpriteDebug, setShowSpriteDebug] = useState(false);
-  const toggleSpriteDebug = useCallback(() => setShowSpriteDebug(v => !v), []);
   const [shadowEditorWarningShown, setShadowEditorWarningShown] = useState(
     () => localStorage.getItem('shadowEditor.warningDismissed') === 'true',
   );
@@ -36,20 +35,9 @@ const useAppOverlays = ({ showDialog, dismissDialog }: AppOverlaysParams) => {
     }
   }, [shadowEditorWarningShown, showDialog, dismissDialog]);
 
-  // Dev-only sprite debug toggle (Ctrl+Shift+D)
-  useEffect(() => {
-    if (!window.api.isDev) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'D') { e.preventDefault(); setShowSpriteDebug(v => !v); }
-    };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
-  }, []);
-
   return {
     showUpdateDialog, setShowUpdateDialog,
     showAbout, setShowAbout,
-    showSpriteDebug, toggleSpriteDebug,
     handleShowShadowEditor,
   };
 };
