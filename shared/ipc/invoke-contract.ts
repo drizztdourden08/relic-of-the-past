@@ -19,6 +19,9 @@ interface InvokeContract {
   // App
   'app:getUserDataPath': () => Promise<string>;
 
+  // WASM core bytes — renderer instantiates non-streaming (file:// can't fetch)
+  'wasm:readBytes': () => Promise<ArrayBuffer>;
+
   // Window queries
   'window:isMaximized': () => Promise<boolean>;
   'window:setAlwaysOnTop': (value: boolean) => Promise<boolean>;

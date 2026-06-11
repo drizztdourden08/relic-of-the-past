@@ -23,6 +23,7 @@ import { registerConnectionHandlers } from './connections/ipc-handlers';
 import { registerScreenEditorHandlers } from './screen-editor/ipc-handlers';
 import { registerShadowCastingHandlers } from './shadow-casting';
 import { registerAppHandlers } from './app/ipc-handlers';
+import { registerWasmHandlers } from './wasm/ipc-handlers';
 import { initAutoUpdater, registerUpdaterHandlers } from './updater';
 import { emit } from './lib/ipc/handle';
 
@@ -51,6 +52,7 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerShadowCastingHandlers },
   { register: registerUpdaterHandlers },
   { register: registerAppHandlers },
+  { register: registerWasmHandlers },
 ];
 
 // Ensure consistent userData path across dev and production

@@ -12,6 +12,7 @@ import type { EventContract } from './event-contract';
 
 const INVOKE_MAP = {
   getUserDataPath: 'app:getUserDataPath',
+  readWasmBytes: 'wasm:readBytes',
   isMaximized: 'window:isMaximized',
   setAlwaysOnTop: 'window:setAlwaysOnTop',
   setAudioMuted: 'window:setAudioMuted',
