@@ -3,23 +3,23 @@
 
 ## Volume Controls
 
-Three independent volume sliders, all accessible from Profile Settings → Audio:
+There are three volume sliders in Profile Settings → Audio:
 
 - **Master** — overall volume multiplier
 - **Music** — background music level
 - **SFX** — sound effects level
 
-Each slider operates independently. Setting Music to 0 mutes music while keeping sound effects audible.
+Each slider works on its own, so setting Music to 0 mutes the music while sound effects keep playing.
 
 ### Mute Toggle
 
-A speaker icon in the title bar provides instant mute/unmute without opening settings. Mute state persists across sessions.
+A speaker icon in the title bar mutes and unmutes audio without opening settings. The mute state is remembered between sessions.
 
 ---
 
 ## MSU-1 Support
 
-MSU-1 is a SNES enhancement chip specification that allows CD-quality audio tracks to replace the original game music. The community has produced dozens of MSU packs — orchestral, remixed, other game soundtracks, etc.
+MSU-1 is a SNES enhancement chip specification that lets CD-quality audio tracks stand in for the original game music. The community has produced dozens of MSU packs, including orchestral versions, remixes, and soundtracks lifted from other games.
 
 ### Importing an MSU Pack
 
@@ -33,7 +33,7 @@ The pack is copied into the app's data directory.
 
 1. Open Profile Settings → Audio
 2. Select your imported pack from the MSU dropdown
-3. The game will use the MSU tracks instead of the original SNES audio
+3. The game plays the MSU tracks in place of the original SNES audio
 
 ### MSU Pack Format
 
@@ -46,4 +46,4 @@ Track numbering follows the community MSU-1 standard for A Link to the Past.
 
 ### Per-Profile
 
-MSU pack selection is per-profile. You can have one profile with orchestral music and another with the original soundtrack.
+MSU pack selection is saved per profile. One profile can run orchestral music while another keeps the original soundtrack.

@@ -1,16 +1,16 @@
 <!-- @layer docs @kind doc -->
 # Cheats Widget
 
-Modify game state in real time. Changes take effect immediately in the running game.
+Edit game state on the fly. Changes take effect immediately in the running game.
 
 ## Tabs
 
-- **Items** — give any item by id (queued for safe delivery).
-- **Stats** — set current/max health, rupees, bombs, arrows; refill magic.
-- **Combat** — outgoing damage multiplier and extra-armor reduction.
+- **Items** — give any item by id. Items are queued so they're delivered safely.
+- **Stats** — set current and max health, rupees, bombs, and arrows, and refill magic.
+- **Combat** — adjust the outgoing damage multiplier and extra-armor reduction.
 - **Bottles** — set the contents of each bottle slot.
 
-Item delivery is gated by `WasmCanReceiveItem` so it never corrupts state, and cheated items don't mark
+Item delivery is gated by `WasmCanReceiveItem`, so it won't corrupt state, and cheated items don't mark
 checks complete. Values are clamped to safe ranges.
 
 > Full behavior, ranges, and the underlying functions: [Cheats & Commands hooks](../hooks/cheats-commands.md)

@@ -7,7 +7,7 @@ Debugging and diagnostic tools available from Menu → Advanced.
 
 ## Dev Console
 
-Opens Chromium DevTools (the same developer tools available in Chrome/Edge). Useful for:
+Opens Chromium DevTools, the same developer tools you get in Chrome and Edge. Useful for:
 
 - Inspecting the React component tree
 - Viewing console logs and errors
@@ -23,28 +23,28 @@ Shortcut: accessible from Menu → Advanced → **Dev Console**.
 
 A visual inspector for the game's sprite system:
 
-- Shows all currently loaded sprites
-- Displays sprite metadata (position, animation frame, tile index)
-- Useful for verifying asset extraction correctness
+- Shows every currently loaded sprite
+- Displays sprite metadata such as position, animation frame, and tile index
+- Helps you confirm asset extraction is correct
 - Helps debug rendering issues
 
 ---
 
 ## Input Calibration
 
-A controller diagnostic panel (also documented in [Input & Controllers](input-controllers.md)):
+A controller diagnostic panel, also covered in [Input & Controllers](input-controllers.md):
 
-- **Byte inspector** — raw gamepad input values in real-time
+- **Byte inspector** — raw gamepad input values in real time
 - **Vibration tester** — sends rumble pulses to verify haptics
-- **Input recording** — captures sequences for replay/debugging
+- **Input recording** — captures sequences for replay and debugging
 
 ---
 
 ## Logs Widget
 
-While technically a widget (Menu → Widgets → Logs), the real-time log viewer is useful for development:
+The real-time log viewer lives under Menu → Widgets → Logs, but it earns its place among the dev tools:
 
-- Shows all internal app events
+- Shows internal app events
 - Filters by log level
 - Captures game engine state changes
 - Displays error stack traces

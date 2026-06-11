@@ -7,15 +7,15 @@ Vibration feedback for supported controllers, triggered by in-game events.
 
 ## Supported Controllers
 
-Haptics work with any controller that supports rumble/vibration through the Gamepad API:
+Haptics work with any controller that supports rumble through the Gamepad API:
 
-- **Nintendo Switch Pro Controller** (v1 and v2)
-- **Xbox controllers** (Xbox One, Series X|S)
-- **PlayStation controllers** (DualShock 3, DualShock 4, DualSense)
-- **8BitDo controllers** (Pro 2, Ultimate, etc.)
+- **Nintendo Switch Pro Controller**, v1 and v2
+- **Xbox controllers**, including Xbox One and Series X|S
+- **PlayStation controllers**, including DualShock 3, DualShock 4, and DualSense
+- **8BitDo controllers** such as the Pro 2 and Ultimate
 - **GameCube wireless adapter**
 
-The vibration intensity and duration varies by event type.
+Intensity and duration vary by event type.
 
 ---
 
@@ -38,8 +38,8 @@ Each event can be individually toggled on or off in Profile Settings → Haptics
 
 ## Configuration
 
-- **Per-event toggle** — enable or disable vibration for each event type individually
-- **Per-profile** — haptic settings are stored per-profile
+- **Per-event toggle** — turn vibration on or off for each event type on its own
+- **Per-profile** — haptic settings are saved per profile
 
 ---
 
@@ -47,7 +47,7 @@ Each event can be individually toggled on or off in Profile Settings → Haptics
 
 If vibration doesn't work:
 
-1. Verify your controller supports rumble
-2. Check that the controller is properly connected (not just keyboard-mapped)
-3. Use the **Input Calibration** tool (Menu → Advanced → Input Calibration) — it has a vibration tester that sends a test pulse
-4. Some Bluetooth connections may not support rumble — try wired if available
+1. Check that your controller supports rumble
+2. Make sure the controller is actually connected, not just keyboard-mapped
+3. Open the **Input Calibration** tool from Menu → Advanced → Input Calibration and use its vibration tester to send a test pulse
+4. Some Bluetooth connections don't carry rumble, so try a wired connection if you have one

@@ -1,25 +1,25 @@
 <!-- @layer docs @kind doc -->
 # Auto-Update
 
-The app includes a built-in update system that checks for new releases and can download and apply them automatically.
+The app checks for new releases on its own and can download and apply them for you.
 
 ---
 
 ## How It Works
 
-1. **On startup** — 5 seconds after launch, the app checks GitHub Releases for a newer version
-2. **Manual check** — Menu → Advanced → **Check for Updates** triggers a check at any time
-3. **Notification** — if a newer version exists, an indicator appears in the title bar
-4. **Download** — clicking the notification opens a dialog where you can choose to download
-5. **Install** — once downloaded, you can restart immediately or install later (on next quit)
+1. **On startup** — five seconds after launch, the app checks GitHub Releases for a newer version
+2. **Manual check** — Menu → Advanced → **Check for Updates** runs a check whenever you want
+3. **Notification** — when a newer version exists, an indicator appears in the title bar
+4. **Download** — click the notification to open a dialog and choose to download
+5. **Install** — after the download finishes, restart right away or wait and install on next quit
 
-The update system uses `electron-updater` which compares the running app version against the `latest.yml` file published with each GitHub Release.
+Updates run through `electron-updater`, which compares the running app version against the `latest.yml` file published with each GitHub Release.
 
 ---
 
 ## Supported Build Types
 
-Auto-update only works with **installed** builds. The portable Windows executable cannot update itself.
+Auto-update works only with installed builds. The portable Windows executable can't update itself.
 
 | Platform | Build | Auto-Update | Reason |
 |----------|-------|-------------|--------|
@@ -36,13 +36,13 @@ Auto-update only works with **installed** builds. The portable Windows executabl
 ### Automatic Detection
 
 1. Launch the app
-2. After 5 seconds, a check runs silently in the background
-3. If an update is found, the title bar shows an update badge
+2. After five seconds, a check runs quietly in the background
+3. When an update is found, the title bar shows an update badge
 4. Click the badge to open the Update Dialog
 5. The dialog shows the new version number and release notes
 6. Click **Update** to download
-7. Progress bar shows download status
-8. Once complete, click **Restart & Update** to apply immediately — or close the dialog and the update applies on next app quit
+7. A progress bar shows download status
+8. When it's done, click **Restart & Update** to apply right away, or close the dialog and let the update apply on the next quit
 
 ### Manual Check
 
@@ -57,7 +57,7 @@ Auto-update only works with **installed** builds. The portable Windows executabl
 
 ### Version Comparison
 
-The app compares its embedded version (from `package.json` at build time) against the version declared in `latest.yml` on the latest GitHub Release. Versions follow semver (e.g., `0.8.1` → `0.8.2`).
+The app compares its embedded version, baked in from `package.json` at build time, against the version declared in `latest.yml` on the latest GitHub Release. Versions follow semver, for example `0.8.1` → `0.8.2`.
 
 ### Download
 
@@ -67,7 +67,7 @@ The app compares its embedded version (from `package.json` at build time) agains
 
 ### No Background Downloads
 
-`autoDownload` is disabled. The app only notifies you — it never downloads without explicit user action.
+`autoDownload` is off, so the app only notifies you and waits for you to start the download yourself.
 
 ---
 
@@ -76,10 +76,10 @@ The app compares its embedded version (from `package.json` at build time) agains
 If you're using the portable Windows build (`rotp-windows-portable.exe`):
 
 - The update check still runs and detects new versions
-- The Update Dialog will appear
-- However, the download/install mechanism may not work correctly since the app can't replace a running executable
+- The Update Dialog still appears
+- The download and install step may not work, because the app can't replace a running executable
 
-**Recommendation:** Portable users should download new versions manually from the [Releases page](https://github.com/drizztdourden08/relic-of-the-past/releases).
+If you're on the portable build, download new versions by hand from the [Releases page](https://github.com/drizztdourden08/relic-of-the-past/releases).
 
 ---
 
@@ -90,4 +90,4 @@ If you're using the portable Windows build (`rotp-windows-portable.exe`):
 | No update notification | App is in dev mode | Updates only check in packaged builds |
 | "Update failed" error | Network issue or GitHub API rate limit | Try again later |
 | Update found but can't download | Private repo without token | Requires public repo or embedded token |
-| Portable shows update but can't install | Expected — portable doesn't support auto-install | Download manually |
+| Portable shows update but can't install | Portable builds don't support auto-install | Download manually |

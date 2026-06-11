@@ -1,60 +1,55 @@
 <!-- @layer docs @kind doc -->
 # Save System
 
-Relic of the Past provides three save mechanisms, all operating independently and per-profile.
+Relic of the Past has two kinds of save, and both work per profile: auto-save and quick save states.
 
 ---
 
 ## Auto-Save
 
-The game automatically saves at a configurable interval.
+The game saves itself on a timer you set.
 
-- **Timer** — set the auto-save frequency (e.g., every 60 seconds)
-- **Save on quit** — automatically saves when you close the app or stop the game
-- Auto-saves use a dedicated slot and do not interfere with quick saves or named saves
+- Set the interval, say every 60 seconds.
+- Turn on save-on-quit and it saves when you close the app or stop the game.
+- Auto-saves use their own dedicated slot, so they stay out of the way of your quick save states.
 
 ---
 
-## Quick Saves
+## Quick Save States
 
-Quick saves provide fast, controller-friendly save/load without opening any menu.
+A quick save state is a full machine-state snapshot you can drop and restore anywhere, without opening
+a menu. For the full picture, see [Save States](save-states.md).
 
 ### Saving
 
-Hold the configured button (default: `Select`) for the configured duration. A slide-down overlay appears showing all quick save slots. The hold duration is configurable to prevent accidental saves during gameplay.
+Hold the configured button, Select by default, for the configured duration. A slide-down overlay
+appears showing all the slots. The hold duration is there to keep you from saving by accident mid-game,
+and it's adjustable.
 
 ### Loading
 
-Access quick save slots from the save state overlay. Each slot shows:
+Open the same overlay and tap a populated slot to load it. Each slot shows:
 
-- A **screenshot** captured at the moment of saving
-- Timestamp
-- In-game location
+- A screenshot from the moment you saved
+- A timestamp
+- The in-game location
 
 ### Slots
 
-Multiple quick save slots are available. The overlay shows all slots at once so you can choose which to overwrite or load.
+There are several slots, and the overlay lays them all out at once so you can pick which to overwrite or
+load.
 
 ---
 
-## Named Saves
+## Save Screenshots
 
-Named saves are manual saves with a custom label. They differ from quick saves in that:
-
-- They require explicit user action (not a hold shortcut)
-- They have a user-defined name for easy identification
-- They cannot be accidentally overwritten by the quick save shortcut
-
-Best for: milestone saves, before boss fights, or any point you want to reliably return to.
-
----
-
-## Save State Screenshots
-
-Every save (auto, quick, and named) captures a screenshot of the game at the moment of saving. These screenshots appear in the save slot overlay as visual previews, making it easy to identify which save is which without reading timestamps.
+Every save, whether auto or quick, grabs a screenshot at the moment it's written. Those screenshots show
+up as previews in the slot overlay, so you can tell saves apart at a glance without squinting at
+timestamps.
 
 ---
 
 ## Storage
 
-All save data is stored per-profile in the app's data directory. Deleting a profile deletes its saves. Saves are not shared between profiles.
+Save data lives per profile in the app's data directory. Delete a profile and its saves go with it.
+Nothing is shared between profiles.

@@ -6,7 +6,7 @@
 - **OS:** Windows 10+, macOS 11+, or Linux (x64)
 - **RAM:** 4 GB minimum
 - **Disk:** ~200 MB for the application
-- **ROM:** A legally obtained US, EU, or JP SNES ROM of A Link to the Past (`.sfc` or `.smc`)
+- **ROM:** A legally obtained SNES ROM of A Link to the Past (`.sfc` or `.smc`). Gameplay needs the US (NTSC) ROM; EU and JP ROMs are used only to import their language.
 
 ---
 
@@ -30,29 +30,29 @@ Each release provides platform-specific builds:
 
 A single executable that runs without installation.
 
-- **No admin rights required**
-- **No registry entries or shortcuts created**
-- Run from anywhere — USB drive, Downloads folder, etc.
-- Settings and saves are stored in `%APPDATA%/relic-of-the-past/`
-- **Does not support auto-update** — you must manually download new versions
+- Needs no admin rights
+- Creates no registry entries or shortcuts
+- Runs from anywhere: a USB drive, your Downloads folder, wherever
+- Stores settings and saves in `%APPDATA%/relic-of-the-past/`
+- Does not auto-update, so you download new versions yourself
 
-Best for: trying the app, running from removable media, environments where you can't install software.
+Best for trying the app, running from removable media, or any environment where you can't install software.
 
 ### Installer (`rotp-windows-setup.exe`)
 
 A standard Windows installer (NSIS).
 
-- Installs to `Program Files` by default (customizable)
+- Installs to `Program Files` by default, and you can change that
 - Creates Start Menu and optional Desktop shortcuts
-- Adds an uninstaller accessible from Windows Settings → Apps
-- **Supports auto-update** — the app will notify you when a new version is available and can update itself in-place
-- Requires admin rights during installation
+- Adds an uninstaller you'll find under Windows Settings → Apps
+- Auto-updates: the app tells you when a new version is out and updates itself in place
+- Needs admin rights to install
 
-Best for: regular use, keeping the app up-to-date automatically.
+Best for regular use, since it keeps the app up to date automatically.
 
 ### Windows SmartScreen Warning
 
-Because the app is not code-signed, Windows may show a "Windows protected your PC" warning on first launch. Click **"More info"** → **"Run anyway"**. This only appears once.
+The app isn't code-signed, so Windows may show a "Windows protected your PC" warning the first time you launch it. Click "More info", then "Run anyway". You'll only see it once.
 
 ---
 
@@ -62,9 +62,9 @@ Because the app is not code-signed, Windows may show a "Windows protected your P
 
 1. Open the `.dmg` file
 2. Drag **Relic of the Past** into the Applications folder
-3. On first launch, right-click → **Open** (bypasses Gatekeeper for unsigned apps)
+3. On first launch, right-click and choose **Open** to get past Gatekeeper, since the app is unsigned
 
-macOS may show "this app is from an unidentified developer." Use right-click → Open to bypass this.
+macOS may say the app is from an unidentified developer. Right-click and choose Open to get past it.
 
 Auto-update is supported on macOS via the `.zip` companion file included in each release.
 
@@ -116,4 +116,4 @@ Regardless of installation method, user data is stored in:
 | macOS | `~/Library/Application Support/relic-of-the-past/` |
 | Linux | `~/.config/relic-of-the-past/` |
 
-This includes profiles, saves, settings, imported ROMs, and MSU packs. Uninstalling the app does **not** delete this data.
+This covers profiles, saves, settings, imported ROMs, and MSU packs. Uninstalling the app leaves this data in place.

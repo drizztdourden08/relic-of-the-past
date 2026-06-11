@@ -12,8 +12,9 @@ app has a handful of global shortcuts handled by the renderer's `useKeyboardShor
 | Game controls | Pause / stop / reset the running game |
 | Profile switching | Jump between profiles |
 
-Game input is **suppressed** automatically when a menu/overlay is open, when the Sprite Debug view is
-active, or during input calibration — so a shortcut never leaks into the game and vice-versa.
+Game input is held back automatically when a menu or overlay is open, when the Sprite Debug view is
+active, or during input calibration. That keeps a shortcut from leaking into the game, and the other
+way around.
 
-> The exact key for each toggle is shown in the title bar and the relevant settings. Most actions are
-> also reachable from the menu and the title bar, so you don't have to memorize them.
+> The current key for each toggle shows up in the title bar and the relevant settings. Most actions are
+> also reachable from the menu and the title bar, so there's nothing to memorize.

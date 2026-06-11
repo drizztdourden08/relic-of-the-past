@@ -1,7 +1,7 @@
 <!-- @layer docs @kind doc -->
 # Input & Controllers
 
-Full controller and keyboard support with complete rebinding.
+Controllers and keyboards are both fully supported, and you can rebind everything.
 
 ---
 
@@ -22,7 +22,7 @@ Full controller and keyboard support with complete rebinding.
 
 ## Rebinding
 
-Every game action can be rebound to any key, button, or axis:
+Any game action can be rebound to any key, button, or axis:
 
 1. Open Profile Settings → Controls
 2. Click the action you want to rebind
@@ -39,37 +39,35 @@ Every game action can be rebound to any key, button, or axis:
 
 ### Multiple Bindings
 
-You can bind the same action to multiple inputs (e.g., both a keyboard key and a controller button). The game responds to whichever is pressed.
+You can bind one action to several inputs at once, say a keyboard key and a controller button. The game responds to whichever you press.
 
 ---
 
 ## Controller Icon Sets
 
-The UI displays button prompts using icons that match your connected controller:
+Button prompts in the UI use icons that match your connected controller:
 
-- Nintendo layout (A/B/X/Y in Nintendo positions)
-- Xbox layout (A/B/X/Y in Xbox positions)
-- PlayStation layout (Cross/Circle/Square/Triangle)
+- Nintendo layout, with A/B/X/Y in their Nintendo positions
+- Xbox layout, with A/B/X/Y in their Xbox positions
+- PlayStation layout, with Cross/Circle/Square/Triangle
 - Keyboard glyphs
 
-Icons update automatically when the active input device changes.
+The icons switch automatically when you change input device.
 
 ---
 
 ## Input Calibration Tool
 
-Available from Menu → Advanced → **Input Calibration**.
+You'll find this under Menu → Advanced → **Input Calibration**. It's a diagnostic tool for tracking down controller problems:
 
-A diagnostic tool for troubleshooting controller issues:
+- The byte inspector shows raw input values from the controller in real time.
+- The vibration tester sends test pulses so you can confirm rumble works.
+- Input recording captures a sequence of inputs and plays it back.
 
-- **Byte inspector** — shows raw input values from the controller in real-time
-- **Vibration tester** — sends test pulses to verify rumble works
-- **Input recording** — captures and replays input sequences
-
-Useful for verifying that all buttons are detected, checking analog stick deadzones, and confirming rumble functionality.
+Reach for it when you want to check that every button is detected, look at analog stick deadzones, or confirm rumble is working.
 
 ---
 
 ## Per-Profile
 
-Control bindings are stored per-profile. You can have different button layouts for different profiles (e.g., a speedrun profile with optimized bindings).
+Control bindings are stored per profile, so each profile can have its own button layout. You might keep a separate speedrun profile with tuned bindings, for example.
