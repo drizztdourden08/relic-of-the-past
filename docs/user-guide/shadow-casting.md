@@ -1,6 +1,9 @@
 <!-- @layer docs @kind doc -->
 # Shadow Casting
 
+> [!WARNING]
+> **Heavy development.** Shadow casting is experimental and actively changing — expect rough edges and incomplete per-screen data. It's fine to leave it off.
+
 An optional post-processing effect that adds **heightmap-based dynamic shadows and lighting** over the
 game canvas, authored per screen. It's a visual enhancement plus a dev-facing editor.
 

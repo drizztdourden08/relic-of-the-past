@@ -1,96 +1,56 @@
 <!-- @layer docs @kind doc -->
-# Getting Started
+# First Launch
 
-## First Launch
+The first time you open Relic of the Past, nothing is loaded yet — the app needs a ROM to extract its game assets from. Here's the full walkthrough.
 
-When you open Relic of the Past for the first time, you'll see an empty state — no game is loaded yet. The app needs a ROM file to extract game assets from.
+## Step 1 · Import your ROM
 
----
+1. Open the menu (the hamburger icon in the title bar, or press `Escape`).
+2. Go to **Data** → **ROMs**.
+3. Choose **Import ROM** and select your `.sfc` or `.smc` file.
 
-## Step 1: Import Your ROM
+The game runs on the **US (NTSC) ROM** only. ROMs from other regions can be imported too, but only to extract their **language** for in-game text — they don't run the game. The ROM is copied into the app's data directory, so you can move or delete the original afterward.
 
-1. Open the **menu** (hamburger icon in the title bar, or press `Escape`)
-2. Go to **Data** → **ROMs**
-3. Click **Import ROM**
-4. Select your `.sfc` or `.smc` file
+### Asset extraction
 
-The app supports:
+When you import a ROM, the app extracts its assets — graphics, maps, audio, and text — once, in a few seconds. Unlike the original PC port, no Python is required; it's all handled in TypeScript.
 
-- US (NTSC) ROM
-- European (PAL) ROM
-- Japanese ROM
-- French ROM
+## Step 2 · Create a profile
 
-The ROM is copied into the app's data directory — you can delete or move the original file afterward.
+1. Choose **Create Profile** (or go to **Data** → **Profiles**).
+2. Give it a name.
+3. Select the ROM to use.
+4. Choose a language.
 
-### Asset Extraction
+A profile is a self-contained space that holds its own ROM and language, save data, settings (display, gameplay, audio), control bindings, and MSU pack. You can keep several — say, one for casual play and one tuned for speedrunning.
 
-When a ROM is imported, the app automatically extracts all game assets (graphics, maps, audio, text). This is a one-time process that takes a few seconds. Unlike the original PC port, **no Python installation is required** — extraction is handled entirely in TypeScript.
+## Step 3 · Configure settings
 
----
+With a profile open, head to its **Settings** to set up:
 
-## Step 2: Create a Profile
+- **Display** — aspect ratio, window mode, and an optional FPS counter in the title bar.
+- **Gameplay** — the original PC-port toggles plus this app's extras: auto-save, quick saves, item cycling, and quality-of-life options.
+- **Audio** — volume levels and your MSU pack.
+- **Controls** — rebind any action.
+- **Haptics** — vibration for in-game events.
 
-1. From the main screen, click **Create Profile** (or go to Menu → Profiles)
-2. Give it a name
-3. Select the ROM to use
-4. Choose a language
+Every setting is saved per profile. The feature pages cover each area in detail.
 
-A profile is an isolated container that holds:
+## Step 4 · Play
 
-- ROM reference
-- Language setting
-- Save data (auto-saves, quick saves, named saves)
-- Game settings (display, gameplay, audio)
-- Control bindings
-- MSU pack selection
+Click **Play** (or your configured start button) and the game opens in the app window.
 
-You can create multiple profiles — for example, one for casual play and one for speedrunning with different settings.
+While playing:
 
----
-
-## Step 3: Configure Settings
-
-With a profile selected, open **Profile Settings** to configure:
-
-- **Display** — aspect ratio, window mode, FPS counter
-- **Gameplay** — original PC port toggles
-- **Audio** — volume levels, MSU pack
-- **Controls** — rebind any action
-- **Haptics** — vibration events
-
-All settings are per-profile. See the individual feature docs for details.
-
----
-
-## Step 4: Play
-
-Click **Play** or press your configured start button. The game launches immediately in the app window.
-
-### In-Game Controls
-
-- **Title bar** — hover the top edge to reveal (auto-hides during gameplay)
-- **Menu** — hamburger icon or `Escape`
-- **Quick save** — hold the configured button (default: Select) for the configured duration
-- **Mute** — click the speaker icon in the title bar
+- **Title bar** — hover the top edge to reveal it; it auto-hides during play.
+- **Menu** — the hamburger icon or `Escape`.
+- **Quick save** — hold the save button (Select by default).
+- **Mute** — the speaker icon in the title bar.
 
 ### Widgets
 
-While playing, you can open overlay widgets from Menu → Widgets:
+From **Menu → Widgets** you can open overlay panels — the inventory tracker, checks tracker, cheats, and logs among them. Widgets dock to any screen edge or float freely.
 
-- Inventory Tracker
-- Checks Tracker
-- Cheats
-- Logs
+## Updating the app
 
-Widgets can be docked to any screen edge or floated freely.
-
----
-
-## Updating the App
-
-If you installed via the NSIS installer (Windows), DMG (macOS), AppImage, or .deb (Linux), the app checks for updates on startup. When a new version is available, a notification appears in the title bar. You can also manually check via Menu → Advanced → **Check for Updates**.
-
-If you're using the portable Windows build, you'll need to download new versions manually from the [Releases page](https://github.com/drizztdourden08/relic-of-the-past/releases).
-
-See [Auto-Update](../user-guide/auto-update.md) for more details.
+Installed builds (Windows installer, macOS DMG, Linux AppImage/`.deb`) check for updates on startup and show a notice in the title bar when one's available; you can also check via **Menu → Advanced → Check for Updates**. The portable Windows build doesn't auto-update — grab new versions from the [Releases page](https://github.com/drizztdourden08/relic-of-the-past/releases). See [Auto-Update](../user-guide/auto-update.md) for details.

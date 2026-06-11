@@ -1,40 +1,32 @@
 <!-- @layer docs @kind doc -->
 # Importing a ROM & Assets
 
-The app contains **no game data**. You point it at your own legally obtained ROM once; it extracts the
-assets it needs and stores them locally. Nothing is uploaded anywhere.
+The app ships with no game data. You point it at your own legally obtained ROM once, it extracts the assets it needs, and it stores them locally. Nothing is uploaded anywhere.
 
 ## Import
 
-1. Title bar → **Data** → **ROMs**.
-2. **Import ROM** → select your `.sfc`/`.smc` (or import from a URL).
-3. The ROM is **copied into the app's data directory** — you can move or delete the original afterward.
+1. Open the title-bar menu → **Data** → **ROMs**.
+2. Choose **Import ROM** and select your `.sfc`/`.smc` file (you can also import from a URL).
+3. The ROM is copied into the app's data directory, so you can move or delete the original afterward.
 
-Supported regions: US (NTSC), European (PAL), Japanese, and French ROMs. The app **validates the
-checksum** (`ZELDA3_SHA1` / `ZELDA3_SHA1_US`) on load, so the wrong file fails loudly rather than
-producing a broken game.
+The game runs on the **US (NTSC) ROM** only. The app checks the ROM on import, so any other file is rejected rather than quietly producing a broken game. ROMs from other regions can still be imported, but only to pull their **language** for in-game text — they don't run the game themselves.
 
 ## Asset extraction
 
-When a ROM is imported, the app extracts all game assets — graphics, maps, audio, text — into a
-`zelda3_assets.dat` blob the game core loads. This is a **one-time** step that takes a few seconds.
+When you import a ROM, the app extracts its assets — graphics, maps, audio, and text — into a single `zelda3_assets.dat` file that the game loads. This happens once and takes a few seconds.
 
-Unlike the original PC port, **no Python is required**: extraction is a pure-TypeScript pipeline (see
-[Asset-Extraction Pipeline](../architecture/asset-extraction.md) for how it works).
+Unlike the original PC port, you don't need Python: extraction is a built-in TypeScript pipeline. If you're curious how it works, see the [Asset-Extraction Pipeline](../architecture/asset-extraction.md).
 
 ## Related data, per ROM
 
-The [Data Manager](../user-guide/data-manager.md) manages everything keyed to a ROM:
+The [Data Manager](../user-guide/data-manager.md) keeps everything tied to a ROM in one place:
 
-- **Sprites** — extract/cache per-ROM sprite PNGs (used by debug/tracker tooling).
-- **Languages** — extract translations (English, French, …) for in-game dialogue.
+- **Sprites** — cache per-ROM sprite images used by the tracker and debug tools.
+- **Languages** — import a non-US ROM to extract its translation for in-game dialogue. This is the only thing other-region ROMs are used for.
 - **MSU-1** — import custom music packs to attach to a profile.
 
 ## Then create a profile
 
-A ROM by itself doesn't start a game — you play through a [profile](../user-guide/profiles.md) that
-references the ROM plus a language and (optionally) an MSU pack. See [Quick Start](quick-start.md) or
-the full [First Launch](first-launch.md) walkthrough.
+A ROM on its own doesn't start a game — you play through a [profile](../user-guide/profiles.md) that points at the ROM plus a language and, if you like, an MSU pack. See [Quick Start](quick-start.md) or the full [First Launch](first-launch.md) walkthrough.
 
-> **Never commit ROMs or extracted assets.** They're gitignored and stay on your machine; see the
-> [Copyright / Media Gate](../contributing/copyright-gate.md).
+> Never commit ROMs or extracted assets. They're gitignored and stay on your machine.

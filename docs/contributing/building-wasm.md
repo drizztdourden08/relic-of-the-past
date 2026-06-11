@@ -1,9 +1,11 @@
 <!-- @layer docs @kind doc -->
 # Building the WASM Core
 
-> ⚠️ The WASM build is a **separate manual step — not part of any `npm` script.** The TS app loads a
-> committed prebuilt `apps/desktop/public/wasm/zelda3.{js,wasm,data}`. **C changes under `core/` have
-> no effect until you rebuild.** You only need this when editing C — normal app work doesn't.
+> ⚠️ **You only need this when you change the C code.** `npm run dev` and `npm run build` run an
+> `ensure-wasm` step that rebuilds the WASM core automatically whenever it's missing or a C source is
+> newer than the last build, so normal app work needs nothing extra. The build output is gitignored,
+> not committed. C changes under `core/` take effect on the next `dev`/`build` — or run
+> `npm run ensure-wasm` to force a rebuild now.
 
 ## Prerequisites
 

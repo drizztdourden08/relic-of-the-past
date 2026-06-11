@@ -1,46 +1,38 @@
 <!-- @layer docs @kind doc -->
-# Game Settings
+# Display & Graphics
 
-All game settings are configurable in-app through the Profile Settings panel. No `.ini` file editing required.
-
----
+Everything about how the game looks lives in the profile's **Settings** tab — there's no `.ini` file to edit, and every setting is saved per profile.
 
 ## Display
 
-### Aspect Ratio
+**Aspect ratio** — choose 4:3 (the original SNES shape), 3:2, 16:9, 16:10, or 18:9. Wider ratios show more of the scene horizontally rather than stretching the picture. **Extend Y** shows the full 240 lines the SNES could output.
 
-- **4:3** — original SNES ratio
-- **3:2** — slightly wider, fills more of modern screens
-- **16:9** — widescreen (game renders with extended horizontal view)
+When you go widescreen, two extra toggles let you keep sprites unchanged and skip the fixes that normally hide widescreen artifacts.
 
-### Window Mode
+## Window
 
-- **Windowed** — standard resizable window
-- **Fullscreen** — exclusive fullscreen
-- **Borderless** — fullscreen without exclusive mode (allows fast alt-tab)
+**Mode** — run in a normal window or borderless, and optionally start in fullscreen.
 
-### Viewport
+**Viewport** decides how the picture fills the window:
 
-- **Autofit** — maintains aspect ratio with black bars (or edge effect) on the sides
-- **Stretch** — fills the entire window, may distort the image
+- **Letterbox** — keep the exact aspect ratio, with bars on the sides.
+- **Fit window** — scale to fit while staying close to the ratio.
+- **Stretch** — fill the whole window, which can distort the picture.
 
-### FPS Display
+## Performance
 
-Toggle an FPS counter in the corner of the game view. Useful for verifying performance.
+- **Show FPS** — adds a small frame-rate counter to the **title bar** (not over the game image). Handy for checking performance.
+- **Disable frame delay** — drops the frame-pacing wait, which uncaps the speed for benchmarking.
 
----
+## Rendering
 
-## Gameplay Settings
+The renderer offers a few engine options — an optimized PPU, enhanced Mode 7, and lifting the per-line sprite limit — plus two picture options: linear filtering to smooth the upscale, and dimming the screen flashes. The defaults are a good starting point; the engine options trade a little accuracy for smoothness.
 
-All original PC port settings are exposed in the UI:
+## Gameplay options
 
-- **Item switch (L/R)** — use shoulder buttons to cycle through equipped items
-- Additional original zelda3 port toggles as they existed in `zelda3.ini`
+The separate **Gameplay** settings tab holds the original PC-port toggles — movement tweaks, combat options, and bug fixes — and adds extras of its own: auto-save, quick save states, item cycling with the shoulder buttons, and a set of quality-of-life options. As with display, it's all in the UI.
 
-These map directly to the underlying game engine configuration but are managed per-profile through the UI instead of a shared config file.
+## Related
 
----
-
-## Per-Profile
-
-All display and gameplay settings are stored per-profile. Switching profiles loads that profile's settings immediately.
+- [Visual Enhancements](visual-enhancements.md) — edge effects and other overworld extras.
+- [Shadow Casting](shadow-casting.md) — heightmap-based shadows and lighting.

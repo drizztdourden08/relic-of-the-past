@@ -1,6 +1,9 @@
 <!-- @layer docs @kind doc -->
 # Navigation Widget
 
+> [!WARNING]
+> **Heavy development — not meant for normal play.** This widget is tooling for **randomizer development**: mapping screens, connections, and pathfinding data. It isn't built for in-game use and changes often.
+
 The control surface for the [navigation/minimap system](../user-guide/navigation-minimap.md): minimaps,
 pathfinding, and (dev) editors.
 
