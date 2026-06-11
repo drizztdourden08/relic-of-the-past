@@ -1,8 +1,8 @@
 <!-- @layer docs @kind doc -->
 # State Queries — Sprites
 
-Live sprite slots and the subset that physically gate navigation (Uncle indoors, guards outdoors).
-The engine has **16 sprite slots** (`0–15`); these queries scan them. All return `HEAPU8` pointers,
+Live sprite slots and the subset that physically gate navigation: Uncle indoors, guards outdoors.
+The engine has 16 sprite slots (`0–15`), and these queries scan them. All return `HEAPU8` pointers,
 each buffer prefixed with a 1-byte `count`.
 
 **Sources:** `core/game-hooks/state_queries_sprites.c`, `core/game-hooks/state_queries_grids.c`
@@ -11,7 +11,7 @@ each buffer prefixed with a 1-byte `count`.
 ---
 
 ### WasmGetLiveSprites
-`int WasmGetLiveSprites(void)` → `[count]` then up to 16 × **10 bytes**:
+`int WasmGetLiveSprites(void)` → `[count]` then up to 16 × 10 bytes:
 
 | Off | Field | Off | Field |
 |----:|-------|----:|-------|
@@ -25,14 +25,14 @@ Only slots with non-zero `sprite_state` are included.
 
 ### WasmGetNavigationBlockers
 `int WasmGetNavigationBlockers(void)` → `[count]` then up to 16 × `[xLo, xHi, yLo, yHi]`. The sprites
-that block routes for flood-fill: **indoors**, Uncle (`type 0x73`, `sprite_E == 0`); **outdoors**, the
+that block routes for flood-fill: indoors, Uncle (`type 0x73`, `sprite_E == 0`); outdoors, the
 guard/barrier family (`0x3F, 0x40, 0x41, 0x45–0x4B`).
 
 ### WasmGetIndoorUncleBlockers
-`int WasmGetIndoorUncleBlockers(void)` → `[count]` then up to 2 × `[xLo, xHi, yLo, yHi]` — just the
-early-game Uncle blocker (indoors only). A narrower sibling of the query above.
+`int WasmGetIndoorUncleBlockers(void)` → `[count]` then up to 2 × `[xLo, xHi, yLo, yHi]`: just the
+early-game Uncle blocker, indoors only. A narrower sibling of the query above.
 
 ### WasmGetOverworldGuardSpawns
 `int WasmGetOverworldGuardSpawns(void)` → `[count]` then up to 16 × `[xLo, xHi, yLo, yHi]`. Unlike the
-live queries, this reads **static spawn data** (`sprite_where_in_overworld`) so flood-fill sees guard
+live queries, this reads static spawn data (`sprite_where_in_overworld`) so flood-fill sees guard
 positions even when the sprites haven't proximity-loaded yet (tutorial guards `0x3F`/`0x40`). Empty if indoors.

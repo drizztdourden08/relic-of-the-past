@@ -1,8 +1,8 @@
 <!-- @layer docs @kind doc -->
 # State Queries — Inventory & Progress
 
-Read-only snapshots of Link's items, vitals, dungeon progress, and the full UI state. All return a
-pointer into `HEAPU8` (read the documented bytes immediately). See [Overview](overview.md) for the
+Read-only snapshots of Link's items, vitals, dungeon progress, and the full UI state. Each returns a
+pointer into `HEAPU8`; read the documented bytes immediately. See [Overview](overview.md) for the
 buffer convention.
 
 **Sources:** `core/game-hooks/state_queries.c`, `core/game-hooks/ui_state.c`
@@ -11,7 +11,7 @@ buffer convention.
 ---
 
 ### WasmGetInventoryState
-`int WasmGetInventoryState(void)` → ptr to a **40-byte** buffer (bytes 0–33 used).
+`int WasmGetInventoryState(void)` → pointer to a 40-byte buffer (bytes 0–33 used).
 
 | Off | Field | | Off | Field |
 |----:|-------|-|----:|-------|
@@ -22,11 +22,11 @@ buffer convention.
 | | || 33 | health capacity |
 
 ### WasmGetRoomFlags
-`int WasmGetRoomFlags(void)` → pointer to `save_dung_info` (the **saved** dungeon room-flag bitset:
-per-room chest/enemy/event progress). Read as needed; it's the live SRAM array.
+`int WasmGetRoomFlags(void)` → pointer to `save_dung_info`, the saved dungeon room-flag bitset holding
+per-room chest/enemy/event progress. Read as needed; it's the live SRAM array.
 
 ### WasmGetLiveRoomFlags
-`int WasmGetLiveRoomFlags(void)` → **4-byte** buffer for the room Link is *currently* in:
+`int WasmGetLiveRoomFlags(void)` → 4-byte buffer for the room Link is currently in:
 
 | Off | Field |
 |----:|-------|
@@ -37,7 +37,7 @@ per-room chest/enemy/event progress). Read as needed; it's the live SRAM array.
 `int WasmGetOverworldFlags(void)` → pointer to `save_ow_event_info` (bit-packed overworld event flags).
 
 ### WasmGetProgressFlags
-`int WasmGetProgressFlags(void)` → **16-byte** buffer (bytes 0–12 used):
+`int WasmGetProgressFlags(void)` → 16-byte buffer (bytes 0–12 used):
 
 | Off | Field | Off | Field |
 |----:|-------|----:|-------|
@@ -50,7 +50,7 @@ per-room chest/enemy/event progress). Read as needed; it's the live SRAM array.
 | 6 | mirror | | |
 
 ### WasmGetViewportInfo
-`int WasmGetViewportInfo(void)` → **20-byte** buffer (camera/Link world position + module):
+`int WasmGetViewportInfo(void)` → 20-byte buffer holding camera and Link world position plus module:
 
 | Off | Field | Off | Field |
 |----:|-------|----:|-------|
@@ -64,8 +64,8 @@ per-room chest/enemy/event progress). Read as needed; it's the live SRAM array.
 | 8–9 | viewport height (u16, 224 or 240) | | |
 
 ### WasmGetGameUIState
-`int WasmGetGameUIState(void)` → **256-byte** buffer (bytes 0–124 used). The all-in-one frame
-snapshot the React HUD overlay polls every `requestAnimationFrame`. Layout (byte ranges):
+`int WasmGetGameUIState(void)` → 256-byte buffer (bytes 0–124 used). This is the all-in-one frame
+snapshot the React HUD overlay polls every `requestAnimationFrame`. Layout by byte range:
 
 | Bytes | Group | Bytes | Group |
 |------:|-------|------:|-------|
@@ -78,7 +78,7 @@ snapshot the React HUD overlay polls every `requestAnimationFrame`. Layout (byte
 | 46–52 | equipment: sword, shield, armor, gloves, boots, flippers, moon pearl | 115–118 | player action state (for haptics): handler state, running, dash ctr, anim steps |
 | 53–60 | dungeon progress: pendants, crystals, map/compass/bigkey (u16 each) | 119–124 | extended location: which entrance, lower level, Link X/Y (u16) |
 
-> The exact per-byte assignment is in `ui_state.c` (lines 18–155) — treat that file as the source of
+> The exact per-byte assignment lives in `ui_state.c` (lines 18–155). Treat that file as the source of
 > truth if you extend the parser in `lib/game/bridge/ui-bridge-parser.ts`.
 
 ### WasmGetUIOverlayMode / WasmSetUIOverlayMode

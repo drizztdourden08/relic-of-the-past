@@ -1,7 +1,7 @@
 <!-- @layer docs @kind doc -->
 # State Queries — Rooms & Collision
 
-Collision grids, room geometry, doors, stairs, and dungeon-map placement — the data the
+Collision grids, room geometry, doors, stairs, and dungeon-map placement: the data the
 [navigation engine](../architecture/navigation.md) consumes. All return `HEAPU8` pointers.
 
 **Sources:** `state_queries.c`, `state_queries_grids.c`, `state_queries_rooms.c`, `state_queries_room_exits.c`
@@ -24,17 +24,17 @@ upper-layer attrs, `0x1000–0x1FFF` = lower-layer attrs (64×64 tiles per layer
 
 ### WasmGetRoomCollisionTypeForRoom
 `int WasmGetRoomCollisionTypeForRoom(int room_id)` → collision type `(hdr[0] >> 2) & 7` read
-straight from the ROM header for **any** room id (0–0x127); headless-safe. `-1` if out of range.
+straight from the ROM header for any room id (0–0x127); headless-safe. Returns `-1` if out of range.
 
 ### WasmBuildOverworldAttrGrid
-`int WasmBuildOverworldAttrGrid(int screen_idx)` → builds a **64×64** collision-attr grid for an
+`int WasmBuildOverworldAttrGrid(int screen_idx)` → builds a 64×64 collision-attr grid for an
 overworld screen on demand and returns its pointer (row stride 64). Decodes Map16→Map8→attr and
 propagates the deep-grass/water priority bit.
 
 ### WasmBuildRoomAttrGrid
 `int WasmBuildRoomAttrGrid(int room_id)` → loads `room_id` into the dungeon tilemap, rebuilds the
 collision attr table, restores the previous room, and returns the `dung_bg2_attr_table` pointer
-(read 64×64, `+0x1000` for the lower layer). Heavy — it runs the real room loader; call off the hot path.
+(read 64×64, `+0x1000` for the lower layer). This is heavy: it runs the real room loader, so call it off the hot path.
 
 ### WasmGetToggleFloorPositions
 `int WasmGetToggleFloorPositions(void)` → buffer populated during `WasmBuildRoomAttrGrid`:
@@ -43,7 +43,7 @@ collision attr table, restores the previous room, and returns the `dung_bg2_attr
 ## Room geometry
 
 ### WasmGetRoomLayoutInfo
-`int WasmGetRoomLayoutInfo(void)` → **8-byte** buffer (zeroed if outdoors):
+`int WasmGetRoomLayoutInfo(void)` → 8-byte buffer (zeroed if outdoors):
 
 | Off | Field | Off | Field |
 |----:|-------|----:|-------|
@@ -52,7 +52,7 @@ collision attr table, restores the previous room, and returns the `dung_bg2_attr
 | 2 | quadrant fullsize Y | 5–7 | pad |
 
 ### WasmGetDungeonMapPosition
-`int WasmGetDungeonMapPosition(void)` → **12-byte** buffer; the room's footprint in the 5×5 dungeon
+`int WasmGetDungeonMapPosition(void)` → 12-byte buffer giving the room's footprint in the 5×5 dungeon
 map grid (zeroed for caves/houses):
 
 | Off | Field | Off | Field |
@@ -64,7 +64,7 @@ map grid (zeroed for caves/houses):
 | 4 | # basement floors | 9 | origin row (= map row) |
 
 ### WasmGetRoomDoorBoundaryTiles
-`int WasmGetRoomDoorBoundaryTiles(void)` → `[count, pad]` then up to 16 × **5 bytes**:
+`int WasmGetRoomDoorBoundaryTiles(void)` → `[count, pad]` then up to 16 × 5 bytes:
 `[direction, tileCol, tileRow, doorType, isOpen]`. direction 0=N 1=S 2=W 3=E. For N/S doors `tileCol`
 is the leftmost of the 4-tile opening; for W/E, `tileRow` is the topmost.
 
@@ -84,9 +84,9 @@ direction: `0`=up, `4`=down (attr bit 2). Found by scanning attr tiles `0x30–0
 
 ### WasmGetStaircaseType
 `int WasmGetStaircaseType(void)` → `kind_of_in_room_staircase`: `0`=intra-room stairs (layer change +
-room shift), `1`=layer stairs, `2`=pseudo/water/none (layer changes **blocked**). `-1` if outdoors.
+room shift), `1`=layer stairs, `2`=pseudo/water/none (layer changes are blocked). `-1` if outdoors.
 
 ### WasmGetRoomWalkBoundaries
-`int WasmGetRoomWalkBoundaries(void)` → `[count, pad]` then up to 4 × `[destRoomLo, destRoomHi, tileRow, tileCol]` —
+`int WasmGetRoomWalkBoundaries(void)` → `[count, pad]` then up to 4 × `[destRoomLo, destRoomHi, tileRow, tileCol]`:
 palace toggle-door passages where walking through switches rooms (e.g. Castle→Sewer). Destination is
 inferred from the edge the toggle sits on.

@@ -1,35 +1,35 @@
 <!-- @layer docs @kind doc -->
 # Design Language — Relic of the Past
 
-> The single source of truth for **how the app should look and feel**.
-> `docs/contributing/design-system.md` covers the *code* tiers (primitives/composites/compounds/views);
-> this doc covers the *visual* rules: surfaces, elevation, color roles, controls,
-> spacing, type, sizing, and hierarchy. **Read this before designing anything new.**
+> The single source of truth for how the app should look and feel.
+> `docs/contributing/design-system.md` covers the code tiers (primitives/composites/compounds/views);
+> this doc covers the visual rules: surfaces, elevation, color roles, controls,
+> spacing, type, sizing, and hierarchy. Read it before designing anything new.
 >
-> **One style for the whole app.** The only exception is `domains/hud/**` — it
+> One style covers the whole app. The exception is `domains/hud/**`, which
 > replicates the SNES game HUD with its own pixel-art primitives and the exact
-> game palette, and is deliberately outside everything below.
+> game palette, and sits deliberately outside everything below.
 
 ---
 
 ## 0. The look in one paragraph
 
-A **dark, near-black, neutral** interface (not blue-tinted) with a warm **gold**
-(Triforce) accent and a **green** (Hyrule) primary action. Surfaces step up a
-small **neutral elevation ladder**; floating things cast soft shadows and, when
+A dark, near-black, neutral interface, free of any blue tint, with a warm gold
+(Triforce) accent and a green (Hyrule) primary action. Surfaces step up a
+small neutral elevation ladder. Floating things cast soft shadows and, when
 they sit over the running game, use a translucent "glass" surface with a blur.
-Typography is small, dense, and functional. Gold means *"this is selected / where
-you are"*; green means *"this is the primary action"*; everything else is quiet.
+Typography is small, dense, and functional. Gold means "this is selected, this is where
+you are"; green means "this is the primary action"; everything else stays quiet.
 
 ---
 
-## 1. Color roles (semantic — never reach past these)
+## 1. Color roles (semantic — stay within these)
 
-All color comes from `design-system/tokens/color.css`. Components must use tokens,
-never raw hex/rgb (enforced by stylelint). Pick by **role**, not by hue:
+All color comes from `design-system/tokens/color.css`. Components use tokens
+rather than raw hex/rgb, which stylelint enforces. Pick by role, not by hue:
 
 ### 1.1 Surfaces — the elevation ladder
-The surfaces are **neutral near-black** (no blue tint). Higher = closer to the user.
+The surfaces are neutral near-black, with no blue tint. Higher = closer to the user.
 
 | Level | Token | Value | Use for |
 |---|---|---|---|
@@ -39,8 +39,8 @@ The surfaces are **neutral near-black** (no blue tint). Higher = closer to the u
 | 3 — elevated | `--color-bg-elevated` | `#222228` | dialogs, dropdowns, popovers, hover of a raised control |
 | glass | `--color-bg-overlay` | `rgb(10 10 15 / .88)` | translucent surface for panels floating **over the game** |
 
-**Rule:** a child surface is at most **one level** above its parent. Don't skip
-levels, and don't invent a 4th solid tier.
+**Rule:** a child surface sits at most one level above its parent. Keep to the ladder,
+and leave the three solid tiers as they are.
 
 ### 1.2 Surface tints (state overlays, not new colors)
 | Token | Use |
@@ -48,7 +48,7 @@ levels, and don't invent a 4th solid tier.
 | `--color-surface-hover` (white 4%) | hover on a transparent/ghost control |
 | `--color-surface-hover-strong` (white 7%) | hover on an already-raised control |
 | `--color-surface-inset` (white 2%) | faint inset zones |
-| `--color-surface-selected` (gold 8%) | **selected/active** background tint |
+| `--color-surface-selected` (gold 8%) | selected/active background tint |
 
 ### 1.3 Borders
 `--color-border-subtle` `#2a2a30` (default hairline) · `--color-border-default`
@@ -58,7 +58,7 @@ levels, and don't invent a 4th solid tier.
 ### 1.4 Text
 `--color-text-primary` `#e8e8ec` · `--color-text-secondary` `#a0a0a8` ·
 `--color-text-muted` `#666670` · `--color-text-faint` `#44444c`.
-**There is no `tertiary`** — use `muted`.
+There's no `tertiary`; use `muted` instead.
 
 ### 1.5 Accents & semantics — the meaning of each hue
 This is the rule that fixes most of today's inconsistency:
@@ -72,22 +72,22 @@ This is the rule that fixes most of today's inconsistency:
 | **Ghost** | transparent | none + grey text | low-emphasis inline actions; grey hover fill |
 | **Destructive** | **Red** | `--color-danger-*` | delete/remove, error text, close-on-hover |
 | **Warning / pending** | **Amber** | `--color-warning-base/-dim` | "reachable but not done", caution banners |
-| **Informational only** | **Blue** | `--color-info-base` | neutral status/info text & icons — **never** a selection state |
+| **Informational only** | **Blue** | `--color-info-base` | neutral status/info text & icons, kept out of selection states |
 | **Status: complete/success** | Green | `--color-green-base/-bright` | done/obtained |
 
-> **Hard rule — three action tiers, side by side:** **gold = primary**, **green =
-> secondary**, **grey = tertiary/ghost**. Gold is also the selection/active/focus
-> color. Green is *not* "positive-only" and *not* a generic active state — it is the
-> second-most-prominent **action** sitting next to a gold primary. Plain utility
-> buttons (Cancel, Back, tools like the Navigation FUNCTIONS row) are **tertiary
-> (grey)**. Red = destructive · amber = warning · blue = info **text/icons only**
-> (never an action or selection color).
+> **Hard rule — three action tiers, side by side:** gold = primary, green =
+> secondary, grey = tertiary/ghost. Gold doubles as the selection/active/focus
+> color. Green covers more than positive states, and it isn't a generic active state;
+> it's the second-most-prominent action sitting next to a gold primary. Plain utility
+> buttons (Cancel, Back, tools like the Navigation FUNCTIONS row) are tertiary
+> (grey). Red = destructive · amber = warning · blue = info text and icons only,
+> which keeps it clear of action and selection roles.
 
 ---
 
 ## 2. Elevation: shadow + blur
 
-### 2.1 Shadow ladder (3 steps — use the token, never a raw shadow)
+### 2.1 Shadow ladder (3 steps — use the token rather than a raw shadow)
 | Token | Value | Use |
 |---|---|---|
 | `--shadow-sm` *(=overlay)* | `0 4px 16px rgb(0 0 0 / .4)` | tooltips, small poppers |
@@ -95,8 +95,8 @@ This is the rule that fixes most of today's inconsistency:
 | `--shadow-lg` | `0 12px 32px rgb(0 0 0 / .6)` | dialogs, full-screen layer cards |
 
 > Today there are 5+ ad-hoc shadows (widget `0 4 20`, fullscreen `0 16 48`, settings
-> `0 8 32`…). Snap each to the nearest token. *(Action: add `--shadow-sm`/`--shadow-md`
-> aliases so names read as a ladder.)*
+> `0 8 32`…). Snap each to the nearest token. To do: add `--shadow-sm`/`--shadow-md`
+> aliases so the names read as a ladder.
 
 ### 2.2 Backdrop blur (2 tiers only)
 | Token | Value | Use |
@@ -104,8 +104,8 @@ This is the rule that fixes most of today's inconsistency:
 | `--blur-sm` | `4px` | light scrims (save-state, pause), save-slot action overlays |
 | `--blur-md` | `8px` | floating glass panels over the game (widgets, shadow editor, log overlay) |
 
-> Today: 2px / 4px / 8px / 16px with no rule. Snap to **4** or **8**. *(Action: add the
-> two blur tokens.)*
+> Today: 2px / 4px / 8px / 16px with no rule. Snap to **4** or **8**. To do: add the
+> two blur tokens.
 
 ### 2.3 Scrims (modal backdrops — 2 tiers)
 | Token | Value | Use |
@@ -129,21 +129,21 @@ surfaces = `lg`; pills = a deliberate full-round (define `--radius-pill: 999px`)
 ### 3.2 Spacing
 One scale for gap/margin/padding: `--space-xs 4 · -sm 8 · -md 12 · -lg 16 · -xl 24 · -2xl 32`.
 > Spacing is only **38% tokenized** today. `2px`(95×), `6px`(75×), `3px`(31×), `10px`(17×)
-> dominate. Rule: **use a token.** `6px`→`sm`(8) or `xs`(4); `3px`/`2px`→`xs`(4) or 0;
-> `10px`→`md`(12). Hairline `1–2px` is allowed *only* for borders/optical nudges, never layout.
+> dominate. Rule: use a token. `6px`→`sm`(8) or `xs`(4); `3px`/`2px`→`xs`(4) or 0;
+> `10px`→`md`(12). Reserve hairline `1–2px` for borders and optical nudges, keeping it out of layout.
 
 ### 3.3 Type
 Family `--font-sans` (UI) / `--font-mono` (ids, code, numbers).
 Sizes: `--text-xs 10 · -sm 11 · -base 13 · -lg 16 · -xl 20`. Weights `400/500/600`.
 > Font-size is **57% tokenized**. The real gaps: `12px`(24×, between sm & base) and
-> `9px`(12×, below xs). Rule: snap `12→base(13)` or `sm(11)`, `9/8→xs(10)`. Don't widen
-> the scale — densify by weight/color, not by inventing sizes.
+> `9px`(12×, below xs). Rule: snap `12→base(13)` or `sm(11)`, `9/8→xs(10)`. Keep the
+> scale as-is and densify by weight and color rather than inventing sizes.
 
 ### 3.4 Motion
 `--transition-fast .1s` (hover/press) · `--transition-normal .15s` (enter/layout).
-Dialog enter = fade+scale 0.95→1 over .15s. Don't hand-roll durations.
+Dialog enter = fade+scale 0.95→1 over .15s. Use these tokens rather than hand-rolled durations.
 
-### 3.5 Z-index — always the token, never a raw number
+### 3.5 Z-index — always the token, not a raw number
 `--z-base 1 · -sticky 10 · -nav-overlay 20 · -backdrop 50 · -panel 100 · -floating 110 ·
 -modal 200 · -popover 250 · -toast 300 · -tooltip 400`. Portal layers mirror these.
 > Components currently hard-code `z-index: 100/200/300`. Replace with the token. Two
@@ -153,8 +153,8 @@ Dialog enter = fade+scale 0.95→1 over .15s. Don't hand-roll durations.
 
 ## 4. Controls (the part that's most inconsistent today)
 
-**Default to a design-system primitive. Do not hand-roll a control that a primitive
-already covers.** Primitives & their canonical look:
+Default to a design-system primitive, and reach for one whenever a primitive
+already covers the control. Primitives and their canonical look:
 
 | Primitive | Look | Selected state |
 |---|---|---|
@@ -167,14 +167,14 @@ already covers.** Primitives & their canonical look:
 | `TagPicker` | chip, radius `sm`, `2px 8px` | **gold** text + gold-glow bg |
 
 **Rules**
-1. **Tab decks → `TabBar`.** Never hand-roll. (4 hand-rolled today: data-manager,
-   profile-hub, controls-settings, cheats-widget.)
+1. **Tab decks → `TabBar`.** Use it instead of a hand-rolled deck. (4 hand-rolled today:
+   data-manager, profile-hub, controls-settings, cheats-widget.)
 2. **Selectable chips/tags → `TagPicker`.** (tracker filters, conn-editor tags today.)
 3. **Mutually-exclusive options → `SegmentedControl`/`RadioGroup`.**
 4. **One primary `Button` (green) per view/section.** Everything else is `secondary`/`ghost`.
 5. **Selected = gold, always.** A control's "active" state uses gold tokens regardless
    of which widget it lives in.
-6. A bespoke control is justified **only** when no primitive fits; then it still uses
+6. A bespoke control is justified when no primitive fits, and even then it uses
    the tokens above and the gold/green/danger rules.
 
 ---
@@ -193,36 +193,36 @@ Surface `elevated`, border `default`, radius `lg`, shadow `lg`, scrim `--color-s
 ### 5.3 Floating panels over the game (tracker, shadow editor, log overlay)
 Glass surface `--color-bg-overlay`, `--blur-md`, border `subtle`, radius `lg`,
 shadow `md`. **Fixed widths from a token set:** `--panel-w-sm 200 · -md 280 · -lg 380`.
-> Today these are blue-tinted `rgb(20 20 30 …)` at random widths (180/260/420). Move to
-> the neutral glass token + a panel-width token.
+> Today these are blue-tinted `rgb(20 20 30 …)` at random widths (180/260/420). Move them to
+> the neutral glass token and a panel-width token.
 
 ### 5.4 Widgets (`Widget` composite)
 Docked = surface `raised`, square edges; floating = glass + blur-md + shadow-md +
 radius `lg`. **Minimum width `--widget-w-min: 240px`.** The runtime opacity var
-(`--widget-frame-opacity`) is legitimate (user setting) — keep it, but derive the
-color from the neutral glass token, not a one-off blue rgb.
+(`--widget-frame-opacity`) is a legitimate user setting, so keep it, but derive the
+color from the neutral glass token rather than a one-off blue rgb.
 
 ---
 
 ## 6. Hierarchy rules (how to compose a screen)
 
 1. **Surfaces step exactly one level.** canvas → page(base) → card(raised) → popover(elevated).
-2. **One primary action (green) per surface.** Secondary actions are quiet.
-3. **Gold marks the current/selected thing** — at most one "active" per group.
+2. **One primary action (green) per surface.** Secondary actions stay quiet.
+3. **Gold marks the current/selected thing**, with at most one "active" per group.
 4. **Section headers**: `text-secondary`, `xs`/`sm`, uppercase, `letter-spacing .04em`.
 5. **Body text** `secondary`; **emphasis** `primary`; **meta/ids** `muted` + `font-mono`.
 6. **Spacing rhythm:** `sm`(8) between controls, `md`(12) between groups, `lg`(16)+
-   section padding. Never eyeball px.
-7. **Borders are hairlines** (`subtle`); reserve `strong` for hover/emphasis only.
+   section padding. Reach for a token rather than eyeballing px.
+7. **Borders are hairlines** (`subtle`), with `strong` kept for hover and emphasis.
 
 ---
 
 ## 7. Building something new — checklist
 
-- [ ] Could a **primitive/composite** already do this? Use it. (Don't reinvent tabs/chips/buttons/dialogs.)
-- [ ] Every color is a **role token** (§1). No raw hex/rgb. No ghost token names (§ audit).
+- [ ] Could a **primitive/composite** already do this? Use it, and reuse tabs/chips/buttons/dialogs rather than rebuilding them.
+- [ ] Every color is a **role token** (§1), with no raw hex/rgb and no ghost token names (§ audit).
 - [ ] Surface is the right **elevation level** and only one above its parent.
-- [ ] Spacing/radius/type are **tokens** (§3). No `3px`/`6px`/`12px` one-offs.
+- [ ] Spacing/radius/type are **tokens** (§3), with no `3px`/`6px`/`12px` one-offs.
 - [ ] Shadow + blur + scrim from the **ladders** (§2).
 - [ ] `z-index` is a **token** (§3.5).
 - [ ] Selected = **gold**; the one CTA = **green**; destructive = **danger**; info = **blue (text only)**.
@@ -245,7 +245,7 @@ These are referenced by the rules but not yet defined — add to `tokens/`:
                    --widget-w-min: 240px;
 ```
 
-And **delete/alias the ghost tokens** components reference but that don't exist
+And alias or remove the ghost tokens that components reference but that don't exist
 (they silently no-op today): `--color-bg-sunken`→`bg-base`, `--color-bg-active`→
 `surface-selected`, `--color-bg-hover`→`surface-hover`, `--color-bg-input`→`bg-raised`,
 `--color-bg-surface`→`bg-raised`, `--color-accent-default`→`gold-base`,
@@ -256,7 +256,7 @@ And **delete/alias the ghost tokens** components reference but that don't exist
 
 ## Token enforcement — colors are tokens-only (mechanically blocked)
 
-Raw colors are **gating errors**, not conventions. Two blockers:
+Raw colors are gating errors rather than conventions. Two blockers:
 
 1. **CSS** (`.stylelintrc.json`): `color-no-hex` + `color-named` (error) and a
    `function-disallowed-list` banning `rgb() / rgba() / hsl() / hsla() / hwb()` in
@@ -264,8 +264,8 @@ Raw colors are **gating errors**, not conventions. Two blockers:
 2. **Inline styles / TS** (`eslint.config.mjs` → `local/no-raw-color`, error): bans
    hex/rgb/hsl literals assigned to colour-ish style properties (`color`,
    `background`, `borderColor`, `fill`, `stroke`, `boxShadow`, …). Dynamic values
-   (`color: cond ? a : b`, `fn()`) and canvas `ctx.fillStyle = …` assignments do
-   **not** match — those are the legitimate escape hatches below.
+   (`color: cond ? a : b`, `fn()`) and canvas `ctx.fillStyle = …` assignments fall
+   outside the rule, and they're the legitimate escape hatches below.
 
 ### Documented exceptions (where raw colors are allowed)
 
@@ -296,8 +296,8 @@ Beyond color, these are hard-blocked in `ui/**` CSS (stylelint
 | `padding` / `margin` / `gap` | no `px` | `--space-*` |
 
 Existing raw values were rounded to the nearest token. `var(--token, fallback)`
-fallbacks are banned (tokens-only) — use the token bare. Positioning offsets
-(`top/left/right/bottom`), `width/height`, and `border-width` are **not** forced
-(no positional token scale; these are layout, not design-scale values). Inline
-`style={{}}` dimensional values in dense debug widgets are not yet rule-enforced
-(the type scale floors at 10px; those widgets use 8–9px).
+fallbacks are banned, so use the token bare. Positioning offsets
+(`top/left/right/bottom`), `width/height`, and `border-width` stay unforced, since
+there's no positional token scale and these are layout rather than design-scale values. Inline
+`style={{}}` dimensional values in dense debug widgets aren't rule-enforced yet
+(the type scale floors at 10px, and those widgets use 8–9px).

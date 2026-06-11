@@ -12,7 +12,7 @@ shader. All live in `emscripten_api.c`; setters are callable while the game runs
 
 | Function | Signature | Effect |
 |----------|-----------|--------|
-| `WasmSetFeatures` | `void(uint32_t features)` | Sets `g_wanted_zelda_features` (the enhancement bitmask — widescreen, sprite limits, etc.). |
+| `WasmSetFeatures` | `void(uint32_t features)` | Sets `g_wanted_zelda_features`, the enhancement bitmask covering widescreen, sprite limits, and similar flags. |
 | `WasmGetFeatures` | `uint32_t(void)` | Current feature bitmask. |
 | `WasmSetPpuRenderFlags` | `void(int flags)` | Sets PPU render flags; preserves the separately-managed `BlackBG2` bit. |
 | `WasmGetPpuRenderFlags` | `int(void)` | Current PPU render flags. |
@@ -35,7 +35,7 @@ shader. All live in `emscripten_api.c`; setters are callable while the game runs
 ## Clean frame (edge-glow source)
 
 A HUD-less, sprite-less render of the current frame, used by the [edge-glow](../user-guide/visual-enhancements.md)
-post-processing. Render, then read width/height and the RGBA buffer.
+post-processing. Render first, then read the width, height, and RGBA buffer.
 
 | Function | Signature | Returns |
 |----------|-----------|---------|

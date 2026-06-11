@@ -1,10 +1,10 @@
 <!-- @layer docs @kind doc -->
 # Adding a WASM Function
 
-Crossing the C↔TS boundary touches **two places**. Miss one and it fails silently (dead-code
-stripped) or throws at the `ccall`. Do both, then [rebuild WASM](building-wasm.md). Pick the
-direction first. (The repo's `add-wasm-function` skill scaffolds this; see the
-[hooks reference](../hooks/overview.md) for the existing surface and buffer conventions.)
+Crossing the C↔TS boundary touches two places. Miss one and it either fails silently, since the
+dead code gets stripped, or throws at the `ccall`. Do both, then [rebuild WASM](building-wasm.md).
+Pick the direction first. The repo's `add-wasm-function` skill scaffolds this, and the
+[hooks reference](../hooks/overview.md) covers the existing surface and buffer conventions.
 
 ## Direction A — TypeScript calls into C (`Wasm*` export)
 
@@ -28,9 +28,9 @@ EMSCRIPTEN_KEEPALIVE
 void WasmSetMyThing(int value) { /* … */ }
 ```
 
-`EMSCRIPTEN_KEEPALIVE` is mandatory — it both retains *and* exports the symbol, so there is **no**
+`EMSCRIPTEN_KEEPALIVE` is mandatory. It both retains and exports the symbol, so there's no
 `EXPORTED_FUNCTIONS` list to edit in `build.bat`/`Makefile`. Add a declaration to `game_hooks.h` only
-if other **C** code calls it.
+when other C code calls it.
 
 **2 · TypeScript caller** in `apps/desktop/src/lib/game/` (the right `bridge/*` facade or domain module):
 
@@ -57,15 +57,15 @@ void GameHook_NotifyMyEvent(uint8 arg) {
 ```
 
 **2 · Call site** in upstream `core/zelda3/` — insert the `GameHook_NotifyMyEvent(…)` call at the game
-event. **This is the only sanctioned reason to edit `zelda3/`**: a single call line; logic stays in
+event. This is the one sanctioned reason to edit `zelda3/`: a single call line, with the logic staying in
 `game-hooks/`.
 
-**3 · JS registers the handler** in the renderer: `window.__onMyEvent = (arg) => { … }` (mirror how
-`window.__onItemReceived` is wired). No `EXPORTED_FUNCTIONS` entry is needed for this direction.
+**3 · JS registers the handler** in the renderer: `window.__onMyEvent = (arg) => { … }`, mirroring how
+`window.__onItemReceived` is wired. This direction needs no `EXPORTED_FUNCTIONS` entry.
 
 ## Finally
 
-1. [Rebuild WASM](building-wasm.md) — C changes don't take effect until rebuilt.
+1. [Rebuild WASM](building-wasm.md), since C changes only take effect after a rebuild.
 2. Restart `npm run dev`.
 3. Trigger the function/event and confirm. A "function not found" at `ccall` means the C function is
-   missing its `EMSCRIPTEN_KEEPALIVE` tag or the WASM wasn't rebuilt.
+   missing its `EMSCRIPTEN_KEEPALIVE` tag, or the WASM wasn't rebuilt.

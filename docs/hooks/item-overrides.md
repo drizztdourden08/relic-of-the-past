@@ -8,14 +8,14 @@ The randomizer primitive: replace the item a given chest yields. JS registers `(
 
 | Function | Signature | Effect |
 |----------|-----------|--------|
-| `WasmSetItemOverride` | `void(int room_id, int original_item, int new_item)` | Add or update an override. Matches on `(room_id, original_item)`; updates `new_item` if the pair already exists. Table holds up to **256** entries. |
+| `WasmSetItemOverride` | `void(int room_id, int original_item, int new_item)` | Add or update an override. Matches on `(room_id, original_item)`; updates `new_item` if the pair already exists. Table holds up to 256 entries. |
 | `WasmClearItemOverrides` | `void(void)` | Empty the override table. |
 
 ## How it's applied (C → C, no JS event)
 
 When a chest opens, the vendored game code calls the callback `GameHook_OverrideChestItem(room_id,
-original_item)`. It scans the override table and returns the replacement item id (or the original if
-none matches). This is a pure C→C hook — see [Callbacks](callbacks.md) for the full callback surface.
+original_item)`. It scans the override table and returns the replacement item id, or the original if
+none matches. This is a pure C→C hook; see [Callbacks](callbacks.md) for the full callback surface.
 
 ```mermaid
 flowchart TD

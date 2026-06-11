@@ -1,9 +1,9 @@
 <!-- @layer docs @kind doc -->
 # Callbacks (C→JS events)
 
-The other direction: functions the **game core** calls at gameplay events. There are **14**
+The other direction: functions the game core calls at gameplay events. There are 14
 `GameHook_*` callbacks. Two of them surface to the renderer via `EM_ASM` → a `window.__on*` callback;
-the rest are C→C (engine-internal accessors and the wrappers invoked by the `Wasm*` exports).
+the rest are C→C — engine-internal accessors and the wrappers invoked by the `Wasm*` exports.
 
 **Sources:** `haptic_events.c`, `game_hooks.c`, `check_triggers.c`, `item_overrides.c`, `cheats.c`
 
@@ -19,8 +19,8 @@ drop). `method` distinguishes receipt styles. Drives the inventory/checks tracke
 
 ### `window.__onHapticEvent(type, param)`
 Fired by the eight haptic hooks in `haptic_events.c`. `type` is the event enum below; `param` carries
-intensity-ish data (damage, item id, swing type) or `0`. The renderer maps these to controller
-rumble — see [Haptics](../user-guide/haptics.md). `type` **must** match `HapticEventType` in the JS
+intensity data (damage, item id, swing type) or `0`. The renderer maps these to controller
+rumble — see [Haptics](../user-guide/haptics.md). `type` has to match `HapticEventType` in the JS
 `haptics` module.
 
 | `type` | Hook | `param` |
@@ -36,7 +36,7 @@ rumble — see [Haptics](../user-guide/haptics.md). `type` **must** match `Hapti
 
 ## C→C callbacks (no JS event)
 
-These are called from the vendored game code or from the `Wasm*` wrappers — useful to know when
+These are called from the vendored game code or from the `Wasm*` wrappers. They're useful to know when
 tracing behavior, but you don't register anything for them.
 
 | Callback | Called from | Purpose |
@@ -49,7 +49,7 @@ tracing behavior, but you don't register anything for them.
 
 ## Adding a new event
 
-A new C→JS event mirrors an export's 2-place rule but in reverse: add the `GameHook_*` function
+A new C→JS event mirrors an export's two-place rule in reverse: add the `GameHook_*` function
 (declared in `game_hooks.h`), `EM_ASM` a `window.__on*` call, insert the call-site in the vendored
 core at the right gameplay event, and register the handler in the renderer. See the `add-wasm-function`
 skill and [Adding a WASM Function](../contributing/adding-a-wasm-function.md).

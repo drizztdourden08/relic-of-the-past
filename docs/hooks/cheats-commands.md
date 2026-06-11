@@ -1,7 +1,7 @@
 <!-- @layer docs @kind doc -->
 # Cheats & Commands
 
-Functions that **change** game state: pause/reset, the cheat menu, and the check/NPC triggers that
+Functions that change game state: pause/reset, the cheat menu, and the check/NPC triggers that
 power the delivery queue and randomizer. Most are `void` and take effect on the next frame.
 
 **Sources:** `core/game-hooks/cheats.c`, `core/game-hooks/check_triggers.c`, `core/wasm-build/emscripten_api.c`
@@ -24,10 +24,10 @@ power the delivery queue and randomizer. Most are `void` and take effect on the 
 
 | Function | Signature | Notes |
 |----------|-----------|-------|
-| `WasmCheatGiveItem` | `void(int item_id)` | Plays the standing receipt animation. **`item_id` must be 0–75 (0x4B)** — higher ids corrupt `g_ram`. No-op outside gameplay modules (7/9). Does **not** mark a check done. |
+| `WasmCheatGiveItem` | `void(int item_id)` | Plays the standing receipt animation. `item_id` must be 0–75 (0x4B); higher ids corrupt `g_ram`. No-op outside gameplay modules (7/9). Does not mark a check done. |
 | `WasmCheatSetHealth` | `void(int value)` | Clamped to `[0, capacity]`; cancels pending heal. |
 | `WasmCheatSetMaxHealth` | `void(int value)` | Heart capacity, clamped `[8, 160]` (1–20 hearts; 8 units/heart). |
-| `WasmCheatSetRupees` | `void(int value)` | Sets the rupee **goal** (counter animates), clamped `[0, 999]`. |
+| `WasmCheatSetRupees` | `void(int value)` | Sets the rupee goal (the counter animates), clamped `[0, 999]`. |
 | `WasmCheatSetBombs` | `void(int value)` | Clamped `[0, 99]`. |
 | `WasmCheatSetArrows` | `void(int value)` | Clamped `[0, 99]`. |
 | `WasmCheatRefillMagic` | `void(void)` | Magic to full (`0x80`). |

@@ -1,9 +1,9 @@
 <!-- @layer docs @kind doc -->
 # Electron & IPC
 
-The Electron **main process** owns everything the renderer can't: the filesystem, native modules
-(HID/USB), windows, protocols, and all ROM/profile/save I/O. The renderer reaches it **only through
-IPC** — never by importing main-process code (an [architecture invariant](overview.md)).
+The Electron main process owns everything the renderer can't: the filesystem, native modules
+(HID/USB), windows, protocols, and all ROM/profile/save I/O. The renderer reaches it only through
+IPC, never by importing main-process code (an [architecture invariant](overview.md)).
 
 ## The boundary
 
@@ -14,29 +14,29 @@ flowchart LR
     M -->|"typed result"| R
 ```
 
-Every channel's signature lives **once**, in a channel-keyed contract under
-`shared/ipc/`. The preload, the main-process handlers, **and** the renderer's
+Every channel's signature lives once, in a channel-keyed contract under
+`shared/ipc/`. The preload, the main-process handlers, and the renderer's
 `window.api` are all type-checked against it, so a wrong channel name, argument,
 or return type is a compile error in any of the three.
 
-- **Contracts (`shared/ipc/`)** — the single source of truth, split by direction:
+- Contracts (`shared/ipc/`) are the single source of truth, split by direction:
   `InvokeContract` (request→response, `invoke`/`handle`), `SendContract`
-  (fire-and-forget renderer→main, `send`/`on`), `EventContract` (main→renderer,
+  (fire-and-forget renderer→main, `send`/`on`), and `EventContract` (main→renderer,
   `emit`/`subscribe`).
-- **Join map (`shared/ipc/maps.ts`)** — the only table linking a friendly
+- The join map (`shared/ipc/maps.ts`) is the only table linking a friendly
   `window.api` method name to its channel. `IpcApi` (the `window.api` type, in
-  `env.d.ts`) is **derived** from the contracts + maps, so a method's signature is
+  `env.d.ts`) is derived from the contracts and maps, so a method's signature is
   never hand-written twice.
-- **Typed wrappers** — main: `handle`/`on`/`emit` (`electron/lib/ipc/handle.ts`);
-  preload: `invoke`/`send`/`subscribe` + `buildInvoke`/`buildSend`/`buildEvents`
+- Typed wrappers cover both sides. Main uses `handle`/`on`/`emit` (`electron/lib/ipc/handle.ts`);
+  preload uses `invoke`/`send`/`subscribe` plus the `buildInvoke`/`buildSend`/`buildEvents`
   factories (`electron/lib/ipc/bridge.ts`). Raw `ipcMain`/`ipcRenderer`/
-  `webContents.send` appear **only** in these two files.
-- The preload's flat methods are **generated** from the maps; nested namespaces
+  `webContents.send` appear only in these two files.
+- The preload's flat methods are generated from the maps; nested namespaces
   (`updater`, `shadowCasting`, `screenEditor`) are wired explicitly via `invoke`.
 - Each domain registers its handlers via a `register*()` function, wired in
   `main.ts` through the declarative `IPC_HANDLERS` list (dev-only domains gated there).
-- Adding a channel → [Adding an IPC Channel](../contributing/adding-an-ipc-channel.md)
-  (or the `electron` skill).
+- To add a channel, see [Adding an IPC Channel](../contributing/adding-an-ipc-channel.md)
+  or the `electron` skill.
 
 ## Domains (`apps/desktop/electron/`)
 
@@ -60,7 +60,7 @@ or return type is a compile error in any of the three.
 
 ## Native modules
 
-`node-hid` and `usb` live **only** in the main process (and its workers) — never in `shared/` or the
+`node-hid` and `usb` live only in the main process and its workers, not in `shared/` or the
 renderer. Controller input is read in main and forwarded to the renderer via `onHid*` callbacks; see
 [Input & Controllers](../user-guide/input-controllers.md) and [Haptics](../user-guide/haptics.md).
 

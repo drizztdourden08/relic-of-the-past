@@ -1,15 +1,15 @@
 <!-- @layer docs @kind doc -->
 # Navigation Architecture
 
-The pathfinding/minimap system computes where Link can reach and how screens/rooms connect. The pure
-logic lives in `shared/game/navigation/` (no React/Node — it runs in a plain test process); the
-renderer draws the overlay; the [game hooks](../hooks/state-queries-rooms.md) feed it collision data.
+The pathfinding/minimap system computes where Link can reach and how screens and rooms connect. The pure
+logic lives in `shared/game/navigation/`; it has no React or Node and runs in a plain test process. The
+renderer draws the overlay, and the [game hooks](../hooks/state-queries-rooms.md) feed it collision data.
 
-> This is an **active area of work**. Design notes: `shared/game/navigation/plan/PLAN.md` and
+> This is an active area of work. Design notes live in `shared/game/navigation/plan/PLAN.md` and
 > `REFACTOR-PLAN.md`. User-facing behavior: [Navigation & Minimap](../user-guide/navigation-minimap.md).
 >
-> **Not-yet-wired building blocks.** `floodFillWorld` (`flood-fill/`) and
-> `buildFloodFillSession` (`session/`) are intentional WIP with no live caller yet —
+> Some building blocks aren't wired up yet. `floodFillWorld` (`flood-fill/`) and
+> `buildFloodFillSession` (`session/`) are work in progress with no live caller yet,
 > registered in [Codebase Audit](codebase-audit.md) so dead-code sweeps skip them.
 
 ## Data sources
@@ -49,4 +49,4 @@ Collision grids and room geometry come from the WASM core on demand:
 ## Offline tooling
 
 `scripts/analyze-navigation.ts` plus the `--dump-nav=N` flag export navigation data for a save state
-(`debug-output/dump-nav.json`) so the analysis can run headless. See [Developer Tools](../user-guide/developer-tools.md).
+to `debug-output/dump-nav.json`, so the analysis can run headless. See [Developer Tools](../user-guide/developer-tools.md).
