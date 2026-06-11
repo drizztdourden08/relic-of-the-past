@@ -19,16 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-This license applies to the Relic of the Past application code authored in this
-repository. It does NOT cover the vendored upstream decompilation under
-`core/zelda3/`, which is distributed under its own license (see
-`core/zelda3/LICENSE.txt`).
-
-This is an unofficial fan-made/open-source project. It is not affiliated with,
-endorsed by, sponsored by, or approved by Nintendo. Nintendo, The Legend of
-Zelda, and related names, characters, music, artwork, and assets are trademarks
-and/or copyrights of Nintendo. No Nintendo-owned game assets are included in
-this repository.

@@ -96,5 +96,14 @@ The full documentation lives in **[`docs/`](docs/)** (also published to the proj
 ## Credits & license
 
 This project stands on the shoulders of the open-source community — see [CREDITS.md](CREDITS.md).
-Application code is released under the [MIT License](LICENSE). The vendored decompilation under
-`core/zelda3/` is distributed under its own license (`core/zelda3/LICENSE.txt`).
+Application code is released under the [MIT License](LICENSE).
+
+> **Side note — third-party code & trademarks.** The MIT license covers only the
+> application code authored in this repository. It does **not** cover the vendored
+> upstream decompilation under `core/zelda3/`, which is distributed under its own
+> license — see [`core/zelda3/LICENSE.txt`](core/zelda3/LICENSE.txt).
+>
+> This is an unofficial fan-made / open-source project, not affiliated with, endorsed
+> by, sponsored by, or approved by Nintendo. Nintendo, The Legend of Zelda, and related
+> names, characters, music, artwork, and assets are trademarks and/or copyrights of
+> Nintendo. No Nintendo-owned game assets are included in this repository.
