@@ -30,20 +30,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # GitHub wikis resolve a relative `*.md` link to the raw blob
-      # (raw.githubusercontent.com) instead of the rendered page, so strip the
-      # `.md` extension from intra-doc links to make them bare wiki page links.
-      # External URLs (scheme://) are left alone. Runs on the runner's checkout
-      # only — the committed docs/ source keeps its `.md` links intact.
-      - name: Rewrite intra-doc links for the wiki (strip .md)
-        run: |
-          find docs -name '*.md' -print0 \
-            | xargs -0 perl -0777 -pi -e 's/\]\(((?!\w+:\/\/)[^)\s#]+)\.md(#[^)]*)?\)/]($1$2)/g'
-      - name: Publish docs/ to the wiki
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # GitHub wikis only render pages at the repo ROOT — pages in subdirectories
+      # redirect to their raw blob and 404. docs/ is organised into folders, so
+      # flatten it to root-level slugs and rewrite intra-doc links before
+      # publishing. Source docs/ is untouched; the flat copy is .wiki-build/.
+      - name: Build flat wiki pages from docs/
+        run: node scripts/build-wiki.mjs
+      - name: Publish to the wiki
         uses: Andrew-Chen-Wang/github-wiki-action@v4
         with:
-          path: docs
+          path: .wiki-build
           strategy: clone
-          # Keep our explicit Home.md as the landing page (don't auto-convert README.md).
+          # We pre-flatten and rewrite links ourselves; keep the action's own
+          # preprocessing off so it doesn't move README.md over our Home.md.
           preprocess: false
           commit-message: 'docs: sync wiki from docs/ @ ${{ github.sha }}'
