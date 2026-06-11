@@ -30,6 +30,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # GitHub wikis resolve a relative `*.md` link to the raw blob
+      # (raw.githubusercontent.com) instead of the rendered page, so strip the
+      # `.md` extension from intra-doc links to make them bare wiki page links.
+      # External URLs (scheme://) are left alone. Runs on the runner's checkout
+      # only — the committed docs/ source keeps its `.md` links intact.
+      - name: Rewrite intra-doc links for the wiki (strip .md)
+        run: |
+          find docs -name '*.md' -print0 \
+            | xargs -0 perl -0777 -pi -e 's/\]\(((?!\w+:\/\/)[^)\s#]+)\.md(#[^)]*)?\)/]($1$2)/g'
       - name: Publish docs/ to the wiki
         uses: Andrew-Chen-Wang/github-wiki-action@v4
         with:
