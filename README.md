@@ -17,8 +17,6 @@ polished UI, controller support, save profiles, MSU-1 audio, and randomizer tool
 
 **Project status:** Pre-release / Beta — actively developed, expect rough edges.
 
-### 🌐 [**relic-of-the-past.com**](https://relic-of-the-past.com) — download the latest build &amp; read the docs
-
 </div>
 
 ---
