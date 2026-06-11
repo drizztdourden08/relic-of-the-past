@@ -1,235 +1,75 @@
 <!-- @layer docs @kind doc -->
-# Coding Standards — ALttP Port
+# Coding Standards
 
-> Canonical coding-style reference for this repo. Both Claude Code (`/CLAUDE.md`)
-> and GitHub Copilot (`.vscode/copilot-instructions.md`) point at this file so
-> there is a single source of truth.
+This project favors small, focused files and a predictable shape, so the codebase stays easy to read and to move around in. Here's how we write code, and why.
 
-## Hard Rules (enforced by ESLint + a PostToolUse hook)
+## Small, single-purpose files
 
-These are non-negotiable and **mechanically enforced** — see `eslint.config.mjs`
-and `scripts/hooks/lint-changed.mjs` (lints every file on Write/Edit and feeds
-violations straight back). Run the `coding-standards` skill's checklist after every
-change.
+Every file does one thing: one component, one hook, one utility, one group of types, one set of constants. When a file grows past about 200 lines, that's the cue to split it. A file that does one thing rarely needs more room, and smaller files are easier to test, reuse, and reason about.
 
-1. **≤ 200 lines per file** (code lines). At the cap, split — no monolithic files, ever.
-2. **Arrow functions only.** No `function foo() {}` declarations for components,
-   hooks, or utilities.
-3. **Exports grouped at the end** — never inline `export const/function/type`.
-   (Barrels may re-export inline: `export { X } from './X'`.)
-4. **`import type { … }`** for type-only imports.
-5. **Design patterns are applied where they fit**, and **every plan states the
-   pattern(s) used and the final output filetree** — use the `refactoring-guru` skill.
+## Arrow functions
 
-## Core Principles
+We use arrow functions for components, hooks, and utilities rather than `function` declarations, so definitions read the same way everywhere.
 
-1. **One thing per file.** Every file has a single responsibility — one component, one hook, one utility function, one type definition group, one constant set. Split aggressively.
-2. **Destructure params on the first line** of any function/hook/component body.
-3. **Exports at the end of the file** — never inline `export` on declarations.
-4. **Group by concept in folders** — prefer deep logical structure over flat directories. Don't over-split: avoid a folder holding a single trivial file unless it will clearly grow.
-5. **Small files, high reusability** — the hard cap is **200 lines**; treat ~150 as the point to start planning a split.
+## Exports at the end
 
-## Export Pattern
-
-No inline `export` keyword on declarations. All exports grouped at the end of the file:
+Declarations stay clean, with no inline `export` keyword. Group the exports together at the bottom of the file:
 
 ```ts
-// ✅ Correct
 const MyComponent = () => { ... };
 type Props = { ... };
 
 export { MyComponent };
 export type { Props };
-
-// ❌ Wrong
-export const MyComponent = () => { ... };
-export type Props = { ... };
 ```
 
-Exception: barrel `index.ts` files use `export { X } from './X'` re-exports inline (they have no local declarations).
+Barrel `index.ts` files are the exception: they only re-export, as in `export { X } from './X'`.
 
-## Destructuring Rule
+## Destructure on the first line
 
-Every function, hook, component, or utility that receives a params/props/config object **destructures it on the first line**:
+When a function, hook, or component takes a params or props object, destructure it on the first line of the body. That documents what the code actually uses, right up front.
 
-```ts
-// ✅ Hook
-const useProfileManagement = (params: ProfileManagementParams) => {
-  const { showDialog, onProfileLoaded } = params;
-  // ...
-};
+## Group by concept, in deep folders
 
-// ✅ Component
-const ProfileCard = (props: ProfileCardProps) => {
-  const { name, romFile, onSelect } = props;
-  // ...
-};
-
-// ✅ Utility
-const serializeToIni = (settings: GameSettings, options: SerializeOptions) => {
-  const { msuPath, includeDefaults } = options;
-  // ...
-};
-
-// ❌ Wrong — accessing props.name, params.showDialog throughout
-```
-
-## File Organization
-
-**One thing per file.** This applies to everything — not just components:
-
-| File type | Rule |
-|-----------|------|
-| Component | One component per `.tsx` file |
-| Hook | One hook per `.ts` file |
-| Utility function | One function per file (or tightly coupled set) |
-| Type definitions | One logical group per `types.ts` |
-| Constants | One logical group per `constants.ts` |
-| Test | One test suite per `.test.ts` / `.spec.ts` |
-
-```
-// ✅ Correct — each file has one job
-behavior/
-├── useGameLifecycle.ts
-├── useSaveOverlay.ts
-└── useStartup.ts
-
-utils/
-├── serializeToIni.ts
-├── mergeSettings.ts
-└── formatDuration.ts
-
-// ❌ Wrong — dumping multiple things in one file
-helpers.ts  (contains serializeToIni + mergeSettings + formatDuration + 3 types)
-```
-
-**Folder grouping by concept:** Assemble related files under logical folders. Prefer deep structure over flat dumps:
-
-```
-// ✅ Correct — grouped by domain
-shared/
-├── game/         — game logic, seeds, events
-├── input/        — input system, presets, registry
-├── types/        — shared TypeScript types
-└── asset-extraction/
-    ├── rom/
-    ├── graphics/
-    ├── compression/
-    └── music/
-
-apps/desktop/src/
-├── App/
-│   ├── behavior/     — App-level hooks
-│   ├── PageRouter.tsx
-│   └── App.tsx
-├── components/
-│   ├── views/        — full-page views
-│   └── composites/   — reusable compound components
-├── lib/              — non-React logic (game bridge, IPC, etc.)
-└── widgets/          — widget content components
-
-// ❌ Wrong — flat folder with 30+ unrelated files
-```
-
-Additional rules:
-
-- Path aliases: `@shared/*` → `shared/` folder.
-- Barrel files (`index.ts`) only re-export — no logic.
-- File name matches what it exports (e.g., `useGameLifecycle.ts`, `SlotCard.tsx`, `serializeToIni.ts`).
-- If a utility folder has 3+ files, add an `index.ts` barrel.
-
-## Component Architecture
-
-Each non-trivial component lives in its own folder:
+Prefer deep, logical folders over flat dumps, with related files together under a folder named for the concept they serve. Each non-trivial component gets its own folder:
 
 ```
 ComponentName/
-├── ComponentName.tsx        — main component
-├── ComponentName.css        — scoped styles
-├── ComponentName.type.ts    — shared types/interfaces for this component
-├── ComponentName.constants.ts — static data, configs, magic values
-├── behavior/                — custom hooks (useXyz.ts), one per file
-├── sub-components/          — child components only used here (recursive shape)
-└── index.ts                 — barrel re-export
+├── ComponentName.tsx           main component
+├── ComponentName.css           scoped styles
+├── ComponentName.type.ts       shared types
+├── ComponentName.constants.ts  static data and configs
+├── behavior/                   one hook per file
+├── sub-components/             children used only here
+└── index.ts                    barrel re-export
 ```
 
-Root files are **name-prefixed** and the root holds ONLY those five — enforced
-mechanically by the **structure-policy** (analyze adapter). Plus: **no raw HTML
-outside `ui/design-system/primitives/`** (`local/no-raw-html`, ESLint) and
-**no raw hex/named colors in component CSS** (`color-no-hex`, stylelint). All
-three are warnings today (work toward error); `npm run report` lists them.
+A small single-file component doesn't need a folder, and there's no need to over-split — a folder holding one trivial file isn't worth it unless it will clearly grow.
 
-- `ComponentName.type.ts` imports React/shared types as needed, exports with `export type { ... }` at end.
-- `index.ts` re-exports the main component and any types consumers need.
-- Small components (single file, no hooks) don't need a folder — just `Component.tsx`.
+## Hooks
 
-## Hook Design
+Use a zero-argument hook when it's self-contained, a few positional arguments for two to four simple dependencies, and a params object once there are callbacks or many config values. Hooks return a named object rather than a tuple.
 
-- **Zero-param hooks** when fully self-contained (e.g., `useGameLifecycle()`).
-- **Positional args** for 2-4 simple dependencies (e.g., `useKeyboardShortcuts(nav, dialog, dismissDialog, activeProfile)`).
-- **Params object** when there are callbacks or many config values.
-- Return an object with named properties — never a tuple.
+## Naming
 
-## App-Level Decomposition
-
-```tsx
-const App = () => {
-  // 1. Declare all hooks (pure state + logic)
-  const game = useGameLifecycle();
-  const display = useDisplaySettings({ isGameRunning: game.isRunning });
-  const profileMgmt = useProfileManagement({ ... });
-  const nav = useAppNavigation({ ... });
-
-  // 2. Side-effect hooks (no return value)
-  useStartup(profileMgmt, nav);
-  useIpcLogBridge();
-
-  // 3. Minimal glue callbacks (only what can't live in a hook)
-  const handleShowPicker = useCallback(...);
-
-  // 4. Render — delegate page routing to PageRouter
-  return (
-    <div className="app">
-      <TitleBar ... />
-      <PageRouter nav={nav} game={game} ... />
-      <WidgetManager ... />
-      <Dialog ... />
-    </div>
-  );
-};
-```
-
-## Naming Conventions
-
-- **Hooks**: `useXyz` — camelCase, verb-noun (e.g., `useGameLifecycle`, `useSaveOverlay`).
-- **Components**: PascalCase (e.g., `PageRouter`, `ProfilePicker`).
-- **Types/Interfaces**: PascalCase, no `I` prefix (e.g., `ConfirmDialog`, `PageId`).
-- **Utilities**: camelCase, verb-noun (e.g., `serializeToIni`, `mergeSettings`).
-- **Constants**: camelCase for objects/arrays, UPPER_SNAKE for true constants only when disambiguation helps.
-- **Event handlers**: `handleXyz` for internal, `onXyz` for props passed to children.
-- **Boolean state**: `isXyz` or `showXyz` (e.g., `isRunning`, `showSpriteDebug`).
+- Hooks: `useXyz`, for example `useGameLifecycle`.
+- Components and types: `PascalCase`, with no `I` prefix.
+- Utilities: `camelCase` verb-noun, for example `serializeToIni`.
+- Event handlers: `handleXyz` internally, `onXyz` for props passed to children.
+- Booleans: `isXyz` or `showXyz`.
 
 ## TypeScript
 
-- Both `type` and `interface` are valid — use whichever fits. They live together in their own `types.ts` file (one per component/module).
-- Use `import type { ... }` for type-only imports.
-- No `any` unless interfacing with untyped externals (cast with `as any` comment explaining why).
-- Shared types live in `shared/types/` or component-local `types.ts`.
+Use `type` or `interface`, whichever fits, and keep a module's types together in their own `types.ts`. Import types with `import type { ... }`. Avoid `any` unless you're interfacing with something untyped, and leave a comment when you do.
 
-## React Patterns
+## React
 
-- Functional components only (no class components).
-- `useCallback` for handlers passed as props to prevent unnecessary re-renders.
-- `useEffect` cleanup: always return cleanup functions for subscriptions/listeners.
-- No inline object/array literals in JSX props (causes re-renders) — extract to `useMemo` or constants.
+Functional components only. Reach for `useCallback` on handlers passed as props, clean up subscriptions in `useEffect`, and pull inline object or array literals out of JSX props (into `useMemo` or constants) so they don't trigger needless re-renders.
 
-## Testing
+## Design patterns
 
-- Test files: `*.test.ts` or `*.spec.ts` colocated or in `tests/` directory.
-- Run only relevant tests, not the full suite.
-- Use `vitest` for unit tests. For app/E2E verification, **prefer the built-in
-  automation flags** (screenshots, state dumps) over Playwright — see
-  @docs/contributing/testing.md.
-- **Playwright is ephemeral:** don't accumulate specs. Write throwaway specs in
-  `tests/scratch/` (gitignored), run, then delete. Only `tests/snapshot.spec.ts`
-  is permanent. Never modify files marked "NEVER MODIFIED BY THE AI."
+When a familiar problem turns up, use the pattern that fits and mention it in your plan. Clear structure and the right pattern matter more than cleverness.
+
+---
+
+ESLint and a few project checks back these conventions up, so most slips get caught automatically. The real goal, though, is readable and well-organized code, not just a passing linter.

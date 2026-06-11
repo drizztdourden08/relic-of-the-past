@@ -7,10 +7,10 @@ description: Enforce this project's strict coding standards on every change — 
 
 # Coding standards — apply & verify, every change
 
-Authoritative rules: @docs/contributing/coding-standards.md. For smells, refactoring techniques,
-design patterns, and SOLID, use the `refactoring-guru` skill. Mechanically backed by
-`eslint.config.mjs` + the PostToolUse lint hook — but **do not rely on the hook
-alone**; the structural and design-pattern judgment is yours.
+The enforced rules live in this skill (see the checkup below); @docs/contributing/coding-standards.md
+is the human-facing overview. For smells, refactoring techniques, design patterns, and SOLID, use the
+`refactoring-guru` skill. Mechanically backed by `eslint.config.mjs` + the PostToolUse lint hook — but
+**do not rely on the hook alone**; the structural and design-pattern judgment is yours.
 
 ## When planning (before writing)
 
