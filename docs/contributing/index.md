@@ -41,4 +41,4 @@ npm run ci    # tsc + eslint + repo analysis
 - [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`…), scoped where helpful.
 - Branch from `master`, keep PRs small and focused, and fill out the PR template.
 - Update docs in [`docs/`](../README.md) when behavior changes. They're the source of truth and sync to the Wiki.
-- For security-sensitive reports, follow [Security](../project/security.md) rather than opening a public issue.
+- For security-sensitive reports, use private disclosure rather than opening a public issue.

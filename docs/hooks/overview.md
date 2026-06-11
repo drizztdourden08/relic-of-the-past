@@ -54,9 +54,8 @@ Full procedure: the `add-wasm-function` skill and [Contributing → Adding a WAS
 > **Headless / automation exports.** A few exports (`WasmInitHeadless`, `WasmSetInputMode`,
 > `WasmLoadSram`, `WasmGetFeatures`, `WasmGetPpuRenderFlags`, `WasmGetRoomCollisionTypeForRoom`) are
 > driven by the headless / `--command` startup path — Node scripts, `--auto-state` / `--screenshot` /
-> `--dump-*` — rather than the interactive renderer, so they have no renderer `ccall` by design. They are
-> registered in the [Codebase Audit](../architecture/codebase-audit.md) so dead-code sweeps don't flag
-> them.
+> `--dump-*` — rather than the interactive renderer, so they have no renderer `ccall` by design. This is
+> intentional, so dead-code sweeps should not flag them.
 
 ## The catalogue (79 exports, by category)
 

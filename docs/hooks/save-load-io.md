@@ -29,5 +29,5 @@ see how `lib/input/` composes it before calling `WasmSetInput`.
 | `WasmLoadSram` | `void(void)` | `ZeldaReadSram` — load the persistent battery save. |
 
 > Save states (full machine snapshots) are distinct from SRAM (the in-game battery save). See
-> [Save System](../user-guide/save-system.md) and [Save States](../user-guide/save-states.md) for how
-> the app wires slots, screenshots, and auto-save on top of these primitives.
+> [Save States](../user-guide/save-states.md) for how the app wires slots, screenshots, and auto-save
+> on top of these primitives.

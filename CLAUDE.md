@@ -118,11 +118,9 @@ these are gitignored and never committed. Same for `test-roms/` and `saves/`.
   behind that hook is **ours**, lives in `core/game-hooks/`, and *is* in scope. So:
   a `GameHook_*` function or its wiring is fair game even though it sits next to
   vendored code; the surrounding decompiled C is not.
-- **Before flagging code as dead, check the intentional-unused registry** in
-  @docs/architecture/codebase-audit.md. Headless/`--command` WASM exports and WIP
-  integration scaffolding (randomizer delivery, unwired navigation primitives) have
-  **no renderer caller by design** — that doc also holds the project health snapshot,
-  communication map, and remediation log; update it after any cross-cutting refactor.
+- **Before flagging code as dead, remember the intentional-unused surfaces.**
+  Headless/`--command` WASM exports and WIP integration scaffolding (randomizer
+  delivery, unwired navigation primitives) have **no renderer caller by design**.
 - WASM exports rely on `EMSCRIPTEN_KEEPALIVE` (the single source of truth), so
   `build.bat` and `Makefile` carry no per-function `EXPORTED_FUNCTIONS` list to
   keep in sync. `build.bat` is the canonical build used for the app.

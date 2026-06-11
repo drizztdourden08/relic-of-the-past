@@ -9,8 +9,7 @@ renderer draws the overlay, and the [game hooks](../hooks/state-queries-rooms.md
 > `REFACTOR-PLAN.md`. User-facing behavior: [Navigation & Minimap](../user-guide/navigation-minimap.md).
 >
 > Some building blocks aren't wired up yet. `floodFillWorld` (`flood-fill/`) and
-> `buildFloodFillSession` (`session/`) are work in progress with no live caller yet,
-> registered in [Codebase Audit](codebase-audit.md) so dead-code sweeps skip them.
+> `buildFloodFillSession` (`session/`) are work in progress with no live caller yet.
 
 ## Data sources
 

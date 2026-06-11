@@ -15,7 +15,6 @@ reads well both when browsing the repo and on the Wiki tab.
 | [Architecture](architecture/overview.md) | Zones & invariants, the WASM bridge, asset extraction, navigation, Electron/IPC |
 | [Game Hooks Reference](hooks/overview.md) | Every `Wasm*` export and `GameHook_*` callback crossing the C↔JS boundary |
 | [Contributing](contributing/index.md) | Build from source, WASM build, coding standards, testing, design system |
-| [Project](project/known-limitations.md) | Known limitations, release notes, credits, security |
 
 The full navigation menu is [`_Sidebar.md`](_Sidebar.md) (rendered as the Wiki sidebar).
 

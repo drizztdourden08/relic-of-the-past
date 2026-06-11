@@ -87,8 +87,8 @@ the TypeScript/React renderer. See the [Architecture overview](docs/architecture
 
 The full documentation lives in **[`docs/`](docs/)** (also published to the project Wiki):
 
-- **Start here:** [Quick Start](docs/getting-started/quick-start.md) · [Installation](docs/getting-started/installation.md) · [Known limitations](docs/project/known-limitations.md)
-- **User guide:** [profiles](docs/user-guide/profiles.md), [save system](docs/user-guide/save-system.md), [controllers](docs/user-guide/input-controllers.md), [MSU audio](docs/user-guide/audio-msu.md), [HUD](docs/user-guide/hud.md), and more under [docs/user-guide/](docs/user-guide/)
+- **Start here:** [Quick Start](docs/getting-started/quick-start.md) · [Installation](docs/getting-started/installation.md)
+- **User guide:** [profiles](docs/user-guide/profiles.md), [save states](docs/user-guide/save-states.md), [controllers](docs/user-guide/input-controllers.md), [MSU audio](docs/user-guide/audio-msu.md), [HUD](docs/user-guide/hud.md), and more under [docs/user-guide/](docs/user-guide/)
 - **Architecture:** [overview](docs/architecture/overview.md) · [the WASM bridge](docs/architecture/wasm-bridge.md) · [asset extraction](docs/architecture/asset-extraction.md)
 - **Game hooks reference:** [the C↔JS boundary](docs/hooks/overview.md) — every `Wasm*` export & callback
 - **Contributing:** [guide](docs/contributing/index.md) · [coding standards](docs/contributing/coding-standards.md) · [design system](docs/contributing/design-system.md)

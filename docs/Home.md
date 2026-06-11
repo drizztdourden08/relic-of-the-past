@@ -39,8 +39,7 @@ flowchart LR
 
 ## Status
 
-Pre-release / beta — actively developed, expect rough edges. See
-[Known Limitations](project/known-limitations.md) and the [Release Notes](releases/index.md).
+Pre-release and in active development, so expect rough edges.
 
 ---
 
