@@ -1,53 +1,33 @@
 <!-- @layer docs @kind doc -->
+<!-- @wiki-title: Haptics -->
 # Haptics
 
-Vibration feedback for supported controllers, triggered by in-game events.
+These settings control controller vibration and live in the Haptics tab. You need a compatible controller, such as an Xbox, Switch Pro, or DualSense.
 
----
+## General
 
-## Supported Controllers
+**Enable Haptic Feedback** turns rumble on for game events. It is on by default.
 
-Haptics work with any controller that supports rumble through the Gamepad API:
+**Vibration Intensity** is a global strength multiplier, set with a slider from 10 to 100%. The default is 70%, and it is available when haptics are on.
 
-- **Nintendo Switch Pro Controller**, v1 and v2
-- **Xbox controllers**, including Xbox One and Series X|S
-- **PlayStation controllers**, including DualShock 3, DualShock 4, and DualSense
-- **8BitDo controllers** such as the Pro 2 and Ultimate
-- **GameCube wireless adapter**
+## Combat
 
-Intensity and duration vary by event type.
+These settings are available when haptics are on.
 
----
+**Sword Swing** gives a faint buzz when Link swings. It is on by default.
 
-## Events
+**Sword Hit Enemy** gives a normal buzz when the sword connects. It is on by default.
 
-Each event can be individually toggled on or off in Profile Settings → Haptics:
+**Sword Clink** gives a faint buzz when the sword hits something invulnerable or a shield. It is on by default.
 
-| Event | Description |
-|-------|-------------|
-| Sword swing | Light pulse on each sword attack |
-| Hookshot impact | Medium vibration when hookshot connects |
-| Damage taken | Sharp vibration when Link takes damage |
-| Boss kill | Strong, sustained vibration on boss defeat |
-| Locked door | Short buzz when hitting a locked door |
-| Item pickup | Gentle pulse on collecting an item |
-| Bomb explosion | Heavy rumble on bomb detonation |
-| Fall into pit | Medium vibration on falling |
+**Damage Taken** gives a buzz scaled to how much damage Link takes. It is on by default.
 
----
+## Actions
 
-## Configuration
+These settings are available when haptics are on.
 
-- **Per-event toggle** — turn vibration on or off for each event type on its own
-- **Per-profile** — haptic settings are saved per profile
+**Item Use** vibrates when using items like the hammer, hookshot, bombs, medallions, and rods. It is on by default.
 
----
+**Dash Vibration** gives a rhythmic step buzz while dashing with the Pegasus Boots. It is on by default.
 
-## Troubleshooting
-
-If vibration doesn't work:
-
-1. Check that your controller supports rumble
-2. Make sure the controller is actually connected, not just keyboard-mapped
-3. Open the **Input Calibration** tool from Menu → Advanced → Input Calibration and use its vibration tester to send a test pulse
-4. Some Bluetooth connections don't carry rumble, so try a wired connection if you have one
+**Environmental Effects** vibrates for world events such as falling into pits, landing from ledges, entering water, mirror warps, chests opening, and bomb blasts. It is on by default.

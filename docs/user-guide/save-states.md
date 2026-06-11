@@ -1,4 +1,5 @@
 <!-- @layer docs @kind doc -->
+<!-- @wiki-title: Save States -->
 # Save States
 
 A save state, also called a quick save, is a full snapshot of the machine state. It's separate from the game's own in-game battery save. With a save state you can checkpoint anywhere and jump back instantly, without opening a menu.

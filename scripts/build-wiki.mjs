@@ -5,12 +5,17 @@
  * GitHub wikis only render pages at the repository root: a page in a
  * subdirectory is redirected to its raw blob and 404s. docs/ is organised into
  * folders, so this script flattens every page to a root-level slug and rewrites
- * intra-doc links to match. Slugs are Title-Cased with an acronym map, so the
- * wiki shows readable, breadcrumb-style titles like "User Guide Audio MSU".
+ * intra-doc links to match. A page's wiki title is its slug with hyphens shown
+ * as spaces, so slugs are chosen to read well:
+ *   - by default, the folder path is Title-Cased with an acronym map
+ *     ("user-guide/audio-msu" -> "User-Guide-Audio-MSU" -> "User Guide Audio MSU")
+ *   - a page may override this with `<!-- @wiki-title: My Title -->` near the top,
+ *     which becomes the slug verbatim (spaces -> "-"). This decouples the title
+ *     from the folder, so files can be grouped however the sidebar needs.
  *
  * Docs in EXCLUDE stay in the repo for CLAUDE.md and the skills but are not
- * published to the human wiki. Any link that points at an unpublished page is
- * downgraded to plain text, so the wiki never carries a dead link.
+ * published to the human wiki. Any link to an unpublished page is downgraded to
+ * plain text, so the wiki never carries a dead link.
  *
  * Input:  docs/        (source of truth — never modified)
  * Output: .wiki-build/ (flat; consumed by the docs-wiki-sync workflow)
@@ -28,7 +33,7 @@ const EXCLUDE = new Set([
   'contributing/file-tagging.md',
 ]);
 
-// Words rendered in all-caps within titles.
+// Words rendered in all-caps within path-derived titles.
 const ACRONYMS = {
   msu: 'MSU', hud: 'HUD', fps: 'FPS', wasm: 'WASM', ipc: 'IPC', rom: 'ROM',
   roms: 'ROMs', ui: 'UI', io: 'IO', snes: 'SNES', ppu: 'PPU', sram: 'SRAM',
@@ -47,18 +52,23 @@ const collectDocs = (dir, base = dir) => {
   return out;
 };
 
-// docs-relative path without extension → flat wiki slug.
-// Root-level files (no "/", e.g. Home, _Sidebar) keep their exact name.
+// docs-relative path without extension → path-derived Title-Cased slug.
 const toSlug = (posixNoExt) => {
   if (!posixNoExt.includes('/')) return posixNoExt;
   return posixNoExt.split('/').flatMap((seg) => seg.split('-')).map(titleWord).join('-');
 };
 
+// Resolve a file's wiki slug: an explicit @wiki-title wins (non-root files only),
+// otherwise fall back to the path-derived slug.
+const slugFor = (f) => {
+  const head = readFileSync(join(DOCS_DIR, f), 'utf8').slice(0, 500);
+  const m = head.match(/@wiki-title:\s*([^\n>]+?)\s*-->/);
+  if (m && f.includes('/')) return m[1].trim().replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  return toSlug(f.replace(/\.md$/i, ''));
+};
+
 const files = collectDocs(DOCS_DIR).filter((f) => !EXCLUDE.has(f));
-const published = new Map(files.map((f) => {
-  const noExt = f.replace(/\.md$/i, '');
-  return [noExt, toSlug(noExt)];
-}));
+const published = new Map(files.map((f) => [f.replace(/\.md$/i, ''), slugFor(f)]));
 
 const isExternal = (target) => /^(?:[a-z][a-z0-9+.-]*:|#|\/)/i.test(target);
 
@@ -81,7 +91,7 @@ const build = () => {
   mkdirSync(OUT_DIR, { recursive: true });
   const seen = new Map();
   for (const f of files) {
-    const outName = `${toSlug(f.replace(/\.md$/i, ''))}.md`;
+    const outName = `${published.get(f.replace(/\.md$/i, ''))}.md`;
     if (seen.has(outName)) {
       throw new Error(`[build-wiki] slug collision: "${outName}" from "${seen.get(outName)}" and "${f}"`);
     }

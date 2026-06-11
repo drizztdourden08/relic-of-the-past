@@ -8,20 +8,23 @@
 - [Importing a ROM](getting-started/importing-a-rom.md)
 - [First Launch](getting-started/first-launch.md)
 
-**User Guide**
+**Home**
 
-- [Profiles](user-guide/profiles.md)
+- [The Home Screen](user-guide/home.md)
 - [Save States](user-guide/save-states.md)
-- [Display & Graphics](user-guide/display-graphics.md)
-  - [Visual Enhancements](user-guide/visual-enhancements.md)
-  - [Shadow Casting](user-guide/shadow-casting.md)
+- [Keyboard Shortcuts](user-guide/keyboard-shortcuts.md)
+
+**Settings**
+
+- [Display](user-guide/display-graphics.md)
+- [Visual Enhancements](user-guide/visual-enhancements.md)
+- [Shadow Casting](user-guide/shadow-casting.md)
 - [Audio & MSU](user-guide/audio-msu.md)
+- [Gameplay](user-guide/gameplay.md)
 - [HUD](user-guide/hud.md)
 - [Controls](user-guide/input-controllers.md)
-  - [Controller Calibration](user-guide/controller-calibration.md)
+- [Controller Calibration](user-guide/controller-calibration.md)
 - [Haptics](user-guide/haptics.md)
-- [Keyboard Shortcuts](user-guide/keyboard-shortcuts.md)
-- [Navigation & Minimap](user-guide/navigation-minimap.md)
 
 **Data Manager**
 
@@ -35,6 +38,7 @@
 
 - [Developer Tools](user-guide/developer-tools.md)
 - [Sprite Tools](user-guide/sprite-tools.md)
+- [Navigation & Minimap](user-guide/navigation-minimap.md)
 - [Auto-Update](user-guide/auto-update.md)
 
 **Widgets**

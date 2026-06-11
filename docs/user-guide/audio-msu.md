@@ -1,49 +1,26 @@
 <!-- @layer docs @kind doc -->
-# Audio & MSU
+<!-- @wiki-title: Audio and MSU -->
+# Audio and MSU
 
-## Volume Controls
+These settings live in the **Audio** tab of a profile, and each one is saved with that profile. Start at the top with the overall levels, then move down to output quality and finally MSU music.
 
-There are three volume sliders in Profile Settings → Audio:
+## Volume
 
-- **Master** — overall volume multiplier
-- **Music** — background music level
-- **SFX** — sound effects level
+- **Master Volume** — a slider from 0 to 100% (default 100). This sets the overall output level for everything you hear, so turning it down quiets music and sound effects together.
+- **Music Volume** — a slider from 0 to 100% (default 100) with its own mute toggle. It controls the background music, which plays on SPC channels 0 through 5.
+- **SFX Volume** — a slider from 0 to 100% (default 100) with its own mute toggle. It controls the sound effects, which play on SPC channels 6 and 7.
 
-Each slider works on its own, so setting Music to 0 mutes the music while sound effects keep playing.
+## Playback
 
-### Mute Toggle
+- **Channels** — a segmented control offering Mono or Stereo (default Stereo). Stereo separates the left and right output so sounds feel like they come from a direction.
+- **Sample Rate** — a segmented control offering 22050, 32000, 44100, and 48000 Hz (default 44100). A higher rate captures more audio detail, and 44100 or 48000 is the recommended choice.
+- **Buffer Size** — a segmented control offering 512, 1024, 2048, and 4096 (default 2048). A smaller buffer lowers latency but can introduce crackling, while a larger buffer stays steady at the cost of a little delay.
 
-A speaker icon in the title bar mutes and unmutes audio without opening settings. The mute state is remembered between sessions.
+## MSU Audio
 
----
+MSU music swaps the original SNES soundtrack for CD-quality tracks. You import and manage packs in the [Data Manager](data-manager.md), then choose one here.
 
-## MSU-1 Support
-
-MSU-1 is a SNES enhancement chip specification that lets CD-quality audio tracks stand in for the original game music. The community has produced dozens of MSU packs, including orchestral versions, remixes, and soundtracks lifted from other games.
-
-### Importing an MSU Pack
-
-1. Open Menu → Data → **MSU Packs**
-2. Click **Import MSU**
-3. Select the folder containing your MSU files (`.pcm` tracks and `.msu` file)
-
-The pack is copied into the app's data directory.
-
-### Selecting an MSU Pack
-
-1. Open Profile Settings → Audio
-2. Select your imported pack from the MSU dropdown
-3. The game plays the MSU tracks in place of the original SNES audio
-
-### MSU Pack Format
-
-A valid MSU pack contains:
-
-- A `.msu` file (metadata)
-- Numbered `.pcm` files (one per track)
-
-Track numbering follows the community MSU-1 standard for A Link to the Past.
-
-### Per-Profile
-
-MSU pack selection is saved per profile. One profile can run orchestral music while another keeps the original soundtrack.
+- **MSU Pack** — imports an MSU pack from a `.zip` file so its CD-quality music is available to the game.
+- **MSU Mode** — a segmented control offering Off, MSU, Deluxe, OPUZ, and Deluxe OPUZ (default Off). This picks which CD-music format to use and needs MSU files to be available.
+- **Resume MSU** — a toggle (default on, available when MSU is on). With it on, a track picks up where it left off instead of restarting from the beginning.
+- **MSU Volume** — a slider from 0 to 100% (default 100, available when MSU is on). It sets the MSU music level relative to the sound effects.
