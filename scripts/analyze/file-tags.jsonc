@@ -48,5 +48,8 @@
   ".github/**/*.yml":         { "layer": "root-config", "kind": "config" },
 
   // Git hooks (shell scripts, no extension).
-  ".githooks/**":             { "layer": "tooling-scripts", "kind": "logic" }
+  ".githooks/**":             { "layer": "tooling-scripts", "kind": "logic" },
+
+  // Per-version release notes — source of truth for GitHub release bodies.
+  "release-notes/**":         { "layer": "root-config", "kind": "doc" }
 }

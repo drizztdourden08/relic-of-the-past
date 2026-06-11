@@ -112,6 +112,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v6
+
       - name: Download all artifacts
         uses: actions/download-artifact@v8
         with:
@@ -122,7 +124,14 @@ jobs:
         run: |
           TAG=${GITHUB_REF#refs/tags/}
           BASE="https://github.com/drizztdourden08/relic-of-the-past/releases/download/${TAG}"
+          NOTES="release-notes/${TAG}.md"
           {
+            # Per-version notes (the source of truth in release-notes/) lead, when present.
+            if [ -f "$NOTES" ]; then
+              cat "$NOTES"
+              echo ""
+              echo ""
+            fi
             echo "## Downloads"
             echo ""
             echo "**Windows**"
