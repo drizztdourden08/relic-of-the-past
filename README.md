@@ -8,9 +8,10 @@
 **A modern, cross-platform desktop launcher for the open-source *A Link to the Past* PC port —
 polished UI, controller support, save profiles, MSU-1 audio, and randomizer tooling.**
 
+[![Website](https://img.shields.io/badge/website-relic--of--the--past.com-c8a84e?logo=googlechrome&logoColor=white)](https://relic-of-the-past.com)
 [![CI](https://github.com/drizztdourden08/relic-of-the-past/actions/workflows/ci.yml/badge.svg)](https://github.com/drizztdourden08/relic-of-the-past/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/drizztdourden08/relic-of-the-past?include_prereleases&sort=semver)](https://github.com/drizztdourden08/relic-of-the-past/releases)
-[![License](https://img.shields.io/github/license/drizztdourden08/relic-of-the-past)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-blue)](#installation)
 [![Built with](https://img.shields.io/badge/built%20with-Electron%20%2B%20React%20%2B%20WASM-9cf)](#how-it-works)
 
