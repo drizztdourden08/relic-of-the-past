@@ -14,8 +14,12 @@ import { Box } from '../../../../design-system/primitives/Box';
 import { HudView, PauseMenuView } from '../../../hud';
 import { LocationNotification } from '../../../hud/views/LocationNotification';
 import { DeliveryQueueIndicator } from '../../../hud/views/DeliveryQueueIndicator';
+import { HudUnavailableNotice } from '../../../hud/views/HudUnavailableNotice';
 import { useLocationNotification } from '../../../hud/hooks/useLocationNotification';
+import { isMainHudVisibleForMode } from '../../../hud/hud-visibility';
 import { useHudSettingsStore } from '../../../../../stores/hud-settings-store';
+import { useGameUIStore } from '../../../../../stores/game-ui-store';
+import { useSpriteAvailabilityStore } from '../../../../../stores/sprite-availability-store';
 import { useDeliveryQueueStore } from '../../../../../stores/delivery-queue-store';
 import { wasmGetMenuState, deliveryQueue } from '../../../../../lib/game';
 import '../../../hud/hud.css';
@@ -31,10 +35,18 @@ const MENU_TRANSITION_MS = 483;
 type MenuPhase = 'gameplay' | 'opening' | 'open' | 'closing';
 
 const GameOverlay = ({ width, height }: GameOverlayProps) => {
-  const { mode, enhancedParts } = useHudSettingsStore();
-  const isEnhanced = mode === 'enhanced';
-  const showMainHud = isEnhanced && enhancedParts.includes('main');
-  const showPauseMenu = isEnhanced && enhancedParts.includes('pause');
+  const { mode: hudMode, style: hudStyle, enhancedParts } = useHudSettingsStore();
+  const gameMode = useGameUIStore((s) => s.mode);
+  const spritesAvailable = useSpriteAvailabilityStore((s) => s.available);
+  const isEnhanced = hudMode === 'enhanced';
+
+  // The sprite HUD can only render when the Vanilla style is paired with
+  // extracted sprites for the active ROM; otherwise we show an HTML notice.
+  const spriteHudRenderable = hudStyle === 'vanilla' && spritesAvailable;
+  // Gate the main overlay on the live game mode — only present during gameplay
+  // and dialogue (see hud-visibility), never the intro, maps, or other menus.
+  const showMainSlot = isEnhanced && enhancedParts.includes('main') && isMainHudVisibleForMode(gameMode);
+  const showPauseMenu = isEnhanced && enhancedParts.includes('pause') && spriteHudRenderable;
   const [menuPhase, setMenuPhase] = useState<MenuPhase>('gameplay');
   const rafRef = useRef<number>(0);
 
@@ -90,12 +102,17 @@ const GameOverlay = ({ width, height }: GameOverlayProps) => {
           slideTransition={transition}
         />
       )}
-      {/* HUD — slides down when menu opens */}
-      {showMainHud && (
-        <HudView
-          slideTransform={isMenuVisible ? 'translateY(100%)' : 'translateY(0)'}
-          slideTransition={transition}
-        />
+      {/* HUD — slides down when menu opens. Falls back to an HTML notice when the
+          sprite HUD can't render (Modern style, or Vanilla without sprites). */}
+      {showMainSlot && (
+        spriteHudRenderable ? (
+          <HudView
+            slideTransform={isMenuVisible ? 'translateY(100%)' : 'translateY(0)'}
+            slideTransition={transition}
+          />
+        ) : (
+          <HudUnavailableNotice reason={hudStyle === 'modern' ? 'modern' : 'no-sprites'} />
+        )
       )}
       {/* Location change notifications */}
       <LocationNotification />

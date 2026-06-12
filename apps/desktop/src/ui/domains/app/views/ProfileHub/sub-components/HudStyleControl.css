@@ -1,0 +1,21 @@
+/* @layer renderer-components @kind style */
+.hud-style-control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.hud-style-control__notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  background: var(--c-surface);
+}
+
+.hud-style-control__notice .text {
+  color: var(--c-text-dim);
+}
