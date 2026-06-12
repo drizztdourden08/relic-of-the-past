@@ -4,15 +4,11 @@ import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
 import { ToggleGroup } from '../../../../../design-system/primitives/ToggleGroup';
+import { HudStyleControl } from './HudStyleControl';
 
 const HUD_MODE_OPTIONS = [
   { value: 'original', label: 'Original' },
   { value: 'enhanced', label: 'Enhanced' },
-];
-
-const HUD_STYLE_OPTIONS = [
-  { value: 'vanilla', label: 'Vanilla' },
-  { value: 'modern', label: 'Modern', disabled: true },
 ];
 
 const ASPECT_OPTIONS = [
@@ -79,12 +75,9 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
       );
     case 'hudStyle':
       return (
-        <SegmentedControl
-          label="Style"
-          description="Vanilla recreates the original SNES look using extracted sprites. Modern uses a redesigned theme."
+        <HudStyleControl
           value={settings.hudStyle}
-          options={HUD_STYLE_OPTIONS}
-          onChange={(v) => onChange({ hudStyle: v as GameSettings['hudStyle'] })}
+          onChange={(v) => onChange({ hudStyle: v })}
         />
       );
     case 'hudRatio':

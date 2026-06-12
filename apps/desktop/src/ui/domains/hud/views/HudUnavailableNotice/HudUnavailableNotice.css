@@ -1,0 +1,26 @@
+/* @layer renderer-hud @kind style */
+.hud-unavailable {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hud-unavailable__box {
+  margin-top: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  background: var(--c-bg);
+  text-align: center;
+}
+
+.hud-unavailable__box .text--caption {
+  color: var(--c-text-dim);
+}

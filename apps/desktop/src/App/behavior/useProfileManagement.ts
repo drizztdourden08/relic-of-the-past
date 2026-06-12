@@ -4,7 +4,7 @@ import type { ConfirmDialog } from '../types';
 import { log } from '../../lib/log-bus';
 import { resetGame, setAutoSaveConfig } from '../../lib/game';
 import { serializeToIni, mergeSettings } from '../../lib/game/settings';
-import { setSpritesBase } from '@shared/game/items/sprites';
+import { applySpritesForRom } from '../../lib/sprites/apply-sprites-for-rom';
 import { loadInputProfile, loadMsuPack } from './load-profile-helpers';
 
 const useProfileManagement = (params: {
@@ -42,7 +42,7 @@ const useProfileManagement = (params: {
 
     setActiveProfile(profile);
     setLoadingProfile(profile.name);
-    setSpritesBase(window.api.getSpritesBaseUrl(profile.romFile));
+    void applySpritesForRom(profile.romFile);
     log.app(`Loading profile: ${profile.name} (${profile.romFile})`);
 
     const savedSettings = await window.api.readConfig(profile.id);
@@ -92,7 +92,7 @@ const useProfileManagement = (params: {
 
   const handleSelectProfile = useCallback(async (profile: Profile) => {
     setActiveProfile(profile);
-    setSpritesBase(window.api.getSpritesBaseUrl(profile.romFile));
+    void applySpritesForRom(profile.romFile);
     await window.api.setLastProfile(profile.id);
   }, []);
 
@@ -101,7 +101,7 @@ const useProfileManagement = (params: {
     log.app(`Created profile: ${profile.name}`);
     await refreshProfilesAndRoms();
     setActiveProfile(profile);
-    setSpritesBase(window.api.getSpritesBaseUrl(profile.romFile));
+    void applySpritesForRom(profile.romFile);
     await window.api.setLastProfile(profile.id);
   }, [refreshProfilesAndRoms]);
 

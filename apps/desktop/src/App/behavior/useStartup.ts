@@ -1,7 +1,7 @@
 /* @layer renderer-appshell @kind hook */
 import { useEffect } from 'react';
 import { log } from '../../lib/log-bus';
-import { setSpritesBase } from '@shared/game/items/sprites';
+import { applySpritesForRom } from '../../lib/sprites/apply-sprites-for-rom';
 import type { PageId } from '../types';
 
 const useStartup = (
@@ -30,7 +30,7 @@ const useStartup = (
         } else if (profileList.length === 1) {
           log.app('Single profile found, showing profile page...');
           profileMgmt.setActiveProfile(profileList[0]);
-          setSpritesBase(window.api.getSpritesBaseUrl(profileList[0].romFile));
+          void applySpritesForRom(profileList[0].romFile);
           if (!isAutoTest) nav.setActivePage('profile');
         } else {
           const lastProfile = appState.lastProfileId
@@ -39,7 +39,7 @@ const useStartup = (
           if (lastProfile) {
             log.app(`Resuming last profile: ${lastProfile.name}`);
             profileMgmt.setActiveProfile(lastProfile);
-            setSpritesBase(window.api.getSpritesBaseUrl(lastProfile.romFile));
+            void applySpritesForRom(lastProfile.romFile);
             if (!isAutoTest) nav.setActivePage('profile');
           } else {
             nav.setActivePage('picker');
