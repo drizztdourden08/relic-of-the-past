@@ -31,7 +31,8 @@ polished UI, controller support, save profiles, MSU-1 audio, and randomizer tool
 
 ## Community
 
-| | |
+| Type | Link |
+|----------|----------|
 | [![Website](https://img.shields.io/badge/Website-c8a84e?logo=googlechrome&logoColor=white)](https://relic-of-the-past.com) | <https://relic-of-the-past.com> |
 | [![Discord](https://img.shields.io/badge/Discord-5865F2?logo=discord&logoColor=white)](https://discord.gg/jBkmwzKHZN) | <https://discord.gg/jBkmwzKHZN> |
 | [![Issues](https://img.shields.io/badge/GitHub-Issues-181717?logo=github&logoColor=white)](https://github.com/drizztdourden08/relic-of-the-past/issues) | <https://github.com/drizztdourden08/relic-of-the-past/issues> |
