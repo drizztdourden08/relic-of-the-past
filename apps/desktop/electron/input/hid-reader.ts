@@ -24,6 +24,7 @@ import { ForwardStats } from './hid-forward-stats';
 import type { WorkerResult, WorkerMessage } from './hid-worker-protocol';
 import { emit } from '../lib/ipc/handle';
 import type { EventContract } from '@shared/ipc';
+import { findController } from '@shared/input/register-all';
 
 class HidInputReader {
   // Non-private so hid-reader-scan can operate on the instance (compile-time only).
@@ -109,10 +110,17 @@ class HidInputReader {
     }
   }
 
+  /** Whether the controller for this device key declares rumble support. */
+  private deviceSupportsVibration(deviceKey: string): boolean {
+    const [vid, pid] = deviceKey.split(':');
+    return findController(vid, pid)?.supportsVibration() ?? false;
+  }
+
   /** Vibrate an HID controller for a given duration and intensity. */
   vibrate(deviceKey: string, durationMs: number, intensity: number): boolean {
     const dev = this.devices.find(d => d.key === deviceKey);
     if (!dev) return false;
+    if (!this.deviceSupportsVibration(deviceKey)) return false;
     const frames = buildSegmentFrames(durationMs, intensity);
     writeFramesDirect(dev, frames);
     return true;
@@ -126,6 +134,9 @@ class HidInputReader {
       this.log(msg);
       this.send('hid:error', { deviceKey, error: msg });
       return { ok: false, error: msg };
+    }
+    if (!this.deviceSupportsVibration(deviceKey)) {
+      return { ok: false, error: 'controller does not support vibration' };
     }
 
     const frames = buildPatternFrames(pattern, gapMs);

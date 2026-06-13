@@ -11,7 +11,7 @@
  * - 17 buttons
  */
 
-import { BaseController, type ControllerButton, type ControllerAxis, type ControllerContext, type ParsedInput, type StickDefaults, type VibrationSegment } from '../../base';
+import { BaseController, type ControllerButton, type ControllerAxis, type ControllerContext, type ParsedInput, type StickDefaults } from '../../base';
 import { registerController } from '../../registry';
 import type { ButtonMapping, ButtonIcon } from '../../../types/controls';
 import { icon, btn } from './builders';
@@ -41,9 +41,6 @@ const ICONS: Record<string, ButtonIcon> = {
 
 // ── Haptic Patterns ──
 
-const HAPTIC_STRONG: number[] = [0x93, 0x35, 0x36, 0x1c, 0x0d];
-const HAPTIC_MEDIUM: number[] = [0x75, 0x19, 0x41, 0x9b, 0x03];
-const HAPTIC_LIGHT:  number[] = [0x48, 0x71, 0x20, 0x5a, 0x02];
 const HAPTIC_SILENT: number[] = [0x3f, 0x01, 0xf0, 0x19, 0x00];
 
 // ── HID Init ──
@@ -253,48 +250,6 @@ class SwitchProController extends BaseController {
   // ── Haptics ──
 
   supportsVibration(): boolean { return true; }
-
-  async vibrate(ctx: ControllerContext, pattern: VibrationSegment[], gapMs: number = 0): Promise<{ ok: boolean; error?: string }> {
-    const segments: { haptic: number[]; frames: number }[] = [];
-    for (const seg of pattern) {
-      const clamped = Math.max(0, Math.min(1, seg.intensity));
-      const haptic = clamped >= 0.7 ? HAPTIC_STRONG
-        : clamped >= 0.3 ? HAPTIC_MEDIUM
-        : HAPTIC_LIGHT;
-      segments.push({ haptic, frames: Math.max(1, Math.ceil(seg.durationMs / 4)) });
-    }
-
-    const gapFrames = Math.max(0, Math.ceil(gapMs / 4));
-    let counter = 0;
-    let errors = 0;
-
-    for (let s = 0; s < segments.length; s++) {
-      const { haptic, frames } = segments[s];
-      for (let i = 0; i < frames; i++) {
-        const buf = this.buildHapticFrame(haptic, counter);
-        const ok = await ctx.hidWrite(buf);
-        if (!ok) errors++;
-        counter = (counter + 1) & 0x0F;
-      }
-      if (gapFrames > 0 && s < segments.length - 1) {
-        for (let i = 0; i < gapFrames; i++) {
-          const buf = this.buildHapticFrame(HAPTIC_SILENT, counter);
-          const ok = await ctx.hidWrite(buf);
-          if (!ok) errors++;
-          counter = (counter + 1) & 0x0F;
-        }
-      }
-    }
-
-    // End with silence
-    const ok = await ctx.hidWrite(this.buildHapticFrame(HAPTIC_SILENT, counter));
-    if (!ok) errors++;
-
-    if (errors > 0) {
-      return { ok: false, error: `${errors} frame write(s) failed` };
-    }
-    return { ok: true };
-  }
 
   // ── Stick Defaults ──
 
