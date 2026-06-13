@@ -12,6 +12,7 @@ import { Text } from '../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../design-system/primitives/Image';
 import { Svg, SvgLine, SvgCircle } from '../../../../../design-system/primitives/Svg';
 import { getButtonIconUrl } from '@app/lib/input/button-icons';
+import { publicAsset } from '@app/lib/assets/public-asset';
 import { DEVICE_DATABASE } from '@shared/input/data/devices';
 import { findPresetByVidPid } from '@shared/input';
 
@@ -24,9 +25,9 @@ const VIS_STYLES: Record<string, CSSProperties> = {
 
 // ── Controller silhouette icons ──
 const CONTROLLER_ICON_MAP: Record<string, string> = {
-  nintendo: '/buttons/switch/controller_switch_pro.svg',
-  xbox: '/buttons/xbox/controller_xboxseries.svg',
-  playstation: '/buttons/playstation/controller_playstation5.svg',
+  nintendo: publicAsset('buttons/switch/controller_switch_pro.svg'),
+  xbox: publicAsset('buttons/xbox/controller_xboxseries.svg'),
+  playstation: publicAsset('buttons/playstation/controller_playstation5.svg'),
 };
 
 // ── Axis Record Button ──

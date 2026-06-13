@@ -1,15 +1,17 @@
 /* @layer renderer-components @kind data */
 /**
- * Maps controller profile icon IDs to SVG file paths in /buttons/.
+ * Maps controller profile icon IDs to SVG file paths in public/buttons/.
+ * Paths go through publicAsset so they resolve under file:// in packaged builds.
  */
+import { publicAsset } from '../assets/public-asset';
 
-const SWITCH_BASE = '/buttons/switch';
-const XBOX_BASE = '/buttons/xbox';
-const PS_BASE = '/buttons/playstation';
-const SNES_BASE = '/buttons/snes';
-const KB_BASE = '/buttons/keyboard';
-const GENERIC_BASE = '/buttons/generic';
-const GC_BASE = '/buttons/gc';
+const SWITCH_BASE = publicAsset('buttons/switch');
+const XBOX_BASE = publicAsset('buttons/xbox');
+const PS_BASE = publicAsset('buttons/playstation');
+const SNES_BASE = publicAsset('buttons/snes');
+const KB_BASE = publicAsset('buttons/keyboard');
+const GENERIC_BASE = publicAsset('buttons/generic');
+const GC_BASE = publicAsset('buttons/gc');
 
 /** Icon ID → SVG path mapping */
 const BUTTON_ICON_MAP: Record<string, string> = {
