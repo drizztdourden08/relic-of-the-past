@@ -15,6 +15,7 @@
 import { handleHapticEvent, setVibrateFunction, updateHapticSettings } from '@shared/input/haptics';
 import type { HapticSettings } from '@shared/input/haptics';
 import type { VibrationSegment } from '@shared/input/base';
+import { findController } from '@shared/input/register-all';
 import { webHidReader } from './hid-reader';
 
 let initialized = false;
@@ -82,7 +83,12 @@ const dispatchVibration = (pattern: VibrationSegment[], gapMs?: number): void =>
 const sendToController = (pattern: VibrationSegment[], gapMs?: number): void => {
   const keys = webHidReader.getConnectedDeviceKeys();
   if (keys.length === 0) return;
-  window.api.vibratePattern(keys[0], pattern, gapMs ?? 0);
+  const key = keys[0];
+  // Only dispatch to controllers that actually rumble. Writing haptic frames to a
+  // non-vibrating pad still pauses its HID read stream, which stalls input.
+  const [vid, pid] = key.split(':');
+  if (!findController(vid, pid)?.supportsVibration()) return;
+  window.api.vibratePattern(key, pattern, gapMs ?? 0);
 };
 
 const scheduleDecay = (ms: number): void => {
