@@ -9,6 +9,7 @@
 polished UI, controller support, save profiles, MSU-1 audio, and randomizer tooling.**
 
 [![Website](https://img.shields.io/badge/website-relic--of--the--past.com-c8a84e?logo=googlechrome&logoColor=white)](https://relic-of-the-past.com)
+[![Discord](https://img.shields.io/badge/Discord-join-5865F2?logo=discord&logoColor=white)](https://discord.gg/jBkmwzKHZN)
 [![CI](https://github.com/drizztdourden08/relic-of-the-past/actions/workflows/ci.yml/badge.svg)](https://github.com/drizztdourden08/relic-of-the-past/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/drizztdourden08/relic-of-the-past?include_prereleases&sort=semver)](https://github.com/drizztdourden08/relic-of-the-past/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
@@ -27,6 +28,14 @@ polished UI, controller support, save profiles, MSU-1 audio, and randomizer tool
 > names, characters, music, artwork, and assets are trademarks and/or copyrights of Nintendo.
 > **No Nintendo-owned game assets are included in this repository — you must provide your own
 > legally obtained ROM.**
+
+## Community
+
+| | |
+|---|---|
+| [![Website](https://img.shields.io/badge/Website-c8a84e?logo=googlechrome&logoColor=white)](https://relic-of-the-past.com) | <https://relic-of-the-past.com> |
+| [![Discord](https://img.shields.io/badge/Discord-5865F2?logo=discord&logoColor=white)](https://discord.gg/jBkmwzKHZN) | <https://discord.gg/jBkmwzKHZN> |
+| [![Issues](https://img.shields.io/badge/GitHub-Issues-181717?logo=github&logoColor=white)](https://github.com/drizztdourden08/relic-of-the-past/issues) | <https://github.com/drizztdourden08/relic-of-the-past/issues> |
 
 ## What is this?
 
