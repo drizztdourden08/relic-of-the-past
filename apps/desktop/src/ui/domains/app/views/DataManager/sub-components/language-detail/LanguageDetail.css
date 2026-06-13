@@ -1,0 +1,90 @@
+/* @layer renderer-components @kind style */
+
+/* The detail pane (.master-detail__detail) is already the bounded overflow-y:auto
+   scroll container, so this content just flows naturally and the pane scrolls —
+   no nested heights/scroll regions that would squeeze the glyph canvas. */
+.language-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.language-detail__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.language-detail__font-wrap {
+  padding: var(--space-sm);
+  background: var(--c-inset);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+}
+
+/* width:100% fills the pane; height:auto lets the canvas's 16:7 intrinsic ratio
+   set the displayed height so every glyph row is shown. */
+.language-detail__font {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: var(--c-text);
+  image-rendering: pixelated;
+}
+
+.language-detail__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.language-detail__lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.language-detail__lines-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.dialogue-line {
+  display: flex;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.dialogue-line:hover {
+  background: var(--c-hover);
+}
+
+.dialogue-line__id {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-faint);
+}
+
+.dialogue-line__content {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.dialogue-line__text {
+  color: var(--c-text);
+  white-space: pre-wrap;
+}
+
+.dialogue-line__code {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  background: var(--c-inset);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-xs);
+}

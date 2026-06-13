@@ -9,6 +9,7 @@ import type { Profile, AppState } from '@shared/types/profile';
 import type { NormalSaveInfo, AutoSaveInfo, QuickSaveSlotInfo } from '@shared/types/saves';
 import type { PlaySession } from '@shared/types/session';
 import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
+import type { LanguagePack, LanguageSummary } from '@shared/types/language';
 
 type Result = { success: boolean; error?: string };
 type MsuResult = { success: boolean; fileCount?: number; error?: string };
@@ -95,12 +96,12 @@ interface InvokeContract {
   'msu:readTrackFile': (packName: string, fileName: string) => Promise<ArrayBuffer>;
 
   // Languages
-  'languages:list': () => Promise<Array<{ code: string; fileCount: number }>>;
+  'languages:list': () => Promise<LanguageSummary[]>;
   'languages:extract': (romFile: string, langCode: string) => Promise<Result>;
   'languages:extractFromFile': (filePath: string, langCode: string) => Promise<Result>;
   'languages:extractFromUrl': (url: string, langCode: string) => Promise<Result>;
   'languages:delete': (langCode: string) => Promise<void>;
-  'languages:getDialogue': (langCode: string) => Promise<string | null>;
+  'languages:getLanguage': (langCode: string) => Promise<LanguagePack | null>;
 
   // Sessions + tracker
   'sessions:list': (profileId: string) => Promise<PlaySession[]>;

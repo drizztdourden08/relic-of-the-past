@@ -110,7 +110,7 @@ const boolToIni = (v: boolean): string => {
   return v ? '1' : '0';
 };
 
-const serializeToIni = (settings: GameSettings, msuPath?: string): string => {
+const serializeToIni = (settings: GameSettings, msuPath?: string, language?: string): string => {
   // Build ExtendedAspectRatio value with modifiers
   const parts: string[] = [];
   if (settings.extendY) parts.push('extend_y');
@@ -120,7 +120,7 @@ const serializeToIni = (settings: GameSettings, msuPath?: string): string => {
   const aspectValue = parts.join(', ');
 
   return `[General]
-Autosave = ${boolToIni(settings.autosave)}
+${language ? `Language = ${language}\n` : ''}Autosave = ${boolToIni(settings.autosave)}
 DisplayPerfInTitle = ${boolToIni(settings.displayPerfInTitle)}
 DisableFrameDelay = ${boolToIni(settings.disableFrameDelay)}
 ExtendedAspectRatio = ${aspectValue}

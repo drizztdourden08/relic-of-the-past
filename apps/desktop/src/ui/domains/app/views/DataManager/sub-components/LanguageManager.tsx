@@ -1,9 +1,11 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback } from 'react';
 import type { CSSProperties } from 'react';
+import type { LanguageSummary } from '@shared/types/language';
 import { ImportForm } from './ImportForm';
+import { LANGUAGE_NAMES } from './language-names';
+import { LanguageDetail } from './language-detail';
 import { Box } from '../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../design-system/primitives/Text';
 import { IconButton } from '../../../../../design-system/primitives/IconButton';
 import { Select } from '../../../../../design-system/primitives/Select';
 import { Field } from '../../../../../design-system/primitives/Field';
@@ -13,25 +15,6 @@ import { ListItemRow } from '../../../../../design-system/composites/ListItemRow
 
 const IL: Record<string, CSSProperties> = {
   importForm: { marginBottom: 0, paddingBottom: 'var(--space-xs)' },
-  col: { display: 'flex', flexDirection: 'column', height: '100%' },
-};
-
-interface LanguageInfo {
-  code: string;
-  fileCount: number;
-}
-
-const LANGUAGE_NAMES: Record<string, string> = {
-  en: 'English',
-  de: 'German (Deutsch)',
-  fr: 'French (Français)',
-  'fr-c': 'French Canadian',
-  es: 'Spanish (Español)',
-  pl: 'Polish (Polski)',
-  pt: 'Portuguese (Português)',
-  nl: 'Dutch (Nederlands)',
-  sv: 'Swedish (Svenska)',
-  redux: 'Redux',
 };
 
 interface LanguageManagerProps {
@@ -40,11 +23,9 @@ interface LanguageManagerProps {
 }
 
 const LanguageManager = (props: LanguageManagerProps) => {
-  const { romStatuses, onDeleteConfirm } = props;
-  const [languages, setLanguages] = useState<LanguageInfo[]>([]);
+  const { onDeleteConfirm } = props;
+  const [languages, setLanguages] = useState<LanguageSummary[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
-  const [dialogue, setDialogue] = useState<string | null>(null);
-  const [loadingDialogue, setLoadingDialogue] = useState(false);
   const [extractLang, setExtractLang] = useState('');
 
   const refresh = useCallback(async () => {
@@ -53,16 +34,6 @@ const LanguageManager = (props: LanguageManagerProps) => {
   }, []);
 
   useEffect(() => { refresh(); }, [refresh]);
-
-  // Load dialogue when selection changes
-  useEffect(() => {
-    if (!selected) { setDialogue(null); return; }
-    setLoadingDialogue(true);
-    window.api.getDialogue(selected).then((text) => {
-      setDialogue(text);
-      setLoadingDialogue(false);
-    });
-  }, [selected]);
 
   const handleUrlImport = useCallback(async (url: string) => {
     if (!extractLang) return { success: false, message: 'Select a language first' };
@@ -93,14 +64,13 @@ const LanguageManager = (props: LanguageManagerProps) => {
     const name = LANGUAGE_NAMES[code] ?? code;
     onDeleteConfirm('Delete Language', `Delete language pack "${name}"? This cannot be undone.`, async () => {
       await window.api.deleteLanguage(code);
-      if (selected === code) { setSelected(null); setDialogue(null); }
+      if (selected === code) setSelected(null);
       await refresh();
     });
   }, [selected, refresh, onDeleteConfirm]);
 
   const list = (
     <>
-      {/* Language selector + ROM import form */}
       <Box className="import-form" style={IL.importForm}>
         <Field label="Language">
           <Select
@@ -135,7 +105,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
             key={lang.code}
             icon="🌐"
             name={LANGUAGE_NAMES[lang.code] ?? lang.code}
-            meta={`${lang.fileCount} file${lang.fileCount !== 1 ? 's' : ''}`}
+            meta={`${lang.glyphCount} glyphs · ${lang.lineCount} lines`}
             selected={selected === lang.code}
             onClick={() => setSelected(lang.code)}
             action={
@@ -149,17 +119,8 @@ const LanguageManager = (props: LanguageManagerProps) => {
     </>
   );
 
-  const detail = !selected ? (
-    <Text>Select a language to view dialogue entries</Text>
-  ) : loadingDialogue ? (
-    <Text>Loading…</Text>
-  ) : dialogue ? (
-    <Box style={IL.col}>
-      <Text as="h3" className="detail-panel__title">{LANGUAGE_NAMES[selected] ?? selected}</Text>
-      <Box className="dialogue-viewer">{dialogue}</Box>
-    </Box>
-  ) : (
-    <Text>No dialogue data available</Text>
+  const detail = (
+    <LanguageDetail code={selected} name={selected ? (LANGUAGE_NAMES[selected] ?? selected) : ''} />
   );
 
   return <MasterDetailLayout list={list} detail={detail} detailEmpty={!selected} />;

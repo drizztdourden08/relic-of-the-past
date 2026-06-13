@@ -52,8 +52,8 @@ const useProfileManagement = (params: {
     await loadMsuPack(profile, settings);
 
     const msuPath = (profile.msuPack && settings.enableMSU !== 'false') ? '/msu/' : undefined;
-    const ini = serializeToIni(settings, msuPath);
-    log.app(`Loaded profile settings (aspect: ${settings.aspectRatio}, viewport: ${settings.viewportConstraint}, renderer: ${settings.newRenderer ? 'new' : 'old'})`);
+    const ini = serializeToIni(settings, msuPath, profile.language);
+    log.app(`Loaded profile settings (aspect: ${settings.aspectRatio}, viewport: ${settings.viewportConstraint}, renderer: ${settings.newRenderer ? 'new' : 'old'}, language: ${profile.language ?? 'us'})`);
 
     // Configure auto-save before game starts
     setAutoSaveConfig({
