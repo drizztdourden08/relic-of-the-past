@@ -6,7 +6,7 @@
  * Features:
  * - HID input via report 0x3F (simple mode, before init) and 0x30 (full mode, after init)
  * - HID-level initialization (0x80 handshake commands + subcommand 0x03 for full report mode)
- * - Haptic vibration via HID report 0x02 (same format as SPC2)
+ * - Haptic vibration via HID report 0x02
  * - 12-bit analog sticks (in full mode), 8-bit (in simple mode)
  * - 17 buttons
  */
@@ -39,7 +39,7 @@ const ICONS: Record<string, ButtonIcon> = {
   'switch-capture':icon('switch-capture', 'Capture'),
 };
 
-// ── Haptic Patterns (same as SPC2 — same hardware vibration motor format) ──
+// ── Haptic Patterns ──
 
 const HAPTIC_STRONG: number[] = [0x93, 0x35, 0x36, 0x1c, 0x0d];
 const HAPTIC_MEDIUM: number[] = [0x75, 0x19, 0x41, 0x9b, 0x03];
@@ -80,16 +80,16 @@ class SwitchProController extends BaseController {
   readonly defaultMappings = DEFAULT_MAPPINGS;
 
   readonly buttons: ControllerButton[] = [
-    { id: 'a',       label: 'A Button',     icon: 'switch-a',       category: 'face' },
     { id: 'b',       label: 'B Button',     icon: 'switch-b',       category: 'face' },
-    { id: 'x',       label: 'X Button',     icon: 'switch-x',       category: 'face' },
+    { id: 'a',       label: 'A Button',     icon: 'switch-a',       category: 'face' },
     { id: 'y',       label: 'Y Button',     icon: 'switch-y',       category: 'face' },
+    { id: 'x',       label: 'X Button',     icon: 'switch-x',       category: 'face' },
     { id: 'l',       label: 'L Bumper',     icon: 'switch-l',       category: 'shoulder' },
     { id: 'r',       label: 'R Bumper',     icon: 'switch-r',       category: 'shoulder' },
     { id: 'zl',      label: 'ZL Trigger',   icon: 'switch-zl',      category: 'trigger' },
     { id: 'zr',      label: 'ZR Trigger',   icon: 'switch-zr',      category: 'trigger' },
-    { id: 'plus',    label: 'Plus',         icon: 'switch-plus',    category: 'system' },
     { id: 'minus',   label: 'Minus',        icon: 'switch-minus',   category: 'system' },
+    { id: 'plus',    label: 'Plus',         icon: 'switch-plus',    category: 'system' },
     { id: 'lstick',  label: 'L Stick',      icon: 'switch-ls',      category: 'stick' },
     { id: 'rstick',  label: 'R Stick',      icon: 'switch-rs',      category: 'stick' },
     { id: 'dpUp',    label: 'D-Pad Up',     icon: 'switch-dup',     category: 'dpad' },

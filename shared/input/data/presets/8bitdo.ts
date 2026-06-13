@@ -45,16 +45,16 @@ const DEFAULT_MAPPINGS: ButtonMapping[] = [
 ];
 
 const BUTTONS: ControllerButton[] = [
-  { id: 'a',       label: 'A Button',    icon: '8bitdo-a',      category: 'face' },
   { id: 'b',       label: 'B Button',    icon: '8bitdo-b',      category: 'face' },
-  { id: 'x',       label: 'X Button',    icon: '8bitdo-x',      category: 'face' },
+  { id: 'a',       label: 'A Button',    icon: '8bitdo-a',      category: 'face' },
   { id: 'y',       label: 'Y Button',    icon: '8bitdo-y',      category: 'face' },
+  { id: 'x',       label: 'X Button',    icon: '8bitdo-x',      category: 'face' },
   { id: 'l',       label: 'L Bumper',    icon: '8bitdo-l',      category: 'shoulder' },
   { id: 'r',       label: 'R Bumper',    icon: '8bitdo-r',      category: 'shoulder' },
   { id: 'zl',      label: 'ZL Trigger',  icon: '8bitdo-l',      category: 'trigger' },
   { id: 'zr',      label: 'ZR Trigger',  icon: '8bitdo-r',      category: 'trigger' },
-  { id: 'plus',    label: 'Start',       icon: '8bitdo-start',  category: 'system' },
-  { id: 'minus',   label: 'Select',      icon: '8bitdo-select', category: 'system' },
+  { id: 'select',  label: 'Select',      icon: '8bitdo-select', category: 'system' },
+  { id: 'start',   label: 'Start',       icon: '8bitdo-start',  category: 'system' },
   { id: 'lstick',  label: 'L Stick',     icon: '8bitdo-l',      category: 'stick' },
   { id: 'rstick',  label: 'R Stick',     icon: '8bitdo-r',      category: 'stick' },
   { id: 'dpUp',    label: 'D-Pad Up',    icon: '8bitdo-dup',    category: 'dpad' },

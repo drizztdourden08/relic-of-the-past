@@ -226,7 +226,6 @@ class GameCubeWirelessController extends BaseController {
 
   /**
    * Report 0x0A — alternate USB HID mode (after USB init 0x03 command).
-   * Same byte layout as Switch Pro Controller 2's report 0x09.
    *
    * Byte layout (DataView offsets, after report ID byte):
    *   0: Timer    1: Battery
@@ -286,7 +285,7 @@ class GameCubeWirelessController extends BaseController {
    * Simple mode (report 0x3F) — 8-bit sticks, hat-switch dpad.
    * Default mode before init sequence is sent.
    *
-   * Byte layout (same as Switch Pro Controller):
+   * Byte layout:
    *   0: Buttons byte 0: B(0x01) A(0x02) Y(0x04) X(0x08) L(0x10) R(0x20) ZL(0x40) ZR(0x80)
    *   1: Buttons byte 1: Minus(0x01) Plus(0x02) Home(0x10) Capture(0x20)
    *   2: Hat switch (0-7 for dpad, 8 = centered)
@@ -468,7 +467,7 @@ class GameCubeWirelessController extends BaseController {
   }
 
   private buildHapticFrame(pattern: number[], counter: number): number[] {
-    // Report 0x10: rumble only (same format as Switch Pro)
+    // Report 0x10: rumble only
     const buf = new Array(64).fill(0);
     buf[0] = 0x10;
     buf[1] = counter & 0x0F;
