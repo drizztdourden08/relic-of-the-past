@@ -70,7 +70,7 @@ const INVOKE_MAP = {
   extractLanguageFromFile: 'languages:extractFromFile',
   extractLanguageFromUrl: 'languages:extractFromUrl',
   deleteLanguage: 'languages:delete',
-  getDialogue: 'languages:getDialogue',
+  getLanguage: 'languages:getLanguage',
   listSessions: 'sessions:list',
   saveSession: 'sessions:save',
   saveTrackerState: 'tracker:save',

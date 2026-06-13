@@ -9,6 +9,7 @@ import { Text } from '../../../../../../design-system/primitives/Text';
 import { Select } from '../../../../../../design-system/primitives/Select';
 import { Button } from '../../../../../../design-system/primitives/Button';
 import { formatRelativeTime } from '../../../../../../../utils';
+import { languageLabel } from '../language-names';
 
 const IL: Record<string, CSSProperties> = {
   col: { display: 'flex', flexDirection: 'column', height: '100%' },
@@ -47,7 +48,7 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
             }}
             options={[
               { value: '', label: 'Default (English)' },
-              ...languages.map((l) => ({ value: l.code, label: l.code })),
+              ...languages.map((l) => ({ value: l.code, label: languageLabel(l.code) })),
             ]}
             placeholder="Default (English)"
           />
@@ -82,7 +83,7 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
         <Text className="detail-panel__label">ROM</Text>
         <Text className="detail-panel__value">{profile.romFile}</Text>
         <Text className="detail-panel__label">Language</Text>
-        <Text className="detail-panel__value">{profile.language || 'English (default)'}</Text>
+        <Text className="detail-panel__value">{profile.language ? languageLabel(profile.language) : 'English (default)'}</Text>
         <Text className="detail-panel__label">MSU Pack</Text>
         <Text className="detail-panel__value">{profile.msuPack || 'None'}</Text>
         <Text className="detail-panel__label">Created</Text>

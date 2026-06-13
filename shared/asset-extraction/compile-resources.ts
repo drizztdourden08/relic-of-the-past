@@ -12,12 +12,15 @@ import { buildOverworldCompressed, buildOverworldTables } from './compile-overwo
 import { buildDungeonRooms, buildDefaultAndOverlayRooms, buildDungeonSecrets, buildDungeonAttrs, buildEnemyDamageData, buildDungeonSprites, buildDungeonMap } from './compile-dungeons';
 import { buildDialogue } from './compile-dialogue';
 import { buildSoundBanks } from './compile-sound';
+import type { PackedLangEntry } from './text/build-language-entry';
 
 interface CompileOptions {
   /** If true, skip dialogue (requires language extraction) */
   skipDialogue?: boolean;
   /** If true, skip sound banks (requires music compiler) */
   skipMusic?: boolean;
+  /** Extra language packs to bake in alongside US (index 0). */
+  extraLanguages?: PackedLangEntry[];
 }
 
 const compileResources = (rom: RomData, options: CompileOptions = {}): Buffer => {
@@ -35,7 +38,7 @@ const compileResources = (rom: RomData, options: CompileOptions = {}): Buffer =>
   buildSpriteGfx(rom, A);
   buildBgGfx(rom, A);
   buildMisc(rom, A);
-  if (!options.skipDialogue) buildDialogue(rom, A);
+  if (!options.skipDialogue) buildDialogue(rom, A, options.extraLanguages);
   buildDungeonMap(rom, A);
   buildTilemaps(rom, A);
   buildOverworldCompressed(rom, A);
