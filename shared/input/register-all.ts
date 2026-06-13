@@ -9,6 +9,7 @@
 import './data/presets/gamecube-wireless';
 import './data/presets/switch-pro-2';
 import './data/presets/switch-pro';
+import './data/presets/nso-snes';
 import './data/presets/xbox';
 import './data/presets/playstation';
 import './data/presets/8bitdo';
