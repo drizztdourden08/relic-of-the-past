@@ -17,6 +17,12 @@ import type { ScreenDefinition } from '@shared/game/types';
 const SCREEN_DISMISS_MS = 3000;
 const TRANSITION_DISMISS_MS = 2000;
 
+/**
+ * Location notifications belong to the in-progress navigation feature.
+ * Suppressed for now — flip to true to re-enable when the feature ships.
+ */
+const NOTIFICATIONS_ENABLED: boolean = false;
+
 const useLocationNotification = () => {
   const prevDetectedRef = useRef<ScreenDefinition | null>(null);
   const prevRoomRef = useRef<number>(-1);
@@ -25,6 +31,8 @@ const useLocationNotification = () => {
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    if (!NOTIFICATIONS_ENABLED) return;
+
     const unsub = useGameUIStore.subscribe((state, prevState) => {
       const map = state.map;
       const prevMap = prevState?.map;
