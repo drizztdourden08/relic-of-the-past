@@ -11,6 +11,7 @@ import { Button } from '../../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../../design-system/primitives/Image';
 import type { DetectedDevice } from '@shared/types/controls';
+import { publicAsset } from '@app/lib/assets/public-asset';
 import './DeviceCard.css';
 
 interface DeviceCardProps {
@@ -21,17 +22,17 @@ interface DeviceCardProps {
 
 /** Map controller family → silhouette icon path */
 const FAMILY_ICON: Record<string, string> = {
-  xbox: '/buttons/xbox/controller_xboxseries.svg',
-  playstation: '/buttons/generic/generic_joystick.svg',
-  nintendo: '/buttons/switch/controller_switch_pro.svg',
-  '8bitdo': '/buttons/generic/generic_joystick.svg',
-  keyboard: '/buttons/keyboard/keyboard.svg',
-  generic: '/buttons/generic/generic_joystick.svg',
+  xbox: publicAsset('buttons/xbox/controller_xboxseries.svg'),
+  playstation: publicAsset('buttons/generic/generic_joystick.svg'),
+  nintendo: publicAsset('buttons/switch/controller_switch_pro.svg'),
+  '8bitdo': publicAsset('buttons/generic/generic_joystick.svg'),
+  keyboard: publicAsset('buttons/keyboard/keyboard.svg'),
+  generic: publicAsset('buttons/generic/generic_joystick.svg'),
 };
 
 /** Map specific preset → more accurate icon */
 const PRESET_ICON: Record<string, string> = {
-  'gamecube-wireless': '/buttons/gc/controller_gamecube.svg',
+  'gamecube-wireless': publicAsset('buttons/gc/controller_gamecube.svg'),
 };
 
 const DeviceCard = (props: DeviceCardProps) => {

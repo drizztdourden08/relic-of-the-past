@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import type { InputProfile, DetectedDevice } from '@shared/types/controls';
 import { SNES_BUTTONS } from '@shared/types/controls';
 import { findDeviceProfileByVidPid } from '@shared/input';
+import { publicAsset } from '@app/lib/assets/public-asset';
 import { padHex } from './controls-settings.type';
 
 interface UseDisplayMappingsArgs {
@@ -22,11 +23,11 @@ const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) 
     const hasGamepad = activeProfile.mappings.some(m => m.binding.type !== 'keyboard');
 
     const familyIconMap: Record<string, string> = {
-      xbox: '/buttons/xbox/controller_xboxseries.svg',
-      nintendo: '/buttons/switch/controller_switch_pro.svg',
-      playstation: '/buttons/playstation/controller_playstation5.svg',
-      keyboard: '/buttons/keyboard/keyboard.svg',
-      generic: '/buttons/generic/generic_joystick.svg',
+      xbox: publicAsset('buttons/xbox/controller_xboxseries.svg'),
+      nintendo: publicAsset('buttons/switch/controller_switch_pro.svg'),
+      playstation: publicAsset('buttons/playstation/controller_playstation5.svg'),
+      keyboard: publicAsset('buttons/keyboard/keyboard.svg'),
+      generic: publicAsset('buttons/generic/generic_joystick.svg'),
     };
 
     if (hasKeyboard) {
