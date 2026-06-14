@@ -5,7 +5,7 @@
  * when the set of language packs changes (extract / delete).
  */
 import { writeFile, access } from 'fs/promises';
-import { loadRom } from '@shared/asset-extraction/rom/rom-loader';
+import { loadRom } from '@shared/asset-extraction/rom/load-rom-file';
 import { compileResources } from '@shared/asset-extraction/compile-resources';
 import { getUserDataPath } from '../lib/paths';
 import { getAssetFileName, hasAssetForRom, listRoms } from '../roms/store';

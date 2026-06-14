@@ -7,6 +7,7 @@ import { serializeToIni, mergeSettings } from '../../lib/game/settings';
 import { applySpritesForRom } from '../../lib/sprites/apply-sprites-for-rom';
 import * as profileStore from '../../lib/storage/profile-store';
 import * as romsStore from '../../lib/storage/roms-store';
+import * as assetsStore from '../../lib/storage/assets-store';
 import { loadInputProfile, loadMsuPack } from './load-profile-helpers';
 
 const useProfileManagement = (params: {
@@ -65,10 +66,10 @@ const useProfileManagement = (params: {
       saveOnQuit: settings.saveOnQuit,
     });
 
-    const hasAssets = await window.api.checkAssets(profile.romFile);
+    const hasAssets = await assetsStore.checkAssets(profile.romFile);
     if (!hasAssets) {
       log.app(`No cached assets for ${profile.romFile}, extracting...`);
-      const result = await window.api.extractAssets(profile.romFile);
+      const result = await assetsStore.extractAssets(profile.romFile);
       if (!result.success) {
         log.error(`Extraction failed: ${result.error}`);
         setLoadingProfile(null);
@@ -76,7 +77,7 @@ const useProfileManagement = (params: {
       }
     }
 
-    const buffer = await window.api.loadAssets(profile.romFile);
+    const buffer = await assetsStore.loadAssets(profile.romFile);
     if (buffer) {
       log.app(`Loaded assets (${(buffer.byteLength / 1024).toFixed(0)} KB)`);
       onProfileLoaded({
@@ -144,7 +145,7 @@ const useProfileManagement = (params: {
     await refreshProfilesAndRoms();
     setImportingRom(false);
 
-    const extractResult = await window.api.extractAssets(result.romFile);
+    const extractResult = await assetsStore.extractAssets(result.romFile);
     if (!extractResult.success) {
       log.error(`Extraction failed: ${extractResult.error}`);
       setExtractionStates((prev) => ({ ...prev, [result.romFile]: 'failed' }));
@@ -158,7 +159,7 @@ const useProfileManagement = (params: {
   const handleExtractAssets = useCallback(async (romFile: string) => {
     log.app(`Extracting assets for ${romFile}...`);
     setExtractionStates((prev) => ({ ...prev, [romFile]: 'extracting' }));
-    const result = await window.api.extractAssets(romFile);
+    const result = await assetsStore.extractAssets(romFile);
     if (!result.success) {
       log.error(`Extraction failed: ${result.error}`);
       setExtractionStates((prev) => ({ ...prev, [romFile]: 'failed' }));

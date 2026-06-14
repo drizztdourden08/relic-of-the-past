@@ -6,13 +6,14 @@
  */
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { resolve } from 'path';
 
 export default defineConfig({
   root: resolve(__dirname, 'src'),
   base: './',
   publicDir: resolve(__dirname, 'public'),
-  plugins: [react()],
+  plugins: [react(), nodePolyfills({ globals: { Buffer: true, process: true } })],
   resolve: {
     alias: {
       '@shared': resolve(__dirname, '../../shared'),

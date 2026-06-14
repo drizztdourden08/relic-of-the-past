@@ -10,7 +10,7 @@
 import { readFileSync, readdirSync, unlinkSync } from 'fs';
 import { join, basename } from 'path';
 import type { RomData } from '../rom/rom-types';
-import { loadRom } from '../rom/rom-loader';
+import { loadRom } from '../rom/load-rom-file';
 import type { ImageBuffer } from '../graphics/png-writer';
 import type { RGBA } from '../graphics/palette';
 import {

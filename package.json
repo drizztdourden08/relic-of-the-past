@@ -102,6 +102,7 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.60.1",
     "vite": "^7.3.3",
+    "vite-plugin-node-polyfills": "^0.28.0",
     "vitest": "^4.1.7"
   }
 }
