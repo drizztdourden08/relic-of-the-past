@@ -8,6 +8,7 @@ import type { GameSettings } from '@shared/types/settings';
 import type { InputProfile } from '@shared/types/controls';
 import { KEYBOARD_DEFAULT } from '@shared/input';
 import { getInputManager, profileFromPreset } from '../../../../../../../lib/input/input-manager';
+import { readInputProfiles, writeInputProfiles } from '@app/lib/storage/profile-data-store';
 
 interface UseProfileActionsArgs {
   settings: GameSettings;
@@ -28,13 +29,13 @@ const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsA
     loadedRef.current = true;
 
     (async () => {
-      const raw = await window.api.readInputProfiles(profileId);
+      const raw = await readInputProfiles(profileId);
       let loaded = raw as InputProfile[];
 
       if (loaded.length === 0) {
         const defaultProfile = profileFromPreset(KEYBOARD_DEFAULT);
         loaded = [defaultProfile];
-        await window.api.writeInputProfiles(profileId, loaded);
+        await writeInputProfiles(profileId, loaded);
       }
 
       setProfiles(loaded);
@@ -48,7 +49,7 @@ const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsA
   // ─── Persist helper ───
   const persistProfiles = useCallback(async (updated: InputProfile[]) => {
     setProfiles(updated);
-    await window.api.writeInputProfiles(profileId, updated);
+    await writeInputProfiles(profileId, updated);
   }, [profileId]);
 
   const selectProfile = useCallback((profile: InputProfile) => {

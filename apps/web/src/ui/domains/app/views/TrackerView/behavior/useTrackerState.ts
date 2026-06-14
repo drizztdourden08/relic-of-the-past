@@ -10,6 +10,7 @@ import {
   getActiveProfileId,
 } from '../../../../../../lib/game';
 import type { UnknownItemEntry } from '../../../../../../lib/game';
+import { loadTrackerState, saveTrackerState } from '@app/lib/storage/profile-data-store';
 import type { CheckStatus } from '@shared/game/logic/eval';
 
 const useTrackerState = () => {
@@ -20,7 +21,7 @@ const useTrackerState = () => {
   useEffect(() => {
     const profileId = getActiveProfileId();
     if (!profileId) return;
-    window.api.loadTrackerState(profileId).then((state: any) => {
+    loadTrackerState(profileId).then((state: any) => {
       if (state?.unknownItems?.length) {
         loadUnknownItems(state.unknownItems);
         setUnknownItems(state.unknownItems);
@@ -35,7 +36,7 @@ const useTrackerState = () => {
       setUnknownItems([...items]);
       const profileId = getActiveProfileId();
       if (profileId) {
-        window.api.saveTrackerState(profileId, { unknownItems: items });
+        saveTrackerState(profileId, { unknownItems: items });
       }
     });
   }, []);

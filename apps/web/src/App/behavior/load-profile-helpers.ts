@@ -3,13 +3,14 @@
 import { setMsuData, getInputManager } from '../../lib/game';
 import type { mergeSettings } from '../../lib/game/settings';
 import { log } from '../../lib/log-bus';
+import { readInputProfiles } from '@app/lib/storage/profile-data-store';
 import type { InputProfile } from '@shared/types/controls';
 
 type Settings = ReturnType<typeof mergeSettings>;
 
 const loadInputProfile = async (profileId: string, settings: Settings) => {
   try {
-    const rawProfiles = await window.api.readInputProfiles(profileId);
+    const rawProfiles = await readInputProfiles(profileId);
     const inputProfiles = rawProfiles as InputProfile[];
     if (inputProfiles.length > 0) {
       const activeId = settings.activeInputProfileId;
