@@ -8,19 +8,10 @@
  * built without it) this degrades to a no-op host — Tier 1 (Gamepad API) is
  * unaffected. See docs/controllers/support-matrix.md.
  */
-import { Capacitor, registerPlugin } from '@capacitor/core';
-import type { PluginListenerHandle } from '@capacitor/core';
-import type { ControllerHost, HidDeviceInfo, HidOpenedInfo, HidDisconnectInfo, HidErrorInfo, VibrateStep, VibrateResult } from '@shared/platform';
+import type { ControllerHost, HidOpenedInfo, HidDisconnectInfo, HidErrorInfo } from '@shared/platform';
+import { isControllerHidAvailable, controllerHid, bridgeEvent } from './controller-hid-plugin';
 
 interface NativeReport { deviceKey: string; vendorId: number; productId: number; data: string }
-
-interface ControllerHidPlugin {
-  enumerate: () => Promise<{ devices: HidDeviceInfo[] }>;
-  getOpenKeys: () => Promise<{ keys: string[] }>;
-  write: (opts: { deviceKey: string; data: number[] }) => Promise<{ ok: boolean }>;
-  vibrate: (opts: { deviceKey: string; pattern: VibrateStep[]; gapMs: number }) => Promise<VibrateResult>;
-  addListener: (event: string, cb: (data: unknown) => void) => Promise<PluginListenerHandle>;
-}
 
 const noop: ControllerHost = {
   enumerate: async () => [],
@@ -34,28 +25,22 @@ const noop: ControllerHost = {
   onMainPerf: () => () => {},
 };
 
-// addListener resolves async; expose a synchronous unsubscribe that detaches once ready.
-const bridge = (plugin: ControllerHidPlugin, event: string, cb: (data: unknown) => void): (() => void) => {
-  const handle = plugin.addListener(event, cb);
-  return () => { handle.then((h) => h.remove()).catch(() => {}); };
-};
-
 const createCapacitorControllerHost = (): ControllerHost => {
-  if (!Capacitor.isPluginAvailable('ControllerHid')) return noop;
-  const plugin = registerPlugin<ControllerHidPlugin>('ControllerHid');
+  if (!isControllerHidAvailable()) return noop;
+  const plugin = controllerHid();
 
   return {
     enumerate: async () => (await plugin.enumerate()).devices,
     getOpenKeys: async () => (await plugin.getOpenKeys()).keys,
     write: async (deviceKey, data) => (await plugin.write({ deviceKey, data })).ok,
     vibratePattern: (deviceKey, pattern, gapMs) => plugin.vibrate({ deviceKey, pattern, gapMs }),
-    onReport: (cb) => bridge(plugin, 'report', (d) => {
+    onReport: (cb) => bridgeEvent('report', (d) => {
       const r = d as NativeReport;
       cb(r.deviceKey, r.vendorId, r.productId, Buffer.from(r.data, 'base64'));
     }),
-    onDeviceOpened: (cb) => bridge(plugin, 'deviceOpened', (d) => cb(d as HidOpenedInfo)),
-    onDisconnect: (cb) => bridge(plugin, 'disconnect', (d) => cb(d as HidDisconnectInfo)),
-    onError: (cb) => bridge(plugin, 'error', (d) => cb(d as HidErrorInfo)),
+    onDeviceOpened: (cb) => bridgeEvent('deviceOpened', (d) => cb(d as HidOpenedInfo)),
+    onDisconnect: (cb) => bridgeEvent('disconnect', (d) => cb(d as HidDisconnectInfo)),
+    onError: (cb) => bridgeEvent('error', (d) => cb(d as HidErrorInfo)),
     onMainPerf: () => () => {},
   };
 };

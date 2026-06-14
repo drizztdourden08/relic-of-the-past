@@ -8,6 +8,7 @@ import { findController } from '@shared/input/register-all';
 import * as controllersStore from './controllers-store';
 import type { ControllerContext } from '@shared/input/base';
 import { webHidReader } from './hid-reader';
+import { openCapacitorUsb } from '@app/platform/hosts/capacitor/usb-device';
 
 type ControllerEntry = { controller: ReturnType<typeof findController>; ctx: ControllerContext };
 
@@ -18,6 +19,9 @@ const initController = async (deviceKey: string, vendorId: string, productId: st
     deviceKey,
     hidWrite: (data: number[]) => controllersStore.writeHidDevice(deviceKey, data),
     usbOpen: async (vid: number, pid: number) => {
+      // Android USB-OTG via the native plugin (no WebUSB in the WebView); desktop uses WebUSB.
+      const native = await openCapacitorUsb(vid, pid);
+      if (native) return native;
       if (!navigator.usb) return null;
       try {
         return await navigator.usb.requestDevice({ filters: [{ vendorId: vid, productId: pid }] });
