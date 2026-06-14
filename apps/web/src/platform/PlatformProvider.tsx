@@ -10,6 +10,7 @@ import type { Platform } from '@shared/platform';
 import { resolvePlatform } from '@shared/platform';
 import { createElectronFactory } from './hosts/electron-factory';
 import { createWebFactory } from './hosts/web-factory';
+import { createCapacitorFactory } from './hosts/capacitor-factory';
 
 const PlatformContext = createContext<Platform | null>(null);
 
@@ -17,6 +18,7 @@ const PlatformProvider = ({ children }: { children: ReactNode }) => {
   const platform = useMemo(
     () => resolvePlatform({
       electron: createElectronFactory,
+      capacitor: createCapacitorFactory,
       web: createWebFactory,
     }),
     [],

@@ -1,0 +1,13 @@
+{
+  "name": "@relic/mobile",
+  "version": "0.8.5",
+  "private": true,
+  "description": "Capacitor (Android/iOS) host for Relic of the Past. Wraps the apps/web renderer bundle. Modules resolve from the hoisted root node_modules.",
+  "dependencies": {
+    "@capacitor/android": "^8.4.0",
+    "@capacitor/core": "^8.4.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.4.0"
+  }
+}

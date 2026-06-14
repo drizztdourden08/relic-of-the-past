@@ -1,4 +1,5 @@
 /* @layer renderer-other @kind component */
+import './platform/install-api-shim';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
