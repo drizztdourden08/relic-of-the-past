@@ -17,6 +17,7 @@ import type { HapticSettings } from '@shared/input/haptics';
 import type { VibrationSegment } from '@shared/input/base';
 import { findController } from '@shared/input/register-all';
 import { webHidReader } from './hid-reader';
+import * as controllersStore from './controllers-store';
 
 let initialized = false;
 
@@ -88,7 +89,7 @@ const sendToController = (pattern: VibrationSegment[], gapMs?: number): void => 
   // non-vibrating pad still pauses its HID read stream, which stalls input.
   const [vid, pid] = key.split(':');
   if (!findController(vid, pid)?.supportsVibration()) return;
-  window.api.vibratePattern(key, pattern, gapMs ?? 0);
+  controllersStore.vibratePattern(key, pattern, gapMs ?? 0);
 };
 
 const scheduleDecay = (ms: number): void => {

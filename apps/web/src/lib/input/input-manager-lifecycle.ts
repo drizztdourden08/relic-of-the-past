@@ -1,6 +1,7 @@
 /* @layer renderer-lib @kind logic */
 /** Start/stop listener wiring + device refresh for InputManager (take the instance). */
 import { KEYBOARD_DEFAULT } from '@shared/input';
+import * as controllersStore from './controllers-store';
 import { detectAllDevices } from './device-detector';
 import { webHidReader } from './hid-reader';
 import type { WebHidInputState, DeviceStickCalibration } from './hid-reader';
@@ -19,12 +20,12 @@ const startInput = (m: InputManager): void => {
 
   if (!m.calibrationLoaded) {
     m.calibrationLoaded = true;
-    window.api.readStickCalibration()
+    controllersStore.readStickCalibration()
       .then((store) => {
         webHidReader.loadStickCalibrations(store as Record<string, DeviceStickCalibration>);
       })
       .catch((e: unknown) => console.warn('[input] failed to load stick calibration', e));
-    window.api.readTriggerCalibration()
+    controllersStore.readTriggerCalibration()
       .then((store) => {
         webHidReader.loadTriggerCalibrations(store);
       })
@@ -53,26 +54,26 @@ const startInput = (m: InputManager): void => {
     m.pauseManager.checkControllerDisconnect(m.activeProfile, m.devices);
   });
 
-  m.ipcReportUnsub = window.api.onHidReport((deviceKey, vendorId, productId, data) => {
+  m.ipcReportUnsub = controllersStore.onHidReport((deviceKey, vendorId, productId, data) => {
     webHidReader.handleIpcReport(deviceKey, vendorId, productId, data);
   });
-  m.ipcDisconnectUnsub = window.api.onHidDisconnect((info) => {
+  m.ipcDisconnectUnsub = controllersStore.onHidDisconnect((info) => {
     webHidReader.handleIpcDisconnect(info.deviceKey, info.error);
     m.activeControllers.delete(info.deviceKey);
   });
-  m.ipcErrorUnsub = window.api.onHidError((info) => {
+  m.ipcErrorUnsub = controllersStore.onHidError((info) => {
     webHidReader.addDiag(`⚠ HID error (${info.deviceKey}): ${info.error}`);
     resetController(info.deviceKey, m.activeControllers);
   });
-  m.ipcMainPerfUnsub = window.api.onHidMainPerf((msg) => {
+  m.ipcMainPerfUnsub = controllersStore.onHidMainPerf((msg) => {
     webHidReader.addDiag(`🖥 ${msg}`);
   });
-  m.ipcDeviceOpenedUnsub = window.api.onHidDeviceOpened((info) => {
+  m.ipcDeviceOpenedUnsub = controllersStore.onHidDeviceOpened((info) => {
     webHidReader.markDeviceOpened(info.deviceKey, info.product);
     initController(info.deviceKey, info.vendorId, info.productId, m.activeControllers);
   });
 
-  window.api.getOpenHidKeys().then(keys => {
+  controllersStore.getOpenHidKeys().then(keys => {
     for (const key of keys) {
       webHidReader.markDeviceOpened(key);
     }
@@ -130,7 +131,7 @@ const refreshDevicesImpl = (m: InputManager): void => {
     try { fn(m.devices); } catch { /* ignore */ }
   }
 
-  window.api.enumerateHidDevices()
+  controllersStore.enumerateHidDevices()
     .then(hidDevices => {
       m.hidDeviceCache = hidDevices;
       const updated = detectAllDevices(hidDevices);

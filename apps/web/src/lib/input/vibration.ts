@@ -11,6 +11,8 @@
  * caring about the underlying transport.
  */
 
+import * as controllersStore from './controllers-store';
+
 // ── Public API ────────────────────────────────────────────────────────────
 
 interface VibrateOptions {
@@ -47,7 +49,7 @@ const vibrateGamepadPattern = (gamepadIndex: number, pattern: { durationMs: numb
 
 const vibrateHid = (deviceKey: string, durationMs: number, opts?: VibrateOptions): void => {
   const intensity = opts?.intensity ?? 0.7;
-  window.api.vibratePattern(deviceKey, [{ durationMs, intensity }], 0);
+  controllersStore.vibratePattern(deviceKey, [{ durationMs, intensity }], 0);
 };
 
 const vibrate = (target: string, durationMs: number, opts?: VibrateOptions): void => {
@@ -64,7 +66,7 @@ const vibratePattern = (target: string, pattern: { durationMs: number; intensity
     const idx = parseInt(target.replace('gamepad-', ''), 10);
     if (!isNaN(idx)) vibrateGamepadPattern(idx, pattern, gapMs);
   } else {
-    window.api.vibratePattern(target, pattern, gapMs);
+    controllersStore.vibratePattern(target, pattern, gapMs);
   }
 };
 

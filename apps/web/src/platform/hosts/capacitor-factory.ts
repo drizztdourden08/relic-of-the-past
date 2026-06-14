@@ -6,7 +6,7 @@
  * calls hit the boot-safe shim (see api-shim.ts).
  */
 import { Capacitor } from '@capacitor/core';
-import type { PlatformFactory, WindowControlsPort } from '@shared/platform';
+import type { PlatformFactory, WindowControlsPort, ControllerHost } from '@shared/platform';
 import { createCapacitorStorage } from './capacitor/storage';
 import { createCapacitorFileStore } from './capacitor/file-store';
 import { createCapacitorFilePicker } from './capacitor/file-picker';
@@ -28,6 +28,18 @@ const createWindowControls = (): WindowControlsPort => ({
   onFullscreenChange: noopUnsub,
 });
 
+const createControllerHost = (): ControllerHost => ({
+  enumerate: async () => [],
+  getOpenKeys: async () => [],
+  write: async () => false,
+  vibratePattern: async () => ({ ok: false }),
+  onReport: () => () => {},
+  onDeviceOpened: () => () => {},
+  onDisconnect: () => () => {},
+  onError: () => () => {},
+  onMainPerf: () => () => {},
+});
+
 const createCapacitorFactory = (): PlatformFactory => ({
   info: {
     host: 'capacitor',
@@ -46,11 +58,13 @@ const createCapacitorFactory = (): PlatformFactory => ({
     selfUpdate: false,
     nativeFileDialog: false,
     revealDataFolder: false,
+    hapticFeedback: false,
   },
   createWindowControls,
   createStorage: createCapacitorStorage,
   createFileStore: createCapacitorFileStore,
   createFilePicker: createCapacitorFilePicker,
+  createControllerHost,
 });
 
 export { createCapacitorFactory };

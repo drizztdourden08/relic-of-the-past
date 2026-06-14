@@ -14,6 +14,7 @@ import type { GamepadSnapshot } from '../../../../../../lib/input/input-manager'
 import type { HidControllerMap } from './HidCalibrationWizard';
 import type { TriggerCalibrationData } from './TriggerCalibrationWizard';
 import type { HidDeviceInfo } from './GamepadCard';
+import * as controllersStore from '@app/lib/input/controllers-store';
 
 interface EventEntry {
   time: number;
@@ -39,14 +40,14 @@ const useInputCalibration = () => {
 
   const [hidDeviceInfo, setHidDeviceInfo] = useState<HidDeviceInfo[]>([]);
   const refreshHidDevices = useCallback(() => {
-    window.api.enumerateHidDevices()
+    controllersStore.enumerateHidDevices()
       .then(devices => setHidDeviceInfo(devices))
       .catch((e: unknown) => console.warn('[input] failed to enumerate HID devices', e));
   }, []);
   useEffect(() => { refreshHidDevices(); }, [webHidConnected, refreshHidDevices]);
 
   useEffect(() => {
-    window.api.readStickCalibration()
+    controllersStore.readStickCalibration()
       .then((store) => setStickCalibrationStore(store as Record<string, DeviceStickCalibration>))
       .catch((e: unknown) => console.warn('[input] failed to load stick calibration', e));
   }, []);
@@ -64,7 +65,7 @@ const useInputCalibration = () => {
 
   // Direct HID connect/disconnect subscriptions for immediate UI updates
   useEffect(() => {
-    const unsubConnect = window.api.onHidDeviceOpened(() => {
+    const unsubConnect = controllersStore.onHidDeviceOpened(() => {
       forceUpdate();
       refreshHidDevices();
     });
@@ -114,12 +115,12 @@ const useInputCalibration = () => {
     webHidReader.setStickCalibration(key, cal);
     const updated = { ...stickCalibrationStore, [key]: cal };
     setStickCalibrationStore(updated);
-    await window.api.writeStickCalibration(updated);
+    await controllersStore.writeStickCalibration(updated);
   };
 
   const handleTriggerCalibrationComplete = async (deviceKey: string, axisIndex: number, cal: TriggerCalibrationData) => {
     webHidReader.setTriggerCalibration(deviceKey, axisIndex, cal);
-    await window.api.writeTriggerCalibration(deviceKey, axisIndex, cal);
+    await controllersStore.writeTriggerCalibration(deviceKey, axisIndex, cal);
   };
 
   // Auto-scroll log

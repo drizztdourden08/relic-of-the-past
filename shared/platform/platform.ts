@@ -10,6 +10,7 @@ import type { WindowControlsPort } from './ports/window-controls';
 import type { StoragePort } from './ports/storage';
 import type { FileStore } from './ports/file-store';
 import type { FilePickerPort } from './ports/file-picker';
+import type { ControllerHost } from './ports/controller-host';
 import type { PlatformFactory } from './factory';
 import { detectHost } from './detect';
 
@@ -20,6 +21,7 @@ interface Platform {
   storage: StoragePort;
   files: FileStore;
   filePicker: FilePickerPort;
+  controllers: ControllerHost;
 }
 
 type FactoryMap = Partial<Record<HostShell, () => PlatformFactory>>;
@@ -31,6 +33,7 @@ const createPlatform = (factory: PlatformFactory): Platform => ({
   storage: factory.createStorage(),
   files: factory.createFileStore(),
   filePicker: factory.createFilePicker(),
+  controllers: factory.createControllerHost(),
 });
 
 const resolvePlatform = (factories: FactoryMap): Platform => {

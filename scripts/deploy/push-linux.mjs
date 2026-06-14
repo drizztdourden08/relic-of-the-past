@@ -62,10 +62,17 @@ const pushToVm = (distro, vm, appimage) => {
   log(`Copying AppImage -> ${target}${port ? `:${port}` : ''}`);
   wsl(distro, `scp ${scpPort}${idFlag}-o StrictHostKeyChecking=accept-new ${appimage} ${target}:~/${remote}`);
   log('Launching on the VM desktop (passing --no-focus --muted)…');
+  // -n + </dev/null detach stdin so ssh returns instead of hanging on the
+  // backgrounded GUI process; setsid + log redirect fully detaches it; `exit 0`
+  // makes the remote shell return cleanly. APPIMAGE_EXTRACT_AND_RUN=1 runs the
+  // AppImage without FUSE (Ubuntu 24.04+ ships FUSE3, not the libfuse2 type-2
+  // AppImages need).
   wsl(
     distro,
-    `ssh ${sshPort}${idFlag}${target} 'chmod +x ~/${remote}; pkill -f ${remote} 2>/dev/null; ` +
-      `DISPLAY=${display} setsid ~/${remote} --no-sandbox --no-focus --muted >/tmp/rotp.log 2>&1 &'`,
+    `ssh -n ${sshPort}${idFlag}-o StrictHostKeyChecking=accept-new ${target} ` +
+      `'chmod +x ~/${remote}; pkill -f ${remote} 2>/dev/null; ` +
+      `APPIMAGE_EXTRACT_AND_RUN=1 DISPLAY=${display} setsid ~/${remote} ` +
+      `--no-sandbox --no-focus --muted </dev/null >/tmp/rotp.log 2>&1 & exit 0'`,
   );
   log('Pushed + launched. Plug in your controller and verify the app enumerates it on the VM.');
 };

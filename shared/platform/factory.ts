@@ -9,6 +9,7 @@ import type { WindowControlsPort } from './ports/window-controls';
 import type { StoragePort } from './ports/storage';
 import type { FileStore } from './ports/file-store';
 import type { FilePickerPort } from './ports/file-picker';
+import type { ControllerHost } from './ports/controller-host';
 
 interface PlatformFactory {
   readonly info: PlatformInfo;
@@ -17,7 +18,7 @@ interface PlatformFactory {
   createStorage: () => StoragePort;
   createFileStore: () => FileStore;
   createFilePicker: () => FilePickerPort;
-  // future: createControllerHost, …
+  createControllerHost: () => ControllerHost;
 }
 
 export type { PlatformFactory };

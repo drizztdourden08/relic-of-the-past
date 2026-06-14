@@ -3,7 +3,7 @@
  * Electron host adapter. Fulfills the platform ports by delegating to the
  * existing preload-injected window.api — the proven desktop path, unchanged.
  */
-import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, FilePickerPort } from '@shared/platform';
+import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, FilePickerPort, ControllerHost } from '@shared/platform';
 import { osFromProcess } from '@shared/platform';
 
 const toArrayBuffer = (data: Uint8Array): ArrayBuffer =>
@@ -55,6 +55,18 @@ const createFilePicker = (): FilePickerPort => ({
   },
 });
 
+const createControllerHost = (): ControllerHost => ({
+  enumerate: () => window.api.enumerateHidDevices(),
+  getOpenKeys: () => window.api.getOpenHidKeys(),
+  write: (deviceKey, data) => window.api.writeHidDevice(deviceKey, data),
+  vibratePattern: (deviceKey, pattern, gapMs) => window.api.vibratePattern(deviceKey, pattern, gapMs),
+  onReport: (cb) => window.api.onHidReport(cb),
+  onDeviceOpened: (cb) => window.api.onHidDeviceOpened(cb),
+  onDisconnect: (cb) => window.api.onHidDisconnect(cb),
+  onError: (cb) => window.api.onHidError(cb),
+  onMainPerf: (cb) => window.api.onHidMainPerf(cb),
+});
+
 const createElectronFactory = (): PlatformFactory => ({
   info: {
     host: 'electron',
@@ -73,11 +85,13 @@ const createElectronFactory = (): PlatformFactory => ({
     selfUpdate: true,
     nativeFileDialog: true,
     revealDataFolder: true,
+    hapticFeedback: true,
   },
   createWindowControls,
   createStorage,
   createFileStore,
   createFilePicker,
+  createControllerHost,
 });
 
 export { createElectronFactory };

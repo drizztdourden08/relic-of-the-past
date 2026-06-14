@@ -14,6 +14,10 @@ sudo apt-get install -y \
   libnss3 libgbm1 libasound2t64 libgtk-3-0 libnotify4 \
   libxss1 libxtst6 libatk-bridge2.0-0 libdrm2 xdg-utils
 
+# Type-2 AppImages want libfuse2 (Ubuntu 24.04+ ships FUSE3); push-linux also sets
+# APPIMAGE_EXTRACT_AND_RUN=1 as a fallback, so this is best-effort, never fatal.
+sudo apt-get install -y libfuse2t64 2>/dev/null || sudo apt-get install -y libfuse2 2>/dev/null || true
+
 # Ubuntu 24.04+ activates OpenSSH via ssh.socket; older releases use ssh.service.
 # Enabling the wrong one leaves nothing listening on :22, so prefer the socket.
 if systemctl list-unit-files | grep -q '^ssh.socket'; then
