@@ -1,80 +1,59 @@
-# Controller support matrix
+# Controller support
 
-How controllers are supported on each platform, by which transport, and where
-functionality is limited. The parser, controller presets, calibration, and haptic
-patterns are **shared**; only the device transport differs per platform (behind the
-`ControllerHost` platform port).
+Which controllers work on each platform, over which connection, and where features are
+limited. Input parsing, controller presets, calibration, and haptics are the same
+everywhere; only how the device is reached differs per platform.
 
-Legend: ✅ works · ⚠️ conditional · 🔧 implemented, pending on-device verification (USB-OTG native plugin) · ❌ not possible.
+Legend: ✅ supported · ⚠️ needs one-time setup · ❌ not available.
 
-## Transports per platform
+## Connections per platform
 
-| Transport | Windows | macOS | Linux | Android |
-|-----------|:--:|:--:|:--:|:--:|
-| node-hid (Electron main, raw HID) | ✅ | ✅ | ⚠️ needs udev rules | ❌ (no main process) |
-| Web Gamepad API (standard pads) | ✅ | ✅ | ✅ | ✅ |
-| WebUSB (`usb-init`) | ✅ | ✅ | ⚠️ udev | ❌ not in WebView |
-| Native USB-HID plugin (`UsbManager`) | — | — | — | 🔧 planned (USB-OTG) |
+| Connection | Windows | macOS | Linux | Android |
+|------------|:--:|:--:|:--:|:--:|
+| Raw HID (full feature access) | ✅ | ✅ | ⚠️ udev rules | ✅ USB-OTG only |
+| Standard gamepad (buttons/axes/rumble) | ✅ | ✅ | ✅ | ✅ |
 
-## Functionality per platform
+On Android, raw HID is available over a **wired USB-OTG** connection only. **Bluetooth**
+controllers come through the standard gamepad layer (buttons, axes, basic rumble).
 
-| Functionality | Windows | macOS | Linux | Android |
+## Features per platform
+
+| Feature | Windows | macOS | Linux | Android (USB-OTG) | Android (Bluetooth) |
+|---|:--:|:--:|:--:|:--:|:--:|
+| Standard input (buttons/axes) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Precise raw-HID input | ✅ | ✅ | ⚠️ udev | ✅ | ❌ |
+| Output writes (LEDs/config) | ✅ | ✅ | ⚠️ udev | ✅ | ❌ |
+| Basic rumble | ✅ | ✅ | ✅ | ✅ | ✅ (device-dependent) |
+| Advanced HID haptics | ✅ | ✅ | ⚠️ udev | ✅ | ❌ |
+| Switch / NSO controller init | ✅ | ✅ | ⚠️ udev | ✅ | ❌ |
+| Stick / trigger calibration | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+On Linux, the ⚠️ features need the controller udev rules — see [linux-setup.md](linux-setup.md).
+The `.deb` installs them automatically.
+
+## By controller
+
+| Controller | Windows / macOS | Linux | Android (USB-OTG) | Android (Bluetooth) |
 |---|:--:|:--:|:--:|:--:|
-| Standard input (buttons/axes) | ✅ | ✅ | ✅ | ✅ |
-| Precise raw-HID input | ✅ | ✅ | ⚠️ udev | 🔧 USB-OTG · ❌ BT |
-| Output writes (LEDs/config) | ✅ | ✅ | ⚠️ udev | 🔧 USB-OTG · ❌ BT |
-| Basic rumble (Gamepad `vibrationActuator`) | ✅ | ✅ | ✅ | ✅ (device-dependent) |
-| Advanced HID haptics (patterns) | ✅ | ✅ | ⚠️ udev | 🔧 USB-OTG · ❌ BT |
-| Switch/NSO `usb-init` | ✅ | ✅ | ⚠️ udev | 🔧 USB-OTG · ❌ BT |
-| Stick/trigger calibration | ✅ | ✅ | ✅ | ✅ |
-| Accurate enumeration (no button press) | ✅ | ✅ | ⚠️ udev | 🔧 USB-OTG · ❌ BT |
-
-Linux ⚠️ → ✅ once the udev rules are installed (see [linux-setup.md](linux-setup.md);
-the `.deb` does it automatically).
-
-## By controller family
-
-| Controller | Win/macOS | Linux (udev) | Android USB-OTG | Android Bluetooth |
-|---|:--:|:--:|:--:|:--:|
-| Xbox (XInput) | ✅ full | ✅ full | ✅ full (Gamepad API) | ✅ full (Gamepad API) |
-| PlayStation (DS4/DualSense) | ✅ full | ✅ full | ✅ standard · 🔧 raw via plugin | ✅ standard mapping |
-| 8BitDo / generic pads | ✅ | ✅ | ✅ standard | ✅ standard mapping |
-| **Switch 1 Pro Controller** | ✅ full | ✅ full | ✅ standard · 🔧 raw via plugin | ✅ standard mapping |
-| **Switch Pro Controller 2** (needs custom init) | ✅ full | ✅ full | 🔧 full via plugin | ❌ **not usable** |
-| **NSO GameCube** (needs custom init) | ✅ full | ✅ full | 🔧 full via plugin | ❌ **not usable** |
+| Xbox | ✅ | ✅ | ✅ | ✅ |
+| PlayStation (DS4 / DualSense) | ✅ | ✅ | ✅ | ✅ standard |
+| 8BitDo / generic pads | ✅ | ✅ | ✅ | ✅ standard |
+| Switch Pro Controller | ✅ | ✅ | ✅ | ✅ standard |
+| Switch Pro Controller 2 | ✅ | ✅ | ✅ | ❌ |
+| NSO GameCube | ✅ | ✅ | ✅ | ❌ |
 | Keyboard | ✅ | ✅ | ✅ | ✅ |
 
-## Key limitations
+## Limitations
 
-- **Linux** needs the controller **udev rules** for raw-HID controllers (Nintendo/Sony)
-  and the `usb-init`; without them you get only basic Gamepad-API input. The `.deb`
-  installs them; AppImage users install manually.
-- **Android Bluetooth** can only deliver what Android maps through the **Gamepad API**
-  (standard buttons/axes + basic rumble). There is **no app-level raw Bluetooth-HID**
-  access (Android exposes no host-role HID API to non-root apps), so over BT you get
-  **no** raw HID, advanced haptics, output writes, or vendor `usb-init`.
-- **Switch Pro Controller 2 / NSO GameCube** stay silent until they receive a vendor
-  `usb-init`, which needs raw HID/USB **write** access. On desktop this works over USB
-  and Bluetooth (node-hid/libusb). On **Android these are wired-only**: full support over
-  **USB-OTG** (via the native plugin), and **not usable over Bluetooth** — the only
-  wireless fallback for them is the on-screen touch overlay.
-- **Android advanced haptics/precise input** require the **USB-OTG native plugin**;
-  Bluetooth controllers get basic Gamepad rumble only.
-- **iOS** is not yet a target (the platform model is iOS-ready).
-
-## Under the hood
-
-Each platform supplies a `ControllerHost` (raw bytes in/out); everything downstream is
-shared. Transports: node-hid on Windows/macOS/Linux (Electron), the native
-`ControllerHid` plugin (`UsbManager`) on Android USB-OTG, and the Web Gamepad API for
-standard pads everywhere. The Switch Pro 2 USB bulk-init stays single-sourced in the
-TS preset and runs on Android through a WebUSB-shaped shim over the plugin's generic
-USB channel — no byte sequences duplicated into native code.
-
-**Status (2026-06-14):** Linux support is shipped (udev rules + .deb auto-install).
-The Android renderer seam (`ControllerHost` + USB shim) is implemented and
-type-checked. The native `ControllerHid` Java plugin
-(`apps/mobile/android/.../controllerhid/`) is a first implementation that **cannot be
-compiled on the Windows dev host** (no JDK/SDK) and is **pending on-device
-verification** — that is what the 🔧 cells above mean. See
-`plans/controller-parity-linux-android.md` for the implementation plan.
+- **Linux** needs the controller udev rules for raw-HID controllers (Nintendo, Sony) and
+  for the Switch/NSO init. Without them, only standard gamepad input works. The `.deb`
+  installs the rules; AppImage users install them manually
+  ([linux-setup.md](linux-setup.md)).
+- **Android Bluetooth** delivers only standard gamepad input (buttons, axes, basic
+  rumble). Raw HID, advanced haptics, output writes, and the Switch/NSO init are not
+  available over Bluetooth — Android gives apps no raw Bluetooth-HID access.
+- **Switch Pro Controller 2** and **NSO GameCube** need a vendor init sequence over a raw
+  connection before they send input. On desktop this works over USB and Bluetooth; on
+  Android it works over **USB-OTG only**. Over Bluetooth they don't work — use the
+  on-screen touch controls instead.
+- **iOS** is not a supported target yet.

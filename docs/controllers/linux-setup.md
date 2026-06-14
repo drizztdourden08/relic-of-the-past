@@ -39,10 +39,5 @@ systemd-logind) to controllers from these vendors, over both `hidraw` and `usb`:
 If your controller has a different vendor ID, add a matching pair of lines and
 reload (`udevadm control --reload-rules && udevadm trigger`).
 
-## Notes
-
-- Xbox controllers use the Gamepad API (XInput-style) and generally work without the
-  rules; the rules matter for **raw-HID** controllers (Nintendo, Sony) and the
-  Switch/NSO `usb-init`.
-- WSL is build-only — it has no USB passthrough, so controller testing needs a real
-  Linux desktop (e.g. a VirtualBox VM with USB passthrough enabled).
+Xbox controllers work without the rules (standard gamepad input); the rules matter for
+raw-HID controllers (Nintendo, Sony) and the Switch/NSO init.
