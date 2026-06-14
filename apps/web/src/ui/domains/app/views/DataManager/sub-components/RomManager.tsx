@@ -10,6 +10,7 @@ import { EmptyState } from '../../../../../design-system/primitives/EmptyState';
 import { MasterDetailLayout } from '../../../../../design-system/composites/MasterDetailLayout';
 import { ListItemRow } from '../../../../../design-system/composites/ListItemRow';
 import { formatBytes } from '../../../../../../utils/formatBytes';
+import * as romsStore from '@app/lib/storage/roms-store';
 
 const IL: Record<string, CSSProperties> = {
   mono: { fontFamily: 'var(--font-mono)' },
@@ -43,14 +44,14 @@ const RomManager = (props: RomManagerProps) => {
   useEffect(() => {
     if (!selected) { setDetail(null); return; }
     setLoadingDetail(true);
-    window.api.getRomInfo(selected).then((info) => {
+    romsStore.getRomInfo(selected).then((info) => {
       setDetail(info);
       setLoadingDetail(false);
     });
   }, [selected]);
 
   const handleUrlImport = useCallback(async (url: string) => {
-    const result = await window.api.importRomUrl(url);
+    const result = await romsStore.importUrl(url);
     if (result.success) {
       onRefresh();
       if (!result.alreadyExists) {
@@ -63,9 +64,7 @@ const RomManager = (props: RomManagerProps) => {
 
   const handleFileImport = useCallback(async (files: File[]) => {
     if (files.length === 0) return { success: false, message: 'No file selected' };
-    const filePath = window.api.getFilePath(files[0]);
-    if (!filePath) return { success: false, message: 'Could not read file path' };
-    const result = await window.api.importRom(filePath);
+    const result = await romsStore.importFile(files[0]);
     if (result.success) {
       onRefresh();
       // Auto-extract assets

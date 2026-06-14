@@ -3,7 +3,7 @@
  * Plain-browser host adapter (renderer opened over http without Electron or
  * Capacitor). Also the resolve fallback. No window chrome, no persistent storage.
  */
-import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, StorageSummary } from '@shared/platform';
+import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, StorageSummary, FilePickerPort } from '@shared/platform';
 
 const noopUnsub = () => () => {};
 
@@ -46,6 +46,19 @@ const createFileStore = (): FileStore => ({
   stat: async () => null,
 });
 
+const createFilePicker = (): FilePickerPort => ({
+  pickFile: (opts) => new Promise((resolve) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    if (opts?.extensions?.length) input.accept = opts.extensions.map((e) => `.${e}`).join(',');
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      resolve(file ? { name: file.name, bytes: new Uint8Array(await file.arrayBuffer()) } : null);
+    };
+    input.click();
+  }),
+});
+
 const createWebFactory = (): PlatformFactory => ({
   info: {
     host: 'web',
@@ -68,6 +81,7 @@ const createWebFactory = (): PlatformFactory => ({
   createWindowControls,
   createStorage,
   createFileStore,
+  createFilePicker,
 });
 
 export { createWebFactory };

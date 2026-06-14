@@ -8,6 +8,7 @@
 import { useEffect, useState } from 'react';
 import type { ImportProgress } from '@shared/ipc';
 import { formatBytes } from '@app/utils/formatBytes';
+import { subscribeImportProgress } from '@app/lib/storage/import-progress-bus';
 
 type ImportKind = ImportProgress['kind'];
 type ImportPhase = ImportProgress['phase'];
@@ -47,7 +48,7 @@ const useImportProgress = (kind: ImportKind): ImportProgressState => {
   const [state, setState] = useState<ImportProgressState>(IDLE);
 
   useEffect(() => {
-    const unsubscribe = window.api.onImportProgress((progress) => {
+    const unsubscribe = subscribeImportProgress((progress) => {
       if (progress.kind !== kind) return;
       if (progress.phase === 'done') { setState(IDLE); return; }
       if (progress.phase === 'error') {
