@@ -1,6 +1,6 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
-import { publicAsset } from '../../apps/desktop/src/lib/assets/public-asset';
+import { publicAsset } from '../../apps/web/src/lib/assets/public-asset';
 
 // Vitest runs with Vite's default BASE_URL of '/'. The contract under test is the
 // normalization: any leading "/" or "./" is stripped before the base is applied,

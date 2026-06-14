@@ -12,7 +12,7 @@
   "overrides": [
     {
       "comment": "App + design-system CSS must use design tokens only — no raw colors. hex/named/rgb()/rgba()/hsl() are all blocked; use var(--c-*)/var(--color-*). The few dynamic per-instance opacity frames (tracker/widget) opt out per-line with a stylelint-disable comment.",
-      "files": ["apps/desktop/src/ui/**/*.css"],
+      "files": ["apps/web/src/ui/**/*.css"],
       "rules": {
         "color-no-hex": true,
         "color-named": "never",
@@ -28,7 +28,7 @@
     },
     {
       "comment": "Token definition files are where raw color values are allowed to live.",
-      "files": ["apps/desktop/src/ui/design-system/tokens/**/*.css"],
+      "files": ["apps/web/src/ui/design-system/tokens/**/*.css"],
       "rules": {
         "color-no-hex": null,
         "color-named": null,
@@ -38,7 +38,7 @@
     },
     {
       "comment": "HUD replicates the in-game interface using the exact SNES palette; its colors are game-accurate, not design tokens, so the color rules do not apply (see CLAUDE.md HUD exception).",
-      "files": ["apps/desktop/src/ui/domains/hud/**/*.css"],
+      "files": ["apps/web/src/ui/domains/hud/**/*.css"],
       "rules": {
         "color-no-hex": null,
         "color-named": null,
@@ -47,5 +47,5 @@
       }
     }
   ],
-  "ignoreFiles": ["**/node_modules/**", "dist/**", "release/**", "apps/desktop/public/**"]
+  "ignoreFiles": ["**/node_modules/**", "dist/**", "release/**", "apps/web/public/**"]
 }

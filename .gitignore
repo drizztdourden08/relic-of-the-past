@@ -1,3 +1,6 @@
+# Implementation plans (working docs, never committed)
+/plans
+
 # Dependencies
 node_modules/
 
@@ -10,10 +13,10 @@ out/
 
 # WASM build artifacts
 core/wasm-build/output/
-apps/desktop/public/wasm/
+apps/web/public/wasm/
 
 # Extracted sprites (generated at runtime)
-apps/desktop/public/sprites/
+apps/web/public/sprites/
 
 # Electron
 release/

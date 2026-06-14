@@ -38,4 +38,4 @@ Launch test runs with `--no-focus --muted` so the window doesn't grab focus whil
 
 The app changes quickly, so there's no standing Playwright suite — specs go stale within days. Use Playwright only for a one-off check: put the throwaway spec in `tests/scratch/` (which is gitignored), run it, and delete it when you're done. The one permanent spec is `tests/snapshot.spec.ts`.
 
-A few files make up the test harness and shouldn't be changed casually: `apps/desktop/electron/test/ipc-handlers.ts`, `apps/desktop/src/App/behavior/useAutoTest.ts`, and `tests/snapshot.spec.ts`. If you think one needs to change, check with the maintainer first.
+A few files make up the test harness and shouldn't be changed casually: `apps/desktop/electron/test/ipc-handlers.ts`, `apps/web/src/App/behavior/useAutoTest.ts`, and `tests/snapshot.spec.ts`. If you think one needs to change, check with the maintainer first.

@@ -22,4 +22,4 @@ bar or Menu → **Widgets**, and you can have several open at once.
 | [Logs](logs.md) | Real-time app/game/input log viewer. |
 
 > Widget data comes from the running game through the bridge ([game hooks](../hooks/overview.md)) and
-> the Zustand stores in `apps/desktop/src/stores/`.
+> the Zustand stores in `apps/web/src/stores/`.

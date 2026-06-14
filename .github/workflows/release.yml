@@ -86,9 +86,9 @@ jobs:
         run: |
           cd core/wasm-build
           emmake make
-          mkdir -p ../../apps/desktop/public/wasm
-          cp output/zelda3.js ../../apps/desktop/public/wasm/
-          cp output/zelda3.wasm ../../apps/desktop/public/wasm/
+          mkdir -p ../../apps/web/public/wasm
+          cp output/zelda3.js ../../apps/web/public/wasm/
+          cp output/zelda3.wasm ../../apps/web/public/wasm/
         shell: bash
 
       - name: Install dependencies

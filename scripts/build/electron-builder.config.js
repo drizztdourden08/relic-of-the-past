@@ -25,7 +25,7 @@ module.exports = {
   ],
   win: {
     target: ['portable', 'nsis'],
-    icon: 'apps/desktop/public/logos/icon.ico',
+    icon: 'apps/web/public/logos/icon.ico',
     signAndEditExecutable: false,
   },
   portable: {
@@ -36,17 +36,17 @@ module.exports = {
     allowToChangeInstallationDirectory: true,
     createDesktopShortcut: true,
     artifactName: 'rotp-windows-setup.exe',
-    installerSidebar: 'apps/desktop/public/logos/installerSidebar.bmp',
-    uninstallerSidebar: 'apps/desktop/public/logos/uninstallerSidebar.bmp',
+    installerSidebar: 'apps/web/public/logos/installerSidebar.bmp',
+    uninstallerSidebar: 'apps/web/public/logos/uninstallerSidebar.bmp',
   },
   mac: {
     target: ['dmg', 'zip'],
-    icon: 'apps/desktop/public/logos/logo-512.png',
+    icon: 'apps/web/public/logos/logo-512.png',
     artifactName: 'rotp-macos.${ext}',
   },
   linux: {
     target: ['AppImage', 'deb'],
-    icon: 'apps/desktop/public/logos/logo-256.png',
+    icon: 'apps/web/public/logos/logo-256.png',
     artifactName: 'rotp-linux.${ext}',
     category: 'Game',
     maintainer: 'drizztdourden08@users.noreply.github.com',

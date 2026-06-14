@@ -15,13 +15,13 @@
     "sourceMap": true,
     "paths": {
       "@shared/*": ["./shared/*"],
-      "@app/*": ["./apps/desktop/src/*"],
-      "@ds/*": ["./apps/desktop/src/ui/design-system/*"],
-      "@domains/*": ["./apps/desktop/src/ui/domains/*"]
+      "@app/*": ["./apps/web/src/*"],
+      "@ds/*": ["./apps/web/src/ui/design-system/*"],
+      "@domains/*": ["./apps/web/src/ui/domains/*"]
     }
   },
   "include": [
-    "apps/desktop/src/**/*",
+    "apps/web/src/**/*",
     "apps/desktop/electron/**/*",
     "shared/**/*"
   ],

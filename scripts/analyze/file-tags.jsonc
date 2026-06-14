@@ -31,7 +31,7 @@
   "**/*.dat":   { "kind": "asset" },
   "**/*.sfc":   { "kind": "asset" },
 
-  "apps/desktop/public/**":   { "kind": "asset" },
+  "apps/web/public/**":   { "kind": "asset" },
 
   "shared/game/data/**":      { "kind": "data" },
   "shared/input/data/**":     { "kind": "data" },

@@ -15,7 +15,7 @@
 ## Build manually (`build.bat` — what `ensure-wasm` invokes)
 
 `core/wasm-build/build.bat` is the build the app actually uses; it writes straight to
-`apps/desktop/public/wasm/` (with debug info). `ensure-wasm` calls it for you, but you can run it
+`apps/web/public/wasm/` (with debug info). `ensure-wasm` calls it for you, but you can run it
 directly. Activate the Emscripten env first:
 
 ```bash
@@ -30,7 +30,7 @@ renderer) to pick up the new module.
 
 | File | Output | Use |
 |------|--------|-----|
-| `build.bat` | `apps/desktop/public/wasm/` | **Canonical** — what the app runs. |
+| `build.bat` | `apps/web/public/wasm/` | **Canonical** — what the app runs. |
 | `Makefile` (`emmake make`) | `output/` | Alternate (CI). |
 
 Neither carries a per-function `EXPORTED_FUNCTIONS` list. Every `Wasm*` export is tagged
