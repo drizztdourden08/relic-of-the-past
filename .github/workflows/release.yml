@@ -1,11 +1,16 @@
 name: Release
 
-# Runs only when you ask: either trigger it manually, or push a release tag.
+# Two ways in:
+#   1. Manual (workflow_dispatch): enter a version (e.g. 0.9.0). If release-notes/v0.9.0.md
+#      exists and the tag does not, this bumps package.json, commits "release: v0.9.0" to
+#      master, tags it, and runs the full build — as a draft, or published-as-latest when
+#      set_latest is ticked.
+#   2. Push a vX.Y.Z tag yourself: builds and creates a draft (the original flow).
 on:
   workflow_dispatch:
     inputs:
-      tag:
-        description: 'Existing tag to release (e.g. v0.8.6). Required for manual runs.'
+      version:
+        description: 'New version to release, e.g. 0.9.0 (or v0.9.0). release-notes/<tag>.md must already exist on master and the tag must not exist yet.'
         required: true
         type: string
       set_latest:
@@ -25,12 +30,37 @@ permissions:
   contents: write
 
 jobs:
-  preflight:
+  prepare:
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.resolve.outputs.tag }}
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ inputs.tag || github.ref }}
+          ref: master
+          fetch-depth: 0
+
+      - name: Resolve & validate target version
+        id: resolve
+        run: |
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+            # Triggered by a pushed tag — nothing to cut, just pass it through.
+            echo "tag=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+            echo "mode=push" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          RAW="${{ inputs.version }}"
+          TAG="v${RAW#v}"            # accept 0.9.0 or v0.9.0 → v0.9.0
+          if [ ! -f "release-notes/$TAG.md" ]; then
+            echo "::error::Missing release-notes/$TAG.md on master. Commit the notes first — they are the source of truth for the release body."
+            exit 1
+          fi
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "::error::Tag $TAG already exists. Pick a new version."
+            exit 1
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "mode=dispatch" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-node@v6
         with:
@@ -54,17 +84,24 @@ jobs:
           test -f core/wasm-build/Makefile || { echo "Missing WASM Makefile"; exit 1; }
           echo "All preflight checks passed."
 
-      - name: Verify release notes exist
+      - name: Cut release commit & tag
+        # Manual runs only — the gate above has passed, so it is safe to tag now.
+        # Pushing with GITHUB_TOKEN intentionally does NOT re-trigger the push-tag
+        # path, so the build below is the only run.
+        if: steps.resolve.outputs.mode == 'dispatch'
         run: |
-          TAG="${{ inputs.tag || github.ref_name }}"
-          if [ ! -f "release-notes/$TAG.md" ]; then
-            echo "::error::Missing release notes: release-notes/$TAG.md does not exist. Create it (the source of truth for the $TAG release body) and commit it before pushing the $TAG tag."
-            exit 1
-          fi
-          echo "Found release notes for $TAG."
+          TAG="${{ steps.resolve.outputs.tag }}"
+          npm version "${TAG#v}" --no-git-tag-version --allow-same-version
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          git commit -m "release: $TAG"
+          git tag "$TAG"
+          git push origin HEAD:master
+          git push origin "$TAG"
 
   build:
-    needs: preflight
+    needs: prepare
     strategy:
       matrix:
         include:
@@ -83,7 +120,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ inputs.tag || github.ref }}
+          ref: ${{ needs.prepare.outputs.tag }}
 
       - uses: actions/setup-node@v6
         with:
@@ -131,13 +168,13 @@ jobs:
           path: release/${{ matrix.platform }}/*
 
   release:
-    needs: build
+    needs: [prepare, build]
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ inputs.tag || github.ref }}
+          ref: ${{ needs.prepare.outputs.tag }}
 
       - name: Download all artifacts
         uses: actions/download-artifact@v8
@@ -147,7 +184,7 @@ jobs:
 
       - name: Generate release body
         run: |
-          TAG="${{ inputs.tag || github.ref_name }}"
+          TAG="${{ needs.prepare.outputs.tag }}"
           BASE="https://github.com/drizztdourden08/relic-of-the-past/releases/download/${TAG}"
           NOTES="release-notes/${TAG}.md"
           {
@@ -174,7 +211,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: ${{ inputs.tag || github.ref_name }}
+          tag_name: ${{ needs.prepare.outputs.tag }}
           # Default (tag push) stays a draft. A manual run with set_latest=true
           # publishes immediately and marks it the latest release.
           draft: ${{ inputs.set_latest != true }}
