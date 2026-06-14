@@ -23,6 +23,14 @@ const EMPTY_ARRAY_METHODS = new Set<string>([
   'listAutoSaves', 'enumerateHidDevices', 'getOpenHidKeys', 'getSlotInfos',
 ]);
 
+// Invoke methods whose callers immediately read a property of the result; a bare
+// null would throw on access. These return a contract-shaped empty object so the
+// renderer boots cleanly (matches the contract in shared/ipc/invoke-contract.ts).
+const STUB_RETURNS: Record<string, () => unknown> = {
+  getAppState: () => ({ lastProfileId: null }),
+  getTestArgs: () => ({ autoState: null, screenshot: null }),
+};
+
 const installApiShim = (): void => {
   if ((window as { api?: unknown }).api) return; // real api present → leave it
 
@@ -47,7 +55,8 @@ const installApiShim = (): void => {
   };
 
   for (const method of Object.keys(INVOKE_MAP)) {
-    api[method] = (async () => (EMPTY_ARRAY_METHODS.has(method) ? [] : null)) as AnyFn;
+    const stub = STUB_RETURNS[method];
+    api[method] = (async () => (stub ? stub() : EMPTY_ARRAY_METHODS.has(method) ? [] : null)) as AnyFn;
   }
   for (const method of Object.keys(SEND_MAP)) {
     api[method] = (() => {}) as AnyFn;
