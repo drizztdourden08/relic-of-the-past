@@ -56,7 +56,7 @@ void WasmSetMyThing(int value) { /* clamp inputs with clampi() from num_util.h *
   `num_util.h` (`clampi`), `game_constants.h` (`MODULE_*`, `HAPTIC_*`, sprite ids).
   Reuse them instead of re-deriving magic numbers or byte math.
 
-### Step 2 — TypeScript caller (`apps/desktop/src/lib/game/...`)
+### Step 2 — TypeScript caller (`apps/web/src/lib/game/...`)
 
 ```ts
 // scalar

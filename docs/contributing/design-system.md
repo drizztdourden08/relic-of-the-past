@@ -7,7 +7,7 @@ UI fits in the wider app, see @docs/architecture/overview.md.
 
 ## Where things actually live
 
-All UI lives under `apps/desktop/src/ui/`, split into a reusable
+All UI lives under `apps/web/src/ui/`, split into a reusable
 `design-system/` and app-facing `domains/`:
 
 ```
@@ -27,7 +27,7 @@ ui/
 ```
 
 Aliases: `@ds/*` → `ui/design-system/*`, `@domains/*` → `ui/domains/*` (plus the
-existing `@app/*` → `apps/desktop/src/*`, `@shared/*`). Non-presentational code
+existing `@app/*` → `apps/web/src/*`, `@shared/*`). Non-presentational code
 (`App/`, `stores/`, `lib/`, `hooks/`, `utils/`) stays at `src/` root.
 
 ## Component taxonomy — four tiers

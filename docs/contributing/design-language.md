@@ -260,7 +260,7 @@ Raw colors are gating errors rather than conventions. Two blockers:
 
 1. **CSS** (`.stylelintrc.json`): `color-no-hex` + `color-named` (error) and a
    `function-disallowed-list` banning `rgb() / rgba() / hsl() / hsla() / hwb()` in
-   all `apps/desktop/src/ui/**/*.css`. Use `var(--c-*)` / `var(--color-*)`.
+   all `apps/web/src/ui/**/*.css`. Use `var(--c-*)` / `var(--color-*)`.
 2. **Inline styles / TS** (`eslint.config.mjs` → `local/no-raw-color`, error): bans
    hex/rgb/hsl literals assigned to colour-ish style properties (`color`,
    `background`, `borderColor`, `fill`, `stroke`, `boxShadow`, …). Dynamic values

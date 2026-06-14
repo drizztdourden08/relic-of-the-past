@@ -32,7 +32,7 @@ void WasmSetMyThing(int value) { /* … */ }
 `EXPORTED_FUNCTIONS` list to edit in `build.bat`/`Makefile`. Add a declaration to `game_hooks.h` only
 when other C code calls it.
 
-**2 · TypeScript caller** in `apps/desktop/src/lib/game/` (the right `bridge/*` facade or domain module):
+**2 · TypeScript caller** in `apps/web/src/lib/game/` (the right `bridge/*` facade or domain module):
 
 ```ts
 const flag = mod.ccall('WasmGetMyFlag', 'number', [], []) as number;   // scalar

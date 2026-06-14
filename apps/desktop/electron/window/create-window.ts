@@ -23,7 +23,7 @@ const createWindow = (): BrowserWindow => {
     autoHideMenuBar: true,
     title: 'Relic of the Past',
     icon: is.dev
-      ? join(__dirname, '../../apps/desktop/public/logos/logo-256.png')
+      ? join(__dirname, '../../apps/web/public/logos/logo-256.png')
       : join(__dirname, '../renderer/logos/logo-256.png'),
     backgroundColor: '#000000',
     show: !noFocus,

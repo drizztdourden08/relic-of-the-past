@@ -2,7 +2,7 @@
 ---
 
 name: design-system
-description: Build and maintain the app's design system — design tokens and reusable UI primitives (Button, Card, Dialog, Field…) — with strict structure. Use when adding/changing UI styling, creating a reusable component, touching apps/desktop/src/design-system/, introducing a color/spacing/radius value, or when a visual pattern is about to be duplicated. Keeps tokens the single source of truth and primitives strictly organized
+description: Build and maintain the app's design system — design tokens and reusable UI primitives (Button, Card, Dialog, Field…) — with strict structure. Use when adding/changing UI styling, creating a reusable component, touching apps/web/src/design-system/, introducing a color/spacing/radius value, or when a visual pattern is about to be duplicated. Keeps tokens the single source of truth and primitives strictly organized
 ---
 
 # Design system

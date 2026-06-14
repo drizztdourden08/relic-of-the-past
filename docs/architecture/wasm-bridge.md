@@ -10,7 +10,7 @@ full function list is the [Game Hooks Reference](../hooks/overview.md).
 ```mermaid
 flowchart LR
     SRC["core/zelda3 (vendored C)<br/>+ core/game-hooks (our C)"] -->|"Emscripten"| OUT["zelda3.js / .wasm / .data"]
-    OUT -->|"copied to"| PUB["apps/desktop/public/wasm/"]
+    OUT -->|"copied to"| PUB["apps/web/public/wasm/"]
 ```
 
 `core/game-hooks/` is our layer. Every `Wasm*` export and `GameHook_*` callback lives here, or in
@@ -22,7 +22,7 @@ the TS app loads a committed prebuilt module, so day-to-day work needs no Emscri
 
 | Direction | Mechanism | Where |
 |-----------|-----------|-------|
-| JS → C | `mod.ccall('Wasm…', ret, argTypes, args)` | wrappers in `apps/desktop/src/lib/game/` |
+| JS → C | `mod.ccall('Wasm…', ret, argTypes, args)` | wrappers in `apps/web/src/lib/game/` |
 | C → JS | `EM_ASM(window.__on…(...))` | C in `game-hooks/`, handlers in the renderer |
 
 The bridge module (`lib/game/`) is a Facade: it's the only TypeScript allowed to touch the WASM
@@ -30,7 +30,7 @@ module. The renderer reaches the game through it, with no raw `ccall`/`HEAPU8` e
 [architecture invariant](overview.md).
 
 ```
-apps/desktop/src/lib/game/
+apps/web/src/lib/game/
 ├── wasm-bridge.ts        singleton module ref + a few core ccalls
 ├── bridge/               grouped ccall facades (commands, render, ui-state,
 │                         progress, room-grids, room-layout, room-doors,

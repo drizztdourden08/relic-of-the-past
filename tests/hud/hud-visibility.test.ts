@@ -1,7 +1,7 @@
 /* @layer test @kind test */
 import { describe, it, expect } from 'vitest';
 import type { UIMode } from '@shared/game/types';
-import { isMainHudVisibleForMode } from '../../apps/desktop/src/ui/domains/hud/hud-visibility';
+import { isMainHudVisibleForMode } from '../../apps/web/src/ui/domains/hud/hud-visibility';
 
 describe('isMainHudVisibleForMode', () => {
   it('shows the main HUD during gameplay, dialogue, and the pause slide', () => {

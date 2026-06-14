@@ -10,7 +10,7 @@
  */
 import path from 'path';
 
-const UI_PREFIX = 'apps/desktop/src/ui/';
+const UI_PREFIX = 'apps/web/src/ui/';
 const posix = path.posix;
 
 const run = async (records) => {

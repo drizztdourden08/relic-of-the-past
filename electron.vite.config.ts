@@ -5,7 +5,7 @@ import { resolve } from 'path';
 
 const nodeAlias = {
   '@shared': resolve(__dirname, 'shared'),
-  '@app': resolve(__dirname, 'apps/desktop/src'),
+  '@app': resolve(__dirname, 'apps/web/src'),
 };
 
 export default defineConfig({
@@ -33,21 +33,21 @@ export default defineConfig({
     },
   },
   renderer: {
-    root: resolve(__dirname, 'apps/desktop/src'),
-    publicDir: resolve(__dirname, 'apps/desktop/public'),
+    root: resolve(__dirname, 'apps/web/src'),
+    publicDir: resolve(__dirname, 'apps/web/public'),
     plugins: [react()],
     resolve: {
       alias: {
         '@shared': resolve(__dirname, 'shared'),
-        '@app': resolve(__dirname, 'apps/desktop/src'),
-        '@ds': resolve(__dirname, 'apps/desktop/src/ui/design-system'),
-        '@domains': resolve(__dirname, 'apps/desktop/src/ui/domains'),
+        '@app': resolve(__dirname, 'apps/web/src'),
+        '@ds': resolve(__dirname, 'apps/web/src/ui/design-system'),
+        '@domains': resolve(__dirname, 'apps/web/src/ui/domains'),
       },
     },
     build: {
       outDir: resolve(__dirname, 'dist/renderer'),
       rollupOptions: {
-        input: resolve(__dirname, 'apps/desktop/src/index.html'),
+        input: resolve(__dirname, 'apps/web/src/index.html'),
       },
     },
   },
