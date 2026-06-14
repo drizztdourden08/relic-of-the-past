@@ -3,6 +3,16 @@ name: Release
 # Runs only when you ask: either trigger it manually, or push a release tag.
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing tag to release (e.g. v0.8.6). Required for manual runs.'
+        required: true
+        type: string
+      set_latest:
+        description: 'Publish immediately and mark as the latest release (instead of a draft).'
+        required: false
+        default: false
+        type: boolean
   push:
     tags:
       - 'v*'
@@ -19,6 +29,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.tag || github.ref }}
 
       - uses: actions/setup-node@v6
         with:
@@ -43,9 +55,8 @@ jobs:
           echo "All preflight checks passed."
 
       - name: Verify release notes exist
-        if: startsWith(github.ref, 'refs/tags/')
         run: |
-          TAG="${GITHUB_REF#refs/tags/}"
+          TAG="${{ inputs.tag || github.ref_name }}"
           if [ ! -f "release-notes/$TAG.md" ]; then
             echo "::error::Missing release notes: release-notes/$TAG.md does not exist. Create it (the source of truth for the $TAG release body) and commit it before pushing the $TAG tag."
             exit 1
@@ -71,6 +82,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.tag || github.ref }}
 
       - uses: actions/setup-node@v6
         with:
@@ -123,6 +136,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.tag || github.ref }}
 
       - name: Download all artifacts
         uses: actions/download-artifact@v8
@@ -132,7 +147,7 @@ jobs:
 
       - name: Generate release body
         run: |
-          TAG=${GITHUB_REF#refs/tags/}
+          TAG="${{ inputs.tag || github.ref_name }}"
           BASE="https://github.com/drizztdourden08/relic-of-the-past/releases/download/${TAG}"
           NOTES="release-notes/${TAG}.md"
           {
@@ -159,7 +174,11 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
-          draft: true
+          tag_name: ${{ inputs.tag || github.ref_name }}
+          # Default (tag push) stays a draft. A manual run with set_latest=true
+          # publishes immediately and marks it the latest release.
+          draft: ${{ inputs.set_latest != true }}
+          make_latest: ${{ inputs.set_latest == true }}
           generate_release_notes: false
           body_path: release-body.md
           files: |
