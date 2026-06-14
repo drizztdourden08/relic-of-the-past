@@ -11,7 +11,7 @@ import { getModule, setModule, setProfileId, getProfileId, setState, setInput, g
 import { startSramSync, stopSramSync } from './sram-sync';
 import { startAutoSave, stopAutoSave, saveOnQuit } from './auto-save';
 import { resetMasterVolume } from './audio-volume';
-import { reassertVolumes } from './live-settings';
+import { reassertLiveFlagsAfterLoad } from './live-settings';
 import { initTrackerBridge, destroyTrackerBridge } from './tracker';
 import { startSession, endSession } from './session-tracker';
 import { getInputManager } from '../input/input-manager';
@@ -205,8 +205,11 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
     log.wasm('WASM module running');
     canvas.focus();
 
-    // ─── Apply saved volume settings immediately ───
-    reassertVolumes();
+    // ─── Apply saved live flags (HUD/pause/backdrop hide, volumes) immediately ───
+    // A freshly-loaded module starts with every flag at default, so push the primed
+    // values now — otherwise the native HUD-hide flag stays off and the original HUD
+    // renders alongside the enhanced overlay.
+    reassertLiveFlagsAfterLoad();
 
     // ─── Input manager: wire JS-driven input to WASM ───
     const inputMgr = getInputManager();
