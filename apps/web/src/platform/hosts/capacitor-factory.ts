@@ -7,6 +7,8 @@
  */
 import { Capacitor } from '@capacitor/core';
 import type { PlatformFactory, WindowControlsPort } from '@shared/platform';
+import { createCapacitorStorage } from './capacitor/storage';
+import { createCapacitorFileStore } from './capacitor/file-store';
 
 const noopUnsub = () => () => {};
 
@@ -42,8 +44,11 @@ const createCapacitorFactory = (): PlatformFactory => ({
     customProtocol: false,
     selfUpdate: false,
     nativeFileDialog: false,
+    revealDataFolder: false,
   },
   createWindowControls,
+  createStorage: createCapacitorStorage,
+  createFileStore: createCapacitorFileStore,
 });
 
 export { createCapacitorFactory };

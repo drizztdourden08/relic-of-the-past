@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback } from 'react';
+import { DataHome } from './sub-components/DataHome';
 import { ProfileManager } from './sub-components/ProfileManager';
 import { RomManager } from './sub-components/RomManager';
 import { LanguageManager } from './sub-components/LanguageManager';
@@ -32,7 +33,7 @@ const DataManager = (props: DataManagerProps) => {
     isGameRunning = false,
     onSwitchProfile,
   } = props;
-  const [activeTab, setActiveTab] = useState<DataTab>(initialTab ?? 'profiles');
+  const [activeTab, setActiveTab] = useState<DataTab>(initialTab ?? 'home');
 
   // Sync tab when navigating from TitleBar
   useEffect(() => {
@@ -42,6 +43,7 @@ const DataManager = (props: DataManagerProps) => {
   const handleRefresh = useCallback(() => { onRefresh(); }, [onRefresh]);
 
   const tabs: { id: DataTab; icon: string; label: string }[] = [
+    { id: 'home', icon: '🏠', label: 'Home' },
     { id: 'profiles', icon: '👤', label: 'Profiles' },
     { id: 'roms', icon: '🎮', label: 'ROMs' },
     { id: 'sprites', icon: '🖼️', label: 'Sprites' },
@@ -66,6 +68,7 @@ const DataManager = (props: DataManagerProps) => {
         />
 
         <Box className="data-manager__content">
+          {activeTab === 'home' && <DataHome />}
           {activeTab === 'profiles' && (
             <ProfileManager
               profiles={profiles}

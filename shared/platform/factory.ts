@@ -6,12 +6,16 @@
  */
 import type { PlatformInfo, Capabilities } from './types';
 import type { WindowControlsPort } from './ports/window-controls';
+import type { StoragePort } from './ports/storage';
+import type { FileStore } from './ports/file-store';
 
 interface PlatformFactory {
   readonly info: PlatformInfo;
   readonly capabilities: Capabilities;
   createWindowControls: () => WindowControlsPort;
-  // future: createFileStore, createControllerHost, createDialogs, …
+  createStorage: () => StoragePort;
+  createFileStore: () => FileStore;
+  // future: createControllerHost, createDialogs, …
 }
 
 export type { PlatformFactory };

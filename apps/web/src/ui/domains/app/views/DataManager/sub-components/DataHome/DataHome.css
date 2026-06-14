@@ -1,0 +1,103 @@
+/* @layer renderer-components @kind style */
+.data-home {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  overflow-y: auto;
+}
+
+.data-home__location {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-hover);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+}
+
+.data-home__location-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.data-home__os {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  color: var(--c-text);
+}
+
+.data-home__path {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  word-break: break-all;
+}
+
+.data-home__hint {
+  font-size: var(--text-xs);
+  color: var(--c-text-faint);
+  white-space: nowrap;
+}
+
+.data-home__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: var(--space-sm);
+}
+
+.data-home__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  background: var(--c-inset);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+}
+
+.data-home__card-icon {
+  font-size: var(--text-xl);
+}
+
+.data-home__card-count {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semi);
+  color: var(--c-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.data-home__card-label {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.data-home__card-size {
+  font-size: var(--text-xs);
+  color: var(--c-text-faint);
+}
+
+.data-home__loading {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-lg);
+}
+
+.data-home__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--c-border);
+}
+
+.data-home__total {
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+}
