@@ -1,11 +1,10 @@
 name: Release
 
-# Two ways in:
-#   1. Manual (workflow_dispatch): enter a version (e.g. 0.9.0). If release-notes/v0.9.0.md
-#      exists and the tag does not, this bumps package.json, commits "release: v0.9.0" to
-#      master, tags it, and runs the full build — as a draft, or published-as-latest when
-#      set_latest is ticked.
-#   2. Push a vX.Y.Z tag yourself: builds and creates a draft (the original flow).
+# One way in: trigger this workflow with a version (e.g. 0.9.0), either from the
+# GitHub UI (Run workflow) or locally with `npm run release -- 0.9.0 [--latest]`.
+# Both routes pass the SAME params. If release-notes/v0.9.0.md exists and the tag
+# does not, this bumps package.json, commits "release: v0.9.0" to master, tags it,
+# and runs the full build — as a draft, or published-as-latest when set_latest is on.
 on:
   workflow_dispatch:
     inputs:
@@ -18,9 +17,6 @@ on:
         required: false
         default: false
         type: boolean
-  push:
-    tags:
-      - 'v*'
 
 concurrency:
   group: release
@@ -43,12 +39,6 @@ jobs:
       - name: Resolve & validate target version
         id: resolve
         run: |
-          if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
-            # Triggered by a pushed tag — nothing to cut, just pass it through.
-            echo "tag=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
-            echo "mode=push" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
           RAW="${{ inputs.version }}"
           TAG="v${RAW#v}"            # accept 0.9.0 or v0.9.0 → v0.9.0
           if [ ! -f "release-notes/$TAG.md" ]; then
@@ -60,7 +50,6 @@ jobs:
             exit 1
           fi
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-          echo "mode=dispatch" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-node@v6
         with:
@@ -85,10 +74,7 @@ jobs:
           echo "All preflight checks passed."
 
       - name: Cut release commit & tag
-        # Manual runs only — the gate above has passed, so it is safe to tag now.
-        # Pushing with GITHUB_TOKEN intentionally does NOT re-trigger the push-tag
-        # path, so the build below is the only run.
-        if: steps.resolve.outputs.mode == 'dispatch'
+        # The gate above has passed, so it is safe to bump, commit, and tag now.
         run: |
           TAG="${{ steps.resolve.outputs.tag }}"
           npm version "${TAG#v}" --no-git-tag-version --allow-same-version
