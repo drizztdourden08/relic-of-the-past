@@ -7,10 +7,11 @@
  * The workflow itself does the version bump, the "release: vX.Y.Z" commit on
  * master, the tag, and the build — nothing is committed or tagged locally here.
  *
- * Usage:
- *   npm run release -- 0.9.0            # build a draft release
+ * Usage (the version can be positional or a flag; a leading "v" is optional):
+ *   npm run release -- 0.9.0            # positional
+ *   npm run release -- --version 0.9.0  # long flag (also --version=0.9.0)
+ *   npm run release -- -v 0.9.0         # short flag (also -v0.9.0 / --v0.9.0)
  *   npm run release -- 0.9.0 --latest   # publish immediately as the latest release
- *   npm run release -- v0.9.0           # leading "v" is accepted too
  *
  * Preconditions (also enforced server-side by the workflow):
  *   - release-notes/v<version>.md exists and is committed/pushed to master
@@ -25,8 +26,24 @@ const REF = 'master';
 
 const parseArgs = (argv) => {
   const rest = argv.slice(2);
-  const setLatest = rest.includes('--latest');
-  const version = rest.find((a) => !a.startsWith('-'));
+  let version;
+  let setLatest = false;
+
+  for (let i = 0; i < rest.length; i += 1) {
+    const arg = rest[i];
+    if (arg === '--latest') {
+      setLatest = true;
+    } else if (/^--?(?:v|version)=/.test(arg)) {
+      version = arg.split('=')[1]; // --version=0.9.0 / --v=0.9.0 / -v=0.9.0
+    } else if (/^--?(?:v|version)$/.test(arg)) {
+      version = rest[(i += 1)]; // --version 0.9.0 / --v 0.9.0 / -v 0.9.0
+    } else if (/^--?v(\d.*)$/.test(arg)) {
+      version = arg.match(/^--?v(\d.*)$/)[1]; // glued: -v0.9.0 / --v0.9.0
+    } else if (!arg.startsWith('-') && version === undefined) {
+      version = arg; // positional
+    }
+  }
+
   return { version, setLatest };
 };
 
@@ -39,7 +56,7 @@ const run = () => {
   const { version, setLatest } = parseArgs(process.argv);
 
   if (!version) {
-    fail('Missing version. Example: npm run release -- 0.9.0 [--latest]');
+    fail('Missing version. Examples: npm run release -- 0.9.0   |   npm run release -- --version 0.9.0 [--latest]');
   }
 
   const tag = `v${version.replace(/^v/, '')}`;
