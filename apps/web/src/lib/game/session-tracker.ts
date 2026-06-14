@@ -6,6 +6,7 @@
 
 import type { PlaySession } from '@shared/types/session';
 import { log } from '../log-bus';
+import { saveSession, listSessions as listSessionsStore } from '../storage/profile-data-store';
 
 let activeSession: { id: string; profileId: string; startedAt: number } | null = null;
 
@@ -42,7 +43,7 @@ const endSession = async (): Promise<PlaySession | null> => {
   activeSession = null;
 
   try {
-    await window.api.saveSession(session.profileId, session);
+    await saveSession(session.profileId, session);
   } catch {
     log.error('[Session] Failed to persist session');
   }
@@ -56,7 +57,7 @@ const getActiveSession = () => {
 
 const listSessions = async (profileId: string): Promise<PlaySession[]> => {
   try {
-    return await window.api.listSessions(profileId);
+    return await listSessionsStore(profileId);
   } catch {
     return [];
   }
