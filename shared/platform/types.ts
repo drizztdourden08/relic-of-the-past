@@ -29,6 +29,7 @@ interface Capabilities {
   selfUpdate: boolean; // electron-updater present
   nativeFileDialog: boolean; // OS open dialog vs document picker
   revealDataFolder: boolean; // can open the data dir in an OS file manager
+  hapticFeedback: boolean; // controller rumble / device vibration available
 }
 
 export type { HostShell, OsKind, FormFactor, InputModel, PlatformInfo, Capabilities };

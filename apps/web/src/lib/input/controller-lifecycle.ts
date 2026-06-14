@@ -5,6 +5,7 @@
  */
 
 import { findController } from '@shared/input/register-all';
+import * as controllersStore from './controllers-store';
 import type { ControllerContext } from '@shared/input/base';
 import { webHidReader } from './hid-reader';
 
@@ -15,7 +16,7 @@ const initController = async (deviceKey: string, vendorId: string, productId: st
   if (!controller) return;
   const ctx: ControllerContext = {
     deviceKey,
-    hidWrite: (data: number[]) => window.api.writeHidDevice(deviceKey, data),
+    hidWrite: (data: number[]) => controllersStore.writeHidDevice(deviceKey, data),
     usbOpen: async (vid: number, pid: number) => {
       if (!navigator.usb) return null;
       try {
