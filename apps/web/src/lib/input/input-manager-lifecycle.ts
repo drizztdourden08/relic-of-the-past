@@ -1,6 +1,7 @@
 /* @layer renderer-lib @kind logic */
 /** Start/stop listener wiring + device refresh for InputManager (take the instance). */
 import { KEYBOARD_DEFAULT } from '@shared/input';
+import { getPlatform } from '@app/platform/get-platform';
 import * as controllersStore from './controllers-store';
 import { detectAllDevices } from './device-detector';
 import { webHidReader } from './hid-reader';
@@ -9,6 +10,15 @@ import { profileFromPreset } from './profile-utils';
 import { initController, resetController } from './controller-lifecycle';
 import { resolveGamepad } from './input-manager-events';
 import type { InputManager } from './input-manager';
+
+// One-time hint when a controller can't be opened on Linux (missing udev rules).
+let linuxUdevHintShown = false;
+const maybeLinuxUdevHint = (error: string): void => {
+  if (linuxUdevHintShown || getPlatform().info.os !== 'linux') return;
+  if (!/access|permission|eacces|cannot open|open failed/i.test(error)) return;
+  linuxUdevHintShown = true;
+  webHidReader.addDiag('🐧 Controller access denied. Install the udev rules — see docs/controllers/linux-setup.md (the .deb installs them automatically).');
+};
 
 const startInput = (m: InputManager): void => {
   if (m.running) return;
@@ -63,6 +73,7 @@ const startInput = (m: InputManager): void => {
   });
   m.ipcErrorUnsub = controllersStore.onHidError((info) => {
     webHidReader.addDiag(`⚠ HID error (${info.deviceKey}): ${info.error}`);
+    maybeLinuxUdevHint(info.error);
     resetController(info.deviceKey, m.activeControllers);
   });
   m.ipcMainPerfUnsub = controllersStore.onHidMainPerf((msg) => {

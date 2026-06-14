@@ -51,4 +51,9 @@ module.exports = {
     category: 'Game',
     maintainer: 'drizztdourden08@users.noreply.github.com',
   },
+  // .deb auto-installs the controller udev rules (AppImage users install manually —
+  // see docs/controllers/linux-setup.md).
+  deb: {
+    afterInstall: 'scripts/build/linux/deb-postinst.sh',
+  },
 };
