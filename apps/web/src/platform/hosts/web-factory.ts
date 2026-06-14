@@ -32,6 +32,7 @@ const createStorage = (): StoragePort => ({
   getLocation: async () => EMPTY_SUMMARY.location,
   reveal: async () => {},
   getSummary: async () => EMPTY_SUMMARY,
+  spritesBaseUrl: async () => '',
 });
 
 const createFileStore = (): FileStore => ({

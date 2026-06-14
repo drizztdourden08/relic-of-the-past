@@ -5,6 +5,7 @@ import type { LanguageSummary } from '@shared/types/language';
 import { ImportForm } from './ImportForm';
 import { LANGUAGE_NAMES } from './language-names';
 import { LanguageDetail } from './language-detail';
+import * as languagesStore from '@app/lib/storage/languages-store';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { IconButton } from '../../../../../design-system/primitives/IconButton';
 import { Select } from '../../../../../design-system/primitives/Select';
@@ -29,7 +30,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
   const [extractLang, setExtractLang] = useState('');
 
   const refresh = useCallback(async () => {
-    const langs = await window.api.listLanguages();
+    const langs = await languagesStore.listLanguages();
     setLanguages(langs);
   }, []);
 
@@ -37,7 +38,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
 
   const handleUrlImport = useCallback(async (url: string) => {
     if (!extractLang) return { success: false, message: 'Select a language first' };
-    const result = await window.api.extractLanguageFromUrl(url, extractLang);
+    const result = await languagesStore.extractLanguageFromUrl(url, extractLang);
     if (result.success) {
       await refresh();
       setSelected(extractLang);
@@ -49,9 +50,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
   const handleFileImport = useCallback(async (files: File[]) => {
     if (files.length === 0) return { success: false, message: 'No file selected' };
     if (!extractLang) return { success: false, message: 'Select a language first' };
-    const filePath = window.api.getFilePath(files[0]);
-    if (!filePath) return { success: false, message: 'Could not read file path' };
-    const result = await window.api.extractLanguageFromFile(filePath, extractLang);
+    const result = await languagesStore.extractLanguageFromFile(files[0], extractLang);
     if (result.success) {
       await refresh();
       setSelected(extractLang);
@@ -63,7 +62,7 @@ const LanguageManager = (props: LanguageManagerProps) => {
   const handleDelete = useCallback((code: string) => {
     const name = LANGUAGE_NAMES[code] ?? code;
     onDeleteConfirm('Delete Language', `Delete language pack "${name}"? This cannot be undone.`, async () => {
-      await window.api.deleteLanguage(code);
+      await languagesStore.deleteLanguage(code);
       if (selected === code) setSelected(null);
       await refresh();
     });

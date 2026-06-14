@@ -5,6 +5,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { readConfig } from '../../../../../../../lib/storage/profile-store';
+import { listLanguages } from '../../../../../../../lib/storage/languages-store';
+import { listMsuPacks } from '../../../../../../../lib/storage/msu-store';
 
 interface UseProfileManagerParams {
   profiles: Profile[];
@@ -28,8 +30,8 @@ const useProfileManager = ({ profiles, romStatuses, onCreateProfile, onRefresh }
   const selectedProfile = profiles.find((p) => p.id === selected);
 
   useEffect(() => {
-    window.api.listLanguages().then(setLanguages);
-    window.api.listMsuPacks().then(setMsuPacks);
+    listLanguages().then(setLanguages);
+    listMsuPacks().then(setMsuPacks);
   }, [creating]);
 
   useEffect(() => {

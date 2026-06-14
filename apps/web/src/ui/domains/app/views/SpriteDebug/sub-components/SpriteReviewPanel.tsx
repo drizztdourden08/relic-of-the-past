@@ -10,6 +10,7 @@ import type { ReviewStatus, ReviewData } from '../SpriteDebug.type';
 import { Box, Button } from '../../../../../design-system/primitives';
 import { CategoryButton, FilterBtns, Stats } from './ReviewControls';
 import { SpriteImageCard } from './ReviewCards';
+import { loadSpriteReview, saveSpriteReview } from '@app/lib/storage/sprites-store';
 import { S } from '../SpriteDebug.constants';
 
 const SpriteReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
@@ -20,12 +21,12 @@ const SpriteReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    window.api.loadSpriteReview().then(d => { setData((d ?? {}) as ReviewData); setLoaded(true); });
+    loadSpriteReview().then(d => { setData((d ?? {}) as ReviewData); setLoaded(true); });
   }, []);
 
   const persist = useCallback((next: ReviewData) => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => window.api.saveSpriteReview(next), 300);
+    saveTimer.current = setTimeout(() => saveSpriteReview(next), 300);
   }, []);
 
   const setStatus = (key: string, status: ReviewStatus) => {
@@ -79,7 +80,7 @@ const SpriteReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
         <Stats counts={counts} total={SPRITE_MANIFEST.length} />
         <Box style={S.headerButtons}>
           <FilterBtns filter={filter} setFilter={setFilter} />
-          <Button variant="bare" onClick={() => { setData({}); window.api.saveSpriteReview({}); }} style={S.resetBtn}>Reset</Button>
+          <Button variant="bare" onClick={() => { setData({}); saveSpriteReview({}); }} style={S.resetBtn}>Reset</Button>
         </Box>
       </Box>
       <Box style={S.grid}>

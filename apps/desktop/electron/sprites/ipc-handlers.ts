@@ -6,7 +6,7 @@ import { getUserDataPath } from '../lib/paths';
 import { readJson, writeJson } from '../lib/json-store';
 import { logToRenderer } from '../lib/renderer-log';
 import { makeImportReporter } from '../lib/import-progress';
-import { extractAllItemSprites } from '@shared/asset-extraction/item-sprites/extract-items';
+import { extractAllItemSprites } from '@shared/asset-extraction/item-sprites/extract-items-node';
 import spriteDefinitions from '@shared/game/sprites/definitions.json';
 
 const spriteDir = (romFile: string): string => {

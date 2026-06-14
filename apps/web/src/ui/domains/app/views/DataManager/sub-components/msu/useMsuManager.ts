@@ -5,6 +5,7 @@ import { formatBytes } from '../../../../../../../utils/formatBytes';
 import { MSU_TRACK_DESCRIPTIONS } from './msu-track-descriptions';
 import { getTrackNumber } from './msu.type';
 import type { MsuPack, MsuFile, TrackInfo, MatchedTrack } from './msu.type';
+import * as msuStore from '@app/lib/storage/msu-store';
 
 const useMsuManager = (onRefresh: () => void) => {
   const [packs, setPacks] = useState<MsuPack[]>([]);
@@ -16,7 +17,7 @@ const useMsuManager = (onRefresh: () => void) => {
   const [trackMapping, setTrackMapping] = useState<Record<number, string>>({});
 
   const refresh = useCallback(async () => {
-    const list = await window.api.listMsuPacks();
+    const list = await msuStore.listMsuPacks();
     setPacks(list);
     onRefresh();
   }, [onRefresh]);
@@ -28,8 +29,8 @@ const useMsuManager = (onRefresh: () => void) => {
     if (!selected) { setFiles([]); setTrackInfos([]); return; }
     setLoadingFiles(true);
     Promise.all([
-      window.api.getMsuPackFiles(selected),
-      window.api.getMsuTrackList(selected),
+      msuStore.getMsuPackFiles(selected),
+      msuStore.getMsuTrackList(selected),
     ]).then(([fileList, tracks]) => {
       setFiles(fileList.sort((a, b) => {
         const na = getTrackNumber(a.name) ?? 999;
@@ -99,7 +100,7 @@ const useMsuManager = (onRefresh: () => void) => {
 
   const handleUrlImport = useCallback(async (url: string) => {
     const packName = newPackName.trim() || `pack-${Date.now()}`;
-    const result = await window.api.importMsu(packName, url);
+    const result = await msuStore.importMsu(packName, url);
     if (result.success) {
       await refresh();
       setSelected(packName);
@@ -111,10 +112,8 @@ const useMsuManager = (onRefresh: () => void) => {
 
   const handleFileImport = useCallback(async (importFiles: File[]) => {
     if (importFiles.length === 0) return { success: false, message: 'No file selected' };
-    const filePath = window.api.getFilePath(importFiles[0]);
-    if (!filePath) return { success: false, message: 'Could not read file path' };
     const packName = newPackName.trim() || `pack-${Date.now()}`;
-    const result = await window.api.importMsuFile(packName, filePath);
+    const result = await msuStore.importMsuFile(packName, importFiles[0]);
     if (result.success) {
       await refresh();
       setSelected(packName);

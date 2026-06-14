@@ -30,6 +30,7 @@ const createStorage = (): StoragePort => ({
   getLocation: () => window.api.getDataLocation(),
   reveal: () => window.api.revealDataFolder(),
   getSummary: () => window.api.getStorageSummary(),
+  spritesBaseUrl: async (romFile) => window.api.getSpritesBaseUrl(romFile),
 });
 
 const createFileStore = (): FileStore => ({

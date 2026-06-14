@@ -12,6 +12,7 @@ import { Button } from '../../../../../design-system/primitives/Button';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { useSpriteAvailabilityStore } from '../../../../../../stores/sprite-availability-store';
+import * as spritesStore from '@app/lib/storage/sprites-store';
 import './HudStyleControl.css';
 
 interface HudStyleControlProps {
@@ -26,7 +27,7 @@ const HudStyleControl = ({ value, onChange }: HudStyleControlProps) => {
   // Re-check on mount — sprites may have been extracted from the Data Manager.
   useEffect(() => {
     if (!romFile) return;
-    void window.api.checkSpritesExtracted(romFile).then(({ extracted }) => setAvailability(romFile, extracted));
+    void spritesStore.checkSpritesExtracted(romFile).then(({ extracted }) => setAvailability(romFile, extracted));
   }, [romFile, setAvailability]);
 
   const options = [
@@ -37,9 +38,9 @@ const HudStyleControl = ({ value, onChange }: HudStyleControlProps) => {
   const handleExtract = async () => {
     if (!romFile || extracting) return;
     setExtracting(true);
-    const res = await window.api.extractSprites(romFile);
+    const res = await spritesStore.extractSprites(romFile);
     if (res.success) {
-      const { extracted } = await window.api.checkSpritesExtracted(romFile);
+      const { extracted } = await spritesStore.checkSpritesExtracted(romFile);
       setAvailability(romFile, extracted);
     }
     setExtracting(false);

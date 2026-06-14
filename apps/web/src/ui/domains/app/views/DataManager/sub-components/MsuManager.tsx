@@ -6,6 +6,7 @@ import { Text } from '../../../../../design-system/primitives/Text';
 import { TextInput } from '../../../../../design-system/primitives/TextInput';
 import { Field } from '../../../../../design-system/primitives/Field';
 import { MasterDetailLayout } from '../../../../../design-system/composites/MasterDetailLayout';
+import { deleteMsuPack } from '@app/lib/storage/msu-store';
 import { useMsuManager } from './msu/useMsuManager';
 import { MsuPackList } from './msu/MsuPackList';
 import { MsuTrackPanel } from './msu/MsuTrackPanel';
@@ -36,7 +37,7 @@ const MsuManager = (props: MsuManagerProps) => {
 
   const handleDelete = useCallback((packName: string) => {
     onDeleteConfirm('Delete MSU Pack', `Delete MSU pack "${packName}"? This cannot be undone.`, async () => {
-      await window.api.deleteMsuPack(packName);
+      await deleteMsuPack(packName);
       if (selected === packName) { setSelected(null); }
       await refresh();
     });

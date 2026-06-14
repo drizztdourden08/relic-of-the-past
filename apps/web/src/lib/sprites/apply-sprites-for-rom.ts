@@ -7,11 +7,12 @@
  */
 import { setSpritesBase } from '@shared/game/items/sprites';
 import { useSpriteAvailabilityStore } from '../../stores/sprite-availability-store';
+import * as spritesStore from '../storage/sprites-store';
 
 const applySpritesForRom = async (romFile: string): Promise<void> => {
-  setSpritesBase(window.api.getSpritesBaseUrl(romFile));
+  setSpritesBase(await spritesStore.getSpritesBaseUrl(romFile));
   try {
-    const { extracted } = await window.api.checkSpritesExtracted(romFile);
+    const { extracted } = await spritesStore.checkSpritesExtracted(romFile);
     useSpriteAvailabilityStore.getState().setAvailability(romFile, extracted);
   } catch {
     useSpriteAvailabilityStore.getState().setAvailability(romFile, false);

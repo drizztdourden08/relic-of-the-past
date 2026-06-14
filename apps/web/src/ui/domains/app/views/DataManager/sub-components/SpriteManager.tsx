@@ -13,6 +13,7 @@ import { ListItemRow } from '../../../../../design-system/composites/ListItemRow
 import { SpriteGrid } from './SpriteGrid';
 import { ImportProgress } from './ImportProgress';
 import { useImportProgress } from '@app/hooks/useImportProgress';
+import * as spritesStore from '@app/lib/storage/sprites-store';
 import './SpriteManager.css';
 
 interface SpriteManagerProps {
@@ -34,7 +35,7 @@ const SpriteManager = (props: SpriteManagerProps) => {
 
   const refreshExtracted = useCallback(async () => {
     const entries = await Promise.all(
-      romsWithAssets.map(async (r) => [r.romFile, await window.api.checkSpritesExtracted(r.romFile)] as const)
+      romsWithAssets.map(async (r) => [r.romFile, await spritesStore.checkSpritesExtracted(r.romFile)] as const)
     );
     setExtractedMap(Object.fromEntries(entries));
   }, [romsWithAssets]);
@@ -56,15 +57,18 @@ const SpriteManager = (props: SpriteManagerProps) => {
     if (!importedRoms.some(r => r.romFile === selectedRom)) setSelectedRom(importedRoms[0].romFile);
   }, [importedRoms, selectedRom]);
 
-  const spriteBaseUrl = useMemo(
-    () => selectedRom ? window.api.getSpritesBaseUrl(selectedRom) : '',
-    [selectedRom]
-  );
+  const [spriteBaseUrl, setSpriteBaseUrl] = useState('');
+  useEffect(() => {
+    if (!selectedRom) { setSpriteBaseUrl(''); return; }
+    let cancelled = false;
+    spritesStore.getSpritesBaseUrl(selectedRom).then((u) => { if (!cancelled) setSpriteBaseUrl(u); });
+    return () => { cancelled = true; };
+  }, [selectedRom]);
 
   const handleExtract = useCallback(async () => {
     if (!toExtract) return;
     setBusy(true); setMessage(null);
-    const result = await window.api.extractSprites(toExtract);
+    const result = await spritesStore.extractSprites(toExtract);
     setBusy(false);
     if (result.success) {
       setMessage({ type: 'success', text: `Extracted ${result.count ?? 0} sprites` });
@@ -78,7 +82,7 @@ const SpriteManager = (props: SpriteManagerProps) => {
 
   const handleDelete = useCallback(async (romFile: string) => {
     setBusy(true); setMessage(null);
-    const result = await window.api.deleteSprites(romFile);
+    const result = await spritesStore.deleteSprites(romFile);
     setBusy(false);
     if (result.success) {
       await refreshExtracted();
