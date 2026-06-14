@@ -7,6 +7,7 @@ import type { ProfileHubProps } from '../ProfileHub.type';
 import { pushLiveSettings, LIVE_SETTINGS, getInputManager } from '../../../../../../lib/game';
 import { useHudSettingsStore } from '../../../../../../stores/hud-settings-store';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
+import { writeConfig } from '../../../../../../lib/storage/profile-store';
 
 const syncHudStore = (s: GameSettings): void => {
   useHudSettingsStore.getState().setHudSettings({
@@ -44,7 +45,7 @@ const applySettingsSideEffects = (patch: Partial<GameSettings>, next: GameSettin
   } = deps;
 
   // Persist asynchronously; surface failures so settings never silently fail to save.
-  window.api.writeConfig(profileId, { ...next }).catch((e: unknown) => {
+  writeConfig(profileId, { ...next }).catch((e: unknown) => {
     console.error('[settings] failed to persist config', e);
     setToasts((prev) => [
       ...prev.filter((t) => t.id !== 'config-save-failed'),

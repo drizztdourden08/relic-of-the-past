@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { readConfig } from '../../../../../../../lib/storage/profile-store';
 
 interface UseProfileManagerParams {
   profiles: Profile[];
@@ -33,7 +34,7 @@ const useProfileManager = ({ profiles, romStatuses, onCreateProfile, onRefresh }
 
   useEffect(() => {
     if (!selected) { setSettings(null); return; }
-    window.api.readConfig(selected).then(setSettings);
+    readConfig(selected).then(setSettings);
   }, [selected]);
 
   const handleCreate = useCallback(() => {

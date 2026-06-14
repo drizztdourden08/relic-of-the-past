@@ -9,6 +9,7 @@ import { Text } from '../../../../../../design-system/primitives/Text';
 import { Select } from '../../../../../../design-system/primitives/Select';
 import { Button } from '../../../../../../design-system/primitives/Button';
 import { formatRelativeTime } from '../../../../../../../utils';
+import { updateProfile } from '../../../../../../../lib/storage/profile-store';
 import { languageLabel } from '../language-names';
 
 const IL: Record<string, CSSProperties> = {
