@@ -1,11 +1,11 @@
 /* @layer renderer-app @kind component */
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Box, Image } from '@ds/primitives';
 import { WidgetManager, useWidgetLayout } from '@ds/composites/Widget';
 import { Dialog } from '@ds/composites/Dialog';
 import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, DatasetWidgetContent, CheatsWidgetContent } from '@domains/widgets';
 import { loadTrackerStateBlob, saveTrackerStateBlob } from '@app/lib/tracker-state-io';
-import { getInputManager, primeLiveSettings } from '@app/lib/game';
+import { primeLiveSettings } from '@app/lib/game';
 import { useExclusiveInsetsStore } from '@app/stores/exclusive-insets-store';
 import { useAutoUpdate } from '@app/hooks/useAutoUpdate';
 import { useAppVersion } from '@app/hooks/useAppVersion';
@@ -26,6 +26,7 @@ import { useStartup } from '@app/App/behavior/useStartup';
 import { useAutoTest } from '@app/App/behavior/useAutoTest';
 import { useDumpLayers } from '@app/App/behavior/useDumpLayers';
 import { useDumpNav } from '@app/App/behavior/useDumpNav';
+import { useAppMainEffects } from '@app/App/behavior/useAppMainEffects';
 import { useCapability } from '@app/platform';
 import { TitleBar } from '../TitleBar';
 import { GameLayer } from '../GameLayer';
@@ -40,6 +41,7 @@ const widgetIO = { load: loadTrackerStateBlob, save: saveTrackerStateBlob };
 const AppMain = () => {
   const appVersion = useAppVersion();
   const windowChrome = useCapability('windowChrome');
+  const canUpdate = useCapability('selfUpdate');
 
   const { dialog, showDialog, dismissDialog, handleDeleteConfirm } = useConfirmDialog();
   const game = useGameLifecycle();
@@ -90,17 +92,7 @@ const AppMain = () => {
   useDumpLayers({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame, openNavWidget: () => widgets.open('navigation') });
   useDumpNav({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame });
   useIpcLogBridge();
-
-  // Auto-open navigation widget when --auto-flood CLI flag is set
-  useEffect(() => {
-    if (window.api.autoFlood) widgets.open('navigation');
-  }, []);
-
-  // Input suppression: disable game input when menus/overlays are open
-  useEffect(() => {
-    const gameActive = game.isRunning && nav.activePage === 'none';
-    getInputManager().setInputSuppressed(!gameActive);
-  }, [game.isRunning, nav.activePage]);
+  useAppMainEffects({ isGameRunning: game.isRunning, activePage: nav.activePage, openNavWidget: () => widgets.open('navigation') });
 
   const widgetVisibility = useMemo(() => Object.fromEntries(widgets.layout.widgets.map((w) => [w.id, w.visible])), [widgets.layout]);
 
@@ -133,9 +125,9 @@ const AppMain = () => {
         isMuted={audio.isMuted}
         onToggleMute={audio.handleToggleMute}
         showFps={display.showFps}
-        updateAvailable={!update.portable && (update.status === 'available' || update.status === 'ready')}
+        updateAvailable={canUpdate && !update.portable && (update.status === 'available' || update.status === 'ready')}
         onUpdateClick={() => setShowUpdateDialog(true)}
-        onCheckForUpdates={update.portable ? undefined : () => { update.check(); setShowUpdateDialog(true); }}
+        onCheckForUpdates={!canUpdate || update.portable ? undefined : () => { update.check(); setShowUpdateDialog(true); }}
       />
       )}
 
@@ -206,6 +198,7 @@ const AppMain = () => {
         onCancel={dismissDialog}
       />
 
+      {canUpdate && (
       <UpdateDialog
         open={showUpdateDialog}
         state={update}
@@ -213,6 +206,7 @@ const AppMain = () => {
         onInstall={update.install}
         onClose={() => setShowUpdateDialog(false)}
       />
+      )}
 
       <AboutDialog
         open={showAbout}

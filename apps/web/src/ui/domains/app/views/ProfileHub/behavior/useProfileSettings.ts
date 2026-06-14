@@ -2,6 +2,7 @@
 /** Settings load/persist/live-push, pause tracking, and restart toasts for ProfileHub. */
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { GameSettings } from '@shared/types/settings';
+import { usePlatform } from '@app/platform';
 import type { ToastItem } from '../../../../../design-system/primitives/Toast';
 import { DEFAULT_SETTINGS, mergeSettings } from '../../../../../../lib/game/settings';
 import { pushLiveSettings, LIVE_SETTINGS, getInputManager } from '../../../../../../lib/game';
@@ -17,6 +18,7 @@ const useProfileSettings = (props: ProfileHubProps) => {
     onSaveSlotSettingsChange, onEdgeEffectChange, onShadowCastingChange,
   } = props;
 
+  const { window: win } = usePlatform();
   const [settings, setSettings] = useState<GameSettings>(DEFAULT_SETTINGS);
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const restartToastShownRef = useRef(false);
@@ -75,12 +77,13 @@ const useProfileSettings = (props: ProfileHubProps) => {
       const next = { ...prev, ...patch };
       applySettingsSideEffects(patch, next, {
         profileId: profile.id, isGameRunning, changedKeys, restartToastShownRef, setToasts,
+        setFullscreen: win.setFullscreen,
         onWindowModeChange, onConstraintSettingsChange, onMasterVolumeChange, onDisplayPerfChange,
         onSaveSlotSettingsChange, onEdgeEffectChange, onShadowCastingChange,
       });
       return next;
     });
-  }, [profile.id, isGameRunning]);
+  }, [profile.id, isGameRunning, win]);
 
   // Apply master volume override from titlebar mute toggle
   useEffect(() => {
