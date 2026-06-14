@@ -2,6 +2,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App';
+import { PlatformProvider } from './platform';
 import { pollInventoryState, getCompletedChecks, getCurrentInventory } from './lib/game/tracker';
 import './ui/design-system/tokens/index.css';
 
@@ -10,6 +11,8 @@ import './ui/design-system/tokens/index.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <PlatformProvider>
+      <App />
+    </PlatformProvider>
   </StrictMode>,
 );

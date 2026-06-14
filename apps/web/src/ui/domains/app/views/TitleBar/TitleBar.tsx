@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useRef, useState, useEffect, useCallback } from 'react';
 import type { GameSettings } from '@shared/types/settings';
+import { usePlatform } from '@app/platform';
 import { DropdownMenu } from '../../../../design-system/composites/DropdownMenu';
 import { IconButton } from '../../../../design-system/primitives/IconButton';
 import { Box } from '../../../../design-system/primitives/Box';
@@ -51,6 +52,7 @@ const TitleBar = (props: TitleBarProps) => {
     onCheckForUpdates,
   } = props;
   const menuRef = useRef<HTMLDivElement>(null);
+  const { window: win } = usePlatform();
   const { isMaximized, menuOpen, toggleMenu, closeMenu } = useTitleBar(menuRef);
   const [pinned, setPinned] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -60,9 +62,9 @@ const TitleBar = (props: TitleBarProps) => {
 
   // Track fullscreen state independently of windowMode
   useEffect(() => {
-    window.api.isFullscreen().then(setIsFullscreen);
-    return window.api.onFullscreenChange(setIsFullscreen);
-  }, []);
+    win.isFullscreen().then(setIsFullscreen);
+    return win.onFullscreenChange(setIsFullscreen);
+  }, [win]);
 
   const hidden = windowMode === 'borderless' || isFullscreen;
 
@@ -97,7 +99,7 @@ const TitleBar = (props: TitleBarProps) => {
   }, [showFps, gameRunning]);
 
   const togglePin = async () => {
-    const result = await window.api.setAlwaysOnTop(!pinned);
+    const result = await win.setAlwaysOnTop(!pinned);
     setPinned(result);
   };
 
