@@ -1,5 +1,6 @@
 /* @layer renderer-appshell @kind hook */
 import { useEffect } from 'react';
+import { usePlatform } from '@app/platform';
 import type { PageId, ConfirmDialog } from '../types';
 
 const useKeyboardShortcuts = (
@@ -8,11 +9,12 @@ const useKeyboardShortcuts = (
   dismissDialog: () => void,
   activeProfile: Profile | null,
 ) => {
+  const { window: win } = usePlatform();
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.altKey && e.key === 'Enter') {
         e.preventDefault();
-        window.api.toggleFullscreen();
+        win.toggleFullscreen();
         return;
       }
       // Dev-only Sprite Debug toggle (Ctrl+Shift+D) — opens it as a full-window page,
@@ -34,7 +36,7 @@ const useKeyboardShortcuts = (
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, [nav, activeProfile, dialog, dismissDialog]);
+  }, [win, nav, activeProfile, dialog, dismissDialog]);
 };
 
 export { useKeyboardShortcuts };

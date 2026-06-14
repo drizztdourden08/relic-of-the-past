@@ -33,11 +33,12 @@ interface SettingsEffectDeps extends ParentCallbacks {
   changedKeys: (keyof GameSettings)[];
   restartToastShownRef: React.MutableRefObject<boolean>;
   setToasts: React.Dispatch<React.SetStateAction<ToastItem[]>>;
+  setFullscreen: (on: boolean) => void;
 }
 
 const applySettingsSideEffects = (patch: Partial<GameSettings>, next: GameSettings, deps: SettingsEffectDeps): void => {
   const {
-    profileId, isGameRunning, changedKeys, restartToastShownRef, setToasts,
+    profileId, isGameRunning, changedKeys, restartToastShownRef, setToasts, setFullscreen,
     onWindowModeChange, onConstraintSettingsChange, onMasterVolumeChange, onDisplayPerfChange,
     onSaveSlotSettingsChange, onEdgeEffectChange, onShadowCastingChange,
   } = deps;
@@ -58,7 +59,7 @@ const applySettingsSideEffects = (patch: Partial<GameSettings>, next: GameSettin
 
   // Apply fullscreen immediately when toggled
   if ('startFullscreen' in patch) {
-    window.api.setFullscreen(!!next.startFullscreen);
+    setFullscreen(!!next.startFullscreen);
   }
 
   // Notify parent of constraint-relevant settings changes

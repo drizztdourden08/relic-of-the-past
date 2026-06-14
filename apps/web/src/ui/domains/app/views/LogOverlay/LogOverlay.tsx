@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useRef } from 'react';
+import { usePlatform } from '@app/platform';
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';
 import { Icon } from '../../../../design-system/primitives/Icon';
@@ -13,6 +14,7 @@ import type { LogOverlayProps } from './LogOverlay.type';
 
 const LogOverlay = (props: LogOverlayProps) => {
   const { visible: externalVisible, onClose } = props;
+  const { window: win } = usePlatform();
   const bottomRef = useRef<HTMLDivElement>(null);
   const { visible: f12Visible, setVisible: setF12Visible, entries } = useLogOverlay(bottomRef);
 
@@ -29,7 +31,7 @@ const LogOverlay = (props: LogOverlayProps) => {
       <Box className="log-overlay__header">
         <Text className="log-overlay__title">Log</Text>
         <Text className="log-overlay__hint">F12 to toggle</Text>
-        <IconButton variant="ghost" size="sm" label="Open DevTools" onClick={() => window.api.openDevTools()}>
+        <IconButton variant="ghost" size="sm" label="Open DevTools" onClick={() => win.openDevTools()}>
           <Icon paths={DEVTOOLS_ICON_PATHS} size={12} />
         </IconButton>
         <IconButton variant="ghost" size="sm" label="Close logs" onClick={handleClose}>

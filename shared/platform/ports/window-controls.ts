@@ -13,7 +13,10 @@ interface WindowControlsPort {
   toggleMaximize: () => void;
   close: () => void;
   toggleFullscreen: () => void;
+  setFullscreen: (on: boolean) => void;
+  setAspectRatioLock: (ratio: number, extraHeight: number) => void;
   setAlwaysOnTop: (on: boolean) => Promise<boolean>;
+  openDevTools: () => void;
   isMaximized: () => Promise<boolean>;
   isFullscreen: () => Promise<boolean>;
   onMaximizedChange: (cb: (value: boolean) => void) => Unsub;

@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind logic */
 /** Builds the TitleBar dropdown menu item tree from props + closeMenu. */
+import type { WindowControlsPort } from '@shared/platform';
 import type { DropdownMenu } from '../../../../../design-system/composites/DropdownMenu';
 import type { TitleBarProps } from '../TitleBar.type';
 
@@ -11,11 +12,11 @@ type MenuBuilderDeps = Pick<TitleBarProps,
   | 'onShowConnectionDebug' | 'onToggleDataset' | 'onShowInputTester' | 'onShowSpriteDebug'
   | 'onShowShadowEditor' | 'onCheckForUpdates' | 'onShowCredits' | 'onShowDesignGallery' | 'onShowAbout'
   | 'widgetVisibility'
-> & { closeMenu: () => void };
+> & { closeMenu: () => void; win: WindowControlsPort };
 
 const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
   const {
-    closeMenu, activeProfile, gameRunning,
+    closeMenu, win, activeProfile, gameRunning,
     onShowProfile, onToggleSaveStates, onShowDataManager, onToggleInventory, onToggleChecks,
     onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset,
     onShowInputTester, onShowSpriteDebug, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout,
@@ -70,7 +71,7 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
       label: 'Advanced',
       children: [
         { key: 'input-tester', icon: '🎮', label: 'Input Calibration', onClick: () => { closeMenu(); onShowInputTester(); } },
-        { key: 'dev-console', icon: '🛠️', label: 'Dev Console', onClick: () => { closeMenu(); window.api.openDevTools(); } },
+        { key: 'dev-console', icon: '🛠️', label: 'Dev Console', onClick: () => { closeMenu(); win.openDevTools(); } },
         { key: 'sprite-debug', icon: '🖼️', label: 'Sprite Debug', onClick: () => { closeMenu(); onShowSpriteDebug(); } },
         { key: 'design-gallery', icon: '🎨', label: 'Design Gallery', onClick: () => { closeMenu(); onShowDesignGallery(); } },
         ...(window.api.isDev ? [{ key: 'shadow-editor', icon: '🌓', label: 'Shadow Editor', onClick: () => { closeMenu(); onShowShadowEditor(); } }] : []),
@@ -95,7 +96,7 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
       label: 'About',
       onClick: () => { closeMenu(); onShowAbout(); },
     },
-    { key: 'quit', icon: '✕', label: 'Quit', onClick: () => window.api.close() },
+    { key: 'quit', icon: '✕', label: 'Quit', onClick: () => win.close() },
   ];
 };
 

@@ -109,7 +109,7 @@ const TitleBar = (props: TitleBarProps) => {
 
 
   const menuItems = buildTitleBarMenuItems({
-    closeMenu, activeProfile, gameRunning,
+    closeMenu, win, activeProfile, gameRunning,
     onShowProfile, onToggleSaveStates, onShowDataManager, onToggleInventory, onToggleChecks,
     onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset,
     onShowInputTester, onShowSpriteDebug, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout,

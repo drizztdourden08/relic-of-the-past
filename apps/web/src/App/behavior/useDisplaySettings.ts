@@ -1,10 +1,12 @@
 /* @layer renderer-appshell @kind hook */
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { GameSettings } from '@shared/types/settings';
+import { usePlatform } from '@app/platform';
 import { syncAspectRatioLock } from './syncAspectRatioLock';
 
 const useDisplaySettings = (params: { isGameRunning: boolean }) => {
   const { isGameRunning } = params;
+  const { window: win } = usePlatform();
 
   const [windowMode, setWindowMode] = useState<GameSettings['windowMode']>('default');
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -37,15 +39,15 @@ const useDisplaySettings = (params: { isGameRunning: boolean }) => {
 
   // Track fullscreen state for aspect ratio lock
   useEffect(() => {
-    window.api.isFullscreen().then(setIsFullscreen);
-    return window.api.onFullscreenChange(setIsFullscreen);
-  }, []);
+    win.isFullscreen().then(setIsFullscreen);
+    return win.onFullscreenChange(setIsFullscreen);
+  }, [win]);
 
   // Sync aspect ratio lock when settings change
   useEffect(() => {
     if (!isGameRunning) return;
-    syncAspectRatioLock(viewportConstraint, aspectRatio, windowMode, isFullscreen);
-  }, [isGameRunning, viewportConstraint, aspectRatio, windowMode, isFullscreen]);
+    syncAspectRatioLock(win, viewportConstraint, aspectRatio, windowMode, isFullscreen);
+  }, [win, isGameRunning, viewportConstraint, aspectRatio, windowMode, isFullscreen]);
 
   // Re-sync when game starts (canvas buffer dimensions become available)
   const vcRef = useRef(viewportConstraint);
@@ -60,7 +62,7 @@ const useDisplaySettings = (params: { isGameRunning: boolean }) => {
   useEffect(() => {
     if (!isGameRunning) {
       if (vcRef.current === 'fit') {
-        window.api.setAspectRatioLock(0, 0);
+        win.setAspectRatioLock(0, 0);
       }
       return;
     }
@@ -71,11 +73,11 @@ const useDisplaySettings = (params: { isGameRunning: boolean }) => {
       const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
       if ((canvas && canvas.width > 0 && canvas.height > 0) || attempts >= 30) {
         clearInterval(poll);
-        syncAspectRatioLock(vcRef.current, arRef.current, wmRef.current, fsRef.current);
+        syncAspectRatioLock(win, vcRef.current, arRef.current, wmRef.current, fsRef.current);
       }
     }, 100);
     return () => clearInterval(poll);
-  }, [isGameRunning]);
+  }, [win, isGameRunning]);
 
   const initFromSettings = useCallback((settings: {
     windowMode: GameSettings['windowMode'];
@@ -93,9 +95,9 @@ const useDisplaySettings = (params: { isGameRunning: boolean }) => {
     setOverworldEdgeEffect(settings.overworldEdgeEffect);
     setPostProcessingShadows(settings.postProcessingShadows);
     if (settings.startFullscreen) {
-      window.api.setFullscreen(true);
+      win.setFullscreen(true);
     }
-  }, []);
+  }, [win]);
 
   return {
     windowMode,
