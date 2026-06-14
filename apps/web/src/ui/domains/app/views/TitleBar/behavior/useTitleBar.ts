@@ -1,14 +1,16 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect, type RefObject } from 'react';
+import { usePlatform } from '@app/platform';
 
 const useTitleBar = (menuRef: RefObject<HTMLDivElement | null>) => {
+  const { window: win } = usePlatform();
   const [isMaximized, setIsMaximized] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    window.api.isMaximized().then(setIsMaximized);
-    return window.api.onMaximizedChange(setIsMaximized);
-  }, []);
+    win.isMaximized().then(setIsMaximized);
+    return win.onMaximizedChange(setIsMaximized);
+  }, [win]);
 
   // Close on outside click
   useEffect(() => {

@@ -35,6 +35,7 @@ const ROLE_RULES = [
   ['apps/web/src/App/', 'renderer-appshell'],
   ['apps/web/src/', 'renderer-other'],
   ['apps/web/public/', 'renderer-public'],
+  ['shared/platform/', 'shared-platform'],
   ['shared/asset-extraction/', 'shared-asset-extraction'],
   ['shared/game/', 'shared-game'],
   ['shared/input/', 'shared-input'],

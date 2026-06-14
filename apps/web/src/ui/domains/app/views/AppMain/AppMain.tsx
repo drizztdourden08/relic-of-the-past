@@ -26,6 +26,7 @@ import { useStartup } from '@app/App/behavior/useStartup';
 import { useAutoTest } from '@app/App/behavior/useAutoTest';
 import { useDumpLayers } from '@app/App/behavior/useDumpLayers';
 import { useDumpNav } from '@app/App/behavior/useDumpNav';
+import { useCapability } from '@app/platform';
 import { TitleBar } from '../TitleBar';
 import { GameLayer } from '../GameLayer';
 import { SaveStateOverlay } from '../SaveStateOverlay/SaveStateOverlay';
@@ -38,6 +39,7 @@ const widgetIO = { load: loadTrackerStateBlob, save: saveTrackerStateBlob };
 
 const AppMain = () => {
   const appVersion = useAppVersion();
+  const windowChrome = useCapability('windowChrome');
 
   const { dialog, showDialog, dismissDialog, handleDeleteConfirm } = useConfirmDialog();
   const game = useGameLifecycle();
@@ -104,6 +106,7 @@ const AppMain = () => {
 
   return (
     <Box className="app">
+      {windowChrome && (
       <TitleBar
         onImportRom={profileMgmt.handleImportRom}
         onSwitchProfile={handleShowPicker}
@@ -134,6 +137,7 @@ const AppMain = () => {
         onUpdateClick={() => setShowUpdateDialog(true)}
         onCheckForUpdates={update.portable ? undefined : () => { update.check(); setShowUpdateDialog(true); }}
       />
+      )}
 
       <Box className="app__content">
         {!game.isRunning && (

@@ -46,6 +46,7 @@ interface ScreenEditorApi {
 interface ExtrasApi {
   isDev: boolean;
   autoFlood: boolean;
+  os: string; // process.platform on Electron ('win32' | 'darwin' | 'linux')
   getSpritesBaseUrl: (romFile: string) => string;
   getFilePath: (file: File) => string;
 }
