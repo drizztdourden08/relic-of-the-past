@@ -5,6 +5,7 @@
  */
 
 import { log } from '../log-bus';
+import * as savesStore from '../storage/saves-store';
 import { getModule, getProfileId } from './wasm-bridge';
 
 let autoSaveInterval: ReturnType<typeof setInterval> | null = null;
@@ -53,7 +54,7 @@ const performAutoSave = async (trigger: 'timer' | 'quit'): Promise<boolean> => {
     const screenshot = await captureScreenshot();
 
     // Send to main process
-    await window.api.createAutoSave(profileId, trigger, ab, screenshot);
+    await savesStore.createAutoSave(profileId, trigger, ab, screenshot);
     log.app(`[AutoSave] ${trigger} auto-save created (${(ab.byteLength / 1024).toFixed(0)} KB)`);
 
     // Clean up MEMFS temp file
@@ -70,7 +71,7 @@ const pruneIfNeeded = async (maxEntries: number): Promise<void> => {
   const profileId = getProfileId();
   if (!profileId) return;
   try {
-    await window.api.pruneAutoSaves(profileId, maxEntries);
+    await savesStore.pruneAutoSaves(profileId, maxEntries);
   } catch {
     // Best effort
   }

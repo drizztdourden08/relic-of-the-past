@@ -4,6 +4,7 @@
  */
 
 import { log } from '../log-bus';
+import * as savesStore from '../storage/saves-store';
 import { getModule, getProfileId } from './wasm-bridge';
 
 let sramSyncInterval: ReturnType<typeof setInterval> | null = null;
@@ -32,7 +33,7 @@ const syncSramToDisk = async (): Promise<void> => {
     const hash = simpleHash(data);
     if (hash === lastSramHash) return;
     lastSramHash = hash;
-    await window.api.writeSram(profileId, (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength));
+    await savesStore.writeSram(profileId, (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength));
     log.app(`[SRAM] Synced ${data.byteLength} bytes to disk (hash=${hash})`);
   } catch {
     // Silently ignore — may happen during shutdown

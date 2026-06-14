@@ -6,6 +6,7 @@ import type { PlaySession } from '@shared/types/session';
 import { saveState, loadState, captureStateBuffer, loadStateFromBuffer } from '../../../../../../../lib/game';
 import { listSessions } from '../../../../../../../lib/game/session-tracker';
 import { log } from '../../../../../../../lib/log-bus';
+import * as savesStore from '@app/lib/storage/saves-store';
 import type { SlotInfo, DialogState } from './home-tab.type';
 import { QUICK_SAVE_SLOTS, defaultSaveName, ensureGameRunning, captureCanvasScreenshot } from './home-tab-helpers';
 import { fetchQuickSlots, fetchNormalSaves, fetchAutoSaves } from './home-tab-data';
@@ -79,7 +80,7 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
     const ab = captureStateBuffer();
     if (!ab) { setBusyNormal(null); return; }
     const screenshot = await captureCanvasScreenshot();
-    await window.api.createNormalSave(profileId, name, ab, screenshot);
+    await savesStore.createNormalSave(profileId, name, ab, screenshot);
     await loadNormalSaves();
     setBusyNormal(null);
   }, [profileId, newSaveName]);
@@ -88,7 +89,7 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
     setBusyNormal(id);
     log.app(`Loading normal save: ${id}`);
     await ensureGameRunning(isGameRunning, onStartGame);
-    const buffer = await window.api.loadNormalSave(profileId, id);
+    const buffer = await savesStore.loadNormalSave(profileId, id);
     if (buffer) loadStateFromBuffer(buffer);
     setBusyNormal(null);
   }, [profileId, isGameRunning, onStartGame]);
@@ -107,7 +108,7 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
     const ab = captureStateBuffer();
     if (!ab) { setBusyNormal(null); return; }
     const screenshot = await captureCanvasScreenshot();
-    await window.api.overwriteNormalSave(profileId, id, ab, screenshot);
+    await savesStore.overwriteNormalSave(profileId, id, ab, screenshot);
     await loadNormalSaves();
     setBusyNormal(null);
   }, [profileId, dialog]);
@@ -122,13 +123,13 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
     setDialog({ type: null });
     if (!id) return;
     setBusyNormal(id);
-    await window.api.deleteNormalSave(profileId, id);
+    await savesStore.deleteNormalSave(profileId, id);
     await loadNormalSaves();
     setBusyNormal(null);
   }, [profileId, dialog]);
 
   const handleRenameNormal = useCallback(async (id: string, newName: string) => {
-    await window.api.renameNormalSave(profileId, id, newName);
+    await savesStore.renameNormalSave(profileId, id, newName);
     await loadNormalSaves();
   }, [profileId]);
 
@@ -137,14 +138,14 @@ const useHomeTabSaves = (params: { profileId: string; isGameRunning: boolean; on
     setBusyAuto(id);
     log.app(`Loading auto-save: ${id}`);
     await ensureGameRunning(isGameRunning, onStartGame);
-    const buffer = await window.api.loadAutoSave(profileId, id);
+    const buffer = await savesStore.loadAutoSave(profileId, id);
     if (buffer) loadStateFromBuffer(buffer);
     setBusyAuto(null);
   }, [profileId, isGameRunning, onStartGame]);
 
   const handleDeleteAuto = useCallback(async (id: string) => {
     setBusyAuto(id);
-    await window.api.deleteAutoSave(profileId, id);
+    await savesStore.deleteAutoSave(profileId, id);
     await loadAutoSaves();
     setBusyAuto(null);
   }, [profileId]);

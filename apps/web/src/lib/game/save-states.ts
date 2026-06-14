@@ -4,6 +4,7 @@
  */
 
 import { log } from '../log-bus';
+import * as savesStore from '../storage/saves-store';
 import { getModule, getProfileId } from './wasm-bridge';
 import { pollInventoryState } from './tracker';
 import { reassertLiveFlagsAfterLoad } from './live-settings';
@@ -46,14 +47,14 @@ const saveState = async (slot: number): Promise<boolean> => {
 
     const ab = (data.buffer as ArrayBuffer).slice(data.byteOffset, data.byteOffset + data.byteLength);
     log.app(`[SaveState] Sending ${ab.byteLength} bytes to main process (profileId=${profileId}, slot=${slot})...`);
-    await window.api.writeState(profileId, slot, ab);
+    await savesStore.writeState(profileId, slot, ab);
     log.app(`[SaveState] Slot ${slot} persisted to disk ✓`);
 
     try {
       const blob = await captureScreenshot();
       if (blob) {
         const screenshotAb = await blob.arrayBuffer();
-        await window.api.writeScreenshot(profileId, slot, screenshotAb);
+        await savesStore.writeScreenshot(profileId, slot, screenshotAb);
         log.app(`[SaveState] Screenshot saved (${(screenshotAb.byteLength / 1024).toFixed(0)} KB)`);
       }
     } catch {
@@ -78,7 +79,7 @@ const loadState = async (slot: number): Promise<boolean> => {
   }
   try {
     log.app(`[LoadState] Reading slot ${slot} from disk (profileId=${profileId})...`);
-    const buffer = await window.api.readState(profileId, slot);
+    const buffer = await savesStore.readState(profileId, slot);
     if (!buffer) {
       log.app(`[LoadState] No save state file on disk for slot ${slot}`);
       return false;

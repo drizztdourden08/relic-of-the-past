@@ -5,6 +5,7 @@
  */
 
 import { log } from '../log-bus';
+import * as savesStore from '../storage/saves-store';
 import type { EmscriptenModule } from './types';
 import { DEFAULT_ZELDA3_INI } from './config';
 import { getModule, setModule, setProfileId, getProfileId, setState, setInput, getGameState } from './wasm-bridge';
@@ -62,7 +63,7 @@ const resetGame = async (): Promise<void> => {
       if (activeAutoSaveConfig.maxEntries) {
         const profileId = getProfileId();
         if (profileId) {
-          await window.api.pruneAutoSaves(profileId, activeAutoSaveConfig.maxEntries);
+          await savesStore.pruneAutoSaves(profileId, activeAutoSaveConfig.maxEntries);
         }
       }
     } catch {
@@ -158,7 +159,7 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
 
     let sramData: Uint8Array | null = null;
     if (profileId) {
-      const buffer = await window.api.readSram(profileId);
+      const buffer = await savesStore.readSram(profileId);
       if (buffer) {
         sramData = new Uint8Array(buffer);
         log.app(`Loaded SRAM from profile (${sramData.byteLength} bytes)`);

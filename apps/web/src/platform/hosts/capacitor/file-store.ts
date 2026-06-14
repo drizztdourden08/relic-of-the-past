@@ -60,7 +60,7 @@ const createCapacitorFileStore = (): FileStore => ({
   stat: async (path): Promise<FileStat | null> => {
     try {
       const s = await Filesystem.stat({ path, directory: DIR });
-      return { bytes: s.size ?? 0, isDirectory: s.type === 'directory' };
+      return { bytes: s.size ?? 0, isDirectory: s.type === 'directory', mtimeMs: s.mtime ?? 0 };
     } catch { return null; }
   },
 });

@@ -29,17 +29,22 @@ const ensureDistro = (distro) => {
 const syncTree = (distro, workdir) => {
   const src = `${toWslPath(process.cwd())}/`;
   log(`Syncing working tree -> ${distro}:${workdir} (rsync)`);
+  // No quotes around paths: double-quotes get mangled crossing Windows -> WSL, and
+  // single-quotes would stop ~ from expanding. These paths contain no spaces.
   wsl(
     distro,
     `mkdir -p ${workdir} && rsync -a --delete ` +
       `--exclude node_modules --exclude .git --exclude dist --exclude release ` +
-      `'${src}' '${workdir}/'`,
+      `${src} ${workdir}/`,
   );
 };
 
 const buildInWsl = (distro, workdir) => {
   log('Installing deps + building the Linux AppImage in WSL (first run is slow)…');
-  wsl(distro, `cd ${workdir} && npm install && npm run build:linux`);
+  // The build logic lives in build-in-wsl.sh (on disk in the synced tree) so its
+  // quoting/globs aren't mangled crossing the Windows -> WSL process boundary; the
+  // inline command stays trivial (no double-quotes, no parens, no globs).
+  wsl(distro, `cd ${workdir} && bash scripts/deploy/build-in-wsl.sh`);
   const appimage = wslCapture(distro, `ls ${workdir}/release/*.AppImage 2>/dev/null | head -n1`);
   if (!appimage) fail('Build finished but no .AppImage was produced in release/.');
   log(`Built: ${appimage}`);
@@ -47,16 +52,19 @@ const buildInWsl = (distro, workdir) => {
 };
 
 const pushToVm = (distro, vm, appimage) => {
-  const { host, user, identityFile, display = ':0' } = vm;
+  const { host, user, identityFile, port, display = ':0' } = vm;
   const target = `${user}@${host}`;
   const idFlag = identityFile ? `-i ${identityFile} ` : '';
+  // scp uses -P for the port, ssh uses -p (NAT port-forward → host 127.0.0.1:2222).
+  const scpPort = port ? `-P ${port} ` : '';
+  const sshPort = port ? `-p ${port} ` : '';
   const remote = 'rotp-linux.AppImage';
-  log(`Copying AppImage -> ${target}`);
-  wsl(distro, `scp ${idFlag}-o StrictHostKeyChecking=accept-new ${appimage} ${target}:~/${remote}`);
+  log(`Copying AppImage -> ${target}${port ? `:${port}` : ''}`);
+  wsl(distro, `scp ${scpPort}${idFlag}-o StrictHostKeyChecking=accept-new ${appimage} ${target}:~/${remote}`);
   log('Launching on the VM desktop (passing --no-focus --muted)…');
   wsl(
     distro,
-    `ssh ${idFlag}${target} 'chmod +x ~/${remote}; pkill -f ${remote} 2>/dev/null; ` +
+    `ssh ${sshPort}${idFlag}${target} 'chmod +x ~/${remote}; pkill -f ${remote} 2>/dev/null; ` +
       `DISPLAY=${display} setsid ~/${remote} --no-sandbox --no-focus --muted >/tmp/rotp.log 2>&1 &'`,
   );
   log('Pushed + launched. Plug in your controller and verify the app enumerates it on the VM.');
