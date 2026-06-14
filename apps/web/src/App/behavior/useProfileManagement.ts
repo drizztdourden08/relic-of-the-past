@@ -5,6 +5,7 @@ import { log } from '../../lib/log-bus';
 import { resetGame, setAutoSaveConfig } from '../../lib/game';
 import { serializeToIni, mergeSettings } from '../../lib/game/settings';
 import { applySpritesForRom } from '../../lib/sprites/apply-sprites-for-rom';
+import * as profileStore from '../../lib/storage/profile-store';
 import { loadInputProfile, loadMsuPack } from './load-profile-helpers';
 
 const useProfileManagement = (params: {
@@ -28,7 +29,7 @@ const useProfileManagement = (params: {
 
   const refreshProfilesAndRoms = useCallback(async () => {
     const [profileList, romStatusList] = await Promise.all([
-      window.api.listProfiles(),
+      profileStore.listProfiles(),
       window.api.listRomsWithStatus(),
     ]);
     setProfiles(profileList);
@@ -45,7 +46,7 @@ const useProfileManagement = (params: {
     void applySpritesForRom(profile.romFile);
     log.app(`Loading profile: ${profile.name} (${profile.romFile})`);
 
-    const savedSettings = await window.api.readConfig(profile.id);
+    const savedSettings = await profileStore.readConfig(profile.id);
     const settings = mergeSettings((savedSettings ?? {}) as any);
 
     await loadInputProfile(profile.id, settings);
@@ -82,8 +83,8 @@ const useProfileManagement = (params: {
         configIni: ini,
         settings,
       });
-      await window.api.setLastProfile(profile.id);
-      await window.api.updateLastPlayed(profile.id);
+      await profileStore.setLastProfile(profile.id);
+      await profileStore.updateLastPlayed(profile.id);
     } else {
       log.error('Failed to load assets after extraction');
     }
@@ -93,16 +94,16 @@ const useProfileManagement = (params: {
   const handleSelectProfile = useCallback(async (profile: Profile) => {
     setActiveProfile(profile);
     void applySpritesForRom(profile.romFile);
-    await window.api.setLastProfile(profile.id);
+    await profileStore.setLastProfile(profile.id);
   }, []);
 
   const handleCreateProfile = useCallback(async (name: string, romFile: string, language?: string, msuPack?: string) => {
-    const profile = await window.api.createProfile(name, romFile, language, msuPack);
+    const profile = await profileStore.createProfile(name, romFile, language, msuPack);
     log.app(`Created profile: ${profile.name}`);
     await refreshProfilesAndRoms();
     setActiveProfile(profile);
     void applySpritesForRom(profile.romFile);
-    await window.api.setLastProfile(profile.id);
+    await profileStore.setLastProfile(profile.id);
   }, [refreshProfilesAndRoms]);
 
   const handleDeleteProfile = useCallback((id: string) => {
@@ -114,7 +115,7 @@ const useProfileManagement = (params: {
       variant: 'danger',
       onConfirm: async () => {
         dismissDialog();
-        await window.api.deleteProfile(id);
+        await profileStore.deleteProfile(id);
         log.app('Profile deleted');
         if (activeProfile?.id === id) {
           setActiveProfile(null);

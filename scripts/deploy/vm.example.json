@@ -1,0 +1,11 @@
+{
+  "wslDistro": "Ubuntu-24.04",
+  "wslWorkdir": "~/relic",
+  "avdName": "rotp_test",
+  "vm": {
+    "host": "192.168.56.10",
+    "user": "you",
+    "identityFile": "/home/you/.ssh/id_ed25519",
+    "display": ":0"
+  }
+}

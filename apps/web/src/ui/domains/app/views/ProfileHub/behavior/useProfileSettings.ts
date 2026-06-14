@@ -9,6 +9,7 @@ import { pushLiveSettings, LIVE_SETTINGS, getInputManager } from '../../../../..
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { log } from '../../../../../../lib/log-bus';
 import type { ProfileHubProps } from '../ProfileHub.type';
+import { readConfig } from '@app/lib/storage/profile-store';
 import { applySettingsSideEffects, syncHudStore } from './apply-settings-effects';
 
 const useProfileSettings = (props: ProfileHubProps) => {
@@ -96,7 +97,7 @@ const useProfileSettings = (props: ProfileHubProps) => {
   useEffect(() => {
     (async () => {
       try {
-        const saved = await window.api.readConfig(profile.id);
+        const saved = await readConfig(profile.id);
         if (saved) {
           const merged = mergeSettings(saved);
           setSettings(merged);

@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { log } from '../../lib/log-bus';
 import { applySpritesForRom } from '../../lib/sprites/apply-sprites-for-rom';
+import { getAppState } from '../../lib/storage/profile-store';
 import type { PageId } from '../types';
 
 const useStartup = (
@@ -16,7 +17,7 @@ const useStartup = (
       try {
         const [{ profiles: profileList }, appState, testArgs] = await Promise.all([
           profileMgmt.refreshProfilesAndRoms(),
-          window.api.getAppState(),
+          getAppState(),
           window.api.getTestArgs(),
         ]);
 

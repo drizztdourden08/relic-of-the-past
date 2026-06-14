@@ -52,6 +52,9 @@ test-roms/
 .env.local
 .env.*.local
 
+# Local deploy target config (VM SSH details — per machine, never committed)
+scripts/deploy/vm.json
+
 # Logs
 *.log
 npm-debug.log*
