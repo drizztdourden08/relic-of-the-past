@@ -7,21 +7,13 @@
 import * as assets from '@shared/storage/assets';
 import type { LanguageInput } from '@shared/storage/assets';
 import { getPlatform } from '@app/platform/get-platform';
-import ExtractWorker from '../game/extract-assets.worker?worker';
+import { runOnWorker } from './extraction-client';
+import { listRomsWithStatus } from './roms-store';
 
 const files = () => getPlatform().files;
 
 const runExtraction = (romBytes: Uint8Array, languages: LanguageInput[]): Promise<Uint8Array> =>
-  new Promise((resolve, reject) => {
-    const worker = new ExtractWorker();
-    worker.onmessage = (e: MessageEvent<{ ok: boolean; dat?: Uint8Array; error?: string }>) => {
-      worker.terminate();
-      if (e.data.ok && e.data.dat) resolve(e.data.dat);
-      else reject(new Error(e.data.error ?? 'Asset extraction failed'));
-    };
-    worker.onerror = (err) => { worker.terminate(); reject(new Error(err.message)); };
-    worker.postMessage({ romBytes, languages });
-  });
+  runOnWorker<Uint8Array>({ op: 'assets', romBytes, languages });
 
 const checkAssets = (romFile: string): Promise<boolean> => assets.check(files(), romFile);
 
@@ -43,4 +35,11 @@ const extractAssets = async (romFile: string): Promise<{ success: boolean; error
   }
 };
 
-export { checkAssets, loadAssets, extractAssets };
+// Rebuild every ROM that already has a cached .dat (after a language pack changes).
+const recompileAll = async (): Promise<void> => {
+  for (const rom of await listRomsWithStatus()) {
+    if (rom.hasAssets) await extractAssets(rom.romFile);
+  }
+};
+
+export { checkAssets, loadAssets, extractAssets, recompileAll };

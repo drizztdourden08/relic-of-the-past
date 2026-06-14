@@ -30,6 +30,9 @@ interface StoragePort {
   getLocation: () => Promise<DataLocation>;
   reveal: () => Promise<void>; // no-op when !canReveal
   getSummary: () => Promise<StorageSummary>;
+  // Base URL for a ROM's extracted sprites (app-sprite:// on Electron,
+  // Capacitor.convertFileSrc on mobile); ends with '/'. Empty when unavailable.
+  spritesBaseUrl: (romFile: string) => Promise<string>;
 }
 
 export type { DataDomain, DataLocation, DomainUsage, StorageSummary, StoragePort };

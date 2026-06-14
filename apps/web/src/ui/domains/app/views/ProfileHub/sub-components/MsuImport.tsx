@@ -4,6 +4,7 @@ import { DropZone } from '../../../../../design-system/primitives/DropZone';
 import { TextInput } from '../../../../../design-system/primitives/TextInput';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Button } from '../../../../../design-system/primitives/Button';
+import * as msuStore from '@app/lib/storage/msu-store';
 import './MsuImport.css';
 
 interface MsuImportProps {
@@ -32,7 +33,7 @@ const MsuImport = (props: MsuImportProps) => {
     setStatus({ message: 'Downloading…', variant: '' });
 
     try {
-      const result = await window.api.importMsu(profileId, trimmed);
+      const result = await msuStore.importMsu(profileId, trimmed);
       if (result.success) {
         setStatus({ message: `Imported ${result.fileCount ?? 0} MSU files`, variant: 'success' });
         setUrl('');
@@ -52,13 +53,7 @@ const MsuImport = (props: MsuImportProps) => {
     setStatus({ message: 'Importing…', variant: '' });
 
     try {
-      // Use the file path from Electron's File object
-      const filePath = window.api.getFilePath(files[0]);
-      if (!filePath) {
-        setStatus({ message: 'Could not read file path', variant: 'error' });
-        return;
-      }
-      const result = await window.api.importMsuFile(profileId, filePath);
+      const result = await msuStore.importMsuFile(profileId, files[0]);
       if (result.success) {
         setStatus({ message: `Imported ${result.fileCount ?? 0} MSU files`, variant: 'success' });
       } else {

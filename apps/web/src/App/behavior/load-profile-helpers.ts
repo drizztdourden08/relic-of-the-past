@@ -4,6 +4,7 @@ import { setMsuData, getInputManager } from '../../lib/game';
 import type { mergeSettings } from '../../lib/game/settings';
 import { log } from '../../lib/log-bus';
 import { readInputProfiles } from '@app/lib/storage/profile-data-store';
+import * as msuStore from '@app/lib/storage/msu-store';
 import type { InputProfile } from '@shared/types/controls';
 
 type Settings = ReturnType<typeof mergeSettings>;
@@ -28,13 +29,13 @@ const loadMsuPack = async (profile: Profile, settings: Settings) => {
   if (profile.msuPack && settings.enableMSU !== 'false') {
     log.app(`[MSU] Loading pack "${profile.msuPack}"...`);
     try {
-      const trackList = await window.api.getMsuTrackList(profile.msuPack);
+      const trackList = await msuStore.getMsuTrackList(profile.msuPack);
       if (trackList.length > 0) {
         const tracks: { num: number; ext: string; data: Uint8Array }[] = [];
         for (let i = 0; i < trackList.length; i += 5) {
           const batch = trackList.slice(i, i + 5);
           const results = await Promise.all(
-            batch.map((t) => window.api.readMsuTrackFile(profile.msuPack!, t.fileName)),
+            batch.map((t) => msuStore.readMsuTrackFile(profile.msuPack!, t.fileName)),
           );
           for (let j = 0; j < batch.length; j++) {
             tracks.push({ num: batch[j].trackNum, ext: batch[j].ext, data: new Uint8Array(results[j]) });

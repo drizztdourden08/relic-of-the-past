@@ -1,11 +1,12 @@
 /* @layer renderer-components @kind component */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Text, TabBar } from '../../../../design-system/primitives';
 import { FullScreenLayer } from '../../../../design-system/composites/FullScreenLayer';
 import type { SpriteDebugProps, ReviewMode } from './SpriteDebug.type';
 import { SpriteReviewPanel } from './sub-components/SpriteReviewPanel';
 import { ItemReviewPanel } from './sub-components/ItemReviewPanel';
 import { S } from './SpriteDebug.constants';
+import { getSpritesBaseUrl } from '@app/lib/storage/sprites-store';
 
 const MODES = [
   { id: 'sprites', label: 'Sprite Review' },
@@ -15,7 +16,13 @@ const MODES = [
 const SpriteDebug = (props: SpriteDebugProps) => {
   const { onClose, romFile } = props;
   const [mode, setMode] = useState<ReviewMode>('sprites');
-  const baseUrl = romFile ? window.api.getSpritesBaseUrl(romFile) : '';
+  const [baseUrl, setBaseUrl] = useState('');
+  useEffect(() => {
+    if (!romFile) { setBaseUrl(''); return; }
+    let cancelled = false;
+    getSpritesBaseUrl(romFile).then((u) => { if (!cancelled) setBaseUrl(u); });
+    return () => { cancelled = true; };
+  }, [romFile]);
 
   return (
     <FullScreenLayer onClose={onClose} title="Sprite Debug">

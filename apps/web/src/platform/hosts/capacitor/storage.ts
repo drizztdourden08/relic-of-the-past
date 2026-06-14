@@ -48,6 +48,13 @@ const getLocation = async (): Promise<DataLocation> => {
 const createCapacitorStorage = (): StoragePort => ({
   getLocation,
   reveal: async () => {},
+  spritesBaseUrl: async (romFile) => {
+    const stem = romFile.replace(/\.(sfc|smc)$/i, '');
+    try {
+      const { uri } = await Filesystem.getUri({ path: `sprites/${stem}`, directory: DIR });
+      return `${Capacitor.convertFileSrc(uri)}/`;
+    } catch { return ''; }
+  },
   getSummary: async (): Promise<StorageSummary> => {
     const domains: DomainUsage[] = [];
     for (const { domain, label, dir } of DOMAINS) {

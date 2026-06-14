@@ -14,7 +14,14 @@ sudo apt-get install -y \
   libnss3 libgbm1 libasound2t64 libgtk-3-0 libnotify4 \
   libxss1 libxtst6 libatk-bridge2.0-0 libdrm2 xdg-utils
 
-sudo systemctl enable --now ssh
+# Ubuntu 24.04+ activates OpenSSH via ssh.socket; older releases use ssh.service.
+# Enabling the wrong one leaves nothing listening on :22, so prefer the socket.
+if systemctl list-unit-files | grep -q '^ssh.socket'; then
+  sudo systemctl disable --now ssh.service 2>/dev/null || true
+  sudo systemctl enable --now ssh.socket
+else
+  sudo systemctl enable --now ssh
+fi
 
 echo "[setup-vm-runtime] Adding udev rule so the plugdev group can read HID controllers…"
 sudo tee /etc/udev/rules.d/99-rotp-controllers.rules >/dev/null <<'EOF'

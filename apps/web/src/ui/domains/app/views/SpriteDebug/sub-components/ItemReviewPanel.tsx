@@ -6,6 +6,7 @@ import { Box, Button } from '../../../../../design-system/primitives';
 import { FilterBtns, Stats } from './ReviewControls';
 import { ItemAssocCard } from './ReviewCards';
 import { S } from '../SpriteDebug.constants';
+import { loadSpriteDebug, saveSpriteDebug } from '@app/lib/storage/sprites-store';
 
 const ALL_ITEMS = Object.entries(ITEM_SPRITE_MAP).map(([name, file]) => ({
   name,
@@ -19,12 +20,12 @@ const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    window.api.loadSpriteDebug().then(d => { setData((d ?? {}) as ReviewData); setLoaded(true); });
+    loadSpriteDebug().then(d => { setData((d ?? {}) as ReviewData); setLoaded(true); });
   }, []);
 
   const persist = useCallback((next: ReviewData) => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => window.api.saveSpriteDebug(next), 300);
+    saveTimer.current = setTimeout(() => saveSpriteDebug(next), 300);
   }, []);
 
   const setStatus = (key: string, status: ReviewStatus) => {
@@ -65,7 +66,7 @@ const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
         <Stats counts={counts} total={ALL_ITEMS.length} />
         <Box style={S.headerButtons}>
           <FilterBtns filter={filter} setFilter={setFilter} />
-          <Button variant="bare" onClick={() => { setData({}); window.api.saveSpriteDebug({}); }} style={S.resetBtn}>Reset</Button>
+          <Button variant="bare" onClick={() => { setData({}); saveSpriteDebug({}); }} style={S.resetBtn}>Reset</Button>
         </Box>
       </Box>
       <Box style={S.grid}>
