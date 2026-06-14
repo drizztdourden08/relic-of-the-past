@@ -12,6 +12,18 @@ import type { EventContract } from './event-contract';
 
 const INVOKE_MAP = {
   getUserDataPath: 'app:getUserDataPath',
+  getDataLocation: 'storage:getLocation',
+  revealDataFolder: 'storage:reveal',
+  getStorageSummary: 'storage:getSummary',
+  fileReadBytes: 'file:readBytes',
+  fileReadText: 'file:readText',
+  fileWriteBytes: 'file:writeBytes',
+  fileWriteText: 'file:writeText',
+  fileList: 'file:list',
+  fileRemove: 'file:remove',
+  fileExists: 'file:exists',
+  fileMkdir: 'file:mkdir',
+  fileStat: 'file:stat',
   readWasmBytes: 'wasm:readBytes',
   isMaximized: 'window:isMaximized',
   setAlwaysOnTop: 'window:setAlwaysOnTop',

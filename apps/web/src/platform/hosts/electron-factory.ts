@@ -3,8 +3,13 @@
  * Electron host adapter. Fulfills the platform ports by delegating to the
  * existing preload-injected window.api — the proven desktop path, unchanged.
  */
-import type { PlatformFactory, WindowControlsPort } from '@shared/platform';
+import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore } from '@shared/platform';
 import { osFromProcess } from '@shared/platform';
+
+const toArrayBuffer = (data: Uint8Array): ArrayBuffer =>
+  data.byteOffset === 0 && data.byteLength === data.buffer.byteLength
+    ? (data.buffer as ArrayBuffer)
+    : (data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength) as ArrayBuffer);
 
 const createWindowControls = (): WindowControlsPort => ({
   minimize: () => window.api.minimize(),
@@ -19,6 +24,27 @@ const createWindowControls = (): WindowControlsPort => ({
   isFullscreen: () => window.api.isFullscreen(),
   onMaximizedChange: (cb) => window.api.onMaximizedChange(cb),
   onFullscreenChange: (cb) => window.api.onFullscreenChange(cb),
+});
+
+const createStorage = (): StoragePort => ({
+  getLocation: () => window.api.getDataLocation(),
+  reveal: () => window.api.revealDataFolder(),
+  getSummary: () => window.api.getStorageSummary(),
+});
+
+const createFileStore = (): FileStore => ({
+  readBytes: async (path) => {
+    const buf = await window.api.fileReadBytes(path);
+    return buf ? new Uint8Array(buf) : null;
+  },
+  readText: (path) => window.api.fileReadText(path),
+  writeBytes: (path, data) => window.api.fileWriteBytes(path, toArrayBuffer(data)),
+  writeText: (path, data) => window.api.fileWriteText(path, data),
+  list: (dir) => window.api.fileList(dir),
+  remove: (path) => window.api.fileRemove(path),
+  exists: (path) => window.api.fileExists(path),
+  mkdir: (dir) => window.api.fileMkdir(dir),
+  stat: (path) => window.api.fileStat(path),
 });
 
 const createElectronFactory = (): PlatformFactory => ({
@@ -38,8 +64,11 @@ const createElectronFactory = (): PlatformFactory => ({
     customProtocol: true,
     selfUpdate: true,
     nativeFileDialog: true,
+    revealDataFolder: true,
   },
   createWindowControls,
+  createStorage,
+  createFileStore,
 });
 
 export { createElectronFactory };

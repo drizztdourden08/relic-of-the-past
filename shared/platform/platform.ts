@@ -7,6 +7,8 @@
  */
 import type { PlatformInfo, Capabilities, HostShell } from './types';
 import type { WindowControlsPort } from './ports/window-controls';
+import type { StoragePort } from './ports/storage';
+import type { FileStore } from './ports/file-store';
 import type { PlatformFactory } from './factory';
 import { detectHost } from './detect';
 
@@ -14,6 +16,8 @@ interface Platform {
   info: PlatformInfo;
   capabilities: Capabilities;
   window: WindowControlsPort;
+  storage: StoragePort;
+  files: FileStore;
 }
 
 type FactoryMap = Partial<Record<HostShell, () => PlatformFactory>>;
@@ -22,6 +26,8 @@ const createPlatform = (factory: PlatformFactory): Platform => ({
   info: factory.info,
   capabilities: factory.capabilities,
   window: factory.createWindowControls(),
+  storage: factory.createStorage(),
+  files: factory.createFileStore(),
 });
 
 const resolvePlatform = (factories: FactoryMap): Platform => {

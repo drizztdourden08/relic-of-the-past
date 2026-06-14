@@ -4,5 +4,7 @@ export { createPlatform, resolvePlatform } from './platform';
 
 export type { HostShell, OsKind, FormFactor, InputModel, PlatformInfo, Capabilities } from './types';
 export type { WindowControlsPort, Unsub } from './ports/window-controls';
+export type { DataDomain, DataLocation, DomainUsage, StorageSummary, StoragePort } from './ports/storage';
+export type { FileStat, FileStore } from './ports/file-store';
 export type { PlatformFactory } from './factory';
 export type { Platform, FactoryMap } from './platform';
