@@ -4,7 +4,6 @@
  * Returns a RomData instance (dependency-injected, no global state).
  */
 import { createHash } from 'crypto';
-import { readFileSync } from 'fs';
 import type { RomData, RomLanguage, RomHashTable } from './rom-types';
 import { snesToLinear } from './snes-address';
 
@@ -24,46 +23,6 @@ const ZELDA3_SHA1: RomHashTable = {
   '9325C22EB0A2A1F0017157C8B620BC3A605CEDE1': { language: 'redux', description: 'English Redux - https://www.romhacking.net/hacks/2594/' },
   'FA8ADFDBA2697C9A54D583A1284A22AC764C7637': { language: 'nl', description: 'Dutch - https://www.romhacking.net/translations/1124/' },
   '43CD3438469B2C3FE879EA2F410B3EF3CB3F1CA4': { language: 'sv', description: 'Swedish - https://www.romhacking.net/translations/982/' },
-};
-
-const loadRom = (path: string, supportMultilanguage = false): RomData => {
-  let romBytes = Buffer.from(readFileSync(path));
-
-  // Strip SMC header (512 bytes) if present
-  if ((romBytes.length & 0xfffff) === 0x200) {
-    romBytes = romBytes.subarray(0x200);
-  }
-
-  const hash = createHash('sha1').update(romBytes).digest('hex').toUpperCase();
-  const entry = ZELDA3_SHA1[hash];
-
-  // Workaround for Swedish ROM with broken size
-  if (entry?.language === 'sv' && romBytes.length === 0x10083b) {
-    romBytes = romBytes.subarray(0x200);
-  }
-
-  if (supportMultilanguage) {
-    if (!entry) {
-      const supported = Object.entries(ZELDA3_SHA1)
-        .map(([k, v]) => `  ${v.language}: ${k}: ${v.description}`)
-        .join('\n');
-      throw new Error(
-        `ROM with hash ${hash} not supported.\n\nYou need one of the following ROMs:\n${supported}`
-      );
-    }
-  } else {
-    if (!entry || entry.language !== 'us') {
-      throw new Error(
-        `ROM with hash ${hash} not supported.\n\nExpected ${ZELDA3_SHA1_US}.\n` +
-        `Please verify your ROM is "Legend of Zelda, The - A Link to the Past (USA)"`
-      );
-    }
-  }
-
-  const language: RomLanguage = entry!.language;
-  const description = entry!.description;
-
-  return createRomData(romBytes, language, description);
 };
 
 const loadRomFromBuffer = (buffer: Buffer, supportMultilanguage = false): RomData => {
@@ -154,6 +113,5 @@ const createRomData = (bytes: Buffer, language: RomLanguage, description: string
 export {
   ZELDA3_SHA1,
   ZELDA3_SHA1_US,
-  loadRom,
   loadRomFromBuffer
 };

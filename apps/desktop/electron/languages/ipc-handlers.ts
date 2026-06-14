@@ -5,7 +5,7 @@ import { getUserDataPath } from '../lib/paths';
 import { logToRenderer } from '../lib/renderer-log';
 import { resolveSourceFiles, type ImportSource } from '../lib/import-source';
 import { ROM_EXTENSIONS } from '../lib/extensions';
-import { loadRom } from '@shared/asset-extraction/rom/rom-loader';
+import { loadRom } from '@shared/asset-extraction/rom/load-rom-file';
 import { fail, errMessage } from '../lib/result';
 import { makeImportReporter } from '../lib/import-progress';
 import { extractLanguagePack, listLanguageSummaries, readLanguagePack } from './language-pack';
