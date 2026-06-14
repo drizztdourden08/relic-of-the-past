@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Relic of the Past</string>
+    <string name="title_activity_main">Relic of the Past</string>
+    <string name="package_name">com.relicofthepast.app</string>
+    <string name="custom_url_scheme">com.relicofthepast.app</string>
+</resources>

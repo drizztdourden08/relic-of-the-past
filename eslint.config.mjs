@@ -117,6 +117,7 @@ export default tseslint.config(
       'release/**',
       'core/**',
       'apps/web/public/**',
+      'apps/mobile/android/**',
       'playwright-report/**',
       'test-results/**',
       'tests/test-results/**',

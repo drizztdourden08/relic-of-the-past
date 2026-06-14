@@ -21,6 +21,15 @@ apps/web/public/sprites/
 # Electron
 release/
 
+# Capacitor / Android build artifacts (native project is committed; output is not)
+apps/mobile/android/.gradle/
+apps/mobile/android/build/
+apps/mobile/android/app/build/
+apps/mobile/android/app/src/main/assets/public/
+apps/mobile/android/local.properties
+apps/mobile/android/.idea/
+apps/mobile/android/capacitor-cordova-android-plugins/
+
 # Assets (user-provided)
 assets/assets.dat
 assets/*.sfc
