@@ -60,6 +60,11 @@ prove the AppImage builds inside WSL.
 
 ## Stage 3 — Full Linux test VM  *(you; ~30–45 min)*
 
+> Version note: the VM runs **Ubuntu 26.04 LTS** (current LTS). The WSL build
+> engine stays on **24.04 on purpose** — an AppImage built against an older glibc
+> runs on newer systems but not vice-versa, so building on 24.04 keeps the output
+> portable to 26.04 *and* older distros.
+
 1. **Install VirtualBox** (PowerShell — winget is present):
 
    ```powershell
@@ -69,7 +74,7 @@ prove the AppImage builds inside WSL.
    Then the **Extension Pack** (needed for USB passthrough) — download and install
    via *File → Tools → Extension Pack Manager*: <https://www.virtualbox.org/wiki/Downloads>
 
-2. **Get the Ubuntu 24.04 Desktop ISO:** <https://ubuntu.com/download/desktop>
+2. **Get the Ubuntu 26.04 LTS Desktop ISO:** <https://ubuntu.com/download/desktop>
 
 3. **Create the VM** (VirtualBox UI): *New* → Type *Linux* / Ubuntu (64-bit) →
    4096 MB+ RAM, 2+ CPUs, 25 GB+ disk → attach the ISO → run the Ubuntu installer
@@ -103,9 +108,11 @@ prove the AppImage builds inside WSL.
    Copy-Item scripts\deploy\vm.example.json scripts\deploy\vm.json
    ```
 
-   Edit `vm.json` → set `vm.host` (the VM IP, or `127.0.0.1` if you used NAT
-   port-forward), `vm.user`, and optionally `vm.identityFile` (a **WSL-side** key
-   path — `scp`/`ssh` run inside WSL). Set up a key once for passwordless push:
+   Edit `vm.json` → for the **NAT port-forward** above set `vm.host` `127.0.0.1`
+   and `vm.port` `2222` (for a **Host-Only** adapter instead, use the VM's
+   `192.168.56.x` IP and omit `vm.port`). Set `vm.user`, and optionally
+   `vm.identityFile` (a **WSL-side** key path — `scp`/`ssh` run inside WSL). Set up
+   a key once for passwordless push:
 
    ```bash
    # in WSL:

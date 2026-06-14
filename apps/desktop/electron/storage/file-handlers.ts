@@ -55,7 +55,7 @@ const registerFileHandlers = (): void => {
   handle('file:stat', async (_e, path): Promise<FileStat | null> => {
     try {
       const s = await stat(resolveSafe(path));
-      return { bytes: s.size, isDirectory: s.isDirectory() };
+      return { bytes: s.size, isDirectory: s.isDirectory(), mtimeMs: s.mtimeMs };
     } catch { return null; }
   });
 };

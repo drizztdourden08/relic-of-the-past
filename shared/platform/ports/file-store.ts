@@ -10,6 +10,7 @@
 interface FileStat {
   bytes: number;
   isDirectory: boolean;
+  mtimeMs: number; // last-modified epoch ms (0 if unavailable)
 }
 
 interface FileStore {

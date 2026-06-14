@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # @layer tooling-scripts @kind script
-# One-time bootstrap for the full Linux test VM (Ubuntu 24.04 Desktop): an SSH
+# One-time bootstrap for the full Linux test VM (Ubuntu 26.04 LTS Desktop): an SSH
 # server (so push-linux can scp + remote-launch), the Electron runtime libs an
 # AppImage needs, and a udev rule so node-hid can open a passed-through controller
 # without root. Run once inside the VM:

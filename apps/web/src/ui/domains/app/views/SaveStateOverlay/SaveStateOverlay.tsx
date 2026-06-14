@@ -7,6 +7,7 @@ import { Text } from '../../../../design-system/primitives/Text';
 import { Image } from '../../../../design-system/primitives/Image';
 import { ProgressRing } from '../../../../design-system/primitives/ProgressRing';
 import { log } from '../../../../../lib/log-bus';
+import * as savesStore from '@app/lib/storage/saves-store';
 import type { SlotHint } from './behavior/useEnhancedSaveSlot';
 import './SaveStateOverlay.css';
 import type { SaveStateOverlayProps, SlotInfo } from './SaveStateOverlay.type';
@@ -25,7 +26,7 @@ const SaveStateOverlay = (props: SaveStateOverlayProps) => {
     const profileId = getActiveProfileId();
     if (!profileId) return;
 
-    const infos = await window.api.getSlotInfos(profileId);
+    const infos = await savesStore.getSlotInfos(profileId);
 
     const slotData: SlotInfo[] = [];
     for (let i = 0; i < SLOT_COUNT; i++) {
@@ -33,7 +34,7 @@ const SaveStateOverlay = (props: SaveStateOverlayProps) => {
       let screenshotUrl: string | null = null;
       if (info?.hasScreenshot) {
         try {
-          const b64 = await window.api.readScreenshot(profileId, i);
+          const b64 = await savesStore.readScreenshot(profileId, i);
           if (b64) {
             screenshotUrl = 'data:image/png;base64,' + b64;
           }
