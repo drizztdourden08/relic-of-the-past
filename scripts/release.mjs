@@ -12,6 +12,8 @@
  *   npm run release -- --version 0.9.0  # long flag (also --version=0.9.0)
  *   npm run release -- -v 0.9.0         # short flag (also -v0.9.0 / --v0.9.0)
  *   npm run release -- 0.9.0 --latest   # publish immediately as the latest release
+ *   npm run release:last                # highest release-notes/v*.md, published as latest
+ *   npm run release -- --last           # highest release-notes/v*.md (add --latest to publish)
  *
  * Preconditions (also enforced server-side by the workflow):
  *   - release-notes/v<version>.md exists and is committed/pushed to master
@@ -19,7 +21,7 @@
  */
 
 import { execFileSync, spawnSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 
 const WORKFLOW = 'release.yml';
 const REF = 'master';
@@ -29,10 +31,14 @@ const parseArgs = (argv) => {
   let version;
   let setLatest = false;
 
+  let last = false;
+
   for (let i = 0; i < rest.length; i += 1) {
     const arg = rest[i];
     if (arg === '--latest') {
       setLatest = true;
+    } else if (arg === '--last') {
+      last = true;
     } else if (/^--?(?:v|version)=/.test(arg)) {
       version = arg.split('=')[1]; // --version=0.9.0 / --v=0.9.0 / -v=0.9.0
     } else if (/^--?(?:v|version)$/.test(arg)) {
@@ -44,7 +50,21 @@ const parseArgs = (argv) => {
     }
   }
 
-  return { version, setLatest };
+  return { version, setLatest, last };
+};
+
+const highestNotesVersion = () => {
+  const files = readdirSync('release-notes').filter((f) => /^v\d+\.\d+\.\d+\.md$/.test(f));
+  if (!files.length) {
+    fail('No release-notes/v*.md files found to pick a version from.');
+  }
+  const parts = (f) => f.replace(/^v|\.md$/g, '').split('.').map(Number);
+  files.sort((a, b) => {
+    const [aMaj, aMin, aPatch] = parts(a);
+    const [bMaj, bMin, bPatch] = parts(b);
+    return bMaj - aMaj || bMin - aMin || bPatch - aPatch;
+  });
+  return files[0].replace(/\.md$/, ''); // e.g. "v0.9.0"
 };
 
 const fail = (message) => {
@@ -53,10 +73,11 @@ const fail = (message) => {
 };
 
 const run = () => {
-  const { version, setLatest } = parseArgs(process.argv);
+  const { version: explicitVersion, setLatest, last } = parseArgs(process.argv);
+  const version = last ? highestNotesVersion() : explicitVersion;
 
   if (!version) {
-    fail('Missing version. Examples: npm run release -- 0.9.0   |   npm run release -- --version 0.9.0 [--latest]');
+    fail('Missing version. Examples: npm run release -- 0.9.0   |   npm run release -- --version 0.9.0 [--latest]   |   npm run release:last');
   }
 
   const tag = `v${version.replace(/^v/, '')}`;

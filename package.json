@@ -41,6 +41,7 @@
     "report:tokens": "node scripts/analyze/analyze.mjs --json && node scripts/analyze/reports.mjs tokens",
     "clean": "rimraf dist release",
     "release": "node scripts/release.mjs",
+    "release:last": "node scripts/release.mjs --last --latest",
     "version:patch": "npm version patch --no-git-tag-version",
     "version:minor": "npm version minor --no-git-tag-version",
     "version:major": "npm version major --no-git-tag-version"
