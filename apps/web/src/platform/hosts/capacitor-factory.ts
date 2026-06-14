@@ -1,15 +1,17 @@
 /* @layer renderer-other @kind logic */
 /**
  * Capacitor (Android/iOS) host adapter. Window controls are no-ops — mobile has
- * no window chrome. Native-facility ports (files, controllers, …) are filled in
- * later phases; until then their capabilities read false and unported window.api
- * calls hit the boot-safe shim (see api-shim.ts).
+ * no window chrome. Files go through the Filesystem plugin; controllers go through
+ * the native ControllerHid plugin (raw USB-HID over USB-OTG, degrading to no-op
+ * when the plugin is absent — Bluetooth pads use the Gamepad API). Unported
+ * window.api calls hit the boot-safe shim (see api-shim.ts).
  */
 import { Capacitor } from '@capacitor/core';
-import type { PlatformFactory, WindowControlsPort, ControllerHost } from '@shared/platform';
+import type { PlatformFactory, WindowControlsPort } from '@shared/platform';
 import { createCapacitorStorage } from './capacitor/storage';
 import { createCapacitorFileStore } from './capacitor/file-store';
 import { createCapacitorFilePicker } from './capacitor/file-picker';
+import { createCapacitorControllerHost } from './capacitor/controller-host';
 
 const noopUnsub = () => () => {};
 
@@ -26,18 +28,6 @@ const createWindowControls = (): WindowControlsPort => ({
   isFullscreen: async () => false,
   onMaximizedChange: noopUnsub,
   onFullscreenChange: noopUnsub,
-});
-
-const createControllerHost = (): ControllerHost => ({
-  enumerate: async () => [],
-  getOpenKeys: async () => [],
-  write: async () => false,
-  vibratePattern: async () => ({ ok: false }),
-  onReport: () => () => {},
-  onDeviceOpened: () => () => {},
-  onDisconnect: () => () => {},
-  onError: () => () => {},
-  onMainPerf: () => () => {},
 });
 
 const createCapacitorFactory = (): PlatformFactory => ({
@@ -64,7 +54,7 @@ const createCapacitorFactory = (): PlatformFactory => ({
   createStorage: createCapacitorStorage,
   createFileStore: createCapacitorFileStore,
   createFilePicker: createCapacitorFilePicker,
-  createControllerHost,
+  createControllerHost: createCapacitorControllerHost,
 });
 
 export { createCapacitorFactory };
