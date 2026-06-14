@@ -1,5 +1,14 @@
 package com.relicofthepast.app;
 
-import com.getcapacitor.BridgeActivity;
+import android.os.Bundle;
 
-public class MainActivity extends BridgeActivity {}
+import com.getcapacitor.BridgeActivity;
+import com.relicofthepast.app.controllerhid.ControllerHidPlugin;
+
+public class MainActivity extends BridgeActivity {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        registerPlugin(ControllerHidPlugin.class);
+        super.onCreate(savedInstanceState);
+    }
+}
