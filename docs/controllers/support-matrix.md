@@ -5,7 +5,7 @@ functionality is limited. The parser, controller presets, calibration, and hapti
 patterns are **shared**; only the device transport differs per platform (behind the
 `ControllerHost` platform port).
 
-Legend: ✅ works · ⚠️ conditional · 🔧 planned (native plugin, not yet shipped) · ❌ not possible.
+Legend: ✅ works · ⚠️ conditional · 🔧 implemented, pending on-device verification (USB-OTG native plugin) · ❌ not possible.
 
 ## Transports per platform
 
@@ -66,5 +66,15 @@ the `.deb` does it automatically).
 
 Each platform supplies a `ControllerHost` (raw bytes in/out); everything downstream is
 shared. Transports: node-hid on Windows/macOS/Linux (Electron), the native
-`UsbManager` plugin on Android USB-OTG, and the Web Gamepad API for standard pads
-everywhere. See `plans/controller-parity-linux-android.md` for the implementation plan.
+`ControllerHid` plugin (`UsbManager`) on Android USB-OTG, and the Web Gamepad API for
+standard pads everywhere. The Switch Pro 2 USB bulk-init stays single-sourced in the
+TS preset and runs on Android through a WebUSB-shaped shim over the plugin's generic
+USB channel — no byte sequences duplicated into native code.
+
+**Status (2026-06-14):** Linux support is shipped (udev rules + .deb auto-install).
+The Android renderer seam (`ControllerHost` + USB shim) is implemented and
+type-checked. The native `ControllerHid` Java plugin
+(`apps/mobile/android/.../controllerhid/`) is a first implementation that **cannot be
+compiled on the Windows dev host** (no JDK/SDK) and is **pending on-device
+verification** — that is what the 🔧 cells above mean. See
+`plans/controller-parity-linux-android.md` for the implementation plan.
