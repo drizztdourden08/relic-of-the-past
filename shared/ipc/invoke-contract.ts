@@ -49,6 +49,7 @@ interface InvokeContract {
 
   // Dialog
   'dialog:openRom': () => Promise<string | null>;
+  'dialog:pickFile': (extensions: string[]) => Promise<{ name: string; data: ArrayBuffer } | null>;
 
   // Profiles
   'profiles:list': () => Promise<Profile[]>;

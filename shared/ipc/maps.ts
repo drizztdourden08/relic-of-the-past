@@ -31,6 +31,7 @@ const INVOKE_MAP = {
   isAudioMuted: 'window:isAudioMuted',
   isFullscreen: 'window:isFullscreen',
   openRomDialog: 'dialog:openRom',
+  pickFile: 'dialog:pickFile',
   listProfiles: 'profiles:list',
   createProfile: 'profiles:create',
   deleteProfile: 'profiles:delete',

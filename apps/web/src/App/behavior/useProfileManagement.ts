@@ -6,6 +6,7 @@ import { resetGame, setAutoSaveConfig } from '../../lib/game';
 import { serializeToIni, mergeSettings } from '../../lib/game/settings';
 import { applySpritesForRom } from '../../lib/sprites/apply-sprites-for-rom';
 import * as profileStore from '../../lib/storage/profile-store';
+import * as romsStore from '../../lib/storage/roms-store';
 import { loadInputProfile, loadMsuPack } from './load-profile-helpers';
 
 const useProfileManagement = (params: {
@@ -30,7 +31,7 @@ const useProfileManagement = (params: {
   const refreshProfilesAndRoms = useCallback(async () => {
     const [profileList, romStatusList] = await Promise.all([
       profileStore.listProfiles(),
-      window.api.listRomsWithStatus(),
+      romsStore.listRomsWithStatus(),
     ]);
     setProfiles(profileList);
     setRomStatuses(romStatusList);
@@ -127,24 +128,17 @@ const useProfileManagement = (params: {
   }, [profiles, activeProfile, refreshProfilesAndRoms, showDialog, dismissDialog, onGameClear]);
 
   const handleImportRom = useCallback(async () => {
-    const romPath = await window.api.openRomDialog();
-    if (!romPath) return;
+    const result = await romsStore.importPicked();
+    if (!result) return; // cancelled
 
     setImportingRom(true);
-    log.app(`Importing ROM: ${romPath}`);
-    const result = await window.api.importRom(romPath);
     if (!result.success) {
       log.error(`Failed to import ROM: ${result.error}`);
       setImportingRom(false);
       return;
     }
 
-    if (result.alreadyExists) {
-      log.app(`ROM already imported: ${result.romFile}`);
-    } else {
-      log.app(`ROM imported: ${result.romFile}`);
-    }
-
+    log.app(result.alreadyExists ? `ROM already imported: ${result.romFile}` : `ROM imported: ${result.romFile}`);
     log.app(`Extracting assets for ${result.romFile}...`);
     setExtractionStates((prev) => ({ ...prev, [result.romFile]: 'extracting' }));
     await refreshProfilesAndRoms();
@@ -182,7 +176,7 @@ const useProfileManagement = (params: {
       variant: 'danger',
       onConfirm: async () => {
         dismissDialog();
-        await window.api.deleteRom(romFile);
+        await romsStore.deleteRom(romFile);
         log.app(`Removed ROM: ${romFile}`);
         setExtractionStates((prev) => {
           const next = { ...prev };

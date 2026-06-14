@@ -92,15 +92,20 @@ prove the AppImage builds inside WSL.
    through.) Then start the VM and plug the controller in. USB docs:
    <https://docs.oracle.com/en/virtualization/virtualbox/7.0/user/usb-support.html>
 
-6. **Inside the VM**, run the runtime bootstrap (clone the repo there, or just copy
-   the one script over):
+6. **Inside the VM**, run the runtime bootstrap. SSH isn't up yet (this script
+   installs it), so get the file in via a **VirtualBox shared folder** (needs Guest
+   Additions, which you're installing for performance anyway): *Devices → Shared
+   Folders → +* → Folder Path `…\scripts\deploy`, Auto-mount + Make Permanent; then
+   in the VM `sudo usermod -aG vboxsf $USER`, re-login, and:
 
    ```bash
-   bash setup-vm-runtime.sh
+   bash /media/sf_deploy/setup-vm-runtime.sh
    ```
 
-   Installs SSH + Electron runtime libs + the HID udev rule, and **prints the line
-   to paste into `vm.json`** (host IP + user). Log out/in once afterward.
+   (Or *Devices → Drag and Drop → Bidirectional* and drag the file in.) Installs SSH
+   + Electron runtime libs + the HID udev rule, adds you to `plugdev`, and prints an
+   IP/user line. For the NAT setup ignore the printed IP (we use `127.0.0.1:2222`) —
+   just note your **username**. Log out/in once afterward.
 
 7. **On Windows**, create the target config:
 

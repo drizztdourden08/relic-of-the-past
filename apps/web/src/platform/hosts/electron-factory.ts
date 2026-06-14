@@ -3,7 +3,7 @@
  * Electron host adapter. Fulfills the platform ports by delegating to the
  * existing preload-injected window.api — the proven desktop path, unchanged.
  */
-import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore } from '@shared/platform';
+import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, FilePickerPort } from '@shared/platform';
 import { osFromProcess } from '@shared/platform';
 
 const toArrayBuffer = (data: Uint8Array): ArrayBuffer =>
@@ -47,6 +47,13 @@ const createFileStore = (): FileStore => ({
   stat: (path) => window.api.fileStat(path),
 });
 
+const createFilePicker = (): FilePickerPort => ({
+  pickFile: async (opts) => {
+    const picked = await window.api.pickFile(opts?.extensions ?? []);
+    return picked ? { name: picked.name, bytes: new Uint8Array(picked.data) } : null;
+  },
+});
+
 const createElectronFactory = (): PlatformFactory => ({
   info: {
     host: 'electron',
@@ -69,6 +76,7 @@ const createElectronFactory = (): PlatformFactory => ({
   createWindowControls,
   createStorage,
   createFileStore,
+  createFilePicker,
 });
 
 export { createElectronFactory };
