@@ -4,6 +4,7 @@
  */
 
 import type { GameSettings } from '@shared/types/settings';
+import { effectiveCustomRatio } from './aspect-ratio';
 
 const DEFAULT_SETTINGS: GameSettings = {
   // General
@@ -17,6 +18,8 @@ const DEFAULT_SETTINGS: GameSettings = {
 
   // Aspect Ratio & Display
   aspectRatio: '16:9',
+  customAspectW: 0,
+  customAspectH: 0,
   extendY: true,
   unchangedSprites: false,
   noVisualFixes: false,
@@ -35,6 +38,9 @@ const DEFAULT_SETTINGS: GameSettings = {
   windowMode: 'default',
   startFullscreen: false,
   viewportConstraint: 'none',
+
+  // Mobile display
+  renderIntoNotch: true,
 
   // Gameplay
   itemSwitchLR: false,
@@ -76,6 +82,8 @@ const DEFAULT_SETTINGS: GameSettings = {
   hudMode: 'original',
   hudStyle: 'vanilla',
   hudRatio: 'match',
+  customHudAspectW: 0,
+  customHudAspectH: 0,
   hudEnhancedParts: ['main', 'pause'],
   hudHeartMode: 'original',
   hudMagicMode: 'original',
@@ -114,7 +122,12 @@ const serializeToIni = (settings: GameSettings, msuPath?: string, language?: str
   // Build ExtendedAspectRatio value with modifiers
   const parts: string[] = [];
   if (settings.extendY) parts.push('extend_y');
-  parts.push(settings.aspectRatio);
+  if (settings.aspectRatio === 'custom') {
+    const { w, h } = effectiveCustomRatio(settings.customAspectW, settings.customAspectH);
+    parts.push(`${w}:${h}`);
+  } else {
+    parts.push(settings.aspectRatio);
+  }
   if (settings.unchangedSprites) parts.push('unchanged_sprites');
   if (settings.noVisualFixes) parts.push('no_visual_fixes');
   const aspectValue = parts.join(', ');
@@ -189,6 +202,17 @@ const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
   // Fix aspectRatio if it was set to the removed 'stretch' value
   if ((merged.aspectRatio as string) === 'stretch') {
     merged.aspectRatio = '16:9';
+  }
+  // Migrate the removed '18:9' preset to an equivalent custom ratio (screen + HUD)
+  if ((merged.aspectRatio as string) === '18:9') {
+    merged.aspectRatio = 'custom';
+    merged.customAspectW = 18;
+    merged.customAspectH = 9;
+  }
+  if ((merged.hudRatio as string) === '18:9') {
+    merged.hudRatio = 'custom';
+    merged.customHudAspectW = 18;
+    merged.customHudAspectH = 9;
   }
   // Strip removed fields so they don't persist
   delete (merged as Record<string, unknown>).ignoreAspectRatio;

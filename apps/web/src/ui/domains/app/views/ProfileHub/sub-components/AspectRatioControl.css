@@ -1,0 +1,29 @@
+/* @layer renderer-components @kind style */
+.aspect-ratio-control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.aspect-ratio-control__custom {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-end; /* right-align under the segmented control */
+  align-items: flex-end;
+  gap: var(--space-xs);
+}
+
+.aspect-ratio-control__fields {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.aspect-ratio-control__sep {
+  color: var(--c-text-dim);
+}
+
+.aspect-ratio-control__error {
+  color: var(--c-danger);
+  font-size: var(--text-sm);
+}

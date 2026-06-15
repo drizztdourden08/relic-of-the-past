@@ -4,7 +4,9 @@ import { create } from 'zustand';
 interface HudSettings {
   mode: 'original' | 'enhanced';
   style: 'vanilla' | 'modern';
-  ratio: 'match' | '4:3' | '3:2' | '16:9' | '16:10' | '18:9';
+  ratio: 'match' | '4:3' | '3:2' | '16:9' | '16:10' | 'custom';
+  customW: number; // ratio width when ratio === 'custom'; 0 = auto-detect
+  customH: number; // ratio height; 0 = auto-detect
   enhancedParts: ('main' | 'pause')[];
   heartMode: 'original' | 'smooth';
   magicMode: 'original' | 'accurate';
@@ -21,6 +23,8 @@ const useHudSettingsStore = create<HudSettingsStore>()((set) => ({
   mode: 'original',
   style: 'vanilla',
   ratio: 'match',
+  customW: 0,
+  customH: 0,
   enhancedParts: ['main', 'pause'],
   heartMode: 'original',
   magicMode: 'original',

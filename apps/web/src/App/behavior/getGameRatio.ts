@@ -1,19 +1,19 @@
 /* @layer renderer-appshell @kind logic */
 import type { GameSettings } from '@shared/types/settings';
+import { parseRatioString, detectScreenRatio } from '@app/lib/game/aspect-ratio';
 
 const getGameRatio = (aspectRatio: GameSettings['aspectRatio']): number => {
+  // The live canvas reflects the actual rendered width (including custom ratios), so prefer it.
   const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
   if (canvas && canvas.width > 0 && canvas.height > 0) {
     return canvas.width / canvas.height;
   }
-  switch (aspectRatio) {
-    case '16:9':  return 16 / 9;
-    case '16:10': return 16 / 10;
-    case '18:9':  return 18 / 9;
-    case '3:2':   return 3 / 2;
-    case '4:3':
-    default:      return 4 / 3;
+  // Pre-canvas fallback (only the 'fit' window lock uses this, and it re-syncs once the canvas exists).
+  if (aspectRatio === 'custom') {
+    const { w, h } = detectScreenRatio();
+    return w / h;
   }
+  return parseRatioString(aspectRatio) || 4 / 3;
 };
 
 export { getGameRatio };

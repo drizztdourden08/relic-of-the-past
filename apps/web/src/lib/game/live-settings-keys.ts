@@ -50,6 +50,8 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'hudMode',
   'hudStyle',
   'hudRatio',
+  'customHudAspectW',
+  'customHudAspectH',
   'hudEnhancedParts',
   'hudHeartMode',
   'hudMagicMode',

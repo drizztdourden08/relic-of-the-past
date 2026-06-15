@@ -5,6 +5,8 @@ import type { GameSettings } from '@shared/types/settings';
 import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
 import { ToggleGroup } from '../../../../../design-system/primitives/ToggleGroup';
 import { HudStyleControl } from './HudStyleControl';
+import { AspectRatioControl } from './AspectRatioControl';
+import { aspectRatioValue, parseRatioString } from '@app/lib/game/aspect-ratio';
 
 const HUD_MODE_OPTIONS = [
   { value: 'original', label: 'Original' },
@@ -16,22 +18,17 @@ const ASPECT_OPTIONS = [
   { value: '3:2', label: '3:2' },
   { value: '16:9', label: '16:9' },
   { value: '16:10', label: '16:10' },
-  { value: '18:9', label: '18:9' },
+  { value: 'custom', label: 'Custom' },
 ];
 
-const ratioToNum = (r: string): number => {
-  const [w, h] = r.split(':').map(Number);
-  return w / h;
-};
-
-const getHudRatioOptions = (screenRatio: GameSettings['aspectRatio']) => {
-  const screenVal = ratioToNum(screenRatio);
+// Disable fixed presets wider than the screen (the HUD clamps to it anyway); Match/Custom stay open.
+const getHudRatioOptions = (settings: GameSettings) => {
+  const screenVal = aspectRatioValue(settings.aspectRatio, settings.customAspectW, settings.customAspectH);
   return [
-    { value: 'match' as const, label: 'Match' },
-    ...ASPECT_OPTIONS.map((opt) => ({
-      ...opt,
-      disabled: ratioToNum(opt.value) > screenVal,
-    })),
+    { value: 'match', label: 'Match' },
+    ...ASPECT_OPTIONS.map((opt) =>
+      opt.value === 'custom' ? opt : { ...opt, disabled: parseRatioString(opt.value) > screenVal },
+    ),
   ];
 };
 
@@ -82,12 +79,17 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
       );
     case 'hudRatio':
       return (
-        <SegmentedControl
+        <AspectRatioControl
           label="Aspect Ratio"
-          description="Match keeps the overlay in sync with the game viewport. Fixed ratios let you pin the HUD to a narrower area."
+          description="Match keeps the overlay in sync with the game viewport. Fixed ratios pin the HUD to a narrower area; Custom accepts any ratio."
           value={settings.hudRatio}
-          options={getHudRatioOptions(settings.aspectRatio)}
-          onChange={(v) => onChange({ hudRatio: v as GameSettings['hudRatio'] })}
+          options={getHudRatioOptions(settings)}
+          customW={settings.customHudAspectW}
+          customH={settings.customHudAspectH}
+          ratioKey="hudRatio"
+          wKey="customHudAspectW"
+          hKey="customHudAspectH"
+          onChange={onChange}
         />
       );
     case 'hudEnhancedParts':

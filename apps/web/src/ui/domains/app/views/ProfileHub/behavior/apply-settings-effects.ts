@@ -14,6 +14,8 @@ const syncHudStore = (s: GameSettings): void => {
     mode: s.hudMode,
     style: s.hudStyle,
     ratio: s.hudRatio,
+    customW: s.customHudAspectW,
+    customH: s.customHudAspectH,
     enhancedParts: s.hudEnhancedParts,
     heartMode: s.hudHeartMode,
     magicMode: s.hudMagicMode,
@@ -97,7 +99,7 @@ const applySettingsSideEffects = (patch: Partial<GameSettings>, next: GameSettin
   }
 
   // Sync HUD settings to store for live rendering
-  if ('hudMode' in patch || 'hudStyle' in patch || 'hudRatio' in patch || 'hudEnhancedParts' in patch || 'hudHeartMode' in patch || 'hudMagicMode' in patch || 'hudCountLayout' in patch || 'hudPauseStyle' in patch || 'hudPauseHighlight' in patch) {
+  if ('hudMode' in patch || 'hudStyle' in patch || 'hudRatio' in patch || 'customHudAspectW' in patch || 'customHudAspectH' in patch || 'hudEnhancedParts' in patch || 'hudHeartMode' in patch || 'hudMagicMode' in patch || 'hudCountLayout' in patch || 'hudPauseStyle' in patch || 'hudPauseHighlight' in patch) {
     syncHudStore(next);
   }
 

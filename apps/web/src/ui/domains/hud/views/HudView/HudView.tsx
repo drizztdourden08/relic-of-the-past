@@ -7,20 +7,10 @@ import { HudCurrentItem } from '../../composites/HudCurrentItem';
 import { HudCount } from '../../composites/HudCount';
 import { HudLife } from '../../compounds/HudLife';
 import { useRef, useEffect, useState, useCallback } from 'react';
-
-const ratioToNumeric = (ratio: string): number => {
-  switch (ratio) {
-    case '4:3': return 4 / 3;
-    case '3:2': return 3 / 2;
-    case '16:10': return 16 / 10;
-    case '16:9': return 16 / 9;
-    case '18:9': return 18 / 9;
-    default: return 0; // 'match' — use full container width
-  }
-};
+import { aspectRatioValue } from '@app/lib/game/aspect-ratio';
 
 const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string; slideTransition?: string } = {}) => {
-  const { heartMode, magicMode, countLayout, ratio: hudRatio } = useHudSettingsStore();
+  const { heartMode, magicMode, countLayout, ratio: hudRatio, customW, customH } = useHudSettingsStore();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(2);
@@ -40,7 +30,7 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
     setScale(newScale);
 
     // Determine HUD content width based on chosen ratio
-    const numericRatio = ratioToNumeric(hudRatio);
+    const numericRatio = aspectRatioValue(hudRatio, customW, customH);
     if (numericRatio <= 0) {
       // 'match' — use full container width
       setHudWidth(undefined);
@@ -50,7 +40,7 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
       const effectiveRatio = Math.min(numericRatio, screenRatio);
       setHudWidth(Math.floor(h * effectiveRatio));
     }
-  }, [hudRatio]);
+  }, [hudRatio, customW, customH]);
 
   useEffect(() => {
     computeScale();

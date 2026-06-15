@@ -7,7 +7,8 @@ REM Prerequisites: Emscripten SDK must be activated (run emsdk_env.bat first)
 setlocal enabledelayedexpansion
 
 set ZELDA3=..\zelda3
-set OUTPUT_DIR=..\..\apps\desktop\public\wasm
+REM Renderer public dir (electron.vite.config publicDir + scripts/ensure-wasm.mjs); also the web/mobile build root.
+set OUTPUT_DIR=..\..\apps\web\public\wasm
 
 if not exist "%OUTPUT_DIR%" mkdir "%OUTPUT_DIR%"
 if not exist "assets" mkdir "assets"
@@ -94,6 +95,7 @@ emcc -O2 -g2 ^
   -o %OUTPUT_DIR%\zelda3.js ^
   -sUSE_SDL=2 ^
   -sWASM=1 ^
+  -sSTACK_SIZE=4194304 ^
   -sALLOW_MEMORY_GROWTH=1 ^
   -sINITIAL_MEMORY=67108864 ^
   -sFORCE_FILESYSTEM=1 ^

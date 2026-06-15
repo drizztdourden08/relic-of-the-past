@@ -17,6 +17,7 @@ out/
 # WASM build artifacts
 core/wasm-build/output/
 apps/web/public/wasm/
+apps/desktop/public/wasm/
 
 # Extracted sprites (generated at runtime)
 apps/web/public/sprites/

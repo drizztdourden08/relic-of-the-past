@@ -1,0 +1,59 @@
+/* @layer renderer-components @kind style */
+.stepper {
+  display: inline-flex;
+  align-items: stretch;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  overflow: hidden; /* clip the buttons to the rounded outer border */
+  transition: border-color var(--transition-normal);
+}
+
+.stepper:focus-within {
+  border-color: var(--c-gold);
+}
+
+.stepper__field {
+  width: 2.25rem;
+  min-width: 0;
+  text-align: center;
+  padding: var(--space-xs) 0;
+  background: transparent;
+  border: none;
+  color: var(--c-text);
+  font-size: var(--text-base);
+  outline: none;
+}
+
+.stepper__btn {
+  flex: none;
+  width: 1.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--c-text-dim);
+  font-size: var(--text-lg);
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.stepper__btn:first-child {
+  border-right: 1px solid var(--c-border);
+}
+
+.stepper__btn:last-child {
+  border-left: 1px solid var(--c-border);
+}
+
+.stepper__btn:hover {
+  background: var(--c-hover);
+  color: var(--c-text);
+}
+
+.stepper--disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}

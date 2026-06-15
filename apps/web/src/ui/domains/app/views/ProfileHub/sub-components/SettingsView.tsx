@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
 import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
+import { AspectRatioControl } from './AspectRatioControl';
 
 interface SettingsViewProps {
   settings: GameSettings;
@@ -18,7 +19,7 @@ const SECTIONS: Section[] = [
         id: 'display-aspect',
         title: 'Aspect Ratio',
         items: [
-          { key: 'aspectRatio', label: 'Aspect Ratio', description: 'Screen aspect ratio for the game content', keywords: 'widescreen 4:3 16:9 16:10 18:9 ultrawide' },
+          { key: 'aspectRatio', label: 'Aspect Ratio', description: 'Screen aspect ratio for the game content', keywords: 'widescreen 4:3 16:9 16:10 custom ultrawide 21:9' },
           { key: 'extendY', label: 'Extend Y', description: 'Show 240 lines instead of 224, revealing extra vertical content at the top and bottom of the screen', keywords: 'height resolution vertical' },
         ],
       },
@@ -112,7 +113,7 @@ const ASPECT_OPTIONS = [
   { value: '3:2', label: '3:2' },
   { value: '16:9', label: '16:9' },
   { value: '16:10', label: '16:10' },
-  { value: '18:9', label: '18:9' },
+  { value: 'custom', label: 'Custom' },
 ];
 
 const VIEWPORT_OPTIONS = [
@@ -130,11 +131,17 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
   switch (key) {
     case 'aspectRatio':
       return (
-        <SegmentedControl
+        <AspectRatioControl
           label="Aspect Ratio"
+          description="Screen aspect ratio for the game content. Custom accepts any ratio from 4:3 up to ultrawide."
           value={settings.aspectRatio}
           options={ASPECT_OPTIONS}
-          onChange={(v) => onChange({ aspectRatio: v as GameSettings['aspectRatio'] })}
+          customW={settings.customAspectW}
+          customH={settings.customAspectH}
+          ratioKey="aspectRatio"
+          wKey="customAspectW"
+          hKey="customAspectH"
+          onChange={onChange}
         />
       );
     case 'viewportConstraint':
