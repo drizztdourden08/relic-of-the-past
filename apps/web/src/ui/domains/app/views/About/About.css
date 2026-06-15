@@ -1,5 +1,11 @@
 /* @layer renderer-components @kind style */
-.about-dialog__header {
+
+.about {
+  max-width: var(--dialog-w-md);
+  margin: 0 auto;
+}
+
+.about__header {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7,27 +13,27 @@
   margin-bottom: var(--space-lg);
 }
 
-.about-dialog__logo {
-  width: 80px;
-  height: 80px;
+.about__logo {
+  width: 96px;
+  height: 96px;
   border-radius: var(--radius-lg);
 }
 
-.about-dialog__title {
-  font-size: var(--text-lg);
+.about__title {
+  font-size: var(--text-xl);
   font-weight: var(--weight-semi);
   color: var(--c-text);
   margin: 0;
 }
 
-.about-dialog__body {
+.about__body {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
   margin-bottom: var(--space-md);
 }
 
-.about-dialog__row {
+.about__row {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -36,18 +42,18 @@
   background: var(--c-sunken);
 }
 
-.about-dialog__label {
+.about__label {
   font-size: var(--text-sm);
   color: var(--c-text-muted);
 }
 
-.about-dialog__value {
+.about__value {
   font-size: var(--text-sm);
   font-family: var(--font-mono);
   color: var(--c-text);
 }
 
-.about-dialog__description {
+.about__description {
   font-size: var(--text-sm);
   color: var(--c-text-dim);
   text-align: center;
