@@ -15,7 +15,8 @@ const DEFAULTS = {
   wslDistro: 'Ubuntu-24.04',
   wslWorkdir: '~/relic',
   avdName: 'rotp_test',
-  vm: null, // { host, user, identityFile?, display? } — required only for the VM hop
+  vmName: 'Linux-rotp-test', // VirtualBox VM name (for sharedfolder commands)
+  vm: null, // { host, user, identityFile? } — required for the VM hop
 };
 
 const loadConfig = () => {
@@ -26,6 +27,7 @@ const loadConfig = () => {
     wslDistro: process.env.ROTP_WSL_DISTRO || fromFile.wslDistro || DEFAULTS.wslDistro,
     wslWorkdir: fromFile.wslWorkdir || DEFAULTS.wslWorkdir,
     avdName: process.env.ROTP_AVD || fromFile.avdName || DEFAULTS.avdName,
+    vmName: fromFile.vmName || DEFAULTS.vmName,
     vm: fromFile.vm || DEFAULTS.vm,
   };
 };

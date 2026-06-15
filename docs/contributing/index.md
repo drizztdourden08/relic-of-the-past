@@ -31,6 +31,7 @@ is the short version GitHub surfaces, and points here.
 | Architecture / where code goes | [Architecture overview](../architecture/overview.md) |
 | UI components | [Design System](design-system.md), [Design Language](design-language.md) |
 | Anything user-visible | run the app and verify — [Testing](testing.md) |
+| Linux / Android targets | [Testing on a Linux VM & Android emulator](testing-linux-and-android.md) |
 
 ## Before you open a PR
 

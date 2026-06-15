@@ -2,11 +2,10 @@
   "wslDistro": "Ubuntu-24.04",
   "wslWorkdir": "~/relic",
   "avdName": "rotp_test",
+  "vmName": "Linux-rotp-test",
   "vm": {
-    "host": "127.0.0.1",
-    "port": 2222,
+    "host": "192.168.56.50",
     "user": "you",
-    "identityFile": "/home/you/.ssh/id_ed25519",
-    "display": ":0"
+    "identityFile": "/home/you/.ssh/id_ed25519"
   }
 }

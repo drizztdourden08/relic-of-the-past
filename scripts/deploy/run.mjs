@@ -1,9 +1,5 @@
 /* @layer tooling-scripts @kind script */
-/**
- * Shell helpers shared by the deploy push scripts. Uses execFileSync with arg
- * arrays (no intermediate shell), so WSL/ssh payloads need no Windows-quote
- * gymnastics — each bash command is passed as a single argv entry to `bash -lc`.
- */
+/** Shell helpers shared by the deploy scripts. */
 import { execFileSync } from 'node:child_process';
 
 const log = (msg) => console.log(`\x1b[36m[deploy]\x1b[0m ${msg}`);
