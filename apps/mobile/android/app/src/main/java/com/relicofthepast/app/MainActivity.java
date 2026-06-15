@@ -1,5 +1,7 @@
 package com.relicofthepast.app;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.WindowManager;
@@ -8,6 +10,7 @@ import android.webkit.WebView;
 import androidx.activity.BackEventCompat;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -28,7 +31,16 @@ public class MainActivity extends BridgeActivity {
         final WebView webView = getBridge() != null ? getBridge().getWebView() : null;
         if (webView != null) {
             webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
+            // Black, not the default grey, so the area behind the WebView (display
+            // cutout, transiently-shown bars) matches the app's black background.
+            webView.setBackgroundColor(Color.BLACK);
         }
+
+        // Paint the window itself black and make the system bars transparent, so the
+        // notch/cutout and bar regions read as pure black instead of system grey.
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
 
         // Keep the screen awake while the app is foregrounded — players use a controller
         // and may never touch the screen, so the display would otherwise time out and
@@ -40,6 +52,10 @@ public class MainActivity extends BridgeActivity {
         // own (black) background fills those regions; the game stays letterboxed in its
         // box, so nothing important lands under the camera notch.
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        // Consume all window insets so Capacitor's WebView fills the entire screen
+        // (including the display cutout) instead of being padded into the safe area —
+        // without this the content sits off-center next to the camera notch.
+        ViewCompat.setOnApplyWindowInsetsListener(getWindow().getDecorView(), (v, insets) -> WindowInsetsCompat.CONSUMED);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             WindowManager.LayoutParams lp = getWindow().getAttributes();
             lp.layoutInDisplayCutoutMode = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
