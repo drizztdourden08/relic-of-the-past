@@ -1,4 +1,12 @@
+import groovy.json.JsonSlurper
+
 apply plugin: 'com.android.application'
+
+// App version derived from the repo-root package.json so the APK tracks releases.
+def rootPkg = new JsonSlurper().parse(file("../../../../package.json"))
+def appVersionName = rootPkg.version
+def (vMaj, vMin, vPat) = appVersionName.tokenize('.').collect { it.toInteger() }
+def appVersionCode = vMaj * 10000 + vMin * 100 + vPat
 
 android {
     namespace = "com.relicofthepast.app"
@@ -7,8 +15,8 @@ android {
         applicationId "com.relicofthepast.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode appVersionCode
+        versionName appVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -16,10 +24,26 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        release {
+            // Creds come from env vars (CI) or gradle properties (local). When absent,
+            // the release build stays unsigned — build a debug APK instead.
+            def ksFile = System.getenv('RELIC_KEYSTORE_FILE') ?: findProperty('RELIC_KEYSTORE_FILE')
+            if (ksFile) {
+                storeFile file(ksFile)
+                storePassword System.getenv('RELIC_KEYSTORE_PASSWORD') ?: findProperty('RELIC_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('RELIC_KEY_ALIAS') ?: (findProperty('RELIC_KEY_ALIAS') ?: 'relic')
+                keyPassword System.getenv('RELIC_KEY_PASSWORD') ?: findProperty('RELIC_KEY_PASSWORD')
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (System.getenv('RELIC_KEYSTORE_FILE') ?: findProperty('RELIC_KEYSTORE_FILE')) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 }
