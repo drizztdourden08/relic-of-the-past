@@ -19,6 +19,28 @@ const getSDL2Audio = (): { audioContext: AudioContext; scriptProcessorNode: Audi
   return { audioContext: sdl2.audioContext, scriptProcessorNode: sdl2.audio.scriptProcessorNode };
 };
 
+// Mobile WebViews/browsers create the AudioContext suspended (autoplay policy). The
+// game-start tap's user-activation is long expired by the time the context exists, so
+// arm the next real interaction to resume it. Self-removes once the context is running.
+const GESTURE_EVENTS = ['pointerdown', 'touchend', 'keydown', 'click'] as const;
+
+const handleResumeGesture = (): void => {
+  const sdl2 = getSDL2Audio();
+  const stop = () => GESTURE_EVENTS.forEach((evt) => window.removeEventListener(evt, handleResumeGesture, true));
+  if (!sdl2 || sdl2.audioContext.state === 'running') { stop(); return; }
+  sdl2.audioContext.resume()
+    .then(() => { if (getSDL2Audio()?.audioContext.state === 'running') stop(); })
+    .catch(() => {});
+};
+
+const armGestureResume = (): void => {
+  GESTURE_EVENTS.forEach((evt) => window.addEventListener(evt, handleResumeGesture, { capture: true, passive: true }));
+};
+
+const disarmGestureResume = (): void => {
+  GESTURE_EVENTS.forEach((evt) => window.removeEventListener(evt, handleResumeGesture, true));
+};
+
 const clearPendingPoll = (): void => {
   if (pendingPollId !== null) {
     clearInterval(pendingPollId);
@@ -50,6 +72,11 @@ const initMasterVolume = (volume: number): void => {
     startPendingPoll();
     return;
   }
+
+  // Ensure a suspended context gets resumed (immediately if allowed, else on the next
+  // user gesture). Idempotent — duplicate listeners are de-duped by identity.
+  armGestureResume();
+  handleResumeGesture();
 
   const { audioContext: ctx, scriptProcessorNode: source } = sdl2;
 
@@ -83,6 +110,7 @@ const resetMasterVolume = (): void => {
   gainNode = null;
   pendingVolume = null;
   clearPendingPoll();
+  disarmGestureResume();
 };
 
 const suspendAudio = (): void => {

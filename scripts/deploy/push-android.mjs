@@ -90,10 +90,13 @@ const deployCapacitor = (serial) => {
   const apk = join(android, 'app', 'build', 'outputs', 'apk', 'debug', 'app-debug.apk');
   log(`Installing + launching on ${serial}…`);
   run(adb, ['-s', serial, 'install', '-r', apk]);
+  // Force-stop first so a still-running instance reloads the freshly-installed web
+  // bundle instead of keeping the old one in its WebView.
+  run(adb, ['-s', serial, 'shell', 'am', 'force-stop', APP_ID], { stdio: 'ignore' });
   run(adb, ['-s', serial, 'shell', 'monkey', '-p', APP_ID, '-c', 'android.intent.category.LAUNCHER', '1'], {
     stdio: 'ignore',
   });
-  log('Installed and launched on the emulator.');
+  log(`Installed and launched on ${serial}.`);
 };
 
 const main = () => {

@@ -104,12 +104,10 @@ const resetGame = async (): Promise<void> => {
     if (sdl2?.capture?.scriptProcessorNode) sdl2.capture.scriptProcessorNode.disconnect();
     if (sdl2?.audioContext) sdl2.audioContext.close().catch(() => {});
 
-    // Free GPU resources — safe because the FX renderer guards with isContextLost()
+    // Free GPU resources — safe because the FX renderer guards with isContextLost().
+    // The game canvas is WebGL1 (see startGame), so probe just that.
     const canvas = (mod as any).canvas as HTMLCanvasElement | undefined;
-    if (canvas) {
-      const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
-      gl?.getExtension('WEBGL_lose_context')?.loseContext();
-    }
+    canvas?.getContext('webgl')?.getExtension('WEBGL_lose_context')?.loseContext();
   }
   setModule(null);
   setProfileId(null);
@@ -175,14 +173,13 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
 
     const instantiateWasm = createInstantiateWasm();
 
-    // Pre-initialize the game canvas WebGL context with preserveDrawingBuffer=true
-    // so the edge-glow renderer can cross-read it on Linux. On Linux with native
-    // OpenGL (unlike ANGLE on Windows/Mac), the backbuffer is cleared after each
-    // SDL_RenderPresent, causing cross-context texImage2D reads to return black.
-    // HTML spec guarantees getContext returns the same object for the same type,
-    // so Emscripten reuses whichever context we create here.
-    void (canvas.getContext('webgl2', { preserveDrawingBuffer: true }) ??
-      canvas.getContext('webgl', { preserveDrawingBuffer: true }));
+    // preserveDrawingBuffer=true lets the edge-glow renderer cross-read the canvas on
+    // Linux (native GL clears the backbuffer after SDL_RenderPresent); Emscripten reuses
+    // this same-type context. MUST be 'webgl' (WebGL1) — SDL2's Emscripten renderer is
+    // GLES2/WebGL1 (build sets no MAX_WEBGL_VERSION). A 'webgl2' context here makes SDL's
+    // getContext('webgl') null → accelerated renderer fails → software fallback's
+    // getContext('2d') is null too → "createImageData of null" (crashed Android's WebView).
+    canvas.getContext('webgl', { preserveDrawingBuffer: true });
 
     const module: EmscriptenModule = await Zelda3({
       canvas,
