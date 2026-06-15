@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  USB-OTG game controllers Relic offers to handle on attach. vendor-id is DECIMAL.
+  Matches the Linux udev vendor list (scripts/build/linux/99-relic-controllers.rules).
+  Nintendo 0x057e=1406 · Sony 0x054c=1356 · Microsoft 0x045e=1118 · 8BitDo 0x2dc8=11720.
+-->
+<resources>
+    <usb-device vendor-id="1406" />
+    <usb-device vendor-id="1356" />
+    <usb-device vendor-id="1118" />
+    <usb-device vendor-id="11720" />
+</resources>

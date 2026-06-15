@@ -21,3 +21,6 @@
 *.yaml text eol=lf
 # Git hooks must stay LF (CRLF breaks the #!/bin/sh shebang) and executable
 .githooks/** text eol=lf
+# Shell scripts + udev rules ship to Linux — CRLF breaks the shebang / parsing
+*.sh text eol=lf
+*.rules text eol=lf

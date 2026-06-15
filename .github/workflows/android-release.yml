@@ -1,0 +1,73 @@
+name: Android APK (manual)
+
+# Ad-hoc, on-demand signed APK build — uploads the APK as a workflow artifact.
+# NOTE: the real release path builds and attaches the APK itself (the build-android
+# job in release.yml), so every release already ships it. This workflow is only for
+# building a one-off APK outside a release (e.g. to test a branch). Signing uses a
+# self-signed keystore stored in repo secrets — see docs/contributing/testing-linux-and-android.md.
+#
+# Required repository secrets:
+#   ANDROID_KEYSTORE_B64       base64 of the release keystore (relic-release.jks)
+#   ANDROID_KEYSTORE_PASSWORD  store/key password
+#   ANDROID_KEY_ALIAS          key alias (e.g. "relic")
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set up Emscripten (for the WASM core)
+        uses: emscripten-core/setup-emsdk@v16
+        with:
+          version: 3.1.51
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build WASM core
+        # emcc is on PATH here (setup-emsdk), so the shared build script runs directly
+        # and writes into apps/web/public/wasm — which cap:sync bundles into the APK.
+        run: node core/wasm-build/build.mjs
+
+      - name: Build web bundle + sync into the Android project
+        run: npm run cap:sync
+
+      - name: Decode signing keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > "$RUNNER_TEMP/relic-release.jks"
+
+      - name: Build signed release APK
+        working-directory: apps/mobile/android
+        env:
+          RELIC_KEYSTORE_FILE: ${{ runner.temp }}/relic-release.jks
+          RELIC_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          RELIC_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          RELIC_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleRelease --no-daemon
+
+      - name: Stage APK
+        run: cp apps/mobile/android/app/build/outputs/apk/release/app-release.apk rotp-android.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: rotp-android-apk
+          path: rotp-android.apk

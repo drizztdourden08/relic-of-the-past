@@ -7,7 +7,7 @@ description: Compile the zelda3 C core to WebAssembly with Emscripten. Use when 
 
 # Build the WASM core
 
-The TS app loads `apps/desktop/public/wasm/zelda3.{js,wasm}` (gitignored, not committed).
+The TS app loads `apps/web/public/wasm/zelda3.{js,wasm}` (gitignored, not committed).
 `npm run dev` / `npm run build` **auto-build it** via the `ensure-wasm` pre-step when it's
 missing or any C source changed (`scripts/ensure-wasm.mjs` — mtime check), so a C change
 takes effect on the next `dev`/`build`. `npm run ensure-wasm` forces a rebuild. Use this
@@ -22,7 +22,7 @@ is unavailable (non-Windows). It runs the same `build.bat` the auto-build invoke
 ## Build (canonical — use this)
 
 `core/wasm-build/build.bat` is the build the app actually uses. It writes
-straight to `apps/desktop/public/wasm/` and includes debug info (`-g2`).
+straight to `apps/web/public/wasm/` and includes debug info (`-g2`).
 
 Emscripten needs its env activated in the same shell. Run from the Bash tool:
 

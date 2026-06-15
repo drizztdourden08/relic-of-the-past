@@ -9,7 +9,7 @@ import fs from 'fs';
 import path from 'path';
 
 const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'release', 'coverage', '.vite', 'out', 'build-output', 'saves', 'test-roms', 'assets', 'temp-scripts', 'worktrees']);
-const SKIP_REL = ['apps/desktop/public/wasm', '.claude/worktrees'];
+const SKIP_REL = ['apps/web/public/wasm', 'apps/mobile/android', '.claude/worktrees'];
 const SKIP_FILE = /(\.jsonl|\.vcxproj|\.filters|\.sln|\.bmp|\.map|\.csv|\.lock|package-lock\.json)$/i;
 
 const walkFiles = (root, dir = root, acc = []) => {

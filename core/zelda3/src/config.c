@@ -432,8 +432,17 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
           nospr = true;
         else if (strcmp(s, "no_visual_fixes") == 0)
           novis = true;
-        else
-          return false;
+        else {
+          // Custom "W:H" — wider ratios beyond the named presets. Same formula the presets use;
+          // clamped to kPpuExtraLeftRight later in emscripten_main.c.
+          char *endp;
+          long cw = strtol(s, &endp, 10);
+          long ch = (*endp == ':') ? strtol(endp + 1, NULL, 10) : 0;
+          if (cw <= 0 || ch <= 0)
+            return false;
+          int extra = (h * (int)cw / (int)ch - 256) / 2;
+          g_config.extended_aspect_ratio = extra > 0 ? extra : 0;
+        }
       }
       if (g_config.extended_aspect_ratio && !nospr)
         g_config.features0 |= kFeatures0_ExtendScreen64;

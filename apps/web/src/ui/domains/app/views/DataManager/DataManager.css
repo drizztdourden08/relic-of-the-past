@@ -1,0 +1,52 @@
+/* @layer renderer-components @kind style */
+.data-manager {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ─── Body: left tabs + content ─── */
+
+.data-manager__body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ─── Tab rail (left side) ─── */
+
+.data-manager__tabs {
+  width: 120px;
+}
+
+/* Compact viewport (< --bp-compact): let the rail shrink to its icon strip. */
+@media (width <= 820px) {
+  .data-manager__tabs {
+    width: auto;
+  }
+}
+
+/* ─── Content ─── */
+
+.data-manager__content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Manager list (rows are the ListItemRow composite) ─── */
+
+.data-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.data-manager__loading {
+  padding: 0 var(--space-sm) var(--space-md);
+}

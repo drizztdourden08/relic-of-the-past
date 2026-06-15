@@ -1,0 +1,19 @@
+/* @layer renderer-other @kind component */
+import './platform/install-api-shim';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from './App';
+import { PlatformProvider } from './platform';
+import { pollInventoryState, getCompletedChecks, getCurrentInventory } from './lib/game/tracker';
+import './ui/design-system/tokens/index.css';
+
+// Expose tracker bridge functions for live integration tests
+(window as any).__trackerBridge = { pollInventoryState, getCompletedChecks, getCurrentInventory };
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <PlatformProvider>
+      <App />
+    </PlatformProvider>
+  </StrictMode>,
+);

@@ -16,7 +16,7 @@ flowchart TD
         B["singleton module ref (~79 exported fns)<br/>TS → C: mod.ccall('Wasm...', ...)<br/>C → TS: EM_ASM → window.__onItemReceived(...)"]
     end
     subgraph APP["TS app"]
-        A["apps/desktop/src/ — React 19 renderer (UI, HUD, widgets)<br/>apps/desktop/electron/ — main + preload: IPC, HID, ROMs, MSU, profiles, saves, protocols<br/>shared/ — asset-extraction, game logic, nav"]
+        A["apps/web/src/ — React 19 renderer (UI, HUD, widgets)<br/>apps/desktop/electron/ — main + preload: IPC, HID, ROMs, MSU, profiles, saves, protocols<br/>shared/ — asset-extraction, game logic, nav"]
     end
     CORE -->|"Emscripten → zelda3.js/.wasm/.data → public/wasm/"| BRIDGE
     BRIDGE --> APP
@@ -26,7 +26,7 @@ The **WASM bridge is the trickiest part of the codebase**: any new function that
 crosses the C↔TS boundary touches **two places** — the C impl in
 `core/game-hooks/*.c` (tagged `EMSCRIPTEN_KEEPALIVE`, which both retains *and*
 exports the symbol — there is **no** `EXPORTED_FUNCTIONS` list to maintain), and
-the `ccall` site in `apps/desktop/src/lib/game/`. C→JS events go the other way via `EM_ASM` →
+the `ccall` site in `apps/web/src/lib/game/`. C→JS events go the other way via `EM_ASM` →
 `window.__on*`. Full procedure: the `add-wasm-function` skill. Rebuild after any C
 change: the `build-wasm` skill (C edits don't take effect until rebuilt).
 
@@ -37,25 +37,38 @@ change: the `build-wasm` skill (C edits don't take effect until rebuilt).
 | `core/zelda3/` | Upstream C decompilation + SNES emulation. Treat as vendored. |
 | `core/game-hooks/` | Our C hook layer — `Wasm*` exports, `GameHook_*` callbacks, cheats, state queries, haptics. |
 | `core/wasm-build/` | Emscripten build (`build.bat`, `Makefile`, `emscripten_main.c`). |
-| `apps/desktop/src/` | React renderer. `lib/game/` is the JS side of the bridge; `stores/` are Zustand stores; `hud/`, `widgets/`, `components/`. |
+| `apps/web/src/` | React renderer. `lib/game/` is the JS side of the bridge; `stores/` are Zustand stores; `hud/`, `widgets/`, `components/`. |
 | `apps/desktop/electron/` | Electron main process + preload (Node-side: input, ROM loading, profiles, saves). |
 | `shared/` | Code shared between renderer & electron. `asset-extraction/` (ROM→.dat pipeline), `game/` (logic, navigation, checks, seeds), `types/`. |
 | `tests/` | `vitest` unit tests (`*.test.ts`) + `playwright` specs (`*.spec.ts`, screenshots). |
 | `scripts/` | Out-of-band tooling: `analyze/` (quality + tagging harness), `copyright-gate/`, `build/` (packaging config), `hooks/` (agent lint hook), `analyze-navigation.ts` (offline nav extraction). |
 | `docs/` | Project documentation. |
 
-Path aliases: `@shared/*` → `shared/`, `@app/*` → `apps/desktop/src/`.
+Path aliases: `@shared/*` → `shared/`, `@app/*` → `apps/web/src/`.
 
 ## Build & run
 
 > ⚠️ **The WASM core auto-builds.** `npm run dev` / `npm run build` run an
 > `ensure-wasm` pre-step (scripts/ensure-wasm.mjs) that (re)builds
-> `apps/desktop/public/wasm/zelda3.{js,wasm}` when it is **missing or any C source is
+> `apps/web/public/wasm/zelda3.{js,wasm}` when it is **missing or any C source is
 > newer** than the last build — otherwise it's a fast no-op. The wasm is **gitignored**
 > (not committed); the build needs Emscripten (`$EMSDK`, default `E:\GameProjects\emsdk`).
 > `npm install` likewise auto-fetches the Electron binary (`ensure-electron`). C changes
 > take effect on the next `dev`/`build`; force a rebuild with `npm run ensure-wasm` or
 > the `build-wasm` skill.
+
+> 📱 **Mobile (Android) testing — env on this machine.** `npm run push:android` does the
+> whole loop: `build:web` → `cap sync` → regenerates launcher icons/splash from
+> `apps/mobile/assets/logo.png` (build-time; outputs are gitignored) → debug APK → `adb`
+> install + launch on a running AVD. It needs `ANDROID_HOME` = `C:\Android` and
+> `JAVA_HOME` = `C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot` — both are set
+> at the **user level** (with their `bin`s on PATH), so a normal terminal already has
+> them. **Claude's non-interactive tool shells can inherit a stale env block that lacks
+> these** — if `$env:ANDROID_HOME` is empty, set them inline before building:
+> `$env:ANDROID_HOME='C:\Android'; $env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot'`.
+> Release APKs are distributed via **GitHub Releases** (`.github/workflows/android-release.yml`),
+> signed with a self-signed keystore kept OUTSIDE the repo at
+> `E:\GameProjects\relic-signing\relic-release.jks` (CI reads the `ANDROID_KEYSTORE_*` secrets).
 
 | Task | Command | Notes |
 |------|---------|-------|
@@ -157,7 +170,7 @@ extractors) → `asset-builder.ts` (serializes the `.dat`). Public barrel: `inde
 
 ## Key files to know
 
-- `apps/desktop/src/lib/game/wasm-bridge.ts` — the bridge singleton + most `ccall`s.
+- `apps/web/src/lib/game/wasm-bridge.ts` — the bridge singleton + most `ccall`s.
 - `core/game-hooks/state_queries.c` — pattern for returning data to JS via pointers + `HEAPU8`.
 - `core/game-hooks/game_hooks.h` — declared hook surface.
 - `core/wasm-build/build.bat` — the build everyone actually runs.

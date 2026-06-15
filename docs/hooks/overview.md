@@ -19,7 +19,7 @@ flowchart LR
 ```
 
 - **JS → C**: every export is a C function marked `EMSCRIPTEN_KEEPALIVE`. JS reaches it through a
-  thin wrapper in `apps/desktop/src/lib/game/`, the bridge, via `mod.ccall(name, ret, argTypes, args)`.
+  thin wrapper in `apps/web/src/lib/game/`, the bridge, via `mod.ccall(name, ret, argTypes, args)`.
 - **C → JS**: the game core fires `GameHook_*` functions at gameplay events; the JS-facing ones use
   `EM_ASM` to call a `window.__on*` callback the renderer registered.
 
@@ -42,7 +42,7 @@ byte-by-byte layout.
 A new boundary function touches two places; miss one and it won't be callable:
 
 1. **C impl** in `core/game-hooks/*.c` (or `core/wasm-build/emscripten_*.c`) marked `EMSCRIPTEN_KEEPALIVE`.
-2. **JS wrapper** — the `ccall` site in `apps/desktop/src/lib/game/`.
+2. **JS wrapper** — the `ccall` site in `apps/web/src/lib/game/`.
 
 Full procedure: the `add-wasm-function` skill and [Contributing → Adding a WASM Function](../contributing/adding-a-wasm-function.md).
 

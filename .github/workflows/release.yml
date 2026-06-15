@@ -119,12 +119,9 @@ jobs:
           version: 3.1.51
 
       - name: Build WASM
-        run: |
-          cd core/wasm-build
-          emmake make
-          mkdir -p ../../apps/desktop/public/wasm
-          cp output/zelda3.js ../../apps/desktop/public/wasm/
-          cp output/zelda3.wasm ../../apps/desktop/public/wasm/
+        # Shared build script (single source of truth) writes straight into
+        # apps/web/public/wasm — same output the desktop package consumes.
+        run: node core/wasm-build/build.mjs
         shell: bash
 
       - name: Install dependencies
@@ -153,8 +150,70 @@ jobs:
           name: release-${{ matrix.platform }}
           path: release/${{ matrix.platform }}/*
 
+  build-android:
+    # The signed Android APK is part of the SAME release run as the desktop builds,
+    # so every release path (UI "Run workflow" or `npm run release`) ships it
+    # alongside win/mac/linux. Signing secrets: see android-release.yml header.
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.prepare.outputs.tag }}
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Emscripten
+        uses: emscripten-core/setup-emsdk@v16
+        with:
+          version: 3.1.51
+
+      - name: Build WASM
+        run: node core/wasm-build/build.mjs
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build web bundle + sync into the Android project
+        run: npm run cap:sync
+
+      - name: Decode signing keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > "$RUNNER_TEMP/relic-release.jks"
+
+      - name: Build signed release APK
+        working-directory: apps/mobile/android
+        env:
+          RELIC_KEYSTORE_FILE: ${{ runner.temp }}/relic-release.jks
+          RELIC_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          RELIC_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          RELIC_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleRelease --no-daemon
+
+      - name: Stage APK
+        run: cp apps/mobile/android/app/build/outputs/apk/release/app-release.apk rotp-android.apk
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-android
+          path: rotp-android.apk
+
   release:
-    needs: [prepare, build]
+    needs: [prepare, build, build-android]
     runs-on: ubuntu-latest
 
     steps:
@@ -192,6 +251,9 @@ jobs:
             echo "**Linux**"
             echo "- [AppImage](${BASE}/rotp-linux.AppImage) — universal"
             echo "- [Debian Package (.deb)](${BASE}/rotp-linux.deb)"
+            echo ""
+            echo "**Android**"
+            echo "- [APK](${BASE}/rotp-android.apk) — sideload (self-signed; allow unknown sources)"
           } > release-body.md
 
       - name: Create GitHub Release
@@ -208,5 +270,6 @@ jobs:
             artifacts/release-win/*
             artifacts/release-mac/*
             artifacts/release-linux/*
+            artifacts/release-android/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

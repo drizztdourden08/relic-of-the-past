@@ -1,0 +1,101 @@
+/* @layer renderer-design-system @kind style */
+
+/*
+ * CANONICAL design-language tokens (proposed). Added under NEW names so the
+ * existing `--color-*` tokens keep working on this preview branch. The Design
+ * Gallery renders the system from these. The cleanup phases (DS-D*) migrate the
+ * whole app onto these and delete the old names.
+ *
+ * Rules in one line:
+ *   ONE background family · ONE blur · THREE action tiers side by side —
+ *   GOLD = primary (& selection/active) · GREEN = secondary · GREY = tertiary/ghost ·
+ *   red=danger · amber=warning · blue=info-text-only.
+ */
+:root {
+  /* ─── Surfaces — ONE background family (depth via border + shadow, not hue) ─── */
+  --c-bg:            #000;                /* THE background: canvas, pages, panels, docked widgets — pure black */
+  --c-surface:       #17171d;            /* one step up: cards, inputs, dialogs, dropdowns, popovers */
+  --c-sunken:        #08080b;            /* wells, code blocks, deep insets */
+  --c-glass:         rgb(14 14 18 / 0.92); /* floating-over-game panels (+ --blur) */
+
+  /* ─── Floating panels — translucent cards that let the one bg show through (+ --blur) ─── */
+  --c-panel:         rgb(23 23 29 / 0.55); /* floating side-nav / content cards */
+  --c-inset:         rgb(8 8 11 / 0.45);   /* translucent well inside a floating card */
+  --c-hairline:      rgb(255 255 255 / 0.06); /* faint glass edge for floating cards */
+
+  /* ─── Borders (2 tiers) ─── */
+  --c-border:        #2a2a32;            /* hairline default */
+  --c-border-strong: #3c3c46;            /* hover / emphasis */
+
+  /* ─── State fills ─── */
+  --c-hover:         rgb(255 255 255 / 0.05);   /* neutral hover */
+  --c-selected:      rgb(200 168 78 / 0.12);    /* GOLD — selected / active fill */
+
+  /* ─── Text (4 tiers) ─── */
+  --c-text:          #e8e8ec;
+  --c-text-dim:      #9a9aa4;
+  --c-text-muted:    #5e5e68;
+  --c-text-faint:    #3c3c44;            /* disabled */
+
+  /* ─── Accent: GOLD = primary (selection, active, focus, primary CTA, emphasis) ─── */
+  --c-gold:          #c8a84e;
+  --c-gold-bright:   #e4c65a;
+  --c-gold-dim:      #2a2418;            /* dim fill bg */
+  --c-gold-soft:     rgb(200 168 78 / 0.14);
+
+  /* ─── Accent: GREEN = secondary (positive / success / go — contextual only) ─── */
+  --c-green:         #4a9966;
+  --c-green-bright:  #5cb87a;
+  --c-green-dim:     #1a2a1e;
+  --c-green-soft:    rgb(74 153 102 / 0.14);
+
+  /* ─── Semantics ─── */
+  --c-danger:        #e5556e;
+  --c-danger-dim:    #2a1a1e;
+  --c-danger-soft:   rgb(229 85 110 / 0.14);
+  --c-warning:       #e0b341;
+  --c-warning-dim:   #2a2418;
+  --c-warning-soft:  rgb(224 179 65 / 0.14);
+  --c-info:          #5b9bd5;            /* info TEXT/icon only — never a selection state */
+  --c-info-dim:      #15212e;            /* dark blue fill */
+  --c-info-soft:     rgb(91 155 213 / 0.14);
+
+  /* ─── Elevation: 3 shadows + ONE blur ─── */
+  --shadow-1:        0 2px 8px rgb(0 0 0 / 0.4);
+  --shadow-2:        0 8px 24px rgb(0 0 0 / 0.5);
+  --shadow-3:        0 16px 40px rgb(0 0 0 / 0.6);
+  --blur:            8px;
+
+  /* ─── Scrims (2 tiers) ─── */
+  --c-scrim:         rgb(0 0 0 / 0.6);   /* standard modal backdrop */
+  --c-scrim-game:    rgb(0 0 0 / 0.35);  /* when the game must stay visible (pause) */
+
+  /* ─── Radius ─── */
+  --r-sm:   4px;
+  --r-md:   6px;
+  --r-lg:   8px;
+  --r-pill: 999px;
+
+  /* ─── Sizing ─── */
+  --dialog-w-sm: 400px;
+  --dialog-w-md: 600px;
+  --panel-w-sm:  220px;
+  --panel-w-md:  300px;
+  --panel-w-lg:  380px;
+  --widget-w-min: 240px;
+
+  /* ─── Responsive — breakpoints + fluid page padding ───
+     @media conditions can't read var(), so these values are also hardcoded in the
+     media/container queries that consume them — these tokens are the canonical source. */
+  --bp-narrow:  600px;   /* below: drop secondary side-navs */
+  --bp-compact: 820px;   /* below: collapse nav rails, tighten full-page padding */
+  --pad-page:   clamp(var(--space-sm), 2.5vw, var(--space-2xl)); /* tight on phones, roomy on desktop */
+
+  /* Device safe-area (notch / display-cutout) insets, in CSS px. 0 by default; the
+     Android shell overrides these on <html> at runtime (it consumes window insets
+     for full-bleed, which zeroes env(safe-area-inset-*)). */
+  --sai-top:    0;
+  --sai-right:  0;
+  --sai-bottom: 0;
+  --sai-left:   0;
+}

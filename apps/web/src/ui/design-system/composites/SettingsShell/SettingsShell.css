@@ -1,0 +1,38 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * Two floating, translucent cards (side-nav + content) separated by a gap,
+ * letting the one app background show through. Depth comes from the faint glass
+ * edge + blur, not a solid block.
+ */
+
+.settings-shell {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  gap: var(--space-md);
+  padding: 0 var(--space-md) var(--space-md);
+}
+
+.settings-shell__content {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: var(--pad-page);
+  background: var(--c-panel);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--c-hairline);
+  border-radius: var(--r-lg);
+}
+
+/* Narrow viewport (< --bp-narrow): drop the side-nav, content goes full-width.
+   Navigation on these pages is reached through the mobile Options drawer instead. */
+@media (width <= 600px) {
+  .settings-shell {
+    gap: 0;
+  }
+
+  .settings-shell .side-nav {
+    display: none;
+  }
+}

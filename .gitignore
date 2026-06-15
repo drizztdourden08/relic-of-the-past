@@ -1,3 +1,9 @@
+# Implementation plans (working docs, never committed)
+/plans
+
+# MCP config (contains secrets — bot tokens, API keys)
+.mcp.json
+
 # Dependencies
 node_modules/
 
@@ -10,13 +16,28 @@ out/
 
 # WASM build artifacts
 core/wasm-build/output/
+apps/web/public/wasm/
 apps/desktop/public/wasm/
 
 # Extracted sprites (generated at runtime)
-apps/desktop/public/sprites/
+apps/web/public/sprites/
 
 # Electron
 release/
+
+# Capacitor / Android build artifacts (native project is committed; output is not)
+apps/mobile/android/.gradle/
+apps/mobile/android/build/
+apps/mobile/android/app/build/
+apps/mobile/android/app/src/main/assets/public/
+apps/mobile/android/local.properties
+apps/mobile/android/.idea/
+apps/mobile/android/capacitor-cordova-android-plugins/
+# Launcher icons + splash are generated at build time from apps/mobile/assets/logo.png
+# by `@capacitor/assets` (npm run cap:sync) — the source is committed, the output is not.
+apps/mobile/android/app/src/main/res/mipmap-*/ic_launcher*.png
+apps/mobile/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher*.xml
+apps/mobile/android/app/src/main/res/drawable*/splash.png
 
 # Assets (user-provided)
 assets/assets.dat
@@ -39,6 +60,11 @@ test-roms/
 .env
 .env.local
 .env.*.local
+
+# Local deploy target config (VM SSH details — per machine, never committed)
+scripts/deploy/vm.json
+# Local push SSH public key (per machine, never committed)
+scripts/deploy/*.pub
 
 # Logs
 *.log

@@ -4,8 +4,6 @@
  * Replaces Python's PIL Image for sprite/tile output.
  */
 import { PNG } from 'pngjs';
-import { writeFileSync, mkdirSync } from 'fs';
-import { dirname } from 'path';
 import type { RGBA } from './palette';
 
 /**
@@ -122,12 +120,6 @@ class ImageBuffer {
     const png = new PNG({ width: this.width, height: this.height });
     this.data.copy(png.data);
     return PNG.sync.write(png);
-  }
-
-  /** Write to PNG file (creates directories if needed) */
-  savePng(filePath: string): void {
-    mkdirSync(dirname(filePath), { recursive: true });
-    writeFileSync(filePath, this.toPngBuffer());
   }
 }
 

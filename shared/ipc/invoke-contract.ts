@@ -10,6 +10,7 @@ import type { NormalSaveInfo, AutoSaveInfo, QuickSaveSlotInfo } from '@shared/ty
 import type { PlaySession } from '@shared/types/session';
 import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
 import type { LanguagePack, LanguageSummary } from '@shared/types/language';
+import type { DataLocation, StorageSummary, FileStat } from '@shared/platform';
 
 type Result = { success: boolean; error?: string };
 type MsuResult = { success: boolean; fileCount?: number; error?: string };
@@ -19,6 +20,22 @@ type ReviewMap = Record<string, { status: string; comment?: string }>;
 interface InvokeContract {
   // App
   'app:getUserDataPath': () => Promise<string>;
+
+  // Storage — data location, reveal in OS file manager, per-domain usage summary
+  'storage:getLocation': () => Promise<DataLocation>;
+  'storage:reveal': () => Promise<void>;
+  'storage:getSummary': () => Promise<StorageSummary>;
+
+  // Generic file store — POSIX paths relative to the Data root
+  'file:readBytes': (path: string) => Promise<ArrayBuffer | null>;
+  'file:readText': (path: string) => Promise<string | null>;
+  'file:writeBytes': (path: string, data: ArrayBuffer) => Promise<void>;
+  'file:writeText': (path: string, data: string) => Promise<void>;
+  'file:list': (dir: string) => Promise<string[]>;
+  'file:remove': (path: string) => Promise<void>;
+  'file:exists': (path: string) => Promise<boolean>;
+  'file:mkdir': (dir: string) => Promise<void>;
+  'file:stat': (path: string) => Promise<FileStat | null>;
 
   // WASM core bytes — renderer instantiates non-streaming (file:// can't fetch)
   'wasm:readBytes': () => Promise<ArrayBuffer>;
@@ -32,6 +49,7 @@ interface InvokeContract {
 
   // Dialog
   'dialog:openRom': () => Promise<string | null>;
+  'dialog:pickFile': (extensions: string[]) => Promise<{ name: string; data: ArrayBuffer } | null>;
 
   // Profiles
   'profiles:list': () => Promise<Profile[]>;

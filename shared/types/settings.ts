@@ -26,7 +26,11 @@ interface GameSettings {
   disableFrameDelay: boolean;
 
   // ─── Aspect Ratio & Display ───
-  aspectRatio: '4:3' | '3:2' | '16:9' | '16:10' | '18:9';
+  // 'auto' = current app viewport (notch-aware); 'screen' = full device screen; a preset string
+  // ('4:3'…'16:10') = fixed; 'custom' = the W:H below. Re-resolved on every game start.
+  aspectRatio: 'auto' | 'screen' | '4:3' | '3:2' | '16:9' | '16:10' | 'custom';
+  customAspectW: number; // ratio width when aspectRatio === 'custom'; 0 = auto-detect from screen
+  customAspectH: number; // ratio height; 0 = auto-detect
   extendY: boolean;
   unchangedSprites: boolean;
   noVisualFixes: boolean;
@@ -45,6 +49,11 @@ interface GameSettings {
   windowMode: 'default' | 'borderless';
   startFullscreen: boolean;
   viewportConstraint: 'none' | 'fit' | 'fill';
+
+  // ─── Mobile display ───
+  // true (default): render under the camera cutout (full-bleed). false: keep UI +
+  // canvas inside the usable screen. Renderer-only (not serialized to the INI).
+  renderIntoNotch: boolean;
 
   // ─── Gameplay features ───
   itemSwitchLR: boolean;
@@ -85,7 +94,9 @@ interface GameSettings {
   // ─── HUD ───
   hudMode: 'original' | 'enhanced';
   hudStyle: 'vanilla' | 'modern';
-  hudRatio: 'match' | '4:3' | '3:2' | '16:9' | '16:10' | '18:9';
+  hudRatio: 'match' | '4:3' | '3:2' | '16:9' | '16:10' | 'custom';
+  customHudAspectW: number; // ratio width when hudRatio === 'custom'; 0 = auto-detect from screen
+  customHudAspectH: number; // ratio height; 0 = auto-detect
   hudEnhancedParts: ('main' | 'pause')[];
   hudHeartMode: 'original' | 'smooth';
   hudMagicMode: 'original' | 'accurate';

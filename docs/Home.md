@@ -33,7 +33,7 @@ flowchart LR
 - **C / WASM core** (`core/`) — the vendored decompilation plus *our* hook layer (`game-hooks/`)
   that exposes ~79 `Wasm*` functions and fires `GameHook_*` callbacks. See
   [The WASM Bridge](architecture/wasm-bridge.md).
-- **Bridge** (`apps/desktop/src/lib/game/`) — the only TypeScript that talks to the WASM module.
+- **Bridge** (`apps/web/src/lib/game/`) — the only TypeScript that talks to the WASM module.
 - **TS app** — the Electron main process (ROMs, profiles, saves, HID) and the React renderer
   (UI, HUD, widgets, navigation overlay).
 

@@ -17,6 +17,7 @@ const api: IpcApi = {
   // Non-IPC helpers
   isDev: process.env.NODE_ENV !== 'production',
   autoFlood: process.argv.includes('--auto-flood'),
+  os: process.platform,
   getSpritesBaseUrl: (romFile) => `app-sprite://sprites/${romStem(romFile)}/`,
   getFilePath: (file) => webUtils.getPathForFile(file),
 

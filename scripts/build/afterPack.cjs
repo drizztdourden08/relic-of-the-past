@@ -7,7 +7,7 @@ exports.default = async function afterPack(context) {
   if (context.electronPlatformName !== 'win32') return;
 
   const exePath = path.join(context.appOutDir, `${context.packager.appInfo.productFilename}.exe`);
-  const icoPath = path.resolve(__dirname, '../../apps/desktop/public/logos/icon.ico');
+  const icoPath = path.resolve(__dirname, '../../apps/web/public/logos/icon.ico');
 
   const { rcedit } = require('rcedit');
   await rcedit(exePath, { icon: icoPath });
