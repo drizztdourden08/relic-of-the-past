@@ -1,8 +1,10 @@
-name: Android APK
+name: Android APK (manual)
 
-# Builds a signed release APK and attaches it to the GitHub Release (no Play Store).
-# Sideload it from the release page. Signing uses a self-signed keystore stored in
-# repo secrets — see docs/contributing/testing-linux-and-android.md.
+# Ad-hoc, on-demand signed APK build — uploads the APK as a workflow artifact.
+# NOTE: the real release path builds and attaches the APK itself (the build-android
+# job in release.yml), so every release already ships it. This workflow is only for
+# building a one-off APK outside a release (e.g. to test a branch). Signing uses a
+# self-signed keystore stored in repo secrets — see docs/contributing/testing-linux-and-android.md.
 #
 # Required repository secrets:
 #   ANDROID_KEYSTORE_B64       base64 of the release keystore (relic-release.jks)
@@ -10,8 +12,6 @@ name: Android APK
 #   ANDROID_KEY_ALIAS          key alias (e.g. "relic")
 
 on:
-  release:
-    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -35,12 +35,16 @@ jobs:
 
       - name: Set up Emscripten (for the WASM core)
         uses: emscripten-core/setup-emsdk@v16
+        with:
+          version: 3.1.51
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
       - name: Build WASM core
-        run: npm run ensure-wasm
+        # emcc is on PATH here (setup-emsdk), so the shared build script runs directly
+        # and writes into apps/web/public/wasm — which cap:sync bundles into the APK.
+        run: node core/wasm-build/build.mjs
 
       - name: Build web bundle + sync into the Android project
         run: npm run cap:sync
@@ -62,14 +66,7 @@ jobs:
       - name: Stage APK
         run: cp apps/mobile/android/app/build/outputs/apk/release/app-release.apk rotp-android.apk
 
-      - name: Attach APK to the release
-        if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v3
-        with:
-          files: rotp-android.apk
-
-      - name: Upload APK artifact (manual runs)
-        if: github.event_name == 'workflow_dispatch'
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v7
         with:
           name: rotp-android-apk

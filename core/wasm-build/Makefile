@@ -1,122 +1,18 @@
 # @layer core-wasm-build @kind build
-# Emscripten WASM Build for zelda3
+# Emscripten WASM build for zelda3 — thin wrapper.
 #
-# Prerequisites:
-#   - Emscripten SDK installed and activated (run emsdk_env before building)
-#   - On Windows: run from cmd.exe with emsdk_env.bat sourced
+# The source list and emcc flags live in build.mjs, the single source of truth
+# shared by this Makefile, build.bat, ensure-wasm, and CI. Keeping the build in
+# one place means it can never drift between platforms.
 #
-# Usage:
-#   cd core/wasm-build
-#   emmake make
-#
-# Output: output/zelda3.js, output/zelda3.wasm
-#
-# NOTE: There is no explicit list of Wasm* exports to maintain. Every JS-callable
-# function is tagged EMSCRIPTEN_KEEPALIVE in its .c file, which both retains and
-# exports the symbol — that attribute is the single source of truth. Adding an
-# export touches only the C file + the ccall site, never this build (or build.bat).
+# Prerequisite: the Emscripten SDK is activated (emcc on PATH).
+# Usage:  make        (emcc already resolves; emmake is not required)
+# Output: apps/web/public/wasm/zelda3.{js,wasm}
 
-ZELDA3 := ../zelda3
+.PHONY: all clean
 
-# Source files — game logic + SNES emulation + Opus decoder
-# Excludes: main.c (replaced by emscripten_main.c), opengl.c, glsl_shader.c,
-#           gl_core_3_1.c, volume_control.c (Win32-only)
-GAME_SRCS := \
-	$(ZELDA3)/src/ancilla.c \
-	$(ZELDA3)/src/attract.c \
-	$(ZELDA3)/src/audio.c \
-	$(ZELDA3)/src/config.c \
-	$(ZELDA3)/src/dungeon.c \
-	$(ZELDA3)/src/ending.c \
-	$(ZELDA3)/src/hud.c \
-	$(ZELDA3)/src/load_gfx.c \
-	$(ZELDA3)/src/messaging.c \
-	$(ZELDA3)/src/misc.c \
-	$(ZELDA3)/src/nmi.c \
-	$(ZELDA3)/src/overlord.c \
-	$(ZELDA3)/src/overworld.c \
-	$(ZELDA3)/src/player.c \
-	$(ZELDA3)/src/player_oam.c \
-	$(ZELDA3)/src/poly.c \
-	$(ZELDA3)/src/select_file.c \
-	$(ZELDA3)/src/spc_player.c \
-	$(ZELDA3)/src/sprite.c \
-	$(ZELDA3)/src/sprite_main.c \
-	$(ZELDA3)/src/tagalong.c \
-	$(ZELDA3)/src/tile_detect.c \
-	$(ZELDA3)/src/util.c \
-	$(ZELDA3)/src/zelda_cpu_infra.c \
-	$(ZELDA3)/src/zelda_rtl.c
-
-SNES_SRCS := \
-	$(ZELDA3)/snes/apu.c \
-	$(ZELDA3)/snes/cart.c \
-	$(ZELDA3)/snes/cpu.c \
-	$(ZELDA3)/snes/dma.c \
-	$(ZELDA3)/snes/dsp.c \
-	$(ZELDA3)/snes/input.c \
-	$(ZELDA3)/snes/ppu.c \
-	$(ZELDA3)/snes/snes.c \
-	$(ZELDA3)/snes/snes_other.c \
-	$(ZELDA3)/snes/spc.c \
-	$(ZELDA3)/snes/tracing.c
-
-OPUS_SRC := $(ZELDA3)/third_party/opus-1.3.1-stripped/opus_decoder_amalgam.c
-
-# Game hooks
-HOOK_SRCS := ../game-hooks/game_hooks.c \
-             ../game-hooks/item_overrides.c \
-             ../game-hooks/state_queries.c \
-             ../game-hooks/state_queries_sprites.c \
-             ../game-hooks/state_queries_grids.c \
-             ../game-hooks/state_queries_tables.c \
-             ../game-hooks/state_queries_rooms.c \
-             ../game-hooks/state_queries_room_exits.c \
-             ../game-hooks/check_triggers.c \
-             ../game-hooks/ui_state.c \
-             ../game-hooks/cheats.c \
-             ../game-hooks/haptic_events.c
-
-# Our Emscripten-specific main
-EM_MAIN := emscripten_main.c emscripten_sdl.c emscripten_api.c emscripten_io.c
-
-ALL_SRCS := $(EM_MAIN) $(GAME_SRCS) $(SNES_SRCS) $(OPUS_SRC) $(HOOK_SRCS)
-
-OUTPUT_DIR := output
-TARGET := $(OUTPUT_DIR)/zelda3.js
-
-CC := emcc
-
-CFLAGS := -O2 \
-	-I $(ZELDA3) \
-	-I ../game-hooks \
-	-DSYSTEM_VOLUME_MIXER_AVAILABLE=0 \
-	-Wno-unused-function \
-	-Wno-unused-variable
-
-EMFLAGS := -sUSE_SDL=2 \
-	-sWASM=1 \
-	-sALLOW_MEMORY_GROWTH=1 \
-	-sINITIAL_MEMORY=67108864 \
-	-sFORCE_FILESYSTEM=1 \
-	-sMODULARIZE=1 \
-	-sEXPORT_NAME='Zelda3' \
-	-sENVIRONMENT=web,node \
-	-sEXPORTED_FUNCTIONS='["_main","_malloc","_free"]' \
-	-sEXPORTED_RUNTIME_METHODS='["ccall","cwrap","FS","HEAPU8"]'
-
-LDFLAGS := $(EMFLAGS)
-
-.PHONY: all clean dirs
-
-all: dirs $(TARGET)
-
-$(TARGET): $(ALL_SRCS)
-	$(CC) $(CFLAGS) $(ALL_SRCS) -o $(TARGET) $(LDFLAGS)
-
-dirs:
-	@mkdir -p $(OUTPUT_DIR)
-	@mkdir -p assets
+all:
+	node build.mjs
 
 clean:
-	rm -rf $(OUTPUT_DIR)
+	rm -rf ../../apps/web/public/wasm/zelda3.js ../../apps/web/public/wasm/zelda3.wasm
