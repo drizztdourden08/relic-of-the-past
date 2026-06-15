@@ -27,8 +27,12 @@ const INTERFACE_SUBMODULE_MODES: Record<number, UIMode> = {
 
 const deriveUIMode = (mainModule: number, subModule: number, _subSubModule: number, floorTimer: number): UIMode => {
   switch (mainModule) {
-    case 0:
-    case 1:
+    case 0: // Module00_Intro
+    case 1: // Module01_FileSelect
+    case 2: // Module02_CopyFile
+    case 3: // Module03_EraseFile
+    case 4: // Module04_NameFile
+    case 20: // Module14_Attract — the intro "video" / legend demo
       return 'title';
     case 5:
     case 6:
