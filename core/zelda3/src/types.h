@@ -8,11 +8,11 @@
 // Build time config options
 enum {
   kEnableLargeScreen = 1,
-  // How much extra spacing to add on the sides. 152 columns ⇒ up to 21:9 (2.33:1) at 240-line
-  // height — covers every phone landscape ratio and standard ultrawide. Going higher (toward the
+  // How much extra spacing to add on the sides. 128 columns ⇒ ~20:9 at 240-line height — covers
+  // every phone landscape ratio and standard ultrawide. Going higher (152 reaches 21:9; toward the
   // uint8 ceiling of 255) trips a latent out-of-bounds in the upstream widescreen load/render path,
-  // so 152 is the verified-safe maximum. The wider frames also need a larger stack — see
-  // core/wasm-build/build.bat (-sSTACK_SIZE).
+  // so 152 is the verified-safe maximum and 128 the shipped value. The wider frames also need a
+  // larger stack — see core/wasm-build/build.mjs (-sSTACK_SIZE).
   kPpuExtraLeftRight = kEnableLargeScreen ? 128 : 0,
 };
 
