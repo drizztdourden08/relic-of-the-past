@@ -26,7 +26,9 @@ interface GameSettings {
   disableFrameDelay: boolean;
 
   // ─── Aspect Ratio & Display ───
-  aspectRatio: '4:3' | '3:2' | '16:9' | '16:10' | 'custom';
+  // 'auto' = current app viewport (notch-aware); 'screen' = full device screen; a preset string
+  // ('4:3'…'16:10') = fixed; 'custom' = the W:H below. Re-resolved on every game start.
+  aspectRatio: 'auto' | 'screen' | '4:3' | '3:2' | '16:9' | '16:10' | 'custom';
   customAspectW: number; // ratio width when aspectRatio === 'custom'; 0 = auto-detect from screen
   customAspectH: number; // ratio height; 0 = auto-detect
   extendY: boolean;

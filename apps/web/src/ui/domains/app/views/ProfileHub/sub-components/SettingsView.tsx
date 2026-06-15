@@ -1,9 +1,11 @@
 /* @layer renderer-components @kind data */
-import type { ReactNode } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
 import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
 import { AspectRatioControl } from './AspectRatioControl';
+import { usePlatform } from '@app/platform';
+import { useSafeAreaInsets } from '@app/hooks/useSafeAreaInsets';
 
 interface SettingsViewProps {
   settings: GameSettings;
@@ -19,7 +21,7 @@ const SECTIONS: Section[] = [
         id: 'display-aspect',
         title: 'Aspect Ratio',
         items: [
-          { key: 'aspectRatio', label: 'Aspect Ratio', description: 'Screen aspect ratio for the game content', keywords: 'widescreen 4:3 16:9 16:10 custom ultrawide 21:9' },
+          { key: 'aspectRatio', label: 'Aspect Ratio', description: 'Screen aspect ratio for the game content. Auto re-detects your screen on every start.', keywords: 'widescreen 4:3 16:9 16:10 custom auto detect ultrawide 21:9' },
           { key: 'extendY', label: 'Extend Y', description: 'Show 240 lines instead of 224, revealing extra vertical content at the top and bottom of the screen', keywords: 'height resolution vertical' },
         ],
       },
@@ -109,12 +111,25 @@ const SECTIONS: Section[] = [
 ];
 
 const ASPECT_OPTIONS = [
+  { value: 'auto', label: 'Auto' },
+  { value: 'screen', label: 'Screen' },
+  { value: 'preset', label: 'Preset' },
+  { value: 'custom', label: 'Custom' },
+];
+
+const ASPECT_PRESETS = [
   { value: '4:3', label: '4:3' },
   { value: '3:2', label: '3:2' },
   { value: '16:9', label: '16:9' },
   { value: '16:10', label: '16:10' },
-  { value: 'custom', label: 'Custom' },
 ];
+
+const ASPECT_DESCRIPTIONS: Record<string, string> = {
+  auto: 'Matches the app’s current size and adapts as it changes (e.g. around a camera cutout). Best default.',
+  screen: 'Matches your device’s full physical screen ratio.',
+  preset: 'Use a fixed, standard aspect ratio.',
+  custom: 'Set an exact width : height ratio.',
+};
 
 const VIEWPORT_OPTIONS = [
   { value: 'none', label: 'Letterbox' },
@@ -127,20 +142,31 @@ const WINDOW_MODE_OPTIONS = [
   { value: 'borderless', label: 'Borderless' },
 ];
 
+// Mobile-only, shown only when the device actually has a cutout (see SettingsView).
+const NOTCH_ITEM = {
+  key: 'renderIntoNotch',
+  label: 'Render under camera cutout',
+  description: 'On: the game and UI use the full screen, extending under the camera notch. Off: keep everything inside the usable screen area.',
+  keywords: 'notch cutout camera safe area fullscreen mobile display edge',
+};
+
 const renderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
   switch (key) {
     case 'aspectRatio':
       return (
         <AspectRatioControl
           label="Aspect Ratio"
-          description="Screen aspect ratio for the game content. Custom accepts any ratio from 4:3 up to ultrawide."
+          description="Screen aspect ratio for the game content."
           value={settings.aspectRatio}
           options={ASPECT_OPTIONS}
+          presetOptions={ASPECT_PRESETS}
+          descriptions={ASPECT_DESCRIPTIONS}
           customW={settings.customAspectW}
           customH={settings.customAspectH}
           ratioKey="aspectRatio"
           wKey="customAspectW"
           hKey="customAspectH"
+          renderIntoNotch={settings.renderIntoNotch}
           onChange={onChange}
         />
       );
@@ -169,10 +195,23 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
 
 const SettingsView = (props: SettingsViewProps) => {
   const { settings, onChange } = props;
+  const { info } = usePlatform();
+  const { hasNotch } = useSafeAreaInsets();
+  const showNotch = info.formFactor === 'mobile' && hasNotch;
+
+  // Inject the notch toggle into the Window section only on a mobile device with a cutout.
+  const sections = useMemo<Section[]>(() => {
+    if (!showNotch) return SECTIONS;
+    return SECTIONS.map((section) =>
+      section.id === 'window'
+        ? { ...section, subsections: [...section.subsections, { id: 'window-notch', title: 'Mobile', items: [NOTCH_ITEM] }] }
+        : section,
+    );
+  }, [showNotch]);
 
   return (
     <SettingsLayout
-      sections={SECTIONS}
+      sections={sections}
       settings={settings}
       onChange={onChange}
       renderControl={renderControl}

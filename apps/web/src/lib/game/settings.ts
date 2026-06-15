@@ -4,7 +4,7 @@
  */
 
 import type { GameSettings } from '@shared/types/settings';
-import { effectiveCustomRatio } from './aspect-ratio';
+import { effectiveCustomRatio, detectScreenRatio, detectViewportRatio } from './aspect-ratio';
 
 const DEFAULT_SETTINGS: GameSettings = {
   // General
@@ -122,8 +122,16 @@ const serializeToIni = (settings: GameSettings, msuPath?: string, language?: str
   // Build ExtendedAspectRatio value with modifiers
   const parts: string[] = [];
   if (settings.extendY) parts.push('extend_y');
-  if (settings.aspectRatio === 'custom') {
-    const { w, h } = effectiveCustomRatio(settings.customAspectW, settings.customAspectH);
+  if (settings.aspectRatio === 'auto') {
+    // App viewport at start (notch-aware).
+    const { w, h } = detectViewportRatio(settings.renderIntoNotch);
+    parts.push(`${w}:${h}`);
+  } else if (settings.aspectRatio === 'screen') {
+    // Full physical device screen.
+    const { w, h } = detectScreenRatio(true);
+    parts.push(`${w}:${h}`);
+  } else if (settings.aspectRatio === 'custom') {
+    const { w, h } = effectiveCustomRatio(settings.customAspectW, settings.customAspectH, settings.renderIntoNotch);
     parts.push(`${w}:${h}`);
   } else {
     parts.push(settings.aspectRatio);

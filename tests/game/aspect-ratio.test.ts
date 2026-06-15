@@ -8,7 +8,7 @@ describe('validateCustomRatio', () => {
   it('accepts ratios from 4:3 up to the wide ceiling', () => {
     expect(validateCustomRatio(4, 3).valid).toBe(true);
     expect(validateCustomRatio(16, 9).valid).toBe(true);
-    expect(validateCustomRatio(21, 9).valid).toBe(true);
+    expect(validateCustomRatio(19, 9).valid).toBe(true); // 2.11 — within the ~2.13 (512px tilemap) cap
   });
 
   it('rejects ratios taller than 4:3', () => {
@@ -18,7 +18,8 @@ describe('validateCustomRatio', () => {
   });
 
   it('rejects ratios wider than the max', () => {
-    expect(validateCustomRatio(32, 9).valid).toBe(false); // 3.56 > ~3.19
+    expect(validateCustomRatio(21, 9).valid).toBe(false); // 2.33 > ~2.13
+    expect(validateCustomRatio(32, 9).valid).toBe(false);
   });
 
   it('rejects non-integer or non-positive input', () => {
@@ -32,13 +33,13 @@ describe('detectScreenRatio', () => {
   afterEach(() => vi.unstubAllGlobals());
 
   it('GCD-reduces a landscape phone screen', () => {
-    vi.stubGlobal('window', { screen: { width: 2340, height: 1080 } });
-    expect(detectScreenRatio()).toEqual({ w: 13, h: 6 });
+    vi.stubGlobal('window', { screen: { width: 1920, height: 1080 } });
+    expect(detectScreenRatio()).toEqual({ w: 16, h: 9 });
   });
 
   it('normalizes a portrait screen to its landscape ratio', () => {
-    vi.stubGlobal('window', { screen: { width: 1080, height: 2340 } });
-    expect(detectScreenRatio()).toEqual({ w: 13, h: 6 });
+    vi.stubGlobal('window', { screen: { width: 1080, height: 1920 } });
+    expect(detectScreenRatio()).toEqual({ w: 16, h: 9 });
   });
 
   it('clamps taller-than-4:3 screens to 4:3', () => {

@@ -27,3 +27,15 @@
   color: var(--c-danger);
   font-size: var(--text-sm);
 }
+
+.aspect-ratio-control__detected {
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.aspect-ratio-control__capped {
+  color: var(--c-danger);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
