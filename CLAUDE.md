@@ -57,6 +57,19 @@ Path aliases: `@shared/*` → `shared/`, `@app/*` → `apps/web/src/`.
 > take effect on the next `dev`/`build`; force a rebuild with `npm run ensure-wasm` or
 > the `build-wasm` skill.
 
+> 📱 **Mobile (Android) testing — env on this machine.** `npm run push:android` does the
+> whole loop: `build:web` → `cap sync` → regenerates launcher icons/splash from
+> `apps/mobile/assets/logo.png` (build-time; outputs are gitignored) → debug APK → `adb`
+> install + launch on a running AVD. It needs `ANDROID_HOME` = `C:\Android` and
+> `JAVA_HOME` = `C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot` — both are set
+> at the **user level** (with their `bin`s on PATH), so a normal terminal already has
+> them. **Claude's non-interactive tool shells can inherit a stale env block that lacks
+> these** — if `$env:ANDROID_HOME` is empty, set them inline before building:
+> `$env:ANDROID_HOME='C:\Android'; $env:JAVA_HOME='C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot'`.
+> Release APKs are distributed via **GitHub Releases** (`.github/workflows/android-release.yml`),
+> signed with a self-signed keystore kept OUTSIDE the repo at
+> `E:\GameProjects\relic-signing\relic-release.jks` (CI reads the `ANDROID_KEYSTORE_*` secrets).
+
 | Task | Command | Notes |
 |------|---------|-------|
 | Run the app (dev) | `npm run dev` | electron-vite dev server + Electron. |
