@@ -1,6 +1,9 @@
 # Implementation plans (working docs, never committed)
 /plans
 
+# MCP config (contains secrets — bot tokens, API keys)
+.mcp.json
+
 # Dependencies
 node_modules/
 
