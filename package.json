@@ -1,6 +1,6 @@
 {
   "name": "relic-of-the-past",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "private": true,
   "description": "Relic of the Past – Electron + React + WASM",
   "author": {
@@ -49,7 +49,8 @@
     "report:structure": "node scripts/analyze/analyze.mjs --json && node scripts/analyze/reports.mjs structure",
     "report:tokens": "node scripts/analyze/analyze.mjs --json && node scripts/analyze/reports.mjs tokens",
     "clean": "rimraf dist release",
-    "release": "npm version patch --no-git-tag-version && node -e \"const v='v'+require('./package.json').version;const{execSync:r}=require('child_process');r('git add package.json package-lock.json',{stdio:'inherit'});r(`git commit -m \\\"release: ${v}\\\"`,{stdio:'inherit'});r(`git tag -f ${v}`,{stdio:'inherit'});r('git push',{stdio:'inherit'});r(`git push origin ${v}`,{stdio:'inherit'});console.log(`\\nReleased ${v}`)\"",
+    "release": "node scripts/release.mjs",
+    "release:last": "node scripts/release.mjs --last --latest",
     "version:patch": "npm version patch --no-git-tag-version",
     "version:minor": "npm version minor --no-git-tag-version",
     "version:major": "npm version major --no-git-tag-version"
