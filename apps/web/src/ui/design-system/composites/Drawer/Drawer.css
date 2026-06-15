@@ -1,0 +1,64 @@
+/* @layer renderer-components @kind style */
+
+.drawer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  pointer-events: none;
+}
+
+.drawer--open {
+  pointer-events: auto;
+}
+
+.drawer__scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--c-scrim);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+.drawer--open .drawer__scrim {
+  opacity: 1;
+}
+
+.drawer__panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: min(86vw, 380px);
+  display: flex;
+  flex-direction: column;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--duration-normal) var(--ease-standard);
+  will-change: transform;
+}
+
+.drawer--right .drawer__panel {
+  right: 0;
+  transform: translateX(100%);
+}
+
+.drawer--left .drawer__panel {
+  left: 0;
+  transform: translateX(-100%);
+}
+
+.drawer--top .drawer__panel {
+  inset: 0 0 auto;
+  width: auto;
+  max-height: 86vh;
+  transform: translateY(-100%);
+}
+
+.drawer--open.drawer--right .drawer__panel,
+.drawer--open.drawer--left .drawer__panel {
+  transform: translateX(0);
+}
+
+.drawer--open.drawer--top .drawer__panel {
+  transform: translateY(0);
+}

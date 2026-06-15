@@ -8,7 +8,6 @@ import { loadTrackerStateBlob, saveTrackerStateBlob } from '@app/lib/tracker-sta
 import { primeLiveSettings } from '@app/lib/game';
 import { useExclusiveInsetsStore } from '@app/stores/exclusive-insets-store';
 import { useAutoUpdate } from '@app/hooks/useAutoUpdate';
-import { useAppVersion } from '@app/hooks/useAppVersion';
 import { PageRouter } from '@app/App/PageRouter';
 import { useAppNavigation } from '@app/App/behavior/useAppNavigation';
 import { useAppOverlays } from '@app/App/behavior/useAppOverlays';
@@ -29,17 +28,17 @@ import { useDumpNav } from '@app/App/behavior/useDumpNav';
 import { useAppMainEffects } from '@app/App/behavior/useAppMainEffects';
 import { useCapability } from '@app/platform';
 import { TitleBar } from '../TitleBar';
+import { MobileChrome } from '../MobileChrome';
+import type { TitleBarProps } from '../TitleBar/TitleBar.type';
 import { GameLayer } from '../GameLayer';
 import { SaveStateOverlay } from '../SaveStateOverlay/SaveStateOverlay';
 import { UpdateDialog } from '../../compounds/UpdateDialog';
-import { AboutDialog } from '../../compounds/AboutDialog';
 import './AppMain.css';
 
 // Profile-layout persistence injected into the bare Widget composite (keeps IPC out of it).
 const widgetIO = { load: loadTrackerStateBlob, save: saveTrackerStateBlob };
 
 const AppMain = () => {
-  const appVersion = useAppVersion();
   const windowChrome = useCapability('windowChrome');
   const canUpdate = useCapability('selfUpdate');
 
@@ -76,7 +75,6 @@ const AppMain = () => {
 
   const {
     showUpdateDialog, setShowUpdateDialog,
-    showAbout, setShowAbout,
     handleShowShadowEditor,
   } = useAppOverlays({ showDialog, dismissDialog });
 
@@ -96,40 +94,43 @@ const AppMain = () => {
 
   const widgetVisibility = useMemo(() => Object.fromEntries(widgets.layout.widgets.map((w) => [w.id, w.visible])), [widgets.layout]);
 
+  // Shared by the desktop TitleBar and the touch MobileChrome — same actions, two views.
+  const chromeProps: TitleBarProps = {
+    onImportRom: profileMgmt.handleImportRom,
+    onSwitchProfile: () => handleShowDataManager('profiles'),
+    onShowProfile: handleShowProfile,
+    onShowLogs: () => widgets.toggle('logs'),
+    onToggleSaveStates: saveOverlay.toggle,
+    onToggleInventory: () => widgets.toggle('inventory'),
+    onToggleChecks: () => widgets.toggle('checks'),
+    onToggleDebug: () => widgets.toggle('debug'),
+    onToggleCheats: () => widgets.toggle('cheats'),
+    onShowDataManager: handleShowDataManager,
+    onShowInputTester: () => nav.setActivePage('input-tester'),
+    onShowCredits: () => nav.setActivePage('credits'),
+    onShowDesignGallery: () => nav.setActivePage('design-gallery'),
+    onShowSpriteDebug: () => nav.setActivePage('sprite-debug'),
+    onShowConnectionDebug: () => widgets.toggle('navigation'),
+    onToggleDataset: () => widgets.toggle('dataset'),
+    onShowShadowEditor: handleShowShadowEditor,
+    onShowAbout: () => nav.setActivePage('about'),
+    activeProfile: profileMgmt.activeProfile,
+    widgetVisibility,
+    gameRunning: game.isRunning,
+    windowMode: display.windowMode,
+    isMuted: audio.isMuted,
+    onToggleMute: audio.handleToggleMute,
+    showFps: display.showFps,
+    updateAvailable: canUpdate && !update.portable && (update.status === 'available' || update.status === 'ready'),
+    onUpdateClick: () => setShowUpdateDialog(true),
+    onCheckForUpdates: !canUpdate || update.portable ? undefined : () => { update.check(); setShowUpdateDialog(true); },
+  };
+
   return (
     <Box className="app">
-      {windowChrome && (
-      <TitleBar
-        onImportRom={profileMgmt.handleImportRom}
-        onSwitchProfile={() => handleShowDataManager('profiles')}
-        onShowProfile={handleShowProfile}
-        onShowLogs={() => widgets.toggle('logs')}
-        onToggleSaveStates={saveOverlay.toggle}
-        onToggleInventory={() => widgets.toggle('inventory')}
-        onToggleChecks={() => widgets.toggle('checks')}
-        onToggleDebug={() => widgets.toggle('debug')}
-        onToggleCheats={() => widgets.toggle('cheats')}
-        onShowDataManager={handleShowDataManager}
-        onShowInputTester={() => nav.setActivePage('input-tester')}
-        onShowCredits={() => nav.setActivePage('credits')}
-        onShowDesignGallery={() => nav.setActivePage('design-gallery')}
-        onShowSpriteDebug={() => nav.setActivePage('sprite-debug')}
-        onShowConnectionDebug={() => widgets.toggle('navigation')}
-        onToggleDataset={() => widgets.toggle('dataset')}
-        onShowShadowEditor={handleShowShadowEditor}
-        onShowAbout={() => setShowAbout(true)}
-        activeProfile={profileMgmt.activeProfile}
-        widgetVisibility={widgetVisibility}
-        gameRunning={game.isRunning}
-        windowMode={display.windowMode}
-        isMuted={audio.isMuted}
-        onToggleMute={audio.handleToggleMute}
-        showFps={display.showFps}
-        updateAvailable={canUpdate && !update.portable && (update.status === 'available' || update.status === 'ready')}
-        onUpdateClick={() => setShowUpdateDialog(true)}
-        onCheckForUpdates={!canUpdate || update.portable ? undefined : () => { update.check(); setShowUpdateDialog(true); }}
-      />
-      )}
+      {windowChrome
+        ? <TitleBar {...chromeProps} />
+        : <MobileChrome {...chromeProps} activePage={nav.activePage} onClosePage={() => nav.setActivePage('none')} />}
 
       <Box className="app__content">
         {!game.isRunning && (
@@ -206,12 +207,6 @@ const AppMain = () => {
         onClose={() => setShowUpdateDialog(false)}
       />
       )}
-
-      <AboutDialog
-        open={showAbout}
-        version={appVersion}
-        onClose={() => setShowAbout(false)}
-      />
     </Box>
   );
 };

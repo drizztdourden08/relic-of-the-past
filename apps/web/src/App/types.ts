@@ -1,7 +1,7 @@
 /* @layer renderer-appshell @kind types */
 import type { GameSettings } from '@shared/types/settings';
 
-type PageId = 'none' | 'profile' | 'data' | 'input-tester' | 'credits' | 'design-gallery' | 'sprite-debug';
+type PageId = 'none' | 'profile' | 'data' | 'input-tester' | 'credits' | 'design-gallery' | 'sprite-debug' | 'about';
 
 interface ConfirmDialog {
   title: string;
