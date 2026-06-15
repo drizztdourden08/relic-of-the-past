@@ -14,6 +14,11 @@ export default defineConfig({
   base: './',
   publicDir: resolve(__dirname, 'public'),
   plugins: [react(), nodePolyfills({ globals: { Buffer: true, process: true } })],
+  // The extraction Web Worker is bundled separately and needs the same polyfills,
+  // or `Buffer` is undefined in the packaged build — dev leaks a global, prod doesn't.
+  worker: {
+    plugins: () => [nodePolyfills({ globals: { Buffer: true, process: true } })],
+  },
   resolve: {
     alias: {
       '@shared': resolve(__dirname, '../../shared'),

@@ -39,6 +39,11 @@ export default defineConfig({
     // node polyfills (Buffer/crypto/fs/…) so the pure-TS asset-extraction pipeline
     // runs in the renderer/Worker, not just Electron main.
     plugins: [react(), nodePolyfills({ globals: { Buffer: true, process: true } })],
+    // The extraction Web Worker is bundled separately and needs the same polyfills,
+    // or `Buffer` is undefined in the packaged build — dev leaks a global, prod doesn't.
+    worker: {
+      plugins: () => [nodePolyfills({ globals: { Buffer: true, process: true } })],
+    },
     resolve: {
       alias: {
         '@shared': resolve(__dirname, 'shared'),
