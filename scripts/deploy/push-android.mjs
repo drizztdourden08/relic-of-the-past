@@ -26,8 +26,12 @@ const onlineDevices = () =>
     .filter((line) => line.trim().endsWith('\tdevice'));
 
 const deviceSerial = () => {
-  const line = onlineDevices()[0];
-  return line ? line.split(/\s+/)[0] : null;
+  const online = onlineDevices().map((line) => line.split(/\s+/)[0]);
+  // Honor ANDROID_SERIAL when it names an online device — lets you target a real
+  // phone (e.g. 192.168.2.31:5555) while an emulator is also connected.
+  const preferred = process.env.ANDROID_SERIAL;
+  if (preferred && online.includes(preferred)) return preferred;
+  return online[0] ?? null;
 };
 
 const waitForBoot = () => {
