@@ -10,6 +10,7 @@ import android.webkit.WebView;
 import androidx.activity.BackEventCompat;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -54,8 +55,13 @@ public class MainActivity extends BridgeActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         // Consume all window insets so Capacitor's WebView fills the entire screen
         // (including the display cutout) instead of being padded into the safe area —
-        // without this the content sits off-center next to the camera notch.
-        ViewCompat.setOnApplyWindowInsetsListener(getWindow().getDecorView(), (v, insets) -> WindowInsetsCompat.CONSUMED);
+        // without this the content sits off-center next to the camera notch. We first
+        // forward the cutout insets to the web as CSS vars (--sai-*), since consuming
+        // them zeroes the page's env(safe-area-inset-*).
+        ViewCompat.setOnApplyWindowInsetsListener(getWindow().getDecorView(), (v, insets) -> {
+            injectSafeAreaInsets(insets);
+            return WindowInsetsCompat.CONSUMED;
+        });
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             WindowManager.LayoutParams lp = getWindow().getAttributes();
             lp.layoutInDisplayCutoutMode = Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
@@ -89,8 +95,31 @@ public class MainActivity extends BridgeActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         // Re-hide the bars after they're transiently revealed by a swipe or after
-        // returning from the background — otherwise the grey chrome creeps back.
-        if (hasFocus) applyImmersive();
+        // returning from the background — otherwise the grey chrome creeps back. Also
+        // re-dispatch insets so the web gets the cutout sizes once its DOM is ready.
+        if (hasFocus) {
+            applyImmersive();
+            ViewCompat.requestApplyInsets(getWindow().getDecorView());
+        }
+    }
+
+    // Forward the display-cutout insets to the web as CSS px custom properties on
+    // <html> (--sai-top/right/bottom/left). We consume insets for full-bleed, which
+    // zeroes env(safe-area-inset-*), so the renderer reads these instead.
+    private void injectSafeAreaInsets(WindowInsetsCompat insets) {
+        if (getBridge() == null) return;
+        final WebView webView = getBridge().getWebView();
+        if (webView == null) return;
+        final Insets cut = insets.getInsets(WindowInsetsCompat.Type.displayCutout());
+        float d = getResources().getDisplayMetrics().density;
+        if (d <= 0) d = 1;
+        final String js = "(function(){var s=document.documentElement.style;"
+            + "s.setProperty('--sai-left','" + (cut.left / d) + "px');"
+            + "s.setProperty('--sai-top','" + (cut.top / d) + "px');"
+            + "s.setProperty('--sai-right','" + (cut.right / d) + "px');"
+            + "s.setProperty('--sai-bottom','" + (cut.bottom / d) + "px');"
+            + "window.dispatchEvent(new Event('rotpinsets'));})();";
+        webView.evaluateJavascript(js, null);
     }
 
     private void applyImmersive() {

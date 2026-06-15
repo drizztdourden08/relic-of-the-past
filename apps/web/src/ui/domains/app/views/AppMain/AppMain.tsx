@@ -1,5 +1,5 @@
 /* @layer renderer-app @kind component */
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Box, Image } from '@ds/primitives';
 import { WidgetManager, useWidgetLayout } from '@ds/composites/Widget';
 import { Dialog } from '@ds/composites/Dialog';
@@ -7,6 +7,7 @@ import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, L
 import { loadTrackerStateBlob, saveTrackerStateBlob } from '@app/lib/tracker-state-io';
 import { primeLiveSettings } from '@app/lib/game';
 import { useExclusiveInsetsStore } from '@app/stores/exclusive-insets-store';
+import { applyNotchMode } from '@app/hooks/useSafeAreaInsets';
 import { useAutoUpdate } from '@app/hooks/useAutoUpdate';
 import { PageRouter } from '@app/App/PageRouter';
 import { useAppNavigation } from '@app/App/behavior/useAppNavigation';
@@ -52,6 +53,7 @@ const AppMain = () => {
     dismissDialog,
     onProfileLoaded: (data) => {
       primeLiveSettings(data.settings);
+      applyNotchMode(data.settings.renderIntoNotch);
       game.setGameData(data.assetData, data.configIni);
       display.initFromSettings({
         windowMode: data.settings.windowMode,
@@ -91,6 +93,9 @@ const AppMain = () => {
   useDumpNav({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame });
   useIpcLogBridge();
   useAppMainEffects({ isGameRunning: game.isRunning, activePage: nav.activePage, openNavWidget: () => widgets.open('navigation') });
+
+  // Default notch mode until a profile loads (keeps startup windows clear of a cutout).
+  useEffect(() => { applyNotchMode(true); }, []);
 
   const widgetVisibility = useMemo(() => Object.fromEntries(widgets.layout.widgets.map((w) => [w.id, w.visible])), [widgets.layout]);
 

@@ -1,9 +1,11 @@
 /* @layer renderer-components @kind component */
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '../../../../design-system/primitives/Button';
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';
+import { Spinner } from '../../../../design-system/primitives/Spinner';
 import { ToastContainer } from '../../../../design-system/primitives/Toast';
+import { applyNotchMode } from '@app/hooks/useSafeAreaInsets';
 import { useProfileSettings } from './behavior/useProfileSettings';
 import { ProfileHubBody } from './sub-components/ProfileHubBody';
 import './ProfileHub.css';
@@ -17,6 +19,14 @@ const ProfileHub = (props: ProfileHubProps) => {
 
   const { settings, handleSettingsChange, gamePaused, handleTogglePause, toasts, dismissToast } = useProfileSettings(props);
 
+  // Stop is slow (save-on-quit → teardown); show feedback and ignore re-taps until done.
+  const [stopping, setStopping] = useState(false);
+  useEffect(() => { if (!isGameRunning) setStopping(false); }, [isGameRunning]);
+  const handleStop = useCallback(() => { setStopping(true); onStopGame(); }, [onStopGame]);
+
+  // Reflect the per-profile notch preference on <html> whenever it changes.
+  useEffect(() => { applyNotchMode(settings.renderIntoNotch); }, [settings.renderIntoNotch]);
+
   return (
     <Box className="profile-hub">
       {/* Profile Header — always visible */}
@@ -28,11 +38,13 @@ const ProfileHub = (props: ProfileHubProps) => {
               <Button variant="primary" size="md" onClick={onStartGame}>▶ Play</Button>
             ) : (
               <>
-                <Button variant="tertiary" size="md" onClick={handleTogglePause}>
+                <Button variant="tertiary" size="md" onClick={handleTogglePause} disabled={stopping}>
                   {gamePaused ? '▶ Resume' : '⏸ Pause'}
                 </Button>
-                <Button variant="danger" size="md" onClick={onStopGame}>■ Stop</Button>
-                <Button variant="tertiary" size="md" onClick={onResetGame}>↻ Reset</Button>
+                <Button variant="danger" size="md" onClick={handleStop} disabled={stopping}>
+                  {stopping ? <><Spinner size="sm" /> Stopping…</> : '■ Stop'}
+                </Button>
+                <Button variant="tertiary" size="md" onClick={onResetGame} disabled={stopping}>↻ Reset</Button>
               </>
             )}
           </Box>

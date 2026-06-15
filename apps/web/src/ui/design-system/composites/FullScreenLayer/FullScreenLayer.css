@@ -7,7 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--pad-page);
+  padding: var(--space-2xl);
 }
 
 .fullscreen-layer__card {
@@ -26,7 +26,7 @@
 
 .fullscreen-layer__header {
   flex-shrink: 0;
-  padding: var(--space-md) var(--pad-page);
+  padding: var(--space-md) var(--space-xl);
 }
 
 /* Window titles read like page titles — bigger than dialog titles. */
@@ -40,7 +40,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding: 0 var(--pad-page) var(--space-lg);
+  padding: 0 var(--space-xl) var(--space-lg);
 }
 
 @keyframes fsl-in {
@@ -55,9 +55,9 @@
   }
 }
 
-/* Mobile platform: a full-screen page is just that — no surrounding padding and
-   no card border/radius/shadow, edge to edge. It keeps the usual glass surface.
-   Navigation is the back gesture / Options drawer, so the header's ✕ is dropped. */
+/* Mobile platform: the SAME page container as desktop, only made full-screen —
+   drop the outer gap, the border, and the radius (card fills the screen). Header,
+   inner padding, background, and everything else stay identical to desktop. */
 .platform-mobile .fullscreen-layer {
   padding: 0;
 }
@@ -67,17 +67,4 @@
   height: 100%;
   border: none;
   border-radius: 0;
-  box-shadow: none;
-}
-
-.platform-mobile .fullscreen-layer__header {
-  padding: var(--space-sm) var(--space-md);
-}
-
-.platform-mobile .fullscreen-layer__header .window-header__title {
-  font-size: var(--text-lg);
-}
-
-.platform-mobile .fullscreen-layer__header .window-header__close {
-  display: none;
 }

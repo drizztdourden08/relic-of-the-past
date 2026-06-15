@@ -90,4 +90,12 @@
   --bp-narrow:  600px;   /* below: drop secondary side-navs */
   --bp-compact: 820px;   /* below: collapse nav rails, tighten full-page padding */
   --pad-page:   clamp(var(--space-sm), 2.5vw, var(--space-2xl)); /* tight on phones, roomy on desktop */
+
+  /* Device safe-area (notch / display-cutout) insets, in CSS px. 0 by default; the
+     Android shell overrides these on <html> at runtime (it consumes window insets
+     for full-bleed, which zeroes env(safe-area-inset-*)). */
+  --sai-top:    0;
+  --sai-right:  0;
+  --sai-bottom: 0;
+  --sai-left:   0;
 }

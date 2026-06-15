@@ -24,7 +24,7 @@ interface ProfileHubBodyProps {
 
 const TABS: { id: ProfileHubTab; icon: string; label: string }[] = [
   { id: 'home', icon: '🏠', label: 'Home' },
-  { id: 'settings', icon: '⚙️', label: 'Settings' },
+  { id: 'settings', icon: '📺', label: 'Display' },
   { id: 'audio', icon: '🔊', label: 'Audio' },
   { id: 'gameplay', icon: '🎮', label: 'Gameplay' },
   { id: 'hud', icon: '🖥️', label: 'HUD' },
