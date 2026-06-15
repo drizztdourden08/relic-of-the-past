@@ -46,7 +46,17 @@ const installApiShim = (): void => {
       getAvailable: async () => null,
       download: async () => {},
       install: async () => {},
-      getVersion: async () => '0.0.0',
+      getVersion: async () => {
+        // Native hosts (Capacitor) report the real app version (Android versionName,
+        // itself derived from the repo-root package.json). Plain web has no native
+        // App plugin, so getInfo() throws → fall back to a placeholder.
+        try {
+          const { App } = await import('@capacitor/app');
+          return (await App.getInfo()).version || '0.0.0';
+        } catch {
+          return '0.0.0';
+        }
+      },
       onUpdateAvailable: eventStub, onUpToDate: eventStub, onDownloadProgress: eventStub,
       onDownloadComplete: eventStub, onError: eventStub,
     },

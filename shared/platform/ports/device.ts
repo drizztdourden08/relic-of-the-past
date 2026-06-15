@@ -14,6 +14,12 @@ interface DevicePort {
   allowSleep: () => void; // release it
   vibrate: (durationMs: number) => void; // device haptic; no-op where unavailable
   onAppPause: (cb: () => void) => Unsubscribe; // app sent to background
+  // Android back, intercepted so the app handles it instead of navigating away. The
+  // edge says which side a back *swipe* came from ('right' for a button press / no
+  // gesture). No-op where there is no back action.
+  onBackButton: (cb: (edge: BackEdge) => void) => Unsubscribe;
 }
+
+type BackEdge = 'left' | 'right';
 
 export type { DevicePort };

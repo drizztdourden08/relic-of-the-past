@@ -21,6 +21,14 @@ const createCapacitorDevice = (): DevicePort => ({
     const handle = App.addListener('appStateChange', ({ isActive }) => { if (!isActive) cb(); });
     return () => { handle.then((h) => h.remove()).catch(() => {}); };
   },
+  onBackButton: (cb) => {
+    // MainActivity intercepts Back and dispatches a 'rotpback' window event carrying the
+    // swipe edge (it reads BackEventCompat.getSwipeEdge); we don't use @capacitor/app's
+    // backButton here because it can't tell left from right.
+    const handler = (e: Event) => cb((e as CustomEvent).detail === 'left' ? 'left' : 'right');
+    window.addEventListener('rotpback', handler);
+    return () => window.removeEventListener('rotpback', handler);
+  },
 });
 
 export { createCapacitorDevice };

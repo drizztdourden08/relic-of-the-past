@@ -7,6 +7,7 @@
  * window.api calls hit the boot-safe shim (see api-shim.ts).
  */
 import { Capacitor } from '@capacitor/core';
+import { App } from '@capacitor/app';
 import type { PlatformFactory, WindowControlsPort } from '@shared/platform';
 import { createCapacitorStorage } from './capacitor/storage';
 import { createCapacitorFileStore } from './capacitor/file-store';
@@ -19,7 +20,7 @@ const noopUnsub = () => () => {};
 const createWindowControls = (): WindowControlsPort => ({
   minimize: () => {},
   toggleMaximize: () => {},
-  close: () => {},
+  close: () => { App.exitApp().catch(() => {}); },
   toggleFullscreen: () => {},
   setFullscreen: () => {},
   setAspectRatioLock: () => {},

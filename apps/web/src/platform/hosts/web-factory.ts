@@ -22,6 +22,7 @@ const createDevice = (): DevicePort => {
       document.addEventListener('visibilitychange', handler);
       return () => document.removeEventListener('visibilitychange', handler);
     },
+    onBackButton: () => () => {},
   };
 };
 

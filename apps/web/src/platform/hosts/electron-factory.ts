@@ -13,6 +13,7 @@ const createDevice = (): DevicePort => ({
   allowSleep: () => {},
   vibrate: () => {},
   onAppPause: () => () => {},
+  onBackButton: () => () => {},
 });
 
 const toArrayBuffer = (data: Uint8Array): ArrayBuffer =>
