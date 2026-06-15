@@ -3,8 +3,17 @@
  * Electron host adapter. Fulfills the platform ports by delegating to the
  * existing preload-injected window.api — the proven desktop path, unchanged.
  */
-import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, FilePickerPort, ControllerHost } from '@shared/platform';
+import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, FilePickerPort, ControllerHost, DevicePort } from '@shared/platform';
 import { osFromProcess } from '@shared/platform';
+
+// Desktop handles screen-stay-awake and save-on-close through its own window
+// lifecycle; the device port stays inert here. Controllers carry desktop haptics.
+const createDevice = (): DevicePort => ({
+  keepAwake: () => {},
+  allowSleep: () => {},
+  vibrate: () => {},
+  onAppPause: () => () => {},
+});
 
 const toArrayBuffer = (data: Uint8Array): ArrayBuffer =>
   data.byteOffset === 0 && data.byteLength === data.buffer.byteLength
@@ -92,6 +101,7 @@ const createElectronFactory = (): PlatformFactory => ({
   createFileStore,
   createFilePicker,
   createControllerHost,
+  createDevice,
 });
 
 export { createElectronFactory };

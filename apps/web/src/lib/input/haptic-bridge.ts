@@ -16,6 +16,7 @@ import { handleHapticEvent, setVibrateFunction, updateHapticSettings } from '@sh
 import type { HapticSettings } from '@shared/input/haptics';
 import type { VibrationSegment } from '@shared/input/base';
 import { findController } from '@shared/input/register-all';
+import { getPlatform } from '@app/platform/get-platform';
 import { webHidReader } from './hid-reader';
 import * as controllersStore from './controllers-store';
 
@@ -72,6 +73,8 @@ const dispatchVibration = (pattern: VibrationSegment[], gapMs?: number): void =>
   if (motorOff || stronger) {
     debugDispatchCount++;
     sendToController(pattern, gapMs);
+    // Device haptics (mobile phone buzz); no-op on desktop, where controllers rumble.
+    getPlatform().device.vibrate(totalDuration);
     activeIntensity = peakIntensity;
     activeUntil = now + effectiveDuration;
     scheduleDecay(effectiveDuration);

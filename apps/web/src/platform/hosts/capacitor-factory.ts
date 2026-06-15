@@ -12,6 +12,7 @@ import { createCapacitorStorage } from './capacitor/storage';
 import { createCapacitorFileStore } from './capacitor/file-store';
 import { createCapacitorFilePicker } from './capacitor/file-picker';
 import { createCapacitorControllerHost } from './capacitor/controller-host';
+import { createCapacitorDevice } from './capacitor/device';
 
 const noopUnsub = () => () => {};
 
@@ -48,13 +49,14 @@ const createCapacitorFactory = (): PlatformFactory => ({
     selfUpdate: false,
     nativeFileDialog: false,
     revealDataFolder: false,
-    hapticFeedback: false,
+    hapticFeedback: true,
   },
   createWindowControls,
   createStorage: createCapacitorStorage,
   createFileStore: createCapacitorFileStore,
   createFilePicker: createCapacitorFilePicker,
   createControllerHost: createCapacitorControllerHost,
+  createDevice: createCapacitorDevice,
 });
 
 export { createCapacitorFactory };

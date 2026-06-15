@@ -22,6 +22,7 @@ import { useGameUIStore } from '../../stores/game-ui-store';
 import { DEFAULT_SETTINGS } from './settings';
 import { deliveryQueue } from './delivery-queue';
 import { createInstantiateWasm } from './instantiate-wasm';
+import { getPlatform } from '../../platform/get-platform';
 
 declare function Zelda3(config: Record<string, unknown>): Promise<EmscriptenModule>;
 
@@ -53,6 +54,9 @@ const setAutoSaveConfig = (config: AutoSaveConfig | null): void => {
 };
 
 let activeCrashHandler: ((e: ErrorEvent) => void) | null = null;
+
+// Mobile: unsubscribe for the app-backgrounded → save-on-background hook.
+let appPauseUnsub: (() => void) | null = null;
 let startGeneration = 0;
 
 const resetGame = async (): Promise<void> => {
@@ -79,6 +83,9 @@ const resetGame = async (): Promise<void> => {
   deliveryQueue.clear();
   destroyTrackerBridge();
   destroyHapticBridge();
+  appPauseUnsub?.();
+  appPauseUnsub = null;
+  getPlatform().device.allowSleep();
   resetMasterVolume();
   getInputManager().stop();
   if (activeCrashHandler) {
@@ -222,6 +229,10 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
 
     // ─── Haptic bridge: wire up vibration feedback for game events ───
     initHapticBridge(DEFAULT_SETTINGS.haptics);
+
+    // ─── Device lifecycle: hold the screen awake; save when backgrounded (mobile) ───
+    getPlatform().device.keepAwake();
+    appPauseUnsub = getPlatform().device.onAppPause(() => { void saveOnQuit(); });
 
     // ─── UI bridge: start rAF polling for React overlay state ───
     initUIBridge(useGameUIStore.getState()._setState);

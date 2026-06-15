@@ -3,9 +3,27 @@
  * Plain-browser host adapter (renderer opened over http without Electron or
  * Capacitor). Also the resolve fallback. No window chrome, no persistent storage.
  */
-import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, StorageSummary, FilePickerPort, ControllerHost } from '@shared/platform';
+import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, StorageSummary, FilePickerPort, ControllerHost, DevicePort } from '@shared/platform';
 
 const noopUnsub = () => () => {};
+
+// Best-effort browser device hooks (wake lock / vibrate / visibility).
+const createDevice = (): DevicePort => {
+  let wakeLock: { release: () => Promise<void> } | null = null;
+  return {
+    keepAwake: () => {
+      const nav = navigator as Navigator & { wakeLock?: { request: (t: string) => Promise<{ release: () => Promise<void> }> } };
+      nav.wakeLock?.request('screen').then((l) => { wakeLock = l; }).catch(() => {});
+    },
+    allowSleep: () => { wakeLock?.release().catch(() => {}); wakeLock = null; },
+    vibrate: (durationMs) => { try { navigator.vibrate?.(Math.max(1, Math.round(durationMs))); } catch { /* ignore */ } },
+    onAppPause: (cb) => {
+      const handler = () => { if (document.visibilityState === 'hidden') cb(); };
+      document.addEventListener('visibilitychange', handler);
+      return () => document.removeEventListener('visibilitychange', handler);
+    },
+  };
+};
 
 const createWindowControls = (): WindowControlsPort => ({
   minimize: () => {},
@@ -97,6 +115,7 @@ const createWebFactory = (): PlatformFactory => ({
   createFileStore,
   createFilePicker,
   createControllerHost,
+  createDevice,
 });
 
 export { createWebFactory };

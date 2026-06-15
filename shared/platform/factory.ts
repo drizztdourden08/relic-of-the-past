@@ -10,6 +10,7 @@ import type { StoragePort } from './ports/storage';
 import type { FileStore } from './ports/file-store';
 import type { FilePickerPort } from './ports/file-picker';
 import type { ControllerHost } from './ports/controller-host';
+import type { DevicePort } from './ports/device';
 
 interface PlatformFactory {
   readonly info: PlatformInfo;
@@ -19,6 +20,7 @@ interface PlatformFactory {
   createFileStore: () => FileStore;
   createFilePicker: () => FilePickerPort;
   createControllerHost: () => ControllerHost;
+  createDevice: () => DevicePort;
 }
 
 export type { PlatformFactory };
