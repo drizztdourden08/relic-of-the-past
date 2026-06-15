@@ -20,7 +20,7 @@ cat > "$DESKTOP" <<EOF
 Type=Application
 Name=Relic of the Past
 Comment=Relic of the Past (test build)
-Exec=env APPIMAGE_EXTRACT_AND_RUN=1 "$APP" --no-sandbox --ozone-platform=wayland --enable-features=UseOzonePlatform --disable-gpu
+Exec=env APPIMAGE_EXTRACT_AND_RUN=1 "$APP" --no-sandbox --ozone-platform=wayland --enable-features=UseOzonePlatform
 Icon=$ICON
 Terminal=false
 Categories=Game;

@@ -1,108 +1,120 @@
 /* @layer tooling-scripts @kind script */
 /**
- * Build the Linux AppImage in WSL and launch it on the test VM.
+ * Build the Linux app directly inside the VirtualBox test VM and launch it.
+ * No WSL build step — the VM is both the build machine and the test target.
  *
- *   npm run push:linux                  build, then push + launch on the VM
- *   npm run push:linux -- --build-only  build only
+ *   npm run push:linux                  build, push test-roms, launch on VM
+ *   npm run push:linux -- --build-only  build only (no launch)
+ *
+ * One-time VM setup required before the first run:
+ *   ssh rotp@192.168.56.50 'bash -s' < scripts/deploy/setup-vm-builder.sh
+ *
+ * Flow:
+ *   1. Mount Windows source tree into the VM via a transient VirtualBox shared folder.
+ *   2. SSH → rsync shared folder to ~/relic (local VM copy — avoids building over slow vboxsf).
+ *   3. SSH → build: npm install + electron-builder → AppImage staged to ~/rotp-linux.AppImage.incoming.
+ *   4. Mount test-roms shared folder in VM.
+ *   5. SSH → vm-launch.sh: atomic swap + launch.
  */
 import { copyFileSync, mkdirSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { loadConfig, VM_CONFIG_PATH } from './config.mjs';
-import { log, warn, fail, run, wsl, wslCapture } from './run.mjs';
+import { log, warn, fail, run } from './run.mjs';
 
-// "E:\GameProjects\x" -> "/mnt/e/GameProjects/x"
-const toWslPath = (winPath) =>
-  `/mnt/${winPath[0].toLowerCase()}${winPath.slice(2).replace(/\\/g, '/')}`;
+const VBOXMANAGE = process.env.VBOXMANAGE || 'C:\\Program Files\\Oracle\\VirtualBox\\VBoxManage.exe';
+const ROMS_DIR = 'test-roms';
+const SRC_SHARE = 'relic-src';
 
-// WSL path -> Windows \\wsl.localhost UNC path.
-const toUnc = (distro, wslPath) => `\\\\wsl.localhost\\${distro}${wslPath.replace(/\//g, '\\')}`;
+// Unix path (/home/x/y) → Windows UNC path via WSL (\\wsl.localhost\distro\home\x\y).
+// Used only when identityFile is a WSL path (starts with /).
+const toUnc = (distro, wslPath) =>
+  `\\\\wsl.localhost\\${distro}${wslPath.replace(/\//g, '\\')}`;
 
-// Copy the WSL SSH key to a temp file with owner-only access for the Windows ssh client.
-const prepareWinKey = (distro, wslKeyPath) => {
+// Copy the SSH identity file to %TEMP%\rotp_vm_key with owner-only ACL so
+// Windows OpenSSH accepts it. Supports both Windows paths and WSL paths.
+const prepareWinKey = (config, identityFile) => {
   const dst = join(process.env.TEMP || 'C:\\Windows\\Temp', 'rotp_vm_key');
   try {
     run('icacls', [dst, '/grant', `${process.env.USERNAME}:F`], { stdio: 'ignore' });
-  } catch {
-    // no existing key to unlock
-  }
+  } catch { /* no existing key to unlock */ }
   rmSync(dst, { force: true });
-  copyFileSync(toUnc(distro, wslKeyPath), dst);
+  const isWinPath = /^[A-Za-z]:[\\\/]/.test(identityFile);
+  const src = isWinPath ? identityFile : toUnc(config.wslDistro, identityFile);
+  copyFileSync(src, dst);
   run('icacls', [dst, '/inheritance:r'], { stdio: 'ignore' });
   run('icacls', [dst, '/grant:r', `${process.env.USERNAME}:F`], { stdio: 'ignore' });
   return dst;
 };
 
-const ensureDistro = (distro) => {
+// Add a transient VirtualBox shared folder and mount it in the VM.
+const mountShare = (vmName, shareName, hostPath, sshArgs, target, mountPoint) => {
+  mkdirSync(hostPath, { recursive: true });
   try {
-    run('wsl', ['-d', distro, 'true'], { stdio: 'ignore' });
-  } catch {
-    fail(`WSL distro "${distro}" not found — see docs/contributing/testing-linux-and-android.md.`);
-  }
-};
-
-const syncTree = (distro, workdir) => {
-  const src = `${toWslPath(process.cwd())}/`;
-  log(`Syncing working tree -> ${distro}:${workdir}`);
-  wsl(
-    distro,
-    `mkdir -p ${workdir} && rsync -a --delete ` +
-      `--exclude node_modules --exclude .git --exclude dist --exclude release ` +
-      `${src} ${workdir}/`,
-  );
-};
-
-const buildInWsl = (distro, workdir) => {
-  log('Building the Linux AppImage in WSL…');
-  wsl(distro, `cd ${workdir} && bash scripts/deploy/build-in-wsl.sh`);
-  const appimage = wslCapture(distro, `ls ${workdir}/release/*.AppImage 2>/dev/null | head -n1`);
-  if (!appimage) fail('Build finished but no .AppImage was produced in release/.');
-  log(`Built: ${appimage}`);
-  return appimage;
-};
-
-const VBOXMANAGE = process.env.VBOXMANAGE || 'C:\\Program Files\\Oracle\\VirtualBox\\VBoxManage.exe';
-const ROMS_DIR = 'test-roms';
-
-// Mount the local ./test-roms folder into the VM at ~/test-roms via a VirtualBox shared folder.
-const mountRoms = (vmName, sshArgs, target) => {
-  const local = join(process.cwd(), ROMS_DIR);
-  mkdirSync(local, { recursive: true });
-  try {
-    run(VBOXMANAGE, ['sharedfolder', 'add', vmName, '--name', ROMS_DIR, '--hostpath', local, '--transient'], {
+    run(VBOXMANAGE, ['sharedfolder', 'add', vmName, '--name', shareName, '--hostpath', hostPath, '--transient'], {
       stdio: 'ignore',
     });
-  } catch {
-    // share already mapped
-  }
-  // Pass as a single string — Windows OpenSSH joins multiple positional args with
-  // spaces, so splitting bash/-lc/script causes && to be parsed by the remote shell
-  // instead of inside the bash -lc invocation.
+  } catch { /* share already mapped */ }
   run('ssh', [
     ...sshArgs,
     target,
-    `bash -lc 'mkdir -p ~/${ROMS_DIR} && (mountpoint -q ~/${ROMS_DIR} || sudo mount -t vboxsf -o uid=$(id -u),gid=$(id -g) ${ROMS_DIR} ~/${ROMS_DIR})'`,
+    `bash -lc 'mkdir -p ${mountPoint} && (mountpoint -q ${mountPoint} || sudo mount -t vboxsf -o uid=$(id -u),gid=$(id -g) ${shareName} ${mountPoint})'`,
   ]);
 };
 
-// scp the AppImage + launcher to the VM from Windows, then run the launcher over ssh.
-const pushToVm = (distro, vm, vmName, appimage) => {
-  const { host, user, identityFile, port } = vm;
+const syncFromShare = (sshArgs, target) => {
+  log('Syncing source tree from shared folder → ~/relic…');
+  run('ssh', [
+    ...sshArgs,
+    target,
+    `bash -lc 'rsync -a --delete --exclude node_modules --exclude .git --exclude dist --exclude release ~/relic-src/ ~/relic/'`,
+  ]);
+};
+
+const buildInVm = (sshArgs, target) => {
+  log('Building Linux app in VM…');
+  run('ssh', [
+    ...sshArgs,
+    target,
+    `bash -lc 'cd ~/relic && bash scripts/deploy/build-in-vm.sh'`,
+  ]);
+};
+
+const main = () => {
+  const config = loadConfig();
+  const buildOnly = process.argv.slice(2).includes('--build-only');
+
+  if (!config.vm) {
+    fail(`No VM target in ${VM_CONFIG_PATH}. Copy vm.example.json → vm.json and fill the "vm" block.`);
+  }
+
+  const { host, user, identityFile, port } = config.vm;
   const target = `${user}@${host}`;
-  const key = identityFile ? prepareWinKey(distro, identityFile) : null;
+  const key = identityFile ? prepareWinKey(config, identityFile) : null;
   const idFlag = key ? ['-i', key] : [];
   const sslOpt = ['-o', 'StrictHostKeyChecking=accept-new'];
   const scpArgs = [...(port ? ['-P', String(port)] : []), ...idFlag, ...sslOpt];
   const sshArgs = ['-n', ...(port ? ['-p', String(port)] : []), ...idFlag, ...sslOpt];
-  const appUnc = toUnc(distro, appimage);
-  const launcher = resolve(import.meta.dirname, 'vm-launch.sh');
+
+  // 1. Mount Windows source tree into VM
+  log(`Mounting source tree → ${target}:~/relic-src`);
+  mountShare(config.vmName, SRC_SHARE, process.cwd(), sshArgs, target, '~/relic-src');
+
+  // 2. Rsync to local VM copy
+  syncFromShare(sshArgs, target);
+
+  // 3. Build in VM
+  buildInVm(sshArgs, target);
+
+  if (buildOnly) return;
+
+  // 4. Mount test-roms
+  log(`Mounting ${ROMS_DIR} → ${target}:~/${ROMS_DIR}`);
+  mountShare(config.vmName, ROMS_DIR, join(process.cwd(), ROMS_DIR), sshArgs, target, `~/${ROMS_DIR}`);
+
+  // 5. Install desktop entry + launch
   const installer = resolve(import.meta.dirname, 'vm-install-desktop.sh');
   const icon = resolve(import.meta.dirname, '../../apps/web/public/logos/logo-256.png');
-  log(`Mounting ${ROMS_DIR} -> ${target}:~/${ROMS_DIR}`);
-  mountRoms(vmName, sshArgs, target);
-  log(`Copying AppImage + launcher + desktop entry -> ${target}`);
   run('ssh', [...sshArgs, target, 'mkdir', '-p', '.local/share/icons', '.local/share/applications']);
-  run('scp', [...scpArgs, appUnc, `${target}:rotp-linux.AppImage.incoming`]);
-  run('scp', [...scpArgs, launcher, `${target}:vm-launch.sh`]);
   run('scp', [...scpArgs, installer, `${target}:vm-install-desktop.sh`]);
   run('scp', [...scpArgs, icon, `${target}:.local/share/icons/relic-of-the-past.png`]);
   log('Installing dock entry…');
@@ -110,22 +122,6 @@ const pushToVm = (distro, vm, vmName, appimage) => {
   log('Launching on the VM…');
   run('ssh', [...sshArgs, target, 'bash', 'vm-launch.sh']);
   log('Pushed and launched on the VM.');
-};
-
-const main = () => {
-  const config = loadConfig();
-  const buildOnly = process.argv.slice(2).includes('--build-only');
-
-  ensureDistro(config.wslDistro);
-  syncTree(config.wslDistro, config.wslWorkdir);
-  const appimage = buildInWsl(config.wslDistro, config.wslWorkdir);
-
-  if (buildOnly) return;
-  if (!config.vm) {
-    warn(`No VM target in ${VM_CONFIG_PATH}. Copy vm.example.json -> vm.json and fill the "vm" block.`);
-    return;
-  }
-  pushToVm(config.wslDistro, config.vm, config.vmName, appimage);
 };
 
 main();

@@ -19,13 +19,12 @@ chmod +x "$APP" 2>/dev/null || true
 
 # Launch into the logged-in GNOME session. This VM is Wayland (gnome-shell owns
 # wayland-0); Electron needs the Ozone Wayland backend + the session runtime dir and
-# bus, or it dies with "ui/aura: platform failed to initialize". No real GPU on the
-# VM, so force software GL with --disable-gpu. No FUSE (extract-and-run).
+# bus, or it dies with "ui/aura: platform failed to initialize". No FUSE (extract-and-run).
 export APPIMAGE_EXTRACT_AND_RUN=1
 export XDG_RUNTIME_DIR="/run/user/$U"
 export WAYLAND_DISPLAY="${WAYLAND_DISPLAY:-wayland-0}"
 export DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS:-unix:path=/run/user/$U/bus}"
-FLAGS="--no-sandbox --ozone-platform=wayland --enable-features=UseOzonePlatform --disable-gpu --muted"
+FLAGS="--no-sandbox --ozone-platform=wayland --enable-features=UseOzonePlatform --muted"
 
 if [ "${1:-}" = "--test" ]; then
   echo "[vm-launch] WAYLAND_DISPLAY=$WAYLAND_DISPLAY flags: $FLAGS"
