@@ -8,10 +8,22 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { resolve } from 'path';
+import { createRequire } from 'node:module';
+
+// Surface the bundled Capacitor runtime version to the renderer (About page debug
+// info). Resolved at build time; absent on other host builds (guard with typeof).
+const capacitorVersion = (() => {
+  try {
+    return createRequire(import.meta.url)('@capacitor/core/package.json').version as string;
+  } catch {
+    return '';
+  }
+})();
 
 export default defineConfig({
   root: resolve(__dirname, 'src'),
   base: './',
+  define: { __CAP_VERSION__: JSON.stringify(capacitorVersion) },
   publicDir: resolve(__dirname, 'public'),
   plugins: [react(), nodePolyfills({ globals: { Buffer: true, process: true } })],
   // The extraction Web Worker is bundled separately and needs the same polyfills,

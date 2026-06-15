@@ -1,6 +1,8 @@
 /* @layer renderer-components @kind style */
 
 .about {
+  display: flex;
+  flex-direction: column;
   max-width: var(--dialog-w-md);
   margin: 0 auto;
 }
@@ -51,6 +53,11 @@
   font-size: var(--text-sm);
   font-family: var(--font-mono);
   color: var(--c-text);
+}
+
+.about__copy {
+  align-self: center;
+  margin-top: var(--space-md);
 }
 
 .about__description {
