@@ -82,7 +82,7 @@ const AppMain = () => {
 
   const {
     dataTab, profileHubTab, setProfileHubTab,
-    handleShowPicker, handleShowProfile, handleShowDataManager,
+    handleShowProfile, handleShowDataManager,
   } = useAppViewCallbacks({ game, showDialog, dismissDialog, profileMgmt, nav });
 
   useKeyboardShortcuts(nav, dialog, dismissDialog, profileMgmt.activeProfile);
@@ -101,7 +101,7 @@ const AppMain = () => {
       {windowChrome && (
       <TitleBar
         onImportRom={profileMgmt.handleImportRom}
-        onSwitchProfile={handleShowPicker}
+        onSwitchProfile={() => handleShowDataManager('profiles')}
         onShowProfile={handleShowProfile}
         onShowLogs={() => widgets.toggle('logs')}
         onToggleSaveStates={saveOverlay.toggle}
@@ -161,7 +161,6 @@ const AppMain = () => {
           audio={audio}
           saveState={saveState}
           handleDeleteConfirm={handleDeleteConfirm}
-          handleShowPicker={handleShowPicker}
           dataTab={dataTab}
           profileHubTab={profileHubTab}
           onProfileHubTabChange={setProfileHubTab}

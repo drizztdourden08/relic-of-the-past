@@ -27,12 +27,11 @@ interface ProfileDetailPanelProps {
   msuPacks: Array<{ name: string }>;
   isGameRunning: boolean;
   onSelectProfile: (profile: Profile) => void;
-  onSwitchProfile: () => void;
   onRefresh: () => void;
 }
 
 const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
-  const { profile, settings, languages, msuPacks, isGameRunning, onSelectProfile, onSwitchProfile, onRefresh } = props;
+  const { profile, settings, languages, msuPacks, isGameRunning, onSelectProfile, onRefresh } = props;
 
   return (
     <Box style={IL.col}>
@@ -74,9 +73,6 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
       <Box style={IL.actionRow}>
         <Button variant="primary" size="sm" onClick={() => onSelectProfile(profile)}>
           Open Profile
-        </Button>
-        <Button variant="ghost" size="sm" onClick={onSwitchProfile}>
-          {isGameRunning ? 'Switch Profile…' : 'Switch Profile'}
         </Button>
       </Box>
 

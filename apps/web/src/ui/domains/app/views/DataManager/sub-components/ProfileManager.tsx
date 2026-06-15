@@ -26,11 +26,10 @@ interface ProfileManagerProps {
   onDeleteProfile: (id: string) => void;
   onRefresh: () => void;
   isGameRunning: boolean;
-  onSwitchProfile: () => void;
 }
 
 const ProfileManager = (props: ProfileManagerProps) => {
-  const { profiles, romStatuses, onSelectProfile, onCreateProfile, onDeleteProfile, onRefresh, isGameRunning, onSwitchProfile } = props;
+  const { profiles, romStatuses, onSelectProfile, onCreateProfile, onDeleteProfile, onRefresh, isGameRunning } = props;
 
   const {
     selected, setSelected,
@@ -129,7 +128,6 @@ const ProfileManager = (props: ProfileManagerProps) => {
       msuPacks={msuPacks}
       isGameRunning={isGameRunning}
       onSelectProfile={onSelectProfile}
-      onSwitchProfile={onSwitchProfile}
       onRefresh={onRefresh}
     />
   );

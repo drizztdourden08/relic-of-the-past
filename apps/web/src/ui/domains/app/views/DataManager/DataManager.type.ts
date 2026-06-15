@@ -18,7 +18,6 @@ interface DataManagerProps {
   loadingProfile?: string | null;
   initialTab?: DataTab;
   isGameRunning?: boolean;
-  onSwitchProfile: () => void;
 }
 
 export type {

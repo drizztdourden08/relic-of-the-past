@@ -31,7 +31,6 @@ const DataManager = (props: DataManagerProps) => {
     loadingProfile = null,
     initialTab,
     isGameRunning = false,
-    onSwitchProfile,
   } = props;
   const [activeTab, setActiveTab] = useState<DataTab>(initialTab ?? 'home');
 
@@ -78,7 +77,6 @@ const DataManager = (props: DataManagerProps) => {
               onDeleteProfile={onDeleteProfile}
               onRefresh={handleRefresh}
               isGameRunning={isGameRunning}
-              onSwitchProfile={onSwitchProfile}
             />
           )}
           {activeTab === 'roms' && (

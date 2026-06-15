@@ -21,26 +21,6 @@ const useAppViewCallbacks = (params: AppViewCallbacksParams) => {
   const [dataTab, setDataTab] = useState<string>('profiles');
   const [profileHubTab, setProfileHubTab] = useState<ProfileHubTab>('home');
 
-  // ─── Navigation with game-running confirmation ───
-  const handleShowPicker = useCallback(async () => {
-    if (game.isRunning) {
-      showDialog({
-        title: 'Switch Profile',
-        message: 'This will close the currently running game. Any unsaved progress will be lost.',
-        confirmLabel: 'Switch Profile',
-        variant: 'default',
-        onConfirm: async () => {
-          dismissDialog();
-          game.clearGame();
-          profileMgmt.setActiveProfile(null);
-          await nav.handleShowPicker();
-        },
-      });
-    } else {
-      await nav.handleShowPicker();
-    }
-  }, [game, showDialog, dismissDialog, profileMgmt, nav]);
-
   const handleShowProfile = useCallback(async () => {
     if (profileMgmt.activeProfile) {
       await profileMgmt.refreshProfilesAndRoms();
@@ -56,7 +36,7 @@ const useAppViewCallbacks = (params: AppViewCallbacksParams) => {
 
   return {
     dataTab, profileHubTab, setProfileHubTab,
-    handleShowPicker, handleShowProfile, handleShowDataManager,
+    handleShowProfile, handleShowDataManager,
   };
 };
 
