@@ -15,6 +15,20 @@ import type { EdgeGlowRenderer, EdgeGlowOptions } from './types';
 import { createTexture, createFBO, destroyFBO, drawQuad } from '../webgl/gl-helpers';
 import { compilePrograms, getUniformLocations } from './edge-glow-programs';
 
+const create2DFallbackRenderer = (fxCanvas: HTMLCanvasElement): EdgeGlowRenderer | null => {
+  const ctx = fxCanvas.getContext('2d');
+  if (!ctx) return null;
+  const render = (gameCanvas: HTMLCanvasElement): void => {
+    if (fxCanvas.width !== gameCanvas.width || fxCanvas.height !== gameCanvas.height) {
+      fxCanvas.width = gameCanvas.width;
+      fxCanvas.height = gameCanvas.height;
+    }
+    ctx.drawImage(gameCanvas, 0, 0);
+  };
+  const noop = (): void => {};
+  return { render, resize: noop, setEnabled: noop, setBlackBounds: noop, setMaxBounds: noop, setEffectOpacity: noop, setPixelateParams: noop, dispose: noop };
+};
+
 const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOptions = {}): EdgeGlowRenderer | null => {
   const glOrNull = glCanvas.getContext('webgl', {
     alpha: false,
@@ -24,8 +38,8 @@ const createEdgeGlowRenderer = (glCanvas: HTMLCanvasElement, options: EdgeGlowOp
   });
 
   if (!glOrNull) {
-    console.warn('[EdgeGlow] WebGL not available');
-    return null;
+    console.warn('[EdgeGlow] WebGL not available — falling back to 2D passthrough');
+    return create2DFallbackRenderer(glCanvas);
   }
 
   const gl = glOrNull;

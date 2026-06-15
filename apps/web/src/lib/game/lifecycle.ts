@@ -175,6 +175,15 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
 
     const instantiateWasm = createInstantiateWasm();
 
+    // Pre-initialize the game canvas WebGL context with preserveDrawingBuffer=true
+    // so the edge-glow renderer can cross-read it on Linux. On Linux with native
+    // OpenGL (unlike ANGLE on Windows/Mac), the backbuffer is cleared after each
+    // SDL_RenderPresent, causing cross-context texImage2D reads to return black.
+    // HTML spec guarantees getContext returns the same object for the same type,
+    // so Emscripten reuses whichever context we create here.
+    void (canvas.getContext('webgl2', { preserveDrawingBuffer: true }) ??
+      canvas.getContext('webgl', { preserveDrawingBuffer: true }));
+
     const module: EmscriptenModule = await Zelda3({
       canvas,
       instantiateWasm,
