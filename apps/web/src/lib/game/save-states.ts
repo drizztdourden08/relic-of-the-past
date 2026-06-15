@@ -8,18 +8,7 @@ import * as savesStore from '../storage/saves-store';
 import { getModule, getProfileId } from './wasm-bridge';
 import { pollInventoryState } from './tracker';
 import { reassertLiveFlagsAfterLoad } from './live-settings';
-
-const captureScreenshot = (): Promise<Blob | null> => {
-  const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
-  if (!canvas) return Promise.resolve(null);
-  return new Promise((resolve) => {
-    try {
-      canvas.toBlob((blob) => resolve(blob), 'image/png');
-    } catch {
-      resolve(null);
-    }
-  });
-};
+import { captureGameFrameBlob } from './capture-frame';
 
 const saveState = async (slot: number): Promise<boolean> => {
   const mod = getModule();
@@ -51,7 +40,7 @@ const saveState = async (slot: number): Promise<boolean> => {
     log.app(`[SaveState] Slot ${slot} persisted to disk ✓`);
 
     try {
-      const blob = await captureScreenshot();
+      const blob = await captureGameFrameBlob();
       if (blob) {
         const screenshotAb = await blob.arrayBuffer();
         await savesStore.writeScreenshot(profileId, slot, screenshotAb);

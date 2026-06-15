@@ -2,7 +2,7 @@
 /** Edge-glow shader render loop for GameLayer (overworld extended-viewport mirror glow). */
 import { useRef } from 'react';
 import type React from 'react';
-import { wasmGetViewportInfo, wasmRenderCleanFrame } from '../../../../../../lib/game';
+import { wasmGetViewportInfo, wasmRenderCleanFrame, fulfillFrameCapture } from '../../../../../../lib/game';
 import { createEdgeGlowRenderer } from '../../../../../../lib/game/edge-glow';
 import type { EdgeGlowRenderer } from '../../../../../../lib/game/edge-glow';
 import { useCanvasOverlayLoop } from './useCanvasOverlayLoop';
@@ -104,6 +104,10 @@ const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
       // Get clean frame (no HUD) for the mirror pass
       const cleanResult = vp?.isGameplay ? wasmRenderCleanFrame() : null;
       renderer.render(gameCanvas, time, cleanResult ?? null);
+
+      // Fulfill any pending save-state screenshot from this just-rendered, visible
+      // frame (same turn → no async/hidden-canvas readback quirks).
+      fulfillFrameCapture(fxCanvas);
     },
   });
 };

@@ -7,26 +7,14 @@
 import { log } from '../log-bus';
 import * as savesStore from '../storage/saves-store';
 import { getModule, getProfileId } from './wasm-bridge';
+import { captureGameFrameBlob } from './capture-frame';
 
 let autoSaveInterval: ReturnType<typeof setInterval> | null = null;
 let autoSaveSlot = 99; // Dedicated MEMFS slot for auto-save (not user-visible)
 
-const captureScreenshot = (): Promise<ArrayBuffer | undefined> => {
-  const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
-  if (!canvas) return Promise.resolve(undefined);
-  return new Promise((resolve) => {
-    try {
-      canvas.toBlob(async (blob) => {
-        if (blob) {
-          resolve(await blob.arrayBuffer());
-        } else {
-          resolve(undefined);
-        }
-      }, 'image/png');
-    } catch {
-      resolve(undefined);
-    }
-  });
+const captureScreenshot = async (): Promise<ArrayBuffer | undefined> => {
+  const blob = await captureGameFrameBlob();
+  return blob ? await blob.arrayBuffer() : undefined;
 };
 
 const performAutoSave = async (trigger: 'timer' | 'quit'): Promise<boolean> => {

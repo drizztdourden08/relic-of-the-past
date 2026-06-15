@@ -7,19 +7,32 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-xs);
+  width: 100%;
 }
 
 .save-slot--busy {
-  opacity: 0.5;
   pointer-events: none;
 }
 
-/* ─── Card (screenshot + overlaid controls) ─── */
+/* Busy spinner — covers the card with a scrim so feedback reads while the
+   screenshot is captured and the slots reload. */
+.save-slot__spinner {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-scrim-game);
+}
 
+/* ─── Card (screenshot + overlaid controls) ───
+   Width is driven by the container (overlay slot / Home grid cell); height
+   follows the SNES frame aspect. */
 .save-slot__card {
   position: relative;
-  width: 96px;
-  height: 84px;
+  width: 100%;
+  aspect-ratio: 256 / 224;
   border-radius: var(--r-sm);
   overflow: hidden;
   background: var(--c-scrim-game);
@@ -95,57 +108,54 @@
   pointer-events: none;
 }
 
-/* Overlaid action buttons — bottom center */
-.save-slot__btns {
+/* Split action bar — bottom slice of the card, blackened so it stays legible
+   over the screenshot, split into two flush halves (Save | Load). */
+.save-slot__actions {
   position: absolute;
-  bottom: 4px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
-  gap: var(--space-xs);
+  height: 30%;
+  min-height: 24px;
   z-index: var(--z-base);
-  opacity: 0;
-  transition: opacity var(--transition-fast);
+  background: var(--c-scrim);
 }
 
-.save-slot__card:hover .save-slot__btns {
-  opacity: 1;
-}
-
-.save-slot__btn {
+.save-slot__action {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 22px;
-  border: 1px solid var(--c-border-strong);
-  border-radius: var(--r-sm);
-  background: var(--c-scrim);
+  border: none;
+  background: transparent;
   color: var(--c-text);
   cursor: pointer;
-  transition: all var(--transition-fast);
-  backdrop-filter: blur(4px);
+  transition: background var(--transition-fast), color var(--transition-fast);
 }
 
-.save-slot__btn:hover:not(:disabled) {
-  color: var(--c-text);
-  border-color: var(--c-border-strong);
+.save-slot__action--save {
+  border-right: 1px solid var(--c-border-strong);
 }
 
-.save-slot__btn--save:hover:not(:disabled) {
+.save-slot__action--save:hover:not(:disabled),
+.save-slot__action--save:focus-visible {
   background: var(--c-gold-soft);
-  border-color: var(--c-gold);
   color: var(--c-gold-bright);
 }
 
-.save-slot__btn--load:hover:not(:disabled) {
+.save-slot__action--load:hover:not(:disabled),
+.save-slot__action--load:focus-visible {
   background: var(--c-green-soft);
-  border-color: var(--c-green);
   color: var(--c-green-bright);
 }
 
-.save-slot__btn:disabled {
-  opacity: 0.2;
+.save-slot__action:focus-visible {
+  outline: none;
+}
+
+.save-slot__action:disabled {
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
