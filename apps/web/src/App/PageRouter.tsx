@@ -1,6 +1,5 @@
 /* @layer renderer-appshell @kind component */
 import { useCallback } from 'react';
-import { ProfilePicker } from '../ui/domains/app/views/ProfilePicker';
 import { ProfileHub } from '../ui/domains/app/views/ProfileHub';
 import { DataManager } from '../ui/domains/app/views/DataManager';
 import { InputCalibration } from '../ui/domains/app/views/InputTester';
@@ -52,14 +51,13 @@ interface PageRouterProps {
     handleSaveSlotSettingsChange: (enabled: boolean, duration: number) => void;
   };
   handleDeleteConfirm: (title: string, message: string, onConfirm: () => void) => void;
-  handleShowPicker: () => void;
   dataTab: string;
   profileHubTab: ProfileHubTab;
   onProfileHubTabChange: (tab: ProfileHubTab) => void;
 }
 
 const PageRouter = (props: PageRouterProps) => {
-  const { nav, profileMgmt, game, display, audio, saveState, handleDeleteConfirm, handleShowPicker, dataTab, profileHubTab, onProfileHubTabChange } = props;
+  const { nav, profileMgmt, game, display, audio, saveState, handleDeleteConfirm, dataTab, profileHubTab, onProfileHubTabChange } = props;
 
   const handleStartGame = useCallback(() => {
     if (profileMgmt.activeProfile) {
@@ -78,24 +76,7 @@ const PageRouter = (props: PageRouterProps) => {
   // ProfileHub stays mounted to preserve scroll/state; other pages use early returns
   let otherPage: React.ReactNode = null;
 
-  if (nav.activePage === 'picker') {
-    otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="Profiles">
-        <ProfilePicker
-          profiles={profileMgmt.profiles}
-          romStatuses={profileMgmt.romDisplayInfos}
-          onSelectProfile={(p: Profile) => { profileMgmt.handleSelectProfile(p); nav.setActivePage('profile'); }}
-          onCreateProfile={(name: string, romFile: string) => { profileMgmt.handleCreateProfile(name, romFile); nav.setActivePage('profile'); }}
-          onDeleteProfile={profileMgmt.handleDeleteProfile}
-          onImportRom={profileMgmt.handleImportRom}
-          onExtractAssets={profileMgmt.handleExtractAssets}
-          onDeleteRom={profileMgmt.handleDeleteRom}
-          importingRom={profileMgmt.importingRom}
-          loadingProfile={profileMgmt.loadingProfile}
-        />
-      </FullScreenLayer>
-    );
-  } else if (nav.activePage === 'data') {
+  if (nav.activePage === 'data') {
     otherPage = (
       <FullScreenLayer onClose={nav.closePage} title="Data Manager">
         <DataManager
@@ -112,7 +93,6 @@ const PageRouter = (props: PageRouterProps) => {
           loadingProfile={profileMgmt.loadingProfile}
           initialTab={dataTab as any}
           isGameRunning={game.isRunning}
-          onSwitchProfile={handleShowPicker}
         />
       </FullScreenLayer>
     );

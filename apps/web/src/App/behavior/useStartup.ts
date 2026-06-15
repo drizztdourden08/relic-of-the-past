@@ -27,7 +27,7 @@ const useStartup = (
 
         if (profileList.length === 0) {
           log.app('No profiles found, showing setup screen');
-          nav.setActivePage('picker');
+          nav.setActivePage('data');
         } else if (profileList.length === 1) {
           log.app('Single profile found, showing profile page...');
           profileMgmt.setActiveProfile(profileList[0]);
@@ -43,12 +43,12 @@ const useStartup = (
             void applySpritesForRom(lastProfile.romFile);
             if (!isAutoTest) nav.setActivePage('profile');
           } else {
-            nav.setActivePage('picker');
+            nav.setActivePage('data');
           }
         }
       } catch (err) {
         log.error(`Startup failed: ${err}`);
-        nav.setActivePage('picker');
+        nav.setActivePage('data');
       }
     })();
   }, []);

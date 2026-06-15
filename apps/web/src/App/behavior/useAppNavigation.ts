@@ -8,11 +8,6 @@ const useAppNavigation = (params: { activeProfile: Profile | null; refreshLists:
 
   const closePage = useCallback(() => setActivePage('none'), []);
 
-  const handleShowPicker = useCallback(async () => {
-    await refreshLists();
-    setActivePage('picker');
-  }, [refreshLists]);
-
   const handleShowProfile = useCallback(async () => {
     if (activeProfile) {
       await refreshLists();
@@ -30,7 +25,6 @@ const useAppNavigation = (params: { activeProfile: Profile | null; refreshLists:
     activePage,
     setActivePage,
     closePage,
-    handleShowPicker,
     handleShowProfile,
     handleShowDataManager,
   };
