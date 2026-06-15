@@ -74,12 +74,13 @@ const mountRoms = (vmName, sshArgs, target) => {
   } catch {
     // share already mapped
   }
+  // Pass as a single string — Windows OpenSSH joins multiple positional args with
+  // spaces, so splitting bash/-lc/script causes && to be parsed by the remote shell
+  // instead of inside the bash -lc invocation.
   run('ssh', [
     ...sshArgs,
     target,
-    'bash',
-    '-lc',
-    `mkdir -p ~/${ROMS_DIR} && (mountpoint -q ~/${ROMS_DIR} || sudo mount -t vboxsf -o uid=$(id -u),gid=$(id -g) ${ROMS_DIR} ~/${ROMS_DIR})`,
+    `bash -lc 'mkdir -p ~/${ROMS_DIR} && (mountpoint -q ~/${ROMS_DIR} || sudo mount -t vboxsf -o uid=$(id -u),gid=$(id -g) ${ROMS_DIR} ~/${ROMS_DIR})'`,
   ]);
 };
 
