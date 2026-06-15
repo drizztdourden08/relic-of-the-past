@@ -30,7 +30,8 @@
     "build:linux": "rimraf dist release && electron-vite build && electron-builder --linux --config scripts/build/electron-builder.config.js -c.directories.output=release",
     "preview": "electron-vite preview",
     "build:web": "vite build --config apps/web/vite.config.ts",
-    "cap:sync": "npm run build:web && cd apps/mobile && npx cap sync",
+    "assets:android": "cd apps/mobile && npx @capacitor/assets generate --android --iconBackgroundColor=#0f0f12 --splashBackgroundColor=#0f0f12",
+    "cap:sync": "npm run build:web && cd apps/mobile && npx cap sync && npx @capacitor/assets generate --android --iconBackgroundColor=#0f0f12 --splashBackgroundColor=#0f0f12",
     "android:open": "cd apps/mobile && npx cap open android",
     "android:run": "npm run cap:sync && cd apps/mobile && npx cap run android",
     "push:linux": "node scripts/deploy/push-linux.mjs",
@@ -56,9 +57,12 @@
     "version:major": "npm version major --no-git-tag-version"
   },
   "dependencies": {
+    "@capacitor-community/keep-awake": "^8.0.1",
     "@capacitor/android": "^8.4.0",
+    "@capacitor/app": "^8.1.0",
     "@capacitor/core": "^8.4.0",
     "@capacitor/filesystem": "^8.1.2",
+    "@capacitor/haptics": "^8.0.2",
     "@capawesome/capacitor-file-picker": "^8.0.2",
     "@electron-toolkit/utils": "^4.0.0",
     "@iconify-icons/game-icons": "^1.2.1",
@@ -76,6 +80,7 @@
     "zustand": "^5.0.13"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^8.4.0",
     "@playwright/test": "^1.60.0",
     "@types/js-yaml": "^4.0.9",

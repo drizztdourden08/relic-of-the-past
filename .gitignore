@@ -29,6 +29,11 @@ apps/mobile/android/app/src/main/assets/public/
 apps/mobile/android/local.properties
 apps/mobile/android/.idea/
 apps/mobile/android/capacitor-cordova-android-plugins/
+# Launcher icons + splash are generated at build time from apps/mobile/assets/logo.png
+# by `@capacitor/assets` (npm run cap:sync) — the source is committed, the output is not.
+apps/mobile/android/app/src/main/res/mipmap-*/ic_launcher*.png
+apps/mobile/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher*.xml
+apps/mobile/android/app/src/main/res/drawable*/splash.png
 
 # Assets (user-provided)
 assets/assets.dat
