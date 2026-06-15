@@ -83,4 +83,11 @@
   --panel-w-md:  300px;
   --panel-w-lg:  380px;
   --widget-w-min: 240px;
+
+  /* ─── Responsive — breakpoints + fluid page padding ───
+     @media conditions can't read var(), so these values are also hardcoded in the
+     media/container queries that consume them — these tokens are the canonical source. */
+  --bp-narrow:  600px;   /* below: drop secondary side-navs */
+  --bp-compact: 820px;   /* below: collapse nav rails, tighten full-page padding */
+  --pad-page:   clamp(var(--space-sm), 2.5vw, var(--space-2xl)); /* tight on phones, roomy on desktop */
 }

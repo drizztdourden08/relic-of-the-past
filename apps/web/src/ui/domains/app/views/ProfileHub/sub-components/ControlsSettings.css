@@ -313,3 +313,15 @@
 .controls-settings__used-input-label--dim {
   color: var(--c-text-muted);
 }
+
+/* Short viewport (landscape phones): reclaim vertical space by dropping the bottom
+   Required Inputs summary and the "Button Mappings" section header. */
+@media (height <= 520px) {
+  .controls-settings__used-inputs {
+    display: none;
+  }
+
+  .controls-settings__bindings .controls-settings__section-header {
+    display: none;
+  }
+}

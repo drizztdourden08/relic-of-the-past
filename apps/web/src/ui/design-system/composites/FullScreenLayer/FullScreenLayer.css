@@ -7,7 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-2xl);
+  padding: var(--pad-page);
 }
 
 .fullscreen-layer__card {
@@ -26,7 +26,7 @@
 
 .fullscreen-layer__header {
   flex-shrink: 0;
-  padding: var(--space-md) var(--space-xl);
+  padding: var(--space-md) var(--pad-page);
 }
 
 /* Window titles read like page titles — bigger than dialog titles. */
@@ -40,7 +40,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding: 0 var(--space-xl) var(--space-lg);
+  padding: 0 var(--pad-page) var(--space-lg);
 }
 
 @keyframes fsl-in {
@@ -53,4 +53,31 @@
     opacity: 1;
     transform: scale(1);
   }
+}
+
+/* Mobile platform: a full-screen page is just that — no surrounding padding and
+   no card border/radius/shadow, edge to edge. It keeps the usual glass surface.
+   Navigation is the back gesture / Options drawer, so the header's ✕ is dropped. */
+.platform-mobile .fullscreen-layer {
+  padding: 0;
+}
+
+.platform-mobile .fullscreen-layer__card {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.platform-mobile .fullscreen-layer__header {
+  padding: var(--space-sm) var(--space-md);
+}
+
+.platform-mobile .fullscreen-layer__header .window-header__title {
+  font-size: var(--text-lg);
+}
+
+.platform-mobile .fullscreen-layer__header .window-header__close {
+  display: none;
 }

@@ -18,9 +18,21 @@
   flex: 1;
   min-width: 0;
   overflow-y: auto;
-  padding: var(--space-xl);
+  padding: var(--pad-page);
   background: var(--c-panel);
   backdrop-filter: blur(var(--blur));
   border: 1px solid var(--c-hairline);
   border-radius: var(--r-lg);
+}
+
+/* Narrow viewport (< --bp-narrow): drop the side-nav, content goes full-width.
+   Navigation on these pages is reached through the mobile Options drawer instead. */
+@media (width <= 600px) {
+  .settings-shell {
+    gap: 0;
+  }
+
+  .settings-shell .side-nav {
+    display: none;
+  }
 }

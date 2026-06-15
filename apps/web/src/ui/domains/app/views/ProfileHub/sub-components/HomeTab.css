@@ -38,10 +38,10 @@
   font-weight: var(--weight-medium);
 }
 
-/* Two-column layout */
+/* Two-column layout — collapses to one column when there isn't room for two. */
 .home-tab__columns {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
   gap: var(--space-xl);
   min-height: 0;
 }
@@ -83,7 +83,7 @@
 
 .home-tab__save-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
   gap: var(--space-sm);
 }
 

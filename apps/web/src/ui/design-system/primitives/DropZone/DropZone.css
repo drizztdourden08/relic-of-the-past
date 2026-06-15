@@ -45,3 +45,16 @@
   font-size: var(--text-xs);
   color: var(--c-text-muted);
 }
+
+/* Compact viewport (< --bp-compact): a tall drop target wastes scarce vertical
+   space on phones — shrink the padding and icon. */
+@media (width <= 820px) {
+  .dropzone {
+    gap: var(--space-xs);
+    padding: var(--space-md) var(--space-lg);
+  }
+
+  .dropzone__icon {
+    font-size: var(--text-xl);
+  }
+}

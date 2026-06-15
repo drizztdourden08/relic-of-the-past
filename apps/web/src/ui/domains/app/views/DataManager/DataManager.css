@@ -22,6 +22,13 @@
   width: 120px;
 }
 
+/* Compact viewport (< --bp-compact): let the rail shrink to its icon strip. */
+@media (width <= 820px) {
+  .data-manager__tabs {
+    width: auto;
+  }
+}
+
 /* ─── Content ─── */
 
 .data-manager__content {

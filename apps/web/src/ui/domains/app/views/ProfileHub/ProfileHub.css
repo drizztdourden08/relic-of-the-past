@@ -48,6 +48,13 @@
   width: 120px;
 }
 
+/* Compact viewport (< --bp-compact): let the rail shrink to its icon strip. */
+@media (width <= 820px) {
+  .profile-hub__tabs {
+    width: auto;
+  }
+}
+
 .profile-hub__content {
   flex: 1;
   min-height: 0;

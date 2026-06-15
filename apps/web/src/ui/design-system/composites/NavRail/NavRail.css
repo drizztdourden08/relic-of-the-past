@@ -3,9 +3,26 @@
 .nav-rail {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
   flex-shrink: 0;
-  container-type: inline-size;
+  min-height: 0;
+  position: relative; /* anchors the floating panel when collapsed */
+}
+
+/* The scrollable list of items. Reserve the scrollbar gutter even on desktop so
+   the rail width doesn't jump when scrolling kicks in. */
+.nav-rail__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+/* Unfold toggle — only shown on narrow viewports (see media query below). */
+.nav-rail__unfold {
+  display: none;
 }
 
 .nav-rail__item {
@@ -53,13 +70,54 @@
   white-space: nowrap;
 }
 
-/* Collapse to icon-only when the rail is too narrow for labels. */
-@container (max-width: 96px) {
+/* Compact viewport (< --bp-compact): collapse to an icon strip. The unfold
+   button floats the labeled panel over content, taking no layout space. */
+@media (width <= 820px) {
+  .nav-rail__unfold {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-xs);
+    padding: var(--space-sm);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    background: var(--c-sunken);
+    color: var(--c-text-dim);
+    font-size: var(--text-lg);
+    line-height: 1;
+    cursor: pointer;
+  }
+
   .nav-rail__label {
     display: none;
   }
 
   .nav-rail__item {
     justify-content: center;
+  }
+
+  /* Unfolded: lift the panel out of flow so the icon strip's width stays
+     reserved (no content reflow) and the labeled menu floats on top. */
+  .nav-rail--expanded .nav-rail__panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: var(--z-popover);
+    min-width: max-content;
+    max-height: 100%;
+    padding: var(--space-xs);
+    background: var(--c-glass);
+    backdrop-filter: blur(var(--blur));
+    border: 1px solid var(--c-hairline);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-2);
+  }
+
+  .nav-rail--expanded .nav-rail__label {
+    display: inline;
+  }
+
+  .nav-rail--expanded .nav-rail__item {
+    justify-content: flex-start;
   }
 }
