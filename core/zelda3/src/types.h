@@ -13,7 +13,7 @@ enum {
   // uint8 ceiling of 255) trips a latent out-of-bounds in the upstream widescreen load/render path,
   // so 152 is the verified-safe maximum. The wider frames also need a larger stack — see
   // core/wasm-build/build.bat (-sSTACK_SIZE).
-  kPpuExtraLeftRight = kEnableLargeScreen ? 152 : 0,
+  kPpuExtraLeftRight = kEnableLargeScreen ? 128 : 0,
 };
 
 typedef uint8_t uint8;

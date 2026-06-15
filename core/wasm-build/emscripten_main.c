@@ -173,8 +173,11 @@ int main(int argc, char **argv) {
   // Initialize game core (use WASM-safe version to avoid ppu_init signature mismatch)
   WasmZeldaInitialize();
 
-  // Configure PPU
-  g_zenv.ppu->extraLeftRight = UintMin(g_config.extended_aspect_ratio, kPpuExtraLeftRight);
+  // Configure PPU. Clamp the configured extra to the build cap up front so the render buffer width
+  // (g_snes_width) and the PPU's extra columns always agree — a wider buffer would leave an unwritten
+  // edge, and a view past the 512px BG tilemap wraps to stale tiles (garbage on the sides).
+  g_config.extended_aspect_ratio = UintMin(g_config.extended_aspect_ratio, kPpuExtraLeftRight);
+  g_zenv.ppu->extraLeftRight = g_config.extended_aspect_ratio;
   g_snes_width = (g_config.extended_aspect_ratio * 2 + 256);
   g_snes_height = (g_config.extend_y ? 240 : 224);
 
