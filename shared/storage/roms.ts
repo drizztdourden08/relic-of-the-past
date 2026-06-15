@@ -16,6 +16,9 @@ const ROM_RE = /\.(sfc|smc)$/i;
 const RAW_ROM_MAX_BYTES = 8 * 1024 * 1024;
 const datName = (romFile: string): string => romFile.replace(/\.(sfc|smc)$/i, '.dat');
 
+// Extensions offered by the cross-platform ROM file picker (no leading dots).
+const ROM_PICK_EXTENSIONS = ['sfc', 'smc', 'zip'];
+
 const listRoms = async (files: FileStore): Promise<string[]> =>
   (await files.list('roms')).filter((f) => ROM_RE.test(f));
 
@@ -68,5 +71,5 @@ const importBytes = async (files: FileStore, fileName: string, bytes: Uint8Array
   return { success: true, romFile: romName, alreadyExists: false };
 };
 
-export { listRoms, listWithStatus, getInfo, deleteRom, importBytes };
+export { listRoms, listWithStatus, getInfo, deleteRom, importBytes, ROM_PICK_EXTENSIONS };
 export type { RomImportResult };

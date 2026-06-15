@@ -60,6 +60,11 @@ const DropZone = (props: DropZoneProps) => {
     e.target.value = '';
   }, [filterFiles, onDrop]);
 
+  // Android's WebView drops accept extensions with no registered MIME (e.g. .sfc),
+  // so include application/octet-stream to keep those files selectable. filterFiles
+  // still enforces the accept extensions after the pick.
+  const inputAccept = accept?.length ? [...accept, 'application/octet-stream'].join(',') : undefined;
+
   const cls = [
     'dropzone',
     active && 'dropzone--active',
@@ -82,7 +87,7 @@ const DropZone = (props: DropZoneProps) => {
       <input
         ref={inputRef}
         type="file"
-        accept={accept?.join(',')}
+        accept={inputAccept}
         style={{ display: 'none' }}
         onChange={handleFileInput}
       />

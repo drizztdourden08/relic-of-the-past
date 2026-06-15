@@ -31,7 +31,7 @@ const getRomInfo = (romFile: string) => roms.getInfo(files(), romFile);
 const deleteRom = (romFile: string) => roms.deleteRom(files(), romFile);
 
 const importPicked = async (): Promise<RomImportResult | null> => {
-  const picked = await getPlatform().filePicker.pickFile({ extensions: ['sfc', 'smc', 'zip'] });
+  const picked = await getPlatform().filePicker.pickFile({ extensions: roms.ROM_PICK_EXTENSIONS });
   if (!picked) return null;
   return finalize(await roms.importBytes(files(), picked.name, picked.bytes, (phase) => emit(phase)));
 };
