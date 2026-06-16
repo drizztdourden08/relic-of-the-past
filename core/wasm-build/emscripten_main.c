@@ -179,7 +179,14 @@ int main(int argc, char **argv) {
   g_config.extended_aspect_ratio = UintMin(g_config.extended_aspect_ratio, kPpuExtraLeftRight);
   g_zenv.ppu->extraLeftRight = g_config.extended_aspect_ratio;
   g_snes_width = (g_config.extended_aspect_ratio * 2 + 256);
-  g_snes_height = (g_config.extend_y ? 240 : 224);
+  // Tall: extraTopBottom is the per-side vertical budget; the buffer grows by top+bottom. botBudget keeps
+  // the legacy +16 (extend_y) when not tall. This 224+top+bot MUST match ZeldaDrawPpuFrame's loop height.
+  g_config.extended_aspect_ratio_vertical = UintMin(g_config.extended_aspect_ratio_vertical, kPpuExtraTopBottom);
+  g_zenv.ppu->extraTopBottom = g_config.extended_aspect_ratio_vertical;
+  g_oam_tall_budget = g_config.extended_aspect_ratio_vertical;  // sprite OAM 9-bit-Y gate (types.h)
+  int top_budget = g_config.extended_aspect_ratio_vertical;
+  int bot_budget = top_budget > 0 ? top_budget : (g_config.extend_y ? 16 : 0);
+  g_snes_height = 224 + top_budget + bot_budget;
 
   g_ppu_render_flags = g_config.new_renderer * kPpuRenderFlags_NewRenderer |
                        g_config.enhanced_mode7 * kPpuRenderFlags_4x4Mode7 |

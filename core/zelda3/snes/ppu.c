@@ -36,7 +36,9 @@ enum {
 Ppu* ppu_init() {
   Ppu* ppu = (Ppu * )malloc(sizeof(Ppu));
   ppu->extraLeftRight = kPpuExtraLeftRight;
+  ppu->extraTopBottom = 0;  // set per-config in emscripten_main; 0 = no tall (4:3 unchanged)
   ppu->extraTopCur = 0;
+  ppu->extraBottomCur = 0;
   // Allocate a linear world tilemap for BG1/BG2 (full 1024px area). Disabled until the overworld
   // populates it; other layers/scenes keep the stock wrapping SNES path.
   for (int i = 0; i < 4; i++) {
@@ -182,23 +184,29 @@ void ppu_runLine(Ppu *ppu, int line) {
         j = (j + 1 == mod ? 0 : j + 1);
       }
     }
+    // Tall screens: `line` is the physical buffer row+1; the content scanline `sl` is shifted up by the
+    // top budget so rows above the base image sample above the camera (the linear-world fetch clamps a
+    // negative worldTileY to transparent, exactly like the horizontal left edge). extraTopBottom == 0 ⇒
+    // sl == line and every formula below collapses to the original 4:3/240 behavior (byte-identical).
+    int sl = line - (int)ppu->extraTopBottom;
+
     // evaluate sprites
     ClearBackdrop(&ppu->objBuffer);
-    ppu->lineHasSprites = !ppu->forcedBlank && ppu_evaluateSprites(ppu, line - 1);
+    ppu->lineHasSprites = !ppu->forcedBlank && ppu_evaluateSprites(ppu, sl - 1);
 
-    // outside of visible range?
-    if (line >= 225 + ppu->extraBottomCur) {
+    // Outside the visible band (top OR bottom extra beyond the loaded content) → black bar row.
+    if (sl < 1 - (int)ppu->extraTopCur || sl >= 225 + (int)ppu->extraBottomCur) {
       memset(&ppu->renderBuffer[(line - 1) * ppu->renderPitch], 0, sizeof(uint32) * (256 + ppu->extraLeftRight * 2));
       return;
     }
 
     if (ppu->renderFlags & kPpuRenderFlags_NewRenderer) {
-      PpuDrawWholeLine(ppu, line);
+      PpuDrawWholeLine(ppu, sl);  // writes to physical row (sl-1+extraTopBottom) == (line-1)
     } else {
       if (ppu->mode == 7)
-        ppu_calculateMode7Starts(ppu, line);
+        ppu_calculateMode7Starts(ppu, sl);
       for (int x = 0; x < 256; x++)
-        ppu_handlePixel(ppu, x, line);
+        ppu_handlePixel(ppu, x, sl);
 
       uint8 *dst = ppu->renderBuffer + ((line - 1) * ppu->renderPitch);
       if (ppu->extraLeftRight != 0) {
@@ -729,8 +737,13 @@ void PpuSetMode7PerspectiveCorrection(Ppu *ppu, int low, int high) {
 void PpuSetExtraSideSpace(Ppu *ppu, int left, int right, int top, int bottom) {
   ppu->extraLeftCur = UintMin(left, ppu->extraLeftRight);
   ppu->extraRightCur = UintMin(right, ppu->extraLeftRight);
-  ppu->extraTopCur = UintMin(top, 16);
-  ppu->extraBottomCur = UintMin(bottom, 16);
+  // Vertical budget per side: extraTopBottom when tall is configured, else the legacy +16 bottom-only
+  // (the 224->240 extend_y mode). The buffer height (g_snes_height) is allocated for exactly this budget,
+  // so the clamp here must match it or the render overruns the texture.
+  int topBudget = ppu->extraTopBottom;
+  int botBudget = topBudget > 0 ? topBudget : ((ppu->renderFlags & kPpuRenderFlags_Height240) ? 16 : 0);
+  ppu->extraTopCur = UintMin(top, topBudget);
+  ppu->extraBottomCur = UintMin(bottom, botBudget);
 }
 
 static FORCEINLINE float FloatInterpolate(float x, float xmin, float xmax, float ymin, float ymax) {
@@ -754,7 +767,8 @@ static void PpuDrawMode7Upsampled(Ppu *ppu, uint y) {
       m0v[i] = 4096.0f / FloatInterpolate((int)y + kInterpolateOffsets[i], 0, 223, ppu->mode7PerspectiveLow, ppu->mode7PerspectiveHigh);
   }
   size_t pitch = ppu->renderPitch;
-  uint8 *render_buffer_ptr = &ppu->renderBuffer[(y - 1) * 4 * pitch];
+  // tall: shift down by the top budget so mode7 (world map / title) lands centered in the tall buffer (4x-scaled rows)
+  uint8 *render_buffer_ptr = &ppu->renderBuffer[(y - 1 + (int)ppu->extraTopBottom) * 4 * pitch];
   uint8 *dst_start = render_buffer_ptr + (ppu->extraLeftRight - ppu->extraLeftCur) * 16;
   size_t draw_width = 256 + ppu->extraLeftCur + ppu->extraRightCur;
   uint8 *dst_curline = dst_start;
@@ -879,7 +893,7 @@ static void PpuDrawBackgrounds(Ppu *ppu, int y, bool sub) {
 
 static NOINLINE void PpuDrawWholeLine(Ppu *ppu, uint y) {
   if (ppu->forcedBlank) {
-    uint8 *dst = &ppu->renderBuffer[(y - 1) * ppu->renderPitch];
+    uint8 *dst = &ppu->renderBuffer[(y - 1 + (int)ppu->extraTopBottom) * ppu->renderPitch];
     size_t n = sizeof(uint32) * (256 + ppu->extraLeftRight * 2);
     memset(dst, 0, n);
     return;
@@ -919,8 +933,8 @@ static NOINLINE void PpuDrawWholeLine(Ppu *ppu, uint y) {
   uint32 cw_clip_math = ((cwin.bits & kCwBitsMod[ppu->clipMode]) ^ kCwBitsMod[ppu->clipMode + 4]) |
                         ((cwin.bits & kCwBitsMod[ppu->preventMathMode]) ^ kCwBitsMod[ppu->preventMathMode + 4]) << 8;
 
-  uint32 *dst = (uint32*)&ppu->renderBuffer[(y - 1) * ppu->renderPitch], *dst_org = dst;
-  
+  uint32 *dst = (uint32*)&ppu->renderBuffer[(y - 1 + (int)ppu->extraTopBottom) * ppu->renderPitch], *dst_org = dst;
+
   dst += (ppu->extraLeftRight - ppu->extraLeftCur);
 
   uint32 windex = 0;
@@ -1057,7 +1071,7 @@ static void ppu_handlePixel(Ppu* ppu, int x, int y) {
       r2 = r; g2 = g; b2 = b;
     }
   }
-  int row = y - 1;
+  int row = y - 1 + (int)ppu->extraTopBottom;  // tall: shift the base image down by the top budget (0 when not tall)
   uint8 *pixelBuffer = (uint8*) &ppu->renderBuffer[row * ppu->renderPitch + (x + ppu->extraLeftRight) * 4];
   pixelBuffer[0] = ((b << 3) | (b >> 2)) * ppu->brightness / 15;
   pixelBuffer[1] = ((g << 3) | (g >> 2)) * ppu->brightness / 15;
@@ -1316,12 +1330,26 @@ static bool ppu_evaluateSprites(Ppu* ppu, int line) {
     int yy = ppu->oam[index] >> 8;
     if (yy == 0xf0)
       continue;  // this works for zelda because sprites are always 8 or 16.
-    // check if the sprite is on this line and get the sprite size
-    int row = (line - yy) & 0xff;
     int highOam = ppu->oam[0x100 + (index >> 4)] >> (index & 15);
     int spriteSize = spriteSizes[(highOam >> 1) & 1];
-    if (row >= spriteSize)
-      continue;
+    // check if the sprite is on this line and get the sprite size
+    int row;
+    if (ppu->extraTopBottom != 0) {
+      // Tall view spans >256 lines, more than the 8-bit OAM-Y can place. Reconstruct the game's 9-bit Y
+      // (high bit from oamHighY, synced from g_oam_y_high) and map the high range to negative — above the
+      // screen top — exactly like the stock 9-bit X does for the left edge. Each sprite is then evaluated
+      // on a single line (no 256px-apart duplicate) and can sit anywhere in the tall pan.
+      yy += ppu->oamHighY[index >> 1] ? 256 : 0;
+      if (yy >= 256 + (int)ppu->extraTopBottom)
+        yy -= 512;
+      row = line - yy;
+      if (row < 0 || row >= spriteSize)
+        continue;
+    } else {
+      row = (line - yy) & 0xff;
+      if (row >= spriteSize)
+        continue;
+    }
     // in y-range, get the x location, using the high bit as well
     int x = (ppu->oam[index] & 0xff) + (highOam & 1) * 256;
     x -= (x >= 256 + extra_left_right) * 512;

@@ -47,9 +47,28 @@ enum {
   kCheckDamageFromPlayer_Ne = 2,
 };
 
+// Tall screens: OAM Y is only 8-bit. When a tall view is configured (g_oam_tall_budget != 0) encode a
+// 9-bit screen-Y — low 8 bits in oam->y, the high bit in g_oam_y_high[slot] — so the PPU can place
+// sprites across the taller-than-256px pan (mirror of the stock 9-bit X). Outside the representable
+// range, hide (0xf0). Non-tall keeps the exact stock 8-bit clip (screen-Y in [-16, 239]).
+static inline void OamSetY(OamEnt *oam, uint16 y) {
+  if (g_oam_tall_budget) {
+    int16 ys = (int16)y;
+    int b = (int)g_oam_tall_budget;
+    if (ys >= b - 256 && ys < 256 + b) {
+      oam->y = (uint8)y;
+      g_oam_y_high[oam - oam_buf] = (y >> 8) & 1;
+    } else {
+      oam->y = 0xf0;
+    }
+  } else {
+    oam->y = (uint16)(y + 0x10) < 0x100 ? (uint8)y : 0xf0;
+  }
+}
+
 static inline void SetOamHelper0(OamEnt *oam, uint16 x, uint16 y, uint8 charnum, uint8 flags, uint8 big) {
   oam->x = x;
-  oam->y = (uint16)(y + 0x10) < 0x100 ? y : 0xf0;
+  OamSetY(oam, y);
   oam->charnum = charnum;
   oam->flags = flags;
   bytewise_extended_oam[oam - oam_buf] = big | (x >> 8 & 1);

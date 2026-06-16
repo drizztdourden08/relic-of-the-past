@@ -95,7 +95,7 @@ int WasmGetProgressFlags(void) {
 
 // ─── Viewport Info ───
 
-static uint8 g_viewport_buf[24];
+static uint8 g_viewport_buf[28];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetViewportInfo(void) {
@@ -105,7 +105,8 @@ int WasmGetViewportInfo(void) {
   PutU16(g_viewport_buf, 2, g_zenv.ppu->extraLeftRight);
   PutU16(g_viewport_buf, 4, g_zenv.ppu->extraLeftCur);
   PutU16(g_viewport_buf, 6, g_zenv.ppu->extraRightCur);
-  g_viewport_buf[8] = g_zenv.ppu->extraBottomCur;  // vertical extra stays small (<=16)
+  g_viewport_buf[8] = (uint8)g_zenv.ppu->extraBottomCur;  // vertical content rows below base (<=kPpuExtraTopBottom)
+  g_viewport_buf[11] = (uint8)g_zenv.ppu->extraTopCur;     // vertical content rows above base (tall); [11] was unused
 
   // locationModule: the player's physical location regardless of UI overlays.
   // The menu / spotlight modules are transient overlays — the player hasn't
@@ -124,7 +125,9 @@ int WasmGetViewportInfo(void) {
   g_viewport_buf[10] = (locMod == MODULE_DUNGEON) ? (cur_palace_index_x2 == 0xff ? 1 : 2) : 0;
 
   uint16 w = (uint16)(g_config.extended_aspect_ratio * 2 + 256);
-  uint16 h = g_config.extend_y ? 240 : 224;
+  int topB = g_zenv.ppu->extraTopBottom;
+  int botB = topB > 0 ? topB : (g_config.extend_y ? 16 : 0);
+  uint16 h = (uint16)(224 + topB + botB);  // total render height (matches g_snes_height)
   PutU16(g_viewport_buf, 12, w);
   PutU16(g_viewport_buf, 14, h);
 
@@ -135,6 +138,10 @@ int WasmGetViewportInfo(void) {
   // Link's world position
   PutU16(g_viewport_buf, 20, link_x_coord);
   PutU16(g_viewport_buf, 22, link_y_coord);
+
+  // Vertical (tall) max budget per side, so JS can compute blackTop = budget - extraTopCur unambiguously
+  // (snesHeight alone can't tell a tall V=8 config from the legacy extend_y +16 bottom-only).
+  PutU16(g_viewport_buf, 24, (uint16)g_zenv.ppu->extraTopBottom);
   return (int)g_viewport_buf;
 }
 

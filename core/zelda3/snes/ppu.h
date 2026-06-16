@@ -68,7 +68,7 @@ struct Ppu {
   uint32_t renderPitch;
   uint8_t *renderBuffer;
   uint16_t extraLeftCur, extraRightCur, extraLeftRight;  // horizontal extra can exceed 255 (>3.19:1)
-  uint8_t extraBottomCur, extraTopCur;                   // vertical extra stays small (<=16)
+  uint16_t extraTopCur, extraBottomCur, extraTopBottom;  // vertical extra: Cur = content rows this frame, extraTopBottom = max budget per side (0 = no tall)
   float mode7PerspectiveLow, mode7PerspectiveHigh;
 
   // TMW / TSW etc
@@ -131,7 +131,10 @@ struct Ppu {
   int32_t m7startY;
 
   uint16_t oam[0x110];
-  
+  // Tall screens: OAM Y is 8-bit. This carries the per-sprite high Y bit (synced from the game's
+  // g_oam_y_high each frame) so ppu_evaluateSprites can place sprites across a >256px tall pan.
+  uint8_t oamHighY[128];
+
   // store 31 extra entries to remove the need for clamp
   uint8_t brightnessMult[32 + 31];
   uint8_t brightnessMultHalf[32 * 2];

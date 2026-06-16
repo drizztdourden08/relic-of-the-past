@@ -441,8 +441,17 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
           if (cw <= 0 || ch <= 0)
             return false;
           int extra = (h * (int)cw / (int)ch - 256) / 2;
-          extra = IntMin(extra, kPpuExtraLeftRight);  // extended_aspect_ratio is uint8; clamp before truncation
-          g_config.extended_aspect_ratio = extra > 0 ? extra : 0;
+          if (extra > 0) {
+            extra = IntMin(extra, kPpuExtraLeftRight);  // clamp before the uint16 store
+            g_config.extended_aspect_ratio = extra;
+          } else {
+            // Taller than the base pixel aspect → extend vertically instead (256-wide, symmetric
+            // top+bottom). render_h gives the pixel aspect cw:ch at width 256; (render_h-224)/2 per side.
+            g_config.extended_aspect_ratio = 0;
+            int render_h = 256 * (int)ch / (int)cw;
+            int vextra = (render_h - 224) / 2;
+            g_config.extended_aspect_ratio_vertical = IntMin(IntMax(vextra, 0), kPpuExtraTopBottom);
+          }
         }
       }
       if (g_config.extended_aspect_ratio && !nospr)

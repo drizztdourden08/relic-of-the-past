@@ -12,8 +12,12 @@ interface ViewportInfo {
   extraLeftCur: number;
   /** Actual valid map content pixels on right beyond base 256 */
   extraRightCur: number;
+  /** Actual valid map content pixels above base 224 (tall screens) */
+  extraTopCur: number;
   /** Actual valid map content pixels below base 224 */
   extraBottomCur: number;
+  /** Max vertical extra per side (tall budget); 0 = not tall */
+  extraTopBottom: number;
   /** Total render width */
   snesWidth: number;
   /** Total render height */
@@ -22,6 +26,8 @@ interface ViewportInfo {
   blackLeft: number;
   /** Pixels of black on the right edge (no map content) */
   blackRight: number;
+  /** Pixels of black on the top edge (no map content; tall screens) */
+  blackTop: number;
   /** Pixels of black on the bottom edge (no map content) */
   blackBottom: number;
   /** Whether the game is in active gameplay (dungeon or overworld) */
@@ -55,6 +61,7 @@ const wasmGetViewportInfo = (): ViewportInfo | null =>
     const extraLeftCur = u16(4);
     const extraRightCur = u16(6);
     const extraBottomCur = heap[ptr + 8];
+    const extraTopCur = heap[ptr + 11];
     const locationModule = heap[ptr + 9];
     const locationType = heap[ptr + 10]; // 0=overworld, 1=house/cave, 2=dungeon
     const snesWidth = u16(12);
@@ -63,19 +70,22 @@ const wasmGetViewportInfo = (): ViewportInfo | null =>
     const cameraY = u16(18);
     const linkX = u16(20);
     const linkY = u16(22);
+    const extraTopBottom = u16(24); // tall max budget per side (0 = not tall)
 
     // Black pixels = max extra - actual rendered extra
     const blackLeft = extraLeftRight - extraLeftCur;
     const blackRight = extraLeftRight - extraRightCur;
-    // Bottom: extend_y adds 16 rows (240-224), extraBottomCur = how many have content
-    const blackBottom = snesHeight === 240 ? (16 - extraBottomCur) : 0;
+    // Vertical: tall mode budgets extraTopBottom per side; else the legacy extend_y +16 bottom-only.
+    const blackTop = extraTopBottom - extraTopCur;
+    const bottomBudget = extraTopBottom > 0 ? extraTopBottom : (snesHeight === 240 ? 16 : 0);
+    const blackBottom = bottomBudget - extraBottomCur;
 
     // Active gameplay = location module 7 (dungeon) or 9 (overworld)
     const isGameplay = (locationModule === 7 || locationModule === 9);
 
     return {
-      mainModule, submodule, extraLeftRight, extraLeftCur, extraRightCur,
-      extraBottomCur, snesWidth, snesHeight, blackLeft, blackRight, blackBottom,
+      mainModule, submodule, extraLeftRight, extraLeftCur, extraRightCur, extraTopCur,
+      extraBottomCur, extraTopBottom, snesWidth, snesHeight, blackLeft, blackRight, blackTop, blackBottom,
       isGameplay, locationModule, locationType, cameraX, cameraY, linkX, linkY,
     };
   });

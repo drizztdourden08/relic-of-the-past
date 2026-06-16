@@ -187,16 +187,21 @@ static void ConfigurePpuSideSpace() {
       extra_left = BG2HOFS_copy2 - ow_scroll_vars0.xstart;
       extra_right = ow_scroll_vars0.xend - BG2HOFS_copy2;
       extra_bottom = ow_scroll_vars0.yend - BG2VOFS_copy2;
+      extra_top = IntMax(0, BG2VOFS_copy2 - ow_scroll_vars0.ystart);  // tall: rows above the camera (mirror of extra_bottom)
       // Only use the linear world tilemap when stationary in a fully-loaded area (submodule 0).
       // During screen-to-screen scroll transitions the camera spans two areas that a single-area
       // buffer can't represent — fall back to the stock streaming path, which scrolls correctly.
       if (submodule_index == 0) {
         BuildOverworldWorldTilemap();
       } else {
-        // The stock 2-screen tilemap wraps past 512px (128/side), so clamp the transition view to it;
-        // the edge-mirror fills the wider sides until the new area is loaded and the world path resumes.
+        // The stock 2-screen tilemap is 512px on BOTH axes, so clamp the transition view to 128/side
+        // each way (256+256 and 224+256 both fit in 512); the edge-mirror fills past the loaded area
+        // until the world path resumes at submodule 0. Clamp — don't zero — so the tall extent stays up
+        // during the scroll (a horizontal transition must keep the full vertical view, and vice versa).
         extra_left = IntMax(0, IntMin(extra_left, 128));
         extra_right = IntMax(0, IntMin(extra_right, 128));
+        extra_top = IntMax(0, IntMin(extra_top, 128));
+        extra_bottom = IntMax(0, IntMin(extra_bottom, 128));
       }
     }
   } else if (mod == 7) {
@@ -209,6 +214,9 @@ static void ConfigurePpuSideSpace() {
 
     int qy = quadrant_fullsize_y >> 1;
     extra_bottom = IntMax(room_bounds_y.v[qy + 2] - BG2VOFS_copy2, 0);
+    // tall: rows above the camera, bounded by the room's top edge (mirror of extra_bottom). The room's
+    // tilemap is fully resident, so the stock vertical fetch represents it without wrap.
+    extra_top = IntMax(BG2VOFS_copy2 - room_bounds_y.v[qy], 0);
   } else if (mod == 20 || mod == 0 || mod == 1) {
     extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
     extra_bottom = 16;
@@ -238,13 +246,25 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
       PpuSetMode7PerspectiveCorrection(g_zenv.ppu, 0, 0);
   }
 
-  if (g_zenv.ppu->extraLeftRight != 0 || render_flags & kPpuRenderFlags_Height240)
+  if (g_zenv.ppu->extraLeftRight != 0 || g_zenv.ppu->extraTopBottom != 0 || render_flags & kPpuRenderFlags_Height240)
     ConfigurePpuSideSpace();
 
-  int height = render_flags & kPpuRenderFlags_Height240 ? 240 : 224;
+  // Total physical buffer rows = base 224 + top budget + bottom budget. The top budget is the tall extra
+  // per side (extraTopBottom); the bottom budget matches it for tall, else the legacy +16 (extend_y). This
+  // MUST equal g_snes_height (emscripten_main.c) or ppu_runLine overruns the texture. V == 0 ⇒ 224 or 240.
+  int topBudget = g_zenv.ppu->extraTopBottom;
+  int botBudget = topBudget > 0 ? topBudget : (render_flags & kPpuRenderFlags_Height240 ? 16 : 0);
+  int height = 224 + topBudget + botBudget;
+
+  // Tall: hand this frame's per-sprite high Y bit to the PPU so ppu_evaluateSprites can place sprites
+  // across the whole pan (OAM Y is only 8-bit). g_oam_y_high was filled by the OAM helpers this frame.
+  if (topBudget) {
+    for (int s = 0; s < 128; s++)
+      g_zenv.ppu->oamHighY[s] = g_oam_y_high[s];
+  }
 
   for (int i = 0; i <= height; i++) {
-    if (i == 128 && irq_flag) {
+    if (i == 128 + topBudget && irq_flag) {  // file-select BG3 split fires at content line 128 (shifted down by the top budget)
       zelda_ppu_write(BG3HOFS, selectfile_var8);
       zelda_ppu_write(BG3HOFS, selectfile_var8 >> 8);
       zelda_ppu_write(BG3VOFS, 0);
@@ -293,9 +313,16 @@ static void ZeldaInitializationCode() {
   zelda_snes_dummy_write(NMITIMEN, 0x81);
 }
 
+// Tall-screen sprite support — see types.h. extraTopBottom is copied into g_oam_tall_budget at config
+// time (emscripten_main.c / main.c); g_oam_y_high carries the per-slot Y-high bit for the 9-bit OAM Y.
+uint16 g_oam_tall_budget;
+uint8 g_oam_y_high[128];
+
 static void ClearOamBuffer() {  // 80841e
-  for (int i = 0; i < 128; i++)
+  for (int i = 0; i < 128; i++) {
     oam_buf[i].y = 0xf0;
+    g_oam_y_high[i] = 0;  // reset each frame; OAM helpers set it for tall sprites this frame
+  }
 }
 
 static void ZeldaRunGameLoop() {

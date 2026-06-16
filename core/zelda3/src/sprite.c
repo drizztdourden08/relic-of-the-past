@@ -1509,8 +1509,8 @@ void SpriteDraw_SingleLarge(int k) {  // 86dc10
 void Sprite_PrepAndDrawSingleLargeNoPrep(int k, PrepOamCoordsRet *info) {  // 86dc13
   OamEnt *oam = GetOamCurPtr();
   oam->x = info->x;
-  if ((uint16)(info->y + 0x10) < 0x100) {
-    oam->y = info->y;
+  OamSetY(oam, info->y);
+  if (oam->y != 0xf0) {
     oam->charnum = kSprite_PrepAndDrawSingleLarge_Tab2[kSprite_PrepAndDrawSingleLarge_Tab1[sprite_type[k]] + sprite_graphics[k]];
     oam->flags = info->flags;
   }
@@ -1546,8 +1546,8 @@ void SpriteDraw_SingleSmall(int k) {  // 86dcef
     return;
   OamEnt *oam = GetOamCurPtr();
   oam->x = info.x;
-  if ((uint16)(info.y + 0x10) < 0x100) {
-    oam->y = info.y;
+  OamSetY(oam, info.y);
+  if (oam->y != 0xf0) {
     oam->charnum = kSprite_PrepAndDrawSingleLarge_Tab2[kSprite_PrepAndDrawSingleLarge_Tab1[sprite_type[k]] + sprite_graphics[k]];
     oam->flags = info.flags;
   }
@@ -1843,9 +1843,10 @@ bool Sprite_PrepOamCoordOrDoubleRet(int k, PrepOamCoordsRet *ret) {  // 86e41e
   ret->flags = sprite_oam_flags[k] ^ sprite_obj_prio[k];
   ret->r4 = 0;
   int xt = (enhanced_features0 & kFeatures0_ExtendScreen64) ? 0x40 : 0;
+  int yt = g_oam_tall_budget;  // tall: widen the vertical keep-alive window so sprites in the tall band aren't culled/killed (mirror of xt)
 
   if ((uint16)(x + 0x40 + xt) >= (0x170 + xt * 2) ||
-      (uint16)(y + 0x40) >= 0x170 && !(sprite_flags4[k] & 0x20)) {
+      (uint16)(y + 0x40 + yt) >= (0x170 + yt * 2) && !(sprite_flags4[k] & 0x20)) {
     sprite_pause[k]++;
     if (!(sprite_defl_bits[k] & 0x80))
       Sprite_KillSelf(k);
@@ -3779,9 +3780,10 @@ void Sprite_ProximityActivation() {  // 89c58f
 void Sprite_ActivateWhenProximal() {  // 89c5bb
   if (byte_7E069E[1]) {
     int xt = (enhanced_features0 & kFeatures0_ExtendScreen64) ? 0x40 : 0;
+    int yt = g_oam_tall_budget;  // tall: scan the taller left/right edge so sprites spawn across the pan
     uint16 x = BG2HOFS_copy2 + (sign8(byte_7E069E[1]) ? -0x10 - xt : 0x110 + xt);
-    uint16 y = BG2VOFS_copy2 - 0x30;
-    for (int i = 21; i >= 0; i--, y += 16)
+    uint16 y = BG2VOFS_copy2 - 0x30 - yt;
+    for (int i = 21 + (yt >> 3); i >= 0; i--, y += 16)
       Sprite_Overworld_ProximityMotivatedLoad(x, y);
   }
 }
@@ -3789,8 +3791,9 @@ void Sprite_ActivateWhenProximal() {  // 89c5bb
 void Sprite_ActivateWhenProximalBig() {  // 89c5fa
   if (byte_7E069E[0]) {
     int xt = (enhanced_features0 & kFeatures0_ExtendScreen64) ? 0x40 : 0;
+    int yt = g_oam_tall_budget;  // tall: spawn at the further-out top/bottom edge when scrolling vertically
     uint16 x = BG2HOFS_copy2 - 0x30 - xt;
-    uint16 y = BG2VOFS_copy2 + (sign8(byte_7E069E[0]) ? -0x10 : 0x110);
+    uint16 y = BG2VOFS_copy2 + (sign8(byte_7E069E[0]) ? -0x10 - yt : 0x110 + yt);
     for (int i = 21 + (xt >> 3); i >= 0; i--, x += 16)
       Sprite_Overworld_ProximityMotivatedLoad(x, y);
   }

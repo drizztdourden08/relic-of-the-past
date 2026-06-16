@@ -18,6 +18,12 @@ enum {
   // 4, so odd caps overran the buffer into the audio/DSP heap; fixed in ppu.c.) Wider frames also need a
   // larger stack — see core/wasm-build/build.mjs (-sSTACK_SIZE).
   kPpuExtraLeftRight = kEnableLargeScreen ? 384 : 0,
+  // Vertical counterpart of kPpuExtraLeftRight: max extra scanlines per side (top AND bottom) for tall
+  // (taller-than-4:3) screens. 128 ⇒ up to 224+256 = 480 render rows ⇒ down to ~0.62:1 display, covering
+  // tall desktop windows and near-portrait. The linear-world fetch clamps vertically just like horizontally
+  // (out-of-area rows ⇒ transparent ⇒ edge-mirror), and the overworld area carries up to 1024px of rows, so
+  // this is bounded by the loaded area, not the SNES tilemap. 0 (kEnableLargeScreen off) = no tall.
+  kPpuExtraTopBottom = kEnableLargeScreen ? 128 : 0,
 };
 
 typedef uint8_t uint8;
@@ -107,5 +113,12 @@ typedef struct MemBlk {
 MemBlk FindIndexInMemblk(MemBlk data, size_t i);
 
 void NORETURN Die(const char *error);
+
+// Tall-screen sprite support (our widescreen/tall feature). OAM Y is only 8-bit, so a view taller than
+// ~256px needs an extra Y-high bit per sprite. g_oam_tall_budget mirrors Ppu.extraTopBottom (0 = not
+// tall); g_oam_y_high holds the per-slot Y-high bit, set by the OAM helpers and synced to the PPU each
+// frame. Defined in zelda_rtl.c.
+extern uint16 g_oam_tall_budget;
+extern uint8 g_oam_y_high[128];
 
 #endif  // ZELDA3_TYPES_H_
