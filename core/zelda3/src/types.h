@@ -114,11 +114,13 @@ MemBlk FindIndexInMemblk(MemBlk data, size_t i);
 
 void NORETURN Die(const char *error);
 
-// Tall-screen sprite support (our widescreen/tall feature). OAM Y is only 8-bit, so a view taller than
-// ~256px needs an extra Y-high bit per sprite. g_oam_tall_budget mirrors Ppu.extraTopBottom (0 = not
-// tall); g_oam_y_high holds the per-slot Y-high bit, set by the OAM helpers and synced to the PPU each
-// frame. Defined in zelda_rtl.c.
+// Widescreen/tall feature budgets — the rendered extra per side, mirroring Ppu.extraTopBottom (vertical)
+// and Ppu.extraLeftRight (horizontal); 0 on the unused axis (a config is wide XOR tall). Used by the OAM
+// 9-bit-Y encoding and the viewport camera lock (kFeatures0_CameraLockToViewport). Defined in zelda_rtl.c.
 extern uint16 g_oam_tall_budget;
+extern uint16 g_oam_wide_budget;
+// OAM Y is only 8-bit, so a view taller than ~256px needs an extra Y-high bit per sprite; g_oam_y_high
+// holds the per-slot bit, set by the OAM helpers and synced to the PPU each frame.
 extern uint8 g_oam_y_high[128];
 
 #endif  // ZELDA3_TYPES_H_

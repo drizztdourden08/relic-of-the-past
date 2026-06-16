@@ -39,6 +39,7 @@ Ppu* ppu_init() {
   ppu->extraTopBottom = 0;  // set per-config in emscripten_main; 0 = no tall (4:3 unchanged)
   ppu->extraTopCur = 0;
   ppu->extraBottomCur = 0;
+  ppu->cameraLockShiftX = ppu->cameraLockShiftY = 0;
   // Allocate a linear world tilemap for BG1/BG2 (full 1024px area). Disabled until the overworld
   // populates it; other layers/scenes keep the stock wrapping SNES path.
   for (int i = 0; i < 4; i++) {
@@ -315,6 +316,9 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
     &ppu->vram[sc_offs + (bglayer->tilemapWider ? 0x400 : 0) & 0x7fff]
   };
   int tileadr = ppu->bgLayer[layer].tileAdr, pixel;
+  // Camera lock: shift the sampled coordinate itself (not worldOff) so the tile INDEX and the in-tile
+  // row (y & 7) stay consistent — shifting worldOffY by a non-multiple-of-8 desyncs them ("rolling tiles").
+  if (bglayer->useWorld) y -= ppu->cameraLockShiftY;
   int tileadr1 = tileadr + 7 - (y & 0x7), tileadr0 = tileadr + (y & 0x7);
   // Linear-world path: read a contiguous worldW x worldH tilemap with clamping (out-of-area ->
   // transparent) instead of the wrapping 2-screen SNES layout, so the view can exceed 512px.
@@ -326,6 +330,7 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
     if (win.bits & (1 << windex))
       continue;  // layer is disabled for this window part
     uint x = win.edges[windex] + bglayer->hScroll;
+    if (useWorld) x -= ppu->cameraLockShiftX;  // camera lock: shift sample coord (see the vertical note above)
     uint w = win.edges[windex + 1] - win.edges[windex];
     PpuZbufType *dstz = ppu->bgBuffers[sub].data + win.edges[windex] + kPpuExtraLeftRight;
     const uint16 *tp, *tp_last, *tp_next;
@@ -1342,6 +1347,7 @@ static bool ppu_evaluateSprites(Ppu* ppu, int line) {
       yy += ppu->oamHighY[index >> 1] ? 256 : 0;
       if (yy >= 256 + (int)ppu->extraTopBottom)
         yy -= 512;
+      yy += ppu->cameraLockShiftY;  // camera-lock: shift sprites to match the clamped overworld view
       row = line - yy;
       if (row < 0 || row >= spriteSize)
         continue;
@@ -1353,6 +1359,7 @@ static bool ppu_evaluateSprites(Ppu* ppu, int line) {
     // in y-range, get the x location, using the high bit as well
     int x = (ppu->oam[index] & 0xff) + (highOam & 1) * 256;
     x -= (x >= 256 + extra_left_right) * 512;
+    x += ppu->cameraLockShiftX;  // camera-lock: shift sprites to match the clamped overworld view
     // if in x-range
     if (x <= -(spriteSize + extra_left_right))
       continue;

@@ -173,6 +173,7 @@ static void ConfigurePpuSideSpace() {
   // Let PPU impl know about the maximum allowed extra space on the sides and bottom
   int extra_right = 0, extra_left = 0, extra_bottom = 0, extra_top = 0;
   g_zenv.ppu->bgLayer[1].useWorld = false;  // re-enabled per-frame only for outdoor areas (below)
+  g_zenv.ppu->cameraLockShiftX = g_zenv.ppu->cameraLockShiftY = 0;  // set only by the stationary overworld lock branch
 //  printf("main %d, sub %d  (%d, %d, %d)\n", main_module_index, submodule_index, BG2HOFS_copy2, room_bounds_x.v[2 | (quadrant_fullsize_x >> 1)], quadrant_fullsize_x >> 1);
   int mod = main_module_index;
   if (mod == 14)
@@ -192,6 +193,29 @@ static void ConfigurePpuSideSpace() {
       // During screen-to-screen scroll transitions the camera spans two areas that a single-area
       // buffer can't represent — fall back to the stock streaming path, which scrolls correctly.
       if (submodule_index == 0) {
+        if (enhanced_features0 & kFeatures0_CameraLockToViewport) {
+          // Render-level camera lock: clamp the RENDERED view to the area so its edges rest on the
+          // boundary (no out-of-area black), then shift the world fetch (below) + sprites (ppu eval) by
+          // the same delta. The game camera (BG2VOFS) and the overworld scroll/transition logic are
+          // untouched — this is purely visual. Per side: clamp the inset to half the area span so a
+          // small area just centers instead of inverting.
+          int v = IntMin((int)g_oam_tall_budget, ((int)ow_scroll_vars0.yend - (int)ow_scroll_vars0.ystart) / 2);
+          int h = IntMin((int)g_oam_wide_budget, ((int)ow_scroll_vars0.xend - (int)ow_scroll_vars0.xstart) / 2);
+          if (v > 0) {
+            int clampedV = IntMax((int)BG2VOFS_copy2, (int)ow_scroll_vars0.ystart + v);
+            clampedV = IntMin(clampedV, (int)ow_scroll_vars0.yend - v);
+            g_zenv.ppu->cameraLockShiftY = (int)BG2VOFS_copy2 - clampedV;
+            extra_top = clampedV - (int)ow_scroll_vars0.ystart;
+            extra_bottom = (int)ow_scroll_vars0.yend - clampedV;
+          }
+          if (h > 0) {
+            int clampedH = IntMax((int)BG2HOFS_copy2, (int)ow_scroll_vars0.xstart + h);
+            clampedH = IntMin(clampedH, (int)ow_scroll_vars0.xend - h);
+            g_zenv.ppu->cameraLockShiftX = (int)BG2HOFS_copy2 - clampedH;
+            extra_left = clampedH - (int)ow_scroll_vars0.xstart;
+            extra_right = (int)ow_scroll_vars0.xend - clampedH;
+          }
+        }
         BuildOverworldWorldTilemap();
       } else {
         // The stock 2-screen tilemap is 512px on BOTH axes, so clamp the transition view to 128/side
@@ -316,6 +340,7 @@ static void ZeldaInitializationCode() {
 // Tall-screen sprite support — see types.h. extraTopBottom is copied into g_oam_tall_budget at config
 // time (emscripten_main.c / main.c); g_oam_y_high carries the per-slot Y-high bit for the 9-bit OAM Y.
 uint16 g_oam_tall_budget;
+uint16 g_oam_wide_budget;
 uint8 g_oam_y_high[128];
 
 static void ClearOamBuffer() {  // 80841e

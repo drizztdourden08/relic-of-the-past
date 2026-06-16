@@ -69,6 +69,10 @@ struct Ppu {
   uint8_t *renderBuffer;
   uint16_t extraLeftCur, extraRightCur, extraLeftRight;  // horizontal extra can exceed 255 (>3.19:1)
   uint16_t extraTopCur, extraBottomCur, extraTopBottom;  // vertical extra: Cur = content rows this frame, extraTopBottom = max budget per side (0 = no tall)
+  // Camera-lock-to-viewport (render-only): how far to shift the overworld BG view + sprites so the
+  // rendered view edge rests on the area boundary (no out-of-area black). Set per-frame by
+  // ConfigurePpuSideSpace; the game camera (BG2VOFS) is untouched. 0 = no shift (not locked / mid-area).
+  int32_t cameraLockShiftX, cameraLockShiftY;
   float mode7PerspectiveLow, mode7PerspectiveHigh;
 
   // TMW / TSW etc

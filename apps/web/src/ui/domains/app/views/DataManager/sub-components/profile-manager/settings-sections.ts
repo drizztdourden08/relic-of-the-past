@@ -17,6 +17,7 @@ const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label
     keys: [
       { key: 'aspectRatio', label: 'Aspect Ratio' },
       { key: 'extendY', label: 'Extend Y' },
+      { key: 'cameraLockToViewport', label: 'Lock Camera to View' },
       { key: 'unchangedSprites', label: 'Unchanged Sprites' },
       { key: 'noVisualFixes', label: 'No Visual Fixes' },
       { key: 'windowMode', label: 'Window Mode', format: (v) => String(v ?? 'default') },

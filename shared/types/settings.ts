@@ -34,6 +34,9 @@ interface GameSettings {
   extendY: boolean;
   unchangedSprites: boolean;
   noVisualFixes: boolean;
+  // Lock the overworld camera to the wide/tall view so its edges stop at the area boundary (no
+  // out-of-area black band); Link still walks to the screen edge. Off = original 224x256 camera.
+  cameraLockToViewport: boolean;
 
   // ─── Graphics ───
   windowScale: number; // 1-5 (legacy, unused in Electron)

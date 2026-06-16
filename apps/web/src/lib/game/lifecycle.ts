@@ -187,7 +187,13 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
       preRun: [(mod: EmscriptenModule) => {
         log.wasm(`Writing assets to virtual FS (${(assetData.byteLength / 1024).toFixed(0)} KB)`);
         mod.FS.writeFile('/zelda3_assets.dat', assetData);
-        mod.FS.writeFile('/zelda3.ini', configIni ?? DEFAULT_ZELDA3_INI);
+        // Dev/test aid: __relicDebug.forceAspect (set from RELIC_FORCE_ASPECT) swaps the W:H token on
+        // the ExtendedAspectRatio line, preserving its modifiers (camera_lock, extend_y, …). No-op normally.
+        const forceAspect = (window as unknown as { __relicDebug?: { forceAspect?: string | null } }).__relicDebug?.forceAspect;
+        const iniToWrite = forceAspect && configIni
+          ? configIni.replace(/^(ExtendedAspectRatio = [^\n]*?)\d+:\d+/m, `$1${forceAspect}`)
+          : (configIni ?? DEFAULT_ZELDA3_INI);
+        mod.FS.writeFile('/zelda3.ini', iniToWrite);
         try { mod.FS.mkdir('/saves'); } catch { /* may exist */ }
         if (sramData) {
           mod.FS.writeFile('/saves/sram.dat', sramData);

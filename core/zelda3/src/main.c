@@ -294,7 +294,8 @@ int main(int argc, char** argv) {
   g_zenv.ppu->extraLeftRight = UintMin(g_config.extended_aspect_ratio, kPpuExtraLeftRight);
   g_snes_width = (g_config.extended_aspect_ratio * 2 + 256);
   g_zenv.ppu->extraTopBottom = UintMin(g_config.extended_aspect_ratio_vertical, kPpuExtraTopBottom);
-  g_oam_tall_budget = g_zenv.ppu->extraTopBottom;  // sprite OAM 9-bit-Y gate (types.h)
+  g_oam_tall_budget = g_zenv.ppu->extraTopBottom;  // sprite OAM 9-bit-Y gate + camera lock (types.h)
+  g_oam_wide_budget = g_zenv.ppu->extraLeftRight;  // horizontal budget for the camera lock
   {
     int top_budget = g_zenv.ppu->extraTopBottom;
     int bot_budget = top_budget > 0 ? top_budget : (g_config.extend_y ? 16 : 0);

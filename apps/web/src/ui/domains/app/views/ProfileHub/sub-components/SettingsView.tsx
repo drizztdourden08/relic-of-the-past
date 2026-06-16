@@ -23,6 +23,7 @@ const SECTIONS: Section[] = [
         items: [
           { key: 'aspectRatio', label: 'Aspect Ratio', description: 'Screen aspect ratio for the game content. Auto re-detects your screen on every start.', keywords: 'widescreen 4:3 16:9 16:10 custom auto detect ultrawide 21:9' },
           { key: 'extendY', label: 'Extend Y', description: 'Show 240 lines instead of 224, revealing extra vertical content at the top and bottom of the screen', keywords: 'height resolution vertical' },
+          { key: 'cameraLockToViewport', label: 'Lock Camera to View', description: 'Stop the camera at the map edge for the wide/tall view so no out-of-area black border shows; Link still walks to the screen edge. Turn off for the original camera (e.g. speedrun/glitch parity).', keywords: 'camera lock viewport edge black border bound speedrun glitch wide tall' },
         ],
       },
       {

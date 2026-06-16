@@ -22,6 +22,7 @@ const FEATURE_FLAGS = {
   switchLRLimit:          32768,
   dimFlashes:             65536,
   disableTelepathy:       131072,
+  cameraLockToViewport:   262144,
 } as const;
 
 // PPU render flag values — must match ppu.h
@@ -52,6 +53,7 @@ const buildFeatureFlags = (s: GameSettings): number => {
   if (s.cancelBirdTravel) flags |= FEATURE_FLAGS.cancelBirdTravel;
   if (s.dimFlashes) flags |= FEATURE_FLAGS.dimFlashes;
   if (s.disableTelepathy) flags |= FEATURE_FLAGS.disableTelepathy;
+  if (s.cameraLockToViewport) flags |= FEATURE_FLAGS.cameraLockToViewport;
   return flags;
 };
 

@@ -48,6 +48,11 @@ enum {
   kFeatures0_DimFlashes = 65536,
 
   kFeatures0_DisableTelepathy = 131072,
+
+  // Lock the overworld camera to the rendered (wide/tall) view so its edges stop at the area boundary
+  // instead of the original 224x256 view — removes the out-of-area black band; Link still walks to the
+  // screen edge. Behind a setting because it shifts the camera, which can affect glitch/speedrun timing.
+  kFeatures0_CameraLockToViewport = 262144,
 };
 
 #define enhanced_features0 (*(uint32*)(g_ram+0x64c))

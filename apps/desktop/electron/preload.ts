@@ -53,3 +53,11 @@ const api: IpcApi = {
 };
 
 contextBridge.exposeInMainWorld('api', api);
+
+// Dev/test aid (not part of the IpcApi contract): when RELIC_FORCE_ASPECT is set in the environment
+// (e.g. a Playwright launch passing env: { RELIC_FORCE_ASPECT: '16:9' }), the renderer overrides the
+// profile's aspect ratio at boot so the wide/tall camera paths can be exercised without changing it
+// in-app. Null in normal runs — has no effect.
+contextBridge.exposeInMainWorld('__relicDebug', {
+  forceAspect: process.env.RELIC_FORCE_ASPECT || null,
+});

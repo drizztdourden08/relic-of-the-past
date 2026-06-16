@@ -23,6 +23,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   extendY: true,
   unchangedSprites: false,
   noVisualFixes: false,
+  cameraLockToViewport: true,
 
   // Graphics
   windowScale: 2,
@@ -138,6 +139,7 @@ const serializeToIni = (settings: GameSettings, msuPath?: string, language?: str
   }
   if (settings.unchangedSprites) parts.push('unchanged_sprites');
   if (settings.noVisualFixes) parts.push('no_visual_fixes');
+  if (settings.cameraLockToViewport) parts.push('camera_lock');
   const aspectValue = parts.join(', ');
 
   return `[General]

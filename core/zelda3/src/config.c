@@ -432,6 +432,8 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
           nospr = true;
         else if (strcmp(s, "no_visual_fixes") == 0)
           novis = true;
+        else if (strcmp(s, "camera_lock") == 0)
+          g_config.features0 |= kFeatures0_CameraLockToViewport;  // stop the camera at the area edge for the wide/tall view
         else {
           // Custom "W:H" — wider ratios beyond the named presets. Same formula the presets use;
           // clamped to kPpuExtraLeftRight later in emscripten_main.c.
