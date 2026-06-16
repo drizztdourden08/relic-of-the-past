@@ -7,7 +7,7 @@
  */
 
 const BASE_WIDTH = 256;
-const MAX_EXTRA = 128; // kPpuExtraLeftRight — capped so the 256+2*extra view never exceeds the 512px BG tilemap (wider wraps to stale tiles in large overworld areas)
+const MAX_EXTRA = 152; // kPpuExtraLeftRight — the PPU linear-world fetch renders past the 512px SNES tilemap with no-wrap clamping (no edge garbage); 152 (~21:9 / 2.5:1) is the verified-safe ceiling before a separate latent OOB in the vendored widescreen path
 const MAX_RENDER_H = 240; // extendY height — the worst case, needs the most columns for a ratio
 
 const MIN_ASPECT = 4 / 3; // native; wider is allowed, taller is not

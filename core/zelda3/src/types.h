@@ -8,12 +8,14 @@
 // Build time config options
 enum {
   kEnableLargeScreen = 1,
-  // How much extra spacing to add on the sides. 128 columns ⇒ ~20:9 at 240-line height — covers
-  // every phone landscape ratio and standard ultrawide. Going higher (152 reaches 21:9; toward the
-  // uint8 ceiling of 255) trips a latent out-of-bounds in the upstream widescreen load/render path,
-  // so 152 is the verified-safe maximum and 128 the shipped value. The wider frames also need a
-  // larger stack — see core/wasm-build/build.mjs (-sSTACK_SIZE).
-  kPpuExtraLeftRight = kEnableLargeScreen ? 128 : 0,
+  // How much extra spacing to add on the sides. The PPU linear-world fetch (ppu.c PpuDrawBackground_4bpp
+  // + zelda_rtl.c BuildOverworldWorldTilemap) renders past the 512px SNES BG tilemap with no-wrap
+  // clamping, so the old 128 (512px) wrap limit is gone. 152 columns ⇒ ~21:9 / 2.5:1 at 224-line height,
+  // covering every phone landscape ratio and standard ultrawide. Going higher (toward the uint8 ceiling
+  // of 255) still trips a separate latent out-of-bounds in the vendored widescreen load/render path, so
+  // 152 is the verified-safe shipped maximum. The wider frames also need a larger stack — see
+  // core/wasm-build/build.mjs (-sSTACK_SIZE).
+  kPpuExtraLeftRight = kEnableLargeScreen ? 152 : 0,
 };
 
 typedef uint8_t uint8;

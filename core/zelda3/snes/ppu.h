@@ -21,10 +21,19 @@ typedef struct BgLayer {
   uint16_t tilemapAdr;
   // -- snapshot ends here
   uint16_t tileAdr;
+  // Linear "world" tilemap (not saved): when useWorld is set the BG fetch reads a contiguous
+  // worldW x worldH grid of tilemap entries with clamping (out-of-area -> transparent) instead of
+  // the wrapping 2-screen SNES layout. Lets the view extend past the 512px tilemap without garbage.
+  bool useWorld;
+  uint16_t worldW, worldH;       // tilemap size in 8x8 tiles
+  int32_t worldOffX, worldOffY;  // added to the local (x,y) to recover the full area-relative pixel (the PPU scroll is masked to 0x1ff, so it only carries the low 512px)
+  uint16_t *world;
 } BgLayer;
 
 enum {
   kPpuXPixels = 256 + kPpuExtraLeftRight * 2,
+  // Max linear-world tilemap dimension in 8x8 tiles: a full 2x2 overworld area is 1024px = 128 tiles.
+  kPpuWorldTiles = 128,
 };
 
 typedef uint16_t PpuZbufType;
@@ -58,7 +67,7 @@ struct Ppu {
   uint8_t renderFlags;
   uint32_t renderPitch;
   uint8_t *renderBuffer;
-  uint8_t extraLeftCur, extraRightCur, extraLeftRight, extraBottomCur;
+  uint8_t extraLeftCur, extraRightCur, extraLeftRight, extraBottomCur, extraTopCur;
   float mode7PerspectiveLow, mode7PerspectiveHigh;
 
   // TMW / TSW etc
@@ -147,6 +156,6 @@ void PpuBeginDrawing(Ppu *ppu, uint8_t *buffer, size_t pitch, uint32_t render_fl
 int PpuGetCurrentRenderScale(Ppu *ppu, uint32_t render_flags);
 
 void PpuSetMode7PerspectiveCorrection(Ppu *ppu, int low, int high);
-void PpuSetExtraSideSpace(Ppu *ppu, int left, int right, int bottom);
+void PpuSetExtraSideSpace(Ppu *ppu, int left, int right, int top, int bottom);
 
 #endif  // ZELDA3_SNES_PPU_H_

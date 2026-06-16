@@ -36,10 +36,20 @@ enum {
 Ppu* ppu_init() {
   Ppu* ppu = (Ppu * )malloc(sizeof(Ppu));
   ppu->extraLeftRight = kPpuExtraLeftRight;
+  ppu->extraTopCur = 0;
+  // Allocate a linear world tilemap for BG1/BG2 (full 1024px area). Disabled until the overworld
+  // populates it; other layers/scenes keep the stock wrapping SNES path.
+  for (int i = 0; i < 4; i++) {
+    ppu->bgLayer[i].useWorld = false;
+    ppu->bgLayer[i].worldW = ppu->bgLayer[i].worldH = 0;
+    ppu->bgLayer[i].world = (i < 2) ? (uint16*)calloc((size_t)kPpuWorldTiles * kPpuWorldTiles, sizeof(uint16)) : NULL;
+  }
   return ppu;
 }
 
 void ppu_free(Ppu* ppu) {
+  for (int i = 0; i < 4; i++)
+    free(ppu->bgLayer[i].world);
   free(ppu);
 }
 
@@ -50,6 +60,7 @@ void ppu_reset(Ppu* ppu) {
   ppu->extraLeftCur = 0;
   ppu->extraRightCur = 0;
   ppu->extraBottomCur = 0;
+  ppu->extraTopCur = 0;
   ppu->vramPointer = 0;
   ppu->vramIncrementOnHigh = false;
   ppu->vramIncrement = 1;
@@ -294,6 +305,11 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
   };
   int tileadr = ppu->bgLayer[layer].tileAdr, pixel;
   int tileadr1 = tileadr + 7 - (y & 0x7), tileadr0 = tileadr + (y & 0x7);
+  // Linear-world path: read a contiguous worldW x worldH tilemap with clamping (out-of-area ->
+  // transparent) instead of the wrapping 2-screen SNES layout, so the view can exceed 512px.
+  bool useWorld = bglayer->useWorld;
+  int worldTileY = useWorld ? (((int)y + bglayer->worldOffY) >> 3) : 0;
+  uint16 worldRowBuf[kPpuXPixels / 8 + 8];
   const uint16 *addr;
   for (size_t windex = 0; windex < win.nr; windex++) {
     if (win.bits & (1 << windex))
@@ -301,9 +317,24 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
     uint x = win.edges[windex] + bglayer->hScroll;
     uint w = win.edges[windex + 1] - win.edges[windex];
     PpuZbufType *dstz = ppu->bgBuffers[sub].data + win.edges[windex] + kPpuExtraLeftRight;
-    const uint16 *tp = tps[x >> 8 & 1] + ((x >> 3) & 0x1f);
-    const uint16 *tp_last = tps[x >> 8 & 1] + 31;
-    const uint16 *tp_next = tps[(x >> 8 & 1) ^ 1];
+    const uint16 *tp, *tp_last, *tp_next;
+    if (useWorld) {
+      // Gather this run's tiles into a contiguous buffer (clamped), so NEXT_TP just steps linearly.
+      int firstCol = ((int)x + bglayer->worldOffX) >> 3;
+      int ntiles = (int)(((x & 7) + w + 7) >> 3) + 1;
+      if (ntiles > kPpuXPixels / 8 + 7) ntiles = kPpuXPixels / 8 + 7;
+      bool validY = (worldTileY >= 0 && worldTileY < (int)bglayer->worldH);
+      const uint16 *wrow = validY ? bglayer->world + (size_t)worldTileY * bglayer->worldW : NULL;
+      for (int k = 0; k <= ntiles; k++) {
+        int c = firstCol + k;
+        worldRowBuf[k] = (validY && c >= 0 && c < (int)bglayer->worldW) ? wrow[c] : 0;
+      }
+      tp = worldRowBuf, tp_next = worldRowBuf, tp_last = worldRowBuf + (kPpuXPixels / 8 + 7);
+    } else {
+      tp = tps[x >> 8 & 1] + ((x >> 3) & 0x1f);
+      tp_last = tps[x >> 8 & 1] + 31;
+      tp_next = tps[(x >> 8 & 1) ^ 1];
+    }
 #define NEXT_TP() if (tp != tp_last) tp += 1; else tp = tp_next, tp_next = tp_last - 31, tp_last = tp + 31;
     // Handle clipped pixels on left side
     if (x & 7) {
@@ -692,9 +723,10 @@ void PpuSetMode7PerspectiveCorrection(Ppu *ppu, int low, int high) {
   ppu->mode7PerspectiveHigh = 1.0f / high;
 }
 
-void PpuSetExtraSideSpace(Ppu *ppu, int left, int right, int bottom) {
+void PpuSetExtraSideSpace(Ppu *ppu, int left, int right, int top, int bottom) {
   ppu->extraLeftCur = UintMin(left, ppu->extraLeftRight);
   ppu->extraRightCur = UintMin(right, ppu->extraLeftRight);
+  ppu->extraTopCur = UintMin(top, 16);
   ppu->extraBottomCur = UintMin(bottom, 16);
 }
 

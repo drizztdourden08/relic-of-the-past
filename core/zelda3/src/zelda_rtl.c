@@ -1,6 +1,7 @@
 #include "zelda_rtl.h"
 #include "variables.h"
 #include "misc.h"
+#include "overworld.h"
 #include "nmi.h"
 #include "poly.h"
 #include "attract.h"
@@ -137,9 +138,41 @@ static void SimpleHdma_DoLine(SimpleHdma *c) {
   c->rep_count--;
 }
 
+// Expand the resident overworld map16 (dung_bg2 — the full current area, 32x32 or 64x64 map16) into
+// the BG2 layer's linear "world" tilemap so the widescreen view can extend past the 512px SNES
+// tilemap into real map instead of wrapping. Out-of-area columns clamp to transparent (edge-mirror).
+static void BuildOverworldWorldTilemap() {
+  BgLayer *bg = &g_zenv.ppu->bgLayer[1];  // BG2 carries the overworld terrain (dung_bg2)
+  if (!bg->world)
+    return;
+  int originX = ow_scroll_vars0.xstart, originY = ow_scroll_vars0.ystart;
+  int w = (((int)ow_scroll_vars0.xend - originX) >> 3) + 32;  // area width in 8x8 tiles (+32 = the 256px view)
+  int h = (((int)ow_scroll_vars0.yend - originY) >> 3) + 32;
+  w = IntMax(0, IntMin(w, kPpuWorldTiles));
+  h = IntMax(0, IntMin(h, kPpuWorldTiles));
+  const uint16 *map8 = GetMap16toMap8Table();
+  for (int wy = 0; wy < h; wy++) {
+    int suby = wy & 1;
+    const uint16 *m16row = dung_bg2 + (wy >> 1) * 64;
+    uint16 *dst = bg->world + (size_t)wy * w;
+    for (int wx = 0; wx < w; wx++) {
+      const uint16 *s = map8 + (size_t)m16row[wx >> 1] * 4;  // 2x2 sub-tiles: TL=s[0] TR=s[1] BL=s[2] BR=s[3]
+      dst[wx] = s[suby * 2 + (wx & 1)];
+    }
+  }
+  bg->worldW = w, bg->worldH = h;
+  // The overworld BG scroll wraps at the 1024px (tilemapWider/Higher) tilemap, so the PPU hScroll/vScroll
+  // carry only the low 10 bits. worldOff re-adds the 1024-aligned high part minus the area origin, so the
+  // fetch's local (x,y) maps back to an absolute area tile.
+  bg->worldOffX = ((int)BG2HOFS_copy2 & ~0x3ff) - originX;
+  bg->worldOffY = ((int)BG2VOFS_copy2 & ~0x3ff) - originY;
+  bg->useWorld = true;
+}
+
 static void ConfigurePpuSideSpace() {
   // Let PPU impl know about the maximum allowed extra space on the sides and bottom
-  int extra_right = 0, extra_left = 0, extra_bottom = 0;
+  int extra_right = 0, extra_left = 0, extra_bottom = 0, extra_top = 0;
+  g_zenv.ppu->bgLayer[1].useWorld = false;  // re-enabled per-frame only for outdoor areas (below)
 //  printf("main %d, sub %d  (%d, %d, %d)\n", main_module_index, submodule_index, BG2HOFS_copy2, room_bounds_x.v[2 | (quadrant_fullsize_x >> 1)], quadrant_fullsize_x >> 1);
   int mod = main_module_index;
   if (mod == 14)
@@ -154,6 +187,7 @@ static void ConfigurePpuSideSpace() {
       extra_left = BG2HOFS_copy2 - ow_scroll_vars0.xstart;
       extra_right = ow_scroll_vars0.xend - BG2HOFS_copy2;
       extra_bottom = ow_scroll_vars0.yend - BG2VOFS_copy2;
+      BuildOverworldWorldTilemap();  // populate BG2's linear tilemap so the view can exceed 512px
     }
   } else if (mod == 7) {
     // indoors, except when the light cone is in use
@@ -169,7 +203,7 @@ static void ConfigurePpuSideSpace() {
     extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
     extra_bottom = 16;
   }
-  PpuSetExtraSideSpace(g_zenv.ppu, extra_left, extra_right, extra_bottom);
+  PpuSetExtraSideSpace(g_zenv.ppu, extra_left, extra_right, extra_top, extra_bottom);
 }
 
 void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {

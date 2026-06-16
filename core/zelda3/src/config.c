@@ -441,6 +441,7 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
           if (cw <= 0 || ch <= 0)
             return false;
           int extra = (h * (int)cw / (int)ch - 256) / 2;
+          extra = IntMin(extra, kPpuExtraLeftRight);  // extended_aspect_ratio is uint8; clamp before truncation
           g_config.extended_aspect_ratio = extra > 0 ? extra : 0;
         }
       }
