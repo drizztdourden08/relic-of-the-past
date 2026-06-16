@@ -187,7 +187,17 @@ static void ConfigurePpuSideSpace() {
       extra_left = BG2HOFS_copy2 - ow_scroll_vars0.xstart;
       extra_right = ow_scroll_vars0.xend - BG2HOFS_copy2;
       extra_bottom = ow_scroll_vars0.yend - BG2VOFS_copy2;
-      BuildOverworldWorldTilemap();  // populate BG2's linear tilemap so the view can exceed 512px
+      // Only use the linear world tilemap when stationary in a fully-loaded area (submodule 0).
+      // During screen-to-screen scroll transitions the camera spans two areas that a single-area
+      // buffer can't represent — fall back to the stock streaming path, which scrolls correctly.
+      if (submodule_index == 0) {
+        BuildOverworldWorldTilemap();
+      } else {
+        // The stock 2-screen tilemap wraps past 512px (128/side), so clamp the transition view to it;
+        // the edge-mirror fills the wider sides until the new area is loaded and the world path resumes.
+        extra_left = IntMax(0, IntMin(extra_left, 128));
+        extra_right = IntMax(0, IntMin(extra_right, 128));
+      }
     }
   } else if (mod == 7) {
     // indoors, except when the light cone is in use
