@@ -67,7 +67,8 @@ struct Ppu {
   uint8_t renderFlags;
   uint32_t renderPitch;
   uint8_t *renderBuffer;
-  uint8_t extraLeftCur, extraRightCur, extraLeftRight, extraBottomCur, extraTopCur;
+  uint16_t extraLeftCur, extraRightCur, extraLeftRight;  // horizontal extra can exceed 255 (>3.19:1)
+  uint8_t extraBottomCur, extraTopCur;                   // vertical extra stays small (<=16)
   float mode7PerspectiveLow, mode7PerspectiveHigh;
 
   // TMW / TSW etc

@@ -7,7 +7,7 @@
  */
 
 const BASE_WIDTH = 256;
-const MAX_EXTRA = 152; // kPpuExtraLeftRight — the PPU linear-world fetch renders past the 512px SNES tilemap with no-wrap clamping (no edge garbage); 152 (~21:9 / 2.5:1) is the verified-safe ceiling before a separate latent OOB in the vendored widescreen path
+const MAX_EXTRA = 384; // kPpuExtraLeftRight — 256+2*384 = 1024px = the full big-overworld-area width (~4.0:1 at 240h, ~4.3:1 at 224h), covering 32:9 and any real screen. The PPU linear-world fetch renders past the 512px SNES tilemap with no-wrap clamping; beyond the area the edge-mirror fills it.
 const MAX_RENDER_H = 240; // extendY height — the worst case, needs the most columns for a ratio
 
 const MIN_ASPECT = 4 / 3; // native; wider is allowed, taller is not

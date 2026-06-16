@@ -95,20 +95,17 @@ int WasmGetProgressFlags(void) {
 
 // ─── Viewport Info ───
 
-static uint8 g_viewport_buf[20];
+static uint8 g_viewport_buf[24];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetViewportInfo(void) {
   g_viewport_buf[0] = main_module_index;
   g_viewport_buf[1] = submodule_index;
-  g_viewport_buf[2] = g_zenv.ppu->extraLeftRight;
-  g_viewport_buf[3] = g_zenv.ppu->extraLeftCur;
-  g_viewport_buf[4] = g_zenv.ppu->extraRightCur;
-  g_viewport_buf[5] = g_zenv.ppu->extraBottomCur;
-  uint16 w = (uint16)(g_config.extended_aspect_ratio * 2 + 256);
-  uint16 h = g_config.extend_y ? 240 : 224;
-  PutU16(g_viewport_buf, 6, w);
-  PutU16(g_viewport_buf, 8, h);
+  // extra{LeftRight,Left,Right}Cur are uint16 (can exceed 255 for very wide ratios)
+  PutU16(g_viewport_buf, 2, g_zenv.ppu->extraLeftRight);
+  PutU16(g_viewport_buf, 4, g_zenv.ppu->extraLeftCur);
+  PutU16(g_viewport_buf, 6, g_zenv.ppu->extraRightCur);
+  g_viewport_buf[8] = g_zenv.ppu->extraBottomCur;  // vertical extra stays small (<=16)
 
   // locationModule: the player's physical location regardless of UI overlays.
   // The menu / spotlight modules are transient overlays — the player hasn't
@@ -118,22 +115,26 @@ int WasmGetViewportInfo(void) {
   uint8 mod = main_module_index;
   if ((mod == MODULE_MENU || mod == MODULE_SPOTLIGHT_CLOSE || mod == MODULE_SPOTLIGHT_OPEN) &&
       saved_module_for_menu != 0) {
-    g_viewport_buf[10] = saved_module_for_menu;
+    g_viewport_buf[9] = saved_module_for_menu;
   } else {
-    g_viewport_buf[10] = mod;
+    g_viewport_buf[9] = mod;
   }
-
   // locationType: 0=overworld/other, 1=house/cave, 2=dungeon
-  uint8 locMod = g_viewport_buf[10];
-  g_viewport_buf[11] = (locMod == MODULE_DUNGEON) ? (cur_palace_index_x2 == 0xff ? 1 : 2) : 0;
+  uint8 locMod = g_viewport_buf[9];
+  g_viewport_buf[10] = (locMod == MODULE_DUNGEON) ? (cur_palace_index_x2 == 0xff ? 1 : 2) : 0;
+
+  uint16 w = (uint16)(g_config.extended_aspect_ratio * 2 + 256);
+  uint16 h = g_config.extend_y ? 240 : 224;
+  PutU16(g_viewport_buf, 12, w);
+  PutU16(g_viewport_buf, 14, h);
 
   // Camera world position (BG2 scroll = top-left of viewport in world coords)
-  PutU16(g_viewport_buf, 12, BG2HOFS_copy2);
-  PutU16(g_viewport_buf, 14, BG2VOFS_copy2);
+  PutU16(g_viewport_buf, 16, BG2HOFS_copy2);
+  PutU16(g_viewport_buf, 18, BG2VOFS_copy2);
 
   // Link's world position
-  PutU16(g_viewport_buf, 16, link_x_coord);
-  PutU16(g_viewport_buf, 18, link_y_coord);
+  PutU16(g_viewport_buf, 20, link_x_coord);
+  PutU16(g_viewport_buf, 22, link_y_coord);
   return (int)g_viewport_buf;
 }
 

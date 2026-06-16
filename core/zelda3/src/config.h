@@ -59,7 +59,7 @@ typedef struct Config {
   uint8 audio_channels;
   uint16 audio_samples;
   bool autosave;
-  uint8 extended_aspect_ratio;
+  uint16 extended_aspect_ratio;  // extra columns per side; uint16 so it can exceed 255 (>3.19:1)
   bool extend_y;
   bool no_sprite_limits;
   bool display_perf_title;

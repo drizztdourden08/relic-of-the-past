@@ -47,20 +47,22 @@ interface ViewportInfo {
 const wasmGetViewportInfo = (): ViewportInfo | null =>
   callPtr('WasmGetViewportInfo', (mod, ptr) => {
     const heap = mod.HEAPU8;
+    const u16 = (off: number) => heap[ptr + off] | (heap[ptr + off + 1] << 8);
     const mainModule = heap[ptr];
     const submodule = heap[ptr + 1];
-    const extraLeftRight = heap[ptr + 2];
-    const extraLeftCur = heap[ptr + 3];
-    const extraRightCur = heap[ptr + 4];
-    const extraBottomCur = heap[ptr + 5];
-    const snesWidth = heap[ptr + 6] | (heap[ptr + 7] << 8);
-    const snesHeight = heap[ptr + 8] | (heap[ptr + 9] << 8);
-    const locationModule = heap[ptr + 10];
-    const locationType = heap[ptr + 11]; // 0=overworld, 1=house/cave, 2=dungeon
-    const cameraX = heap[ptr + 12] | (heap[ptr + 13] << 8);
-    const cameraY = heap[ptr + 14] | (heap[ptr + 15] << 8);
-    const linkX = heap[ptr + 16] | (heap[ptr + 17] << 8);
-    const linkY = heap[ptr + 18] | (heap[ptr + 19] << 8);
+    // extra{LeftRight,Left,Right}Cur are uint16 (can exceed 255 for very wide ratios)
+    const extraLeftRight = u16(2);
+    const extraLeftCur = u16(4);
+    const extraRightCur = u16(6);
+    const extraBottomCur = heap[ptr + 8];
+    const locationModule = heap[ptr + 9];
+    const locationType = heap[ptr + 10]; // 0=overworld, 1=house/cave, 2=dungeon
+    const snesWidth = u16(12);
+    const snesHeight = u16(14);
+    const cameraX = u16(16);
+    const cameraY = u16(18);
+    const linkX = u16(20);
+    const linkY = u16(22);
 
     // Black pixels = max extra - actual rendered extra
     const blackLeft = extraLeftRight - extraLeftCur;

@@ -164,8 +164,11 @@ void PpuBeginDrawing(Ppu *ppu, uint8_t *pixels, size_t pitch, uint32_t render_fl
 }
 
 static inline void ClearBackdrop(PpuPixelPrioBufs *buf) {
-  for (size_t i = 0; i != countof(buf->data); i += 4)
+  size_t i = 0, n = countof(buf->data);
+  for (; i + 4 <= n; i += 4)  // bulk: 4 entries per 64-bit store
     *(uint64*)&buf->data[i] = 0x0500050005000500;
+  for (; i < n; i++)          // tail when countof isn't a multiple of 4 (odd kPpuExtraLeftRight)
+    buf->data[i] = 0x0500;
 }
 
 
