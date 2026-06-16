@@ -82,9 +82,15 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package.json package-lock.json
-          git commit -m "release: $TAG"
+          # Re-releasing a version that's already bumped (e.g. recovering a failed
+          # run) leaves nothing to commit — that's fine, skip the commit and just tag.
+          if git diff --cached --quiet; then
+            echo "package.json already at $TAG — skipping the release commit."
+          else
+            git commit -m "release: $TAG"
+            git push origin HEAD:master
+          fi
           git tag "$TAG"
-          git push origin HEAD:master
           git push origin "$TAG"
 
   build:
