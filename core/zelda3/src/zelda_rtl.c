@@ -142,8 +142,6 @@ static void SimpleHdma_DoLine(SimpleHdma *c) {
 // when building a transition tilemap that spans two areas.
 extern const uint16 kOverworld_OffsetBaseX[64];
 extern const uint16 kOverworld_OffsetBaseY[64];
-extern const uint16 kOverworld_Size1[2];
-extern const uint16 kOverworld_Size2[2];
 extern const int16 kOverworld_Func6B_AreaDelta[4];
 
 // Snapshot of the source area's map16, kept while stationary so a scroll transition can build a world
@@ -203,21 +201,26 @@ static void BuildOverworldWorldTilemap() {
 // Build a world tilemap spanning the source area (from the snapshot) AND the destination area (live
 // dung_bg2, loaded partway through the transition), so the camera-locked wide/tall view pans smoothly
 // across the seam with real content on both sides — no 512px wrap, no black, at any aspect ratio.
-static void BuildTransitionWorldTilemap(int destXs, int destXe, int destYs, int destYe) {
+static void BuildTransitionWorldTilemap(int destArea) {
   BgLayer *bg = &g_zenv.ppu->bgLayer[1];
   if (!bg->world)
     return;
+  // Blit each area's ACTUAL map16 extent (32x32 small / 64x64 large = 64/128 map8 tiles per side), NOT the
+  // scroll-range + 256: the vertical scroll range (Size1) overshoots the real map16 by ~30px, and reading
+  // past the map16 produces garbage. Using the true size also makes the two areas tile exactly at the seam.
+  int srcTiles = kOverworldMapIsSmall[g_ow_src_area] ? 64 : 128;
+  int destTiles = kOverworldMapIsSmall[destArea] ? 64 : 128;
+  int destXs = kOverworld_OffsetBaseX[destArea], destYs = kOverworld_OffsetBaseY[destArea];
   int left = IntMin(g_ow_src_xs, destXs), top = IntMin(g_ow_src_ys, destYs);
-  int right = IntMax(g_ow_src_xe, destXe) + 256, bottom = IntMax(g_ow_src_ye, destYe) + 256;
+  int right = IntMax(g_ow_src_xs + srcTiles * 8, destXs + destTiles * 8);
+  int bottom = IntMax(g_ow_src_ys + srcTiles * 8, destYs + destTiles * 8);
   int w = IntMax(0, IntMin((right - left) >> 3, kPpuWorldTiles));
   int h = IntMax(0, IntMin((bottom - top) >> 3, kPpuWorldTiles));
   const uint16 *map8 = GetMap16toMap8Table();
   memset(bg->world, 0, (size_t)w * h * sizeof(uint16));  // gaps / out-of-area = transparent
-  BlitAreaMap16(bg->world, w, h, g_ow_src_map16,
-                (((int)g_ow_src_xe - g_ow_src_xs) >> 3) + 32, (((int)g_ow_src_ye - g_ow_src_ys) >> 3) + 32,
+  BlitAreaMap16(bg->world, w, h, g_ow_src_map16, srcTiles, srcTiles,
                 (g_ow_src_xs - left) >> 3, (g_ow_src_ys - top) >> 3, map8);
-  BlitAreaMap16(bg->world, w, h, dung_bg2,
-                ((destXe - destXs) >> 3) + 32, ((destYe - destYs) >> 3) + 32,
+  BlitAreaMap16(bg->world, w, h, dung_bg2, destTiles, destTiles,
                 (destXs - left) >> 3, (destYs - top) >> 3, map8);
   bg->worldW = w, bg->worldH = h;
   bg->worldOffX = ((int)BG2HOFS_copy2 & ~0x3ff) - left;
@@ -334,11 +337,8 @@ static void ConfigurePpuSideSpace() {
           // content on both sides of the seam (no 512px wrap, no black, no narrowing) at any aspect ratio.
           // dung_bg2 holds the destination from mid-transition; the source comes from the snapshot.
           int destArea = g_ow_src_area + kOverworld_Func6B_AreaDelta[overworld_screen_transition & 3];
-          if ((unsigned)destArea < 64) {
-            int big = overworld_area_is_big != 0;
-            int dxs = kOverworld_OffsetBaseX[destArea], dys = kOverworld_OffsetBaseY[destArea];
-            BuildTransitionWorldTilemap(dxs, dxs + (int)kOverworld_Size2[big], dys, dys + (int)kOverworld_Size1[big]);
-          }
+          if ((unsigned)destArea < 64)
+            BuildTransitionWorldTilemap(destArea);
         }
         if (!g_zenv.ppu->bgLayer[1].useWorld) {
           // Stock 2-screen path (lock off, or no valid neighbour area): clamp to the 512px tilemap.
