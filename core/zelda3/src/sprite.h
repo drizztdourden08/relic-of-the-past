@@ -66,8 +66,18 @@ static inline void OamSetY(OamEnt *oam, uint16 y) {
   }
 }
 
-static inline void SetOamHelper0(OamEnt *oam, uint16 x, uint16 y, uint8 charnum, uint8 flags, uint8 big) {
+// Wide screens: the stock OAM X is 9-bit (oam->x + the high bit in bytewise_extended_oam below), which
+// caps the view at 512px. When a wide view is configured (g_oam_wide_budget != 0) also carry the SIGNED X
+// bits ABOVE the 9th in g_oam_x_high[slot] = (int16)x >> 9, so the PPU can place the sprite at its true
+// absolute X. 0 for any sprite in [-512,511], so this only matters for the far side of a >512px view.
+static inline void OamSetX(OamEnt *oam, uint16 x) {
   oam->x = x;
+  if (g_oam_wide_budget)
+    g_oam_x_high[oam - oam_buf] = (uint8)((int16)x >> 9);
+}
+
+static inline void SetOamHelper0(OamEnt *oam, uint16 x, uint16 y, uint8 charnum, uint8 flags, uint8 big) {
+  OamSetX(oam, x);
   OamSetY(oam, y);
   oam->charnum = charnum;
   oam->flags = flags;
@@ -75,7 +85,7 @@ static inline void SetOamHelper0(OamEnt *oam, uint16 x, uint16 y, uint8 charnum,
 }
 
 static inline void SetOamHelper1(OamEnt *oam, uint16 x, uint8 y, uint8 charnum, uint8 flags, uint8 big) {
-  oam->x = x;
+  OamSetX(oam, x);
   oam->y = y;
   oam->charnum = charnum;
   oam->flags = flags;

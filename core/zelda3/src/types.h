@@ -122,5 +122,10 @@ extern uint16 g_oam_wide_budget;
 // OAM Y is only 8-bit, so a view taller than ~256px needs an extra Y-high bit per sprite; g_oam_y_high
 // holds the per-slot bit, set by the OAM helpers and synced to the PPU each frame.
 extern uint8 g_oam_y_high[128];
+// OAM X is only 9-bit (≤512px), so a view WIDER than 512px (extra > 128, ~21:9+) draws a sprite AND its
+// 512-wrapped alias = the "ghost". g_oam_x_high holds the SIGNED X bits ABOVE the stock 9 (i.e.
+// (int16)screenX >> 9) per slot; 0 for any sprite in [-512,511] (so most need nothing). Set by the OAM
+// helpers when wide, synced to the PPU each frame, letting the PPU place a sprite at its true absolute X.
+extern uint8 g_oam_x_high[128];
 
 #endif  // ZELDA3_TYPES_H_

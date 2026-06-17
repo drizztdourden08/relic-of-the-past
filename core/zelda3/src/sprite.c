@@ -3754,9 +3754,13 @@ void Sprite_ActivateAllProxima() {  // 89c55e
   uint8 bak1 = byte_7E069E[1];
   byte_7E069E[1] = 0xff;
 
-  int xt = 2 * (int)g_oam_wide_budget;  // wide: cover the wide extra band + worst-case camera-lock shift (|shift| <= budget); mirror of yt
+  int xt = 2 * (int)g_oam_wide_budget;  // wide: cover the wide extra band + worst-case camera-lock shift (|shift| <= budget)
+  // This sweeps the left-edge scan (offset -16-xt) rightward across the area. That scan offset cancels xt's
+  // contribution to the RIGHTWARD reach, so widening the view needs extra loop iterations (each = 16px) to
+  // reach the far side — without them the far side of the wide view never gets swept and its sprites don't
+  // spawn on entry. (xt>>3)+(xt>>4) extends the reach by ~2*budget, covering cam+256+2*budget (the locked edge).
   BG2HOFS_copy2 -= xt;
-  for (int i = 21 + (xt >> 3); i >= 0; i--) {
+  for (int i = 21 + (xt >> 3) + (xt >> 4); i >= 0; i--) {
     Sprite_ActivateWhenProximal();
     BG2HOFS_copy2 += 16;
   }
@@ -3764,38 +3768,75 @@ void Sprite_ActivateAllProxima() {  // 89c55e
   BG2HOFS_copy2 = bak0;
 }
 
+// Camera-lock shift per axis (see zelda_rtl.c) — the rendered view sits at the GAME camera minus this shift.
+extern int g_camera_lock_shift_x, g_camera_lock_shift_y;
+
+// Phase 2: spawn every sprite whose true world position lies in the rendered view rectangle (game camera ±
+// the camera-lock shift ± the wide/tall budget), regardless of distance to Link — so nothing in a wide /
+// locked multi-screen view is missing or pops in as the camera nears. Supersedes the old camera-anchored
+// edge + lock-band scans. Sprite_Overworld_ProximityMotivatedLoad bounds-checks the area and dedups via the
+// loaded bitmap, so out-of-area cells and already-resident sprites are cheap no-ops. The 16-slot cap still
+// applies (a very dense area can exceed it — Phase 3 lifts it); the sweep is row-major (top-left first).
+static void Sprite_ActivateWithinViewRect() {
+  int wb = (int)g_oam_wide_budget, tb = (int)g_oam_tall_budget;
+  int vx = (int)BG2HOFS_copy2 - g_camera_lock_shift_x;  // clamped (rendered) view origin = game cam - shift
+  int vy = (int)BG2VOFS_copy2 - g_camera_lock_shift_y;
+  int x1 = vx + 0x100 + wb + 0x20, y1 = vy + 0x100 + tb + 0x30;  // +margin for sprite extent
+  for (int y = vy - tb - 0x30; y <= y1; y += 16)
+    for (int x = vx - wb - 0x20; x <= x1; x += 16)
+      Sprite_Overworld_ProximityMotivatedLoad((uint16)x, (uint16)y);
+}
+
 void Sprite_ProximityActivation() {  // 89c58f
-  if (submodule_index != 0) {
-    Sprite_ActivateWhenProximal();
-    Sprite_ActivateWhenProximalBig();
-  } else {
-    if (!(spr_ranged_based_toggler & 1))
-      Sprite_ActivateWhenProximal();
-    if (spr_ranged_based_toggler & 1)
-      Sprite_ActivateWhenProximalBig();
-    spr_ranged_based_toggler++;
-  }
+  Sprite_ActivateWithinViewRect();
 }
 
 void Sprite_ActivateWhenProximal() {  // 89c5bb
+  int xt = 2 * (int)g_oam_wide_budget;  // wide: cover the wide extra band + worst-case camera-lock shift (|shift| <= budget); mirror of yt
+  int yt = 2 * (int)g_oam_tall_budget;  // tall: scan the taller left/right edge so sprites spawn across the pan
   if (byte_7E069E[1]) {
-    int xt = 2 * (int)g_oam_wide_budget;  // wide: cover the wide extra band + worst-case camera-lock shift (|shift| <= budget); mirror of yt
-    int yt = 2 * (int)g_oam_tall_budget;  // tall: scan the taller left/right edge so sprites spawn across the pan
+    // Moving horizontally: scan the single leading edge; the camera sweeps it across columns over frames.
     uint16 x = BG2HOFS_copy2 + (sign8(byte_7E069E[1]) ? -0x10 - xt : 0x110 + xt);
     uint16 y = BG2VOFS_copy2 - 0x30 - yt;
     for (int i = 21 + (yt >> 3); i >= 0; i--, y += 16)
       Sprite_Overworld_ProximityMotivatedLoad(x, y);
   }
+  if (g_camera_lock_shift_x) {
+    // Camera pinned at a horizontal boundary can't sweep its leading edge across the lock band (the strip the
+    // lock reveals on the shifted side), so a single-column scan would miss sprites a block over. Sweep every
+    // column of the band each frame (independent of camera motion, which is 0 / stale while pinned); already-
+    // loaded sprites are cheap no-ops so the cost lands only until they spawn.
+    int dir = g_camera_lock_shift_x < 0 ? 1 : -1;  // shift<0 => band to the right; shift>0 => to the left
+    uint16 base = BG2HOFS_copy2 + (dir > 0 ? 0x110 : -0x10);
+    for (int c = 0; c <= (xt >> 4); c++) {
+      uint16 x = base + dir * (c << 4);
+      uint16 y = BG2VOFS_copy2 - 0x30 - yt;
+      for (int i = 21 + (yt >> 3); i >= 0; i--, y += 16)
+        Sprite_Overworld_ProximityMotivatedLoad(x, y);
+    }
+  }
 }
 
 void Sprite_ActivateWhenProximalBig() {  // 89c5fa
+  int xt = 2 * (int)g_oam_wide_budget;  // wide: cover the wide extra band + worst-case camera-lock shift (|shift| <= budget); mirror of yt
+  int yt = 2 * (int)g_oam_tall_budget;  // tall: spawn at the further-out top/bottom edge when scrolling vertically
   if (byte_7E069E[0]) {
-    int xt = 2 * (int)g_oam_wide_budget;  // wide: cover the wide extra band + worst-case camera-lock shift (|shift| <= budget); mirror of yt
-    int yt = 2 * (int)g_oam_tall_budget;  // tall: spawn at the further-out top/bottom edge when scrolling vertically
+    // Moving vertically: scan the single leading edge; the camera sweeps it across rows over frames.
     uint16 x = BG2HOFS_copy2 - 0x30 - xt;
     uint16 y = BG2VOFS_copy2 + (sign8(byte_7E069E[0]) ? -0x10 - yt : 0x110 + yt);
     for (int i = 21 + (xt >> 3); i >= 0; i--, x += 16)
       Sprite_Overworld_ProximityMotivatedLoad(x, y);
+  }
+  if (g_camera_lock_shift_y) {
+    // Camera pinned at a vertical boundary (tall mode): sweep every row of the vertical lock band, same as above.
+    int dir = g_camera_lock_shift_y < 0 ? 1 : -1;  // shift<0 => band below; shift>0 => above
+    uint16 base = BG2VOFS_copy2 + (dir > 0 ? 0x110 : -0x10);
+    for (int c = 0; c <= (yt >> 4); c++) {
+      uint16 y = base + dir * (c << 4);
+      uint16 x = BG2HOFS_copy2 - 0x30 - xt;
+      for (int i = 21 + (xt >> 3); i >= 0; i--, x += 16)
+        Sprite_Overworld_ProximityMotivatedLoad(x, y);
+    }
   }
 }
 

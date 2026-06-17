@@ -1533,6 +1533,11 @@ void Module09_2A_00_ScrollToLand() {  // 82b532
     OverworldHandleMapScroll();
 }
 
+// Set by ConfigurePpuSideSpace: the camera-lock shift on each axis (non-zero while the lock holds the
+// rendered view at a boundary). The BG1 parallax below is driven by the GAME camera's scroll, which keeps
+// moving while the view is held — so suppress it then, otherwise the parallax drifts against the static scene.
+extern int g_camera_lock_shift_x, g_camera_lock_shift_y;
+
 void Overworld_OperateCameraScroll() {  // 82bb90
   int z = (allow_scroll_z && link_z_coord != 0xffff) ? link_z_coord : 0;
   uint16 y = link_y_coord - z + 12;
@@ -1552,7 +1557,7 @@ void Overworld_OperateCameraScroll() {  // 82bb90
     } while (--av);
     WORD(byte_7E069E[0]) = r4;
     uint8 oi = BYTE(overlay_index);
-    if (oi != 0x97 && oi != 0x9d && r4 != 0) {
+    if (oi != 0x97 && oi != 0x9d && r4 != 0 && g_camera_lock_shift_y == 0) {
       if (oi == 0xb5 || oi == 0xbe) {
         subp = (r4 & 3) << 14;
         r4 >>= 2;
@@ -1593,7 +1598,7 @@ void Overworld_OperateCameraScroll() {  // 82bb90
     } while (--ax);
     WORD(byte_7E069E[1]) = r4;
     uint8 oi = BYTE(overlay_index);
-    if (oi != 0x97 && oi != 0x9d && r4 != 0) {
+    if (oi != 0x97 && oi != 0x9d && r4 != 0 && g_camera_lock_shift_x == 0) {
       if (oi == 0x95 || oi == 0x9e) {
         subp = (r4 & 3) << 14;
         r4 >>= 2;

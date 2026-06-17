@@ -234,6 +234,12 @@ static void BuildTransitionWorldTilemap(int destArea) {
 static int g_lock_last_shift_x, g_lock_last_shift_y;
 static int g_lock_last_cam_x, g_lock_last_cam_y;
 
+// Set each frame to the camera-lock shift on each axis: non-zero while the lock holds the rendered view at a
+// boundary (the game camera is pinned but the view is shifted to the area edge). Consumers: the overworld
+// parallax (BG1) holds when non-zero so it doesn't drift against the static scene; the sprite proximity
+// loader scans the lock band (the shifted side) so sprites in the extended view spawn even while pinned.
+int g_camera_lock_shift_x, g_camera_lock_shift_y;
+
 static void ConfigurePpuSideSpace() {
   // Let PPU impl know about the maximum allowed extra space on the sides and bottom
   int extra_right = 0, extra_left = 0, extra_bottom = 0, extra_top = 0;
@@ -367,6 +373,8 @@ static void ConfigurePpuSideSpace() {
     extra_bottom = 16;
   }
   PpuSetExtraSideSpace(g_zenv.ppu, extra_left, extra_right, extra_top, extra_bottom);
+  g_camera_lock_shift_x = g_zenv.ppu->cameraLockShiftX;
+  g_camera_lock_shift_y = g_zenv.ppu->cameraLockShiftY;
 }
 
 void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
@@ -406,6 +414,12 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
   if (topBudget) {
     for (int s = 0; s < 128; s++)
       g_zenv.ppu->oamHighY[s] = g_oam_y_high[s];
+  }
+  // Wide: hand this frame's per-sprite high X (bits above the stock 9) to the PPU so ppu_evaluateSprites
+  // can place sprites at their true X across a >512px view (OAM X is only 9-bit). Filled by the OAM helpers.
+  if (g_oam_wide_budget) {
+    for (int s = 0; s < 128; s++)
+      g_zenv.ppu->oamHighX[s] = g_oam_x_high[s];
   }
 
   for (int i = 0; i <= height; i++) {
@@ -463,11 +477,13 @@ static void ZeldaInitializationCode() {
 uint16 g_oam_tall_budget;
 uint16 g_oam_wide_budget;
 uint8 g_oam_y_high[128];
+uint8 g_oam_x_high[128];  // see types.h — signed high X bits (above the stock 9) for wide views
 
 static void ClearOamBuffer() {  // 80841e
   for (int i = 0; i < 128; i++) {
     oam_buf[i].y = 0xf0;
     g_oam_y_high[i] = 0;  // reset each frame; OAM helpers set it for tall sprites this frame
+    g_oam_x_high[i] = 0;  // reset each frame; OAM helpers set it for wide sprites this frame
   }
 }
 

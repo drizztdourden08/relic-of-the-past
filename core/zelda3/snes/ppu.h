@@ -141,6 +141,10 @@ struct Ppu {
   // Tall screens: OAM Y is 8-bit. This carries the per-sprite high Y bit (synced from the game's
   // g_oam_y_high each frame) so ppu_evaluateSprites can place sprites across a >256px tall pan.
   uint8_t oamHighY[128];
+  // Wide screens: OAM X is 9-bit. This carries the SIGNED per-sprite X bits above the stock 9 (synced from
+  // g_oam_x_high each frame) so ppu_evaluateSprites can place sprites at their true X across a >512px wide
+  // view with no 512 fold — otherwise a sprite and its ±512 alias both draw (the ghost).
+  uint8_t oamHighX[128];
 
   // store 31 extra entries to remove the need for clamp
   uint8_t brightnessMult[32 + 31];

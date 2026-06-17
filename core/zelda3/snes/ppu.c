@@ -1348,9 +1348,11 @@ static bool ppu_evaluateSprites(Ppu* ppu, int line) {
       // screen top — exactly like the stock 9-bit X does for the left edge. Each sprite is then evaluated
       // on a single line (no 256px-apart duplicate) and can sit anywhere in the tall pan.
       yy += ppu->oamHighY[index >> 1] ? 256 : 0;
+      // camera-lock: shift BEFORE the wrap (see the X axis below) so a sprite in the bottom lock band isn't
+      // folded above the screen and culled.
+      yy += ppu->cameraLockShiftY;
       if (yy >= 256 + (int)ppu->extraTopBottom)
         yy -= 512;
-      yy += ppu->cameraLockShiftY;  // camera-lock: shift sprites to match the clamped overworld view
       row = line - yy;
       if (row < 0 || row >= spriteSize)
         continue;
@@ -1360,9 +1362,18 @@ static bool ppu_evaluateSprites(Ppu* ppu, int line) {
         continue;
     }
     // in y-range, get the x location, using the high bit as well
-    int x = (ppu->oam[index] & 0xff) + (highOam & 1) * 256;
-    x -= (x >= 256 + extra_left_right) * 512;
-    x += ppu->cameraLockShiftX;  // camera-lock: shift sprites to match the clamped overworld view
+    int x = (ppu->oam[index] & 0xff) + (highOam & 1) * 256;   // stock 9-bit screen X (0..511)
+    if (extra_left_right != 0) {
+      // Wide view: place at the TRUE X. oamHighX carries the signed bits above the 9th, so a sprite sits
+      // anywhere across a >512px view with no ±512 fold (the fold would otherwise draw a 512px-away ghost).
+      x += (int)(int8_t)ppu->oamHighX[index >> 1] * 512;
+      x += ppu->cameraLockShiftX;
+    } else {
+      // Stock path (4:3 / tall-only): the view is ≤256px so the 9-bit X + fold is exact and never ghosts.
+      // Camera-lock shift applies BEFORE the fold so a lock-band sprite isn't folded off-screen + culled.
+      x += ppu->cameraLockShiftX;
+      x -= (x >= 256 + extra_left_right) * 512;
+    }
     // if in x-range
     if (x <= -(spriteSize + extra_left_right))
       continue;
