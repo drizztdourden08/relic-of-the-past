@@ -189,10 +189,13 @@ static void ConfigurePpuSideSpace() {
       extra_right = ow_scroll_vars0.xend - BG2HOFS_copy2;
       extra_bottom = ow_scroll_vars0.yend - BG2VOFS_copy2;
       extra_top = IntMax(0, BG2VOFS_copy2 - ow_scroll_vars0.ystart);  // tall: rows above the camera (mirror of extra_bottom)
-      // Only use the linear world tilemap when stationary in a fully-loaded area (submodule 0).
-      // During screen-to-screen scroll transitions the camera spans two areas that a single-area
-      // buffer can't represent — fall back to the stock streaming path, which scrolls correctly.
-      if (submodule_index == 0) {
+      // Apply the lock + linear world tilemap whenever the overworld view is stationary in a fully-loaded
+      // area: submodule 0 (normal play) OR the inventory menu overlay (main_module 14), which can only be
+      // opened from submodule 0 and freezes the camera/area at that state — so the same lock keeps the
+      // overworld behind the menu aligned instead of snapping back to an unshifted view.
+      // During screen-to-screen scroll transitions the camera spans two areas that a single-area buffer
+      // can't represent — fall back to the stock streaming path, which scrolls correctly.
+      if (submodule_index == 0 || main_module_index == 14) {
         if (enhanced_features0 & kFeatures0_CameraLockToViewport) {
           // Render-level camera lock: clamp the RENDERED view to the area so its edges rest on the
           // boundary (no out-of-area black), then shift the world fetch (below) + sprites (ppu eval) by
@@ -218,10 +221,39 @@ static void ConfigurePpuSideSpace() {
         }
         BuildOverworldWorldTilemap();
       } else {
-        // The stock 2-screen tilemap is 512px on BOTH axes, so clamp the transition view to 128/side
-        // each way (256+256 and 224+256 both fit in 512); the edge-mirror fills past the loaded area
-        // until the world path resumes at submodule 0. Clamp — don't zero — so the tall extent stays up
-        // during the scroll (a horizontal transition must keep the full vertical view, and vice versa).
+        // Screen-to-screen scroll transition: the stock 2-screen tilemap (512px both axes) streams the
+        // neighbor area in, so we can't use the single-area world buffer. But the lock must NOT just drop —
+        // that's what made transitions jump and flash black bars. Keep the lock on the axis that ISN'T
+        // scrolling (its area bounds are stable and the camera stays within them, so the perpendicular
+        // extent holds steady); on the scrolling axis the camera spans two areas, so fill the view from the
+        // streamed neighbor (full budget) instead of collapsing to a black bar at the old area's edge.
+        if (enhanced_features0 & kFeatures0_CameraLockToViewport) {
+          int v = IntMin((int)g_oam_tall_budget, ((int)ow_scroll_vars0.yend - (int)ow_scroll_vars0.ystart) / 2);
+          int h = IntMin((int)g_oam_wide_budget, ((int)ow_scroll_vars0.xend - (int)ow_scroll_vars0.xstart) / 2);
+          bool yLock = v > 0 && (int)BG2VOFS_copy2 >= (int)ow_scroll_vars0.ystart && (int)BG2VOFS_copy2 <= (int)ow_scroll_vars0.yend;
+          bool xLock = h > 0 && (int)BG2HOFS_copy2 >= (int)ow_scroll_vars0.xstart && (int)BG2HOFS_copy2 <= (int)ow_scroll_vars0.xend;
+          if (yLock) {
+            int clampedV = IntMax((int)BG2VOFS_copy2, (int)ow_scroll_vars0.ystart + v);
+            clampedV = IntMin(clampedV, (int)ow_scroll_vars0.yend - v);
+            g_zenv.ppu->cameraLockShiftY = (int)BG2VOFS_copy2 - clampedV;
+            extra_top = clampedV - (int)ow_scroll_vars0.ystart;
+            extra_bottom = (int)ow_scroll_vars0.yend - clampedV;
+          } else {
+            extra_top = extra_bottom = (int)g_oam_tall_budget;  // scrolling vertically: fill from the streamed tilemap
+          }
+          if (xLock) {
+            int clampedH = IntMax((int)BG2HOFS_copy2, (int)ow_scroll_vars0.xstart + h);
+            clampedH = IntMin(clampedH, (int)ow_scroll_vars0.xend - h);
+            g_zenv.ppu->cameraLockShiftX = (int)BG2HOFS_copy2 - clampedH;
+            extra_left = clampedH - (int)ow_scroll_vars0.xstart;
+            extra_right = (int)ow_scroll_vars0.xend - clampedH;
+          } else {
+            extra_left = extra_right = (int)g_oam_wide_budget;  // scrolling horizontally: fill from the streamed tilemap
+          }
+        }
+        // The stock 2-screen tilemap is 512px on both axes; clamp each side to 128 so the fetch stays inside
+        // the loaded region (256+256 and 224+256 both fit in 512). Clamp — don't zero — so the perpendicular
+        // extent stays up during the scroll.
         extra_left = IntMax(0, IntMin(extra_left, 128));
         extra_right = IntMax(0, IntMin(extra_right, 128));
         extra_top = IntMax(0, IntMin(extra_top, 128));

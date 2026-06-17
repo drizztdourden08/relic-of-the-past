@@ -308,6 +308,12 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
   IS_SCREEN_WINDOWED(ppu, sub, layer) ? PpuWindows_Calc(&win, ppu, layer) : PpuWindows_Clear(&win, ppu, layer);
   BgLayer *bglayer = &ppu->bgLayer[layer];
   y += bglayer->vScroll;
+  // Camera lock (BG2 = overworld terrain only): shift the sampled coordinate itself (not worldOff) so the
+  // tile INDEX and the in-tile row (y & 7) stay consistent — shifting worldOffY by a non-multiple-of-8
+  // desyncs them ("rolling tiles"). Applied BEFORE the tilemap address so it also drives the stock 2-screen
+  // fetch, which keeps the non-scrolling axis locked during scroll transitions (useWorld is off then). 0 =
+  // no lock. Only BG2 (the overworld layer) is shifted; BG1 and the BG3 HUD (2bpp) are never touched.
+  if (layer == 1) y -= ppu->cameraLockShiftY;
   int sc_offs = bglayer->tilemapAdr + (((y >> 3) & 0x1f) << 5);
   if ((y & 0x100) && bglayer->tilemapHigher)
     sc_offs += bglayer->tilemapWider ? 0x800 : 0x400;
@@ -316,9 +322,6 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
     &ppu->vram[sc_offs + (bglayer->tilemapWider ? 0x400 : 0) & 0x7fff]
   };
   int tileadr = ppu->bgLayer[layer].tileAdr, pixel;
-  // Camera lock: shift the sampled coordinate itself (not worldOff) so the tile INDEX and the in-tile
-  // row (y & 7) stay consistent — shifting worldOffY by a non-multiple-of-8 desyncs them ("rolling tiles").
-  if (bglayer->useWorld) y -= ppu->cameraLockShiftY;
   int tileadr1 = tileadr + 7 - (y & 0x7), tileadr0 = tileadr + (y & 0x7);
   // Linear-world path: read a contiguous worldW x worldH tilemap with clamping (out-of-area ->
   // transparent) instead of the wrapping 2-screen SNES layout, so the view can exceed 512px.
@@ -330,7 +333,7 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
     if (win.bits & (1 << windex))
       continue;  // layer is disabled for this window part
     uint x = win.edges[windex] + bglayer->hScroll;
-    if (useWorld) x -= ppu->cameraLockShiftX;  // camera lock: shift sample coord (see the vertical note above)
+    if (layer == 1) x -= ppu->cameraLockShiftX;  // camera lock (BG2 only): shift sample coord — world + stock paths
     uint w = win.edges[windex + 1] - win.edges[windex];
     PpuZbufType *dstz = ppu->bgBuffers[sub].data + win.edges[windex] + kPpuExtraLeftRight;
     const uint16 *tp, *tp_last, *tp_next;
