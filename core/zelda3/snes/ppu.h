@@ -32,8 +32,11 @@ typedef struct BgLayer {
 
 enum {
   kPpuXPixels = 256 + kPpuExtraLeftRight * 2,
-  // Max linear-world tilemap dimension in 8x8 tiles: a full 2x2 overworld area is 1024px = 128 tiles.
-  kPpuWorldTiles = 128,
+  // Max linear-world tilemap dimension in 8x8 tiles. A single 2x2 overworld area is 1024px = 128 tiles;
+  // during a scroll transition we build a buffer spanning BOTH the source and destination areas (so the
+  // wide/tall view pans across the seam without the wrapping stock tilemap), needing up to two large areas
+  // = 2048px = 256 tiles, plus margin.
+  kPpuWorldTiles = 320,
 };
 
 typedef uint16_t PpuZbufType;
