@@ -1508,13 +1508,15 @@ void SpriteDraw_SingleLarge(int k) {  // 86dc10
 
 void Sprite_PrepAndDrawSingleLargeNoPrep(int k, PrepOamCoordsRet *info) {  // 86dc13
   OamEnt *oam = GetOamCurPtr();
-  oam->x = info->x;
+  OamSetX(oam, info->x);
   OamSetY(oam, info->y);
   if (oam->y != 0xf0) {
     oam->charnum = kSprite_PrepAndDrawSingleLarge_Tab2[kSprite_PrepAndDrawSingleLarge_Tab1[sprite_type[k]] + sprite_graphics[k]];
     oam->flags = info->flags;
   }
-  bytewise_extended_oam[oam - oam_buf] = 2 | ((info->x >= 256) ? 1: 0);
+  // bit 8 of the 9-bit OAM X. Stock used (x >= 256), which only equals bit 8 for x < 512; in a wide view a
+  // sprite at screen-x >= 512 needs the true (x>>8)&1 or its body splits 256px from its shadow (SetOamHelper1).
+  bytewise_extended_oam[oam - oam_buf] = 2 | ((info->x >> 8) & 1);
   if (sprite_flags3[k] & 0x10)
     SpriteDraw_Shadow(k, info);
 }
@@ -1545,13 +1547,13 @@ void SpriteDraw_SingleSmall(int k) {  // 86dcef
   if (Sprite_PrepOamCoordOrDoubleRet(k, &info))
     return;
   OamEnt *oam = GetOamCurPtr();
-  oam->x = info.x;
+  OamSetX(oam, info.x);
   OamSetY(oam, info.y);
   if (oam->y != 0xf0) {
     oam->charnum = kSprite_PrepAndDrawSingleLarge_Tab2[kSprite_PrepAndDrawSingleLarge_Tab1[sprite_type[k]] + sprite_graphics[k]];
     oam->flags = info.flags;
   }
-  bytewise_extended_oam[oam - oam_buf] = 0 | (info.x >= 256);
+  bytewise_extended_oam[oam - oam_buf] = (info.x >> 8) & 1;  // true bit 8 (stock used x>=256; wrong for wide x>=512)
   if (sprite_flags3[k] & 0x10)
     SpriteDraw_Shadow_custom(k, &info, 2);
 }
@@ -3055,7 +3057,7 @@ void SpriteDeath_DrawPoof(int k) {  // 86fb2a
     if (kPerishOverlay_Char[i]) {
       oam->charnum = kPerishOverlay_Char[i];
       oam->y = HIBYTE(dungmap_var7) - r12 + kPerishOverlay_Y[i];
-      oam->x = BYTE(dungmap_var7) - r12 + kPerishOverlay_X[i];
+      OamSetX(oam, BYTE(dungmap_var7) - r12 + kPerishOverlay_X[i]);
       oam->flags = (info.flags & 0x30) | kPerishOverlay_Flags[i];
     }
   } while (oam++, i--, --n >= 0);
@@ -3341,7 +3343,7 @@ void Garnish13_PyramidDebris(int k) {  // 89b216
     garnish_type[k] = 0;
     return;
   }
-  oam->x = t;
+  OamSetX(oam, t);
   if ((t = garnish_y_lo[k] - BG2VOFS_copy2) >= 240) {
     garnish_type[k] = 0;
     return;
@@ -4325,7 +4327,7 @@ int Sprite_SpawnDynamicallyEx(int k, uint8 what, SpriteSpawnInfo *info, int j) {
 void SpriteFall_Draw(int k, PrepOamCoordsRet *info) {  // 9dffc5
   static const uint8 kSpriteFall_Char[8] = {0x83, 0x83, 0x83, 0x80, 0x80, 0x80, 0xb7, 0xb7};
   OamEnt *oam = GetOamCurPtr();
-  oam->x = info->x + 4;
+  OamSetX(oam, info->x + 4);
   oam->y = info->y + 4;
   oam->charnum = kSpriteFall_Char[sprite_delay_main[k] >> 2];
   oam->flags = info->flags & 0x30 | 0x04;
