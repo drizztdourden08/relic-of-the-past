@@ -60,6 +60,10 @@ enum {
   kPpuRenderFlags_NoSprites = 32,
   // Force BG1 + backdrop pixels to black (for indoor scenes)
   kPpuRenderFlags_BlackBG2 = 64,
+  // Render the wide overworld view's no-data-gap sentinel (kPpuWorldGapPixel: backdrop layer 5 with a
+  // non-zero colour index) as black, while leaving the real green backdrop (cidx 0, which shows through
+  // transparent terrain such as tree bases and doorways) untouched. Set per-frame during scroll transitions.
+  kPpuRenderFlags_BlackBackdrop = 128,
 };
 
 

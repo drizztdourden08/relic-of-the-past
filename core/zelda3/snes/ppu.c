@@ -174,6 +174,12 @@ static inline void ClearBackdrop(PpuPixelPrioBufs *buf) {
     buf->data[i] = 0x0500;
 }
 
+// Sentinel painted into the wide overworld view's no-data gaps: same low priority as the backdrop (0x0500),
+// so it overwrites only the backdrop, but with a non-zero colour index so it stays distinguishable from it.
+// The compositor renders this as black (kPpuRenderFlags_BlackBackdrop) while leaving the real, intentionally
+// green backdrop — which shows through transparent terrain like tree bases and doorways — untouched.
+#define kPpuWorldGapPixel 0x0501
+
 
 void ppu_runLine(Ppu *ppu, int line) {
   if(line != 0) {
@@ -363,7 +369,7 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
       NEXT_TP();
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
-      uint32 bits = READ_BITS(ta, tile & 0x3ff);
+      uint32 bits = (tile || !useWorld) ? READ_BITS(ta, tile & 0x3ff) : 0;  // world gap (entry 0) => backdrop, not char 0
       if (bits) {
         z += ((tile & 0x1c00) >> kPaletteShift);
         if (tile & 0x4000) {
@@ -374,6 +380,8 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
           do DO_PIXEL_HFLIP(0); while (bits <<= 1, dstz++, --curw);
         }
       } else {
+        if (useWorld && !tile)  // no-data gap: paint the backdrop run black via the sentinel
+          for (int q = 0; q < curw; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
         dstz += curw;
       }
     }
@@ -383,7 +391,7 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
       NEXT_TP();
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
-      uint32 bits = READ_BITS(ta, tile & 0x3ff);
+      uint32 bits = (tile || !useWorld) ? READ_BITS(ta, tile & 0x3ff) : 0;  // world gap (entry 0) => backdrop, not char 0
       if (bits) {
         z += ((tile & 0x1c00) >> kPaletteShift);
         if (tile & 0x4000) {
@@ -393,6 +401,8 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
           DO_PIXEL_HFLIP(0); DO_PIXEL_HFLIP(1); DO_PIXEL_HFLIP(2); DO_PIXEL_HFLIP(3);
           DO_PIXEL_HFLIP(4); DO_PIXEL_HFLIP(5); DO_PIXEL_HFLIP(6); DO_PIXEL_HFLIP(7);
         }
+      } else if (useWorld && !tile) {  // no-data gap: paint the backdrop run black via the sentinel
+        for (int q = 0; q < 8; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
       }
       dstz += 8, w -= 8;
     }
@@ -401,7 +411,7 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
       uint32 tile = *tp;
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
-      uint32 bits = READ_BITS(ta, tile & 0x3ff);
+      uint32 bits = (tile || !useWorld) ? READ_BITS(ta, tile & 0x3ff) : 0;  // world gap (entry 0) => backdrop, not char 0
       if (bits) {
         z += ((tile & 0x1c00) >> kPaletteShift);
         if (tile & 0x4000) {
@@ -409,6 +419,8 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
         } else {
           do DO_PIXEL_HFLIP(0); while (bits <<= 1, dstz++, --w);
         }
+      } else if (useWorld && !tile) {  // no-data gap: paint the backdrop run black via the sentinel
+        for (int q = 0; q < w; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
       }
     }
   }
@@ -955,11 +967,12 @@ static NOINLINE void PpuDrawWholeLine(Ppu *ppu, uint y) {
     if (math_enabled_cur == 0 || fixed_color == 0 && !ppu->halfColor && !rendered_subscreen) {
       // Math is disabled (or has no effect), so can avoid the per-pixel maths check
       uint32 i = left;
-      if (ppu->renderFlags & kPpuRenderFlags_BlackBG2) {
+      if (ppu->renderFlags & (kPpuRenderFlags_BlackBG2 | kPpuRenderFlags_BlackBackdrop)) {
         do {
           uint8 layer = (ppu->bgBuffers[0].data[i] >> 8) & 0xf;
           uint8 cidx = ppu->bgBuffers[0].data[i] & 0xff;
-          if (layer == 5 || (layer == 1 && cidx >= 112)) {
+          if ((ppu->renderFlags & kPpuRenderFlags_BlackBG2) ? (layer == 5 || (layer == 1 && cidx >= 112))
+                                                            : (layer == 5 && cidx != 0)) {  // BlackBackdrop: gap sentinel only
             dst[0] = 0;
           } else {
             uint32 color = ppu->cgram[ppu->bgBuffers[0].data[i] & 0xff];
@@ -985,7 +998,8 @@ static NOINLINE void PpuDrawWholeLine(Ppu *ppu, uint y) {
       do {
         uint8 main_layer = (ppu->bgBuffers[0].data[i] >> 8) & 0xf;
         uint8 cidx2 = ppu->bgBuffers[0].data[i] & 0xff;
-        if ((ppu->renderFlags & kPpuRenderFlags_BlackBG2) && (main_layer == 5 || (main_layer == 1 && cidx2 >= 112))) {
+        if ((ppu->renderFlags & kPpuRenderFlags_BlackBG2) ? (main_layer == 5 || (main_layer == 1 && cidx2 >= 112))
+            : ((ppu->renderFlags & kPpuRenderFlags_BlackBackdrop) && main_layer == 5 && cidx2 != 0)) {  // gap sentinel
           dst[0] = 0;
         } else {
           uint32 color = ppu->cgram[ppu->bgBuffers[0].data[i] & 0xff], color2;

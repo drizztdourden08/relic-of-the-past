@@ -143,6 +143,8 @@ static void SimpleHdma_DoLine(SimpleHdma *c) {
 extern const uint16 kOverworld_OffsetBaseX[64];
 extern const uint16 kOverworld_OffsetBaseY[64];
 extern const int16 kOverworld_Func6B_AreaDelta[4];
+extern const uint16 kOverworld_Size1[2];  // area camera Y span (small/big); used to centre the destination
+extern const uint16 kOverworld_Size2[2];  // area camera X span (small/big); used to centre the destination
 
 // Snapshot of the source area's map16, kept while stationary so a scroll transition can build a world
 // tilemap spanning BOTH areas. dung_bg2 holds only one area and is overwritten with the destination
@@ -240,6 +242,19 @@ static int g_lock_last_cam_x, g_lock_last_cam_y;
 // loader scans the lock band (the shifted side) so sprites in the extended view spawn even while pinned.
 int g_camera_lock_shift_x, g_camera_lock_shift_y;
 
+// Camera-lock clamp for one axis: the rendered-view camera position the lock pins to, given the real game
+// camera, the area's scroll bounds [start,end], and that side's budget. The inset is half the area span at
+// most, so an area narrower/shorter than the view simply centers (the clamp collapses to the midpoint). The
+// lock shift is then (cam - clamp) and the low-side content extent is (clamp - start). A non-positive budget
+// (e.g. no vertical space in the pure-wide config) yields clamp == cam, i.e. no lock / no shift on that axis.
+static int CameraLockClamp(int cam, int start, int end, int budget) {
+  int inset = IntMin(budget, (end - start) / 2);
+  if (inset <= 0)
+    return cam;
+  int clamped = IntMax(cam, start + inset);
+  return IntMin(clamped, end - inset);
+}
+
 static void ConfigurePpuSideSpace() {
   // Let PPU impl know about the maximum allowed extra space on the sides and bottom
   int extra_right = 0, extra_left = 0, extra_bottom = 0, extra_top = 0;
@@ -271,24 +286,15 @@ static void ConfigurePpuSideSpace() {
           // Render-level camera lock: clamp the RENDERED view to the area so its edges rest on the
           // boundary (no out-of-area black), then shift the world fetch (below) + sprites (ppu eval) by
           // the same delta. The game camera (BG2VOFS) and the overworld scroll/transition logic are
-          // untouched — this is purely visual. Per side: clamp the inset to half the area span so a
-          // small area just centers instead of inverting.
-          int v = IntMin((int)g_oam_tall_budget, ((int)ow_scroll_vars0.yend - (int)ow_scroll_vars0.ystart) / 2);
-          int h = IntMin((int)g_oam_wide_budget, ((int)ow_scroll_vars0.xend - (int)ow_scroll_vars0.xstart) / 2);
-          if (v > 0) {
-            int clampedV = IntMax((int)BG2VOFS_copy2, (int)ow_scroll_vars0.ystart + v);
-            clampedV = IntMin(clampedV, (int)ow_scroll_vars0.yend - v);
-            g_zenv.ppu->cameraLockShiftY = (int)BG2VOFS_copy2 - clampedV;
-            extra_top = clampedV - (int)ow_scroll_vars0.ystart;
-            extra_bottom = (int)ow_scroll_vars0.yend - clampedV;
-          }
-          if (h > 0) {
-            int clampedH = IntMax((int)BG2HOFS_copy2, (int)ow_scroll_vars0.xstart + h);
-            clampedH = IntMin(clampedH, (int)ow_scroll_vars0.xend - h);
-            g_zenv.ppu->cameraLockShiftX = (int)BG2HOFS_copy2 - clampedH;
-            extra_left = clampedH - (int)ow_scroll_vars0.xstart;
-            extra_right = (int)ow_scroll_vars0.xend - clampedH;
-          }
+          // untouched — this is purely visual. CameraLockClamp halves the inset so a small area centers.
+          int clampedH = CameraLockClamp((int)BG2HOFS_copy2, (int)ow_scroll_vars0.xstart, (int)ow_scroll_vars0.xend, (int)g_oam_wide_budget);
+          int clampedV = CameraLockClamp((int)BG2VOFS_copy2, (int)ow_scroll_vars0.ystart, (int)ow_scroll_vars0.yend, (int)g_oam_tall_budget);
+          g_zenv.ppu->cameraLockShiftX = (int)BG2HOFS_copy2 - clampedH;
+          g_zenv.ppu->cameraLockShiftY = (int)BG2VOFS_copy2 - clampedV;
+          extra_left = clampedH - (int)ow_scroll_vars0.xstart;
+          extra_right = (int)ow_scroll_vars0.xend - clampedH;
+          extra_top = IntMax(0, clampedV - (int)ow_scroll_vars0.ystart);
+          extra_bottom = (int)ow_scroll_vars0.yend - clampedV;
         }
         // Remember this stationary frame's lock so a following scroll transition can interpolate from it.
         g_lock_last_shift_x = g_zenv.ppu->cameraLockShiftX;
@@ -297,54 +303,68 @@ static void ConfigurePpuSideSpace() {
         g_lock_last_cam_y = BG2VOFS_copy2;
         BuildOverworldWorldTilemap();
       } else {
-        // Screen-to-screen scroll transition. The camera always scrolls exactly one 256px screen to the
-        // adjacent area, and the stock 2-screen tilemap streams that screen in — so the full locked-wide view
-        // (<=398px) stays inside the sliding 512px window the whole way. Interpolate each axis's lock shift
-        // from the value it had at the source boundary (saved last stationary frame) through 0 to its
-        // negation (the destination boundary's value) as the camera crosses: progress = |camera - last|/256.
-        // This pans the view smoothly and is continuous with the stationary lock at both seams (no jump, no
-        // black bar). The non-scrolling axis has |camera - last| == 0, so its shift is simply held.
+        // Non-stationary outdoor sub-states. A screen-to-screen scroll transition (the submodule 1-8 chain)
+        // smoothly interpolates the lock shift on BOTH axes from the source area's stationary lock (saved on
+        // the last stationary frame) to the DESTINATION area's stationary lock, so the view arrives already
+        // centered on the destination — no jump when the stationary lock takes over at submodule 0 — for any
+        // source/dest size combination. Any other sub-state (dungeon-exit walk, mosaic) holds the current-area
+        // lock, exactly like the stationary branch.
         if (enhanced_features0 & kFeatures0_CameraLockToViewport) {
-          // Per axis: while the camera is still within the current area's bounds (the source area before it
-          // leaves, or the destination once it has arrived) use the exact lock clamp. While it is crossing
-          // the seam (outside those bounds), interpolate the shift from the source-boundary value toward its
-          // negation, measuring progress against the game's scroll target so it lands continuously on the
-          // destination lock (no seam jump). The interpolation only runs mid-scroll, where the target is
-          // still the transition endpoint (it gets reset to the destination's own limits once the scroll
-          // completes). The perpendicular axis never leaves its bounds, so it stays clamped (held).
-          int v = IntMin((int)g_oam_tall_budget, ((int)ow_scroll_vars0.yend - (int)ow_scroll_vars0.ystart) / 2);
-          int h = IntMin((int)g_oam_wide_budget, ((int)ow_scroll_vars0.xend - (int)ow_scroll_vars0.xstart) / 2);
-          int target = (&up_down_scroll_target)[overworld_screen_transition & 3];
-          if (v > 0 && (int)BG2VOFS_copy2 >= (int)ow_scroll_vars0.ystart && (int)BG2VOFS_copy2 <= (int)ow_scroll_vars0.yend) {
-            int clampedV = IntMax((int)BG2VOFS_copy2, (int)ow_scroll_vars0.ystart + v);
-            clampedV = IntMin(clampedV, (int)ow_scroll_vars0.yend - v);
-            g_zenv.ppu->cameraLockShiftY = (int)BG2VOFS_copy2 - clampedV;
-            extra_top = clampedV - (int)ow_scroll_vars0.ystart;
-            extra_bottom = (int)ow_scroll_vars0.yend - clampedV;
-          } else {
-            int dist = target - g_lock_last_cam_y; if (dist < 0) dist = -dist;
-            int delta = (int)BG2VOFS_copy2 - g_lock_last_cam_y; if (delta < 0) delta = -delta; if (delta > dist) delta = dist;
-            g_zenv.ppu->cameraLockShiftY = dist > 0 ? g_lock_last_shift_y * (dist - 2 * delta) / dist : -g_lock_last_shift_y;
+          int dir = overworld_screen_transition & 3;  // 0 up, 1 down, 2 left, 3 right
+          int destArea = g_ow_src_area + kOverworld_Func6B_AreaDelta[dir];
+          if (submodule_index <= 8 && (unsigned)destArea < 64) {
+            int big = !kOverworldMapIsSmall[destArea];
+            int destXs = kOverworld_OffsetBaseX[destArea], destYs = kOverworld_OffsetBaseY[destArea];
+            int destXe = destXs + kOverworld_Size2[big], destYe = destYs + kOverworld_Size1[big];
+            bool xMoving = dir >= 2;  // left/right scroll the X axis, up/down the Y axis
+            // Progress 0..1 from the source lock to the destination lock: hold the source before the scroll,
+            // ramp with the scrolling axis's advance DURING the scroll (submodule 6), then hold the dest after
+            // (submodules 7-8, the ease-off + walk-in). The scroll-target word is only the landing target
+            // during submodule 6 — Overworld_SetCameraBoundaries resets it to the destination area's own
+            // target the instant the scroll completes — so progress must key off the SUBMODULE, not the live
+            // target, or the post-scroll frames recompute a bogus ratio and the view jitters before settling.
+            int num = 0, den = 1;
+            if (submodule_index >= 7) {
+              num = 1, den = 1;
+            } else if (submodule_index == 6) {
+              int movTarget = (&up_down_scroll_target)[dir];
+              int movCam = xMoving ? (int)BG2HOFS_copy2 : (int)BG2VOFS_copy2;
+              int movLast = xMoving ? g_lock_last_cam_x : g_lock_last_cam_y;
+              den = movTarget - movLast; if (den < 0) den = -den;
+              num = movCam - movLast; if (num < 0) num = -num; if (num > den) num = den;
+              if (den <= 0) num = den = 1;
+            }
+            // Destination camera per axis: the perpendicular axis never moves (use the live camera); the
+            // moving axis targets its landing while scrolling (submodule 6), then the live camera once landed,
+            // so the shift lands exactly on the stationary clamp (the walk-in nudges the camera a few px).
+            int destCamX = (xMoving && submodule_index == 6) ? (int)(&up_down_scroll_target)[dir] : (int)BG2HOFS_copy2;
+            int destCamY = (!xMoving && submodule_index == 6) ? (int)(&up_down_scroll_target)[dir] : (int)BG2VOFS_copy2;
+            int destShiftX = destCamX - CameraLockClamp(destCamX, destXs, destXe, (int)g_oam_wide_budget);
+            int destShiftY = destCamY - CameraLockClamp(destCamY, destYs, destYe, (int)g_oam_tall_budget);
+            g_zenv.ppu->cameraLockShiftX = g_lock_last_shift_x + (destShiftX - g_lock_last_shift_x) * num / den;
+            g_zenv.ppu->cameraLockShiftY = g_lock_last_shift_y + (destShiftY - g_lock_last_shift_y) * num / den;
+            // Render the full wide/tall view: the two-area world tilemap (below) supplies real content on
+            // both sides of the seam; no-data gaps fall through to the black backdrop in PpuDrawBackground.
+            extra_left = extra_right = (int)g_oam_wide_budget;
             extra_top = extra_bottom = (int)g_oam_tall_budget;
-          }
-          if (h > 0 && (int)BG2HOFS_copy2 >= (int)ow_scroll_vars0.xstart && (int)BG2HOFS_copy2 <= (int)ow_scroll_vars0.xend) {
-            int clampedH = IntMax((int)BG2HOFS_copy2, (int)ow_scroll_vars0.xstart + h);
-            clampedH = IntMin(clampedH, (int)ow_scroll_vars0.xend - h);
+            BuildTransitionWorldTilemap(destArea);
+            // The full-width pan exposes the no-data gaps; PpuDrawBackground paints them with a sentinel that
+            // BlackBackdrop renders black, matching the letterboxed margins — while the real green backdrop that
+            // shows through transparent terrain (tree bases, doorways) is left untouched. (PpuBeginDrawing
+            // resets renderFlags every frame, so this only affects the transition.)
+            g_zenv.ppu->renderFlags |= kPpuRenderFlags_BlackBackdrop;
+          } else {
+            // Non-scroll sub-state (dungeon-exit walk, mosaic, ...): hold the current-area stationary lock.
+            int clampedH = CameraLockClamp((int)BG2HOFS_copy2, (int)ow_scroll_vars0.xstart, (int)ow_scroll_vars0.xend, (int)g_oam_wide_budget);
+            int clampedV = CameraLockClamp((int)BG2VOFS_copy2, (int)ow_scroll_vars0.ystart, (int)ow_scroll_vars0.yend, (int)g_oam_tall_budget);
             g_zenv.ppu->cameraLockShiftX = (int)BG2HOFS_copy2 - clampedH;
+            g_zenv.ppu->cameraLockShiftY = (int)BG2VOFS_copy2 - clampedV;
             extra_left = clampedH - (int)ow_scroll_vars0.xstart;
             extra_right = (int)ow_scroll_vars0.xend - clampedH;
-          } else {
-            int dist = target - g_lock_last_cam_x; if (dist < 0) dist = -dist;
-            int delta = (int)BG2HOFS_copy2 - g_lock_last_cam_x; if (delta < 0) delta = -delta; if (delta > dist) delta = dist;
-            g_zenv.ppu->cameraLockShiftX = dist > 0 ? g_lock_last_shift_x * (dist - 2 * delta) / dist : -g_lock_last_shift_x;
-            extra_left = extra_right = (int)g_oam_wide_budget;
+            extra_top = IntMax(0, clampedV - (int)ow_scroll_vars0.ystart);
+            extra_bottom = (int)ow_scroll_vars0.yend - clampedV;
+            BuildOverworldWorldTilemap();
           }
-          // Build a world tilemap spanning the source + destination areas so the panned view reads real
-          // content on both sides of the seam (no 512px wrap, no black, no narrowing) at any aspect ratio.
-          // dung_bg2 holds the destination from mid-transition; the source comes from the snapshot.
-          int destArea = g_ow_src_area + kOverworld_Func6B_AreaDelta[overworld_screen_transition & 3];
-          if ((unsigned)destArea < 64)
-            BuildTransitionWorldTilemap(destArea);
         }
         if (!g_zenv.ppu->bgLayer[1].useWorld) {
           // Stock 2-screen path (lock off, or no valid neighbour area): clamp to the 512px tilemap.

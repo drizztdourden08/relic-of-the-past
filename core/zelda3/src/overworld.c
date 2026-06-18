@@ -164,8 +164,8 @@ static const uint8 kOverworldAreaHeads[64] = {
   48, 48, 50, 51, 52, 53, 53, 55,
   48, 48, 58, 59, 60, 53, 53, 63,
 };
-static const uint16 kOverworld_Size1[2] = { 0x11e, 0x31e };
-static const uint16 kOverworld_Size2[2] = { 0x100, 0x300 };
+const uint16 kOverworld_Size1[2] = { 0x11e, 0x31e };  // non-static: camera Y span (small/big), read by the camera-lock transition (zelda_rtl.c)
+const uint16 kOverworld_Size2[2] = { 0x100, 0x300 };  // non-static: camera X span (small/big), read by the camera-lock transition (zelda_rtl.c)
 static const uint16 kOverworld_UpDownScrollSize[2] = { 0x2e0, 0x4e0 };
 static const uint16 kOverworld_LeftRightScrollSize[2] = { 0x300, 0x500 };
 static const int16 kOverworld_Func6B_Tab1[4] = { -8, 8, -8, 8 };
