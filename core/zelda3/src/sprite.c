@@ -1853,6 +1853,14 @@ bool Sprite_PrepOamCoordOrDoubleRet(int k, PrepOamCoordsRet *ret) {  // 86e41e
     if (!(sprite_defl_bits[k] & 0x80))
       Sprite_KillSelf(k);
     out_of_bounds = true;
+  } else if ((uint16)(x + 0x40) >= 0x170 ||
+             (uint16)(y + 0x40) >= 0x170 && !(sprite_flags4[k] & 0x20)) {
+    // In the wide/tall extra band but outside the stock 256px screen: keep the sprite alive and DRAWN (so the
+    // wide view isn't missing it), but pause its AI like the stock game would by simply not having it loaded
+    // out here. Without this, a sprite loaded into the wide band acts from off the stock screen — vision
+    // probes reach across, and the global guard alarm makes static archers fire from "infinite" distance. It
+    // resumes the moment Link brings it onto the stock screen. (No-op when there is no wide/tall budget.)
+    sprite_pause[k]++;
   }
   ret->x = R0;
   ret->y = R2;
