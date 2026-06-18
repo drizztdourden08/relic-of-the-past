@@ -44,6 +44,10 @@ interface ViewportInfo {
   linkX: number;
   /** Link's world Y position */
   linkY: number;
+  /** Camera-lock render shift X (wide view): the rendered view sits at camera − shift. 0 = no lock. */
+  cameraLockShiftX: number;
+  /** Camera-lock render shift Y (tall view): the rendered view sits at camera − shift. 0 = no lock. */
+  cameraLockShiftY: number;
 }
 
 /**
@@ -54,6 +58,7 @@ const wasmGetViewportInfo = (): ViewportInfo | null =>
   callPtr('WasmGetViewportInfo', (mod, ptr) => {
     const heap = mod.HEAPU8;
     const u16 = (off: number) => heap[ptr + off] | (heap[ptr + off + 1] << 8);
+    const i16 = (off: number) => (u16(off) << 16) >> 16; // signed 16-bit (camera-lock shift can be negative)
     const mainModule = heap[ptr];
     const submodule = heap[ptr + 1];
     // extra{LeftRight,Left,Right}Cur are uint16 (can exceed 255 for very wide ratios)
@@ -71,6 +76,8 @@ const wasmGetViewportInfo = (): ViewportInfo | null =>
     const linkX = u16(20);
     const linkY = u16(22);
     const extraTopBottom = u16(24); // tall max budget per side (0 = not tall)
+    const cameraLockShiftX = i16(26); // signed: rendered view = camera − shift (wide-view re-centering)
+    const cameraLockShiftY = i16(28);
 
     // Black pixels = max extra - actual rendered extra
     const blackLeft = extraLeftRight - extraLeftCur;
@@ -87,6 +94,7 @@ const wasmGetViewportInfo = (): ViewportInfo | null =>
       mainModule, submodule, extraLeftRight, extraLeftCur, extraRightCur, extraTopCur,
       extraBottomCur, extraTopBottom, snesWidth, snesHeight, blackLeft, blackRight, blackTop, blackBottom,
       isGameplay, locationModule, locationType, cameraX, cameraY, linkX, linkY,
+      cameraLockShiftX, cameraLockShiftY,
     };
   });
 

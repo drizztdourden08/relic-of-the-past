@@ -95,7 +95,7 @@ int WasmGetProgressFlags(void) {
 
 // ─── Viewport Info ───
 
-static uint8 g_viewport_buf[28];
+static uint8 g_viewport_buf[32];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetViewportInfo(void) {
@@ -142,6 +142,12 @@ int WasmGetViewportInfo(void) {
   // Vertical (tall) max budget per side, so JS can compute blackTop = budget - extraTopCur unambiguously
   // (snesHeight alone can't tell a tall V=8 config from the legacy extend_y +16 bottom-only).
   PutU16(g_viewport_buf, 24, (uint16)g_zenv.ppu->extraTopBottom);
+
+  // Camera-lock render shift (wide/tall view): the rendered view sits at the game camera MINUS this shift,
+  // and the shift varies as the lock re-centers while Link moves. World-space overlays must subtract it (on
+  // top of extraLeftRight) or they drift / appear to follow Link. Signed; stored as int16, read as signed.
+  PutU16(g_viewport_buf, 26, (uint16)(int16)g_zenv.ppu->cameraLockShiftX);
+  PutU16(g_viewport_buf, 28, (uint16)(int16)g_zenv.ppu->cameraLockShiftY);
   return (int)g_viewport_buf;
 }
 

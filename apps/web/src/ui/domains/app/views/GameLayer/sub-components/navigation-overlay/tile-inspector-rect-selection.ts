@@ -91,8 +91,8 @@ const useRectSelection = (params: RectSelectionParams) => {
     if (!vp) return null;
     const scaleX = width / vp.snesWidth;
     const scaleY = height / vp.snesHeight;
-    const viewLeft = vp.cameraX - vp.extraLeftRight;
-    const viewTop = vp.cameraY;
+    const viewLeft = vp.cameraX - vp.cameraLockShiftX - vp.extraLeftRight;
+    const viewTop = vp.cameraY - vp.cameraLockShiftY;
     const screenWorldX = isIndoors
       ? (Math.floor(vp.linkX / 512) * 512)
       : ((result.screenIndex & 7) * 512);
