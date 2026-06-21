@@ -38,8 +38,6 @@ const stepToBuffer = (step: number): number => {
 
 const renderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
   switch (key) {
-    case 'msuImport':
-      return null; // handled by AudioSettings component directly
     case 'masterVolume':
       return (
         <Slider
@@ -67,6 +65,7 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
           formatValue={(v) => `${v}%`}
           mute={settings.musicMuted}
           onMuteToggle={() => onChange({ musicMuted: !settings.musicMuted })}
+          disabled={!settings.perGroupVolume}
         />
       );
     case 'sfxVolume':
@@ -82,6 +81,7 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
           formatValue={(v) => `${v}%`}
           mute={settings.sfxMuted}
           onMuteToggle={() => onChange({ sfxMuted: !settings.sfxMuted })}
+          disabled={!settings.perGroupVolume}
         />
       );
     case 'audioChannels':
@@ -148,6 +148,8 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
 
 const isDisabled = (key: string, settings: GameSettings): boolean => {
   if (key === 'resumeMSU') return settings.enableMSU === 'false';
+  // The Music/SFX sliders only do anything once the independent-mix toggle is on.
+  if (key === 'musicVolume' || key === 'sfxVolume') return !settings.perGroupVolume;
   return false;
 };
 

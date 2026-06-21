@@ -52,6 +52,10 @@ struct Dsp {
   uint8_t musicVolume;    // music channels volume (0=mute, 128=full)
   uint8_t sfxVolume;      // sfx channels volume (0=mute, 128=full)
   uint8_t sfxChannelMask; // bitmask: bit i=1 means channel i is currently SFX
+  // NOTE: the per-group-volume *enable* gate is NOT a struct field — it's a module-level flag in dsp.c.
+  // Adding a field here (even before `ram`) shifts struct end-padding and changes dsp_saveload's size
+  // (sizeof(Dsp)-offsetof(ram)), which would silently break every existing save state. Keep this region
+  // byte-identical to upstream.
   // mirror ram (serialization starts here — do NOT add fields below this line)
   uint8_t ram[0x80];
   // 8 channels
@@ -102,5 +106,7 @@ void dsp_getSamples(Dsp* dsp, int16_t* sampleData, int samplesPerFrame, int numC
 void dsp_saveload(Dsp *dsp, SaveLoadFunc *func, void *ctx);
 void dsp_setMusicVolume(Dsp* dsp, uint8_t volume);
 void dsp_setSfxVolume(Dsp* dsp, uint8_t volume);
+void dsp_setPerGroupVolumeEnabled(Dsp* dsp, bool enabled);
+bool dsp_getPerGroupVolumeEnabled(void);
 
 #endif

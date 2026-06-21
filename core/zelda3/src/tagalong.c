@@ -436,7 +436,7 @@ void Follower_NotFollowing() {  // 89a2b2
         // (3) die with a bottled faerie.
         // Fixed this by clearing the follower indicator here, instead of in the ancilla
         // bomb code.
-        if (enhanced_features0 & kFeatures0_MiscBugFixes) {
+        if (enhanced_features2 & kFeatures2_SuperBombClearFollowerOnExplode) {
           follower_indicator = 0;
           return;
         }
@@ -667,7 +667,7 @@ skip_first_sprites:
 
   if (follower_indicator == 13) {
     // Display colorful superbomb palette also on frame 0.
-    if (enhanced_features0 & kFeatures0_MiscBugFixes ? (super_bomb_indicator_unk2 <= 1) : (super_bomb_indicator_unk2 == 1))
+    if (enhanced_features2 & kFeatures2_SuperBombPaletteOnFrameZero ? (super_bomb_indicator_unk2 <= 1) : (super_bomb_indicator_unk2 == 1))
      pal = (frame_counter & 7);
   }
 

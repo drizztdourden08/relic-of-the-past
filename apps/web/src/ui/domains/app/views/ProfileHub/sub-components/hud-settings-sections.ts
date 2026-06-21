@@ -42,6 +42,7 @@ const SECTIONS: Section[] = [
         id: 'pause-options',
         title: 'Options',
         items: [
+          { key: 'hudPauseStyle', label: 'Pause Style', description: 'Visual treatment of the pause menu. Vanilla keeps the original look; Enhanced uses the high-quality overlay.', keywords: 'pause style vanilla enhanced menu overlay' },
           { key: 'hudPauseHighlight', label: 'Item Highlight', description: 'How the currently selected item is indicated in the pause menu grid.', keywords: 'pause item highlight box glow selection cursor' },
         ],
       },

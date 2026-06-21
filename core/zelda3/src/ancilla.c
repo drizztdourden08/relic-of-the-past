@@ -1273,7 +1273,7 @@ void Ancilla05_Boomerang(int k) {  // 8890fc
 
   if (!ancilla_aux_timer[k]) {
     if (button_b_frames < 9 && player_handler_timer == 0) {
-      if (link_is_bunny_mirror || link_auxiliary_state || link_item_in_hand == 0 && (enhanced_features0 & kFeatures0_MiscBugFixes)) {
+      if (link_is_bunny_mirror || link_auxiliary_state || link_item_in_hand == 0 && (enhanced_features1 & kFeatures1_BoomerangTerminateWhenEmptyHanded)) {
         Boomerang_Terminate(k);
         return;
       }
@@ -5382,7 +5382,7 @@ void Ancilla3A_BigBombExplosion(int k) {  // 88f18d
   }
   if (ancilla_item_to_link[k] == 3 && ancilla_arr3[k] == 1) {
     // Changed so this is reset elsewhere. Some code depends on the value 13.
-    uint8 old = (enhanced_features0 & kFeatures0_MiscBugFixes) ? follower_indicator : 0;
+    uint8 old = (enhanced_features1 & kFeatures1_BigBombPreserveFollowerIndicator) ? follower_indicator : 0;
     follower_indicator = 13;
     Bomb_CheckForDestructibles(Ancilla_GetX(k), Ancilla_GetY(k), 0); // r14?
     follower_indicator = old;
@@ -5492,7 +5492,7 @@ void RevivalFairy_MonitorHP() {  // 88f430
       link_player_handler_state = kPlayerState_PermaBunny;
       link_is_bunny_mirror = 1;
       //bugfix: dying as permabunny doesn't restore link palette during death animation
-      if (enhanced_features0 & kFeatures0_MiscBugFixes)
+      if (enhanced_features1 & kFeatures1_PermabunnyRestorePaletteOnRevive)
         LoadGearPalettes_bunny();
     } else {
       link_player_handler_state = kPlayerState_Ground;

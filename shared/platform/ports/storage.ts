@@ -5,7 +5,7 @@
  * Backed by IPC on Electron and the Filesystem plugin on Capacitor.
  */
 
-type DataDomain = 'profiles' | 'roms' | 'saves' | 'sprites' | 'languages' | 'msu' | 'assets';
+type DataDomain = 'profiles' | 'roms' | 'saves' | 'sprites' | 'linkSprites' | 'languages' | 'msu' | 'assets';
 
 interface DataLocation {
   path: string; // absolute Data root on this platform

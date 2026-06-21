@@ -1,10 +1,11 @@
 /* @layer renderer-appshell @kind logic */
 /** Async side-effect helpers for loadProfileForGame (input profile + MSU pack). */
-import { setMsuData, getInputManager } from '../../lib/game';
+import { setMsuData, setLinkSpriteData, getInputManager } from '../../lib/game';
 import type { mergeSettings } from '../../lib/game/settings';
 import { log } from '../../lib/log-bus';
 import { readInputProfiles } from '@app/lib/storage/profile-data-store';
 import * as msuStore from '@app/lib/storage/msu-store';
+import { readLinkSprite } from '@app/lib/storage/link-sprites-store';
 import type { InputProfile } from '@shared/types/controls';
 
 type Settings = ReturnType<typeof mergeSettings>;
@@ -58,4 +59,17 @@ const loadMsuPack = async (profile: Profile, settings: Settings) => {
   }
 };
 
-export { loadInputProfile, loadMsuPack };
+// Stage the profile's selected custom Link sprite (.zspr) for the next boot; the bridge writes it to MEMFS.
+const loadLinkSprite = async (settings: Settings) => {
+  if (!settings.linkSprite) { setLinkSpriteData(null); return; }
+  try {
+    const bytes = await readLinkSprite(settings.linkSprite);
+    setLinkSpriteData(bytes ?? null);
+    if (!bytes) log.app(`[LinkSprite] Selected sprite "${settings.linkSprite}" not found`);
+  } catch (err) {
+    log.error(`[LinkSprite] Failed to load sprite: ${err instanceof Error ? err.message : err}`);
+    setLinkSpriteData(null);
+  }
+};
+
+export { loadInputProfile, loadMsuPack, loadLinkSprite };

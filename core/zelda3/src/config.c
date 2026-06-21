@@ -405,15 +405,19 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
       return true;
     } else if (StringEqualsNoCase(key, "ResumeMSU")) {
       return ParseBool(value, &g_config.resume_msu);
+    } else if (StringEqualsNoCase(key, "PerGroupVolume")) {
+      return ParseBoolBit(value, &g_config.features0, kFeatures0_PerGroupVolume);
     }
   } else if (section == 3) {
     if (StringEqualsNoCase(key, "Autosave")) {
       g_config.autosave = (bool)strtol(value, (char**)NULL, 10);
       return true;
     } else if (StringEqualsNoCase(key, "ExtendedAspectRatio")) {
+      // Carries only the ratio value (+ extend_y, which changes the row count the ratio is measured at).
+      // The sprite/visual/camera companions are now individual [Features] keys (WidescreenSprites,
+      // WidescreenVisualFixes, CameraLock) — see plans/settings-registry-map.md.
       const char* s;
       int h = 224;
-      bool nospr = false, novis = false;
       // todo: make it not depend on the order
       while ((s = NextDelim(&value, ',')) != NULL) {
         if (strcmp(s, "extend_y") == 0)
@@ -428,10 +432,6 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
           g_config.extended_aspect_ratio = (h * 3 / 2 - 256) / 2;
         else if (strcmp(s, "4:3") == 0)
           g_config.extended_aspect_ratio = 0;
-        else if (strcmp(s, "unchanged_sprites") == 0)
-          nospr = true;
-        else if (strcmp(s, "no_visual_fixes") == 0)
-          novis = true;
         else {
           // Custom "W:H" — wider ratios beyond the named presets. Same formula the presets use;
           // clamped to kPpuExtraLeftRight later in emscripten_main.c.
@@ -441,13 +441,19 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
           if (cw <= 0 || ch <= 0)
             return false;
           int extra = (h * (int)cw / (int)ch - 256) / 2;
-          g_config.extended_aspect_ratio = extra > 0 ? extra : 0;
+          if (extra > 0) {
+            extra = IntMin(extra, kPpuExtraLeftRight);  // clamp before the uint16 store
+            g_config.extended_aspect_ratio = extra;
+          } else {
+            // Taller than the base pixel aspect → extend vertically instead (256-wide, symmetric
+            // top+bottom). render_h gives the pixel aspect cw:ch at width 256; (render_h-224)/2 per side.
+            g_config.extended_aspect_ratio = 0;
+            int render_h = 256 * (int)ch / (int)cw;
+            int vextra = (render_h - 224) / 2;
+            g_config.extended_aspect_ratio_vertical = IntMin(IntMax(vextra, 0), kPpuExtraTopBottom);
+          }
         }
       }
-      if (g_config.extended_aspect_ratio && !nospr)
-        g_config.features0 |= kFeatures0_ExtendScreen64;
-      if (g_config.extended_aspect_ratio && !novis)
-        g_config.features0 |= kFeatures0_WidescreenVisualFixes;
       return true;
     } else if (StringEqualsNoCase(key, "DisplayPerfInTitle")) {
       return ParseBool(value, &g_config.display_perf_title);
@@ -462,6 +468,10 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_SwitchLR);
     } else if (StringEqualsNoCase(key, "ItemSwitchLRLimit")) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_SwitchLRLimit);
+    } else if (StringEqualsNoCase(key, "InventoryReorder")) {
+      return ParseBoolBit(value, &g_config.features0, kFeatures0_InventoryReorder);
+    } else if (StringEqualsNoCase(key, "SecondaryItemSlots")) {
+      return ParseBoolBit(value, &g_config.features0, kFeatures0_SecondaryItemSlots);
     } else if (StringEqualsNoCase(key, "TurnWhileDashing")) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_TurnWhileDashing);
     } else if (StringEqualsNoCase(key, "MirrorToDarkworld")) {
@@ -488,6 +498,24 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_CancelBirdTravel);
     } else if (StringEqualsNoCase(key, "DisableTelepathy")) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_DisableTelepathy);
+    } else if (StringEqualsNoCase(key, "ExtendedRendering")) {
+      return ParseBoolBit(value, &g_config.features0, kFeatures0_ExtendedRendering);
+    } else if (StringEqualsNoCase(key, "LinearWorldTilemap")) {
+      return ParseBoolBit(value, &g_config.features0, kFeatures0_LinearWorldTilemap);
+    } else if (StringEqualsNoCase(key, "UltrawideRendering")) {
+      return ParseBoolBit(value, &g_config.features0, kFeatures0_Ultrawide);
+    } else if (StringEqualsNoCase(key, "TallRendering")) {
+      return ParseBoolBit(value, &g_config.features0, kFeatures0_TallRender);
+    } else if (StringEqualsNoCase(key, "WidescreenSprites")) {
+      return ParseBoolBit(value, &g_config.features0, kFeatures0_ExtendScreen64);
+    } else if (StringEqualsNoCase(key, "WidescreenVisualFixes")) {
+      return ParseBoolBit(value, &g_config.features0, kFeatures0_WidescreenVisualFixes);
+    } else if (StringEqualsNoCase(key, "PauseOffscreenAI")) {
+      return ParseBoolBit(value, &g_config.features0, kFeatures0_PauseOffscreenAI);
+    } else if (StringEqualsNoCase(key, "CameraLock")) {
+      return ParseBoolBit(value, &g_config.features0, kFeatures0_CameraLockToViewport);
+    } else if (StringEqualsNoCase(key, "SmoothTransitions")) {
+      return ParseBoolBit(value, &g_config.features0, kFeatures0_SmoothTransitions);
     }
   }
   return false;

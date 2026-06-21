@@ -2,31 +2,34 @@
 /** Section/subsection config for the Gameplay settings tab. */
 import type { Section } from '../../../compounds/SettingsLayout';
 
+// Save-state management lives in the System tab now (it's app/host scope, not gameplay behavior).
+// Exported here because its controls are rendered by gameplay-settings-controls (shared renderer).
+const SAVE_SECTION: Section = {
+  id: 'save-states',
+  title: 'Save States',
+  subsections: [
+    {
+      id: 'save-auto',
+      title: 'Auto-Save',
+      items: [
+        { key: 'autoSaveEnabled', label: 'Enable Auto-Save', description: 'Automatically create save state snapshots at regular intervals during gameplay', keywords: 'auto save timer interval automatic' },
+        { key: 'autoSaveIntervalSeconds', label: 'Auto-Save Interval', description: 'How often to create an automatic save (in seconds)', keywords: 'auto save interval time frequency' },
+        { key: 'autoSaveMaxEntries', label: 'Max Auto-Save Entries', description: 'Maximum number of auto-saves to keep (oldest are pruned)', keywords: 'auto save max limit entries prune' },
+        { key: 'saveOnQuit', label: 'Save on Quit', description: 'Automatically create a save state when you stop the game or close the app', keywords: 'save quit close exit auto' },
+      ],
+    },
+    {
+      id: 'save-shortcuts',
+      title: 'Quick Save Shortcuts',
+      items: [
+        { key: 'enhancedSaveSlotShortcut', label: 'Enhanced Save Slot Shortcut', description: 'Opens the save slot menu on shortcut press instead of immediately saving/loading', keywords: 'save state slot shortcut enhanced menu overlay' },
+        { key: 'saveHoldDuration', label: 'Hold to Save Duration', description: 'How long to hold the key to save (seconds)', keywords: 'save hold duration time seconds' },
+      ],
+    },
+  ],
+};
+
 const SECTIONS: Section[] = [
-  {
-    id: 'general',
-    title: 'General',
-    subsections: [
-      {
-        id: 'general-autosave',
-        title: 'Auto-Save',
-        items: [
-          { key: 'autoSaveEnabled', label: 'Enable Auto-Save', description: 'Automatically create save state snapshots at regular intervals during gameplay', keywords: 'auto save timer interval automatic' },
-          { key: 'autoSaveIntervalSeconds', label: 'Auto-Save Interval', description: 'How often to create an automatic save (in seconds)', keywords: 'auto save interval time frequency' },
-          { key: 'autoSaveMaxEntries', label: 'Max Auto-Save Entries', description: 'Maximum number of auto-saves to keep (oldest are pruned)', keywords: 'auto save max limit entries prune' },
-          { key: 'saveOnQuit', label: 'Save on Quit', description: 'Automatically create a save state when you stop the game or close the app', keywords: 'save quit close exit auto' },
-        ],
-      },
-      {
-        id: 'general-savestates',
-        title: 'Quick Save States',
-        items: [
-          { key: 'enhancedSaveSlotShortcut', label: 'Enhanced Save Slot Shortcut', description: 'Opens the save slot menu on shortcut press instead of immediately saving/loading', keywords: 'save state slot shortcut enhanced menu overlay' },
-          { key: 'saveHoldDuration', label: 'Hold to Save Duration', description: 'How long to hold the key to save (seconds)', keywords: 'save hold duration time seconds' },
-        ],
-      },
-    ],
-  },
   {
     id: 'items',
     title: 'Items',
@@ -37,6 +40,8 @@ const SECTIONS: Section[] = [
         items: [
           { key: 'itemSwitchLR', label: 'Advanced Item Selection', description: 'Use L and R shoulder buttons to cycle through your equipped items', keywords: 'item cycle lr bumper' },
           { key: 'itemSwitchLRLimit', label: 'Limit to First 4 Items', description: 'When cycling with L/R, only rotate through the first 4 item slots', keywords: 'item limit slots' },
+          { key: 'secondaryItemSlots', label: 'Secondary Item Slots (X / L / R)', description: 'Assign separate items to the X, L, and R buttons instead of just Y. Not in the original game.', keywords: 'secondary item slot x l r buttons assign' },
+          { key: 'inventoryReorder', label: 'Reorder Inventory', description: 'Hold Y and press a direction in the inventory to move items around. Not in the original game.', keywords: 'inventory reorder rearrange organize items y arrows' },
         ],
       },
     ],
@@ -88,20 +93,6 @@ const SECTIONS: Section[] = [
       },
     ],
   },
-  {
-    id: 'bugfixes',
-    title: 'Bug Fixes',
-    subsections: [
-      {
-        id: 'bugfixes-options',
-        title: 'Options',
-        items: [
-          { key: 'miscBugFixes', label: 'Miscellaneous Minor Fixes', description: 'Apply various minor corrections for original game glitches — fixes follower behavior, music transitions, death counting, and tile rendering issues', keywords: 'bug fix glitch minor misc', link: 'https://github.com/snesrev/zelda3/wiki/Bug-Fixes-:-Misc.' },
-          { key: 'gameChangingBugFixes', label: 'Game-Changing Bug Fixes', description: 'Apply fixes that noticeably affect gameplay behavior — changes enemy patterns, chest drops, and boss mechanics to match intended design', keywords: 'bug fix game changing major', link: 'https://github.com/snesrev/zelda3/wiki/Bug-Fixes-:-Game-Changing' },
-        ],
-      },
-    ],
-  },
 ];
 
-export { SECTIONS };
+export { SECTIONS, SAVE_SECTION };

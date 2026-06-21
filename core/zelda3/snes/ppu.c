@@ -33,14 +33,34 @@ enum {
   kWindow2Enabled = 8,
 };
 
-Ppu* ppu_init() {
+Ppu* ppu_init(void) {
   Ppu* ppu = (Ppu * )malloc(sizeof(Ppu));
   ppu->extraLeftRight = kPpuExtraLeftRight;
+  ppu->extraTopBottom = 0;  // set per-config in emscripten_main; 0 = no tall (4:3 unchanged)
+  ppu->extraTopCur = 0;
+  ppu->extraBottomCur = 0;
+  ppu->cameraLockShiftX = ppu->cameraLockShiftY = 0;
+  // The linear world tilemap (full 1024px area) is allocated lazily on first use by the overworld
+  // builder (PpuEnsureWorldTilemap) — a 4:3/all-off build never populates it, so it stays NULL and
+  // costs nothing. Neutral defaults keep every layer on the stock wrapping SNES path until then.
+  for (int i = 0; i < 4; i++) {
+    ppu->bgLayer[i].useWorld = false;
+    ppu->bgLayer[i].worldW = ppu->bgLayer[i].worldH = 0;
+    ppu->bgLayer[i].world = NULL;
+  }
   return ppu;
 }
 
 void ppu_free(Ppu* ppu) {
+  for (int i = 0; i < 4; i++)
+    free(ppu->bgLayer[i].world);
   free(ppu);
+}
+
+bool PpuEnsureWorldTilemap(BgLayer *bg) {
+  if (bg->world == NULL)
+    bg->world = (uint16*)calloc((size_t)kPpuWorldTiles * kPpuWorldTiles, sizeof(uint16));
+  return bg->world != NULL;  // false on OOM — callers must skip the world build and stay on the stock path
 }
 
 void ppu_reset(Ppu* ppu) {
@@ -50,6 +70,7 @@ void ppu_reset(Ppu* ppu) {
   ppu->extraLeftCur = 0;
   ppu->extraRightCur = 0;
   ppu->extraBottomCur = 0;
+  ppu->extraTopCur = 0;
   ppu->vramPointer = 0;
   ppu->vramIncrementOnHigh = false;
   ppu->vramIncrement = 1;
@@ -153,9 +174,18 @@ void PpuBeginDrawing(Ppu *ppu, uint8_t *pixels, size_t pitch, uint32_t render_fl
 }
 
 static inline void ClearBackdrop(PpuPixelPrioBufs *buf) {
-  for (size_t i = 0; i != countof(buf->data); i += 4)
+  size_t i = 0, n = countof(buf->data);
+  for (; i + 4 <= n; i += 4)  // bulk: 4 entries per 64-bit store
     *(uint64*)&buf->data[i] = 0x0500050005000500;
+  for (; i < n; i++)          // tail when countof isn't a multiple of 4 (odd kPpuExtraLeftRight)
+    buf->data[i] = 0x0500;
 }
+
+// Sentinel painted into the wide overworld view's no-data gaps: same low priority as the backdrop (0x0500),
+// so it overwrites only the backdrop, but with a non-zero colour index so it stays distinguishable from it.
+// The compositor renders this as black (kPpuRenderFlags_BlackBackdrop) while leaving the real, intentionally
+// green backdrop — which shows through transparent terrain like tree bases and doorways — untouched.
+#define kPpuWorldGapPixel 0x0501
 
 
 void ppu_runLine(Ppu *ppu, int line) {
@@ -168,23 +198,29 @@ void ppu_runLine(Ppu *ppu, int line) {
         j = (j + 1 == mod ? 0 : j + 1);
       }
     }
+    // Tall screens: `line` is the physical buffer row+1; the content scanline `sl` is shifted up by the
+    // top budget so rows above the base image sample above the camera (the linear-world fetch clamps a
+    // negative worldTileY to transparent, exactly like the horizontal left edge). extraTopBottom == 0 ⇒
+    // sl == line and every formula below collapses to the original 4:3/240 behavior (byte-identical).
+    int sl = line - (int)ppu->extraTopBottom;
+
     // evaluate sprites
     ClearBackdrop(&ppu->objBuffer);
-    ppu->lineHasSprites = !ppu->forcedBlank && ppu_evaluateSprites(ppu, line - 1);
+    ppu->lineHasSprites = !ppu->forcedBlank && ppu_evaluateSprites(ppu, sl - 1);
 
-    // outside of visible range?
-    if (line >= 225 + ppu->extraBottomCur) {
+    // Outside the visible band (top OR bottom extra beyond the loaded content) → black bar row.
+    if (sl < 1 - (int)ppu->extraTopCur || sl >= 225 + (int)ppu->extraBottomCur) {
       memset(&ppu->renderBuffer[(line - 1) * ppu->renderPitch], 0, sizeof(uint32) * (256 + ppu->extraLeftRight * 2));
       return;
     }
 
     if (ppu->renderFlags & kPpuRenderFlags_NewRenderer) {
-      PpuDrawWholeLine(ppu, line);
+      PpuDrawWholeLine(ppu, sl);  // writes to physical row (sl-1+extraTopBottom) == (line-1)
     } else {
       if (ppu->mode == 7)
-        ppu_calculateMode7Starts(ppu, line);
+        ppu_calculateMode7Starts(ppu, sl);
       for (int x = 0; x < 256; x++)
-        ppu_handlePixel(ppu, x, line);
+        ppu_handlePixel(ppu, x, sl);
 
       uint8 *dst = ppu->renderBuffer + ((line - 1) * ppu->renderPitch);
       if (ppu->extraLeftRight != 0) {
@@ -285,6 +321,12 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
   IS_SCREEN_WINDOWED(ppu, sub, layer) ? PpuWindows_Calc(&win, ppu, layer) : PpuWindows_Clear(&win, ppu, layer);
   BgLayer *bglayer = &ppu->bgLayer[layer];
   y += bglayer->vScroll;
+  // Camera lock (BG2 = overworld terrain only): shift the sampled coordinate itself (not worldOff) so the
+  // tile INDEX and the in-tile row (y & 7) stay consistent — shifting worldOffY by a non-multiple-of-8
+  // desyncs them ("rolling tiles"). Applied BEFORE the tilemap address so it also drives the stock 2-screen
+  // fetch, which keeps the non-scrolling axis locked during scroll transitions (useWorld is off then). 0 =
+  // no lock. Only BG2 (the overworld layer) is shifted; BG1 and the BG3 HUD (2bpp) are never touched.
+  if (layer == 1) y -= ppu->cameraLockShiftY;
   int sc_offs = bglayer->tilemapAdr + (((y >> 3) & 0x1f) << 5);
   if ((y & 0x100) && bglayer->tilemapHigher)
     sc_offs += bglayer->tilemapWider ? 0x800 : 0x400;
@@ -294,16 +336,37 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
   };
   int tileadr = ppu->bgLayer[layer].tileAdr, pixel;
   int tileadr1 = tileadr + 7 - (y & 0x7), tileadr0 = tileadr + (y & 0x7);
+  // Linear-world path: read a contiguous worldW x worldH tilemap with clamping (out-of-area ->
+  // transparent) instead of the wrapping 2-screen SNES layout, so the view can exceed 512px.
+  bool useWorld = bglayer->useWorld;
+  int worldTileY = useWorld ? (((int)y + bglayer->worldOffY) >> 3) : 0;
+  uint16 worldRowBuf[kPpuXPixels / 8 + 8];
   const uint16 *addr;
   for (size_t windex = 0; windex < win.nr; windex++) {
     if (win.bits & (1 << windex))
       continue;  // layer is disabled for this window part
     uint x = win.edges[windex] + bglayer->hScroll;
+    if (layer == 1) x -= ppu->cameraLockShiftX;  // camera lock (BG2 only): shift sample coord — world + stock paths
     uint w = win.edges[windex + 1] - win.edges[windex];
     PpuZbufType *dstz = ppu->bgBuffers[sub].data + win.edges[windex] + kPpuExtraLeftRight;
-    const uint16 *tp = tps[x >> 8 & 1] + ((x >> 3) & 0x1f);
-    const uint16 *tp_last = tps[x >> 8 & 1] + 31;
-    const uint16 *tp_next = tps[(x >> 8 & 1) ^ 1];
+    const uint16 *tp, *tp_last, *tp_next;
+    if (useWorld) {
+      // Gather this run's tiles into a contiguous buffer (clamped), so NEXT_TP just steps linearly.
+      int firstCol = ((int)x + bglayer->worldOffX) >> 3;
+      int ntiles = (int)(((x & 7) + w + 7) >> 3) + 1;
+      if (ntiles > kPpuXPixels / 8 + 7) ntiles = kPpuXPixels / 8 + 7;
+      bool validY = (worldTileY >= 0 && worldTileY < (int)bglayer->worldH);
+      const uint16 *wrow = validY ? bglayer->world + (size_t)worldTileY * bglayer->worldW : NULL;
+      for (int k = 0; k <= ntiles; k++) {
+        int c = firstCol + k;
+        worldRowBuf[k] = (validY && c >= 0 && c < (int)bglayer->worldW) ? wrow[c] : 0;
+      }
+      tp = worldRowBuf, tp_next = worldRowBuf, tp_last = worldRowBuf + (kPpuXPixels / 8 + 7);
+    } else {
+      tp = tps[x >> 8 & 1] + ((x >> 3) & 0x1f);
+      tp_last = tps[x >> 8 & 1] + 31;
+      tp_next = tps[(x >> 8 & 1) ^ 1];
+    }
 #define NEXT_TP() if (tp != tp_last) tp += 1; else tp = tp_next, tp_next = tp_last - 31, tp_last = tp + 31;
     // Handle clipped pixels on left side
     if (x & 7) {
@@ -313,7 +376,7 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
       NEXT_TP();
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
-      uint32 bits = READ_BITS(ta, tile & 0x3ff);
+      uint32 bits = (tile || !useWorld) ? READ_BITS(ta, tile & 0x3ff) : 0;  // world gap (entry 0) => backdrop, not char 0
       if (bits) {
         z += ((tile & 0x1c00) >> kPaletteShift);
         if (tile & 0x4000) {
@@ -324,6 +387,8 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
           do DO_PIXEL_HFLIP(0); while (bits <<= 1, dstz++, --curw);
         }
       } else {
+        if (useWorld && !tile)  // no-data gap: paint the backdrop run black via the sentinel
+          for (int q = 0; q < curw; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
         dstz += curw;
       }
     }
@@ -333,7 +398,7 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
       NEXT_TP();
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
-      uint32 bits = READ_BITS(ta, tile & 0x3ff);
+      uint32 bits = (tile || !useWorld) ? READ_BITS(ta, tile & 0x3ff) : 0;  // world gap (entry 0) => backdrop, not char 0
       if (bits) {
         z += ((tile & 0x1c00) >> kPaletteShift);
         if (tile & 0x4000) {
@@ -343,6 +408,8 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
           DO_PIXEL_HFLIP(0); DO_PIXEL_HFLIP(1); DO_PIXEL_HFLIP(2); DO_PIXEL_HFLIP(3);
           DO_PIXEL_HFLIP(4); DO_PIXEL_HFLIP(5); DO_PIXEL_HFLIP(6); DO_PIXEL_HFLIP(7);
         }
+      } else if (useWorld && !tile) {  // no-data gap: paint the backdrop run black via the sentinel
+        for (int q = 0; q < 8; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
       }
       dstz += 8, w -= 8;
     }
@@ -351,7 +418,7 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
       uint32 tile = *tp;
       int ta = (tile & 0x8000) ? tileadr1 : tileadr0;
       PpuZbufType z = (tile & 0x2000) ? zhi : zlo;
-      uint32 bits = READ_BITS(ta, tile & 0x3ff);
+      uint32 bits = (tile || !useWorld) ? READ_BITS(ta, tile & 0x3ff) : 0;  // world gap (entry 0) => backdrop, not char 0
       if (bits) {
         z += ((tile & 0x1c00) >> kPaletteShift);
         if (tile & 0x4000) {
@@ -359,6 +426,8 @@ static void PpuDrawBackground_4bpp(Ppu *ppu, uint y, bool sub, uint layer, PpuZb
         } else {
           do DO_PIXEL_HFLIP(0); while (bits <<= 1, dstz++, --w);
         }
+      } else if (useWorld && !tile) {  // no-data gap: paint the backdrop run black via the sentinel
+        for (int q = 0; q < w; q++) { if (dstz[q] == 0x0500) dstz[q] = kPpuWorldGapPixel; }
       }
     }
   }
@@ -692,10 +761,16 @@ void PpuSetMode7PerspectiveCorrection(Ppu *ppu, int low, int high) {
   ppu->mode7PerspectiveHigh = 1.0f / high;
 }
 
-void PpuSetExtraSideSpace(Ppu *ppu, int left, int right, int bottom) {
+void PpuSetExtraSideSpace(Ppu *ppu, int left, int right, int top, int bottom) {
   ppu->extraLeftCur = UintMin(left, ppu->extraLeftRight);
   ppu->extraRightCur = UintMin(right, ppu->extraLeftRight);
-  ppu->extraBottomCur = UintMin(bottom, 16);
+  // Vertical budget per side: extraTopBottom when tall is configured, else the legacy +16 bottom-only
+  // (the 224->240 extend_y mode). The buffer height (g_snes_height) is allocated for exactly this budget,
+  // so the clamp here must match it or the render overruns the texture.
+  int topBudget = ppu->extraTopBottom;
+  int botBudget = topBudget > 0 ? topBudget : ((ppu->renderFlags & kPpuRenderFlags_Height240) ? 16 : 0);
+  ppu->extraTopCur = UintMin(top, topBudget);
+  ppu->extraBottomCur = UintMin(bottom, botBudget);
 }
 
 static FORCEINLINE float FloatInterpolate(float x, float xmin, float xmax, float ymin, float ymax) {
@@ -719,7 +794,8 @@ static void PpuDrawMode7Upsampled(Ppu *ppu, uint y) {
       m0v[i] = 4096.0f / FloatInterpolate((int)y + kInterpolateOffsets[i], 0, 223, ppu->mode7PerspectiveLow, ppu->mode7PerspectiveHigh);
   }
   size_t pitch = ppu->renderPitch;
-  uint8 *render_buffer_ptr = &ppu->renderBuffer[(y - 1) * 4 * pitch];
+  // tall: shift down by the top budget so mode7 (world map / title) lands centered in the tall buffer (4x-scaled rows)
+  uint8 *render_buffer_ptr = &ppu->renderBuffer[(y - 1 + (int)ppu->extraTopBottom) * 4 * pitch];
   uint8 *dst_start = render_buffer_ptr + (ppu->extraLeftRight - ppu->extraLeftCur) * 16;
   size_t draw_width = 256 + ppu->extraLeftCur + ppu->extraRightCur;
   uint8 *dst_curline = dst_start;
@@ -844,7 +920,7 @@ static void PpuDrawBackgrounds(Ppu *ppu, int y, bool sub) {
 
 static NOINLINE void PpuDrawWholeLine(Ppu *ppu, uint y) {
   if (ppu->forcedBlank) {
-    uint8 *dst = &ppu->renderBuffer[(y - 1) * ppu->renderPitch];
+    uint8 *dst = &ppu->renderBuffer[(y - 1 + (int)ppu->extraTopBottom) * ppu->renderPitch];
     size_t n = sizeof(uint32) * (256 + ppu->extraLeftRight * 2);
     memset(dst, 0, n);
     return;
@@ -884,8 +960,8 @@ static NOINLINE void PpuDrawWholeLine(Ppu *ppu, uint y) {
   uint32 cw_clip_math = ((cwin.bits & kCwBitsMod[ppu->clipMode]) ^ kCwBitsMod[ppu->clipMode + 4]) |
                         ((cwin.bits & kCwBitsMod[ppu->preventMathMode]) ^ kCwBitsMod[ppu->preventMathMode + 4]) << 8;
 
-  uint32 *dst = (uint32*)&ppu->renderBuffer[(y - 1) * ppu->renderPitch], *dst_org = dst;
-  
+  uint32 *dst = (uint32*)&ppu->renderBuffer[(y - 1 + (int)ppu->extraTopBottom) * ppu->renderPitch], *dst_org = dst;
+
   dst += (ppu->extraLeftRight - ppu->extraLeftCur);
 
   uint32 windex = 0;
@@ -898,11 +974,12 @@ static NOINLINE void PpuDrawWholeLine(Ppu *ppu, uint y) {
     if (math_enabled_cur == 0 || fixed_color == 0 && !ppu->halfColor && !rendered_subscreen) {
       // Math is disabled (or has no effect), so can avoid the per-pixel maths check
       uint32 i = left;
-      if (ppu->renderFlags & kPpuRenderFlags_BlackBG2) {
+      if (ppu->renderFlags & (kPpuRenderFlags_BlackBG2 | kPpuRenderFlags_BlackBackdrop)) {
         do {
           uint8 layer = (ppu->bgBuffers[0].data[i] >> 8) & 0xf;
           uint8 cidx = ppu->bgBuffers[0].data[i] & 0xff;
-          if (layer == 5 || (layer == 1 && cidx >= 112)) {
+          if ((ppu->renderFlags & kPpuRenderFlags_BlackBG2) ? (layer == 5 || (layer == 1 && cidx >= 112))
+                                                            : (layer == 5 && cidx != 0)) {  // BlackBackdrop: gap sentinel only
             dst[0] = 0;
           } else {
             uint32 color = ppu->cgram[ppu->bgBuffers[0].data[i] & 0xff];
@@ -928,7 +1005,8 @@ static NOINLINE void PpuDrawWholeLine(Ppu *ppu, uint y) {
       do {
         uint8 main_layer = (ppu->bgBuffers[0].data[i] >> 8) & 0xf;
         uint8 cidx2 = ppu->bgBuffers[0].data[i] & 0xff;
-        if ((ppu->renderFlags & kPpuRenderFlags_BlackBG2) && (main_layer == 5 || (main_layer == 1 && cidx2 >= 112))) {
+        if ((ppu->renderFlags & kPpuRenderFlags_BlackBG2) ? (main_layer == 5 || (main_layer == 1 && cidx2 >= 112))
+            : ((ppu->renderFlags & kPpuRenderFlags_BlackBackdrop) && main_layer == 5 && cidx2 != 0)) {  // gap sentinel
           dst[0] = 0;
         } else {
           uint32 color = ppu->cgram[ppu->bgBuffers[0].data[i] & 0xff], color2;
@@ -1022,7 +1100,7 @@ static void ppu_handlePixel(Ppu* ppu, int x, int y) {
       r2 = r; g2 = g; b2 = b;
     }
   }
-  int row = y - 1;
+  int row = y - 1 + (int)ppu->extraTopBottom;  // tall: shift the base image down by the top budget (0 when not tall)
   uint8 *pixelBuffer = (uint8*) &ppu->renderBuffer[row * ppu->renderPitch + (x + ppu->extraLeftRight) * 4];
   pixelBuffer[0] = ((b << 3) | (b >> 2)) * ppu->brightness / 15;
   pixelBuffer[1] = ((g << 3) | (g >> 2)) * ppu->brightness / 15;
@@ -1281,15 +1359,42 @@ static bool ppu_evaluateSprites(Ppu* ppu, int line) {
     int yy = ppu->oam[index] >> 8;
     if (yy == 0xf0)
       continue;  // this works for zelda because sprites are always 8 or 16.
-    // check if the sprite is on this line and get the sprite size
-    int row = (line - yy) & 0xff;
     int highOam = ppu->oam[0x100 + (index >> 4)] >> (index & 15);
     int spriteSize = spriteSizes[(highOam >> 1) & 1];
-    if (row >= spriteSize)
-      continue;
+    // check if the sprite is on this line and get the sprite size
+    int row;
+    if (ppu->extraTopBottom != 0) {
+      // Tall view spans >256 lines, more than the 8-bit OAM-Y can place. Reconstruct the game's 9-bit Y
+      // (high bit from oamHighY, synced from g_oam_y_high) and map the high range to negative — above the
+      // screen top — exactly like the stock 9-bit X does for the left edge. Each sprite is then evaluated
+      // on a single line (no 256px-apart duplicate) and can sit anywhere in the tall pan.
+      yy += ppu->oamHighY[index >> 1] ? 256 : 0;
+      // camera-lock: shift BEFORE the wrap (see the X axis below) so a sprite in the bottom lock band isn't
+      // folded above the screen and culled.
+      yy += ppu->cameraLockShiftY;
+      if (yy >= 256 + (int)ppu->extraTopBottom)
+        yy -= 512;
+      row = line - yy;
+      if (row < 0 || row >= spriteSize)
+        continue;
+    } else {
+      row = (line - yy) & 0xff;
+      if (row >= spriteSize)
+        continue;
+    }
     // in y-range, get the x location, using the high bit as well
-    int x = (ppu->oam[index] & 0xff) + (highOam & 1) * 256;
-    x -= (x >= 256 + extra_left_right) * 512;
+    int x = (ppu->oam[index] & 0xff) + (highOam & 1) * 256;   // stock 9-bit screen X (0..511)
+    if (extra_left_right != 0) {
+      // Wide view: place at the TRUE X. oamHighX carries the signed bits above the 9th, so a sprite sits
+      // anywhere across a >512px view with no ±512 fold (the fold would otherwise draw a 512px-away ghost).
+      x += (int)(int8_t)ppu->oamHighX[index >> 1] * 512;
+      x += ppu->cameraLockShiftX;
+    } else {
+      // Stock path (4:3 / tall-only): the view is ≤256px so the 9-bit X + fold is exact and never ghosts.
+      // Camera-lock shift applies BEFORE the fold so a lock-band sprite isn't folded off-screen + culled.
+      x += ppu->cameraLockShiftX;
+      x -= (x >= 256 + extra_left_right) * 512;
+    }
     // if in x-range
     if (x <= -(spriteSize + extra_left_right))
       continue;

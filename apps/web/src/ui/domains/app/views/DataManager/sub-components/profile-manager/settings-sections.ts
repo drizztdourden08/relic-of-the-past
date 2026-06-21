@@ -17,8 +17,9 @@ const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label
     keys: [
       { key: 'aspectRatio', label: 'Aspect Ratio' },
       { key: 'extendY', label: 'Extend Y' },
-      { key: 'unchangedSprites', label: 'Unchanged Sprites' },
-      { key: 'noVisualFixes', label: 'No Visual Fixes' },
+      { key: 'cameraLockToViewport', label: 'Lock Camera to View' },
+      { key: 'widescreenSprites', label: 'Widescreen Sprites' },
+      { key: 'widescreenVisualFixes', label: 'Widescreen Visual Fixes' },
       { key: 'windowMode', label: 'Window Mode', format: (v) => String(v ?? 'default') },
       { key: 'startFullscreen', label: 'Start Fullscreen' },
       { key: 'viewportConstraint', label: 'Viewport Constraint', format: (v) => String(v ?? 'none') },

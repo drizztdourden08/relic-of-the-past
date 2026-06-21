@@ -11,6 +11,8 @@
 // Single JS-interop site: every notifier funnels through here so the
 // window-guard and the __onHapticEvent contract are defined exactly once.
 static void EmitHaptic(int type, int arg) {
+  // Opt-in gate: with haptics off, fire zero JS host-calls (no EM_ASM at all).
+  if (!(enhanced_features0 & kFeatures0_Haptics)) return;
   EM_ASM({
     if (typeof window !== 'undefined' && window.__onHapticEvent) {
       window.__onHapticEvent($0, $1);

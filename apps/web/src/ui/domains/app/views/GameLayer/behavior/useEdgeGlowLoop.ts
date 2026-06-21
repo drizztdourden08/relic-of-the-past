@@ -57,7 +57,7 @@ const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
       if (vp) {
         // Use locationModule (physical location, unaffected by text/menu overlays)
         // so effects persist during telepathy, NPC dialogue, etc.
-        const hasExtended = vp.extraLeftRight > 0 || (vp.snesHeight === 240);
+        const hasExtended = vp.extraLeftRight > 0 || vp.extraTopBottom > 0 || (vp.snesHeight === 240);
         const isOverworld = vp.locationModule === 9;
         if (isOverworld && hasExtended && edgeEffectRef.current) {
           renderer.setEnabled(true);
@@ -67,7 +67,7 @@ const useEdgeGlowLoop = (params: EdgeGlowLoopParams): void => {
         // Only update bounds when on overworld — freeze during text/events
         if (isOverworld) {
           renderer.setBlackBounds(vp.blackLeft, vp.blackRight, vp.blackBottom);
-          const maxBottom = vp.snesHeight === 240 ? 16 : 0;
+          const maxBottom = vp.extraTopBottom > 0 ? vp.extraTopBottom : (vp.snesHeight === 240 ? 16 : 0);
           renderer.setMaxBounds(vp.extraLeftRight, vp.extraLeftRight, maxBottom);
         }
 

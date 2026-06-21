@@ -8,8 +8,15 @@
 #include <limits.h>
 #include "dsp_regs.h"
 #include "dsp.h"
+#include "../src/features.h"
 
 #define MY_CHANGES 1
+
+// Per-group-volume enable gate. Kept OUT of the Dsp struct on purpose: it's an audio setting, not SNES DSP
+// game state, and any field added to Dsp shifts the serialized region's size (dsp_saveload uses
+// sizeof(Dsp)-offsetof(ram)), which silently breaks every existing save state. There is a single DSP, so a
+// module-level flag is equivalent and keeps the save format stable. Resynced from settings each frame.
+static bool g_perGroupVolumeEnabled;
 
 static const int rateValues[32] = {
   0, 2048, 1536, 1280, 1024, 768, 640, 512,
@@ -137,15 +144,15 @@ void dsp_cycle(Dsp* dsp) {
   int totalR = 0;
   for(int i = 0; i < 8; i++) {
     dsp_cycleChannel(dsp, i);
-    // Apply sub-volume to sampleOut directly so it affects both main mix and echo input
-    uint8_t groupVol = (dsp->sfxChannelMask & (1 << i)) ? dsp->sfxVolume : dsp->musicVolume;
-    if (groupVol < 128) {
-      dsp->channel[i].sampleOut = (dsp->channel[i].sampleOut * groupVol) >> 7;
+    if (g_perGroupVolumeEnabled) {
+      // Apply sub-volume to sampleOut directly so it affects both main mix and echo input
+      uint8_t groupVol = (dsp->sfxChannelMask & (1 << i)) ? dsp->sfxVolume : dsp->musicVolume;
+      if (groupVol < 128) {
+        dsp->channel[i].sampleOut = (dsp->channel[i].sampleOut * groupVol) >> 7;
+      }
     }
-    int sampleL = (dsp->channel[i].sampleOut * dsp->channel[i].volumeL) >> 6;
-    int sampleR = (dsp->channel[i].sampleOut * dsp->channel[i].volumeR) >> 6;
-    totalL += sampleL;
-    totalR += sampleR;
+    totalL += (dsp->channel[i].sampleOut * dsp->channel[i].volumeL) >> 6;
+    totalR += (dsp->channel[i].sampleOut * dsp->channel[i].volumeR) >> 6;
     totalL = totalL < -0x8000 ? -0x8000 : (totalL > 0x7fff ? 0x7fff : totalL); // clamp 16-bit
     totalR = totalR < -0x8000 ? -0x8000 : (totalR > 0x7fff ? 0x7fff : totalR); // clamp 16-bit
   }
@@ -674,4 +681,16 @@ void dsp_setMusicVolume(Dsp* dsp, uint8_t volume) {
 
 void dsp_setSfxVolume(Dsp* dsp, uint8_t volume) {
   dsp->sfxVolume = volume > 128 ? 128 : volume;
+}
+
+// Per-group volume gate, pushed from the game side (kFeatures0_PerGroupVolume) so this audio core never
+// reads game RAM. false => stock DSP mix (bit-exact). Driven from the per-frame feature sync so a live
+// toggle takes effect immediately, not only on the next volume change.
+void dsp_setPerGroupVolumeEnabled(Dsp* dsp, bool enabled) {
+  (void)dsp;
+  g_perGroupVolumeEnabled = enabled;
+}
+
+bool dsp_getPerGroupVolumeEnabled(void) {
+  return g_perGroupVolumeEnabled;
 }

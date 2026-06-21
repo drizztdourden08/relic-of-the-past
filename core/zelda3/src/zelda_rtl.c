@@ -1,12 +1,14 @@
 #include "zelda_rtl.h"
 #include "variables.h"
 #include "misc.h"
+#include "overworld.h"
 #include "nmi.h"
 #include "poly.h"
 #include "attract.h"
 #include "snes/ppu.h"
 #include "snes/snes_regs.h"
 #include "snes/dma.h"
+#include "snes/dsp.h"
 #include "spc_player.h"
 #include "util.h"
 #include "audio.h"
@@ -15,6 +17,8 @@ ZeldaEnv g_zenv;
 uint8 g_ram[131072];
 
 uint32 g_wanted_zelda_features;
+uint32 g_wanted_zelda_features1;
+uint32 g_wanted_zelda_features2;
 
 static void Startup_InitializeMemory();
 
@@ -137,9 +141,126 @@ static void SimpleHdma_DoLine(SimpleHdma *c) {
   c->rep_count--;
 }
 
+// Overworld area geometry tables (defined in overworld.c). Used to locate the destination area's content
+// when building a transition tilemap that spans two areas.
+extern const uint16 kOverworld_OffsetBaseX[64];
+extern const uint16 kOverworld_OffsetBaseY[64];
+extern const int16 kOverworld_Func6B_AreaDelta[4];
+extern const uint16 kOverworld_Size1[2];  // area camera Y span (small/big); used to centre the destination
+extern const uint16 kOverworld_Size2[2];  // area camera X span (small/big); used to centre the destination
+
+// Snapshot of the source area's map16, kept while stationary so a scroll transition can build a world
+// tilemap spanning BOTH areas. dung_bg2 holds only one area and is overwritten with the destination
+// partway through the transition, so we must keep our own copy of the source.
+static uint16 g_ow_src_map16[0x1000];  // copy of dung_bg2 (64x64 map16) for the source area
+static int g_ow_src_xs, g_ow_src_xe, g_ow_src_ys, g_ow_src_ye, g_ow_src_area;
+
+// Blit one overworld area's map16 (64-wide) into the linear world buffer as map8 tiles, at tile offset
+// (offX, offY). Tiles falling outside the buffer are skipped (the caller clears it first for the gaps).
+static void BlitAreaMap16(uint16 *world, int worldW, int worldH, const uint16 *map16,
+                          int areaWt, int areaHt, int offX, int offY, const uint16 *map8) {
+  for (int ay = 0; ay < areaHt; ay++) {
+    int by = offY + ay;
+    if ((unsigned)by >= (unsigned)worldH)
+      continue;
+    const uint16 *m16row = map16 + (size_t)(ay >> 1) * 64;
+    uint16 *dst = world + (size_t)by * worldW;
+    int suby = ay & 1;
+    for (int ax = 0; ax < areaWt; ax++) {
+      int bx = offX + ax;
+      if ((unsigned)bx >= (unsigned)worldW)
+        continue;
+      const uint16 *s = map8 + (size_t)m16row[ax >> 1] * 4;  // 2x2 sub-tiles: TL=s[0] TR=s[1] BL=s[2] BR=s[3]
+      dst[bx] = s[suby * 2 + (ax & 1)];
+    }
+  }
+}
+
+// Expand the resident overworld map16 (dung_bg2 — the full current area) into the BG2 layer's linear
+// "world" tilemap so the widescreen view can extend past the 512px SNES tilemap into real map instead of
+// wrapping. Out-of-area columns clamp to transparent (edge-mirror). Also snapshots the area for transitions.
+static void BuildOverworldWorldTilemap() {
+  BgLayer *bg = &g_zenv.ppu->bgLayer[1];  // BG2 carries the overworld terrain (dung_bg2)
+  if (!PpuEnsureWorldTilemap(bg)) { bg->worldW = bg->worldH = 0; bg->useWorld = false; return; }  // OOM: stock path
+  int originX = ow_scroll_vars0.xstart, originY = ow_scroll_vars0.ystart;
+  int w = (((int)ow_scroll_vars0.xend - originX) >> 3) + 32;  // area width in 8x8 tiles (+32 = the 256px view)
+  int h = (((int)ow_scroll_vars0.yend - originY) >> 3) + 32;
+  w = IntMax(0, IntMin(w, kPpuWorldTiles));
+  h = IntMax(0, IntMin(h, kPpuWorldTiles));
+  BlitAreaMap16(bg->world, w, h, dung_bg2, w, h, 0, 0, GetMap16toMap8Table());
+  bg->worldW = w, bg->worldH = h;
+  // The overworld BG scroll wraps at the 1024px tilemap, so the PPU hScroll/vScroll carry only the low 10
+  // bits. worldOff re-adds the 1024-aligned high part minus the area origin, so the fetch's local (x,y)
+  // maps back to an absolute area tile.
+  bg->worldOffX = ((int)BG2HOFS_copy2 & ~0x3ff) - originX;
+  bg->worldOffY = ((int)BG2VOFS_copy2 & ~0x3ff) - originY;
+  bg->useWorld = true;
+  // Snapshot the source area (map16 + bounds + index) for a possible upcoming scroll transition.
+  memcpy(g_ow_src_map16, dung_bg2, sizeof(g_ow_src_map16));
+  g_ow_src_xs = originX, g_ow_src_xe = ow_scroll_vars0.xend;
+  g_ow_src_ys = originY, g_ow_src_ye = ow_scroll_vars0.yend;
+  g_ow_src_area = (BYTE(current_area_of_player) >> 1) & 0x3f;
+}
+
+// Build a world tilemap spanning the source area (from the snapshot) AND the destination area (live
+// dung_bg2, loaded partway through the transition), so the camera-locked wide/tall view pans smoothly
+// across the seam with real content on both sides — no 512px wrap, no black, at any aspect ratio.
+static void BuildTransitionWorldTilemap(int destArea) {
+  BgLayer *bg = &g_zenv.ppu->bgLayer[1];
+  if (!PpuEnsureWorldTilemap(bg)) { bg->worldW = bg->worldH = 0; bg->useWorld = false; return; }  // OOM: stock path
+  // Blit each area's ACTUAL map16 extent (32x32 small / 64x64 large = 64/128 map8 tiles per side), NOT the
+  // scroll-range + 256: the vertical scroll range (Size1) overshoots the real map16 by ~30px, and reading
+  // past the map16 produces garbage. Using the true size also makes the two areas tile exactly at the seam.
+  int srcTiles = kOverworldMapIsSmall[g_ow_src_area] ? 64 : 128;
+  int destTiles = kOverworldMapIsSmall[destArea] ? 64 : 128;
+  int destXs = kOverworld_OffsetBaseX[destArea], destYs = kOverworld_OffsetBaseY[destArea];
+  int left = IntMin(g_ow_src_xs, destXs), top = IntMin(g_ow_src_ys, destYs);
+  int right = IntMax(g_ow_src_xs + srcTiles * 8, destXs + destTiles * 8);
+  int bottom = IntMax(g_ow_src_ys + srcTiles * 8, destYs + destTiles * 8);
+  int w = IntMax(0, IntMin((right - left) >> 3, kPpuWorldTiles));
+  int h = IntMax(0, IntMin((bottom - top) >> 3, kPpuWorldTiles));
+  const uint16 *map8 = GetMap16toMap8Table();
+  memset(bg->world, 0, (size_t)w * h * sizeof(uint16));  // gaps / out-of-area = transparent
+  BlitAreaMap16(bg->world, w, h, g_ow_src_map16, srcTiles, srcTiles,
+                (g_ow_src_xs - left) >> 3, (g_ow_src_ys - top) >> 3, map8);
+  BlitAreaMap16(bg->world, w, h, dung_bg2, destTiles, destTiles,
+                (destXs - left) >> 3, (destYs - top) >> 3, map8);
+  bg->worldW = w, bg->worldH = h;
+  bg->worldOffX = ((int)BG2HOFS_copy2 & ~0x3ff) - left;
+  bg->worldOffY = ((int)BG2VOFS_copy2 & ~0x3ff) - top;
+  bg->useWorld = true;
+}
+
+// Last stationary (submodule 0) camera-lock state. A scroll transition always moves the camera exactly one
+// 256px screen to the adjacent area, so we interpolate the lock shift from this saved value to its negation
+// as the camera crosses — the view pans smoothly across the seam instead of jumping when the lock hands off.
+static int g_lock_last_shift_x, g_lock_last_shift_y;
+static int g_lock_last_cam_x, g_lock_last_cam_y;
+
+// Set each frame to the camera-lock shift on each axis: non-zero while the lock holds the rendered view at a
+// boundary (the game camera is pinned but the view is shifted to the area edge). Consumers: the overworld
+// parallax (BG1) holds when non-zero so it doesn't drift against the static scene; the sprite proximity
+// loader scans the lock band (the shifted side) so sprites in the extended view spawn even while pinned.
+int g_camera_lock_shift_x, g_camera_lock_shift_y;
+
+// Camera-lock clamp for one axis: the rendered-view camera position the lock pins to, given the real game
+// camera, the area's scroll bounds [start,end], and that side's budget. The inset is half the area span at
+// most, so an area narrower/shorter than the view simply centers (the clamp collapses to the midpoint). The
+// lock shift is then (cam - clamp) and the low-side content extent is (clamp - start). A non-positive budget
+// (e.g. no vertical space in the pure-wide config) yields clamp == cam, i.e. no lock / no shift on that axis.
+static int CameraLockClamp(int cam, int start, int end, int budget) {
+  int inset = IntMin(budget, (end - start) / 2);
+  if (inset <= 0)
+    return cam;
+  int clamped = IntMax(cam, start + inset);
+  return IntMin(clamped, end - inset);
+}
+
 static void ConfigurePpuSideSpace() {
   // Let PPU impl know about the maximum allowed extra space on the sides and bottom
-  int extra_right = 0, extra_left = 0, extra_bottom = 0;
+  int extra_right = 0, extra_left = 0, extra_bottom = 0, extra_top = 0;
+  g_zenv.ppu->bgLayer[1].useWorld = false;  // re-enabled per-frame only for outdoor areas (below)
+  g_zenv.ppu->cameraLockShiftX = g_zenv.ppu->cameraLockShiftY = 0;  // set only by the stationary overworld lock branch
 //  printf("main %d, sub %d  (%d, %d, %d)\n", main_module_index, submodule_index, BG2HOFS_copy2, room_bounds_x.v[2 | (quadrant_fullsize_x >> 1)], quadrant_fullsize_x >> 1);
   int mod = main_module_index;
   if (mod == 14)
@@ -154,6 +275,111 @@ static void ConfigurePpuSideSpace() {
       extra_left = BG2HOFS_copy2 - ow_scroll_vars0.xstart;
       extra_right = ow_scroll_vars0.xend - BG2HOFS_copy2;
       extra_bottom = ow_scroll_vars0.yend - BG2VOFS_copy2;
+      extra_top = IntMax(0, BG2VOFS_copy2 - ow_scroll_vars0.ystart);  // tall: rows above the camera (mirror of extra_bottom)
+      // Apply the lock + linear world tilemap whenever the overworld view is stationary in a fully-loaded
+      // area: submodule 0 (normal play) OR the inventory menu overlay (main_module 14), which can only be
+      // opened from submodule 0 and freezes the camera/area at that state — so the same lock keeps the
+      // overworld behind the menu aligned instead of snapping back to an unshifted view.
+      // During screen-to-screen scroll transitions the camera spans two areas that a single-area buffer
+      // can't represent — fall back to the stock streaming path, which scrolls correctly.
+      if (submodule_index == 0 || main_module_index == 14) {
+        if (enhanced_features0 & kFeatures0_CameraLockToViewport) {
+          // Render-level camera lock: clamp the RENDERED view to the area so its edges rest on the
+          // boundary (no out-of-area black), then shift the world fetch (below) + sprites (ppu eval) by
+          // the same delta. The game camera (BG2VOFS) and the overworld scroll/transition logic are
+          // untouched — this is purely visual. CameraLockClamp halves the inset so a small area centers.
+          int clampedH = CameraLockClamp((int)BG2HOFS_copy2, (int)ow_scroll_vars0.xstart, (int)ow_scroll_vars0.xend, (int)g_oam_wide_budget);
+          int clampedV = CameraLockClamp((int)BG2VOFS_copy2, (int)ow_scroll_vars0.ystart, (int)ow_scroll_vars0.yend, (int)g_oam_tall_budget);
+          g_zenv.ppu->cameraLockShiftX = (int)BG2HOFS_copy2 - clampedH;
+          g_zenv.ppu->cameraLockShiftY = (int)BG2VOFS_copy2 - clampedV;
+          extra_left = clampedH - (int)ow_scroll_vars0.xstart;
+          extra_right = (int)ow_scroll_vars0.xend - clampedH;
+          extra_top = IntMax(0, clampedV - (int)ow_scroll_vars0.ystart);
+          extra_bottom = (int)ow_scroll_vars0.yend - clampedV;
+        }
+        // Snapshot the lock + build the linear world tilemap ONLY when the wide/tall/lock view is active.
+        // At all-off this must NOT run: BuildOverworldWorldTilemap() sets bgLayer[1].useWorld=true, which
+        // would switch BG2 off the stock wrapping fetch even with no widescreen and no lock.
+        if (g_oam_wide_budget || g_oam_tall_budget || (enhanced_features0 & kFeatures0_CameraLockToViewport)) {
+          // Remember this stationary frame's lock so a following scroll transition can interpolate from it.
+          g_lock_last_shift_x = g_zenv.ppu->cameraLockShiftX;
+          g_lock_last_shift_y = g_zenv.ppu->cameraLockShiftY;
+          g_lock_last_cam_x = BG2HOFS_copy2;
+          g_lock_last_cam_y = BG2VOFS_copy2;
+          BuildOverworldWorldTilemap();
+        }
+      } else {
+        // Non-stationary outdoor sub-states. A screen-to-screen scroll transition (the submodule 1-8 chain)
+        // smoothly interpolates the lock shift on BOTH axes from the source area's stationary lock (saved on
+        // the last stationary frame) to the DESTINATION area's stationary lock, so the view arrives already
+        // centered on the destination — no jump when the stationary lock takes over at submodule 0 — for any
+        // source/dest size combination. Any other sub-state (dungeon-exit walk, mosaic) holds the current-area
+        // lock, exactly like the stationary branch.
+        if (enhanced_features0 & kFeatures0_CameraLockToViewport) {
+          int dir = overworld_screen_transition & 3;  // 0 up, 1 down, 2 left, 3 right
+          int destArea = g_ow_src_area + kOverworld_Func6B_AreaDelta[dir];
+          if (submodule_index <= 8 && (unsigned)destArea < 64) {
+            int big = !kOverworldMapIsSmall[destArea];
+            int destXs = kOverworld_OffsetBaseX[destArea], destYs = kOverworld_OffsetBaseY[destArea];
+            int destXe = destXs + kOverworld_Size2[big], destYe = destYs + kOverworld_Size1[big];
+            bool xMoving = dir >= 2;  // left/right scroll the X axis, up/down the Y axis
+            // Progress 0..1 from the source lock to the destination lock: hold the source before the scroll,
+            // ramp with the scrolling axis's advance DURING the scroll (submodule 6), then hold the dest after
+            // (submodules 7-8, the ease-off + walk-in). The scroll-target word is only the landing target
+            // during submodule 6 — Overworld_SetCameraBoundaries resets it to the destination area's own
+            // target the instant the scroll completes — so progress must key off the SUBMODULE, not the live
+            // target, or the post-scroll frames recompute a bogus ratio and the view jitters before settling.
+            int num = 0, den = 1;
+            if (submodule_index >= 7) {
+              num = 1, den = 1;
+            } else if (submodule_index == 6) {
+              int movTarget = (&up_down_scroll_target)[dir];
+              int movCam = xMoving ? (int)BG2HOFS_copy2 : (int)BG2VOFS_copy2;
+              int movLast = xMoving ? g_lock_last_cam_x : g_lock_last_cam_y;
+              den = movTarget - movLast; if (den < 0) den = -den;
+              num = movCam - movLast; if (num < 0) num = -num; if (num > den) num = den;
+              if (den <= 0) num = den = 1;
+            }
+            // Destination camera per axis: the perpendicular axis never moves (use the live camera); the
+            // moving axis targets its landing while scrolling (submodule 6), then the live camera once landed,
+            // so the shift lands exactly on the stationary clamp (the walk-in nudges the camera a few px).
+            int destCamX = (xMoving && submodule_index == 6) ? (int)(&up_down_scroll_target)[dir] : (int)BG2HOFS_copy2;
+            int destCamY = (!xMoving && submodule_index == 6) ? (int)(&up_down_scroll_target)[dir] : (int)BG2VOFS_copy2;
+            int destShiftX = destCamX - CameraLockClamp(destCamX, destXs, destXe, (int)g_oam_wide_budget);
+            int destShiftY = destCamY - CameraLockClamp(destCamY, destYs, destYe, (int)g_oam_tall_budget);
+            g_zenv.ppu->cameraLockShiftX = g_lock_last_shift_x + (destShiftX - g_lock_last_shift_x) * num / den;
+            g_zenv.ppu->cameraLockShiftY = g_lock_last_shift_y + (destShiftY - g_lock_last_shift_y) * num / den;
+            // Render the full wide/tall view: the two-area world tilemap (below) supplies real content on
+            // both sides of the seam; no-data gaps fall through to the black backdrop in PpuDrawBackground.
+            extra_left = extra_right = (int)g_oam_wide_budget;
+            extra_top = extra_bottom = (int)g_oam_tall_budget;
+            BuildTransitionWorldTilemap(destArea);
+            // The full-width pan exposes the no-data gaps; PpuDrawBackground paints them with a sentinel that
+            // BlackBackdrop renders black, matching the letterboxed margins — while the real green backdrop that
+            // shows through transparent terrain (tree bases, doorways) is left untouched. (PpuBeginDrawing
+            // resets renderFlags every frame, so this only affects the transition.)
+            g_zenv.ppu->renderFlags |= kPpuRenderFlags_BlackBackdrop;
+          } else {
+            // Non-scroll sub-state (dungeon-exit walk, mosaic, ...): hold the current-area stationary lock.
+            int clampedH = CameraLockClamp((int)BG2HOFS_copy2, (int)ow_scroll_vars0.xstart, (int)ow_scroll_vars0.xend, (int)g_oam_wide_budget);
+            int clampedV = CameraLockClamp((int)BG2VOFS_copy2, (int)ow_scroll_vars0.ystart, (int)ow_scroll_vars0.yend, (int)g_oam_tall_budget);
+            g_zenv.ppu->cameraLockShiftX = (int)BG2HOFS_copy2 - clampedH;
+            g_zenv.ppu->cameraLockShiftY = (int)BG2VOFS_copy2 - clampedV;
+            extra_left = clampedH - (int)ow_scroll_vars0.xstart;
+            extra_right = (int)ow_scroll_vars0.xend - clampedH;
+            extra_top = IntMax(0, clampedV - (int)ow_scroll_vars0.ystart);
+            extra_bottom = (int)ow_scroll_vars0.yend - clampedV;
+            BuildOverworldWorldTilemap();
+          }
+        }
+        if (!g_zenv.ppu->bgLayer[1].useWorld) {
+          // Stock 2-screen path (lock off, or no valid neighbour area): clamp to the 512px tilemap.
+          extra_left = IntMax(0, IntMin(extra_left, 128));
+          extra_right = IntMax(0, IntMin(extra_right, 128));
+          extra_top = IntMax(0, IntMin(extra_top, 128));
+          extra_bottom = IntMax(0, IntMin(extra_bottom, 128));
+        }
+      }
     }
   } else if (mod == 7) {
     // indoors, except when the light cone is in use
@@ -165,11 +391,16 @@ static void ConfigurePpuSideSpace() {
 
     int qy = quadrant_fullsize_y >> 1;
     extra_bottom = IntMax(room_bounds_y.v[qy + 2] - BG2VOFS_copy2, 0);
+    // tall: rows above the camera, bounded by the room's top edge (mirror of extra_bottom). The room's
+    // tilemap is fully resident, so the stock vertical fetch represents it without wrap.
+    extra_top = IntMax(BG2VOFS_copy2 - room_bounds_y.v[qy], 0);
   } else if (mod == 20 || mod == 0 || mod == 1) {
     extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
     extra_bottom = 16;
   }
-  PpuSetExtraSideSpace(g_zenv.ppu, extra_left, extra_right, extra_bottom);
+  PpuSetExtraSideSpace(g_zenv.ppu, extra_left, extra_right, extra_top, extra_bottom);
+  g_camera_lock_shift_x = g_zenv.ppu->cameraLockShiftX;
+  g_camera_lock_shift_y = g_zenv.ppu->cameraLockShiftY;
 }
 
 void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
@@ -194,13 +425,31 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
       PpuSetMode7PerspectiveCorrection(g_zenv.ppu, 0, 0);
   }
 
-  if (g_zenv.ppu->extraLeftRight != 0 || render_flags & kPpuRenderFlags_Height240)
+  if (g_zenv.ppu->extraLeftRight != 0 || g_zenv.ppu->extraTopBottom != 0 || render_flags & kPpuRenderFlags_Height240)
     ConfigurePpuSideSpace();
 
-  int height = render_flags & kPpuRenderFlags_Height240 ? 240 : 224;
+  // Total physical buffer rows = base 224 + top budget + bottom budget. The top budget is the tall extra
+  // per side (extraTopBottom); the bottom budget matches it for tall, else the legacy +16 (extend_y). This
+  // MUST equal g_snes_height (emscripten_main.c) or ppu_runLine overruns the texture. V == 0 ⇒ 224 or 240.
+  int topBudget = g_zenv.ppu->extraTopBottom;
+  int botBudget = topBudget > 0 ? topBudget : (render_flags & kPpuRenderFlags_Height240 ? 16 : 0);
+  int height = 224 + topBudget + botBudget;
+
+  // Tall: hand this frame's per-sprite high Y bit to the PPU so ppu_evaluateSprites can place sprites
+  // across the whole pan (OAM Y is only 8-bit). g_oam_y_high was filled by the OAM helpers this frame.
+  if (topBudget) {
+    for (int s = 0; s < 128; s++)
+      g_zenv.ppu->oamHighY[s] = g_oam_y_high[s];
+  }
+  // Wide: hand this frame's per-sprite high X (bits above the stock 9) to the PPU so ppu_evaluateSprites
+  // can place sprites at their true X across a >512px view (OAM X is only 9-bit). Filled by the OAM helpers.
+  if (g_oam_wide_budget) {
+    for (int s = 0; s < 128; s++)
+      g_zenv.ppu->oamHighX[s] = g_oam_x_high[s];
+  }
 
   for (int i = 0; i <= height; i++) {
-    if (i == 128 && irq_flag) {
+    if (i == 128 + topBudget && irq_flag) {  // file-select BG3 split fires at content line 128 (shifted down by the top budget)
       zelda_ppu_write(BG3HOFS, selectfile_var8);
       zelda_ppu_write(BG3HOFS, selectfile_var8 >> 8);
       zelda_ppu_write(BG3VOFS, 0);
@@ -249,9 +498,19 @@ static void ZeldaInitializationCode() {
   zelda_snes_dummy_write(NMITIMEN, 0x81);
 }
 
+// Tall-screen sprite support — see types.h. extraTopBottom is copied into g_oam_tall_budget at config
+// time (emscripten_main.c / main.c); g_oam_y_high carries the per-slot Y-high bit for the 9-bit OAM Y.
+uint16 g_oam_tall_budget;
+uint16 g_oam_wide_budget;
+uint8 g_oam_y_high[128];
+uint8 g_oam_x_high[128];  // see types.h — signed high X bits (above the stock 9) for wide views
+
 static void ClearOamBuffer() {  // 80841e
-  for (int i = 0; i < 128; i++)
+  for (int i = 0; i < 128; i++) {
     oam_buf[i].y = 0xf0;
+    g_oam_y_high[i] = 0;  // reset each frame; OAM helpers set it for tall sprites this frame
+    g_oam_x_high[i] = 0;  // reset each frame; OAM helpers set it for wide sprites this frame
+  }
 }
 
 static void ZeldaRunGameLoop() {
@@ -264,7 +523,7 @@ static void ZeldaRunGameLoop() {
 
 void ZeldaInitialize() {
   g_zenv.dma = dma_init(NULL);
-  g_zenv.ppu = ppu_init(NULL);
+  g_zenv.ppu = ppu_init();
   g_zenv.ram = g_ram;
   g_zenv.sram = (uint8*)calloc(8192, 1);
   g_zenv.vram = g_zenv.ppu->vram;
@@ -722,6 +981,22 @@ bool ZeldaRunFrame(int inputs) {
         enhanced_features0 = g_wanted_zelda_features;
         EmuSyncMemoryRegion(&enhanced_features0, sizeof(enhanced_features0));
         StateRecorder_RecordPatchByte(&state_recorder, kRam_Features0, (uint8 *)&enhanced_features0, 4);
+        // Push the per-group-volume gate to the audio core here (the one place features change) so a live
+        // toggle applies at once and dsp.c stays free of game-RAM reads.
+        if (g_zenv.player)
+          dsp_setPerGroupVolumeEnabled(g_zenv.player->dsp, (enhanced_features0 & kFeatures0_PerGroupVolume) != 0);
+      }
+      // Split bug-fix toggles (features1/features2) sync + record exactly like features0 so replays stay
+      // deterministic regardless of which individual fixes are enabled.
+      if (enhanced_features1 != g_wanted_zelda_features1) {
+        enhanced_features1 = g_wanted_zelda_features1;
+        EmuSyncMemoryRegion(&enhanced_features1, sizeof(enhanced_features1));
+        StateRecorder_RecordPatchByte(&state_recorder, kRam_Features1, (uint8 *)&enhanced_features1, 4);
+      }
+      if (enhanced_features2 != g_wanted_zelda_features2) {
+        enhanced_features2 = g_wanted_zelda_features2;
+        EmuSyncMemoryRegion(&enhanced_features2, sizeof(enhanced_features2));
+        StateRecorder_RecordPatchByte(&state_recorder, kRam_Features2, (uint8 *)&enhanced_features2, 4);
       }
     }
   }
@@ -811,6 +1086,16 @@ void SaveLoadSlot(int cmd, int which) {
       StateRecorder_Save(&state_recorder, f);
 
     fclose(f);
+
+    // A quicksave Load resumes live from the restored snapshot (not a TAS replay). Reset the recorder to a
+    // fresh baseline of the loaded state: this drops the pre-load input/feature log so it can never desync,
+    // and makes any post-load feature-flag change (current settings re-applied) a clean live patch rather
+    // than an out-of-place edit in a stale replay stream. This is what decouples save states from settings:
+    // a save made under one feature set loads cleanly under any other. (Reference Replays keep their log.)
+    if (cmd == kSaveLoad_Load) {
+      state_recorder.replay_mode = false;
+      StateRecorder_ClearKeyLog(&state_recorder);
+    }
   }
 }
 

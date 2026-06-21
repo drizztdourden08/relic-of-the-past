@@ -598,7 +598,7 @@ static void Hud_EquipItemBelow(uint8 *item) {  // 8ddf00
 }
 
 int GetCurrentItemButtonIndex() {
-  if (enhanced_features0 & kFeatures0_SwitchLR) {
+  if (enhanced_features0 & kFeatures0_SecondaryItemSlots) {
     return (joypad1L_last & kJoypadL_X) ? 1 :
            (joypad1L_last & kJoypadL_L) ? 2 :
            (joypad1L_last & kJoypadL_R) ? 3 : 0;
@@ -631,7 +631,7 @@ void Hud_NormalMenu() {  // 8ddf15
     return;
   }
 
-  if (joypad1H_last & kJoypadH_Y && !(joypad1L_last & kJoypadL_X) && (enhanced_features0 & kFeatures0_SwitchLR)) {
+  if (joypad1H_last & kJoypadH_Y && !(joypad1L_last & kJoypadL_X) && (enhanced_features0 & kFeatures0_InventoryReorder)) {
     if (filtered_joypad_H & kJoypadH_Up) {
       Hud_ReorderItem(kNewStyleInventory ? -6 : -5);
     } else if (filtered_joypad_H & kJoypadH_Down) {

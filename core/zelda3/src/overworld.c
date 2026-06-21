@@ -164,14 +164,14 @@ static const uint8 kOverworldAreaHeads[64] = {
   48, 48, 50, 51, 52, 53, 53, 55,
   48, 48, 58, 59, 60, 53, 53, 63,
 };
-static const uint16 kOverworld_Size1[2] = { 0x11e, 0x31e };
-static const uint16 kOverworld_Size2[2] = { 0x100, 0x300 };
+const uint16 kOverworld_Size1[2] = { 0x11e, 0x31e };  // non-static: camera Y span (small/big), read by the camera-lock transition (zelda_rtl.c)
+const uint16 kOverworld_Size2[2] = { 0x100, 0x300 };  // non-static: camera X span (small/big), read by the camera-lock transition (zelda_rtl.c)
 static const uint16 kOverworld_UpDownScrollSize[2] = { 0x2e0, 0x4e0 };
 static const uint16 kOverworld_LeftRightScrollSize[2] = { 0x300, 0x500 };
 static const int16 kOverworld_Func6B_Tab1[4] = { -8, 8, -8, 8 };
 static const int16 kOverworld_Func6B_Tab2[4] = { 27, 27, 30, 30 };
 static const int16 kOverworld_Func6B_Tab3[4] = { -0x70, 0x70, -0x70, 0x70 };
-static const int16 kOverworld_Func6B_AreaDelta[4] = { -8, 8, -1, 1 };
+const int16 kOverworld_Func6B_AreaDelta[4] = { -8, 8, -1, 1 };  // non-static: read by the transition world tilemap (zelda_rtl.c)
 static const uint8 kOverworld_Func8_tab[4] = { 0xe0, 8, 0xe0, 0x10 };
 static const uint16 kDoorAnimTiles[56] = {
   0xda8, 0xda9, 0xdaa, 0xdab,
@@ -1533,6 +1533,11 @@ void Module09_2A_00_ScrollToLand() {  // 82b532
     OverworldHandleMapScroll();
 }
 
+// Set by ConfigurePpuSideSpace: the camera-lock shift on each axis (non-zero while the lock holds the
+// rendered view at a boundary). The BG1 parallax below is driven by the GAME camera's scroll, which keeps
+// moving while the view is held — so suppress it then, otherwise the parallax drifts against the static scene.
+extern int g_camera_lock_shift_x, g_camera_lock_shift_y;
+
 void Overworld_OperateCameraScroll() {  // 82bb90
   int z = (allow_scroll_z && link_z_coord != 0xffff) ? link_z_coord : 0;
   uint16 y = link_y_coord - z + 12;
@@ -1552,7 +1557,7 @@ void Overworld_OperateCameraScroll() {  // 82bb90
     } while (--av);
     WORD(byte_7E069E[0]) = r4;
     uint8 oi = BYTE(overlay_index);
-    if (oi != 0x97 && oi != 0x9d && r4 != 0) {
+    if (oi != 0x97 && oi != 0x9d && r4 != 0 && g_camera_lock_shift_y == 0) {
       if (oi == 0xb5 || oi == 0xbe) {
         subp = (r4 & 3) << 14;
         r4 >>= 2;
@@ -1593,7 +1598,7 @@ void Overworld_OperateCameraScroll() {  // 82bb90
     } while (--ax);
     WORD(byte_7E069E[1]) = r4;
     uint8 oi = BYTE(overlay_index);
-    if (oi != 0x97 && oi != 0x9d && r4 != 0) {
+    if (oi != 0x97 && oi != 0x9d && r4 != 0 && g_camera_lock_shift_x == 0) {
       if (oi == 0x95 || oi == 0x9e) {
         subp = (r4 & 3) << 14;
         r4 >>= 2;
@@ -3587,7 +3592,7 @@ fail:
       goto fail;
     sound_effect_2 = 0x1b;
   // The discovery chime is missing when lifting the rock covering the magic portal leading to the Ice Temple
-  } else if (data == 0x82 && (enhanced_features0 & kFeatures0_MiscBugFixes)) {
+  } else if (data == 0x82 && (enhanced_features2 & kFeatures2_IcePortalRevealChime)) {
     sound_effect_2 = 0x1b;
   }
   static const uint16 kTileBelow[4] = { 0xDCC, 0x212, 0xFFFF, 0xDB4 };

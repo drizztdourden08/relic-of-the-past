@@ -95,20 +95,18 @@ int WasmGetProgressFlags(void) {
 
 // ─── Viewport Info ───
 
-static uint8 g_viewport_buf[20];
+static uint8 g_viewport_buf[32];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetViewportInfo(void) {
   g_viewport_buf[0] = main_module_index;
   g_viewport_buf[1] = submodule_index;
-  g_viewport_buf[2] = g_zenv.ppu->extraLeftRight;
-  g_viewport_buf[3] = g_zenv.ppu->extraLeftCur;
-  g_viewport_buf[4] = g_zenv.ppu->extraRightCur;
-  g_viewport_buf[5] = g_zenv.ppu->extraBottomCur;
-  uint16 w = (uint16)(g_config.extended_aspect_ratio * 2 + 256);
-  uint16 h = g_config.extend_y ? 240 : 224;
-  PutU16(g_viewport_buf, 6, w);
-  PutU16(g_viewport_buf, 8, h);
+  // extra{LeftRight,Left,Right}Cur are uint16 (can exceed 255 for very wide ratios)
+  PutU16(g_viewport_buf, 2, g_zenv.ppu->extraLeftRight);
+  PutU16(g_viewport_buf, 4, g_zenv.ppu->extraLeftCur);
+  PutU16(g_viewport_buf, 6, g_zenv.ppu->extraRightCur);
+  g_viewport_buf[8] = (uint8)g_zenv.ppu->extraBottomCur;  // vertical content rows below base (<=kPpuExtraTopBottom)
+  g_viewport_buf[11] = (uint8)g_zenv.ppu->extraTopCur;     // vertical content rows above base (tall); [11] was unused
 
   // locationModule: the player's physical location regardless of UI overlays.
   // The menu / spotlight modules are transient overlays — the player hasn't
@@ -118,22 +116,38 @@ int WasmGetViewportInfo(void) {
   uint8 mod = main_module_index;
   if ((mod == MODULE_MENU || mod == MODULE_SPOTLIGHT_CLOSE || mod == MODULE_SPOTLIGHT_OPEN) &&
       saved_module_for_menu != 0) {
-    g_viewport_buf[10] = saved_module_for_menu;
+    g_viewport_buf[9] = saved_module_for_menu;
   } else {
-    g_viewport_buf[10] = mod;
+    g_viewport_buf[9] = mod;
   }
-
   // locationType: 0=overworld/other, 1=house/cave, 2=dungeon
-  uint8 locMod = g_viewport_buf[10];
-  g_viewport_buf[11] = (locMod == MODULE_DUNGEON) ? (cur_palace_index_x2 == 0xff ? 1 : 2) : 0;
+  uint8 locMod = g_viewport_buf[9];
+  g_viewport_buf[10] = (locMod == MODULE_DUNGEON) ? (cur_palace_index_x2 == 0xff ? 1 : 2) : 0;
+
+  uint16 w = (uint16)(g_config.extended_aspect_ratio * 2 + 256);
+  int topB = g_zenv.ppu->extraTopBottom;
+  int botB = topB > 0 ? topB : (g_config.extend_y ? 16 : 0);
+  uint16 h = (uint16)(224 + topB + botB);  // total render height (matches g_snes_height)
+  PutU16(g_viewport_buf, 12, w);
+  PutU16(g_viewport_buf, 14, h);
 
   // Camera world position (BG2 scroll = top-left of viewport in world coords)
-  PutU16(g_viewport_buf, 12, BG2HOFS_copy2);
-  PutU16(g_viewport_buf, 14, BG2VOFS_copy2);
+  PutU16(g_viewport_buf, 16, BG2HOFS_copy2);
+  PutU16(g_viewport_buf, 18, BG2VOFS_copy2);
 
   // Link's world position
-  PutU16(g_viewport_buf, 16, link_x_coord);
-  PutU16(g_viewport_buf, 18, link_y_coord);
+  PutU16(g_viewport_buf, 20, link_x_coord);
+  PutU16(g_viewport_buf, 22, link_y_coord);
+
+  // Vertical (tall) max budget per side, so JS can compute blackTop = budget - extraTopCur unambiguously
+  // (snesHeight alone can't tell a tall V=8 config from the legacy extend_y +16 bottom-only).
+  PutU16(g_viewport_buf, 24, (uint16)g_zenv.ppu->extraTopBottom);
+
+  // Camera-lock render shift (wide/tall view): the rendered view sits at the game camera MINUS this shift,
+  // and the shift varies as the lock re-centers while Link moves. World-space overlays must subtract it (on
+  // top of extraLeftRight) or they drift / appear to follow Link. Signed; stored as int16, read as signed.
+  PutU16(g_viewport_buf, 26, (uint16)(int16)g_zenv.ppu->cameraLockShiftX);
+  PutU16(g_viewport_buf, 28, (uint16)(int16)g_zenv.ppu->cameraLockShiftY);
   return (int)g_viewport_buf;
 }
 

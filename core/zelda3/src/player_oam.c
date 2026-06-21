@@ -1107,7 +1107,7 @@ continue_after_set:
 
     // This appears to hide link by setting the extended bits of the oam to hide them from the screen.
     // It doesn't really play well with the widescreen modes, so change how it's done.
-    if (enhanced_features0 & kFeatures0_WidescreenVisualFixes) {
+    if (enhanced_features2 & kFeatures2_WidescreenLinkHideViaOffscreenY) {
       OamEnt *oam = &oam_buf[sort_sprites_offset_into_oam_buffer >> 2];
       for (int i = 0; i < 12; i++) {
         if (i < shadow_oam_pos || i > shadow_oam_pos + 1)

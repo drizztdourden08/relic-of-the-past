@@ -21,10 +21,22 @@ typedef struct BgLayer {
   uint16_t tilemapAdr;
   // -- snapshot ends here
   uint16_t tileAdr;
+  // Linear "world" tilemap (not saved): when useWorld is set the BG fetch reads a contiguous
+  // worldW x worldH grid of tilemap entries with clamping (out-of-area -> transparent) instead of
+  // the wrapping 2-screen SNES layout. Lets the view extend past the 512px tilemap without garbage.
+  bool useWorld;
+  uint16_t worldW, worldH;       // tilemap size in 8x8 tiles
+  int32_t worldOffX, worldOffY;  // added to the local (x,y) to recover the full area-relative pixel (the PPU scroll is masked to 0x1ff, so it only carries the low 512px)
+  uint16_t *world;
 } BgLayer;
 
 enum {
   kPpuXPixels = 256 + kPpuExtraLeftRight * 2,
+  // Max linear-world tilemap dimension in 8x8 tiles. A single 2x2 overworld area is 1024px = 128 tiles;
+  // during a scroll transition we build a buffer spanning BOTH the source and destination areas (so the
+  // wide/tall view pans across the seam without the wrapping stock tilemap), needing up to two large areas
+  // = 2048px = 256 tiles, plus margin.
+  kPpuWorldTiles = 320,
 };
 
 typedef uint16_t PpuZbufType;
@@ -48,6 +60,10 @@ enum {
   kPpuRenderFlags_NoSprites = 32,
   // Force BG1 + backdrop pixels to black (for indoor scenes)
   kPpuRenderFlags_BlackBG2 = 64,
+  // Render the wide overworld view's no-data-gap sentinel (kPpuWorldGapPixel: backdrop layer 5 with a
+  // non-zero colour index) as black, while leaving the real green backdrop (cidx 0, which shows through
+  // transparent terrain such as tree bases and doorways) untouched. Set per-frame during scroll transitions.
+  kPpuRenderFlags_BlackBackdrop = 128,
 };
 
 
@@ -58,7 +74,12 @@ struct Ppu {
   uint8_t renderFlags;
   uint32_t renderPitch;
   uint8_t *renderBuffer;
-  uint8_t extraLeftCur, extraRightCur, extraLeftRight, extraBottomCur;
+  uint16_t extraLeftCur, extraRightCur, extraLeftRight;  // horizontal extra can exceed 255 (>3.19:1)
+  uint16_t extraTopCur, extraBottomCur, extraTopBottom;  // vertical extra: Cur = content rows this frame, extraTopBottom = max budget per side (0 = no tall)
+  // Camera-lock-to-viewport (render-only): how far to shift the overworld BG view + sprites so the
+  // rendered view edge rests on the area boundary (no out-of-area black). Set per-frame by
+  // ConfigurePpuSideSpace; the game camera (BG2VOFS) is untouched. 0 = no shift (not locked / mid-area).
+  int32_t cameraLockShiftX, cameraLockShiftY;
   float mode7PerspectiveLow, mode7PerspectiveHigh;
 
   // TMW / TSW etc
@@ -121,7 +142,14 @@ struct Ppu {
   int32_t m7startY;
 
   uint16_t oam[0x110];
-  
+  // Tall screens: OAM Y is 8-bit. This carries the per-sprite high Y bit (synced from the game's
+  // g_oam_y_high each frame) so ppu_evaluateSprites can place sprites across a >256px tall pan.
+  uint8_t oamHighY[128];
+  // Wide screens: OAM X is 9-bit. This carries the SIGNED per-sprite X bits above the stock 9 (synced from
+  // g_oam_x_high each frame) so ppu_evaluateSprites can place sprites at their true X across a >512px wide
+  // view with no 512 fold — otherwise a sprite and its ±512 alias both draw (the ghost).
+  uint8_t oamHighX[128];
+
   // store 31 extra entries to remove the need for clamp
   uint8_t brightnessMult[32 + 31];
   uint8_t brightnessMultHalf[32 * 2];
@@ -133,7 +161,7 @@ struct Ppu {
   uint16_t vram[0x8000];
 };
 
-Ppu* ppu_init();
+Ppu* ppu_init(void);
 void ppu_free(Ppu* ppu);
 void ppu_reset(Ppu* ppu);
 void ppu_handleVblank(Ppu* ppu);
@@ -141,12 +169,16 @@ void ppu_runLine(Ppu* ppu, int line);
 uint8_t ppu_read(Ppu* ppu, uint8_t adr);
 void ppu_write(Ppu* ppu, uint8_t adr, uint8_t val);
 void ppu_saveload(Ppu *ppu, SaveLoadFunc *func, void *ctx);
+// Lazily allocate this layer's linear world tilemap (full kPpuWorldTiles^2 area) on first use, so a
+// 4:3/all-off build that never enters the wide overworld path pays nothing. No-op once allocated.
+// Returns false on allocation failure — the caller must then leave worldW/worldH at 0 and skip the build.
+bool PpuEnsureWorldTilemap(BgLayer *bg);
 void PpuBeginDrawing(Ppu *ppu, uint8_t *buffer, size_t pitch, uint32_t render_flags);
 
 // Returns the current render scale, 1x = 256px, 2x=512px, 4x=1024px
 int PpuGetCurrentRenderScale(Ppu *ppu, uint32_t render_flags);
 
 void PpuSetMode7PerspectiveCorrection(Ppu *ppu, int low, int high);
-void PpuSetExtraSideSpace(Ppu *ppu, int left, int right, int bottom);
+void PpuSetExtraSideSpace(Ppu *ppu, int left, int right, int top, int bottom);
 
 #endif  // ZELDA3_SNES_PPU_H_

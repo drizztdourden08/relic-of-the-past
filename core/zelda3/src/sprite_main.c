@@ -1502,7 +1502,7 @@ void Kiki_LyingInwait(int k) {
     return;
   if (Sprite_CheckDamageToLink_same_layer(k)) {
     // Kiki Big Bomb Fix
-    if (enhanced_features0 & kFeatures0_MiscBugFixes)
+    if (enhanced_features1 & kFeatures1_KikiDefuseBigBomb)
       follower_dropped = 0;  // defuse bomb
 
     follower_indicator = 10;
@@ -2360,7 +2360,7 @@ void MasterSword_Draw(int k) {  // 858da8
     return;
   OamEnt *oam = GetOamCurPtr();
   for (int i = 5; i >= 0; i--, oam++) {
-    oam->x = kMasterSword_Draw_X[i] + info.x;
+    OamSetX(oam, kMasterSword_Draw_X[i] + info.x);
     oam->y = kMasterSword_Draw_Y[i] + info.y;
     oam->charnum = kMasterSword_Draw_Char[i];
     oam->flags = info.flags;
@@ -2528,7 +2528,7 @@ void SpriteDraw_Beamos_Eyeball(int k, PrepOamCoordsRet *info) {  // 859151
   OamEnt *oam = GetOamCurPtr() + n;
   int i = sprite_D[k] >> 1;
   BYTE(dungmap_var7) = kBeamosEyeball_Draw_X[i] - 3;
-  oam->x = BYTE(dungmap_var7) + info->x;
+  OamSetX(oam, BYTE(dungmap_var7) + info->x);
   HIBYTE(dungmap_var7) = kBeamosEyeball_Draw_Y[i] - 18;
   oam->y = HIBYTE(dungmap_var7) + info->y;
   oam->charnum = kBeamosEyeball_Draw_Char[i];
@@ -2875,7 +2875,7 @@ void Sprite_Zora_Main(int k) {  // 859725
       } else {
         // In Misery Mire some Zoras are placed in shallow water so they can't spawn
         // This fixes so they will be able to spawn in shallow water after a delay.
-        if (enhanced_features0 & kFeatures0_GameChangingBugFixes) {
+        if (enhanced_features1 & kFeatures1_ZoraSpawnInShallowWater) {
           if (sprite_tiletype == 9 && sprite_delay_aux2[k] == 1)
             goto spawn_anyway;
           Sprite_SetX(k, org_x);
@@ -3119,7 +3119,7 @@ void ZoraKing_Draw(int k) {  // 859cab
     int g = sprite_graphics[k];
     for (int i = 3; i >= 0; i--, oam++) {
       int j = g * 4 + i;
-      oam->x = kZoraKing_Draw_X0[j] + info.x;
+      OamSetX(oam, kZoraKing_Draw_X0[j] + info.x);
       oam->y = kZoraKing_Draw_Y0[j] + info.y;
       oam->charnum = kZoraKing_Draw_Char0[j];
       uint8 f = kZoraKing_Draw_Flags0[j];
@@ -3584,7 +3584,7 @@ void Lanmola_Draw(int k) {  // 85a64a
   do {
     int j = r2 + k * 64;
     r2 = r2 - 8 & 63;
-    oam->x = moldorm_x_lo[j] - BG2HOFS_copy2;
+    OamSetX(oam, moldorm_x_lo[j] - BG2HOFS_copy2);
     if (!sign8(beamos_x_hi[j]))
       oam->y = moldorm_y_lo[j] - beamos_x_hi[j] - BG2VOFS_copy2;
     j = beamos_y_hi[j];
@@ -3601,7 +3601,7 @@ void Lanmola_Draw(int k) {  // 85a64a
   do {
     int j = r5 + k * 64;
     r5 = r5 - 8 & 63;
-    oam->x = moldorm_x_lo[j] - BG2HOFS_copy2;
+    OamSetX(oam, moldorm_x_lo[j] - BG2HOFS_copy2);
     if (!sign8(beamos_x_hi[j]))
       oam->y = moldorm_y_lo[j] + 10 - BG2VOFS_copy2;
     oam->charnum = 0x6c;
@@ -4547,7 +4547,7 @@ void SpriteDraw_SpriteBombExplosion(int k) {  // 85c113
   int base = sprite_delay_aux1[k] >> 1 & 0xc;
   for (int i = 3; i >= 0; i--, oam++) {
     int j = base + i;
-    oam->x = kEnemyBombExplosion_X[j] + info.x;
+    OamSetX(oam, kEnemyBombExplosion_X[j] + info.x);
     oam->y = kEnemyBombExplosion_Y[j] + info.y;
     oam->charnum = kEnemyBombExplosion_Char[j];
     oam->flags = kEnemyBombExplosion_Flags[j] | info.flags;
@@ -6379,7 +6379,7 @@ void Sprite_E7_Mushroom(int k) {  // 85ee78
     return;
 
   // If we're in the middle of a mirror warp, don't get the mushroom yet
-  if (enhanced_features0 & kFeatures0_MiscBugFixes && submodule_index != 0)
+  if (enhanced_features1 & kFeatures1_MushroomNoPickupDuringMirrorWarp && submodule_index != 0)
     return;
 
   if (Sprite_CheckDamageToLink_same_layer(k)) {
@@ -7138,7 +7138,7 @@ void DashTreeTop_Draw(int k) {  // 85fe6f
   } else {
     int j = sprite_subtype2[k] - 1;
     for (int i = 15; i >= 0; i--, oam++) {
-      oam->x = BYTE(dungmap_var7) + kDashTreeTop_X[i];
+      OamSetX(oam, BYTE(dungmap_var7) + kDashTreeTop_X[i]);
       oam->y = HIBYTE(dungmap_var7) + kDashTreeTop_Y[i];
       oam->charnum = kDashTreeTop_Char[j];
       oam->flags = kDashTreeTop_Flags[j];
@@ -8306,7 +8306,7 @@ void Sprite_09_GiantMoldorm(int k) {  // 869469
     link_incapacitated_timer = 24;
     sprite_delay_aux1[k] = 48;
     // For some reason they forgot to or in the sfx.
-    sound_effect_2 = Sprite_CalculateSfxPan(k) | (enhanced_features0 & kFeatures0_MiscBugFixes ? 0x32 : 0);
+    sound_effect_2 = Sprite_CalculateSfxPan(k) | (enhanced_features1 & kFeatures1_GiantMoldormKnockbackSfx ? 0x32 : 0);
   }
 
   int j = sprite_D[k] + low_health * 16;
@@ -11751,7 +11751,7 @@ void Sprite_D8_Heart(int k) {  // 86cec0
 
   // Avoid calling Sprite_HandleAbsorptionByPlayer twice, it's called
   // also from within Sprite_HandleDraggingByAncilla
-  if (sprite_state[k] == 0 && (enhanced_features0 & kFeatures0_MiscBugFixes))
+  if (sprite_state[k] == 0 && (enhanced_features1 & kFeatures1_NoDoubleAbsorptionHandling))
     return;
 
   if (Sprite_HandleDraggingByAncilla(k))
@@ -11823,7 +11823,7 @@ void Sprite_E3_Fairy(int k) {  // 86cf94
     }
     // Avoid calling Sprite_HandleAbsorptionByPlayer twice, it's called
     // also from within Sprite_HandleDraggingByAncilla
-    if (sprite_state[k] == 0 && (enhanced_features0 & kFeatures0_MiscBugFixes))
+    if (sprite_state[k] == 0 && (enhanced_features1 & kFeatures1_NoDoubleAbsorptionHandling))
       return;
     if (Sprite_HandleDraggingByAncilla(k))
       return;
@@ -13331,7 +13331,7 @@ void SpriteDraw_Pikit_Tongue(int k, PrepOamCoordsRet *info) {  // 8dd74a
   oam++;
   int g = sprite_D[k];
   for (int i = 3; i >= 0; i--, oam++) {
-    oam->x = x + (int8)sprite_A[k] * kPikit_TongueMult[i] / 256;
+    OamSetX(oam, x + (int8)sprite_A[k] * kPikit_TongueMult[i] / 256);
     oam->y = y + (int8)sprite_B[k] * kPikit_TongueMult[i] / 256;
     oam->charnum = kPikit_Draw_Char[g];
     oam->flags = kPikit_Draw_Flags[g] | info->flags;
@@ -13360,7 +13360,7 @@ void SpriteDraw_Pikit_Loot(int k, PrepOamCoordsRet *info) {  // 8dd858
   OamEnt *oam = GetOamCurPtr();
   for (int i = 3; i >= 0; i--, oam++) {
     int j = g * 4 + i;
-    oam->x = tmp_counter + kPikit_DrawGrabbedItem_X[j];
+    OamSetX(oam, tmp_counter + kPikit_DrawGrabbedItem_X[j]);
     oam->y = byte_7E0FB6 + kPikit_DrawGrabbedItem_Y[j];
     oam->charnum = kPikit_DrawGrabbedItem_Char[j];
     oam->flags = kPikit_DrawGrabbedItem_Flags[g];
@@ -13765,7 +13765,7 @@ void MovableMantle_Draw(int k) {  // 9afcb3
     return;
   OamEnt *oam = GetOamCurPtr();
   for (int i = 5; i >= 0; i--, oam++) {
-    oam->x = kMovableMantle_X[i] + info.x;
+    OamSetX(oam, kMovableMantle_X[i] + info.x);
     oam->y = kMovableMantle_Y[i] + info.y;
     oam->charnum = kMovableMantle_Char[i];
     oam->flags = kMovableMantle_Flags[i];
@@ -15204,7 +15204,7 @@ void SpritePrep_Swamola_InitializeSegments(int k) {  // 9d9c80
   int j;
 
   // The snes code uses the wrong bank.. Causes glitches with lanmolas in misery mire
-  if (enhanced_features0 & kFeatures0_MiscBugFixes) {
+  if (enhanced_features1 & kFeatures1_SwamolaCorrectSegmentIndex) {
     j = k * 32;
   } else {
     static const uint8 kBuggySwamolaLookup[6] = { 0x1c, 0xa9, 0x03, 0x9d, 0x90, 0x0d };  // wrong bank
@@ -19746,7 +19746,7 @@ void KingHelmasaur_OperateTail(int k, PrepOamCoordsRet *info) {  // 9e8920
   for (int i = overlord_gen2[3]; i != 16; i++, oam++) {
     uint8 x = overlord_x_lo[i + 5] + info->x;
     uint8 y = overlord_y_lo[i + 5] + info->y;
-    oam->x = x;
+    OamSetX(oam, x);
     oam->y = y;
     oam->charnum = (i == overlord_gen2[3]) ? 0xe4 : 0xac;
     oam->flags = info->flags ^ 0x1b;
@@ -20733,7 +20733,7 @@ void HauntedGroveBird_Blink(int k) {  // 9e9b9c
     return;
   OamEnt *oam = GetOamCurPtr();
   int j = sprite_D[k];
-  oam->x = info.x + kFluteBoyBird_X[j];
+  OamSetX(oam, info.x + kFluteBoyBird_X[j]);
   oam->y = info.y;
   oam->charnum = 0xae;
   oam->flags = info.flags | kFluteBoyAnimal_OamFlags[j];
@@ -22496,7 +22496,7 @@ bool SpikeBlock_CheckStatueCollision(int k) {  // 9ebe19
 }
 
 void Sprite_88_Mothula(int k) {  // 9ebe7e
-  if (enhanced_features0 & kFeatures0_MiscBugFixes) {
+  if (enhanced_features1 & kFeatures1_MothulaTakesL4AndSpinDamage) {
     // L4 sword and L3 spin slash can now damage Mothula
     enemy_damage_data[0x884] = 1;
     enemy_damage_data[0x885] = 1;

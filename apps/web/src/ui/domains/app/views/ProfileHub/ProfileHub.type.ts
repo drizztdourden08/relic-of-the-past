@@ -2,7 +2,18 @@
 import type { Profile } from '@shared/types/profile';
 import type { GameSettings } from '@shared/types/settings';
 
-type ProfileHubTab = 'home' | 'settings' | 'audio' | 'gameplay' | 'hud' | 'controls' | 'haptics';
+type ProfileHubTab =
+  | 'home'
+  | 'settings' // Display
+  | 'graphics'
+  | 'audio'
+  | 'gameplay'
+  | 'bugfixes'
+  | 'hud'
+  | 'controls'
+  | 'haptics'
+  | 'system'
+  | 'mobile';
 
 interface ProfileHubProps {
   profile: Profile;

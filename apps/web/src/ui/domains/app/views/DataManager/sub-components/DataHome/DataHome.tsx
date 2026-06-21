@@ -9,7 +9,7 @@ import { formatBytes } from './behavior/formatBytes';
 import './DataHome.css';
 
 const DOMAIN_ICONS: Record<string, string> = {
-  profiles: '👤', roms: '🎮', sprites: '🖼️', languages: '🌐', msu: '🎵', assets: '📦', saves: '💾',
+  profiles: '👤', roms: '🎮', sprites: '🖼️', linkSprites: '🧝', languages: '🌐', msu: '🎵', assets: '📦', saves: '💾',
 };
 
 const DataHome = () => {

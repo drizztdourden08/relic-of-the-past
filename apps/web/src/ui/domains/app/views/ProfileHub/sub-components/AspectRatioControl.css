@@ -39,3 +39,9 @@
   font-size: var(--text-sm);
   font-variant-numeric: tabular-nums;
 }
+
+.aspect-ratio-control__recommended {
+  color: var(--c-gold);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}

@@ -18,6 +18,7 @@ const SECTIONS: Section[] = [
         id: 'volume-channels',
         title: 'Channels',
         items: [
+          { key: 'perGroupVolume', label: 'Independent Music / SFX', description: 'Mix music and sound effects separately. Off keeps the original audio mix exactly — the sliders below do nothing until this is on.', keywords: 'split independent music sfx mix per group separate volume' },
           { key: 'musicVolume', label: 'Music Volume', description: 'Controls the background music volume (SPC channels 0-5)', keywords: 'volume music bgm background' },
           { key: 'sfxVolume', label: 'SFX Volume', description: 'Controls the sound effects volume (SPC channels 6-7)', keywords: 'volume sfx sound effects' },
         ],
@@ -43,13 +44,6 @@ const SECTIONS: Section[] = [
     id: 'msu',
     title: 'MSU Audio',
     subsections: [
-      {
-        id: 'msu-import',
-        title: 'Import',
-        items: [
-          { key: 'msuImport', label: 'MSU Pack', description: 'Import an MSU audio pack (.zip) to replace the original soundtrack with CD-quality music', keywords: 'msu import download pack zip' },
-        ],
-      },
       {
         id: 'msu-mode',
         title: 'Mode',

@@ -37,6 +37,27 @@ uint32_t WasmGetFeatures(void) {
   return g_wanted_zelda_features;
 }
 
+// Split bug-fix toggles overflow the 32-bit features0 word, so they ride in two more bitmasks.
+EMSCRIPTEN_KEEPALIVE
+void WasmSetFeatures1(uint32_t features) {
+  g_wanted_zelda_features1 = features;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t WasmGetFeatures1(void) {
+  return g_wanted_zelda_features1;
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmSetFeatures2(uint32_t features) {
+  g_wanted_zelda_features2 = features;
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t WasmGetFeatures2(void) {
+  return g_wanted_zelda_features2;
+}
+
 EMSCRIPTEN_KEEPALIVE
 void WasmSetPpuRenderFlags(int flags) {
   // Preserve BlackBG2 flag (managed separately by WasmSetForceBackdropBlack)

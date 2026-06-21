@@ -1413,7 +1413,7 @@ void Sprite_HandleAbsorptionByPlayer(int k) {  // 86d13c
   case 14:
     link_shield_type = sprite_subtype[k];
     // Shield needs to have the right palette after pikit
-    if (enhanced_features0 & kFeatures0_MiscBugFixes)
+    if (enhanced_features1 & kFeatures1_ReloadShieldPaletteAfterPikit)
       Palette_Load_Shield();
     break;
   }
@@ -1432,7 +1432,7 @@ bool SpriteDraw_AbsorbableTransient(int k, bool transient) {  // 86d22f
     // This code runs when an absorbable is hidden under say a rock.
     // sprite_B holds the sprite that grabbed us with a hookshot.
     // Cancel the grab if we're hidden.
-    if (enhanced_features0 & kFeatures0_MiscBugFixes)
+    if (enhanced_features1 & kFeatures1_CancelHookshotGrabOnHiddenAbsorbable)
       sprite_B[k] = 0;
     return true;
   }
@@ -1508,13 +1508,15 @@ void SpriteDraw_SingleLarge(int k) {  // 86dc10
 
 void Sprite_PrepAndDrawSingleLargeNoPrep(int k, PrepOamCoordsRet *info) {  // 86dc13
   OamEnt *oam = GetOamCurPtr();
-  oam->x = info->x;
-  if ((uint16)(info->y + 0x10) < 0x100) {
-    oam->y = info->y;
+  OamSetX(oam, info->x);
+  OamSetY(oam, info->y);
+  if (oam->y != 0xf0) {
     oam->charnum = kSprite_PrepAndDrawSingleLarge_Tab2[kSprite_PrepAndDrawSingleLarge_Tab1[sprite_type[k]] + sprite_graphics[k]];
     oam->flags = info->flags;
   }
-  bytewise_extended_oam[oam - oam_buf] = 2 | ((info->x >= 256) ? 1: 0);
+  // bit 8 of the 9-bit OAM X. Stock used (x >= 256), which only equals bit 8 for x < 512; in a wide view a
+  // sprite at screen-x >= 512 needs the true (x>>8)&1 or its body splits 256px from its shadow (SetOamHelper1).
+  bytewise_extended_oam[oam - oam_buf] = 2 | ((info->x >> 8) & 1);
   if (sprite_flags3[k] & 0x10)
     SpriteDraw_Shadow(k, info);
 }
@@ -1545,13 +1547,13 @@ void SpriteDraw_SingleSmall(int k) {  // 86dcef
   if (Sprite_PrepOamCoordOrDoubleRet(k, &info))
     return;
   OamEnt *oam = GetOamCurPtr();
-  oam->x = info.x;
-  if ((uint16)(info.y + 0x10) < 0x100) {
-    oam->y = info.y;
+  OamSetX(oam, info.x);
+  OamSetY(oam, info.y);
+  if (oam->y != 0xf0) {
     oam->charnum = kSprite_PrepAndDrawSingleLarge_Tab2[kSprite_PrepAndDrawSingleLarge_Tab1[sprite_type[k]] + sprite_graphics[k]];
     oam->flags = info.flags;
   }
-  bytewise_extended_oam[oam - oam_buf] = 0 | (info.x >= 256);
+  bytewise_extended_oam[oam - oam_buf] = (info.x >> 8) & 1;  // true bit 8 (stock used x>=256; wrong for wide x>=512)
   if (sprite_flags3[k] & 0x10)
     SpriteDraw_Shadow_custom(k, &info, 2);
 }
@@ -1842,14 +1844,23 @@ bool Sprite_PrepOamCoordOrDoubleRet(int k, PrepOamCoordsRet *ret) {  // 86e41e
   R2 = y - sprite_z[k];
   ret->flags = sprite_oam_flags[k] ^ sprite_obj_prio[k];
   ret->r4 = 0;
-  int xt = (enhanced_features0 & kFeatures0_ExtendScreen64) ? 0x40 : 0;
+  int xt = 2 * (int)g_oam_wide_budget;  // wide: cover the wide extra band + worst-case camera-lock shift (|shift| <= budget); mirror of yt
+  int yt = 2 * (int)g_oam_tall_budget;  // tall: widen the vertical keep-alive window so sprites in the tall band aren't culled/killed (mirror of xt)
 
   if ((uint16)(x + 0x40 + xt) >= (0x170 + xt * 2) ||
-      (uint16)(y + 0x40) >= 0x170 && !(sprite_flags4[k] & 0x20)) {
+      (uint16)(y + 0x40 + yt) >= (0x170 + yt * 2) && !(sprite_flags4[k] & 0x20)) {
     sprite_pause[k]++;
     if (!(sprite_defl_bits[k] & 0x80))
       Sprite_KillSelf(k);
     out_of_bounds = true;
+  } else if ((uint16)(x + 0x40) >= 0x170 ||
+             (uint16)(y + 0x40) >= 0x170 && !(sprite_flags4[k] & 0x20)) {
+    // In the wide/tall extra band but outside the stock 256px screen: keep the sprite alive and DRAWN
+    // so the wide view renders it, but optionally pause its AI — behind kFeatures0_PauseOffscreenAI
+    // because it changes gameplay (guards can't react from off-screen). Off = stock behavior where the
+    // sprite simply wouldn't be loaded out there; on = explicit user opt-in to avoid the guard-alarm bug.
+    if (enhanced_features0 & kFeatures0_PauseOffscreenAI)
+      sprite_pause[k]++;
   }
   ret->x = R0;
   ret->y = R2;
@@ -2015,7 +2026,7 @@ bool Sprite_CheckTileProperty(int k, int j) {  // 86e73c
     if (sprite_F[k] && !sign8(sprite_give_damage[k])) {
 
       // Some mothula bug fix because we changed damage class 4.
-      if (sprite_type[k] == 0x88 && (enhanced_features0 & kFeatures0_MiscBugFixes)) {
+      if (sprite_type[k] == 0x88 && (enhanced_features1 & kFeatures1_MothulaSpikeTileDamageClassFix)) {
         if (sprite_hit_timer[k] == 0)
           Ancilla_CheckDamageToSprite_preset(k, 6);
       } else {
@@ -2682,7 +2693,7 @@ uint8 Sprite_CheckDamageFromLink(int k) {  // 86f2b4
       link_incapacitated_timer = 16;
       SpriteSfx_QueueSfx2WithPan(k, 0x21);
       sprite_delay_aux1[k] = 48;
-      sound_effect_2 = Sprite_CalculateSfxPan(k) | (enhanced_features0 & kFeatures0_MiscBugFixes ? 0x32 : 0);
+      sound_effect_2 = Sprite_CalculateSfxPan(k) | (enhanced_features1 & kFeatures1_GiantMoldormWeaponTinkSfxFix ? 0x32 : 0);
       Link_PlaceWeaponTink();
       return kCheckDamageFromPlayer_Carry;
     }
@@ -3054,7 +3065,7 @@ void SpriteDeath_DrawPoof(int k) {  // 86fb2a
     if (kPerishOverlay_Char[i]) {
       oam->charnum = kPerishOverlay_Char[i];
       oam->y = HIBYTE(dungmap_var7) - r12 + kPerishOverlay_Y[i];
-      oam->x = BYTE(dungmap_var7) - r12 + kPerishOverlay_X[i];
+      OamSetX(oam, BYTE(dungmap_var7) - r12 + kPerishOverlay_X[i]);
       oam->flags = (info.flags & 0x30) | kPerishOverlay_Flags[i];
     }
   } while (oam++, i--, --n >= 0);
@@ -3340,7 +3351,7 @@ void Garnish13_PyramidDebris(int k) {  // 89b216
     garnish_type[k] = 0;
     return;
   }
-  oam->x = t;
+  OamSetX(oam, t);
   if ((t = garnish_y_lo[k] - BG2VOFS_copy2) >= 240) {
     garnish_type[k] = 0;
     return;
@@ -3753,9 +3764,13 @@ void Sprite_ActivateAllProxima() {  // 89c55e
   uint8 bak1 = byte_7E069E[1];
   byte_7E069E[1] = 0xff;
 
-  int xt = (enhanced_features0 & kFeatures0_ExtendScreen64) ? 0x40 : 0;
+  int xt = 2 * (int)g_oam_wide_budget;  // wide: cover the wide extra band + worst-case camera-lock shift (|shift| <= budget)
+  // This sweeps the left-edge scan (offset -16-xt) rightward across the area. That scan offset cancels xt's
+  // contribution to the RIGHTWARD reach, so widening the view needs extra loop iterations (each = 16px) to
+  // reach the far side — without them the far side of the wide view never gets swept and its sprites don't
+  // spawn on entry. (xt>>3)+(xt>>4) extends the reach by ~2*budget, covering cam+256+2*budget (the locked edge).
   BG2HOFS_copy2 -= xt;
-  for (int i = 21 + (xt >> 3); i >= 0; i--) {
+  for (int i = 21 + (xt >> 3) + (xt >> 4); i >= 0; i--) {
     Sprite_ActivateWhenProximal();
     BG2HOFS_copy2 += 16;
   }
@@ -3763,7 +3778,30 @@ void Sprite_ActivateAllProxima() {  // 89c55e
   BG2HOFS_copy2 = bak0;
 }
 
+// Camera-lock shift per axis (see zelda_rtl.c) — the rendered view sits at the GAME camera minus this shift.
+extern int g_camera_lock_shift_x, g_camera_lock_shift_y;
+
+// Phase 2: spawn every sprite whose true world position lies in the rendered view rectangle (game camera ±
+// the camera-lock shift ± the wide/tall budget), regardless of distance to Link — so nothing in a wide /
+// locked multi-screen view is missing or pops in as the camera nears. Supersedes the old camera-anchored
+// edge + lock-band scans. Sprite_Overworld_ProximityMotivatedLoad bounds-checks the area and dedups via the
+// loaded bitmap, so out-of-area cells and already-resident sprites are cheap no-ops. The 16-slot cap still
+// applies (a very dense area can exceed it — Phase 3 lifts it); the sweep is row-major (top-left first).
+static void Sprite_ActivateWithinViewRect() {
+  int wb = (int)g_oam_wide_budget, tb = (int)g_oam_tall_budget;
+  int vx = (int)BG2HOFS_copy2 - g_camera_lock_shift_x;  // clamped (rendered) view origin = game cam - shift
+  int vy = (int)BG2VOFS_copy2 - g_camera_lock_shift_y;
+  int x1 = vx + 0x100 + wb + 0x20, y1 = vy + 0x100 + tb + 0x30;  // +margin for sprite extent
+  for (int y = vy - tb - 0x30; y <= y1; y += 16)
+    for (int x = vx - wb - 0x20; x <= x1; x += 16)
+      Sprite_Overworld_ProximityMotivatedLoad((uint16)x, (uint16)y);
+}
+
 void Sprite_ProximityActivation() {  // 89c58f
+  if (g_oam_wide_budget || g_oam_tall_budget || g_camera_lock_shift_x || g_camera_lock_shift_y) {
+    Sprite_ActivateWithinViewRect();
+    return;
+  }
   if (submodule_index != 0) {
     Sprite_ActivateWhenProximal();
     Sprite_ActivateWhenProximalBig();
@@ -3777,22 +3815,51 @@ void Sprite_ProximityActivation() {  // 89c58f
 }
 
 void Sprite_ActivateWhenProximal() {  // 89c5bb
+  int xt = 2 * (int)g_oam_wide_budget;  // wide: cover the wide extra band + worst-case camera-lock shift (|shift| <= budget); mirror of yt
+  int yt = 2 * (int)g_oam_tall_budget;  // tall: scan the taller left/right edge so sprites spawn across the pan
   if (byte_7E069E[1]) {
-    int xt = (enhanced_features0 & kFeatures0_ExtendScreen64) ? 0x40 : 0;
+    // Moving horizontally: scan the single leading edge; the camera sweeps it across columns over frames.
     uint16 x = BG2HOFS_copy2 + (sign8(byte_7E069E[1]) ? -0x10 - xt : 0x110 + xt);
-    uint16 y = BG2VOFS_copy2 - 0x30;
-    for (int i = 21; i >= 0; i--, y += 16)
+    uint16 y = BG2VOFS_copy2 - 0x30 - yt;
+    for (int i = 21 + (yt >> 3); i >= 0; i--, y += 16)
       Sprite_Overworld_ProximityMotivatedLoad(x, y);
+  }
+  if (g_camera_lock_shift_x) {
+    // Camera pinned at a horizontal boundary can't sweep its leading edge across the lock band (the strip the
+    // lock reveals on the shifted side), so a single-column scan would miss sprites a block over. Sweep every
+    // column of the band each frame (independent of camera motion, which is 0 / stale while pinned); already-
+    // loaded sprites are cheap no-ops so the cost lands only until they spawn.
+    int dir = g_camera_lock_shift_x < 0 ? 1 : -1;  // shift<0 => band to the right; shift>0 => to the left
+    uint16 base = BG2HOFS_copy2 + (dir > 0 ? 0x110 : -0x10);
+    for (int c = 0; c <= (xt >> 4); c++) {
+      uint16 x = base + dir * (c << 4);
+      uint16 y = BG2VOFS_copy2 - 0x30 - yt;
+      for (int i = 21 + (yt >> 3); i >= 0; i--, y += 16)
+        Sprite_Overworld_ProximityMotivatedLoad(x, y);
+    }
   }
 }
 
 void Sprite_ActivateWhenProximalBig() {  // 89c5fa
+  int xt = 2 * (int)g_oam_wide_budget;  // wide: cover the wide extra band + worst-case camera-lock shift (|shift| <= budget); mirror of yt
+  int yt = 2 * (int)g_oam_tall_budget;  // tall: spawn at the further-out top/bottom edge when scrolling vertically
   if (byte_7E069E[0]) {
-    int xt = (enhanced_features0 & kFeatures0_ExtendScreen64) ? 0x40 : 0;
+    // Moving vertically: scan the single leading edge; the camera sweeps it across rows over frames.
     uint16 x = BG2HOFS_copy2 - 0x30 - xt;
-    uint16 y = BG2VOFS_copy2 + (sign8(byte_7E069E[0]) ? -0x10 : 0x110);
+    uint16 y = BG2VOFS_copy2 + (sign8(byte_7E069E[0]) ? -0x10 - yt : 0x110 + yt);
     for (int i = 21 + (xt >> 3); i >= 0; i--, x += 16)
       Sprite_Overworld_ProximityMotivatedLoad(x, y);
+  }
+  if (g_camera_lock_shift_y) {
+    // Camera pinned at a vertical boundary (tall mode): sweep every row of the vertical lock band, same as above.
+    int dir = g_camera_lock_shift_y < 0 ? 1 : -1;  // shift<0 => band below; shift>0 => above
+    uint16 base = BG2VOFS_copy2 + (dir > 0 ? 0x110 : -0x10);
+    for (int c = 0; c <= (yt >> 4); c++) {
+      uint16 y = base + dir * (c << 4);
+      uint16 x = BG2HOFS_copy2 - 0x30 - xt;
+      for (int i = 21 + (xt >> 3); i >= 0; i--, x += 16)
+        Sprite_Overworld_ProximityMotivatedLoad(x, y);
+    }
   }
 }
 
@@ -4281,7 +4348,7 @@ int Sprite_SpawnDynamicallyEx(int k, uint8 what, SpriteSpawnInfo *info, int j) {
 void SpriteFall_Draw(int k, PrepOamCoordsRet *info) {  // 9dffc5
   static const uint8 kSpriteFall_Char[8] = {0x83, 0x83, 0x83, 0x80, 0x80, 0x80, 0xb7, 0xb7};
   OamEnt *oam = GetOamCurPtr();
-  oam->x = info->x + 4;
+  OamSetX(oam, info->x + 4);
   oam->y = info->y + 4;
   oam->charnum = kSpriteFall_Char[sprite_delay_main[k] >> 2];
   oam->flags = info->flags & 0x30 | 0x04;

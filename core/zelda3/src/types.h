@@ -8,12 +8,22 @@
 // Build time config options
 enum {
   kEnableLargeScreen = 1,
-  // How much extra spacing to add on the sides. 128 columns ⇒ ~20:9 at 240-line height — covers
-  // every phone landscape ratio and standard ultrawide. Going higher (152 reaches 21:9; toward the
-  // uint8 ceiling of 255) trips a latent out-of-bounds in the upstream widescreen load/render path,
-  // so 152 is the verified-safe maximum and 128 the shipped value. The wider frames also need a
+  // How much extra spacing to add on the sides. The PPU linear-world fetch (ppu.c PpuDrawBackground_4bpp
+  // + zelda_rtl.c BuildOverworldWorldTilemap) renders past the 512px SNES BG tilemap with no-wrap
+  // clamping, so the old 128 (512px) wrap limit is gone. 384 columns ⇒ 1024px = the full big-overworld
+  // -area width ⇒ ~4.3:1 (224h) / ~4.0:1 (240h) — covers 32:9 and any real screen; a wider view just
+  // exceeds the loaded area, where the edge-mirror fills it. extended_aspect_ratio / Ppu.extraLeftRight
+  // are uint16 so the value can exceed the old uint8 255 (~3.19:1). (The old "152 verified-safe max" was
+  // actually a ClearBackdrop parity bug — its loop required kPpuXPixels = 256+2*extra to be a multiple of
+  // 4, so odd caps overran the buffer into the audio/DSP heap; fixed in ppu.c.) Wider frames also need a
   // larger stack — see core/wasm-build/build.mjs (-sSTACK_SIZE).
-  kPpuExtraLeftRight = kEnableLargeScreen ? 128 : 0,
+  kPpuExtraLeftRight = kEnableLargeScreen ? 384 : 0,
+  // Vertical counterpart of kPpuExtraLeftRight: max extra scanlines per side (top AND bottom) for tall
+  // (taller-than-4:3) screens. 128 ⇒ up to 224+256 = 480 render rows ⇒ down to ~0.62:1 display, covering
+  // tall desktop windows and near-portrait. The linear-world fetch clamps vertically just like horizontally
+  // (out-of-area rows ⇒ transparent ⇒ edge-mirror), and the overworld area carries up to 1024px of rows, so
+  // this is bounded by the loaded area, not the SNES tilemap. 0 (kEnableLargeScreen off) = no tall.
+  kPpuExtraTopBottom = kEnableLargeScreen ? 128 : 0,
 };
 
 typedef uint8_t uint8;
@@ -103,5 +113,19 @@ typedef struct MemBlk {
 MemBlk FindIndexInMemblk(MemBlk data, size_t i);
 
 void NORETURN Die(const char *error);
+
+// Widescreen/tall feature budgets — the rendered extra per side, mirroring Ppu.extraTopBottom (vertical)
+// and Ppu.extraLeftRight (horizontal); 0 on the unused axis (a config is wide XOR tall). Used by the OAM
+// 9-bit-Y encoding and the viewport camera lock (kFeatures0_CameraLockToViewport). Defined in zelda_rtl.c.
+extern uint16 g_oam_tall_budget;
+extern uint16 g_oam_wide_budget;
+// OAM Y is only 8-bit, so a view taller than ~256px needs an extra Y-high bit per sprite; g_oam_y_high
+// holds the per-slot bit, set by the OAM helpers and synced to the PPU each frame.
+extern uint8 g_oam_y_high[128];
+// OAM X is only 9-bit (≤512px), so a view WIDER than 512px (extra > 128, ~21:9+) draws a sprite AND its
+// 512-wrapped alias = the "ghost". g_oam_x_high holds the SIGNED X bits ABOVE the stock 9 (i.e.
+// (int16)screenX >> 9) per slot; 0 for any sprite in [-512,511] (so most need nothing). Set by the OAM
+// helpers when wide, synced to the PPU each frame, letting the PPU place a sprite at its true absolute X.
+extern uint8 g_oam_x_high[128];
 
 #endif  // ZELDA3_TYPES_H_

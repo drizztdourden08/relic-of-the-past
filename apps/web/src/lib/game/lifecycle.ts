@@ -7,7 +7,7 @@
 import { log } from '../log-bus';
 import * as savesStore from '../storage/saves-store';
 import type { EmscriptenModule } from './types';
-import { DEFAULT_ZELDA3_INI } from './config';
+import { writeBootFiles } from './boot-files';
 import { getModule, setModule, setProfileId, getProfileId, setState, setInput, getGameState } from './wasm-bridge';
 import { startSramSync, stopSramSync } from './sram-sync';
 import { startAutoSave, stopAutoSave, saveOnQuit } from './auto-save';
@@ -37,6 +37,13 @@ let pendingMsuData: MsuTrackData[] | null = null;
 
 const setMsuData = (data: MsuTrackData[] | null): void => {
   pendingMsuData = data;
+};
+
+// Custom Link sprite (.zspr) staged for the next boot — written to MEMFS where ApplyCustomLinkGraphics reads it.
+let pendingLinkSprite: Uint8Array | null = null;
+
+const setLinkSpriteData = (data: Uint8Array | null): void => {
+  pendingLinkSprite = data;
 };
 
 // ─── Auto-save config (set before game start, used during stop) ───
@@ -185,23 +192,9 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
       canvas,
       instantiateWasm,
       preRun: [(mod: EmscriptenModule) => {
-        log.wasm(`Writing assets to virtual FS (${(assetData.byteLength / 1024).toFixed(0)} KB)`);
-        mod.FS.writeFile('/zelda3_assets.dat', assetData);
-        mod.FS.writeFile('/zelda3.ini', configIni ?? DEFAULT_ZELDA3_INI);
-        try { mod.FS.mkdir('/saves'); } catch { /* may exist */ }
-        if (sramData) {
-          mod.FS.writeFile('/saves/sram.dat', sramData);
-        }
-        // Write MSU pack files to MEMFS
-        if (pendingMsuData && pendingMsuData.length > 0) {
-          try { mod.FS.mkdir('/msu'); } catch { /* may exist */ }
-          log.app(`[MSU] Writing ${pendingMsuData.length} tracks to MEMFS...`);
-          for (const track of pendingMsuData) {
-            mod.FS.writeFile(`/msu/${track.num}.${track.ext}`, track.data);
-          }
-          log.app(`[MSU] All tracks written to MEMFS`);
-          pendingMsuData = null; // Free staging memory
-        }
+        writeBootFiles(mod, { assetData, configIni, sramData, msu: pendingMsuData, linkSprite: pendingLinkSprite });
+        pendingMsuData = null; // free staging memory
+        pendingLinkSprite = null;
       }],
       print: (text: string) => {
         log.core(text);
@@ -267,5 +260,5 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
   }
 };
 
-export { resetGame, setAutoSaveConfig, setMsuData, startGame };
+export { resetGame, setAutoSaveConfig, setMsuData, setLinkSpriteData, startGame };
 export type { AutoSaveConfig, MsuTrackData };

@@ -26,6 +26,8 @@ interface ViewportInfo {
   snesWidth: number;
   snesHeight: number;
   extraLeftRight: number;
+  cameraLockShiftX: number;
+  cameraLockShiftY: number;
   linkX: number;
   linkY: number;
   isGameplay: boolean;
@@ -36,8 +38,11 @@ const buildDrawContext = (ctx: CanvasRenderingContext2D, vp: ViewportInfo, width
   const camY = vp.cameraY;
   const snesW = vp.snesWidth;
   const snesH = vp.snesHeight;
-  const viewLeft = camX - vp.extraLeftRight;
-  const viewTop = camY;
+  // The wide/tall camera lock shifts the rendered view by cameraLockShift (rendered view = camera − shift),
+  // so the canvas origin is the game camera minus the lock shift minus the side budget. Subtract it or
+  // world-anchored overlay elements drift and appear to follow Link as the view re-centers.
+  const viewLeft = camX - vp.cameraLockShiftX - vp.extraLeftRight;
+  const viewTop = camY - vp.cameraLockShiftY;
   const scaleX = width / snesW;
   const scaleY = height / snesH;
 

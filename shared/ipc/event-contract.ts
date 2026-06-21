@@ -8,7 +8,7 @@
 
 /** Progress of a data import (ROM / MSU / language / sprites), main → renderer. */
 interface ImportProgress {
-  kind: 'rom' | 'msu' | 'language' | 'sprite';
+  kind: 'rom' | 'msu' | 'language' | 'sprite' | 'linkSprite';
   /** Correlation key — pack name / language code / rom stem. */
   id: string;
   phase: 'download' | 'extract' | 'copy' | 'decode' | 'done' | 'error';

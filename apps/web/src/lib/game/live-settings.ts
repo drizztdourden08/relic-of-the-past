@@ -18,7 +18,7 @@ import { setMasterVolume } from './audio-volume';
 import { updateHapticBridgeSettings } from '../input/haptic-bridge';
 import { DEFAULT_SETTINGS } from './settings';
 import { log } from '../log-bus';
-import { buildFeatureFlags, buildPpuFlags } from './live-settings-flags';
+import { buildFeatureFlags, buildPpuFlags, buildFeatureWords } from './live-settings-flags';
 import { LIVE_SETTINGS } from './live-settings-keys';
 
 // Track the last-pushed forceBackdropBlack value so we can re-assert after state loads
@@ -42,6 +42,11 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
   try {
     const features = buildFeatureFlags(settings);
     mod.ccall('WasmSetFeatures', null, ['number'], [features]);
+
+    // Split bug-fix toggles ride in two more bitmask words (guarded: older WASM lacks these exports).
+    const { features1, features2 } = buildFeatureWords(settings);
+    try { mod.ccall('WasmSetFeatures1', null, ['number'], [features1]); } catch { /* WASM not rebuilt yet */ }
+    try { mod.ccall('WasmSetFeatures2', null, ['number'], [features2]); } catch { /* WASM not rebuilt yet */ }
 
     const ppuFlags = buildPpuFlags(settings);
     mod.ccall('WasmSetPpuRenderFlags', null, ['number'], [ppuFlags]);

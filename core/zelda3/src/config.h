@@ -59,7 +59,8 @@ typedef struct Config {
   uint8 audio_channels;
   uint16 audio_samples;
   bool autosave;
-  uint8 extended_aspect_ratio;
+  uint16 extended_aspect_ratio;  // extra columns per side; uint16 so it can exceed 255 (>3.19:1)
+  uint16 extended_aspect_ratio_vertical;  // extra scanlines per side (top AND bottom) for taller-than-4:3; 0 = none
   bool extend_y;
   bool no_sprite_limits;
   bool display_perf_title;
@@ -68,6 +69,8 @@ typedef struct Config {
   bool disable_frame_delay;
   uint8 msuvolume;
   uint32 features0;
+  uint32 features1;  // split bug-fix toggles (overflow of features0); see plans/zelda3-settings-plan.md
+  uint32 features2;  // overflow word for the split bug-fix toggles
 
   const char *link_graphics;
   char *memory_buffer;

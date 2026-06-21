@@ -44,11 +44,13 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
       icon: '📦',
       label: 'Data',
       children: [
+        { key: 'data-home', icon: '🏠', label: 'Home', onClick: () => { closeMenu(); onShowDataManager('home'); } },
         { key: 'profiles', icon: '👤', label: 'Profiles', onClick: () => { closeMenu(); onShowDataManager('profiles'); } },
         { key: 'roms', icon: '🎮', label: 'ROMs', onClick: () => { closeMenu(); onShowDataManager('roms'); } },
         { key: 'languages', icon: '🌐', label: 'Languages', onClick: () => { closeMenu(); onShowDataManager('languages'); } },
         { key: 'msu', icon: '🎵', label: 'MSU', onClick: () => { closeMenu(); onShowDataManager('msu'); } },
         { key: 'sprites', icon: '🖼️', label: 'Sprites', onClick: () => { closeMenu(); onShowDataManager('sprites'); } },
+        { key: 'link-sprites', icon: '🧝', label: 'Link Sprites', onClick: () => { closeMenu(); onShowDataManager('linkSprites'); } },
       ],
     },
     {

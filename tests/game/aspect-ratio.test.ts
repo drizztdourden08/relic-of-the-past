@@ -8,18 +8,25 @@ describe('validateCustomRatio', () => {
   it('accepts ratios from 4:3 up to the wide ceiling', () => {
     expect(validateCustomRatio(4, 3).valid).toBe(true);
     expect(validateCustomRatio(16, 9).valid).toBe(true);
-    expect(validateCustomRatio(19, 9).valid).toBe(true); // 2.11 — within the ~2.13 (512px tilemap) cap
+    expect(validateCustomRatio(32, 9).valid).toBe(true); // 3.56 — within the ~4.27 (1024px linear-world) cap
   });
 
-  it('rejects ratios taller than 4:3', () => {
-    const r = validateCustomRatio(5, 4); // 1.25 < 1.333
+  it('accepts tall (taller-than-4:3) ratios down to the portrait floor', () => {
+    expect(validateCustomRatio(5, 4).valid).toBe(true); // 1.25
+    expect(validateCustomRatio(1, 1).valid).toBe(true); // square
+    expect(validateCustomRatio(3, 4).valid).toBe(true); // 0.75 portrait
+    expect(validateCustomRatio(9, 16).valid).toBe(true); // 0.5625 — within the 256/480 floor
+  });
+
+  it('rejects ratios taller than the portrait floor', () => {
+    const r = validateCustomRatio(1, 2); // 0.5 < 256/480 ≈ 0.533
     expect(r.valid).toBe(false);
-    expect(r.error).toMatch(/taller/i);
+    expect(r.error).toMatch(/tall/i);
   });
 
   it('rejects ratios wider than the max', () => {
-    expect(validateCustomRatio(21, 9).valid).toBe(false); // 2.33 > ~2.13
-    expect(validateCustomRatio(32, 9).valid).toBe(false);
+    expect(validateCustomRatio(9, 2).valid).toBe(false); // 4.5 > ~4.27
+    expect(validateCustomRatio(5, 1).valid).toBe(false); // 5.0
   });
 
   it('rejects non-integer or non-positive input', () => {
@@ -42,9 +49,9 @@ describe('detectScreenRatio', () => {
     expect(detectScreenRatio()).toEqual({ w: 16, h: 9 });
   });
 
-  it('clamps taller-than-4:3 screens to 4:3', () => {
-    vi.stubGlobal('window', { screen: { width: 1280, height: 1024 } }); // 1.25
-    expect(detectScreenRatio()).toEqual({ w: 4, h: 3 });
+  it('renders a 5:4 screen at its own (mildly tall) ratio', () => {
+    vi.stubGlobal('window', { screen: { width: 1280, height: 1024 } }); // 1.25 — now filled, not clamped to 4:3
+    expect(detectScreenRatio()).toEqual({ w: 5, h: 4 });
   });
 
   it('clamps ultra-wide screens to the max', () => {

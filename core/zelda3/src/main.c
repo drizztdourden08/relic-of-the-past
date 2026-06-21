@@ -293,11 +293,20 @@ int main(int argc, char** argv) {
   ZeldaInitialize();
   g_zenv.ppu->extraLeftRight = UintMin(g_config.extended_aspect_ratio, kPpuExtraLeftRight);
   g_snes_width = (g_config.extended_aspect_ratio * 2 + 256);
-  g_snes_height = (g_config.extend_y ? 240 : 224);
+  g_zenv.ppu->extraTopBottom = UintMin(g_config.extended_aspect_ratio_vertical, kPpuExtraTopBottom);
+  g_oam_tall_budget = g_zenv.ppu->extraTopBottom;  // sprite OAM 9-bit-Y gate + camera lock (types.h)
+  g_oam_wide_budget = g_zenv.ppu->extraLeftRight;  // horizontal budget for the camera lock
+  {
+    int top_budget = g_zenv.ppu->extraTopBottom;
+    int bot_budget = top_budget > 0 ? top_budget : (g_config.extend_y ? 16 : 0);
+    g_snes_height = 224 + top_budget + bot_budget;
+  }
 
 
   // Delay actually setting those features in ram until any snapshots finish playing.
   g_wanted_zelda_features = g_config.features0;
+  g_wanted_zelda_features1 = g_config.features1;
+  g_wanted_zelda_features2 = g_config.features2;
 
   g_ppu_render_flags = g_config.new_renderer * kPpuRenderFlags_NewRenderer |
                        g_config.enhanced_mode7 * kPpuRenderFlags_4x4Mode7 |

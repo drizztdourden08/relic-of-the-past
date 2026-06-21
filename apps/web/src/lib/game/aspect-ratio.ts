@@ -7,11 +7,15 @@
  */
 
 const BASE_WIDTH = 256;
-const MAX_EXTRA = 128; // kPpuExtraLeftRight — capped so the 256+2*extra view never exceeds the 512px BG tilemap (wider wraps to stale tiles in large overworld areas)
+const BASE_HEIGHT = 224;
+const MAX_EXTRA = 384; // kPpuExtraLeftRight — 256+2*384 = 1024px = the full big-overworld-area width (~4.0:1 at 240h, ~4.3:1 at 224h), covering 32:9 and any real screen. The PPU linear-world fetch renders past the 512px SNES tilemap with no-wrap clamping; beyond the area the edge-mirror fills it.
+const MAX_EXTRA_VERTICAL = 128; // kPpuExtraTopBottom — 224+2*128 = 480 render rows; the tall (taller-than-4:3) counterpart of MAX_EXTRA. The world fetch clamps vertically just like horizontally.
 const MAX_RENDER_H = 240; // extendY height — the worst case, needs the most columns for a ratio
 
-const MIN_ASPECT = 4 / 3; // native; wider is allowed, taller is not
-const MAX_ASPECT = (BASE_WIDTH + 2 * MAX_EXTRA) / MAX_RENDER_H; // = 2.13 (~19:9); the SNES 512px tilemap limit
+// Render pixel-aspect bounds. The served W:H is the render width/height (square pixels). > BASE_WIDTH/BASE_HEIGHT
+// gets horizontal extra (wide); < it gets vertical extra (tall). MIN_ASPECT is the tallest the buffer allows.
+const MIN_ASPECT = BASE_WIDTH / (BASE_HEIGHT + 2 * MAX_EXTRA_VERTICAL); // = 256/480 ≈ 0.53 (very tall)
+const MAX_ASPECT = (BASE_WIDTH + 2 * MAX_EXTRA) / MAX_RENDER_H; // ≈ 4.27; the widescreen cap
 
 interface RatioCheck {
   valid: boolean;
@@ -26,9 +30,11 @@ const validateCustomRatio = (w: number, h: number): RatioCheck => {
     return { valid: false, ratio: 0, error: 'Use whole numbers ≥ 1' };
   }
   const ratio = w / h;
-  if (ratio < MIN_ASPECT - 1e-6) return { valid: false, ratio, error: 'Cannot be taller than 4:3' };
+  if (ratio < MIN_ASPECT - 1e-6) {
+    return { valid: false, ratio, error: `Too tall (max ${Math.round((1 / MIN_ASPECT) * 100) / 100}:1 portrait)` };
+  }
   if (ratio > MAX_ASPECT + 1e-6) {
-    return { valid: false, ratio, error: `Max is ${Math.round(MAX_ASPECT * 100) / 100}:1` };
+    return { valid: false, ratio, error: `Too wide (max ${Math.round(MAX_ASPECT * 100) / 100}:1)` };
   }
   return { valid: true, ratio };
 };
@@ -45,11 +51,13 @@ const clampAndReduce = (longPx: number, shortPx: number): { w: number; h: number
   let long = longPx;
   let short = shortPx;
   const ratio = long / short;
-  if (ratio < MIN_ASPECT) {
-    long = 4;
-    short = 3;
-  } else if (ratio > MAX_ASPECT) {
+  // Callers pass a landscape-normalized pair (ratio ≥ 1), so only the wide ceiling normally bites; the
+  // tall floor is here for completeness if an un-normalized (portrait) pair is ever passed. Ratios in
+  // [MIN_ASPECT, MAX_ASPECT] (incl. 5:4 / square / mild-tall) pass through unclamped — the engine fills them.
+  if (ratio > MAX_ASPECT) {
     long = Math.round(MAX_ASPECT * short);
+  } else if (ratio < MIN_ASPECT) {
+    short = Math.round(long / MIN_ASPECT);
   }
   const g = gcd(long, short) || 1;
   return { w: long / g, h: short / g };
@@ -103,7 +111,7 @@ const buildReadout = (long: number, short: number): RatioReadout => {
 // Standard display ratios real screens use, plus the engine's exact cap (32:15 = 512/240). Screens
 // are always one of these, so snapping to the nearest avoids meaningless GCD pairs like "29:13".
 const COMMON_RATIOS: ReadonlyArray<readonly [number, number]> = [
-  [4, 3], [3, 2], [16, 10], [5, 3], [16, 9], [17, 9], [18, 9], [19, 9], [32, 15], [20, 9], [21, 9],
+  [1, 1], [5, 4], [4, 3], [3, 2], [16, 10], [5, 3], [16, 9], [17, 9], [18, 9], [19, 9], [32, 15], [20, 9], [21, 9],
 ];
 
 /** Snap a measured numeric ratio to the nearest standard display ratio, so 2.226 reads as "20:9"

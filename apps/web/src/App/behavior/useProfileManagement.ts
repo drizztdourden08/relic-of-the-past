@@ -8,7 +8,7 @@ import { applySpritesForRom } from '../../lib/sprites/apply-sprites-for-rom';
 import * as profileStore from '../../lib/storage/profile-store';
 import * as romsStore from '../../lib/storage/roms-store';
 import * as assetsStore from '../../lib/storage/assets-store';
-import { loadInputProfile, loadMsuPack } from './load-profile-helpers';
+import { loadInputProfile, loadMsuPack, loadLinkSprite } from './load-profile-helpers';
 
 const useProfileManagement = (params: {
   showDialog: (config: ConfirmDialog) => void;
@@ -53,6 +53,7 @@ const useProfileManagement = (params: {
 
     await loadInputProfile(profile.id, settings);
     await loadMsuPack(profile, settings);
+    await loadLinkSprite(settings);
 
     const msuPath = (profile.msuPack && settings.enableMSU !== 'false') ? '/msu/' : undefined;
     const ini = serializeToIni(settings, msuPath, profile.language);
