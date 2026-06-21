@@ -1502,7 +1502,7 @@ void Kiki_LyingInwait(int k) {
     return;
   if (Sprite_CheckDamageToLink_same_layer(k)) {
     // Kiki Big Bomb Fix
-    if (enhanced_features0 & kFeatures0_MiscBugFixes)
+    if (enhanced_features1 & kFeatures1_KikiDefuseBigBomb)
       follower_dropped = 0;  // defuse bomb
 
     follower_indicator = 10;
@@ -2875,7 +2875,7 @@ void Sprite_Zora_Main(int k) {  // 859725
       } else {
         // In Misery Mire some Zoras are placed in shallow water so they can't spawn
         // This fixes so they will be able to spawn in shallow water after a delay.
-        if (enhanced_features0 & kFeatures0_GameChangingBugFixes) {
+        if (enhanced_features1 & kFeatures1_ZoraSpawnInShallowWater) {
           if (sprite_tiletype == 9 && sprite_delay_aux2[k] == 1)
             goto spawn_anyway;
           Sprite_SetX(k, org_x);
@@ -6379,7 +6379,7 @@ void Sprite_E7_Mushroom(int k) {  // 85ee78
     return;
 
   // If we're in the middle of a mirror warp, don't get the mushroom yet
-  if (enhanced_features0 & kFeatures0_MiscBugFixes && submodule_index != 0)
+  if (enhanced_features1 & kFeatures1_MushroomNoPickupDuringMirrorWarp && submodule_index != 0)
     return;
 
   if (Sprite_CheckDamageToLink_same_layer(k)) {
@@ -8306,7 +8306,7 @@ void Sprite_09_GiantMoldorm(int k) {  // 869469
     link_incapacitated_timer = 24;
     sprite_delay_aux1[k] = 48;
     // For some reason they forgot to or in the sfx.
-    sound_effect_2 = Sprite_CalculateSfxPan(k) | (enhanced_features0 & kFeatures0_MiscBugFixes ? 0x32 : 0);
+    sound_effect_2 = Sprite_CalculateSfxPan(k) | (enhanced_features1 & kFeatures1_GiantMoldormKnockbackSfx ? 0x32 : 0);
   }
 
   int j = sprite_D[k] + low_health * 16;
@@ -11751,7 +11751,7 @@ void Sprite_D8_Heart(int k) {  // 86cec0
 
   // Avoid calling Sprite_HandleAbsorptionByPlayer twice, it's called
   // also from within Sprite_HandleDraggingByAncilla
-  if (sprite_state[k] == 0 && (enhanced_features0 & kFeatures0_MiscBugFixes))
+  if (sprite_state[k] == 0 && (enhanced_features1 & kFeatures1_NoDoubleAbsorptionHandling))
     return;
 
   if (Sprite_HandleDraggingByAncilla(k))
@@ -11823,7 +11823,7 @@ void Sprite_E3_Fairy(int k) {  // 86cf94
     }
     // Avoid calling Sprite_HandleAbsorptionByPlayer twice, it's called
     // also from within Sprite_HandleDraggingByAncilla
-    if (sprite_state[k] == 0 && (enhanced_features0 & kFeatures0_MiscBugFixes))
+    if (sprite_state[k] == 0 && (enhanced_features1 & kFeatures1_NoDoubleAbsorptionHandling))
       return;
     if (Sprite_HandleDraggingByAncilla(k))
       return;
@@ -15204,7 +15204,7 @@ void SpritePrep_Swamola_InitializeSegments(int k) {  // 9d9c80
   int j;
 
   // The snes code uses the wrong bank.. Causes glitches with lanmolas in misery mire
-  if (enhanced_features0 & kFeatures0_MiscBugFixes) {
+  if (enhanced_features1 & kFeatures1_SwamolaCorrectSegmentIndex) {
     j = k * 32;
   } else {
     static const uint8 kBuggySwamolaLookup[6] = { 0x1c, 0xa9, 0x03, 0x9d, 0x90, 0x0d };  // wrong bank
@@ -22496,7 +22496,7 @@ bool SpikeBlock_CheckStatueCollision(int k) {  // 9ebe19
 }
 
 void Sprite_88_Mothula(int k) {  // 9ebe7e
-  if (enhanced_features0 & kFeatures0_MiscBugFixes) {
+  if (enhanced_features1 & kFeatures1_MothulaTakesL4AndSpinDamage) {
     // L4 sword and L3 spin slash can now damage Mothula
     enemy_damage_data[0x884] = 1;
     enemy_damage_data[0x885] = 1;

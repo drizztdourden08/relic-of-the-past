@@ -69,6 +69,8 @@ typedef struct Config {
   bool disable_frame_delay;
   uint8 msuvolume;
   uint32 features0;
+  uint32 features1;  // split bug-fix toggles (overflow of features0); see plans/zelda3-settings-plan.md
+  uint32 features2;  // overflow word for the split bug-fix toggles
 
   const char *link_graphics;
   char *memory_buffer;

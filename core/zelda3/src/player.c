@@ -136,6 +136,7 @@ void Link_Main() {  // 878000
 //  RunEmulatedFunc(0x878000, 0, 0, 0, true, true, -2, 0);
 //  return;
 
+#ifdef RELIC_DEBUG_LINK_TRACE
   // ─── DEBUG TRACE: logs state each frame in Link_Main ───
   extern int g_cheat_trace_frames;
   static int dbg_main_trace = 0;
@@ -158,6 +159,7 @@ void Link_Main() {  // 878000
            link_animation_steps, link_speed_setting);
   }
   // ─── END DEBUG TRACE ───
+#endif
 
   link_x_coord_prev = link_x_coord;
   link_y_coord_prev = link_y_coord;
@@ -279,7 +281,7 @@ void PlayerHandler_00_Ground_3() {  // 8781a0
       // Ensure we're not handling potions. Things further
       // down don't assume this and change the module indexes randomly.
       // This also fixes a bug where bombos, ether, quake get aborted if you use spin attack at the same time.
-      if ((enhanced_features0 & kFeatures0_MiscBugFixes) && (
+      if ((enhanced_features1 & kFeatures1_MedallionSpinAttackAbortFix) && (
           main_module_index == 14 && submodule_index != 2 ||
           link_player_handler_state == kPlayerState_Bombos ||
           link_player_handler_state == kPlayerState_Ether ||
@@ -364,7 +366,7 @@ endif_3:
   // HandleIndoorCameraAndDoors must not be called twice in the same frame,
   // this might mess up camera positioning. For example when using spin attack
   // in between bumpers.
-  if (g_ApplyLinksMovementToCamera_called && (enhanced_features0 & kFeatures0_MiscBugFixes))
+  if (g_ApplyLinksMovementToCamera_called && (enhanced_features1 & kFeatures1_DoubleCameraDoorHandlingFix))
     return;
 
   HandleIndoorCameraAndDoors();
@@ -1427,7 +1429,7 @@ void LinkState_Pits() {  // 8792d3
     // can levitate across chasms.
     // Fix this by ensuring that the dash button is held down before proceeding to the dash state.
     if (link_countdown_for_dash &&
-        (!(enhanced_features0 & kFeatures0_MiscBugFixes) || (joypad1L_last & kJoypadL_A))) {
+        (!(enhanced_features1 & kFeatures1_TurboDashPitLevitationFix) || (joypad1L_last & kJoypadL_A))) {
       LinkState_Dashing();
       return;
     }
@@ -1442,7 +1444,7 @@ aux_state:
   if (!(tiledetect_pit_tile & 1)) {
     // Reset player_near_pit_state if we're no longer near a hole.
     // This fixes a bug where you could walk on water
-    if (enhanced_features0 & kFeatures0_MiscBugFixes)
+    if (enhanced_features1 & kFeatures1_WalkOnWaterPitStateFix)
       player_near_pit_state = 0;
 
     if (link_is_running) {
@@ -1625,7 +1627,7 @@ void HandleDungeonLandingFromPit() {  // 879520
   }
   //exploration glitch could also be armed without quitting
   //by jumping off a dungeon ledge into an access pit
-  if (enhanced_features0 & kFeatures0_MiscBugFixes) {
+  if (enhanced_features1 & kFeatures1_PitLandingExplorationGlitchFix) {
     about_to_jump_off_ledge = 0;
   }
   link_y_coord = tiledetect_which_y_pos[0];
@@ -2335,6 +2337,7 @@ void LinkItem_Rod() {  // 879eef
     return;
   player_handler_timer++;
 
+  // Intentional, behavior-equivalent OOB-read cleanup: guard before indexing kRodAnimDelays (vanilla read past end at timer==3).
   if (player_handler_timer < 3) {
     link_delay_timer_spin_attack = kRodAnimDelays[player_handler_timer];
     return;
@@ -2369,6 +2372,7 @@ void LinkItem_Hammer() {  // 879f7b
     return;
   player_handler_timer++;
 
+  // Intentional, behavior-equivalent OOB-read cleanup: guard before indexing kHammerAnimDelays (vanilla read past end at timer==3).
   if (player_handler_timer < 3) {
     link_delay_timer_spin_attack = kHammerAnimDelays[player_handler_timer];
     if (player_handler_timer == 1) {
@@ -2407,6 +2411,7 @@ void LinkItem_Bow() {  // 87a006
     return;
   player_handler_timer++;
 
+  // Intentional, behavior-equivalent OOB-read cleanup: guard before indexing kBowDelays (vanilla read past end at timer==3).
   if (player_handler_timer < 3) {
     link_delay_timer_spin_attack = kBowDelays[player_handler_timer];
     return;
@@ -3295,7 +3300,7 @@ void LinkItem_Cape() {  // 87adc1
     if (!--cape_decrement_counter) {
       cape_decrement_counter = kCapeDepletionTimers[link_magic_consumption];
       // Avoid magic underflow if an anti-fairy consumes magic.
-      if (link_magic_power == 0 && (enhanced_features0 & kFeatures0_MiscBugFixes) ||
+      if (link_magic_power == 0 && (enhanced_features1 & kFeatures1_CapeMagicUnderflowFix) ||
           !--link_magic_power) {
         Link_ForceUnequipCape();
         return;
@@ -3337,7 +3342,7 @@ void HaltLinkWhenUsingItems() {  // 87ae65
 
 void Link_HandleCape_passive_LiftCheck() {  // 87ae88
   //bugfix: grabbing or pulling while wearing cape didn't drain magic
-  if (link_state_bits & 0x80 || (enhanced_features0 & kFeatures0_MiscBugFixes && link_grabbing_wall))
+  if (link_state_bits & 0x80 || (enhanced_features1 & kFeatures1_CapeDrainWhileGrabbingFix && link_grabbing_wall))
     Player_CheckHandleCapeStuff();
 }
 
@@ -3369,7 +3374,7 @@ void LinkItem_CaneOfSomaria() {  // 87aec0
           // then quickly switch to the mushroom or magic powder after
           // the "no magic" prompt, you will automatically sprinkle magic powder
           // despite pressing no button and having no magic.
-          if (enhanced_features0 & kFeatures0_MiscBugFixes)
+          if (enhanced_features1 & kFeatures1_SomariaNoMagicPowderFix)
             goto out;
           return;
         }
@@ -3381,7 +3386,7 @@ void LinkItem_CaneOfSomaria() {  // 87aec0
     if (AncillaAdd_SomariaBlock(0x2c, 1) < 0) {
       // If you use the Cane of Somaria while two bombs and the boomerang are active,
       // magic will be refunded instead of used.
-      if (did_charge_magic || !(enhanced_features0 & kFeatures0_MiscBugFixes))
+      if (did_charge_magic || !(enhanced_features1 & kFeatures1_SomariaMagicRefundExploitFix))
         Refund_Magic(4);
     }
     link_delay_timer_spin_attack = kRodAnimDelays[0];
@@ -3518,7 +3523,7 @@ void Refund_Magic(uint8 x) {  // 87b0e9
 
   int new_magic = link_magic_power + cost;
   // Ensure magic can't overflow (for example the cane of somaria bug)
-  if (enhanced_features0 & kFeatures0_MiscBugFixes && new_magic >= 128)
+  if (enhanced_features1 & kFeatures1_MagicRefundOverflowClampFix && new_magic >= 128)
     new_magic = 128;
   link_magic_power = new_magic;
 }
@@ -5224,7 +5229,7 @@ void StartMovementCollisionChecks_X_HandleOutdoors() {  // 87c8e9
   // Fix by always calling it, not sure why you wouldn't always want to call it.
   if ((R14 & 2) == 0 && (R12 & 5) != 0) {
     bool skip_check = link_is_running && !(link_direction_facing & 4);
-    if (!skip_check || (enhanced_features0 & kFeatures0_MiscBugFixes)) {
+    if (!skip_check || (enhanced_features1 & kFeatures1_DashBufferingSlopeFlagFix)) {
       FlagMovingIntoSlopes_X();
       if ((link_moving_against_diag_tile & 0xf) != 0)
         return;
@@ -5638,7 +5643,7 @@ void FlagMovingIntoSlopes_Y() {  // 87e076
   if (tiledetect_diagonal_tile & 5) {
     int8 ym = tiledetect_which_y_pos[0] & 7;
 
-    if (enhanced_features0 & kFeatures0_MiscBugFixes) {
+    if (enhanced_features1 & kFeatures1_SlopeJudderOobReadFix) {
       if (tiledetect_diag_state & 2) {
         ym = -ym;
       } else {
@@ -6039,7 +6044,7 @@ void Link_HandleMovingAnimation_StartWithDash() {  // 87e704
   static const uint8 tab3[24] = { 1, 2, 3, 2, 2, 2, 3, 2, 1, 1, 2, 1, 1, 1, 2, 1, 2, 2, 3, 2, 2, 2, 3, 2 };
 
 //bugfix: tempbunny animation steps are wrong due to missing check
-  if (link_player_handler_state == 23 || (enhanced_features0 & kFeatures0_MiscBugFixes && link_player_handler_state == 28)) {  // bunny states
+  if (link_player_handler_state == 23 || (enhanced_features1 & kFeatures1_TempBunnyAnimationStepsFix && link_player_handler_state == 28)) {  // bunny states
     if (link_animation_steps < 4 && player_on_somaria_platform != 2) {
       if (++link_counter_var1 >= tab2[x]) {
         link_counter_var1 = 0;
@@ -6158,7 +6163,7 @@ void HandleDoorTransitions() {  // 87e901
   // There's an added return to catch the same behavior a bit up, but this one catches more cases,
   // at the expense of link already having done his movement, so by returning here we might
   // miss handling the door causing other kinds of issues.
-  if ((enhanced_features0 & kFeatures0_MiscBugFixes) && !(main_module_index == 7 && submodule_index == 0))
+  if ((enhanced_features1 & kFeatures1_PotionModuleDoorTransitionFix) && !(main_module_index == 7 && submodule_index == 0))
     return;
 
   if (link_direction_last & 0xC && is_standing_in_doorway == 1) {
@@ -6312,7 +6317,7 @@ void Link_Initialize() {  // 87f13c
   player_on_somaria_platform = 0;
   link_spin_attack_step_counter = 0;
 
-  if (enhanced_features0 & kFeatures0_MiscBugFixes) {
+  if (enhanced_features1 & kFeatures1_LinkInitGlitchStateReset) {
     // If you quit while jumping from a ledge and get hit on a platform you can go under solid layers
     about_to_jump_off_ledge = 0;
  
@@ -6375,7 +6380,7 @@ void Link_ResetProperties_B() {  // 87f1e6
 }
 
 void Link_ResetProperties_C() {  // 87f1fa
-  if (enhanced_features0 & kFeatures0_MiscBugFixes) {
+  if (enhanced_features2 & kFeatures2_SaveMenuLockoutAfterMedallionFix) {
     // Fix save menu lockout when dying after medallion cast (#126)
     flag_custom_spell_anim_active = 0;
   }

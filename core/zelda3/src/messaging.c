@@ -796,7 +796,7 @@ void Death_Func15(bool count_as_death) {  // 89f50f
   if (i != 0xff)
     link_keys_earned_per_dungeon[(i == 2 ? 0 : i) >> 1] = link_num_keys;
   Sprite_ResetAll();
-  if (death_var2 == 0xffff && (!(enhanced_features0 & kFeatures0_MiscBugFixes) || count_as_death))
+  if (death_var2 == 0xffff && (!(enhanced_features1 & kFeatures1_FixDeathCounterOvercount) || count_as_death))
     death_save_counter++;
   death_var5++;
   if (subsubmodule_index != 1) {
@@ -2107,7 +2107,7 @@ void CopySaveToWRAM() {  // 8ccfbb
   // If you save / quit in the middle of a mosaic effect, such as
   // being electrocuted by a buzz blob, the resumed game will skip
   // the location prompt and start in the sanctuary.
-  if (enhanced_features0 & kFeatures0_MiscBugFixes)
+  if (enhanced_features1 & kFeatures1_FixResumeMosaicSanctuaryWarp)
     mosaic_level = 0;
 
   hud_var1 = 128;
@@ -2910,7 +2910,7 @@ void Death_PrepFaint() {  // 8ffa6f
     link_is_bunny = 0;
   link_timer_tempbunny = 0;
   //bugfix: dying as permabunny doesn't restore link palette during death animation
-  if (enhanced_features0 & kFeatures0_MiscBugFixes)
+  if (enhanced_features1 & kFeatures1_FixPermabunnyDeathPalette)
     LoadActualGearPalettes();
   sound_effect_1 = 0x27 | Link_CalculateSfxPan();
   for (int i = 0; i != 4; i++) {

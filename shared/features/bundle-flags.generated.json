@@ -1,0 +1,426 @@
+{
+  "total": 42,
+  "flags": {
+    "medallionSpinAttackAbortFix": {
+      "flag": "kFeatures1_MedallionSpinAttackAbortFix",
+      "word": 1,
+      "bit": 1,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/player.c:282 (PlayerHandler_00_Ground_3)"
+      ]
+    },
+    "doubleCameraDoorHandlingFix": {
+      "flag": "kFeatures1_DoubleCameraDoorHandlingFix",
+      "word": 1,
+      "bit": 2,
+      "bundleFlag": "MiscBugFixes",
+      "category": "bug-fix-cosmetic",
+      "sites": [
+        "core/zelda3/src/player.c:367 (PlayerHandler_00_Ground_3)"
+      ]
+    },
+    "turboDashPitLevitationFix": {
+      "flag": "kFeatures1_TurboDashPitLevitationFix",
+      "word": 1,
+      "bit": 4,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/player.c:1430 (LinkState_Pits)"
+      ]
+    },
+    "walkOnWaterPitStateFix": {
+      "flag": "kFeatures1_WalkOnWaterPitStateFix",
+      "word": 1,
+      "bit": 8,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/player.c:1445 (LinkState_Pits)"
+      ]
+    },
+    "pitLandingExplorationGlitchFix": {
+      "flag": "kFeatures1_PitLandingExplorationGlitchFix",
+      "word": 1,
+      "bit": 16,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/player.c:1628 (HandleDungeonLandingFromPit)"
+      ]
+    },
+    "capeMagicUnderflowFix": {
+      "flag": "kFeatures1_CapeMagicUnderflowFix",
+      "word": 1,
+      "bit": 32,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/player.c:3298 (cape depletion decrement)"
+      ]
+    },
+    "capeDrainWhileGrabbingFix": {
+      "flag": "kFeatures1_CapeDrainWhileGrabbingFix",
+      "word": 1,
+      "bit": 64,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/player.c:3340 (Link_HandleCape_passive_LiftCheck)"
+      ]
+    },
+    "somariaNoMagicPowderFix": {
+      "flag": "kFeatures1_SomariaNoMagicPowderFix",
+      "word": 1,
+      "bit": 128,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/player.c:3372 (LinkItem_CaneOfSomaria)"
+      ]
+    },
+    "somariaMagicRefundExploitFix": {
+      "flag": "kFeatures1_SomariaMagicRefundExploitFix",
+      "word": 1,
+      "bit": 256,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/player.c:3384 (LinkItem_CaneOfSomaria)"
+      ]
+    },
+    "magicRefundOverflowClampFix": {
+      "flag": "kFeatures1_MagicRefundOverflowClampFix",
+      "word": 1,
+      "bit": 512,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/player.c:3521 (Refund_Magic)"
+      ]
+    },
+    "dashBufferingSlopeFlagFix": {
+      "flag": "kFeatures1_DashBufferingSlopeFlagFix",
+      "word": 1,
+      "bit": 1024,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/player.c:5227 (FlagMovingIntoSlopes caller)"
+      ]
+    },
+    "slopeJudderOobReadFix": {
+      "flag": "kFeatures1_SlopeJudderOobReadFix",
+      "word": 1,
+      "bit": 2048,
+      "bundleFlag": "MiscBugFixes",
+      "category": "bug-fix-cosmetic",
+      "sites": [
+        "core/zelda3/src/player.c:5641 (FlagMovingIntoSlopes_Y)"
+      ]
+    },
+    "tempBunnyAnimationStepsFix": {
+      "flag": "kFeatures1_TempBunnyAnimationStepsFix",
+      "word": 1,
+      "bit": 4096,
+      "bundleFlag": "MiscBugFixes",
+      "category": "visual-only",
+      "sites": [
+        "core/zelda3/src/player.c:6042 (Link animation-step handler)"
+      ]
+    },
+    "potionModuleDoorTransitionFix": {
+      "flag": "kFeatures1_PotionModuleDoorTransitionFix",
+      "word": 1,
+      "bit": 8192,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/player.c:6161 (HandleDoorTransitions)"
+      ]
+    },
+    "linkInitGlitchStateReset": {
+      "flag": "kFeatures1_LinkInitGlitchStateReset",
+      "word": 1,
+      "bit": 16384,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/player.c:6315 (Link_Initialize)"
+      ]
+    },
+    "kikiDefuseBigBomb": {
+      "flag": "kFeatures1_KikiDefuseBigBomb",
+      "word": 1,
+      "bit": 32768,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/sprite_main.c:1505 (Kiki_LyingInwait)"
+      ]
+    },
+    "zoraSpawnInShallowWater": {
+      "flag": "kFeatures1_ZoraSpawnInShallowWater",
+      "word": 1,
+      "bit": 65536,
+      "bundleFlag": "GameChangingBugFixes",
+      "category": "bug-fix-cosmetic",
+      "sites": [
+        "core/zelda3/src/sprite_main.c:2878 (Sprite_Zora_Main case 0)"
+      ]
+    },
+    "mushroomNoPickupDuringMirrorWarp": {
+      "flag": "kFeatures1_MushroomNoPickupDuringMirrorWarp",
+      "word": 1,
+      "bit": 131072,
+      "bundleFlag": "MiscBugFixes",
+      "category": "bug-fix-cosmetic",
+      "sites": [
+        "core/zelda3/src/sprite_main.c:6382 (Sprite_E7_Mushroom)"
+      ]
+    },
+    "giantMoldormKnockbackSfx": {
+      "flag": "kFeatures1_GiantMoldormKnockbackSfx",
+      "word": 1,
+      "bit": 262144,
+      "bundleFlag": "MiscBugFixes",
+      "category": "visual-only",
+      "sites": [
+        "core/zelda3/src/sprite_main.c:8309 (GiantMoldorm main)"
+      ]
+    },
+    "noDoubleAbsorptionHandling": {
+      "flag": "kFeatures1_NoDoubleAbsorptionHandling",
+      "word": 1,
+      "bit": 524288,
+      "bundleFlag": "MiscBugFixes",
+      "category": "bug-fix-cosmetic",
+      "sites": [
+        "core/zelda3/src/sprite_main.c:11754 (Sprite_D8_Heart)",
+        "core/zelda3/src/sprite_main.c:11826 (Sprite_E3_Fairy case 0)"
+      ]
+    },
+    "swamolaCorrectSegmentIndex": {
+      "flag": "kFeatures1_SwamolaCorrectSegmentIndex",
+      "word": 1,
+      "bit": 1048576,
+      "bundleFlag": "MiscBugFixes",
+      "category": "bug-fix-cosmetic",
+      "sites": [
+        "core/zelda3/src/sprite_main.c:15207 (SpritePrep_Swamola_InitializeSegments)"
+      ]
+    },
+    "mothulaTakesL4AndSpinDamage": {
+      "flag": "kFeatures1_MothulaTakesL4AndSpinDamage",
+      "word": 1,
+      "bit": 2097152,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/sprite_main.c:22499 (Sprite_88_Mothula)"
+      ]
+    },
+    "reloadShieldPaletteAfterPikit": {
+      "flag": "kFeatures1_ReloadShieldPaletteAfterPikit",
+      "word": 1,
+      "bit": 4194304,
+      "bundleFlag": "MiscBugFixes",
+      "category": "visual-only",
+      "sites": [
+        "core/zelda3/src/sprite.c:1416 (Sprite_HandleAbsorptionByPlayer case 14)"
+      ]
+    },
+    "cancelHookshotGrabOnHiddenAbsorbable": {
+      "flag": "kFeatures1_CancelHookshotGrabOnHiddenAbsorbable",
+      "word": 1,
+      "bit": 8388608,
+      "bundleFlag": "MiscBugFixes",
+      "category": "bug-fix-cosmetic",
+      "sites": [
+        "core/zelda3/src/sprite.c:1435 (SpriteDraw_AbsorbableTransient)"
+      ]
+    },
+    "mothulaSpikeTileDamageClassFix": {
+      "flag": "kFeatures1_MothulaSpikeTileDamageClassFix",
+      "word": 1,
+      "bit": 16777216,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/sprite.c:2029 (sprite tile-collision damage handler, tiletype 0x44)"
+      ]
+    },
+    "giantMoldormWeaponTinkSfxFix": {
+      "flag": "kFeatures1_GiantMoldormWeaponTinkSfxFix",
+      "word": 1,
+      "bit": 33554432,
+      "bundleFlag": "MiscBugFixes",
+      "category": "visual-only",
+      "sites": [
+        "core/zelda3/src/sprite.c:2696 (Sprite_CheckDamageFromLink, type 9)"
+      ]
+    },
+    "boomerangTerminateWhenEmptyHanded": {
+      "flag": "kFeatures1_BoomerangTerminateWhenEmptyHanded",
+      "word": 1,
+      "bit": 67108864,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/ancilla.c:1276 (Ancilla05_Boomerang)"
+      ]
+    },
+    "bigBombPreserveFollowerIndicator": {
+      "flag": "kFeatures1_BigBombPreserveFollowerIndicator",
+      "word": 1,
+      "bit": 134217728,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/ancilla.c:5385 (Ancilla3A_BigBombExplosion)"
+      ]
+    },
+    "permabunnyRestorePaletteOnRevive": {
+      "flag": "kFeatures1_PermabunnyRestorePaletteOnRevive",
+      "word": 1,
+      "bit": 268435456,
+      "bundleFlag": "MiscBugFixes",
+      "category": "visual-only",
+      "sites": [
+        "core/zelda3/src/ancilla.c:5495 (RevivalFairy_MonitorHP)"
+      ]
+    },
+    "fixDeathCounterOvercount": {
+      "flag": "kFeatures1_FixDeathCounterOvercount",
+      "word": 1,
+      "bit": 536870912,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/messaging.c:799 (Death_Func15)"
+      ]
+    },
+    "fixResumeMosaicSanctuaryWarp": {
+      "flag": "kFeatures1_FixResumeMosaicSanctuaryWarp",
+      "word": 1,
+      "bit": 1073741824,
+      "bundleFlag": "MiscBugFixes",
+      "category": "bug-fix-cosmetic",
+      "sites": [
+        "core/zelda3/src/messaging.c:2110 (CopySaveToWRAM)"
+      ]
+    },
+    "fixPermabunnyDeathPalette": {
+      "flag": "kFeatures1_FixPermabunnyDeathPalette",
+      "word": 1,
+      "bit": 2147483648,
+      "bundleFlag": "MiscBugFixes",
+      "category": "visual-only",
+      "sites": [
+        "core/zelda3/src/messaging.c:2913 (Death_PrepFaint)"
+      ]
+    },
+    "skipRoomTagsDuringStaircaseTransition": {
+      "flag": "kFeatures2_SkipRoomTagsDuringStaircaseTransition",
+      "word": 2,
+      "bit": 1,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/dungeon.c:4288 (Dungeon_HandleRoomTags)"
+      ]
+    },
+    "skipDungeonUpdateAfterModuleExit": {
+      "flag": "kFeatures2_SkipDungeonUpdateAfterModuleExit",
+      "word": 2,
+      "bit": 2,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/dungeon.c:6510 (Module07_Dungeon)"
+      ]
+    },
+    "kholdstareShellPaletteRange": {
+      "flag": "kFeatures2_KholdstareShellPaletteRange",
+      "word": 2,
+      "bit": 4,
+      "bundleFlag": "MiscBugFixes",
+      "category": "visual-only",
+      "sites": [
+        "core/zelda3/src/load_gfx.c:1107 (KholdstareShell_PaletteFiltering)"
+      ]
+    },
+    "preserveGlovesColorOnGearReload": {
+      "flag": "kFeatures2_PreserveGlovesColorOnGearReload",
+      "word": 2,
+      "bit": 8,
+      "bundleFlag": "MiscBugFixes",
+      "category": "visual-only",
+      "sites": [
+        "core/zelda3/src/load_gfx.c:1889 (LoadActualGearPalettes)"
+      ]
+    },
+    "superBombClearFollowerOnExplode": {
+      "flag": "kFeatures2_SuperBombClearFollowerOnExplode",
+      "word": 2,
+      "bit": 16,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/tagalong.c:439 (Follower_NotFollowing)"
+      ]
+    },
+    "superBombPaletteOnFrameZero": {
+      "flag": "kFeatures2_SuperBombPaletteOnFrameZero",
+      "word": 2,
+      "bit": 32,
+      "bundleFlag": "MiscBugFixes",
+      "category": "visual-only",
+      "sites": [
+        "core/zelda3/src/tagalong.c:670 (Tagalong_Draw)"
+      ]
+    },
+    "fixPortalMusicRestart": {
+      "flag": "kFeatures2_FixPortalMusicRestart",
+      "word": 2,
+      "bit": 64,
+      "bundleFlag": "MiscBugFixes",
+      "category": "bug-fix-cosmetic",
+      "sites": [
+        "core/zelda3/src/audio.c:115 (ZeldaIsPlayingMusicTrackWithBug)"
+      ]
+    },
+    "icePortalRevealChime": {
+      "flag": "kFeatures2_IcePortalRevealChime",
+      "word": 2,
+      "bit": 128,
+      "bundleFlag": "MiscBugFixes",
+      "category": "bug-fix-cosmetic",
+      "sites": [
+        "core/zelda3/src/overworld.c:3595 (Overworld_RevealSecret)"
+      ]
+    },
+    "widescreenLinkHideViaOffscreenY": {
+      "flag": "kFeatures2_WidescreenLinkHideViaOffscreenY",
+      "word": 2,
+      "bit": 256,
+      "bundleFlag": "WidescreenVisualFixes",
+      "category": "visual-only",
+      "sites": [
+        "core/zelda3/src/player_oam.c:1110 (LinkOam_Main)"
+      ]
+    },
+    "saveMenuLockoutAfterMedallionFix": {
+      "flag": "kFeatures2_SaveMenuLockoutAfterMedallionFix",
+      "word": 2,
+      "bit": 512,
+      "bundleFlag": "MiscBugFixes",
+      "category": "gameplay-affecting",
+      "sites": [
+        "core/zelda3/src/player.c:6378"
+      ]
+    }
+  }
+}

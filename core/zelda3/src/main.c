@@ -305,6 +305,8 @@ int main(int argc, char** argv) {
 
   // Delay actually setting those features in ram until any snapshots finish playing.
   g_wanted_zelda_features = g_config.features0;
+  g_wanted_zelda_features1 = g_config.features1;
+  g_wanted_zelda_features2 = g_config.features2;
 
   g_ppu_render_flags = g_config.new_renderer * kPpuRenderFlags_NewRenderer |
                        g_config.enhanced_mode7 * kPpuRenderFlags_4x4Mode7 |

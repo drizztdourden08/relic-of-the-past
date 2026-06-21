@@ -4285,7 +4285,7 @@ void Dungeon_HandleRoomTags() {  // 81c2fd
     // calling the tag routines cause they could also change the submodule,
     // causing items to spawn in incorrect locations cause link_x/y_coord gets
     // out of sync if you enter a staircase exactly when a room tag triggers.
-    if (enhanced_features0 & kFeatures0_MiscBugFixes && submodule_index != 0)
+    if (enhanced_features2 & kFeatures2_SkipRoomTagsDuringStaircaseTransition && submodule_index != 0)
       return;
 
     g_ram[14] = 0;
@@ -6507,7 +6507,7 @@ void Module07_Dungeon() {  // 8287a2
 
   // When having the somaria on door button and exiting in skull woods, 
   // don't overwrite submodule_index
-  if (enhanced_features0 & kFeatures0_MiscBugFixes && main_module_index != 7)
+  if (enhanced_features2 & kFeatures2_SkipDungeonUpdateAfterModuleExit && main_module_index != 7)
     goto skip;
 
   dung_misc_objs_index = 0;

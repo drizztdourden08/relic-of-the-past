@@ -5,9 +5,22 @@
 int g_cheat_trace_frames = 0;
 
 // ─── Cheat State (persists until reset or explicit disable) ───
+//
+// These are CHEATS, not enhanced-features flags: their defaults below are the
+// neutral / no-op values (mult=1, pct=0, trace=0), so with nothing set the
+// consumers (GameHook_GetDamageMultiplier / GameHook_ApplyExtraArmor in
+// sprite.c/player.c, and the trace read in player.c) reproduce byte-faithful
+// vanilla behavior. They are mutated only by the Wasm* setters at the bottom of
+// this file (driven from the JS cheats UI), never at startup.
+//
+// Audit note: unlike the enhanced_features0 bitmask in features.h, cheat state
+// lives in these file-local statics rather than a unified config/registry. If a
+// single config audit ever needs to enumerate them, surface them through the
+// existing GameHook_Get* accessors below (the same pattern features expose) so
+// the statics stay the single source of truth.
 
-static uint8 g_cheat_damage_mult = 1;      // Outgoing damage multiplier (1-255)
-static uint8 g_cheat_extra_armor_pct = 0;   // Extra damage reduction % (0-100), stacks with armor
+static uint8 g_cheat_damage_mult = 1;      // Outgoing damage multiplier (1-255); 1 = vanilla no-op
+static uint8 g_cheat_extra_armor_pct = 0;   // Extra damage reduction % (0-100), stacks with armor; 0 = vanilla no-op
 
 // ─── Local helpers ───
 // clampi() comes from num_util.h (shared with the volume setters).

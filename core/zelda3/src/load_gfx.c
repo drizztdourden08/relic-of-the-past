@@ -1104,7 +1104,7 @@ void PaletteFilter_SP5F() {  // 80ec0d
 }
 
 void KholdstareShell_PaletteFiltering() {  // 80ec79
-  int t = (enhanced_features0 & kFeatures0_MiscBugFixes) ? 0x50 : 0x40;
+  int t = (enhanced_features2 & kFeatures2_KholdstareShellPaletteRange) ? 0x50 : 0x40;
   if (subsubmodule_index == 0) {
     memcpy(main_palette_buffer + t, aux_palette_buffer + t, 8 * sizeof(uint16));
     palette_filter_countdown = 0;
@@ -1886,7 +1886,7 @@ void Palette_RevertTranslucencySwap() {  // 8ed6bb
 
 void LoadActualGearPalettes() {  // 8ed6c0
   LoadGearPalettes(link_sword_type, link_shield_type, link_armor);
-  if (enhanced_features0 & kFeatures0_MiscBugFixes)
+  if (enhanced_features2 & kFeatures2_PreserveGlovesColorOnGearReload)
     Palette_UpdateGlovesColor();
 }
 
