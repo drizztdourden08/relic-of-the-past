@@ -24,6 +24,20 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'noSpriteLimits',
   'newRenderer',
   'enhancedMode7',
+  // Extended-rendering feature bits that are pure per-frame flags (no buffer-geometry change, so no
+  // restart). The geometry settings they sit beside — extendedRendering, aspectRatio, ultrawideRendering,
+  // tallRendering, extendY — are baked at init and are deliberately NOT here.
+  'cameraLockToViewport',
+  'smoothTransitions',
+  'pauseOffscreenAI',
+  'widescreenSprites',
+  'widescreenVisualFixes',
+  // Granular bug-fix toggles + new gameplay flags (synced every frame via features1/features2)
+  'bugFixToggles',
+  'inventoryReorder',
+  'secondaryItemSlots',
+  // Per-group volume enable gate (DSP flag pushed live)
+  'perGroupVolume',
   // Window settings (Electron-managed, no WASM restart needed)
   'windowMode',
   'viewportConstraint',
@@ -58,9 +72,6 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'hudCountLayout',
   'hudPauseStyle',
   'hudPauseHighlight',
-  // Notification settings (React-only, no WASM restart needed)
-  'showScreenNotification',
-  'showTransitionNotification',
   // Haptics (JS-only, no WASM restart needed)
   'haptics',
 ]);

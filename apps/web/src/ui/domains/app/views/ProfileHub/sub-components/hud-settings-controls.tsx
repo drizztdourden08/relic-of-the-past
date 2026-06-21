@@ -52,6 +52,11 @@ const ENHANCED_PARTS_OPTIONS = [
   { value: 'pause', label: 'Pause' },
 ];
 
+const PAUSE_STYLE_OPTIONS = [
+  { value: 'vanilla', label: 'Vanilla' },
+  { value: 'enhanced', label: 'Enhanced' },
+];
+
 const PAUSE_HIGHLIGHT_OPTIONS = [
   { value: 'box', label: 'Box' },
   { value: 'glow', label: 'Glow' },
@@ -130,6 +135,16 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
           value={settings.hudCountLayout}
           options={COUNT_LAYOUT_OPTIONS}
           onChange={(v) => onChange({ hudCountLayout: v as GameSettings['hudCountLayout'] })}
+        />
+      );
+    case 'hudPauseStyle':
+      return (
+        <SegmentedControl
+          label="Pause Style"
+          description="Vanilla keeps the original pause menu. Enhanced renders it through the high-quality overlay."
+          value={settings.hudPauseStyle}
+          options={PAUSE_STYLE_OPTIONS}
+          onChange={(v) => onChange({ hudPauseStyle: v as GameSettings['hudPauseStyle'] })}
         />
       );
     case 'hudPauseHighlight':

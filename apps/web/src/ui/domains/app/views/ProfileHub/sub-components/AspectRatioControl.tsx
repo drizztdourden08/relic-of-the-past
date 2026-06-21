@@ -1,11 +1,10 @@
 /* @layer renderer-components @kind component */
 /**
- * Aspect-ratio picker shared by the Screen and HUD settings. A top-level segmented selector; when
- * `presetOptions` is given, the concrete preset strings ('4:3'…) are grouped under a single "Preset"
- * entry that reveals a second selector. Other entries reveal their own sub-UI when chosen:
- *   custom → W:H steppers · auto → live viewport readout · screen → device-screen readout.
- * A per-option description (from `descriptions`) shows under the selector. HUD passes no presetOptions,
- * so it keeps its original flat behavior.
+ * Aspect-ratio picker. Two modes:
+ *  - Legacy (HUD): pass presetOptions → shows a single "Preset" tab.
+ *  - Split (game): pass widePresets and/or tallPresets → shows "Wide" / "Tall" tabs.
+ * Other tabs (Auto, Screen, Custom) are always rendered based on the options prop.
+ * A recommendedNote appears in gold when the selected mode matches recommendedValue.
  */
 import { useEffect, useState } from 'react';
 import type { GameSettings } from '@shared/types/settings';
@@ -24,16 +23,23 @@ interface AspectRatioControlProps {
   description?: string;
   value: string;
   options: SegmentOption[];
-  /** Preset strings shown in the second selector when the "preset" entry is chosen (enables grouping). */
+  /** Legacy HUD usage — single flat preset row. */
   presetOptions?: SegmentOption[];
-  /** Per-(main-)option help text shown under the selector. */
+  /** Game usage — wide preset row (shown when mode = 'wide'). */
+  widePresets?: SegmentOption[];
+  /** Game usage — tall preset row (shown when mode = 'tall'). Omit when tall rendering is off. */
+  tallPresets?: SegmentOption[];
+  /** Per-mode description text. */
   descriptions?: Record<string, string>;
+  /** Mode value that gets a gold "Recommended" note. */
+  recommendedValue?: string;
+  /** Note shown in gold when the selected mode equals recommendedValue. */
+  recommendedNote?: string;
   customW: number;
   customH: number;
   ratioKey: 'aspectRatio' | 'hudRatio';
   wKey: 'customAspectW' | 'customHudAspectW';
   hKey: 'customAspectH' | 'customHudAspectH';
-  /** When false, auto / custom-auto detection trims the camera-cutout insets. */
   renderIntoNotch?: boolean;
   onChange: (patch: Partial<GameSettings>) => void;
 }
@@ -52,26 +58,35 @@ const renderReadout = (r: RatioReadout) => {
 };
 
 const AspectRatioControl = (props: AspectRatioControlProps) => {
-  const { label, description, value, options, presetOptions, descriptions, customW, customH, ratioKey, wKey, hKey, renderIntoNotch = true, onChange } = props;
+  const {
+    label, description, value, options, presetOptions, widePresets, tallPresets,
+    descriptions, recommendedValue, recommendedNote,
+    customW, customH, ratioKey, wKey, hKey, renderIntoNotch = true, onChange,
+  } = props;
 
-  // Re-render when the viewport / cutout insets change so the auto + screen readouts stay live.
   useSafeAreaInsets();
   const eff = effectiveCustomRatio(customW, customH, renderIntoNotch);
   const [w, setW] = useState(eff.w);
   const [h, setH] = useState(eff.h);
+  useEffect(() => { setW(eff.w); setH(eff.h); }, [eff.w, eff.h]);
 
-  useEffect(() => {
-    setW(eff.w);
-    setH(eff.h);
-  }, [eff.w, eff.h]);
-
+  // Resolve which top-level tab the current value belongs to
+  const wideValues = new Set((widePresets ?? []).map((o) => o.value));
+  const tallValues = new Set((tallPresets ?? []).map((o) => o.value));
   const presetValues = new Set((presetOptions ?? []).map((o) => o.value));
-  const grouped = presetOptions != null && options.some((o) => o.value === 'preset');
-  const mainValue = grouped && presetValues.has(value) ? 'preset' : value;
-  const check = validateCustomRatio(w, h);
+  let mainValue = value;
+  if (widePresets && wideValues.has(value)) mainValue = 'wide';
+  else if (tallPresets && tallValues.has(value)) mainValue = 'tall';
+  else if (presetOptions && presetValues.has(value)) mainValue = 'preset';
 
   const handleMain = (next: string) => {
-    if (next === 'preset') {
+    if (next === 'wide') {
+      const fallback = widePresets?.[0]?.value ?? '16:9';
+      onChange({ [ratioKey]: wideValues.has(value) ? value : fallback } as Partial<GameSettings>);
+    } else if (next === 'tall') {
+      const fallback = tallPresets?.[0]?.value ?? '3:4';
+      onChange({ [ratioKey]: tallValues.has(value) ? value : fallback } as Partial<GameSettings>);
+    } else if (next === 'preset') {
       const fallback = presetOptions?.[0]?.value ?? '16:9';
       onChange({ [ratioKey]: presetValues.has(value) ? value : fallback } as Partial<GameSettings>);
     } else if (next === 'custom' && !(customW > 0 && customH > 0)) {
@@ -83,12 +98,12 @@ const AspectRatioControl = (props: AspectRatioControlProps) => {
   };
 
   const commit = (nw: number, nh: number) => {
-    setW(nw);
-    setH(nh);
-    if (validateCustomRatio(nw, nh).valid) {
-      onChange({ [wKey]: nw, [hKey]: nh } as Partial<GameSettings>);
-    }
+    setW(nw); setH(nh);
+    if (validateCustomRatio(nw, nh).valid) onChange({ [wKey]: nw, [hKey]: nh } as Partial<GameSettings>);
   };
+
+  const check = validateCustomRatio(w, h);
+  const isRecommended = !!recommendedValue && mainValue === recommendedValue;
 
   return (
     <Box className="aspect-ratio-control">
@@ -99,16 +114,26 @@ const AspectRatioControl = (props: AspectRatioControlProps) => {
         options={options}
         onChange={handleMain}
       />
-
+      {isRecommended && recommendedNote && (
+        <Text className="aspect-ratio-control__recommended">{recommendedNote}</Text>
+      )}
+      {mainValue === 'wide' && widePresets && (
+        <Box className="aspect-ratio-control__custom">
+          <SegmentedControl value={value} options={widePresets} onChange={(v) => onChange({ [ratioKey]: v } as Partial<GameSettings>)} />
+        </Box>
+      )}
+      {mainValue === 'tall' && tallPresets && (
+        <Box className="aspect-ratio-control__custom">
+          <SegmentedControl value={value} options={tallPresets} onChange={(v) => onChange({ [ratioKey]: v } as Partial<GameSettings>)} />
+        </Box>
+      )}
       {mainValue === 'preset' && presetOptions && (
         <Box className="aspect-ratio-control__custom">
           <SegmentedControl value={value} options={presetOptions} onChange={(v) => onChange({ [ratioKey]: v } as Partial<GameSettings>)} />
         </Box>
       )}
-
       {mainValue === 'auto' && renderReadout(viewportReadout(renderIntoNotch))}
       {mainValue === 'screen' && renderReadout(screenReadout(true))}
-
       {value === 'custom' && (
         <Box className="aspect-ratio-control__custom">
           <Box className="aspect-ratio-control__fields">
