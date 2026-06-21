@@ -3592,7 +3592,7 @@ fail:
       goto fail;
     sound_effect_2 = 0x1b;
   // The discovery chime is missing when lifting the rock covering the magic portal leading to the Ice Temple
-  } else if (data == 0x82 && (enhanced_features0 & kFeatures0_MiscBugFixes)) {
+  } else if (data == 0x82 && (enhanced_features2 & kFeatures2_IcePortalRevealChime)) {
     sound_effect_2 = 0x1b;
   }
   static const uint16 kTileBelow[4] = { 0xDCC, 0x212, 0xFFFF, 0xDB4 };

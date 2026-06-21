@@ -8,6 +8,7 @@
 #include "snes/ppu.h"
 #include "snes/snes_regs.h"
 #include "snes/dma.h"
+#include "snes/dsp.h"
 #include "spc_player.h"
 #include "util.h"
 #include "audio.h"
@@ -16,6 +17,8 @@ ZeldaEnv g_zenv;
 uint8 g_ram[131072];
 
 uint32 g_wanted_zelda_features;
+uint32 g_wanted_zelda_features1;
+uint32 g_wanted_zelda_features2;
 
 static void Startup_InitializeMemory();
 
@@ -178,8 +181,7 @@ static void BlitAreaMap16(uint16 *world, int worldW, int worldH, const uint16 *m
 // wrapping. Out-of-area columns clamp to transparent (edge-mirror). Also snapshots the area for transitions.
 static void BuildOverworldWorldTilemap() {
   BgLayer *bg = &g_zenv.ppu->bgLayer[1];  // BG2 carries the overworld terrain (dung_bg2)
-  if (!bg->world)
-    return;
+  if (!PpuEnsureWorldTilemap(bg)) { bg->worldW = bg->worldH = 0; bg->useWorld = false; return; }  // OOM: stock path
   int originX = ow_scroll_vars0.xstart, originY = ow_scroll_vars0.ystart;
   int w = (((int)ow_scroll_vars0.xend - originX) >> 3) + 32;  // area width in 8x8 tiles (+32 = the 256px view)
   int h = (((int)ow_scroll_vars0.yend - originY) >> 3) + 32;
@@ -205,8 +207,7 @@ static void BuildOverworldWorldTilemap() {
 // across the seam with real content on both sides — no 512px wrap, no black, at any aspect ratio.
 static void BuildTransitionWorldTilemap(int destArea) {
   BgLayer *bg = &g_zenv.ppu->bgLayer[1];
-  if (!bg->world)
-    return;
+  if (!PpuEnsureWorldTilemap(bg)) { bg->worldW = bg->worldH = 0; bg->useWorld = false; return; }  // OOM: stock path
   // Blit each area's ACTUAL map16 extent (32x32 small / 64x64 large = 64/128 map8 tiles per side), NOT the
   // scroll-range + 256: the vertical scroll range (Size1) overshoots the real map16 by ~30px, and reading
   // past the map16 produces garbage. Using the true size also makes the two areas tile exactly at the seam.
@@ -296,12 +297,17 @@ static void ConfigurePpuSideSpace() {
           extra_top = IntMax(0, clampedV - (int)ow_scroll_vars0.ystart);
           extra_bottom = (int)ow_scroll_vars0.yend - clampedV;
         }
-        // Remember this stationary frame's lock so a following scroll transition can interpolate from it.
-        g_lock_last_shift_x = g_zenv.ppu->cameraLockShiftX;
-        g_lock_last_shift_y = g_zenv.ppu->cameraLockShiftY;
-        g_lock_last_cam_x = BG2HOFS_copy2;
-        g_lock_last_cam_y = BG2VOFS_copy2;
-        BuildOverworldWorldTilemap();
+        // Snapshot the lock + build the linear world tilemap ONLY when the wide/tall/lock view is active.
+        // At all-off this must NOT run: BuildOverworldWorldTilemap() sets bgLayer[1].useWorld=true, which
+        // would switch BG2 off the stock wrapping fetch even with no widescreen and no lock.
+        if (g_oam_wide_budget || g_oam_tall_budget || (enhanced_features0 & kFeatures0_CameraLockToViewport)) {
+          // Remember this stationary frame's lock so a following scroll transition can interpolate from it.
+          g_lock_last_shift_x = g_zenv.ppu->cameraLockShiftX;
+          g_lock_last_shift_y = g_zenv.ppu->cameraLockShiftY;
+          g_lock_last_cam_x = BG2HOFS_copy2;
+          g_lock_last_cam_y = BG2VOFS_copy2;
+          BuildOverworldWorldTilemap();
+        }
       } else {
         // Non-stationary outdoor sub-states. A screen-to-screen scroll transition (the submodule 1-8 chain)
         // smoothly interpolates the lock shift on BOTH axes from the source area's stationary lock (saved on
@@ -517,7 +523,7 @@ static void ZeldaRunGameLoop() {
 
 void ZeldaInitialize() {
   g_zenv.dma = dma_init(NULL);
-  g_zenv.ppu = ppu_init(NULL);
+  g_zenv.ppu = ppu_init();
   g_zenv.ram = g_ram;
   g_zenv.sram = (uint8*)calloc(8192, 1);
   g_zenv.vram = g_zenv.ppu->vram;
@@ -975,6 +981,22 @@ bool ZeldaRunFrame(int inputs) {
         enhanced_features0 = g_wanted_zelda_features;
         EmuSyncMemoryRegion(&enhanced_features0, sizeof(enhanced_features0));
         StateRecorder_RecordPatchByte(&state_recorder, kRam_Features0, (uint8 *)&enhanced_features0, 4);
+        // Push the per-group-volume gate to the audio core here (the one place features change) so a live
+        // toggle applies at once and dsp.c stays free of game-RAM reads.
+        if (g_zenv.player)
+          dsp_setPerGroupVolumeEnabled(g_zenv.player->dsp, (enhanced_features0 & kFeatures0_PerGroupVolume) != 0);
+      }
+      // Split bug-fix toggles (features1/features2) sync + record exactly like features0 so replays stay
+      // deterministic regardless of which individual fixes are enabled.
+      if (enhanced_features1 != g_wanted_zelda_features1) {
+        enhanced_features1 = g_wanted_zelda_features1;
+        EmuSyncMemoryRegion(&enhanced_features1, sizeof(enhanced_features1));
+        StateRecorder_RecordPatchByte(&state_recorder, kRam_Features1, (uint8 *)&enhanced_features1, 4);
+      }
+      if (enhanced_features2 != g_wanted_zelda_features2) {
+        enhanced_features2 = g_wanted_zelda_features2;
+        EmuSyncMemoryRegion(&enhanced_features2, sizeof(enhanced_features2));
+        StateRecorder_RecordPatchByte(&state_recorder, kRam_Features2, (uint8 *)&enhanced_features2, 4);
       }
     }
   }
@@ -1064,6 +1086,16 @@ void SaveLoadSlot(int cmd, int which) {
       StateRecorder_Save(&state_recorder, f);
 
     fclose(f);
+
+    // A quicksave Load resumes live from the restored snapshot (not a TAS replay). Reset the recorder to a
+    // fresh baseline of the loaded state: this drops the pre-load input/feature log so it can never desync,
+    // and makes any post-load feature-flag change (current settings re-applied) a clean live patch rather
+    // than an out-of-place edit in a stale replay stream. This is what decouples save states from settings:
+    // a save made under one feature set loads cleanly under any other. (Reference Replays keep their log.)
+    if (cmd == kSaveLoad_Load) {
+      state_recorder.replay_mode = false;
+      StateRecorder_ClearKeyLog(&state_recorder);
+    }
   }
 }
 

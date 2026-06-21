@@ -1413,7 +1413,7 @@ void Sprite_HandleAbsorptionByPlayer(int k) {  // 86d13c
   case 14:
     link_shield_type = sprite_subtype[k];
     // Shield needs to have the right palette after pikit
-    if (enhanced_features0 & kFeatures0_MiscBugFixes)
+    if (enhanced_features1 & kFeatures1_ReloadShieldPaletteAfterPikit)
       Palette_Load_Shield();
     break;
   }
@@ -1432,7 +1432,7 @@ bool SpriteDraw_AbsorbableTransient(int k, bool transient) {  // 86d22f
     // This code runs when an absorbable is hidden under say a rock.
     // sprite_B holds the sprite that grabbed us with a hookshot.
     // Cancel the grab if we're hidden.
-    if (enhanced_features0 & kFeatures0_MiscBugFixes)
+    if (enhanced_features1 & kFeatures1_CancelHookshotGrabOnHiddenAbsorbable)
       sprite_B[k] = 0;
     return true;
   }
@@ -1855,12 +1855,12 @@ bool Sprite_PrepOamCoordOrDoubleRet(int k, PrepOamCoordsRet *ret) {  // 86e41e
     out_of_bounds = true;
   } else if ((uint16)(x + 0x40) >= 0x170 ||
              (uint16)(y + 0x40) >= 0x170 && !(sprite_flags4[k] & 0x20)) {
-    // In the wide/tall extra band but outside the stock 256px screen: keep the sprite alive and DRAWN (so the
-    // wide view isn't missing it), but pause its AI like the stock game would by simply not having it loaded
-    // out here. Without this, a sprite loaded into the wide band acts from off the stock screen — vision
-    // probes reach across, and the global guard alarm makes static archers fire from "infinite" distance. It
-    // resumes the moment Link brings it onto the stock screen. (No-op when there is no wide/tall budget.)
-    sprite_pause[k]++;
+    // In the wide/tall extra band but outside the stock 256px screen: keep the sprite alive and DRAWN
+    // so the wide view renders it, but optionally pause its AI — behind kFeatures0_PauseOffscreenAI
+    // because it changes gameplay (guards can't react from off-screen). Off = stock behavior where the
+    // sprite simply wouldn't be loaded out there; on = explicit user opt-in to avoid the guard-alarm bug.
+    if (enhanced_features0 & kFeatures0_PauseOffscreenAI)
+      sprite_pause[k]++;
   }
   ret->x = R0;
   ret->y = R2;
@@ -2026,7 +2026,7 @@ bool Sprite_CheckTileProperty(int k, int j) {  // 86e73c
     if (sprite_F[k] && !sign8(sprite_give_damage[k])) {
 
       // Some mothula bug fix because we changed damage class 4.
-      if (sprite_type[k] == 0x88 && (enhanced_features0 & kFeatures0_MiscBugFixes)) {
+      if (sprite_type[k] == 0x88 && (enhanced_features1 & kFeatures1_MothulaSpikeTileDamageClassFix)) {
         if (sprite_hit_timer[k] == 0)
           Ancilla_CheckDamageToSprite_preset(k, 6);
       } else {
@@ -2693,7 +2693,7 @@ uint8 Sprite_CheckDamageFromLink(int k) {  // 86f2b4
       link_incapacitated_timer = 16;
       SpriteSfx_QueueSfx2WithPan(k, 0x21);
       sprite_delay_aux1[k] = 48;
-      sound_effect_2 = Sprite_CalculateSfxPan(k) | (enhanced_features0 & kFeatures0_MiscBugFixes ? 0x32 : 0);
+      sound_effect_2 = Sprite_CalculateSfxPan(k) | (enhanced_features1 & kFeatures1_GiantMoldormWeaponTinkSfxFix ? 0x32 : 0);
       Link_PlaceWeaponTink();
       return kCheckDamageFromPlayer_Carry;
     }
@@ -3798,7 +3798,20 @@ static void Sprite_ActivateWithinViewRect() {
 }
 
 void Sprite_ProximityActivation() {  // 89c58f
-  Sprite_ActivateWithinViewRect();
+  if (g_oam_wide_budget || g_oam_tall_budget || g_camera_lock_shift_x || g_camera_lock_shift_y) {
+    Sprite_ActivateWithinViewRect();
+    return;
+  }
+  if (submodule_index != 0) {
+    Sprite_ActivateWhenProximal();
+    Sprite_ActivateWhenProximalBig();
+  } else {
+    if (!(spr_ranged_based_toggler & 1))
+      Sprite_ActivateWhenProximal();
+    if (spr_ranged_based_toggler & 1)
+      Sprite_ActivateWhenProximalBig();
+    spr_ranged_based_toggler++;
+  }
 }
 
 void Sprite_ActivateWhenProximal() {  // 89c5bb

@@ -161,7 +161,7 @@ struct Ppu {
   uint16_t vram[0x8000];
 };
 
-Ppu* ppu_init();
+Ppu* ppu_init(void);
 void ppu_free(Ppu* ppu);
 void ppu_reset(Ppu* ppu);
 void ppu_handleVblank(Ppu* ppu);
@@ -169,6 +169,10 @@ void ppu_runLine(Ppu* ppu, int line);
 uint8_t ppu_read(Ppu* ppu, uint8_t adr);
 void ppu_write(Ppu* ppu, uint8_t adr, uint8_t val);
 void ppu_saveload(Ppu *ppu, SaveLoadFunc *func, void *ctx);
+// Lazily allocate this layer's linear world tilemap (full kPpuWorldTiles^2 area) on first use, so a
+// 4:3/all-off build that never enters the wide overworld path pays nothing. No-op once allocated.
+// Returns false on allocation failure — the caller must then leave worldW/worldH at 0 and skip the build.
+bool PpuEnsureWorldTilemap(BgLayer *bg);
 void PpuBeginDrawing(Ppu *ppu, uint8_t *buffer, size_t pitch, uint32_t render_flags);
 
 // Returns the current render scale, 1x = 256px, 2x=512px, 4x=1024px

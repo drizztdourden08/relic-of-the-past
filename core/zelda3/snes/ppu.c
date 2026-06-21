@@ -33,19 +33,20 @@ enum {
   kWindow2Enabled = 8,
 };
 
-Ppu* ppu_init() {
+Ppu* ppu_init(void) {
   Ppu* ppu = (Ppu * )malloc(sizeof(Ppu));
   ppu->extraLeftRight = kPpuExtraLeftRight;
   ppu->extraTopBottom = 0;  // set per-config in emscripten_main; 0 = no tall (4:3 unchanged)
   ppu->extraTopCur = 0;
   ppu->extraBottomCur = 0;
   ppu->cameraLockShiftX = ppu->cameraLockShiftY = 0;
-  // Allocate a linear world tilemap for BG1/BG2 (full 1024px area). Disabled until the overworld
-  // populates it; other layers/scenes keep the stock wrapping SNES path.
+  // The linear world tilemap (full 1024px area) is allocated lazily on first use by the overworld
+  // builder (PpuEnsureWorldTilemap) — a 4:3/all-off build never populates it, so it stays NULL and
+  // costs nothing. Neutral defaults keep every layer on the stock wrapping SNES path until then.
   for (int i = 0; i < 4; i++) {
     ppu->bgLayer[i].useWorld = false;
     ppu->bgLayer[i].worldW = ppu->bgLayer[i].worldH = 0;
-    ppu->bgLayer[i].world = (i < 2) ? (uint16*)calloc((size_t)kPpuWorldTiles * kPpuWorldTiles, sizeof(uint16)) : NULL;
+    ppu->bgLayer[i].world = NULL;
   }
   return ppu;
 }
@@ -54,6 +55,12 @@ void ppu_free(Ppu* ppu) {
   for (int i = 0; i < 4; i++)
     free(ppu->bgLayer[i].world);
   free(ppu);
+}
+
+bool PpuEnsureWorldTilemap(BgLayer *bg) {
+  if (bg->world == NULL)
+    bg->world = (uint16*)calloc((size_t)kPpuWorldTiles * kPpuWorldTiles, sizeof(uint16));
+  return bg->world != NULL;  // false on OOM — callers must skip the world build and stay on the stock path
 }
 
 void ppu_reset(Ppu* ppu) {
