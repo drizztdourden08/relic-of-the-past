@@ -8,6 +8,7 @@
 #include "snes/dsp_regs.h"
 
 #include "spc_player.h"
+#include "features.h"
 
 typedef struct MemMap {
   uint16 off, org_off;
@@ -161,8 +162,12 @@ static void Dsp_Write(SpcPlayer *p, uint8_t reg, uint8 value) {
 }
 
 static void Not_Implemented() {
-  assert(0);
-  printf("Not Implemented\n");
+  // The zelda3 save format does not persist the SPC CPU registers, so loading a state can momentarily land
+  // the SPC on an unexpected/unimplemented command until the music engine re-syncs on the next valid one.
+  // Never abort the whole app over it — every caller handles this as a no-op (skip the command), so just
+  // log it (throttled) and recover. (Was assert(0), which hard-crashed the WASM on save-state loads.)
+  static int warned;
+  if (warned < 8) { printf("SPC: unimplemented command skipped (recovering)\n"); warned++; }
 }
 
 static uint16 SpcDivHelper(int a, uint8 b) {
@@ -1223,8 +1228,10 @@ void SpcPlayer_GenerateSamples(SpcPlayer *p) {
 
   assert(p->dsp->sampleOffset <= 534);
 
-  // Sync SFX channel mask to DSP for per-group volume scaling
-  p->dsp->sfxChannelMask = p->is_chan_on;
+  // Sync SFX channel mask to DSP for per-group volume scaling (opt-in only; gate lives on the DSP so
+  // this audio-core file needn't reach into game RAM — dsp.c sets it from kFeatures0_PerGroupVolume)
+  if (dsp_getPerGroupVolumeEnabled())
+    p->dsp->sfxChannelMask = p->is_chan_on;
 
   for (;;) {
     if (p->timer_cycles >= 64) {
@@ -1232,7 +1239,8 @@ void SpcPlayer_GenerateSamples(SpcPlayer *p) {
       Spc_Loop_Part1(p);
       p->timer_cycles &= 63;
       // Re-sync after SPC tick may have changed channel allocation
-      p->dsp->sfxChannelMask = p->is_chan_on;
+      if (dsp_getPerGroupVolumeEnabled())
+        p->dsp->sfxChannelMask = p->is_chan_on;
     }
 
     // sample rate 32000

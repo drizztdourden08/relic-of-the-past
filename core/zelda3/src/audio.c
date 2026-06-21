@@ -112,7 +112,7 @@ bool ZeldaIsPlayingMusicTrackWithBug(uint8 track) {
   if (mp->state != kMsuState_Idle && mp->enabled & kMsuEnabled_MsuDeluxe)
     return RemapMsuDeluxeTrack(mp, track) == mp->resume_info.actual_track;
   else
-    return track == (enhanced_features0 & kFeatures0_MiscBugFixes ? music_unk1 : last_music_control);
+    return track == (enhanced_features2 & kFeatures2_FixPortalMusicRestart ? music_unk1 : last_music_control);
 }
 
 uint8 ZeldaGetEntranceMusicTrack(int i) {
