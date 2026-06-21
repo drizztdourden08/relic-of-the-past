@@ -17,7 +17,7 @@ const getLegacyPath = (...segments: string[]): string => {
 };
 
 const ensureDataDirectories = async (): Promise<void> => {
-  const dirs = ['assets', 'roms', 'profiles', 'config', 'msu', 'languages', 'sprites'];
+  const dirs = ['assets', 'roms', 'profiles', 'config', 'msu', 'languages', 'sprites', 'link-sprites'];
   for (const dir of dirs) {
     await mkdir(getUserDataPath(dir), { recursive: true });
   }

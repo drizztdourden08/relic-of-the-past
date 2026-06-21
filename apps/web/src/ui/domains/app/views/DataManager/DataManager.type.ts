@@ -2,7 +2,7 @@
 import type { Profile } from '@shared/types/profile';
 import type { RomDisplayInfo } from '../../../../../App/types';
 
-type DataTab = 'home' | 'profiles' | 'roms' | 'languages' | 'msu' | 'sprites';
+type DataTab = 'home' | 'profiles' | 'roms' | 'languages' | 'msu' | 'sprites' | 'linkSprites';
 
 interface DataManagerProps {
   profiles: Profile[];
