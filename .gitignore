@@ -97,3 +97,7 @@ scripts/analyze/report.json
 
 # Loop scheduler transient lock
 .claude/scheduled_tasks.lock
+
+# Claude config — managed in the private claude-config repo, never committed here
+.claude/
+CLAUDE.md
