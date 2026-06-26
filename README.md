@@ -55,8 +55,10 @@ Download the latest build for your platform from the
 | Platform | Download |
 |----------|----------|
 | Windows  | Portable `.exe` or Installer `.exe` |
-| macOS    | `.dmg` |
+| macOS \* | `.dmg` |
 | Linux    | `.AppImage` or `.deb` |
+
+\* Special instruction. See [here](https://github.com/drizztdourden08/relic-of-the-past/wiki/Getting-Started-Installation#relic-of-the-past-is-damaged-and-cant-be-opened).
 
 Then launch the app and select your ROM when prompted. See the [Quick Start](docs/getting-started/quick-start.md)
 and [Installation](docs/getting-started/installation.md) guides for details.

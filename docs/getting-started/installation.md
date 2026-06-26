@@ -62,9 +62,24 @@ The app isn't code-signed, so Windows may show a "Windows protected your PC" war
 
 1. Open the `.dmg` file
 2. Drag **Relic of the Past** into the Applications folder
-3. On first launch, right-click and choose **Open** to get past Gatekeeper, since the app is unsigned
+3. On first launch, right-click the app and choose **Open**, then confirm in the dialog
 
-macOS may say the app is from an unidentified developer. Right-click and choose Open to get past it.
+The app is ad-hoc signed but not notarized by Apple, so macOS shows it as coming
+from an unidentified developer. Right-click → **Open** clears this, and you only
+see it once.
+
+### "Relic of the Past is damaged and can't be opened"
+
+If macOS says the app is **damaged** and offers only to move it to the Bin, the
+file picked up a quarantine flag during download. The app isn't actually damaged.
+Clear the flag in Terminal:
+
+```bash
+xattr -dr com.apple.quarantine "/Applications/Relic of the Past.app"
+```
+
+Then open the app normally. Alternatively, copying the `.dmg` onto the Mac from a
+USB drive or another computer avoids the quarantine flag entirely.
 
 Auto-update is supported on macOS via the `.zip` companion file included in each release.
 
