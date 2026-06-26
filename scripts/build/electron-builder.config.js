@@ -43,6 +43,10 @@ module.exports = {
     target: ['dmg', 'zip'],
     icon: 'apps/web/public/logos/logo-512.png',
     artifactName: 'rotp-macos.${ext}',
+    // Ad-hoc signature (no Apple Developer ID). On Apple Silicon this stops
+    // Gatekeeper reporting the app as "damaged"; users still right-click → Open
+    // once to clear the unidentified-developer prompt.
+    identity: '-',
   },
   linux: {
     target: ['AppImage', 'deb'],
