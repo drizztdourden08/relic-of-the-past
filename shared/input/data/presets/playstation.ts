@@ -1,16 +1,26 @@
 /* @layer shared-input @kind data */
 /**
- * PlayStation Controllers (DualShock 3/4, DualSense, DualSense Edge)
+ * PlayStation Controllers (DualShock 4, DualSense, DualSense Edge)
  * VID: 0x054C  PIDs: various
  *
- * Uses Web Gamepad API via Chromium's built-in HID remapping.
- * Listed as inputApi 'hid' but Chromium handles the parsing.
+ * Input arrives as raw HID report 0x01, parsed in sony-hid.ts into the
+ * standard-gamepad button/axis order the mappings below assume.
  */
 
-import { BaseController, type ControllerButton, type ControllerAxis } from '../../base';
+import { BaseController, type ControllerButton, type ControllerAxis, type ParsedInput, type StickDefaults } from '../../base';
 import { registerController } from '../../registry';
 import type { ButtonMapping, ButtonIcon } from '../../../types/controls';
 import { icon, btn } from './builders';
+import { parseDualShock4Report, parseDualSenseReport } from './sony-hid';
+
+// 8-bit sticks centered at 0x80; deadzones tuned to ride out resting jitter.
+const SONY_STICK_DEFAULTS: StickDefaults = {
+  encoding: '8bit-centered',
+  center: 128,
+  range: 128,
+  innerDeadzone: 0.08,
+  outerDeadzone: 0.95,
+};
 
 const PS_ICONS: Record<string, ButtonIcon> = {
   'ps-cross':    icon('ps-cross', 'Cross Button'),
@@ -95,6 +105,12 @@ class DualShock4Controller extends BaseController {
   readonly defaultMappings = PS_MAPPINGS;
   readonly buttons = PS_BUTTONS;
   readonly axes = AXES;
+
+  parseReport(reportId: number, data: DataView): ParsedInput | null {
+    return parseDualShock4Report(reportId, data);
+  }
+
+  getStickDefaults(): StickDefaults { return SONY_STICK_DEFAULTS; }
 }
 
 // DualSense
@@ -115,6 +131,12 @@ class DualSenseController extends BaseController {
     { id: 'mute', label: 'Mute', icon: 'ps-mute', category: 'system' },
   ];
   readonly axes = AXES;
+
+  parseReport(reportId: number, data: DataView): ParsedInput | null {
+    return parseDualSenseReport(reportId, data);
+  }
+
+  getStickDefaults(): StickDefaults { return SONY_STICK_DEFAULTS; }
 }
 
 registerController(new DualShock4Controller());
