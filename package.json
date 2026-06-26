@@ -1,6 +1,6 @@
 {
   "name": "relic-of-the-past",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "private": true,
   "description": "Relic of the Past – Electron + React + WASM",
   "author": {
