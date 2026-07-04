@@ -7,8 +7,20 @@
 
 import type { DetectedDevice } from '@shared/types/controls';
 import type { InputProfile } from '@shared/types/controls';
+import { allowedDevices } from './profile-devices';
 
 type PauseListener = (paused: boolean, controllerName: string) => void;
+
+const padVidPid = (v: string): string => v.toLowerCase().padStart(4, '0');
+
+/** Human-readable name for a mapped device key, for the disconnect overlay. */
+const deviceNameForKey = (profile: InputProfile, devices: DetectedDevice[], key: string): string => {
+  const match = devices.find(d => d.vendorId && d.productId && `${padVidPid(d.vendorId)}:${padVidPid(d.productId)}` === key);
+  if (match) return match.displayName;
+  const assigned = profile.assignedDevice;
+  if (assigned && `${padVidPid(assigned.vendorId)}:${padVidPid(assigned.productId)}` === key) return assigned.displayName;
+  return 'Controller';
+};
 
 class PauseManager {
   private paused = false;
@@ -58,29 +70,56 @@ class PauseManager {
   }
 
   /**
-   * Check if the assigned controller is still connected; pause if not.
+   * Pause if any device the active profile's map references is no longer connected.
+   * `connectedKeys` is the fresh set of "vid:pid" for currently-connected pads (HID
+   * + Gamepad API) — passed in rather than read from the device cache, which lags a
+   * disconnect by a refresh cycle. `devices` is used only to name the missing pad.
    */
-  checkControllerDisconnect(profile: InputProfile | null, devices: DetectedDevice[]): void {
-    if (this.paused) return;
-    const assigned = profile?.assignedDevice;
-    if (assigned && assigned.deviceFamily !== 'keyboard') {
-      const stillConnected = devices.some(
-        d => d.vendorId === assigned.vendorId && d.productId === assigned.productId && d.connected
-      );
-      if (!stillConnected) {
-        this.paused = true;
-        this.pausedControllerName = assigned.displayName;
-        this.onPause?.(true);
-        this.notify(true, assigned.displayName);
-      }
+  checkControllerDisconnect(profile: InputProfile | null, connectedKeys: Set<string>, devices: DetectedDevice[]): void {
+    if (this.paused || !profile) return;
+    const { gamepadKeys } = allowedDevices(profile);
+    for (const key of gamepadKeys) {
+      if (connectedKeys.has(key)) continue;
+      const name = deviceNameForKey(profile, devices, key);
+      this.paused = true;
+      this.pausedControllerName = name;
+      this.onPause?.(true);
+      this.notify(true, name);
+      return;
     }
   }
 
   /**
-   * Auto-resume if paused due to controller disconnect (not manual).
+   * Resume from a disconnect pause only once EVERY device the active profile maps is
+   * connected again. Gating on the mapped set means an unrelated controller can't
+   * dismiss the overlay — only the right one reconnecting (or being activated) does.
+   * Never touches a manual pause.
    */
-  autoResume(): void {
-    if (this.paused && this.pausedControllerName !== 'Manual pause') {
+  resumeIfPresent(profile: InputProfile | null, connectedKeys: Set<string>): void {
+    if (!this.paused || this.pausedControllerName === 'Manual pause' || !profile) return;
+    const { gamepadKeys } = allowedDevices(profile);
+    for (const key of gamepadKeys) {
+      if (!connectedKeys.has(key)) return; // still missing at least one mapped pad
+    }
+    this.resume();
+  }
+
+  /**
+   * Re-evaluate after the ACTIVE PROFILE changes — the mapped device set is now
+   * different, so pause (or re-name the pause) if the new profile's controller is
+   * missing, or resume if it's present. Leaves a manual pause untouched.
+   */
+  reevaluateForProfile(profile: InputProfile | null, connectedKeys: Set<string>, devices: DetectedDevice[]): void {
+    if (!profile || this.pausedControllerName === 'Manual pause') return;
+    const { gamepadKeys } = allowedDevices(profile);
+    const missing = [...gamepadKeys].find(key => !connectedKeys.has(key));
+    if (missing) {
+      const name = deviceNameForKey(profile, devices, missing);
+      this.paused = true;
+      this.pausedControllerName = name;
+      this.onPause?.(true);
+      this.notify(true, name);
+    } else if (this.paused) {
       this.resume();
     }
   }

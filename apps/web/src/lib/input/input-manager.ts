@@ -28,7 +28,7 @@ import type { GamepadSnapshot } from './polling-engine';
 import type { HidDeviceInfo } from './gamepad-vid-pid';
 import type { ControllerEntry } from './controller-lifecycle';
 import { startInput, stopInput, refreshDevicesImpl } from './input-manager-lifecycle';
-import { rebuildMaps, guardKeys, keyDown, keyUp, gamepadConnected, gamepadDisconnected, pollFrame } from './input-manager-events';
+import { rebuildMaps, guardKeys, keyDown, keyUp, gamepadConnected, gamepadDisconnected, pollFrame, connectedGamepadKeys } from './input-manager-events';
 import { wireProfileActions, setProfiles as setProfilesImpl, subscribeActiveProfile, cycleActiveProfile as cycleActiveProfileImpl } from './input-manager-profiles';
 import type { AllowedDevices } from './profile-devices';
 import type { ActiveProfileListener, DeviceChangeListener, InputStateListener } from './input-manager-types';
@@ -138,6 +138,10 @@ class InputManager {
     return this.activeProfile;
   }
 
+  getProfiles(): InputProfile[] {
+    return this.profiles;
+  }
+
   setProfiles(profiles: InputProfile[]): void {
     setProfilesImpl(this, profiles);
   }
@@ -173,6 +177,21 @@ class InputManager {
 
   isPaused(): boolean {
     return this.pauseManager.isPaused;
+  }
+
+  /** Pause if a device the active profile maps is missing (disconnect / startup / state-load). */
+  checkControllerPresence(): void {
+    this.pauseManager.checkControllerDisconnect(this.activeProfile, connectedGamepadKeys(this), this.devices);
+  }
+
+  /** Resume a disconnect-pause once all the active profile's mapped devices are back. */
+  resumeIfControllerPresent(): void {
+    this.pauseManager.resumeIfPresent(this.activeProfile, connectedGamepadKeys(this));
+  }
+
+  /** Re-check presence after the active profile changes (pause or resume as needed). */
+  reevaluateControllerPresence(): void {
+    this.pauseManager.reevaluateForProfile(this.activeProfile, connectedGamepadKeys(this), this.devices);
   }
 
   resume(): void {

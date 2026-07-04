@@ -38,6 +38,9 @@ const cycleActiveProfile = (m: InputManager, direction: 1 | -1): void => {
   for (const fn of m.activeProfileListeners) {
     try { fn(next); } catch { /* ignore */ }
   }
+  // The mapped device set just changed — pause if the new profile's controller is
+  // absent, or resume if it's now present.
+  m.reevaluateControllerPresence();
 };
 
 export { wireProfileActions, setProfiles, subscribeActiveProfile, cycleActiveProfile };

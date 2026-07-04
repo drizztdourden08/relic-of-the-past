@@ -4,7 +4,19 @@ import { markActivated, updateActivationState } from './device-detector';
 import { resolveGamepadVidPid } from './gamepad-vid-pid';
 import { computeBitmask, snapshotGamepads } from './polling-engine';
 import { allowedDevices } from './profile-devices';
+import { webHidReader } from './hid-reader';
 import type { InputManager } from './input-manager';
+
+/** Fresh set of connected pad "vid:pid" keys — HID (node-hid) + Gamepad API. */
+const connectedGamepadKeys = (m: InputManager): Set<string> => {
+  const keys = new Set(webHidReader.getConnectedDeviceKeys());
+  for (const gp of navigator.getGamepads()) {
+    if (!gp || !gp.connected) continue;
+    const vp = m.gamepadVidPid.get(gp.index);
+    if (vp) keys.add(`${vp.vid}:${vp.pid}`);
+  }
+  return keys;
+};
 
 const isTextInput = (target: EventTarget | null): boolean => {
   if (!target) return false;
@@ -87,14 +99,14 @@ const gamepadConnected = (m: InputManager, e: GamepadEvent): void => {
   markActivated(e.gamepad.index);
   updateActivationState();
   resolveGamepad(m, e.gamepad);
+  m.pauseManager.resumeIfPresent(m.activeProfile, connectedGamepadKeys(m));
   m.refreshDevices();
-  m.pauseManager.autoResume();
 };
 
 const gamepadDisconnected = (m: InputManager): void => {
   updateActivationState();
+  m.pauseManager.checkControllerDisconnect(m.activeProfile, connectedGamepadKeys(m), m.devices);
   m.refreshDevices();
-  m.pauseManager.checkControllerDisconnect(m.activeProfile, m.devices);
 };
 
 const pollFrame = (m: InputManager): void => {
@@ -137,4 +149,4 @@ const pollFrame = (m: InputManager): void => {
   m.animFrameId = requestAnimationFrame(m.pollLoop);
 };
 
-export { isTextInput, rebuildMaps, guardKeys, keyDown, keyUp, resolveGamepad, gamepadConnected, gamepadDisconnected, pollFrame };
+export { isTextInput, rebuildMaps, guardKeys, keyDown, keyUp, resolveGamepad, gamepadConnected, gamepadDisconnected, pollFrame, connectedGamepadKeys };

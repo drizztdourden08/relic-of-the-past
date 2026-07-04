@@ -6,10 +6,10 @@
  */
 
 import { getInputManager, resolveFunctionMappingIcon } from '../../../../../../lib/game';
-import type { FunctionAction, FunctionMapping } from '@shared/types/controls';
-import { getBindingLabel, getBindingIconUrl } from '../../ProfileHub/sub-components/controls/BindingRow';
-import { keyCodeToIconId, getButtonIconUrl } from '@app/lib/input/button-icons';
+import type { FunctionMapping, InputBinding, ButtonIcon } from '@shared/types/controls';
 import type { SlotHint } from './enhanced-save-slot.types';
+
+type BindingInfo = { binding: InputBinding; icon: ButtonIcon | null };
 
 const withPauseGuard = async (action: () => Promise<boolean>): Promise<boolean> => {
   const inputMgr = getInputManager();
@@ -26,51 +26,33 @@ const withPauseGuard = async (action: () => Promise<boolean>): Promise<boolean> 
   return result;
 };
 
-const getSlotBinding = (mappings: FunctionMapping[], slot: number): { label: string; iconUrl: string | null } => {
-  const loadAction = `load-state-${slot + 1}` as FunctionAction;
-  const loadMapping = mappings.find(m => m.action === loadAction && m.binding.type !== 'none');
-  if (loadMapping) {
-    const icon = loadMapping.icon ?? resolveFunctionMappingIcon(loadMapping);
-    return {
-      label: getBindingLabel(loadMapping.binding, icon),
-      iconUrl: getBindingIconUrl(loadMapping.binding, icon),
-    };
-  }
-  const saveAction = `save-state-${slot + 1}` as FunctionAction;
-  const saveMapping = mappings.find(m => m.action === saveAction && m.binding.type !== 'none');
-  if (saveMapping) {
-    const icon = saveMapping.icon ?? resolveFunctionMappingIcon(saveMapping);
-    return {
-      label: getBindingLabel(saveMapping.binding, icon),
-      iconUrl: getBindingIconUrl(saveMapping.binding, icon),
-    };
-  }
-  return { label: `Slot ${slot + 1}`, iconUrl: null };
+const bindingInfo = (m: FunctionMapping): BindingInfo => ({
+  binding: m.binding,
+  icon: m.icon ?? resolveFunctionMappingIcon(m),
+});
+
+const getSlotBinding = (mappings: FunctionMapping[], slot: number): BindingInfo => {
+  const loadMapping = mappings.find(m => m.action === `load-state-${slot + 1}` && m.binding.type !== 'none');
+  if (loadMapping) return bindingInfo(loadMapping);
+  const saveMapping = mappings.find(m => m.action === `save-state-${slot + 1}` && m.binding.type !== 'none');
+  if (saveMapping) return bindingInfo(saveMapping);
+  return { binding: { type: 'none' }, icon: null };
 };
 
-const getEscBinding = (): { label: string; iconUrl: string | null } => {
-  const iconId = keyCodeToIconId('Escape');
-  return {
-    label: 'Esc',
-    iconUrl: iconId ? getButtonIconUrl(iconId) : null,
-  };
-};
+const getEscBinding = (): BindingInfo => ({ binding: { type: 'keyboard', code: 'Escape' }, icon: null });
 
 const buildIdleHints = (mappings: FunctionMapping[], slot: number): SlotHint[] => {
   const slotInfo = getSlotBinding(mappings, slot);
   const escInfo = getEscBinding();
   return [
-    { action: 'tap-load', keyLabel: slotInfo.label, iconUrl: slotInfo.iconUrl },
-    { action: 'hold-save', keyLabel: slotInfo.label, iconUrl: slotInfo.iconUrl },
-    { action: 'esc-cancel', keyLabel: escInfo.label, iconUrl: escInfo.iconUrl },
+    { action: 'tap-load', ...slotInfo },
+    { action: 'hold-save', ...slotInfo },
+    { action: 'esc-cancel', ...escInfo },
   ];
 };
 
 const buildHoldingHints = (mappings: FunctionMapping[], slot: number): SlotHint[] => {
-  const slotInfo = getSlotBinding(mappings, slot);
-  return [
-    { action: 'holding-save', keyLabel: slotInfo.label, iconUrl: slotInfo.iconUrl },
-  ];
+  return [{ action: 'holding-save', ...getSlotBinding(mappings, slot) }];
 };
 
 export { withPauseGuard, getSlotBinding, getEscBinding, buildIdleHints, buildHoldingHints };
