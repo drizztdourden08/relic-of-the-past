@@ -13,6 +13,16 @@
   flex-shrink: 0;
 }
 
+.input-glyph--sm .input-glyph__icon {
+  width: 18px;
+  height: 18px;
+}
+
+.input-glyph__plain {
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}
+
 .input-glyph__key {
   display: inline-block;
   background: var(--c-bg);
