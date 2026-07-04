@@ -7,6 +7,7 @@ import {
 import type { wasmGetViewportInfo } from '../../../../../lib/game';
 import { getCompletedChecks } from '../../../../../lib/game/tracker';
 import type { TileAttrContext } from '@shared/game/navigation/tile-attrs';
+import { linkStartTile } from '@shared/game/navigation/link-start-tile';
 
 type Point = { x: number; y: number };
 type DualLayerGrids = { layer0: number[][]; layer1: number[][]; stairTiles: Array<{ row: number; col: number }> };
@@ -124,35 +125,7 @@ const computeStartContext = (args: {
       ? (Math.floor(vp.linkY / 512) * 512)
       : (((primaryScreenIndex >> 3) & 7) * 512);
 
-    const relPixelX = vp.linkX - screenWorldX;
-    const relPixelY = (vp.linkY + 8) - screenWorldY; // collision hitbox starts 8px below sprite top
-
-    // Match overlay debug footprint: Link's hitbox is the lower 16x16 (skip head).
-    const tileMinCol = Math.floor(relPixelX / 8);
-    const tileMaxCol = Math.floor((relPixelX + 15) / 8);
-    const tileMinRow = Math.floor(relPixelY / 8);
-    const tileMaxRow = Math.floor((relPixelY + 15) / 8);
-
-    const centerCol = relPixelX / 8 + 0.5;
-    const centerRow = relPixelY / 8 + 0.5;
-    const clamp = (v: number) => Math.max(0, Math.min(63, v));
-
-    let best: { row: number; col: number } | null = null;
-    let bestD2 = Number.POSITIVE_INFINITY;
-    for (let r = tileMinRow; r <= tileMaxRow; r++) {
-      for (let c = tileMinCol; c <= tileMaxCol; c++) {
-        const rr = clamp(r);
-        const cc = clamp(c);
-        const dr = rr - centerRow;
-        const dc = cc - centerCol;
-        const d2 = dr * dr + dc * dc;
-        if (d2 < bestD2) {
-          bestD2 = d2;
-          best = { row: rr, col: cc };
-        }
-      }
-    }
-    startPos = best ?? { row: clamp(Math.floor(centerRow)), col: clamp(Math.floor(centerCol)) };
+    startPos = linkStartTile({ linkX: vp.linkX, linkY: vp.linkY, screenWorldX, screenWorldY });
   }
 
   return { startPos, tileContext, rawAttrGrid, dualLayerGrids, linkLayer };

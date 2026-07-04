@@ -27,6 +27,7 @@ interface FloodFillDumpInput {
   dualLayerGrids: { layer0: number[][]; layer1: number[][]; stairTiles: Array<{ row: number; col: number }> } | null;
   linkLayer: 0 | 1 | null;
   staircaseType: number | null;
+  startPos?: { row: number; col: number };
   roomLayout: {
     intraEdges?: EdgeName[];
     shape?: string;
@@ -93,19 +94,31 @@ const formatTravelDests = (travelDests: number[] | null): TravelDest[] | null =>
     label: i === 0 ? 'pit/block' : `stair${i - 1}`,
   })).filter(td => td.room !== 0) : null;
 
-const computeFloodFill = (input: FloodFillDumpInput): FloodFillDump | null => {
-  const { roomIndex, attrGrid, dualLayerGrids, linkLayer, staircaseType, roomLayout } = input;
-  if (!attrGrid) return null;
-
-  // Convert flat Uint8Array to 64x64 grid
+const toGrid = (flat: Uint8Array): number[][] => {
   const grid: number[][] = [];
   for (let r = 0; r < 64; r++) {
-    grid.push(Array.from(attrGrid.slice(r * 64, (r + 1) * 64)));
+    grid.push(Array.from(flat.slice(r * 64, (r + 1) * 64)));
   }
+  return grid;
+};
+
+/** Encode the reachable grid as 64 strings of base-36 ReachState digits (0 = unreachable). */
+const encodeReachableRows = (reachable: number[][]): string[] =>
+  reachable.map(row => row.map(v => v.toString(36)).join(''));
+
+/** Encode a raw attr grid as 64 strings of 2-char hex bytes (for baselines/diagnosis). */
+const encodeAttrRows = (grid: number[][]): string[] =>
+  grid.map(row => row.map(v => v.toString(16).padStart(2, '0')).join(''));
+
+const computeFloodFill = (input: FloodFillDumpInput): FloodFillDump | null => {
+  const { roomIndex, attrGrid, dualLayerGrids, linkLayer, staircaseType, roomLayout, startPos } = input;
+  if (!attrGrid) return null;
+
+  const grid = toGrid(attrGrid);
   const opts: FloodFillOptions = {
     tileContext: 'interior-dungeon',
     inventory: new Set(),
-    startPos: undefined,
+    startPos,
     dualLayerGrids: dualLayerGrids ?? undefined,
     stairTiles: dualLayerGrids?.stairTiles,
     startLayer: linkLayer ?? undefined,
@@ -141,6 +154,12 @@ const computeFloodFill = (input: FloodFillDumpInput): FloodFillDump | null => {
   return {
     reachableCount: result.reachableCount,
     totalTiles: result.totalTiles,
+    reachableRows: encodeReachableRows(result.reachable),
+    ledges: result.ledges.map(({ startRow, startCol, endRow, endCol }) => ({ startRow, startCol, endRow, endCol })),
+    attrRows: {
+      layer0: encodeAttrRows(dualLayerGrids?.layer0 ?? grid),
+      layer1: dualLayerGrids ? encodeAttrRows(dualLayerGrids.layer1) : null,
+    },
     connections: connections.map(c => ({
       edge: c.edge,
       targetScreen: c.targetScreen,
@@ -162,4 +181,32 @@ const computeFloodFill = (input: FloodFillDumpInput): FloodFillDump | null => {
   };
 };
 
-export { collectEntranceData, formatStairs, formatTravelDests, computeFloodFill };
+const computeOverworldFloodFill = (
+  screenIndex: number,
+  attrGrid: Uint8Array | null,
+  startPos?: { row: number; col: number },
+): FloodFillDump | null => {
+  if (!attrGrid) return null;
+
+  const result = floodFillScreen(toGrid(attrGrid), screenIndex, { tileContext: 'overworld', inventory: new Set(), startPos });
+  const connections = getConnections(result);
+
+  return {
+    reachableCount: result.reachableCount,
+    totalTiles: result.totalTiles,
+    reachableRows: encodeReachableRows(result.reachable),
+    ledges: result.ledges.map(({ startRow, startCol, endRow, endCol }) => ({ startRow, startCol, endRow, endCol })),
+    attrRows: { layer0: encodeAttrRows(toGrid(attrGrid)), layer1: null },
+    connections: connections.map(c => ({
+      edge: c.edge,
+      targetScreen: c.targetScreen,
+      targetScreenHex: `0x${c.targetScreen.toString(16).padStart(4, '0')}`,
+      freeTileCount: c.freeTileCount,
+      itemTileCount: c.itemTileCount,
+      positions: c.positions,
+    })),
+    scrollBoundary: null,
+  };
+};
+
+export { collectEntranceData, formatStairs, formatTravelDests, computeFloodFill, computeOverworldFloodFill };
