@@ -26,12 +26,14 @@ import {
   wasmGetLinkLayer,
   wasmGetStaircaseType,
   wasmBuildRoomAttrGrid,
+  wasmBuildOverworldAttrGrid,
   wasmGetToggleFloorPositions,
   wasmGetIndoorDualLayerGrids,
 } from '../../lib/game';
 import { resolveCurrentScreenDetailed } from '@shared/game/data/screens';
 import type { VariantGameState } from '@shared/game/data/screens';
-import { collectEntranceData, formatStairs, formatTravelDests, computeFloodFill } from './dump-nav/builders';
+import { collectEntranceData, formatStairs, formatTravelDests, computeFloodFill, computeOverworldFloodFill } from './dump-nav/builders';
+import { linkStartTile } from '@shared/game/navigation/link-start-tile';
 
 interface DumpNavDeps {
   activeProfile: Profile | null;
@@ -132,11 +134,20 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
       const toggleFloorPositions = isIndoors ? wasmGetToggleFloorPositions() : [];
 
       // ─── Flood fill + connections (for internal edge verification) ───
+      // Seed the flood from Link's hitbox tile (same derivation as the navigation widget).
+      const startPos = viewport
+        ? linkStartTile({
+            linkX: viewport.linkX,
+            linkY: viewport.linkY,
+            screenWorldX: isIndoors ? Math.floor(viewport.linkX / 512) * 512 : (overworldScreenIndex & 7) * 512,
+            screenWorldY: isIndoors ? Math.floor(viewport.linkY / 512) * 512 : ((overworldScreenIndex >> 3) & 7) * 512,
+          })
+        : undefined;
       const floodFillData = isIndoors
         ? computeFloodFill({
-            roomIndex, attrGrid, dualLayerGrids: wasmGetIndoorDualLayerGrids(), linkLayer, staircaseType, roomLayout,
+            roomIndex, attrGrid, dualLayerGrids: wasmGetIndoorDualLayerGrids(), linkLayer, staircaseType, roomLayout, startPos,
           })
-        : null;
+        : computeOverworldFloodFill(overworldScreenIndex, wasmBuildOverworldAttrGrid(overworldScreenIndex), startPos);
 
       const dump = {
         slot,
@@ -197,6 +208,7 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
           intraEdges: roomLayout.intraEdges,
         } : null,
         linkLayer,
+        linkStart: startPos ?? null,
         staircaseType,
         toggleFloorPositions: toggleFloorPositions.map(p => ({
           pos: `0x${p.pos.toString(16).padStart(4, '0')}`,
