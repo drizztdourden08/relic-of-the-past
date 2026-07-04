@@ -7,7 +7,7 @@
 
 import { getInputManager, resolveFunctionMappingIcon } from '../../../../../../lib/game';
 import type { FunctionAction, FunctionMapping } from '@shared/types/controls';
-import { getBindingLabel, getBindingIconUrl } from '../../ProfileHub/sub-components/controls/BindingRow';
+import { getBindingLabel, getBindingIconUrl } from '@app/lib/input/binding-display';
 import { keyCodeToIconId, getButtonIconUrl } from '@app/lib/input/button-icons';
 import type { SlotHint } from './enhanced-save-slot.types';
 

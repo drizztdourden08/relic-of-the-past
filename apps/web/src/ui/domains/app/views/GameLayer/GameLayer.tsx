@@ -12,6 +12,9 @@ import { useCanvasFit } from '../../../../../hooks/useCanvasFit';
 import { useShadowEditorStore } from '../../../../../stores/shadow-editor-store';
 import { useExclusiveInsetsStore } from '../../../../../stores/exclusive-insets-store';
 import { ControllerDisconnectOverlay } from './sub-components/ControllerDisconnectOverlay';
+import { ProfileSwitcherOverlay } from './sub-components/ProfileSwitcherOverlay';
+import { useControllerOverlay } from './behavior/useControllerOverlay';
+import { useProfileSwitcher } from './behavior/useProfileSwitcher';
 import { NavigationOverlay } from './sub-components/navigation-overlay';
 import { ShadowEditorOverlay } from './sub-components/ShadowEditorOverlay';
 import { ShadowEditorPanel } from './sub-components/ShadowEditorPanel';
@@ -120,24 +123,16 @@ const GameLayer = (props: GameLayerProps) => {
     return unsub;
   }, [status]);
 
-  // Double-click canvas to resume from pause
+  // On game start, verify the profile's mapped controller is actually present.
+  // Delay so HID enumeration / gamepad activation has a moment to populate.
   useEffect(() => {
     if (status !== 'running') return;
+    const id = setTimeout(() => getInputManager().checkControllerPresence(), 800);
+    return () => clearTimeout(id);
+  }, [status]);
 
-    const handleDblClick = () => {
-      const inputMgr = getInputManager();
-      if (inputMgr.isPaused()) {
-        inputMgr.resume();
-      }
-    };
-
-    const canvas = canvasRef.current;
-    canvas?.addEventListener('dblclick', handleDblClick);
-
-    return () => {
-      canvas?.removeEventListener('dblclick', handleDblClick);
-    };
-  }, [status, canvasKey]);
+  const overlay = useControllerOverlay(controllerPaused);
+  const profileSwitcher = useProfileSwitcher(status === 'running');
 
   return (
     <Box
@@ -185,7 +180,14 @@ const GameLayer = (props: GameLayerProps) => {
       />
 
       {controllerPaused && status === 'running' && disconnectedName && disconnectedName !== 'Manual pause' && (
-        <ControllerDisconnectOverlay controllerName={disconnectedName} />
+        <ControllerDisconnectOverlay
+          controllerName={disconnectedName}
+          pauseMapping={overlay.pauseMapping}
+          prevMapping={overlay.prevMapping}
+          nextMapping={overlay.nextMapping}
+          canSwitchProfile={overlay.canSwitchProfile}
+          onResume={overlay.onResume}
+        />
       )}
       {controllerPaused && status === 'running' && (!disconnectedName || disconnectedName === 'Manual pause') && (
         <Box className="game-layer__pause-overlay">
@@ -194,6 +196,15 @@ const GameLayer = (props: GameLayerProps) => {
             <Box className="game-layer__pause-bar" />
           </Box>
         </Box>
+      )}
+      {status === 'running' && (
+        <ProfileSwitcherOverlay
+          open={profileSwitcher.open}
+          profiles={profileSwitcher.profiles}
+          activeId={profileSwitcher.activeId}
+          prevMapping={profileSwitcher.prevMapping}
+          nextMapping={profileSwitcher.nextMapping}
+        />
       )}
       {status === 'running' && <NavigationOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
       {status === 'running' && <ShadowEditorOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}

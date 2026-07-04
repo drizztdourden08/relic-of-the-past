@@ -48,29 +48,17 @@
   font-size: var(--text-base);
   color: var(--c-text-dim);
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
 }
 
 .controller-disconnect-overlay__actions p {
-  margin: 0 0 var(--space-sm);
-}
-
-.controller-disconnect-overlay__actions ul {
   margin: 0;
-  padding-left: var(--space-lg);
-  list-style: disc;
 }
 
-.controller-disconnect-overlay__actions li {
-  margin-bottom: var(--space-xs);
-}
-
-.controller-disconnect-overlay__actions kbd {
-  display: inline-block;
-  background: var(--c-bg);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-sm);
-  padding: var(--space-xs) var(--space-sm);
-  font-family: monospace;
-  font-size: var(--text-sm);
-  color: var(--c-gold);
+.controller-disconnect-overlay__option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
 }

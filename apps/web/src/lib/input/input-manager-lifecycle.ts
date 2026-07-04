@@ -8,7 +8,7 @@ import { webHidReader } from './hid-reader';
 import type { WebHidInputState, DeviceStickCalibration } from './hid-reader';
 import { profileFromPreset } from './profile-utils';
 import { initController, resetController } from './controller-lifecycle';
-import { resolveGamepad } from './input-manager-events';
+import { resolveGamepad, connectedGamepadKeys } from './input-manager-events';
 import type { InputManager } from './input-manager';
 
 // One-time hint when a controller can't be opened on Linux (missing udev rules).
@@ -53,15 +53,16 @@ const startInput = (m: InputManager): void => {
     m.hidStates.set(state.deviceKey, { buttons: state.buttons, axes: state.axes });
     m.currentHidStates.set(state.deviceKey, state);
     m.hidStatesDirty = true;
-    m.pauseManager.autoResume();
+    // A mapped pad sending data again means it's back — resume (gated to the profile).
+    if (m.pauseManager.isPaused) m.resumeIfControllerPresent();
   });
   m.hidDisconnectUnsub = webHidReader.onDisconnect((_deviceKey) => {
     m.hidStates.delete(_deviceKey);
     m.currentHidStates.delete(_deviceKey);
     m.hidStatesDirty = true;
     m.rawDispatcher.removeDevice(_deviceKey);
+    m.pauseManager.checkControllerDisconnect(m.activeProfile, connectedGamepadKeys(m), m.devices);
     m.refreshDevices();
-    m.pauseManager.checkControllerDisconnect(m.activeProfile, m.devices);
   });
 
   m.ipcReportUnsub = controllersStore.onHidReport((deviceKey, vendorId, productId, data) => {
@@ -82,6 +83,7 @@ const startInput = (m: InputManager): void => {
   m.ipcDeviceOpenedUnsub = controllersStore.onHidDeviceOpened((info) => {
     webHidReader.markDeviceOpened(info.deviceKey, info.product);
     initController(info.deviceKey, info.vendorId, info.productId, m.activeControllers);
+    if (m.pauseManager.isPaused) m.resumeIfControllerPresent();
   });
 
   controllersStore.getOpenHidKeys().then(keys => {
@@ -91,7 +93,12 @@ const startInput = (m: InputManager): void => {
   }).catch((e: unknown) => console.warn('[input] failed to read open HID keys', e));
 
   m.refreshDevices();
-  m.devicePollId = setInterval(() => m.refreshDevices(), 2000);
+  m.devicePollId = setInterval(() => {
+    m.refreshDevices();
+    // Safety net for a reconnect that fired no event — resume only, never re-pause,
+    // so a manual resume of a still-absent controller stays resumed.
+    if (m.pauseManager.isPaused) m.resumeIfControllerPresent();
+  }, 2000);
   m.pollLoop();
 };
 
