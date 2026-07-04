@@ -4,8 +4,8 @@ import { saveState, loadState, getActiveProfileId } from '../../../../../lib/gam
 import { SaveSlot } from '../../compounds/SaveSlot';
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';
-import { Image } from '../../../../design-system/primitives/Image';
 import { ProgressRing } from '../../../../design-system/primitives/ProgressRing';
+import { InputGlyph } from '../../compounds/InputGlyph';
 import { log } from '../../../../../lib/log-bus';
 import * as savesStore from '@app/lib/storage/saves-store';
 import type { SlotHint } from './behavior/useEnhancedSaveSlot';
@@ -162,11 +162,14 @@ const SaveStateOverlay = (props: SaveStateOverlayProps) => {
             {hints?.map((hint) => (
               <Box key={hint.action} className={`save-overlay__hint save-overlay__hint--${hint.action}`}>
                 <Box className="save-overlay__hint-icon-wrap">
-                  {hint.iconUrl ? (
-                    <Image src={hint.iconUrl} alt={hint.keyLabel} className="save-overlay__hint-icon" />
-                  ) : (
-                    <Text className="save-overlay__hint-key-text">{hint.keyLabel}</Text>
-                  )}
+                  <InputGlyph
+                    binding={hint.binding}
+                    icon={hint.icon}
+                    showLabel={false}
+                    size="sm"
+                    fallbackVariant="plain"
+                    fallbackClassName="save-overlay__hint-key-text"
+                  />
                   {(hint.action === 'hold-save' || hint.action === 'holding-save') && (
                     <ProgressRing
                       className="save-overlay__hint-ring"
