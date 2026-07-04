@@ -53,18 +53,56 @@ const prepareScreen = (rawAttrGrid: number[][], tileContext: TileAttrContext, dy
   return { grid, ledges, dynamicBlockerCells };
 };
 
+/** Max boundary-gap width still considered a doorway (standard dungeon passages are 4 tiles). */
+const DOORWAY_MAX_WIDTH = 6;
+
+/**
+ * Boundary 0x00 cells that are safe to seed the void flood from. Walkable exit corridors
+ * (room transitions) reach the grid edge as narrow, wall-flanked gaps — standard dungeon
+ * doorways are 4 tiles wide — and must NOT seed the flood, or it walks up the corridor and
+ * wipes the room's real floor (e.g. room 0x72's lower floor via its open south passage).
+ * Structural void touches the edge in wide open spans, which do seed.
+ */
+const collectVoidSeeds = (layer: number[][]): Array<[number, number]> => {
+  const seeds: Array<[number, number]> = [];
+  const edges: Array<{ at: (i: number) => [number, number] }> = [
+    { at: (i) => [0, i] },              // north edge
+    { at: (i) => [GRID_SIZE - 1, i] },  // south edge
+    { at: (i) => [i, 0] },              // west edge
+    { at: (i) => [i, GRID_SIZE - 1] },  // east edge
+  ];
+
+  for (const edge of edges) {
+    let runStart = -1;
+    for (let i = 0; i <= GRID_SIZE; i++) {
+      const isOpen = i < GRID_SIZE && layer[edge.at(i)[0]][edge.at(i)[1]] === 0x00;
+      if (isOpen && runStart < 0) runStart = i;
+      if (isOpen || runStart < 0) continue;
+
+      // Run [runStart, i) ended — a doorway needs walls on BOTH flanks (grid corners don't count).
+      const runLen = i - runStart;
+      const hasFlankBefore = runStart > 0;
+      const hasFlankAfter = i < GRID_SIZE;
+      const isDoorway = runLen <= DOORWAY_MAX_WIDTH && hasFlankBefore && hasFlankAfter;
+      if (!isDoorway) {
+        for (let j = runStart; j < i; j++) seeds.push(edge.at(j));
+      }
+      runStart = -1;
+    }
+  }
+  return seeds;
+};
+
 const constrainVoidTiles = (thisLayer: number[][], _otherLayer: number[][]): number[][] => {
-  // Step 1: Flood from boundary through 0x00 tiles to find void-connected regions
+  // Step 1: Flood from boundary through 0x00 tiles to find void-connected regions,
+  // seeding only from wide-open boundary spans (doorway gaps are walkable exits).
   const isVoid: boolean[][] = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(false));
   const queue: Array<[number, number]> = [];
 
-  for (let r = 0; r < GRID_SIZE; r++) {
-    for (let c = 0; c < GRID_SIZE; c++) {
-      if ((r === 0 || r === GRID_SIZE - 1 || c === 0 || c === GRID_SIZE - 1) && thisLayer[r][c] === 0x00) {
-        isVoid[r][c] = true;
-        queue.push([r, c]);
-      }
-    }
+  for (const [r, c] of collectVoidSeeds(thisLayer)) {
+    if (isVoid[r][c]) continue;
+    isVoid[r][c] = true;
+    queue.push([r, c]);
   }
   while (queue.length > 0) {
     const [qr, qc] = queue.shift()!;

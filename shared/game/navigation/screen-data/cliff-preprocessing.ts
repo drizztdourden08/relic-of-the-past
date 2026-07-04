@@ -1,13 +1,10 @@
 /* @layer shared-game @kind logic */
 import type { TilePassability, LedgeTraversal } from '../types';
 import { GRID_SIZE } from '../types';
+import { computeIndoorLedgeDirs, HORIZ_LEDGE_ATTRS, VERT_LEDGE_ATTRS } from './indoor-ledge-dirs';
 
 const processStraightCliffs = (grid: TilePassability[][], rawAttr: number[][], ledges: LedgeTraversal[], isIndoors = false): void => {
   const CLIFF_TRIGGERS = new Set([0x28, 0x29, 0x2a, 0x2b, 0x2f]);
-  // Horizontal ledge attrs (0x2a/0x2b) — direction inferred from surrounding walls
-  const HORIZ_LEDGE_ATTRS = new Set([0x2a, 0x2b]);
-  // Vertical ledge attrs (0x28/0x29) — direction inferred from surrounding walls
-  const VERT_LEDGE_ATTRS = new Set([0x28, 0x29]);
   // Outdoors: fixed directions; Indoors: 0x28/0x29/0x2a/0x2b use wall inference, only 0x2f is hardcoded
   const CLIFF_DIRS: Record<number, { dr: number; dc: number; dir: 'n' | 's' | 'e' | 'w' }> = isIndoors
     ? {
@@ -25,6 +22,10 @@ const processStraightCliffs = (grid: TilePassability[][], rawAttr: number[][], l
     ? new Set([0x01, 0x02, 0x03, 0x04, 0x1a, 0x12, 0x13, 0x1b])
     : new Set([0x01, 0x02, 0x03, 0x1a, 0x12, 0x13, 0x1b]);
 
+  // Indoor 0x28/0x29/0x2a/0x2b: precompute every trigger's inferred direction so each
+  // can check its neighbors' directions, not just their attrs.
+  const indoorDirs = isIndoors ? computeIndoorLedgeDirs(rawAttr, CLIFF_WALL) : null;
+
   for (let row = 0; row < GRID_SIZE; row++) {
     for (let col = 0; col < GRID_SIZE; col++) {
       const attr = rawAttr[row][col];
@@ -32,60 +33,15 @@ const processStraightCliffs = (grid: TilePassability[][], rawAttr: number[][], l
 
       let dr: number, dc: number, dir: 'n' | 's' | 'e' | 'w';
 
-      if (isIndoors && HORIZ_LEDGE_ATTRS.has(attr)) {
-        // 0x2a/0x2b indoor: direction inferred from which side has the cliff face (walls).
-        // The jump goes TOWARD the wall/cliff face and over it.
-        const hasWallEast = col < 63 && CLIFF_WALL.has(rawAttr[row][col + 1]);
-        const hasWallWest = col > 0 && CLIFF_WALL.has(rawAttr[row][col - 1]);
-        if (hasWallEast && !hasWallWest) {
-          dr = 0; dc = 1; dir = 'e';
-        } else if (hasWallWest && !hasWallEast) {
-          dr = 0; dc = -1; dir = 'w';
-        } else {
-          // Ambiguous — check further for walls
-          let wallsEast = 0, wallsWest = 0;
-          for (let d = 1; d <= 3 && col + d < GRID_SIZE; d++) {
-            if (CLIFF_WALL.has(rawAttr[row][col + d])) wallsEast++;
-          }
-          for (let d = 1; d <= 3 && col - d >= 0; d++) {
-            if (CLIFF_WALL.has(rawAttr[row][col - d])) wallsWest++;
-          }
-          if (wallsEast > wallsWest) {
-            dr = 0; dc = 1; dir = 'e';
-          } else if (wallsWest > wallsEast) {
-            dr = 0; dc = -1; dir = 'w';
-          } else {
-            // Default fallback: east
-            dr = 0; dc = 1; dir = 'e';
-          }
-        }
-      } else if (isIndoors && VERT_LEDGE_ATTRS.has(attr)) {
-        // 0x28/0x29 indoor: direction inferred from which side has the cliff face (walls).
-        // The jump goes TOWARD the wall/cliff face and over it.
-        const hasWallSouth = row < 63 && CLIFF_WALL.has(rawAttr[row + 1][col]);
-        const hasWallNorth = row > 0 && CLIFF_WALL.has(rawAttr[row - 1][col]);
-        if (hasWallSouth && !hasWallNorth) {
-          dr = 1; dc = 0; dir = 's';
-        } else if (hasWallNorth && !hasWallSouth) {
-          dr = -1; dc = 0; dir = 'n';
-        } else {
-          // Ambiguous — check further for walls
-          let wallsSouth = 0, wallsNorth = 0;
-          for (let d = 1; d <= 3 && row + d < GRID_SIZE; d++) {
-            if (CLIFF_WALL.has(rawAttr[row + d][col])) wallsSouth++;
-          }
-          for (let d = 1; d <= 3 && row - d >= 0; d++) {
-            if (CLIFF_WALL.has(rawAttr[row - d][col])) wallsNorth++;
-          }
-          if (wallsSouth > wallsNorth) {
-            dr = 1; dc = 0; dir = 's';
-          } else if (wallsNorth > wallsSouth) {
-            dr = -1; dc = 0; dir = 'n';
-          } else {
-            // Default fallback: south
-            dr = 1; dc = 0; dir = 's';
-          }
-        }
+      if (indoorDirs && (HORIZ_LEDGE_ATTRS.has(attr) || VERT_LEDGE_ATTRS.has(attr))) {
+        ({ dr, dc, dir } = indoorDirs.get(row * GRID_SIZE + col)!);
+
+        // Link's body is 2 tiles wide: a jump only exists where a perpendicular neighbor
+        // trigger jumps the SAME way. Kills false 1-wide arrows (e.g. beside staircases,
+        // where a lone trigger's neighbor infers the opposite direction).
+        const [pr, pc] = dr !== 0 ? [0, 1] : [1, 0];
+        const sameDir = (r2: number, c2: number) => indoorDirs.get(r2 * GRID_SIZE + c2)?.dir === dir;
+        if (!sameDir(row - pr, col - pc) && !sameDir(row + pr, col + pc)) continue;
       } else {
         const fixed = CLIFF_DIRS[attr];
         if (!fixed) continue;

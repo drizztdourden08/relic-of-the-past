@@ -68,19 +68,17 @@ class DualLayerStrategy implements LayerStrategy {
     if (hitLedge && !ledgeFallMatch) return [];
 
     if (hitLedge && ledgeFallMatch) {
-      // Full 2x2 body must be ledge tiles for Link to jump — 1-wide ledges are invalid
-      let fullBodyLedge = true;
-      for (const [br, bc] of bodyTiles(nr, nc)) {
-        const t = this.grids[0][br][bc];
-        if (t.type !== 'ledge' || !canLeaveLedge(t.dir, dr, dc)) {
-          fullBodyLedge = false;
-          break;
-        }
+      // Link's 2-wide leading edge must sit fully on jump tiles pointing the same way —
+      // a 1-wide ledge can't carry his 2x2 body. Checking the whole body at the entry
+      // position is wrong: it straddles the trigger line AND the approach floor, which
+      // only coincides with ledge tiles when the band happens to be 2+ deep (south fans).
+      // 1-deep north/east/west trigger lines must still fire the cross.
+      for (const [tr, tc] of newTiles) {
+        const t = this.grids[0][tr][tc];
+        if (t.type !== 'ledge' || !canLeaveLedge(t.dir, dr, dc)) return [];
       }
-      if (!fullBodyLedge) return [];
 
-      const results = this.expandLedgeCross(nr, nc, dr, dc, requirements, inventory, bounds);
-      return results;
+      return this.expandLedgeCross(nr, nc, dr, dc, requirements, inventory, bounds);
     }
 
     // ─── Stair detection ───
@@ -154,7 +152,10 @@ class DualLayerStrategy implements LayerStrategy {
         for (const [lr2, lc2] of ledgeTiles) {
           this.traversedLedgeTiles.push({ row: lr2, col: lc2, reqs: requirements });
         }
-        return [];
+        // Enqueue the landing on layer 1 so the flood continues into the lower
+        // area. Recording the traversed ledge tiles above only draws the overlay
+        // arrow; without this return the dropped-to region never gets flooded.
+        return [{ row: lr, col: lc, layer: 1, requirements: newReqs }];
       }
     }
     return [];
