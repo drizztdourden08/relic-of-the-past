@@ -121,6 +121,12 @@ abstract class BaseController {
   async vibrate(_ctx: ControllerContext, _pattern: VibrationSegment[], _gapMs?: number): Promise<{ ok: boolean; error?: string }> {
     return { ok: false, error: 'vibration not supported' };
   }
+  /**
+   * Map a 0–1 pattern intensity to the motor magnitude this pad should actually play, so each
+   * controller can compensate for how strong its rumble tech feels. Callers apply this to
+   * strength only — segment durations are never changed. Default: identity (no adjustment).
+   */
+  shapeVibration(intensity: number): number { return intensity; }
 
   // ── Stick Calibration ──
   getStickDefaults(): StickDefaults | null { return null; }

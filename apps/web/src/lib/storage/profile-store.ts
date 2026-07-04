@@ -21,7 +21,15 @@ const getAppState = (): Promise<AppState> => store.getAppState(files());
 const readConfig = (id: string): Promise<Record<string, unknown> | null> => store.readConfig(files(), id);
 const writeConfig = (id: string, settings: Record<string, unknown>): Promise<void> => store.writeConfig(files(), id, settings);
 
+// Merge-write the active input profile id without clobbering other settings — used
+// when the profile-cycle shortcut switches profiles outside the settings screen.
+const updateActiveInputProfileId = async (id: string, activeInputProfileId: string): Promise<void> => {
+  const current = (await store.readConfig(files(), id)) ?? {};
+  await store.writeConfig(files(), id, { ...current, activeInputProfileId });
+};
+
 export {
   listProfiles, createProfile, updateProfile, deleteProfile,
   setLastProfile, updateLastPlayed, getAppState, readConfig, writeConfig,
+  updateActiveInputProfileId,
 };

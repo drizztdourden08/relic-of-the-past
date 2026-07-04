@@ -152,6 +152,9 @@ interface GameSettings {
 
   // ─── Haptics ───
   haptics: HapticSettings;
+  // Per-device haptics override map, keyed by "vid:pid". Absent key = default
+  // (enabled when the device supports vibration). Set false to mute a device.
+  hapticDevices?: Record<string, boolean>;
 }
 
 export type { GameSettings, HapticSettings };

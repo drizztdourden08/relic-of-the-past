@@ -10,6 +10,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@shared': resolve(__dirname, 'shared'),
+      '@app': resolve(__dirname, 'apps/web/src'),
     },
   },
 });

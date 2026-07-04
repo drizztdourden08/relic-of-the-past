@@ -12,6 +12,7 @@ const SHORTCUT_ACTIONS = [
   'load-state-9', 'load-state-10', 'load-state-11', 'load-state-12',
   'pause', 'reset',
   'fullscreen', 'turbo',
+  'profile-next', 'profile-prev',
 ] as const;
 
 const CHEAT_ACTIONS = [
@@ -51,6 +52,8 @@ const FUNCTION_ACTION_LABELS: Record<FunctionAction, string> = {
   'reset': 'Reset',
   'fullscreen': 'Fullscreen',
   'turbo': 'Turbo',
+  'profile-next': 'Next Input Profile',
+  'profile-prev': 'Previous Input Profile',
   'cheat-health': 'Restore Health',
   'cheat-equipment': 'Restore Equipment',
   'cheat-keys': 'Give All Keys',
@@ -94,6 +97,8 @@ const DEFAULT_FUNCTION_MAPPINGS: FunctionMapping[] = [
   { action: 'reset', binding: { type: 'keyboard', code: 'KeyR', modifiers: { ctrl: true } }, icon: null },
   { action: 'fullscreen', binding: { type: 'keyboard', code: 'Enter', modifiers: { alt: true } }, icon: null },
   { action: 'turbo', binding: { type: 'keyboard', code: 'Tab' }, icon: null },
+  { action: 'profile-next', binding: { type: 'keyboard', code: 'PageDown' }, icon: null },
+  { action: 'profile-prev', binding: { type: 'keyboard', code: 'PageUp' }, icon: null },
   { action: 'cheat-health', binding: { type: 'keyboard', code: 'KeyW' }, icon: null },
   { action: 'cheat-equipment', binding: { type: 'keyboard', code: 'KeyW', modifiers: { shift: true } }, icon: null },
   { action: 'cheat-keys', binding: { type: 'keyboard', code: 'KeyO' }, icon: null },

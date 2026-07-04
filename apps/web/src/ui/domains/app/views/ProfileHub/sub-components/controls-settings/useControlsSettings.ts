@@ -10,6 +10,7 @@ import { useDeviceSync } from './useDeviceSync';
 import { useBindingState } from './useBindingState';
 import { useDragDrop } from './useDragDrop';
 import { useDisplayMappings } from './useDisplayMappings';
+import { useHapticDevices } from './useHapticDevices';
 
 const useControlsSettings = ({ settings, onChange, profileId }: UseControlsSettingsArgs) => {
   const [activeTab, setActiveTab] = useState<'controls' | 'enhanced' | 'shortcuts' | 'cheats'>('controls');
@@ -54,6 +55,15 @@ const useControlsSettings = ({ settings, onChange, profileId }: UseControlsSetti
 
   const { requiredInputs, displayMappings } = useDisplayMappings({ activeProfile, devices });
 
+  const {
+    hapticEnabledDevices,
+    hapticDragOver,
+    handleHapticDragOver,
+    handleHapticDragLeave,
+    handleHapticDrop,
+    disableHaptics,
+  } = useHapticDevices({ settings, onChange, devices });
+
   return {
     profiles,
     activeProfile,
@@ -70,6 +80,12 @@ const useControlsSettings = ({ settings, onChange, profileId }: UseControlsSetti
     requiredInputs,
     displayMappings,
     displayFunctionMappings,
+    hapticEnabledDevices,
+    hapticDragOver,
+    handleHapticDragOver,
+    handleHapticDragLeave,
+    handleHapticDrop,
+    disableHaptics,
     setActiveTab,
     setSidebarCollapsed,
     setDevicesCollapsed,

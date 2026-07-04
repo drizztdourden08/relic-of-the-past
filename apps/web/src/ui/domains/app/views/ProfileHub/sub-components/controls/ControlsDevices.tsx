@@ -4,6 +4,7 @@ import { Box } from '../../../../../../design-system/primitives/Box';
 import { Button } from '../../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { DeviceCard } from './DeviceCard';
+import { HapticsDropBox } from './HapticsDropBox';
 import type { useControlsSettings } from '../useControlsSettings';
 
 type Ctrl = ReturnType<typeof useControlsSettings>;
@@ -41,6 +42,16 @@ const ControlsDevices = ({ ctrl }: { ctrl: Ctrl }) => {
         {ctrl.filteredDevices.length === 0 && (
           <Text as="p" className="controls-settings__no-devices">No devices detected</Text>
         )}
+      </Box>
+      <Box className="controls-settings__devices-column-expanded">
+        <HapticsDropBox
+          chips={ctrl.hapticEnabledDevices}
+          dragOver={ctrl.hapticDragOver}
+          onDragOver={ctrl.handleHapticDragOver}
+          onDragLeave={ctrl.handleHapticDragLeave}
+          onDrop={ctrl.handleHapticDrop}
+          onRemove={ctrl.disableHaptics}
+        />
       </Box>
       <Text as="p" className="controls-settings__devices-column-expanded controls-settings__device-hint">
         Click controller icon or drag onto bindings to assign.

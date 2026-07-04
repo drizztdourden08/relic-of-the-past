@@ -15,12 +15,22 @@
 import { handleHapticEvent, setVibrateFunction, updateHapticSettings } from '@shared/input/haptics';
 import type { HapticSettings } from '@shared/input/haptics';
 import type { VibrationSegment } from '@shared/input/base';
-import { findController } from '@shared/input/register-all';
+import { findController, findControllerById } from '@shared/input/register-all';
+import { parseGamepadId } from '@shared/input';
+import type { BaseController } from '@shared/input/base';
 import { getPlatform } from '@app/platform/get-platform';
 import { webHidReader } from './hid-reader';
+import { vibrateGamepadPattern } from './vibration';
+import { peekInputManager } from './input-manager';
 import * as controllersStore from './controllers-store';
 
 let initialized = false;
+
+// ─── Per-device haptics gate ───
+// Keyed by "vid:pid"; a key set to false mutes that device. Absent = enabled
+// (the supportsVibration() check still applies). Configured in the DEVICES panel.
+let hapticDevices: Record<string, boolean> = {};
+const deviceHapticsEnabled = (deviceKey: string): boolean => hapticDevices[deviceKey] !== false;
 
 // ─── Vibration Mixer State ───
 
@@ -84,15 +94,65 @@ const dispatchVibration = (pattern: VibrationSegment[], gapMs?: number): void =>
   }
 };
 
+// Xbox/XInput pads surface on both the Gamepad API and node-hid buses; mirror the
+// polling-engine's id match so the same physical pad isn't buzzed twice.
+const isGamepadServedByHid = (gp: Gamepad, hidKeys: Set<string>): boolean => {
+  const id = gp.id.toLowerCase();
+  for (const key of hidKeys) {
+    const [vid, pid] = key.split(':');
+    if (id.includes(`vendor: ${vid}`) && id.includes(`product: ${pid}`)) return true;
+  }
+  return false;
+};
+
+// Resolve the controller behind a Gamepad-API pad so its per-pad strength shaping applies.
+// Xbox/XInput rarely embeds vid/pid in the id, so fall back to the family keyword.
+const resolveGamepadController = (gp: Gamepad): BaseController | null => {
+  const parsed = parseGamepadId(gp.id);
+  if (parsed && parsed.vid !== '0000') {
+    const byId = findController(parsed.vid, parsed.pid);
+    if (byId) return byId;
+  }
+  const id = gp.id.toLowerCase();
+  if (id.includes('xbox') || id.includes('xinput')) return findControllerById('xbox');
+  return null;
+};
+
+// Apply a controller's strength curve to each segment. Magnitude only — durations are kept
+// exactly as authored, so a pad can hit harder without any event lasting longer.
+const shapeForController = (ctrl: BaseController | null, pattern: VibrationSegment[]): VibrationSegment[] => {
+  if (!ctrl) return pattern;
+  return pattern.map(seg => ({ durationMs: seg.durationMs, intensity: ctrl.shapeVibration(seg.intensity) }));
+};
+
 const sendToController = (pattern: VibrationSegment[], gapMs?: number): void => {
-  const keys = webHidReader.getConnectedDeviceKeys();
-  if (keys.length === 0) return;
-  const key = keys[0];
-  // Only dispatch to controllers that actually rumble. Writing haptic frames to a
-  // non-vibrating pad still pauses its HID read stream, which stalls input.
-  const [vid, pid] = key.split(':');
-  if (!findController(vid, pid)?.supportsVibration()) return;
-  controllersStore.vibratePattern(key, pattern, gapMs ?? 0);
+  const gap = gapMs ?? 0;
+
+  // HID controllers (Switch Pro, PlayStation, 8BitDo) via the node-hid worker. Only
+  // dispatch to pads that actually rumble — writing haptic frames to a non-vibrating
+  // pad still pauses its HID read stream, which stalls input.
+  const hidKeys = webHidReader.getConnectedDeviceKeys();
+  for (const key of hidKeys) {
+    if (!deviceHapticsEnabled(key)) continue;
+    const [vid, pid] = key.split(':');
+    const ctrl = findController(vid, pid);
+    if (ctrl?.supportsVibration()) {
+      controllersStore.vibratePattern(key, shapeForController(ctrl, pattern), gap);
+    }
+  }
+
+  // Gamepad API controllers (Xbox/XInput) rumble through the vibrationActuator, never
+  // node-hid — so they never show up in hidKeys above. Skip any pad already served
+  // over HID to avoid a double buzz.
+  const hidSet = new Set(hidKeys);
+  const gamepadVidPid = peekInputManager()?.gamepadVidPid;
+  for (const gp of navigator.getGamepads()) {
+    if (!gp || !gp.connected || isGamepadServedByHid(gp, hidSet)) continue;
+    if (!(gp as { vibrationActuator?: { playEffect?: unknown } }).vibrationActuator?.playEffect) continue;
+    const vp = gamepadVidPid?.get(gp.index);
+    if (vp && !deviceHapticsEnabled(`${vp.vid}:${vp.pid}`)) continue;
+    vibrateGamepadPattern(gp.index, shapeForController(resolveGamepadController(gp), pattern), gap);
+  }
 };
 
 const scheduleDecay = (ms: number): void => {
@@ -124,6 +184,10 @@ const updateHapticBridgeSettings = (settings: HapticSettings): void => {
   updateHapticSettings(settings);
 };
 
+const updateHapticDevices = (map: Record<string, boolean> | undefined): void => {
+  hapticDevices = map ?? {};
+};
+
 const destroyHapticBridge = (): void => {
   (window as any).__onHapticEvent = null;
   setVibrateFunction(null);
@@ -138,5 +202,6 @@ const destroyHapticBridge = (): void => {
 export {
   destroyHapticBridge,
   initHapticBridge,
-  updateHapticBridgeSettings
+  updateHapticBridgeSettings,
+  updateHapticDevices
 };

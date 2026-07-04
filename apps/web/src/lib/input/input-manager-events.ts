@@ -3,6 +3,7 @@
 import { markActivated, updateActivationState } from './device-detector';
 import { resolveGamepadVidPid } from './gamepad-vid-pid';
 import { computeBitmask, snapshotGamepads } from './polling-engine';
+import { allowedDevices } from './profile-devices';
 import type { InputManager } from './input-manager';
 
 const isTextInput = (target: EventTarget | null): boolean => {
@@ -16,6 +17,7 @@ const rebuildMaps = (m: InputManager): void => {
   m.keyboardMap.clear();
   m.gamepadButtonMap.clear();
   m.gamepadAxisMap.clear();
+  m.allowed = allowedDevices(m.activeProfile);
   if (!m.activeProfile) return;
   for (const mapping of m.activeProfile.mappings) {
     const b = mapping.binding;
@@ -100,10 +102,16 @@ const pollFrame = (m: InputManager): void => {
 
   const windowFocused = document.hasFocus();
 
+  // Resolve vid:pid for any pad connected before its 'gamepadconnected' fired, so the
+  // device gate can match it against the active profile's map.
+  for (const gp of navigator.getGamepads()) {
+    if (gp && gp.connected && !m.gamepadVidPid.has(gp.index)) resolveGamepad(m, gp);
+  }
+
   m.currentGamepads = snapshotGamepads();
 
   if (windowFocused && !m.pauseManager.isPaused && !m.inputSuppressed) {
-    const mask = computeBitmask(m.keyStates, m.keyboardMap, m.gamepadButtonMap, m.gamepadAxisMap, m.hidStates);
+    const mask = computeBitmask(m.keyStates, m.keyboardMap, m.gamepadButtonMap, m.gamepadAxisMap, m.hidStates, m.allowed, m.gamepadVidPid);
     m.setInputFn?.(mask);
   }
 
@@ -113,7 +121,7 @@ const pollFrame = (m: InputManager): void => {
   }
 
   if (windowFocused && !m.inputSuppressed && m.functionActions.hasMappedGamepadButtons) {
-    m.functionActions.checkGamepads(m.hidStates);
+    m.functionActions.checkGamepads(m.hidStates, m.allowed, m.gamepadVidPid);
   }
 
   if (m.stateListeners.size > 0) {

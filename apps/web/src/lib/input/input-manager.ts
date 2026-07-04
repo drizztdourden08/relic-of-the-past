@@ -29,10 +29,19 @@ import type { HidDeviceInfo } from './gamepad-vid-pid';
 import type { ControllerEntry } from './controller-lifecycle';
 import { startInput, stopInput, refreshDevicesImpl } from './input-manager-lifecycle';
 import { rebuildMaps, guardKeys, keyDown, keyUp, gamepadConnected, gamepadDisconnected, pollFrame } from './input-manager-events';
-import type { DeviceChangeListener, InputStateListener } from './input-manager-types';
+import { wireProfileActions, setProfiles as setProfilesImpl, subscribeActiveProfile, cycleActiveProfile as cycleActiveProfileImpl } from './input-manager-profiles';
+import type { AllowedDevices } from './profile-devices';
+import type { ActiveProfileListener, DeviceChangeListener, InputStateListener } from './input-manager-types';
 
 class InputManager {
   activeProfile: InputProfile | null = null;
+  // All saved input profiles, kept in sync so the profile-cycle shortcut can switch
+  // the active one during gameplay (settings screen not required).
+  profiles: InputProfile[] = [];
+  // Devices the active profile's map references — the input gate whitelists these.
+  allowed: AllowedDevices = { keyboard: false, gamepadKeys: new Set() };
+  activeProfileListeners = new Set<ActiveProfileListener>();
+  persistActiveProfileId: ((id: string) => void) | null = null;
   keyStates = new Map<string, boolean>();
   allPressedKeys = new Set<string>();
   animFrameId: number | null = null;
@@ -88,6 +97,7 @@ class InputManager {
       resumeAudio();
     };
     this.functionActions.onPauseToggle = () => this.pauseManager.togglePause();
+    wireProfileActions(this);
   }
 
   // ─── Event handler fields (stable identity for add/removeEventListener) ───
@@ -126,6 +136,23 @@ class InputManager {
 
   getProfile(): InputProfile | null {
     return this.activeProfile;
+  }
+
+  setProfiles(profiles: InputProfile[]): void {
+    setProfilesImpl(this, profiles);
+  }
+
+  /** Wire persistence of the active profile id (survives app restart). */
+  setActiveProfilePersist(fn: (id: string) => void): void {
+    this.persistActiveProfileId = fn;
+  }
+
+  onActiveProfileChange(listener: ActiveProfileListener): () => void {
+    return subscribeActiveProfile(this, listener);
+  }
+
+  cycleActiveProfile(direction: 1 | -1): void {
+    cycleActiveProfileImpl(this, direction);
   }
 
   setFunctionMappings(mappings: FunctionMapping[]): void {
@@ -222,9 +249,12 @@ const getInputManager = (): InputManager => {
   return instance;
 };
 
-export { InputManager, getInputManager };
+/** Return the existing InputManager without creating/starting one (null if none). */
+const peekInputManager = (): InputManager | null => instance;
+
+export { InputManager, getInputManager, peekInputManager };
 export { profileFromPreset, resolveFunctionMappingIcon } from './profile-utils';
-export type { DeviceChangeListener, InputStateListener } from './input-manager-types';
+export type { ActiveProfileListener, DeviceChangeListener, InputStateListener } from './input-manager-types';
 export type { PauseListener } from './pause-manager';
 export type { RawInputEvent, RawInputListener } from './raw-input-dispatcher';
 export type { GamepadSnapshot } from './polling-engine';

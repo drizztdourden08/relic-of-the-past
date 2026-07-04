@@ -42,13 +42,23 @@ const useProfileActions = ({ settings, onChange, profileId }: UseProfileActionsA
       const activeId = settings.activeInputProfileId;
       const active = loaded.find(p => p.id === activeId) ?? loaded[0];
       setActiveProfile(active);
+      getInputManager().setProfiles(loaded);
       getInputManager().setProfile(active);
     })();
   }, [profileId, settings.activeInputProfileId]);
 
+  // ─── Reflect profile-cycle shortcut (PageUp/PageDown) into the UI + settings ───
+  useEffect(() => {
+    return getInputManager().onActiveProfileChange((profile) => {
+      setActiveProfile(profile);
+      onChange({ activeInputProfileId: profile.id });
+    });
+  }, [onChange]);
+
   // ─── Persist helper ───
   const persistProfiles = useCallback(async (updated: InputProfile[]) => {
     setProfiles(updated);
+    getInputManager().setProfiles(updated);
     await writeInputProfiles(profileId, updated);
   }, [profileId]);
 
