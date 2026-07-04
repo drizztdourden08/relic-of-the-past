@@ -101,3 +101,12 @@ scripts/analyze/report.json
 # Claude config — managed in the private claude-config repo, never committed here
 .claude/
 CLAUDE.md
+
+# AI config — managed in the private ai-config repo, never committed here
+.ai-config.json
+.ai/
+AGENTS.md
+.github/copilot-instructions.md
+
+.claude/settings.json
+.codex/config.toml
