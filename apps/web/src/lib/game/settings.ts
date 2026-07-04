@@ -119,6 +119,7 @@ const DEFAULT_SETTINGS: GameSettings = {
     dashVibration: true,
     environmentalEffects: true,
   },
+  hapticDevices: {},
 };
 
 const boolToIni = (v: boolean): string => {
@@ -214,6 +215,7 @@ MiscBugFixes = ${boolToIni(settings.miscBugFixes)}
 GameChangingBugFixes = ${boolToIni(settings.gameChangingBugFixes)}
 CancelBirdTravel = ${boolToIni(settings.cancelBirdTravel)}
 DisableTelepathy = ${boolToIni(settings.disableTelepathy)}
+Haptics = ${boolToIni(!!settings.haptics?.enabled)}
 ${renderFlagsIni}
 `;
 };

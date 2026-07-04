@@ -1,9 +1,12 @@
 /* @layer renderer-lib @kind types */
-import type { DetectedDevice } from '@shared/types/controls';
+import type { DetectedDevice, InputProfile } from '@shared/types/controls';
 import type { WebHidInputState } from './hid-reader';
 import type { GamepadSnapshot } from './polling-engine';
 
 type DeviceChangeListener = (devices: DetectedDevice[]) => void;
+
+/** Fires when the active input profile changes (e.g. via the profile-cycle shortcut). */
+type ActiveProfileListener = (profile: InputProfile) => void;
 
 /** Per-frame state listener — for InputCalibration, InputTester visualization */
 type InputStateListener = (
@@ -12,4 +15,4 @@ type InputStateListener = (
   pressedKeys: Set<string>,
 ) => void;
 
-export type { DeviceChangeListener, InputStateListener };
+export type { ActiveProfileListener, DeviceChangeListener, InputStateListener };

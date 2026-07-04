@@ -6,7 +6,18 @@
 
 import type { FunctionMapping, FunctionAction } from '@shared/types/controls';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
-import { webHidReader } from './hid-reader';
+import type { AllowedDevices } from './profile-devices';
+
+/** Merge saved mappings with defaults so newly-added actions always have a binding. */
+const mergeWithDefaults = (mappings: FunctionMapping[]): FunctionMapping[] => {
+  if (mappings.length === 0) return DEFAULT_FUNCTION_MAPPINGS;
+  const present = new Set(mappings.map(m => m.action));
+  const merged = [...mappings];
+  for (const def of DEFAULT_FUNCTION_MAPPINGS) {
+    if (!present.has(def.action)) merged.push(def);
+  }
+  return merged;
+};
 
 type FunctionKeyUpListener = (action: FunctionAction) => void;
 
@@ -37,7 +48,7 @@ class FunctionActionEngine {
   }
 
   setMappings(mappings: FunctionMapping[]): void {
-    this.functionMappings = mappings;
+    this.functionMappings = mergeWithDefaults(mappings);
     this.rebuild();
   }
 
@@ -94,31 +105,20 @@ class FunctionActionEngine {
    * Check gamepad/HID buttons against function mappings each frame.
    * Fires callbacks on rising edge, fires keyUp listeners on falling edge.
    */
-  checkGamepads(hidStates: Map<string, { buttons: boolean[]; axes: number[] }>): void {
-    // --- Web Gamepad API controllers (skip those handled by node-hid) ---
-    const gamepads = navigator.getGamepads();
-    const hidIds = new Set(webHidReader.getConnectedDeviceKeys());
-
-    for (const gp of gamepads) {
+  checkGamepads(hidStates: Map<string, { buttons: boolean[]; axes: number[] }>, allowed: AllowedDevices, gamepadVidPid: Map<number, { vid: string; pid: string }>): void {
+    // --- Web Gamepad API controllers — only devices in the active profile's map ---
+    for (const gp of navigator.getGamepads()) {
       if (!gp || !gp.connected) continue;
-      // Skip gamepads already handled by WebHID
-      const gpIdLower = gp.id.toLowerCase();
-      let isDuplicate = false;
-      for (const hidId of hidIds) {
-        const [vid, pid] = hidId.split(':');
-        if (gpIdLower.includes(`vendor: ${vid}`) && gpIdLower.includes(`product: ${pid}`)) {
-          isDuplicate = true;
-          break;
-        }
-      }
-      if (isDuplicate) continue;
-
+      const vp = gamepadVidPid.get(gp.index);
+      const key = vp ? `${vp.vid}:${vp.pid}` : null;
+      if (!key || !allowed.gamepadKeys.has(key)) continue;
       // Normalize Web Gamepad buttons (objects) to booleans, then share one code path.
       this.processDeviceState(`gamepad-${gp.index}`, gp.buttons.map((b) => b.pressed), gp.axes);
     }
 
     // --- WebHID controllers (Switch Pro, PlayStation, 8BitDo) ---
     for (const [deviceKey, state] of hidStates) {
+      if (!allowed.gamepadKeys.has(deviceKey)) continue;
       this.processDeviceState(deviceKey, state.buttons, state.axes);
     }
   }

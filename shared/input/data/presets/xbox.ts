@@ -105,6 +105,13 @@ class XboxController extends BaseController {
   readonly axes = AXES;
 
   supportsVibration(): boolean { return true; }
+
+  // Xbox dual-rumble is a linear ERM magnitude that feels weak at low values — and the motors
+  // barely move below ~0.25 — versus Switch HD rumble's punchy pre-baked pulses. Lift onto a
+  // floor and boost so short combat pulses land hard. Strength only; duration is untouched.
+  shapeVibration(intensity: number): number {
+    return intensity <= 0 ? 0 : Math.min(1, 0.3 + intensity * 0.85);
+  }
 }
 
 registerController(new XboxController());

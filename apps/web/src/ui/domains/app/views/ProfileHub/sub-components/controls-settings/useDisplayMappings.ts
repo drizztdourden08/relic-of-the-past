@@ -8,6 +8,7 @@ import type { InputProfile, DetectedDevice } from '@shared/types/controls';
 import { SNES_BUTTONS } from '@shared/types/controls';
 import { findDeviceProfileByVidPid } from '@shared/input';
 import { publicAsset } from '@app/lib/assets/public-asset';
+import { allowedDevices } from '@app/lib/input/profile-devices';
 import { padHex } from './controls-settings.type';
 
 interface UseDisplayMappingsArgs {
@@ -19,7 +20,7 @@ const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) 
   const requiredInputs = useMemo(() => {
     if (!activeProfile) return [];
     const inputs: Array<{ type: 'keyboard' | 'gamepad'; label: string; iconSrc: string; connected: boolean }> = [];
-    const hasKeyboard = activeProfile.mappings.some(m => m.binding.type === 'keyboard');
+    const { keyboard: hasKeyboard, gamepadKeys: usedDeviceKeys } = allowedDevices(activeProfile);
     const hasGamepad = activeProfile.mappings.some(m => m.binding.type !== 'keyboard');
 
     const familyIconMap: Record<string, string> = {
@@ -39,17 +40,6 @@ const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) 
       });
     }
     if (hasGamepad) {
-      const usedDeviceKeys = new Set<string>();
-      for (const m of activeProfile.mappings) {
-        if (m.binding.type !== 'keyboard' && m.sourceVid && m.sourcePid) {
-          usedDeviceKeys.add(`${padHex(m.sourceVid)}:${padHex(m.sourcePid)}`);
-        }
-      }
-      const assigned = activeProfile.assignedDevice;
-      if (assigned?.vendorId && assigned?.productId) {
-        usedDeviceKeys.add(`${padHex(assigned.vendorId)}:${padHex(assigned.productId)}`);
-      }
-
       if (usedDeviceKeys.size > 0) {
         for (const key of usedDeviceKeys) {
           const [vid, pid] = key.split(':');

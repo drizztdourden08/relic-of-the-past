@@ -4,6 +4,7 @@ import { setMsuData, setLinkSpriteData, getInputManager } from '../../lib/game';
 import type { mergeSettings } from '../../lib/game/settings';
 import { log } from '../../lib/log-bus';
 import { readInputProfiles } from '@app/lib/storage/profile-data-store';
+import { updateActiveInputProfileId } from '@app/lib/storage/profile-store';
 import * as msuStore from '@app/lib/storage/msu-store';
 import { readLinkSprite } from '@app/lib/storage/link-sprites-store';
 import type { InputProfile } from '@shared/types/controls';
@@ -17,7 +18,10 @@ const loadInputProfile = async (profileId: string, settings: Settings) => {
     if (inputProfiles.length > 0) {
       const activeId = settings.activeInputProfileId;
       const active = inputProfiles.find(p => p.id === activeId) ?? inputProfiles[0];
-      getInputManager().setProfile(active);
+      const mgr = getInputManager();
+      mgr.setProfiles(inputProfiles);
+      mgr.setActiveProfilePersist((id) => { void updateActiveInputProfileId(profileId, id); });
+      mgr.setProfile(active);
       log.app(`Loaded input profile: ${active.name}`);
     }
   } catch {

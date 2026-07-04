@@ -8,6 +8,7 @@
 import type { SnesButton } from '@shared/types/controls';
 import { SNES_BUTTON_BITS } from '@shared/types/controls';
 import { webHidReader } from './hid-reader';
+import type { AllowedDevices } from './profile-devices';
 
 /** Gamepad snapshot matching the shape InputCalibration/InputTester need */
 interface GamepadSnapshot {
@@ -20,77 +21,55 @@ interface GamepadSnapshot {
   axes: number[];
 }
 
-const computeBitmask = (keyStates: Map<string, boolean>, keyboardMap: Map<string, SnesButton>, gamepadButtonMap: Map<number, SnesButton>, gamepadAxisMap: Map<string, SnesButton>, hidStates: Map<string, { buttons: boolean[]; axes: number[] }>): number => {
+/** OR a device's buttons + axes into the mask against the active profile's maps. */
+const applyDeviceState = (mask: number, buttons: readonly boolean[], axes: readonly number[], gamepadButtonMap: Map<number, SnesButton>, gamepadAxisMap: Map<string, SnesButton>): number => {
+  for (const [index, snesBtn] of gamepadButtonMap) {
+    if (index < buttons.length && buttons[index]) {
+      mask |= (1 << SNES_BUTTON_BITS[snesBtn]);
+    }
+  }
+  for (const [key, snesBtn] of gamepadAxisMap) {
+    const [axisStr, dir] = key.split(':');
+    const axisIndex = parseInt(axisStr, 10);
+    if (axisIndex < axes.length) {
+      const val = axes[axisIndex];
+      const threshold = 0.5;
+      if ((dir === '+' && val > threshold) || (dir === '-' && val < -threshold)) {
+        mask |= (1 << SNES_BUTTON_BITS[snesBtn]);
+      }
+    }
+  }
+  return mask;
+};
+
+const computeBitmask = (keyStates: Map<string, boolean>, keyboardMap: Map<string, SnesButton>, gamepadButtonMap: Map<number, SnesButton>, gamepadAxisMap: Map<string, SnesButton>, hidStates: Map<string, { buttons: boolean[]; axes: number[] }>, allowed: AllowedDevices, gamepadVidPid: Map<number, { vid: string; pid: string }>): number => {
   let mask = 0;
 
-  // Keyboard
-  for (const [code, pressed] of keyStates) {
-    if (pressed) {
-      const btn = keyboardMap.get(code);
-      if (btn !== undefined) {
-        mask |= (1 << SNES_BUTTON_BITS[btn]);
+  // Keyboard — only when the active profile actually binds keyboard keys
+  if (allowed.keyboard) {
+    for (const [code, pressed] of keyStates) {
+      if (pressed) {
+        const btn = keyboardMap.get(code);
+        if (btn !== undefined) {
+          mask |= (1 << SNES_BUTTON_BITS[btn]);
+        }
       }
     }
   }
 
-  // Web Gamepad API (XInput controllers like Xbox)
-  const gamepads = navigator.getGamepads();
-  const hidIds = new Set(webHidReader.getConnectedDeviceKeys());
-  for (const gp of gamepads) {
+  // Web Gamepad API (XInput controllers like Xbox) — only devices in the profile's map
+  for (const gp of navigator.getGamepads()) {
     if (!gp || !gp.connected) continue;
-
-    // Skip gamepad if already handled by node-hid
-    const gpIdLower = gp.id.toLowerCase();
-    let isDuplicate = false;
-    for (const hidId of hidIds) {
-      const [vid, pid] = hidId.split(':');
-      if (gpIdLower.includes(`vendor: ${vid}`) && gpIdLower.includes(`product: ${pid}`)) {
-        isDuplicate = true;
-        break;
-      }
-    }
-    if (isDuplicate) continue;
-
-    // Buttons
-    for (const [index, snesBtn] of gamepadButtonMap) {
-      if (index < gp.buttons.length && gp.buttons[index].pressed) {
-        mask |= (1 << SNES_BUTTON_BITS[snesBtn]);
-      }
-    }
-
-    // Axes
-    for (const [key, snesBtn] of gamepadAxisMap) {
-      const [axisStr, dir] = key.split(':');
-      const axisIndex = parseInt(axisStr, 10);
-      if (axisIndex < gp.axes.length) {
-        const val = gp.axes[axisIndex];
-        const threshold = 0.5;
-        if ((dir === '+' && val > threshold) || (dir === '-' && val < -threshold)) {
-          mask |= (1 << SNES_BUTTON_BITS[snesBtn]);
-        }
-      }
-    }
+    const vp = gamepadVidPid.get(gp.index);
+    const key = vp ? `${vp.vid}:${vp.pid}` : null;
+    if (!key || !allowed.gamepadKeys.has(key)) continue;
+    mask = applyDeviceState(mask, gp.buttons.map(b => b.pressed), gp.axes, gamepadButtonMap, gamepadAxisMap);
   }
 
-  // HID input (Switch Pro, PlayStation, 8BitDo)
-  for (const [, state] of hidStates) {
-    for (const [index, snesBtn] of gamepadButtonMap) {
-      if (index < state.buttons.length && state.buttons[index]) {
-        mask |= (1 << SNES_BUTTON_BITS[snesBtn]);
-      }
-    }
-
-    for (const [key, snesBtn] of gamepadAxisMap) {
-      const [axisStr, dir] = key.split(':');
-      const axisIndex = parseInt(axisStr, 10);
-      if (axisIndex < state.axes.length) {
-        const val = state.axes[axisIndex];
-        const threshold = 0.5;
-        if ((dir === '+' && val > threshold) || (dir === '-' && val < -threshold)) {
-          mask |= (1 << SNES_BUTTON_BITS[snesBtn]);
-        }
-      }
-    }
+  // HID input (Switch Pro, PlayStation, 8BitDo) — only devices in the profile's map
+  for (const [deviceKey, state] of hidStates) {
+    if (!allowed.gamepadKeys.has(deviceKey)) continue;
+    mask = applyDeviceState(mask, state.buttons, state.axes, gamepadButtonMap, gamepadAxisMap);
   }
 
   return mask;
