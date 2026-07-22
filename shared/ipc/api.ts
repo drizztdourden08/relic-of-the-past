@@ -50,6 +50,8 @@ interface ExtrasApi {
   os: string; // process.platform on Electron ('win32' | 'darwin' | 'linux')
   getSpritesBaseUrl: (romFile: string) => string;
   getFilePath: (file: File) => string;
+  // Test/automation startup flags (see electron window/startup-config.ts).
+  startup: { fresh: boolean; widgets: string[] };
 }
 
 type IpcApi = InvokeApi & SendApi & EventApi & ExtrasApi & {

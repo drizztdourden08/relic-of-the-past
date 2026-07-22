@@ -132,6 +132,7 @@ const SEND_MAP = {
   toggleFullscreen: 'window:toggleFullscreen',
   setFullscreen: 'window:setFullscreen',
   setAspectRatioLock: 'window:setAspectRatioLock',
+  appReady: 'window:appReady',
 } as const satisfies Record<string, keyof SendContract>;
 
 const EVENT_MAP = {

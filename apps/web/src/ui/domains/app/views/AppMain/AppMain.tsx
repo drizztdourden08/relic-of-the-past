@@ -23,16 +23,15 @@ import { useProfileManagement } from '@app/App/behavior/useProfileManagement';
 import { useSaveOverlay } from '@app/App/behavior/useSaveOverlay';
 import { useSaveStateSettings } from '@app/App/behavior/useSaveStateSettings';
 import { useStartup } from '@app/App/behavior/useStartup';
-import { useAutoTest } from '@app/App/behavior/useAutoTest';
-import { useDumpLayers } from '@app/App/behavior/useDumpLayers';
-import { useDumpNav } from '@app/App/behavior/useDumpNav';
-import { useSimRun } from '@app/App/behavior/useSimRun';
+import { useWasmWarmup } from '@app/App/behavior/useWasmWarmup';
+import { useDebugLaunchHooks } from '@app/App/behavior/useDebugLaunchHooks';
 import { useAppMainEffects } from '@app/App/behavior/useAppMainEffects';
 import { useCapability } from '@app/platform';
 import { TitleBar } from '../TitleBar';
 import { MobileChrome } from '../MobileChrome';
 import type { TitleBarProps } from '../TitleBar/TitleBar.type';
 import { GameLayer } from '../GameLayer';
+import { BootProgressBar } from '../BootProgressBar';
 import { SaveStateOverlay } from '../SaveStateOverlay/SaveStateOverlay';
 import { UpdateDialog } from '../../compounds/UpdateDialog';
 import './AppMain.css';
@@ -71,7 +70,7 @@ const AppMain = () => {
     onGameClear: () => game.clearGame(),
   });
   const nav = useAppNavigation({ activeProfile: profileMgmt.activeProfile, refreshLists: profileMgmt.refreshProfilesAndRoms });
-  const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null, widgetIO);
+  const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null, widgetIO, window.api.startup);
   const setExclusiveInsets = useExclusiveInsetsStore((s) => s.setInsets);
   const saveOverlay = useSaveOverlay(saveState, game.isRunning);
   const update = useAutoUpdate();
@@ -89,15 +88,17 @@ const AppMain = () => {
   useKeyboardShortcuts(nav, dialog, dismissDialog, profileMgmt.activeProfile);
 
   useStartup(profileMgmt, nav);
-  useAutoTest({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame });
-  useDumpLayers({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame, openNavWidget: () => widgets.open('navigation') });
-  useDumpNav({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame });
-  useSimRun({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame });
+  useWasmWarmup();
+  useDebugLaunchHooks({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame, openNavWidget: () => widgets.open('navigation') });
   useIpcLogBridge();
   useAppMainEffects({ isGameRunning: game.isRunning, activePage: nav.activePage, openNavWidget: () => widgets.open('navigation') });
 
   // Default notch mode until a profile loads (keeps startup windows clear of a cutout).
   useEffect(() => { applyNotchMode(true); }, []);
+
+  // Splash → full size: the UI shell has mounted, so grow the splash-sized window
+  // to the last saved bounds (electron only; no-op on web/mobile).
+  useEffect(() => { window.api?.appReady?.(); }, []);
 
   const widgetVisibility = useMemo(() => Object.fromEntries(widgets.layout.widgets.map((w) => [w.id, w.visible])), [widgets.layout]);
 
@@ -216,6 +217,8 @@ const AppMain = () => {
         onClose={() => setShowUpdateDialog(false)}
       />
       )}
+
+      <BootProgressBar />
     </Box>
   );
 };

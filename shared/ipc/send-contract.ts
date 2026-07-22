@@ -12,6 +12,7 @@ interface SendContract {
   'window:toggleFullscreen': () => void;
   'window:setFullscreen': (value: boolean) => void;
   'window:setAspectRatioLock': (ratio: number, extraHeight: number) => void;
+  'window:appReady': () => void;
 }
 
 export type { SendContract };

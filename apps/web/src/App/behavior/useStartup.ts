@@ -23,7 +23,9 @@ const useStartup = (
 
         const dumpSlot = await window.api.getDumpLayersSlot();
         const dumpNavSlot = await window.api.getDumpNavSlot();
-        const isAutoTest = testArgs.autoState !== null || !!testArgs.screenshot || dumpSlot !== null || dumpNavSlot !== null;
+        // --fresh (and other automation) starts straight in the game view with no
+        // home/profile menu in the way.
+        const isAutoTest = testArgs.autoState !== null || !!testArgs.screenshot || dumpSlot !== null || dumpNavSlot !== null || window.api.startup.fresh;
 
         if (profileList.length === 0) {
           log.app('No profiles found, showing setup screen');

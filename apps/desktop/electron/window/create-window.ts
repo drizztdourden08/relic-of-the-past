@@ -3,22 +3,88 @@ import { BrowserWindow } from 'electron';
 import { join } from 'path';
 import { is } from '@electron-toolkit/utils';
 import { loadWindowState, trackWindowState } from './window-state';
+import { parseStartupConfig, startupRendererArgs } from './startup-config';
+import { sendWindowToBack } from './send-to-back';
 
 let mainWindow: BrowserWindow | null = null;
+
+// The window opens at this fixed size to frame the boot splash, then grows to the
+// saved size once the renderer signals it's ready (restoreSavedBounds below).
+const SPLASH_WIDTH = 480;
+const SPLASH_HEIGHT = 360;
+
+// Saved bounds are captured at creation but applied only on app-ready, so the
+// splash never flashes at the (possibly maximized) full size first.
+let pendingSavedState: ReturnType<typeof loadWindowState> | null = null;
+let savedStateRestored = false;
+
+// --no-focus (test/automation) launches must never steal focus OR cover the
+// user's other windows. Tracked at module scope so restoreSavedBounds honours it
+// too (its maximize/fullscreen calls would otherwise activate + raise the window).
+let launchNoFocus = false;
+
+// --window-size opens at a fixed size; the splash→saved-size growth is skipped so
+// the window keeps exactly the requested resolution.
+let fixedWindowSize = false;
 
 const getMainWindow = (): BrowserWindow | null => {
   return mainWindow;
 };
 
+/** Show the window without activating it, then drop it behind other apps. */
+const showInBackground = (win: BrowserWindow): void => {
+  win.setAlwaysOnTop(false);
+  win.showInactive();
+  win.blur();
+  // showInactive avoids focus but still lands on top of the z-order on Windows;
+  // SetWindowPos(HWND_BOTTOM) actually puts us behind the user's other windows.
+  sendWindowToBack(win);
+};
+
+/** Grow the splash-sized window to the last saved size/position/mode. Idempotent —
+ *  fired by the renderer's app-ready signal, with a timeout fallback in createWindow. */
+const restoreSavedBounds = (): void => {
+  if (savedStateRestored || !mainWindow || !pendingSavedState) return;
+  savedStateRestored = true;
+  // A fixed --window-size launch keeps its requested resolution — no growth.
+  if (fixedWindowSize) return;
+  const saved = pendingSavedState;
+
+  if (saved.x !== undefined && saved.y !== undefined) {
+    mainWindow.setContentBounds({ x: saved.x, y: saved.y, width: saved.width, height: saved.height });
+  } else {
+    mainWindow.setContentSize(saved.width, saved.height);
+    if (!launchNoFocus) mainWindow.center();
+  }
+
+  // Start tracking normal bounds only now, so the splash size is never persisted.
+  trackWindowState(mainWindow);
+
+  // In no-focus mode, never maximize/fullscreen (both activate + raise the
+  // window). Re-assert the inactive/background state after the resize instead.
+  if (launchNoFocus) {
+    showInBackground(mainWindow);
+    return;
+  }
+
+  if (saved.isMaximized) mainWindow.maximize();
+  if (saved.isFullscreen) mainWindow.setFullScreen(true);
+};
+
 const createWindow = (): BrowserWindow => {
   const noFocus = process.argv.includes('--no-focus');
-  const saved = loadWindowState();
+  launchNoFocus = noFocus;
+  const startup = parseStartupConfig();
+  fixedWindowSize = startup.windowSize !== null;
+  pendingSavedState = loadWindowState();
+  savedStateRestored = false;
 
   mainWindow = new BrowserWindow({
-    width: saved.width,
-    height: saved.height,
+    width: startup.windowSize?.width ?? SPLASH_WIDTH,
+    height: startup.windowSize?.height ?? SPLASH_HEIGHT,
     minWidth: 360,
     minHeight: 280,
+    center: true,
     titleBarStyle: 'hidden',
     autoHideMenuBar: true,
     title: 'Relic of the Past',
@@ -35,31 +101,19 @@ const createWindow = (): BrowserWindow => {
       // The game loop drives on rAF; keep it running at full speed when the
       // window is unfocused (e.g. --no-focus automation) instead of throttled.
       backgroundThrottling: false,
+      // Forward test/automation layout flags to the renderer (read in preload).
+      additionalArguments: startupRendererArgs(startup),
     },
   });
 
-  // Restore position using content bounds to avoid invisible frame offset on Windows
-  if (saved.x !== undefined && saved.y !== undefined) {
-    mainWindow.setContentBounds({
-      x: saved.x,
-      y: saved.y,
-      width: saved.width,
-      height: saved.height,
-    });
-  }
-
-  // Start tracking normal bounds before maximizing
-  trackWindowState(mainWindow);
-
-  if (saved.isMaximized) {
-    mainWindow.maximize();
-  }
-  if (saved.isFullscreen) {
-    mainWindow.setFullScreen(true);
-  }
+  // Fallback: if the renderer never signals ready (crash/hang), grow anyway.
+  setTimeout(restoreSavedBounds, 10000);
 
   if (noFocus) {
-    mainWindow.showInactive();
+    showInBackground(mainWindow);
+    // Re-assert the background position once the first paint is ready (showing the
+    // painted frame can otherwise bounce the window back to the top of the z-order).
+    mainWindow.once('ready-to-show', () => { if (mainWindow) sendWindowToBack(mainWindow); });
   }
 
   // Let F1-F12 (and Tab) pass through to the renderer instead of being
@@ -100,4 +154,4 @@ const createWindow = (): BrowserWindow => {
   return mainWindow;
 };
 
-export { createWindow, getMainWindow };
+export { createWindow, getMainWindow, restoreSavedBounds };

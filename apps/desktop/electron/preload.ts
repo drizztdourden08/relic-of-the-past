@@ -20,6 +20,11 @@ const api: IpcApi = {
   os: process.platform,
   getSpritesBaseUrl: (romFile) => `app-sprite://sprites/${romStem(romFile)}/`,
   getFilePath: (file) => webUtils.getPathForFile(file),
+  // Test/automation layout flags, forwarded from main via additionalArguments.
+  startup: {
+    fresh: process.argv.includes('--startup-fresh'),
+    widgets: (process.argv.find((a) => a.startsWith('--startup-widgets='))?.slice('--startup-widgets='.length).split(',').filter(Boolean)) ?? [],
+  },
 
   // Flat methods generated from the channel maps
   ...buildInvoke(INVOKE_MAP),
