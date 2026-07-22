@@ -9,9 +9,15 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type { CSSProperties } from 'react';
 import { useGameUIStore } from '../../../../stores/game-ui-store';
+import { useNavigationOverlayStore } from '../../../../stores/navigation-overlay-store';
 import { getDungeonName } from '@shared/game/data/screens/game-values';
-import { wasmGetProgressIndicator, wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetRoomStairInfo } from '../../../../lib/game';
+import { wasmGetProgressIndicator, wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetRoomStairInfo, wasmGetFallHoles, wasmGetAreaHeads } from '../../../../lib/game';
 import { useScreenDataStatus, useConnectionStatus } from './useDatasetStatus';
+import { describeConnectionTiles } from './connection-tile-display';
+import { connectionIssues } from './connection-issues';
+import { useConnectionAudit } from './useConnectionAudit';
+import { useRealTransitions } from './useRealTransitions';
+import { ConnectionAuditSection } from './ConnectionAuditSection';
 import { ScreenEditorDialog } from './ScreenEditorDialog';
 import { ConnectionEditorDialog } from './ConnectionEditorDialog';
 import { Box, Text, StatusBadge, Button } from '../../../design-system/primitives';
@@ -80,12 +86,46 @@ const DatasetWidgetContent = () => {
     return wasmGetExitScreenMap().get(roomIndex) ?? null;
   }, [isIndoors, roomIndex]);
 
+  // Fall holes on the current overworld area, resolved entrance-id → room via
+  // the same head-group comparison useRealTransitions' collectFallHoles uses.
+  const detectedFallHoleRooms = useMemo(() => {
+    if (isIndoors) return [];
+    const heads = wasmGetAreaHeads();
+    const entranceRooms = wasmGetEntranceRooms();
+    const currentHead = heads ? heads[overworldScreenIndex] : overworldScreenIndex;
+    const rooms: number[] = [];
+    for (const hole of wasmGetFallHoles()) {
+      const holeHead = heads ? heads[hole.area] : hole.area;
+      if (holeHead !== currentHead) continue;
+      const room = entranceRooms?.[hole.entranceId];
+      if (room != null && room !== 0) rooms.push(room);
+    }
+    return rooms;
+  }, [isIndoors, overworldScreenIndex]);
+
   const connStatus = useConnectionStatus(
     screenStatus.screen?.id ?? null,
     detectedEntranceScreens,
     detectedStairs,
     exitScreen,
+    detectedFallHoleRooms,
   );
+
+  // Flood connections refresh the audit whenever the Navigation widget re-floods.
+  const floodConnections = useNavigationOverlayStore(s => s.connections);
+
+  // Count existing connections with completeness warnings so the reviewer sees
+  // how many are incomplete, not just how many exist.
+  const incompleteConnCount = useMemo(() => {
+    const screenId = screenStatus.screen?.id ?? null;
+    return connStatus.existingConnections.reduce((n, c) => {
+      const tileDesc = describeConnectionTiles(c, floodConnections, screenId);
+      return connectionIssues(c, tileDesc).length > 0 ? n + 1 : n;
+    }, 0);
+  }, [connStatus.existingConnections, floodConnections, screenStatus.screen]);
+  const realTransitions = useRealTransitions(isIndoors, roomIndex, floodConnections, overworldScreenIndex);
+  const realAvailable = isIndoors ? screenStatus.screen != null : floodConnections.length > 0;
+  const audit = useConnectionAudit({ screenId: screenStatus.screen?.id ?? null, unmatched: connStatus.unmatched, realTransitions, realAvailable, floodConnections });
 
   // Review helpers
   const locationReview = reviewData[locationKey] ?? { status: 'neutral' as ReviewStatus, connections: {} };
@@ -177,7 +217,7 @@ const DatasetWidgetContent = () => {
           )}
           <Box style={S.infoRow}>
             <Text style={S.infoLabel}>Connections</Text>
-            <Text>{connStatus.existingConnections.length} in dataset{connStatus.missingCount > 0 ? `, ${connStatus.missingCount} detected not mapped` : ''}</Text>
+            <Text>{connStatus.existingConnections.length} in dataset{connStatus.missingCount > 0 ? `, ${connStatus.missingCount} detected not mapped` : ''}{incompleteConnCount > 0 ? `, ${incompleteConnCount} incomplete` : ''}</Text>
           </Box>
         </Box>
         <Box style={IL.btnRow}>
@@ -189,6 +229,9 @@ const DatasetWidgetContent = () => {
           </Button>
         </Box>
       </Box>
+
+      {/* ═══ CONNECTION AUDIT ═══ */}
+      <ConnectionAuditSection badFindings={audit.badFindings} addFindings={audit.addFindings} />
 
       {/* ═══ REVIEW ═══ */}
       <Box style={S.section}>

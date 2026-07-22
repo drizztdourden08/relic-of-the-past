@@ -41,10 +41,64 @@
 
 .conn-editor__item-ids {
   font-size: var(--text-xs);
-  font-family: var(--font-mono);
   color: var(--c-text);
   cursor: pointer;
   flex: 1;
+}
+
+/* Endpoint pair: display name prominent, id code secondary. */
+.conn-editor__ep-pair {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.conn-editor__ep {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+}
+
+.conn-editor__ep-name {
+  color: var(--c-text);
+  font-weight: 600;
+}
+
+.conn-editor__ep-code {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  color: var(--c-text-muted);
+}
+
+.conn-editor__ep--unknown .conn-editor__ep-code {
+  color: var(--c-warning);
+}
+
+.conn-editor__ep-arrow {
+  color: var(--c-text-muted);
+}
+
+.conn-editor__item-edit-hint {
+  padding: var(--space-xs) 0 0 var(--space-lg);
+}
+
+/* Completeness warnings — replaces the previous silent blank. */
+.conn-editor__item-issues {
+  display: flex;
+  flex-direction: column;
+  padding-left: var(--space-lg);
+}
+
+.conn-editor__item-issue {
+  font-size: var(--text-xs);
+  color: var(--c-warning);
+}
+
+.conn-editor__item-ok {
+  font-size: var(--text-xs);
+  color: var(--c-green);
+  padding-left: var(--space-lg);
 }
 
 .conn-editor__item-edit {
@@ -109,6 +163,13 @@
   color: var(--c-text-muted);
   padding-left: var(--space-lg);
   cursor: pointer;
+}
+
+.conn-editor__item-tiles {
+  font-size: var(--text-xs);
+  color: var(--c-info);
+  font-family: var(--font-mono);
+  padding-left: var(--space-lg);
 }
 
 .conn-editor__suggested {

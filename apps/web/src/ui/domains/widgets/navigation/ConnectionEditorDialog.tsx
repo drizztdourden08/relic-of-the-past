@@ -15,6 +15,9 @@ import type { ScreenConnection } from '@shared/game/types';
 import { CONNECTION_TAG_METADATA } from '@shared/game/data/connections/tags';
 import type { DetectedConnection } from './useDatasetStatus';
 import { useConnectionEditor } from './useConnectionEditor';
+import { connectionIssues } from './connection-issues';
+import { ConnectionEndpoints } from './ConnectionEndpoints';
+import { ConnectionIssues } from './ConnectionIssues';
 import './ConnectionEditorDialog.css';
 
 interface ConnectionEditorDialogProps {
@@ -34,7 +37,7 @@ const ConnectionEditorDialog = (props: ConnectionEditorDialogProps) => {
   const { open, onClose, screenId } = props;
   const {
     step, setStep, connections, editingIdx, setEditingIdx, writing, writeError,
-    suggestedConnections, newConnections, generatedCode, targetFile,
+    suggestedConnections, newConnections, generatedCode, targetFile, tileDescriptions,
     addSuggested, addBlank, removeConnection, updateConnection, toggleTag, handleWrite,
   } = useConnectionEditor(props);
 
@@ -99,15 +102,20 @@ const ConnectionEditorDialog = (props: ConnectionEditorDialogProps) => {
                       />
                     </Box>
                   ) : (
-                    <Text className="conn-editor__item-ids" onClick={() => setEditingIdx(idx)}>
-                      {conn.from} → {conn.to}
-                    </Text>
+                    <Box className="conn-editor__item-ids" onClick={() => setEditingIdx(idx)}>
+                      <ConnectionEndpoints from={conn.from} to={conn.to} />
+                    </Box>
                   )}
                   <Box className="conn-editor__item-actions">
                     {conn.isNew && <Badge variant="warning">new</Badge>}
                     <Button variant="bare" className="conn-editor__btn-remove" onClick={() => removeConnection(idx)}>×</Button>
                   </Box>
                 </Box>
+                {editingIdx === idx && (
+                  <Box className="conn-editor__item-edit-hint">
+                    <ConnectionEndpoints from={conn.from} to={conn.to} />
+                  </Box>
+                )}
                 {editingIdx === idx && (
                   <Box className="conn-editor__item-tags">
                     {(['transit', 'barrier', 'dir', 'ctx'] as const).map(ns => (
@@ -132,6 +140,10 @@ const ConnectionEditorDialog = (props: ConnectionEditorDialogProps) => {
                     {conn.tags.map(t => t.split(':')[1]).join(', ')}
                   </Box>
                 )}
+                {tileDescriptions[conn.key] && (
+                  <Text className="conn-editor__item-tiles">{tileDescriptions[conn.key]}</Text>
+                )}
+                <ConnectionIssues issues={connectionIssues(conn, tileDescriptions[conn.key] ?? null)} />
               </Box>
             ))}
 
@@ -143,7 +155,7 @@ const ConnectionEditorDialog = (props: ConnectionEditorDialogProps) => {
                   .filter(s => !connections.some(c => c.from === s.from && c.to === s.to))
                   .map(s => (
                     <Box key={s.key} className="conn-editor__suggested-item">
-                      <Text>{s.from} → {s.to}</Text>
+                      <ConnectionEndpoints from={s.from} to={s.to} />
                       <Text className="conn-editor__suggested-tags">
                         {s.tags.map(t => t.split(':')[1]).join(', ')}
                       </Text>

@@ -3,7 +3,7 @@ import { useEffect, useMemo } from 'react';
 import { Box, Image } from '@ds/primitives';
 import { WidgetManager, useWidgetLayout } from '@ds/composites/Widget';
 import { Dialog } from '@ds/composites/Dialog';
-import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, DatasetWidgetContent, CheatsWidgetContent } from '@domains/widgets';
+import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, LogsWidgetContent, DebugWidgetContent, NavigationWidgetContent, DatasetWidgetContent, CheatsWidgetContent, SimulatorWidgetContent } from '@domains/widgets';
 import { loadTrackerStateBlob, saveTrackerStateBlob } from '@app/lib/tracker-state-io';
 import { primeLiveSettings } from '@app/lib/game';
 import { useExclusiveInsetsStore } from '@app/stores/exclusive-insets-store';
@@ -26,6 +26,7 @@ import { useStartup } from '@app/App/behavior/useStartup';
 import { useAutoTest } from '@app/App/behavior/useAutoTest';
 import { useDumpLayers } from '@app/App/behavior/useDumpLayers';
 import { useDumpNav } from '@app/App/behavior/useDumpNav';
+import { useSimRun } from '@app/App/behavior/useSimRun';
 import { useAppMainEffects } from '@app/App/behavior/useAppMainEffects';
 import { useCapability } from '@app/platform';
 import { TitleBar } from '../TitleBar';
@@ -91,6 +92,7 @@ const AppMain = () => {
   useAutoTest({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame });
   useDumpLayers({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame, openNavWidget: () => widgets.open('navigation') });
   useDumpNav({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame });
+  useSimRun({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame });
   useIpcLogBridge();
   useAppMainEffects({ isGameRunning: game.isRunning, activePage: nav.activePage, openNavWidget: () => widgets.open('navigation') });
 
@@ -117,6 +119,7 @@ const AppMain = () => {
     onShowSpriteDebug: () => nav.setActivePage('sprite-debug'),
     onShowConnectionDebug: () => widgets.toggle('navigation'),
     onToggleDataset: () => widgets.toggle('dataset'),
+    onToggleSimulator: () => widgets.toggle('simulator'),
     onShowShadowEditor: handleShowShadowEditor,
     onShowAbout: () => nav.setActivePage('about'),
     activeProfile: profileMgmt.activeProfile,
@@ -188,6 +191,7 @@ const AppMain = () => {
             navigation: <NavigationWidgetContent />,
             dataset: <DatasetWidgetContent />,
             cheats: <CheatsWidgetContent />,
+            simulator: <SimulatorWidgetContent />,
           }}
         </WidgetManager>
 

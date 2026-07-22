@@ -24,6 +24,10 @@ void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id);
 void GameHook_TriggerNpcCheck(uint8 flag_type, uint8 flag_mask, uint8 item_id,
                               uint8 sprite_type_id, uint8 post_gfx);
 
+// Programmatically trigger a standing-overworld-item check: sets the screen's
+// event bit and grants the item.
+void GameHook_TriggerOverworldCheck(uint8 screen, uint8 mask, uint8 item_id);
+
 // ─── Cheats (cheats.c) ───
 
 // Returns the current outgoing damage multiplier (1 = normal).

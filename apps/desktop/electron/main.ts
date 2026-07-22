@@ -19,6 +19,8 @@ import { registerInputHandlers, stopInputHandlers } from './input';
 import { registerTestHandlers } from './test/ipc-handlers';
 import { registerDumpLayersHandler } from './debug/dump-layers-handler';
 import { registerDumpNavHandler } from './debug/dump-nav-handler';
+import { registerSimRunHandler } from './debug/sim-run-handler';
+import { registerSimLogHandlers } from './debug/sim-log-handler';
 import { registerConnectionHandlers } from './connections/ipc-handlers';
 import { registerScreenEditorHandlers } from './screen-editor/ipc-handlers';
 import { registerShadowCastingHandlers } from './shadow-casting';
@@ -47,6 +49,8 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerTestHandlers },
   { register: registerDumpLayersHandler },
   { register: registerDumpNavHandler },
+  { register: registerSimRunHandler },
+  { register: registerSimLogHandlers },
   { register: registerConnectionHandlers },
   // Screen editor writes to source files — a dev authoring tool only. Never
   // register its IPC channel in a packaged build (prevents renderer file writes).

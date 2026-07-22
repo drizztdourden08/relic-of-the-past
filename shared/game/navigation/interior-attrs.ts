@@ -29,8 +29,10 @@ const buildInteriorAttrs = (): Readonly<Record<number, TileAttrDef>> => {
   t[0x70] = { pass: 'obstacle', req: 'lift.1', labels: ['pot'], cat: 'liftable' };
   t[0x71] = { pass: 'obstacle', req: 'lift.1', labels: ['pot'], cat: 'liftable' };
   t[0x72] = { pass: 'obstacle', req: 'lift.1', labels: ['pot'], cat: 'liftable' };
+  // 0x73-0x7F share TileBehavior_ManipulablyReplaced with the pots above, but carry
+  // pushable blocks: Link shoves them aside with no item, so they never block navigation.
   for (let attr = 0x73; attr <= 0x7F; attr++) {
-    t[attr] = { pass: 'blocked', labels: ['wall'], cat: 'special' };
+    t[attr] = { pass: 'free', labels: ['pushable block'], cat: 'liftable' };
   }
   // 0x80-0x8D are door passage tiles stamped by Dungeon_LoadDoorAttribute().
   // They mark open doorways between rooms and must be passable for flood fill.
@@ -68,9 +70,11 @@ const buildInteriorAttrs = (): Readonly<Record<number, TileAttrDef>> => {
   for (let attr = 0xC0; attr <= 0xCF; attr++) {
     t[attr] = { pass: 'blocked', labels: ['torch'], cat: 'special' };
   }
-  // 0xF0-0xFF: TileBehavior_FlaggableDoor — solid until flag set (R14 |= bits).
+  // 0xF0-0xFF: TileBehavior_FlaggableDoor — solid until a flag is set. In practice these are
+  // the bombable/cracked walls whose flag is set by blasting them open, so Link passes once he
+  // has bombs. Model them as a bomb-gated obstacle rather than a permanent wall.
   for (let attr = 0xF0; attr <= 0xFF; attr++) {
-    t[attr] = { pass: 'blocked', labels: ['flaggable door'], cat: 'special' };
+    t[attr] = { pass: 'obstacle', req: 'bombs', labels: ['bombable wall'], cat: 'special' };
   }
 
   return t;

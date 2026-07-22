@@ -34,7 +34,16 @@ const FEATURE_FLAGS = {
   smoothTransitions:      67108864,
   inventoryReorder:       134217728,
   secondaryItemSlots:     268435456,
+  autoSkipDialog:         536870912,
 } as const;
+
+// When non-null, forces the auto-skip-dialog bit to this value in the pushed features word regardless of
+// the user's setting; null defers to the setting. Used by the gameplay simulator during its runs.
+let autoSkipDialogOverride: boolean | null = null;
+
+const setAutoSkipDialogOverride = (on: boolean | null): void => {
+  autoSkipDialogOverride = on;
+};
 
 // PPU render flag values — must match ppu.h
 const PPU_FLAGS = {
@@ -63,6 +72,8 @@ const buildFeatureFlags = (s: GameSettings): number => {
   if (s.itemSwitchLRLimit) flags |= FEATURE_FLAGS.switchLRLimit;
   if (s.inventoryReorder) flags |= FEATURE_FLAGS.inventoryReorder;
   if (s.secondaryItemSlots) flags |= FEATURE_FLAGS.secondaryItemSlots;
+  if (autoSkipDialogOverride === null ? s.autoSkipDialog : autoSkipDialogOverride)
+    flags |= FEATURE_FLAGS.autoSkipDialog;
   if (s.turnWhileDashing) flags |= FEATURE_FLAGS.turnWhileDashing;
   if (s.mirrorToDarkworld) flags |= FEATURE_FLAGS.mirrorToDarkworld;
   if (s.collectItemsWithSword) flags |= FEATURE_FLAGS.collectItemsWithSword;
@@ -117,4 +128,4 @@ const buildPpuFlags = (s: GameSettings): number => {
   return flags;
 };
 
-export { buildFeatureFlags, buildPpuFlags, buildFeatureWords };
+export { buildFeatureFlags, buildPpuFlags, buildFeatureWords, setAutoSkipDialogOverride };

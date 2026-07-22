@@ -275,6 +275,22 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
     affectsVanillaParity: true,
     live: true,
   },
+  {
+    id: 'autoSkipDialog',
+    label: 'Auto-skip dialog',
+    description: 'Renders dialog text instantly and auto-advances message-box waits; interactive choice prompts still wait for you.',
+    userMessage:
+      'Shows dialog text at once and dismisses message boxes for you, including item-get text, without skipping anything that happens when a dialog ends. Yes/no and shop prompts still wait for your answer. Not in the original game — leave off for vanilla parity.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'relic',
+    flag: 'kFeatures0_AutoSkipDialog',
+    bit: 536870912,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
 ]
 
 const FEATURES: FeatureDef[] = [

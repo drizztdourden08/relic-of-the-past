@@ -93,4 +93,24 @@ const evaluateEntry = (tile: TilePassability, dr: number, dc: number, requiremen
   }
 };
 
-export { bodyTiles, getNewTiles, findStartBody, isBodyPassable, canLeaveLedge, evaluateEntry };
+const stampGateTokens = (
+  tiles: readonly [number, number][],
+  gateMap: ReadonlyMap<string, readonly string[]> | undefined,
+  requirements: Set<string>,
+  newReqs: Set<string>,
+): Set<string> => {
+  if (!gateMap) return newReqs;
+  let result = newReqs;
+  for (const [tr, tc] of tiles) {
+    const tokens = gateMap.get(`${tr},${tc}`);
+    if (!tokens) continue;
+    for (const token of tokens) {
+      if (requirements.has(token) || result.has(token)) continue;
+      if (result === requirements) result = new Set(requirements);
+      result.add(token);
+    }
+  }
+  return result;
+};
+
+export { bodyTiles, getNewTiles, findStartBody, isBodyPassable, canLeaveLedge, evaluateEntry, stampGateTokens };

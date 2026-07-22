@@ -90,6 +90,7 @@ int WasmGetProgressFlags(void) {
   g_progress_buf[10] = (uint8)(save_dung_info[0x123]);
   g_progress_buf[11] = (uint8)(save_dung_info[0x11E]);
   g_progress_buf[12] = player_sleep_in_bed_state;
+  g_progress_buf[13] = follower_indicator;  // tagalong id (0 = none); NPC-presence gate
   return (int)g_progress_buf;
 }
 

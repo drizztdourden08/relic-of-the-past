@@ -11,6 +11,7 @@ import type { PlaySession } from '@shared/types/session';
 import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
 import type { LanguagePack, LanguageSummary } from '@shared/types/language';
 import type { DataLocation, StorageSummary, FileStat } from '@shared/platform';
+import type { SimRunConfig } from '@shared/game/simulation';
 
 type Result = { success: boolean; error?: string };
 type MsuResult = { success: boolean; fileCount?: number; error?: string };
@@ -166,6 +167,12 @@ interface InvokeContract {
   'debug:dumpLayers': (data: unknown) => Promise<string>;
   'debug:getDumpNavSlot': () => Promise<number | null>;
   'debug:dumpNav': (data: unknown) => Promise<string>;
+  'debug:getSimRunConfig': () => Promise<SimRunConfig | null>;
+  'debug:writeSimRun': (data: unknown) => Promise<string>;
+
+  // Simulator run log (detailed JSONL sink)
+  'sim:appendLog': (args: { runId: string; line: string }) => Promise<Result>;
+  'sim:openLog': (args: { runId: string }) => Promise<Result>;
 
   // Shadow casting (nested namespace in the friendly API)
   'shadow-casting:load': () => Promise<ShadowCastingProject>;
@@ -174,7 +181,8 @@ interface InvokeContract {
 
   // Screen editor (dev-only, nested namespace)
   'screenEditor:writeScreen': (args: { filePath: string; code: string; screenId: string | null }) => Promise<Result>;
-  'screenEditor:writeConnections': (args: { filePath: string; code: string }) => Promise<Result>;
+  'screenEditor:writeConnections': (args: { filePath: string; code?: string; mode?: 'insert' | 'remove' | 'replace'; from?: string; to?: string }) => Promise<Result>;
+  'screenEditor:writeCheck': (args: { filePath: string; code: string; checkId: string | null }) => Promise<Result>;
   'screenEditor:appendRegistry': (args: { type: 'area' | 'location'; entries: Array<{ id: string; name: string; world?: string; areaId?: string }> }) => Promise<Result>;
 
   // Auto-updater (nested namespace)

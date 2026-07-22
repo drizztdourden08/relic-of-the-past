@@ -37,6 +37,7 @@ type TraversalRequirement =
   | 'book' | 'shovel' | 'net' | 'bottle'
   | 'agahnim.0' | 'agahnim.1' | 'rescue_zelda' | 'castle_gate'
   | `smallkey:${string}` | `bigkey:${string}`
+  | `event:${string}`
   ;
 
 /**

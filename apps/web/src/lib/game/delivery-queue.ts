@@ -6,33 +6,8 @@
  */
 
 import { getModule } from './wasm-bridge';
-
-// ─── Types ───
-
-interface DeliveryEntry {
-  id: string;
-  /** Human-readable message shown in the queue indicator */
-  message: string;
-  /** Source tag: 'cheat', 'randomizer', player name, etc. */
-  source: string;
-  /** The action to execute when Link can receive */
-  action: DeliveryAction;
-  /** Timestamp when enqueued */
-  enqueuedAt: number;
-}
-
-type DeliveryAction =
-  | { type: 'give_item'; itemId: number }
-  | { type: 'trigger_check'; roomId: number; chestIndex: number; itemId: number }
-  | { type: 'trigger_npc_check'; flagType: number; flagMask: number; itemId: number; spriteType: number; postGfx: number }
-  | { type: 'custom'; execute: () => void };
-
-interface DeliveryQueueState {
-  pending: DeliveryEntry[];
-  delivering: DeliveryEntry | null;
-}
-
-type StateListener = (state: DeliveryQueueState) => void;
+import { log } from '../log-bus';
+import type { DeliveryEntry, DeliveryAction, DeliveryQueueState, StateListener } from './delivery-queue.type';
 
 // ─── Queue Implementation ───
 
@@ -42,8 +17,16 @@ let rafId: number | null = null;
 let listeners: Set<StateListener> = new Set();
 let nextId = 0;
 let cooldownFrames = 0;
+// Whether the in-flight delivery has been observed to make the game busy (WasmCanReceiveItem
+// false). We only complete once it goes busy THEN ready again, so an item still incoming can't
+// resolve on the same frame it executed. Frames counted since execute, for the stuck-delivery timeout.
+let deliveringBecameBusy = false;
+let deliveringFrames = 0;
 
 const DELIVERY_COOLDOWN = 30; // frames between deliveries (~0.5s at 60fps)
+// Safety cap so a delivery that never reports ready again can't hang a simulator run forever
+// (~10s at 60fps). On timeout we log and complete anyway.
+const DELIVERY_TIMEOUT_FRAMES = 600;
 
 const generateId = (): string => {
   return `dlv_${Date.now()}_${nextId++}`;
@@ -97,11 +80,20 @@ const tick = (): void => {
   }
 
   if (delivering) {
-    // Wait for the previous delivery to finish (Link becomes available again)
-    if (canReceive()) {
+    deliveringFrames++;
+    const ready = canReceive();
+    if (!ready) deliveringBecameBusy = true;
+    const timedOut = deliveringFrames >= DELIVERY_TIMEOUT_FRAMES;
+    // Complete only once the game actually consumed the item (busy → ready), or on timeout so a
+    // stuck delivery can't hang the run. Resolving here — not at execute time — is what makes the
+    // simulator's trigger() wait for the pickup + item-get dialog to fully finish.
+    if ((ready && deliveringBecameBusy) || timedOut) {
+      const done = delivering;
       delivering = null;
       cooldownFrames = DELIVERY_COOLDOWN;
       notify();
+      if (timedOut && !ready) log.app(`Delivery "${done.message}" timed out waiting for pickup to finish`, 'warn');
+      try { done.onComplete?.(); } catch { /* ignore */ }
     }
     return;
   }
@@ -112,19 +104,22 @@ const tick = (): void => {
   // Deliver next item
   const entry = queue.shift()!;
   delivering = entry;
+  deliveringBecameBusy = false;
+  deliveringFrames = 0;
   notify();
   executeAction(entry.action);
 };
 
 // ─── Public API ───
 
-const enqueue = (message: string, source: string, action: DeliveryAction): string => {
+const enqueue = (message: string, source: string, action: DeliveryAction, onComplete?: () => void): string => {
   const entry: DeliveryEntry = {
     id: generateId(),
     message,
     source,
     action,
     enqueuedAt: Date.now(),
+    onComplete,
   };
   queue.push(entry);
   notify();
@@ -140,10 +135,18 @@ const remove = (id: string): boolean => {
 };
 
 const clear = (): void => {
+  // Resolve any awaited completions so a dropped delivery can't leave the simulator's trigger()
+  // promise hanging forever.
+  const dropped = delivering ? [delivering, ...queue] : [...queue];
   queue = [];
   delivering = null;
+  deliveringBecameBusy = false;
+  deliveringFrames = 0;
   cooldownFrames = 0;
   notify();
+  for (const entry of dropped) {
+    try { entry.onComplete?.(); } catch { /* ignore */ }
+  }
 };
 
 const peek = (): DeliveryEntry | undefined => {
@@ -184,4 +187,4 @@ const deliveryQueue = {
 };
 
 export { enqueue, remove, clear, peek, size, subscribe, startProcessing, stopProcessing, deliveryQueue };
-export type { DeliveryEntry, DeliveryAction, DeliveryQueueState };
+export type { DeliveryEntry, DeliveryAction, DeliveryQueueState } from './delivery-queue.type';

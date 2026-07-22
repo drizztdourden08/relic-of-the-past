@@ -3,7 +3,7 @@ import type { ScreenConnection } from '../../../types';
 
 const LW_PASSAGE_CONNECTIONS: ScreenConnection[] = [
   // Hyrule Castle Secret Entrance
-  { from: 'lw-1b', to: 'hyrule-castle-secret-entrance', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance'] },
+  { from: 'lw-1b', to: 'hyrule-castle-secret-passage', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance'] },
   { from: 'light-world-rain', to: 'hyrule-castle-secret-entrance', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance', 'barrier:event'] },
   { from: 'hyrule-castle-courtyard', to: 'hyrule-castle-secret-entrance', tags: ['transit:stairs', 'dir:two-way', 'ctx:entrance'] },
   { from: 'hyrule-castle-secret-entrance', to: 'lw-1b', tags: ['transit:door', 'dir:one-way', 'ctx:internal'] },

@@ -8,7 +8,9 @@
 import type { ScreenTag } from './screens/tags';
 import type { ConnectionTag } from './connections/tags';
 import type { VariantCondition } from '../types';
+import type { ConnectionNavData } from '../navigation/nav-data.types';
 import { getDungeonName } from './screens/game-values';
+import { serializeConnectionNav } from './connection-nav-codegen';
 
 interface ScreenCodegenInput {
   id: string;
@@ -34,6 +36,7 @@ interface ConnectionCodegenInput {
   from: string;
   to: string;
   tags: readonly ConnectionTag[];
+  nav?: ConnectionNavData;
 }
 
 const hex = (n: number): string => {
@@ -79,7 +82,8 @@ const serializeScreen = (screen: ScreenCodegenInput, indent = '  '): string => {
 
 const serializeConnection = (conn: ConnectionCodegenInput, indent = '  '): string => {
   const tagStr = conn.tags.map(t => `'${t}'`).join(', ');
-  return `${indent}{ from: '${conn.from}', to: '${conn.to}', tags: [${tagStr}] },`;
+  const navStr = conn.nav ? `, nav: ${serializeConnectionNav(conn.nav)}` : '';
+  return `${indent}{ from: '${conn.from}', to: '${conn.to}', tags: [${tagStr}]${navStr} },`;
 };
 
 const escapeSingleQuote = (s: string): string => {

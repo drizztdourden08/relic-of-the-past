@@ -15,5 +15,6 @@ const CHECK_BY_ID = new Map<string, CheckDefinition>(
 export * from './tags';
 export * from './grouping';
 export * from './flags';
+export type { PresenceCondition, BitState } from './presence-condition';
 
 export { ALL_CHECKS, CHECK_BY_ID };

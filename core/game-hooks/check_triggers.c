@@ -154,3 +154,21 @@ void WasmTriggerNpcCheck(int flag_type, int flag_mask, int item_id,
   GameHook_TriggerNpcCheck((uint8)flag_type, (uint8)flag_mask, (uint8)item_id,
                            (uint8)sprite_type_id, (uint8)post_gfx);
 }
+
+// ─── Overworld Check Trigger ───
+
+void GameHook_TriggerOverworldCheck(uint8 screen, uint8 mask, uint8 item_id) {
+  save_ow_event_info[screen] |= mask;
+  printf("[GameHook] TriggerOverworldCheck: save_ow_event_info[0x%02x] |= 0x%02x → 0x%02x, item=0x%02x\n",
+         screen, mask, save_ow_event_info[screen], item_id);
+
+  item_receipt_method = 0;
+  if (item_id != 0xFF) {
+    Link_ReceiveItem(item_id, 0);
+  }
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmTriggerOverworldCheck(int screen, int mask, int item_id) {
+  GameHook_TriggerOverworldCheck((uint8)screen, (uint8)mask, (uint8)item_id);
+}

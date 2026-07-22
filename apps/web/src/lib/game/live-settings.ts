@@ -31,6 +31,9 @@ let lastPauseHidden = false;
 let lastMasterVolume = 100;
 let lastMusicVol = 128; // 0-128 WASM scale
 let lastSfxVol = 128;  // 0-128 WASM scale
+// Last full settings pushed, so a live override (e.g. the simulator's auto-skip-dialog force) can
+// recompute and re-push the features word without the caller holding the settings object.
+let lastSettings: GameSettings | null = null;
 
 const pushLiveSettings = (settings: GameSettings): boolean => {
   const mod = getModule();
@@ -40,6 +43,7 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
   }
 
   try {
+    lastSettings = settings;
     const features = buildFeatureFlags(settings);
     mod.ccall('WasmSetFeatures', null, ['number'], [features]);
 
@@ -131,7 +135,24 @@ const reassertLiveFlagsAfterLoad = (): void => {
   reassertVolumes();
 };
 
+/**
+ * Recompute and re-push only the features word. Lets a live feature override
+ * (e.g. the simulator forcing auto-skip-dialog on) reach the core immediately.
+ * Falls back to DEFAULT_SETTINGS when no settings have been pushed/primed yet, so
+ * the override still reaches the core on a fresh session (buildFeatureFlags ORs
+ * the override in regardless of the base settings).
+ */
+const reassertFeatureFlags = (): void => {
+  const mod = getModule();
+  if (!mod) return;
+  const settings = lastSettings ?? DEFAULT_SETTINGS;
+  try { mod.ccall('WasmSetFeatures', null, ['number'], [buildFeatureFlags(settings)]); } catch { /* ignore */ }
+};
+
 const primeLiveSettings = (settings: GameSettings): void => {
+  // Seed lastSettings so a live override (simulator auto-skip-dialog) can recompute and re-push
+  // the features word even before the user changes a setting to trigger a full pushLiveSettings.
+  lastSettings = settings;
   lastBackdropBlack = !!settings.forceBackdropBlack;
   const hideHud = settings.hudMode === 'enhanced' && settings.hudEnhancedParts.includes('main');
   lastHudHidden = hideHud;
@@ -142,4 +163,4 @@ const primeLiveSettings = (settings: GameSettings): void => {
   lastSfxVol = settings.sfxMuted ? 0 : Math.round(settings.sfxVolume * 1.28);
 };
 
-export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, primeLiveSettings };
+export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, primeLiveSettings };

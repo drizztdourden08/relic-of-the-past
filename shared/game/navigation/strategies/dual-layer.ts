@@ -3,7 +3,7 @@ import type { TilePassability } from '../types';
 import type { TileAttrContext } from '../tile-attrs';
 import { GRID_SIZE } from '../types';
 import type { LayerStrategy, BFSCell, BFSExpansionResult, QuadrantBounds } from './layer-strategy';
-import { bodyTiles, getNewTiles, canLeaveLedge, evaluateEntry } from './bfs-helpers';
+import { bodyTiles, getNewTiles, canLeaveLedge, evaluateEntry, stampGateTokens } from './bfs-helpers';
 import { buildDualLayerTileResult, SWAP_STAIR_ATTRS } from './dual-layer-build-result';
 import type { DualLayerTileResult } from './dual-layer-build-result';
 
@@ -17,6 +17,7 @@ class DualLayerStrategy implements LayerStrategy {
   private readonly rawAttrs: [number[][], number[][]];
   private readonly tileContext: TileAttrContext;
   private readonly startLayer: 0 | 1;
+  private readonly gateMap?: ReadonlyMap<string, readonly string[]>;
   private readonly traversedStairTiles: { layer: 0 | 1; row: number; col: number; reqs: Set<string> }[] = [];
   private readonly traversedLedgeTiles: { row: number; col: number; reqs: Set<string> }[] = [];
 
@@ -25,11 +26,13 @@ class DualLayerStrategy implements LayerStrategy {
     rawAttrs: [number[][], number[][]],
     tileContext: TileAttrContext,
     startLayer: 0 | 1,
+    gateMap?: ReadonlyMap<string, readonly string[]>,
   ) {
     this.grids = grids;
     this.rawAttrs = rawAttrs;
     this.tileContext = tileContext;
     this.startLayer = startLayer;
+    this.gateMap = gateMap;
   }
 
   getGrid(layer: 0 | 1): TilePassability[][] { return this.grids[layer]; }
@@ -111,6 +114,7 @@ class DualLayerStrategy implements LayerStrategy {
     }
     if (!canMove) return [];
 
+    newReqs = stampGateTokens(newTiles, this.gateMap, requirements, newReqs);
     return [{ row: nr, col: nc, layer, requirements: newReqs }];
   }
 

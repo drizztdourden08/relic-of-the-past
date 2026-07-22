@@ -118,6 +118,10 @@ const INVOKE_MAP = {
   writeDumpLayers: 'debug:dumpLayers',
   getDumpNavSlot: 'debug:getDumpNavSlot',
   writeDumpNav: 'debug:dumpNav',
+  getSimRunConfig: 'debug:getSimRunConfig',
+  writeSimRun: 'debug:writeSimRun',
+  appendSimLog: 'sim:appendLog',
+  openSimLog: 'sim:openLog',
 } as const satisfies Record<string, keyof InvokeContract>;
 
 const SEND_MAP = {

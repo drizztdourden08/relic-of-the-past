@@ -36,12 +36,18 @@ const processStraightCliffs = (grid: TilePassability[][], rawAttr: number[][], l
       if (indoorDirs && (HORIZ_LEDGE_ATTRS.has(attr) || VERT_LEDGE_ATTRS.has(attr))) {
         ({ dr, dc, dir } = indoorDirs.get(row * GRID_SIZE + col)!);
 
-        // Link's body is 2 tiles wide: a jump only exists where a perpendicular neighbor
-        // trigger jumps the SAME way. Kills false 1-wide arrows (e.g. beside staircases,
-        // where a lone trigger's neighbor infers the opposite direction).
+        // Link's body is 2 tiles wide, so a jump exists only where an adjacent trigger
+        // jumps the SAME way AND is itself standable: its approach tile — the floor Link
+        // launches from, one step back against the jump direction — must not be a wall.
+        // A same-direction neighbor pinned against a wall holds no part of Link's body,
+        // so it forms no usable pair.
         const [pr, pc] = dr !== 0 ? [0, 1] : [1, 0];
-        const sameDir = (r2: number, c2: number) => indoorDirs.get(r2 * GRID_SIZE + c2)?.dir === dir;
-        if (!sameDir(row - pr, col - pc) && !sameDir(row + pr, col + pc)) continue;
+        const pairs = (r2: number, c2: number): boolean => {
+          if (indoorDirs.get(r2 * GRID_SIZE + c2)?.dir !== dir) return false;
+          const ar = r2 - dr, ac = c2 - dc;
+          return ar >= 0 && ar < GRID_SIZE && ac >= 0 && ac < GRID_SIZE && !CLIFF_WALL.has(rawAttr[ar][ac]);
+        };
+        if (!pairs(row - pr, col - pc) && !pairs(row + pr, col + pc)) continue;
       } else {
         const fixed = CLIFF_DIRS[attr];
         if (!fixed) continue;

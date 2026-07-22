@@ -8,5 +8,6 @@ export { detectRequirements, INVENTORY_PROGRESSION } from './requirement-detecto
 export type { RequirementDetectorInput, DetectedRequirement } from './requirement-detector';
 export { buildScreenNavUpdates } from './screen-updater';
 export type { ScreenNavUpdate, ScreenUpdaterInput } from './screen-updater';
-export { transitTypeFromTags, buildConnectionNavUpdates } from './connection-updater';
+export { transitTypeFromTags, isBidirectional, buildConnectionNavUpdates } from './connection-updater';
 export type { ConnectionNavUpdate, ConnectionUpdaterInput } from './connection-updater';
+export { buildConnectionNav } from './connection-nav-from-flood';

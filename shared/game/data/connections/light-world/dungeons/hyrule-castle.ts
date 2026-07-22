@@ -7,7 +7,6 @@ const LW_HYRULE_CASTLE_CONNECTIONS: ScreenConnection[] = [
   { from: 'lw-1b', to: 'hc-0x61', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'lw-1b', to: 'hc-0x62', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'lw-23', to: 'hc-0x80', tags: ['transit:hole', 'dir:two-way', 'ctx:dungeon-enter'] },
-  { from: 'lw-2c', to: 'hc-0x51', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'lw-14', to: 'hc-0x18', tags: ['transit:grave', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'lw-14', to: 'hc-0x11', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
   { from: 'hc-0x01', to: 'hc-0x72', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },

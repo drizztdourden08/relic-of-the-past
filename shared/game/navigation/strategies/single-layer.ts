@@ -4,7 +4,7 @@ import type { TileAttrContext } from '../tile-attrs';
 import { getHookshotTargetTiles } from '../tile-attrs';
 import { GRID_SIZE, TRAVERSAL_DIR_OFFSET, STAIRS_TRAVERSAL_STATE } from '../types';
 import type { LayerStrategy, BFSCell, BFSExpansionResult, QuadrantBounds } from './layer-strategy';
-import { bodyTiles, getNewTiles, canLeaveLedge, evaluateEntry } from './bfs-helpers';
+import { bodyTiles, getNewTiles, canLeaveLedge, evaluateEntry, stampGateTokens } from './bfs-helpers';
 
 /**
  * Single-layer BFS strategy. No cross-layer transitions.
@@ -15,11 +15,13 @@ class SingleLayerStrategy implements LayerStrategy {
   private readonly grid: TilePassability[][];
   private readonly rawAttr: number[][];
   private readonly tileContext: TileAttrContext;
+  private readonly gateMap?: ReadonlyMap<string, readonly string[]>;
 
-  constructor(grid: TilePassability[][], rawAttr: number[][], tileContext: TileAttrContext) {
+  constructor(grid: TilePassability[][], rawAttr: number[][], tileContext: TileAttrContext, gateMap?: ReadonlyMap<string, readonly string[]>) {
     this.grid = grid;
     this.rawAttr = rawAttr;
     this.tileContext = tileContext;
+    this.gateMap = gateMap;
   }
 
   getGrid(_layer: 0 | 1): TilePassability[][] { return this.grid; }
@@ -59,6 +61,7 @@ class SingleLayerStrategy implements LayerStrategy {
     }
     if (!canMove) return [];
 
+    newReqs = stampGateTokens(newTiles, this.gateMap, requirements, newReqs);
     return [{ row: nr, col: nc, layer: 0, requirements: newReqs }];
   }
 
