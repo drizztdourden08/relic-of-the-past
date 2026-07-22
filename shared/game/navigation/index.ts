@@ -48,6 +48,10 @@ export { PriorityQueue } from './core/priority-queue';
 export { buildScreenBundle } from './screen-bundles';
 export type { ScreenBundle } from './screen-bundles';
 
+// ─── Door Gates (door records → BFS gated cells) ─────────────────────────────
+export { doorRequirement, buildDoorGates, DOOR_KIND } from './door-gates';
+export type { DoorGateInput, DoorGate } from './door-gates';
+
 // ─── Navigation Data Types (for analysis + pathfinder) ───────────────────────
 export type {
   TraversalRequirement, RequirementSet, ConnectionTransitType,

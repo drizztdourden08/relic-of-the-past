@@ -20,9 +20,11 @@
  *   [10] = save_dung_info[0x123] lo (Mini Moldorm Cave room flag)
  *   [11] = save_dung_info[0x11E] lo (Hype Cave room flag)
  *   [12] = player_sleep_in_bed_state (0=asleep, 1=uncle woke, 2=out of bed)
+ *   [13] = follower_indicator (tagalong id; 0=none) — used by NPC presence gating
  *
  * Source: core/zelda3/src/sprite_main.c (NPC handlers)
  */
+import type { PresenceCondition } from '../presence-condition';
 
 interface NpcCheckConfig {
   // ─── Detection (bridge polling) ───
@@ -42,12 +44,31 @@ interface NpcCheckConfig {
   spriteType: number;
   /** sprite_graphics value to set after trigger (post-check visual) */
   postGfx: number;
+  /**
+   * Native room index where this NPC actually gives its check. When set, the
+   * simulator's sprite→check matcher only binds a discovered sprite to this
+   * config if the sprite's live room equals `room` — needed when the same
+   * sprite type appears in more than one room (the Uncle 0x73 spawns both in
+   * Link's house intro room 0x104 and the sword-giving secret passage 0x55).
+   * Omit for NPCs whose sprite type is unambiguous; those match by type alone.
+   */
+  room?: number;
 
   // ─── Documentation ───
   /** What visually happens to the NPC after the check */
   visualNote: string;
   /** Source function in sprite_main.c */
   sourceFunc: string;
+
+  // ─── Presence (simulator) ───
+  /**
+   * Declarative spawn condition the simulator evaluates against live game state
+   * to decide whether this NPC is actually present at the current progress. This
+   * is the sanctioned single exception to the sim's "detection is data-free" rule
+   * (see presence-condition.ts). Omit it for unconditional NPCs — absent means
+   * "always present when the room is reachable".
+   */
+  presence?: PresenceCondition;
 }
 
 /**
@@ -70,8 +91,14 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
     flagType: 0, flagMask: 0x01,
     itemId: 0x00,
     spriteType: 0x73, postGfx: 1,
+    room: 0x55,
     visualNote: 'Sword/shield disappear from hands (lying down pose)',
     sourceFunc: 'Uncle_InPassage',
+    // Sprite 0x73 spawns in two rooms: Link's house intro room (0x104, the
+    // scripted uncle — NOT a check) and the secret passage (0x55, the sword
+    // check). `room: 0x55` binds this config to the passage only, so the house
+    // uncle is never matched. No presence gate: the passage uncle is available
+    // until collected, and the engine's done-set stops re-discovery in a run.
   },
 
   // ═══════════════════════════════════════════════════════════════
@@ -87,6 +114,8 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
     spriteType: 0x52, postGfx: 12,
     visualNote: 'Zora submerges after giving item (gfx 12)',
     sourceFunc: 'Sprite_52_KingZora',
+    // Only offers the Flippers while Link doesn't already own them.
+    presence: { item: 'Flippers', owned: false },
   },
 
   // ═══════════════════════════════════════════════════════════════
@@ -132,6 +161,9 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
     spriteType: 0xAD, postGfx: 0,
     visualNote: 'Stays seated (frame-based animation)',
     sourceFunc: 'Sprite_AD_OldMan',
+    // Present only when Link has no follower in tow AND doesn't yet hold the
+    // Magic Mirror (link_item_mirror level 2 = tracker's "Magic Mirror").
+    presence: { and: [{ follower: 'none' }, { item: 'Magic Mirror', owned: false }] },
   },
 
   // ═══════════════════════════════════════════════════════════════
@@ -209,6 +241,11 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
     spriteType: 0x1A, postGfx: 4,
     visualNote: 'Smiths hammering animation (gfx 4)',
     sourceFunc: 'Smithy_Main',
+    // Blacksmith is the first CHECK_NPC_FLAGS entry for sprite 0x1A, so
+    // npcConfigForSprite(0x1A) resolves here. Despawns once the smith-reunion
+    // flag (sram_progress_indicator_3 & 0x20, 0xF3C9) is set. (The follower
+    // nuance from the decomp — frog tagalong id 7 mid-quest — is deferred.)
+    presence: { progressIndicator3: 0x20, state: 'clear' },
   },
 
   // ═══════════════════════════════════════════════════════════════
@@ -285,6 +322,10 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
     spriteType: 0x39, postGfx: 0,
     visualNote: 'Chest disappears (sprite killed)',
     sourceFunc: 'Sprite_39_Locksmith',
+    // Absent while Link is escorting the purple-chest follower (follower_indicator
+    // == 9); once opened, sram_progress_indicator_3 & 0x10 (0xF3C9) is set, so
+    // present only while that bit is still clear.
+    presence: { and: [{ not: { followerEq: 9 } }, { progressIndicator3: 0x10, state: 'clear' }] },
   },
 
   // ═══════════════════════════════════════════════════════════════

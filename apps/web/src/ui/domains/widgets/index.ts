@@ -5,3 +5,4 @@ export { LogsWidgetContent } from './logs';
 export { DebugWidgetContent } from './debug';
 export { NavigationWidgetContent, DatasetWidgetContent } from './navigation';
 export { CheatsWidgetContent } from './cheats';
+export { SimulatorWidgetContent } from './simulator';

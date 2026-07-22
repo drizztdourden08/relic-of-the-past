@@ -3,8 +3,12 @@
 import { useState, useMemo, useEffect } from 'react';
 import type { ScreenConnection } from '@shared/game/types';
 import type { ConnectionTag } from '@shared/game/data/connections/tags';
+import type { ConnectionNavData } from '@shared/game/navigation';
 import { serializeConnection, resolveConnectionFile } from '@shared/game/data/screen-codegen';
+import { buildConnectionNav } from '@shared/game/navigation/analysis/connection-nav-from-flood';
+import { useNavigationOverlayStore } from '../../../../stores/navigation-overlay-store';
 import type { DetectedConnection } from './useDatasetStatus';
+import { matchFlood, describeConnectionTiles } from './connection-tile-display';
 
 interface EditableConnection {
   key: string;
@@ -12,6 +16,7 @@ interface EditableConnection {
   to: string;
   tags: ConnectionTag[];
   isNew: boolean;
+  nav?: ConnectionNavData;
 }
 
 interface ConnectionEditorParams {
@@ -32,6 +37,10 @@ const useConnectionEditor = (params: ConnectionEditorParams) => {
   const [writing, setWriting] = useState(false);
   const [writeError, setWriteError] = useState<string | null>(null);
 
+  // Live flood crossings for the current screen — supply persisted-nav fallbacks
+  // and the tile data attached to newly written connections.
+  const floodConnections = useNavigationOverlayStore(s => s.connections);
+
   // Initialize on open
   useEffect(() => {
     if (!open) return;
@@ -45,6 +54,7 @@ const useConnectionEditor = (params: ConnectionEditorParams) => {
       to: c.to,
       tags: [...c.tags],
       isNew: false,
+      nav: c.nav,
     }));
 
     setConnections(existing);
@@ -112,12 +122,25 @@ const useConnectionEditor = (params: ConnectionEditorParams) => {
     updateConnection(idx, { tags });
   };
 
-  // Generate code for new connections only
+  // Generate code for new connections only. Attach nav derived from the
+  // matching live flood crossing so the written connection carries tile data;
+  // omit nav when no crossing backs the edge (never fabricate).
   const newConnections = connections.filter(c => c.isNew);
   const generatedCode = useMemo(
-    () => newConnections.map(c => serializeConnection(c)).join('\n'),
-    [newConnections],
+    () => newConnections.map(c => {
+      const info = matchFlood(c, floodConnections, screenId);
+      const nav = info ? buildConnectionNav(info, c.tags) : undefined;
+      return serializeConnection({ from: c.from, to: c.to, tags: c.tags, nav });
+    }).join('\n'),
+    [newConnections, floodConnections, screenId],
   );
+
+  // Read-only crossing description per connection (persisted nav, else flood).
+  const tileDescriptions = useMemo(() => {
+    const map: Record<string, string | null> = {};
+    for (const c of connections) map[c.key] = describeConnectionTiles(c, floodConnections, screenId);
+    return map;
+  }, [connections, floodConnections, screenId]);
 
   const targetFile = useMemo(() => {
     if (!screenMeta || newConnections.length === 0) return null;
@@ -152,7 +175,7 @@ const useConnectionEditor = (params: ConnectionEditorParams) => {
 
   return {
     step, setStep, connections, editingIdx, setEditingIdx, writing, writeError,
-    suggestedConnections, newConnections, generatedCode, targetFile,
+    suggestedConnections, newConnections, generatedCode, targetFile, tileDescriptions,
     addSuggested, addBlank, removeConnection, updateConnection, toggleTag, handleWrite,
   };
 };

@@ -92,6 +92,8 @@ interface GameSettings {
   // and assign separate items to the X / L / R buttons. Both non-vanilla, opt-in.
   inventoryReorder: boolean;
   secondaryItemSlots: boolean;
+  // Render dialog instantly and auto-advance message-box waits; choice prompts stay interactive. Non-vanilla.
+  autoSkipDialog: boolean;
   turnWhileDashing: boolean;
   mirrorToDarkworld: boolean;
   collectItemsWithSword: boolean;

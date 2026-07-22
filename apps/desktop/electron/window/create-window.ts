@@ -32,6 +32,9 @@ const createWindow = (): BrowserWindow => {
       sandbox: false,
       contextIsolation: true,
       nodeIntegration: false,
+      // The game loop drives on rAF; keep it running at full speed when the
+      // window is unfocused (e.g. --no-focus automation) instead of throttled.
+      backgroundThrottling: false,
     },
   });
 

@@ -84,7 +84,7 @@ const useScreenDataStatus = (matchResult: ScreenMatchResult | null, isIndoors: b
 type ConnectionStatus = 'complete' | 'partial' | 'none';
 
 interface DetectedConnection {
-  type: 'entrance' | 'stair' | 'edge';
+  type: 'entrance' | 'stair' | 'edge' | 'hole';
   targetRoomOrScreen: number;
   label: string;
 }
@@ -97,7 +97,7 @@ interface ConnectionStatusResult {
   unmatched: DetectedConnection[];
 }
 
-const useConnectionStatus = (screenId: string | null, detectedEntranceScreens: number[], detectedStairs: RoomStairInfo[], exitScreen: number | null): ConnectionStatusResult => {
+const useConnectionStatus = (screenId: string | null, detectedEntranceScreens: number[], detectedStairs: RoomStairInfo[], exitScreen: number | null, detectedFallHoleRooms: number[]): ConnectionStatusResult => {
   return useMemo(() => {
     if (!screenId) {
       return {
@@ -113,6 +113,8 @@ const useConnectionStatus = (screenId: string | null, detectedEntranceScreens: n
     const existing = ALL_CONNECTIONS.filter(
       c => c.from === screenId || c.to === screenId,
     );
+
+    const lookup = getScreenLookup();
 
     // Build detected connections from game state
     const detected: DetectedConnection[] = [];
@@ -147,9 +149,19 @@ const useConnectionStatus = (screenId: string | null, detectedEntranceScreens: n
       });
     }
 
+    // Fall holes: each hole on this overworld screen drops into a room
+    for (const room of detectedFallHoleRooms) {
+      const target = lookup.byCaveRoom.get(room)
+        ?? [...lookup.byDungeonRoom.values()].find(r => r.roomIndex === room);
+      detected.push({
+        type: 'hole',
+        targetRoomOrScreen: room,
+        label: `Hole → ${target?.name ?? `room 0x${room.toString(16).toUpperCase()}`}`,
+      });
+    }
+
     // Compare: for each detected connection, check if a matching one exists
     const unmatched: DetectedConnection[] = [];
-    const lookup = getScreenLookup();
 
     for (const det of detected) {
       let found = false;
@@ -174,7 +186,7 @@ const useConnectionStatus = (screenId: string | null, detectedEntranceScreens: n
     else status = 'partial';
 
     return { status, missingCount, existingConnections: existing, detectedConnections: detected, unmatched };
-  }, [screenId, detectedEntranceScreens, detectedStairs, exitScreen]);
+  }, [screenId, detectedEntranceScreens, detectedStairs, exitScreen, detectedFallHoleRooms]);
 };
 
 export { useScreenDataStatus, useConnectionStatus };

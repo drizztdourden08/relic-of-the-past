@@ -129,6 +129,10 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
       const roomLayout = isIndoors ? wasmGetRoomLayoutInfo() : null;
       const linkLayer = isIndoors ? wasmGetLinkLayer() : null;
       const staircaseType = isIndoors ? wasmGetStaircaseType() : null;
+      // Read the live dual-layer grids BEFORE wasmBuildRoomAttrGrid: that rebuild runs
+      // Dungeon_LoadRoom, which is destructive and overwrites the live collision tables the
+      // widget actually floods. Capturing after it produced grids that never matched the widget.
+      const dualLayerGrids = isIndoors ? wasmGetIndoorDualLayerGrids() : null;
       const attrGrid = isIndoors ? wasmBuildRoomAttrGrid(roomIndex) : null;
       // After WasmBuildRoomAttrGrid, toggle floor positions are populated
       const toggleFloorPositions = isIndoors ? wasmGetToggleFloorPositions() : [];
@@ -145,7 +149,7 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
         : undefined;
       const floodFillData = isIndoors
         ? computeFloodFill({
-            roomIndex, attrGrid, dualLayerGrids: wasmGetIndoorDualLayerGrids(), linkLayer, staircaseType, roomLayout, startPos,
+            roomIndex, attrGrid, dualLayerGrids, linkLayer, staircaseType, roomLayout, startPos,
           })
         : computeOverworldFloodFill(overworldScreenIndex, wasmBuildOverworldAttrGrid(overworldScreenIndex), startPos);
 

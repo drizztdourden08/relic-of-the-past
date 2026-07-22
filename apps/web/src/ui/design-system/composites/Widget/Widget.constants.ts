@@ -71,6 +71,14 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultDockedSize: 340,
     defaultFloatingSize: { width: 360, height: 500 },
   },
+  {
+    id: 'simulator',
+    label: 'Simulator',
+    defaultVisibility: 'game-only' as WidgetVisibility,
+    defaultSide: 'right' as SnapSide,
+    defaultDockedSize: 360,
+    defaultFloatingSize: { width: 380, height: 560 },
+  },
 ];
 
 export { POSITION_OPTIONS, TITLEBAR_HEIGHT, WIDGET_DEFINITIONS };

@@ -19,6 +19,7 @@ interface TitleBarProps {
   onShowSpriteDebug: () => void;
   onShowConnectionDebug: () => void;
   onToggleDataset: () => void;
+  onToggleSimulator: () => void;
   onShowShadowEditor: () => void;
   onShowAbout: () => void;
   activeProfile: Profile | null;

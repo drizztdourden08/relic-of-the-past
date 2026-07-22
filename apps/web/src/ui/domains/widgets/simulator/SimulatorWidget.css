@@ -1,0 +1,234 @@
+/* @layer renderer-widgets @kind style */
+
+.simulator {
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  font-size: var(--text-sm);
+  color: var(--c-text);
+}
+
+/* ─── Controls ─── */
+
+.simulator__controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.simulator__control-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+/* ─── Progress ─── */
+
+.simulator__progress {
+  display: flex;
+  flex-direction: column;
+  background: var(--c-inset);
+  border: 1px solid var(--c-hairline);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.simulator__progress-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.simulator__progress-row:nth-child(odd) {
+  background: var(--c-hover);
+}
+
+.simulator__progress-label {
+  color: var(--c-text-dim);
+}
+
+.simulator__progress-value {
+  font-family: var(--font-mono);
+  color: var(--c-text);
+  overflow-wrap: anywhere;
+}
+
+/* ─── Event feed ─── */
+
+.simulator__events {
+  flex: 1;
+  min-height: 120px;
+  max-height: 240px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--c-inset);
+  border: 1px solid var(--c-hairline);
+  border-radius: var(--r-md);
+  padding: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.simulator__event {
+  display: flex;
+  gap: var(--space-sm);
+  line-height: var(--leading-tight);
+}
+
+.simulator__event-step {
+  flex-shrink: 0;
+  color: var(--c-text-muted);
+  min-width: 3ch;
+  text-align: right;
+}
+
+.simulator__event-msg {
+  flex: 1;
+  min-width: 0;
+  color: var(--c-text);
+  overflow-wrap: break-word;
+}
+
+.simulator__events-empty,
+.simulator__suggestions-empty {
+  color: var(--c-text-muted);
+  padding: var(--space-sm);
+}
+
+/* ─── Results ─── */
+
+.simulator__results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  border-top: 1px solid var(--c-hairline);
+  padding-top: var(--space-md);
+}
+
+.simulator__results-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.simulator__banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--c-hairline);
+  border-radius: var(--r-md);
+}
+
+.simulator__banner--success {
+  background: var(--c-green-soft);
+  border-color: var(--c-green);
+  color: var(--c-green-bright);
+}
+
+.simulator__banner--danger {
+  background: var(--c-danger-soft);
+  border-color: var(--c-danger);
+  color: var(--c-danger);
+}
+
+.simulator__banner-icon {
+  flex-shrink: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semi);
+}
+
+.simulator__banner-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.simulator__banner-title {
+  font-weight: var(--weight-semi);
+}
+
+.simulator__banner-detail {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  overflow-wrap: anywhere;
+}
+
+.simulator__softlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  color: var(--c-text-dim);
+}
+
+.simulator__suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.simulator__suggestions-title {
+  font-weight: var(--weight-semi);
+  color: var(--c-text);
+}
+
+/* ─── Suggestion card ─── */
+
+.simulator__suggestion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  background: var(--c-inset);
+  border: 1px solid var(--c-hairline);
+  border-radius: var(--r-md);
+  padding: var(--space-sm);
+}
+
+.simulator__suggestion-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.simulator__suggestion-file {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+}
+
+.simulator__suggestion-reason {
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+}
+
+.simulator__suggestion-code {
+  margin: 0;
+  padding: var(--space-sm);
+  background: var(--c-bg);
+  border-radius: var(--r-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text);
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+.simulator__suggestion-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.simulator__suggestion-error {
+  color: var(--c-danger);
+  font-size: var(--text-xs);
+}

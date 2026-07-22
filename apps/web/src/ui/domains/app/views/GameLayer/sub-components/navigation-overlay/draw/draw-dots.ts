@@ -11,7 +11,7 @@ const DOT_COLOR_UPPER = 'rgba(100, 215, 255, 0.65)';
 const DOT_COLOR_LOWER = 'rgba(50, 165, 215, 0.55)';
 const DOT_COLOR_REQ = 'rgba(255, 100, 180, 0.35)';
 
-const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], layer1ReachableOverride: [ReachState[][], ReachState[][]] | null, rawL0: number[][] | undefined, rawL1: number[][] | undefined): void => {
+const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], layer1ReachableOverride: [ReachState[][], ReachState[][]] | null): void => {
   const { ctx, scaleX, scaleY, viewLeft, viewTop, snesW, snesH, TILE_PX, dotRadius, getScreenWorldOrigin } = dc;
 
   ctx.globalAlpha = 0.55;
@@ -26,19 +26,11 @@ const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], laye
         const mergedReachable = perLayer ? (layer0Reach || layer1Reach) : drawResult.reachable[r][c] === 1;
         if (!mergedReachable) continue;
 
-        const l0HasContent = isDualLayer && rawL0 != null &&
-          (rawL0[r][c] !== 0x00 || layer0Reach);
-        const l1HasContent = isDualLayer && rawL1 != null &&
-          (rawL1[r][c] !== 0x00 || layer1Reach);
-        let hasOverlap = l0HasContent && l1HasContent;
-
-        // Suppress overlap at door passages: when only one layer is reached and both
-        // raw attrs are identical but NOT 0x1C, the non-reached layer was filler (0x1C)
-        // that got normalized by copying the other layer's value — not real content.
-        if (hasOverlap && !(layer0Reach && layer1Reach) && rawL0 && rawL1) {
-          const a0 = rawL0[r][c];
-          if (a0 === rawL1[r][c] && a0 !== 0x1C) hasOverlap = false;
-        }
+        // A split (two-layer) dot means the flood genuinely REACHED the tile on both
+        // layers. Keying this off raw attr content instead drew single-layer tiles that
+        // merely have geometry on the other layer (e.g. a wall/object on the layer below
+        // a reached upper floor) as misleading two-state dots.
+        const hasOverlap = isDualLayer && layer0Reach && layer1Reach;
 
         if (!hasOverlap && drawResult.attrGrid && LEDGE_ATTRS.has(drawResult.attrGrid[r][c])) continue;
         if (perLayer && (perLayer[0][r][c] === STAIRS_TRAVERSAL_STATE || perLayer[1][r][c] === STAIRS_TRAVERSAL_STATE)) continue;

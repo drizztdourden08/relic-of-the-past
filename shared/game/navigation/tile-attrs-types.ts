@@ -16,7 +16,8 @@ type TileReq =
   | 'hammer'     // Magic Hammer — pegs
   | 'boots'      // Pegasus Boots — bonk rocks
   | 'flippers'   // Zora's Flippers — deep water
-  | 'hookshot';  // Hookshot — grapple across gaps (hookshot posts)
+  | 'hookshot'   // Hookshot — grapple across gaps (hookshot posts)
+  | 'bombs';     // Bombs — blast open cracked/bombable walls
 
 /**
  * Semantic labels — exhaustive set describing what a tile "is" or "does".
@@ -47,13 +48,13 @@ type TileLabel =
   // Special / interactive
   | 'hookshot post' | 'grapple point' | 'hookshot-grabbable'
   // Liftable obstacles
-  | 'bush' | 'sign' | 'pot'
+  | 'bush' | 'sign' | 'pot' | 'pushable block'
   | 'light rock' | 'dark rock'
   | 'hammer peg'
   | 'bonk rock' | 'dash target'
   // Doors / transitions (interior)
   | 'door passage' | 'shutter door' | 'entrance'
-  | 'torch' | 'flaggable door';
+  | 'torch' | 'flaggable door' | 'bombable wall';
 
 /** Navigation passability for flood fill */
 type TilePass = 'free' | 'obstacle' | 'blocked' | 'water' | 'pit';

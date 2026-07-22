@@ -472,6 +472,8 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_InventoryReorder);
     } else if (StringEqualsNoCase(key, "SecondaryItemSlots")) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_SecondaryItemSlots);
+    } else if (StringEqualsNoCase(key, "AutoSkipDialog")) {
+      return ParseBoolBit(value, &g_config.features0, kFeatures0_AutoSkipDialog);
     } else if (StringEqualsNoCase(key, "TurnWhileDashing")) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_TurnWhileDashing);
     } else if (StringEqualsNoCase(key, "MirrorToDarkworld")) {

@@ -155,6 +155,9 @@ const computeFloodFill = (input: FloodFillDumpInput): FloodFillDump | null => {
     reachableCount: result.reachableCount,
     totalTiles: result.totalTiles,
     reachableRows: encodeReachableRows(result.reachable),
+    reachableByLayer: result.reachableByLayer
+      ? { layer0: encodeReachableRows(result.reachableByLayer[0]), layer1: encodeReachableRows(result.reachableByLayer[1]) }
+      : undefined,
     ledges: result.ledges.map(({ startRow, startCol, endRow, endCol }) => ({ startRow, startCol, endRow, endCol })),
     attrRows: {
       layer0: encodeAttrRows(dualLayerGrids?.layer0 ?? grid),

@@ -2,6 +2,7 @@
 import type { GridPos, OverworldEntrance, ScreenVariant } from '../types';
 import type { TileAttrContext, TileReq } from '../tile-attrs';
 import type { QuadrantBounds } from '../strategies/layer-strategy';
+import type { DoorGate } from '../door-gates';
 
 interface FloodFillOptions {
   tileContext: TileAttrContext;
@@ -23,6 +24,12 @@ interface FloodFillOptions {
   staircaseType?: number;
   /** Additional seed positions for BFS (used when propagating from adjacent screens). */
   extraSeeds?: GridPos[];
+  /**
+   * Opt-in door gates. Each closed gated door contributes cells whose crossing
+   * stamps requirement tokens onto the path (like an item obstacle). Absent or
+   * empty → BFS output is identical to a run with no gates.
+   */
+  doorGates?: DoorGate[];
 }
 
 export type { FloodFillOptions };

@@ -170,5 +170,5 @@ const bundleToConnectionPoint = (bundle: BorderBundle): ConnectionPointData => {
   };
 };
 
-export { transitTypeFromTags, buildConnectionNavUpdates };
+export { transitTypeFromTags, isBidirectional, buildConnectionNavUpdates };
 export type { ConnectionNavUpdate, ConnectionUpdaterInput };

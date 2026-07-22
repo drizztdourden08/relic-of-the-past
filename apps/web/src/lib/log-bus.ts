@@ -1,5 +1,5 @@
 /* @layer renderer-lib @kind logic */
-type LogChannel = 'core' | 'app' | 'randomizer' | 'wasm' | 'ipc' | 'error';
+type LogChannel = 'core' | 'app' | 'randomizer' | 'wasm' | 'ipc' | 'sim' | 'error';
 type LogLevel = 'info' | 'warn' | 'error';
 
 interface LogEntry {
@@ -47,6 +47,7 @@ const log = {
   randomizer(msg: string, level: LogLevel = 'info'): void { emit('randomizer', level, msg); },
   wasm(msg: string, level: LogLevel = 'info'): void { emit('wasm', level, msg); },
   ipc(msg: string, level: LogLevel = 'info'): void { emit('ipc', level, msg); },
+  sim(msg: string, level: LogLevel = 'info'): void { emit('sim', level, msg); },
   error(msg: string): void { emit('error', 'error', msg); },
 };
 
@@ -65,6 +66,7 @@ const CHANNEL_COLORS: Record<LogChannel, string> = {
   randomizer: '#b388ff',
   wasm: '#4dd0e1',
   ipc: '#ffd54f',
+  sim: '#ff9e64',
   error: '#e94560',
 };
 

@@ -2341,18 +2341,48 @@ void Text_Render() {  // 8ec8d9
   kText_Render[text_render_state]();
 }
 
+// Scan the parsed message buffer for a choice/selection command (yes-no prompts, shop
+// buy/sell, item-select). These require user input and must remain visible.
+static bool Text_MessageHasChoice() {
+  int pos = 0;
+  for (int guard = 0; guard < 0x600; guard++) {
+    uint32 cmd = Text_DecodeCmd(messaging_text_buffer[pos], &messaging_text_buffer[pos + 1]);
+    switch (TEXTCMD_CMD(cmd)) {
+    case kTextCmd_Choose:
+    case kTextCmd_Choose2:
+    case kTextCmd_Choose3:
+    case kTextCmd_Selchg:
+    case kTextCmd_Item:
+      return true;
+    case kTextCmd_EndMessage:
+      return false;
+    }
+    pos += 1 + TEXTCMD_MULTIBYTE(cmd);
+  }
+  return false;
+}
+
+// With auto-skip-dialog on, non-choice message boxes complete their state machine (all
+// end-of-message side-effects still fire) but withhold every VRAM upload so the box and
+// text never reach the screen. Choice messages are exempt so the player can still respond.
+static bool Text_ShouldSuppressDraw() {
+  return (enhanced_features0 & kFeatures0_AutoSkipDialog) && !Text_MessageHasChoice();
+}
+
 void RenderText_Draw_Border() {  // 8ec8ea
   RenderText_DrawBorderInitialize();
   uint16 *d = RenderText_DrawBorderRow(vram_upload_data, 0);
   for(int i = 0; i != 6; i++)
     d = RenderText_DrawBorderRow(d, 6);
   d = RenderText_DrawBorderRow(d, 12);
-  nmi_load_bg_from_vram = 1;
+  if (!Text_ShouldSuppressDraw())
+    nmi_load_bg_from_vram = 1;
   text_render_state = 2;
 }
 
 void RenderText_Draw_BorderIncremental() {  // 8ec919
-  nmi_load_bg_from_vram = 1;
+  if (!Text_ShouldSuppressDraw())
+    nmi_load_bg_from_vram = 1;
   uint8 a = text_incremental_state;
   uint16 *d = vram_upload_data;
   if (a)
@@ -2387,13 +2417,13 @@ RESTART:;
 
   switch (TEXTCMD_CMD(cmd)) {
   case kTextCmd_IsLetter:
-    if (vwf_line_speed_cur >= 2) {
+    if (vwf_line_speed_cur >= 2 && !(enhanced_features0 & kFeatures0_AutoSkipDialog)) {
       vwf_line_speed_cur--;
       break;
     }
     VWF_RenderSingle(TEXTCMD_PARAM(cmd));
     dialogue_msg_read_pos += 1 + TEXTCMD_MULTIBYTE(cmd);
-    if (vwf_line_speed_cur == 0)
+    if (vwf_line_speed_cur == 0 || (enhanced_features0 & kFeatures0_AutoSkipDialog))
       goto RESTART;
     break;
   case kTextCmd_NextPic:  // RenderText_Draw_NextImage
@@ -2448,7 +2478,7 @@ RESTART:;
     vwf_flag_next_line = 1;
     goto COMMAND_DONE;
   case kTextCmd_Wait:  // RenderText_Draw_Wait
-    switch (joypad1L_last & 0x80 ? 1 : text_wait_countdown) {
+    switch (((joypad1L_last & 0x80) || (enhanced_features0 & kFeatures0_AutoSkipDialog)) ? 1 : text_wait_countdown) {
     case 0:
       text_wait_countdown = kText_WaitDurations[TEXTCMD_PARAM(cmd)] - 1;
       break;
@@ -2471,7 +2501,7 @@ RESTART:;
       if (--text_wait_countdown2 == 1)
         sound_effect_2 = 36;
     } else {
-      if ((filtered_joypad_H | filtered_joypad_L) & 0xc0) {
+      if (((filtered_joypad_H | filtered_joypad_L) & 0xc0) || (enhanced_features0 & kFeatures0_AutoSkipDialog)) {
         text_wait_countdown2 = 28;
         goto COMMAND_DONE;
       }
@@ -2482,7 +2512,7 @@ RESTART:;
       if (--text_wait_countdown2 == 1)
         sound_effect_2 = 36;
     } else {
-      if ((filtered_joypad_H | filtered_joypad_L)) {
+      if ((filtered_joypad_H | filtered_joypad_L) || (enhanced_features0 & kFeatures0_AutoSkipDialog)) {
         text_render_state = 4;
         text_wait_countdown2 = 28;
       }
@@ -2492,8 +2522,10 @@ RESTART:;
   if (0) COMMAND_DONE: {
     dialogue_msg_read_pos += 1 + TEXTCMD_MULTIBYTE(cmd);
   }
-  nmi_subroutine_index = 2;
-  nmi_disable_core_updates = 2;
+  if (!Text_ShouldSuppressDraw()) {
+    nmi_subroutine_index = 2;
+    nmi_disable_core_updates = 2;
+  }
 }
 
 void RenderText_Draw_Finish() {  // 8eca35
@@ -2503,7 +2535,8 @@ void RenderText_Draw_Finish() {  // 8eca35
   d[1] = 0x2E42;
   d[2] = 0x387F;
   d[3] = 0xffff;
-  nmi_load_bg_from_vram = 1;
+  if (!Text_ShouldSuppressDraw())
+    nmi_load_bg_from_vram = 1;
   messaging_module = 0;
   submodule_index = 0;
   main_module_index = saved_module_for_menu;
@@ -2782,7 +2815,8 @@ void RenderText_Refresh() {  // 8ed307
       *d++ = *s++;
   }
   *d = 0xffff;
-  nmi_load_bg_from_vram = 1;
+  if (!Text_ShouldSuppressDraw())
+    nmi_load_bg_from_vram = 1;
 }
 
 

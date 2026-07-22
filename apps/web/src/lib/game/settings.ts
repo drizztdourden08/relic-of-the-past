@@ -55,6 +55,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   itemSwitchLRLimit: false,
   inventoryReorder: false,
   secondaryItemSlots: false,
+  autoSkipDialog: false,
   turnWhileDashing: false,
   mirrorToDarkworld: false,
   collectItemsWithSword: false,
@@ -202,6 +203,7 @@ ItemSwitchLR = ${boolToIni(settings.itemSwitchLR)}
 ItemSwitchLRLimit = ${boolToIni(settings.itemSwitchLRLimit)}
 InventoryReorder = ${boolToIni(settings.inventoryReorder)}
 SecondaryItemSlots = ${boolToIni(settings.secondaryItemSlots)}
+AutoSkipDialog = ${boolToIni(settings.autoSkipDialog)}
 TurnWhileDashing = ${boolToIni(settings.turnWhileDashing)}
 MirrorToDarkworld = ${boolToIni(settings.mirrorToDarkworld)}
 CollectItemsWithSword = ${boolToIni(settings.collectItemsWithSword)}

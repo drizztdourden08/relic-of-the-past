@@ -21,7 +21,6 @@ const LW_HOUSE_CONNECTIONS: ScreenConnection[] = [
   { from: 'links-house', to: 'lw-2c', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
 
   // Links House — intro variant (passage to Secret Passage / Uncle)
-  { from: 'links-house--intro', to: 'hyrule-castle-secret-passage', tags: ['transit:stairs', 'dir:two-way', 'ctx:internal'] },
 
   // Central / South
   { from: 'lw-3b', to: 'dam', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
@@ -36,6 +35,7 @@ const LW_HOUSE_CONNECTIONS: ScreenConnection[] = [
   // Two Brothers House (passage between overworld areas)
   { from: 'lw-28', to: 'two-brothers-house', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
   { from: 'two-brothers-house', to: 'maze-race-ledge', tags: ['transit:door', 'dir:one-way', 'ctx:exit'] },
+{ from: 'links-house--intro', to: 'lw-2c', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
 ];
 
 export { LW_HOUSE_CONNECTIONS };

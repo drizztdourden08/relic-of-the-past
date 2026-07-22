@@ -40,10 +40,14 @@ const syncSramToDisk = async (): Promise<void> => {
   }
 };
 
-const startSramSync = (): void => {
-  stopSramSync();
+const armInterval = (): void => {
   lastSramHash = null;
   sramSyncInterval = setInterval(syncSramToDisk, 5000);
+};
+
+const startSramSync = (): void => {
+  stopSramSync();
+  armInterval();
 };
 
 const stopSramSync = (): void => {
@@ -54,4 +58,21 @@ const stopSramSync = (): void => {
   syncSramToDisk();
 };
 
-export { startSramSync, stopSramSync };
+/**
+ * Pause the periodic flush WITHOUT the final flush stopSramSync performs. Used by
+ * the gameplay simulator so a mid-run 5s tick never persists half-simulated SRAM
+ * to the profile's sram.dat. Resume restarts the interval (also without a flush).
+ */
+const pauseSramSync = (): void => {
+  if (sramSyncInterval) {
+    clearInterval(sramSyncInterval);
+    sramSyncInterval = null;
+  }
+};
+
+const resumeSramSync = (): void => {
+  if (sramSyncInterval) return; // already running — nothing to restart
+  armInterval();
+};
+
+export { startSramSync, stopSramSync, pauseSramSync, resumeSramSync };

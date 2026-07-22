@@ -57,10 +57,8 @@ const OverlayCanvas = ({ width, height, gameRunning, mouseStateRef }: OverlayCan
 
       const dc = buildDrawContext(ctx, vp, width, height, result, isIndoors);
       const drawResults = results.length > 0 ? results : [result];
-      const rawL0 = result?.dualLayerGrids?.layer0;
-      const rawL1 = result?.dualLayerGrids?.layer1;
 
-      drawReachableDots(dc, drawResults, layer1ReachableOverride, rawL0, rawL1);
+      drawReachableDots(dc, drawResults, layer1ReachableOverride);
       drawPathPreview(dc, mouseStateRef.current, result, vp, setLockedPath);
       drawCliffArrows(dc, drawResults);
       drawStairArrows(dc, drawResults);

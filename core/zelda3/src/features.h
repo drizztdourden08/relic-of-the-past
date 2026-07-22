@@ -75,6 +75,10 @@ enum {
   kFeatures0_InventoryReorder = 134217728,  // Y + arrows in the inventory reorders items (off = stock)
   kFeatures0_SecondaryItemSlots = 268435456, // assign separate items to X/L/R buttons (off = Y-only, vanilla)
   // (native-HUD-hide is driven by g_hud_hide_mask / WasmSetHudHidden — not a features0 bit.)
+
+  // Render dialog text instantly and auto-advance message-box waits (mid-message continues, timed
+  // pauses, end-of-message dismiss); choice prompts stay interactive. Off = stock text pacing.
+  kFeatures0_AutoSkipDialog = 536870912,
 };
 
 // The 42 split bug-fix toggles (kFeatures1_* / kFeatures2_*) — generated from the Wave-1b catalog.

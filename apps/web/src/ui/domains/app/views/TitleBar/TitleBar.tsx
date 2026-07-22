@@ -38,6 +38,7 @@ const TitleBar = (props: TitleBarProps) => {
     onShowSpriteDebug,
     onShowConnectionDebug,
     onToggleDataset,
+    onToggleSimulator,
     onShowShadowEditor,
     onShowAbout,
     activeProfile,
@@ -111,7 +112,7 @@ const TitleBar = (props: TitleBarProps) => {
   const menuItems = buildTitleBarMenuItems({
     closeMenu, win, activeProfile, gameRunning,
     onShowProfile, onToggleSaveStates, onShowDataManager, onToggleInventory, onToggleChecks,
-    onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset,
+    onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset, onToggleSimulator,
     onShowInputTester, onShowSpriteDebug, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout,
     widgetVisibility,
   });

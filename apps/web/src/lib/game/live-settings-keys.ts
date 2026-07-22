@@ -36,6 +36,7 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'bugFixToggles',
   'inventoryReorder',
   'secondaryItemSlots',
+  'autoSkipDialog',
   // Per-group volume enable gate (DSP flag pushed live)
   'perGroupVolume',
   // Window settings (Electron-managed, no WASM restart needed)
