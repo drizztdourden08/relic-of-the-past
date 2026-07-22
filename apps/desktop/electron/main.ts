@@ -1,10 +1,19 @@
 /* @layer electron-main @kind logic */
-import { app, BrowserWindow, Menu, session, protocol } from 'electron';
+import { app, BrowserWindow, Menu, session, protocol, ipcMain } from 'electron';
 import { is } from '@electron-toolkit/utils';
+
+// Earliest main-process timestamp — used by the opt-in --boot-timing diagnostic to
+// report how long the launch → splash-gone path takes. No-op without the flag.
+const BOOT_START = Date.now();
+const BOOT_TIMING = process.argv.includes('--boot-timing');
+const logBoot = (label: string): void => {
+  if (BOOT_TIMING) console.log(`[boot-timing] ${label}: +${Date.now() - BOOT_START}ms`);
+};
 
 import { initPaths, ensureDataDirectories } from './lib/paths';
 import { createWindow, getMainWindow, registerWindowHandlers, registerAspectRatioHandlers } from './window';
 import { saveWindowState } from './window/window-state';
+import { isEphemeralLaunch } from './window/startup-config';
 import { registerDialogHandlers } from './dialogs/ipc-handlers';
 import { registerProfileHandlers, migrateDataFolder } from './profiles';
 import { registerRomHandlers } from './roms';
@@ -99,6 +108,12 @@ app.whenReady().then(async () => {
 
   const mainWindow = getMainWindow()!;
 
+  // Boot-timing diagnostic (opt-in via --boot-timing): renderer HTML loaded, then
+  // the renderer's app-ready signal (splash replaced by the UI).
+  logBoot('window created');
+  mainWindow.webContents.once('did-finish-load', () => logBoot('renderer did-finish-load'));
+  ipcMain.once('window:appReady', () => logBoot('app-ready (splash gone)'));
+
   // Initialize auto-updater (handlers registered above)
   initAutoUpdater(mainWindow);
 
@@ -135,9 +150,10 @@ app.whenReady().then(async () => {
   mainWindow.on('enter-full-screen', () => emit(mainWindow, 'window:fullscreen', true));
   mainWindow.on('leave-full-screen', () => emit(mainWindow, 'window:fullscreen', false));
 
-  // Persist window size/position/mode on close
+  // Persist window size/position/mode on close — except test/automation launches
+  // (--window-size / --fresh), which must not overwrite the user's saved bounds.
   mainWindow.on('close', () => {
-    saveWindowState(mainWindow);
+    if (!isEphemeralLaunch()) saveWindowState(mainWindow);
   });
 
   app.on('activate', () => {

@@ -22,6 +22,7 @@ import { useGameUIStore } from '../../stores/game-ui-store';
 import { DEFAULT_SETTINGS } from './settings';
 import { deliveryQueue } from './delivery-queue';
 import { createInstantiateWasm } from './instantiate-wasm';
+import { loadGlueScript } from './wasm-warmup';
 import { getPlatform } from '../../platform/get-platform';
 
 declare function Zelda3(config: Record<string, unknown>): Promise<EmscriptenModule>;
@@ -177,6 +178,10 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
         log.app(`Loaded SRAM from profile (${sramData.byteLength} bytes)`);
       }
     }
+
+    // Ensure the Emscripten glue is present before calling Zelda3() — the glue is
+    // now loaded lazily by the background warmup, which may not have finished yet.
+    await loadGlueScript();
 
     const instantiateWasm = createInstantiateWasm();
 

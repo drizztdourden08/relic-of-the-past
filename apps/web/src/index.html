@@ -8,10 +8,44 @@
       content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: file: app-sprite:"
     />
     <title>Relic of the Past</title>
+    <!-- Boot splash: painted instantly (no bundle/JS/WASM needed). React replaces
+         #root on first render, so the splash tears itself down for free. -->
+    <style>
+      #boot-splash {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 28px;
+        background: #000;
+      }
+      #boot-splash img {
+        width: 192px;
+        height: 192px;
+        image-rendering: auto;
+      }
+      #boot-splash .boot-splash__spinner {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 3px solid rgba(255, 255, 255, 0.12);
+        border-top-color: #c8a84e;
+        animation: boot-splash-rotate 0.7s linear infinite;
+      }
+      @keyframes boot-splash-rotate {
+        to { transform: rotate(360deg); }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
-    <script src="./wasm/zelda3.js"></script>
+    <div id="root">
+      <div id="boot-splash">
+        <img src="./logos/logo-256.png" alt="" />
+        <div class="boot-splash__spinner"></div>
+      </div>
+    </div>
     <script type="module" src="./main.tsx"></script>
   </body>
 </html>

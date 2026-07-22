@@ -144,11 +144,6 @@ const GameLayer = (props: GameLayerProps) => {
           : undefined
       }
     >
-      {status === 'loading' && (
-        <Box className="game-layer__status-overlay">
-          <Text className="game-layer__status-text game-layer__status-text--loading">Loading WASM core...</Text>
-        </Box>
-      )}
       {status === 'error' && (
         <Box className="game-layer__status-overlay">
           <Text className="game-layer__status-text game-layer__status-text--error">Error: {error}</Text>
