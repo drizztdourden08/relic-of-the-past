@@ -62,7 +62,7 @@
 
 .conn-editor__ep-name {
   color: var(--c-text);
-  font-weight: 600;
+  font-weight: var(--weight-semi);
 }
 
 .conn-editor__ep-code {
