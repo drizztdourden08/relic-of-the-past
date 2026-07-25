@@ -24,6 +24,9 @@ const frontierExhausted = (s: EngineState): boolean =>
 /** Returns the terminal outcome, or null while the run can still progress. */
 const evaluateOutcome = (s: EngineState, totalChecks?: number): SimOutcome | null => {
   if (s.stopHit) return 'stopped-at-check';
+  // Bounded-testing cap: stop once N distinct screens have been visited across
+  // the whole run (everVisited survives epoch resets; visited does not).
+  if (s.config.screenLimit != null && s.everVisited.size >= s.config.screenLimit) return 'stopped-at-check';
   if (allChecksDone(s, totalChecks) || goalCheckDone(s)) return 'completed';
   if (frontierExhausted(s) && !s.progressSinceEpoch) return 'not-completable';
   return null;

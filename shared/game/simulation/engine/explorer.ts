@@ -6,6 +6,7 @@
  * so reachability re-floods from the current virtual position.
  */
 import type { DetectedCheck } from '../types';
+import { SCREEN_BY_ID } from '../../data/screens';
 import type { ReachContext } from '../requirements-map';
 import { inventoryToReachTokens, affectsTraversal } from '../requirements-map';
 import type { EngineState } from './state';
@@ -45,6 +46,13 @@ const spendKey = (state: EngineState, dungeon: string): boolean => {
   return true;
 };
 
+/** Spend one small key from whichever dungeon bucket has one (coarse). */
+const spendAnyKey = (state: EngineState): void => {
+  for (const [dungeon, n] of state.keys) {
+    if (n > 0) { state.keys.set(dungeon, n - 1); return; }
+  }
+};
+
 const addKey = (state: EngineState, dungeon: string): void => {
   state.keys.set(dungeon, (state.keys.get(dungeon) ?? 0) + 1);
 };
@@ -67,6 +75,36 @@ const applyItem = (state: EngineState, itemName: string, dungeonHint?: string): 
   }
   state.inventory.add(itemName);
   syncReachTokens(state);
+};
+
+/**
+ * Localized refresh after an in-room unlock/kill: new epoch (fresh detects),
+ * but ONLY the current screen loses its visited mark — the run re-floods it in
+ * place instead of resetting the whole exploration. progressSinceEpoch stays
+ * set so the exhaustion pass still sweeps everything once at the end.
+ */
+const localRefresh = (state: EngineState): void => {
+  state.epoch += 1;
+  state.visited.delete(state.virtual.screenId);
+  state.failed = new Set();
+  state.route = [];
+  state.frontier = [];
+  state.progressSinceEpoch = true;
+};
+
+/**
+ * Refresh after a change that alters reachability in OTHER screens — Zelda
+ * tagging along opens the throne room's push-wall passage, far from where she
+ * was rescued. Every screen but the current one becomes re-explorable (unlike
+ * localRefresh, which only re-floods the room Link stands in).
+ */
+const globalRefresh = (state: EngineState): void => {
+  state.epoch += 1;
+  state.visited = new Set([state.virtual.screenId]);
+  state.failed = new Set();
+  state.route = [];
+  state.frontier = [];
+  state.progressSinceEpoch = true;
 };
 
 /** Reset the frontier and bump the epoch — reachability re-floods from here. */
@@ -93,13 +131,17 @@ const markDoneAndContinue = (state: EngineState, check: DetectedCheck): void => 
  */
 const onCheckVerified = (state: EngineState, check: DetectedCheck): void => {
   if (check.itemReceived) {
-    const dungeonHint = check.matched?.dungeon ? canonicalDungeon(check.matched.dungeon) : undefined;
-    applyItem(state, check.itemReceived, dungeonHint);
+    // Attribute dungeon-less key grants to the matched check's dungeon, or —
+    // for unmatched grants like an enemy's key drop — to the current location.
+    const location = SCREEN_BY_ID.get(state.virtual.screenId)?.location;
+    const hint = check.matched?.dungeon ?? location;
+    applyItem(state, check.itemReceived, hint ? canonicalDungeon(hint) : undefined);
   }
   if (check.matchedName) state.completedChecks.add(check.matchedName);
 
   if (affectsTraversal(check.itemReceived, check.evidence)) {
-    resetFrontier(state);
+    localRefresh(state);
+    markDoneAndContinue(state, check);
   } else {
     markDoneAndContinue(state, check);
   }
@@ -112,7 +154,10 @@ export {
   keyAvailable,
   buildReachContext,
   spendKey,
+  spendAnyKey,
   addKey,
+  localRefresh,
+  globalRefresh,
   applyItem,
   resetFrontier,
   markDoneAndContinue,

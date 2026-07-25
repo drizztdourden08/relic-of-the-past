@@ -100,7 +100,7 @@ describe('simulation engine loop', () => {
     expect(state.completedChecks.has("Link's House")).toBe(true);
     // The Hammer pickup must have bumped the epoch (unlock-reset).
     expect(state.epoch).toBeGreaterThanOrEqual(1);
-    expect(events.some(m => m.startsWith('Unlock!'))).toBe(true);
+    expect(events.some(m => m.startsWith('Reset:'))).toBe(true);
   });
 
   it('re-floods from the current position after a traversal-affecting unlock', () => {

@@ -107,7 +107,20 @@ const runSingleLayerFlood = (rawAttrGrid: number[][], screenIndex: number, optio
   // Single-layer BFS (using unified engine with SingleLayerStrategy)
   const singleBounds: QuadrantBounds = quadrantBounds ?? { minRow: 0, maxRow: GRID_SIZE - 1, minCol: 0, maxCol: GRID_SIZE - 1 };
   const strategy = new SingleLayerStrategy(grid.tiles, grid.rawAttr, tileContext, buildGateMap(options));
-  const bfsResult = runBFS(strategy, start.row, start.col, entrancePositions, inv, singleBounds, options.extraSeeds);
+  let seeds = options.extraSeeds ? [...options.extraSeeds] : [];
+  let bfsResult = runBFS(strategy, start.row, start.col, entrancePositions, inv, singleBounds, seeds.length > 0 ? seeds : undefined);
+  // One-way ledge hops: a reachable ledge start drops Link at its landing tile.
+  // The BFS walks one tile at a time and can't jump the cliff band, so seed
+  // each newly reachable landing and re-run — repeated for chained plateaus.
+  for (let pass = 0; pass < 4; pass++) {
+    const landings = ledges.filter((l) =>
+      bfsResult.reachable[l.startRow]?.[l.startCol]
+      && !bfsResult.reachable[l.endRow]?.[l.endCol]
+      && grid.tiles[l.endRow]?.[l.endCol]?.type === 'free');
+    if (landings.length === 0) break;
+    seeds = [...seeds, ...landings.map((l) => ({ row: l.endRow, col: l.endCol }))];
+    bfsResult = runBFS(strategy, start.row, start.col, entrancePositions, inv, singleBounds, seeds);
+  }
 
   // Filter ledges to only reachable ones
   const reachableLedges = ledges.filter((l: { startRow: number; startCol: number }) => bfsResult.reachable[l.startRow]?.[l.startCol]);

@@ -66,13 +66,18 @@ describe('explorer — unlock-reset rule', () => {
     ...opts,
   });
 
-  it('bumps the epoch and resets the frontier on a traversal-affecting item', () => {
+  it('bumps the epoch and re-floods the CURRENT screen on a traversal-affecting item', () => {
     const s = freshState();
     s.frontier = ['B', 'C'];
+    s.visited = new Set(['A', 'B']);
     onCheckVerified(s, detected({ itemReceived: 'Hammer', matchedName: 'Kakariko Tavern' }));
     expect(s.epoch).toBe(1);
     expect(s.frontier).toHaveLength(0);
-    expect(s.progressSinceEpoch).toBe(false);
+    // Localized refresh: only the current screen re-floods; other visits stay,
+    // and progressSinceEpoch stays set so the exhaustion pass sweeps later.
+    expect(s.visited.has('A')).toBe(false);
+    expect(s.visited.has('B')).toBe(true);
+    expect(s.progressSinceEpoch).toBe(true);
     expect(s.completedChecks.has('Kakariko Tavern')).toBe(true);
   });
 

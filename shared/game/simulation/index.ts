@@ -6,6 +6,8 @@ export type {
   VirtualLink,
   FlagSnapshot,
   SimObservation,
+  SimExit,
+  SimArea,
   SimLocation,
   ScreenGridBundle,
   RoomInteractables,
@@ -36,6 +38,7 @@ export type { ReachContext } from './requirements-map';
 export { createEngine } from './engine/engine';
 export type { EngineDeps, StepResult } from './engine/engine';
 export { createEngineState, cloneState } from './engine/state';
+export { screenLabel } from './engine/step-helpers';
 export type { EngineState, SimTarget } from './engine/state';
 export {
   buildAdjacency,

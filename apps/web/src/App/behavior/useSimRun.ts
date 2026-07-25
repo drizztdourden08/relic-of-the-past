@@ -9,8 +9,9 @@
  */
 
 import { useEffect, useRef } from 'react';
-import { subscribeGameState, loadState } from '../../lib/game';
-import { createLiveGamePort, runSimulation } from '@app/lib/game/simulator';
+import { subscribeGameState, loadState, wasmGetViewportInfo } from '../../lib/game';
+import { linkStartTile } from '@shared/game/navigation/link-start-tile';
+import { createLiveGamePort, runSimulation, floodOverworldScreen } from '@app/lib/game/simulator';
 import { pauseSramSync, resumeSramSync } from '@app/lib/game/sram-sync';
 import { buildSimRunReport } from '@shared/game/simulation';
 
@@ -52,14 +53,36 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
       }
       await new Promise((r) => setTimeout(r, 3000));
 
+      // Diagnostic: addressable flood of one screen — validates the sim's flood
+      // matches the normal in-game flood without running the whole simulation.
+      if (config.floodScreen !== null) {
+        // Seed from the live Link tile only when the game is actually standing on
+        // the flooded overworld screen; otherwise flood seedless (remote screen).
+        const vp = wasmGetViewportInfo();
+        const liveScreen = vp ? ((((vp.linkY >> 9) & 7) << 3) | ((vp.linkX >> 9) & 7)) : -1;
+        const startPos = vp && liveScreen === config.floodScreen
+          ? linkStartTile({
+              linkX: vp.linkX, linkY: vp.linkY,
+              screenWorldX: (config.floodScreen & 7) * 512,
+              screenWorldY: ((config.floodScreen >> 3) & 7) * 512,
+            })
+          : undefined;
+        const flood = floodOverworldScreen(config.floodScreen, startPos);
+        console.log(`[SimRun] flood seed=${JSON.stringify(startPos)} liveScreen=0x${liveScreen.toString(16)}`);
+        console.log(`[SimRun] flood screen 0x${config.floodScreen.toString(16)}: ${JSON.stringify(flood && { reachable: flood.reachableCount, total: flood.totalTiles, entrances: flood.entranceCount, edges: flood.edgeCount, ledges: flood.ledgeCount })}`);
+        await window.api.writeSimRun({ floodScreen: config.floodScreen, flood });
+        setTimeout(() => window.close(), 500);
+        return;
+      }
+
       const port = createLiveGamePort();
       pauseSramSync();
       port.setAutoSkipDialog(true);
       try {
-        const { state, recorder, steps, reachedTarget } = await runSimulation(port, config);
+        const { state, recorder, steps, reachedTarget, screenFloods } = await runSimulation(port, config);
         const report = buildSimRunReport(state, recorder, { config, steps, reachedTarget });
-        console.log(`[SimRun] outcome=${report.outcome} reachedTarget=${reachedTarget} steps=${steps} checks=${report.verifiedChecks.length}`);
-        const path = await window.api.writeSimRun(report);
+        console.log(`[SimRun] outcome=${report.outcome} reachedTarget=${reachedTarget} steps=${steps} checks=${report.verifiedChecks.length} floods=${screenFloods.length}`);
+        const path = await window.api.writeSimRun({ ...report, screenFloods });
         console.log(`[SimRun] Written to: ${path}`);
       } finally {
         port.setAutoSkipDialog(null);

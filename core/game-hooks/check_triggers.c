@@ -64,6 +64,17 @@ static void TryVisualChestOpen(uint16 room_id, uint8 chest_index) {
          chest_index, room_id);
 }
 
+// Vanilla duplicate-item rule, mirrored from Link_HandleChest (player.c:3850):
+// an item with an alternate swaps to it when the primary is already owned —
+// e.g. a second Lamp (0x12) becomes 5 Rupees (0x35, the Secret Passage chest).
+static const uint8 kSimReceiveItemAlternates[76] = {
+  255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,  68, 255, 255, 255,
+  255, 255,  53, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+  255, 255, 255, 255, 255, 255, 255, 255, 255, 255,  70, 255, 255, 255, 255, 255,
+  255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+  255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+};
+
 void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
   if (chest_index > 5) {
     printf("[GameHook] Invalid chest_index %d (max 5)\n", chest_index);
@@ -81,6 +92,14 @@ void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
   }
 
   TryVisualChestOpen(room_id, chest_index);
+
+  if (item_id < 76) {
+    uint8 alt = kSimReceiveItemAlternates[item_id];
+    if (alt != 0xff && g_ram[kMemoryLocationToGiveItemTo[item_id]]) {
+      printf("[GameHook] TriggerCheck: duplicate item 0x%02x swapped to 0x%02x\n", item_id, alt);
+      item_id = alt;
+    }
+  }
 
   item_receipt_method = 1;
   Link_ReceiveItem(item_id, 0);

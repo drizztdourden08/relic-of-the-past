@@ -22,6 +22,8 @@ interface SimulatorPort {
   getRoomSprites: (roomId: number) => SimSprite[];
   getOverworldSprites: (screenIndex: number) => SimSprite[];
   getRoomDoors: (roomId: number) => SimDoor[];
+  /** Room-header TAG bytes — scripted effects (kill-to-open-door family etc.). */
+  getRoomTags: (roomId: number) => [number, number];
   trigger: (action: TriggerAction) => Promise<void>;
   /** features0 auto-skip-dialog bit: true/false force it; null defers to the user's setting. */
   setAutoSkipDialog: (on: boolean | null) => void;

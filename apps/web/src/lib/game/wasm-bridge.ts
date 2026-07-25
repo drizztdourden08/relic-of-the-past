@@ -35,6 +35,13 @@ const setProfileId = (id: string | null): void => { currentProfileId = id; };
 
 const subscribeGameState = (fn: GameStateListener): () => void => {
   listeners.add(fn);
+  // Replay the current state to the new subscriber (deferred one microtask, so the
+  // caller's `const unsub = subscribeGameState(...)` is assigned before a listener
+  // that calls unsub() runs). Without this, a subscriber that starts waiting AFTER
+  // the status already became 'running' — e.g. useAutoTest/useSimRun call
+  // waitForRunning() only once loadProfileForGame() has resolved, which itself sets
+  // status to 'running' — never sees the transition and hangs forever.
+  queueMicrotask(() => { if (listeners.has(fn)) { try { fn(currentState); } catch { /* ignore */ } } });
   return () => listeners.delete(fn);
 };
 
@@ -55,18 +62,18 @@ export { wasmGetViewportInfo, wasmRenderCleanFrame } from './bridge/render';
 export { wasmGetGameUIState, wasmSetUIOverlayMode, wasmGetUIOverlayMode, wasmGetMenuState } from './bridge/ui-state';
 export { wasmGetProgressIndicator, wasmGetOverworldVariant } from './bridge/progress';
 export {
-  wasmGetIndoorDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer,
+  wasmGetIndoorDualLayerGrids, wasmBuildRoomDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer,
   wasmGetRoomCollisionType, wasmGetStaircaseType, wasmBuildOverworldAttrGrid,
   wasmBuildRoomAttrGrid, wasmGetToggleFloorPositions,
 } from './bridge/room-grids';
 export { wasmGetRoomLayoutInfo, wasmGetDungeonMapPosition } from './bridge/room-layout';
 export {
-  wasmGetRoomDoorBoundaryTiles, wasmGetRoomStairInfo, wasmGetRoomWalkBoundaries,
-  wasmGetRoomExitDoors, wasmGetRoomTravelDestinations,
+  wasmGetRoomDoorBoundaryTiles, wasmGetRoomStairInfo, wasmGetRoomStairInfoFor, wasmGetRoomWalkBoundaries, wasmGetRoomWalkBoundariesFor,
+  wasmGetRoomExitDoors, wasmGetRoomTravelDestinations, wasmGetRoomTravelDestinationsFor, wasmGetRoomTagsFor,
 } from './bridge/room-doors';
 export { wasmGetIndoorUncleBlockers, wasmGetNavigationBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns } from './bridge/sprites-blockers';
 export { wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns } from './bridge/nav-tables';
-export { wasmGetRoomChests, wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetRoomDoorInfo, wasmTriggerOverworldCheck, wasmReadFlagSnapshot } from './bridge/sim-queries';
+export { wasmGetRoomChests, wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetRoomDoorInfo, wasmSimUnlockDoor, wasmSimCloseDoor, wasmSimKillDrop, wasmSimZeldaFollow, wasmSimZeldaRescue, wasmGetRoomCellLocks, wasmSimOpenCellLock, wasmTriggerOverworldCheck, wasmReadFlagSnapshot } from './bridge/sim-queries';
 
 export type { ViewportInfo } from './bridge/render';
 export type { OverworldVariantInfo, GameProgressInfo } from './bridge/progress';

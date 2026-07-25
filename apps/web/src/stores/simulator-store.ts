@@ -1,8 +1,12 @@
 /* @layer renderer-stores @kind logic */
 /**
- * Simulator run state — status, progress, narrative event ring buffer, and the
+ * Simulator run state — status, progress, the full narrative event list, and the
  * finished-run artefacts (outcome, dataset suggestions, softlock report). The
  * runner (useSimulatorRun) writes here; the widget sub-components read.
+ *
+ * Events are kept in FULL: a long run's early history is exactly what makes a
+ * log worth reading, and a capped tail silently hides it. The dialog windows
+ * the list instead of trimming it (see LogView).
  */
 import { create } from 'zustand';
 import type {
@@ -22,8 +26,6 @@ interface SimProgress {
   epoch: number;
   currentScreen: string;
 }
-
-const EVENT_CAP = 500;
 
 const emptyProgress = (): SimProgress => ({
   phase: 'idle',
@@ -74,10 +76,7 @@ const useSimulatorStore = create<SimulatorStore>()((set) => ({
   }),
   setStatus: (status) => set({ status }),
   setPhaseLabel: (phaseLabel) => set({ phaseLabel }),
-  pushEvents: (incoming) => set((s) => {
-    const next = [...s.events, ...incoming];
-    return { events: next.length > EVENT_CAP ? next.slice(-EVENT_CAP) : next };
-  }),
+  pushEvents: (incoming) => set((s) => ({ events: [...s.events, ...incoming] })),
   setProgress: (progress) => set({ progress }),
   finishRun: ({ outcome, suggestions, softlockReport }) => set({
     status: 'done',

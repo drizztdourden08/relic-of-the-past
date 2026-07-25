@@ -32,6 +32,8 @@ const SimulatorWidgetContent = () => {
         status={status}
         stopAtCheckId={run.stopAtCheckId}
         onStopAtChange={run.setStopAtCheckId}
+        screenLimit={run.screenLimit}
+        onScreenLimitChange={run.setScreenLimit}
         canRestore={run.canRestore}
         onStart={run.start}
         onPause={run.pause}

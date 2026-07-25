@@ -100,6 +100,7 @@ class DualLayerStrategy implements LayerStrategy {
     }
 
     // ─── Same-layer expansion ───
+    const results: BFSExpansionResult[] = [];
     const targetGrid = this.grids[layer];
     let canMove = true;
     let newReqs = requirements;
@@ -112,10 +113,24 @@ class DualLayerStrategy implements LayerStrategy {
         for (const req of entry.newReqs) newReqs.add(req);
       }
     }
-    if (!canMove) return [];
+    if (canMove) {
+      newReqs = stampGateTokens(newTiles, this.gateMap, requirements, newReqs);
+      results.push({ row: nr, col: nc, layer, requirements: newReqs });
+    }
 
-    newReqs = stampGateTokens(newTiles, this.gateMap, requirements, newReqs);
-    return [{ row: nr, col: nc, layer, requirements: newReqs }];
+    // ─── Door-passage layer bridge ───
+    // A door threshold (plain passages 0x80-0x8D, or layer-toggle shutters
+    // 0x90-0xAF which flip Link's layer by design) belongs to its door's
+    // layer, and the game's door transit puts Link ON that layer. Stepping
+    // onto tiles that are door passages on the OTHER layer continues the walk
+    // there — lower-layer doors (the sewers' BG1 corridors, the sanctuary's
+    // back door) are unreachable from an upper-layer approach otherwise.
+    const other = (1 - layer) as 0 | 1;
+    const doorPassage = (a: number): boolean => (a >= 0x80 && a <= 0x8d) || (a >= 0x90 && a <= 0xaf);
+    if (newTiles.every(([tr, tc]) => doorPassage(this.rawAttrs[other][tr]?.[tc] ?? 0))) {
+      results.push({ row: nr, col: nc, layer: other, requirements });
+    }
+    return results;
   }
 
   private expandLedgeCross(
@@ -172,6 +187,7 @@ class DualLayerStrategy implements LayerStrategy {
     const otherLayer = (1 - layer) as 0 | 1;
     const targetGrid = this.grids[otherLayer];
     const stairTiles: [number, number][] = [];
+    let landAttempts = 0;
 
     for (let step = 0; step < GRID_SIZE; step++) {
       const lr = nr + step * dr;
@@ -186,6 +202,12 @@ class DualLayerStrategy implements LayerStrategy {
         }
       }
       if (onStair) continue;
+
+      // Stairs deposit Link right at their end. If the body can't stand within
+      // a few steps of the band (body alignment + landing decor), the cross
+      // FAILS — an unbounded scan would teleport the flood across sealed
+      // regions (0x71's locked corridor seam, ~17 rows away).
+      if (++landAttempts > 4) return [];
 
       let canLand = true;
       let newReqs = requirements;

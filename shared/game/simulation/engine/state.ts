@@ -4,7 +4,9 @@
  * through every phase. Created once at run start from the first observation.
  */
 import type { TraversalRequirement } from '../../navigation/nav-data.types';
-import type { SimConfig, SimOutcome, SimPhase, VirtualLink, FlagSnapshot, TriggerAction } from '../types';
+import type { GridPos } from '../../navigation/types';
+import type { SimConfig, SimOutcome, SimPhase, VirtualLink, FlagSnapshot, TriggerAction, SimExit, SimArea } from '../types';
+import type { RegionJob } from './regions';
 
 /** A discovered interactable paired with the trigger that fires it. */
 interface SimTarget {
@@ -15,6 +17,14 @@ interface SimTarget {
   key: string;
   /** Naming label for the narrative log. */
   label: string;
+  /** Interactable noun for the log ("chest", NPC kind). */
+  noun: string;
+  /** Trigger verb for the log ("Opening", "Talking to"). */
+  verb: string;
+  /** Flood-grid tile the interactable sits on, when its position is known. */
+  tile?: GridPos;
+  /** Interacting walks into a live trap section — shutters slam shut behind Link first. */
+  trap?: boolean;
 }
 
 interface EngineState {
@@ -22,6 +32,8 @@ interface EngineState {
   step: number;
   epoch: number;
   virtual: VirtualLink;
+  /** Big multi-sub-screen area the virtual Link currently stands in (log grouping). */
+  area?: SimArea;
 
   /** Item names held (mirrors the game inventory). */
   inventory: Set<string>;
@@ -34,13 +46,27 @@ interface EngineState {
   /** Observed done events (gate `event:*` tokens). */
   events: Set<string>;
 
-  /** Screen IDs already explored this run. */
+  /** Screen IDs already explored this epoch (cleared by resetFrontier). */
   visited: Set<string>;
+  /** Distinct screen IDs explored across the WHOLE run — the screen-limit basis. */
+  everVisited: Set<string>;
+  /**
+   * Game-discovered exit graph: screenId → exits its flood detected. Once any
+   * screen contributes exits, traversal runs on this graph alone (never the
+   * static connection dataset).
+   */
+  discovered: Map<string, SimExit[]>;
+  /** Per-screen union of flood-reached tiles (region memory, run-wide). */
+  regionReach: Map<string, boolean[][]>;
+  /** Pending visits into unexplored regions of already-visited screens. */
+  regionJobs: RegionJob[];
   /** Screen IDs reachable but not yet explored (current epoch). */
   frontier: string[];
   /** Every screen reachable this epoch — feeds the softlock report. */
   reachedScreens: Set<string>;
 
+  /** Screens whose trap shutters currently sit slammed shut behind Link. */
+  trapClosed: Set<string>;
   /** Target keys already triggered. */
   done: Set<string>;
   /** Target keys whose trigger produced no flag change this epoch (retried next epoch). */
@@ -73,8 +99,13 @@ const createEngineState = (virtual: VirtualLink, inventory: Set<string>, config:
   bigKeys: new Set(),
   events: new Set(),
   visited: new Set([virtual.screenId]),
+  everVisited: new Set([virtual.screenId]),
+  discovered: new Map(),
+  regionReach: new Map(),
+  regionJobs: [],
   frontier: [],
   reachedScreens: new Set([virtual.screenId]),
+  trapClosed: new Set(),
   done: new Set(),
   failed: new Set(),
   completedChecks: new Set(),
@@ -95,8 +126,13 @@ const cloneState = (s: EngineState): EngineState => ({
   bigKeys: new Set(s.bigKeys),
   events: new Set(s.events),
   visited: new Set(s.visited),
+  everVisited: new Set(s.everVisited),
+  discovered: new Map(s.discovered),
+  regionReach: new Map(s.regionReach),
+  regionJobs: [...s.regionJobs],
   frontier: [...s.frontier],
   reachedScreens: new Set(s.reachedScreens),
+  trapClosed: new Set(s.trapClosed),
   done: new Set(s.done),
   failed: new Set(s.failed),
   completedChecks: new Set(s.completedChecks),

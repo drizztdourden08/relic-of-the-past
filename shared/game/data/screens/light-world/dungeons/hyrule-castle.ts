@@ -4,7 +4,7 @@ import type { ScreenDefinition } from '../../../../types';
 const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
   {
     id: 'hc-0x01',
-    name: 'Dark Cross',
+    name: 'North Corridor',
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x01,
@@ -17,7 +17,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
   },
   {
     id: 'hc-0x02',
-    name: 'Secret Room',
+    name: 'Behind Sanctuary',
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x02,
@@ -29,7 +29,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
   },
   {
     id: 'hc-0x11',
-    name: 'Water Room',
+    name: 'Bombable Stock Room',
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x11,
@@ -78,7 +78,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
   },
   {
     id: 'hc-0x22',
-    name: 'Switch Room',
+    name: 'Sewer Text Trigger Room',
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x22,
@@ -90,7 +90,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
   },
   {
     id: 'hc-0x32',
-    name: 'Escape Dark Room',
+    name: 'Sewer Key Chest Room',
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x32,
@@ -126,7 +126,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
   },
   {
     id: 'hc-0x50',
-    name: 'Zelda\'s Cell',
+    name: 'West Corridor',
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x50,
@@ -150,7 +150,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
   },
   {
     id: 'hc-0x52',
-    name: 'Guard Bypass',
+    name: 'East Corridor',
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x52,
@@ -162,7 +162,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
   },
   {
     id: 'hc-0x60',
-    name: 'West Wing',
+    name: 'West Entrance',
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x60,
@@ -174,7 +174,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
   },
   {
     id: 'hc-0x61',
-    name: 'Main Hall',
+    name: 'Main Entrance',
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x61,
@@ -187,7 +187,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
   },
   {
     id: 'hc-0x62',
-    name: 'East Wing',
+    name: 'East Entrance',
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x62,
@@ -199,7 +199,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
   },
   {
     id: 'hc-0x70',
-    name: 'West Corridor',
+    name: 'Corridor to Jail Cells',
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x70,
@@ -211,7 +211,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
   },
   {
     id: 'hc-0x71',
-    name: 'Lobby',
+    name: 'Boomerang Chest Room',
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x71,
@@ -223,7 +223,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
   },
   {
     id: 'hc-0x72',
-    name: 'East Corridor',
+    name: 'Map Chest Room',
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x72,
@@ -235,7 +235,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
   },
   {
     id: 'hc-0x80',
-    name: 'Boomerang Room',
+    name: 'Jail Cell',
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x80,
@@ -247,7 +247,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
   },
   {
     id: 'hc-0x81',
-    name: 'Map Room',
+    name: 'Basement Corridor',
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x81,
@@ -259,7 +259,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
   },
   {
     id: 'hc-0x82',
-    name: 'South Guard Room',
+    name: 'Basement Chasm',
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x82,

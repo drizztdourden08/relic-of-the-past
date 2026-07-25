@@ -1,0 +1,80 @@
+/* @layer renderer-components @kind style */
+
+/* Input + a stacked up/down chevron spinner fused into one bordered control. */
+.number-input {
+  display: inline-flex;
+  align-items: stretch;
+  width: 100%;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color var(--transition-normal);
+}
+
+.number-input:focus-within {
+  border-color: var(--c-gold);
+}
+
+.number-input--disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.number-input__field {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-sm) var(--space-md);
+  background: transparent;
+  border: none;
+  color: var(--c-text);
+  font-size: var(--text-base);
+  outline: none;
+
+  /* Hide the native spinner — the chevron buttons replace it. */
+  appearance: textfield;
+}
+
+.number-input__field::-webkit-outer-spin-button,
+.number-input__field::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.number-input__field::placeholder {
+  color: var(--c-text-faint);
+}
+
+/* Stacked buttons, flush against the field (shared border, no gap). */
+.number-input__spin {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--c-border);
+}
+
+.number-input__btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--space-sm);
+  background: transparent;
+  border: none;
+  color: var(--c-text-dim);
+  cursor: pointer;
+  transition: color var(--transition-normal), background var(--transition-normal);
+}
+
+.number-input__btn + .number-input__btn {
+  border-top: 1px solid var(--c-border);
+}
+
+.number-input__btn:hover {
+  color: var(--c-text);
+  background: var(--c-hover);
+}
+
+.number-input__btn:disabled {
+  cursor: default;
+  opacity: 0.4;
+}

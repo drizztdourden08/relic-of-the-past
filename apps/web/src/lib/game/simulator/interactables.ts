@@ -5,10 +5,9 @@
  * kinds all come straight from the game.
  */
 import type { SimChest, SimSprite, SimDoor } from '@shared/game/simulation';
-import { wasmGetRoomChests, wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetRoomDoorInfo } from '../';
+import { wasmGetRoomChests, wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetRoomDoorInfo, wasmGetRoomCellLocks } from '../';
 import type { SimDoorDirection } from '../';
 import { spriteKindFor } from './sprite-kinds';
-import { readMapState } from './read-game-state';
 
 const DOOR_DIRS: Record<SimDoorDirection, SimDoor['direction']> = {
   north: 'n',
@@ -38,25 +37,21 @@ const getRoomChests = (roomId: number): SimChest[] =>
  * (evaluatePresence over the NPC's declarative condition) — the sanctioned
  * single data read for the otherwise data-free detector.
  *
- * The flood-fill grid the engine reachability-checks against is only ever
- * built for the room the game is *currently loaded into* — a query for any
- * other room has no valid grid to test tiles against. So `posKnown` mirrors
- * current-vs-remote the same way the C chest query already does: `true` for
- * the loaded room (the flood can judge it), `false` for a remote room (fall
- * back to the engine's coarse screen-level reachability instead of wrongly
- * failing the loaded room's flood check against a different room's tiles).
+ * `posKnown` is always true: spawn positions come from the static room sprite
+ * table and are valid remotely, and the engine floods the VIRTUAL room's grid
+ * (built room-addressably) — so the flood can always judge these tiles. A
+ * fail-open here would let unreachable NPCs trigger through walls/blockers.
  */
-const getRoomSprites = (roomId: number): SimSprite[] => {
-  const map = readMapState();
-  const isLoadedRoom = map?.isIndoors === true && map.roomIndex === roomId;
-  return wasmGetRoomSpriteSpawns(roomId).map((s) => ({
+const getRoomSprites = (roomId: number): SimSprite[] =>
+  wasmGetRoomSpriteSpawns(roomId).map((s) => ({
     roomId,
     spriteType: s.spriteType,
     tile: { row: s.row, col: s.col },
-    posKnown: isLoadedRoom,
+    posKnown: true,
     kind: spriteKindFor(s.spriteType),
+    carriesKey: s.carriesKey,
+    carriesBigKey: s.carriesBigKey,
   }));
-};
 
 const getOverworldSprites = (screenIndex: number): SimSprite[] =>
   wasmGetOverworldSpriteSpawns(screenIndex).map((s) => ({
@@ -67,13 +62,29 @@ const getOverworldSprites = (screenIndex: number): SimSprite[] =>
     kind: spriteKindFor(s.spriteType),
   }));
 
-const getRoomDoors = (roomId: number): SimDoor[] =>
-  wasmGetRoomDoorInfo(roomId).map((d) => ({
+/**
+ * A room's doors, plus its CELL LOCKS — the keyhole plates that gate a jail
+ * cell (room object 0x18). They carry no door-table record at all, so they
+ * arrive as big-key doors flagged `cellLock`, keyed by chest slot.
+ */
+const getRoomDoors = (roomId: number): SimDoor[] => [
+  ...wasmGetRoomDoorInfo(roomId).map((d, index) => ({
     roomId,
+    index,
     tiles: [{ row: d.row, col: d.col }],
     direction: DOOR_DIRS[d.direction],
     kind: DOOR_KINDS[d.kind] ?? 'normal',
     opened: d.isOpen,
-  }));
+  })),
+  ...wasmGetRoomCellLocks(roomId).map((l) => ({
+    roomId,
+    index: l.slot,
+    tiles: [{ row: l.row, col: l.col }],
+    direction: 'n' as const,
+    kind: 'big-key' as const,
+    opened: l.opened,
+    cellLock: true,
+  })),
+];
 
 export { getRoomChests, getRoomSprites, getOverworldSprites, getRoomDoors };

@@ -33,6 +33,10 @@ interface SimSpriteRaw {
   col: number;
   row: number;
   floor: number;
+  /** Drops a small key on death (0xe4/0xfe die-action marker in room data). */
+  carriesKey: boolean;
+  /** Drops the BIG key on death (0xe4/0xfd marker). */
+  carriesBigKey: boolean;
 }
 
 interface SimDoorRaw {
@@ -42,6 +46,8 @@ interface SimDoorRaw {
   kind: number;
   nativeType: number;
   isOpen: boolean;
+  /** 0 = upper/BG2 door, 1 = lower/BG1 (door position slots 6-11). */
+  layer: 0 | 1;
 }
 
 const DIR_NAMES: SimDoorDirection[] = ['north', 'south', 'west', 'east'];
@@ -64,17 +70,54 @@ const wasmGetRoomSpriteSpawns = (roomId: number): SimSpriteRaw[] =>
     spriteType: heap[o + 0],
     col: heap[o + 1],
     row: heap[o + 2],
-    floor: heap[o + 3],
+    floor: heap[o + 3] & 1,
+    carriesKey: (heap[o + 3] & 2) !== 0,
+    carriesBigKey: (heap[o + 3] & 4) !== 0,
   }), roomArg(roomId));
 
+/** "Virtually kill" a room's meaningful enemy: marks the room's drop-taken
+ *  (0x400) or enemies-cleared (0x800, itemId 0xff) SRAM bit and grants the
+ *  drop through the normal receive path. */
+const wasmSimKillDrop = (roomId: number, itemId: number): void =>
+  voidCall('WasmSimKillDrop', { argTypes: ['number', 'number'], args: [roomId, itemId] });
+
+/** Open a door's SRAM/live bit as the game would when Link uses a small key.
+ *  consume=false opens the counterpart record without spending another key. */
+const wasmSimUnlockDoor = (roomId: number, doorIndex: number, consume: boolean): void =>
+  voidCall('WasmSimUnlockDoor', { argTypes: ['number', 'number', 'number'], args: [roomId, doorIndex, consume ? 1 : 0] });
+
+/** Big-key "Cell Lock" plates (room object 0x18) — `opened` once its bit is set. */
+const wasmGetRoomCellLocks = (roomId: number): { slot: number; row: number; col: number; opened: boolean }[] =>
+  decodeTable('WasmGetRoomCellLocks', { countBytes: 1, dataStart: 2, stride: 4, maxCount: 6 }, (heap, o) => ({
+    slot: heap[o + 0],
+    row: heap[o + 1],
+    col: heap[o + 2],
+    opened: heap[o + 3] !== 0,
+  }), roomArg(roomId));
+
+/** Open a cell lock — sets the slot's chest-open bit, as the game does. */
+const wasmSimOpenCellLock = (roomId: number, slot: number): void =>
+  voidCall('WasmSimOpenCellLock', { argTypes: ['number', 'number'], args: [roomId, slot] });
+
+/** Zelda becomes Link's follower (her cell's TransitionToTagalong state). */
+const wasmSimZeldaFollow = (): void => voidCall('WasmSimZeldaFollow', { argTypes: [], args: [] });
+
+/** The Sanctuary priest scene: progress indicator → 2 ("rescued Zelda"). */
+const wasmSimZeldaRescue = (): void => voidCall('WasmSimZeldaRescue', { argTypes: [], args: [] });
+
+/** Clear a door's open bit — a trap shutter slamming shut again behind Link. */
+const wasmSimCloseDoor = (roomId: number, doorIndex: number): void =>
+  voidCall('WasmSimCloseDoor', { argTypes: ['number', 'number'], args: [roomId, doorIndex] });
+
 const wasmGetRoomDoorInfo = (roomId: number): SimDoorRaw[] =>
-  decodeTable('WasmGetRoomDoorInfo', { countBytes: 1, dataStart: 2, stride: 6, maxCount: 16 }, (heap, o) => ({
+  decodeTable('WasmGetRoomDoorInfo', { countBytes: 1, dataStart: 2, stride: 7, maxCount: 16 }, (heap, o) => ({
     direction: DIR_NAMES[heap[o + 0]] ?? 'north',
     col: heap[o + 1],
     row: heap[o + 2],
     kind: heap[o + 3],
     nativeType: heap[o + 4],
     isOpen: heap[o + 5] !== 0,
+    layer: heap[o + 6] === 1 ? 1 : 0,
   }), roomArg(roomId));
 
 const wasmGetOverworldSpriteSpawns = (screenIndex: number): SimSpriteRaw[] =>
@@ -82,6 +125,8 @@ const wasmGetOverworldSpriteSpawns = (screenIndex: number): SimSpriteRaw[] =>
     spriteType: heap[o + 0],
     col: heap[o + 1],
     row: heap[o + 2],
+    carriesKey: false,
+    carriesBigKey: false,
     floor: 0,
   }), roomArg(screenIndex));
 
@@ -109,5 +154,7 @@ const wasmReadFlagSnapshot = (): SimFlagSnapshot | null =>
     };
   });
 
-export { wasmGetRoomChests, wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetRoomDoorInfo, wasmTriggerOverworldCheck, wasmReadFlagSnapshot };
+export { wasmGetRoomChests, wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetRoomDoorInfo,
+  wasmSimUnlockDoor, wasmSimCloseDoor, wasmSimKillDrop, wasmSimZeldaFollow, wasmSimZeldaRescue,
+  wasmGetRoomCellLocks, wasmSimOpenCellLock, wasmTriggerOverworldCheck, wasmReadFlagSnapshot };
 export type { SimChestRaw, SimSpriteRaw, SimDoorRaw, SimDoorDirection, SimFlagSnapshot };

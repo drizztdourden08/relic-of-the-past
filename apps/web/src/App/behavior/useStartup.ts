@@ -23,9 +23,11 @@ const useStartup = (
 
         const dumpSlot = await window.api.getDumpLayersSlot();
         const dumpNavSlot = await window.api.getDumpNavSlot();
-        // --fresh (and other automation) starts straight in the game view with no
-        // home/profile menu in the way.
-        const isAutoTest = testArgs.autoState !== null || !!testArgs.screenshot || dumpSlot !== null || dumpNavSlot !== null || window.api.startup.fresh;
+        const simRun = await window.api.getSimRunConfig();
+        // Automation launches (--fresh, --sim-run, --dump-*, --auto-state, --screenshot)
+        // start straight in the game view with no home/profile menu in the way — the
+        // game only reaches 'running' on the game view, which the sim waits for.
+        const isAutoTest = testArgs.autoState !== null || !!testArgs.screenshot || dumpSlot !== null || dumpNavSlot !== null || simRun !== null || window.api.startup.fresh;
 
         if (profileList.length === 0) {
           log.app('No profiles found, showing setup screen');

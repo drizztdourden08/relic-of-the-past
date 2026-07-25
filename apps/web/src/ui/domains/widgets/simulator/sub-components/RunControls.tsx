@@ -3,7 +3,7 @@
  * Start / Pause / Resume / Stop plus the searchable stop-at-check picker and the
  * Restore pre-run state (Memento) button.
  */
-import { Box, Button, Field } from '@ds/primitives';
+import { Box, Button, Field, NumberInput } from '@ds/primitives';
 import type { RunStatus } from '@app/stores/simulator-store';
 import { StopAtCheckPicker } from './StopAtCheckPicker';
 
@@ -11,6 +11,8 @@ interface RunControlsProps {
   status: RunStatus;
   stopAtCheckId: string;
   onStopAtChange: (id: string) => void;
+  screenLimit: number | null;
+  onScreenLimitChange: (limit: number | null) => void;
   canRestore: boolean;
   onStart: () => void;
   onPause: () => void;
@@ -20,11 +22,15 @@ interface RunControlsProps {
 }
 
 const RunControls = (props: RunControlsProps) => {
-  const { status, stopAtCheckId, onStopAtChange, canRestore, onStart, onPause, onResume, onStop, onRestore } = props;
+  const { status, stopAtCheckId, onStopAtChange, screenLimit, onScreenLimitChange, canRestore, onStart, onPause, onResume, onStop, onRestore } = props;
 
   const idle = status === 'idle' || status === 'done';
   const running = status === 'running';
   const paused = status === 'paused';
+
+  const handleScreenLimit = (value: number) => {
+    onScreenLimitChange(Number.isNaN(value) || value < 1 ? null : Math.floor(value));
+  };
 
   return (
     <Box className="simulator__controls">
@@ -32,6 +38,15 @@ const RunControls = (props: RunControlsProps) => {
         <StopAtCheckPicker
           stopAtCheckId={stopAtCheckId}
           onStopAtChange={onStopAtChange}
+          disabled={!idle}
+        />
+      </Field>
+      <Field label="Max screens" hint="blank = unlimited">
+        <NumberInput
+          min={1}
+          placeholder="unlimited"
+          value={screenLimit ?? ''}
+          onChange={handleScreenLimit}
           disabled={!idle}
         />
       </Field>

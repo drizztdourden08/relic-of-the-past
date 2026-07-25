@@ -12,7 +12,9 @@
 
 const ITEM_ID_TO_NAME: Record<number, string> = {
   // Swords (0xF359 = link_sword_type, values 1–4)
-  0x00: 'Fighter Sword',
+  // Item 0x00 is the uncle's combined grant: LinkGiveItem special-cases j==0 to
+  // ALSO write link_shield_type (misc.c:723) before the sword — one item, both.
+  0x00: 'Fighter Sword & Shield',
   0x01: 'Master Sword',
   0x02: 'Tempered Sword',
   0x03: 'Golden Sword',
