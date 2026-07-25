@@ -1,11 +1,13 @@
 /* @layer renderer-widgets @kind component */
 /**
- * Narrative event feed for the current run — auto-scrolls to the newest line,
- * mirroring the Logs widget behaviour.
+ * Log entry point. The widget container is far too narrow to read a log in, so
+ * there is no inline preview: just a button (with the live event count) that
+ * opens the full log dialog.
  */
-import { useEffect, useRef } from 'react';
-import { Box, Text } from '@ds/primitives';
+import { useState } from 'react';
+import { Box, Text, Button } from '@ds/primitives';
 import type { SimEvent } from '@shared/game/simulation';
+import { LogDialog } from './LogDialog';
 
 interface EventLogProps {
   events: SimEvent[];
@@ -13,22 +15,21 @@ interface EventLogProps {
 
 const EventLog = (props: EventLogProps) => {
   const { events } = props;
-  const bottomRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [events]);
+  const [open, setOpen] = useState(false);
 
   return (
-    <Box className="simulator__events">
-      {events.length === 0 && <Box className="simulator__events-empty">No events yet.</Box>}
-      {events.map((event, i) => (
-        <Box key={`${event.step}-${i}`} className="simulator__event">
-          <Text className="simulator__event-step">{event.step}</Text>
-          <Text className="simulator__event-msg">{event.msg}</Text>
-        </Box>
-      ))}
-      <Box ref={bottomRef} />
+    <Box className="simulator__log">
+      <Button
+        variant="secondary"
+        size="sm"
+        className="simulator__log-open"
+        onClick={() => setOpen(true)}
+        disabled={events.length === 0}
+      >
+        ⤢ Open log
+        <Text className="simulator__log-count">{events.length}</Text>
+      </Button>
+      <LogDialog open={open} onClose={() => setOpen(false)} events={events} />
     </Box>
   );
 };

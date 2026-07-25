@@ -13,12 +13,15 @@ import {
   CHEST_OPEN_MASKS,
   CHECK_OVERWORLD_FLAGS,
   CHECK_NPC_FLAGS,
+  CHECK_EVENT_FLAGS,
 } from '../../checks/flags';
 import { ALL_CHECKS } from '../../checks';
 
 const UNKNOWN = 'unknown-check';
 
-const CHECK_BY_NAME = new Map<string, CheckDefinition>(ALL_CHECKS.map(c => [c.name, c]));
+// Keyed by BOTH id and display name — flag matchers return canonical ids
+// ("Sewers - Dark Cross") while some callers look up by short name.
+const CHECK_BY_NAME = new Map<string, CheckDefinition>(ALL_CHECKS.flatMap(c => [[c.id, c], [c.name, c]] as [string, CheckDefinition][]));
 
 const matchRoom = (diff: FlagDiff): string | null => {
   for (const [name, entry] of Object.entries(CHECK_ROOM_FLAGS)) {
@@ -43,7 +46,24 @@ const matchProgress = (diff: FlagDiff): string | null => {
     const hit = cfg.mask === 0xff ? diff.after !== 0 : (cfg.mask & diff.setBits) !== 0;
     if (hit) return name;
   }
-  return null;
+  return matchEvent(diff);
+};
+
+/**
+ * Progression events are THRESHOLD reads of the progress buffer, not bitmasks
+ * (sram_progress_indicator 1 = post-uncle, 2 = rescued Zelda). A diff names an
+ * event only when it CROSSES that threshold, and the highest crossed threshold
+ * wins — reaching 2 is "Rescued Zelda", not "Zelda Rescue Started". Ids are
+ * translated to display names so the log reads like every other check.
+ */
+const matchEvent = (diff: FlagDiff): string | null => {
+  const crossed = Object.entries(CHECK_EVENT_FLAGS)
+    .filter(([, cfg]) => cfg.bufferIndex === diff.index)
+    .flatMap(([id, cfg]) => (Array.isArray(cfg.value) ? cfg.value : [cfg.value]).map((v) => ({ id, v, compare: cfg.compare })))
+    .filter(({ v, compare }) => (compare === 'eq' || compare === 'any-of' ? diff.after === v : diff.before < v && diff.after >= v))
+    .sort((a, b) => b.v - a.v);
+  const best = crossed[0];
+  return best ? (CHECK_BY_NAME.get(best.id)?.name ?? best.id) : null;
 };
 
 /** Name a single diff, or null if nothing matches. */

@@ -57,45 +57,32 @@
   overflow-wrap: anywhere;
 }
 
-/* ─── Event feed ─── */
+/* ─── Log entry point ───
+   No inline feed: the widget column is too narrow to read a log in, so this is
+   just the button that opens the dialog, with the live event count as a pill. */
 
-.simulator__events {
-  flex: 1;
-  min-height: 120px;
-  max-height: 240px;
-  overflow-y: auto;
+.simulator__log {
   display: flex;
   flex-direction: column;
-  gap: 0;
+}
+
+.simulator__log-open {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  width: 100%;
+}
+
+.simulator__log-count {
+  padding: 0 var(--space-xs);
+  border-radius: var(--r-sm);
   background: var(--c-inset);
-  border: 1px solid var(--c-hairline);
-  border-radius: var(--r-md);
-  padding: var(--space-sm);
+  color: var(--c-text-faint);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
 }
 
-.simulator__event {
-  display: flex;
-  gap: var(--space-sm);
-  line-height: var(--leading-tight);
-}
-
-.simulator__event-step {
-  flex-shrink: 0;
-  color: var(--c-text-muted);
-  min-width: 3ch;
-  text-align: right;
-}
-
-.simulator__event-msg {
-  flex: 1;
-  min-width: 0;
-  color: var(--c-text);
-  overflow-wrap: break-word;
-}
-
-.simulator__events-empty,
 .simulator__suggestions-empty {
   color: var(--c-text-muted);
   padding: var(--space-sm);

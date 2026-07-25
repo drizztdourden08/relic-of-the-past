@@ -17,6 +17,7 @@ import { onItemReceived } from '../tracker';
 import { observe } from './observe';
 import { getScreenGrids } from './screen-grids';
 import { getRoomChests, getRoomSprites, getOverworldSprites, getRoomDoors } from './interactables';
+import { wasmGetRoomTagsFor } from '../';
 import { trigger } from './trigger';
 
 /** Force the features0 auto-skip-dialog bit (or defer to the user's setting with null) and push it to the core immediately. */
@@ -49,6 +50,7 @@ const createLiveGamePort = (): SimulatorPort => {
     getRoomSprites,
     getOverworldSprites,
     getRoomDoors,
+    getRoomTags: wasmGetRoomTagsFor,
     trigger,
     setAutoSkipDialog,
     snapshotState,

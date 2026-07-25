@@ -97,6 +97,25 @@ int WasmBuildRoomAttrGrid(int room_id) {
   Dungeon_LoadObjectAttribute();
   Dungeon_LoadDoorAttribute();
 
+  // Shutter doors: the game opens them at RUNTIME via the room's kill tag
+  // (Dungeon_OpenShutterDoors), which this headless rebuild never runs — and a
+  // shutter's far-side draw slot (k >= 8) checks its RAW slot bit, which SRAM
+  // can never carry. Mirror the runtime rule here: when a shutter's door-list
+  // slot (k & 7) reads open, force its draw slot open and restamp its attrs,
+  // so BOTH trigger strips of an opened shutter become walkable transits.
+  {
+    uint16 open_bits = dung_door_opened_incl_adjacent;
+    for (int k = 0; k < 16; k++) {
+      if (!dung_door_tilemap_address[k]) continue;
+      uint8 t = (uint8)(door_type_and_slot[k] & 0xfe);
+      int is_shutter = (t == 0x18 || t == 0x32 || t == 0x36 || t == 0x38 || t == 0x44);
+      if (!is_shutter || !(open_bits & kUpperBitmasks[k & 7])) continue;
+      dung_door_opened_incl_adjacent |= kUpperBitmasks[k];
+      Dungeon_LoadSingleDoorAttribute(k);
+    }
+    dung_door_opened_incl_adjacent = open_bits;
+  }
+
   // Restore
   dungeon_room_index = saved_room;
 

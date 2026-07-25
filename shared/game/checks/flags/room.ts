@@ -273,6 +273,7 @@ const DIRECT_ROOM_FLAGS: Record<string, DirectRoomFlagEntry> = {
   // Standing items (torches, ground items in dungeon rooms)
   // ═══════════════════════════════════════════
   'Desert Palace - Torch': { roomId: 0x73, mask: 0x400 },
+
   "Ganons Tower - Bob's Torch": { roomId: 0x8c, mask: 0x400 },
   'Lost Woods Hideout': { roomId: 0xe1, mask: 0x200 },
   'Lumberjack Tree': { roomId: 0xe2, mask: 0x200 },

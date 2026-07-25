@@ -7,35 +7,48 @@ import { callPtr, callWhenRunning, decodeTable, readU16 } from './wasm-call';
  * Layer 0 = offset 0 (upper) — main walkable floor. Layer 1 = offset 0x1000 (lower).
  * Returns raw data with no modifications. Works with live game state.
  */
-const wasmGetIndoorDualLayerGrids = (): { layer0: number[][]; layer1: number[][]; stairTiles: Array<{ row: number; col: number }> } | null =>
-  callPtr('WasmGetIndoorAttrTable', (mod, ptr) => {
-    const heap = mod.HEAPU8;
-    const layer0: number[][] = Array.from({ length: 64 }, () => new Array<number>(64));
-    const layer1: number[][] = Array.from({ length: 64 }, () => new Array<number>(64));
-    const stairTiles: Array<{ row: number; col: number }> = [];
-    let hasDifference = false;
-    for (let r = 0; r < 64; r++) {
-      const row0 = ptr + r * 64;
-      const row1 = ptr + 0x1000 + r * 64;
-      for (let c = 0; c < 64; c++) {
-        let a0 = heap[row0 + c];
-        let a1 = heap[row1 + c];
-        // Record upper-floor stair positions (raw 0x1C on BG1/layer1) before normalization.
-        if (a1 === 0x1C) {
-          stairTiles.push({ row: r, col: c });
-        }
-        // 0x1C is a filler/stair-detection value; normalize it away by copying the other layer.
-        if (a0 === 0x1C && a1 !== 0x1C) a0 = a1;
-        if (a1 === 0x1C && a0 !== 0x1C) a1 = a0;
-        layer0[r][c] = a0;
-        layer1[r][c] = a1;
-        if (a0 !== a1) hasDifference = true;
+type DualLayerGrids = { layer0: number[][]; layer1: number[][]; stairTiles: Array<{ row: number; col: number }> };
+
+/** Decode a 0x2000-byte attr table ([BG2 at +0][BG1 at +0x1000]) into both layers.
+ *  Returns null when the layers are identical (no meaningful dual-layer collision). */
+const decodeDualLayers = (heap: Uint8Array, ptr: number): DualLayerGrids | null => {
+  const layer0: number[][] = Array.from({ length: 64 }, () => new Array<number>(64));
+  const layer1: number[][] = Array.from({ length: 64 }, () => new Array<number>(64));
+  const stairTiles: Array<{ row: number; col: number }> = [];
+  let hasDifference = false;
+  for (let r = 0; r < 64; r++) {
+    const row0 = ptr + r * 64;
+    const row1 = ptr + 0x1000 + r * 64;
+    for (let c = 0; c < 64; c++) {
+      let a0 = heap[row0 + c];
+      let a1 = heap[row1 + c];
+      // Record upper-floor stair positions (raw 0x1C on BG1/layer1) before normalization.
+      if (a1 === 0x1C) {
+        stairTiles.push({ row: r, col: c });
       }
+      // 0x1C is a filler/stair-detection value; normalize it away by copying the other layer.
+      if (a0 === 0x1C && a1 !== 0x1C) a0 = a1;
+      if (a1 === 0x1C && a0 !== 0x1C) a1 = a0;
+      layer0[r][c] = a0;
+      layer1[r][c] = a1;
+      if (a0 !== a1) hasDifference = true;
     }
-    // If layers are identical after normalization, no meaningful dual-layer collision.
-    if (!hasDifference) return null;
-    return { layer0, layer1, stairTiles };
-  });
+  }
+  if (!hasDifference) return null;
+  return { layer0, layer1, stairTiles };
+};
+
+const wasmGetIndoorDualLayerGrids = (): DualLayerGrids | null =>
+  callPtr('WasmGetIndoorAttrTable', (mod, ptr) => decodeDualLayers(mod.HEAPU8, ptr));
+
+/**
+ * Build BOTH collision layers for any indoor room (headless, room-addressable).
+ * Castle basements and other split-level rooms keep their walkable floor on
+ * BG1 (lower layer, table offset +0x1000) — a BG2-only flood renders them as
+ * solid wall. Null when the layers are identical.
+ */
+const wasmBuildRoomDualLayerGrids = (roomId: number): DualLayerGrids | null =>
+  callPtr('WasmBuildRoomAttrGrid', (mod, ptr) => decodeDualLayers(mod.HEAPU8, ptr), { argTypes: ['number'], args: [roomId] });
 
 /**
  * Get the raw indoor layer0 collision grid from live game state.
@@ -89,6 +102,7 @@ const wasmGetToggleFloorPositions = (): Array<{ pos: number; row: number; col: n
 
 export {
   wasmGetIndoorDualLayerGrids,
+  wasmBuildRoomDualLayerGrids,
   wasmGetIndoorLayer0Grid,
   wasmGetLinkLayer,
   wasmGetRoomCollisionType,

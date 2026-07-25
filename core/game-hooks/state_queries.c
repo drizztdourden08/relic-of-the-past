@@ -91,6 +91,8 @@ int WasmGetProgressFlags(void) {
   g_progress_buf[11] = (uint8)(save_dung_info[0x11E]);
   g_progress_buf[12] = player_sleep_in_bed_state;
   g_progress_buf[13] = follower_indicator;  // tagalong id (0 = none); NPC-presence gate
+  g_progress_buf[14] = link_num_keys;       // key grants/spends are observable progress
+  g_progress_buf[15] = (uint8)link_bigkey;  // big-key grants are observable progress
   return (int)g_progress_buf;
 }
 

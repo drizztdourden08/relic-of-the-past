@@ -15,6 +15,10 @@ interface SimRunConfig {
   stopAtCheckId: string | null;
   /** Hard step cap so a stuck run always terminates. */
   maxSteps: number;
+  /** Diagnostic: flood this overworld screen addressably and report its numbers, then exit. */
+  floodScreen: number | null;
+  /** Max distinct screens the game-driven flood visits before ending (null = unlimited). */
+  screenWalkLimit: number | null;
 }
 
 /** A dataset edge from a reached screen to a screen the run never reached. */

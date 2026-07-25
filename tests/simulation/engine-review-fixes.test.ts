@@ -106,29 +106,32 @@ const CHAIN: ScreenConnection[] = [
   { from: 'B', to: 'C', tags: ['transit:walk', 'dir:two-way'] },
 ];
 
-describe('engine — pass-through screens get observed', () => {
-  it('discovers and triggers an intermediate screen chest while routing past it', () => {
+describe('engine — visited pass-through screens are backtracked, not re-explored', () => {
+  it('routes through an already-visited screen with one Backtrack event and no re-discovery', () => {
     const world = new FakeWorld([
       { screenId: 'B', roomId: CHICKEN_HOUSE_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: BOMBS_ID },
       { screenId: 'C', roomId: LINKS_HOUSE_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: LAMP_ID },
     ]);
     const engine = createEngine({ adjacency: buildAdjacency(CHAIN) });
     let state = createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), { goalCheckId: "Link's House" });
-    // Mark B as already visited so the frontier picks C directly and the route (A→B→C) passes through B.
+    // Mark B as already visited so the route (A→B→C) merely passes through it.
     state.visited.add('B');
 
+    const events: string[] = [];
     for (let i = 0; i < 500 && state.phase !== 'done'; i++) {
       const obs = world.observe(state);
-      const { actions, nextState } = engine.step(state, obs);
+      const { actions, events: stepEvents, nextState } = engine.step(state, obs);
+      for (const e of stepEvents) events.push(e.msg);
       for (const a of actions) world.apply(a);
       state = nextState;
     }
 
     expect(state.phase).toBe('done');
-    // The chest sitting on the pass-through screen B was observed and triggered.
-    expect(state.done.has(`chest:${CHICKEN_HOUSE_ROOM}:0`)).toBe(true);
-    expect(state.completedChecks.has('Chicken House')).toBe(true);
     expect(state.completedChecks.has("Link's House")).toBe(true);
+    // Explored ground is passed through with a single BACKTRACK marker — its
+    // interactables are NOT re-discovered (they were handled when first visited).
+    expect(events.some(m => m.startsWith('Backtrack through B'))).toBe(true);
+    expect(state.done.has(`chest:${CHICKEN_HOUSE_ROOM}:0`)).toBe(false);
   });
 });
 

@@ -6,14 +6,15 @@
  * / JSONL sink. Stops on outcome, the Stop button, or the step safety cap.
  */
 import { useCallback, useRef, useState } from 'react';
-import type { SimulatorPort, SimConfig, EngineState } from '@shared/game/simulation';
-import { createEngine, createEngineState, createRecorder, recordTransition, recordDoorGate } from '@shared/game/simulation';
+import type { SimulatorPort, SimConfig, EngineState, SimEvent } from '@shared/game/simulation';
+import { createEngine, createEngineState, createRecorder, recordTransition, recordDoorGate, screenLabel } from '@shared/game/simulation';
 import type { RecorderState } from '@shared/game/simulation';
-import { createLiveGamePort, createSimLogWriter } from '@app/lib/game/simulator';
+import { createLiveGamePort, createSimLogWriter, screenAreaInfo } from '@app/lib/game/simulator';
 import type { SimLogWriter } from '@app/lib/game/simulator';
 import { pauseSramSync, resumeSramSync } from '@app/lib/game/sram-sync';
 import { useSimulatorStore } from '@app/stores/simulator-store';
-import { buildObservation, fanOutEvents, waitAfterTrigger } from './runner-loop';
+import { buildObservation, fanOutEvents, waitAfterTrigger, screenFloodEvent, exitsEvent, sequenceEvent } from './runner-loop';
+import type { DetectCache } from './runner-loop';
 import { computeProgress, buildRunResults } from './run-results';
 
 const SAFETY_CAP = 50_000;
@@ -27,7 +28,10 @@ const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms
 
 const useSimulatorRun = () => {
   const [stopAtCheckId, setStopAtCheckId] = useState<string>('');
+  const [screenLimit, setScreenLimit] = useState<number | null>(null);
   const [canRestore, setCanRestore] = useState(false);
+  const screenLimitRef = useRef<number | null>(null);
+  screenLimitRef.current = screenLimit;
 
   const control = useRef<Control>({ running: false, paused: false });
   const portRef = useRef<SimulatorPort | null>(null);
@@ -42,12 +46,31 @@ const useSimulatorRun = () => {
 
     const base = port.observe();
     let state: EngineState = createEngineState(base.virtual, base.inventory, config);
+    const detectCache: DetectCache = new Map();
+    let sequenceLabel: string | null = null;
+
+    // Config echo + sequence marker, then the starting screen's flood up front.
+    const startEvents: SimEvent[] = [];
+    const stopLabel = config.stopAtCheckId ? `stop at "${config.stopAtCheckId}", ` : '';
+    startEvents.push({ level: 'narrative', msg: `Run config: ${stopLabel}screen limit ${config.screenLimit ?? 'unlimited'}`, step: state.step });
+    const seq = sequenceEvent(sequenceLabel, state.step);
+    if (seq) { startEvents.push(seq); sequenceLabel = seq.msg.slice('Sequence '.length); }
+    state.area = screenAreaInfo(state.virtual.screenId);
+    if (state.area) startEvents.push({ level: 'narrative', msg: `Area ${state.area.label} (${state.area.size} sub-screens)`, step: state.step });
+    startEvents.push({ level: 'narrative', msg: `Screen ${screenLabel(state.virtual.screenId)}`, step: state.step });
+    startEvents.push({ level: 'narrative', msg: `START at ${state.virtual.tile.col},${state.virtual.tile.row}`, step: state.step });
+    const startFlood = screenFloodEvent(state, detectCache);
+    if (startFlood) startEvents.push(startFlood);
+    const startExits = exitsEvent(state, detectCache);
+    if (startExits) startEvents.push(startExits);
+    fanOutEvents(startEvents, writer, store.pushEvents, recorder);
 
     while (control.current.running && !state.outcome && state.step < SAFETY_CAP) {
       if (control.current.paused) { await sleep(120); continue; }
 
       const previousScreen = state.virtual.screenId;
-      const obs = buildObservation(port, state, itemRef.current);
+      const previousEpoch = state.epoch;
+      const obs = buildObservation(port, state, detectCache, itemRef.current);
       itemRef.current = undefined;
       for (const door of obs.interactables?.doors ?? []) recordDoorGate(recorder, door);
 
@@ -56,8 +79,25 @@ const useSimulatorRun = () => {
       for (const action of actions) await port.trigger(action);
 
       state = nextState;
-      if (nextState.virtual.screenId !== previousScreen) {
-        recordTransition(recorder, previousScreen, nextState.virtual.screenId);
+      const screenChanged = nextState.virtual.screenId !== previousScreen;
+      if (screenChanged) recordTransition(recorder, previousScreen, nextState.virtual.screenId);
+      // A check can flip the game's progress phase — surface it as a Sequence marker.
+      const seqChange = sequenceEvent(sequenceLabel, nextState.step);
+      if (seqChange) {
+        sequenceLabel = seqChange.msg.slice('Sequence '.length);
+        fanOutEvents([seqChange], writer, store.pushEvents, recorder);
+      }
+      // Re-flood on entering a new screen OR after an unlock re-seeds the frontier
+      // (epoch bump), so the "Reset:" line is followed by the new reachability.
+      // Never after the stop target hit / run end, and never on BACKTRACK
+      // pass-through hops (phase stays 'traversing' — explored ground).
+      if ((screenChanged || nextState.epoch > previousEpoch) && nextState.phase !== 'traversing' && !nextState.stopHit && !nextState.outcome) {
+        const followups: SimEvent[] = [];
+        const floodEvent = screenFloodEvent(nextState, detectCache);
+        if (floodEvent) followups.push(floodEvent);
+        const exitsLine = exitsEvent(nextState, detectCache);
+        if (exitsLine) followups.push(exitsLine);
+        if (followups.length > 0) fanOutEvents(followups, writer, store.pushEvents, recorder);
       }
 
       store.setProgress(computeProgress(state));
@@ -88,7 +128,10 @@ const useSimulatorRun = () => {
     pauseSramSync();
     port.setAutoSkipDialog(true);
     const unsubscribe = port.onItemReceived((id) => { itemRef.current = id; });
-    const config: SimConfig = stopAtCheckId ? { stopAtCheckId } : {};
+    const config: SimConfig = {
+      ...(stopAtCheckId ? { stopAtCheckId } : {}),
+      ...(screenLimitRef.current != null ? { screenLimit: screenLimitRef.current } : {}),
+    };
 
     try {
       await drive(port, writer, config);
@@ -132,7 +175,7 @@ const useSimulatorRun = () => {
     await writerRef.current?.openLog();
   }, []);
 
-  return { stopAtCheckId, setStopAtCheckId, canRestore, start, pause, resume, stop, restore, openLog };
+  return { stopAtCheckId, setStopAtCheckId, screenLimit, setScreenLimit, canRestore, start, pause, resume, stop, restore, openLog };
 };
 
 export { useSimulatorRun };

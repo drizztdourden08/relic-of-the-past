@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 /**
- * Shown when a run finishes: the outcome banner, an Open log button, and the
+ * Shown when a run finishes: the outcome banner, a reveal-log-file button, and the
  * list of dataset suggestions the run produced. Reaching the configured stop
  * check ('stopped-at-check') and completing the goal ('completed') both read as
  * success; only 'not-completable' is a failure (with a softlock summary).
@@ -64,7 +64,8 @@ const ResultsPanel = (props: ResultsPanelProps) => {
             <Text className="simulator__banner-detail">{banner.detail}</Text>
           </Box>
         </Box>
-        <Button size="sm" variant="tertiary" onClick={onOpenLog}>Open log</Button>
+        {/* Reveals the run's JSONL on disk — distinct from the in-app log dialog. */}
+        <Button size="sm" variant="tertiary" onClick={onOpenLog}>Reveal log file</Button>
       </Box>
 
       {outcome === 'not-completable' && softlockReport && <SoftlockSummary report={softlockReport} />}

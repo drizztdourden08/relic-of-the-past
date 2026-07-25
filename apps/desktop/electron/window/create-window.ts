@@ -5,6 +5,7 @@ import { is } from '@electron-toolkit/utils';
 import { loadWindowState, trackWindowState } from './window-state';
 import { parseStartupConfig, startupRendererArgs } from './startup-config';
 import { sendWindowToBack } from './send-to-back';
+import { attachTextInteraction } from './text-interaction';
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -128,6 +129,9 @@ const createWindow = (): BrowserWindow => {
       mainWindow!.webContents.setIgnoreMenuShortcuts(false);
     }
   });
+
+  // Right-click Copy/Paste menu + guaranteed Ctrl/Cmd+C copy.
+  attachTextInteraction(mainWindow);
 
   // Allow gamepad and other device permissions for the renderer
   mainWindow.webContents.session.setPermissionCheckHandler(() => true);

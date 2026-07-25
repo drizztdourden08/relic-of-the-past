@@ -24,7 +24,7 @@ const parseSimRunConfig = (): SimRunConfig | null => {
   const arg = process.argv.find((a) => a === '--sim-run' || a.startsWith('--sim-run='));
   if (!arg) return null;
 
-  const config: SimRunConfig = { startSlot: null, target: null, stopAtCheckId: null, maxSteps: DEFAULT_MAX_STEPS };
+  const config: SimRunConfig = { startSlot: null, target: null, stopAtCheckId: null, maxSteps: DEFAULT_MAX_STEPS, floodScreen: null, screenWalkLimit: null };
   const eq = arg.indexOf('=');
   if (eq === -1) return config;
 
@@ -35,6 +35,8 @@ const parseSimRunConfig = (): SimRunConfig | null => {
     else if (key === 'target') config.target = value;
     else if (key === 'stop') config.stopAtCheckId = value;
     else if (key === 'max') config.maxSteps = parseInt(value, 10);
+    else if (key === 'flood') config.floodScreen = parseInt(value, 16);
+    else if (key === 'screens') config.screenWalkLimit = parseInt(value, 10);
   }
   return config;
 };

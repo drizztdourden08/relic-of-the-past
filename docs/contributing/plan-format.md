@@ -2,7 +2,21 @@
 # How to Present a Plan
 
 Every implementation plan for this project follows this format. Keep it **concise** —
-show, don't narrate. Favor code blocks and ASCII over prose.
+show, don't narrate. Favor code blocks and diagrams over prose.
+
+## Deliverable: a rendered HTML page
+
+A plan ships as an **HTML artifact**, not a wall of chat text:
+
+- Write the page source to `plans/<name>.html` so it persists with the project
+  (`/plans` is gitignored — see the plans-folder rule).
+- Publish it with the **Artifact** tool so it renders as a real page.
+- Treatment is **utilitarian and polished**: genuine typographic hierarchy, a considered
+  palette, both light and dark themes, tables for findings, code blocks for real code.
+  Not a landing page — a document that is scanned and operated on.
+
+Markdown in `plans/*.md` stays fine for short notes and throwaway working docs. Anything
+presented as *the plan* gets the rendered page.
 
 ## Required sections (in order)
 
@@ -17,8 +31,7 @@ show, don't narrate. Favor code blocks and ASCII over prose.
 5. **Key code** — real code blocks for the important new/changed units (signatures,
    component skeletons, the core function) so they can be seen before approval.
 6. **Flow / preview** — a data-flow, sequence, component-hierarchy, or UI-layout
-   diagram when it aids understanding. Generate it with the **asciiflow** MCP server
-   and paste the exported ASCII inline (see the Flow / preview section below).
+   diagram when it aids understanding. Use **mermaid** (see the Flow / preview section below).
 7. **Standards check** — confirm tiers (if UI), ≤200 lines/file, one-thing-per-file.
 
 Omit a section only if it genuinely doesn't apply (e.g. no data-model change).
@@ -80,32 +93,102 @@ const useSaveSlots = (profileId: string) => {
 export { useSaveSlots };
 ```
 
-## Flow / preview — generate with the asciiflow MCP server
+## Flow / preview — mermaid
 
-For **box-and-arrow flows, sequence/component diagrams, and UI wireframes**, generate
-the ASCII with the **asciiflow** MCP server — don't hand-draw it. Then **paste the
-exported ASCII into the message/plan** inside a code block (the user does not see raw
-tool output).
+For **box-and-arrow flows, sequence/component diagrams, and dependency graphs**, write
+**mermaid**. Artifacts render it natively — `<pre class="mermaid">…</pre>` in an HTML page,
+or a ```mermaid fence in markdown. No MCP server, no hand-drawn boxes.
 
-- Tools: `canvas_batch` (preferred — one call: `canvas_new` → `draw_box` /
-  `draw_arrow` / `draw_line` / `add_text` → auto-exports). Coordinates are char-grid
-  `x/y/w/h` (boxes min 3×3).
-- **End arrows one cell short of a box** — an arrowhead landing on a border overwrites
-  it (`wind▼w.api`). Leave the head in the gap.
-- Run diagrams **sequentially** (shared canvas); start each with `canvas_new`.
-- **Fallback:** if the MCP server is unavailable, hand-draw the ASCII.
+```html
+<pre class="mermaid">
+flowchart LR
+  W["Widget"] --> FA["lib/game/flood<br/>getScreenGrids → buildFloodOptions"]
+  S["Simulator"] --> FA
+  FA --> F["floodFillScreen"]
+</pre>
+```
 
-Use plain text (not the tool) for: the **CRUD filetree** (it's a text tree, above) and
+- **Quote every node label** (`A["text (ok)"]`) — parentheses and slashes otherwise break
+  the parse. Use `<br/>` for line breaks inside a node.
+- Keep to `flowchart` / `sequenceDiagram` / `graph`; exotic diagram types render
+  inconsistently.
+- **Put diagrams on a light "plate"** (a fixed pale background card) so they stay legible
+  in both themes — mermaid's own colours don't follow the page tokens.
+
+Use plain text (not mermaid) for: the **CRUD filetree** (it's a text tree, above) and
 **tile-grid / pixel-art sketches** (see the `interpret-game-screenshot` skill).
 
-Example (a Save-Manager flow + wireframe) is produced by `canvas_batch` and pasted as
-a fenced block, e.g.:
+Hand-drawn ASCII is an acceptable fallback only when a plan must stay pure markdown.
 
+## House style — the standard plan look
+
+This is the agreed visual system for plan pages. Reuse it; don't reinvent per plan.
+It is derived from the app's own debug UI (warm near-black, amber/gold titles, cyan data
+lines), so a plan reads like a tool document rather than a generic web page.
+
+### Tokens
+
+```css
+:root {
+  /* Neutrals: warm, amber-biased — a pure mid-grey reads as unconsidered */
+  --ground: #12100e; --surface: #1b1815; --surface-2: #221e1a; --hairline: #322b24;
+  --text: #ece6da; --text-dim: #a89e8d; --text-faint: #7c7365;
+  /* Accent = the game's gold; cool = the FLOOD-line cyan, used for links/secondary */
+  --accent: #e8a33d; --cool: #5fb3c4;
+  /* Semantic, kept separate from the accent */
+  --ok: #7fb861; --warn: #e0a63c; --bad: #c9663f;
+  /* Fixed pale card for diagrams — mermaid ignores page tokens */
+  --plate: #f2eee5; --plate-ink: #241f1a;
+
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  --sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --step: clamp(0.82rem, 0.8rem + 0.1vw, 0.9rem);
+  --maxw: 74rem;
+}
 ```
-┌──SaveManager───┐    ┌──useSaveSlots──┐    ┌───saveStore────┐
-│                │────►                │────►                │
-└────────────────┘    └────────────────┘    └────────────────┘
-```
+
+Light theme flips to warm paper (`--ground: #f7f4ed`, `--surface: #fffdf8`,
+`--text: #1e1a16`) with the accents darkened for contrast (`--accent: #a96a10`,
+`--cool: #2b7c8e`, `--ok: #4a7f31`, `--bad: #a2431f`).
+
+**Theme wiring is token-level:** define the palette on `:root`, redefine *only the tokens*
+under `@media (prefers-color-scheme: dark)`, then again under `:root[data-theme="dark"]`
+and `:root[data-theme="light"]` so the viewer's toggle wins in both directions. Style
+components through the tokens — never inside the media query.
+
+### Type
+
+- **Headings + data in mono, body in sans.** Mono headings suit debug/disassembly subject
+  matter; the sans keeps prose readable. No webfont URLs — the artifact CSP blocks font
+  CDNs and you get a silent fallback. System stacks only.
+- Body `line-height: 1.62`, paragraphs capped at `68ch`, standfirst at `60ch`.
+- `text-wrap: balance` on headings; uppercase eyebrows/labels at `0.1–0.16em` tracking.
+- `font-variant-numeric: tabular-nums` wherever digits line up.
+
+### Layout & components
+
+- Single centred spine at `--maxw`; `gap`-based flex/grid, not per-element margins.
+- **Masthead:** mono eyebrow → `h1` → standfirst → a **verdict strip** of 3–5 headline
+  numbers (`dl` grid with `gap: 1px` over a `--hairline` background for hairline dividers).
+- **`h2`:** mono, `border-bottom: 2px solid var(--accent)`, plus a small filled phase badge.
+- **Findings table:** mono ID column in `--accent`, a severity **chip** per row. Chips tint
+  from one token: `background: color-mix(in srgb, var(--bad) 22%, transparent)` with a 45%
+  border. Wrap every table in an `overflow-x: auto` container so the body never scrolls
+  sideways.
+- **Steps:** `ol` with `counter-reset` and circular numbered markers + a top hairline per
+  item. Use numbering **only when order is real** (a dependency chain), never as decoration.
+- **Callouts:** `3px` left border — `--cool` for information, `--bad` for blocking.
+- **Code:** mono `0.78rem` on `--surface`, `2px solid var(--accent)` left border,
+  `overflow-x: auto`. Colour spans inside: comment / keyword / string / deleted.
+- **Diagram plates:** always-pale card (`--plate`) with an uppercase mono `figcaption`, so
+  mermaid stays legible in either theme.
+- Visible `:focus-visible`, and honour `prefers-reduced-motion`.
+
+### Structural honesty
+
+Numbering, eyebrows, dividers and chips must encode something **true** — steps are numbered
+because they depend on each other, chips carry the real severity categories from the audit.
+If a device is only decoration, drop it.
 
 ## Style rules
 

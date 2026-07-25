@@ -67,25 +67,25 @@ int WasmGetRoomExitDoors(void) {
 
 // ─── Room Inter-Room Stair Info (destinations + positions from attr table) ───
 // Max 4 inter-room stairs per room.
-// Each entry: [destRoom(1), tileRow(1), tileCol(1), direction(1)]
-// direction: 0=up, 4=down (matches attr bit 2)
+// Each entry: [destRoom(1), tileRow(1), tileCol(1), flags(1)]
+// flags: bit 2 = direction (0 up, 4 down, matches attr bit 2), bit 0 = the attr
+// PAGE the stair tile was found on (0 = BG2/upper, 1 = BG1/lower) — taking the
+// stair deposits Link on that layer, which decides the destination flood's
+// start layer (the sewers' Behind-Sanctuary alcove is a BG1 arrival).
 // Stair index tiles have attr = 0x30..0x37 where bits 0-1 = stair index, bit 2 = direction.
 
 static uint8 g_room_stairs_buf[2 + 4 * 4];
 
-EMSCRIPTEN_KEEPALIVE
-int WasmGetRoomStairInfo(void) {
-  memset(g_room_stairs_buf, 0, sizeof(g_room_stairs_buf));
+int WasmBuildRoomAttrGrid(int room_id);  // state_queries_grids.c
 
-  if (!player_is_indoors) {
-    return (int)g_room_stairs_buf;
-  }
-
+// Scan both pages of the attr table for stair index tiles and pair each with
+// its header travel destination. The attr table + header must already describe
+// the room being queried (live play, or right after WasmBuildRoomAttrGrid).
+// Page 0 = upper layer (offset 0), Page 1 = lower layer (offset 0x1000).
+static int SimScanRoomStairs(void) {
   uint8 found[4] = {0, 0, 0, 0};
   uint8 count = 0;
 
-  // Scan both pages of the attr table for stair index tiles.
-  // Page 0 = upper layer (offset 0), Page 1 = lower layer (offset 0x1000).
   for (int page = 0; page < 2 && count < 4; page++) {
     int base = page * 0x1000;
     for (int pos = 0; pos < 0x1000 && count < 4; pos++) {
@@ -104,7 +104,7 @@ int WasmGetRoomStairInfo(void) {
       g_room_stairs_buf[o + 0] = dest;
       g_room_stairs_buf[o + 1] = row;
       g_room_stairs_buf[o + 2] = col;
-      g_room_stairs_buf[o + 3] = attr & 4;
+      g_room_stairs_buf[o + 3] = (uint8)((attr & 4) | page);
       count++;
     }
   }
@@ -112,6 +112,27 @@ int WasmGetRoomStairInfo(void) {
   g_room_stairs_buf[0] = count;
   g_room_stairs_buf[1] = 0;
   return (int)g_room_stairs_buf;
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetRoomStairInfo(void) {
+  memset(g_room_stairs_buf, 0, sizeof(g_room_stairs_buf));
+
+  if (!player_is_indoors) {
+    return (int)g_room_stairs_buf;
+  }
+
+  return SimScanRoomStairs();
+}
+
+// Room-addressable variant: rebuild the target room's attr table + header
+// (WasmBuildRoomAttrGrid loads both), then run the same stair scan — so the
+// simulator can discover a remote room's staircases without Link being there.
+EMSCRIPTEN_KEEPALIVE
+int WasmGetRoomStairInfoFor(int room_id) {
+  memset(g_room_stairs_buf, 0, sizeof(g_room_stairs_buf));
+  WasmBuildRoomAttrGrid(room_id);
+  return SimScanRoomStairs();
 }
 
 // ─── Room Travel Destinations (from room header) ───
@@ -125,6 +146,18 @@ int WasmGetRoomTravelDestinations(void) {
   for (int i = 0; i < 5; i++) {
     g_travel_dest_buf[i] = player_is_indoors ? dung_hdr_travel_destinations[i] : 0;
   }
+  return (int)g_travel_dest_buf;
+}
+
+// Room-addressable variant: load the target room's header, then return its
+// 5 travel destination bytes ([0] pit/warp, [1..4] stair/teleport slots —
+// warp-room doors teleport to [3] (west) / [4] (east), dungeon.c:2067).
+EMSCRIPTEN_KEEPALIVE
+int WasmGetRoomTravelDestinationsFor(int room_id) {
+  memset(g_travel_dest_buf, 0, sizeof(g_travel_dest_buf));
+  if (room_id < 0 || room_id >= 0x128) return (int)g_travel_dest_buf;
+  WasmBuildRoomAttrGrid(room_id);
+  for (int i = 0; i < 5; i++) g_travel_dest_buf[i] = dung_hdr_travel_destinations[i];
   return (int)g_travel_dest_buf;
 }
 
@@ -149,19 +182,12 @@ int WasmGetStaircaseType(void) {
 
 static uint8 g_walk_bounds_buf[2 + 4 * 4];
 
-EMSCRIPTEN_KEEPALIVE
-int WasmGetRoomWalkBoundaries(void) {
-  memset(g_walk_bounds_buf, 0, sizeof(g_walk_bounds_buf));
-
-  if (!player_is_indoors) {
-    return (int)g_walk_bounds_buf;
-  }
-
+// Scan the toggle-palace positions loaded for `room` (live play, or right
+// after WasmBuildRoomAttrGrid loaded that room's objects).
+static int SimScanWalkBoundaries(uint16 room) {
   uint8 count = 0;
   uint8 num_toggles = (uint8)(dung_num_toggle_palace >> 1);
   if (num_toggles > 4) num_toggles = 4;
-
-  uint16 room = dungeon_room_index;
 
   for (uint8 i = 0; i < num_toggles && count < 4; i++) {
     uint16 pos = dung_toggle_palace_pos[i];
@@ -187,4 +213,35 @@ int WasmGetRoomWalkBoundaries(void) {
   g_walk_bounds_buf[0] = count;
   g_walk_bounds_buf[1] = 0;
   return (int)g_walk_bounds_buf;
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetRoomWalkBoundaries(void) {
+  memset(g_walk_bounds_buf, 0, sizeof(g_walk_bounds_buf));
+  if (!player_is_indoors) return (int)g_walk_bounds_buf;
+  return SimScanWalkBoundaries(dungeon_room_index);
+}
+
+// Room-addressable room-header TAG bytes ([tag1, tag2]) — the room's scripted
+// effects (kill-enemies-to-open-door, switch doors, moving walls, …).
+static uint8 g_room_tags_buf[2];
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetRoomTagsFor(int room_id) {
+  g_room_tags_buf[0] = g_room_tags_buf[1] = 0;
+  if (room_id < 0 || room_id >= 0x128) return (int)g_room_tags_buf;
+  WasmBuildRoomAttrGrid(room_id);
+  g_room_tags_buf[0] = dung_hdr_tag[0];
+  g_room_tags_buf[1] = dung_hdr_tag[1];
+  return (int)g_room_tags_buf;
+}
+
+// Room-addressable variant: rebuild the target room (loads its toggle-palace
+// walk-through positions), then run the same scan — remote rooms included.
+EMSCRIPTEN_KEEPALIVE
+int WasmGetRoomWalkBoundariesFor(int room_id) {
+  memset(g_walk_bounds_buf, 0, sizeof(g_walk_bounds_buf));
+  if (room_id < 0 || room_id >= 0x128) return (int)g_walk_bounds_buf;
+  WasmBuildRoomAttrGrid(room_id);
+  return SimScanWalkBoundaries((uint16)room_id);
 }

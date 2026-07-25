@@ -63,6 +63,10 @@ const keyDown = (m: InputManager, e: KeyboardEvent): void => {
   m.rawDispatcher.emit({ type: 'keyboard', code: e.code }, 'keyboard');
 
   if (m.inputSuppressed) return;
+  // Ctrl/Cmd chords (copy/paste/select-all…) are never game input — swallowing
+  // them here killed Ctrl+C over hand-selected log text. The modifier key's own
+  // keydown still routes normally in case Ctrl itself is mapped.
+  if ((e.ctrlKey || e.metaKey) && !e.code.startsWith('Control') && !e.code.startsWith('Meta')) return;
 
   if (!e.repeat) {
     if (m.functionActions.handleKeyDown(e.code, e.shiftKey, e.ctrlKey, e.altKey)) {

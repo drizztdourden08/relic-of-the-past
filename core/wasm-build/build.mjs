@@ -45,7 +45,7 @@ const opusSrc = [z('third_party', 'opus-1.3.1-stripped', 'opus_decoder_amalgam.c
 const hookSrcs = [
   'game_hooks', 'state_queries', 'state_queries_sprites', 'state_queries_grids',
   'state_queries_tables', 'state_queries_rooms', 'state_queries_room_exits',
-  'sim_queries', 'item_overrides', 'check_triggers', 'ui_state', 'cheats', 'haptic_events',
+  'sim_queries', 'sim_triggers', 'item_overrides', 'check_triggers', 'ui_state', 'cheats', 'haptic_events',
 ].map((f) => h(`${f}.c`));
 
 // Our Emscripten entry points (replace the native main.c). Resolved from this dir.

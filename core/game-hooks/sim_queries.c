@@ -29,16 +29,19 @@ static int SimIsCurrentRoom(int room_id) {
 // Layout: [count(1), pad(1)] then count records of 7 bytes:
 //   [chestIndex(1), isBig(1), itemId(1), isOpen(1), posKnown(1), col(1), row(1)]
 // chestIndex 0-5 = order within the room's chest table (also the open-bit index).
-// Tile position is only resolvable for the occupied room (posKnown=0 elsewhere);
-// col/row index the 64-wide dungeon tilemap (row spans pages for tall rooms).
+// Tile position comes from live dung_chest_locations for the occupied room, and
+// from the room's static object data (the chest object's draw position) for any
+// other room — so remote chests are position-known too; col/row index the
+// 64-wide dungeon tilemap (row spans pages for tall rooms).
 static uint8 g_sim_chests_buf[2 + 6 * 7];
 
 // Walk one room-object list layer starting at byte |off|, counting drawn chest
-// objects and returning the offset of its 0xffff terminator. Mirrors the loader's
-// RoomDraw_DrawAllObjects / RoomData_DrawObject (dungeon.c:2664,2695) without any
-// drawing or live-state writes: 3-byte object entries until 0xffff, with a 0xfff0
-// marker switching to a 2-byte door sub-list (doors draw no chest).
-static int SimScanChestObjects(const uint8 *p, int off, int *chests) {
+// objects (recording each one's draw-position tile) and returning the offset of
+// its 0xffff terminator. Mirrors the loader's RoomDraw_DrawAllObjects /
+// RoomData_DrawObject (dungeon.c:2664,2695) without any drawing or live-state
+// writes: 3-byte object entries until 0xffff, with a 0xfff0 marker switching to
+// a 2-byte door sub-list (doors draw no chest).
+static int SimScanChestObjects(const uint8 *p, int off, int *chests, uint8 *cols, uint8 *rows) {
   for (;;) {
     uint16 d = *(const uint16 *)(p + off);
     if (d == 0xffff) return off;
@@ -51,7 +54,15 @@ static int SimScanChestObjects(const uint8 *p, int off, int *chests) {
     uint8 idx = p[off + 2];
     if ((d & 0xfc) != 0xfc && idx >= 0xf8) {
       uint8 sub = (uint8)(((idx & 7) << 4) | (((d >> 8) & 3) << 2) | (d & 3));
-      if (sub == 0x19 || sub == 0x31) (*chests)++;
+      if (sub == 0x19 || sub == 0x31) {
+        // Draw position, decoded exactly like the full-index object branch of
+        // RoomData_DrawObject: x = low byte >> 2, y = top 6 bits (dst = y*64+x).
+        if (*chests < 6) {
+          cols[*chests] = (uint8)((d & 0xff) >> 2);
+          rows[*chests] = (uint8)((d >> 10) & 0x3f);
+        }
+        (*chests)++;
+      }
     }
     off += 3;
   }
@@ -62,18 +73,19 @@ static int SimScanChestObjects(const uint8 *p, int off, int *chests) {
   }
 }
 
-// Room-addressable count of the chest objects a room actually draws, derived from
-// its static object data — no loaded-room state required, so it is valid for remote
-// queries. The room's own objects live in three consecutive layers starting at byte
-// 2 (Dungeon_LoadRoom dungeon.c:2621-2631; byte 0 is the floor, byte 1 the layout);
-// each layer ends in 0xffff, +2 reaches the next. The shared wall-shell template
+// Room-addressable scan of the chest objects a room actually draws — count plus
+// each chest's draw-position tile — derived from its static object data. No
+// loaded-room state required, so it is valid for remote queries. The room's own
+// objects live in three consecutive layers starting at byte 2 (Dungeon_LoadRoom
+// dungeon.c:2621-2631; byte 0 is the floor, byte 1 the layout); each layer ends
+// in 0xffff, +2 reaches the next. The shared wall-shell template
 // (dungeon.c:2614-2619) is structural and never carries chests, so it is not scanned.
-static int SimRoomDrawnChestCount(int room_id) {
+static int SimRoomScanChests(int room_id, uint8 *cols, uint8 *rows) {
   const uint8 *p = GetDungeonRoomLayout(room_id);
   int chests = 0;
   int off = 2;
   for (int layer = 0; layer < 3; layer++) {
-    off = SimScanChestObjects(p, off, &chests);
+    off = SimScanChestObjects(p, off, &chests, cols, rows);
     off += 2;
   }
   return chests;
@@ -98,8 +110,10 @@ int WasmGetRoomChests(int room_id) {
   // For the loaded room dung_num_chests_x2>>1 is that count directly; remote rooms
   // (the live counter only describes the loaded room) parse the static object data
   // room-addressably so the cap — and the 0x55 suppression — holds off-screen too.
+  uint8 scan_cols[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+  uint8 scan_rows[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
   int drawn = current ? (int)(dung_num_chests_x2 >> 1)
-                      : SimRoomDrawnChestCount(room_id);
+                      : SimRoomScanChests(room_id, scan_cols, scan_rows);
   uint16 sram = save_dung_info[room_id];
   const uint8 *cd = kDungeonRoomChests;
   uint8 count = 0;
@@ -121,6 +135,12 @@ int WasmGetRoomChests(int room_id) {
         row = (uint8)(pos >> 6);
         pos_known = 1;
       }
+    } else if (scan_cols[count] != 0xFF) {
+      // Remote room: the chest object's draw position (same slot order — each
+      // drawn chest takes slot == its scan ordinal, matching the live decode).
+      col = scan_cols[count];
+      row = scan_rows[count];
+      pos_known = 1;
     }
 
     int o = 2 + count * 7;
@@ -139,9 +159,12 @@ int WasmGetRoomChests(int room_id) {
 
 // ─── Static sprite spawns ───
 // Layout: [count(1), sortSetting(1)] then count records of 4 bytes:
-//   [spriteType(1), col(1), row(1), floor(1)]
-// col/row are 8px-tile positions within the 64x64 room grid. Overlords (x>=0xe0)
-// and die-action markers (type 0xe4) are omitted — only spawn sprites are listed.
+//   [spriteType(1), col(1), row(1), flags(1)]
+// col/row are 8px-tile positions within the 64x64 room grid. flags: bit0 =
+// floor (y>>7), bit1 = drops a small key on death, bit2 = drops the big key —
+// from the 0xe4/0xfe|0xfd die-action marker that FOLLOWS the carrier's entry
+// (Dungeon_LoadSingleSprite, sprite.c:3662). Overlords (x>=0xe0) and the
+// markers themselves are omitted — only spawn sprites are listed.
 static uint8 g_sim_sprites_buf[2 + 32 * 4];
 
 EMSCRIPTEN_KEEPALIVE
@@ -154,7 +177,10 @@ int WasmGetRoomSpriteSpawns(int room_id) {
   uint8 count = 0;
   for (; *src != 0xff && count < 32; src += 3) {
     uint8 y = src[0], x = src[1], type = src[2];
-    if (type == 0xe4 && (y == 0xfe || y == 0xfd)) continue;
+    if (type == 0xe4 && (y == 0xfe || y == 0xfd)) {
+      if (count > 0) g_sim_sprites_buf[2 + (count - 1) * 4 + 3] |= (y == 0xfe) ? 2 : 4;
+      continue;
+    }
     if (x >= 0xe0) continue;
 
     int o = 2 + count * 4;
@@ -183,12 +209,14 @@ static uint8 SimDoorKind(uint8 t) {
 }
 
 // ─── Doors ───
-// Layout: [count(1), pad(1)] then count records of 6 bytes:
-//   [direction(1), col(1), row(1), kind(1), nativeType(1), isOpen(1)]
+// Layout: [count(1), pad(1)] then count records of 7 bytes:
+//   [direction(1), col(1), row(1), kind(1), nativeType(1), isOpen(1), layer(1)]
 // direction 0=N,1=S,2=W,3=E. col/row index the 64-wide dungeon tilemap.
 // isOpen: door-open bit (slots 0-3) from the live word for the occupied room or
 // the SRAM room word otherwise; always-open doorways (types 0/2) read open.
-static uint8 g_sim_doors_buf[2 + 16 * 6];
+// layer: 0 = upper/BG2, 1 = lower/BG1 — door position slots 6-11 are the
+// lower-layer positions (RoomDraw_NormalRangedDoors_*, dungeon.c:3068).
+static uint8 g_sim_doors_buf[2 + 16 * 7];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomDoorInfo(int room_id) {
@@ -211,20 +239,23 @@ int WasmGetRoomDoorInfo(int room_id) {
     uint16 addr = tab[pos] & 0x1fff;
 
     uint8 is_open = (type == 0 || type == 2) ? 1
-                  : (count < 4 && (open_bits & (0x1000 << count))) ? 1 : 0;
+                  : (count < 4 && (open_bits & (0x8000 >> count))) ? 1 : 0;
 
-    int o = 2 + count * 6;
+    int o = 2 + count * 7;
     g_sim_doors_buf[o + 0] = dir;
     g_sim_doors_buf[o + 1] = (uint8)((addr % 128) / 2);
     g_sim_doors_buf[o + 2] = (uint8)(addr / 128);
     g_sim_doors_buf[o + 3] = SimDoorKind(type);
     g_sim_doors_buf[o + 4] = type;
     g_sim_doors_buf[o + 5] = is_open;
+    g_sim_doors_buf[o + 6] = (pos >= 6) ? 1 : 0;
     count++;
   }
   g_sim_doors_buf[0] = count;
   return (int)g_sim_doors_buf;
 }
+
+// (Door unlock/close and enemy-kill trigger writes live in sim_triggers.c.)
 
 // ─── Overworld static sprite spawns ───
 // Layout: [count(1), pad(1)] then count records of 3 bytes:

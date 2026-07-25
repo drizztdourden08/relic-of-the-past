@@ -28,6 +28,8 @@ interface SimConfig {
   stopAtCheckId?: string;
   /** Goal check whose completion ends the run (default: Ganon). */
   goalCheckId?: string;
+  /** Stop once this many distinct screens have been visited (for bounded testing). */
+  screenLimit?: number;
 }
 
 // ─── Virtual Link & Observation ──────────────────────────────────────────────
@@ -66,6 +68,37 @@ interface SimObservation {
   presenceState?: PresenceGameState;
   /** Item id delivered since the previous step (from onItemReceived). */
   itemReceived?: number;
+  /**
+   * Exits detected by flooding the current screen in-game (border connections,
+   * doors, holes, stairs). When present, traversal runs purely on this
+   * discovered graph — the static connection dataset is not consulted.
+   */
+  exits?: SimExit[];
+  /** Flood-reached tiles of the current screen (region memory for re-visits). */
+  reached?: boolean[][];
+}
+
+/** A big multi-sub-screen overworld area (castle-style 2×2 groups). */
+interface SimArea {
+  key: string;
+  label: string;
+  size: number;
+}
+
+/** A game-detected way off a screen: destination + where Link lands there. */
+interface SimExit {
+  to: string;
+  entryTile?: GridPos;
+  /** Border crossings are walkable both ways; holes/doors are not implied so. */
+  twoWay?: boolean;
+  /** Tile the exit sits on within the flooded screen (walk-distance ordering). */
+  fromTile?: GridPos;
+  /** Big-area sub-screen the exit physically sits on, when not the visited one. */
+  via?: string;
+  /** Walk-steps from the entry tile (out-of-area exits carry a bias offset). */
+  steps?: number;
+  /** Big area the DESTINATION belongs to (null/absent = a standalone screen). */
+  area?: SimArea;
 }
 
 /** Identifies which screen/room the room-addressable reads target. */
@@ -93,6 +126,8 @@ interface RoomInteractables {
   chests: SimChest[];
   sprites: SimSprite[];
   doors: SimDoor[];
+  /** Room-header TAG bytes ([tag1, tag2]); [0,0] outdoors/unknown. */
+  tags?: [number, number];
 }
 
 // ─── Trigger Actions ─────────────────────────────────────────────────────────
@@ -101,7 +136,12 @@ type TriggerAction =
   | { type: 'chest'; roomId: number; chestIndex: number; itemId: number }
   | { type: 'npc'; flagType: number; flagMask: number; itemId: number }
   | { type: 'overworld'; screen: number; mask: number; itemId: number }
-  | { type: 'boss'; roomId: number; itemId: number; prizeId: number };
+  | { type: 'boss'; roomId: number; itemId: number; prizeId: number }
+  | { type: 'door'; roomId: number; doorIndex: number; doorKind: 'small-key' | 'big-key' | 'bombable'; cellLock?: boolean }
+  | { type: 'kill'; roomId: number; itemId: number; opensShutters: boolean }
+  | { type: 'trapShutters'; roomId: number }
+  | { type: 'pullSwitch'; roomId: number }
+  | { type: 'progress'; step: 'zelda-follow' | 'zelda-rescue' };
 
 // ─── Detection ───────────────────────────────────────────────────────────────
 
@@ -177,15 +217,24 @@ interface SimSprite {
   posKnown: boolean;
   kind: 'npc' | 'standing' | 'overworld' | 'other';
   itemId?: number;
+  /** Drops a small key when defeated (from the room's die-action marker). */
+  carriesKey?: boolean;
+  /** Drops the BIG key when defeated (0xe4/0xfd marker). */
+  carriesBigKey?: boolean;
 }
 
 interface SimDoor {
   roomId: number;
+  /** Slot in the room's door table — also the open-bit index (slots 0-3). */
+  index: number;
   tiles: GridPos[];
   direction: 'n' | 's' | 'e' | 'w';
   kind: 'normal' | 'small-key' | 'big-key' | 'bombable' | 'shutter' | 'switch' | 'trap';
   /** From the room's door-open flag bits. */
   opened: boolean;
+  /** A jail-cell keyhole plate (room object 0x18) rather than a door-table door:
+   *  `index` is its chest slot and opening it writes that slot's open bit. */
+  cellLock?: boolean;
 }
 
 export type {
@@ -195,6 +244,8 @@ export type {
   VirtualLink,
   FlagSnapshot,
   SimObservation,
+  SimExit,
+  SimArea,
   SimLocation,
   ScreenGridBundle,
   RoomInteractables,

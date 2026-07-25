@@ -1,0 +1,229 @@
+/* @layer renderer-widgets @kind style */
+
+/* Code-editor-style log: line-number gutter + coloured tag + message, in a
+   bordered panel with its own background. */
+.sim-log {
+  overflow: auto;
+  padding: var(--space-sm) 0;
+  background: var(--c-inset);
+  border: 1px solid var(--c-hairline);
+  border-radius: var(--r-md);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  color: var(--c-text);
+
+  /* Global styles disable selection; the log must be hand-selectable + copyable. */
+  user-select: text;
+}
+
+/* Force selection on every descendant too — ancestor user-select: none rules
+   (body reset, widget frame) otherwise re-resolve `auto` children to none. */
+.sim-log * {
+  user-select: text;
+}
+
+/* Higher specificity than `.sim-log *`: line numbers stay out of hand-copies. */
+.sim-log .sim-log__ln {
+  user-select: none;
+}
+
+.sim-log--empty {
+  padding: var(--space-md);
+  color: var(--c-text-faint);
+}
+
+/* Positioning context for the floating "newest" button over the scroller. */
+.sim-log-scroll {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sim-log__to-bottom {
+  position: absolute;
+  right: var(--space-md);
+  bottom: var(--space-md);
+  z-index: var(--z-base);
+  opacity: 0.85;
+}
+
+/* Header row of the window: loads the previous slice of history. */
+.sim-log__older {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-md) var(--space-sm);
+  border-bottom: 1px solid var(--c-hairline);
+}
+
+.sim-log__older-note {
+  color: var(--c-text-faint);
+}
+
+/* A fixed line-number gutter, then the (indentable) content block. */
+.sim-log__row {
+  display: grid;
+  grid-template-columns: 4ch 1fr;
+  column-gap: var(--space-md);
+  align-items: stretch;
+  padding: 0 var(--space-md);
+  white-space: pre-wrap;
+}
+
+.sim-log__row:hover {
+  background: var(--c-hover);
+}
+
+.sim-log__ln {
+  text-align: right;
+  color: var(--c-text-faint);
+  user-select: none; /* keep line numbers out of hand-copied text */
+}
+
+/* Content = tag column + message. Screen markers sit here at the base level. */
+.sim-log__content {
+  display: grid;
+  grid-template-columns: 10ch 1fr;
+  column-gap: var(--space-md);
+  align-items: baseline;
+  min-width: 0;
+}
+
+/* Indent levels: Sequence at the base, big-screen Areas one in, Screen markers
+   under their area (or the sequence), and everything inside a screen one deeper
+   with a vertical guide line (stacked rows share the border). */
+.sim-log__content--lvl1 {
+  margin-left: var(--space-lg);
+}
+
+.sim-log__content--lvl2 {
+  margin-left: calc(var(--space-lg) * 2);
+  padding-left: var(--space-md);
+  border-left: 2px solid var(--c-hairline);
+}
+
+.sim-log__content--lvl3 {
+  margin-left: calc(var(--space-lg) * 3);
+  padding-left: var(--space-md);
+  border-left: 2px solid var(--c-hairline);
+}
+
+.sim-log__tag {
+  text-align: right;
+  font-weight: var(--weight-semi);
+  white-space: nowrap;
+}
+
+.sim-log__msg {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ── Colour by event kind (tag strong, message tinted) ── */
+.sim-log__tag--seq      { color: var(--c-gold-bright); }
+
+.sim-log__msg--seq {
+  color: var(--c-gold-bright);
+  font-weight: var(--weight-semi);
+  text-transform: uppercase;
+}
+
+.sim-log__tag--area     { color: var(--c-info); }
+
+.sim-log__msg--area {
+  color: var(--c-info);
+  font-weight: var(--weight-semi);
+}
+
+.sim-log__tag--backtrack { color: var(--c-text-muted); }
+.sim-log__msg--backtrack { color: var(--c-text-muted); }
+.sim-log__tag--pos      { color: var(--c-text-faint); }
+.sim-log__msg--pos      { color: var(--c-text-dim); }
+.sim-log__tag--screen   { color: var(--c-text); }
+
+.sim-log__msg--screen {
+  color: var(--c-text);
+  font-weight: var(--weight-semi);
+}
+
+.sim-log__tag--flood    { color: var(--c-info); }
+.sim-log__msg--flood    { color: var(--c-info); }
+.sim-log__tag--reset    { color: var(--c-gold-bright); }
+.sim-log__msg--reset    { color: var(--c-gold); }
+.sim-log__tag--check    { color: var(--c-green); }
+.sim-log__msg--check    { color: var(--c-green-dim); }
+.sim-log__tag--item     { color: var(--c-gold-bright); }
+.sim-log__msg--item     { color: var(--c-gold); }
+.sim-log__tag--move     { color: var(--c-text-muted); }
+.sim-log__msg--move     { color: var(--c-text-dim); }
+.sim-log__tag--unlock   { color: var(--c-gold-bright); }
+.sim-log__msg--unlock   { color: var(--c-gold-bright); }
+.sim-log__tag--outcome  { color: var(--c-green-bright); }
+.sim-log__msg--outcome  { color: var(--c-green-bright); }
+.sim-log__tag--discover { color: var(--c-info-dim); }
+.sim-log__msg--discover { color: var(--c-text); }
+.sim-log__tag--info     { color: var(--c-text-muted); }
+.sim-log__msg--info     { color: var(--c-text); }
+.sim-log__tag--debug    { color: var(--c-text-faint); }
+.sim-log__msg--debug    { color: var(--c-text-faint); }
+
+/* ── Pop-out dialog ── */
+.sim-log-dialog {
+  /* Override the base .dialog max-width: 400px — the log needs room. */
+  width: min(1100px, 95vw);
+  max-width: 95vw;
+  height: min(82vh, 900px);
+  display: flex;
+  flex-direction: column;
+}
+
+.sim-log-dialog__toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-bottom: var(--space-sm);
+}
+
+.sim-log-dialog__count {
+  margin-right: auto;
+  color: var(--c-text-faint);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.sim-log-dialog__body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sim-log-dialog__body .sim-log-scroll,
+.sim-log-dialog__body .sim-log {
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── Type filter dropdown ── */
+.log-filter {
+  position: relative;
+}
+
+.log-filter__panel {
+  position: absolute;
+  top: calc(100% + var(--space-xs));
+  left: 0;
+  z-index: var(--z-popover);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 160px;
+  padding: var(--space-sm);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-dropdown);
+}
