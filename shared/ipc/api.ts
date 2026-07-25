@@ -50,8 +50,12 @@ interface ExtrasApi {
   os: string; // process.platform on Electron ('win32' | 'darwin' | 'linux')
   getSpritesBaseUrl: (romFile: string) => string;
   getFilePath: (file: File) => string;
-  // Test/automation startup flags (see electron window/startup-config.ts).
-  startup: { fresh: boolean; widgets: string[] };
+  // Test/automation startup flags (see electron window/startup-config.ts). `automation`
+  // is true for ANY automated launch and makes it read-only for shared configuration.
+  startup: { fresh: boolean; widgets: string[]; automation: boolean };
+  // Named-instance identity (see electron instance/instance-config.ts). Both null on
+  // a normal launch; `name` marks the window, `profile` is the profile to boot into.
+  instance: { name: string | null; profile: string | null };
 }
 
 type IpcApi = InvokeApi & SendApi & EventApi & ExtrasApi & {

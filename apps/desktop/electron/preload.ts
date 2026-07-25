@@ -13,6 +13,10 @@ import { invoke, subscribe, buildInvoke, buildSend, buildEvents } from './lib/ip
 
 const romStem = (romFile: string): string => parse(romFile).name;
 
+/** Read a `--flag=value` argument forwarded from main via additionalArguments. */
+const forwardedFlag = (flag: string): string | null =>
+  process.argv.find((a) => a.startsWith(`${flag}=`))?.slice(flag.length + 1) || null;
+
 const api: IpcApi = {
   // Non-IPC helpers
   isDev: process.env.NODE_ENV !== 'production',
@@ -24,6 +28,15 @@ const api: IpcApi = {
   startup: {
     fresh: process.argv.includes('--startup-fresh'),
     widgets: (process.argv.find((a) => a.startsWith('--startup-widgets='))?.slice('--startup-widgets='.length).split(',').filter(Boolean)) ?? [],
+    // True for any test/automation launch. Such a run must not write the configuration
+    // every launch shares — see lib/instance.ts.
+    automation: process.argv.includes('--startup-automation'),
+  },
+  // Named-instance identity (--instance / --profile), null on a normal launch. The
+  // renderer marks the window with the name and boots straight into `profile`.
+  instance: {
+    name: forwardedFlag('--startup-instance'),
+    profile: forwardedFlag('--startup-profile'),
   },
 
   // Flat methods generated from the channel maps

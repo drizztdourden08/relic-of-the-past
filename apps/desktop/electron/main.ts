@@ -11,6 +11,7 @@ const logBoot = (label: string): void => {
 };
 
 import { initPaths, ensureDataDirectories } from './lib/paths';
+import { applyInstanceIdentity, parseInstanceConfig } from './instance';
 import { createWindow, getMainWindow, registerWindowHandlers, registerAspectRatioHandlers } from './window';
 import { saveWindowState } from './window/window-state';
 import { isEphemeralLaunch } from './window/startup-config';
@@ -74,6 +75,11 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
 
 // Ensure consistent userData path across dev and production
 app.setName('relic-of-the-past');
+
+// A named instance identifies itself to the OS (Windows taskbar grouping, macOS dock),
+// so an automated launch is tellable apart wherever windows are listed. Must run before
+// the first window exists. No-op on a normal launch.
+applyInstanceIdentity(parseInstanceConfig().name);
 
 // Register custom protocol for serving sprite images from userData
 protocol.registerSchemesAsPrivileged([
