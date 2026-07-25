@@ -55,6 +55,9 @@
     "version:patch": "npm version patch --no-git-tag-version",
     "version:minor": "npm version minor --no-git-tag-version",
     "version:major": "npm version major --no-git-tag-version",
+    "wt": "node scripts/parallel/wt.mjs",
+    "wt:list": "node scripts/parallel/wt.mjs list",
+    "wt:new": "node scripts/parallel/wt.mjs new",
     "vault:sync": "node scripts/vault/sync.mjs",
     "vault:status": "node scripts/vault/sync.mjs --status",
     "vault:push": "node scripts/vault/push.mjs"

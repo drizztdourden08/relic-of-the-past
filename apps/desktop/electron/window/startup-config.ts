@@ -13,6 +13,8 @@
  * forwarded to the renderer via webPreferences.additionalArguments.
  */
 
+import { isAutomationLaunch, parseInstanceConfig } from '../instance';
+
 interface StartupConfig {
   windowSize: { width: number; height: number } | null;
   widgets: string[];
@@ -43,14 +45,22 @@ const startupRendererArgs = (config: StartupConfig): string[] => {
   const args: string[] = [];
   if (config.fresh) args.push('--startup-fresh');
   if (config.widgets.length > 0) args.push(`--startup-widgets=${config.widgets.join(',')}`);
+  // The renderer process does not inherit the main process's argv, so --instance and
+  // --profile have to be forwarded explicitly like every other renderer-bound flag.
+  const instance = parseInstanceConfig();
+  if (instance.name) args.push(`--startup-instance=${instance.name}`);
+  if (instance.profile) args.push(`--startup-profile=${instance.profile}`);
+  // The renderer needs the automation verdict too — it owns the app.json write.
+  if (isAutomationLaunch()) args.push('--startup-automation');
   return args;
 };
 
-/** Test/automation launches must not persist window or layout state over the user's. */
-const isEphemeralLaunch = (): boolean => {
-  const config = parseStartupConfig();
-  return config.windowSize !== null || config.fresh;
-};
+/**
+ * Test/automation launches must not persist window or layout state over the user's.
+ * Delegates to the one automation predicate, so every automation flag is covered —
+ * not just the two that happened to be checked here first.
+ */
+const isEphemeralLaunch = (): boolean => isAutomationLaunch();
 
 export { parseStartupConfig, startupRendererArgs, isEphemeralLaunch };
 export type { StartupConfig };

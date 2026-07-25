@@ -40,7 +40,8 @@ const installApiShim = (): void => {
     os: 'android',
     getSpritesBaseUrl: () => '',
     getFilePath: () => '',
-    startup: { fresh: false, widgets: [] },
+    startup: { fresh: false, widgets: [], automation: false },
+    instance: { name: null, profile: null },
     updater: {
       isPortable: async () => true,
       check: async () => {},

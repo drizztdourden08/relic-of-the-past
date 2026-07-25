@@ -7,6 +7,7 @@
 import type { Profile, AppState } from '@shared/types/profile';
 import * as store from '@shared/storage/profiles';
 import { getPlatform } from '@app/platform/get-platform';
+import { isAutomationLaunch } from '@app/lib/instance';
 
 const files = () => getPlatform().files;
 
@@ -15,7 +16,12 @@ const createProfile = (name: string, romFile: string, language?: string, msuPack
   store.createProfile(files(), name, romFile, language, msuPack);
 const updateProfile = (id: string, patch: Partial<Profile>): Promise<Profile | null> => store.updateProfile(files(), id, patch);
 const deleteProfile = (id: string): Promise<void> => store.deleteProfile(files(), id);
-const setLastProfile = (id: string): Promise<void> => store.setLastProfile(files(), id);
+// app.json decides which profile opens by default, and it is shared by every launch.
+// loadProfileForGame() writes it on each run, so ANY automated launch — not only a named
+// instance — is prevented from repointing it, or the user's next normal launch resumes an
+// agent's profile. Gated here, at the single seam, so no call site can forget.
+const setLastProfile = (id: string): Promise<void> =>
+  isAutomationLaunch() ? Promise.resolve() : store.setLastProfile(files(), id);
 const updateLastPlayed = (id: string): Promise<void> => store.updateLastPlayed(files(), id);
 const getAppState = (): Promise<AppState> => store.getAppState(files());
 const readConfig = (id: string): Promise<Record<string, unknown> | null> => store.readConfig(files(), id);

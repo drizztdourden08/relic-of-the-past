@@ -67,6 +67,21 @@
   user-select: none;
 }
 
+/* Named-instance marker — an automated launch running beside the user's own app.
+   Informational, not a warning: the name itself is what identifies the window. */
+.titlebar__instance {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semi);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-info);
+  background: var(--c-info-soft);
+  border: 1px solid var(--c-info);
+  padding: 0 var(--space-xs);
+  border-radius: var(--r-sm);
+}
+
 .titlebar__fps {
   font-size: var(--text-xs);
   font-family: var(--font-mono);

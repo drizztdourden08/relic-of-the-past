@@ -6,6 +6,10 @@ import { loadWindowState, trackWindowState } from './window-state';
 import { parseStartupConfig, startupRendererArgs } from './startup-config';
 import { sendWindowToBack } from './send-to-back';
 import { attachTextInteraction } from './text-interaction';
+import { resolveWindowIcon } from './window-icon';
+import { parseInstanceConfig } from '../instance';
+
+const APP_TITLE = 'Relic of the Past';
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -76,6 +80,7 @@ const createWindow = (): BrowserWindow => {
   const noFocus = process.argv.includes('--no-focus');
   launchNoFocus = noFocus;
   const startup = parseStartupConfig();
+  const instance = parseInstanceConfig();
   fixedWindowSize = startup.windowSize !== null;
   pendingSavedState = loadWindowState();
   savedStateRestored = false;
@@ -88,10 +93,10 @@ const createWindow = (): BrowserWindow => {
     center: true,
     titleBarStyle: 'hidden',
     autoHideMenuBar: true,
-    title: 'Relic of the Past',
-    icon: is.dev
-      ? join(__dirname, '../../apps/web/public/logos/logo-256.png')
-      : join(__dirname, '../renderer/logos/logo-256.png'),
+    // A named instance carries its name in the title and swaps to the bot icon, so
+    // parallel agent launches are tellable apart from the taskbar alone.
+    title: instance.name ? `${APP_TITLE} — ${instance.name}` : APP_TITLE,
+    icon: resolveWindowIcon(instance.name),
     backgroundColor: '#000000',
     show: !noFocus,
     webPreferences: {
@@ -109,6 +114,18 @@ const createWindow = (): BrowserWindow => {
 
   // Fallback: if the renderer never signals ready (crash/hang), grow anyway.
   setTimeout(restoreSavedBounds, 10000);
+
+  // The WASM core sets an SDL window title (kWindowTitle in emscripten_main.c), which
+  // reaches document.title and overrides the BrowserWindow title — so without this an
+  // instance name never shows in the window or on the taskbar. Hold our own title for a
+  // named instance; a normal launch keeps whatever it does today.
+  if (instance.name) {
+    const instanceTitle = `${APP_TITLE} — ${instance.name}`;
+    mainWindow.on('page-title-updated', (event) => {
+      event.preventDefault();
+      mainWindow?.setTitle(instanceTitle);
+    });
+  }
 
   if (noFocus) {
     showInBackground(mainWindow);

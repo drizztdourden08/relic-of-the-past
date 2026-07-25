@@ -12,6 +12,8 @@ import { Icon } from '../../../../design-system/primitives/Icon';
 import { useTitleBar } from './behavior/useTitleBar';
 import { buildTitleBarMenuItems } from './behavior/title-bar-menu';
 import { WindowControls } from './sub-components/WindowControls';
+import { InstanceBadge } from './sub-components/InstanceBadge';
+import { instanceName } from '../../../../../lib/instance';
 import { getFps } from '../../../../../lib/game';
 import './TitleBar.css';
 import {
@@ -119,6 +121,10 @@ const TitleBar = (props: TitleBarProps) => {
 
 
 
+  // An automated launch wears the bot logo so a screenshot identifies itself.
+  const instance = instanceName();
+  const logoSrc = instance ? './logos/logo-bot-128.png' : './logos/logo-128.png';
+
   const titlebarClass = [
     'titlebar',
     hidden && !menuOpen && 'titlebar--hidden',
@@ -174,9 +180,10 @@ const TitleBar = (props: TitleBarProps) => {
       </Box>
 
       <Box className="titlebar__center">
-        <Image className="titlebar__logo" src="./logos/logo-128.png" alt="" />
+        <Image className="titlebar__logo" src={logoSrc} alt="" />
         <Text className="titlebar__title">Relic of the Past</Text>
-        <Image className="titlebar__logo" src="./logos/logo-128.png" alt="" />
+        {instance && <InstanceBadge name={instance} />}
+        <Image className="titlebar__logo" src={logoSrc} alt="" />
       </Box>
 
       <WindowControls isMaximized={isMaximized} />
