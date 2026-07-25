@@ -1,8 +1,8 @@
 {
   "name": "relic-of-the-past",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "private": true,
-  "description": "Relic of the Past \u2013 Electron + React + WASM",
+  "description": "Relic of the Past – Electron + React + WASM",
   "author": {
     "name": "drizztdourden_",
     "email": "drizztdourden08@users.noreply.github.com"
