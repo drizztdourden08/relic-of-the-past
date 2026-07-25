@@ -3,7 +3,7 @@ import type { ScreenDefinition } from '../../../types';
 
 const DW_SHOPS: ScreenDefinition[] = [
   { id: 'village-of-outcasts-shop', name: 'Village of Outcasts Shop', type: 'interior', world: 'dark', location: 'Village of Outcasts', area: 'Village Of Outcasts', roomIndex: 0x011C, interior: { kind: 'shop' }, tags: ['env:indoor'] },
-  { id: 'dark-lake-hylia-shop', name: 'Dark Lake Hylia Shop', type: 'interior', world: 'dark', location: 'Dark Lake', area: 'Dark Lake Hylia', roomIndex: 0x011E, interior: { kind: 'shop' }, tags: ['env:indoor'] },
+  { id: 'dark-lake-hylia-shop', name: 'Dark Great Lake Shop', type: 'interior', world: 'dark', location: 'Dark Lake', area: 'Dark Lake Hylia', roomIndex: 0x011E, interior: { kind: 'shop' }, tags: ['env:indoor'] },
   { id: 'dark-world-lumberjack-shop', name: 'Dark World Lumberjack Shop', type: 'interior', world: 'dark', location: 'Skull Woods', area: 'Skull Woods Area', roomIndex: 0x0115, interior: { kind: 'shop' }, tags: ['env:indoor'] },
   { id: 'dark-world-potion-shop', name: 'Dark World Potion Shop', type: 'interior', world: 'dark', location: 'Village of Outcasts', area: 'Village Of Outcasts', roomIndex: 0x0118, interior: { kind: 'shop' }, tags: ['env:indoor'] },
   { id: 'red-shield-shop', name: 'Red Shield Shop', type: 'interior', world: 'dark', location: 'Village of Outcasts', area: 'Village Of Outcasts', roomIndex: 0x0115, interior: { kind: 'shop' }, tags: ['env:indoor'] },

@@ -3,7 +3,7 @@ export type {
   SimPhase,
   SimOutcome,
   SimConfig,
-  VirtualLink,
+  VirtualPlayer,
   FlagSnapshot,
   SimObservation,
   SimExit,
@@ -81,3 +81,5 @@ export type { SimRunConfig, SimRunReport, BoundaryEdge } from './sim-run/types';
 
 export { evaluatePresence, buildPresenceState, emptyPresenceState, BOSS_DEAD_BIT } from './presence';
 export type { PresenceGameState, PresenceStateInput, PresenceCondition, BitState } from './presence';
+export type { AnnotationKind, AnnotationState, ScreenAnnotation, ScreenAnnotations, ScreenTag } from './annotations';
+export { roomTagName } from './room-tags';

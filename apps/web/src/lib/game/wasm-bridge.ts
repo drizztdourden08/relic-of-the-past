@@ -57,6 +57,9 @@ const setInput = (mask: number): void => {
 };
 
 // ─── Re-export the per-concern bridge facades (external API unchanged) ───
+export { wasmGetPlayerStateInfo } from './bridge/player-state';
+export type { PlayerStateInfo } from './bridge/player-state';
+
 export { wasmSetPaused } from './bridge/commands';
 export { wasmGetViewportInfo, wasmRenderCleanFrame } from './bridge/render';
 export { wasmGetGameUIState, wasmSetUIOverlayMode, wasmGetUIOverlayMode, wasmGetMenuState } from './bridge/ui-state';
@@ -73,7 +76,7 @@ export {
 } from './bridge/room-doors';
 export { wasmGetIndoorUncleBlockers, wasmGetNavigationBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns } from './bridge/sprites-blockers';
 export { wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns } from './bridge/nav-tables';
-export { wasmGetRoomChests, wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetRoomDoorInfo, wasmSimUnlockDoor, wasmSimCloseDoor, wasmSimKillDrop, wasmSimZeldaFollow, wasmSimZeldaRescue, wasmGetRoomCellLocks, wasmSimOpenCellLock, wasmTriggerOverworldCheck, wasmReadFlagSnapshot } from './bridge/sim-queries';
+export { wasmGetRoomChests, wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetRoomDoorInfo, wasmSimUnlockDoor, wasmSimCloseDoor, wasmSimKillDrop, wasmSimFollowerAttach, wasmSimFollowerRescue, wasmGetRoomCellLocks, wasmSimOpenCellLock, wasmTriggerOverworldCheck, wasmReadFlagSnapshot } from './bridge/sim-queries';
 
 export type { ViewportInfo } from './bridge/render';
 export type { OverworldVariantInfo, GameProgressInfo } from './bridge/progress';

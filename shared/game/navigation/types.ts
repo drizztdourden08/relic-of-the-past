@@ -1,5 +1,5 @@
 /* @layer shared-game @kind data */
-import type { TileAttrContext } from './tile-attrs';
+import type { TileAttrContext, TileReq } from './tile-attrs';
 
 // ─── Grid Constants ──────────────────────────────────────────────────────────
 
@@ -105,6 +105,12 @@ interface FloodFillResult {
   ledges: LedgeTraversal[];
   attrGrid?: number[][];
   reqGrid?: string[][];
+  /**
+   * The traversal tokens this flood ran with. Consumers that judge a tile or an
+   * entrance ("can Link use it?") need the same inventory the BFS used; without
+   * it on the result they either re-derived it or skipped the check entirely.
+   */
+  items?: readonly TileReq[];
   /** Dynamic blocker tiles applied to this BFS snapshot (runtime sprite blockers). */
   dynamicBlockerCells?: GridPos[];
   /** Grid positions of hookshot targets reachable from walked tiles */

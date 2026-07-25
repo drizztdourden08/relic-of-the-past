@@ -1,10 +1,10 @@
 /* @layer renderer-components @kind component */
-/** Graphics tab — how the picture is drawn: renderer, quality, post-processing effects, and Link appearance. */
+/** Graphics tab — how the picture is drawn: renderer, quality, post-processing effects, and player appearance. */
 import { type ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
 import { RENDERING_SECTION, ENHANCEMENTS_SECTION } from './SettingsView.constants';
-import { LinkSpriteSelector } from './LinkSpriteSelector';
+import { PlayerSpriteSelector } from './PlayerSpriteSelector';
 
 interface GraphicsSettingsProps {
   settings: GameSettings;
@@ -16,9 +16,9 @@ const APPEARANCE_SECTION: Section = {
   title: 'Appearance',
   subsections: [
     {
-      id: 'appearance-link',
-      title: 'Link Sprite',
-      items: [{ key: 'linkSprite', label: 'Link Sprite', description: 'Choose a custom Link sprite from your library.', keywords: 'link sprite character appearance custom zspr' }],
+      id: 'appearance-player',
+      title: 'Player Sprite',
+      items: [{ key: 'linkSprite', label: 'Player Sprite', description: 'Choose a custom player sprite from your library.', keywords: 'player sprite character appearance custom zspr' }],
     },
   ],
 };
@@ -27,7 +27,7 @@ const SECTIONS: Section[] = [RENDERING_SECTION, ENHANCEMENTS_SECTION, APPEARANCE
 
 const renderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
   if (key !== 'linkSprite') return null;
-  return <LinkSpriteSelector value={settings.linkSprite} onChange={(v) => onChange({ linkSprite: v })} />;
+  return <PlayerSpriteSelector value={settings.linkSprite} onChange={(v) => onChange({ linkSprite: v })} />;
 };
 
 const GraphicsSettings = (props: GraphicsSettingsProps) => {

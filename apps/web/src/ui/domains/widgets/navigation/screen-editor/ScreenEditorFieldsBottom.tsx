@@ -118,7 +118,7 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
             {conditionType === 'check' && (
               <Box className="screen-editor__row screen-editor__row--half">
                 <EditorField label="Check Name">
-                  <TextInput value={condCheckName} onChange={e => setCondCheckName(e.target.value)} placeholder="e.g. Link's Uncle" />
+                  <TextInput value={condCheckName} onChange={e => setCondCheckName(e.target.value)} placeholder="e.g. Bottle Merchant" />
                 </EditorField>
                 <Box>
                   <Checkbox checked={condCheckCollected} onChange={setCondCheckCollected} label="Collected" />

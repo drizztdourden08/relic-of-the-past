@@ -13,6 +13,7 @@ import { subscribeGameState, loadState, wasmGetViewportInfo } from '../../lib/ga
 import { linkStartTile } from '@shared/game/navigation/link-start-tile';
 import { createLiveGamePort, runSimulation, floodOverworldScreen } from '@app/lib/game/simulator';
 import { pauseSramSync, resumeSramSync } from '@app/lib/game/sram-sync';
+import { overworldOrigin } from '@app/lib/game/flood';
 import { buildSimRunReport } from '@shared/game/simulation';
 
 interface SimRunDeps {
@@ -56,15 +57,15 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
       // Diagnostic: addressable flood of one screen — validates the sim's flood
       // matches the normal in-game flood without running the whole simulation.
       if (config.floodScreen !== null) {
-        // Seed from the live Link tile only when the game is actually standing on
+        // Seed from the live player tile only when the game is actually standing on
         // the flooded overworld screen; otherwise flood seedless (remote screen).
         const vp = wasmGetViewportInfo();
         const liveScreen = vp ? ((((vp.linkY >> 9) & 7) << 3) | ((vp.linkX >> 9) & 7)) : -1;
         const startPos = vp && liveScreen === config.floodScreen
           ? linkStartTile({
               linkX: vp.linkX, linkY: vp.linkY,
-              screenWorldX: (config.floodScreen & 7) * 512,
-              screenWorldY: ((config.floodScreen >> 3) & 7) * 512,
+              screenWorldX: overworldOrigin(config.floodScreen).x,
+              screenWorldY: overworldOrigin(config.floodScreen).y,
             })
           : undefined;
         const flood = floodOverworldScreen(config.floodScreen, startPos);

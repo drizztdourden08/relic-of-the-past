@@ -39,7 +39,7 @@ const StatsTab = () => {
             Set 1♥
           </Button>
           <Button variant="danger" size="sm" onClick={() => cheatSetHealth(0)}>
-            Kill Link
+            Kill Player
           </Button>
         </Box>
       </Box>

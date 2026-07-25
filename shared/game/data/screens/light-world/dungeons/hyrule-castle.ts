@@ -1,4 +1,23 @@
 /* @layer shared-game @kind data */
+/**
+ * Hyrule Castle — two palaces in one file.
+ *
+ * The game splits this area into two dungeon contexts, and `cur_palace_index_x2`
+ * reports whichever one Link is currently in:
+ *
+ *   0x00 — the Sewers (the escape route: 0x02, 0x11, 0x12, 0x21, 0x22, 0x32, 0x41, 0x42)
+ *   0x02 — the Castle proper (0x01, 0x50-0x52, 0x60-0x62, 0x70-0x72, 0x80-0x82)
+ *
+ * Both report the same dungeon NAME ("Hyrule Castle") for keys and the map, which is
+ * why they share this file. The per-room split above is the game's own association,
+ * taken from the dungeon-map floor layouts (`kDungMap_FloorLayout`, one room list per
+ * dungeon) and cross-checked against the entrance/starting-point palace tables:
+ * room 0x12 and 0x11 enter as palace 0x00, rooms 0x60/0x61/0x62 as 0x02, and the
+ * 0x80 / 0x51 starting points as 0x02.
+ *
+ * Room 0x18 is the exception: it appears on neither dungeon map and its only entrance
+ * reports palace 0xFF, so its 0x00 here is unverified — see the note on its entry.
+ */
 import type { ScreenDefinition } from '../../../../types';
 
 const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
@@ -8,7 +27,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x01,
-    dungeon: { palaceIndex: 0x00, floor: -2, gridX: 1, gridY: 0 },
+    dungeon: { palaceIndex: 0x02, floor: -2, gridX: 1, gridY: 0 },
     tags: [
       'env:underground',
       'hazard:dark',
@@ -53,6 +72,11 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
     ],
   },
   {
+    // UNVERIFIED palace: room 0x18 is on neither the Sewers nor the Castle dungeon
+    // map, and its only entrance (the graveyard grave drop) reports palace 0xFF —
+    // as does its room theme, which matches no other room here. 0x00 is kept
+    // because every room it connects to (0x02, 0x12) is Sewers; detection reaches
+    // it through the palace-scan fallback either way.
     id: 'hc-0x18',
     name: 'Sewers Drop',
     type: 'dungeon', world: 'light',
@@ -130,7 +154,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x50,
-    dungeon: { palaceIndex: 0x00, floor: -1, gridX: 0, gridY: 5 },
+    dungeon: { palaceIndex: 0x02, floor: -1, gridX: 0, gridY: 5 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -142,7 +166,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x51,
-    dungeon: { palaceIndex: 0x00, floor: 0, gridX: 1, gridY: 5 },
+    dungeon: { palaceIndex: 0x02, floor: 0, gridX: 1, gridY: 5 },
     tags: [
       'env:underground',
       'role:entrance',
@@ -154,7 +178,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x52,
-    dungeon: { palaceIndex: 0x00, floor: -1, gridX: 2, gridY: 5 },
+    dungeon: { palaceIndex: 0x02, floor: -1, gridX: 2, gridY: 5 },
     tags: [
       'env:underground',
       'role:connector',
@@ -166,7 +190,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x60,
-    dungeon: { palaceIndex: 0x00, floor: 0, gridX: 0, gridY: 6 },
+    dungeon: { palaceIndex: 0x02, floor: 0, gridX: 0, gridY: 6 },
     tags: [
       'env:underground',
       'role:entrance',
@@ -178,7 +202,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x61,
-    dungeon: { palaceIndex: 0x00, floor: 0, gridX: 1, gridY: 6 },
+    dungeon: { palaceIndex: 0x02, floor: 0, gridX: 1, gridY: 6 },
     tags: [
       'env:underground',
       'role:hub',
@@ -191,7 +215,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x62,
-    dungeon: { palaceIndex: 0x00, floor: 0, gridX: 2, gridY: 6 },
+    dungeon: { palaceIndex: 0x02, floor: 0, gridX: 2, gridY: 6 },
     tags: [
       'env:underground',
       'role:entrance',
@@ -203,7 +227,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x70,
-    dungeon: { palaceIndex: 0x00, floor: 0, gridX: 0, gridY: 7 },
+    dungeon: { palaceIndex: 0x02, floor: 0, gridX: 0, gridY: 7 },
     tags: [
       'env:underground',
       'role:connector',
@@ -215,7 +239,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x71,
-    dungeon: { palaceIndex: 0x00, floor: 0, gridX: 1, gridY: 7 },
+    dungeon: { palaceIndex: 0x02, floor: 0, gridX: 1, gridY: 7 },
     tags: [
       'env:underground',
       'role:hub',
@@ -227,7 +251,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x72,
-    dungeon: { palaceIndex: 0x00, floor: 0, gridX: 2, gridY: 7 },
+    dungeon: { palaceIndex: 0x02, floor: 0, gridX: 2, gridY: 7 },
     tags: [
       'env:underground',
       'role:connector',
@@ -239,7 +263,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x80,
-    dungeon: { palaceIndex: 0x00, floor: 0, gridX: 0, gridY: 8 },
+    dungeon: { palaceIndex: 0x02, floor: 0, gridX: 0, gridY: 8 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -251,7 +275,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x81,
-    dungeon: { palaceIndex: 0x00, floor: 0, gridX: 1, gridY: 8 },
+    dungeon: { palaceIndex: 0x02, floor: 0, gridX: 1, gridY: 8 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -263,7 +287,7 @@ const HYRULE_CASTLE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x82,
-    dungeon: { palaceIndex: 0x00, floor: 0, gridX: 2, gridY: 8 },
+    dungeon: { palaceIndex: 0x02, floor: 0, gridX: 2, gridY: 8 },
     tags: [
       'env:underground',
       'role:connector',

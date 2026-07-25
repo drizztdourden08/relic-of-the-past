@@ -7,7 +7,7 @@
  */
 import type { RomData } from './rom/rom-types';
 import { AssetBuilder } from './asset-builder';
-import { buildSpriteGfx, buildBgGfx, buildLinkGraphics, buildMisc, buildMap32ToMap16, buildTilemaps } from './compile-graphics';
+import { buildSpriteGfx, buildBgGfx, buildPlayerGraphics, buildMisc, buildMap32ToMap16, buildTilemaps } from './compile-graphics';
 import { buildOverworldCompressed, buildOverworldTables } from './compile-overworld';
 import { buildDungeonRooms, buildDefaultAndOverlayRooms, buildDungeonSecrets, buildDungeonAttrs, buildEnemyDamageData, buildDungeonSprites, buildDungeonMap } from './compile-dungeons';
 import { buildDialogue } from './compile-dialogue';
@@ -32,7 +32,7 @@ const compileResources = (rom: RomData, options: CompileOptions = {}): Buffer =>
   buildDungeonSecrets(rom, A);
   buildDungeonAttrs(rom, A);
   buildEnemyDamageData(rom, A);
-  buildLinkGraphics(rom, A);
+  buildPlayerGraphics(rom, A);
   buildDungeonSprites(rom, A);
   buildMap32ToMap16(rom, A);
   buildSpriteGfx(rom, A);

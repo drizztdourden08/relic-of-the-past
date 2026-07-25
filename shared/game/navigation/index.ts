@@ -5,7 +5,6 @@ export type { FloodFillOptions } from './flood-fill';
 export type { QuadrantBounds } from './flood-fill';
 
 // ─── Entry Point #2: Multi-Screen Flood Fill ─────────────────────────────────
-export { floodFillWorld } from './flood-fill';
 
 // ─── Connection destination naming ───────────────────────────────────────────
 export { getConnectionDestinationName } from './connection-names';
@@ -49,8 +48,6 @@ export { buildScreenBundle } from './screen-bundles';
 export type { ScreenBundle } from './screen-bundles';
 
 // ─── Door Gates (door records → BFS gated cells) ─────────────────────────────
-export { doorRequirement, buildDoorGates, DOOR_KIND } from './door-gates';
-export type { DoorGateInput, DoorGate } from './door-gates';
 
 // ─── Navigation Data Types (for analysis + pathfinder) ───────────────────────
 export type {
@@ -58,4 +55,4 @@ export type {
   RegionNavData, ConnectionNavData, ConnectionPointData,
   NavObstacle, NavFeature, NavVariant,
 } from './nav-data.types';
-
+export { isEntranceUsable, usableEntrances, usableEntranceTransition } from './flood-fill/entrance-usable';

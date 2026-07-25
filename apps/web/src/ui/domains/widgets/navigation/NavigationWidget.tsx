@@ -3,13 +3,15 @@ import { Box, Text, Button } from '../../../design-system/primitives';
 import { S } from './styles';
 import { ScreenMapWithConnections, TileRecorderBtn, PathCopyBtn } from './sub-components';
 import { GameStatePanel } from './sub-components/GameStatePanel';
-import { LinkStatePanel } from './sub-components/LinkStatePanel';
+import { PlayerStatePanel } from './sub-components/PlayerStatePanel';
 import { ConnectionsPanel } from './sub-components/ConnectionsPanel';
+import { ScreenPanel } from './sub-components/ScreenPanel';
+import { ActiveStates } from './sub-components/ActiveStates';
 import { useNavigation } from './useNavigation';
 
 const NavigationWidgetContent = () => {
   const {
-    screenBundle, screenName, isIndoors, roomIndex, isDarkWorld, overworldScreenIndex, externalConnections, renderResults, linkDebug, respawnEntIds, palaceIndex, dungeonMapPos, roomLayoutInfo, whichEntrance, roomStartLayer, progressInfo, displayedVariant, dynamicBlockerCount, linkX, linkY, running, handleRun, result, toggleOverlay, overlayStore, autoRun, setAutoRun, reachableSum, totalTilesSum, entranceSum, internalConnections, fallHoleLandings, entranceSpawns,
+    screenBundle, screenName, isIndoors, roomIndex, isDarkWorld, overworldScreenIndex, externalConnections, renderResults, playerDebug, respawnEntIds, palaceIndex, dungeonMapPos, roomLayoutInfo, whichEntrance, roomStartLayer, progressInfo, gameStates, displayedVariant, dynamicBlockerCount, playerX, playerY, running, handleRun, result, toggleOverlay, overlayStore, autoRun, setAutoRun, reachableSum, totalTilesSum, entranceSum, internalConnections, fallHoleLandings, entranceSpawns,
   } = useNavigation();
 
   return (
@@ -27,13 +29,15 @@ const NavigationWidgetContent = () => {
 
         {/* Screen map with edge connection indicators */}
         {screenBundle && (
-          <ScreenMapWithConnections bundle={screenBundle} connections={externalConnections} renderResults={renderResults} linkScreenIndex={linkDebug?.liveScreenIndex ?? null} linkPos={linkDebug ? { screen: linkDebug.liveScreenIndex, row: linkDebug.tileMinRow, col: linkDebug.tileMinCol } : null} respawnEntIds={respawnEntIds} />
+          <ScreenMapWithConnections bundle={screenBundle} connections={externalConnections} renderResults={renderResults} playerScreenIndex={playerDebug?.liveScreenIndex ?? null} playerPos={playerDebug ? { screen: playerDebug.liveScreenIndex, row: playerDebug.tileMinRow, col: playerDebug.tileMinCol } : null} respawnEntIds={respawnEntIds} />
         )}
       </Box>
 
       <GameStatePanel isIndoors={isIndoors} palaceIndex={palaceIndex} roomIndex={roomIndex} dungeonMapPos={dungeonMapPos} roomLayoutInfo={roomLayoutInfo} whichEntrance={whichEntrance} roomStartLayer={roomStartLayer} overworldScreenIndex={overworldScreenIndex} isDarkWorld={isDarkWorld} progressInfo={progressInfo} displayedVariant={displayedVariant} dynamicBlockerCount={dynamicBlockerCount} />
-      {/* ═══ 2. LINK STATE ═══ */}
-      <LinkStatePanel linkDebug={linkDebug} isIndoors={isIndoors} linkX={linkX} linkY={linkY} />
+      <ActiveStates states={gameStates} />
+
+      {/* ═══ 2. PLAYER STATE ═══ */}
+      <PlayerStatePanel playerDebug={playerDebug} isIndoors={isIndoors} playerX={playerX} playerY={playerY} />
 
       {/* ═══ 4. FUNCTIONS ═══ */}
       <Box style={S.section}>
@@ -76,7 +80,9 @@ const NavigationWidgetContent = () => {
         )}
       </Box>
 
-      <ConnectionsPanel entranceSum={entranceSum} renderResults={renderResults} screenBundle={screenBundle} isDarkWorld={isDarkWorld} roomIndex={roomIndex} isIndoors={isIndoors} respawnEntIds={respawnEntIds} entranceSpawns={entranceSpawns} externalConnections={externalConnections} internalConnections={internalConnections} fallHoleLandings={fallHoleLandings} linkDebug={linkDebug} />
+      <ScreenPanel annotations={overlayStore.annotations} edges={externalConnections} isIndoors={isIndoors} palaceIndex={palaceIndex} />
+
+      <ConnectionsPanel entranceSum={entranceSum} renderResults={renderResults} screenBundle={screenBundle} isDarkWorld={isDarkWorld} roomIndex={roomIndex} isIndoors={isIndoors} respawnEntIds={respawnEntIds} entranceSpawns={entranceSpawns} externalConnections={externalConnections} internalConnections={internalConnections} fallHoleLandings={fallHoleLandings} playerDebug={playerDebug} />
     </Box>
   );
 };

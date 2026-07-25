@@ -33,10 +33,10 @@ const SECTIONS: Section[] = [
         id: 'haptics-combat-options',
         title: 'Sword & Damage',
         items: [
-          { key: 'haptics.swordSwing', label: 'Sword Swing', description: 'Very faint vibration when Link swings the sword', keywords: 'sword swing slash attack' },
+          { key: 'haptics.swordSwing', label: 'Sword Swing', description: 'Very faint vibration when the player swings the sword', keywords: 'sword swing slash attack' },
           { key: 'haptics.swordHitEnemy', label: 'Sword Hit Enemy', description: 'Normal vibration when the sword connects with an enemy', keywords: 'sword hit enemy damage' },
           { key: 'haptics.swordClink', label: 'Sword Clink', description: 'Faint vibration when the sword clinks against an invulnerable surface or shield', keywords: 'sword clink deflect shield bounce' },
-          { key: 'haptics.damageTaken', label: 'Damage Taken', description: 'Vibration scaled to damage amount when Link gets hurt (stronger for more damage)', keywords: 'damage hurt health hearts' },
+          { key: 'haptics.damageTaken', label: 'Damage Taken', description: 'Vibration scaled to damage amount when the player gets hurt (stronger for more damage)', keywords: 'damage hurt health hearts' },
         ],
       },
     ],
@@ -109,7 +109,7 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
       return (
         <Toggle
           label="Sword Swing"
-          description="Very faint vibration when Link swings the sword"
+          description="Very faint vibration when the player swings the sword"
           checked={haptics.swordSwing}
           onChange={(v) => onChange(hapticPatch(settings, 'swordSwing', v))}
           disabled={disabled}
@@ -142,7 +142,7 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
       return (
         <Toggle
           label="Damage Taken"
-          description="Vibration scaled to damage amount when Link gets hurt"
+          description="Vibration scaled to damage amount when the player gets hurt"
           checked={haptics.damageTaken}
           onChange={(v) => onChange(hapticPatch(settings, 'damageTaken', v))}
           disabled={disabled}

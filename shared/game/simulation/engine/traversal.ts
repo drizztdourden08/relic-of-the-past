@@ -40,7 +40,7 @@ const connectionRequirements = (conn: ScreenConnection): RequirementSet => {
   const fromBarriers = barrierTagsToRequirements(conn.tags);
   if (fromBarriers.length > 0) return fromBarriers;
   // Fallback for a cross-world portal with no explicit nav data: traversing the
-  // Dark World as Link needs the Moon Pearl, so gate on it at minimum. Without
+  // Dark World as the player needs the Moon Pearl, so gate on it at minimum. Without
   // this the rain-intro empty-inventory run warped lw-10 → west-dark-world and
   // swept the whole dark world. Conservative placeholder — the connections
   // dataset pass will replace it with the real requirement set.

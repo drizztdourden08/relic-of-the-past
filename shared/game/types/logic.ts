@@ -17,7 +17,7 @@ interface TrackerState {
 
 type LogicMode = 'vanilla' | 'open' | 'inverted' | 'no-logic';
 type SwordMode = 'normal' | 'swordless' | 'assured';
-type Goal = 'ganon' | 'pedestal' | 'triforce-hunt' | 'crystals' | 'bosses';
+type Goal = 'final-boss' | 'pedestal' | 'relic-hunt' | 'crystals' | 'bosses';
 
 interface LogicConfig {
   mode: LogicMode;
@@ -34,11 +34,11 @@ interface LogicConfig {
     miseryMire: 'Ether' | 'Bombos' | 'Quake';
     turtleRock: 'Ether' | 'Bombos' | 'Quake';
   };
-  /** Crystals needed to enter Ganon's Tower */
+  /** Crystals needed to enter the final tower */
   crystalsForGT: number;
-  /** Crystals needed to damage Ganon */
-  crystalsForGanon: number;
-  /** Pendants needed for Master Sword Pedestal */
+  /** Crystals needed to damage the final boss */
+  crystalsForFinalBoss: number;
+  /** Pendants needed for the sword pedestal */
   pendantsForPedestal: number;
   /** Sword mode */
   swordMode: SwordMode;

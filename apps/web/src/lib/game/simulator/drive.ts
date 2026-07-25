@@ -10,7 +10,8 @@ import type { SimulatorPort, SimObservation, SimEvent, DetectedCheck, EngineStat
 import { createEngine, createEngineState, createRecorder, recordCheck, recordTransition, recordDoorGate } from '@shared/game/simulation';
 import type { RecorderState } from '@shared/game/simulation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
-import { SCREEN_BY_ID } from '@shared/game/data/screens';
+import { buildObservation, detectFor, floodItems, locationForScreen, waitAfterTrigger } from './observe';
+import type { DetectCache } from './observe';
 import { detectScreenExits } from './screen-exits';
 import type { DetectedScreen } from './screen-exits';
 
@@ -22,46 +23,6 @@ interface ScreenFloodLog {
   edges: number;
 }
 
-/** Screen id → room-addressable location (mirrors the widget's sim-location). */
-const locationForScreen = (screenId: string): SimLocation | null => {
-  const screen = SCREEN_BY_ID.get(screenId);
-  if (!screen) return null;
-  const isIndoors = screen.type !== 'overworld';
-  const roomIndex = screen.roomIndex ?? 0;
-  return { isIndoors, roomId: isIndoors ? roomIndex : 0, owScreenIndex: isIndoors ? 0 : roomIndex };
-};
-
-const TILE_REQS: readonly string[] = ['lift.1', 'lift.2', 'lift.3', 'hammer', 'boots', 'flippers', 'hookshot'];
-const floodItems = (state: EngineState): TileReq[] => {
-  const items = new Set<TileReq>(['lift.1']);
-  for (const t of state.reachTokens) if (TILE_REQS.includes(t)) items.add(t as TileReq);
-  return [...items];
-};
-
-/** One detect per screen+epoch, shared by the log capture and traversal exits. */
-const detectFor = (state: EngineState, cache: Map<string, DetectedScreen | null>): DetectedScreen | null => {
-  // Keyed by entry REGION (quantized tile) too — a room re-entered through a
-  // different door floods a different region and needs its own detection.
-  const t = state.virtual.tile;
-  const key = `${state.virtual.screenId}#${state.epoch}#${t.row >> 4},${t.col >> 4}`;
-  if (!cache.has(key)) {
-    cache.set(key, detectScreenExits(state.virtual.screenId, { entryTile: state.virtual.tile, items: floodItems(state) }));
-  }
-  return cache.get(key) ?? null;
-};
-
-/** Assemble the full observation for the screen the virtual Link is exploring. */
-const buildObservation = (port: SimulatorPort, state: EngineState, detected: DetectedScreen | null, itemReceived?: number): SimObservation => {
-  const base = port.observe();
-  const loc = locationForScreen(state.virtual.screenId);
-  if (!loc) return { ...base, itemReceived };
-  const interactables = loc.isIndoors
-    ? { chests: port.getRoomChests(loc.roomId), sprites: port.getRoomSprites(loc.roomId), doors: port.getRoomDoors(loc.roomId), tags: port.getRoomTags(loc.roomId) }
-    : { chests: [], sprites: port.getOverworldSprites(loc.owScreenIndex), doors: [] };
-  return { ...base, grids: port.getScreenGrids(loc), interactables, itemReceived, exits: detected?.exits, reached: detected?.reached };
-};
-
-/** Record every DetectedCheck an event carried so unmatched checks surface as suggestions. */
 const recordEvents = (recorder: RecorderState, events: SimEvent[]): void => {
   for (const event of events) {
     const detected = (event.data as { detected?: DetectedCheck } | undefined)?.detected;
@@ -70,10 +31,6 @@ const recordEvents = (recorder: RecorderState, events: SimEvent[]): void => {
     recordCheck(recorder, { name: detected.matchedName, screenId: detected.at.screenId, roomId: loc?.roomId ?? 0, tile: detected.at.tile });
   }
 };
-
-const nextFrame = (): Promise<void> => new Promise((resolve) => requestAnimationFrame(() => resolve()));
-/** ~2 frames so the game advances the trigger / item grant before the next step. */
-const waitAfterTrigger = async (): Promise<void> => { await nextFrame(); await nextFrame(); };
 
 interface DriveResult {
   state: EngineState;
@@ -111,7 +68,7 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
     while (!state.outcome && steps < config.maxSteps) {
       const prevScreen = state.virtual.screenId;
       const prevEpoch = state.epoch;
-      const obs = buildObservation(port, state, detectFor(state, cache), item);
+      const obs = buildObservation(port, state, cache, item);
       item = undefined;
       for (const door of obs.interactables?.doors ?? []) recordDoorGate(recorder, door);
 

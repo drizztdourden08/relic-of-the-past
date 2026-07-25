@@ -47,7 +47,7 @@ const decodeStairs = (heap: Uint8Array, o: number): RoomStairInfo => ({
   row: heap[o + 1],
   col: heap[o + 2],
   direction: (heap[o + 3] & 4) !== 0 ? 'down' : 'up',
-  /** Attr page the stair tile sits on — taking it lands Link on that layer. */
+  /** Attr page the stair tile sits on — taking it lands the player on that layer. */
   layer: (heap[o + 3] & 1) as 0 | 1,
 });
 

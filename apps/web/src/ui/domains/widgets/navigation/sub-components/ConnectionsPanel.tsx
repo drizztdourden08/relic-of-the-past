@@ -1,8 +1,8 @@
 /* @layer renderer-widgets @kind component */
 import type { CSSProperties } from 'react';
 import { Icon } from '@iconify/react/offline';
-import { getConnectionDestinationName } from '@shared/game/navigation';
-import { SCREEN_BY_ID } from '@shared/game/data/screens';
+import { getConnectionDestinationName, usableEntrances } from '@shared/game/navigation';
+import { SCREEN_BY_ID, displayName as screenDisplayName } from '@shared/game/data/screens';
 import { Box, Text } from '../../../../design-system/primitives';
 import { getEntranceIcon } from '../../../../../lib/entrance-icons';
 import { S } from '../styles';
@@ -18,11 +18,11 @@ const IL: Record<string, CSSProperties> = {
   bigEmoji: { fontSize: 18 },
 };
 
-type Props = Pick<ReturnType<typeof useNavigation>, 'entranceSum' | 'renderResults' | 'screenBundle' | 'isDarkWorld' | 'roomIndex' | 'isIndoors' | 'respawnEntIds' | 'entranceSpawns' | 'externalConnections' | 'internalConnections' | 'fallHoleLandings' | 'linkDebug'>;
+type Props = Pick<ReturnType<typeof useNavigation>, 'entranceSum' | 'renderResults' | 'screenBundle' | 'isDarkWorld' | 'roomIndex' | 'isIndoors' | 'respawnEntIds' | 'entranceSpawns' | 'externalConnections' | 'internalConnections' | 'fallHoleLandings' | 'playerDebug'>;
 
 /** "Connections" panel: entrances, edges, internal edges, fall holes. */
 const ConnectionsPanel = (props: Props) => {
-  const { entranceSum, renderResults, screenBundle, isDarkWorld, roomIndex, isIndoors, respawnEntIds, entranceSpawns, externalConnections, internalConnections, fallHoleLandings, linkDebug } = props;
+  const { entranceSum, renderResults, screenBundle, isDarkWorld, roomIndex, isIndoors, respawnEntIds, entranceSpawns, externalConnections, internalConnections, fallHoleLandings, playerDebug } = props;
   return (
     <>
       {/* ═══ 5. CONNECTIONS (unified) ═══ */}
@@ -31,9 +31,9 @@ const ConnectionsPanel = (props: Props) => {
 
         {/* ─── Entrances sub-section ─── */}
         <Box style={{ ...S.meta, color: 'var(--c-text-dim)', marginBottom: 4, marginTop: 2, fontSize: 10, textTransform: 'uppercase', letterSpacing: 1 }}>Entrances ({entranceSum})</Box>
-        {renderResults.some(r => r.entrances.some(e => r.transitions.some(t => t.entranceIdx === e.id))) ? (
+        {renderResults.some(r => usableEntrances(r).length > 0) ? (
           renderResults.map(r => {
-            const reachableEntrances = r.entrances.filter(e => r.transitions.some(t => t.entranceIdx === e.id));
+            const reachableEntrances = usableEntrances(r);
             if (reachableEntrances.length === 0) return null;
             const scrLabel = screenBundle?.isMulti
               ? (screenBundle.screenNames[r.screenIndex] ?? `0x${r.screenIndex.toString(16).toUpperCase()}`)
@@ -98,7 +98,8 @@ const ConnectionsPanel = (props: Props) => {
               targetName = `Room 0x${conn.targetScreen.toString(16).toUpperCase().padStart(2, '0')}`;
             } else {
               const targetNodeId = `${isDarkWorld ? 'dw' : 'lw'}-${conn.targetScreen.toString(16).padStart(2, '0')}`;
-              targetName = SCREEN_BY_ID.get(targetNodeId)?.name ?? `0x${conn.targetScreen.toString(16).toUpperCase()}`;
+              const target = SCREEN_BY_ID.get(targetNodeId);
+              targetName = target ? screenDisplayName(target.id, target.name) : `0x${conn.targetScreen.toString(16).toUpperCase()}`;
             }
             const fromLabel = screenBundle?.isMulti && conn.sourceScreen != null
               ? ` (${screenBundle.subNames[conn.sourceScreen] ?? ''})`
@@ -108,7 +109,7 @@ const ConnectionsPanel = (props: Props) => {
               ? `${posAxis}${conn.positions[0]}-${conn.positions[conn.positions.length - 1]}`
               : '';
             // Compute target layer if this is a toggle door (XOR current layer)
-            const currentLayer = linkDebug?.linkLayer;
+            const currentLayer = playerDebug?.playerLayer;
             const targetLayerLabel = conn.layerToggle && currentLayer !== null
               ? (currentLayer === 0 ? '→ Lower' : '→ Upper')
               : null;

@@ -16,12 +16,12 @@ import {
  * are restructured to match these keys.
  */
 const DUNGEON_SCREEN_RULES: Record<string, Requirement> = {
-  // Hyrule Castle / Sewers
+  // First castle / sewers
   'hc-0x01|hc-sewers': 'Small Key (Hyrule Castle)',
   'hc-0x11|hc-sewers-back': 'Small Key (Hyrule Castle)',
   'hc-sewers|hc-secret-room': canBombOrBonk,
 
-  // Agahnims Tower
+  // Wizards tower
   'ct-0x20|ct-agahnim': { and: [hasSword, 'Small Key (Agahnims Tower)'] },
 
   // Tower of Hera
@@ -99,7 +99,7 @@ const DUNGEON_SCREEN_RULES: Record<string, Requirement> = {
   'pod-entrance|pod-spike-statue': 'Small Key (Palace of Darkness)',
   'pod-spike-statue|pod-maze': 'Small Key (Palace of Darkness)',
 
-  // Ganons Tower
+  // Final tower
   'gt-entrance|gt-tile-room': 'Cane of Somaria',
   'gt-entrance|gt-hookshot-room': {
     and: ['Hammer', { or: ['Hookshot', 'Pegasus Boots'] }],

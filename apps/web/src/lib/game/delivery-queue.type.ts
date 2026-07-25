@@ -1,5 +1,5 @@
 /* @layer bridge-wasm @kind types */
-/** Types for the delivery queue — item deliveries that wait until Link can receive them. */
+/** Types for the delivery queue — item deliveries that wait until the player can receive them. */
 
 interface DeliveryEntry {
   id: string;
@@ -7,7 +7,7 @@ interface DeliveryEntry {
   message: string;
   /** Source tag: 'cheat', 'randomizer', player name, etc. */
   source: string;
-  /** The action to execute when Link can receive */
+  /** The action to execute when the player can receive */
   action: DeliveryAction;
   /** Timestamp when enqueued */
   enqueuedAt: number;

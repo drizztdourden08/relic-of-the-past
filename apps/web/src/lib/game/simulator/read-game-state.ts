@@ -4,7 +4,7 @@ import type { MapState } from '@shared/game/types';
 import { wasmGetGameUIState } from '../';
 import { parseGameUIBuffer } from '../ui-bridge';
 
-/** Current location fields (room/screen/entrance + Link pixel position), or null when unavailable. */
+/** Current location fields (room/screen/entrance + player pixel position), or null when unavailable. */
 const readMapState = (): MapState | null => {
   const ui = wasmGetGameUIState();
   if (!ui) return null;

@@ -9,11 +9,7 @@ import { DualLayerStrategy } from '../strategies/dual-layer';
 import type { QuadrantBounds } from '../strategies/layer-strategy';
 import { prepareScreen, constrainVoidTiles, findStartPosition } from './screen-prep';
 import { findEntrancePositions, buildBorders } from './orchestrator-helpers';
-import { toGateTokenMap } from '../door-gates';
 import type { FloodFillOptions } from './flood-options';
-
-const buildGateMap = (options: FloodFillOptions): Map<string, string[]> | undefined =>
-  options.doorGates?.length ? toGateTokenMap(options.doorGates) : undefined;
 
 const runDualLayerFlood = (rawAttrGrid: number[][], screenIndex: number, options: FloodFillOptions): FloodFillResult => {
   const { tileContext, inventory, startPos, dynamicBlockers, entrances = [], variant, quadrantBounds } = options;
@@ -51,7 +47,6 @@ const runDualLayerFlood = (rawAttrGrid: number[][], screenIndex: number, options
     [prep0.grid.rawAttr, prep1.grid.rawAttr],
     tileContext,
     startLayer,
-    buildGateMap(options),
   );
 
   const bfsResult = runBFS(strategy, start.row, start.col, ePos, inv, bfsBounds, options.extraSeeds);
@@ -76,7 +71,7 @@ const runDualLayerFlood = (rawAttrGrid: number[][], screenIndex: number, options
     totalTiles: quadrantBounds
       ? (quadrantBounds.maxRow - quadrantBounds.minRow + 1) * (quadrantBounds.maxCol - quadrantBounds.minCol + 1)
       : GRID_SIZE * GRID_SIZE,
-    entrances: sEnts, ledges: reachableLedges, hookTargets,
+    entrances: sEnts, ledges: reachableLedges, hookTargets, items: [...inv],
     attrGrid: grid.rawAttr, reqGrid, dynamicBlockerCells, borders, variant,
     tileLayer, reachableByLayer, dualLayerGrids: options.dualLayerGrids,
     staircaseType: options.staircaseType, startLayer: options.startLayer,
@@ -106,7 +101,7 @@ const runSingleLayerFlood = (rawAttrGrid: number[][], screenIndex: number, optio
 
   // Single-layer BFS (using unified engine with SingleLayerStrategy)
   const singleBounds: QuadrantBounds = quadrantBounds ?? { minRow: 0, maxRow: GRID_SIZE - 1, minCol: 0, maxCol: GRID_SIZE - 1 };
-  const strategy = new SingleLayerStrategy(grid.tiles, grid.rawAttr, tileContext, buildGateMap(options));
+  const strategy = new SingleLayerStrategy(grid.tiles, grid.rawAttr, tileContext);
   let seeds = options.extraSeeds ? [...options.extraSeeds] : [];
   let bfsResult = runBFS(strategy, start.row, start.col, entrancePositions, inv, singleBounds, seeds.length > 0 ? seeds : undefined);
   // One-way ledge hops: a reachable ledge start drops Link at its landing tile.
@@ -134,7 +129,7 @@ const runSingleLayerFlood = (rawAttrGrid: number[][], screenIndex: number, optio
     totalTiles: quadrantBounds
       ? (quadrantBounds.maxRow - quadrantBounds.minRow + 1) * (quadrantBounds.maxCol - quadrantBounds.minCol + 1)
       : GRID_SIZE * GRID_SIZE,
-    entrances: screenEntrances, ledges: reachableLedges,
+    entrances: screenEntrances, ledges: reachableLedges, items: [...inv],
     hookTargets: bfsResult.hookTargets,
     attrGrid: grid.rawAttr, reqGrid: bfsResult.reqGrid,
     dynamicBlockerCells, borders, variant,

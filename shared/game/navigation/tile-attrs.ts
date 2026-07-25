@@ -27,6 +27,18 @@ const isCategory = (attr: number, cat: TileCat, context: TileAttrContext = 'over
   return getTileAttrsMap(context)[attr]?.cat === cat;
 };
 
+/**
+ * Walkable floor, or a doorway Link can transit. Door thresholds count: plain
+ * passages (0x80-0x8D) and the layer-toggle shutters (0x90-0xAF) are crossable
+ * even though they are not floor. Callers had this as a bare hex-range
+ * expression in three places; keep the ranges here with the rest of the tile
+ * semantics so there is one definition to correct.
+ */
+const isDoorPassageAttr = (attr: number): boolean =>
+  (attr >= 0x80 && attr <= 0x8d) || (attr >= 0x90 && attr <= 0xaf);
+
+const isPassableAttr = (attr: number): boolean => attr === 0x00 || isDoorPassageAttr(attr);
+
 // ─── Category Sets (derived from the map) ───────────────────────────────────
 
 const attrsOfCat = (map: Readonly<Record<number, TileAttrDef>>, cat: TileCat): ReadonlySet<number> => {
@@ -61,7 +73,7 @@ const getHookshotTargetTiles = (context: TileAttrContext = 'overworld'): Readonl
 
 export {
   OVERWORLD_TILE_ATTRS, INTERIOR_HOUSE_TILE_ATTRS, INTERIOR_CAVE_TILE_ATTRS, INTERIOR_DUNGEON_TILE_ATTRS,
-  TILE_ATTRS, getTileAttrsMap, getAttrLabel, getAttrReq, isCategory,
+  TILE_ATTRS, getTileAttrsMap, getAttrLabel, getAttrReq, isCategory, isDoorPassageAttr, isPassableAttr,
   WATER_TILES, CLIFF_TRIGGER_TILES, CLIFF_FACE_TILES, PIT_TILES, HOOKSHOT_TARGET_TILES, getHookshotTargetTiles,
 };
 export type { TileReq, TileLabel, TilePass, TileCat, TileAttrContext, TileAttrDef } from './tile-attrs-types';

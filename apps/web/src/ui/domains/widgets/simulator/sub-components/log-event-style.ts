@@ -29,7 +29,7 @@ const classifyEvent = (event: SimEvent): LogStyle => {
   if (/^END at /.test(m)) return { kind: 'pos', tag: 'END' };
   if (/^Run finished/.test(m)) return { kind: 'outcome', tag: 'DONE' };
   if (/^Reset/i.test(m)) return { kind: 'reset', tag: 'RESET' };
-  if (/^Unlock|^Defeated |^Shutter door|^Pulled |^Zelda is following/.test(m)) return { kind: 'unlock', tag: 'UNLK' };
+  if (/^Unlock|^Defeated |^Shutter door|^Pulled |^The follower is tagging along/.test(m)) return { kind: 'unlock', tag: 'UNLK' };
   if (/^Running |^→/.test(m)) return { kind: 'move', tag: 'MOVE' };
   if (/^Got ["“]/.test(m)) return { kind: 'item', tag: 'ITEM' };
   if (/^Found |^discovered/.test(m)) return { kind: 'discover', tag: 'FIND' };

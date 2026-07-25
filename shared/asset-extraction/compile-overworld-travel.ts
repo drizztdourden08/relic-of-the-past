@@ -1,4 +1,4 @@
-/* @layer shared-asset-extraction @kind logic */
+﻿/* @layer shared-asset-extraction @kind logic */
 /**
  * Overworld bird travel and whirlpool data compilation.
  */
@@ -13,8 +13,8 @@ const buildOverworldTravel = (rom: RomData, A: AssetBuilder, ctx: OverworldConte
   const travelLoadOff = new Array(17).fill(0);
   const travelScrollX = new Array(17).fill(0);
   const travelScrollY = new Array(17).fill(0);
-  const travelLinkX = new Array(17).fill(0);
-  const travelLinkY = new Array(17).fill(0);
+  const travelPlayerX = new Array(17).fill(0);
+  const travelPlayerY = new Array(17).fill(0);
   const travelCamX = new Array(17).fill(0);
   const travelCamY = new Array(17).fill(0);
   const travelUnk1 = new Array(17).fill(0);
@@ -58,8 +58,8 @@ const buildOverworldTravel = (rom: RomData, A: AssetBuilder, ctx: OverworldConte
       travelLoadOff[j] = rom.getWord(0x82eb07 + ri * 2);
       travelScrollX[j] = rom.getWord(0x82eb4b + ri * 2);
       travelScrollY[j] = rom.getWord(0x82eb29 + ri * 2);
-      travelLinkX[j] = rom.getWord(0x82eb8f + ri * 2);
-      travelLinkY[j] = rom.getWord(0x82eb6d + ri * 2);
+      travelPlayerX[j] = rom.getWord(0x82eb8f + ri * 2);
+      travelPlayerY[j] = rom.getWord(0x82eb6d + ri * 2);
       travelCamX[j] = rom.getWord(0x82ebd3 + ri * 2);
       travelCamY[j] = rom.getWord(0x82ebb1 + ri * 2);
       travelUnk1[j] = rom.getInt8(0x82ebf5 + ri * 2);
@@ -71,8 +71,8 @@ const buildOverworldTravel = (rom: RomData, A: AssetBuilder, ctx: OverworldConte
   A.addUint16('kBirdTravel_Map16LoadSrcOff', travelLoadOff);
   A.addUint16('kBirdTravel_ScrollX', travelScrollX);
   A.addUint16('kBirdTravel_ScrollY', travelScrollY);
-  A.addUint16('kBirdTravel_LinkXCoord', travelLinkX);
-  A.addUint16('kBirdTravel_LinkYCoord', travelLinkY);
+  A.addUint16('kBirdTravel_LinkXCoord', travelPlayerX);
+  A.addUint16('kBirdTravel_LinkYCoord', travelPlayerY);
   A.addUint16('kBirdTravel_CameraXScroll', travelCamX);
   A.addUint16('kBirdTravel_CameraYScroll', travelCamY);
   A.addInt8('kBirdTravel_Unk1', travelUnk1);

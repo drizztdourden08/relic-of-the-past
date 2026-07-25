@@ -8,7 +8,7 @@ const TOWER_OF_HERA_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Tower of Hera', area: 'Death Mountain',
     roomIndex: 0x07,
-    dungeon: { palaceIndex: 0x08, floor: 5, gridX: 7, gridY: 0 },
+    dungeon: { palaceIndex: 0x14, floor: 5, gridX: 7, gridY: 0 },
     tags: [
       'env:underground',
       'role:boss',
@@ -20,7 +20,7 @@ const TOWER_OF_HERA_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Tower of Hera', area: 'Death Mountain',
     roomIndex: 0x17,
-    dungeon: { palaceIndex: 0x08, floor: 4, gridX: 7, gridY: 1 },
+    dungeon: { palaceIndex: 0x14, floor: 4, gridX: 7, gridY: 1 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -32,7 +32,7 @@ const TOWER_OF_HERA_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Tower of Hera', area: 'Death Mountain',
     roomIndex: 0x27,
-    dungeon: { palaceIndex: 0x08, floor: 2, gridX: 7, gridY: 2 },
+    dungeon: { palaceIndex: 0x14, floor: 2, gridX: 7, gridY: 2 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -44,7 +44,7 @@ const TOWER_OF_HERA_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Tower of Hera', area: 'Death Mountain',
     roomIndex: 0x31,
-    dungeon: { palaceIndex: 0x08, floor: 1, gridX: 1, gridY: 3 },
+    dungeon: { palaceIndex: 0x14, floor: 1, gridX: 1, gridY: 3 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -56,7 +56,7 @@ const TOWER_OF_HERA_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Tower of Hera', area: 'Death Mountain',
     roomIndex: 0x77,
-    dungeon: { palaceIndex: 0x08, floor: 0, gridX: 7, gridY: 7 },
+    dungeon: { palaceIndex: 0x14, floor: 0, gridX: 7, gridY: 7 },
     tags: [
       'env:underground',
       'role:entrance',
@@ -69,7 +69,7 @@ const TOWER_OF_HERA_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Tower of Hera', area: 'Death Mountain',
     roomIndex: 0x87,
-    dungeon: { palaceIndex: 0x08, floor: -1, gridX: 7, gridY: 8 },
+    dungeon: { palaceIndex: 0x14, floor: -1, gridX: 7, gridY: 8 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -81,7 +81,7 @@ const TOWER_OF_HERA_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Tower of Hera', area: 'Death Mountain',
     roomIndex: 0xA7,
-    dungeon: { palaceIndex: 0x08, floor: 3, gridX: 7, gridY: 10 },
+    dungeon: { palaceIndex: 0x14, floor: 3, gridX: 7, gridY: 10 },
     tags: [
       'env:underground',
       'role:safe',

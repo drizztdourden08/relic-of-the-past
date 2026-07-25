@@ -7,10 +7,10 @@
  * step the engine while the item is still incoming / the item-get dialog animates.
  */
 import type { TriggerAction } from '@shared/game/simulation';
-import { ITEM_ID_TO_NAME } from '@shared/game/items';
+import { itemLabel, resolveDuplicate } from '@shared/game/items';
 import { enqueue } from '../delivery-queue';
 import { wasmTriggerOverworldCheck, wasmGetRoomDoorInfo, wasmSimUnlockDoor, wasmSimCloseDoor, wasmSimKillDrop,
-  wasmSimZeldaFollow, wasmSimZeldaRescue, wasmSimOpenCellLock } from '../';
+  wasmSimFollowerAttach, wasmSimFollowerRescue, wasmSimOpenCellLock } from '../';
 import { getCurrentInventory } from '../tracker';
 import { outerWall, OPPOSITE, ROOM_EDGE_ADJ } from './room-doorways';
 
@@ -49,32 +49,13 @@ const closeDoorBothSides = (roomId: number, doorIndex: number): void => {
   for (const [r, i] of doorRecordPair(roomId, doorIndex)) wasmSimCloseDoor(r, i);
 };
 
-const labelFor = (itemId: number): string => ITEM_ID_TO_NAME[itemId] ?? `item 0x${itemId.toString(16)}`;
-
-/**
- * Vanilla duplicate-item rule (Link_HandleChest, player.c:3850): chest items
- * with an alternate swap to it when the primary is already owned. Resolved
- * HERE so the delivery label, the sim log AND the granted item all agree —
- * the C hook applies the same rule as a backstop.
- */
-const DUPLICATE_ALTERNATES: Record<number, number> = {
-  0x0c: 0x44, // Blue Boomerang → 10 Arrows
-  0x12: 0x35, // Lamp → 5 Rupees
-  0x2a: 0x46, // Red Boomerang → 300 Rupees
-};
-
-const resolveDuplicate = (itemId: number): number => {
-  const alt = DUPLICATE_ALTERNATES[itemId];
-  if (alt === undefined) return itemId;
-  const owned = getCurrentInventory().has(ITEM_ID_TO_NAME[itemId] ?? '');
-  return owned ? alt : itemId;
-};
+const labelFor = itemLabel;
 
 const trigger = (action: TriggerAction): Promise<void> =>
   new Promise((resolve) => {
     switch (action.type) {
       case 'chest': {
-        const itemId = resolveDuplicate(action.itemId);
+        const itemId = resolveDuplicate(action.itemId, getCurrentInventory());
         enqueue(labelFor(itemId), SOURCE,
           { type: 'trigger_check', roomId: action.roomId, chestIndex: action.chestIndex, itemId },
           resolve);
@@ -126,8 +107,8 @@ const trigger = (action: TriggerAction): Promise<void> =>
       }
       case 'progress':
         // Scripted rescue progression — pure state writes, no item pickup.
-        if (action.step === 'zelda-follow') wasmSimZeldaFollow();
-        else wasmSimZeldaRescue();
+        if (action.step === 'follower-join') wasmSimFollowerAttach();
+        else wasmSimFollowerRescue();
         resolve();
         return;
       case 'pullSwitch': {
@@ -141,7 +122,7 @@ const trigger = (action: TriggerAction): Promise<void> =>
         return;
       }
       case 'trapShutters': {
-        // Trap doors slam shut behind Link: close every OPEN shutter record.
+        // Trap doors slam shut behind the player: close every OPEN shutter record.
         const doors = wasmGetRoomDoorInfo(action.roomId);
         for (let i = 0; i < doors.length && i < 4; i++) {
           if (doors[i].kind === 4 && doors[i].isOpen) closeDoorBothSides(action.roomId, i);

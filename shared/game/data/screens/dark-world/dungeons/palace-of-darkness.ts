@@ -8,7 +8,7 @@ const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Palace of Darkness', area: 'Dark East',
     roomIndex: 0x09,
-    dungeon: { palaceIndex: 0x0A, floor: -2, gridX: 9, gridY: 0 },
+    dungeon: { palaceIndex: 0x0C, floor: -2, gridX: 9, gridY: 0 },
     tags: [
       'env:underground',
       'hazard:dark',
@@ -21,7 +21,7 @@ const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Palace of Darkness', area: 'Dark East',
     roomIndex: 0x0A,
-    dungeon: { palaceIndex: 0x0A, floor: -2, gridX: 10, gridY: 0 },
+    dungeon: { palaceIndex: 0x0C, floor: -2, gridX: 10, gridY: 0 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -33,7 +33,7 @@ const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Palace of Darkness', area: 'Dark East',
     roomIndex: 0x0B,
-    dungeon: { palaceIndex: 0x0A, floor: -2, gridX: 11, gridY: 0 },
+    dungeon: { palaceIndex: 0x0C, floor: -2, gridX: 11, gridY: 0 },
     tags: [
       'env:underground',
       'role:hub',
@@ -45,7 +45,7 @@ const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Palace of Darkness', area: 'Dark East',
     roomIndex: 0x19,
-    dungeon: { palaceIndex: 0x0A, floor: -2, gridX: 9, gridY: 1 },
+    dungeon: { palaceIndex: 0x0C, floor: -2, gridX: 9, gridY: 1 },
     tags: [
       'env:underground',
       'hazard:dark',
@@ -57,7 +57,7 @@ const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Palace of Darkness', area: 'Dark East',
     roomIndex: 0x1A,
-    dungeon: { palaceIndex: 0x0A, floor: -2, gridX: 10, gridY: 1 },
+    dungeon: { palaceIndex: 0x0C, floor: -2, gridX: 10, gridY: 1 },
     tags: [
       'env:underground',
       'role:hub',
@@ -69,7 +69,7 @@ const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Palace of Darkness', area: 'Dark East',
     roomIndex: 0x1B,
-    dungeon: { palaceIndex: 0x0A, floor: -2, gridX: 11, gridY: 1 },
+    dungeon: { palaceIndex: 0x0C, floor: -2, gridX: 11, gridY: 1 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -81,7 +81,7 @@ const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Palace of Darkness', area: 'Dark East',
     roomIndex: 0x2A,
-    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 10, gridY: 2 },
+    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 10, gridY: 2 },
     tags: [
       'env:underground',
       'role:hub',
@@ -93,7 +93,7 @@ const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Palace of Darkness', area: 'Dark East',
     roomIndex: 0x2B,
-    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 11, gridY: 2 },
+    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 11, gridY: 2 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -105,7 +105,7 @@ const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Palace of Darkness', area: 'Dark East',
     roomIndex: 0x3A,
-    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 10, gridY: 3 },
+    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 10, gridY: 3 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -117,7 +117,7 @@ const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Palace of Darkness', area: 'Dark East',
     roomIndex: 0x3B,
-    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 11, gridY: 3 },
+    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 11, gridY: 3 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -129,7 +129,7 @@ const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Palace of Darkness', area: 'Dark East',
     roomIndex: 0x4A,
-    dungeon: { palaceIndex: 0x0A, floor: 0, gridX: 10, gridY: 4 },
+    dungeon: { palaceIndex: 0x0C, floor: 0, gridX: 10, gridY: 4 },
     tags: [
       'env:underground',
       'role:entrance',
@@ -142,7 +142,7 @@ const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Palace of Darkness', area: 'Dark East',
     roomIndex: 0x4B,
-    dungeon: { palaceIndex: 0x0A, floor: 0, gridX: 11, gridY: 4 },
+    dungeon: { palaceIndex: 0x0C, floor: 0, gridX: 11, gridY: 4 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -154,7 +154,7 @@ const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Palace of Darkness', area: 'Dark East',
     roomIndex: 0x5A,
-    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 10, gridY: 5 },
+    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 10, gridY: 5 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -166,7 +166,7 @@ const PALACE_OF_DARKNESS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Palace of Darkness', area: 'Dark East',
     roomIndex: 0x6A,
-    dungeon: { palaceIndex: 0x0A, floor: -2, gridX: 10, gridY: 6 },
+    dungeon: { palaceIndex: 0x0C, floor: -2, gridX: 10, gridY: 6 },
     tags: [
       'env:underground',
       'role:boss',

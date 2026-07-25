@@ -1,13 +1,15 @@
 /* @layer shared-game @kind logic */
 /**
- * Flood-fills the current screen (reusing the existing BFS) and turns the
- * in-game-discovered interactables sitting on reachable tiles into triggerable
- * targets. When no grids are supplied the tile-reachability gate is skipped
- * (every discovered interactable is considered reachable).
+ * Turns the in-game-discovered interactables sitting on reachable tiles into
+ * triggerable targets. Reachability comes from the observation's `reached` grid
+ * — the SAME flood the exit detection ran, with entrances, blockers and the
+ * correct start layer. This step used to re-flood the screen itself with a
+ * weaker option set (no entrances, no blockers, no startLayer), so in a
+ * split-level room the flood gating every chest/door/NPC target started on the
+ * wrong layer while the exit flood started on the right one. When no grid is
+ * supplied the gate is skipped (every interactable counts as reachable).
  */
-import type { FloodFillResult, GridPos, ReachState } from '../../navigation/types';
-import type { TileReq } from '../../navigation/tile-attrs';
-import { floodFillScreen } from '../../navigation';
+import type { GridPos } from '../../navigation/types';
 import type { SimObservation, SimChest, SimSprite } from '../types';
 import { planTrigger, npcConfigForSprite } from '../trigger/trigger-plans';
 import type { PresenceGameState } from '../presence/state';
@@ -15,52 +17,30 @@ import { evaluatePresence } from '../presence/evaluate';
 import { keyAvailable } from './explorer';
 import type { EngineState, SimTarget } from './state';
 
-const TILE_REQ_TOKENS: readonly string[] = ['lift.1', 'lift.2', 'lift.3', 'hammer', 'boots', 'flippers', 'hookshot'];
+/** Tiles the detect flood reached; undefined = no grid, so gating is skipped. */
+type Reached = boolean[][] | undefined;
 
-const toTileReqSet = (tokens: Set<string>): Set<TileReq> => {
-  const set = new Set<TileReq>();
-  for (const t of tokens) if (TILE_REQ_TOKENS.includes(t)) set.add(t as TileReq);
-  return set;
-};
-
-/** Run the shared BFS for the current screen, or null when no grids are present. */
-const floodCurrent = (state: EngineState, obs: SimObservation): FloodFillResult | null => {
-  const grids = obs.grids;
-  if (!grids) return null;
-  return floodFillScreen(grids.rawAttrGrid, grids.screenIndex, {
-    tileContext: grids.tileContext,
-    inventory: toTileReqSet(state.reachTokens),
-    startPos: state.virtual.tile,
-    dualLayerGrids: grids.dualLayerGrids,
-    staircaseType: grids.staircaseType,
-  });
-};
-
-const isTileReachable = (flood: FloodFillResult | null, tile: GridPos): boolean => {
-  if (!flood) return true;
-  const grid: ReachState[][] = flood.reachable;
-  return (grid[tile.row]?.[tile.col] ?? 0) > 0;
-};
+const isTileReachable = (reached: Reached, tile: GridPos): boolean =>
+  !reached || reached[tile.row]?.[tile.col] === true;
 
 /**
- * Rows below a chest's stored tile where Link stands to open it. A chest is a
- * 2x2 (16px) solid block anchored at its top-left 8px tile, so both the stored
- * row and the row below it are the chest body. Link opens it from *directly
- * below*, facing up (`Link_PerformOpenChest` bails unless facing==up), his feet
- * on the first walkable row under the footprint — two rows below the anchor.
+ * Rows below a chest's stored tile where the player stands to open it. A chest is
+ * a 2x2 (16px) solid block anchored at its top-left 8px tile, so both the stored
+ * row and the row below it are the chest body. The player opens it from *directly
+ * below*, facing up (the open-chest routine bails unless facing==up), feet on the
+ * first walkable row under the footprint — two rows below the anchor.
  */
 const CHEST_OPEN_ROW_OFFSET = 2;
 
 /**
  * True when a chest's open-from tile is reachable. The chest spans columns
- * `col`/`col+1`; Link (16px wide) can stand below either, so a reachable tile at
+ * `col`/`col+1`; the player (16px wide) can stand below either, so a reachable tile at
  * `(row + 2, col)` OR `(row + 2, col + 1)` means the chest is openable.
  */
-const hasReachableOpenTile = (flood: FloodFillResult | null, tile: GridPos): boolean => {
-  if (!flood) return true;
-  const grid: ReachState[][] = flood.reachable;
+const hasReachableOpenTile = (reached: Reached, tile: GridPos): boolean => {
+  if (!reached) return true;
   const openRow = tile.row + CHEST_OPEN_ROW_OFFSET;
-  return (grid[openRow]?.[tile.col] ?? 0) > 0 || (grid[openRow]?.[tile.col + 1] ?? 0) > 0;
+  return reached[openRow]?.[tile.col] === true || reached[openRow]?.[tile.col + 1] === true;
 };
 
 const FLOOD_GRID_SIZE = 64;
@@ -70,19 +50,18 @@ const isOutOfFloodRange = (tile: GridPos): boolean =>
   tile.row < 0 || tile.row >= FLOOD_GRID_SIZE || tile.col < 0 || tile.col >= FLOOD_GRID_SIZE;
 
 /**
- * A sprite is interactable when Link can stand NEXT to it — its own tiles are
+ * A sprite is interactable when the player can stand NEXT to it — its own tiles are
  * often solid (a blocking NPC like the uncle stamps a 3×3 footprint into the
  * grid, so the spawn tile itself never floods). Any reachable tile within a
  * 2-tile ring around the spawn counts as "can talk to it".
  */
 const SPRITE_TALK_RADIUS = 2;
 
-const hasReachableNeighbor = (flood: FloodFillResult | null, tile: GridPos, radius: number = SPRITE_TALK_RADIUS): boolean => {
-  if (!flood) return true;
-  const grid: ReachState[][] = flood.reachable;
+const hasReachableNeighbor = (reached: Reached, tile: GridPos, radius: number = SPRITE_TALK_RADIUS): boolean => {
+  if (!reached) return true;
   for (let dr = -radius; dr <= radius; dr++) {
     for (let dc = -radius; dc <= radius; dc++) {
-      if ((grid[tile.row + dr]?.[tile.col + dc] ?? 0) > 0) return true;
+      if (reached[tile.row + dr]?.[tile.col + dc] === true) return true;
     }
   }
   return false;
@@ -96,16 +75,9 @@ const DOOR_REACH_RADIUS = 10;
 const SMALL_KEY_ITEM = 0x24;
 const BIG_KEY_ITEM = 0x32;
 
-/** Progress-buffer slot carrying follower_indicator (1 = Zelda tagging along). */
+/** Progress-buffer slot carrying follower_indicator (1 = the follower tagging along). */
 const FOLLOWER_SLOT = 13;
 
-/**
- * Zelda's two scripted interactions (Sprite_76_Zelda, sprite_main.c:6251). Same
- * sanctioned-transcription class as the NPC presence conditions: the states live
- * in hardcoded C handlers that no raw read recovers. Touching her in the cell
- * starts the tagalong (which is what opens the throne-room passage); reaching
- * the Sanctuary with her runs the priest scene that completes the rescue.
- */
 /**
  * Pull switches (Sprite_PullSwitch_bounce, sprite types 0x04-0x07). Pulling one
  * sets dung_flag_statechange_waterpuzzle, which the room's tag routine reads to
@@ -114,10 +86,17 @@ const FOLLOWER_SLOT = 13;
  */
 const isPullSwitch = (spriteType: number): boolean => spriteType >= 0x04 && spriteType <= 0x07;
 
-const ZELDA_SPRITE = 0x76;
-const ZELDA_STEPS = [
-  { room: 0x80, step: 'zelda-follow', verb: 'Rescuing', noun: 'Zelda', following: false },
-  { room: 0x12, step: 'zelda-rescue', verb: 'Bringing', noun: 'Zelda to the priest', following: true },
+/**
+ * The follower NPC's two scripted interactions (sprite type 0x76). Same
+ * sanctioned-transcription class as the NPC presence conditions: the states live
+ * in hardcoded C handlers that no raw read recovers. Touching her in the cell
+ * starts the tagalong (which is what opens the throne-room passage); reaching
+ * the Sanctuary with her runs the priest scene that completes the rescue.
+ */
+const FOLLOWER_SPRITE = 0x76;
+const FOLLOWER_STEPS = [
+  { room: 0x80, step: 'follower-join', verb: 'Rescuing', noun: 'the princess', following: false },
+  { room: 0x12, step: 'follower-deliver', verb: 'Bringing', noun: 'the princess to the priest', following: true },
 ] as const;
 
 /**
@@ -128,17 +107,17 @@ const ZELDA_STEPS = [
  * instead of indexing out of the flood grid (`?? 0` would silently read them
  * as unreachable and drop them).
  */
-const interactableReachable = (posKnown: boolean, flood: FloodFillResult | null, tile: GridPos): boolean =>
-  !posKnown || isOutOfFloodRange(tile) || hasReachableNeighbor(flood, tile);
+const interactableReachable = (posKnown: boolean, reached: Reached, tile: GridPos): boolean =>
+  !posKnown || isOutOfFloodRange(tile) || hasReachableNeighbor(reached, tile);
 
 /**
- * A chest is a solid 2x2 block Link can never stand on — the game opens it only
+ * A chest is a solid 2x2 block the player can never stand on — the game opens it only
  * from the walkable tile directly below its footprint, facing up. So a posKnown
  * chest is reachable iff that open-from tile is reachable (not any neighbor);
  * unknown-position and out-of-flood-range chests keep the coarse fallback.
  */
-const chestReachable = (posKnown: boolean, flood: FloodFillResult | null, tile: GridPos): boolean =>
-  !posKnown || isOutOfFloodRange(tile) || hasReachableOpenTile(flood, tile);
+const chestReachable = (posKnown: boolean, reached: Reached, tile: GridPos): boolean =>
+  !posKnown || isOutOfFloodRange(tile) || hasReachableOpenTile(reached, tile);
 
 /**
  * Whether a discovered sprite is actually spawned at the current progress. A
@@ -178,7 +157,7 @@ const chestLabel = (chest: SimChest): string => `chest (room ${chest.roomId.toSt
 const spriteLabel = (sprite: SimSprite): string => `${sprite.kind} (room ${sprite.roomId.toString(16)})`;
 
 /** Reachable, not-yet-done interactables on the current screen as trigger targets. */
-const discoverTargets = (state: EngineState, obs: SimObservation, flood: FloodFillResult | null): SimTarget[] => {
+const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reached): SimTarget[] => {
   const inter = obs.interactables;
   if (!inter) return [];
   const screenId = state.virtual.screenId;
@@ -188,14 +167,14 @@ const discoverTargets = (state: EngineState, obs: SimObservation, flood: FloodFi
   const shutters = inter.doors.filter((d) => d.kind === 'shutter');
   const living = livingKillables(state, screenId, inter);
   // Open shutters with killables still alive: walking deeper into the room
-  // slams the doors shut behind Link (the game's trap-door rule) — every
+  // slams the doors shut behind the player (the game's trap-door rule) — every
   // target found in this window carries the trap marker.
   const trapArm = killGated && living.length > 0 && shutters.some((d) => d.opened);
 
   for (const chest of inter.chests) {
     const key = chestKey(chest);
     if (chest.opened || state.done.has(key) || state.failed.has(key)) continue;
-    if (!chestReachable(chest.posKnown, flood, chest.tile)) continue;
+    if (!chestReachable(chest.posKnown, reached, chest.tile)) continue;
     const action = planTrigger(chest);
     if (action) {
       const tile = chest.posKnown ? chest.tile : undefined;
@@ -217,7 +196,7 @@ const discoverTargets = (state: EngineState, obs: SimObservation, flood: FloodFi
     if (kind === 'big-key' && state.bigKeys.size === 0) continue;
     if (kind === 'bombable' && !hasBombs) continue;
     const tile = door.tiles[0];
-    if (tile && !hasReachableNeighbor(flood, tile, DOOR_REACH_RADIUS)) continue;
+    if (tile && !hasReachableNeighbor(reached, tile, DOOR_REACH_RADIUS)) continue;
     const action = { type: 'door', roomId: door.roomId, doorIndex: door.index, doorKind: kind, ...(door.cellLock ? { cellLock: true } : {}) } as const;
     const noun = door.cellLock ? 'cell lock' : DOOR_NOUN[kind];
     targets.push({ screenId, roomId: door.roomId, action, key, label: `${noun} (room ${door.roomId.toString(16)} #${door.index})`, noun, verb: DOOR_VERB[kind], tile });
@@ -226,7 +205,7 @@ const discoverTargets = (state: EngineState, obs: SimObservation, flood: FloodFi
   for (const sprite of inter.sprites) {
     const key = spriteKey(sprite);
     if (state.done.has(key) || state.failed.has(key)) continue;
-    if (!interactableReachable(sprite.posKnown, flood, sprite.tile)) continue;
+    if (!interactableReachable(sprite.posKnown, reached, sprite.tile)) continue;
     if (!spritePresent(sprite, obs.presenceState)) continue;
     const tile = sprite.posKnown ? sprite.tile : undefined;
     if (isPullSwitch(sprite.spriteType)) {
@@ -237,12 +216,12 @@ const discoverTargets = (state: EngineState, obs: SimObservation, flood: FloodFi
       }
       continue;
     }
-    if (sprite.spriteType === ZELDA_SPRITE) {
+    if (sprite.spriteType === FOLLOWER_SPRITE) {
       const following = (obs.flags.progress[FOLLOWER_SLOT] ?? 0) === 1;
-      const zstep = ZELDA_STEPS.find((z) => z.room === sprite.roomId && z.following === following);
-      if (zstep) {
-        const action = { type: 'progress', step: zstep.step } as const;
-        targets.push({ screenId, roomId: sprite.roomId, action, key, label: zstep.noun, noun: zstep.noun, verb: zstep.verb, tile });
+      const fstep = FOLLOWER_STEPS.find((f) => f.room === sprite.roomId && f.following === following);
+      if (fstep) {
+        const action = { type: 'progress', step: fstep.step } as const;
+        targets.push({ screenId, roomId: sprite.roomId, action, key, label: fstep.noun, noun: fstep.noun, verb: fstep.verb, tile });
       }
       continue;
     }
@@ -252,7 +231,7 @@ const discoverTargets = (state: EngineState, obs: SimObservation, flood: FloodFi
       const itemId = sprite.carriesBigKey ? BIG_KEY_ITEM : SMALL_KEY_ITEM;
       const noun = sprite.carriesBigKey ? 'big key guard' : 'key guard';
       // The LAST living killable's death satisfies the room's kill tag — its
-      // kill reopens every shutter, including the ones that slammed behind Link.
+      // kill reopens every shutter, including the ones that slammed behind the player.
       const reopens = killGated && shutters.length > 0 && living.every((l) => l === sprite);
       const action = { type: 'kill', roomId: sprite.roomId, itemId, opensShutters: reopens } as const;
       targets.push({ screenId, roomId: sprite.roomId, action, key, label: `${noun} (room ${sprite.roomId.toString(16)})`, noun, verb: 'Defeating', tile, trap: trapArm });
@@ -271,7 +250,7 @@ const discoverTargets = (state: EngineState, obs: SimObservation, flood: FloodFi
     if (!state.done.has(key) && !state.failed.has(key)) {
       const enemy = inter.sprites.find((sp) =>
         sp.kind === 'other' && !sp.carriesKey && !sp.carriesBigKey
-        && interactableReachable(sp.posKnown, flood, sp.tile));
+        && interactableReachable(sp.posKnown, reached, sp.tile));
       if (enemy) {
         const action = { type: 'kill', roomId: enemy.roomId, itemId: 0xff, opensShutters: true } as const;
         targets.push({ screenId, roomId: enemy.roomId, action, key, label: `guards (room ${enemy.roomId.toString(16)})`, noun: 'guards', verb: 'Defeating', tile: enemy.tile });
@@ -282,4 +261,4 @@ const discoverTargets = (state: EngineState, obs: SimObservation, flood: FloodFi
   return targets;
 };
 
-export { floodCurrent, discoverTargets, isTileReachable, hasReachableOpenTile, KILL_GATE_TAG };
+export { discoverTargets, isTileReachable, hasReachableOpenTile, KILL_GATE_TAG };

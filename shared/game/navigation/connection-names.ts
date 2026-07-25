@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import { ALL_CONNECTIONS } from '../data/connections';
-import { SCREEN_BY_ID } from '../data/screens';
+import { SCREEN_BY_ID, displayName } from '../data/screens';
 
 /** fromRegionId → destination screen IDs (built once from the connection table). */
 const connectionsByFrom = new Map<string, string[]>();
@@ -19,7 +19,7 @@ const getConnectionDestinationName = (currentScreenId: string, targetRoomId: num
   if (!destinations) return null;
   for (const toId of destinations) {
     const screen = SCREEN_BY_ID.get(toId);
-    if (screen && screen.roomIndex === targetRoomId) return screen.name;
+    if (screen && screen.roomIndex === targetRoomId) return displayName(screen.id, screen.name);
   }
   return null;
 };

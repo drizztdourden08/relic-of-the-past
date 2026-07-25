@@ -1,7 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 /**
  * Writes every boot input into the Emscripten MEMFS during preRun: game assets, the INI, SRAM, MSU tracks,
- * and the custom Link sprite. Extracted from lifecycle.ts so each stays small and single-purpose.
+ * and the custom player sprite. Extracted from lifecycle.ts so each stays small and single-purpose.
  */
 import { log } from '../log-bus';
 import type { EmscriptenModule } from './types';
@@ -32,7 +32,7 @@ const writeBootFiles = (mod: EmscriptenModule, f: BootFiles): void => {
     for (const t of f.msu) mod.FS.writeFile(`/msu/${t.num}.${t.ext}`, t.data);
     log.app(`[MSU] Wrote ${f.msu.length} tracks to MEMFS`);
   }
-  // Custom Link sprite: the INI's LinkGraphics key points here (serializeToIni → ApplyCustomLinkGraphics).
+  // Custom player sprite: the INI's LinkGraphics key points here (serializeToIni → ApplyCustomLinkGraphics).
   if (f.linkSprite) mod.FS.writeFile('/link_sprite.zspr', f.linkSprite);
 };
 

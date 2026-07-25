@@ -13,7 +13,7 @@ import type { SimExit } from '@shared/game/simulation';
 import type { ScreenDefinition } from '@shared/game/types';
 import { SCREEN_BY_ID } from '@shared/game/data/screens';
 import { wasmGetRoomDoorInfo, wasmGetRoomTravelDestinationsFor } from '../';
-import { getScreenGrids } from './screen-grids';
+import { getScreenGrids } from '../flood';
 import { interiorScreenId } from './screen-resolve';
 import { doorwayDistance, entryFromEdge, exitFromEdge } from './exit-order';
 import type { EdgeName } from './exit-order';
@@ -29,7 +29,7 @@ const OPPOSITE: Record<EdgeName, EdgeName> = { north: 'south', south: 'north', w
 
 /** A room-to-room destination is plausible only when the dataset knows it AND it
  *  lives in the same world as the source — a "neighbor" resolving to nothing or
- *  the other world is a room-index artefact (e.g. Link's house door tiles read
+ *  the other world is a room-index artefact (e.g. the player's house door tiles read
  *  as a south border into "room 0x114" = the DARK-world bumper cave). */
 const plausibleRoomNeighbor = (id: string, src?: ScreenDefinition): boolean => {
   if (id.startsWith('room:')) return false;

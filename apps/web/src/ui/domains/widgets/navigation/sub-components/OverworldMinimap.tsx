@@ -2,6 +2,7 @@
 import type { CSSProperties } from 'react';
 import { Icon } from '@iconify/react/offline';
 import type { ConnectionInfo } from '@shared/game/navigation';
+import { usableEntrances } from '@shared/game/navigation';
 
 const IL: Record<string, CSSProperties> = {
   cellName: { fontWeight: 700, fontSize: 11, position: 'relative' },
@@ -14,10 +15,11 @@ import { useNavigationOverlayStore } from '../../../../../stores/navigation-over
 import { EDGE_COLORS } from '../navigation.constants';
 import { getScreenDisplayName } from '../widget-helpers';
 import { ReachabilityCanvas } from './ReachabilityCanvas';
+import { AnnotationLayer } from './AnnotationLayer';
 import type { MinimapProps } from './IndoorMinimap';
 
 /** Overworld minimap: a multi-cell grid (one cell per 512×512 screen). */
-const OverworldMinimap = ({ bundle, connections, renderResults, linkScreenIndex, linkPos, respawnEntIds, roomIndex }: MinimapProps) => {
+const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenIndex, playerPos, respawnEntIds, roomIndex }: MinimapProps) => {
   const EDGE_PAD = 18;
   const GAP = 2;
   const AVAIL = 224;
@@ -34,6 +36,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, linkScreenIndex,
 
   const externalConns = connections.filter(c => !c.isIntraRoom);
   const fallHoleSpawns = useNavigationOverlayStore(s => s.fallHoleSpawns);
+  const annotations = useNavigationOverlayStore(s => s.annotations);
 
   const byEdge: Record<string, ConnectionInfo[]> = { north: [], south: [], east: [], west: [] };
   for (const c of externalConns) {
@@ -77,7 +80,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, linkScreenIndex,
       {bundle.screens.map((scr, idx) => {
         const col = idx % bundle.cols;
         const row = Math.floor(idx / bundle.cols);
-        const isActive = linkScreenIndex === scr;
+        const isActive = playerScreenIndex === scr;
         const analyzed = renderResults.some(r => r.screenIndex === scr);
         const scrResult = renderResults.find(r => r.screenIndex === scr);
         return (
@@ -97,7 +100,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, linkScreenIndex,
         );
       })}
 
-      {renderResults.flatMap(r => r.entrances.filter(e => r.transitions.some(t => t.entranceIdx === e.id)).map(ent => {
+      {renderResults.flatMap(r => usableEntrances(r).map(ent => {
         const scrIdx = bundle.screens.indexOf(r.screenIndex);
         if (scrIdx < 0) return null;
         const cellCol = scrIdx % bundle.cols;
@@ -124,16 +127,35 @@ const OverworldMinimap = ({ bundle, connections, renderResults, linkScreenIndex,
         );
       })}
 
-      {linkPos && bundle.screens.includes(linkPos.screen) && (() => {
-        const scrIdx = bundle.screens.indexOf(linkPos.screen);
+      {playerPos && bundle.screens.includes(playerPos.screen) && (() => {
+        const scrIdx = bundle.screens.indexOf(playerPos.screen);
         const col = scrIdx % bundle.cols;
         const row = Math.floor(scrIdx / bundle.cols);
         const cellLeft = EDGE_PAD + col * (cellW + GAP);
         const cellTop = EDGE_PAD + row * (cellH + GAP);
-        const x = (linkPos.col / 64) * cellW;
-        const y = (linkPos.row / 64) * cellH;
+        const x = (playerPos.col / 64) * cellW;
+        const y = (playerPos.row / 64) * cellH;
         return <Box style={{ position: 'absolute', left: cellLeft + x - 3, top: cellTop + y - 3, width: 6, height: 6, borderRadius: '50%', background: 'var(--c-green)', boxShadow: '0 0 3px var(--c-green)', pointerEvents: 'none' }} />;
       })()}
+
+      {/* Every annotated screen draws in its OWN cell — a multi-screen area has
+          mechanics on sub-screens the player is not standing on. */}
+      {annotations.map((set) => {
+        const scrIdx = bundle.screens.indexOf(set.screenIndex);
+        if (scrIdx < 0) return null;
+        const cellLeft = EDGE_PAD + (scrIdx % bundle.cols) * (cellW + GAP);
+        const cellTop = EDGE_PAD + Math.floor(scrIdx / bundle.cols) * (cellH + GAP);
+        return (
+          <AnnotationLayer
+            key={`anno-set-${set.screenIndex}`}
+            annotations={set}
+            cellLeft={cellLeft}
+            cellTop={cellTop}
+            cellW={cellW}
+            cellH={cellH}
+          />
+        );
+      })}
 
       {renderHorizEdge(byEdge.north, 'n', EDGE_PAD - 15)}
       {renderHorizEdge(byEdge.south, 's', EDGE_PAD + gridH + 1)}

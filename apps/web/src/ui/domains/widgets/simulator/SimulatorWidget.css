@@ -57,6 +57,57 @@
   overflow-wrap: anywhere;
 }
 
+/* ─── Run trail ─── */
+
+.simulator__trail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  max-height: 180px;
+  overflow-y: auto;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--c-inset);
+  border: 1px solid var(--c-hairline);
+  border-radius: var(--r-md);
+}
+
+.simulator__trail-title {
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.simulator__trail-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.simulator__trail-index {
+  min-width: 1.5em;
+  color: var(--c-text-muted);
+  text-align: right;
+}
+
+.simulator__trail-name {
+  color: var(--c-text);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.simulator__trail-haul {
+  color: var(--c-green-bright);
+}
+
+.simulator__trail-epoch {
+  margin-left: auto;
+  color: var(--c-text-muted);
+}
+
 /* ─── Log entry point ───
    No inline feed: the widget column is too narrow to read a log in, so this is
    just the button that opens the dialog, with the live event count as a pill. */

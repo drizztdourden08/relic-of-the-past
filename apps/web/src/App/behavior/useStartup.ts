@@ -1,6 +1,7 @@
 /* @layer renderer-appshell @kind hook */
 import { useEffect } from 'react';
 import { log } from '../../lib/log-bus';
+import { loadNameOverlay } from '../../lib/assets/load-name-overlay';
 import { applySpritesForRom } from '../../lib/sprites/apply-sprites-for-rom';
 import { getAppState } from '../../lib/storage/profile-store';
 import type { PageId } from '../types';
@@ -15,6 +16,10 @@ const useStartup = (
   useEffect(() => {
     (async () => {
       try {
+        // Screen display names first, so nothing can render a name before the
+        // overlay is in place. Absent without the companion repo — a no-op then.
+        await loadNameOverlay();
+
         const [{ profiles: profileList }, appState, testArgs] = await Promise.all([
           profileMgmt.refreshProfilesAndRoms(),
           getAppState(),

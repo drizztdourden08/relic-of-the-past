@@ -40,9 +40,9 @@ interface ViewportInfo {
   cameraX: number;
   /** Camera world Y position (BG2 vertical scroll) */
   cameraY: number;
-  /** Link's world X position */
+  /** The player's world X position */
   linkX: number;
-  /** Link's world Y position */
+  /** The player's world Y position */
   linkY: number;
   /** Camera-lock render shift X (wide view): the rendered view sits at camera − shift. 0 = no lock. */
   cameraLockShiftX: number;

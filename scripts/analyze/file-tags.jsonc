@@ -30,8 +30,16 @@
   "**/*.woff2": { "kind": "asset" },
   "**/*.dat":   { "kind": "asset" },
   "**/*.sfc":   { "kind": "asset" },
+  // Emulator save states — test fixtures, cannot carry a header comment.
+  "**/*.sav":   { "kind": "asset" },
 
   "apps/web/public/**":   { "kind": "asset" },
+  // Generated Emscripten output, mirrored for the desktop shell (gitignored).
+  "apps/desktop/public/wasm/**": { "kind": "asset" },
+  // Named save states the tests + nav baselines load; documented in their README.
+  "tests/fixtures/save-states/**": { "kind": "asset" },
+  // Kept (permanent) app-driven specs — see tests/e2e/README.md.
+  "tests/e2e/**": { "kind": "test" },
 
   "shared/game/data/**":      { "kind": "data" },
   "shared/input/data/**":     { "kind": "data" },

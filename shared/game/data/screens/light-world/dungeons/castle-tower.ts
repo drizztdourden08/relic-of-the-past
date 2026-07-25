@@ -4,11 +4,11 @@ import type { ScreenDefinition } from '../../../../types';
 const CASTLE_TOWER_DUNGEON: ScreenDefinition[] = [
   {
     id: 'ct-0x20',
-    name: 'Agahnim',
+    name: 'Wizard Boss Room',
     type: 'dungeon', world: 'light',
     location: 'Castle Tower', area: 'Hyrule Castle',
     roomIndex: 0x20,
-    dungeon: { palaceIndex: 0x1A, floor: 6, gridX: 0, gridY: 2 },
+    dungeon: { palaceIndex: 0x08, floor: 6, gridX: 0, gridY: 2 },
     tags: [
       'env:underground',
       'role:boss',
@@ -20,7 +20,7 @@ const CASTLE_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Castle Tower', area: 'Hyrule Castle',
     roomIndex: 0x30,
-    dungeon: { palaceIndex: 0x1A, floor: 5, gridX: 0, gridY: 3 },
+    dungeon: { palaceIndex: 0x08, floor: 5, gridX: 0, gridY: 3 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -32,7 +32,7 @@ const CASTLE_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Castle Tower', area: 'Hyrule Castle',
     roomIndex: 0x40,
-    dungeon: { palaceIndex: 0x1A, floor: 4, gridX: 0, gridY: 4 },
+    dungeon: { palaceIndex: 0x08, floor: 4, gridX: 0, gridY: 4 },
     tags: [
       'env:underground',
       'hazard:dark',
@@ -45,7 +45,7 @@ const CASTLE_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Castle Tower', area: 'Hyrule Castle',
     roomIndex: 0xB0,
-    dungeon: { palaceIndex: 0x1A, floor: 3, gridX: 0, gridY: 11 },
+    dungeon: { palaceIndex: 0x08, floor: 3, gridX: 0, gridY: 11 },
     tags: [
       'env:underground',
       'hazard:dark',
@@ -57,7 +57,7 @@ const CASTLE_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Castle Tower', area: 'Hyrule Castle',
     roomIndex: 0xC0,
-    dungeon: { palaceIndex: 0x1A, floor: 2, gridX: 0, gridY: 12 },
+    dungeon: { palaceIndex: 0x08, floor: 2, gridX: 0, gridY: 12 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -69,7 +69,7 @@ const CASTLE_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Castle Tower', area: 'Hyrule Castle',
     roomIndex: 0xD0,
-    dungeon: { palaceIndex: 0x1A, floor: 1, gridX: 0, gridY: 13 },
+    dungeon: { palaceIndex: 0x08, floor: 1, gridX: 0, gridY: 13 },
     tags: [
       'env:underground',
       'role:connector',
@@ -81,7 +81,7 @@ const CASTLE_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'light',
     location: 'Castle Tower', area: 'Hyrule Castle',
     roomIndex: 0xE0,
-    dungeon: { palaceIndex: 0x1A, floor: 0, gridX: 0, gridY: 14 },
+    dungeon: { palaceIndex: 0x08, floor: 0, gridX: 0, gridY: 14 },
     tags: [
       'env:underground',
       'role:entrance',

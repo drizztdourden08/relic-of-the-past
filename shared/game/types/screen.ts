@@ -125,7 +125,7 @@ interface ScreenBase {
   world: World;
   /** Structural parent — all screens sharing a location are "one place" */
   location: string;
-  /** Broad zone for notification line 2 ("Death Mountain", "Kakariko", "East Hyrule") */
+  /** Broad zone for notification line 2 (e.g. "Death Mountain", "Kakariko") */
   area: string;
 
   // ─── Game Values ───

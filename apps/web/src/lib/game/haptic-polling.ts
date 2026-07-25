@@ -42,7 +42,7 @@ const pollHapticState = (heap: Uint8Array, ptr: number): void => {
   const dashCtr = heap[ptr + 117];
 
   // ─── Dash vibration ───
-  // Link is actively dashing when isRunning=1 and dashCtr < 64 (charging complete)
+  // The player is actively dashing when isRunning=1 and dashCtr < 64 (charging complete)
   const isDashing = isRunning !== 0 && dashCtr < 64 && dashCtr >= 32;
 
   if (isDashing) {

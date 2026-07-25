@@ -20,7 +20,7 @@ void GameHook_NotifyItemReceived(uint8 item_id, uint8 method);
 // plays the hold-up animation, and fires the JS notification.
 void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id);
 
-// Programmatically trigger an NPC-type check (Uncle, Sahasrahla, etc.)
+// Programmatically trigger an NPC-type check (Uncle, the village elder, etc.)
 void GameHook_TriggerNpcCheck(uint8 flag_type, uint8 flag_mask, uint8 item_id,
                               uint8 sprite_type_id, uint8 post_gfx);
 
@@ -41,20 +41,20 @@ uint8 GameHook_ApplyExtraArmor(uint8 dmg);
 
 // ─── Haptic Events (haptic_events.c) ───
 
-// Called when Link starts a sword swing animation.
+// Called when the player starts a sword swing animation.
 // swing_type: 0 = normal full swing, 1 = rapid re-swing (quick slash)
 void GameHook_NotifySwordSwing(int swing_type);
 
-// Called when Link's sword connects with an enemy sprite.
+// Called when the player's sword connects with an enemy sprite.
 void GameHook_NotifySwordHitEnemy(uint8 damage_dealt);
 
-// Called when Link's sword clinks against an invulnerable surface/enemy.
+// Called when the player's sword clinks against an invulnerable surface/enemy.
 void GameHook_NotifySwordClink(void);
 
-// Called when Link takes damage (damage_amount = hearts lost in 1/8ths).
+// Called when the player takes damage (damage_amount = hearts lost in 1/8ths).
 void GameHook_NotifyDamageTaken(uint8 damage_amount);
 
-// Called when Link uses a Y-button item.
+// Called when the player uses a Y-button item.
 void GameHook_NotifyItemUsed(uint8 item_id);
 
 // Called for environmental haptic events (falling, landing, chest open, etc.)
@@ -65,7 +65,7 @@ void GameHook_NotifyEnvironmentalEvent(uint8 event_type);
 // Called when hookshot hits a wall and retracts.
 void GameHook_NotifyHookshotWall(void);
 
-// Called when boomerang returns to Link (catch).
+// Called when boomerang returns to the player (catch).
 void GameHook_NotifyBoomerangCatch(void);
 
 #endif // GAME_HOOKS_H

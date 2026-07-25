@@ -9,7 +9,7 @@ import {
 
 /** Check rules for dungeon-internal locations. */
 const DUNGEON_CHECK_RULES: Record<string, Requirement> = {
-  // ── Hyrule Castle / Sewers ─────────────────────────────────────────
+  // ── First Castle / Sewers ──────────────────────────────────────────
   'Sewers - Dark Cross': 'Lamp',
   'Sewers - Key Rat Key Drop': 'Lamp',
 
@@ -75,7 +75,7 @@ const DUNGEON_CHECK_RULES: Record<string, Requirement> = {
   'Turtle Rock - Boss': { and: ['Fire Rod', 'Ice Rod'] },
   'Turtle Rock - Prize': { and: ['Fire Rod', 'Ice Rod'] },
 
-  // ── Ganon's Tower ──────────────────────────────────────────────────
+  // ── Final Tower ────────────────────────────────────────────────────
   "Ganons Tower - Bob's Torch": 'Pegasus Boots',
   'Ganons Tower - Compass Room - Top Left': 'Fire Rod',
   'Ganons Tower - Compass Room - Top Right': 'Fire Rod',
@@ -93,7 +93,7 @@ const DUNGEON_CHECK_RULES: Record<string, Requirement> = {
   'Ganons Tower - Mini Helmasaur Room - Right': canShootArrows,
   'Ganons Tower - Mini Helmasaur Key Drop': canShootArrows,
 
-  // ── Ganon (final boss) ─────────────────────────────────────────────
+  // ── Final boss ─────────────────────────────────────────────────────
   'Ganon': { and: [hasBeamSword, 'Lamp', 'Silver Arrows'] },
 };
 

@@ -25,7 +25,7 @@ const dedupe = (exits: SimExit[]): SimExit[] => {
 };
 
 /** The DESTINATION room's stair/walk-boundary that leads back here = the
- *  landing tile Link appears on after taking this transition. */
+ *  landing tile the player appears on after taking this transition. */
 const stairLandingTile = (destRoom: number, fromRoom: number): GridPos | undefined => {
   const back = wasmGetRoomStairInfoFor(destRoom).find((s) => s.destRoom === fromRoom)
     ?? wasmGetRoomWalkBoundariesFor(destRoom).find((b) => b.destRoom === fromRoom);
@@ -37,7 +37,7 @@ const detectRoom = (roomId: number, items: TileReq[], entryTile?: GridPos, src?:
   const run = floodRoomRun(roomId, items, entryTile);
   if (!run) return null;
   const owSide = enrichEntrances();
-  const dist = stepDistances(run.result.reachable, run.result.startPos);
+  const dist = stepDistances(run.result.reachable, run.result.startPos, run.result.ledges);
   const exits: SimExit[] = [];
   const scores: number[] = [];
   const pushExit = (exit: SimExit, score?: number): void => {
@@ -49,13 +49,13 @@ const detectRoom = (roomId: number, items: TileReq[], entryTile?: GridPos, src?:
   // Exit-door trigger spots (attr 0x8E) — a border touch or door record there
   // means "walk OUT of the dungeon" (e.g. the castle's front doors sit right
   // above the basement jail rooms). Memoized per wall spot. The throne room's
-  // push-wall (kDoorType_ThroneRoom, native 0x14) counts as blocked too until
-  // Zelda follows — its notch tiles flood, but the wall only opens for her.
+  // push-wall (kDoorType_ThroneRoom, native 0x14) counts as blocked too until the
+  // follower is in tow — its notch tiles flood, but the wall only opens for her.
   // …and warp-room doors (native 0x46) teleport rather than scroll, so their
   // wall spots are blocked for border/edge purposes too.
-  const zeldaFollowing = (wasmReadFlagSnapshot()?.progress[13] ?? 0) === 1;
+  const followerActive = (wasmReadFlagSnapshot()?.progress[13] ?? 0) === 1;
   const blockedSpots = wasmGetRoomDoorInfo(roomId)
-    .filter((d) => d.nativeType === 0x46 || (d.nativeType === 0x14 && !zeldaFollowing))
+    .filter((d) => d.nativeType === 0x46 || (d.nativeType === 0x14 && !followerActive))
     .map((d) => ({ edge: d.direction as EdgeName, pos: d.direction === 'north' || d.direction === 'south' ? d.col : d.row }));
   const exitSpotMemo = new Map<string, boolean>();
   const isExitSpot = (edge: EdgeName, pos: number): boolean => {

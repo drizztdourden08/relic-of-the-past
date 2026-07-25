@@ -18,3 +18,4 @@ export {
   type InventoryCategory,
   type InventoryViewMode,
 } from './sprites';
+export { resolveDuplicate, isDuplicated, itemLabel, DUPLICATE_ALTERNATES } from './duplicate-alternates';

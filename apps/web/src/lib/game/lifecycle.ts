@@ -40,7 +40,7 @@ const setMsuData = (data: MsuTrackData[] | null): void => {
   pendingMsuData = data;
 };
 
-// Custom Link sprite (.zspr) staged for the next boot — written to MEMFS where ApplyCustomLinkGraphics reads it.
+// Custom player sprite (.zspr) staged for the next boot — written to MEMFS where ApplyCustomLinkGraphics reads it.
 let pendingLinkSprite: Uint8Array | null = null;
 
 const setLinkSpriteData = (data: Uint8Array | null): void => {

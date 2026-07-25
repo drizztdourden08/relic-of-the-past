@@ -1,0 +1,87 @@
+/* @layer tests @kind test */
+/**
+ * PERMANENT (`.keep.spec.ts`) — do not delete with the scratch specs.
+ *
+ * One location must flood to the SAME number no matter who asks. Three consumers
+ * run the reachability flood — the navigation widget, the simulator's runner and
+ * the offline `--dump-nav` dumper — and for a long time they disagreed: the
+ * dumper reported 590 reachable tiles in the Jail Cell where the widget reported
+ * 608, because the dumper hand-built its options with an EMPTY inventory and a
+ * hard-coded interior tile context.
+ *
+ * That gap was found by eye, in a screenshot. This test is what finds it next
+ * time: it drives the real app once per state, reads the widget's own reachable
+ * count out of the UI, reads the dumper's count out of the JSON it writes, and
+ * asserts they match. The dumper now floods through the same runner the simulator
+ * uses, so agreeing here means all three agree.
+ */
+import { test, expect } from '@playwright/test';
+import { _electron as electron } from 'playwright';
+import { join } from 'path';
+import { existsSync, readFileSync, rmSync } from 'fs';
+import { execSync } from 'child_process';
+
+const PROJECT_ROOT = join(__dirname, '..', '..');
+const MAIN_JS = join(PROJECT_ROOT, 'dist', 'electron', 'main.js');
+const DUMP_PATH = join(PROJECT_ROOT, 'debug-output', 'dump-nav.json');
+
+/** Named manual saves — stable by design, unlike quick slots. */
+const STATES = ['test-jail-cell', 'test-throne-room', 'test-sanctuary-grounds'];
+
+const killElectron = () => {
+  try { execSync('taskkill /F /IM electron.exe /T', { stdio: 'ignore' }); } catch { /* none running */ }
+};
+
+/** The widget's own reachable count, read from the rendered panel. */
+const widgetReachable = async (state: string): Promise<number> => {
+  killElectron();
+  const app = await electron.launch({
+    args: [MAIN_JS, '--muted', '--no-focus', `--auto-state=${state}`, '--widgets=navigation'],
+    env: { ...process.env, NODE_ENV: 'production' },
+  });
+  try {
+    const window = await app.firstWindow();
+    await window.waitForLoadState('domcontentloaded');
+    await window.waitForTimeout(16_000);
+    await window.getByRole('button', { name: /Flood Fill/ }).click();
+    await window.waitForTimeout(3500);
+    const text = await window.locator('text=/^\\d+\\/\\d+ \\(\\d+%\\)$/').first().textContent();
+    const m = /^(\d+)\//.exec(text ?? '');
+    if (!m) throw new Error(`no reachable count rendered for ${state}: ${text}`);
+    return Number(m[1]);
+  } finally {
+    await app.close();
+  }
+};
+
+/** The dumper's reachable count for the same state. */
+const dumpReachable = async (state: string): Promise<number> => {
+  killElectron();
+  if (existsSync(DUMP_PATH)) rmSync(DUMP_PATH);
+  const app = await electron.launch({
+    args: [MAIN_JS, '--muted', '--no-focus', `--dump-nav=${state}`],
+    env: { ...process.env, NODE_ENV: 'production' },
+  });
+  try {
+    // The app writes the dump and exits itself; poll for the file.
+    for (let i = 0; i < 120 && !existsSync(DUMP_PATH); i++) {
+      await new Promise((r) => setTimeout(r, 1000));
+    }
+    if (!existsSync(DUMP_PATH)) throw new Error(`--dump-nav=${state} wrote no dump`);
+    const dump = JSON.parse(readFileSync(DUMP_PATH, 'utf8'));
+    if (dump.error) throw new Error(`--dump-nav=${state} reported: ${dump.error}`);
+    return dump.floodFill?.reachableCount ?? -1;
+  } finally {
+    await app.close().catch(() => { /* already exited itself */ });
+  }
+};
+
+for (const state of STATES) {
+  test(`flood parity — ${state}`, async () => {
+    test.setTimeout(600_000);
+    const widget = await widgetReachable(state);
+    const dump = await dumpReachable(state);
+    console.log(`PARITY ${state} widget=${widget} dump=${dump}`);
+    expect(widget, `widget reported ${widget} but --dump-nav reported ${dump} for ${state}`).toBe(dump);
+  });
+}

@@ -1,12 +1,16 @@
 /* @layer renderer-widgets @kind hook */
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useGameUIStore } from '../../../../stores/game-ui-store';
+import { usableEntrances } from '@shared/game/navigation';
+import { displayName } from '@shared/game/data/screens';
+import { annotateFlooded } from './nav-flood/annotate-flooded';
+import { liveGameStates } from '../../../../lib/game/live-game-states';
 import { useNavigationOverlayStore } from '../../../../stores/navigation-overlay-store';
 import type { ScreenBundle, FloodFillResult, ConnectionInfo } from '@shared/game/navigation';
 import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetProgressIndicator, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetDungeonMapPosition } from '../../../../lib/game';
 import type { OverworldVariantInfo } from '../../../../lib/game';
 import { enrichEntrances } from './widget-helpers';
-import { useScreenDetection, useLinkDebugState, useAutoFloodTrigger } from './hooks';
+import { useScreenDetection, usePlayerDebugState, useAutoFloodTrigger } from './hooks';
 import { buildInventory, buildOverworldBlockers, computeStartContext } from './nav-flood/prepare';
 import { collectIndoorEntrances } from './nav-flood/indoor-entrances';
 import { propagateScreens } from './nav-flood/propagate';
@@ -15,7 +19,7 @@ import { useNavConnections } from './nav-flood/use-nav-connections';
 
 /** All Navigation-widget state, data acquisition, and flood-fill orchestration. */
 const useNavigation = () => {
-  const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex, whichEntrance, linkX, linkY } = useGameUIStore(s => s.map);
+  const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex, whichEntrance, linkX: playerX, linkY: playerY } = useGameUIStore(s => s.map);
   const equipment = useGameUIStore(s => s.equipment);
   const inventoryItems = useGameUIStore(s => s.inventory.items);
   const overlayStore = useNavigationOverlayStore();
@@ -36,7 +40,7 @@ const useNavigation = () => {
   const pendingAutoSecondPassRef = useRef(false);
   const autoSecondPassTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Capture Link's layer at the moment a room loads (the "starting layer" for this room visit)
+  // Capture the player's layer at the moment a room loads (the "starting layer" for this room visit)
   const [roomStartLayer, setRoomStartLayer] = useState<number | null>(null);
   const prevRoomForLayerRef = useRef<number | null>(null);
   useEffect(() => {
@@ -72,8 +76,9 @@ const useNavigation = () => {
   // ─── Screen detection: single source of truth ───
   const detectionResult = useScreenDetection(debugTick);
   const progressInfo = wasmGetProgressIndicator();
+  const gameStates = liveGameStates();
   const detectedScreen = detectionResult?.screen ?? null;
-  const screenName = detectedScreen?.name
+  const screenName = (detectedScreen && displayName(detectedScreen.id, detectedScreen.name))
     ?? (isIndoors ? `Room 0x${roomIndex.toString(16).toUpperCase().padStart(4, '0')}` : `Screen 0x${overworldScreenIndex.toString(16).toUpperCase().padStart(2, '0')}`);
   const displayedVariant = !isIndoors
     ? (result ? wasmGetOverworldVariant(result.screenIndex) : variant)
@@ -83,14 +88,14 @@ const useNavigation = () => {
     : (result ? [result] : []);
   const reachableSum = renderResults.reduce((sum, r) => sum + r.reachableCount, 0);
   const totalTilesSum = renderResults.reduce((sum, r) => sum + r.totalTiles, 0);
-  const entranceSum = renderResults.reduce((sum, r) => sum + r.entrances.filter(e => r.transitions.some(t => t.entranceIdx === e.id)).length, 0);
+  const entranceSum = renderResults.reduce((sum, r) => sum + usableEntrances(r).length, 0);
 
   // Force a lightweight periodic rerender so live debug values update while moving.
   useEffect(() => {
     const id = setInterval(() => setDebugTick(t => (t + 1) & 1023), 200);
     return () => clearInterval(id);
   }, []);
-  const linkDebug = useLinkDebugState(debugTick);
+  const playerDebug = usePlayerDebugState(debugTick);
 
   // Clear overlay and screen bundle when screen changes
   useEffect(() => {
@@ -128,7 +133,7 @@ const useNavigation = () => {
 
       const items = buildInventory(equipment, inventoryItems);
       const blockerWorldPoints = isIndoors ? [] : buildOverworldBlockers();
-      const { startPos, tileContext, rawAttrGrid, dualLayerGrids, linkLayer } = computeStartContext({ vp, primaryScreenIndex, isIndoors });
+      const { startPos, tileContext, rawAttrGrid, dualLayerGrids, playerLayer } = computeStartContext({ vp, primaryScreenIndex, isIndoors });
 
       // Get entrance data + exit map from WASM (cached per run)
       const allEntrances = enrichEntrances();
@@ -150,7 +155,7 @@ const useNavigation = () => {
 
       const { responses, overworldBundle } = propagateScreens({
         isIndoors, primaryScreenIndex, startPos, rawAttrGrid, items, tileContext,
-        allEntrances, exitScreenByRoom, intraEdges, dualLayerGrids, linkLayer, blockerWorldPoints,
+        allEntrances, exitScreenByRoom, intraEdges, dualLayerGrids, playerLayer, blockerWorldPoints,
       });
       // Outdoors: set bundle before the early-return so it persists even with no reachable screens.
       if (overworldBundle) setScreenBundle(overworldBundle);
@@ -184,6 +189,10 @@ const useNavigation = () => {
       setRespawnEntIds(currentRespawnIds);
 
       overlayStore.setData(primaryResult, allConnections, fillResults, fallHoleSpawns, currentRespawnIds);
+
+      // Derived from the same reads the run gates on, so the overlay and the run
+      // can never describe a screen differently.
+      overlayStore.setAnnotations(annotateFlooded({ fillResults, isIndoors, primaryScreenIndex, startPos, primaryScreenId: detectedScreen?.id ?? null }));
     } catch (e) { console.error(e); }
     finally {
       setRunning(false);
@@ -245,7 +254,7 @@ const useNavigation = () => {
   const entranceSpawns = wasmGetEntranceSpawns();
 
   return {
-    screenBundle, screenName, isIndoors, roomIndex, isDarkWorld, overworldScreenIndex, externalConnections, renderResults, linkDebug, respawnEntIds, palaceIndex, dungeonMapPos, roomLayoutInfo, whichEntrance, roomStartLayer, progressInfo, displayedVariant, dynamicBlockerCount, linkX, linkY, running, handleRun, result, toggleOverlay, overlayStore, autoRun, setAutoRun, reachableSum, totalTilesSum, entranceSum, internalConnections, fallHoleLandings, entranceSpawns,
+    screenBundle, screenName, isIndoors, roomIndex, isDarkWorld, overworldScreenIndex, externalConnections, renderResults, playerDebug, respawnEntIds, palaceIndex, dungeonMapPos, roomLayoutInfo, whichEntrance, roomStartLayer, progressInfo, gameStates, displayedVariant, dynamicBlockerCount, playerX, playerY, running, handleRun, result, toggleOverlay, overlayStore, autoRun, setAutoRun, reachableSum, totalTilesSum, entranceSum, internalConnections, fallHoleLandings, entranceSpawns,
   };
 };
 

@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind logic */
 import type { FloodFillResult } from '@shared/game/navigation';
+import { isEntranceUsable } from '@shared/game/navigation';
 import type { DrawContext } from './draw-context';
 import { EDGE_COLORS } from '../navigation-overlay.type';
 import { getEntranceIcon } from '../../../../../../../../lib/entrance-icons';
@@ -27,7 +28,7 @@ const drawEntrances = (dc: DrawContext, drawResults: FloodFillResult[], isIndoor
   for (const drawResult of drawResults) {
     const origin = getScreenWorldOrigin(drawResult.screenIndex);
     for (const ent of drawResult.entrances) {
-      if (!drawResult.transitions.some(t => t.entranceIdx === ent.id)) continue;
+      if (!isEntranceUsable(drawResult, ent)) continue;
       const xOffset = (!isIndoors && ent.id < 200) ? 8 : 0;
       const worldX = origin.x + ent.gridCol * TILE_PX + xOffset;
       const worldY = origin.y + ent.gridRow * TILE_PX;

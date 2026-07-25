@@ -4,6 +4,7 @@ import {
   wasmGetToggleFloorPositions, wasmGetDungeonMapPosition,
   wasmGetEntranceSpawns, wasmGetEntranceRooms, wasmGetFallHoles,
 } from '../../../../../lib/game';
+import { spawnLandingTile } from '../../../../../lib/game/flood';
 import type { wasmGetRoomLayoutInfo } from '../../../../../lib/game';
 import type { ConnectionInfo, ScreenBundle } from '@shared/game/navigation';
 
@@ -102,9 +103,7 @@ const computeFallHoleLandings = (primaryScreenIndex: number, isIndoors: boolean)
       if (rooms[h.entranceId] === primaryScreenIndex) {
         const spawn = spawns[h.entranceId];
         if (spawn) {
-          // +1 col / +2 row: spawn is Link's sprite top-left; offset to center on hitbox (bottom 2×2)
-          const gridCol = Math.floor((spawn.x - roomOriginX) / 8) + 1;
-          const gridRow = Math.floor((spawn.y - roomOriginY) / 8) + 2;
+          const { row: gridRow, col: gridCol } = spawnLandingTile(spawn.x, spawn.y, { x: roomOriginX, y: roomOriginY });
           if (gridRow >= 0 && gridRow < 64 && gridCol >= 0 && gridCol < 64) {
             fallHoleSpawns.push({ gridRow, gridCol, entranceId: h.entranceId });
           }

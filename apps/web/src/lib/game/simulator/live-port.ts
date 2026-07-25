@@ -15,7 +15,7 @@ import { captureStateBuffer, loadStateFromBuffer, reassertFeatureFlags, delivery
 import { setAutoSkipDialogOverride } from '../live-settings-flags';
 import { onItemReceived } from '../tracker';
 import { observe } from './observe';
-import { getScreenGrids } from './screen-grids';
+import { getScreenGrids } from '../flood';
 import { getRoomChests, getRoomSprites, getOverworldSprites, getRoomDoors } from './interactables';
 import { wasmGetRoomTagsFor } from '../';
 import { trigger } from './trigger';

@@ -7,4 +7,4 @@ export { drawCliffArrows, drawStairArrows } from './draw-arrows';
 export { drawConnections } from './draw-connections';
 export { drawEntrances } from './draw-entrances';
 export { drawFallHoleSpawns, drawPitStripes } from './draw-fall-zones';
-export { drawLinkDebug } from './draw-link-debug';
+export { drawPlayerDebug } from './draw-player-debug';

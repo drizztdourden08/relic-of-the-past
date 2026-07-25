@@ -8,7 +8,7 @@ const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Turtle Rock', area: 'Dark Death Mountain',
     roomIndex: 0x04,
-    dungeon: { palaceIndex: 0x16, floor: -2, gridX: 4, gridY: 0 },
+    dungeon: { palaceIndex: 0x18, floor: -2, gridX: 4, gridY: 0 },
     tags: [
       'env:underground',
       'role:boss',
@@ -20,7 +20,7 @@ const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Turtle Rock', area: 'Dark Death Mountain',
     roomIndex: 0x13,
-    dungeon: { palaceIndex: 0x16, floor: -2, gridX: 3, gridY: 1 },
+    dungeon: { palaceIndex: 0x18, floor: -2, gridX: 3, gridY: 1 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -32,7 +32,7 @@ const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Turtle Rock', area: 'Dark Death Mountain',
     roomIndex: 0x14,
-    dungeon: { palaceIndex: 0x16, floor: -2, gridX: 4, gridY: 1 },
+    dungeon: { palaceIndex: 0x18, floor: -2, gridX: 4, gridY: 1 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -44,7 +44,7 @@ const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Turtle Rock', area: 'Dark Death Mountain',
     roomIndex: 0x15,
-    dungeon: { palaceIndex: 0x16, floor: -2, gridX: 5, gridY: 1 },
+    dungeon: { palaceIndex: 0x18, floor: -2, gridX: 5, gridY: 1 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -56,7 +56,7 @@ const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Turtle Rock', area: 'Dark Death Mountain',
     roomIndex: 0x23,
-    dungeon: { palaceIndex: 0x16, floor: -2, gridX: 3, gridY: 2 },
+    dungeon: { palaceIndex: 0x18, floor: -2, gridX: 3, gridY: 2 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -68,7 +68,7 @@ const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Turtle Rock', area: 'Dark Death Mountain',
     roomIndex: 0x24,
-    dungeon: { palaceIndex: 0x16, floor: -2, gridX: 4, gridY: 2 },
+    dungeon: { palaceIndex: 0x18, floor: -2, gridX: 4, gridY: 2 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -80,7 +80,7 @@ const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Turtle Rock', area: 'Dark Death Mountain',
     roomIndex: 0xA4,
-    dungeon: { palaceIndex: 0x16, floor: -1, gridX: 4, gridY: 10 },
+    dungeon: { palaceIndex: 0x18, floor: -1, gridX: 4, gridY: 10 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -92,7 +92,7 @@ const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Turtle Rock', area: 'Dark Death Mountain',
     roomIndex: 0xB4,
-    dungeon: { palaceIndex: 0x16, floor: -1, gridX: 4, gridY: 11 },
+    dungeon: { palaceIndex: 0x18, floor: -1, gridX: 4, gridY: 11 },
     tags: [
       'env:underground',
       'hazard:dark',
@@ -104,7 +104,7 @@ const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Turtle Rock', area: 'Dark Death Mountain',
     roomIndex: 0xB5,
-    dungeon: { palaceIndex: 0x16, floor: -1, gridX: 5, gridY: 11 },
+    dungeon: { palaceIndex: 0x18, floor: -1, gridX: 5, gridY: 11 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -116,7 +116,7 @@ const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Turtle Rock', area: 'Dark Death Mountain',
     roomIndex: 0xB6,
-    dungeon: { palaceIndex: 0x16, floor: -1, gridX: 6, gridY: 11 },
+    dungeon: { palaceIndex: 0x18, floor: -1, gridX: 6, gridY: 11 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -128,7 +128,7 @@ const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Turtle Rock', area: 'Dark Death Mountain',
     roomIndex: 0xB7,
-    dungeon: { palaceIndex: 0x16, floor: -1, gridX: 7, gridY: 11 },
+    dungeon: { palaceIndex: 0x18, floor: -1, gridX: 7, gridY: 11 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -140,7 +140,7 @@ const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Turtle Rock', area: 'Dark Death Mountain',
     roomIndex: 0xC4,
-    dungeon: { palaceIndex: 0x16, floor: 0, gridX: 4, gridY: 12 },
+    dungeon: { palaceIndex: 0x18, floor: 0, gridX: 4, gridY: 12 },
     tags: [
       'env:underground',
       'role:entrance',
@@ -152,7 +152,7 @@ const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Turtle Rock', area: 'Dark Death Mountain',
     roomIndex: 0xC5,
-    dungeon: { palaceIndex: 0x16, floor: 0, gridX: 5, gridY: 12 },
+    dungeon: { palaceIndex: 0x18, floor: 0, gridX: 5, gridY: 12 },
     tags: [
       'env:underground',
       'role:entrance',
@@ -165,7 +165,7 @@ const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Turtle Rock', area: 'Dark Death Mountain',
     roomIndex: 0xC6,
-    dungeon: { palaceIndex: 0x16, floor: 0, gridX: 6, gridY: 12 },
+    dungeon: { palaceIndex: 0x18, floor: 0, gridX: 6, gridY: 12 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -177,7 +177,7 @@ const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Turtle Rock', area: 'Dark Death Mountain',
     roomIndex: 0xC7,
-    dungeon: { palaceIndex: 0x16, floor: 0, gridX: 7, gridY: 12 },
+    dungeon: { palaceIndex: 0x18, floor: 0, gridX: 7, gridY: 12 },
     tags: [
       'env:underground',
       'role:entrance',
@@ -189,7 +189,7 @@ const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Turtle Rock', area: 'Dark Death Mountain',
     roomIndex: 0xD5,
-    dungeon: { palaceIndex: 0x16, floor: 0, gridX: 5, gridY: 13 },
+    dungeon: { palaceIndex: 0x18, floor: 0, gridX: 5, gridY: 13 },
     tags: [
       'env:underground',
       'role:entrance',
@@ -201,7 +201,7 @@ const TURTLE_ROCK_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Turtle Rock', area: 'Dark Death Mountain',
     roomIndex: 0xD6,
-    dungeon: { palaceIndex: 0x16, floor: 0, gridX: 6, gridY: 13 },
+    dungeon: { palaceIndex: 0x18, floor: 0, gridX: 6, gridY: 13 },
     tags: [
       'env:underground',
       'role:connector',

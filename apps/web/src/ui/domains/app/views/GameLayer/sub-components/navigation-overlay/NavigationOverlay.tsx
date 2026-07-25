@@ -16,7 +16,7 @@ const IL: Record<string, CSSProperties> = {
 };
 
 const NavigationOverlay = ({ width, height, gameRunning }: Props) => {
-  const { visible, result } = useNavigationOverlayStore();
+  const { visible, result, annotations } = useNavigationOverlayStore();
   const { overworldScreenIndex, roomIndex, isIndoors } = useGameUIStore(s => s.map);
 
   const [mouseState, setMouseState] = useState<MouseState>({
@@ -90,7 +90,7 @@ const NavigationOverlay = ({ width, height, gameRunning }: Props) => {
       )}
       <Box style={IL.legends}>
         <PathControlsLegend />
-        <OverlayLegend />
+        <OverlayLegend annotations={annotations} />
       </Box>
     </Box>
   );

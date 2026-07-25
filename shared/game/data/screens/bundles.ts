@@ -8,6 +8,7 @@
 
 import { ALL_LIGHT_WORLD_SCREENS } from './light-world';
 import { ALL_DARK_WORLD_SCREENS } from './dark-world';
+import { displayName } from './names-overlay';
 import type { ScreenDefinition } from '../../types';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -60,8 +61,8 @@ const buildScreenBundle = (group: number[]): ScreenBundle => {
   if (group.length === 1) {
     const screenIndex = group[0];
     const screen = screenByIndex.get(screenIndex);
-    const name = screen?.location ?? screen?.name ?? `Screen 0x${screenIndex.toString(16).toUpperCase()}`;
-    const screenName = screen?.name ?? name;
+    const name = screen?.location ?? (screen && displayName(screen.id, screen.name)) ?? `Screen 0x${screenIndex.toString(16).toUpperCase()}`;
+    const screenName = screen ? displayName(screen.id, screen.name) : name;
     return {
       name,
       screens: group,
@@ -85,7 +86,7 @@ const buildScreenBundle = (group: number[]): ScreenBundle => {
     const scr = group[i];
     const screen = screenByIndex.get(scr);
     subNames[scr] = QUAD_POSITIONS[i] ?? `#${i}`;
-    screenNames[scr] = screen?.name ?? `${bundleName} ${subNames[scr]}`;
+    screenNames[scr] = screen ? displayName(screen.id, screen.name) : `${bundleName} ${subNames[scr]}`;
   }
 
   return {

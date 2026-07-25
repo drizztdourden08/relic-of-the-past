@@ -4,6 +4,7 @@ import type React from 'react';
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { wasmGetViewportInfo } from '../../../../../../../lib/game';
 import type { GridPos } from './navigation-overlay.type';
+import { screenOriginFor } from '@app/lib/game/flood';
 
 const mouseEventToTile = (
   e: React.MouseEvent<HTMLDivElement>,
@@ -27,12 +28,9 @@ const mouseEventToTile = (
   const viewTop = vp.cameraY - vp.cameraLockShiftY;
   const worldX = snesX + viewLeft;
   const worldY = snesY + viewTop;
-  const screenWorldX = isIndoors
-    ? (Math.floor(vp.linkX / 512) * 512)
-    : ((result.screenIndex & 7) * 512);
-  const screenWorldY = isIndoors
-    ? (Math.floor(vp.linkY / 512) * 512)
-    : (((result.screenIndex >> 3) & 7) * 512);
+  const { x: screenWorldX, y: screenWorldY } = screenOriginFor({
+    isIndoors, linkX: vp.linkX, linkY: vp.linkY, screenIndex: result.screenIndex,
+  });
   const col = Math.floor((worldX - screenWorldX) / 8);
   const row = Math.floor((worldY - screenWorldY) / 8);
   if (row < 0 || row >= 64 || col < 0 || col >= 64) return null;

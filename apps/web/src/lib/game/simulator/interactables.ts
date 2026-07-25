@@ -23,6 +23,7 @@ const getRoomChests = (roomId: number): SimChest[] =>
   wasmGetRoomChests(roomId).map((c) => ({
     roomId,
     chestIndex: c.chestIndex,
+    isBig: c.isBig,
     tile: { row: c.row, col: c.col },
     posKnown: c.posKnown,
     opened: c.isOpen,
@@ -31,7 +32,7 @@ const getRoomChests = (roomId: number): SimChest[] =>
 
 /**
  * Room-addressable static sprite spawns, mapped to SimSprite. This works for
- * remote rooms the virtual Link isn't in (static placement from the room's
+ * remote rooms the virtual player isn't in (static placement from the room's
  * sprite table). The progress-conditional NPCs the table lists (intro uncle,
  * pre-Flippers King Zora, ...) are filtered later by the engine's presence gate
  * (evaluatePresence over the NPC's declarative condition) — the sanctioned
@@ -75,6 +76,8 @@ const getRoomDoors = (roomId: number): SimDoor[] => [
     direction: DOOR_DIRS[d.direction],
     kind: DOOR_KINDS[d.kind] ?? 'normal',
     opened: d.isOpen,
+    nativeType: d.nativeType,
+    layer: d.layer,
   })),
   ...wasmGetRoomCellLocks(roomId).map((l) => ({
     roomId,

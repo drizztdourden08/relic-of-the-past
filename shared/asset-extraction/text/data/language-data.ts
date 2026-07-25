@@ -1,6 +1,6 @@
 /* @layer shared-asset-extraction @kind data */
 /**
- * Language definitions for ALTTP text compression/decompression.
+ * Language definitions for the game's text compression/decompression.
  * Data-driven — each language is a config object, not a class.
  *
  * Ported from: core/zelda3/assets/text_compression.py

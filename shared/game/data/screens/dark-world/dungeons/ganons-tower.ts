@@ -8,7 +8,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x05,
-    dungeon: { palaceIndex: 0x18, floor: -2, gridX: 5, gridY: 0 },
+    dungeon: { palaceIndex: 0x1A, floor: -2, gridX: 5, gridY: 0 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -16,11 +16,11 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
   },
   {
     id: 'gt-0x0c',
-    name: 'Ganon-Ball Room',
+    name: 'Energy Ball Room',
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x0C,
-    dungeon: { palaceIndex: 0x18, floor: 6, gridX: 12, gridY: 0 },
+    dungeon: { palaceIndex: 0x1A, floor: 6, gridX: 12, gridY: 0 },
     tags: [
       'env:underground',
       'role:boss',
@@ -28,11 +28,11 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
   },
   {
     id: 'gt-0x0d',
-    name: 'Agahnim 2',
+    name: 'Wizard Rematch',
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x0D,
-    dungeon: { palaceIndex: 0x18, floor: 6, gridX: 13, gridY: 0 },
+    dungeon: { palaceIndex: 0x1A, floor: 6, gridX: 13, gridY: 0 },
     tags: [
       'env:underground',
       'role:boss',
@@ -44,7 +44,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x1C,
-    dungeon: { palaceIndex: 0x18, floor: 5, gridX: 12, gridY: 1 },
+    dungeon: { palaceIndex: 0x1A, floor: 5, gridX: 12, gridY: 1 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -56,7 +56,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x1D,
-    dungeon: { palaceIndex: 0x18, floor: 5, gridX: 13, gridY: 1 },
+    dungeon: { palaceIndex: 0x1A, floor: 5, gridX: 13, gridY: 1 },
     tags: [
       'env:underground',
       'role:connector',
@@ -68,7 +68,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x3C,
-    dungeon: { palaceIndex: 0x18, floor: 4, gridX: 12, gridY: 3 },
+    dungeon: { palaceIndex: 0x1A, floor: 4, gridX: 12, gridY: 3 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -80,7 +80,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x3D,
-    dungeon: { palaceIndex: 0x18, floor: 4, gridX: 13, gridY: 3 },
+    dungeon: { palaceIndex: 0x1A, floor: 4, gridX: 13, gridY: 3 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -92,7 +92,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x4C,
-    dungeon: { palaceIndex: 0x18, floor: 3, gridX: 12, gridY: 4 },
+    dungeon: { palaceIndex: 0x1A, floor: 3, gridX: 12, gridY: 4 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -104,7 +104,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x4D,
-    dungeon: { palaceIndex: 0x18, floor: 3, gridX: 13, gridY: 4 },
+    dungeon: { palaceIndex: 0x1A, floor: 3, gridX: 13, gridY: 4 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -116,7 +116,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x5B,
-    dungeon: { palaceIndex: 0x18, floor: 3, gridX: 11, gridY: 5 },
+    dungeon: { palaceIndex: 0x1A, floor: 3, gridX: 11, gridY: 5 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -128,7 +128,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x5C,
-    dungeon: { palaceIndex: 0x18, floor: 2, gridX: 12, gridY: 5 },
+    dungeon: { palaceIndex: 0x1A, floor: 2, gridX: 12, gridY: 5 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -140,7 +140,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x5D,
-    dungeon: { palaceIndex: 0x18, floor: 2, gridX: 13, gridY: 5 },
+    dungeon: { palaceIndex: 0x1A, floor: 2, gridX: 13, gridY: 5 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -152,7 +152,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x6B,
-    dungeon: { palaceIndex: 0x18, floor: 2, gridX: 11, gridY: 6 },
+    dungeon: { palaceIndex: 0x1A, floor: 2, gridX: 11, gridY: 6 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -164,7 +164,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x6C,
-    dungeon: { palaceIndex: 0x18, floor: 1, gridX: 12, gridY: 6 },
+    dungeon: { palaceIndex: 0x1A, floor: 1, gridX: 12, gridY: 6 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -176,7 +176,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x6D,
-    dungeon: { palaceIndex: 0x18, floor: 1, gridX: 13, gridY: 6 },
+    dungeon: { palaceIndex: 0x1A, floor: 1, gridX: 13, gridY: 6 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -188,7 +188,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x7B,
-    dungeon: { palaceIndex: 0x18, floor: 1, gridX: 11, gridY: 7 },
+    dungeon: { palaceIndex: 0x1A, floor: 1, gridX: 11, gridY: 7 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -200,7 +200,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x7C,
-    dungeon: { palaceIndex: 0x18, floor: 1, gridX: 12, gridY: 7 },
+    dungeon: { palaceIndex: 0x1A, floor: 1, gridX: 12, gridY: 7 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -212,7 +212,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x7D,
-    dungeon: { palaceIndex: 0x18, floor: 1, gridX: 13, gridY: 7 },
+    dungeon: { palaceIndex: 0x1A, floor: 1, gridX: 13, gridY: 7 },
     tags: [
       'env:underground',
       'role:connector',
@@ -224,7 +224,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x8B,
-    dungeon: { palaceIndex: 0x18, floor: 0, gridX: 11, gridY: 8 },
+    dungeon: { palaceIndex: 0x1A, floor: 0, gridX: 11, gridY: 8 },
     tags: [
       'env:underground',
       'role:hub',
@@ -236,7 +236,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x8C,
-    dungeon: { palaceIndex: 0x18, floor: 0, gridX: 12, gridY: 8 },
+    dungeon: { palaceIndex: 0x1A, floor: 0, gridX: 12, gridY: 8 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -248,7 +248,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x8D,
-    dungeon: { palaceIndex: 0x18, floor: 0, gridX: 13, gridY: 8 },
+    dungeon: { palaceIndex: 0x1A, floor: 0, gridX: 13, gridY: 8 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -260,7 +260,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x95,
-    dungeon: { palaceIndex: 0x18, floor: -1, gridX: 5, gridY: 9 },
+    dungeon: { palaceIndex: 0x1A, floor: -1, gridX: 5, gridY: 9 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -272,7 +272,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x96,
-    dungeon: { palaceIndex: 0x18, floor: -1, gridX: 6, gridY: 9 },
+    dungeon: { palaceIndex: 0x1A, floor: -1, gridX: 6, gridY: 9 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -284,7 +284,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x9B,
-    dungeon: { palaceIndex: 0x18, floor: 0, gridX: 11, gridY: 9 },
+    dungeon: { palaceIndex: 0x1A, floor: 0, gridX: 11, gridY: 9 },
     tags: [
       'env:underground',
       'role:entrance',
@@ -296,7 +296,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x9C,
-    dungeon: { palaceIndex: 0x18, floor: 0, gridX: 12, gridY: 9 },
+    dungeon: { palaceIndex: 0x1A, floor: 0, gridX: 12, gridY: 9 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -308,7 +308,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0x9D,
-    dungeon: { palaceIndex: 0x18, floor: 0, gridX: 13, gridY: 9 },
+    dungeon: { palaceIndex: 0x1A, floor: 0, gridX: 13, gridY: 9 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -320,7 +320,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0xA5,
-    dungeon: { palaceIndex: 0x18, floor: -1, gridX: 5, gridY: 10 },
+    dungeon: { palaceIndex: 0x1A, floor: -1, gridX: 5, gridY: 10 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -332,7 +332,7 @@ const GANONS_TOWER_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Ganon\'s Tower', area: 'Dark Death Mountain',
     roomIndex: 0xA6,
-    dungeon: { palaceIndex: 0x18, floor: -1, gridX: 6, gridY: 10 },
+    dungeon: { palaceIndex: 0x1A, floor: -1, gridX: 6, gridY: 10 },
     tags: [
       'env:underground',
       'loot:chest',

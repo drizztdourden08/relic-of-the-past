@@ -11,6 +11,7 @@ import { useDatasetSuggestions } from './behavior/useDatasetSuggestions';
 import { RunControls } from './sub-components/RunControls';
 import { ProgressSummary } from './sub-components/ProgressSummary';
 import { EventLog } from './sub-components/EventLog';
+import { RunTrail } from './sub-components/RunTrail';
 import { ResultsPanel } from './sub-components/ResultsPanel';
 import './SimulatorWidget.css';
 
@@ -22,6 +23,7 @@ const SimulatorWidgetContent = () => {
   const phaseLabel = useSimulatorStore((s) => s.phaseLabel);
   const progress = useSimulatorStore((s) => s.progress);
   const events = useSimulatorStore((s) => s.events);
+  const trail = useSimulatorStore((s) => s.trail);
   const outcome = useSimulatorStore((s) => s.outcome);
   const suggestions = useSimulatorStore((s) => s.suggestions);
   const softlockReport = useSimulatorStore((s) => s.softlockReport);
@@ -42,6 +44,7 @@ const SimulatorWidgetContent = () => {
         onRestore={run.restore}
       />
       <ProgressSummary status={status} phaseLabel={phaseLabel} progress={progress} />
+      <RunTrail trail={trail} checksDone={progress.checksDone} />
       <EventLog events={events} />
       <ResultsPanel
         outcome={outcome}

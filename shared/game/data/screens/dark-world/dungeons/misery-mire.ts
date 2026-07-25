@@ -8,7 +8,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0x90,
-    dungeon: { palaceIndex: 0x14, floor: -2, gridX: 0, gridY: 9 },
+    dungeon: { palaceIndex: 0x0E, floor: -2, gridX: 0, gridY: 9 },
     tags: [
       'env:underground',
       'role:boss',
@@ -20,7 +20,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0x91,
-    dungeon: { palaceIndex: 0x14, floor: -2, gridX: 1, gridY: 9 },
+    dungeon: { palaceIndex: 0x0E, floor: -2, gridX: 1, gridY: 9 },
     tags: [
       'env:underground',
       'hazard:dark',
@@ -32,7 +32,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0x92,
-    dungeon: { palaceIndex: 0x14, floor: -2, gridX: 2, gridY: 9 },
+    dungeon: { palaceIndex: 0x0E, floor: -2, gridX: 2, gridY: 9 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -44,7 +44,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0x93,
-    dungeon: { palaceIndex: 0x14, floor: -2, gridX: 3, gridY: 9 },
+    dungeon: { palaceIndex: 0x0E, floor: -2, gridX: 3, gridY: 9 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -56,7 +56,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0x97,
-    dungeon: { palaceIndex: 0x14, floor: -1, gridX: 7, gridY: 9 },
+    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 7, gridY: 9 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -68,7 +68,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0x98,
-    dungeon: { palaceIndex: 0x14, floor: 0, gridX: 8, gridY: 9 },
+    dungeon: { palaceIndex: 0x0E, floor: 0, gridX: 8, gridY: 9 },
     tags: [
       'env:underground',
       'role:entrance',
@@ -81,7 +81,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0xA0,
-    dungeon: { palaceIndex: 0x14, floor: -2, gridX: 0, gridY: 10 },
+    dungeon: { palaceIndex: 0x0E, floor: -2, gridX: 0, gridY: 10 },
     tags: [
       'env:underground',
       'hazard:dark',
@@ -93,7 +93,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0xA1,
-    dungeon: { palaceIndex: 0x14, floor: -2, gridX: 1, gridY: 10 },
+    dungeon: { palaceIndex: 0x0E, floor: -2, gridX: 1, gridY: 10 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -105,7 +105,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0xA2,
-    dungeon: { palaceIndex: 0x14, floor: -2, gridX: 2, gridY: 10 },
+    dungeon: { palaceIndex: 0x0E, floor: -2, gridX: 2, gridY: 10 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -117,7 +117,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0xA3,
-    dungeon: { palaceIndex: 0x14, floor: -2, gridX: 3, gridY: 10 },
+    dungeon: { palaceIndex: 0x0E, floor: -2, gridX: 3, gridY: 10 },
     tags: [
       'env:underground',
       'role:connector',
@@ -129,7 +129,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0xB1,
-    dungeon: { palaceIndex: 0x14, floor: -1, gridX: 1, gridY: 11 },
+    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 1, gridY: 11 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -141,7 +141,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0xB2,
-    dungeon: { palaceIndex: 0x14, floor: -1, gridX: 2, gridY: 11 },
+    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 2, gridY: 11 },
     tags: [
       'env:underground',
       'role:hub',
@@ -153,7 +153,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0xB3,
-    dungeon: { palaceIndex: 0x14, floor: -1, gridX: 3, gridY: 11 },
+    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 3, gridY: 11 },
     tags: [
       'env:underground',
       'role:connector',
@@ -165,7 +165,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0xC1,
-    dungeon: { palaceIndex: 0x14, floor: -1, gridX: 1, gridY: 12 },
+    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 1, gridY: 12 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -177,7 +177,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0xC2,
-    dungeon: { palaceIndex: 0x14, floor: -1, gridX: 2, gridY: 12 },
+    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 2, gridY: 12 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -189,7 +189,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0xC3,
-    dungeon: { palaceIndex: 0x14, floor: -1, gridX: 3, gridY: 12 },
+    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 3, gridY: 12 },
     tags: [
       'env:underground',
       'role:connector',
@@ -201,7 +201,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0xD1,
-    dungeon: { palaceIndex: 0x14, floor: -1, gridX: 1, gridY: 13 },
+    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 1, gridY: 13 },
     tags: [
       'env:underground',
       'role:connector',
@@ -213,7 +213,7 @@ const MISERY_MIRE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Misery Mire', area: 'Dark Mire',
     roomIndex: 0xD2,
-    dungeon: { palaceIndex: 0x14, floor: -1, gridX: 2, gridY: 13 },
+    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 2, gridY: 13 },
     tags: [
       'env:underground',
       'role:hub',

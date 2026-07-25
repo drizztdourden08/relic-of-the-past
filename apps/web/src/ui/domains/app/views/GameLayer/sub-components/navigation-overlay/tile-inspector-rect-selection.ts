@@ -5,6 +5,7 @@ import { useState, useCallback } from 'react';
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { wasmGetViewportInfo } from '../../../../../../../lib/game';
 import type { GridPos } from './navigation-overlay.type';
+import { screenOriginFor } from '@app/lib/game/flood';
 
 interface RectSelectionParams {
   mouseToTile: (e: React.MouseEvent<HTMLDivElement>) => GridPos | null;
@@ -93,12 +94,9 @@ const useRectSelection = (params: RectSelectionParams) => {
     const scaleY = height / vp.snesHeight;
     const viewLeft = vp.cameraX - vp.cameraLockShiftX - vp.extraLeftRight;
     const viewTop = vp.cameraY - vp.cameraLockShiftY;
-    const screenWorldX = isIndoors
-      ? (Math.floor(vp.linkX / 512) * 512)
-      : ((result.screenIndex & 7) * 512);
-    const screenWorldY = isIndoors
-      ? (Math.floor(vp.linkY / 512) * 512)
-      : (((result.screenIndex >> 3) & 7) * 512);
+    const { x: screenWorldX, y: screenWorldY } = screenOriginFor({
+      isIndoors, linkX: vp.linkX, linkY: vp.linkY, screenIndex: result.screenIndex,
+    });
     const r0 = Math.min(rectSel.startRow, rectSel.endRow);
     const r1 = Math.max(rectSel.startRow, rectSel.endRow);
     const c0 = Math.min(rectSel.startCol, rectSel.endCol);

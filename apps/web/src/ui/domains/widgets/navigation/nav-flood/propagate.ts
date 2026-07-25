@@ -7,6 +7,7 @@ import type { TileReq, TileAttrContext } from '@shared/game/navigation/tile-attr
 import { uint8ToGrid, computeBigScreenGroup } from '../widget-helpers';
 import type { enrichEntrances } from '../widget-helpers';
 import type { DualLayerGrids, Point } from './prepare';
+import { overworldOrigin, tileInScreen } from '../../../../../lib/game/flood';
 
 type EdgeName = 'north' | 'south' | 'east' | 'west';
 type Cell = { row: number; col: number };
@@ -28,22 +29,21 @@ interface PropagateCtx {
   exitScreenByRoom: Map<number, number>;
   intraEdges: EdgeName[];
   dualLayerGrids: DualLayerGrids | undefined;
-  linkLayer: 0 | 1 | undefined;
+  playerLayer: 0 | 1 | undefined;
   blockerWorldPoints: Point[];
 }
 
 const propagateScreens = (ctx: PropagateCtx): { responses: ScreenResponse[]; overworldBundle: ScreenBundle | null } => {
   const {
     isIndoors, primaryScreenIndex, startPos, rawAttrGrid, items, tileContext,
-    allEntrances, exitScreenByRoom, intraEdges, dualLayerGrids, linkLayer, blockerWorldPoints,
+    allEntrances, exitScreenByRoom, intraEdges, dualLayerGrids, playerLayer, blockerWorldPoints,
   } = ctx;
 
   // Helper to build dynamic blockers for a given screen
   const getBlockersForScreen = (screenIndex: number) => !isIndoors
     ? blockerWorldPoints
       .map(b => ({
-        row: Math.floor((b.y - (((screenIndex >> 3) & 7) * 512)) / 8),
-        col: Math.floor((b.x - ((screenIndex & 7) * 512)) / 8),
+        ...tileInScreen(b.x, b.y, overworldOrigin(screenIndex)),
       }))
       .filter(p => p.row >= 0 && p.row < 64 && p.col >= 0 && p.col < 64)
     : undefined;
@@ -71,8 +71,7 @@ const propagateScreens = (ctx: PropagateCtx): { responses: ScreenResponse[]; ove
       exitScreenByRoom,
       quadrantBounds: undefined,
       dualLayerGrids: isIndoors ? dualLayerGrids : undefined,
-      stairTiles: isIndoors ? dualLayerGrids?.stairTiles : undefined,
-      startLayer: isIndoors ? linkLayer : undefined,
+      startLayer: isIndoors ? playerLayer : undefined,
       staircaseType: isIndoors ? (wasmGetStaircaseType?.() ?? undefined) : undefined,
       extraSeeds,
       variant: runVariant ? {
@@ -86,7 +85,7 @@ const propagateScreens = (ctx: PropagateCtx): { responses: ScreenResponse[]; ove
     return { screenIndex, result, connections, dynamicBlockers };
   };
 
-  // Run primary screen first (from Link's position), then iteratively propagate.
+  // Run primary screen first (from the player's position), then iteratively propagate.
   // Indoors: single room only (loading adjacent rooms via wasmBuildRoomAttrGrid
   // corrupts the live game's collision state because Dungeon_LoadRoom is destructive).
   // Outdoors: propagate within the same big-screen group.

@@ -3,7 +3,7 @@
 import { callWhenRunning } from './wasm-call';
 
 interface OverworldVariantInfo {
-  /** sram_progress_indicator: 0=intro, 1=post-uncle, 2=zelda-rescued, 3=agahnim-defeated */
+  /** sram_progress_indicator: 0=intro, 1=post-uncle, 2=princess-rescued, 3=agahnim-defeated */
   progressIndicator: number;
   /** save_ow_event_info[screen] for the current screen */
   screenEventFlags: number;

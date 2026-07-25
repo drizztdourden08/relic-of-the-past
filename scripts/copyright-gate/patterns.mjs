@@ -27,7 +27,14 @@ const TEXT_SKIP_PREFIXES = [
   'docs/', 'shared/game/data/', 'shared/input/data/',
   'scripts/copyright-gate/', '.github/', '.githooks/',
 ];
-const TEXT_SKIP_EXACT = new Set(['shared/credits.ts', 'LICENSE']);
+// Files whose whole point is to NAME the rights holder. Nominative use — removing
+// the trademark would make the text meaningless, so the gate must not block edits
+// to them.
+const TEXT_SKIP_EXACT = new Set([
+  'shared/credits.ts',
+  'LICENSE',
+  'apps/web/src/ui/domains/app/views/About/About.tsx',
+]);
 
 // When false, trademark hits warn instead of block (media files always block).
 const TEXT_RULE_BLOCKS = true;

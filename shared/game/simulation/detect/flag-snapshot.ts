@@ -8,7 +8,7 @@ import type { FlagSnapshot, FlagDiff } from '../types';
 
 const DUNG_INFO_LEN = 320;
 // save_ow_event_info base is 0xF280; the flag tables index up to screen 0x81.
-// Screens 0x80 (Master Sword Pedestal) and 0x81 (Zora's Ledge) alias into the
+// Screens 0x80 (the sword pedestal) and 0x81 (the waterfall ledge) alias into the
 // adjacent SRAM word at 0xF300/0xF301, so the buffer must span through 0x81.
 const OW_EVENT_LEN = 0x82;
 const PROGRESS_LEN = 16;

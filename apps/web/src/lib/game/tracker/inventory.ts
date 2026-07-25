@@ -175,12 +175,12 @@ const progressToEvents = (heapU8: Uint8Array, progPtr: number): string[] => {
   const progressIndicator = heapU8[progPtr];       // index 0
   const sleepState = heapU8[progPtr + 12];         // index 12
 
-  // Link wakes up: either got out of bed this session (sleepState >= 2)
+  // The player wakes up: either got out of bed this session (sleepState >= 2)
   // or already past uncle in a loaded save (progressIndicator >= 1)
   if (sleepState >= 2 || progressIndicator >= 1) events.push('Link Wakes Up');
   // progress_indicator >= 1 means Uncle gave sword, you're in the castle
   if (progressIndicator >= 1) events.push('Zelda Rescue Started');
-  // progress_indicator >= 2 means Zelda reached Sanctuary, rain stops
+  // progress_indicator >= 2 means the princess reached the Sanctuary, rain stops
   if (progressIndicator >= 2) events.push('Rescued Zelda');
   // progress_indicator >= 3 means escaped dungeon, full game
   if (progressIndicator >= 3) events.push('Rescued Old Man');

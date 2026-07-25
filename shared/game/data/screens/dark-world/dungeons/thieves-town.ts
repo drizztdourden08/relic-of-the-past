@@ -8,7 +8,7 @@ const THIEVES_TOWN_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Thieves\' Town', area: 'Village Of Outcasts',
     roomIndex: 0x44,
-    dungeon: { palaceIndex: 0x10, floor: -1, gridX: 4, gridY: 4 },
+    dungeon: { palaceIndex: 0x16, floor: -1, gridX: 4, gridY: 4 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -20,7 +20,7 @@ const THIEVES_TOWN_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Thieves\' Town', area: 'Village Of Outcasts',
     roomIndex: 0x45,
-    dungeon: { palaceIndex: 0x10, floor: -1, gridX: 5, gridY: 4 },
+    dungeon: { palaceIndex: 0x16, floor: -1, gridX: 5, gridY: 4 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -32,7 +32,7 @@ const THIEVES_TOWN_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Thieves\' Town', area: 'Village Of Outcasts',
     roomIndex: 0x64,
-    dungeon: { palaceIndex: 0x10, floor: -1, gridX: 4, gridY: 6 },
+    dungeon: { palaceIndex: 0x16, floor: -1, gridX: 4, gridY: 6 },
     tags: [
       'env:underground',
       'role:connector',
@@ -44,7 +44,7 @@ const THIEVES_TOWN_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Thieves\' Town', area: 'Village Of Outcasts',
     roomIndex: 0x65,
-    dungeon: { palaceIndex: 0x10, floor: -1, gridX: 5, gridY: 6 },
+    dungeon: { palaceIndex: 0x16, floor: -1, gridX: 5, gridY: 6 },
     tags: [
       'env:underground',
       'role:boss',
@@ -56,7 +56,7 @@ const THIEVES_TOWN_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Thieves\' Town', area: 'Village Of Outcasts',
     roomIndex: 0xAB,
-    dungeon: { palaceIndex: 0x10, floor: -2, gridX: 11, gridY: 10 },
+    dungeon: { palaceIndex: 0x16, floor: -2, gridX: 11, gridY: 10 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -68,7 +68,7 @@ const THIEVES_TOWN_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Thieves\' Town', area: 'Village Of Outcasts',
     roomIndex: 0xAC,
-    dungeon: { palaceIndex: 0x10, floor: 0, gridX: 12, gridY: 10 },
+    dungeon: { palaceIndex: 0x16, floor: 0, gridX: 12, gridY: 10 },
     tags: [
       'env:underground',
       'role:connector',
@@ -80,7 +80,7 @@ const THIEVES_TOWN_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Thieves\' Town', area: 'Village Of Outcasts',
     roomIndex: 0xBB,
-    dungeon: { palaceIndex: 0x10, floor: -2, gridX: 11, gridY: 11 },
+    dungeon: { palaceIndex: 0x16, floor: -2, gridX: 11, gridY: 11 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -92,7 +92,7 @@ const THIEVES_TOWN_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Thieves\' Town', area: 'Village Of Outcasts',
     roomIndex: 0xBC,
-    dungeon: { palaceIndex: 0x10, floor: -2, gridX: 12, gridY: 11 },
+    dungeon: { palaceIndex: 0x16, floor: -2, gridX: 12, gridY: 11 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -104,7 +104,7 @@ const THIEVES_TOWN_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Thieves\' Town', area: 'Village Of Outcasts',
     roomIndex: 0xCB,
-    dungeon: { palaceIndex: 0x10, floor: -1, gridX: 11, gridY: 12 },
+    dungeon: { palaceIndex: 0x16, floor: -1, gridX: 11, gridY: 12 },
     tags: [
       'env:underground',
       'role:connector',
@@ -116,7 +116,7 @@ const THIEVES_TOWN_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Thieves\' Town', area: 'Village Of Outcasts',
     roomIndex: 0xCC,
-    dungeon: { palaceIndex: 0x10, floor: -1, gridX: 12, gridY: 12 },
+    dungeon: { palaceIndex: 0x16, floor: -1, gridX: 12, gridY: 12 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -128,7 +128,7 @@ const THIEVES_TOWN_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Thieves\' Town', area: 'Village Of Outcasts',
     roomIndex: 0xDB,
-    dungeon: { palaceIndex: 0x10, floor: -1, gridX: 11, gridY: 13 },
+    dungeon: { palaceIndex: 0x16, floor: -1, gridX: 11, gridY: 13 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -140,7 +140,7 @@ const THIEVES_TOWN_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Thieves\' Town', area: 'Village Of Outcasts',
     roomIndex: 0xDC,
-    dungeon: { palaceIndex: 0x10, floor: 0, gridX: 12, gridY: 13 },
+    dungeon: { palaceIndex: 0x16, floor: 0, gridX: 12, gridY: 13 },
     tags: [
       'env:underground',
       'role:entrance',

@@ -4,7 +4,7 @@
 // Room-addressable state queries for the gameplay simulator. Each export packs a
 // count-prefixed record list into a static buffer and returns its address; the TS
 // bridge parses the documented layout. Chest/door open-state reads live bits when
-// |room_id| is the room Link currently occupies, otherwise the SRAM room word.
+// |room_id| is the room the player currently occupies, otherwise the SRAM room word.
 
 // Live chest-open masks (bits 8-13); SRAM form is these >> 4 (bits 4-9).
 static const uint16 kSimChestMasks[6] = { 0x100, 0x200, 0x400, 0x800, 0x1000, 0x2000 };
@@ -103,9 +103,9 @@ int WasmGetRoomChests(int room_id) {
   // the slot and open-bit index even past cell locks, which advance the separate
   // dung_num_bigkey_locks_x2 (dungeon.c:1697) and never shift a chest's slot.
   // Entries beyond |drawn| are vestigial dev leftovers with no chest object drawn
-  // — e.g. room 0x55, the Hyrule Castle Secret Passage (a connector whose layout
-  // draws no chest) still carries a leftover Lamp entry duplicating Link's House
-  // (room 0x104). OpenChestForItem yields nothing for them (there is no 0x58+slot
+  // — e.g. room 0x55, the first castle's secret passage (a connector whose layout
+  // draws no chest) still carries a leftover Lamp entry duplicating the player's
+  // house (room 0x104). OpenChestForItem yields nothing for them (there is no 0x58+slot
   // chest tile, dungeon.c:5738-5799), so capping at |drawn| drops the phantom.
   // For the loaded room dung_num_chests_x2>>1 is that count directly; remote rooms
   // (the live counter only describes the loaded room) parse the static object data
@@ -262,7 +262,7 @@ int WasmGetRoomDoorInfo(int room_id) {
 //   [spriteType(1), col(1), row(1)]
 // col/row are 8px-tile positions within the area's 64x64 screen grid, decoded
 // from the same 3-byte OW sprite entries the loader reads (Overworld_LoadSprites,
-// core/zelda3/src/sprite.c:3743) via the block index the game builds there and
+// src/sprite.c:3743) via the block index the game builds there and
 // unpacks into world coordinates in Overworld_LoadProximaSpriteIfAlive
 // (sprite.c:3877). The active per-area table is phase-dependent:
 // GetOverworldSpritePtr (overworld.c:302) selects the beginning (progress 0/1) /

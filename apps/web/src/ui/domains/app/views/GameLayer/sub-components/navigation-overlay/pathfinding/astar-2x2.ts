@@ -188,9 +188,9 @@ const findPath2x2LayerAware = (start: GridPos, goal: GridPos, startLayer: 0 | 1,
   return null;
 };
 
-const findPath2x2FromLink = (linkX: number, linkY: number, screenWorldX: number, screenWorldY: number, goal: GridPos, reachable: ReachState[][], layerGrids?: [ReachState[][], ReachState[][]], startLayer?: 0 | 1): GridPos[] | null => {
-  const startRow = Math.floor((linkY - screenWorldY) / 8);
-  const startCol = Math.floor((linkX - screenWorldX) / 8);
+const findPath2x2FromPlayer = (playerX: number, playerY: number, screenWorldX: number, screenWorldY: number, goal: GridPos, reachable: ReachState[][], layerGrids?: [ReachState[][], ReachState[][]], startLayer?: 0 | 1): GridPos[] | null => {
+  const startRow = Math.floor((playerY - screenWorldY) / 8);
+  const startCol = Math.floor((playerX - screenWorldX) / 8);
 
   // Layer-aware path when dual-layer data is available
   if (layerGrids && startLayer !== undefined) {
@@ -210,4 +210,4 @@ const findPath2x2FromLink = (linkX: number, linkY: number, screenWorldX: number,
   return findPath2x2AStar(start, goal, reachable);
 };
 
-export { findNearest2x2Goal, findPath2x2AStar, findPath2x2LayerAware, findPath2x2FromLink };
+export { findNearest2x2Goal, findPath2x2AStar, findPath2x2LayerAware, findPath2x2FromPlayer };
