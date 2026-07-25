@@ -35,8 +35,11 @@ const PREVIEW_COLS = 2;
 const PREVIEW_W = PREVIEW_COLS * 8;
 const PREVIEW_H = (PREVIEW_TILES.length / PREVIEW_COLS) * 8;
 
+// A palette block holds 15 colors per outfit, for pixel indices 1–15 — index 0 is transparent and has
+// no stored entry, so entry N-1 is the color for index N. The core lands these the same way: 15 words
+// copied to the sprite palette's second slot onward (Palette_Load_LinkArmorAndGloves).
 const snesColor = (pal: Uint8Array, idx: number): [number, number, number] => {
-  const c = word(pal, idx * 2);
+  const c = word(pal, (idx - 1) * 2);
   return [(c & 31) * 8, ((c >> 5) & 31) * 8, ((c >> 10) & 31) * 8];
 };
 

@@ -32,6 +32,7 @@
 #include "src/features.h"
 #include "src/hud.h"
 
+#include "game_hooks.h"
 #include "emscripten_internal.h"
 
 // ---------------------------------------------------------------------------
@@ -158,22 +159,16 @@ void ChangeWindowScale(int scale_step) {
   // No-op in WASM — browser handles sizing
 }
 
-// Custom Link sprite (.zspr) override — main.c's LoadLinkGraphics isn't linked into the WASM build, so we
-// reimplement the ZSPR load: read the MEMFS path the bridge wrote (LinkGraphics INI key), validate, and copy
-// pixel + palette over the default Link gfx. No-op when unset. Length is checked before reading any offset.
-static void ApplyCustomLinkGraphics(void) {
+// Custom player sprite selected in the profile — main.c's LoadLinkGraphics isn't linked into the WASM
+// build, so read the MEMFS path the bridge wrote (LinkGraphics INI key) and hand it to the sprite
+// module. No-op when unset. The palette isn't pushed live here: the core isn't initialized yet, and
+// the normal startup sequence samples the patched assets on its own.
+static void ApplyConfiguredPlayerSprite(void) {
   size_t length = 0;
   uint8 *file = g_config.link_graphics ? ReadWholeFile(g_config.link_graphics, &length) : NULL;
   if (file == NULL)
     return;
-  if (length >= 27 && memcmp(file, "ZSPR", 4) == 0) {
-    uint32 px_off = DWORD(file[9]), px_len = WORD(file[13]), pal_off = DWORD(file[15]), pal_len = WORD(file[19]);
-    if (px_len == 0x7000 && (uint64)px_off + px_len <= length && (uint64)pal_off + pal_len <= length) {
-      memcpy(kLinkGraphics, file + px_off, 0x7000);
-      if (pal_len >= 120) memcpy(kPalette_ArmorAndGloves, file + pal_off, 120);
-      if (pal_len >= 124) memcpy(kGlovesColor, file + pal_off + 120, 4);
-    }
-  }
+  PlayerSprite_Apply(file, length, false);
   free(file);
 }
 
@@ -189,9 +184,9 @@ int main(int argc, char **argv) {
   // Load game assets
   LoadAssets();
 
-  // Custom Link sprite: if the INI set LinkGraphics (the bridge wrote the .zspr to MEMFS + the key), this
-  // overrides the default Link gfx loaded by LoadAssets. No-op when no sprite is selected (vanilla).
-  ApplyCustomLinkGraphics();
+  // Custom player sprite: if the INI set LinkGraphics (the bridge wrote the .zspr to MEMFS + the key),
+  // this overrides the sheet LoadAssets just read. No-op when no sprite is selected (stock).
+  ApplyConfiguredPlayerSprite();
 
   // Initialize game core (use WASM-safe version to avoid ppu_init signature mismatch)
   WasmZeldaInitialize();

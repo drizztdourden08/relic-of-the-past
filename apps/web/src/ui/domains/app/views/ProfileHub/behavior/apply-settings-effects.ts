@@ -4,10 +4,24 @@ import type React from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import type { ToastItem } from '../../../../../design-system/primitives/Toast';
 import type { ProfileHubProps } from '../ProfileHub.type';
-import { pushLiveSettings, LIVE_SETTINGS, getInputManager } from '../../../../../../lib/game';
+import { pushLiveSettings, LIVE_SETTINGS, getInputManager, applyPlayerSprite, clearPlayerSprite, setLinkSpriteData } from '../../../../../../lib/game';
 import { useHudSettingsStore } from '../../../../../../stores/hud-settings-store';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { writeConfig } from '../../../../../../lib/storage/profile-store';
+import { readLinkSprite } from '../../../../../../lib/storage/link-sprites-store';
+
+// Apply a sprite choice to the running core and re-stage it for the next boot. Staging matters even
+// when the live swap succeeds: the core re-reads the staged bytes when the game restarts.
+const swapPlayerSprite = async (name: string | null): Promise<void> => {
+  if (!name) {
+    setLinkSpriteData(null);
+    clearPlayerSprite();
+    return;
+  }
+  const bytes = await readLinkSprite(name);
+  setLinkSpriteData(bytes ?? null);
+  if (bytes) applyPlayerSprite(bytes);
+};
 
 const syncHudStore = (s: GameSettings): void => {
   useHudSettingsStore.getState().setHudSettings({
@@ -96,6 +110,11 @@ const applySettingsSideEffects = (patch: Partial<GameSettings>, next: GameSettin
   // Notify parent of shadow casting toggle
   if ('postProcessingShadows' in patch) {
     onShadowCastingChange?.(next.postProcessingShadows);
+  }
+
+  // Swap the player sprite sheet in the running core so the choice shows without a restart.
+  if ('linkSprite' in patch) {
+    void swapPlayerSprite(next.linkSprite);
   }
 
   // Sync HUD settings to store for live rendering

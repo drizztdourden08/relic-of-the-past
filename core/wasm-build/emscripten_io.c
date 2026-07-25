@@ -20,6 +20,7 @@
 #include "src/util.h"
 #include "src/spc_player.h"
 
+#include "game_hooks.h"
 #include "emscripten_internal.h"
 
 // Assets (canonical definitions; declared extern in assets.h)
@@ -121,7 +122,28 @@ void WasmSaveState(int slot) {
 EMSCRIPTEN_KEEPALIVE
 void WasmLoadState(int slot) {
   SaveLoadSlot(kSaveLoad_Load, slot);
+  // A snapshot carries the palette buffers that were live when it was recorded, so a state saved
+  // under a different sheet reinstates that sheet's colors — the selected one would sit unused in
+  // the assets until some in-game event happened to reload gear palettes. Re-push it here.
+  if (PlayerSprite_HasCustom())
+    PlayerSprite_RefreshPalette();
   printf("*** Load state: slot %d\n", slot);
+}
+
+// Swap the player sprite sheet mid-session from a .zspr the renderer wrote to MEMFS. Pushes the new
+// palette live, so the change shows without rebooting the core. Returns 0 and leaves the assets alone
+// if the file is missing or malformed.
+EMSCRIPTEN_KEEPALIVE
+int WasmApplyPlayerSpriteFile(const char *path) {
+  size_t length = 0;
+  uint8 *file = path ? ReadWholeFile(path, &length) : NULL;
+  if (file == NULL) {
+    printf("[PlayerSprite] Could not read %s\n", path ? path : "(null)");
+    return 0;
+  }
+  int ok = PlayerSprite_Apply(file, length, true) ? 1 : 0;
+  free(file);
+  return ok;
 }
 
 EMSCRIPTEN_KEEPALIVE

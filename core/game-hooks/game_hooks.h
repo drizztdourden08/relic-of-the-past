@@ -39,6 +39,22 @@ uint8 GameHook_GetExtraArmorPct(void);
 // Applies the extra-armor cheat to an incoming damage value (no-op at 0%).
 uint8 GameHook_ApplyExtraArmor(uint8 dmg);
 
+// ─── Custom player sprite sheets (player_sprite.c) ───
+
+// Overwrite the player gfx + armor/gloves palette assets from a ZSPR sheet. |push_live| samples the
+// new palette into the live buffers straight away — pass false before the core is initialized.
+// Returns false (assets untouched) if the sheet is malformed.
+bool PlayerSprite_Apply(const uint8 *data, size_t len, bool push_live);
+
+// Put the stock sheet and palettes back. No-op when no custom sheet is applied.
+void PlayerSprite_Restore(bool push_live);
+
+// True while a custom sheet is applied.
+bool PlayerSprite_HasCustom(void);
+
+// Sample the armor/gloves palette assets into the live palette buffers.
+void PlayerSprite_RefreshPalette(void);
+
 // ─── Haptic Events (haptic_events.c) ───
 
 // Called when the player starts a sword swing animation.
