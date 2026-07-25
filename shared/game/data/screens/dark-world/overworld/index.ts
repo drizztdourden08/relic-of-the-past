@@ -8,7 +8,7 @@ import type { ScreenDefinition } from '../../../../types';
  */
 const DARK_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
   {
-    id: 'dw-00', name: 'Skull Woods NW',
+    id: 'dw-00', name: 'Dark Woods NW',
     type: 'overworld', world: 'dark',
     location: 'Skull Woods', area: 'Skull Woods Area',
     roomIndex: 0x40,
@@ -16,7 +16,7 @@ const DARK_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'dw-01', name: 'Skull Woods NE',
+    id: 'dw-01', name: 'Dark Woods NE',
     type: 'overworld', world: 'dark',
     location: 'Skull Woods', area: 'Skull Woods Area',
     roomIndex: 0x41,
@@ -24,7 +24,7 @@ const DARK_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'dw-02', name: 'Eastern Skull Clearing',
+    id: 'dw-02', name: 'Eastern Dark Clearing',
     type: 'overworld', world: 'dark',
     location: 'Dark Death Mountain', area: 'Dark Death Mountain',
     roomIndex: 0x42,
@@ -32,7 +32,7 @@ const DARK_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'dw-03', name: 'Ganon\'s Tower NW',
+    id: 'dw-03', name: 'Final Tower NW',
     type: 'overworld', world: 'dark',
     location: 'Dark Death Mountain', area: 'Dark Death Mountain',
     roomIndex: 0x43,
@@ -40,7 +40,7 @@ const DARK_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'dw-04', name: 'Ganon\'s Tower NE',
+    id: 'dw-04', name: 'Final Tower NE',
     type: 'overworld', world: 'dark',
     location: 'Dark Death Mountain', area: 'Dark Death Mountain',
     roomIndex: 0x44,
@@ -64,7 +64,7 @@ const DARK_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'dw-07', name: 'Turtle Rock',
+    id: 'dw-07', name: 'Dark Eastern Summit',
     type: 'overworld', world: 'dark',
     location: 'Dark Death Mountain', area: 'Dark Death Mountain',
     roomIndex: 0x47,
@@ -72,7 +72,7 @@ const DARK_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'dw-08', name: 'Skull Woods SW',
+    id: 'dw-08', name: 'Dark Woods SW',
     type: 'overworld', world: 'dark',
     location: 'Skull Woods', area: 'Skull Woods Area',
     roomIndex: 0x48,
@@ -80,7 +80,7 @@ const DARK_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'dw-09', name: 'Skull Woods SE',
+    id: 'dw-09', name: 'Dark Woods SE',
     type: 'overworld', world: 'dark',
     location: 'Skull Woods', area: 'Skull Woods Area',
     roomIndex: 0x49,
@@ -96,7 +96,7 @@ const DARK_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'dw-0b', name: 'Ganon\'s Tower SW',
+    id: 'dw-0b', name: 'Final Tower SW',
     type: 'overworld', world: 'dark',
     location: 'Dark Death Mountain', area: 'Dark Death Mountain',
     roomIndex: 0x4B,
@@ -104,7 +104,7 @@ const DARK_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'dw-0c', name: 'Ganon\'s Tower SE',
+    id: 'dw-0c', name: 'Final Tower SE',
     type: 'overworld', world: 'dark',
     location: 'Dark Death Mountain', area: 'Dark Death Mountain',
     roomIndex: 0x4C,
@@ -136,7 +136,7 @@ const DARK_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'dw-10', name: 'Skull Woods Outskirts',
+    id: 'dw-10', name: 'Dark Woods Outskirts',
     type: 'overworld', world: 'dark',
     location: 'Skull Woods', area: 'Skull Woods Area',
     roomIndex: 0x50,

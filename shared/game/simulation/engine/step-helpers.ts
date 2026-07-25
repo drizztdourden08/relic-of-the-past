@@ -1,11 +1,11 @@
 /* @layer shared-game @kind logic */
 /**
  * Stateless helpers for the step machine: event constructors, edge key-spending,
- * and the tile the virtual Link lands on when crossing an edge.
+ * and the tile the virtual player lands on when crossing an edge.
  */
 import type { SimEvent, SimExit, SimObservation, TriggerAction } from '../types';
 import type { GridPos } from '../../navigation/types';
-import { SCREEN_BY_ID } from '../../data/screens';
+import { SCREEN_BY_ID, displayName } from '../../data/screens';
 import { cloneSnapshot } from '../detect/flag-snapshot';
 import type { ScreenEdge } from './traversal';
 import { spendKey, spendAnyKey, localRefresh, globalRefresh } from './explorer';
@@ -17,8 +17,8 @@ const SCREEN_CENTER: GridPos = { row: 32, col: 32 };
 /** Screen id plus its dataset display name for the log: `lw-2c (Uncle Estate)`.
  *  Display only — traversal never consults the dataset. Unknown ids stay bare. */
 const screenLabel = (id: string): string => {
-  const name = SCREEN_BY_ID.get(id)?.name;
-  return name ? `${id} (${name})` : id;
+  const screen = SCREEN_BY_ID.get(id);
+  return screen ? `${id} (${displayName(id, screen.name)})` : id;
 };
 
 /** "Found chest at 12,20" when the tile is known, else falls back to the room. */
@@ -38,19 +38,19 @@ const spendKeysForEdge = (s: EngineState, edge: ScreenEdge): void => {
   }
 };
 
-/** Where the virtual Link lands when crossing an edge — the connection's entry point, else screen centre. */
+/** Where the virtual player lands when crossing an edge — the connection's entry point, else screen centre. */
 const entryTileFor = (edge: ScreenEdge): GridPos => edge.connection.nav?.toPoint?.position ?? SCREEN_CENTER;
 
 const posMsg = (label: 'START' | 'END', tile: GridPos): string => `${label} at ${tile.col},${tile.row}`;
 
-/** Where the virtual Link lands crossing a hop (discovered exit or static edge). */
+/** Where the virtual player lands crossing a hop (discovered exit or static edge). */
 const landingTile = (exit?: SimExit, edge?: ScreenEdge): GridPos =>
   exit ? (exit.entryTile ?? SCREEN_CENTER) : entryTileFor(edge!);
 
 /**
- * Full narration for one screen hop: END position (the tile Link leaves from),
- * Exiting (with big-area via), area enter/leave markers, Screen entry, START
- * position (the tile Link lands on). Mutates s.virtual and s.area.
+ * Full narration for one screen hop: END position (the tile the player leaves
+ * from), Exiting (with big-area via), area enter/leave markers, Screen entry,
+ * START position (the tile the player lands on). Mutates s.virtual and s.area.
  */
 const emitHop = (s: EngineState, events: SimEvent[], next: string, exit?: SimExit, edge?: ScreenEdge): void => {
   const from = s.virtual.screenId;
@@ -104,36 +104,36 @@ const emitShutterClear = (s: EngineState, events: SimEvent[], label: string, key
   s.phase = 'observing';
 };
 
-/** Zelda now follows Link: state progress, not a check. Her tagalong unlocks the
- *  throne room's passage — a REMOTE screen — so the whole graph re-opens. */
+/** The follower now tags along: state progress, not a check. Her tagalong unlocks
+ *  the throne room's passage — a REMOTE screen — so the whole graph re-opens. */
 const emitFollower = (s: EngineState, events: SimEvent[], key: string): void => {
   s.done.add(key);
-  s.events.add('event:zelda-following');
-  events.push(narrative(s, 'Zelda is following Link'));
+  s.events.add('event:follower-joined');
+  events.push(narrative(s, 'The follower is tagging along'));
   globalRefresh(s);
-  events.push(narrative(s, 'Reset: re-exploring with Zelda following'));
+  events.push(narrative(s, 'Reset: re-exploring with the follower tagging along'));
   s.currentTarget = undefined;
   s.preTrigger = undefined;
   s.phase = 'observing';
 };
 
-/** How close (tiles, chebyshev) a shutter must sit to Link's landing tile to
- *  count as the door he just walked through. */
+/** How close (tiles, chebyshev) a shutter must sit to the player's landing tile
+ *  to count as the door just walked through. */
 const TRAP_ENTRY_RADIUS = 8;
 
 /** Arriving beside a closed shutter in a kill-tag room: it just slammed shut
- *  behind Link — narrate it (the flood's edges-0 line is the hard evidence). */
+ *  behind the player — narrate it (the flood's edges-0 line is the hard evidence). */
 const emitEntryTrapSlam = (s: EngineState, obs: SimObservation, events: SimEvent[]): void => {
   const inter = obs.interactables;
   if (!inter || !(inter.tags ?? [0, 0]).some(KILL_GATE_TAG)) return;
   const near = inter.doors.find((d) => d.kind === 'shutter' && !d.opened && d.tiles.some((t) =>
     Math.abs(t.row - s.virtual.tile.row) <= TRAP_ENTRY_RADIUS && Math.abs(t.col - s.virtual.tile.col) <= TRAP_ENTRY_RADIUS));
-  if (near) events.push(narrative(s, `Shutter door slammed shut behind Link (room ${near.roomId.toString(16)})`));
+  if (near) events.push(narrative(s, `Shutter door slammed shut behind the player (room ${near.roomId.toString(16)})`));
 };
 
 /**
  * Interacting inside a still-hostile trap section slams every open shutter shut
- * FIRST: Link walks in (his virtual tile moves to the target), the real target
+ * FIRST: the player walks in (the virtual tile moves to the target), the real target
  * is requeued, and the slam runs as its own trigger/verify cycle. Returns true
  * when the interception consumed this step.
  */
@@ -154,7 +154,7 @@ const interceptTrap = (s: EngineState, obs: SimObservation, events: SimEvent[], 
 
 /** The slam verified (door-open bits dropped): narrate + re-flood in place. */
 const emitTrapClosed = (s: EngineState, events: SimEvent[], roomId: number): void => {
-  events.push(narrative(s, `Shutter doors slammed shut behind Link (room ${roomId.toString(16)})`));
+  events.push(narrative(s, `Shutter doors slammed shut behind the player (room ${roomId.toString(16)})`));
   localRefresh(s);
   events.push(narrative(s, `Reset: re-flooding ${screenLabel(s.virtual.screenId)} with new state`));
   s.currentTarget = undefined;

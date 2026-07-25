@@ -2,7 +2,7 @@
 import type { ScreenDefinition } from '../../../types';
 
 const LW_CAVES: ScreenDefinition[] = [
-  { id: 'aginahs-cave', name: 'Aginahs Cave', type: 'interior', world: 'light', location: 'Desert of Mystery', area: 'Desert', roomIndex: 0x08, interior: { kind: 'cave' }, tags: ['env:underground', 'loot:chest'] },
+  { id: 'aginahs-cave', name: 'Desert Sages Cave', type: 'interior', world: 'light', location: 'Desert of Mystery', area: 'Desert', roomIndex: 0x08, interior: { kind: 'cave' }, tags: ['env:underground', 'loot:chest'] },
   { id: 'bat-cave-right', name: 'Bat Cave (right)', type: 'interior', world: 'light', location: 'Kakariko Village', area: 'Kakariko', roomIndex: 0xE4, interior: { kind: 'cave' }, tags: ['env:underground', 'loot:chest'] },
   { id: 'bat-cave-left', name: 'Bat Cave (left)', type: 'interior', world: 'light', location: 'Kakariko Village', area: 'Kakariko', roomIndex: 0xE5, interior: { kind: 'cave' }, tags: ['env:underground', 'role:connector'] },
   { id: 'kings-grave', name: 'Kings Grave', type: 'interior', world: 'light', location: 'Eastern Hyrule', area: 'East Hyrule', roomIndex: 0x0113, interior: { kind: 'cave' }, tags: ['env:underground', 'loot:chest'] },

@@ -8,7 +8,7 @@ const SKULL_WOODS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Skull Woods', area: 'Skull Woods Area',
     roomIndex: 0x29,
-    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 9, gridY: 2 },
+    dungeon: { palaceIndex: 0x10, floor: -1, gridX: 9, gridY: 2 },
     tags: [
       'env:underground',
       'role:boss',
@@ -20,7 +20,7 @@ const SKULL_WOODS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Skull Woods', area: 'Skull Woods Area',
     roomIndex: 0x39,
-    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 9, gridY: 3 },
+    dungeon: { palaceIndex: 0x10, floor: -1, gridX: 9, gridY: 3 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -32,7 +32,7 @@ const SKULL_WOODS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Skull Woods', area: 'Skull Woods Area',
     roomIndex: 0x49,
-    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 9, gridY: 4 },
+    dungeon: { palaceIndex: 0x10, floor: -1, gridX: 9, gridY: 4 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -44,7 +44,7 @@ const SKULL_WOODS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Skull Woods', area: 'Skull Woods Area',
     roomIndex: 0x56,
-    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 6, gridY: 5 },
+    dungeon: { palaceIndex: 0x10, floor: -1, gridX: 6, gridY: 5 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -56,7 +56,7 @@ const SKULL_WOODS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Skull Woods', area: 'Skull Woods Area',
     roomIndex: 0x57,
-    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 7, gridY: 5 },
+    dungeon: { palaceIndex: 0x10, floor: -1, gridX: 7, gridY: 5 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -68,7 +68,7 @@ const SKULL_WOODS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Skull Woods', area: 'Skull Woods Area',
     roomIndex: 0x58,
-    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 8, gridY: 5 },
+    dungeon: { palaceIndex: 0x10, floor: -1, gridX: 8, gridY: 5 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -81,7 +81,7 @@ const SKULL_WOODS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Skull Woods', area: 'Skull Woods Area',
     roomIndex: 0x59,
-    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 9, gridY: 5 },
+    dungeon: { palaceIndex: 0x10, floor: -1, gridX: 9, gridY: 5 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -93,7 +93,7 @@ const SKULL_WOODS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Skull Woods', area: 'Skull Woods Area',
     roomIndex: 0x67,
-    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 7, gridY: 6 },
+    dungeon: { palaceIndex: 0x10, floor: -1, gridX: 7, gridY: 6 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -105,7 +105,7 @@ const SKULL_WOODS_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Skull Woods', area: 'Skull Woods Area',
     roomIndex: 0x68,
-    dungeon: { palaceIndex: 0x0E, floor: -1, gridX: 8, gridY: 6 },
+    dungeon: { palaceIndex: 0x10, floor: -1, gridX: 8, gridY: 6 },
     tags: [
       'env:underground',
       'role:entrance',

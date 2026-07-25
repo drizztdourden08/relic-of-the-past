@@ -12,7 +12,7 @@ import { requirementsMet } from '../requirements-map';
 import { buildReachContext, syncReachTokens, resetFrontier } from './explorer';
 import { evaluateOutcome, goalCheckDone, allChecksDone } from './goal';
 import { cloneSnapshot } from '../detect/flag-snapshot';
-import { floodCurrent, discoverTargets } from './discover';
+import { discoverTargets } from './discover';
 import { verifyStep } from './verify-step';
 import { narrative, debug, foundMsg, screenLabel, posMsg, landingTile, emitHop, spendKeysForEdge, emitEntryTrapSlam, interceptTrap } from './step-helpers';
 import { unionReach, stampReach, regionCovered, unexploredRegionJobs, takeRegionJob } from './regions';
@@ -46,8 +46,8 @@ const createEngine = ({ adjacency = buildAdjacency(), totalChecks }: EngineDeps 
     if (obs.reached) unionReach(s.regionReach, s.virtual.screenId, obs.reached);
     if (firstVisit) emitEntryTrapSlam(s, obs, events);
 
-    const flood = floodCurrent(s, obs);
-    for (const target of discoverTargets(s, obs, flood)) {
+    // The detect flood (obs.reached) is the ONLY flood — see discover.ts.
+    for (const target of discoverTargets(s, obs, obs.reached)) {
       if (!s.pending.some(t => t.key === target.key)) {
         s.pending.push(target);
         events.push(narrative(s, foundMsg(target)));
@@ -134,7 +134,7 @@ const createEngine = ({ adjacency = buildAdjacency(), totalChecks }: EngineDeps 
   const trigger = (s: EngineState, obs: SimObservation, events: SimEvent[], actions: TriggerAction[]): void => {
     const target = s.currentTarget;
     if (!target) { s.phase = 'observing'; return; }
-    // A trap-marked target slams the shutters shut behind Link first (its own
+    // A trap-marked target slams the shutters shut behind the player first (its own
     // trigger/verify cycle); the real target re-runs right after.
     if (interceptTrap(s, obs, events, actions)) return;
     s.preTrigger = cloneSnapshot(obs.flags);

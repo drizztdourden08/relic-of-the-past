@@ -4,7 +4,7 @@
  * byte-for-byte SRAM copies; the simulator only diffs them and never reads
  * check data to decide what happened (see check-matcher for naming).
  */
-import type { GridPos } from '../navigation/types';
+import type { GridPos, ScreenVariant } from '../navigation/types';
 import type { TileAttrContext } from '../navigation/tile-attrs';
 import type { TraversalRequirement } from '../navigation/nav-data.types';
 import type { CheckDefinition } from '../types';
@@ -26,16 +26,16 @@ type SimOutcome = 'completed' | 'stopped-at-check' | 'not-completable';
 interface SimConfig {
   /** Halt right after this check triggers. */
   stopAtCheckId?: string;
-  /** Goal check whose completion ends the run (default: Ganon). */
+  /** Goal check whose completion ends the run (default: the final-boss check). */
   goalCheckId?: string;
   /** Stop once this many distinct screens have been visited (for bounded testing). */
   screenLimit?: number;
 }
 
-// ─── Virtual Link & Observation ──────────────────────────────────────────────
+// ─── Virtual Player & Observation ────────────────────────────────────────────
 
-/** Simulated position — the screen the virtual Link explores. */
-interface VirtualLink {
+/** Simulated position — the screen the virtual player character explores. */
+interface VirtualPlayer {
   screenId: string;
   tile: GridPos;
 }
@@ -51,7 +51,7 @@ interface FlagSnapshot {
 }
 
 interface SimObservation {
-  virtual: VirtualLink;
+  virtual: VirtualPlayer;
   realLocation: SimLocation;
   inventory: Set<string>;
   /** Raw SRAM copies for diffing. */
@@ -85,7 +85,7 @@ interface SimArea {
   size: number;
 }
 
-/** A game-detected way off a screen: destination + where Link lands there. */
+/** A game-detected way off a screen: destination + where the player lands there. */
 interface SimExit {
   to: string;
   entryTile?: GridPos;
@@ -95,8 +95,16 @@ interface SimExit {
   fromTile?: GridPos;
   /** Big-area sub-screen the exit physically sits on, when not the visited one. */
   via?: string;
-  /** Walk-steps from the entry tile (out-of-area exits carry a bias offset). */
+  /**
+   * TRUE walk-steps from the entry tile, or undefined when the distance is
+   * genuinely unknown. Never carries a sort bias — showing the raw ordering score
+   * as a step count is what produced nonsense like "4096 steps".
+   */
   steps?: number;
+  /** The raw ordering score (may include the out-of-area bias). Sorting only. */
+  score?: number;
+  /** Why `steps` is missing or qualified: 'other-screen' | 'via-hop'. */
+  stepsNote?: 'other-screen' | 'via-hop';
   /** Big area the DESTINATION belongs to (null/absent = a standalone screen). */
   area?: SimArea;
 }
@@ -119,6 +127,8 @@ interface ScreenGridBundle {
   dualLayerGrids?: { layer0: number[][]; layer1: number[][] };
   /** kind_of_in_room_staircase value (2 = layer changes blocked). */
   staircaseType?: number;
+  /** Progress-dependent overworld screen variant (post-aga tiles etc.). */
+  variant?: ScreenVariant;
 }
 
 /** Room-addressable discovery bundle the runner pulls from the port. */
@@ -141,7 +151,7 @@ type TriggerAction =
   | { type: 'kill'; roomId: number; itemId: number; opensShutters: boolean }
   | { type: 'trapShutters'; roomId: number }
   | { type: 'pullSwitch'; roomId: number }
-  | { type: 'progress'; step: 'zelda-follow' | 'zelda-rescue' };
+  | { type: 'progress'; step: 'follower-join' | 'follower-deliver' };
 
 // ─── Detection ───────────────────────────────────────────────────────────────
 
@@ -164,7 +174,7 @@ interface DetectedCheck {
   matched?: CheckDefinition;
   matchedName?: string;
   itemReceived?: string;
-  at: VirtualLink;
+  at: VirtualPlayer;
 }
 
 // ─── Events ──────────────────────────────────────────────────────────────────
@@ -202,6 +212,8 @@ interface SoftlockReport {
 interface SimChest {
   roomId: number;
   chestIndex: number;
+  /** A BIG chest (bit 15 of the chest-room word) — needs the big key to open. */
+  isBig: boolean;
   tile: GridPos;
   /** False when the C layer reports posKnown=0 (col=row=0xFF) for a remote room. */
   posKnown: boolean;
@@ -235,13 +247,18 @@ interface SimDoor {
   /** A jail-cell keyhole plate (room object 0x18) rather than a door-table door:
    *  `index` is its chest slot and opening it writes that slot's open bit. */
   cellLock?: boolean;
+  /** Raw kDoorType — distinguishes doors that share a `kind` (throne push wall
+   *  0x14, warp-room door 0x46) and that only the native value identifies. */
+  nativeType?: number;
+  /** 0 = upper/BG2, 1 = lower/BG1 (door position slots 6-11). */
+  layer?: 0 | 1;
 }
 
 export type {
   SimPhase,
   SimOutcome,
   SimConfig,
-  VirtualLink,
+  VirtualPlayer,
   FlagSnapshot,
   SimObservation,
   SimExit,

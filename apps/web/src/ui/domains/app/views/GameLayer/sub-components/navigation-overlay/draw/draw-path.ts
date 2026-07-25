@@ -3,7 +3,7 @@ import type { FloodFillResult } from '@shared/game/navigation';
 import type { ReachState } from '@shared/game/navigation/types';
 import type { DrawContext } from './draw-context';
 import type { MouseState } from '../navigation-overlay.type';
-import { findNearest2x2Goal, findPath2x2FromLink } from '../pathfinding';
+import { findNearest2x2Goal, findPath2x2FromPlayer } from '../pathfinding';
 
 const drawPathPreview = (dc: DrawContext, mouseState: MouseState, result: FloodFillResult, vp: { linkX: number; linkY: number }, setLockedPath: (path: { row: number; col: number; attr: number }[] | null) => void): void => {
   const { ctx, scaleX, scaleY, viewLeft, viewTop, TILE_PX, screenWorldX, screenWorldY } = dc;
@@ -18,7 +18,7 @@ const drawPathPreview = (dc: DrawContext, mouseState: MouseState, result: FloodF
   const goal2x2 = findNearest2x2Goal(activeTarget.row, activeTarget.col, result.reachable);
   // Pathfinding uses layer-aware routing when dual-layer data exists
   const path = goal2x2
-    ? findPath2x2FromLink(
+    ? findPath2x2FromPlayer(
         vp.linkX, vp.linkY + 8, screenWorldX, screenWorldY, goal2x2,
         result.reachable, result.reachableByLayer, result.startLayer,
       )

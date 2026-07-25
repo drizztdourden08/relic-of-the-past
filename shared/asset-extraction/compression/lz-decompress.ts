@@ -1,6 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * SNES LZ decompression — 7-mode format used by Zelda 3 for compressed assets.
+ * SNES LZ decompression — 7-mode format used by the game for compressed assets.
  *
  * Ported from util.py `decomp()`. This must produce byte-identical output.
  *
@@ -24,7 +24,7 @@ import type { RomData } from '../rom/rom-types';
 type GetByteFn = (addr: number) => number;
 
 /**
- * Decompress data from a SNES address using the Zelda 3 LZ format.
+ * Decompress data from a SNES address using the game's LZ format.
  *
  * @param ea - Starting SNES address of compressed data
  * @param getByte - Byte-read function (typically rom.getByte)

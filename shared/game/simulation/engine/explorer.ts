@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /**
- * Virtual-Link bookkeeping: inventory → reach tokens, consumable dungeon keys,
+ * Virtual-player bookkeeping: inventory → reach tokens, consumable dungeon keys,
  * events, and the unlock-reset epoch rule. When a verified check hands over a
  * traversal-affecting item or flag, the epoch advances and the frontier resets
  * so reachability re-floods from the current virtual position.
@@ -93,10 +93,10 @@ const localRefresh = (state: EngineState): void => {
 };
 
 /**
- * Refresh after a change that alters reachability in OTHER screens — Zelda
- * tagging along opens the throne room's push-wall passage, far from where she
- * was rescued. Every screen but the current one becomes re-explorable (unlike
- * localRefresh, which only re-floods the room Link stands in).
+ * Refresh after a change that alters reachability in OTHER screens — the
+ * follower tagging along opens the throne room's push-wall passage, far from
+ * where she was rescued. Every screen but the current one becomes re-explorable
+ * (unlike localRefresh, which only re-floods the room the player stands in).
  */
 const globalRefresh = (state: EngineState): void => {
   state.epoch += 1;

@@ -83,7 +83,7 @@ const useDumpLayers = ({ activeProfile, loadProfileForGame, openNavWidget }: Dum
       console.log('[DumpLayers] Gathering dual-layer grid data...');
 
       const dualLayerGrids = wasmGetIndoorDualLayerGrids();
-      const linkLayer = wasmGetLinkLayer();
+      const playerLayer = wasmGetLinkLayer();
 
       // If hover-tile requested, open nav widget and trigger tooltip
       let hoverScreenshot: string | null = null;
@@ -162,7 +162,7 @@ const useDumpLayers = ({ activeProfile, loadProfileForGame, openNavWidget }: Dum
         stateSlot: slot,
         roomIndex,
         roomHex: roomIndex !== null ? `0x${roomIndex.toString(16).padStart(3, '0')}` : null,
-        linkLayer,
+        linkLayer: playerLayer,
         viewport: viewport ? {
           mainModule: viewport.mainModule,
           locationType: viewport.locationType,
@@ -185,7 +185,7 @@ const useDumpLayers = ({ activeProfile, loadProfileForGame, openNavWidget }: Dum
         } : undefined,
       };
 
-      console.log(`[DumpLayers] hasDualLayers=${output.hasDualLayers}, linkLayer=${linkLayer}`);
+      console.log(`[DumpLayers] hasDualLayers=${output.hasDualLayers}, linkLayer=${playerLayer}`);
       if (output.grids) {
         console.log(`[DumpLayers] ${output.grids.splitTiles.length} tiles with layer split`);
       } else {

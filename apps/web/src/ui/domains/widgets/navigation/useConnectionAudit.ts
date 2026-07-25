@@ -13,7 +13,7 @@
 
 import { useMemo } from 'react';
 import { ALL_CONNECTIONS } from '@shared/game/data/connections';
-import { SCREEN_BY_ID, getScreenLookup } from '@shared/game/data/screens';
+import { SCREEN_BY_ID, getScreenLookup, displayName } from '@shared/game/data/screens';
 import { serializeConnection } from '@shared/game/data/screen-codegen';
 import { buildConnectionNav } from '@shared/game/navigation/analysis/connection-nav-from-flood';
 import type { ConnectionInfo } from '@shared/game/navigation';
@@ -86,7 +86,7 @@ const buildBadFindings = (screenId: string, realTransitions: RealTransition[]): 
 
     const transit = conn.tags.find(t => t.startsWith('transit:'));
     const mech = transit ? transit.slice('transit:'.length) : null;
-    // The flood only covers tiles reachable from Link's current position, so a
+    // The flood only covers tiles reachable from the player's current position, so a
     // border it did not reach is NOT proof a walkable edge is absent — an
     // incomplete negative. Walk/ledge edges therefore only ever produce ADD
     // findings, never REMOVE. Door/stairs/hole/passage/warp/mirror edges are
@@ -122,8 +122,10 @@ const ARTICLE_FOR_TYPE: Record<DetectedConnection['type'], 'a' | 'an'> = {
 
 // The exit-screen detection reuses the 'entrance' type but prefixes its label
 // with "Exit → "; strip that when a resolved screen name isn't available.
-const destinationName = (to: string, det: DetectedConnection): string =>
-  SCREEN_BY_ID.get(to)?.name ?? det.label.replace(/^Exit → /, '');
+const destinationName = (to: string, det: DetectedConnection): string => {
+  const screen = SCREEN_BY_ID.get(to);
+  return screen ? displayName(screen.id, screen.name) : det.label.replace(/^Exit → /, '');
+};
 
 // Two independent detectors (the entrance scan and the exit-screen check) can
 // both flag the same missing edge from the same screen. Dedupe on the

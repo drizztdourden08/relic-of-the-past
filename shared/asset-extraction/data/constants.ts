@@ -23,7 +23,7 @@ const ADDR_SWORD_PALETTE = 0x9bd630;
 /** Shield palette colors (3 shields × 4 colors = 12 words) */
 const ADDR_SHIELD_PALETTE = 0x9bd648;
 
-/** Link armor palette (Green Mail = armor 0, 15 colors) */
+/** Player armor palette (Green Mail = armor 0, 15 colors) */
 const ADDR_ARMOR_PALETTE = 0x9bd308;
 
 export {

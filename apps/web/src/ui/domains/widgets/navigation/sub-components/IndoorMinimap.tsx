@@ -2,6 +2,7 @@
 import { useMemo } from 'react';
 import type { CSSProperties } from 'react';
 import { Icon } from '@iconify/react/offline';
+import { usableEntrances } from '@shared/game/navigation';
 import type { ConnectionInfo, ScreenBundle, FloodFillResult } from '@shared/game/navigation';
 import { Box, Text } from '../../../../design-system/primitives';
 import { getEntranceIcon } from '../../../../../lib/entrance-icons';
@@ -10,13 +11,14 @@ import { useNavigationOverlayStore } from '../../../../../stores/navigation-over
 import { EDGE_COLORS } from '../navigation.constants';
 import { getScreenDisplayName } from '../widget-helpers';
 import { ReachabilityCanvas } from './ReachabilityCanvas';
+import { AnnotationLayer } from './AnnotationLayer';
 
 interface MinimapProps {
   bundle: ScreenBundle;
   connections: ConnectionInfo[];
   renderResults: FloodFillResult[];
-  linkScreenIndex: number | null;
-  linkPos: { screen: number; row: number; col: number } | null;
+  playerScreenIndex: number | null;
+  playerPos: { screen: number; row: number; col: number } | null;
   respawnEntIds: Set<number>;
   roomIndex: number;
 }
@@ -24,7 +26,7 @@ interface MinimapProps {
 const COUNT_LABEL: CSSProperties = { position: 'absolute', bottom: 2, left: 0, right: 0, textAlign: 'center', fontSize: 9, color: 'var(--c-text-dim)', pointerEvents: 'none' };
 
 /** Indoor/dungeon minimap: a single full-size rectangle. */
-const IndoorMinimap = ({ bundle, connections, renderResults, linkPos, respawnEntIds, roomIndex }: MinimapProps) => {
+const IndoorMinimap = ({ bundle, connections, renderResults, playerPos, respawnEntIds, roomIndex }: MinimapProps) => {
   const EDGE_PAD = 18;
   const AVAIL = 224;
   const innerSize = AVAIL - EDGE_PAD * 2;
@@ -43,6 +45,7 @@ const IndoorMinimap = ({ bundle, connections, renderResults, linkPos, respawnEnt
 
   const externalConns = connections.filter(c => !c.isIntraRoom);
   const fallHoleSpawns = useNavigationOverlayStore(s => s.fallHoleSpawns);
+  const annotations = useNavigationOverlayStore(s => s.annotations);
 
   const primaryResult = renderResults.find(r => r.screenIndex === bundle.head) ?? renderResults[0];
 
@@ -120,7 +123,7 @@ const IndoorMinimap = ({ bundle, connections, renderResults, linkPos, respawnEnt
         )}
       </Box>
 
-      {renderResults.flatMap(r => r.entrances.filter(e => r.transitions.some(t => t.entranceIdx === e.id)).map(ent => {
+      {renderResults.flatMap(r => usableEntrances(r).map(ent => {
         const x = mapLeft + ((ent.gridCol + 0.5) / 64) * mapW;
         const y = mapTop + ((ent.gridRow + 0.5) / 64) * mapH;
         const sz = Math.max(6, mapW * 4 / 64);
@@ -141,11 +144,13 @@ const IndoorMinimap = ({ bundle, connections, renderResults, linkPos, respawnEnt
         );
       })}
 
-      {linkPos && bundle.screens.includes(linkPos.screen) && (() => {
-        const x = mapLeft + ((linkPos.col + 0.5) / 64) * mapW;
-        const y = mapTop + ((linkPos.row + 0.5) / 64) * mapH;
+      {playerPos && bundle.screens.includes(playerPos.screen) && (() => {
+        const x = mapLeft + ((playerPos.col + 0.5) / 64) * mapW;
+        const y = mapTop + ((playerPos.row + 0.5) / 64) * mapH;
         return <Box style={{ position: 'absolute', left: x - 3, top: y - 3, width: 6, height: 6, borderRadius: '50%', background: 'var(--c-green)', boxShadow: '0 0 3px var(--c-green)', pointerEvents: 'none' }} />;
       })()}
+
+      <AnnotationLayer annotations={annotations.find(a => a.screenIndex === roomIndex) ?? null} cellLeft={mapLeft} cellTop={mapTop} cellW={mapW} cellH={mapH} />
 
       {renderHorizEdge(byEdge.north, 'n', mapDivTop - 14 + borderW)}
       {renderHorizEdge(byEdge.south, 's', mapDivTop + mapH + borderW)}

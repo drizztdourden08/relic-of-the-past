@@ -81,7 +81,7 @@ const wasmGetRoomSpriteSpawns = (roomId: number): SimSpriteRaw[] =>
 const wasmSimKillDrop = (roomId: number, itemId: number): void =>
   voidCall('WasmSimKillDrop', { argTypes: ['number', 'number'], args: [roomId, itemId] });
 
-/** Open a door's SRAM/live bit as the game would when Link uses a small key.
+/** Open a door's SRAM/live bit as the game would when the player uses a small key.
  *  consume=false opens the counterpart record without spending another key. */
 const wasmSimUnlockDoor = (roomId: number, doorIndex: number, consume: boolean): void =>
   voidCall('WasmSimUnlockDoor', { argTypes: ['number', 'number', 'number'], args: [roomId, doorIndex, consume ? 1 : 0] });
@@ -99,13 +99,13 @@ const wasmGetRoomCellLocks = (roomId: number): { slot: number; row: number; col:
 const wasmSimOpenCellLock = (roomId: number, slot: number): void =>
   voidCall('WasmSimOpenCellLock', { argTypes: ['number', 'number'], args: [roomId, slot] });
 
-/** Zelda becomes Link's follower (her cell's TransitionToTagalong state). */
-const wasmSimZeldaFollow = (): void => voidCall('WasmSimZeldaFollow', { argTypes: [], args: [] });
+/** The princess becomes the player's follower (her cell's TransitionToTagalong state). */
+const wasmSimFollowerAttach = (): void => voidCall('WasmSimFollowerAttach', { argTypes: [], args: [] });
 
-/** The Sanctuary priest scene: progress indicator → 2 ("rescued Zelda"). */
-const wasmSimZeldaRescue = (): void => voidCall('WasmSimZeldaRescue', { argTypes: [], args: [] });
+/** The Sanctuary priest scene: progress indicator → 2 (the princess is safe). */
+const wasmSimFollowerRescue = (): void => voidCall('WasmSimFollowerRescue', { argTypes: [], args: [] });
 
-/** Clear a door's open bit — a trap shutter slamming shut again behind Link. */
+/** Clear a door's open bit — a trap shutter slamming shut again behind the player. */
 const wasmSimCloseDoor = (roomId: number, doorIndex: number): void =>
   voidCall('WasmSimCloseDoor', { argTypes: ['number', 'number'], args: [roomId, doorIndex] });
 
@@ -155,6 +155,6 @@ const wasmReadFlagSnapshot = (): SimFlagSnapshot | null =>
   });
 
 export { wasmGetRoomChests, wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetRoomDoorInfo,
-  wasmSimUnlockDoor, wasmSimCloseDoor, wasmSimKillDrop, wasmSimZeldaFollow, wasmSimZeldaRescue,
+  wasmSimUnlockDoor, wasmSimCloseDoor, wasmSimKillDrop, wasmSimFollowerAttach, wasmSimFollowerRescue,
   wasmGetRoomCellLocks, wasmSimOpenCellLock, wasmTriggerOverworldCheck, wasmReadFlagSnapshot };
 export type { SimChestRaw, SimSpriteRaw, SimDoorRaw, SimDoorDirection, SimFlagSnapshot };

@@ -58,7 +58,7 @@ const loadSpritePalettes = (rom: RomData): SpritePalettes => {
     palettes[0][i + 1] = snesToRgba(aux3[i]);
   }
 
-  // Palette 7 = Link's armor (Green Mail = armor 0)
+  // Palette 7 = the player's armor (Green Mail = armor 0)
   const armorPal = rom.getWords(ADDR_ARMOR_PALETTE, 15);
   for (let i = 0; i < 15; i++) {
     palettes[7][i + 1] = snesToRgba(armorPal[i]);

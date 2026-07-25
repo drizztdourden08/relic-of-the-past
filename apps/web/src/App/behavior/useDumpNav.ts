@@ -10,7 +10,7 @@
 import { useEffect, useRef } from 'react';
 import {
   subscribeGameState,
-  loadState,
+  loadStateRef,
   wasmGetViewportInfo,
   wasmGetGameUIState,
   wasmGetExitScreenMap,
@@ -32,8 +32,10 @@ import {
 } from '../../lib/game';
 import { resolveCurrentScreenDetailed } from '@shared/game/data/screens';
 import type { VariantGameState } from '@shared/game/data/screens';
-import { collectEntranceData, formatStairs, formatTravelDests, computeFloodFill, computeOverworldFloodFill } from './dump-nav/builders';
+import { collectEntranceData, formatStairs, formatTravelDests } from './dump-nav/builders';
+import { runDumpFlood } from './dump-nav/run-flood';
 import { linkStartTile } from '@shared/game/navigation/link-start-tile';
+import { screenOriginFor } from '../../lib/game/flood';
 
 interface DumpNavDeps {
   activeProfile: Profile | null;
@@ -67,11 +69,12 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
       });
       if (cancelled) return;
 
-      console.log(`[DumpNav] Game running. Loading state slot ${slot}...`);
-      const loadResult = await loadState(slot);
-      console.log(`[DumpNav] loadState(${slot}) returned: ${loadResult}`);
+      const kind = typeof slot === 'number' ? 'quick slot' : 'manual save';
+      console.log(`[DumpNav] Game running. Loading ${kind} ${slot}...`);
+      const loadResult = await loadStateRef(slot);
+      console.log(`[DumpNav] load ${kind} ${slot} returned: ${loadResult}`);
       if (!loadResult) {
-        const dump = { slot, error: `loadState(${slot}) returned false — save state not found or module not ready` };
+        const dump = { slot, error: `loading ${kind} "${slot}" returned false — state not found or module not ready` };
         await window.api.writeDumpNav(dump);
         setTimeout(() => window.close(), 500);
         return;
@@ -127,7 +130,7 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
       // ─── Door & room structure data ───
       const doorBoundaryTiles = isIndoors ? wasmGetRoomDoorBoundaryTiles() : [];
       const roomLayout = isIndoors ? wasmGetRoomLayoutInfo() : null;
-      const linkLayer = isIndoors ? wasmGetLinkLayer() : null;
+      const playerLayer = isIndoors ? wasmGetLinkLayer() : null;
       const staircaseType = isIndoors ? wasmGetStaircaseType() : null;
       // Read the live dual-layer grids BEFORE wasmBuildRoomAttrGrid: that rebuild runs
       // Dungeon_LoadRoom, which is destructive and overwrites the live collision tables the
@@ -138,20 +141,19 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
       const toggleFloorPositions = isIndoors ? wasmGetToggleFloorPositions() : [];
 
       // ─── Flood fill + connections (for internal edge verification) ───
-      // Seed the flood from Link's hitbox tile (same derivation as the navigation widget).
-      const startPos = viewport
-        ? linkStartTile({
-            linkX: viewport.linkX,
-            linkY: viewport.linkY,
-            screenWorldX: isIndoors ? Math.floor(viewport.linkX / 512) * 512 : (overworldScreenIndex & 7) * 512,
-            screenWorldY: isIndoors ? Math.floor(viewport.linkY / 512) * 512 : ((overworldScreenIndex >> 3) & 7) * 512,
-          })
+      // Seed the flood from the player's hitbox tile (same derivation as the navigation widget).
+      const origin = viewport
+        ? screenOriginFor({ isIndoors, linkX: viewport.linkX, linkY: viewport.linkY, screenIndex: overworldScreenIndex })
+        : null;
+      const startPos = viewport && origin
+        ? linkStartTile({ linkX: viewport.linkX, linkY: viewport.linkY, screenWorldX: origin.x, screenWorldY: origin.y })
         : undefined;
-      const floodFillData = isIndoors
-        ? computeFloodFill({
-            roomIndex, attrGrid, dualLayerGrids, linkLayer, staircaseType, roomLayout, startPos,
-          })
-        : computeOverworldFloodFill(overworldScreenIndex, wasmBuildOverworldAttrGrid(overworldScreenIndex), startPos);
+      // Floods through the SAME runner the simulator uses (see run-flood.ts).
+      const { floodFill: floodFillData, annotations } = runDumpFlood({
+        isIndoors, roomIndex, overworldScreenIndex, startPos,
+        screenId: detection?.screen.id ?? null,
+        attrGrid, dualLayerGrids, playerLayer, staircaseType, roomLayout,
+      });
 
       const dump = {
         slot,
@@ -211,7 +213,7 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
           quadrantY: roomLayout.quadrantY,
           intraEdges: roomLayout.intraEdges,
         } : null,
-        linkLayer,
+        linkLayer: playerLayer,
         linkStart: startPos ?? null,
         staircaseType,
         toggleFloorPositions: toggleFloorPositions.map(p => ({
@@ -220,6 +222,10 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
           col: p.col,
         })),
         floodFill: floodFillData,
+        // Mechanics with their REACHABILITY — a detected check the flood cannot
+        // walk to is flagged `blocked`, so a dump says whether a thing is
+        // obtainable and not merely that it exists.
+        annotations,
       };
 
       console.log(`[DumpNav] Dumping navigation data...`);

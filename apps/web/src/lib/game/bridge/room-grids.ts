@@ -66,7 +66,7 @@ const wasmGetIndoorLayer0Grid = (): number[][] | null =>
     return grid;
   });
 
-/** Get Link's current layer: 0 (upper) or 1 (lower), or null if game not running. */
+/** Get the player's current layer: 0 (upper) or 1 (lower), or null if game not running. */
 const wasmGetLinkLayer = (): 0 | 1 | null =>
   callWhenRunning<0 | 1 | null>(null, (mod) => ((mod.ccall('WasmGetLinkIsOnLowerLevel', 'number', [], []) as number) !== 0 ? 1 : 0));
 

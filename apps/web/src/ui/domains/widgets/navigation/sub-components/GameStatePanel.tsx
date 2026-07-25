@@ -15,7 +15,7 @@ const GameStatePanel = (props: Props) => {
       <Box style={S.section}>
         <Box style={S.sectionTitle}>Game State</Box>
         <Box style={S.infoBox}>
-          <DescRow label="Mode" desc="Whether Link is currently indoors (dungeon/cave/house) or outdoors on the overworld.">
+          <DescRow label="Mode" desc="Whether the player is currently indoors (dungeon/cave/house) or outdoors on the overworld.">
             <Text style={{ color: isIndoors ? 'var(--c-warning)' : 'var(--c-green)' }}>{isIndoors ? 'Indoor' : 'Outdoor'}</Text>
           </DescRow>
           {isIndoors ? (
@@ -60,13 +60,13 @@ const GameStatePanel = (props: Props) => {
                   <Text style={S.valInfo}>{dungeonMapPos.effectiveLayout}</Text>
                 </DescRow>
               )}
-              <DescRow label="Last Entrance" desc="The entrance ID Link last used to enter from the overworld. Determines spawn position, starting layer, and palace assignment. Does NOT update for indoor-to-indoor transitions.">
+              <DescRow label="Last Entrance" desc="The entrance ID the player last used to enter from the overworld. Determines spawn position, starting layer, and palace assignment. Does NOT update for indoor-to-indoor transitions.">
                 <Text style={{ color: whichEntrance ? 'var(--c-info)' : 'var(--c-text-muted)' }}>{whichEntrance ? `0x${whichEntrance.toString(16).toUpperCase().padStart(2, '0')} (${whichEntrance})` : '—'}</Text>
               </DescRow>
-              <DescRow label="Palace Index" desc="Identifies which dungeon Link is in (0–13). 0xFF = cave/house (non-dungeon interior). Used for dungeon-specific logic like boss keys and maps.">
+              <DescRow label="Palace Index" desc="Identifies which dungeon the player is in (0–13). 0xFF = cave/house (non-dungeon interior). Used for dungeon-specific logic like boss keys and maps.">
                 <Text>{palaceIndex === 0xFF ? 'Cave/House' : `${palaceIndex >> 1} (0x${palaceIndex.toString(16).toUpperCase()})`}</Text>
               </DescRow>
-              <DescRow label="Starting Layer" desc="The layer Link was on when this room was first entered. Captured at room load. In rooms with staircase type 2 (Blocked), Link stays locked to this layer. Layer toggles are caused by door type 22 (kDoorType_PlayerBgChange).">
+              <DescRow label="Starting Layer" desc="The layer the player was on when this room was first entered. Captured at room load. In rooms with staircase type 2 (Blocked), the player stays locked to this layer. Layer toggles are caused by door type 22 (kDoorType_PlayerBgChange).">
                 {roomStartLayer !== null ? (
                   <Text style={{ color: roomStartLayer === 0 ? 'var(--c-info)' : 'var(--c-info)' }}>
                     {roomStartLayer === 0 ? 'Upper (BG2)' : 'Lower (BG1)'}
@@ -102,7 +102,7 @@ const GameStatePanel = (props: Props) => {
               <DescRow label="Flags" desc="Screen-specific event flags from SRAM. Track permanent world changes like opened chests, pulled levers, and destroyed barriers.">
                 <Text style={S.valDim}>0x{displayedVariant.screenEventFlags.toString(16).padStart(2, '0')}</Text>
               </DescRow>
-              <DescRow label="NPC Blockers" desc="Number of sprites currently blocking BFS pathfinding (tutorial guards, barriers). These physically prevent Link from passing.">
+              <DescRow label="NPC Blockers" desc="Number of sprites currently blocking BFS pathfinding (tutorial guards, barriers). These physically prevent the player from passing.">
                 <Text style={{ color: dynamicBlockerCount > 0 ? 'var(--c-warning)' : 'var(--c-text-muted)' }}>{dynamicBlockerCount}</Text>
               </DescRow>
             </>

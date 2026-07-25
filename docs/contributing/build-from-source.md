@@ -60,3 +60,33 @@ app extracts what it needs locally. See [Quick Start](../getting-started/quick-s
 
 Path aliases: `@shared/*` → `shared/`, `@app/*` → `apps/web/src/`. See the
 [Architecture overview](../architecture/overview.md) for zones and dependency invariants.
+
+## The private companion repository (optional)
+
+Some material this project uses is derived from the original game and therefore is not
+in this repository: the named save states the end-to-end tests load, the blessed
+navigation baselines, and the display-name overlay for the screen datasets. Those live
+in a separate **private** repository and are copied into place on demand.
+
+**You do not need it.** Without access:
+
+- the app builds and runs,
+- `npm run lint` and the unit tests pass,
+- the end-to-end tests that need a save state report as *skipped*,
+- screens show their id (`hc-0x80`) instead of a display name.
+
+With access, one command fetches everything:
+
+```bash
+npm run vault:sync
+```
+
+It also runs automatically after `npm install`, and is a no-op with a single line of
+output when you have no access — it never fails a build. To see what is mapped and
+whether it is in place:
+
+```bash
+npm run vault:status
+```
+
+Access is granted per contributor; ask the repository owner if you need the fixtures.

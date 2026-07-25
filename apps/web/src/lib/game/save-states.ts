@@ -102,6 +102,41 @@ const loadState = async (slot: number): Promise<boolean> => {
 };
 
 /**
+ * Load a NORMAL (manual) save by its name rather than a quick-slot number.
+ * Names are stable and quick-save can never overwrite them, so automation and
+ * regression baselines pin to a name instead of a slot index. Matching is
+ * case-insensitive; the newest save wins if two share a name.
+ */
+const loadNamedState = async (name: string): Promise<boolean> => {
+  const profileId = getProfileId();
+  if (!profileId) {
+    log.app('[LoadState] ABORT: no profileId');
+    return false;
+  }
+  const wanted = name.trim().toLowerCase();
+  const saves = await savesStore.listNormalSaves(profileId);
+  const match = saves.find((s) => s.name.toLowerCase() === wanted);
+  if (!match) {
+    log.error(`[LoadState] No manual save named "${name}". Available: ${saves.map((s) => s.name).join(', ') || 'none'}`);
+    return false;
+  }
+  const buffer = await savesStore.loadNormalSave(profileId, match.id);
+  if (!buffer) {
+    log.error(`[LoadState] Manual save "${match.name}" (${match.id}) has no data on disk`);
+    return false;
+  }
+  log.app(`[LoadState] Loading manual save "${match.name}" (${match.id}, ${buffer.byteLength} bytes)`);
+  return loadStateFromBuffer(buffer);
+};
+
+/**
+ * Load whichever the CLI asked for: a number is a quick-save slot, a string is
+ * a manual save's name. One resolver so every automation flag behaves alike.
+ */
+const loadStateRef = (ref: number | string): Promise<boolean> =>
+  typeof ref === 'number' ? loadState(ref) : loadNamedState(ref);
+
+/**
  * Capture the current game state into a temp slot and return its raw bytes.
  * Encapsulates the WASM/MEMFS dance so views never touch the module directly.
  */
@@ -133,4 +168,4 @@ const loadStateFromBuffer = (buffer: ArrayBuffer, slot = 98): boolean => {
   return true;
 };
 
-export { captureStateBuffer, loadState, loadStateFromBuffer, saveState };
+export { captureStateBuffer, loadNamedState, loadState, loadStateFromBuffer, loadStateRef, saveState };

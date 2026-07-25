@@ -11,6 +11,7 @@ import { useEffect, useRef } from 'react';
 import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { useLocationNotificationStore } from '../../../../stores/location-notification-store';
 import { resolveCurrentScreen } from '@shared/game/data/screens/detection';
+import { displayName } from '@shared/game/data/screens';
 import type { ScreenDefinition } from '@shared/game/types';
 
 /** Auto-dismiss delay in ms */
@@ -89,7 +90,7 @@ const useLocationNotification = () => {
 
       // ─── Transition notification (name change within same location) ───
       if (store.showTransition && prev && prev.location === detected.location && prev.name !== detected.name) {
-        const entrance = detected.name;
+        const entrance = displayName(detected.id, detected.name);
         store.setTransition(entrance);
 
         if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);

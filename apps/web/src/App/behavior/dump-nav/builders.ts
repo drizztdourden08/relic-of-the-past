@@ -1,7 +1,8 @@
 /* @layer renderer-appshell @kind logic */
 /** Pure builders for the --dump-nav debug payload (no WASM calls — data passed in). */
 import { floodFillScreen, getConnections } from '@shared/game/navigation';
-import type { FloodFillOptions } from '@shared/game/navigation';
+import { spawnLandingTile } from '../../../lib/game/flood';
+import type { FloodFillResult, ConnectionInfo } from '@shared/game/navigation';
 import type {
   MatchingEntrance,
   FallHoleLanding,
@@ -23,9 +24,11 @@ interface EntranceDataInput {
 
 interface FloodFillDumpInput {
   roomIndex: number;
+  /** The flood, already run by the SHARED runner (floodRoomRun). */
+  run: { result: FloodFillResult; connections: ConnectionInfo[] } | null;
   attrGrid: Uint8Array | null;
   dualLayerGrids: { layer0: number[][]; layer1: number[][]; stairTiles: Array<{ row: number; col: number }> } | null;
-  linkLayer: 0 | 1 | null;
+  playerLayer: 0 | 1 | null;
   staircaseType: number | null;
   startPos?: { row: number; col: number };
   roomLayout: {
@@ -66,8 +69,7 @@ const collectEntranceData = (input: EntranceDataInput) => {
       if (entranceRooms[h.entranceId] === roomIndex) {
         const spawn = entranceSpawns[h.entranceId];
         if (spawn) {
-          const gridCol = Math.floor((spawn.x - roomOriginX) / 8);
-          const gridRow = Math.floor((spawn.y - roomOriginY) / 8);
+          const { row: gridRow, col: gridCol } = spawnLandingTile(spawn.x, spawn.y, { x: roomOriginX, y: roomOriginY });
           fallHoleLandings.push({ entranceId: h.entranceId, gridRow, gridCol, fromArea: h.area, fromAreaHex: `0x${h.area.toString(16).padStart(2, '0')}` });
         }
       }
@@ -111,21 +113,11 @@ const encodeAttrRows = (grid: number[][]): string[] =>
   grid.map(row => row.map(v => v.toString(16).padStart(2, '0')).join(''));
 
 const computeFloodFill = (input: FloodFillDumpInput): FloodFillDump | null => {
-  const { roomIndex, attrGrid, dualLayerGrids, linkLayer, staircaseType, roomLayout, startPos } = input;
-  if (!attrGrid) return null;
+  const { run, attrGrid, dualLayerGrids, roomLayout } = input;
+  if (!attrGrid || !run) return null;
 
   const grid = toGrid(attrGrid);
-  const opts: FloodFillOptions = {
-    tileContext: 'interior-dungeon',
-    inventory: new Set(),
-    startPos,
-    dualLayerGrids: dualLayerGrids ?? undefined,
-    stairTiles: dualLayerGrids?.stairTiles,
-    startLayer: linkLayer ?? undefined,
-    staircaseType: staircaseType ?? undefined,
-  };
-  const result = floodFillScreen(grid, roomIndex, opts);
-  const connections = getConnections(result, roomLayout?.intraEdges);
+  const { result, connections } = run;
 
   // Detect scroll boundaries
   const shape = roomLayout?.shape ?? '1x1';
@@ -185,14 +177,11 @@ const computeFloodFill = (input: FloodFillDumpInput): FloodFillDump | null => {
 };
 
 const computeOverworldFloodFill = (
-  screenIndex: number,
+  run: { result: FloodFillResult; connections: ConnectionInfo[] } | null,
   attrGrid: Uint8Array | null,
-  startPos?: { row: number; col: number },
 ): FloodFillDump | null => {
-  if (!attrGrid) return null;
-
-  const result = floodFillScreen(toGrid(attrGrid), screenIndex, { tileContext: 'overworld', inventory: new Set(), startPos });
-  const connections = getConnections(result);
+  if (!attrGrid || !run) return null;
+  const { result, connections } = run;
 
   return {
     reachableCount: result.reachableCount,

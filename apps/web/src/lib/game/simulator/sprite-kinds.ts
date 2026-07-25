@@ -10,7 +10,7 @@
 import type { SimSprite } from '@shared/game/simulation';
 
 const SPRITE_KINDS: Record<number, SimSprite['kind']> = {
-  0x16: 'npc', // Sahasrahla
+  0x16: 'npc', // the first sage
   0x1a: 'npc', // Blind's Hut / hint NPC
   0x1f: 'npc', // Sick Kid
   0x28: 'npc', // Gets bombable-wall room flag on trigger

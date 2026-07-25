@@ -13,7 +13,8 @@ import { drawCliffArrows, drawStairArrows } from './draw/draw-arrows';
 import { drawConnections } from './draw/draw-connections';
 import { drawEntrances } from './draw/draw-entrances';
 import { drawFallHoleSpawns, drawPitStripes } from './draw/draw-fall-zones';
-import { drawLinkDebug } from './draw/draw-link-debug';
+import { drawPlayerDebug } from './draw/draw-player-debug';
+import { drawAnnotations } from './draw/draw-annotations';
 
 interface OverlayCanvasProps extends Props {
   mouseStateRef: React.RefObject<MouseState>;
@@ -22,7 +23,7 @@ interface OverlayCanvasProps extends Props {
 const OverlayCanvas = ({ width, height, gameRunning, mouseStateRef }: OverlayCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
-  const { visible, result, results, connections, fallHoleSpawns, respawnEntIds, setLockedPath } = useNavigationOverlayStore();
+  const { visible, result, results, connections, fallHoleSpawns, respawnEntIds, annotations, hiddenKinds, setLockedPath } = useNavigationOverlayStore();
   const { overworldScreenIndex, roomIndex, isIndoors } = useGameUIStore(s => s.map);
   const activeScreenIndex = isIndoors ? roomIndex : overworldScreenIndex;
 
@@ -68,14 +69,16 @@ const OverlayCanvas = ({ width, height, gameRunning, mouseStateRef }: OverlayCan
         drawFallHoleSpawns(dc, fallHoleSpawns, activeScreenIndex, drawResults);
       }
       drawPitStripes(dc, drawResults);
-      drawLinkDebug(dc, vp, wasmGetLiveSprites());
+      // Annotations last so locks/triggers/exits sit above the reachability art.
+      if (annotations.length) drawAnnotations(dc, annotations, hiddenKinds);
+      drawPlayerDebug(dc, vp, wasmGetLiveSprites());
 
       rafRef.current = requestAnimationFrame(draw);
     };
 
     rafRef.current = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [visible, result, results, connections, fallHoleSpawns, respawnEntIds, width, height, gameRunning, activeScreenIndex, isIndoors, roomIndex, layer1ReachableOverride, mouseStateRef, setLockedPath]);
+  }, [visible, result, results, connections, fallHoleSpawns, respawnEntIds, annotations, hiddenKinds, width, height, gameRunning, activeScreenIndex, isIndoors, roomIndex, layer1ReachableOverride, mouseStateRef, setLockedPath]);
 
   return (
     <Canvas

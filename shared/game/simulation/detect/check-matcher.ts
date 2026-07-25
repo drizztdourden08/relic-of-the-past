@@ -51,10 +51,10 @@ const matchProgress = (diff: FlagDiff): string | null => {
 
 /**
  * Progression events are THRESHOLD reads of the progress buffer, not bitmasks
- * (sram_progress_indicator 1 = post-uncle, 2 = rescued Zelda). A diff names an
- * event only when it CROSSES that threshold, and the highest crossed threshold
- * wins — reaching 2 is "Rescued Zelda", not "Zelda Rescue Started". Ids are
- * translated to display names so the log reads like every other check.
+ * (sram_progress_indicator 1 = post-uncle, 2 = the rescue completed). A diff
+ * names an event only when it CROSSES that threshold, and the highest crossed
+ * threshold wins — reaching 2 is the COMPLETED rescue, not the started one. Ids
+ * are translated to display names so the log reads like every other check.
  */
 const matchEvent = (diff: FlagDiff): string | null => {
   const crossed = Object.entries(CHECK_EVENT_FLAGS)

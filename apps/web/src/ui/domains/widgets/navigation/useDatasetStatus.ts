@@ -5,7 +5,7 @@
  */
 
 import { useMemo } from 'react';
-import { getScreenLookup } from '@shared/game/data/screens';
+import { getScreenLookup, displayName } from '@shared/game/data/screens';
 import type { ScreenMatchResult } from '@shared/game/data/screens';
 import { ALL_CONNECTIONS } from '@shared/game/data/connections';
 import type { ScreenDefinition, ScreenConnection } from '@shared/game/types';
@@ -125,7 +125,7 @@ const useConnectionStatus = (screenId: string | null, detectedEntranceScreens: n
       detected.push({
         type: 'entrance',
         targetRoomOrScreen: screen,
-        label: owScreen?.name ?? `OW 0x${screen.toString(16).toUpperCase()}`,
+        label: owScreen ? displayName(owScreen.id, owScreen.name) : `OW 0x${screen.toString(16).toUpperCase()}`,
       });
     }
 
@@ -145,7 +145,7 @@ const useConnectionStatus = (screenId: string | null, detectedEntranceScreens: n
       detected.push({
         type: 'entrance',
         targetRoomOrScreen: exitScreen,
-        label: `Exit → ${owScreen?.name ?? `OW 0x${exitScreen.toString(16).toUpperCase()}`}`,
+        label: `Exit → ${owScreen ? displayName(owScreen.id, owScreen.name) : `OW 0x${exitScreen.toString(16).toUpperCase()}`}`,
       });
     }
 
@@ -156,7 +156,7 @@ const useConnectionStatus = (screenId: string | null, detectedEntranceScreens: n
       detected.push({
         type: 'hole',
         targetRoomOrScreen: room,
-        label: `Hole → ${target?.name ?? `room 0x${room.toString(16).toUpperCase()}`}`,
+        label: `Hole → ${target ? displayName(target.id, target.name) : `room 0x${room.toString(16).toUpperCase()}`}`,
       });
     }
 

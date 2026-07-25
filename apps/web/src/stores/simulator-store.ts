@@ -19,6 +19,15 @@ import type {
 
 type RunStatus = 'idle' | 'running' | 'paused' | 'done';
 
+/** One screen the run entered, in order — the route it actually walked. */
+interface TrailStop {
+  screenId: string;
+  /** Epoch the run was on when it arrived. */
+  epoch: number;
+  /** Checks completed at arrival, so a stop's own haul is the next delta. */
+  checksAt: number;
+}
+
 interface SimProgress {
   phase: SimPhase;
   checksDone: number;
@@ -42,6 +51,7 @@ interface SimulatorStore {
   outcome: SimOutcome | null;
   progress: SimProgress;
   events: SimEvent[];
+  trail: TrailStop[];
   suggestions: DatasetSuggestion[];
   softlockReport: SoftlockReport | null;
 
@@ -61,6 +71,7 @@ const useSimulatorStore = create<SimulatorStore>()((set) => ({
   outcome: null,
   progress: emptyProgress(),
   events: [],
+  trail: [],
   suggestions: [],
   softlockReport: null,
 
@@ -71,13 +82,21 @@ const useSimulatorStore = create<SimulatorStore>()((set) => ({
     outcome: null,
     progress: emptyProgress(),
     events: [],
+    trail: [],
     suggestions: [],
     softlockReport: null,
   }),
   setStatus: (status) => set({ status }),
   setPhaseLabel: (phaseLabel) => set({ phaseLabel }),
   pushEvents: (incoming) => set((s) => ({ events: [...s.events, ...incoming] })),
-  setProgress: (progress) => set({ progress }),
+  // The trail is derived here rather than pushed separately: the engine's own
+  // currentScreen is the single source, so the route cannot drift from the run.
+  setProgress: (progress) => set((s) => {
+    const last = s.trail[s.trail.length - 1];
+    if (!progress.currentScreen || progress.currentScreen === last?.screenId) return { progress };
+    const stop: TrailStop = { screenId: progress.currentScreen, epoch: progress.epoch, checksAt: progress.checksDone };
+    return { progress, trail: [...s.trail, stop] };
+  }),
   finishRun: ({ outcome, suggestions, softlockReport }) => set({
     status: 'done',
     outcome,
@@ -91,10 +110,11 @@ const useSimulatorStore = create<SimulatorStore>()((set) => ({
     outcome: null,
     progress: emptyProgress(),
     events: [],
+    trail: [],
     suggestions: [],
     softlockReport: null,
   }),
 }));
 
 export { useSimulatorStore };
-export type { RunStatus, SimProgress };
+export type { RunStatus, SimProgress, TrailStop };

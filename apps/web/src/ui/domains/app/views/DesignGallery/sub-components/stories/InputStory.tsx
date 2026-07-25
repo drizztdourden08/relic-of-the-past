@@ -16,7 +16,7 @@ const TAG_GROUPS = [
 
 /** Components › text / number / select / slider inputs. */
 const InputStory = () => {
-  const [text, setText] = useState('Link');
+  const [text, setText] = useState('Player');
   const [num, setNum] = useState(3);
   const [bottle, setBottle] = useState('red');
   const [vol, setVol] = useState(60);

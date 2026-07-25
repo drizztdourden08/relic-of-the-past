@@ -8,7 +8,7 @@ const SWAMP_PALACE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Swamp Palace', area: 'Dark South',
     roomIndex: 0x06,
-    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 6, gridY: 0 },
+    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 6, gridY: 0 },
     tags: [
       'env:underground',
       'role:boss',
@@ -20,7 +20,7 @@ const SWAMP_PALACE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Swamp Palace', area: 'Dark South',
     roomIndex: 0x16,
-    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 6, gridY: 1 },
+    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 6, gridY: 1 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -32,7 +32,7 @@ const SWAMP_PALACE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Swamp Palace', area: 'Dark South',
     roomIndex: 0x25,
-    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 5, gridY: 2 },
+    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 5, gridY: 2 },
     tags: [
       'env:underground',
       'role:connector',
@@ -44,7 +44,7 @@ const SWAMP_PALACE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Swamp Palace', area: 'Dark South',
     roomIndex: 0x26,
-    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 6, gridY: 2 },
+    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 6, gridY: 2 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -56,7 +56,7 @@ const SWAMP_PALACE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Swamp Palace', area: 'Dark South',
     roomIndex: 0x28,
-    dungeon: { palaceIndex: 0x0C, floor: 0, gridX: 8, gridY: 2 },
+    dungeon: { palaceIndex: 0x0A, floor: 0, gridX: 8, gridY: 2 },
     tags: [
       'env:underground',
       'role:entrance',
@@ -68,7 +68,7 @@ const SWAMP_PALACE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Swamp Palace', area: 'Dark South',
     roomIndex: 0x34,
-    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 4, gridY: 3 },
+    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 4, gridY: 3 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -80,7 +80,7 @@ const SWAMP_PALACE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Swamp Palace', area: 'Dark South',
     roomIndex: 0x35,
-    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 5, gridY: 3 },
+    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 5, gridY: 3 },
     tags: [
       'env:underground',
       'role:connector',
@@ -92,7 +92,7 @@ const SWAMP_PALACE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Swamp Palace', area: 'Dark South',
     roomIndex: 0x36,
-    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 6, gridY: 3 },
+    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 6, gridY: 3 },
     tags: [
       'env:underground',
       'role:hub',
@@ -104,7 +104,7 @@ const SWAMP_PALACE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Swamp Palace', area: 'Dark South',
     roomIndex: 0x37,
-    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 7, gridY: 3 },
+    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 7, gridY: 3 },
     tags: [
       'env:underground',
       'loot:chest',
@@ -116,7 +116,7 @@ const SWAMP_PALACE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Swamp Palace', area: 'Dark South',
     roomIndex: 0x38,
-    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 8, gridY: 3 },
+    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 8, gridY: 3 },
     tags: [
       'env:underground',
       'role:hub',
@@ -129,7 +129,7 @@ const SWAMP_PALACE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Swamp Palace', area: 'Dark South',
     roomIndex: 0x46,
-    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 6, gridY: 4 },
+    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 6, gridY: 4 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -141,7 +141,7 @@ const SWAMP_PALACE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Swamp Palace', area: 'Dark South',
     roomIndex: 0x54,
-    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 4, gridY: 5 },
+    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 4, gridY: 5 },
     tags: [
       'env:underground',
       'role:connector',
@@ -153,7 +153,7 @@ const SWAMP_PALACE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Swamp Palace', area: 'Dark South',
     roomIndex: 0x66,
-    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 6, gridY: 6 },
+    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 6, gridY: 6 },
     tags: [
       'env:underground',
       'role:puzzle',
@@ -165,7 +165,7 @@ const SWAMP_PALACE_DUNGEON: ScreenDefinition[] = [
     type: 'dungeon', world: 'dark',
     location: 'Swamp Palace', area: 'Dark South',
     roomIndex: 0x76,
-    dungeon: { palaceIndex: 0x0C, floor: -1, gridX: 6, gridY: 7 },
+    dungeon: { palaceIndex: 0x0A, floor: -1, gridX: 6, gridY: 7 },
     tags: [
       'env:underground',
       'role:connector',

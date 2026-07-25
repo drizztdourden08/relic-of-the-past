@@ -3,7 +3,7 @@
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { wasmGetViewportInfo, wasmGetLiveSprites } from '../../../../../../../lib/game';
 import type { GridPos, Rect } from './navigation-overlay.type';
-import { findNearest2x2Goal, findPath2x2FromLink } from './pathfinding/astar-2x2';
+import { findNearest2x2Goal, findPath2x2FromPlayer } from './pathfinding/astar-2x2';
 import { rectsOverlap, segmentOverlapsRect } from './pathfinding/helpers';
 
 type Sprites = ReturnType<typeof wasmGetLiveSprites>;
@@ -71,7 +71,7 @@ const computePathTooltipPosition = (params: PathTipParams): { tipX: number; tipY
   const goal2x2 = findNearest2x2Goal(activeTarget.row, activeTarget.col, result.reachable);
   // Pathfinding uses layer-aware routing when dual-layer data exists
   const path = goal2x2
-    ? findPath2x2FromLink(
+    ? findPath2x2FromPlayer(
         vp.linkX, vp.linkY + 8, screenWorldX, screenWorldY, goal2x2,
         result.reachable, result.reachableByLayer, result.startLayer,
       )

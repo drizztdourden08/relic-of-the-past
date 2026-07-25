@@ -7,6 +7,8 @@
 import type { SimOutcome } from '../types';
 import type { EngineState } from './state';
 
+/** Dataset check id/name of the final-boss check — matched against ALL_CHECKS, so
+ *  this literal must stay exactly as the checks dataset spells it. */
 const DEFAULT_GOAL_CHECK = 'Ganon';
 
 const goalCheckDone = (s: EngineState): boolean => {

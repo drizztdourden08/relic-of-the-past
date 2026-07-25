@@ -1,11 +1,8 @@
 /* @layer renderer-widgets @kind logic */
-/** Flood-fill run preparation: inventory set, overworld blockers, and Link's start context. */
-import {
-  wasmGetLiveSprites, wasmGetOverworldGuardSpawns,
-  wasmGetIndoorDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetIndoorUncleBlockers,
-} from '../../../../../lib/game';
+/** Flood-fill run preparation: inventory set, overworld blockers, and the player's start context. */
+import { wasmGetLiveSprites, wasmGetOverworldGuardSpawns, wasmGetIndoorDualLayerGrids, wasmGetLinkLayer } from '../../../../../lib/game';
+import { getScreenGrids, screenOriginFor } from '../../../../../lib/game/flood';
 import type { wasmGetViewportInfo } from '../../../../../lib/game';
-import { getCompletedChecks } from '../../../../../lib/game/tracker';
 import type { TileAttrContext } from '@shared/game/navigation/tile-attrs';
 import { linkStartTile } from '@shared/game/navigation/link-start-tile';
 
@@ -17,7 +14,7 @@ interface StartContext {
   tileContext: TileAttrContext;
   rawAttrGrid: number[][] | undefined;
   dualLayerGrids: DualLayerGrids | undefined;
-  linkLayer: 0 | 1 | undefined;
+  playerLayer: 0 | 1 | undefined;
 }
 
 const buildInventory = (
@@ -85,51 +82,30 @@ const computeStartContext = (args: {
   let tileContext: TileAttrContext = isIndoors ? 'interior-house' : 'overworld';
   let rawAttrGrid: number[][] | undefined;
   let dualLayerGrids: DualLayerGrids | undefined;
-  let linkLayer: 0 | 1 | undefined;
+  let playerLayer: 0 | 1 | undefined;
 
   if (vp) {
     if (isIndoors) {
-      // TileDetect only branches on indoors, but we keep cave/house and dungeon contexts separate for future tuning.
-      tileContext = vp.locationType === 2 ? 'interior-dungeon' : 'interior-house';
-      dualLayerGrids = wasmGetIndoorDualLayerGrids() ?? undefined;
-      rawAttrGrid = dualLayerGrids?.layer0 ?? wasmGetIndoorLayer0Grid() ?? undefined;
-      linkLayer = wasmGetLinkLayer() ?? undefined;
-
-      // Early-game indoor variant: Uncle at house / in-passage physically blocks tiles.
-      // We stamp his live sprite footprint into the attr grid so flood-fill reflects state.
-      // Once the uncle check is collected, he no longer blocks (randomizer-safe).
-      if (rawAttrGrid && !getCompletedChecks().has("Link's Uncle")) {
-        const blockers = wasmGetIndoorUncleBlockers();
-        const roomWorldX = Math.floor(vp.linkX / 512) * 512;
-        const roomWorldY = Math.floor(vp.linkY / 512) * 512;
-        // Uncle uses 3x3 expanded footprint (same as overworld guards)
-        // to properly block narrow passages.
-        for (const b of blockers) {
-          const c0 = Math.floor((b.x - roomWorldX) / 8);
-          const r0 = Math.floor((b.y - roomWorldY) / 8);
-          for (let dr = -1; dr <= 1; dr++) {
-            for (let dc = -1; dc <= 1; dc++) {
-              const rr = r0 + dr;
-              const cc = c0 + dc;
-              if (rr >= 0 && rr < 64 && cc >= 0 && cc < 64) {
-                rawAttrGrid[rr][cc] = 0x01; // wall/blocked
-              }
-            }
-          }
-        }
-      }
+      // One grid source for widget + simulator + dumper (lib/game/flood): it picks
+      // live tables for the loaded room, rebuilds any other addressably, and stamps
+      // the uncle's blocker footprint into EVERY layer. Stamping only the raw grid
+      // (which aliases layer 0) let a dual-layer room flood straight through him.
+      const bundle = getScreenGrids({ isIndoors: true, roomId: primaryScreenIndex, owScreenIndex: 0 });
+      tileContext = bundle.tileContext;
+      rawAttrGrid = bundle.rawAttrGrid;
+      // The widget's overlay wants stairTiles alongside the layers; the flood
+      // itself never reads them (see flood-options).
+      const liveDual = wasmGetIndoorDualLayerGrids();
+      dualLayerGrids = bundle.dualLayerGrids
+        ? { ...bundle.dualLayerGrids, stairTiles: liveDual?.stairTiles ?? [] }
+        : undefined;
+      playerLayer = wasmGetLinkLayer() ?? undefined;
     }
-    const screenWorldX = isIndoors
-      ? (Math.floor(vp.linkX / 512) * 512)
-      : ((primaryScreenIndex & 7) * 512);
-    const screenWorldY = isIndoors
-      ? (Math.floor(vp.linkY / 512) * 512)
-      : (((primaryScreenIndex >> 3) & 7) * 512);
-
-    startPos = linkStartTile({ linkX: vp.linkX, linkY: vp.linkY, screenWorldX, screenWorldY });
+    const origin = screenOriginFor({ isIndoors, linkX: vp.linkX, linkY: vp.linkY, screenIndex: primaryScreenIndex });
+    startPos = linkStartTile({ linkX: vp.linkX, linkY: vp.linkY, screenWorldX: origin.x, screenWorldY: origin.y });
   }
 
-  return { startPos, tileContext, rawAttrGrid, dualLayerGrids, linkLayer };
+  return { startPos, tileContext, rawAttrGrid, dualLayerGrids, playerLayer };
 };
 
 export { buildInventory, buildOverworldBlockers, computeStartContext };

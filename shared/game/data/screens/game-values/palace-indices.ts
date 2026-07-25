@@ -9,6 +9,13 @@
  * NOTE: The value is set by the entrance data tables, NOT by the room itself.
  * Different entrances to the same dungeon may set different palace values
  * (e.g. HC main entrance sets 2, sewers entrance sets 0).
+ *
+ * The value is DOUBLED — the game's own dungeon tables are indexed by
+ * `cur_palace_index_x2 >> 1`. This mapping is the ROM's, read off the dungeon-map
+ * floor-layout table (pointers at SNES $8AF605, 14 entries, one per dungeon; each
+ * entry lists that dungeon's room numbers) and corroborated by
+ * `kDungeonCrystalPendantBit`. Do not reorder it to match a wiki or a UI list:
+ * `getDungeonName` decides which data file a screen is written back into.
  */
 
 const PALACE_INDEX_NAMES: Record<number, string> = {
@@ -16,16 +23,16 @@ const PALACE_INDEX_NAMES: Record<number, string> = {
   0x02: 'Hyrule Castle (Castle)',
   0x04: 'Eastern Palace',
   0x06: 'Desert Palace',
-  0x08: 'Tower of Hera',
-  0x0A: 'Palace of Darkness',
-  0x0C: 'Swamp Palace',
-  0x0E: 'Skull Woods',
-  0x10: "Thieves' Town",
+  0x08: 'Castle Tower',
+  0x0A: 'Swamp Palace',
+  0x0C: 'Palace of Darkness',
+  0x0E: 'Misery Mire',
+  0x10: 'Skull Woods',
   0x12: 'Ice Palace',
-  0x14: 'Misery Mire',
-  0x16: 'Turtle Rock',
-  0x18: "Ganon's Tower",
-  0x1A: 'Castle Tower',
+  0x14: 'Tower of Hera',
+  0x16: "Thieves' Town",
+  0x18: 'Turtle Rock',
+  0x1A: "Ganon's Tower",
   0xFF: 'Cave / House',
 };
 
@@ -34,16 +41,16 @@ const DUNGEON_PALACE_VALUES: Record<string, number[]> = {
   'Hyrule Castle': [0x00, 0x02],
   'Eastern Palace': [0x04],
   'Desert Palace': [0x06],
-  'Tower of Hera': [0x08],
-  'Palace of Darkness': [0x0A],
-  'Swamp Palace': [0x0C],
-  'Skull Woods': [0x0E],
-  "Thieves' Town": [0x10],
+  'Castle Tower': [0x08],
+  'Swamp Palace': [0x0A],
+  'Palace of Darkness': [0x0C],
+  'Misery Mire': [0x0E],
+  'Skull Woods': [0x10],
   'Ice Palace': [0x12],
-  'Misery Mire': [0x14],
-  'Turtle Rock': [0x16],
-  "Ganon's Tower": [0x18],
-  'Castle Tower': [0x1A],
+  'Tower of Hera': [0x14],
+  "Thieves' Town": [0x16],
+  'Turtle Rock': [0x18],
+  "Ganon's Tower": [0x1A],
 };
 
 const getPalaceName = (palaceIndex: number): string => {

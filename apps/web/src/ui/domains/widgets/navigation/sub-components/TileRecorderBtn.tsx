@@ -4,7 +4,7 @@ import { Button } from '../../../../design-system/primitives';
 import { wasmGetViewportInfo } from '../../../../../lib/game';
 import { S } from '../styles';
 
-/** Records the attr value of each tile Link walks over (debug aid). */
+/** Records the attr value of each tile the player walks over (debug aid). */
 const TileRecorderBtn = ({ attrGrid, overworldScreenIndex }: { attrGrid: number[][] | null; overworldScreenIndex: number }) => {
   const [recording, setRecording] = useState(false);
   const [tiles, setTiles] = useState<Array<{ row: number; col: number; attr: number }>>([]);

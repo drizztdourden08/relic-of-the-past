@@ -5,7 +5,7 @@
  */
 import type { TraversalRequirement } from '../../navigation/nav-data.types';
 import type { GridPos } from '../../navigation/types';
-import type { SimConfig, SimOutcome, SimPhase, VirtualLink, FlagSnapshot, TriggerAction, SimExit, SimArea } from '../types';
+import type { SimConfig, SimOutcome, SimPhase, VirtualPlayer, FlagSnapshot, TriggerAction, SimExit, SimArea } from '../types';
 import type { RegionJob } from './regions';
 
 /** A discovered interactable paired with the trigger that fires it. */
@@ -23,7 +23,7 @@ interface SimTarget {
   verb: string;
   /** Flood-grid tile the interactable sits on, when its position is known. */
   tile?: GridPos;
-  /** Interacting walks into a live trap section — shutters slam shut behind Link first. */
+  /** Interacting walks into a live trap section — shutters slam shut behind the player first. */
   trap?: boolean;
 }
 
@@ -31,8 +31,8 @@ interface EngineState {
   phase: SimPhase;
   step: number;
   epoch: number;
-  virtual: VirtualLink;
-  /** Big multi-sub-screen area the virtual Link currently stands in (log grouping). */
+  virtual: VirtualPlayer;
+  /** Big multi-sub-screen area the virtual player currently stands in (log grouping). */
   area?: SimArea;
 
   /** Item names held (mirrors the game inventory). */
@@ -65,7 +65,7 @@ interface EngineState {
   /** Every screen reachable this epoch — feeds the softlock report. */
   reachedScreens: Set<string>;
 
-  /** Screens whose trap shutters currently sit slammed shut behind Link. */
+  /** Screens whose trap shutters currently sit slammed shut behind the player. */
   trapClosed: Set<string>;
   /** Target keys already triggered. */
   done: Set<string>;
@@ -88,7 +88,7 @@ interface EngineState {
   config: SimConfig;
 }
 
-const createEngineState = (virtual: VirtualLink, inventory: Set<string>, config: SimConfig): EngineState => ({
+const createEngineState = (virtual: VirtualPlayer, inventory: Set<string>, config: SimConfig): EngineState => ({
   phase: 'observing',
   step: 0,
   epoch: 0,

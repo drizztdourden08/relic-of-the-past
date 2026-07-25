@@ -14,10 +14,10 @@ static int SimTrigIsCurrentRoom(int room_id) {
 }
 
 // ─── Door unlock ───
-// Sets a door's open bit exactly like the game does when Link spends a small
-// key on it: the room's SRAM word slot, plus the live word when the room is
-// loaded. `consume` spends one of Link's keys — the counterpart record of the
-// SAME physical doorway in the adjacent room is opened with consume=0.
+// Sets a door's open bit exactly like the game does when the player spends a
+// small key on it: the room's SRAM word slot, plus the live word when the room
+// is loaded. `consume` spends one of the player's keys — the counterpart record
+// of the SAME physical doorway in the adjacent room is opened with consume=0.
 EMSCRIPTEN_KEEPALIVE
 void WasmSimUnlockDoor(int room_id, int door_index, int consume) {
   if (!SimTrigRoomValid(room_id) || door_index < 0 || door_index > 3) return;
@@ -29,8 +29,8 @@ void WasmSimUnlockDoor(int room_id, int door_index, int consume) {
 }
 
 // ─── Door close ───
-// Clears a door's open bit — trap shutters slam shut again behind Link when he
-// walks into a section that still holds live kill-trigger enemies. Only ever
+// Clears a door's open bit — trap shutters slam shut again behind the player on
+// walking into a section that still holds live kill-trigger enemies. Only ever
 // meaningful for shutter (kind 4) doors; key doors stay open once unlocked.
 EMSCRIPTEN_KEEPALIVE
 void WasmSimCloseDoor(int room_id, int door_index) {
@@ -42,12 +42,12 @@ void WasmSimCloseDoor(int room_id, int door_index) {
 
 // ─── Cell locks (big-key locks) ───
 // Room object 0x18 "Cell Lock" (dungeon.c:1696) is the keyhole plate sealing a
-// jail cell — Zelda's door. It carries NO door-table record: the drawer records
-// it in dung_chest_locations, and the attr post-pass (dungeon.c:4041) marks it
-// with 0x8000, which is what OpenChestForItem reads to treat the tile as a
-// big-key lock rather than a chest (dungeon.c:5715). Opening one needs the
-// dungeon's big key and sets the slot's chest-open bit; `case 0x18` then draws
-// nothing, so the tiles stay plain floor.
+// jail cell — the captive princess's door. It carries NO door-table record: the
+// drawer records it in dung_chest_locations, and the attr post-pass
+// (dungeon.c:4041) marks it with 0x8000, which is what OpenChestForItem reads to
+// treat the tile as a big-key lock rather than a chest (dungeon.c:5715). Opening
+// one needs the dungeon's big key and sets the slot's chest-open bit;
+// `case 0x18` then draws nothing, so the tiles stay plain floor.
 //
 // Slots come from the room's static object data — read exactly like the chest
 // scan (sim_queries.c) so remote rooms work and NO loaded-room state is touched;
@@ -133,22 +133,22 @@ void WasmSimOpenCellLock(int room_id, int slot) {
   if (SimTrigIsCurrentRoom(room_id)) dung_savegame_state_bits |= kSimChestOpenMasks[slot];
 }
 
-// ─── Zelda rescue progression ───
-// Touching Zelda in her cell runs Zelda_InCell case 4 "TransitionToTagalong"
-// (sprite_main.c:6299): she becomes Link's follower and the save's starting
-// point moves to the sewers. The tagalong is what opens the throne room's
-// push-wall passage, so the simulator writes the same two values.
+// ─── Captive-princess rescue progression ───
+// Touching the princess in her cell runs the in-cell sprite handler's case 4
+// "TransitionToTagalong" (sprite_main.c:6299): she becomes the player's follower
+// and the save's starting point moves to the sewers. The tagalong is what opens
+// the throne room's push-wall passage, so the simulator writes the same two values.
 EMSCRIPTEN_KEEPALIVE
-void WasmSimZeldaFollow(void) {
+void WasmSimFollowerAttach(void) {
   which_starting_point = 2;
   follower_indicator = 1;
 }
 
-// The priest scene at the Sanctuary runs Zelda_EnteringSanctuary case 1
-// (sprite_main.c:6337): progress indicator 2 = "rescued", starting point back
-// to 1, and Zelda stops following (she stays behind as a room sprite).
+// The priest scene at the sanctuary runs the entering-sanctuary sprite handler's
+// case 1 (sprite_main.c:6337): progress indicator 2 = "rescued", starting point
+// back to 1, and she stops following (she stays behind as a room sprite).
 EMSCRIPTEN_KEEPALIVE
-void WasmSimZeldaRescue(void) {
+void WasmSimFollowerRescue(void) {
   which_starting_point = 1;
   sram_progress_indicator = 2;
   follower_indicator = 0;

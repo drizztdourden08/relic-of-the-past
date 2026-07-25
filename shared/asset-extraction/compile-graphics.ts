@@ -1,6 +1,6 @@
 /* @layer shared-asset-extraction @kind logic */
 /**
- * Graphics asset compilation — sprites, backgrounds, link graphics, misc data, tilemaps, map32.
+ * Graphics asset compilation — sprites, backgrounds, player graphics, misc data, tilemaps, map32.
  */
 import type { RomData } from './rom/rom-types';
 import type { AssetBuilder } from './asset-builder';
@@ -29,7 +29,7 @@ const buildBgGfx = (rom: RomData, A: AssetBuilder): void => {
   A.addPacked('kBgGfx', all);
 };
 
-const buildLinkGraphics = (rom: RomData, A: AssetBuilder): void => {
+const buildPlayerGraphics = (rom: RomData, A: AssetBuilder): void => {
   const height = 448;
   const raw = rom.getBytes(0x108000, 0x800 * height / 32);
   const result: number[] = [];
@@ -94,4 +94,4 @@ const buildTilemaps = (rom: RomData, A: AssetBuilder): void => {
   }
 };
 
-export { buildBgGfx, buildLinkGraphics, buildMap32ToMap16, buildMisc, buildSpriteGfx, buildTilemaps };
+export { buildBgGfx, buildMap32ToMap16, buildMisc, buildPlayerGraphics, buildSpriteGfx, buildTilemaps };

@@ -70,7 +70,7 @@ int WasmGetRoomExitDoors(void) {
 // Each entry: [destRoom(1), tileRow(1), tileCol(1), flags(1)]
 // flags: bit 2 = direction (0 up, 4 down, matches attr bit 2), bit 0 = the attr
 // PAGE the stair tile was found on (0 = BG2/upper, 1 = BG1/lower) — taking the
-// stair deposits Link on that layer, which decides the destination flood's
+// stair deposits the player on that layer, which decides the destination flood's
 // start layer (the sewers' Behind-Sanctuary alcove is a BG1 arrival).
 // Stair index tiles have attr = 0x30..0x37 where bits 0-1 = stair index, bit 2 = direction.
 
@@ -127,7 +127,7 @@ int WasmGetRoomStairInfo(void) {
 
 // Room-addressable variant: rebuild the target room's attr table + header
 // (WasmBuildRoomAttrGrid loads both), then run the same stair scan — so the
-// simulator can discover a remote room's staircases without Link being there.
+// simulator can discover a remote room's staircases without the player being there.
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomStairInfoFor(int room_id) {
   memset(g_room_stairs_buf, 0, sizeof(g_room_stairs_buf));

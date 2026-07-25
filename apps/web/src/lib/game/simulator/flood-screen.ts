@@ -5,7 +5,7 @@
  * loaded one) and runs the SAME shared floodFillScreen the nav widget uses, with
  * the SAME options (inventory + progress variant + entrances + exit map + solid-
  * sprite blockers), so the numbers match a normal in-game flood. No rendering,
- * no Link movement — this is the per-screen unit the chained BFS drives.
+ * no player movement — this is the per-screen unit the chained BFS drives.
  *
  * Blockers are derived addressably from WasmGetOverworldSpriteSpawns (which is
  * progress-aware), so a remote screen (one the game isn't standing on) still gets
@@ -15,10 +15,11 @@
  * reads addressable WASM tables, so it is reused here pending a move to the bridge.
  */
 import { wasmBuildOverworldAttrGrid, wasmGetExitScreenMap, wasmGetOverworldVariant, wasmGetOverworldSpriteSpawns } from '../';
-import { floodFillScreen, getConnections, getAttrReq } from '@shared/game/navigation';
+import { floodFillScreen, getConnections, usableEntranceTransition } from '@shared/game/navigation';
 import type { ConnectionInfo, FloodFillResult, GridPos, TransitionPoint } from '@shared/game/navigation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
 import { enrichEntrances } from '@domains/widgets/navigation/widget-helpers';
+import { buildFloodOptions, getScreenGrids } from '../flood';
 
 // Sprite types that block BFS (mirrors buildOverworldBlockers): tutorial guards
 // (0x3f), barriers (0x40), uncle (0x73). Each stamps a 3×3 footprint.
@@ -69,38 +70,26 @@ const floodOneOverworld = (
   startPos?: GridPos,
   extraSeeds?: GridPos[],
 ): ScreenFloodRun | null => {
-  const raw = wasmBuildOverworldAttrGrid(screenIndex);
-  if (!raw) return null;
-  const variant = wasmGetOverworldVariant(screenIndex);
-  const result = floodFillScreen(toGrid(raw), screenIndex, {
-    tileContext: 'overworld',
-    inventory: new Set(items),
+  const bundle = getScreenGrids({ isIndoors: false, roomId: 0, owScreenIndex: screenIndex });
+  if (!bundle.rawAttrGrid.length) return null;
+  // Options come from the one builder, same as the indoor flood — a hand-rolled
+  // set here is how the overworld numbers drifted from the room numbers.
+  const result = floodFillScreen(bundle.rawAttrGrid, bundle.screenIndex, buildFloodOptions({
+    location: { isIndoors: false, roomId: 0, owScreenIndex: screenIndex },
+    items,
     startPos,
     extraSeeds,
-    dynamicBlockers: blockerCells(screenIndex),
     entrances: enrichEntrances(),
-    exitScreenByRoom: wasmGetExitScreenMap(),
-    variant: variant
-      ? { progressTier: variant.progressIndicator, eventOverlay: variant.eventOverlayActive, eventFlags: variant.screenEventFlags }
-      : undefined,
-  });
+  }, bundle));
   return { result, connections: getConnections(result) };
 };
 
 /**
- * An entrance transition Link can ACTUALLY take right now: the BFS reached it
+ * An entrance transition the player can ACTUALLY take right now: the BFS reached it
  * without unmet item tiles, and the entrance tile itself isn't sitting under an
  * item-locked obstacle (e.g. the Uncle-Estate-West stairs buried under a rock —
  * the proximity trigger fires from beside the rock, but the way in is sealed).
  */
-const usableEntranceTransition = (result: FloodFillResult, t: TransitionPoint, items: TileReq[]): boolean => {
-  if (t.edge !== 'entrance') return false;
-  if (t.requirements.some((r) => !items.includes(r as TileReq))) return false;
-  const attr = result.attrGrid?.[t.row]?.[t.col];
-  if (attr == null) return true;
-  const req = getAttrReq(attr, result.tileContext);
-  return req === undefined || items.includes(req);
-};
 
 /** Summarise a run the way the nav widget reports its numbers. */
 const summarizeRun = (run: ScreenFloodRun, items: TileReq[]): ScreenFlood => {

@@ -138,7 +138,7 @@ int WasmGetViewportInfo(void) {
   PutU16(g_viewport_buf, 16, BG2HOFS_copy2);
   PutU16(g_viewport_buf, 18, BG2VOFS_copy2);
 
-  // Link's world position
+  // The player's world position
   PutU16(g_viewport_buf, 20, link_x_coord);
   PutU16(g_viewport_buf, 22, link_y_coord);
 
@@ -147,8 +147,8 @@ int WasmGetViewportInfo(void) {
   PutU16(g_viewport_buf, 24, (uint16)g_zenv.ppu->extraTopBottom);
 
   // Camera-lock render shift (wide/tall view): the rendered view sits at the game camera MINUS this shift,
-  // and the shift varies as the lock re-centers while Link moves. World-space overlays must subtract it (on
-  // top of extraLeftRight) or they drift / appear to follow Link. Signed; stored as int16, read as signed.
+  // and the shift varies as the lock re-centers while the player moves. World-space overlays must subtract it
+  // (on top of extraLeftRight) or they drift / appear to follow the player. Signed; stored as int16, read as signed.
   PutU16(g_viewport_buf, 26, (uint16)(int16)g_zenv.ppu->cameraLockShiftX);
   PutU16(g_viewport_buf, 28, (uint16)(int16)g_zenv.ppu->cameraLockShiftY);
   return (int)g_viewport_buf;
@@ -179,4 +179,33 @@ int WasmGetRoomCollisionTypeForRoom(int room_id) {
   if (room_id < 0 || room_id > 0x127) return -1;
   const uint8 *hdr = GetRoomHeaderPtr(room_id);
   return (int)((hdr[0] >> 2) & 7);
+}
+
+// ─── Player state (display-only) ───
+// Layout: 8 bytes
+//   [0] link_player_handler_state (kPlayerState_*)
+//   [1] player_sleep_in_bed_state  (step counter INSIDE the sleeping handler)
+//   [2] link_is_running            (dashing with the Pegasus boots)
+//   [3] link_is_bunny
+//   [4] link_is_in_deep_water
+//   [5] link_grabbing_wall
+//   [6] sram_progress_flags        (named bits, for the widget's state chips)
+//   [7] link_incapacitated_timer   (nonzero while stunned/recoiling)
+//
+// Deliberately NOT folded into the progress buffer that WasmGetProgressFlags
+// returns: the simulator DIFFS that buffer to detect checks, and these values
+// change every frame, so adding them there would fabricate check events.
+static uint8 g_player_state_buf[8];
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetPlayerStateInfo(void) {
+  g_player_state_buf[0] = link_player_handler_state;
+  g_player_state_buf[1] = player_sleep_in_bed_state;
+  g_player_state_buf[2] = link_is_running;
+  g_player_state_buf[3] = link_is_bunny;
+  g_player_state_buf[4] = link_is_in_deep_water;
+  g_player_state_buf[5] = link_grabbing_wall;
+  g_player_state_buf[6] = sram_progress_flags;
+  g_player_state_buf[7] = link_incapacitated_timer;
+  return (int)g_player_state_buf;
 }

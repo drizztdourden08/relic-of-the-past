@@ -5,10 +5,10 @@
 
 static const uint16 kChestOpenMasksHook[] = { 0x100, 0x200, 0x400, 0x800, 0x1000, 0x2000 };
 
-// Try to visually open the chest tiles if Link is in the matching room.
+// Try to visually open the chest tiles if the player is in the matching room.
 static void TryVisualChestOpen(uint16 room_id, uint8 chest_index) {
   if (dungeon_room_index != room_id) {
-    printf("[GameHook] Visual skip: Link in room 0x%03x, chest in 0x%03x\n",
+    printf("[GameHook] Visual skip: player in room 0x%03x, chest in 0x%03x\n",
            dungeon_room_index, room_id);
     return;
   }
@@ -64,7 +64,7 @@ static void TryVisualChestOpen(uint16 room_id, uint8 chest_index) {
          chest_index, room_id);
 }
 
-// Vanilla duplicate-item rule, mirrored from Link_HandleChest (player.c:3850):
+// Vanilla duplicate-item rule, mirrored from the chest handler (player.c:3850):
 // an item with an alternate swaps to it when the primary is already owned —
 // e.g. a second Lamp (0x12) becomes 5 Rupees (0x35, the Secret Passage chest).
 static const uint8 kSimReceiveItemAlternates[76] = {

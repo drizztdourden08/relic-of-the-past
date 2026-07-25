@@ -28,7 +28,7 @@ interface DetectedScreen {
 }
 
 /** Entrance-transition exits of one flood run (doors + holes into rooms);
- *  item-gated entrances are excluded — Link can't take them yet. */
+ *  item-gated entrances are excluded — the player can't take them yet. */
 const entranceExits = (run: ScreenFloodRun, items: TileReq[], src?: ScreenDefinition): SimExit[] => {
   const rooms = wasmGetEntranceRooms();
   if (!rooms) return [];
@@ -62,7 +62,7 @@ const detectOverworld = (screenIndex: number, items: TileReq[], entryTile?: Grid
   if (!run) return null;
   const group = new Set(computeBigScreenGroup(screenIndex));
   const inArea = group.size > 1;
-  const dist = stepDistances(run.result.reachable, run.result.startPos);
+  const dist = stepDistances(run.result.reachable, run.result.startPos, run.result.ledges);
   const exits: SimExit[] = [];
   const scores: number[] = [];
   const pushExit = (exit: SimExit, leavesArea: boolean): void => {

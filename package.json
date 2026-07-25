@@ -2,7 +2,7 @@
   "name": "relic-of-the-past",
   "version": "0.11.0",
   "private": true,
-  "description": "Relic of the Past – Electron + React + WASM",
+  "description": "Relic of the Past \u2013 Electron + React + WASM",
   "author": {
     "name": "drizztdourden_",
     "email": "drizztdourden08@users.noreply.github.com"
@@ -17,7 +17,7 @@
     "node": ">=24"
   },
   "scripts": {
-    "postinstall": "node scripts/ensure-electron.mjs",
+    "postinstall": "node scripts/ensure-electron.mjs && npm run vault:sync",
     "ensure-electron": "node scripts/ensure-electron.mjs",
     "ensure-wasm": "node scripts/ensure-wasm.mjs",
     "predev": "node scripts/ensure-electron.mjs && node scripts/ensure-wasm.mjs",
@@ -54,7 +54,10 @@
     "release:last": "node scripts/release.mjs --last --latest",
     "version:patch": "npm version patch --no-git-tag-version",
     "version:minor": "npm version minor --no-git-tag-version",
-    "version:major": "npm version major --no-git-tag-version"
+    "version:major": "npm version major --no-git-tag-version",
+    "vault:sync": "node scripts/vault/sync.mjs",
+    "vault:status": "node scripts/vault/sync.mjs --status",
+    "vault:push": "node scripts/vault/push.mjs"
   },
   "dependencies": {
     "@capacitor-community/keep-awake": "^8.0.1",

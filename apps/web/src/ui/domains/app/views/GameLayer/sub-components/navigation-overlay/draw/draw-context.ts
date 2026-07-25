@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { ReachState } from '@shared/game/navigation/types';
+import { overworldOrigin, screenOriginFor } from '@app/lib/game/flood';
 
 /** Shared drawing context passed to all draw functions. */
 interface DrawContext {
@@ -40,18 +41,15 @@ const buildDrawContext = (ctx: CanvasRenderingContext2D, vp: ViewportInfo, width
   const snesH = vp.snesHeight;
   // The wide/tall camera lock shifts the rendered view by cameraLockShift (rendered view = camera − shift),
   // so the canvas origin is the game camera minus the lock shift minus the side budget. Subtract it or
-  // world-anchored overlay elements drift and appear to follow Link as the view re-centers.
+  // world-anchored overlay elements drift and appear to follow the player as the view re-centers.
   const viewLeft = camX - vp.cameraLockShiftX - vp.extraLeftRight;
   const viewTop = camY - vp.cameraLockShiftY;
   const scaleX = width / snesW;
   const scaleY = height / snesH;
 
-  const screenWorldX = isIndoors
-    ? (Math.floor(vp.linkX / 512) * 512)
-    : ((result.screenIndex & 7) * 512);
-  const screenWorldY = isIndoors
-    ? (Math.floor(vp.linkY / 512) * 512)
-    : (((result.screenIndex >> 3) & 7) * 512);
+  const { x: screenWorldX, y: screenWorldY } = screenOriginFor({
+    isIndoors, linkX: vp.linkX, linkY: vp.linkY, screenIndex: result.screenIndex,
+  });
 
   const TILE_PX = 8;
   const dotRadius = Math.max(2.5, 4 * Math.min(scaleX, scaleY));
@@ -60,10 +58,7 @@ const buildDrawContext = (ctx: CanvasRenderingContext2D, vp: ViewportInfo, width
     if (isIndoors) {
       return { x: screenWorldX, y: screenWorldY };
     }
-    return {
-      x: (screenIndex & 7) * 512,
-      y: ((screenIndex >> 3) & 7) * 512,
-    };
+    return overworldOrigin(screenIndex);
   };
 
   return {

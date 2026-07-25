@@ -1,7 +1,7 @@
 /* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
 
-// ─── Debug trace (read by Link_ControlHandler in player.c) ───
+// ─── Debug trace (read by the player control handler in player.c) ───
 int g_cheat_trace_frames = 0;
 
 // ─── Cheat State (persists until reset or explicit disable) ───
@@ -42,8 +42,8 @@ uint8 GameHook_GetExtraArmorPct(void) {
 
 // Apply the extra-armor cheat to an incoming damage value. No-op at 0%; otherwise
 // reduces by the configured percentage (clamped to a 1-point floor unless 100%),
-// stacking with the game's normal armor. Keeps this arithmetic out of vendored
-// zelda3 (player.c just calls this hook).
+// stacking with the game's normal armor. Keeps this arithmetic out of the
+// vendored core (player.c just calls this hook).
 uint8 GameHook_ApplyExtraArmor(uint8 dmg) {
   uint8 pct = GameHook_GetExtraArmorPct();
   if (pct == 0 || dmg == 0) return dmg;
@@ -75,7 +75,7 @@ void WasmCheatGiveItem(int item_id) {
   printf("[Cheat] GiveItem: item=0x%02x\n", item_id);
 }
 
-// Set Link's current health directly.
+// Set the player's current health directly.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetHealth(int value) {
   uint8 capped = (uint8)clampi(value, 0, link_health_capacity);
@@ -84,7 +84,7 @@ void WasmCheatSetHealth(int value) {
   printf("[Cheat] SetHealth: %d/%d\n", capped, link_health_capacity);
 }
 
-// Set Link's max hearts (capacity). Each heart = 8 units.
+// Set the player's max hearts (capacity). Each heart = 8 units.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetMaxHealth(int value) {
   uint8 capped = (uint8)clampi(value, 8, 160);  // 1-20 hearts (8 units each)
@@ -185,7 +185,7 @@ void WasmCheatStartTrace(int frames) {
   printf("[Cheat] StartTrace: %d frames\n", g_cheat_trace_frames);
 }
 
-// Query whether Link can currently receive an item via the delivery system.
+// Query whether the player can currently receive an item via the delivery system.
 // Returns 1 if safe to call Link_ReceiveItem, 0 otherwise.
 EMSCRIPTEN_KEEPALIVE
 int WasmCanReceiveItem(void) {

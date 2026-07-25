@@ -88,7 +88,7 @@ const readCompletedChecks = (mod: WasmModule): Set<string> | null => {
       }
       if (completed) newCompleted.add(checkId);
     }
-    // Fallback: if progress_indicator >= 1, Link has definitely woken up
+    // Fallback: if progress_indicator >= 1, the player has definitely woken up
     if (heap[progPtr] >= 1) newCompleted.add('event-link-wakes-up');
     // Direct memory read fallback: player_sleep_in_bed_state >= 2
     const roomFlagsPtr = mod.ccall('WasmGetRoomFlags', 'number', [], []) as number;

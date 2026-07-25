@@ -2,10 +2,15 @@
 /**
  * Builds a SimObservation from live game state. The real location comes from the
  * game UI-state buffer; the virtual location is that same spot expressed as a
- * known screen id (via screen detection) plus Link's pixel→tile conversion.
+ * known screen id (via screen detection) plus the player's pixel→tile conversion.
  * Inventory is the tracker's Set; flags are independent SRAM copies for diffing.
  */
-import type { SimObservation, VirtualLink, FlagSnapshot } from '@shared/game/simulation';
+import type { SimObservation, VirtualPlayer, FlagSnapshot, SimLocation, SimulatorPort } from '@shared/game/simulation';
+import type { EngineState } from '@shared/game/simulation';
+import type { TileReq } from '@shared/game/navigation/tile-attrs';
+import { SCREEN_BY_ID } from '@shared/game/data/screens';
+import { detectScreenExits } from './screen-exits';
+import type { DetectedScreen } from './screen-exits';
 import { emptySnapshot, buildPresenceState, emptyPresenceState } from '@shared/game/simulation';
 import type { MapState } from '@shared/game/types';
 import type { VariantGameState } from '@shared/game/data/screens';
@@ -13,17 +18,18 @@ import { resolveCurrentScreen } from '@shared/game/data/screens';
 import { linkStartTile } from '@shared/game/navigation/link-start-tile';
 import { wasmGetProgressIndicator, wasmReadFlagSnapshot } from '../';
 import { getCompletedChecks, getCurrentInventory, pollInventoryState } from '../tracker';
+import { screenOriginFor } from '../flood';
 import { readMapState } from './read-game-state';
 
-const IDLE_VIRTUAL: VirtualLink = { screenId: 'unknown', tile: { row: 0, col: 0 } };
+const IDLE_VIRTUAL: VirtualPlayer = { screenId: 'unknown', tile: { row: 0, col: 0 } };
 
-const virtualFrom = (map: MapState): VirtualLink => {
+const virtualFrom = (map: MapState): VirtualPlayer => {
   // Feed the SAME disambiguation context the navigation widget's useScreenDetection
   // uses (entranceId/whichEntrance + palaceIndex + progressTier + completedChecks).
   // An indoor roomIndex is not unique on its own — an interior can share a room
-  // value with a dungeon room (e.g. the seed run started in Hyrule Castle "Water
-  // Room" 0x11 during the rain intro, whose room value collided with a Kakariko
-  // interior, mis-seeding virtual Link there until the first hop). palaceIndex
+  // value with a dungeon room (e.g. the seed run started in the first castle's
+  // "Water Room" 0x11 during the rain intro, whose room value collided with a
+  // village interior, mis-seeding the virtual player there until the first hop). palaceIndex
   // steers the resolver to the dungeon match and whichEntrance disambiguates
   // shared-room interiors, so the first observe resolves correctly.
   const variantState: VariantGameState = {
@@ -36,8 +42,9 @@ const virtualFrom = (map: MapState): VirtualLink => {
   );
   const screenId = screen?.id ?? (map.isIndoors ? `room:${map.roomIndex}` : `ow:${map.overworldScreenIndex}`);
 
-  const screenWorldX = map.isIndoors ? Math.floor(map.linkX / 512) * 512 : (map.overworldScreenIndex & 7) * 512;
-  const screenWorldY = map.isIndoors ? Math.floor(map.linkY / 512) * 512 : ((map.overworldScreenIndex >> 3) & 7) * 512;
+  const { x: screenWorldX, y: screenWorldY } = screenOriginFor({
+    isIndoors: map.isIndoors, linkX: map.linkX, linkY: map.linkY, screenIndex: map.overworldScreenIndex,
+  });
   const tile = linkStartTile({ linkX: map.linkX, linkY: map.linkY, screenWorldX, screenWorldY });
 
   return { screenId, tile };
@@ -79,3 +86,78 @@ const observe = (): SimObservation => {
 };
 
 export { observe };
+
+// ─── Shared runner-loop pieces ───────────────────────────────────────────────
+// The widget runner and the headless `--sim-run` driver both step the engine, and
+// both needed the same four things around it. They each had their own verbatim
+// copy (including the cache key), so a fix to one silently missed the other.
+
+const TILE_REQS: readonly string[] = ['lift.1', 'lift.2', 'lift.3', 'hammer', 'boots', 'flippers', 'hookshot'];
+
+/** Detect results cached per screen + epoch + entry region. */
+type DetectCache = Map<string, DetectedScreen | null>;
+
+/** Flood inventory from the engine's reach tokens (always includes bare-hands lift). */
+const floodItems = (state: EngineState): TileReq[] => {
+  const items = new Set<TileReq>(['lift.1']);
+  for (const t of state.reachTokens) if (TILE_REQS.includes(t)) items.add(t as TileReq);
+  return [...items];
+};
+
+/** The SimLocation a screen id refers to, or null when it isn't a known screen. */
+const locationForScreen = (screenId: string): SimLocation | null => {
+  const screen = SCREEN_BY_ID.get(screenId);
+  if (!screen) return null;
+  const isIndoors = screen.type !== 'overworld';
+  const roomIndex = screen.roomIndex ?? 0;
+  return { isIndoors, roomId: isIndoors ? roomIndex : 0, owScreenIndex: isIndoors ? 0 : roomIndex };
+};
+
+/**
+ * Detect (flood + exits) the virtual player's current screen, cached per epoch.
+ * Keyed by entry REGION (quantized tile) too — a room re-entered through a
+ * different door floods a different region and needs its own detection.
+ */
+const detectFor = (state: EngineState, cache: DetectCache): DetectedScreen | null => {
+  const t = state.virtual.tile;
+  const key = `${state.virtual.screenId}#${state.epoch}#${t.row >> 4},${t.col >> 4}`;
+  if (!cache.has(key)) {
+    cache.set(key, detectScreenExits(state.virtual.screenId, { entryTile: state.virtual.tile, items: floodItems(state) }));
+  }
+  return cache.get(key) ?? null;
+};
+
+/** Pull grids + room interactables + detected exits for the current screen. */
+const buildObservation = (port: SimulatorPort, state: EngineState, cache: DetectCache, itemReceived?: number): SimObservation => {
+  const base = port.observe();
+  const loc = locationForScreen(state.virtual.screenId);
+  if (!loc) return { ...base, itemReceived };
+  // The room queries decode dungeon-indexed room tables; outdoor screens read the
+  // overworld sprite table instead. Overworld chests and doors don't exist as
+  // interactables (standing items and secrets come later), so only sprites are supplied.
+  const interactables = loc.isIndoors
+    ? {
+        chests: port.getRoomChests(loc.roomId),
+        sprites: port.getRoomSprites(loc.roomId),
+        doors: port.getRoomDoors(loc.roomId),
+        tags: port.getRoomTags(loc.roomId),
+      }
+    : { chests: [], sprites: port.getOverworldSprites(loc.owScreenIndex), doors: [] };
+  const detected = detectFor(state, cache);
+  return {
+    ...base,
+    grids: port.getScreenGrids(loc),
+    interactables,
+    itemReceived,
+    exits: detected?.exits,
+    reached: detected?.reached,
+  };
+};
+
+const nextFrame = (): Promise<void> => new Promise((resolve) => requestAnimationFrame(() => resolve()));
+
+/** Two frames so a triggered delivery has landed before the next observation. */
+const waitAfterTrigger = async (): Promise<void> => { await nextFrame(); await nextFrame(); };
+
+export { buildObservation, detectFor, floodItems, locationForScreen, nextFrame, waitAfterTrigger };
+export type { DetectCache };

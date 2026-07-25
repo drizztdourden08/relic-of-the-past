@@ -2,7 +2,6 @@
 import { describe, it, expect } from 'vitest';
 import type { SimChest, SimSprite, SimObservation, FlagSnapshot } from '../../shared/game/simulation/types';
 import type { PresenceGameState } from '../../shared/game/simulation/presence/state';
-import type { FloodFillResult } from '../../shared/game/navigation/types';
 import { createEngineState } from '../../shared/game/simulation/engine/state';
 import { discoverTargets, hasReachableOpenTile } from '../../shared/game/simulation/engine/discover';
 import { emptySnapshot } from '../../shared/game/simulation/detect/flag-snapshot';
@@ -34,11 +33,11 @@ const makeChest = (tile: { row: number; col: number }): SimChest => ({
   itemId: 0x12,
 });
 
-/** Builds a flood result whose `reachable` grid is the given rows (0/1). */
-const floodFrom = (rows: number[][]): FloodFillResult => ({ reachable: rows }) as unknown as FloodFillResult;
+/** The detect flood's `reached` grid (booleans), written here as 0/1 for clarity. */
+const floodFrom = (rows: number[][]): boolean[][] => rows.map((r) => r.map(Boolean));
 
 /** A grid where only the tile two rows below `(r,c)` is reachable (left column). */
-const openBelowLeft = (r: number, c: number): FloodFillResult => {
+const openBelowLeft = (r: number, c: number): boolean[][] => {
   const rows: number[][] = [];
   for (let row = 0; row <= r + 2; row++) rows.push(new Array(c + 2).fill(0));
   rows[r + 2][c] = 1;

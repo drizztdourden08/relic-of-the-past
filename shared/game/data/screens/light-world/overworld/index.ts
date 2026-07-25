@@ -32,7 +32,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-03', name: 'Tower of Hera NW',
+    id: 'lw-03', name: 'Mountain Tower NW',
     type: 'overworld', world: 'light',
     location: 'Death Mountain', area: 'Death Mountain',
     roomIndex: 0x03,
@@ -40,7 +40,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-04', name: 'Tower of Hera NE',
+    id: 'lw-04', name: 'Mountain Tower NE',
     type: 'overworld', world: 'light',
     location: 'Death Mountain', area: 'Death Mountain',
     roomIndex: 0x04,
@@ -64,7 +64,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-07', name: 'Turtle Rock',
+    id: 'lw-07', name: 'Eastern Summit',
     type: 'overworld', world: 'light',
     location: 'Death Mountain', area: 'Death Mountain',
     roomIndex: 0x07,
@@ -96,7 +96,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-0b', name: 'Tower of Hera SW',
+    id: 'lw-0b', name: 'Mountain Tower SW',
     type: 'overworld', world: 'light',
     location: 'Death Mountain', area: 'Death Mountain',
     roomIndex: 0x0B,
@@ -104,7 +104,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-0c', name: 'Tower of Hera SE',
+    id: 'lw-0c', name: 'Mountain Tower SE',
     type: 'overworld', world: 'light',
     location: 'Death Mountain', area: 'Death Mountain',
     roomIndex: 0x0C,
@@ -128,7 +128,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-0f', name: 'Zora Falls Outskirts',
+    id: 'lw-0f', name: 'River Falls Outskirts',
     type: 'overworld', world: 'light',
     location: 'Death Mountain', area: 'Death Mountain',
     roomIndex: 0x0F,
@@ -144,7 +144,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-11', name: 'Kakariko Psychics',
+    id: 'lw-11', name: 'Village Psychics',
     type: 'overworld', world: 'light',
     location: 'Kakariko Village', area: 'Kakariko',
     roomIndex: 0x11,
@@ -192,7 +192,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-17', name: 'Zora Ridge',
+    id: 'lw-17', name: 'River Ridge',
     type: 'overworld', world: 'light',
     location: 'Eastern Hyrule', area: 'East Hyrule',
     roomIndex: 0x17,
@@ -200,7 +200,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-18', name: 'Kakariko NW',
+    id: 'lw-18', name: 'Village NW',
     type: 'overworld', world: 'light',
     location: 'Kakariko Village', area: 'Kakariko',
     roomIndex: 0x18,
@@ -208,7 +208,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-19', name: 'Kakariko NE',
+    id: 'lw-19', name: 'Village NE',
     type: 'overworld', world: 'light',
     location: 'Kakariko Village', area: 'Kakariko',
     roomIndex: 0x19,
@@ -224,7 +224,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-1b', name: 'Hyrule Castle NW',
+    id: 'lw-1b', name: 'First Castle NW',
     type: 'overworld', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x1B,
@@ -232,7 +232,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-1c', name: 'Hyrule Castle NE',
+    id: 'lw-1c', name: 'First Castle NE',
     type: 'overworld', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x1C,
@@ -264,7 +264,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-20', name: 'Kakariko SW',
+    id: 'lw-20', name: 'Village SW',
     type: 'overworld', world: 'light',
     location: 'Kakariko Village', area: 'Kakariko',
     roomIndex: 0x20,
@@ -272,7 +272,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-21', name: 'Kakariko SE',
+    id: 'lw-21', name: 'Village SE',
     type: 'overworld', world: 'light',
     location: 'Kakariko Village', area: 'Kakariko',
     roomIndex: 0x21,
@@ -288,7 +288,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-23', name: 'Hyrule Castle SW',
+    id: 'lw-23', name: 'First Castle SW',
     type: 'overworld', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x23,
@@ -296,7 +296,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-24', name: 'Hyrule Castle SE',
+    id: 'lw-24', name: 'First Castle SE',
     type: 'overworld', world: 'light',
     location: 'Hyrule Castle', area: 'Hyrule Castle',
     roomIndex: 0x24,
@@ -328,7 +328,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-28', name: 'Kakariko Maze',
+    id: 'lw-28', name: 'Village Maze',
     type: 'overworld', world: 'light',
     location: 'Kakariko Village', area: 'Kakariko',
     roomIndex: 0x28,
@@ -336,7 +336,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-29', name: 'Kakariko South Annex',
+    id: 'lw-29', name: 'Village South Annex',
     type: 'overworld', world: 'light',
     location: 'Kakariko Village', area: 'Kakariko',
     roomIndex: 0x29,
@@ -416,7 +416,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-33', name: 'Hyrule Wetlands NW',
+    id: 'lw-33', name: 'Central Wetlands NW',
     type: 'overworld', world: 'light',
     location: 'Lake Hylia', area: 'Lake Hylia',
     roomIndex: 0x33,
@@ -424,7 +424,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-34', name: 'Hyrule Wetlands NE',
+    id: 'lw-34', name: 'Central Wetlands NE',
     type: 'overworld', world: 'light',
     location: 'Lake Hylia', area: 'Lake Hylia',
     roomIndex: 0x34,
@@ -432,7 +432,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-35', name: 'Lake Hylia NW',
+    id: 'lw-35', name: 'Great Lake NW',
     type: 'overworld', world: 'light',
     location: 'Lake Hylia', area: 'Lake Hylia',
     roomIndex: 0x35,
@@ -440,7 +440,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-36', name: 'Lake Hylia NE',
+    id: 'lw-36', name: 'Great Lake NE',
     type: 'overworld', world: 'light',
     location: 'Lake Hylia', area: 'Lake Hylia',
     roomIndex: 0x36,
@@ -488,7 +488,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-3c', name: 'Hyrule Wetlands Terrace',
+    id: 'lw-3c', name: 'Central Wetlands Terrace',
     type: 'overworld', world: 'light',
     location: 'Lake Hylia', area: 'Lake Hylia',
     roomIndex: 0x3C,
@@ -496,7 +496,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-3d', name: 'Lake Hylia SW',
+    id: 'lw-3d', name: 'Great Lake SW',
     type: 'overworld', world: 'light',
     location: 'Lake Hylia', area: 'Lake Hylia',
     roomIndex: 0x3D,
@@ -504,7 +504,7 @@ const LIGHT_WORLD_OVERWORLD_SCREENS: ScreenDefinition[] = [
     tags: ['env:outdoor'],
   },
   {
-    id: 'lw-3e', name: 'Lake Hylia SE',
+    id: 'lw-3e', name: 'Great Lake SE',
     type: 'overworld', world: 'light',
     location: 'Lake Hylia', area: 'Lake Hylia',
     roomIndex: 0x3E,

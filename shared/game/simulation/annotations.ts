@@ -1,0 +1,63 @@
+/* @layer shared-game @kind types */
+/**
+ * ScreenAnnotations — the one description of "what is on this screen and what
+ * state is it in", derived from the simulator's own discovery so the overlay, the
+ * minimaps and the widget panel cannot disagree with the run.
+ *
+ * Deliberately a GENERATOR, not a checklist: annotations come from the same
+ * interactable reads the engine gates targets on, so a mechanic the simulator
+ * learns to find shows up here automatically. A kind with no renderer is a test
+ * failure (see the renderer registry), and an unmapped kind still draws as a
+ * neutral marker — a new mechanic can never ship invisible.
+ */
+import type { GridPos } from '../navigation/types';
+
+type AnnotationKind =
+  // Pickups & checks
+  | 'chest' | 'big-chest' | 'npc-check' | 'standing-item'
+  // Locks & barriers
+  | 'key-door' | 'big-key-door' | 'cell-lock' | 'shutter' | 'bombable' | 'follower-gate'
+  // Triggers
+  | 'pull-switch' | 'kill-trigger' | 'key-carrier' | 'big-key-carrier'
+  // Ways off the screen
+  | 'warp-door' | 'exit-door' | 'stair' | 'walk-boundary' | 'fall-hole' | 'entrance' | 'exit'
+  // Anything the simulator reports that has no mapping yet.
+  | 'unknown';
+
+/** Display state. `shut`/`open` are physical; the rest are check progress. */
+type AnnotationState = 'open' | 'shut' | 'done' | 'available' | 'blocked';
+
+interface ScreenAnnotation {
+  kind: AnnotationKind;
+  tile: GridPos;
+  /** BG layer the thing sits on, when it is layer-specific. */
+  layer?: 0 | 1;
+  /** Short human label — "Map Chest", "cell lock #1", "Corridor to Jail Cells". */
+  label: string;
+  state?: AnnotationState;
+  /** Secondary line: item name, destination screen, walk distance. */
+  detail?: string;
+  /** Traversal tokens this thing demands ('smallkey:*', 'bigkey:*', 'sword'…). */
+  requires?: string[];
+  /** For a way off the screen: the screen id it leads to. */
+  target?: string;
+}
+
+/** One room-header TAG byte, decoded. Screen-wide, so it has no tile. */
+interface ScreenTag {
+  value: number;
+  name: string;
+}
+
+interface ScreenAnnotations {
+  screenId: string;
+  /** Room id indoors, overworld screen index outdoors — for world placement. */
+  screenIndex: number;
+  items: ScreenAnnotation[];
+  /** Check progress for this screen, for the minimap badge. */
+  checks: { done: number; available: number; blocked: number };
+  /** Decoded room tags — what mechanic the room header arms. Indoors only. */
+  tags?: readonly ScreenTag[];
+}
+
+export type { AnnotationKind, AnnotationState, ScreenAnnotation, ScreenAnnotations, ScreenTag };

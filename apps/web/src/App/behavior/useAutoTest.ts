@@ -4,16 +4,17 @@
  * ║  THIS TEST MUST NEVER BE MODIFIED BY THE AI             ║
  * ╚══════════════════════════════════════════════════════════╝
  *
- * Auto-test hook — reacts to CLI args --auto-state=N --screenshot=NAME.
+ * Auto-test hook — reacts to CLI args --auto-state=N|NAME --screenshot=NAME.
  * When present, automatically:
  *   1. Starts the game with the current profile
- *   2. Loads save state slot N
+ *   2. Loads the requested state — a number is a quick-save slot, a string is a
+ *      manual (normal) save's name
  *   3. Waits for rendering to settle
  *   4. Captures a screenshot via the main process
  */
 
 import { useEffect, useRef } from 'react';
-import { subscribeGameState, loadState } from '../../lib/game';
+import { subscribeGameState, loadStateRef } from '../../lib/game';
 import { log } from '../../lib/log-bus';
 
 interface AutoTestDeps {
@@ -55,8 +56,9 @@ const useAutoTest = ({ activeProfile, loadProfileForGame }: AutoTestDeps) => {
 
       // Load save state if requested
       if (args.autoState !== null) {
-        log.app(`[AutoTest] Loading state slot ${args.autoState}...`);
-        await loadState(args.autoState);
+        const kind = typeof args.autoState === 'number' ? 'quick slot' : 'manual save';
+        log.app(`[AutoTest] Loading ${kind} ${args.autoState}...`);
+        await loadStateRef(args.autoState);
         // Wait for a few frames to render
         await new Promise((r) => setTimeout(r, 2000));
       }

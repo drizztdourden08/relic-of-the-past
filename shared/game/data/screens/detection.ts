@@ -7,6 +7,7 @@
 
 import type { ScreenDefinition, VariantCondition } from '../../types';
 import { ALL_SCREENS } from './index';
+import { scanForRoom } from './palace-fallback';
 
 // ─── Variant Resolution ──────────────────────────────────────────────────────
 
@@ -161,15 +162,13 @@ const resolveCurrentScreenDetailed = (isIndoors: boolean, palaceIndex: number, r
       if (dungeon) return { screen: dungeon, method: 'exact' };
 
       // 3. Dungeon fallback — scan all palace variants for this room
-      for (const [key, screen] of lookup.byDungeonRoom) {
-        if (key.endsWith(`:${roomIndex}`)) {
-          const storedPalace = parseInt(key.split(':')[0], 10);
-          return {
-            screen,
-            method: 'palace-scan',
-            palaceMismatch: { expected: storedPalace, actual: palaceIndex },
-          };
-        }
+      const scanned = scanForRoom(lookup.byDungeonRoom, roomIndex, palaceIndex);
+      if (scanned) {
+        return {
+          screen: scanned.screen,
+          method: 'palace-scan',
+          palaceMismatch: { expected: scanned.expected, actual: palaceIndex },
+        };
       }
     }
 
@@ -187,15 +186,13 @@ const resolveCurrentScreenDetailed = (isIndoors: boolean, palaceIndex: number, r
 
     // 5. Fallback: palace unknown (0xFF) but room might belong to a dungeon
     if (dungeonIdx > 12) {
-      for (const [key, screen] of lookup.byDungeonRoom) {
-        if (key.endsWith(`:${roomIndex}`)) {
-          const storedPalace = parseInt(key.split(':')[0], 10);
-          return {
-            screen,
-            method: 'palace-scan',
-            palaceMismatch: { expected: storedPalace, actual: palaceIndex },
-          };
-        }
+      const scanned = scanForRoom(lookup.byDungeonRoom, roomIndex, palaceIndex);
+      if (scanned) {
+        return {
+          screen: scanned.screen,
+          method: 'palace-scan',
+          palaceMismatch: { expected: scanned.expected, actual: palaceIndex },
+        };
       }
     }
     return null;

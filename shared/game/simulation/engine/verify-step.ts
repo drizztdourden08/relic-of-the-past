@@ -27,7 +27,7 @@ const verifyStep = (s: EngineState, obs: SimObservation, events: SimEvent[]): vo
 
   if (target?.action.type === 'trapShutters') { emitTrapClosed(s, events, target.action.roomId); return; }
   if (target?.action.type === 'pullSwitch') { emitSwitchPulled(s, events, target.key, target.action.roomId); return; }
-  if (target?.action.type === 'progress' && target.action.step === 'zelda-follow') { emitFollower(s, events, target.key); return; }
+  if (target?.action.type === 'progress' && target.action.step === 'follower-join') { emitFollower(s, events, target.key); return; }
   if (target?.action.type === 'door') { emitDoorUnlock(s, events, target.label, target.key, target.action.doorKind === 'small-key'); return; }
   if (target?.action.type === 'kill' && target.action.opensShutters && target.action.itemId === 0xff) { emitShutterClear(s, events, target.label, target.key); return; }
   const { name, matched } = matchDiffs(diffs);
@@ -45,7 +45,7 @@ const verifyStep = (s: EngineState, obs: SimObservation, events: SimEvent[]): vo
   if (itemReceived) events.push(narrative(s, shown !== UNKNOWN ? `Got "${itemReceived}" (${shown})` : `Got "${itemReceived}"`));
   events.push({ ...narrative(s, `Verified ${shown}`), data: { detected } });
   // A drop-kill that satisfied the room's kill tag (last living killable)
-  // reopens the trap shutters the game closed behind Link.
+  // reopens the trap shutters the game closed behind the player.
   if (target?.action.type === 'kill' && target.action.opensShutters && target.action.itemId !== 0xff) {
     s.trapClosed.delete(target.screenId);
     events.push(narrative(s, `Defeated ${target.label} — shutter doors reopened`));

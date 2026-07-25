@@ -39,7 +39,7 @@ interface PauseMenuData {
   progressIndicator: number;
   /** Heart pieces collected (0-3) */
   heartPieces: number;
-  /** Whether Link is currently in a dungeon (palace) */
+  /** Whether the player is currently in a dungeon (palace) */
   isInDungeon: boolean;
   /** Dungeon big keys bitmask */
   bigKeys: number;

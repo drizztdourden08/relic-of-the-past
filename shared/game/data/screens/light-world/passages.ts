@@ -3,7 +3,7 @@ import type { ScreenDefinition } from '../../../types';
 
 const LW_PASSAGES: ScreenDefinition[] = [
   { id: 'hyrule-castle-secret-passage', name: 'Secret Passage', type: 'interior', world: 'light', location: 'Hyrule Castle', area: 'Hyrule Castle', roomIndex: 0x55, interior: { kind: 'passage' }, tags: ['env:underground', 'role:connector'] },
-  { id: 'hyrule-castle-secret-entrance', name: 'Hyrule Castle Secret Entrance', type: 'interior', world: 'light', location: 'Hyrule Castle', area: 'Hyrule Castle', roomIndex: 0x0126, interior: { kind: 'passage' }, tags: ['env:underground', 'role:connector'] },
+  { id: 'hyrule-castle-secret-entrance', name: 'First Castle Secret Entrance', type: 'interior', world: 'light', location: 'Hyrule Castle', area: 'Hyrule Castle', roomIndex: 0x0126, interior: { kind: 'passage' }, tags: ['env:underground', 'role:connector'] },
   { id: 'old-man-cave', name: 'Old Man Cave', type: 'interior', world: 'light', location: 'Death Mountain', area: 'Death Mountain', roomIndex: 0xF0, interior: { kind: 'passage' }, tags: ['env:underground', 'role:connector'] },
   { id: 'spectacle-rock-cave-bottom', name: 'Spectacle Rock Cave (Bottom)', type: 'interior', world: 'light', location: 'Death Mountain', area: 'Death Mountain', roomIndex: 0xE3, interior: { kind: 'passage' }, tags: ['env:underground', 'role:connector'] },
   { id: 'spectacle-rock-cave-peak', name: 'Spectacle Rock Cave (Peak)', type: 'interior', world: 'light', location: 'Death Mountain', area: 'Death Mountain', roomIndex: 0xE2, interior: { kind: 'passage' }, tags: ['env:underground', 'role:connector'] },

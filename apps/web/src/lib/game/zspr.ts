@@ -1,17 +1,17 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * ZSPR (ALttP custom sprite) parsing + a small preview renderer for the Link sprite picker.
- * Format: "ZSPR" magic, then little-endian header fields; 0x7000 bytes of 4bpp Link gfx + a palette block.
+ * ZSPR (community custom-sprite format) parsing + a small preview renderer for the sprite picker.
+ * Format: "ZSPR" magic, then little-endian header fields; 0x7000 bytes of 4bpp player gfx + a palette block.
  * The core applies these the same way (see emscripten_main.c ApplyCustomLinkGraphics).
  */
 import { decode4bppTile } from '@shared/asset-extraction/graphics';
 
 interface ZsprData {
-  pixels: Uint8Array; // 0x7000 bytes of 4bpp Link tiles
+  pixels: Uint8Array; // 0x7000 bytes of 4bpp player tiles
   palette: Uint8Array; // raw SNES BGR555 palette block
 }
 
-const LINK_PIXELS = 0x7000;
+const PLAYER_PIXELS = 0x7000;
 
 const word = (b: Uint8Array, i: number): number => b[i] | (b[i + 1] << 8);
 const dword = (b: Uint8Array, i: number): number => b[i] | (b[i + 1] << 8) | (b[i + 2] << 16) | (b[i + 3] << 24);
@@ -25,11 +25,11 @@ const parseZspr = (bytes: Uint8Array): ZsprData | null => {
   const pixelLen = word(bytes, 13);
   const palOffs = dword(bytes, 15);
   const palLen = word(bytes, 19);
-  if (pixelLen !== LINK_PIXELS || pixelOffs + pixelLen > bytes.length || palOffs + palLen > bytes.length) return null;
-  return { pixels: bytes.subarray(pixelOffs, pixelOffs + LINK_PIXELS), palette: bytes.subarray(palOffs, palOffs + palLen) };
+  if (pixelLen !== PLAYER_PIXELS || pixelOffs + pixelLen > bytes.length || palOffs + palLen > bytes.length) return null;
+  return { pixels: bytes.subarray(pixelOffs, pixelOffs + PLAYER_PIXELS), palette: bytes.subarray(palOffs, palOffs + palLen) };
 };
 
-// Front-facing standing Link, top-left of the sheet: 2 cols x 3 rows (16x24). The sheet is 16 tiles wide.
+// Front-facing standing pose, top-left of the sheet: 2 cols x 3 rows (16x24). The sheet is 16 tiles wide.
 const PREVIEW_TILES = [0, 1, 16, 17, 32, 33];
 const PREVIEW_COLS = 2;
 const PREVIEW_W = PREVIEW_COLS * 8;
@@ -40,7 +40,7 @@ const snesColor = (pal: Uint8Array, idx: number): [number, number, number] => {
   return [(c & 31) * 8, ((c >> 5) & 31) * 8, ((c >> 10) & 31) * 8];
 };
 
-/** Render the standing-Link preview to a PNG data URL, or null if the bytes aren't a valid ZSPR. */
+/** Render the standing-pose preview to a PNG data URL, or null if the bytes aren't a valid ZSPR. */
 const decodeZsprPreview = (bytes: Uint8Array): string | null => {
   const z = parseZspr(bytes);
   if (!z) return null;

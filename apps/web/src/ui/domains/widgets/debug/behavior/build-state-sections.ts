@@ -47,7 +47,7 @@ const buildStateSections = (state: GameUIState, fps?: number): StateSectionData[
       { label: 'Entrance', value: hex(map.whichEntrance), mono: true },
       { label: 'Floor', value: String(map.currentFloor) },
       { label: 'Layer', value: map.linkLayer === 0 ? 'Upper' : 'Lower' },
-      { label: 'Link X / Y', value: `${map.linkX}, ${map.linkY}`, mono: true },
+      { label: 'Player X / Y', value: `${map.linkX}, ${map.linkY}`, mono: true },
     ] },
     { title: 'HUD', rows: [
       { label: 'Hearts', value: formatHearts(hud.healthCurrent, hud.healthCapacity), mono: true },
