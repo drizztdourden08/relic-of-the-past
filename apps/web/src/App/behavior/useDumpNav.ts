@@ -10,7 +10,7 @@
 import { useEffect, useRef } from 'react';
 import {
   subscribeGameState,
-  loadState,
+  loadStateRef,
   wasmGetViewportInfo,
   wasmGetGameUIState,
   wasmGetExitScreenMap,
@@ -67,11 +67,12 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
       });
       if (cancelled) return;
 
-      console.log(`[DumpNav] Game running. Loading state slot ${slot}...`);
-      const loadResult = await loadState(slot);
-      console.log(`[DumpNav] loadState(${slot}) returned: ${loadResult}`);
+      const kind = typeof slot === 'number' ? 'quick slot' : 'manual save';
+      console.log(`[DumpNav] Game running. Loading ${kind} ${slot}...`);
+      const loadResult = await loadStateRef(slot);
+      console.log(`[DumpNav] load ${kind} ${slot} returned: ${loadResult}`);
       if (!loadResult) {
-        const dump = { slot, error: `loadState(${slot}) returned false — save state not found or module not ready` };
+        const dump = { slot, error: `loading ${kind} "${slot}" returned false — state not found or module not ready` };
         await window.api.writeDumpNav(dump);
         setTimeout(() => window.close(), 500);
         return;

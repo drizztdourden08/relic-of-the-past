@@ -7,11 +7,14 @@
  * Test automation IPC handlers.
  *
  * CLI args consumed by the renderer:
- *   --auto-state=N    Load save state slot N after game starts
+ *   --auto-state=N    Load quick-save slot N after game starts
+ *   --auto-state=NAME Load the MANUAL (normal) save called NAME — names are stable
+ *                     and quick-save can never overwrite them, so automation and
+ *                     regression baselines pin to a name instead of a slot index
  *   --screenshot=NAME Capture window to tests/screenshots/{NAME}.png after state load
  *
  * The renderer calls these IPC channels:
- *   test:getArgs       → returns { autoState: number | null, screenshot: string | null }
+ *   test:getArgs       → returns { autoState: number | string | null, screenshot: string | null }
  *   test:screenshot    → captures BrowserWindow to the given path, returns path
  */
 
@@ -20,13 +23,18 @@ import { join } from 'path';
 import { handle } from '../lib/ipc/handle';
 import { writeFile, mkdir } from 'fs/promises';
 
-const parseTestArgs = (): { autoState: number | null; screenshot: string | null } => {
-  let autoState: number | null = null;
+const parseTestArgs = (): { autoState: number | string | null; screenshot: string | null } => {
+  let autoState: number | string | null = null;
   let screenshot: string | null = null;
 
   for (const arg of process.argv) {
-    const stateMatch = arg.match(/^--auto-state=(\d+)$/);
-    if (stateMatch) autoState = parseInt(stateMatch[1], 10);
+    // All-digits stays a quick-save slot (unchanged); anything else is a
+    // manual-save name.
+    const stateMatch = arg.match(/^--auto-state=(.+)$/);
+    if (stateMatch) {
+      const raw = stateMatch[1];
+      autoState = /^\d+$/.test(raw) ? parseInt(raw, 10) : raw;
+    }
 
     const ssMatch = arg.match(/^--screenshot=(.+)$/);
     if (ssMatch) screenshot = ssMatch[1];

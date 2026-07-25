@@ -158,14 +158,14 @@ interface InvokeContract {
   'navReview:save': (data: unknown) => Promise<void>;
 
   // Test automation
-  'test:getArgs': () => Promise<{ autoState: number | null; screenshot: string | null }>;
+  'test:getArgs': () => Promise<{ autoState: number | string | null; screenshot: string | null }>;
   'test:screenshot': (name: string) => Promise<string>;
 
   // Debug dumps
   'debug:getDumpLayersSlot': () => Promise<number | null>;
   'debug:getHoverTile': () => Promise<{ col: number; row: number } | null>;
   'debug:dumpLayers': (data: unknown) => Promise<string>;
-  'debug:getDumpNavSlot': () => Promise<number | null>;
+  'debug:getDumpNavSlot': () => Promise<number | string | null>;
   'debug:dumpNav': (data: unknown) => Promise<string>;
   'debug:getSimRunConfig': () => Promise<SimRunConfig | null>;
   'debug:writeSimRun': (data: unknown) => Promise<string>;
