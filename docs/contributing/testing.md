@@ -63,6 +63,8 @@ to prevent. Pass the flag.
 
 ## Playwright
 
-The app changes quickly, so there's no standing Playwright suite — specs go stale within days. Use Playwright only for a one-off check: put the throwaway spec in `tests/scratch/` (which is gitignored), run it, and delete it when you're done. The one permanent spec is `tests/snapshot.spec.ts`.
+Playwright specs are **throwaway by default**. The app changes quickly and specs go stale within days, so a one-off check belongs in `tests/scratch/` (gitignored): write it, run it, delete it.
 
-A few files make up the test harness and shouldn't be changed casually: `apps/desktop/electron/test/ipc-handlers.ts`, `apps/web/src/App/behavior/useAutoTest.ts`, and `tests/snapshot.spec.ts`. If you think one needs to change, check with the maintainer first.
+A spec becomes permanent only when the maintainer asks for it. Those live in `tests/e2e/` with a `.keep.spec.ts` suffix and are documented in that folder's README, which records what each one guards against. Don't add one, or move a spec there, on your own initiative — if a throwaway looks worth keeping, say so and ask.
+
+A few files make up the test harness and shouldn't be changed casually: `apps/desktop/electron/test/ipc-handlers.ts` and `apps/web/src/App/behavior/useAutoTest.ts`. If you think one needs to change, check with the maintainer first.
