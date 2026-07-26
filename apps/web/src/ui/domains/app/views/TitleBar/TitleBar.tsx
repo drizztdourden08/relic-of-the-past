@@ -16,7 +16,8 @@ import { InstanceBadge } from './sub-components/InstanceBadge';
 import { instanceName } from '../../../../../lib/instance';
 import { getFps } from '../../../../../lib/game';
 import { useRefreshRate } from '../../../../../hooks/useRefreshRate';
-import { effectiveHz } from '@shared/display/refresh-rate';
+import { effectiveHz, isSyncedRate } from '@shared/display/refresh-rate';
+import { RefreshRateTag } from './sub-components/RefreshRateTag';
 import './TitleBar.css';
 import {
   MENU_ICON_CIRCLES, PIN_ICON_PATHS, MUTE_ICON_PATHS, VOLUME_ICON_PATHS, SAVE_ICON_PATHS,
@@ -52,6 +53,7 @@ const TitleBar = (props: TitleBarProps) => {
     isMuted = false,
     onToggleMute,
     showFps = false,
+    onShowDisplaySettings,
     updateAvailable = false,
     onUpdateClick,
     onCheckForUpdates,
@@ -181,6 +183,9 @@ const TitleBar = (props: TitleBarProps) => {
         {menuOpen && <DropdownMenu items={menuItems} anchorRef={menuRef} />}
         {showFps && fps > 0 && (
           <Text className="titlebar__fps">{fps} FPS{refreshHz !== null ? ` (${Math.round(refreshHz)} Hz)` : ''}</Text>
+        )}
+        {showFps && fps > 0 && !isSyncedRate(refreshHz) && refreshHz !== null && onShowDisplaySettings && (
+          <RefreshRateTag onClick={onShowDisplaySettings} />
         )}
       </Box>
 

@@ -58,6 +58,7 @@ interface InvokeContract {
   'display:getRefreshRate': () => Promise<RefreshRateInfo>;
   'display:getSyncedRateStatus': () => Promise<SyncedRateStatus>;
   'display:setSyncedRatePreference': (enabled: boolean, targetHz: number) => Promise<SyncedRateStatus>;
+  'display:applyRefreshRate': (hz: number) => Promise<SyncedRateStatus>;
 
   // Dialog
   'dialog:openRom': () => Promise<string | null>;

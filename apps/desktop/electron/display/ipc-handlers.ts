@@ -1,7 +1,7 @@
 /* @layer electron-main @kind logic */
 import { handle } from '../lib/ipc/handle';
 import { readRefreshRate } from './refresh-rate';
-import { readStatus, setPreference } from './mode-switch';
+import { readStatus, setPreference, applyPermanently } from './mode-switch';
 
 const registerDisplayHandlers = (): void => {
   handle('display:getRefreshRate', () => readRefreshRate());
@@ -10,6 +10,7 @@ const registerDisplayHandlers = (): void => {
     setPreference({ enabled, targetHz });
     return readStatus();
   });
+  handle('display:applyRefreshRate', (_event, hz) => applyPermanently(hz));
 };
 
 export { registerDisplayHandlers };

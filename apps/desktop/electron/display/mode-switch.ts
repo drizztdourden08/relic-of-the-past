@@ -126,5 +126,32 @@ const readStatus = (): SyncedRateStatus => {
 /** Last-ditch restore for app shutdown, so a quit from fullscreen cannot strand the display. */
 const restoreOnShutdown = (): void => restore();
 
-export { onFullscreenChange, setPreference, readStatus, restoreOnShutdown, availableSyncedRates };
+/**
+ * Change the rate and keep it — the explicit "Change refresh rate" action, as opposed to the
+ * fullscreen switch. Nothing is recorded for restoring, because the player asked for this to
+ * stick; undoing it means choosing another rate here or in the OS display settings.
+ */
+const applyPermanently = (hz: number): SyncedRateStatus => {
+  const driver = getDisplayModeDriver();
+  lastError = '';
+  if (!driver.available) {
+    lastError = driver.unavailableReason;
+    return readStatus();
+  }
+  const exactRate = syncedRateMap().get(hz);
+  if (exactRate === undefined) {
+    lastError = `this display does not offer ${hz} Hz`;
+    return readStatus();
+  }
+  if (!driver.setRate(exactRate)) {
+    lastError = `the system refused to switch this display to ${hz} Hz`;
+    return readStatus();
+  }
+  // A pending fullscreen restore would drag the display back off the rate just chosen, so it
+  // is dropped: this new rate is now the one to come back to.
+  rateToRestore = null;
+  return readStatus();
+};
+
+export { onFullscreenChange, setPreference, readStatus, restoreOnShutdown, availableSyncedRates, applyPermanently };
 export type { Preference };

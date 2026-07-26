@@ -30,6 +30,8 @@ interface TitleBarProps {
   isMuted?: boolean;
   onToggleMute?: () => void;
   showFps?: boolean;
+  /** Opens the Display settings — used by the incompatible-refresh-rate tag. */
+  onShowDisplaySettings?: () => void;
   updateAvailable?: boolean;
   onUpdateClick?: () => void;
   onCheckForUpdates?: () => void;

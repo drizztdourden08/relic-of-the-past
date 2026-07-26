@@ -1,0 +1,17 @@
+/* @layer renderer-components @kind style */
+.refresh-rate-tag {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+
+.refresh-rate-tag:hover {
+  filter: brightness(1.15);
+}
+
+.refresh-rate-tag:focus-visible {
+  outline: 2px solid var(--c-danger);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}

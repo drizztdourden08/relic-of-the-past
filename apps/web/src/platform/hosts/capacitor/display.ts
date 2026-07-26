@@ -47,6 +47,7 @@ const createCapacitorDisplay = (): DisplayPort => ({
   // No user-facing switch on Android: the platform owns mode selection and only takes a hint.
   getSyncedRateStatus: async () => UNSUPPORTED_SYNCED_RATE,
   setSyncedRatePreference: async () => UNSUPPORTED_SYNCED_RATE,
+  applyRefreshRate: async () => UNSUPPORTED_SYNCED_RATE,
 });
 
 export { createCapacitorDisplay };

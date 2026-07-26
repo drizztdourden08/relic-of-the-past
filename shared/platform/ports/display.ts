@@ -25,6 +25,8 @@ interface DisplayPort {
   getSyncedRateStatus: () => Promise<SyncedRateStatus>;
   /** Store the preference. The host applies it on fullscreen transitions, not here. */
   setSyncedRatePreference: (enabled: boolean, targetHz: number) => Promise<SyncedRateStatus>;
+  /** Change the rate and keep it. Undone only by choosing another rate, here or in the OS. */
+  applyRefreshRate: (hz: number) => Promise<SyncedRateStatus>;
 }
 
 export { UNSUPPORTED_SYNCED_RATE };

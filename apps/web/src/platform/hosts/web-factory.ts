@@ -74,6 +74,7 @@ const createDisplay = (): DisplayPort => ({
   getRefreshRate: async () => ({ reportedHz: null, measuredHz: null, modes: [] }),
   getSyncedRateStatus: async () => UNSUPPORTED_SYNCED_RATE,
   setSyncedRatePreference: async () => UNSUPPORTED_SYNCED_RATE,
+  applyRefreshRate: async () => UNSUPPORTED_SYNCED_RATE,
 });
 
 const createFilePicker = (): FilePickerPort => ({

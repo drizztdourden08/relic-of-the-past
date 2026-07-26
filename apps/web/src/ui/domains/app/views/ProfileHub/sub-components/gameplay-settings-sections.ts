@@ -30,6 +30,9 @@ const SAVE_SECTION: Section = {
 };
 
 const SECTIONS: Section[] = [
+  // Save states live here rather than in a tab of their own: they are part of how the game is
+  // played, not a property of the host.
+  SAVE_SECTION,
   {
     id: 'items',
     title: 'Items',

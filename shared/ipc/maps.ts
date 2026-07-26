@@ -35,6 +35,7 @@ const INVOKE_MAP = {
   getRefreshRate: 'display:getRefreshRate',
   getSyncedRateStatus: 'display:getSyncedRateStatus',
   setSyncedRatePreference: 'display:setSyncedRatePreference',
+  applyRefreshRate: 'display:applyRefreshRate',
   openRomDialog: 'dialog:openRom',
   pickFile: 'dialog:pickFile',
   listProfiles: 'profiles:list',

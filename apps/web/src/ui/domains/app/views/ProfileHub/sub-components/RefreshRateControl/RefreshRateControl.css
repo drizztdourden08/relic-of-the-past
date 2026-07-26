@@ -1,0 +1,54 @@
+/* @layer renderer-components @kind style */
+.refresh-rate {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  align-items: flex-start;
+}
+
+.refresh-rate__description {
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.refresh-rate__status {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  background: var(--c-panel);
+  width: 100%;
+}
+
+.refresh-rate__current {
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+}
+
+.refresh-rate__current-value {
+  color: var(--c-text);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semi);
+}
+
+.refresh-rate__warning {
+  color: var(--c-danger);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.refresh-rate__dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.refresh-rate__dialog-line {
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}

@@ -1,9 +1,18 @@
 /* @layer renderer-components @kind component */
+/**
+ * Display tab — everything about how the game reaches the screen: rendering geometry, camera,
+ * the window it lives in, and the frame pacing between the two. Window and performance used to
+ * sit in a separate "System" tab, which split one subject across two places.
+ */
 import { useMemo, type ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
-import { AspectRatioControl } from './AspectRatioControl';
 import { buildDisplaySection, buildCameraSection } from './SettingsView.display';
+import { buildWindowSection, buildPerformanceSection } from './SettingsView.constants';
+import { renderDisplayControl } from './SettingsView.controls';
+import { useRefreshRate } from '../../../../../../hooks/useRefreshRate';
+import { useSyncedRate } from '../../../../../../hooks/useSyncedRate';
+import { effectiveHz } from '@shared/display/refresh-rate';
 
 interface SettingsViewProps {
   settings: GameSettings;
@@ -44,14 +53,6 @@ const getAspectOptions = (s: GameSettings) => {
   return opts;
 };
 
-const ASPECT_DESCRIPTIONS: Record<string, string> = {
-  auto: "Matches the window size — adapts to notch, resize, and rotation automatically.",
-  screen: "Matches the full physical screen ratio.",
-  wide: 'Choose a standard widescreen preset.',
-  tall: 'Choose a tall (portrait-style) preset.',
-  custom: 'Set an exact width : height ratio.',
-};
-
 // Cascade resets when a capability is disabled: ensure the active ratio is still valid.
 const withCascade = (patch: Partial<GameSettings>, current: GameSettings): Partial<GameSettings> => {
   const cascade = { ...patch };
@@ -71,38 +72,36 @@ const withCascade = (patch: Partial<GameSettings>, current: GameSettings): Parti
   return cascade;
 };
 
-const renderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
-  if (key !== 'aspectRatio') return null;
-  return (
-    <AspectRatioControl
-      label="Aspect Ratio"
-      description="Screen aspect ratio for the game content."
-      value={settings.aspectRatio}
-      options={getAspectOptions(settings)}
-      widePresets={getWidePresets(settings)}
-      tallPresets={settings.tallRendering ? TALL_PRESETS : undefined}
-      descriptions={ASPECT_DESCRIPTIONS}
-      recommendedValue="auto"
-      recommendedNote="Best for most setups — follows your window and adapts to notch or resize."
-      customW={settings.customAspectW}
-      customH={settings.customAspectH}
-      ratioKey="aspectRatio"
-      wKey="customAspectW"
-      hKey="customAspectH"
-      renderIntoNotch={settings.renderIntoNotch}
-      onChange={onChange}
-    />
-  );
-};
-
 const SettingsView = (props: SettingsViewProps) => {
   const { settings, onChange } = props;
   const handleChange = (patch: Partial<GameSettings>) => onChange(withCascade(patch, settings));
 
+  const detectedHz = effectiveHz(useRefreshRate());
+  // Pushing the preference here also arms it for the session; the host applies it on the next
+  // fullscreen transition rather than on this call.
+  const { status: syncedRate } = useSyncedRate(settings.syncedRefreshRate, settings.syncedRefreshRateHz);
+
   const sections = useMemo<Section[]>(() => {
     const camera = buildCameraSection(settings);
-    return [buildDisplaySection(settings), ...(camera ? [camera] : [])];
-  }, [settings]);
+    return [
+      buildDisplaySection(settings),
+      ...(camera ? [camera] : []),
+      buildWindowSection(settings),
+      buildPerformanceSection(detectedHz, syncedRate),
+    ];
+  }, [settings, detectedHz, syncedRate]);
+
+  const renderControl = (key: string, s: GameSettings, change: (patch: Partial<GameSettings>) => void): ReactNode | null =>
+    renderDisplayControl({
+      key,
+      settings: s,
+      onChange: change,
+      aspectOptions: getAspectOptions(s),
+      widePresets: getWidePresets(s),
+      tallPresets: s.tallRendering ? TALL_PRESETS : undefined,
+      syncedRate,
+      detectedHz,
+    });
 
   return (
     <SettingsLayout

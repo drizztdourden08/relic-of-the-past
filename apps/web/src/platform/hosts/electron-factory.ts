@@ -42,6 +42,7 @@ const createDisplay = (): DisplayPort => ({
   getRefreshRate: () => window.api.getRefreshRate(),
   getSyncedRateStatus: () => window.api.getSyncedRateStatus(),
   setSyncedRatePreference: (enabled, targetHz) => window.api.setSyncedRatePreference(enabled, targetHz),
+  applyRefreshRate: (hz) => window.api.applyRefreshRate(hz),
 });
 
 const createStorage = (): StoragePort => ({

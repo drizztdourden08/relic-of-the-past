@@ -21,8 +21,11 @@ const useAppViewCallbacks = (params: AppViewCallbacksParams) => {
   const [dataTab, setDataTab] = useState<string>('profiles');
   const [profileHubTab, setProfileHubTab] = useState<ProfileHubTab>('home');
 
-  const handleShowProfile = useCallback(async () => {
+  // The optional tab lets a caller deep-link straight to the settings it is talking about —
+  // the incompatible-refresh-rate tag uses it to land on Display.
+  const handleShowProfile = useCallback(async (tab?: ProfileHubTab) => {
     if (profileMgmt.activeProfile) {
+      if (tab) setProfileHubTab(tab);
       await profileMgmt.refreshProfilesAndRoms();
       nav.setActivePage('profile');
     }
