@@ -19,6 +19,7 @@
  */
 import { wasmGetIndoorUncleBlockers, wasmGetOverworldSpriteSpawns, wasmGetRoomSpriteSpawns, wasmGetViewportInfo } from '../';
 import { getCompletedChecks } from '../tracker';
+import { npcCheckFor } from './annotate/npc-checks';
 import type { GridPos } from '@shared/game/navigation';
 import { GRID_SIZE } from '@shared/game/navigation/types';
 import { originContaining, tileInScreen } from './world-origin';
@@ -26,10 +27,17 @@ import { originContaining, tileInScreen } from './world-origin';
 /** Sprite types that block the BFS. Everything else is walked through. */
 const BLOCKER_SPRITES = new Set([0x3f, 0x40, 0x73]);
 const UNCLE_SPRITE = 0x73;
-/** The uncle stops blocking the moment his check is collected (randomizer-safe). */
-const UNCLE_CHECK = "Link's Uncle";
+/** The room his check lives in — sprite 0x73 spawns in two, and only one is a check. */
+const UNCLE_CHECK_ROOM = 0x55;
 
-const uncleCollected = (): boolean => getCompletedChecks().has(UNCLE_CHECK);
+/**
+ * Has his check been collected? Asked by SPRITE ID, never by name: the check
+ * table owns the name, and code that repeats it silently stops agreeing with the
+ * table the moment either side is edited (and a randomizer renames the item, not
+ * the check). `npcCheckFor` is the same matcher the simulator triggers through.
+ */
+const uncleCollected = (): boolean =>
+  npcCheckFor(UNCLE_SPRITE, UNCLE_CHECK_ROOM, getCompletedChecks())?.done === true;
 
 /** Every in-bounds tile of the 3×3 footprint centred on (row, col). */
 const footprint = (row: number, col: number): GridPos[] => {

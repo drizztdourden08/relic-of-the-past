@@ -230,7 +230,10 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
     }
   }
 
-  const hasBombs = [...state.inventory].some((n) => n.includes('Bomb'));
+  // Keyed on the traversal token, not on a substring of a display name: matching
+  // 'Bomb' also matches the medallion whose name starts the same way, which would
+  // have handed the run bombs it never picked up.
+  const hasBombs = state.reachTokens.has('bombs');
   // Bombs are permanent once obtained, so any cracked wall is openable from then on.
   if (hasBombs) targets.push(...discoverBombableWalls(state, obs, reached));
   const hasSword = [...state.inventory].some((n) => n.includes('Sword'));

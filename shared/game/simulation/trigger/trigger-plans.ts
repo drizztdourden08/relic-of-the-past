@@ -23,6 +23,11 @@ const planChestTrigger = (chest: SimChest): TriggerAction => ({
  */
 /** Overworld screens from here up are the second world. */
 const DARK_WORLD_SCREEN_BASE = 0x40;
+/** A room is 64 columns of 8px, so X passes 0x100 at column 32. */
+const HALF_ROOM_COLS = 32;
+/** Room-state slots for the two bits a standing heart piece can occupy. */
+const ROOM_BIT_HEART_RIGHT = 5;
+const ROOM_BIT_HEART_LEFT = 6;
 
 const npcConfigForSprite = (spriteType: number, roomId?: number, outdoor?: boolean) =>
   Object.values(CHECK_NPC_FLAGS).find((cfg) => {
@@ -51,11 +56,19 @@ const planSpriteTrigger = (sprite: SimSprite): TriggerAction | null => {
     return { type: 'npc', flagType: cfg.flagType, flagMask: cfg.flagMask, itemId: cfg.itemId };
   }
   if (sprite.kind === 'standing' || sprite.kind === 'overworld') {
-    // The flag lives in save_ow_event_info[screen], and for an outdoor sprite the
-    // "room" IS that screen. Indoors there is no such screen, so a standing item
-    // in a cave has no flag to set here and is left for its own check entry.
-    if (!sprite.outdoor) return null;
-    return { type: 'overworld', screen: sprite.roomId, mask: 0x40, itemId: sprite.itemId ?? 0 };
+    // Outdoors the pickup is an overworld event bit, and the sprite's "room" IS
+    // the screen it stands on.
+    if (sprite.outdoor) {
+      return { type: 'overworld', screen: sprite.roomId, mask: 0x40, itemId: sprite.itemId ?? 0 };
+    }
+    // Indoors there is no screen to flag. The game records the pickup in the
+    // ROOM's own state bits instead (HeartUpgrade_CheckIfAlreadyObtained,
+    // sprite_main.c:1311): live 0x2000 when `sprite_x_hi & 1` — that is, X past
+    // 0x100, so a column in the room's right half — and live 0x4000 otherwise.
+    // Both are room-state slots, which the chest action already writes.
+    const rightHalf = sprite.tile.col >= HALF_ROOM_COLS;
+    const chestIndex = rightHalf ? ROOM_BIT_HEART_RIGHT : ROOM_BIT_HEART_LEFT;
+    return { type: 'chest', roomId: sprite.roomId, chestIndex, itemId: sprite.itemId ?? 0 };
   }
   return null;
 };
