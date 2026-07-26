@@ -48,6 +48,10 @@ interface ViewportInfo {
   cameraLockShiftX: number;
   /** Camera-lock render shift Y (tall view): the rendered view sits at camera − shift. 0 = no lock. */
   cameraLockShiftY: number;
+  /** Non-zero while the player occupies a doorway (its orientation, not a flag). */
+  inDoorway: number;
+  /** Door open/close animation step, 0 when no door is animating. */
+  doorAnimStep: number;
 }
 
 /**
@@ -78,6 +82,8 @@ const wasmGetViewportInfo = (): ViewportInfo | null =>
     const extraTopBottom = u16(24); // tall max budget per side (0 = not tall)
     const cameraLockShiftX = i16(26); // signed: rendered view = camera − shift (wide-view re-centering)
     const cameraLockShiftY = i16(28);
+    const inDoorway = heap[ptr + 30];
+    const doorAnimStep = heap[ptr + 31];
 
     // Black pixels = max extra - actual rendered extra
     const blackLeft = extraLeftRight - extraLeftCur;
@@ -94,7 +100,7 @@ const wasmGetViewportInfo = (): ViewportInfo | null =>
       mainModule, submodule, extraLeftRight, extraLeftCur, extraRightCur, extraTopCur,
       extraBottomCur, extraTopBottom, snesWidth, snesHeight, blackLeft, blackRight, blackTop, blackBottom,
       isGameplay, locationModule, locationType, cameraX, cameraY, linkX, linkY,
-      cameraLockShiftX, cameraLockShiftY,
+      cameraLockShiftX, cameraLockShiftY, inDoorway, doorAnimStep,
     };
   });
 

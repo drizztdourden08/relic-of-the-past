@@ -520,6 +520,8 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_SmoothTransitions);
     } else if (StringEqualsNoCase(key, "Haptics")) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_Haptics);
+    } else if (StringEqualsNoCase(key, "DeveloperTools")) {
+      return ParseBoolBit(value, &g_config.features0, kFeatures0_DeveloperTools);
     }
   }
   return false;

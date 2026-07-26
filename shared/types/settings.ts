@@ -175,6 +175,12 @@ interface GameSettings {
   // Per-device haptics override map, keyed by "vid:pid". Absent key = default
   // (enabled when the device supports vibration). Set false to mute a device.
   hapticDevices?: Record<string, boolean>;
+
+  // ─── Developer ───
+  // Master gate for developer-only instrumentation (transition-settled events, and any future dev-only
+  // GameHook). Off by default: the C hook that would fire these makes zero host-calls when this is off,
+  // same contract as haptics.enabled. Purely observational, never changes gameplay.
+  developerToolsEnabled: boolean;
 }
 
 export type { GameSettings, HapticSettings };
