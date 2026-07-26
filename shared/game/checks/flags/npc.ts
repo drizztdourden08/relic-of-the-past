@@ -38,6 +38,15 @@ interface NpcCheckConfig {
   flagType: number;
   /** Bit mask to OR into the flag byte when triggering */
   flagMask: number;
+  /**
+   * Room flag this check actually lives in, for the NPCs whose completion is
+   * recorded in `save_dung_info[room]` rather than a progress byte. `flagType`
+   * only reaches the three progress bytes, so those configs carried a `flagMask`
+   * of 0 — the trigger set nothing, the run never saw a flag change, and the
+   * check stayed unverified even though its item had been handed over. The bit
+   * is a chest-open bit, so it is named by chest index (CHEST_OPEN_MASKS).
+   */
+  roomFlag?: { roomId: number; chestIndex: number };
   /** Item ID to give via Link_ReceiveItem */
   itemId: number;
   /** Sprite type to find and transition (0xFF = no sprite change) */
@@ -337,6 +346,7 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
   'Potion Shop': {
     bufferIndex: 9, mask: 0x80,
     flagType: 2, flagMask: 0x00,
+    roomFlag: { roomId: 0x109, chestIndex: 3 },
     itemId: 0x0D,
     spriteType: 0x36, postGfx: 0,
     // Sprite_Witch case 0 (core/zelda3/src/sprite_main.c:5851) only reaches the
@@ -382,6 +392,7 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
   'Mini Moldorm Cave - Generous Guy': {
     bufferIndex: 10, mask: 0x40,
     flagType: 2, flagMask: 0x00,
+    roomFlag: { roomId: 0x123, chestIndex: 2 },
     itemId: 0xFF,
     spriteType: 0x28, postGfx: 0,
     visualNote: 'NPC stays in place (fortune teller idle)',
@@ -397,6 +408,7 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
   'Hype Cave - Generous Guy': {
     bufferIndex: 11, mask: 0x40,
     flagType: 2, flagMask: 0x00,
+    roomFlag: { roomId: 0x11E, chestIndex: 2 },
     itemId: 0xFF,
     spriteType: 0x28, postGfx: 0,
     visualNote: 'NPC stays in place (fortune teller idle)',

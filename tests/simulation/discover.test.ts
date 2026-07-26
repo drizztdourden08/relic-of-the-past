@@ -173,9 +173,17 @@ describe('discoverTargets — NPC presence gating', () => {
     expect(discoverTargets(freshState(), obs, null)).toHaveLength(0);
   });
 
-  it('discovers an unconditional NPC regardless of state (Sahasrahla)', () => {
-    const obs = spriteObs(makeSprite(0x16, 'npc', 0x1ea), presenceWith({ progressFlags: 0x10 }));
+  it('discovers the first sage once the pendant is in hand', () => {
+    const obs = spriteObs(makeSprite(0x16, 'npc', 0x1ea), presenceWith({ inventory: new Set(['Green Pendant']) }));
     expect(discoverTargets(freshState(), obs, null)).toHaveLength(1);
+  });
+
+  it('drops the first sage before the pendant, and again once his gift is already held', () => {
+    const before = spriteObs(makeSprite(0x16, 'npc', 0x1ea), presenceWith({ progressFlags: 0x10 }));
+    expect(discoverTargets(freshState(), before, null)).toHaveLength(0);
+    const after = spriteObs(makeSprite(0x16, 'npc', 0x1ea),
+      presenceWith({ inventory: new Set(['Green Pendant', 'Pegasus Boots']) }));
+    expect(discoverTargets(freshState(), after, null)).toHaveLength(0);
   });
 
   it('ignores a non-check sprite (no NPC config → no trigger)', () => {

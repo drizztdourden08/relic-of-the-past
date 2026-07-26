@@ -52,6 +52,10 @@ interface RoomProbe {
   attrRows: Array<{ row: number; raw: string; l0: string; l1: string; reached: string }>;
   /** Whole-room shape: '.' solid, ' ' floor, 'o' obstacle(req), '#' flooded, '*' flooded obstacle. */
   map: string[];
+  /** Whole entrance→room table, so an absent room can be told from a short read. */
+  entranceTable: { size: number; rooms: string };
+  /** Entrance ids landing in nearby rooms — finds the door when this room has none. */
+  neighbourEntrances: Array<{ room: number; ids: number[] }>;
   /** Bounding box of the reached region — shows where the flood actually is. */
   bbox?: { minRow: number; maxRow: number; minCol: number; maxCol: number };
 }
@@ -163,6 +167,19 @@ const probeRoom = (roomId: number, entryTile?: { row: number; col: number }, ite
         rows.push(`${String(row).padStart(2)}|${line}`);
       }
       return rows;
+    })(),
+    entranceTable: {
+      size: rooms?.length ?? 0,
+      rooms: Array.from(rooms ?? []).map((r, i) => `${i}:${r.toString(16)}`).join(' '),
+    },
+    neighbourEntrances: (() => {
+      const out: Array<{ room: number; ids: number[] }> = [];
+      for (let r = roomId - 8; r <= roomId + 8; r++) {
+        const ids: number[] = [];
+        for (let id = 0; id < (rooms?.length ?? 0); id++) if (rooms?.[id] === r) ids.push(id);
+        if (ids.length > 0) out.push({ room: r, ids });
+      }
+      return out;
     })(),
     reachable: detected?.flood.reachableCount ?? 0,
     bbox: run ? (() => {

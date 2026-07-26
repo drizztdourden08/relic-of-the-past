@@ -9,6 +9,8 @@
 import type { ScreenAnnotation } from '@shared/game/simulation';
 import type { SimSprite } from '@shared/game/simulation';
 import { npcCheckFor } from './npc-checks';
+import { standingItemId } from '../../simulator/sprite-kinds';
+import { itemLabel } from '@shared/game/items';
 
 /** Sprite_PullSwitch_bounce covers sprite types 0x04-0x07. */
 const isPullSwitch = (t: number): boolean => t >= 0x04 && t <= 0x07;
@@ -48,7 +50,12 @@ const spriteAnnotation = (sprite: SimSprite, ctx: SpriteContext): ScreenAnnotati
   }
   if (sprite.spriteType === PRINCESS_SPRITE) return { kind: 'npc-check', tile, label: 'Princess' };
   if (sprite.kind === 'npc') return { kind: 'npc-check', tile, label: `npc 0x${sprite.spriteType.toString(16)}` };
-  if (sprite.kind === 'standing' || sprite.kind === 'overworld') return { kind: 'standing-item', tile, label: 'item' };
+  if (sprite.kind === 'standing' || sprite.kind === 'overworld') {
+    // Name what it hands over rather than saying 'item' — the simulator resolves
+    // the same id to decide the pickup, so both agree on what is lying there.
+    const itemId = standingItemId(sprite.spriteType);
+    return { kind: 'standing-item', tile, label: itemId === undefined ? 'item' : itemLabel(itemId) };
+  }
 
   return null;
 };

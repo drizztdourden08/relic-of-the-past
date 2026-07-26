@@ -43,6 +43,11 @@ const planSpriteTrigger = (sprite: SimSprite): TriggerAction | null => {
   if (sprite.kind === 'npc') {
     const cfg = npcConfigForSprite(sprite.spriteType, sprite.roomId, sprite.outdoor);
     if (!cfg) return null;
+    // A room-flag NPC records its completion where the chest bits live, which the
+    // npc action cannot reach — the chest action writes exactly that bit.
+    if (cfg.roomFlag) {
+      return { type: 'chest', roomId: cfg.roomFlag.roomId, chestIndex: cfg.roomFlag.chestIndex, itemId: cfg.itemId };
+    }
     return { type: 'npc', flagType: cfg.flagType, flagMask: cfg.flagMask, itemId: cfg.itemId };
   }
   if (sprite.kind === 'standing' || sprite.kind === 'overworld') {
