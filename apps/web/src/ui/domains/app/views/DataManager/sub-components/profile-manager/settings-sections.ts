@@ -9,7 +9,7 @@ const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label
     keys: [
       { key: 'autosave', label: 'Autosave' },
       { key: 'displayPerfInTitle', label: 'FPS Counter' },
-      { key: 'disableFrameDelay', label: 'Disable Frame Delay' },
+      { key: 'vsync', label: 'V-Sync' },
     ],
   },
   {
@@ -23,6 +23,7 @@ const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label
       { key: 'windowMode', label: 'Window Mode', format: (v) => String(v ?? 'default') },
       { key: 'startFullscreen', label: 'Start Fullscreen' },
       { key: 'viewportConstraint', label: 'Viewport Constraint', format: (v) => String(v ?? 'none') },
+      { key: 'pixelPerfect', label: 'Pixel Perfect' },
     ],
   },
   {

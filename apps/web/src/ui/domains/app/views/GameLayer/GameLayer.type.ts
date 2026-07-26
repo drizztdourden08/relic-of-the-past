@@ -4,6 +4,7 @@ interface GameLayerProps {
   configIni?: string;
   profileId?: string;
   stretch?: boolean;
+  pixelPerfect?: boolean;
   edgeEffect?: boolean;
   shadowCasting?: boolean;
 }

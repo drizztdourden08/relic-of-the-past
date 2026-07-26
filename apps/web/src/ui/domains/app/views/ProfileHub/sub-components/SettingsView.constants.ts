@@ -1,20 +1,25 @@
 /* @layer renderer-components @kind data */
-import type { Section } from '../../../compounds/SettingsLayout';
+import type { GameSettings } from '@shared/types/settings';
+import type { Section, SettingItem } from '../../../compounds/SettingsLayout';
 
-const WINDOW_SECTION: Section = {
-  id: 'window',
-  title: 'Window',
-  subsections: [
-    {
-      id: 'window-mode',
-      title: 'Mode',
-      items: [
-        { key: 'windowMode', label: 'Window Mode', description: 'Window display mode', keywords: 'borderless windowed default' },
-        { key: 'startFullscreen', label: 'Start in Fullscreen', description: 'Automatically enter fullscreen when the game starts', keywords: 'fullscreen launch start' },
-        { key: 'viewportConstraint', label: 'Viewport', description: 'Controls how the game canvas relates to the window', keywords: 'ratio lock constrain aspect black bars stretch fill fit viewport' },
-      ],
-    },
-  ],
+const PIXEL_PERFECT_ITEM: SettingItem = {
+  key: 'pixelPerfect',
+  label: 'Pixel Perfect',
+  description: 'Scale the picture by whole source pixels only, so every pixel is exactly the same size. Removes the shimmer on fences, walls and other straight edges while scrolling, at the cost of slightly wider black borders. Turns Linear Filtering off while active.',
+  keywords: 'pixel perfect integer scale scaling sharp crisp shimmer wobble ripple tearing nearest',
+};
+
+/** Pixel Perfect only has meaning under Letterbox — Fit/Stretch bypass the fit math entirely. */
+const buildWindowSection = (s: GameSettings): Section => {
+  const items: SettingItem[] = [
+    { key: 'windowMode', label: 'Window Mode', description: 'Window display mode', keywords: 'borderless windowed default' },
+    { key: 'startFullscreen', label: 'Start in Fullscreen', description: 'Automatically enter fullscreen when the game starts', keywords: 'fullscreen launch start' },
+    { key: 'viewportConstraint', label: 'Viewport', description: 'Controls how the game canvas relates to the window', keywords: 'ratio lock constrain aspect black bars stretch fill fit viewport' },
+  ];
+
+  if (s.viewportConstraint === 'none') items.push(PIXEL_PERFECT_ITEM);
+
+  return { id: 'window', title: 'Window', subsections: [{ id: 'window-mode', title: 'Mode', items }] };
 };
 
 const PERFORMANCE_SECTION: Section = {
@@ -26,7 +31,7 @@ const PERFORMANCE_SECTION: Section = {
       title: 'Options',
       items: [
         { key: 'displayPerfInTitle', label: 'Show FPS', description: 'Display the current frames per second in the title bar while the game is running', keywords: 'fps performance frame rate counter' },
-        { key: 'disableFrameDelay', label: 'Disable Frame Delay', description: 'Remove the per-frame sleep used for timing — improves performance and reduces input lag on 60 Hz displays where V-Sync handles the pacing', keywords: 'frame delay vsync performance input lag 60hz' },
+        { key: 'vsync', label: 'V-Sync', description: 'Pace the game against your display’s refresh rate instead of an internal timer. Smooths scrolling on 60 Hz displays where the two clocks would otherwise drift apart. Game speed stays correct on any refresh rate.', keywords: 'vsync v-sync tearing judder stutter frame pacing refresh rate smooth scrolling 60hz' },
       ],
     },
   ],
@@ -91,4 +96,4 @@ const MOBILE_SECTION: Section = {
   subsections: [{ id: 'mobile-display', title: 'Display', items: [NOTCH_ITEM] }],
 };
 
-export { WINDOW_SECTION, PERFORMANCE_SECTION, RENDERING_SECTION, ENHANCEMENTS_SECTION, MOBILE_SECTION };
+export { buildWindowSection, PERFORMANCE_SECTION, RENDERING_SECTION, ENHANCEMENTS_SECTION, MOBILE_SECTION };

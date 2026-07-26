@@ -26,7 +26,7 @@ import './GameLayer.css';
 import type { GameLayerProps } from './GameLayer.type';
 
 const GameLayer = (props: GameLayerProps) => {
-  const { assetData, configIni, profileId, stretch, edgeEffect = true, shadowCasting = false } = props;
+  const { assetData, configIni, profileId, stretch, pixelPerfect = false, edgeEffect = true, shadowCasting = false } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fxCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -50,7 +50,7 @@ const GameLayer = (props: GameLayerProps) => {
   const exclusiveInsets = useExclusiveInsetsStore((s) => s.insets);
 
   // Compute fitted size using shared hook (same formula for canvas + overlay)
-  const fitSize = useCanvasFit(containerRef, bufSize.w, bufSize.h, stretch);
+  const fitSize = useCanvasFit({ containerRef, bufW: bufSize.w, bufH: bufSize.h, stretch, pixelPerfect });
 
   // Apply fitted size to canvases (they need direct DOM style manipulation).
   // Depends on `status` because SDL/Emscripten removes inline styles during

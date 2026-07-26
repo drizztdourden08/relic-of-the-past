@@ -41,7 +41,7 @@ const syncHudStore = (s: GameSettings): void => {
 
 type ParentCallbacks = Pick<ProfileHubProps,
   'onWindowModeChange' | 'onConstraintSettingsChange' | 'onMasterVolumeChange' | 'onDisplayPerfChange'
-  | 'onSaveSlotSettingsChange' | 'onEdgeEffectChange' | 'onShadowCastingChange'
+  | 'onSaveSlotSettingsChange' | 'onEdgeEffectChange' | 'onShadowCastingChange' | 'onPixelPerfectChange'
 >;
 
 interface SettingsEffectDeps extends ParentCallbacks {
@@ -57,7 +57,7 @@ const applySettingsSideEffects = (patch: Partial<GameSettings>, next: GameSettin
   const {
     profileId, isGameRunning, changedKeys, restartToastShownRef, setToasts, setFullscreen,
     onWindowModeChange, onConstraintSettingsChange, onMasterVolumeChange, onDisplayPerfChange,
-    onSaveSlotSettingsChange, onEdgeEffectChange, onShadowCastingChange,
+    onSaveSlotSettingsChange, onEdgeEffectChange, onShadowCastingChange, onPixelPerfectChange,
   } = deps;
 
   // Persist asynchronously; surface failures so settings never silently fail to save.
@@ -110,6 +110,11 @@ const applySettingsSideEffects = (patch: Partial<GameSettings>, next: GameSettin
   // Notify parent of shadow casting toggle
   if ('postProcessingShadows' in patch) {
     onShadowCastingChange?.(next.postProcessingShadows);
+  }
+
+  // Notify parent of pixel-perfect toggle (drives the canvas fit)
+  if ('pixelPerfect' in patch) {
+    onPixelPerfectChange?.(next.pixelPerfect);
   }
 
   // Swap the player sprite sheet in the running core so the choice shows without a restart.

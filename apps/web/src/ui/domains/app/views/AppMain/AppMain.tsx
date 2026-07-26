@@ -63,6 +63,7 @@ const AppMain = () => {
         overworldEdgeEffect: data.settings.overworldEdgeEffect,
         postProcessingShadows: data.settings.postProcessingShadows,
         startFullscreen: data.settings.startFullscreen,
+        pixelPerfect: data.settings.pixelPerfect,
       });
       audio.initFromSettings(data.settings.masterVolume);
       saveState.initFromSettings(data.settings.enhancedSaveSlotShortcut, data.settings.saveHoldDuration);
@@ -152,6 +153,7 @@ const AppMain = () => {
           profileId={profileMgmt.activeProfile?.id}
           stretch={display.viewportConstraint !== 'none'}
           edgeEffect={display.overworldEdgeEffect}
+          pixelPerfect={display.pixelPerfect}
           shadowCasting={display.postProcessingShadows}
         />
 

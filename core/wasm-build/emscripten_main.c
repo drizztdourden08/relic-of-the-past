@@ -3,7 +3,8 @@
 // Provides SDL2 init, the emscripten_set_main_loop frame callback, and main().
 // The SDL renderer/audio/input handlers live in emscripten_sdl.c; asset
 // loading + save/load + input setters in emscripten_io.c; the JS-facing
-// settings/command/clean-frame exports in emscripten_api.c. Shared engine
+// settings/command/clean-frame exports in emscripten_api.c; the loop's
+// schedule and per-tick step budget in emscripten_pacing.c. Shared engine
 // state is declared in emscripten_internal.h and DEFINED here.
 
 #include <stdio.h>
@@ -116,6 +117,11 @@ static void MainFrameCallback(void) {
 
   if (g_paused) return;
 
+  // A tick that owes nothing leaves the canvas holding the previous frame (the context is created
+  // with preserveDrawingBuffer), so there is nothing to redraw and no reason to burn a draw on it.
+  int steps = StepsOwedThisTick();
+  if (steps == 0) return;
+
   // FPS measurement: count frames per wall-clock second using emscripten_get_now()
   // (SDL_GetPerformanceCounter returns uint64 ms, losing sub-ms precision which
   //  causes division-by-zero in per-frame timing on fast draws)
@@ -138,8 +144,12 @@ static void MainFrameCallback(void) {
     g_curr_fps = 0;
   }
 
+  // More than one step only happens when the display refreshes slower than the game runs; the
+  // intermediate states are simulated but never drawn, which keeps real-time speed without
+  // rendering frames nobody sees.
   int inputs = g_input1_state;
-  ZeldaRunFrame(inputs);
+  for (int i = 0; i < steps; i++)
+    ZeldaRunFrame(inputs);
 
   // Draw
   int render_scale = PpuGetCurrentRenderScale(g_zenv.ppu, g_ppu_render_flags);
@@ -305,10 +315,12 @@ int main(int argc, char **argv) {
 
   printf("zelda3 WASM initialized. Starting main loop.\n");
 
-  // Run at 60 FPS. Using fps=0 (rAF) can cause timing issues because the
-  // browser may call the callback at the display's refresh rate which can
-  // exceed 60Hz on high-refresh displays, making the game run too fast.
-  // The SNES runs at ~60.098 FPS (NTSC); 60 is close enough.
+  // Start on the timer schedule (fps > 0), which is what this build has always used. A non-zero fps
+  // makes Emscripten drive the loop from setTimeout rather than the display's vertical blank; that
+  // keeps the game at ~60 FPS on any monitor, at the cost of drifting against the display's own
+  // clock. SetVsyncMode() swaps to the vblank-driven schedule when the profile asks for it — the
+  // accumulator in StepsOwedThisTick is what keeps the speed correct there, since rAF fires at
+  // whatever the panel runs at. The bridge pushes the profile's choice right after startup.
   emscripten_set_main_loop(MainFrameCallback, 60, 1);
 
   // Cleanup (unreachable with simulate_infinite_loop=1, but good practice)

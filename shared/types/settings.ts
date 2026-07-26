@@ -23,7 +23,13 @@ interface GameSettings {
   autoSaveMaxEntries: number; // 1-20, default 5
   saveOnQuit: boolean;
   displayPerfInTitle: boolean;
+  // Legacy: only read by the native SDL main loop, which is not part of the WASM build — kept so
+  // existing profiles and the INI round-trip unchanged. Superseded by `vsync` below.
   disableFrameDelay: boolean;
+  // Drive the core's frame loop from the display's vertical blank (requestAnimationFrame) instead of
+  // a free-running timer, and gate the game step on a 60.0988 Hz accumulator so the speed stays right
+  // on any refresh rate. Off = the timer pacing the app has always used. Live-togglable.
+  vsync: boolean;
 
   // ─── Aspect Ratio & Display ───
   // Master gate — off: the engine always runs 4:3 vanilla and no sub-settings appear in the UI.
@@ -79,6 +85,11 @@ interface GameSettings {
   windowMode: 'default' | 'borderless';
   startFullscreen: boolean;
   viewportConstraint: 'none' | 'fit' | 'fill';
+  // Snap the canvas to a whole number of source pixels, measured in DEVICE pixels so display scaling
+  // can't reintroduce uneven pixel sizes. Trades a little image size for a scroll that never shimmers.
+  // Renderer-only (not serialized to the INI). Only meaningful when viewportConstraint is 'none' —
+  // the other modes bypass the fit math entirely. Forces linearFiltering off while enabled.
+  pixelPerfect: boolean;
 
   // ─── Mobile display ───
   // true (default): render under the camera cutout (full-bleed). false: keep UI +
