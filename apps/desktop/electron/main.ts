@@ -15,6 +15,7 @@ import { applyInstanceIdentity, parseInstanceConfig } from './instance';
 import { createWindow, getMainWindow, registerWindowHandlers, registerAspectRatioHandlers } from './window';
 import { saveWindowState } from './window/window-state';
 import { isEphemeralLaunch } from './window/startup-config';
+import { registerDisplayHandlers } from './display/ipc-handlers';
 import { registerDialogHandlers } from './dialogs/ipc-handlers';
 import { registerProfileHandlers, migrateDataFolder } from './profiles';
 import { registerRomHandlers } from './roms';
@@ -48,6 +49,7 @@ import { emit } from './lib/ipc/handle';
 const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerWindowHandlers },
   { register: registerAspectRatioHandlers },
+  { register: registerDisplayHandlers },
   { register: registerDialogHandlers },
   { register: registerProfileHandlers },
   { register: registerRomHandlers },

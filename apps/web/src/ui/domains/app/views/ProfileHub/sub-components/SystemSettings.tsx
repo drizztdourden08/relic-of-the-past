@@ -4,7 +4,9 @@ import { type ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
 import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
-import { buildWindowSection, PERFORMANCE_SECTION } from './SettingsView.constants';
+import { buildWindowSection, buildPerformanceSection } from './SettingsView.constants';
+import { useRefreshRate } from '../../../../../../hooks/useRefreshRate';
+import { effectiveHz } from '@shared/display/refresh-rate';
 import { SAVE_SECTION } from './gameplay-settings-sections';
 import { renderControl as renderSaveControl, isDisabled } from './gameplay-settings-controls';
 
@@ -24,8 +26,10 @@ const WINDOW_MODE_OPTIONS = [
   { value: 'borderless', label: 'Borderless' },
 ];
 
-// Window is built per-render: the Pixel Perfect item only appears under the Letterbox viewport.
-const buildSections = (s: GameSettings): Section[] => [buildWindowSection(s), PERFORMANCE_SECTION, SAVE_SECTION];
+// Both built per-render: Pixel Perfect only appears under the Letterbox viewport, and the
+// Performance copy carries a refresh-rate note that depends on the display we detect.
+const buildSections = (s: GameSettings, refreshHz: number | null): Section[] =>
+  [buildWindowSection(s), buildPerformanceSection(refreshHz), SAVE_SECTION];
 
 const renderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
   if (key === 'windowMode') {
@@ -54,9 +58,10 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
 
 const SystemSettings = (props: SystemSettingsProps) => {
   const { settings, onChange } = props;
+  const refreshHz = effectiveHz(useRefreshRate());
   return (
     <SettingsLayout
-      sections={buildSections(settings)}
+      sections={buildSections(settings, refreshHz)}
       settings={settings}
       onChange={onChange}
       renderControl={renderControl}

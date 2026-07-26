@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind data */
 import type { GameSettings } from '@shared/types/settings';
 import type { Section, SettingItem } from '../../../compounds/SettingsLayout';
+import { bestSyncedRate, isSyncedRate } from '@shared/display/refresh-rate';
 
 const PIXEL_PERFECT_ITEM: SettingItem = {
   key: 'pixelPerfect',
@@ -22,7 +23,22 @@ const buildWindowSection = (s: GameSettings): Section => {
   return { id: 'window', title: 'Window', subsections: [{ id: 'window-mode', title: 'Mode', items }] };
 };
 
-const PERFORMANCE_SECTION: Section = {
+const VSYNC_DESCRIPTION = 'Pace the game against your display’s refresh rate instead of an internal timer. Smooths scrolling on 60 Hz displays where the two clocks would otherwise drift apart. Game speed stays correct on any refresh rate.';
+
+/**
+ * The game advances exactly 60 times a second, so a display running at a whole multiple of 60
+ * shows every frame for the same length of time. One that isn't holds some frames longer than
+ * others, and no amount of pacing on our side can even that out. Rather than leave the player
+ * wondering why V-Sync didn't help, say so and name the rate that would.
+ */
+const refreshAdvisory = (refreshHz: number | null): string => {
+  if (refreshHz === null || isSyncedRate(refreshHz)) return '';
+  const target = bestSyncedRate(refreshHz);
+  if (target === null) return '';
+  return ` Note: your display is running at ${Math.round(refreshHz)} Hz, which is not a whole multiple of 60. Some frames will be shown longer than others whatever this setting does. Setting your display to ${target} Hz makes the timing even.`;
+};
+
+const buildPerformanceSection = (refreshHz: number | null): Section => ({
   id: 'performance',
   title: 'Performance',
   subsections: [
@@ -30,12 +46,12 @@ const PERFORMANCE_SECTION: Section = {
       id: 'performance-options',
       title: 'Options',
       items: [
-        { key: 'displayPerfInTitle', label: 'Show FPS', description: 'Display the current frames per second in the title bar while the game is running', keywords: 'fps performance frame rate counter' },
-        { key: 'vsync', label: 'V-Sync', description: 'Pace the game against your display’s refresh rate instead of an internal timer. Smooths scrolling on 60 Hz displays where the two clocks would otherwise drift apart. Game speed stays correct on any refresh rate.', keywords: 'vsync v-sync tearing judder stutter frame pacing refresh rate smooth scrolling 60hz' },
+        { key: 'displayPerfInTitle', label: 'Show FPS', description: 'Display the current frames per second, and your display’s refresh rate, in the title bar while the game is running', keywords: 'fps performance frame rate counter refresh rate hz' },
+        { key: 'vsync', label: 'V-Sync', description: VSYNC_DESCRIPTION + refreshAdvisory(refreshHz), keywords: 'vsync v-sync tearing judder stutter frame pacing refresh rate smooth scrolling 60hz' },
       ],
     },
   ],
-};
+});
 
 const RENDERING_SECTION: Section = {
   id: 'rendering',
@@ -96,4 +112,4 @@ const MOBILE_SECTION: Section = {
   subsections: [{ id: 'mobile-display', title: 'Display', items: [NOTCH_ITEM] }],
 };
 
-export { buildWindowSection, PERFORMANCE_SECTION, RENDERING_SECTION, ENHANCEMENTS_SECTION, MOBILE_SECTION };
+export { buildWindowSection, buildPerformanceSection, RENDERING_SECTION, ENHANCEMENTS_SECTION, MOBILE_SECTION };

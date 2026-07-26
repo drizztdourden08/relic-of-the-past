@@ -15,6 +15,8 @@ import { WindowControls } from './sub-components/WindowControls';
 import { InstanceBadge } from './sub-components/InstanceBadge';
 import { instanceName } from '../../../../../lib/instance';
 import { getFps } from '../../../../../lib/game';
+import { useRefreshRate } from '../../../../../hooks/useRefreshRate';
+import { effectiveHz } from '@shared/display/refresh-rate';
 import './TitleBar.css';
 import {
   MENU_ICON_CIRCLES, PIN_ICON_PATHS, MUTE_ICON_PATHS, VOLUME_ICON_PATHS, SAVE_ICON_PATHS,
@@ -61,6 +63,9 @@ const TitleBar = (props: TitleBarProps) => {
   const [hovered, setHovered] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [fps, setFps] = useState(0);
+  // Shown beside the FPS so the two can be compared at a glance — the game runs at 60, and a
+  // refresh rate that is not a whole multiple of that is what makes scrolling look uneven.
+  const refreshHz = effectiveHz(useRefreshRate());
   const titlebarRef = useRef<HTMLDivElement>(null);
 
   // Track fullscreen state independently of windowMode
@@ -175,7 +180,7 @@ const TitleBar = (props: TitleBarProps) => {
         )}
         {menuOpen && <DropdownMenu items={menuItems} anchorRef={menuRef} />}
         {showFps && fps > 0 && (
-          <Text className="titlebar__fps">{fps} FPS</Text>
+          <Text className="titlebar__fps">{fps} FPS{refreshHz !== null ? ` (${Math.round(refreshHz)} Hz)` : ''}</Text>
         )}
       </Box>
 
