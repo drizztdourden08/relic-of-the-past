@@ -240,6 +240,14 @@ interface SimChest {
 
 interface SimSprite {
   roomId: number;
+  /**
+   * True when this came from the OVERWORLD spawn table, so `roomId` is a screen
+   * index rather than a room. A check-giving NPC is classified `kind: 'npc'`
+   * whether it stands indoors or out, so the kind cannot answer this — and it
+   * has to be answerable, because an overworld screen index says which world the
+   * sprite is in (see NpcCheckConfig.owWorld).
+   */
+  outdoor?: boolean;
   spriteType: number;
   tile: GridPos;
   /** False when the sprite's tile position is unknown (coarse reachability). */

@@ -21,14 +21,27 @@ const planChestTrigger = (chest: SimChest): TriggerAction => ({
  * (disambiguates a type that spawns in several rooms — see NpcCheckConfig.room).
  * Room-less configs keep matching by type alone.
  */
-const npcConfigForSprite = (spriteType: number, roomId?: number) =>
-  Object.values(CHECK_NPC_FLAGS).find(
-    cfg => cfg.spriteType === spriteType && (cfg.room === undefined || cfg.room === roomId),
-  );
+/** Overworld screens from here up are the second world. */
+const DARK_WORLD_SCREEN_BASE = 0x40;
+
+const npcConfigForSprite = (spriteType: number, roomId?: number, outdoor?: boolean) =>
+  Object.values(CHECK_NPC_FLAGS).find((cfg) => {
+    if (cfg.spriteType !== spriteType) return false;
+    if (cfg.room !== undefined && cfg.room !== roomId) return false;
+    // For an overworld sprite the "room" IS the screen index, so it says which
+    // world the sprite is in — the only thing separating two NPCs that share a
+    // sprite type across the worlds (see NpcCheckConfig.owWorld).
+    if (cfg.owWorld !== undefined && outdoor) {
+      if (roomId == null) return false;
+      const isDark = roomId >= DARK_WORLD_SCREEN_BASE;
+      if (isDark !== (cfg.owWorld === 'dark')) return false;
+    }
+    return true;
+  });
 
 const planSpriteTrigger = (sprite: SimSprite): TriggerAction | null => {
   if (sprite.kind === 'npc') {
-    const cfg = npcConfigForSprite(sprite.spriteType, sprite.roomId);
+    const cfg = npcConfigForSprite(sprite.spriteType, sprite.roomId, sprite.outdoor);
     if (!cfg) return null;
     return { type: 'npc', flagType: cfg.flagType, flagMask: cfg.flagMask, itemId: cfg.itemId };
   }

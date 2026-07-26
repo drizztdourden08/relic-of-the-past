@@ -131,7 +131,7 @@ const chestReachable = (posKnown: boolean, reached: Reached, tile: GridPos): boo
  * presenceState was observed, gating also fails open (all present).
  */
 const spritePresent = (sprite: SimSprite, presenceState: PresenceGameState | undefined): boolean => {
-  const cfg = npcConfigForSprite(sprite.spriteType, sprite.roomId);
+  const cfg = npcConfigForSprite(sprite.spriteType, sprite.roomId, sprite.outdoor);
   if (!cfg?.presence || !presenceState) return true;
   return evaluatePresence(cfg.presence, presenceState);
 };

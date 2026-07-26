@@ -57,6 +57,7 @@ const getRoomSprites = (roomId: number): SimSprite[] =>
 const getOverworldSprites = (screenIndex: number): SimSprite[] =>
   wasmGetOverworldSpriteSpawns(screenIndex).map((s) => ({
     roomId: screenIndex,
+    outdoor: true,
     spriteType: s.spriteType,
     tile: { row: s.row, col: s.col },
     posKnown: true,

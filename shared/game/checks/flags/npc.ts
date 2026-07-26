@@ -53,6 +53,21 @@ interface NpcCheckConfig {
    * Omit for NPCs whose sprite type is unambiguous; those match by type alone.
    */
   room?: number;
+  /**
+   * Which world this NPC lives in, for OVERWORLD sprites only.
+   *
+   * A sprite type is not unique across the two worlds: 0x2e is both the
+   * light-world flute boy and the dark-world stump (chosen by `sprite_subtype2`
+   * in `Sprite_2E_FluteKid`), and 0x1a is both the smith and the frog. The
+   * simulator reads the addressable spawn table, which does not carry
+   * `subtype2`, so matching on type alone bound the light-world boy to the
+   * stump's config and wrote its item flag on a screen the player can reach
+   * before the dark world exists at all.
+   *
+   * Overworld screen indices at or above 0x40 are the second world — a property
+   * of the game, not of our data — so the screen the sprite sits on settles it.
+   */
+  owWorld?: 'light' | 'dark';
 
   // ─── Documentation ───
   /** What visually happens to the NPC after the check */
@@ -273,6 +288,7 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
   // Gives item 0x13 (Shovel)
   // ═══════════════════════════════════════════════════════════════
   'Stumpy': {
+    owWorld: 'dark',
     bufferIndex: 2, mask: 0x08,
     flagType: 2, flagMask: 0x08,
     itemId: 0x13,
@@ -334,6 +350,7 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
   // Gives item 0x16 (Bottle)
   // ═══════════════════════════════════════════════════════════════
   'Purple Chest': {
+    owWorld: 'dark',
     bufferIndex: 2, mask: 0x10,
     flagType: 2, flagMask: 0x10,
     itemId: 0x16,
