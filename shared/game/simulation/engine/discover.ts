@@ -169,15 +169,19 @@ const BOMBABLE_ATTR_MAX = 0xff;
  * re-flood. One target per contiguous patch, since a single blast opens the lot.
  */
 const discoverBombableWalls = (state: EngineState, obs: SimObservation, reached: Reached): SimTarget[] => {
-  const grid = obs.grids?.rawAttrGrid;
-  if (!grid || !obs.realLocation) return [];
-  const roomId = obs.grids?.screenIndex ?? 0;
+  const bundle = obs.grids;
+  if (!bundle) return [];
+  // A split-level room keeps its floor on the LAYER grids and the dual-layer flood
+  // reads those, not rawAttrGrid — so a wall scan that only looked at the raw grid
+  // missed every cracked wall in such a room. Scan all of them.
+  const grids = [bundle.rawAttrGrid, ...(bundle.dualLayerGrids ? [bundle.dualLayerGrids.layer0, bundle.dualLayerGrids.layer1] : [])];
+  const roomId = bundle.screenIndex;
   const targets: SimTarget[] = [];
   const claimed: GridPos[] = [];
-  for (let row = 0; row < grid.length; row++) {
-    for (let col = 0; col < (grid[row]?.length ?? 0); col++) {
-      const attr = grid[row][col];
-      if (attr < BOMBABLE_ATTR_MIN || attr > BOMBABLE_ATTR_MAX) continue;
+  const rows = Math.max(...grids.map((g) => g.length));
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < 64; col++) {
+      if (!grids.some((g) => { const a = g[row]?.[col] ?? 0; return a >= BOMBABLE_ATTR_MIN && a <= BOMBABLE_ATTR_MAX; })) continue;
       const tile = { row, col };
       // One target per patch: a blast opens everything around it.
       if (claimed.some((p) => Math.abs(p.row - row) <= 4 && Math.abs(p.col - col) <= 4)) continue;
