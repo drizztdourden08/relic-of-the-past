@@ -17,6 +17,12 @@ interface SimRunConfig {
   maxSteps: number;
   /** Diagnostic: flood this overworld screen addressably and report its numbers, then exit. */
   floodScreen: number | null;
+  /** Diagnostic: report this ROOM's entrance seeds, exit-table entry and detected
+   *  exits, then exit — the indoor counterpart of `floodScreen`, for finding out
+   *  why a room reads as a dead end. */
+  probeRoom: number | null;
+  /** Optional entry tile for `probeRoom`, as the flood's start position. */
+  probeTile: { row: number; col: number } | null;
   /** Max distinct screens the game-driven flood visits before ending (null = unlimited). */
   screenWalkLimit: number | null;
 }

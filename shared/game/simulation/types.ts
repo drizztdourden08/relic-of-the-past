@@ -85,9 +85,26 @@ interface SimArea {
   size: number;
 }
 
+/** Which detection branch produced an exit. Diagnosis only — never a decision.
+ *  A fabricated edge is useless to chase until you know which branch invented it. */
+type SimExitOrigin = 'ow-border' | 'ow-entrance' | 'room-border' | 'room-stair' | 'room-door' | 'room-doorway' | 'room-warp' | 'exit-table';
+
 /** A game-detected way off a screen: destination + where the player lands there. */
 interface SimExit {
   to: string;
+  origin?: SimExitOrigin;
+  /**
+   * Which way in this crossing uses, as seen from the destination.
+   *
+   * Arriving on a screen through its west edge says nothing about what is
+   * reachable from its east edge, and a wall can carry SEVERAL separate
+   * crossings — Uncle's Estate East has two on its west border. Keying explored
+   * state on the screen alone therefore skips real ground. For a border the
+   * signature is the contiguous tile span the crossing occupies (from the
+   * flood's own ConnectionInfo.positions); for a door, hole or stair it is the
+   * game's entrance id, already unique.
+   */
+  edgeSig?: string;
   entryTile?: GridPos;
   /** Border crossings are walkable both ways; holes/doors are not implied so. */
   twoWay?: boolean;
@@ -262,6 +279,7 @@ export type {
   FlagSnapshot,
   SimObservation,
   SimExit,
+  SimExitOrigin,
   SimArea,
   SimLocation,
   ScreenGridBundle,

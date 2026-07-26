@@ -19,6 +19,7 @@ import type { ScreenFlood, ScreenFloodRun } from './flood-screen';
 import { owScreenId, interiorScreenId, spawnTile, screenAreaInfo } from './screen-resolve';
 import { stepDistances, distanceAt, sortExitsByDistance, entryFromEdge, exitFromEdge, reachedGrid, AREA_EXIT_BIAS } from './exit-order';
 import { detectRoom, dedupe } from './room-exits';
+import { locationForScreen } from './screen-location';
 
 interface DetectedScreen {
   flood: ScreenFlood;
@@ -27,22 +28,42 @@ interface DetectedScreen {
   reached: boolean[][];
 }
 
+/** Entrance ids at or above this offset are fall holes, not doors — you drop in
+ *  and must find another way out, so the edge is genuinely one-way. Below it is
+ *  an ordinary doorway, which the player can always walk straight back through
+ *  (`enrichEntrances` merges holes in at `200 + id`). */
+const FALL_HOLE_ID_BASE = 200;
+
 /** Entrance-transition exits of one flood run (doors + holes into rooms);
  *  item-gated entrances are excluded — the player can't take them yet. */
-const entranceExits = (run: ScreenFloodRun, items: TileReq[], src?: ScreenDefinition): SimExit[] => {
+const entranceExits = (run: ScreenFloodRun, items: TileReq[], fromKey: string, src?: ScreenDefinition): SimExit[] => {
   const rooms = wasmGetEntranceRooms();
   if (!rooms) return [];
   const exits: SimExit[] = [];
   for (const t of run.result.transitions) {
     if (t.edge !== 'entrance' || t.entranceIdx == null || t.entranceIdx >= 1000) continue;
     if (!usableEntranceTransition(run.result, t, items)) continue;
-    const realId = t.entranceIdx >= 200 ? t.entranceIdx - 200 : t.entranceIdx;
+    const isFallHole = t.entranceIdx >= FALL_HOLE_ID_BASE;
+    const realId = isFallHole ? t.entranceIdx - FALL_HOLE_ID_BASE : t.entranceIdx;
     const destRoom = rooms[realId];
     if (destRoom == null) continue;
-    exits.push({ to: interiorScreenId(destRoom, src), entryTile: spawnTile(realId, destRoom), fromTile: { row: t.row, col: t.col } });
+    const landing = spawnTile(realId, destRoom);
+    exits.push({
+      to: interiorScreenId(destRoom, landing, fromKey),
+      entryTile: landing,
+      fromTile: { row: t.row, col: t.col },
+      twoWay: !isFallHole,
+      origin: 'ow-entrance',
+      edgeSig: `e${realId}`,
+    });
   }
   return exits;
 };
+
+/** A crossing's tile span — its identity on the wall. Two crossings on the same
+ *  side of a screen have disjoint spans, which is what tells them apart. */
+const spanOf = (positions: readonly number[]): string =>
+  positions.length === 0 ? '?' : `${Math.min(...positions)}-${Math.max(...positions)}`;
 
 const OW_EDGE_ADJ = {
   north: (s: number) => (((s >> 3) & 7) > 0 ? s - 8 : null),
@@ -57,7 +78,7 @@ const OW_EDGE_ADJ = {
  * sub-screens are ordinary exits, ordered before out-of-area ones so the whole
  * big screen gets explored before moving on.
  */
-const detectOverworld = (screenIndex: number, items: TileReq[], entryTile?: GridPos, src?: ScreenDefinition): DetectedScreen | null => {
+const detectOverworld = (screenIndex: number, items: TileReq[], entryTile?: GridPos, src?: ScreenDefinition, fromKey = `ow:${screenIndex}`): DetectedScreen | null => {
   const run = floodOneOverworld(screenIndex, items, entryTile);
   if (!run) return null;
   const group = new Set(computeBigScreenGroup(screenIndex));
@@ -74,25 +95,38 @@ const detectOverworld = (screenIndex: number, items: TileReq[], entryTile?: Grid
     if (conn.freeTileCount === 0) continue;
     const to = owScreenId(conn.targetScreen);
     const mid = conn.positions[Math.floor(conn.positions.length / 2)] ?? 32;
+    const span = spanOf(conn.positions);
     pushExit(
-      { to, entryTile: entryFromEdge(conn.edge, mid), fromTile: exitFromEdge(conn.edge, mid), twoWay: true, area: screenAreaInfo(to) },
+      { to, entryTile: entryFromEdge(conn.edge, mid), fromTile: exitFromEdge(conn.edge, mid), twoWay: true, origin: 'ow-border', edgeSig: `${conn.edge}:${span}`, area: screenAreaInfo(to) },
       !group.has(conn.targetScreen),
     );
   }
-  for (const exit of entranceExits(run, items, src)) pushExit({ ...exit, area: screenAreaInfo(exit.to) }, true);
+  for (const exit of entranceExits(run, items, fromKey, src)) pushExit({ ...exit, area: screenAreaInfo(exit.to) }, true);
 
   return { flood: summarizeRun(run, items), exits: dedupe(sortExitsByDistance(exits, scores)), reached: reachedGrid(run.result.reachable) };
 };
 
-/** Detect a screen's flood numbers + game-driven exits. Null when unresolvable. */
+/**
+ * Detect a screen's flood numbers + game-driven exits.
+ *
+ * A synthetic id the dataset does not define still names a real room, so it is
+ * detected from its number with no `src` to disambiguate against — better a room
+ * with real geometry and a coarse name than a hole in the graph.
+ */
 const detectScreenExits = (screenId: string, opts?: { entryTile?: GridPos; items?: TileReq[] }): DetectedScreen | null => {
-  const screen = SCREEN_BY_ID.get(screenId);
-  if (!screen) return null;
   const items = opts?.items ?? ['lift.1'];
+  const screen = SCREEN_BY_ID.get(screenId);
+  if (!screen) {
+    const loc = locationForScreen(screenId);
+    if (!loc) return null;
+    return loc.isIndoors
+      ? detectRoom(loc.roomId, items, opts?.entryTile, undefined, screenId)
+      : detectOverworld(loc.owScreenIndex, items, opts?.entryTile, undefined, screenId);
+  }
   const roomIndex = screen.roomIndex ?? 0;
   return screen.type === 'overworld'
-    ? detectOverworld(roomIndex, items, opts?.entryTile, screen)
-    : detectRoom(roomIndex, items, opts?.entryTile, screen);
+    ? detectOverworld(roomIndex, items, opts?.entryTile, screen, screenId)
+    : detectRoom(roomIndex, items, opts?.entryTile, screen, screenId);
 };
 
 export { detectScreenExits };

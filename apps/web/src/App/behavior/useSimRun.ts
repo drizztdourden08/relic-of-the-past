@@ -11,7 +11,7 @@
 import { useEffect, useRef } from 'react';
 import { subscribeGameState, loadState, wasmGetViewportInfo } from '../../lib/game';
 import { linkStartTile } from '@shared/game/navigation/link-start-tile';
-import { createLiveGamePort, runSimulation, floodOverworldScreen } from '@app/lib/game/simulator';
+import { createLiveGamePort, runSimulation, floodOverworldScreen, probeRoom } from '@app/lib/game/simulator';
 import { pauseSramSync, resumeSramSync } from '@app/lib/game/sram-sync';
 import { overworldOrigin } from '@app/lib/game/flood';
 import { buildSimRunReport } from '@shared/game/simulation';
@@ -76,15 +76,31 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
         return;
       }
 
+      // Diagnostic: why does one room read as a dead end? Dumps the tables that
+      // decide it (entrance seeds, fall holes, exit-screen entry, detected exits).
+      if (config.probeRoom !== null) {
+        const probe = probeRoom(config.probeRoom, config.probeTile ?? undefined);
+        console.log(`[SimRun] room 0x${config.probeRoom.toString(16)}: ${JSON.stringify(probe)}`);
+        await window.api.writeSimRun({ probe });
+        setTimeout(() => window.close(), 500);
+        return;
+      }
+
       const port = createLiveGamePort();
       pauseSramSync();
       port.setAutoSkipDialog(true);
       try {
-        const { state, recorder, steps, reachedTarget, screenFloods } = await runSimulation(port, config);
+        const { state, recorder, steps, reachedTarget, screenFloods, visits, path, checks } = await runSimulation(port, config);
         const report = buildSimRunReport(state, recorder, { config, steps, reachedTarget });
         console.log(`[SimRun] outcome=${report.outcome} reachedTarget=${reachedTarget} steps=${steps} checks=${report.verifiedChecks.length} floods=${screenFloods.length}`);
-        const path = await window.api.writeSimRun({ ...report, screenFloods });
-        console.log(`[SimRun] Written to: ${path}`);
+        const inventory = {
+          items: [...state.inventory].sort(),
+          keys: Object.fromEntries([...state.keys].filter(([, n]) => n > 0)),
+          bigKeys: [...state.bigKeys].sort(),
+          events: [...state.events].sort(),
+        };
+        const outPath = await window.api.writeSimRun({ ...report, screenFloods, visits, path, checks, inventory });
+        console.log(`[SimRun] Written to: ${outPath}`);
       } finally {
         port.setAutoSkipDialog(null);
         resumeSramSync();

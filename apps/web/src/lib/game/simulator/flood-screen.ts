@@ -79,7 +79,13 @@ const floodOneOverworld = (
     items,
     startPos,
     extraSeeds,
-    entrances: enrichEntrances(),
+    // ONLY this screen's own entrances. The full list was being seeded into every
+    // screen's flood, and an entrance is placed by its 64x64 grid position with the
+    // `area` never consulted — so any screen whose flood reached that tile grew a
+    // door belonging to somewhere else entirely. Entrances 101 and 102 both sit at
+    // (34,30), which is how Great Lake NW acquired a door into the psychic's hut
+    // two-thirds of the map away.
+    entrances: enrichEntrances().filter((e) => e.area === screenIndex),
   }, bundle));
   return { result, connections: getConnections(result) };
 };

@@ -10,6 +10,9 @@ import type { EngineState } from '@shared/game/simulation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
 import { SCREEN_BY_ID } from '@shared/game/data/screens';
 import { detectScreenExits } from './screen-exits';
+import { locationForScreen } from './screen-location';
+import { interiorScreenId } from './screen-resolve';
+import type { GridPos } from '@shared/game/navigation';
 import type { DetectedScreen } from './screen-exits';
 import { emptySnapshot, buildPresenceState, emptyPresenceState } from '@shared/game/simulation';
 import type { MapState } from '@shared/game/types';
@@ -23,31 +26,25 @@ import { readMapState } from './read-game-state';
 
 const IDLE_VIRTUAL: VirtualPlayer = { screenId: 'unknown', tile: { row: 0, col: 0 } };
 
-const virtualFrom = (map: MapState): VirtualPlayer => {
-  // Feed the SAME disambiguation context the navigation widget's useScreenDetection
-  // uses (entranceId/whichEntrance + palaceIndex + progressTier + completedChecks).
-  // An indoor roomIndex is not unique on its own — an interior can share a room
-  // value with a dungeon room (e.g. the seed run started in the first castle's
-  // "Water Room" 0x11 during the rain intro, whose room value collided with a
-  // village interior, mis-seeding the virtual player there until the first hop). palaceIndex
-  // steers the resolver to the dungeon match and whichEntrance disambiguates
-  // shared-room interiors, so the first observe resolves correctly.
-  const variantState: VariantGameState = {
-    completedChecks: getCompletedChecks(),
-    entranceId: map.whichEntrance ?? undefined,
-    progressTier: wasmGetProgressIndicator()?.tier,
-  };
-  const screen = resolveCurrentScreen(
-    map.isIndoors, map.palaceIndex, map.roomIndex, map.overworldScreenIndex, map.whichEntrance, variantState,
-  );
-  const screenId = screen?.id ?? (map.isIndoors ? `room:${map.roomIndex}` : `ow:${map.overworldScreenIndex}`);
-
+const tileOf = (map: MapState): GridPos => {
   const { x: screenWorldX, y: screenWorldY } = screenOriginFor({
     isIndoors: map.isIndoors, linkX: map.linkX, linkY: map.linkY, screenIndex: map.overworldScreenIndex,
   });
-  const tile = linkStartTile({ linkX: map.linkX, linkY: map.linkY, screenWorldX, screenWorldY });
+  return linkStartTile({ linkX: map.linkX, linkY: map.linkY, screenWorldX, screenWorldY });
+};
 
-  return { screenId, tile };
+const virtualFrom = (map: MapState): VirtualPlayer => {
+  // The traversal key is the GAME's own number — room index indoors, overworld
+  // screen index outdoors. Screen DETECTION (which dataset entry this is) used to
+  // seed it, which meant a colliding room index put the virtual player in the
+  // wrong place before the first hop. Identity no longer depends on the dataset.
+  // Region-qualified indoors, so the live position keys the same node the exit
+  // that led here named — see interiorScreenId.
+  const screenId = map.isIndoors
+    ? interiorScreenId(map.roomIndex, tileOf(map))
+    : `ow:${map.overworldScreenIndex}`;
+
+  return { screenId, tile: tileOf(map) };
 };
 
 const readFlags = (): FlagSnapshot => wasmReadFlagSnapshot() ?? emptySnapshot();
@@ -102,15 +99,6 @@ const floodItems = (state: EngineState): TileReq[] => {
   const items = new Set<TileReq>(['lift.1']);
   for (const t of state.reachTokens) if (TILE_REQS.includes(t)) items.add(t as TileReq);
   return [...items];
-};
-
-/** The SimLocation a screen id refers to, or null when it isn't a known screen. */
-const locationForScreen = (screenId: string): SimLocation | null => {
-  const screen = SCREEN_BY_ID.get(screenId);
-  if (!screen) return null;
-  const isIndoors = screen.type !== 'overworld';
-  const roomIndex = screen.roomIndex ?? 0;
-  return { isIndoors, roomId: isIndoors ? roomIndex : 0, owScreenIndex: isIndoors ? 0 : roomIndex };
 };
 
 /**
