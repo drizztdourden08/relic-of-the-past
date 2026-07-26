@@ -167,6 +167,9 @@ type TriggerAction =
   | { type: 'door'; roomId: number; doorIndex: number; doorKind: 'small-key' | 'big-key' | 'bombable'; cellLock?: boolean }
   | { type: 'kill'; roomId: number; itemId: number; opensShutters: boolean }
   | { type: 'trapShutters'; roomId: number }
+  /** Blast a cracked wall open. Bombs are permanent once obtained, so this needs
+   *  no count — see flood/bombed-walls.ts. */
+  | { type: 'bombWall'; roomId: number; tile: GridPos }
   | { type: 'pullSwitch'; roomId: number }
   | { type: 'progress'; step: 'follower-join' | 'follower-deliver' };
 

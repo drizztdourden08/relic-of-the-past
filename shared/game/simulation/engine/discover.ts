@@ -156,6 +156,50 @@ const livingKillables = (state: EngineState, screenId: string, inter: Interactab
 const chestLabel = (chest: SimChest): string => `chest (room ${chest.roomId.toString(16)} #${chest.chestIndex})`;
 const spriteLabel = (sprite: SimSprite): string => `${sprite.kind} (room ${sprite.roomId.toString(16)})`;
 
+/** Cracked-wall attrs (TileBehavior_FlaggableDoor) — solid until blasted. */
+const BOMBABLE_ATTR_MIN = 0xf0;
+const BOMBABLE_ATTR_MAX = 0xff;
+
+/**
+ * Cracked walls the run can blow open right now.
+ *
+ * The flood models one as an obstacle needing bombs, which only lets the player
+ * stand ON it — the passage beyond stays shut, which is not what a bomb does. So
+ * a reachable wall is offered as a TARGET instead: blast it, mark it floor, and
+ * re-flood. One target per contiguous patch, since a single blast opens the lot.
+ */
+const discoverBombableWalls = (state: EngineState, obs: SimObservation, reached: Reached): SimTarget[] => {
+  const grid = obs.grids?.rawAttrGrid;
+  if (!grid || !obs.realLocation) return [];
+  const roomId = obs.grids?.screenIndex ?? 0;
+  const targets: SimTarget[] = [];
+  const claimed: GridPos[] = [];
+  for (let row = 0; row < grid.length; row++) {
+    for (let col = 0; col < (grid[row]?.length ?? 0); col++) {
+      const attr = grid[row][col];
+      if (attr < BOMBABLE_ATTR_MIN || attr > BOMBABLE_ATTR_MAX) continue;
+      const tile = { row, col };
+      // One target per patch: a blast opens everything around it.
+      if (claimed.some((p) => Math.abs(p.row - row) <= 4 && Math.abs(p.col - col) <= 4)) continue;
+      if (!hasReachableNeighbor(reached, tile, DOOR_REACH_RADIUS)) continue;
+      const key = `bomb:${roomId}:${row},${col}`;
+      if (state.done.has(key) || state.failed.has(key)) continue;
+      claimed.push(tile);
+      targets.push({
+        screenId: state.virtual.screenId,
+        roomId,
+        action: { type: 'bombWall', roomId, tile },
+        key,
+        label: `cracked wall (room ${roomId.toString(16)} @${col},${row})`,
+        noun: 'cracked wall',
+        verb: 'Bombing',
+        tile,
+      });
+    }
+  }
+  return targets;
+};
+
 /** Reachable, not-yet-done interactables on the current screen as trigger targets. */
 const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reached): SimTarget[] => {
   const inter = obs.interactables;
@@ -183,6 +227,8 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
   }
 
   const hasBombs = [...state.inventory].some((n) => n.includes('Bomb'));
+  // Bombs are permanent once obtained, so any cracked wall is openable from then on.
+  if (hasBombs) targets.push(...discoverBombableWalls(state, obs, reached));
   const hasSword = [...state.inventory].some((n) => n.includes('Sword'));
   const DOOR_NOUN = { 'small-key': 'key door', 'big-key': 'big key door', bombable: 'bombable wall' } as const;
   const DOOR_VERB = { 'small-key': 'Unlocking', 'big-key': 'Unlocking', bombable: 'Bombing' } as const;

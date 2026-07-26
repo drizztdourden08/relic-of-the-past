@@ -25,6 +25,7 @@ import {
 import { readMapState } from '../simulator/read-game-state';
 import { emptyGrid64, toGrid64 } from './grid-convert';
 import { stampIndoorBlockers } from './blockers';
+import { stampBombedWalls } from './bombed-walls';
 
 /** True when `roomId` is the indoor room the game is standing in right now. */
 const isLoadedRoom = (roomId: number): boolean => {
@@ -70,6 +71,8 @@ const indoorBundle = (roomId: number): ScreenGridBundle => {
   // The dual-layer flood reads the layer grids, not rawAttrGrid — stamp them all.
   const grids = [bundle.rawAttrGrid, ...(bundle.dualLayerGrids ? [bundle.dualLayerGrids.layer0, bundle.dualLayerGrids.layer1] : [])];
   stampIndoorBlockers(roomId, grids, live);
+  // Walls the run has already blown open read as floor from here on.
+  stampBombedWalls(roomId, grids);
   return bundle;
 };
 

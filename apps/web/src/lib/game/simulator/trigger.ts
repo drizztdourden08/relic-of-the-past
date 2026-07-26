@@ -13,6 +13,7 @@ import { wasmTriggerOverworldCheck, wasmGetRoomDoorInfo, wasmSimUnlockDoor, wasm
   wasmSimFollowerAttach, wasmSimFollowerRescue, wasmSimOpenCellLock } from '../';
 import { getCurrentInventory } from '../tracker';
 import { outerWall, OPPOSITE, ROOM_EDGE_ADJ } from './room-doorways';
+import { markBombed } from '../flood';
 
 const SOURCE = 'simulator';
 
@@ -118,6 +119,15 @@ const trigger = (action: TriggerAction): Promise<void> =>
         for (let i = 0; i < doors.length && i < 4; i++) {
           if (doors[i].kind === 4 && !doors[i].isOpen) unlockDoorBothSides(action.roomId, i, false);
         }
+        resolve();
+        return;
+      }
+      case 'bombWall': {
+        // A blast turns the cracked patch into floor for the rest of the run. There
+        // is no addressable game write for this — the real tilemap swap happens in
+        // the explosion path — so the opened state lives in the flood facade and
+        // every later grid build stamps it. See flood/bombed-walls.ts.
+        markBombed(action.roomId, action.tile);
         resolve();
         return;
       }

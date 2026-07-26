@@ -8,3 +8,4 @@ export type { FloodRequest } from './flood-options';
 export { deriveStartLayer } from './start-layer';
 export { annotateScreen } from './annotate-screen';
 export { roomEntrances, STAIR_ID_BASE, BOUNDARY_ID_BASE } from './room-entrances';
+export { markBombed, isBombed, resetBombedWalls, isBombableAttr } from './bombed-walls';

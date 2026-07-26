@@ -9,7 +9,7 @@ import { ITEM_ID_TO_NAME } from '../../items/id-map';
 import { diffSnapshots, emptySnapshot } from '../detect/flag-snapshot';
 import { matchDiffs, UNKNOWN } from '../detect/check-matcher';
 import { onCheckVerified } from './explorer';
-import { narrative, debug, emitDoorUnlock, emitShutterClear, emitSwitchPulled, emitTrapClosed, emitFollower } from './step-helpers';
+import { narrative, debug, emitDoorUnlock, emitShutterClear, emitSwitchPulled, emitTrapClosed, emitFollower , emitWallBombed } from './step-helpers';
 import type { EngineState } from './state';
 
 const verifyStep = (s: EngineState, obs: SimObservation, events: SimEvent[]): void => {
@@ -17,6 +17,10 @@ const verifyStep = (s: EngineState, obs: SimObservation, events: SimEvent[]): vo
   const target = s.currentTarget;
 
   // No flag change → nothing observable; mark failed so this epoch skips it.
+  // A blast changes no game state, so it can never show a diff — settle it first
+  // or the no-diff branch below would mark the wall permanently failed.
+  if (target?.action.type === 'bombWall') { emitWallBombed(s, events, target.key, target.label); return; }
+
   if (diffs.length === 0) {
     if (target) { s.failed.add(target.key); events.push(debug(s, `trigger produced no flag change: ${target.label}`)); }
     s.currentTarget = undefined;

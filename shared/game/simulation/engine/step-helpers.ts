@@ -121,6 +121,22 @@ const emitSwitchPulled = (s: EngineState, events: SimEvent[], key: string, roomI
   s.phase = 'observing';
 };
 
+/**
+ * A cracked wall blown open. Unlike every other trigger this writes NO game
+ * state — the opened tiles live in the flood facade — so it produces no flag diff
+ * and must never reach the diff check, which would mark it failed. Re-flood in
+ * place: the whole point is the passage the blast just opened.
+ */
+const emitWallBombed = (s: EngineState, events: SimEvent[], key: string, label: string): void => {
+  s.done.add(key);
+  events.push(narrative(s, `Bombed ${label} — wall opened`));
+  localRefresh(s);
+  events.push(narrative(s, `Reset: re-flooding ${screenLabel(s.virtual.screenId)} with new state`));
+  s.currentTarget = undefined;
+  s.preTrigger = undefined;
+  s.phase = 'observing';
+};
+
 /** Room-clear kill trigger verified: the shutters are open — re-flood in place. */
 const emitShutterClear = (s: EngineState, events: SimEvent[], label: string, key: string): void => {
   s.done.add(key);
@@ -190,4 +206,4 @@ const emitTrapClosed = (s: EngineState, events: SimEvent[], roomId: number): voi
   s.phase = 'observing';
 };
 
-export { narrative, debug, foundMsg, screenLabel, posMsg, landingTile, arrivalLabel, emitHop, spendKeysForEdge, emitDoorUnlock, emitShutterClear, emitSwitchPulled, emitEntryTrapSlam, emitFollower, interceptTrap, emitTrapClosed, entryTileFor, SCREEN_CENTER };
+export { narrative, debug, foundMsg, screenLabel, posMsg, landingTile, arrivalLabel, emitHop, emitWallBombed, spendKeysForEdge, emitDoorUnlock, emitShutterClear, emitSwitchPulled, emitEntryTrapSlam, emitFollower, interceptTrap, emitTrapClosed, entryTileFor, SCREEN_CENTER };
