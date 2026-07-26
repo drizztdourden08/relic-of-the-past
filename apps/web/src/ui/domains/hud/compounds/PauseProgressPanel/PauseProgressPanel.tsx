@@ -4,7 +4,7 @@
  *
  * Game layout: tiles (21,11)→(30,19) = 10×9 tiles
  * - Pendants: 3 icons (green top-center, blue bottom-left, red bottom-right)
- * - Crystals: 7 icons in a diamond pattern
+ * - Crystals: 7 icons in 2-3-2 rows, the middle row offset half a slot
  *
  * link_which_pendants bits: 0=Power(red), 1=Wisdom(blue), 2=Courage(green)
  * link_has_crystals bits: 0-6 for each crystal
@@ -31,14 +31,19 @@ const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBa
   const innerRows = 7;
 
   if (showCrystals) {
-    // Crystal layout: 7 crystals in specific positions
-    // Row 1 (y=2): positions 2,4 (2 crystals)
-    // Row 2 (y=4): positions 0,2,4,6 (4 crystals) — but game uses diamond
-    // Actual game: row0: c2,c4 | row1: c0,c2,c4,c6 | adjusted to fit
+    // Crystal slots, in tiles from the inner (inside-border) top-left corner. Each
+    // crystal is 2 tiles wide and 1 tall, so the rows sit 2 tiles apart and the
+    // middle row of 3 is inset one tile, giving the 2-3-2 arrangement:
+    //
+    //     . .        cols 2,4
+    //    . . .       cols 1,3,5
+    //     . .        cols 2,4
+    //
+    // Index order is the crystal bit order, so slot N shows bit N.
     const crystalPositions = [
-      { x: 2, y: 1 }, { x: 4, y: 1 },    // top row
-      { x: 0, y: 3 }, { x: 2, y: 3 }, { x: 4, y: 3 }, { x: 6, y: 3 }, // middle row
-      { x: 3, y: 5 },                       // bottom
+      { x: 2, y: 2 }, { x: 4, y: 2 },
+      { x: 1, y: 4 }, { x: 3, y: 4 }, { x: 5, y: 4 },
+      { x: 2, y: 6 }, { x: 4, y: 6 },
     ];
 
     return (
@@ -51,7 +56,7 @@ const PauseProgressPanel = ({ pendants, crystals, showCrystals, scale, spritesBa
           <HudBox key={idx} style={{
             position: 'absolute',
             left: pos.x * tile,
-            top: (pos.y + 1) * tile,
+            top: pos.y * tile,
           }}>
             <PauseCrystalIcon
               filled={!!(crystals & (1 << idx))}
