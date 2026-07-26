@@ -14,7 +14,9 @@ import { roomEntrances, getScreenGrids } from '../flood';
 import { enrichEntrances } from '@domains/widgets/navigation/widget-helpers';
 import { usableEntranceTransition } from '@shared/game/navigation';
 import { detectRoom } from './room-exits';
+import { getRoomChests, getRoomSprites, getRoomDoors } from './interactables';
 import { floodRoomRun } from './flood-room';
+import type { TileReq } from '@shared/game/navigation/tile-attrs';
 
 interface RoomProbe {
   roomId: number;
@@ -40,17 +42,23 @@ interface RoomProbe {
   reachable: number;
   /** Did the addressable rebuild actually produce this room's grid? */
   gridBuilt: { raw: boolean; dual: boolean };
+  /** Chests the room reports, and whether the flood can stand next to each. */
+  chests: Array<{ index: number; row: number; col: number; opened: boolean; big: boolean; touchable: boolean }>;
+  /** Doors the room reports — kind, native type and open state. */
+  doors: Array<{ index: number; kind: string; nativeType?: number; dir: string; row: number; col: number; opened: boolean }>;
+  /** Sprites the room reports, with the kind the simulator assigns them. */
+  sprites: Array<{ type: string; row: number; col: number; kind: string }>;
   /** Bounding box of the reached region — shows where the flood actually is. */
   bbox?: { minRow: number; maxRow: number; minCol: number; maxCol: number };
 }
 
-const probeRoom = (roomId: number, entryTile?: { row: number; col: number }): RoomProbe => {
+const probeRoom = (roomId: number, entryTile?: { row: number; col: number }, items: TileReq[] = ['lift.1']): RoomProbe => {
   const rooms = wasmGetEntranceRooms();
   const entranceIds: number[] = [];
   for (let id = 0; id < (rooms?.length ?? 0); id++) if (rooms?.[id] === roomId) entranceIds.push(id);
   const holeIds = new Set(wasmGetFallHoles().map((h) => h.entranceId));
-  const run = floodRoomRun(roomId, ['lift.1'], entryTile);
-  const detected = detectRoom(roomId, ['lift.1'], entryTile);
+  const run = floodRoomRun(roomId, items, entryTile);
+  const detected = detectRoom(roomId, items, entryTile);
   const owIds = new Set(enrichEntrances().map((e) => e.id));
   const transitions = (run?.result.transitions ?? [])
     .filter((t) => t.edge === 'entrance' && t.entranceIdx != null)
@@ -58,7 +66,7 @@ const probeRoom = (roomId: number, entryTile?: { row: number; col: number }): Ro
       idx: t.entranceIdx as number,
       row: t.row,
       col: t.col,
-      usable: run ? usableEntranceTransition(run.result, t, ['lift.1']) : false,
+      usable: run ? usableEntranceTransition(run.result, t, items) : false,
       inOwTable: owIds.has(t.entranceIdx as number),
     }));
   return {
@@ -99,6 +107,27 @@ const probeRoom = (roomId: number, entryTile?: { row: number; col: number }): Ro
       const dual = !!b.dualLayerGrids && b.dualLayerGrids.layer0.some((r) => r.some((v) => v !== 0));
       return { raw, dual };
     })(),
+    chests: getRoomChests(roomId).map((c) => ({
+      index: c.chestIndex, row: c.tile.row, col: c.tile.col, opened: c.opened, big: c.isBig,
+      // Chests are solid: the run must stand on a NEIGHBOUR, so that is the test.
+      touchable: (() => {
+        for (let dr = -2; dr <= 2; dr++) {
+          for (let dc = -2; dc <= 2; dc++) {
+            const rr = c.tile.row + dr;
+            const cc = c.tile.col + dc;
+            if ((run?.result.reachable[rr]?.[cc] ?? 0) > 0) return true;
+          }
+        }
+        return false;
+      })(),
+    })),
+    doors: getRoomDoors(roomId).map((d) => ({
+      index: d.index, kind: d.kind, nativeType: d.nativeType, dir: d.direction,
+      row: d.tiles[0]?.row ?? -1, col: d.tiles[0]?.col ?? -1, opened: d.opened,
+    })),
+    sprites: getRoomSprites(roomId).map((sp) => ({
+      type: `0x${sp.spriteType.toString(16)}`, row: sp.tile.row, col: sp.tile.col, kind: sp.kind,
+    })),
     reachable: detected?.flood.reachableCount ?? 0,
     bbox: run ? (() => {
       let minRow = 99, maxRow = -1, minCol = 99, maxCol = -1;

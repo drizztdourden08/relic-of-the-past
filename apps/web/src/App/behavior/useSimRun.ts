@@ -80,7 +80,8 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
       // Diagnostic: why does one room read as a dead end? Dumps the tables that
       // decide it (entrance seeds, fall holes, exit-screen entry, detected exits).
       if (config.probeRoom !== null) {
-        const probe = probeRoom(config.probeRoom, config.probeTile ?? undefined);
+        const probe = probeRoom(config.probeRoom, config.probeTile ?? undefined,
+          ['lift.1', ...(config.probeItems ?? [])] as Parameters<typeof probeRoom>[2]);
         console.log(`[SimRun] room 0x${config.probeRoom.toString(16)}: ${JSON.stringify(probe)}`);
         await window.api.writeSimRun({ probe });
         setTimeout(() => window.close(), 500);
