@@ -24,7 +24,7 @@ const parseSimRunConfig = (): SimRunConfig | null => {
   const arg = process.argv.find((a) => a === '--sim-run' || a.startsWith('--sim-run='));
   if (!arg) return null;
 
-  const config: SimRunConfig = { startSlot: null, target: null, stopAtCheckId: null, maxSteps: DEFAULT_MAX_STEPS, floodScreen: null, probeRoom: null, probeTile: null, screenWalkLimit: null };
+  const config: SimRunConfig = { startSlot: null, target: null, stopAtCheckId: null, maxSteps: DEFAULT_MAX_STEPS, floodScreen: null, probeRoom: null, probeTile: null, probeItems: null, screenWalkLimit: null };
   const eq = arg.indexOf('=');
   if (eq === -1) return config;
 
@@ -36,6 +36,7 @@ const parseSimRunConfig = (): SimRunConfig | null => {
     else if (key === 'stop') config.stopAtCheckId = value;
     else if (key === 'max') config.maxSteps = parseInt(value, 10);
     else if (key === 'flood') config.floodScreen = parseInt(value, 16);
+    else if (key === 'items') config.probeItems = value.split(',').filter(Boolean);
     else if (key === 'room') config.probeRoom = parseInt(value, 16);
     else if (key === 'tile') {
       const [row, col] = value.split(',').map((n) => parseInt(n, 10));

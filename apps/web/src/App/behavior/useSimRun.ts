@@ -61,17 +61,18 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
         // the flooded overworld screen; otherwise flood seedless (remote screen).
         const vp = wasmGetViewportInfo();
         const liveScreen = vp ? ((((vp.linkY >> 9) & 7) << 3) | ((vp.linkX >> 9) & 7)) : -1;
-        const startPos = vp && liveScreen === config.floodScreen
+        const startPos = config.probeTile ?? (vp && liveScreen === config.floodScreen
           ? linkStartTile({
               linkX: vp.linkX, linkY: vp.linkY,
               screenWorldX: overworldOrigin(config.floodScreen).x,
               screenWorldY: overworldOrigin(config.floodScreen).y,
             })
-          : undefined;
-        const flood = floodOverworldScreen(config.floodScreen, startPos);
+          : undefined);
+        const items = ['lift.1', ...(config.probeItems ?? [])] as Parameters<typeof floodOverworldScreen>[2];
+        const flood = floodOverworldScreen(config.floodScreen, startPos, items);
         console.log(`[SimRun] flood seed=${JSON.stringify(startPos)} liveScreen=0x${liveScreen.toString(16)}`);
         console.log(`[SimRun] flood screen 0x${config.floodScreen.toString(16)}: ${JSON.stringify(flood && { reachable: flood.reachableCount, total: flood.totalTiles, entrances: flood.entranceCount, edges: flood.edgeCount, ledges: flood.ledgeCount })}`);
-        await window.api.writeSimRun({ floodScreen: config.floodScreen, flood });
+        await window.api.writeSimRun({ floodScreen: config.floodScreen, items, flood });
         setTimeout(() => window.close(), 500);
         return;
       }

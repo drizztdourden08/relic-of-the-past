@@ -21,6 +21,8 @@ interface SimRunConfig {
    *  exits, then exit — the indoor counterpart of `floodScreen`, for finding out
    *  why a room reads as a dead end. */
   probeRoom: number | null;
+  /** Extra traversal items for the `floodScreen` diagnostic (comma separated). */
+  probeItems: string[] | null;
   /** Optional entry tile for `probeRoom`, as the flood's start position. */
   probeTile: { row: number; col: number } | null;
   /** Max distinct screens the game-driven flood visits before ending (null = unlimited). */

@@ -131,6 +131,15 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
     spriteType: 0x16, postGfx: 0,
     visualNote: 'Stays in place (frame-based idle animation)',
     sourceFunc: 'Sprite_Sahasrahla',
+    // Sasha_Idle (sprite_main.c:6560) only reaches the boots branch when the
+    // first dungeon's pendant is held and the boots are not:
+    //   if (!(link_which_pendants & 4))      -> talks only
+    //   else if (!link_item_boots)           -> ai_state = 2, grants 0x4b
+    // `link_which_pendants & 4` is the tracker's 'Green Pendant'
+    // (tracker/inventory.ts). Without this the boots were free from the start,
+    // and everything they open -- bonk rocks, the ledge behind one, and the
+    // interior behind THAT -- came with them.
+    presence: { and: [{ item: 'Green Pendant', owned: true }, { item: 'Pegasus Boots', owned: false }] },
   },
 
   // ═══════════════════════════════════════════════════════════════
@@ -242,10 +251,19 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
     visualNote: 'Smiths hammering animation (gfx 4)',
     sourceFunc: 'Smithy_Main',
     // Blacksmith is the first CHECK_NPC_FLAGS entry for sprite 0x1A, so
-    // npcConfigForSprite(0x1A) resolves here. Despawns once the smith-reunion
-    // flag (sram_progress_indicator_3 & 0x20, 0xF3C9) is set. (The follower
-    // nuance from the decomp — frog tagalong id 7 mid-quest — is deferred.)
-    presence: { progressIndicator3: 0x20, state: 'clear' },
+    // npcConfigForSprite(0x1A) resolves here.
+    //
+    // Smithy_Main case 0 (sprite_main.c:10107) offers tempering only when the
+    // smith-reunion flag is SET, and never while his partner is in tow:
+    //   if (follower_indicator != 8) {
+    //     ...
+    //     else if (sram_progress_indicator_3 & 0x20) { -> tempering choice }
+    //     else Sprite_ShowSolicitedMessage(k, 0xdf);   // just talks
+    //   }
+    // This read 'clear', i.e. the exact inverse -- so the tempered sword was
+    // available before the smith had been found at all. The 10-rupee cost is
+    // not modelled: money is assumed farmable.
+    presence: { and: [{ progressIndicator3: 0x20, state: 'set' }, { not: { followerEq: 8 } }] },
   },
 
   // ═══════════════════════════════════════════════════════════════
