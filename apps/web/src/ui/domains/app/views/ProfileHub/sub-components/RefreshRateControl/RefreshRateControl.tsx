@@ -37,7 +37,11 @@ const RefreshRateControl = (props: RefreshRateControlProps) => {
   // A stored rate the display no longer offers would leave nothing selected, so fall back to
   // the highest — which is also what the default of 0 resolves to.
   const selected = value > 0 && rates.includes(value) ? value : rates[rates.length - 1];
-  const currentHz = status.currentHz ?? detectedHz;
+  // The detected value leads: it comes from the shared store, which is re-read after a switch,
+  // so it is the only one of the three guaranteed to reflect the display as it is now. The
+  // host status behind it is only fetched when the preference changes and goes stale the
+  // moment the rate is changed from here.
+  const currentHz = detectedHz ?? result?.currentHz ?? status.currentHz;
   const compatible = isSyncedRate(currentHz);
 
   return (
@@ -56,10 +60,21 @@ const RefreshRateControl = (props: RefreshRateControlProps) => {
       </Text>
 
       <Box className="refresh-rate__status">
-        <Text className="refresh-rate__current">Detected now:</Text>
-        <Text className="refresh-rate__current-value">
-          {currentHz !== null ? `${Math.round(currentHz)} Hz` : 'unknown'}
-        </Text>
+        <Box className="refresh-rate__row">
+          <Text className="refresh-rate__current">
+            Detected now:
+            <Text className="refresh-rate__current-value">
+              {currentHz !== null ? `${Math.round(currentHz)} Hz` : 'unknown'}
+            </Text>
+          </Text>
+          <Button
+            variant="secondary"
+            disabled={!status.supported || !rates.length || applying}
+            onClick={() => setDialogOpen(true)}
+          >
+            {applying ? 'Changing…' : 'Change refresh rate'}
+          </Button>
+        </Box>
         {!compatible && currentHz !== null && (
           <Text className="refresh-rate__warning">
             {Math.round(currentHz)} Hz is not a multiple of 60. The game runs at 60 frames a second,
@@ -71,14 +86,6 @@ const RefreshRateControl = (props: RefreshRateControlProps) => {
           <Text className="refresh-rate__warning">{result.lastError}</Text>
         )}
       </Box>
-
-      <Button
-        variant="secondary"
-        disabled={!status.supported || !rates.length || applying}
-        onClick={() => setDialogOpen(true)}
-      >
-        {applying ? 'Changing…' : 'Change refresh rate'}
-      </Button>
 
       <ChangeRefreshRateDialog
         open={dialogOpen}

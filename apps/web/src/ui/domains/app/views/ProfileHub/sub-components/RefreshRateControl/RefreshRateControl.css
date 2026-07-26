@@ -23,7 +23,19 @@
   width: 100%;
 }
 
+/* Detection and the action share a row so the block stays short; the warning wraps below. */
+.refresh-rate__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  width: 100%;
+}
+
 .refresh-rate__current {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-xs);
   color: var(--c-text-dim);
   font-size: var(--text-sm);
 }
