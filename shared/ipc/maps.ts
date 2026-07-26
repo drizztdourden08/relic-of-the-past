@@ -12,6 +12,7 @@ import type { EventContract } from './event-contract';
 
 const INVOKE_MAP = {
   getUserDataPath: 'app:getUserDataPath',
+  getSystemDiagnostics: 'diagnostics:getSystem',
   getDataLocation: 'storage:getLocation',
   revealDataFolder: 'storage:reveal',
   revealProfileFolder: 'storage:revealProfile',

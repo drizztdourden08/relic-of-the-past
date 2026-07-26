@@ -11,6 +11,7 @@ import type { PlaySession } from '@shared/types/session';
 import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
 import type { LanguagePack, LanguageSummary } from '@shared/types/language';
 import type { DataLocation, StorageSummary, FileStat } from '@shared/platform';
+import type { SystemDiagnostics } from '@shared/types/diagnostics';
 import type { SimRunConfig } from '@shared/game/simulation';
 
 type Result = { success: boolean; error?: string };
@@ -21,6 +22,9 @@ type ReviewMap = Record<string, { status: string; comment?: string }>;
 interface InvokeContract {
   // App
   'app:getUserDataPath': () => Promise<string>;
+
+  // Diagnostics — host hardware/OS readout for the About page's debug info
+  'diagnostics:getSystem': () => Promise<SystemDiagnostics>;
 
   // Storage — data location, reveal in OS file manager, per-domain usage summary
   'storage:getLocation': () => Promise<DataLocation>;
