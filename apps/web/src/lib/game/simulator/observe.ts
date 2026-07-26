@@ -89,7 +89,18 @@ export { observe };
 // both needed the same four things around it. They each had their own verbatim
 // copy (including the cache key), so a fix to one silently missed the other.
 
-const TILE_REQS: readonly string[] = ['lift.1', 'lift.2', 'lift.3', 'hammer', 'boots', 'flippers', 'hookshot'];
+/**
+ * Traversal tokens the tile attributes actually gate on. `bombs` belongs here:
+ * one interior attr is a bombable wall (`req: 'bombs'`, interior-attrs.ts), and
+ * omitting the token left those tiles blocked forever rather than opening once
+ * bombs are carried.
+ *
+ * NOTE the overworld tables carry NO bomb requirement at all, so a cave mouth
+ * behind a bombable wall — the ice rod cave — is reachable regardless. That is a
+ * revealed-secret mechanic (an overworld event flag), not a tile requirement, and
+ * it is not modelled yet.
+ */
+const TILE_REQS: readonly string[] = ['lift.1', 'lift.2', 'lift.3', 'hammer', 'boots', 'flippers', 'hookshot', 'bombs'];
 
 /** Detect results cached per screen + epoch + entry region. */
 type DetectCache = Map<string, DetectedScreen | null>;

@@ -9,14 +9,15 @@
  * This file only ORCHESTRATES — per-family mapping lives in `annotate/`.
  */
 import type { ScreenAnnotation, ScreenAnnotations, ScreenTag } from '@shared/game/simulation';
-import type { SimLocation } from '@shared/game/simulation';
+import type { SimLocation, SimExit } from '@shared/game/simulation';
 import type { GridPos } from '@shared/game/navigation';
 import type { ReachState } from '@shared/game/navigation/types';
-import { roomTagName } from '@shared/game/simulation';
+import { roomTagName, arrivalLabel } from '@shared/game/simulation';
 import { itemLabel, resolveDuplicate } from '@shared/game/items';
 import { SCREEN_BY_ID } from '@shared/game/data/screens';
 import { getRoomChests, getRoomDoors, getRoomSprites, getOverworldSprites } from '../simulator/interactables';
 import { detectScreenExits } from '../simulator/screen-exits';
+import { displayNameFor } from '../simulator/screen-location';
 import { wasmGetRoomTagsFor, wasmGetRoomTravelDestinationsFor } from '../';
 import { isFollowerActive } from '../follower-state';
 import { getCompletedChecks, getCurrentInventory } from '../tracker';
@@ -92,7 +93,7 @@ const annotateRoom = (roomId: number, items: ScreenAnnotation[], completed: Read
  * How far the exit is, in words a reader can trust. `steps` is a real distance or
  * absent; the note says why it is absent rather than printing a sort score.
  */
-const exitDetail = (exit: { steps?: number; stepsNote?: string }): string | undefined => {
+const exitDistance = (exit: { steps?: number; stepsNote?: string }): string | undefined => {
   const where = exit.stepsNote === 'other-screen' ? ' (other screen)' : '';
   if (exit.steps !== undefined) return `${exit.steps} steps${where}`;
   if (exit.stepsNote === 'via-hop') return 'via a ledge hop';
@@ -100,13 +101,31 @@ const exitDetail = (exit: { steps?: number; stepsNote?: string }): string | unde
   return undefined;
 };
 
+/**
+ * Distance, the WAY IN it uses, and which detection branch produced it.
+ *
+ * Several ways out of one screen can share a destination and still be different
+ * crossings — a wall carries more than one — so a list of identical rows is
+ * unreadable and, worse, unauditable: four entries reading "exit to overworld"
+ * cannot be told apart or checked against the game. The simulator decides on
+ * these three facts, so the widget shows all three.
+ */
+const exitDetail = (exit: SimExit): string | undefined => {
+  const parts = [exitDistance(exit), arrivalLabel(exit), exit.origin].filter(Boolean);
+  return parts.length > 0 ? parts.join(' · ') : undefined;
+};
+
 /** Ways off the screen, with the walk distance the simulator ordered them by. */
 const annotateExits = (screenId: string, items: ScreenAnnotation[], entryTile?: GridPos): void => {
   const detected = detectScreenExits(screenId, entryTile ? { entryTile } : {});
   for (const exit of detected?.exits ?? []) {
     if (!exit.fromTile) continue;
-    const name = SCREEN_BY_ID.get(exit.to)?.name ?? exit.to;
-    items.push({ kind: 'exit', tile: exit.fromTile, label: name, target: exit.to,
+    // Ids are the game's numbers now, so the dataset cannot be indexed by them
+    // directly — displayNameFor resolves a label, and the raw id stays visible
+    // because it is what the run's own log and report speak in.
+    const name = displayNameFor(exit.to);
+    const label = name === exit.to ? exit.to : `${name} (${exit.to})`;
+    items.push({ kind: 'exit', tile: exit.fromTile, label, target: exit.to,
       ...(exitDetail(exit) ? { detail: exitDetail(exit) } : {}) });
   }
 };

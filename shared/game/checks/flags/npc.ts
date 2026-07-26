@@ -339,6 +339,16 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
     flagType: 2, flagMask: 0x00,
     itemId: 0x0D,
     spriteType: 0x36, postGfx: 0,
+    // Sprite_Witch case 0 (core/zelda3/src/sprite_main.c:5851) only reaches the
+    // trade when the mushroom itself is in hand:
+    //   if (link_item_mushroom == 0)       -> talks only
+    //   else if (link_item_mushroom == 1)  -> Witch_AcceptShroom
+    //   else                               -> already holds the powder
+    // The two values share one inventory slot, which the tracker splits into
+    // 'Mushroom' (1) and 'Magic Powder' (2), so naming the mushroom covers both
+    // the not-yet and already-traded cases. Without this the powder was granted
+    // on sight, with the mushroom never picked up.
+    presence: { item: 'Mushroom', owned: true },
     visualNote: 'Witch stays; powder appears on counter',
     sourceFunc: 'Sprite_Witch',
   },

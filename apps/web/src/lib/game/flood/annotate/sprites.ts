@@ -22,6 +22,15 @@ interface SpriteContext {
   shutterCount: number;
 }
 
+/**
+ * Which spawn table this sprite was read from. It is not cosmetic: a sprite type
+ * is not unique across the two worlds (0x2e is both the light-world flute boy and
+ * the dark-world stump), and the overworld table's index IS the screen, which is
+ * what settles which of the two it is. Nothing else on the sprite can say.
+ */
+const sourceNote = (sprite: SimSprite): string =>
+  sprite.outdoor ? 'overworld spawn' : 'room spawn';
+
 const spriteAnnotation = (sprite: SimSprite, ctx: SpriteContext): ScreenAnnotation | null => {
   const tile = sprite.tile;
 
@@ -33,9 +42,9 @@ const spriteAnnotation = (sprite: SimSprite, ctx: SpriteContext): ScreenAnnotati
       ...(ctx.shutterCount > 0 ? { detail: `opens ${ctx.shutterCount} shutter${ctx.shutterCount > 1 ? 's' : ''}` } : {}) };
   }
 
-  const check = npcCheckFor(sprite.spriteType, ctx.roomId, ctx.completed);
+  const check = npcCheckFor(sprite.spriteType, sprite.roomId, ctx.completed, sprite.outdoor);
   if (check) {
-    return { kind: 'npc-check', tile, label: check.name, state: check.done ? 'done' : 'available' };
+    return { kind: 'npc-check', tile, label: check.name, detail: sourceNote(sprite), state: check.done ? 'done' : 'available' };
   }
   if (sprite.spriteType === PRINCESS_SPRITE) return { kind: 'npc-check', tile, label: 'Princess' };
   if (sprite.kind === 'npc') return { kind: 'npc-check', tile, label: `npc 0x${sprite.spriteType.toString(16)}` };
