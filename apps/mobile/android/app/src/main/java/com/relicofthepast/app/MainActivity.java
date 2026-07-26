@@ -18,11 +18,13 @@ import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.getcapacitor.BridgeActivity;
 import com.relicofthepast.app.controllerhid.ControllerHidPlugin;
+import com.relicofthepast.app.framerate.FrameRatePlugin;
 
 public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         registerPlugin(ControllerHidPlugin.class);
+        registerPlugin(FrameRatePlugin.class);
         super.onCreate(savedInstanceState);
 
         // Let the game's audio (Web Audio / SDL2) start without an explicit tap. The

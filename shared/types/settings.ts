@@ -30,6 +30,13 @@ interface GameSettings {
   // a free-running timer, and gate the game step on a 60.0988 Hz accumulator so the speed stays right
   // on any refresh rate. Off = the timer pacing the app has always used. Live-togglable.
   vsync: boolean;
+  // While in fullscreen, switch the display to a refresh rate that is a whole multiple of the
+  // game's 60 steps a second, and put the original back on leaving fullscreen or quitting.
+  // Only meaningful on desktop, and only where the platform can change modes at all.
+  syncedRefreshRate: boolean;
+  // Target rate in Hz. 0 means "the highest multiple of 60 this display offers", which is what
+  // a fresh profile gets — a stored rate the display later stops offering falls back to that.
+  syncedRefreshRateHz: number;
 
   // ─── Aspect Ratio & Display ───
   // Master gate — off: the engine always runs 4:3 vanilla and no sub-settings appear in the UI.

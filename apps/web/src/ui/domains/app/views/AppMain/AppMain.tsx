@@ -13,6 +13,7 @@ import { PageRouter } from '@app/App/PageRouter';
 import { useAppNavigation } from '@app/App/behavior/useAppNavigation';
 import { useAppOverlays } from '@app/App/behavior/useAppOverlays';
 import { useAppViewCallbacks } from '@app/App/behavior/useAppViewCallbacks';
+import { buildChromeProps } from '@app/App/behavior/buildChromeProps';
 import { useAudioSettings } from '@app/App/behavior/useAudioSettings';
 import { useConfirmDialog } from '@app/App/behavior/useConfirmDialog';
 import { useDisplaySettings } from '@app/App/behavior/useDisplaySettings';
@@ -103,38 +104,11 @@ const AppMain = () => {
 
   const widgetVisibility = useMemo(() => Object.fromEntries(widgets.layout.widgets.map((w) => [w.id, w.visible])), [widgets.layout]);
 
-  // Shared by the desktop TitleBar and the touch MobileChrome — same actions, two views.
-  const chromeProps: TitleBarProps = {
-    onImportRom: profileMgmt.handleImportRom,
-    onSwitchProfile: () => handleShowDataManager('profiles'),
-    onShowProfile: handleShowProfile,
-    onShowLogs: () => widgets.toggle('logs'),
-    onToggleSaveStates: saveOverlay.toggle,
-    onToggleInventory: () => widgets.toggle('inventory'),
-    onToggleChecks: () => widgets.toggle('checks'),
-    onToggleDebug: () => widgets.toggle('debug'),
-    onToggleCheats: () => widgets.toggle('cheats'),
-    onShowDataManager: handleShowDataManager,
-    onShowInputTester: () => nav.setActivePage('input-tester'),
-    onShowCredits: () => nav.setActivePage('credits'),
-    onShowDesignGallery: () => nav.setActivePage('design-gallery'),
-    onShowSpriteDebug: () => nav.setActivePage('sprite-debug'),
-    onShowConnectionDebug: () => widgets.toggle('navigation'),
-    onToggleDataset: () => widgets.toggle('dataset'),
-    onToggleSimulator: () => widgets.toggle('simulator'),
-    onShowShadowEditor: handleShowShadowEditor,
-    onShowAbout: () => nav.setActivePage('about'),
-    activeProfile: profileMgmt.activeProfile,
-    widgetVisibility,
-    gameRunning: game.isRunning,
-    windowMode: display.windowMode,
-    isMuted: audio.isMuted,
-    onToggleMute: audio.handleToggleMute,
-    showFps: display.showFps,
-    updateAvailable: canUpdate && !update.portable && (update.status === 'available' || update.status === 'ready'),
-    onUpdateClick: () => setShowUpdateDialog(true),
-    onCheckForUpdates: !canUpdate || update.portable ? undefined : () => { update.check(); setShowUpdateDialog(true); },
-  };
+  const chromeProps: TitleBarProps = buildChromeProps({
+    profileMgmt, widgets, saveOverlay, nav, game, display, audio, widgetVisibility,
+    handleShowProfile, handleShowDataManager, handleShowShadowEditor,
+    canUpdate, update, setShowUpdateDialog,
+  });
 
   return (
     <Box className="app">
