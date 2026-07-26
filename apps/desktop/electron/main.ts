@@ -16,6 +16,7 @@ import { createWindow, getMainWindow, registerWindowHandlers, registerAspectRati
 import { saveWindowState } from './window/window-state';
 import { isEphemeralLaunch } from './window/startup-config';
 import { registerDisplayHandlers } from './display/ipc-handlers';
+import { onFullscreenChange, restoreOnShutdown } from './display/mode-switch';
 import { registerDialogHandlers } from './dialogs/ipc-handlers';
 import { registerProfileHandlers, migrateDataFolder } from './profiles';
 import { registerRomHandlers } from './roms';
@@ -161,8 +162,16 @@ app.whenReady().then(async () => {
   // Forward window state events to renderer
   mainWindow.on('maximize', () => emit(mainWindow, 'window:maximized', true));
   mainWindow.on('unmaximize', () => emit(mainWindow, 'window:maximized', false));
-  mainWindow.on('enter-full-screen', () => emit(mainWindow, 'window:fullscreen', true));
-  mainWindow.on('leave-full-screen', () => emit(mainWindow, 'window:fullscreen', false));
+  // The synced-rate switch rides on these transitions rather than on renderer state, so the
+  // display is always handed back even if the window is closed straight out of fullscreen.
+  mainWindow.on('enter-full-screen', () => {
+    onFullscreenChange(true);
+    emit(mainWindow, 'window:fullscreen', true);
+  });
+  mainWindow.on('leave-full-screen', () => {
+    onFullscreenChange(false);
+    emit(mainWindow, 'window:fullscreen', false);
+  });
 
   // Persist window size/position/mode on close — except test/automation launches
   // (--window-size / --fresh), which must not overwrite the user's saved bounds.
@@ -179,6 +188,8 @@ app.whenReady().then(async () => {
 
 app.on('will-quit', () => {
   stopInputHandlers();
+  // Quitting from fullscreen must not leave the player's display on a rate they did not pick.
+  restoreOnShutdown();
 });
 
 app.on('window-all-closed', () => {

@@ -6,11 +6,26 @@
  * the renderer's own frame-timing measurement), so the port stays fulfillable everywhere.
  * Changing the rate is a separate concern and needs native code per OS, so it is not here.
  */
-import type { RefreshRateInfo } from '../../types/display';
+import type { RefreshRateInfo, SyncedRateStatus } from '../../types/display';
+
+const UNSUPPORTED_SYNCED_RATE: SyncedRateStatus = {
+  supported: false,
+  unsupportedReason: 'changing the refresh rate is only possible in the desktop app',
+  availableRates: [],
+  currentHz: null,
+  activeHz: null,
+  bestHz: null,
+  lastError: '',
+};
 
 interface DisplayPort {
   /** What the host knows. Hosts that know nothing return nulls rather than guessing. */
   getRefreshRate: () => Promise<RefreshRateInfo>;
+  /** Whether a rate switch is possible here, and what it would offer. */
+  getSyncedRateStatus: () => Promise<SyncedRateStatus>;
+  /** Store the preference. The host applies it on fullscreen transitions, not here. */
+  setSyncedRatePreference: (enabled: boolean, targetHz: number) => Promise<SyncedRateStatus>;
 }
 
+export { UNSUPPORTED_SYNCED_RATE };
 export type { DisplayPort };

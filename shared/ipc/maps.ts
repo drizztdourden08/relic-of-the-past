@@ -33,6 +33,8 @@ const INVOKE_MAP = {
   isAudioMuted: 'window:isAudioMuted',
   isFullscreen: 'window:isFullscreen',
   getRefreshRate: 'display:getRefreshRate',
+  getSyncedRateStatus: 'display:getSyncedRateStatus',
+  setSyncedRatePreference: 'display:setSyncedRatePreference',
   openRomDialog: 'dialog:openRom',
   pickFile: 'dialog:pickFile',
   listProfiles: 'profiles:list',

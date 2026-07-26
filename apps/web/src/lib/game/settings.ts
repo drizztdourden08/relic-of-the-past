@@ -16,6 +16,8 @@ const DEFAULT_SETTINGS: GameSettings = {
   displayPerfInTitle: false,
   disableFrameDelay: false,
   vsync: false,
+  syncedRefreshRate: false,
+  syncedRefreshRateHz: 0,
 
   // Aspect Ratio & Display
   extendedRendering: false,

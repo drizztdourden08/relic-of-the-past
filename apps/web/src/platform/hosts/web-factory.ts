@@ -3,6 +3,7 @@
  * Plain-browser host adapter (renderer opened over http without Electron or
  * Capacitor). Also the resolve fallback. No window chrome, no persistent storage.
  */
+import { UNSUPPORTED_SYNCED_RATE } from '@shared/platform';
 import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, StorageSummary, FilePickerPort, ControllerHost, DevicePort, DisplayPort } from '@shared/platform';
 
 const noopUnsub = () => () => {};
@@ -71,6 +72,8 @@ const createFileStore = (): FileStore => ({
 // frame-timing measurement is the only signal and this reports nothing rather than guessing.
 const createDisplay = (): DisplayPort => ({
   getRefreshRate: async () => ({ reportedHz: null, measuredHz: null, modes: [] }),
+  getSyncedRateStatus: async () => UNSUPPORTED_SYNCED_RATE,
+  setSyncedRatePreference: async () => UNSUPPORTED_SYNCED_RATE,
 });
 
 const createFilePicker = (): FilePickerPort => ({

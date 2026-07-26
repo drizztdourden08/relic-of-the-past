@@ -42,6 +42,9 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   // Window settings (Electron-managed, no WASM restart needed)
   'windowMode',
   'viewportConstraint',
+  // Host-side display switch: pushed on change, applied on the next fullscreen transition
+  'syncedRefreshRate',
+  'syncedRefreshRateHz',
   // Canvas fit is recomputed from a React prop — no WASM restart needed
   'pixelPerfect',
   // Frame pacing (swapped via WasmSetVsync — the main loop's schedule can change mid-run)

@@ -1,11 +1,13 @@
 /* @layer renderer-components @kind component */
 /** System tab — app/host meta: window, performance, and save-state management. */
-import { type ReactNode } from 'react';
+import { useCallback, type ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
+import type { SyncedRateStatus } from '@shared/types/display';
 import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
 import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
 import { buildWindowSection, buildPerformanceSection } from './SettingsView.constants';
 import { useRefreshRate } from '../../../../../../hooks/useRefreshRate';
+import { useSyncedRate } from '../../../../../../hooks/useSyncedRate';
 import { effectiveHz } from '@shared/display/refresh-rate';
 import { SAVE_SECTION } from './gameplay-settings-sections';
 import { renderControl as renderSaveControl, isDisabled } from './gameplay-settings-controls';
@@ -27,11 +29,30 @@ const WINDOW_MODE_OPTIONS = [
 ];
 
 // Both built per-render: Pixel Perfect only appears under the Letterbox viewport, and the
-// Performance copy carries a refresh-rate note that depends on the display we detect.
-const buildSections = (s: GameSettings, refreshHz: number | null): Section[] =>
-  [buildWindowSection(s), buildPerformanceSection(refreshHz), SAVE_SECTION];
+// Performance copy depends on the display we detect and on what the host can switch to.
+const buildSections = (s: GameSettings, refreshHz: number | null, syncedRate: SyncedRateStatus): Section[] =>
+  [buildWindowSection(s), buildPerformanceSection(refreshHz, syncedRate), SAVE_SECTION];
 
-const renderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
+/** Options come from the rates the display actually reported, so none of them can be refused. */
+const rateOptions = (rates: number[]): Array<{ value: string; label: string }> =>
+  rates.map((hz) => ({ value: String(hz), label: `${hz} Hz` }));
+
+const renderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void, syncedRate?: SyncedRateStatus): ReactNode | null => {
+  if (key === 'syncedRefreshRateHz' && syncedRate) {
+    // A stored rate the display no longer offers would leave the control with no selection, so
+    // fall back to showing the highest — which is what 0 (the default) resolves to anyway.
+    const rates = syncedRate.availableRates;
+    const stored = settings.syncedRefreshRateHz;
+    const selected = stored > 0 && rates.includes(stored) ? stored : rates[rates.length - 1];
+    return (
+      <SegmentedControl
+        label="Target Refresh Rate"
+        value={String(selected)}
+        options={rateOptions(rates)}
+        onChange={(v) => onChange({ syncedRefreshRateHz: Number(v) })}
+      />
+    );
+  }
   if (key === 'windowMode') {
     return (
       <SegmentedControl
@@ -59,12 +80,19 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
 const SystemSettings = (props: SystemSettingsProps) => {
   const { settings, onChange } = props;
   const refreshHz = effectiveHz(useRefreshRate());
+  // Pushing the preference here also arms it for the session — the host applies it on the next
+  // fullscreen transition, not on this call.
+  const { status: syncedRate } = useSyncedRate(settings.syncedRefreshRate, settings.syncedRefreshRateHz);
+  const renderWithStatus = useCallback(
+    (key: string, s: GameSettings, change: (patch: Partial<GameSettings>) => void) => renderControl(key, s, change, syncedRate),
+    [syncedRate],
+  );
   return (
     <SettingsLayout
-      sections={buildSections(settings, refreshHz)}
+      sections={buildSections(settings, refreshHz, syncedRate)}
       settings={settings}
       onChange={onChange}
-      renderControl={renderControl}
+      renderControl={renderWithStatus}
       isDisabled={isDisabled}
     />
   );

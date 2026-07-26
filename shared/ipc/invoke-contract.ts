@@ -10,7 +10,7 @@ import type { NormalSaveInfo, AutoSaveInfo, QuickSaveSlotInfo } from '@shared/ty
 import type { PlaySession } from '@shared/types/session';
 import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
 import type { LanguagePack, LanguageSummary } from '@shared/types/language';
-import type { RefreshRateInfo } from '@shared/types/display';
+import type { RefreshRateInfo, SyncedRateStatus } from '@shared/types/display';
 import type { DataLocation, StorageSummary, FileStat } from '@shared/platform';
 import type { SystemDiagnostics } from '@shared/types/diagnostics';
 import type { SimRunConfig } from '@shared/game/simulation';
@@ -56,6 +56,8 @@ interface InvokeContract {
 
   // Display — refresh rate of the screen the window is on
   'display:getRefreshRate': () => Promise<RefreshRateInfo>;
+  'display:getSyncedRateStatus': () => Promise<SyncedRateStatus>;
+  'display:setSyncedRatePreference': (enabled: boolean, targetHz: number) => Promise<SyncedRateStatus>;
 
   // Dialog
   'dialog:openRom': () => Promise<string | null>;

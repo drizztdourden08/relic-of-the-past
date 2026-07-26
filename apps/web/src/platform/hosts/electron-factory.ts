@@ -40,6 +40,8 @@ const createWindowControls = (): WindowControlsPort => ({
 // refines it. Modes stay empty because Electron cannot enumerate them.
 const createDisplay = (): DisplayPort => ({
   getRefreshRate: () => window.api.getRefreshRate(),
+  getSyncedRateStatus: () => window.api.getSyncedRateStatus(),
+  setSyncedRatePreference: (enabled, targetHz) => window.api.setSyncedRatePreference(enabled, targetHz),
 });
 
 const createStorage = (): StoragePort => ({
