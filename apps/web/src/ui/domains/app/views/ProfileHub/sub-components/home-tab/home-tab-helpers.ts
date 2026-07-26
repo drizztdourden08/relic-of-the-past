@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind logic */
 /** Shared helpers for the Home tab: time formatting, game-ready wait, canvas screenshot. */
-import { subscribeGameState } from '../../../../../../../lib/game';
+import { subscribeGameState, captureGameFrameBlob } from '../../../../../../../lib/game';
 
 const QUICK_SAVE_SLOTS = 12;
 
@@ -37,12 +37,10 @@ const ensureGameRunning = async (isGameRunning: boolean, onStartGame: () => void
   });
 };
 
-/** Capture the live game canvas as a PNG ArrayBuffer (DOM concern — stays in the view layer). */
+/** Capture the currently-rendered game frame as a PNG ArrayBuffer, same path quick-saves use. */
 const captureCanvasScreenshot = async (): Promise<ArrayBuffer | undefined> => {
-  const canvas = document.querySelector('.game-layer__canvas') as HTMLCanvasElement | null;
-  if (!canvas) return undefined;
   try {
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob((b) => resolve(b), 'image/png'));
+    const blob = await captureGameFrameBlob();
     if (blob) return await blob.arrayBuffer();
   } catch { /* ignore */ }
   return undefined;

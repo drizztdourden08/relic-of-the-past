@@ -13,7 +13,7 @@ export { setMsuData, setAutoSaveConfig, setLinkSpriteData } from './lifecycle';
 export { applyPlayerSprite, clearPlayerSprite } from './player-sprite';
 export type { MsuTrackData, AutoSaveConfig } from './lifecycle';
 export { saveState, loadState, loadNamedState, loadStateRef, captureStateBuffer, loadStateFromBuffer } from './save-states';
-export { fulfillFrameCapture } from './capture-frame';
+export { captureGameFrameBlob, fulfillFrameCapture } from './capture-frame';
 export { setItemOverride, clearItemOverrides } from './randomizer';
 export { pushLiveSettings, reassertBackdropBlack, reassertVsync, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, primeLiveSettings, LIVE_SETTINGS } from './live-settings';
 export { initMasterVolume, setMasterVolume, suspendAudio, resumeAudio } from './audio-volume';
