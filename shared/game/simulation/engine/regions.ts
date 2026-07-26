@@ -59,7 +59,30 @@ interface RegionJob {
   /** Screen holding the exit into the unexplored region. */
   from: string;
   to: string;
+  /** Which way in, so traverse takes THAT exit and not another to the same screen. */
+  edgeSig?: string;
 }
+
+/** Identity of an arrival: the destination plus the way in. */
+const arrivalKey = (to: string, edgeSig?: string): string => `${to}#${edgeSig ?? 'x'}`;
+
+/**
+ * Is this way in already accounted for?
+ *
+ * Either we have used it, or it lands inside ground we already explored — a
+ * screen has several edges on one side and most of them drop you in the same
+ * place, so there is nothing to learn by walking each one. What must NOT be
+ * skipped is an edge landing OUTSIDE the explored region: the sanctuary grounds
+ * hold a ledge the lower part cannot reach, so entering from the sanctuary door
+ * floods 1762 tiles and entering from the screen to the west floods 2139. Those
+ * are two different places behind one screen id.
+ */
+const arrivalAccountedFor = (
+  arrivals: Set<string>,
+  map: Map<string, boolean[][]>,
+  exit: SimExit,
+): boolean =>
+  arrivals.has(arrivalKey(exit.to, exit.edgeSig)) || regionCovered(map, exit.to, exit.entryTile);
 
 /** Visited screens some discovered exit enters OUTSIDE their explored region —
  *  multi-region rooms still owe a visit through that specific doorway. */
@@ -67,15 +90,16 @@ const unexploredRegionJobs = (
   discovered: Map<string, SimExit[]>,
   map: Map<string, boolean[][]>,
   visited: Set<string>,
+  arrivals: Set<string>,
 ): RegionJob[] => {
   const out: RegionJob[] = [];
   const seen = new Set<string>();
   for (const [from, exits] of discovered) {
     for (const exit of exits) {
       if (!visited.has(exit.to) || !exit.entryTile) continue;
-      if (regionCovered(map, exit.to, exit.entryTile)) continue;
-      const key = `${from}->${exit.to}`;
-      if (!seen.has(key)) { seen.add(key); out.push({ from, to: exit.to }); }
+      if (arrivalAccountedFor(arrivals, map, exit)) continue;
+      const key = `${from}->${arrivalKey(exit.to, exit.edgeSig)}`;
+      if (!seen.has(key)) { seen.add(key); out.push({ from, to: exit.to, edgeSig: exit.edgeSig }); }
     }
   }
   return out;
@@ -88,10 +112,15 @@ const takeRegionJob = (s: EngineState): string[] | null => {
   while (s.regionJobs.length > 0) {
     const job = s.regionJobs.shift()!;
     const path = findDiscoveredPath(s.discovered, s.virtual.screenId, job.from);
-    if (path) return [...path.slice(1), job.to];
+    if (path) {
+      // Pin the way in: several exits can lead to the same screen, and arriving
+      // through the wrong one would leave this job forever unsatisfied.
+      s.pendingEdgeSig = job.edgeSig ?? null;
+      return [...path.slice(1), job.to];
+    }
   }
   return null;
 };
 
-export { unionReach, stampReach, regionCovered, unexploredRegionJobs, takeRegionJob };
+export { unionReach, stampReach, regionCovered, arrivalKey, arrivalAccountedFor, unexploredRegionJobs, takeRegionJob };
 export type { RegionJob };

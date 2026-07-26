@@ -24,9 +24,22 @@ import type { DetectedScreen } from './screen-exits';
 const isStandaloneInterior = (roomId: number): boolean =>
   usesCachedEntrance(roomId) || wasmGetExitScreenMap().has(roomId);
 
+/**
+ * Drop genuinely duplicate exits — same destination AND same way in.
+ *
+ * Keying on the destination alone collapsed every crossing into a screen down to
+ * one, and they are not interchangeable: one side of a screen can carry several
+ * separate crossings landing in places that do not connect. The sanctuary
+ * grounds hold a ledge the lower part cannot reach, and the only way onto it is
+ * the second of two east crossings from the screen to its west — which this
+ * threw away, making the ledge permanently unreachable.
+ */
 const dedupe = (exits: SimExit[]): SimExit[] => {
   const seen = new Set<string>();
-  return exits.filter((e) => (seen.has(e.to) ? false : (seen.add(e.to), true)));
+  return exits.filter((e) => {
+    const key = `${e.to}#${e.edgeSig ?? ''}`;
+    return seen.has(key) ? false : (seen.add(key), true);
+  });
 };
 
 /** The DESTINATION room's stair/walk-boundary that leads back here = the

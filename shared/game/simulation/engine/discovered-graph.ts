@@ -48,9 +48,21 @@ const findDiscoveredPath = (graph: DiscoveredGraph, from: string, to: string): s
   return null;
 };
 
-/** The exit record for a `from → to` hop (carries the landing tile). */
-const discoveredExitFor = (graph: DiscoveredGraph, from: string, to: string): SimExit | undefined =>
-  (graph.get(from) ?? []).find((e) => e.to === to);
+/**
+ * The exit record for a `from → to` hop (carries the landing tile).
+ *
+ * `wantSig` pins WHICH exit when several lead to the same screen — a screen can
+ * be entered by more than one crossing and they need not land in the same place,
+ * so a job that exists to try one of them must not be satisfied by another.
+ */
+const discoveredExitFor = (graph: DiscoveredGraph, from: string, to: string, wantSig?: string | null): SimExit | undefined => {
+  const list = graph.get(from) ?? [];
+  if (wantSig) {
+    const pinned = list.find((e) => e.to === to && e.edgeSig === wantSig);
+    if (pinned) return pinned;
+  }
+  return list.find((e) => e.to === to);
+};
 
 /**
  * Record a screen's flood-detected exits. Keeps previously-known edges the new

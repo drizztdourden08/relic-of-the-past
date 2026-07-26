@@ -10,6 +10,7 @@ import { cloneSnapshot } from '../detect/flag-snapshot';
 import type { ScreenEdge } from './traversal';
 import { spendKey, spendAnyKey, localRefresh, globalRefresh } from './explorer';
 import { KILL_GATE_TAG } from './discover';
+import { arrivalKey } from './regions';
 import type { EngineState, SimTarget } from './state';
 
 const SCREEN_CENTER: GridPos = { row: 32, col: 32 };
@@ -52,6 +53,30 @@ const landingTile = (exit?: SimExit, edge?: ScreenEdge): GridPos =>
  * from), Exiting (with big-area via), area enter/leave markers, Screen entry,
  * START position (the tile the player lands on). Mutates s.virtual and s.area.
  */
+/**
+ * How the player got in, in words. A screen id alone cannot say which of its
+ * several ways in was used, and two of them need not lead to the same ground —
+ * so the log has to name the crossing, not just the destination.
+ *
+ * Border signatures carry the tile SPAN, because one side of a screen can hold
+ * more than one separate crossing.
+ */
+const arrivalLabel = (exit?: SimExit, tile?: GridPos): string => {
+  const sig = exit?.edgeSig;
+  if (!sig) return tile ? `at ${tile.col},${tile.row}` : 'start';
+  const border = /^(north|south|west|east):(\d+)-(\d+)$/.exec(sig);
+  if (border) return `via ${border[1]} edge, tiles ${border[2]}-${border[3]}`;
+  const entrance = /^e(\d+)$/.exec(sig);
+  if (entrance) return `via entrance #${entrance[1]}${tile ? ` at ${tile.col},${tile.row}` : ''}`;
+  const stair = /^s(\d+)$/.exec(sig);
+  if (stair) return `via stair #${stair[1]}`;
+  const doorway = /^d(north|south|west|east):(\d+)$/.exec(sig);
+  if (doorway) return `via ${doorway[1]} doorway at ${doorway[2]}`;
+  if (sig.startsWith('w')) return `via warp door ${sig.slice(1)}`;
+  if (sig.startsWith('x')) return 'via its exit door';
+  return `via ${sig}`;
+};
+
 const emitHop = (s: EngineState, events: SimEvent[], next: string, exit?: SimExit, edge?: ScreenEdge): void => {
   const from = s.virtual.screenId;
   events.push(narrative(s, posMsg('END', exit?.fromTile ?? s.virtual.tile)));
@@ -65,7 +90,10 @@ const emitHop = (s: EngineState, events: SimEvent[], next: string, exit?: SimExi
   }
   const tile = landingTile(exit, edge);
   s.virtual = { screenId: next, tile };
-  events.push(narrative(s, `Screen ${screenLabel(next)}`));
+  // Record WHICH way in was used, so the same screen entered another way still
+  // counts as unexplored ground (see arrivalAccountedFor).
+  if (exit) s.arrivals.add(arrivalKey(next, exit.edgeSig));
+  events.push(narrative(s, `Screen ${screenLabel(next)} ${arrivalLabel(exit, tile)}`));
   events.push(narrative(s, posMsg('START', tile)));
 };
 
@@ -162,4 +190,4 @@ const emitTrapClosed = (s: EngineState, events: SimEvent[], roomId: number): voi
   s.phase = 'observing';
 };
 
-export { narrative, debug, foundMsg, screenLabel, posMsg, landingTile, emitHop, spendKeysForEdge, emitDoorUnlock, emitShutterClear, emitSwitchPulled, emitEntryTrapSlam, emitFollower, interceptTrap, emitTrapClosed, entryTileFor, SCREEN_CENTER };
+export { narrative, debug, foundMsg, screenLabel, posMsg, landingTile, arrivalLabel, emitHop, spendKeysForEdge, emitDoorUnlock, emitShutterClear, emitSwitchPulled, emitEntryTrapSlam, emitFollower, interceptTrap, emitTrapClosed, entryTileFor, SCREEN_CENTER };

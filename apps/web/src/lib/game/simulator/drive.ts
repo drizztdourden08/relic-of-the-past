@@ -61,6 +61,8 @@ interface PathStep {
   index: number;
   /** False when the route only passed through without stopping to observe. */
   observed: boolean;
+  /** How this screen was entered — see arrivalLabel. */
+  via?: string;
 }
 
 const describeScreen = (screenId: string): Omit<PathStep, 'observed'> => {
@@ -156,6 +158,8 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
       const { actions, events, nextState } = engine.step(state, obs);
       recordEvents(recorder, events, checks, path.length - 1, steps);
       for (const e of events) {
+        const m = /^Screen .+? (via .+|at \d+,\d+)$/.exec(e.msg);
+        if (m && path.length > 0) path[path.length - 1].via = m[1];
         if (e.msg.includes('(new region)')) tally.regionJobs += 1;
         else if (e.msg.startsWith('Backtrack through')) tally.backtracks += 1;
         else if (e.msg.startsWith('Running ')) tally.hops += 1;

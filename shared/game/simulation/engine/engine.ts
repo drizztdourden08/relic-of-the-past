@@ -62,7 +62,7 @@ const createEngine = ({ adjacency = buildAdjacency(), totalChecks }: EngineDeps 
     for (const id of reachable) s.reachedScreens.add(id);
     s.frontier = [...reachable].filter(id => id !== s.virtual.screenId && !s.visited.has(id));
     // Visited rooms entered OUTSIDE their explored region (a hall behind a different door) still owe a visit.
-    s.regionJobs = unexploredRegionJobs(s.discovered, s.regionReach, s.visited).filter(j => j.to !== s.virtual.screenId);
+    s.regionJobs = unexploredRegionJobs(s.discovered, s.regionReach, s.visited, s.arrivals).filter(j => j.to !== s.virtual.screenId);
     s.phase = 'planning';
   };
 
@@ -110,7 +110,9 @@ const createEngine = ({ adjacency = buildAdjacency(), totalChecks }: EngineDeps 
     if (s.route.length === 0) { s.phase = 'observing'; return; }
     const from = s.virtual.screenId; // discovered mode: the hop must be a flood-detected exit
     const next = s.route.shift()!;
-    const discoveredExit = s.discovered.size > 0 ? discoveredExitFor(s.discovered, from, next) : undefined;
+    const discoveredExit = s.discovered.size > 0
+      ? discoveredExitFor(s.discovered, from, next, s.route.length === 0 ? s.pendingEdgeSig : null)
+      : undefined;
     const edge = s.discovered.size > 0 ? undefined : (adjacency.get(from) ?? []).find(e => e.to === next && canPass(s)(e));
     if (!discoveredExit && !edge) {
       s.route = [];
@@ -128,6 +130,7 @@ const createEngine = ({ adjacency = buildAdjacency(), totalChecks }: EngineDeps 
       return; // phase stays 'traversing'
     }
     emitHop(s, events, next, discoveredExit, edge);
+    if (s.route.length === 0) s.pendingEdgeSig = null;
     s.phase = 'observing'; // observe the destination so its targets get triggered
   };
 
