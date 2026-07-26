@@ -39,6 +39,7 @@ const createWindowControls = (): WindowControlsPort => ({
 const createStorage = (): StoragePort => ({
   getLocation: () => window.api.getDataLocation(),
   reveal: () => window.api.revealDataFolder(),
+  revealProfile: async (profileId) => (await window.api.revealProfileFolder(profileId)).success,
   getSummary: () => window.api.getStorageSummary(),
   spritesBaseUrl: async (romFile) => window.api.getSpritesBaseUrl(romFile),
 });

@@ -29,6 +29,9 @@ interface StorageSummary {
 interface StoragePort {
   getLocation: () => Promise<DataLocation>;
   reveal: () => Promise<void>; // no-op when !canReveal
+  // One profile's folder. Resolves false when the host can't reveal (!canReveal) or
+  // the folder couldn't be opened, so a caller can tell the user instead of no-op'ing.
+  revealProfile: (profileId: string) => Promise<boolean>;
   getSummary: () => Promise<StorageSummary>;
   // Base URL for a ROM's extracted sprites (app-sprite:// on Electron,
   // Capacitor.convertFileSrc on mobile); ends with '/'. Empty when unavailable.

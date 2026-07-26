@@ -49,6 +49,7 @@ const getLocation = async (): Promise<DataLocation> => {
 const createCapacitorStorage = (): StoragePort => ({
   getLocation,
   reveal: async () => {},
+  revealProfile: async () => false,
   spritesBaseUrl: async (romFile) => {
     const stem = romFile.replace(/\.(sfc|smc)$/i, '');
     try {

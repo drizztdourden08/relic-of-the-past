@@ -27,6 +27,10 @@ const DOMAINS: { domain: DataDomain; label: string; dir: string }[] = [
   { domain: 'assets', label: 'Assets', dir: 'assets' },
 ];
 
+// Strips anything outside [A-Za-z0-9_-] so an id can never contain a path
+// separator, '..', or a drive letter.
+const sanitizeId = (id: string): string => id.replace(/[^A-Za-z0-9_-]/g, '_');
+
 const dirBytes = async (dir: string): Promise<number> => {
   let total = 0;
   let entries;
@@ -52,6 +56,11 @@ const getLocation = (): DataLocation => ({
 const registerStorageHandlers = (): void => {
   handle('storage:getLocation', () => getLocation());
   handle('storage:reveal', async () => { await shell.openPath(getUserDataPath()); });
+  handle('storage:revealProfile', async (_e, profileId) => {
+    const dir = getUserDataPath('profiles', sanitizeId(profileId));
+    const error = await shell.openPath(dir);
+    return error ? { success: false, error } : { success: true };
+  });
   handle('storage:getSummary', async (): Promise<StorageSummary> => {
     const domains: DomainUsage[] = [];
     for (const { domain, label, dir } of DOMAINS) {

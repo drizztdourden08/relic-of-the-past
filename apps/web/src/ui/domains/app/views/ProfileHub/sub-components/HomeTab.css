@@ -38,6 +38,12 @@
   font-weight: var(--weight-medium);
 }
 
+/* Sits in the info-card row, so it matches the cards' height instead of the
+   button's own intrinsic one. */
+.home-tab__folder-btn {
+  align-self: stretch;
+}
+
 /* Two-column layout — collapses to one column when there isn't room for two. */
 .home-tab__columns {
   display: grid;

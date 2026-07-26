@@ -50,6 +50,7 @@ const EMPTY_SUMMARY: StorageSummary = {
 const createStorage = (): StoragePort => ({
   getLocation: async () => EMPTY_SUMMARY.location,
   reveal: async () => {},
+  revealProfile: async () => false,
   getSummary: async () => EMPTY_SUMMARY,
   spritesBaseUrl: async () => '',
 });
