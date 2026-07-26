@@ -101,23 +101,5 @@ const recordExits = (graph: DiscoveredGraph, from: string, exits: SimExit[]): vo
   }
 };
 
-/**
- * Identity of an ARRIVAL: the destination plus the way in. A screen entered
- * through a different crossing is unexplored ground even when the screen itself
- * has been seen. Exits with no signature fall back to the screen alone, which is
- * the old behaviour.
- */
-const arrivalKey = (exit: SimExit): string =>
-  exit.edgeSig ? `${exit.to}#${exit.edgeSig}` : exit.to;
-
-/** Screens with at least one known way in that has never been used. */
-const screensWithUnusedArrival = (graph: DiscoveredGraph, arrivals: Set<string>): Set<string> => {
-  const out = new Set<string>();
-  for (const list of graph.values()) {
-    for (const exit of list) if (!arrivals.has(arrivalKey(exit))) out.add(exit.to);
-  }
-  return out;
-};
-
-export { reachableDiscovered, findDiscoveredPath, discoveredExitFor, recordExits, arrivalKey, screensWithUnusedArrival };
+export { reachableDiscovered, findDiscoveredPath, discoveredExitFor, recordExits };
 export type { DiscoveredGraph };

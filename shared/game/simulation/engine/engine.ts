@@ -7,7 +7,7 @@
 import type { SimObservation, SimEvent, TriggerAction } from '../types';
 import type { Adjacency, ScreenEdge } from './traversal';
 import { buildAdjacency, findScreenPath, reachableFrom } from './traversal';
-import { reachableDiscovered, findDiscoveredPath, discoveredExitFor, recordExits, arrivalKey } from './discovered-graph';
+import { reachableDiscovered, findDiscoveredPath, discoveredExitFor, recordExits } from './discovered-graph';
 import { requirementsMet } from '../requirements-map';
 import { buildReachContext, syncReachTokens, resetFrontier } from './explorer';
 import { evaluateOutcome, goalCheckDone, allChecksDone } from './goal';
@@ -123,12 +123,10 @@ const createEngine = ({ adjacency = buildAdjacency(), totalChecks }: EngineDeps 
     // clears `visited`; a landing OUTSIDE the explored region is a fresh visit instead.)
     const tile = landingTile(discoveredExit, edge);
     if (s.route.length > 0 && s.visited.has(next) && regionCovered(s.regionReach, next, tile)) {
-      if (discoveredExit) s.arrivals.add(arrivalKey(discoveredExit));
       s.virtual = { screenId: next, tile };
       events.push(narrative(s, `Backtrack through ${screenLabel(next)} entering at ${tile.col},${tile.row}`));
       return; // phase stays 'traversing'
     }
-    if (discoveredExit) s.arrivals.add(arrivalKey(discoveredExit));
     emitHop(s, events, next, discoveredExit, edge);
     s.phase = 'observing'; // observe the destination so its targets get triggered
   };

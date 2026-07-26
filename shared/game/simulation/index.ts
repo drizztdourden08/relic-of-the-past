@@ -66,6 +66,8 @@ export {
 export { buildSoftlockReport } from './engine/softlock-report';
 
 export { planTrigger, planChestTrigger, planSpriteTrigger, npcConfigForSprite } from './trigger/trigger-plans';
+export { buildEndSummary, formatEndSummary } from './engine/end-summary';
+export type { EndSummary } from './engine/end-summary';
 export { bossTriggerable, isReachable, meetsRequirements, bossRequirement } from './trigger/boss-gate';
 export type { BossSite } from './trigger/boss-gate';
 

@@ -13,7 +13,7 @@ import type { EngineState } from './state';
 
 const GRID = 64;
 /** Landing tiles sit on walls/door notches; scan a window around them. */
-const WINDOW = 6;
+const WINDOW = 3;
 
 /** Merge a screen's newly-flooded reach into its run-wide union. */
 const unionReach = (map: Map<string, boolean[][]>, screenId: string, reached: boolean[][]): void => {

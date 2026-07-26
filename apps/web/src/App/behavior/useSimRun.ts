@@ -14,7 +14,7 @@ import { linkStartTile } from '@shared/game/navigation/link-start-tile';
 import { createLiveGamePort, runSimulation, floodOverworldScreen, probeRoom } from '@app/lib/game/simulator';
 import { pauseSramSync, resumeSramSync } from '@app/lib/game/sram-sync';
 import { overworldOrigin } from '@app/lib/game/flood';
-import { buildSimRunReport } from '@shared/game/simulation';
+import { buildSimRunReport, formatEndSummary } from '@shared/game/simulation';
 
 interface SimRunDeps {
   activeProfile: Profile | null;
@@ -90,8 +90,9 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
       pauseSramSync();
       port.setAutoSkipDialog(true);
       try {
-        const { state, recorder, steps, reachedTarget, screenFloods, visits, path, checks } = await runSimulation(port, config);
+        const { state, recorder, steps, reachedTarget, screenFloods, visits, path, checks, tally, endSummary } = await runSimulation(port, config);
         const report = buildSimRunReport(state, recorder, { config, steps, reachedTarget });
+        for (const line of formatEndSummary(endSummary)) console.log(`[SimRun] END ${line}`);
         console.log(`[SimRun] outcome=${report.outcome} reachedTarget=${reachedTarget} steps=${steps} checks=${report.verifiedChecks.length} floods=${screenFloods.length}`);
         const inventory = {
           items: [...state.inventory].sort(),
@@ -99,7 +100,7 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
           bigKeys: [...state.bigKeys].sort(),
           events: [...state.events].sort(),
         };
-        const outPath = await window.api.writeSimRun({ ...report, screenFloods, visits, path, checks, inventory });
+        const outPath = await window.api.writeSimRun({ ...report, screenFloods, visits, path, checks, inventory, tally, endSummary });
         console.log(`[SimRun] Written to: ${outPath}`);
       } finally {
         port.setAutoSkipDialog(null);

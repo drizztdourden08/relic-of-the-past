@@ -7,7 +7,7 @@
  * unattended path the data-correction loop uses.
  */
 import type { SimulatorPort, SimObservation, SimEvent, DetectedCheck, EngineState, SimLocation, SimConfig, SimRunConfig } from '@shared/game/simulation';
-import { createEngine, createEngineState, createRecorder, recordCheck, recordTransition, recordDoorGate } from '@shared/game/simulation';
+import { createEngine, createEngineState, createRecorder, recordCheck, recordTransition, recordDoorGate, buildEndSummary } from '@shared/game/simulation';
 import type { RecorderState } from '@shared/game/simulation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
 import type { GridPos } from '@shared/game/navigation';
@@ -101,6 +101,8 @@ interface DriveResult {
   visits: VisitLog[];
   path: PathStep[];
   checks: CheckLog[];
+  tally: { regionJobs: number; backtracks: number; epochResets: number; hops: number };
+  endSummary: ReturnType<typeof buildEndSummary>;
 }
 
 const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise<DriveResult> => {
@@ -124,6 +126,8 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
   const visits: VisitLog[] = [];
   const path: PathStep[] = [{ ...describeScreen(state.virtual.screenId), observed: true }];
   const checks: CheckLog[] = [];
+  /** Does the region-memory path actually fire? Counted from the engine's own events. */
+  const tally = { regionJobs: 0, backtracks: 0, epochResets: 0, hops: 0 };
   const captureFlood = (st: EngineState): void => {
     const f = detectFor(st, cache)?.flood;
     if (f) screenFloods.push({ screenId: st.virtual.screenId, reachable: f.reachableCount, total: f.totalTiles, entrances: f.entranceCount, edges: f.edgeCount });
@@ -151,6 +155,12 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
 
       const { actions, events, nextState } = engine.step(state, obs);
       recordEvents(recorder, events, checks, path.length - 1, steps);
+      for (const e of events) {
+        if (e.msg.includes('(new region)')) tally.regionJobs += 1;
+        else if (e.msg.startsWith('Backtrack through')) tally.backtracks += 1;
+        else if (e.msg.startsWith('Running ')) tally.hops += 1;
+        else if (e.msg.includes('re-exploring after progress')) tally.epochResets += 1;
+      }
       for (const action of actions) await port.trigger(action);
 
       state = nextState;
@@ -171,7 +181,7 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
     unsub();
   }
 
-  return { state, recorder, steps, reachedTarget, screenFloods, visits, path, checks };
+  return { state, recorder, steps, reachedTarget, screenFloods, visits, path, checks, tally, endSummary: buildEndSummary(state) };
 };
 
 export { runSimulation };

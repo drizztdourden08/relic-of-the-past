@@ -64,8 +64,6 @@ interface EngineState {
   frontier: string[];
   /** Every screen reachable this epoch — feeds the softlock report. */
   reachedScreens: Set<string>;
-  /** Ways in already used, as `screenId#edgeSig` — see arrivalKey. */
-  arrivals: Set<string>;
 
   /** Screens whose trap shutters currently sit slammed shut behind the player. */
   trapClosed: Set<string>;
@@ -107,7 +105,6 @@ const createEngineState = (virtual: VirtualPlayer, inventory: Set<string>, confi
   regionJobs: [],
   frontier: [],
   reachedScreens: new Set([virtual.screenId]),
-  arrivals: new Set(),
   trapClosed: new Set(),
   done: new Set(),
   failed: new Set(),
@@ -135,7 +132,6 @@ const cloneState = (s: EngineState): EngineState => ({
   regionJobs: [...s.regionJobs],
   frontier: [...s.frontier],
   reachedScreens: new Set(s.reachedScreens),
-  arrivals: new Set(s.arrivals),
   trapClosed: new Set(s.trapClosed),
   done: new Set(s.done),
   failed: new Set(s.failed),
