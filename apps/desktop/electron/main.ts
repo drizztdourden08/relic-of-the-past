@@ -35,6 +35,7 @@ import { registerConnectionHandlers } from './connections/ipc-handlers';
 import { registerScreenEditorHandlers } from './screen-editor/ipc-handlers';
 import { registerShadowCastingHandlers } from './shadow-casting';
 import { registerAppHandlers } from './app/ipc-handlers';
+import { registerDiagnosticsHandlers } from './diagnostics/ipc-handlers';
 import { registerWasmHandlers } from './wasm/ipc-handlers';
 import { registerStorageHandlers } from './storage/ipc-handlers';
 import { registerFileHandlers } from './storage/file-handlers';
@@ -68,6 +69,7 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerShadowCastingHandlers },
   { register: registerUpdaterHandlers },
   { register: registerAppHandlers },
+  { register: registerDiagnosticsHandlers },
   { register: registerWasmHandlers },
   { register: registerStorageHandlers },
   { register: registerFileHandlers },
