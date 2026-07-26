@@ -25,6 +25,7 @@ interface InvokeContract {
   // Storage — data location, reveal in OS file manager, per-domain usage summary
   'storage:getLocation': () => Promise<DataLocation>;
   'storage:reveal': () => Promise<void>;
+  'storage:revealProfile': (profileId: string) => Promise<Result>;
   'storage:getSummary': () => Promise<StorageSummary>;
 
   // Generic file store — POSIX paths relative to the Data root

@@ -14,6 +14,7 @@ const INVOKE_MAP = {
   getUserDataPath: 'app:getUserDataPath',
   getDataLocation: 'storage:getLocation',
   revealDataFolder: 'storage:reveal',
+  revealProfileFolder: 'storage:revealProfile',
   getStorageSummary: 'storage:getSummary',
   fileReadBytes: 'file:readBytes',
   fileReadText: 'file:readText',

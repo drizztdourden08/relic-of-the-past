@@ -1,6 +1,10 @@
 /* @layer renderer-components @kind component */
+import { useCallback } from 'react';
+import { usePlatform } from '@app/platform';
+import { log } from '@app/lib/log-bus';
 import { HeroSaveCard } from '../../../compounds/HeroSaveCard';
 import { Box } from '../../../../../design-system/primitives/Box';
+import { Button } from '../../../../../design-system/primitives/Button';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { formatRelativeTime } from './home-tab/home-tab-helpers';
 import { useHomeTabSaves } from './home-tab/useHomeTabSaves';
@@ -16,6 +20,16 @@ const HomeTab = (props: HomeTabProps) => {
   const { profileId, romFile, isGameRunning, onStartGame, lastPlayed, created, windowMode } = props;
   const saves = useHomeTabSaves({ profileId, isGameRunning, onStartGame });
   const { heroSave, normalScreenshots, busyNormal, handleLoadNormal } = saves;
+  const { storage, capabilities } = usePlatform();
+
+  const handleOpenFolder = useCallback(async () => {
+    try {
+      const opened = await storage.revealProfile(profileId);
+      if (!opened) log.app('Could not open the profile folder', 'warn');
+    } catch (e: unknown) {
+      log.app(`Could not open the profile folder: ${e instanceof Error ? e.message : e}`, 'error');
+    }
+  }, [storage, profileId]);
 
   return (
     <Box className="home-tab">
@@ -38,6 +52,18 @@ const HomeTab = (props: HomeTabProps) => {
             <Text className="home-tab__info-label">Window</Text>
             <Text className="home-tab__info-value" style={CAPITALIZE}>{windowMode}</Text>
           </Box>
+        )}
+        {capabilities.revealDataFolder && (
+          <Button
+            variant="secondary"
+            size="sm"
+            className="home-tab__folder-btn"
+            icon="📂"
+            onClick={() => void handleOpenFolder()}
+            title="Open this profile's folder in the system file manager"
+          >
+            Open profile folder
+          </Button>
         )}
       </Box>
 
