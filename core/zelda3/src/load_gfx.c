@@ -6,6 +6,7 @@
 #include "player.h"
 #include "sprite.h"
 #include "assets.h"
+#include "game_hooks.h"
 
 // Allow this to be overwritten
 uint16 kGlovesColor[2] = {0x52f6, 0x376};
@@ -2063,6 +2064,7 @@ void Palette_Load_LinkArmorAndGloves() {  // 9bedf9
 void Palette_UpdateGlovesColor() {  // 9bee1b
   if (link_item_gloves)
     main_palette_buffer[0xfd] = aux_palette_buffer[0xfd] = kGlovesColor[link_item_gloves - 1];
+  GameHook_PlayerGlovesColorUpdated();
   flag_update_cgram_in_nmi += 1;
 }
 
@@ -2117,6 +2119,11 @@ void Palette_LoadMultiple(const uint16 *src, int dst, int x_ents, int y_pals) { 
 void Palette_LoadMultiple_Arbitrary(const uint16 *src, int dst, int x_ents) {  // 9bef7b
   memcpy(&aux_palette_buffer[dst >> 1], src, sizeof(uint16) * (x_ents + 1));
   memcpy(&main_palette_buffer[dst >> 1], src, sizeof(uint16) * (x_ents + 1));
+  // Every gear-palette load lands here, whichever outfit it picked. A custom sheet keeps its colors in a
+  // private palette bank rather than this row, which villagers and followers draw from too, so mirror the
+  // load into that bank and the player tracks armor, bunny form and the electro palette the same way.
+  if (dst == kPal_ArmorGloves)
+    GameHook_PlayerGearPaletteLoaded(src);
 }
 
 void Palette_LoadForFileSelect() {  // 9bef96
