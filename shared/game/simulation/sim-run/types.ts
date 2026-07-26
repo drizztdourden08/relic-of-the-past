@@ -29,6 +29,10 @@ interface SimRunConfig {
   probeItems: string[] | null;
   /** Optional entry tile for `probeRoom`, as the flood's start position. */
   probeTile: { row: number; col: number } | null;
+  /** Diagnostic: report every ROOM whose spawn table holds this sprite type, then
+   *  exit. Answers "where does the game actually put this?" when a dataset room
+   *  index is suspect. */
+  scanSprite: number | null;
   /** Max distinct screens the game-driven flood visits before ending (null = unlimited). */
   screenWalkLimit: number | null;
 }

@@ -11,7 +11,7 @@
 import { useEffect, useRef } from 'react';
 import { subscribeGameState, loadState, loadStateRef, wasmGetViewportInfo } from '../../lib/game';
 import { linkStartTile } from '@shared/game/navigation/link-start-tile';
-import { createLiveGamePort, runSimulation, floodOverworldScreen, probeRoom } from '@app/lib/game/simulator';
+import { createLiveGamePort, runSimulation, floodOverworldScreen, probeRoom, scanRoomsForSprite } from '@app/lib/game/simulator';
 import { pauseSramSync, resumeSramSync } from '@app/lib/game/sram-sync';
 import { overworldOrigin } from '@app/lib/game/flood';
 import { buildSimRunReport, formatEndSummary } from '@shared/game/simulation';
@@ -77,6 +77,16 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
         console.log(`[SimRun] flood seed=${JSON.stringify(startPos)} liveScreen=0x${liveScreen.toString(16)}`);
         console.log(`[SimRun] flood screen 0x${config.floodScreen.toString(16)}: ${JSON.stringify(flood && { reachable: flood.reachableCount, total: flood.totalTiles, entrances: flood.entranceCount, edges: flood.edgeCount, ledges: flood.ledgeCount })}`);
         await window.api.writeSimRun({ floodScreen: config.floodScreen, items, flood });
+        setTimeout(() => window.close(), 500);
+        return;
+      }
+
+      // Diagnostic: which rooms hold a given sprite? A dataset room index that
+      // points at the wrong cave is invisible until you ask the game itself.
+      if (config.scanSprite !== null) {
+        const hits = scanRoomsForSprite(config.scanSprite);
+        console.log(`[SimRun] sprite 0x${config.scanSprite.toString(16)} in ${hits.length} rooms`);
+        await window.api.writeSimRun({ scanSprite: config.scanSprite, hits });
         setTimeout(() => window.close(), 500);
         return;
       }

@@ -7,6 +7,7 @@ export type { ScreenFlood } from './flood-screen';
 export { floodRoomScreen } from './flood-room';
 export { detectScreenExits } from './screen-exits';
 export { probeRoom } from './probe-room';
+export { scanRoomsForSprite } from './scan-sprite';
 export type { RoomProbe } from './probe-room';
 export type { DetectedScreen } from './screen-exits';
 export { screenAreaInfo } from './screen-resolve';
