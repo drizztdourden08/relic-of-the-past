@@ -15,6 +15,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   saveOnQuit: true,
   displayPerfInTitle: false,
   disableFrameDelay: false,
+  vsync: false,
 
   // Aspect Ratio & Display
   extendedRendering: false,
@@ -46,6 +47,7 @@ const DEFAULT_SETTINGS: GameSettings = {
   windowMode: 'default',
   startFullscreen: false,
   viewportConstraint: 'none',
+  pixelPerfect: false,
 
   // Mobile display
   renderIntoNotch: true,
@@ -182,7 +184,7 @@ WindowScale = ${settings.windowScale}
 NewRenderer = ${boolToIni(settings.newRenderer)}
 EnhancedMode7 = ${boolToIni(settings.enhancedMode7)}
 NoSpriteLimits = ${boolToIni(settings.noSpriteLimits)}
-LinearFiltering = ${boolToIni(settings.linearFiltering)}
+LinearFiltering = ${boolToIni(settings.linearFiltering && !settings.pixelPerfect)}
 OutputMethod = ${settings.outputMethod}
 DimFlashes = ${boolToIni(settings.dimFlashes)}
 ${settings.linkSprite ? 'LinkGraphics = /link_sprite.zspr\n' : ''}

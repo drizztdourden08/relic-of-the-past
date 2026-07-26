@@ -4,7 +4,7 @@ import { type ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
 import { SegmentedControl } from '../../../../../design-system/primitives/SegmentedControl';
-import { WINDOW_SECTION, PERFORMANCE_SECTION } from './SettingsView.constants';
+import { buildWindowSection, PERFORMANCE_SECTION } from './SettingsView.constants';
 import { SAVE_SECTION } from './gameplay-settings-sections';
 import { renderControl as renderSaveControl, isDisabled } from './gameplay-settings-controls';
 
@@ -24,7 +24,8 @@ const WINDOW_MODE_OPTIONS = [
   { value: 'borderless', label: 'Borderless' },
 ];
 
-const SECTIONS: Section[] = [WINDOW_SECTION, PERFORMANCE_SECTION, SAVE_SECTION];
+// Window is built per-render: the Pixel Perfect item only appears under the Letterbox viewport.
+const buildSections = (s: GameSettings): Section[] => [buildWindowSection(s), PERFORMANCE_SECTION, SAVE_SECTION];
 
 const renderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
   if (key === 'windowMode') {
@@ -55,7 +56,7 @@ const SystemSettings = (props: SystemSettingsProps) => {
   const { settings, onChange } = props;
   return (
     <SettingsLayout
-      sections={SECTIONS}
+      sections={buildSections(settings)}
       settings={settings}
       onChange={onChange}
       renderControl={renderControl}

@@ -42,6 +42,10 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   // Window settings (Electron-managed, no WASM restart needed)
   'windowMode',
   'viewportConstraint',
+  // Canvas fit is recomputed from a React prop — no WASM restart needed
+  'pixelPerfect',
+  // Frame pacing (swapped via WasmSetVsync — the main loop's schedule can change mid-run)
+  'vsync',
   // Audio volume (Web Audio gain, no restart needed)
   'masterVolume',
   // Sub-volumes (WASM DSP-level, no restart needed)

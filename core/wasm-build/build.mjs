@@ -50,7 +50,7 @@ const hookSrcs = [
 ].map((f) => h(`${f}.c`));
 
 // Our Emscripten entry points (replace the native main.c). Resolved from this dir.
-const emMain = ['emscripten_main.c', 'emscripten_sdl.c', 'emscripten_api.c', 'emscripten_io.c'].map((f) => join(here, f));
+const emMain = ['emscripten_main.c', 'emscripten_sdl.c', 'emscripten_api.c', 'emscripten_io.c', 'emscripten_pacing.c'].map((f) => join(here, f));
 
 const cflags = [
   '-O2', '-g2',

@@ -24,6 +24,18 @@ extern bool g_js_input_mode;
 // ── FPS (defined in emscripten_main.c) ──
 extern int g_curr_fps;
 
+// ── Frame pacing (defined in emscripten_pacing.c) ──
+// Nominal NTSC frame time. The game step is gated on this so a display-synced loop
+// advances at the right speed no matter what the refresh rate is.
+#define FRAME_INTERVAL_MS (1000.0 / 60.0988)
+// True while the loop is display-synced (rAF); false for the timer schedule.
+extern bool g_vsync;
+// Milliseconds of game time owed. Only consulted in vsync mode.
+extern double g_frame_accumulator;
+extern double g_last_frame_time;
+void SetVsyncMode(bool enable);
+int StepsOwedThisTick(void);
+
 // ── Audio (defined in emscripten_main.c) ──
 extern uint8 *g_audiobuffer, *g_audiobuffer_cur, *g_audiobuffer_end;
 extern int g_frames_per_block;

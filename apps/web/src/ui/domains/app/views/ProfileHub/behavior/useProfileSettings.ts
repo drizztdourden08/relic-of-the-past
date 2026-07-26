@@ -16,7 +16,7 @@ const useProfileSettings = (props: ProfileHubProps) => {
   const {
     profile, isGameRunning, masterVolumeOverride,
     onWindowModeChange, onConstraintSettingsChange, onMasterVolumeChange, onDisplayPerfChange,
-    onSaveSlotSettingsChange, onEdgeEffectChange, onShadowCastingChange,
+    onSaveSlotSettingsChange, onEdgeEffectChange, onShadowCastingChange, onPixelPerfectChange,
   } = props;
 
   const { window: win } = usePlatform();
@@ -80,7 +80,7 @@ const useProfileSettings = (props: ProfileHubProps) => {
         profileId: profile.id, isGameRunning, changedKeys, restartToastShownRef, setToasts,
         setFullscreen: win.setFullscreen,
         onWindowModeChange, onConstraintSettingsChange, onMasterVolumeChange, onDisplayPerfChange,
-        onSaveSlotSettingsChange, onEdgeEffectChange, onShadowCastingChange,
+        onSaveSlotSettingsChange, onEdgeEffectChange, onShadowCastingChange, onPixelPerfectChange,
       });
       return next;
     });
@@ -108,6 +108,7 @@ const useProfileSettings = (props: ProfileHubProps) => {
           onDisplayPerfChange?.(merged.displayPerfInTitle);
           onEdgeEffectChange?.(merged.overworldEdgeEffect);
           onShadowCastingChange?.(merged.postProcessingShadows);
+          onPixelPerfectChange?.(merged.pixelPerfect);
           getInputManager().setFunctionMappings(merged.functionMappings ?? DEFAULT_FUNCTION_MAPPINGS);
           // Always attempt to push — if module isn't running yet, it's a no-op.
           pushLiveSettings(merged);
