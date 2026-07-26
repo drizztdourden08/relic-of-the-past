@@ -3584,9 +3584,9 @@ void Lanmola_Draw(int k) {  // 85a64a
   do {
     int j = r2 + k * 64;
     r2 = r2 - 8 & 63;
-    OamSetX(oam, moldorm_x_lo[j] - BG2HOFS_copy2);
+    OamSetXLowByte(oam, moldorm_x_lo[j] - BG2HOFS_copy2);
     if (!sign8(beamos_x_hi[j]))
-      oam->y = moldorm_y_lo[j] - beamos_x_hi[j] - BG2VOFS_copy2;
+      OamSetY(oam, OamWrappedScreenY(moldorm_y_lo[j] - beamos_x_hi[j] - BG2VOFS_copy2));
     j = beamos_y_hi[j];
     if (n != 7 || i != 0) {
       oam->charnum = (n == i) ? kLanmola_Draw_Char1[j] : 0xc6;
@@ -3601,9 +3601,9 @@ void Lanmola_Draw(int k) {  // 85a64a
   do {
     int j = r5 + k * 64;
     r5 = r5 - 8 & 63;
-    OamSetX(oam, moldorm_x_lo[j] - BG2HOFS_copy2);
+    OamSetXLowByte(oam, moldorm_x_lo[j] - BG2HOFS_copy2);
     if (!sign8(beamos_x_hi[j]))
-      oam->y = moldorm_y_lo[j] + 10 - BG2VOFS_copy2;
+      OamSetY(oam, OamWrappedScreenY(moldorm_y_lo[j] + 10 - BG2VOFS_copy2));
     oam->charnum = 0x6c;
     oam->flags = 0x34;
     bytewise_extended_oam[oam - oam_buf] = 2;
