@@ -945,6 +945,7 @@ continue_after_set:
         q = (bank1 & 1) ? q << 4 : q;
         WORD(oam_buf[oam_pos].charnum) = (q & 0xc000) | oam_priority_value | link_palette_bits_of_oam | 4;
         bytewise_extended_oam[oam_pos] = 0;
+        g_oam_player[oam_pos] = 1;
       }
     }
 
@@ -959,6 +960,7 @@ continue_after_set:
       q = (bank2 & 1) ? q << 4 : q;
       WORD(oam_buf[oam_pos].charnum) = (q & 0xc000) | oam_priority_value | link_palette_bits_of_oam | 0x14;
       bytewise_extended_oam[oam_pos] = 0;
+      g_oam_player[oam_pos] = 1;
     }
   }
   SwordResult sr;
@@ -1085,12 +1087,14 @@ continue_after_set:
         WORD(oam_buf[oam_pos].charnum) = td & 0xf000 | oam_priority_value | link_palette_bits_of_oam;
         WORD(oam_buf[oam_pos].x) = oam_x | oam_y << 8;
         bytewise_extended_oam[oam_pos] = 2 + (oam_x >= 0xf8);
+        g_oam_player[oam_pos] = 1;
       }
 
       if ((td << 4 & 0xf000) != 0xf000) {
         WORD(oam_buf[oam_pos+1].charnum) = td << 4 & 0xf000 | oam_priority_value | link_palette_bits_of_oam | 2;
         WORD(oam_buf[oam_pos+1].x) = (uint8)(xcoord) | (ycoord - zcoord + 8) << 8;
         bytewise_extended_oam[oam_pos+1] = 2;
+        g_oam_player[oam_pos+1] = 1;
       }
     }
   }

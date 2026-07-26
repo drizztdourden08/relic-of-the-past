@@ -127,5 +127,10 @@ extern uint8 g_oam_y_high[128];
 // (int16)screenX >> 9) per slot; 0 for any sprite in [-512,511] (so most need nothing). Set by the OAM
 // helpers when wide, synced to the PPU each frame, letting the PPU place a sprite at its true absolute X.
 extern uint8 g_oam_x_high[128];
+// Which OAM slots hold the player's own body this frame. The gear palette lives in a sprite palette that
+// villagers and followers also draw from, so a custom sheet's colors cannot go there without recoloring
+// them. Marked slots read a private palette bank in the PPU instead. Set by the player OAM builder,
+// cleared with the buffer each frame, synced to the PPU alongside the arrays above.
+extern uint8 g_oam_player[128];
 
 #endif  // ZELDA3_TYPES_H_
