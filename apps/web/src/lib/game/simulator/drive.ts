@@ -63,6 +63,11 @@ interface PathStep {
   observed: boolean;
   /** How this screen was entered — see arrivalLabel. */
   via?: string;
+  /** Items that appeared on arriving here. */
+  gained?: string[];
+  /** Items that VANISHED on arriving here. A durable item in this list means
+   *  something wrote over its slot, which an end-of-run total cannot reveal. */
+  lost?: string[];
 }
 
 const describeScreen = (screenId: string): Omit<PathStep, 'observed'> => {
@@ -82,15 +87,18 @@ interface CheckLog {
   /** Index into `path` at the moment it verified. */
   atPathIndex: number;
   step: number;
+  /** Inventory the moment it verified — an item that LEAVES this list between two
+   *  checks was clobbered by something, which no end-of-run total can show. */
+  items: string[];
 }
 
-const recordEvents = (recorder: RecorderState, events: SimEvent[], checks: CheckLog[], pathIndex: number, step: number): void => {
+const recordEvents = (recorder: RecorderState, events: SimEvent[], checks: CheckLog[], pathIndex: number, step: number, items: string[]): void => {
   for (const event of events) {
     const detected = (event.data as { detected?: DetectedCheck } | undefined)?.detected;
     if (!detected?.matchedName) continue;
     const loc = locationForScreen(detected.at.screenId);
     recordCheck(recorder, { name: detected.matchedName, screenId: detected.at.screenId, roomId: loc?.roomId ?? 0, tile: detected.at.tile });
-    checks.push({ name: detected.matchedName, screenId: detected.at.screenId, atPathIndex: pathIndex, step });
+    checks.push({ name: detected.matchedName, screenId: detected.at.screenId, atPathIndex: pathIndex, step, items });
   }
 };
 
@@ -127,6 +135,7 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
   const screenFloods: ScreenFloodLog[] = [];
   const visits: VisitLog[] = [];
   const path: PathStep[] = [{ ...describeScreen(state.virtual.screenId), observed: true }];
+  let prevInv: string[] = [...state.inventory].sort();
   const checks: CheckLog[] = [];
   /** Does the region-memory path actually fire? Counted from the engine's own events. */
   const tally = { regionJobs: 0, backtracks: 0, epochResets: 0, hops: 0 };
@@ -156,7 +165,7 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
       for (const door of obs.interactables?.doors ?? []) recordDoorGate(recorder, door);
 
       const { actions, events, nextState } = engine.step(state, obs);
-      recordEvents(recorder, events, checks, path.length - 1, steps);
+      recordEvents(recorder, events, checks, path.length - 1, steps, [...nextState.inventory].sort());
       for (const e of events) {
         const m = /^Screen .+? (via .+|at \d+,\d+)$/.exec(e.msg);
         if (m && path.length > 0) path[path.length - 1].via = m[1];
@@ -174,7 +183,16 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
         recordTransition(recorder, prevScreen, nextState.virtual.screenId);
         // 'traversing' means the route has further hops to make, so this screen is
         // being passed through and will never be observed.
-        path.push({ ...describeScreen(nextState.virtual.screenId), observed: nextState.phase !== 'traversing' });
+        const inv = [...nextState.inventory].sort();
+        const gained = inv.filter((i) => !prevInv.includes(i));
+        const lost = prevInv.filter((i) => !inv.includes(i));
+        prevInv = inv;
+        path.push({
+          ...describeScreen(nextState.virtual.screenId),
+          observed: nextState.phase !== 'traversing',
+          ...(gained.length > 0 ? { gained } : {}),
+          ...(lost.length > 0 ? { lost } : {}),
+        });
       }
       if ((changedScreen || nextState.epoch > prevEpoch) && nextState.phase !== 'traversing' && !nextState.stopHit && !nextState.outcome) captureFlood(nextState);
       // `target` = physically traversed to (visited), not merely flood-reachable.

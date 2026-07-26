@@ -289,7 +289,8 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
     }
     const action = planTrigger(sprite);
     if (action) {
-      targets.push({ screenId, roomId: sprite.roomId, action, key, label: spriteLabel(sprite), noun: sprite.kind, verb: 'Talking to', tile });
+      const pickup = sprite.kind === 'standing' || sprite.kind === 'overworld';
+      targets.push({ screenId, roomId: sprite.roomId, action, key, label: spriteLabel(sprite), noun: pickup ? 'standing item' : sprite.kind, verb: pickup ? 'Picking up' : 'Talking to', tile });
     }
   }
 

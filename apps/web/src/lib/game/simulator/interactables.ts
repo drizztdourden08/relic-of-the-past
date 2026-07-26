@@ -7,7 +7,7 @@
 import type { SimChest, SimSprite, SimDoor } from '@shared/game/simulation';
 import { wasmGetRoomChests, wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetRoomDoorInfo, wasmGetRoomCellLocks } from '../';
 import type { SimDoorDirection } from '../';
-import { spriteKindFor } from './sprite-kinds';
+import { spriteKindFor, standingItemId } from './sprite-kinds';
 
 const DOOR_DIRS: Record<SimDoorDirection, SimDoor['direction']> = {
   north: 'n',
@@ -62,6 +62,7 @@ const getOverworldSprites = (screenIndex: number): SimSprite[] =>
     tile: { row: s.row, col: s.col },
     posKnown: true,
     kind: spriteKindFor(s.spriteType),
+    itemId: standingItemId(s.spriteType),
   }));
 
 /**

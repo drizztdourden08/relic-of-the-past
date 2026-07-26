@@ -46,6 +46,10 @@ const planSpriteTrigger = (sprite: SimSprite): TriggerAction | null => {
     return { type: 'npc', flagType: cfg.flagType, flagMask: cfg.flagMask, itemId: cfg.itemId };
   }
   if (sprite.kind === 'standing' || sprite.kind === 'overworld') {
+    // The flag lives in save_ow_event_info[screen], and for an outdoor sprite the
+    // "room" IS that screen. Indoors there is no such screen, so a standing item
+    // in a cave has no flag to set here and is left for its own check entry.
+    if (!sprite.outdoor) return null;
     return { type: 'overworld', screen: sprite.roomId, mask: 0x40, itemId: sprite.itemId ?? 0 };
   }
   return null;
