@@ -9,6 +9,10 @@ import type { SimOutcome, DatasetSuggestion } from '../types';
 interface SimRunConfig {
   /** 0-based save-state slot to load before running (null = current state). */
   startSlot: number | null;
+  /** Named MANUAL save to load instead of a slot — `--auto-state` cannot be
+   *  combined with `--sim-run` because both hooks load the profile on mount and
+   *  race, so the flag has to do it itself. */
+  stateName: string | null;
   /** Stop early once this screen is reached (null = run to outcome). */
   target: string | null;
   /** Halt right after this check triggers (engine SimConfig.stopAtCheckId). */

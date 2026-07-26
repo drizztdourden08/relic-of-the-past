@@ -2,19 +2,24 @@
 /**
  * Walls the run has blown open.
  *
- * A cracked wall is tile attr 0xF0-0xFF (`TileBehavior_FlaggableDoor`) — solid
- * until its flag is set, and the flag is set by blasting it. The flood models it
- * as `pass: 'obstacle', req: 'bombs'`, which lets the player STAND on the wall
- * once bombs are carried but not continue past it: on the village well that
- * moves the flood's top edge two rows and stops, 29 rows short of the chest
- * behind it. Standing on a wall is not what the game does — bombing turns it
- * into floor, permanently, and that is a state change rather than a
- * requirement.
+ * `Bomb_CheckForDestructibles` (dungeon.c:5170) is the ground truth: an interior
+ * attr of `0xF0 | j` is not scenery, it is a marker saying "destructible door
+ * slot `j` is here", and a blast opens it when that slot's type masks to 0x28,
+ * 0x2A or 0x2E. The attr appears on BOTH faces of the wall it pierces — the
+ * village well carries `0xF0` at rows 37-38 and `0xF8` at rows 27-28, with eight
+ * rows of plain wall between them — because either face can be bombed.
  *
- * So the run bombs it: discovery offers the wall as a target once bombs are in
- * hand, triggering records it here, and every subsequent grid build stamps those
- * cells walkable. The same shape as `stampIndoorBlockers`, which already edits
- * grids on the way out of `getScreenGrids`.
+ * That geometry is why a blast radius is the wrong model. Stamping cells around
+ * the marker leaves the wall's interior solid, so the flood gains two rows and
+ * still stops; the run reached the marker and never the chamber behind it. What
+ * a blast actually does is PIERCE: it opens a corridor the width of the marker,
+ * straight through the wall, out to the floor on the far side.
+ *
+ * So the carve is deliberately conservative — it only consumes plain wall and
+ * further door markers, only along one axis, only for the marker's own width,
+ * and only if it reaches open floor within `MAX_WALL_DEPTH`. A tunnel that never
+ * surfaces is not a passage and is discarded, which keeps the model from
+ * inventing shortcuts through the middle of a room.
  *
  * ⚠️ This is sim-side state, not a game write. Every other trigger pokes real
  * SRAM; the tilemap swap a real bomb performs happens in the explosion path and
@@ -26,48 +31,110 @@
  */
 import type { GridPos } from '@shared/game/navigation';
 
-/** Cracked-wall attrs: solid until flagged (see interior-attrs.ts). */
+/** Destructible-door markers: `0xF0 | slot` (see Bomb_CheckForDestructibles). */
 const BOMBABLE_ATTR_MIN = 0xf0;
 const BOMBABLE_ATTR_MAX = 0xff;
-/** A blast opens the whole cracked patch, not one 8px cell. */
-const BLAST_RADIUS = 2;
+/** Attrs a blast may consume: plain interior wall in its two flavours. */
+const WALL_ATTRS = new Set([0x01, 0x04]);
+/** Deepest wall a single blast pierces — beyond this it is rock, not a wall. */
+const MAX_WALL_DEPTH = 16;
 const GRID = 64;
+const NEIGHBOURS = [[-1, 0], [1, 0], [0, -1], [0, 1]] as const;
 
-const bombed = new Map<number, Set<string>>();
+/** Blast seeds per room. The carve needs the grids, so it happens at stamp time. */
+const seeds = new Map<number, GridPos[]>();
+/** Cells the carve opened, so `isBombed` answers after the fact. */
+const opened = new Map<number, Set<string>>();
 
 const cellKey = (row: number, col: number): string => `${row},${col}`;
 
 const isBombableAttr = (attr: number): boolean => attr >= BOMBABLE_ATTR_MIN && attr <= BOMBABLE_ATTR_MAX;
+/** Wall or another marker — what a blast is allowed to eat through. */
+const isPierceable = (attr: number): boolean => WALL_ATTRS.has(attr) || isBombableAttr(attr);
 
-/** Record a blast at `tile` in `roomId`, opening the patch around it. */
+/** Record a blast at `tile` in `roomId`. */
 const markBombed = (roomId: number, tile: GridPos): void => {
-  const set = bombed.get(roomId) ?? new Set<string>();
-  for (let dr = -BLAST_RADIUS; dr <= BLAST_RADIUS; dr++) {
-    for (let dc = -BLAST_RADIUS; dc <= BLAST_RADIUS; dc++) {
-      const row = tile.row + dr;
-      const col = tile.col + dc;
-      if (row >= 0 && row < GRID && col >= 0 && col < GRID) set.add(cellKey(row, col));
-    }
-  }
-  bombed.set(roomId, set);
+  seeds.set(roomId, [...(seeds.get(roomId) ?? []), tile]);
 };
 
 const isBombed = (roomId: number, tile: GridPos): boolean =>
-  bombed.get(roomId)?.has(cellKey(tile.row, tile.col)) === true;
+  opened.get(roomId)?.has(cellKey(tile.row, tile.col)) === true;
 
-/** Turn every recorded blast cell that still reads as a cracked wall into floor. */
-const stampBombedWalls = (roomId: number, grids: number[][][]): void => {
-  const set = bombed.get(roomId);
-  if (!set) return;
-  for (const key of set) {
-    const [row, col] = key.split(',').map(Number);
-    for (const grid of grids) {
-      if (isBombableAttr(grid[row]?.[col] ?? 0)) grid[row][col] = 0x00;
+/** The contiguous run of marker cells the blast landed on, 4-connected. */
+const markerPatch = (grid: number[][], tile: GridPos): GridPos[] => {
+  const seen = new Set<string>([cellKey(tile.row, tile.col)]);
+  const patch: GridPos[] = [];
+  const queue: GridPos[] = [tile];
+  while (queue.length > 0) {
+    const cur = queue.shift() as GridPos;
+    if (!isBombableAttr(grid[cur.row]?.[cur.col] ?? 0)) continue;
+    patch.push(cur);
+    for (const [dr, dc] of NEIGHBOURS) {
+      const row = cur.row + dr;
+      const col = cur.col + dc;
+      const key = cellKey(row, col);
+      if (row < 0 || row >= GRID || col < 0 || col >= GRID || seen.has(key)) continue;
+      seen.add(key);
+      queue.push({ row, col });
     }
   }
+  return patch;
+};
+
+/**
+ * Walk `lanes` outward from `start` along one axis, eating wall, and return the
+ * cells crossed once open floor is reached. An empty result means this axis is
+ * rock rather than a wall, so nothing is opened.
+ */
+const pierce = (grid: number[][], lanes: number[], start: number, step: number, vertical: boolean): GridPos[] => {
+  const cells: GridPos[] = [];
+  for (let d = 1; d <= MAX_WALL_DEPTH; d++) {
+    const at = start + step * d;
+    if (at < 0 || at >= GRID) return [];
+    const attrs = lanes.map((lane) => (vertical ? grid[at]?.[lane] : grid[lane]?.[at]) ?? 0x01);
+    // Every lane open — the far side is reached, and the wall is behind us.
+    if (attrs.every((a) => !isPierceable(a))) return cells;
+    for (const lane of lanes) cells.push(vertical ? { row: at, col: lane } : { row: lane, col: at });
+  }
+  return [];
+};
+
+/** Every cell one blast opens: the marker itself plus the corridor it pierces. */
+const carve = (grid: number[][], tile: GridPos): GridPos[] => {
+  const patch = markerPatch(grid, tile);
+  if (patch.length === 0) return [];
+  const rows = patch.map((c) => c.row);
+  const cols = patch.map((c) => c.col);
+  const colLanes = [...new Set(cols)].sort((a, b) => a - b);
+  const rowLanes = [...new Set(rows)].sort((a, b) => a - b);
+  // A marker sits on one face, so the rock in front of it has to clear as well
+  // as the rock behind — both ends of the axis are pierced.
+  return [
+    ...patch,
+    ...pierce(grid, colLanes, Math.min(...rows), -1, true),
+    ...pierce(grid, colLanes, Math.max(...rows), +1, true),
+    ...pierce(grid, rowLanes, Math.min(...cols), -1, false),
+    ...pierce(grid, rowLanes, Math.max(...cols), +1, false),
+  ];
+};
+
+/** Open every recorded blast, in every layer, on the way out of a grid build. */
+const stampBombedWalls = (roomId: number, grids: number[][][]): void => {
+  const blasts = seeds.get(roomId);
+  if (!blasts || grids.length === 0) return;
+  const set = opened.get(roomId) ?? new Set<string>();
+  for (const tile of blasts) {
+    for (const grid of grids) {
+      for (const cell of carve(grid, tile)) {
+        grid[cell.row][cell.col] = 0x00;
+        set.add(cellKey(cell.row, cell.col));
+      }
+    }
+  }
+  opened.set(roomId, set);
 };
 
 /** Cleared between runs so one run's blasts never leak into the next. */
-const resetBombedWalls = (): void => { bombed.clear(); };
+const resetBombedWalls = (): void => { seeds.clear(); opened.clear(); };
 
 export { markBombed, isBombed, stampBombedWalls, resetBombedWalls, isBombableAttr, BOMBABLE_ATTR_MIN, BOMBABLE_ATTR_MAX };

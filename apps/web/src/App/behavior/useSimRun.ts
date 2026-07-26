@@ -9,7 +9,7 @@
  */
 
 import { useEffect, useRef } from 'react';
-import { subscribeGameState, loadState, wasmGetViewportInfo } from '../../lib/game';
+import { subscribeGameState, loadState, loadStateRef, wasmGetViewportInfo } from '../../lib/game';
 import { linkStartTile } from '@shared/game/navigation/link-start-tile';
 import { createLiveGamePort, runSimulation, floodOverworldScreen, probeRoom } from '@app/lib/game/simulator';
 import { pauseSramSync, resumeSramSync } from '@app/lib/game/sram-sync';
@@ -43,7 +43,11 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
       await loadProfileForGame(activeProfile);
       await waitForRunning();
 
-      if (config.startSlot !== null) {
+      if (config.stateName !== null) {
+        const ok = await loadStateRef(config.stateName);
+        console.log(`[SimRun] loadStateRef(${config.stateName}) → ${ok}`);
+        await new Promise((r) => setTimeout(r, 2000));
+      } else if (config.startSlot !== null) {
         const loaded = await loadState(config.startSlot);
         console.log(`[SimRun] loadState(${config.startSlot}) → ${loaded}`);
         if (!loaded) {

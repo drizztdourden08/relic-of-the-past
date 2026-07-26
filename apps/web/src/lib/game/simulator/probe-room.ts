@@ -48,6 +48,10 @@ interface RoomProbe {
   doors: Array<{ index: number; kind: string; nativeType?: number; dir: string; row: number; col: number; opened: boolean }>;
   /** Sprites the room reports, with the kind the simulator assigns them. */
   sprites: Array<{ type: string; row: number; col: number; kind: string }>;
+  /** Raw attrs per layer across the rows where the flood stops — what it thinks is solid. */
+  attrRows: Array<{ row: number; raw: string; l0: string; l1: string; reached: string }>;
+  /** Whole-room shape: '.' solid, ' ' floor, 'o' obstacle(req), '#' flooded, '*' flooded obstacle. */
+  map: string[];
   /** Bounding box of the reached region — shows where the flood actually is. */
   bbox?: { minRow: number; maxRow: number; minCol: number; maxCol: number };
 }
@@ -128,6 +132,38 @@ const probeRoom = (roomId: number, entryTile?: { row: number; col: number }, ite
     sprites: getRoomSprites(roomId).map((sp) => ({
       type: `0x${sp.spriteType.toString(16)}`, row: sp.tile.row, col: sp.tile.col, kind: sp.kind,
     })),
+    attrRows: (() => {
+      const b = getScreenGrids({ isIndoors: true, roomId, owScreenIndex: 0 });
+      const hex = (g?: number[][], row?: number) =>
+        g && row != null ? (g[row] ?? []).slice(12, 21).map((v) => v.toString(16).padStart(2, '0')).join(' ') : '';
+      const out = [];
+      for (let row = 6; row <= 44; row++) {
+        out.push({
+          row,
+          raw: hex(b.rawAttrGrid, row),
+          l0: hex(b.dualLayerGrids?.layer0, row),
+          l1: hex(b.dualLayerGrids?.layer1, row),
+          reached: (run?.result.reachable[row] ?? []).slice(8, 32).map((v) => (v > 0 ? '#' : '.')).join(''),
+        });
+      }
+      return out;
+    })(),
+    map: (() => {
+      const b = getScreenGrids({ isIndoors: true, roomId, owScreenIndex: 0 });
+      const grids = [b.rawAttrGrid];
+      const rows: string[] = [];
+      for (let row = 0; row < 64; row++) {
+        let line = '';
+        for (let col = 0; col < 64; col++) {
+          const a = Math.min(...grids.map((g) => g[row]?.[col] ?? 0xff));
+          const hot = (run?.result.reachable[row]?.[col] ?? 0) > 0;
+          const obstacle = a >= 0xf0 || a === 0x71;
+          line += obstacle ? (hot ? '*' : 'o') : a === 0x00 ? (hot ? '#' : ' ') : (hot ? '+' : '.');
+        }
+        rows.push(`${String(row).padStart(2)}|${line}`);
+      }
+      return rows;
+    })(),
     reachable: detected?.flood.reachableCount ?? 0,
     bbox: run ? (() => {
       let minRow = 99, maxRow = -1, minCol = 99, maxCol = -1;
