@@ -1,0 +1,22 @@
+/* @layer renderer-components @kind style */
+.textarea {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  color: var(--c-text);
+  font-size: var(--text-base);
+  font-family: inherit;
+  outline: none;
+  resize: vertical;
+  transition: border-color var(--transition-normal);
+}
+
+.textarea:focus {
+  border-color: var(--c-gold);
+}
+
+.textarea::placeholder {
+  color: var(--c-text-faint);
+}

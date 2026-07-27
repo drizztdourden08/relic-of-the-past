@@ -42,6 +42,7 @@ import { registerWasmHandlers } from './wasm/ipc-handlers';
 import { registerStorageHandlers } from './storage/ipc-handlers';
 import { registerFileHandlers } from './storage/file-handlers';
 import { initAutoUpdater, registerUpdaterHandlers } from './updater';
+import { registerGithubHandlers } from './github/ipc-handlers';
 import { emit } from './lib/ipc/handle';
 
 // Every IPC domain's register fn, gated by environment. ipcMain.handle order is
@@ -76,6 +77,7 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerWasmHandlers },
   { register: registerStorageHandlers },
   { register: registerFileHandlers },
+  { register: registerGithubHandlers },
 ];
 
 // Ensure consistent userData path across dev and production

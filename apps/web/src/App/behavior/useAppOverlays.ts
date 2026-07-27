@@ -12,6 +12,7 @@ interface AppOverlaysParams {
 
 const useAppOverlays = ({ showDialog, dismissDialog }: AppOverlaysParams) => {
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+  const [showBugReportDialog, setShowBugReportDialog] = useState(false);
   const [shadowEditorWarningShown, setShadowEditorWarningShown] = useState(
     () => localStorage.getItem('shadowEditor.warningDismissed') === 'true',
   );
@@ -36,6 +37,7 @@ const useAppOverlays = ({ showDialog, dismissDialog }: AppOverlaysParams) => {
 
   return {
     showUpdateDialog, setShowUpdateDialog,
+    showBugReportDialog, setShowBugReportDialog,
     handleShowShadowEditor,
   };
 };

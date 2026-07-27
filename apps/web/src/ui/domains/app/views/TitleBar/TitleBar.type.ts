@@ -22,6 +22,7 @@ interface TitleBarProps {
   onToggleSimulator: () => void;
   onShowShadowEditor: () => void;
   onShowAbout: () => void;
+  onShowBugReport: () => void;
   activeProfile: Profile | null;
   gameRunning: boolean;
   /** Visibility of each toggleable widget, keyed by widget id, for menu checkmarks. */

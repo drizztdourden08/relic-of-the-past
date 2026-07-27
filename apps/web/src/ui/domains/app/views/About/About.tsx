@@ -5,7 +5,7 @@ import { Text } from '../../../../design-system/primitives/Text';
 import { Image } from '../../../../design-system/primitives/Image';
 import { Button } from '../../../../design-system/primitives/Button';
 import { useAboutInfo } from './behavior/useAboutInfo';
-import { useDebugText } from './behavior/useDebugText';
+import { useDebugText } from '@app/lib/diagnostics';
 import './About.css';
 
 const copyText = async (text: string): Promise<void> => {

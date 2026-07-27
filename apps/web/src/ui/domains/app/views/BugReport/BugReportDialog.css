@@ -1,0 +1,39 @@
+/* @layer renderer-components @kind style */
+.bug-report {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  width: 32rem;
+  max-width: 90vw;
+  padding: var(--space-lg);
+}
+
+.bug-report__debug-info {
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.bug-report__debug-info-text {
+  margin-top: var(--space-sm);
+  max-height: 12rem;
+  overflow: auto;
+  font-size: var(--text-xs);
+  white-space: pre-wrap;
+}
+
+.bug-report__status {
+  font-size: var(--text-sm);
+}
+
+.bug-report__status--error {
+  color: var(--c-danger);
+}
+
+.bug-report__result-url {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+  word-break: break-all;
+  user-select: text;
+}

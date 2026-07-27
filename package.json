@@ -72,6 +72,7 @@
     "@capawesome/capacitor-file-picker": "^8.0.2",
     "@electron-toolkit/utils": "^4.0.0",
     "@iconify-icons/game-icons": "^1.2.1",
+    "@iconify-icons/lucide": "^1.2.135",
     "@iconify/react": "^6.0.2",
     "electron-updater": "^6.8.3",
     "js-yaml": "^4.1.1",
