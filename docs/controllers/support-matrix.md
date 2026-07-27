@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Controller support
 
 Which controllers work on each platform, over which connection, and where features are
