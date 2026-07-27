@@ -9,6 +9,7 @@ import type { TileAttrContext } from '../navigation/tile-attrs';
 import type { TraversalRequirement } from '../navigation/nav-data.types';
 import type { CheckDefinition } from '../types';
 import type { PresenceGameState } from './presence/state';
+import type { RoomSectionSplit } from './room-section';
 
 // ─── Phases & Outcomes ───────────────────────────────────────────────────────
 
@@ -76,6 +77,40 @@ interface SimObservation {
   exits?: SimExit[];
   /** Flood-reached tiles of the current screen (region memory for re-visits). */
   reached?: boolean[][];
+  /** Combat rows for the sprite types on the current screen, resolved via the port. */
+  combat?: CombatContext;
+  /** Which axes of the current indoor room split into separate scrolling
+   *  sections. Undefined outdoors or when no room is loaded. */
+  sectionSplit?: RoomSectionSplit;
+}
+
+/** Resolved per-sprite-type damage row: initial health, initial flags4, and
+ *  the 16-entry damage-by-class table already reduced through the game's own
+ *  two-step lookup. */
+interface SpriteCombatInfo {
+  health: number;
+  flags4: number;
+  damageByClass: number[];
+}
+
+/** Shared ancilla (projectile) damage-class table and tile-attribute ->
+ *  projectile-collision table (0 pass, 1 block, 2 sloped, 3 layer-dependent,
+ *  4 priority flip). */
+interface CombatTables {
+  ancillaDamageClass: number[];
+  projectileTileCollision: number[];
+}
+
+/**
+ * Combat rows for the sprites on the current screen. `tables` is null when
+ * the developer-tools combat gate is off — combat reasoning is then
+ * unavailable and every gating sprite must read as not killable, never as
+ * killable. `bySpriteType` carries one row per distinct sprite type seen;
+ * a missing/null row means the query missed (gate off, or an out-of-range type).
+ */
+interface CombatContext {
+  tables: CombatTables | null;
+  bySpriteType: Record<number, SpriteCombatInfo | null>;
 }
 
 /** A big multi-sub-screen overworld area (castle-style 2×2 groups). */
@@ -85,9 +120,26 @@ interface SimArea {
   size: number;
 }
 
+/** Which detection branch produced an exit. Diagnosis only — never a decision.
+ *  A fabricated edge is useless to chase until you know which branch invented it. */
+type SimExitOrigin = 'ow-border' | 'ow-entrance' | 'room-border' | 'room-stair' | 'room-door' | 'room-doorway' | 'room-warp' | 'exit-table';
+
 /** A game-detected way off a screen: destination + where the player lands there. */
 interface SimExit {
   to: string;
+  origin?: SimExitOrigin;
+  /**
+   * Which way in this crossing uses, as seen from the destination.
+   *
+   * Arriving on a screen through its west edge says nothing about what is
+   * reachable from its east edge, and a wall can carry SEVERAL separate
+   * crossings — Uncle's Estate East has two on its west border. Keying explored
+   * state on the screen alone therefore skips real ground. For a border the
+   * signature is the contiguous tile span the crossing occupies (from the
+   * flood's own ConnectionInfo.positions); for a door, hole or stair it is the
+   * game's entrance id, already unique.
+   */
+  edgeSig?: string;
   entryTile?: GridPos;
   /** Border crossings are walkable both ways; holes/doors are not implied so. */
   twoWay?: boolean;
@@ -150,7 +202,12 @@ type TriggerAction =
   | { type: 'door'; roomId: number; doorIndex: number; doorKind: 'small-key' | 'big-key' | 'bombable'; cellLock?: boolean }
   | { type: 'kill'; roomId: number; itemId: number; opensShutters: boolean }
   | { type: 'trapShutters'; roomId: number }
-  | { type: 'pullSwitch'; roomId: number }
+  /** Blast a cracked wall open. Bombs are permanent once obtained, so this needs
+   *  no count — see flood/bombed-walls.ts. */
+  | { type: 'bombWall'; roomId: number; tile: GridPos }
+  /** `drain` is set when the switch's effect reaches beyond its own room — a
+   *  remote overworld screen's event byte, not a local shutter. */
+  | { type: 'pullSwitch'; roomId: number; drain?: { screen: number; mask: number } }
   | { type: 'progress'; step: 'follower-join' | 'follower-deliver' };
 
 // ─── Detection ───────────────────────────────────────────────────────────────
@@ -223,6 +280,14 @@ interface SimChest {
 
 interface SimSprite {
   roomId: number;
+  /**
+   * True when this came from the OVERWORLD spawn table, so `roomId` is a screen
+   * index rather than a room. A check-giving NPC is classified `kind: 'npc'`
+   * whether it stands indoors or out, so the kind cannot answer this — and it
+   * has to be answerable, because an overworld screen index says which world the
+   * sprite is in (see NpcCheckConfig.owWorld).
+   */
+  outdoor?: boolean;
   spriteType: number;
   tile: GridPos;
   /** False when the sprite's tile position is unknown (coarse reachability). */
@@ -262,6 +327,7 @@ export type {
   FlagSnapshot,
   SimObservation,
   SimExit,
+  SimExitOrigin,
   SimArea,
   SimLocation,
   ScreenGridBundle,
@@ -276,4 +342,8 @@ export type {
   SimChest,
   SimSprite,
   SimDoor,
+  SpriteCombatInfo,
+  CombatTables,
+  CombatContext,
+  RoomSectionSplit,
 };

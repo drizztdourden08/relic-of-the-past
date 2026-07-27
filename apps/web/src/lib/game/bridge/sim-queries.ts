@@ -10,13 +10,13 @@ interface SimFlagSnapshot {
   dungInfo: Uint16Array;
   /** save_ow_event_info — uint8[0x82], indexed by overworld screen. */
   owEventInfo: Uint8Array;
-  /** g_progress_buf — 16-byte progress buffer. */
+  /** g_progress_buf — 19-byte progress buffer (see state_queries.c). */
   progress: Uint8Array;
 }
 
 const DUNG_INFO_LEN = 320;
 const OW_EVENT_LEN = 0x82;
-const PROGRESS_LEN = 16;
+const PROGRESS_LEN = 21;
 
 interface SimChestRaw {
   chestIndex: number;

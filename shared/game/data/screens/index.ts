@@ -31,3 +31,4 @@ export { getPalaceMismatches, clearPalaceMismatches, describePalaceMismatch } fr
 export type { PalaceMismatch } from './palace-fallback';
 export { setNameOverlay, hasNameOverlay, displayName } from './names-overlay';
 export type { NameOverlay } from './names-overlay';
+export { dungeonGroupOf, dungeonGroupForScreen } from './dungeon-group';

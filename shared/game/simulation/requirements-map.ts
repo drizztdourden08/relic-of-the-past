@@ -16,6 +16,13 @@ import { LOGIC_REFERENCED_ITEMS } from './logic-item-names';
 
 /** Item name → traversal token. Keys/big-keys are handled separately (consumable / per-dungeon). */
 const ITEM_TO_TOKEN: Record<string, TraversalRequirement> = {
+  // Bombs are a traversal item, not just a consumable. One interior tile attr is a
+  // bombable wall (`req: 'bombs'`), and without this entry the token never reached
+  // the flood at all — so the wall stayed shut forever — AND receiving bombs did
+  // not count as traversal-affecting, so a wall already seen was never
+  // re-evaluated once they arrived. The well's own chests hand over the bombs that
+  // open its top room, so both halves have to work for that chest to be reachable.
+  Bombs: 'bombs',
   'Power Glove': 'lift.2',
   'Titans Mitts': 'lift.3',
   Hammer: 'hammer',

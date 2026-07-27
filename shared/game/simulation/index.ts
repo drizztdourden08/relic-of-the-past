@@ -21,6 +21,7 @@ export type {
   SimChest,
   SimSprite,
   SimDoor,
+  SpriteCombatInfo, CombatTables, CombatContext, RoomSectionSplit,
 } from './types';
 
 export type { SimulatorPort } from './port';
@@ -66,6 +67,9 @@ export {
 export { buildSoftlockReport } from './engine/softlock-report';
 
 export { planTrigger, planChestTrigger, planSpriteTrigger, npcConfigForSprite } from './trigger/trigger-plans';
+export { arrivalLabel } from './engine/step-helpers';
+export { buildEndSummary, formatEndSummary } from './engine/end-summary';
+export type { EndSummary } from './engine/end-summary';
 export { bossTriggerable, isReachable, meetsRequirements, bossRequirement } from './trigger/boss-gate';
 export type { BossSite } from './trigger/boss-gate';
 

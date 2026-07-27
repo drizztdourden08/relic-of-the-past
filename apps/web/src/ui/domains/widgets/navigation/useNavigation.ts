@@ -12,7 +12,7 @@ import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetProgressIndicator,
 import type { OverworldVariantInfo } from '../../../../lib/game';
 import { enrichEntrances } from './widget-helpers';
 import { useScreenDetection, usePlayerDebugState, useFloodOnTransition } from './hooks';
-import { buildInventory, buildOverworldBlockers, computeStartContext } from './nav-flood/prepare';
+import { buildInventory, computeStartContext } from './nav-flood/prepare';
 import { collectIndoorEntrances } from './nav-flood/indoor-entrances';
 import { propagateScreens } from './nav-flood/propagate';
 import { annotateLayerToggles, buildIndoorScreenBundle, computeFallHoleLandings } from './nav-flood/finalize';
@@ -131,8 +131,7 @@ const useNavigation = () => {
       const primaryScreenIndex = isIndoors ? activeScreenIndex : liveOverworldScreenIndex;
 
       const items = buildInventory(equipment, inventoryItems);
-      const blockerWorldPoints = isIndoors ? [] : buildOverworldBlockers();
-      const { startPos, tileContext, rawAttrGrid, dualLayerGrids, playerLayer } = computeStartContext({ vp, primaryScreenIndex, isIndoors });
+      const { startPos } = computeStartContext({ vp, primaryScreenIndex, isIndoors });
 
       // Get entrance data + exit map from WASM (cached per run)
       const allEntrances = enrichEntrances();
@@ -153,8 +152,7 @@ const useNavigation = () => {
       const intraEdges = roomLayout?.intraEdges ?? [];
 
       const { responses, overworldBundle } = propagateScreens({
-        isIndoors, primaryScreenIndex, startPos, rawAttrGrid, items, tileContext,
-        allEntrances, exitScreenByRoom, intraEdges, dualLayerGrids, playerLayer, blockerWorldPoints,
+        isIndoors, primaryScreenIndex, startPos, items, allEntrances, intraEdges,
       });
       // Outdoors: set bundle before the early-return so it persists even with no reachable screens.
       if (overworldBundle) setScreenBundle(overworldBundle);

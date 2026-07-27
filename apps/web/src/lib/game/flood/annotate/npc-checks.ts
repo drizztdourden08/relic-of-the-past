@@ -9,6 +9,7 @@
  * check, hence the `room` narrowing.
  */
 import { CHECK_NPC_FLAGS } from '@shared/game/checks/flags';
+import { npcConfigForSprite } from '@shared/game/simulation';
 
 interface NpcCheck {
   name: string;
@@ -16,13 +17,24 @@ interface NpcCheck {
 }
 
 /** The check this sprite represents in this room, or null when it is not one. */
-const npcCheckFor = (spriteType: number, roomId: number, completed: ReadonlySet<string>): NpcCheck | null => {
-  for (const [name, cfg] of Object.entries(CHECK_NPC_FLAGS)) {
-    if (cfg.spriteType !== spriteType) continue;
-    if (cfg.room !== undefined && cfg.room !== roomId) continue;
-    return { name, done: completed.has(name) };
-  }
-  return null;
+/**
+ * Which check this sprite gives, using the SAME matcher the simulator triggers
+ * through. This had its own copy of the rule, so once the simulator learned that
+ * a sprite type is not unique across the two worlds the widget would have gone on
+ * labelling the light-world flute boy as the dark-world stump — showing a check
+ * the run correctly refuses to take, which is the one thing the widget must never
+ * do.
+ */
+const npcCheckFor = (
+  spriteType: number,
+  roomId: number,
+  completed: ReadonlySet<string>,
+  outdoor?: boolean,
+): NpcCheck | null => {
+  const cfg = npcConfigForSprite(spriteType, roomId, outdoor);
+  if (!cfg) return null;
+  const entry = Object.entries(CHECK_NPC_FLAGS).find(([, c]) => c === cfg);
+  return entry ? { name: entry[0], done: completed.has(entry[0]) } : null;
 };
 
 export { npcCheckFor };

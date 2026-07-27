@@ -10,15 +10,18 @@
  * supplied the gate is skipped (every interactable counts as reachable).
  */
 import type { GridPos } from '../../navigation/types';
-import type { SimObservation, SimChest, SimSprite } from '../types';
+import type { SimObservation, SimChest, SimSprite, TriggerAction } from '../types';
 import { planTrigger, npcConfigForSprite } from '../trigger/trigger-plans';
 import type { PresenceGameState } from '../presence/state';
 import { evaluatePresence } from '../presence/evaluate';
 import { keyAvailable } from './explorer';
+import { evaluateRoomThreat } from './enemy-reach';
+import type { RoomThreat } from './enemy-reach';
+import { isPullSwitch, drainEffectForSwitchRoom, owEventSet, standingItemPresent } from './discover-switches';
+import { hasReachableNeighbor, DOOR_REACH_RADIUS } from './discover-reach';
+import type { Reached } from './discover-reach';
+import { discoverBombableWalls } from './discover-bombs';
 import type { EngineState, SimTarget } from './state';
-
-/** Tiles the detect flood reached; undefined = no grid, so gating is skipped. */
-type Reached = boolean[][] | undefined;
 
 const isTileReachable = (reached: Reached, tile: GridPos): boolean =>
   !reached || reached[tile.row]?.[tile.col] === true;
@@ -49,42 +52,12 @@ const FLOOD_GRID_SIZE = 64;
 const isOutOfFloodRange = (tile: GridPos): boolean =>
   tile.row < 0 || tile.row >= FLOOD_GRID_SIZE || tile.col < 0 || tile.col >= FLOOD_GRID_SIZE;
 
-/**
- * A sprite is interactable when the player can stand NEXT to it — its own tiles are
- * often solid (a blocking NPC like the uncle stamps a 3×3 footprint into the
- * grid, so the spawn tile itself never floods). Any reachable tile within a
- * 2-tile ring around the spawn counts as "can talk to it".
- */
-const SPRITE_TALK_RADIUS = 2;
-
-const hasReachableNeighbor = (reached: Reached, tile: GridPos, radius: number = SPRITE_TALK_RADIUS): boolean => {
-  if (!reached) return true;
-  for (let dr = -radius; dr <= radius; dr++) {
-    for (let dc = -radius; dc <= radius; dc++) {
-      if (reached[tile.row + dr]?.[tile.col + dc] === true) return true;
-    }
-  }
-  return false;
-};
-
-/** Door records sit several tiles inside walls, away from walkable floor
- *  (internal quadrant doors run up to ~10 tiles from the nearest floor). */
-const DOOR_REACH_RADIUS = 10;
-
 /** Item ids the game grants for key drops (id-map 0x24 / 0x32). */
 const SMALL_KEY_ITEM = 0x24;
 const BIG_KEY_ITEM = 0x32;
 
 /** Progress-buffer slot carrying follower_indicator (1 = the follower tagging along). */
 const FOLLOWER_SLOT = 13;
-
-/**
- * Pull switches (Sprite_PullSwitch_bounce, sprite types 0x04-0x07). Pulling one
- * sets dung_flag_statechange_waterpuzzle, which the room's tag routine reads to
- * raise its trapdoors — that is what opens the Behind-Sanctuary shutter onto the
- * Sanctuary. Only meaningful in a room that still has a shutter shut.
- */
-const isPullSwitch = (spriteType: number): boolean => spriteType >= 0x04 && spriteType <= 0x07;
 
 /**
  * The follower NPC's two scripted interactions (sprite type 0x76). Same
@@ -101,14 +74,13 @@ const FOLLOWER_STEPS = [
 
 /**
  * Unknown-position interactables (remote rooms) fall back to coarse
- * screen-level reachability. Overworld sprite spawns on large 2x2 areas pack
- * the second screen's coordinates past the first, so tile coords can run up
- * to ~126 on either axis — those also fall back to coarse reachability
- * instead of indexing out of the flood grid (`?? 0` would silently read them
- * as unreachable and drop them).
+ * screen-level reachability. A known position is always local to the screen
+ * being observed — overworld sprites are resolved to their true screen and
+ * local tile before this runs (see `getOverworldSprites`) — so it is judged
+ * against the flood normally.
  */
 const interactableReachable = (posKnown: boolean, reached: Reached, tile: GridPos): boolean =>
-  !posKnown || isOutOfFloodRange(tile) || hasReachableNeighbor(reached, tile);
+  !posKnown || hasReachableNeighbor(reached, tile);
 
 /**
  * A chest is a solid 2x2 block the player can never stand on — the game opens it only
@@ -131,7 +103,7 @@ const chestReachable = (posKnown: boolean, reached: Reached, tile: GridPos): boo
  * presenceState was observed, gating also fails open (all present).
  */
 const spritePresent = (sprite: SimSprite, presenceState: PresenceGameState | undefined): boolean => {
-  const cfg = npcConfigForSprite(sprite.spriteType, sprite.roomId);
+  const cfg = npcConfigForSprite(sprite.spriteType, sprite.roomId, sprite.outdoor);
   if (!cfg?.presence || !presenceState) return true;
   return evaluatePresence(cfg.presence, presenceState);
 };
@@ -144,14 +116,32 @@ const spriteKey = (sprite: SimSprite): string =>
  *  shutters (the sanctuary's escape door) share the door kind but not the tag. */
 const KILL_GATE_TAG = (t: number): boolean => t >= 0x01 && t <= 0x13;
 
+/** The overworld screen the run is VIRTUALLY standing on, or null when indoors.
+ *  Traversal is virtual, so the game's physical position stays wherever the save
+ *  started — it cannot answer which screen an outdoor sprite has to belong to. */
+const virtualOwScreen = (screenId: string): number | null => {
+  const m = /^ow:(\d+)/.exec(screenId);
+  return m ? Number(m[1]) : null;
+};
+
+/** No sprite gates anything here — the verdict a room with nothing to clear
+ *  would trivially give, without running the combat sweep to get it. */
+const EMPTY_THREAT: RoomThreat = { gating: [], clearable: true };
+
 type Interactables = NonNullable<SimObservation['interactables']>;
 
+/** Sprite keys the current threat sweep counts as gating the room's clear
+ *  (flags4 lacks the room-clear-exempt bit — see enemy-reach.ts). */
+const gatingSpriteKeys = (threat: RoomThreat): Set<string> => new Set(threat.gating.map((g) => spriteKey(g.sprite)));
+
 /** Killable enemies still alive: a carrier until its own kill target ran, a
- *  plain enemy until the room's clear trigger ran. */
-const livingKillables = (state: EngineState, screenId: string, inter: Interactables): SimSprite[] =>
-  inter.sprites.filter((sp) => (sp.carriesKey || sp.carriesBigKey
+ *  gating sprite until the room's clear trigger ran. */
+const livingKillables = (state: EngineState, screenId: string, inter: Interactables, threat: RoomThreat): SimSprite[] => {
+  const gating = gatingSpriteKeys(threat);
+  return inter.sprites.filter((sp) => (sp.carriesKey || sp.carriesBigKey
     ? !state.done.has(spriteKey(sp))
-    : sp.kind === 'other' && !state.done.has(`clear:${screenId}`)));
+    : gating.has(spriteKey(sp)) && !state.done.has(`clear:${screenId}`)));
+};
 
 const chestLabel = (chest: SimChest): string => `chest (room ${chest.roomId.toString(16)} #${chest.chestIndex})`;
 const spriteLabel = (sprite: SimSprite): string => `${sprite.kind} (room ${sprite.roomId.toString(16)})`;
@@ -161,11 +151,25 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
   const inter = obs.interactables;
   if (!inter) return [];
   const screenId = state.virtual.screenId;
+  const owScreen = virtualOwScreen(screenId);
   const targets: SimTarget[] = [];
 
   const killGated = (inter.tags ?? [0, 0]).some(KILL_GATE_TAG);
   const shutters = inter.doors.filter((d) => d.kind === 'shutter');
-  const living = livingKillables(state, screenId, inter);
+  // The game only ever consults Sprite_CheckIfRoomIsClear in a room whose tag
+  // gates on it, so the sweep only runs there — a room that isn't kill-gated
+  // has no clearable/unclearable verdict to give in the first place.
+  const threat = killGated && shutters.some((d) => !d.opened)
+    ? evaluateRoomThreat({
+        sprites: inter.sprites,
+        reached,
+        grids: obs.grids,
+        inventory: state.inventory,
+        combat: obs.combat,
+        split: obs.sectionSplit,
+      })
+    : EMPTY_THREAT;
+  const living = livingKillables(state, screenId, inter, threat);
   // Open shutters with killables still alive: walking deeper into the room
   // slams the doors shut behind the player (the game's trap-door rule) — every
   // target found in this window carries the trap marker.
@@ -182,7 +186,12 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
     }
   }
 
-  const hasBombs = [...state.inventory].some((n) => n.includes('Bomb'));
+  // Keyed on the traversal token, not on a substring of a display name: matching
+  // 'Bomb' also matches the medallion whose name starts the same way, which would
+  // have handed the run bombs it never picked up.
+  const hasBombs = state.reachTokens.has('bombs');
+  // Bombs are permanent once obtained, so any cracked wall is openable from then on.
+  if (hasBombs) targets.push(...discoverBombableWalls(state, obs, reached));
   const hasSword = [...state.inventory].some((n) => n.includes('Sword'));
   const DOOR_NOUN = { 'small-key': 'key door', 'big-key': 'big key door', bombable: 'bombable wall' } as const;
   const DOOR_VERB = { 'small-key': 'Unlocking', 'big-key': 'Unlocking', bombable: 'Bombing' } as const;
@@ -205,13 +214,26 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
   for (const sprite of inter.sprites) {
     const key = spriteKey(sprite);
     if (state.done.has(key) || state.failed.has(key)) continue;
+    // A big overworld area's spawn table lists every screen's sprites at once,
+    // already resolved to the screen each one actually sits on. One that
+    // belongs to a neighbouring screen has no flood here to judge it against —
+    // it becomes a target when THAT screen is observed instead.
+    if (sprite.outdoor && owScreen !== null && sprite.roomId !== owScreen) continue;
     if (!interactableReachable(sprite.posKnown, reached, sprite.tile)) continue;
     if (!spritePresent(sprite, obs.presenceState)) continue;
+    if (!standingItemPresent(sprite, obs.presenceState)) continue;
     const tile = sprite.posKnown ? sprite.tile : undefined;
     if (isPullSwitch(sprite.spriteType)) {
       const tagged = (inter.tags ?? [0, 0]).some((t) => t !== 0);
-      if (tagged && shutters.some((d) => !d.opened)) {
-        const action = { type: 'pullSwitch', roomId: sprite.roomId } as const;
+      const opensShutters = tagged && shutters.some((d) => !d.opened);
+      const drain = drainEffectForSwitchRoom(sprite.roomId);
+      // A drain switch already thrown wastes a step for no further effect —
+      // offer it only while its target bit is still unset.
+      const drainPending = drain !== undefined && !owEventSet(obs.presenceState, drain.screen, drain.mask);
+      if (opensShutters || drainPending) {
+        const action: TriggerAction = drain
+          ? { type: 'pullSwitch', roomId: sprite.roomId, drain }
+          : { type: 'pullSwitch', roomId: sprite.roomId };
         targets.push({ screenId, roomId: sprite.roomId, action, key, label: `pull switch (room ${sprite.roomId.toString(16)})`, noun: 'pull switch', verb: 'Pulling', tile });
       }
       continue;
@@ -239,26 +261,28 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
     }
     const action = planTrigger(sprite);
     if (action) {
-      targets.push({ screenId, roomId: sprite.roomId, action, key, label: spriteLabel(sprite), noun: sprite.kind, verb: 'Talking to', tile });
+      const pickup = sprite.kind === 'standing' || sprite.kind === 'overworld';
+      targets.push({ screenId, roomId: sprite.roomId, action, key, label: spriteLabel(sprite), noun: pickup ? 'standing item' : sprite.kind, verb: pickup ? 'Picking up' : 'Talking to', tile });
     }
   }
 
   // Kill-gated shutter doors: clearing the room's enemies opens them — only
-  // in rooms whose header TAG is a kill/clear-to-open variant.
-  if (hasSword && killGated && shutters.some((d) => !d.opened)) {
+  // in rooms whose header TAG is a kill/clear-to-open variant, and only once
+  // EVERY gating sprite is confirmed killable (RoomThreat.clearable), not just
+  // the first one found.
+  if (killGated && shutters.some((d) => !d.opened) && threat.clearable && threat.gating.length > 0) {
     const key = `clear:${screenId}`;
     if (!state.done.has(key) && !state.failed.has(key)) {
-      const enemy = inter.sprites.find((sp) =>
-        sp.kind === 'other' && !sp.carriesKey && !sp.carriesBigKey
-        && interactableReachable(sp.posKnown, reached, sp.tile));
-      if (enemy) {
-        const action = { type: 'kill', roomId: enemy.roomId, itemId: 0xff, opensShutters: true } as const;
-        targets.push({ screenId, roomId: enemy.roomId, action, key, label: `guards (room ${enemy.roomId.toString(16)})`, noun: 'guards', verb: 'Defeating', tile: enemy.tile });
-      }
+      // Key-carriers get their own dedicated drop target above; pick a
+      // non-carrier gating sprite to anchor this one where possible.
+      const rep = threat.gating.find((g) => !g.sprite.carriesKey && !g.sprite.carriesBigKey) ?? threat.gating[0];
+      const tile = rep.from ?? rep.sprite.tile;
+      const action = { type: 'kill', roomId: rep.sprite.roomId, itemId: 0xff, opensShutters: true } as const;
+      targets.push({ screenId, roomId: rep.sprite.roomId, action, key, label: `guards (room ${rep.sprite.roomId.toString(16)})`, noun: 'guards', verb: 'Defeating', tile });
     }
   }
 
   return targets;
 };
 
-export { discoverTargets, isTileReachable, hasReachableOpenTile, KILL_GATE_TAG };
+export { discoverTargets, isTileReachable, hasReachableOpenTile, KILL_GATE_TAG, chestKey, spriteKey };

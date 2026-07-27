@@ -27,8 +27,15 @@ interface DirectRoomFlagEntry {
   mask: number;
 }
 
-/** Chest-open bit masks indexed by chestIndex (0-5) for save_dung_info format. */
-const CHEST_OPEN_MASKS = [0x10, 0x20, 0x40, 0x80, 0x100, 0x200] as const;
+/**
+ * Room-state bit masks by slot, in save_dung_info format (the live room word
+ * shifted right by 4). Slots 0-5 are the chest-open bits. Slot 6 is the other
+ * bit a standing heart piece can occupy: the game records an indoor pickup at
+ * live 0x4000, or live 0x2000 when the sprite sits in the room's right half
+ * (HeartUpgrade_CheckIfAlreadyObtained, sprite_main.c:1311). Live 0x2000 is
+ * already slot 5, so a right-half piece needs no new slot at all.
+ */
+const CHEST_OPEN_MASKS = [0x10, 0x20, 0x40, 0x80, 0x100, 0x200, 0x400] as const;
 
 /**
  * Chest-type checks: detected via CHEST_OPEN_MASKS[chestIndex].
@@ -37,6 +44,9 @@ const CHECK_ROOM_FLAGS: Record<string, RoomFlagEntry> = {
   // ═══════════════════════════════════════════
   // Hyrule Castle / Sewers
   // ═══════════════════════════════════════════
+  // Standing heart piece, not a chest — slot 5 is the room-state bit the game
+  // uses for a pickup in the room's right half (this one is at column 46).
+  'Lost Woods Hideout': { roomId: 0x0e1, chestIndex: 5 },
   'Secret Passage': { roomId: 0x55, chestIndex: 0 },
   'Hyrule Castle - Boomerang Chest': { roomId: 0x71, chestIndex: 0 },
   'Hyrule Castle - Map Chest': { roomId: 0x72, chestIndex: 0 },

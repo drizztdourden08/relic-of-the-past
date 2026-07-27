@@ -49,14 +49,17 @@ describe('ledge hops in the walk BFS', () => {
     expect(dist[20 * GRID + 5]).toBe(999);
   });
 
-  it('gives a real distance across a ledge drop', () => {
+  it('sorts everything across a ledge drop after every walk on this side', () => {
     const ledges = [{ startRow: 9, startCol: 5, endRow: 11, endCol: 5 }];
     const dist = stepDistances(gridWithWall(10), { row: 5, col: 5 }, ledges);
-    // 4 steps down to row 9, then one hop to row 11.
+    // 4 steps down to row 9 — plain walking, so a plain distance.
     expect(dist[9 * GRID + 5]).toBe(4);
-    expect(dist[11 * GRID + 5]).toBe(5);
-    // And the walk continues normally beyond the landing.
-    expect(dist[20 * GRID + 5]).toBe(14);
+    // The drop is ONE-WAY, so it must not look cheap: the landing costs more
+    // than any walk on the current footing can, and the walk beyond it carries
+    // that penalty along. Otherwise the run drops off with work still pending
+    // above and, the screen being marked visited, never comes back for it.
+    expect(dist[11 * GRID + 5]).toBeGreaterThan(999);
+    expect(dist[20 * GRID + 5]).toBe(dist[11 * GRID + 5] + 9);
   });
 
   it('treats a ledge as one-way — the far side cannot walk back up it', () => {

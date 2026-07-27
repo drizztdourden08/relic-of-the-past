@@ -1,6 +1,5 @@
 /* @layer renderer-appshell @kind logic */
 /** Pure builders for the --dump-nav debug payload (no WASM calls — data passed in). */
-import { floodFillScreen, getConnections } from '@shared/game/navigation';
 import { spawnLandingTile } from '../../../lib/game/flood';
 import type { FloodFillResult, ConnectionInfo } from '@shared/game/navigation';
 import type {

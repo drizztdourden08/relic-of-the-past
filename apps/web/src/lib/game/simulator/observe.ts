@@ -5,11 +5,14 @@
  * known screen id (via screen detection) plus the player's pixel→tile conversion.
  * Inventory is the tracker's Set; flags are independent SRAM copies for diffing.
  */
-import type { SimObservation, VirtualPlayer, FlagSnapshot, SimLocation, SimulatorPort } from '@shared/game/simulation';
+import type { SimObservation, VirtualPlayer, FlagSnapshot, SimLocation, SimulatorPort, SimSprite, CombatContext } from '@shared/game/simulation';
 import type { EngineState } from '@shared/game/simulation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
 import { SCREEN_BY_ID } from '@shared/game/data/screens';
 import { detectScreenExits } from './screen-exits';
+import { locationForScreen } from './screen-location';
+import { interiorScreenId } from './screen-resolve';
+import type { GridPos } from '@shared/game/navigation';
 import type { DetectedScreen } from './screen-exits';
 import { emptySnapshot, buildPresenceState, emptyPresenceState } from '@shared/game/simulation';
 import type { MapState } from '@shared/game/types';
@@ -23,31 +26,25 @@ import { readMapState } from './read-game-state';
 
 const IDLE_VIRTUAL: VirtualPlayer = { screenId: 'unknown', tile: { row: 0, col: 0 } };
 
-const virtualFrom = (map: MapState): VirtualPlayer => {
-  // Feed the SAME disambiguation context the navigation widget's useScreenDetection
-  // uses (entranceId/whichEntrance + palaceIndex + progressTier + completedChecks).
-  // An indoor roomIndex is not unique on its own — an interior can share a room
-  // value with a dungeon room (e.g. the seed run started in the first castle's
-  // "Water Room" 0x11 during the rain intro, whose room value collided with a
-  // village interior, mis-seeding the virtual player there until the first hop). palaceIndex
-  // steers the resolver to the dungeon match and whichEntrance disambiguates
-  // shared-room interiors, so the first observe resolves correctly.
-  const variantState: VariantGameState = {
-    completedChecks: getCompletedChecks(),
-    entranceId: map.whichEntrance ?? undefined,
-    progressTier: wasmGetProgressIndicator()?.tier,
-  };
-  const screen = resolveCurrentScreen(
-    map.isIndoors, map.palaceIndex, map.roomIndex, map.overworldScreenIndex, map.whichEntrance, variantState,
-  );
-  const screenId = screen?.id ?? (map.isIndoors ? `room:${map.roomIndex}` : `ow:${map.overworldScreenIndex}`);
-
+const tileOf = (map: MapState): GridPos => {
   const { x: screenWorldX, y: screenWorldY } = screenOriginFor({
     isIndoors: map.isIndoors, linkX: map.linkX, linkY: map.linkY, screenIndex: map.overworldScreenIndex,
   });
-  const tile = linkStartTile({ linkX: map.linkX, linkY: map.linkY, screenWorldX, screenWorldY });
+  return linkStartTile({ linkX: map.linkX, linkY: map.linkY, screenWorldX, screenWorldY });
+};
 
-  return { screenId, tile };
+const virtualFrom = (map: MapState): VirtualPlayer => {
+  // The traversal key is the GAME's own number — room index indoors, overworld
+  // screen index outdoors. Screen DETECTION (which dataset entry this is) used to
+  // seed it, which meant a colliding room index put the virtual player in the
+  // wrong place before the first hop. Identity no longer depends on the dataset.
+  // Region-qualified indoors, so the live position keys the same node the exit
+  // that led here named — see interiorScreenId.
+  const screenId = map.isIndoors
+    ? interiorScreenId(map.roomIndex, tileOf(map))
+    : `ow:${map.overworldScreenIndex}`;
+
+  return { screenId, tile: tileOf(map) };
 };
 
 const readFlags = (): FlagSnapshot => wasmReadFlagSnapshot() ?? emptySnapshot();
@@ -92,7 +89,18 @@ export { observe };
 // both needed the same four things around it. They each had their own verbatim
 // copy (including the cache key), so a fix to one silently missed the other.
 
-const TILE_REQS: readonly string[] = ['lift.1', 'lift.2', 'lift.3', 'hammer', 'boots', 'flippers', 'hookshot'];
+/**
+ * Traversal tokens the tile attributes actually gate on. `bombs` belongs here:
+ * one interior attr is a bombable wall (`req: 'bombs'`, interior-attrs.ts), and
+ * omitting the token left those tiles blocked forever rather than opening once
+ * bombs are carried.
+ *
+ * NOTE the overworld tables carry NO bomb requirement at all, so a cave mouth
+ * behind a bombable wall — the ice rod cave — is reachable regardless. That is a
+ * revealed-secret mechanic (an overworld event flag), not a tile requirement, and
+ * it is not modelled yet.
+ */
+const TILE_REQS: readonly string[] = ['lift.1', 'lift.2', 'lift.3', 'hammer', 'boots', 'flippers', 'hookshot', 'bombs'];
 
 /** Detect results cached per screen + epoch + entry region. */
 type DetectCache = Map<string, DetectedScreen | null>;
@@ -102,15 +110,6 @@ const floodItems = (state: EngineState): TileReq[] => {
   const items = new Set<TileReq>(['lift.1']);
   for (const t of state.reachTokens) if (TILE_REQS.includes(t)) items.add(t as TileReq);
   return [...items];
-};
-
-/** The SimLocation a screen id refers to, or null when it isn't a known screen. */
-const locationForScreen = (screenId: string): SimLocation | null => {
-  const screen = SCREEN_BY_ID.get(screenId);
-  if (!screen) return null;
-  const isIndoors = screen.type !== 'overworld';
-  const roomIndex = screen.roomIndex ?? 0;
-  return { isIndoors, roomId: isIndoors ? roomIndex : 0, owScreenIndex: isIndoors ? 0 : roomIndex };
 };
 
 /**
@@ -125,6 +124,15 @@ const detectFor = (state: EngineState, cache: DetectCache): DetectedScreen | nul
     cache.set(key, detectScreenExits(state.virtual.screenId, { entryTile: state.virtual.tile, items: floodItems(state) }));
   }
   return cache.get(key) ?? null;
+};
+
+/** Combat rows for the distinct sprite types on screen, plus the shared tables. */
+const combatFor = (port: SimulatorPort, sprites: SimSprite[]): CombatContext => {
+  const bySpriteType: Record<number, ReturnType<SimulatorPort['getSpriteCombat']>> = {};
+  for (const spriteType of new Set(sprites.map((s) => s.spriteType))) {
+    bySpriteType[spriteType] = port.getSpriteCombat(spriteType);
+  }
+  return { tables: port.getCombatTables(), bySpriteType };
 };
 
 /** Pull grids + room interactables + detected exits for the current screen. */
@@ -151,6 +159,8 @@ const buildObservation = (port: SimulatorPort, state: EngineState, cache: Detect
     itemReceived,
     exits: detected?.exits,
     reached: detected?.reached,
+    combat: combatFor(port, interactables.sprites),
+    sectionSplit: loc.isIndoors ? port.getRoomSectionSplit() : undefined,
   };
 };
 

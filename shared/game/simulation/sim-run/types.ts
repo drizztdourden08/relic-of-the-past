@@ -9,6 +9,10 @@ import type { SimOutcome, DatasetSuggestion } from '../types';
 interface SimRunConfig {
   /** 0-based save-state slot to load before running (null = current state). */
   startSlot: number | null;
+  /** Named MANUAL save to load instead of a slot — `--auto-state` cannot be
+   *  combined with `--sim-run` because both hooks load the profile on mount and
+   *  race, so the flag has to do it itself. */
+  stateName: string | null;
   /** Stop early once this screen is reached (null = run to outcome). */
   target: string | null;
   /** Halt right after this check triggers (engine SimConfig.stopAtCheckId). */
@@ -17,6 +21,21 @@ interface SimRunConfig {
   maxSteps: number;
   /** Diagnostic: flood this overworld screen addressably and report its numbers, then exit. */
   floodScreen: number | null;
+  /** Diagnostic: report this ROOM's entrance seeds, exit-table entry and detected
+   *  exits, then exit — the indoor counterpart of `floodScreen`, for finding out
+   *  why a room reads as a dead end. */
+  probeRoom: number | null;
+  /** Extra traversal items for the `floodScreen` diagnostic (comma separated). */
+  probeItems: string[] | null;
+  /** Optional entry tile for `probeRoom`, as the flood's start position. */
+  probeTile: { row: number; col: number } | null;
+  /** Diagnostic: report every ROOM whose spawn table holds this sprite type, then
+   *  exit. Answers "where does the game actually put this?" when a dataset room
+   *  index is suspect. */
+  scanSprite: number | null;
+  /** Diagnostic: report this sprite type's resolved combat row (health, flags4,
+   *  per-class damage) plus the shared ancilla/tile combat tables, then exit. */
+  combatSprite: number | null;
   /** Max distinct screens the game-driven flood visits before ending (null = unlimited). */
   screenWalkLimit: number | null;
 }

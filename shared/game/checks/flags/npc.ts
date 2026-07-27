@@ -6,7 +6,7 @@
  *   1. DETECTION: how to poll whether the check is complete (progress buffer byte + mask)
  *   2. TRIGGER:   how to programmatically fire the check (sprite type, post-gfx, item, extras)
  *
- * WasmGetProgressFlags() returns a 16-byte buffer:
+ * WasmGetProgressFlags() returns a 19-byte buffer:
  *   [0]  = sram_progress_indicator   (0xF3C5)
  *   [1]  = sram_progress_flags       (0xF3C6)
  *   [2]  = sram_progress_indicator_3 (0xF3C9)
@@ -16,11 +16,18 @@
  *   [6]  = link_item_mirror
  *   [7]  = link_item_quake_medallion
  *   [8]  = link_magic_consumption
- *   [9]  = save_dung_info[0x109] lo (Potion Shop room flag)
- *   [10] = save_dung_info[0x123] lo (Mini Moldorm Cave room flag)
- *   [11] = save_dung_info[0x11E] lo (Hype Cave room flag)
+ *   [9]  = save_dung_info[0x109] low byte (Potion Shop room flag)
+ *   [10] = save_dung_info[0x123] low byte (Mini Moldorm Cave room flag)
+ *   [11] = save_dung_info[0x11E] low byte (Hype Cave room flag)
  *   [12] = player_sleep_in_bed_state (0=asleep, 1=uncle woke, 2=out of bed)
  *   [13] = follower_indicator (tagalong id; 0=none) — used by NPC presence gating
+ *   [16] = save_dung_info[0x109] high byte
+ *   [17] = save_dung_info[0x123] high byte — carries chest slot 6 (save-format bit 0x400)
+ *   [18] = save_dung_info[0x11E] high byte
+ *
+ * A room word's bits span the full 16 bits, so each tracked room above 0xFF
+ * needs both its low byte (already adjacent to the other progress fields) and
+ * a high byte, appended at the end so [12]-[15] keep their existing indices.
  *
  * Source: core/zelda3/src/sprite_main.c (NPC handlers)
  */
@@ -38,6 +45,15 @@ interface NpcCheckConfig {
   flagType: number;
   /** Bit mask to OR into the flag byte when triggering */
   flagMask: number;
+  /**
+   * Room flag this check actually lives in, for the NPCs whose completion is
+   * recorded in `save_dung_info[room]` rather than a progress byte. `flagType`
+   * only reaches the three progress bytes, so those configs carried a `flagMask`
+   * of 0 — the trigger set nothing, the run never saw a flag change, and the
+   * check stayed unverified even though its item had been handed over. The bit
+   * is a chest-open bit, so it is named by chest index (CHEST_OPEN_MASKS).
+   */
+  roomFlag?: { roomId: number; chestIndex: number };
   /** Item ID to give via Link_ReceiveItem */
   itemId: number;
   /** Sprite type to find and transition (0xFF = no sprite change) */
@@ -53,6 +69,21 @@ interface NpcCheckConfig {
    * Omit for NPCs whose sprite type is unambiguous; those match by type alone.
    */
   room?: number;
+  /**
+   * Which world this NPC lives in, for OVERWORLD sprites only.
+   *
+   * A sprite type is not unique across the two worlds: 0x2e is both the
+   * light-world flute boy and the dark-world stump (chosen by `sprite_subtype2`
+   * in `Sprite_2E_FluteKid`), and 0x1a is both the smith and the frog. The
+   * simulator reads the addressable spawn table, which does not carry
+   * `subtype2`, so matching on type alone bound the light-world boy to the
+   * stump's config and wrote its item flag on a screen the player can reach
+   * before the dark world exists at all.
+   *
+   * Overworld screen indices at or above 0x40 are the second world — a property
+   * of the game, not of our data — so the screen the sprite sits on settles it.
+   */
+  owWorld?: 'light' | 'dark';
 
   // ─── Documentation ───
   /** What visually happens to the NPC after the check */
@@ -131,6 +162,15 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
     spriteType: 0x16, postGfx: 0,
     visualNote: 'Stays in place (frame-based idle animation)',
     sourceFunc: 'Sprite_Sahasrahla',
+    // Sasha_Idle (sprite_main.c:6560) only reaches the boots branch when the
+    // first dungeon's pendant is held and the boots are not:
+    //   if (!(link_which_pendants & 4))      -> talks only
+    //   else if (!link_item_boots)           -> ai_state = 2, grants 0x4b
+    // `link_which_pendants & 4` is the tracker's 'Green Pendant'
+    // (tracker/inventory.ts). Without this the boots were free from the start,
+    // and everything they open -- bonk rocks, the ledge behind one, and the
+    // interior behind THAT -- came with them.
+    presence: { and: [{ item: 'Green Pendant', owned: true }, { item: 'Pegasus Boots', owned: false }] },
   },
 
   // ═══════════════════════════════════════════════════════════════
@@ -242,10 +282,19 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
     visualNote: 'Smiths hammering animation (gfx 4)',
     sourceFunc: 'Smithy_Main',
     // Blacksmith is the first CHECK_NPC_FLAGS entry for sprite 0x1A, so
-    // npcConfigForSprite(0x1A) resolves here. Despawns once the smith-reunion
-    // flag (sram_progress_indicator_3 & 0x20, 0xF3C9) is set. (The follower
-    // nuance from the decomp — frog tagalong id 7 mid-quest — is deferred.)
-    presence: { progressIndicator3: 0x20, state: 'clear' },
+    // npcConfigForSprite(0x1A) resolves here.
+    //
+    // Smithy_Main case 0 (sprite_main.c:10107) offers tempering only when the
+    // smith-reunion flag is SET, and never while his partner is in tow:
+    //   if (follower_indicator != 8) {
+    //     ...
+    //     else if (sram_progress_indicator_3 & 0x20) { -> tempering choice }
+    //     else Sprite_ShowSolicitedMessage(k, 0xdf);   // just talks
+    //   }
+    // This read 'clear', i.e. the exact inverse -- so the tempered sword was
+    // available before the smith had been found at all. The 10-rupee cost is
+    // not modelled: money is assumed farmable.
+    presence: { and: [{ progressIndicator3: 0x20, state: 'set' }, { not: { followerEq: 8 } }] },
   },
 
   // ═══════════════════════════════════════════════════════════════
@@ -255,6 +304,7 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
   // Gives item 0x13 (Shovel)
   // ═══════════════════════════════════════════════════════════════
   'Stumpy': {
+    owWorld: 'dark',
     bufferIndex: 2, mask: 0x08,
     flagType: 2, flagMask: 0x08,
     itemId: 0x13,
@@ -303,8 +353,19 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
   'Potion Shop': {
     bufferIndex: 9, mask: 0x80,
     flagType: 2, flagMask: 0x00,
+    roomFlag: { roomId: 0x109, chestIndex: 3 },
     itemId: 0x0D,
     spriteType: 0x36, postGfx: 0,
+    // Sprite_Witch case 0 (core/zelda3/src/sprite_main.c:5851) only reaches the
+    // trade when the mushroom itself is in hand:
+    //   if (link_item_mushroom == 0)       -> talks only
+    //   else if (link_item_mushroom == 1)  -> Witch_AcceptShroom
+    //   else                               -> already holds the powder
+    // The two values share one inventory slot, which the tracker splits into
+    // 'Mushroom' (1) and 'Magic Powder' (2), so naming the mushroom covers both
+    // the not-yet and already-traded cases. Without this the powder was granted
+    // on sight, with the mushroom never picked up.
+    presence: { item: 'Mushroom', owned: true },
     visualNote: 'Witch stays; powder appears on counter',
     sourceFunc: 'Sprite_Witch',
   },
@@ -316,6 +377,7 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
   // Gives item 0x16 (Bottle)
   // ═══════════════════════════════════════════════════════════════
   'Purple Chest': {
+    owWorld: 'dark',
     bufferIndex: 2, mask: 0x10,
     flagType: 2, flagMask: 0x10,
     itemId: 0x16,
@@ -330,17 +392,25 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
 
   // ═══════════════════════════════════════════════════════════════
   // Mini Moldorm Cave - Generous Guy — Room 0x123
-  // Sprite 0x28, handler: Sprite_28_DarkWorldHintNPC
-  // Detection: save_dung_info[0x123] & 0x40 (bufferIndex 10)
-  // Vanilla: restores health for 20 rupees. Rando: gives item.
+  // Sprite 0xBB subtype2=2 (NiceThiefWithGift), dispatched via Sprite_BB_Shopkeeper
+  // NiceThiefWithGift sets LIVE bit 0x4000, saved as save_dung_info[0x123] & 0x400
+  // (room words are stored shifted right 4) — bufferIndex 17 is that word's high
+  // byte, so the 0x400 save-format bit reads back as mask 0x04.
+  // Vanilla: one-time gift of 300 rupees, no cost.
   // ═══════════════════════════════════════════════════════════════
   'Mini Moldorm Cave - Generous Guy': {
-    bufferIndex: 10, mask: 0x40,
+    bufferIndex: 17, mask: 0x04,
     flagType: 2, flagMask: 0x00,
-    itemId: 0xFF,
-    spriteType: 0x28, postGfx: 0,
-    visualNote: 'NPC stays in place (fortune teller idle)',
-    sourceFunc: 'Sprite_28_DarkWorldHintNPC',
+    roomFlag: { roomId: 0x123, chestIndex: 6 },
+    itemId: 0x46,
+    spriteType: 0xBB, postGfx: 0,
+    room: 0x123,
+    visualNote: 'NPC keeps facing the player; no lasting visual change after the gift',
+    sourceFunc: 'NiceThiefWithGift',
+    // Sprite 0xBB (Sprite_BB_Shopkeeper) dispatches on sprite_subtype2 to many
+    // unrelated roles spawned throughout the game (shop clerks, minigame
+    // hosts, thieves). `room: 0x123` binds this config to this cave only, so
+    // it cannot match one of those other 0xBB sprites elsewhere.
   },
 
   // ═══════════════════════════════════════════════════════════════
@@ -352,6 +422,7 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
   'Hype Cave - Generous Guy': {
     bufferIndex: 11, mask: 0x40,
     flagType: 2, flagMask: 0x00,
+    roomFlag: { roomId: 0x11E, chestIndex: 2 },
     itemId: 0xFF,
     spriteType: 0x28, postGfx: 0,
     visualNote: 'NPC stays in place (fortune teller idle)',

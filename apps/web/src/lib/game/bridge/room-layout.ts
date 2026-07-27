@@ -1,6 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 /** Room layout shape + dungeon map position. */
 import { callPtr } from './wasm-call';
+import type { RoomSectionSplit } from '@shared/game/simulation';
 
 interface RoomLayoutInfo {
   layout: number;
@@ -61,6 +62,24 @@ const wasmGetRoomLayoutInfo = (): RoomLayoutInfo | null =>
     return { layout, shape, quadrantFullsizeX: qfx, quadrantFullsizeY: qfy, quadrantX: qx, quadrantY: qy, intraEdges };
   });
 
+/**
+ * Which axes of the current room are actively split into scrolling sections,
+ * plus which section the player currently stands in.
+ *
+ * `intraEdges` only carries an edge when the room's own quadrant flags say that
+ * axis isn't merged, so seeing an east/west entry means the room is split in X
+ * and a north/south entry means it's split in Y — regardless of which quadrant
+ * the player currently occupies within that split. The player's own section
+ * comes straight from the game's live quadrant read (`quadrantX`/`quadrantY`),
+ * not re-derived from a pixel position.
+ */
+const roomSectionSplitFrom = (info: RoomLayoutInfo | null): RoomSectionSplit => ({
+  splitX: !!info?.intraEdges.some((edge) => edge === 'east' || edge === 'west'),
+  splitY: !!info?.intraEdges.some((edge) => edge === 'north' || edge === 'south'),
+  playerSectionX: info?.quadrantX === 1 ? 1 : 0,
+  playerSectionY: info?.quadrantY === 2 ? 1 : 0,
+});
+
 const floorRawToLabel = (raw: number): string => {
   if (raw === 0) return '1F';
   if (raw < 128) return `${raw + 1}F`;
@@ -92,5 +111,5 @@ const wasmGetDungeonMapPosition = (): DungeonMapPosition | null =>
     };
   });
 
-export { wasmGetRoomLayoutInfo, wasmGetDungeonMapPosition };
+export { wasmGetRoomLayoutInfo, wasmGetDungeonMapPosition, roomSectionSplitFrom };
 export type { RoomLayoutInfo, DungeonMapPosition };

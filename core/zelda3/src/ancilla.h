@@ -18,6 +18,9 @@ typedef struct AncillaRadialProjection {
   uint8 r0, r2, r4, r6;
 } AncillaRadialProjection;
 
+extern const uint8 kAncilla_Damage[57];
+extern const uint8 kAncilla_TileColl0_Attrs[256];
+
 uint16 Ancilla_GetX(int k);
 uint16 Ancilla_GetY(int k);
 void Ancilla_SetX(int k, uint16 x);

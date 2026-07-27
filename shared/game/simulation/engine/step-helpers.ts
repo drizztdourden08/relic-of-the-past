@@ -10,6 +10,8 @@ import { cloneSnapshot } from '../detect/flag-snapshot';
 import type { ScreenEdge } from './traversal';
 import { spendKey, spendAnyKey, localRefresh, globalRefresh } from './explorer';
 import { KILL_GATE_TAG } from './discover';
+import { arrivalKey } from './regions';
+import { narrative, debug } from './event-log';
 import type { EngineState, SimTarget } from './state';
 
 const SCREEN_CENTER: GridPos = { row: 32, col: 32 };
@@ -26,9 +28,6 @@ const foundMsg = (target: SimTarget): string =>
   target.tile
     ? `Found ${target.noun} at ${target.tile.col},${target.tile.row}`
     : `Found ${target.noun} (room ${target.roomId.toString(16)})`;
-
-const narrative = (s: EngineState, msg: string): SimEvent => ({ level: 'narrative', msg, step: s.step });
-const debug = (s: EngineState, msg: string, data?: unknown): SimEvent => ({ level: 'debug', msg, step: s.step, data });
 
 const spendKeysForEdge = (s: EngineState, edge: ScreenEdge): void => {
   for (const group of edge.requirements) {
@@ -52,6 +51,30 @@ const landingTile = (exit?: SimExit, edge?: ScreenEdge): GridPos =>
  * from), Exiting (with big-area via), area enter/leave markers, Screen entry,
  * START position (the tile the player lands on). Mutates s.virtual and s.area.
  */
+/**
+ * How the player got in, in words. A screen id alone cannot say which of its
+ * several ways in was used, and two of them need not lead to the same ground —
+ * so the log has to name the crossing, not just the destination.
+ *
+ * Border signatures carry the tile SPAN, because one side of a screen can hold
+ * more than one separate crossing.
+ */
+const arrivalLabel = (exit?: SimExit, tile?: GridPos): string => {
+  const sig = exit?.edgeSig;
+  if (!sig) return tile ? `at ${tile.col},${tile.row}` : 'start';
+  const border = /^(north|south|west|east):(\d+)-(\d+)$/.exec(sig);
+  if (border) return `via ${border[1]} edge, tiles ${border[2]}-${border[3]}`;
+  const entrance = /^e(\d+)$/.exec(sig);
+  if (entrance) return `via entrance #${entrance[1]}${tile ? ` at ${tile.col},${tile.row}` : ''}`;
+  const stair = /^s(\d+)$/.exec(sig);
+  if (stair) return `via stair #${stair[1]}`;
+  const doorway = /^d(north|south|west|east):(\d+)$/.exec(sig);
+  if (doorway) return `via ${doorway[1]} doorway at ${doorway[2]}`;
+  if (sig.startsWith('w')) return `via warp door ${sig.slice(1)}`;
+  if (sig.startsWith('x')) return 'via its exit door';
+  return `via ${sig}`;
+};
+
 const emitHop = (s: EngineState, events: SimEvent[], next: string, exit?: SimExit, edge?: ScreenEdge): void => {
   const from = s.virtual.screenId;
   events.push(narrative(s, posMsg('END', exit?.fromTile ?? s.virtual.tile)));
@@ -65,7 +88,10 @@ const emitHop = (s: EngineState, events: SimEvent[], next: string, exit?: SimExi
   }
   const tile = landingTile(exit, edge);
   s.virtual = { screenId: next, tile };
-  events.push(narrative(s, `Screen ${screenLabel(next)}`));
+  // Record WHICH way in was used, so the same screen entered another way still
+  // counts as unexplored ground (see arrivalAccountedFor).
+  if (exit) s.arrivals.add(arrivalKey(next, exit.edgeSig));
+  events.push(narrative(s, `Screen ${screenLabel(next)} ${arrivalLabel(exit, tile)}`));
   events.push(narrative(s, posMsg('START', tile)));
 };
 
@@ -82,10 +108,43 @@ const emitDoorUnlock = (s: EngineState, events: SimEvent[], label: string, key: 
   s.phase = 'observing';
 };
 
-/** A pulled switch raised the room's trapdoors — re-flood in place. */
-const emitSwitchPulled = (s: EngineState, events: SimEvent[], key: string, roomId: number): void => {
+/**
+ * A pulled switch raised the room's trapdoors, or — when `drain` is set —
+ * lowered the water on a remote overworld screen instead. The local case
+ * re-floods just this room; the remote case invalidates everywhere but here,
+ * since a screen the run already passed through may now offer new ground.
+ */
+const emitSwitchPulled = (
+  s: EngineState,
+  events: SimEvent[],
+  key: string,
+  roomId: number,
+  drain?: { screen: number; mask: number },
+): void => {
   s.done.add(key);
-  events.push(narrative(s, `Pulled switch (room ${roomId.toString(16)}) — shutter doors opened`));
+  if (drain) {
+    events.push(narrative(s, `Pulled switch (room ${roomId.toString(16)}) — drained screen 0x${drain.screen.toString(16)}`));
+    globalRefresh(s);
+    events.push(narrative(s, 'Reset: re-exploring with the drained screen open'));
+  } else {
+    events.push(narrative(s, `Pulled switch (room ${roomId.toString(16)}) — shutter doors opened`));
+    localRefresh(s);
+    events.push(narrative(s, `Reset: re-flooding ${screenLabel(s.virtual.screenId)} with new state`));
+  }
+  s.currentTarget = undefined;
+  s.preTrigger = undefined;
+  s.phase = 'observing';
+};
+
+/**
+ * A cracked wall blown open. Unlike every other trigger this writes NO game
+ * state — the opened tiles live in the flood facade — so it produces no flag diff
+ * and must never reach the diff check, which would mark it failed. Re-flood in
+ * place: the whole point is the passage the blast just opened.
+ */
+const emitWallBombed = (s: EngineState, events: SimEvent[], key: string, label: string): void => {
+  s.done.add(key);
+  events.push(narrative(s, `Bombed ${label} — wall opened`));
   localRefresh(s);
   events.push(narrative(s, `Reset: re-flooding ${screenLabel(s.virtual.screenId)} with new state`));
   s.currentTarget = undefined;
@@ -162,4 +221,4 @@ const emitTrapClosed = (s: EngineState, events: SimEvent[], roomId: number): voi
   s.phase = 'observing';
 };
 
-export { narrative, debug, foundMsg, screenLabel, posMsg, landingTile, emitHop, spendKeysForEdge, emitDoorUnlock, emitShutterClear, emitSwitchPulled, emitEntryTrapSlam, emitFollower, interceptTrap, emitTrapClosed, entryTileFor, SCREEN_CENTER };
+export { narrative, debug, foundMsg, screenLabel, posMsg, landingTile, arrivalLabel, emitHop, emitWallBombed, spendKeysForEdge, emitDoorUnlock, emitShutterClear, emitSwitchPulled, emitEntryTrapSlam, emitFollower, interceptTrap, emitTrapClosed, entryTileFor, SCREEN_CENTER };

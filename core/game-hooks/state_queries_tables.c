@@ -97,13 +97,18 @@ int WasmGetAreaHeads(void) {
 }
 
 // Entrance rooms: entrance ID → dungeon room (uint16 per entry), count prefix.
-// 133 entries max → 2 + 133*2 = 268 bytes.
-static uint8 g_entrance_rooms_buf[2 + 133 * 2];
+// The cap was 133 — the count of front-door entrances — which silently dropped
+// every entry past it. The table does not stop there: the secondary entries that
+// follow are the only way into a handful of rooms, so a room like the village
+// hideout (0x11D) had no entrance at all and read as unreachable while every
+// neighbour of it had one. Sized from the entrance count the assets declare.
+#define SIM_MAX_ENTRANCES 192
+static uint8 g_entrance_rooms_buf[2 + SIM_MAX_ENTRANCES * 2];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetEntranceRooms(void) {
   uint16 count = kEntranceData_rooms_SIZE / 2;
-  if (count > 133) count = 133;
+  if (count > SIM_MAX_ENTRANCES) count = SIM_MAX_ENTRANCES;
   BufW b = BufW_Init(g_entrance_rooms_buf);
   BufW_U16(&b, count);
   for (uint16 i = 0; i < count; i++) {
@@ -113,13 +118,13 @@ int WasmGetEntranceRooms(void) {
 }
 
 // Entrance spawn positions: playerX(u16) + playerY(u16) + startingBg(u8) per
-// entry, count prefix. 133 entries max → 2 + 133*5 = 667 bytes.
-static uint8 g_entrance_spawn_buf[2 + 133 * 5];
+// entry, count prefix. Same cap as the room table so ids line up across both.
+static uint8 g_entrance_spawn_buf[2 + SIM_MAX_ENTRANCES * 5];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetEntranceSpawns(void) {
   uint16 count = kEntranceData_playerX_SIZE / 2;
-  if (count > 133) count = 133;
+  if (count > SIM_MAX_ENTRANCES) count = SIM_MAX_ENTRANCES;
   BufW b = BufW_Init(g_entrance_spawn_buf);
   BufW_U16(&b, count);
   for (uint16 i = 0; i < count; i++) {

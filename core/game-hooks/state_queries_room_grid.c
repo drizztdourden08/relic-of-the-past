@@ -18,6 +18,8 @@ static uint8 g_toggle_floor_debug[2 + 16 * 4];
  * Must run before WRAM is restored: dung_toggle_floor_pos belongs to the room that was
  * just drawn, and the restore puts the live room's values back.
  */
+void SimCaptureRoomHeaderState(void);  // state_queries_room_exits.c
+
 static void CaptureToggleFloorPositions(void) {
   uint8 count = (uint8)(dung_num_toggle_floor >> 1);
   if (count > 16) count = 16;
@@ -111,6 +113,7 @@ int WasmBuildRoomAttrGrid(int room_id) {
   // dung_bg2_attr_table would hand back memory we are about to overwrite, and would alias
   // the live-room reader (WasmGetIndoorAttrTable) that points at the same address.
   CaptureToggleFloorPositions();
+  SimCaptureRoomHeaderState();
   memcpy(g_nav_room_grid, dung_bg2_attr_table, sizeof(g_nav_room_grid));
   memcpy(g_ram, g_nav_room_ram_backup, sizeof(g_ram));
 

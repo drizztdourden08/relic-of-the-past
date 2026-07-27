@@ -14,8 +14,21 @@ const UNREACHED = 0xffff;
 /** Steps stamped on tiles the flood reached but the walk-BFS still can't, after
  *  ledge hops have been walked: reachable, distance genuinely unknown. */
 const HOP_STEPS = 999;
-/** A ledge drop costs about one move — the player hops it in a single action. */
-const LEDGE_COST = 1;
+/** Exits LEAVING a big multi-sub-screen area sort after every in-area exit, so
+ *  the whole big screen gets explored before moving on. */
+const AREA_EXIT_BIAS = 0x1000;
+/**
+ * A ledge drop is ONE-WAY: the player cannot climb back. Priced as one move it
+ * looked almost free, so the ordering happily dropped off a ledge with work
+ * still pending on the footing above — and since the screen it left is then
+ * marked visited, that work was stranded for the rest of the run.
+ *
+ * So a hop costs more than any walk on the current footing can (`HOP_STEPS` is
+ * already the ceiling a real distance is assumed to stay under). That makes the
+ * order lexicographic — every walkable target first, drops afterwards, deepest
+ * last — without forbidding the drop.
+ */
+const LEDGE_COST = HOP_STEPS + 1;
 
 /** Steps-to-walk from `start` to every reached cell (UNREACHED elsewhere).
  *  The start itself may sit on a non-reached tile (door thresholds, spawn
@@ -66,7 +79,9 @@ const stepDistances = (reachable: ReachState[][], start: GridPos, ledges: readon
     }
     for (const to of hops.get(cur) ?? []) {
       if (dist[to] !== UNREACHED) continue;
-      dist[to] = dist[cur] + LEDGE_COST;
+      // Saturate below the out-of-area bias so a many-hop tile on THIS area
+      // still sorts ahead of another sub-screen's exits.
+      dist[to] = Math.min(dist[cur] + LEDGE_COST, AREA_EXIT_BIAS - 1);
       queue.push(to);
     }
   }
@@ -98,10 +113,6 @@ const distanceAt = (dist: Uint16Array, tile: GridPos): number => {
   }
   return best;
 };
-
-/** Exits LEAVING a big multi-sub-screen area sort after every in-area exit, so
- *  the whole big screen gets explored before moving on. */
-const AREA_EXIT_BIAS = 0x1000;
 
 /**
  * Splits an ordering score back into what it means. The score packs three things

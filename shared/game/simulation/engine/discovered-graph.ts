@@ -48,9 +48,21 @@ const findDiscoveredPath = (graph: DiscoveredGraph, from: string, to: string): s
   return null;
 };
 
-/** The exit record for a `from → to` hop (carries the landing tile). */
-const discoveredExitFor = (graph: DiscoveredGraph, from: string, to: string): SimExit | undefined =>
-  (graph.get(from) ?? []).find((e) => e.to === to);
+/**
+ * The exit record for a `from → to` hop (carries the landing tile).
+ *
+ * `wantSig` pins WHICH exit when several lead to the same screen — a screen can
+ * be entered by more than one crossing and they need not land in the same place,
+ * so a job that exists to try one of them must not be satisfied by another.
+ */
+const discoveredExitFor = (graph: DiscoveredGraph, from: string, to: string, wantSig?: string | null): SimExit | undefined => {
+  const list = graph.get(from) ?? [];
+  if (wantSig) {
+    const pinned = list.find((e) => e.to === to && e.edgeSig === wantSig);
+    if (pinned) return pinned;
+  }
+  return list.find((e) => e.to === to);
+};
 
 /**
  * Record a screen's flood-detected exits. Keeps previously-known edges the new
@@ -58,13 +70,40 @@ const discoveredExitFor = (graph: DiscoveredGraph, from: string, to: string): Si
  * border crossing as a reverse edge — so a dead-end room you walked into never
  * strands the BFS: the way you came in stays walkable back out.
  */
+/**
+ * Overworld screen indices 0x40 and up are the second world — a GAME fact, not a
+ * dataset one, so it holds for synthetic `ow:N` ids too. Undefined for interiors,
+ * whose world only their palace context knows.
+ */
+const owWorldOf = (screenId: string): 'light' | 'dark' | undefined => {
+  const m = /^(?:lw|dw)-([0-9a-f]{2})$/.exec(screenId) ?? /^ow:(\d+)$/.exec(screenId);
+  if (!m) return undefined;
+  const idx = screenId.startsWith('ow:') ? Number(m[1]) : parseInt(m[1], 16);
+  if (!Number.isFinite(idx)) return undefined;
+  return screenId.startsWith('dw-') || idx >= 0x40 ? 'dark' : 'light';
+};
+
+/**
+ * A discovered edge that jumps between the two worlds without a warp/mirror is
+ * always an artefact. Interior resolution used to prevent this by refusing to name
+ * an other-world room, but once rooms with no dataset entry gained real geometry
+ * they could report other-world exits of their own. The world test belongs on the
+ * EDGE, where it holds regardless of how the endpoint got its name.
+ */
+const crossesWorlds = (from: string, to: string): boolean => {
+  const a = owWorldOf(from);
+  const b = owWorldOf(to);
+  return a !== undefined && b !== undefined && a !== b;
+};
+
 const recordExits = (graph: DiscoveredGraph, from: string, exits: SimExit[]): void => {
-  const merged = [...exits];
+  const kept = exits.filter((e) => !crossesWorlds(from, e.to));
+  const merged = [...kept];
   for (const prev of graph.get(from) ?? []) {
     if (!merged.some((e) => e.to === prev.to)) merged.push(prev);
   }
   graph.set(from, merged);
-  for (const exit of exits) {
+  for (const exit of kept) {
     if (!exit.twoWay) continue;
     const back = graph.get(exit.to) ?? [];
     if (!back.some((e) => e.to === from)) {

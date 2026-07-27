@@ -5,9 +5,10 @@
  * kinds all come straight from the game.
  */
 import type { SimChest, SimSprite, SimDoor } from '@shared/game/simulation';
-import { wasmGetRoomChests, wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetRoomDoorInfo, wasmGetRoomCellLocks } from '../';
+import { wasmGetRoomChests, wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetRoomDoorInfo, wasmGetRoomCellLocks, wasmGetAreaHeads } from '../';
 import type { SimDoorDirection } from '../';
-import { spriteKindFor } from './sprite-kinds';
+import { spriteKindFor, standingItemId } from './sprite-kinds';
+import { resolveAreaSprite } from './overworld-area';
 
 const DOOR_DIRS: Record<SimDoorDirection, SimDoor['direction']> = {
   north: 'n',
@@ -54,14 +55,28 @@ const getRoomSprites = (roomId: number): SimSprite[] =>
     carriesBigKey: s.carriesBigKey,
   }));
 
-const getOverworldSprites = (screenIndex: number): SimSprite[] =>
-  wasmGetOverworldSpriteSpawns(screenIndex).map((s) => ({
-    roomId: screenIndex,
-    spriteType: s.spriteType,
-    tile: { row: s.row, col: s.col },
-    posKnown: true,
-    kind: spriteKindFor(s.spriteType),
-  }));
+/**
+ * A big overworld area returns the SAME spawn table however one of its four
+ * screens is queried, with every spawn's tile relative to the area's head
+ * screen. Each spawn is resolved to the screen it actually sits on before it
+ * becomes a `SimSprite`, so `roomId` always names the screen that owns it and
+ * `tile` is always local to that screen — never area-relative.
+ */
+const getOverworldSprites = (screenIndex: number): SimSprite[] => {
+  const heads = wasmGetAreaHeads();
+  return wasmGetOverworldSpriteSpawns(screenIndex).map((s) => {
+    const resolved = heads ? resolveAreaSprite(screenIndex, { row: s.row, col: s.col }, heads) : { screenIndex, tile: { row: s.row, col: s.col } };
+    return {
+      roomId: resolved.screenIndex,
+      outdoor: true,
+      spriteType: s.spriteType,
+      tile: resolved.tile,
+      posKnown: true,
+      kind: spriteKindFor(s.spriteType),
+      itemId: standingItemId(s.spriteType),
+    };
+  });
+};
 
 /**
  * A room's doors, plus its CELL LOCKS — the keyhole plates that gate a jail

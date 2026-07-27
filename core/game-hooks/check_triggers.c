@@ -3,7 +3,13 @@
 #include "src/misc.h"
 #include "src/dungeon.h"
 
-static const uint16 kChestOpenMasksHook[] = { 0x100, 0x200, 0x400, 0x800, 0x1000, 0x2000 };
+// Room-state bits by slot. 0-5 are the chest-open bits; 6 is the OTHER bit a
+// standing heart piece can use. HeartUpgrade_CheckIfAlreadyObtained
+// (sprite_main.c:1311) records an indoor pickup at 0x4000, or 0x2000 when the
+// sprite sits in the room's right half (sprite_x_hi & 1) — and 0x2000 is
+// already slot 5, so only 0x4000 was missing.
+static const uint16 kChestOpenMasksHook[] = { 0x100, 0x200, 0x400, 0x800, 0x1000, 0x2000, 0x4000 };
+#define kChestOpenMasksHook_COUNT 7
 
 // Try to visually open the chest tiles if the player is in the matching room.
 static void TryVisualChestOpen(uint16 room_id, uint8 chest_index) {
@@ -76,8 +82,8 @@ static const uint8 kSimReceiveItemAlternates[76] = {
 };
 
 void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
-  if (chest_index > 5) {
-    printf("[GameHook] Invalid chest_index %d (max 5)\n", chest_index);
+  if (chest_index >= kChestOpenMasksHook_COUNT) {
+    printf("[GameHook] Invalid chest_index %d (max %d)\n", chest_index, kChestOpenMasksHook_COUNT - 1);
     return;
   }
 

@@ -49,7 +49,7 @@ static const int8 kAncilla_TileColl_Attrs[256] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 };
-static const uint8 kAncilla_TileColl0_Attrs[256] = {
+const uint8 kAncilla_TileColl0_Attrs[256] = {
   0, 1, 0, 3, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0,
   1, 1, 1, 1, 0, 0, 0, 0, 2, 2, 2, 2, 0, 3, 3, 3,
   0, 0, 0, 0, 0, 0, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4,
@@ -66,6 +66,12 @@ static const uint8 kAncilla_TileColl0_Attrs[256] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+};
+const uint8 kAncilla_Damage[57] = {
+  6, 1, 11, 0, 0, 0, 0, 8,  0,  6, 0, 12,  1, 0, 0,  0,
+  0, 1,  0, 0, 0, 0, 0, 0, 14, 13, 0,  0, 15, 0, 0,  7,
+  1, 1,  1, 1, 1, 1, 1, 1,  1,  1, 1,  1,  1, 1, 1, 11,
+  0, 1,  1, 1, 1, 1, 1, 1,  1,
 };
 static const uint8 kBomb_Draw_Tab0[12] = {0, 1, 2, 3, 2, 3, 4, 5, 6, 7, 8, 9};
 static const uint8 kBomb_Draw_Tab2[11] = {1, 4, 4, 4, 4, 4, 5, 4, 6, 6, 6};
@@ -500,12 +506,6 @@ void Ancilla_CheckDamageToSprite(int k, uint8 type) {  // 86ecb7
 }
 
 void Ancilla_CheckDamageToSprite_aggressive(int k, uint8 type) {  // 86ecbd
-  static const uint8 kAncilla_Damage[57] = {
-    6, 1, 11, 0, 0, 0, 0, 8,  0,  6, 0, 12,  1, 0, 0,  0,
-    0, 1,  0, 0, 0, 0, 0, 0, 14, 13, 0,  0, 15, 0, 0,  7,
-    1, 1,  1, 1, 1, 1, 1, 1,  1,  1, 1,  1,  1, 1, 1, 11,
-    0, 1,  1, 1, 1, 1, 1, 1,  1,
-  };
   uint8 dmg = kAncilla_Damage[type];
   if (dmg == 6 && link_item_bow >= 3) {
     if (sprite_type[k] == 0xd7)

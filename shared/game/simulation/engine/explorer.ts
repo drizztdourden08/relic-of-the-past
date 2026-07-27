@@ -5,10 +5,11 @@
  * traversal-affecting item or flag, the epoch advances and the frontier resets
  * so reachability re-floods from the current virtual position.
  */
-import type { DetectedCheck } from '../types';
+import type { DetectedCheck, SimEvent } from '../types';
 import { SCREEN_BY_ID } from '../../data/screens';
 import type { ReachContext } from '../requirements-map';
-import { inventoryToReachTokens, affectsTraversal } from '../requirements-map';
+import { inventoryToReachTokens, affectsTraversal, ITEM_TO_TOKEN } from '../requirements-map';
+import { reopenLedgersFor } from './dungeon-ledger-lifecycle';
 import type { EngineState } from './state';
 
 const canonicalDungeon = (name: string): string =>
@@ -60,21 +61,30 @@ const addKey = (state: EngineState, dungeon: string): void => {
 /**
  * Fold a received item name into inventory + key/big-key tracking. The live game
  * grants generic "Small Key" / "Big Key" without a dungeon suffix; `dungeonHint`
- * (from the matched check) attributes those to the right dungeon.
+ * (from the matched check) attributes those to the right dungeon. Returns the
+ * requirement tokens this grant satisfies, for the dungeon ledger's reopen check
+ * (see `reopenLedgersFor`) — the same vocabulary `requirements-map` evaluates.
  */
-const applyItem = (state: EngineState, itemName: string, dungeonHint?: string): void => {
+const applyItem = (state: EngineState, itemName: string, dungeonHint?: string): string[] => {
   if (itemName.startsWith('Small Key')) {
     const dungeon = dungeonFromKeyItem(itemName) ?? dungeonHint;
-    if (dungeon) addKey(state, dungeon);
-    return;
+    if (!dungeon) return [];
+    addKey(state, dungeon);
+    return [`smallkey:${dungeon}`];
   }
   if (itemName.startsWith('Big Key')) {
     const dungeon = dungeonFromKeyItem(itemName) ?? dungeonHint;
-    if (dungeon) state.bigKeys.add(dungeon);
-    return;
+    if (!dungeon) return [];
+    state.bigKeys.add(dungeon);
+    return [`bigkey:${dungeon}`];
   }
   state.inventory.add(itemName);
   syncReachTokens(state);
+  const tokens: string[] = [];
+  const token = ITEM_TO_TOKEN[itemName];
+  if (token) tokens.push(token);
+  if (itemName === 'Titans Mitts') tokens.push('lift.2');
+  return tokens;
 };
 
 /**
@@ -128,14 +138,18 @@ const markDoneAndContinue = (state: EngineState, check: DetectedCheck): void => 
 /**
  * The loop the whole feature hinges on: a traversal-affecting unlock resets the
  * frontier and advances the epoch; anything else simply marks the check done.
+ * `events` is optional only so existing direct-call tests need no changes —
+ * the live engine always passes it, since a reopened dungeon group is only
+ * reviewable through the narrative log.
  */
-const onCheckVerified = (state: EngineState, check: DetectedCheck): void => {
+const onCheckVerified = (state: EngineState, check: DetectedCheck, events: SimEvent[] = []): void => {
   if (check.itemReceived) {
     // Attribute dungeon-less key grants to the matched check's dungeon, or —
     // for unmatched grants like an enemy's key drop — to the current location.
     const location = SCREEN_BY_ID.get(state.virtual.screenId)?.location;
     const hint = check.matched?.dungeon ?? location;
-    applyItem(state, check.itemReceived, hint ? canonicalDungeon(hint) : undefined);
+    const gained = applyItem(state, check.itemReceived, hint ? canonicalDungeon(hint) : undefined);
+    reopenLedgersFor(state, gained, check.itemReceived, events);
   }
   if (check.matchedName) state.completedChecks.add(check.matchedName);
 

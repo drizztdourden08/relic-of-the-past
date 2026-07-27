@@ -1,6 +1,7 @@
 /* @layer bridge-wasm @kind logic */
 /** Room door/stair/walk/exit boundaries + travel destinations. */
 import { callPtr, decodeTable, readU16 } from './wasm-call';
+import { readMapState } from '../simulator/read-game-state';
 
 interface DoorBoundaryTile {
   direction: 'north' | 'south' | 'west' | 'east';
@@ -42,8 +43,18 @@ const wasmGetRoomDoorBoundaryTiles = (): DoorBoundaryTile[] =>
     isOpen: heap[o + 4] !== 0,
   }));
 
-const decodeStairs = (heap: Uint8Array, o: number): RoomStairInfo => ({
-  destRoom: heap[o + 0],
+/**
+ * The header stores a staircase destination as ONE BYTE, and the game writes it
+ * with `BYTE(dungeon_room_index) = ...` (dungeon.c:4339) — the low byte only, so
+ * the room's own high byte carries over and a staircase never leaves its bank of
+ * 256 rooms. Reading the byte as the whole room index silently sent every stair
+ * in the 0x1xx caves to a dungeon room: the village hideout's stair to 0x119
+ * read as 0x19, so nothing led into it and its five chests were unreachable.
+ */
+const stairDest = (destByte: number, fromRoom: number): number => (fromRoom & 0xff00) | destByte;
+
+const decodeStairs = (heap: Uint8Array, o: number, fromRoom: number): RoomStairInfo => ({
+  destRoom: stairDest(heap[o + 0], fromRoom),
   row: heap[o + 1],
   col: heap[o + 2],
   direction: (heap[o + 3] & 4) !== 0 ? 'down' : 'up',
@@ -51,13 +62,17 @@ const decodeStairs = (heap: Uint8Array, o: number): RoomStairInfo => ({
   layer: (heap[o + 3] & 1) as 0 | 1,
 });
 
-const wasmGetRoomStairInfo = (): RoomStairInfo[] =>
-  decodeTable('WasmGetRoomStairInfo', { countBytes: 1, dataStart: 2, stride: 4, maxCount: 4 }, decodeStairs);
+const wasmGetRoomStairInfo = (): RoomStairInfo[] => {
+  const here = readMapState()?.roomIndex ?? 0;
+  return decodeTable('WasmGetRoomStairInfo', { countBytes: 1, dataStart: 2, stride: 4, maxCount: 4 },
+    (heap, o) => decodeStairs(heap, o, here));
+};
 
 /** Room-addressable inter-room stairs — works for any room, not just the loaded
  *  one (rebuilds that room's attr table + header as a side effect). */
 const wasmGetRoomStairInfoFor = (roomId: number): RoomStairInfo[] =>
-  decodeTable('WasmGetRoomStairInfoFor', { countBytes: 1, dataStart: 2, stride: 4, maxCount: 4 }, decodeStairs, { argTypes: ['number'], args: [roomId] });
+  decodeTable('WasmGetRoomStairInfoFor', { countBytes: 1, dataStart: 2, stride: 4, maxCount: 4 },
+    (heap, o) => decodeStairs(heap, o, roomId), { argTypes: ['number'], args: [roomId] });
 
 const decodeWalkBoundary = (heap: Uint8Array, o: number): RoomWalkBoundary => ({
   destRoom: readU16(heap, o),

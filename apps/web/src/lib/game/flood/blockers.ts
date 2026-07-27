@@ -17,19 +17,36 @@
  * grid — which aliases layer 0 — so a dual-layer room floods straight through
  * him on layer 1.
  */
-import { wasmGetIndoorUncleBlockers, wasmGetOverworldSpriteSpawns, wasmGetRoomSpriteSpawns, wasmGetViewportInfo } from '../';
+import { wasmGetIndoorUncleBlockers, wasmGetOverworldSpriteSpawns, wasmGetRoomSpriteSpawns, wasmGetViewportInfo, wasmGetAreaHeads } from '../';
+import { resolveAreaSprite } from '../simulator/overworld-area';
 import { getCompletedChecks } from '../tracker';
+import { npcCheckFor } from './annotate/npc-checks';
 import type { GridPos } from '@shared/game/navigation';
 import { GRID_SIZE } from '@shared/game/navigation/types';
 import { originContaining, tileInScreen } from './world-origin';
 
-/** Sprite types that block the BFS. Everything else is walked through. */
-const BLOCKER_SPRITES = new Set([0x3f, 0x40, 0x73]);
+/** Sprite types that block the BFS. Everything else is walked through.
+ *
+ *  0x57 is the pair of statues flanking the sealed door in the south-west
+ *  desert. They are solid, and the ground they stand on reads as plain floor,
+ *  so without them the flood walks between them and treats a sealed dungeon as
+ *  open. They step aside only once the altar in front of them is used, which
+ *  needs an item from a later dungeon — that removal is NOT modelled yet, so
+ *  they block for the whole run. Correct for everything before the first
+ *  dungeon; revisit when the altar trigger exists. */
+const BLOCKER_SPRITES = new Set([0x3f, 0x40, 0x73, 0x57]);
 const UNCLE_SPRITE = 0x73;
-/** The uncle stops blocking the moment his check is collected (randomizer-safe). */
-const UNCLE_CHECK = "Link's Uncle";
+/** The room his check lives in — sprite 0x73 spawns in two, and only one is a check. */
+const UNCLE_CHECK_ROOM = 0x55;
 
-const uncleCollected = (): boolean => getCompletedChecks().has(UNCLE_CHECK);
+/**
+ * Has his check been collected? Asked by SPRITE ID, never by name: the check
+ * table owns the name, and code that repeats it silently stops agreeing with the
+ * table the moment either side is edited (and a randomizer renames the item, not
+ * the check). `npcCheckFor` is the same matcher the simulator triggers through.
+ */
+const uncleCollected = (): boolean =>
+  npcCheckFor(UNCLE_SPRITE, UNCLE_CHECK_ROOM, getCompletedChecks())?.done === true;
 
 /** Every in-bounds tile of the 3×3 footprint centred on (row, col). */
 const footprint = (row: number, col: number): GridPos[] => {
@@ -47,13 +64,25 @@ const footprint = (row: number, col: number): GridPos[] => {
 /**
  * Blocker tiles for an overworld screen, from the progress-aware spawn table so
  * remote screens work too. Collected-uncle screens drop his footprint.
+ *
+ * A multi-screen area hands back the WHOLE area's spawns with tiles measured
+ * from its head screen, so a blocker on the far half carries a coordinate past
+ * this screen's grid. Clipping those away silently drops the blocker and the
+ * flood walks straight through it; each spawn is resolved to the screen it
+ * really stands on and only kept when that is this one.
  */
 const overworldBlockerCells = (screenIndex: number): GridPos[] => {
   const skipUncle = uncleCollected();
+  const heads = wasmGetAreaHeads();
   const cells: GridPos[] = [];
-  for (const s of wasmGetOverworldSpriteSpawns(screenIndex)) {
-    if (!BLOCKER_SPRITES.has(s.spriteType)) continue;
-    if (s.spriteType === UNCLE_SPRITE && skipUncle) continue;
+  for (const raw of wasmGetOverworldSpriteSpawns(screenIndex)) {
+    if (!BLOCKER_SPRITES.has(raw.spriteType)) continue;
+    if (raw.spriteType === UNCLE_SPRITE && skipUncle) continue;
+    const resolved = heads
+      ? resolveAreaSprite(screenIndex, { row: raw.row, col: raw.col }, heads)
+      : { screenIndex, tile: { row: raw.row, col: raw.col } };
+    if (resolved.screenIndex !== screenIndex) continue;
+    const s = { spriteType: raw.spriteType, row: resolved.tile.row, col: resolved.tile.col };
     cells.push(...footprint(s.row, s.col));
   }
   return cells;
