@@ -9,7 +9,7 @@
  * them side by side and the disagreement is obvious; inferring it from a finished
  * run's trail is not.
  */
-import { wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetFallHoles, wasmGetOverworldEntrances, wasmGetEntranceSpawns, wasmGetAreaHeads } from '../';
+import { wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetFallHoles, wasmGetOverworldEntrances, wasmGetEntranceSpawns, wasmGetAreaHeads, wasmGetRoomWalkBoundariesFor, wasmGetRoomStairInfoFor } from '../';
 import { roomEntrances, getScreenGrids } from '../flood';
 import { enrichEntrances } from '@domains/widgets/navigation/widget-helpers';
 import { usableEntranceTransition } from '@shared/game/navigation';
@@ -17,6 +17,7 @@ import { detectRoom } from './room-exits';
 import { getRoomChests, getRoomSprites, getRoomDoors } from './interactables';
 import { floodRoomRun } from './flood-room';
 import { probeRoomThreat } from './probe-room-threat';
+import { floodAnchorReport, edgeOpenCount } from './probe-room-anchors';
 import type { RoomThreatProbe } from './probe-room-threat';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
 
@@ -58,6 +59,14 @@ interface RoomProbe {
   entranceTable: { size: number; rooms: string };
   /** Entrance ids landing in nearby rooms — finds the door when this room has none. */
   neighbourEntrances: Array<{ room: number; ids: number[] }>;
+  /** Open tiles on each outer wall ring. Mostly reads 64 — that ring is the
+   *  supertile's padding, which is what lets a stray flood run a whole perimeter. */
+  edgeOpen: { north: number; south: number; east: number; west: number };
+  /** Which of the room's own anchors the flood reached — none means dead space. */
+  anchors?: { total: number; hits: string[]; missed: string[] };
+  /** The game's own edge-scroll records, for comparison against what the flood
+   *  claims: staircases, and the walk boundaries that name a destination room. */
+  scrolls: { boundaries: Array<{ row: number; col: number; destRoom: number }>; stairs: Array<{ row: number; col: number; destRoom: number }> };
   /** Bounding box of the reached region — shows where the flood actually is. */
   bbox?: { minRow: number; maxRow: number; minCol: number; maxCol: number };
   /** The combat sweep's verdict on this room's gating sprites — see probe-room-threat.ts. */
@@ -187,6 +196,12 @@ const probeRoom = (roomId: number, entryTile?: { row: number; col: number }, ite
       }
       return out;
     })(),
+    scrolls: {
+      boundaries: wasmGetRoomWalkBoundariesFor(roomId).map((b) => ({ row: b.row, col: b.col, destRoom: b.destRoom })),
+      stairs: wasmGetRoomStairInfoFor(roomId).map((s) => ({ row: s.row, col: s.col, destRoom: s.destRoom })),
+    },
+    edgeOpen: { north: edgeOpenCount(roomId,'north'), south: edgeOpenCount(roomId,'south'), east: edgeOpenCount(roomId,'east'), west: edgeOpenCount(roomId,'west') },
+    anchors: run ? floodAnchorReport(roomId, run) : undefined,
     reachable: detected?.flood.reachableCount ?? 0,
     bbox: run ? (() => {
       let minRow = 99, maxRow = -1, minCol = 99, maxCol = -1;

@@ -21,6 +21,17 @@ import type { DetectedScreen } from './screen-exits';
 
 /** Can the game leave this room straight to the overworld? Cached-entrance rooms
  *  restore the door they came in by; the rest are listed in kExitDataRooms. */
+/**
+ * Widest a room-to-room crossing can be and still be a doorway.
+ *
+ * A supertile's outer padding ring is open tiles all the way round, so a flood
+ * that gets into it anywhere runs the whole perimeter and reports a crossing
+ * spanning most of every edge — which is how the first castle's basement
+ * "scrolled" east into the desert dungeon over 54 tiles. A real doorway is a
+ * notch a few tiles wide; the castle's own room-to-room walks measure 2 to 6.
+ */
+const MAX_DOORWAY_SPAN = 12;
+
 const isStandaloneInterior = (roomId: number): boolean =>
   usesCachedEntrance(roomId) || wasmGetExitScreenMap().has(roomId);
 
@@ -120,6 +131,7 @@ const detectRoom = (roomId: number, items: TileReq[], entryTile?: GridPos, src?:
   // check keeps those from reading as room-to-room edges into solid wall.
   for (const conn of run.connections) {
     if (conn.isIntraRoom) continue;
+    if (conn.positions.length > MAX_DOORWAY_SPAN) continue;
     const adj = ROOM_EDGE_ADJ[conn.edge](roomId);
     if (adj === null) continue;
     const mid0 = conn.positions[Math.floor(conn.positions.length / 2)] ?? 32;
