@@ -1,3 +1,4 @@
+<!-- @layer tests @kind doc -->
 # Permanent app-driven tests (`*.keep.spec.ts`)
 
 Playwright specs in this project are **ephemeral by default**: they are written in

@@ -1,3 +1,4 @@
+/* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import { formatDialogueText } from '@shared/asset-extraction/text/dialogue-decoder';
 import { parseDialogueText, dialogueTexts } from '@shared/asset-extraction/text/parse-dialogue-text';

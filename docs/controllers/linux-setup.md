@@ -1,3 +1,4 @@
+<!-- @layer docs @kind doc -->
 # Linux — controller setup (udev rules)
 
 On Linux, raw controller access (node-hid for HID reports, libusb for the Switch/NSO
