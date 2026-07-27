@@ -16,6 +16,7 @@ import { HapticsSettings } from './HapticsSettings';
 import { DeveloperSettings } from './DeveloperSettings';
 import { MobileSettings } from './MobileSettings';
 import { usePlatform } from '@app/platform';
+import { PROFILE_HUB_TABS } from '../ProfileHub.constants';
 import type { ProfileHubProps, ProfileHubTab } from '../ProfileHub.type';
 
 interface ProfileHubBodyProps {
@@ -28,26 +29,16 @@ interface ProfileHubBodyProps {
   onStartGame: () => void;
 }
 
-const BASE_TABS: { id: ProfileHubTab; icon: string; label: string }[] = [
-  { id: 'home', icon: '🏠', label: 'Home' },
-  { id: 'settings', icon: '📺', label: 'Display' },
-  { id: 'graphics', icon: '🎨', label: 'Graphics' },
-  { id: 'audio', icon: '🔊', label: 'Audio' },
-  { id: 'gameplay', icon: '🎮', label: 'Gameplay' },
-  { id: 'bugfixes', icon: '🐛', label: 'Bug Fixes' },
-  { id: 'hud', icon: '🖥️', label: 'HUD' },
-  { id: 'controls', icon: '⌨️', label: 'Controls' },
-  { id: 'haptics', icon: '📳', label: 'Haptics' },
-  { id: 'developer', icon: '🛠️', label: 'Developer' },
-];
-
-const MOBILE_TAB: { id: ProfileHubTab; icon: string; label: string } = { id: 'mobile', icon: '📱', label: 'Mobile' };
-
 const ProfileHubBody = (props: ProfileHubBodyProps) => {
   const { activeTab, setActiveTab, settings, onChange, profile, isGameRunning, onStartGame } = props;
   const { info } = usePlatform();
   // Mobile options live in their own tab, always pinned to the very bottom — shown only on mobile.
-  const tabs = useMemo(() => (info.formFactor === 'mobile' ? [...BASE_TABS, MOBILE_TAB] : BASE_TABS), [info.formFactor]);
+  const tabs = useMemo(
+    () => (Object.entries(PROFILE_HUB_TABS) as [ProfileHubTab, typeof PROFILE_HUB_TABS[ProfileHubTab]][])
+      .filter(([, spec]) => !spec.mobileOnly || info.formFactor === 'mobile')
+      .map(([id, spec]) => ({ id, icon: spec.icon, label: spec.label })),
+    [info.formFactor],
+  );
 
   return (
     <Box className="profile-hub__body">

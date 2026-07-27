@@ -4,24 +4,13 @@ import { type ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
 import { RENDERING_SECTION, ENHANCEMENTS_SECTION } from './SettingsView.constants';
+import { APPEARANCE_SECTION } from './graphics-settings-sections';
 import { PlayerSpriteSelector } from './PlayerSpriteSelector';
 
 interface GraphicsSettingsProps {
   settings: GameSettings;
   onChange: (patch: Partial<GameSettings>) => void;
 }
-
-const APPEARANCE_SECTION: Section = {
-  id: 'appearance',
-  title: 'Appearance',
-  subsections: [
-    {
-      id: 'appearance-player',
-      title: 'Player Sprite',
-      items: [{ key: 'linkSprite', label: 'Player Sprite', description: 'Choose a custom player sprite from your library.', keywords: 'player sprite character appearance custom zspr' }],
-    },
-  ],
-};
 
 const SECTIONS: Section[] = [RENDERING_SECTION, ENHANCEMENTS_SECTION, APPEARANCE_SECTION];
 

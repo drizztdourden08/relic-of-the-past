@@ -30,6 +30,7 @@ import { useAppMainEffects } from '@app/App/behavior/useAppMainEffects';
 import { useCapability } from '@app/platform';
 import { TitleBar } from '../TitleBar';
 import { MobileChrome } from '../MobileChrome';
+import { SearchPalette } from '../SearchPalette';
 import type { TitleBarProps } from '../TitleBar/TitleBar.type';
 import { GameLayer } from '../GameLayer';
 import { BootProgressBar } from '../BootProgressBar';
@@ -77,15 +78,10 @@ const AppMain = () => {
   const saveOverlay = useSaveOverlay(saveState, game.isRunning);
   const update = useAutoUpdate();
 
-  const {
-    showUpdateDialog, setShowUpdateDialog,
-    handleShowShadowEditor,
-  } = useAppOverlays({ showDialog, dismissDialog });
+  const { showUpdateDialog, setShowUpdateDialog, handleShowShadowEditor } = useAppOverlays({ showDialog, dismissDialog });
 
-  const {
-    dataTab, profileHubTab, setProfileHubTab,
-    handleShowProfile, handleShowDataManager,
-  } = useAppViewCallbacks({ game, showDialog, dismissDialog, profileMgmt, nav });
+  const { dataTab, profileHubTab, setProfileHubTab, handleShowProfile, handleShowDataManager } =
+    useAppViewCallbacks({ game, showDialog, dismissDialog, profileMgmt, nav });
 
   useKeyboardShortcuts(nav, dialog, dismissDialog, profileMgmt.activeProfile);
 
@@ -195,6 +191,8 @@ const AppMain = () => {
       )}
 
       <BootProgressBar />
+
+      <SearchPalette navProps={chromeProps} navDeps={{ setActivePage: nav.setActivePage, setProfileHubTab }} />
     </Box>
   );
 };
