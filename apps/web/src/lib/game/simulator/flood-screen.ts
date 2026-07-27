@@ -1,29 +1,22 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * Addressable single-screen overworld flood for the game-driven simulator.
- * Builds a screen's collision grid offline (works for any screen, not just the
- * loaded one) and runs the SAME shared floodFillScreen the nav widget uses, with
- * the SAME options (inventory + progress variant + entrances + exit map + solid-
- * sprite blockers), so the numbers match a normal in-game flood. No rendering,
- * no player movement — this is the per-screen unit the chained BFS drives.
+ * The simulator's view of one overworld screen: the shared flood, plus the
+ * summary numbers the run and the nav widget both report.
  *
- * Blockers are derived addressably from WasmGetOverworldSpriteSpawns (which is
- * progress-aware), so a remote screen (one the game isn't standing on) still gets
- * the guard/uncle footprints the live buildOverworldBlockers would produce.
+ * The flood itself is not here. `floodOneScreen` (lib/game/flood/flood-area.ts)
+ * runs it for every caller, so a screen flooded from a given seed answers the
+ * same for the widget and for the run. What this file adds is the summary and
+ * the diagnostics the run needs on top.
  *
  * NOTE (prototype): enrichEntrances still lives in the nav widget layer; it only
  * reads addressable WASM tables, so it is reused here pending a move to the bridge.
  */
-import { wasmBuildOverworldAttrGrid, wasmGetExitScreenMap, wasmGetOverworldVariant, wasmGetOverworldSpriteSpawns } from '../';
-import { floodFillScreen, getConnections, usableEntranceTransition } from '@shared/game/navigation';
-import type { ConnectionInfo, FloodFillResult, GridPos, TransitionPoint } from '@shared/game/navigation';
+import { wasmGetOverworldSpriteSpawns } from '../';
+import { usableEntranceTransition } from '@shared/game/navigation';
+import type { ConnectionInfo, FloodFillResult, GridPos } from '@shared/game/navigation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
 import { enrichEntrances } from '@domains/widgets/navigation/widget-helpers';
-import { buildFloodOptions, getScreenGrids } from '../flood';
-
-// Sprite types that block BFS (mirrors buildOverworldBlockers): tutorial guards
-// (0x3f), barriers (0x40), uncle (0x73). Each stamps a 3×3 footprint.
-const BLOCKER_SPRITES = new Set([0x3f, 0x40, 0x73]);
+import { floodOneScreen, getScreenGrids } from '../flood';
 
 interface ScreenFlood {
   reachableCount: number;
@@ -49,54 +42,18 @@ interface ScreenFloodRun {
   connections: ConnectionInfo[];
 }
 
-const toGrid = (flat: Uint8Array): number[][] => {
-  const grid: number[][] = [];
-  for (let r = 0; r < 64; r++) grid.push(Array.from(flat.slice(r * 64, (r + 1) * 64)));
-  return grid;
-};
-
-/** Solid-sprite blocker cells for a screen, read addressably (progress-aware). */
-const blockerCells = (screenIndex: number): GridPos[] => {
-  const cells: GridPos[] = [];
-  for (const s of wasmGetOverworldSpriteSpawns(screenIndex)) {
-    if (!BLOCKER_SPRITES.has(s.spriteType)) continue;
-    for (let dr = -1; dr <= 1; dr++) {
-      for (let dc = -1; dc <= 1; dc++) {
-        const row = s.row + dr;
-        const col = s.col + dc;
-        if (row >= 0 && row < 64 && col >= 0 && col < 64) cells.push({ row, col });
-      }
-    }
-  }
-  return cells;
-};
-
-/** Run one addressable overworld screen flood; null when the grid can't build. */
+/** Run one addressable overworld screen flood; null when the grid can't build.
+ *  Straight through to the shared flood — the widget calls the same function, so
+ *  the same seed on the same screen cannot give the two of them different numbers. */
 const floodOneOverworld = (
   screenIndex: number,
   items: TileReq[],
   startPos?: GridPos,
   extraSeeds?: GridPos[],
-): ScreenFloodRun | null => {
-  const bundle = getScreenGrids({ isIndoors: false, roomId: 0, owScreenIndex: screenIndex });
-  if (!bundle.rawAttrGrid.length) return null;
-  // Options come from the one builder, same as the indoor flood — a hand-rolled
-  // set here is how the overworld numbers drifted from the room numbers.
-  const result = floodFillScreen(bundle.rawAttrGrid, bundle.screenIndex, buildFloodOptions({
-    location: { isIndoors: false, roomId: 0, owScreenIndex: screenIndex },
-    items,
-    startPos,
-    extraSeeds,
-    // ONLY this screen's own entrances. The full list was being seeded into every
-    // screen's flood, and an entrance is placed by its 64x64 grid position with the
-    // `area` never consulted — so any screen whose flood reached that tile grew a
-    // door belonging to somewhere else entirely. Entrances 101 and 102 both sit at
-    // (34,30), which is how Great Lake NW acquired a door into the psychic's hut
-    // two-thirds of the map away.
-    entrances: enrichEntrances().filter((e) => e.area === screenIndex),
-  }, bundle));
-  return { result, connections: getConnections(result) };
-};
+): ScreenFloodRun | null => floodOneScreen(
+  { isIndoors: false, roomId: 0, owScreenIndex: screenIndex },
+  { items, ...(startPos ? { startPos } : {}), ...(extraSeeds ? { extraSeeds } : {}), entrances: enrichEntrances() },
+);
 
 /**
  * An entrance transition the player can ACTUALLY take right now: the BFS reached it
@@ -152,5 +109,5 @@ const floodOverworldScreen = (screenIndex: number, startPos?: GridPos, items: Ti
   return run ? summarizeRun(run, items, screenIndex) : null;
 };
 
-export { floodOneOverworld, floodOverworldScreen, summarizeRun, usableEntranceTransition, blockerCells };
+export { floodOneOverworld, floodOverworldScreen, summarizeRun, usableEntranceTransition };
 export type { ScreenFlood, ScreenFloodRun };

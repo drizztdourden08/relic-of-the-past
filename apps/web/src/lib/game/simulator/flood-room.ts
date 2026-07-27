@@ -11,8 +11,7 @@ import {
   wasmGetEntranceSpawns, wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetFallHoles,
   wasmGetRoomStairInfo, wasmGetRoomStairInfoFor, wasmGetRoomWalkBoundaries, wasmGetRoomWalkBoundariesFor, wasmGetRoomLayoutInfo, wasmGetRoomDoorInfo,
 } from '../';
-import { floodFillScreen, getConnections } from '@shared/game/navigation';
-import { buildFloodOptions, getScreenGrids, roomEntrances } from '../flood';
+import { floodOneScreen, roomEntrances } from '../flood';
 import type { ConnectionInfo, FloodFillResult, GridPos, OverworldEntrance } from '@shared/game/navigation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
 import { readMapState } from './read-game-state';
@@ -30,23 +29,24 @@ interface RoomFloodRun {
  *  The grid bundle arrives with the uncle's blocker footprint already stamped
  *  (see screen-grids.ts) — remote rooms included. */
 const floodRoomRun = (roomId: number, items: TileReq[], startPos?: GridPos): RoomFloodRun | null => {
-  const bundle = getScreenGrids({ isIndoors: true, roomId, owScreenIndex: 0 });
   const entrances = roomEntrances(roomId);
-  const location = { isIndoors: true as const, roomId, owScreenIndex: 0 };
-  const runFrom = (from?: GridPos) => floodFillScreen(bundle.rawAttrGrid, bundle.screenIndex,
-    buildFloodOptions({ location, items, startPos: from, entrances }, bundle));
+  // Intra-room scroll boundaries (a 2×2 room's internal doorway) come from the
+  // live room-layout read — only available for the loaded room.
+  const live = readMapState();
+  const intraEdges = live?.isIndoors && live.roomIndex === roomId ? (wasmGetRoomLayoutInfo()?.intraEdges ?? []) : [];
+  const runFrom = (from?: GridPos) => floodOneScreen(
+    { isIndoors: true, roomId, owScreenIndex: 0 },
+    { items, ...(from ? { startPos: from } : {}), entrances, intraEdges },
+  );
   // A room's spawn record can sit outside its own walkable floor — the threshold
   // tile of the door rather than the ground behind it. Seeding there reaches
   // nothing at all, which reads as a sealed room and sends the run straight back
   // out. A seed that reaches nothing is not a seed, so fall back to the room's
   // own entrance list, which lands on floor.
   const seeded = runFrom(startPos);
-  const result = startPos && seeded.reachableCount === 0 ? runFrom(undefined) : seeded;
-  // Intra-room scroll boundaries (a 2×2 room's internal doorway) come from the
-  // live room-layout read — only available for the loaded room.
-  const live = readMapState();
-  const intraEdges = live?.isIndoors && live.roomIndex === roomId ? (wasmGetRoomLayoutInfo()?.intraEdges ?? []) : [];
-  return { result, connections: getConnections(result, intraEdges.length > 0 ? intraEdges : undefined), entrances };
+  if (!seeded) return null;
+  const run = startPos && seeded.result.reachableCount === 0 ? runFrom(undefined) ?? seeded : seeded;
+  return { result: run.result, connections: run.connections, entrances };
 };
 
 /** Flood an indoor room and report widget-style numbers. */
