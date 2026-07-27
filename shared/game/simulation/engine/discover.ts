@@ -146,6 +146,10 @@ const spriteKey = (sprite: SimSprite): string =>
  *  shutters (the sanctuary's escape door) share the door kind but not the tag. */
 const KILL_GATE_TAG = (t: number): boolean => t >= 0x01 && t <= 0x13;
 
+/** No sprite gates anything here — the verdict a room with nothing to clear
+ *  would trivially give, without running the combat sweep to get it. */
+const EMPTY_THREAT: RoomThreat = { gating: [], clearable: true };
+
 type Interactables = NonNullable<SimObservation['interactables']>;
 
 /** Sprite keys the current threat sweep counts as gating the room's clear
@@ -221,13 +225,18 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
 
   const killGated = (inter.tags ?? [0, 0]).some(KILL_GATE_TAG);
   const shutters = inter.doors.filter((d) => d.kind === 'shutter');
-  const threat = evaluateRoomThreat({
-    sprites: inter.sprites,
-    reached,
-    grids: obs.grids,
-    inventory: state.inventory,
-    combat: obs.combat,
-  });
+  // The game only ever consults Sprite_CheckIfRoomIsClear in a room whose tag
+  // gates on it, so the sweep only runs there — a room that isn't kill-gated
+  // has no clearable/unclearable verdict to give in the first place.
+  const threat = killGated && shutters.some((d) => !d.opened)
+    ? evaluateRoomThreat({
+        sprites: inter.sprites,
+        reached,
+        grids: obs.grids,
+        inventory: state.inventory,
+        combat: obs.combat,
+      })
+    : EMPTY_THREAT;
   const living = livingKillables(state, screenId, inter, threat);
   // Open shutters with killables still alive: walking deeper into the room
   // slams the doors shut behind the player (the game's trap-door rule) — every

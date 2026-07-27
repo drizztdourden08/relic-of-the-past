@@ -132,7 +132,7 @@ EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomStairInfoFor(int room_id) {
   memset(g_room_stairs_buf, 0, sizeof(g_room_stairs_buf));
   WasmBuildRoomAttrGrid(room_id);
-  return SimScanRoomStairs();
+  return (int)g_room_stairs_buf;
 }
 
 // ─── Room Travel Destinations (from room header) ───
@@ -157,7 +157,6 @@ int WasmGetRoomTravelDestinationsFor(int room_id) {
   memset(g_travel_dest_buf, 0, sizeof(g_travel_dest_buf));
   if (room_id < 0 || room_id >= 0x128) return (int)g_travel_dest_buf;
   WasmBuildRoomAttrGrid(room_id);
-  for (int i = 0; i < 5; i++) g_travel_dest_buf[i] = dung_hdr_travel_destinations[i];
   return (int)g_travel_dest_buf;
 }
 
@@ -231,8 +230,6 @@ int WasmGetRoomTagsFor(int room_id) {
   g_room_tags_buf[0] = g_room_tags_buf[1] = 0;
   if (room_id < 0 || room_id >= 0x128) return (int)g_room_tags_buf;
   WasmBuildRoomAttrGrid(room_id);
-  g_room_tags_buf[0] = dung_hdr_tag[0];
-  g_room_tags_buf[1] = dung_hdr_tag[1];
   return (int)g_room_tags_buf;
 }
 
@@ -243,5 +240,19 @@ int WasmGetRoomWalkBoundariesFor(int room_id) {
   memset(g_walk_bounds_buf, 0, sizeof(g_walk_bounds_buf));
   if (room_id < 0 || room_id >= 0x128) return (int)g_walk_bounds_buf;
   WasmBuildRoomAttrGrid(room_id);
-  return SimScanWalkBoundaries((uint16)room_id);
+  return (int)g_walk_bounds_buf;
+}
+
+// Everything a room-addressable query needs that lives in WRAM rather than in the
+// returned grid: the stair list, the header's travel destinations, the room tags
+// and the walk-through boundaries. WasmBuildRoomAttrGrid puts all of WRAM back
+// before it returns, so these have to be taken while the requested room is still
+// rendered — read afterwards they describe whichever room the game is physically
+// standing in, which for a headless run is wherever the save happened to start.
+void SimCaptureRoomHeaderState(void) {
+  SimScanRoomStairs();
+  for (int i = 0; i < 5; i++) g_travel_dest_buf[i] = dung_hdr_travel_destinations[i];
+  g_room_tags_buf[0] = dung_hdr_tag[0];
+  g_room_tags_buf[1] = dung_hdr_tag[1];
+  SimScanWalkBoundaries(dungeon_room_index);
 }

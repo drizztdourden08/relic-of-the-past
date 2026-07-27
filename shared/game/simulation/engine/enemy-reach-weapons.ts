@@ -37,9 +37,17 @@ const ANCILLA_WEAPONS: ReadonlyArray<{ item: string; ancillaType: number; travel
   { item: 'Ice Rod', ancillaType: 0x0b, travel: Infinity, label: 'ice rod' },
 ];
 
+/** True when some inventory entry names this sword tier. The uncle's gift is
+ *  tracked as the combined 'Fighter Sword & Shield' grant (item 0x00, id-map.ts)
+ *  rather than the bare 'Fighter Sword' name (item 0x49) that a tier-1 sword
+ *  found on its own would carry — so this looks for the tier name as a
+ *  substring of an entry rather than requiring an exact match. */
+const hasSwordTier = (inventory: Set<string>, name: string): boolean =>
+  [...inventory].some((entry) => entry.includes(name));
+
 /** Highest sword tier (1-4) present in the inventory, 0 when swordless. */
 const swordTier = (inventory: Set<string>): number =>
-  SWORD_TIER_NAMES.reduce((tier, name, i) => (inventory.has(name) ? i + 1 : tier), 0);
+  SWORD_TIER_NAMES.reduce((tier, name, i) => (hasSwordTier(inventory, name) ? i + 1 : tier), 0);
 
 /** damageByClass is indexed by damage class, not ancilla type — this is the
  *  ancilla -> damage-class step of the game's two-step lookup. */

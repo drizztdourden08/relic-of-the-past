@@ -16,6 +16,8 @@ import { usableEntranceTransition } from '@shared/game/navigation';
 import { detectRoom } from './room-exits';
 import { getRoomChests, getRoomSprites, getRoomDoors } from './interactables';
 import { floodRoomRun } from './flood-room';
+import { probeRoomThreat } from './probe-room-threat';
+import type { RoomThreatProbe } from './probe-room-threat';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
 
 interface RoomProbe {
@@ -58,6 +60,8 @@ interface RoomProbe {
   neighbourEntrances: Array<{ room: number; ids: number[] }>;
   /** Bounding box of the reached region — shows where the flood actually is. */
   bbox?: { minRow: number; maxRow: number; minCol: number; maxCol: number };
+  /** The combat sweep's verdict on this room's gating sprites — see probe-room-threat.ts. */
+  threat: RoomThreatProbe;
 }
 
 const probeRoom = (roomId: number, entryTile?: { row: number; col: number }, items: TileReq[] = ['lift.1']): RoomProbe => {
@@ -195,6 +199,7 @@ const probeRoom = (roomId: number, entryTile?: { row: number; col: number }, ite
       }
       return { minRow, maxRow, minCol, maxCol };
     })() : undefined,
+    threat: probeRoomThreat(roomId, run),
   };
 };
 
