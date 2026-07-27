@@ -40,6 +40,36 @@ interface RoomThreat {
   clearable: boolean;
 }
 
+/** How far from a sprite a reached tile may sit and still count it as standing on
+ *  ground the player currently occupies. Two tiles covers a sprite whose recorded
+ *  tile sits just inside the wall its floor abuts. */
+const LIVE_REGION_RADIUS = 2;
+
+/**
+ * Is this sprite in the part of the room the player is actually in?
+ *
+ * The clear test the game runs walks its sixteen LIVE sprite slots. What we hold
+ * instead is the room's whole static spawn list, and one room slot can cover
+ * several scrolling sections, each with its own shutters and its own guard. The
+ * castle's boomerang room is two: enter the first and its shutters slam until you
+ * kill the guard standing there; the section to its east then does the same with
+ * its own. Judging both sections at once makes each look unclearable, because
+ * neither guard can be struck from the other side.
+ *
+ * Sprites are counted per section, not per room slot. Inside a section the rule
+ * stays absolute — every gating sprite there has to be killable, so this cannot
+ * clear a room off one convenient kill while another enemy stands beside it.
+ */
+const inLivePart = (tile: SimSprite['tile'], reached: boolean[][] | undefined): boolean => {
+  if (!reached) return true;
+  for (let dr = -LIVE_REGION_RADIUS; dr <= LIVE_REGION_RADIUS; dr++) {
+    for (let dc = -LIVE_REGION_RADIUS; dc <= LIVE_REGION_RADIUS; dc++) {
+      if (reached[tile.row + dr]?.[tile.col + dc]) return true;
+    }
+  }
+  return false;
+};
+
 /** Unknown flags4 (no combat row for this sprite type) defaults to gating: a
  *  room can't be called clear on the strength of a sprite we know nothing about. */
 const isGating = (info: SpriteCombatInfo | null): boolean =>
@@ -83,6 +113,7 @@ const evaluateRoomThreat = (params: {
   const gating = sprites
     .map((sprite) => ({ sprite, info: infoFor(sprite.spriteType) }))
     .filter(({ info }) => isGating(info))
+    .filter(({ sprite }) => inLivePart(sprite.tile, reached))
     .map(({ sprite, info }) => evaluateSprite(sprite, info, weapons, reached, grids, tables?.projectileTileCollision));
   return { gating, clearable: gating.every((e) => e.killable) };
 };
