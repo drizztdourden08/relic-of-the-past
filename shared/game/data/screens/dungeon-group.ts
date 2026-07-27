@@ -44,6 +44,23 @@ const roomGroups = (): Map<number, number> => {
   return groupByRoom as Map<number, number>;
 };
 
+/** Groups that span more than one palace index need a name of their own, since
+ *  no single room's location describes the whole of it. */
+const GROUP_NAMES: Readonly<Record<number, string>> = {
+  1: 'Hyrule Castle Escape Sequence',
+};
+
+/** What to call a group in the run's log. Falls back to the location its rooms
+ *  carry, and to the bare number when the screens name no location. */
+const dungeonGroupName = (group: number): string => {
+  if (GROUP_NAMES[group]) return GROUP_NAMES[group];
+  if (!nameByRoom) buildRoomMaps();
+  for (const [room, name] of nameByRoom as Map<number, string>) {
+    if (roomGroups().get(room) === group) return name;
+  }
+  return `group ${group}`;
+};
+
 /** The dungeon's display name for a traversal id, or null when it is not a dungeon. */
 const dungeonNameForScreen = (screenId: string): string | null => {
   const m = ROOM_ID.exec(screenId);
@@ -59,4 +76,4 @@ const dungeonGroupForScreen = (screenId: string): number | null => {
   return roomGroups().get(Number(m[1])) ?? null;
 };
 
-export { dungeonGroupOf, dungeonGroupForScreen, dungeonNameForScreen };
+export { dungeonGroupOf, dungeonGroupForScreen, dungeonNameForScreen, dungeonGroupName };

@@ -7,7 +7,7 @@
  * than adding a second reset mechanism.
  */
 import type { SimEvent } from '../types';
-import { dungeonGroupForScreen } from '../../data/screens/dungeon-group';
+import { dungeonGroupForScreen, dungeonGroupName } from '../../data/screens/dungeon-group';
 import { narrative } from './event-log';
 import type { EngineState } from './state';
 
@@ -29,7 +29,7 @@ const closeIdleDungeonGroups = (state: EngineState, events: SimEvent[]): void =>
 
     if (ledger.owed.length === 0) {
       ledger.complete = true;
-      events.push(narrative(state, `Dungeon group ${ledger.group} complete — nothing left owed, will not be re-entered`));
+      events.push(narrative(state, `${dungeonGroupName(ledger.group)} complete — nothing left owed, will not be re-entered`));
       continue;
     }
     ledger.exhausted = true;
@@ -37,7 +37,7 @@ const closeIdleDungeonGroups = (state: EngineState, events: SimEvent[]): void =>
       ledger.owed.map(o => o.blockedBy).filter((t): t is string => Boolean(t)),
     )];
     const reasons = ledger.reopensOn.length > 0 ? ledger.reopensOn.join(', ') : 'unknown reasons';
-    events.push(narrative(state, `Dungeon group ${ledger.group} exhausted: ${ledger.owed.length} check(s) still owed, blocked by ${reasons}`));
+    events.push(narrative(state, `${dungeonGroupName(ledger.group)} exhausted: ${ledger.owed.length} check(s) still owed, blocked by ${reasons}`));
   }
 };
 
@@ -56,7 +56,7 @@ const reopenLedgersFor = (state: EngineState, tokens: string[], itemLabel: strin
     for (const id of [...state.visited]) {
       if (dungeonGroupForScreen(id) === ledger.group) state.visited.delete(id);
     }
-    events.push(narrative(state, `Dungeon group ${ledger.group} reopening — acquired ${itemLabel}`));
+    events.push(narrative(state, `${dungeonGroupName(ledger.group)} reopening — acquired ${itemLabel}`));
   }
 };
 
