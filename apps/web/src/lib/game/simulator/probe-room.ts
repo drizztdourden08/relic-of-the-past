@@ -145,9 +145,9 @@ const probeRoom = (roomId: number, entryTile?: { row: number; col: number }, ite
     attrRows: (() => {
       const b = getScreenGrids({ isIndoors: true, roomId, owScreenIndex: 0 });
       const hex = (g?: number[][], row?: number) =>
-        g && row != null ? (g[row] ?? []).slice(12, 21).map((v) => v.toString(16).padStart(2, '0')).join(' ') : '';
+        g && row != null ? (g[row] ?? []).slice(24, 40).map((v) => v.toString(16).padStart(2, '0')).join(' ') : '';
       const out = [];
-      for (let row = 6; row <= 44; row++) {
+      for (let row = 30; row <= 52; row++) {
         out.push({
           row,
           raw: hex(b.rawAttrGrid, row),

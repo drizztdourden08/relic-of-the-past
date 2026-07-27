@@ -32,8 +32,16 @@ interface RoomFloodRun {
 const floodRoomRun = (roomId: number, items: TileReq[], startPos?: GridPos): RoomFloodRun | null => {
   const bundle = getScreenGrids({ isIndoors: true, roomId, owScreenIndex: 0 });
   const entrances = roomEntrances(roomId);
-  const result = floodFillScreen(bundle.rawAttrGrid, bundle.screenIndex,
-    buildFloodOptions({ location: { isIndoors: true, roomId, owScreenIndex: 0 }, items, startPos, entrances }, bundle));
+  const location = { isIndoors: true as const, roomId, owScreenIndex: 0 };
+  const runFrom = (from?: GridPos) => floodFillScreen(bundle.rawAttrGrid, bundle.screenIndex,
+    buildFloodOptions({ location, items, startPos: from, entrances }, bundle));
+  // A room's spawn record can sit outside its own walkable floor — the threshold
+  // tile of the door rather than the ground behind it. Seeding there reaches
+  // nothing at all, which reads as a sealed room and sends the run straight back
+  // out. A seed that reaches nothing is not a seed, so fall back to the room's
+  // own entrance list, which lands on floor.
+  const seeded = runFrom(startPos);
+  const result = startPos && seeded.reachableCount === 0 ? runFrom(undefined) : seeded;
   // Intra-room scroll boundaries (a 2×2 room's internal doorway) come from the
   // live room-layout read — only available for the loaded room.
   const live = readMapState();
