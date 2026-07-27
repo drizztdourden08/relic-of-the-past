@@ -1,7 +1,8 @@
 /* @layer renderer-hud @kind component */
 /**
  * PauseCrystalIcon — renders a single crystal (empty or filled).
- * Crystals are 16×16 (2×2 tiles).
+ * A crystal is 16×8: two tiles side by side, one tile tall. Drawing it square
+ * stretches the sprite to double height.
  */
 import { HudImage } from '../../primitives/HudImage';
 
@@ -12,14 +13,15 @@ interface PauseCrystalIconProps {
 }
 
 const PauseCrystalIcon = ({ filled, scale, spritesBase }: PauseCrystalIconProps) => {
-  const size = 16 * scale;
+  const width = 16 * scale;
+  const height = 8 * scale;
   const src = `${spritesBase}pause-crystal-${filled ? 'filled' : 'empty'}.png`;
 
   return (
     <HudImage
       src={src}
-      width={size}
-      height={size}
+      width={width}
+      height={height}
       style={{ display: 'block', imageRendering: 'pixelated' }}
     />
   );

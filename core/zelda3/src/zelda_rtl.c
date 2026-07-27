@@ -447,6 +447,12 @@ void ZeldaDrawPpuFrame(uint8 *pixel_buffer, size_t pitch, uint32 render_flags) {
     for (int s = 0; s < 128; s++)
       g_zenv.ppu->oamHighX[s] = g_oam_x_high[s];
   }
+  // Custom sheet: hand over this frame's player slots so the PPU resolves them against the private palette
+  // bank rather than the sprite palette the gear shares with villagers and followers.
+  if (g_zenv.ppu->playerPalActive) {
+    for (int s = 0; s < 128; s++)
+      g_zenv.ppu->oamIsPlayer[s] = g_oam_player[s];
+  }
 
   for (int i = 0; i <= height; i++) {
     if (i == 128 + topBudget && irq_flag) {  // file-select BG3 split fires at content line 128 (shifted down by the top budget)
@@ -504,12 +510,14 @@ uint16 g_oam_tall_budget;
 uint16 g_oam_wide_budget;
 uint8 g_oam_y_high[128];
 uint8 g_oam_x_high[128];  // see types.h — signed high X bits (above the stock 9) for wide views
+uint8 g_oam_player[128];  // see types.h — which slots are the player's own body, for the private palette
 
 static void ClearOamBuffer() {  // 80841e
   for (int i = 0; i < 128; i++) {
     oam_buf[i].y = 0xf0;
     g_oam_y_high[i] = 0;  // reset each frame; OAM helpers set it for tall sprites this frame
     g_oam_x_high[i] = 0;  // reset each frame; OAM helpers set it for wide sprites this frame
+    g_oam_player[i] = 0;  // reset each frame; the player OAM builder marks its own slots
   }
 }
 

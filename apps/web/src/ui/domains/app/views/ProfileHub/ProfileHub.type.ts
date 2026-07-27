@@ -4,7 +4,7 @@ import type { GameSettings } from '@shared/types/settings';
 
 type ProfileHubTab =
   | 'home'
-  | 'settings' // Display
+  | 'settings' // Display: rendering, camera, window, performance
   | 'graphics'
   | 'audio'
   | 'gameplay'
@@ -12,7 +12,7 @@ type ProfileHubTab =
   | 'hud'
   | 'controls'
   | 'haptics'
-  | 'system'
+  | 'developer'
   | 'mobile';
 
 interface ProfileHubProps {
@@ -27,6 +27,7 @@ interface ProfileHubProps {
   onDisplayPerfChange?: (enabled: boolean) => void;
   onSaveSlotSettingsChange?: (enhanced: boolean, holdDuration: number) => void;
   onEdgeEffectChange?: (enabled: boolean) => void;
+  onPixelPerfectChange?: (enabled: boolean) => void;
   onShadowCastingChange?: (enabled: boolean) => void;
   masterVolumeOverride?: { volume: number; version: number } | null;
   activeTab?: ProfileHubTab;

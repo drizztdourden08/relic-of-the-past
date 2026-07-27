@@ -25,6 +25,12 @@ const APPEARANCE_SECTION: Section = {
 
 const SECTIONS: Section[] = [RENDERING_SECTION, ENHANCEMENTS_SECTION, APPEARANCE_SECTION];
 
+// Pixel Perfect promises whole, identical source pixels — bilinear interpolation would break that
+// upstream of everything else, so the core is handed LinearFiltering off and the control follows suit.
+const isDisabled = (key: string, settings: GameSettings): boolean => {
+  return key === 'linearFiltering' && settings.pixelPerfect;
+};
+
 const renderControl = (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void): ReactNode | null => {
   if (key !== 'linkSprite') return null;
   return <PlayerSpriteSelector value={settings.linkSprite} onChange={(v) => onChange({ linkSprite: v })} />;
@@ -32,7 +38,7 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
 
 const GraphicsSettings = (props: GraphicsSettingsProps) => {
   const { settings, onChange } = props;
-  return <SettingsLayout sections={SECTIONS} settings={settings} onChange={onChange} renderControl={renderControl} />;
+  return <SettingsLayout sections={SECTIONS} settings={settings} onChange={onChange} renderControl={renderControl} isDisabled={isDisabled} />;
 };
 
 export { GraphicsSettings };

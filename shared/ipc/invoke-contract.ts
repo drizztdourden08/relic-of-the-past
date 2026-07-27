@@ -10,7 +10,9 @@ import type { NormalSaveInfo, AutoSaveInfo, QuickSaveSlotInfo } from '@shared/ty
 import type { PlaySession } from '@shared/types/session';
 import type { ShadowCastingProject, ScreenShadowData } from '@shared/types/shadow-casting';
 import type { LanguagePack, LanguageSummary } from '@shared/types/language';
+import type { RefreshRateInfo, SyncedRateStatus } from '@shared/types/display';
 import type { DataLocation, StorageSummary, FileStat } from '@shared/platform';
+import type { SystemDiagnostics } from '@shared/types/diagnostics';
 import type { SimRunConfig } from '@shared/game/simulation';
 
 type Result = { success: boolean; error?: string };
@@ -22,9 +24,13 @@ interface InvokeContract {
   // App
   'app:getUserDataPath': () => Promise<string>;
 
+  // Diagnostics — host hardware/OS readout for the About page's debug info
+  'diagnostics:getSystem': () => Promise<SystemDiagnostics>;
+
   // Storage — data location, reveal in OS file manager, per-domain usage summary
   'storage:getLocation': () => Promise<DataLocation>;
   'storage:reveal': () => Promise<void>;
+  'storage:revealProfile': (profileId: string) => Promise<Result>;
   'storage:getSummary': () => Promise<StorageSummary>;
 
   // Generic file store — POSIX paths relative to the Data root
@@ -47,6 +53,12 @@ interface InvokeContract {
   'window:setAudioMuted': (value: boolean) => Promise<boolean>;
   'window:isAudioMuted': () => Promise<boolean>;
   'window:isFullscreen': () => Promise<boolean>;
+
+  // Display — refresh rate of the screen the window is on
+  'display:getRefreshRate': () => Promise<RefreshRateInfo>;
+  'display:getSyncedRateStatus': () => Promise<SyncedRateStatus>;
+  'display:setSyncedRatePreference': (enabled: boolean, targetHz: number) => Promise<SyncedRateStatus>;
+  'display:applyRefreshRate': (hz: number) => Promise<SyncedRateStatus>;
 
   // Dialog
   'dialog:openRom': () => Promise<string | null>;

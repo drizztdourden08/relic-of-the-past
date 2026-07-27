@@ -116,6 +116,18 @@ void WasmSetDisplayPerf(int enable) {
   g_config.display_perf_title = enable;
 }
 
+// Swap the frame loop between the display's vertical blank and the fixed timer. Live-safe: the
+// profile pushes the current choice at startup and again whenever the setting changes.
+EMSCRIPTEN_KEEPALIVE
+void WasmSetVsync(int enable) {
+  SetVsyncMode(enable != 0);
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetVsync(void) {
+  return g_vsync ? 1 : 0;
+}
+
 // ---------------------------------------------------------------------------
 // Volume — masters the SDL audio mixer + per-channel DSP volumes
 // ---------------------------------------------------------------------------

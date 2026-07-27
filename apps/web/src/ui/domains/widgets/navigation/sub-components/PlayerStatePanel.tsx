@@ -51,6 +51,14 @@ const PlayerStatePanel = (props: Props) => {
             </Text>
           </DescRow>
         )}
+        {isIndoors && (
+          <DescRow label="Doorway" desc="Doorway state, both values LATCHED rather than per-frame. Neither is safe to treat as 'is this happening right now'. The first is the orientation of the doorway the player occupies (is_standing_in_doorway): set on entering a room through a doorway, cleared only on certain intra-room transitions. 'Anim' is the door animation step (door_animation_step_indicator, 0-16): it is left at 16 once a door finishes opening rather than returning to 0.">
+            <Text style={S.valInfo}>
+              {playerDebug.inDoorway === 0 ? 'no' : `0x${playerDebug.inDoorway.toString(16).toUpperCase()}`}
+              {playerDebug.doorAnimStep > 0 && <Text style={S.valWarning}> · anim {playerDebug.doorAnimStep}</Text>}
+            </Text>
+          </DescRow>
+        )}
         {playerDebug.staircaseType !== null && playerDebug.staircaseType >= 0 && (
           <DescRow label="Staircase" desc="Controls layer-change behavior (kind_of_in_room_staircase). 0=intra-room stairs (layer+room shift), 1=layer stairs (changes allowed), 2=pseudo/water stairs (ALL layer changes BLOCKED).">
             <Text style={{ color: playerDebug.staircaseType === 2 ? 'var(--c-danger)' : 'var(--c-green-bright)' }}>

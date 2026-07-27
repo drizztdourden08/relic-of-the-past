@@ -33,12 +33,17 @@ propagates the deep-grass/water priority bit.
 
 ### WasmBuildRoomAttrGrid
 `int WasmBuildRoomAttrGrid(int room_id)` → loads `room_id` into the dungeon tilemap, rebuilds the
-collision attr table, restores the previous room, and returns the `dung_bg2_attr_table` pointer
-(read 64×64, `+0x1000` for the lower layer). This is heavy: it runs the real room loader, so call it off the hot path.
+collision attr table and returns a pointer to a private copy of it (read 64×64, `+0x1000` for the
+lower layer). This is heavy: it runs the real room loader, so call it off the hot path.
+
+It snapshots and restores all of WRAM around the rebuild, so it leaves the running game untouched.
+It still answers from **room data, not live state**. For the room the player currently occupies use
+`WasmGetIndoorAttrTable`, which reports the runtime collision the player is actually walking on
+(opened doorways, lifted pots, pushed blocks).
 
 ### WasmGetToggleFloorPositions
-`int WasmGetToggleFloorPositions(void)` → buffer populated during `WasmBuildRoomAttrGrid`:
-`[count, pad]` then up to 16 × `[posLo, posHi, row, col]`.
+`int WasmGetToggleFloorPositions(void)` → the toggle-floor positions captured by the last
+`WasmBuildRoomAttrGrid` call: `[count, pad]` then up to 16 × `[posLo, posHi, row, col]`.
 
 ## Room geometry
 

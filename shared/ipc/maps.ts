@@ -12,8 +12,10 @@ import type { EventContract } from './event-contract';
 
 const INVOKE_MAP = {
   getUserDataPath: 'app:getUserDataPath',
+  getSystemDiagnostics: 'diagnostics:getSystem',
   getDataLocation: 'storage:getLocation',
   revealDataFolder: 'storage:reveal',
+  revealProfileFolder: 'storage:revealProfile',
   getStorageSummary: 'storage:getSummary',
   fileReadBytes: 'file:readBytes',
   fileReadText: 'file:readText',
@@ -30,6 +32,10 @@ const INVOKE_MAP = {
   setAudioMuted: 'window:setAudioMuted',
   isAudioMuted: 'window:isAudioMuted',
   isFullscreen: 'window:isFullscreen',
+  getRefreshRate: 'display:getRefreshRate',
+  getSyncedRateStatus: 'display:getSyncedRateStatus',
+  setSyncedRatePreference: 'display:setSyncedRatePreference',
+  applyRefreshRate: 'display:applyRefreshRate',
   openRomDialog: 'dialog:openRom',
   pickFile: 'dialog:pickFile',
   listProfiles: 'profiles:list',

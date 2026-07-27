@@ -3,7 +3,7 @@
  * Electron host adapter. Fulfills the platform ports by delegating to the
  * existing preload-injected window.api — the proven desktop path, unchanged.
  */
-import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, FilePickerPort, ControllerHost, DevicePort } from '@shared/platform';
+import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, FilePickerPort, ControllerHost, DevicePort, DisplayPort } from '@shared/platform';
 import { osFromProcess } from '@shared/platform';
 
 // Desktop handles screen-stay-awake and save-on-close through its own window
@@ -36,9 +36,19 @@ const createWindowControls = (): WindowControlsPort => ({
   onFullscreenChange: (cb) => window.api.onFullscreenChange(cb),
 });
 
+// The OS knows the rate for the display the window sits on; the renderer's measurement
+// refines it. Modes stay empty because Electron cannot enumerate them.
+const createDisplay = (): DisplayPort => ({
+  getRefreshRate: () => window.api.getRefreshRate(),
+  getSyncedRateStatus: () => window.api.getSyncedRateStatus(),
+  setSyncedRatePreference: (enabled, targetHz) => window.api.setSyncedRatePreference(enabled, targetHz),
+  applyRefreshRate: (hz) => window.api.applyRefreshRate(hz),
+});
+
 const createStorage = (): StoragePort => ({
   getLocation: () => window.api.getDataLocation(),
   reveal: () => window.api.revealDataFolder(),
+  revealProfile: async (profileId) => (await window.api.revealProfileFolder(profileId)).success,
   getSummary: () => window.api.getStorageSummary(),
   spritesBaseUrl: async (romFile) => window.api.getSpritesBaseUrl(romFile),
 });
@@ -103,6 +113,7 @@ const createElectronFactory = (): PlatformFactory => ({
   createFilePicker,
   createControllerHost,
   createDevice,
+  createDisplay,
 });
 
 export { createElectronFactory };

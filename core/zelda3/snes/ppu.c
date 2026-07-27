@@ -79,6 +79,8 @@ void ppu_reset(Ppu* ppu) {
   ppu->cgramSecondWrite = false;
   ppu->cgramBuffer = 0;
   memset(ppu->oam, 0, sizeof(ppu->oam));
+  memset(ppu->oamIsPlayer, 0, sizeof(ppu->oamIsPlayer));
+  ppu->playerPalActive = false;
   ppu->oamAdr = 0;
   ppu->oamSecondWrite = false;
   ppu->oamBuffer = 0;
@@ -166,7 +168,7 @@ void PpuBeginDrawing(Ppu *ppu, uint8_t *pixels, size_t pitch, uint32_t render_fl
   }
 
   if (PpuGetCurrentRenderScale(ppu, ppu->renderFlags) == 4) {
-    for (int i = 0; i < 256; i++) {
+    for (int i = 0; i < 0x110; i++) {
       uint32 color = ppu->cgram[i];
       ppu->colorMapRgb[i] = ppu->brightnessMult[color & 0x1f] << 16 | ppu->brightnessMult[(color >> 5) & 0x1f] << 8 | ppu->brightnessMult[(color >> 10) & 0x1f];
     }
@@ -660,6 +662,21 @@ static void PpuDrawBackground_2bpp_mosaic(Ppu *ppu, int y, bool sub, uint layer,
 #define SPRITE_PRIO_TO_PRIO(prio, level6) (((prio) * 4 + 2) * 16 + 4 + (level6 ? 2 : 0))
 #define SPRITE_PRIO_TO_PRIO_HI(prio) ((prio) * 4 + 2)
 
+// A z-buffer entry packs a CGRAM index in bits 0-7, the layer type in bits 8-11 and the priority level in
+// bits 12-15. The player's own pixels carry their layer type raised by 8 (sprite 4 -> 12, sprite-without-
+// color-math 6 -> 14), which is free: no layer type above 6 is otherwise used, and priority levels never
+// coincide between backgrounds and sprites, so the raised nibble can never decide an ordering comparison.
+// Masking the nibble with 7 recovers the layer the rest of the pipeline expects.
+#define ZBUF_PLAYER_LAYER_BIT 0x800
+#define ZBUF_LAYER(z) (((z) >> 8) & 7)
+
+// CGRAM entry a z-buffer value resolves to. The player reads its private bank by color index alone, so it
+// keeps the sheet's colors whichever hardware palette its OAM entry happens to name — including palette 0,
+// where the translucency swap parks the player in rooms with a see-through layer.
+static inline uint32 ZbufToCgram(PpuZbufType z) {
+  return (z & ZBUF_PLAYER_LAYER_BIT) ? (kPpuPlayerPalBase | (z & 0xf)) : (z & 0xff);
+}
+
 static void PpuDrawSprites(Ppu *ppu, uint y, uint sub, bool clear_backdrop) {
   int layer = 4;
   if (!IS_SCREEN_ENABLED(ppu, sub, layer))
@@ -851,7 +868,7 @@ static void PpuDrawMode7Upsampled(Ppu *ppu, uint y) {
     for (size_t i = 0; i < draw_width; i++, dst += 16) {
       uint32 pixel = pixels[i] & 0xff;
       if (pixel) {
-        uint32 color = ppu->colorMapRgb[pixel];
+        uint32 color = ppu->colorMapRgb[ZbufToCgram(pixels[i])];
         ((uint32 *)dst)[3] = ((uint32 *)dst)[2] = ((uint32 *)dst)[1] = ((uint32 *)dst)[0] = color;
         ((uint32 *)(dst + pitch * 1))[3] = ((uint32 *)(dst + pitch * 1))[2] = ((uint32 *)(dst + pitch * 1))[1] = ((uint32 *)(dst + pitch * 1))[0] = color;
         ((uint32 *)(dst + pitch * 2))[3] = ((uint32 *)(dst + pitch * 2))[2] = ((uint32 *)(dst + pitch * 2))[1] = ((uint32 *)(dst + pitch * 2))[0] = color;
@@ -976,13 +993,13 @@ static NOINLINE void PpuDrawWholeLine(Ppu *ppu, uint y) {
       uint32 i = left;
       if (ppu->renderFlags & (kPpuRenderFlags_BlackBG2 | kPpuRenderFlags_BlackBackdrop)) {
         do {
-          uint8 layer = (ppu->bgBuffers[0].data[i] >> 8) & 0xf;
+          uint8 layer = ZBUF_LAYER(ppu->bgBuffers[0].data[i]);
           uint8 cidx = ppu->bgBuffers[0].data[i] & 0xff;
           if ((ppu->renderFlags & kPpuRenderFlags_BlackBG2) ? (layer == 5 || (layer == 1 && cidx >= 112))
                                                             : (layer == 5 && cidx != 0)) {  // BlackBackdrop: gap sentinel only
             dst[0] = 0;
           } else {
-            uint32 color = ppu->cgram[ppu->bgBuffers[0].data[i] & 0xff];
+            uint32 color = ppu->cgram[ZbufToCgram(ppu->bgBuffers[0].data[i])];
             dst[0] = ppu->brightnessMult[color & clip_color_mask] << 16 |
                      ppu->brightnessMult[(color >> 5) & clip_color_mask] << 8 |
                      ppu->brightnessMult[(color >> 10) & clip_color_mask];
@@ -990,7 +1007,7 @@ static NOINLINE void PpuDrawWholeLine(Ppu *ppu, uint y) {
         } while (dst++, ++i < right);
       } else {
         do {
-          uint32 color = ppu->cgram[ppu->bgBuffers[0].data[i] & 0xff];
+          uint32 color = ppu->cgram[ZbufToCgram(ppu->bgBuffers[0].data[i])];
           dst[0] = ppu->brightnessMult[color & clip_color_mask] << 16 |
                    ppu->brightnessMult[(color >> 5) & clip_color_mask] << 8 |
                    ppu->brightnessMult[(color >> 10) & clip_color_mask];
@@ -1003,13 +1020,13 @@ static NOINLINE void PpuDrawWholeLine(Ppu *ppu, uint y) {
       // Need to check for each pixel whether to use math or not based on the main screen layer.
       uint32 i = left;
       do {
-        uint8 main_layer = (ppu->bgBuffers[0].data[i] >> 8) & 0xf;
+        uint8 main_layer = ZBUF_LAYER(ppu->bgBuffers[0].data[i]);
         uint8 cidx2 = ppu->bgBuffers[0].data[i] & 0xff;
         if ((ppu->renderFlags & kPpuRenderFlags_BlackBG2) ? (main_layer == 5 || (main_layer == 1 && cidx2 >= 112))
             : ((ppu->renderFlags & kPpuRenderFlags_BlackBackdrop) && main_layer == 5 && cidx2 != 0)) {  // gap sentinel
           dst[0] = 0;
         } else {
-          uint32 color = ppu->cgram[ppu->bgBuffers[0].data[i] & 0xff], color2;
+          uint32 color = ppu->cgram[ZbufToCgram(ppu->bgBuffers[0].data[i])], color2;
           uint32 r = color & clip_color_mask;
           uint32 g = (color >> 5) & clip_color_mask;
           uint32 b = (color >> 10) & clip_color_mask;
@@ -1017,7 +1034,7 @@ static NOINLINE void PpuDrawWholeLine(Ppu *ppu, uint y) {
           if (math_enabled_cur & (1 << main_layer)) {
             if (math_enabled_cur & 0x100) {  // addSubscreen ?
               if ((ppu->bgBuffers[1].data[i] & 0xff) != 0)
-                color2 = ppu->cgram[ppu->bgBuffers[1].data[i] & 0xff], color_map = half_color_map;
+                color2 = ppu->cgram[ZbufToCgram(ppu->bgBuffers[1].data[i])], color_map = half_color_map;
               else  // Don't halve if ppu->addSubscreen && backdrop
                 color2 = fixed_color;
             } else {
@@ -1202,10 +1219,10 @@ static int ppu_getPixel(Ppu *ppu, int x, int y, bool sub, int *r, int *g, int *b
           );
         }
       } else {
-        // get a pixel from the sprite buffer
+        // get a pixel from the sprite buffer, keeping the player's bank bit so it resolves like the real path
         pixel = 0;
         if ((ppu->objBuffer.data[x + kPpuExtraLeftRight] >> 12) == SPRITE_PRIO_TO_PRIO_HI(curPriority))
-          pixel = ppu->objBuffer.data[x + kPpuExtraLeftRight] & 0xff;
+          pixel = ppu->objBuffer.data[x + kPpuExtraLeftRight] & (0xff | ZBUF_PLAYER_LAYER_BIT);
       }
     }
     if (pixel > 0) {
@@ -1213,11 +1230,11 @@ static int ppu_getPixel(Ppu *ppu, int x, int y, bool sub, int *r, int *g, int *b
       break;
     }
   }
-  uint16_t color = ppu->cgram[pixel & 0xff];
+  uint16_t color = ppu->cgram[ZbufToCgram(pixel)];
   *r = color & 0x1f;
   *g = (color >> 5) & 0x1f;
   *b = (color >> 10) & 0x1f;
-  if (layer == 4 && pixel < 0xc0) layer = 6; // sprites with palette color < 0xc0
+  if (layer == 4 && (pixel & 0xff) < 0xc0) layer = 6; // sprites with palette color < 0xc0
   return layer;
 
 }
@@ -1411,6 +1428,9 @@ static bool ppu_evaluateSprites(Ppu* ppu, int line) {
     int paletteBase = 0x80 + 16 * ((oam1 & 0xe00) >> 9);
     int prio = SPRITE_PRIO_TO_PRIO((oam1 & 0x3000) >> 12, (oam1 & 0x800) == 0);
     PpuZbufType z = paletteBase + (prio << 8);
+    // Mark the player's own body so its pixels resolve against the private bank rather than the shared row.
+    if (ppu->playerPalActive && ppu->oamIsPlayer[index >> 1])
+      z += ZBUF_PLAYER_LAYER_BIT;
     
     for (int col = 0; col < spriteSize; col += 8) {
       if (col + x > -8 - extra_left_right && col + x < 256 + extra_left_right) {

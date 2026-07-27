@@ -23,6 +23,9 @@ import { LIVE_SETTINGS } from './live-settings-keys';
 
 // Track the last-pushed forceBackdropBlack value so we can re-assert after state loads
 let lastBackdropBlack = false;
+// Frame pacing mode. The core boots on the timer schedule and has no INI key for this, so the
+// startup re-assert is what actually applies the profile's choice — not just a post-load repair.
+let lastVsync = false;
 // Track the last-pushed hudHidden value so we can re-assert after state loads
 let lastHudHidden = false;
 // Track the last-pushed pauseHidden value so we can re-assert after state loads
@@ -80,6 +83,12 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
       mod.ccall('WasmSetForceBackdropBlack', null, ['number'], [settings.forceBackdropBlack ? 1 : 0]);
     } catch { /* WASM not rebuilt yet */ }
 
+    // Frame pacing (guard: function may not exist in older WASM builds)
+    try {
+      lastVsync = !!settings.vsync;
+      mod.ccall('WasmSetVsync', null, ['number'], [settings.vsync ? 1 : 0]);
+    } catch { /* WASM not rebuilt yet */ }
+
     // Hide native gameplay HUD when enhanced overlay is active
     try {
       const hideHud = settings.hudMode === 'enhanced' && settings.hudEnhancedParts.includes('main');
@@ -115,6 +124,8 @@ const tryVoidCcall = (fn: string, value: number): void => {
 
 const reassertBackdropBlack = (): void => tryVoidCcall('WasmSetForceBackdropBlack', lastBackdropBlack ? 1 : 0);
 
+const reassertVsync = (): void => tryVoidCcall('WasmSetVsync', lastVsync ? 1 : 0);
+
 const reassertHudHidden = (): void => tryVoidCcall('WasmSetHudHidden', lastHudHidden ? 1 : 0);
 
 const reassertPauseHidden = (): void => tryVoidCcall('WasmSetPauseHidden', lastPauseHidden ? 1 : 0);
@@ -130,6 +141,7 @@ const reassertVolumes = (): void => {
 /** Re-assert every live flag after a save-state load clobbers WRAM. */
 const reassertLiveFlagsAfterLoad = (): void => {
   reassertBackdropBlack();
+  reassertVsync();
   reassertHudHidden();
   reassertPauseHidden();
   reassertVolumes();
@@ -154,6 +166,7 @@ const primeLiveSettings = (settings: GameSettings): void => {
   // the features word even before the user changes a setting to trigger a full pushLiveSettings.
   lastSettings = settings;
   lastBackdropBlack = !!settings.forceBackdropBlack;
+  lastVsync = !!settings.vsync;
   const hideHud = settings.hudMode === 'enhanced' && settings.hudEnhancedParts.includes('main');
   lastHudHidden = hideHud;
   const hidePause = settings.hudMode === 'enhanced' && settings.hudEnhancedParts.includes('pause');
@@ -163,4 +176,4 @@ const primeLiveSettings = (settings: GameSettings): void => {
   lastSfxVol = settings.sfxMuted ? 0 : Math.round(settings.sfxVolume * 1.28);
 };
 
-export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, primeLiveSettings };
+export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, reassertVsync, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, primeLiveSettings };

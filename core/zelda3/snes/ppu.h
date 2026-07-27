@@ -37,6 +37,10 @@ enum {
   // wide/tall view pans across the seam without the wrapping stock tilemap), needing up to two large areas
   // = 2048px = 256 tiles, plus margin.
   kPpuWorldTiles = 320,
+  // First entry of the player's private 16-color palette bank, past the 256 the hardware addresses. The
+  // gear palette shares a sprite row with villagers and followers, so a custom sheet's colors live here
+  // instead and only the player's own pixels resolve against them. See Ppu.cgram.
+  kPpuPlayerPalBase = 0x100,
 };
 
 typedef uint16_t PpuZbufType;
@@ -149,13 +153,24 @@ struct Ppu {
   // g_oam_x_high each frame) so ppu_evaluateSprites can place sprites at their true X across a >512px wide
   // view with no 512 fold — otherwise a sprite and its ±512 alias both draw (the ghost).
   uint8_t oamHighX[128];
+  // Which OAM slots hold the player's own body this frame (synced from g_oam_player). Those pixels read
+  // the private palette bank at cgram[0x100] instead of the hardware palette their OAM entry names, so a
+  // custom sprite sheet can recolor the player without disturbing the row it shares — see kPpuPlayerPal.
+  uint8_t oamIsPlayer[128];
+  // False unless a custom sheet is loaded, in which case the bank above is live. Keeps the stock game
+  // on exactly the path it had before the bank existed.
+  bool playerPalActive;
 
   // store 31 extra entries to remove the need for clamp
   uint8_t brightnessMult[32 + 31];
   uint8_t brightnessMultHalf[32 * 2];
-  uint16_t cgram[0x100];
+  // 0x000-0x0FF is CGRAM as the hardware sees it, and the only part a save state records. kPpuPlayerPalBase
+  // onward is the player's private bank, derived from the loaded sheet and re-pushed whenever gear palettes
+  // reload, so growing this array leaves the snapshot byte-identical.
+  uint16_t cgram[0x110];
   uint8_t mosaicModulo[kPpuXPixels];
-  uint32_t colorMapRgb[256];
+  // Brightness-mapped mirror of cgram for the 4x scale path, player bank included.
+  uint32_t colorMapRgb[0x110];
   PpuPixelPrioBufs bgBuffers[2];
   PpuPixelPrioBufs objBuffer;
   uint16_t vram[0x8000];

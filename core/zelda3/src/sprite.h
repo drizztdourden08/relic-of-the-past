@@ -66,6 +66,26 @@ static inline void OamSetY(OamEnt *oam, uint16 y) {
   }
 }
 
+// Mirror of OamSetX for draw routines that keep only the LOW BYTE of a sprite's world X (per-segment
+// position histories, for instance). Such a caller cannot produce a true absolute screen X, so it must
+// NOT drive the wide-view high-X extension: the stock 9-bit X is the whole coordinate, exactly as
+// SetOamPlain treats it. Handing the low-byte difference to OamSetX instead derives a garbage
+// (int16)x >> 9 and flings the sprite a multiple of 512px off-screen.
+static inline void OamSetXLowByte(OamEnt *oam, uint8 x) {
+  oam->x = x;
+  g_oam_x_high[oam - oam_buf] = 0;
+}
+
+// Some draw routines keep only the low byte of a sprite's world Y (per-segment position histories, for
+// instance) and rely on 8-bit wrap to place anything above the camera: a screen-Y of -8 arrives as 0xf8.
+// OamSetY needs a SIGNED screen-Y to build the 9-bit form a tall view reads, so map that wrap band back
+// to negative first. 0xf0..0xff is the stock visible-above-top window ([-16,-1]); 0xe0..0xef really is
+// below a 224-line screen, so it must stay positive.
+static inline uint16 OamWrappedScreenY(int y) {
+  uint8 v = (uint8)y;
+  return (uint16)(v >= 0xf0 ? (int)v - 256 : (int)v);
+}
+
 // Wide screens: the stock OAM X is 9-bit (oam->x + the high bit in bytewise_extended_oam below), which
 // caps the view at 512px. When a wide view is configured (g_oam_wide_budget != 0) also carry the SIGNED X
 // bits ABOVE the 9th in g_oam_x_high[slot] = (int16)x >> 9, so the PPU can place the sprite at its true

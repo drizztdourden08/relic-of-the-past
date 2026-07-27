@@ -293,14 +293,35 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
 ]
 
+// --- Dev ----------------------------------------------------------------------
+const DEV_FEATURES: FeatureDef[] = [
+  {
+    id: 'developerToolsEnabled',
+    label: 'Developer tools',
+    description: 'Master gate for developer-only instrumentation hooks, such as the transition-settled event the Navigation widget subscribes to in auto mode.',
+    userMessage:
+      'Turns on developer-only instrumentation. Host-side and purely observational, so it never changes what the game computes. Off by default; leave off unless a feature you use says it needs this.',
+    group: 'Dev',
+    kind: 'host-event',
+    origin: 'relic',
+    flag: 'kFeatures0_DeveloperTools',
+    bit: 1073741824,
+    default: false,
+    requires: [],
+    affectsVanillaParity: false,
+    live: true,
+  },
+]
+
 const FEATURES: FeatureDef[] = [
   ...DISPLAY_FEATURES,
   ...AUDIO_FEATURES,
   ...INPUT_FEATURES,
   ...GAMEPLAY_FEATURES,
+  ...DEV_FEATURES,
   ...BUNDLE_FIXES, // the 42 split bug-fix toggles (generated)
 ]
 
 const FEATURES_BY_ID: Record<string, FeatureDef> = Object.fromEntries(FEATURES.map((f) => [f.id, f]))
 
-export { FEATURES, FEATURES_BY_ID, DISPLAY_FEATURES, AUDIO_FEATURES, INPUT_FEATURES, GAMEPLAY_FEATURES }
+export { FEATURES, FEATURES_BY_ID, DISPLAY_FEATURES, AUDIO_FEATURES, INPUT_FEATURES, GAMEPLAY_FEATURES, DEV_FEATURES }

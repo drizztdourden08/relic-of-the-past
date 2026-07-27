@@ -5,6 +5,7 @@ import { Text } from '../../../../design-system/primitives/Text';
 import { Image } from '../../../../design-system/primitives/Image';
 import { Button } from '../../../../design-system/primitives/Button';
 import { useAboutInfo } from './behavior/useAboutInfo';
+import { useDebugText } from './behavior/useDebugText';
 import './About.css';
 
 const copyText = async (text: string): Promise<void> => {
@@ -23,13 +24,15 @@ const copyText = async (text: string): Promise<void> => {
 /** About page content (rendered inside a FullScreenLayer by the PageRouter). */
 const About = () => {
   const { rows, buildDebugText } = useAboutInfo();
+  const { debugText } = useDebugText(buildDebugText);
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(async () => {
-    await copyText(buildDebugText());
+    if (!debugText) return;
+    await copyText(debugText);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
-  }, [buildDebugText]);
+  }, [debugText]);
 
   return (
     <Box className="about">
@@ -47,8 +50,8 @@ const About = () => {
         ))}
       </Box>
 
-      <Button variant="secondary" className="about__copy" onClick={handleCopy}>
-        {copied ? '✓ Copied' : 'Copy debug info'}
+      <Button variant="secondary" className="about__copy" onClick={handleCopy} disabled={!debugText}>
+        {copied ? '✓ Copied' : debugText ? 'Copy debug info' : 'Collecting…'}
       </Button>
 
       <Text as="p" className="about__description">

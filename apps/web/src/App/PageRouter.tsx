@@ -43,6 +43,7 @@ interface PageRouterProps {
     handleDisplayPerfChange: (enabled: boolean) => void;
     handleEdgeEffectChange: (enabled: boolean) => void;
     handleShadowCastingChange: (enabled: boolean) => void;
+    handlePixelPerfectChange: (enabled: boolean) => void;
   };
   audio: {
     handleMasterVolumeChange: (volume: number) => void;
@@ -146,6 +147,7 @@ const PageRouter = (props: PageRouterProps) => {
             onDisplayPerfChange={display.handleDisplayPerfChange}
             onEdgeEffectChange={display.handleEdgeEffectChange}
             onShadowCastingChange={display.handleShadowCastingChange}
+            onPixelPerfectChange={display.handlePixelPerfectChange}
             onSaveSlotSettingsChange={saveState.handleSaveSlotSettingsChange}
             masterVolumeOverride={audio.muteOverride}
             activeTab={profileHubTab}

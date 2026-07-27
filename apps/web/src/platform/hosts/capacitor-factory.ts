@@ -14,6 +14,7 @@ import { createCapacitorFileStore } from './capacitor/file-store';
 import { createCapacitorFilePicker } from './capacitor/file-picker';
 import { createCapacitorControllerHost } from './capacitor/controller-host';
 import { createCapacitorDevice } from './capacitor/device';
+import { createCapacitorDisplay } from './capacitor/display';
 
 const noopUnsub = () => () => {};
 
@@ -58,6 +59,7 @@ const createCapacitorFactory = (): PlatformFactory => ({
   createFilePicker: createCapacitorFilePicker,
   createControllerHost: createCapacitorControllerHost,
   createDevice: createCapacitorDevice,
+  createDisplay: createCapacitorDisplay,
 });
 
 export { createCapacitorFactory };

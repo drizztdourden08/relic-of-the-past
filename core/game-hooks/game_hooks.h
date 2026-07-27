@@ -41,19 +41,26 @@ uint8 GameHook_ApplyExtraArmor(uint8 dmg);
 
 // ─── Custom player sprite sheets (player_sprite.c) ───
 
-// Overwrite the player gfx + armor/gloves palette assets from a ZSPR sheet. |push_live| samples the
-// new palette into the live buffers straight away — pass false before the core is initialized.
+// Overwrite the player gfx asset from a ZSPR sheet and take its palette into the PPU's private player
+// bank. |push_live| lands the colors straight away — pass false before the core is initialized.
 // Returns false (assets untouched) if the sheet is malformed.
 bool PlayerSprite_Apply(const uint8 *data, size_t len, bool push_live);
 
-// Put the stock sheet and palettes back. No-op when no custom sheet is applied.
+// Put the stock sheet back and return the player to the shared palette row. No-op when none is applied.
 void PlayerSprite_Restore(bool push_live);
 
 // True while a custom sheet is applied.
 bool PlayerSprite_HasCustom(void);
 
-// Sample the armor/gloves palette assets into the live palette buffers.
+// Reload gear palettes so the player's banked colors are rebuilt for the current armor and gloves.
 void PlayerSprite_RefreshPalette(void);
+
+// The game loaded a gear palette into the shared sprite row; |src| is the outfit it chose inside
+// kPalette_ArmorAndGloves. Mirrors it into the player's private bank when a custom sheet is applied.
+void GameHook_PlayerGearPaletteLoaded(const uint16 *src);
+
+// The gloves color was refreshed on its own, without a full gear reload.
+void GameHook_PlayerGlovesColorUpdated(void);
 
 // ─── Haptic Events (haptic_events.c) ───
 
@@ -83,5 +90,11 @@ void GameHook_NotifyHookshotWall(void);
 
 // Called when boomerang returns to the player (catch).
 void GameHook_NotifyBoomerangCatch(void);
+
+// ─── Transition Events (transition_events.c) ───
+
+// Called once per game frame from Module_MainRouting, after the frame's module has run.
+// Gated on kFeatures0_DeveloperTools: makes zero host-calls when that setting is off.
+void GameHook_ModuleFrameEnd(void);
 
 #endif // GAME_HOOKS_H

@@ -1,6 +1,6 @@
 {
   "name": "relic-of-the-past",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "private": true,
   "description": "Relic of the Past – Electron + React + WASM",
   "author": {
@@ -76,6 +76,7 @@
     "electron-updater": "^6.8.3",
     "js-yaml": "^4.1.1",
     "jszip": "^3.10.1",
+    "koffi": "^3.1.2",
     "marked": "^18.0.4",
     "node-hid": "^3.3.0",
     "node-stream-zip": "^1.15.0",

@@ -2,6 +2,8 @@
 import { useCallback } from 'react';
 import { usePlatform } from '@app/platform';
 import { useAppVersion } from '@app/hooks/useAppVersion';
+import { buildDebugText, collectRendererDiagnostics } from '@app/lib/diagnostics';
+import type { SystemDiagnostics } from '@shared/types/diagnostics';
 import type { OsKind, HostShell } from '@shared/platform';
 
 // Injected at build time (apps/web/vite.config.ts) for the Capacitor build; absent
@@ -31,22 +33,19 @@ const OS_LABEL: Record<OsKind, string> = {
 const capacitorVersion = (): string | null =>
   typeof __CAP_VERSION__ === 'string' && __CAP_VERSION__ ? __CAP_VERSION__ : null;
 
-// Best-effort GPU string via WebGL's debug-renderer extension.
-const readGpu = (): string => {
+// Host hardware only exists behind a main process; the web and mobile builds report
+// what the renderer can see on its own.
+const fetchSystem = async (): Promise<SystemDiagnostics | null> => {
   try {
-    const gl = document.createElement('canvas').getContext('webgl');
-    if (!gl) return '—';
-    const ext = gl.getExtension('WEBGL_debug_renderer_info');
-    const renderer = ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
-    return String(renderer);
+    return (await window.api?.getSystemDiagnostics?.()) ?? null;
   } catch {
-    return '—';
+    return null;
   }
 };
 
 /** About page rows (for display) + a debug-info string builder (for the Copy button),
  *  both sourced from the platform facade rather than the user agent. */
-const useAboutInfo = (): { rows: AboutRow[]; buildDebugText: () => string } => {
+const useAboutInfo = (): { rows: AboutRow[]; buildDebugText: () => Promise<string> } => {
   const { info } = usePlatform();
   const version = useAppVersion();
 
@@ -66,20 +65,24 @@ const useAboutInfo = (): { rows: AboutRow[]; buildDebugText: () => string } => {
     { label: 'Platform', value: OS_LABEL[info.os] },
   ];
 
-  const buildDebugText = useCallback((): string => [
-    'Relic of the Past — debug info',
-    `Version: ${version || '—'}`,
-    `Runtime: ${runtime}`,
-    `Engine: ${engine}`,
-    `Platform: ${OS_LABEL[info.os]} (host: ${info.host}, os: ${info.os})`,
-    `Form factor: ${info.formFactor} · Input: ${info.input} · Dev: ${info.isDev}`,
-    `Screen: ${window.screen.width}×${window.screen.height} @ ${window.devicePixelRatio}x`,
-    `Viewport: ${window.innerWidth}×${window.innerHeight}`,
-    `GPU: ${readGpu()}`,
-    `User agent: ${navigator.userAgent}`,
-  ].join('\n'), [version, runtime, engine, info]);
+  const buildText = useCallback(async (): Promise<string> => {
+    const [system, renderer] = await Promise.all([fetchSystem(), collectRendererDiagnostics()]);
+    return buildDebugText({
+      header: [
+        'Relic of the Past — debug info',
+        `Version: ${version || '—'}`,
+        `Runtime: ${runtime}`,
+        `Engine: ${engine}`,
+        `Platform: ${OS_LABEL[info.os]} (host: ${info.host}, os: ${info.os})`,
+        `Form factor: ${info.formFactor} · Input: ${info.input} · Dev: ${info.isDev}`,
+      ],
+      system,
+      renderer,
+      userAgent: navigator.userAgent,
+    });
+  }, [version, runtime, engine, info]);
 
-  return { rows, buildDebugText };
+  return { rows, buildDebugText: buildText };
 };
 
 export { useAboutInfo };
