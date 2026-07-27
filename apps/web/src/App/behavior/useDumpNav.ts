@@ -132,9 +132,9 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
       const roomLayout = isIndoors ? wasmGetRoomLayoutInfo() : null;
       const playerLayer = isIndoors ? wasmGetLinkLayer() : null;
       const staircaseType = isIndoors ? wasmGetStaircaseType() : null;
-      // Read the live dual-layer grids BEFORE wasmBuildRoomAttrGrid: that rebuild runs
-      // Dungeon_LoadRoom, which is destructive and overwrites the live collision tables the
-      // widget actually floods. Capturing after it produced grids that never matched the widget.
+      // Live tables first, then the rebuild. The rebuild now snapshots and restores WRAM,
+      // so this is no longer load-bearing, but the two describe different things (live
+      // room vs. ROM-derived), and reading the live one first keeps that plain.
       const dualLayerGrids = isIndoors ? wasmGetIndoorDualLayerGrids() : null;
       const attrGrid = isIndoors ? wasmBuildRoomAttrGrid(roomIndex) : null;
       // After WasmBuildRoomAttrGrid, toggle floor positions are populated

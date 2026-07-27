@@ -151,6 +151,14 @@ int WasmGetViewportInfo(void) {
   // (on top of extraLeftRight) or they drift / appear to follow the player. Signed; stored as int16, read as signed.
   PutU16(g_viewport_buf, 26, (uint16)(int16)g_zenv.ppu->cameraLockShiftX);
   PutU16(g_viewport_buf, 28, (uint16)(int16)g_zenv.ppu->cameraLockShiftY);
+
+  // Doorway/door debug state, surfaced for display only (the Navigation widget's Player
+  // State panel). Both are LATCHED, not per-frame: is_standing_in_doorway is set on
+  // entering a room through a doorway and cleared only on certain intra-room transitions;
+  // door_animation_step_indicator is left at 16 once a door finishes opening rather than
+  // returning to 0. Neither is safe to use as a "is this happening right now" gate.
+  g_viewport_buf[30] = is_standing_in_doorway;
+  g_viewport_buf[31] = (uint8)door_animation_step_indicator;  // 0..16
   return (int)g_viewport_buf;
 }
 

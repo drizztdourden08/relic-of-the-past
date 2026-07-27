@@ -3,7 +3,8 @@
  * Plain-browser host adapter (renderer opened over http without Electron or
  * Capacitor). Also the resolve fallback. No window chrome, no persistent storage.
  */
-import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, StorageSummary, FilePickerPort, ControllerHost, DevicePort } from '@shared/platform';
+import { UNSUPPORTED_SYNCED_RATE } from '@shared/platform';
+import type { PlatformFactory, WindowControlsPort, StoragePort, FileStore, StorageSummary, FilePickerPort, ControllerHost, DevicePort, DisplayPort } from '@shared/platform';
 
 const noopUnsub = () => () => {};
 
@@ -67,6 +68,15 @@ const createFileStore = (): FileStore => ({
   stat: async () => null,
 });
 
+// No OS-level source in a browser: there is no standard refresh-rate API, so the renderer's
+// frame-timing measurement is the only signal and this reports nothing rather than guessing.
+const createDisplay = (): DisplayPort => ({
+  getRefreshRate: async () => ({ reportedHz: null, measuredHz: null, modes: [] }),
+  getSyncedRateStatus: async () => UNSUPPORTED_SYNCED_RATE,
+  setSyncedRatePreference: async () => UNSUPPORTED_SYNCED_RATE,
+  applyRefreshRate: async () => UNSUPPORTED_SYNCED_RATE,
+});
+
 const createFilePicker = (): FilePickerPort => ({
   pickFile: (opts) => new Promise((resolve) => {
     const input = document.createElement('input');
@@ -118,6 +128,7 @@ const createWebFactory = (): PlatformFactory => ({
   createFilePicker,
   createControllerHost,
   createDevice,
+  createDisplay,
 });
 
 export { createWebFactory };

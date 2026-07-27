@@ -16,6 +16,10 @@ interface PlayerDebugState {
   playerLayer: number | null;
   collisionType: number | null;
   staircaseType: number | null;
+  /** Doorway orientation the player occupies, 0 when not in one. Sticky, not per-frame. */
+  inDoorway: number;
+  /** Door open/close animation step, 0 when no door is animating. */
+  doorAnimStep: number;
 }
 
 const usePlayerDebugState = (_debugTick: number): PlayerDebugState | null => {
@@ -57,6 +61,8 @@ const usePlayerDebugState = (_debugTick: number): PlayerDebugState | null => {
     playerLayer: wasmGetLinkLayer?.() ?? null,
     collisionType: wasmGetRoomCollisionType?.() ?? null,
     staircaseType: wasmGetStaircaseType?.() ?? null,
+    inDoorway: vpDebug.inDoorway,
+    doorAnimStep: vpDebug.doorAnimStep,
   };
 };
 

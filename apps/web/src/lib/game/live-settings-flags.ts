@@ -35,6 +35,7 @@ const FEATURE_FLAGS = {
   inventoryReorder:       134217728,
   secondaryItemSlots:     268435456,
   autoSkipDialog:         536870912,
+  developerTools:         1073741824,
 } as const;
 
 // When non-null, forces the auto-skip-dialog bit to this value in the pushed features word regardless of
@@ -92,6 +93,7 @@ const buildFeatureFlags = (s: GameSettings): number => {
   // Music/SFX sliders are inert; the user must enable it before those sliders take effect.
   if (s.perGroupVolume) flags |= FEATURE_FLAGS.perGroupVolume;
   if (s.haptics?.enabled) flags |= FEATURE_FLAGS.haptics;
+  if (s.developerToolsEnabled) flags |= FEATURE_FLAGS.developerTools;
   return flags;
 };
 

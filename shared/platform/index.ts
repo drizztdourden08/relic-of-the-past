@@ -11,5 +11,7 @@ export type {
   ControllerHost, HidDeviceInfo, HidOpenedInfo, HidDisconnectInfo, HidErrorInfo, VibrateStep, VibrateResult,
 } from './ports/controller-host';
 export type { DevicePort } from './ports/device';
+export type { DisplayPort } from './ports/display';
+export { UNSUPPORTED_SYNCED_RATE } from './ports/display';
 export type { PlatformFactory } from './factory';
 export type { Platform, FactoryMap } from './platform';

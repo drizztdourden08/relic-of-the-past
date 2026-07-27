@@ -13,7 +13,7 @@ import { BugFixesSettings } from './BugFixesSettings';
 import { HudSettings } from './HudSettings';
 import { ControlsSettings } from './ControlsSettings';
 import { HapticsSettings } from './HapticsSettings';
-import { SystemSettings } from './SystemSettings';
+import { DeveloperSettings } from './DeveloperSettings';
 import { MobileSettings } from './MobileSettings';
 import { usePlatform } from '@app/platform';
 import { PROFILE_HUB_TABS } from '../ProfileHub.constants';
@@ -71,7 +71,7 @@ const ProfileHubBody = (props: ProfileHubBodyProps) => {
           <ControlsSettings settings={settings} onChange={onChange} profileId={profile.id} />
         )}
         {activeTab === 'haptics' && <HapticsSettings settings={settings} onChange={onChange} />}
-        {activeTab === 'system' && <SystemSettings settings={settings} onChange={onChange} />}
+        {activeTab === 'developer' && <DeveloperSettings settings={settings} onChange={onChange} />}
         {activeTab === 'mobile' && <MobileSettings settings={settings} onChange={onChange} />}
       </Box>
     </Box>

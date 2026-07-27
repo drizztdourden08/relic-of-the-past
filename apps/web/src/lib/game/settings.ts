@@ -16,6 +16,8 @@ const DEFAULT_SETTINGS: GameSettings = {
   displayPerfInTitle: false,
   disableFrameDelay: false,
   vsync: false,
+  syncedRefreshRate: false,
+  syncedRefreshRateHz: 0,
 
   // Aspect Ratio & Display
   extendedRendering: false,
@@ -123,6 +125,9 @@ const DEFAULT_SETTINGS: GameSettings = {
     environmentalEffects: true,
   },
   hapticDevices: {},
+
+  // Developer
+  developerToolsEnabled: false,
 };
 
 const boolToIni = (v: boolean): string => {
@@ -220,6 +225,7 @@ GameChangingBugFixes = ${boolToIni(settings.gameChangingBugFixes)}
 CancelBirdTravel = ${boolToIni(settings.cancelBirdTravel)}
 DisableTelepathy = ${boolToIni(settings.disableTelepathy)}
 Haptics = ${boolToIni(!!settings.haptics?.enabled)}
+DeveloperTools = ${boolToIni(settings.developerToolsEnabled)}
 ${renderFlagsIni}
 `;
 };

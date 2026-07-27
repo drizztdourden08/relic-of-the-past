@@ -194,6 +194,9 @@ If a device is only decoration, drop it.
 
 - **Concise.** No restating the request; no walls of prose.
 - **Code over description** — if you'd describe a type or function, show it instead.
-- **A diagram beats a paragraph** for flow/layout — generate it with the asciiflow
-  MCP server (see Flow / preview) and paste the export inline.
+- **A diagram beats a paragraph** for flow/layout: write it as mermaid on a pale plate
+  (see Flow / preview).
 - Always end a plan with the pattern(s) + filetree even if the rest is short.
+- **Read the House style section above before writing the page.** The palette, type and
+  components are fixed for every plan; don't derive a new look from this doc's summary or
+  from a memory note.

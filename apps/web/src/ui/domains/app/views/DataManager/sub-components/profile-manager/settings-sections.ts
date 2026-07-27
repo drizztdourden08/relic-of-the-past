@@ -10,6 +10,8 @@ const SETTINGS_SECTIONS: Array<{ title: string; keys: Array<{ key: string; label
       { key: 'autosave', label: 'Autosave' },
       { key: 'displayPerfInTitle', label: 'FPS Counter' },
       { key: 'vsync', label: 'V-Sync' },
+      { key: 'syncedRefreshRate', label: 'Synced Refresh Rate (fullscreen)' },
+      { key: 'syncedRefreshRateHz', label: 'Target Refresh Rate', format: (v) => (Number(v) > 0 ? `${v} Hz` : 'Highest') },
     ],
   },
   {

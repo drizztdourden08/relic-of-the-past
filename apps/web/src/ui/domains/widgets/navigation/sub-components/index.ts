@@ -5,6 +5,7 @@ export { InternalEdgeDiamond } from './InternalEdgeDiamond';
 export { ReqIcon } from './ReqIcon';
 export { TileRecorderBtn } from './TileRecorderBtn';
 export { PathCopyBtn } from './PathCopyBtn';
+export { FunctionsPanel } from './FunctionsPanel';
 export { ReachabilityCanvas } from './ReachabilityCanvas';
 export { ScreenMapWithConnections } from './ScreenMapWithConnections';
 export { IndoorMinimap } from './IndoorMinimap';
