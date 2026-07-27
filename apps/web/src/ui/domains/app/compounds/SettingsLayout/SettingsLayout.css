@@ -69,3 +69,27 @@
 .settings-layout__group > * + * {
   border-top: 1px solid var(--c-border);
 }
+
+/* Search-palette deep-link landing — a brief gold pulse on the row it jumped to. */
+.is-search-hit {
+  animation: settings-search-hit 1.2s ease-out;
+}
+
+@keyframes settings-search-hit {
+  0% {
+    box-shadow: inset 0 0 0 2px var(--c-gold-bright), 0 0 16px var(--c-gold-soft);
+    background: var(--c-gold-soft);
+  }
+
+  100% {
+    box-shadow: inset 0 0 0 0 transparent;
+    background: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-search-hit {
+    animation: none;
+    box-shadow: inset 0 0 0 2px var(--c-gold-bright);
+  }
+}

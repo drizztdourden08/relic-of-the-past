@@ -1,6 +1,7 @@
 /* @layer renderer-appshell @kind hook */
 import { useEffect } from 'react';
 import { usePlatform } from '@app/platform';
+import { useSearchStore } from '@app/stores/search-store';
 import type { PageId, ConfirmDialog } from '../types';
 
 const useKeyboardShortcuts = (
@@ -24,7 +25,16 @@ const useKeyboardShortcuts = (
         nav.setActivePage(nav.activePage === 'sprite-debug' ? 'none' : 'sprite-debug');
         return;
       }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        const search = useSearchStore.getState();
+        if (search.open) search.closePalette(); else search.openPalette();
+        return;
+      }
       if (e.key !== 'Escape') return;
+
+      // The search palette owns Escape first when open — it's the top-most surface.
+      if (useSearchStore.getState().open) { e.preventDefault(); useSearchStore.getState().closePalette(); return; }
       e.preventDefault();
 
       // Dismiss confirm dialog

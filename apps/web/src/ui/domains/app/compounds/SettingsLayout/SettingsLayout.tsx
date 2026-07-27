@@ -91,8 +91,8 @@ const SettingsLayout = (props: SettingsLayoutProps) => {
                 <Box className="settings-layout__group">
                   {sub.items.map((item) => {
                     const custom = renderControl?.(item.key, settings, onChange);
-                    if (custom) return <Box key={item.key}>{custom}</Box>;
-                    return <Box key={item.key}>{renderToggle(item.key, item)}</Box>;
+                    if (custom) return <Box key={item.key} data-setting-key={item.key}>{custom}</Box>;
+                    return <Box key={item.key} data-setting-key={item.key}>{renderToggle(item.key, item)}</Box>;
                   })}
                 </Box>
               </Box>

@@ -6,8 +6,10 @@ import { Text } from '../../../../design-system/primitives/Text';
 import { Spinner } from '../../../../design-system/primitives/Spinner';
 import { ToastContainer } from '../../../../design-system/primitives/Toast';
 import { applyNotchMode } from '@app/hooks/useSafeAreaInsets';
+import { useSearchStore } from '@app/stores/search-store';
 import { useProfileSettings } from './behavior/useProfileSettings';
 import { ProfileHubBody } from './sub-components/ProfileHubBody';
+import { scrollToAnchor } from '../SearchPalette/behavior/scroll-to-anchor';
 import './ProfileHub.css';
 import type { ProfileHubProps, ProfileHubTab } from './ProfileHub.type';
 
@@ -26,6 +28,22 @@ const ProfileHub = (props: ProfileHubProps) => {
 
   // Reflect the per-profile notch preference on <html> whenever it changes.
   useEffect(() => { applyNotchMode(settings.renderIntoNotch); }, [settings.renderIntoNotch]);
+
+  // Search palette bridge: while this profile's hub is mounted, it's the sole read/write
+  // owner of GameSettings — register so the palette can show and flip inline toggles.
+  const registerSettings = useSearchStore((s) => s.registerSettings);
+  const clearSettings = useSearchStore((s) => s.clearSettings);
+  useEffect(() => { registerSettings(settings, handleSettingsChange); }, [settings, handleSettingsChange, registerSettings]);
+  useEffect(() => () => clearSettings(), [clearSettings]);
+
+  // Consume a pending search deep-link once the target tab's content is showing.
+  const pendingAnchor = useSearchStore((s) => s.pendingAnchor);
+  const setPendingAnchor = useSearchStore((s) => s.setPendingAnchor);
+  useEffect(() => {
+    if (!pendingAnchor) return;
+    scrollToAnchor(pendingAnchor);
+    setPendingAnchor(null);
+  }, [pendingAnchor, activeTab, setPendingAnchor]);
 
   return (
     <Box className="profile-hub">

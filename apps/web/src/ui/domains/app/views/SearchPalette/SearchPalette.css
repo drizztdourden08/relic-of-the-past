@@ -1,0 +1,240 @@
+/* @layer renderer-components @kind style */
+
+/* ── Scrim ─────────────────────────────────────────────────────────────── */
+.search-scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--c-scrim);
+  z-index: var(--z-modal);
+  -webkit-app-region: no-drag; /* else the titlebar's drag region eats the click through it */
+  animation: search-scrim-fade var(--duration-normal) ease;
+}
+
+@keyframes search-scrim-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── The morphing surface: one element, always mounted, that grows from a zero-size
+   seed at top-center into the full panel when .is-open is added (Jex CommandSurface). ── */
+.search-palette {
+  position: fixed;
+  top: var(--space-sm);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-modal);
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--c-glass);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  opacity: 0;
+  pointer-events: none;
+  -webkit-app-region: no-drag;
+  transition:
+    width var(--duration-drawer) var(--ease-emphasized),
+    height var(--duration-drawer) var(--ease-emphasized),
+    border-radius var(--duration-drawer) var(--ease-emphasized),
+    opacity var(--duration-fast) ease,
+    border-color var(--duration-normal);
+}
+
+.search-palette.is-open {
+  width: min(640px, 92vw);
+  height: min(70vh, 560px);
+  opacity: 1;
+  pointer-events: auto;
+  border-radius: var(--r-lg);
+  border-color: var(--c-border);
+  box-shadow: var(--shadow-3);
+}
+
+.search-palette__topedge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--c-gold), transparent);
+  opacity: 0;
+  transition: opacity var(--duration-normal);
+}
+
+.search-palette.is-open .search-palette__topedge {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-palette,
+  .search-scrim {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* ── Input row ─────────────────────────────────────────────────────────── */
+.search-palette__input-row {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--c-hairline);
+}
+
+/* Content stays out of layout/tab-order while collapsed — only opacity animates on the shell. */
+.search-palette:not(.is-open) .search-palette__input-row {
+  visibility: hidden;
+}
+
+.search-palette__input-icon {
+  color: var(--c-text-muted);
+  flex: none;
+}
+
+.search-palette__input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  font-size: var(--text-lg);
+  color: var(--c-text);
+  padding: 0;
+}
+
+.search-palette__input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.search-palette__count {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  flex: none;
+}
+
+/* ── Body ──────────────────────────────────────────────────────────────── */
+.search-palette__body {
+  flex: 1;
+  min-height: 0;
+  opacity: 0;
+  transition: opacity var(--duration-normal);
+}
+
+.search-palette.is-open .search-palette__body {
+  opacity: 1;
+}
+
+.search-palette:not(.is-open) .search-palette__body {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.search-palette__list {
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--space-sm);
+}
+
+.search-palette__list-heading {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semi);
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: var(--space-xs) var(--space-md);
+}
+
+.search-palette__empty {
+  padding: var(--space-xl);
+  text-align: center;
+  color: var(--c-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* ── Result row ────────────────────────────────────────────────────────── */
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--r-md);
+  cursor: pointer;
+}
+
+.search-row:hover,
+.search-row--active {
+  background: var(--c-hover);
+}
+
+.search-row--disabled {
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+}
+
+.search-row__icon {
+  flex: none;
+  font-size: var(--text-lg);
+  width: 1.4em;
+  text-align: center;
+}
+
+.search-row__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-row__label {
+  font-size: var(--text-base);
+  color: var(--c-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-row__description {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-row__breadcrumb {
+  flex: none;
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  max-width: 40%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-row__check {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c-text-faint);
+}
+
+.search-row__check.is-on {
+  background: var(--c-gold);
+}
+
+.search-row__toggle {
+  flex: none;
+}

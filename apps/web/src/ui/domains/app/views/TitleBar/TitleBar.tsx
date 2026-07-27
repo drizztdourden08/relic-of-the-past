@@ -15,9 +15,10 @@ import { WindowControls } from './sub-components/WindowControls';
 import { InstanceBadge } from './sub-components/InstanceBadge';
 import { instanceName } from '../../../../../lib/instance';
 import { getFps } from '../../../../../lib/game';
+import { useSearchStore } from '../../../../../stores/search-store';
 import './TitleBar.css';
 import {
-  MENU_ICON_CIRCLES, PIN_ICON_PATHS, MUTE_ICON_PATHS, VOLUME_ICON_PATHS, SAVE_ICON_PATHS,
+  MENU_ICON_CIRCLES, PIN_ICON_PATHS, MUTE_ICON_PATHS, VOLUME_ICON_PATHS, SAVE_ICON_PATHS, SEARCH_ICON_PATHS,
 } from './TitleBar.constants';
 import type { TitleBarProps } from './TitleBar.type';
 
@@ -57,6 +58,7 @@ const TitleBar = (props: TitleBarProps) => {
   const menuRef = useRef<HTMLDivElement>(null);
   const { window: win } = usePlatform();
   const { isMaximized, menuOpen, toggleMenu, closeMenu } = useTitleBar(menuRef);
+  const openSearch = useSearchStore((s) => s.openPalette);
   const [pinned, setPinned] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -149,6 +151,16 @@ const TitleBar = (props: TitleBarProps) => {
           onClick={togglePin}
         >
           <Icon paths={PIN_ICON_PATHS} size={14} />
+        </IconButton>
+        <IconButton
+          variant="ghost"
+          size="sm"
+          label="Search"
+          className="titlebar__search"
+          onClick={openSearch}
+        >
+          <Icon paths={SEARCH_ICON_PATHS} size={14} />
+          <Text as="span" className="titlebar__search-spark" aria-hidden>✦</Text>
         </IconButton>
         <IconButton
           variant="ghost"
