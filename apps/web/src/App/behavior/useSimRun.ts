@@ -10,6 +10,7 @@
 
 import { useEffect, useRef } from 'react';
 import { subscribeGameState, loadState, loadStateRef, wasmGetViewportInfo, wasmGetSpriteCombat, wasmGetCombatTables } from '../../lib/game';
+import { readLoadout } from '../../lib/game/simulator/read-loadout';
 import { linkStartTile } from '@shared/game/navigation/link-start-tile';
 import { createLiveGamePort, runSimulation, floodOverworldScreen, probeRoom, scanRoomsForSprite } from '@app/lib/game/simulator';
 import { pauseSramSync, resumeSramSync } from '@app/lib/game/sram-sync';
@@ -164,6 +165,10 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
           keys: Object.fromEntries([...state.keys].filter(([, n]) => n > 0)),
           bigKeys: [...state.bigKeys].sort(),
           events: [...state.events].sort(),
+          // What the player actually holds, read from the save rather than
+          // tallied from check names — hearts, equipment tiers and the
+          // per-dungeon map/compass/big-key state the run does not track.
+          loadout: readLoadout(),
         };
         const outPath = await window.api.writeSimRun({ ...report, screenFloods, visits, path, checks, log, inventory, tally, endSummary });
         console.log(`[SimRun] Written to: ${outPath}`);
