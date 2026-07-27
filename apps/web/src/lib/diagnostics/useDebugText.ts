@@ -1,9 +1,9 @@
-/* @layer renderer-components @kind hook */
+/* @layer renderer-lib @kind hook */
 /**
- * Collects the debug-info text once when the page opens rather than on click. The
+ * Collects the debug-info text once when the caller mounts, rather than on click. The
  * probes are asynchronous (the frame-rate one has to watch real frames), and doing
- * that work inside the click handler would put an await between the user's gesture
- * and the clipboard write.
+ * that work inside a click handler would put an await between the user's gesture and
+ * the moment the text is ready.
  */
 import { useEffect, useState } from 'react';
 

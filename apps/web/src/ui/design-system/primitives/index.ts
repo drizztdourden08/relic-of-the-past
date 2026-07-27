@@ -21,6 +21,7 @@ export { Button } from './Button';
 export { IconButton } from './IconButton';
 export { Badge } from './Badge';
 export { TextInput } from './TextInput';
+export { Textarea } from './Textarea';
 export { Select, NativeSelect } from './Select';
 export type { SelectOption, SelectGroup } from './Select';
 export { Toggle } from './Toggle';

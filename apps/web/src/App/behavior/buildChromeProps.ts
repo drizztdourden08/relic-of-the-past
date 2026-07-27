@@ -23,13 +23,14 @@ interface ChromePropsDeps {
   canUpdate: boolean;
   update: { portable: boolean; status: string; check: () => void };
   setShowUpdateDialog: (open: boolean) => void;
+  setShowBugReportDialog: (open: boolean) => void;
 }
 
 const buildChromeProps = (deps: ChromePropsDeps): TitleBarProps => {
   const {
     profileMgmt, widgets, saveOverlay, nav, game, display, audio, widgetVisibility,
     handleShowProfile, handleShowDataManager, handleShowShadowEditor,
-    canUpdate, update, setShowUpdateDialog,
+    canUpdate, update, setShowUpdateDialog, setShowBugReportDialog,
   } = deps;
 
   return {
@@ -55,6 +56,7 @@ const buildChromeProps = (deps: ChromePropsDeps): TitleBarProps => {
     onToggleSimulator: () => widgets.toggle('simulator'),
     onShowShadowEditor: handleShowShadowEditor,
     onShowAbout: () => nav.setActivePage('about'),
+    onShowBugReport: () => setShowBugReportDialog(true),
     activeProfile: profileMgmt.activeProfile,
     widgetVisibility,
     gameRunning: game.isRunning,

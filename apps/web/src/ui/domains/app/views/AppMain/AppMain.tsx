@@ -36,6 +36,7 @@ import { GameLayer } from '../GameLayer';
 import { BootProgressBar } from '../BootProgressBar';
 import { SaveStateOverlay } from '../SaveStateOverlay/SaveStateOverlay';
 import { UpdateDialog } from '../../compounds/UpdateDialog';
+import { BugReportDialog } from '../BugReport';
 import './AppMain.css';
 
 // Profile-layout persistence injected into the bare Widget composite (keeps IPC out of it).
@@ -78,7 +79,11 @@ const AppMain = () => {
   const saveOverlay = useSaveOverlay(saveState, game.isRunning);
   const update = useAutoUpdate();
 
-  const { showUpdateDialog, setShowUpdateDialog, handleShowShadowEditor } = useAppOverlays({ showDialog, dismissDialog });
+  const {
+    showUpdateDialog, setShowUpdateDialog,
+    showBugReportDialog, setShowBugReportDialog,
+    handleShowShadowEditor,
+  } = useAppOverlays({ showDialog, dismissDialog });
 
   const { dataTab, profileHubTab, setProfileHubTab, handleShowProfile, handleShowDataManager } =
     useAppViewCallbacks({ game, showDialog, dismissDialog, profileMgmt, nav });
@@ -103,7 +108,7 @@ const AppMain = () => {
   const chromeProps: TitleBarProps = buildChromeProps({
     profileMgmt, widgets, saveOverlay, nav, game, display, audio, widgetVisibility,
     handleShowProfile, handleShowDataManager, handleShowShadowEditor,
-    canUpdate, update, setShowUpdateDialog,
+    canUpdate, update, setShowUpdateDialog, setShowBugReportDialog,
   });
 
   return (
@@ -189,6 +194,10 @@ const AppMain = () => {
         onClose={() => setShowUpdateDialog(false)}
       />
       )}
+      <BugReportDialog
+        open={showBugReportDialog}
+        onClose={() => setShowBugReportDialog(false)}
+      />
 
       <BootProgressBar />
 

@@ -14,6 +14,8 @@ import type { RefreshRateInfo, SyncedRateStatus } from '@shared/types/display';
 import type { DataLocation, StorageSummary, FileStat } from '@shared/platform';
 import type { SystemDiagnostics } from '@shared/types/diagnostics';
 import type { SimRunConfig } from '@shared/game/simulation';
+import type { CreateIssueRequest, CreateIssueResult } from '@shared/types/github-issue';
+
 
 type Result = { success: boolean; error?: string };
 type MsuResult = { success: boolean; fileCount?: number; error?: string };
@@ -196,6 +198,9 @@ interface InvokeContract {
   'screenEditor:writeConnections': (args: { filePath: string; code?: string; mode?: 'insert' | 'remove' | 'replace'; from?: string; to?: string }) => Promise<Result>;
   'screenEditor:writeCheck': (args: { filePath: string; code: string; checkId: string | null }) => Promise<Result>;
   'screenEditor:appendRegistry': (args: { type: 'area' | 'location'; entries: Array<{ id: string; name: string; world?: string; areaId?: string }> }) => Promise<Result>;
+
+  // GitHub bug reporting — anonymous relay, see cloud-functions/report-issue
+  'github:createIssue': (req: CreateIssueRequest) => Promise<CreateIssueResult>;
 
   // Auto-updater (nested namespace)
   'updater:isPortable': () => Promise<boolean>;

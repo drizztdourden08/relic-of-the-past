@@ -128,6 +128,7 @@ const INVOKE_MAP = {
   writeSimRun: 'debug:writeSimRun',
   appendSimLog: 'sim:appendLog',
   openSimLog: 'sim:openLog',
+  createGithubIssue: 'github:createIssue',
 } as const satisfies Record<string, keyof InvokeContract>;
 
 const SEND_MAP = {

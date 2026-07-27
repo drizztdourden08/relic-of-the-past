@@ -1,0 +1,17 @@
+{
+  "name": "kill-switch-function",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "functions-framework --target=killSwitch --source=dist"
+  },
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.4.0",
+    "google-auth-library": "^9.14.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}
