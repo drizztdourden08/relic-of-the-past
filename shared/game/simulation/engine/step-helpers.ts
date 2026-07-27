@@ -108,12 +108,29 @@ const emitDoorUnlock = (s: EngineState, events: SimEvent[], label: string, key: 
   s.phase = 'observing';
 };
 
-/** A pulled switch raised the room's trapdoors — re-flood in place. */
-const emitSwitchPulled = (s: EngineState, events: SimEvent[], key: string, roomId: number): void => {
+/**
+ * A pulled switch raised the room's trapdoors, or — when `drain` is set —
+ * lowered the water on a remote overworld screen instead. The local case
+ * re-floods just this room; the remote case invalidates everywhere but here,
+ * since a screen the run already passed through may now offer new ground.
+ */
+const emitSwitchPulled = (
+  s: EngineState,
+  events: SimEvent[],
+  key: string,
+  roomId: number,
+  drain?: { screen: number; mask: number },
+): void => {
   s.done.add(key);
-  events.push(narrative(s, `Pulled switch (room ${roomId.toString(16)}) — shutter doors opened`));
-  localRefresh(s);
-  events.push(narrative(s, `Reset: re-flooding ${screenLabel(s.virtual.screenId)} with new state`));
+  if (drain) {
+    events.push(narrative(s, `Pulled switch (room ${roomId.toString(16)}) — drained screen 0x${drain.screen.toString(16)}`));
+    globalRefresh(s);
+    events.push(narrative(s, 'Reset: re-exploring with the drained screen open'));
+  } else {
+    events.push(narrative(s, `Pulled switch (room ${roomId.toString(16)}) — shutter doors opened`));
+    localRefresh(s);
+    events.push(narrative(s, `Reset: re-flooding ${screenLabel(s.virtual.screenId)} with new state`));
+  }
   s.currentTarget = undefined;
   s.preTrigger = undefined;
   s.phase = 'observing';

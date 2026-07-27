@@ -205,7 +205,9 @@ type TriggerAction =
   /** Blast a cracked wall open. Bombs are permanent once obtained, so this needs
    *  no count — see flood/bombed-walls.ts. */
   | { type: 'bombWall'; roomId: number; tile: GridPos }
-  | { type: 'pullSwitch'; roomId: number }
+  /** `drain` is set when the switch's effect reaches beyond its own room — a
+   *  remote overworld screen's event byte, not a local shutter. */
+  | { type: 'pullSwitch'; roomId: number; drain?: { screen: number; mask: number } }
   | { type: 'progress'; step: 'follower-join' | 'follower-deliver' };
 
 // ─── Detection ───────────────────────────────────────────────────────────────

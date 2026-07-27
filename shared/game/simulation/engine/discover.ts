@@ -10,17 +10,18 @@
  * supplied the gate is skipped (every interactable counts as reachable).
  */
 import type { GridPos } from '../../navigation/types';
-import type { SimObservation, SimChest, SimSprite } from '../types';
+import type { SimObservation, SimChest, SimSprite, TriggerAction } from '../types';
 import { planTrigger, npcConfigForSprite } from '../trigger/trigger-plans';
 import type { PresenceGameState } from '../presence/state';
 import { evaluatePresence } from '../presence/evaluate';
 import { keyAvailable } from './explorer';
 import { evaluateRoomThreat } from './enemy-reach';
 import type { RoomThreat } from './enemy-reach';
+import { isPullSwitch, drainEffectForSwitchRoom, owEventSet, standingItemPresent } from './discover-switches';
+import { hasReachableNeighbor, DOOR_REACH_RADIUS } from './discover-reach';
+import type { Reached } from './discover-reach';
+import { discoverBombableWalls } from './discover-bombs';
 import type { EngineState, SimTarget } from './state';
-
-/** Tiles the detect flood reached; undefined = no grid, so gating is skipped. */
-type Reached = boolean[][] | undefined;
 
 const isTileReachable = (reached: Reached, tile: GridPos): boolean =>
   !reached || reached[tile.row]?.[tile.col] === true;
@@ -51,42 +52,12 @@ const FLOOD_GRID_SIZE = 64;
 const isOutOfFloodRange = (tile: GridPos): boolean =>
   tile.row < 0 || tile.row >= FLOOD_GRID_SIZE || tile.col < 0 || tile.col >= FLOOD_GRID_SIZE;
 
-/**
- * A sprite is interactable when the player can stand NEXT to it — its own tiles are
- * often solid (a blocking NPC like the uncle stamps a 3×3 footprint into the
- * grid, so the spawn tile itself never floods). Any reachable tile within a
- * 2-tile ring around the spawn counts as "can talk to it".
- */
-const SPRITE_TALK_RADIUS = 2;
-
-const hasReachableNeighbor = (reached: Reached, tile: GridPos, radius: number = SPRITE_TALK_RADIUS): boolean => {
-  if (!reached) return true;
-  for (let dr = -radius; dr <= radius; dr++) {
-    for (let dc = -radius; dc <= radius; dc++) {
-      if (reached[tile.row + dr]?.[tile.col + dc] === true) return true;
-    }
-  }
-  return false;
-};
-
-/** Door records sit several tiles inside walls, away from walkable floor
- *  (internal quadrant doors run up to ~10 tiles from the nearest floor). */
-const DOOR_REACH_RADIUS = 10;
-
 /** Item ids the game grants for key drops (id-map 0x24 / 0x32). */
 const SMALL_KEY_ITEM = 0x24;
 const BIG_KEY_ITEM = 0x32;
 
 /** Progress-buffer slot carrying follower_indicator (1 = the follower tagging along). */
 const FOLLOWER_SLOT = 13;
-
-/**
- * Pull switches (Sprite_PullSwitch_bounce, sprite types 0x04-0x07). Pulling one
- * sets dung_flag_statechange_waterpuzzle, which the room's tag routine reads to
- * raise its trapdoors — that is what opens the Behind-Sanctuary shutter onto the
- * Sanctuary. Only meaningful in a room that still has a shutter shut.
- */
-const isPullSwitch = (spriteType: number): boolean => spriteType >= 0x04 && spriteType <= 0x07;
 
 /**
  * The follower NPC's two scripted interactions (sprite type 0x76). Same
@@ -175,54 +146,6 @@ const livingKillables = (state: EngineState, screenId: string, inter: Interactab
 const chestLabel = (chest: SimChest): string => `chest (room ${chest.roomId.toString(16)} #${chest.chestIndex})`;
 const spriteLabel = (sprite: SimSprite): string => `${sprite.kind} (room ${sprite.roomId.toString(16)})`;
 
-/** Cracked-wall attrs (TileBehavior_FlaggableDoor) — solid until blasted. */
-const BOMBABLE_ATTR_MIN = 0xf0;
-const BOMBABLE_ATTR_MAX = 0xff;
-
-/**
- * Cracked walls the run can blow open right now.
- *
- * The flood models one as an obstacle needing bombs, which only lets the player
- * stand ON it — the passage beyond stays shut, which is not what a bomb does. So
- * a reachable wall is offered as a TARGET instead: blast it, mark it floor, and
- * re-flood. One target per contiguous patch, since a single blast opens the lot.
- */
-const discoverBombableWalls = (state: EngineState, obs: SimObservation, reached: Reached): SimTarget[] => {
-  const bundle = obs.grids;
-  if (!bundle) return [];
-  // A split-level room keeps its floor on the LAYER grids and the dual-layer flood
-  // reads those, not rawAttrGrid — so a wall scan that only looked at the raw grid
-  // missed every cracked wall in such a room. Scan all of them.
-  const grids = [bundle.rawAttrGrid, ...(bundle.dualLayerGrids ? [bundle.dualLayerGrids.layer0, bundle.dualLayerGrids.layer1] : [])];
-  const roomId = bundle.screenIndex;
-  const targets: SimTarget[] = [];
-  const claimed: GridPos[] = [];
-  const rows = Math.max(...grids.map((g) => g.length));
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < 64; col++) {
-      if (!grids.some((g) => { const a = g[row]?.[col] ?? 0; return a >= BOMBABLE_ATTR_MIN && a <= BOMBABLE_ATTR_MAX; })) continue;
-      const tile = { row, col };
-      // One target per patch: a blast opens everything around it.
-      if (claimed.some((p) => Math.abs(p.row - row) <= 4 && Math.abs(p.col - col) <= 4)) continue;
-      if (!hasReachableNeighbor(reached, tile, DOOR_REACH_RADIUS)) continue;
-      const key = `bomb:${roomId}:${row},${col}`;
-      if (state.done.has(key) || state.failed.has(key)) continue;
-      claimed.push(tile);
-      targets.push({
-        screenId: state.virtual.screenId,
-        roomId,
-        action: { type: 'bombWall', roomId, tile },
-        key,
-        label: `cracked wall (room ${roomId.toString(16)} @${col},${row})`,
-        noun: 'cracked wall',
-        verb: 'Bombing',
-        tile,
-      });
-    }
-  }
-  return targets;
-};
-
 /** Reachable, not-yet-done interactables on the current screen as trigger targets. */
 const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reached): SimTarget[] => {
   const inter = obs.interactables;
@@ -298,11 +221,19 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
     if (sprite.outdoor && owScreen !== null && sprite.roomId !== owScreen) continue;
     if (!interactableReachable(sprite.posKnown, reached, sprite.tile)) continue;
     if (!spritePresent(sprite, obs.presenceState)) continue;
+    if (!standingItemPresent(sprite, obs.presenceState)) continue;
     const tile = sprite.posKnown ? sprite.tile : undefined;
     if (isPullSwitch(sprite.spriteType)) {
       const tagged = (inter.tags ?? [0, 0]).some((t) => t !== 0);
-      if (tagged && shutters.some((d) => !d.opened)) {
-        const action = { type: 'pullSwitch', roomId: sprite.roomId } as const;
+      const opensShutters = tagged && shutters.some((d) => !d.opened);
+      const drain = drainEffectForSwitchRoom(sprite.roomId);
+      // A drain switch already thrown wastes a step for no further effect —
+      // offer it only while its target bit is still unset.
+      const drainPending = drain !== undefined && !owEventSet(obs.presenceState, drain.screen, drain.mask);
+      if (opensShutters || drainPending) {
+        const action: TriggerAction = drain
+          ? { type: 'pullSwitch', roomId: sprite.roomId, drain }
+          : { type: 'pullSwitch', roomId: sprite.roomId };
         targets.push({ screenId, roomId: sprite.roomId, action, key, label: `pull switch (room ${sprite.roomId.toString(16)})`, noun: 'pull switch', verb: 'Pulling', tile });
       }
       continue;
@@ -354,4 +285,4 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
   return targets;
 };
 
-export { discoverTargets, isTileReachable, hasReachableOpenTile, KILL_GATE_TAG, chestKey, spriteKey, BOMBABLE_ATTR_MIN, BOMBABLE_ATTR_MAX };
+export { discoverTargets, isTileReachable, hasReachableOpenTile, KILL_GATE_TAG, chestKey, spriteKey };

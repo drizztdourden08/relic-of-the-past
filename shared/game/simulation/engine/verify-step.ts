@@ -30,7 +30,7 @@ const verifyStep = (s: EngineState, obs: SimObservation, events: SimEvent[]): vo
   }
 
   if (target?.action.type === 'trapShutters') { emitTrapClosed(s, events, target.action.roomId); return; }
-  if (target?.action.type === 'pullSwitch') { emitSwitchPulled(s, events, target.key, target.action.roomId); return; }
+  if (target?.action.type === 'pullSwitch') { emitSwitchPulled(s, events, target.key, target.action.roomId, target.action.drain); return; }
   if (target?.action.type === 'progress' && target.action.step === 'follower-join') { emitFollower(s, events, target.key); return; }
   if (target?.action.type === 'door') { emitDoorUnlock(s, events, target.label, target.key, target.action.doorKind === 'small-key'); return; }
   if (target?.action.type === 'kill' && target.action.opensShutters && target.action.itemId === 0xff) { emitShutterClear(s, events, target.label, target.key); return; }

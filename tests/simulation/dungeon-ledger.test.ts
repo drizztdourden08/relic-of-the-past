@@ -4,7 +4,8 @@ import type { SimObservation, SimChest, FlagSnapshot, DetectedCheck, SimEvent } 
 import type { SimTarget } from '../../shared/game/simulation/engine/state';
 import { createEngineState } from '../../shared/game/simulation/engine/state';
 import { emptySnapshot } from '../../shared/game/simulation/detect/flag-snapshot';
-import { chestKey, BOMBABLE_ATTR_MIN } from '../../shared/game/simulation/engine/discover';
+import { chestKey } from '../../shared/game/simulation/engine/discover';
+import { BOMBABLE_ATTR_MIN } from '../../shared/game/simulation/engine/discover-bombs';
 import { updateDungeonLedger } from '../../shared/game/simulation/engine/dungeon-ledger-scan';
 import { closeIdleDungeonGroups, reopenLedgersFor } from '../../shared/game/simulation/engine/dungeon-ledger-lifecycle';
 import { onCheckVerified } from '../../shared/game/simulation/engine/explorer';

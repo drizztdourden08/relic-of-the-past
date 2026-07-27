@@ -10,7 +10,8 @@
 import type { SimObservation } from '../types';
 import { SCREEN_BY_ID } from '../../data/screens';
 import { canonicalDungeon, keyAvailable } from './explorer';
-import { chestKey, spriteKey, BOMBABLE_ATTR_MIN, BOMBABLE_ATTR_MAX } from './discover';
+import { chestKey, spriteKey } from './discover';
+import { BOMBABLE_ATTR_MIN, BOMBABLE_ATTR_MAX } from './discover-bombs';
 import { dungeonGroupForScreen } from '../../data/screens/dungeon-group';
 import { ensureLedger, upsertOwed, pruneDoneChecks } from './dungeon-ledger';
 import type { EngineState, SimTarget } from './state';

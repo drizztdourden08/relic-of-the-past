@@ -119,6 +119,9 @@ const trigger = (action: TriggerAction): Promise<void> =>
         for (let i = 0; i < doors.length && i < 4; i++) {
           if (doors[i].kind === 4 && !doors[i].isOpen) unlockDoorBothSides(action.roomId, i, false);
         }
+        // A drain switch writes the same overworld event byte its room's tag
+        // routine would, for real — no item, just the flag the game itself reads.
+        if (action.drain) wasmTriggerOverworldCheck(action.drain.screen, action.drain.mask, 0xff);
         resolve();
         return;
       }
