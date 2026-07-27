@@ -102,6 +102,16 @@ const recordEvents = (recorder: RecorderState, events: SimEvent[], checks: Check
   }
 };
 
+/** One narrative-level line the engine emitted, in order. This is the run's own
+ *  account of what it did and why — trigger attempts, unlocks, resets, trap
+ *  slams — the same wording the widget's log shows, just persisted for a
+ *  headless run so a stall can be read back afterward instead of re-derived
+ *  from cold probes. */
+interface LogLine {
+  step: number;
+  msg: string;
+}
+
 interface DriveResult {
   state: EngineState;
   recorder: RecorderState;
@@ -111,6 +121,7 @@ interface DriveResult {
   visits: VisitLog[];
   path: PathStep[];
   checks: CheckLog[];
+  log: LogLine[];
   tally: { regionJobs: number; backtracks: number; epochResets: number; hops: number };
   endSummary: ReturnType<typeof buildEndSummary>;
 }
@@ -137,6 +148,7 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
   const path: PathStep[] = [{ ...describeScreen(state.virtual.screenId), observed: true }];
   let prevInv: string[] = [...state.inventory].sort();
   const checks: CheckLog[] = [];
+  const log: LogLine[] = [];
   /** Does the region-memory path actually fire? Counted from the engine's own events. */
   const tally = { regionJobs: 0, backtracks: 0, epochResets: 0, hops: 0 };
   const captureFlood = (st: EngineState): void => {
@@ -167,6 +179,7 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
       const { actions, events, nextState } = engine.step(state, obs);
       recordEvents(recorder, events, checks, path.length - 1, steps, [...nextState.inventory].sort());
       for (const e of events) {
+        if (e.level === 'narrative') log.push({ step: steps, msg: e.msg });
         const m = /^Screen .+? (via .+|at \d+,\d+)$/.exec(e.msg);
         if (m && path.length > 0) path[path.length - 1].via = m[1];
         if (e.msg.includes('(new region)')) tally.regionJobs += 1;
@@ -203,8 +216,8 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
     unsub();
   }
 
-  return { state, recorder, steps, reachedTarget, screenFloods, visits, path, checks, tally, endSummary: buildEndSummary(state) };
+  return { state, recorder, steps, reachedTarget, screenFloods, visits, path, checks, log, tally, endSummary: buildEndSummary(state) };
 };
 
 export { runSimulation };
-export type { DriveResult, ScreenFloodLog, VisitLog, PathStep, CheckLog };
+export type { DriveResult, ScreenFloodLog, VisitLog, PathStep, CheckLog, LogLine };

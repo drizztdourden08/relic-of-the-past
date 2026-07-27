@@ -49,7 +49,7 @@ interface RoomProbe {
   /** Doors the room reports — kind, native type and open state. */
   doors: Array<{ index: number; kind: string; nativeType?: number; dir: string; row: number; col: number; opened: boolean }>;
   /** Sprites the room reports, with the kind the simulator assigns them. */
-  sprites: Array<{ type: string; row: number; col: number; kind: string }>;
+  sprites: Array<{ type: string; row: number; col: number; kind: string; carriesKey?: boolean; carriesBigKey?: boolean }>;
   /** Raw attrs per layer across the rows where the flood stops — what it thinks is solid. */
   attrRows: Array<{ row: number; raw: string; l0: string; l1: string; reached: string }>;
   /** Whole-room shape: '.' solid, ' ' floor, 'o' obstacle(req), '#' flooded, '*' flooded obstacle. */
@@ -139,6 +139,8 @@ const probeRoom = (roomId: number, entryTile?: { row: number; col: number }, ite
     })),
     sprites: getRoomSprites(roomId).map((sp) => ({
       type: `0x${sp.spriteType.toString(16)}`, row: sp.tile.row, col: sp.tile.col, kind: sp.kind,
+      ...(sp.carriesKey ? { carriesKey: true } : {}),
+      ...(sp.carriesBigKey ? { carriesBigKey: true } : {}),
     })),
     attrRows: (() => {
       const b = getScreenGrids({ isIndoors: true, roomId, owScreenIndex: 0 });
