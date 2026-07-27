@@ -24,7 +24,7 @@ const parseSimRunConfig = (): SimRunConfig | null => {
   const arg = process.argv.find((a) => a === '--sim-run' || a.startsWith('--sim-run='));
   if (!arg) return null;
 
-  const config: SimRunConfig = { startSlot: null, stateName: null, target: null, stopAtCheckId: null, maxSteps: DEFAULT_MAX_STEPS, floodScreen: null, probeRoom: null, probeTile: null, probeItems: null, scanSprite: null, screenWalkLimit: null };
+  const config: SimRunConfig = { startSlot: null, stateName: null, target: null, stopAtCheckId: null, maxSteps: DEFAULT_MAX_STEPS, floodScreen: null, probeRoom: null, probeTile: null, probeItems: null, scanSprite: null, combatSprite: null, screenWalkLimit: null };
   const eq = arg.indexOf('=');
   if (eq === -1) return config;
 
@@ -40,6 +40,7 @@ const parseSimRunConfig = (): SimRunConfig | null => {
     else if (key === 'items') config.probeItems = value.split(',').filter(Boolean);
     else if (key === 'room') config.probeRoom = parseInt(value, 16);
     else if (key === 'scan') config.scanSprite = parseInt(value, 16);
+    else if (key === 'combat') config.combatSprite = parseInt(value, 16);
     else if (key === 'tile') {
       const [row, col] = value.split(',').map((n) => parseInt(n, 10));
       if (Number.isFinite(row) && Number.isFinite(col)) config.probeTile = { row, col };

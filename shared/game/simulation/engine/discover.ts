@@ -15,6 +15,8 @@ import { planTrigger, npcConfigForSprite } from '../trigger/trigger-plans';
 import type { PresenceGameState } from '../presence/state';
 import { evaluatePresence } from '../presence/evaluate';
 import { keyAvailable } from './explorer';
+import { evaluateRoomThreat } from './enemy-reach';
+import type { RoomThreat } from './enemy-reach';
 import type { EngineState, SimTarget } from './state';
 
 /** Tiles the detect flood reached; undefined = no grid, so gating is skipped. */
@@ -146,12 +148,18 @@ const KILL_GATE_TAG = (t: number): boolean => t >= 0x01 && t <= 0x13;
 
 type Interactables = NonNullable<SimObservation['interactables']>;
 
+/** Sprite keys the current threat sweep counts as gating the room's clear
+ *  (flags4 lacks the room-clear-exempt bit — see enemy-reach.ts). */
+const gatingSpriteKeys = (threat: RoomThreat): Set<string> => new Set(threat.gating.map((g) => spriteKey(g.sprite)));
+
 /** Killable enemies still alive: a carrier until its own kill target ran, a
- *  plain enemy until the room's clear trigger ran. */
-const livingKillables = (state: EngineState, screenId: string, inter: Interactables): SimSprite[] =>
-  inter.sprites.filter((sp) => (sp.carriesKey || sp.carriesBigKey
+ *  gating sprite until the room's clear trigger ran. */
+const livingKillables = (state: EngineState, screenId: string, inter: Interactables, threat: RoomThreat): SimSprite[] => {
+  const gating = gatingSpriteKeys(threat);
+  return inter.sprites.filter((sp) => (sp.carriesKey || sp.carriesBigKey
     ? !state.done.has(spriteKey(sp))
-    : sp.kind === 'other' && !state.done.has(`clear:${screenId}`)));
+    : gating.has(spriteKey(sp)) && !state.done.has(`clear:${screenId}`)));
+};
 
 const chestLabel = (chest: SimChest): string => `chest (room ${chest.roomId.toString(16)} #${chest.chestIndex})`;
 const spriteLabel = (sprite: SimSprite): string => `${sprite.kind} (room ${sprite.roomId.toString(16)})`;
@@ -213,7 +221,14 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
 
   const killGated = (inter.tags ?? [0, 0]).some(KILL_GATE_TAG);
   const shutters = inter.doors.filter((d) => d.kind === 'shutter');
-  const living = livingKillables(state, screenId, inter);
+  const threat = evaluateRoomThreat({
+    sprites: inter.sprites,
+    reached,
+    grids: obs.grids,
+    inventory: state.inventory,
+    combat: obs.combat,
+  });
+  const living = livingKillables(state, screenId, inter, threat);
   // Open shutters with killables still alive: walking deeper into the room
   // slams the doors shut behind the player (the game's trap-door rule) — every
   // target found in this window carries the trap marker.
@@ -298,17 +313,18 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
   }
 
   // Kill-gated shutter doors: clearing the room's enemies opens them — only
-  // in rooms whose header TAG is a kill/clear-to-open variant.
-  if (hasSword && killGated && shutters.some((d) => !d.opened)) {
+  // in rooms whose header TAG is a kill/clear-to-open variant, and only once
+  // EVERY gating sprite is confirmed killable (RoomThreat.clearable), not just
+  // the first one found.
+  if (killGated && shutters.some((d) => !d.opened) && threat.clearable && threat.gating.length > 0) {
     const key = `clear:${screenId}`;
     if (!state.done.has(key) && !state.failed.has(key)) {
-      const enemy = inter.sprites.find((sp) =>
-        sp.kind === 'other' && !sp.carriesKey && !sp.carriesBigKey
-        && interactableReachable(sp.posKnown, reached, sp.tile));
-      if (enemy) {
-        const action = { type: 'kill', roomId: enemy.roomId, itemId: 0xff, opensShutters: true } as const;
-        targets.push({ screenId, roomId: enemy.roomId, action, key, label: `guards (room ${enemy.roomId.toString(16)})`, noun: 'guards', verb: 'Defeating', tile: enemy.tile });
-      }
+      // Key-carriers get their own dedicated drop target above; pick a
+      // non-carrier gating sprite to anchor this one where possible.
+      const rep = threat.gating.find((g) => !g.sprite.carriesKey && !g.sprite.carriesBigKey) ?? threat.gating[0];
+      const tile = rep.from ?? rep.sprite.tile;
+      const action = { type: 'kill', roomId: rep.sprite.roomId, itemId: 0xff, opensShutters: true } as const;
+      targets.push({ screenId, roomId: rep.sprite.roomId, action, key, label: `guards (room ${rep.sprite.roomId.toString(16)})`, noun: 'guards', verb: 'Defeating', tile });
     }
   }
 

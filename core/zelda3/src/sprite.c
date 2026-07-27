@@ -108,7 +108,7 @@ static const int8 kSlopedTile[32] = {
 static const uint8 kSprite_Func1_Tab[8] = {15, 15, 24, 15, 15, 19, 15, 15};
 static const uint8 kSprite_Func1_Tab2[8] = {6, 6, 6, 12, 6, 6, 6, 15};
 static const uint8 kSprite_Func14_Damage[12] = {1, 2, 3, 4, 2, 3, 4, 5, 1, 1, 2, 3};
-static const uint8 kEnemyDamages[128] = {
+const uint8 kEnemyDamages[128] = {
   0, 1, 32, 255, 252, 251, 0, 0, 0, 2, 64, 4, 0, 0, 0, 0,
   0, 4, 64, 2, 3, 0, 0, 0, 0, 8, 64, 4, 0, 0, 0, 0,
   0, 16, 64, 8, 0, 0, 0, 0, 0, 16, 64, 8, 0, 0, 0, 0,
@@ -136,7 +136,7 @@ static const uint8 kSpriteInit_Flags2[243] = {
   0x82, 0x83, 0x83, 0x81, 0x82, 0x81, 0x82, 0xa0, 0xa1, 0xa3, 0xa1, 0xa1, 0xa1, 0x83, 0x85, 0x83,
   0x83, 0x83, 0x83,
 };
-static const uint8 kSpriteInit_Health[243] = {
+const uint8 kSpriteInit_Health[243] = {
    12,   6, 255,   3,  3,   3,   3,   3,   2,  12,  4, 255,   0,   3,  12,   2,
     0,  20,   4,   4,  0, 255,   0,   2,   3,   8,  0,   0,   0,   0,   0,   0,
     8,   3,   8,   2,  2,   0,   3, 255,   0,   3,  3,   3,   3,   3,   3,   3,
@@ -190,7 +190,7 @@ static const uint8 kSpriteInit_Flags3[243] = {
   0xf8, 0xf4, 0xf4, 0xd8, 0xf8, 0xd8, 0xdf, 0xc8, 0x69, 0xc1, 0xd2, 0xd2, 0xdc, 0xc7, 0xc1, 0xc7,
   0xc7, 0xc7, 0xc1,
 };
-static const uint8 kSpriteInit_Flags4[243] = {
+const uint8 kSpriteInit_Flags4[243] = {
      0,    0,    0, 0x43, 0x43, 0x43, 0x43, 0x43,    0,    0,    0,    0, 0x1c,    0,    0,    2,
      1,    3,    0,    0,    3, 0xc0,    7,    0,    0,    0,    7, 0x45, 0x43,    0, 0x40,  0xd,
      0,    0,    0,    0,    0,    0,    0,    0,    7,    7,    7,    7,    7,    7,  0xd,    7,

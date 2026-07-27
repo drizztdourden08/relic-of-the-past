@@ -77,6 +77,7 @@ export {
 export { wasmGetIndoorUncleBlockers, wasmGetNavigationBlockers, wasmGetLiveSprites, wasmGetOverworldGuardSpawns } from './bridge/sprites-blockers';
 export { wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns } from './bridge/nav-tables';
 export { wasmGetRoomChests, wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetRoomDoorInfo, wasmSimUnlockDoor, wasmSimCloseDoor, wasmSimKillDrop, wasmSimFollowerAttach, wasmSimFollowerRescue, wasmGetRoomCellLocks, wasmSimOpenCellLock, wasmTriggerOverworldCheck, wasmReadFlagSnapshot } from './bridge/sim-queries';
+export { wasmGetSpriteCombat, wasmGetCombatTables } from './bridge/combat-tables';
 
 export type { ViewportInfo } from './bridge/render';
 export type { OverworldVariantInfo, GameProgressInfo } from './bridge/progress';
@@ -85,6 +86,7 @@ export type { DoorBoundaryTile, RoomStairInfo, RoomWalkBoundary, RoomExitDoor } 
 export type { LiveSpriteInfo } from './bridge/sprites-blockers';
 export type { OverworldEntrance, FallHole } from './bridge/nav-tables';
 export type { SimChestRaw, SimSpriteRaw, SimDoorRaw, SimDoorDirection, SimFlagSnapshot } from './bridge/sim-queries';
+export type { SpriteCombatInfo, CombatTables } from './bridge/combat-tables';
 
 export {
   getGameState, getModule, getProfileId, setInput, setModule, setProfileId,

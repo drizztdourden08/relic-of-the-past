@@ -26,7 +26,7 @@ interface PresenceGameState {
 }
 
 /**
- * Raw inputs the live port hands in. `progress` is the 16-byte buffer from
+ * Raw inputs the live port hands in. `progress` is the 19-byte buffer from
  * WasmGetProgressFlags (byte layout documented in checks/flags/npc.ts, with
  * follower_indicator at index 13); the other two are the SRAM copies the sim
  * already snapshots for flag diffing.

@@ -6,7 +6,7 @@
  *   1. DETECTION: how to poll whether the check is complete (progress buffer byte + mask)
  *   2. TRIGGER:   how to programmatically fire the check (sprite type, post-gfx, item, extras)
  *
- * WasmGetProgressFlags() returns a 16-byte buffer:
+ * WasmGetProgressFlags() returns a 19-byte buffer:
  *   [0]  = sram_progress_indicator   (0xF3C5)
  *   [1]  = sram_progress_flags       (0xF3C6)
  *   [2]  = sram_progress_indicator_3 (0xF3C9)
@@ -16,11 +16,18 @@
  *   [6]  = link_item_mirror
  *   [7]  = link_item_quake_medallion
  *   [8]  = link_magic_consumption
- *   [9]  = save_dung_info[0x109] lo (Potion Shop room flag)
- *   [10] = save_dung_info[0x123] lo (Mini Moldorm Cave room flag)
- *   [11] = save_dung_info[0x11E] lo (Hype Cave room flag)
+ *   [9]  = save_dung_info[0x109] low byte (Potion Shop room flag)
+ *   [10] = save_dung_info[0x123] low byte (Mini Moldorm Cave room flag)
+ *   [11] = save_dung_info[0x11E] low byte (Hype Cave room flag)
  *   [12] = player_sleep_in_bed_state (0=asleep, 1=uncle woke, 2=out of bed)
  *   [13] = follower_indicator (tagalong id; 0=none) — used by NPC presence gating
+ *   [16] = save_dung_info[0x109] high byte
+ *   [17] = save_dung_info[0x123] high byte — carries chest slot 6 (save-format bit 0x400)
+ *   [18] = save_dung_info[0x11E] high byte
+ *
+ * A room word's bits span the full 16 bits, so each tracked room above 0xFF
+ * needs both its low byte (already adjacent to the other progress fields) and
+ * a high byte, appended at the end so [12]-[15] keep their existing indices.
  *
  * Source: core/zelda3/src/sprite_main.c (NPC handlers)
  */
@@ -385,18 +392,25 @@ const CHECK_NPC_FLAGS: Record<string, NpcCheckConfig> = {
 
   // ═══════════════════════════════════════════════════════════════
   // Mini Moldorm Cave - Generous Guy — Room 0x123
-  // Sprite 0x28, handler: Sprite_28_DarkWorldHintNPC
-  // Detection: save_dung_info[0x123] & 0x40 (bufferIndex 10)
-  // Vanilla: restores health for 20 rupees. Rando: gives item.
+  // Sprite 0xBB subtype2=2 (NiceThiefWithGift), dispatched via Sprite_BB_Shopkeeper
+  // NiceThiefWithGift sets LIVE bit 0x4000, saved as save_dung_info[0x123] & 0x400
+  // (room words are stored shifted right 4) — bufferIndex 17 is that word's high
+  // byte, so the 0x400 save-format bit reads back as mask 0x04.
+  // Vanilla: one-time gift of 300 rupees, no cost.
   // ═══════════════════════════════════════════════════════════════
   'Mini Moldorm Cave - Generous Guy': {
-    bufferIndex: 10, mask: 0x40,
+    bufferIndex: 17, mask: 0x04,
     flagType: 2, flagMask: 0x00,
-    roomFlag: { roomId: 0x123, chestIndex: 2 },
-    itemId: 0xFF,
-    spriteType: 0x28, postGfx: 0,
-    visualNote: 'NPC stays in place (fortune teller idle)',
-    sourceFunc: 'Sprite_28_DarkWorldHintNPC',
+    roomFlag: { roomId: 0x123, chestIndex: 6 },
+    itemId: 0x46,
+    spriteType: 0xBB, postGfx: 0,
+    room: 0x123,
+    visualNote: 'NPC keeps facing the player; no lasting visual change after the gift',
+    sourceFunc: 'NiceThiefWithGift',
+    // Sprite 0xBB (Sprite_BB_Shopkeeper) dispatches on sprite_subtype2 to many
+    // unrelated roles spawned throughout the game (shop clerks, minigame
+    // hosts, thieves). `room: 0x123` binds this config to this cave only, so
+    // it cannot match one of those other 0xBB sprites elsewhere.
   },
 
   // ═══════════════════════════════════════════════════════════════

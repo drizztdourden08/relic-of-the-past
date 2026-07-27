@@ -12,17 +12,23 @@
  */
 import type { SimulatorPort } from '@shared/game/simulation';
 import { captureStateBuffer, loadStateFromBuffer, reassertFeatureFlags, deliveryQueue } from '../';
-import { setAutoSkipDialogOverride } from '../live-settings-flags';
+import { setAutoSkipDialogOverride, setDeveloperToolsOverride } from '../live-settings-flags';
 import { onItemReceived } from '../tracker';
 import { observe } from './observe';
 import { getScreenGrids } from '../flood';
 import { getRoomChests, getRoomSprites, getOverworldSprites, getRoomDoors } from './interactables';
-import { wasmGetRoomTagsFor } from '../';
+import { wasmGetRoomTagsFor, wasmGetSpriteCombat, wasmGetCombatTables } from '../';
 import { trigger } from './trigger';
 
 /** Force the features0 auto-skip-dialog bit (or defer to the user's setting with null) and push it to the core immediately. */
 const setAutoSkipDialog = (on: boolean | null): void => {
   setAutoSkipDialogOverride(on);
+  reassertFeatureFlags();
+};
+
+/** Force the features0 developer-tools bit (or defer to the user's setting with null) and push it to the core immediately. */
+const setDeveloperTools = (on: boolean | null): void => {
+  setDeveloperToolsOverride(on);
   reassertFeatureFlags();
 };
 
@@ -51,8 +57,11 @@ const createLiveGamePort = (): SimulatorPort => {
     getOverworldSprites,
     getRoomDoors,
     getRoomTags: wasmGetRoomTagsFor,
+    getSpriteCombat: wasmGetSpriteCombat,
+    getCombatTables: wasmGetCombatTables,
     trigger,
     setAutoSkipDialog,
+    setDeveloperTools,
     snapshotState,
     restoreState,
     onItemReceived: subscribeItem,

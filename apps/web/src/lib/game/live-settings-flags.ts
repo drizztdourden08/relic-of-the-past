@@ -46,6 +46,16 @@ const setAutoSkipDialogOverride = (on: boolean | null): void => {
   autoSkipDialogOverride = on;
 };
 
+// When non-null, ORs the developer-tools bit into the pushed features word regardless of the user's
+// setting; null defers to the setting. The developer-tools gate only unlocks read-only instrumentation
+// queries (sprite/combat tables etc.) — it is the game's own data, not a gameplay change — so the
+// simulator, itself a developer tool, may switch it on for the duration of a headless run.
+let developerToolsOverride: boolean | null = null;
+
+const setDeveloperToolsOverride = (on: boolean | null): void => {
+  developerToolsOverride = on;
+};
+
 // PPU render flag values — must match ppu.h
 const PPU_FLAGS = {
   newRenderer:    1,
@@ -93,7 +103,8 @@ const buildFeatureFlags = (s: GameSettings): number => {
   // Music/SFX sliders are inert; the user must enable it before those sliders take effect.
   if (s.perGroupVolume) flags |= FEATURE_FLAGS.perGroupVolume;
   if (s.haptics?.enabled) flags |= FEATURE_FLAGS.haptics;
-  if (s.developerToolsEnabled) flags |= FEATURE_FLAGS.developerTools;
+  if (developerToolsOverride === null ? s.developerToolsEnabled : developerToolsOverride)
+    flags |= FEATURE_FLAGS.developerTools;
   return flags;
 };
 
@@ -130,4 +141,4 @@ const buildPpuFlags = (s: GameSettings): number => {
   return flags;
 };
 
-export { buildFeatureFlags, buildPpuFlags, buildFeatureWords, setAutoSkipDialogOverride };
+export { buildFeatureFlags, buildPpuFlags, buildFeatureWords, setAutoSkipDialogOverride, setDeveloperToolsOverride };

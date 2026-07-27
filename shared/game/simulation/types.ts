@@ -76,6 +76,37 @@ interface SimObservation {
   exits?: SimExit[];
   /** Flood-reached tiles of the current screen (region memory for re-visits). */
   reached?: boolean[][];
+  /** Combat rows for the sprite types on the current screen, resolved via the port. */
+  combat?: CombatContext;
+}
+
+/** Resolved per-sprite-type damage row: initial health, initial flags4, and
+ *  the 16-entry damage-by-class table already reduced through the game's own
+ *  two-step lookup. */
+interface SpriteCombatInfo {
+  health: number;
+  flags4: number;
+  damageByClass: number[];
+}
+
+/** Shared ancilla (projectile) damage-class table and tile-attribute ->
+ *  projectile-collision table (0 pass, 1 block, 2 sloped, 3 layer-dependent,
+ *  4 priority flip). */
+interface CombatTables {
+  ancillaDamageClass: number[];
+  projectileTileCollision: number[];
+}
+
+/**
+ * Combat rows for the sprites on the current screen. `tables` is null when
+ * the developer-tools combat gate is off — combat reasoning is then
+ * unavailable and every gating sprite must read as not killable, never as
+ * killable. `bySpriteType` carries one row per distinct sprite type seen;
+ * a missing/null row means the query missed (gate off, or an out-of-range type).
+ */
+interface CombatContext {
+  tables: CombatTables | null;
+  bySpriteType: Record<number, SpriteCombatInfo | null>;
 }
 
 /** A big multi-sub-screen overworld area (castle-style 2×2 groups). */
@@ -305,4 +336,7 @@ export type {
   SimChest,
   SimSprite,
   SimDoor,
+  SpriteCombatInfo,
+  CombatTables,
+  CombatContext,
 };

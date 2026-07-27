@@ -37,17 +37,22 @@ per-room chest/enemy/event progress. Read as needed; it's the live SRAM array.
 `int WasmGetOverworldFlags(void)` → pointer to `save_ow_event_info` (bit-packed overworld event flags).
 
 ### WasmGetProgressFlags
-`int WasmGetProgressFlags(void)` → 16-byte buffer (bytes 0–12 used):
+`int WasmGetProgressFlags(void)` → 19-byte buffer (bytes 0–18 used). The three room words at
+9–11 only fit their low byte there; bytes 16–18 carry the matching high byte, since a room
+word's bits span all 16 bits:
 
 | Off | Field | Off | Field |
 |----:|-------|----:|-------|
-| 0 | `sram_progress_indicator` | 7 | quake medallion |
-| 1 | `sram_progress_flags` | 8 | magic consumption |
-| 2 | `sram_progress_indicator_3` | 9 | `save_dung_info[0x109]` |
-| 3 | flippers | 10 | `save_dung_info[0x123]` |
-| 4 | boots | 11 | `save_dung_info[0x11E]` |
-| 5 | bug net | 12 | `player_sleep_in_bed_state` |
-| 6 | mirror | | |
+| 0 | `sram_progress_indicator` | 10 | `save_dung_info[0x123]` low byte |
+| 1 | `sram_progress_flags` | 11 | `save_dung_info[0x11E]` low byte |
+| 2 | `sram_progress_indicator_3` | 12 | `player_sleep_in_bed_state` |
+| 3 | flippers | 13 | `follower_indicator` |
+| 4 | boots | 14 | `link_num_keys` |
+| 5 | bug net | 15 | `link_bigkey` |
+| 6 | mirror | 16 | `save_dung_info[0x109]` high byte |
+| 7 | quake medallion | 17 | `save_dung_info[0x123]` high byte |
+| 8 | magic consumption | 18 | `save_dung_info[0x11E]` high byte |
+| 9 | `save_dung_info[0x109]` low byte | | |
 
 ### WasmGetViewportInfo
 `int WasmGetViewportInfo(void)` → 20-byte buffer holding camera and Link world position plus module:

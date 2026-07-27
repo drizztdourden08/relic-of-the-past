@@ -72,8 +72,31 @@ int WasmGetOverworldFlags(void) {
 }
 
 // ─── Progress Flags Query ───
-
-static uint8 g_progress_buf[16];
+// Layout: 19 bytes.
+//   [0]  sram_progress_indicator
+//   [1]  sram_progress_flags
+//   [2]  sram_progress_indicator_3
+//   [3]  link_item_flippers
+//   [4]  link_item_boots
+//   [5]  link_item_bug_net
+//   [6]  link_item_mirror
+//   [7]  link_item_quake_medallion
+//   [8]  link_magic_consumption
+//   [9]  save_dung_info[0x109] low byte  (Potion Shop room flag)
+//   [10] save_dung_info[0x123] low byte  (Mini Moldorm Cave room flag)
+//   [11] save_dung_info[0x11E] low byte  (Hype Cave room flag)
+//   [12] player_sleep_in_bed_state
+//   [13] follower_indicator
+//   [14] link_num_keys
+//   [15] link_bigkey
+//   [16] save_dung_info[0x109] high byte
+//   [17] save_dung_info[0x123] high byte
+//   [18] save_dung_info[0x11E] high byte
+// A room word's chest/item bits span the full 16 bits (CHEST_OPEN_MASKS runs up
+// to 0x400), so the three tracked rooms each carry both the low byte (already
+// here) and a high byte appended at the end, rather than widening [9]-[11] in
+// place and reshuffling every other index in this buffer.
+static uint8 g_progress_buf[19];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetProgressFlags(void) {
@@ -93,6 +116,9 @@ int WasmGetProgressFlags(void) {
   g_progress_buf[13] = follower_indicator;  // tagalong id (0 = none); NPC-presence gate
   g_progress_buf[14] = link_num_keys;       // key grants/spends are observable progress
   g_progress_buf[15] = (uint8)link_bigkey;  // big-key grants are observable progress
+  g_progress_buf[16] = (uint8)(save_dung_info[0x109] >> 8);
+  g_progress_buf[17] = (uint8)(save_dung_info[0x123] >> 8);
+  g_progress_buf[18] = (uint8)(save_dung_info[0x11E] >> 8);
   return (int)g_progress_buf;
 }
 

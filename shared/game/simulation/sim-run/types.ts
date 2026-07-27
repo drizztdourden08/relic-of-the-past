@@ -33,6 +33,9 @@ interface SimRunConfig {
    *  exit. Answers "where does the game actually put this?" when a dataset room
    *  index is suspect. */
   scanSprite: number | null;
+  /** Diagnostic: report this sprite type's resolved combat row (health, flags4,
+   *  per-class damage) plus the shared ancilla/tile combat tables, then exit. */
+  combatSprite: number | null;
   /** Max distinct screens the game-driven flood visits before ending (null = unlimited). */
   screenWalkLimit: number | null;
 }

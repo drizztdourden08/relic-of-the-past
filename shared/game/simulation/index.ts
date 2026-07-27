@@ -21,6 +21,7 @@ export type {
   SimChest,
   SimSprite,
   SimDoor,
+  SpriteCombatInfo, CombatTables, CombatContext,
 } from './types';
 
 export type { SimulatorPort } from './port';

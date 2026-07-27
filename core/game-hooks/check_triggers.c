@@ -82,8 +82,8 @@ static const uint8 kSimReceiveItemAlternates[76] = {
 };
 
 void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
-  if (chest_index > 5) {
-    printf("[GameHook] Invalid chest_index %d (max 5)\n", chest_index);
+  if (chest_index >= kChestOpenMasksHook_COUNT) {
+    printf("[GameHook] Invalid chest_index %d (max %d)\n", chest_index, kChestOpenMasksHook_COUNT - 1);
     return;
   }
 

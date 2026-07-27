@@ -22,6 +22,7 @@ const SPRITE_KINDS: Record<number, SimSprite['kind']> = {
   0x73: 'npc', // Link's Uncle (UncleAndPriest)
   0x75: 'npc', // Bottle Merchant
   0xad: 'npc', // Old Man (Death Mountain)
+  0xbb: 'npc', // Shopkeeper dispatch (subtype2 selects role; the cave gift-giver is one)
   // Standing items — collected by walking onto them, not by talking. The pair
   // that matters before the first dungeon: the fungus in the woods and the
   // loose heart pieces (`Sprite_E7_*` / `Sprite_HeartPiece`, sprite_main.c:705).

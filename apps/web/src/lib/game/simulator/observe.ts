@@ -5,7 +5,7 @@
  * known screen id (via screen detection) plus the player's pixel→tile conversion.
  * Inventory is the tracker's Set; flags are independent SRAM copies for diffing.
  */
-import type { SimObservation, VirtualPlayer, FlagSnapshot, SimLocation, SimulatorPort } from '@shared/game/simulation';
+import type { SimObservation, VirtualPlayer, FlagSnapshot, SimLocation, SimulatorPort, SimSprite, CombatContext } from '@shared/game/simulation';
 import type { EngineState } from '@shared/game/simulation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
 import { SCREEN_BY_ID } from '@shared/game/data/screens';
@@ -126,6 +126,15 @@ const detectFor = (state: EngineState, cache: DetectCache): DetectedScreen | nul
   return cache.get(key) ?? null;
 };
 
+/** Combat rows for the distinct sprite types on screen, plus the shared tables. */
+const combatFor = (port: SimulatorPort, sprites: SimSprite[]): CombatContext => {
+  const bySpriteType: Record<number, ReturnType<SimulatorPort['getSpriteCombat']>> = {};
+  for (const spriteType of new Set(sprites.map((s) => s.spriteType))) {
+    bySpriteType[spriteType] = port.getSpriteCombat(spriteType);
+  }
+  return { tables: port.getCombatTables(), bySpriteType };
+};
+
 /** Pull grids + room interactables + detected exits for the current screen. */
 const buildObservation = (port: SimulatorPort, state: EngineState, cache: DetectCache, itemReceived?: number): SimObservation => {
   const base = port.observe();
@@ -150,6 +159,7 @@ const buildObservation = (port: SimulatorPort, state: EngineState, cache: Detect
     itemReceived,
     exits: detected?.exits,
     reached: detected?.reached,
+    combat: combatFor(port, interactables.sprites),
   };
 };
 
