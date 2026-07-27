@@ -14,8 +14,10 @@ import { dungeonGroupOf, dungeonGroupForScreen } from '../../shared/game/data/sc
 // Real dungeon-group data: the sewers (hc-0x11, palace index 0x00) are reachable
 // only through the castle above (hc-0x01, palace index 0x02) — the one case the
 // ledger groups together.
-const SEWERS_SCREEN = 'hc-0x11';
-const CASTLE_SCREEN = 'hc-0x01';
+// Traversal ids are the game's own room numbers, never a definition's slug —
+// the ledger has to resolve a group from the id shape the run actually emits.
+const SEWERS_SCREEN = 'room:17';
+const CASTLE_SCREEN = 'room:1';
 const SEWERS_ROOM = 0x11;
 
 const freshState = (screenId = SEWERS_SCREEN) => createEngineState({ screenId, tile: { row: 0, col: 0 } }, new Set(), {});

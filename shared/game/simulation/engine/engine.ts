@@ -17,7 +17,7 @@ import { verifyStep } from './verify-step';
 import { narrative, debug, foundMsg, screenLabel, posMsg, landingTile, emitHop, spendKeysForEdge, emitEntryTrapSlam, interceptTrap } from './step-helpers';
 import { unionReach, stampReach, regionCovered, unexploredRegionJobs, takeRegionJob } from './regions';
 import { updateDungeonLedger } from './dungeon-ledger-scan';
-import { closeIdleDungeonGroups } from './dungeon-ledger-lifecycle';
+import { closeIdleDungeonGroups, inCompletedGroup } from './dungeon-ledger-lifecycle';
 import type { EngineState } from './state';
 import { cloneState } from './state';
 
@@ -64,7 +64,11 @@ const createEngine = ({ adjacency = buildAdjacency(), totalChecks }: EngineDeps 
       ? reachableDiscovered(s.discovered, s.virtual.screenId)
       : reachableFrom(adjacency, s.virtual.screenId, canPass(s));
     for (const id of reachable) s.reachedScreens.add(id);
-    s.frontier = [...reachable].filter(id => id !== s.virtual.screenId && !s.visited.has(id));
+    // A dungeon group settled as complete owes nothing, so its screens stay out
+    // of the frontier for the rest of the run. Without this the run keeps walking
+    // back through a dungeon it has already finished.
+    s.frontier = [...reachable].filter(id =>
+      id !== s.virtual.screenId && !s.visited.has(id) && !inCompletedGroup(s, id));
     // Visited rooms entered OUTSIDE their explored region (a hall behind a different door) still owe a visit.
     s.regionJobs = unexploredRegionJobs(s.discovered, s.regionReach, s.visited, s.arrivals).filter(j => j.to !== s.virtual.screenId);
     closeIdleDungeonGroups(s, events);

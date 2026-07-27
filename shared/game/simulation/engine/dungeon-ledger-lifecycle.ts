@@ -8,7 +8,7 @@
  */
 import type { SimEvent } from '../types';
 import { dungeonGroupForScreen } from '../../data/screens/dungeon-group';
-import { narrative, debug } from './event-log';
+import { narrative } from './event-log';
 import type { EngineState } from './state';
 
 /** True while some part of the group is still reachable/actionable this epoch. */
@@ -29,7 +29,7 @@ const closeIdleDungeonGroups = (state: EngineState, events: SimEvent[]): void =>
 
     if (ledger.owed.length === 0) {
       ledger.complete = true;
-      events.push(debug(state, `Dungeon group ${ledger.group} complete — nothing left owed`));
+      events.push(narrative(state, `Dungeon group ${ledger.group} complete — nothing left owed, will not be re-entered`));
       continue;
     }
     ledger.exhausted = true;
@@ -60,4 +60,12 @@ const reopenLedgersFor = (state: EngineState, tokens: string[], itemLabel: strin
   }
 };
 
-export { closeIdleDungeonGroups, reopenLedgersFor };
+/** True when this screen belongs to a group already settled as complete. Such a
+ *  group owes nothing, so nothing there is worth walking back to. */
+const inCompletedGroup = (state: EngineState, screenId: string): boolean => {
+  const group = dungeonGroupForScreen(screenId);
+  if (group == null) return false;
+  return state.ledgers.get(group)?.complete === true;
+};
+
+export { closeIdleDungeonGroups, reopenLedgersFor, inCompletedGroup };

@@ -8,11 +8,10 @@
  * owed themselves; they only explain why something else is blocked.
  */
 import type { SimObservation } from '../types';
-import { SCREEN_BY_ID } from '../../data/screens';
 import { canonicalDungeon, keyAvailable } from './explorer';
 import { chestKey, spriteKey } from './discover';
 import { BOMBABLE_ATTR_MIN, BOMBABLE_ATTR_MAX } from './discover-bombs';
-import { dungeonGroupForScreen } from '../../data/screens/dungeon-group';
+import { dungeonGroupForScreen, dungeonNameForScreen } from '../../data/screens/dungeon-group';
 import { ensureLedger, upsertOwed, pruneDoneChecks } from './dungeon-ledger';
 import type { EngineState, SimTarget } from './state';
 
@@ -69,7 +68,7 @@ const updateDungeonLedger = (state: EngineState, obs: SimObservation, targets: S
   const openedChests = new Set(inter.chests.filter(c => c.opened).map(chestKey));
   ledger.owed = ledger.owed.filter(o => !openedChests.has(o.checkId));
 
-  const dungeon = canonicalDungeon(SCREEN_BY_ID.get(state.virtual.screenId)?.location ?? '');
+  const dungeon = canonicalDungeon(dungeonNameForScreen(state.virtual.screenId) ?? '');
   const actionable = new Set(targets.map(t => t.key));
   const handled = new Set<string>();
 

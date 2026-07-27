@@ -9,7 +9,6 @@
  * not a general grouping rule.
  */
 import { SCREEN_BY_ID } from './index';
-import type { ScreenDefinition } from '../../types';
 
 /** `palaceIndex` is the raw `cur_palace_index_x2` a screen carries; the game's
  *  own dungeon tables (and this ledger) index by `palaceIndex >> 1`. */
@@ -18,11 +17,46 @@ const dungeonGroupOf = (palaceIndex: number): number => {
   return dungeonIndex === 0 ? 1 : dungeonIndex;
 };
 
-/** The dungeon group a screen belongs to, or null when it isn't a dungeon room. */
-const dungeonGroupForScreen = (screenId: string): number | null => {
-  const screen: ScreenDefinition | undefined = SCREEN_BY_ID.get(screenId);
-  if (!screen || screen.type !== 'dungeon') return null;
-  return dungeonGroupOf(screen.dungeon.palaceIndex);
+/** Room number out of a traversal id (`room:N`, optionally region- and
+ *  door-qualified). Overworld ids carry no room and yield null. */
+const ROOM_ID = /^room:(\d+)/;
+
+/** Room number -> group, built once. A traversal id names the game's own room
+ *  number, never a definition's slug, so the lookup has to go through the room
+ *  number the screens carry rather than through the id. */
+let groupByRoom: Map<number, number> | null = null;
+/** Room number -> the dungeon's own name, for the key bookkeeping that is keyed
+ *  by dungeon rather than by group (a group can span two palace indices). */
+let nameByRoom: Map<number, string> | null = null;
+
+const buildRoomMaps = (): void => {
+  groupByRoom = new Map<number, number>();
+  nameByRoom = new Map<number, string>();
+  for (const screen of SCREEN_BY_ID.values()) {
+    if (screen.type !== 'dungeon' || screen.roomIndex === undefined) continue;
+    groupByRoom.set(screen.roomIndex, dungeonGroupOf(screen.dungeon.palaceIndex));
+    if (screen.location) nameByRoom.set(screen.roomIndex, screen.location);
+  }
 };
 
-export { dungeonGroupOf, dungeonGroupForScreen };
+const roomGroups = (): Map<number, number> => {
+  if (!groupByRoom) buildRoomMaps();
+  return groupByRoom as Map<number, number>;
+};
+
+/** The dungeon's display name for a traversal id, or null when it is not a dungeon. */
+const dungeonNameForScreen = (screenId: string): string | null => {
+  const m = ROOM_ID.exec(screenId);
+  if (!m) return null;
+  if (!nameByRoom) buildRoomMaps();
+  return (nameByRoom as Map<number, string>).get(Number(m[1])) ?? null;
+};
+
+/** The dungeon group a screen belongs to, or null when it isn't a dungeon room. */
+const dungeonGroupForScreen = (screenId: string): number | null => {
+  const m = ROOM_ID.exec(screenId);
+  if (!m) return null;
+  return roomGroups().get(Number(m[1])) ?? null;
+};
+
+export { dungeonGroupOf, dungeonGroupForScreen, dungeonNameForScreen };
