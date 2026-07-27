@@ -9,7 +9,7 @@
  * both are runtime lookups, never assumed.
  */
 import type { GridPos } from '../../navigation/types';
-import type { SimSprite, ScreenGridBundle, CombatContext, SpriteCombatInfo } from '../types';
+import type { SimSprite, ScreenGridBundle, CombatContext, SpriteCombatInfo, RoomSectionSplit } from '../types';
 import { weaponsFor } from './enemy-reach-weapons';
 import { findPositionFor } from './enemy-reach-geometry';
 
@@ -40,13 +40,12 @@ interface RoomThreat {
   clearable: boolean;
 }
 
-/** How far from a sprite a reached tile may sit and still count it as standing on
- *  ground the player currently occupies. Two tiles covers a sprite whose recorded
- *  tile sits just inside the wall its floor abuts. */
-const LIVE_REGION_RADIUS = 2;
+/** Column/row that splits a room's quadrant grid — every indoor room screen is
+ *  32x32 tiles, and the game never divides one anywhere else. */
+const SECTION_SPLIT_LINE = 32;
 
 /**
- * Is this sprite in the part of the room the player is actually in?
+ * Is this sprite in the same scrolling section as the player?
  *
  * The clear test the game runs walks its sixteen LIVE sprite slots. What we hold
  * instead is the room's whole static spawn list, and one room slot can cover
@@ -59,15 +58,15 @@ const LIVE_REGION_RADIUS = 2;
  * Sprites are counted per section, not per room slot. Inside a section the rule
  * stays absolute — every gating sprite there has to be killable, so this cannot
  * clear a room off one convenient kill while another enemy stands beside it.
+ *
+ * `split` missing, or split on neither axis (a plain single-section room), means
+ * there is only one section to judge: everyone gates.
  */
-const inLivePart = (tile: SimSprite['tile'], reached: boolean[][] | undefined): boolean => {
-  if (!reached) return true;
-  for (let dr = -LIVE_REGION_RADIUS; dr <= LIVE_REGION_RADIUS; dr++) {
-    for (let dc = -LIVE_REGION_RADIUS; dc <= LIVE_REGION_RADIUS; dc++) {
-      if (reached[tile.row + dr]?.[tile.col + dc]) return true;
-    }
-  }
-  return false;
+const inSameSection = (tile: GridPos, split: RoomSectionSplit | undefined): boolean => {
+  if (!split || (!split.splitX && !split.splitY)) return true;
+  const spriteSectionX = split.splitX && tile.col >= SECTION_SPLIT_LINE ? 1 : 0;
+  const spriteSectionY = split.splitY && tile.row >= SECTION_SPLIT_LINE ? 1 : 0;
+  return spriteSectionX === split.playerSectionX && spriteSectionY === split.playerSectionY;
 };
 
 /** Unknown flags4 (no combat row for this sprite type) defaults to gating: a
@@ -105,15 +104,18 @@ const evaluateRoomThreat = (params: {
   grids: ScreenGridBundle | undefined;
   inventory: Set<string>;
   combat: CombatContext | undefined;
+  /** Scroll-section split of the room being evaluated, including the player's
+   *  current section. */
+  split?: RoomSectionSplit;
 }): RoomThreat => {
-  const { sprites, reached, grids, inventory, combat } = params;
+  const { sprites, reached, grids, inventory, combat, split } = params;
   const tables = combat?.tables ?? null;
   const infoFor = (spriteType: number): SpriteCombatInfo | null => (tables ? (combat?.bySpriteType[spriteType] ?? null) : null);
   const weapons = tables ? weaponsFor(inventory, tables) : [];
   const gating = sprites
     .map((sprite) => ({ sprite, info: infoFor(sprite.spriteType) }))
     .filter(({ info }) => isGating(info))
-    .filter(({ sprite }) => inLivePart(sprite.tile, reached))
+    .filter(({ sprite }) => inSameSection(sprite.tile, split))
     .map(({ sprite, info }) => evaluateSprite(sprite, info, weapons, reached, grids, tables?.projectileTileCollision));
   return { gating, clearable: gating.every((e) => e.killable) };
 };

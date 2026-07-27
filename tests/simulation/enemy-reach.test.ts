@@ -148,6 +148,40 @@ describe('evaluateRoomThreat — room-clear-exempt sprites', () => {
   });
 });
 
+describe('evaluateRoomThreat — multi-section room', () => {
+  const SECTION_GRID_SIZE = 64;
+  const wideOpenAttrGrid = (): number[][] => Array.from({ length: SECTION_GRID_SIZE }, () => new Array<number>(SECTION_GRID_SIZE).fill(0));
+  const wideReached = (): boolean[][] => Array.from({ length: SECTION_GRID_SIZE }, () => new Array<boolean>(SECTION_GRID_SIZE).fill(true));
+
+  it('gates only the sprite sharing the player\'s scroll section, and the room reads clearable', () => {
+    const westGuard = makeSprite({ row: 48, col: 12 }, 0x42); // same section as the player
+    const eastGuard = makeSprite({ row: 48, col: 52 }, 0x41); // across the room's internal split
+    const damageByClass = new Array(16).fill(0);
+    damageByClass[1] = 3; // both sprite types share a row a sword kills
+
+    const threat = evaluateRoomThreat({
+      sprites: [westGuard, eastGuard],
+      reached: wideReached(),
+      grids: makeGrids(wideOpenAttrGrid()),
+      inventory: new Set(['Fighter Sword']),
+      combat: {
+        tables: makeTables(),
+        bySpriteType: {
+          0x42: { health: 4, flags4: 0, damageByClass },
+          0x41: { health: 4, flags4: 0, damageByClass },
+        },
+      },
+      // West/east split, player standing in the west section (section 0).
+      split: { splitX: true, splitY: false, playerSectionX: 0, playerSectionY: 0 },
+    });
+
+    expect(threat.gating).toHaveLength(1);
+    expect(threat.gating[0].sprite.spriteType).toBe(0x42);
+    expect(threat.gating[0].killable).toBe(true);
+    expect(threat.clearable).toBe(true);
+  });
+});
+
 describe('evaluateRoomThreat — combat reasoning unavailable', () => {
   it('reads every sprite as not killable when the developer-tools combat gate is off', () => {
     const sprite = makeSprite({ row: 5, col: 5 });

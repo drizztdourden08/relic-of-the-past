@@ -21,6 +21,24 @@ interface EventFlagEntry {
 }
 
 const CHECK_EVENT_FLAGS: Record<string, EventFlagEntry> = {
+  // Throne Room Shelf Moved = which_starting_point == 4. The mantle sprite stamps
+  // that checkpoint the first time the shelf is pushed aside, which is also what
+  // opens the way down to the escape passage. Checkpoint ids are not ordered, so
+  // this compares for equality rather than a threshold.
+  'event-shelf-push': {
+    bufferIndex: 19,
+    compare: 'eq',
+    value: 4,
+  },
+
+  // Sahasrahla Quest Given = savegame_map_icons_indicator == 3. The sage sets the
+  // map markers the first time he finishes handing out the errand.
+  'event-sahasrahla-quest': {
+    bufferIndex: 20,
+    compare: 'eq',
+    value: 3,
+  },
+
   // Link wakes up = player_sleep_in_bed_state >= 2 (got out of bed)
   // NOTE: For loaded saves past uncle, progressToEvents also fires 'Link Wakes Up'
   // via sram_progress_indicator >= 1, but for the CHECK completion we use the bed state.

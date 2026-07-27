@@ -96,7 +96,7 @@ int WasmGetOverworldFlags(void) {
 // to 0x400), so the three tracked rooms each carry both the low byte (already
 // here) and a high byte appended at the end, rather than widening [9]-[11] in
 // place and reshuffling every other index in this buffer.
-static uint8 g_progress_buf[19];
+static uint8 g_progress_buf[21];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetProgressFlags(void) {
@@ -119,6 +119,11 @@ int WasmGetProgressFlags(void) {
   g_progress_buf[16] = (uint8)(save_dung_info[0x109] >> 8);
   g_progress_buf[17] = (uint8)(save_dung_info[0x123] >> 8);
   g_progress_buf[18] = (uint8)(save_dung_info[0x11E] >> 8);
+  // Scripted-scene checkpoints the run cannot otherwise observe. The first is the
+  // starting-point id the game stamps as each opening scene completes; the second
+  // is the map-marker state the eastern sage sets once he has given his errand.
+  g_progress_buf[19] = which_starting_point;
+  g_progress_buf[20] = savegame_map_icons_indicator;
   return (int)g_progress_buf;
 }
 

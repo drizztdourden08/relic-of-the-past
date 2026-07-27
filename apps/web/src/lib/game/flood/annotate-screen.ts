@@ -159,6 +159,10 @@ const annotateScreen = (
     tags = annotateRoom(loc.roomId, items, completed, getCurrentInventory());
   } else {
     for (const sprite of getOverworldSprites(loc.owScreenIndex)) {
+      // A big area's spawn table lists every screen's sprites, already resolved
+      // to their true screen — one belonging to a neighbour is drawn when THAT
+      // screen is annotated, not here.
+      if (sprite.roomId !== loc.owScreenIndex) continue;
       const a = spriteAnnotation(sprite, { roomId: -1, completed, shutterCount: 0 });
       if (a) items.push(a);
     }

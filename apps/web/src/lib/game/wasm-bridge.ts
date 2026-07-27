@@ -69,7 +69,7 @@ export {
   wasmGetRoomCollisionType, wasmGetStaircaseType, wasmBuildOverworldAttrGrid,
   wasmBuildRoomAttrGrid, wasmGetToggleFloorPositions,
 } from './bridge/room-grids';
-export { wasmGetRoomLayoutInfo, wasmGetDungeonMapPosition } from './bridge/room-layout';
+export { wasmGetRoomLayoutInfo, wasmGetDungeonMapPosition, roomSectionSplitFrom } from './bridge/room-layout';
 export {
   wasmGetRoomDoorBoundaryTiles, wasmGetRoomStairInfo, wasmGetRoomStairInfoFor, wasmGetRoomWalkBoundaries, wasmGetRoomWalkBoundariesFor,
   wasmGetRoomExitDoors, wasmGetRoomTravelDestinations, wasmGetRoomTravelDestinationsFor, wasmGetRoomTagsFor,

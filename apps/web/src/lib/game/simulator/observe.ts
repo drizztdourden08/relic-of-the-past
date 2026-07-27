@@ -160,6 +160,7 @@ const buildObservation = (port: SimulatorPort, state: EngineState, cache: Detect
     exits: detected?.exits,
     reached: detected?.reached,
     combat: combatFor(port, interactables.sprites),
+    sectionSplit: loc.isIndoors ? port.getRoomSectionSplit() : undefined,
   };
 };
 

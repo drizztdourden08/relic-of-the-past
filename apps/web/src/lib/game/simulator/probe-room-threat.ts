@@ -4,12 +4,13 @@
  * probe-room.ts to keep that file under the line budget. See enemy-reach.ts
  * for what "gating" and "clearable" mean.
  */
-import type { CombatContext } from '@shared/game/simulation';
+import type { CombatContext, RoomSectionSplit } from '@shared/game/simulation';
 import { evaluateRoomThreat } from '@shared/game/simulation/engine/enemy-reach';
-import { wasmGetSpriteCombat, wasmGetCombatTables } from '../';
+import { wasmGetSpriteCombat, wasmGetCombatTables, wasmGetRoomLayoutInfo, roomSectionSplitFrom } from '../';
 import { getCurrentInventory } from '../tracker';
 import { getRoomSprites } from './interactables';
 import { getScreenGrids } from '../flood';
+import { readMapState } from './read-game-state';
 import type { RoomFloodRun } from './flood-room';
 
 interface RoomThreatProbe {
@@ -30,6 +31,15 @@ const combatForProbe = (spriteTypes: number[]): CombatContext => {
   return { tables: wasmGetCombatTables(), bySpriteType };
 };
 
+/** The room's section split, only trustworthy when the player is actually
+ *  standing in the probed room (the layout read is live-only — see
+ *  WasmGetRoomLayoutInfo). A remote probe gets no split, so every gating
+ *  sprite counts, same as a plain single-section room. */
+const splitForProbe = (roomId: number): RoomSectionSplit | undefined => {
+  const live = readMapState();
+  return live?.isIndoors && live.roomIndex === roomId ? roomSectionSplitFrom(wasmGetRoomLayoutInfo()) : undefined;
+};
+
 const probeRoomThreat = (roomId: number, run: RoomFloodRun | null): RoomThreatProbe => {
   const sprites = getRoomSprites(roomId);
   const reached = Array.from({ length: 64 }, (_, r) =>
@@ -37,7 +47,7 @@ const probeRoomThreat = (roomId: number, run: RoomFloodRun | null): RoomThreatPr
   const grids = getScreenGrids({ isIndoors: true, roomId, owScreenIndex: 0 });
   const combat = combatForProbe(sprites.map((s) => s.spriteType));
   const inventory = new Set(getCurrentInventory());
-  const evaluated = evaluateRoomThreat({ sprites, reached, grids, inventory, combat });
+  const evaluated = evaluateRoomThreat({ sprites, reached, grids, inventory, combat, split: splitForProbe(roomId) });
   return {
     inventory: [...inventory],
     clearable: evaluated.clearable,

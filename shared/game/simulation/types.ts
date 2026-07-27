@@ -9,6 +9,7 @@ import type { TileAttrContext } from '../navigation/tile-attrs';
 import type { TraversalRequirement } from '../navigation/nav-data.types';
 import type { CheckDefinition } from '../types';
 import type { PresenceGameState } from './presence/state';
+import type { RoomSectionSplit } from './room-section';
 
 // ─── Phases & Outcomes ───────────────────────────────────────────────────────
 
@@ -78,6 +79,9 @@ interface SimObservation {
   reached?: boolean[][];
   /** Combat rows for the sprite types on the current screen, resolved via the port. */
   combat?: CombatContext;
+  /** Which axes of the current indoor room split into separate scrolling
+   *  sections. Undefined outdoors or when no room is loaded. */
+  sectionSplit?: RoomSectionSplit;
 }
 
 /** Resolved per-sprite-type damage row: initial health, initial flags4, and
@@ -339,4 +343,5 @@ export type {
   SpriteCombatInfo,
   CombatTables,
   CombatContext,
+  RoomSectionSplit,
 };

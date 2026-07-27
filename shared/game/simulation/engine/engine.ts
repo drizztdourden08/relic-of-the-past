@@ -16,6 +16,8 @@ import { discoverTargets } from './discover';
 import { verifyStep } from './verify-step';
 import { narrative, debug, foundMsg, screenLabel, posMsg, landingTile, emitHop, spendKeysForEdge, emitEntryTrapSlam, interceptTrap } from './step-helpers';
 import { unionReach, stampReach, regionCovered, unexploredRegionJobs, takeRegionJob } from './regions';
+import { updateDungeonLedger } from './dungeon-ledger-scan';
+import { closeIdleDungeonGroups } from './dungeon-ledger-lifecycle';
 import type { EngineState } from './state';
 import { cloneState } from './state';
 
@@ -47,12 +49,14 @@ const createEngine = ({ adjacency = buildAdjacency(), totalChecks }: EngineDeps 
     if (firstVisit) emitEntryTrapSlam(s, obs, events);
 
     // The detect flood (obs.reached) is the ONLY flood — see discover.ts.
-    for (const target of discoverTargets(s, obs, obs.reached)) {
+    const targets = discoverTargets(s, obs, obs.reached);
+    for (const target of targets) {
       if (!s.pending.some(t => t.key === target.key)) {
         s.pending.push(target);
         events.push(narrative(s, foundMsg(target)));
       }
     }
+    updateDungeonLedger(s, obs, targets);
 
     // Game-driven mode: exits observed → frontier comes purely from the discovered graph.
     if (obs.exits) recordExits(s.discovered, s.virtual.screenId, obs.exits);
@@ -63,6 +67,7 @@ const createEngine = ({ adjacency = buildAdjacency(), totalChecks }: EngineDeps 
     s.frontier = [...reachable].filter(id => id !== s.virtual.screenId && !s.visited.has(id));
     // Visited rooms entered OUTSIDE their explored region (a hall behind a different door) still owe a visit.
     s.regionJobs = unexploredRegionJobs(s.discovered, s.regionReach, s.visited, s.arrivals).filter(j => j.to !== s.virtual.screenId);
+    closeIdleDungeonGroups(s, events);
     s.phase = 'planning';
   };
 

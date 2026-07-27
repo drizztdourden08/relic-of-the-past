@@ -7,6 +7,7 @@ import type { TraversalRequirement } from '../../navigation/nav-data.types';
 import type { GridPos } from '../../navigation/types';
 import type { SimConfig, SimOutcome, SimPhase, VirtualPlayer, FlagSnapshot, TriggerAction, SimExit, SimArea } from '../types';
 import type { RegionJob } from './regions';
+import type { DungeonLedger } from './dungeon-ledger';
 
 /** A discovered interactable paired with the trigger that fires it. */
 interface SimTarget {
@@ -77,6 +78,8 @@ interface EngineState {
   failed: Set<string>;
   /** Verified check names (naming from the matcher) — feeds goal/softlock. */
   completedChecks: Set<string>;
+  /** Per-dungeon-group ledger of what is still owed there — see dungeon-ledger.ts. */
+  ledgers: Map<number, DungeonLedger>;
   /** Interactables discovered on the current screen awaiting trigger. */
   pending: SimTarget[];
   currentTarget?: SimTarget;
@@ -102,6 +105,7 @@ const createEngineState = (virtual: VirtualPlayer, inventory: Set<string>, confi
   keys: new Map(),
   bigKeys: new Set(),
   events: new Set(),
+  ledgers: new Map(),
   visited: new Set([virtual.screenId]),
   everVisited: new Set([virtual.screenId]),
   discovered: new Map(),
@@ -144,6 +148,10 @@ const cloneState = (s: EngineState): EngineState => ({
   done: new Set(s.done),
   failed: new Set(s.failed),
   completedChecks: new Set(s.completedChecks),
+  ledgers: new Map([...s.ledgers].map(([group, ledger]) => [
+    group,
+    { ...ledger, owed: ledger.owed.map(o => ({ ...o })), reopensOn: [...ledger.reopensOn] },
+  ])),
   pending: [...s.pending],
   route: [...s.route],
 });

@@ -15,6 +15,7 @@ import type {
   TriggerAction,
   SpriteCombatInfo,
   CombatTables,
+  RoomSectionSplit,
 } from './types';
 
 interface SimulatorPort {
@@ -30,6 +31,9 @@ interface SimulatorPort {
   getSpriteCombat: (spriteType: number) => SpriteCombatInfo | null;
   /** Shared ancilla/projectile combat tables; null when the developer-tools gate is off. */
   getCombatTables: () => CombatTables | null;
+  /** Scroll-section split of the currently loaded indoor room (all-false outdoors
+   *  or when no room is loaded). */
+  getRoomSectionSplit: () => RoomSectionSplit;
   trigger: (action: TriggerAction) => Promise<void>;
   /** features0 auto-skip-dialog bit: true/false force it; null defers to the user's setting. */
   setAutoSkipDialog: (on: boolean | null) => void;

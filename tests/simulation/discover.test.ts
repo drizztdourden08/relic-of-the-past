@@ -191,3 +191,74 @@ describe('discoverTargets — NPC presence gating', () => {
     expect(discoverTargets(freshState(), obs, null)).toHaveLength(0);
   });
 });
+
+// ─── Overworld sprites resolved to their true screen ───────────────────────
+// A big (2x2) overworld area returns its whole sprite table however one of
+// its screens is queried, each spawn already resolved to the screen it
+// actually sits on (see getOverworldSprites / resolveAreaSprite). A target
+// must be judged against the flood of the screen it is actually on, and must
+// never be offered for a screen it does not belong to.
+
+const HEAD_SCREEN = 24;
+const SOUTH_SCREEN = HEAD_SCREEN + 8;
+
+const owSprite = (roomId: number, tile: { row: number; col: number }): SimSprite => ({
+  roomId,
+  outdoor: true,
+  spriteType: 0x00,
+  tile,
+  posKnown: true,
+  kind: 'overworld',
+  itemId: 0x01,
+});
+
+const owObs = (owScreenIndex: number, sprites: SimSprite[]): SimObservation => ({
+  ...baseObs(emptySnapshot()),
+  virtual: { screenId: `ow:${owScreenIndex}`, tile: { row: 0, col: 0 } },
+  realLocation: { isIndoors: false, roomId: 0, owScreenIndex },
+  interactables: { chests: [], sprites, doors: [] },
+});
+
+/** Traversal is virtual, so which screen is being observed comes from the run's own
+ *  position, never from where the game physically sits. */
+const owState = (owScreenIndex: number) =>
+  createEngineState({ screenId: `ow:${owScreenIndex}`, tile: { row: 0, col: 0 } }, new Set(), {});
+
+/** A flood grid reachable everywhere within the given bounds. */
+const allReachable = (rows: number, cols: number): boolean[][] =>
+  Array.from({ length: rows }, () => new Array(cols).fill(true));
+
+describe('discoverTargets — overworld sprites resolved to their true screen', () => {
+  it('discovers a sprite normally when it belongs to the observed screen', () => {
+    const obs = owObs(HEAD_SCREEN, [owSprite(HEAD_SCREEN, { row: 20, col: 12 })]);
+    expect(discoverTargets(owState(HEAD_SCREEN), obs, allReachable(64, 64))).toHaveLength(1);
+  });
+
+  it('does not offer a sprite resolved to a neighbouring screen as a target for the observed one', () => {
+    // Resolved to the screen one row south of the head — belongs to SOUTH_SCREEN,
+    // not the head screen this observation is for. The flood is fully
+    // reachable, so only the screen mismatch can be excluding it.
+    const obs = owObs(HEAD_SCREEN, [owSprite(SOUTH_SCREEN, { row: 20, col: 12 })]);
+    expect(discoverTargets(owState(HEAD_SCREEN), obs, allReachable(64, 64))).toHaveLength(0);
+  });
+
+  it('offers that same sprite once its own screen is the one being observed', () => {
+    const obs = owObs(SOUTH_SCREEN, [owSprite(SOUTH_SCREEN, { row: 20, col: 12 })]);
+    expect(discoverTargets(owState(SOUTH_SCREEN), obs, allReachable(64, 64))).toHaveLength(1);
+  });
+});
+
+describe('discoverTargets — posKnown === false fallback', () => {
+  it('discovers an unknown-position interactable regardless of a real, unrelated flood grid', () => {
+    const sprite: SimSprite = {
+      roomId: 0x181,
+      spriteType: 0x00,
+      tile: { row: 999, col: 999 }, // far outside any real grid
+      posKnown: false,
+      kind: 'standing',
+      itemId: 0x01,
+    };
+    const obs: SimObservation = { ...baseObs(emptySnapshot()), interactables: { chests: [], sprites: [sprite], doors: [] } };
+    expect(discoverTargets(freshState(), obs, allReachable(4, 4))).toHaveLength(1);
+  });
+});

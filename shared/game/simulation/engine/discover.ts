@@ -103,14 +103,13 @@ const FOLLOWER_STEPS = [
 
 /**
  * Unknown-position interactables (remote rooms) fall back to coarse
- * screen-level reachability. Overworld sprite spawns on large 2x2 areas pack
- * the second screen's coordinates past the first, so tile coords can run up
- * to ~126 on either axis — those also fall back to coarse reachability
- * instead of indexing out of the flood grid (`?? 0` would silently read them
- * as unreachable and drop them).
+ * screen-level reachability. A known position is always local to the screen
+ * being observed — overworld sprites are resolved to their true screen and
+ * local tile before this runs (see `getOverworldSprites`) — so it is judged
+ * against the flood normally.
  */
 const interactableReachable = (posKnown: boolean, reached: Reached, tile: GridPos): boolean =>
-  !posKnown || isOutOfFloodRange(tile) || hasReachableNeighbor(reached, tile);
+  !posKnown || hasReachableNeighbor(reached, tile);
 
 /**
  * A chest is a solid 2x2 block the player can never stand on — the game opens it only
@@ -145,6 +144,14 @@ const spriteKey = (sprite: SimSprite): string =>
 /** Room-header TAGs of the kill/clear-to-open-door family. Sequence-triggered
  *  shutters (the sanctuary's escape door) share the door kind but not the tag. */
 const KILL_GATE_TAG = (t: number): boolean => t >= 0x01 && t <= 0x13;
+
+/** The overworld screen the run is VIRTUALLY standing on, or null when indoors.
+ *  Traversal is virtual, so the game's physical position stays wherever the save
+ *  started — it cannot answer which screen an outdoor sprite has to belong to. */
+const virtualOwScreen = (screenId: string): number | null => {
+  const m = /^ow:(\d+)/.exec(screenId);
+  return m ? Number(m[1]) : null;
+};
 
 /** No sprite gates anything here — the verdict a room with nothing to clear
  *  would trivially give, without running the combat sweep to get it. */
@@ -221,6 +228,7 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
   const inter = obs.interactables;
   if (!inter) return [];
   const screenId = state.virtual.screenId;
+  const owScreen = virtualOwScreen(screenId);
   const targets: SimTarget[] = [];
 
   const killGated = (inter.tags ?? [0, 0]).some(KILL_GATE_TAG);
@@ -235,6 +243,7 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
         grids: obs.grids,
         inventory: state.inventory,
         combat: obs.combat,
+        split: obs.sectionSplit,
       })
     : EMPTY_THREAT;
   const living = livingKillables(state, screenId, inter, threat);
@@ -282,6 +291,11 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
   for (const sprite of inter.sprites) {
     const key = spriteKey(sprite);
     if (state.done.has(key) || state.failed.has(key)) continue;
+    // A big overworld area's spawn table lists every screen's sprites at once,
+    // already resolved to the screen each one actually sits on. One that
+    // belongs to a neighbouring screen has no flood here to judge it against —
+    // it becomes a target when THAT screen is observed instead.
+    if (sprite.outdoor && owScreen !== null && sprite.roomId !== owScreen) continue;
     if (!interactableReachable(sprite.posKnown, reached, sprite.tile)) continue;
     if (!spritePresent(sprite, obs.presenceState)) continue;
     const tile = sprite.posKnown ? sprite.tile : undefined;
@@ -340,4 +354,4 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
   return targets;
 };
 
-export { discoverTargets, isTileReachable, hasReachableOpenTile, KILL_GATE_TAG };
+export { discoverTargets, isTileReachable, hasReachableOpenTile, KILL_GATE_TAG, chestKey, spriteKey, BOMBABLE_ATTR_MIN, BOMBABLE_ATTR_MAX };

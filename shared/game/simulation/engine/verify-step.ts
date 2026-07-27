@@ -40,7 +40,7 @@ const verifyStep = (s: EngineState, obs: SimObservation, events: SimEvent[]): vo
   const detected: DetectedCheck = { evidence: diffs, matched, matchedName: name, itemReceived, at: s.virtual };
 
   if (target) s.done.add(target.key);
-  onCheckVerified(s, detected);
+  onCheckVerified(s, detected, events);
 
   const stopId = s.config.stopAtCheckId;
   if (stopId && (matched?.id === stopId || name === stopId)) s.stopHit = true;

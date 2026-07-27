@@ -11,6 +11,7 @@ import type { ScreenEdge } from './traversal';
 import { spendKey, spendAnyKey, localRefresh, globalRefresh } from './explorer';
 import { KILL_GATE_TAG } from './discover';
 import { arrivalKey } from './regions';
+import { narrative, debug } from './event-log';
 import type { EngineState, SimTarget } from './state';
 
 const SCREEN_CENTER: GridPos = { row: 32, col: 32 };
@@ -27,9 +28,6 @@ const foundMsg = (target: SimTarget): string =>
   target.tile
     ? `Found ${target.noun} at ${target.tile.col},${target.tile.row}`
     : `Found ${target.noun} (room ${target.roomId.toString(16)})`;
-
-const narrative = (s: EngineState, msg: string): SimEvent => ({ level: 'narrative', msg, step: s.step });
-const debug = (s: EngineState, msg: string, data?: unknown): SimEvent => ({ level: 'debug', msg, step: s.step, data });
 
 const spendKeysForEdge = (s: EngineState, edge: ScreenEdge): void => {
   for (const group of edge.requirements) {

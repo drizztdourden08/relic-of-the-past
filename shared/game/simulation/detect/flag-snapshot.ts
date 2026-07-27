@@ -11,7 +11,7 @@ const DUNG_INFO_LEN = 320;
 // Screens 0x80 (the sword pedestal) and 0x81 (the waterfall ledge) alias into the
 // adjacent SRAM word at 0xF300/0xF301, so the buffer must span through 0x81.
 const OW_EVENT_LEN = 0x82;
-const PROGRESS_LEN = 19;
+const PROGRESS_LEN = 21;
 
 const emptySnapshot = (): FlagSnapshot => ({
   dungInfo: new Uint16Array(DUNG_INFO_LEN),

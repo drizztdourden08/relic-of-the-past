@@ -16,7 +16,7 @@ interface SimFlagSnapshot {
 
 const DUNG_INFO_LEN = 320;
 const OW_EVENT_LEN = 0x82;
-const PROGRESS_LEN = 19;
+const PROGRESS_LEN = 21;
 
 interface SimChestRaw {
   chestIndex: number;
