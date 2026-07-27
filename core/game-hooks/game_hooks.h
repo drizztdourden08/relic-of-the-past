@@ -91,4 +91,10 @@ void GameHook_NotifyHookshotWall(void);
 // Called when boomerang returns to the player (catch).
 void GameHook_NotifyBoomerangCatch(void);
 
+// ─── Transition Events (transition_events.c) ───
+
+// Called once per game frame from Module_MainRouting, after the frame's module has run.
+// Gated on kFeatures0_DeveloperTools: makes zero host-calls when that setting is off.
+void GameHook_ModuleFrameEnd(void);
+
 #endif // GAME_HOOKS_H

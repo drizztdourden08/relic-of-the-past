@@ -79,6 +79,11 @@ enum {
   // Render dialog text instantly and auto-advance message-box waits (mid-message continues, timed
   // pauses, end-of-message dismiss); choice prompts stay interactive. Off = stock text pacing.
   kFeatures0_AutoSkipDialog = 536870912,
+
+  // Master gate for developer-only instrumentation hooks (transition-settled events, and any future
+  // dev-only GameHook). Off = zero GameHook host-calls, same contract as kFeatures0_Haptics. Purely
+  // observational; never changes gameplay, so it carries no vanilla-parity note.
+  kFeatures0_DeveloperTools = 1073741824,
 };
 
 // The 42 split bug-fix toggles (kFeatures1_* / kFeatures2_*) — generated from the Wave-1b catalog.

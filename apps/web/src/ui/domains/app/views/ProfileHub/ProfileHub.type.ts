@@ -12,6 +12,7 @@ type ProfileHubTab =
   | 'hud'
   | 'controls'
   | 'haptics'
+  | 'developer'
   | 'mobile';
 
 interface ProfileHubProps {

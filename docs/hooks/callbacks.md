@@ -1,11 +1,12 @@
 <!-- @layer docs @kind doc -->
 # Callbacks (C→JS events)
 
-The other direction: functions the game core calls at gameplay events. There are 14
-`GameHook_*` callbacks. Two of them surface to the renderer via `EM_ASM` → a `window.__on*` callback;
+The other direction: functions the game core calls at gameplay events. There are 15
+`GameHook_*` callbacks. Three of them surface to the renderer via `EM_ASM` → a `window.__on*` callback;
 the rest are C→C — engine-internal accessors and the wrappers invoked by the `Wasm*` exports.
 
-**Sources:** `haptic_events.c`, `game_hooks.c`, `check_triggers.c`, `item_overrides.c`, `cheats.c`
+**Sources:** `haptic_events.c`, `game_hooks.c`, `check_triggers.c`, `item_overrides.c`, `cheats.c`,
+`transition_events.c`
 
 ---
 
@@ -33,6 +34,19 @@ rumble — see [Haptics](../user-guide/haptics.md). `type` has to match `HapticE
 | 5 | `GameHook_NotifyEnvironmentalEvent` | event subtype (fall, landing, bomb, water, mirror, quake, boss…) |
 | 6 | `GameHook_NotifyHookshotWall` | 0 |
 | 7 | `GameHook_NotifyBoomerangCatch` | 0 |
+
+### `window.__onTransitionSettled(module, fromSubmodule, isIndoors, roomIndex, owScreenIndex)`
+Fired by `GameHook_ModuleFrameEnd`, called once per frame from `Module_MainRouting`. Reports the
+frame the game hands control back to the player: `main_module_index` enters a gameplay module (7
+dungeon, 9 overworld), or `submodule_index` inside one returns to 0. That is the frame on which a
+room transition, door animation, shutter close or stair climb has finished and the room's
+collision is final, for every dungeon submodule at once, since the dungeon module's own dispatch
+treats submodule 0 as settled. `fromSubmodule` is 0 when this is a module-enter edge, otherwise the
+submodule that just finished. See [Transition Events](transition-events.md) for the classification
+and the renderer subscription.
+
+Gated on the **Developer Tools** setting (off by default): the hook makes zero host-calls, and
+`GameHook_ModuleFrameEnd` costs nothing beyond the flag check, when it's off.
 
 ## C→C callbacks (no JS event)
 

@@ -15,7 +15,7 @@ flowchart LR
     JS["JS — bridge & renderer"]
     C["C game core (WASM)"]
     JS -->|"ccall('Wasm…') · 79 exports · JS drives/reads"| C
-    C -->|"EM_ASM(window.__on…) · 2 events · game notifies JS"| JS
+    C -->|"EM_ASM(window.__on…) · 3 events · game notifies JS"| JS
 ```
 
 - **JS → C**: every export is a C function marked `EMSCRIPTEN_KEEPALIVE`. JS reaches it through a

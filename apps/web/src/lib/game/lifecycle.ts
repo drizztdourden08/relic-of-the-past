@@ -14,6 +14,7 @@ import { startAutoSave, stopAutoSave, saveOnQuit } from './auto-save';
 import { resetMasterVolume } from './audio-volume';
 import { reassertLiveFlagsAfterLoad } from './live-settings';
 import { initTrackerBridge, destroyTrackerBridge } from './tracker';
+import { initTransitionEventsBridge, destroyTransitionEventsBridge } from './events/transition-events';
 import { startSession, endSession } from './session-tracker';
 import { getInputManager } from '../input/input-manager';
 import { initHapticBridge, destroyHapticBridge, updateHapticBridgeSettings } from '../input/haptic-bridge';
@@ -91,6 +92,7 @@ const resetGame = async (): Promise<void> => {
   deliveryQueue.clear();
   destroyTrackerBridge();
   destroyHapticBridge();
+  destroyTransitionEventsBridge();
   appPauseUnsub?.();
   appPauseUnsub = null;
   getPlatform().device.allowSleep();
@@ -233,6 +235,9 @@ const startGame = async (canvas: HTMLCanvasElement, assetData: Uint8Array, confi
 
     // ─── Haptic bridge: wire up vibration feedback for game events ───
     initHapticBridge(DEFAULT_SETTINGS.haptics);
+
+    // ─── Transition events bridge: wire up window.__onTransitionSettled ───
+    initTransitionEventsBridge();
 
     // ─── Device lifecycle: hold the screen awake; save when backgrounded (mobile) ───
     getPlatform().device.keepAwake();

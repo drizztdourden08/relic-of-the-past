@@ -1,4 +1,5 @@
 #include "misc.h"
+#include "game_hooks.h"
 #include "variables.h"
 #include "hud.h"
 #include "dungeon.h"
@@ -323,6 +324,7 @@ static void KillAghanim_Func12() {
 
 void Module_MainRouting() {  // 8080b5
   kMainRouting[main_module_index]();
+  GameHook_ModuleFrameEnd();
 }
 
 void NMI_PrepareSprites() {  // 8085fc

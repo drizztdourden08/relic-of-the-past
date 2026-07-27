@@ -4,8 +4,9 @@
 static uint8 g_overworld_guard_spawns_buf[1 + 16 * 4];
 
 // ─── Navigation Grid Exports ───
-// These build 64×64 collision attr grids on demand for any screen/room.
+// Builds a 64×64 collision attr grid on demand for any overworld screen.
 // Used by the unified navigation engine (same code path: widget + offline).
+// The indoor equivalent lives in state_queries_room_grid.c.
 
 static uint8 g_nav_overworld_grid[64 * 64];
 
@@ -52,92 +53,6 @@ int WasmBuildOverworldAttrGrid(int screen_idx) {
   }
 
   return (int)g_nav_overworld_grid;
-}
-
-EMSCRIPTEN_KEEPALIVE
-int WasmBuildRoomAttrGrid(int room_id) {
-  // Save state that Dungeon_LoadRoom touches
-  uint16 saved_room = dungeon_room_index;
-
-  // Set target room
-  dungeon_room_index = (uint16)room_id;
-
-  // Clear tilemap buffers (Dungeon_LoadRoom draws into these)
-  memset(dung_bg2, 0, 0x2000 * 2);  // 64×64 uint16
-  memset(dung_bg1, 0, 0x2000 * 2);
-
-  // Clear attr tables
-  memset(dung_bg2_attr_table, 0, 0x2000);
-
-  // Initialize dung_torch_data with 0xFF so the torch search loop terminates
-  // immediately (it loops until it finds 0xFFFF terminator)
-  memset(&dung_torch_data[0], 0xFF, 0x120);
-
-  // Initialize movable_block_datas room fields to 0xFFFF (no matches)
-  for (int i = 0; i < 0x18C / 4; i++) {
-    movable_block_datas[i].room = 0xFFFF;
-  }
-
-  // Build the room tilemap (draws tiles into dung_bg2/bg1)
-  Dungeon_LoadRoom();
-
-  // Load BASE tile attributes (entries 0x000-0x13F, 0x1C0-0x1FF)
-  Init_LoadDefaultTileAttr();
-
-  // Load custom tile attributes for this room's theme (entries 0x140-0x1BF)
-  Dungeon_LoadCustomTileAttr();
-
-  // Build collision attribute table from tilemap
-  dung_draw_width_indicator = 0;
-  dung_draw_height_indicator = 0;
-  overworld_map_state = 0;
-  Dungeon_LoadBasicAttribute_full(0x1000);
-
-  // Apply object and door collision overrides
-  Dungeon_LoadObjectAttribute();
-  Dungeon_LoadDoorAttribute();
-
-  // Shutter doors: the game opens them at RUNTIME via the room's kill tag
-  // (Dungeon_OpenShutterDoors), which this headless rebuild never runs — and a
-  // shutter's far-side draw slot (k >= 8) checks its RAW slot bit, which SRAM
-  // can never carry. Mirror the runtime rule here: when a shutter's door-list
-  // slot (k & 7) reads open, force its draw slot open and restamp its attrs,
-  // so BOTH trigger strips of an opened shutter become walkable transits.
-  {
-    uint16 open_bits = dung_door_opened_incl_adjacent;
-    for (int k = 0; k < 16; k++) {
-      if (!dung_door_tilemap_address[k]) continue;
-      uint8 t = (uint8)(door_type_and_slot[k] & 0xfe);
-      int is_shutter = (t == 0x18 || t == 0x32 || t == 0x36 || t == 0x38 || t == 0x44);
-      if (!is_shutter || !(open_bits & kUpperBitmasks[k & 7])) continue;
-      dung_door_opened_incl_adjacent |= kUpperBitmasks[k];
-      Dungeon_LoadSingleDoorAttribute(k);
-    }
-    dung_door_opened_incl_adjacent = open_bits;
-  }
-
-  // Restore
-  dungeon_room_index = saved_room;
-
-  // Return pointer to the attr table (caller reads 64×64 from ptr, +0x1000 for lower layer)
-  return (int)dung_bg2_attr_table;
-}
-
-// Debug: get layer toggle door positions populated during WasmBuildRoomAttrGrid
-static uint8 g_toggle_floor_debug[2 + 16 * 4];  // [count][pad] then per entry: [posLo, posHi, row, col]
-EMSCRIPTEN_KEEPALIVE
-int WasmGetToggleFloorPositions(void) {
-  uint8 count = (uint8)(dung_num_toggle_floor >> 1);
-  if (count > 16) count = 16;
-  g_toggle_floor_debug[0] = count;
-  g_toggle_floor_debug[1] = 0;
-  for (uint8 i = 0; i < count; i++) {
-    uint16 pos = dung_toggle_floor_pos[i];
-    PutU16(g_toggle_floor_debug, 2 + i * 4, pos);
-    g_toggle_floor_debug[2 + i * 4 + 2] = (uint8)(pos / 64);  // row
-    g_toggle_floor_debug[2 + i * 4 + 3] = (uint8)(pos % 64);  // col
-  }
-  return (int)g_toggle_floor_debug;
 }
 
 EMSCRIPTEN_KEEPALIVE

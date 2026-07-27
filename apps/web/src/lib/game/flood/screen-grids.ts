@@ -18,6 +18,7 @@ import {
   wasmBuildRoomAttrGrid,
   wasmBuildRoomDualLayerGrids,
   wasmGetIndoorDualLayerGrids,
+  wasmGetIndoorLayer0Grid,
   wasmGetOverworldVariant,
   wasmGetStaircaseType,
   wasmGetViewportInfo,
@@ -43,13 +44,27 @@ const overworldBundle = (owScreenIndex: number): ScreenGridBundle => {
   };
 };
 
-const indoorBundle = (roomId: number): ScreenGridBundle => {
+/**
+ * The occupied room is READ from the live tables; any other room is rebuilt from ROM.
+ *
+ * A rebuild derives collision from room data, which throws away exactly the runtime state
+ * that makes the answer correct: an opened doorway's transit tiles, the cleared tile
+ * under a lifted pot, a pushed block. So the live room must never be rebuilt, however
+ * cheap it looks.
+ */
+const indoorAttrGrid = (roomId: number, live: boolean): number[][] => {
+  if (live) return wasmGetIndoorLayer0Grid() ?? emptyGrid64();
   const flat = wasmBuildRoomAttrGrid(roomId);
+  return flat ? toGrid64(flat) : emptyGrid64();
+};
+
+const indoorBundle = (roomId: number): ScreenGridBundle => {
+  // Settled before any read: it picks where every grid below comes from.
   const live = isLoadedRoom(roomId);
   const bundle: ScreenGridBundle = {
     screenIndex: roomId,
     tileContext: 'interior-dungeon',
-    rawAttrGrid: flat ? toGrid64(flat) : emptyGrid64(),
+    rawAttrGrid: indoorAttrGrid(roomId, live),
   };
   if (live) {
     // TileDetect only branches on indoors; cave/house vs dungeon stays split for

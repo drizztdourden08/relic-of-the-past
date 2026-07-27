@@ -125,6 +125,9 @@ const DEFAULT_SETTINGS: GameSettings = {
     environmentalEffects: true,
   },
   hapticDevices: {},
+
+  // Developer
+  developerToolsEnabled: false,
 };
 
 const boolToIni = (v: boolean): string => {
@@ -222,6 +225,7 @@ GameChangingBugFixes = ${boolToIni(settings.gameChangingBugFixes)}
 CancelBirdTravel = ${boolToIni(settings.cancelBirdTravel)}
 DisableTelepathy = ${boolToIni(settings.disableTelepathy)}
 Haptics = ${boolToIni(!!settings.haptics?.enabled)}
+DeveloperTools = ${boolToIni(settings.developerToolsEnabled)}
 ${renderFlagsIni}
 `;
 };

@@ -82,6 +82,8 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'hudPauseHighlight',
   // Haptics (JS-only, no WASM restart needed)
   'haptics',
+  // Developer tools master gate (synced every frame via features0, same path as haptics)
+  'developerToolsEnabled',
   // Player sprite sheet (swapped in place via WasmApplyPlayerSpriteFile)
   'linkSprite',
 ]);
