@@ -106,12 +106,13 @@ class FunctionActionEngine {
    * Fires callbacks on rising edge, fires keyUp listeners on falling edge.
    */
   checkGamepads(hidStates: Map<string, { buttons: boolean[]; axes: number[] }>, allowed: AllowedDevices, gamepadVidPid: Map<number, { vid: string; pid: string }>): void {
-    // --- Web Gamepad API controllers — only devices in the active profile's map ---
+    // --- Web Gamepad API controllers — only devices in the active profile's map,
+    // and only when not already served over HID (see polling-engine.ts computeBitmask). ---
     for (const gp of navigator.getGamepads()) {
       if (!gp || !gp.connected) continue;
       const vp = gamepadVidPid.get(gp.index);
       const key = vp ? `${vp.vid}:${vp.pid}` : null;
-      if (!key || !allowed.gamepadKeys.has(key)) continue;
+      if (!key || !allowed.gamepadKeys.has(key) || hidStates.has(key)) continue;
       // Normalize Web Gamepad buttons (objects) to booleans, then share one code path.
       this.processDeviceState(`gamepad-${gp.index}`, gp.buttons.map((b) => b.pressed), gp.axes);
     }
