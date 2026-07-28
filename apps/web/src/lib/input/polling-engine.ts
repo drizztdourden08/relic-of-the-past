@@ -57,12 +57,14 @@ const computeBitmask = (keyStates: Map<string, boolean>, keyboardMap: Map<string
     }
   }
 
-  // Web Gamepad API (XInput controllers like Xbox) — only devices in the profile's map
+  // Web Gamepad API (XInput controllers like Xbox) — only devices in the profile's map,
+  // and only when not already served over HID (some HID pads can surface on both buses;
+  // reading both would apply the HID-indexed maps to two differently-laid-out sources).
   for (const gp of navigator.getGamepads()) {
     if (!gp || !gp.connected) continue;
     const vp = gamepadVidPid.get(gp.index);
     const key = vp ? `${vp.vid}:${vp.pid}` : null;
-    if (!key || !allowed.gamepadKeys.has(key)) continue;
+    if (!key || !allowed.gamepadKeys.has(key) || hidStates.has(key)) continue;
     mask = applyDeviceState(mask, gp.buttons.map(b => b.pressed), gp.axes, gamepadButtonMap, gamepadAxisMap);
   }
 
