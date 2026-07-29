@@ -1,6 +1,9 @@
 /* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
 
+/** Item-grant tally, defined in check_triggers.c — see SimCountReceive there. */
+void SimCountReceive(uint8 site, uint8 item_id);
+
 // Simulator trigger writes: door unlock/close and virtual enemy kills. These
 // mutate the same SRAM room words the game persists, so a rebuilt attr grid
 // (WasmBuildRoomAttrGrid) and the live room agree with the simulated state.
@@ -165,6 +168,30 @@ void WasmSimKillDrop(int room_id, int item_id) {
   save_dung_info[room_id] |= (item_id == 0xff) ? 0x800 : 0x400;
   if (item_id != 0xff) {
     item_receipt_method = 0;
+    SimCountReceive(3, (uint8)item_id);
     Link_ReceiveItem((uint8)item_id, 0);
   }
+}
+
+// ─── Scripted event triggers ───
+// Two milestones the run reaches by interacting with a sprite rather than by
+// opening anything, so nothing else in the save records them.
+
+// The throne room's movable mantle (Sprite_EE_MovableMantle, sprite_main.c:1335)
+// stamps checkpoint 4 the instant the shelf starts sliding, which is also what
+// opens the way down to the escape passage. The game additionally demands the
+// follower in tow, a lit torch, and enough push velocity; the caller owns those
+// preconditions, this records the outcome.
+EMSCRIPTEN_KEEPALIVE
+void WasmSimPushMantle(void) {
+  which_starting_point = 4;
+}
+
+// The first sage's errand (Sprite_Sahasrahla case 1, sprite_main.c:6543). His
+// idle handler routes a pendant-less player into the "mark map" branch, which
+// raises the map markers; the boots branch (case 2) sets the same byte, so this
+// is the outcome either way.
+EMSCRIPTEN_KEEPALIVE
+void WasmSimMarkMapIcons(void) {
+  savegame_map_icons_indicator = 3;
 }
