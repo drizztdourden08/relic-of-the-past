@@ -92,8 +92,7 @@ flowchart LR
 ```
 
 A three-layer architecture: the vendored C decompilation, our C↔JS hook layer compiled to WASM, and
-the TypeScript/React renderer. See the [Architecture overview](docs/architecture/overview.md) and
-[CLAUDE.md](CLAUDE.md) for the full picture.
+the TypeScript/React renderer.
 
 ## Documentation
 
