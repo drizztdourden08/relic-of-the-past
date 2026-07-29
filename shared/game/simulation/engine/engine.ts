@@ -72,7 +72,7 @@ const createEngine = ({ adjacency = buildAdjacency(), totalChecks }: EngineDeps 
     s.frontier = [...reachable].filter(id =>
       id !== s.virtual.screenId && !s.visited.has(id) && !inCompletedGroup(s, id));
     // Visited rooms entered OUTSIDE their explored region (a hall behind a different door) still owe a visit.
-    s.regionJobs = unexploredRegionJobs(s.discovered, s.regionReach, s.visited, s.arrivals).filter(j => j.to !== s.virtual.screenId);
+    s.regionJobs = unexploredRegionJobs(s.discovered, s.regionReach, s.visited, s.arrivals, s.crossings).filter(j => j.to !== s.virtual.screenId);
     closeIdleDungeonGroups(s, events);
     s.phase = 'planning';
   };

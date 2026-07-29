@@ -64,6 +64,28 @@ interface RegionJob {
   edgeSig?: string;
 }
 
+/**
+ * Canonical identity of a screen-to-screen crossing, the SAME from either side.
+ *
+ * An edge is always a run of tiles down one side, so a right edge spanning rows
+ * 12-25 and the left edge spanning rows 12-25 on the screen to its right are one
+ * physical boundary. Matching on that — the pair of screens, the axis, and the span
+ * — lets a crossing be recognised from the far side, which an arrival key cannot
+ * do: each side derives its own `edgeSig` from its own flood, so the two never
+ * compare equal.
+ *
+ * Region qualifiers are stripped for the pair: which quadrant each side happened to
+ * land in says nothing about which boundary was crossed.
+ */
+const crossingKey = (from: string, to: string, edgeSig?: string): string | null => {
+  const parts = /^(north|south|east|west):(.+)$/.exec(edgeSig ?? '');
+  if (!parts) return null;
+  const axis = parts[1] === 'north' || parts[1] === 'south' ? 'ns' : 'ew';
+  const bare = (id: string): string => id.replace(/@\d+,\d+/, '');
+  const [a, b] = bare(from) < bare(to) ? [bare(from), bare(to)] : [bare(to), bare(from)];
+  return `${a}|${b}|${axis}|${parts[2]}`;
+};
+
 /** Identity of an arrival: the destination plus the way in. */
 const arrivalKey = (to: string, edgeSig?: string): string => `${to}#${edgeSig ?? 'x'}`;
 
@@ -82,8 +104,17 @@ const arrivalAccountedFor = (
   arrivals: Set<string>,
   map: Map<string, boolean[][]>,
   exit: SimExit,
-): boolean =>
-  arrivals.has(arrivalKey(exit.to, exit.edgeSig)) || regionCovered(map, exit.to, exit.entryTile);
+  crossings?: Set<string>,
+  from?: string,
+): boolean => {
+  if (arrivals.has(arrivalKey(exit.to, exit.edgeSig))) return true;
+  // Already crossed this boundary from the other side — same tiles, same result.
+  if (crossings && from) {
+    const key = crossingKey(from, exit.to, exit.edgeSig);
+    if (key && crossings.has(key)) return true;
+  }
+  return regionCovered(map, exit.to, exit.entryTile);
+};
 
 /** How far a way-out's launch tile may sit from the tile we landed on and still
  *  be the same doorway. A door's trigger tile is a few tiles off the spawn it
@@ -127,13 +158,14 @@ const unexploredRegionJobs = (
   map: Map<string, boolean[][]>,
   visited: Set<string>,
   arrivals: Set<string>,
+  crossings?: Set<string>,
 ): RegionJob[] => {
   const out: RegionJob[] = [];
   const seen = new Set<string>();
   for (const [from, exits] of discovered) {
     for (const exit of exits) {
       if (!visited.has(exit.to) || !exit.entryTile) continue;
-      if (arrivalAccountedFor(arrivals, map, exit)) continue;
+      if (arrivalAccountedFor(arrivals, map, exit, crossings, from)) continue;
       const key = `${from}->${arrivalKey(exit.to, exit.edgeSig)}`;
       if (!seen.has(key)) { seen.add(key); out.push({ from, to: exit.to, edgeSig: exit.edgeSig }); }
     }
@@ -158,5 +190,5 @@ const takeRegionJob = (s: EngineState): string[] | null => {
   return null;
 };
 
-export { unionReach, stampReach, regionCovered, arrivalKey, arrivalAccountedFor, markWayBackUsed, unexploredRegionJobs, takeRegionJob };
+export { unionReach, stampReach, regionCovered, crossingKey, arrivalKey, arrivalAccountedFor, markWayBackUsed, unexploredRegionJobs, takeRegionJob };
 export type { RegionJob };

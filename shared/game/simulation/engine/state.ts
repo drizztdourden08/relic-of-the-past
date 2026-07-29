@@ -67,6 +67,9 @@ interface EngineState {
   reachedScreens: Set<string>;
   /** Ways in already used, as `screenId#edgeSig` — see arrivalKey. */
   arrivals: Set<string>;
+  /** Boundaries already crossed, by canonical identity — see crossingKey. A
+   *  crossing recognised from either side needs walking only once. */
+  crossings: Set<string>;
   /** Where the last hop came from, and the tile it landed on. Crossing a link
    *  uses it up from BOTH ends, and the far end can only be identified once the
    *  destination's own exits are known — see markWayBackUsed. */
@@ -118,6 +121,7 @@ const createEngineState = (virtual: VirtualPlayer, inventory: Set<string>, confi
   frontier: [],
   reachedScreens: new Set([virtual.screenId]),
   arrivals: new Set(),
+  crossings: new Set(),
   cameFrom: null,
   pendingEdgeSig: null,
   trapClosed: new Set(),
@@ -148,6 +152,7 @@ const cloneState = (s: EngineState): EngineState => ({
   frontier: [...s.frontier],
   reachedScreens: new Set(s.reachedScreens),
   arrivals: new Set(s.arrivals),
+  crossings: new Set(s.crossings),
   cameFrom: s.cameFrom,
   pendingEdgeSig: s.pendingEdgeSig,
   trapClosed: new Set(s.trapClosed),

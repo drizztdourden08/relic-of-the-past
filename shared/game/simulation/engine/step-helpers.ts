@@ -10,7 +10,7 @@ import { cloneSnapshot } from '../detect/flag-snapshot';
 import type { ScreenEdge } from './traversal';
 import { spendKey, spendAnyKey, localRefresh, globalRefresh } from './explorer';
 import { KILL_GATE_TAG } from './discover';
-import { arrivalKey } from './regions';
+import { arrivalKey, crossingKey } from './regions';
 import { narrative, debug } from './event-log';
 import type { EngineState, SimTarget } from './state';
 
@@ -91,6 +91,10 @@ const emitHop = (s: EngineState, events: SimEvent[], next: string, exit?: SimExi
   // Record WHICH way in was used, so the same screen entered another way still
   // counts as unexplored ground (see arrivalAccountedFor).
   if (exit) s.arrivals.add(arrivalKey(next, exit.edgeSig));
+  // Record the BOUNDARY, not just the arrival: the same tiles seen from the far
+  // side resolve to this key too, so the run never walks one doorway twice.
+  const crossed = exit ? crossingKey(from, next, exit.edgeSig) : null;
+  if (crossed) s.crossings.add(crossed);
   // The way back is used up too — observe() marks it once `next`'s own exits
   // name it (see markWayBackUsed).
   s.cameFrom = { screenId: from, tile };
