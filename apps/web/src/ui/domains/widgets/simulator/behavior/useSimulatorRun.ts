@@ -127,6 +127,19 @@ const useSimulatorRun = () => {
     // half-simulated state to sram.dat mid-run. Resumed in the finally below.
     pauseSramSync();
     port.setAutoSkipDialog(true);
+    // The simulation reads the game's combat tables to work out which of a room's
+    // enemies actually gate it, and those queries sit behind the developer-tools
+    // switch. Without this the tables answer empty, every room reads as having no
+    // gating enemy, and a kill-gated room's shutters never reopen — the run walks
+    // into the first one, is sealed in, and the frontier dies with everything past
+    // it unreachable. The headless runner has always done this; the widget did not.
+    // The gate is read-only instrumentation and the run is itself a developer tool,
+    // so it may hold the switch for its own duration and must drop it afterwards,
+    // which the finally below does. Never touches the user's persisted setting.
+    port.setDeveloperTools(true);
+    // A features word set here is only WANTED until the core latches it on its next
+    // frame (zelda_rtl.c:989), so give it frames before anything reads the tables.
+    await new Promise((r) => setTimeout(r, 500));
     const unsubscribe = port.onItemReceived((id) => { itemRef.current = id; });
     const config: SimConfig = {
       ...(stopAtCheckId ? { stopAtCheckId } : {}),
@@ -138,6 +151,7 @@ const useSimulatorRun = () => {
     } finally {
       unsubscribe();
       port.setAutoSkipDialog(null);
+      port.setDeveloperTools(null);
       control.current.running = false;
       resumeSramSync();
     }

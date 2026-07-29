@@ -208,7 +208,7 @@ type TriggerAction =
   /** `drain` is set when the switch's effect reaches beyond its own room — a
    *  remote overworld screen's event byte, not a local shutter. */
   | { type: 'pullSwitch'; roomId: number; drain?: { screen: number; mask: number } }
-  | { type: 'progress'; step: 'follower-join' | 'follower-deliver' };
+  | { type: 'progress'; step: 'follower-join' | 'follower-deliver' | 'shelf-push' | 'sage-quest' };
 
 // ─── Detection ───────────────────────────────────────────────────────────────
 

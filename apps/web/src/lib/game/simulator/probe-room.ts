@@ -46,7 +46,7 @@ interface RoomProbe {
   /** Did the addressable rebuild actually produce this room's grid? */
   gridBuilt: { raw: boolean; dual: boolean };
   /** Chests the room reports, and whether the flood can stand next to each. */
-  chests: Array<{ index: number; row: number; col: number; opened: boolean; big: boolean; touchable: boolean }>;
+  chests: Array<{ index: number; row: number; col: number; opened: boolean; big: boolean; touchable: boolean; itemId?: number }>;
   /** Doors the room reports — kind, native type and open state. */
   doors: Array<{ index: number; kind: string; nativeType?: number; dir: string; row: number; col: number; opened: boolean }>;
   /** Sprites the room reports, with the kind the simulator assigns them. */
@@ -129,7 +129,7 @@ const probeRoom = (roomId: number, entryTile?: { row: number; col: number }, ite
       return { raw, dual };
     })(),
     chests: getRoomChests(roomId).map((c) => ({
-      index: c.chestIndex, row: c.tile.row, col: c.tile.col, opened: c.opened, big: c.isBig,
+      index: c.chestIndex, row: c.tile.row, col: c.tile.col, opened: c.opened, big: c.isBig, itemId: c.itemId,
       // Chests are solid: the run must stand on a NEIGHBOUR, so that is the test.
       touchable: (() => {
         for (let dr = -2; dr <= 2; dr++) {

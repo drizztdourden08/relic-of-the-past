@@ -91,6 +91,9 @@ const emitHop = (s: EngineState, events: SimEvent[], next: string, exit?: SimExi
   // Record WHICH way in was used, so the same screen entered another way still
   // counts as unexplored ground (see arrivalAccountedFor).
   if (exit) s.arrivals.add(arrivalKey(next, exit.edgeSig));
+  // The way back is used up too — observe() marks it once `next`'s own exits
+  // name it (see markWayBackUsed).
+  s.cameFrom = { screenId: from, tile };
   events.push(narrative(s, `Screen ${screenLabel(next)} ${arrivalLabel(exit, tile)}`));
   events.push(narrative(s, posMsg('START', tile)));
 };

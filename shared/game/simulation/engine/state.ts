@@ -67,6 +67,10 @@ interface EngineState {
   reachedScreens: Set<string>;
   /** Ways in already used, as `screenId#edgeSig` — see arrivalKey. */
   arrivals: Set<string>;
+  /** Where the last hop came from, and the tile it landed on. Crossing a link
+   *  uses it up from BOTH ends, and the far end can only be identified once the
+   *  destination's own exits are known — see markWayBackUsed. */
+  cameFrom: { screenId: string; tile: GridPos } | null;
   /** Edge signature the current route must arrive through, if pinned. */
   pendingEdgeSig: string | null;
 
@@ -114,6 +118,7 @@ const createEngineState = (virtual: VirtualPlayer, inventory: Set<string>, confi
   frontier: [],
   reachedScreens: new Set([virtual.screenId]),
   arrivals: new Set(),
+  cameFrom: null,
   pendingEdgeSig: null,
   trapClosed: new Set(),
   done: new Set(),
@@ -143,6 +148,7 @@ const cloneState = (s: EngineState): EngineState => ({
   frontier: [...s.frontier],
   reachedScreens: new Set(s.reachedScreens),
   arrivals: new Set(s.arrivals),
+  cameFrom: s.cameFrom,
   pendingEdgeSig: s.pendingEdgeSig,
   trapClosed: new Set(s.trapClosed),
   done: new Set(s.done),

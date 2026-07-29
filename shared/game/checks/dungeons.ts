@@ -9,9 +9,9 @@ const DUNGEON_CHECKS: CheckDefinition[] = [
   { id: 'Hyrule Castle - Map Chest', name: 'Map Chest', type: 'chest', screen: 'hyrule-castle', dungeon: 'Hyrule Castle', vanillaItem: 'Map' },
   { id: "Hyrule Castle - Zelda's Chest", name: "Zelda's Chest", type: 'chest', screen: 'hyrule-castle', dungeon: 'Hyrule Castle', vanillaItem: '5 Rupees' },
   { id: 'Sewers - Dark Cross', name: 'Dark Cross', type: 'chest', screen: 'sewers-dark', dungeon: 'Hyrule Castle', vanillaItem: '5 Rupees' },
-  { id: 'Sewers - Secret Room - Left', name: 'Secret Room - Left', type: 'chest', screen: 'sewers-secret-room', dungeon: 'Hyrule Castle', vanillaItem: '20 Rupees' },
-  { id: 'Sewers - Secret Room - Middle', name: 'Secret Room - Middle', type: 'chest', screen: 'sewers-secret-room', dungeon: 'Hyrule Castle', vanillaItem: '20 Rupees' },
-  { id: 'Sewers - Secret Room - Right', name: 'Secret Room - Right', type: 'chest', screen: 'sewers-secret-room', dungeon: 'Hyrule Castle', vanillaItem: '20 Rupees' },
+  { id: 'Sewers - Secret Room - Left', name: 'Secret Room - Left', type: 'chest', screen: 'sewers-secret-room', dungeon: 'Hyrule Castle', vanillaItem: '3 Bombs' },
+  { id: 'Sewers - Secret Room - Middle', name: 'Secret Room - Middle', type: 'chest', screen: 'sewers-secret-room', dungeon: 'Hyrule Castle', vanillaItem: '300 Rupees' },
+  { id: 'Sewers - Secret Room - Right', name: 'Secret Room - Right', type: 'chest', screen: 'sewers-secret-room', dungeon: 'Hyrule Castle', vanillaItem: '10 Arrows' },
   { id: 'Sanctuary', name: 'Sanctuary', type: 'chest', screen: 'sanctuary', dungeon: 'Hyrule Castle', vanillaItem: 'Heart Container' },
   // Key drops
   { id: 'Hyrule Castle - Map Guard Key Drop', name: 'Map Guard Key Drop', type: 'keyDrop', screen: 'hyrule-castle', dungeon: 'Hyrule Castle', vanillaItem: 'Small Key (Hyrule Castle)' },

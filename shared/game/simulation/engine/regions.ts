@@ -12,6 +12,7 @@ import { findDiscoveredPath } from './discovered-graph';
 import type { EngineState } from './state';
 
 const GRID = 64;
+
 /** Landing tiles sit on walls/door notches; scan a window around them. */
 const WINDOW = 3;
 
@@ -84,6 +85,41 @@ const arrivalAccountedFor = (
 ): boolean =>
   arrivals.has(arrivalKey(exit.to, exit.edgeSig)) || regionCovered(map, exit.to, exit.entryTile);
 
+/** How far a way-out's launch tile may sit from the tile we landed on and still
+ *  be the same doorway. A door's trigger tile is a few tiles off the spawn it
+ *  puts you on, and a border crossing's launch tile sits right on the seam. */
+const SAME_DOORWAY_RADIUS = 6;
+
+/**
+ * Crossing a link uses it up from BOTH ends.
+ *
+ * Walking A -> B leaves B's way back to A unaccounted for, so it reads as
+ * unexplored ground and schedules a job to return through it. From A the same
+ * thing happens in reverse, and the run ping-pongs across one doorway forever,
+ * one step forward and one back, inflating the step count for no new ground.
+ *
+ * The far end cannot be named in advance: each side computes its own crossing
+ * span from its own flood, so the two signatures do not match. It IS identifiable
+ * on arrival — the exit that leads back where we came from, launching from the
+ * tile we just landed on, is the door we walked through. Matching on POSITION
+ * rather than on the axis matters: two crossings can share a pair of screens and
+ * an axis while landing in places that do not connect (the sanctuary ledge), and
+ * collapsing those would make one of them permanently unreachable.
+ */
+const markWayBackUsed = (
+  arrivals: Set<string>,
+  cameFrom: { screenId: string; tile: GridPos } | null,
+  exits: readonly SimExit[],
+): void => {
+  if (!cameFrom) return;
+  for (const exit of exits) {
+    if (exit.to !== cameFrom.screenId || !exit.fromTile) continue;
+    if (Math.abs(exit.fromTile.row - cameFrom.tile.row) > SAME_DOORWAY_RADIUS) continue;
+    if (Math.abs(exit.fromTile.col - cameFrom.tile.col) > SAME_DOORWAY_RADIUS) continue;
+    arrivals.add(arrivalKey(exit.to, exit.edgeSig));
+  }
+};
+
 /** Visited screens some discovered exit enters OUTSIDE their explored region —
  *  multi-region rooms still owe a visit through that specific doorway. */
 const unexploredRegionJobs = (
@@ -122,5 +158,5 @@ const takeRegionJob = (s: EngineState): string[] | null => {
   return null;
 };
 
-export { unionReach, stampReach, regionCovered, arrivalKey, arrivalAccountedFor, unexploredRegionJobs, takeRegionJob };
+export { unionReach, stampReach, regionCovered, arrivalKey, arrivalAccountedFor, markWayBackUsed, unexploredRegionJobs, takeRegionJob };
 export type { RegionJob };

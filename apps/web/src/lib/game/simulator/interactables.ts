@@ -51,6 +51,11 @@ const getRoomSprites = (roomId: number): SimSprite[] =>
     tile: { row: s.row, col: s.col },
     posKnown: true,
     kind: spriteKindFor(s.spriteType),
+    // A standing item indoors hands over the same thing it does outdoors. Without
+    // this the trigger fell back to item id 0, which is a real item (the uncle's
+    // sword), so the woods heart piece silently handed out a second sword and the
+    // piece never counted.
+    itemId: standingItemId(s.spriteType),
     carriesKey: s.carriesKey,
     carriesBigKey: s.carriesBigKey,
   }));

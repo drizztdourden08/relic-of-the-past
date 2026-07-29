@@ -9,14 +9,13 @@ const LIGHT_WORLD_CHECKS: CheckDefinition[] = [
   // Throne Room Shelf Moved = which_starting_point reaching 4, set the instant
   // the mantle begins sliding aside in Sprite_EE_MovableMantle
   // (core/zelda3/src/sprite_main.c:1335 — requires the follower and a lit
-  // torch). Not yet detectable: which_starting_point is written by the game
-  // hooks but is not exported by WasmGetProgressFlags.
+  // torch). Progress buffer index 19.
   { id: 'event-shelf-push', name: 'Throne Room Shelf Moved', type: 'event', screen: 'hyrule-castle' },
   { id: 'event-rescued-zelda', name: 'Rescued Zelda', type: 'event', screen: 'sanctuary' },
   // Sahasrahla Quest Given = savegame_map_icons_indicator reaching 3, set when
   // Sprite_Sahasrahla's "mark map" dialogue completes
-  // (core/zelda3/src/sprite_main.c:6543). Not yet detectable:
-  // savegame_map_icons_indicator is not exported by WasmGetProgressFlags.
+  // (core/zelda3/src/sprite_main.c:6543). Progress buffer index 20. Distinct
+  // from his boots check below, which is pendant-gated and comes much later.
   { id: 'event-sahasrahla-quest', name: 'Sahasrahla Quest Given', type: 'event', screen: 'sahasrahlas-hut' },
 
   // ─── Light World ───
