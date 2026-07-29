@@ -105,6 +105,19 @@ const wasmSimFollowerAttach = (): void => voidCall('WasmSimFollowerAttach', { ar
 /** The Sanctuary priest scene: progress indicator → 2 (the princess is safe). */
 const wasmSimFollowerRescue = (): void => voidCall('WasmSimFollowerRescue', { argTypes: [], args: [] });
 
+/** Diagnostic tallies of Link_ReceiveItem calls — see SimCountReceive in C. */
+const wasmGetReceiveCount = (itemId: number): number =>
+  callWhenRunning(0, (mod) => mod.ccall('WasmGetReceiveCount', 'number', ['number'], [itemId]) as number);
+
+const wasmGetReceiveSite = (site: number): number =>
+  callWhenRunning(0, (mod) => mod.ccall('WasmGetReceiveSite', 'number', ['number'], [site]) as number);
+
+/** The throne room shelf sliding aside — checkpoint 4, the run's proof it pushed. */
+const wasmSimPushMantle = (): void => voidCall('WasmSimPushMantle', { argTypes: [], args: [] });
+
+/** The first sage finishing his errand — the map markers go up. */
+const wasmSimMarkMapIcons = (): void => voidCall('WasmSimMarkMapIcons', { argTypes: [], args: [] });
+
 /** Clear a door's open bit — a trap shutter slamming shut again behind the player. */
 const wasmSimCloseDoor = (roomId: number, doorIndex: number): void =>
   voidCall('WasmSimCloseDoor', { argTypes: ['number', 'number'], args: [roomId, doorIndex] });
@@ -156,5 +169,6 @@ const wasmReadFlagSnapshot = (): SimFlagSnapshot | null =>
 
 export { wasmGetRoomChests, wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetRoomDoorInfo,
   wasmSimUnlockDoor, wasmSimCloseDoor, wasmSimKillDrop, wasmSimFollowerAttach, wasmSimFollowerRescue,
+  wasmSimPushMantle, wasmSimMarkMapIcons, wasmGetReceiveCount, wasmGetReceiveSite,
   wasmGetRoomCellLocks, wasmSimOpenCellLock, wasmTriggerOverworldCheck, wasmReadFlagSnapshot };
 export type { SimChestRaw, SimSpriteRaw, SimDoorRaw, SimDoorDirection, SimFlagSnapshot };

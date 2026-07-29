@@ -17,18 +17,15 @@ const drawCliffArrows = (dc: DrawContext, drawResults: FloodFillResult[]): void 
       const endWorldX = origin.x + ledge.endCol * TILE_PX + TILE_PX / 2;
       const endWorldY = origin.y + ledge.endRow * TILE_PX + TILE_PX / 2;
 
-      const dirX = endWorldX - startWorldX;
-      const dirY = endWorldY - startWorldY;
-      const dirLen = Math.hypot(dirX, dirY);
-      if (dirLen === 0) continue;
-      const normX = dirX / dirLen;
-      const normY = dirY / dirLen;
+      if (endWorldX === startWorldX && endWorldY === startWorldY) continue;
 
-      const edgeStartX = startWorldX - normX * (TILE_PX / 2);
-      const edgeStartY = startWorldY - normY * (TILE_PX / 2);
-
-      const startSX = edgeStartX - viewLeft;
-      const startSY = edgeStartY - viewTop;
+      // Both ends sit on a tile CENTRE. The tail used to be pulled half a tile
+      // back along the direction, which put it inside the neighbouring tile and
+      // made a jump look like it began one tile further back than it does — and on
+      // a diagonal it also skewed the drawn angle away from the 45 degrees the hop
+      // actually travels.
+      const startSX = startWorldX - viewLeft;
+      const startSY = startWorldY - viewTop;
       const endSX = endWorldX - viewLeft;
       const endSY = endWorldY - viewTop;
 

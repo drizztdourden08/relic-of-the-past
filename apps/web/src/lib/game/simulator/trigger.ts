@@ -10,7 +10,8 @@ import type { TriggerAction } from '@shared/game/simulation';
 import { itemLabel, resolveDuplicate } from '@shared/game/items';
 import { enqueue } from '../delivery-queue';
 import { wasmTriggerOverworldCheck, wasmGetRoomDoorInfo, wasmSimUnlockDoor, wasmSimCloseDoor, wasmSimKillDrop,
-  wasmSimFollowerAttach, wasmSimFollowerRescue, wasmSimOpenCellLock } from '../';
+  wasmSimFollowerAttach, wasmSimFollowerRescue, wasmSimOpenCellLock,
+  wasmSimPushMantle, wasmSimMarkMapIcons } from '../';
 import { getCurrentInventory } from '../tracker';
 import { outerWall, OPPOSITE, ROOM_EDGE_ADJ } from './room-doorways';
 import { markBombed } from '../flood';
@@ -109,6 +110,8 @@ const trigger = (action: TriggerAction): Promise<void> =>
       case 'progress':
         // Scripted rescue progression — pure state writes, no item pickup.
         if (action.step === 'follower-join') wasmSimFollowerAttach();
+        else if (action.step === 'shelf-push') wasmSimPushMantle();
+        else if (action.step === 'sage-quest') wasmSimMarkMapIcons();
         else wasmSimFollowerRescue();
         resolve();
         return;

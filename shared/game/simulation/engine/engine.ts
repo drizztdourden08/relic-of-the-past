@@ -15,7 +15,7 @@ import { cloneSnapshot } from '../detect/flag-snapshot';
 import { discoverTargets } from './discover';
 import { verifyStep } from './verify-step';
 import { narrative, debug, foundMsg, screenLabel, posMsg, landingTile, emitHop, spendKeysForEdge, emitEntryTrapSlam, interceptTrap } from './step-helpers';
-import { unionReach, stampReach, regionCovered, unexploredRegionJobs, takeRegionJob } from './regions';
+import { unionReach, stampReach, regionCovered, markWayBackUsed, unexploredRegionJobs, takeRegionJob } from './regions';
 import { updateDungeonLedger } from './dungeon-ledger-scan';
 import { closeIdleDungeonGroups, inCompletedGroup } from './dungeon-ledger-lifecycle';
 import type { EngineState } from './state';
@@ -60,6 +60,8 @@ const createEngine = ({ adjacency = buildAdjacency(), totalChecks }: EngineDeps 
 
     // Game-driven mode: exits observed → frontier comes purely from the discovered graph.
     if (obs.exits) recordExits(s.discovered, s.virtual.screenId, obs.exits);
+    // The doorway we just walked through is spent from this side as well.
+    if (obs.exits) markWayBackUsed(s.arrivals, s.cameFrom, obs.exits);
     const reachable = s.discovered.size > 0
       ? reachableDiscovered(s.discovered, s.virtual.screenId)
       : reachableFrom(adjacency, s.virtual.screenId, canPass(s));
@@ -70,7 +72,7 @@ const createEngine = ({ adjacency = buildAdjacency(), totalChecks }: EngineDeps 
     s.frontier = [...reachable].filter(id =>
       id !== s.virtual.screenId && !s.visited.has(id) && !inCompletedGroup(s, id));
     // Visited rooms entered OUTSIDE their explored region (a hall behind a different door) still owe a visit.
-    s.regionJobs = unexploredRegionJobs(s.discovered, s.regionReach, s.visited, s.arrivals).filter(j => j.to !== s.virtual.screenId);
+    s.regionJobs = unexploredRegionJobs(s.discovered, s.regionReach, s.visited, s.arrivals, s.crossings).filter(j => j.to !== s.virtual.screenId);
     closeIdleDungeonGroups(s, events);
     s.phase = 'planning';
   };

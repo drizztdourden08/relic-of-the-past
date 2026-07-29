@@ -12,7 +12,7 @@
  * sword; naming it in code would put the game's own product names into the
  * repository, which the copyright gate exists to prevent.
  */
-import { wasmGetGameUIState } from '../';
+import { wasmGetGameUIState, wasmGetReceiveCount, wasmGetReceiveSite } from '../';
 import { parseGameUIBuffer } from '../ui-bridge';
 import { dungeonGroupName, dungeonGroupOf } from '@shared/game/data/screens/dungeon-group';
 
@@ -45,6 +45,10 @@ interface Loadout {
   smallKeysHere: number;
   dungeonItems: DungeonItems[];
   quest: { pendants: number; crystals: number };
+  /** Diagnostic: how many times the game was actually told to hand over an item.
+   *  Link_ReceiveItem is not idempotent, so a count above the number of checks
+   *  taken means something granted twice. Sites: 0 chest, 1 npc, 2 overworld, 3 kill. */
+  grants: { byItem: Record<string, number>; bySite: number[] };
 }
 
 /** Bit test the game's own way (`hud.c`: `field << dungeonIndex & 0x8000`), so
@@ -87,10 +91,19 @@ const readLoadout = (): Loadout | null => {
       flippers: equipment.flippers !== 0,
       moonPearl: equipment.moonPearl !== 0,
     },
-    consumables: { rupees: hud.rupees, bombs: hud.bombs, arrows: hud.arrows },
+    // The GOAL, not the displayed counter. The HUD ticks `link_rupees_actual` up
+    // toward `link_rupees_goal` a few per frame (hud.c:389), so a run that ends
+    // while the counter is still climbing reports less than the player owns.
+    consumables: { rupees: hud.rupeeTarget, bombs: hud.bombs, arrows: hud.arrows },
     smallKeysHere: hud.keys,
     dungeonItems: collectDungeonItems(dungeonProgress.maps, dungeonProgress.compasses, dungeonProgress.bigKeys),
     quest: { pendants: dungeonProgress.pendants, crystals: dungeonProgress.crystals },
+    grants: {
+      byItem: Object.fromEntries(Array.from({ length: 256 }, (_, id) => [id, wasmGetReceiveCount(id)] as const)
+        .filter(([, n]) => n > 0)
+        .map(([id, n]) => [`0x${Number(id).toString(16).padStart(2, '0')}`, n])),
+      bySite: [0, 1, 2, 3].map((i) => wasmGetReceiveSite(i)),
+    },
   };
 };
 

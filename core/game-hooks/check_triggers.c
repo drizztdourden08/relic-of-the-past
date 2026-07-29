@@ -8,6 +8,41 @@
 // (sprite_main.c:1311) records an indoor pickup at 0x4000, or 0x2000 when the
 // sprite sits in the room's right half (sprite_x_hi & 1) — and 0x2000 is
 // already slot 5, so only 0x4000 was missing.
+// Diagnostic: how many times each item id was actually handed over, and by which
+// call site. Link_ReceiveItem is not idempotent, so a check granted twice really
+// does give the item twice; this is how that gets caught instead of inferred.
+uint16 g_receive_counts[256];
+uint16 g_receive_by_site[4];
+
+// A heart piece is not an ordinary receive. Sprite_HeartPiece (sprite_main.c:6493)
+// advances the piece counter FIRST and only hands over a container when it wraps
+// to zero. The raw receive path assumes that already happened: it sees
+// `a == 23 && link_heart_pieces == 0` and converts the piece into a container
+// outright (ancilla.c:3424). Granting a piece directly therefore turned pieces
+// into whole hearts. Mirror the sprite instead.
+static int SimGiveHeartPiece(void) {
+  link_heart_pieces = (link_heart_pieces + 1) & 3;
+  if (link_heart_pieces != 0) return 0;
+  item_receipt_method = 0;
+  Link_ReceiveItem(0x26, 0);
+  return 1;
+}
+
+void SimCountReceive(uint8 site, uint8 item_id) {
+  g_receive_counts[item_id]++;
+  if (site < 4) g_receive_by_site[site]++;
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetReceiveCount(int item_id) {
+  return (item_id >= 0 && item_id < 256) ? g_receive_counts[item_id] : -1;
+}
+
+EMSCRIPTEN_KEEPALIVE
+int WasmGetReceiveSite(int site) {
+  return (site >= 0 && site < 4) ? g_receive_by_site[site] : -1;
+}
+
 static const uint16 kChestOpenMasksHook[] = { 0x100, 0x200, 0x400, 0x800, 0x1000, 0x2000, 0x4000 };
 #define kChestOpenMasksHook_COUNT 7
 
@@ -87,6 +122,20 @@ void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
     return;
   }
 
+  // Already collected? Setting the bit again is harmless, but Link_ReceiveItem is
+  // NOT idempotent — granting a second time really does hand over another item.
+  // A heart piece re-granted this way silently inflated the heart count, since
+  // every fourth one converts into a container (sprite_main.c:6493).
+  uint16 mask = kChestOpenMasksHook[chest_index];
+  uint16 already = (dungeon_room_index == room_id)
+      ? (uint16)(dung_savegame_state_bits & mask)
+      : (uint16)(save_dung_info[room_id] & (mask >> 4));
+  if (already) {
+    printf("[GameHook] TriggerCheck: room=0x%03x chest=%d already collected, no re-grant\n",
+           room_id, chest_index);
+    return;
+  }
+
   if (dungeon_room_index == room_id) {
     dung_savegame_state_bits |= kChestOpenMasksHook[chest_index];
     printf("[GameHook] TriggerCheck: room=0x%03x chest=%d item=0x%02x state_bits=0x%04x (current room)\n",
@@ -107,6 +156,8 @@ void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
     }
   }
 
+  SimCountReceive(0, item_id);
+  if (item_id == 0x17) { SimGiveHeartPiece(); return; }
   item_receipt_method = 1;
   Link_ReceiveItem(item_id, 0);
 }
@@ -163,7 +214,9 @@ void GameHook_TriggerNpcCheck(uint8 flag_type, uint8 flag_mask, uint8 item_id,
   item_receipt_method = 0;
 
   if (item_id != 0xFF) {
-    Link_ReceiveItem(item_id, 0);
+    SimCountReceive(1, item_id);
+    if (item_id == 0x17) SimGiveHeartPiece();
+    else Link_ReceiveItem(item_id, 0);
   }
 
   if (sprite_type_id == 0x28) {
@@ -183,12 +236,21 @@ void WasmTriggerNpcCheck(int flag_type, int flag_mask, int item_id,
 // ─── Overworld Check Trigger ───
 
 void GameHook_TriggerOverworldCheck(uint8 screen, uint8 mask, uint8 item_id) {
+  // Already taken? The bit is idempotent but Link_ReceiveItem is not, so a second
+  // trigger really does hand the item over again. A re-granted heart piece
+  // inflates the heart count, since every fourth converts (sprite_main.c:6493).
+  if (item_id != 0xFF && (save_ow_event_info[screen] & mask)) {
+    printf("[GameHook] TriggerOverworldCheck: screen=0x%02x mask=0x%02x already taken, no re-grant\n", screen, mask);
+    return;
+  }
   save_ow_event_info[screen] |= mask;
   printf("[GameHook] TriggerOverworldCheck: save_ow_event_info[0x%02x] |= 0x%02x → 0x%02x, item=0x%02x\n",
          screen, mask, save_ow_event_info[screen], item_id);
 
   item_receipt_method = 0;
   if (item_id != 0xFF) {
+    SimCountReceive(2, item_id);
+    if (item_id == 0x17) { SimGiveHeartPiece(); return; }
     Link_ReceiveItem(item_id, 0);
   }
 }

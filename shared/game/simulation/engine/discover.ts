@@ -73,6 +73,23 @@ const FOLLOWER_STEPS = [
 ] as const;
 
 /**
+ * Milestones reached by working a sprite rather than by opening anything, so
+ * nothing in the save records them unless the run does it deliberately. Same
+ * sanctioned-transcription class as FOLLOWER_STEPS above: which sprite, in which
+ * room, and what it takes all live in hardcoded C handlers.
+ *
+ * The shelf needs the follower in tow, exactly as the mantle's own handler does
+ * (`follower_indicator != 1` returns early). The sage needs nothing: his idle
+ * handler routes a pendant-less player straight into the errand, which is why
+ * this is separate from his boots check, which IS pendant-gated and correctly
+ * out of reach this early.
+ */
+const EVENT_STEPS = [
+  { sprite: 0xee, room: 0x51, step: 'shelf-push', verb: 'Pushing', noun: 'the throne room shelf', needsFollower: true },
+  { sprite: 0x16, room: 0x105, step: 'sage-quest', verb: 'Talking to', noun: 'the first sage', needsFollower: false },
+] as const;
+
+/**
  * Unknown-position interactables (remote rooms) fall back to coarse
  * screen-level reachability. A known position is always local to the screen
  * being observed — overworld sprites are resolved to their true screen and
@@ -219,6 +236,23 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
     // belongs to a neighbouring screen has no flood here to judge it against —
     // it becomes a target when THAT screen is observed instead.
     if (sprite.outdoor && owScreen !== null && sprite.roomId !== owScreen) continue;
+    // Scripted milestones come first, and deliberately BEFORE the presence gate.
+    // That gate answers "is this sprite's CHECK on offer", which for the sage is
+    // his pendant-gated boots — a different reward from the same sprite. His
+    // errand is available the whole time, and gating it on the boots' condition
+    // hid it for the entire pre-dungeon run. Reach uses the door radius: these
+    // sprites are furniture the player works from a distance, and the mantle's
+    // own tile sits inside the shelf, several tiles from any standable floor.
+    const estep = EVENT_STEPS.find((e) => e.sprite === sprite.spriteType && e.room === sprite.roomId);
+    if (estep) {
+      const inTow = (obs.flags.progress[FOLLOWER_SLOT] ?? 0) === 1;
+      if ((!estep.needsFollower || inTow) && hasReachableNeighbor(reached, sprite.tile, DOOR_REACH_RADIUS)) {
+        const action = { type: 'progress', step: estep.step } as const;
+        const tile = sprite.posKnown ? sprite.tile : undefined;
+        targets.push({ screenId, roomId: sprite.roomId, action, key, label: estep.noun, noun: estep.noun, verb: estep.verb, tile });
+      }
+      continue;
+    }
     if (!interactableReachable(sprite.posKnown, reached, sprite.tile)) continue;
     if (!spritePresent(sprite, obs.presenceState)) continue;
     if (!standingItemPresent(sprite, obs.presenceState)) continue;

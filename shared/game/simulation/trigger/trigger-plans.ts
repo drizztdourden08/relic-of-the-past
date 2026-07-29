@@ -58,8 +58,12 @@ const planSpriteTrigger = (sprite: SimSprite): TriggerAction | null => {
   if (sprite.kind === 'standing' || sprite.kind === 'overworld') {
     // Outdoors the pickup is an overworld event bit, and the sprite's "room" IS
     // the screen it stands on.
+    // Item id 0 is the uncle's sword, not "nothing", so a sprite with no mapped
+    // item must not be triggered at all. Skipping leaves the check visibly
+    // uncollected instead of quietly granting the wrong item.
+    if (sprite.itemId === undefined) return null;
     if (sprite.outdoor) {
-      return { type: 'overworld', screen: sprite.roomId, mask: 0x40, itemId: sprite.itemId ?? 0 };
+      return { type: 'overworld', screen: sprite.roomId, mask: 0x40, itemId: sprite.itemId };
     }
     // Indoors there is no screen to flag. The game records the pickup in the
     // ROOM's own state bits instead (HeartUpgrade_CheckIfAlreadyObtained,
@@ -68,7 +72,7 @@ const planSpriteTrigger = (sprite: SimSprite): TriggerAction | null => {
     // Both are room-state slots, which the chest action already writes.
     const rightHalf = sprite.tile.col >= HALF_ROOM_COLS;
     const chestIndex = rightHalf ? ROOM_BIT_HEART_RIGHT : ROOM_BIT_HEART_LEFT;
-    return { type: 'chest', roomId: sprite.roomId, chestIndex, itemId: sprite.itemId ?? 0 };
+    return { type: 'chest', roomId: sprite.roomId, chestIndex, itemId: sprite.itemId };
   }
   return null;
 };
