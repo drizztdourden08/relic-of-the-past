@@ -8,6 +8,7 @@
  * early can be told apart from one that genuinely exhausted its reach, and so a
  * blocked chest or an unentered room is visible instead of merely absent.
  */
+import type { DungeonId } from '../../data';
 import type { EngineState } from './state';
 
 interface EndSummary {
@@ -16,7 +17,7 @@ interface EndSummary {
   /** Edges the graph knows versus screens they lead to that were never entered. */
   exits: { edges: number; leadingNowhereNew: number };
   checks: { verified: number };
-  keys: { held: Record<string, number>; bigKeys: string[] };
+  keys: { held: Partial<Record<DungeonId, number>>; bigKeys: DungeonId[] };
 }
 
 /** Cap the listing — a run that entered nothing should not print a novel. */
@@ -29,6 +30,9 @@ const buildEndSummary = (state: EngineState): EndSummary => {
   const neverEntered = [...discovered].filter((id) => !state.everVisited.has(id)).sort();
   let edges = 0;
   for (const exits of state.discovered.values()) edges += exits.length;
+
+  const held: Partial<Record<DungeonId, number>> = {};
+  for (const [dungeon, n] of state.keys) if (n > 0) held[dungeon] = n;
 
   return {
     screens: {
@@ -44,10 +48,7 @@ const buildEndSummary = (state: EngineState): EndSummary => {
     },
     exits: { edges, leadingNowhereNew: neverEntered.length },
     checks: { verified: state.completedChecks.size },
-    keys: {
-      held: Object.fromEntries([...state.keys].filter(([, n]) => n > 0)),
-      bigKeys: [...state.bigKeys].sort(),
-    },
+    keys: { held, bigKeys: [...state.bigKeys].sort() },
   };
 };
 

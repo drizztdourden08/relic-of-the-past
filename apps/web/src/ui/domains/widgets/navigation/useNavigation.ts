@@ -2,7 +2,6 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { usableEntrances } from '@shared/game/navigation';
-import { displayName } from '@shared/game/data/screens';
 import { annotateFlooded } from './nav-flood/annotate-flooded';
 import { liveGameStates } from '../../../../lib/game/live-game-states';
 import { useNavigationOverlayStore } from '../../../../stores/navigation-overlay-store';
@@ -80,7 +79,8 @@ const useNavigation = () => {
   const progressInfo = wasmGetProgressIndicator();
   const gameStates = liveGameStates();
   const detectedScreen = detectionResult?.screen ?? null;
-  const screenName = (detectedScreen && displayName(detectedScreen.id, detectedScreen.name))
+  const screenId = detectedScreen?.id ?? null;
+  const screenName = (detectedScreen && (detectedScreen.vanillaName ?? detectedScreen.randomizerName))
     ?? (isIndoors ? `Room 0x${roomIndex.toString(16).toUpperCase().padStart(4, '0')}` : `Screen 0x${overworldScreenIndex.toString(16).toUpperCase().padStart(2, '0')}`);
   const displayedVariant = !isIndoors
     ? (result ? wasmGetOverworldVariant(result.screenIndex) : variant)
@@ -241,7 +241,7 @@ const useNavigation = () => {
   const entranceSpawns = wasmGetEntranceSpawns();
 
   return {
-    screenBundle, screenName, isIndoors, roomIndex, isDarkWorld, overworldScreenIndex, externalConnections, renderResults, playerDebug, respawnEntIds, palaceIndex, dungeonMapPos, roomLayoutInfo, whichEntrance, roomStartLayer, progressInfo, gameStates, displayedVariant, dynamicBlockerCount, playerX, playerY, running, handleRun, result, handleClear, overlayStore, mode, setMode, reachableSum, totalTilesSum, entranceSum, internalConnections, fallHoleLandings, entranceSpawns,
+    screenBundle, screenName, screenId, isIndoors, roomIndex, isDarkWorld, overworldScreenIndex, externalConnections, renderResults, playerDebug, respawnEntIds, palaceIndex, dungeonMapPos, roomLayoutInfo, whichEntrance, roomStartLayer, progressInfo, gameStates, displayedVariant, dynamicBlockerCount, playerX, playerY, running, handleRun, result, handleClear, overlayStore, mode, setMode, reachableSum, totalTilesSum, entranceSum, internalConnections, fallHoleLandings, entranceSpawns,
   };
 };
 

@@ -15,6 +15,8 @@ import { planTrigger, npcConfigForSprite } from '../trigger/trigger-plans';
 import type { PresenceGameState } from '../presence/state';
 import { evaluatePresence } from '../presence/evaluate';
 import { keyAvailable } from './explorer';
+import { ANY_DUNGEON } from '../dungeon-key-target';
+import { swordTier } from './enemy-reach-weapons';
 import { evaluateRoomThreat } from './enemy-reach';
 import type { RoomThreat } from './enemy-reach';
 import { isPullSwitch, drainEffectForSwitchRoom, owEventSet, standingItemPresent } from './discover-switches';
@@ -120,9 +122,9 @@ const chestReachable = (posKnown: boolean, reached: Reached, tile: GridPos): boo
  * presenceState was observed, gating also fails open (all present).
  */
 const spritePresent = (sprite: SimSprite, presenceState: PresenceGameState | undefined): boolean => {
-  const cfg = npcConfigForSprite(sprite.spriteType, sprite.roomId, sprite.outdoor);
-  if (!cfg?.presence || !presenceState) return true;
-  return evaluatePresence(cfg.presence, presenceState);
+  const check = npcConfigForSprite(sprite.spriteType, sprite.roomId, sprite.outdoor);
+  if (!check?.presence || !presenceState) return true;
+  return evaluatePresence(check.presence, presenceState);
 };
 
 const chestKey = (chest: SimChest): string => `chest:${chest.roomId}:${chest.chestIndex}`;
@@ -199,7 +201,7 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
     const action = planTrigger(chest);
     if (action) {
       const tile = chest.posKnown ? chest.tile : undefined;
-      targets.push({ screenId, roomId: chest.roomId, action, key, label: chestLabel(chest), noun: 'chest', verb: 'Opening', tile, trap: trapArm });
+      targets.push({ screenId, roomId: chest.roomId, action, key, role: 'check', label: chestLabel(chest), noun: 'chest', verb: 'Opening', tile, trap: trapArm });
     }
   }
 
@@ -209,7 +211,10 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
   const hasBombs = state.reachTokens.has('bombs');
   // Bombs are permanent once obtained, so any cracked wall is openable from then on.
   if (hasBombs) targets.push(...discoverBombableWalls(state, obs, reached));
-  const hasSword = [...state.inventory].some((n) => n.includes('Sword'));
+  // Keyed on the item ids the sword ladder is made of, not on a name substring:
+  // the same reasoning as the bomb token below, plus 'Fighter Sword & Shield' is
+  // a record of its own whose name only happens to contain the word.
+  const hasSword = swordTier(state.inventory) > 0;
   const DOOR_NOUN = { 'small-key': 'key door', 'big-key': 'big key door', bombable: 'bombable wall' } as const;
   const DOOR_VERB = { 'small-key': 'Unlocking', 'big-key': 'Unlocking', bombable: 'Bombing' } as const;
   for (const door of inter.doors) {
@@ -218,14 +223,14 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
     const key = `door:${door.roomId}:${door.index}`;
     if (state.done.has(key) || state.failed.has(key)) continue;
     // Any held small/big key qualifies — key bookkeeping is coarse for now.
-    if (kind === 'small-key' && !keyAvailable(state, '*')) continue;
+    if (kind === 'small-key' && !keyAvailable(state, ANY_DUNGEON)) continue;
     if (kind === 'big-key' && state.bigKeys.size === 0) continue;
     if (kind === 'bombable' && !hasBombs) continue;
     const tile = door.tiles[0];
     if (tile && !hasReachableNeighbor(reached, tile, DOOR_REACH_RADIUS)) continue;
     const action = { type: 'door', roomId: door.roomId, doorIndex: door.index, doorKind: kind, ...(door.cellLock ? { cellLock: true } : {}) } as const;
     const noun = door.cellLock ? 'cell lock' : DOOR_NOUN[kind];
-    targets.push({ screenId, roomId: door.roomId, action, key, label: `${noun} (room ${door.roomId.toString(16)} #${door.index})`, noun, verb: DOOR_VERB[kind], tile });
+    targets.push({ screenId, roomId: door.roomId, action, key, role: 'gate', label: `${noun} (room ${door.roomId.toString(16)} #${door.index})`, noun, verb: DOOR_VERB[kind], tile });
   }
 
   for (const sprite of inter.sprites) {
@@ -249,7 +254,7 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
       if ((!estep.needsFollower || inTow) && hasReachableNeighbor(reached, sprite.tile, DOOR_REACH_RADIUS)) {
         const action = { type: 'progress', step: estep.step } as const;
         const tile = sprite.posKnown ? sprite.tile : undefined;
-        targets.push({ screenId, roomId: sprite.roomId, action, key, label: estep.noun, noun: estep.noun, verb: estep.verb, tile });
+        targets.push({ screenId, roomId: sprite.roomId, action, key, role: 'check', label: estep.noun, noun: estep.noun, verb: estep.verb, tile });
       }
       continue;
     }
@@ -268,7 +273,7 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
         const action: TriggerAction = drain
           ? { type: 'pullSwitch', roomId: sprite.roomId, drain }
           : { type: 'pullSwitch', roomId: sprite.roomId };
-        targets.push({ screenId, roomId: sprite.roomId, action, key, label: `pull switch (room ${sprite.roomId.toString(16)})`, noun: 'pull switch', verb: 'Pulling', tile });
+        targets.push({ screenId, roomId: sprite.roomId, action, key, role: 'gate', label: `pull switch (room ${sprite.roomId.toString(16)})`, noun: 'pull switch', verb: 'Pulling', tile });
       }
       continue;
     }
@@ -277,7 +282,7 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
       const fstep = FOLLOWER_STEPS.find((f) => f.room === sprite.roomId && f.following === following);
       if (fstep) {
         const action = { type: 'progress', step: fstep.step } as const;
-        targets.push({ screenId, roomId: sprite.roomId, action, key, label: fstep.noun, noun: fstep.noun, verb: fstep.verb, tile });
+        targets.push({ screenId, roomId: sprite.roomId, action, key, role: 'gate', label: fstep.noun, noun: fstep.noun, verb: fstep.verb, tile });
       }
       continue;
     }
@@ -290,13 +295,13 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
       // kill reopens every shutter, including the ones that slammed behind the player.
       const reopens = killGated && shutters.length > 0 && living.every((l) => l === sprite);
       const action = { type: 'kill', roomId: sprite.roomId, itemId, opensShutters: reopens } as const;
-      targets.push({ screenId, roomId: sprite.roomId, action, key, label: `${noun} (room ${sprite.roomId.toString(16)})`, noun, verb: 'Defeating', tile, trap: trapArm });
+      targets.push({ screenId, roomId: sprite.roomId, action, key, role: 'check', label: `${noun} (room ${sprite.roomId.toString(16)})`, noun, verb: 'Defeating', tile, trap: trapArm });
       continue;
     }
     const action = planTrigger(sprite);
     if (action) {
       const pickup = sprite.kind === 'standing' || sprite.kind === 'overworld';
-      targets.push({ screenId, roomId: sprite.roomId, action, key, label: spriteLabel(sprite), noun: pickup ? 'standing item' : sprite.kind, verb: pickup ? 'Picking up' : 'Talking to', tile });
+      targets.push({ screenId, roomId: sprite.roomId, action, key, role: 'check', label: spriteLabel(sprite), noun: pickup ? 'standing item' : sprite.kind, verb: pickup ? 'Picking up' : 'Talking to', tile });
     }
   }
 
@@ -312,7 +317,7 @@ const discoverTargets = (state: EngineState, obs: SimObservation, reached: Reach
       const rep = threat.gating.find((g) => !g.sprite.carriesKey && !g.sprite.carriesBigKey) ?? threat.gating[0];
       const tile = rep.from ?? rep.sprite.tile;
       const action = { type: 'kill', roomId: rep.sprite.roomId, itemId: 0xff, opensShutters: true } as const;
-      targets.push({ screenId, roomId: rep.sprite.roomId, action, key, label: `guards (room ${rep.sprite.roomId.toString(16)})`, noun: 'guards', verb: 'Defeating', tile });
+      targets.push({ screenId, roomId: rep.sprite.roomId, action, key, role: 'gate', label: `guards (room ${rep.sprite.roomId.toString(16)})`, noun: 'guards', verb: 'Defeating', tile });
     }
   }
 

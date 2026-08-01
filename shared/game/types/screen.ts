@@ -1,21 +1,6 @@
 /* @layer shared-game @kind types */
-import type { ScreenTag } from '../data/screens/tags';
-import type { ConnectionTag } from '../data/connections/tags';
+import type { ScreenTag, ConnectionTag } from '../data';
 import type { RegionNavData, ConnectionNavData } from '../navigation/nav-data.types';
-
-// ─── Check Types ───
-
-type CheckType =
-  | 'chest'
-  | 'npc'
-  | 'standing'
-  | 'boss'
-  | 'prize'
-  | 'keyDrop'
-  | 'potItem'
-  | 'dig'
-  | 'bonk'
-  | 'event';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // SCREEN DATA MODEL
@@ -55,7 +40,7 @@ interface OverworldContext {
 
 interface DungeonContext {
   /** Runtime cur_palace_index_x2 (0x00–0x1A) — the canonical dungeon identifier.
-   *  Name is derived via getDungeonName(palaceIndex). */
+   *  The dungeon entity is resolved from it via `dungeonForPalaceIndex`. */
   palaceIndex: number;
   /** Floor level (-2, -1, 0, 1, 2...) */
   floor?: number;
@@ -181,35 +166,8 @@ interface ScreenConnection {
   nav?: ConnectionNavData;
 }
 
-// ─── Check (belongs-to: check → screen) ───
-
-interface CheckDefinition {
-  id: string;
-  name: string;
-  type: CheckType;
-  /** Screen ID this check lives in */
-  screen: string;
-  /** Dungeon name (for key/prize logic) */
-  dungeon?: string;
-  vanillaItem?: string | string[];
-  /** SRAM room index for chest-open flag tracking */
-  roomId?: number;
-  /** Chest index within the room (0-5, maps to bits 0x100-0x2000) */
-  chestIndex?: number;
-}
-
-// ─── Requirement Expression Tree ───
-
-type Requirement =
-  | string
-  | { and: Requirement[] }
-  | { or: Requirement[] }
-  | { count: [string, number] };
-
 export type {
   BundleLayout,
-  CheckDefinition,
-  CheckType,
   DungeonContext,
   DungeonScreen,
   InteriorContext,
@@ -217,7 +175,6 @@ export type {
   InteriorScreen,
   OverworldContext,
   OverworldScreen,
-  Requirement,
   ScreenBase,
   ScreenBundle,
   ScreenConnection,

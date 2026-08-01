@@ -5,9 +5,10 @@
  * shutter clears and trap slams — each of which re-floods the room in place.
  */
 import type { SimObservation, SimEvent, DetectedCheck } from '../types';
-import { ITEM_ID_TO_NAME } from '../../items/id-map';
+import { getItem } from '../../data';
 import { diffSnapshots, emptySnapshot } from '../detect/flag-snapshot';
-import { matchDiffs, UNKNOWN } from '../detect/check-matcher';
+import { matchDiffs } from '../detect/check-matcher';
+import { UNIDENTIFIED } from '../detect/unidentified';
 import { onCheckVerified } from './explorer';
 import { narrative, debug, emitDoorUnlock, emitShutterClear, emitSwitchPulled, emitTrapClosed, emitFollower , emitWallBombed } from './step-helpers';
 import type { EngineState } from './state';
@@ -34,19 +35,22 @@ const verifyStep = (s: EngineState, obs: SimObservation, events: SimEvent[]): vo
   if (target?.action.type === 'progress' && target.action.step === 'follower-join') { emitFollower(s, events, target.key); return; }
   if (target?.action.type === 'door') { emitDoorUnlock(s, events, target.label, target.key, target.action.doorKind === 'small-key'); return; }
   if (target?.action.type === 'kill' && target.action.opensShutters && target.action.itemId === 0xff) { emitShutterClear(s, events, target.label, target.key); return; }
-  const { name, matched } = matchDiffs(diffs);
-  const itemReceived = obs.itemReceived !== undefined ? ITEM_ID_TO_NAME[obs.itemReceived] : undefined;
+  const matched = matchDiffs(diffs);
+  const itemReceived = obs.itemReceived;
   const epochBefore = s.epoch;
-  const detected: DetectedCheck = { evidence: diffs, matched, matchedName: name, itemReceived, at: s.virtual };
+  const detected: DetectedCheck = { evidence: diffs, matched, checkId: matched?.id, itemReceived, at: s.virtual };
 
   if (target) s.done.add(target.key);
   onCheckVerified(s, detected, events);
 
-  const stopId = s.config.stopAtCheckId;
-  if (stopId && (matched?.id === stopId || name === stopId)) s.stopHit = true;
+  if (s.config.stopAtCheckId && matched?.id === s.config.stopAtCheckId) s.stopHit = true;
 
-  const shown = name === UNKNOWN && target ? target.label : name;
-  if (itemReceived) events.push(narrative(s, shown !== UNKNOWN ? `Got "${itemReceived}" (${shown})` : `Got "${itemReceived}"`));
+  // Names are resolved HERE, for a human reading the log, and stored nowhere.
+  const shown = matched ? matched.randomizerName : target?.label ?? UNIDENTIFIED;
+  if (itemReceived) {
+    const itemName = getItem(itemReceived).randomizerName;
+    events.push(narrative(s, matched || target ? `Got "${itemName}" (${shown})` : `Got "${itemName}"`));
+  }
   events.push({ ...narrative(s, `Verified ${shown}`), data: { detected } });
   // A drop-kill that satisfied the room's kill tag (last living killable)
   // reopens the trap shutters the game closed behind the player.

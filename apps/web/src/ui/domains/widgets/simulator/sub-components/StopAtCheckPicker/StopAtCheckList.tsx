@@ -5,15 +5,15 @@
  * selection back to a full run.
  */
 import { Box, Button, Text } from '@ds/primitives';
-import type { CheckDefinition } from '@shared/game/types';
+import type { CheckId, CheckRecord } from '@shared/game/data';
 import type { CheckStatus } from '@shared/game/logic/eval';
 import { checkTypeIcon } from './check-type-icons';
 
 interface StopAtCheckListProps {
-  checks: CheckDefinition[];
-  selectedId: string;
+  checks: CheckRecord[];
+  selectedId: CheckId | '';
   statuses: Map<string, CheckStatus>;
-  onSelect: (id: string) => void;
+  onSelect: (id: CheckId | '') => void;
 }
 
 const StopAtCheckList = (props: StopAtCheckListProps) => {
@@ -40,10 +40,10 @@ const StopAtCheckList = (props: StopAtCheckListProps) => {
           key={check.id}
           className={`stop-picker__row stop-picker__row--${statuses.get(check.id) ?? 'blocked'} ${selectedId === check.id ? 'stop-picker__row--selected' : ''}`}
           onClick={() => onSelect(check.id)}
-          title={check.type}
+          title={check.kind}
         >
-          <Text className="stop-picker__row-icon">{checkTypeIcon(check.type)}</Text>
-          <Text className="stop-picker__row-name">{check.name}</Text>
+          <Text className="stop-picker__row-icon">{checkTypeIcon(check.kind)}</Text>
+          <Text className="stop-picker__row-name">{check.randomizerName}</Text>
           <Text className="stop-picker__row-id">{check.id}</Text>
         </Button>
       ))}

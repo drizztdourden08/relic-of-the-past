@@ -1,13 +1,95 @@
 /* @layer shared-game @kind data */
-import type { ScreenConnection } from '../../../../types';
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ConnectionRecord } from '../../../types';
 
-const LW_OVERWORLD_CENTRAL_CONNECTIONS: ScreenConnection[] = [
-  // Save & Quit → overworld
-  { from: 'menu', to: 'links-house', tags: ['transit:warp', 'dir:one-way', 'ctx:save-quit'] },
-
-  // Rain state transitions
-  { from: 'links-house', to: 'light-world-rain', tags: ['transit:door', 'dir:one-way', 'ctx:exit', 'barrier:event'] },
-  { from: 'light-world-rain', to: 'hyrule-castle-courtyard', tags: ['transit:walk', 'dir:one-way', 'ctx:overworld', 'barrier:event'] },
+const LW_OVERWORLD_CENTRAL_HYRULE_CONNECTIONS: ConnectionRecord[] = [
+  {
+    id: 'connection-003',
+    kind: 'edge',
+    fromScreenId: 'screen-027',
+    toScreenId: 'screen-021',
+    direction: 'one-way',
+    tags: ['dir:one-way', 'ctx:overworld', 'barrier:event'],
+  },
+  {
+    id: 'connection-023',
+    kind: 'teleport',
+    fromScreenId: 'screen-026',
+    toScreenId: 'screen-005',
+    direction: 'one-way',
+    tags: ['dir:one-way', 'ctx:overworld'],
+    requirements: { itemId: 'item-075' },
+  },
+  {
+    id: 'connection-130',
+    kind: 'edge',
+    fromScreenId: 'screen-056',
+    toScreenId: 'screen-064',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-131',
+    kind: 'edge',
+    fromScreenId: 'screen-056',
+    toScreenId: 'screen-057',
+    placement: { at: 'side', side: 'south' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-132',
+    kind: 'edge',
+    fromScreenId: 'screen-064',
+    toScreenId: 'screen-072',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-133',
+    kind: 'edge',
+    fromScreenId: 'screen-064',
+    toScreenId: 'screen-065',
+    placement: { at: 'side', side: 'south' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-134',
+    kind: 'edge',
+    fromScreenId: 'screen-072',
+    toScreenId: 'screen-080',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-135',
+    kind: 'edge',
+    fromScreenId: 'screen-072',
+    toScreenId: 'screen-073',
+    placement: { at: 'side', side: 'south' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-163',
+    kind: 'edge',
+    fromScreenId: 'screen-064',
+    toScreenId: 'screen-026',
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-164',
+    kind: 'edge',
+    fromScreenId: 'screen-064',
+    toScreenId: 'screen-027',
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
 ];
 
-export { LW_OVERWORLD_CENTRAL_CONNECTIONS };
+export { LW_OVERWORLD_CENTRAL_HYRULE_CONNECTIONS };

@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind component */
 import { useState, useMemo, useCallback } from 'react';
 import { Box, Text } from '../../../../design-system/primitives';
-import { ALL_CHECKS } from '@shared/game/checks';
-import type { GroupDimension, FilterState } from '@shared/game/checks/grouping';
-import { buildGroupTree, filterChecks } from '@shared/game/checks/grouping';
+import { find } from '@shared/game/data';
+import type { GroupDimension, FilterState } from '@shared/game/logic/queries/check-grouping';
+import { buildGroupTree, filterChecks } from '@shared/game/logic/queries/check-grouping';
 import { TrackerSummary } from './sub-components/TrackerSummary';
 import { TrackerInventory } from './sub-components/TrackerInventory';
 import { TrackerFilters, type ViewMode } from './sub-components/TrackerFilters';
@@ -50,7 +50,8 @@ const TrackerView = (props: TrackerViewProps) => {
     useCallback((x, y) => setChecksPanel(s => ({ ...s, x, y })), [setChecksPanel]),
   );
 
-  const filteredChecks = useMemo(() => filterChecks(ALL_CHECKS, filter, tagMap, snapshot), [filter, tagMap, snapshot]);
+  const checks = useMemo(() => find('check', () => true), []);
+  const filteredChecks = useMemo(() => filterChecks(checks, filter, tagMap, snapshot), [checks, filter, tagMap, snapshot]);
   const groupTree = useMemo(() => buildGroupTree(filteredChecks, snapshot, grouping, tagMap), [filteredChecks, snapshot, grouping, tagMap]);
 
   if (!visible) return null;

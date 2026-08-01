@@ -1,11 +1,115 @@
 /* @layer shared-game @kind data */
-import type { ScreenConnection } from '../../../../types';
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ConnectionRecord } from '../../../types';
 
-const DW_OVERWORLD_DARK_MIRE_CONNECTIONS: ScreenConnection[] = [
-  // Mirror spots
-  { from: 'dark-desert', to: 'desert-ledge', tags: ['transit:mirror', 'dir:one-way', 'ctx:cross-world'] },
-  { from: 'dark-desert', to: 'desert-northern-cliffs', tags: ['transit:mirror', 'dir:one-way', 'ctx:cross-world'] },
-  { from: 'dark-desert', to: 'desert-palace-lone-stairs', tags: ['transit:mirror', 'dir:one-way', 'ctx:cross-world'] },
+const DW_OVERWORLD_DARK_MIRE_CONNECTIONS: ConnectionRecord[] = [
+  {
+    id: 'connection-439',
+    kind: 'teleport',
+    fromScreenId: 'screen-238',
+    toScreenId: 'screen-009',
+    direction: 'one-way',
+    tags: ['dir:one-way', 'ctx:cross-world'],
+    requirements: { itemId: 'item-027' },
+  },
+  {
+    id: 'connection-440',
+    kind: 'teleport',
+    fromScreenId: 'screen-238',
+    toScreenId: 'screen-011',
+    direction: 'one-way',
+    tags: ['dir:one-way', 'ctx:cross-world'],
+    requirements: { itemId: 'item-027' },
+  },
+  {
+    id: 'connection-441',
+    kind: 'teleport',
+    fromScreenId: 'screen-238',
+    toScreenId: 'screen-014',
+    direction: 'one-way',
+    tags: ['dir:one-way', 'ctx:cross-world'],
+    requirements: { itemId: 'item-027' },
+  },
+  {
+    id: 'connection-560',
+    kind: 'edge',
+    fromScreenId: 'screen-250',
+    toScreenId: 'screen-267',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-561',
+    kind: 'edge',
+    fromScreenId: 'screen-250',
+    toScreenId: 'screen-251',
+    placement: { at: 'side', side: 'south' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-562',
+    kind: 'edge',
+    fromScreenId: 'screen-267',
+    toScreenId: 'screen-275',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-563',
+    kind: 'edge',
+    fromScreenId: 'screen-267',
+    toScreenId: 'screen-268',
+    placement: { at: 'side', side: 'south' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-575',
+    kind: 'edge',
+    fromScreenId: 'screen-251',
+    toScreenId: 'screen-268',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-576',
+    kind: 'edge',
+    fromScreenId: 'screen-268',
+    toScreenId: 'screen-276',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-577',
+    kind: 'edge',
+    fromScreenId: 'screen-276',
+    toScreenId: 'screen-284',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-578',
+    kind: 'edge',
+    fromScreenId: 'screen-284',
+    toScreenId: 'screen-292',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-598',
+    kind: 'edge',
+    fromScreenId: 'screen-268',
+    toScreenId: 'screen-238',
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
 ];
 
 export { DW_OVERWORLD_DARK_MIRE_CONNECTIONS };

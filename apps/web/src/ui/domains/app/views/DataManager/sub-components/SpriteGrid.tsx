@@ -9,7 +9,7 @@ import {
   CATEGORY_LABELS,
   CATEGORY_ORDER,
   type SpriteCategory,
-} from '@shared/game/sprites';
+} from '@shared/game/data';
 
 interface SpriteGridProps {
   /** Base URL for the selected ROM's extracted sprite PNGs. */

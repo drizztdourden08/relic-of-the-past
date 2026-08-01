@@ -6,7 +6,7 @@
  */
 import * as sprites from '@shared/storage/sprites';
 import type { SpriteDef, SpriteBuffer } from '@shared/asset-extraction/item-sprites/extract-items';
-import spriteDefinitions from '@shared/game/sprites/definitions.json';
+import spriteDefinitions from '@shared/game/data/sprite-manifest/definitions.json';
 import { getPlatform } from '@app/platform/get-platform';
 import { runOnWorker } from './extraction-client';
 import { publishImportProgress } from './import-progress-bus';

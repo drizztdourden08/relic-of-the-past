@@ -14,7 +14,7 @@
  */
 import { wasmGetGameUIState, wasmGetReceiveCount, wasmGetReceiveSite } from '../';
 import { parseGameUIBuffer } from '../ui-bridge';
-import { dungeonGroupName, dungeonGroupOf } from '@shared/game/data/screens/dungeon-group';
+import { dungeonGroupName, dungeonGroupOf } from '@shared/game/logic/queries/dungeon-group';
 
 /** Health is stored in eighths of a heart. */
 const PER_HEART = 8;

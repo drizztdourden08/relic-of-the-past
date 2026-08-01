@@ -1,0 +1,96 @@
+/* @layer shared-game @kind data */
+/** Further split by locality out of checks/{dungeons,light-world,dark-world}.ts — Package T. */
+import type { CheckRecord } from '../../types';
+import { canShootArrows } from '../../requirements/helpers';
+
+const DUNGEON_EASTERN_PALACE_CHECKS: CheckRecord[] = [
+  {
+    id: 'check-116',
+    gameId: { roomId: 168, chestIndex: 0 },
+    kind: 'chest',
+    screenId: 'screen-143',
+    dungeonId: 'dungeon-003',
+    randomizerName: 'Compass Chest',
+    vanillaItemIds: ['item-038'],
+  },
+  {
+    id: 'check-117',
+    gameId: { roomId: 169, chestIndex: 0 },
+    kind: 'chest',
+    screenId: 'screen-144',
+    dungeonId: 'dungeon-003',
+    randomizerName: 'Big Chest',
+    vanillaItemIds: ['item-012'],
+    requirements: { itemId: 'item-094' },
+  },
+  {
+    id: 'check-118',
+    gameId: { roomId: 185, chestIndex: 0 },
+    kind: 'chest',
+    screenId: 'screen-148',
+    dungeonId: 'dungeon-003',
+    randomizerName: 'Cannonball Chest',
+    vanillaItemIds: ['item-065'],
+  },
+  {
+    id: 'check-119',
+    gameId: { roomId: 184, chestIndex: 0 },
+    kind: 'chest',
+    screenId: 'screen-147',
+    dungeonId: 'dungeon-003',
+    randomizerName: 'Big Key Chest',
+    vanillaItemIds: ['item-051'],
+    requirements: { itemId: 'item-019' },
+  },
+  {
+    id: 'check-120',
+    gameId: { roomId: 170, chestIndex: 0 },
+    kind: 'chest',
+    screenId: 'screen-145',
+    dungeonId: 'dungeon-003',
+    randomizerName: 'Map Chest',
+    vanillaItemIds: ['item-052'],
+  },
+  {
+    id: 'check-121',
+    gameId: { roomId: 200, mask: 2048 },
+    kind: 'boss',
+    screenId: 'screen-151',
+    dungeonId: 'dungeon-003',
+    randomizerName: 'Boss',
+    vanillaItemIds: ['item-039'],
+    requirements: { allOf: [{ itemId: 'item-094' }, { itemId: 'item-019' }, canShootArrows] },
+  },
+  {
+    id: 'check-122',
+    gameId: { roomId: 200, mask: 2048 },
+    kind: 'prize',
+    screenId: 'screen-151',
+    dungeonId: 'dungeon-003',
+    randomizerName: 'Prize',
+    vanillaItemIds: ['item-056'],
+    requirements: { allOf: [{ itemId: 'item-094' }, { itemId: 'item-019' }, canShootArrows] },
+  },
+  {
+    id: 'check-123',
+    gameId: { roomId: 186, mask: 1024 },
+    kind: 'keyDrop',
+    screenId: 'screen-149',
+    dungeonId: 'dungeon-003',
+    randomizerName: 'Dark Square Pot Key',
+    vanillaItemIds: ['item-097'],
+    requirements: { itemId: 'item-019' },
+  },
+  {
+    id: 'check-124',
+    gameId: { roomId: 153, mask: 1024 },
+    kind: 'keyDrop',
+    screenId: 'screen-141',
+    dungeonId: 'dungeon-003',
+    randomizerName: 'Dark Eyegore Key Drop',
+    vanillaItemIds: ['item-097'],
+    requirements: { itemId: 'item-019' },
+  },
+];
+
+export { DUNGEON_EASTERN_PALACE_CHECKS };

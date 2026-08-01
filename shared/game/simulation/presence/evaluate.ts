@@ -3,11 +3,12 @@
  * evaluatePresence — pure evaluation of a declarative PresenceCondition against
  * a PresenceGameState snapshot. This is the sim's ONE sanctioned data read: the
  * transcribed spawn conditions live as data on the checks (see
- * checks/presence-condition.ts) and this function reads them. An absent
- * condition means "always present".
+ * CheckRecord.presence) and this function reads them. An absent condition means
+ * "always present". An `itemId` leaf is asked of the inventory directly — it used
+ * to resolve to a display name first, purely because the engine's inventory was a
+ * name set.
  */
-import type { PresenceCondition } from '../../checks/presence-condition';
-import type { BitState } from '../../checks/presence-condition';
+import type { BitState, PresenceCondition } from '../../data';
 import type { PresenceGameState } from './state';
 
 /** save_dung_info bit marking a room's boss defeated / room cleared. */
@@ -25,7 +26,7 @@ const evaluatePresence = (condition: PresenceCondition | undefined, state: Prese
   if ('progressIndicator3' in condition) {
     return bitMatches(state.progressIndicator3, condition.progressIndicator3, condition.state);
   }
-  if ('item' in condition) return state.inventory.has(condition.item) === condition.owned;
+  if ('itemId' in condition) return state.inventory.has(condition.itemId) === condition.owned;
   if ('follower' in condition) return state.followerIndicator === 0;
   if ('followerEq' in condition) return state.followerIndicator === condition.followerEq;
   if ('owEvent' in condition) {

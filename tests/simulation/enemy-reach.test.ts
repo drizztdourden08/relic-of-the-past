@@ -3,6 +3,15 @@ import { describe, it, expect } from 'vitest';
 import type { GridPos } from '../../shared/game/navigation/types';
 import type { SimSprite, ScreenGridBundle, CombatContext, CombatTables } from '../../shared/game/simulation/types';
 import { evaluateRoomThreat } from '../../shared/game/simulation/engine/enemy-reach';
+import type { ItemId } from '../../shared/game/data';
+
+// Inventories are dataset ids: item-012 bow, item-074 tier-1 sword, item-004 tier-4,
+// item-013 blue boomerang, item-008 fire rod.
+const BOW: ItemId = 'item-012';
+const SWORD_1: ItemId = 'item-074';
+const SWORD_4: ItemId = 'item-004';
+const BOOMERANG: ItemId = 'item-013';
+const FIRE_ROD: ItemId = 'item-008';
 
 const GRID_SIZE = 20;
 
@@ -56,7 +65,7 @@ describe('evaluateRoomThreat — line of fire', () => {
       sprites: [makeSprite(enemy)],
       reached,
       grids: makeGrids(attrGrid),
-      inventory: new Set(['Bow']),
+      inventory: new Set([BOW]),
       combat: {
         tables: makeTables({ ancillaDamageClass: (() => { const c = new Array(57).fill(0); c[0x09] = 5; return c; })() }),
         bySpriteType: { 1: { health: 4, flags4: 0, damageByClass: (() => { const d = new Array(16).fill(0); d[5] = 2; return d; })() } },
@@ -77,7 +86,7 @@ describe('evaluateRoomThreat — zero damage class', () => {
       sprites: [makeSprite(enemy)],
       reached: fullyReached(),
       grids: makeGrids(openAttrGrid()),
-      inventory: new Set(['Fighter Sword']), // tier 1 -> damage class 1
+      inventory: new Set([SWORD_1]), // tier 1 -> damage class 1
       combat: {
         tables: makeTables(),
         bySpriteType: { 1: { health: 4, flags4: 0, damageByClass: new Array(16).fill(0) } }, // class 1 reads 0
@@ -98,7 +107,7 @@ describe('evaluateRoomThreat — zero damage class', () => {
       sprites: [makeSprite(enemy)],
       reached: fullyReached(),
       grids: makeGrids(openAttrGrid()),
-      inventory: new Set(['Blue Boomerang']),
+      inventory: new Set([BOOMERANG]),
       combat: { tables: makeTables({ ancillaDamageClass }), bySpriteType: { 1: { health: 2, flags4: 0, damageByClass } } },
     });
 
@@ -121,7 +130,7 @@ describe('evaluateRoomThreat — unbounded beam reach', () => {
       sprites: [makeSprite(enemy)],
       reached,
       grids: makeGrids(openAttrGrid()),
-      inventory: new Set(['Fire Rod']),
+      inventory: new Set([FIRE_ROD]),
       combat: { tables: makeTables({ ancillaDamageClass }), bySpriteType: { 1: { health: 1, flags4: 0, damageByClass } } },
     });
 
@@ -163,7 +172,7 @@ describe('evaluateRoomThreat — multi-section room', () => {
       sprites: [westGuard, eastGuard],
       reached: wideReached(),
       grids: makeGrids(wideOpenAttrGrid()),
-      inventory: new Set(['Fighter Sword']),
+      inventory: new Set([SWORD_1]),
       combat: {
         tables: makeTables(),
         bySpriteType: {
@@ -189,7 +198,7 @@ describe('evaluateRoomThreat — combat reasoning unavailable', () => {
       sprites: [sprite],
       reached: fullyReached(),
       grids: makeGrids(openAttrGrid()),
-      inventory: new Set(['Bow', 'Golden Sword']),
+      inventory: new Set([BOW, SWORD_4]),
       combat: { tables: null, bySpriteType: {} },
     });
 
@@ -205,7 +214,7 @@ describe('evaluateRoomThreat — combat reasoning unavailable', () => {
       sprites: [sprite],
       reached: fullyReached(),
       grids: makeGrids(openAttrGrid()),
-      inventory: new Set(['Golden Sword']),
+      inventory: new Set([SWORD_4]),
       combat: undefined,
     });
 

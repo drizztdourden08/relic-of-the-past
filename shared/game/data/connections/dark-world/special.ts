@@ -1,14 +1,41 @@
 /* @layer shared-game @kind data */
-import type { ScreenConnection } from '../../../types';
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ConnectionRecord } from '../../types';
 
-const DW_SPECIAL_CONNECTIONS: ScreenConnection[] = [
-  { from: 'pyramid-ledge', to: 'pyramid', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
-  { from: 'pyramid', to: 'bottom-of-pyramid', tags: ['transit:stairs', 'dir:one-way', 'ctx:internal'] },
-  { from: 'bottom-of-pyramid', to: 'dw-1b', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
-
-  // Turtle Rock top entrance area
-  { from: 'dark-death-mountain-top', to: 'dw-07', tags: ['transit:door', 'dir:two-way', 'ctx:dungeon-enter'] },
-  { from: 'dark-death-mountain-top', to: 'dark-death-mountain-top', tags: ['transit:warp', 'dir:one-way', 'ctx:overworld', 'barrier:medallion'] },
+const DW_SPECIAL_CONNECTIONS: ConnectionRecord[] = [
+  {
+    id: 'connection-428',
+    kind: 'entrance',
+    fromScreenId: 'screen-252',
+    toScreenId: 'screen-452',
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-892',
+    kind: 'entrance',
+    fromScreenId: 'screen-256',
+    toScreenId: 'screen-452',
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:entrance'],
+  },
+  {
+    id: 'connection-893',
+    kind: 'stairs',
+    fromScreenId: 'screen-452',
+    toScreenId: 'screen-451',
+    direction: 'one-way',
+    tags: ['dir:one-way', 'ctx:internal'],
+  },
+  {
+    id: 'connection-894',
+    kind: 'entrance',
+    fromScreenId: 'screen-451',
+    toScreenId: 'screen-280',
+    placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:exit'],
+  },
 ];
 
 export { DW_SPECIAL_CONNECTIONS };

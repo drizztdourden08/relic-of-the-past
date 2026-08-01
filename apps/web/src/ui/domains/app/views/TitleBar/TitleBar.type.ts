@@ -17,6 +17,7 @@ interface TitleBarProps {
   onShowCredits: () => void;
   onShowDesignGallery: () => void;
   onShowSpriteDebug: () => void;
+  onShowDatasetInspector: () => void;
   onShowConnectionDebug: () => void;
   onToggleDataset: () => void;
   onToggleSimulator: () => void;

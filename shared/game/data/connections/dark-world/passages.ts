@@ -1,13 +1,50 @@
 /* @layer shared-game @kind data */
-import type { ScreenConnection } from '../../../types';
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ConnectionRecord } from '../../types';
 
-const DW_PASSAGE_CONNECTIONS: ScreenConnection[] = [
-  // Superbunny Cave (connects dark death mountain top ↔ bottom)
-  { from: 'east-death-mountain-top', to: 'superbunny-cave-top', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
-  { from: 'dark-death-mountain-top', to: 'superbunny-cave-top', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
-  { from: 'dark-death-mountain-east-bottom', to: 'superbunny-cave-bottom', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
-  { from: 'superbunny-cave-top', to: 'superbunny-cave-bottom', tags: ['transit:stairs', 'dir:one-way', 'ctx:internal'] },
-  { from: 'superbunny-cave-bottom', to: 'east-death-mountain-bottom', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+const DW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
+  {
+    id: 'connection-880',
+    kind: 'entrance',
+    fromScreenId: 'screen-017',
+    toScreenId: 'screen-463',
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:entrance'],
+  },
+  {
+    id: 'connection-881',
+    kind: 'entrance',
+    fromScreenId: 'screen-236',
+    toScreenId: 'screen-463',
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:entrance'],
+  },
+  {
+    id: 'connection-882',
+    kind: 'entrance',
+    fromScreenId: 'screen-233',
+    toScreenId: 'screen-457',
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:entrance'],
+  },
+  {
+    id: 'connection-883',
+    kind: 'stairs',
+    fromScreenId: 'screen-463',
+    toScreenId: 'screen-457',
+    placement: { at: 'area', rect: { x: 15, y: 3, w: 2, h: 2 } },
+    direction: 'one-way',
+    tags: ['dir:one-way', 'ctx:internal'],
+  },
+  {
+    id: 'connection-884',
+    kind: 'entrance',
+    fromScreenId: 'screen-457',
+    toScreenId: 'screen-016',
+    placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:exit'],
+  },
 ];
 
-export { DW_PASSAGE_CONNECTIONS };
+export { DW_PASSAGES_CONNECTIONS };

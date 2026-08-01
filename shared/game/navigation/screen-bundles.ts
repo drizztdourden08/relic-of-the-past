@@ -1,4 +1,4 @@
 /* @layer shared-game @kind logic */
-// Re-export from canonical data layer location
-export { buildScreenBundle } from '../data/screens/bundles';
-export type { ScreenBundle } from '../data/screens/bundles';
+// Re-export from canonical query location
+export { buildScreenBundle } from '../logic/queries/bundles';
+export type { ScreenBundle } from '../logic/queries/bundles';

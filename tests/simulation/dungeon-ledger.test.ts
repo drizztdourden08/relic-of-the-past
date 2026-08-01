@@ -9,7 +9,7 @@ import { BOMBABLE_ATTR_MIN } from '../../shared/game/simulation/engine/discover-
 import { updateDungeonLedger } from '../../shared/game/simulation/engine/dungeon-ledger-scan';
 import { closeIdleDungeonGroups, reopenLedgersFor } from '../../shared/game/simulation/engine/dungeon-ledger-lifecycle';
 import { onCheckVerified } from '../../shared/game/simulation/engine/explorer';
-import { dungeonGroupOf, dungeonGroupForScreen } from '../../shared/game/data/screens/dungeon-group';
+import { dungeonGroupOf, dungeonGroupForScreen } from '../../shared/game/logic/queries/dungeon-group';
 
 // Real dungeon-group data: the sewers (hc-0x11, palace index 0x00) are reachable
 // only through the castle above (hc-0x01, palace index 0x02) — the one case the
@@ -168,7 +168,7 @@ describe('reopenLedgersFor', () => {
 
   it('does not reopen on an unrelated acquisition', () => {
     const { state, group } = exhaustedState();
-    reopenLedgersFor(state, ['hammer'], 'Hammer', []);
+    reopenLedgersFor(state, ['hammer'], 'the hammer', []);
     expect(state.ledgers.get(group)!.exhausted).toBe(true);
     expect(state.visited.has(SEWERS_SCREEN)).toBe(true);
   });
@@ -176,7 +176,7 @@ describe('reopenLedgersFor', () => {
   it('reopens and un-visits the group\'s screens when a listed token is acquired', () => {
     const { state, group } = exhaustedState();
     const events: SimEvent[] = [];
-    reopenLedgersFor(state, ['bombs'], 'Bombs', events);
+    reopenLedgersFor(state, ['bombs'], 'bombs', events);
 
     const ledger = state.ledgers.get(group)!;
     expect(ledger.exhausted).toBe(false);
@@ -200,7 +200,8 @@ describe('onCheckVerified — reopen hooked into the item-gained path', () => {
     });
     state.visited.add(SEWERS_SCREEN);
 
-    const check: DetectedCheck = { evidence: [], itemReceived: 'Bombs', at: state.virtual };
+    // item-041 is the bomb pickup, which is what grants the 'bombs' token.
+    const check: DetectedCheck = { evidence: [], itemReceived: 'item-041', at: state.virtual };
     const events: SimEvent[] = [];
     onCheckVerified(state, check, events);
 

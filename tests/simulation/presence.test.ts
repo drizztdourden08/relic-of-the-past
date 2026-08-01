@@ -2,13 +2,14 @@
 import { describe, it, expect } from 'vitest';
 import type { PresenceCondition, PresenceGameState } from '../../shared/game/simulation/presence/state';
 import { evaluatePresence, BOSS_DEAD_BIT } from '../../shared/game/simulation/presence/evaluate';
+import type { ItemId } from '../../shared/game/data';
 
 const baseState = (partial: Partial<PresenceGameState> = {}): PresenceGameState => ({
   progressFlags: 0,
   progressIndicator: 0,
   progressIndicator3: 0,
   followerIndicator: 0,
-  inventory: new Set<string>(),
+  inventory: new Set<ItemId>(),
   owEventInfo: [],
   roomState: [],
   ...partial,
@@ -35,11 +36,11 @@ describe('evaluatePresence', () => {
     expect(evaluatePresence({ progressIndicator3: 0x10, state: 'set' }, baseState({ progressIndicator3: 0x10 }))).toBe(true);
   });
 
-  it('item owned/not — King Zora needs Flippers absent', () => {
-    const cond: PresenceCondition = { item: 'Flippers', owned: false };
+  it('item owned/not — asked of the inventory by id', () => {
+    const cond: PresenceCondition = { itemId: 'item-031', owned: false };
     expect(evaluatePresence(cond, baseState())).toBe(true);
-    expect(evaluatePresence(cond, baseState({ inventory: new Set(['Flippers']) }))).toBe(false);
-    expect(evaluatePresence({ item: 'Flippers', owned: true }, baseState({ inventory: new Set(['Flippers']) }))).toBe(true);
+    expect(evaluatePresence(cond, baseState({ inventory: new Set<ItemId>(['item-031']) }))).toBe(false);
+    expect(evaluatePresence({ itemId: 'item-031', owned: true }, baseState({ inventory: new Set<ItemId>(['item-031']) }))).toBe(true);
   });
 
   it('follower none / followerEq', () => {
@@ -65,16 +66,16 @@ describe('evaluatePresence', () => {
   });
 
   it('and requires every sub-condition — Old Man (no follower AND no mirror)', () => {
-    const cond: PresenceCondition = { and: [{ follower: 'none' }, { item: 'Magic Mirror', owned: false }] };
+    const cond: PresenceCondition = { and: [{ follower: 'none' }, { itemId: 'item-027', owned: false }] };
     expect(evaluatePresence(cond, baseState())).toBe(true);
     expect(evaluatePresence(cond, baseState({ followerIndicator: 1 }))).toBe(false);
-    expect(evaluatePresence(cond, baseState({ inventory: new Set(['Magic Mirror']) }))).toBe(false);
+    expect(evaluatePresence(cond, baseState({ inventory: new Set<ItemId>(['item-027']) }))).toBe(false);
   });
 
   it('or requires any sub-condition', () => {
-    const cond: PresenceCondition = { or: [{ follower: 'none' }, { item: 'Lamp', owned: true }] };
+    const cond: PresenceCondition = { or: [{ follower: 'none' }, { itemId: 'item-019', owned: true }] };
     expect(evaluatePresence(cond, baseState({ followerIndicator: 3 }))).toBe(false);
-    expect(evaluatePresence(cond, baseState({ followerIndicator: 3, inventory: new Set(['Lamp']) }))).toBe(true);
+    expect(evaluatePresence(cond, baseState({ followerIndicator: 3, inventory: new Set<ItemId>(['item-019']) }))).toBe(true);
   });
 
   it('not inverts — Locksmith absent while escorting follower 9', () => {

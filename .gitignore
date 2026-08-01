@@ -16,6 +16,9 @@ out/
 
 # WASM build artifacts
 core/wasm-build/output/
+
+# One-time id-assignment manifest (build artifact, regenerate via generate-ids.ts)
+scripts/generate-ids/output/
 apps/web/public/wasm/
 apps/desktop/public/wasm/
 
@@ -118,4 +121,3 @@ AGENTS.md
 .vault/
 tests/fixtures/save-states/
 .claude/nav-baselines/
-apps/web/public/names.json

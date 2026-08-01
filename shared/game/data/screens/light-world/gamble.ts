@@ -1,9 +1,39 @@
 /* @layer shared-game @kind data */
-import type { ScreenDefinition } from '../../../types';
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ScreenRecord } from '../../types';
 
-const LW_GAMBLE: ScreenDefinition[] = [
-  { id: 'kakariko-gamble-game', name: 'Village Gamble Game', type: 'interior', world: 'light', location: 'Kakariko Village', area: 'Kakariko', roomIndex: 0x011B, interior: { kind: 'gamble' }, tags: ['env:indoor'] },
-  { id: 'lost-woods-gamble', name: 'Lost Woods Gamble', type: 'interior', world: 'light', location: 'Lost Woods', area: 'Lost Woods', roomIndex: 0x010C, interior: { kind: 'gamble' }, tags: ['env:underground'] },
+const LW_GAMBLE_SCREENS: ScreenRecord[] = [
+  {
+    id: 'screen-219',
+    gameId: { roomIndex: 283 },
+    kind: 'interior',
+    world: 'light',
+    interiorKind: 'gamble',
+    randomizerName: 'Kakariko Gamble Game',
+    areaId: 'area-012',
+    locationId: 'location-017',
+    tags: ['env:indoor'],
+    status: 'mapped',
+    spawns: [
+      { actorId: 'actor-262', tile: { x: 48, y: 18 } },
+      { actorId: 'actor-262', tile: { x: 10, y: 44 } },
+    ],
+  },
+  {
+    id: 'screen-215',
+    gameId: { roomIndex: 262 },
+    kind: 'interior',
+    world: 'light',
+    interiorKind: 'gamble',
+    randomizerName: 'Lost Woods Gamble',
+    areaId: 'area-014',
+    locationId: 'location-019',
+    tags: ['env:underground'],
+    status: 'mapped',
+    spawns: [
+      { actorId: 'actor-230', tile: { x: 16, y: 54 } },
+    ],
+  },
 ];
 
-export { LW_GAMBLE };
+export { LW_GAMBLE_SCREENS };

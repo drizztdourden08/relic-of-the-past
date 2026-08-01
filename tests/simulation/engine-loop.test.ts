@@ -1,14 +1,17 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import type { ScreenConnection } from '../../shared/game/types';
+import type { ConnectionRecord } from '../../shared/game/data';
 import type { SimChest, SimObservation, TriggerAction, FlagSnapshot, SimEvent, DetectedCheck } from '../../shared/game/simulation/types';
 import { createEngine } from '../../shared/game/simulation/engine/engine';
 import { createEngineState } from '../../shared/game/simulation/engine/state';
 import type { EngineState } from '../../shared/game/simulation/engine/state';
 import { buildAdjacency } from '../../shared/game/simulation/engine/traversal';
 import { emptySnapshot, cloneSnapshot } from '../../shared/game/simulation/detect/flag-snapshot';
-import { CHEST_OPEN_MASKS } from '../../shared/game/checks/flags';
-import { ITEM_ID_TO_NAME } from '../../shared/game/items/id-map';
+import { getItemByGameId } from '../../shared/game/data';
+import type { CheckId, ItemId } from '../../shared/game/data';
+
+/** Chest-open bit per slot — same native fact the matcher itself uses. */
+const CHEST_OPEN_MASKS = [0x10, 0x20, 0x40, 0x80, 0x100, 0x200, 0x400] as const;
 
 // ─── Synthetic world (3 screens, chests wired to real room IDs so the matcher names them) ───
 // A — start; chest 0x103 (Kakariko Tavern) hands over the Hammer that unlocks B→C.
@@ -16,6 +19,9 @@ import { ITEM_ID_TO_NAME } from '../../shared/game/items/id-map';
 
 const KAKARIKO_TAVERN_ROOM = 0x103;
 const LINKS_HOUSE_ROOM = 0x104;
+/** The checks those two chests ARE — identity is the id, not the display name. */
+const TAVERN_CHECK: CheckId = 'check-027';
+const HOUSE_CHECK: CheckId = 'check-026';
 const HAMMER_ID = 0x09;
 const LAMP_ID = 0x12;
 const BOMBS_ID = 0x28;
@@ -24,20 +30,22 @@ interface WorldChest extends SimChest {
   screenId: string;
 }
 
-const makeConnections = (lockBToC: boolean): ScreenConnection[] => [
-  { from: 'A', to: 'B', tags: ['transit:walk', 'dir:two-way'] },
+const makeConnections = (lockBToC: boolean): ConnectionRecord[] => [
+  { id: 'connection-t01', fromScreenId: 'A', toScreenId: 'B', direction: 'two-way', tags: ['transit:walk', 'dir:two-way'] } as unknown as ConnectionRecord,
   {
-    from: 'B',
-    to: 'C',
+    id: 'connection-t02',
+    fromScreenId: 'B',
+    toScreenId: 'C',
+    direction: 'two-way',
     tags: ['transit:door', 'dir:two-way'],
     nav: { transitType: 'door', requirements: lockBToC ? [['hammer']] : [], bidirectional: true, weight: 1 },
-  },
+  } as unknown as ConnectionRecord,
 ];
 
 class FakeWorld {
   flags: FlagSnapshot = emptySnapshot();
-  inventory = new Set<string>();
-  pendingItem: number | undefined;
+  inventory = new Set<ItemId>();
+  pendingItem: ItemId | undefined;
   virtualScreen = 'A';
 
   constructor(private chests: WorldChest[]) {}
@@ -66,13 +74,13 @@ class FakeWorld {
   apply(action: TriggerAction): void {
     if (action.type !== 'chest') return;
     this.flags.dungInfo[action.roomId] |= CHEST_OPEN_MASKS[action.chestIndex];
-    this.pendingItem = action.itemId;
-    const name = ITEM_ID_TO_NAME[action.itemId];
-    if (name) this.inventory.add(name);
+    const item = getItemByGameId({ receiveItemId: action.itemId });
+    this.pendingItem = item?.id;
+    if (item) this.inventory.add(item.id);
   }
 }
 
-const runLoop = (world: FakeWorld, connections: ScreenConnection[], goalCheckId?: string) => {
+const runLoop = (world: FakeWorld, connections: ConnectionRecord[], goalCheckId?: CheckId) => {
   const engine = createEngine({ adjacency: buildAdjacency(connections) });
   let state = createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), { goalCheckId });
   const events: string[] = [];
@@ -92,12 +100,12 @@ describe('simulation engine loop', () => {
       { screenId: 'A', roomId: KAKARIKO_TAVERN_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: HAMMER_ID },
       { screenId: 'C', roomId: LINKS_HOUSE_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: LAMP_ID },
     ]);
-    const { state, events } = runLoop(world, makeConnections(true), 'Link\'s House');
+    const { state, events } = runLoop(world, makeConnections(true), HOUSE_CHECK);
 
     expect(state.phase).toBe('done');
     expect(state.outcome).toBe('completed');
-    expect(state.completedChecks.has('Kakariko Tavern')).toBe(true);
-    expect(state.completedChecks.has("Link's House")).toBe(true);
+    expect(state.completedChecks.has(TAVERN_CHECK)).toBe(true);
+    expect(state.completedChecks.has(HOUSE_CHECK)).toBe(true);
     // The Hammer pickup must have bumped the epoch (unlock-reset).
     expect(state.epoch).toBeGreaterThanOrEqual(1);
     expect(events.some(m => m.startsWith('Reset:'))).toBe(true);
@@ -108,7 +116,7 @@ describe('simulation engine loop', () => {
       { screenId: 'A', roomId: KAKARIKO_TAVERN_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: HAMMER_ID },
       { screenId: 'C', roomId: LINKS_HOUSE_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: LAMP_ID },
     ]);
-    const { state } = runLoop(world, makeConnections(true), 'Link\'s House');
+    const { state } = runLoop(world, makeConnections(true), HOUSE_CHECK);
     // Screen C is only reachable after the Hammer unlock — reaching it proves the re-flood.
     expect(state.reachedScreens.has('C')).toBe(true);
     expect(state.visited.has('C')).toBe(true);
@@ -120,12 +128,12 @@ describe('simulation engine loop', () => {
       { screenId: 'A', roomId: KAKARIKO_TAVERN_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: BOMBS_ID },
       { screenId: 'C', roomId: LINKS_HOUSE_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: LAMP_ID },
     ]);
-    const { state } = runLoop(world, makeConnections(true), 'Link\'s House');
+    const { state } = runLoop(world, makeConnections(true), HOUSE_CHECK);
 
     expect(state.phase).toBe('done');
     expect(state.outcome).toBe('not-completable');
     expect(state.reachedScreens.has('C')).toBe(false);
-    expect(state.completedChecks.has('Kakariko Tavern')).toBe(true);
+    expect(state.completedChecks.has(TAVERN_CHECK)).toBe(true);
   });
 
   it('stops exactly at a configured stop-at-check', () => {
@@ -134,7 +142,7 @@ describe('simulation engine loop', () => {
       { screenId: 'C', roomId: LINKS_HOUSE_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: LAMP_ID },
     ]);
     const engine = createEngine({ adjacency: buildAdjacency(makeConnections(true)) });
-    let state = createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), { stopAtCheckId: 'Kakariko Tavern' });
+    let state = createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), { stopAtCheckId: TAVERN_CHECK });
     for (let i = 0; i < 500 && state.phase !== 'done'; i++) {
       const obs = world.observe(state);
       const { actions, nextState } = engine.step(state, obs);
@@ -142,7 +150,7 @@ describe('simulation engine loop', () => {
       state = nextState;
     }
     expect(state.outcome).toBe('stopped-at-check');
-    expect(state.completedChecks.has("Link's House")).toBe(false);
+    expect(state.completedChecks.has(HOUSE_CHECK)).toBe(false);
   });
 
   it('attaches the DetectedCheck to the "Verified …" event as its data payload', () => {
@@ -151,7 +159,7 @@ describe('simulation engine loop', () => {
       { screenId: 'C', roomId: LINKS_HOUSE_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: LAMP_ID },
     ]);
     const engine = createEngine({ adjacency: buildAdjacency(makeConnections(true)) });
-    let state = createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), { goalCheckId: "Link's House" });
+    let state = createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), { goalCheckId: HOUSE_CHECK });
     const events: SimEvent[] = [];
     for (let i = 0; i < 500 && state.phase !== 'done'; i++) {
       const obs = world.observe(state);
@@ -163,6 +171,6 @@ describe('simulation engine loop', () => {
 
     const verified = events.find(e => e.msg === 'Verified Kakariko Tavern');
     const detected = (verified?.data as { detected?: DetectedCheck } | undefined)?.detected;
-    expect(detected?.matchedName).toBe('Kakariko Tavern');
+    expect(detected?.checkId).toBe(TAVERN_CHECK);
   });
 });

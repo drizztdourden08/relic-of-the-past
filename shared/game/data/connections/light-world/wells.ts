@@ -1,11 +1,45 @@
 /* @layer shared-game @kind data */
-import type { ScreenConnection } from '../../../types';
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ConnectionRecord } from '../../types';
 
-const LW_WELL_CONNECTIONS: ScreenConnection[] = [
-  { from: 'lw-18', to: 'kakariko-well-top', tags: ['transit:hole', 'dir:one-way', 'ctx:entrance'] },
-  { from: 'lw-18', to: 'kakariko-well-bottom', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
-  { from: 'kakariko-well-top', to: 'kakariko-well-bottom', tags: ['transit:hole', 'dir:one-way', 'ctx:internal'] },
-  { from: 'kakariko-well-bottom', to: 'lw-18', tags: ['transit:door', 'dir:two-way', 'ctx:exit'] },
+const LW_WELLS_CONNECTIONS: ConnectionRecord[] = [
+  {
+    id: 'connection-404',
+    kind: 'hole',
+    fromScreenId: 'screen-031',
+    toScreenId: 'screen-221',
+    placement: { at: 'area', rect: { x: 22, y: 24, w: 2, h: 2 } },
+    direction: 'one-way',
+    tags: ['dir:one-way', 'ctx:entrance'],
+  },
+  {
+    id: 'connection-405',
+    kind: 'entrance',
+    fromScreenId: 'screen-031',
+    toScreenId: 'screen-224',
+    placement: { at: 'area', rect: { x: 22, y: 24, w: 2, h: 2 } },
+    direction: 'two-way',
+    counterpartId: 'connection-407',
+    tags: ['dir:two-way', 'ctx:entrance'],
+  },
+  {
+    id: 'connection-406',
+    kind: 'hole',
+    fromScreenId: 'screen-221',
+    toScreenId: 'screen-224',
+    direction: 'one-way',
+    tags: ['dir:one-way', 'ctx:internal'],
+  },
+  {
+    id: 'connection-407',
+    kind: 'entrance',
+    fromScreenId: 'screen-224',
+    toScreenId: 'screen-031',
+    placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
+    direction: 'two-way',
+    counterpartId: 'connection-405',
+    tags: ['dir:two-way', 'ctx:exit'],
+  },
 ];
 
-export { LW_WELL_CONNECTIONS };
+export { LW_WELLS_CONNECTIONS };

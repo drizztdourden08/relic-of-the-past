@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import type { CheckTag } from '@shared/game/checks/tags';
-import { TAG_DEFINITIONS } from '@shared/game/checks/tags';
-import type { GroupDimension, FilterState } from '@shared/game/checks/grouping';
-import { GROUP_DIMENSIONS } from '@shared/game/checks/grouping';
+import type { CheckTag } from '@shared/game/data';
+import { CHECK_TAG_DEFINITIONS } from '@shared/game/data';
+import type { GroupDimension, FilterState } from '@shared/game/logic/queries/check-grouping';
+import { GROUP_DIMENSIONS } from '@shared/game/logic/queries/check-grouping';
 import { Box, Text, Button } from '../../../../../design-system/primitives';
 
 interface TrackerFilterPanelsProps {
@@ -47,7 +47,7 @@ const TrackerFilterPanels = (props: TrackerFilterPanelsProps) => {
             <Box key={cat} className="tracker-filters__tag-group">
               <Text className="tracker-filters__tag-group-label">{cat}</Text>
               <Box className="tracker-filters__tag-list">
-                {TAG_DEFINITIONS.filter(t => t.category === cat).map(t => (
+                {CHECK_TAG_DEFINITIONS.filter(t => t.category === cat).map(t => (
                   <Button
                     variant="bare"
                     key={t.id}

@@ -8,12 +8,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import { computeTrackerSnapshot } from '@shared/game/logic/eval';
 import type { CheckStatus } from '@shared/game/logic/eval';
-import { resolveRules, VANILLA_CONFIG } from '@shared/game/logic/presets';
-import { ALL_CHECKS } from '@shared/game/checks';
-import { getCheckTags } from '@shared/game/checks/tags';
-import { filterChecks } from '@shared/game/checks/grouping';
-import type { FilterState } from '@shared/game/checks/grouping';
-import type { CheckDefinition } from '@shared/game/types';
+import { resolveRules } from '@shared/game/logic/resolver';
+import { VANILLA_CONFIG } from '@shared/game/data/presets';
+import { find } from '@shared/game/data';
+import type { CheckId, CheckRecord, ItemId } from '@shared/game/data';
+import { getCheckTags } from '@shared/game/logic/queries/check-tags';
+import { filterChecks } from '@shared/game/logic/queries/check-grouping';
+import type { FilterState } from '@shared/game/logic/queries/check-grouping';
 import {
   onInventoryChanged, onCompletedChecksChanged,
   getCurrentInventory, getCompletedChecks,
@@ -29,13 +30,14 @@ const EMPTY_FILTER: FilterState = {
 
 const useStopAtChecks = () => {
   const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);
-  const [inventory, setInventory] = useState<Set<string>>(() => getCurrentInventory());
-  const [completed, setCompleted] = useState<Set<string>>(() => getCompletedChecks());
+  const [inventory, setInventory] = useState<Set<ItemId>>(() => getCurrentInventory());
+  const [completed, setCompleted] = useState<Set<CheckId>>(() => getCompletedChecks());
 
   useEffect(() => onInventoryChanged((inv) => setInventory(new Set(inv))), []);
   useEffect(() => onCompletedChecksChanged((c) => setCompleted(new Set(c))), []);
 
-  const tagMap = useMemo(() => getCheckTags(ALL_CHECKS), []);
+  const checkRecords = useMemo(() => find('check', () => true), []);
+  const tagMap = useMemo(() => getCheckTags(checkRecords), [checkRecords]);
   const resolvedLogic = useMemo(() => resolveRules(VANILLA_CONFIG), []);
   const effectiveInventory = useMemo(() => {
     const merged = new Set(resolvedLogic.startInventory);
@@ -44,13 +46,13 @@ const useStopAtChecks = () => {
   }, [inventory, resolvedLogic]);
 
   const statuses = useMemo<Map<string, CheckStatus>>(
-    () => computeTrackerSnapshot(effectiveInventory, completed, ALL_CHECKS, resolvedLogic.connections, resolvedLogic.screenRules, resolvedLogic.checkRules),
-    [effectiveInventory, completed, resolvedLogic],
+    () => computeTrackerSnapshot(effectiveInventory, completed, checkRecords, resolvedLogic.connections, resolvedLogic.checkOverrides),
+    [effectiveInventory, completed, checkRecords, resolvedLogic],
   );
 
-  const checks = useMemo<CheckDefinition[]>(
-    () => filterChecks(ALL_CHECKS, filter, tagMap, statuses),
-    [filter, tagMap, statuses],
+  const checks = useMemo<CheckRecord[]>(
+    () => filterChecks(checkRecords, filter, tagMap, statuses),
+    [checkRecords, filter, tagMap, statuses],
   );
 
   return { filter, setFilter, checks, statuses };

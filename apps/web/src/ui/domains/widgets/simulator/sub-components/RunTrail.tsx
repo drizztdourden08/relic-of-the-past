@@ -7,7 +7,8 @@
  * engine's own currentScreen, so the trail cannot disagree with the run.
  */
 import { Box, Text } from '@ds/primitives';
-import { SCREEN_BY_ID, displayName } from '@shared/game/data/screens';
+import { getScreen } from '@shared/game/data';
+import type { ScreenId } from '@shared/game/data';
 import type { TrailStop } from '@app/stores/simulator-store';
 import { haulAt } from './trail-haul';
 
@@ -25,10 +26,11 @@ const RunTrail = ({ trail, checksDone }: RunTrailProps) => {
       <Text className="simulator__trail-title">Route ({trail.length} stops)</Text>
       {trail.map((stop, i) => {
         const haul = haulAt(trail, i, checksDone);
+        const screen = getScreen(stop.screenId as ScreenId);
         return (
           <Box key={`${i}-${stop.screenId}`} className="simulator__trail-row">
             <Text className="simulator__trail-index">{i + 1}</Text>
-            <Text className="simulator__trail-name">{displayName(stop.screenId, SCREEN_BY_ID.get(stop.screenId)?.name)}</Text>
+            <Text className="simulator__trail-name">{screen.vanillaName ?? screen.randomizerName}</Text>
             {haul > 0 && <Text className="simulator__trail-haul">+{haul}</Text>}
             <Text className="simulator__trail-epoch">e{stop.epoch}</Text>
           </Box>

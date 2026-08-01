@@ -64,10 +64,10 @@ const api: IpcApi = {
     onError: (cb) => subscribe('updater:error', cb),
   },
   screenEditor: {
-    writeRegion: (args) => invoke('screenEditor:writeScreen', args),
+    writeScreen: (args) => invoke('screenEditor:writeScreen', args),
     writeConnections: (args) => invoke('screenEditor:writeConnections', args),
     writeCheck: (args) => invoke('screenEditor:writeCheck', args),
-    appendRegistry: (args) => invoke('screenEditor:appendRegistry', args),
+    allocateGeography: (args) => invoke('screenEditor:allocateGeography', args),
   },
 };
 

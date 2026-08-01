@@ -13,14 +13,14 @@ import type { SimLocation, SimExit } from '@shared/game/simulation';
 import type { GridPos } from '@shared/game/navigation';
 import type { ReachState } from '@shared/game/navigation/types';
 import { roomTagName, arrivalLabel } from '@shared/game/simulation';
-import { itemLabel, resolveDuplicate } from '@shared/game/items';
-import { SCREEN_BY_ID } from '@shared/game/data/screens';
+import { itemLabel, resolveDuplicate } from '@shared/game/logic/queries/item-duplicates';
 import { getRoomChests, getRoomDoors, getRoomSprites, getOverworldSprites } from '../simulator/interactables';
 import { detectScreenExits } from '../simulator/screen-exits';
-import { displayNameFor } from '../simulator/screen-location';
+import { screenNameFor } from '../simulator/screen-name';
 import { wasmGetRoomTagsFor, wasmGetRoomTravelDestinationsFor } from '../';
 import { isFollowerActive } from '../follower-state';
 import { getCompletedChecks, getCurrentInventory } from '../tracker';
+import type { CheckId, ItemId } from '@shared/game/data';
 import { doorAnnotation } from './annotate/doors';
 import { spriteAnnotation } from './annotate/sprites';
 import { exitDoorTiles } from './annotate/exit-doors';
@@ -31,7 +31,7 @@ const KILL_GATE_TAG = (t: number): boolean => t >= 0x01 && t <= 0x13;
 const hex = (n: number): string => n.toString(16);
 
 /** Everything indoors: chests, doors, tags, sprites, exit doors. */
-const annotateRoom = (roomId: number, items: ScreenAnnotation[], completed: ReadonlySet<string>, inventory: ReadonlySet<string>): ScreenTag[] => {
+const annotateRoom = (roomId: number, items: ScreenAnnotation[], completed: ReadonlySet<CheckId>, inventory: ReadonlySet<ItemId>): ScreenTag[] => {
   const followerReady = isFollowerActive();
 
   for (const chest of getRoomChests(roomId)) {
@@ -120,11 +120,12 @@ const annotateExits = (screenId: string, items: ScreenAnnotation[], entryTile?: 
   const detected = detectScreenExits(screenId, entryTile ? { entryTile } : {});
   for (const exit of detected?.exits ?? []) {
     if (!exit.fromTile) continue;
-    // Ids are the game's numbers now, so the dataset cannot be indexed by them
-    // directly — displayNameFor resolves a label, and the raw id stays visible
-    // because it is what the run's own log and report speak in.
-    const name = displayNameFor(exit.to);
-    const label = name === exit.to ? exit.to : `${name} (${exit.to})`;
+    // An exit has to be able to say WHERE it goes. Its destination is a traversal
+    // id, not a dataset key, so the name comes from an explicit lookup that may
+    // answer nothing — and the asking screen lends the palace that tells two rooms
+    // sharing a number apart. `target` keeps the traversal id for the engine;
+    // `label` is display only, and falls back to the id rather than to a guess.
+    const label = screenNameFor(exit.to, screenId) ?? exit.to;
     items.push({ kind: 'exit', tile: exit.fromTile, label, target: exit.to,
       ...(exitDetail(exit) ? { detail: exitDetail(exit) } : {}) });
   }
@@ -132,11 +133,20 @@ const annotateExits = (screenId: string, items: ScreenAnnotation[], entryTile?: 
 
 const CHECK_KINDS: ReadonlySet<ScreenAnnotation['kind']> = new Set(['chest', 'big-chest', 'npc-check', 'standing-item']);
 
-const tallyChecks = (items: readonly ScreenAnnotation[], completed: ReadonlySet<string>) =>
+/**
+ * Progress for the screen's checks, off each annotation's own state.
+ *
+ * There used to be a second test here — the completed set asked about the
+ * annotation's LABEL — which could never work: a chest's label is the item it
+ * yields, not a check's name. Whoever knows the check sets `state` (chests from
+ * the room's open bit, NPCs and standing items from the completed set by
+ * `checkId`), so the state is the whole answer.
+ */
+const tallyChecks = (items: readonly ScreenAnnotation[]) =>
   items.reduce(
     (acc, a) => {
       if (!CHECK_KINDS.has(a.kind)) return acc;
-      if (a.state === 'done' || completed.has(a.label)) acc.done += 1;
+      if (a.state === 'done') acc.done += 1;
       else if (a.state === 'blocked') acc.blocked += 1;
       else acc.available += 1;
       return acc;
@@ -177,7 +187,7 @@ const annotateScreen = (
     screenId,
     screenIndex: loc.isIndoors ? loc.roomId : loc.owScreenIndex,
     items,
-    checks: tallyChecks(items, completed),
+    checks: tallyChecks(items),
     ...(tags.length ? { tags } : {}),
   };
 };

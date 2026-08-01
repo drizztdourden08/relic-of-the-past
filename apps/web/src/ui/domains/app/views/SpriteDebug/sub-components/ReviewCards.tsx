@@ -4,7 +4,7 @@ import { Box, Text, Image, TextInput } from '../../../../../design-system/primit
 import type { ReviewEntry, ReviewStatus } from '../SpriteDebug.type';
 
 const NONE_LABEL: CSSProperties = { fontSize: 9, color: 'var(--c-text-muted)' };
-import type { SpriteManifestEntry } from '@shared/game/sprites';
+import type { SpriteManifestEntry } from '@shared/game/data';
 import { StatusBtns } from './ReviewControls';
 import { S } from '../SpriteDebug.constants';
 

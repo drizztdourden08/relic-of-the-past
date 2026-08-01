@@ -1,9 +1,11 @@
 /* @layer renderer-components @kind hook */
 import { useState, useEffect, useMemo } from 'react';
 import { computeTrackerSnapshot } from '@shared/game/logic/eval';
-import { resolveRules, VANILLA_CONFIG } from '@shared/game/logic/presets';
-import { ALL_CHECKS } from '@shared/game/checks';
-import { getCheckTags } from '@shared/game/checks/tags';
+import { resolveRules } from '@shared/game/logic/resolver';
+import { VANILLA_CONFIG } from '@shared/game/data/presets';
+import { find } from '@shared/game/data';
+import type { CheckId, ItemId } from '@shared/game/data';
+import { getCheckTags } from '@shared/game/logic/queries/check-tags';
 import {
   onInventoryChanged, onUnknownItem, onCompletedChecksChanged,
   getCurrentInventory, getCompletedChecks, getUnknownItems, loadUnknownItems,
@@ -14,8 +16,8 @@ import { loadTrackerState, saveTrackerState } from '@app/lib/storage/profile-dat
 import type { CheckStatus } from '@shared/game/logic/eval';
 
 const useTrackerState = () => {
-  const [inventory, setInventory] = useState<Set<string>>(() => getCurrentInventory());
-  const [completedChecks, setCompletedChecks] = useState<Set<string>>(() => getCompletedChecks());
+  const [inventory, setInventory] = useState<Set<ItemId>>(() => getCurrentInventory());
+  const [completedChecks, setCompletedChecks] = useState<Set<CheckId>>(() => getCompletedChecks());
   const [unknownItems, setUnknownItems] = useState<UnknownItemEntry[]>(() => getUnknownItems());
 
   useEffect(() => {
@@ -41,7 +43,8 @@ const useTrackerState = () => {
     });
   }, []);
 
-  const tagMap = useMemo(() => getCheckTags(ALL_CHECKS), []);
+  const checks = useMemo(() => find('check', () => true), []);
+  const tagMap = useMemo(() => getCheckTags(checks), [checks]);
   const resolvedLogic = useMemo(() => resolveRules(VANILLA_CONFIG), []);
   const effectiveInventory = useMemo(() => {
     const merged = new Set(resolvedLogic.startInventory);
@@ -49,8 +52,8 @@ const useTrackerState = () => {
     return merged;
   }, [inventory, resolvedLogic]);
   const snapshot = useMemo(
-    () => computeTrackerSnapshot(effectiveInventory, completedChecks, ALL_CHECKS, resolvedLogic.connections, resolvedLogic.screenRules, resolvedLogic.checkRules),
-    [effectiveInventory, completedChecks, resolvedLogic],
+    () => computeTrackerSnapshot(effectiveInventory, completedChecks, checks, resolvedLogic.connections, resolvedLogic.checkOverrides),
+    [effectiveInventory, completedChecks, checks, resolvedLogic],
   );
 
   const stats = useMemo(() => {

@@ -12,7 +12,7 @@ import respawnIcon from '@iconify-icons/game-icons/player-time';
 import forestEntranceIcon from '@iconify-icons/game-icons/hills';
 import holeIcon from '@iconify-icons/game-icons/hole';
 import wellIcon from '@iconify-icons/game-icons/well';
-import { getScreenLookup } from '@shared/game/data/screens';
+import { getScreenLookup } from '@shared/game/logic/queries/detection';
 
 type EntranceType = 'door' | 'cave' | 'hole' | 'well' | 'dungeon' | 'fairy' | 'shop' | 'house' | 'overworld' | 'respawn' | 'unknown';
 
@@ -51,9 +51,9 @@ const classifyEntranceType = (entId: number, roomId: number, roomIndex: number, 
   if (entId >= 1000) {
     const screen = getScreenLookup().byCaveRoom.get(roomIndex);
     if (!screen) return 'overworld';
-    if (screen.type === 'dungeon') return 'dungeon';
-    if (screen.type === 'interior') {
-      const kind = screen.interior.kind;
+    if (screen.kind === 'dungeon') return 'dungeon';
+    if (screen.kind === 'interior') {
+      const kind = screen.interiorKind;
       if (kind === 'shop') return 'shop';
       if (kind === 'fairy') return 'fairy';
       if (kind === 'house') return 'house';
@@ -64,9 +64,9 @@ const classifyEntranceType = (entId: number, roomId: number, roomIndex: number, 
   if (isIndoors) return 'overworld';
   const screen = getScreenLookup().byCaveRoom.get(roomId);
   if (!screen) return 'overworld';
-  if (screen.type === 'dungeon') return 'dungeon';
-  if (screen.type === 'interior') {
-    const kind = screen.interior.kind;
+  if (screen.kind === 'dungeon') return 'dungeon';
+  if (screen.kind === 'interior') {
+    const kind = screen.interiorKind;
     if (kind === 'shop') return 'shop';
     if (kind === 'fairy') return 'fairy';
     if (kind === 'house') return 'house';

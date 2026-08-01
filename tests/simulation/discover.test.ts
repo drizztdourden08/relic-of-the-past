@@ -169,12 +169,12 @@ describe('discoverTargets — NPC presence gating', () => {
   });
 
   it('drops a conditional room-less NPC when its condition fails (King Zora, Flippers owned)', () => {
-    const obs = spriteObs(makeSprite(0x52, 'npc', 0x181), presenceWith({ inventory: new Set(['Flippers']) }));
+    const obs = spriteObs(makeSprite(0x52, 'npc', 0x181), presenceWith({ inventory: new Set(['item-031' as const]) }));
     expect(discoverTargets(freshState(), obs, null)).toHaveLength(0);
   });
 
   it('discovers the first sage once the pendant is in hand', () => {
-    const obs = spriteObs(makeSprite(0x16, 'npc', 0x1ea), presenceWith({ inventory: new Set(['Green Pendant']) }));
+    const obs = spriteObs(makeSprite(0x16, 'npc', 0x1ea), presenceWith({ inventory: new Set(['item-056' as const]) }));
     expect(discoverTargets(freshState(), obs, null)).toHaveLength(1);
   });
 
@@ -182,7 +182,7 @@ describe('discoverTargets — NPC presence gating', () => {
     const before = spriteObs(makeSprite(0x16, 'npc', 0x1ea), presenceWith({ progressFlags: 0x10 }));
     expect(discoverTargets(freshState(), before, null)).toHaveLength(0);
     const after = spriteObs(makeSprite(0x16, 'npc', 0x1ea),
-      presenceWith({ inventory: new Set(['Green Pendant', 'Pegasus Boots']) }));
+      presenceWith({ inventory: new Set(['item-056' as const, 'item-076' as const]) }));
     expect(discoverTargets(freshState(), after, null)).toHaveLength(0);
   });
 

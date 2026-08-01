@@ -1,0 +1,107 @@
+/* @layer shared-game @kind data */
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ConnectionRecord } from '../../../types';
+
+const LW_OVERWORLD_KAKARIKO_1_CONNECTIONS: ConnectionRecord[] = [
+
+  {
+    id: 'connection-041',
+    kind: 'edge',
+    fromScreenId: 'screen-037',
+    toScreenId: 'screen-033',
+    direction: 'one-way',
+    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-084',
+    kind: 'edge',
+    fromScreenId: 'screen-045',
+    toScreenId: 'screen-053',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-085',
+    kind: 'edge',
+    fromScreenId: 'screen-045',
+    toScreenId: 'screen-046',
+    placement: { at: 'side', side: 'south' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-086',
+    kind: 'edge',
+    fromScreenId: 'screen-053',
+    toScreenId: 'screen-061',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-087',
+    kind: 'edge',
+    fromScreenId: 'screen-053',
+    toScreenId: 'screen-054',
+    placement: { at: 'side', side: 'south' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-097',
+    kind: 'edge',
+    fromScreenId: 'screen-031',
+    toScreenId: 'screen-046',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-098',
+    kind: 'edge',
+    fromScreenId: 'screen-031',
+    toScreenId: 'screen-032',
+    placement: { at: 'side', side: 'south' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-099',
+    kind: 'edge',
+    fromScreenId: 'screen-046',
+    toScreenId: 'screen-054',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-100',
+    kind: 'edge',
+    fromScreenId: 'screen-046',
+    toScreenId: 'screen-047',
+    placement: { at: 'side', side: 'south' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-101',
+    kind: 'edge',
+    fromScreenId: 'screen-054',
+    toScreenId: 'screen-062',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-102',
+    kind: 'edge',
+    fromScreenId: 'screen-054',
+    toScreenId: 'screen-055',
+    placement: { at: 'side', side: 'south' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+];
+
+export { LW_OVERWORLD_KAKARIKO_1_CONNECTIONS };

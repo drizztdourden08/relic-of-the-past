@@ -63,7 +63,14 @@ const installApiShim = (): void => {
       onDownloadComplete: eventStub, onError: eventStub,
     },
     shadowCasting: { load: async () => null, save: async () => {}, getScreen: async () => null },
-    screenEditor: { writeRegion: async () => {}, writeConnections: async () => {}, appendRegistry: async () => {} },
+    // Editing the dataset needs a repo on disk, so every channel refuses here
+    // rather than silently reporting success.
+    screenEditor: {
+      writeScreen: async () => ({ success: false, error: 'The dataset editor needs the desktop app.' }),
+      writeConnections: async () => ({ success: false, error: 'The dataset editor needs the desktop app.' }),
+      writeCheck: async () => ({ success: false, error: 'The dataset editor needs the desktop app.' }),
+      allocateGeography: async () => ({ success: false, error: 'The dataset editor needs the desktop app.' }),
+    },
   };
 
   for (const method of Object.keys(INVOKE_MAP)) {

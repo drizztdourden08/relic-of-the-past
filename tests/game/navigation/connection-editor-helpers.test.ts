@@ -1,11 +1,14 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import { SCREEN_BY_ID } from '../../../shared/game/data/screens';
-import type { ConnectionTag } from '../../../shared/game/data/connections/tags';
+import { getScreen } from '../../../shared/game/data';
+import type { ConnectionTag } from '../../../shared/game/data';
 import { endpointLabel } from '../../../apps/web/src/ui/domains/widgets/navigation/connection-endpoint-label';
 import { connectionIssues } from '../../../apps/web/src/ui/domains/widgets/navigation/connection-issues';
 
-const KNOWN_ID = 'lw-00';
+// screen-028/screen-043 = lw-00/lw-01 — looked up via
+// scripts/generate-ids/output/id-manifest.json, not re-derived by hand.
+const KNOWN_ID = 'screen-028';
+const KNOWN_ID_2 = 'screen-043';
 const UNKNOWN_ID = 'nope-ff';
 
 describe('endpointLabel — resolve endpoint id → display name + code', () => {
@@ -13,7 +16,8 @@ describe('endpointLabel — resolve endpoint id → display name + code', () => 
     const label = endpointLabel(KNOWN_ID);
     expect(label.known).toBe(true);
     expect(label.code).toBe(KNOWN_ID);
-    expect(label.name).toBe(SCREEN_BY_ID.get(KNOWN_ID)?.name ?? null);
+    const screen = getScreen(KNOWN_ID);
+    expect(label.name).toBe(screen.vanillaName ?? screen.randomizerName);
     expect(label.name).not.toBeNull();
   });
 
@@ -28,7 +32,7 @@ describe('endpointLabel — resolve endpoint id → display name + code', () => 
 describe('connectionIssues — per-connection completeness warnings', () => {
   const complete = {
     from: KNOWN_ID,
-    to: 'lw-01',
+    to: KNOWN_ID_2,
     tags: ['transit:walk', 'dir:two-way'] as ConnectionTag[],
   };
 

@@ -8,7 +8,9 @@ import { getModule, getGameState } from './wasm-bridge';
 import { voidCall } from './bridge/wasm-call';
 import { enqueue } from './delivery-queue';
 import type { DeliveryAction } from './delivery-queue';
-import { ITEM_ID_TO_NAME } from '@shared/game/items';
+import { getItemByGameId } from '@shared/game/data';
+
+const itemName = (itemId: number): string => getItemByGameId({ receiveItemId: itemId })?.randomizerName ?? `Unknown Item #${itemId}`;
 
 // Expose trace helper on window for dev-console debugging
 if (typeof window !== 'undefined') {
@@ -44,21 +46,21 @@ const numArgs = (...args: number[]): { argTypes: string[]; args: unknown[] } => 
 const cheatGiveItem = (itemId: number): void => {
   if (!isReady()) return;
   const action: DeliveryAction = { type: 'give_item', itemId };
-  const name = ITEM_ID_TO_NAME[itemId] ?? `Unknown Item #${itemId}`;
+  const name = itemName(itemId);
   enqueue(name, 'cheat', action);
 };
 
 const cheatTriggerCheck = (roomId: number, chestIndex: number, itemId: number): void => {
   if (!isReady()) return;
   const action: DeliveryAction = { type: 'trigger_check', roomId, chestIndex, itemId };
-  const name = ITEM_ID_TO_NAME[itemId] ?? `Unknown Item #${itemId}`;
+  const name = itemName(itemId);
   enqueue(name, 'cheat', action);
 };
 
 const cheatTriggerNpcCheck = (flagType: number, flagMask: number, itemId: number, spriteType: number, postGfx: number): void => {
   if (!isReady()) return;
   const action: DeliveryAction = { type: 'trigger_npc_check', flagType, flagMask, itemId, spriteType, postGfx };
-  const name = ITEM_ID_TO_NAME[itemId] ?? `Unknown Item #${itemId}`;
+  const name = itemName(itemId);
   enqueue(name, 'cheat', action);
 };
 

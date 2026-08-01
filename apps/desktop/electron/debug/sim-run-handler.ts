@@ -17,8 +17,12 @@ import { join } from 'path';
 import { handle } from '../lib/ipc/handle';
 import { writeFile, mkdir } from 'fs/promises';
 import type { SimRunConfig } from '@shared/game/simulation';
+import type { CheckId } from '@shared/game/data';
 
 const DEFAULT_MAX_STEPS = 20000;
+
+/** The CLI hands over free text; only a real check id may become one. */
+const isCheckId = (value: string): value is CheckId => value.startsWith('check-');
 
 const parseSimRunConfig = (): SimRunConfig | null => {
   const arg = process.argv.find((a) => a === '--sim-run' || a.startsWith('--sim-run='));
@@ -34,7 +38,9 @@ const parseSimRunConfig = (): SimRunConfig | null => {
     if (key === 'slot') config.startSlot = parseInt(value, 10);
     else if (key === 'state') config.stateName = value;
     else if (key === 'target') config.target = value;
-    else if (key === 'stop') config.stopAtCheckId = value;
+    // `stop` is a check ID (`check-072`), not a check name — the engine's stop
+    // condition compares identities, and 11 dungeons share a "Big Chest".
+    else if (key === 'stop') config.stopAtCheckId = isCheckId(value) ? value : null;
     else if (key === 'max') config.maxSteps = parseInt(value, 10);
     else if (key === 'flood') config.floodScreen = parseInt(value, 16);
     else if (key === 'items') config.probeItems = value.split(',').filter(Boolean);

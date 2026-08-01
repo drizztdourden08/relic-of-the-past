@@ -7,7 +7,7 @@
  * step the engine while the item is still incoming / the item-get dialog animates.
  */
 import type { TriggerAction } from '@shared/game/simulation';
-import { itemLabel, resolveDuplicate } from '@shared/game/items';
+import { itemLabel, resolveDuplicate } from '@shared/game/logic/queries/item-duplicates';
 import { enqueue } from '../delivery-queue';
 import { wasmTriggerOverworldCheck, wasmGetRoomDoorInfo, wasmSimUnlockDoor, wasmSimCloseDoor, wasmSimKillDrop,
   wasmSimFollowerAttach, wasmSimFollowerRescue, wasmSimOpenCellLock,

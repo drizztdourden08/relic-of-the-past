@@ -1,11 +1,78 @@
 /* @layer shared-game @kind data */
-import type { ScreenDefinition } from '../../../types';
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ScreenRecord } from '../../types';
 
-const LW_SHOPS: ScreenDefinition[] = [
-  { id: 'kakariko-shop', name: 'Village Shop', type: 'interior', world: 'light', location: 'Kakariko Village', area: 'Kakariko', roomIndex: 0x0100, interior: { kind: 'shop' }, tags: ['env:indoor'] },
-  { id: 'cave-shop-lake-hylia', name: 'Cave Shop (Great Lake)', type: 'interior', world: 'light', location: 'Lake Hylia', area: 'Lake Hylia', roomIndex: 0x010C, interior: { kind: 'shop' }, tags: ['env:underground'] },
-  { id: 'light-world-death-mountain-shop', name: 'Light World Death Mountain Shop', type: 'interior', world: 'light', location: 'Death Mountain', area: 'Death Mountain', roomIndex: 0x010B, interior: { kind: 'shop' }, tags: ['env:indoor'] },
-  { id: 'potion-shop', name: 'Potion Shop', type: 'interior', world: 'light', location: 'Eastern Hyrule', area: 'East Hyrule', roomIndex: 0x011E, interior: { kind: 'shop' }, tags: ['env:indoor'] },
+const LW_SHOPS_SCREENS: ScreenRecord[] = [
+  {
+    id: 'screen-199',
+    gameId: { roomIndex: 256 },
+    kind: 'interior',
+    world: 'light',
+    interiorKind: 'shop',
+    randomizerName: 'Kakariko Shop',
+    areaId: 'area-012',
+    locationId: 'location-017',
+    tags: ['env:indoor'],
+    status: 'mapped',
+    spawns: [
+      { actorId: 'actor-230', tile: { x: 22, y: 54 } },
+    ],
+  },
+  {
+    id: 'screen-214',
+    gameId: { roomIndex: 268 },
+    kind: 'interior',
+    world: 'light',
+    interiorKind: 'shop',
+    randomizerName: 'Cave Shop (Lake Hylia)',
+    areaId: 'area-013',
+    locationId: 'location-018',
+    tags: ['env:underground'],
+    status: 'mapped',
+    spawns: [
+      { actorId: 'actor-255', tile: { x: 46, y: 14 } },
+      { actorId: 'actor-255', tile: { x: 48, y: 14 } },
+      { actorId: 'actor-255', tile: { x: 46, y: 16 } },
+      { actorId: 'actor-255', tile: { x: 48, y: 16 } },
+      { actorId: 'actor-111', tile: { x: 14, y: 40 } },
+      { actorId: 'actor-111', tile: { x: 16, y: 40 } },
+      { actorId: 'actor-111', tile: { x: 24, y: 40 } },
+      { actorId: 'actor-111', tile: { x: 24, y: 52 } },
+    ],
+  },
+  {
+    id: 'screen-213',
+    gameId: { roomIndex: 267 },
+    kind: 'interior',
+    world: 'light',
+    interiorKind: 'shop',
+    randomizerName: 'Light World Death Mountain Shop',
+    areaId: 'area-008',
+    locationId: 'location-009',
+    tags: ['env:indoor'],
+    status: 'mapped',
+    triggerIds: ['actor-032'],
+    spawns: [
+      { actorId: 'actor-154', tile: { x: 30, y: 6 } },
+      { actorId: 'actor-152', tile: { x: 36, y: 6 } },
+      { actorId: 'actor-065', tile: { x: 26, y: 14 } },
+    ],
+  },
+  {
+    id: 'screen-220',
+    gameId: { roomIndex: 265 },
+    kind: 'interior',
+    world: 'light',
+    interiorKind: 'shop',
+    randomizerName: 'Potion Shop',
+    areaId: 'area-010',
+    locationId: 'location-012',
+    tags: ['env:indoor'],
+    status: 'mapped',
+    spawns: [
+      { actorId: 'actor-260', tile: { x: 20, y: 54 } },
+    ],
+  },
 ];
 
-export { LW_SHOPS };
+export { LW_SHOPS_SCREENS };

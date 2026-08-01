@@ -2,7 +2,8 @@
 import type { CSSProperties } from 'react';
 import { Icon } from '@iconify/react/offline';
 import { getConnectionDestinationName, usableEntrances } from '@shared/game/navigation';
-import { SCREEN_BY_ID, displayName as screenDisplayName } from '@shared/game/data/screens';
+import { getScreenByGameId } from '@shared/game/data';
+import type { ScreenId } from '@shared/game/data';
 import { Box, Text } from '../../../../design-system/primitives';
 import { getEntranceIcon } from '../../../../../lib/entrance-icons';
 import { S } from '../styles';
@@ -38,7 +39,11 @@ const ConnectionsPanel = (props: Props) => {
             const scrLabel = screenBundle?.isMulti
               ? (screenBundle.screenNames[r.screenIndex] ?? `0x${r.screenIndex.toString(16).toUpperCase()}`)
               : null;
-            const screenNodeId = `${isDarkWorld ? 'dw' : 'lw'}-${r.screenIndex.toString(16).padStart(2, '0')}`;
+            // overworldIndex is the unified 0x00-0x7F space (dark world offset by 0x40),
+            // not the per-world range r.screenIndex carries.
+            const sourceScreenId: ScreenId | undefined = getScreenByGameId({
+              overworldIndex: isDarkWorld ? r.screenIndex + 0x40 : r.screenIndex,
+            })?.id;
             return (
               <Box key={`ent-${r.screenIndex}`}>
                 {scrLabel && <Box style={{ ...S.meta, color: 'var(--c-info)', marginTop: 2 }}>{scrLabel}</Box>}
@@ -59,7 +64,7 @@ const ConnectionsPanel = (props: Props) => {
                       ? (getScreenDisplayName(ent.roomId))
                       : 'Overworld';
                   } else {
-                    displayName = getConnectionDestinationName(screenNodeId, ent.roomId)
+                    displayName = (sourceScreenId ? getConnectionDestinationName(sourceScreenId, ent.roomId) : null)
                       ?? `Room 0x${ent.roomId.toString(16).toUpperCase()}`;
                   }
                   return (
@@ -97,9 +102,10 @@ const ConnectionsPanel = (props: Props) => {
             if (isIndoors) {
               targetName = `Room 0x${conn.targetScreen.toString(16).toUpperCase().padStart(2, '0')}`;
             } else {
-              const targetNodeId = `${isDarkWorld ? 'dw' : 'lw'}-${conn.targetScreen.toString(16).padStart(2, '0')}`;
-              const target = SCREEN_BY_ID.get(targetNodeId);
-              targetName = target ? screenDisplayName(target.id, target.name) : `0x${conn.targetScreen.toString(16).toUpperCase()}`;
+              // overworldIndex is a unified 0x00-0x7F space (dark world offset by 0x40),
+              // not the per-world 0x00-0x3F range conn.targetScreen carries.
+              const target = getScreenByGameId({ overworldIndex: isDarkWorld ? conn.targetScreen + 0x40 : conn.targetScreen });
+              targetName = target ? (target.vanillaName ?? target.randomizerName) : `0x${conn.targetScreen.toString(16).toUpperCase()}`;
             }
             const fromLabel = screenBundle?.isMulti && conn.sourceScreen != null
               ? ` (${screenBundle.subNames[conn.sourceScreen] ?? ''})`

@@ -8,8 +8,8 @@
  * live flood); a null/empty value means there is no tile data to show.
  */
 
-import { SCREEN_BY_ID } from '@shared/game/data/screens';
-import type { ConnectionTag } from '@shared/game/data/connections/tags';
+import { findOne } from '@shared/game/data';
+import type { ConnectionTag } from '@shared/game/data';
 
 interface ConnectionIssueInput {
   from: string;
@@ -17,12 +17,14 @@ interface ConnectionIssueInput {
   tags: readonly ConnectionTag[];
 }
 
+const screenExists = (id: string): boolean => findOne('screen', s => s.id === id) != null;
+
 const connectionIssues = (conn: ConnectionIssueInput, tileDesc: string | null): string[] => {
   const issues: string[] = [];
 
   if (!tileDesc) issues.push('⚠ no tile data');
-  if (!SCREEN_BY_ID.has(conn.from)) issues.push(`⚠ unknown screen: ${conn.from}`);
-  if (!SCREEN_BY_ID.has(conn.to)) issues.push(`⚠ unknown screen: ${conn.to}`);
+  if (!screenExists(conn.from)) issues.push(`⚠ unknown screen: ${conn.from}`);
+  if (!screenExists(conn.to)) issues.push(`⚠ unknown screen: ${conn.to}`);
   if (!conn.tags.some(t => t.startsWith('transit:'))) issues.push('⚠ no transit type');
   if (!conn.tags.some(t => t.startsWith('dir:'))) issues.push('⚠ no direction');
 

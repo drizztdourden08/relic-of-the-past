@@ -1,15 +1,14 @@
 /* @layer renderer-widgets @kind constants */
 /**
- * Per-CheckType icon glyphs for the stop-at-check picker.
+ * Per-CheckKind icon glyphs for the stop-at-check picker.
  *
- * No shared per-CheckType icon set exists in the codebase — the checks/tracker
- * widget renders `check.type` as plain text — and this work may only touch the
- * simulator widget, so the mapping is defined locally here. Keep the keys in
- * sync with the CheckType union in shared/game/types.
+ * No shared per-kind icon set exists elsewhere in the codebase, so the mapping
+ * is defined locally here. Keep the keys in sync with the CheckKind union in
+ * shared/game/data.
  */
-import type { CheckType } from '@shared/game/types';
+import type { CheckKind } from '@shared/game/data';
 
-const CHECK_TYPE_ICONS: Record<CheckType, string> = {
+const CHECK_TYPE_ICONS: Record<CheckKind, string> = {
   chest: '🧰',
   npc: '🧑',
   standing: '✨',
@@ -22,6 +21,6 @@ const CHECK_TYPE_ICONS: Record<CheckType, string> = {
   event: '⚑',
 };
 
-const checkTypeIcon = (type: CheckType): string => CHECK_TYPE_ICONS[type] ?? '•';
+const checkTypeIcon = (type: CheckKind): string => CHECK_TYPE_ICONS[type] ?? '•';
 
 export { CHECK_TYPE_ICONS, checkTypeIcon };

@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind logic */
 /** Data-prep helpers for the Navigation widget (pure + wasm-backed). */
-import { getScreenLookup, displayName } from '@shared/game/data/screens';
+import { getScreenLookup } from '@shared/game/logic/queries/detection';
 import type { OverworldEntrance } from '@shared/game/navigation';
 import {
   wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetEntranceRooms, wasmGetAreaHeads,
@@ -9,7 +9,7 @@ import {
 /** Get overworld screen display name from screen index. */
 const getScreenDisplayName = (screenIndex: number): string => {
   const screen = getScreenLookup().byOverworldScreen.get(screenIndex);
-  return screen ? displayName(screen.id, screen.name) : `0x${screenIndex.toString(16).toUpperCase()}`;
+  return screen ? (screen.vanillaName ?? screen.randomizerName) : `0x${screenIndex.toString(16).toUpperCase()}`;
 };
 
 /** Convert flat Uint8Array (4096 bytes) to 64×64 number[][] grid. */

@@ -2,11 +2,13 @@
 /**
  * Maps a discovered interactable (chest / NPC sprite / standing or overworld
  * item) to the `TriggerAction` that fires the real check through the delivery
- * queue. NPC sprites resolve their flag/item payload from CHECK_NPC_FLAGS by
- * sprite type; everything else is derived from the interactable itself.
+ * queue. NPC sprites resolve their flag/item payload from the check records'
+ * own gameId by sprite type; everything else is derived from the
+ * interactable itself.
  */
 import type { SimChest, SimSprite, TriggerAction } from '../types';
-import { CHECK_NPC_FLAGS } from '../../checks/flags';
+import type { CheckRecord } from '../../data';
+import { find, getCheckByGameId } from '../../data';
 
 const planChestTrigger = (chest: SimChest): TriggerAction => ({
   type: 'chest',
@@ -18,7 +20,7 @@ const planChestTrigger = (chest: SimChest): TriggerAction => ({
 /**
  * NPC config matching a discovered sprite. Configs are matched by sprite type;
  * a config that pins a `room` matches only when the sprite's live room equals it
- * (disambiguates a type that spawns in several rooms — see NpcCheckConfig.room).
+ * (disambiguates a type that spawns in several rooms — see CheckGameId.room).
  * Room-less configs keep matching by type alone.
  */
 /** Overworld screens from here up are the second world. */
@@ -28,14 +30,17 @@ const HALF_ROOM_COLS = 32;
 /** Room-state slots for the two bits a standing heart piece can occupy. */
 const ROOM_BIT_HEART_RIGHT = 5;
 const ROOM_BIT_HEART_LEFT = 6;
+/** save_ow_event_info bit an outdoor pickup sets. */
+const OW_PICKUP_MASK = 0x40;
 
-const npcConfigForSprite = (spriteType: number, roomId?: number, outdoor?: boolean) =>
-  Object.values(CHECK_NPC_FLAGS).find((cfg) => {
+const npcConfigForSprite = (spriteType: number, roomId?: number, outdoor?: boolean): CheckRecord | undefined =>
+  find('check', c => c.gameId.spriteType !== undefined).find((c) => {
+    const cfg = c.gameId;
     if (cfg.spriteType !== spriteType) return false;
     if (cfg.room !== undefined && cfg.room !== roomId) return false;
     // For an overworld sprite the "room" IS the screen index, so it says which
     // world the sprite is in — the only thing separating two NPCs that share a
-    // sprite type across the worlds (see NpcCheckConfig.owWorld).
+    // sprite type across the worlds (see CheckGameId.owWorld).
     if (cfg.owWorld !== undefined && outdoor) {
       if (roomId == null) return false;
       const isDark = roomId >= DARK_WORLD_SCREEN_BASE;
@@ -46,8 +51,9 @@ const npcConfigForSprite = (spriteType: number, roomId?: number, outdoor?: boole
 
 const planSpriteTrigger = (sprite: SimSprite): TriggerAction | null => {
   if (sprite.kind === 'npc') {
-    const cfg = npcConfigForSprite(sprite.spriteType, sprite.roomId, sprite.outdoor);
-    if (!cfg) return null;
+    const check = npcConfigForSprite(sprite.spriteType, sprite.roomId, sprite.outdoor);
+    const cfg = check?.gameId;
+    if (!cfg || cfg.itemId === undefined || cfg.flagType === undefined || cfg.flagMask === undefined) return null;
     // A room-flag NPC records its completion where the chest bits live, which the
     // npc action cannot reach — the chest action writes exactly that bit.
     if (cfg.roomFlag) {
@@ -63,7 +69,7 @@ const planSpriteTrigger = (sprite: SimSprite): TriggerAction | null => {
     // uncollected instead of quietly granting the wrong item.
     if (sprite.itemId === undefined) return null;
     if (sprite.outdoor) {
-      return { type: 'overworld', screen: sprite.roomId, mask: 0x40, itemId: sprite.itemId };
+      return { type: 'overworld', screen: sprite.roomId, mask: OW_PICKUP_MASK, itemId: sprite.itemId };
     }
     // Indoors there is no screen to flag. The game records the pickup in the
     // ROOM's own state bits instead (HeartUpgrade_CheckIfAlreadyObtained,
@@ -77,10 +83,26 @@ const planSpriteTrigger = (sprite: SimSprite): TriggerAction | null => {
   return null;
 };
 
+/**
+ * The check a standing / overworld pickup IS.
+ *
+ * Derived from the SAME facts `planSpriteTrigger` writes when the run takes it —
+ * an overworld event bit outdoors, a room-state slot indoors — so the two cannot
+ * disagree about which check a given item on the floor represents. Without this
+ * the overlay had no identity for a standing item and could only ever draw it as
+ * available, however many times the run had already collected it.
+ */
+const checkForStandingItem = (sprite: SimSprite): CheckRecord | undefined => {
+  if (sprite.kind !== 'standing' && sprite.kind !== 'overworld') return undefined;
+  if (sprite.outdoor) return getCheckByGameId({ owScreen: sprite.roomId, mask: OW_PICKUP_MASK });
+  const rightHalf = sprite.tile.col >= HALF_ROOM_COLS;
+  return getCheckByGameId({ roomId: sprite.roomId, chestIndex: rightHalf ? ROOM_BIT_HEART_RIGHT : ROOM_BIT_HEART_LEFT });
+};
+
 /** Dispatch by interactable shape. */
 const planTrigger = (interactable: SimChest | SimSprite): TriggerAction | null => {
   if ('chestIndex' in interactable) return planChestTrigger(interactable);
   return planSpriteTrigger(interactable);
 };
 
-export { planTrigger, planChestTrigger, planSpriteTrigger, npcConfigForSprite };
+export { planTrigger, planChestTrigger, planSpriteTrigger, npcConfigForSprite, checkForStandingItem };

@@ -3,12 +3,12 @@
  * Builds a SimObservation from live game state. The real location comes from the
  * game UI-state buffer; the virtual location is that same spot expressed as a
  * known screen id (via screen detection) plus the player's pixel→tile conversion.
- * Inventory is the tracker's Set; flags are independent SRAM copies for diffing.
+ * Inventory is the tracker's Set of item ids; flags are independent SRAM copies
+ * for diffing.
  */
 import type { SimObservation, VirtualPlayer, FlagSnapshot, SimLocation, SimulatorPort, SimSprite, CombatContext } from '@shared/game/simulation';
 import type { EngineState } from '@shared/game/simulation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
-import { SCREEN_BY_ID } from '@shared/game/data/screens';
 import { detectScreenExits } from './screen-exits';
 import { locationForScreen } from './screen-location';
 import { interiorScreenId } from './screen-resolve';
@@ -16,11 +16,10 @@ import type { GridPos } from '@shared/game/navigation';
 import type { DetectedScreen } from './screen-exits';
 import { emptySnapshot, buildPresenceState, emptyPresenceState } from '@shared/game/simulation';
 import type { MapState } from '@shared/game/types';
-import type { VariantGameState } from '@shared/game/data/screens';
-import { resolveCurrentScreen } from '@shared/game/data/screens';
+import type { ItemId } from '@shared/game/data';
 import { linkStartTile } from '@shared/game/navigation/link-start-tile';
 import { wasmGetProgressIndicator, wasmReadFlagSnapshot } from '../';
-import { getCompletedChecks, getCurrentInventory, pollInventoryState } from '../tracker';
+import { getCurrentInventory, pollInventoryState } from '../tracker';
 import { screenOriginFor } from '../flood';
 import { readMapState } from './read-game-state';
 
@@ -64,7 +63,7 @@ const observe = (): SimObservation => {
       presenceState: emptyPresenceState(),
     };
   }
-  const inventory = new Set(getCurrentInventory());
+  const inventory = getCurrentInventory();
   const flags = readFlags();
   return {
     virtual: virtualFrom(map),
@@ -136,7 +135,7 @@ const combatFor = (port: SimulatorPort, sprites: SimSprite[]): CombatContext => 
 };
 
 /** Pull grids + room interactables + detected exits for the current screen. */
-const buildObservation = (port: SimulatorPort, state: EngineState, cache: DetectCache, itemReceived?: number): SimObservation => {
+const buildObservation = (port: SimulatorPort, state: EngineState, cache: DetectCache, itemReceived?: ItemId): SimObservation => {
   const base = port.observe();
   const loc = locationForScreen(state.virtual.screenId);
   if (!loc) return { ...base, itemReceived };

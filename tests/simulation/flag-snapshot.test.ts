@@ -2,7 +2,9 @@
 import { describe, it, expect } from 'vitest';
 import { emptySnapshot, cloneSnapshot, diffSnapshots } from '../../shared/game/simulation/detect/flag-snapshot';
 import { matchDiffs } from '../../shared/game/simulation/detect/check-matcher';
-import { CHEST_OPEN_MASKS } from '../../shared/game/checks/flags';
+
+/** Chest-open bit for slot 0 — same native fact the matcher itself uses. */
+const CHEST_SLOT_0_MASK = 0x10;
 
 describe('flag-snapshot diffing', () => {
   it('produces no diffs for identical snapshots', () => {
@@ -14,11 +16,11 @@ describe('flag-snapshot diffing', () => {
   it('reports the changed word, index, and newly-set bits for a room flag', () => {
     const before = emptySnapshot();
     const after = cloneSnapshot(before);
-    after.dungInfo[0x104] |= CHEST_OPEN_MASKS[0]; // Link's House chest 0
+    after.dungInfo[0x104] |= CHEST_SLOT_0_MASK; // Link's House chest 0
 
     const diffs = diffSnapshots(before, after);
     expect(diffs).toHaveLength(1);
-    expect(diffs[0]).toMatchObject({ kind: 'room', index: 0x104, setBits: CHEST_OPEN_MASKS[0] });
+    expect(diffs[0]).toMatchObject({ kind: 'room', index: 0x104, setBits: CHEST_SLOT_0_MASK });
   });
 
   it('diffs overworld and progress buffers independently', () => {
@@ -39,19 +41,20 @@ describe('flag-snapshot diffing', () => {
     expect(a.dungInfo[0]).toBe(0);
   });
 
-  it('names a room-flag diff via the matcher (naming only)', () => {
+  it('identifies a room-flag diff as the check whose chest bit it is', () => {
     const before = emptySnapshot();
     const after = cloneSnapshot(before);
-    after.dungInfo[0x104] |= CHEST_OPEN_MASKS[0];
-    const { name } = matchDiffs(diffSnapshots(before, after));
-    expect(name).toBe("Link's House");
+    after.dungInfo[0x104] |= CHEST_SLOT_0_MASK;
+    const matched = matchDiffs(diffSnapshots(before, after));
+    // The identity is the id; the name is only asserted as derived output.
+    expect(matched?.id).toBe('check-026');
+    expect(matched?.gameId).toMatchObject({ roomId: 0x104, chestIndex: 0 });
   });
 
-  it('falls back to unknown-check when nothing matches', () => {
+  it('identifies nothing when no check owns the changed bit', () => {
     const before = emptySnapshot();
     const after = cloneSnapshot(before);
     after.dungInfo[0x2] |= 0x10; // no check maps to room 0x02 chest 0
-    const { name } = matchDiffs(diffSnapshots(before, after));
-    expect(name).toBe('unknown-check');
+    expect(matchDiffs(diffSnapshots(before, after))).toBeUndefined();
   });
 });

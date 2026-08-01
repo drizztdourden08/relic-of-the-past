@@ -1,9 +1,24 @@
 /* @layer shared-game @kind data */
-import type { ScreenConnection } from '../../../types';
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ConnectionRecord } from '../../types';
 
-const LW_HINT_CONNECTIONS: ScreenConnection[] = [
-  { from: 'lw-11', to: 'fortune-teller-light', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
-  { from: 'lw-35', to: 'lake-hylia-fortune-teller', tags: ['transit:door', 'dir:two-way', 'ctx:entrance'] },
+const LW_HINTS_CONNECTIONS: ConnectionRecord[] = [
+  {
+    id: 'connection-351',
+    kind: 'entrance',
+    fromScreenId: 'screen-045',
+    toScreenId: 'screen-183',
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:entrance'],
+  },
+  {
+    id: 'connection-352',
+    kind: 'entrance',
+    fromScreenId: 'screen-081',
+    toScreenId: 'screen-184',
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:entrance'],
+  },
 ];
 
-export { LW_HINT_CONNECTIONS };
+export { LW_HINTS_CONNECTIONS };

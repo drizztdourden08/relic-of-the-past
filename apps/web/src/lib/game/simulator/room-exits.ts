@@ -8,7 +8,7 @@
 import type { GridPos } from '@shared/game/navigation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
 import type { SimExit } from '@shared/game/simulation';
-import type { ScreenDefinition } from '@shared/game/types';
+import type { ScreenRecord } from '@shared/game/data';
 import { enrichEntrances } from '@domains/widgets/navigation/widget-helpers';
 import { wasmGetRoomStairInfoFor, wasmGetRoomWalkBoundariesFor, wasmGetRoomDoorInfo, wasmGetExitScreenMap, wasmReadFlagSnapshot } from '../';
 import { summarizeRun, usableEntranceTransition } from './flood-screen';
@@ -62,7 +62,7 @@ const stairLandingTile = (destRoom: number, fromRoom: number): GridPos | undefin
 };
 
 /** Flood an indoor room; exits = its doors back outside + stairs/boundaries. */
-const detectRoom = (roomId: number, items: TileReq[], entryTile?: GridPos, src?: ScreenDefinition, fromKey = ''): DetectedScreen | null => {
+const detectRoom = (roomId: number, items: TileReq[], entryTile?: GridPos, src?: ScreenRecord, fromKey = ''): DetectedScreen | null => {
   const run = floodRoomRun(roomId, items, entryTile);
   if (!run) return null;
   const owSide = enrichEntrances();

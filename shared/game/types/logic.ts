@@ -1,4 +1,6 @@
 /* @layer shared-game @kind types */
+import type { ItemId, ScreenId } from '../data/types';
+
 // ─── Tracker State ───
 
 interface CheckState {
@@ -9,7 +11,7 @@ interface CheckState {
 interface TrackerState {
   profileId: string;
   checks: Record<string, CheckState>;
-  inventory: string[];
+  inventory: ItemId[];
   startedAt: number;
 }
 
@@ -19,20 +21,23 @@ type LogicMode = 'vanilla' | 'open' | 'inverted' | 'no-logic';
 type SwordMode = 'normal' | 'swordless' | 'assured';
 type Goal = 'final-boss' | 'pedestal' | 'relic-hunt' | 'crystals' | 'bosses';
 
+/** The three medallion items — Bombos (item-016), Ether (item-017), Quake (item-018). */
+type MedallionItemId = ItemId;
+
 interface LogicConfig {
   mode: LogicMode;
   /** Screen ID where the game starts (default: 'menu') */
   startingScreen: string;
   /** Items the player has at game start (e.g. open mode gives Bombs free) */
-  startingItems: string[];
-  /** S&Q destinations freely available from Menu (screen IDs) */
-  saveQuitDestinations: string[];
+  startingItems: ItemId[];
+  /** S&Q destinations freely available from Menu */
+  saveQuitDestinations: ScreenId[];
   /** Whether Moon Pearl is required to be human in DW */
   moonPearlRequired: boolean;
   /** Medallion requirements (randomized per seed) */
   medallionRequirements: {
-    miseryMire: 'Ether' | 'Bombos' | 'Quake';
-    turtleRock: 'Ether' | 'Bombos' | 'Quake';
+    miseryMire: MedallionItemId;
+    turtleRock: MedallionItemId;
   };
   /** Crystals needed to enter the final tower */
   crystalsForGT: number;

@@ -4,7 +4,7 @@
  * Mirrors useHud pattern: extracts relevant data, provides sprite config.
  */
 import { useGameUIStore } from '../../../../stores/game-ui-store';
-import { getSpritesBase } from '@shared/game/items/sprites';
+import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
 
 interface PauseMenuData {
   /** 20 item slots (inventory.items) */

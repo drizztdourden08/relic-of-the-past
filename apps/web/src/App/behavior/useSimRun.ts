@@ -16,6 +16,7 @@ import { createLiveGamePort, runSimulation, floodOverworldScreen, probeRoom, sca
 import { pauseSramSync, resumeSramSync } from '@app/lib/game/sram-sync';
 import { overworldOrigin } from '@app/lib/game/flood';
 import { buildSimRunReport, formatEndSummary } from '@shared/game/simulation';
+import { getDungeon, getItem } from '@shared/game/data';
 import { getModule } from '../../lib/game';
 
 /** Bit that excludes a sprite from a room-clear count, per Sprite_CheckIfRoomIsClear. */
@@ -160,10 +161,12 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
         const report = buildSimRunReport(state, recorder, { config, steps, reachedTarget });
         for (const line of formatEndSummary(endSummary)) console.log(`[SimRun] END ${line}`);
         console.log(`[SimRun] outcome=${report.outcome} reachedTarget=${reachedTarget} steps=${steps} checks=${report.verifiedChecks.length} floods=${screenFloods.length}`);
+        // Id first so the entry is unambiguous and sorts stably, name after so a
+        // person can read the artifact. The name is resolved here and stored nowhere.
         const inventory = {
-          items: [...state.inventory].sort(),
+          items: [...state.inventory].sort().map((id) => `${id} ${getItem(id).randomizerName}`),
           keys: Object.fromEntries([...state.keys].filter(([, n]) => n > 0)),
-          bigKeys: [...state.bigKeys].sort(),
+          bigKeys: [...state.bigKeys].sort().map((id) => `${id} ${getDungeon(id).randomizerName}`),
           events: [...state.events].sort(),
           // What the player actually holds, read from the save rather than
           // tallied from check names — hearts, equipment tiers and the

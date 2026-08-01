@@ -1,7 +1,7 @@
 /* @layer renderer-widgets @kind component */
 /** ScreenEditor step-1 bottom: identity/metadata + optional variant condition. */
 import { Box, Button, Select, TagPicker, TextInput, Checkbox } from '../../../../design-system/primitives';
-import type { VariantCondition } from '@shared/game/types';
+import type { AreaId, LocationId, VariantCondition } from '@shared/game/data';
 import { CONDITION_TYPE_OPTIONS, TAG_GROUPS } from './screen-editor-constants';
 import { EditorField } from './EditorField';
 import { LockedValue } from './LockedValue';
@@ -9,21 +9,22 @@ import type { ScreenEditor } from './useScreenEditor';
 
 const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
   const {
-    name, setName, creatingArea, setCreatingArea, areaOptions, areaId, setAreaId, setLocationId,
+    randomizerName, setRandomizerName, creatingArea, setCreatingArea, areaOptions, areaId, setAreaId, setLocationId,
     newAreaName, setNewAreaName, handleCreateArea, isDungeonLocked, resolvedLocation,
     creatingLocation, setCreatingLocation, locationOptions, locationId, newLocationName, setNewLocationName,
-    handleCreateLocation, type, entranceId, setEntranceId, selectedTags, setSelectedTags,
+    handleCreateLocation, kind, entranceId, setEntranceId, selectedTags, setSelectedTags,
     hasVariant, setHasVariant, variantKey, setVariantKey, variantLabel, setVariantLabel,
-    conditionType, setConditionType, condCheckName, setCondCheckName, condCheckCollected, setCondCheckCollected,
+    conditionType, setConditionType, condCheckId, setCondCheckId, condCheckCollected, setCondCheckCollected,
     condFlagAddr, setCondFlagAddr, condFlagBit, setCondFlagBit, condFlagValue, setCondFlagValue,
     condEntranceId, setCondEntranceId, condProgressMin, setCondProgressMin, condProgressMax, setCondProgressMax,
+    newOptionValue,
   } = editor;
   return (
     <>
       {/* ── Section 3: Identity & Metadata ── */}
       <Box className="screen-editor__section">
         <EditorField className="screen-editor__row" label="Name">
-          <TextInput value={name} onChange={e => setName(e.target.value)} placeholder="Screen name" />
+          <TextInput value={randomizerName} onChange={e => setRandomizerName(e.target.value)} placeholder="Screen name" />
         </EditorField>
 
         {/* Area — editable for all types (dungeon defaults from meta) */}
@@ -34,8 +35,8 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
                 options={areaOptions}
                 value={areaId}
                 onChange={v => {
-                  if (v === '__new__') { setCreatingArea(true); setNewAreaName(''); }
-                  else { setAreaId(v); setLocationId(''); }
+                  if (v === newOptionValue) { setCreatingArea(true); setNewAreaName(''); }
+                  else { setAreaId(v as AreaId); setLocationId(''); }
                 }}
                 placeholder="Select area..."
                 searchable
@@ -63,8 +64,8 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
                   options={locationOptions}
                   value={locationId}
                   onChange={v => {
-                    if (v === '__new__') { setCreatingLocation(true); setNewLocationName(''); }
-                    else { setLocationId(v); }
+                    if (v === newOptionValue) { setCreatingLocation(true); setNewLocationName(''); }
+                    else { setLocationId(v as LocationId); }
                   }}
                   placeholder="Select location..."
                   searchable
@@ -80,7 +81,7 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
           </EditorField>
         )}
 
-        {type === 'interior' && (
+        {kind === 'interior' && (
           <EditorField className="screen-editor__row" label="Entrance ID">
             <TextInput value={entranceId} onChange={e => setEntranceId(e.target.value)} placeholder="Optional hex — disambiguates shared rooms" />
           </EditorField>
@@ -117,8 +118,8 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
             </EditorField>
             {conditionType === 'check' && (
               <Box className="screen-editor__row screen-editor__row--half">
-                <EditorField label="Check Name">
-                  <TextInput value={condCheckName} onChange={e => setCondCheckName(e.target.value)} placeholder="e.g. Bottle Merchant" />
+                <EditorField label="Check Id">
+                  <TextInput value={condCheckId} onChange={e => setCondCheckId(e.target.value)} placeholder="check-031" />
                 </EditorField>
                 <Box>
                   <Checkbox checked={condCheckCollected} onChange={setCondCheckCollected} label="Collected" />

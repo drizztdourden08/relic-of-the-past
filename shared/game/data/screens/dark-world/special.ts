@@ -1,9 +1,42 @@
 /* @layer shared-game @kind data */
-import type { ScreenDefinition } from '../../../types';
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ScreenRecord } from '../../types';
 
-const DW_SPECIAL: ScreenDefinition[] = [
-  { id: 'pyramid', name: 'Pyramid', type: 'interior', world: 'dark', location: 'Dark Eastern', area: 'Dark East', roomIndex: 0x62, interior: { kind: 'special' }, tags: ['env:indoor'] },
-  { id: 'bottom-of-pyramid', name: 'Bottom of Pyramid', type: 'interior', world: 'dark', location: 'Dark Eastern', area: 'Dark East', roomIndex: 0x62, interior: { kind: 'special' }, tags: ['env:indoor'] },
+const DW_SPECIAL_SCREENS: ScreenRecord[] = [
+  {
+    id: 'screen-452',
+    gameId: { roomIndex: 98 },
+    kind: 'interior',
+    world: 'dark',
+    interiorKind: 'special',
+    randomizerName: 'Pyramid',
+    areaId: 'area-003',
+    locationId: 'location-005',
+    tags: ['env:indoor'],
+    status: 'mapped',
+    spawns: [
+      { actorId: 'actor-076', tile: { x: 24, y: 16 } },
+      { actorId: 'actor-077', tile: { x: 20, y: 26 } },
+      { actorId: 'actor-077', tile: { x: 34, y: 28 } },
+    ],
+  },
+  {
+    id: 'screen-451',
+    gameId: { roomIndex: 98 },
+    kind: 'interior',
+    world: 'dark',
+    interiorKind: 'special',
+    randomizerName: 'Bottom of Pyramid',
+    areaId: 'area-003',
+    locationId: 'location-005',
+    tags: ['env:indoor'],
+    status: 'mapped',
+    spawns: [
+      { actorId: 'actor-076', tile: { x: 24, y: 16 } },
+      { actorId: 'actor-077', tile: { x: 20, y: 26 } },
+      { actorId: 'actor-077', tile: { x: 34, y: 28 } },
+    ],
+  },
 ];
 
-export { DW_SPECIAL };
+export { DW_SPECIAL_SCREENS };

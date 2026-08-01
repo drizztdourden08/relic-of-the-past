@@ -9,6 +9,8 @@ import { useCallback, useRef, useState } from 'react';
 import type { SimulatorPort, SimConfig, EngineState, SimEvent } from '@shared/game/simulation';
 import { createEngine, createEngineState, createRecorder, recordTransition, recordDoorGate, screenLabel } from '@shared/game/simulation';
 import type { RecorderState } from '@shared/game/simulation';
+import type { CheckId, ItemId } from '@shared/game/data';
+import { getCheck } from '@shared/game/data';
 import { createLiveGamePort, createSimLogWriter, screenAreaInfo } from '@app/lib/game/simulator';
 import type { SimLogWriter } from '@app/lib/game/simulator';
 import { pauseSramSync, resumeSramSync } from '@app/lib/game/sram-sync';
@@ -27,7 +29,7 @@ interface Control {
 const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
 
 const useSimulatorRun = () => {
-  const [stopAtCheckId, setStopAtCheckId] = useState<string>('');
+  const [stopAtCheckId, setStopAtCheckId] = useState<CheckId | ''>('');
   const [screenLimit, setScreenLimit] = useState<number | null>(null);
   const [canRestore, setCanRestore] = useState(false);
   const screenLimitRef = useRef<number | null>(null);
@@ -37,7 +39,7 @@ const useSimulatorRun = () => {
   const portRef = useRef<SimulatorPort | null>(null);
   const writerRef = useRef<SimLogWriter | null>(null);
   const snapshotRef = useRef<ArrayBuffer | null>(null);
-  const itemRef = useRef<number | undefined>(undefined);
+  const itemRef = useRef<ItemId | undefined>(undefined);
 
   const drive = useCallback(async (port: SimulatorPort, writer: SimLogWriter, config: SimConfig) => {
     const store = useSimulatorStore.getState();
@@ -51,7 +53,7 @@ const useSimulatorRun = () => {
 
     // Config echo + sequence marker, then the starting screen's flood up front.
     const startEvents: SimEvent[] = [];
-    const stopLabel = config.stopAtCheckId ? `stop at "${config.stopAtCheckId}", ` : '';
+    const stopLabel = config.stopAtCheckId ? `stop at "${getCheck(config.stopAtCheckId).randomizerName}", ` : '';
     startEvents.push({ level: 'narrative', msg: `Run config: ${stopLabel}screen limit ${config.screenLimit ?? 'unlimited'}`, step: state.step });
     const seq = sequenceEvent(sequenceLabel, state.step);
     if (seq) { startEvents.push(seq); sequenceLabel = seq.msg.slice('Sequence '.length); }

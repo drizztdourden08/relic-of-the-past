@@ -5,18 +5,22 @@
  * turn disagreements with the static data into suggestions.
  */
 import type { GridPos } from '../../navigation/types';
+import type { CheckId } from '../../data';
 import type { SimDoor } from '../types';
+import type { TraversalId } from '../traversal-id';
 
 interface ObservedCheck {
-  name: string;
-  screenId: string;
+  /** Which check this was, or null when the diff matched none — an unmatched
+   *  observation is exactly what becomes a dataset suggestion. */
+  checkId: CheckId | null;
+  screenId: TraversalId;
   roomId: number;
   tile: GridPos;
 }
 
 interface ObservedTransition {
-  from: string;
-  to: string;
+  from: TraversalId;
+  to: TraversalId;
 }
 
 interface ObservedDoorGate {
@@ -35,17 +39,17 @@ interface RecorderState {
 const createRecorder = (): RecorderState => ({ checks: [], transitions: [], doorGates: [] });
 
 /**
- * Dedupe by name + location, not name alone: unmatched checks all share the
- * generic 'unknown-check' name (see check-matcher's UNKNOWN), so a name-only
- * key would collapse every distinct unknown observation in a run into one.
+ * Dedupe by identity + location, not identity alone: every unmatched observation
+ * has a null checkId, so an identity-only key would collapse all of them in a run
+ * into one — and they are the ones worth reporting individually.
  */
 const recordCheck = (rec: RecorderState, check: ObservedCheck): void => {
-  if (!rec.checks.some(c => c.name === check.name && c.roomId === check.roomId && c.screenId === check.screenId)) {
+  if (!rec.checks.some(c => c.checkId === check.checkId && c.roomId === check.roomId && c.screenId === check.screenId)) {
     rec.checks.push(check);
   }
 };
 
-const recordTransition = (rec: RecorderState, from: string, to: string): void => {
+const recordTransition = (rec: RecorderState, from: TraversalId, to: TraversalId): void => {
   if (!rec.transitions.some(t => t.from === from && t.to === to)) rec.transitions.push({ from, to });
 };
 

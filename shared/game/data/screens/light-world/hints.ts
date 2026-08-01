@@ -1,9 +1,50 @@
 /* @layer shared-game @kind data */
-import type { ScreenDefinition } from '../../../types';
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ScreenRecord } from '../../types';
 
-const LW_HINTS: ScreenDefinition[] = [
-  { id: 'fortune-teller-light', name: 'Fortune Teller (Light)', type: 'interior', world: 'light', location: 'Kakariko Village', area: 'Kakariko', roomIndex: 0xE7, interior: { kind: 'hint' }, tags: ['env:indoor'] },
-  { id: 'lake-hylia-fortune-teller', name: 'Great Lake Fortune Teller', type: 'interior', world: 'light', location: 'Lake Hylia', area: 'Lake Hylia', roomIndex: 0xE7, interior: { kind: 'hint' }, tags: ['env:indoor'] },
+const LW_HINTS_SCREENS: ScreenRecord[] = [
+  {
+    id: 'screen-183',
+    gameId: { roomIndex: 231 },
+    kind: 'interior',
+    world: 'light',
+    interiorKind: 'hint',
+    randomizerName: 'Fortune Teller (Light)',
+    areaId: 'area-012',
+    locationId: 'location-017',
+    tags: ['env:indoor'],
+    status: 'mapped',
+    spawns: [
+      { actorId: 'actor-103', tile: { x: 32, y: 8 } },
+      { actorId: 'actor-103', tile: { x: 38, y: 8 } },
+      { actorId: 'actor-103', tile: { x: 42, y: 22 } },
+      { actorId: 'actor-103', tile: { x: 22, y: 24 } },
+      { actorId: 'actor-103', tile: { x: 22, y: 26 } },
+      { actorId: 'actor-103', tile: { x: 42, y: 26 } },
+      { actorId: 'actor-103', tile: { x: 42, y: 30 } },
+    ],
+  },
+  {
+    id: 'screen-184',
+    gameId: { roomIndex: 231 },
+    kind: 'interior',
+    world: 'light',
+    interiorKind: 'hint',
+    randomizerName: 'Lake Hylia Fortune Teller',
+    areaId: 'area-013',
+    locationId: 'location-018',
+    tags: ['env:indoor'],
+    status: 'mapped',
+    spawns: [
+      { actorId: 'actor-103', tile: { x: 32, y: 8 } },
+      { actorId: 'actor-103', tile: { x: 38, y: 8 } },
+      { actorId: 'actor-103', tile: { x: 42, y: 22 } },
+      { actorId: 'actor-103', tile: { x: 22, y: 24 } },
+      { actorId: 'actor-103', tile: { x: 22, y: 26 } },
+      { actorId: 'actor-103', tile: { x: 42, y: 26 } },
+      { actorId: 'actor-103', tile: { x: 42, y: 30 } },
+    ],
+  },
 ];
 
-export { LW_HINTS };
+export { LW_HINTS_SCREENS };

@@ -3,6 +3,7 @@
  * Types for the headless sim-run automation (`--sim-run`): the config the CLI
  * flag parses into, and the report the run writes for the data-correction loop.
  */
+import type { CheckId } from '../../data';
 import type { SimOutcome, DatasetSuggestion } from '../types';
 
 /** Parsed from the `--sim-run=...` CLI flag. */
@@ -16,7 +17,7 @@ interface SimRunConfig {
   /** Stop early once this screen is reached (null = run to outcome). */
   target: string | null;
   /** Halt right after this check triggers (engine SimConfig.stopAtCheckId). */
-  stopAtCheckId: string | null;
+  stopAtCheckId: CheckId | null;
   /** Hard step cap so a stuck run always terminates. */
   maxSteps: number;
   /** Diagnostic: flood this overworld screen addressably and report its numbers, then exit. */
@@ -25,7 +26,8 @@ interface SimRunConfig {
    *  exits, then exit — the indoor counterpart of `floodScreen`, for finding out
    *  why a room reads as a dead end. */
   probeRoom: number | null;
-  /** Extra traversal items for the `floodScreen` diagnostic (comma separated). */
+  /** Extra traversal TOKENS for the `floodScreen` diagnostic ('lift.2', 'boots'),
+   *  comma separated — fed straight to the flood, not item ids. */
   probeItems: string[] | null;
   /** Optional entry tile for `probeRoom`, as the flood's start position. */
   probeTile: { row: number; col: number } | null;
@@ -57,8 +59,8 @@ interface SimRunReport {
   steps: number;
   /** Logical screens the flood reached this run. */
   reachedScreens: string[];
-  /** Real checks verified (triggered + flag-confirmed) this run. */
-  verifiedChecks: string[];
+  /** Real checks verified (triggered + flag-confirmed) this run, by id. */
+  verifiedChecks: CheckId[];
   /** Edges leaving the reached set — where traversal stopped (gates / bad edges). */
   boundaryEdges: BoundaryEdge[];
   /** Recorder-derived, ready-to-write corrections (traversed-but-unmapped, etc.). */

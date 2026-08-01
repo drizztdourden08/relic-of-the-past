@@ -1,16 +1,19 @@
 /* @layer renderer-components @kind component */
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { ITEM_SPRITE_MAP } from '@shared/game/items/sprites';
+import { find } from '@shared/game/data';
+import { spriteFilename } from '@shared/game/logic/queries/item-sprites';
 import type { ReviewStatus, ReviewData } from '../SpriteDebug.type';
 import { Box, Button } from '../../../../../design-system/primitives';
 import { FilterBtns, Stats } from './ReviewControls';
 import { ItemAssocCard } from './ReviewCards';
 import { S } from '../SpriteDebug.constants';
 import { loadSpriteDebug, saveSpriteDebug } from '@app/lib/storage/sprites-store';
+import { migrateLegacyReviewKeys } from './migrate-review-keys';
 
-const ALL_ITEMS = Object.entries(ITEM_SPRITE_MAP).map(([name, file]) => ({
-  name,
-  file,
+const ALL_ITEMS = find('item', () => true).map(item => ({
+  id: item.id,
+  name: item.randomizerName,
+  file: spriteFilename(item.spriteId) ?? '',
 }));
 
 const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
@@ -20,7 +23,11 @@ const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    loadSpriteDebug().then(d => { setData((d ?? {}) as ReviewData); setLoaded(true); });
+    loadSpriteDebug().then(d => {
+      const migrated = migrateLegacyReviewKeys((d ?? {}) as ReviewData);
+      setData(migrated);
+      setLoaded(true);
+    });
   }, []);
 
   const persist = useCallback((next: ReviewData) => {
@@ -49,13 +56,13 @@ const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
 
   const counts = useMemo(() => {
     const c = { good: 0, bad: 0, neutral: 0, yellow: 0 };
-    ALL_ITEMS.forEach(i => { c[data[i.name]?.status ?? 'neutral']++; });
+    ALL_ITEMS.forEach(i => { c[data[i.id]?.status ?? 'neutral']++; });
     return c;
   }, [data]);
 
   const filtered = useMemo(() => {
     if (filter === 'all') return ALL_ITEMS;
-    return ALL_ITEMS.filter(i => (data[i.name]?.status ?? 'neutral') === filter);
+    return ALL_ITEMS.filter(i => (data[i.id]?.status ?? 'neutral') === filter);
   }, [filter, data]);
 
   if (!loaded) return null;
@@ -72,12 +79,12 @@ const ItemReviewPanel = ({ baseUrl }: { baseUrl: string }) => {
       <Box style={S.grid}>
         {filtered.map(item => (
           <ItemAssocCard
-            key={item.name}
+            key={item.id}
             item={item}
-            entry={data[item.name] ?? { status: 'neutral' }}
+            entry={data[item.id] ?? { status: 'neutral' }}
             baseUrl={baseUrl}
-            onSetStatus={s => setStatus(item.name, s)}
-            onSetComment={c => setComment(item.name, c)}
+            onSetStatus={s => setStatus(item.id, s)}
+            onSetComment={c => setComment(item.id, c)}
           />
         ))}
       </Box>

@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
-import type { ScreenConnection, CheckDefinition } from '../../shared/game/types';
+import type { CheckId, CheckRecord, ConnectionRecord, ItemId } from '../../shared/game/data';
 import type {
   SimChest,
   SimObservation,
@@ -16,10 +16,12 @@ import { buildAdjacency } from '../../shared/game/simulation/engine/traversal';
 import { resetFrontier, onCheckVerified } from '../../shared/game/simulation/engine/explorer';
 import { discoverTargets } from '../../shared/game/simulation/engine/discover';
 import { emptySnapshot, cloneSnapshot } from '../../shared/game/simulation/detect/flag-snapshot';
-import { CHEST_OPEN_MASKS } from '../../shared/game/checks/flags';
-import { ITEM_ID_TO_NAME } from '../../shared/game/items/id-map';
+import { getItemByGameId } from '../../shared/game/data';
 
 // ─── Shared fixtures ─────────────────────────────────────────────────────────
+
+/** Chest-open bit per slot — same native fact the matcher itself uses. */
+const CHEST_OPEN_MASKS = [0x10, 0x20, 0x40, 0x80, 0x100, 0x200, 0x400] as const;
 
 const KAKARIKO_TAVERN_ROOM = 0x103;
 const LINKS_HOUSE_ROOM = 0x104;
@@ -65,8 +67,8 @@ interface WorldChest extends SimChest {
 
 class FakeWorld {
   flags: FlagSnapshot = emptySnapshot();
-  inventory = new Set<string>();
-  pendingItem: number | undefined;
+  inventory = new Set<ItemId>();
+  pendingItem: ItemId | undefined;
   virtualScreen = 'A';
 
   constructor(private chests: WorldChest[]) {}
@@ -95,15 +97,20 @@ class FakeWorld {
   apply(action: TriggerAction): void {
     if (action.type !== 'chest') return;
     this.flags.dungInfo[action.roomId] |= CHEST_OPEN_MASKS[action.chestIndex];
-    this.pendingItem = action.itemId;
-    const name = ITEM_ID_TO_NAME[action.itemId];
-    if (name) this.inventory.add(name);
+    const item = getItemByGameId({ receiveItemId: action.itemId });
+    this.pendingItem = item?.id;
+    if (item) this.inventory.add(item.id);
   }
 }
 
-const CHAIN: ScreenConnection[] = [
-  { from: 'A', to: 'B', tags: ['transit:walk', 'dir:two-way'] },
-  { from: 'B', to: 'C', tags: ['transit:walk', 'dir:two-way'] },
+/** The check room 0x104's chest IS; the two generic key grants the core delivers. */
+const HOUSE_CHECK: CheckId = 'check-026';
+const SMALL_KEY: ItemId = 'item-037';
+const BIG_KEY: ItemId = 'item-051';
+
+const CHAIN: ConnectionRecord[] = [
+  { id: 'connection-t01', fromScreenId: 'A', toScreenId: 'B', direction: 'two-way', tags: ['transit:walk', 'dir:two-way'] } as unknown as ConnectionRecord,
+  { id: 'connection-t02', fromScreenId: 'B', toScreenId: 'C', direction: 'two-way', tags: ['transit:walk', 'dir:two-way'] } as unknown as ConnectionRecord,
 ];
 
 describe('engine — visited pass-through screens are backtracked, not re-explored', () => {
@@ -113,7 +120,7 @@ describe('engine — visited pass-through screens are backtracked, not re-explor
       { screenId: 'C', roomId: LINKS_HOUSE_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: LAMP_ID },
     ]);
     const engine = createEngine({ adjacency: buildAdjacency(CHAIN) });
-    let state = createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), { goalCheckId: "Link's House" });
+    let state = createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), { goalCheckId: HOUSE_CHECK });
     // Mark B as already visited so the route (A→B→C) merely passes through it.
     state.visited.add('B');
 
@@ -127,7 +134,7 @@ describe('engine — visited pass-through screens are backtracked, not re-explor
     }
 
     expect(state.phase).toBe('done');
-    expect(state.completedChecks.has("Link's House")).toBe(true);
+    expect(state.completedChecks.has(HOUSE_CHECK)).toBe(true);
     // Explored ground is passed through with a single BACKTRACK marker — its
     // interactables are NOT re-discovered (they were handled when first visited).
     expect(events.some(m => m.startsWith('Backtrack through B'))).toBe(true);
@@ -140,13 +147,15 @@ describe('engine — visited pass-through screens are backtracked, not re-explor
 describe('engine — traverse never teleports through a blocked edge', () => {
   it('aborts the route when the next hop has no passable edge', () => {
     // A→C is hammer-locked; a stale route to C exists but the virtual Link has no hammer.
-    const conns: ScreenConnection[] = [
+    const conns: ConnectionRecord[] = [
       {
-        from: 'A',
-        to: 'C',
+        id: 'connection-t03',
+        fromScreenId: 'A',
+        toScreenId: 'C',
+        direction: 'two-way',
         tags: ['transit:door', 'dir:two-way'],
         nav: { transitType: 'door', requirements: [['hammer']], bidirectional: true, weight: 1 },
-      },
+      } as unknown as ConnectionRecord,
     ];
     const engine = createEngine({ adjacency: buildAdjacency(conns) });
     const state = createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), {});
@@ -256,15 +265,18 @@ describe('explorer — generic key attribution', () => {
 
   it('attributes a suffix-less "Small Key" to the matched check\'s dungeon', () => {
     const s = freshState();
-    const matched = { dungeon: 'Eastern Palace' } as CheckDefinition;
-    onCheckVerified(s, detected({ itemReceived: 'Small Key', matched, matchedName: 'Eastern Palace - Big Chest' }));
-    expect(s.keys.get('eastern-palace')).toBe(1);
+    const matched = { id: 'check-117', dungeonId: 'dungeon-003' } as CheckRecord;
+    onCheckVerified(s, detected({ itemReceived: SMALL_KEY, matched, checkId: matched.id }));
+    expect(s.keys.get('dungeon-003')).toBe(1);
+    // …and no other dungeon is credited by the same grant.
+    expect(s.keys.get('dungeon-009')).toBeUndefined();
   });
 
   it('attributes a suffix-less "Big Key" to the matched check\'s dungeon', () => {
     const s = freshState();
-    const matched = { dungeon: "Thieves' Town" } as CheckDefinition;
-    onCheckVerified(s, detected({ itemReceived: 'Big Key', matched, matchedName: "Thieves' Town - Big Key Chest" }));
-    expect(s.bigKeys.has('thieves-town')).toBe(true);
+    const matched = { id: 'check-179', dungeonId: 'dungeon-009' } as CheckRecord;
+    onCheckVerified(s, detected({ itemReceived: BIG_KEY, matched, checkId: matched.id }));
+    expect(s.bigKeys.has('dungeon-009')).toBe(true);
+    expect(s.bigKeys.has('dungeon-003')).toBe(false);
   });
 });

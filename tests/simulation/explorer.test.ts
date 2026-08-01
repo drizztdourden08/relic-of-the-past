@@ -9,49 +9,55 @@ import {
   applyItem,
   syncReachTokens,
   onCheckVerified,
-  dungeonFromKeyItem,
-  canonicalDungeon,
 } from '../../shared/game/simulation/engine/explorer';
 import { requirementsMet } from '../../shared/game/simulation/requirements-map';
 import { evaluateOutcome } from '../../shared/game/simulation/engine/goal';
 import type { DetectedCheck } from '../../shared/game/simulation/types';
+
+/** dungeon-003 is the third dungeon; the id is the identity, its name is not. */
+const EASTERN = 'dungeon-003';
+const TITANS_MITTS = 'item-029';
+const HAMMER = 'item-010';
+const BOMB_PICKUP = 'item-041';
+const RUPEES = 'item-054';
 
 const freshState = () => createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), {});
 
 describe('explorer — consumable small keys', () => {
   it('adds, spends, and reports availability per dungeon', () => {
     const s = freshState();
-    addKey(s, 'eastern-palace');
-    addKey(s, 'eastern-palace');
-    expect(keyAvailable(s, 'eastern-palace')).toBe(true);
+    addKey(s, EASTERN);
+    addKey(s, EASTERN);
+    expect(keyAvailable(s, EASTERN)).toBe(true);
 
-    expect(spendKey(s, 'eastern-palace')).toBe(true);
-    expect(spendKey(s, 'eastern-palace')).toBe(true);
-    expect(spendKey(s, 'eastern-palace')).toBe(false); // none left
-    expect(keyAvailable(s, 'eastern-palace')).toBe(false);
+    expect(spendKey(s, EASTERN)).toBe(true);
+    expect(spendKey(s, EASTERN)).toBe(true);
+    expect(spendKey(s, EASTERN)).toBe(false); // none left
+    expect(keyAvailable(s, EASTERN)).toBe(false);
   });
 
   it('gates a smallkey requirement on the remaining key count', () => {
     const s = freshState();
-    const req = [['smallkey:eastern-palace']];
+    const req = [[`smallkey:${EASTERN}`]];
     expect(requirementsMet(req, buildReachContext(s))).toBe(false);
-    addKey(s, 'eastern-palace');
+    addKey(s, EASTERN);
     expect(requirementsMet(req, buildReachContext(s))).toBe(true);
-    spendKey(s, 'eastern-palace');
+    spendKey(s, EASTERN);
     expect(requirementsMet(req, buildReachContext(s))).toBe(false);
   });
 
-  it('normalizes dungeon names and extracts them from key item names', () => {
-    expect(canonicalDungeon("Thieves' Town")).toBe('thieves-town');
-    expect(dungeonFromKeyItem('Small Key (Eastern Palace)')).toBe('eastern-palace');
-    expect(dungeonFromKeyItem('Lamp')).toBeNull();
+  it('keys one dungeon without crediting another', () => {
+    const s = freshState();
+    addKey(s, EASTERN);
+    expect(keyAvailable(s, 'dungeon-004')).toBe(false);
+    expect(keyAvailable(s, '*')).toBe(true);
   });
 });
 
 describe('explorer — inventory → traversal tokens', () => {
-  it('maps item names to reach tokens (Titan\'s Mitt implies light-rock lift)', () => {
+  it('grants the lower lift rungs with the top one, from the token progression', () => {
     const s = freshState();
-    applyItem(s, 'Titans Mitts');
+    applyItem(s, TITANS_MITTS);
     syncReachTokens(s);
     expect(s.reachTokens.has('lift.3')).toBe(true);
     expect(s.reachTokens.has('lift.2')).toBe(true);
@@ -70,7 +76,7 @@ describe('explorer — unlock-reset rule', () => {
     const s = freshState();
     s.frontier = ['B', 'C'];
     s.visited = new Set(['A', 'B']);
-    onCheckVerified(s, detected({ itemReceived: 'Hammer', matchedName: 'Kakariko Tavern' }));
+    onCheckVerified(s, detected({ itemReceived: HAMMER, checkId: 'check-072' }));
     expect(s.epoch).toBe(1);
     expect(s.frontier).toHaveLength(0);
     // Localized refresh: only the current screen re-floods; other visits stay,
@@ -78,17 +84,24 @@ describe('explorer — unlock-reset rule', () => {
     expect(s.visited.has('A')).toBe(false);
     expect(s.visited.has('B')).toBe(true);
     expect(s.progressSinceEpoch).toBe(true);
-    expect(s.completedChecks.has('Kakariko Tavern')).toBe(true);
+    expect(s.completedChecks.has('check-072')).toBe(true);
   });
 
   it('marks done and continues (no epoch bump) on a non-traversal item', () => {
     const s = freshState();
     s.frontier = ['B'];
-    onCheckVerified(s, detected({ itemReceived: '3 Bombs', matchedName: 'Chicken House' }));
+    onCheckVerified(s, detected({ itemReceived: RUPEES, checkId: 'check-073' }));
     expect(s.epoch).toBe(0);
     expect(s.frontier).toEqual(['B']);
     expect(s.progressSinceEpoch).toBe(true);
-    expect(s.completedChecks.has('Chicken House')).toBe(true);
+    expect(s.completedChecks.has('check-073')).toBe(true);
+  });
+
+  it('treats the bomb pickup as traversal-affecting', () => {
+    const s = freshState();
+    onCheckVerified(s, detected({ itemReceived: BOMB_PICKUP, checkId: 'check-074' }));
+    expect(s.epoch).toBe(1);
+    expect(s.reachTokens.has('bombs')).toBe(true);
   });
 });
 
@@ -110,8 +123,8 @@ describe('goal — terminal conditions', () => {
 
   it('returns completed once the goal check is done', () => {
     const s = freshState();
-    s.config = { goalCheckId: 'Ganon' };
-    s.completedChecks.add('Ganon');
+    s.config = { goalCheckId: 'check-097' };
+    s.completedChecks.add('check-097');
     expect(evaluateOutcome(s)).toBe('completed');
   });
 

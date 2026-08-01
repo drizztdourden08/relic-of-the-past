@@ -1,33 +1,45 @@
 /* @layer shared-game @kind data */
-import type { ScreenConnection } from '../../../../types';
+import type { ConnectionRecord } from '../../../types';
+import { DW_DUNGEON_GANONS_TOWER_FLOOR_M2_M1_CONNECTIONS } from './ganons-tower-floor-m2-m1';
+import { DW_DUNGEON_GANONS_TOWER_FLOOR_0_CONNECTIONS } from './ganons-tower-floor-0';
+import { DW_DUNGEON_GANONS_TOWER_FLOOR_1_CONNECTIONS } from './ganons-tower-floor-1';
+import { DW_DUNGEON_GANONS_TOWER_FLOOR_2_3_CONNECTIONS } from './ganons-tower-floor-2-3';
+import { DW_DUNGEON_GANONS_TOWER_FLOOR_4_6_CONNECTIONS } from './ganons-tower-floor-4-6';
+import { DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS } from './ice-palace-floor-lower';
+import { DW_DUNGEON_ICE_PALACE_FLOOR_UPPER_CONNECTIONS } from './ice-palace-floor-upper';
+import { DW_DUNGEON_MISERY_MIRE_FLOOR_M2_CONNECTIONS } from './misery-mire-floor-m2';
+import { DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS } from './misery-mire-floor-m1-0';
+import { DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS } from './palace-of-darkness-floor-m2';
+import { DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M1_0_CONNECTIONS } from './palace-of-darkness-floor-m1-0';
+import { DW_DUNGEON_SKULL_WOODS_1_CONNECTIONS } from './skull-woods-1';
+import { DW_DUNGEON_SKULL_WOODS_2_CONNECTIONS } from './skull-woods-2';
+import { DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS } from './swamp-palace-floor-m1';
+import { DW_DUNGEON_SWAMP_PALACE_FLOOR_0_CONNECTIONS } from './swamp-palace-floor-0';
+import { DW_DUNGEON_THIEVES_TOWN_CONNECTIONS } from './thieves-town';
+import { DW_DUNGEON_TURTLE_ROCK_FLOOR_M2_CONNECTIONS } from './turtle-rock-floor-m2';
+import { DW_DUNGEON_TURTLE_ROCK_FLOOR_M1_CONNECTIONS } from './turtle-rock-floor-m1';
+import { DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS } from './turtle-rock-floor-0';
 
-import { DW_PALACE_OF_DARKNESS_CONNECTIONS } from './palace-of-darkness';
-import { DW_SWAMP_PALACE_CONNECTIONS } from './swamp-palace';
-import { DW_SKULL_WOODS_CONNECTIONS } from './skull-woods';
-import { DW_THIEVES_TOWN_CONNECTIONS } from './thieves-town';
-import { DW_ICE_PALACE_CONNECTIONS } from './ice-palace';
-import { DW_MISERY_MIRE_CONNECTIONS } from './misery-mire';
-import { DW_TURTLE_ROCK_CONNECTIONS } from './turtle-rock';
-import { DW_GANONS_TOWER_CONNECTIONS } from './ganons-tower';
-
-export { DW_PALACE_OF_DARKNESS_CONNECTIONS } from './palace-of-darkness';
-export { DW_SWAMP_PALACE_CONNECTIONS } from './swamp-palace';
-export { DW_SKULL_WOODS_CONNECTIONS } from './skull-woods';
-export { DW_THIEVES_TOWN_CONNECTIONS } from './thieves-town';
-export { DW_ICE_PALACE_CONNECTIONS } from './ice-palace';
-export { DW_MISERY_MIRE_CONNECTIONS } from './misery-mire';
-export { DW_TURTLE_ROCK_CONNECTIONS } from './turtle-rock';
-export { DW_GANONS_TOWER_CONNECTIONS } from './ganons-tower';
-
-const DW_DUNGEON_CONNECTIONS: ScreenConnection[] = [
-  ...DW_PALACE_OF_DARKNESS_CONNECTIONS,
-  ...DW_SWAMP_PALACE_CONNECTIONS,
-  ...DW_SKULL_WOODS_CONNECTIONS,
-  ...DW_THIEVES_TOWN_CONNECTIONS,
-  ...DW_ICE_PALACE_CONNECTIONS,
-  ...DW_MISERY_MIRE_CONNECTIONS,
-  ...DW_TURTLE_ROCK_CONNECTIONS,
-  ...DW_GANONS_TOWER_CONNECTIONS,
+const DW_DUNGEONS_CONNECTIONS: ConnectionRecord[] = [
+  ...DW_DUNGEON_GANONS_TOWER_FLOOR_M2_M1_CONNECTIONS,
+  ...DW_DUNGEON_GANONS_TOWER_FLOOR_0_CONNECTIONS,
+  ...DW_DUNGEON_GANONS_TOWER_FLOOR_1_CONNECTIONS,
+  ...DW_DUNGEON_GANONS_TOWER_FLOOR_2_3_CONNECTIONS,
+  ...DW_DUNGEON_GANONS_TOWER_FLOOR_4_6_CONNECTIONS,
+  ...DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS,
+  ...DW_DUNGEON_ICE_PALACE_FLOOR_UPPER_CONNECTIONS,
+  ...DW_DUNGEON_MISERY_MIRE_FLOOR_M2_CONNECTIONS,
+  ...DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS,
+  ...DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS,
+  ...DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M1_0_CONNECTIONS,
+  ...DW_DUNGEON_SKULL_WOODS_1_CONNECTIONS,
+  ...DW_DUNGEON_SKULL_WOODS_2_CONNECTIONS,
+  ...DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS,
+  ...DW_DUNGEON_SWAMP_PALACE_FLOOR_0_CONNECTIONS,
+  ...DW_DUNGEON_THIEVES_TOWN_CONNECTIONS,
+  ...DW_DUNGEON_TURTLE_ROCK_FLOOR_M2_CONNECTIONS,
+  ...DW_DUNGEON_TURTLE_ROCK_FLOOR_M1_CONNECTIONS,
+  ...DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS,
 ];
 
-export { DW_DUNGEON_CONNECTIONS };
+export { DW_DUNGEONS_CONNECTIONS };

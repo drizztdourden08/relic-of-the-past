@@ -35,12 +35,14 @@ export {
   affectsTraversal,
 } from './requirements-map';
 export type { ReachContext } from './requirements-map';
+export type { KeyTarget } from './dungeon-key-target';
+export type { TraversalId } from './traversal-id';
 
 export { createEngine } from './engine/engine';
 export type { EngineDeps, StepResult } from './engine/engine';
 export { createEngineState, cloneState } from './engine/state';
-export { screenLabel } from './engine/step-helpers';
-export type { EngineState, SimTarget } from './engine/state';
+export { screenLabel } from './engine/screen-label';
+export type { EngineState, SimTarget, SimTargetRole } from './engine/state';
 export {
   buildAdjacency,
   connectionRequirements,
@@ -52,8 +54,6 @@ export {
 export type { Adjacency, ScreenEdge, CanPass } from './engine/traversal';
 export { evaluateOutcome, goalCheckDone, allChecksDone, frontierExhausted } from './engine/goal';
 export {
-  canonicalDungeon,
-  dungeonFromKeyItem,
   syncReachTokens,
   keyAvailable,
   buildReachContext,
@@ -66,7 +66,7 @@ export {
 } from './engine/explorer';
 export { buildSoftlockReport } from './engine/softlock-report';
 
-export { planTrigger, planChestTrigger, planSpriteTrigger, npcConfigForSprite } from './trigger/trigger-plans';
+export { planTrigger, planChestTrigger, planSpriteTrigger, npcConfigForSprite, checkForStandingItem } from './trigger/trigger-plans';
 export { arrivalLabel } from './engine/step-helpers';
 export { buildEndSummary, formatEndSummary } from './engine/end-summary';
 export type { EndSummary } from './engine/end-summary';
@@ -74,7 +74,7 @@ export { bossTriggerable, isReachable, meetsRequirements, bossRequirement } from
 export type { BossSite } from './trigger/boss-gate';
 
 export { emptySnapshot, cloneSnapshot, diffSnapshots } from './detect/flag-snapshot';
-export { matchDiff, matchDiffs, UNKNOWN } from './detect/check-matcher';
+export { matchDiff, matchDiffs } from './detect/check-matcher';
 
 export { createRecorder, recordCheck, recordTransition, recordDoorGate } from './recording/recorder';
 export type { RecorderState, ObservedCheck, ObservedTransition, ObservedDoorGate } from './recording/recorder';

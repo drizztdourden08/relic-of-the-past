@@ -11,6 +11,7 @@
  * granted); the extra frames let item-receipt and auto-skip-dialog settle.
  */
 import type { SimulatorPort, RoomSectionSplit } from '@shared/game/simulation';
+import type { ItemId } from '@shared/game/data';
 import { captureStateBuffer, loadStateFromBuffer, reassertFeatureFlags, deliveryQueue } from '../';
 import { setAutoSkipDialogOverride, setDeveloperToolsOverride } from '../live-settings-flags';
 import { onItemReceived } from '../tracker';
@@ -42,8 +43,14 @@ const restoreState = (buf: ArrayBuffer): Promise<void> => {
   return Promise.resolve();
 };
 
-const subscribeItem = (cb: (itemId: number) => void): (() => void) =>
-  onItemReceived((_name, itemId) => cb(itemId));
+/**
+ * The tracker has already resolved the native receive index to a record, so the
+ * dataset id is what travels. This used to throw the id away and forward the raw
+ * native number, which the engine's verify step then looked up again — the same
+ * join, done twice, with a name in the middle.
+ */
+const subscribeItem = (cb: (itemId: ItemId) => void): (() => void) =>
+  onItemReceived((itemId) => cb(itemId));
 
 /** The current room's scroll-section split — valid since the player is standing
  *  in whatever room this reads (see WasmGetRoomLayoutInfo). */

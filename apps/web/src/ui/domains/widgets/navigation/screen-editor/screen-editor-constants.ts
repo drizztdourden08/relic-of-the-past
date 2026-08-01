@@ -1,12 +1,11 @@
 /* @layer renderer-widgets @kind logic */
-/** Static option lists + id/slug helpers for the ScreenEditorDialog wizard. */
+/** Static option lists for the ScreenEditorDialog wizard. */
 import type { SelectOption, SegmentOption, TagPickerGroup } from '../../../../design-system/primitives';
-import type { ScreenType, InteriorKind } from '@shared/game/types';
-import type { ScreenTag } from '@shared/game/data/screens/tags';
-import { TAG_METADATA, TAG_NAMESPACES } from '@shared/game/data/screens/tags';
-import { PALACE_INDEX_NAMES } from '@shared/game/data/screens/game-values';
+import type { InteriorKind, ScreenKind, ScreenTag } from '@shared/game/data';
+import { TAG_METADATA, TAG_NAMESPACES } from '@shared/game/data';
+import { PALACE_INDEX_NAMES } from '@shared/game/logic/queries/dungeon-values';
 
-const TYPE_SEGMENTS: SegmentOption<ScreenType>[] = [
+const TYPE_SEGMENTS: SegmentOption<ScreenKind>[] = [
   { value: 'overworld', label: 'Overworld' },
   { value: 'dungeon', label: 'Dungeon' },
   { value: 'interior', label: 'Interior' },
@@ -42,18 +41,7 @@ const TAG_GROUPS: TagPickerGroup<ScreenTag>[] = TAG_NAMESPACES.map(ns => ({
   options: TAG_METADATA.filter(t => t.namespace === ns.id).map(t => ({ value: t.id, label: t.label })),
 }));
 
-const getDungeonPrefix = (palaceIndex: number): string => {
-  const map: Record<number, string> = {
-    0x00: 'hc', 0x02: 'hc', 0x04: 'ep', 0x06: 'dp', 0x08: 'ct',
-    0x0A: 'sp', 0x0C: 'pod', 0x0E: 'mm', 0x10: 'sw',
-    0x12: 'ip', 0x14: 'toh', 0x16: 'tt', 0x18: 'tr', 0x1A: 'gt',
-  };
-  return map[palaceIndex] ?? 'room';
-};
-
-const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-
 export {
   TYPE_SEGMENTS, WORLD_SEGMENTS, PALACE_OPTIONS, INTERIOR_KIND_OPTIONS,
-  CONDITION_TYPE_OPTIONS, TAG_GROUPS, getDungeonPrefix, slugify,
+  CONDITION_TYPE_OPTIONS, TAG_GROUPS,
 };

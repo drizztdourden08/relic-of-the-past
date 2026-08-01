@@ -136,9 +136,9 @@ const readCheckSummary = async (window: Page): Promise<CheckSummary> => {
   return { done: await one('done'), available: await one('available'), blocked: await one('unreachable') };
 };
 
-/** The `room-104 · INDOOR` / `lw-1b · LW · R3 C3` id line. */
+/** The `screen-133 · 0x80 · INDOOR` / `screen-062 · 0x1B · LW · R3 C3` id line. */
 const readScreenId = async (window: Page): Promise<string> =>
-  ((await window.locator('text=/(room-[0-9a-f]{3}|[ld]w-[0-9a-f]{2}) · /').first().textContent()) ?? '').trim();
+  ((await window.locator('text=/screen-[0-9]{3} · /').first().textContent()) ?? '').trim();
 
 export {
   readStates, awaitState, readFlood, readGroups, readRows, readTags, readCheckSummary, readScreenId,

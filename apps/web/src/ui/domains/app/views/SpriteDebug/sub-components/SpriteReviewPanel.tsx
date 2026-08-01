@@ -4,8 +4,8 @@ import {
   SPRITE_MANIFEST,
   CATEGORY_LABELS,
   CATEGORY_ORDER,
-} from '@shared/game/sprites';
-import type { SpriteCategory } from '@shared/game/sprites';
+} from '@shared/game/data';
+import type { SpriteCategory } from '@shared/game/data';
 import type { ReviewStatus, ReviewData } from '../SpriteDebug.type';
 import { Box, Button } from '../../../../../design-system/primitives';
 import { CategoryButton, FilterBtns, Stats } from './ReviewControls';

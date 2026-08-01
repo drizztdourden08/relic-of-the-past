@@ -10,8 +10,8 @@
 import type { GridPos } from '@shared/game/navigation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
 import type { SimExit } from '@shared/game/simulation';
-import type { ScreenDefinition } from '@shared/game/types';
-import { SCREEN_BY_ID } from '@shared/game/data/screens';
+import type { ScreenRecord } from '@shared/game/data';
+import { findOne } from '@shared/game/data';
 import { computeBigScreenGroup } from '@domains/widgets/navigation/widget-helpers';
 import { wasmGetEntranceRooms } from '../';
 import { floodOneOverworld, summarizeRun, usableEntranceTransition } from './flood-screen';
@@ -36,7 +36,7 @@ const FALL_HOLE_ID_BASE = 200;
 
 /** Entrance-transition exits of one flood run (doors + holes into rooms);
  *  item-gated entrances are excluded — the player can't take them yet. */
-const entranceExits = (run: ScreenFloodRun, items: TileReq[], fromKey: string, src?: ScreenDefinition): SimExit[] => {
+const entranceExits = (run: ScreenFloodRun, items: TileReq[], fromKey: string, src?: ScreenRecord): SimExit[] => {
   const rooms = wasmGetEntranceRooms();
   if (!rooms) return [];
   const exits: SimExit[] = [];
@@ -78,7 +78,7 @@ const OW_EDGE_ADJ = {
  * sub-screens are ordinary exits, ordered before out-of-area ones so the whole
  * big screen gets explored before moving on.
  */
-const detectOverworld = (screenIndex: number, items: TileReq[], entryTile?: GridPos, src?: ScreenDefinition, fromKey = `ow:${screenIndex}`): DetectedScreen | null => {
+const detectOverworld = (screenIndex: number, items: TileReq[], entryTile?: GridPos, src?: ScreenRecord, fromKey = `ow:${screenIndex}`): DetectedScreen | null => {
   const run = floodOneOverworld(screenIndex, items, entryTile);
   if (!run) return null;
   const group = new Set(computeBigScreenGroup(screenIndex));
@@ -115,18 +115,17 @@ const detectOverworld = (screenIndex: number, items: TileReq[], entryTile?: Grid
  */
 const detectScreenExits = (screenId: string, opts?: { entryTile?: GridPos; items?: TileReq[] }): DetectedScreen | null => {
   const items = opts?.items ?? ['lift.1'];
-  const screen = SCREEN_BY_ID.get(screenId);
-  if (!screen) {
-    const loc = locationForScreen(screenId);
-    if (!loc) return null;
-    return loc.isIndoors
-      ? detectRoom(loc.roomId, items, opts?.entryTile, undefined, screenId)
-      : detectOverworld(loc.owScreenIndex, items, opts?.entryTile, undefined, screenId);
-  }
-  const roomIndex = screen.roomIndex ?? 0;
-  return screen.type === 'overworld'
-    ? detectOverworld(roomIndex, items, opts?.entryTile, screen, screenId)
-    : detectRoom(roomIndex, items, opts?.entryTile, screen, screenId);
+  // ONE resolution for both vocabularies. A second copy here read the overworld
+  // index out of `roomIndex`, which an overworld record does not carry, so every
+  // dataset-id overworld detection silently ran on screen 0 — a whole screen's
+  // worth of exits belonging to somewhere else.
+  const loc = locationForScreen(screenId);
+  if (!loc) return null;
+  // The resolved screen record is never consulted for matching logic on the
+  // indoor path — it plays no part in the outcome, so it is not passed through.
+  return loc.isIndoors
+    ? detectRoom(loc.roomId, items, opts?.entryTile, undefined, screenId)
+    : detectOverworld(loc.owScreenIndex, items, opts?.entryTile, findOne('screen', (s) => s.id === screenId), screenId);
 };
 
 export { detectScreenExits };

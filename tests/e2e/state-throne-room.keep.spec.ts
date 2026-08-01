@@ -17,7 +17,7 @@ import { withState } from './state-harness';
 test('test-throne-room keeps the follower gate shut with no follower', async () => {
   test.setTimeout(300_000);
   await withState('test-throne-room', async (r) => {
-    expect(await r.screenId(), 'the Throne Room is room 0x051').toMatch(/^room-051 · INDOOR/);
+    expect(await r.screenId(), 'the Throne Room is screen-119 (room 0x051)').toMatch(/^screen-119 · 0x51 · INDOOR/);
 
     // Half one: nobody is following, which is why the gate is shut.
     const states = await r.states();

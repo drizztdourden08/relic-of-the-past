@@ -1,25 +1,45 @@
 /* @layer shared-game @kind logic */
-import type { Requirement, CheckDefinition, ScreenConnection } from '../types';
-import { ITEM_GROUPS } from '../items/groups';
+import type { CheckRecord, ItemId, CheckId, Requirement } from '../data';
+import { ITEM_GROUPS } from '../data';
+
+// ─── A resolved traversal edge — a real connection (or the virtual menu spawn
+// points), with its effective requirement (base record + any mode overlay)
+// already attached. This is what resolver.ts hands to the functions below. ───
+
+interface ReachConnection {
+  from: string;
+  to: string;
+  requirements?: Requirement;
+}
 
 // ─── Requirement Evaluation ───
 
-const evaluateRequirement = (req: Requirement, inventory: Set<string>): boolean => {
-  if (typeof req === 'string') {
-    return inventory.has(req);
+const evaluateRequirement = (
+  req: Requirement,
+  inventory: ReadonlySet<ItemId>,
+  completedChecks: ReadonlySet<CheckId>,
+): boolean => {
+  if ('impossible' in req) return false;
+
+  if ('itemId' in req) {
+    return inventory.has(req.itemId);
   }
 
-  if ('and' in req) {
-    return req.and.every(sub => evaluateRequirement(sub, inventory));
+  if ('checkId' in req) {
+    return completedChecks.has(req.checkId);
   }
 
-  if ('or' in req) {
-    return req.or.some(sub => evaluateRequirement(sub, inventory));
+  if ('allOf' in req) {
+    return req.allOf.every(sub => evaluateRequirement(sub, inventory, completedChecks));
+  }
+
+  if ('anyOf' in req) {
+    return req.anyOf.some(sub => evaluateRequirement(sub, inventory, completedChecks));
   }
 
   if ('count' in req) {
-    const [group, n] = req.count;
-    const members = ITEM_GROUPS[group];
+    const { groupId, n } = req.count;
+    const members = ITEM_GROUPS[groupId];
     if (!members) return false;
     let count = 0;
     for (const item of members) {
@@ -34,53 +54,50 @@ const evaluateRequirement = (req: Requirement, inventory: Set<string>): boolean 
 
 // ─── Screen Reachability (BFS) ───
 
-const getReachableScreens = (inventory: Set<string>, connections: ScreenConnection[], screenRules: Record<string, Requirement>): Set<string> => {
+const getReachableScreens = (
+  inventory: ReadonlySet<ItemId>,
+  completedChecks: ReadonlySet<CheckId>,
+  connections: readonly ReachConnection[],
+): Set<string> => {
   const reachable = new Set<string>();
   const queue: string[] = ['menu'];
   reachable.add('menu');
 
   // Build adjacency list once
-  const adj = new Map<string, string[]>();
+  const adj = new Map<string, ReachConnection[]>();
   for (const conn of connections) {
     let list = adj.get(conn.from);
     if (!list) {
       list = [];
       adj.set(conn.from, list);
     }
-    list.push(conn.to);
+    list.push(conn);
   }
 
-  while (queue.length > 0) {
-    const current = queue.shift()!;
+  const tryReach = (current: string): boolean => {
+    let changed = false;
     const neighbors = adj.get(current);
-    if (!neighbors) continue;
-
-    for (const to of neighbors) {
-      if (reachable.has(to)) continue;
-
-      const rule = screenRules[`${current}|${to}`];
-      if (rule && !evaluateRequirement(rule, inventory)) continue;
-
-      reachable.add(to);
-      queue.push(to);
+    if (!neighbors) return changed;
+    for (const edge of neighbors) {
+      if (reachable.has(edge.to)) continue;
+      if (edge.requirements && !evaluateRequirement(edge.requirements, inventory, completedChecks)) continue;
+      reachable.add(edge.to);
+      queue.push(edge.to);
+      changed = true;
     }
+    return changed;
+  };
+
+  while (queue.length > 0) {
+    tryReach(queue.shift()!);
   }
 
   // Fixed-point: re-traverse until no new screens found.
   let changed = true;
   while (changed) {
     changed = false;
-    for (const screenId of reachable) {
-      const neighbors = adj.get(screenId);
-      if (!neighbors) continue;
-      for (const to of neighbors) {
-        if (reachable.has(to)) continue;
-        const rule = screenRules[`${screenId}|${to}`];
-        if (rule && !evaluateRequirement(rule, inventory)) continue;
-        reachable.add(to);
-        queue.push(to);
-        changed = true;
-      }
+    for (const screenId of [...reachable]) {
+      if (tryReach(screenId)) changed = true;
     }
   }
 
@@ -91,55 +108,83 @@ const getReachableScreens = (inventory: Set<string>, connections: ScreenConnecti
 
 type CheckStatus = 'completed' | 'reachable' | 'blocked';
 
-const getAccessibleChecks = (inventory: Set<string>, completedChecks: Set<string>, checks: CheckDefinition[], connections: ScreenConnection[], screenRules: Record<string, Requirement>, checkRules: Record<string, Requirement>): CheckDefinition[] => {
-  const reachable = getReachableScreens(inventory, connections, screenRules);
+/** The check's requirement after any config-driven override (e.g. the pedestal's pendant count) is applied. */
+const effectiveCheckRequirement = (
+  check: CheckRecord,
+  checkOverrides: Partial<Record<CheckId, Requirement>>,
+): Requirement | undefined => checkOverrides[check.id] ?? check.requirements;
+
+const getAccessibleChecks = (
+  inventory: ReadonlySet<ItemId>,
+  completedChecks: ReadonlySet<CheckId>,
+  checks: readonly CheckRecord[],
+  connections: readonly ReachConnection[],
+  checkOverrides: Partial<Record<CheckId, Requirement>>,
+): CheckRecord[] => {
+  const reachable = getReachableScreens(inventory, completedChecks, connections);
 
   return checks.filter(check => {
     if (completedChecks.has(check.id)) return false;
-    if (!reachable.has(check.screen)) return false;
+    if (!check.screenId || !reachable.has(check.screenId)) return false;
 
-    const localRule = checkRules[check.id];
-    if (localRule && !evaluateRequirement(localRule, inventory)) return false;
+    const requirement = effectiveCheckRequirement(check, checkOverrides);
+    if (requirement && !evaluateRequirement(requirement, inventory, completedChecks)) return false;
 
     return true;
   });
 };
 
-const getCheckStatus = (checkId: string, inventory: Set<string>, completedChecks: Set<string>, checks: CheckDefinition[], connections: ScreenConnection[], screenRules: Record<string, Requirement>, checkRules: Record<string, Requirement>): CheckStatus => {
+const getCheckStatus = (
+  checkId: CheckId,
+  inventory: ReadonlySet<ItemId>,
+  completedChecks: ReadonlySet<CheckId>,
+  checks: readonly CheckRecord[],
+  connections: readonly ReachConnection[],
+  checkOverrides: Partial<Record<CheckId, Requirement>>,
+): CheckStatus => {
   if (completedChecks.has(checkId)) return 'completed';
 
   const check = checks.find(c => c.id === checkId);
   if (!check) return 'blocked';
 
-  const reachable = getReachableScreens(inventory, connections, screenRules);
-  if (!reachable.has(check.screen)) return 'blocked';
+  const reachable = getReachableScreens(inventory, completedChecks, connections);
+  if (!check.screenId || !reachable.has(check.screenId)) return 'blocked';
 
-  const localRule = checkRules[checkId];
-  if (localRule && !evaluateRequirement(localRule, inventory)) return 'blocked';
+  const requirement = effectiveCheckRequirement(check, checkOverrides);
+  if (requirement && !evaluateRequirement(requirement, inventory, completedChecks)) return 'blocked';
 
   return 'reachable';
 };
 
-const getBlockingItems = (req: Requirement, inventory: Set<string>): string[] => {
-  if (typeof req === 'string') {
-    return inventory.has(req) ? [] : [req];
+/** Item ids still missing to satisfy `req`, given the current inventory. */
+const getBlockingItems = (
+  req: Requirement,
+  inventory: ReadonlySet<ItemId>,
+  completedChecks: ReadonlySet<CheckId>,
+): ItemId[] => {
+  if ('impossible' in req || 'checkId' in req) {
+    return [];
   }
 
-  if ('and' in req) {
-    const missing: string[] = [];
-    for (const sub of req.and) {
-      if (!evaluateRequirement(sub, inventory)) {
-        missing.push(...getBlockingItems(sub, inventory));
+  if ('itemId' in req) {
+    return inventory.has(req.itemId) ? [] : [req.itemId];
+  }
+
+  if ('allOf' in req) {
+    const missing: ItemId[] = [];
+    for (const sub of req.allOf) {
+      if (!evaluateRequirement(sub, inventory, completedChecks)) {
+        missing.push(...getBlockingItems(sub, inventory, completedChecks));
       }
     }
     return missing;
   }
 
-  if ('or' in req) {
-    let best: string[] | null = null;
-    for (const sub of req.or) {
-      if (evaluateRequirement(sub, inventory)) return [];
-      const items = getBlockingItems(sub, inventory);
+  if ('anyOf' in req) {
+    let best: ItemId[] | null = null;
+    for (const sub of req.anyOf) {
+      if (evaluateRequirement(sub, inventory, completedChecks)) return [];
+      const items = getBlockingItems(sub, inventory, completedChecks);
       if (best === null || items.length < best.length) {
         best = items;
       }
@@ -148,9 +193,9 @@ const getBlockingItems = (req: Requirement, inventory: Set<string>): string[] =>
   }
 
   if ('count' in req) {
-    const [group, n] = req.count;
-    const members = ITEM_GROUPS[group];
-    if (!members) return [`${n}x ${group}`];
+    const { groupId, n } = req.count;
+    const members = ITEM_GROUPS[groupId];
+    if (!members) return [];
     const missing = members.filter(m => !inventory.has(m));
     const have = members.length - missing.length;
     const need = n - have;
@@ -160,9 +205,15 @@ const getBlockingItems = (req: Requirement, inventory: Set<string>): string[] =>
   return [];
 };
 
-const computeTrackerSnapshot = (inventory: Set<string>, completedChecks: Set<string>, checks: CheckDefinition[], connections: ScreenConnection[], screenRules: Record<string, Requirement>, checkRules: Record<string, Requirement>): Map<string, CheckStatus> => {
-  const reachable = getReachableScreens(inventory, connections, screenRules);
-  const result = new Map<string, CheckStatus>();
+const computeTrackerSnapshot = (
+  inventory: ReadonlySet<ItemId>,
+  completedChecks: ReadonlySet<CheckId>,
+  checks: readonly CheckRecord[],
+  connections: readonly ReachConnection[],
+  checkOverrides: Partial<Record<CheckId, Requirement>>,
+): Map<CheckId, CheckStatus> => {
+  const reachable = getReachableScreens(inventory, completedChecks, connections);
+  const result = new Map<CheckId, CheckStatus>();
 
   for (const check of checks) {
     if (completedChecks.has(check.id)) {
@@ -170,13 +221,13 @@ const computeTrackerSnapshot = (inventory: Set<string>, completedChecks: Set<str
       continue;
     }
 
-    if (!reachable.has(check.screen)) {
+    if (!check.screenId || !reachable.has(check.screenId)) {
       result.set(check.id, 'blocked');
       continue;
     }
 
-    const localRule = checkRules[check.id];
-    if (localRule && !evaluateRequirement(localRule, inventory)) {
+    const requirement = effectiveCheckRequirement(check, checkOverrides);
+    if (requirement && !evaluateRequirement(requirement, inventory, completedChecks)) {
       result.set(check.id, 'blocked');
       continue;
     }
@@ -193,6 +244,6 @@ export {
   getAccessibleChecks,
   getBlockingItems,
   getCheckStatus,
-  getReachableScreens
+  getReachableScreens,
 };
-export type { CheckStatus };
+export type { CheckStatus, ReachConnection };

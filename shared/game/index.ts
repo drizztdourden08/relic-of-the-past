@@ -1,19 +1,17 @@
 /* @layer shared-game @kind logic */
 // shared/game — All game domain data, logic, and types
 
-export * from './types';
-export * from './items';
-export * from './checks';
-export * from './data/screens';
-export * from './data/connections';
+// Old (pre-migration) screen types — kept for the not-yet-migrated consumers
+// that still import them; the names that now collide with ./data's new
+// records (BitState, CheckTag, PresenceCondition, InteriorKind, Requirement,
+// ScreenVariantInfo, VariantCondition, World) are NOT re-exported here since
+// ./data is the authoritative source for those going forward.
+export type {
+  BundleLayout, DungeonContext, DungeonScreen,
+  InteriorContext, InteriorScreen, OverworldContext, OverworldScreen,
+  ScreenBase, ScreenBundle, ScreenConnection, ScreenDefinition, ScreenType,
+} from './types';
+export * from './data';
 export * from './logic';
-export {
-  SPRITE_MANIFEST,
-  CATEGORY_LABELS,
-  CATEGORY_ORDER,
-  getSpritePath,
-  type SpriteCategory,
-  type SpriteManifestEntry,
-} from './sprites';
 export * from './events';
 export * from './seed';

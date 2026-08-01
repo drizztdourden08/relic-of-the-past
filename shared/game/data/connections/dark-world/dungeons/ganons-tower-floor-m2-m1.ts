@@ -1,0 +1,80 @@
+/* @layer shared-game @kind data */
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ConnectionRecord } from '../../../types';
+
+const DW_DUNGEON_GANONS_TOWER_FLOOR_M2_M1_CONNECTIONS: ConnectionRecord[] = [
+  {
+    id: 'connection-794',
+    kind: 'stairs',
+    fromScreenId: 'screen-318',
+    toScreenId: 'screen-417',
+    direction: 'two-way',
+    counterpartId: 'connection-835',
+    dungeonId: 'dungeon-013',
+    tags: ['dir:two-way', 'ctx:internal'],
+  },
+  {
+    id: 'connection-827',
+    kind: 'door',
+    fromScreenId: 'screen-403',
+    toScreenId: 'screen-404',
+    placement: { at: 'side', side: 'east', tileRange: { axis: 'y', start: 16, end: 17 } },
+    direction: 'two-way',
+    dungeonId: 'dungeon-013',
+    tags: ['dir:two-way', 'ctx:internal'],
+  },
+  {
+    id: 'connection-828',
+    kind: 'door',
+    fromScreenId: 'screen-403',
+    toScreenId: 'screen-417',
+    placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
+    direction: 'two-way',
+    dungeonId: 'dungeon-013',
+    tags: ['dir:two-way', 'ctx:internal'],
+  },
+  {
+    id: 'connection-829',
+    kind: 'edge',
+    fromScreenId: 'screen-404',
+    toScreenId: 'screen-418',
+    placement: { at: 'side', side: 'south' },
+    direction: 'two-way',
+    counterpartId: 'connection-836',
+    dungeonId: 'dungeon-013',
+    tags: ['dir:two-way', 'ctx:internal'],
+  },
+  {
+    id: 'connection-834',
+    kind: 'edge',
+    fromScreenId: 'screen-417',
+    toScreenId: 'screen-418',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    dungeonId: 'dungeon-013',
+    tags: ['dir:two-way', 'ctx:internal'],
+  },
+  {
+    id: 'connection-835',
+    kind: 'stairs',
+    fromScreenId: 'screen-417',
+    toScreenId: 'screen-318',
+    direction: 'two-way',
+    counterpartId: 'connection-794',
+    dungeonId: 'dungeon-013',
+    tags: ['dir:two-way', 'ctx:internal'],
+  },
+  {
+    id: 'connection-836',
+    kind: 'edge',
+    fromScreenId: 'screen-418',
+    toScreenId: 'screen-404',
+    placement: { at: 'side', side: 'north' },
+    direction: 'two-way',
+    counterpartId: 'connection-829',
+    dungeonId: 'dungeon-013',
+    tags: ['dir:two-way', 'ctx:internal'],
+  },
+];
+
+export { DW_DUNGEON_GANONS_TOWER_FLOOR_M2_M1_CONNECTIONS };

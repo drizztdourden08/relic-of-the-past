@@ -6,9 +6,9 @@
  */
 import { useCallback, useState } from 'react';
 import { Box, Button, TextInput } from '@ds/primitives';
-import type { FilterState, ItemFilter, StatusFilter } from '@shared/game/checks/grouping';
-import { TAG_DEFINITIONS } from '@shared/game/checks/tags';
-import type { CheckTag } from '@shared/game/checks/tags';
+import type { FilterState, ItemFilter, StatusFilter } from '@shared/game/logic/queries/check-grouping';
+import { CHECK_TAG_DEFINITIONS } from '@shared/game/data';
+import type { CheckTag } from '@shared/game/data';
 
 interface StopAtCheckFiltersProps {
   filter: FilterState;
@@ -94,7 +94,7 @@ const StopAtCheckFilters = (props: StopAtCheckFiltersProps) => {
         <Box className="stop-picker__tags">
           {TAG_CATEGORIES.map((cat) => (
             <Box key={cat} className="stop-picker__tag-group">
-              {TAG_DEFINITIONS.filter((t) => t.category === cat).map((t) => (
+              {CHECK_TAG_DEFINITIONS.filter((t) => t.category === cat).map((t) => (
                 <Button
                   variant="bare"
                   size="sm"

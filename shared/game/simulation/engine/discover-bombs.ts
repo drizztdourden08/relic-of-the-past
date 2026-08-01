@@ -43,6 +43,7 @@ const discoverBombableWalls = (state: EngineState, obs: SimObservation, reached:
         roomId,
         action: { type: 'bombWall', roomId, tile },
         key,
+        role: 'gate',
         label: `cracked wall (room ${roomId.toString(16)} @${col},${row})`,
         noun: 'cracked wall',
         verb: 'Bombing',

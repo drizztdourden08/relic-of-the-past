@@ -15,6 +15,10 @@ import type { DataLocation, StorageSummary, FileStat } from '@shared/platform';
 import type { SystemDiagnostics } from '@shared/types/diagnostics';
 import type { SimRunConfig } from '@shared/game/simulation';
 import type { CreateIssueRequest, CreateIssueResult } from '@shared/types/github-issue';
+import type {
+  AllocateGeographyArgs, AllocateGeographyResult, WriteConnectionsArgs,
+  WriteRecordResult, WriteScreenArgs,
+} from './screen-editor-contract';
 
 
 type Result = { success: boolean; error?: string };
@@ -193,11 +197,13 @@ interface InvokeContract {
   'shadow-casting:save': (data: ShadowCastingProject) => Promise<{ success: boolean }>;
   'shadow-casting:get-screen': (screenId: number) => Promise<ScreenShadowData | null>;
 
-  // Screen editor (dev-only, nested namespace)
-  'screenEditor:writeScreen': (args: { filePath: string; code: string; screenId: string | null }) => Promise<Result>;
-  'screenEditor:writeConnections': (args: { filePath: string; code?: string; mode?: 'insert' | 'remove' | 'replace'; from?: string; to?: string }) => Promise<Result>;
+  // Screen editor (dev-only, nested namespace). Record payloads carry no id and
+  // no source text — the main process allocates the id and serializes the record
+  // with the dataset's own emitter. See shared/ipc/screen-editor-contract.ts.
+  'screenEditor:writeScreen': (args: WriteScreenArgs) => Promise<WriteRecordResult>;
+  'screenEditor:writeConnections': (args: WriteConnectionsArgs) => Promise<WriteRecordResult>;
   'screenEditor:writeCheck': (args: { filePath: string; code: string; checkId: string | null }) => Promise<Result>;
-  'screenEditor:appendRegistry': (args: { type: 'area' | 'location'; entries: Array<{ id: string; name: string; world?: string; areaId?: string }> }) => Promise<Result>;
+  'screenEditor:allocateGeography': (args: AllocateGeographyArgs) => Promise<AllocateGeographyResult>;
 
   // GitHub bug reporting — anonymous relay, see cloud-functions/report-issue
   'github:createIssue': (req: CreateIssueRequest) => Promise<CreateIssueResult>;

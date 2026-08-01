@@ -18,7 +18,7 @@ import { withState } from './state-harness';
 test('test-tag-room still decodes its kill gate', async () => {
   test.setTimeout(300_000);
   await withState('test-tag-room', async (r) => {
-    expect(await r.screenId(), 'the Boomerang Chest Room is room 0x071').toMatch(/^room-071 · INDOOR/);
+    expect(await r.screenId(), 'the Boomerang Chest Room is screen-127 (room 0x071)').toMatch(/^screen-127 · 0x71 · INDOOR/);
 
     // The flood is what derives the annotations, so it has to run first.
     const flood = await r.flood();
