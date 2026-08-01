@@ -1,14 +1,14 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
 import { Box, Text, Button } from '../../../../../design-system/primitives';
-import type { CheckDefinition } from '@shared/game/types';
+import type { CheckRecord } from '@shared/game/data';
 import type { CheckStatus } from '@shared/game/logic/eval';
 import { TrackerCheckRow } from './TrackerCheckRow';
 import '../TrackerView.css';
 
 interface TrackerAreaSectionProps {
   area: string;
-  checks: CheckDefinition[];
+  checks: CheckRecord[];
   statuses: Map<string, CheckStatus>;
 }
 

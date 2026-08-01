@@ -5,12 +5,13 @@
  */
 import { Box, Button, Field, NumberInput } from '@ds/primitives';
 import type { RunStatus } from '@app/stores/simulator-store';
+import type { CheckId } from '@shared/game/data';
 import { StopAtCheckPicker } from './StopAtCheckPicker';
 
 interface RunControlsProps {
   status: RunStatus;
-  stopAtCheckId: string;
-  onStopAtChange: (id: string) => void;
+  stopAtCheckId: CheckId | '';
+  onStopAtChange: (id: CheckId | '') => void;
   screenLimit: number | null;
   onScreenLimitChange: (limit: number | null) => void;
   canRestore: boolean;

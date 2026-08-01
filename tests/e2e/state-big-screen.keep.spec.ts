@@ -25,7 +25,7 @@ const SCREENS = 4;
 test('test-big-screen covers every sub-screen, not just Link\'s', async () => {
   test.setTimeout(300_000);
   await withState('test-big-screen', async (r) => {
-    expect(await r.screenId(), 'the castle exterior is light-world screen 0x1b').toMatch(/^lw-1b · LW/);
+    expect(await r.screenId(), 'the castle exterior is screen-062, light-world screen 0x1b').toMatch(/^screen-062 · 0x1B · LW/);
 
     const flood = await r.flood();
     // The total is the arithmetic proof that all four screens were flooded.

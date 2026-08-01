@@ -6,7 +6,7 @@
  * observe via `buildPresenceState`. Plain scalars + array-likes keep it cheap
  * to build and trivial to construct in tests.
  */
-import type { PresenceCondition } from '../../checks/presence-condition';
+import type { ItemId, PresenceCondition } from '../../data';
 
 interface PresenceGameState {
   /** sram_progress_flags byte (0xF3C6). */
@@ -17,8 +17,8 @@ interface PresenceGameState {
   progressIndicator3: number;
   /** follower_indicator (tagalong id; 0 = none, 0xF3CC). */
   followerIndicator: number;
-  /** Item names currently held (tracker inventory Set). */
-  inventory: ReadonlySet<string>;
+  /** Items currently held, by dataset id (the tracker's inventory Set). */
+  inventory: ReadonlySet<ItemId>;
   /** save_ow_event_info bytes, indexed by overworld screen (0xF280 base). */
   owEventInfo: ArrayLike<number>;
   /** save_dung_info words, indexed by room id (bit 0x8000 = boss/room cleared). */
@@ -35,7 +35,7 @@ interface PresenceStateInput {
   progress: ArrayLike<number>;
   owEventInfo: ArrayLike<number>;
   roomState: ArrayLike<number>;
-  inventory: ReadonlySet<string>;
+  inventory: ReadonlySet<ItemId>;
 }
 
 const PROGRESS_INDICATOR = 0;
@@ -59,7 +59,7 @@ const emptyPresenceState = (): PresenceGameState => ({
   progressIndicator: 0,
   progressIndicator3: 0,
   followerIndicator: 0,
-  inventory: new Set<string>(),
+  inventory: new Set<ItemId>(),
   owEventInfo: [],
   roomState: [],
 });

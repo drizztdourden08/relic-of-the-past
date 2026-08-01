@@ -11,13 +11,22 @@
  * traversal ever needed; the dataset only supplies the name.
  */
 import type { SimLocation } from '@shared/game/simulation';
-import { SCREEN_BY_ID } from '@shared/game/data/screens';
+import { findOne } from '@shared/game/data';
 
 const SYNTHETIC_ROOM = /^room:(\d+)(?:[@^].*)?$/;
 const SYNTHETIC_OW = /^ow:(\d+)$/;
 
+/**
+ * The two kinds of screen keep their native index in DIFFERENT fields —
+ * `overworldIndex` outdoors, `roomIndex` indoors — so one of them has to be
+ * chosen by kind. Reading `roomIndex` for both resolved every overworld screen to
+ * index 0: the caller then read, flooded and annotated the first screen of the
+ * world instead of the one it asked for, while the reachability handed to it still
+ * described the real screen. Nothing threw; the numbers were simply another
+ * place's.
+ */
 const locationForScreen = (screenId: string): SimLocation | null => {
-  const screen = SCREEN_BY_ID.get(screenId);
+  const screen = findOne('screen', (s) => s.id === screenId);
   if (!screen) {
     const room = SYNTHETIC_ROOM.exec(screenId);
     if (room) return { isIndoors: true, roomId: Number(room[1]), owScreenIndex: 0 };
@@ -25,28 +34,9 @@ const locationForScreen = (screenId: string): SimLocation | null => {
     if (ow) return { isIndoors: false, roomId: 0, owScreenIndex: Number(ow[1]) };
     return null;
   }
-  const isIndoors = screen.type !== 'overworld';
-  const roomIndex = screen.roomIndex ?? 0;
-  return { isIndoors, roomId: isIndoors ? roomIndex : 0, owScreenIndex: isIndoors ? 0 : roomIndex };
+  const isIndoors = screen.kind !== 'overworld';
+  const index = (isIndoors ? screen.gameId.roomIndex : screen.gameId.overworldIndex) ?? 0;
+  return { isIndoors, roomId: isIndoors ? index : 0, owScreenIndex: isIndoors ? 0 : index };
 };
 
-/**
- * A human label for a traversal key. NAMES ONLY — nothing here may influence a
- * traversal decision. When several interiors share a room index the first is
- * taken; a wrong label is cosmetic now that identity is the number.
- */
-const displayNameFor = (screenId: string): string => {
-  const known = SCREEN_BY_ID.get(screenId);
-  if (known) return known.name;
-  const loc = locationForScreen(screenId);
-  if (!loc) return screenId;
-  const wantOverworld = !loc.isIndoors;
-  const index = wantOverworld ? loc.owScreenIndex : loc.roomId;
-  for (const s of SCREEN_BY_ID.values()) {
-    if ((s.type === 'overworld') !== wantOverworld) continue;
-    if ((s.roomIndex ?? -1) === index) return s.name;
-  }
-  return screenId;
-};
-
-export { locationForScreen, displayNameFor };
+export { locationForScreen };

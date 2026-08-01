@@ -1,9 +1,32 @@
 /* @layer shared-game @kind data */
-import type { ScreenDefinition } from '../../../types';
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ScreenRecord } from '../../types';
 
-const LW_WELLS: ScreenDefinition[] = [
-  { id: 'kakariko-well-top', name: 'Village Well (top)', type: 'interior', world: 'light', location: 'Kakariko Village', area: 'Kakariko', roomIndex: 0x011F, interior: { kind: 'well' }, tags: ['env:underground', 'traverse:fall'] },
-  { id: 'kakariko-well-bottom', name: 'Village Well (bottom)', type: 'interior', world: 'light', location: 'Kakariko Village', area: 'Kakariko', roomIndex: 0x0123, interior: { kind: 'well' }, tags: ['env:underground', 'loot:chest'] },
+const LW_WELLS_SCREENS: ScreenRecord[] = [
+  {
+    id: 'screen-221',
+    gameId: { roomIndex: 47 },
+    kind: 'interior',
+    world: 'light',
+    interiorKind: 'well',
+    randomizerName: 'Kakariko Well (top)',
+    areaId: 'area-012',
+    locationId: 'location-017',
+    tags: ['env:underground', 'traverse:fall'],
+    status: 'mapped',
+  },
+  {
+    id: 'screen-224',
+    gameId: { roomIndex: 47 },
+    kind: 'interior',
+    world: 'light',
+    interiorKind: 'well',
+    randomizerName: 'Kakariko Well (bottom)',
+    areaId: 'area-012',
+    locationId: 'location-017',
+    tags: ['env:underground', 'loot:chest'],
+    status: 'mapped',
+  },
 ];
 
-export { LW_WELLS };
+export { LW_WELLS_SCREENS };

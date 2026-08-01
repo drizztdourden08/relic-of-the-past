@@ -4,12 +4,13 @@
  * exhausted with no progress since the epoch began — is the softlock signal
  * this whole tool exists to produce.
  */
+import type { CheckId } from '../../data';
 import type { SimOutcome } from '../types';
 import type { EngineState } from './state';
 
-/** Dataset check id/name of the final-boss check — matched against ALL_CHECKS, so
- *  this literal must stay exactly as the checks dataset spells it. */
-const DEFAULT_GOAL_CHECK = 'Ganon';
+/** The final-boss check. Used to be the display name 'Ganon', which only worked
+ *  while exactly one check happened to carry that name. */
+const DEFAULT_GOAL_CHECK: CheckId = 'check-097';
 
 const goalCheckDone = (s: EngineState): boolean => {
   const goal = s.config.goalCheckId ?? DEFAULT_GOAL_CHECK;

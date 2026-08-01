@@ -2,7 +2,7 @@
 /** ScreenEditor step-1 top: classification (type/world) + type-specific detail panel. */
 import type { CSSProperties } from 'react';
 import { Box, Text, Select, SegmentedControl, TextInput } from '../../../../design-system/primitives';
-import type { InteriorKind } from '@shared/game/types';
+import type { InteriorKind } from '@shared/game/data';
 
 const GAP4: CSSProperties = { display: 'flex', gap: '4px' };
 import { TYPE_SEGMENTS, WORLD_SEGMENTS, PALACE_OPTIONS, INTERIOR_KIND_OPTIONS } from './screen-editor-constants';
@@ -12,8 +12,8 @@ import type { ScreenEditor } from './useScreenEditor';
 
 const ScreenEditorFieldsTop = ({ editor }: { editor: ScreenEditor }) => {
   const {
-    type, setType, world, setWorld, isDungeonLocked, dungeonMeta, overworldDerived,
-    palaceIdx, handlePalaceChange, dungeonName, floor, setFloor, gridX, setGridX, gridY, setGridY,
+    kind, setKind, world, setWorld, dungeonGeography, effectiveWorld,
+    palaceIdx, handlePalaceChange, floor, setFloor, gridX, setGridX, gridY, setGridY,
     interiorKind, setInteriorKind, effectiveGridX, effectiveGridY,
   } = editor;
   return (
@@ -22,12 +22,12 @@ const ScreenEditorFieldsTop = ({ editor }: { editor: ScreenEditor }) => {
       <Box className="screen-editor__section">
         <SegmentedControl
           label="Type"
-          value={type}
+          value={kind}
           options={TYPE_SEGMENTS}
-          onChange={setType}
+          onChange={setKind}
         />
-        {/* World — locked for dungeon (derived from meta) and overworld (derived from roomIndex) */}
-        {type === 'interior' ? (
+        {/* World — locked for a dungeon (its rooms decide) and for the overworld (its index decides) */}
+        {kind === 'interior' ? (
           <SegmentedControl
             label="World"
             value={world}
@@ -37,7 +37,7 @@ const ScreenEditorFieldsTop = ({ editor }: { editor: ScreenEditor }) => {
         ) : (
           <EditorField className="screen-editor__row screen-editor__row--locked" label="World">
             <LockedValue>
-              {(isDungeonLocked ? dungeonMeta!.world : overworldDerived?.world ?? world) === 'light' ? 'Light World' : 'Dark World'}
+              {effectiveWorld === 'light' ? 'Light World' : 'Dark World'}
             </LockedValue>
           </EditorField>
         )}
@@ -46,17 +46,17 @@ const ScreenEditorFieldsTop = ({ editor }: { editor: ScreenEditor }) => {
       {/* ── Section 2: Type-specific panel ── */}
       <Box className="screen-editor__panel">
         <Text className="screen-editor__panel-label">
-          {type === 'dungeon' ? 'Dungeon' : type === 'overworld' ? 'Overworld' : 'Interior'} Details
+          {kind === 'dungeon' ? 'Dungeon' : kind === 'overworld' ? 'Overworld' : 'Interior'} Details
         </Text>
 
-        {type === 'dungeon' && (
+        {kind === 'dungeon' && (
           <>
             <EditorField className="screen-editor__row" label="Palace Index">
               <Select options={PALACE_OPTIONS} value={palaceIdx} onChange={handlePalaceChange} placeholder="Select palace..." searchable />
             </EditorField>
-            {dungeonName && (
+            {dungeonGeography && (
               <EditorField className="screen-editor__row screen-editor__row--locked" label="Dungeon">
-                <LockedValue>{dungeonName}</LockedValue>
+                <LockedValue>{dungeonGeography.randomizerName}</LockedValue>
               </EditorField>
             )}
             <Box className="screen-editor__row screen-editor__row--half">
@@ -73,13 +73,13 @@ const ScreenEditorFieldsTop = ({ editor }: { editor: ScreenEditor }) => {
           </>
         )}
 
-        {type === 'interior' && (
+        {kind === 'interior' && (
           <EditorField className="screen-editor__row" label="Interior Kind">
             <Select options={INTERIOR_KIND_OPTIONS} value={interiorKind} onChange={v => setInteriorKind(v as InteriorKind)} />
           </EditorField>
         )}
 
-        {type === 'overworld' && (
+        {kind === 'overworld' && (
           <Box className="screen-editor__row screen-editor__row--half">
             <EditorField className="screen-editor__row--locked" label="Grid X">
               <LockedValue>{effectiveGridX}</LockedValue>

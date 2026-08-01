@@ -9,7 +9,7 @@
  */
 
 import type { ConnectionNavData, ConnectionTransitType, RequirementSet, ConnectionPointData, TraversalRequirement } from '../nav-data.types';
-import type { ConnectionTag } from '../../data/connections/tags';
+import type { ConnectionTag } from '../../data';
 import type { ScreenConnection } from '../../types';
 import type { ResolvedEntrance } from './entrance-resolver';
 import type { BorderBundle } from './border-bundles';

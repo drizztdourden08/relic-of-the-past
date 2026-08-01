@@ -1,8 +1,124 @@
 /* @layer shared-game @kind data */
-import type { ScreenConnection } from '../../../../types';
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ConnectionRecord } from '../../../types';
+import { canLiftHeavyRocks, canLiftRocks } from '../../../requirements/helpers';
 
-const LW_OVERWORLD_LOST_WOODS_CONNECTIONS: ScreenConnection[] = [
-  { from: 'lw-00', to: 'master-sword-meadow', tags: ['transit:walk', 'dir:two-way', 'ctx:overworld'] },
+const LW_OVERWORLD_LOST_WOODS_CONNECTIONS: ConnectionRecord[] = [
+  {
+    id: 'connection-045',
+    kind: 'edge',
+    fromScreenId: 'screen-028',
+    toScreenId: 'screen-036',
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-050',
+    kind: 'teleport',
+    fromScreenId: 'screen-030',
+    toScreenId: 'screen-260',
+    direction: 'one-way',
+    tags: ['dir:one-way', 'ctx:cross-world'],
+    requirements: { allOf: [{ anyOf: [{ allOf: [{ itemId: 'item-010' }, canLiftRocks] }, canLiftHeavyRocks] }, { itemId: 'item-032' }] },
+  },
+  {
+    id: 'connection-052',
+    kind: 'edge',
+    fromScreenId: 'screen-028',
+    toScreenId: 'screen-043',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-053',
+    kind: 'edge',
+    fromScreenId: 'screen-028',
+    toScreenId: 'screen-029',
+    placement: { at: 'side', side: 'south' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-054',
+    kind: 'edge',
+    fromScreenId: 'screen-043',
+    toScreenId: 'screen-051',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-055',
+    kind: 'edge',
+    fromScreenId: 'screen-043',
+    toScreenId: 'screen-044',
+    placement: { at: 'side', side: 'south' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-067',
+    kind: 'edge',
+    fromScreenId: 'screen-029',
+    toScreenId: 'screen-044',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-068',
+    kind: 'edge',
+    fromScreenId: 'screen-029',
+    toScreenId: 'screen-030',
+    placement: { at: 'side', side: 'south' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-069',
+    kind: 'edge',
+    fromScreenId: 'screen-044',
+    toScreenId: 'screen-052',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-070',
+    kind: 'edge',
+    fromScreenId: 'screen-044',
+    toScreenId: 'screen-045',
+    placement: { at: 'side', side: 'south' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-082',
+    kind: 'edge',
+    fromScreenId: 'screen-030',
+    toScreenId: 'screen-045',
+    placement: { at: 'side', side: 'east' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-083',
+    kind: 'edge',
+    fromScreenId: 'screen-030',
+    toScreenId: 'screen-031',
+    placement: { at: 'side', side: 'south' },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
+  {
+    id: 'connection-166',
+    kind: 'edge',
+    fromScreenId: 'screen-029',
+    toScreenId: 'screen-036',
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:overworld'],
+  },
 ];
 
 export { LW_OVERWORLD_LOST_WOODS_CONNECTIONS };

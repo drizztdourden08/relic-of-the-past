@@ -17,7 +17,7 @@ import { withState } from './state-harness';
 test('test-jail-cell still has both checks behind a locked cell', async () => {
   test.setTimeout(300_000);
   await withState('test-jail-cell', async (r) => {
-    expect(await r.screenId(), 'the Jail Cell is room 0x080').toMatch(/^room-080 · INDOOR/);
+    expect(await r.screenId(), 'the Jail Cell is screen-133 (room 0x080)').toMatch(/^screen-133 · 0x80 · INDOOR/);
 
     const flood = await r.flood();
     expect(flood, 'the blessed indoor baseline').toEqual({ reachable: 608, total: 4096 });

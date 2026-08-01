@@ -11,34 +11,22 @@
 
 import { Box, Text, Button, Badge, TextInput } from '../../../design-system/primitives';
 import { WizardDialogShell } from '../../../design-system/composites/WizardDialogShell';
-import type { ScreenConnection } from '@shared/game/types';
-import { CONNECTION_TAG_METADATA } from '@shared/game/data/connections/tags';
-import type { DetectedConnection } from './useDatasetStatus';
+import { CONNECTION_TAG_METADATA } from '@shared/game/data';
 import { useConnectionEditor } from './useConnectionEditor';
+import type { ConnectionEditorParams } from './useConnectionEditor';
 import { connectionIssues } from './connection-issues';
 import { ConnectionEndpoints } from './ConnectionEndpoints';
 import { ConnectionIssues } from './ConnectionIssues';
 import './ConnectionEditorDialog.css';
 
-interface ConnectionEditorDialogProps {
-  open: boolean;
-  onClose: () => void;
-  /** Current screen ID */
-  screenId: string | null;
-  /** Screen metadata for file resolution */
-  screenMeta: { type: string; dungeon?: string; isDarkWorld: boolean } | null;
-  /** Existing connections from the dataset */
-  existingConnections: ScreenConnection[];
-  /** Detected connections from game state not yet in dataset */
-  unmatchedConnections: DetectedConnection[];
-}
+type ConnectionEditorDialogProps = ConnectionEditorParams;
 
 const ConnectionEditorDialog = (props: ConnectionEditorDialogProps) => {
   const { open, onClose, screenId } = props;
   const {
     step, setStep, connections, editingIdx, setEditingIdx, writing, writeError,
     suggestedConnections, newConnections, generatedCode, targetFile, tileDescriptions,
-    addSuggested, addBlank, removeConnection, updateConnection, toggleTag, handleWrite,
+    unresolved, canWrite, addSuggested, addBlank, removeConnection, updateConnection, toggleTag, handleWrite,
   } = useConnectionEditor(props);
 
   const headerExtra = screenId
@@ -57,7 +45,7 @@ const ConnectionEditorDialog = (props: ConnectionEditorDialogProps) => {
           <Button
             variant="primary"
             onClick={handleWrite}
-            disabled={writing || newConnections.length === 0}
+            disabled={writing || !canWrite}
           >
             {writing ? 'Writing...' : 'Accept & Write'}
           </Button>
@@ -178,9 +166,14 @@ const ConnectionEditorDialog = (props: ConnectionEditorDialogProps) => {
               <>
                 <Box className="conn-editor__file-target">
                   <Text>Target: </Text>
-                  <Text as="code">{targetFile?.relativePath}</Text>
+                  <Text as="code">{targetFile?.relativePath ?? `unresolved — ${targetFile?.unresolved ?? 'no destination'}`}</Text>
                 </Box>
                 <Box as="pre" className="conn-editor__code">{generatedCode}</Box>
+                {unresolved.map(u => (
+                  <Text as="p" key={u} className="conn-editor__error">
+                    {u} — both endpoints must name a screen in the dataset before this can be written.
+                  </Text>
+                ))}
               </>
             )}
             {writeError && <Text as="p" className="conn-editor__error">{writeError}</Text>}

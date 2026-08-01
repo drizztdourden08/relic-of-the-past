@@ -1,13 +1,12 @@
 /* @layer shared-game @kind logic */
-import { ALL_CONNECTIONS } from '../data/connections';
-import { SCREEN_BY_ID, displayName } from '../data/screens';
+import { find, getScreen } from '../data';
 
-/** fromRegionId → destination screen IDs (built once from the connection table). */
+/** fromScreenId → destination screen IDs (built once from the connection table). */
 const connectionsByFrom = new Map<string, string[]>();
-for (const conn of ALL_CONNECTIONS) {
-  let list = connectionsByFrom.get(conn.from);
-  if (!list) { list = []; connectionsByFrom.set(conn.from, list); }
-  list.push(conn.to);
+for (const conn of find('connection', () => true)) {
+  let list = connectionsByFrom.get(conn.fromScreenId);
+  if (!list) { list = []; connectionsByFrom.set(conn.fromScreenId, list); }
+  list.push(conn.toScreenId);
 }
 
 /**
@@ -18,8 +17,9 @@ const getConnectionDestinationName = (currentScreenId: string, targetRoomId: num
   const destinations = connectionsByFrom.get(currentScreenId);
   if (!destinations) return null;
   for (const toId of destinations) {
-    const screen = SCREEN_BY_ID.get(toId);
-    if (screen && screen.roomIndex === targetRoomId) return displayName(screen.id, screen.name);
+    const screen = getScreen(toId);
+    const nativeIndex = screen.gameId.overworldIndex ?? screen.gameId.roomIndex;
+    if (nativeIndex === targetRoomId) return screen.vanillaName ?? screen.randomizerName;
   }
   return null;
 };

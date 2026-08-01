@@ -1,77 +1,99 @@
 /* @layer electron-main @kind logic */
 /**
- * Shared regex-based write helpers for the screen/check editor IPC handlers.
- * Both operate on a TS source file that exports an array literal: insert a
- * new entry before the closing `];`, or replace the object literal whose
- * `id: '<id>'` matches.
+ * Write helpers for the editor's source-file edits. Each data file exports one
+ * array literal: insert a new entry before the closing `];`, or replace/remove
+ * the entry whose `id:` matches.
+ *
+ * Records are matched by walking real brace depth, not by regex: a v8 record is
+ * multi-line and contains nested objects and arrays, which a `\{[^}]*\}` pattern
+ * silently fails to span. An `id` is the only key ever matched on.
  */
 
-const escapeRegex = (s: string): string => {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+interface Span {
+  start: number;
+  end: number;
+}
+
+interface WriteResult {
+  content: string;
+  error?: string;
+}
+
+const escapeSingleQuote = (s: string): string => s.replace(/'/g, "\\'");
+
+/**
+ * Every outermost `{...}` region in the file, skipping string literals and
+ * comments so a brace inside either cannot shift the depth.
+ */
+const topLevelBraceSpans = (content: string): Span[] => {
+  const spans: Span[] = [];
+  let depth = 0;
+  let start = -1;
+  let quote: string | null = null;
+  let comment: 'line' | 'block' | null = null;
+  for (let i = 0; i < content.length; i++) {
+    const ch = content[i];
+    if (comment === 'line') {
+      if (ch === '\n') comment = null;
+      continue;
+    }
+    if (comment === 'block') {
+      if (ch === '*' && content[i + 1] === '/') { comment = null; i++; }
+      continue;
+    }
+    if (quote) {
+      if (ch === '\\') i++;
+      else if (ch === quote) quote = null;
+      continue;
+    }
+    if (ch === '/' && content[i + 1] === '/') { comment = 'line'; i++; continue; }
+    if (ch === '/' && content[i + 1] === '*') { comment = 'block'; i++; continue; }
+    if (ch === "'" || ch === '"' || ch === '`') { quote = ch; continue; }
+    if (ch === '{') {
+      if (depth === 0) start = i;
+      depth++;
+    } else if (ch === '}') {
+      depth--;
+      if (depth === 0 && start >= 0) {
+        spans.push({ start, end: i + 1 });
+        start = -1;
+      }
+    }
+  }
+  return spans;
 };
 
-const escapeSingleQuote = (s: string): string => {
-  return s.replace(/'/g, "\\'");
+/** The full lines occupied by the record carrying `id`, trailing comma included. */
+const recordSpan = (content: string, id: string): Span | null => {
+  const needle = `id: '${escapeSingleQuote(id)}'`;
+  const span = topLevelBraceSpans(content).find(s => content.slice(s.start, s.end).includes(needle));
+  if (!span) return null;
+  const start = content.lastIndexOf('\n', span.start) + 1;
+  const end = content[span.end] === ',' ? span.end + 1 : span.end;
+  return { start, end };
 };
 
-// Insert `code` immediately before the last `];` in the file.
-const insertBeforeArrayClose = (content: string, code: string): { content: string; error?: string } => {
+/** Insert `code` immediately before the last `];` in the file. */
+const insertBeforeArrayClose = (content: string, code: string): WriteResult => {
   const lastBracket = content.lastIndexOf('];');
-  if (lastBracket === -1) {
-    return { content, error: 'Could not find array closing bracket in file' };
-  }
-  return {
-    content: content.slice(0, lastBracket) + code + '\n' + content.slice(lastBracket),
-  };
+  if (lastBracket === -1) return { content, error: 'Could not find array closing bracket in file' };
+  return { content: content.slice(0, lastBracket) + code + '\n' + content.slice(lastBracket) };
 };
 
-// Replace the object literal whose `id: '<id>'` field matches with `code`.
-const replaceById = (content: string, id: string, code: string): { content: string; error?: string } => {
-  const idPattern = new RegExp(
-    `(\\{[^}]*id:\\s*'${escapeRegex(id)}'[^}]*\\},?)`,
-    's',
-  );
-  const match = content.match(idPattern);
-  if (!match) {
-    return { content, error: `Could not find id '${id}' in file` };
-  }
-  return { content: content.replace(match[0], code) };
+/** Replace the record whose `id` matches with `code`. */
+const replaceById = (content: string, id: string, code: string): WriteResult => {
+  const span = recordSpan(content, id);
+  if (!span) return { content, error: `Could not find id '${id}' in file` };
+  return { content: content.slice(0, span.start) + code + content.slice(span.end) };
 };
 
-// Match the whole object literal (plus its line) whose `from`/`to` both match.
-// Safe against the `tags: [...]` array (brackets, not braces); does not match
-// entries carrying a nested `nav: { ... }` object.
-const connectionLinePattern = (from: string, to: string): RegExp =>
-  new RegExp(
-    `[ \\t]*\\{[^{}]*from:\\s*'${escapeRegex(from)}'[^{}]*to:\\s*'${escapeRegex(to)}'[^{}]*\\},?\\n?`,
-  );
-
-// Remove the connection whose `from`+`to` endpoints match.
-const removeConnectionByEndpoints = (content: string, from: string, to: string): { content: string; error?: string } => {
-  const pattern = connectionLinePattern(from, to);
-  const match = content.match(pattern);
-  if (!match) {
-    return { content, error: `Could not find connection '${from}' → '${to}' in file` };
-  }
-  return { content: content.replace(match[0], '') };
+/** Remove the record whose `id` matches, and the line it sat on. */
+const removeById = (content: string, id: string): WriteResult => {
+  const span = recordSpan(content, id);
+  if (!span) return { content, error: `Could not find id '${id}' in file` };
+  const end = content[span.end] === '\n' ? span.end + 1 : span.end;
+  return { content: content.slice(0, span.start) + content.slice(end) };
 };
 
-// Replace the connection whose `from`+`to` endpoints match with `code`.
-const replaceConnectionByEndpoints = (content: string, from: string, to: string, code: string): { content: string; error?: string } => {
-  const pattern = connectionLinePattern(from, to);
-  const match = content.match(pattern);
-  if (!match) {
-    return { content, error: `Could not find connection '${from}' → '${to}' in file` };
-  }
-  const replacement = code.endsWith('\n') ? code : `${code}\n`;
-  return { content: content.replace(match[0], replacement) };
-};
-
-export {
-  escapeRegex,
-  escapeSingleQuote,
-  insertBeforeArrayClose,
-  replaceById,
-  removeConnectionByEndpoints,
-  replaceConnectionByEndpoints,
-};
+export { escapeSingleQuote, insertBeforeArrayClose, removeById, replaceById };
+export type { Span, WriteResult };

@@ -30,8 +30,8 @@ import {
   wasmGetToggleFloorPositions,
   wasmGetIndoorDualLayerGrids,
 } from '../../lib/game';
-import { resolveCurrentScreenDetailed } from '@shared/game/data/screens';
-import type { VariantGameState } from '@shared/game/data/screens';
+import { resolveCurrentScreenDetailed } from '@shared/game/logic/queries/detection';
+import type { VariantGameState } from '@shared/game/logic/queries/detection';
 import { collectEntranceData, formatStairs, formatTravelDests } from './dump-nav/builders';
 import { runDumpFlood } from './dump-nav/run-flood';
 import { linkStartTile } from '@shared/game/navigation/link-start-tile';
@@ -171,7 +171,7 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
         viewport: viewport ? { locationType: viewport.locationType } : null,
         detection: detection ? {
           screenId: detection.screen.id,
-          screenName: detection.screen.name,
+          screenName: detection.screen.randomizerName,
           method: detection.method,
           hasVariant: !!detection.screen.variant,
           variantKey: detection.screen.variant?.key ?? null,

@@ -7,7 +7,8 @@
 import type { GridPos, ScreenVariant } from '../navigation/types';
 import type { TileAttrContext } from '../navigation/tile-attrs';
 import type { TraversalRequirement } from '../navigation/nav-data.types';
-import type { CheckDefinition } from '../types';
+import type { CheckId, CheckRecord, ItemId } from '../data';
+import type { TraversalId } from './traversal-id';
 import type { PresenceGameState } from './presence/state';
 import type { RoomSectionSplit } from './room-section';
 
@@ -26,9 +27,9 @@ type SimOutcome = 'completed' | 'stopped-at-check' | 'not-completable';
 
 interface SimConfig {
   /** Halt right after this check triggers. */
-  stopAtCheckId?: string;
+  stopAtCheckId?: CheckId;
   /** Goal check whose completion ends the run (default: the final-boss check). */
-  goalCheckId?: string;
+  goalCheckId?: CheckId;
   /** Stop once this many distinct screens have been visited (for bounded testing). */
   screenLimit?: number;
 }
@@ -37,7 +38,7 @@ interface SimConfig {
 
 /** Simulated position — the screen the virtual player character explores. */
 interface VirtualPlayer {
-  screenId: string;
+  screenId: TraversalId;
   tile: GridPos;
 }
 
@@ -54,7 +55,8 @@ interface FlagSnapshot {
 interface SimObservation {
   virtual: VirtualPlayer;
   realLocation: SimLocation;
-  inventory: Set<string>;
+  /** Items held, by dataset id — the tracker's own set, passed through. */
+  inventory: Set<ItemId>;
   /** Raw SRAM copies for diffing. */
   flags: FlagSnapshot;
   /** Interactables the runner assembled from the port for the current screen. */
@@ -67,8 +69,10 @@ interface SimObservation {
    * Optional: when absent, NPC presence gating fails open (all present).
    */
   presenceState?: PresenceGameState;
-  /** Item id delivered since the previous step (from onItemReceived). */
-  itemReceived?: number;
+  /** Item delivered since the previous step (from onItemReceived). The tracker
+   *  already resolves the native id to a record, so the id travels intact rather
+   *  than being flattened to a native number and looked up again downstream. */
+  itemReceived?: ItemId;
   /**
    * Exits detected by flooding the current screen in-game (border connections,
    * doors, holes, stairs). When present, traversal runs purely on this
@@ -126,7 +130,7 @@ type SimExitOrigin = 'ow-border' | 'ow-entrance' | 'room-border' | 'room-stair' 
 
 /** A game-detected way off a screen: destination + where the player lands there. */
 interface SimExit {
-  to: string;
+  to: TraversalId;
   origin?: SimExitOrigin;
   /**
    * Which way in this crossing uses, as seen from the destination.
@@ -146,7 +150,7 @@ interface SimExit {
   /** Tile the exit sits on within the flooded screen (walk-distance ordering). */
   fromTile?: GridPos;
   /** Big-area sub-screen the exit physically sits on, when not the visited one. */
-  via?: string;
+  via?: TraversalId;
   /**
    * TRUE walk-steps from the entry tile, or undefined when the distance is
    * genuinely unknown. Never carries a sort bias — showing the raw ordering score
@@ -227,10 +231,11 @@ interface FlagDiff {
 
 interface DetectedCheck {
   evidence: FlagDiff[];
-  /** Naming only — never used for detection. */
-  matched?: CheckDefinition;
-  matchedName?: string;
-  itemReceived?: string;
+  /** The identified check's record — display and dungeon attribution, never detection. */
+  matched?: CheckRecord;
+  /** Which check this was, absent when the diff matched none. */
+  checkId?: CheckId;
+  itemReceived?: ItemId;
   at: VirtualPlayer;
 }
 
@@ -259,8 +264,8 @@ interface DatasetSuggestion {
 // ─── Softlock Report ─────────────────────────────────────────────────────────
 
 interface SoftlockReport {
-  completed: string[];
-  blocked: Array<{ checkId: string; missing: TraversalRequirement[][] }>;
+  completed: CheckId[];
+  blocked: Array<{ checkId: CheckId; missing: TraversalRequirement[][] }>;
   unreachedScreens: string[];
 }
 

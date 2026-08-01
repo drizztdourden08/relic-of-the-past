@@ -1,10 +1,12 @@
 /* @layer renderer-widgets @kind logic */
 /**
- * Types for the connection audit — cross-checks the static ALL_CONNECTIONS
+ * Types for the connection audit — cross-checks the static connection
  * dataset against the game's REAL in-game transitions for the current screen.
  */
 
-import type { ConnectionTag } from '@shared/game/data/connections/tags';
+import type { ConnectionTag, ScreenId } from '@shared/game/data';
+import type { FileTarget } from '@shared/game/data/record-file-targets';
+import type { WriteConnectionsArgs } from '@shared/ipc/screen-editor-contract';
 
 /** How a real in-game destination index should be resolved to a screen id. */
 type RealDestKind = 'screen' | 'room' | 'entrance';
@@ -20,20 +22,26 @@ interface RealTransition {
 }
 
 /** Kind of dataset edit a finding proposes. */
-type SuggestionKind = 'add' | 'remove' | 'fix';
+type SuggestionKind = 'add' | 'remove';
 
-/** An editable, applyable finding about one connection edge. */
+/** One applyable finding about a connection edge. */
 interface ConnectionSuggestion {
   kind: SuggestionKind;
-  from: string;
-  to: string;
+  fromScreenId: ScreenId;
+  toScreenId: ScreenId;
   tags: ConnectionTag[];
-  /** Exact object-literal line to write (add/fix) or the offending line (remove). */
+  /**
+   * Read-only preview of the record that will be written or removed. The write
+   * payload is `write`, not this text, so a finding cannot be hand-edited into a
+   * different shape on its way to disk.
+   */
   code: string;
   /** Human-readable justification shown in the widget. */
   reason: string;
   /** Connections source file, relative to shared/game/data/. */
-  targetFile: string;
+  targetFile: FileTarget;
+  /** Exactly what Apply sends. Null when the edge cannot be written safely. */
+  write: WriteConnectionsArgs | null;
 }
 
 export type { RealDestKind, RealTransition, SuggestionKind, ConnectionSuggestion };

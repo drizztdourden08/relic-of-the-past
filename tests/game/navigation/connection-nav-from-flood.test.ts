@@ -1,10 +1,9 @@
 /* @layer tests @kind test */
 import { describe, it, expect } from 'vitest';
 import { buildConnectionNav } from '../../../shared/game/navigation/analysis/connection-nav-from-flood';
-import { serializeConnection } from '../../../shared/game/data/screen-codegen';
+import { serializeConnectionRecord } from '../../../shared/game/data/record-codegen';
 import type { ConnectionInfo } from '../../../shared/game/navigation';
-import type { ScreenConnection } from '../../../shared/game/types';
-import type { ConnectionTag } from '../../../shared/game/data/connections/tags';
+import type { ConnectionRecord, ConnectionTag } from '../../../shared/game/data';
 
 const makeInfo = (over: Partial<ConnectionInfo>): ConnectionInfo => ({
   edge: 'east',
@@ -56,34 +55,61 @@ describe('buildConnectionNav — ConnectionInfo → ConnectionNavData', () => {
   });
 });
 
-describe('serializeConnection — nav emission', () => {
-  const tags: ConnectionTag[] = ['transit:walk', 'dir:two-way'];
+describe('serializeConnectionRecord — record emission', () => {
+  const tags: ConnectionTag[] = ['dir:two-way'];
+  const base = {
+    kind: 'edge',
+    fromScreenId: 'screen-030',
+    toScreenId: 'screen-031',
+    direction: 'two-way',
+    tags,
+  } as const;
 
-  it('omits nav when absent (no regression)', () => {
-    const line = serializeConnection({ from: 'lw-30', to: 'lw-31', tags });
-    expect(line).toBe(`  { from: 'lw-30', to: 'lw-31', tags: ['transit:walk', 'dir:two-way'] },`);
+  it('omits nav when absent, and every other optional field with it', () => {
+    const literal = serializeConnectionRecord({ ...base });
+    expect(literal).toBe([
+      '  {',
+      "    kind: 'edge',",
+      "    fromScreenId: 'screen-030',",
+      "    toScreenId: 'screen-031',",
+      "    direction: 'two-way',",
+      "    tags: ['dir:two-way'],",
+      '  },',
+    ].join('\n'));
   });
 
-  it('emits a compact nav literal for a walk crossing', () => {
-    const nav = buildConnectionNav(makeInfo({ positions: [30, 31], requirements: [] }), tags);
-    const line = serializeConnection({ from: 'lw-30', to: 'lw-31', tags, nav });
-    expect(line).toContain(`nav: { transitType: 'walk', requirements: [], bidirectional: true, overlapTiles: [30, 31], weight: 2 }`);
+  it('collapses a nav literal onto one line while it fits', () => {
+    const nav = buildConnectionNav(makeInfo({ positions: [30, 31], requirements: [] }), ['transit:walk', 'dir:two-way']);
+    const literal = serializeConnectionRecord({ ...base, nav });
+    expect(literal).toContain(`nav: { transitType: 'walk', requirements: [], bidirectional: true, weight: 2, overlapTiles: [30, 31] },`);
   });
 
-  it('emits fromPoint for a door crossing', () => {
+  it('expands a nav literal that no longer fits, keeping every field', () => {
     const nav = buildConnectionNav(makeInfo({ edge: 'north', positions: [24], requirements: ['boots'] }), ['transit:door', 'dir:two-way']);
-    const line = serializeConnection({ from: 'lw-30', to: 'int-24', tags: ['transit:door', 'dir:two-way'], nav });
-    expect(line).toContain(`fromPoint: { id:`);
-    expect(line).toContain(`direction: 'n', tiles: [24], requirements: [['boots']], position: { row: 0, col: 24 }, oneWay: null }`);
+    const literal = serializeConnectionRecord({ ...base, kind: 'door', nav });
+    expect(literal).toContain(`      transitType: 'door',`);
+    expect(literal).toContain(`      requirements: [['boots']],`);
+    expect(literal).toContain(`        direction: 'n',`);
+    expect(literal).toContain(`        tiles: [24],`);
+    expect(literal).toContain(`        position: { row: 0, col: 24 },`);
+    expect(literal).toContain(`        oneWay: null,`);
+  });
+
+  it('emits the frozen id first when the allocator has stamped one', () => {
+    const literal = serializeConnectionRecord({ id: 'connection-897', ...base });
+    expect(literal.split('\n')[1]).toBe("    id: 'connection-897',");
   });
 });
 
 // Compile-time guard: the shape the serializer emits must be a valid
-// ScreenConnection.nav. If ConnectionNavData drifts, this const fails tsc.
-const ROUND_TRIP: ScreenConnection = {
-  from: 'lw-30',
-  to: 'lw-31',
-  tags: ['transit:walk', 'dir:two-way'],
+// ConnectionRecord.nav. If ConnectionNavData drifts, this const fails tsc.
+const ROUND_TRIP: ConnectionRecord = {
+  id: 'connection-897',
+  kind: 'edge',
+  fromScreenId: 'screen-030',
+  toScreenId: 'screen-031',
+  direction: 'two-way',
+  tags: ['dir:two-way'],
   nav: {
     transitType: 'walk',
     requirements: [['boots']],
@@ -95,7 +121,7 @@ const ROUND_TRIP: ScreenConnection = {
   },
 };
 
-describe('emitted nav literal type-checks as ScreenConnection', () => {
+describe('emitted nav literal type-checks as ConnectionRecord', () => {
   it('round-trip const is well-typed', () => {
     expect(ROUND_TRIP.nav?.transitType).toBe('walk');
   });

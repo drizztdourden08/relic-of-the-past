@@ -7,10 +7,9 @@
  * sharing the SOURCE screen's world, then its location.
  */
 import type { GridPos } from '@shared/game/navigation';
-import type { VariantGameState } from '@shared/game/data/screens';
-import type { ScreenDefinition } from '@shared/game/types';
+import type { VariantGameState } from '@shared/game/logic/queries/detection';
+import type { ScreenRecord } from '@shared/game/data';
 import type { SimArea } from '@shared/game/simulation';
-import { resolveCurrentScreen, SCREEN_BY_ID } from '@shared/game/data/screens';
 import { locationForScreen } from './screen-location';
 import { computeBigScreenGroup } from '@domains/widgets/navigation/widget-helpers';
 import { wasmGetEntranceSpawns, wasmGetProgressIndicator } from '../';
@@ -33,9 +32,9 @@ const variantState = (): VariantGameState => ({
 const owScreenId = (idx: number): string => `ow:${idx}`;
 
 /** Progress-matching variant first, then the non-variant base, then anything. */
-const pickVariant = (list: ScreenDefinition[]): ScreenDefinition => {
+const pickVariant = (list: ScreenRecord[]): ScreenRecord => {
   const tier = wasmGetProgressIndicator()?.tier ?? 0;
-  const cond = (s: ScreenDefinition) => s.variant?.condition;
+  const cond = (s: ScreenRecord) => s.variant?.condition;
   const match = list.find((s) => {
     const c = cond(s);
     return c?.type === 'progress' && (c.max == null || tier <= c.max) && (c.min == null || tier >= c.min);

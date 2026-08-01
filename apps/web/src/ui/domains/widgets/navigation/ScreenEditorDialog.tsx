@@ -21,8 +21,8 @@ const ScreenEditorDialog = (props: ScreenEditorProps) => {
   const { open, onClose, existingScreen } = props;
   const editor = useScreenEditor(props);
   const {
-    step, setStep, mismatches, generatedId, roomIndex, status, setStatus,
-    writing, writeError, generatedCode, targetFile, handleWrite,
+    step, setStep, mismatches, screenId, roomIndex, status, setStatus,
+    writing, writeError, generatedCode, targetFile, canWrite, blockers, handleWrite,
   } = editor;
 
   const headerExtra = (
@@ -30,7 +30,7 @@ const ScreenEditorDialog = (props: ScreenEditorProps) => {
       <Text className="screen-editor__room-id">
         Room 0x{roomIndex.toString(16).toUpperCase().padStart(roomIndex > 0xFF ? 4 : 2, '0')}
       </Text>
-      <Text as="code" className="screen-editor__generated-id">{generatedId}</Text>
+      <Text as="code" className="screen-editor__generated-id">{screenId ?? 'id allocated on write'}</Text>
       <StatusBadge status={status} interactive onChange={setStatus} />
     </>
   );
@@ -44,7 +44,7 @@ const ScreenEditorDialog = (props: ScreenEditorProps) => {
       {step === 1 && (
         <>
           <Button variant="tertiary" onClick={() => setStep(0)}>← Back</Button>
-          <Button variant="primary" onClick={handleWrite} disabled={writing}>
+          <Button variant="primary" onClick={handleWrite} disabled={writing || !canWrite}>
             {writing ? 'Writing...' : 'Accept & Write'}
           </Button>
         </>
@@ -64,10 +64,11 @@ const ScreenEditorDialog = (props: ScreenEditorProps) => {
       actions={actions}
       className="screen-editor"
     >
-      {/* Mismatch warnings */}
-      {mismatches.length > 0 && (
+      {/* Mismatch warnings + anything blocking the write */}
+      {(mismatches.length > 0 || blockers.length > 0) && (
         <Box className="screen-editor__warnings">
-          {mismatches.map((w, i) => <Text as="p" key={i}>{w}</Text>)}
+          {mismatches.map(w => <Text as="p" key={w}>{w}</Text>)}
+          {blockers.map(b => <Text as="p" key={b}>{b}</Text>)}
         </Box>
       )}
 
@@ -84,7 +85,7 @@ const ScreenEditorDialog = (props: ScreenEditorProps) => {
         <Box className="screen-editor__preview">
           <Box className="screen-editor__file-target">
             <Text>Target: </Text>
-            <Text as="code">{targetFile.relativePath}</Text>
+            <Text as="code">{targetFile.relativePath ?? `unresolved — ${targetFile.unresolved ?? 'no destination'}`}</Text>
           </Box>
           <Box as="pre" className="screen-editor__code">{generatedCode}</Box>
           {writeError && <Text as="p" className="screen-editor__error">{writeError}</Text>}

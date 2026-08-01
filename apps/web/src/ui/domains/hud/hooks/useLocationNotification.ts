@@ -10,9 +10,8 @@
 import { useEffect, useRef } from 'react';
 import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { useLocationNotificationStore } from '../../../../stores/location-notification-store';
-import { resolveCurrentScreen } from '@shared/game/data/screens/detection';
-import { displayName } from '@shared/game/data/screens';
-import type { ScreenDefinition } from '@shared/game/types';
+import { resolveCurrentScreen } from '@shared/game/logic/queries/detection';
+import type { ScreenRecord } from '@shared/game/data';
 
 /** Auto-dismiss delay in ms */
 const SCREEN_DISMISS_MS = 3000;
@@ -25,7 +24,7 @@ const TRANSITION_DISMISS_MS = 2000;
 const NOTIFICATIONS_ENABLED: boolean = false;
 
 const useLocationNotification = () => {
-  const prevDetectedRef = useRef<ScreenDefinition | null>(null);
+  const prevDetectedRef = useRef<ScreenRecord | null>(null);
   const prevRoomRef = useRef<number>(-1);
   const prevOwScreenRef = useRef<number>(-1);
   const screenTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -78,7 +77,7 @@ const useLocationNotification = () => {
 
       // ─── Screen notification ───
       // Only fire if location changed (same zone = no notification)
-      if (store.showScreen && (!prev || prev.location !== detected.location)) {
+      if (store.showScreen && (!prev || prev.locationId !== detected.locationId)) {
         store.setScreen(detected);
 
         // Auto-dismiss
@@ -89,8 +88,8 @@ const useLocationNotification = () => {
       }
 
       // ─── Transition notification (name change within same location) ───
-      if (store.showTransition && prev && prev.location === detected.location && prev.name !== detected.name) {
-        const entrance = displayName(detected.id, detected.name);
+      if (store.showTransition && prev && prev.locationId === detected.locationId && prev.randomizerName !== detected.randomizerName) {
+        const entrance = detected.vanillaName ?? detected.randomizerName;
         store.setTransition(entrance);
 
         if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);

@@ -1,14 +1,14 @@
 /* @layer renderer-components @kind component */
 import { Box, Text, Image } from '../../../../../design-system/primitives';
-import type { InventoryCategory, InventorySlot, InventoryViewMode } from '@shared/game/items/sprites';
+import type { InventoryCategory, InventorySlot, InventoryViewMode, ItemId } from '@shared/game/data';
 import {
   INVENTORY_LAYOUT, INGAME_ITEMS_GRID, INGAME_EQUIPMENT, INGAME_PASSIVES, COMPACT_LAYOUT,
-  resolveItemSprite, getSpritesBase,
-} from '@shared/game/items/sprites';
+} from '@shared/game/data';
+import { resolveItemSprite, getSpritesBase } from '@shared/game/logic/queries/item-sprites';
 import '../TrackerView.css';
 
 interface TrackerInventoryProps {
-  inventory: Set<string>;
+  inventory: ReadonlySet<ItemId>;
   viewMode?: InventoryViewMode;
 }
 
@@ -21,7 +21,7 @@ const TrackerInventory = (props: TrackerInventoryProps) => {
 
 // ─── Default view (categorized) ───
 
-const DefaultInventory = ({ inventory }: { inventory: Set<string> }) => {
+const DefaultInventory = ({ inventory }: { inventory: ReadonlySet<ItemId> }) => {
   return (
     <Box className="tracker-inventory">
       {INVENTORY_LAYOUT.map((category) => (
@@ -31,7 +31,7 @@ const DefaultInventory = ({ inventory }: { inventory: Set<string> }) => {
   );
 };
 
-const TrackerInventoryCategory = ({ category, inventory }: { category: InventoryCategory; inventory: Set<string> }) => {
+const TrackerInventoryCategory = ({ category, inventory }: { category: InventoryCategory; inventory: ReadonlySet<ItemId> }) => {
   return (
     <Box className="tracker-inventory__category">
       <Text className="tracker-inventory__category-label">{category.label}</Text>
@@ -46,7 +46,7 @@ const TrackerInventoryCategory = ({ category, inventory }: { category: Inventory
 
 // ─── In-game view (matches SNES pause screen layout) ───
 
-const IngameInventory = ({ inventory }: { inventory: Set<string> }) => {
+const IngameInventory = ({ inventory }: { inventory: ReadonlySet<ItemId> }) => {
   return (
     <Box className="tracker-inventory tracker-inventory--ingame">
       <Box className="tracker-inventory__ingame-main">
@@ -74,7 +74,7 @@ const IngameInventory = ({ inventory }: { inventory: Set<string> }) => {
 
 // ─── Compact view (flat grid, upgrades broken down) ───
 
-const CompactInventory = ({ inventory }: { inventory: Set<string> }) => {
+const CompactInventory = ({ inventory }: { inventory: ReadonlySet<ItemId> }) => {
   return (
     <Box className="tracker-inventory tracker-inventory--compact">
       <Box className="tracker-inventory__grid tracker-inventory__grid--compact">
@@ -88,7 +88,7 @@ const CompactInventory = ({ inventory }: { inventory: Set<string> }) => {
 
 // ─── Shared slot renderer ───
 
-const TrackerInventorySlot = ({ slot, inventory }: { slot: InventorySlot; inventory: Set<string> }) => {
+const TrackerInventorySlot = ({ slot, inventory }: { slot: InventorySlot; inventory: ReadonlySet<ItemId> }) => {
   const { obtained, sprite } = resolveItemSprite(slot, inventory);
   return (
     <Box className={`tracker-inventory__slot ${obtained ? 'tracker-inventory__slot--obtained' : 'tracker-inventory__slot--missing'}`}>

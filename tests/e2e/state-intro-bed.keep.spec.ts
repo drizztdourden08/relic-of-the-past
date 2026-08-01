@@ -60,7 +60,7 @@ const noneMatch = (match: RegExp) => (chips: string[]) => !chips.some((s) => mat
 test('test-intro-bed plays the opening and reports each beat', async () => {
   test.setTimeout(600_000);
   await withState('test-intro-bed', async (r) => {
-    expect(await r.screenId(), 'the intro bed scene is room 0x104').toMatch(/^room-104 · INDOOR/);
+    expect(await r.screenId(), 'the intro bed scene is screen-205, the intro variant (room 0x104)').toMatch(/^screen-205 · 0x104 · INDOOR/);
 
     // ── Beat 1: asleep, before any input ──────────────────────────────────────
     const asleep = await r.awaitState(/asleep/i);

@@ -8,7 +8,8 @@
  */
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { Box, Button, Portal, Text } from '@ds/primitives';
-import { CHECK_BY_ID } from '@shared/game/checks';
+import { getCheck } from '@shared/game/data';
+import type { CheckId } from '@shared/game/data';
 import { useStopAtChecks } from '../../behavior/useStopAtChecks';
 import { StopAtCheckFilters } from './StopAtCheckFilters';
 import { StopAtCheckList } from './StopAtCheckList';
@@ -16,8 +17,8 @@ import { checkTypeIcon } from './check-type-icons';
 import './StopAtCheckPicker.css';
 
 interface StopAtCheckPickerProps {
-  stopAtCheckId: string;
-  onStopAtChange: (id: string) => void;
+  stopAtCheckId: CheckId | '';
+  onStopAtChange: (id: CheckId | '') => void;
   disabled: boolean;
 }
 
@@ -40,14 +41,14 @@ const StopAtCheckPicker = (props: StopAtCheckPickerProps) => {
     setPos({ top: rect.bottom + 4, left: rect.left, width: rect.width });
   }, [open]);
 
-  const handleSelect = useCallback((id: string) => {
+  const handleSelect = useCallback((id: CheckId | '') => {
     onStopAtChange(id);
     setOpen(false);
   }, [onStopAtChange]);
 
-  const selected = stopAtCheckId ? CHECK_BY_ID.get(stopAtCheckId) : undefined;
-  const triggerIcon = selected ? checkTypeIcon(selected.type) : '∞';
-  const triggerLabel = selected?.name ?? 'No stop — full run';
+  const selected = stopAtCheckId ? getCheck(stopAtCheckId) : undefined;
+  const triggerIcon = selected ? checkTypeIcon(selected.kind) : '∞';
+  const triggerLabel = selected?.randomizerName ?? 'No stop — full run';
 
   return (
     <>

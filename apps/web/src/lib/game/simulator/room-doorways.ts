@@ -10,8 +10,7 @@
  */
 import type { GridPos } from '@shared/game/navigation';
 import type { SimExit } from '@shared/game/simulation';
-import type { ScreenDefinition } from '@shared/game/types';
-import { SCREEN_BY_ID } from '@shared/game/data/screens';
+import type { ScreenRecord } from '@shared/game/data';
 import { wasmGetRoomDoorInfo, wasmGetRoomTravelDestinationsFor, wasmGetEntranceRooms, wasmGetExitScreenMap } from '../';
 import { getScreenGrids } from '../flood';
 import { interiorScreenId, usesCachedEntrance } from './screen-resolve';
@@ -38,7 +37,7 @@ const OPPOSITE: Record<EdgeName, EdgeName> = { north: 'south', south: 'north', w
  * player could walk somewhere; a missing entry silently deleted a real doorway
  * and a shared room index invented one.
  */
-const plausibleRoomNeighbor = (_id: string, _src?: ScreenDefinition): boolean => true;
+const plausibleRoomNeighbor = (_id: string, _src?: ScreenRecord): boolean => true;
 
 /**
  * Rooms an overworld entrance points at — the MOUTH of a standalone place.
@@ -124,7 +123,7 @@ const doorwayLandingOpen = (adjRoomId: number, edge: EdgeName, pos: number): boo
 
 interface DoorwayScanArgs {
   roomId: number;
-  src?: ScreenDefinition;
+  src?: ScreenRecord;
   /** Walk-step distances over the source room's flood (see stepDistances). */
   dist: Uint16Array;
   push: (exit: SimExit, score: number) => void;

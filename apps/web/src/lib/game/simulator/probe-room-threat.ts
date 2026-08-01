@@ -8,6 +8,7 @@ import type { CombatContext, RoomSectionSplit } from '@shared/game/simulation';
 import { evaluateRoomThreat } from '@shared/game/simulation/engine/enemy-reach';
 import { wasmGetSpriteCombat, wasmGetCombatTables, wasmGetRoomLayoutInfo, roomSectionSplitFrom } from '../';
 import { getCurrentInventory } from '../tracker';
+import type { ItemId } from '@shared/game/data';
 import { getRoomSprites } from './interactables';
 import { getScreenGrids } from '../flood';
 import { readMapState } from './read-game-state';
@@ -17,7 +18,7 @@ interface RoomThreatProbe {
   /** The LIVE tracker inventory at probe time (not a simulated virtual-run
    *  inventory) — a room probed before picking anything up reads every
    *  sprite as `no-weapon` by design. */
-  inventory: string[];
+  inventory: ItemId[];
   clearable: boolean;
   gating: Array<{ type: string; killable: boolean; weapon?: string; blockedBy?: string }>;
 }
@@ -47,7 +48,9 @@ const probeRoomThreat = (roomId: number, run: RoomFloodRun | null): RoomThreatPr
   const grids = getScreenGrids({ isIndoors: true, roomId, owScreenIndex: 0 });
   const combat = combatForProbe(sprites.map((s) => s.spriteType));
   const inventory = new Set(getCurrentInventory());
-  const evaluated = evaluateRoomThreat({ sprites, reached, grids, inventory, combat, split: splitForProbe(roomId) });
+  const evaluated = evaluateRoomThreat({
+    sprites, reached, grids, combat, split: splitForProbe(roomId), inventory,
+  });
   return {
     inventory: [...inventory],
     clearable: evaluated.clearable,

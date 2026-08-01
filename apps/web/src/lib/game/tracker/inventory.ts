@@ -1,9 +1,18 @@
 /* @layer bridge-wasm @kind logic */
 /**
  * Inventory state parsing — reads the 34-byte WASM buffer from
- * WasmGetInventoryState() and converts it into a Set<string> of
- * tracker-compatible item names.
+ * WasmGetInventoryState() and converts it into a `Set<ItemId>`.
+ *
+ * The set is keyed by dataset id, never by display name. Names are not unique
+ * (two records share several of them), so a name-keyed owned-set loses records
+ * by construction; ids also mean the compiler rejects a display string being
+ * mistaken for an owned item. The slot → id mapping itself lives in item-ids.ts.
  */
+import type { ItemId } from '@shared/game/data';
+import {
+  addBits, addByValue, addLadder, addNative,
+  BOTTLE_SLOT, BY_VALUE, CRYSTAL_BITS, LADDERS, MIRROR, PENDANT_BITS, SIMPLE,
+} from './item-ids';
 
 interface RawInventoryState {
   bow: number;
@@ -81,114 +90,48 @@ const parseInventoryBuffer = (heapU8: Uint8Array, ptr: number): RawInventoryStat
   };
 };
 
-const inventoryToItemSet = (raw: RawInventoryState): Set<string> => {
-  const items = new Set<string>();
+/** Slot values 1-2 are one rung, 3+ is two — the byte is not a rung count here. */
+const bowRungs = (bow: number): number => (bow >= 3 ? 2 : bow >= 1 ? 1 : 0);
 
-  // Sword progression
-  if (raw.sword >= 4) items.add('Golden Sword');
-  if (raw.sword >= 3) items.add('Tempered Sword');
-  if (raw.sword >= 2) items.add('Master Sword');
-  if (raw.sword >= 1) items.add('Fighter Sword');
-
-  // Shield progression
-  if (raw.shield >= 3) items.add('Mirror Shield');
-  if (raw.shield >= 2) items.add('Fire Shield');
-  if (raw.shield >= 1) items.add('Fighters Shield');
-
-  // Armor
-  if (raw.armor >= 2) items.add('Red Mail');
-  if (raw.armor >= 1) items.add('Blue Mail');
-
-  // Glove progression
-  if (raw.gloves >= 2) items.add('Titans Mitts');
-  if (raw.gloves >= 1) items.add('Power Glove');
-
-  // Bow
-  if (raw.bow >= 3) { items.add('Silver Bow'); items.add('Bow'); }
-  else if (raw.bow >= 1) items.add('Bow');
-
-  // Boomerang
-  if (raw.boomerang === 2) items.add('Red Boomerang');
-  else if (raw.boomerang === 1) items.add('Blue Boomerang');
-
-  // Simple flags
-  if (raw.hookshot) items.add('Hookshot');
-  if (raw.bombs) items.add('Bombs');
-  if (raw.fireRod) items.add('Fire Rod');
-  if (raw.iceRod) items.add('Ice Rod');
-  if (raw.bombos) items.add('Bombos');
-  if (raw.ether) items.add('Ether');
-  if (raw.quake) items.add('Quake');
-  if (raw.lamp) items.add('Lamp');
-  if (raw.hammer) items.add('Hammer');
-  if (raw.bugNet) items.add('Bug Catching Net');
-  if (raw.book) items.add('Book of Mudora');
-  if (raw.somaria) items.add('Cane of Somaria');
-  if (raw.byrna) items.add('Cane of Byrna');
-  if (raw.cape) items.add('Cape');
-  if (raw.mirror >= 2) items.add('Magic Mirror');
-  if (raw.boots) items.add('Pegasus Boots');
-  if (raw.flippers) items.add('Flippers');
-  if (raw.moonPearl) items.add('Moon Pearl');
-
-  // Mushroom/Powder
-  if (raw.mushroom === 1) items.add('Mushroom');
-  else if (raw.mushroom === 2) items.add('Magic Powder');
-
-  // Flute/Shovel
-  if (raw.flute >= 3) items.add('Activated Flute');
-  else if (raw.flute === 2) items.add('Flute');
-  else if (raw.flute === 1) items.add('Shovel');
-
-  // Bottles
-  const bottleSlots = [raw.bottle1, raw.bottle2, raw.bottle3, raw.bottle4];
-  for (const b of bottleSlots) {
-    if (b > 0) items.add('Bottle');
-    if (b === 2) items.add('Bottle (Red Potion)');
-    if (b === 3) items.add('Bottle (Green Potion)');
-    if (b === 4) items.add('Bottle (Blue Potion)');
-    if (b === 5) items.add('Bottle (Fairy)');
-    if (b === 6) items.add('Bottle (Bee)');
-    if (b === 7) items.add('Bottle (Good Bee)');
+const addBottles = (items: Set<ItemId>, raw: RawInventoryState): void => {
+  for (const slot of [raw.bottle1, raw.bottle2, raw.bottle3, raw.bottle4]) {
+    if (slot <= 0) continue;
+    addNative(items, BOTTLE_SLOT);
+    addByValue(items, BY_VALUE.bottle, slot);
   }
+};
 
-  // Pendants (bitmask)
-  if (raw.pendants & 0x04) items.add('Green Pendant');
-  if (raw.pendants & 0x02) items.add('Red Pendant');
-  if (raw.pendants & 0x01) items.add('Blue Pendant');
-
-  // Crystals (bitmask)
-  const crystalBits = [
-    [0x02, 'Crystal 1'], [0x10, 'Crystal 2'], [0x40, 'Crystal 3'],
-    [0x20, 'Crystal 4'], [0x04, 'Crystal 5'], [0x01, 'Crystal 6'],
-    [0x08, 'Crystal 7'],
-  ] as const;
-  for (const [bit, name] of crystalBits) {
-    if (raw.crystals & bit) items.add(name);
+const addSimpleFlags = (items: Set<ItemId>, raw: RawInventoryState): void => {
+  for (const [slot, receiveItemId] of Object.entries(SIMPLE)) {
+    if (raw[slot as keyof typeof SIMPLE]) addNative(items, receiveItemId);
   }
+};
+
+const inventoryToItemSet = (raw: RawInventoryState): Set<ItemId> => {
+  const items = new Set<ItemId>();
+
+  addLadder(items, LADDERS.sword, raw.sword);
+  addLadder(items, LADDERS.shield, raw.shield);
+  addLadder(items, LADDERS.mail, raw.armor);
+  addLadder(items, LADDERS.lift, raw.gloves);
+  addLadder(items, LADDERS.bow, bowRungs(raw.bow));
+
+  addSimpleFlags(items, raw);
+  if (raw.mirror >= 2) addNative(items, MIRROR);
+
+  addByValue(items, BY_VALUE.boomerang, raw.boomerang);
+  addByValue(items, BY_VALUE.mushroom, raw.mushroom);
+  // The top flute value replaces the plain one rather than stacking on it.
+  addByValue(items, BY_VALUE.flute, Math.min(raw.flute, 3));
+
+  addBottles(items, raw);
+  addBits(items, PENDANT_BITS, raw.pendants);
+  addBits(items, CRYSTAL_BITS, raw.crystals);
 
   return items;
 };
 
-const progressToEvents = (heapU8: Uint8Array, progPtr: number): string[] => {
-  const events: string[] = [];
-  const progressIndicator = heapU8[progPtr];       // index 0
-  const sleepState = heapU8[progPtr + 12];         // index 12
-
-  // The player wakes up: either got out of bed this session (sleepState >= 2)
-  // or already past uncle in a loaded save (progressIndicator >= 1)
-  if (sleepState >= 2 || progressIndicator >= 1) events.push('Link Wakes Up');
-  // progress_indicator >= 1 means Uncle gave sword, you're in the castle
-  if (progressIndicator >= 1) events.push('Zelda Rescue Started');
-  // progress_indicator >= 2 means the princess reached the Sanctuary, rain stops
-  if (progressIndicator >= 2) events.push('Rescued Zelda');
-  // progress_indicator >= 3 means escaped dungeon, full game
-  if (progressIndicator >= 3) events.push('Rescued Old Man');
-
-  return events;
-};
-
-const setsEqual = (a: Set<string>, b: Set<string>): boolean => {
+const setsEqual = <T>(a: ReadonlySet<T>, b: ReadonlySet<T>): boolean => {
   if (a.size !== b.size) return false;
   for (const item of a) {
     if (!b.has(item)) return false;
@@ -196,10 +139,5 @@ const setsEqual = (a: Set<string>, b: Set<string>): boolean => {
   return true;
 };
 
-export {
-  inventoryToItemSet,
-  parseInventoryBuffer,
-  progressToEvents,
-  setsEqual
-};
+export { inventoryToItemSet, parseInventoryBuffer, setsEqual };
 export type { RawInventoryState };

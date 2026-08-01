@@ -1,9 +1,38 @@
 /* @layer shared-game @kind data */
-import type { ScreenDefinition } from '../../../types';
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ScreenRecord } from '../../types';
 
-const DW_GAMBLE: ScreenDefinition[] = [
-  { id: 'chest-game', name: 'Chest Game', type: 'interior', world: 'dark', location: 'Village of Outcasts', area: 'Village Of Outcasts', roomIndex: 0x0111, interior: { kind: 'gamble' }, tags: ['env:indoor', 'loot:chest'] },
-  { id: 'archery-game', name: 'Archery Game', type: 'interior', world: 'dark', location: 'Dark South', area: 'Dark South', roomIndex: 0x0110, interior: { kind: 'gamble' }, tags: ['env:indoor'] },
+const DW_GAMBLE_SCREENS: ScreenRecord[] = [
+  {
+    id: 'screen-470',
+    gameId: { roomIndex: 273 },
+    kind: 'interior',
+    world: 'dark',
+    interiorKind: 'gamble',
+    randomizerName: 'Chest Game',
+    areaId: 'area-017',
+    locationId: 'location-031',
+    tags: ['env:indoor', 'loot:chest'],
+    status: 'mapped',
+    spawns: [
+      { actorId: 'actor-192', tile: { x: 22, y: 54 } },
+    ],
+  },
+  {
+    id: 'screen-469',
+    gameId: { roomIndex: 272 },
+    kind: 'interior',
+    world: 'dark',
+    interiorKind: 'gamble',
+    randomizerName: 'Archery Game',
+    areaId: 'area-017',
+    locationId: 'location-031',
+    tags: ['env:indoor'],
+    status: 'mapped',
+    spawns: [
+      { actorId: 'actor-230', tile: { x: 14, y: 42 } },
+    ],
+  },
 ];
 
-export { DW_GAMBLE };
+export { DW_GAMBLE_SCREENS };

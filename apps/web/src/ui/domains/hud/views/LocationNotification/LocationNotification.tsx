@@ -4,7 +4,7 @@
  * Positioned at bottom-center of the game overlay.
  */
 
-import { displayName } from '@shared/game/data/screens';
+import { getLocation } from '@shared/game/data';
 import { HudBox } from '../../primitives/HudBox';
 import { useLocationNotificationStore } from '../../../../../stores/location-notification-store';
 import { SCREEN_DISMISS_MS, TRANSITION_DISMISS_MS } from '../../hooks/useLocationNotification';
@@ -24,8 +24,8 @@ const LocationNotification = () => {
       {screen && (
         <NotificationBanner
           key={`screen-${screen.timestamp}`}
-          title={screen.screen.location}
-          subtitle={displayName(screen.screen.id, screen.screen.name)}
+          title={getLocation(screen.screen.locationId).randomizerName}
+          subtitle={screen.screen.vanillaName ?? screen.screen.randomizerName}
           dismissMs={SCREEN_DISMISS_MS}
           variant="screen"
         />

@@ -1,0 +1,116 @@
+/* @layer shared-game @kind data */
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ConnectionRecord } from '../../types';
+import { canUseBombs } from '../../requirements/helpers';
+import { canBombOrBonk } from '../../requirements/helpers';
+
+const LW_HOUSES_2_CONNECTIONS: ConnectionRecord[] = [
+  {
+    id: 'connection-364',
+    kind: 'entrance',
+    fromScreenId: 'screen-048',
+    toScreenId: 'screen-165',
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:entrance'],
+  },
+  {
+    id: 'connection-365',
+    kind: 'entrance',
+    fromScreenId: 'screen-072',
+    toScreenId: 'screen-204',
+    placement: { at: 'area', rect: { x: 22, y: 30, w: 2, h: 2 } },
+    direction: 'two-way',
+    counterpartId: 'connection-366',
+    tags: ['dir:two-way', 'ctx:entrance'],
+  },
+  {
+    id: 'connection-366',
+    kind: 'entrance',
+    fromScreenId: 'screen-204',
+    toScreenId: 'screen-072',
+    placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
+    direction: 'two-way',
+    counterpartId: 'connection-365',
+    tags: ['dir:two-way', 'ctx:exit'],
+  },
+  {
+    id: 'connection-367',
+    kind: 'entrance',
+    fromScreenId: 'screen-066',
+    toScreenId: 'screen-170',
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:entrance'],
+  },
+  {
+    id: 'connection-368',
+    kind: 'entrance',
+    fromScreenId: 'screen-086',
+    toScreenId: 'screen-209',
+    placement: { at: 'area', rect: { x: 30, y: 38, w: 2, h: 2 } },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:entrance'],
+  },
+  {
+    id: 'connection-369',
+    kind: 'entrance',
+    fromScreenId: 'screen-051',
+    toScreenId: 'screen-177',
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:entrance'],
+  },
+  {
+    id: 'connection-370',
+    kind: 'entrance',
+    fromScreenId: 'screen-004',
+    toScreenId: 'screen-192',
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:entrance'],
+  },
+  {
+    id: 'connection-371',
+    kind: 'door',
+    fromScreenId: 'screen-192',
+    toScreenId: 'screen-193',
+    placement: { at: 'side', side: 'east', tileRange: { axis: 'y', start: 48, end: 49 } },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:internal'],
+  },
+  {
+    id: 'connection-372',
+    kind: 'entrance',
+    fromScreenId: 'screen-193',
+    toScreenId: 'screen-007',
+    placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:exit'],
+  },
+  {
+    id: 'connection-373',
+    kind: 'entrance',
+    fromScreenId: 'screen-033',
+    toScreenId: 'screen-222',
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:entrance'],
+    requirements: canBombOrBonk,
+  },
+  {
+    id: 'connection-374',
+    kind: 'entrance',
+    fromScreenId: 'screen-222',
+    toScreenId: 'screen-037',
+    direction: 'one-way',
+    tags: ['dir:one-way', 'ctx:exit'],
+    requirements: canBombOrBonk,
+  },
+  {
+    id: 'connection-375',
+    kind: 'entrance',
+    fromScreenId: 'screen-205',
+    toScreenId: 'screen-072',
+    placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
+    direction: 'two-way',
+    tags: ['dir:two-way', 'ctx:entrance'],
+  },
+];
+
+export { LW_HOUSES_2_CONNECTIONS };

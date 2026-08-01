@@ -1,24 +1,25 @@
 /* @layer shared-game @kind data */
-import type { ScreenConnection } from '../../../../types';
+import type { ConnectionRecord } from '../../../types';
+import { LW_DUNGEON_CASTLE_TOWER_CONNECTIONS } from './castle-tower';
+import { LW_DUNGEON_DESERT_PALACE_CONNECTIONS } from './desert-palace';
+import { LW_DUNGEON_EASTERN_PALACE_FLOOR_0_CONNECTIONS } from './eastern-palace-floor-0';
+import { LW_DUNGEON_EASTERN_PALACE_FLOOR_1_CONNECTIONS } from './eastern-palace-floor-1';
+import { LW_DUNGEON_HYRULE_CASTLE_FLOOR_M2_CONNECTIONS } from './hyrule-castle-floor-m2';
+import { LW_DUNGEON_HYRULE_CASTLE_FLOOR_M1_CONNECTIONS } from './hyrule-castle-floor-m1';
+import { LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_1_CONNECTIONS } from './hyrule-castle-floor-0-1';
+import { LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_2_CONNECTIONS } from './hyrule-castle-floor-0-2';
+import { LW_DUNGEON_TOWER_OF_HERA_CONNECTIONS } from './tower-of-hera';
 
-import { LW_HYRULE_CASTLE_CONNECTIONS } from './hyrule-castle';
-import { LW_CASTLE_TOWER_CONNECTIONS } from './castle-tower';
-import { LW_EASTERN_PALACE_CONNECTIONS } from './eastern-palace';
-import { LW_DESERT_PALACE_CONNECTIONS } from './desert-palace';
-import { LW_TOWER_OF_HERA_CONNECTIONS } from './tower-of-hera';
-
-export { LW_HYRULE_CASTLE_CONNECTIONS } from './hyrule-castle';
-export { LW_CASTLE_TOWER_CONNECTIONS } from './castle-tower';
-export { LW_EASTERN_PALACE_CONNECTIONS } from './eastern-palace';
-export { LW_DESERT_PALACE_CONNECTIONS } from './desert-palace';
-export { LW_TOWER_OF_HERA_CONNECTIONS } from './tower-of-hera';
-
-const LW_DUNGEON_CONNECTIONS: ScreenConnection[] = [
-  ...LW_HYRULE_CASTLE_CONNECTIONS,
-  ...LW_CASTLE_TOWER_CONNECTIONS,
-  ...LW_EASTERN_PALACE_CONNECTIONS,
-  ...LW_DESERT_PALACE_CONNECTIONS,
-  ...LW_TOWER_OF_HERA_CONNECTIONS,
+const LW_DUNGEONS_CONNECTIONS: ConnectionRecord[] = [
+  ...LW_DUNGEON_CASTLE_TOWER_CONNECTIONS,
+  ...LW_DUNGEON_DESERT_PALACE_CONNECTIONS,
+  ...LW_DUNGEON_EASTERN_PALACE_FLOOR_0_CONNECTIONS,
+  ...LW_DUNGEON_EASTERN_PALACE_FLOOR_1_CONNECTIONS,
+  ...LW_DUNGEON_HYRULE_CASTLE_FLOOR_M2_CONNECTIONS,
+  ...LW_DUNGEON_HYRULE_CASTLE_FLOOR_M1_CONNECTIONS,
+  ...LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_1_CONNECTIONS,
+  ...LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_2_CONNECTIONS,
+  ...LW_DUNGEON_TOWER_OF_HERA_CONNECTIONS,
 ];
 
-export { LW_DUNGEON_CONNECTIONS };
+export { LW_DUNGEONS_CONNECTIONS };

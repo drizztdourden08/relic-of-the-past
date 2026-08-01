@@ -17,7 +17,7 @@ import { withState } from './state-harness';
 test('test-sanctuary-grounds is still the outdoor baseline', async () => {
   test.setTimeout(300_000);
   await withState('test-sanctuary-grounds', async (r) => {
-    expect(await r.screenId(), 'the Sanctuary grounds are light-world screen 0x13').toMatch(/^lw-13 · LW/);
+    expect(await r.screenId(), 'the Sanctuary grounds are screen-061, light-world screen 0x13').toMatch(/^screen-061 · 0x13 · LW/);
 
     const flood = await r.flood();
     // One screen only — this is the single-screen outdoor case on purpose.

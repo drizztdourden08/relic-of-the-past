@@ -7,7 +7,6 @@
  */
 
 import type { CSSProperties } from 'react';
-import { displayName } from '@shared/game/data/screens';
 import { Box, Text, StatusBadge, Button } from '../../../design-system/primitives';
 import { S } from './dataset-widget-styles';
 import { DatasetStatusPill } from './DatasetStatusPill';
@@ -74,7 +73,7 @@ const DatasetStatusSection = (props: DatasetStatusSectionProps) => {
         {screenStatus.screen && (
           <Box style={S.infoRow}>
             <Text style={S.infoLabel}>Name</Text>
-            <Text>{displayName(screenStatus.screen.id, screenStatus.screen.name)}</Text>
+            <Text>{screenStatus.screen.vanillaName ?? screenStatus.screen.randomizerName}</Text>
           </Box>
         )}
         {screenStatus.screen && (

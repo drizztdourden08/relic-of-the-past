@@ -8,9 +8,11 @@
  */
 import type { ScreenAnnotation } from '@shared/game/simulation';
 import type { SimSprite } from '@shared/game/simulation';
+import type { CheckId } from '@shared/game/data';
+import { checkForStandingItem } from '@shared/game/simulation';
 import { npcCheckFor } from './npc-checks';
 import { standingItemId } from '../../simulator/sprite-kinds';
-import { itemLabel } from '@shared/game/items';
+import { itemLabel } from '@shared/game/logic/queries/item-duplicates';
 
 /** Sprite_PullSwitch_bounce covers sprite types 0x04-0x07. */
 const isPullSwitch = (t: number): boolean => t >= 0x04 && t <= 0x07;
@@ -19,7 +21,7 @@ const PRINCESS_SPRITE = 0x76;
 
 interface SpriteContext {
   roomId: number;
-  completed: ReadonlySet<string>;
+  completed: ReadonlySet<CheckId>;
   /** Shutter doors in this room — what a pull switch here opens. */
   shutterCount: number;
 }
@@ -46,7 +48,7 @@ const spriteAnnotation = (sprite: SimSprite, ctx: SpriteContext): ScreenAnnotati
 
   const check = npcCheckFor(sprite.spriteType, sprite.roomId, ctx.completed, sprite.outdoor);
   if (check) {
-    return { kind: 'npc-check', tile, label: check.name, detail: sourceNote(sprite), state: check.done ? 'done' : 'available' };
+    return { kind: 'npc-check', tile, checkId: check.checkId, label: check.name, detail: sourceNote(sprite), state: check.done ? 'done' : 'available' };
   }
   if (sprite.spriteType === PRINCESS_SPRITE) return { kind: 'npc-check', tile, label: 'Princess' };
   if (sprite.kind === 'npc') return { kind: 'npc-check', tile, label: `npc 0x${sprite.spriteType.toString(16)}` };
@@ -54,7 +56,16 @@ const spriteAnnotation = (sprite: SimSprite, ctx: SpriteContext): ScreenAnnotati
     // Name what it hands over rather than saying 'item' — the simulator resolves
     // the same id to decide the pickup, so both agree on what is lying there.
     const itemId = standingItemId(sprite.spriteType);
-    return { kind: 'standing-item', tile, label: itemId === undefined ? 'item' : itemLabel(itemId) };
+    // A standing item IS a check, resolved from the same flag the pickup writes.
+    // Without its id the marker had no identity and always read as available,
+    // whatever the run had already collected.
+    const pickup = checkForStandingItem(sprite);
+    return {
+      kind: 'standing-item',
+      tile,
+      label: itemId === undefined ? 'item' : itemLabel(itemId),
+      ...(pickup ? { checkId: pickup.id, state: ctx.completed.has(pickup.id) ? 'done' as const : 'available' as const } : {}),
+    };
   }
 
   return null;

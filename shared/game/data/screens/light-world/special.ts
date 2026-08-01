@@ -1,8 +1,20 @@
 /* @layer shared-game @kind data */
-import type { ScreenDefinition } from '../../../types';
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ScreenRecord } from '../../types';
 
-const LW_SPECIAL: ScreenDefinition[] = [
-  { id: 'menu', name: 'Menu / Save & Quit', type: 'overworld', world: 'light', location: 'Menu', area: '', overworld: { gridX: 0, gridY: 0 }, tags: ['role:spawn'] },
+const LW_SPECIAL_SCREENS: ScreenRecord[] = [
+  {
+    id: 'screen-038',
+    gameId: {},
+    kind: 'overworld',
+    world: 'light',
+    randomizerName: 'Menu / Save & Quit',
+    areaId: 'area-000',
+    locationId: 'location-000',
+    position: { gridX: 0, gridY: 0 },
+    tags: ['role:spawn'],
+    status: 'mapped',
+  },
 ];
 
-export { LW_SPECIAL };
+export { LW_SPECIAL_SCREENS };

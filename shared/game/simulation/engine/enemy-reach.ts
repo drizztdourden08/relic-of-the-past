@@ -9,6 +9,7 @@
  * both are runtime lookups, never assumed.
  */
 import type { GridPos } from '../../navigation/types';
+import type { ItemId } from '../../data';
 import type { SimSprite, ScreenGridBundle, CombatContext, SpriteCombatInfo, RoomSectionSplit } from '../types';
 import { weaponsFor } from './enemy-reach-weapons';
 import { findPositionFor } from './enemy-reach-geometry';
@@ -102,7 +103,7 @@ const evaluateRoomThreat = (params: {
   sprites: SimSprite[];
   reached: boolean[][] | undefined;
   grids: ScreenGridBundle | undefined;
-  inventory: Set<string>;
+  inventory: ReadonlySet<ItemId>;
   combat: CombatContext | undefined;
   /** Scroll-section split of the room being evaluated, including the player's
    *  current section. */

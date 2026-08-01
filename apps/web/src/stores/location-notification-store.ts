@@ -5,10 +5,10 @@
  */
 
 import { create } from 'zustand';
-import type { ScreenDefinition } from '@shared/game/types';
+import type { ScreenRecord } from '@shared/game/data';
 
 interface LocationNotification {
-  screen: ScreenDefinition;
+  screen: ScreenRecord;
   timestamp: number;
 }
 
@@ -27,7 +27,7 @@ interface LocationNotificationStore {
   /** Whether transition notifications are enabled */
   showTransition: boolean;
 
-  setScreen: (screen: ScreenDefinition) => void;
+  setScreen: (screen: ScreenRecord) => void;
   setTransition: (entrance: string) => void;
   clearScreen: () => void;
   clearTransition: () => void;

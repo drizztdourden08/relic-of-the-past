@@ -1,169 +1,119 @@
 /* @layer electron-main @kind logic */
 /**
- * IPC handlers for the Screen/Connection editor wizards.
- * Reads/writes to the shared/game/data/ and shared/game/checks/ source files.
+ * IPC handlers for the dev screen/connection editor.
+ *
+ * The renderer sends RECORDS, never source text and never an id for something
+ * new: this process allocates every id and runs the dataset's own emitter, so a
+ * write cannot carry a caller-minted id or a shape the record interfaces no
+ * longer describe.
  */
 
-import { existsSync } from 'fs';
 import { readFile, writeFile } from 'fs/promises';
-import { dirname, join } from 'path';
 import { handle } from '../lib/ipc/handle';
+import { serializeConnectionRecord, serializeScreenRecord } from '@shared/game/data/record-codegen';
+import type { ConnectionRecord, ScreenRecord } from '@shared/game/data/types';
+import type {
+  WriteConnectionsArgs, WriteRecordResult, WriteScreenArgs,
+} from '@shared/ipc/screen-editor-contract';
 import { resolveSourceFile } from './resolve-source-file';
-import { escapeSingleQuote, insertBeforeArrayClose, replaceById, removeConnectionByEndpoints, replaceConnectionByEndpoints } from './source-writers';
+import { insertBeforeArrayClose, removeById, replaceById } from './source-writers';
+import type { WriteResult } from './source-writers';
+import { withAllocatedIds } from './id-allocator';
+import { allocateGeography } from './geography-writer';
+import { getWorkspaceRoot } from './workspace-root';
 
-let cachedWorkspaceRoot: string | null = null;
+const failed = (e: unknown): { success: false; error: string } =>
+  ({ success: false, error: e instanceof Error ? e.message : 'Unknown error' });
 
-// Walk up from `start` looking for the ancestor that contains shared/game/data
-// — a reliable anchor for the repo root. A fixed relative depth (eg.
-// '../../../..' from __dirname) breaks as soon as the bundler changes how many
-// directories deep this file lands: dev, the electron-vite production build,
-// and a packaged app all bundle this handler at different depths.
-const findRepoRoot = (start: string): string | null => {
-  let dir = start;
-  for (;;) {
-    if (existsSync(join(dir, 'shared', 'game', 'data'))) return dir;
-    const parent = dirname(dir);
-    if (parent === dir) return null;
-    dir = parent;
+// Read → transform → write in one place, so every handler treats a writer error
+// the same way and nothing half-writes.
+const editFile = async (
+  path: string,
+  edit: (content: string) => WriteResult,
+  ids: readonly string[],
+): Promise<WriteRecordResult> => {
+  const content = await readFile(path, 'utf-8');
+  const result = edit(content);
+  if (result.error) return { success: false, error: result.error };
+  await writeFile(path, result.content, 'utf-8');
+  return { success: true, ids };
+};
+
+const writeScreen = (args: WriteScreenArgs): Promise<WriteRecordResult> => {
+  const root = getWorkspaceRoot();
+  const path = resolveSourceFile(root, args.filePath, 'data');
+  const replaceId = args.replaceId;
+
+  if (replaceId) {
+    const record = { id: replaceId, ...args.record } as ScreenRecord;
+    return editFile(path, content => replaceById(content, replaceId, serializeScreenRecord(record)), [replaceId]);
   }
+  return withAllocatedIds(root, 'screen', 1, ([id]) => {
+    const record = { id: id as ScreenRecord['id'], ...args.record } as ScreenRecord;
+    return editFile(path, content => insertBeforeArrayClose(content, serializeScreenRecord(record)), [id]);
+  });
 };
 
-// Resolve the workspace root by walking up from this file's location, falling
-// back to the process working directory (the app is always launched from the
-// repo root, so this covers the case where the bundled output moved outside
-// the source tree entirely, eg. a packaged build). Cached since it never
-// changes for the lifetime of the process.
-const getWorkspaceRoot = (): string => {
-  if (cachedWorkspaceRoot) return cachedWorkspaceRoot;
-  cachedWorkspaceRoot = findRepoRoot(__dirname) ?? findRepoRoot(process.cwd()) ?? process.cwd();
-  return cachedWorkspaceRoot;
+const writeConnections = (args: WriteConnectionsArgs): Promise<WriteRecordResult> => {
+  const root = getWorkspaceRoot();
+  const path = resolveSourceFile(root, args.filePath, 'data');
+
+  if (args.mode === 'remove') {
+    return editFile(path, content => removeById(content, args.connectionId), [args.connectionId]);
+  }
+  if (args.mode === 'replace') {
+    const record = { id: args.connectionId, ...args.record } as ConnectionRecord;
+    return editFile(path, content => replaceById(content, args.connectionId, serializeConnectionRecord(record)), [args.connectionId]);
+  }
+  const records = args.records;
+  if (records.length === 0) return Promise.resolve({ success: false, error: 'insert needs at least one record' });
+  return withAllocatedIds(root, 'connection', records.length, ids => {
+    const code = records
+      .map((record, i) => serializeConnectionRecord({ id: ids[i] as ConnectionRecord['id'], ...record } as ConnectionRecord))
+      .join('\n');
+    return editFile(path, content => insertBeforeArrayClose(content, code), ids);
+  });
 };
-
-const resolveDataFile = (root: string, relPath: string): string =>
-  resolveSourceFile(root, relPath, 'data');
-
-const resolveCheckFile = (root: string, relPath: string): string =>
-  resolveSourceFile(root, relPath, 'checks');
 
 const registerScreenEditorHandlers = (): void => {
-  // Write a screen definition to source file
-  handle('screenEditor:writeScreen', async (_e, args: {
-    filePath: string; // relative to shared/game/data/
-    code: string;
-    screenId: string | null; // null = insert new, string = replace existing
-  }) => {
+  handle('screenEditor:writeScreen', async (_e, args) => {
     try {
-      const root = getWorkspaceRoot();
-      const fullPath = resolveDataFile(root, args.filePath);
-
-      const content = await readFile(fullPath, 'utf-8');
-
-      const result = args.screenId
-        ? replaceById(content, args.screenId, args.code)
-        : insertBeforeArrayClose(content, args.code);
-      if (result.error) {
-        return { success: false, error: result.error };
-      }
-
-      await writeFile(fullPath, result.content, 'utf-8');
-      return { success: true };
+      return await writeScreen(args);
     } catch (e: unknown) {
-      return { success: false, error: e instanceof Error ? e.message : 'Unknown error' };
+      return failed(e);
     }
   });
 
-  // Write connections to source file. Insert (default), remove, or replace an
-  // entry identified by its `from`/`to` endpoints.
-  handle('screenEditor:writeConnections', async (_e, args: {
-    filePath: string; // relative to shared/game/data/
-    code?: string;
-    mode?: 'insert' | 'remove' | 'replace';
-    from?: string;
-    to?: string;
-  }) => {
+  handle('screenEditor:writeConnections', async (_e, args) => {
     try {
-      const root = getWorkspaceRoot();
-      const fullPath = resolveDataFile(root, args.filePath);
-
-      const content = await readFile(fullPath, 'utf-8');
-      const mode = args.mode ?? 'insert';
-
-      let result: { content: string; error?: string };
-      if (mode === 'remove') {
-        if (!args.from || !args.to) return { success: false, error: 'remove needs from and to' };
-        result = removeConnectionByEndpoints(content, args.from, args.to);
-      } else if (mode === 'replace') {
-        if (!args.from || !args.to || !args.code) return { success: false, error: 'replace needs from, to and code' };
-        result = replaceConnectionByEndpoints(content, args.from, args.to, args.code);
-      } else {
-        if (!args.code) return { success: false, error: 'insert needs code' };
-        result = insertBeforeArrayClose(content, args.code);
-      }
-      if (result.error) {
-        return { success: false, error: result.error };
-      }
-
-      await writeFile(fullPath, result.content, 'utf-8');
-      return { success: true };
+      return await writeConnections(args);
     } catch (e: unknown) {
-      return { success: false, error: e instanceof Error ? e.message : 'Unknown error' };
+      return failed(e);
     }
   });
 
-  // Write a check-data update to source file (shared/game/checks/)
-  handle('screenEditor:writeCheck', async (_e, args: {
-    filePath: string; // relative to shared/game/checks/
-    code: string;
-    checkId: string | null; // null = insert new, string = replace existing
-  }) => {
+  // Check data still travels as text: shared/game/checks/ has not moved onto the
+  // record facade yet, so there is no record shape to emit here.
+  handle('screenEditor:writeCheck', async (_e, args) => {
     try {
-      const root = getWorkspaceRoot();
-      const fullPath = resolveCheckFile(root, args.filePath);
-
-      const content = await readFile(fullPath, 'utf-8');
-
+      const path = resolveSourceFile(getWorkspaceRoot(), args.filePath, 'checks');
+      const content = await readFile(path, 'utf-8');
       const result = args.checkId
         ? replaceById(content, args.checkId, args.code)
         : insertBeforeArrayClose(content, args.code);
-      if (result.error) {
-        return { success: false, error: result.error };
-      }
-
-      await writeFile(fullPath, result.content, 'utf-8');
+      if (result.error) return { success: false, error: result.error };
+      await writeFile(path, result.content, 'utf-8');
       return { success: true };
     } catch (e: unknown) {
-      return { success: false, error: e instanceof Error ? e.message : 'Unknown error' };
+      return failed(e);
     }
   });
 
-  // Append new area/location entries to registry files
-  handle('screenEditor:appendRegistry', async (_e, args: {
-    type: 'area' | 'location';
-    entries: Array<{ id: string; name: string; world?: string; areaId?: string }>;
-  }) => {
+  handle('screenEditor:allocateGeography', async (_e, args) => {
     try {
-      const root = getWorkspaceRoot();
-      const file = args.type === 'area' ? 'screens/areas.ts' : 'screens/locations.ts';
-      const fullPath = join(root, 'shared', 'game', 'data', file);
-
-      const content = await readFile(fullPath, 'utf-8');
-
-      const lines = args.entries.map(entry => {
-        if (args.type === 'area') {
-          return `  { id: '${entry.id}', name: '${escapeSingleQuote(entry.name)}', world: '${entry.world ?? 'light'}' },`;
-        }
-        return `  { id: '${entry.id}', name: '${escapeSingleQuote(entry.name)}', areaId: '${entry.areaId}' },`;
-      });
-
-      const result = insertBeforeArrayClose(content, lines.join('\n'));
-      if (result.error) {
-        return { success: false, error: result.error };
-      }
-
-      await writeFile(fullPath, result.content, 'utf-8');
-      return { success: true };
+      return await allocateGeography(getWorkspaceRoot(), args);
     } catch (e: unknown) {
-      return { success: false, error: e instanceof Error ? e.message : 'Unknown error' };
+      return failed(e);
     }
   });
 };

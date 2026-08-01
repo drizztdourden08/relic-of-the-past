@@ -16,7 +16,7 @@ import { withState } from './state-harness';
 test('test-links-house is still the canonical run start', async () => {
   test.setTimeout(300_000);
   await withState('test-links-house', async (r) => {
-    expect(await r.screenId(), 'Link\'s House is room 0x104').toMatch(/^room-104 · INDOOR/);
+    expect(await r.screenId(), 'the starting house is screen-205, the intro variant (room 0x104)').toMatch(/^screen-205 · 0x104 · INDOOR/);
 
     // A follower is what makes this the intro and not a replay of the house later.
     const states = await r.states();

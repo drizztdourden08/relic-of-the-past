@@ -1,8 +1,9 @@
 /* @layer renderer-widgets @kind hook */
 import { useEffect, useMemo, useRef } from 'react';
 import { useGameUIStore } from '../../../../../stores/game-ui-store';
-import { describePalaceMismatch, resolveCurrentScreenDetailed } from '@shared/game/data/screens';
-import type { ScreenMatchResult, VariantGameState } from '@shared/game/data/screens';
+import { describePalaceMismatch } from '@shared/game/logic/queries/palace-fallback';
+import { resolveCurrentScreenDetailed } from '@shared/game/logic/queries/detection';
+import type { ScreenMatchResult, VariantGameState } from '@shared/game/logic/queries/detection';
 import { wasmGetProgressIndicator } from '../../../../../lib/game';
 import { getCompletedChecks } from '../../../../../lib/game/tracker';
 
@@ -28,10 +29,10 @@ const useScreenDetection = (debugTick?: number): ScreenMatchResult | null => {
   useEffect(() => {
     const mismatch = match?.palaceMismatch;
     if (!mismatch || !match) return;
-    const key = `${mismatch.actual}:${match.screen.roomIndex}`;
+    const key = `${mismatch.actual}:${match.screen.gameId.roomIndex}`;
     if (warned.current.has(key)) return;
     warned.current.add(key);
-    console.warn(describePalaceMismatch({ ...mismatch, room: match.screen.roomIndex ?? -1, screenId: match.screen.id }));
+    console.warn(describePalaceMismatch({ ...mismatch, room: match.screen.gameId.roomIndex ?? -1, screenId: match.screen.id }));
   }, [match]);
 
   return match;

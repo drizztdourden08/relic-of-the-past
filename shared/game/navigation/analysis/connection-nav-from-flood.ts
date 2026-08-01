@@ -14,7 +14,7 @@
 
 import type { ConnectionInfo } from '../types';
 import type { ConnectionNavData, ConnectionPointData, RequirementSet, TraversalRequirement } from '../nav-data.types';
-import type { ConnectionTag } from '../../data/connections/tags';
+import type { ConnectionTag } from '../../data';
 import { transitTypeFromTags, isBidirectional } from './connection-updater';
 
 type Edge = ConnectionInfo['edge'];

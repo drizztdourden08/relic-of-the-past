@@ -5,23 +5,17 @@
  */
 import type { SimEvent, SimExit, SimObservation, TriggerAction } from '../types';
 import type { GridPos } from '../../navigation/types';
-import { SCREEN_BY_ID, displayName } from '../../data/screens';
+import { screenLabel } from './screen-label';
 import { cloneSnapshot } from '../detect/flag-snapshot';
 import type { ScreenEdge } from './traversal';
 import { spendKey, spendAnyKey, localRefresh, globalRefresh } from './explorer';
+import { ANY_DUNGEON, keyTargetOf } from '../dungeon-key-target';
 import { KILL_GATE_TAG } from './discover';
 import { arrivalKey, crossingKey } from './regions';
 import { narrative, debug } from './event-log';
 import type { EngineState, SimTarget } from './state';
 
 const SCREEN_CENTER: GridPos = { row: 32, col: 32 };
-
-/** Screen id plus its dataset display name for the log: `lw-2c (Uncle Estate)`.
- *  Display only — traversal never consults the dataset. Unknown ids stay bare. */
-const screenLabel = (id: string): string => {
-  const screen = SCREEN_BY_ID.get(id);
-  return screen ? `${id} (${displayName(id, screen.name)})` : id;
-};
 
 /** "Found chest at 12,20" when the tile is known, else falls back to the room. */
 const foundMsg = (target: SimTarget): string =>
@@ -32,7 +26,15 @@ const foundMsg = (target: SimTarget): string =>
 const spendKeysForEdge = (s: EngineState, edge: ScreenEdge): void => {
   for (const group of edge.requirements) {
     for (const token of group) {
-      if (token.startsWith('smallkey:')) spendKey(s, token.slice('smallkey:'.length));
+      if (!token.startsWith('smallkey:')) continue;
+      const target = keyTargetOf(token.slice('smallkey:'.length));
+      // A wildcard token spends nothing: it names no dungeon, so there is no
+      // bucket to draw from. That is a real leak — the static graph lets a run
+      // walk a `barrier:small-key` edge for free — and it is preserved here
+      // rather than quietly changed, because spending would alter what the
+      // simulator can reach. Same family as the unsatisfiable `bigkey:*` in
+      // requirements-map; both want the connections dataset to name the dungeon.
+      if (target && target !== ANY_DUNGEON) spendKey(s, target);
     }
   }
 };
@@ -210,7 +212,7 @@ const interceptTrap = (s: EngineState, obs: SimObservation, events: SimEvent[], 
   s.pending.unshift(target);
   if (target.tile) s.virtual = { ...s.virtual, tile: target.tile };
   const noun = `${target.noun}'s section`;
-  s.currentTarget = { screenId: target.screenId, roomId: target.roomId, key: `trap:${target.screenId}`, action: { type: 'trapShutters', roomId: target.roomId }, label: noun, noun, verb: 'Walking into' };
+  s.currentTarget = { screenId: target.screenId, roomId: target.roomId, key: `trap:${target.screenId}`, role: 'gate', action: { type: 'trapShutters', roomId: target.roomId }, label: noun, noun, verb: 'Walking into' };
   s.preTrigger = cloneSnapshot(obs.flags);
   actions.push(s.currentTarget.action);
   events.push(narrative(s, `Walking into ${target.noun}'s section`));

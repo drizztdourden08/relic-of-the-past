@@ -11,7 +11,10 @@ import { haulAt } from '../../apps/web/src/ui/domains/widgets/simulator/sub-comp
 const stop = (screenId: string, checksAt: number): TrailStop => ({ screenId, epoch: 0, checksAt });
 
 describe('run trail haul', () => {
-  const trail = [stop('lw-2c', 0), stop('room-104', 1), stop('room-080', 1), stop('room-012', 4)];
+  // `screenId` carries a TraversalId (shared/game/simulation/traversal-id.ts) — the
+  // engine's own `ow:<screenIndex>` / `room:<roomIndex>` identity, not a dataset
+  // ScreenId. `haulAt` never inspects the string; these just need to look real.
+  const trail = [stop('ow:44', 0), stop('room:260', 1), stop('room:128', 1), stop('room:18', 4)];
 
   it('credits a stop with the checks earned before leaving it', () => {
     expect(haulAt(trail, 0, 4)).toBe(1);

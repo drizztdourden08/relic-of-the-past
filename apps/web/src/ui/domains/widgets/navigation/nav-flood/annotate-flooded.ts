@@ -9,7 +9,7 @@
 import type { FloodFillResult, GridPos } from '@shared/game/navigation';
 import type { ScreenAnnotations } from '@shared/game/simulation';
 import { annotateScreen } from '../../../../../lib/game/flood';
-import { screenIdForGameId } from '@shared/game/data/screens';
+import { screenIdForGameId } from '@shared/game/logic/queries/game-id';
 
 interface AnnotateArgs {
   fillResults: FloodFillResult[];

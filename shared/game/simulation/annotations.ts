@@ -11,6 +11,7 @@
  * neutral marker — a new mechanic can never ship invisible.
  */
 import type { GridPos } from '../navigation/types';
+import type { CheckId } from '../data';
 
 type AnnotationKind =
   // Pickups & checks
@@ -32,8 +33,15 @@ interface ScreenAnnotation {
   tile: GridPos;
   /** BG layer the thing sits on, when it is layer-specific. */
   layer?: 0 | 1;
-  /** Short human label — "Map Chest", "cell lock #1", "Corridor to Jail Cells". */
+  /** Short human label, resolved for display only — never an identity. */
   label: string;
+  /**
+   * The check this thing IS, when it is one. Without it a standing item has no
+   * check identity, so `state` can only ever say "available" — it cannot know
+   * whether the run already collected it. Identity is the id; `label` is the
+   * rendering of it.
+   */
+  checkId?: CheckId;
   state?: AnnotationState;
   /** Secondary line: item name, destination screen, walk distance. */
   detail?: string;

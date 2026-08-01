@@ -1,6 +1,6 @@
 /* @layer renderer-hud @kind hook */
 import { useGameUIStore } from '../../../../stores/game-ui-store';
-import { getSpritesBase } from '@shared/game/items/sprites';
+import { getSpritesBase } from '@shared/game/logic/queries/item-sprites';
 
 /**
  * SNES native resolution constants.

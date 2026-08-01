@@ -1,6 +1,6 @@
 /* @layer renderer-widgets @kind component */
 import { useState } from 'react';
-import type { InventoryViewMode } from '@shared/game/items/sprites';
+import type { InventoryViewMode } from '@shared/game/data';
 import { Box, Text, SegmentedControl } from '../../../../design-system/primitives';
 import { STORAGE_KEY, VIEW_OPTIONS } from '../inventory.constants';
 

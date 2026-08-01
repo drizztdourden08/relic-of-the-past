@@ -5,7 +5,7 @@
  * HUD reads sprites from this base, so it must always track the ROM in use.
  * Call wherever the active ROM changes (profile select / load / create / boot).
  */
-import { setSpritesBase } from '@shared/game/items/sprites';
+import { setSpritesBase } from '@shared/game/logic/queries/item-sprites';
 import { useSpriteAvailabilityStore } from '../../stores/sprite-availability-store';
 import * as spritesStore from '../storage/sprites-store';
 

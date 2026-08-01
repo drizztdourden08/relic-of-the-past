@@ -7,11 +7,13 @@
  * unattended path the data-correction loop uses.
  */
 import type { SimulatorPort, SimObservation, SimEvent, DetectedCheck, EngineState, SimLocation, SimConfig, SimRunConfig } from '@shared/game/simulation';
+import type { CheckId, ItemId } from '@shared/game/data';
+import { getCheck, getItem } from '@shared/game/data';
 import { createEngine, createEngineState, createRecorder, recordCheck, recordTransition, recordDoorGate, buildEndSummary } from '@shared/game/simulation';
 import type { RecorderState } from '@shared/game/simulation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
 import type { GridPos } from '@shared/game/navigation';
-import { displayNameFor } from './screen-location';
+import { displayNameFor } from './screen-name';
 import { buildObservation, detectFor, floodItems, locationForScreen, waitAfterTrigger } from './observe';
 import type { DetectCache } from './observe';
 import { detectScreenExits } from './screen-exits';
@@ -82,23 +84,30 @@ const describeScreen = (screenId: string): Omit<PathStep, 'observed'> => {
 
 /** A verified check, pinned to WHERE in the walked path it happened. */
 interface CheckLog {
+  checkId: CheckId;
+  /** Resolved for the reader of this log, off the id above. */
   name: string;
   screenId: string;
   /** Index into `path` at the moment it verified. */
   atPathIndex: number;
   step: number;
-  /** Inventory the moment it verified — an item that LEAVES this list between two
-   *  checks was clobbered by something, which no end-of-run total can show. */
+  /** Inventory the moment it verified, as display names for the reader — an item
+   *  that LEAVES this list between two checks was clobbered by something, which
+   *  no end-of-run total can show. */
   items: string[];
 }
+
+/** Item names for a held set, resolved at the point of logging and stored nowhere. */
+const itemNames = (items: ReadonlySet<ItemId>): string[] => [...items].map((id) => getItem(id).randomizerName).sort();
 
 const recordEvents = (recorder: RecorderState, events: SimEvent[], checks: CheckLog[], pathIndex: number, step: number, items: string[]): void => {
   for (const event of events) {
     const detected = (event.data as { detected?: DetectedCheck } | undefined)?.detected;
-    if (!detected?.matchedName) continue;
+    const checkId = detected?.checkId;
+    if (!detected || !checkId) continue;
     const loc = locationForScreen(detected.at.screenId);
-    recordCheck(recorder, { name: detected.matchedName, screenId: detected.at.screenId, roomId: loc?.roomId ?? 0, tile: detected.at.tile });
-    checks.push({ name: detected.matchedName, screenId: detected.at.screenId, atPathIndex: pathIndex, step, items });
+    recordCheck(recorder, { checkId, screenId: detected.at.screenId, roomId: loc?.roomId ?? 0, tile: detected.at.tile });
+    checks.push({ checkId, name: getCheck(checkId).randomizerName, screenId: detected.at.screenId, atPathIndex: pathIndex, step, items });
   }
 };
 
@@ -137,7 +146,7 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
   let state = createEngineState(base.virtual, base.inventory, engineConfig);
   let steps = 0;
   let reachedTarget = false;
-  let item: number | undefined;
+  let item: ItemId | undefined;
   const unsub = port.onItemReceived((id) => { item = id; });
   const cache = new Map<string, DetectedScreen | null>();
 
@@ -146,7 +155,7 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
   const screenFloods: ScreenFloodLog[] = [];
   const visits: VisitLog[] = [];
   const path: PathStep[] = [{ ...describeScreen(state.virtual.screenId), observed: true }];
-  let prevInv: string[] = [...state.inventory].sort();
+  let prevInv: string[] = itemNames(state.inventory);
   const checks: CheckLog[] = [];
   const log: LogLine[] = [];
   /** Does the region-memory path actually fire? Counted from the engine's own events. */
@@ -177,7 +186,7 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
       for (const door of obs.interactables?.doors ?? []) recordDoorGate(recorder, door);
 
       const { actions, events, nextState } = engine.step(state, obs);
-      recordEvents(recorder, events, checks, path.length - 1, steps, [...nextState.inventory].sort());
+      recordEvents(recorder, events, checks, path.length - 1, steps, itemNames(nextState.inventory));
       for (const e of events) {
         if (e.level === 'narrative') log.push({ step: steps, msg: e.msg });
         const m = /^Screen .+? (via .+|at \d+,\d+)$/.exec(e.msg);
@@ -196,7 +205,7 @@ const runSimulation = async (port: SimulatorPort, config: SimRunConfig): Promise
         recordTransition(recorder, prevScreen, nextState.virtual.screenId);
         // 'traversing' means the route has further hops to make, so this screen is
         // being passed through and will never be observed.
-        const inv = [...nextState.inventory].sort();
+        const inv = itemNames(nextState.inventory);
         const gained = inv.filter((i) => !prevInv.includes(i));
         const lost = prevInv.filter((i) => !inv.includes(i));
         prevInv = inv;

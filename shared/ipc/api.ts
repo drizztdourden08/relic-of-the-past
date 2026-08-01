@@ -37,10 +37,10 @@ interface ShadowCastingApi {
 }
 
 interface ScreenEditorApi {
-  writeRegion: InvokeContract['screenEditor:writeScreen'];
+  writeScreen: InvokeContract['screenEditor:writeScreen'];
   writeConnections: InvokeContract['screenEditor:writeConnections'];
   writeCheck: InvokeContract['screenEditor:writeCheck'];
-  appendRegistry: InvokeContract['screenEditor:appendRegistry'];
+  allocateGeography: InvokeContract['screenEditor:allocateGeography'];
 }
 
 // Non-IPC helpers exposed on window.api (process flags + pure renderer helpers).

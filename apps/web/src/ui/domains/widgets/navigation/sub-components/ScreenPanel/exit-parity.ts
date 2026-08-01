@@ -9,12 +9,14 @@
  * signature of a screen the run will never leave that way, which used to be
  * invisible in the widget.
  *
- * Comparison is on the screen NUMBER, not on an id string. An indoor screen id is
- * keyed by palace+room (`hc-0x80`) and cannot be synthesized from a room number, so
- * matching ids meant every indoor edge looked like a mismatch.
+ * Comparison is on the screen NUMBER, not on an id string. A record id is a frozen
+ * sequential id with no native value in it, so it cannot be derived from a room
+ * number — matching ids directly meant every indoor edge looked like a mismatch.
  */
 import type { ScreenAnnotation } from '@shared/game/simulation';
-import { SCREEN_BY_ID, gameIdLabel } from '@shared/game/data/screens';
+import { getScreen } from '@shared/game/data';
+import type { ScreenId } from '@shared/game/data';
+import { gameIdLabel, gameScreenIdOf } from '@shared/game/logic/queries/game-id';
 
 interface EdgeLike {
   targetScreen: number;
@@ -38,8 +40,12 @@ interface ExitParity {
 const screenLabel = (screen: number, isIndoors: boolean, palace?: number): string =>
   gameIdLabel(isIndoors ? { kind: 'room', room: screen, palace } : { kind: 'overworld', screen });
 
-/** The screen number an exit's target id refers to (roomIndex doubles as the OW index). */
-const targetNumber = (target: string): number | undefined => SCREEN_BY_ID.get(target)?.roomIndex;
+/** The screen number an exit's target id refers to (native room index or OW index). */
+const targetNumber = (target: string): number | undefined => {
+  const gameId = gameScreenIdOf(getScreen(target as ScreenId));
+  if (!gameId) return undefined;
+  return gameId.kind === 'overworld' ? gameId.screen : gameId.room;
+};
 
 const compareExitsToEdges = (
   exits: readonly ScreenAnnotation[],

@@ -1,0 +1,16 @@
+/* @layer renderer-app @kind style */
+
+.record-link {
+  color: var(--c-gold-bright);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.record-link:hover {
+  text-decoration: underline;
+}
+
+.record-link--empty {
+  color: var(--c-text-faint);
+  cursor: default;
+}

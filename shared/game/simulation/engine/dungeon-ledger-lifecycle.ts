@@ -7,7 +7,7 @@
  * than adding a second reset mechanism.
  */
 import type { SimEvent } from '../types';
-import { dungeonGroupForScreen, dungeonGroupName } from '../../data/screens/dungeon-group';
+import { dungeonGroupForScreen, dungeonGroupName } from '../../logic/queries/dungeon-group';
 import { narrative } from './event-log';
 import type { EngineState } from './state';
 

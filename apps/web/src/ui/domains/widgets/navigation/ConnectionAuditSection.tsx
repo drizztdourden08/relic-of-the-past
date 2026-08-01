@@ -27,7 +27,7 @@ const ConnectionAuditSection = ({ badFindings, addFindings }: ConnectionAuditSec
             ⚠ Bad connection{badFindings.length > 1 ? 's' : ''} detected (from in-game data)
           </Box>
           {badFindings.map(f => (
-            <ConnectionFindingRow key={`${f.kind}-${f.from}-${f.to}`} finding={f} />
+            <ConnectionFindingRow key={`${f.kind}-${f.fromScreenId}-${f.toScreenId}`} finding={f} />
           ))}
         </Box>
       )}
@@ -35,7 +35,7 @@ const ConnectionAuditSection = ({ badFindings, addFindings }: ConnectionAuditSec
         <Box style={S.section}>
           <Box style={AUDIT_S.sectionTitleAdd}>Add detected connections</Box>
           {addFindings.map(f => (
-            <ConnectionFindingRow key={`${f.kind}-${f.from}-${f.to}`} finding={f} />
+            <ConnectionFindingRow key={`${f.kind}-${f.fromScreenId}-${f.toScreenId}`} finding={f} />
           ))}
         </Box>
       )}

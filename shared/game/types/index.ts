@@ -1,8 +1,6 @@
 /* @layer shared-game @kind barrel */
 export type {
   BundleLayout,
-  CheckDefinition,
-  CheckType,
   DungeonContext,
   DungeonScreen,
   InteriorContext,
@@ -10,7 +8,6 @@ export type {
   InteriorScreen,
   OverworldContext,
   OverworldScreen,
-  Requirement,
   ScreenBase,
   ScreenBundle,
   ScreenConnection,

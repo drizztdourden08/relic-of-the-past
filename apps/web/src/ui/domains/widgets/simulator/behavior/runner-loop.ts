@@ -22,12 +22,13 @@ interface SimLogSink {
 
 /** One detect per screen+epoch — the flood result feeds BOTH the log and traversal. */
 
-/** Feeds the DetectedCheck an event carried into the recorder so unmatched checks surface as dataset suggestions. */
+/** Feeds the DetectedCheck an event carried into the recorder so unmatched checks
+ *  surface as dataset suggestions — an unidentified diff records a null checkId,
+ *  which is exactly what the suggestion builder looks for. */
 const recordDetectedCheck = (recorder: RecorderState, detected: DetectedCheck): void => {
-  if (!detected.matchedName) return;
   const loc = locationForScreen(detected.at.screenId);
   recordCheck(recorder, {
-    name: detected.matchedName,
+    checkId: detected.checkId ?? null,
     screenId: detected.at.screenId,
     roomId: loc?.roomId ?? 0,
     tile: detected.at.tile,

@@ -6,20 +6,20 @@
  * into an actionable target (a standing item, an NPC check) is recorded the
  * first time it is seen. Gates — doors, cracked walls, switches — are never
  * owed themselves; they only explain why something else is blocked.
+ *
+ * Which of the two a target is comes off `SimTarget.role`. It used to come from
+ * matching the target's English noun against a word list, so the ledger's answer
+ * to "does this dungeon still owe something" depended on the wording of a log
+ * label — reword "key door" and every locked door became a check the run owed.
  */
 import type { SimObservation } from '../types';
-import { canonicalDungeon, keyAvailable } from './explorer';
+import type { DungeonId } from '../../data';
+import { keyAvailable } from './explorer';
 import { chestKey, spriteKey } from './discover';
 import { BOMBABLE_ATTR_MIN, BOMBABLE_ATTR_MAX } from './discover-bombs';
-import { dungeonGroupForScreen, dungeonNameForScreen } from '../../data/screens/dungeon-group';
+import { dungeonGroupForScreen, dungeonForScreen } from '../../logic/queries/dungeon-group';
 import { ensureLedger, upsertOwed, pruneDoneChecks } from './dungeon-ledger';
 import type { EngineState, SimTarget } from './state';
-
-/** Nouns discoverTargets assigns to gates and mechanisms rather than checks. */
-const GATE_NOUNS = new Set([
-  'cracked wall', 'key door', 'big key door', 'bombable wall', 'cell lock',
-  'pull switch', 'the princess', 'the princess to the priest', 'guards',
-]);
 
 /** Any bombable-attribute tile still standing, ignoring reach — a wall the
  *  flood already treats as impassable never shows up as a target without bombs. */
@@ -32,12 +32,15 @@ const hasUnblastedWall = (obs: SimObservation): boolean => {
 
 /** Best-effort reason a present-but-not-actionable check is blocked, from the
  *  same gates discoverTargets already checks for doors/walls/kills. */
-const guessBlocker = (state: EngineState, obs: SimObservation, dungeon: string): string | undefined => {
+const guessBlocker = (state: EngineState, obs: SimObservation, dungeon: DungeonId | null): string | undefined => {
   const inter = obs.interactables;
   if (!state.reachTokens.has('bombs')
     && (hasUnblastedWall(obs) || (inter?.doors.some(d => d.kind === 'bombable' && !d.opened) ?? false))) {
     return 'bombs';
   }
+  // Outside a dungeon there is no key bucket to be short of, so a locked door
+  // there explains nothing and no token is owed.
+  if (!dungeon) return undefined;
   if (inter?.doors.some(d => d.kind === 'small-key' && !d.opened) && !keyAvailable(state, dungeon)) {
     return `smallkey:${dungeon}`;
   }
@@ -68,7 +71,7 @@ const updateDungeonLedger = (state: EngineState, obs: SimObservation, targets: S
   const openedChests = new Set(inter.chests.filter(c => c.opened).map(chestKey));
   ledger.owed = ledger.owed.filter(o => !openedChests.has(o.checkId));
 
-  const dungeon = canonicalDungeon(dungeonNameForScreen(state.virtual.screenId) ?? '');
+  const dungeon = dungeonForScreen(state.virtual.screenId);
   const actionable = new Set(targets.map(t => t.key));
   const handled = new Set<string>();
 
@@ -88,7 +91,7 @@ const updateDungeonLedger = (state: EngineState, obs: SimObservation, targets: S
   }
 
   for (const target of targets) {
-    if (GATE_NOUNS.has(target.noun) || handled.has(target.key)) continue;
+    if (target.role === 'gate' || handled.has(target.key)) continue;
     upsertOwed(ledger, target.key, target.roomId, undefined);
   }
 };

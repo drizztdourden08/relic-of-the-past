@@ -5,6 +5,7 @@
  * `DataWorldPort` replays the recorded dataset offline. The engine only ever
  * speaks to this interface.
  */
+import type { ItemId } from '../data';
 import type {
   SimObservation,
   SimLocation,
@@ -42,7 +43,9 @@ interface SimulatorPort {
   /** Memento: snapshot pre-run state so it can be restored afterwards. */
   snapshotState: () => Promise<ArrayBuffer>;
   restoreState: (buf: ArrayBuffer) => Promise<void>;
-  onItemReceived: (cb: (itemId: number) => void) => () => void;
+  /** The item that was granted, by dataset id. The tracker resolves the native
+   *  receive index to a record already, so nothing downstream re-derives it. */
+  onItemReceived: (cb: (itemId: ItemId) => void) => () => void;
 }
 
 export type { SimulatorPort, SimLocation, ScreenGridBundle };

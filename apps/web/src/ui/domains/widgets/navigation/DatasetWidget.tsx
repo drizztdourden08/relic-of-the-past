@@ -9,7 +9,6 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { useNavigationOverlayStore } from '../../../../stores/navigation-overlay-store';
-import { getDungeonName } from '@shared/game/data/screens/game-values';
 import { wasmGetProgressIndicator, wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetRoomStairInfo, wasmGetFallHoles, wasmGetAreaHeads } from '../../../../lib/game';
 import { useScreenDataStatus, useConnectionStatus } from './useDatasetStatus';
 import { describeConnectionTiles } from './connection-tile-display';
@@ -43,10 +42,6 @@ const DatasetWidgetContent = () => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => window.api.saveConnectionReview(next), 300);
   }, []);
-
-  const locationKey = isIndoors
-    ? `room-${roomIndex.toString(16).padStart(3, '0')}`
-    : `${isDarkWorld ? 'dw' : 'lw'}-${overworldScreenIndex.toString(16).padStart(2, '0')}`;
 
   // Screen detection
   const detectionResult = useScreenDetection();
@@ -107,18 +102,26 @@ const DatasetWidgetContent = () => {
   const incompleteConnCount = useMemo(() => {
     const screenId = screenStatus.screen?.id ?? null;
     return connStatus.existingConnections.reduce((n, c) => {
-      const tileDesc = describeConnectionTiles(c, floodConnections, screenId);
-      return connectionIssues(c, tileDesc).length > 0 ? n + 1 : n;
+      // describeConnectionTiles/connectionIssues take the editor's plain
+      // {from,to,tags} shape, not ConnectionRecord's fromScreenId/toScreenId.
+      const conn = { from: c.fromScreenId, to: c.toScreenId, tags: c.tags };
+      const tileDesc = describeConnectionTiles(conn, floodConnections, screenId);
+      return connectionIssues(conn, tileDesc).length > 0 ? n + 1 : n;
     }, 0);
   }, [connStatus.existingConnections, floodConnections, screenStatus.screen]);
   const realTransitions = useRealTransitions(isIndoors, roomIndex, floodConnections, overworldScreenIndex);
   const realAvailable = isIndoors ? screenStatus.screen != null : floodConnections.length > 0;
   const audit = useConnectionAudit({ screenId: screenStatus.screen?.id ?? null, unmatched: connStatus.unmatched, realTransitions, realAvailable, floodConnections });
 
-  // Review helpers
-  const locationReview = reviewData[locationKey] ?? { status: 'neutral' as ReviewStatus, connections: {} };
+  // Review helpers. Keyed by the screen's frozen id — a review note follows the
+  // record, not a synthesized index string. An unrecognised screen has nothing to
+  // key on, so reviewing is simply unavailable until the screen is in the dataset.
+  const locationKey = screenStatus.screen?.id ?? null;
+  const locationReview = (locationKey ? reviewData[locationKey] : undefined)
+    ?? { status: 'neutral' as ReviewStatus, connections: {} };
 
   const setLocStatus = (status: ReviewStatus) => {
+    if (!locationKey) return;
     setReviewData(prev => {
       const entry = prev[locationKey] ?? { status: 'neutral', connections: {} };
       const next = { ...prev, [locationKey]: { ...entry, status } };
@@ -127,6 +130,7 @@ const DatasetWidgetContent = () => {
     });
   };
   const setLocComment = (comment: string) => {
+    if (!locationKey) return;
     setReviewData(prev => {
       const entry = prev[locationKey] ?? { status: 'neutral' as ReviewStatus, connections: {} };
       const next = { ...prev, [locationKey]: { ...entry, comment } };
@@ -162,13 +166,13 @@ const DatasetWidgetContent = () => {
         open={screenEditorOpen}
         onClose={() => setScreenEditorOpen(false)}
         existingScreen={screenStatus.screen}
-        gameState={{ roomIndex, palaceIndex, isIndoors, isDarkWorld }}
+        gameState={{ roomIndex, overworldIndex: overworldScreenIndex, palaceIndex, isIndoors, isDarkWorld }}
       />
       <ConnectionEditorDialog
         open={connEditorOpen}
         onClose={() => setConnEditorOpen(false)}
         screenId={screenStatus.screen?.id ?? null}
-        screenMeta={screenStatus.screen ? { type: screenStatus.screen.type, dungeon: screenStatus.screen.type === 'dungeon' ? getDungeonName(screenStatus.screen.dungeon.palaceIndex) : undefined, isDarkWorld } : null}
+        screen={screenStatus.screen}
         existingConnections={connStatus.existingConnections}
         unmatchedConnections={connStatus.unmatched}
       />

@@ -41,12 +41,14 @@ describe('annotation grouping', () => {
   });
 });
 
-// REAL screen ids — an indoor id is keyed by palace+room ("hc-0x80"), so a made-up
-// "room-080" resolves to nothing. Using fake ids here is what let the widget ship
-// with every indoor exit missing.
+// REAL screen ids — an indoor screen's gameId is keyed by palace+room, so a
+// made-up id resolves to nothing. Using fake ids here is what let the widget
+// ship with every indoor exit missing. 'screen-133' is the real dataset id
+// for the Jail Cell (room 0x80, palace 0x02) — looked up via
+// scripts/generate-ids/output/id-manifest.json.
 describe('exit / edge parity', () => {
   it('reports nothing when the two lists agree', () => {
-    const exits = [at('exit', 'Jail Cell', { target: 'hc-0x80' })];
+    const exits = [at('exit', 'Jail Cell', { target: 'screen-133' })];
     const parity = compareExitsToEdges(exits, [{ targetScreen: 0x80, edge: 'north' }], true, 1);
     expect(parity).toEqual({ edgesWithoutExit: [], exitsWithoutEdge: [] });
   });
@@ -57,7 +59,7 @@ describe('exit / edge parity', () => {
   });
 
   it('names a door/stair exit that is not a border edge', () => {
-    const exits = [at('exit', 'Jail Cell', { target: 'hc-0x80' })];
+    const exits = [at('exit', 'Jail Cell', { target: 'screen-133' })];
     expect(compareExitsToEdges(exits, [], true, 1).exitsWithoutEdge).toEqual(['Jail Cell']);
 
     // Without the palace, room 0x80 resolves to a CAVE that shares the number —

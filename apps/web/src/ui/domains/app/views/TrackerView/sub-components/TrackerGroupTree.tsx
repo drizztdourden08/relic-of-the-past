@@ -1,12 +1,13 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
 import { Box, Text, Image, Button } from '../../../../../design-system/primitives';
-import type { CheckDefinition } from '@shared/game/types';
+import type { CheckRecord, ItemId } from '@shared/game/data';
+import { getItem } from '@shared/game/data';
 import type { CheckStatus } from '@shared/game/logic/eval';
-import type { GroupNode } from '@shared/game/checks/grouping';
+import type { GroupNode } from '@shared/game/logic/queries/check-grouping';
 import type { ViewMode } from './TrackerFilters';
 import { TrackerCheckRow } from './TrackerCheckRow';
-import { getItemSprite } from '@shared/game/items/sprites';
+import { getItemSprite } from '@shared/game/logic/queries/item-sprites';
 import '../TrackerView.css';
 
 interface TrackerGroupTreeProps {
@@ -72,15 +73,15 @@ const TrackerGroupSection = ({ node, statuses, viewMode, depth }: TrackerGroupTr
   );
 };
 
-const CheckList = ({ checks, statuses, viewMode }: { checks: CheckDefinition[]; statuses: Map<string, CheckStatus>; viewMode: ViewMode }) => {
+const CheckList = ({ checks, statuses, viewMode }: { checks: CheckRecord[]; statuses: Map<string, CheckStatus>; viewMode: ViewMode }) => {
   if (viewMode === 'visual') {
     return (
       <Box className="tracker-checks--visual">
         {checks.flatMap(check => {
           const status = statuses.get(check.id) ?? 'blocked';
-          if (Array.isArray(check.vanillaItem)) {
-            return check.vanillaItem.map((item, i) => (
-              <CheckCard key={`${check.id}__${i}`} check={check} status={status} itemOverride={item} />
+          if (check.vanillaItemIds.length > 1) {
+            return check.vanillaItemIds.map((itemId, i) => (
+              <CheckCard key={`${check.id}__${i}`} check={check} status={status} itemOverride={itemId} />
             ));
           }
           return [<CheckCard key={check.id} check={check} status={status} />];
@@ -93,14 +94,14 @@ const CheckList = ({ checks, statuses, viewMode }: { checks: CheckDefinition[]; 
     <Box className="tracker-checks--list">
       {checks.flatMap(check => {
         const status = statuses.get(check.id) ?? 'blocked';
-        if (Array.isArray(check.vanillaItem) && viewMode === 'detailed') {
-          return check.vanillaItem.map((item, i) => (
+        if (check.vanillaItemIds.length > 1 && viewMode === 'detailed') {
+          return check.vanillaItemIds.map((itemId, i) => (
             <TrackerCheckRow
               key={`${check.id}__${i}`}
               check={check}
               status={status}
               detailed
-              itemOverride={item}
+              itemOverride={itemId}
             />
           ));
         }
@@ -117,9 +118,10 @@ const CheckList = ({ checks, statuses, viewMode }: { checks: CheckDefinition[]; 
   );
 };
 
-const CheckCard = ({ check, status, itemOverride }: { check: CheckDefinition; status: CheckStatus; itemOverride?: string }) => {
-  const displayItem = itemOverride ?? (Array.isArray(check.vanillaItem) ? check.vanillaItem.join(', ') : check.vanillaItem);
-  const sprite = displayItem ? getItemSprite(displayItem) : undefined;
+const CheckCard = ({ check, status, itemOverride }: { check: CheckRecord; status: CheckStatus; itemOverride?: ItemId }) => {
+  const itemId = itemOverride ?? check.vanillaItemIds[0];
+  const displayItem = itemId ? getItem(itemId).randomizerName : undefined;
+  const sprite = itemId ? getItemSprite(itemId) : undefined;
 
   return (
     <Box className={`tracker-card tracker-card--${status}`}>
@@ -129,7 +131,7 @@ const CheckCard = ({ check, status, itemOverride }: { check: CheckDefinition; st
       {!sprite && <Box className="tracker-card__sprite-placeholder" />}
       <Box className="tracker-card__text">
         <Text className="tracker-card__item-name">{displayItem ?? '???'}</Text>
-        <Text className="tracker-card__check-name">{check.name}</Text>
+        <Text className="tracker-card__check-name">{check.randomizerName}</Text>
       </Box>
     </Box>
   );

@@ -7,13 +7,14 @@
  */
 import { Box, Button, Text } from '@ds/primitives';
 import type { SimOutcome, SoftlockReport, DatasetSuggestion } from '@shared/game/simulation';
-import { CHECK_BY_ID } from '@shared/game/checks';
+import { getCheck } from '@shared/game/data';
+import type { CheckId } from '@shared/game/data';
 import { SuggestionCard } from './SuggestionCard';
 import type { ApplyResult } from '../behavior/useDatasetSuggestions';
 
 interface ResultsPanelProps {
   outcome: SimOutcome | null;
-  stopAtCheckId: string;
+  stopAtCheckId: CheckId | '';
   softlockReport: SoftlockReport | null;
   suggestions: DatasetSuggestion[];
   canApplyCheck: boolean;
@@ -23,10 +24,10 @@ interface ResultsPanelProps {
 
 type BannerTone = 'success' | 'danger';
 
-const resolveStopName = (stopAtCheckId: string): string =>
-  (stopAtCheckId ? CHECK_BY_ID.get(stopAtCheckId)?.name : undefined) ?? stopAtCheckId ?? 'stop check';
+const resolveStopName = (stopAtCheckId: CheckId | ''): string =>
+  stopAtCheckId ? getCheck(stopAtCheckId).randomizerName : 'stop check';
 
-const bannerFor = (outcome: SimOutcome, stopAtCheckId: string): { tone: BannerTone; icon: string; title: string; detail: string } => {
+const bannerFor = (outcome: SimOutcome, stopAtCheckId: CheckId | ''): { tone: BannerTone; icon: string; title: string; detail: string } => {
   switch (outcome) {
     case 'stopped-at-check':
       return { tone: 'success', icon: '✓', title: 'Success', detail: `Reached ${resolveStopName(stopAtCheckId)}` };

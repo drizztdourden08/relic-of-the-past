@@ -2,13 +2,14 @@
 import { describe, it, expect } from 'vitest';
 import type { SimSprite } from '../../shared/game/simulation/types';
 import { planTrigger, planSpriteTrigger } from '../../shared/game/simulation/trigger/trigger-plans';
-import { CHECK_NPC_FLAGS } from '../../shared/game/checks/flags';
+import { find } from '../../shared/game/data';
 
 // ─── Overworld sprite → TriggerAction mapping ────────────────────────────────
 // Outdoor discovery routes every screen sprite through the same kind-based
 // dispatch the indoor path uses: NPC-kind sprites resolve their flag/item payload
-// from CHECK_NPC_FLAGS; anything else is not derivable data-free yet and maps to
-// null so the engine skips it (no invented overworld mask).
+// from the check records' own gameId by spriteType; anything else is not
+// derivable data-free yet and maps to null so the engine skips it (no invented
+// overworld mask).
 
 const KING_ZORA_TYPE = 0x52;
 const ZORAS_DOMAIN_SCREEN = 0x0f;
@@ -22,8 +23,8 @@ const owSprite = (spriteType: number, kind: SimSprite['kind']): SimSprite => ({
 });
 
 describe('planSpriteTrigger — outdoor sprites', () => {
-  it('maps an overworld NPC sprite to its npc trigger via CHECK_NPC_FLAGS', () => {
-    const cfg = Object.values(CHECK_NPC_FLAGS).find(c => c.spriteType === KING_ZORA_TYPE);
+  it("maps an overworld NPC sprite to its npc trigger via the check's own gameId", () => {
+    const cfg = find('check', c => c.gameId.spriteType === KING_ZORA_TYPE)[0]?.gameId;
     expect(cfg).toBeDefined();
 
     const action = planSpriteTrigger(owSprite(KING_ZORA_TYPE, 'npc'));
@@ -39,7 +40,7 @@ describe('planSpriteTrigger — outdoor sprites', () => {
     expect(planSpriteTrigger(owSprite(0x00, 'other'))).toBeNull();
   });
 
-  it('returns null for an NPC-kind sprite with no matching CHECK_NPC_FLAGS config', () => {
+  it('returns null for an NPC-kind sprite with no matching check record', () => {
     expect(planSpriteTrigger(owSprite(0xfe, 'npc'))).toBeNull();
   });
 

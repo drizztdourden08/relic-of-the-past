@@ -1,50 +1,48 @@
 /* @layer shared-game @kind logic */
 /**
- * Best-effort naming of a raw flag diff, using the existing flag tables. This
- * is NAMING only — detection already happened via byte-diffing. Any diff that
- * matches no known check is reported as `unknown-check` so the recorder can
- * propose a dataset fix.
+ * Identifies a raw flag diff as one of the known checks, using the check records'
+ * own gameId. This is IDENTIFICATION only — detection already happened via
+ * byte-diffing. A diff that matches no known check yields nothing, so the recorder
+ * can propose a dataset fix.
+ *
+ * Every matcher returns the RECORD, so the caller holds the check's id. They used
+ * to return `randomizerName`, which a lookup table then had to turn back into a
+ * record — and that table was keyed by id AND name at once, so with 11 dungeons
+ * each holding a "Big Chest" the later name won and 57 checks became unreachable:
+ * one dungeon's chest resolved to another dungeon's record, and its key with it.
  */
-import type { CheckDefinition } from '../../types';
 import type { FlagDiff } from '../types';
-import {
-  CHECK_ROOM_FLAGS,
-  DIRECT_ROOM_FLAGS,
-  CHEST_OPEN_MASKS,
-  CHECK_OVERWORLD_FLAGS,
-  CHECK_NPC_FLAGS,
-  CHECK_EVENT_FLAGS,
-} from '../../checks/flags';
-import { ALL_CHECKS } from '../../checks';
+import { find } from '../../data';
+import type { CheckRecord } from '../../data';
 
-const UNKNOWN = 'unknown-check';
+const CHEST_OPEN_MASKS = [0x10, 0x20, 0x40, 0x80, 0x100, 0x200, 0x400] as const;
 
-// Keyed by BOTH id and display name — flag matchers return canonical ids
-// ("Sewers - Dark Cross") while some callers look up by short name.
-const CHECK_BY_NAME = new Map<string, CheckDefinition>(ALL_CHECKS.flatMap(c => [[c.id, c], [c.name, c]] as [string, CheckDefinition][]));
+const ALL_CHECKS = find('check', () => true);
 
-const matchRoom = (diff: FlagDiff): string | null => {
-  for (const [name, entry] of Object.entries(CHECK_ROOM_FLAGS)) {
-    if (entry.roomId === diff.index && (CHEST_OPEN_MASKS[entry.chestIndex] & diff.setBits) !== 0) return name;
+const matchRoom = (diff: FlagDiff): CheckRecord | undefined => {
+  for (const c of ALL_CHECKS) {
+    const { roomId, chestIndex, mask } = c.gameId;
+    if (roomId !== diff.index) continue;
+    if (chestIndex !== undefined && (CHEST_OPEN_MASKS[chestIndex] & diff.setBits) !== 0) return c;
+    if (mask !== undefined && chestIndex === undefined && (mask & diff.setBits) !== 0) return c;
   }
-  for (const [name, entry] of Object.entries(DIRECT_ROOM_FLAGS)) {
-    if (entry.roomId === diff.index && (entry.mask & diff.setBits) !== 0) return name;
-  }
-  return null;
+  return undefined;
 };
 
-const matchOverworld = (diff: FlagDiff): string | null => {
-  for (const [name, entry] of Object.entries(CHECK_OVERWORLD_FLAGS)) {
-    if (entry.screen === diff.index && (entry.mask & diff.setBits) !== 0) return name;
+const matchOverworld = (diff: FlagDiff): CheckRecord | undefined => {
+  for (const c of ALL_CHECKS) {
+    const { owScreen, mask } = c.gameId;
+    if (owScreen === diff.index && mask !== undefined && (mask & diff.setBits) !== 0) return c;
   }
-  return null;
+  return undefined;
 };
 
-const matchProgress = (diff: FlagDiff): string | null => {
-  for (const [name, cfg] of Object.entries(CHECK_NPC_FLAGS)) {
-    if (cfg.bufferIndex !== diff.index) continue;
-    const hit = cfg.mask === 0xff ? diff.after !== 0 : (cfg.mask & diff.setBits) !== 0;
-    if (hit) return name;
+const matchProgress = (diff: FlagDiff): CheckRecord | undefined => {
+  for (const c of ALL_CHECKS) {
+    const { bufferIndex, mask, roomId } = c.gameId;
+    if (bufferIndex !== diff.index || mask === undefined || roomId !== undefined) continue;
+    const hit = mask === 0xff ? diff.after !== 0 : (mask & diff.setBits) !== 0;
+    if (hit) return c;
   }
   return matchEvent(diff);
 };
@@ -53,33 +51,34 @@ const matchProgress = (diff: FlagDiff): string | null => {
  * Progression events are THRESHOLD reads of the progress buffer, not bitmasks
  * (sram_progress_indicator 1 = post-uncle, 2 = the rescue completed). A diff
  * names an event only when it CROSSES that threshold, and the highest crossed
- * threshold wins — reaching 2 is the COMPLETED rescue, not the started one. Ids
- * are translated to display names so the log reads like every other check.
+ * threshold wins — reaching 2 is the COMPLETED rescue, not the started one.
  */
-const matchEvent = (diff: FlagDiff): string | null => {
-  const crossed = Object.entries(CHECK_EVENT_FLAGS)
-    .filter(([, cfg]) => cfg.bufferIndex === diff.index)
-    .flatMap(([id, cfg]) => (Array.isArray(cfg.value) ? cfg.value : [cfg.value]).map((v) => ({ id, v, compare: cfg.compare })))
+const matchEvent = (diff: FlagDiff): CheckRecord | undefined => {
+  const crossed = ALL_CHECKS
+    .filter(c => c.gameId.bufferIndex === diff.index && c.gameId.compare !== undefined)
+    .flatMap(c => {
+      const values = Array.isArray(c.gameId.value) ? c.gameId.value : c.gameId.value !== undefined ? [c.gameId.value] : [];
+      return values.map(v => ({ check: c, v, compare: c.gameId.compare }));
+    })
     .filter(({ v, compare }) => (compare === 'eq' || compare === 'any-of' ? diff.after === v : diff.before < v && diff.after >= v))
     .sort((a, b) => b.v - a.v);
-  const best = crossed[0];
-  return best ? (CHECK_BY_NAME.get(best.id)?.name ?? best.id) : null;
+  return crossed[0]?.check;
 };
 
-/** Name a single diff, or null if nothing matches. */
-const matchDiff = (diff: FlagDiff): string | null => {
+/** The check a single diff identifies, or undefined when nothing matches. */
+const matchDiff = (diff: FlagDiff): CheckRecord | undefined => {
   if (diff.kind === 'room') return matchRoom(diff);
   if (diff.kind === 'overworld') return matchOverworld(diff);
   return matchProgress(diff);
 };
 
-/** First named match across a set of diffs; falls back to 'unknown-check'. */
-const matchDiffs = (diffs: FlagDiff[]): { name: string; matched?: CheckDefinition } => {
+/** First identified check across a set of diffs, or undefined when none match. */
+const matchDiffs = (diffs: FlagDiff[]): CheckRecord | undefined => {
   for (const diff of diffs) {
-    const name = matchDiff(diff);
-    if (name) return { name, matched: CHECK_BY_NAME.get(name) };
+    const matched = matchDiff(diff);
+    if (matched) return matched;
   }
-  return { name: UNKNOWN };
+  return undefined;
 };
 
-export { matchDiff, matchDiffs, UNKNOWN };
+export { matchDiff, matchDiffs };

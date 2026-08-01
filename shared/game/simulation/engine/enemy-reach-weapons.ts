@@ -5,8 +5,16 @@
  * resolved damage class, and its reach. Thrown bombs are NOT modelled here —
  * their parabolic travel distance was not pinned down; only the placed
  * (contact) bomb is represented.
+ *
+ * Every match is on an `ItemId`. This used to turn the sword ids into display
+ * names and then ask whether any inventory entry CONTAINED one, which meant a
+ * renamed record made the run silently swordless — and the reason the substring
+ * was there (the uncle's gift is a combined sword-and-shield record) had already
+ * stopped applying, because the tracker's sword ladder adds every rung below the
+ * one held, so the bare tier-1 sword is always in the set.
  */
-import { itemLabel } from '../../items';
+import type { ItemId, RangeProfile } from '../../data';
+import { ITEM_GROUPS, getItem } from '../../data';
 import type { CombatTables } from '../types';
 import type { Weapon } from './enemy-reach';
 
@@ -17,45 +25,49 @@ const CONTACT_RADIUS = 2;
  *  Swing-timing adjustments on top of these are not modelled. */
 const SWORD_BASE_DAMAGE_CLASS = [1, 2, 3, 4];
 
-/** Sword item ids in tier order. Identity is the id; the name is only looked up
- *  because the inventory this is matched against is a set of display names. */
-const SWORD_TIER_IDS = [0x49, 0x01, 0x02, 0x03];
-const SWORD_TIER_NAMES = SWORD_TIER_IDS.map((id) => itemLabel(id));
+/** Sword items in tier order — the dataset's own group, which is already ordered
+ *  weakest-first, so no local copy of the tier list exists to drift from it. */
+const SWORD_TIER_IDS: readonly ItemId[] = ITEM_GROUPS.Swords ?? [];
 
 /** Ancilla type for the sword beam (needs a sword above tier 1). Its
  *  near-full-health firing condition is not modelled — the beam is offered
  *  whenever the sword requirement is met. */
 const SWORD_BEAM_ANCILLA = 0x0c;
 
-/** Ancilla-borne weapons keyed by the inventory item name that unlocks them. */
-const ANCILLA_WEAPONS: ReadonlyArray<{ item: string; ancillaType: number; travel: number; label: string }> = [
-  { item: 'Bow', ancillaType: 0x09, travel: Infinity, label: 'bow' },
-  { item: 'Blue Boomerang', ancillaType: 0x05, travel: 8, label: 'boomerang' },
-  { item: 'Red Boomerang', ancillaType: 0x05, travel: 36, label: 'boomerang' },
-  { item: 'Hookshot', ancillaType: 0x1f, travel: 16, label: 'hookshot' },
-  { item: 'Fire Rod', ancillaType: 0x02, travel: Infinity, label: 'fire rod' },
-  { item: 'Ice Rod', ancillaType: 0x0b, travel: Infinity, label: 'ice rod' },
+/** The bomb pickup stands in for "carries bombs" — no record expresses bomb
+ *  capacity (same gap the traversal-token table documents). */
+const BOMB_ITEM_ID: ItemId = 'item-041';
+const PLACED_BOMB_ANCILLA = 0x07;
+
+/**
+ * Ancilla-borne weapons, by the item that unlocks them. The ancilla type and the
+ * travel distance come from that item's own `weapon` profile, so the combat facts
+ * live on the record; only the short log label is stated here.
+ */
+const ANCILLA_WEAPONS: ReadonlyArray<{ itemId: ItemId; label: string }> = [
+  { itemId: 'item-012', label: 'bow' },
+  { itemId: 'item-013', label: 'boomerang' },
+  { itemId: 'item-043', label: 'boomerang' },
+  { itemId: 'item-011', label: 'hookshot' },
+  { itemId: 'item-008', label: 'fire rod' },
+  { itemId: 'item-009', label: 'ice rod' },
 ];
 
-/** True when some inventory entry names this sword tier. The uncle's gift is
- *  tracked as the combined 'Fighter Sword & Shield' grant (item 0x00, id-map.ts)
- *  rather than the bare 'Fighter Sword' name (item 0x49) that a tier-1 sword
- *  found on its own would carry — so this looks for the tier name as a
- *  substring of an entry rather than requiring an exact match. */
-const hasSwordTier = (inventory: Set<string>, name: string): boolean =>
-  [...inventory].some((entry) => entry.includes(name));
-
 /** Highest sword tier (1-4) present in the inventory, 0 when swordless. */
-const swordTier = (inventory: Set<string>): number =>
-  SWORD_TIER_NAMES.reduce((tier, name, i) => (hasSwordTier(inventory, name) ? i + 1 : tier), 0);
+const swordTier = (inventory: ReadonlySet<ItemId>): number =>
+  SWORD_TIER_IDS.reduce((tier, id, i) => (inventory.has(id) ? i + 1 : tier), 0);
 
 /** damageByClass is indexed by damage class, not ancilla type — this is the
  *  ancilla -> damage-class step of the game's two-step lookup. */
 const damageClassFor = (ancillaType: number, tables: CombatTables): number => tables.ancillaDamageClass[ancillaType] ?? 0;
 
+/** How far this weapon's projectile travels, from the record's range profile. */
+const travelOf = (range: RangeProfile): number =>
+  range.kind === 'unbounded' ? Infinity : range.tiles;
+
 /** Every weapon the inventory can bring to bear, with damage classes resolved
  *  against the shared ancilla table. */
-const weaponsFor = (inventory: Set<string>, tables: CombatTables): Weapon[] => {
+const weaponsFor = (inventory: ReadonlySet<ItemId>, tables: CombatTables): Weapon[] => {
   const weapons: Weapon[] = [];
   const tier = swordTier(inventory);
   if (tier > 0) {
@@ -76,14 +88,22 @@ const weaponsFor = (inventory: Set<string>, tables: CombatTables): Weapon[] => {
       label: 'sword beam',
     });
   }
-  if (inventory.has('Bombs')) {
-    weapons.push({ ancillaType: 0x07, damageClass: damageClassFor(0x07, tables), kind: 'contact', travel: CONTACT_RADIUS, label: 'bomb' });
+  if (inventory.has(BOMB_ITEM_ID)) {
+    weapons.push({ ancillaType: PLACED_BOMB_ANCILLA, damageClass: damageClassFor(PLACED_BOMB_ANCILLA, tables), kind: 'contact', travel: CONTACT_RADIUS, label: 'bomb' });
   }
-  for (const w of ANCILLA_WEAPONS) {
-    if (!inventory.has(w.item)) continue;
-    weapons.push({ ancillaType: w.ancillaType, damageClass: damageClassFor(w.ancillaType, tables), kind: 'travelling', travel: w.travel, label: w.label });
+  for (const { itemId, label } of ANCILLA_WEAPONS) {
+    if (!inventory.has(itemId)) continue;
+    const profile = getItem(itemId).weapon;
+    if (!profile) continue;
+    weapons.push({
+      ancillaType: profile.ancillaType,
+      damageClass: damageClassFor(profile.ancillaType, tables),
+      kind: 'travelling',
+      travel: travelOf(profile.range),
+      label,
+    });
   }
   return weapons;
 };
 
-export { weaponsFor, swordTier, CONTACT_RADIUS };
+export { weaponsFor, swordTier, CONTACT_RADIUS, BOMB_ITEM_ID };

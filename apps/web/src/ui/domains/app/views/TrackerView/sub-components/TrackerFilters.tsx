@@ -1,6 +1,6 @@
 /* @layer renderer-components @kind component */
 import { useState } from 'react';
-import type { GroupDimension, StatusFilter, FilterState } from '@shared/game/checks/grouping';
+import type { GroupDimension, StatusFilter, FilterState } from '@shared/game/logic/queries/check-grouping';
 import { Box, TextInput, Button } from '../../../../../design-system/primitives';
 import { TrackerFilterPanels } from './TrackerFilterPanels';
 import '../TrackerView.css';

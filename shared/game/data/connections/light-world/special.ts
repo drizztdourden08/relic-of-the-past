@@ -1,6 +1,7 @@
 /* @layer shared-game @kind data */
-import type { ScreenConnection } from '../../../types';
+/** Split out of the flat seed files by scripts/generate-ids/split-seeds.ts. */
+import type { ConnectionRecord } from '../../types';
 
-const LW_SPECIAL_CONNECTIONS: ScreenConnection[] = [];
+const LW_SPECIAL_CONNECTIONS: ConnectionRecord[] = [];
 
 export { LW_SPECIAL_CONNECTIONS };
