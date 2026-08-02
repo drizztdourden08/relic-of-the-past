@@ -12,7 +12,7 @@ const LW_DUNGEON_TOWER_OF_HERA_SCREENS: ScreenRecord[] = [
     areaId: 'area-008',
     locationId: 'location-029',
     position: { gridX: 7, gridY: 0, floor: 5 },
-    tags: ['env:underground', 'role:boss'],
+    tags: ['tag-003', 'tag-006'],
     status: 'mapped',
     triggerIds: ['actor-041'],
     spawns: [
@@ -28,7 +28,7 @@ const LW_DUNGEON_TOWER_OF_HERA_SCREENS: ScreenRecord[] = [
     areaId: 'area-008',
     locationId: 'location-029',
     position: { gridX: 7, gridY: 1, floor: 4 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-208', tile: { x: 14, y: 22 } },
@@ -51,7 +51,7 @@ const LW_DUNGEON_TOWER_OF_HERA_SCREENS: ScreenRecord[] = [
     areaId: 'area-008',
     locationId: 'location-029',
     position: { gridX: 7, gridY: 2, floor: 2 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-056', tile: { x: 46, y: 18 } },
@@ -72,7 +72,7 @@ const LW_DUNGEON_TOWER_OF_HERA_SCREENS: ScreenRecord[] = [
     areaId: 'area-008',
     locationId: 'location-029',
     position: { gridX: 1, gridY: 3, floor: 1 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-161', tile: { x: 48, y: 52 } },
@@ -98,7 +98,7 @@ const LW_DUNGEON_TOWER_OF_HERA_SCREENS: ScreenRecord[] = [
     areaId: 'area-008',
     locationId: 'location-029',
     position: { gridX: 7, gridY: 7, floor: 0 },
-    tags: ['env:underground', 'role:entrance', 'role:hub'],
+    tags: ['tag-003', 'tag-005', 'tag-009'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-056', tile: { x: 22, y: 18 } },
@@ -118,7 +118,7 @@ const LW_DUNGEON_TOWER_OF_HERA_SCREENS: ScreenRecord[] = [
     areaId: 'area-008',
     locationId: 'location-029',
     position: { gridX: 7, gridY: 8, floor: -1 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     triggerIds: ['actor-049', 'actor-024'],
     spawns: [
@@ -145,7 +145,7 @@ const LW_DUNGEON_TOWER_OF_HERA_SCREENS: ScreenRecord[] = [
     areaId: 'area-008',
     locationId: 'location-029',
     position: { gridX: 7, gridY: 10, floor: 3 },
-    tags: ['env:underground', 'role:safe'],
+    tags: ['tag-003', 'tag-013'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 12, y: 16 } },

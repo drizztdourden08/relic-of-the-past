@@ -82,12 +82,17 @@
 }
 
 /* ─── Dropdown content (rendered in portal) ─── */
+
+/* The shell only clips and positions; the options list inside it is what
+   scrolls, so the search box can stay put without needing to be sticky. */
 .select-content {
   position: fixed;
   z-index: var(--z-popover);
+  display: flex;
+  flex-direction: column;
   min-width: 180px;
   max-height: 280px;
-  overflow-y: auto;
+  overflow: hidden;
   background: var(--c-surface);
   border: 1px solid var(--c-border-strong);
   border-radius: var(--radius-md);
@@ -96,26 +101,22 @@
   pointer-events: auto;
 }
 
-.select-content::-webkit-scrollbar {
-  width: 6px;
+/* Too little room underneath: the panel is anchored to the trigger's top edge
+   and lifted clear of it. */
+.select-content[data-drop-up='true'] {
+  transform: translateY(-100%);
 }
 
-.select-content::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.select-content::-webkit-scrollbar-thumb {
-  background: var(--c-border);
-  border-radius: var(--r-sm);
+.select-content__list {
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 /* ─── Search input inside dropdown ─── */
 .select-search {
   padding: var(--space-xs) var(--space-sm);
-  position: sticky;
-  top: 0;
   background: var(--c-surface);
-  z-index: var(--z-base);
+  flex-shrink: 0;
 }
 
 .select-search__input {

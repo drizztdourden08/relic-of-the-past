@@ -15,7 +15,13 @@ import { ALL_ACTORS } from './actors';
 import { DUNGEONS } from './dungeons';
 import { AREAS } from './areas';
 import { LOCATIONS } from './locations';
+import { ALL_TAGS } from './tags';
+import { ALL_ITEM_GROUPS } from './item-groups';
+import { ALL_ENUMERATION } from './enumeration';
 
+replaceAll('tag', ALL_TAGS);
+replaceAll('item-group', ALL_ITEM_GROUPS);
+replaceAll('enumeration', ALL_ENUMERATION);
 replaceAll('screen', ALL_SCREENS);
 replaceAll('connection', ALL_CONNECTIONS);
 replaceAll('check', ALL_CHECKS);

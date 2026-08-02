@@ -82,6 +82,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_2: CheckRecord[] = [
     randomizerName: 'Big Key Chest',
     vanillaItemIds: ['item-051'],
     requirements: { allOf: [canUseBombs, canActivateCrystalSwitch] },
+    tags: ['tag-084'],
   },
   {
     id: 'check-258',
@@ -111,6 +112,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_2: CheckRecord[] = [
     dungeonId: 'dungeon-013',
     randomizerName: 'Pre-Moldorm Chest',
     vanillaItemIds: ['item-037'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-261',
@@ -129,6 +131,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_2: CheckRecord[] = [
     dungeonId: 'dungeon-013',
     randomizerName: 'Conveyor Cross Pot Key',
     vanillaItemIds: ['item-108'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-263',
@@ -138,6 +141,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_2: CheckRecord[] = [
     dungeonId: 'dungeon-013',
     randomizerName: 'Double Switch Pot Key',
     vanillaItemIds: ['item-108'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-264',
@@ -147,6 +151,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_2: CheckRecord[] = [
     dungeonId: 'dungeon-013',
     randomizerName: 'Conveyor Star Pits Pot Key',
     vanillaItemIds: ['item-108'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-265',
@@ -157,6 +162,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_2: CheckRecord[] = [
     randomizerName: 'Mini Helmasaur Key Drop',
     vanillaItemIds: ['item-108'],
     requirements: canShootArrows,
+    tags: ['tag-083'],
   },
 ];
 

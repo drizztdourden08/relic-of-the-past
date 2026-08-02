@@ -1,9 +1,12 @@
 /* @layer shared-game @kind logic */
 /**
  * Grouping dimension catalog + per-dimension value resolution for a check.
+ * World/area/location/dungeon read ScreenRecord/AreaRecord/DungeonRecord
+ * directly — they used to go through a precomputed CheckTag, which only ever
+ * duplicated these same fields.
  */
-import type { CheckRecord, CheckTag } from '../../../data';
-import { CHECK_TAG_DEFINITIONS, getDungeon, getScreen } from '../../../data';
+import type { CheckRecord } from '../../../data';
+import { getArea, getDungeon, getScreen, hasTagKey, labelOf } from '../../../data';
 import type { GroupDimension, GroupDimensionDef } from './types';
 
 const GROUP_DIMENSIONS: GroupDimensionDef[] = [
@@ -16,42 +19,44 @@ const GROUP_DIMENSIONS: GroupDimensionDef[] = [
   { id: 'content', label: 'Content', description: 'Key, Map/Compass, Boss Item, etc.' },
 ];
 
-const getGroupValue = (check: CheckRecord, dimension: GroupDimension, tags: CheckTag[]): string => {
+/** Death Mountain (area-008) is the one area that spans both worlds — the check's own screen breaks the tie. */
+const areaLabel = (check: CheckRecord): string => {
+  if (check.screenId) {
+    const screen = getScreen(check.screenId);
+    const area = getArea(screen.areaId);
+    if (area.world === 'both') return screen.world === 'dark' ? `Dark ${area.randomizerName}` : area.randomizerName;
+    return area.randomizerName;
+  }
+  if (check.dungeonId) return getDungeon(check.dungeonId).randomizerName;
+  return 'Other';
+};
+
+const getGroupValue = (check: CheckRecord, dimension: GroupDimension): string => {
+  const screen = check.screenId ? getScreen(check.screenId) : undefined;
   switch (dimension) {
     case 'world':
-      return tags.includes('dark_world') ? 'Dark World' : 'Light World';
-    case 'area': {
-      const areaTags = tags.filter(t =>
-        CHECK_TAG_DEFINITIONS.find(d => d.id === t && d.category === 'area')
-      );
-      if (areaTags.length > 0) {
-        const def = CHECK_TAG_DEFINITIONS.find(d => d.id === areaTags[0]);
-        return def?.label ?? 'Other';
-      }
-      // For dungeon checks, use the dungeon name as area.
-      if (check.dungeonId) return getDungeon(check.dungeonId).randomizerName;
-      return 'Other';
-    }
-    case 'location': {
-      if (tags.includes('dungeon')) return 'Dungeon';
-      if (tags.includes('cave')) return 'Cave';
-      if (tags.includes('house')) return 'House';
+      return screen?.world === 'dark' ? 'Dark World' : 'Light World';
+    case 'area':
+      return areaLabel(check);
+    case 'location':
+      if (check.dungeonId) return 'Dungeon';
+      if (screen?.interiorKind === 'cave') return 'Cave';
+      if (screen?.interiorKind === 'house') return 'House';
       return 'Overworld';
-    }
     case 'dungeon':
       return check.dungeonId ? getDungeon(check.dungeonId).randomizerName : 'Overworld';
     case 'screen': {
-      if (!check.screenId) return 'Unknown';
-      const screen = getScreen(check.screenId);
+      if (!screen) return 'Unknown';
       return screen.vanillaName ?? screen.randomizerName;
     }
     case 'type':
-      return check.kind.charAt(0).toUpperCase() + check.kind.slice(1);
+      return labelOf('check-kind', check.kind) ?? check.kind;
     case 'content': {
-      if (tags.includes('key')) return 'Keys';
-      if (tags.includes('big_key')) return 'Big Keys';
-      if (tags.includes('map_compass')) return 'Map/Compass';
-      if (tags.includes('boss_item')) return 'Boss Items';
+      const tags = check.tags ?? [];
+      if (hasTagKey(tags, 'content:key')) return 'Keys';
+      if (hasTagKey(tags, 'content:big-key')) return 'Big Keys';
+      if (hasTagKey(tags, 'content:map-compass')) return 'Map/Compass';
+      if (hasTagKey(tags, 'content:boss-item')) return 'Boss Items';
       return 'Other';
     }
   }

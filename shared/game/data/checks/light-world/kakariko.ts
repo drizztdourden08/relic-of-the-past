@@ -2,6 +2,7 @@
 /** Further split by locality out of checks/{dungeons,light-world,dark-world}.ts — Package T. */
 import type { CheckRecord } from '../../types';
 import { canLiftHeavyRocks } from '../../requirements/helpers';
+import { ITEM_GROUP_IDS } from '../../item-groups';
 
 const LW_KAKARIKO_CHECKS: CheckRecord[] = [
   {
@@ -135,7 +136,7 @@ const LW_KAKARIKO_CHECKS: CheckRecord[] = [
     actorId: 'actor-005',
     visualNote: 'Changes to lying-still graphics (gfx 1)',
     sourceFunc: 'Sprite_1F_SickKid',
-    requirements: { count: { groupId: 'Bottles', n: 1 } },
+    requirements: { count: { groupId: ITEM_GROUP_IDS.Bottles, n: 1 } },
   },
   {
     id: 'check-055',

@@ -12,6 +12,7 @@ const DUNGEON_THIEVES_TOWN_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-009',
     randomizerName: 'Big Key Chest',
     vanillaItemIds: ['item-051'],
+    tags: ['tag-084'],
   },
   {
     id: 'check-174',
@@ -21,6 +22,7 @@ const DUNGEON_THIEVES_TOWN_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-009',
     randomizerName: 'Map Chest',
     vanillaItemIds: ['item-052'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-175',
@@ -30,6 +32,7 @@ const DUNGEON_THIEVES_TOWN_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-009',
     randomizerName: 'Compass Chest',
     vanillaItemIds: ['item-038'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-176',
@@ -48,6 +51,7 @@ const DUNGEON_THIEVES_TOWN_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-009',
     randomizerName: 'Attic',
     vanillaItemIds: ['item-037'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-178',
@@ -77,6 +81,7 @@ const DUNGEON_THIEVES_TOWN_CHECKS: CheckRecord[] = [
     randomizerName: 'Boss',
     vanillaItemIds: ['item-039'],
     requirements: canKillMostThings,
+    tags: ['tag-086'],
   },
   {
     id: 'check-181',
@@ -87,6 +92,7 @@ const DUNGEON_THIEVES_TOWN_CHECKS: CheckRecord[] = [
     randomizerName: 'Prize',
     vanillaItemIds: ['item-115'],
     requirements: canKillMostThings,
+    tags: ['tag-086'],
   },
   {
     id: 'check-182',
@@ -96,6 +102,7 @@ const DUNGEON_THIEVES_TOWN_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-009',
     randomizerName: 'Hallway Pot Key',
     vanillaItemIds: ['item-106'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-183',
@@ -105,6 +112,7 @@ const DUNGEON_THIEVES_TOWN_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-009',
     randomizerName: 'Spike Switch Pot Key',
     vanillaItemIds: ['item-106'],
+    tags: ['tag-083'],
   },
 ];
 

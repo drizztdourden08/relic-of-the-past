@@ -12,7 +12,7 @@ const DW_DUNGEON_SKULL_WOODS_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 18, y: 24, w: 2, h: 2 } },
     direction: 'one-way',
     dungeonId: 'dungeon-008',
-    tags: ['dir:one-way', 'ctx:dungeon-enter'],
+    tags: ['tag-072', 'tag-081'],
   },
   {
     id: 'connection-656',
@@ -21,7 +21,7 @@ const DW_DUNGEON_SKULL_WOODS_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-370',
     direction: 'one-way',
     dungeonId: 'dungeon-008',
-    tags: ['dir:one-way', 'ctx:dungeon-enter'],
+    tags: ['tag-072', 'tag-081'],
   },
   {
     id: 'connection-657',
@@ -31,7 +31,7 @@ const DW_DUNGEON_SKULL_WOODS_1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-674',
     dungeonId: 'dungeon-008',
-    tags: ['dir:two-way', 'ctx:dungeon-enter'],
+    tags: ['tag-073', 'tag-081'],
   },
   {
     id: 'connection-658',
@@ -40,7 +40,7 @@ const DW_DUNGEON_SKULL_WOODS_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-369',
     direction: 'one-way',
     dungeonId: 'dungeon-008',
-    tags: ['dir:one-way', 'ctx:dungeon-enter'],
+    tags: ['tag-072', 'tag-081'],
   },
   {
     id: 'connection-659',
@@ -50,7 +50,7 @@ const DW_DUNGEON_SKULL_WOODS_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-008',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-660',
@@ -61,7 +61,7 @@ const DW_DUNGEON_SKULL_WOODS_1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-671',
     dungeonId: 'dungeon-008',
-    tags: ['dir:two-way', 'ctx:internal', 'barrier:small-key'],
+    tags: ['tag-073', 'tag-076', 'tag-057'],
   },
   {
     id: 'connection-661',
@@ -71,7 +71,7 @@ const DW_DUNGEON_SKULL_WOODS_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
     direction: 'two-way',
     dungeonId: 'dungeon-008',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-662',
@@ -81,7 +81,7 @@ const DW_DUNGEON_SKULL_WOODS_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east', tileRange: { axis: 'y', start: 48, end: 49 } },
     direction: 'two-way',
     dungeonId: 'dungeon-008',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-663',
@@ -90,7 +90,7 @@ const DW_DUNGEON_SKULL_WOODS_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-371',
     direction: 'two-way',
     dungeonId: 'dungeon-008',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-664',
@@ -100,7 +100,7 @@ const DW_DUNGEON_SKULL_WOODS_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east', tileRange: { axis: 'y', start: 48, end: 49 } },
     direction: 'two-way',
     dungeonId: 'dungeon-008',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-665',
@@ -110,7 +110,7 @@ const DW_DUNGEON_SKULL_WOODS_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
     direction: 'two-way',
     dungeonId: 'dungeon-008',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
 ];
 

@@ -1,7 +1,7 @@
 /* @layer shared-game @kind logic */
 import type { CheckId, ConnectionRecord, ItemId, Requirement, ScreenId } from '../data';
 import type { LogicConfig } from '../types';
-import { find, getScreen } from '../data';
+import { find, getScreen, ITEM_GROUP_IDS } from '../data';
 import type { ReachConnection } from './eval';
 import { hasBeamSword, hasCrystals, hasSword } from '../data/requirements/helpers';
 
@@ -87,7 +87,7 @@ const resolveRules = (config: LogicConfig): ResolvedRules => {
   setRequirementIfPresent('screen-277', 'screen-407', hasCrystals(config.crystalsForGT)); // dungeon-013's entrance (connection-793)
 
   // --- Pedestal requirement ---
-  checkOverrides['check-072'] = { count: { groupId: 'Pendants', n: config.pendantsForPedestal } };
+  checkOverrides['check-072'] = { count: { groupId: ITEM_GROUP_IDS.Pendants, n: config.pendantsForPedestal } };
 
   // --- S&Q destination gating ---
   // The hermit's cave has no menu-sourced connection (true before this

@@ -11,7 +11,7 @@ const DW_OVERWORLD_DARK_NORTH_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-281',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-523',
@@ -20,7 +20,7 @@ const DW_OVERWORLD_DARK_NORTH_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-296',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-524',
@@ -29,7 +29,7 @@ const DW_OVERWORLD_DARK_NORTH_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-289',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-525',
@@ -38,7 +38,7 @@ const DW_OVERWORLD_DARK_NORTH_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-304',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-526',
@@ -47,7 +47,7 @@ const DW_OVERWORLD_DARK_NORTH_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-297',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-536',
@@ -56,7 +56,7 @@ const DW_OVERWORLD_DARK_NORTH_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-289',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-537',
@@ -65,7 +65,7 @@ const DW_OVERWORLD_DARK_NORTH_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-282',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-538',
@@ -74,7 +74,7 @@ const DW_OVERWORLD_DARK_NORTH_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-297',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-539',
@@ -83,7 +83,7 @@ const DW_OVERWORLD_DARK_NORTH_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-290',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-540',
@@ -92,7 +92,7 @@ const DW_OVERWORLD_DARK_NORTH_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-305',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-541',
@@ -101,7 +101,7 @@ const DW_OVERWORLD_DARK_NORTH_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-298',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-585',
@@ -109,7 +109,7 @@ const DW_OVERWORLD_DARK_NORTH_2_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-288',
     toScreenId: 'screen-255',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-586',
@@ -117,7 +117,7 @@ const DW_OVERWORLD_DARK_NORTH_2_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-288',
     toScreenId: 'screen-239',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-595',
@@ -125,7 +125,7 @@ const DW_OVERWORLD_DARK_NORTH_2_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-288',
     toScreenId: 'screen-256',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
 ];
 

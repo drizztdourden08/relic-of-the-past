@@ -1,11 +1,10 @@
 /* @layer shared-game @kind types */
-import type { ActorId, AreaId, LocationId, ScreenId } from './ids';
-import type { ScreenTag } from '../taxonomy/screen-tags';
+import type { ActorId, AreaId, LocationId, ScreenId, TagId } from './ids';
 import type { RegionNavData } from '../../navigation/nav-data.types';
+import type { InteriorKind, ScreenKind, ScreenStatus, World } from '../enumeration/generated-types';
 
-type ScreenKind = 'overworld' | 'dungeon' | 'interior';
-type World = 'light' | 'dark';
-type InteriorKind = 'house' | 'cave' | 'shop' | 'fairy' | 'well' | 'passage' | 'hint' | 'gamble' | 'special';
+/** A screen only ever sits in one world — `'both'` is an area-level concept (e.g. Death Mountain). */
+type ScreenWorld = Exclude<World, 'both'>;
 
 interface ScreenGameId {
   /** Native OW screen index (0x00-0x3F per world). */
@@ -49,7 +48,7 @@ interface ScreenRecord {
   id: ScreenId;
   gameId: ScreenGameId;
   kind: ScreenKind;
-  world: World;
+  world: ScreenWorld;
   interiorKind?: InteriorKind;
   /** Only set when a real in-game/guide term exists — see the naming policy. */
   vanillaName?: string;
@@ -58,9 +57,10 @@ interface ScreenRecord {
   areaId: AreaId;
   locationId: LocationId;
   position?: ScreenPosition;
-  tags: readonly ScreenTag[];
+  /** References into the tag collection — read the terms back with `tagKeysOf`. */
+  tags: readonly TagId[];
   variant?: ScreenVariantInfo;
-  status: 'draft' | 'mapped' | 'verified';
+  status: ScreenStatus;
   /** Pre-computed flood-fill navigation facts — tile counts, obstacles, connection points. */
   nav?: RegionNavData;
   /**
@@ -79,7 +79,9 @@ export type {
   ScreenPosition,
   ScreenRecord,
   ScreenSpawn,
+  ScreenStatus,
   ScreenVariantInfo,
+  ScreenWorld,
   VariantCondition,
   World,
 };

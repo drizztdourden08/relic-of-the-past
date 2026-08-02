@@ -7,6 +7,9 @@ import type { ItemRecord } from './item';
 import type { DungeonRecord } from './dungeon';
 import type { AreaRecord, LocationRecord } from './region';
 import type { ActorRecord } from './actor';
+import type { TagRecord } from './tag';
+import type { ItemGroupRecord } from './item-group';
+import type { EnumerationEntry } from './enumeration';
 
 /** Maps each EntityKind to its record shape, so find()/findOne() stay typed. */
 interface EntityRecordMap {
@@ -18,6 +21,9 @@ interface EntityRecordMap {
   area: AreaRecord;
   location: LocationRecord;
   actor: ActorRecord;
+  tag: TagRecord;
+  'item-group': ItemGroupRecord;
+  enumeration: EnumerationEntry;
 }
 
 type EntityOf<K extends EntityKind> = EntityRecordMap[K];

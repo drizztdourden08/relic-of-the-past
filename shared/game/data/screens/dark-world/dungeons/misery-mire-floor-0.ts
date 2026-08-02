@@ -12,7 +12,7 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-005',
     locationId: 'location-020',
     position: { gridX: 8, gridY: 9, floor: 0 },
-    tags: ['env:underground', 'role:entrance', 'role:hub'],
+    tags: ['tag-003', 'tag-005', 'tag-009'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-118', tile: { x: 32, y: 38 } },

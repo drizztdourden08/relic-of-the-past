@@ -12,7 +12,7 @@ const LW_CAVES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Checkerboard Cave',
     areaId: 'area-009',
     locationId: 'location-010',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-230', tile: { x: 16, y: 44 } },
@@ -27,7 +27,7 @@ const LW_CAVES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Lost Woods Hideout (top)',
     areaId: 'area-014',
     locationId: 'location-019',
-    tags: ['env:underground', 'traverse:fall'],
+    tags: ['tag-003', 'tag-040'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-262', tile: { x: 46, y: 26 } },
@@ -43,7 +43,7 @@ const LW_CAVES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Lost Woods Hideout (bottom)',
     areaId: 'area-014',
     locationId: 'location-019',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-262', tile: { x: 46, y: 26 } },
@@ -59,7 +59,7 @@ const LW_CAVES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Lumberjack Tree (top)',
     areaId: 'area-014',
     locationId: 'location-019',
-    tags: ['env:underground', 'traverse:fall'],
+    tags: ['tag-003', 'tag-040'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 14, y: 12 } },
@@ -78,7 +78,7 @@ const LW_CAVES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Lumberjack Tree (bottom)',
     areaId: 'area-014',
     locationId: 'location-019',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 14, y: 12 } },
@@ -97,7 +97,7 @@ const LW_CAVES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Spectacle Rock Cave (Top)',
     areaId: 'area-008',
     locationId: 'location-009',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 14, y: 12 } },
@@ -116,7 +116,7 @@ const LW_CAVES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Paradox Cave Front',
     areaId: 'area-008',
     locationId: 'location-009',
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-210', tile: { x: 28, y: 18 } },
@@ -135,7 +135,7 @@ const LW_CAVES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Paradox Cave Chest Area',
     areaId: 'area-008',
     locationId: 'location-009',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     triggerIds: ['actor-024'],
     spawns: [
@@ -157,7 +157,7 @@ const LW_CAVES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Paradox Cave',
     areaId: 'area-008',
     locationId: 'location-009',
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-208', tile: { x: 46, y: 40 } },
@@ -172,7 +172,7 @@ const LW_CAVES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Spiral Cave (Top)',
     areaId: 'area-008',
     locationId: 'location-009',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-056', tile: { x: 44, y: 36 } },

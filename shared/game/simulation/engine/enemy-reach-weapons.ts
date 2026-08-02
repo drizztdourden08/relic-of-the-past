@@ -14,7 +14,7 @@
  * one held, so the bare tier-1 sword is always in the set.
  */
 import type { ItemId, RangeProfile } from '../../data';
-import { ITEM_GROUPS, getItem } from '../../data';
+import { getItem, ITEM_GROUP_IDS, membersOf } from '../../data';
 import type { CombatTables } from '../types';
 import type { Weapon } from './enemy-reach';
 
@@ -27,7 +27,7 @@ const SWORD_BASE_DAMAGE_CLASS = [1, 2, 3, 4];
 
 /** Sword items in tier order — the dataset's own group, which is already ordered
  *  weakest-first, so no local copy of the tier list exists to drift from it. */
-const SWORD_TIER_IDS: readonly ItemId[] = ITEM_GROUPS.Swords ?? [];
+const SWORD_TIER_IDS: readonly ItemId[] = membersOf(ITEM_GROUP_IDS.Swords);
 
 /** Ancilla type for the sword beam (needs a sword above tier 1). Its
  *  near-full-health firing condition is not modelled — the beam is offered

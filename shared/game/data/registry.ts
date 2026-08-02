@@ -6,6 +6,7 @@ type Store = { [K in EntityKind]: Map<string, EntityOf<K>> };
 let store: Store = {
   screen: new Map(), connection: new Map(), check: new Map(), item: new Map(),
   dungeon: new Map(), area: new Map(), location: new Map(), actor: new Map(),
+  tag: new Map(), 'item-group': new Map(), enumeration: new Map(),
 };
 
 const replaceAll = <K extends EntityKind>(kind: K, records: readonly EntityOf<K>[]): void => {

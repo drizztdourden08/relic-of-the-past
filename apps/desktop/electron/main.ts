@@ -36,6 +36,7 @@ import { registerSimLogHandlers } from './debug/sim-log-handler';
 import { registerConnectionHandlers } from './connections/ipc-handlers';
 import { registerScreenEditorHandlers } from './screen-editor/ipc-handlers';
 import { registerShadowCastingHandlers } from './shadow-casting';
+import { registerUiViewsHandlers } from './ui-views';
 import { registerAppHandlers } from './app/ipc-handlers';
 import { registerDiagnosticsHandlers } from './diagnostics/ipc-handlers';
 import { registerWasmHandlers } from './wasm/ipc-handlers';
@@ -67,6 +68,7 @@ const IPC_HANDLERS: Array<{ register: () => void; devOnly?: boolean }> = [
   { register: registerSimRunHandler },
   { register: registerSimLogHandlers },
   { register: registerConnectionHandlers },
+  { register: registerUiViewsHandlers },
   // Screen editor writes to source files — a dev authoring tool only. Never
   // register its IPC channel in a packaged build (prevents renderer file writes).
   { register: registerScreenEditorHandlers, devOnly: true },

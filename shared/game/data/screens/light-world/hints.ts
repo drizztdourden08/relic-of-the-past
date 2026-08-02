@@ -12,7 +12,7 @@ const LW_HINTS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Fortune Teller (Light)',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-103', tile: { x: 32, y: 8 } },
@@ -33,7 +33,7 @@ const LW_HINTS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Lake Hylia Fortune Teller',
     areaId: 'area-013',
     locationId: 'location-018',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-103', tile: { x: 32, y: 8 } },

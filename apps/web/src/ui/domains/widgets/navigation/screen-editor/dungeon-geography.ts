@@ -9,7 +9,7 @@
  */
 import { getScreen } from '@shared/game/data';
 import { dungeonForPalaceIndex } from '@shared/game/data/record-file-targets';
-import type { AreaId, DungeonId, LocationId, World } from '@shared/game/data';
+import type { AreaId, DungeonId, LocationId, ScreenWorld } from '@shared/game/data';
 
 interface DungeonGeography {
   dungeonId: DungeonId;
@@ -17,7 +17,7 @@ interface DungeonGeography {
   randomizerName: string;
   areaId: AreaId;
   locationId: LocationId;
-  world: World;
+  world: ScreenWorld;
 }
 
 const dungeonGeographyFor = (palaceIndex: number): DungeonGeography | null => {

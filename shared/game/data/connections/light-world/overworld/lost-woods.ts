@@ -10,7 +10,7 @@ const LW_OVERWORLD_LOST_WOODS_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-028',
     toScreenId: 'screen-036',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-050',
@@ -18,7 +18,7 @@ const LW_OVERWORLD_LOST_WOODS_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-030',
     toScreenId: 'screen-260',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { allOf: [{ anyOf: [{ allOf: [{ itemId: 'item-010' }, canLiftRocks] }, canLiftHeavyRocks] }, { itemId: 'item-032' }] },
   },
   {
@@ -28,7 +28,7 @@ const LW_OVERWORLD_LOST_WOODS_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-043',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-053',
@@ -37,7 +37,7 @@ const LW_OVERWORLD_LOST_WOODS_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-029',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-054',
@@ -46,7 +46,7 @@ const LW_OVERWORLD_LOST_WOODS_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-051',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-055',
@@ -55,7 +55,7 @@ const LW_OVERWORLD_LOST_WOODS_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-044',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-067',
@@ -64,7 +64,7 @@ const LW_OVERWORLD_LOST_WOODS_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-044',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-068',
@@ -73,7 +73,7 @@ const LW_OVERWORLD_LOST_WOODS_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-030',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-069',
@@ -82,7 +82,7 @@ const LW_OVERWORLD_LOST_WOODS_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-052',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-070',
@@ -91,7 +91,7 @@ const LW_OVERWORLD_LOST_WOODS_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-045',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-082',
@@ -100,7 +100,7 @@ const LW_OVERWORLD_LOST_WOODS_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-045',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-083',
@@ -109,7 +109,7 @@ const LW_OVERWORLD_LOST_WOODS_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-031',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-166',
@@ -117,7 +117,7 @@ const LW_OVERWORLD_LOST_WOODS_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-029',
     toScreenId: 'screen-036',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
 ];
 

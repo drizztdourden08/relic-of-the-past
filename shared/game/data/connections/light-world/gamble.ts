@@ -9,7 +9,7 @@ const LW_GAMBLE_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-031',
     toScreenId: 'screen-219',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-350',
@@ -17,7 +17,7 @@ const LW_GAMBLE_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-028',
     toScreenId: 'screen-215',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
 ];
 

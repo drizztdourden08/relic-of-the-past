@@ -11,7 +11,7 @@ const LW_CAVES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-034',
     toScreenId: 'screen-160',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-307',
@@ -19,7 +19,7 @@ const LW_CAVES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-011',
     toScreenId: 'screen-168',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
     requirements: canLiftRocks,
   },
   {
@@ -28,7 +28,7 @@ const LW_CAVES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-055',
     toScreenId: 'screen-169',
     direction: 'two-way',
-    tags: ['transit:bonk', 'dir:two-way', 'ctx:entrance', 'barrier:dash'],
+    tags: ['tag-052', 'tag-073', 'tag-074', 'tag-066'],
     requirements: { itemId: 'item-076' },
   },
   {
@@ -37,7 +37,7 @@ const LW_CAVES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-032',
     toScreenId: 'screen-181',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-310',
@@ -45,7 +45,7 @@ const LW_CAVES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-001',
     toScreenId: 'screen-181',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:entrance'],
+    tags: ['tag-072', 'tag-074'],
   },
   {
     id: 'connection-311',
@@ -54,7 +54,7 @@ const LW_CAVES_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-182',
     placement: { at: 'side', side: 'east', tileRange: { axis: 'y', start: 32, end: 33 } },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:internal', 'barrier:hammer'],
+    tags: ['tag-073', 'tag-076', 'tag-061'],
   },
   {
     id: 'connection-312',
@@ -63,7 +63,7 @@ const LW_CAVES_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-032',
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 31, end: 32 } },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
   {
     id: 'connection-313',
@@ -72,7 +72,7 @@ const LW_CAVES_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-216',
     direction: 'one-way',
     counterpartId: 'connection-314',
-    tags: ['transit:grave', 'dir:one-way', 'ctx:entrance', 'barrier:gloves'],
+    tags: ['tag-050', 'tag-072', 'tag-074', 'tag-060'],
     requirements: { itemId: 'item-076' },
   },
   {
@@ -83,7 +83,7 @@ const LW_CAVES_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
     direction: 'one-way',
     counterpartId: 'connection-313',
-    tags: ['dir:one-way', 'ctx:exit'],
+    tags: ['tag-072', 'tag-075'],
   },
   {
     id: 'connection-315',
@@ -91,7 +91,7 @@ const LW_CAVES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-020',
     toScreenId: 'screen-172',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-316',
@@ -99,7 +99,7 @@ const LW_CAVES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-081',
     toScreenId: 'screen-166',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
     requirements: canUseBombs,
   },
   {
@@ -108,7 +108,7 @@ const LW_CAVES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-073',
     toScreenId: 'screen-174',
     direction: 'two-way',
-    tags: ['transit:bomb', 'dir:two-way', 'ctx:entrance', 'barrier:bomb'],
+    tags: ['tag-051', 'tag-073', 'tag-074', 'tag-059'],
     requirements: canUseBombs,
   },
   {
@@ -117,7 +117,7 @@ const LW_CAVES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-081',
     toScreenId: 'screen-228',
     direction: 'two-way',
-    tags: ['transit:bomb', 'dir:two-way', 'ctx:entrance', 'barrier:bomb'],
+    tags: ['tag-051', 'tag-073', 'tag-074', 'tag-059'],
   },
   {
     id: 'connection-319',
@@ -125,7 +125,7 @@ const LW_CAVES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-065',
     toScreenId: 'screen-161',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
     requirements: canLiftRocks,
   },
   {
@@ -134,7 +134,7 @@ const LW_CAVES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-073',
     toScreenId: 'screen-158',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
     requirements: canLiftRocks,
   },
   {
@@ -143,7 +143,7 @@ const LW_CAVES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-003',
     toScreenId: 'screen-167',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-322',
@@ -151,7 +151,7 @@ const LW_CAVES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-028',
     toScreenId: 'screen-176',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:entrance'],
+    tags: ['tag-072', 'tag-074'],
   },
 ];
 

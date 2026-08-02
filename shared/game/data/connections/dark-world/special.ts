@@ -9,7 +9,7 @@ const DW_SPECIAL_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-252',
     toScreenId: 'screen-452',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-892',
@@ -17,7 +17,7 @@ const DW_SPECIAL_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-256',
     toScreenId: 'screen-452',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-893',
@@ -25,7 +25,7 @@ const DW_SPECIAL_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-452',
     toScreenId: 'screen-451',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:internal'],
+    tags: ['tag-072', 'tag-076'],
   },
   {
     id: 'connection-894',
@@ -34,7 +34,7 @@ const DW_SPECIAL_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-280',
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
 ];
 

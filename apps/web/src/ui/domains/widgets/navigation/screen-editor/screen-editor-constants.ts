@@ -2,19 +2,19 @@
 /** Static option lists for the ScreenEditorDialog wizard. */
 import type { SelectOption, SegmentOption, TagPickerGroup } from '../../../../design-system/primitives';
 import type { InteriorKind, ScreenKind, ScreenTag } from '@shared/game/data';
-import { TAG_METADATA, TAG_NAMESPACES } from '@shared/game/data';
+import { enumerationFor, TAG_METADATA, TAG_NAMESPACES } from '@shared/game/data';
 import { PALACE_INDEX_NAMES } from '@shared/game/logic/queries/dungeon-values';
 
-const TYPE_SEGMENTS: SegmentOption<ScreenKind>[] = [
-  { value: 'overworld', label: 'Overworld' },
-  { value: 'dungeon', label: 'Dungeon' },
-  { value: 'interior', label: 'Interior' },
-];
+/** Sourced from Enumeration rather than hardcoded, so a segment label can't drift from the canonical one. */
+const TYPE_SEGMENTS: SegmentOption<ScreenKind>[] = enumerationFor('screen-kind')
+  .map(entry => ({ value: entry.value as ScreenKind, label: entry.label }));
 
-const WORLD_SEGMENTS: SegmentOption<'light' | 'dark'>[] = [
-  { value: 'light', label: 'Light World' },
-  { value: 'dark', label: 'Dark World' },
-];
+// 'both' is a real `world` value (an overworld screen occupying the same tile
+// in either world) but this wizard's world picker is light/dark only, so it's
+// filtered out here rather than added as a third, meaningless segment.
+const WORLD_SEGMENTS: SegmentOption<'light' | 'dark'>[] = enumerationFor('world')
+  .filter(entry => entry.value !== 'both')
+  .map(entry => ({ value: entry.value as 'light' | 'dark', label: entry.label }));
 
 const PALACE_OPTIONS: SelectOption[] = Object.entries(PALACE_INDEX_NAMES)
   .filter(([k]) => Number(k) !== 0xFF)

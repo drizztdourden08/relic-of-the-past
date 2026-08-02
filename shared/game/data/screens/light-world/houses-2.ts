@@ -12,7 +12,7 @@ const LW_HOUSES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Light World Bomb Hut',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-001', tile: { x: 50, y: 8 } },
@@ -27,7 +27,7 @@ const LW_HOUSES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Library',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:indoor', 'loot:chest'],
+    tags: ['tag-002', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-238', tile: { x: 46, y: 10 } },
@@ -45,7 +45,7 @@ const LW_HOUSES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Starting House',
     areaId: 'area-016',
     locationId: 'location-002',
-    tags: ['env:indoor', 'role:safe', 'role:spawn'],
+    tags: ['tag-002', 'tag-013', 'tag-014'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-011', tile: { x: 52, y: 46 } },
@@ -60,7 +60,7 @@ const LW_HOUSES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Starting House (Intro)',
     areaId: 'area-016',
     locationId: 'location-002',
-    tags: ['env:indoor', 'role:safe', 'role:spawn'],
+    tags: ['tag-002', 'tag-013', 'tag-014'],
     variant: { key: 'intro', progressTier: 0, condition: { type: 'progress', max: 0 } },
     status: 'mapped',
     spawns: [
@@ -76,7 +76,7 @@ const LW_HOUSES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Dam',
     areaId: 'area-016',
     locationId: 'location-002',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-011', tile: { x: 28, y: 16 } },
@@ -93,7 +93,7 @@ const LW_HOUSES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Sahasrahla\'s Hut',
     areaId: 'area-010',
     locationId: 'location-012',
-    tags: ['env:indoor', 'loot:chest'],
+    tags: ['tag-002', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-001', tile: { x: 14, y: 48 } },
@@ -108,7 +108,7 @@ const LW_HOUSES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Lumberjack House',
     areaId: 'area-014',
     locationId: 'location-019',
-    tags: ['env:indoor', 'role:safe'],
+    tags: ['tag-002', 'tag-013'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-262', tile: { x: 46, y: 26 } },
@@ -124,7 +124,7 @@ const LW_HOUSES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Old Man House',
     areaId: 'area-008',
     locationId: 'location-009',
-    tags: ['env:indoor', 'role:safe'],
+    tags: ['tag-002', 'tag-013'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-171', tile: { x: 46, y: 40 } },
@@ -139,7 +139,7 @@ const LW_HOUSES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Old Man House Back',
     areaId: 'area-008',
     locationId: 'location-009',
-    tags: ['env:indoor', 'role:connector'],
+    tags: ['tag-002', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-171', tile: { x: 16, y: 40 } },
@@ -154,7 +154,7 @@ const LW_HOUSES_SCREENS_2: ScreenRecord[] = [
     randomizerName: 'Two Brothers House',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:indoor', 'role:connector'],
+    tags: ['tag-002', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-230', tile: { x: 46, y: 44 } },

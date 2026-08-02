@@ -24,7 +24,7 @@ const ChecksWidgetContent = () => {
         viewMode={viewMode}
         onViewModeChange={setViewMode}
       />
-      {(filter.searchQuery || filter.activeTags.length > 0 || (filter.itemFilter && filter.itemFilter !== 'all') || (filter.statusFilter && filter.statusFilter !== 'all')) && (
+      {(filter.searchQuery || filter.activeFacets.length > 0 || (filter.itemFilter && filter.itemFilter !== 'all') || (filter.statusFilter && filter.statusFilter !== 'all')) && (
         <Box className="tracker-view__filtered-stats">
           Showing {groupTree.stats.total} checks:
           <Text className="tracker-summary__stat--completed"> {groupTree.stats.completed} done</Text>,

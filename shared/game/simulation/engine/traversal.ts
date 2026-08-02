@@ -5,7 +5,7 @@
  * of screen IDs. Connection requirements gate every edge: `ConnectionNavData.requirements`
  * when present, else a fallback derived from `barrier:*` tags.
  */
-import { find, getScreen } from '../../data';
+import { connectionTagKeysOf, find, getScreen, hasTagKey } from '../../data';
 import type { ConnectionRecord } from '../../data';
 import type { RequirementSet } from '../../navigation/nav-data.types';
 import type { Route, RouteStep, ScreenPath } from '../../navigation/types';
@@ -28,7 +28,7 @@ type Adjacency = Map<string, ScreenEdge[]>;
  * same-world, so unknown screens never gain a false gate.
  */
 const isCrossWorld = (conn: ConnectionRecord): boolean => {
-  if (conn.tags.includes('ctx:cross-world') || conn.tags.includes('transit:warp')) return true;
+  if (hasTagKey(conn.tags, 'ctx:cross-world') || hasTagKey(conn.tags, 'transit:warp')) return true;
   const fromWorld = getScreen(conn.fromScreenId).world;
   const toWorld = getScreen(conn.toScreenId).world;
   return fromWorld !== toWorld;
@@ -36,7 +36,7 @@ const isCrossWorld = (conn: ConnectionRecord): boolean => {
 
 const connectionRequirements = (conn: ConnectionRecord): RequirementSet => {
   if (conn.nav?.requirements) return conn.nav.requirements;
-  const fromBarriers = barrierTagsToRequirements(conn.tags);
+  const fromBarriers = barrierTagsToRequirements(connectionTagKeysOf(conn.tags));
   if (fromBarriers.length > 0) return fromBarriers;
   // Fallback for a cross-world portal with no explicit nav data: traversing the
   // Dark World as the player needs the Moon Pearl, so gate on it at minimum. Without
@@ -48,7 +48,7 @@ const connectionRequirements = (conn: ConnectionRecord): RequirementSet => {
 };
 
 const isTwoWay = (conn: ConnectionRecord): boolean =>
-  conn.tags.includes('dir:two-way') || conn.direction === 'two-way' || (conn.nav?.bidirectional ?? false);
+  hasTagKey(conn.tags, 'dir:two-way') || conn.direction === 'two-way' || (conn.nav?.bidirectional ?? false);
 
 const addEdge = (adj: Adjacency, from: string, edge: ScreenEdge): void => {
   const list = adj.get(from);

@@ -12,7 +12,7 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-030',
     position: { gridX: 4, gridY: 0, floor: -2 },
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     triggerIds: ['actor-042', 'actor-025'],
     spawns: [
@@ -38,7 +38,7 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-030',
     position: { gridX: 3, gridY: 1, floor: -2 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-161', tile: { x: 40, y: 34 } },
@@ -62,7 +62,7 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-030',
     position: { gridX: 4, gridY: 1, floor: -2 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-220', tile: { x: 24, y: 8 } },
@@ -86,7 +86,7 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-030',
     position: { gridX: 5, gridY: 1, floor: -2 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-218', tile: { x: 8, y: 24 } },
@@ -110,7 +110,7 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-030',
     position: { gridX: 3, gridY: 2, floor: -2 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-211', tile: { x: 42, y: 40 } },
@@ -129,7 +129,7 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-030',
     position: { gridX: 4, gridY: 2, floor: -2 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     triggerIds: ['actor-024'],
     spawns: [

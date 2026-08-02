@@ -12,7 +12,7 @@ const DW_SPECIAL_SCREENS: ScreenRecord[] = [
     randomizerName: 'Pyramid',
     areaId: 'area-003',
     locationId: 'location-005',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-076', tile: { x: 24, y: 16 } },
@@ -29,7 +29,7 @@ const DW_SPECIAL_SCREENS: ScreenRecord[] = [
     randomizerName: 'Bottom of Pyramid',
     areaId: 'area-003',
     locationId: 'location-005',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-076', tile: { x: 24, y: 16 } },

@@ -11,6 +11,7 @@ const DUNGEON_CASTLE_TOWER_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-002',
     randomizerName: 'Agahnim 1',
     vanillaItemIds: [],
+    tags: ['tag-086'],
   },
   {
     id: 'check-112',
@@ -38,6 +39,7 @@ const DUNGEON_CASTLE_TOWER_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-002',
     randomizerName: 'Dark Archer Key Drop',
     vanillaItemIds: ['item-099'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-115',
@@ -47,6 +49,7 @@ const DUNGEON_CASTLE_TOWER_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-002',
     randomizerName: 'Circle of Pots Key Drop',
     vanillaItemIds: ['item-099'],
+    tags: ['tag-083'],
   },
 ];
 

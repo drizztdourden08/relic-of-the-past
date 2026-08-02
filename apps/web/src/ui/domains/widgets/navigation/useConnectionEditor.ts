@@ -8,6 +8,7 @@
  * nothing hands source text to the write channel: the payload is the records.
  */
 import { useState, useMemo, useEffect } from 'react';
+import { connectionTagKeysOf } from '@shared/game/data';
 import type { ConnectionRecord, ConnectionTag, ScreenId, ScreenRecord } from '@shared/game/data';
 import { serializeConnectionRecord } from '@shared/game/data/record-codegen';
 import { connectionRecordFile } from '@shared/game/data/record-file-targets';
@@ -60,7 +61,7 @@ const useConnectionEditor = (params: ConnectionEditorParams) => {
       key: c.id,
       from: c.fromScreenId,
       to: c.toScreenId,
-      tags: [...c.tags],
+      tags: [...connectionTagKeysOf(c.tags)],
       isNew: false,
     })));
   }, [open, existingConnections]);

@@ -12,7 +12,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 46, y: 28, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:dungeon-enter'],
+    tags: ['tag-073', 'tag-081'],
   },
   {
     id: 'connection-641',
@@ -23,7 +23,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-648',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-654',
@@ -33,7 +33,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 31, end: 32 } },
     direction: 'two-way',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
 ];
 

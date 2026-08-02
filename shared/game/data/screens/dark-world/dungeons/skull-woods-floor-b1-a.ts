@@ -12,7 +12,7 @@ const DW_DUNGEON_SKULL_WOODS_SCREENS_FLOOR_B1_A: ScreenRecord[] = [
     areaId: 'area-015',
     locationId: 'location-024',
     position: { gridX: 9, gridY: 2, floor: -1 },
-    tags: ['env:underground', 'role:boss'],
+    tags: ['tag-003', 'tag-006'],
     status: 'mapped',
     triggerIds: ['actor-041'],
     spawns: [
@@ -28,7 +28,7 @@ const DW_DUNGEON_SKULL_WOODS_SCREENS_FLOOR_B1_A: ScreenRecord[] = [
     areaId: 'area-015',
     locationId: 'location-024',
     position: { gridX: 9, gridY: 3, floor: -1 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-056', tile: { x: 8, y: 48 } },
@@ -48,7 +48,7 @@ const DW_DUNGEON_SKULL_WOODS_SCREENS_FLOOR_B1_A: ScreenRecord[] = [
     areaId: 'area-015',
     locationId: 'location-024',
     position: { gridX: 9, gridY: 4, floor: -1 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     triggerIds: ['actor-045'],
     spawns: [
@@ -75,7 +75,7 @@ const DW_DUNGEON_SKULL_WOODS_SCREENS_FLOOR_B1_A: ScreenRecord[] = [
     areaId: 'area-015',
     locationId: 'location-024',
     position: { gridX: 6, gridY: 5, floor: -1 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-208', tile: { x: 14, y: 50 } },
@@ -100,7 +100,7 @@ const DW_DUNGEON_SKULL_WOODS_SCREENS_FLOOR_B1_A: ScreenRecord[] = [
     areaId: 'area-015',
     locationId: 'location-024',
     position: { gridX: 7, gridY: 5, floor: -1 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     triggerIds: ['actor-027'],
     spawns: [

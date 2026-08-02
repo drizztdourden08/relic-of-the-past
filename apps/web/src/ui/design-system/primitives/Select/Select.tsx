@@ -1,5 +1,6 @@
 /* @layer renderer-components @kind data */
 import { Portal } from '../Portal';
+import { ScrollArea } from '../ScrollArea';
 import { useSelectDropdown } from './behavior/useSelectDropdown';
 import { SelectItem } from './sub-components/SelectItem';
 import type { SelectProps, SelectOption } from './Select.type';
@@ -58,7 +59,10 @@ const Select = (props: SelectProps) => {
           <div
             ref={dropdown.contentRef}
             className="select-content"
-            style={{ top: dropdown.pos.top, left: dropdown.pos.left, width: Math.max(dropdown.pos.width, 180) }}
+            data-drop-up={dropdown.pos?.dropUp ? 'true' : undefined}
+            style={dropdown.pos
+              ? { top: dropdown.pos.top, left: dropdown.pos.left, width: dropdown.pos.width }
+              : undefined}
             role="listbox"
             onKeyDown={dropdown.handleKeyDown}
           >
@@ -76,11 +80,46 @@ const Select = (props: SelectProps) => {
               </div>
             )}
 
-            {dropdown.search ? (
-              dropdown.filtered.length === 0 ? (
-                <div className="select-empty">No matches</div>
+            <ScrollArea className="select-content__list">
+              {dropdown.search ? (
+                dropdown.filtered.length === 0 ? (
+                  <div className="select-empty">No matches</div>
+                ) : (
+                  dropdown.filtered.map((opt, idx) => (
+                    <SelectItem
+                      key={opt.value}
+                      option={opt}
+                      selected={opt.value === value}
+                      highlighted={idx === dropdown.highlightIdx}
+                      idx={idx}
+                      onSelect={dropdown.handleSelect}
+                      renderOption={renderOption}
+                    />
+                  ))
+                )
+              ) : groups ? (
+                groups.map((group, gi) => (
+                  <div key={group.label}>
+                    {gi > 0 && <div className="select-separator" />}
+                    <div className="select-group-label">{group.label}</div>
+                    {group.options.map((opt) => {
+                      const flatIdx = allOptions.indexOf(opt);
+                      return (
+                        <SelectItem
+                          key={opt.value}
+                          option={opt}
+                          selected={opt.value === value}
+                          highlighted={flatIdx === dropdown.highlightIdx}
+                          idx={flatIdx}
+                          onSelect={dropdown.handleSelect}
+                          renderOption={renderOption}
+                        />
+                      );
+                    })}
+                  </div>
+                ))
               ) : (
-                dropdown.filtered.map((opt, idx) => (
+                allOptions.map((opt, idx) => (
                   <SelectItem
                     key={opt.value}
                     option={opt}
@@ -91,41 +130,8 @@ const Select = (props: SelectProps) => {
                     renderOption={renderOption}
                   />
                 ))
-              )
-            ) : groups ? (
-              groups.map((group, gi) => (
-                <div key={group.label}>
-                  {gi > 0 && <div className="select-separator" />}
-                  <div className="select-group-label">{group.label}</div>
-                  {group.options.map((opt) => {
-                    const flatIdx = allOptions.indexOf(opt);
-                    return (
-                      <SelectItem
-                        key={opt.value}
-                        option={opt}
-                        selected={opt.value === value}
-                        highlighted={flatIdx === dropdown.highlightIdx}
-                        idx={flatIdx}
-                        onSelect={dropdown.handleSelect}
-                        renderOption={renderOption}
-                      />
-                    );
-                  })}
-                </div>
-              ))
-            ) : (
-              allOptions.map((opt, idx) => (
-                <SelectItem
-                  key={opt.value}
-                  option={opt}
-                  selected={opt.value === value}
-                  highlighted={idx === dropdown.highlightIdx}
-                  idx={idx}
-                  onSelect={dropdown.handleSelect}
-                  renderOption={renderOption}
-                />
-              ))
-            )}
+              )}
+            </ScrollArea>
           </div>
         </Portal>
       )}

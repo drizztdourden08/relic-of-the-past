@@ -1,19 +1,27 @@
 /* @layer electron-main @kind logic */
 /**
- * Appends a new area or location record to its dataset file.
+ * Writing an area or a location record.
  *
- * The caller supplies a display name and nothing else: the id comes from the
- * allocator and the record text comes from the dataset's own emitter, so neither
- * a name-derived id nor a stale record shape can reach disk from here.
+ * Creating one is its own channel and always has been: the caller supplies a
+ * display name and nothing else, because that is all there is to a brand-new
+ * area or location, and the id comes from the allocator. Rewriting and removing
+ * one take the whole record, like every other record-facade collection, and go
+ * through the shared engine.
+ *
+ * Both files are flat and singular, so there is no destination to derive —
+ * which is the one thing that makes these two the cheapest of the six.
  */
 
 import { readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { serializeAreaRecord, serializeLocationRecord } from '@shared/game/data/record-codegen';
+import { areaRecordFile, locationRecordFile } from '@shared/game/data/record-file-targets';
 import type { AreaId, AreaRecord, LocationRecord } from '@shared/game/data/types';
 import type {
-  Allocated, AllocateGeographyArgs, AllocateGeographyResult,
+  Allocated, AllocateGeographyArgs, AllocateGeographyResult, DeleteRecordArgs, WriteRecordArgs, WriteRecordResult,
 } from '@shared/ipc/screen-editor-contract';
+import { deleteRecord, updateRecord } from './dataset-record-writer';
+import type { RecordWriterSpec } from './dataset-record-writer';
 import { withAllocatedIds } from './id-allocator';
 import { insertBeforeArrayClose } from './source-writers';
 
@@ -54,4 +62,28 @@ const allocateGeography = async (root: string, args: AllocateGeographyArgs): Pro
   });
 };
 
-export { allocateGeography };
+const AREA_SPEC: RecordWriterSpec<AreaRecord> = {
+  kind: 'area',
+  target: () => areaRecordFile(),
+  serialize: serializeAreaRecord,
+};
+
+const LOCATION_SPEC: RecordWriterSpec<LocationRecord> = {
+  kind: 'location',
+  target: () => locationRecordFile(),
+  serialize: serializeLocationRecord,
+};
+
+const writeAreaRecord = (root: string, args: WriteRecordArgs<AreaRecord>): Promise<WriteRecordResult> =>
+  updateRecord(root, AREA_SPEC, args.id, args.record);
+
+const deleteArea = (root: string, args: DeleteRecordArgs): Promise<WriteRecordResult> =>
+  deleteRecord(root, AREA_SPEC, args.id);
+
+const writeLocationRecord = (root: string, args: WriteRecordArgs<LocationRecord>): Promise<WriteRecordResult> =>
+  updateRecord(root, LOCATION_SPEC, args.id, args.record);
+
+const deleteLocation = (root: string, args: DeleteRecordArgs): Promise<WriteRecordResult> =>
+  deleteRecord(root, LOCATION_SPEC, args.id);
+
+export { allocateGeography, deleteArea, deleteLocation, writeAreaRecord, writeLocationRecord };

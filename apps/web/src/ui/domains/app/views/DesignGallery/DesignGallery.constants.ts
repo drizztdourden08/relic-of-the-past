@@ -88,6 +88,7 @@ const TYPE_SCALE: TokenSpec[] = [
 ];
 
 const SPACE_SCALE: TokenSpec[] = [
+  { name: '2xs', cssVar: '--space-2xs', value: '2px', note: 'caption to its control' },
   { name: 'xs', cssVar: '--space-xs', value: '4px' },
   { name: 'sm', cssVar: '--space-sm', value: '8px' },
   { name: 'md', cssVar: '--space-md', value: '12px' },

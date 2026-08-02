@@ -12,7 +12,7 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-005',
     locationId: 'location-020',
     position: { gridX: 7, gridY: 9, floor: -1 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     triggerIds: ['actor-033'],
   },
@@ -25,7 +25,7 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-005',
     locationId: 'location-020',
     position: { gridX: 1, gridY: 11, floor: -1 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-236', tile: { x: 42, y: 14 } },
@@ -49,7 +49,7 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-005',
     locationId: 'location-020',
     position: { gridX: 2, gridY: 11, floor: -1 },
-    tags: ['env:underground', 'role:hub'],
+    tags: ['tag-003', 'tag-009'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-121', tile: { x: 40, y: 16 } },
@@ -77,7 +77,7 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-005',
     locationId: 'location-020',
     position: { gridX: 3, gridY: 11, floor: -1 },
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     triggerIds: ['actor-043'],
     spawns: [
@@ -97,7 +97,7 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-005',
     locationId: 'location-020',
     position: { gridX: 1, gridY: 12, floor: -1 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     triggerIds: ['actor-045'],
     spawns: [
@@ -123,7 +123,7 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-005',
     locationId: 'location-020',
     position: { gridX: 2, gridY: 12, floor: -1 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     triggerIds: ['actor-043'],
     spawns: [
@@ -146,7 +146,7 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-005',
     locationId: 'location-020',
     position: { gridX: 3, gridY: 12, floor: -1 },
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-236', tile: { x: 10, y: 12 } },
@@ -167,7 +167,7 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-005',
     locationId: 'location-020',
     position: { gridX: 1, gridY: 13, floor: -1 },
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-096', tile: { x: 40, y: 12 } },
@@ -189,7 +189,7 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-005',
     locationId: 'location-020',
     position: { gridX: 2, gridY: 13, floor: -1 },
-    tags: ['env:underground', 'role:hub'],
+    tags: ['tag-003', 'tag-009'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-121', tile: { x: 48, y: 12 } },

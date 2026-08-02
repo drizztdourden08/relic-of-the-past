@@ -1,6 +1,23 @@
 /* @layer renderer-components @kind hook */
 import { useState, useRef, useCallback, useEffect } from 'react';
+import { dropPanelPositionFor, useAnchorTracking } from '../../Portal';
 import type { SelectOption } from '../Select.type';
+
+/** Below this much room underneath, flipping above is worth considering. */
+const ROOM_FOR_DROP_DOWN = 200;
+
+/** Breathing space between the trigger and the panel. */
+const TRIGGER_GAP = 4;
+
+/** A narrow trigger still gets a readable list — mirrors `.select-content`'s min-width. */
+const MIN_PANEL_WIDTH = 180;
+
+const selectPositionFor = (rect: DOMRect) =>
+  dropPanelPositionFor(rect, {
+    roomForDropDown: ROOM_FOR_DROP_DOWN,
+    gap: TRIGGER_GAP,
+    minPanelWidth: MIN_PANEL_WIDTH,
+  });
 
 interface UseSelectDropdownParams {
   disabled: boolean;
@@ -18,7 +35,6 @@ const useSelectDropdown = (params: UseSelectDropdownParams) => {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-  const [pos, setPos] = useState<{ top: number; left: number; width: number }>({ top: 0, left: 0, width: 200 });
 
   const filtered = search
     ? allOptions.filter(
@@ -28,21 +44,6 @@ const useSelectDropdown = (params: UseSelectDropdownParams) => {
       )
     : allOptions;
 
-  const updatePosition = useCallback(() => {
-    if (!triggerRef.current) return;
-    const rect = triggerRef.current.getBoundingClientRect();
-    const spaceBelow = window.innerHeight - rect.bottom;
-    const dropUp = spaceBelow < 200 && rect.top > spaceBelow;
-    setPos({
-      top: dropUp ? rect.top - 4 : rect.bottom + 4,
-      left: rect.left,
-      width: rect.width,
-    });
-    if (contentRef.current) {
-      contentRef.current.style.transform = dropUp ? 'translateY(-100%)' : '';
-    }
-  }, []);
-
   const handleOpen = useCallback(() => {
     if (disabled) return;
     setOpen(true);
@@ -50,11 +51,29 @@ const useSelectDropdown = (params: UseSelectDropdownParams) => {
     setHighlightIdx(-1);
   }, [disabled]);
 
-  const handleClose = useCallback(() => {
+  /**
+   * Dismissal that leaves focus alone. Restoring focus to a trigger the user
+   * has just scrolled off screen would drag it straight back into view, so the
+   * scroll path uses this while every deliberate close uses `handleClose`.
+   */
+  const handleDismiss = useCallback(() => {
     setOpen(false);
     setSearch('');
-    triggerRef.current?.focus();
   }, []);
+
+  const handleClose = useCallback(() => {
+    handleDismiss();
+    triggerRef.current?.focus();
+  }, [handleDismiss]);
+
+  // The panel is portalled and positioned in viewport coordinates, so it only
+  // stays attached to the trigger if it is re-measured as things scroll.
+  const { position: pos } = useAnchorTracking({
+    active: open,
+    anchorRef: triggerRef,
+    compute: selectPositionFor,
+    onOutOfView: handleDismiss,
+  });
 
   const handleSelect = useCallback(
     (val: string) => {
@@ -64,17 +83,12 @@ const useSelectDropdown = (params: UseSelectDropdownParams) => {
     [onChange, handleClose],
   );
 
-  // Update position when opening
+  // Focus the search box once the panel has been laid out
   useEffect(() => {
-    if (open) {
-      updatePosition();
-      requestAnimationFrame(() => {
-        if (searchable && searchRef.current) {
-          searchRef.current.focus();
-        }
-      });
-    }
-  }, [open, updatePosition, searchable]);
+    if (!open || !searchable) return undefined;
+    const frame = requestAnimationFrame(() => searchRef.current?.focus());
+    return () => cancelAnimationFrame(frame);
+  }, [open, searchable]);
 
   // Close on outside click
   useEffect(() => {

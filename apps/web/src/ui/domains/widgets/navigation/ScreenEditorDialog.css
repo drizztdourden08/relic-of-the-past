@@ -77,10 +77,21 @@
   gap: var(--space-xs);
 }
 
+/* The rows use the Field primitive, whose label is uppercase and letter-spaced
+   for a settings page. These rows are dense and stacked, so they keep the
+   editor's own quieter label treatment. */
 .screen-editor__row label {
   font-size: var(--text-xs);
   color: var(--c-text-dim);
   font-weight: var(--weight-medium);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* The two halves of a single grid coordinate, side by side in one row. */
+.screen-editor__grid-pair {
+  display: flex;
+  gap: var(--space-xs);
 }
 
 .screen-editor__row--half {
@@ -138,19 +149,6 @@
 .screen-editor__file-target code {
   color: var(--c-gold);
   font-family: var(--font-mono);
-}
-
-.screen-editor__code {
-  background: var(--c-bg);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-sm);
-  padding: var(--space-sm);
-  font-size: var(--text-sm);
-  font-family: var(--font-mono);
-  color: var(--c-text);
-  white-space: pre;
-  overflow-x: auto;
-  line-height: 1.5;
 }
 
 .screen-editor__error {

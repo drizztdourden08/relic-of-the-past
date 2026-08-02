@@ -11,7 +11,7 @@ const LW_CAVES_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-175',
     direction: 'two-way',
     counterpartId: 'connection-327',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-324',
@@ -20,7 +20,7 @@ const LW_CAVES_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-226',
     placement: { at: 'area', rect: { x: 40, y: 14, w: 2, h: 2 } },
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:entrance', 'barrier:dash'],
+    tags: ['tag-072', 'tag-074', 'tag-066'],
     requirements: { itemId: 'item-076' },
   },
   {
@@ -31,7 +31,7 @@ const LW_CAVES_2_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 40, y: 14, w: 2, h: 2 } },
     direction: 'two-way',
     counterpartId: 'connection-329',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-326',
@@ -39,7 +39,7 @@ const LW_CAVES_2_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-176',
     toScreenId: 'screen-175',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:internal'],
+    tags: ['tag-072', 'tag-076'],
   },
   {
     id: 'connection-327',
@@ -49,7 +49,7 @@ const LW_CAVES_2_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
     direction: 'two-way',
     counterpartId: 'connection-323',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
   {
     id: 'connection-328',
@@ -57,7 +57,7 @@ const LW_CAVES_2_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-226',
     toScreenId: 'screen-225',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:internal'],
+    tags: ['tag-072', 'tag-076'],
   },
   {
     id: 'connection-329',
@@ -67,7 +67,7 @@ const LW_CAVES_2_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
     direction: 'two-way',
     counterpartId: 'connection-325',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
   {
     id: 'connection-330',
@@ -75,7 +75,7 @@ const LW_CAVES_2_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-004',
     toScreenId: 'screen-179',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-331',
@@ -83,7 +83,7 @@ const LW_CAVES_2_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-016',
     toScreenId: 'screen-173',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-332',
@@ -92,7 +92,7 @@ const LW_CAVES_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-189',
     direction: 'two-way',
     counterpartId: 'connection-336',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-333',
@@ -100,7 +100,7 @@ const LW_CAVES_2_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-041',
     toScreenId: 'screen-163',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-334',
@@ -109,7 +109,7 @@ const LW_CAVES_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-164',
     direction: 'one-way',
     counterpartId: 'connection-335',
-    tags: ['transit:push', 'dir:one-way', 'ctx:internal'],
+    tags: ['tag-054', 'tag-072', 'tag-076'],
   },
   {
     id: 'connection-335',
@@ -118,7 +118,7 @@ const LW_CAVES_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-173',
     direction: 'one-way',
     counterpartId: 'connection-334',
-    tags: ['dir:one-way', 'ctx:internal'],
+    tags: ['tag-072', 'tag-076'],
   },
   {
     id: 'connection-336',
@@ -128,7 +128,7 @@ const LW_CAVES_2_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
     direction: 'two-way',
     counterpartId: 'connection-332',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
   {
     id: 'connection-337',
@@ -136,7 +136,7 @@ const LW_CAVES_2_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-189',
     toScreenId: 'screen-164',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-388',
@@ -145,7 +145,7 @@ const LW_CAVES_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-008',
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
   {
     id: 'connection-393',
@@ -153,7 +153,7 @@ const LW_CAVES_2_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-163',
     toScreenId: 'screen-198',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:internal'],
+    tags: ['tag-072', 'tag-076'],
   },
 ];
 

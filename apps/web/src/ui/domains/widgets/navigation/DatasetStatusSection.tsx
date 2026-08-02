@@ -10,6 +10,7 @@ import type { CSSProperties } from 'react';
 import { Box, Text, StatusBadge, Button } from '../../../design-system/primitives';
 import { S } from './dataset-widget-styles';
 import { DatasetStatusPill } from './DatasetStatusPill';
+import { SCREEN_STATUS_LABELS } from './screen-status-labels';
 import type { useScreenDataStatus, useConnectionStatus } from './useDatasetStatus';
 import type { useScreenDetection } from './hooks';
 import type { wasmGetProgressIndicator } from '../../../../lib/game';
@@ -79,7 +80,7 @@ const DatasetStatusSection = (props: DatasetStatusSectionProps) => {
         {screenStatus.screen && (
           <Box style={S.infoRow}>
             <Text style={S.infoLabel}>Status</Text>
-            <StatusBadge status={screenStatus.screen.status} />
+            <StatusBadge status={screenStatus.screen.status} labels={SCREEN_STATUS_LABELS} />
           </Box>
         )}
         {screenStatus.screen && !screenStatus.screen.variant && detectionResult?.method === 'cave-ambiguous' && progressInfo && (

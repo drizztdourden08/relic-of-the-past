@@ -8,7 +8,8 @@ interface TagPickerOption<T extends string = string> {
 
 interface TagPickerGroup<T extends string = string> {
   id: string;
-  label: string;
+  /** Omitted for one flat set, where a heading would only repeat the overall label */
+  label?: string;
   options: TagPickerOption<T>[];
 }
 
@@ -22,13 +23,22 @@ interface TagPickerProps<T extends string = string> {
   /** Overall label above all groups */
   label?: string;
   disabled?: boolean;
+  /**
+   * One pick at a time: choosing replaces instead of adding, so the array that
+   * comes back holds at most one value and the chips behave as radios. The
+   * value stays an array either way, which is what keeps this one component
+   * rather than two that look alike.
+   */
+  single?: boolean;
 }
 
 const TagPicker = <T extends string = string>(props: TagPickerProps<T>) => {
-  const { value, groups, onChange, label, disabled = false } = props;
+  const { value, groups, onChange, label, disabled = false, single = false } = props;
 
   const toggle = (tag: T) => {
-    if (value.includes(tag)) {
+    if (single) {
+      onChange(value.includes(tag) ? [] : [tag]);
+    } else if (value.includes(tag)) {
       onChange(value.filter(v => v !== tag));
     } else {
       onChange([...value, tag]);
@@ -40,12 +50,15 @@ const TagPicker = <T extends string = string>(props: TagPickerProps<T>) => {
       {label && <span className="tag-picker__label">{label}</span>}
       {groups.map(group => (
         <div key={group.id} className="tag-picker__group">
-          <span className="tag-picker__group-label">{group.label}</span>
-          <div className="tag-picker__tags">
+          {group.label && <span className="tag-picker__group-label">{group.label}</span>}
+          <div className="tag-picker__tags" role={single ? 'radiogroup' : undefined} aria-label={single ? label : undefined}>
             {group.options.map(opt => (
               <button
                 key={opt.value}
                 type="button"
+                role={single ? 'radio' : undefined}
+                aria-checked={single ? value.includes(opt.value) : undefined}
+                aria-pressed={single ? undefined : value.includes(opt.value)}
                 className={`tag-picker__tag ${value.includes(opt.value) ? 'tag-picker__tag--active' : ''}`}
                 onClick={() => toggle(opt.value)}
                 disabled={disabled}

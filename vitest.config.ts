@@ -11,6 +11,7 @@ export default defineConfig({
     alias: {
       '@shared': resolve(__dirname, 'shared'),
       '@app': resolve(__dirname, 'apps/web/src'),
+      '@ds': resolve(__dirname, 'apps/web/src/ui/design-system'),
     },
   },
 });

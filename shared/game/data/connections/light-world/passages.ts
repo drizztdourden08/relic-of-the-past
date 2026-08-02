@@ -9,7 +9,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-062',
     toScreenId: 'screen-171',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:entrance'],
+    tags: ['tag-072', 'tag-074'],
   },
   {
     id: 'connection-377',
@@ -17,7 +17,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-027',
     toScreenId: 'screen-227',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:entrance', 'barrier:event'],
+    tags: ['tag-072', 'tag-074', 'tag-065'],
   },
   {
     id: 'connection-378',
@@ -25,7 +25,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-021',
     toScreenId: 'screen-227',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-379',
@@ -33,7 +33,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-227',
     toScreenId: 'screen-062',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:internal'],
+    tags: ['tag-072', 'tag-076'],
   },
   {
     id: 'connection-380',
@@ -42,7 +42,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-190',
     direction: 'two-way',
     counterpartId: 'connection-383',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-381',
@@ -51,7 +51,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-190',
     direction: 'two-way',
     counterpartId: 'connection-382',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-382',
@@ -61,7 +61,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
     direction: 'two-way',
     counterpartId: 'connection-381',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
   {
     id: 'connection-383',
@@ -71,7 +71,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
     direction: 'two-way',
     counterpartId: 'connection-380',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
   {
     id: 'connection-384',
@@ -79,7 +79,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-038',
     toScreenId: 'screen-190',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:save-quit'],
+    tags: ['tag-072', 'tag-078'],
   },
   {
     id: 'connection-385',
@@ -87,7 +87,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-004',
     toScreenId: 'screen-180',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-386',
@@ -95,7 +95,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-008',
     toScreenId: 'screen-178',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-387',
@@ -104,7 +104,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-179',
     placement: { at: 'side', side: 'west' },
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:internal', 'barrier:dark'],
+    tags: ['tag-072', 'tag-076', 'tag-062'],
   },
   {
     id: 'connection-389',
@@ -113,7 +113,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-040',
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
   {
     id: 'connection-390',
@@ -121,7 +121,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-007',
     toScreenId: 'screen-191',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-391',
@@ -130,7 +130,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-052',
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
   {
     id: 'connection-392',
@@ -139,7 +139,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-198',
     direction: 'two-way',
     counterpartId: 'connection-394',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-394',
@@ -149,7 +149,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 31, end: 32 } },
     direction: 'two-way',
     counterpartId: 'connection-392',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
   {
     id: 'connection-395',
@@ -157,7 +157,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-019',
     toScreenId: 'screen-194',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-396',
@@ -165,7 +165,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-018',
     toScreenId: 'screen-185',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-397',
@@ -173,7 +173,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-194',
     toScreenId: 'screen-195',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:internal'],
+    tags: ['tag-072', 'tag-076'],
   },
   {
     id: 'connection-398',
@@ -182,7 +182,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-195',
     placement: { at: 'area', rect: { x: 9, y: 3, w: 2, h: 2 } },
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:internal'],
+    tags: ['tag-072', 'tag-076'],
   },
   {
     id: 'connection-399',
@@ -191,7 +191,7 @@ const LW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-019',
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 31, end: 32 } },
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:exit'],
+    tags: ['tag-072', 'tag-075'],
   },
 ];
 

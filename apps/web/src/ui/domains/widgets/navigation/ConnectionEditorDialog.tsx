@@ -11,7 +11,7 @@
 
 import { Box, Text, Button, Badge, TextInput } from '../../../design-system/primitives';
 import { WizardDialogShell } from '../../../design-system/composites/WizardDialogShell';
-import { CONNECTION_TAG_METADATA } from '@shared/game/data';
+import { CONNECTION_TAG_METADATA, CONNECTION_TAG_NAMESPACES } from '@shared/game/data';
 import { useConnectionEditor } from './useConnectionEditor';
 import type { ConnectionEditorParams } from './useConnectionEditor';
 import { connectionIssues } from './connection-issues';
@@ -106,10 +106,10 @@ const ConnectionEditorDialog = (props: ConnectionEditorDialogProps) => {
                 )}
                 {editingIdx === idx && (
                   <Box className="conn-editor__item-tags">
-                    {(['transit', 'barrier', 'dir', 'ctx'] as const).map(ns => (
-                      <Box key={ns} className="conn-editor__tag-group">
-                        <Text className="conn-editor__tag-ns">{ns}</Text>
-                        {CONNECTION_TAG_METADATA.filter(t => t.namespace === ns).map(t => (
+                    {CONNECTION_TAG_NAMESPACES.map(ns => (
+                      <Box key={ns.id} className="conn-editor__tag-group">
+                        <Text className="conn-editor__tag-ns">{ns.label}</Text>
+                        {CONNECTION_TAG_METADATA.filter(t => t.namespace === ns.id).map(t => (
                           <Button
                             variant="bare"
                             key={t.id}

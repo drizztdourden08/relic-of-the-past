@@ -12,7 +12,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-788',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:dungeon-enter', 'barrier:medallion'],
+    tags: ['tag-073', 'tag-081', 'tag-063'],
   },
   {
     id: 'connection-762',
@@ -22,7 +22,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-790',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:dungeon-enter'],
+    tags: ['tag-073', 'tag-081'],
   },
   {
     id: 'connection-763',
@@ -32,7 +32,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-791',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:dungeon-enter'],
+    tags: ['tag-073', 'tag-081'],
   },
   {
     id: 'connection-764',
@@ -42,7 +42,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-789',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:dungeon-enter'],
+    tags: ['tag-073', 'tag-081'],
   },
   {
     id: 'connection-780',
@@ -52,7 +52,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east', tileRange: { axis: 'y', start: 48, end: 49 } },
     direction: 'two-way',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-781',
@@ -62,7 +62,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-782',
@@ -72,7 +72,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
     direction: 'two-way',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-783',
@@ -82,7 +82,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-784',
@@ -92,7 +92,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-785',
@@ -102,7 +102,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-786',
@@ -111,7 +111,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-416',
     direction: 'two-way',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-787',
@@ -120,7 +120,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-326',
     direction: 'two-way',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:internal', 'barrier:small-key'],
+    tags: ['tag-073', 'tag-076', 'tag-057'],
   },
   {
     id: 'connection-788',
@@ -130,7 +130,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-761',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
   {
     id: 'connection-789',
@@ -140,7 +140,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-764',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
   {
     id: 'connection-790',
@@ -150,7 +150,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-762',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
   {
     id: 'connection-791',
@@ -160,7 +160,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_0_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-763',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
 ];
 

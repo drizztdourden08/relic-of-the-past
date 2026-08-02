@@ -1,6 +1,7 @@
 /* @layer shared-game @kind data */
 /** Further split by locality out of checks/{dungeons,light-world,dark-world}.ts — Package T. */
 import type { CheckRecord } from '../../types';
+import { ITEM_GROUP_IDS } from '../../item-groups';
 
 const LW_LOST_WOODS_CHECKS: CheckRecord[] = [
   {
@@ -26,7 +27,7 @@ const LW_LOST_WOODS_CHECKS: CheckRecord[] = [
     screenId: 'screen-036',
     randomizerName: 'Master Sword Pedestal',
     vanillaItemIds: ['item-079'],
-    requirements: { count: { groupId: 'Pendants', n: 3 } },
+    requirements: { count: { groupId: ITEM_GROUP_IDS.Pendants, n: 3 } },
   },
 ];
 

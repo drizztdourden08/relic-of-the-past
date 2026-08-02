@@ -83,8 +83,9 @@ const MIRROR = 26;
  * byte rather than granting through `Link_ReceiveItem`, so the facade has no
  * native fact to resolve them by and the id is stated outright.
  *
- * The pendants point at `item-056/057/058`, which is the trio `ITEM_GROUPS.Pendants`
- * and the sage's own `presence`/`requirements` name. The dataset also holds
+ * The pendants point at `item-056/057/058`, which is the trio the `Pendants`
+ * item group (`ITEM_GROUP_IDS.Pendants`) names, and the sage's own
+ * `presence`/`requirements` name. The dataset also holds
  * `item-109/110/111` — a second record per pendant, same display name — and this
  * used to grant those instead. Nothing noticed while the consumers compared names,
  * because both spell "Green Pendant"; the moment the inventory became a set of ids

@@ -12,7 +12,7 @@ const LW_DUNGEON_DESERT_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-009',
     locationId: 'location-011',
     position: { gridX: 3, gridY: 3, floor: 0 },
-    tags: ['env:underground', 'role:boss'],
+    tags: ['tag-003', 'tag-006'],
     status: 'mapped',
     triggerIds: ['actor-026', 'actor-041'],
     spawns: [
@@ -30,7 +30,7 @@ const LW_DUNGEON_DESERT_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-009',
     locationId: 'location-011',
     position: { gridX: 3, gridY: 4, floor: 0 },
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     triggerIds: ['actor-034'],
     spawns: [
@@ -46,7 +46,7 @@ const LW_DUNGEON_DESERT_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-009',
     locationId: 'location-011',
     position: { gridX: 3, gridY: 5, floor: 0 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-088', tile: { x: 46, y: 14 } },
@@ -73,7 +73,7 @@ const LW_DUNGEON_DESERT_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-009',
     locationId: 'location-011',
     position: { gridX: 3, gridY: 6, floor: 0 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-096', tile: { x: 14, y: 48 } },
@@ -88,7 +88,7 @@ const LW_DUNGEON_DESERT_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-009',
     locationId: 'location-011',
     position: { gridX: 3, gridY: 7, floor: 0 },
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
@@ -110,7 +110,7 @@ const LW_DUNGEON_DESERT_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-009',
     locationId: 'location-011',
     position: { gridX: 3, gridY: 8, floor: 0 },
-    tags: ['env:underground', 'role:entrance'],
+    tags: ['tag-003', 'tag-005'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-097', tile: { x: 54, y: 16 } },
@@ -134,7 +134,7 @@ const LW_DUNGEON_DESERT_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-009',
     locationId: 'location-011',
     position: { gridX: 4, gridY: 8, floor: 0 },
-    tags: ['env:underground', 'role:entrance', 'role:hub'],
+    tags: ['tag-003', 'tag-005', 'tag-009'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-104', tile: { x: 6, y: 10 } },
@@ -155,7 +155,7 @@ const LW_DUNGEON_DESERT_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-009',
     locationId: 'location-011',
     position: { gridX: 5, gridY: 8, floor: 0 },
-    tags: ['env:underground', 'role:entrance'],
+    tags: ['tag-003', 'tag-005'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-097', tile: { x: 14, y: 28 } },

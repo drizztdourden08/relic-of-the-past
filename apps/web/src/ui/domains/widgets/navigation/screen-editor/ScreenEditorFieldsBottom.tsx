@@ -1,9 +1,8 @@
 /* @layer renderer-widgets @kind component */
 /** ScreenEditor step-1 bottom: identity/metadata + optional variant condition. */
-import { Box, Button, Select, TagPicker, TextInput, Checkbox } from '../../../../design-system/primitives';
+import { Box, Button, Field, Select, TagPicker, TextInput, Checkbox } from '../../../../design-system/primitives';
 import type { AreaId, LocationId, VariantCondition } from '@shared/game/data';
 import { CONDITION_TYPE_OPTIONS, TAG_GROUPS } from './screen-editor-constants';
-import { EditorField } from './EditorField';
 import { LockedValue } from './LockedValue';
 import type { ScreenEditor } from './useScreenEditor';
 
@@ -23,12 +22,12 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
     <>
       {/* ── Section 3: Identity & Metadata ── */}
       <Box className="screen-editor__section">
-        <EditorField className="screen-editor__row" label="Name">
+        <Field className="screen-editor__row" label="Name">
           <TextInput value={randomizerName} onChange={e => setRandomizerName(e.target.value)} placeholder="Screen name" />
-        </EditorField>
+        </Field>
 
         {/* Area — editable for all types (dungeon defaults from meta) */}
-        <EditorField className="screen-editor__row" label="Area">
+        <Field className="screen-editor__row" label="Area">
           {!creatingArea ? (
             <Box className="screen-editor__select-with-action">
               <Select
@@ -49,15 +48,15 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
               <Button variant="tertiary" onClick={() => setCreatingArea(false)}>Cancel</Button>
             </Box>
           )}
-        </EditorField>
+        </Field>
 
         {/* Location — locked for dungeon, editable for interior/overworld */}
         {isDungeonLocked ? (
-          <EditorField className="screen-editor__row screen-editor__row--locked" label="Location">
+          <Field className="screen-editor__row screen-editor__row--locked" label="Location">
             <LockedValue>{resolvedLocation}</LockedValue>
-          </EditorField>
+          </Field>
         ) : (
-          <EditorField className="screen-editor__row" label="Location">
+          <Field className="screen-editor__row" label="Location">
             {!creatingLocation ? (
               <Box className="screen-editor__select-with-action">
                 <Select
@@ -78,13 +77,13 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
                 <Button variant="tertiary" onClick={() => setCreatingLocation(false)}>Cancel</Button>
               </Box>
             )}
-          </EditorField>
+          </Field>
         )}
 
         {kind === 'interior' && (
-          <EditorField className="screen-editor__row" label="Entrance ID">
+          <Field className="screen-editor__row" label="Entrance ID">
             <TextInput value={entranceId} onChange={e => setEntranceId(e.target.value)} placeholder="Optional hex — disambiguates shared rooms" />
-          </EditorField>
+          </Field>
         )}
         <TagPicker
           label="Tags"
@@ -102,25 +101,25 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
         {hasVariant && (
           <>
             <Box className="screen-editor__row screen-editor__row--half">
-              <EditorField label="Key">
+              <Field label="Key">
                 <TextInput value={variantKey} onChange={e => setVariantKey(e.target.value)} placeholder="e.g. intro" />
-              </EditorField>
-              <EditorField label="Label (optional)">
+              </Field>
+              <Field label="Label (optional)">
                 <TextInput value={variantLabel} onChange={e => setVariantLabel(e.target.value)} placeholder="Display label" />
-              </EditorField>
+              </Field>
             </Box>
-            <EditorField className="screen-editor__row" label="Condition">
+            <Field className="screen-editor__row" label="Condition">
               <Select
                 options={CONDITION_TYPE_OPTIONS}
                 value={conditionType}
                 onChange={v => setConditionType(v as VariantCondition['type'])}
               />
-            </EditorField>
+            </Field>
             {conditionType === 'check' && (
               <Box className="screen-editor__row screen-editor__row--half">
-                <EditorField label="Check Id">
+                <Field label="Check Id">
                   <TextInput value={condCheckId} onChange={e => setCondCheckId(e.target.value)} placeholder="check-031" />
-                </EditorField>
+                </Field>
                 <Box>
                   <Checkbox checked={condCheckCollected} onChange={setCondCheckCollected} label="Collected" />
                 </Box>
@@ -128,30 +127,30 @@ const ScreenEditorFieldsBottom = ({ editor }: { editor: ScreenEditor }) => {
             )}
             {conditionType === 'flag' && (
               <Box className="screen-editor__row screen-editor__row--half">
-                <EditorField label="WRAM Address">
+                <Field label="WRAM Address">
                   <TextInput value={condFlagAddr} onChange={e => setCondFlagAddr(e.target.value)} placeholder="0x7EF..." />
-                </EditorField>
-                <EditorField label="Bit">
+                </Field>
+                <Field label="Bit">
                   <TextInput value={condFlagBit} onChange={e => setCondFlagBit(e.target.value)} placeholder="0-7" />
-                </EditorField>
+                </Field>
                 <Box>
                   <Checkbox checked={condFlagValue} onChange={setCondFlagValue} label="Value (set)" />
                 </Box>
               </Box>
             )}
             {conditionType === 'entrance' && (
-              <EditorField className="screen-editor__row" label="Entrance ID">
+              <Field className="screen-editor__row" label="Entrance ID">
                 <TextInput value={condEntranceId} onChange={e => setCondEntranceId(e.target.value)} placeholder="Entrance ID to match" />
-              </EditorField>
+              </Field>
             )}
             {conditionType === 'progress' && (
               <Box className="screen-editor__row screen-editor__row--half">
-                <EditorField label="Min Tier">
+                <Field label="Min Tier">
                   <TextInput value={condProgressMin} onChange={e => setCondProgressMin(e.target.value)} placeholder="Optional" />
-                </EditorField>
-                <EditorField label="Max Tier">
+                </Field>
+                <Field label="Max Tier">
                   <TextInput value={condProgressMax} onChange={e => setCondProgressMax(e.target.value)} placeholder="Optional" />
-                </EditorField>
+                </Field>
               </Box>
             )}
           </>

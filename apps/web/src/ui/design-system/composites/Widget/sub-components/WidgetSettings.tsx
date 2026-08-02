@@ -4,8 +4,8 @@
  * Default options (position, opacity) + widget-specific options via children.
  * Rendered as a portal popover anchored below the gear button.
  */
-import { useRef, useLayoutEffect, useState, useEffect, type ReactNode } from 'react';
-import { Portal } from '../../../primitives/Portal';
+import { useRef, useEffect, type ReactNode } from 'react';
+import { Portal, useAnchorTracking } from '../../../primitives/Portal';
 import { Box } from '../../../primitives/Box';
 import { Text } from '../../../primitives/Text';
 import { Checkbox } from '../../../primitives/Checkbox';
@@ -25,24 +25,37 @@ interface WidgetSettingsProps {
   children?: ReactNode;
 }
 
+const PANEL_WIDTH = 240;
+const PANEL_HEIGHT = 160;
+const EDGE_MARGIN = 8;
+const ANCHOR_GAP = 4;
+
+/** Below the gear button, clamped so the panel never hangs off an edge. */
+const panelPositionFor = (rect: DOMRect): { top: number; left: number } => {
+  let top = rect.bottom + ANCHOR_GAP;
+  let left = rect.right - PANEL_WIDTH;
+  if (left < EDGE_MARGIN) left = EDGE_MARGIN;
+  if (left + PANEL_WIDTH > window.innerWidth - EDGE_MARGIN) {
+    left = window.innerWidth - PANEL_WIDTH - EDGE_MARGIN;
+  }
+  if (top + PANEL_HEIGHT > window.innerHeight - EDGE_MARGIN) {
+    top = rect.top - PANEL_HEIGHT - ANCHOR_GAP;
+  }
+  return { top, left };
+};
+
 const WidgetSettings = (props: WidgetSettingsProps) => {
   const { widget, anchorRef, onClose, onChange, children } = props;
   const panelRef = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
 
-  // Position the dropdown below the anchor button, clamped to viewport
-  useLayoutEffect(() => {
-    if (!anchorRef.current) return;
-    const rect = anchorRef.current.getBoundingClientRect();
-    const panelWidth = 240;
-    const panelHeight = 160;
-    let top = rect.bottom + 4;
-    let left = rect.right - panelWidth;
-    if (left < 8) left = 8;
-    if (left + panelWidth > window.innerWidth - 8) left = window.innerWidth - panelWidth - 8;
-    if (top + panelHeight > window.innerHeight - 8) top = rect.top - panelHeight - 4;
-    setPos({ top, left });
-  }, [anchorRef]);
+  // The panel is portalled and placed in viewport coordinates, so it stays
+  // under the gear button only if it is re-measured as things scroll.
+  const { position: pos } = useAnchorTracking({
+    active: true,
+    anchorRef,
+    compute: panelPositionFor,
+    onOutOfView: onClose,
+  });
 
   // Close on outside click
   useEffect(() => {
@@ -79,7 +92,7 @@ const WidgetSettings = (props: WidgetSettingsProps) => {
       <Box
         ref={panelRef}
         className="widget-settings"
-        style={{ position: 'fixed', top: pos.top, left: pos.left, pointerEvents: 'auto' }}
+        style={{ position: 'fixed', top: pos?.top ?? 0, left: pos?.left ?? 0, pointerEvents: 'auto' }}
         onMouseDown={(e) => e.stopPropagation()}
       >
         {/* Default: position */}

@@ -5,7 +5,6 @@ import { resolveRules } from '@shared/game/logic/resolver';
 import { VANILLA_CONFIG } from '@shared/game/data/presets';
 import { find } from '@shared/game/data';
 import type { CheckId, ItemId } from '@shared/game/data';
-import { getCheckTags } from '@shared/game/logic/queries/check-tags';
 import type { GroupDimension, FilterState } from '@shared/game/logic/queries/check-grouping';
 import { buildGroupTree, filterChecks } from '@shared/game/logic/queries/check-grouping';
 import {
@@ -19,13 +18,12 @@ const useChecksData = () => {
   const [completedChecks, setCompletedChecks] = useState<Set<CheckId>>(() => getCompletedChecks());
   const [viewMode, setViewMode] = useState<ViewMode>('compact');
   const [grouping, setGrouping] = useState<GroupDimension[]>(['world', 'dungeon']);
-  const [filter, setFilter] = useState<FilterState>({ searchQuery: '', activeTags: [], tagMode: 'any' });
+  const [filter, setFilter] = useState<FilterState>({ searchQuery: '', activeFacets: [], tagMode: 'any' });
 
   useEffect(() => onInventoryChanged((inv) => setInventory(new Set(inv))), []);
   useEffect(() => onCompletedChecksChanged((checks) => setCompletedChecks(new Set(checks))), []);
 
   const checkRecords = useMemo(() => find('check', () => true), []);
-  const tagMap = useMemo(() => getCheckTags(checkRecords), [checkRecords]);
   const resolvedLogic = useMemo(() => resolveRules(VANILLA_CONFIG), []);
   const effectiveInventory = useMemo(() => {
     const merged = new Set(resolvedLogic.startInventory);
@@ -47,8 +45,8 @@ const useChecksData = () => {
     return { completed, reachable, blocked, total: snapshot.size };
   }, [snapshot]);
 
-  const filteredChecks = useMemo(() => filterChecks(checkRecords, filter, tagMap, snapshot), [checkRecords, filter, tagMap, snapshot]);
-  const groupTree = useMemo(() => buildGroupTree(filteredChecks, snapshot, grouping, tagMap), [filteredChecks, snapshot, grouping, tagMap]);
+  const filteredChecks = useMemo(() => filterChecks(checkRecords, filter, snapshot), [checkRecords, filter, snapshot]);
+  const groupTree = useMemo(() => buildGroupTree(filteredChecks, snapshot, grouping), [filteredChecks, snapshot, grouping]);
 
   return {
     viewMode, setViewMode,

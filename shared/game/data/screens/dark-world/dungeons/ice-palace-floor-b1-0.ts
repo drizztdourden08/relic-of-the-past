@@ -12,7 +12,7 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B1_0: ScreenRecord[] = [
     areaId: 'area-004',
     locationId: 'location-016',
     position: { gridX: 14, gridY: 6, floor: -1 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-213', tile: { x: 38, y: 16 } },
@@ -31,7 +31,7 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B1_0: ScreenRecord[] = [
     areaId: 'area-004',
     locationId: 'location-016',
     position: { gridX: 14, gridY: 7, floor: -1 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     triggerIds: ['actor-270', 'actor-028'],
     spawns: [
@@ -53,7 +53,7 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B1_0: ScreenRecord[] = [
     areaId: 'area-004',
     locationId: 'location-016',
     position: { gridX: 15, gridY: 7, floor: -1 },
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-070', tile: { x: 12, y: 14 } },
@@ -75,7 +75,7 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B1_0: ScreenRecord[] = [
     areaId: 'area-004',
     locationId: 'location-016',
     position: { gridX: 14, gridY: 8, floor: -1 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-124', tile: { x: 54, y: 4 } },
@@ -97,7 +97,7 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B1_0: ScreenRecord[] = [
     areaId: 'area-004',
     locationId: 'location-016',
     position: { gridX: 14, gridY: 9, floor: 0 },
-    tags: ['env:underground', 'role:entrance', 'role:hub'],
+    tags: ['tag-003', 'tag-005', 'tag-009'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-070', tile: { x: 48, y: 10 } },
@@ -116,7 +116,7 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B1_0: ScreenRecord[] = [
     areaId: 'area-004',
     locationId: 'location-016',
     position: { gridX: 15, gridY: 9, floor: 0 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [

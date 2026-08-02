@@ -9,21 +9,33 @@
  * be derived from a name, a hex index or a slug.
  */
 
-import { readdir, readFile } from 'fs/promises';
-import { join } from 'path';
-import { ID_PAD_WIDTH } from '@shared/game/data/types/ids';
+import { readFile } from 'fs/promises';
+import { KIND_ID_PREFIXES, makeId } from '@shared/game/data/types/ids';
+import { collectKindFiles } from './data-files';
 
-/** Where each kind's records live, relative to shared/game/data/. */
+/**
+ * Where each kind's records live, relative to shared/game/data/.
+ *
+ * A LIST rather than one path, because a collection split by size alone spreads
+ * its records over sibling files with no folder of their own to scan — the two
+ * dungeon files being the case that forced it. Every entry is read, so a number
+ * already in use anywhere in the kind is seen.
+ */
 const KIND_ROOTS = {
-  screen: 'screens',
-  connection: 'connections',
-  area: 'areas.ts',
-  location: 'locations.ts',
-} as const;
+  screen: ['screens'],
+  connection: ['connections'],
+  check: ['checks'],
+  item: ['items'],
+  dungeon: ['dungeons-1.ts', 'dungeons-2.ts'],
+  area: ['areas.ts'],
+  location: ['locations.ts'],
+  actor: ['actors'],
+  tag: ['tags'],
+  'item-group': ['item-groups/item-groups.ts'],
+  enumeration: ['enumeration/enumeration.ts'],
+} as const satisfies Record<string, readonly string[]>;
 
 type AllocatableKind = keyof typeof KIND_ROOTS;
-
-const DATA_SEGMENTS = ['shared', 'game', 'data'] as const;
 
 // One queue for all allocations: each task only starts after the previous one has
 // finished reading AND its caller has written, so a concurrent pair cannot both
@@ -36,20 +48,21 @@ const serialize = <T>(task: () => Promise<T>): Promise<T> => {
   return run;
 };
 
-const collectFiles = async (path: string): Promise<string[]> => {
-  if (path.endsWith('.ts')) return [path];
-  const entries = await readdir(path, { withFileTypes: true });
-  const nested = await Promise.all(entries.map(entry => {
-    const child = join(path, entry.name);
-    return entry.isDirectory() ? collectFiles(child) : Promise.resolve(entry.name.endsWith('.ts') ? [child] : []);
-  }));
-  return nested.flat();
-};
-
+/**
+ * Matches the quoted id literal itself, wherever it sits — not only right
+ * after `id:`. Every other kind's records only ever carry the pattern as an
+ * `id:` value, but `item-groups.ts` also writes it as `Swords: 'ig-001'` in
+ * the symbolic `ITEM_GROUP_IDS` map a pristine row's `id` still points at
+ * (see item-group-writer.ts) — a scan anchored on `id:` would never see
+ * those and would keep minting the already-used `ig-001`. Any other kind
+ * referencing a sibling's id (e.g. a connection's `counterpartId`) is still
+ * counted as "used" either way, which is the safe direction: it can only
+ * make the scan skip a taken number, never hand one out twice.
+ */
 const highestUsed = async (root: string, kind: AllocatableKind): Promise<number> => {
-  const base = join(root, ...DATA_SEGMENTS, KIND_ROOTS[kind]);
-  const files = await collectFiles(base);
-  const pattern = new RegExp(`id:\\s*'${kind}-(\\d+)'`, 'g');
+  const files = await collectKindFiles(root, KIND_ROOTS[kind]);
+  const prefix = KIND_ID_PREFIXES[kind];
+  const pattern = new RegExp(`'${prefix}-(\\d+)'`, 'g');
   let highest = 0;
   for (const file of files) {
     const content = await readFile(file, 'utf-8');
@@ -61,7 +74,7 @@ const highestUsed = async (root: string, kind: AllocatableKind): Promise<number>
   return highest;
 };
 
-const format = (kind: AllocatableKind, n: number): string => `${kind}-${String(n).padStart(ID_PAD_WIDTH, '0')}`;
+const format = (kind: AllocatableKind, n: number): string => makeId(kind, n);
 
 /**
  * The next `count` free ids for a kind. Runs the scan and the caller's write on
@@ -78,5 +91,5 @@ const withAllocatedIds = <T>(
   return write(ids);
 });
 
-export { withAllocatedIds };
+export { KIND_ROOTS, withAllocatedIds };
 export type { AllocatableKind };

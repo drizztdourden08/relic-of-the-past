@@ -2,6 +2,7 @@
 import type { DungeonId, ItemId, SpriteId } from './ids';
 import type { ItemCategory } from '../taxonomy/item-categories';
 import type { WeaponProfile } from './combat';
+import type { ItemOrigin } from '../enumeration/generated-types';
 
 interface ItemGameId {
   /** Native Link_ReceiveItem index. Absent for synthetic ids (pendants, crystals, events). */
@@ -12,7 +13,7 @@ interface ItemRecord {
   id: ItemId;
   gameId?: ItemGameId;
   /** A real in-game item vs. a randomizer-only concept. */
-  origin: 'vanilla' | 'randomizer';
+  origin: ItemOrigin;
   category: ItemCategory;
   vanillaName?: string;
   randomizerName: string;
@@ -28,4 +29,4 @@ interface ItemRecord {
   spriteId?: SpriteId;
 }
 
-export type { ItemGameId, ItemRecord };
+export type { ItemGameId, ItemOrigin, ItemRecord };

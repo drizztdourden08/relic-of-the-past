@@ -1,11 +1,12 @@
 /* @layer shared-game @kind logic */
 /**
- * Filters checks by search query, active tags, item reward, and tracker status.
+ * Filters checks by search query, active facets, item reward, and tracker status.
  */
-import type { CheckRecord, CheckTag } from '../../../data';
+import type { CheckRecord } from '../../../data';
 import { getDungeon, getItem, getScreen } from '../../../data';
 import type { CheckStatus } from '../../eval';
 import type { FilterState } from './types';
+import { matchesFacet } from './facets';
 
 const matchesSearch = (check: CheckRecord, query: string): boolean => {
   if (check.id.toLowerCase().includes(query) || check.randomizerName.toLowerCase().includes(query)) return true;
@@ -20,7 +21,6 @@ const matchesSearch = (check: CheckRecord, query: string): boolean => {
 const filterChecks = (
   checks: CheckRecord[],
   filter: FilterState,
-  tagMap: Map<string, CheckTag[]>,
   statuses?: Map<string, CheckStatus>
 ): CheckRecord[] => {
   let result = checks;
@@ -30,13 +30,10 @@ const filterChecks = (
     result = result.filter(c => matchesSearch(c, q));
   }
 
-  if (filter.activeTags.length > 0) {
-    result = result.filter((c) => {
-      const checkTags = tagMap.get(c.id) ?? [];
-      return filter.tagMode === 'all'
-        ? filter.activeTags.every(t => checkTags.includes(t))
-        : filter.activeTags.some(t => checkTags.includes(t));
-    });
+  if (filter.activeFacets.length > 0) {
+    result = result.filter((c) => filter.tagMode === 'all'
+      ? filter.activeFacets.every(f => matchesFacet(c, f))
+      : filter.activeFacets.some(f => matchesFacet(c, f)));
   }
 
   if (filter.itemFilter === 'rewards') {

@@ -1,7 +1,8 @@
 /* @layer tests @kind test */
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeAll, beforeEach } from 'vitest';
 import type { HapticSettings } from '@shared/types/settings';
 import { HapticEventType } from '@shared/input/haptics';
+import type * as HapticBridgeModule from '../../apps/web/src/lib/input/haptic-bridge';
 
 // In-game haptics must reach BOTH controller buses: node-hid pads (Switch Pro, DualSense, 8BitDo)
 // and Gamepad-API/XInput pads (Xbox), which rumble through the vibrationActuator and never appear
@@ -27,7 +28,17 @@ vi.mock('@app/platform/get-platform', () => ({
   getPlatform: () => ({ device: { vibrate: () => {} } }),
 }));
 
-import { initHapticBridge, destroyHapticBridge } from '../../apps/web/src/lib/input/haptic-bridge';
+// haptic-bridge transitively imports lib/log-bus, which touches `window` at
+// module load — the stub has to be in place before that first import happens.
+let initHapticBridge: typeof HapticBridgeModule.initHapticBridge;
+let destroyHapticBridge: typeof HapticBridgeModule.destroyHapticBridge;
+
+beforeAll(async () => {
+  vi.stubGlobal('window', { addEventListener: () => {}, removeEventListener: () => {} });
+  vi.stubGlobal('navigator', { getGamepads: () => h.gamepads });
+  ({ initHapticBridge, destroyHapticBridge } =
+    await import('../../apps/web/src/lib/input/haptic-bridge'));
+});
 
 const settings = (): HapticSettings => ({
   enabled: true, intensity: 100,

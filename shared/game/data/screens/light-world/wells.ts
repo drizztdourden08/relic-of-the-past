@@ -12,7 +12,7 @@ const LW_WELLS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Kakariko Well (top)',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:underground', 'traverse:fall'],
+    tags: ['tag-003', 'tag-040'],
     status: 'mapped',
   },
   {
@@ -24,7 +24,7 @@ const LW_WELLS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Kakariko Well (bottom)',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
   },
 ];

@@ -1,0 +1,143 @@
+/* @layer renderer-components @kind style */
+
+/* A schema-derived form. Nesting is shown with an indent and a rule down the
+   left, so a field five levels deep still reads as belonging to its parent. */
+
+.record-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.record-editor__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+
+.record-editor__legend {
+  display: block;
+  padding: 0 0 var(--space-xs);
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.record-editor__row {
+  border-inline-start: var(--border-width-thick) solid transparent;
+  padding-inline-start: var(--space-sm);
+}
+
+/* The rows use the Field primitive, whose label is uppercase and letter-spaced
+   for a settings page. A schema-derived form is dense and stacked instead, so
+   the label steps back and lets the values carry the column. */
+.record-editor__row label {
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/* Edited but not yet saved. */
+.record-editor__row--dirty {
+  border-inline-start-color: var(--c-gold);
+}
+
+.record-editor__optional {
+  margin-inline-start: var(--space-xs);
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+  text-transform: lowercase;
+}
+
+.record-editor__nest {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-block: var(--space-xs);
+}
+
+.record-editor__nest-label {
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.record-editor__nested {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-inline-start: var(--space-xs);
+  padding-inline-start: var(--space-md);
+  border-inline-start: var(--border-width-thin) solid var(--c-border);
+}
+
+/* Where editing cannot honestly be offered: the kit's own one-line summary. */
+.record-editor__fallback {
+  padding: var(--space-xs) var(--space-sm);
+  border: var(--border-width-thin) dashed var(--c-border);
+  border-radius: var(--radius-sm);
+  background: var(--c-sunken);
+}
+
+.record-editor__note,
+.record-editor__empty {
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+}
+
+.record-editor__array {
+  min-inline-size: 0;
+}
+
+.record-editor__array-row > *:first-child {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+/* One record inside a list: a header strip carrying its position and the
+   structural buttons, then the element's own fields under it. */
+.record-editor__array-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-sm);
+  background: var(--c-sunken);
+}
+
+.record-editor__array-item-head {
+  min-inline-size: 0;
+}
+
+.record-editor__array-index {
+  flex: 1 1 auto;
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.record-editor__tags,
+.record-editor__position {
+  min-inline-size: 0;
+}
+
+.record-editor__footer {
+  padding-top: var(--space-sm);
+  border-top: var(--border-width-thin) solid var(--c-border);
+}
+
+.record-editor__error {
+  flex: 1 1 auto;
+  margin: 0;
+  color: var(--c-danger);
+  font-size: var(--text-sm);
+}

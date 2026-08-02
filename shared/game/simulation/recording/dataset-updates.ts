@@ -5,7 +5,7 @@
  * disagrees with or extends the static screen/connection/check data.
  */
 import type { DatasetSuggestion } from '../types';
-import { find } from '../../data';
+import { find, hasTagKey } from '../../data';
 import type { ConnectionRecord } from '../../data';
 import type { RecorderState, ObservedDoorGate } from './recorder';
 import { DOOR_BARRIER } from '../../data/native-tables';
@@ -20,7 +20,7 @@ const knownConnectionSet = (connections: ConnectionRecord[]): Set<string> => {
   const set = new Set<string>();
   for (const c of connections) {
     set.add(connectionKey(c.fromScreenId, c.toScreenId));
-    if (c.tags.includes('dir:two-way')) set.add(connectionKey(c.toScreenId, c.fromScreenId));
+    if (hasTagKey(c.tags, 'dir:two-way')) set.add(connectionKey(c.toScreenId, c.fromScreenId));
   }
   return set;
 };

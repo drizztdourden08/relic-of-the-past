@@ -14,6 +14,8 @@ import { WizardDialogShell } from '../../../design-system/composites/WizardDialo
 import { useScreenEditor } from './screen-editor/useScreenEditor';
 import { ScreenEditorFieldsTop } from './screen-editor/ScreenEditorFieldsTop';
 import { ScreenEditorFieldsBottom } from './screen-editor/ScreenEditorFieldsBottom';
+import { ScreenCodePreview } from './screen-editor/ScreenCodePreview';
+import { SCREEN_STATUS_LABELS } from './screen-status-labels';
 import type { ScreenEditorProps } from './screen-editor/screen-editor.type';
 import './ScreenEditorDialog.css';
 
@@ -31,7 +33,7 @@ const ScreenEditorDialog = (props: ScreenEditorProps) => {
         Room 0x{roomIndex.toString(16).toUpperCase().padStart(roomIndex > 0xFF ? 4 : 2, '0')}
       </Text>
       <Text as="code" className="screen-editor__generated-id">{screenId ?? 'id allocated on write'}</Text>
-      <StatusBadge status={status} interactive onChange={setStatus} />
+      <StatusBadge status={status} interactive onChange={setStatus} labels={SCREEN_STATUS_LABELS} />
     </>
   );
 
@@ -82,14 +84,12 @@ const ScreenEditorDialog = (props: ScreenEditorProps) => {
 
       {/* Step 2: Preview */}
       {step === 1 && (
-        <Box className="screen-editor__preview">
-          <Box className="screen-editor__file-target">
-            <Text>Target: </Text>
-            <Text as="code">{targetFile.relativePath ?? `unresolved — ${targetFile.unresolved ?? 'no destination'}`}</Text>
-          </Box>
-          <Box as="pre" className="screen-editor__code">{generatedCode}</Box>
-          {writeError && <Text as="p" className="screen-editor__error">{writeError}</Text>}
-        </Box>
+        <ScreenCodePreview
+          code={generatedCode}
+          targetPath={targetFile.relativePath}
+          unresolved={targetFile.unresolved}
+          error={writeError}
+        />
       )}
     </WizardDialogShell>
   );

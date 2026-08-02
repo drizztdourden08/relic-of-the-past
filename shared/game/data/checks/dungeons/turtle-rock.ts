@@ -11,6 +11,7 @@ const DUNGEON_TURTLE_ROCK_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-012',
     randomizerName: 'Compass Chest',
     vanillaItemIds: ['item-038'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-221',
@@ -20,6 +21,7 @@ const DUNGEON_TURTLE_ROCK_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-012',
     randomizerName: 'Roller Room - Left',
     vanillaItemIds: ['item-037'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-222',
@@ -29,6 +31,7 @@ const DUNGEON_TURTLE_ROCK_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-012',
     randomizerName: 'Roller Room - Right',
     vanillaItemIds: ['item-037'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-223',
@@ -48,6 +51,7 @@ const DUNGEON_TURTLE_ROCK_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-012',
     randomizerName: 'Big Key Chest',
     vanillaItemIds: ['item-051'],
+    tags: ['tag-084'],
   },
   {
     id: 'check-225',
@@ -67,6 +71,7 @@ const DUNGEON_TURTLE_ROCK_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-012',
     randomizerName: 'Crystaroller Room',
     vanillaItemIds: ['item-037'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-227',
@@ -76,6 +81,7 @@ const DUNGEON_TURTLE_ROCK_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-012',
     randomizerName: 'Eye Bridge - Bottom Left',
     vanillaItemIds: ['item-037'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-228',
@@ -103,6 +109,7 @@ const DUNGEON_TURTLE_ROCK_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-012',
     randomizerName: 'Eye Bridge - Top Right',
     vanillaItemIds: ['item-052'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-231',
@@ -113,6 +120,7 @@ const DUNGEON_TURTLE_ROCK_CHECKS: CheckRecord[] = [
     randomizerName: 'Boss',
     vanillaItemIds: ['item-039'],
     requirements: { allOf: [{ itemId: 'item-008' }, { itemId: 'item-009' }] },
+    tags: ['tag-086'],
   },
   {
     id: 'check-232',
@@ -123,6 +131,7 @@ const DUNGEON_TURTLE_ROCK_CHECKS: CheckRecord[] = [
     randomizerName: 'Prize',
     vanillaItemIds: ['item-118'],
     requirements: { allOf: [{ itemId: 'item-008' }, { itemId: 'item-009' }] },
+    tags: ['tag-086'],
   },
   {
     id: 'check-233',
@@ -132,6 +141,7 @@ const DUNGEON_TURTLE_ROCK_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-012',
     randomizerName: 'Pokey 1 Key Drop',
     vanillaItemIds: ['item-107'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-234',
@@ -141,6 +151,7 @@ const DUNGEON_TURTLE_ROCK_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-012',
     randomizerName: 'Pokey 2 Key Drop',
     vanillaItemIds: ['item-107'],
+    tags: ['tag-083'],
   },
 ];
 

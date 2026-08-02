@@ -1,0 +1,398 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * Two parts stacked: the grid, which scrolls, and a footer strip, which does
+ * not. The footer is outside the scroller on purpose — a count and an options
+ * button that scroll away with the rows are not there when they are wanted.
+ *
+ * `position: relative` is what the column-remove drop target hangs off — see
+ * `.data-table__trash` below — now that it is a plain absolutely-positioned
+ * child of this element rather than a portalled one.
+ */
+.data-table {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+/*
+ * Wide column sets (a connection carries a lot of fields) scroll HERE and
+ * nowhere else — the page body must never scroll sideways. The header is a
+ * sibling inside that same scroller and is sized `max-content` exactly like the
+ * rows, so it slides with them horizontally while `position: sticky` holds it
+ * vertically. Same technique the previous inspector table needed.
+ */
+.data-table__scroll {
+  /* The column tracks. The component overwrites this per render, and a resize
+     drag overwrites it per mouse move; this is only the standing default. */
+  --dt-tracks: auto;
+
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  border: 1px solid var(--c-hairline);
+  border-radius: var(--r-md);
+  background: var(--c-bg);
+}
+
+/* The strip under the grid brings its own sheet — see TableFooter.css. */
+
+/*
+ * Every row and the header share ONE track list, published as a custom property
+ * on the scroller above them. That is not just tidier than an inline style per
+ * row: it is what lets a resize drag preview itself by writing a single
+ * property, instead of re-rendering every row in the table on every mouse move.
+ */
+.data-table__header,
+.data-table__row {
+  display: grid;
+  grid-template-columns: var(--dt-tracks);
+  gap: var(--space-sm);
+  align-items: center;
+  width: max-content;
+  min-width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.data-table__header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: var(--c-surface);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.data-table__header-cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+  cursor: grab;
+  transition: transform var(--duration-normal) var(--ease-standard);
+}
+
+/* The seam on that trailing edge brings its own sheet — see ColumnResizeHandle.css.
+   The `position: relative` above is what it hangs off. */
+
+/*
+ * ── Drag chrome ───────────────────────────────────────────────────────────
+ * Between them these say the whole story: the slot the column was picked up
+ * from, that same slot once the cursor has moved on and the others have closed
+ * over it, the columns stepping aside, and the edge it comes down on.
+ */
+
+/*
+ * The carried column's own slot, while the cursor is still over it. Its
+ * contents go `visibility: hidden` rather than the cell going transparent, so
+ * the track keeps its width and the hole is a hole rather than a see-through
+ * copy sitting in place. The ghost is excluded: it is parked offscreen and is
+ * what the cursor is carrying.
+ */
+.data-table__header-cell--dragging {
+  background: var(--c-gold-soft);
+  border-radius: var(--r-sm);
+  outline: 1px dashed var(--c-gold-dim);
+  outline-offset: -1px;
+  cursor: grabbing;
+}
+
+/*
+ * The same slot once the cursor has moved on. It keeps its track and empties
+ * out, but wears no marking at all: the columns have closed over it by now,
+ * and a gold box under a column that has slid on top of it is the one place
+ * the drop must NOT look like it is going to land.
+ */
+.data-table__header-cell--vacated {
+  cursor: grabbing;
+}
+
+/*
+ * Two children are spared. The ghost is parked offscreen and is what the cursor
+ * is carrying. The seam matters more: `visibility: hidden` takes an element out
+ * of hit testing, and this is the gutter the cursor crosses FIRST on its way
+ * out of the column it just picked up — hidden, the drag lands on bare grid
+ * there, the header never hears the cursor move on, and nothing steps aside.
+ */
+.data-table__header-cell--dragging > :not(.data-table__drag-ghost, .data-table__resize),
+.data-table__header-cell--vacated > :not(.data-table__drag-ghost, .data-table__resize) {
+  visibility: hidden;
+}
+
+/*
+ * The body half of that hole. The CELL stays visible and its contents do not —
+ * hiding the cell itself would take it out of hit testing, and every body cell
+ * is a drop target now, so the carried column's own cells would answer a drag
+ * over them with the browser's "cannot drop here" cursor.
+ */
+.data-table__cell--dragging {
+  color: transparent;
+}
+
+.data-table__cell--dragging * {
+  visibility: hidden;
+}
+
+/*
+ * The displacement itself is written onto the cells by `useColumnShift` — it is
+ * the carried column's measured width, which no stylesheet can know, and it
+ * lands on the header cell and every body cell of the column together. All the
+ * sheet owes it is the transition it travels over; transform only, so no track
+ * is ever re-measured and no row is ever re-rendered.
+ */
+
+/* The landing edge: a rule down the side of the gap that just opened. */
+.data-table__header-cell--drop-before {
+  box-shadow: inset 2px 0 0 0 var(--c-gold-bright);
+}
+
+.data-table__header-cell--drop-after {
+  box-shadow: inset -2px 0 0 0 var(--c-gold-bright);
+}
+
+/*
+ * The strip handed to setDragImage — the column itself: its name over a few of
+ * its values, narrow and upright so it reads as a column lifted out of the
+ * table. Parked off the top of the viewport: it has to be laid out and painted
+ * for the browser to snapshot it, so it cannot be hidden, only moved out of
+ * sight. The width is a column track's own minimum, so the strip is the width
+ * the column would be.
+ */
+.data-table__drag-ghost {
+  position: fixed;
+  top: -100vh;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 11rem;
+  padding: var(--space-xs) var(--space-sm) var(--space-sm);
+  border: 1px solid var(--c-gold);
+  border-radius: var(--r-md);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-2);
+  pointer-events: none;
+}
+
+/* The grab bar. The drag image is held here, so it wants to look holdable. */
+.data-table__drag-ghost-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  margin-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--c-gold-dim);
+}
+
+.data-table__drag-ghost-grip {
+  color: var(--c-gold-dim);
+}
+
+.data-table__drag-ghost-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--c-gold-bright);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Values read as the table's, one line each — the strip is a sample, not a list. */
+.data-table__drag-ghost-cell {
+  overflow: hidden;
+  padding: calc(var(--space-xs) / 2) 0;
+  color: var(--c-text);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.data-table__drag-ghost-rest {
+  padding-top: var(--space-xs);
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+}
+
+/*
+ * The remove target. A plain absolutely-positioned child of `.data-table` now,
+ * rather than a portalled one — pinned to that container's own bottom-center
+ * rather than the viewport's, so it moves with the table instead of floating
+ * over whatever else is on screen. `z-index` keeps it above the sticky header
+ * and the scrolled rows underneath it.
+ */
+.data-table__trash {
+  position: absolute;
+  z-index: var(--z-floating);
+  bottom: var(--space-xl);
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  width: 7rem;
+  height: 5rem;
+  padding: var(--space-sm);
+  border: 2px dashed var(--c-gold);
+  border-radius: var(--r-lg);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-2);
+  color: var(--c-gold);
+  text-align: center;
+  transform: translateX(-50%);
+  transition:
+    color var(--duration-normal) var(--ease-standard),
+    border-color var(--duration-normal) var(--ease-standard),
+    background var(--duration-normal) var(--ease-standard);
+}
+
+/*
+ * The icon and the caption must not be drop targets of their own, or crossing
+ * from one to the other reads as leaving the box and the red state flickers.
+ */
+.data-table__trash > * {
+  pointer-events: none;
+}
+
+.data-table__trash--over {
+  border-color: var(--c-danger);
+  background: var(--c-danger-dim);
+  color: var(--c-danger);
+}
+
+.data-table__trash-label {
+  font-size: var(--text-xs);
+  color: inherit;
+}
+
+/*
+ * The trailing cell holds no control any more — adding a column is offered by
+ * each column's own ⋯ menu, and once more in the footer's. It stays because it
+ * is the track that absorbs the row's leftover width (see `trackList`), which
+ * is what keeps the last column from stretching to the edge of a wide table.
+ */
+.data-table__header-cell--trailing {
+  justify-content: flex-end;
+  cursor: default;
+  position: relative;
+}
+
+/*
+ * What is INSIDE a header cell — the name, the rename field and the two
+ * controls that overlay them — brings its own sheet; see HeaderCell.css. The
+ * seam on the trailing edge brings another; see ColumnResizeHandle.css.
+ */
+
+.data-table__row {
+  cursor: pointer;
+  border-bottom: 1px solid var(--c-hairline);
+}
+
+.data-table__row:nth-child(even) {
+  background: var(--c-hover);
+}
+
+.data-table__row:hover {
+  background: var(--c-green-soft);
+}
+
+/* Chained with the base class so this beats `:nth-child(even)` on specificity —
+   as a bare class it tied with the even-row rule and lost on an even row. */
+.data-table__row.data-table__row--selected {
+  background: var(--c-selected);
+}
+
+/* The transition is here so a body cell steps aside with its header rather
+   than jumping there — the offset itself is written on by `useColumnShift`. */
+.data-table__cell {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--text-sm);
+  transition: transform var(--duration-normal) var(--ease-standard);
+}
+
+.data-table__group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: max-content;
+  min-width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--c-surface);
+  border-bottom: 1px solid var(--c-hairline);
+}
+
+/*
+ * A plain `.data-table__group-toggle` rule ties on specificity with
+ * `.btn--bare`'s own `display: block; gap: 0` reset — same hazard
+ * `.data-table__row.data-table__row--selected` chains around below, so
+ * without this the toggle's children can fall back to inline text flow
+ * (and visibly misalign) depending on which stylesheet the bundler happens
+ * to place last. The element selector breaks the tie for good.
+ */
+button.data-table__group-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0;
+  cursor: pointer;
+  color: var(--c-text);
+}
+
+.data-table__chevron {
+  color: var(--c-text-dim);
+  width: 1rem;
+}
+
+.data-table__group-key {
+  color: var(--c-text);
+  font-size: var(--text-sm);
+}
+
+/*
+ * The field label and the row count travel together as one unit, pinned to
+ * the scroller's own right edge. `position: sticky; right` is the horizontal
+ * twin of `.data-table__header`'s `position: sticky; top` above, off the same
+ * scrolling ancestor (`.data-table__scroll`). `margin-left: auto` is what
+ * carries the pair to the row's own trailing edge when the row is no wider
+ * than the viewport; the sticky inset is what stops them sailing past the
+ * visible area once the row is wide enough to actually scroll.
+ */
+.data-table__group-total {
+  position: sticky;
+  right: var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-left: auto;
+  padding-left: var(--space-sm);
+  background: var(--c-surface);
+}
+
+.data-table__group-field {
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+}
+
+/*
+ * Chained with the base class for the same specificity-tie reason as
+ * `.data-table__row.data-table__row--selected` — a bare `.data-table__group-count`
+ * would tie with `.badge--neutral` and could lose the gold depending on order.
+ */
+.badge.data-table__group-count {
+  color: var(--c-gold-bright);
+  font-weight: var(--weight-semi);
+}
+
+.data-table__empty {
+  display: block;
+  padding: var(--space-lg);
+  color: var(--c-text-muted);
+  text-align: center;
+}

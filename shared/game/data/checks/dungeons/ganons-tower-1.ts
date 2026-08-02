@@ -11,6 +11,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_1: CheckRecord[] = [
     dungeonId: 'dungeon-013',
     randomizerName: 'Agahnim 2',
     vanillaItemIds: [],
+    tags: ['tag-086'],
   },
   {
     id: 'check-235',
@@ -21,6 +22,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_1: CheckRecord[] = [
     randomizerName: 'Bob\'s Torch',
     vanillaItemIds: ['item-037'],
     requirements: { itemId: 'item-076' },
+    tags: ['tag-083'],
   },
   {
     id: 'check-236',
@@ -48,6 +50,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_1: CheckRecord[] = [
     dungeonId: 'dungeon-013',
     randomizerName: 'Tile Room',
     vanillaItemIds: ['item-037'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-239',
@@ -58,6 +61,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_1: CheckRecord[] = [
     randomizerName: 'Compass Room - Top Left',
     vanillaItemIds: ['item-038'],
     requirements: { itemId: 'item-008' },
+    tags: ['tag-085'],
   },
   {
     id: 'check-240',
@@ -133,6 +137,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_1: CheckRecord[] = [
     dungeonId: 'dungeon-013',
     randomizerName: 'Map Chest',
     vanillaItemIds: ['item-052'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-248',
@@ -142,6 +147,7 @@ const DUNGEON_GANONS_TOWER_CHECKS_1: CheckRecord[] = [
     dungeonId: 'dungeon-013',
     randomizerName: 'Firesnake Room',
     vanillaItemIds: ['item-037'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-249',

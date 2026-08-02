@@ -12,7 +12,7 @@ const DW_OVERWORLD_DARK_NORTH_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-252',
     direction: 'one-way',
     counterpartId: 'connection-429',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-442',
@@ -21,7 +21,7 @@ const DW_OVERWORLD_DARK_NORTH_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-231',
     direction: 'two-way',
     counterpartId: 'connection-443',
-    tags: ['transit:rock', 'dir:two-way', 'ctx:overworld', 'barrier:gloves'],
+    tags: ['tag-053', 'tag-073', 'tag-080', 'tag-060'],
     requirements: canLiftRocks,
   },
   {
@@ -31,7 +31,7 @@ const DW_OVERWORLD_DARK_NORTH_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-252',
     direction: 'two-way',
     counterpartId: 'connection-426',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-445',
@@ -39,7 +39,7 @@ const DW_OVERWORLD_DARK_NORTH_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-255',
     toScreenId: 'screen-070',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { itemId: 'item-027' },
   },
   {
@@ -49,7 +49,7 @@ const DW_OVERWORLD_DARK_NORTH_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-259',
     direction: 'one-way',
     counterpartId: 'connection-448',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-506',
@@ -58,7 +58,7 @@ const DW_OVERWORLD_DARK_NORTH_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-287',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-507',
@@ -67,7 +67,7 @@ const DW_OVERWORLD_DARK_NORTH_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-280',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-508',
@@ -76,7 +76,7 @@ const DW_OVERWORLD_DARK_NORTH_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-295',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-509',
@@ -85,7 +85,7 @@ const DW_OVERWORLD_DARK_NORTH_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-288',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-510',
@@ -94,7 +94,7 @@ const DW_OVERWORLD_DARK_NORTH_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-303',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-511',
@@ -103,7 +103,7 @@ const DW_OVERWORLD_DARK_NORTH_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-296',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-512',
@@ -112,7 +112,7 @@ const DW_OVERWORLD_DARK_NORTH_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-311',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-513',
@@ -121,7 +121,7 @@ const DW_OVERWORLD_DARK_NORTH_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-304',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-521',
@@ -130,7 +130,7 @@ const DW_OVERWORLD_DARK_NORTH_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-288',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
 ];
 

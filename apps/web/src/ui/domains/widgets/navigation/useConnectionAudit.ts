@@ -14,7 +14,7 @@
  */
 
 import { useMemo } from 'react';
-import { find, getScreen } from '@shared/game/data';
+import { connectionTagKeysOf, find, getScreen } from '@shared/game/data';
 import type { ScreenId } from '@shared/game/data';
 import { getScreenLookup } from '@shared/game/logic/queries/detection';
 import { serializeConnectionRecord } from '@shared/game/data/record-codegen';
@@ -107,7 +107,7 @@ const buildBadFindings = (screenId: ScreenId, realTransitions: RealTransition[])
       kind: 'remove',
       fromScreenId: conn.fromScreenId,
       toScreenId: conn.toScreenId,
-      tags: [...conn.tags],
+      tags: [...connectionTagKeysOf(conn.tags)],
       code: serializeConnectionRecord(conn),
       reason,
       targetFile,

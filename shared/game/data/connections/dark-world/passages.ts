@@ -9,7 +9,7 @@ const DW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-017',
     toScreenId: 'screen-463',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-881',
@@ -17,7 +17,7 @@ const DW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-236',
     toScreenId: 'screen-463',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-882',
@@ -25,7 +25,7 @@ const DW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-233',
     toScreenId: 'screen-457',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-883',
@@ -34,7 +34,7 @@ const DW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-457',
     placement: { at: 'area', rect: { x: 15, y: 3, w: 2, h: 2 } },
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:internal'],
+    tags: ['tag-072', 'tag-076'],
   },
   {
     id: 'connection-884',
@@ -43,7 +43,7 @@ const DW_PASSAGES_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-016',
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
 ];
 

@@ -10,7 +10,7 @@ const LW_WELLS_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-221',
     placement: { at: 'area', rect: { x: 22, y: 24, w: 2, h: 2 } },
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:entrance'],
+    tags: ['tag-072', 'tag-074'],
   },
   {
     id: 'connection-405',
@@ -20,7 +20,7 @@ const LW_WELLS_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 22, y: 24, w: 2, h: 2 } },
     direction: 'two-way',
     counterpartId: 'connection-407',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-406',
@@ -28,7 +28,7 @@ const LW_WELLS_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-221',
     toScreenId: 'screen-224',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:internal'],
+    tags: ['tag-072', 'tag-076'],
   },
   {
     id: 'connection-407',
@@ -38,7 +38,7 @@ const LW_WELLS_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
     direction: 'two-way',
     counterpartId: 'connection-405',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
 ];
 

@@ -1,37 +1,14 @@
 /* @layer shared-game @kind types */
-import type { ActorId, ConnectionId, DungeonId, ScreenId } from './ids';
+import type { ActorId, ConnectionId, DungeonId, ScreenId, TagId } from './ids';
 import type { Requirement } from './check';
-import type { ConnectionTag } from '../taxonomy/connection-tags';
 import type { ConnectionNavData } from '../../navigation/nav-data.types';
+import type { ConnectionKind, ConnectionSide } from '../enumeration/generated-types';
 
 interface ConnectionGameId {
   entranceId?: number;
   stairIndex?: number;
   exitId?: number;
 }
-
-/**
- * The six transitions the game itself performs — each one takes control away
- * from the player to move them between screens. Everything else the old
- * `transit:*` vocabulary named (walk, swim, ledge, waterfall, grave, bomb,
- * bonk, rock, push, hookshot) is HOW you reach or clear a crossing, not the
- * crossing itself, so those stay tags.
- */
-type ConnectionKind =
-  /** Scroll across a boundary: overworld border, big-room section boundary. */
-  | 'edge'
-  /** Room ↔ room doorway. Shutter/key/bomb doors are the SAME kind, gated. */
-  | 'door'
-  /** Overworld ↔ interior threshold (the entranceId / exitId pair). */
-  | 'entrance'
-  /** Inter-room / inter-floor staircase (the native stair table). */
-  | 'stairs'
-  /** Any fall-through: a pit to the room below, an overworld hole into a cave. */
-  | 'hole'
-  /** Warp tiles, whirlpools, cross-world portals. */
-  | 'teleport';
-
-type ConnectionSide = 'north' | 'south' | 'east' | 'west' | 'up' | 'down';
 
 interface ConnectionTileRange {
   axis: 'x' | 'y';
@@ -80,8 +57,11 @@ interface ConnectionRecord {
   requirements?: Requirement;
   /** Rare — most doorways are unnamed. */
   name?: string;
-  /** Approach + barrier + context: transit:ledge, barrier:small-key, ctx:cross-world… */
-  tags: readonly ConnectionTag[];
+  /**
+   * Approach + barrier + context, as references into the tag collection — read
+   * the terms back with `tagKeysOf` (transit:ledge, barrier:small-key, …).
+   */
+  tags: readonly TagId[];
   /** Pre-computed flood-fill navigation facts — requirements, bidirectional flag, connection points. */
   nav?: ConnectionNavData;
 }

@@ -9,7 +9,7 @@ const DW_SHOPS_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-247',
     toScreenId: 'screen-482',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-886',
@@ -17,7 +17,7 @@ const DW_SHOPS_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-299',
     toScreenId: 'screen-483',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-887',
@@ -25,7 +25,7 @@ const DW_SHOPS_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-269',
     toScreenId: 'screen-475',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-888',
@@ -33,7 +33,7 @@ const DW_SHOPS_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-303',
     toScreenId: 'screen-478',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-889',
@@ -41,7 +41,7 @@ const DW_SHOPS_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-273',
     toScreenId: 'screen-476',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-890',
@@ -49,7 +49,7 @@ const DW_SHOPS_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-290',
     toScreenId: 'screen-466',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-891',
@@ -57,7 +57,7 @@ const DW_SHOPS_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-236',
     toScreenId: 'screen-453',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
 ];
 

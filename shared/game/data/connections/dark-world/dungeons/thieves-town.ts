@@ -11,7 +11,7 @@ const DW_DUNGEON_THIEVES_TOWN_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-692',
     dungeonId: 'dungeon-009',
-    tags: ['dir:two-way', 'ctx:dungeon-enter'],
+    tags: ['tag-073', 'tag-081'],
   },
   {
     id: 'connection-677',
@@ -21,7 +21,7 @@ const DW_DUNGEON_THIEVES_TOWN_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-009',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-678',
@@ -30,7 +30,7 @@ const DW_DUNGEON_THIEVES_TOWN_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-379',
     direction: 'two-way',
     dungeonId: 'dungeon-009',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-679',
@@ -39,7 +39,7 @@ const DW_DUNGEON_THIEVES_TOWN_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-380',
     direction: 'two-way',
     dungeonId: 'dungeon-009',
-    tags: ['dir:two-way', 'ctx:boss', 'barrier:big-key'],
+    tags: ['tag-073', 'tag-079', 'tag-058'],
   },
   {
     id: 'connection-680',
@@ -49,7 +49,7 @@ const DW_DUNGEON_THIEVES_TOWN_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-009',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-681',
@@ -59,7 +59,7 @@ const DW_DUNGEON_THIEVES_TOWN_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-009',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-682',
@@ -69,7 +69,7 @@ const DW_DUNGEON_THIEVES_TOWN_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
     direction: 'two-way',
     dungeonId: 'dungeon-009',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-683',
@@ -79,7 +79,7 @@ const DW_DUNGEON_THIEVES_TOWN_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
     direction: 'two-way',
     dungeonId: 'dungeon-009',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-684',
@@ -89,7 +89,7 @@ const DW_DUNGEON_THIEVES_TOWN_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-009',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-685',
@@ -99,7 +99,7 @@ const DW_DUNGEON_THIEVES_TOWN_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-009',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-686',
@@ -109,7 +109,7 @@ const DW_DUNGEON_THIEVES_TOWN_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-009',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-687',
@@ -119,7 +119,7 @@ const DW_DUNGEON_THIEVES_TOWN_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-009',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-688',
@@ -129,7 +129,7 @@ const DW_DUNGEON_THIEVES_TOWN_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east', tileRange: { axis: 'y', start: 32, end: 33 } },
     direction: 'two-way',
     dungeonId: 'dungeon-009',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-689',
@@ -139,7 +139,7 @@ const DW_DUNGEON_THIEVES_TOWN_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-009',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-690',
@@ -149,7 +149,7 @@ const DW_DUNGEON_THIEVES_TOWN_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east', tileRange: { axis: 'y', start: 32, end: 33 } },
     direction: 'two-way',
     dungeonId: 'dungeon-009',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-691',
@@ -158,7 +158,7 @@ const DW_DUNGEON_THIEVES_TOWN_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-358',
     direction: 'two-way',
     dungeonId: 'dungeon-009',
-    tags: ['dir:two-way', 'ctx:internal', 'barrier:small-key'],
+    tags: ['tag-073', 'tag-076', 'tag-057'],
   },
   {
     id: 'connection-692',
@@ -168,7 +168,7 @@ const DW_DUNGEON_THIEVES_TOWN_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-676',
     dungeonId: 'dungeon-009',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
 ];
 

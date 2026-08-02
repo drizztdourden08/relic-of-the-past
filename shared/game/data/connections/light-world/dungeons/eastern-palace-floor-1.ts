@@ -10,7 +10,7 @@ const LW_DUNGEON_EASTERN_PALACE_FLOOR_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-144',
     direction: 'two-way',
     dungeonId: 'dungeon-003',
-    tags: ['dir:two-way', 'ctx:internal', 'barrier:big-key'],
+    tags: ['tag-073', 'tag-076', 'tag-058'],
   },
   {
     id: 'connection-260',
@@ -20,7 +20,7 @@ const LW_DUNGEON_EASTERN_PALACE_FLOOR_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-003',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-261',
@@ -30,7 +30,7 @@ const LW_DUNGEON_EASTERN_PALACE_FLOOR_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 15, y: 35, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-003',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-262',
@@ -40,7 +40,7 @@ const LW_DUNGEON_EASTERN_PALACE_FLOOR_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 31, end: 32 } },
     direction: 'two-way',
     dungeonId: 'dungeon-003',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
 ];
 

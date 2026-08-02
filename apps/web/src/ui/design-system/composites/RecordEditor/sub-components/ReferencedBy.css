@@ -1,0 +1,74 @@
+/* @layer renderer-components @kind style */
+
+/* A usage-overview panel: collapsed to one count-per-kind row until asked for
+   the actual list, so a heavily-referenced tag does not swamp the form. */
+
+.referenced-by {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-top: var(--space-sm);
+  border-top: var(--border-width-thin) solid var(--c-border);
+}
+
+.referenced-by__title {
+  margin: 0;
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semi);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.referenced-by__empty {
+  padding-top: var(--space-sm);
+  border-top: var(--border-width-thin) solid var(--c-border);
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+}
+
+.referenced-by__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.referenced-by__toggle {
+  justify-content: flex-start;
+  text-transform: capitalize;
+}
+
+.referenced-by__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  margin: 0;
+  padding-inline-start: var(--space-md);
+  list-style: none;
+
+  /* A single kind can carry hundreds of hits (a common tag sits on most
+     screens) — capped and scrollable so expanding one group never grows the
+     panel, or a dialog built around it, past the window. */
+  max-block-size: 220px;
+  overflow-y: auto;
+}
+
+.referenced-by__item {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  font-size: var(--text-xs);
+}
+
+.referenced-by__link {
+  color: var(--c-gold);
+  cursor: pointer;
+}
+
+.referenced-by__link:hover {
+  text-decoration: underline;
+}
+
+.referenced-by__field {
+  color: var(--c-text-muted);
+}

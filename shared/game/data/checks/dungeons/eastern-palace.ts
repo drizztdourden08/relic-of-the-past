@@ -12,6 +12,7 @@ const DUNGEON_EASTERN_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-003',
     randomizerName: 'Compass Chest',
     vanillaItemIds: ['item-038'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-117',
@@ -41,6 +42,7 @@ const DUNGEON_EASTERN_PALACE_CHECKS: CheckRecord[] = [
     randomizerName: 'Big Key Chest',
     vanillaItemIds: ['item-051'],
     requirements: { itemId: 'item-019' },
+    tags: ['tag-084'],
   },
   {
     id: 'check-120',
@@ -50,6 +52,7 @@ const DUNGEON_EASTERN_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-003',
     randomizerName: 'Map Chest',
     vanillaItemIds: ['item-052'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-121',
@@ -60,6 +63,7 @@ const DUNGEON_EASTERN_PALACE_CHECKS: CheckRecord[] = [
     randomizerName: 'Boss',
     vanillaItemIds: ['item-039'],
     requirements: { allOf: [{ itemId: 'item-094' }, { itemId: 'item-019' }, canShootArrows] },
+    tags: ['tag-086'],
   },
   {
     id: 'check-122',
@@ -70,6 +74,7 @@ const DUNGEON_EASTERN_PALACE_CHECKS: CheckRecord[] = [
     randomizerName: 'Prize',
     vanillaItemIds: ['item-056'],
     requirements: { allOf: [{ itemId: 'item-094' }, { itemId: 'item-019' }, canShootArrows] },
+    tags: ['tag-086'],
   },
   {
     id: 'check-123',
@@ -80,6 +85,7 @@ const DUNGEON_EASTERN_PALACE_CHECKS: CheckRecord[] = [
     randomizerName: 'Dark Square Pot Key',
     vanillaItemIds: ['item-097'],
     requirements: { itemId: 'item-019' },
+    tags: ['tag-083'],
   },
   {
     id: 'check-124',
@@ -90,6 +96,7 @@ const DUNGEON_EASTERN_PALACE_CHECKS: CheckRecord[] = [
     randomizerName: 'Dark Eyegore Key Drop',
     vanillaItemIds: ['item-097'],
     requirements: { itemId: 'item-019' },
+    tags: ['tag-083'],
   },
 ];
 

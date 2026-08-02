@@ -21,9 +21,9 @@ const TrackerView = (props: TrackerViewProps) => {
   const [layout, setLayoutRaw] = useState<TrackerLayoutSettings>(loadLayout);
   const [viewMode, setViewMode] = useState<ViewMode>('compact');
   const [grouping, setGrouping] = useState<GroupDimension[]>(['world', 'dungeon']);
-  const [filter, setFilter] = useState<FilterState>({ searchQuery: '', activeTags: [], tagMode: 'any' });
+  const [filter, setFilter] = useState<FilterState>({ searchQuery: '', activeFacets: [], tagMode: 'any' });
 
-  const { inventory, snapshot, tagMap, stats } = useTrackerState();
+  const { inventory, snapshot, stats } = useTrackerState();
 
   const setLayout = useCallback((updater: (prev: TrackerLayoutSettings) => TrackerLayoutSettings) => {
     setLayoutRaw(prev => {
@@ -51,13 +51,13 @@ const TrackerView = (props: TrackerViewProps) => {
   );
 
   const checks = useMemo(() => find('check', () => true), []);
-  const filteredChecks = useMemo(() => filterChecks(checks, filter, tagMap, snapshot), [checks, filter, tagMap, snapshot]);
-  const groupTree = useMemo(() => buildGroupTree(filteredChecks, snapshot, grouping, tagMap), [filteredChecks, snapshot, grouping, tagMap]);
+  const filteredChecks = useMemo(() => filterChecks(checks, filter, snapshot), [checks, filter, snapshot]);
+  const groupTree = useMemo(() => buildGroupTree(filteredChecks, snapshot, grouping), [filteredChecks, snapshot, grouping]);
 
   if (!visible) return null;
 
   const { combined } = layout;
-  const hasActiveFilter = filter.searchQuery || filter.activeTags.length > 0 || (filter.statusFilter && filter.statusFilter !== 'all');
+  const hasActiveFilter = filter.searchQuery || filter.activeFacets.length > 0 || (filter.statusFilter && filter.statusFilter !== 'all');
 
   const filterStats = hasActiveFilter && (
     <Box className="tracker-view__filtered-stats">

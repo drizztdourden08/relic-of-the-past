@@ -8,8 +8,7 @@
 import type { ActorId } from './ids';
 import type { Requirement } from './check';
 import type { ActorCombatProfile } from './combat';
-
-type ActorKind = 'enemy' | 'boss' | 'npc' | 'object' | 'obstacle' | 'trigger';
+import type { ActorKind } from '../enumeration/generated-types';
 
 interface ActorGameId {
   /** Native sprite type byte (sprite.c) — enemies, bosses, NPCs, objects. */

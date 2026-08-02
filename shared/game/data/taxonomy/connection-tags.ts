@@ -21,11 +21,20 @@ type ContextTag =
 
 type ConnectionTag = TransitTag | BarrierTag | DirectionTag | ContextTag;
 
+type ConnectionTagNamespace = 'transit' | 'barrier' | 'dir' | 'ctx';
+
 interface ConnectionTagMetadata {
   id: ConnectionTag;
   label: string;
-  namespace: 'transit' | 'barrier' | 'dir' | 'ctx';
+  namespace: ConnectionTagNamespace;
 }
+
+const CONNECTION_TAG_NAMESPACES: { id: ConnectionTagNamespace; label: string }[] = [
+  { id: 'transit', label: 'Transit' },
+  { id: 'barrier', label: 'Barrier' },
+  { id: 'dir', label: 'Direction' },
+  { id: 'ctx', label: 'Context' },
+];
 
 const CONNECTION_TAG_METADATA: ConnectionTagMetadata[] = [
   { id: 'transit:door', label: 'Door', namespace: 'transit' },
@@ -72,5 +81,8 @@ const CONNECTION_TAG_METADATA: ConnectionTagMetadata[] = [
   { id: 'ctx:shortcut', label: 'Shortcut', namespace: 'ctx' },
 ];
 
-export { CONNECTION_TAG_METADATA };
-export type { BarrierTag, ConnectionTag, ConnectionTagMetadata, ContextTag, DirectionTag, TransitTag };
+export { CONNECTION_TAG_METADATA, CONNECTION_TAG_NAMESPACES };
+export type {
+  BarrierTag, ConnectionTag, ConnectionTagMetadata, ConnectionTagNamespace,
+  ContextTag, DirectionTag, TransitTag,
+};

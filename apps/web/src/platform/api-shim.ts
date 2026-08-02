@@ -9,7 +9,7 @@
  * empties) instead of crashing. Real per-capability implementations replace these
  * as ports are ported; the exact empties are refined by booting on a device.
  */
-import type { IpcApi } from '@shared/ipc';
+import type { IpcApi, ScreenEditorApi } from '@shared/ipc';
 import { INVOKE_MAP, SEND_MAP, EVENT_MAP } from '@shared/ipc';
 
 type AnyFn = (...args: unknown[]) => unknown;
@@ -30,6 +30,28 @@ const STUB_RETURNS: Record<string, () => unknown> = {
   getAppState: () => ({ lastProfileId: null }),
   getTestArgs: () => ({ autoState: null, screenshot: null }),
 };
+
+/**
+ * Editing the dataset needs a repo on disk, so every editor channel refuses here
+ * rather than silently reporting success. Spelled out one name per entry, and
+ * typed against `ScreenEditorApi` rather than built from a name list, so a
+ * channel added to the contract fails to compile until it refuses here too.
+ */
+const refuseEdit = async (): Promise<{ success: false; error: string }> =>
+  ({ success: false, error: 'The dataset editor needs the desktop app.' });
+
+const SCREEN_EDITOR_STUB = {
+  writeScreen: refuseEdit, writeConnections: refuseEdit, writeCheck: refuseEdit,
+  allocateGeography: refuseEdit, allocateTag: refuseEdit, writeTag: refuseEdit, deleteTag: refuseEdit,
+  allocateItemGroup: refuseEdit, writeItemGroup: refuseEdit, deleteItemGroup: refuseEdit,
+  allocateEnumeration: refuseEdit, writeEnumeration: refuseEdit, deleteEnumeration: refuseEdit,
+  allocateCheck: refuseEdit, writeCheckRecord: refuseEdit, deleteCheck: refuseEdit,
+  allocateItem: refuseEdit, writeItemRecord: refuseEdit, deleteItem: refuseEdit,
+  allocateDungeon: refuseEdit, writeDungeonRecord: refuseEdit, deleteDungeon: refuseEdit,
+  allocateActor: refuseEdit, writeActorRecord: refuseEdit, deleteActor: refuseEdit,
+  writeAreaRecord: refuseEdit, deleteArea: refuseEdit,
+  writeLocationRecord: refuseEdit, deleteLocation: refuseEdit,
+} satisfies Record<keyof ScreenEditorApi, unknown> as unknown as ScreenEditorApi;
 
 const installApiShim = (): void => {
   if ((window as { api?: unknown }).api) return; // real api present → leave it
@@ -63,14 +85,7 @@ const installApiShim = (): void => {
       onDownloadComplete: eventStub, onError: eventStub,
     },
     shadowCasting: { load: async () => null, save: async () => {}, getScreen: async () => null },
-    // Editing the dataset needs a repo on disk, so every channel refuses here
-    // rather than silently reporting success.
-    screenEditor: {
-      writeScreen: async () => ({ success: false, error: 'The dataset editor needs the desktop app.' }),
-      writeConnections: async () => ({ success: false, error: 'The dataset editor needs the desktop app.' }),
-      writeCheck: async () => ({ success: false, error: 'The dataset editor needs the desktop app.' }),
-      allocateGeography: async () => ({ success: false, error: 'The dataset editor needs the desktop app.' }),
-    },
+    screenEditor: SCREEN_EDITOR_STUB,
   };
 
   for (const method of Object.keys(INVOKE_MAP)) {

@@ -12,7 +12,7 @@ const LW_DUNGEON_DESERT_PALACE_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-292',
     dungeonId: 'dungeon-004',
-    tags: ['dir:two-way', 'ctx:dungeon-enter'],
+    tags: ['tag-073', 'tag-081'],
   },
   {
     id: 'connection-279',
@@ -23,7 +23,7 @@ const LW_DUNGEON_DESERT_PALACE_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-293',
     dungeonId: 'dungeon-004',
-    tags: ['dir:two-way', 'ctx:dungeon-enter'],
+    tags: ['tag-073', 'tag-081'],
   },
   {
     id: 'connection-280',
@@ -34,7 +34,7 @@ const LW_DUNGEON_DESERT_PALACE_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-294',
     dungeonId: 'dungeon-004',
-    tags: ['dir:two-way', 'ctx:dungeon-enter'],
+    tags: ['tag-073', 'tag-081'],
   },
   {
     id: 'connection-281',
@@ -45,7 +45,7 @@ const LW_DUNGEON_DESERT_PALACE_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     dungeonId: 'dungeon-004',
     gatedBy: 'actor-026',
-    tags: ['dir:two-way', 'ctx:boss', 'barrier:big-key'],
+    tags: ['tag-073', 'tag-079', 'tag-058'],
   },
   {
     id: 'connection-282',
@@ -55,7 +55,7 @@ const LW_DUNGEON_DESERT_PALACE_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
     direction: 'two-way',
     dungeonId: 'dungeon-004',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-283',
@@ -65,7 +65,7 @@ const LW_DUNGEON_DESERT_PALACE_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 15, y: 3, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-004',
-    tags: ['dir:two-way', 'ctx:internal', 'barrier:small-key'],
+    tags: ['tag-073', 'tag-076', 'tag-057'],
   },
   {
     id: 'connection-284',
@@ -75,7 +75,7 @@ const LW_DUNGEON_DESERT_PALACE_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-004',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-285',
@@ -85,7 +85,7 @@ const LW_DUNGEON_DESERT_PALACE_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-004',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-286',
@@ -95,7 +95,7 @@ const LW_DUNGEON_DESERT_PALACE_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-004',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-287',
@@ -105,7 +105,7 @@ const LW_DUNGEON_DESERT_PALACE_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-004',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-288',
@@ -115,7 +115,7 @@ const LW_DUNGEON_DESERT_PALACE_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-004',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-289',
@@ -125,7 +125,7 @@ const LW_DUNGEON_DESERT_PALACE_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
     direction: 'two-way',
     dungeonId: 'dungeon-004',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-290',
@@ -135,7 +135,7 @@ const LW_DUNGEON_DESERT_PALACE_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-004',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-291',
@@ -145,7 +145,7 @@ const LW_DUNGEON_DESERT_PALACE_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-004',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-292',
@@ -156,7 +156,7 @@ const LW_DUNGEON_DESERT_PALACE_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-278',
     dungeonId: 'dungeon-004',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
   {
     id: 'connection-293',
@@ -167,7 +167,7 @@ const LW_DUNGEON_DESERT_PALACE_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-279',
     dungeonId: 'dungeon-004',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
   {
     id: 'connection-294',
@@ -178,7 +178,7 @@ const LW_DUNGEON_DESERT_PALACE_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-280',
     dungeonId: 'dungeon-004',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
 ];
 

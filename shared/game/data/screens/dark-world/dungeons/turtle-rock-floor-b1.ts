@@ -12,7 +12,7 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-030',
     position: { gridX: 4, gridY: 10, floor: -1 },
-    tags: ['env:underground', 'role:boss'],
+    tags: ['tag-003', 'tag-006'],
     status: 'mapped',
     triggerIds: ['actor-041'],
     spawns: [
@@ -30,7 +30,7 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-030',
     position: { gridX: 4, gridY: 11, floor: -1 },
-    tags: ['env:underground', 'hazard:dark'],
+    tags: ['tag-003', 'tag-016'],
     status: 'mapped',
   },
   {
@@ -42,7 +42,7 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-030',
     position: { gridX: 5, gridY: 11, floor: -1 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
@@ -60,7 +60,7 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-030',
     position: { gridX: 6, gridY: 11, floor: -1 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     triggerIds: ['actor-047'],
     spawns: [
@@ -83,7 +83,7 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-030',
     position: { gridX: 7, gridY: 11, floor: -1 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-189', tile: { x: 8, y: 18 } },

@@ -12,7 +12,7 @@ const LW_HOUSES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-038',
     toScreenId: 'screen-204',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:save-quit'],
+    tags: ['tag-072', 'tag-078'],
   },
   {
     id: 'connection-002',
@@ -21,7 +21,7 @@ const LW_HOUSES_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-027',
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:exit', 'barrier:event'],
+    tags: ['tag-072', 'tag-075', 'tag-065'],
   },
   {
     id: 'connection-353',
@@ -29,7 +29,7 @@ const LW_HOUSES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-031',
     toScreenId: 'screen-210',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-354',
@@ -37,7 +37,7 @@ const LW_HOUSES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-031',
     toScreenId: 'screen-206',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-355',
@@ -45,7 +45,7 @@ const LW_HOUSES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-031',
     toScreenId: 'screen-207',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-356',
@@ -53,7 +53,7 @@ const LW_HOUSES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-031',
     toScreenId: 'screen-208',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-357',
@@ -61,7 +61,7 @@ const LW_HOUSES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-031',
     toScreenId: 'screen-211',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-358',
@@ -69,7 +69,7 @@ const LW_HOUSES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-031',
     toScreenId: 'screen-203',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-359',
@@ -77,7 +77,7 @@ const LW_HOUSES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-031',
     toScreenId: 'screen-212',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
     requirements: canUseBombs,
   },
   {
@@ -86,7 +86,7 @@ const LW_HOUSES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-031',
     toScreenId: 'screen-202',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-361',
@@ -94,7 +94,7 @@ const LW_HOUSES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-031',
     toScreenId: 'screen-200',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-362',
@@ -102,7 +102,7 @@ const LW_HOUSES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-031',
     toScreenId: 'screen-201',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-363',
@@ -110,7 +110,7 @@ const LW_HOUSES_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-055',
     toScreenId: 'screen-223',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
 ];
 

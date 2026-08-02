@@ -12,7 +12,7 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     randomizerName: 'Bonk Fairy (Light)',
     areaId: 'area-016',
     locationId: 'location-002',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-056', tile: { x: 52, y: 10 } },
@@ -30,7 +30,7 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     randomizerName: 'Capacity Upgrade',
     areaId: 'area-013',
     locationId: 'location-018',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
   },
   {
@@ -42,7 +42,7 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     randomizerName: 'Waterfall of Wishing',
     areaId: 'area-010',
     locationId: 'location-012',
-    tags: ['env:underground', 'env:water', 'loot:chest'],
+    tags: ['tag-003', 'tag-004', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-198', tile: { x: 14, y: 48 } },
@@ -58,7 +58,7 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     randomizerName: 'North Fairy Cave',
     areaId: 'area-010',
     locationId: 'location-012',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
   },
   {
@@ -70,7 +70,7 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     randomizerName: 'Lake Hylia Healer Fairy',
     areaId: 'area-013',
     locationId: 'location-018',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 46, y: 28 } },
@@ -87,7 +87,7 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     randomizerName: 'Swamp Healer Fairy',
     areaId: 'area-016',
     locationId: 'location-002',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-262', tile: { x: 22, y: 22 } },
@@ -102,7 +102,7 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     randomizerName: 'Desert Healer Fairy',
     areaId: 'area-009',
     locationId: 'location-010',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-262', tile: { x: 22, y: 22 } },
@@ -117,7 +117,7 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     randomizerName: 'Long Fairy Cave',
     areaId: 'area-010',
     locationId: 'location-012',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
   },
   {
@@ -129,7 +129,7 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     randomizerName: 'Hookshot Fairy',
     areaId: 'area-008',
     locationId: 'location-009',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-163', tile: { x: 14, y: 10 } },

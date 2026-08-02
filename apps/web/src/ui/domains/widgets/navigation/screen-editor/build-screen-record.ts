@@ -11,7 +11,8 @@
  * placeholder ids, no zeroed grid positions.
  */
 import type { PendingScreenRecord } from '@shared/game/data/record-codegen';
-import type { ScreenGameId, ScreenPosition, ScreenRecord } from '@shared/game/data';
+import { tagIdsForKeys } from '@shared/game/data';
+import type { ScreenGameId, ScreenPosition, ScreenRecord, ScreenTag } from '@shared/game/data';
 
 interface ScreenDraft {
   kind: ScreenRecord['kind'];
@@ -21,7 +22,8 @@ interface ScreenDraft {
   areaId: ScreenRecord['areaId'] | '';
   locationId: ScreenRecord['locationId'] | '';
   status: ScreenRecord['status'] | undefined;
-  tags: readonly ScreenRecord['tags'][number][];
+  /** The form picks TERMS; `buildScreenRecord` resolves them to tag ids. */
+  tags: readonly ScreenTag[];
   variant: ScreenRecord['variant'];
   /** Native indices, already numeric. */
   roomIndex: number;
@@ -76,7 +78,8 @@ const buildScreenRecord = (draft: ScreenDraft): DraftResult => {
       areaId: draft.areaId,
       locationId: draft.locationId,
       position,
-      tags: [...draft.tags],
+      // The form works in terms; the record stores references to them.
+      tags: tagIdsForKeys(draft.tags),
       variant: draft.variant,
       status: draft.status ?? 'draft',
       nav: draft.existing?.nav,

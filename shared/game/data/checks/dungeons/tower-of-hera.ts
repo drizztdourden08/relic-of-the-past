@@ -12,6 +12,7 @@ const DUNGEON_TOWER_OF_HERA_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-005',
     randomizerName: 'Basement Cage',
     vanillaItemIds: ['item-037'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-136',
@@ -21,6 +22,7 @@ const DUNGEON_TOWER_OF_HERA_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-005',
     randomizerName: 'Map Chest',
     vanillaItemIds: ['item-052'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-137',
@@ -31,6 +33,7 @@ const DUNGEON_TOWER_OF_HERA_CHECKS: CheckRecord[] = [
     randomizerName: 'Big Key Chest',
     vanillaItemIds: ['item-051'],
     requirements: hasFireSource,
+    tags: ['tag-084'],
   },
   {
     id: 'check-138',
@@ -40,6 +43,7 @@ const DUNGEON_TOWER_OF_HERA_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-005',
     randomizerName: 'Compass Chest',
     vanillaItemIds: ['item-038'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-139',
@@ -60,6 +64,7 @@ const DUNGEON_TOWER_OF_HERA_CHECKS: CheckRecord[] = [
     randomizerName: 'Boss',
     vanillaItemIds: ['item-039'],
     requirements: canKillMostThings,
+    tags: ['tag-086'],
   },
   {
     id: 'check-141',
@@ -70,6 +75,7 @@ const DUNGEON_TOWER_OF_HERA_CHECKS: CheckRecord[] = [
     randomizerName: 'Prize',
     vanillaItemIds: ['item-058'],
     requirements: canKillMostThings,
+    tags: ['tag-086'],
   },
 ];
 

@@ -1,5 +1,6 @@
 /* @layer shared-game @kind data */
 import type { Requirement } from '../types';
+import { ITEM_GROUP_IDS } from '../item-groups';
 
 // ─── Sword Checks ───
 
@@ -99,7 +100,7 @@ const hasTurtleRockMedallion: Requirement = { itemId: 'item-018' }; // Quake
 // ─── Crystal Count ───
 
 const hasCrystals = (n: number): Requirement => ({
-  count: { groupId: 'Crystals', n },
+  count: { groupId: ITEM_GROUP_IDS.Crystals, n },
 });
 
 export {

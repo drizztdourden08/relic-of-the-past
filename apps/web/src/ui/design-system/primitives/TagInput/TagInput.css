@@ -1,0 +1,178 @@
+/* @layer renderer-components @kind style */
+
+.tag-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.tag-input__label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--c-text);
+}
+
+/* ─── The field: chips and the entry share one bordered surface ─── */
+.tag-input__field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  min-height: 34px;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  cursor: text;
+  transition: border-color var(--transition-normal);
+}
+
+.tag-input__field:hover {
+  border-color: var(--c-border-strong);
+}
+
+.tag-input__field:focus-within {
+  border-color: var(--c-gold);
+}
+
+.tag-input--disabled .tag-input__field {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
+
+/* ─── Chips (a Badge wearing the field's surface treatment) ─── */
+.tag-input__chip {
+  gap: var(--space-xs);
+  max-width: 100%;
+  padding: 0 var(--space-xs) 0 var(--space-sm);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  background: var(--c-inset);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+}
+
+.tag-input__chip--off-convention {
+  color: var(--c-warning);
+  border-color: var(--c-warning-dim);
+  background: var(--c-warning-soft);
+}
+
+.tag-input__chip-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tag-input__chip-remove {
+  min-width: auto;
+  padding: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-tight);
+}
+
+/* ─── The text entry ─── */
+.tag-input__entry {
+  flex: 1;
+  min-width: 100px;
+  padding: 0;
+  color: var(--c-text);
+  font-size: var(--text-sm);
+  font-family: inherit;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.tag-input__entry::placeholder {
+  color: var(--c-text-faint);
+}
+
+.tag-input__entry:disabled {
+  cursor: not-allowed;
+}
+
+/* ─── Advisory hint under the field ─── */
+.tag-input__hint {
+  font-size: var(--text-xs);
+  color: var(--c-warning);
+}
+
+/* Advice the field will act on rather than merely mention. */
+.tag-input__hint[data-blocked] {
+  color: var(--c-danger);
+}
+
+/* ─── Suggestion panel (rendered in a portal) ─── */
+.tag-input__panel {
+  position: fixed;
+  z-index: var(--z-popover);
+  min-width: 200px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: var(--space-xs) 0;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-2);
+  pointer-events: auto;
+}
+
+.tag-input__panel[data-drop-up='true'] {
+  transform: translateY(-100%);
+}
+
+.tag-input__panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tag-input__panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tag-input__panel::-webkit-scrollbar-thumb {
+  background: var(--c-border);
+  border-radius: var(--r-sm);
+}
+
+.tag-input__option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.tag-input__option:hover,
+.tag-input__option--highlighted {
+  background: var(--c-hover);
+  color: var(--c-text);
+}
+
+.tag-input__option--create {
+  border-top: 1px solid var(--c-border);
+  color: var(--c-gold);
+}
+
+.tag-input__create-verb {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--c-text-faint);
+}
+
+.tag-input__create-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tag-input__empty {
+  padding: var(--space-md);
+  font-size: var(--text-sm);
+  color: var(--c-text-faint);
+  text-align: center;
+}

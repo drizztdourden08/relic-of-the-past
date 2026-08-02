@@ -12,7 +12,7 @@ const LW_OVERWORLD_HYRULE_CASTLE_SCREENS: ScreenRecord[] = [
     areaId: 'area-011',
     locationId: 'location-023',
     position: { gridX: 3, gridY: 2 },
-    tags: ['env:outdoor', 'role:safe'],
+    tags: ['tag-001', 'tag-013'],
     status: 'mapped',
   },
   {
@@ -24,7 +24,7 @@ const LW_OVERWORLD_HYRULE_CASTLE_SCREENS: ScreenRecord[] = [
     areaId: 'area-011',
     locationId: 'location-023',
     position: { gridX: 4, gridY: 2 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -36,7 +36,7 @@ const LW_OVERWORLD_HYRULE_CASTLE_SCREENS: ScreenRecord[] = [
     areaId: 'area-011',
     locationId: 'location-015',
     position: { gridX: 5, gridY: 2 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -48,7 +48,7 @@ const LW_OVERWORLD_HYRULE_CASTLE_SCREENS: ScreenRecord[] = [
     areaId: 'area-011',
     locationId: 'location-015',
     position: { gridX: 6, gridY: 2 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -60,7 +60,7 @@ const LW_OVERWORLD_HYRULE_CASTLE_SCREENS: ScreenRecord[] = [
     areaId: 'area-011',
     locationId: 'location-015',
     position: { gridX: 3, gridY: 3 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -72,7 +72,7 @@ const LW_OVERWORLD_HYRULE_CASTLE_SCREENS: ScreenRecord[] = [
     areaId: 'area-011',
     locationId: 'location-015',
     position: { gridX: 4, gridY: 3 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -84,7 +84,7 @@ const LW_OVERWORLD_HYRULE_CASTLE_SCREENS: ScreenRecord[] = [
     areaId: 'area-011',
     locationId: 'location-015',
     position: { gridX: 5, gridY: 3 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -96,7 +96,7 @@ const LW_OVERWORLD_HYRULE_CASTLE_SCREENS: ScreenRecord[] = [
     areaId: 'area-011',
     locationId: 'location-015',
     position: { gridX: 3, gridY: 4 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -108,7 +108,7 @@ const LW_OVERWORLD_HYRULE_CASTLE_SCREENS: ScreenRecord[] = [
     areaId: 'area-011',
     locationId: 'location-015',
     position: { gridX: 4, gridY: 4 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -120,7 +120,7 @@ const LW_OVERWORLD_HYRULE_CASTLE_SCREENS: ScreenRecord[] = [
     areaId: 'area-011',
     locationId: 'location-015',
     position: { gridX: 5, gridY: 4 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -132,7 +132,7 @@ const LW_OVERWORLD_HYRULE_CASTLE_SCREENS: ScreenRecord[] = [
     areaId: 'area-011',
     locationId: 'location-015',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -144,7 +144,7 @@ const LW_OVERWORLD_HYRULE_CASTLE_SCREENS: ScreenRecord[] = [
     areaId: 'area-011',
     locationId: 'location-015',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -156,7 +156,7 @@ const LW_OVERWORLD_HYRULE_CASTLE_SCREENS: ScreenRecord[] = [
     areaId: 'area-011',
     locationId: 'location-023',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -168,7 +168,7 @@ const LW_OVERWORLD_HYRULE_CASTLE_SCREENS: ScreenRecord[] = [
     areaId: 'area-011',
     locationId: 'location-015',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
 ];

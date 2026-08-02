@@ -1,12 +1,8 @@
 /* @layer renderer-widgets @kind component */
 /** ScreenEditor step-1 top: classification (type/world) + type-specific detail panel. */
-import type { CSSProperties } from 'react';
-import { Box, Text, Select, SegmentedControl, TextInput } from '../../../../design-system/primitives';
+import { Box, Field, Text, Select, SegmentedControl, TextInput } from '../../../../design-system/primitives';
 import type { InteriorKind } from '@shared/game/data';
-
-const GAP4: CSSProperties = { display: 'flex', gap: '4px' };
 import { TYPE_SEGMENTS, WORLD_SEGMENTS, PALACE_OPTIONS, INTERIOR_KIND_OPTIONS } from './screen-editor-constants';
-import { EditorField } from './EditorField';
 import { LockedValue } from './LockedValue';
 import type { ScreenEditor } from './useScreenEditor';
 
@@ -35,11 +31,11 @@ const ScreenEditorFieldsTop = ({ editor }: { editor: ScreenEditor }) => {
             onChange={setWorld}
           />
         ) : (
-          <EditorField className="screen-editor__row screen-editor__row--locked" label="World">
+          <Field className="screen-editor__row screen-editor__row--locked" label="World">
             <LockedValue>
               {effectiveWorld === 'light' ? 'Light World' : 'Dark World'}
             </LockedValue>
-          </EditorField>
+          </Field>
         )}
       </Box>
 
@@ -51,42 +47,42 @@ const ScreenEditorFieldsTop = ({ editor }: { editor: ScreenEditor }) => {
 
         {kind === 'dungeon' && (
           <>
-            <EditorField className="screen-editor__row" label="Palace Index">
+            <Field className="screen-editor__row" label="Palace Index">
               <Select options={PALACE_OPTIONS} value={palaceIdx} onChange={handlePalaceChange} placeholder="Select palace..." searchable />
-            </EditorField>
+            </Field>
             {dungeonGeography && (
-              <EditorField className="screen-editor__row screen-editor__row--locked" label="Dungeon">
+              <Field className="screen-editor__row screen-editor__row--locked" label="Dungeon">
                 <LockedValue>{dungeonGeography.randomizerName}</LockedValue>
-              </EditorField>
+              </Field>
             )}
             <Box className="screen-editor__row screen-editor__row--half">
-              <EditorField label="Floor">
+              <Field label="Floor">
                 <TextInput value={floor} onChange={e => setFloor(e.target.value)} placeholder="-1, 0, 1..." />
-              </EditorField>
-              <EditorField label="Grid X, Y">
-                <Box style={GAP4}>
+              </Field>
+              <Field label="Grid X, Y">
+                <Box className="screen-editor__grid-pair">
                   <TextInput value={gridX} onChange={e => setGridX(e.target.value)} placeholder="X" />
                   <TextInput value={gridY} onChange={e => setGridY(e.target.value)} placeholder="Y" />
                 </Box>
-              </EditorField>
+              </Field>
             </Box>
           </>
         )}
 
         {kind === 'interior' && (
-          <EditorField className="screen-editor__row" label="Interior Kind">
+          <Field className="screen-editor__row" label="Interior Kind">
             <Select options={INTERIOR_KIND_OPTIONS} value={interiorKind} onChange={v => setInteriorKind(v as InteriorKind)} />
-          </EditorField>
+          </Field>
         )}
 
         {kind === 'overworld' && (
           <Box className="screen-editor__row screen-editor__row--half">
-            <EditorField className="screen-editor__row--locked" label="Grid X">
+            <Field className="screen-editor__row--locked" label="Grid X">
               <LockedValue>{effectiveGridX}</LockedValue>
-            </EditorField>
-            <EditorField className="screen-editor__row--locked" label="Grid Y">
+            </Field>
+            <Field className="screen-editor__row--locked" label="Grid Y">
               <LockedValue>{effectiveGridY}</LockedValue>
-            </EditorField>
+            </Field>
           </Box>
         )}
       </Box>

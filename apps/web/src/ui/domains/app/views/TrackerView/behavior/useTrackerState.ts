@@ -5,7 +5,6 @@ import { resolveRules } from '@shared/game/logic/resolver';
 import { VANILLA_CONFIG } from '@shared/game/data/presets';
 import { find } from '@shared/game/data';
 import type { CheckId, ItemId } from '@shared/game/data';
-import { getCheckTags } from '@shared/game/logic/queries/check-tags';
 import {
   onInventoryChanged, onUnknownItem, onCompletedChecksChanged,
   getCurrentInventory, getCompletedChecks, getUnknownItems, loadUnknownItems,
@@ -44,7 +43,6 @@ const useTrackerState = () => {
   }, []);
 
   const checks = useMemo(() => find('check', () => true), []);
-  const tagMap = useMemo(() => getCheckTags(checks), [checks]);
   const resolvedLogic = useMemo(() => resolveRules(VANILLA_CONFIG), []);
   const effectiveInventory = useMemo(() => {
     const merged = new Set(resolvedLogic.startInventory);
@@ -66,7 +64,7 @@ const useTrackerState = () => {
     return { completed, reachable, blocked, total: snapshot.size };
   }, [snapshot]);
 
-  return { inventory, completedChecks, snapshot, tagMap, stats };
+  return { inventory, completedChecks, snapshot, stats };
 };
 
 export { useTrackerState };

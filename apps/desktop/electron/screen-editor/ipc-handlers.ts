@@ -20,6 +20,10 @@ import { insertBeforeArrayClose, removeById, replaceById } from './source-writer
 import type { WriteResult } from './source-writers';
 import { withAllocatedIds } from './id-allocator';
 import { allocateGeography } from './geography-writer';
+import { allocateTag, deleteTag, writeTag } from './tag-writer';
+import { allocateItemGroup, deleteItemGroup, writeItemGroup } from './item-group-writer';
+import { allocateEnumeration, deleteEnumeration, writeEnumeration } from './enumeration-writer';
+import { registerRecordHandlers } from './record-handlers';
 import { getWorkspaceRoot } from './workspace-root';
 
 const failed = (e: unknown): { success: false; error: string } =>
@@ -76,6 +80,9 @@ const writeConnections = (args: WriteConnectionsArgs): Promise<WriteRecordResult
 };
 
 const registerScreenEditorHandlers = (): void => {
+  // The six record-facade collections, whose channels are all one shape.
+  registerRecordHandlers();
+
   handle('screenEditor:writeScreen', async (_e, args) => {
     try {
       return await writeScreen(args);
@@ -112,6 +119,78 @@ const registerScreenEditorHandlers = (): void => {
   handle('screenEditor:allocateGeography', async (_e, args) => {
     try {
       return await allocateGeography(getWorkspaceRoot(), args);
+    } catch (e: unknown) {
+      return failed(e);
+    }
+  });
+
+  handle('screenEditor:allocateTag', async (_e, args) => {
+    try {
+      return await allocateTag(getWorkspaceRoot(), args);
+    } catch (e: unknown) {
+      return failed(e);
+    }
+  });
+
+  handle('screenEditor:writeTag', async (_e, args) => {
+    try {
+      return await writeTag(getWorkspaceRoot(), args);
+    } catch (e: unknown) {
+      return failed(e);
+    }
+  });
+
+  handle('screenEditor:deleteTag', async (_e, args) => {
+    try {
+      return await deleteTag(getWorkspaceRoot(), args);
+    } catch (e: unknown) {
+      return failed(e);
+    }
+  });
+
+  handle('screenEditor:allocateItemGroup', async (_e, args) => {
+    try {
+      return await allocateItemGroup(getWorkspaceRoot(), args);
+    } catch (e: unknown) {
+      return failed(e);
+    }
+  });
+
+  handle('screenEditor:writeItemGroup', async (_e, args) => {
+    try {
+      return await writeItemGroup(getWorkspaceRoot(), args);
+    } catch (e: unknown) {
+      return failed(e);
+    }
+  });
+
+  handle('screenEditor:deleteItemGroup', async (_e, args) => {
+    try {
+      return await deleteItemGroup(getWorkspaceRoot(), args);
+    } catch (e: unknown) {
+      return failed(e);
+    }
+  });
+
+  handle('screenEditor:allocateEnumeration', async (_e, args) => {
+    try {
+      return await allocateEnumeration(getWorkspaceRoot(), args);
+    } catch (e: unknown) {
+      return failed(e);
+    }
+  });
+
+  handle('screenEditor:writeEnumeration', async (_e, args) => {
+    try {
+      return await writeEnumeration(getWorkspaceRoot(), args);
+    } catch (e: unknown) {
+      return failed(e);
+    }
+  });
+
+  handle('screenEditor:deleteEnumeration', async (_e, args) => {
+    try {
+      return await deleteEnumeration(getWorkspaceRoot(), args);
     } catch (e: unknown) {
       return failed(e);
     }

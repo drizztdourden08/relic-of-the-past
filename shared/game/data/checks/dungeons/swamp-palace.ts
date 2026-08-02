@@ -12,6 +12,7 @@ const DUNGEON_SWAMP_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-007',
     randomizerName: 'Entrance',
     vanillaItemIds: ['item-037'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-158',
@@ -22,6 +23,7 @@ const DUNGEON_SWAMP_PALACE_CHECKS: CheckRecord[] = [
     randomizerName: 'Map Chest',
     vanillaItemIds: ['item-052'],
     requirements: canUseBombs,
+    tags: ['tag-085'],
   },
   {
     id: 'check-159',
@@ -41,6 +43,7 @@ const DUNGEON_SWAMP_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-007',
     randomizerName: 'Compass Chest',
     vanillaItemIds: ['item-038'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-161',
@@ -50,6 +53,7 @@ const DUNGEON_SWAMP_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-007',
     randomizerName: 'Big Key Chest',
     vanillaItemIds: ['item-051'],
+    tags: ['tag-084'],
   },
   {
     id: 'check-162',
@@ -95,6 +99,7 @@ const DUNGEON_SWAMP_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-007',
     randomizerName: 'Boss',
     vanillaItemIds: ['item-039'],
+    tags: ['tag-086'],
   },
   {
     id: 'check-167',
@@ -104,6 +109,7 @@ const DUNGEON_SWAMP_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-007',
     randomizerName: 'Prize',
     vanillaItemIds: ['item-113'],
+    tags: ['tag-086'],
   },
   {
     id: 'check-168',
@@ -113,6 +119,7 @@ const DUNGEON_SWAMP_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-007',
     randomizerName: 'Pot Row Pot Key',
     vanillaItemIds: ['item-100'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-169',
@@ -122,6 +129,7 @@ const DUNGEON_SWAMP_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-007',
     randomizerName: 'Trench 1 Pot Key',
     vanillaItemIds: ['item-100'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-170',
@@ -131,6 +139,7 @@ const DUNGEON_SWAMP_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-007',
     randomizerName: 'Hookshot Pot Key',
     vanillaItemIds: ['item-100'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-171',
@@ -140,6 +149,7 @@ const DUNGEON_SWAMP_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-007',
     randomizerName: 'Trench 2 Pot Key',
     vanillaItemIds: ['item-100'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-172',
@@ -149,6 +159,7 @@ const DUNGEON_SWAMP_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-007',
     randomizerName: 'Waterway Pot Key',
     vanillaItemIds: ['item-100'],
+    tags: ['tag-083'],
   },
 ];
 

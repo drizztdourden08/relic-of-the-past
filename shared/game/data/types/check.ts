@@ -1,7 +1,6 @@
 /* @layer shared-game @kind types */
-import type { ActorId, CheckId, DungeonId, ItemGroupId, ItemId, ScreenId } from './ids';
-
-type CheckKind = 'chest' | 'npc' | 'standing' | 'boss' | 'prize' | 'keyDrop' | 'potItem' | 'dig' | 'bonk' | 'event';
+import type { ActorId, CheckId, DungeonId, ItemGroupId, ItemId, ScreenId, TagId } from './ids';
+import type { CheckKind } from '../enumeration/generated-types';
 
 interface CheckGameId {
   /** Chest checks (save_dung_info[roomId], CHEST_OPEN_MASKS[chestIndex]) — was checks/flags/room.ts's CHECK_ROOM_FLAGS. */
@@ -78,6 +77,8 @@ interface CheckRecord {
   vanillaName?: string;
   randomizerName: string;
   vanillaItemIds: ItemId[];
+  /** References into the tag collection — the check's own content (key/big key/map/compass/boss item). */
+  tags?: readonly TagId[];
   /** The actor that grants this check — an NPC or a boss, joined on spriteType. */
   actorId?: ActorId;
   /** What collecting demands beyond reaching the screen — replaces the old check-rules table. */

@@ -9,7 +9,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-257',
     toScreenId: 'screen-258',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-456',
@@ -17,7 +17,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-257',
     toScreenId: 'screen-029',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { itemId: 'item-027' },
   },
   {
@@ -26,7 +26,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-257',
     toScreenId: 'screen-036',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { itemId: 'item-027' },
   },
   {
@@ -36,7 +36,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-261',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-471',
@@ -45,7 +45,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-245',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-472',
@@ -54,7 +54,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-269',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-473',
@@ -63,7 +63,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-262',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-485',
@@ -72,7 +72,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-262',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-486',
@@ -81,7 +81,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-246',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-487',
@@ -90,7 +90,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-270',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-488',
@@ -99,7 +99,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-263',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-500',
@@ -108,7 +108,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-263',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-501',
@@ -117,7 +117,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-247',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-596',
@@ -125,7 +125,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-245',
     toScreenId: 'screen-257',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-597',
@@ -133,7 +133,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-245',
     toScreenId: 'screen-258',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
 ];
 

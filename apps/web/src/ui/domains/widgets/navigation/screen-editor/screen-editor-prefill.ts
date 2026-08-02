@@ -8,6 +8,7 @@
  * exactly what the record stores.
  */
 import { isDungeonPalace } from '@shared/game/logic/queries/dungeon-values';
+import { screenTagKeysOf } from '@shared/game/data';
 import type {
   AreaId, InteriorKind, LocationId, ScreenKind, ScreenRecord, ScreenTag, VariantCondition,
 } from '@shared/game/data';
@@ -87,7 +88,7 @@ const fromRecord = (screen: ScreenRecord, set: PrefillSetters): void => {
   set.setGridX(num(screen.position?.gridX));
   set.setGridY(num(screen.position?.gridY));
   set.setEntranceId(num(screen.gameId.entranceId));
-  set.setSelectedTags([...screen.tags]);
+  set.setSelectedTags([...screenTagKeysOf(screen.tags)]);
   if (screen.variant) applyVariant(screen.variant, set);
   else clearVariant(set);
 };

@@ -8,7 +8,7 @@ import { actorByGameId, checkByGameId, dungeonByGameId, itemByGameId, screenByGa
 import type {
   ActorGameId, ActorRecord, AreaRecord, CheckGameId, CheckRecord, ConnectionRecord,
   DungeonGameId, DungeonRecord, EntityKind, EntityOf, ItemGameId, ItemRecord, LocationRecord,
-  ScreenGameId, ScreenRecord,
+  ScreenGameId, ScreenRecord, TagRecord,
 } from './types';
 
 // Getters accept a plain `string`, not the branded `FooId` template-literal type:
@@ -50,6 +50,8 @@ const missingRecord = <K extends EntityKind>(kind: K, id: string): EntityOf<K> =
       return { id, areaId: 'area-000', randomizerName: NOT_REGISTERED } as unknown as EntityOf<K>;
     case 'actor':
       return { id, gameId: {}, kind: 'object', randomizerName: NOT_REGISTERED } as unknown as EntityOf<K>;
+    case 'tag':
+      return { id, name: NOT_REGISTERED, namespace: '', value: '', label: NOT_REGISTERED, namespaceLabel: '', appliesTo: [] } as unknown as EntityOf<K>;
     default:
       return { id } as unknown as EntityOf<K>;
   }
@@ -63,6 +65,7 @@ const getDungeon = (id: string): DungeonRecord => get('dungeon', id) ?? missingR
 const getArea = (id: string): AreaRecord => get('area', id) ?? missingRecord('area', id);
 const getLocation = (id: string): LocationRecord => get('location', id) ?? missingRecord('location', id);
 const getActor = (id: string): ActorRecord => get('actor', id) ?? missingRecord('actor', id);
+const getTag = (id: string): TagRecord => get('tag', id) ?? missingRecord('tag', id);
 
 const getScreenByGameId = (match: Partial<ScreenGameId>): ScreenRecord | undefined => screenByGameId(match);
 const getCheckByGameId = (match: Partial<CheckGameId>): CheckRecord | undefined => checkByGameId(match);
@@ -80,4 +83,5 @@ export {
   all, find, findOne,
   getActor, getActorByGameId, getArea, getCheck, getCheckByGameId, getConnection,
   getDungeon, getDungeonByGameId, getItem, getItemByGameId, getLocation, getScreen, getScreenByGameId,
+  getTag,
 };

@@ -1,10 +1,11 @@
 /* @layer shared-game @kind types */
 import type { AreaId, LocationId } from './ids';
+import type { World } from '../enumeration/generated-types';
 
 /** A broad geographic zone — "Death Mountain", "Kakariko", "the desert". */
 interface AreaRecord {
   id: AreaId;
-  world: 'light' | 'dark' | 'both';
+  world: World;
   vanillaName?: string;
   randomizerName: string;
 }

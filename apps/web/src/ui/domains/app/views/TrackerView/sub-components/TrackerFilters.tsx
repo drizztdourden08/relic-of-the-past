@@ -44,7 +44,7 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
   const itemFilter = filter.itemFilter ?? 'all';
   const statusFilter = filter.statusFilter ?? 'all';
   const activeCount = (itemFilter !== 'all' ? 1 : 0) + (statusFilter !== 'all' ? 1 : 0)
-    + (filter.activeTags.length > 0 ? 1 : 0) + (grouping.length > 0 ? 1 : 0);
+    + (filter.activeFacets.length > 0 ? 1 : 0) + (grouping.length > 0 ? 1 : 0);
 
   return (
     <Box className="tracker-filters">
@@ -111,10 +111,10 @@ const TrackerFilters = (props: TrackerFiltersProps) => {
 
           <Button
             variant="bare"
-            className={`tracker-filters__btn ${filter.activeTags.length > 0 ? 'tracker-filters__btn--active' : ''}`}
+            className={`tracker-filters__btn ${filter.activeFacets.length > 0 ? 'tracker-filters__btn--active' : ''}`}
             onClick={() => setShowTagFilter(!showTagFilter)}
           >
-            Tags{filter.activeTags.length > 0 ? ` (${filter.activeTags.length})` : ''}
+            Tags{filter.activeFacets.length > 0 ? ` (${filter.activeFacets.length})` : ''}
           </Button>
 
           <Button

@@ -8,7 +8,7 @@
  * rather than duplicated. Both endpoints must resolve to real screens — an
  * unresolved crossing comes back as null and is never written.
  */
-import { findOne } from '@shared/game/data';
+import { findOne, tagIdsForKeys } from '@shared/game/data';
 import type {
   ConnectionKind, ConnectionRecord, ConnectionTag, DungeonId, ScreenId, ScreenRecord,
 } from '@shared/game/data';
@@ -74,7 +74,8 @@ const buildConnectionRecord = (draft: ConnectionDraft): PendingConnectionRecord 
     toScreenId: to.id,
     direction: directionFor(draft.tags),
     dungeonId: dungeonIdFor(from.id, to.id),
-    tags: draft.tags.filter(t => !RETIRED_TRANSIT.has(t)),
+    // The draft carries terms; the record carries references to them.
+    tags: tagIdsForKeys(draft.tags.filter(t => !RETIRED_TRANSIT.has(t))),
     nav: draft.nav,
   };
 };

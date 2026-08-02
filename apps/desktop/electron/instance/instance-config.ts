@@ -15,6 +15,15 @@
  *   config/window-state.json  guarded by isEphemeralLaunch (window/startup-config)
  *   app.json → lastProfileId  guarded in the renderer's profile-store
  *
+ * This only sandboxes the game PROFILE (app.getPath('userData') is the same directory
+ * for every instance — see lib/paths.ts). A handful of other Data/ files are shared
+ * app-wide tool state on purpose (Data Inspector view-state, nav/connection/sprite
+ * review progress, stick calibration) and are NOT write-restricted — they're meant to
+ * be written, same as a window's size. Don't drive a real UI flow that saves through
+ * one of those from an automated instance expecting `--instance` to sandbox it; see
+ * docs/contributing/testing.md's "`--instance` sandboxes profile data, not app-wide
+ * tool state" section.
+ *
  * The name is a filesystem path segment (it becomes a profile folder), so it is
  * restricted to a slug rather than trusted verbatim.
  */

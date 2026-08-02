@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 import type { CheckRecord, ItemId, CheckId, Requirement } from '../data';
-import { ITEM_GROUPS } from '../data';
+import { membersOf } from '../data';
 
 // ─── A resolved traversal edge — a real connection (or the virtual menu spawn
 // points), with its effective requirement (base record + any mode overlay)
@@ -39,10 +39,8 @@ const evaluateRequirement = (
 
   if ('count' in req) {
     const { groupId, n } = req.count;
-    const members = ITEM_GROUPS[groupId];
-    if (!members) return false;
     let count = 0;
-    for (const item of members) {
+    for (const item of membersOf(groupId)) {
       if (inventory.has(item)) count++;
       if (count >= n) return true;
     }
@@ -194,8 +192,7 @@ const getBlockingItems = (
 
   if ('count' in req) {
     const { groupId, n } = req.count;
-    const members = ITEM_GROUPS[groupId];
-    if (!members) return [];
+    const members = membersOf(groupId);
     const missing = members.filter(m => !inventory.has(m));
     const have = members.length - missing.length;
     const need = n - have;

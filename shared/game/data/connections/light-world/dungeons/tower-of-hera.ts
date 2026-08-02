@@ -11,7 +11,7 @@ const LW_DUNGEON_TOWER_OF_HERA_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-305',
     dungeonId: 'dungeon-005',
-    tags: ['dir:two-way', 'ctx:dungeon-enter'],
+    tags: ['tag-073', 'tag-081'],
   },
   {
     id: 'connection-296',
@@ -21,7 +21,7 @@ const LW_DUNGEON_TOWER_OF_HERA_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 53, y: 13, w: 2, h: 2 } },
     direction: 'one-way',
     dungeonId: 'dungeon-005',
-    tags: ['dir:one-way', 'ctx:internal'],
+    tags: ['tag-072', 'tag-076'],
   },
   {
     id: 'connection-297',
@@ -31,7 +31,7 @@ const LW_DUNGEON_TOWER_OF_HERA_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 7, y: 13, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-005',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-298',
@@ -41,7 +41,7 @@ const LW_DUNGEON_TOWER_OF_HERA_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 53, y: 13, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-005',
-    tags: ['dir:two-way', 'ctx:boss', 'barrier:big-key'],
+    tags: ['tag-073', 'tag-079', 'tag-058'],
   },
   {
     id: 'connection-299',
@@ -51,7 +51,7 @@ const LW_DUNGEON_TOWER_OF_HERA_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 55, y: 13, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-005',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-300',
@@ -61,7 +61,7 @@ const LW_DUNGEON_TOWER_OF_HERA_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 45, y: 37, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-005',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-301',
@@ -70,7 +70,7 @@ const LW_DUNGEON_TOWER_OF_HERA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-142',
     direction: 'two-way',
     dungeonId: 'dungeon-005',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-302',
@@ -80,7 +80,7 @@ const LW_DUNGEON_TOWER_OF_HERA_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 17, y: 40, w: 2, h: 2 } },
     direction: 'one-way',
     dungeonId: 'dungeon-005',
-    tags: ['dir:one-way', 'ctx:internal'],
+    tags: ['tag-072', 'tag-076'],
   },
   {
     id: 'connection-303',
@@ -90,7 +90,7 @@ const LW_DUNGEON_TOWER_OF_HERA_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 15, y: 3, w: 2, h: 2 } },
     direction: 'one-way',
     dungeonId: 'dungeon-005',
-    tags: ['dir:one-way', 'ctx:internal'],
+    tags: ['tag-072', 'tag-076'],
   },
   {
     id: 'connection-304',
@@ -99,7 +99,7 @@ const LW_DUNGEON_TOWER_OF_HERA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-104',
     direction: 'two-way',
     dungeonId: 'dungeon-005',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-305',
@@ -110,7 +110,7 @@ const LW_DUNGEON_TOWER_OF_HERA_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-295',
     dungeonId: 'dungeon-005',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
 ];
 

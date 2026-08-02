@@ -12,7 +12,7 @@ const LW_GAMBLE_SCREENS: ScreenRecord[] = [
     randomizerName: 'Kakariko Gamble Game',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-262', tile: { x: 48, y: 18 } },
@@ -28,7 +28,7 @@ const LW_GAMBLE_SCREENS: ScreenRecord[] = [
     randomizerName: 'Lost Woods Gamble',
     areaId: 'area-014',
     locationId: 'location-019',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-230', tile: { x: 16, y: 54 } },

@@ -10,7 +10,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-024',
     toScreenId: 'screen-081',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: canLiftHeavyRocks,
   },
   {
@@ -19,7 +19,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-025',
     toScreenId: 'screen-081',
     direction: 'one-way',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-044',
@@ -27,7 +27,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-081',
     toScreenId: 'screen-024',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld', 'barrier:swim'],
+    tags: ['tag-073', 'tag-080', 'tag-068'],
   },
   {
     id: 'connection-049',
@@ -35,7 +35,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-074',
     toScreenId: 'screen-259',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { allOf: [{ itemId: 'item-010' }, canLiftRocks, { itemId: 'item-032' }] },
   },
   {
@@ -45,7 +45,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-073',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-148',
@@ -54,7 +54,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-066',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-149',
@@ -63,7 +63,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-081',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-150',
@@ -72,7 +72,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-074',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-151',
@@ -81,7 +81,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-089',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-152',
@@ -90,7 +90,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-082',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-153',
@@ -99,7 +99,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-097',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-154',
@@ -108,7 +108,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-090',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-159',
@@ -117,7 +117,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-074',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-160',
@@ -126,7 +126,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-082',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-161',
@@ -135,7 +135,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-090',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-162',
@@ -144,7 +144,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-098',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-192',
@@ -152,7 +152,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-066',
     toScreenId: 'screen-024',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-193',
@@ -160,7 +160,7 @@ const LW_OVERWORLD_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-066',
     toScreenId: 'screen-025',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
 ];
 

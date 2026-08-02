@@ -10,6 +10,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useGameUIStore } from '../../../../stores/game-ui-store';
 import { useNavigationOverlayStore } from '../../../../stores/navigation-overlay-store';
 import { wasmGetProgressIndicator, wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetRoomStairInfo, wasmGetFallHoles, wasmGetAreaHeads } from '../../../../lib/game';
+import { connectionTagKeysOf } from '@shared/game/data';
 import { useScreenDataStatus, useConnectionStatus } from './useDatasetStatus';
 import { describeConnectionTiles } from './connection-tile-display';
 import { connectionIssues } from './connection-issues';
@@ -104,7 +105,7 @@ const DatasetWidgetContent = () => {
     return connStatus.existingConnections.reduce((n, c) => {
       // describeConnectionTiles/connectionIssues take the editor's plain
       // {from,to,tags} shape, not ConnectionRecord's fromScreenId/toScreenId.
-      const conn = { from: c.fromScreenId, to: c.toScreenId, tags: c.tags };
+      const conn = { from: c.fromScreenId, to: c.toScreenId, tags: connectionTagKeysOf(c.tags) };
       const tileDesc = describeConnectionTiles(conn, floodConnections, screenId);
       return connectionIssues(conn, tileDesc).length > 0 ? n + 1 : n;
     }, 0);
