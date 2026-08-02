@@ -9,10 +9,11 @@
  * it) is derived from the rows, so adding another collection here is this
  * file and nothing else.
  *
- * Rows are read once at module load. The facade is seeded synchronously by its
- * own barrel before anything can import from it, and a write goes to the source
- * files on disk rather than to the in-memory registry, so a stable array per
- * collection is both correct and what keeps the derived schema memo stable.
+ * Rows are read once per collection, on first use, and then kept. The facade is
+ * seeded synchronously by its own barrel before anything can import from it,
+ * and a write goes to the source files on disk rather than to the in-memory
+ * registry, so a stable array per collection is both correct and what keeps the
+ * derived schema memo stable.
  */
 import { all } from '@shared/game/data';
 import {
@@ -64,20 +65,50 @@ const sourceFor = (kind: EntityKind): InspectorSource => ({
   onSave: RECORD_WRITERS[kind],
 });
 
-const COLLECTION_SOURCES: Record<EntityKind, InspectorSource> = Object.fromEntries(
-  ENTITY_KINDS.map(kind => [kind, sourceFor(kind)]),
+const built = new Map<EntityKind, InspectorSource>();
+
+const collectionSource = (kind: EntityKind): InspectorSource => {
+  const ready = built.get(kind);
+  if (ready) return ready;
+  const source = sourceFor(kind);
+  built.set(kind, source);
+  return source;
+};
+
+/**
+ * One property per collection, each built on the first read rather than up
+ * front.
+ *
+ * These modules form an import cycle: record-writers needs id-ref-options to
+ * refresh a renamed record's label, id-ref-options reads the collections here,
+ * and a collection's `onSave` comes back out of record-writers. A cycle is only
+ * a fault when something is READ while a module in it is still evaluating, and
+ * building every source at module scope did exactly that — entering the graph
+ * through record-writers ran this build mid-way through record-writers' own
+ * evaluation, when RECORD_WRITERS was still undefined, and every collection
+ * silently lost its write path. Deferring to first use moves the read past the
+ * point where all four have finished, so entry order stops mattering. See
+ * tests/data-inspector/module-init-order.test.ts.
+ */
+const COLLECTION_SOURCES = Object.defineProperties(
+  {},
+  Object.fromEntries(ENTITY_KINDS.map(kind => [kind, {
+    get: () => collectionSource(kind),
+    enumerable: true,
+    configurable: true,
+  }])),
 ) as Record<EntityKind, InspectorSource>;
 
 /**
- * Rebuilds one collection's source after a record is minted into the live
- * registry. `rows` is read once at module load (see the note above), so a
- * created record is invisible to the table until this replaces the entry with
- * a fresh snapshot — the create flow calls this the moment its own write
- * lands, the same way a delete or an edit would need to if either ever grew a
- * collection instead of mutating one already in it.
+ * Drops one collection's cached source after a record is minted into the live
+ * registry, so the next read picks the new row up. `rows` is a snapshot (see
+ * the note above), so a created record is invisible to the table until this
+ * runs — the create flow calls it the moment its own write lands, the same way
+ * a delete or an edit would need to if either ever grew a collection instead of
+ * mutating one already in it.
  */
 const refreshCollectionSource = (kind: EntityKind): void => {
-  COLLECTION_SOURCES[kind] = sourceFor(kind);
+  built.delete(kind);
 };
 
 export { COLLECTION_SOURCES, refreshCollectionSource };

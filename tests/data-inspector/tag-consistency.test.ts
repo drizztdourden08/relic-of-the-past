@@ -11,16 +11,7 @@
 import {
   afterEach, beforeEach, describe, expect, it, vi,
 } from 'vitest';
-// Entering through `collection-sources.ts` (as the real app does — it is what
-// every other module reaches `RECORD_WRITERS` through) rather than importing
-// `record-writers.ts` directly, which would otherwise expose the two modules'
-// existing circular import from the wrong side: `collection-sources.ts` builds
-// its whole map eagerly at load time, and reaching it before `record-writers.ts`
-// has finished its own top-level evaluation would read `RECORD_WRITERS` while
-// it is still undefined.
-import { COLLECTION_SOURCES } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/collection-sources';
-
-const RECORD_WRITERS = { tag: COLLECTION_SOURCES.tag.onSave };
+import { RECORD_WRITERS } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/record-writers';
 
 const baseTag = {
   id: 'tag-999',
