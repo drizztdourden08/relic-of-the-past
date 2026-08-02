@@ -7,7 +7,7 @@ import { parseStartupConfig, startupRendererArgs } from './startup-config';
 import { sendWindowToBack } from './send-to-back';
 import { attachTextInteraction } from './text-interaction';
 import { resolveWindowIcon } from './window-icon';
-import { parseInstanceConfig } from '../instance';
+import { isAutomationLaunch, parseInstanceConfig } from '../instance';
 
 const APP_TITLE = 'Relic of the Past';
 
@@ -23,9 +23,13 @@ const SPLASH_HEIGHT = 360;
 let pendingSavedState: ReturnType<typeof loadWindowState> | null = null;
 let savedStateRestored = false;
 
-// --no-focus (test/automation) launches must never steal focus OR cover the
-// user's other windows. Tracked at module scope so restoreSavedBounds honours it
-// too (its maximize/fullscreen calls would otherwise activate + raise the window).
+// Test/automation launches must never steal focus OR cover the user's other
+// windows. Derived from isAutomationLaunch() rather than the literal --no-focus
+// flag, so a run that carries --auto-state/--dump-nav/--sim-run/etc. but forgot
+// --no-focus itself is still caught (see docs/contributing/testing.md — --no-focus
+// is documented as mandatory, but forgetting it must not cost the user their
+// focus). Tracked at module scope so restoreSavedBounds honours it too (its
+// maximize/fullscreen calls would otherwise activate + raise the window).
 let launchNoFocus = false;
 
 // --window-size opens at a fixed size; the splash→saved-size growth is skipped so
@@ -77,7 +81,7 @@ const restoreSavedBounds = (): void => {
 };
 
 const createWindow = (): BrowserWindow => {
-  const noFocus = process.argv.includes('--no-focus');
+  const noFocus = isAutomationLaunch();
   launchNoFocus = noFocus;
   const startup = parseStartupConfig();
   const instance = parseInstanceConfig();
@@ -156,7 +160,10 @@ const createWindow = (): BrowserWindow => {
     callback(true);
   });
 
-  if (process.argv.includes('--muted')) {
+  // --muted is documented as mandatory alongside --no-focus for every automated
+  // launch (docs/contributing/testing.md); enforced the same way so forgetting the
+  // literal flag doesn't leave a headless run making noise.
+  if (process.argv.includes('--muted') || isAutomationLaunch()) {
     mainWindow.webContents.setAudioMuted(true);
   }
 
