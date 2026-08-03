@@ -1,5 +1,5 @@
 /* @layer shared-game @kind types */
-import type { CheckRecord, CheckTag } from '../../../data';
+import type { CheckRecord } from '../../../data';
 
 type GroupDimension = 'world' | 'area' | 'location' | 'dungeon' | 'screen' | 'type' | 'content';
 
@@ -23,8 +23,9 @@ type StatusFilter = 'all' | 'completed' | 'reachable' | 'blocked';
 
 interface FilterState {
   searchQuery: string;
-  activeTags: CheckTag[];
-  /** If true, check must have ALL active tags. If false, ANY. */
+  /** Active ids from CHECK_FACET_DEFS — a world/location/area facet, or a real content TagId key. */
+  activeFacets: string[];
+  /** If true, check must match ALL active facets. If false, ANY. */
   tagMode: 'all' | 'any';
   /** Filter checks by whether they have an item reward. */
   itemFilter?: ItemFilter;

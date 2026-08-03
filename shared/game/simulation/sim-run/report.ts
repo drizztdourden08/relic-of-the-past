@@ -4,7 +4,7 @@
  * `boundaryEdges` are the dataset edges that leave the reached set — the places
  * to point `--dump-nav` at when hunting a missing/blocked connection.
  */
-import { find } from '../../data';
+import { find, hasTagKey, tagKeysOf } from '../../data';
 import { buildDatasetSuggestions } from '../recording/dataset-updates';
 import type { EngineState } from '../engine/state';
 import type { RecorderState } from '../recording/recorder';
@@ -21,9 +21,11 @@ const boundaryEdges = (reached: Set<string>): BoundaryEdge[] => {
     seen.add(key);
     out.push({ from, to, tags });
   };
+  // The report is read by a person, so it carries the terms rather than the ids.
   for (const c of find('connection', () => true)) {
-    consider(c.fromScreenId, c.toScreenId, [...c.tags]);
-    if (c.tags.includes('dir:two-way')) consider(c.toScreenId, c.fromScreenId, [...c.tags]);
+    const keys = [...tagKeysOf(c.tags)];
+    consider(c.fromScreenId, c.toScreenId, keys);
+    if (hasTagKey(c.tags, 'dir:two-way')) consider(c.toScreenId, c.fromScreenId, keys);
   }
   return out;
 };

@@ -12,7 +12,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-236',
     direction: 'one-way',
     counterpartId: 'connection-409',
-    tags: ['dir:one-way', 'ctx:overworld'],
+    tags: ['tag-072', 'tag-080'],
   },
   {
     id: 'connection-409',
@@ -21,7 +21,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-237',
     direction: 'one-way',
     counterpartId: 'connection-408',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-410',
@@ -30,7 +30,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-233',
     direction: 'one-way',
     counterpartId: 'connection-412',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-411',
@@ -39,7 +39,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-235',
     direction: 'two-way',
     counterpartId: 'connection-414',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-412',
@@ -48,7 +48,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-236',
     direction: 'one-way',
     counterpartId: 'connection-410',
-    tags: ['dir:one-way', 'ctx:overworld'],
+    tags: ['tag-072', 'tag-080'],
   },
   {
     id: 'connection-413',
@@ -56,7 +56,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-235',
     toScreenId: 'screen-237',
     direction: 'one-way',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-414',
@@ -65,7 +65,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-236',
     direction: 'one-way',
     counterpartId: 'connection-411',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-415',
@@ -73,7 +73,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-234',
     toScreenId: 'screen-236',
     direction: 'one-way',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-416',
@@ -81,7 +81,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-243',
     toScreenId: 'screen-236',
     direction: 'one-way',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-417',
@@ -89,7 +89,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-232',
     toScreenId: 'screen-233',
     direction: 'one-way',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-418',
@@ -97,7 +97,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-237',
     toScreenId: 'screen-005',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { itemId: 'item-027' },
   },
   {
@@ -106,7 +106,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-233',
     toScreenId: 'screen-016',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { itemId: 'item-027' },
   },
   {
@@ -115,7 +115,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-235',
     toScreenId: 'screen-008',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { itemId: 'item-027' },
   },
   {
@@ -124,7 +124,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-234',
     toScreenId: 'screen-018',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { itemId: 'item-027' },
   },
   {
@@ -133,7 +133,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-243',
     toScreenId: 'screen-006',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { itemId: 'item-027' },
   },
   {
@@ -142,7 +142,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-236',
     toScreenId: 'screen-017',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { itemId: 'item-027' },
   },
   {
@@ -152,7 +152,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-260',
     direction: 'one-way',
     counterpartId: 'connection-462',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-465',
@@ -160,7 +160,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-230',
     toScreenId: 'screen-229',
     direction: 'one-way',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
 ];
 

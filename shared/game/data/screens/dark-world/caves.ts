@@ -12,7 +12,7 @@ const DW_CAVES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Dark World Hammer Peg Cave',
     areaId: 'area-017',
     locationId: 'location-031',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-230', tile: { x: 14, y: 42 } },
@@ -27,7 +27,7 @@ const DW_CAVES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Bumper Cave',
     areaId: 'area-017',
     locationId: 'location-031',
-    tags: ['env:underground', 'role:connector', 'loot:chest'],
+    tags: ['tag-003', 'tag-011', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-198', tile: { x: 14, y: 48 } },
@@ -43,7 +43,7 @@ const DW_CAVES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Hype Cave',
     areaId: 'area-007',
     locationId: 'location-008',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-103', tile: { x: 54, y: 22 } },
@@ -62,7 +62,7 @@ const DW_CAVES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Dark Lake Hylia Ledge Spike Cave',
     areaId: 'area-004',
     locationId: 'location-006',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-198', tile: { x: 46, y: 48 } },
@@ -77,7 +77,7 @@ const DW_CAVES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Spike Cave',
     areaId: 'area-002',
     locationId: 'location-004',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-230', tile: { x: 14, y: 8 } },
@@ -92,7 +92,7 @@ const DW_CAVES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Hookshot Cave',
     areaId: 'area-002',
     locationId: 'location-004',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-056', tile: { x: 44, y: 36 } },
@@ -111,7 +111,7 @@ const DW_CAVES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Hookshot Cave (Upper)',
     areaId: 'area-002',
     locationId: 'location-004',
-    tags: ['env:underground', 'loot:chest', 'role:connector'],
+    tags: ['tag-003', 'tag-024', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-056', tile: { x: 32, y: 8 } },
@@ -130,7 +130,7 @@ const DW_CAVES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Mimic Cave',
     areaId: 'area-002',
     locationId: 'location-004',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-056', tile: { x: 46, y: 18 } },

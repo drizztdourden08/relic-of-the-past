@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 ﻿import { useRef, useState, useEffect, useCallback } from 'react';
 import './SegmentedControl.css';
+import { resolveClick } from './behavior/resolve-click';
 import { type SegmentOption, type SegmentedControlProps } from './SegmentedControl.type';
 
 
@@ -10,6 +11,7 @@ const SegmentedControl = <T extends string = string>(props: SegmentedControlProp
     value,
     options,
     onChange,
+    onDeselect,
     label,
     description,
     disabled = false,
@@ -60,7 +62,11 @@ const SegmentedControl = <T extends string = string>(props: SegmentedControlProp
             role="radio"
             aria-checked={value === opt.value}
             className={`segmented__btn ${value === opt.value ? 'segmented__btn--active' : ''}`}
-            onClick={() => onChange(opt.value)}
+            onClick={() => {
+              const outcome = resolveClick(opt.value, value, onDeselect !== undefined);
+              if (outcome.kind === 'deselect') onDeselect?.();
+              else onChange(outcome.value);
+            }}
             disabled={disabled || opt.disabled}
           >
             {opt.label}

@@ -12,7 +12,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-004',
     position: { gridX: 7, gridY: 1 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -24,7 +24,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-004',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -36,7 +36,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-004',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -48,7 +48,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-004',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -60,7 +60,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-004',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -72,7 +72,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-004',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -84,7 +84,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-004',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -96,7 +96,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-004',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -108,7 +108,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-004',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -120,7 +120,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-004',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor', 'role:connector'],
+    tags: ['tag-001', 'tag-011'],
     status: 'mapped',
   },
   {
@@ -132,7 +132,7 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-004',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
 ];

@@ -12,7 +12,7 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B7_B4: ScreenRecord[] = [
     areaId: 'area-004',
     locationId: 'location-016',
     position: { gridX: 14, gridY: 0, floor: -7 },
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-124', tile: { x: 44, y: 36 } },
@@ -30,7 +30,7 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B7_B4: ScreenRecord[] = [
     areaId: 'area-004',
     locationId: 'location-016',
     position: { gridX: 14, gridY: 1, floor: -6 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
@@ -52,7 +52,7 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B7_B4: ScreenRecord[] = [
     areaId: 'area-004',
     locationId: 'location-016',
     position: { gridX: 15, gridY: 1, floor: -6 },
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
@@ -75,7 +75,7 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B7_B4: ScreenRecord[] = [
     areaId: 'area-004',
     locationId: 'location-016',
     position: { gridX: 14, gridY: 2, floor: -5 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     triggerIds: ['actor-269'],
     spawns: [
@@ -96,7 +96,7 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B7_B4: ScreenRecord[] = [
     areaId: 'area-004',
     locationId: 'location-016',
     position: { gridX: 14, gridY: 3, floor: -4 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-161', tile: { x: 12, y: 42 } },
@@ -121,7 +121,7 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B7_B4: ScreenRecord[] = [
     areaId: 'area-004',
     locationId: 'location-016',
     position: { gridX: 15, gridY: 3, floor: -4 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     triggerIds: ['actor-043', 'actor-025'],
     spawns: [
@@ -141,7 +141,7 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B7_B4: ScreenRecord[] = [
     areaId: 'area-004',
     locationId: 'location-016',
     position: { gridX: 14, gridY: 12, floor: -4 },
-    tags: ['env:underground', 'traverse:fall'],
+    tags: ['tag-003', 'tag-040'],
     status: 'mapped',
     triggerIds: ['actor-025'],
     spawns: [
@@ -164,7 +164,7 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B7_B4: ScreenRecord[] = [
     areaId: 'area-004',
     locationId: 'location-016',
     position: { gridX: 14, gridY: 13, floor: -5 },
-    tags: ['env:underground', 'role:boss'],
+    tags: ['tag-003', 'tag-006'],
     status: 'mapped',
     triggerIds: ['actor-041'],
     spawns: [

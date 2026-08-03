@@ -12,7 +12,7 @@ const DW_SHOPS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Village of Outcasts Shop',
     areaId: 'area-017',
     locationId: 'location-031',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-225', tile: { x: 18, y: 50 } },
@@ -27,7 +27,7 @@ const DW_SHOPS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Cave Shop (Dark Lake Hylia)',
     areaId: 'area-004',
     locationId: 'location-006',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 10, y: 14 } },
@@ -46,7 +46,7 @@ const DW_SHOPS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Dark World Lumberjack Shop',
     areaId: 'area-015',
     locationId: 'location-024',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-238', tile: { x: 46, y: 44 } },
@@ -66,7 +66,7 @@ const DW_SHOPS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Dark World Potion Shop',
     areaId: 'area-017',
     locationId: 'location-031',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-230', tile: { x: 50, y: 54 } },
@@ -81,7 +81,7 @@ const DW_SHOPS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Red Shield Shop',
     areaId: 'area-017',
     locationId: 'location-031',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-238', tile: { x: 46, y: 44 } },
@@ -101,7 +101,7 @@ const DW_SHOPS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Big Bomb Shop',
     areaId: 'area-007',
     locationId: 'location-008',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-094', tile: { x: 10, y: 44 } },
@@ -117,7 +117,7 @@ const DW_SHOPS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Cave Shop (Dark Death Mountain)',
     areaId: 'area-002',
     locationId: 'location-004',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-056', tile: { x: 24, y: 42 } },

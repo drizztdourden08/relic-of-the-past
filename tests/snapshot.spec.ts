@@ -34,7 +34,7 @@ test('visual snapshot', async () => {
   test.skip(!existsSync(MAIN_JS), 'Build the app first: npx electron-vite build');
 
   const app = await electron.launch({
-    args: [MAIN_JS, '--muted', `--auto-state=${SLOT}`, `--screenshot=${NAME}`],
+    args: [MAIN_JS, '--muted', '--no-focus', `--auto-state=${SLOT}`, `--screenshot=${NAME}`],
     env: { ...process.env, NODE_ENV: 'production' },
   });
 

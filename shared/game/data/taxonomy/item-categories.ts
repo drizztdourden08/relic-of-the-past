@@ -1,7 +1,6 @@
 /* @layer shared-game @kind data */
 /** Item category taxonomy — our own grouping, not a game secret. */
-
-type ItemCategory = 'weapon' | 'equipment' | 'medallion' | 'bottle' | 'upgrade' | 'crystal' | 'event' | 'junk' | 'key';
+import type { ItemCategory } from '../enumeration/generated-types';
 
 const ITEM_CATEGORY_LABELS: Record<ItemCategory, string> = {
   weapon: 'Weapon',

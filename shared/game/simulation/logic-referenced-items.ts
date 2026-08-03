@@ -12,7 +12,7 @@
  * the chance of two records collapsing onto one shared name.
  */
 import type { ItemId, Requirement } from '../data';
-import { ITEM_GROUPS, find } from '../data';
+import { find, membersOf } from '../data';
 
 const collectItemIds = (req: Requirement, out: Set<ItemId>): void => {
   if ('impossible' in req || 'checkId' in req) return;
@@ -33,8 +33,7 @@ const collectItemIds = (req: Requirement, out: Set<ItemId>): void => {
   }
 
   if ('count' in req) {
-    const members = ITEM_GROUPS[req.count.groupId];
-    if (members) for (const id of members) out.add(id);
+    for (const id of membersOf(req.count.groupId)) out.add(id);
   }
 };
 

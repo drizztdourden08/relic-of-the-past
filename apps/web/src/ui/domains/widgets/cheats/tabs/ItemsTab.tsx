@@ -6,7 +6,9 @@
  */
 import { useState, useMemo, useEffect } from 'react';
 import { TextInput, Box, Text, Image, Button } from '../../../../design-system/primitives';
-import { find, getItem, getScreen } from '@shared/game/data';
+import {
+  enumerationFor, find, getItem, getScreen,
+} from '@shared/game/data';
 import type { CheckId, ItemRecord, CheckRecord } from '@shared/game/data';
 import { getItemSprite } from '@shared/game/logic/queries/item-sprites';
 import {
@@ -16,11 +18,15 @@ import {
 
 type Mode = 'free' | 'checks';
 
-const CATEGORY_ORDER = ['weapon', 'equipment', 'medallion', 'bottle', 'upgrade', 'key', 'junk'];
-const CATEGORY_LABELS: Record<string, string> = {
-  weapon: 'Weapons', equipment: 'Equipment', medallion: 'Medallions',
-  bottle: 'Bottles', upgrade: 'Upgrades', key: 'Keys', junk: 'Consumables',
-};
+// Crystal/event items joined the roster so a givable one (the range check
+// below already excludes the rest) gets its own section instead of being
+// silently dropped by a category this list didn't yet know about.
+const CATEGORY_ORDER = ['weapon', 'equipment', 'medallion', 'bottle', 'upgrade', 'key', 'crystal', 'event', 'junk'];
+
+/** Sourced from Enumeration rather than hand-rolled, so a category label can't drift from the canonical one. */
+const CATEGORY_LABELS: Record<string, string> = Object.fromEntries(
+  enumerationFor('item-category').map(entry => [entry.value, entry.label]),
+);
 
 const ItemsTab = () => {
   const [mode, setMode] = useState<Mode>('free');

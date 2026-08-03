@@ -12,7 +12,7 @@ const DW_GAMBLE_SCREENS: ScreenRecord[] = [
     randomizerName: 'Chest Game',
     areaId: 'area-017',
     locationId: 'location-031',
-    tags: ['env:indoor', 'loot:chest'],
+    tags: ['tag-002', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-192', tile: { x: 22, y: 54 } },
@@ -27,7 +27,7 @@ const DW_GAMBLE_SCREENS: ScreenRecord[] = [
     randomizerName: 'Archery Game',
     areaId: 'area-017',
     locationId: 'location-031',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-230', tile: { x: 14, y: 42 } },

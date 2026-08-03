@@ -8,20 +8,36 @@ interface StatusBadgeProps {
   /** Show as interactive (clickable) or read-only */
   interactive?: boolean;
   onChange?: (status: ScreenStatus) => void;
+  /**
+   * Label per status key, injected by the caller — this primitive cannot
+   * import the dataset directly (design-system/domain dependency invariant),
+   * so the canonical `enumerationFor('screen-status')` labels live one layer
+   * up, in whatever domain code renders a badge. Missing or omitted keys fall
+   * back to `DEFAULT_LABELS`, so the badge still renders standalone.
+   */
+  labels?: Partial<Record<'unsaved' | NonNullable<ScreenStatus>, string>>;
 }
 
-const STATUS_CONFIG: Record<string, { label: string; className: string }> = {
-  unsaved: { label: 'Unsaved', className: 'status-badge--unsaved' },
-  draft: { label: 'Draft', className: 'status-badge--draft' },
-  mapped: { label: 'Mapped', className: 'status-badge--mapped' },
-  verified: { label: 'Verified', className: 'status-badge--verified' },
+const STATUS_CLASS: Record<string, string> = {
+  unsaved: 'status-badge--unsaved',
+  draft: 'status-badge--draft',
+  mapped: 'status-badge--mapped',
+  verified: 'status-badge--verified',
+};
+
+const DEFAULT_LABELS: Record<string, string> = {
+  unsaved: 'Unsaved',
+  draft: 'Draft',
+  mapped: 'Mapped',
+  verified: 'Verified',
 };
 
 const STATUS_CYCLE: ScreenStatus[] = [undefined, 'draft', 'mapped', 'verified'];
 
-const StatusBadge = ({ status, interactive = false, onChange }: StatusBadgeProps) => {
+const StatusBadge = ({ status, interactive = false, onChange, labels }: StatusBadgeProps) => {
   const key = status ?? 'unsaved';
-  const config = STATUS_CONFIG[key];
+  const className = STATUS_CLASS[key];
+  const label = labels?.[key] ?? DEFAULT_LABELS[key];
 
   const handleClick = () => {
     if (!interactive || !onChange) return;
@@ -32,14 +48,14 @@ const StatusBadge = ({ status, interactive = false, onChange }: StatusBadgeProps
 
   return (
     <span
-      className={`status-badge ${config.className} ${interactive ? 'status-badge--interactive' : ''}`}
+      className={`status-badge ${className} ${interactive ? 'status-badge--interactive' : ''}`}
       onClick={interactive ? handleClick : undefined}
-      title={interactive ? 'Click to cycle status' : `Status: ${config.label}`}
+      title={interactive ? 'Click to cycle status' : `Status: ${label}`}
     >
-      {config.label}
+      {label}
     </span>
   );
 };
 
 export { StatusBadge };
-export type { ScreenStatus };
+export type { ScreenStatus, StatusBadgeProps };

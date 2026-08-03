@@ -12,7 +12,7 @@ const DW_HINTS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Dark Desert Hint',
     areaId: 'area-005',
     locationId: 'location-026',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-165', tile: { x: 12, y: 12 } },
@@ -28,7 +28,7 @@ const DW_HINTS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Fortune Teller (Dark)',
     areaId: 'area-017',
     locationId: 'location-031',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-262', tile: { x: 48, y: 18 } },
@@ -44,7 +44,7 @@ const DW_HINTS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Dark Sanctuary Hint',
     areaId: 'area-017',
     locationId: 'location-031',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-225', tile: { x: 18, y: 50 } },
@@ -59,7 +59,7 @@ const DW_HINTS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Palace of Darkness Hint',
     areaId: 'area-003',
     locationId: 'location-005',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-170', tile: { x: 14, y: 48 } },
@@ -75,7 +75,7 @@ const DW_HINTS_SCREENS: ScreenRecord[] = [
     randomizerName: 'East Dark World Hint',
     areaId: 'area-003',
     locationId: 'location-005',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-170', tile: { x: 14, y: 48 } },
@@ -91,7 +91,7 @@ const DW_HINTS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Dark Lake Hylia Ledge Hint',
     areaId: 'area-004',
     locationId: 'location-006',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-165', tile: { x: 48, y: 46 } },

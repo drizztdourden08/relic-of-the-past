@@ -1,0 +1,25 @@
+/* @layer renderer-widgets @kind style */
+
+.live-data-inspector {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  height: 100%;
+  overflow-y: auto;
+}
+
+.live-data-inspector__record {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* Eleven tabs never fit the widget's docked width — scroll rather than clip. */
+.live-data-inspector .tab-bar {
+  overflow-x: auto;
+  flex-shrink: 0;
+}

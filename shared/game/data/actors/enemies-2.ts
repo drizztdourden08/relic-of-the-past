@@ -27,6 +27,28 @@ const ENEMY_ACTORS_2: ActorRecord[] = [
     gameId: { spriteType: 63 },
     kind: 'enemy',
     randomizerName: 'PalaceGuard',
+    combat: {
+      health: 255,
+      flags4: 0,
+      damageByClass: {
+        '0': 0,
+        '1': 0,
+        '2': 64,
+        '3': 8,
+        '4': 16,
+        '5': 16,
+        '6': 4,
+        '7': 255,
+        '8': 4,
+        '9': 100,
+        '10': 0,
+        '11': 8,
+        '12': 8,
+        '13': 16,
+        '14': 254,
+        '15': 32,
+      },
+    },
   },
   {
     // Sprite_41_BlueGuard (sprite_main.h).

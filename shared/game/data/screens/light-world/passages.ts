@@ -12,7 +12,7 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Secret Passage',
     areaId: 'area-011',
     locationId: 'location-015',
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-011', tile: { x: 28, y: 16 } },
@@ -29,7 +29,7 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Hyrule Castle Secret Entrance',
     areaId: 'area-011',
     locationId: 'location-015',
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 14, y: 42 } },
@@ -48,7 +48,7 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Old Man Cave',
     areaId: 'area-008',
     locationId: 'location-009',
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-103', tile: { x: 18, y: 6 } },
@@ -72,7 +72,7 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Spectacle Rock Cave (Bottom)',
     areaId: 'area-008',
     locationId: 'location-009',
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-009', tile: { x: 46, y: 10 } },
@@ -87,7 +87,7 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Spectacle Rock Cave (Peak)',
     areaId: 'area-008',
     locationId: 'location-009',
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 14, y: 12 } },
@@ -106,7 +106,7 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Death Mountain Return Cave',
     areaId: 'area-008',
     locationId: 'location-009',
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
   },
   {
@@ -118,7 +118,7 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Spiral Cave (Bottom)',
     areaId: 'area-008',
     locationId: 'location-009',
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-208', tile: { x: 46, y: 26 } },
@@ -135,7 +135,7 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Fairy Ascension Cave (Bottom)',
     areaId: 'area-008',
     locationId: 'location-009',
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
   },
   {
@@ -147,7 +147,7 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Fairy Ascension Cave (Drop)',
     areaId: 'area-008',
     locationId: 'location-009',
-    tags: ['env:underground', 'traverse:fall'],
+    tags: ['tag-003', 'tag-040'],
     status: 'mapped',
   },
   {
@@ -159,7 +159,7 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Fairy Ascension Cave (Top)',
     areaId: 'area-008',
     locationId: 'location-009',
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-163', tile: { x: 14, y: 10 } },

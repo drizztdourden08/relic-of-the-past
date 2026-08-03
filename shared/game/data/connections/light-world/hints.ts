@@ -9,7 +9,7 @@ const LW_HINTS_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-045',
     toScreenId: 'screen-183',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-352',
@@ -17,7 +17,7 @@ const LW_HINTS_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-081',
     toScreenId: 'screen-184',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
 ];
 

@@ -1,0 +1,50 @@
+/* @layer renderer-components @kind style */
+
+/* Matches the app-wide scrollbar set in tokens/reset.css — same size, same
+   colours — and adds the smooth behaviour and thin Firefox styling on top. */
+.scroll-area {
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-border) transparent;
+}
+
+.scroll-area[data-axis='y'] {
+  overflow: hidden auto;
+}
+
+.scroll-area[data-axis='x'] {
+  overflow: auto hidden;
+}
+
+.scroll-area[data-axis='both'] {
+  overflow: auto;
+}
+
+.scroll-area::-webkit-scrollbar {
+  width: var(--scrollbar-size);
+  height: var(--scrollbar-size);
+}
+
+.scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-area::-webkit-scrollbar-thumb {
+  background: var(--c-border);
+  border-radius: var(--radius-sm);
+}
+
+.scroll-area::-webkit-scrollbar-thumb:hover {
+  background: var(--c-text-muted);
+}
+
+.scroll-area::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-area {
+    scroll-behavior: auto;
+  }
+}

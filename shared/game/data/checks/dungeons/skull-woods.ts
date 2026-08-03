@@ -12,6 +12,7 @@ const DUNGEON_SKULL_WOODS_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-008',
     randomizerName: 'Compass Chest',
     vanillaItemIds: ['item-038'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-185',
@@ -21,6 +22,7 @@ const DUNGEON_SKULL_WOODS_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-008',
     randomizerName: 'Map Chest',
     vanillaItemIds: ['item-052'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-186',
@@ -49,6 +51,7 @@ const DUNGEON_SKULL_WOODS_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-008',
     randomizerName: 'Pinball Room',
     vanillaItemIds: ['item-037'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-189',
@@ -58,6 +61,7 @@ const DUNGEON_SKULL_WOODS_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-008',
     randomizerName: 'Big Key Chest',
     vanillaItemIds: ['item-051'],
+    tags: ['tag-084'],
   },
   {
     id: 'check-190',
@@ -67,6 +71,7 @@ const DUNGEON_SKULL_WOODS_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-008',
     randomizerName: 'Bridge Room',
     vanillaItemIds: ['item-037'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-191',
@@ -77,6 +82,7 @@ const DUNGEON_SKULL_WOODS_CHECKS: CheckRecord[] = [
     randomizerName: 'Boss',
     vanillaItemIds: ['item-039'],
     requirements: { allOf: [{ itemId: 'item-008' }, hasSword] },
+    tags: ['tag-086'],
   },
   {
     id: 'check-192',
@@ -87,6 +93,7 @@ const DUNGEON_SKULL_WOODS_CHECKS: CheckRecord[] = [
     randomizerName: 'Prize',
     vanillaItemIds: ['item-114'],
     requirements: { allOf: [{ itemId: 'item-008' }, hasSword] },
+    tags: ['tag-086'],
   },
   {
     id: 'check-193',
@@ -96,6 +103,7 @@ const DUNGEON_SKULL_WOODS_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-008',
     randomizerName: 'West Lobby Pot Key',
     vanillaItemIds: ['item-103'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-194',
@@ -105,6 +113,7 @@ const DUNGEON_SKULL_WOODS_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-008',
     randomizerName: 'Spike Corner Key Drop',
     vanillaItemIds: ['item-103'],
+    tags: ['tag-083'],
   },
 ];
 

@@ -10,7 +10,7 @@ const DW_FAIRY_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-280',
     toScreenId: 'screen-484',
     direction: 'two-way',
-    tags: ['transit:bomb', 'dir:two-way', 'ctx:entrance', 'barrier:bomb'],
+    tags: ['tag-051', 'tag-073', 'tag-074', 'tag-059'],
   },
   {
     id: 'connection-864',
@@ -18,7 +18,7 @@ const DW_FAIRY_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-282',
     toScreenId: 'screen-460',
     direction: 'two-way',
-    tags: ['transit:bonk', 'dir:two-way', 'ctx:entrance', 'barrier:dash'],
+    tags: ['tag-052', 'tag-073', 'tag-074', 'tag-066'],
   },
   {
     id: 'connection-865',
@@ -26,7 +26,7 @@ const DW_FAIRY_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-299',
     toScreenId: 'screen-461',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-866',
@@ -34,7 +34,7 @@ const DW_FAIRY_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-242',
     toScreenId: 'screen-462',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
     requirements: { allOf: [{ itemId: 'item-032' }, canUseBombs] },
   },
   {
@@ -43,7 +43,7 @@ const DW_FAIRY_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-238',
     toScreenId: 'screen-456',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-868',
@@ -51,7 +51,7 @@ const DW_FAIRY_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-237',
     toScreenId: 'screen-454',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
 ];
 

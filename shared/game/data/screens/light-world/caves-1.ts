@@ -12,7 +12,7 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Aginah\'s Cave',
     areaId: 'area-009',
     locationId: 'location-010',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-001', tile: { x: 50, y: 8 } },
@@ -27,7 +27,7 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Bat Cave (right)',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-103', tile: { x: 50, y: 14 } },
@@ -45,7 +45,7 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Bat Cave (left)',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-103', tile: { x: 30, y: 18 } },
@@ -65,7 +65,7 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'King\'s Tomb',
     areaId: 'area-010',
     locationId: 'location-012',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
   },
   {
@@ -77,7 +77,7 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Mini Moldorm Cave',
     areaId: 'area-016',
     locationId: 'location-002',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-056', tile: { x: 6, y: 44 } },
@@ -96,7 +96,7 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Ice Rod Cave',
     areaId: 'area-013',
     locationId: 'location-018',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-222', tile: { x: 46, y: 14 } },
@@ -113,7 +113,7 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Good Bee Cave',
     areaId: 'area-013',
     locationId: 'location-018',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-262', tile: { x: 14, y: 44 } },
@@ -128,7 +128,7 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     randomizerName: '20 Rupee Cave',
     areaId: 'area-013',
     locationId: 'location-018',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
   },
   {
@@ -140,7 +140,7 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Bonk Rock Cave',
     areaId: 'area-016',
     locationId: 'location-002',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-163', tile: { x: 18, y: 16 } },
@@ -157,7 +157,7 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     randomizerName: '50 Rupee Cave',
     areaId: 'area-016',
     locationId: 'location-002',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
   },
   {
@@ -169,7 +169,7 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Cave 45',
     areaId: 'area-016',
     locationId: 'location-002',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-233', tile: { x: 14, y: 10 } },
@@ -184,7 +184,7 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Graveyard Cave',
     areaId: 'area-010',
     locationId: 'location-012',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-262', tile: { x: 48, y: 18 } },

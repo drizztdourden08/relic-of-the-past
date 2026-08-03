@@ -12,7 +12,7 @@ const LW_OVERWORLD_SOUTH_HYRULE_SCREENS: ScreenRecord[] = [
     areaId: 'area-016',
     locationId: 'location-002',
     position: { gridX: 2, gridY: 6 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -24,7 +24,7 @@ const LW_OVERWORLD_SOUTH_HYRULE_SCREENS: ScreenRecord[] = [
     areaId: 'area-016',
     locationId: 'location-002',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
 ];

@@ -7,8 +7,7 @@
 import { useCallback, useState } from 'react';
 import { Box, Button, TextInput } from '@ds/primitives';
 import type { FilterState, ItemFilter, StatusFilter } from '@shared/game/logic/queries/check-grouping';
-import { CHECK_TAG_DEFINITIONS } from '@shared/game/data';
-import type { CheckTag } from '@shared/game/data';
+import { CHECK_FACET_DEFS } from '@shared/game/logic/queries/check-grouping';
 
 interface StopAtCheckFiltersProps {
   filter: FilterState;
@@ -37,11 +36,11 @@ const StopAtCheckFilters = (props: StopAtCheckFiltersProps) => {
   const itemFilter = filter.itemFilter ?? 'all';
   const statusFilter = filter.statusFilter ?? 'all';
 
-  const toggleTag = useCallback((tag: CheckTag) => {
-    const activeTags = filter.activeTags.includes(tag)
-      ? filter.activeTags.filter((t) => t !== tag)
-      : [...filter.activeTags, tag];
-    onFilterChange({ ...filter, activeTags });
+  const toggleFacet = useCallback((facetId: string) => {
+    const activeFacets = filter.activeFacets.includes(facetId)
+      ? filter.activeFacets.filter((f) => f !== facetId)
+      : [...filter.activeFacets, facetId];
+    onFilterChange({ ...filter, activeFacets });
   }, [filter, onFilterChange]);
 
   return (
@@ -84,23 +83,23 @@ const StopAtCheckFilters = (props: StopAtCheckFiltersProps) => {
       <Button
         variant="bare"
         size="sm"
-        className={`stop-picker__chip ${filter.activeTags.length > 0 ? 'stop-picker__chip--active' : ''}`}
+        className={`stop-picker__chip ${filter.activeFacets.length > 0 ? 'stop-picker__chip--active' : ''}`}
         onClick={() => setShowTags((v) => !v)}
       >
-        Tags{filter.activeTags.length > 0 ? ` (${filter.activeTags.length})` : ''}
+        Tags{filter.activeFacets.length > 0 ? ` (${filter.activeFacets.length})` : ''}
       </Button>
 
       {showTags && (
         <Box className="stop-picker__tags">
           {TAG_CATEGORIES.map((cat) => (
             <Box key={cat} className="stop-picker__tag-group">
-              {CHECK_TAG_DEFINITIONS.filter((t) => t.category === cat).map((t) => (
+              {CHECK_FACET_DEFS.filter((t) => t.category === cat).map((t) => (
                 <Button
                   variant="bare"
                   size="sm"
                   key={t.id}
-                  className={`stop-picker__chip ${filter.activeTags.includes(t.id) ? 'stop-picker__chip--active' : ''}`}
-                  onClick={() => toggleTag(t.id)}
+                  className={`stop-picker__chip ${filter.activeFacets.includes(t.id) ? 'stop-picker__chip--active' : ''}`}
+                  onClick={() => toggleFacet(t.id)}
                 >
                   {t.label}
                 </Button>

@@ -1,0 +1,156 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * What is INSIDE one column header: the name, the inline rename field, and the
+ * two controls that sit over them. The cell's own box, and everything the drag
+ * paints onto it, stay in DataTable.css — that chrome is about the row.
+ *
+ * These rules hang off `.data-table__header-cell`'s `position: relative`, the
+ * same anchor the resize seam next door uses.
+ */
+
+/*
+ * The name gets the WHOLE cell. It is the only child left in the row's flow —
+ * the controls are lifted out of it below — so the ellipsis appears when this
+ * column is too narrow for its own name and at no other time. Previously the
+ * caret and the ⋯ shared the row with it and a header read "WO…" in a cell
+ * with room for "WORLD" twice over.
+ */
+.data-table__header-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.data-table__rename {
+  flex: 1;
+  min-width: 0;
+}
+
+/*
+ * ── The controls, lifted off the label ────────────────────────────────────
+ * The caret and the ⋯ are taken OUT of the cell's flow and pinned to its
+ * trailing edge. In flow they were sharing the cell's width with the name, so
+ * a column was cut short by controls that are not even shown most of the time
+ * — truncation has to be the column's own width talking and nothing else.
+ *
+ * Sitting on top means the text has to get out of the way UNDER them, so the
+ * cluster paints the header's own surface behind itself, faded in over a short
+ * lead-in rather than starting at a hard edge. A name runs on and dissolves,
+ * instead of being sliced through the middle of a letter by a floating chip —
+ * and a gradient is the one treatment that costs the label nothing, because it
+ * is paint: the layout width the ellipsis is measured against never hears
+ * about it.
+ *
+ * Pointer events are handed back per control. The fade lies over the label,
+ * and picking the column up by that stretch of it has to keep working.
+ */
+.data-table__header-chrome {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  padding-left: var(--space-lg);
+  background: linear-gradient(to right, transparent, var(--c-surface) var(--space-lg));
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  pointer-events: none;
+}
+
+.data-table__header-chrome > * {
+  pointer-events: auto;
+}
+
+.data-table__sort,
+.data-table__menu-trigger {
+  display: flex;
+  align-items: center;
+  color: var(--c-text-dim);
+  cursor: pointer;
+}
+
+.data-table__sort:hover,
+.data-table__menu-trigger:hover {
+  color: var(--c-gold-bright);
+}
+
+/*
+ * The cluster is chrome: it says what CAN be done to a column, not what is
+ * being done to it, and a table wearing it in every header reads as busier
+ * than it is. Fading with opacity rather than `display` keeps the controls in
+ * the layout, so nothing reflows on hover, and keeps them reachable by
+ * keyboard — tabbing to one raises the cell's own :focus-within. The menu is
+ * portalled, so the cursor leaves the cell the moment it reaches what it
+ * opened, which is the third condition.
+ *
+ * The fourth is the exception that makes the caret more than chrome: a column
+ * that IS sorted shows its direction at rest, because the order the rows are
+ * in is the state of the table and a reader should never have to hunt for it.
+ * That flag sits on the CELL rather than on the caret — the backing is the
+ * caret's own sibling, and no selector reaches sideways from a child.
+ */
+.data-table__header-cell:hover .data-table__header-chrome,
+.data-table__header-cell:focus-within .data-table__header-chrome,
+.data-table__header-cell--menu-open .data-table__header-chrome,
+.data-table__header-cell--sorted .data-table__header-chrome {
+  opacity: 1;
+}
+
+/*
+ * The ⋯ holds the trailing slot permanently, shown or not, and the caret is
+ * parked INSIDE that slot for as long as it stands empty. So the caret is
+ * flush with the cell's edge at rest — the sort marker is always the
+ * right-most thing in a header — and slides left by exactly one button as the
+ * ⋯ arrives. That is the whole "make room for the ellipsis" gesture, done by
+ * transform, so no track is re-measured and no row re-rendered for it.
+ *
+ * The trigger's width is the token rather than whatever the glyph happens to
+ * measure, or the caret's parking distance and the slot it parks in would be
+ * two different numbers.
+ */
+.data-table__menu-trigger {
+  justify-content: center;
+  width: var(--menu-trigger-width);
+  padding: 0;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+/* The glyph is its own indicator and sits in a fixed box, so the button round
+   it spends no width on padding of its own. */
+.data-table__sort {
+  padding: 0;
+  transform: translateX(var(--menu-trigger-width));
+  transition: transform var(--transition-fast);
+}
+
+.data-table__header-cell:hover .data-table__menu-trigger,
+.data-table__header-cell:focus-within .data-table__menu-trigger,
+.data-table__header-cell--menu-open .data-table__menu-trigger {
+  opacity: 1;
+}
+
+.data-table__header-cell:hover .data-table__sort,
+.data-table__header-cell:focus-within .data-table__sort,
+.data-table__header-cell--menu-open .data-table__sort {
+  transform: translateX(0);
+}
+
+/*
+ * A fixed, narrow box, centred: the indicator's footprint is then the token's
+ * and not the font's, whichever glyph a fallback family ends up drawing.
+ */
+.data-table__caret {
+  display: inline-block;
+  width: var(--sort-caret-width);
+  font-size: var(--text-xs);
+  text-align: center;
+}
+
+.data-table__caret--off {
+  color: var(--c-text-faint);
+}

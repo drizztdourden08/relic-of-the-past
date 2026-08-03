@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { resolveRules } from '../../shared/game/logic/resolver';
 import { getReachableScreens } from '../../shared/game/logic/eval';
 import { VANILLA_CONFIG } from '../../shared/game/data/presets/vanilla';
+import { ITEM_GROUP_IDS } from '../../shared/game/data/item-groups';
 
 describe('resolveRules (id re-key regression)', () => {
   it('wires the menu spawn points to their new screen ids', () => {
@@ -20,7 +21,7 @@ describe('resolveRules (id re-key regression)', () => {
 
   it('re-keys the pedestal check rule to its new CheckId and honors the config pendant count', () => {
     const { checkOverrides } = resolveRules({ ...VANILLA_CONFIG, pendantsForPedestal: 2 });
-    expect(checkOverrides['check-072']).toEqual({ count: { groupId: 'Pendants', n: 2 } });
+    expect(checkOverrides['check-072']).toEqual({ count: { groupId: ITEM_GROUP_IDS.Pendants, n: 2 } });
   });
 
   it('carries a real gated overworld edge through with its new screen ids', () => {

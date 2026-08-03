@@ -6,7 +6,7 @@ import { InputCalibration } from '../ui/domains/app/views/InputTester';
 import { CreditsPage } from '../ui/domains/app/views/ProfileHub/sub-components/CreditsTab';
 import { DesignGallery } from '../ui/domains/app/views/DesignGallery';
 import { SpriteDebug } from '../ui/domains/app/views/SpriteDebug';
-import { DatasetInspector } from '../ui/domains/app/views/DatasetInspector';
+import { DataInspector } from '../ui/domains/app/views/DataInspector';
 import { About } from '../ui/domains/app/views/About';
 import { FullScreenLayer } from '../ui/design-system/composites/FullScreenLayer';
 import type { PageId, RomDisplayInfo } from './types';
@@ -120,10 +120,10 @@ const PageRouter = (props: PageRouterProps) => {
   } else if (nav.activePage === 'sprite-debug') {
     // SpriteDebug brings its own FullScreenLayer (title + close), so render it directly.
     otherPage = <SpriteDebug onClose={nav.closePage} romFile={profileMgmt.activeProfile?.romFile ?? ''} />;
-  } else if (nav.activePage === 'dataset-inspector') {
+  } else if (nav.activePage === 'data-inspector') {
     otherPage = (
-      <FullScreenLayer onClose={nav.closePage} title="Dataset Inspector">
-        <DatasetInspector />
+      <FullScreenLayer onClose={nav.closePage} title="Data Inspector">
+        <DataInspector />
       </FullScreenLayer>
     );
   } else if (nav.activePage === 'about') {

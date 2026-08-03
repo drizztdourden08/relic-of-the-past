@@ -12,7 +12,6 @@ import { resolveRules } from '@shared/game/logic/resolver';
 import { VANILLA_CONFIG } from '@shared/game/data/presets';
 import { find } from '@shared/game/data';
 import type { CheckId, CheckRecord, ItemId } from '@shared/game/data';
-import { getCheckTags } from '@shared/game/logic/queries/check-tags';
 import { filterChecks } from '@shared/game/logic/queries/check-grouping';
 import type { FilterState } from '@shared/game/logic/queries/check-grouping';
 import {
@@ -22,7 +21,7 @@ import {
 
 const EMPTY_FILTER: FilterState = {
   searchQuery: '',
-  activeTags: [],
+  activeFacets: [],
   tagMode: 'any',
   itemFilter: 'all',
   statusFilter: 'all',
@@ -37,7 +36,6 @@ const useStopAtChecks = () => {
   useEffect(() => onCompletedChecksChanged((c) => setCompleted(new Set(c))), []);
 
   const checkRecords = useMemo(() => find('check', () => true), []);
-  const tagMap = useMemo(() => getCheckTags(checkRecords), [checkRecords]);
   const resolvedLogic = useMemo(() => resolveRules(VANILLA_CONFIG), []);
   const effectiveInventory = useMemo(() => {
     const merged = new Set(resolvedLogic.startInventory);
@@ -51,8 +49,8 @@ const useStopAtChecks = () => {
   );
 
   const checks = useMemo<CheckRecord[]>(
-    () => filterChecks(checkRecords, filter, tagMap, statuses),
-    [checkRecords, filter, tagMap, statuses],
+    () => filterChecks(checkRecords, filter, statuses),
+    [checkRecords, filter, statuses],
   );
 
   return { filter, setFilter, checks, statuses };

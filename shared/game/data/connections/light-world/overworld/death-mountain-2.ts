@@ -10,7 +10,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-017',
     toScreenId: 'screen-233',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { itemId: 'item-032' },
   },
   {
@@ -19,7 +19,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-052',
     toScreenId: 'screen-005',
     direction: 'two-way',
-    tags: ['transit:rock', 'dir:two-way', 'ctx:overworld', 'barrier:gloves'],
+    tags: ['tag-053', 'tag-073', 'tag-080', 'tag-060'],
     requirements: canLiftRocks,
   },
   {
@@ -29,7 +29,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-059',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-057',
@@ -38,7 +38,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-052',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-058',
@@ -47,7 +47,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-067',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-059',
@@ -56,7 +56,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-060',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-060',
@@ -65,7 +65,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-075',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-061',
@@ -74,7 +74,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-068',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-062',
@@ -83,7 +83,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-083',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-063',
@@ -92,7 +92,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-076',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-064',
@@ -101,7 +101,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-091',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-065',
@@ -110,7 +110,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-084',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-066',
@@ -119,7 +119,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-092',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-071',
@@ -128,7 +128,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-060',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-072',
@@ -137,7 +137,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-053',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-073',
@@ -146,7 +146,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-068',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-074',
@@ -155,7 +155,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-061',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-075',
@@ -164,7 +164,7 @@ const LW_OVERWORLD_DEATH_MOUNTAIN_2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-076',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
 ];
 

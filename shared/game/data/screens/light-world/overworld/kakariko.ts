@@ -12,7 +12,7 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     position: { gridX: 1, gridY: 2 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -24,7 +24,7 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     position: { gridX: 2, gridY: 2 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -36,7 +36,7 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     position: { gridX: 0, gridY: 3 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -48,7 +48,7 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     position: { gridX: 1, gridY: 3 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -60,7 +60,7 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     position: { gridX: 2, gridY: 3 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -72,7 +72,7 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     position: { gridX: 0, gridY: 4 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -84,7 +84,7 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     position: { gridX: 1, gridY: 4 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -96,7 +96,7 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     position: { gridX: 2, gridY: 4 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -108,7 +108,7 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     position: { gridX: 0, gridY: 5 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -120,7 +120,7 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     position: { gridX: 1, gridY: 5 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -132,7 +132,7 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -144,7 +144,7 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
 ];

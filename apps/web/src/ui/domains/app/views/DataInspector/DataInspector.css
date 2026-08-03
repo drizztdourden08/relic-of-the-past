@@ -1,0 +1,98 @@
+/* @layer renderer-app @kind style */
+
+.data-inspector {
+  height: 100%;
+  display: flex;
+  min-height: 0;
+  gap: var(--space-md);
+  padding: var(--space-md);
+}
+
+.data-inspector__nav {
+  width: 12rem;
+}
+
+.data-inspector__panes {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* The shared two-pane layout sizes its list column for a list of rows; a table
+   needs the greater share of the width, and it scrolls itself (its header is
+   sticky inside its own scroller), so the column must not scroll around it. */
+.data-inspector__master-detail {
+  grid-template-columns: 1.7fr 1fr;
+  padding: 0;
+}
+
+.data-inspector__master-detail > .master-detail__list {
+  overflow: hidden;
+}
+
+/* The list takes the width a folded detail column gave up — any collection's
+   plain record view or the recommendation comparison, whichever is open. */
+.data-inspector__master-detail--folded {
+  grid-template-columns: 1fr max-content;
+}
+
+/* The shared detail pane normally scrolls as one block; here the tab strip must
+   stay put while only the record content underneath it scrolls, so the scrolling
+   moves down to .data-inspector__detail-content and this pane just clips. */
+.data-inspector__master-detail > .master-detail__detail {
+  overflow: hidden;
+  padding: 0;
+}
+
+.data-inspector__detail {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+.data-inspector__detail > .tab-bar {
+  flex: none;
+  padding: 0 var(--space-lg);
+}
+
+/* The overflow itself lives on ScrollArea, which this class sits alongside;
+   what stays here is only how the region is sized and padded. */
+.data-inspector__detail-content {
+  flex: 1;
+  min-height: 0;
+  padding: var(--space-lg);
+}
+
+.data-inspector__list-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+.data-inspector__list-actions > .filter-bar {
+  flex: 1;
+  min-width: 0;
+}
+
+.data-inspector__editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-height: 0;
+}
+
+.data-inspector__note {
+  color: var(--c-text-muted);
+  font-size: var(--text-sm);
+  margin: 0;
+}
+
+.data-inspector__empty {
+  display: block;
+  padding: var(--space-md);
+  color: var(--c-text-faint);
+  font-size: var(--text-sm);
+}

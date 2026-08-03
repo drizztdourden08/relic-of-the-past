@@ -1,0 +1,94 @@
+/* @layer renderer-components @kind style */
+
+/* Shared cell + control styling for the per-kind field kits. Every cell is a
+   single clipped line with the full value on its title attribute. */
+
+.field-kit__text {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.field-kit__muted {
+  color: var(--c-text-faint);
+}
+
+.field-kit__num {
+  display: block;
+  overflow: hidden;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: right;
+}
+
+/* An id that points at another record: mono, accented, underlined on the
+   dotted style that reads as "there is more behind this". The click handler is
+   attached one layer up — see id-ref-kit.tsx. */
+.field-kit__ref {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--c-gold);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+  text-overflow: ellipsis;
+}
+
+.field-kit__mono {
+  display: block;
+  overflow: hidden;
+  color: var(--c-text-dim);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Read-only stand-in shown where real editing belongs to a later composite. */
+.field-kit__placeholder {
+  display: block;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px dashed var(--c-border);
+  border-radius: var(--radius-sm);
+  color: var(--c-text-muted);
+  font-size: var(--text-sm);
+}
+
+.field-kit__range-sep {
+  color: var(--c-text-muted);
+}
+
+/* A picker plus its escape hatch. The row wraps so the entry drops to its own
+   full-width line rather than squeezing the picker it belongs to. */
+.field-kit__open-set {
+  min-inline-size: 0;
+}
+
+/* The picker keeps the full row it had before the hatch was added beside it,
+   and gives width back to the entry rather than pushing it off the edge. */
+.field-kit__open-set > *:first-child {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.field-kit__open-set-entry {
+  flex: 1 1 var(--open-entry-width);
+  min-inline-size: 0;
+}
+
+.field-kit__open-set-input {
+  flex: 1 1 var(--open-entry-width);
+  min-inline-size: 0;
+}
+
+.field-kit__multi-trigger {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

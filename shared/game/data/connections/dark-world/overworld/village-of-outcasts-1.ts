@@ -12,7 +12,7 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-252',
     direction: 'two-way',
     counterpartId: 'connection-427',
-    tags: ['dir:two-way', 'ctx:overworld', 'barrier:swim'],
+    tags: ['tag-073', 'tag-080', 'tag-068'],
     requirements: { itemId: 'item-031' },
   },
   {
@@ -21,7 +21,7 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-260',
     toScreenId: 'screen-257',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-460',
@@ -30,7 +30,7 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-253',
     direction: 'two-way',
     counterpartId: 'connection-463',
-    tags: ['dir:two-way', 'ctx:overworld', 'barrier:hammer'],
+    tags: ['tag-073', 'tag-080', 'tag-061'],
     requirements: { allOf: [{ itemId: 'item-032' }, { itemId: 'item-010' }] },
   },
   {
@@ -40,7 +40,7 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-259',
     direction: 'one-way',
     counterpartId: 'connection-449',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-462',
@@ -49,7 +49,7 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-229',
     direction: 'two-way',
     counterpartId: 'connection-464',
-    tags: ['transit:rock', 'dir:two-way', 'ctx:overworld', 'barrier:gloves'],
+    tags: ['tag-053', 'tag-073', 'tag-080', 'tag-060'],
     requirements: canLiftRocks,
   },
   {
@@ -59,7 +59,7 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-260',
     direction: 'one-way',
     counterpartId: 'connection-460',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-466',
@@ -67,7 +67,7 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-260',
     toScreenId: 'screen-032',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { itemId: 'item-027' },
   },
   {
@@ -76,7 +76,7 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-260',
     toScreenId: 'screen-020',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { allOf: [{ itemId: 'item-032' }, { itemId: 'item-027' }] },
   },
   {
@@ -85,7 +85,7 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-260',
     toScreenId: 'screen-023',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { allOf: [{ itemId: 'item-032' }, { itemId: 'item-027' }] },
   },
   {
@@ -95,7 +95,7 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-271',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-503',
@@ -104,7 +104,7 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-264',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-504',
@@ -113,7 +113,7 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-279',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-505',
@@ -122,7 +122,7 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-272',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-515',
@@ -131,7 +131,7 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-264',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-516',
@@ -140,7 +140,7 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-248',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-517',
@@ -149,7 +149,7 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-272',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
 ];
 

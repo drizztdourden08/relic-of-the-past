@@ -16,9 +16,19 @@ import type { SystemDiagnostics } from '@shared/types/diagnostics';
 import type { SimRunConfig } from '@shared/game/simulation';
 import type { CreateIssueRequest, CreateIssueResult } from '@shared/types/github-issue';
 import type {
-  AllocateGeographyArgs, AllocateGeographyResult, WriteConnectionsArgs,
-  WriteRecordResult, WriteScreenArgs,
+  AllocateEnumerationArgs, AllocateEnumerationResult, AllocateGeographyArgs, AllocateGeographyResult,
+  AllocateItemGroupArgs, AllocateItemGroupResult, AllocateRecordArgs, AllocateRecordResult, AllocateTagArgs,
+  AllocateTagResult, DeleteEnumerationArgs, DeleteItemGroupArgs, DeleteRecordArgs, DeleteTagArgs,
+  WriteConnectionsArgs, WriteEnumerationArgs, WriteItemGroupArgs, WriteRecordArgs, WriteRecordResult, WriteScreenArgs,
+  WriteTagArgs,
 } from './screen-editor-contract';
+import type {
+  ActorRecord, AreaRecord, CheckRecord, DungeonRecord, ItemRecord, LocationRecord,
+} from '@shared/game/data/types';
+import type { EntityKind } from '@shared/game/data';
+import type { UiViewsMap } from './ui-views-contract';
+import type { ReviewEntry, ReviewFile } from './review-contract';
+import type { DetectionContext, DraftRecommendation, PassResult, Recommendation } from './recommendation-contract';
 
 
 type Result = { success: boolean; error?: string };
@@ -175,6 +185,30 @@ interface InvokeContract {
   'navReview:load': () => Promise<unknown>;
   'navReview:save': (data: unknown) => Promise<void>;
 
+  // Data Inspector / table view state — whole-file, app-level (not per profile),
+  // debounced by the renderer repo. See shared/ipc/ui-views-contract.ts.
+  'uiViews:load': () => Promise<UiViewsMap>;
+  'uiViews:save': (data: UiViewsMap) => Promise<void>;
+
+  // Data Inspector review layer — a personal curation status/note/timestamps
+  // pair per record, one file per collection (Data/review/<kind>.json), never
+  // inside the committed dataset. Generalizes the three legacy single-purpose
+  // files above (spriteReview/connectionReview/navReview, now superseded) to
+  // all eleven collections. The main process merges one entry per call rather
+  // than trusting a whole map from the renderer — see review-contract.ts.
+  'review:load': (kind: EntityKind) => Promise<ReviewFile>;
+  'review:save': (kind: EntityKind, id: string, entry: ReviewEntry) => Promise<void>;
+
+  // Recommendation store — one file per collection (Data/recommendations/<kind>.json).
+  // The COLLECTION lives in the main process: folding a pass and recording a verdict
+  // are both read-modify-write over a whole file, and splitting either across an IPC
+  // round trip would let two callers interleave. See recommendation-contract.ts.
+  'recommendations:load': (kind: EntityKind) => Promise<readonly Recommendation[]>;
+  'recommendations:applyPass': (kind: EntityKind, context: DetectionContext,
+    detectorIds: readonly string[], drafts: readonly DraftRecommendation[]) => Promise<PassResult>;
+  'recommendations:decide': (kind: EntityKind, id: string,
+    state: 'accepted' | 'dismissed') => Promise<readonly Recommendation[]>;
+
   // Test automation
   'test:getArgs': () => Promise<{ autoState: number | string | null; screenshot: string | null }>;
   'test:screenshot': (name: string) => Promise<string>;
@@ -204,6 +238,38 @@ interface InvokeContract {
   'screenEditor:writeConnections': (args: WriteConnectionsArgs) => Promise<WriteRecordResult>;
   'screenEditor:writeCheck': (args: { filePath: string; code: string; checkId: string | null }) => Promise<Result>;
   'screenEditor:allocateGeography': (args: AllocateGeographyArgs) => Promise<AllocateGeographyResult>;
+  'screenEditor:allocateTag': (args: AllocateTagArgs) => Promise<AllocateTagResult>;
+  'screenEditor:writeTag': (args: WriteTagArgs) => Promise<WriteRecordResult>;
+  'screenEditor:deleteTag': (args: DeleteTagArgs) => Promise<WriteRecordResult>;
+  'screenEditor:allocateItemGroup': (args: AllocateItemGroupArgs) => Promise<AllocateItemGroupResult>;
+  'screenEditor:writeItemGroup': (args: WriteItemGroupArgs) => Promise<WriteRecordResult>;
+  'screenEditor:deleteItemGroup': (args: DeleteItemGroupArgs) => Promise<WriteRecordResult>;
+  'screenEditor:allocateEnumeration': (args: AllocateEnumerationArgs) => Promise<AllocateEnumerationResult>;
+  'screenEditor:writeEnumeration': (args: WriteEnumerationArgs) => Promise<WriteRecordResult>;
+  'screenEditor:deleteEnumeration': (args: DeleteEnumerationArgs) => Promise<WriteRecordResult>;
+
+  // The six collections that came after the record facade. Uniform by
+  // construction (record in, id back), so they share one generic payload trio.
+  // `writeCheckRecord` carries the suffix its five siblings do because
+  // `writeCheck` above is the older text-based channel and still has callers.
+  'screenEditor:allocateCheck': (a: AllocateRecordArgs<CheckRecord>) => Promise<AllocateRecordResult<CheckRecord>>;
+  'screenEditor:writeCheckRecord': (args: WriteRecordArgs<CheckRecord>) => Promise<WriteRecordResult>;
+  'screenEditor:deleteCheck': (args: DeleteRecordArgs) => Promise<WriteRecordResult>;
+  'screenEditor:allocateItem': (a: AllocateRecordArgs<ItemRecord>) => Promise<AllocateRecordResult<ItemRecord>>;
+  'screenEditor:writeItemRecord': (args: WriteRecordArgs<ItemRecord>) => Promise<WriteRecordResult>;
+  'screenEditor:deleteItem': (args: DeleteRecordArgs) => Promise<WriteRecordResult>;
+  'screenEditor:allocateDungeon': (a: AllocateRecordArgs<DungeonRecord>) => Promise<AllocateRecordResult<DungeonRecord>>;
+  'screenEditor:writeDungeonRecord': (args: WriteRecordArgs<DungeonRecord>) => Promise<WriteRecordResult>;
+  'screenEditor:deleteDungeon': (args: DeleteRecordArgs) => Promise<WriteRecordResult>;
+  'screenEditor:allocateActor': (a: AllocateRecordArgs<ActorRecord>) => Promise<AllocateRecordResult<ActorRecord>>;
+  'screenEditor:writeActorRecord': (args: WriteRecordArgs<ActorRecord>) => Promise<WriteRecordResult>;
+  'screenEditor:deleteActor': (args: DeleteRecordArgs) => Promise<WriteRecordResult>;
+  // Area and location already mint through `allocateGeography`, which asks for a
+  // display name rather than a whole record — so they gain only the other two.
+  'screenEditor:writeAreaRecord': (args: WriteRecordArgs<AreaRecord>) => Promise<WriteRecordResult>;
+  'screenEditor:deleteArea': (args: DeleteRecordArgs) => Promise<WriteRecordResult>;
+  'screenEditor:writeLocationRecord': (args: WriteRecordArgs<LocationRecord>) => Promise<WriteRecordResult>;
+  'screenEditor:deleteLocation': (args: DeleteRecordArgs) => Promise<WriteRecordResult>;
 
   // GitHub bug reporting — anonymous relay, see cloud-functions/report-issue
   'github:createIssue': (req: CreateIssueRequest) => Promise<CreateIssueResult>;

@@ -63,10 +63,21 @@ const topLevelBraceSpans = (content: string): Span[] => {
   return spans;
 };
 
-/** The full lines occupied by the record carrying `id`, trailing comma included. */
-const recordSpan = (content: string, id: string): Span | null => {
+/**
+ * The full lines occupied by the record carrying `id`, trailing comma included.
+ *
+ * `extraNeedle` covers the one collection whose entries are not all written the
+ * same way: an item group's `id` field may still read the symbolic
+ * `ITEM_GROUP_IDS.<Key>` form rather than a plain string literal (see
+ * item-group-writer.ts), so a caller that knows the record's own file
+ * convention can offer a second string to match on. Every other kind never
+ * needs it — `id: '<id>'` is the only shape those files ever write.
+ */
+const recordSpan = (content: string, id: string, extraNeedle?: string): Span | null => {
   const needle = `id: '${escapeSingleQuote(id)}'`;
-  const span = topLevelBraceSpans(content).find(s => content.slice(s.start, s.end).includes(needle));
+  const spans = topLevelBraceSpans(content);
+  const span = spans.find(s => content.slice(s.start, s.end).includes(needle))
+    ?? (extraNeedle ? spans.find(s => content.slice(s.start, s.end).includes(extraNeedle)) : undefined);
   if (!span) return null;
   const start = content.lastIndexOf('\n', span.start) + 1;
   const end = content[span.end] === ',' ? span.end + 1 : span.end;
@@ -81,15 +92,15 @@ const insertBeforeArrayClose = (content: string, code: string): WriteResult => {
 };
 
 /** Replace the record whose `id` matches with `code`. */
-const replaceById = (content: string, id: string, code: string): WriteResult => {
-  const span = recordSpan(content, id);
+const replaceById = (content: string, id: string, code: string, extraNeedle?: string): WriteResult => {
+  const span = recordSpan(content, id, extraNeedle);
   if (!span) return { content, error: `Could not find id '${id}' in file` };
   return { content: content.slice(0, span.start) + code + content.slice(span.end) };
 };
 
 /** Remove the record whose `id` matches, and the line it sat on. */
-const removeById = (content: string, id: string): WriteResult => {
-  const span = recordSpan(content, id);
+const removeById = (content: string, id: string, extraNeedle?: string): WriteResult => {
+  const span = recordSpan(content, id, extraNeedle);
   if (!span) return { content, error: `Could not find id '${id}' in file` };
   const end = content[span.end] === '\n' ? span.end + 1 : span.end;
   return { content: content.slice(0, span.start) + content.slice(end) };

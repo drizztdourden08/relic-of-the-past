@@ -13,7 +13,7 @@ const LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-243',
     dungeonId: 'dungeon-001',
-    tags: ['dir:two-way', 'ctx:dungeon-enter'],
+    tags: ['tag-073', 'tag-081'],
   },
   {
     id: 'connection-196',
@@ -24,7 +24,7 @@ const LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-244',
     dungeonId: 'dungeon-001',
-    tags: ['dir:two-way', 'ctx:dungeon-enter'],
+    tags: ['tag-073', 'tag-081'],
   },
   {
     id: 'connection-197',
@@ -35,7 +35,7 @@ const LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-245',
     dungeonId: 'dungeon-001',
-    tags: ['dir:two-way', 'ctx:dungeon-enter'],
+    tags: ['tag-073', 'tag-081'],
   },
   {
     id: 'connection-198',
@@ -45,7 +45,7 @@ const LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-246',
     dungeonId: 'dungeon-001',
-    tags: ['dir:two-way', 'ctx:dungeon-enter'],
+    tags: ['tag-073', 'tag-081'],
   },
   {
     id: 'connection-199',
@@ -54,7 +54,7 @@ const LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-133',
     direction: 'two-way',
     dungeonId: 'dungeon-001',
-    tags: ['dir:two-way', 'ctx:dungeon-enter'],
+    tags: ['tag-073', 'tag-081'],
   },
   {
     id: 'connection-212',
@@ -64,7 +64,7 @@ const LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 31, end: 32 } },
     direction: 'two-way',
     dungeonId: 'dungeon-001',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-225',
@@ -74,7 +74,7 @@ const LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 31, y: 56, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-001',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-226',
@@ -84,7 +84,7 @@ const LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-001',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-228',
@@ -94,7 +94,7 @@ const LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
     direction: 'two-way',
     dungeonId: 'dungeon-001',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-229',
@@ -104,7 +104,7 @@ const LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-001',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-230',
@@ -114,7 +114,7 @@ const LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 31, end: 32 } },
     direction: 'two-way',
     dungeonId: 'dungeon-001',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-231',
@@ -124,7 +124,7 @@ const LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-001',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-232',
@@ -134,7 +134,7 @@ const LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
     direction: 'two-way',
     dungeonId: 'dungeon-001',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-233',
@@ -144,7 +144,7 @@ const LW_DUNGEON_HYRULE_CASTLE_FLOOR_0_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 20, y: 3, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-001',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
 ];
 

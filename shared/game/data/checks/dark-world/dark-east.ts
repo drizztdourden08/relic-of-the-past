@@ -22,6 +22,7 @@ const DW_DARK_EAST_CHECKS: CheckRecord[] = [
     randomizerName: 'Ganon',
     vanillaItemIds: [],
     requirements: { allOf: [hasBeamSword, { itemId: 'item-019' }, { itemId: 'item-078' }] },
+    tags: ['tag-086'],
   },
 ];
 

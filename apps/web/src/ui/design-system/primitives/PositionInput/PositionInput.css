@@ -1,0 +1,64 @@
+/* @layer renderer-components @kind style */
+
+/* One position, not two numbers that happen to sit together: the axes share a
+   single inset shell so the pair reads as one control, and the shell lights up
+   whichever axis has focus. */
+.position-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  width: 100%;
+}
+
+.position-input__label {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.position-input__axes {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-sm);
+  padding: var(--space-xs);
+  background: var(--c-inset);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-normal);
+}
+
+.position-input__axes:focus-within {
+  border-color: var(--c-border-strong);
+}
+
+/* Each axis: a fixed cap beside a field that takes the rest of the row, so both
+   fields end up the same width whatever the caps say. */
+.position-input__axis {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.position-input__cap {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+  color: var(--c-text-dim);
+  text-transform: uppercase;
+  cursor: default;
+}
+
+.position-input__field {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* The fields carry their own disabled treatment — dim the caps to match rather
+   than fading the shell a second time on top of it. */
+.position-input--disabled .position-input__cap {
+  color: var(--c-text-faint);
+}

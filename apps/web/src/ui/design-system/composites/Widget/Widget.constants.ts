@@ -57,7 +57,7 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
   },
   {
     id: 'dataset',
-    label: 'Dataset & Mapping',
+    label: 'Live Data Inspector',
     defaultVisibility: 'game-only' as WidgetVisibility,
     defaultSide: 'left' as SnapSide,
     defaultDockedSize: 300,

@@ -23,7 +23,7 @@ The app can drive itself from the command line, which is usually quicker than a 
 | `--dump-nav=N` | write the navigation state for slot N to `debug-output/dump-nav.json` |
 | `--muted` | mute audio |
 | `--no-focus` | open the window without taking focus |
-| `--instance=NAME` | run as a named instance: own profile, own identity, writes nothing shared |
+| `--instance=NAME` | run as a named instance: own profile, own identity, and read-only for the two shared files below — but see the note after this section, some app-wide tool state still isn't sandboxed |
 
 For example:
 
@@ -60,6 +60,34 @@ shares:
 So forgetting `--instance` cannot repoint the default profile or move the window — but it
 does mean the run shares the user's save data, which is exactly what the rule above exists
 to prevent. Pass the flag.
+
+### `--instance` sandboxes profile data, not app-wide tool state
+
+`--instance` selects a game **profile** (`app.getPath('userData')` is one fixed directory
+regardless of the flag — see `apps/desktop/electron/lib/paths.ts`), so anything that isn't
+stored inside `Data/profiles/<id>/` is shared across every instance, named or not. Besides
+the two enforced-read-only files above, five files sit directly under `Data/` and are
+**intentionally global by design** — they're tool/UI preferences, not gameplay state, so
+they don't belong per-profile any more than a window's size would:
+
+| File | What it holds |
+|---|---|
+| `Data/ui-views.json` | Data Inspector view-state — per-collection columns, sort, filters |
+| `Data/nav-review.json` | navigation-baseline review progress |
+| `Data/connection-review.json` | connection-review progress |
+| `Data/sprite-review.json` | sprite-review progress (superseded by `Data/review/<kind>.json` below) |
+| `Data/review/<kind>.json` | Data Inspector review layer — status/note/timestamps per collection (screen, connection, check, ...) |
+| `Data/stick-calibration.json` | controller stick calibration (hardware, not a save) |
+
+Unlike the two files the app refuses to write, these are meant to be written — normal use
+is expected to update them. The consequence for automation: **a `--instance` launch is not
+a safe sandbox for exercising a real UI flow that saves through one of these files.**
+Resizing/sorting/filtering a live Data Inspector column, for example, debounce-saves
+straight to the one shared `ui-views.json` — the same file the maintainer's own hand-tuned
+layouts live in. Before driving that flow with Playwright, read the file first; if it holds
+real content, verify with a throwaway unit test against the pure logic instead of the live
+UI, or stop short of the save-triggering interaction, exactly as you'd want a change to a
+save-state format to be checked without touching a real save.
 
 ## Playwright
 

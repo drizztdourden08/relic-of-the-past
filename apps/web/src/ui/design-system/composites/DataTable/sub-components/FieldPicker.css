@@ -1,0 +1,26 @@
+/* @layer renderer-components @kind style */
+
+/*
+ * The picker is a bare panel: its chrome comes from whatever floats it, so only
+ * scrolling and the row extras live here. Rows themselves reuse the shared
+ * dropdown item classes.
+ */
+.field-picker {
+  max-height: 60vh;
+  overflow-y: auto;
+  min-width: 180px;
+}
+
+.field-picker__kind {
+  margin-left: auto;
+  padding-left: var(--space-sm);
+  color: var(--c-text-faint);
+  font-size: var(--text-xs);
+}
+
+.field-picker__empty {
+  display: block;
+  padding: var(--space-xs) var(--space-md);
+  color: var(--c-text-muted);
+  font-size: var(--text-sm);
+}

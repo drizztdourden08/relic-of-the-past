@@ -13,7 +13,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-759',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:dungeon-enter', 'barrier:medallion'],
+    tags: ['tag-073', 'tag-081', 'tag-063'],
   },
   {
     id: 'connection-737',
@@ -23,7 +23,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-738',
@@ -32,7 +32,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-424',
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-742',
@@ -41,7 +41,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-424',
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-743',
@@ -51,7 +51,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-744',
@@ -61,7 +61,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-745',
@@ -71,7 +71,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-746',
@@ -81,7 +81,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-747',
@@ -91,7 +91,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-748',
@@ -101,7 +101,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-749',
@@ -111,7 +111,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-750',
@@ -121,7 +121,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-751',
@@ -130,7 +130,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-402',
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-752',
@@ -140,7 +140,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-753',
@@ -149,7 +149,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-401',
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-754',
@@ -158,7 +158,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-405',
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-756',
@@ -167,7 +167,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-424',
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:internal', 'barrier:small-key'],
+    tags: ['tag-073', 'tag-076', 'tag-057'],
   },
   {
     id: 'connection-757',
@@ -177,7 +177,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:internal', 'barrier:small-key'],
+    tags: ['tag-073', 'tag-076', 'tag-057'],
   },
   {
     id: 'connection-759',
@@ -188,7 +188,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-730',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
   {
     id: 'connection-760',
@@ -197,7 +197,7 @@ const DW_DUNGEON_MISERY_MIRE_FLOOR_M1_0_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-250',
     direction: 'two-way',
     dungeonId: 'dungeon-011',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
 ];
 

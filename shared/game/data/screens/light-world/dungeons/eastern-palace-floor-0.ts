@@ -12,7 +12,7 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-010',
     locationId: 'location-013',
     position: { gridX: 8, gridY: 10, floor: 0 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-127', tile: { x: 44, y: 28 } },
@@ -30,7 +30,7 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-010',
     locationId: 'location-013',
     position: { gridX: 9, gridY: 10, floor: 0 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
@@ -49,7 +49,7 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-010',
     locationId: 'location-013',
     position: { gridX: 10, gridY: 10, floor: 0 },
-    tags: ['env:underground', 'hazard:dark'],
+    tags: ['tag-003', 'tag-016'],
     status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
@@ -70,7 +70,7 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-010',
     locationId: 'location-013',
     position: { gridX: 8, gridY: 11, floor: 0 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     triggerIds: ['actor-043'],
     spawns: [
@@ -91,7 +91,7 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-010',
     locationId: 'location-013',
     position: { gridX: 9, gridY: 11, floor: 0 },
-    tags: ['env:underground', 'role:hub'],
+    tags: ['tag-003', 'tag-009'],
     status: 'mapped',
   },
   {
@@ -103,7 +103,7 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-010',
     locationId: 'location-013',
     position: { gridX: 10, gridY: 11, floor: 0 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
@@ -125,7 +125,7 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-010',
     locationId: 'location-013',
     position: { gridX: 8, gridY: 12, floor: 0 },
-    tags: ['env:underground', 'role:boss'],
+    tags: ['tag-003', 'tag-006'],
     status: 'mapped',
     triggerIds: ['actor-026', 'actor-041'],
     spawns: [
@@ -146,7 +146,7 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-010',
     locationId: 'location-013',
     position: { gridX: 9, gridY: 12, floor: 0 },
-    tags: ['env:underground', 'role:entrance'],
+    tags: ['tag-003', 'tag-005'],
     status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
@@ -164,7 +164,7 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-010',
     locationId: 'location-013',
     position: { gridX: 8, gridY: 13, floor: 0 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-112', tile: { x: 46, y: 10 } },
@@ -189,7 +189,7 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-010',
     locationId: 'location-013',
     position: { gridX: 9, gridY: 13, floor: 0 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
@@ -207,7 +207,7 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-010',
     locationId: 'location-013',
     position: { gridX: 10, gridY: 13, floor: 0 },
-    tags: ['env:underground', 'loot:boss-drop'],
+    tags: ['tag-003', 'tag-026'],
     status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [

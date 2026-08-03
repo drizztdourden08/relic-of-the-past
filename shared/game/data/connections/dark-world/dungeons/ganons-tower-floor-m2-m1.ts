@@ -11,7 +11,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_M2_M1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-835',
     dungeonId: 'dungeon-013',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-827',
@@ -21,7 +21,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_M2_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east', tileRange: { axis: 'y', start: 16, end: 17 } },
     direction: 'two-way',
     dungeonId: 'dungeon-013',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-828',
@@ -31,7 +31,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_M2_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
     direction: 'two-way',
     dungeonId: 'dungeon-013',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-829',
@@ -42,7 +42,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_M2_M1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-836',
     dungeonId: 'dungeon-013',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-834',
@@ -52,7 +52,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_M2_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-013',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-835',
@@ -62,7 +62,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_M2_M1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-794',
     dungeonId: 'dungeon-013',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-836',
@@ -73,7 +73,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_M2_M1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-829',
     dungeonId: 'dungeon-013',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
 ];
 

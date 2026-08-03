@@ -12,7 +12,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_SCREENS: ScreenRecord[] = [
     areaId: 'area-015',
     locationId: 'location-024',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -24,7 +24,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_SCREENS: ScreenRecord[] = [
     areaId: 'area-015',
     locationId: 'location-024',
     position: { gridX: 1, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -36,7 +36,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_SCREENS: ScreenRecord[] = [
     areaId: 'area-015',
     locationId: 'location-024',
     position: { gridX: 0, gridY: 1 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -48,7 +48,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_SCREENS: ScreenRecord[] = [
     areaId: 'area-015',
     locationId: 'location-024',
     position: { gridX: 1, gridY: 1 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -60,7 +60,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_SCREENS: ScreenRecord[] = [
     areaId: 'area-015',
     locationId: 'location-024',
     position: { gridX: 0, gridY: 2 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -72,7 +72,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_SCREENS: ScreenRecord[] = [
     areaId: 'area-015',
     locationId: 'location-024',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -84,7 +84,7 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_SCREENS: ScreenRecord[] = [
     areaId: 'area-015',
     locationId: 'location-024',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
 ];

@@ -12,7 +12,7 @@ const LW_OVERWORLD_DESERT_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-015',
     direction: 'two-way',
     counterpartId: 'connection-027',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
     requirements: { itemId: 'item-030' },
   },
   {
@@ -21,7 +21,7 @@ const LW_OVERWORLD_DESERT_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-015',
     toScreenId: 'screen-013',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:overworld', 'barrier:book'],
+    tags: ['tag-072', 'tag-080', 'tag-070'],
   },
   {
     id: 'connection-027',
@@ -30,7 +30,7 @@ const LW_OVERWORLD_DESERT_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-035',
     direction: 'one-way',
     counterpartId: 'connection-025',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-028',
@@ -39,7 +39,7 @@ const LW_OVERWORLD_DESERT_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-035',
     direction: 'one-way',
     counterpartId: 'connection-184',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-029',
@@ -47,7 +47,7 @@ const LW_OVERWORLD_DESERT_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-010',
     toScreenId: 'screen-009',
     direction: 'one-way',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-030',
@@ -55,7 +55,7 @@ const LW_OVERWORLD_DESERT_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-014',
     toScreenId: 'screen-009',
     direction: 'one-way',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-031',
@@ -63,7 +63,7 @@ const LW_OVERWORLD_DESERT_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-011',
     toScreenId: 'screen-010',
     direction: 'one-way',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-047',
@@ -71,7 +71,7 @@ const LW_OVERWORLD_DESERT_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-002',
     toScreenId: 'screen-034',
     direction: 'one-way',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-051',
@@ -79,7 +79,7 @@ const LW_OVERWORLD_DESERT_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-034',
     toScreenId: 'screen-238',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { allOf: [{ itemId: 'item-075' }, canLiftHeavyRocks] },
   },
   {
@@ -89,7 +89,7 @@ const LW_OVERWORLD_DESERT_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-049',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-142',
@@ -98,7 +98,7 @@ const LW_OVERWORLD_DESERT_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-035',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-143',
@@ -107,7 +107,7 @@ const LW_OVERWORLD_DESERT_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-057',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
 ];
 

@@ -11,7 +11,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east', tileRange: { axis: 'y', start: 48, end: 49 } },
     direction: 'two-way',
     dungeonId: 'dungeon-013',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-815',
@@ -22,7 +22,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-849',
     dungeonId: 'dungeon-013',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-816',
@@ -33,7 +33,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-850',
     dungeonId: 'dungeon-013',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-817',
@@ -43,7 +43,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-013',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-818',
@@ -55,7 +55,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_1_CONNECTIONS: ConnectionRecord[] = [
     counterpartId: 'connection-851',
     dungeonId: 'dungeon-013',
     gatedBy: 'actor-024',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-819',
@@ -65,7 +65,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east', tileRange: { axis: 'y', start: 48, end: 49 } },
     direction: 'two-way',
     dungeonId: 'dungeon-013',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-820',
@@ -75,7 +75,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-013',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-821',
@@ -86,7 +86,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     dungeonId: 'dungeon-013',
     gatedBy: 'actor-024',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-840',
@@ -95,7 +95,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-374',
     direction: 'two-way',
     dungeonId: 'dungeon-013',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-849',
@@ -106,7 +106,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-815',
     dungeonId: 'dungeon-013',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-850',
@@ -117,7 +117,7 @@ const DW_DUNGEON_GANONS_TOWER_FLOOR_1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-816',
     dungeonId: 'dungeon-013',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
 ];
 

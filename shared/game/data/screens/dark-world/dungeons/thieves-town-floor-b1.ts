@@ -12,7 +12,7 @@ const DW_DUNGEON_THIEVES_TOWN_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-017',
     locationId: 'location-028',
     position: { gridX: 4, gridY: 4, floor: -1 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     triggerIds: ['actor-024'],
     spawns: [
@@ -35,7 +35,7 @@ const DW_DUNGEON_THIEVES_TOWN_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-017',
     locationId: 'location-028',
     position: { gridX: 5, gridY: 4, floor: -1 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     triggerIds: ['actor-024'],
     spawns: [
@@ -61,7 +61,7 @@ const DW_DUNGEON_THIEVES_TOWN_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-017',
     locationId: 'location-028',
     position: { gridX: 4, gridY: 6, floor: -1 },
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
@@ -83,7 +83,7 @@ const DW_DUNGEON_THIEVES_TOWN_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-017',
     locationId: 'location-028',
     position: { gridX: 5, gridY: 6, floor: -1 },
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-101', tile: { x: 38, y: 42 } },
@@ -102,7 +102,7 @@ const DW_DUNGEON_THIEVES_TOWN_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-017',
     locationId: 'location-028',
     position: { gridX: 11, gridY: 12, floor: -1 },
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-239', tile: { x: 40, y: 8 } },
@@ -128,7 +128,7 @@ const DW_DUNGEON_THIEVES_TOWN_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-017',
     locationId: 'location-028',
     position: { gridX: 12, gridY: 12, floor: -1 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-108', tile: { x: 38, y: 8 } },
@@ -156,7 +156,7 @@ const DW_DUNGEON_THIEVES_TOWN_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-017',
     locationId: 'location-028',
     position: { gridX: 11, gridY: 13, floor: -1 },
-    tags: ['env:underground', 'loot:chest', 'role:entrance', 'role:hub'],
+    tags: ['tag-003', 'tag-024', 'tag-005', 'tag-009'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-239', tile: { x: 6, y: 8 } },

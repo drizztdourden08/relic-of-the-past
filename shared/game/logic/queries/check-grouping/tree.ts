@@ -3,7 +3,7 @@
  * Builds the nested group tree (0-5 levels) for the tracker and aggregates
  * per-node completion stats.
  */
-import type { CheckRecord, CheckTag } from '../../../data';
+import type { CheckRecord } from '../../../data';
 import type { CheckStatus } from '../../eval';
 import type { GroupDimension, GroupNode } from './types';
 import { getGroupValue } from './dimensions';
@@ -23,7 +23,6 @@ const groupRecursive = (
   checks: CheckRecord[],
   dimensions: GroupDimension[],
   depth: number,
-  tagMap: Map<string, CheckTag[]>,
   statuses: Map<string, CheckStatus>
 ): GroupNode[] => {
   if (depth >= dimensions.length) return [];
@@ -32,8 +31,7 @@ const groupRecursive = (
   const buckets = new Map<string, CheckRecord[]>();
 
   for (const check of checks) {
-    const tags = tagMap.get(check.id) ?? [];
-    const value = getGroupValue(check, dim, tags);
+    const value = getGroupValue(check, dim);
     if (!buckets.has(value)) buckets.set(value, []);
     buckets.get(value)!.push(check);
   }
@@ -44,7 +42,7 @@ const groupRecursive = (
       key: `${dim}:${label}`,
       label,
       children: depth + 1 < dimensions.length
-        ? groupRecursive(groupChecks, dimensions, depth + 1, tagMap, statuses)
+        ? groupRecursive(groupChecks, dimensions, depth + 1, statuses)
         : [],
       checks: depth + 1 >= dimensions.length ? groupChecks : [],
       stats: computeStats(groupChecks, statuses),
@@ -65,8 +63,7 @@ const groupRecursive = (
 const buildGroupTree = (
   checks: CheckRecord[],
   statuses: Map<string, CheckStatus>,
-  dimensions: GroupDimension[],
-  tagMap: Map<string, CheckTag[]>
+  dimensions: GroupDimension[]
 ): GroupNode => {
   const root: GroupNode = {
     key: 'root',
@@ -82,7 +79,7 @@ const buildGroupTree = (
     return root;
   }
 
-  root.children = groupRecursive(checks, dimensions, 0, tagMap, statuses);
+  root.children = groupRecursive(checks, dimensions, 0, statuses);
   root.stats = computeStats(checks, statuses);
   return root;
 };

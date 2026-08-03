@@ -10,7 +10,7 @@ const LW_SHOPS_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-031',
     toScreenId: 'screen-199',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-401',
@@ -18,7 +18,7 @@ const LW_SHOPS_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-081',
     toScreenId: 'screen-214',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-402',
@@ -26,7 +26,7 @@ const LW_SHOPS_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-004',
     toScreenId: 'screen-213',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
     requirements: canUseBombs,
   },
   {
@@ -36,7 +36,7 @@ const LW_SHOPS_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-220',
     placement: { at: 'area', rect: { x: 24, y: 40, w: 2, h: 2 } },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
 ];
 

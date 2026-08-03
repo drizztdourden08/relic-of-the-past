@@ -3,7 +3,7 @@ import './Checkbox.css';
 import type { CheckboxProps } from './Checkbox.type';
 
 const Checkbox = (props: CheckboxProps) => {
-  const { checked, onChange, label, disabled, className = '' } = props;
+  const { checked, onChange, label, ariaLabel, disabled, className = '' } = props;
   return (
     <label className={`checkbox${disabled ? ' checkbox--disabled' : ''}${className ? ` ${className}` : ''}`}>
       <input
@@ -11,6 +11,7 @@ const Checkbox = (props: CheckboxProps) => {
         className="checkbox__input"
         checked={checked}
         disabled={disabled}
+        aria-label={ariaLabel}
         onChange={(e) => onChange(e.target.checked)}
       />
       {label != null && <span className="checkbox__label">{label}</span>}

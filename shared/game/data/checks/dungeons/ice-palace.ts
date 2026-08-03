@@ -12,6 +12,7 @@ const DUNGEON_ICE_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-010',
     randomizerName: 'Compass Chest',
     vanillaItemIds: ['item-038'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-196',
@@ -59,6 +60,7 @@ const DUNGEON_ICE_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-010',
     randomizerName: 'Big Key Chest',
     vanillaItemIds: ['item-051'],
+    tags: ['tag-084'],
   },
   {
     id: 'check-201',
@@ -68,6 +70,7 @@ const DUNGEON_ICE_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-010',
     randomizerName: 'Map Chest',
     vanillaItemIds: ['item-052'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-202',
@@ -78,6 +81,7 @@ const DUNGEON_ICE_PALACE_CHECKS: CheckRecord[] = [
     randomizerName: 'Boss',
     vanillaItemIds: ['item-039'],
     requirements: canMeltThings,
+    tags: ['tag-086'],
   },
   {
     id: 'check-203',
@@ -88,6 +92,7 @@ const DUNGEON_ICE_PALACE_CHECKS: CheckRecord[] = [
     randomizerName: 'Prize',
     vanillaItemIds: ['item-116'],
     requirements: canMeltThings,
+    tags: ['tag-086'],
   },
   {
     id: 'check-204',
@@ -97,6 +102,7 @@ const DUNGEON_ICE_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-010',
     randomizerName: 'Jelly Key Drop',
     vanillaItemIds: ['item-104'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-205',
@@ -106,6 +112,7 @@ const DUNGEON_ICE_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-010',
     randomizerName: 'Conveyor Key Drop',
     vanillaItemIds: ['item-104'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-206',
@@ -116,6 +123,7 @@ const DUNGEON_ICE_PALACE_CHECKS: CheckRecord[] = [
     randomizerName: 'Hammer Block Key Drop',
     vanillaItemIds: ['item-104'],
     requirements: { allOf: [{ itemId: 'item-010' }, canLiftRocks] },
+    tags: ['tag-083'],
   },
   {
     id: 'check-207',
@@ -125,6 +133,7 @@ const DUNGEON_ICE_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-010',
     randomizerName: 'Many Pots Pot Key',
     vanillaItemIds: ['item-104'],
+    tags: ['tag-083'],
   },
 ];
 

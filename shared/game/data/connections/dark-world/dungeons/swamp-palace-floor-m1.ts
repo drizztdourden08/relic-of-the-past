@@ -11,7 +11,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
     direction: 'two-way',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-637',
@@ -21,7 +21,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal', 'barrier:big-key'],
+    tags: ['tag-073', 'tag-076', 'tag-058'],
   },
   {
     id: 'connection-638',
@@ -31,7 +31,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-639',
@@ -41,7 +41,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'west' },
     direction: 'two-way',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-640',
@@ -51,7 +51,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 31, end: 32 } },
     direction: 'two-way',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-642',
@@ -61,7 +61,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-643',
@@ -72,7 +72,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-650',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-644',
@@ -82,7 +82,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-645',
@@ -92,7 +92,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-646',
@@ -102,7 +102,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 31, end: 32 } },
     direction: 'two-way',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-647',
@@ -112,7 +112,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-648',
@@ -123,7 +123,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-641',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-649',
@@ -132,7 +132,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-381',
     direction: 'two-way',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-650',
@@ -143,7 +143,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-643',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-651',
@@ -153,7 +153,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-652',
@@ -162,7 +162,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-348',
     direction: 'two-way',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-653',
@@ -172,7 +172,7 @@ const DW_DUNGEON_SWAMP_PALACE_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
     direction: 'two-way',
     dungeonId: 'dungeon-007',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
 ];
 

@@ -12,7 +12,7 @@ const DW_HOUSES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Mire Shed',
     areaId: 'area-005',
     locationId: 'location-026',
-    tags: ['env:indoor', 'loot:chest'],
+    tags: ['tag-002', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-094', tile: { x: 10, y: 44 } },
@@ -28,7 +28,7 @@ const DW_HOUSES_SCREENS: ScreenRecord[] = [
     randomizerName: 'Brewery',
     areaId: 'area-017',
     locationId: 'location-031',
-    tags: ['env:indoor', 'loot:chest'],
+    tags: ['tag-002', 'tag-024'],
     status: 'mapped',
   },
   {
@@ -40,7 +40,7 @@ const DW_HOUSES_SCREENS: ScreenRecord[] = [
     randomizerName: 'C-Shaped House',
     areaId: 'area-017',
     locationId: 'location-031',
-    tags: ['env:indoor', 'loot:chest'],
+    tags: ['tag-002', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-165', tile: { x: 14, y: 20 } },

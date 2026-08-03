@@ -9,7 +9,7 @@ const LW_OVERWORLD_CENTRAL_HYRULE_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-027',
     toScreenId: 'screen-021',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:overworld', 'barrier:event'],
+    tags: ['tag-072', 'tag-080', 'tag-065'],
   },
   {
     id: 'connection-023',
@@ -17,7 +17,7 @@ const LW_OVERWORLD_CENTRAL_HYRULE_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-026',
     toScreenId: 'screen-005',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:overworld'],
+    tags: ['tag-072', 'tag-080'],
     requirements: { itemId: 'item-075' },
   },
   {
@@ -27,7 +27,7 @@ const LW_OVERWORLD_CENTRAL_HYRULE_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-064',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-131',
@@ -36,7 +36,7 @@ const LW_OVERWORLD_CENTRAL_HYRULE_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-057',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-132',
@@ -45,7 +45,7 @@ const LW_OVERWORLD_CENTRAL_HYRULE_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-072',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-133',
@@ -54,7 +54,7 @@ const LW_OVERWORLD_CENTRAL_HYRULE_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-065',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-134',
@@ -63,7 +63,7 @@ const LW_OVERWORLD_CENTRAL_HYRULE_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-080',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-135',
@@ -72,7 +72,7 @@ const LW_OVERWORLD_CENTRAL_HYRULE_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-073',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-163',
@@ -80,7 +80,7 @@ const LW_OVERWORLD_CENTRAL_HYRULE_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-064',
     toScreenId: 'screen-026',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-164',
@@ -88,7 +88,7 @@ const LW_OVERWORLD_CENTRAL_HYRULE_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-064',
     toScreenId: 'screen-027',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
 ];
 

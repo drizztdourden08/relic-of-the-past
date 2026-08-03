@@ -23,6 +23,7 @@ const DUNGEON_DESERT_PALACE_CHECKS: CheckRecord[] = [
     randomizerName: 'Torch',
     vanillaItemIds: ['item-037'],
     requirements: { itemId: 'item-076' },
+    tags: ['tag-083'],
   },
   {
     id: 'check-127',
@@ -32,6 +33,7 @@ const DUNGEON_DESERT_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-004',
     randomizerName: 'Map Chest',
     vanillaItemIds: ['item-052'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-128',
@@ -41,6 +43,7 @@ const DUNGEON_DESERT_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-004',
     randomizerName: 'Compass Chest',
     vanillaItemIds: ['item-038'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-129',
@@ -50,6 +53,7 @@ const DUNGEON_DESERT_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-004',
     randomizerName: 'Big Key Chest',
     vanillaItemIds: ['item-051'],
+    tags: ['tag-084'],
   },
   {
     id: 'check-130',
@@ -60,6 +64,7 @@ const DUNGEON_DESERT_PALACE_CHECKS: CheckRecord[] = [
     randomizerName: 'Boss',
     vanillaItemIds: ['item-039'],
     requirements: canKillMostThings,
+    tags: ['tag-086'],
   },
   {
     id: 'check-131',
@@ -70,6 +75,7 @@ const DUNGEON_DESERT_PALACE_CHECKS: CheckRecord[] = [
     randomizerName: 'Prize',
     vanillaItemIds: ['item-057'],
     requirements: canKillMostThings,
+    tags: ['tag-086'],
   },
   {
     id: 'check-132',
@@ -79,6 +85,7 @@ const DUNGEON_DESERT_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-004',
     randomizerName: 'Desert Tiles 1 Pot Key',
     vanillaItemIds: ['item-098'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-133',
@@ -88,6 +95,7 @@ const DUNGEON_DESERT_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-004',
     randomizerName: 'Beamos Hall Pot Key',
     vanillaItemIds: ['item-098'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-134',
@@ -97,6 +105,7 @@ const DUNGEON_DESERT_PALACE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-004',
     randomizerName: 'Desert Tiles 2 Pot Key',
     vanillaItemIds: ['item-098'],
+    tags: ['tag-083'],
   },
 ];
 

@@ -9,7 +9,7 @@ type MenuItems = Parameters<typeof DropdownMenu>[0]['items'];
 type MenuBuilderDeps = Pick<TitleBarProps,
   'activeProfile' | 'gameRunning' | 'onShowProfile' | 'onToggleSaveStates' | 'onShowDataManager'
   | 'onToggleInventory' | 'onToggleChecks' | 'onToggleCheats' | 'onShowLogs' | 'onToggleDebug'
-  | 'onShowConnectionDebug' | 'onToggleDataset' | 'onToggleSimulator' | 'onShowInputTester' | 'onShowSpriteDebug' | 'onShowDatasetInspector'
+  | 'onShowConnectionDebug' | 'onToggleDataset' | 'onToggleSimulator' | 'onShowInputTester' | 'onShowSpriteDebug' | 'onShowDataInspector'
   | 'onShowShadowEditor' | 'onCheckForUpdates' | 'onShowCredits' | 'onShowDesignGallery' | 'onShowAbout'
   | 'widgetVisibility'
 > & { closeMenu: () => void; win: WindowControlsPort };
@@ -19,7 +19,7 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
     closeMenu, win, activeProfile, gameRunning,
     onShowProfile, onToggleSaveStates, onShowDataManager, onToggleInventory, onToggleChecks,
     onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset, onToggleSimulator,
-    onShowInputTester, onShowSpriteDebug, onShowDatasetInspector, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout,
+    onShowInputTester, onShowSpriteDebug, onShowDataInspector, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout,
     widgetVisibility = {},
   } = deps;
 
@@ -64,7 +64,7 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
         { key: 'logs', icon: '📋', label: 'Logs', checked: widgetVisibility.logs, onClick: () => { closeMenu(); onShowLogs(); } },
         { key: 'debug', icon: '📡', label: 'Game State', checked: widgetVisibility.debug, onClick: () => { closeMenu(); onToggleDebug(); } },
         { key: 'navigation', icon: '🔗', label: 'Location & Navigation', checked: widgetVisibility.navigation, onClick: () => { closeMenu(); onShowConnectionDebug(); } },
-        { key: 'dataset', icon: '📊', label: 'Dataset & Mapping', checked: widgetVisibility.dataset, onClick: () => { closeMenu(); onToggleDataset(); } },
+        { key: 'dataset', icon: '📊', label: 'Live Data Inspector', checked: widgetVisibility.dataset, onClick: () => { closeMenu(); onToggleDataset(); } },
         { key: 'simulator', icon: '🤖', label: 'Simulator', checked: widgetVisibility.simulator, onClick: () => { closeMenu(); onToggleSimulator(); } },
       ],
     },
@@ -73,10 +73,10 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
       icon: '⚙️',
       label: 'Advanced',
       children: [
-        // Input Calibration and Dataset Inspector are real user options — always available.
+        // Input Calibration and Data Inspector are real user options — always available.
         // The rest are developer tools, shown only in a dev build (and inherently desktop-only).
         { key: 'input-tester', icon: '🎮', label: 'Input Calibration', onClick: () => { closeMenu(); onShowInputTester(); } },
-        { key: 'dataset-inspector', icon: '🔍', label: 'Dataset Inspector', onClick: () => { closeMenu(); onShowDatasetInspector(); } },
+        { key: 'data-inspector', icon: '🔍', label: 'Data Inspector', onClick: () => { closeMenu(); onShowDataInspector(); } },
         ...(window.api.isDev ? [
           { key: 'dev-console', icon: '🛠️', label: 'Dev Console', onClick: () => { closeMenu(); win.openDevTools(); } },
           { key: 'sprite-debug', icon: '🖼️', label: 'Sprite Debug', onClick: () => { closeMenu(); onShowSpriteDebug(); } },

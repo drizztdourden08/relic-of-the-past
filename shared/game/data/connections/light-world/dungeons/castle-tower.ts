@@ -12,7 +12,7 @@ const LW_DUNGEON_CASTLE_TOWER_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-255',
     dungeonId: 'dungeon-002',
-    tags: ['dir:two-way', 'ctx:dungeon-enter'],
+    tags: ['tag-073', 'tag-081'],
   },
   {
     id: 'connection-248',
@@ -23,7 +23,7 @@ const LW_DUNGEON_CASTLE_TOWER_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     dungeonId: 'dungeon-002',
     gatedBy: 'actor-026',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-249',
@@ -33,7 +33,7 @@ const LW_DUNGEON_CASTLE_TOWER_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 15, y: 59, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-002',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-250',
@@ -43,7 +43,7 @@ const LW_DUNGEON_CASTLE_TOWER_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 51, y: 38, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-002',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-251',
@@ -53,7 +53,7 @@ const LW_DUNGEON_CASTLE_TOWER_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 47, y: 3, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-002',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-252',
@@ -63,7 +63,7 @@ const LW_DUNGEON_CASTLE_TOWER_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 51, y: 35, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-002',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-253',
@@ -74,7 +74,7 @@ const LW_DUNGEON_CASTLE_TOWER_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-257',
     dungeonId: 'dungeon-002',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-254',
@@ -85,7 +85,7 @@ const LW_DUNGEON_CASTLE_TOWER_CONNECTIONS: ConnectionRecord[] = [
     direction: 'one-way',
     dungeonId: 'dungeon-002',
     gatedBy: 'actor-026',
-    tags: ['dir:one-way', 'ctx:internal'],
+    tags: ['tag-072', 'tag-076'],
   },
   {
     id: 'connection-255',
@@ -96,7 +96,7 @@ const LW_DUNGEON_CASTLE_TOWER_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-247',
     dungeonId: 'dungeon-002',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
   {
     id: 'connection-256',
@@ -105,7 +105,7 @@ const LW_DUNGEON_CASTLE_TOWER_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-062',
     direction: 'one-way',
     dungeonId: 'dungeon-002',
-    tags: ['dir:one-way', 'ctx:exit'],
+    tags: ['tag-072', 'tag-075'],
   },
   {
     id: 'connection-257',
@@ -116,7 +116,7 @@ const LW_DUNGEON_CASTLE_TOWER_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-253',
     dungeonId: 'dungeon-002',
-    tags: ['dir:two-way', 'ctx:internal', 'barrier:small-key'],
+    tags: ['tag-073', 'tag-076', 'tag-057'],
   },
 ];
 

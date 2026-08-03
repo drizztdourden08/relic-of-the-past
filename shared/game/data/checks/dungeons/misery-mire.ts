@@ -22,6 +22,7 @@ const DUNGEON_MISERY_MIRE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-011',
     randomizerName: 'Map Chest',
     vanillaItemIds: ['item-052'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-210',
@@ -31,6 +32,7 @@ const DUNGEON_MISERY_MIRE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-011',
     randomizerName: 'Main Lobby',
     vanillaItemIds: ['item-037'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-211',
@@ -40,6 +42,7 @@ const DUNGEON_MISERY_MIRE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-011',
     randomizerName: 'Bridge Chest',
     vanillaItemIds: ['item-037'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-212',
@@ -59,6 +62,7 @@ const DUNGEON_MISERY_MIRE_CHECKS: CheckRecord[] = [
     randomizerName: 'Compass Chest',
     vanillaItemIds: ['item-038'],
     requirements: hasFireSource,
+    tags: ['tag-085'],
   },
   {
     id: 'check-214',
@@ -69,6 +73,7 @@ const DUNGEON_MISERY_MIRE_CHECKS: CheckRecord[] = [
     randomizerName: 'Big Key Chest',
     vanillaItemIds: ['item-051'],
     requirements: hasFireSource,
+    tags: ['tag-084'],
   },
   {
     id: 'check-215',
@@ -78,6 +83,7 @@ const DUNGEON_MISERY_MIRE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-011',
     randomizerName: 'Boss',
     vanillaItemIds: ['item-039'],
+    tags: ['tag-086'],
   },
   {
     id: 'check-216',
@@ -87,6 +93,7 @@ const DUNGEON_MISERY_MIRE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-011',
     randomizerName: 'Prize',
     vanillaItemIds: ['item-117'],
+    tags: ['tag-086'],
   },
   {
     id: 'check-217',
@@ -96,6 +103,7 @@ const DUNGEON_MISERY_MIRE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-011',
     randomizerName: 'Spikes Pot Key',
     vanillaItemIds: ['item-102'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-218',
@@ -105,6 +113,7 @@ const DUNGEON_MISERY_MIRE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-011',
     randomizerName: 'Fishbone Pot Key',
     vanillaItemIds: ['item-102'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-219',
@@ -114,6 +123,7 @@ const DUNGEON_MISERY_MIRE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-011',
     randomizerName: 'Conveyor Crystal Key Drop',
     vanillaItemIds: ['item-102'],
+    tags: ['tag-083'],
   },
 ];
 

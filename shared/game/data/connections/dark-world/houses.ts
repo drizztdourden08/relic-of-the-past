@@ -10,7 +10,7 @@ const DW_HOUSES_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-238',
     toScreenId: 'screen-472',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
   {
     id: 'connection-878',
@@ -18,7 +18,7 @@ const DW_HOUSES_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-247',
     toScreenId: 'screen-473',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
     requirements: canUseBombs,
   },
   {
@@ -27,7 +27,7 @@ const DW_HOUSES_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-249',
     toScreenId: 'screen-471',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:entrance'],
+    tags: ['tag-073', 'tag-074'],
   },
 ];
 

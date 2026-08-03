@@ -1,0 +1,21 @@
+/* @layer renderer-components @kind style */
+
+/* The reference breakdown sits right under the dialog's own message, in the
+   body `Dialog` already provides — `ReferencedBy`'s own top border reads as
+   the dialog's content divider, so nothing extra is needed here beyond the gap. */
+
+.delete-guard-dialog__hits {
+  margin-top: var(--space-sm);
+
+  /* Belt and suspenders alongside ReferencedBy's own per-group cap: the dialog
+     shell has no scroll region of its own, so this is what keeps the Cancel /
+     Delete anyway buttons on screen even if several groups get expanded. */
+  max-block-size: 320px;
+  overflow-y: auto;
+}
+
+.delete-guard-dialog__error {
+  margin: 0;
+  color: var(--c-danger);
+  font-size: var(--text-sm);
+}

@@ -12,7 +12,7 @@ const DW_FAIRY_SCREENS: ScreenRecord[] = [
     randomizerName: 'Bonk Fairy (Dark)',
     areaId: 'area-007',
     locationId: 'location-008',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-056', tile: { x: 52, y: 10 } },
@@ -30,7 +30,7 @@ const DW_FAIRY_SCREENS: ScreenRecord[] = [
     randomizerName: 'Dark Lake Hylia Healer Fairy',
     areaId: 'area-004',
     locationId: 'location-006',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 46, y: 28 } },
@@ -47,7 +47,7 @@ const DW_FAIRY_SCREENS: ScreenRecord[] = [
     randomizerName: 'Dark Lake Hylia Ledge Healer Fairy',
     areaId: 'area-004',
     locationId: 'location-006',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 46, y: 28 } },
@@ -64,7 +64,7 @@ const DW_FAIRY_SCREENS: ScreenRecord[] = [
     randomizerName: 'Dark Desert Healer Fairy',
     areaId: 'area-005',
     locationId: 'location-026',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-262', tile: { x: 22, y: 22 } },
@@ -79,7 +79,7 @@ const DW_FAIRY_SCREENS: ScreenRecord[] = [
     randomizerName: 'Dark Death Mountain Healer Fairy',
     areaId: 'area-002',
     locationId: 'location-004',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-056', tile: { x: 24, y: 42 } },
@@ -95,7 +95,7 @@ const DW_FAIRY_SCREENS: ScreenRecord[] = [
     randomizerName: 'Pyramid Fairy',
     areaId: 'area-003',
     locationId: 'location-005',
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-002', tile: { x: 8, y: 46 } },

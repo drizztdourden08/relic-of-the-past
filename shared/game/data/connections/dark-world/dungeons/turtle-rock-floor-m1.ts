@@ -11,7 +11,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
     direction: 'two-way',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-774',
@@ -21,7 +21,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:internal', 'barrier:dark'],
+    tags: ['tag-073', 'tag-076', 'tag-062'],
   },
   {
     id: 'connection-775',
@@ -31,7 +31,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-776',
@@ -42,7 +42,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     dungeonId: 'dungeon-012',
     gatedBy: 'actor-028',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-777',
@@ -52,7 +52,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-778',
@@ -62,7 +62,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-779',
@@ -72,7 +72,7 @@ const DW_DUNGEON_TURTLE_ROCK_FLOOR_M1_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
     direction: 'two-way',
     dungeonId: 'dungeon-012',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
 ];
 

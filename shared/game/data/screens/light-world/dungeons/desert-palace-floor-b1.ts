@@ -12,7 +12,7 @@ const LW_DUNGEON_DESERT_PALACE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-009',
     locationId: 'location-011',
     position: { gridX: 4, gridY: 7, floor: -1 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     triggerIds: ['actor-043'],
     spawns: [
@@ -35,7 +35,7 @@ const LW_DUNGEON_DESERT_PALACE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     areaId: 'area-009',
     locationId: 'location-011',
     position: { gridX: 5, gridY: 7, floor: -1 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     triggerIds: ['actor-024'],
     spawns: [

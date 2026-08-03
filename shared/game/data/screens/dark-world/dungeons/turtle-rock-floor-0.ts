@@ -12,7 +12,7 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-030',
     position: { gridX: 4, gridY: 12, floor: 0 },
-    tags: ['env:underground', 'role:entrance'],
+    tags: ['tag-003', 'tag-005'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-161', tile: { x: 22, y: 20 } },
@@ -36,7 +36,7 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-030',
     position: { gridX: 5, gridY: 12, floor: 0 },
-    tags: ['env:underground', 'role:entrance', 'role:hub'],
+    tags: ['tag-003', 'tag-005', 'tag-009'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-210', tile: { x: 28, y: 18 } },
@@ -58,7 +58,7 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-030',
     position: { gridX: 6, gridY: 12, floor: 0 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-127', tile: { x: 22, y: 8 } },
@@ -79,7 +79,7 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-030',
     position: { gridX: 7, gridY: 12, floor: 0 },
-    tags: ['env:underground', 'role:entrance'],
+    tags: ['tag-003', 'tag-005'],
     status: 'mapped',
     triggerIds: ['actor-045'],
   },
@@ -92,7 +92,7 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-030',
     position: { gridX: 5, gridY: 13, floor: 0 },
-    tags: ['env:underground', 'role:entrance'],
+    tags: ['tag-003', 'tag-005'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-210', tile: { x: 28, y: 18 } },
@@ -111,7 +111,7 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-030',
     position: { gridX: 6, gridY: 13, floor: 0 },
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-211', tile: { x: 14, y: 4 } },

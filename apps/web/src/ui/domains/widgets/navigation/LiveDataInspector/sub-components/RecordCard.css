@@ -1,0 +1,18 @@
+/* @layer renderer-widgets @kind style */
+
+/* One record's own bordered container — same border/background this widget's
+   recommendation cards already use. */
+
+.live-record-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border-radius: var(--r-sm);
+  border: 1px solid var(--c-border);
+  background: var(--c-hover);
+}
+
+.live-record-card__actions {
+  min-block-size: 0;
+}

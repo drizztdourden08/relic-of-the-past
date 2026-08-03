@@ -12,7 +12,7 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-014',
     position: { gridX: 11, gridY: 8, floor: 0 },
-    tags: ['env:underground', 'role:hub'],
+    tags: ['tag-003', 'tag-009'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-208', tile: { x: 42, y: 14 } },
@@ -34,7 +34,7 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-014',
     position: { gridX: 12, gridY: 8, floor: 0 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     triggerIds: ['actor-027'],
     spawns: [
@@ -60,7 +60,7 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-014',
     position: { gridX: 13, gridY: 8, floor: 0 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     triggerIds: ['actor-045', 'actor-268'],
     spawns: [
@@ -86,7 +86,7 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-014',
     position: { gridX: 11, gridY: 9, floor: 0 },
-    tags: ['env:underground', 'role:entrance'],
+    tags: ['tag-003', 'tag-005'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-161', tile: { x: 12, y: 16 } },
@@ -113,7 +113,7 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-014',
     position: { gridX: 12, gridY: 9, floor: 0 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-163', tile: { x: 38, y: 18 } },
@@ -134,7 +134,7 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_0: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-014',
     position: { gridX: 13, gridY: 9, floor: 0 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-161', tile: { x: 56, y: 12 } },

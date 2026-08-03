@@ -1,9 +1,7 @@
 /* @layer renderer-components @kind component */
 import { useCallback } from 'react';
-import type { CheckTag } from '@shared/game/data';
-import { CHECK_TAG_DEFINITIONS } from '@shared/game/data';
 import type { GroupDimension, FilterState } from '@shared/game/logic/queries/check-grouping';
-import { GROUP_DIMENSIONS } from '@shared/game/logic/queries/check-grouping';
+import { CHECK_FACET_DEFS, GROUP_DIMENSIONS } from '@shared/game/logic/queries/check-grouping';
 import { Box, Text, Button } from '../../../../../design-system/primitives';
 
 interface TrackerFilterPanelsProps {
@@ -20,11 +18,11 @@ const TAG_CATEGORIES = ['world', 'location', 'area', 'content'] as const;
 const TrackerFilterPanels = (props: TrackerFilterPanelsProps) => {
   const { filter, onFilterChange, grouping, onGroupingChange, showTagFilter, showGroupConfig } = props;
 
-  const toggleTag = useCallback((tag: CheckTag) => {
-    const active = filter.activeTags.includes(tag)
-      ? filter.activeTags.filter(t => t !== tag)
-      : [...filter.activeTags, tag];
-    onFilterChange({ ...filter, activeTags: active });
+  const toggleFacet = useCallback((facetId: string) => {
+    const active = filter.activeFacets.includes(facetId)
+      ? filter.activeFacets.filter(f => f !== facetId)
+      : [...filter.activeFacets, facetId];
+    onFilterChange({ ...filter, activeFacets: active });
   }, [filter, onFilterChange]);
 
   const addDimension = useCallback((dim: GroupDimension) => {
@@ -47,12 +45,12 @@ const TrackerFilterPanels = (props: TrackerFilterPanelsProps) => {
             <Box key={cat} className="tracker-filters__tag-group">
               <Text className="tracker-filters__tag-group-label">{cat}</Text>
               <Box className="tracker-filters__tag-list">
-                {CHECK_TAG_DEFINITIONS.filter(t => t.category === cat).map(t => (
+                {CHECK_FACET_DEFS.filter(t => t.category === cat).map(t => (
                   <Button
                     variant="bare"
                     key={t.id}
-                    className={`tracker-filters__tag ${filter.activeTags.includes(t.id) ? 'tracker-filters__tag--active' : ''}`}
-                    onClick={() => toggleTag(t.id)}
+                    className={`tracker-filters__tag ${filter.activeFacets.includes(t.id) ? 'tracker-filters__tag--active' : ''}`}
+                    onClick={() => toggleFacet(t.id)}
                   >
                     {t.label}
                   </Button>

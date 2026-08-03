@@ -12,7 +12,7 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_1_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-014',
     position: { gridX: 12, gridY: 5, floor: 2 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-195', tile: { x: 22, y: 4 } },
@@ -31,7 +31,7 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_1_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-014',
     position: { gridX: 13, gridY: 5, floor: 2 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-127', tile: { x: 14, y: 10 } },
@@ -58,7 +58,7 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_1_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-014',
     position: { gridX: 11, gridY: 6, floor: 2 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-161', tile: { x: 14, y: 8 } },
@@ -86,7 +86,7 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_1_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-014',
     position: { gridX: 12, gridY: 6, floor: 1 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     triggerIds: ['actor-050'],
     spawns: [
@@ -106,7 +106,7 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_1_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-014',
     position: { gridX: 13, gridY: 6, floor: 1 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-126', tile: { x: 10, y: 12 } },
@@ -129,7 +129,7 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_1_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-014',
     position: { gridX: 11, gridY: 7, floor: 1 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-071', tile: { x: 22, y: 14 } },
@@ -154,7 +154,7 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_1_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-014',
     position: { gridX: 12, gridY: 7, floor: 1 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     triggerIds: ['actor-037'],
     spawns: [
@@ -175,7 +175,7 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_1_2: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-014',
     position: { gridX: 13, gridY: 7, floor: 1 },
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     triggerIds: ['actor-047'],
     spawns: [

@@ -12,6 +12,7 @@ const DUNGEON_PALACE_OF_DARKNESS_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-006',
     randomizerName: 'Shooter Room',
     vanillaItemIds: ['item-037'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-143',
@@ -21,6 +22,7 @@ const DUNGEON_PALACE_OF_DARKNESS_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-006',
     randomizerName: 'The Arena - Bridge',
     vanillaItemIds: ['item-037'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-144',
@@ -30,6 +32,7 @@ const DUNGEON_PALACE_OF_DARKNESS_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-006',
     randomizerName: 'Stalfos Basement',
     vanillaItemIds: ['item-037'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-145',
@@ -39,6 +42,7 @@ const DUNGEON_PALACE_OF_DARKNESS_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-006',
     randomizerName: 'Big Key Chest',
     vanillaItemIds: ['item-051'],
+    tags: ['tag-084'],
   },
   {
     id: 'check-146',
@@ -49,6 +53,7 @@ const DUNGEON_PALACE_OF_DARKNESS_CHECKS: CheckRecord[] = [
     randomizerName: 'The Arena - Ledge',
     vanillaItemIds: ['item-037'],
     requirements: { itemId: 'item-076' },
+    tags: ['tag-083'],
   },
   {
     id: 'check-147',
@@ -58,6 +63,7 @@ const DUNGEON_PALACE_OF_DARKNESS_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-006',
     randomizerName: 'Map Chest',
     vanillaItemIds: ['item-052'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-148',
@@ -67,6 +73,7 @@ const DUNGEON_PALACE_OF_DARKNESS_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-006',
     randomizerName: 'Compass Chest',
     vanillaItemIds: ['item-038'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-149',
@@ -87,6 +94,7 @@ const DUNGEON_PALACE_OF_DARKNESS_CHECKS: CheckRecord[] = [
     randomizerName: 'Dark Basement - Right',
     vanillaItemIds: ['item-037'],
     requirements: { itemId: 'item-019' },
+    tags: ['tag-083'],
   },
   {
     id: 'check-151',
@@ -107,6 +115,7 @@ const DUNGEON_PALACE_OF_DARKNESS_CHECKS: CheckRecord[] = [
     randomizerName: 'Dark Maze - Bottom',
     vanillaItemIds: ['item-037'],
     requirements: { itemId: 'item-019' },
+    tags: ['tag-083'],
   },
   {
     id: 'check-153',
@@ -136,6 +145,7 @@ const DUNGEON_PALACE_OF_DARKNESS_CHECKS: CheckRecord[] = [
     randomizerName: 'Boss',
     vanillaItemIds: ['item-039'],
     requirements: { allOf: [{ itemId: 'item-091' }, { itemId: 'item-019' }, { itemId: 'item-010' }, canShootArrows] },
+    tags: ['tag-086'],
   },
   {
     id: 'check-156',
@@ -146,6 +156,7 @@ const DUNGEON_PALACE_OF_DARKNESS_CHECKS: CheckRecord[] = [
     randomizerName: 'Prize',
     vanillaItemIds: ['item-112'],
     requirements: { allOf: [{ itemId: 'item-091' }, { itemId: 'item-019' }, { itemId: 'item-010' }, canShootArrows] },
+    tags: ['tag-086'],
   },
 ];
 

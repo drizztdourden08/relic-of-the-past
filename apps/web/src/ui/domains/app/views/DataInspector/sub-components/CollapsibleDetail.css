@@ -1,0 +1,77 @@
+/* @layer renderer-app @kind style */
+
+/* ─── The foldable detail column ───
+   Same mechanism as the Controls page's Profiles column (ControlsSettings.css):
+   the panel shrinks to fit, its content is hidden, and the title turns on its
+   side so the folded strip still names what is behind it. */
+.collapsible-detail {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  transition: width 0.2s ease;
+}
+
+.collapsible-detail--collapsed {
+  width: fit-content;
+}
+
+.collapsible-detail--collapsed .collapsible-detail__content {
+  display: none;
+}
+
+.collapsible-detail__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border-bottom: 1px solid var(--c-border);
+  flex-shrink: 0;
+}
+
+.collapsible-detail--collapsed .collapsible-detail__header {
+  flex-direction: column;
+  border-bottom: none;
+  padding: var(--space-sm) var(--space-xs);
+}
+
+.collapsible-detail__title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--c-text-dim);
+  white-space: nowrap;
+}
+
+.collapsible-detail--collapsed .collapsible-detail__title {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  margin-top: var(--space-sm);
+}
+
+.collapsible-detail__toggle {
+  all: unset;
+  cursor: pointer;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  border-radius: var(--r-sm);
+  flex-shrink: 0;
+}
+
+.collapsible-detail__toggle:hover {
+  background: var(--c-hover);
+  color: var(--c-text);
+}
+
+.collapsible-detail__content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}

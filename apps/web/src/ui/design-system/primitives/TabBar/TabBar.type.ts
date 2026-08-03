@@ -9,6 +9,8 @@ interface TabBarProps {
   tabs: TabItem[];
   activeTab: string;
   onTabChange: (tabId: string) => void;
+  /** Drops the visible label, keeping it as the button's native `title` tooltip instead. */
+  iconOnly?: boolean;
 }
 
 export type {

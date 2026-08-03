@@ -12,7 +12,7 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Blinds Hideout',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:indoor', 'loot:chest'],
+    tags: ['tag-002', 'tag-024'],
     status: 'mapped',
   },
   {
@@ -24,7 +24,7 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Chicken House',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:indoor', 'loot:chest'],
+    tags: ['tag-002', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-058', tile: { x: 18, y: 44 } },
@@ -42,7 +42,7 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Sick Kids House',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-005', tile: { x: 6, y: 48 } },
@@ -57,7 +57,7 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Blacksmiths Hut',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-222', tile: { x: 46, y: 14 } },
@@ -74,7 +74,7 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Tavern',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:indoor', 'loot:chest'],
+    tags: ['tag-002', 'tag-024'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-231', tile: { x: 12, y: 42 } },
@@ -91,7 +91,7 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Tavern (Front)',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:indoor', 'role:safe'],
+    tags: ['tag-002', 'tag-013'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-231', tile: { x: 12, y: 42 } },
@@ -108,7 +108,7 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Elder House',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:indoor', 'role:safe'],
+    tags: ['tag-002', 'tag-013'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-001', tile: { x: 14, y: 48 } },
@@ -123,7 +123,7 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Snitch Lady (East)',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:indoor', 'role:safe'],
+    tags: ['tag-002', 'tag-013'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-230', tile: { x: 16, y: 54 } },
@@ -138,7 +138,7 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Snitch Lady (West)',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:indoor', 'role:safe'],
+    tags: ['tag-002', 'tag-013'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-230', tile: { x: 16, y: 54 } },
@@ -153,7 +153,7 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     randomizerName: 'Bush Covered House',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:indoor', 'role:safe'],
+    tags: ['tag-002', 'tag-013'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-260', tile: { x: 20, y: 54 } },

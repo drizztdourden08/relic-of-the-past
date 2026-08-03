@@ -1,0 +1,32 @@
+/* @layer renderer-components @kind style */
+.code-block {
+  overflow-x: auto;
+  border: var(--border-width-thin) solid var(--c-border);
+  border-radius: var(--radius-md);
+  background: var(--c-sunken);
+}
+
+.code-block__pre {
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.code-block__code {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+}
+
+.code-block__line {
+  display: block;
+}
+
+/* Left accent + soft tint, matching the green already used for `inserted`
+   tokens in code-theme.ts — reads as "added/changed" without a new color. */
+.code-block__line--changed {
+  background: var(--c-green-soft);
+  box-shadow: inset var(--border-width-thick) 0 0 0 var(--c-green-bright);
+}

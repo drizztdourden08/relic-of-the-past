@@ -9,7 +9,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-240',
     toScreenId: 'screen-241',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:overworld'],
+    tags: ['tag-072', 'tag-080'],
     requirements: { itemId: 'item-031' },
   },
   {
@@ -19,7 +19,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-242',
     direction: 'two-way',
     counterpartId: 'connection-435',
-    tags: ['dir:two-way', 'ctx:overworld', 'barrier:swim'],
+    tags: ['tag-073', 'tag-080', 'tag-068'],
   },
   {
     id: 'connection-435',
@@ -28,7 +28,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-240',
     direction: 'one-way',
     counterpartId: 'connection-434',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-436',
@@ -36,7 +36,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-240',
     toScreenId: 'screen-097',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { itemId: 'item-027' },
   },
   {
@@ -45,7 +45,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-240',
     toScreenId: 'screen-025',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
   },
   {
     id: 'connection-438',
@@ -53,7 +53,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-241',
     toScreenId: 'screen-024',
     direction: 'one-way',
-    tags: ['dir:one-way', 'ctx:cross-world'],
+    tags: ['tag-072', 'tag-077'],
     requirements: { itemId: 'item-027' },
   },
   {
@@ -63,7 +63,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-291',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-567',
@@ -72,7 +72,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-284',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-568',
@@ -81,7 +81,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-299',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-569',
@@ -90,7 +90,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-292',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-570',
@@ -99,7 +99,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-307',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-571',
@@ -108,7 +108,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-300',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-572',
@@ -117,7 +117,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-315',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-573',
@@ -126,7 +126,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-308',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-574',
@@ -135,7 +135,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-316',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-579',
@@ -144,7 +144,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-300',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-580',
@@ -153,7 +153,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-308',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-581',
@@ -162,7 +162,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-316',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-599',
@@ -170,7 +170,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-315',
     toScreenId: 'screen-240',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-600',
@@ -178,7 +178,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-315',
     toScreenId: 'screen-241',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-601',
@@ -186,7 +186,7 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-315',
     toScreenId: 'screen-242',
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
 ];
 

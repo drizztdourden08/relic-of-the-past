@@ -41,6 +41,36 @@ interface ScreenEditorApi {
   writeConnections: InvokeContract['screenEditor:writeConnections'];
   writeCheck: InvokeContract['screenEditor:writeCheck'];
   allocateGeography: InvokeContract['screenEditor:allocateGeography'];
+  allocateTag: InvokeContract['screenEditor:allocateTag'];
+  writeTag: InvokeContract['screenEditor:writeTag'];
+  deleteTag: InvokeContract['screenEditor:deleteTag'];
+  allocateItemGroup: InvokeContract['screenEditor:allocateItemGroup'];
+  writeItemGroup: InvokeContract['screenEditor:writeItemGroup'];
+  deleteItemGroup: InvokeContract['screenEditor:deleteItemGroup'];
+  allocateEnumeration: InvokeContract['screenEditor:allocateEnumeration'];
+  writeEnumeration: InvokeContract['screenEditor:writeEnumeration'];
+  deleteEnumeration: InvokeContract['screenEditor:deleteEnumeration'];
+  allocateCheck: InvokeContract['screenEditor:allocateCheck'];
+  writeCheckRecord: InvokeContract['screenEditor:writeCheckRecord'];
+  deleteCheck: InvokeContract['screenEditor:deleteCheck'];
+  allocateItem: InvokeContract['screenEditor:allocateItem'];
+  writeItemRecord: InvokeContract['screenEditor:writeItemRecord'];
+  deleteItem: InvokeContract['screenEditor:deleteItem'];
+  allocateDungeon: InvokeContract['screenEditor:allocateDungeon'];
+  writeDungeonRecord: InvokeContract['screenEditor:writeDungeonRecord'];
+  deleteDungeon: InvokeContract['screenEditor:deleteDungeon'];
+  allocateActor: InvokeContract['screenEditor:allocateActor'];
+  writeActorRecord: InvokeContract['screenEditor:writeActorRecord'];
+  deleteActor: InvokeContract['screenEditor:deleteActor'];
+  writeAreaRecord: InvokeContract['screenEditor:writeAreaRecord'];
+  deleteArea: InvokeContract['screenEditor:deleteArea'];
+  writeLocationRecord: InvokeContract['screenEditor:writeLocationRecord'];
+  deleteLocation: InvokeContract['screenEditor:deleteLocation'];
+}
+
+interface UiViewsApi {
+  load: InvokeContract['uiViews:load'];
+  save: InvokeContract['uiViews:save'];
 }
 
 // Non-IPC helpers exposed on window.api (process flags + pure renderer helpers).
@@ -62,6 +92,7 @@ type IpcApi = InvokeApi & SendApi & EventApi & ExtrasApi & {
   updater: UpdaterApi;
   shadowCasting: ShadowCastingApi;
   screenEditor: ScreenEditorApi;
+  uiViews: UiViewsApi;
 };
 
-export type { IpcApi, UpdaterApi, ShadowCastingApi, ScreenEditorApi };
+export type { IpcApi, UpdaterApi, ShadowCastingApi, ScreenEditorApi, UiViewsApi };

@@ -10,7 +10,7 @@ const LW_OVERWORLD_KAKARIKO_1_CONNECTIONS: ConnectionRecord[] = [
     fromScreenId: 'screen-037',
     toScreenId: 'screen-033',
     direction: 'one-way',
-    tags: ['transit:ledge', 'dir:one-way', 'ctx:overworld'],
+    tags: ['tag-043', 'tag-072', 'tag-080'],
   },
   {
     id: 'connection-084',
@@ -19,7 +19,7 @@ const LW_OVERWORLD_KAKARIKO_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-053',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-085',
@@ -28,7 +28,7 @@ const LW_OVERWORLD_KAKARIKO_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-046',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-086',
@@ -37,7 +37,7 @@ const LW_OVERWORLD_KAKARIKO_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-061',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-087',
@@ -46,7 +46,7 @@ const LW_OVERWORLD_KAKARIKO_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-054',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-097',
@@ -55,7 +55,7 @@ const LW_OVERWORLD_KAKARIKO_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-046',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-098',
@@ -64,7 +64,7 @@ const LW_OVERWORLD_KAKARIKO_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-032',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-099',
@@ -73,7 +73,7 @@ const LW_OVERWORLD_KAKARIKO_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-054',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-100',
@@ -82,7 +82,7 @@ const LW_OVERWORLD_KAKARIKO_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-047',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-101',
@@ -91,7 +91,7 @@ const LW_OVERWORLD_KAKARIKO_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-062',
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
   {
     id: 'connection-102',
@@ -100,7 +100,7 @@ const LW_OVERWORLD_KAKARIKO_1_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-055',
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
-    tags: ['dir:two-way', 'ctx:overworld'],
+    tags: ['tag-073', 'tag-080'],
   },
 ];
 

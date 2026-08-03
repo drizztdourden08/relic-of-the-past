@@ -12,7 +12,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_SCREENS_FLOOR_B2: ScreenRecord[] = [
     areaId: 'area-003',
     locationId: 'location-021',
     position: { gridX: 9, gridY: 0, floor: -2 },
-    tags: ['env:underground', 'hazard:dark', 'role:puzzle'],
+    tags: ['tag-003', 'tag-016', 'tag-015'],
     status: 'mapped',
     triggerIds: ['actor-043'],
     spawns: [
@@ -30,7 +30,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_SCREENS_FLOOR_B2: ScreenRecord[] = [
     areaId: 'area-003',
     locationId: 'location-021',
     position: { gridX: 10, gridY: 0, floor: -2 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     triggerIds: ['actor-043'],
     spawns: [
@@ -47,7 +47,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_SCREENS_FLOOR_B2: ScreenRecord[] = [
     areaId: 'area-003',
     locationId: 'location-021',
     position: { gridX: 11, gridY: 0, floor: -2 },
-    tags: ['env:underground', 'role:hub'],
+    tags: ['tag-003', 'tag-009'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-161', tile: { x: 56, y: 8 } },
@@ -71,7 +71,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_SCREENS_FLOOR_B2: ScreenRecord[] = [
     areaId: 'area-003',
     locationId: 'location-021',
     position: { gridX: 9, gridY: 1, floor: -2 },
-    tags: ['env:underground', 'hazard:dark'],
+    tags: ['tag-003', 'tag-016'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-113', tile: { x: 44, y: 20 } },
@@ -89,7 +89,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_SCREENS_FLOOR_B2: ScreenRecord[] = [
     areaId: 'area-003',
     locationId: 'location-021',
     position: { gridX: 10, gridY: 1, floor: -2 },
-    tags: ['env:underground', 'role:hub'],
+    tags: ['tag-003', 'tag-009'],
     status: 'mapped',
     triggerIds: ['actor-027'],
     spawns: [
@@ -114,7 +114,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_SCREENS_FLOOR_B2: ScreenRecord[] = [
     areaId: 'area-003',
     locationId: 'location-021',
     position: { gridX: 11, gridY: 1, floor: -2 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     triggerIds: ['actor-033'],
     spawns: [
@@ -135,7 +135,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_SCREENS_FLOOR_B2: ScreenRecord[] = [
     areaId: 'area-003',
     locationId: 'location-021',
     position: { gridX: 10, gridY: 6, floor: -2 },
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-117', tile: { x: 46, y: 20 } },

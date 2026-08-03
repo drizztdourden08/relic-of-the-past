@@ -11,7 +11,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 15, y: 35, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-010',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-695',
@@ -22,7 +22,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     dungeonId: 'dungeon-010',
     gatedBy: 'actor-028',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-696',
@@ -32,7 +32,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 47, end: 48 } },
     direction: 'two-way',
     dungeonId: 'dungeon-010',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-697',
@@ -41,7 +41,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-345',
     direction: 'two-way',
     dungeonId: 'dungeon-010',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-698',
@@ -51,7 +51,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-010',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-699',
@@ -61,7 +61,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-010',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-700',
@@ -71,7 +71,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
     direction: 'two-way',
     dungeonId: 'dungeon-010',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-701',
@@ -81,7 +81,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-010',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-702',
@@ -91,7 +91,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east', tileRange: { axis: 'y', start: 48, end: 49 } },
     direction: 'two-way',
     dungeonId: 'dungeon-010',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-703',
@@ -101,7 +101,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-010',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-704',
@@ -111,7 +111,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-010',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-719',
@@ -122,7 +122,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-721',
     dungeonId: 'dungeon-010',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-720',
@@ -133,7 +133,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     dungeonId: 'dungeon-010',
     gatedBy: 'actor-027',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-721',
@@ -144,7 +144,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-719',
     dungeonId: 'dungeon-010',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-722',
@@ -154,7 +154,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-724',
     dungeonId: 'dungeon-010',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-723',
@@ -163,7 +163,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-335',
     direction: 'one-way',
     dungeonId: 'dungeon-010',
-    tags: ['dir:one-way', 'ctx:internal'],
+    tags: ['tag-072', 'tag-076'],
   },
   {
     id: 'connection-724',
@@ -174,7 +174,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     direction: 'two-way',
     counterpartId: 'connection-722',
     dungeonId: 'dungeon-010',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-729',
@@ -184,7 +184,7 @@ const DW_DUNGEON_ICE_PALACE_FLOOR_LOWER_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'north' },
     direction: 'one-way',
     dungeonId: 'dungeon-010',
-    tags: ['dir:one-way', 'ctx:internal'],
+    tags: ['tag-072', 'tag-076'],
   },
 ];
 

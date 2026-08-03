@@ -12,7 +12,7 @@ const LW_OVERWORLD_CENTRAL_HYRULE_SCREENS: ScreenRecord[] = [
     areaId: 'area-001',
     locationId: 'location-002',
     position: { gridX: 2, gridY: 5 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -24,7 +24,7 @@ const LW_OVERWORLD_CENTRAL_HYRULE_SCREENS: ScreenRecord[] = [
     areaId: 'area-001',
     locationId: 'location-002',
     position: { gridX: 3, gridY: 5 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -36,7 +36,7 @@ const LW_OVERWORLD_CENTRAL_HYRULE_SCREENS: ScreenRecord[] = [
     areaId: 'area-001',
     locationId: 'location-002',
     position: { gridX: 4, gridY: 5 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
   {
@@ -48,7 +48,7 @@ const LW_OVERWORLD_CENTRAL_HYRULE_SCREENS: ScreenRecord[] = [
     areaId: 'area-001',
     locationId: 'location-002',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor', 'role:spawn'],
+    tags: ['tag-001', 'tag-014'],
     status: 'mapped',
   },
   {
@@ -60,7 +60,7 @@ const LW_OVERWORLD_CENTRAL_HYRULE_SCREENS: ScreenRecord[] = [
     areaId: 'area-001',
     locationId: 'location-002',
     position: { gridX: 0, gridY: 0 },
-    tags: ['env:outdoor'],
+    tags: ['tag-001'],
     status: 'mapped',
   },
 ];

@@ -20,6 +20,7 @@ const DUNGEON_HYRULE_CASTLE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-001',
     randomizerName: 'Map Chest',
     vanillaItemIds: ['item-052'],
+    tags: ['tag-085'],
   },
   {
     id: 'check-102',
@@ -84,6 +85,7 @@ const DUNGEON_HYRULE_CASTLE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-001',
     randomizerName: 'Map Guard Key Drop',
     vanillaItemIds: ['item-096'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-109',
@@ -93,6 +95,7 @@ const DUNGEON_HYRULE_CASTLE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-001',
     randomizerName: 'Boomerang Guard Key Drop',
     vanillaItemIds: ['item-096'],
+    tags: ['tag-083'],
   },
   {
     id: 'check-110',
@@ -103,6 +106,7 @@ const DUNGEON_HYRULE_CASTLE_CHECKS: CheckRecord[] = [
     randomizerName: 'Key Rat Key Drop',
     vanillaItemIds: ['item-096'],
     requirements: { itemId: 'item-019' },
+    tags: ['tag-083'],
   },
   {
     id: 'check-111',
@@ -112,6 +116,7 @@ const DUNGEON_HYRULE_CASTLE_CHECKS: CheckRecord[] = [
     dungeonId: 'dungeon-001',
     randomizerName: 'Big Key Drop',
     vanillaItemIds: ['item-095'],
+    tags: ['tag-083', 'tag-084'],
   },
 ];
 

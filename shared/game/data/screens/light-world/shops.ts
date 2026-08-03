@@ -12,7 +12,7 @@ const LW_SHOPS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Kakariko Shop',
     areaId: 'area-012',
     locationId: 'location-017',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-230', tile: { x: 22, y: 54 } },
@@ -27,7 +27,7 @@ const LW_SHOPS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Cave Shop (Lake Hylia)',
     areaId: 'area-013',
     locationId: 'location-018',
-    tags: ['env:underground'],
+    tags: ['tag-003'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 46, y: 14 } },
@@ -49,7 +49,7 @@ const LW_SHOPS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Light World Death Mountain Shop',
     areaId: 'area-008',
     locationId: 'location-009',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     triggerIds: ['actor-032'],
     spawns: [
@@ -67,7 +67,7 @@ const LW_SHOPS_SCREENS: ScreenRecord[] = [
     randomizerName: 'Potion Shop',
     areaId: 'area-010',
     locationId: 'location-012',
-    tags: ['env:indoor'],
+    tags: ['tag-002'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-260', tile: { x: 20, y: 54 } },

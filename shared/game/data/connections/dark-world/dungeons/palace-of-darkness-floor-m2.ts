@@ -10,7 +10,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-363',
     direction: 'two-way',
     dungeonId: 'dungeon-006',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-608',
@@ -20,7 +20,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 47, y: 3, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-006',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-609',
@@ -30,7 +30,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-006',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-610',
@@ -40,7 +40,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-006',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-611',
@@ -50,7 +50,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 31, y: 3, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-006',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-612',
@@ -60,7 +60,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-006',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-613',
@@ -70,7 +70,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-006',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-614',
@@ -79,7 +79,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-384',
     direction: 'two-way',
     dungeonId: 'dungeon-006',
-    tags: ['dir:two-way', 'ctx:boss', 'barrier:big-key'],
+    tags: ['tag-073', 'tag-079', 'tag-058'],
   },
   {
     id: 'connection-615',
@@ -89,7 +89,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 50, y: 12, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-006',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-616',
@@ -99,7 +99,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-006',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-617',
@@ -109,7 +109,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'area', rect: { x: 41, y: 3, w: 2, h: 2 } },
     direction: 'two-way',
     dungeonId: 'dungeon-006',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-618',
@@ -119,7 +119,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south' },
     direction: 'two-way',
     dungeonId: 'dungeon-006',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-619',
@@ -129,7 +129,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'east' },
     direction: 'two-way',
     dungeonId: 'dungeon-006',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-620',
@@ -139,7 +139,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     placement: { at: 'side', side: 'south', tileRange: { axis: 'x', start: 15, end: 16 } },
     direction: 'two-way',
     dungeonId: 'dungeon-006',
-    tags: ['dir:two-way', 'ctx:internal'],
+    tags: ['tag-073', 'tag-076'],
   },
   {
     id: 'connection-634',
@@ -148,7 +148,7 @@ const DW_DUNGEON_PALACE_OF_DARKNESS_FLOOR_M2_CONNECTIONS: ConnectionRecord[] = [
     toScreenId: 'screen-270',
     direction: 'two-way',
     dungeonId: 'dungeon-006',
-    tags: ['dir:two-way', 'ctx:exit'],
+    tags: ['tag-073', 'tag-075'],
   },
 ];
 

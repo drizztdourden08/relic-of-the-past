@@ -12,7 +12,7 @@ const LW_SPECIAL_SCREENS: ScreenRecord[] = [
     areaId: 'area-000',
     locationId: 'location-000',
     position: { gridX: 0, gridY: 0 },
-    tags: ['role:spawn'],
+    tags: ['tag-014'],
     status: 'mapped',
   },
 ];

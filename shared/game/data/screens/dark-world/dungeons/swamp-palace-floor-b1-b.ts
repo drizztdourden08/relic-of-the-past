@@ -12,7 +12,7 @@ const DW_DUNGEON_SWAMP_PALACE_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     areaId: 'area-007',
     locationId: 'location-027',
     position: { gridX: 6, gridY: 3, floor: -1 },
-    tags: ['env:underground', 'role:hub'],
+    tags: ['tag-003', 'tag-009'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-109', tile: { x: 22, y: 20 } },
@@ -32,7 +32,7 @@ const DW_DUNGEON_SWAMP_PALACE_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     areaId: 'area-007',
     locationId: 'location-027',
     position: { gridX: 7, gridY: 3, floor: -1 },
-    tags: ['env:underground', 'loot:chest'],
+    tags: ['tag-003', 'tag-024'],
     status: 'mapped',
     triggerIds: ['actor-031'],
     spawns: [
@@ -57,7 +57,7 @@ const DW_DUNGEON_SWAMP_PALACE_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     areaId: 'area-007',
     locationId: 'location-027',
     position: { gridX: 8, gridY: 3, floor: -1 },
-    tags: ['env:underground', 'role:hub', 'role:entrance'],
+    tags: ['tag-003', 'tag-009', 'tag-005'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-109', tile: { x: 24, y: 12 } },
@@ -78,7 +78,7 @@ const DW_DUNGEON_SWAMP_PALACE_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     areaId: 'area-007',
     locationId: 'location-027',
     position: { gridX: 6, gridY: 4, floor: -1 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     triggerIds: ['actor-047'],
     spawns: [
@@ -96,7 +96,7 @@ const DW_DUNGEON_SWAMP_PALACE_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     areaId: 'area-007',
     locationId: 'location-027',
     position: { gridX: 4, gridY: 5, floor: -1 },
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     spawns: [
       { actorId: 'actor-214', tile: { x: 28, y: 10 } },
@@ -118,7 +118,7 @@ const DW_DUNGEON_SWAMP_PALACE_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     areaId: 'area-007',
     locationId: 'location-027',
     position: { gridX: 6, gridY: 6, floor: -1 },
-    tags: ['env:underground', 'role:puzzle'],
+    tags: ['tag-003', 'tag-015'],
     status: 'mapped',
     triggerIds: ['actor-047'],
     spawns: [
@@ -142,7 +142,7 @@ const DW_DUNGEON_SWAMP_PALACE_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     areaId: 'area-007',
     locationId: 'location-027',
     position: { gridX: 6, gridY: 7, floor: -1 },
-    tags: ['env:underground', 'role:connector'],
+    tags: ['tag-003', 'tag-011'],
     status: 'mapped',
     triggerIds: ['actor-029'],
     spawns: [
