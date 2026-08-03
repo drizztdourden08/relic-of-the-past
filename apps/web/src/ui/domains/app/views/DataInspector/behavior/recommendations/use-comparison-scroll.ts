@@ -6,7 +6,7 @@
  * OTHER side is driven — the leader is handed no `scrollTo` at all, so nothing
  * ever pushes a pane back to where it already is. That is the same shape
  * `ScrollArea`'s guard exists for (see create-scroll-guard.ts and
- * tests/design-system/scroll-area-sync.test.ts): the follower's programmatic
+ * tests/design-system/scroll-area-sync.keep.test.ts): the follower's programmatic
  * scroll fires a native event, and the guard swallows it rather than letting it
  * come back as a "user scrolled the follower" and bounce the leader.
  */

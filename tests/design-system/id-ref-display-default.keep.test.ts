@@ -157,3 +157,29 @@ describe('the rendered table — a mixed-target-kind column, with only the defau
     expect(entityKindFromId(sample.id)).toBe('area');
   });
 });
+
+/**
+ * A collection's own `id` field is itself id-shaped, so it infers as `idRef`
+ * targeting its OWN collection — with the default wired in generally, that
+ * would otherwise look the id up and hand back its own name, making the `Id`
+ * row show the same text as whatever name field the record already has. The
+ * `Id` column's one job is showing the id, so this is exempt from the default,
+ * unlike an ordinary reference to another record.
+ */
+describe('the identity field is exempt from the default — it always shows its own id', () => {
+  const idField = fieldAt(screens, 'id');
+
+  it('is itself inferred as idRef, targeting its own collection', () => {
+    expect(idField.kind).toBe('idRef');
+  });
+
+  it('substituteDisplay never runs the default resolver for it', () => {
+    expect(substituteDisplay(sample.row.id, idField, { resolveDefault: defaultIdRefDisplay })).toBeUndefined();
+  });
+
+  it('an explicit displayField still wins even on the identity field — this only closes the default', () => {
+    expect(substituteDisplay(sample.row.id, idField, {
+      displayField: NAME_PATH, resolve: () => 'chosen name', resolveDefault: defaultIdRefDisplay,
+    })).toBe('chosen name');
+  });
+});

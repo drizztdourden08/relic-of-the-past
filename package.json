@@ -20,7 +20,7 @@
     "postinstall": "node scripts/ensure-electron.mjs && npm run vault:sync",
     "ensure-electron": "node scripts/ensure-electron.mjs",
     "ensure-wasm": "node scripts/ensure-wasm.mjs",
-    "generate:enum-types": "node scripts/generate-enum-types.mjs",
+    "generate:enum-types": "node scripts/generate-enum-types-cli.mjs",
     "predev": "node scripts/ensure-electron.mjs && node scripts/ensure-wasm.mjs",
     "dev": "electron-vite dev",
     "prebuild": "node scripts/ensure-electron.mjs && node scripts/ensure-wasm.mjs",

@@ -52,10 +52,20 @@ const alreadyPresent = (content: string, category: string, value: string): boole
  * regen failure (a locked file, a bad edit shape) is worth logging but must
  * not turn a successful write into a reported failure. The next edit, or a
  * manual `npm run generate:enum-types`, catches it back up.
+ *
+ * `root` is passed straight through rather than left for `generateEnumTypes`
+ * to guess: its default guess is relative to its OWN file's location, which is
+ * only correct for the CLI running from its real, unbundled path. This writer
+ * runs from `dist/electron/main.js` in a built app — a different directory
+ * depth than the source tree, and a different one again between a dev build,
+ * an electron-vite production build and a packaged app — so the guess landed
+ * on a nonexistent `dist/shared/...` path and crashed every production launch.
+ * `root` here is the same real repo root every other writer in this file
+ * already receives, so passing it on is the whole fix.
  */
-const regenerateTypes = async (): Promise<void> => {
+const regenerateTypes = async (root: string): Promise<void> => {
   try {
-    await generateEnumTypes();
+    await generateEnumTypes(root);
   } catch (error) {
     console.error('enumeration-writer: failed to regenerate generated-types.ts', error);
   }
@@ -88,7 +98,7 @@ const allocateEnumeration = async (root: string, args: AllocateEnumerationArgs):
     const result = insertBeforeArrayClose(fresh, serializeEnumerationRecord(record));
     if (result.error) return { success: false, error: result.error };
     await writeFile(path, result.content, 'utf-8');
-    await regenerateTypes();
+    await regenerateTypes(root);
     return { success: true, record: record as Allocated<EnumerationEntry> };
   });
 };
@@ -100,7 +110,7 @@ const writeEnumeration = async (root: string, args: WriteEnumerationArgs): Promi
   const result = replaceById(content, args.enumerationId, serializeEnumerationRecord(record));
   if (result.error) return { success: false, error: result.error };
   await writeFile(path, result.content, 'utf-8');
-  await regenerateTypes();
+  await regenerateTypes(root);
   return { success: true, ids: [args.enumerationId] };
 };
 
@@ -110,7 +120,7 @@ const deleteEnumeration = async (root: string, args: DeleteEnumerationArgs): Pro
   const result = removeById(content, args.enumerationId);
   if (result.error) return { success: false, error: result.error };
   await writeFile(path, result.content, 'utf-8');
-  await regenerateTypes();
+  await regenerateTypes(root);
   return { success: true, ids: [args.enumerationId] };
 };
 

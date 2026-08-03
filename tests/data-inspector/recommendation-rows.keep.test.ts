@@ -16,6 +16,10 @@ import {
 import {
   RECOMMENDATION_GROUP_BY, RECOMMENDATION_SCHEMA, recommendationSource,
 } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/recommendation-source';
+// Imported from its own module rather than the `@ds/data` barrel on purpose:
+// the barrel pulls in the view-state binding, which touches `window` at
+// module load.
+import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
 import type { Recommendation } from '@shared/game/recommendations';
 
 const entry = (over: Partial<Recommendation> = {}): Recommendation => ({
@@ -54,10 +58,24 @@ describe('recommendationRows — one flat, kind-agnostic table', () => {
     expect(Object.keys(rows[0])).toEqual(Object.keys(rows[1]));
   });
 
-  it('shows a dash where a create genuinely has no target and no screen', () => {
+  it('keeps a create\'s missing target/screen as null, not a placeholder string', () => {
+    // A literal dash would be a sampled STRING value that fails the id pattern,
+    // degrading the whole column to plain text the moment a create sits next to
+    // any targeted finding — see the file header. null is invisible to the
+    // sampler, so the column still infers idRef off whatever real ids exist.
     const [row] = recommendationRows([entry({ action: 'create', targetId: null, screenId: null })]);
-    expect(row.targetId).toBe('—');
-    expect(row.screenId).toBe('—');
+    expect(row.targetId).toBeNull();
+    expect(row.screenId).toBeNull();
+  });
+
+  it('still infers targetId/screenId as idRef when a create (no target) sits beside a targeted finding', () => {
+    const rows = recommendationRows([
+      entry({ id: 'new-conn', action: 'create', targetId: null, screenId: 'screen-142' }),
+      entry({ id: 'fix-conn', action: 'update', targetId: 'connection-001', screenId: 'screen-088' }),
+    ]);
+    const schema = createSchemaIndex(buildSchema(rows));
+    expect(schema.byPath('targetId')?.kind).toBe('idRef');
+    expect(schema.byPath('screenId')?.kind).toBe('idRef');
   });
 
   it('spells the timestamp so its text order is its chronological order', () => {

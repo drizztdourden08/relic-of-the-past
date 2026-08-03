@@ -53,7 +53,7 @@ the widget's "On this screen" panel cannot disagree with the run.
 
 The annotation kinds are exhaustive by type: `annotation-style.ts` must register a style, glyph and
 legend for every kind in the union, an unmapped kind still draws as a neutral marker, and
-`tests/simulation/annotation-coverage.test.ts` makes a gap a test failure — so a new mechanic cannot
+`tests/simulation/annotation-coverage.keep.test.ts` makes a gap a test failure — so a new mechanic cannot
 ship invisible.
 
 ## Renderer side

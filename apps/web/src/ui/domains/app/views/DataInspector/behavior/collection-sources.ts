@@ -88,7 +88,7 @@ const collectionSource = (kind: EntityKind): InspectorSource => {
  * evaluation, when RECORD_WRITERS was still undefined, and every collection
  * silently lost its write path. Deferring to first use moves the read past the
  * point where all four have finished, so entry order stops mattering. See
- * tests/data-inspector/module-init-order.test.ts.
+ * tests/data-inspector/module-init-order.keep.test.ts.
  */
 const COLLECTION_SOURCES = Object.defineProperties(
   {},

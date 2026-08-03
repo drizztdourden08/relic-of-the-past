@@ -2,7 +2,7 @@
 /**
  * WIP scaffolding — NOT yet wired into the runtime UI. The shipping settings screen does its dependency
  * cascade inline (SettingsView.withCascade); this resolver is the more general replacement for it,
- * validated by tests/features/resolve-features.test.ts and consumed only there for now. Kept on purpose
+ * validated by tests/features/resolve-features.keep.test.ts and consumed only there for now. Kept on purpose
  * (see plans/settings-registry-map.md, the maintained source of truth) — do not flag as dead code.
  */
 import type { FeatureDef } from './feature.type'

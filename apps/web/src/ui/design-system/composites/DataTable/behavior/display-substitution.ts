@@ -22,6 +22,7 @@
  * unset, so a column that already opts into a specific field keeps reading
  * exactly that field, unchanged.
  */
+import { isIdentityField } from '../../RecordEditor';
 import type { FieldDescriptor } from '../../../data/schema/field-descriptor';
 
 /** One choosable field of the collection a reference points at. */
@@ -74,6 +75,16 @@ const asId = (value: unknown): string => {
  * than only the columns a schema config happened to opt in. Every missing
  * piece still falls through to the plain id, so a half-wired table degrades
  * exactly as it always has.
+ *
+ * The identity field is exempt from all of this, default included. Every
+ * collection's own `id` is itself id-shaped, so it infers as `idRef` targeting
+ * its OWN collection — and the default resolver, asked to explain an id by
+ * looking the id up, finds the record itself and returns its own name. The
+ * `Id` column's one job is showing the id; substituting a name there just
+ * duplicates whatever name field is already its own column, and hides the
+ * value the column exists to show behind a hover. An explicit `displayField`
+ * still wins if a column has genuinely been told to show one for `id` — this
+ * only closes the default, not a deliberate choice.
  */
 const substituteDisplay = (
   value: unknown,
@@ -85,6 +96,7 @@ const substituteDisplay = (
   if (!id) return undefined;
   const { displayField, resolve, resolveDefault } = substitution ?? {};
   if (displayField && resolve && field.targetKind) return resolve(field.targetKind, id, displayField);
+  if (isIdentityField(field.path)) return undefined;
   return resolveDefault?.(id, field.targetKind);
 };
 
