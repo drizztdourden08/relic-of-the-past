@@ -13,16 +13,30 @@
  * erasable TypeScript syntax natively, and the module has no runtime deps (its
  * only import is `import type`), so no ts-node / build step is needed here.
  *
- * Run with: `npm run generate:enum-types`.
+ * Run with: `npm run generate:enum-types` (which runs `generate-enum-types-cli.mjs`,
+ * the only file that ever invokes `generateEnumTypes` unprompted — see its own
+ * header for why that trigger cannot live here).
+ *
+ * The repo root defaults to a path relative to THIS script's own file — correct
+ * for the CLI, where the script always runs from its real, unbundled location.
+ * The Electron writer that calls `generateEnumTypes` at runtime is a different
+ * story: `enumeration-writer.ts` gets bundled into `dist/electron/main.js`, and
+ * once that happens `import.meta.url` resolves to the BUNDLE's location, not
+ * this file's original one — the same bundled code can land at a different
+ * directory depth in dev, an electron-vite production build and a packaged
+ * app. So `generateEnumTypes` takes an optional `root`; a caller that already
+ * knows the real repo root (the writer does — every other writer receives one
+ * the same way, see `workspace-root.ts`) passes it in and skips this guess
+ * entirely, and only the CLI ever relies on the default.
  */
 import { writeFileSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.join(SCRIPT_DIR, '..');
-const ENUMERATION_SOURCE = path.join(ROOT, 'shared/game/data/enumeration/enumeration.ts');
-const OUTPUT_PATH = path.join(ROOT, 'shared/game/data/enumeration/generated-types.ts');
+const DEFAULT_ROOT = path.join(SCRIPT_DIR, '..');
+const enumerationSourceFor = (root) => path.join(root, 'shared/game/data/enumeration/enumeration.ts');
+const outputPathFor = (root) => path.join(root, 'shared/game/data/enumeration/generated-types.ts');
 
 /** category → the exported type name every consuming file already expects. */
 const CATEGORY_TYPE_NAMES = {
@@ -79,24 +93,36 @@ const buildGeneratedTypesSource = (allEnumeration) => {
  * once, but the Electron writer calls this repeatedly for the life of the
  * process, and Node's ESM loader otherwise caches the first read forever.
  */
-const loadAllEnumeration = async () => {
-  const mod = await import(`${pathToFileURL(ENUMERATION_SOURCE).href}?t=${Date.now()}`);
+const loadAllEnumeration = async (enumerationSource) => {
+  const mod = await import(`${pathToFileURL(enumerationSource).href}?t=${Date.now()}`);
   return mod.ALL_ENUMERATION;
 };
 
-/** The core generation step — reads the real data, writes the generated file. Reused by callers other than the CLI (e.g. the Data Inspector's write path). */
-const generateEnumTypes = async () => {
-  const allEnumeration = await loadAllEnumeration();
+/**
+ * The core generation step — reads the real data, writes the generated file.
+ * Reused by callers other than the CLI (e.g. the Data Inspector's write path),
+ * which pass their own already-correct repo root rather than this file's guess.
+ */
+const generateEnumTypes = async (root = DEFAULT_ROOT) => {
+  const allEnumeration = await loadAllEnumeration(enumerationSourceFor(root));
   const source = buildGeneratedTypesSource(allEnumeration);
-  writeFileSync(OUTPUT_PATH, source);
-  return OUTPUT_PATH;
+  const outputPath = outputPathFor(root);
+  writeFileSync(outputPath, source);
+  return outputPath;
 };
 
-const isMain = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
-if (isMain) {
-  generateEnumTypes().then((outPath) => {
-    console.log('Wrote', outPath);
-  });
-}
-
+// No self-invoking "am I the CLI entry point" check here on purpose — this
+// module is imported into `enumeration-writer.ts`, which gets bundled into
+// `dist/electron/main.js`. A `process.argv[1] === import.meta.url` check would
+// have been true there too: launching `electron dist/electron/main.js` makes
+// `argv[1]` literally that same bundled file, which is also this code's own
+// `import.meta.url` once bundling has folded it in. That check DID live here
+// once, and it fired on every single app launch as a result — silently
+// running the CLI path with no caller-supplied root, which is exactly the
+// wrong-directory guess that crashed every production build
+// (`ERR_MODULE_NOT_FOUND` for `dist/shared/.../enumeration.ts`). The fix is
+// structural, not a smarter check: nothing in this file may ever call itself.
+// `generate-enum-types-cli.mjs` is the one place that does, and it is never
+// imported by anything else, so it can never end up bundled next to a
+// different real entry point.
 export { buildGeneratedTypesSource, generateEnumTypes };

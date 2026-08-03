@@ -3,4 +3,4 @@
 import type { EnumerationEntry } from '../shared/game/data/types/enumeration';
 
 export declare const buildGeneratedTypesSource: (allEnumeration: readonly EnumerationEntry[]) => string;
-export declare const generateEnumTypes: () => Promise<string>;
+export declare const generateEnumTypes: (root?: string) => Promise<string>;

@@ -9,7 +9,15 @@ Logic is covered by Vitest. Run the file you're working on rather than the whole
 npx vitest run tests/<file>
 ```
 
-Tests live under `tests/`, or alongside the code as `*.test.ts`.
+Tests live under `tests/`.
+
+Vitest tests are **throwaway by default**, the same rule as Playwright specs below: write it, run it, delete it once it's done its job. A test becomes permanent only when the maintainer asks for it, and a permanent one carries a `.keep.test.ts` suffix instead of `.test.ts` — wherever it lives under `tests/` (Vitest tests aren't segregated into a scratch vs. permanent folder the way Playwright specs are, since they're organized by subject, not by lifespan). `.gitignore` enforces the default: `tests/**/*.test.ts` is ignored, `tests/**/*.keep.test.ts` is excepted, so an un-kept test naturally never reaches a commit.
+
+Don't add the `.keep` suffix, or rename an existing test to add it, on your own initiative — if a throwaway looks worth keeping, say so and ask.
+
+### Test-coverage registry
+
+`tests/COVERAGE.md` is a living matrix of app features/areas against their test coverage (covered / partial / none), kept at the root of `tests/` on purpose so a gap is visible at a glance. **It must be kept up to date**: when a `.keep.test.ts` file is added, removed, or its target area changes, update the matching row in the same change. Don't let it drift into a stale snapshot.
 
 ## Checking the running app
 

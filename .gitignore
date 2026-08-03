@@ -17,8 +17,6 @@ out/
 # WASM build artifacts
 core/wasm-build/output/
 
-# One-time id-assignment manifest (build artifact, regenerate via generate-ids.ts)
-scripts/generate-ids/output/
 apps/web/public/wasm/
 apps/desktop/public/wasm/
 
@@ -86,6 +84,11 @@ tests/test-results/
 tests/screenshots/
 # Ephemeral Playwright specs (write, run, delete — never committed)
 tests/scratch/
+# Ephemeral Vitest tests — throwaway by default, same as Playwright specs above.
+# A permanent one carries a .keep.test.ts suffix instead of .test.ts and is
+# excepted below. See docs/contributing/testing.md.
+tests/**/*.test.ts
+!tests/**/*.keep.test.ts
 
 # Temporary/throwaway scripts (not tracked)
 temp-scripts/

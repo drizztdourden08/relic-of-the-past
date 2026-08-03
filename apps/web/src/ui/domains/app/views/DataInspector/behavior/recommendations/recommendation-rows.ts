@@ -14,11 +14,20 @@
  * is derived from the rows, and a mixed-type column would infer as `unknown`
  * and lose its filters. The timestamp keeps a sortable spelling for the same
  * reason — the text order and the chronological order have to agree.
+ *
+ * `targetId`/`screenId` stay `null` for a `create` finding rather than a dash
+ * placeholder — the schema deriver only infers a field as `idRef` when EVERY
+ * sampled value matches the id pattern, and it samples the present (non-null)
+ * values only. A literal `'—'` string is itself a sampled value that fails the
+ * pattern, so one `create` sitting next to any targeted finding degraded the
+ * whole column to plain text for every row — losing id-ref styling, the
+ * name-instead-of-id substitution, and click-to-navigate even for rows that DO
+ * have a real target. `null` is invisible to the sampler, so the column reads
+ * `idRef` off whatever real ids are present; the field kit's own absent-value
+ * rendering already shows the same dash, just downstream of inference instead
+ * of poisoning it.
  */
 import type { Confidence, Recommendation, RecommendationAction } from '@shared/game/recommendations';
-
-/** Stands in for a field a finding genuinely has no value for. */
-const NONE = '—';
 
 /** `certain` before `likely` — the batch-accept gate, so it leads the list. */
 const CONFIDENCE_RANK: Record<Confidence, number> = { certain: 0, likely: 1 };
@@ -28,11 +37,11 @@ interface RecommendationRow {
   id: string;
   kind: string;
   action: RecommendationAction;
-  /** The record being changed; a dash for a `create`, which has no target yet. */
-  targetId: string;
+  /** The record being changed; `null` for a `create`, which has no target yet. */
+  targetId: string | null;
   reason: string;
   confidence: Confidence;
-  screenId: string;
+  screenId: string | null;
   /** `YYYY-MM-DD HH:MM`, UTC — text order and chronological order agree. */
   firstSeenAt: string;
 }
@@ -43,10 +52,10 @@ const rowOf = (entry: Recommendation): RecommendationRow => ({
   id: entry.id,
   kind: entry.kind,
   action: entry.action,
-  targetId: entry.targetId ?? NONE,
+  targetId: entry.targetId ?? null,
   reason: entry.reason,
   confidence: entry.confidence,
-  screenId: entry.screenId ?? NONE,
+  screenId: entry.screenId ?? null,
   firstSeenAt: stampOf(entry.firstSeenAt),
 });
 
@@ -65,5 +74,5 @@ const openRecommendations = (entries: readonly Recommendation[]): readonly Recom
 const recommendationRows = (entries: readonly Recommendation[]): readonly RecommendationRow[] =>
   [...openRecommendations(entries)].sort(byConfidenceThenAge).map(rowOf);
 
-export { CONFIDENCE_RANK, NONE, byConfidenceThenAge, openRecommendations, recommendationRows };
+export { CONFIDENCE_RANK, byConfidenceThenAge, openRecommendations, recommendationRows };
 export type { RecommendationRow };

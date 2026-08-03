@@ -22,7 +22,7 @@ import { Box } from '../../../primitives/Box';
 import { Text } from '../../../primitives/Text';
 import { resolveFieldKit } from '../../field-kits';
 import { unknownKit } from '../../field-kits/unknown-kit';
-import { detectUnionBranch } from '../../RecordEditor';
+import { detectUnionBranch, isIdentityField } from '../../RecordEditor';
 import { getPath } from '../../../data/schema/path';
 import type { FieldDescriptor, FieldKind } from '../../../data/schema/field-descriptor';
 import type { CompactFieldProps } from '../CompactRecordView.type';
@@ -54,13 +54,19 @@ const nestedChildrenFor = (
  * every other kind — same contract `substituteDisplay` keeps for `DataTable`,
  * kept local here since this view has no per-column configuration to check
  * first, only the one baseline resolver.
+ *
+ * The identity field is exempt, same reasoning as `DataTable`'s
+ * `substituteDisplay`: a collection's own `id` infers as `idRef` targeting
+ * itself, so the default resolver would otherwise look the record up by its
+ * own id and hand back its own name — duplicating whatever name field is
+ * already its own row and hiding the id this row exists to show.
  */
 const idRefDisplay = (
   field: FieldDescriptor,
   value: unknown,
   resolve: CompactFieldProps['resolveIdRefDisplay'],
 ): string | undefined => {
-  if (field.kind !== 'idRef' || !resolve) return undefined;
+  if (field.kind !== 'idRef' || !resolve || isIdentityField(field.path)) return undefined;
   const id = typeof value === 'string' ? value.trim() : '';
   return id ? resolve(id, field.targetKind) : undefined;
 };
