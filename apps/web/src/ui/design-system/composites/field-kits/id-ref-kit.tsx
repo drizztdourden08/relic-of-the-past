@@ -25,6 +25,7 @@ import { TextInput } from '../../primitives/TextInput';
 import { toText } from './coerce';
 import { naturalTextCompare, nullsLast } from './compare';
 import { isEmptyValue } from './emptiness';
+import { formatIdRefDisplay } from './id-ref-format';
 import { registerFieldKit } from './registry';
 import { IdRefSelect } from './sub-components/IdRefSelect';
 import type {
@@ -97,9 +98,12 @@ const EditorControl = (props: EditorControlProps) => {
  * output (or delegates from the row) and reads those attributes to resolve a
  * display name and to open the referenced record.
  *
- * `options.display` only changes the TEXT. Both attributes, and the tooltip,
- * keep the real id — what a reference points at is not a matter of how it is
- * being shown, so a cell reading as a name still follows to the same record.
+ * `options.display` only changes the TEXT — `formatIdRefDisplay` turns whatever
+ * resolved (or nothing) into `"Name (id)"` or the bare id, the one formatting
+ * rule every reference reads through. Both attributes, and the tooltip, keep
+ * the real id regardless — what a reference points at is not a matter of how
+ * it is being shown, so a cell reading as a name still follows to the same
+ * record.
  */
 const renderCell = (
   value: unknown,
@@ -108,7 +112,6 @@ const renderCell = (
 ): ReactNode => {
   const id = toText(value).trim();
   if (!id) return <Text className="field-kit__muted">{ABSENT}</Text>;
-  const shown = options?.display?.trim();
   return (
     <Text
       className="field-kit__ref"
@@ -116,7 +119,7 @@ const renderCell = (
       data-id-ref={id}
       data-target-kind={field.targetKind}
     >
-      {shown || id}
+      {formatIdRefDisplay(id, options?.display)}
     </Text>
   );
 };

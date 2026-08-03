@@ -23,6 +23,11 @@ interface UseDataTableInput<T> {
    * visible top level, each opening in the persistent fit-to-content mode.
    */
   initial?: readonly TableColumn[];
+  /**
+   * Grouping the table opens with when nothing was saved for it. Omitted, it
+   * opens flat, which is what every collection did before this existed.
+   */
+  initialGroupBy?: readonly string[];
 }
 
 interface DataTableState<T> extends TableState {
@@ -71,14 +76,18 @@ interface DataTableState<T> extends TableState {
 const defaultColumns = (schema: readonly FieldDescriptor[]): readonly TableColumn[] =>
   schema.filter((field) => !field.hidden).map((field) => ({ path: field.path, fit: true }));
 
-const initialState = (schema: readonly FieldDescriptor[], initial?: readonly TableColumn[]): TableState => ({
+const initialState = (
+  schema: readonly FieldDescriptor[],
+  initial?: readonly TableColumn[],
+  initialGroupBy?: readonly string[],
+): TableState => ({
   columns: initial ?? defaultColumns(schema),
   sort: [],
-  groupBy: [],
+  groupBy: initialGroupBy ? [...initialGroupBy] : [],
 });
 
-const useDataTable = <T>({ rows, schema, initial }: UseDataTableInput<T>): DataTableState<T> => {
-  const [state, setState] = useState<TableState>(() => initialState(schema, initial));
+const useDataTable = <T>({ rows, schema, initial, initialGroupBy }: UseDataTableInput<T>): DataTableState<T> => {
+  const [state, setState] = useState<TableState>(() => initialState(schema, initial, initialGroupBy));
 
   const index = useMemo(() => createSchemaIndex(schema), [schema]);
   const derived = useMemo(

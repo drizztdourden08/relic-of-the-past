@@ -72,6 +72,9 @@ interface EditorControlProps<V = unknown> {
   bounds?: NumberBounds;
 }
 
+/** Resolves one id's display name, given the collection it names — see `resolveIdRefDisplay` below. */
+type ArrayIdRefResolver = (id: string, targetKind?: string) => string | undefined;
+
 /**
  * What a caller may say about ONE cell, over and above the value itself.
  *
@@ -82,9 +85,16 @@ interface EditorControlProps<V = unknown> {
  * something a kit may reach. What stays the kit's own business is that the
  * substitution is cosmetic: the real value still travels on the element, so a
  * reference is followed by its id no matter what is on screen.
+ *
+ * `resolveIdRefDisplay` is `display`'s per-entry counterpart: an `array` of
+ * `idRef` elements holds N ids, not one, so it cannot be resolved to a single
+ * finished string ahead of time — `array-kit` calls it once per element
+ * instead. Every other kit ignores it exactly as it already ignores `display`
+ * when it does not apply.
  */
 interface CellRenderOptions {
   display?: string;
+  resolveIdRefDisplay?: ArrayIdRefResolver;
 }
 
 interface FieldTypeStrategy<V = unknown> {
@@ -112,6 +122,6 @@ const registeredKitKinds = (): readonly FieldKind[] => [...kits.keys()];
 
 export { registerFieldKit, registeredKitKinds, resolveFieldKit };
 export type {
-  CellRenderOptions, EditorControlProps, FieldTypeStrategy, FilterControlProps,
+  ArrayIdRefResolver, CellRenderOptions, EditorControlProps, FieldTypeStrategy, FilterControlProps,
   IdRefOption, IdRefOptionResolver, NumberBounds,
 };

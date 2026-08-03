@@ -47,6 +47,19 @@ describe('capture and restore — the memento round trip', () => {
     expect('tab' in capture(TABLE, [])).toBe(false);
   });
 
+  // The Data Inspector's fold state (CollapsibleDetail) persists through the
+  // same snapshot as the filters and the tab, keyed per collection.
+  it('carries the collapsed flag out and back, alongside the tab', () => {
+    const snapshot = capture(TABLE, [], 'json', true);
+    expect(snapshot.collapsed).toBe(true);
+    expect(restore(snapshot).collapsed).toBe(true);
+  });
+
+  it('leaves the collapsed flag out entirely when there is none', () => {
+    expect('collapsed' in capture(TABLE, [])).toBe(false);
+    expect('collapsed' in restore(capture(TABLE, []))).toBe(false);
+  });
+
   it('copies rather than aliases, so later edits cannot reach back in', () => {
     const snapshot = capture(TABLE, [createClause('name', 'contains', 'a')]);
     expect(snapshot.columns[0]).not.toBe(TABLE.columns[0]);

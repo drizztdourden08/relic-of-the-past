@@ -33,12 +33,12 @@ import './DataTable.css';
 
 const DataTable = <T,>(props: DataTableProps<T>) => {
   const {
-    rows, schema, getRowId, viewKey, fallbackColumns,
+    rows, schema, getRowId, viewKey, fallbackColumns, fallbackGroupBy,
     onSelect, selectedId, countLabel, emptyMessage = 'Nothing to show.',
-    resolveTargetFields, resolveIdRefDisplay,
+    resolveTargetFields, resolveIdRefDisplay, resolveIdRefDefault,
   } = props;
 
-  const { table, sessionView, setSessionView } = useTableView({ rows, schema, viewKey, fallbackColumns });
+  const { table, sessionView, setSessionView } = useTableView({ rows, schema, viewKey, fallbackColumns, fallbackGroupBy });
   const index = useMemo(() => createSchemaIndex(schema), [schema]);
 
   const groups = useExpandedGroups({
@@ -138,9 +138,10 @@ const DataTable = <T,>(props: DataTableProps<T>) => {
     onCellDragOver: drag.onDragOver,
     onCellDrop: drag.onDrop,
     resolveIdRefDisplay,
+    resolveIdRefDefault,
   }), [
     table.columns, index, drag.draggingPath, drag.onDragOver, drag.onDrop,
-    getRowId, selectedId, onSelect, groups, resolveIdRefDisplay,
+    getRowId, selectedId, onSelect, groups, resolveIdRefDisplay, resolveIdRefDefault,
   ]);
 
   return (

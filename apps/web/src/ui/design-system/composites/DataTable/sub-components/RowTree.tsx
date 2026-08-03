@@ -23,7 +23,7 @@ interface RowTreeProps<T> {
 
 const RowTree = <T,>(props: RowTreeProps<T>) => {
   const { nodes, parentUid, context } = props;
-  const { columns, schema, getRowId, isExpanded, onToggleGroup, resolveIdRefDisplay } = context;
+  const { columns, schema, getRowId, isExpanded, onToggleGroup, resolveIdRefDisplay, resolveIdRefDefault } = context;
 
   /*
    * A grouping level is a COLUMN's grouping level, so the display choice the
@@ -34,6 +34,7 @@ const RowTree = <T,>(props: RowTreeProps<T>) => {
   const displayFor = (path: string) => ({
     displayField: columns.find((column) => column.path === path)?.displayField,
     resolve: resolveIdRefDisplay,
+    resolveDefault: resolveIdRefDefault,
   });
 
   return (

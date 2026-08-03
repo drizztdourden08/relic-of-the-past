@@ -141,6 +141,7 @@ const EditorRow = (props: EditorRowProps) => {
   const { field, binding, depth } = props;
   const value = binding.value(field.path);
   const dirty = binding.isDirty(field.path);
+  const changed = binding.isChanged?.(field.path) ?? false;
   const pair = positionPairOf(field);
   const plan: NestedPlan | null = pair
     ? { fields: pair.others }
@@ -150,7 +151,7 @@ const EditorRow = (props: EditorRowProps) => {
     return (
       <Field
         label={labelFor(field)}
-        className={dirty ? 'record-editor__row record-editor__row--dirty' : 'record-editor__row'}
+        className={`record-editor__row${changed ? ' record-editor__row--changed' : ''}${dirty ? ' record-editor__row--dirty' : ''}`}
       >
         {controlFor(field, value, binding, depth)}
       </Field>

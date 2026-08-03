@@ -10,5 +10,5 @@ export { buildPickerNodes, pickableLeafPaths } from './behavior/field-picker-nod
 export type { PickerNode } from './behavior/field-picker-nodes';
 export { substituteDisplay } from './behavior/display-substitution';
 export type {
-  DisplaySubstitution, IdRefDisplayResolver, IdRefTargetField, IdRefTargetFieldResolver,
+  DisplaySubstitution, IdRefDefaultResolver, IdRefDisplayResolver, IdRefTargetField, IdRefTargetFieldResolver,
 } from './behavior/display-substitution';

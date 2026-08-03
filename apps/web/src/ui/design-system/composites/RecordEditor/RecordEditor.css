@@ -45,10 +45,21 @@
   text-transform: none;
 }
 
+/* Changed by whatever produced this record, not by the person looking at it —
+   the same green a code block marks a changed line with. Declared before the
+   dirty rule so a row that is both reads as dirty: an edit made here is the
+   more urgent of the two facts. */
+.record-editor__row--changed {
+  background: var(--c-green-soft);
+  border-inline-start-color: var(--c-green-bright);
+}
+
 /* Edited but not yet saved. */
 .record-editor__row--dirty {
   border-inline-start-color: var(--c-gold);
 }
+
+
 
 .record-editor__optional {
   margin-inline-start: var(--space-xs);

@@ -54,6 +54,14 @@ interface RecordEditorProps<T> {
   onSave?: (next: T) => Promise<void>;
   disabled?: boolean;
   /**
+   * Field paths this record ALREADY differs on before anybody touches the form
+   * — a comparison view marking what a proposal changed. Rendered distinctly
+   * from the dirty marker on purpose: one says "somebody else changed this",
+   * the other says "you did", and a form that spelled them the same way could
+   * not be used to review a change.
+   */
+  changedPaths?: readonly string[];
+  /**
    * What the collections behind this record's id references hold. Supplying it
    * turns every reference field into a searchable picker; omitting it leaves
    * them the plain id inputs they are on their own.
@@ -118,6 +126,8 @@ interface EditorBinding {
   value: (path: string) => unknown;
   onChange: (path: string, value: unknown) => void;
   isDirty: (path: string) => boolean;
+  /** Changed by whatever produced this record, before any edit here. */
+  isChanged?: (path: string) => boolean;
   disabled: boolean;
   /** Passed straight to the kits; absent means every one of them falls back. */
   resolveIdRefOptions?: IdRefOptionResolver;

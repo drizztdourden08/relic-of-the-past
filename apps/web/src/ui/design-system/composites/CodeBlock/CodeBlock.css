@@ -23,3 +23,10 @@
 .code-block__line {
   display: block;
 }
+
+/* Left accent + soft tint, matching the green already used for `inserted`
+   tokens in code-theme.ts — reads as "added/changed" without a new color. */
+.code-block__line--changed {
+  background: var(--c-green-soft);
+  box-shadow: inset var(--border-width-thick) 0 0 0 var(--c-green-bright);
+}

@@ -12,7 +12,7 @@ const SCREEN = 'data-inspector:screen' as ViewKey;
 const ITEM = 'data-inspector:item' as ViewKey;
 
 beforeEach(() => {
-  useDataViewStore.setState({ views: {} });
+  useDataViewStore.setState({ views: {}, pendingRecord: null, pendingRecommendation: null });
 });
 
 describe('data-view-store — per-key isolation', () => {
@@ -71,5 +71,45 @@ describe('data-view-store — per-key isolation', () => {
     // The second call carried no selectedId, and whole-object semantics mean
     // it is gone, not merged forward from the first call.
     expect(useDataViewStore.getState().getSessionView(SCREEN)).toEqual({ ...DEFAULT_SESSION_VIEW, scrollTop: 30 });
+  });
+});
+
+// `openRecord` is the plain-record sibling of `openRecommendation`: same
+// bargain (stash the request, ring the registered opener), a different field
+// so a pending finding and a pending plain record never clobber each other.
+describe('data-view-store — openRecord, the plain-record handoff', () => {
+  it('starts with nothing pending', () => {
+    expect(useDataViewStore.getState().pendingRecord).toBeNull();
+  });
+
+  it('stashes the kind and id an edit button (or a reference) asked for', () => {
+    useDataViewStore.getState().openRecord('connection', 'connection-042');
+    expect(useDataViewStore.getState().pendingRecord).toEqual({ kind: 'connection', id: 'connection-042' });
+  });
+
+  it('rings the registered opener, same as openRecommendation does', () => {
+    let rung = 0;
+    useDataViewStore.getState().registerInspectorOpener(() => { rung += 1; });
+    useDataViewStore.getState().openRecord('screen', 'screen-183');
+    expect(rung).toBe(1);
+    useDataViewStore.getState().registerInspectorOpener(null);
+  });
+
+  it('does nothing when nothing is registered to open', () => {
+    useDataViewStore.getState().registerInspectorOpener(null);
+    expect(() => useDataViewStore.getState().openRecord('item', 'item-001')).not.toThrow();
+  });
+
+  it('clearPendingRecord spends the request without touching pendingRecommendation', () => {
+    useDataViewStore.getState().openRecord('actor', 'actor-007');
+    useDataViewStore.getState().clearPendingRecord();
+    expect(useDataViewStore.getState().pendingRecord).toBeNull();
+    expect(useDataViewStore.getState().pendingRecommendation).toBeNull();
+  });
+
+  it('a later openRecord call replaces an earlier still-pending one', () => {
+    useDataViewStore.getState().openRecord('connection', 'connection-001');
+    useDataViewStore.getState().openRecord('connection', 'connection-002');
+    expect(useDataViewStore.getState().pendingRecord).toEqual({ kind: 'connection', id: 'connection-002' });
   });
 });

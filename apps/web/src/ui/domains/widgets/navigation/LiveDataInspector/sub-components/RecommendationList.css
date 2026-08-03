@@ -1,0 +1,30 @@
+/* @layer renderer-widgets @kind style */
+
+.live-rec-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.live-rec-list__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-xs) 0;
+}
+
+.live-rec-list__count {
+  font-weight: var(--weight-bold);
+  font-size: var(--text-sm);
+}
+
+.live-rec-list__chevron {
+  color: var(--c-text-muted);
+}
+
+.live-rec-list__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}

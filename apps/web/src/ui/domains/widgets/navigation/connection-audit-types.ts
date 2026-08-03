@@ -4,8 +4,9 @@
  * dataset against the game's REAL in-game transitions for the current screen.
  */
 
-import type { ConnectionTag, ScreenId } from '@shared/game/data';
+import type { ConnectionRecord, ConnectionTag, ScreenId } from '@shared/game/data';
 import type { FileTarget } from '@shared/game/data/record-file-targets';
+import type { PendingConnectionRecord } from '@shared/game/data/record-codegen';
 import type { WriteConnectionsArgs } from '@shared/ipc/screen-editor-contract';
 
 /** How a real in-game destination index should be resolved to a screen id. */
@@ -36,6 +37,14 @@ interface ConnectionSuggestion {
    * different shape on its way to disk.
    */
   code: string;
+  /**
+   * The record the finding is ABOUT — the one to insert (no id yet) or the
+   * existing one to remove. `code` is its rendered preview; this is the thing
+   * itself, so a consumer that needs identity or a field value reads it here
+   * rather than parsing the text back out. It stays populated even when
+   * `write` is null, which is the case where the preview is all `code` offers.
+   */
+  record: PendingConnectionRecord | ConnectionRecord;
   /** Human-readable justification shown in the widget. */
   reason: string;
   /** Connections source file, relative to shared/game/data/. */

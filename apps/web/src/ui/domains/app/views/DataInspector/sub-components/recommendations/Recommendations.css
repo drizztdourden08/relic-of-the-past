@@ -1,0 +1,105 @@
+/* @layer renderer-app @kind style */
+
+/* The foldable detail column mechanism itself (the toggle, the collapsed
+   width, the rotated title) now lives in the shared CollapsibleDetail.css —
+   every collection's detail pane uses it, not just this comparison view. */
+
+/* Two records side by side need more room than the one a collection shows. */
+.data-inspector__master-detail--comparing {
+  grid-template-columns: 1fr 1.5fr;
+}
+
+/* ─── The finding, above the panes ─── */
+.rec-detail__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-height: 0;
+  flex: 1;
+  padding-top: var(--space-md);
+}
+
+.rec-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.rec-summary__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.rec-summary__claim {
+  font-weight: var(--weight-bold);
+}
+
+.rec-summary__origin,
+.rec-summary__detail {
+  color: var(--c-text-muted);
+  font-size: var(--text-sm);
+}
+
+.rec-summary__reason {
+  margin: 0;
+}
+
+.rec-summary__evidence {
+  margin: 0;
+  padding-inline-start: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  font-size: var(--text-sm);
+}
+
+.rec-summary__source {
+  font-weight: var(--weight-bold);
+  margin-inline-end: var(--space-xs);
+}
+
+.rec-actions {
+  flex-wrap: wrap;
+}
+
+.rec-actions__error {
+  color: var(--c-danger);
+  font-size: var(--text-sm);
+}
+
+/* ─── The two panes ─── */
+.rec-detail__panes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+  flex: 1;
+  min-height: 0;
+}
+
+.rec-pane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.rec-pane__title {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--c-text-dim);
+  border-bottom: 1px solid var(--c-border);
+  flex-shrink: 0;
+}
+
+.rec-pane > .data-inspector__detail {
+  flex: 1;
+  min-height: 0;
+}

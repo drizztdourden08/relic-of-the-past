@@ -11,6 +11,16 @@ type InspectorRow = Record<string, unknown>;
 
 type InspectorSource = CollectionSource<InspectorRow>;
 
+/**
+ * What the screen can be showing: one of the eleven real collections, or the
+ * recommendations pseudo-collection — rows that are FINDINGS about the dataset
+ * rather than records in it. It is a separate literal rather than a twelfth
+ * `EntityKind` because nothing outside this screen has one to store, write or
+ * reference: there is no `Data/recommendations` record, no id prefix, and no
+ * `COLLECTION_SOURCES` entry (asking for one would throw).
+ */
+type InspectorKind = EntityKind | 'recommendations';
+
 /** What a clicked id reference resolved to, ready to select. */
 interface IdRefTarget {
   kind: EntityKind;
@@ -19,4 +29,4 @@ interface IdRefTarget {
   label: string;
 }
 
-export type { IdRefTarget, InspectorRow, InspectorSource };
+export type { IdRefTarget, InspectorKind, InspectorRow, InspectorSource };

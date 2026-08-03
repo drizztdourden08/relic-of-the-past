@@ -36,6 +36,7 @@ const CATEGORY_TYPE_NAMES = {
   'check-kind': 'CheckKind',
   'item-category': 'ItemCategory',
   'item-origin': 'ItemOrigin',
+  'review-status': 'ReviewStatus',
 };
 
 const HEADER = `/* @layer shared-game @kind generated */

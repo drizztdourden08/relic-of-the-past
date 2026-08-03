@@ -25,7 +25,10 @@ import type {
 import type {
   ActorRecord, AreaRecord, CheckRecord, DungeonRecord, ItemRecord, LocationRecord,
 } from '@shared/game/data/types';
+import type { EntityKind } from '@shared/game/data';
 import type { UiViewsMap } from './ui-views-contract';
+import type { ReviewEntry, ReviewFile } from './review-contract';
+import type { DetectionContext, DraftRecommendation, PassResult, Recommendation } from './recommendation-contract';
 
 
 type Result = { success: boolean; error?: string };
@@ -186,6 +189,25 @@ interface InvokeContract {
   // debounced by the renderer repo. See shared/ipc/ui-views-contract.ts.
   'uiViews:load': () => Promise<UiViewsMap>;
   'uiViews:save': (data: UiViewsMap) => Promise<void>;
+
+  // Data Inspector review layer — a personal curation status/note/timestamps
+  // pair per record, one file per collection (Data/review/<kind>.json), never
+  // inside the committed dataset. Generalizes the three legacy single-purpose
+  // files above (spriteReview/connectionReview/navReview, now superseded) to
+  // all eleven collections. The main process merges one entry per call rather
+  // than trusting a whole map from the renderer — see review-contract.ts.
+  'review:load': (kind: EntityKind) => Promise<ReviewFile>;
+  'review:save': (kind: EntityKind, id: string, entry: ReviewEntry) => Promise<void>;
+
+  // Recommendation store — one file per collection (Data/recommendations/<kind>.json).
+  // The COLLECTION lives in the main process: folding a pass and recording a verdict
+  // are both read-modify-write over a whole file, and splitting either across an IPC
+  // round trip would let two callers interleave. See recommendation-contract.ts.
+  'recommendations:load': (kind: EntityKind) => Promise<readonly Recommendation[]>;
+  'recommendations:applyPass': (kind: EntityKind, context: DetectionContext,
+    detectorIds: readonly string[], drafts: readonly DraftRecommendation[]) => Promise<PassResult>;
+  'recommendations:decide': (kind: EntityKind, id: string,
+    state: 'accepted' | 'dismissed') => Promise<readonly Recommendation[]>;
 
   // Test automation
   'test:getArgs': () => Promise<{ autoState: number | string | null; screenshot: string | null }>;

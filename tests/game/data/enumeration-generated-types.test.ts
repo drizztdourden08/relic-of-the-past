@@ -34,3 +34,26 @@ describe('enumeration/generated-types.ts', () => {
     }
   });
 });
+
+describe('review-status category', () => {
+  it('seeds exactly 5 values, in the untouched → verified progression', () => {
+    const values = ALL_ENUMERATION.filter((entry) => entry.category === 'review-status').map((entry) => entry.value);
+    expect(values).toEqual(['untouched', 'in-review', 'needs-work', 'accepted', 'verified']);
+  });
+
+  it('applies to every entity kind, since review covers all eleven collections', () => {
+    const entries = ALL_ENUMERATION.filter((entry) => entry.category === 'review-status');
+    expect(entries.length).toBeGreaterThan(0);
+    for (const entry of entries) {
+      expect(entry.appliesTo).toContain('screen');
+      expect(entry.appliesTo).toContain('enumeration');
+      expect(entry.appliesTo.length).toBe(11);
+    }
+  });
+
+  it('regenerated a real ReviewStatus union in generated-types.ts', () => {
+    const source = readFileSync(GENERATED_FILE, 'utf8');
+    expect(source).toContain("type ReviewStatus = 'untouched' | 'in-review' | 'needs-work' | 'accepted' | 'verified';");
+    expect(source).toMatch(/export type \{[\s\S]*\bReviewStatus\b[\s\S]*\};/);
+  });
+});

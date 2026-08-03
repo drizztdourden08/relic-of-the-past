@@ -32,6 +32,12 @@
   overflow: hidden;
 }
 
+/* The list takes the width a folded detail column gave up — any collection's
+   plain record view or the recommendation comparison, whichever is open. */
+.data-inspector__master-detail--folded {
+  grid-template-columns: 1fr max-content;
+}
+
 /* The shared detail pane normally scrolls as one block; here the tab strip must
    stay put while only the record content underneath it scrolls, so the scrolling
    moves down to .data-inspector__detail-content and this pane just clips. */

@@ -38,3 +38,5 @@ export { DeleteGuardDialog } from './DeleteGuardDialog';
 export type { DeleteGuardDialogProps } from './DeleteGuardDialog';
 export { CreateRecordDialog } from './CreateRecordDialog';
 export type { CreateOutcome, CreateRecordDialogProps } from './CreateRecordDialog';
+export { CompactRecordView } from './CompactRecordView';
+export type { CompactRecordViewProps } from './CompactRecordView';

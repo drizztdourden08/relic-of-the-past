@@ -54,7 +54,7 @@ const ENTITY_COUNTS: Record<EntityKind, number> = {
   area: 17,
   dungeon: 13,               // verified via generate-ids.ts against the real dungeon field values
   'item-group': 7,           // Swords, Bottles, Crystals, Pendants, Medallions, Bows, Gloves
-  enumeration: 57,           // one row per value across the 10 closed-set label categories
+  enumeration: 62,           // one row per value across the 11 closed-set label categories
 };
 
 const ID_PAD_WIDTH = Math.max(...Object.values(ENTITY_COUNTS)).toString().length;

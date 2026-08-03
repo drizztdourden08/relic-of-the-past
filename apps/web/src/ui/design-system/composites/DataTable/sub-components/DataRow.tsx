@@ -23,7 +23,7 @@ const DataRow = <T,>(props: DataRowProps<T>) => {
   const { row, context } = props;
   const {
     columns, schema, draggingPath, getRowId, selectedId, onSelect,
-    onCellDragOver, onCellDrop, resolveIdRefDisplay,
+    onCellDragOver, onCellDrop, resolveIdRefDisplay, resolveIdRefDefault,
   } = context;
   const id = getRowId(row);
   const selected = selectedId === id;
@@ -45,7 +45,7 @@ const DataRow = <T,>(props: DataRowProps<T>) => {
           onDrop={onCellDrop}
         >
           {cellContent(row, column.path, schema.byPath(column.path), {
-            displayField: column.displayField, resolve: resolveIdRefDisplay,
+            displayField: column.displayField, resolve: resolveIdRefDisplay, resolveDefault: resolveIdRefDefault,
           })}
         </DataCell>
       ))}

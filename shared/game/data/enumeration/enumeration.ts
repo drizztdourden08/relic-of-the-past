@@ -5,7 +5,20 @@
  * `ScreenRecord.world` is still `'light' | 'dark'`) — this is purely an
  * additional label/registry source, not a foreign key.
  */
+import type { EntityKind } from '../types/ids';
 import type { EnumerationEntry } from '../types/enumeration';
+
+/**
+ * Every collection kind, hand-kept in step with `KIND_ID_PREFIXES` (../types/ids)
+ * rather than imported from it — this module's only imports may be `import type`
+ * (erased at parse time), because `generate-enum-types.mjs` loads this file
+ * directly with Node's native TS stripping, with no bundler to resolve an
+ * extensionless runtime import.
+ */
+const ALL_KINDS: readonly EntityKind[] = [
+  'screen', 'connection', 'check', 'item', 'dungeon', 'area', 'location', 'actor', 'tag',
+  'item-group', 'enumeration',
+];
 
 const ALL_ENUMERATION: EnumerationEntry[] = [
   // ─── world — reused by both ScreenRecord.world (light/dark) and the
@@ -95,6 +108,18 @@ const ALL_ENUMERATION: EnumerationEntry[] = [
   // ─── item-origin ───
   { id: 'enum-056', category: 'item-origin', value: 'vanilla', label: 'Vanilla', appliesTo: ['item'] },
   { id: 'enum-057', category: 'item-origin', value: 'randomizer', label: 'Randomizer', appliesTo: ['item'] },
+
+  // ─── review-status — the personal curation layer's status pill (see
+  // shared/game/review/types.ts). Not a field on any record itself (it lives
+  // in Data/review/<kind>.json, never in the committed dataset), but a real
+  // category in this same registry since the review UI's dropdown reads it
+  // exactly like any other enum field would. Applies to all eleven
+  // collections, in the natural untouched → verified progression. ───
+  { id: 'enum-058', category: 'review-status', value: 'untouched', label: 'Untouched', appliesTo: ALL_KINDS },
+  { id: 'enum-059', category: 'review-status', value: 'in-review', label: 'In Review', appliesTo: ALL_KINDS },
+  { id: 'enum-060', category: 'review-status', value: 'needs-work', label: 'Needs Work', appliesTo: ALL_KINDS },
+  { id: 'enum-061', category: 'review-status', value: 'accepted', label: 'Accepted', appliesTo: ALL_KINDS },
+  { id: 'enum-062', category: 'review-status', value: 'verified', label: 'Verified', appliesTo: ALL_KINDS },
 ];
 
 export { ALL_ENUMERATION };

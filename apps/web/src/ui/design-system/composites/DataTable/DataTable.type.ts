@@ -11,7 +11,7 @@ import type { FieldDescriptor } from '../../data/schema/field-descriptor';
 import type { ColumnMove, SortEntry, TableColumn } from '../../data/table/types';
 import type { ViewKey } from '../../data/view-state/snapshot';
 import type {
-  IdRefDisplayResolver, IdRefTargetFieldResolver,
+  IdRefDefaultResolver, IdRefDisplayResolver, IdRefTargetFieldResolver,
 } from './behavior/display-substitution';
 
 interface DataTableProps<T> {
@@ -28,6 +28,12 @@ interface DataTableProps<T> {
    * opening in the persistent fit-to-content mode.
    */
   fallbackColumns?: readonly TableColumn[];
+  /**
+   * Grouping the table opens with when this view has nothing saved yet.
+   * Omitted, it opens flat. A saved layout always wins — a view the user has
+   * arranged has already answered this question.
+   */
+  fallbackGroupBy?: readonly string[];
   onSelect?: (id: string) => void;
   selectedId?: string | null;
   /**
@@ -43,6 +49,13 @@ interface DataTableProps<T> {
    */
   resolveTargetFields?: IdRefTargetFieldResolver;
   resolveIdRefDisplay?: IdRefDisplayResolver;
+  /**
+   * The BASELINE name for a reference column with no `displayField` chosen —
+   * every cell that would otherwise show a raw id gets a turn at this before
+   * falling all the way back to it. Optional, same as the other two: without
+   * it an unconfigured column shows the id, exactly as before this existed.
+   */
+  resolveIdRefDefault?: IdRefDefaultResolver;
 }
 
 /**
@@ -180,6 +193,8 @@ interface RowRenderContext<T> {
    * the same call, so a grouped reference never disagrees with its own cells.
    */
   resolveIdRefDisplay?: IdRefDisplayResolver;
+  /** The same baseline default as `DataTableProps`, threaded down for cells with no `displayField`. */
+  resolveIdRefDefault?: IdRefDefaultResolver;
   /**
    * A column's body cells are a drop target for the column drag, exactly like
    * its header — which is what makes the whole column, top to bottom, the place

@@ -5,6 +5,8 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { all } from '@shared/game/data';
 import { defaultOperatorFor, operatorsFor } from '../../apps/web/src/ui/design-system/data/filter/operators';
 import { resolveFieldKit } from '../../apps/web/src/ui/design-system/composites/field-kits';
+import { formatIdRefDisplay } from '../../apps/web/src/ui/design-system/composites/field-kits/id-ref-format';
+import type { CellRenderOptions } from '../../apps/web/src/ui/design-system/composites/field-kits/registry';
 import type { FieldDescriptor, FieldKind } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
 
 // There is no jsdom or testing-library in this repo, so these are SSR smoke
@@ -32,8 +34,8 @@ const renderEditor = (descriptor: FieldDescriptor, value: unknown): string =>
     field: descriptor, value, onChange: () => undefined,
   }));
 
-const renderCell = (descriptor: FieldDescriptor, value: unknown): string =>
-  renderToStaticMarkup(createElement('div', null, kitFor(descriptor.kind).renderCell(value, descriptor)));
+const renderCell = (descriptor: FieldDescriptor, value: unknown, options?: CellRenderOptions): string =>
+  renderToStaticMarkup(createElement('div', null, kitFor(descriptor.kind).renderCell(value, descriptor, options)));
 
 const screenRow = all('screen')[0] as Record<string, unknown>;
 const connectionRow = all('connection')[0] as Record<string, unknown>;
@@ -121,5 +123,67 @@ describe('field kits — the parts a screen has to bind to', () => {
     const descriptor = field('array', { of: field('string', { path: 'sample[]' }) });
     expect(renderEditor(descriptor, ['a', 'b'])).toContain('2 items');
     expect(renderCell(descriptor, [])).toContain('none');
+  });
+});
+
+describe('formatIdRefDisplay — the one "Name (id)" rule every reference reads through', () => {
+  it('reads as "Name (id)" once a name resolves', () => {
+    expect(formatIdRefDisplay('screen-183', 'Jail Cell')).toBe('Jail Cell (screen-183)');
+  });
+
+  it('falls back to the bare id, no dangling parens, when nothing resolves', () => {
+    expect(formatIdRefDisplay('screen-183', undefined)).toBe('screen-183');
+    expect(formatIdRefDisplay('screen-183', '')).toBe('screen-183');
+    expect(formatIdRefDisplay('screen-183', '   ')).toBe('screen-183');
+  });
+
+  it('does not double up when the resolver just echoes the id back', () => {
+    expect(formatIdRefDisplay('screen-183', 'screen-183')).toBe('screen-183');
+  });
+});
+
+describe('idRef cell — reads through the same formatter', () => {
+  it('shows "Name (id)" once a display name is passed', () => {
+    const markup = renderCell(field('idRef', { targetKind: 'screen' }), 'screen-183', { display: 'Jail Cell' });
+    expect(markup).toContain('Jail Cell (screen-183)');
+    expect(markup).not.toContain('>screen-183<');
+  });
+
+  it('falls back to the bare id with no display passed', () => {
+    const markup = renderCell(field('idRef', { targetKind: 'screen' }), 'screen-183');
+    expect(markup).toContain('>screen-183<');
+  });
+});
+
+describe('array of idRef — one resolved chip per entry, not a flattened summary', () => {
+  const descriptor = field('array', { of: field('idRef', { path: 'sample[]', targetKind: 'screen' }) });
+
+  it('resolves each entry through the injected per-element resolver', () => {
+    const names: Record<string, string> = { 'screen-001': 'Jail Cell', 'screen-002': 'Sanctuary' };
+    const markup = renderCell(descriptor, ['screen-001', 'screen-002'], {
+      resolveIdRefDisplay: (id) => names[id],
+    });
+    expect(markup).toContain('Jail Cell (screen-001)');
+    expect(markup).toContain('Sanctuary (screen-002)');
+    // Not the flattened one-line text every other array gets.
+    expect(markup).not.toContain('screen-001, screen-002');
+  });
+
+  it('marks every chip for cross-record navigation, same handoff as the scalar case', () => {
+    const markup = renderCell(descriptor, ['screen-001', 'screen-002'], { resolveIdRefDisplay: () => undefined });
+    expect(markup).toContain('data-id-ref="screen-001"');
+    expect(markup).toContain('data-id-ref="screen-002"');
+    expect(markup).toContain('data-target-kind="screen"');
+  });
+
+  it('falls back to the bare id per entry with no resolver wired', () => {
+    const markup = renderCell(descriptor, ['screen-001', 'screen-002']);
+    expect(markup).toContain('>screen-001<');
+    expect(markup).toContain('>screen-002<');
+  });
+
+  it('skips a blank entry rather than rendering an empty chip', () => {
+    const markup = renderCell(descriptor, ['screen-001', '', '  ']);
+    expect(markup.match(/data-id-ref=/g)?.length).toBe(1);
   });
 });

@@ -8,6 +8,11 @@
  * elements is a RecordEditor concern (a later composite) because it needs the
  * element's own editor recursively plus row affordances this kit has no place
  * for — a table cell and a filter row are both one line tall.
+ *
+ * The one element kind that is NOT read as raw text: a list of `idRef`s reads
+ * as one resolved chip per entry (see `IdRefBadgeList`), the array counterpart
+ * of the single-value reference cell — everything else keeps the flattened
+ * one-line summary.
  */
 import type { ReactNode } from 'react';
 import { registerFieldTester } from '../../data/filter/tester-registry';
@@ -21,7 +26,8 @@ import { nullsLast } from './compare';
 import { countLabel, summarizeList, toJson } from './summary';
 import { registerFieldKit } from './registry';
 import { ElementValueInput } from './sub-components/ElementValueInput';
-import type { EditorControlProps, FieldTypeStrategy, FilterControlProps } from './registry';
+import { IdRefBadgeList } from './sub-components/IdRefBadgeList';
+import type { CellRenderOptions, EditorControlProps, FieldTypeStrategy, FilterControlProps } from './registry';
 import type { FieldDescriptor } from '../../data/schema/field-descriptor';
 import './field-kits.css';
 
@@ -92,9 +98,18 @@ const EditorControl = (props: EditorControlProps) => {
   );
 };
 
-const renderCell = (value: unknown, field: FieldDescriptor): ReactNode => {
+const renderCell = (value: unknown, field: FieldDescriptor, options?: CellRenderOptions): ReactNode => {
   const list = toList(value);
   if (!list.length) return <Text className="field-kit__muted">{countLabel(0)}</Text>;
+  if (field.of?.kind === 'idRef') {
+    return (
+      <IdRefBadgeList
+        list={list}
+        targetKind={field.of.targetKind}
+        resolveIdRefDisplay={options?.resolveIdRefDisplay}
+      />
+    );
+  }
   return (
     <Text className="field-kit__text" title={`${field.label}: ${toJson(list)}`}>
       {summarizeList(list)}

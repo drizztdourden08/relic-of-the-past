@@ -7,7 +7,8 @@ import type { CodeBlockProps } from './CodeBlock.type';
 
 /** Highlighted, monospaced, horizontally-scrollable code panel. */
 const CodeBlock = (props: CodeBlockProps) => {
-  const { code, language, className = '' } = props;
+  const { code, language, className = '', highlightedLines } = props;
+  const highlighted = highlightedLines ? new Set(highlightedLines) : undefined;
   return (
     <Box className={`code-block${className ? ` ${className}` : ''}`}>
       <Highlight code={code.trimEnd()} language={language} theme={CODE_THEME}>
@@ -16,11 +17,15 @@ const CodeBlock = (props: CodeBlockProps) => {
             <Box as="code" className="code-block__code">
               {tokens.map((line, lineIndex) => {
                 const { className: lineClassName, style: lineStyle } = getLineProps({ line });
+                const isChanged = highlighted?.has(lineIndex + 1) ?? false;
                 return (
                   <Box
                     key={lineIndex}
                     as="div"
-                    className={`code-block__line${lineClassName ? ` ${lineClassName}` : ''}`}
+                    className={
+                      `code-block__line${lineClassName ? ` ${lineClassName}` : ''}`
+                      + (isChanged ? ' code-block__line--changed' : '')
+                    }
                     style={lineStyle}
                   >
                     {line.map((token, tokenIndex) => {

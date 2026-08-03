@@ -6,6 +6,10 @@
  *
  * `tileDesc` is the already-resolved crossing description (persisted nav, else
  * live flood); a null/empty value means there is no tile data to show.
+ *
+ * The messages are named constants because a second reader now matches on them:
+ * the shape detector turns the ones it can fix into real record edits, and
+ * matching on a loose substring would break the moment the wording improved.
  */
 
 import { findOne } from '@shared/game/data';
@@ -17,19 +21,27 @@ interface ConnectionIssueInput {
   tags: readonly ConnectionTag[];
 }
 
+const CONNECTION_ISSUE = {
+  noTileData: '⚠ no tile data',
+  noTransitType: '⚠ no transit type',
+  noDirection: '⚠ no direction',
+} as const;
+
+const unknownScreen = (id: string): string => `⚠ unknown screen: ${id}`;
+
 const screenExists = (id: string): boolean => findOne('screen', s => s.id === id) != null;
 
 const connectionIssues = (conn: ConnectionIssueInput, tileDesc: string | null): string[] => {
   const issues: string[] = [];
 
-  if (!tileDesc) issues.push('⚠ no tile data');
-  if (!screenExists(conn.from)) issues.push(`⚠ unknown screen: ${conn.from}`);
-  if (!screenExists(conn.to)) issues.push(`⚠ unknown screen: ${conn.to}`);
-  if (!conn.tags.some(t => t.startsWith('transit:'))) issues.push('⚠ no transit type');
-  if (!conn.tags.some(t => t.startsWith('dir:'))) issues.push('⚠ no direction');
+  if (!tileDesc) issues.push(CONNECTION_ISSUE.noTileData);
+  if (!screenExists(conn.from)) issues.push(unknownScreen(conn.from));
+  if (!screenExists(conn.to)) issues.push(unknownScreen(conn.to));
+  if (!conn.tags.some(t => t.startsWith('transit:'))) issues.push(CONNECTION_ISSUE.noTransitType);
+  if (!conn.tags.some(t => t.startsWith('dir:'))) issues.push(CONNECTION_ISSUE.noDirection);
 
   return issues;
 };
 
-export { connectionIssues };
+export { CONNECTION_ISSUE, connectionIssues, unknownScreen };
 export type { ConnectionIssueInput };

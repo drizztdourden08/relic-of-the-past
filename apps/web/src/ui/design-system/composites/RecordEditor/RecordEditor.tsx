@@ -17,6 +17,7 @@ import { Button } from '../../primitives/Button';
 import { Flex } from '../../primitives/Flex';
 import { Text } from '../../primitives/Text';
 import { getPath } from '../../data/schema/path';
+import { markedPaths } from './behavior/changed-paths';
 import { useRecordEditorState } from './behavior/use-record-editor-state';
 import { layoutGroups } from './behavior/layout-groups';
 import { EditorGroup } from './sub-components/EditorGroup';
@@ -32,7 +33,7 @@ const NO_FIELDS = 'This record has no fields to show.';
 
 const RecordEditor = <T,>(props: RecordEditorProps<T>) => {
   const {
-    record, schema, config, onSave, disabled = false,
+    record, schema, config, onSave, disabled = false, changedPaths,
     resolveIdRefOptions, resolveTagSuggestions, onCreateTag, resolveNumberBounds,
     referencedBy, onDelete,
   } = props;
@@ -50,18 +51,25 @@ const RecordEditor = <T,>(props: RecordEditorProps<T>) => {
     [resolveNumberBounds, working],
   );
 
+  // Closed over once per changed-path list rather than re-derived per row —
+  // see markedPaths for why a container counts as changed too.
+  const changed = useMemo(() => (changedPaths ? markedPaths(changedPaths) : null), [changedPaths]);
+  const isChanged = useCallback((path: string) => changed?.has(path) ?? false, [changed]);
+
   const binding = useMemo<EditorBinding>(
     () => ({
       value: readValue,
       onChange: setValue,
       isDirty: isPathDirty,
+      isChanged: changed ? isChanged : undefined,
       disabled: readOnly,
       resolveIdRefOptions,
       resolveTagSuggestions,
       onCreateTag,
       bounds: readBounds,
     }),
-    [readValue, setValue, isPathDirty, readOnly, resolveIdRefOptions, resolveTagSuggestions, onCreateTag, readBounds],
+    [readValue, setValue, isPathDirty, changed, isChanged, readOnly, resolveIdRefOptions,
+      resolveTagSuggestions, onCreateTag, readBounds],
   );
 
   return (

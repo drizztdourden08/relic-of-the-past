@@ -55,13 +55,30 @@ const entityKindFromId = (id: string): EntityKind | undefined => {
   return PREFIX_TO_KIND[prefix];
 };
 
-/** The display name an id resolves to, for link text — falls back to the id itself. */
-const resolveRecordLabel = (id: string): string => {
-  const kind = entityKindFromId(id);
+const asEntityKind = (value: string | undefined): EntityKind | undefined =>
+  value ? ENTITY_KINDS.find((kind) => kind === value) : undefined;
+
+/**
+ * The baseline name for an id with no column-level display choice behind it —
+ * the fallback `DataTable`'s `resolveIdRefDefault` and `CompactRecordView`'s
+ * `resolveIdRefDisplay` both call. `targetKindHint` wins when it names a real
+ * kind (a column whose every row points at the same collection); with none —
+ * `undefined`, or a hint that names nothing, which is exactly what a MIXED
+ * column like the Recommendations table's `targetId` produces — this falls
+ * back to reading the kind off the id's OWN prefix, so each row still
+ * resolves correctly even though the column as a whole cannot say what kind
+ * it holds. `undefined` here means "cannot answer", same contract as
+ * `resolveIdRefDisplayValue`, which is what tells the caller to show the id.
+ */
+const defaultIdRefDisplay = (id: string, targetKindHint?: string): string | undefined => {
+  const kind = asEntityKind(targetKindHint) ?? entityKindFromId(id);
   const getter = kind && GETTERS[kind];
-  if (!getter) return id;
+  if (!getter) return undefined;
   const record = getter(id);
-  return record.vanillaName ?? record.randomizerName ?? record.name ?? id;
+  return record.vanillaName ?? record.randomizerName ?? record.name;
 };
 
-export { entityKindFromId, resolveRecordLabel };
+/** The display name an id resolves to, for link text — falls back to the id itself. */
+const resolveRecordLabel = (id: string): string => defaultIdRefDisplay(id) ?? id;
+
+export { defaultIdRefDisplay, entityKindFromId, resolveRecordLabel };

@@ -53,9 +53,13 @@ const createLoadGuard = (): LoadGuard => {
   };
 };
 
-const emptySnapshotFor = (fallbackColumns: readonly TableColumn[]): ViewSnapshot => ({
+const emptySnapshotFor = (
+  fallbackColumns: readonly TableColumn[],
+  fallbackGroupBy?: readonly string[],
+): ViewSnapshot => ({
   ...emptySnapshot(),
   columns: fallbackColumns.map((column) => ({ ...column })),
+  groupBy: fallbackGroupBy ? [...fallbackGroupBy] : [],
 });
 
 /**
@@ -83,13 +87,19 @@ const dedupeClauseIds = (clauses: readonly FilterClause[]): readonly FilterClaus
  * Prunes a durably-loaded snapshot against the CURRENT schema, never trusting
  * stale paths, and falls back to `fallbackColumns` when nothing survived
  * (including when there was nothing to load at all).
+ *
+ * `fallbackGroupBy` applies only to the "nothing to load" case, deliberately:
+ * a view the user has arranged already said what it wants, and a saved layout
+ * with no grouping is an answer, not an absence.
  */
 const restoreDurableSnapshot = (
   loaded: ViewSnapshot | undefined,
   schema: SchemaLike,
   fallbackColumns: readonly TableColumn[],
+  fallbackGroupBy?: readonly string[],
 ): ViewSnapshot => {
-  const pruned = prune(loaded ?? emptySnapshotFor(fallbackColumns), schema, fallbackColumns);
+  const base = loaded ?? emptySnapshotFor(fallbackColumns, fallbackGroupBy);
+  const pruned = prune(base, schema, fallbackColumns);
   return { ...pruned, filters: dedupeClauseIds(pruned.filters) };
 };
 
@@ -99,16 +109,18 @@ interface DurableLoadParams {
   load: () => Promise<ViewSnapshot | undefined>;
   schema: SchemaLike;
   fallbackColumns: readonly TableColumn[];
+  /** Grouping to open with when this view has nothing saved. */
+  fallbackGroupBy?: readonly string[];
   apply: (snapshot: ViewSnapshot) => void;
 }
 
 /** Starts a read and applies its result only if it is still the state the user is looking at. */
 const beginDurableLoad = (params: DurableLoadParams): void => {
-  const { guard, load, schema, fallbackColumns, apply } = params;
+  const { guard, load, schema, fallbackColumns, fallbackGroupBy, apply } = params;
   const token = guard.begin();
   void load().then((loaded) => {
     if (!guard.mayApply(token)) return;
-    apply(restoreDurableSnapshot(loaded, schema, fallbackColumns));
+    apply(restoreDurableSnapshot(loaded, schema, fallbackColumns, fallbackGroupBy));
   });
 };
 

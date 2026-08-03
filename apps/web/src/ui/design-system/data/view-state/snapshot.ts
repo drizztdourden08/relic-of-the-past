@@ -22,12 +22,15 @@ interface ViewSnapshot {
   groupBy: readonly string[];
   filters: readonly FilterClause[];
   tab?: DetailTab;
+  /** Whether this collection's detail pane is folded away — see CollapsibleDetail. */
+  collapsed?: boolean;
 }
 
 interface RestoredView {
   table: TableState;
   filters: readonly FilterClause[];
   tab?: DetailTab;
+  collapsed?: boolean;
 }
 
 /**
@@ -41,6 +44,7 @@ const capture = (
   table: TableState,
   filters: readonly FilterClause[],
   tab?: DetailTab,
+  collapsed?: boolean,
 ): ViewSnapshot => {
   const snapshot: ViewSnapshot = {
     v: SNAPSHOT_VERSION,
@@ -50,6 +54,7 @@ const capture = (
     filters: filters.map((clause) => ({ ...clause })),
   };
   if (tab !== undefined) snapshot.tab = tab;
+  if (collapsed !== undefined) snapshot.collapsed = collapsed;
   return snapshot;
 };
 
@@ -64,6 +69,7 @@ const restore = (snapshot: ViewSnapshot): RestoredView => {
     filters: snapshot.filters.map((clause) => ({ ...clause })),
   };
   if (snapshot.tab !== undefined) view.tab = snapshot.tab;
+  if (snapshot.collapsed !== undefined) view.collapsed = snapshot.collapsed;
   return view;
 };
 

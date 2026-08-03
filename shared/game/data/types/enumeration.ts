@@ -10,7 +10,7 @@ import type { EntityKind, EnumerationId } from './ids';
 type EnumerationCategory =
   | 'world' | 'screen-status' | 'screen-kind' | 'interior-kind'
   | 'connection-kind' | 'connection-side' | 'actor-kind' | 'check-kind'
-  | 'item-category' | 'item-origin';
+  | 'item-category' | 'item-origin' | 'review-status';
 
 /** One labeled value of one category — e.g. `{ category: 'world', value: 'light', label: 'Light World' }`. */
 interface EnumerationEntry {

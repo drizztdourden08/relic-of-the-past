@@ -13,6 +13,14 @@
  * The rule that IS local: substitution is cosmetic and per column. It never
  * touches the value the cell carries, so a cell reading as the referenced
  * record's name still holds that record's id, and following it is unchanged.
+ *
+ * A THIRD thing this package cannot work out for itself, added alongside the
+ * two above: the sensible name to show when a column has not been told to
+ * show one at all. That is still a domain fact — which collection an id
+ * belongs to, and what that collection calls its records — so it arrives the
+ * same way, as `resolveDefault`. It only ever runs when `displayField` is
+ * unset, so a column that already opts into a specific field keeps reading
+ * exactly that field, unchanged.
  */
 import type { FieldDescriptor } from '../../../data/schema/field-descriptor';
 
@@ -36,11 +44,21 @@ type IdRefDisplayResolver = (
   displayField: string,
 ) => string | undefined;
 
+/**
+ * The baseline name for an id with no column-level choice behind it at all.
+ * `targetKind` is a hint, not a requirement: a column whose rows point at
+ * different collections (the Recommendations table's `targetId`, mixed by
+ * design) has none, so the resolver falls back to reading it off the id
+ * itself, per call — see `defaultIdRefDisplay`.
+ */
+type IdRefDefaultResolver = (id: string, targetKind?: string) => string | undefined;
+
 /** A column's display choice paired with whoever can answer it. */
 interface DisplaySubstitution {
   /** A path in the TARGET collection's schema; absent means show the id. */
   displayField?: string;
   resolve?: IdRefDisplayResolver;
+  resolveDefault?: IdRefDefaultResolver;
 }
 
 const asId = (value: unknown): string => {
@@ -50,22 +68,27 @@ const asId = (value: unknown): string => {
 
 /**
  * The text to show in place of a reference's id, or `undefined` for "show the
- * id". Every missing piece — no choice, no resolver, no target, no value —
- * falls through to that same answer, so a half-wired table degrades to the
- * plain id instead of to a hole.
+ * id". A configured `displayField` (with a `resolve` to answer it) wins when
+ * present, unchanged from before this had a fallback; with none configured,
+ * `resolveDefault` gets a turn — the new baseline every reference gets rather
+ * than only the columns a schema config happened to opt in. Every missing
+ * piece still falls through to the plain id, so a half-wired table degrades
+ * exactly as it always has.
  */
 const substituteDisplay = (
   value: unknown,
   field: FieldDescriptor,
   substitution?: DisplaySubstitution,
 ): string | undefined => {
-  const { displayField, resolve } = substitution ?? {};
-  if (!displayField || !resolve || !field.targetKind) return undefined;
+  if (field.kind !== 'idRef') return undefined;
   const id = asId(value);
-  return id ? resolve(field.targetKind, id, displayField) : undefined;
+  if (!id) return undefined;
+  const { displayField, resolve, resolveDefault } = substitution ?? {};
+  if (displayField && resolve && field.targetKind) return resolve(field.targetKind, id, displayField);
+  return resolveDefault?.(id, field.targetKind);
 };
 
 export { substituteDisplay };
 export type {
-  DisplaySubstitution, IdRefDisplayResolver, IdRefTargetField, IdRefTargetFieldResolver,
+  DisplaySubstitution, IdRefDefaultResolver, IdRefDisplayResolver, IdRefTargetField, IdRefTargetFieldResolver,
 };

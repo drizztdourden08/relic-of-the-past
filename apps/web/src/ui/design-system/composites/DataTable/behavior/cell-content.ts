@@ -32,7 +32,14 @@ const cellContent = (
   if (!field) return asText(value);
   const kit = resolveFieldKit(field.kind);
   if (!kit) return asText(value);
-  return kit.renderCell(value, field, { display: substituteDisplay(value, field, substitution) });
+  return kit.renderCell(value, field, {
+    display: substituteDisplay(value, field, substitution),
+    // An array of idRefs cannot be resolved to one finished string ahead of
+    // time (see `array-kit`'s renderCell) — it gets the same DEFAULT resolver
+    // the scalar case falls back to, one call per element, column-level
+    // `displayField` choices being a per-column, single-value concept only.
+    resolveIdRefDisplay: substitution?.resolveDefault,
+  });
 };
 
 /**

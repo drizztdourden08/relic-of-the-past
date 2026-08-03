@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind types */
-﻿import type { ReactNode } from 'react';
+﻿import type { HTMLAttributes, ReactNode } from 'react';
 
 type BadgeVariant = 'success' | 'warning' | 'danger' | 'neutral';
 
-interface BadgeProps {
+interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   variant?: BadgeVariant;
   /** Extra classes, so a caller can give the badge a surface of its own. */
   className?: string;

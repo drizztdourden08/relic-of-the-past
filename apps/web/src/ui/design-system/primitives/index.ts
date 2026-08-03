@@ -24,7 +24,7 @@ export type { ToggleOption, ToggleGroupProps } from './ToggleGroup';
 export { TabBar, type TabItem } from './TabBar';
 export { Portal, useAnchorTracking } from './Portal';
 export type { UseAnchorTrackingParams, UseAnchorTrackingResult } from './Portal';
-export { ScrollArea, type ScrollAreaProps, type ScrollAxis } from './ScrollArea';
+export { ScrollArea, type ScrollAreaProps, type ScrollAxis, type ScrollPosition } from './ScrollArea';
 export { ToastContainer } from './Toast';
 export type { PortalLayer } from './Portal';
 export type { ToastItem, ToastVariant } from './Toast';

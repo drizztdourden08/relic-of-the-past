@@ -75,7 +75,8 @@ they don't belong per-profile any more than a window's size would:
 | `Data/ui-views.json` | Data Inspector view-state — per-collection columns, sort, filters |
 | `Data/nav-review.json` | navigation-baseline review progress |
 | `Data/connection-review.json` | connection-review progress |
-| `Data/sprite-review.json` | sprite-review progress |
+| `Data/sprite-review.json` | sprite-review progress (superseded by `Data/review/<kind>.json` below) |
+| `Data/review/<kind>.json` | Data Inspector review layer — status/note/timestamps per collection (screen, connection, check, ...) |
 | `Data/stick-calibration.json` | controller stick calibration (hardware, not a save) |
 
 Unlike the two files the app refuses to write, these are meant to be written — normal use

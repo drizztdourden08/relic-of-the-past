@@ -37,8 +37,11 @@ const useViewState = (
   key: ViewKey | undefined,
   schema: SchemaLike,
   fallbackColumns: readonly TableColumn[],
+  fallbackGroupBy?: readonly string[],
 ): UseViewStateResult => {
-  const [localSnapshot, setLocalSnapshot] = useState<ViewSnapshot>(() => emptySnapshotFor(fallbackColumns));
+  const [localSnapshot, setLocalSnapshot] = useState<ViewSnapshot>(
+    () => emptySnapshotFor(fallbackColumns, fallbackGroupBy),
+  );
   const [localSession, setLocalSession] = useState<SessionView>(DEFAULT_SESSION_VIEW);
   // Built once per hook instance (lazy initialiser, not a fresh one per render):
   // it decides whether a read that has just come back still describes what the
@@ -60,6 +63,7 @@ const useViewState = (
       load: () => loadViewSnapshot(key),
       schema,
       fallbackColumns,
+      fallbackGroupBy,
       apply: setLocalSnapshot,
     });
     // A new key opens its own generation, so the outgoing one's read can no

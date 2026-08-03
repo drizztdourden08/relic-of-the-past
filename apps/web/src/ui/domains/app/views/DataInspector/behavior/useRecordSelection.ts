@@ -13,21 +13,21 @@
 import { useCallback } from 'react';
 import { DEFAULT_SESSION_VIEW, useDataViewStore } from '@app/stores/data-view-store';
 import { queryViewKey } from '../DataInspector.constants';
-import type { EntityKind } from '@shared/game/data';
+import type { InspectorKind } from '../DataInspector.type';
 
 interface RecordSelection {
   selectedId: string | null;
   /** Selects a record in ANY collection, active or not. */
-  selectIn: (kind: EntityKind, id: string | null) => void;
+  selectIn: (kind: InspectorKind, id: string | null) => void;
 }
 
-const useRecordSelection = (kind: EntityKind): RecordSelection => {
+const useRecordSelection = (kind: InspectorKind): RecordSelection => {
   const selectedId = useDataViewStore(
     state => (state.views[queryViewKey(kind)] ?? DEFAULT_SESSION_VIEW).selectedId,
   );
   const setSessionView = useDataViewStore(state => state.setSessionView);
 
-  const selectIn = useCallback((target: EntityKind, id: string | null) => {
+  const selectIn = useCallback((target: InspectorKind, id: string | null) => {
     const key = queryViewKey(target);
     const current = useDataViewStore.getState().views[key] ?? DEFAULT_SESSION_VIEW;
     setSessionView(key, { ...current, selectedId: id });

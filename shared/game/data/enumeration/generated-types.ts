@@ -15,9 +15,10 @@ type ActorKind = 'enemy' | 'boss' | 'npc' | 'object' | 'obstacle' | 'trigger';
 type CheckKind = 'chest' | 'npc' | 'standing' | 'boss' | 'prize' | 'keyDrop' | 'potItem' | 'dig' | 'bonk' | 'event';
 type ItemCategory = 'weapon' | 'equipment' | 'medallion' | 'bottle' | 'upgrade' | 'crystal' | 'event' | 'junk' | 'key';
 type ItemOrigin = 'vanilla' | 'randomizer';
+type ReviewStatus = 'untouched' | 'in-review' | 'needs-work' | 'accepted' | 'verified';
 
 export type {
   ActorKind, CheckKind, ConnectionKind, ConnectionSide,
-  InteriorKind, ItemCategory, ItemOrigin, ScreenKind,
-  ScreenStatus, World,
+  InteriorKind, ItemCategory, ItemOrigin, ReviewStatus,
+  ScreenKind, ScreenStatus, World,
 };
