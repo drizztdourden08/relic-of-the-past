@@ -13,7 +13,6 @@ const DW_FAIRY_SCREENS: ScreenRecord[] = [
     areaId: 'area-007',
     locationId: 'location-008',
     tags: ['tag-003'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-056', tile: { x: 52, y: 10 } },
       { actorId: 'actor-056', tile: { x: 42, y: 30 } },
@@ -31,7 +30,6 @@ const DW_FAIRY_SCREENS: ScreenRecord[] = [
     areaId: 'area-004',
     locationId: 'location-006',
     tags: ['tag-003'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 46, y: 28 } },
       { actorId: 'actor-255', tile: { x: 48, y: 32 } },
@@ -48,7 +46,6 @@ const DW_FAIRY_SCREENS: ScreenRecord[] = [
     areaId: 'area-004',
     locationId: 'location-006',
     tags: ['tag-003'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 46, y: 28 } },
       { actorId: 'actor-255', tile: { x: 48, y: 32 } },
@@ -65,7 +62,6 @@ const DW_FAIRY_SCREENS: ScreenRecord[] = [
     areaId: 'area-005',
     locationId: 'location-026',
     tags: ['tag-003'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-262', tile: { x: 22, y: 22 } },
     ],
@@ -80,7 +76,6 @@ const DW_FAIRY_SCREENS: ScreenRecord[] = [
     areaId: 'area-002',
     locationId: 'location-004',
     tags: ['tag-003'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-056', tile: { x: 24, y: 42 } },
       { actorId: 'actor-056', tile: { x: 24, y: 44 } },
@@ -96,7 +91,6 @@ const DW_FAIRY_SCREENS: ScreenRecord[] = [
     areaId: 'area-003',
     locationId: 'location-005',
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-002', tile: { x: 8, y: 46 } },
     ],

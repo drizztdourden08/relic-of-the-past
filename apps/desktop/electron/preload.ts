@@ -66,6 +66,7 @@ const api: IpcApi = {
   screenEditor: {
     writeScreen: (args) => invoke('screenEditor:writeScreen', args),
     writeConnections: (args) => invoke('screenEditor:writeConnections', args),
+    writeConnectionPair: (args) => invoke('screenEditor:writeConnectionPair', args),
     writeCheck: (args) => invoke('screenEditor:writeCheck', args),
     allocateGeography: (args) => invoke('screenEditor:allocateGeography', args),
     allocateTag: (args) => invoke('screenEditor:allocateTag', args),

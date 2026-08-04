@@ -108,14 +108,8 @@ interface ConnectionNavData {
   /** Requirements for this connection. OR-of-AND. */
   requirements: RequirementSet;
 
-  /** Explicit bidirectional flag (faster than checking tags at runtime) */
-  bidirectional: boolean;
-
   /** Source-side connection point bundle */
   fromPoint?: ConnectionPointData;
-
-  /** Destination-side connection point bundle */
-  toPoint?: ConnectionPointData;
 
   /**
    * For walk connections: overlapping tile positions (0–63) where

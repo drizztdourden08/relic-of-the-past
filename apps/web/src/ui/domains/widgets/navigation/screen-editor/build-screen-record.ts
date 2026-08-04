@@ -21,7 +21,6 @@ interface ScreenDraft {
   randomizerName: string;
   areaId: ScreenRecord['areaId'] | '';
   locationId: ScreenRecord['locationId'] | '';
-  status: ScreenRecord['status'] | undefined;
   /** The form picks TERMS; `buildScreenRecord` resolves them to tag ids. */
   tags: readonly ScreenTag[];
   variant: ScreenRecord['variant'];
@@ -81,7 +80,6 @@ const buildScreenRecord = (draft: ScreenDraft): DraftResult => {
       // The form works in terms; the record stores references to them.
       tags: tagIdsForKeys(draft.tags),
       variant: draft.variant,
-      status: draft.status ?? 'draft',
       nav: draft.existing?.nav,
       triggerIds: draft.existing?.triggerIds,
       spawns: draft.existing?.spawns,

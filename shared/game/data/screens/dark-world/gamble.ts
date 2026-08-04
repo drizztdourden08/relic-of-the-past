@@ -13,7 +13,6 @@ const DW_GAMBLE_SCREENS: ScreenRecord[] = [
     areaId: 'area-017',
     locationId: 'location-031',
     tags: ['tag-002', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-192', tile: { x: 22, y: 54 } },
     ],
@@ -28,7 +27,6 @@ const DW_GAMBLE_SCREENS: ScreenRecord[] = [
     areaId: 'area-017',
     locationId: 'location-031',
     tags: ['tag-002'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-230', tile: { x: 14, y: 42 } },
     ],

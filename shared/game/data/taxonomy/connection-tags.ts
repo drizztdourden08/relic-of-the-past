@@ -13,15 +13,15 @@ type BarrierTag =
   | 'barrier:crystals' | 'barrier:event' | 'barrier:dash' | 'barrier:hookshot'
   | 'barrier:swim' | 'barrier:fire' | 'barrier:book' | 'barrier:glitch';
 
-type DirectionTag = 'dir:one-way' | 'dir:two-way';
-
 type ContextTag =
   | 'ctx:entrance' | 'ctx:exit' | 'ctx:internal' | 'ctx:cross-world'
   | 'ctx:save-quit' | 'ctx:boss' | 'ctx:overworld' | 'ctx:dungeon-enter' | 'ctx:shortcut';
 
-type ConnectionTag = TransitTag | BarrierTag | DirectionTag | ContextTag;
+/** Direction is derived from `canExit` now (see `data/connections/derive.ts`) — the
+ *  `dir:one-way` / `dir:two-way` tags are retired, not replaced. */
+type ConnectionTag = TransitTag | BarrierTag | ContextTag;
 
-type ConnectionTagNamespace = 'transit' | 'barrier' | 'dir' | 'ctx';
+type ConnectionTagNamespace = 'transit' | 'barrier' | 'ctx';
 
 interface ConnectionTagMetadata {
   id: ConnectionTag;
@@ -32,7 +32,6 @@ interface ConnectionTagMetadata {
 const CONNECTION_TAG_NAMESPACES: { id: ConnectionTagNamespace; label: string }[] = [
   { id: 'transit', label: 'Transit' },
   { id: 'barrier', label: 'Barrier' },
-  { id: 'dir', label: 'Direction' },
   { id: 'ctx', label: 'Context' },
 ];
 
@@ -68,8 +67,6 @@ const CONNECTION_TAG_METADATA: ConnectionTagMetadata[] = [
   { id: 'barrier:fire', label: 'Fire Source', namespace: 'barrier' },
   { id: 'barrier:book', label: 'Book of Mudora', namespace: 'barrier' },
   { id: 'barrier:glitch', label: 'Glitch', namespace: 'barrier' },
-  { id: 'dir:one-way', label: 'One-Way', namespace: 'dir' },
-  { id: 'dir:two-way', label: 'Two-Way', namespace: 'dir' },
   { id: 'ctx:entrance', label: 'Entrance', namespace: 'ctx' },
   { id: 'ctx:exit', label: 'Exit', namespace: 'ctx' },
   { id: 'ctx:internal', label: 'Internal', namespace: 'ctx' },
@@ -84,5 +81,5 @@ const CONNECTION_TAG_METADATA: ConnectionTagMetadata[] = [
 export { CONNECTION_TAG_METADATA, CONNECTION_TAG_NAMESPACES };
 export type {
   BarrierTag, ConnectionTag, ConnectionTagMetadata, ConnectionTagNamespace,
-  ContextTag, DirectionTag, TransitTag,
+  ContextTag, TransitTag,
 };

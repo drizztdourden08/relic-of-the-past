@@ -52,6 +52,8 @@ const applyConfig = (
     const next: FieldDescriptor = { ...field };
     const label = config?.labels?.[field.path];
     if (label !== undefined) next.label = label;
+    const format = config?.formats?.[field.path];
+    if (format !== undefined) next.format = format;
     if (hidden.has(field.path)) next.hidden = true;
     if (groups[field.path] !== undefined) next.group = groups[field.path];
     if (field.children) next.children = applyConfig(field.children, config, groups);

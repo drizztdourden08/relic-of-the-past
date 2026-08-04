@@ -2,13 +2,29 @@
 /**
  * Editor state → a `ConnectionRecord` minus its id.
  *
- * `kind`, `direction` and `dungeonId` are DERIVED the same way the dataset's own
- * split derived them, so an edge written from here is indistinguishable from one
- * already in the files. The tags that became a kind are retired from the tag list
- * rather than duplicated. Both endpoints must resolve to real screens — an
- * unresolved crossing comes back as null and is never written.
+ * `kind` and `dungeonId` are DERIVED the same way the dataset's own split
+ * derived them, so an edge written from here is indistinguishable from one
+ * already in the files. The tags that became a kind are retired from the tag
+ * list rather than duplicated. Both endpoints must resolve to real screens —
+ * an unresolved crossing comes back as null and is never written.
+ *
+ * A connection point ALWAYS needs a real `toConnectionId` partner (see
+ * `data/connections/derive.ts`). When the destination screen already has a
+ * point aimed back at `from`, this links to it directly. When it does not —
+ * a genuinely brand-new crossing the game just showed the player — minting a
+ * real partner id needs the allocator round trip only the write path
+ * (`record-creators.ts`, via IPC to the Electron main process) can do, which
+ * this in-memory proposal builder cannot reach. So it links to
+ * `pendingPartnerId(to.id)` instead: a sentinel that reads unmistakably as
+ * "needs a real partner minted on this screen" rather than a resolvable id.
+ * `createConnection` (`record-creators.ts`) checks every accepted proposal for
+ * this sentinel and, when it finds one, mints BOTH halves as a pair rather
+ * than inserting this record alone — see `connection-pair-writer.ts` on the
+ * main-process side. A proposal never has an unresolved endpoint any other
+ * way: both `from` and `to` must already be real screens (checked below).
  */
-import { findOne, tagIdsForKeys } from '@shared/game/data';
+import { findOne, pendingPartnerId, tagIdsForKeys } from '@shared/game/data';
+import { toScreenIdOf } from '@shared/game/data/connections/derive';
 import type {
   ConnectionKind, ConnectionRecord, ConnectionTag, DungeonId, ScreenId, ScreenRecord,
 } from '@shared/game/data';
@@ -43,9 +59,6 @@ const connectionKindFor = (from: ScreenRecord, to: ScreenRecord, tags: readonly 
   return 'edge';
 };
 
-const directionFor = (tags: readonly ConnectionTag[]): ConnectionRecord['direction'] =>
-  (tags.includes('dir:one-way') ? 'one-way' : 'two-way');
-
 /** The one dungeon both endpoints agree on, if any. */
 const dungeonIdFor = (fromScreenId: ScreenId, toScreenId: ScreenId): DungeonId | undefined => {
   const of = (id: ScreenId) => findOne('dungeon', d => d.roomScreenIds.includes(id))?.id;
@@ -56,7 +69,9 @@ const dungeonIdFor = (fromScreenId: ScreenId, toScreenId: ScreenId): DungeonId |
 };
 
 interface ConnectionDraft {
-  fromScreenId: string;
+  /** The screen this point sits on. */
+  screenId: string;
+  /** The screen the crossing leads to — used only to FIND the existing partner point; never stored. */
   toScreenId: string;
   tags: readonly ConnectionTag[];
   nav?: ConnectionNavData;
@@ -64,15 +79,24 @@ interface ConnectionDraft {
 
 const knownScreen = (id: string): ScreenRecord | undefined => findOne('screen', s => s.id === id);
 
+/** An existing point on `toScreenId` that already names `fromScreenId` as ITS partner. */
+const existingPartner = (fromScreenId: string, toScreenId: string): ConnectionRecord | undefined =>
+  findOne('connection', c => c.screenId === toScreenId && toScreenIdOf(c) === fromScreenId);
+
 const buildConnectionRecord = (draft: ConnectionDraft): PendingConnectionRecord | null => {
-  const from = knownScreen(draft.fromScreenId);
+  const from = knownScreen(draft.screenId);
   const to = knownScreen(draft.toScreenId);
   if (!from || !to) return null;
+  const partner = existingPartner(from.id, to.id);
   return {
     kind: connectionKindFor(from, to, draft.tags),
-    fromScreenId: from.id,
-    toScreenId: to.id,
-    direction: directionFor(draft.tags),
+    screenId: from.id,
+    toConnectionId: partner?.id ?? pendingPartnerId(to.id),
+    // A proposal only ever describes a point the live game just showed the
+    // player leaving from, so it can always exit — the crossing's overall
+    // direction is whatever `partner.canExit` already says (see `directionOf`).
+    canExit: true,
+    placement: { form: 'area', rect: { x: 0, y: 0, w: 0, h: 0 }, tiles: [] },
     dungeonId: dungeonIdFor(from.id, to.id),
     // The draft carries terms; the record carries references to them.
     tags: tagIdsForKeys(draft.tags.filter(t => !RETIRED_TRANSIT.has(t))),
@@ -82,14 +106,14 @@ const buildConnectionRecord = (draft: ConnectionDraft): PendingConnectionRecord 
 
 /** The record an existing dataset connection would be rewritten as. */
 const rewriteConnectionRecord = (record: ConnectionRecord, tags: readonly ConnectionTag[]): PendingConnectionRecord | null => {
-  const rebuilt = buildConnectionRecord({ fromScreenId: record.fromScreenId, toScreenId: record.toScreenId, tags });
+  const rebuilt = buildConnectionRecord({ screenId: record.screenId, toScreenId: toScreenIdOf(record), tags });
   if (!rebuilt) return null;
   // Fields the editor does not own are carried across untouched.
   return {
     ...rebuilt,
     gameId: record.gameId,
     placement: record.placement,
-    counterpartId: record.counterpartId,
+    canExit: record.canExit,
     gatedBy: record.gatedBy,
     requirements: record.requirements,
     name: record.name,
@@ -97,5 +121,5 @@ const rewriteConnectionRecord = (record: ConnectionRecord, tags: readonly Connec
   };
 };
 
-export { buildConnectionRecord, connectionKindFor, directionFor, dungeonIdFor, rewriteConnectionRecord };
+export { buildConnectionRecord, connectionKindFor, dungeonIdFor, rewriteConnectionRecord };
 export type { ConnectionDraft };

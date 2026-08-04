@@ -13,6 +13,13 @@
  * `certain` is the gate because `likely` means the evidence only ever proved
  * presence (see the note on `Confidence`), and nothing inferred that way should
  * be written to the dataset without somebody looking at it.
+ *
+ * A `connection` create is the sharpest version of the same hazard: it mints
+ * TWO records (see `create-connection.ts`) through one main-process allocator
+ * turn, and a batch routinely holds several. Nothing here needs to special-case
+ * that — the same strict sequencing that protects a shared file already means
+ * one pair's allocate-and-write finishes before the next entry's begins, so
+ * pairs from the same batch can never interleave their ids or their writes.
  */
 import type { Recommendation } from '@shared/game/recommendations';
 import type { AcceptOutcome } from './accept-recommendation';

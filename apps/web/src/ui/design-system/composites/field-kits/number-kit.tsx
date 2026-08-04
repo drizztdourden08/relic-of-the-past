@@ -14,6 +14,7 @@ import { nullsLast } from './compare';
 import { registerFieldKit } from './registry';
 import { NumberRange } from './sub-components/NumberRange';
 import type { EditorControlProps, FieldTypeStrategy, FilterControlProps } from './registry';
+import type { FieldDescriptor } from '../../data/schema/field-descriptor';
 import './field-kits.css';
 
 /** Either end may be missing; a missing end is unbounded, and ends may be swapped. */
@@ -59,6 +60,23 @@ const inputValue = (value: unknown): number | string => {
   return Number.isFinite(parsed) ? parsed : '';
 };
 
+const HEX_WIDTH: Record<'hex2' | 'hex4', number> = { hex2: 2, hex4: 4 };
+
+/**
+ * `field.format` reinterprets a raw game index the way the live Game State
+ * panel already shows it (`0x` + uppercase, zero-padded) — see
+ * `GameStatePanel.tsx`. Both bases travel in the title so the decimal a filter
+ * or a saved value uses is never more than a hover away.
+ */
+const formatCell = (raw: number, format: FieldDescriptor['format']): { text: string; title: string } => {
+  if (!format) {
+    const text = String(raw);
+    return { text, title: text };
+  }
+  const hex = `0x${Math.trunc(raw).toString(16).toUpperCase().padStart(HEX_WIDTH[format], '0')}`;
+  return { text: hex, title: `${hex} (${raw})` };
+};
+
 const FilterControl = (props: FilterControlProps) => {
   const { field, op, value, onChange } = props;
   if (op === 'between') return <NumberRange value={value} onChange={onChange} />;
@@ -71,7 +89,11 @@ const FilterControl = (props: FilterControlProps) => {
   );
 };
 
-/** Bounds are the caller's to supply; with none the field stays open at both ends. */
+/**
+ * Stays decimal even when `field.format` asks for a hex cell — hex is a
+ * reading aid for comparing against the live Game State panel, not an input
+ * convention we want to make the user learn just to edit a value.
+ */
 const EditorControl = (props: EditorControlProps) => {
   const { field, value, onChange, disabled, bounds } = props;
   return (
@@ -87,9 +109,14 @@ const EditorControl = (props: EditorControlProps) => {
   );
 };
 
-const renderCell = (value: unknown): ReactNode => {
-  const text = toText(value);
-  return <Text className="field-kit__num" title={text}>{text}</Text>;
+const renderCell = (value: unknown, field: FieldDescriptor): ReactNode => {
+  const raw = toNumber(value);
+  if (!Number.isFinite(raw)) {
+    const text = toText(value);
+    return <Text className="field-kit__num" title={text}>{text}</Text>;
+  }
+  const { text, title } = formatCell(raw, field.format);
+  return <Text className="field-kit__num" title={title}>{text}</Text>;
 };
 
 const numberKit: FieldTypeStrategy = { kind: 'number', FilterControl, EditorControl, renderCell };

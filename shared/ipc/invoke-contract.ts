@@ -19,8 +19,8 @@ import type {
   AllocateEnumerationArgs, AllocateEnumerationResult, AllocateGeographyArgs, AllocateGeographyResult,
   AllocateItemGroupArgs, AllocateItemGroupResult, AllocateRecordArgs, AllocateRecordResult, AllocateTagArgs,
   AllocateTagResult, DeleteEnumerationArgs, DeleteItemGroupArgs, DeleteRecordArgs, DeleteTagArgs,
-  WriteConnectionsArgs, WriteEnumerationArgs, WriteItemGroupArgs, WriteRecordArgs, WriteRecordResult, WriteScreenArgs,
-  WriteTagArgs,
+  WriteConnectionPairArgs, WriteConnectionPairResult, WriteConnectionsArgs, WriteEnumerationArgs, WriteItemGroupArgs,
+  WriteRecordArgs, WriteRecordResult, WriteScreenArgs, WriteTagArgs,
 } from './screen-editor-contract';
 import type {
   ActorRecord, AreaRecord, CheckRecord, DungeonRecord, ItemRecord, LocationRecord,
@@ -236,6 +236,7 @@ interface InvokeContract {
   // with the dataset's own emitter. See shared/ipc/screen-editor-contract.ts.
   'screenEditor:writeScreen': (args: WriteScreenArgs) => Promise<WriteRecordResult>;
   'screenEditor:writeConnections': (args: WriteConnectionsArgs) => Promise<WriteRecordResult>;
+  'screenEditor:writeConnectionPair': (args: WriteConnectionPairArgs) => Promise<WriteConnectionPairResult>;
   'screenEditor:writeCheck': (args: { filePath: string; code: string; checkId: string | null }) => Promise<Result>;
   'screenEditor:allocateGeography': (args: AllocateGeographyArgs) => Promise<AllocateGeographyResult>;
   'screenEditor:allocateTag': (args: AllocateTagArgs) => Promise<AllocateTagResult>;

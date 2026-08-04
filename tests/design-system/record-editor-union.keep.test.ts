@@ -65,30 +65,17 @@ describe('union branch detection — a requirement expression', () => {
   });
 });
 
-describe('union branch detection — a discriminated placement', () => {
-  const field = fieldAt('placement');
-  const variants = variantsOf('placement');
-
-  it('carries the discriminator into every branch', () => {
-    expect(variants.size).toBeGreaterThanOrEqual(2);
-    for (const [shape, value] of variants) {
-      expect(keysShown(field, value), shape).toContain('at');
-    }
-  });
-
-  it('shows the side fields for a side crossing and the rect for an area one', () => {
-    const side = [...variants.entries()].find(([shape]) => shape === 'at+side');
-    const area = [...variants.entries()].find(([shape]) => shape === 'at+rect');
-    expect(side).toBeDefined();
-    expect(area).toBeDefined();
-    expect(keysShown(field, side?.[1])).toEqual(['at', 'side']);
-    expect(keysShown(field, area?.[1])).toEqual(['at', 'rect']);
-  });
-
-  it('adds an optional field only when the value actually has it', () => {
-    const withRange = variantsOf('placement').get('at+side+tileRange');
-    expect(withRange).toBeDefined();
-    expect(keysShown(field, withRange)).toEqual(['at', 'side', 'tileRange']);
+describe('union branch detection — placement is no longer a union', () => {
+  // The connection-model migration replaced the old `{ at: 'side' | 'area', ... }`
+  // discriminated placement with one plain shape (`form`/`rect`/`tiles`, `side`
+  // only on a border point) — a genuine object with an optional field, not a
+  // union of disjoint branches, so `buildSchema` now correctly infers it as
+  // `object` rather than `union` (see infer-kind.ts's isKeySubsetChain, which
+  // exists for exactly this "additive optional fields" shape). Pinned here so
+  // a future placement change that reintroduces real branch disjunction shows
+  // up as a real diff instead of silently staying misclassified.
+  it('infers as an object, not a union', () => {
+    expect(fieldAt('placement').kind).toBe('object');
   });
 });
 
@@ -117,7 +104,7 @@ describe('union branch detection — the same union shape in another collection'
 });
 
 describe('union branch detection — where it refuses to guess', () => {
-  const field = fieldAt('placement');
+  const field = fieldAt('requirements');
 
   it('resolves nothing for an absent value', () => {
     expect(detectUnionBranch(field, undefined).status).toBe('absent');
@@ -125,8 +112,8 @@ describe('union branch detection — where it refuses to guess', () => {
   });
 
   it('resolves nothing for a value that is not a branch shape', () => {
-    expect(detectUnionBranch(field, 'side').status).toBe('not-object');
-    expect(detectUnionBranch(field, [{ at: 'side' }]).status).toBe('not-object');
+    expect(detectUnionBranch(field, 'itemId').status).toBe('not-object');
+    expect(detectUnionBranch(field, [{ itemId: 'item-001' }]).status).toBe('not-object');
   });
 
   it('resolves nothing for a shape it shares no key with', () => {
@@ -135,7 +122,7 @@ describe('union branch detection — where it refuses to guess', () => {
   });
 
   it('reports keys it does not describe rather than dropping them silently', () => {
-    const branch = detectUnionBranch(field, { at: 'side', side: 'north', future: 7 });
+    const branch = detectUnionBranch(field, { itemId: 'item-001', future: 7 });
     expect(branch.status).toBe('resolved');
     expect(branch.extraKeys).toEqual(['future']);
   });

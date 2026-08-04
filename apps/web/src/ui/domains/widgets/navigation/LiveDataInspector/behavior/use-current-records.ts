@@ -10,10 +10,10 @@
  * guessing.
  *
  * `connection` reuses `observations.existingConnections` as-is: it is already
- * every edge touching this screen from EITHER end (see `useConnectionStatus`'s
- * `fromScreenId === screenId || toScreenId === screenId`), the same list the
- * widget's own recommendation filtering already trusts — there was never a
- * "one connection" to pick here, only a `[0]` that discarded the rest.
+ * every point touching this screen (see `useConnectionStatus`'s
+ * `c.screenId === screenId || c.toConnectionId`-resolved screen match), the
+ * same list the widget's own recommendation filtering already trusts — there
+ * was never a "one connection" to pick here, only a `[0]` that discarded the rest.
  */
 import { useMemo } from 'react';
 import {

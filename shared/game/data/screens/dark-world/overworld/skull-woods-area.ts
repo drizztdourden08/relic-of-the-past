@@ -13,7 +13,6 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_SCREENS: ScreenRecord[] = [
     locationId: 'location-024',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-261',
@@ -25,7 +24,6 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_SCREENS: ScreenRecord[] = [
     locationId: 'location-024',
     position: { gridX: 1, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-245',
@@ -37,7 +35,6 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_SCREENS: ScreenRecord[] = [
     locationId: 'location-024',
     position: { gridX: 0, gridY: 1 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-262',
@@ -49,7 +46,6 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_SCREENS: ScreenRecord[] = [
     locationId: 'location-024',
     position: { gridX: 1, gridY: 1 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-246',
@@ -61,7 +57,6 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_SCREENS: ScreenRecord[] = [
     locationId: 'location-024',
     position: { gridX: 0, gridY: 2 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-257',
@@ -73,7 +68,6 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_SCREENS: ScreenRecord[] = [
     locationId: 'location-024',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-258',
@@ -85,7 +79,6 @@ const DW_OVERWORLD_SKULL_WOODS_AREA_SCREENS: ScreenRecord[] = [
     locationId: 'location-024',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
 ];
 

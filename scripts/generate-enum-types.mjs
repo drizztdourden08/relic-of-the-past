@@ -41,7 +41,6 @@ const outputPathFor = (root) => path.join(root, 'shared/game/data/enumeration/ge
 /** category → the exported type name every consuming file already expects. */
 const CATEGORY_TYPE_NAMES = {
   world: 'World',
-  'screen-status': 'ScreenStatus',
   'screen-kind': 'ScreenKind',
   'interior-kind': 'InteriorKind',
   'connection-kind': 'ConnectionKind',

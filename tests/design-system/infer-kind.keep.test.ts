@@ -107,14 +107,18 @@ describe('inferKind — subset-chain regression, real dataset shapes', () => {
     expect(inferKind(positions)).toBe('object');
   });
 
-  it('still reads connection.placement as union: `side` and `rect` branches share no key', () => {
-    const placements = all('connection')
-      .map((connection) => connection.placement)
-      .filter((placement): placement is NonNullable<typeof placement> => placement !== undefined);
+  it('reads connection.placement as object: a border point only ADDS `side` on top of an area one', () => {
+    // The connection-model migration replaced the old discriminated
+    // `{ at: 'side' | 'area', ... }` placement (a real union: the two
+    // branches shared no key) with one shape (form/rect/tiles) where a
+    // border point's `side` is an additive optional field — exactly the
+    // subset-chain case this inference fix exists for, so this is now a
+    // POSITIVE regression case for `object` rather than `union`.
+    const placements = all('connection').map((connection) => connection.placement);
     expect(placements.length).toBeGreaterThan(0);
-    expect(placements.some((p) => p.at === 'side')).toBe(true);
-    expect(placements.some((p) => p.at === 'area')).toBe(true);
-    expect(inferKind(placements)).toBe('union');
+    expect(placements.some((p) => p.form === 'border')).toBe(true);
+    expect(placements.some((p) => p.form === 'area')).toBe(true);
+    expect(inferKind(placements)).toBe('object');
   });
 
   it('still reads connection.requirements as union: itemId/anyOf/allOf branches share no key', () => {

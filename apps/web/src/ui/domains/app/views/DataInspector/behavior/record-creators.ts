@@ -6,46 +6,38 @@
  * Every collection here predates the record facade in its OWN way (a tag's
  * key, an item group's members, a geography record's world/area — see
  * `shared/ipc/screen-editor-contract.ts`), except the four that came after,
- * which all share one generic `Allocate*` shape. Screen and connection have no
- * `Allocate*` channel of their own at all: a brand-new one goes through the
- * same `writeScreen`/`writeConnections` channel an edit does, with no id
- * supplied, which is what tells the main process to allocate one instead of
- * replacing.
+ * which all share one generic `Allocate*` shape. Screen has no `Allocate*`
+ * channel of its own at all: a brand-new one goes through the same
+ * `writeScreen` channel an edit does, with no id supplied, which is what tells
+ * the main process to allocate one instead of replacing. Connection is pulled
+ * into its own file, `create-connection.ts` — a connection can never be
+ * created alone (every record requires a real partner id), so its create step
+ * carries real branching the others don't.
  *
  * Every creator ends the same way regardless of its own shape: fold the
  * allocated record into the live registry, add it to the id-ref option list
  * this collection's own references resolve through, and rebuild this kind's
- * `CollectionSource` so the table shows the new row without a reload.
+ * `CollectionSource` so the table shows the new row without a reload — see
+ * `settle-created-record.ts` for that shared tail.
  */
 import {
   isTagKey, registerEnumerationRecord, registerItemGroupRecord, registerRecord, registerTag,
 } from '@shared/game/data';
-import { connectionRecordFile, screenRecordFile } from '@shared/game/data/record-file-targets';
-import { refreshCollectionSource } from './collection-sources';
+import { screenRecordFile } from '@shared/game/data/record-file-targets';
+import { createConnection } from './create-connection';
 import { invalidateTagSuggestions } from './tag-suggestions';
-import { registerIdRefOption } from './id-ref-options';
-import { resolveRecordLabel } from './record-links';
+import { settleCreatedRecord } from './settle-created-record';
 import type {
-  ActorRecord, AreaRecord, CheckRecord, ConnectionRecord, DungeonRecord, EntityKind, EnumerationEntry,
+  ActorRecord, AreaRecord, CheckRecord, DungeonRecord, EntityKind, EnumerationEntry,
   ItemGroupRecord, ItemRecord, LocationRecord, ScreenRecord, TagRecord,
 } from '@shared/game/data';
 import type { ScreenHome } from '@shared/game/data/record-file-targets';
-import type { PendingConnectionRecord, PendingScreenRecord, Unnumbered } from '@shared/game/data/record-codegen';
+import type { PendingScreenRecord, Unnumbered } from '@shared/game/data/record-codegen';
 import type { AllocateRecordArgs, AllocateRecordResult } from '@shared/ipc/screen-editor-contract';
-import type { InspectorRow } from '../DataInspector.type';
-
-type CreateOutcome = { success: true; id: string } | { success: false; error: string };
-type RecordCreator = (draft: InspectorRow) => Promise<CreateOutcome>;
+import type { CreateOutcome, RecordCreator } from './record-creators.type';
 
 const NO_TARGET = 'No source file could be derived for this record.';
 const NOT_CONVENTION = 'Tags must be in the form namespace:value.';
-
-/** Every creator's shared tail: publish the new id everywhere it needs to resolve. */
-const settled = (kind: EntityKind, id: string): CreateOutcome => {
-  registerIdRefOption(kind, { value: id, label: resolveRecordLabel(id), description: id });
-  refreshCollectionSource(kind);
-  return { success: true, id };
-};
 
 const createScreen: RecordCreator = async (draft) => {
   const target = screenRecordFile(draft as unknown as ScreenHome);
@@ -58,22 +50,7 @@ const createScreen: RecordCreator = async (draft) => {
   if (!result.success) return { success: false, error: result.error };
   const id = result.ids[0];
   registerRecord('screen', { id, ...draft } as unknown as ScreenRecord);
-  return settled('screen', id);
-};
-
-const createConnection: RecordCreator = async (draft) => {
-  const record = draft as unknown as ConnectionRecord;
-  const target = connectionRecordFile(record.fromScreenId, record.toScreenId);
-  if (!target.relativePath) return { success: false, error: target.unresolved ?? NO_TARGET };
-  const result = await window.api.screenEditor.writeConnections({
-    mode: 'insert',
-    filePath: target.relativePath,
-    records: [draft as unknown as PendingConnectionRecord],
-  });
-  if (!result.success) return { success: false, error: result.error };
-  const id = result.ids[0];
-  registerRecord('connection', { id, ...draft } as unknown as ConnectionRecord);
-  return settled('connection', id);
+  return settleCreatedRecord('screen', id);
 };
 
 const createTagRecord: RecordCreator = async (draft) => {
@@ -90,7 +67,7 @@ const createTagRecord: RecordCreator = async (draft) => {
   if (!result.success) return { success: false, error: result.error };
   registerTag(result.record);
   invalidateTagSuggestions();
-  return settled('tag', result.record.id);
+  return settleCreatedRecord('tag', result.record.id);
 };
 
 const createItemGroupRecord: RecordCreator = async (draft) => {
@@ -98,7 +75,7 @@ const createItemGroupRecord: RecordCreator = async (draft) => {
   const result = await window.api.screenEditor.allocateItemGroup({ label: record.label, memberIds: record.memberIds });
   if (!result.success) return { success: false, error: result.error };
   registerItemGroupRecord(result.record);
-  return settled('item-group', result.record.id);
+  return settleCreatedRecord('item-group', result.record.id);
 };
 
 const createEnumerationRecord: RecordCreator = async (draft) => {
@@ -108,7 +85,7 @@ const createEnumerationRecord: RecordCreator = async (draft) => {
   });
   if (!result.success) return { success: false, error: result.error };
   registerEnumerationRecord(result.record);
-  return settled('enumeration', result.record.id);
+  return settleCreatedRecord('enumeration', result.record.id);
 };
 
 const createArea: RecordCreator = async (draft) => {
@@ -118,7 +95,7 @@ const createArea: RecordCreator = async (draft) => {
   });
   if (!result.success) return { success: false, error: result.error };
   registerRecord('area', result.record);
-  return settled('area', result.record.id);
+  return settleCreatedRecord('area', result.record.id);
 };
 
 const createLocation: RecordCreator = async (draft) => {
@@ -128,7 +105,7 @@ const createLocation: RecordCreator = async (draft) => {
   });
   if (!result.success) return { success: false, error: result.error };
   registerRecord('location', result.record);
-  return settled('location', result.record.id);
+  return settleCreatedRecord('location', result.record.id);
 };
 
 /** One creator for a record-facade collection — the channel is the only thing
@@ -140,7 +117,7 @@ const facadeCreator = <T extends { id: string }>(
   const result = await send({ record: draft as unknown as Unnumbered<T> });
   if (!result.success) return { success: false, error: result.error };
   registerRecord(kind, result.record);
-  return settled(kind, result.record.id);
+  return settleCreatedRecord(kind, result.record.id);
 };
 
 const editor = (): typeof window.api.screenEditor => window.api.screenEditor;

@@ -13,7 +13,6 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     areaId: 'area-011',
     locationId: 'location-015',
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-011', tile: { x: 28, y: 16 } },
       { actorId: 'actor-086', tile: { x: 40, y: 42 } },
@@ -30,7 +29,6 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     areaId: 'area-011',
     locationId: 'location-015',
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 14, y: 42 } },
       { actorId: 'actor-255', tile: { x: 16, y: 42 } },
@@ -49,7 +47,6 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     areaId: 'area-008',
     locationId: 'location-009',
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-103', tile: { x: 18, y: 6 } },
       { actorId: 'actor-103', tile: { x: 32, y: 6 } },
@@ -73,7 +70,6 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     areaId: 'area-008',
     locationId: 'location-009',
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-009', tile: { x: 46, y: 10 } },
     ],
@@ -88,7 +84,6 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     areaId: 'area-008',
     locationId: 'location-009',
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 14, y: 12 } },
       { actorId: 'actor-255', tile: { x: 16, y: 12 } },
@@ -107,7 +102,6 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     areaId: 'area-008',
     locationId: 'location-009',
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
   },
   {
     id: 'screen-198',
@@ -119,7 +113,6 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     areaId: 'area-008',
     locationId: 'location-009',
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-208', tile: { x: 46, y: 26 } },
       { actorId: 'actor-163', tile: { x: 50, y: 20 } },
@@ -136,7 +129,6 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     areaId: 'area-008',
     locationId: 'location-009',
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
   },
   {
     id: 'screen-195',
@@ -148,7 +140,6 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     areaId: 'area-008',
     locationId: 'location-009',
     tags: ['tag-003', 'tag-040'],
-    status: 'mapped',
   },
   {
     id: 'screen-185',
@@ -160,7 +151,6 @@ const LW_PASSAGES_SCREENS: ScreenRecord[] = [
     areaId: 'area-008',
     locationId: 'location-009',
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-163', tile: { x: 14, y: 10 } },
       { actorId: 'actor-163', tile: { x: 46, y: 16 } },

@@ -13,7 +13,6 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-013',
     position: { gridX: 8, gridY: 10, floor: 0 },
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-127', tile: { x: 44, y: 28 } },
       { actorId: 'actor-127', tile: { x: 52, y: 28 } },
@@ -31,7 +30,6 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-013',
     position: { gridX: 9, gridY: 10, floor: 0 },
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
       { actorId: 'actor-111', tile: { x: 18, y: 10 } },
@@ -50,7 +48,6 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-013',
     position: { gridX: 10, gridY: 10, floor: 0 },
     tags: ['tag-003', 'tag-016'],
-    status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
       { actorId: 'actor-065', tile: { x: 48, y: 12 } },
@@ -71,7 +68,6 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-013',
     position: { gridX: 8, gridY: 11, floor: 0 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     triggerIds: ['actor-043'],
     spawns: [
       { actorId: 'actor-088', tile: { x: 42, y: 22 } },
@@ -92,7 +88,6 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-013',
     position: { gridX: 9, gridY: 11, floor: 0 },
     tags: ['tag-003', 'tag-009'],
-    status: 'mapped',
   },
   {
     id: 'screen-149',
@@ -104,7 +99,6 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-013',
     position: { gridX: 10, gridY: 11, floor: 0 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
       { actorId: 'actor-127', tile: { x: 40, y: 8 } },
@@ -126,7 +120,6 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-013',
     position: { gridX: 8, gridY: 12, floor: 0 },
     tags: ['tag-003', 'tag-006'],
-    status: 'mapped',
     triggerIds: ['actor-026', 'actor-041'],
     spawns: [
       { actorId: 'actor-138', tile: { x: 40, y: 42 } },
@@ -147,7 +140,6 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-013',
     position: { gridX: 9, gridY: 12, floor: 0 },
     tags: ['tag-003', 'tag-005'],
-    status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
       { actorId: 'actor-089', tile: { x: 32, y: 10 } },
@@ -165,7 +157,6 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-013',
     position: { gridX: 8, gridY: 13, floor: 0 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-112', tile: { x: 46, y: 10 } },
       { actorId: 'actor-112', tile: { x: 48, y: 10 } },
@@ -190,7 +181,6 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-013',
     position: { gridX: 9, gridY: 13, floor: 0 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
       { actorId: 'actor-111', tile: { x: 48, y: 42 } },
@@ -208,7 +198,6 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-013',
     position: { gridX: 10, gridY: 13, floor: 0 },
     tags: ['tag-003', 'tag-026'],
-    status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
       { actorId: 'actor-065', tile: { x: 14, y: 48 } },

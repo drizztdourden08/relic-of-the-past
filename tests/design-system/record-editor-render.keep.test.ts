@@ -64,26 +64,42 @@ describe('RecordEditor — a real record from several collections', () => {
 
 describe('RecordEditor — what auto-layout puts on the page', () => {
   const rows = all('connection');
-  const withRect = rows.find((row) => row.placement?.at === 'area') ?? rows[0];
+  // Placement is a plain nested object now (form/rect/tiles, `side` only on a
+  // border point) rather than a discriminated union — see the connection-model
+  // migration report — so the area-form record is still the right fixture for
+  // nested-object recursion, just not for union-branch detection.
+  const withRect = rows.find((row) => row.placement.form === 'area') ?? rows[0];
+  // `requirements` IS still a genuine discriminated union on a connection
+  // record (itemId / checkId / allOf / anyOf / count / impossible), so it is
+  // the union-branch fixture below instead of `placement`.
+  const withAllOf = rows.find((row) => (row.requirements as { allOf?: unknown[] } | undefined)?.allOf?.length);
 
   it('labels the fields it derived, with no config to name them', () => {
     const markup = render(withRect, rows, true);
-    expect(markup).toContain('From Screen Id');
-    expect(markup).toContain('Direction');
+    expect(markup).toContain('Screen Id');
+    expect(markup).toContain('To Connection Id');
   });
 
-  it('recurses into a union branch and into the object inside it', () => {
+  it('recurses into a nested object inside a plain field', () => {
     const markup = render(withRect, rows, true);
-    // The area branch: the discriminator, its rect, and the rect's own leaves.
+    // Placement's own rect, and the rect's leaves. The schema is derived from
+    // the whole collection, so `side` (a border-only field elsewhere in the
+    // dataset) still appears as an optional field here — only the nested
+    // `Rect` recursion is what this test pins.
     expect(markup).toContain('Placement');
     expect(markup).toContain('Rect');
     expect(markup).toContain('record-editor__nested');
-    // The side-only field belongs to the other branch and must not appear.
-    expect(markup).not.toContain('Tile Range');
+  });
+
+  it('recurses into a union branch (requirements)', () => {
+    expect(withAllOf).toBeDefined();
+    const markup = render(withAllOf, rows, true);
+    expect(markup).toContain('Requirements');
+    expect(markup).toContain('All Of');
   });
 
   it('falls back to a summary for a value in no known branch', () => {
-    const odd = { ...withRect, placement: { nothingKnown: true } } as unknown;
+    const odd = { ...withRect, requirements: { nothingKnown: true } } as unknown;
     const markup = render(odd, rows, true);
     expect(markup).toContain('record-editor__fallback');
     expect(markup).toContain('Unrecognised branch');
@@ -91,7 +107,7 @@ describe('RecordEditor — what auto-layout puts on the page', () => {
 
   it('groups by the config when one is given, in the config order', () => {
     const config: SchemaConfig = {
-      groups: [{ id: 'ends', label: 'Endpoints', paths: ['fromScreenId', 'toScreenId'] }],
+      groups: [{ id: 'ends', label: 'Endpoints', paths: ['screenId', 'toConnectionId'] }],
     };
     const markup = render(withRect, rows, true, config);
     expect(markup).toContain('Endpoints');

@@ -13,7 +13,6 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_B2_B1: ScreenRecord[] = [
     locationId: 'location-014',
     position: { gridX: 5, gridY: 0, floor: -2 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     triggerIds: ['actor-041'],
   },
   {
@@ -26,7 +25,6 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_B2_B1: ScreenRecord[] = [
     locationId: 'location-014',
     position: { gridX: 5, gridY: 9, floor: -1 },
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-078', tile: { x: 44, y: 24 } },
       { actorId: 'actor-078', tile: { x: 46, y: 24 } },
@@ -44,7 +42,6 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_B2_B1: ScreenRecord[] = [
     locationId: 'location-014',
     position: { gridX: 6, gridY: 9, floor: -1 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     triggerIds: ['actor-045'],
     spawns: [
       { actorId: 'actor-204', tile: { x: 16, y: 22 } },
@@ -64,7 +61,6 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_B2_B1: ScreenRecord[] = [
     locationId: 'location-014',
     position: { gridX: 5, gridY: 10, floor: -1 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-121', tile: { x: 44, y: 10 } },
       { actorId: 'actor-121', tile: { x: 50, y: 10 } },
@@ -90,7 +86,6 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_B2_B1: ScreenRecord[] = [
     locationId: 'location-014',
     position: { gridX: 6, gridY: 10, floor: -1 },
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-065', tile: { x: 24, y: 28 } },
     ],

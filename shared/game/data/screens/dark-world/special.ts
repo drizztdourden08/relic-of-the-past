@@ -13,7 +13,6 @@ const DW_SPECIAL_SCREENS: ScreenRecord[] = [
     areaId: 'area-003',
     locationId: 'location-005',
     tags: ['tag-002'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-076', tile: { x: 24, y: 16 } },
       { actorId: 'actor-077', tile: { x: 20, y: 26 } },
@@ -30,7 +29,6 @@ const DW_SPECIAL_SCREENS: ScreenRecord[] = [
     areaId: 'area-003',
     locationId: 'location-005',
     tags: ['tag-002'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-076', tile: { x: 24, y: 16 } },
       { actorId: 'actor-077', tile: { x: 20, y: 26 } },

@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { buildConnectionNav } from '../../../shared/game/navigation/analysis/connection-nav-from-flood';
 import { serializeConnectionRecord } from '../../../shared/game/data/record-codegen';
 import type { ConnectionInfo } from '../../../shared/game/navigation';
-import type { ConnectionRecord, ConnectionTag } from '../../../shared/game/data';
+import type { ConnectionRecord } from '../../../shared/game/data';
 
 const makeInfo = (over: Partial<ConnectionInfo>): ConnectionInfo => ({
   edge: 'east',
@@ -18,18 +18,17 @@ const makeInfo = (over: Partial<ConnectionInfo>): ConnectionInfo => ({
 describe('buildConnectionNav — ConnectionInfo → ConnectionNavData', () => {
   it('walk crossing records positions as overlapTiles and distance weight', () => {
     const info = makeInfo({ edge: 'east', positions: [30, 31, 32], requirements: [] });
-    const nav = buildConnectionNav(info, ['transit:walk', 'dir:two-way']);
+    const nav = buildConnectionNav(info, ['transit:walk']);
     expect(nav.transitType).toBe('walk');
     expect(nav.overlapTiles).toEqual([30, 31, 32]);
     expect(nav.weight).toBe(3);
-    expect(nav.bidirectional).toBe(true);
     expect(nav.fromPoint).toBeUndefined();
     expect(nav.invalid).toBeUndefined();
   });
 
   it('door crossing records a fromPoint entry from positions + edge', () => {
     const info = makeInfo({ edge: 'north', positions: [24], requirements: ['boots'] });
-    const nav = buildConnectionNav(info, ['transit:door', 'dir:two-way']);
+    const nav = buildConnectionNav(info, ['transit:door']);
     expect(nav.transitType).toBe('door');
     expect(nav.overlapTiles).toBeUndefined();
     expect(nav.weight).toBe(1);
@@ -40,11 +39,10 @@ describe('buildConnectionNav — ConnectionInfo → ConnectionNavData', () => {
     expect(nav.requirements).toEqual([['boots']]);
   });
 
-  it('one-way hole is not bidirectional and maps requirements as OR-of-AND', () => {
+  it('hole maps requirements as OR-of-AND', () => {
     const info = makeInfo({ edge: 'south', positions: [10], requirements: [] });
-    const nav = buildConnectionNav(info, ['transit:hole', 'dir:one-way']);
+    const nav = buildConnectionNav(info, ['transit:hole']);
     expect(nav.transitType).toBe('hole');
-    expect(nav.bidirectional).toBe(false);
     expect(nav.fromPoint?.position).toEqual({ row: 63, col: 10 });
   });
 
@@ -56,36 +54,37 @@ describe('buildConnectionNav — ConnectionInfo → ConnectionNavData', () => {
 });
 
 describe('serializeConnectionRecord — record emission', () => {
-  const tags: ConnectionTag[] = ['dir:two-way'];
   const base = {
     kind: 'edge',
-    fromScreenId: 'screen-030',
-    toScreenId: 'screen-031',
-    direction: 'two-way',
-    tags,
+    screenId: 'screen-030',
+    toConnectionId: 'connection-1000',
+    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+    canExit: true,
+    tags: [],
   } as const;
 
   it('omits nav when absent, and every other optional field with it', () => {
     const literal = serializeConnectionRecord({ ...base });
     expect(literal).toBe([
       '  {',
+      "    screenId: 'screen-030',",
+      "    toConnectionId: 'connection-1000',",
       "    kind: 'edge',",
-      "    fromScreenId: 'screen-030',",
-      "    toScreenId: 'screen-031',",
-      "    direction: 'two-way',",
-      "    tags: ['dir:two-way'],",
+      "    placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },",
+      '    canExit: true,',
+      '    tags: [],',
       '  },',
     ].join('\n'));
   });
 
   it('collapses a nav literal onto one line while it fits', () => {
-    const nav = buildConnectionNav(makeInfo({ positions: [30, 31], requirements: [] }), ['transit:walk', 'dir:two-way']);
+    const nav = buildConnectionNav(makeInfo({ positions: [30, 31], requirements: [] }), ['transit:walk']);
     const literal = serializeConnectionRecord({ ...base, nav });
-    expect(literal).toContain(`nav: { transitType: 'walk', requirements: [], bidirectional: true, weight: 2, overlapTiles: [30, 31] },`);
+    expect(literal).toContain(`nav: { transitType: 'walk', requirements: [], weight: 2, overlapTiles: [30, 31] },`);
   });
 
   it('expands a nav literal that no longer fits, keeping every field', () => {
-    const nav = buildConnectionNav(makeInfo({ edge: 'north', positions: [24], requirements: ['boots'] }), ['transit:door', 'dir:two-way']);
+    const nav = buildConnectionNav(makeInfo({ edge: 'north', positions: [24], requirements: ['boots'] }), ['transit:door']);
     const literal = serializeConnectionRecord({ ...base, kind: 'door', nav });
     expect(literal).toContain(`      transitType: 'door',`);
     expect(literal).toContain(`      requirements: [['boots']],`);
@@ -106,14 +105,14 @@ describe('serializeConnectionRecord — record emission', () => {
 const ROUND_TRIP: ConnectionRecord = {
   id: 'connection-897',
   kind: 'edge',
-  fromScreenId: 'screen-030',
-  toScreenId: 'screen-031',
-  direction: 'two-way',
-  tags: ['dir:two-way'],
+  screenId: 'screen-030',
+  toConnectionId: 'connection-1000',
+  placement: { form: 'area', tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } },
+  canExit: true,
+  tags: [],
   nav: {
     transitType: 'walk',
     requirements: [['boots']],
-    bidirectional: true,
     fromPoint: { id: 'flood-30-n', direction: 'n', tiles: [24], requirements: [], position: { row: 0, col: 24 }, oneWay: null },
     overlapTiles: [30, 31],
     weight: 2,

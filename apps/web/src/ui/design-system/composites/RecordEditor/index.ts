@@ -3,6 +3,7 @@ export { RecordEditor } from './RecordEditor';
 export { EditorGroup } from './sub-components/EditorGroup';
 export { ReferencedBy } from './sub-components/ReferencedBy';
 export { changedPaths, hasPathChanged } from './behavior/dirty-paths';
+export { markedPaths } from './behavior/changed-paths';
 export { layoutGroups } from './behavior/layout-groups';
 export { detectUnionBranch } from './behavior/union-branch';
 export { IDENTITY_PATH, isIdentityField } from './behavior/identity-field';

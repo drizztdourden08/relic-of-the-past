@@ -25,6 +25,14 @@ type FieldKind =
   /** Honest fallback: read-only, existence operators only. */
   | 'unknown';
 
+/**
+ * A display-only reinterpretation of a `number` field's cell — the value
+ * itself is never touched, so filtering, sorting and editing all keep working
+ * on the plain decimal underneath. `hex4`/`hex2` name the zero-padded width
+ * (native room ids vs. every other byte-sized game index), not a size limit.
+ */
+type NumberFormat = 'hex2' | 'hex4';
+
 interface FieldDescriptor {
   /** Dot path, e.g. `gameId.roomIndex` — the stable identity used everywhere. */
   path: string;
@@ -52,6 +60,8 @@ interface FieldDescriptor {
   group?: string;
   /** Config-hidden: still a valid path, just not offered by default. */
   hidden?: boolean;
+  /** number only — see `NumberFormat`. Config-applied, same mechanism as `label`. */
+  format?: NumberFormat;
 }
 
 interface FieldGroup {
@@ -69,6 +79,8 @@ interface SchemaConfig {
   hidden?: readonly string[];
   /** Force a kind that inference got wrong. */
   kinds?: Record<string, FieldKind>;
+  /** A `number` field that is really a native game index — display it in hex. */
+  formats?: Record<string, NumberFormat>;
   /** Initial visible column set. */
   defaultColumns?: readonly string[];
 }
@@ -86,4 +98,4 @@ interface CollectionSource<T> {
   onSave?: (row: T) => Promise<void>;
 }
 
-export type { CollectionSource, FieldDescriptor, FieldGroup, FieldKind, SchemaConfig };
+export type { CollectionSource, FieldDescriptor, FieldGroup, FieldKind, NumberFormat, SchemaConfig };

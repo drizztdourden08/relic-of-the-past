@@ -13,7 +13,6 @@ const DW_DUNGEON_SWAMP_PALACE_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     locationId: 'location-027',
     position: { gridX: 6, gridY: 3, floor: -1 },
     tags: ['tag-003', 'tag-009'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-109', tile: { x: 22, y: 20 } },
       { actorId: 'actor-109', tile: { x: 40, y: 20 } },
@@ -33,7 +32,6 @@ const DW_DUNGEON_SWAMP_PALACE_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     locationId: 'location-027',
     position: { gridX: 7, gridY: 3, floor: -1 },
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     triggerIds: ['actor-031'],
     spawns: [
       { actorId: 'actor-162', tile: { x: 22, y: 8 } },
@@ -58,7 +56,6 @@ const DW_DUNGEON_SWAMP_PALACE_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     locationId: 'location-027',
     position: { gridX: 8, gridY: 3, floor: -1 },
     tags: ['tag-003', 'tag-009', 'tag-005'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-109', tile: { x: 24, y: 12 } },
       { actorId: 'actor-109', tile: { x: 14, y: 20 } },
@@ -79,7 +76,6 @@ const DW_DUNGEON_SWAMP_PALACE_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     locationId: 'location-027',
     position: { gridX: 6, gridY: 4, floor: -1 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     triggerIds: ['actor-047'],
     spawns: [
       { actorId: 'actor-109', tile: { x: 44, y: 10 } },
@@ -97,7 +93,6 @@ const DW_DUNGEON_SWAMP_PALACE_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     locationId: 'location-027',
     position: { gridX: 4, gridY: 5, floor: -1 },
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-214', tile: { x: 28, y: 10 } },
       { actorId: 'actor-109', tile: { x: 24, y: 22 } },
@@ -119,7 +114,6 @@ const DW_DUNGEON_SWAMP_PALACE_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     locationId: 'location-027',
     position: { gridX: 6, gridY: 6, floor: -1 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     triggerIds: ['actor-047'],
     spawns: [
       { actorId: 'actor-109', tile: { x: 22, y: 10 } },
@@ -143,7 +137,6 @@ const DW_DUNGEON_SWAMP_PALACE_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     locationId: 'location-027',
     position: { gridX: 6, gridY: 7, floor: -1 },
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
     triggerIds: ['actor-029'],
     spawns: [
       { actorId: 'actor-162', tile: { x: 50, y: 6 } },

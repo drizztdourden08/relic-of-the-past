@@ -4,13 +4,15 @@
  * `boundaryEdges` are the dataset edges that leave the reached set — the places
  * to point `--dump-nav` at when hunting a missing/blocked connection.
  */
-import { find, hasTagKey, tagKeysOf } from '../../data';
+import { find, tagKeysOf } from '../../data';
+import { toScreenIdOf } from '../../data/connections/derive';
 import { buildDatasetSuggestions } from '../recording/dataset-updates';
 import type { EngineState } from '../engine/state';
 import type { RecorderState } from '../recording/recorder';
 import type { SimRunConfig, SimRunReport, BoundaryEdge } from './types';
 
-/** Edges from a reached screen to an unreached one (both orientations of two-way). */
+/** Edges from a reached screen to an unreached one — one per exitable point (a
+ *  two-way crossing already surfaces both orientations as separate records). */
 const boundaryEdges = (reached: Set<string>): BoundaryEdge[] => {
   const seen = new Set<string>();
   const out: BoundaryEdge[] = [];
@@ -23,9 +25,8 @@ const boundaryEdges = (reached: Set<string>): BoundaryEdge[] => {
   };
   // The report is read by a person, so it carries the terms rather than the ids.
   for (const c of find('connection', () => true)) {
-    const keys = [...tagKeysOf(c.tags)];
-    consider(c.fromScreenId, c.toScreenId, keys);
-    if (hasTagKey(c.tags, 'dir:two-way')) consider(c.toScreenId, c.fromScreenId, keys);
+    if (!c.canExit) continue;
+    consider(c.screenId, toScreenIdOf(c), [...tagKeysOf(c.tags)]);
   }
   return out;
 };

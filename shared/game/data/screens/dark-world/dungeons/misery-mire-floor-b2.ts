@@ -13,7 +13,6 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_B2: ScreenRecord[] = [
     locationId: 'location-020',
     position: { gridX: 0, gridY: 9, floor: -2 },
     tags: ['tag-003', 'tag-006'],
-    status: 'mapped',
     triggerIds: ['actor-041'],
     spawns: [
       { actorId: 'actor-145', tile: { x: 14, y: 42 } },
@@ -29,7 +28,6 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_B2: ScreenRecord[] = [
     locationId: 'location-020',
     position: { gridX: 1, gridY: 9, floor: -2 },
     tags: ['tag-003', 'tag-016'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-161', tile: { x: 48, y: 8 } },
       { actorId: 'actor-207', tile: { x: 54, y: 28 } },
@@ -49,7 +47,6 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_B2: ScreenRecord[] = [
     locationId: 'location-020',
     position: { gridX: 2, gridY: 9, floor: -2 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-161', tile: { x: 48, y: 18 } },
       { actorId: 'actor-161', tile: { x: 6, y: 24 } },
@@ -74,7 +71,6 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_B2: ScreenRecord[] = [
     locationId: 'location-020',
     position: { gridX: 3, gridY: 9, floor: -2 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     triggerIds: ['actor-027'],
     spawns: [
       { actorId: 'actor-236', tile: { x: 18, y: 18 } },
@@ -97,7 +93,6 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_B2: ScreenRecord[] = [
     locationId: 'location-020',
     position: { gridX: 0, gridY: 10, floor: -2 },
     tags: ['tag-003', 'tag-016'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-236', tile: { x: 6, y: 16 } },
       { actorId: 'actor-065', tile: { x: 28, y: 16 } },
@@ -114,7 +109,6 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_B2: ScreenRecord[] = [
     locationId: 'location-020',
     position: { gridX: 1, gridY: 10, floor: -2 },
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-161', tile: { x: 20, y: 16 } },
       { actorId: 'actor-094', tile: { x: 48, y: 14 } },
@@ -137,7 +131,6 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_B2: ScreenRecord[] = [
     locationId: 'location-020',
     position: { gridX: 2, gridY: 10, floor: -2 },
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
   },
   {
     id: 'screen-415',
@@ -149,7 +142,6 @@ const DW_DUNGEON_MISERY_MIRE_SCREENS_FLOOR_B2: ScreenRecord[] = [
     locationId: 'location-020',
     position: { gridX: 3, gridY: 10, floor: -2 },
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
   },
 ];
 

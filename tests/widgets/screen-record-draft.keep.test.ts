@@ -19,7 +19,6 @@ const draft = (over: Partial<ScreenDraft>): ScreenDraft => ({
   randomizerName: 'Test Room',
   areaId: 'area-011',
   locationId: 'location-011',
-  status: 'draft',
   tags: [],
   variant: undefined,
   roomIndex: 0x80,
@@ -65,10 +64,6 @@ describe('buildScreenRecord — position and defaults', () => {
   it('omits the position entirely when there is no grid', () => {
     const { record } = buildScreenRecord(draft({ gridX: undefined, gridY: undefined, floor: undefined }));
     expect(record?.position).toBeUndefined();
-  });
-
-  it('falls back to the draft status when none was chosen', () => {
-    expect(buildScreenRecord(draft({ status: undefined })).record?.status).toBe('draft');
   });
 
   it('trims the name and resolves the chosen terms to tag references', () => {

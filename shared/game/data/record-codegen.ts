@@ -84,13 +84,13 @@ const literal = <T,>(record: T, spec: FieldSpec<T>): string => {
 
 const SCREEN_FIELDS = [
   'id', 'gameId', 'kind', 'world', 'interiorKind', 'vanillaName', 'randomizerName',
-  'areaId', 'locationId', 'position', 'tags', 'variant', 'status', 'nav',
+  'areaId', 'locationId', 'position', 'tags', 'variant', 'nav',
   'triggerIds', 'spawns',
 ] as const satisfies readonly (keyof ScreenRecord)[];
 
 const CONNECTION_FIELDS = [
-  'id', 'gameId', 'kind', 'fromScreenId', 'toScreenId', 'placement', 'direction',
-  'counterpartId', 'dungeonId', 'gatedBy', 'requirements', 'name', 'tags', 'nav',
+  'id', 'screenId', 'toConnectionId', 'kind', 'placement', 'canExit',
+  'gameId', 'dungeonId', 'gatedBy', 'requirements', 'name', 'tags', 'nav',
 ] as const satisfies readonly (keyof ConnectionRecord)[];
 
 // Completeness gates. `Record<keyof X, true>` demands every declared field, so a

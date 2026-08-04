@@ -37,6 +37,26 @@
   align-items: baseline;
   gap: var(--space-xs);
   min-inline-size: 0;
+
+  /* Reserved even when nothing differs, so the row that DOES differ does not
+     shift its neighbours by suddenly gaining a border — same convention
+     RecordEditor's own row uses for its dirty/changed accent. */
+  border-inline-start: var(--border-width-thick) solid transparent;
+  padding-inline-start: var(--space-xs);
+}
+
+/* A field whose live reading disagrees with the dataset — tinted so a scan
+   finds it without reading labels. Same danger red the rest of the app
+   reserves for a real problem, not a stylistic accent. */
+.compact-record-view__row--differs {
+  background: var(--c-danger-soft);
+  border-inline-start-color: var(--c-danger);
+}
+
+/* The bracketed live value `DiffBracket` renders beside the dataset value. */
+.compact-record-view__diff {
+  color: var(--c-danger);
+  font-weight: var(--weight-medium);
 }
 
 .compact-record-view__label {
@@ -69,6 +89,12 @@
   font-weight: var(--weight-medium);
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+/* A container never carries its own bracket (see `CompactField`'s module
+   note), so a difference somewhere under it is signalled on the label alone. */
+.compact-record-view__nest--differs > .compact-record-view__nest-label {
+  color: var(--c-danger);
 }
 
 /* Same indent step RecordEditor's own nested rows use, so a sub-property sits

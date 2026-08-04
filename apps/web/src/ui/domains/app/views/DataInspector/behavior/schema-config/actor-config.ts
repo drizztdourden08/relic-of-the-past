@@ -9,6 +9,8 @@ import type { SchemaConfig } from '@ds/data';
 
 const ACTOR_CONFIG: SchemaConfig = {
   defaultColumns: ['id', 'randomizerName', 'kind', 'effect'],
+  // Same hex convention as SCREEN_CONFIG — a native sprite type byte, not a room id.
+  formats: { 'gameId.spriteType': 'hex2' },
 };
 
 export { ACTOR_CONFIG };

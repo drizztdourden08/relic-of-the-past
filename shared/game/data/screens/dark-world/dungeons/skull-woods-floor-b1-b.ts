@@ -13,7 +13,6 @@ const DW_DUNGEON_SKULL_WOODS_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     locationId: 'location-024',
     position: { gridX: 8, gridY: 5, floor: -1 },
     tags: ['tag-003', 'tag-024', 'tag-009'],
-    status: 'mapped',
     triggerIds: ['actor-038', 'actor-044'],
     spawns: [
       { actorId: 'actor-056', tile: { x: 24, y: 40 } },
@@ -37,7 +36,6 @@ const DW_DUNGEON_SKULL_WOODS_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     locationId: 'location-024',
     position: { gridX: 9, gridY: 5, floor: -1 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-056', tile: { x: 14, y: 32 } },
       { actorId: 'actor-056', tile: { x: 16, y: 44 } },
@@ -63,7 +61,6 @@ const DW_DUNGEON_SKULL_WOODS_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     locationId: 'location-024',
     position: { gridX: 7, gridY: 6, floor: -1 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     triggerIds: ['actor-039'],
     spawns: [
       { actorId: 'actor-208', tile: { x: 14, y: 24 } },
@@ -88,7 +85,6 @@ const DW_DUNGEON_SKULL_WOODS_SCREENS_FLOOR_B1_B: ScreenRecord[] = [
     locationId: 'location-024',
     position: { gridX: 8, gridY: 6, floor: -1 },
     tags: ['tag-003', 'tag-005'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-208', tile: { x: 28, y: 14 } },
       { actorId: 'actor-208', tile: { x: 34, y: 14 } },

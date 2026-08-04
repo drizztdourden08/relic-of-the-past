@@ -55,7 +55,7 @@ const serialize = <T>(task: () => Promise<T>): Promise<T> => {
  * the symbolic `ITEM_GROUP_IDS` map a pristine row's `id` still points at
  * (see item-group-writer.ts) — a scan anchored on `id:` would never see
  * those and would keep minting the already-used `ig-001`. Any other kind
- * referencing a sibling's id (e.g. a connection's `counterpartId`) is still
+ * referencing a sibling's id (e.g. a connection's `toConnectionId`) is still
  * counted as "used" either way, which is the safe direction: it can only
  * make the scan skip a taken number, never hand one out twice.
  */

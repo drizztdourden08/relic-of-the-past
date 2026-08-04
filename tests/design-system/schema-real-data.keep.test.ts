@@ -21,23 +21,27 @@ describe('buildSchema — a large, deeply nested collection', () => {
   it('reads prefixed ids as references and records what they point at', () => {
     expect(schema.byPath('id')?.kind).toBe('idRef');
     expect(schema.byPath('id')?.targetKind).toBe('connection');
-    expect(schema.byPath('fromScreenId')?.kind).toBe('idRef');
-    expect(schema.byPath('fromScreenId')?.targetKind).toBe('screen');
+    expect(schema.byPath('screenId')?.kind).toBe('idRef');
+    expect(schema.byPath('screenId')?.targetKind).toBe('screen');
+    expect(schema.byPath('toConnectionId')?.kind).toBe('idRef');
+    expect(schema.byPath('toConnectionId')?.targetKind).toBe('connection');
   });
 
   it('reads a small closed set as an enum and a list as an array', () => {
-    const direction = schema.byPath('direction');
-    expect(direction?.kind).toBe('enum');
-    expect(direction?.options?.length).toBeGreaterThan(0);
+    const kind = schema.byPath('kind');
+    expect(kind?.kind).toBe('enum');
+    expect(kind?.options?.length).toBeGreaterThan(0);
     expect(schema.byPath('tags')?.kind).toBe('array');
   });
 
   it('recognises genuine variant shapes as unions and uniform ones as objects', () => {
     // Branches that never co-occur: one requirement is an id, another is a list.
     expect(schema.byPath('requirements')?.kind).toBe('union');
-    // A discriminated placement — `at` is present on every branch.
-    expect(schema.byPath('placement')?.kind).toBe('union');
-    expect(schema.byPath('placement.at')?.kind).toBe('enum');
+    // Placement is one uniform shape now (form/rect/tiles, `side` an additive
+    // optional field on a border point) — not a discriminated union anymore,
+    // see the connection-model migration report.
+    expect(schema.byPath('placement')?.kind).toBe('object');
+    expect(schema.byPath('placement.form')?.kind).toBe('enum');
     // One consistent shape, so an object, and it nests three levels deep.
     expect(schema.byPath('placement.rect')?.kind).toBe('object');
     expect(schema.byPath('placement.rect.x')?.kind).toBe('number');
@@ -45,7 +49,7 @@ describe('buildSchema — a large, deeply nested collection', () => {
 
   it('marks a field absent from some rows as optional', () => {
     expect(schema.byPath('id')?.optional).toBe(false);
-    expect(schema.byPath('counterpartId')?.optional).toBe(true);
+    expect(schema.byPath('gatedBy')?.optional).toBe(true);
   });
 });
 

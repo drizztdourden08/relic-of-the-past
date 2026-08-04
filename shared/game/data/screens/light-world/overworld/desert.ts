@@ -13,7 +13,6 @@ const LW_OVERWORLD_DESERT_SCREENS: ScreenRecord[] = [
     locationId: 'location-010',
     position: { gridX: 0, gridY: 6 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-049',
@@ -25,7 +24,6 @@ const LW_OVERWORLD_DESERT_SCREENS: ScreenRecord[] = [
     locationId: 'location-010',
     position: { gridX: 1, gridY: 6 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-035',
@@ -37,7 +35,6 @@ const LW_OVERWORLD_DESERT_SCREENS: ScreenRecord[] = [
     locationId: 'location-010',
     position: { gridX: 0, gridY: 7 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-050',
@@ -49,7 +46,6 @@ const LW_OVERWORLD_DESERT_SCREENS: ScreenRecord[] = [
     locationId: 'location-010',
     position: { gridX: 1, gridY: 7 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-058',
@@ -61,7 +57,6 @@ const LW_OVERWORLD_DESERT_SCREENS: ScreenRecord[] = [
     locationId: 'location-010',
     position: { gridX: 2, gridY: 7 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-009',
@@ -73,7 +68,6 @@ const LW_OVERWORLD_DESERT_SCREENS: ScreenRecord[] = [
     locationId: 'location-010',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-010',
@@ -85,7 +79,6 @@ const LW_OVERWORLD_DESERT_SCREENS: ScreenRecord[] = [
     locationId: 'location-010',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-011',
@@ -97,7 +90,6 @@ const LW_OVERWORLD_DESERT_SCREENS: ScreenRecord[] = [
     locationId: 'location-010',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-012',
@@ -109,7 +101,6 @@ const LW_OVERWORLD_DESERT_SCREENS: ScreenRecord[] = [
     locationId: 'location-010',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-013',
@@ -121,7 +112,6 @@ const LW_OVERWORLD_DESERT_SCREENS: ScreenRecord[] = [
     locationId: 'location-010',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-014',
@@ -133,7 +123,6 @@ const LW_OVERWORLD_DESERT_SCREENS: ScreenRecord[] = [
     locationId: 'location-010',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-015',
@@ -145,7 +134,6 @@ const LW_OVERWORLD_DESERT_SCREENS: ScreenRecord[] = [
     locationId: 'location-010',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-002',
@@ -157,7 +145,6 @@ const LW_OVERWORLD_DESERT_SCREENS: ScreenRecord[] = [
     locationId: 'location-010',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
 ];
 

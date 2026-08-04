@@ -13,7 +13,6 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     tags: ['tag-002', 'tag-024'],
-    status: 'mapped',
   },
   {
     id: 'screen-200',
@@ -25,7 +24,6 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     tags: ['tag-002', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-058', tile: { x: 18, y: 44 } },
       { actorId: 'actor-058', tile: { x: 24, y: 44 } },
@@ -43,7 +41,6 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     tags: ['tag-002'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-005', tile: { x: 6, y: 48 } },
     ],
@@ -58,7 +55,6 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     tags: ['tag-002'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-222', tile: { x: 46, y: 14 } },
       { actorId: 'actor-255', tile: { x: 54, y: 16 } },
@@ -75,7 +71,6 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     tags: ['tag-002', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-231', tile: { x: 12, y: 42 } },
       { actorId: 'actor-073', tile: { x: 20, y: 54 } },
@@ -92,7 +87,6 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     tags: ['tag-002', 'tag-013'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-231', tile: { x: 12, y: 42 } },
       { actorId: 'actor-073', tile: { x: 20, y: 54 } },
@@ -109,7 +103,6 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     tags: ['tag-002', 'tag-013'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-001', tile: { x: 14, y: 48 } },
     ],
@@ -124,7 +117,6 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     tags: ['tag-002', 'tag-013'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-230', tile: { x: 16, y: 54 } },
     ],
@@ -139,7 +131,6 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     tags: ['tag-002', 'tag-013'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-230', tile: { x: 16, y: 54 } },
     ],
@@ -154,7 +145,6 @@ const LW_HOUSES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     tags: ['tag-002', 'tag-013'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-260', tile: { x: 20, y: 54 } },
     ],

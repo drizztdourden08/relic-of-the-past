@@ -35,9 +35,12 @@ const NOT_REGISTERED = '(unregistered)';
 const missingRecord = <K extends EntityKind>(kind: K, id: string): EntityOf<K> => {
   switch (kind) {
     case 'screen':
-      return { id, gameId: {}, kind: 'interior', world: 'light', randomizerName: NOT_REGISTERED, areaId: 'area-000', locationId: 'location-000', tags: [], status: 'draft' } as unknown as EntityOf<K>;
+      return { id, gameId: {}, kind: 'interior', world: 'light', randomizerName: NOT_REGISTERED, areaId: 'area-000', locationId: 'location-000', tags: [] } as unknown as EntityOf<K>;
     case 'connection':
-      return { id, kind: 'edge', fromScreenId: 'screen-000', toScreenId: 'screen-000', direction: 'two-way', tags: [] } as unknown as EntityOf<K>;
+      return {
+        id, screenId: 'screen-000', toConnectionId: 'connection-000', kind: 'edge',
+        placement: { form: 'area', rect: { x: 0, y: 0, w: 0, h: 0 }, tiles: [] }, canExit: false, tags: [],
+      } as unknown as EntityOf<K>;
     case 'check':
       return { id, gameId: {}, kind: 'chest', screenId: 'screen-000', randomizerName: NOT_REGISTERED, vanillaItemIds: [] } as unknown as EntityOf<K>;
     case 'item':

@@ -24,13 +24,14 @@ interface ConnectionIssueInput {
 const CONNECTION_ISSUE = {
   noTileData: '⚠ no tile data',
   noTransitType: '⚠ no transit type',
-  noDirection: '⚠ no direction',
 } as const;
 
 const unknownScreen = (id: string): string => `⚠ unknown screen: ${id}`;
 
 const screenExists = (id: string): boolean => findOne('screen', s => s.id === id) != null;
 
+/** Direction is no longer a tag to check for — it is `canExit`, a required
+ *  field the type system already guarantees is present (see `data/connections/derive.ts`). */
 const connectionIssues = (conn: ConnectionIssueInput, tileDesc: string | null): string[] => {
   const issues: string[] = [];
 
@@ -38,7 +39,6 @@ const connectionIssues = (conn: ConnectionIssueInput, tileDesc: string | null): 
   if (!screenExists(conn.from)) issues.push(unknownScreen(conn.from));
   if (!screenExists(conn.to)) issues.push(unknownScreen(conn.to));
   if (!conn.tags.some(t => t.startsWith('transit:'))) issues.push(CONNECTION_ISSUE.noTransitType);
-  if (!conn.tags.some(t => t.startsWith('dir:'))) issues.push(CONNECTION_ISSUE.noDirection);
 
   return issues;
 };

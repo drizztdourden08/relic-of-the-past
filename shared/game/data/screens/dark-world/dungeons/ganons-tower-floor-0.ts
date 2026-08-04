@@ -13,7 +13,6 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-014',
     position: { gridX: 11, gridY: 8, floor: 0 },
     tags: ['tag-003', 'tag-009'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-208', tile: { x: 42, y: 14 } },
       { actorId: 'actor-161', tile: { x: 8, y: 48 } },
@@ -35,7 +34,6 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-014',
     position: { gridX: 12, gridY: 8, floor: 0 },
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     triggerIds: ['actor-027'],
     spawns: [
       { actorId: 'actor-154', tile: { x: 52, y: 6 } },
@@ -61,7 +59,6 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-014',
     position: { gridX: 13, gridY: 8, floor: 0 },
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     triggerIds: ['actor-045', 'actor-268'],
     spawns: [
       { actorId: 'actor-237', tile: { x: 14, y: 8 } },
@@ -87,7 +84,6 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-014',
     position: { gridX: 11, gridY: 9, floor: 0 },
     tags: ['tag-003', 'tag-005'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-161', tile: { x: 12, y: 16 } },
       { actorId: 'actor-161', tile: { x: 14, y: 16 } },
@@ -114,7 +110,6 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-014',
     position: { gridX: 12, gridY: 9, floor: 0 },
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-163', tile: { x: 38, y: 18 } },
       { actorId: 'actor-064', tile: { x: 22, y: 20 } },
@@ -135,7 +130,6 @@ const DW_DUNGEON_GANONS_TOWER_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-014',
     position: { gridX: 13, gridY: 9, floor: 0 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-161', tile: { x: 56, y: 12 } },
       { actorId: 'actor-163', tile: { x: 12, y: 8 } },

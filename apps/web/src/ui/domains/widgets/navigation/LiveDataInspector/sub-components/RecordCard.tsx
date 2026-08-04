@@ -31,10 +31,12 @@ interface RecordCardProps<T> {
   schema: CompactRecordViewProps<T>['schema'];
   config?: CompactRecordViewProps<T>['config'];
   resolveIdRefDisplay?: CompactRecordViewProps<T>['resolveIdRefDisplay'];
+  /** This record's own live differences, looked up by id before this prop arrives. */
+  diffs?: CompactRecordViewProps<T>['diffs'];
 }
 
 const RecordCard = <T,>(props: RecordCardProps<T>) => {
-  const { kind, id, record, schema, config, resolveIdRefDisplay } = props;
+  const { kind, id, record, schema, config, resolveIdRefDisplay, diffs } = props;
   const openRecord = useDataViewStore((state) => state.openRecord);
 
   return (
@@ -49,6 +51,7 @@ const RecordCard = <T,>(props: RecordCardProps<T>) => {
         schema={schema}
         config={config}
         resolveIdRefDisplay={resolveIdRefDisplay}
+        diffs={diffs}
       />
       <ReviewControls kind={kind} recordId={id} />
     </Box>

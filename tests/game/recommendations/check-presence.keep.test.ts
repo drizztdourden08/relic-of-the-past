@@ -1,17 +1,29 @@
 /* @layer test @kind test */
 /**
- * The check-presence detector, driven by the room-addressable chest table.
+ * The `check` strategy, driven by the room-addressable chest table.
+ *
+ * Ported from the hand-written `check-presence` detector (deleted) onto the
+ * declarative comparison engine — `strategy:check` is the detector id now.
+ * The screen-correction probe's live value is "the screen we are currently
+ * on", which a `FieldProbe` can only read off `observations.match?.screen.id`
+ * (see `corrections.probes.ts`'s own header for why), so unlike the original
+ * detector's bare `screenId` context argument, `contextFor` here also builds
+ * a matching `ScreenMatchResult` — exactly what production always carries in
+ * lockstep with `context.screenId` (`use-screen-observations.ts`).
  *
  * The fixture is the real starting interior — the screen a fresh save opens on,
  * whose single chest is the earliest check in the game — rather than a
- * hand-built room, so what the detector is asked about is a shape the dataset
+ * hand-built room, so what the strategy is asked about is a shape the dataset
  * actually holds. The dataset is put back the way it was after each case.
  */
 import { describe, it, expect, afterEach } from 'vitest';
-import { all, getCheck, getItem, registerRecord, replaceRecord, unregisterRecord } from '@shared/game/data';
+import {
+  all, getCheck, getItem, getScreen, registerRecord, replaceRecord, unregisterRecord,
+} from '@shared/game/data';
 import type { CheckRecord, ScreenId } from '@shared/game/data';
 import type { ChestObservation, DetectionContext, ScreenObservations } from '@shared/game/recommendations';
-import { checkPresenceDetector } from '@shared/game/recommendations/detectors/check-presence';
+import { detectorFromStrategy } from '@shared/game/recommendations/compare';
+import { checkStrategy } from '@shared/game/recommendations/strategies/check';
 
 /** The interior a fresh save opens in, and the check catalogued for its chest. */
 const ROOM = 260;
@@ -39,6 +51,7 @@ const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObserv
   match: null,
   liveGameId: { roomIndex: ROOM },
   isIndoors: true,
+  isDarkWorld: false,
   realTransitions: [],
   realAvailable: true,
   unmatchedCrossings: [],
@@ -48,8 +61,12 @@ const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObserv
   ...overrides,
 });
 
-const contextFor = (o: Partial<ScreenObservations>, screenId: ScreenId | null = SCREEN): DetectionContext =>
-  ({ origin: 'live', screenId, observations: observations(o) });
+/** Mirrors `use-screen-observations.ts`: `context.screenId` and
+ *  `observations.match?.screen.id` always agree in production. */
+const contextFor = (o: Partial<ScreenObservations>, screenId: ScreenId | null = SCREEN): DetectionContext => {
+  const match = screenId ? { screen: getScreen(screenId), method: 'exact' as const } : null;
+  return { origin: 'live', screenId, observations: observations({ match, ...o }) };
+};
 
 const restore = (): void => {
   const original = { ...ORIGINAL };
@@ -58,17 +75,20 @@ const restore = (): void => {
 
 afterEach(restore);
 
-describe('check-presence detector — create', () => {
+const detector = detectorFromStrategy(checkStrategy);
+
+describe('check strategy — create', () => {
   it('proposes a check for a chest the room draws that no record covers', () => {
     unregisterRecord('check', CHECK_ID);
 
-    const drafts = checkPresenceDetector.detect(contextFor({ chests: [roomChest()] }));
+    const drafts = detector.detect(contextFor({ chests: [roomChest()] }));
 
     expect(drafts).toHaveLength(1);
     const [draft] = drafts;
     expect(draft.kind).toBe('check');
     expect(draft.action).toBe('create');
     expect(draft.targetId).toBeNull();
+    expect(draft.detector).toBe('strategy:check');
     expect(draft.confidence).toBe('certain');
     expect(draft.key).toBe(`chest:${ROOM}:0`);
     expect(draft.screenId).toBe(SCREEN);
@@ -86,7 +106,7 @@ describe('check-presence detector — create', () => {
     unregisterRecord('check', CHECK_ID);
     const unknown = Math.max(...all('item').map(i => i.gameId?.receiveItemId ?? 0)) + 5;
 
-    const drafts = checkPresenceDetector.detect(contextFor({ chests: [roomChest({ itemId: unknown })] }));
+    const drafts = detector.detect(contextFor({ chests: [roomChest({ itemId: unknown })] }));
 
     expect((drafts[0].proposed as CheckRecord).vanillaItemIds).toEqual([]);
   });
@@ -94,7 +114,7 @@ describe('check-presence detector — create', () => {
   it('mints one finding per chest slot when a room draws several unknown ones', () => {
     unregisterRecord('check', CHECK_ID);
 
-    const drafts = checkPresenceDetector.detect(contextFor({
+    const drafts = detector.detect(contextFor({
       chests: [roomChest(), roomChest({ chestIndex: 1, isBig: true })],
     }));
 
@@ -102,24 +122,24 @@ describe('check-presence detector — create', () => {
   });
 });
 
-describe('check-presence detector — already covered', () => {
+describe('check strategy — already covered', () => {
   it('proposes nothing for a chest the dataset already catalogues', () => {
-    expect(checkPresenceDetector.detect(contextFor({ chests: [roomChest()] }))).toEqual([]);
+    expect(detector.detect(contextFor({ chests: [roomChest()] }))).toEqual([]);
   });
 
   it('proposes nothing when the pass resolved another screen record for the same room', () => {
     const variant = all('screen').find(s => s.gameId.roomIndex === ROOM && s.id !== SCREEN);
     if (!variant) throw new Error('dataset has no second screen record for this room');
 
-    expect(checkPresenceDetector.detect(contextFor({ chests: [roomChest()] }, variant.id))).toEqual([]);
+    expect(detector.detect(contextFor({ chests: [roomChest()] }, variant.id))).toEqual([]);
   });
 });
 
-describe('check-presence detector — update', () => {
+describe('check strategy — update', () => {
   it('corrects a record catalogued as something other than a chest', () => {
     replaceRecord('check', { ...ORIGINAL, kind: 'npc' });
 
-    const drafts = checkPresenceDetector.detect(contextFor({ chests: [roomChest()] }));
+    const drafts = detector.detect(contextFor({ chests: [roomChest()] }));
 
     expect(drafts).toHaveLength(1);
     const [draft] = drafts;
@@ -135,25 +155,25 @@ describe('check-presence detector — update', () => {
     if (!elsewhere) throw new Error('dataset has no screen for another room');
     replaceRecord('check', { ...ORIGINAL, screenId: elsewhere.id });
 
-    const drafts = checkPresenceDetector.detect(contextFor({ chests: [roomChest()] }));
+    const drafts = detector.detect(contextFor({ chests: [roomChest()] }));
 
     expect(drafts).toHaveLength(1);
     expect((drafts[0].proposed as CheckRecord).screenId).toBe(SCREEN);
   });
 });
 
-describe('check-presence detector — what it refuses to read', () => {
+describe('check strategy — what it refuses to read', () => {
   it('stays silent when the chest table was never read', () => {
-    expect(checkPresenceDetector.detect(contextFor({}))).toEqual([]);
+    expect(detector.detect(contextFor({}))).toEqual([]);
   });
 
   it('stays silent outdoors, where there is no chest table at all', () => {
     unregisterRecord('check', CHECK_ID);
-    expect(checkPresenceDetector.detect(contextFor({ chests: [roomChest()], isIndoors: false }))).toEqual([]);
+    expect(detector.detect(contextFor({ chests: [roomChest()], isIndoors: false }))).toEqual([]);
   });
 
   it('stays silent when the room resolved to no screen', () => {
     unregisterRecord('check', CHECK_ID);
-    expect(checkPresenceDetector.detect(contextFor({ chests: [roomChest()] }, null))).toEqual([]);
+    expect(detector.detect(contextFor({ chests: [roomChest()] }, null))).toEqual([]);
   });
 });

@@ -88,6 +88,7 @@
 | Area | Tests | Verdict |
 |---|---|---|
 | Data facade/registry | tests/game/data + tests/data-inspector | covered |
+| Connection-points model (screenId/toConnectionId/canExit pairing) | tests/game/data/connection-pairing.keep.test.ts | covered — 2 of 6 invariants marked `test.todo` for known pre-existing data gaps (see file header) |
 | Enumeration system | tests/game/data/enumeration-*, tests/design-system/enum-* | covered |
 | Tags/taxonomy | tests/game/data/check-content-tags.keep.test.ts | partial — connection-tags, item-categories untested directly |
 | logic/resolver + logic/eval | tests/game/resolver.keep.test.ts | covered |

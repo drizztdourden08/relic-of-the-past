@@ -13,7 +13,6 @@ const LW_DUNGEON_HYRULE_CASTLE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     locationId: 'location-015',
     position: { gridX: 1, gridY: 1, floor: -1 },
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-101', tile: { x: 46, y: 20 } },
       { actorId: 'actor-101', tile: { x: 48, y: 20 } },
@@ -35,7 +34,6 @@ const LW_DUNGEON_HYRULE_CASTLE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     locationId: 'location-015',
     position: { gridX: 8, gridY: 1, floor: -1 },
     tags: ['tag-003', 'tag-040'],
-    status: 'mapped',
   },
   {
     id: 'screen-107',
@@ -47,7 +45,6 @@ const LW_DUNGEON_HYRULE_CASTLE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     locationId: 'location-015',
     position: { gridX: 1, gridY: 2, floor: -1 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-101', tile: { x: 10, y: 12 } },
       { actorId: 'actor-103', tile: { x: 46, y: 12 } },
@@ -72,7 +69,6 @@ const LW_DUNGEON_HYRULE_CASTLE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     locationId: 'location-015',
     position: { gridX: 2, gridY: 2, floor: -1 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-101', tile: { x: 12, y: 40 } },
       { actorId: 'actor-101', tile: { x: 16, y: 40 } },
@@ -93,7 +89,6 @@ const LW_DUNGEON_HYRULE_CASTLE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     locationId: 'location-015',
     position: { gridX: 1, gridY: 4, floor: -1 },
     tags: ['tag-003', 'tag-016'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-101', tile: { x: 34, y: 20 } },
       { actorId: 'actor-101', tile: { x: 54, y: 22 } },
@@ -111,7 +106,6 @@ const LW_DUNGEON_HYRULE_CASTLE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     locationId: 'location-015',
     position: { gridX: 2, gridY: 4, floor: -1 },
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-102', tile: { x: 36, y: 12 } },
       { actorId: 'actor-102', tile: { x: 38, y: 12 } },
@@ -131,7 +125,6 @@ const LW_DUNGEON_HYRULE_CASTLE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     locationId: 'location-015',
     position: { gridX: 0, gridY: 5, floor: -1 },
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-077', tile: { x: 46, y: 28 } },
       { actorId: 'actor-086', tile: { x: 48, y: 32 } },
@@ -148,7 +141,6 @@ const LW_DUNGEON_HYRULE_CASTLE_SCREENS_FLOOR_B1: ScreenRecord[] = [
     locationId: 'location-015',
     position: { gridX: 2, gridY: 5, floor: -1 },
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-077', tile: { x: 14, y: 26 } },
       { actorId: 'actor-086', tile: { x: 16, y: 30 } },

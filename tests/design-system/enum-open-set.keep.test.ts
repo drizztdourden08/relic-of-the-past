@@ -107,32 +107,31 @@ describe('the entry renders in both of its states', () => {
 describe('a field the dataset has only ever written one way', () => {
   const screens = all('screen');
 
-  // The premise, asserted rather than assumed: if either of these ever grows a
-  // second value the dead end this fix addresses stops being reproducible here.
+  // The premise, asserted rather than assumed: if this ever grows a second
+  // value the dead end this fix addresses stops being reproducible here.
+  // (`status` used to be a second example of this shape before it was
+  // retired along with `ScreenRecord.status` — see the connection-model
+  // migration report.)
   it('is a single-option, non-optional enum today', () => {
-    for (const path of ['status', 'variant.key']) {
-      const field = fieldAt(screens, path);
-      expect(field.kind, path).toBe('enum');
-      expect(field.optional, path).toBe(false);
-      expect(field.options, path).toHaveLength(1);
-    }
+    const field = fieldAt(screens, 'variant.key');
+    expect(field.kind).toBe('enum');
+    expect(field.optional).toBe(false);
+    expect(field.options).toHaveLength(1);
   });
 
   it('offers a way out of its one option', () => {
-    for (const path of ['status', 'variant.key']) {
-      expect(renderEditor(fieldAt(screens, path), ''), path).toContain(TOGGLE);
-    }
+    expect(renderEditor(fieldAt(screens, 'variant.key'), '')).toContain(TOGGLE);
   });
 
   it('writes a value nobody has used before straight to the field', () => {
     const written: unknown[] = [];
-    submitOf(fieldAt(screens, 'status'), 'mapped', (next) => written.push(next))('verified');
-    expect(written).toEqual(['verified']);
+    submitOf(fieldAt(screens, 'variant.key'), 'the-only-key', (next) => written.push(next))('a-new-key');
+    expect(written).toEqual(['a-new-key']);
   });
 
   it('shows that new value as the active choice instead of losing it', () => {
-    const markup = renderEditor(fieldAt(screens, 'status'), 'verified');
-    expect(markup).toContain('verified');
+    const markup = renderEditor(fieldAt(screens, 'variant.key'), 'a-new-key');
+    expect(markup).toContain('a-new-key');
     expect(markup.match(/aria-checked="true"/g)).toHaveLength(1);
   });
 });

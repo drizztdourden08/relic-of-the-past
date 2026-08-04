@@ -13,7 +13,6 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_1: ScreenRecord[] = [
     locationId: 'location-004',
     position: { gridX: 2, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-277',
@@ -25,7 +24,6 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_1: ScreenRecord[] = [
     locationId: 'location-004',
     position: { gridX: 3, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-285',
@@ -37,7 +35,6 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_1: ScreenRecord[] = [
     locationId: 'location-004',
     position: { gridX: 4, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-293',
@@ -49,7 +46,6 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_1: ScreenRecord[] = [
     locationId: 'location-004',
     position: { gridX: 5, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-301',
@@ -61,7 +57,6 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_1: ScreenRecord[] = [
     locationId: 'location-004',
     position: { gridX: 6, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-309',
@@ -73,7 +68,6 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_1: ScreenRecord[] = [
     locationId: 'location-004',
     position: { gridX: 7, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-270',
@@ -85,7 +79,6 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_1: ScreenRecord[] = [
     locationId: 'location-004',
     position: { gridX: 2, gridY: 1 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-278',
@@ -97,7 +90,6 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_1: ScreenRecord[] = [
     locationId: 'location-004',
     position: { gridX: 3, gridY: 1 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-286',
@@ -109,7 +101,6 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_1: ScreenRecord[] = [
     locationId: 'location-004',
     position: { gridX: 4, gridY: 1 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-294',
@@ -121,7 +112,6 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_1: ScreenRecord[] = [
     locationId: 'location-004',
     position: { gridX: 5, gridY: 1 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-302',
@@ -133,7 +123,6 @@ const DW_OVERWORLD_DARK_DEATH_MOUNTAIN_SCREENS_1: ScreenRecord[] = [
     locationId: 'location-004',
     position: { gridX: 6, gridY: 1 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
 ];
 
