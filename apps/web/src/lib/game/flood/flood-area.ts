@@ -25,8 +25,10 @@ import { floodFillScreen, getConnections } from '@shared/game/navigation';
 import { computeBigScreenGroup } from '@domains/widgets/navigation/widget-helpers';
 import { buildFloodOptions } from './flood-options';
 import { getScreenGrids } from './screen-grids';
-
-type EdgeName = 'north' | 'south' | 'east' | 'west';
+import { roomEntrances, STAIR_ID_BASE } from './room-entrances';
+import { createSeedLedger } from './area-seeds';
+import { crossingLanding, roomLandingTile } from './area-landings';
+import type { EdgeName } from './area-landings';
 
 interface ScreenFloodRequest {
   items: TileReq[];
@@ -70,18 +72,28 @@ interface AreaFloodRequest extends ScreenFloodRequest {
   primaryScreenIndex: number;
 }
 
-/** A screen is only ever flooded once per area run, so a cap this size is a
- *  runaway guard rather than a real limit on how far seeds travel. */
-const MAX_ITERATIONS = 8;
+/** A screen is re-flooded only when it gains a seed its last run could not
+ *  already reach, so passes converge quickly; this is a runaway guard rather
+ *  than a real limit on how far seeds travel. */
+const MAX_ITERATIONS = 12;
+
+/** Rooms discovered indoors are bounded — a dungeon's connected-room graph can
+ *  run far deeper than the local area a flood is meant to describe. This is
+ *  the same order of size as an overworld big-screen group (usually 1-4
+ *  screens) while still covering a short indoor chain like the first castle's
+ *  entrance hall (West/Main/East Entrance). */
+const MAX_INDOOR_ROOMS = 8;
 
 /**
  * Flood a whole big screen: the primary sub-screen from the player's position,
  * then each neighbour its crossings reach, seeded with every tile those
  * crossings land on.
  *
- * Indoors this is the primary room ALONE. Loading an adjacent room's grid goes
- * through Dungeon_LoadRoom, which is destructive — it would corrupt the live
- * game's collision state to answer a question about a room the player is not in.
+ * Indoors this starts from the primary room and grows through its stairs and
+ * walk-through boundaries (capped by MAX_INDOOR_ROOMS): each connected room's
+ * OWN grid is rebuilt addressably by getScreenGrids exactly like the simulator
+ * already does for any room the player isn't standing in — never through the
+ * destructive Dungeon_LoadRoom, which only the LIVE room ever goes through.
  */
 const propagateArea = (req: AreaFloodRequest): ScreenFloodResult[] => {
   const { isIndoors, primaryScreenIndex, startPos, ...shared } = req;
@@ -90,44 +102,81 @@ const propagateArea = (req: AreaFloodRequest): ScreenFloodResult[] => {
     ? { isIndoors: true, roomId: screenIndex, owScreenIndex: 0 }
     : { isIndoors: false, roomId: 0, owScreenIndex: screenIndex };
 
-  const analyzed = new Map<number, ScreenFloodResult>();
-  let pending = new Map<number, GridPos[]>([[primaryScreenIndex, startPos ? [startPos] : []]]);
+  // Indoors, only the primary room's entrances were computed by the caller (the
+  // widget only ever calls roomEntrances() for the room the player occupies); a
+  // newly discovered room needs its OWN list so its stairs/boundaries can be
+  // found too, or propagation could only ever reach one room deep.
+  const entranceCache = new Map<number, OverworldEntrance[]>();
+  const entrancesFor = (screenIndex: number): OverworldEntrance[] => {
+    if (!isIndoors || screenIndex === primaryScreenIndex) return shared.entrances;
+    const cached = entranceCache.get(screenIndex);
+    if (cached) return cached;
+    const fresh = roomEntrances(screenIndex);
+    entranceCache.set(screenIndex, fresh);
+    return fresh;
+  };
 
-  for (let pass = 0; pass < MAX_ITERATIONS && pending.size > 0; pass++) {
-    const batch = [...pending];
-    pending = new Map();
-    for (const [screenIndex, seeds] of batch) {
+  const analyzed = new Map<number, ScreenFloodResult>();
+  const ledger = createSeedLedger();
+  let dirty = new Set<number>([primaryScreenIndex]);
+
+  /**
+   * Offer a crossing's landing tile to the screen it lands on. Queues that
+   * screen for a (re)flood only when the tile is genuinely new AND its last
+   * flood could not already walk there — so a crossing into ground already
+   * covered costs nothing, and the passes converge instead of ping-ponging.
+   * Reads `dirty` at call time, which is the set for the NEXT pass.
+   */
+  const offerSeed = (screenIndex: number, tile: GridPos): void => {
+    if (!allowed.has(screenIndex)) return;
+    if (!ledger.add(screenIndex, tile)) return;
+    const prev = analyzed.get(screenIndex);
+    if (prev && (prev.result.reachable[tile.row]?.[tile.col] ?? 0) > 0) return;
+    dirty.add(screenIndex);
+  };
+
+  for (let pass = 0; pass < MAX_ITERATIONS && dirty.size > 0; pass++) {
+    const batch = [...dirty];
+    dirty = new Set();
+    for (const screenIndex of batch) {
+      const isPrimary = screenIndex === primaryScreenIndex;
+      // The primary keeps the player's own position as its start; every other
+      // screen starts on the first crossing that reached it. Either way the
+      // REST of the accumulated seeds ride along, so a screen re-run after a
+      // neighbour opened a second way in floods from both at once.
+      const known = ledger.list(screenIndex);
+      const start = isPrimary && startPos ? startPos : known[0];
+      const extra = isPrimary && startPos ? known : known.slice(1);
       const entry = floodOneScreen(locationOf(screenIndex), {
         ...shared,
-        ...(seeds[0] ? { startPos: seeds[0] } : {}),
-        ...(seeds.length > 1 ? { extraSeeds: seeds.slice(1) } : {}),
+        entrances: entrancesFor(screenIndex),
+        ...(start ? { startPos: start } : {}),
+        ...(extra.length > 0 ? { extraSeeds: extra } : {}),
         // Only the screen the player really stands in can claim the live position.
-        atPlayer: screenIndex === primaryScreenIndex ? shared.atPlayer : false,
+        atPlayer: isPrimary ? shared.atPlayer : false,
       });
       if (!entry) continue;
       analyzed.set(screenIndex, entry);
       for (const t of entry.result.transitions) {
-        if (t.edge === 'entrance') continue;
+        if (t.edge === 'entrance') {
+          // Room-stair/walk-boundary ids (>= STAIR_ID_BASE) name a destination
+          // room to grow into; anything below that (a real overworld door, or a
+          // fall-hole id) leaves the indoor room graph entirely and is reported
+          // as an exit, not propagated.
+          if (!isIndoors || t.entranceIdx == null || t.entranceIdx < STAIR_ID_BASE) continue;
+          const destRoom = entrancesFor(screenIndex).find((e) => e.id === t.entranceIdx)?.roomId;
+          if (!destRoom || destRoom === screenIndex) continue;
+          if (!allowed.has(destRoom) && allowed.size < MAX_INDOOR_ROOMS) allowed.add(destRoom);
+          const landing = roomLandingTile(destRoom, screenIndex);
+          if (landing) offerSeed(destRoom, landing);
+          continue;
+        }
         const landing = crossingLanding(screenIndex, t.edge, t);
-        if (!landing || !allowed.has(landing.screenIndex) || analyzed.has(landing.screenIndex)) continue;
-        pending.set(landing.screenIndex, [...(pending.get(landing.screenIndex) ?? []), landing.tile]);
+        if (landing) offerSeed(landing.screenIndex, landing.tile);
       }
     }
   }
   return [...analyzed.values()];
-};
-
-/** Where a border crossing puts the player: the adjacent screen, against its
- *  opposite wall at the same position along the edge. */
-const crossingLanding = (screenIndex: number, edge: EdgeName, at: { row: number; col: number }): { screenIndex: number; tile: GridPos } | null => {
-  const sRow = (screenIndex >> 3) & 7;
-  const sCol = screenIndex & 7;
-  switch (edge) {
-    case 'north': return sRow > 0 ? { screenIndex: ((sRow - 1) << 3) | sCol, tile: { row: 63, col: at.col } } : null;
-    case 'south': return sRow < 7 ? { screenIndex: ((sRow + 1) << 3) | sCol, tile: { row: 0, col: at.col } } : null;
-    case 'west': return sCol > 0 ? { screenIndex: (sRow << 3) | (sCol - 1), tile: { row: at.row, col: 63 } } : null;
-    case 'east': return sCol < 7 ? { screenIndex: (sRow << 3) | (sCol + 1), tile: { row: at.row, col: 0 } } : null;
-  }
 };
 
 export { floodOneScreen, propagateArea };

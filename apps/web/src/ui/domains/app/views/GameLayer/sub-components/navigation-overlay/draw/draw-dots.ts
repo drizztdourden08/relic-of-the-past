@@ -32,7 +32,15 @@ const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], laye
         // a reached upper floor) as misleading two-state dots.
         const hasOverlap = isDualLayer && layer0Reach && layer1Reach;
 
-        if (!hasOverlap && drawResult.attrGrid && LEDGE_ATTRS.has(drawResult.attrGrid[r][c])) continue;
+        // Judge the dot by the attrs of the layer it actually stands on. This
+        // read layer 0's grid for every tile, so a GROUND-only dot was tested
+        // against whatever sits above it — and above an open corridor that is
+        // wall or ledge almost by definition, which blanked every flooded tile
+        // running alongside a raised walkway.
+        const dotAttr = isDualLayer && !layer0Reach
+          ? drawResult.dualLayerGrids?.layer1?.[r]?.[c]
+          : drawResult.attrGrid?.[r]?.[c];
+        if (!hasOverlap && dotAttr !== undefined && LEDGE_ATTRS.has(dotAttr)) continue;
         if (perLayer && (perLayer[0][r][c] === STAIRS_TRAVERSAL_STATE || perLayer[1][r][c] === STAIRS_TRAVERSAL_STATE)) continue;
         // Skip dots for ledge traversal tiles (states 2-9) — arrows are drawn separately
         if (perLayer) {

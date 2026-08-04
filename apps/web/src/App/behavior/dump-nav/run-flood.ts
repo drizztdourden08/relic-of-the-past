@@ -10,9 +10,10 @@
  */
 import type { ScreenAnnotations } from '@shared/game/simulation';
 import type { GridPos } from '@shared/game/navigation';
-import { annotateScreen } from '../../../lib/game/flood';
+import { annotateScreen, propagateArea } from '../../../lib/game/flood';
 import { floodRoomRun } from '../../../lib/game/simulator/flood-room';
 import { floodOneOverworld } from '../../../lib/game/simulator/flood-screen';
+import { enrichEntrances } from '@domains/widgets/navigation/widget-helpers';
 import { wasmBuildOverworldAttrGrid } from '../../../lib/game';
 import { computeFloodFill, computeOverworldFloodFill } from './builders';
 import { dumpFloodItems } from './flood-items';
@@ -42,13 +43,32 @@ const runDumpFlood = (args: RunFloodArgs): RunFloodResult => {
   const { attrGrid, dualLayerGrids, playerLayer, staircaseType, roomLayout } = args;
 
   const items = dumpFloodItems();
-  const run = isIndoors
-    ? floodRoomRun(roomIndex, items, startPos)
-    : floodOneOverworld(overworldScreenIndex, items, startPos);
+  const roomRun = isIndoors ? floodRoomRun(roomIndex, items, startPos) : null;
+  const run = isIndoors ? roomRun : floodOneOverworld(overworldScreenIndex, items, startPos);
 
   const floodFill = isIndoors
     ? computeFloodFill({ roomIndex, run, attrGrid, dualLayerGrids, playerLayer, staircaseType, roomLayout, startPos })
     : computeOverworldFloodFill(run, wasmBuildOverworldAttrGrid(overworldScreenIndex));
+
+  // reachableCount/totalTiles describe the whole connected AREA (propagateArea),
+  // the same total the widget shows, not just this one screen — everything else
+  // in floodFill (rows, attrs, connections) still describes this screen alone.
+  // Without this a room that only reaches its full extent through a stitched
+  // neighbour (a stair, a walk-boundary, an overworld big-screen crossing)
+  // silently under-reports next to what a user actually sees in the live widget.
+  if (floodFill && run) {
+    const areaResults = propagateArea({
+      isIndoors,
+      primaryScreenIndex: isIndoors ? roomIndex : overworldScreenIndex,
+      items,
+      startPos,
+      atPlayer: true,
+      entrances: roomRun ? roomRun.entrances : enrichEntrances(),
+      ...(isIndoors ? { intraEdges: roomLayout?.intraEdges ?? [] } : {}),
+    });
+    floodFill.reachableCount = areaResults.reduce((sum, r) => sum + r.result.reachableCount, 0);
+    floodFill.totalTiles = areaResults.reduce((sum, r) => sum + r.result.totalTiles, 0);
+  }
 
   const annotations = screenId && run
     ? annotateScreen(

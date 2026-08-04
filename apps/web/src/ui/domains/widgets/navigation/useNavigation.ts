@@ -11,6 +11,8 @@ import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetProgressIndicator,
 import type { OverworldVariantInfo } from '../../../../lib/game';
 import { enrichEntrances } from './widget-helpers';
 import { useScreenDetection, usePlayerDebugState, useFloodOnTransition } from './hooks';
+import { reassertFeatureFlags } from '../../../../lib/game';
+import { setDeveloperToolsOverride } from '../../../../lib/game/live-settings-flags';
 import { buildInventory, computeStartContext } from './nav-flood/prepare';
 import { collectIndoorEntrances } from './nav-flood/indoor-entrances';
 import { propagateScreens } from './nav-flood/propagate';
@@ -203,6 +205,23 @@ const useNavigation = () => {
     overlayStore.setMode('auto');
     handleRunRef.current?.();
   }, [activeScreenIndex, running]);
+
+  // The indoor half of useFloodOnTransition listens for the native transition-settled
+  // event, which the core only fires when the developer-tools feature bit is set
+  // (core/game-hooks/transition_events.c). That bit defaults off for a normal player, so
+  // without this override indoor auto-reflood (secret passages, dungeon entries) silently
+  // never fires while overworld reflood — driven off live position instead — keeps working.
+  // The gate only unlocks read-only instrumentation, not a gameplay change, so it's safe to
+  // hold for as long as auto mode is on and must be dropped once it isn't.
+  useEffect(() => {
+    if (!autoRun) return;
+    setDeveloperToolsOverride(true);
+    reassertFeatureFlags();
+    return () => {
+      setDeveloperToolsOverride(null);
+      reassertFeatureFlags();
+    };
+  }, [autoRun]);
 
   // Auto-trigger: re-flood on transition-settled events (indoor) and live position
   // (overworld screen crossing). See useFloodOnTransition for why the split is real, not

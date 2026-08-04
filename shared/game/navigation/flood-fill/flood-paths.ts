@@ -8,6 +8,7 @@ import { SingleLayerStrategy } from '../strategies/single-layer';
 import { DualLayerStrategy } from '../strategies/dual-layer';
 import type { QuadrantBounds } from '../strategies/layer-strategy';
 import { prepareScreen, constrainVoidTiles, findStartPosition } from './screen-prep';
+import { unsupportedUpperVoid } from './upper-void';
 import { findEntrancePositions, buildBorders } from './orchestrator-helpers';
 import type { FloodFillOptions } from './flood-options';
 
@@ -21,13 +22,24 @@ const runDualLayerFlood = (rawAttrGrid: number[][], screenIndex: number, options
   // Real ground is enclosed by walls on that layer.
   const constrainedLayer0 = constrainVoidTiles(layer0, layer1);
   const constrainedLayer1 = constrainVoidTiles(layer1, layer0);
+  // Layer 0 is the UPPER floor, so it gets a second test the lower floor must
+  // not: an enclosed 0x00 region up there is only real if something supports it
+  // (see upper-void.ts). The same test on layer 1 would wall off every ordinary
+  // ground floor, which by definition has open space above it.
+  const upperVoid = unsupportedUpperVoid(constrainedLayer0, constrainedLayer1);
 
   // Build separate collision grids for each layer
   const prep0 = prepareScreen(constrainedLayer0, tileContext, dynamicBlockers, false);
   const prep1 = prepareScreen(constrainedLayer1, tileContext, dynamicBlockers, true); // skip cliffs on layer 1
+  // Applied AFTER cliffs so the gap blocks the walk without joining the wall
+  // runs the cliff scan follows to find a landing.
+  for (let r = 0; r < GRID_SIZE; r++) {
+    for (let c = 0; c < GRID_SIZE; c++) {
+      if (upperVoid[r][c]) prep0.grid.tiles[r][c] = { type: 'blocked' };
+    }
+  }
 
   const grid = prep0.grid;
-  const ledges = prep0.ledges;
   const dynamicBlockerCells = prep0.dynamicBlockerCells;
 
   const startLayer = options.startLayer ?? 0;
@@ -53,16 +65,14 @@ const runDualLayerFlood = (rawAttrGrid: number[][], screenIndex: number, options
 
   const { reachable, transitions, reachableCount, reqGrid, hookTargets, tileLayer, reachableByLayer } = bfsResult;
 
-  // Filter ledges: show arrow only if the approach tile is reachable on layer 0.
-  // Ledges only function on the upper layer; layer 1 reachability is irrelevant.
-  const layer0Reach = bfsResult.reachableByLayer![0];
-  const reachableLedges = ledges.filter(l => {
-    const dr = Math.sign(l.endRow - l.startRow);
-    const dc = Math.sign(l.endCol - l.startCol);
-    const approachRow = l.startRow - dr;
-    const approachCol = l.startCol - dc;
-    return layer0Reach[approachRow]?.[approachCol] != null && layer0Reach[approachRow][approachCol] !== 0;
-  });
+  // The drawn ledges are the BFS's own real cross-layer landings (dual-layer.ts's
+  // expandLedgeCross), not cliff-preprocessing.ts's single-layer wall-run guess —
+  // that guess only walks layer 0's own CLIFF_WALL tiles and has no idea layer 1
+  // exists, so it can land an arrow on more layer-0 ground instead of the real
+  // drop. Every recorded crossing is by construction both reachable (the BFS only
+  // attempts one from an already-reached cell) and landable, so no extra filter
+  // is needed here the way the old wall-run list required one.
+  const reachableLedges = bfsResult.ledges ?? [];
   const borders = buildBorders(transitions, reachable, grid, inv, quadrantBounds);
 
   return {

@@ -1,7 +1,7 @@
 /* @layer renderer-components @kind logic */
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { ReachState } from '@shared/game/navigation/types';
-import { overworldOrigin, screenOriginFor } from '@app/lib/game/flood';
+import { overworldOrigin, roomOrigin, screenOriginFor } from '@app/lib/game/flood';
 
 /** Shared drawing context passed to all draw functions. */
 interface DrawContext {
@@ -54,9 +54,17 @@ const buildDrawContext = (ctx: CanvasRenderingContext2D, vp: ViewportInfo, width
   const TILE_PX = 8;
   const dotRadius = Math.max(2.5, 4 * Math.min(scaleX, scaleY));
 
+  // Indoors, the room the player physically occupies uses the live-derived origin
+  // (screenWorldX/Y above); any OTHER room drawn in the same batch — a connected
+  // room the multi-room flood also covers — has no live position to derive from,
+  // so it falls back to its own roomOrigin(screenIndex). The two agree for the
+  // primary room (roomOrigin is exactly how the entrance/stair tile math built its
+  // own coordinates — see room-entrances.ts), so this only changes behavior for
+  // non-primary rooms, which previously always drew at the primary room's origin
+  // and landed every one of their markers a full room-width off.
   const getScreenWorldOrigin = (screenIndex: number) => {
     if (isIndoors) {
-      return { x: screenWorldX, y: screenWorldY };
+      return screenIndex === result.screenIndex ? { x: screenWorldX, y: screenWorldY } : roomOrigin(screenIndex);
     }
     return overworldOrigin(screenIndex);
   };

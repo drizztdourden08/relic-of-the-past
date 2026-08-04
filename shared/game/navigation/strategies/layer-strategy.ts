@@ -1,5 +1,5 @@
 /* @layer shared-game @kind logic */
-import type { TilePassability, TransitionPoint, GridPos, ReachState } from '../types';
+import type { TilePassability, TransitionPoint, GridPos, ReachState, LedgeTraversal } from '../types';
 
 // ─── BFS Engine Types ────────────────────────────────────────────────────────
 
@@ -32,6 +32,9 @@ interface BFSResult {
   hookTargets: GridPos[];
   tileLayer?: (0 | 1 | 2)[][];
   reachableByLayer?: [ReachState[][], ReachState[][]];
+  /** Real cross-layer ledge hops the BFS actually landed, keyed by their true
+   *  destination — only a dual-layer strategy produces these (see dual-layer.ts). */
+  ledges?: LedgeTraversal[];
 }
 
 // ─── Layer Strategy Interface ────────────────────────────────────────────────
@@ -83,6 +86,7 @@ interface LayerStrategy {
     hookTargets: GridPos[];
     tileLayer?: (0 | 1 | 2)[][];
     reachableByLayer?: [ReachState[][], ReachState[][]];
+    ledges?: LedgeTraversal[];
   };
 }
 

@@ -1,6 +1,6 @@
 /* @layer shared-game @kind logic */
 /** Converts dual-layer BFS body-reached state into merged per-tile reachability + per-layer grids. */
-import type { TilePassability, GridPos, ReachState } from '../types';
+import type { TilePassability, GridPos, ReachState, LedgeTraversal } from '../types';
 import type { TileAttrContext } from '../tile-attrs';
 import { getHookshotTargetTiles } from '../tile-attrs';
 import { GRID_SIZE, TRAVERSAL_DIR_OFFSET, STAIRS_TRAVERSAL_STATE } from '../types';
@@ -17,6 +17,7 @@ interface DualLayerTileResult {
   hookTargets: GridPos[];
   tileLayer: (0 | 1 | 2)[][];
   reachableByLayer: [ReachState[][], ReachState[][]];
+  ledges: LedgeTraversal[];
 }
 
 interface BuildDualLayerArgs {
@@ -27,10 +28,11 @@ interface BuildDualLayerArgs {
   tileContext: TileAttrContext;
   traversedStairTiles: { layer: 0 | 1; row: number; col: number; reqs: Set<string> }[];
   traversedLedgeTiles: { row: number; col: number; reqs: Set<string> }[];
+  ledgeCrossings: LedgeTraversal[];
 }
 
 const buildDualLayerTileResult = (args: BuildDualLayerArgs): DualLayerTileResult => {
-  const { bodyReached, bounds, grids, rawAttrs, tileContext, traversedStairTiles, traversedLedgeTiles } = args;
+  const { bodyReached, bounds, grids, rawAttrs, tileContext, traversedStairTiles, traversedLedgeTiles, ledgeCrossings } = args;
   const { minRow, maxRow, minCol, maxCol } = bounds;
 
   // Convert body positions to per-tile reachability (merge both layers)
@@ -137,7 +139,7 @@ const buildDualLayerTileResult = (args: BuildDualLayerArgs): DualLayerTileResult
     }
   }
 
-  return { reachable, reachableCount, reqGrid, hookTargets, tileLayer, reachableByLayer };
+  return { reachable, reachableCount, reqGrid, hookTargets, tileLayer, reachableByLayer, ledges: ledgeCrossings };
 };
 
 export { buildDualLayerTileResult, SWAP_STAIR_ATTRS };

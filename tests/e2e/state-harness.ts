@@ -15,12 +15,12 @@ import { test } from '@playwright/test';
 import { _electron as electron } from 'playwright';
 import { join } from 'path';
 import { existsSync } from 'fs';
-import { execSync } from 'child_process';
 import type { ElectronApplication, Page } from 'playwright';
 import {
   readStates, awaitState, readFlood, readGroups, readRows, readTags, readCheckSummary, readScreenId,
 } from './state-readers';
 import type { AnnotationRow, CheckSummary } from './state-readers';
+import { TEST_INSTANCE, ensureTestProfile } from './ensure-test-profile';
 
 const PROJECT_ROOT = join(__dirname, '..', '..');
 const MAIN_JS = join(PROJECT_ROOT, 'dist', 'electron', 'main.js');
@@ -54,10 +54,6 @@ interface StateReader {
 
 /** A save state is only usable if its fixture came down with the vault. */
 const hasFixture = (name: string): boolean => existsSync(join(FIXTURES, `${name}.sav`));
-
-const killElectron = () => {
-  try { execSync('taskkill /F /IM electron.exe /T', { stdio: 'ignore' }); } catch { /* none running */ }
-};
 
 /**
  * Make `press()` work whatever controller the machine happens to have.
@@ -114,9 +110,9 @@ const buildReader = (window: Page): StateReader => ({
 const withState = async (name: string, body: (r: StateReader) => Promise<void>): Promise<void> => {
   test.skip(!existsSync(MAIN_JS), 'dist/electron/main.js missing — run `npx electron-vite build` first');
   test.skip(!hasFixture(name), `save-state fixture ${name}.sav is not present (private vault)`);
-  killElectron();
+  await ensureTestProfile();
   const app: ElectronApplication = await electron.launch({
-    args: [MAIN_JS, '--muted', '--no-focus', `--auto-state=${name}`, '--widgets=navigation'],
+    args: [MAIN_JS, '--muted', '--no-focus', `--instance=${TEST_INSTANCE}`, `--auto-state=${name}`, '--widgets=navigation'],
     env: { ...process.env, NODE_ENV: 'production' },
   });
   try {
@@ -129,5 +125,5 @@ const withState = async (name: string, body: (r: StateReader) => Promise<void>):
   }
 };
 
-export { withState, hasFixture, killElectron, KEYS, SETTLE_MS, MAIN_JS, FIXTURES };
+export { withState, hasFixture, KEYS, SETTLE_MS, MAIN_JS, FIXTURES };
 export type { StateReader };
