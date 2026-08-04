@@ -42,3 +42,12 @@
 .tab-bar__label {
   line-height: var(--leading-tight);
 }
+
+.tab-bar__badge {
+  padding: 0 var(--space-2xs);
+  border-radius: var(--radius-sm);
+  background: var(--c-hover);
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+}

@@ -1,9 +1,16 @@
 /* @layer renderer-widgets @kind style */
 
+/* Bounded to under half the widget body: long enough to be useful, short
+   enough that the record region below it (LiveDataInspector.css) always keeps
+   its own floor. `flex-shrink` (the default, 1) lets it go smaller still when
+   the widget itself is short — the cap only ever stops it from GROWING past
+   this share. */
 .live-rec-list {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
+  max-height: 45%;
+  min-height: 0;
 }
 
 .live-rec-list__header {
@@ -12,6 +19,7 @@
   justify-content: space-between;
   width: 100%;
   padding: var(--space-xs) 0;
+  flex-shrink: 0;
 }
 
 .live-rec-list__count {
@@ -23,8 +31,18 @@
   color: var(--c-text-muted);
 }
 
+/* Pinned above the scrolling list, so it stays put while the cards move. */
+.live-rec-list__batch {
+  flex-shrink: 0;
+}
+
+/* The scrolling itself lives on ScrollArea; this class only carries the
+   layout (fill the space left under the header/tabs/batch button, shrink to
+   fit) and the card gap. */
 .live-rec-list__body {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
+  flex: 1;
+  min-height: 0;
 }
