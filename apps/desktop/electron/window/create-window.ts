@@ -136,6 +136,14 @@ const createWindow = (): BrowserWindow => {
     // Re-assert the background position once the first paint is ready (showing the
     // painted frame can otherwise bounce the window back to the top of the z-order).
     mainWindow.once('ready-to-show', () => { if (mainWindow) sendWindowToBack(mainWindow); });
+    // A one-time launch setting isn't enough: focusing a real DOM element (a button
+    // click, a text input) can make Chromium activate the HOSTING native window as a
+    // side effect, on Windows, regardless of showInactive() at launch — this is how a
+    // Playwright-driven click/keypress can steal focus well after a clean no-focus
+    // boot. Rather than enumerate every path that can cause that, treat "focused" as
+    // never a valid state for this window for the rest of its life and immediately
+    // reverse it every time it happens.
+    mainWindow.on('focus', () => { if (mainWindow) showInBackground(mainWindow); });
   }
 
   // Let F1-F12 (and Tab) pass through to the renderer instead of being
