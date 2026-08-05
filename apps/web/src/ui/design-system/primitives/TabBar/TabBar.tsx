@@ -21,6 +21,7 @@ const TabBar = (props: TabBarProps) => {
         >
           {tab.icon && <span className="tab-bar__icon">{tab.icon}</span>}
           {!iconOnly && <span className="tab-bar__label">{tab.label}</span>}
+          {tab.badge != null && <span className="tab-bar__badge">{tab.badge}</span>}
         </button>
       ))}
     </nav>
