@@ -1,20 +1,40 @@
-/* @layer renderer-components @kind types */
-/** The one tile the inspector is describing, as the tooltip needs it. */
-interface TooltipData {
-  x: number; y: number;
-  row: number; col: number;
-  attr: number; label: string;
-  type: string; req: string | null;
+/* @layer renderer-components @kind data */
+import type { TileClassification } from '@shared/game/navigation/tile-classification';
+import type { ReachState } from '@shared/game/navigation/types';
+
+/**
+ * One layer block's data: its full classification, THIS layer's own reach
+ * state, and — only meaningful for a native-attr obstacle — whether the
+ * player's current loadout satisfies it. `isAboveLayer` selects the
+ * "unsupported" wording over "blocked" in reach-status.ts.
+ */
+interface LayerTileData {
+  classification: TileClassification;
+  reach: ReachState;
   canPass: boolean | null;
-  reachable: number;
-  hookTarget: boolean;
+  isAboveLayer: boolean;
+}
+
+/**
+ * Which of the three canonical layouts a tile renders as. Dual falls back to
+ * single when either side has no real content (see tile-inspector-classification.ts) —
+ * so by the time this reaches the tooltip, the mode IS the layout.
+ */
+type TooltipLayers =
+  | { mode: 'single'; primary: LayerTileData }
+  | { mode: 'locked'; lockedLayer: 0 | 1; primary: LayerTileData }
+  | { mode: 'dual'; above: LayerTileData; ground: LayerTileData };
+
+interface TooltipData {
+  x: number;
+  y: number;
+  row: number;
+  col: number;
+  roomTypeLabel: string;
+  layers: TooltipLayers;
   pathReqs: string;
   bfsBlocked: boolean;
   spriteInfo: string[];
-  layer0Attr?: number;
-  layer1Attr?: number;
-  layer0Reach?: boolean;
-  layer1Reach?: boolean;
 }
 
-export type { TooltipData };
+export type { LayerTileData, TooltipLayers, TooltipData };

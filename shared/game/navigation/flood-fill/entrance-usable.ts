@@ -19,7 +19,7 @@ const usableEntranceTransition = (result: FloodFillResult, t: TransitionPoint, i
   if (t.requirements.some((r) => !items.includes(r as TileReq))) return false;
   const attr = result.attrGrid?.[t.row]?.[t.col];
   if (attr == null) return true;
-  const req = getAttrReq(attr, result.tileContext);
+  const req = getAttrReq(attr, result.indoors);
   return req === undefined || items.includes(req);
 };
 

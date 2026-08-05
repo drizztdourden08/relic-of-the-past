@@ -39,7 +39,9 @@ const widgetReachable = async (state: string): Promise<number> => {
     const window = await app.firstWindow();
     await window.waitForLoadState('domcontentloaded');
     await window.waitForTimeout(16_000);
-    await window.getByRole('button', { name: /Flood Fill/ }).click();
+    // dispatchEvent, NOT click(): Playwright's click path calls Page.bringToFront(),
+    // which raises and activates the window on Windows and steals the user's focus.
+    await window.getByRole('button', { name: /Flood Fill/ }).dispatchEvent('click');
     await window.waitForTimeout(3500);
     const text = await window.locator('text=/^\\d+\\/\\d+ \\(\\d+%\\)$/').first().textContent();
     const m = /^(\d+)\//.exec(text ?? '');

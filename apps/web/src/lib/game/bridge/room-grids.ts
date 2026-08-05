@@ -100,6 +100,25 @@ const wasmGetToggleFloorPositions = (): Array<{ pos: number; row: number; col: n
     col: heap[o + 3],
   }));
 
+/** Read a fixed-length, non-count-prefixed uint16 table starting at `ptr`. */
+const readU16Table = (heap: Uint8Array, ptr: number, length: number): number[] =>
+  Array.from({ length }, (_, i) => readU16(heap, ptr + i * 2));
+
+/**
+ * Replacement tile state for slots referenced by attrs 0x70-0x7F (low nibble = slot).
+ * 16 entries; a value's `& 0xf0f0` identifies pot (0x1010), large block (0x2020),
+ * hammer peg (0x4040), or bombable floor (0x3030). Zeroed (all-0) when outdoors.
+ */
+const wasmGetReplacementTileState = (): number[] | null =>
+  callPtr('WasmGetReplacementTileState', (mod, ptr) => readU16Table(mod.HEAPU8, ptr, 16));
+
+/**
+ * Chest lock state for slots referenced by attrs 0x58-0x5D (slot = attr - 0x58).
+ * 6 entries; `>= 0x8000` means the chest is locked. Zeroed (all-0) when outdoors.
+ */
+const wasmGetChestLocations = (): number[] | null =>
+  callPtr('WasmGetChestLocations', (mod, ptr) => readU16Table(mod.HEAPU8, ptr, 6));
+
 export {
   wasmGetIndoorDualLayerGrids,
   wasmBuildRoomDualLayerGrids,
@@ -110,4 +129,6 @@ export {
   wasmBuildOverworldAttrGrid,
   wasmBuildRoomAttrGrid,
   wasmGetToggleFloorPositions,
+  wasmGetReplacementTileState,
+  wasmGetChestLocations,
 };

@@ -62,7 +62,7 @@ describe('updateDungeonLedger — owed accumulation', () => {
     const state = freshState();
     const obs = baseObs();
     obs.interactables = { chests: [makeChest(0)], sprites: [], doors: [] };
-    obs.grids = { screenIndex: SEWERS_ROOM, tileContext: 'interior-dungeon', rawAttrGrid: bombableGrid() };
+    obs.grids = { screenIndex: SEWERS_ROOM, indoors: true, rawAttrGrid: bombableGrid() };
 
     updateDungeonLedger(state, obs, []);
 

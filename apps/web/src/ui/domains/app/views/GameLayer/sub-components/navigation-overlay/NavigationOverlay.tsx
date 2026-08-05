@@ -9,10 +9,21 @@ import { OverlayCanvas } from './OverlayCanvas';
 import { TileInspector } from './TileInspector';
 import { PathControlsLegend } from './PathControlsLegend';
 import { OverlayLegend } from './OverlayLegend';
+import { DotLegend } from './DotLegend';
+import { ArrowLegend } from './ArrowLegend';
 
 const IL: Record<string, CSSProperties> = {
   overlay: { position: 'absolute', inset: 0, zIndex: 6 },
-  legends: { position: 'absolute', bottom: 6, right: 6, zIndex: 7, display: 'flex', gap: 8, alignItems: 'flex-end', pointerEvents: 'none' },
+  // Controls go top-left; the two legends sit side by side bottom-right. Both
+  // containers are pointer-events:none so the overlay never eats a game click —
+  // each panel re-enables pointer events for its own collapse chevron.
+  controls: { position: 'absolute', top: 6, left: 6, zIndex: 7, pointerEvents: 'none' },
+  legends: {
+    position: 'absolute', bottom: 6, right: 6, zIndex: 7,
+    display: 'flex', gap: 6, alignItems: 'flex-end', pointerEvents: 'none',
+  },
+  // Arrows sit directly above the on-screen list, in the right-hand column.
+  legendColumn: { display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'stretch' },
 };
 
 const NavigationOverlay = ({ width, height, gameRunning }: Props) => {
@@ -88,9 +99,15 @@ const NavigationOverlay = ({ width, height, gameRunning }: Props) => {
           pathPreviewState={mouseState}
         />
       )}
-      <Box style={IL.legends}>
+      <Box style={IL.controls}>
         <PathControlsLegend />
-        <OverlayLegend annotations={annotations} />
+      </Box>
+      <Box style={IL.legends}>
+        <DotLegend />
+        <Box style={IL.legendColumn}>
+          <ArrowLegend />
+          <OverlayLegend annotations={annotations} />
+        </Box>
       </Box>
     </Box>
   );

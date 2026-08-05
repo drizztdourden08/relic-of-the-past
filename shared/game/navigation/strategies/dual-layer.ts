@@ -1,6 +1,5 @@
 /* @layer shared-game @kind logic */
 import type { TilePassability } from '../types';
-import type { TileAttrContext } from '../tile-attrs';
 import { GRID_SIZE } from '../types';
 import type { LayerStrategy, BFSCell, BFSExpansionResult, QuadrantBounds } from './layer-strategy';
 import { bodyTiles, getNewTiles, canLeaveLedge, evaluateEntry } from './bfs-helpers';
@@ -16,7 +15,7 @@ class DualLayerStrategy implements LayerStrategy {
   readonly layerCount = 2 as const;
   private readonly grids: [TilePassability[][], TilePassability[][]];
   private readonly rawAttrs: [number[][], number[][]];
-  private readonly tileContext: TileAttrContext;
+  private readonly tileContext: boolean;
   private readonly startLayer: 0 | 1;
   private readonly traversedStairTiles: { layer: 0 | 1; row: number; col: number; reqs: Set<string> }[] = [];
   private readonly traversedLedgeTiles: { row: number; col: number; reqs: Set<string> }[] = [];
@@ -26,7 +25,7 @@ class DualLayerStrategy implements LayerStrategy {
   constructor(
     grids: [TilePassability[][], TilePassability[][]],
     rawAttrs: [number[][], number[][]],
-    tileContext: TileAttrContext,
+    tileContext: boolean,
     startLayer: 0 | 1,
   ) {
     this.grids = grids;

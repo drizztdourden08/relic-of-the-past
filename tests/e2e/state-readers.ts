@@ -67,7 +67,12 @@ const awaitState = async (window: Page, match: RegExp, timeoutMs = POLL_TIMEOUT_
 
 /** Run the flood and read the widget's own reachable/total once it stops moving. */
 const readFlood = async (window: Page): Promise<{ reachable: number; total: number }> => {
-  await window.getByTestId('nav-flood-btn').click();
+  // dispatchEvent, NOT click(): Playwright's click path calls Chromium's
+  // Page.bringToFront() before dispatching the mouse event, which activates and
+  // raises the window on Windows and steals the focus of whoever is at the
+  // keyboard — defeating --no-focus, which only covers launch. A dispatched DOM
+  // click reaches the same React handler without touching the OS z-order.
+  await window.getByTestId('nav-flood-btn').dispatchEvent('click');
   const label = window.locator('text=/^\\d+\\/\\d+ \\(\\d+%\\)$/').first();
   await label.waitFor({ state: 'visible', timeout: POLL_TIMEOUT_MS });
   // A multi-screen area sums per sub-screen, so the total climbs for a moment.

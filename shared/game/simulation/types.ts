@@ -5,7 +5,6 @@
  * check data to decide what happened (see check-matcher for naming).
  */
 import type { GridPos, ScreenVariant } from '../navigation/types';
-import type { TileAttrContext } from '../navigation/tile-attrs';
 import type { TraversalRequirement } from '../navigation/nav-data.types';
 import type { CheckId, CheckRecord, ItemId } from '../data';
 import type { TraversalId } from './traversal-id';
@@ -177,7 +176,7 @@ interface SimLocation {
 /** Attr grids for a single screen, ready for `floodFillScreen`. */
 interface ScreenGridBundle {
   screenIndex: number;
-  tileContext: TileAttrContext;
+  indoors: boolean;
   rawAttrGrid: number[][];
   /** Present for dual-layer indoor rooms. */
   dualLayerGrids?: { layer0: number[][]; layer1: number[][] };

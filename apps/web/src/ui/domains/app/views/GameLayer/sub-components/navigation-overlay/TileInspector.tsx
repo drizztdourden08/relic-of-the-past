@@ -1,18 +1,16 @@
 /* @layer renderer-components @kind component */
-import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import type { CSSProperties } from 'react';
-import { Box } from '../../../../../../design-system/primitives/Box';
+import { Box } from '@ds/primitives/Box';
 import { useGameUIStore } from '../../../../../../../stores/game-ui-store';
 import { wasmGetViewportInfo, wasmGetLiveSprites } from '../../../../../../../lib/game';
-import { classifyTileAttr } from '@shared/game/navigation/tile-classification';
-import { getTileAttrsMap, getAttrLabel } from '@shared/game/navigation/tile-attrs';
 import type { FloodFillResult } from '@shared/game/navigation';
-import type { ReachState } from '@shared/game/navigation/types';
 import type { MouseState } from './navigation-overlay.type';
 import { TileTooltipContent, type TooltipData } from './tooltip';
 import { mouseEventToTile } from './tile-inspector-coords';
 import { useRectSelection } from './tile-inspector-rect-selection';
-import { computeCanPass, buildSpriteInfo, computePathTooltipPosition } from './tile-inspector-tooltip';
+import { buildSpriteInfo, computePathTooltipPosition } from './tile-inspector-tooltip';
+import { buildTooltipLayers } from './tile-inspector-classification';
 
 const COPIED_TOAST: CSSProperties = { position: 'absolute', left: '50%', top: 8, transform: 'translateX(-50%)', background: 'var(--c-green)', color: 'var(--c-text)', padding: '4px 12px', borderRadius: 'var(--r-sm)', fontFamily: 'monospace', fontSize: 12, fontWeight: 'bold', pointerEvents: 'none', zIndex: 8 };
 
@@ -27,25 +25,13 @@ interface TileInspectorProps {
   pathPreviewState?: MouseState;
 }
 
-const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex: _roomIndex, isIndoors, onHoverTile, pathPreviewState }: TileInspectorProps) => {
+const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex, isIndoors, onHoverTile, pathPreviewState }: TileInspectorProps) => {
   const equipment = useGameUIStore(s => s.equipment);
   const inventoryItems = useGameUIStore(s => s.inventory.items);
+  const palaceIndex = useGameUIStore(s => s.map.palaceIndex);
   const spriteRef = useRef<ReturnType<typeof wasmGetLiveSprites>>([]);
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
   const vpRef = useRef<ReturnType<typeof wasmGetViewportInfo>>(null);
-
-  const layer0ReachableLocal = useMemo(() => {
-    if (!result.reachableByLayer) return undefined;
-    return Array.from({ length: 64 }, (_, r) =>
-      Array.from({ length: 64 }, (_, c) => result.reachableByLayer![0][r][c] !== 0),
-    );
-  }, [result.reachableByLayer]);
-  const layer1ReachableLocal = useMemo(() => {
-    if (!result.reachableByLayer) return undefined;
-    return Array.from({ length: 64 }, (_, r) =>
-      Array.from({ length: 64 }, (_, c) => result.reachableByLayer![1][r][c] !== 0),
-    );
-  }, [result.reachableByLayer]);
 
   useEffect(() => {
     let raf = 0;
@@ -63,28 +49,20 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex:
       const vp = vpRef.current;
       if (!vp || !result.attrGrid) return false;
       if (row < 0 || row >= 64 || col < 0 || col >= 64) return false;
-      const attr = result.attrGrid[row][col];
-      const reachable = result.reachable[row][col];
-      const context = result.tileContext ?? 'overworld';
-      const label = getAttrLabel(attr, context);
-      const classification = classifyTileAttr(attr, context);
-      const tileDef = getTileAttrsMap(context)[attr];
+
+      const { roomTypeLabel, layers } = buildTooltipLayers({
+        result, row, col, roomIndex, isIndoors, rawPalaceIndexX2: palaceIndex,
+        reachableByLayer: result.reachableByLayer, equipment, inventoryItems,
+      });
       setTooltip({
-        x: width / 2, y: 40, row, col, attr, label,
-        type: classification.type === 'ledge' ? `ledge (${classification.dir})` : classification.type,
-        req: tileDef?.req ?? null, canPass: null, reachable,
-        hookTarget: tileDef?.hookTarget ?? false,
+        x: width / 2, y: 40, row, col, roomTypeLabel, layers,
         pathReqs: result.reqGrid?.[row]?.[col] ?? '',
         bfsBlocked: false, spriteInfo: [],
-        layer0Attr: result.dualLayerGrids?.layer0[row]?.[col],
-        layer1Attr: result.dualLayerGrids?.layer1[row]?.[col],
-        layer0Reach: layer0ReachableLocal?.[row]?.[col],
-        layer1Reach: layer1ReachableLocal?.[row]?.[col],
       });
       return true;
     };
     return () => { delete (window as any).__debugHoverTile; };
-  }, [result, width, height, layer0ReachableLocal, layer1ReachableLocal]);
+  }, [result, width, height, roomIndex, isIndoors, palaceIndex, equipment, inventoryItems]);
 
   const mouseToTile = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => mouseEventToTile(e, vpRef.current, result, width, height, isIndoors),
@@ -133,18 +111,8 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex:
       return;
     }
 
-    const attr = result.attrGrid[tileRow][tileCol];
-    const reachable = result.reachable[tileRow][tileCol];
-    const context = result.tileContext ?? 'overworld';
-    const classification = classifyTileAttr(attr, context);
-    const label = getAttrLabel(attr, context);
-    const tileDef = getTileAttrsMap(context)[attr];
-    const req = tileDef?.req ?? null;
-    const hookTarget = tileDef?.hookTarget ?? false;
     const bfsBlocked = !!result.dynamicBlockerCells?.some(p => p.row === tileRow && p.col === tileCol);
-
     const spriteInfo = buildSpriteInfo(spriteRef.current, tileRow, tileCol, screenWorldX, screenWorldY);
-    const canPass = computeCanPass(req, equipment, inventoryItems);
 
     const activeTarget = pathPreviewState
       ? (pathPreviewState.lockTarget && pathPreviewState.lockedTile
@@ -160,21 +128,19 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex:
         })
       : { tipX: mx + 14, tipY: my - 60 };
 
+    const { roomTypeLabel, layers } = buildTooltipLayers({
+      result, row: tileRow, col: tileCol, roomIndex, isIndoors, rawPalaceIndexX2: palaceIndex,
+      reachableByLayer: result.reachableByLayer, equipment, inventoryItems,
+    });
+
     setTooltip({
       x: tipX, y: tipY,
-      row: tileRow, col: tileCol,
-      attr, label,
-      type: classification.type === 'ledge' ? `ledge (${classification.dir})` : classification.type,
-      req, canPass, reachable, hookTarget,
+      row: tileRow, col: tileCol, roomTypeLabel, layers,
       pathReqs: result.reqGrid?.[tileRow]?.[tileCol] ?? '',
       bfsBlocked, spriteInfo,
-      layer0Attr: result.dualLayerGrids?.layer0[tileRow]?.[tileCol],
-      layer1Attr: result.dualLayerGrids?.layer1[tileRow]?.[tileCol],
-      layer0Reach: layer0ReachableLocal?.[tileRow]?.[tileCol],
-      layer1Reach: layer1ReachableLocal?.[tileRow]?.[tileCol],
     });
     if (onHoverTile) onHoverTile(tileRow, tileCol);
-  }, [width, height, result, overworldScreenIndex, equipment, inventoryItems, onHoverTile, pathPreviewState, rectSel?.active, handleRectMouseMove, layer0ReachableLocal, layer1ReachableLocal]);
+  }, [width, height, result, overworldScreenIndex, roomIndex, isIndoors, palaceIndex, equipment, inventoryItems, onHoverTile, pathPreviewState, rectSel?.active, handleRectMouseMove]);
 
   return (
     <Box
@@ -208,7 +174,7 @@ const TileInspector = ({ width, height, result, overworldScreenIndex, roomIndex:
           Tile data copied to clipboard! ({selectionRect?.tileCount} tiles)
         </Box>
       )}
-      {tooltip && !rectSel?.active && <TileTooltipContent tooltip={tooltip} result={result} />}
+      {tooltip && !rectSel?.active && <TileTooltipContent tooltip={tooltip} />}
     </Box>
   );
 };

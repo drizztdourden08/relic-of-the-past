@@ -2,14 +2,16 @@
 import type { FloodFillResult } from '@shared/game/navigation';
 import type { ReachState } from '@shared/game/navigation/types';
 import { STAIRS_TRAVERSAL_STATE } from '@shared/game/navigation/types';
+import { DRAW_DOTS_LEDGE_ATTRS } from '@shared/game/data/native-tables';
 import type { DrawContext } from './draw-context';
 
-const LEDGE_ATTRS = new Set([0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x01, 0x02, 0x03, 0x1a, 0x12, 0x11, 0x13, 0x19, 0x1b, 0x3d]);
-
 const DOT_COLOR_REACHABLE = 'rgba(80, 200, 255, 0.6)';
-const DOT_COLOR_UPPER = 'rgba(100, 215, 255, 0.65)';
-const DOT_COLOR_LOWER = 'rgba(50, 165, 215, 0.55)';
 const DOT_COLOR_REQ = 'rgba(255, 100, 180, 0.35)';
+
+/** Ring colour by which layer(s) reached the tile — ground (layer 1), above (layer 0), or both. */
+const RING_COLOR_GROUND = '#5b9bd5';
+const RING_COLOR_ABOVE = '#c8a84e';
+const RING_COLOR_BOTH = '#000';
 
 const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], layer1ReachableOverride: [ReachState[][], ReachState[][]] | null): void => {
   const { ctx, scaleX, scaleY, viewLeft, viewTop, snesW, snesH, TILE_PX, dotRadius, getScreenWorldOrigin } = dc;
@@ -19,6 +21,10 @@ const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], laye
     const origin = getScreenWorldOrigin(drawResult.screenIndex);
     const perLayer = layer1ReachableOverride;
     const isDualLayer = !!perLayer;
+    // A one-layer screen still sits on a layer, and the ring must name the SAME one
+    // the tooltip does or the two disagree on the same tile. Outdoors is always the
+    // ground; a single-layer room takes the layer the flood started on.
+    const singleLayerIsAbove = !isDualLayer && drawResult.indoors && (drawResult.startLayer ?? 0) === 0;
     for (let r = 0; r < 64; r++) {
       for (let c = 0; c < 64; c++) {
         const layer0Reach = perLayer ? perLayer[0][r][c] !== 0 : false;
@@ -32,15 +38,22 @@ const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], laye
         // a reached upper floor) as misleading two-state dots.
         const hasOverlap = isDualLayer && layer0Reach && layer1Reach;
 
-        // Judge the dot by the attrs of the layer it actually stands on. This
-        // read layer 0's grid for every tile, so a GROUND-only dot was tested
-        // against whatever sits above it — and above an open corridor that is
-        // wall or ledge almost by definition, which blanked every flooded tile
-        // running alongside a raised walkway.
+        // Judge the tile by the attrs of the layer it ACTUALLY STANDS ON.
+        //
+        // `attrGrid` is the upper/BG2 layer, so testing it for every tile checks a
+        // ground-only dot against whatever sits ABOVE it — and above an open floor
+        // that is a wall or a ledge almost by definition. The result is that every
+        // reachable tile running alongside a raised walkway draws no dot at all:
+        // e.g. ground 0x00 (plain floor, reachable) under above 0x02 (wall) vanished,
+        // because 0x02 is in the skip set. Reached on the ground only? Then the
+        // ground grid is the one that decides.
+        //
+        // DO NOT collapse this back to a single `attrGrid` read — that regression has
+        // now happened twice, and it silently blanks large runs of correct dots.
         const dotAttr = isDualLayer && !layer0Reach
           ? drawResult.dualLayerGrids?.layer1?.[r]?.[c]
           : drawResult.attrGrid?.[r]?.[c];
-        if (!hasOverlap && dotAttr !== undefined && LEDGE_ATTRS.has(dotAttr)) continue;
+        if (!hasOverlap && dotAttr !== undefined && DRAW_DOTS_LEDGE_ATTRS.has(dotAttr)) continue;
         if (perLayer && (perLayer[0][r][c] === STAIRS_TRAVERSAL_STATE || perLayer[1][r][c] === STAIRS_TRAVERSAL_STATE)) continue;
         // Skip dots for ledge traversal tiles (states 2-9) — arrows are drawn separately
         if (perLayer) {
@@ -61,38 +74,24 @@ const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], laye
         const hasReq = drawResult.reqGrid && drawResult.reqGrid[r][c] !== '';
         const radius = dotRadius * 0.6;
 
-        if (hasOverlap) {
-          const splitAlpha = ctx.globalAlpha;
-          ctx.globalAlpha = 0.85;
-          if (layer1Reach) {
-            ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_LOWER;
-            ctx.beginPath();
-            ctx.arc(dx, dy, radius, Math.PI * 0.5, Math.PI * 1.5);
-            ctx.fill();
-          }
-          if (layer0Reach) {
-            ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_UPPER;
-            ctx.beginPath();
-            ctx.arc(dx, dy, radius, -Math.PI * 0.5, Math.PI * 0.5);
-            ctx.fill();
-          }
-          if (layer0Reach || layer1Reach) {
-            ctx.strokeStyle = '#000';
-            ctx.lineWidth = Math.max(1, Math.min(scaleX, scaleY) * 0.6);
-            ctx.beginPath();
-            ctx.arc(dx, dy, radius, 0, Math.PI * 2);
-            ctx.stroke();
-          }
-          ctx.globalAlpha = splitAlpha;
-        } else {
-          const layerColor = isDualLayer
-            ? (layer0Reach ? DOT_COLOR_UPPER : DOT_COLOR_LOWER)
-            : DOT_COLOR_REACHABLE;
-          ctx.fillStyle = hasReq ? DOT_COLOR_REQ : layerColor;
-          ctx.beginPath();
-          ctx.arc(dx, dy, radius, 0, Math.PI * 2);
-          ctx.fill();
-        }
+        // Fill conveys the flood result only — identical on both layers. The ring
+        // (drawn next) is what conveys which layer(s) reached the tile.
+        ctx.fillStyle = hasReq ? DOT_COLOR_REQ : DOT_COLOR_REACHABLE;
+        ctx.beginPath();
+        ctx.arc(dx, dy, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        const ringColor = hasOverlap
+          ? RING_COLOR_BOTH
+          : ((isDualLayer ? layer0Reach : singleLayerIsAbove) ? RING_COLOR_ABOVE : RING_COLOR_GROUND);
+        const ringAlpha = ctx.globalAlpha;
+        ctx.globalAlpha = 0.85;
+        ctx.strokeStyle = ringColor;
+        ctx.lineWidth = Math.max(1, Math.min(scaleX, scaleY) * 0.6);
+        ctx.beginPath();
+        ctx.arc(dx, dy, radius, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.globalAlpha = ringAlpha;
       }
     }
   }
@@ -116,10 +115,9 @@ const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], laye
     ctx.fill();
   }
 
-  // Draw hookshot targets
+  // Draw hookshot targets as ordinary dots — hookshot-ability is already
+  // reported in the tile tooltip, so no separate ring marks these tiles.
   ctx.globalAlpha = 0.7;
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = '#00ff88';
   for (const drawResult of drawResults) {
     if (!drawResult.hookTargets || drawResult.hookTargets.length === 0) continue;
     const origin = getScreenWorldOrigin(drawResult.screenIndex);
@@ -138,9 +136,6 @@ const drawReachableDots = (dc: DrawContext, drawResults: FloodFillResult[], laye
       ctx.beginPath();
       ctx.arc(dx, dy, dotRadius * 0.6, 0, Math.PI * 2);
       ctx.fill();
-      ctx.beginPath();
-      ctx.arc(dx, dy, dotRadius * 0.65, 0, Math.PI * 2);
-      ctx.stroke();
     }
   }
 };

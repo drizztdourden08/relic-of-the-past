@@ -10,7 +10,6 @@
  */
 
 import type { RegionNavData } from '../nav-data.types';
-import type { TileAttrContext } from '../tile-attrs';
 import type { TileReq } from '../tile-attrs';
 import type { FloodFillResult } from '../types';
 import { floodFillScreen } from '../flood-fill/orchestrator';
@@ -18,7 +17,7 @@ import { INVENTORY_PROGRESSION } from './requirement-detector';
 
 interface GlobalFloodOptions {
   getGrid: (screenIndex: number) => number[][];
-  tileContext: TileAttrContext;
+  indoors: boolean;
   screenIndices: number[];
 }
 
@@ -29,7 +28,7 @@ interface GlobalFloodResult {
 }
 
 const runGlobalFlood = (options: GlobalFloodOptions): GlobalFloodResult => {
-  const { getGrid, tileContext, screenIndices } = options;
+  const { getGrid, indoors, screenIndices } = options;
   const screens = new Map<number, Pick<RegionNavData, 'totalTiles' | 'freeTileCount' | 'maxReachableTileCount'>>();
   const floodResults = new Map<number, FloodFillResult>();
 
@@ -48,14 +47,14 @@ const runGlobalFlood = (options: GlobalFloodOptions): GlobalFloodResult => {
 
     // BFS with no items — free tile count
     const freeResult = floodFillScreen(grid, screenIndex, {
-      tileContext,
+      indoors,
       inventory: emptyInventory,
     });
     floodResults.set(screenIndex, freeResult);
 
     // BFS with all items — max reachable count
     const fullResult = floodFillScreen(grid, screenIndex, {
-      tileContext,
+      indoors,
       inventory: fullInventory,
     });
 

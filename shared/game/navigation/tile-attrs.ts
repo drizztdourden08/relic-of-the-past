@@ -3,28 +3,37 @@
  * Unified tile attribute map — single source of truth for collision behavior,
  * equipment requirements, semantic labels, and category grouping.
  *
- * Tables live in overworld-attrs.ts / interior-attrs.ts; types in
+ * Tables live in overworld-attrs.ts / the native INTERIOR_ATTRS table; types in
  * tile-attrs-types.ts. This module exposes derived helpers + the public barrel.
  */
-import type { TileReq, TileCat, TileAttrContext, TileAttrDef } from './tile-attrs-types';
+import type { TileReq, TileCat, TileAttrDef } from '../data/types/tile-attrs-types';
+import { INTERIOR_ATTRS } from '../data/native-tables';
 import { OVERWORLD_TILE_ATTRS } from './overworld-attrs';
-import { INTERIOR_HOUSE_TILE_ATTRS, INTERIOR_CAVE_TILE_ATTRS, INTERIOR_DUNGEON_TILE_ATTRS, getTileAttrsMap } from './interior-attrs';
 
 /** Backward-compat alias; prefer OVERWORLD_TILE_ATTRS. */
 const TILE_ATTRS = OVERWORLD_TILE_ATTRS;
 
+/**
+ * Selects the attribute map for a tile's classification rules. The engine's own
+ * dispatcher (TileDetect_ExecuteInner, core/zelda3/src/tile_detect.c:256) branches
+ * on a single `is_indoors` bool — house/cave/dungeon interiors all read the same
+ * table until they diverge, so that is all a caller here needs to say.
+ */
+const tileAttrsFor = (indoors: boolean): Readonly<Record<number, TileAttrDef>> =>
+  indoors ? INTERIOR_ATTRS : OVERWORLD_TILE_ATTRS;
+
 // ─── Derived Helpers ────────────────────────────────────────────────────────
 
-const getAttrLabel = (attr: number, context: TileAttrContext = 'overworld'): string => {
-  return getTileAttrsMap(context)[attr]?.labels[0] ?? 'unknown';
+const getAttrLabel = (attr: number, indoors = false): string => {
+  return tileAttrsFor(indoors)[attr]?.labels[0] ?? 'unknown';
 };
 
-const getAttrReq = (attr: number, context: TileAttrContext = 'overworld'): TileReq | undefined => {
-  return getTileAttrsMap(context)[attr]?.req;
+const getAttrReq = (attr: number, indoors = false): TileReq | undefined => {
+  return tileAttrsFor(indoors)[attr]?.req;
 };
 
-const isCategory = (attr: number, cat: TileCat, context: TileAttrContext = 'overworld'): boolean => {
-  return getTileAttrsMap(context)[attr]?.cat === cat;
+const isCategory = (attr: number, cat: TileCat, indoors = false): boolean => {
+  return tileAttrsFor(indoors)[attr]?.cat === cat;
 };
 
 /**
@@ -63,17 +72,17 @@ const HOOKSHOT_TARGET_TILES: ReadonlySet<number> = (() => {
   return s;
 })();
 
-const getHookshotTargetTiles = (context: TileAttrContext = 'overworld'): ReadonlySet<number> => {
+const getHookshotTargetTiles = (indoors = false): ReadonlySet<number> => {
   const s = new Set<number>();
-  for (const [k, v] of Object.entries(getTileAttrsMap(context))) {
+  for (const [k, v] of Object.entries(tileAttrsFor(indoors))) {
     if (v.hookTarget) s.add(Number(k));
   }
   return s;
 };
 
 export {
-  OVERWORLD_TILE_ATTRS, INTERIOR_HOUSE_TILE_ATTRS, INTERIOR_CAVE_TILE_ATTRS, INTERIOR_DUNGEON_TILE_ATTRS,
-  TILE_ATTRS, getTileAttrsMap, getAttrLabel, getAttrReq, isCategory, isDoorPassageAttr, isPassableAttr,
+  OVERWORLD_TILE_ATTRS,
+  TILE_ATTRS, tileAttrsFor, getAttrLabel, getAttrReq, isCategory, isDoorPassageAttr, isPassableAttr,
   WATER_TILES, CLIFF_TRIGGER_TILES, CLIFF_FACE_TILES, PIT_TILES, HOOKSHOT_TARGET_TILES, getHookshotTargetTiles,
 };
-export type { TileReq, TileLabel, TilePass, TileCat, TileAttrContext, TileAttrDef } from './tile-attrs-types';
+export type { TileReq, TileLabel, TilePass, TileCat, TileAttrDef } from '../data/types/tile-attrs-types';

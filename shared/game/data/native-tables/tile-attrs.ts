@@ -6,7 +6,7 @@
  * is_indoors logic) on top of it. Consumers live in `navigation/overworld-attrs.ts`
  * and `navigation/interior-attrs.ts`, which keep the accessor functions.
  */
-import type { TileAttrDef } from '../../navigation/tile-attrs-types';
+import type { TileAttrDef } from '../types/tile-attrs-types';
 
 const OVERWORLD_TILE_ATTRS: Readonly<Record<number, TileAttrDef>> = {
   // ═══ Ground / Walkable ═══════════════════════════════════════════════════════

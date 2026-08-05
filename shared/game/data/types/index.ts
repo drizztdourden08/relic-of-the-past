@@ -22,3 +22,7 @@ export type { AreaRecord, LocationRecord } from './region';
 export type { ActorCombatProfile, RangeProfile, WeaponProfile } from './combat';
 export type { ActorGameId, ActorKind, ActorRecord } from './actor';
 export type { TagRecord } from './tag';
+export type {
+  TileReq, TileLabel, TilePass, TileCat, TileAttrDef,
+  TileBehavior, TileVisual,
+} from './tile-attrs-types';

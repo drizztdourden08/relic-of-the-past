@@ -1,7 +1,6 @@
 /* @layer shared-game @kind logic */
 /** Converts dual-layer BFS body-reached state into merged per-tile reachability + per-layer grids. */
 import type { TilePassability, GridPos, ReachState, LedgeTraversal } from '../types';
-import type { TileAttrContext } from '../tile-attrs';
 import { getHookshotTargetTiles } from '../tile-attrs';
 import { GRID_SIZE, TRAVERSAL_DIR_OFFSET, STAIRS_TRAVERSAL_STATE } from '../types';
 import type { QuadrantBounds } from './layer-strategy';
@@ -25,7 +24,7 @@ interface BuildDualLayerArgs {
   bounds: QuadrantBounds;
   grids: [TilePassability[][], TilePassability[][]];
   rawAttrs: [number[][], number[][]];
-  tileContext: TileAttrContext;
+  tileContext: boolean;
   traversedStairTiles: { layer: 0 | 1; row: number; col: number; reqs: Set<string> }[];
   traversedLedgeTiles: { row: number; col: number; reqs: Set<string> }[];
   ledgeCrossings: LedgeTraversal[];

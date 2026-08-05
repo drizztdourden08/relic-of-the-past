@@ -18,7 +18,7 @@ const getAdjacentRoom = (roomIdx: number, edge: 'north' | 'south' | 'east' | 'we
 const getConnections = (result: FloodFillResult, intraEdges?: ('north' | 'south' | 'east' | 'west')[]): ConnectionInfo[] => {
   const connections: ConnectionInfo[] = [];
   const edges: ('north' | 'south' | 'east' | 'west')[] = ['north', 'south', 'east', 'west'];
-  const isIndoor = result.tileContext !== 'overworld';
+  const isIndoor = result.indoors;
   const intraSet = new Set(intraEdges ?? []);
 
   // Expand intra edges to include both sides of each boundary.

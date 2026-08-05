@@ -72,9 +72,6 @@ type TileCat =
   | 'special'
   | 'pit';
 
-/** Tile attribute context for classification rules. */
-type TileAttrContext = 'overworld' | 'interior-house' | 'interior-cave' | 'interior-dungeon';
-
 interface TileAttrDef {
   /** How the flood fill treats this tile */
   pass: TilePass;
@@ -88,4 +85,53 @@ interface TileAttrDef {
   hookTarget?: true;
 }
 
-export type { TileReq, TileLabel, TilePass, TileCat, TileAttrContext, TileAttrDef };
+/**
+ * Mechanical consequence of a tile, one member per case in
+ * TileDetect_ExecuteInner (core/zelda3/src/tile_detect.c:261-526). The names
+ * ARE the engine's own TileBehavior_* comment names, so a reader can check
+ * conformance against that switch by eye.
+ */
+type TileBehavior =
+  | 'nothing' | 'standard-collision'
+  | 'deep-water' | 'shallow-water' | 'short-water-ladder'
+  | 'moving-floor' | 'spike-floor' | 'ganon-ice' | 'palace-ice'
+  | 'slope' | 'slope-outer' | 'water-staircase'
+  | 'stairs-single-layer' | 'stairs-swap-layer' | 'stairs-visible'
+  // The switch has a FIFTH staircase case (TileHandlerIndoor_3E, tile_detect.c:366)
+  // with no name of its own; it raises the in-room staircase flag in the high nibble,
+  // which sends the player to a different submodule than 'stairs-single-layer' does.
+  // Named after the handler, the same way 'indoor-door-80'/'indoor-door-82' are.
+  | 'indoor-stairs-3e'
+  | 'pit' | 'hookshottable'
+  | 'ledge-north' | 'ledge-south' | 'ledge-east-west'
+  | 'ledge-north-diagonal' | 'ledge-south-diagonal'
+  | 'thick-grass' | 'gravestone' | 'spike' | 'hylian-plaque'
+  | 'diggable-ground' | 'warp' | 'unused-corner' | 'eastern-ruins-corner'
+  | 'liftable' | 'bonk-rocks' | 'chest' | 'rupee-tile' | 'minigame-chest'
+  | 'crystal-peg-up'
+  | 'conveyor-up' | 'conveyor-down' | 'conveyor-left' | 'conveyor-right'
+  | 'manipulably-replaced'
+  | 'indoor-door-80' | 'indoor-door-82' | 'entrance'
+  | 'layer-toggle-shutter' | 'layer-dungeon-toggle-shutter'
+  | 'dungeon-toggle-manual-door' | 'dungeon-toggle-shutter'
+  | 'lightable-torch' | 'flaggable-door';
+
+/**
+ * Descriptive identity — what a tile IS, for the label a person reads. Kept
+ * separate from TileBehavior on purpose: two tiles can share a behavior and
+ * look nothing alike, and a readable label must never pass itself off as the
+ * engine's own classification.
+ */
+type TileVisual =
+  | 'ground' | 'floor' | 'stair-steps' | 'thick-grass' | 'shallow-water' | 'deep-water'
+  | 'water-ladder' | 'ice' | 'wall' | 'plaque' | 'gravestone' | 'spikes'
+  | 'cliff-face' | 'cliff-edge' | 'ledge' | 'pit' | 'diggable-patch' | 'warp-tile'
+  | 'bush' | 'sign' | 'pot' | 'light-rock' | 'dark-rock' | 'bonk-rock' | 'hammer-peg'
+  | 'crystal-peg' | 'pushable-block' | 'chest' | 'conveyor' | 'rupee-floor'
+  | 'door-frame' | 'shutter' | 'entrance-mat' | 'torch-sconce' | 'flaggable-wall'
+  | 'hookshot-post';
+
+export type {
+  TileReq, TileLabel, TilePass, TileCat, TileAttrDef,
+  TileBehavior, TileVisual,
+};

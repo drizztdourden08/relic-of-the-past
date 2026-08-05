@@ -13,7 +13,7 @@ import { findEntrancePositions, buildBorders } from './orchestrator-helpers';
 import type { FloodFillOptions } from './flood-options';
 
 const runDualLayerFlood = (rawAttrGrid: number[][], screenIndex: number, options: FloodFillOptions): FloodFillResult => {
-  const { tileContext, inventory, startPos, dynamicBlockers, entrances = [], variant, quadrantBounds } = options;
+  const { indoors, inventory, startPos, dynamicBlockers, entrances = [], variant, quadrantBounds } = options;
   const { layer0, layer1 } = options.dualLayerGrids!;
 
   // Mark boundary-connected void as blocked on each layer.
@@ -29,8 +29,8 @@ const runDualLayerFlood = (rawAttrGrid: number[][], screenIndex: number, options
   const upperVoid = unsupportedUpperVoid(constrainedLayer0, constrainedLayer1);
 
   // Build separate collision grids for each layer
-  const prep0 = prepareScreen(constrainedLayer0, tileContext, dynamicBlockers, false);
-  const prep1 = prepareScreen(constrainedLayer1, tileContext, dynamicBlockers, true); // skip cliffs on layer 1
+  const prep0 = prepareScreen(constrainedLayer0, indoors, dynamicBlockers, false);
+  const prep1 = prepareScreen(constrainedLayer1, indoors, dynamicBlockers, true); // skip cliffs on layer 1
   // Applied AFTER cliffs so the gap blocks the walk without joining the wall
   // runs the cliff scan follows to find a landing.
   for (let r = 0; r < GRID_SIZE; r++) {
@@ -50,14 +50,14 @@ const runDualLayerFlood = (rawAttrGrid: number[][], screenIndex: number, options
 
   // Determine entrance positions before BFS (needed by both paths)
   const { screenEntrances: sEnts, entrancePositions: ePos } = findEntrancePositions(
-    tileContext, entrances, screenIndex,
+    indoors, entrances, screenIndex,
   );
 
   const bfsBounds: QuadrantBounds = quadrantBounds ?? { minRow: 0, maxRow: GRID_SIZE - 1, minCol: 0, maxCol: GRID_SIZE - 1 };
   const strategy = new DualLayerStrategy(
     [prep0.grid.tiles, prep1.grid.tiles],
     [prep0.grid.rawAttr, prep1.grid.rawAttr],
-    tileContext,
+    indoors,
     startLayer,
   );
 
@@ -76,7 +76,7 @@ const runDualLayerFlood = (rawAttrGrid: number[][], screenIndex: number, options
   const borders = buildBorders(transitions, reachable, grid, inv, quadrantBounds);
 
   return {
-    screenIndex, tileContext, startPos: start,
+    screenIndex, indoors, startPos: start,
     reachable, transitions, reachableCount,
     totalTiles: quadrantBounds
       ? (quadrantBounds.maxRow - quadrantBounds.minRow + 1) * (quadrantBounds.maxCol - quadrantBounds.minCol + 1)
@@ -89,21 +89,21 @@ const runDualLayerFlood = (rawAttrGrid: number[][], screenIndex: number, options
 };
 
 const runSingleLayerFlood = (rawAttrGrid: number[][], screenIndex: number, options: FloodFillOptions, layerBlocked: boolean): FloodFillResult => {
-  const { tileContext, inventory, startPos, dynamicBlockers, entrances = [], variant, quadrantBounds } = options;
+  const { indoors, inventory, startPos, dynamicBlockers, entrances = [], variant, quadrantBounds } = options;
 
   // When layer changes are blocked (staircaseType 2) but dual grids exist,
   // use the starting layer's grid instead of the raw attr grid.
   const singleLayerGrid = layerBlocked && options.dualLayerGrids
     ? (options.startLayer === 1 ? options.dualLayerGrids.layer1 : options.dualLayerGrids.layer0)
     : rawAttrGrid;
-  const prep = prepareScreen(singleLayerGrid, tileContext, dynamicBlockers);
+  const prep = prepareScreen(singleLayerGrid, indoors, dynamicBlockers);
   const grid = prep.grid;
   const ledges = prep.ledges;
   const dynamicBlockerCells = prep.dynamicBlockerCells;
 
   // Determine entrance positions (from the starting layer's grid)
   const { screenEntrances, entrancePositions } = findEntrancePositions(
-    tileContext, entrances, screenIndex,
+    indoors, entrances, screenIndex,
   );
 
   const start = findStartPosition(grid, startPos);
@@ -111,7 +111,7 @@ const runSingleLayerFlood = (rawAttrGrid: number[][], screenIndex: number, optio
 
   // Single-layer BFS (using unified engine with SingleLayerStrategy)
   const singleBounds: QuadrantBounds = quadrantBounds ?? { minRow: 0, maxRow: GRID_SIZE - 1, minCol: 0, maxCol: GRID_SIZE - 1 };
-  const strategy = new SingleLayerStrategy(grid.tiles, grid.rawAttr, tileContext);
+  const strategy = new SingleLayerStrategy(grid.tiles, grid.rawAttr, indoors);
   let seeds = options.extraSeeds ? [...options.extraSeeds] : [];
   let bfsResult = runBFS(strategy, start.row, start.col, entrancePositions, inv, singleBounds, seeds.length > 0 ? seeds : undefined);
   // One-way ledge hops: a reachable ledge start drops Link at its landing tile.
@@ -132,7 +132,7 @@ const runSingleLayerFlood = (rawAttrGrid: number[][], screenIndex: number, optio
   const borders = buildBorders(bfsResult.transitions, bfsResult.reachable, grid, inv, quadrantBounds);
 
   return {
-    screenIndex, tileContext, startPos: start,
+    screenIndex, indoors, startPos: start,
     reachable: bfsResult.reachable,
     transitions: bfsResult.transitions,
     reachableCount: bfsResult.reachableCount,

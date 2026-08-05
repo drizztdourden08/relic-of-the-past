@@ -68,6 +68,7 @@ export {
   wasmGetIndoorDualLayerGrids, wasmBuildRoomDualLayerGrids, wasmGetIndoorLayer0Grid, wasmGetLinkLayer,
   wasmGetRoomCollisionType, wasmGetStaircaseType, wasmBuildOverworldAttrGrid,
   wasmBuildRoomAttrGrid, wasmGetToggleFloorPositions,
+  wasmGetReplacementTileState, wasmGetChestLocations,
 } from './bridge/room-grids';
 export { wasmGetRoomLayoutInfo, wasmGetDungeonMapPosition, roomSectionSplitFrom } from './bridge/room-layout';
 export {

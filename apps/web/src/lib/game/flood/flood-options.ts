@@ -42,7 +42,7 @@ const buildFloodOptions = (req: FloodRequest, grids: ScreenGridBundle): FloodFil
   const { location, items, startPos, atPlayer, entrances, extraSeeds, quadrantBounds } = req;
   const indoors = location.isIndoors;
   return {
-    tileContext: grids.tileContext,
+    indoors: grids.indoors,
     inventory: new Set(items),
     ...(startPos ? { startPos } : {}),
     entrances: entrances ?? [],

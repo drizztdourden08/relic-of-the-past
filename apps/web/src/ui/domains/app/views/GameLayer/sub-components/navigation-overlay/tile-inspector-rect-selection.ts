@@ -62,7 +62,7 @@ const useRectSelection = (params: RectSelectionParams) => {
 
     if (!result.attrGrid) return;
 
-    const context = result.tileContext ?? 'overworld';
+    const indoors = result.indoors ?? false;
     const rows: string[] = [];
     for (let r = r0; r <= r1; r++) {
       const cells: string[] = [];
@@ -77,7 +77,7 @@ const useRectSelection = (params: RectSelectionParams) => {
 
     const header = [
       `Tile Selection [${r0},${c0}] to [${r1},${c1}] (${(r1 - r0 + 1)}×${(c1 - c0 + 1)} = ${(r1 - r0 + 1) * (c1 - c0 + 1)} tiles)`,
-      `Context: ${context} | Screen: 0x${result.screenIndex.toString(16).padStart(2, '0')}`,
+      `Context: ${indoors ? 'interior' : 'overworld'} | Screen: 0x${result.screenIndex.toString(16).padStart(2, '0')}`,
       `Format: <hex_attr><+reachable|~traversal|-blocked>`,
       ``,
     ];
