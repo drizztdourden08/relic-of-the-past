@@ -1,10 +1,10 @@
 /* @layer shared-game @kind types */
 import type { GridPos, OverworldEntrance, ScreenVariant } from '../types';
-import type { TileAttrContext, TileReq } from '../tile-attrs';
+import type { TileReq } from '../tile-attrs';
 import type { QuadrantBounds } from '../strategies/layer-strategy';
 
 interface FloodFillOptions {
-  tileContext: TileAttrContext;
+  indoors: boolean;
   inventory?: Set<TileReq>;
   startPos?: GridPos;
   dynamicBlockers?: GridPos[];

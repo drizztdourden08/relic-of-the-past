@@ -1,12 +1,12 @@
 /* @layer shared-game @kind logic */
 /** Entrance-position resolution and border-bundle building for the flood-fill orchestrator. */
 import type { OverworldEntrance, CollisionGrid, ReachState, TransitionPoint, FloodFillResult } from '../types';
-import type { TileAttrContext, TileReq } from '../tile-attrs';
+import type { TileReq } from '../tile-attrs';
 import { unmetRequirements } from '../core/inventory';
 import type { QuadrantBounds } from '../strategies/layer-strategy';
 
-const findEntrancePositions = (tileContext: TileAttrContext, entrances: OverworldEntrance[], screenIndex: number): { screenEntrances: OverworldEntrance[]; entrancePositions: { row: number; col: number; idx: number }[] } => {
-  if (tileContext === 'overworld') {
+const findEntrancePositions = (indoors: boolean, entrances: OverworldEntrance[], screenIndex: number): { screenEntrances: OverworldEntrance[]; entrancePositions: { row: number; col: number; idx: number }[] } => {
+  if (!indoors) {
     const screenEntrances = entrances.filter(e => e.area === screenIndex);
     const entrancePositions = screenEntrances.map(e => ({ row: e.gridRow, col: e.gridCol, idx: e.id }));
     return { screenEntrances, entrancePositions };

@@ -5,7 +5,21 @@ import { resolveGamepadVidPid } from './gamepad-vid-pid';
 import { computeBitmask, snapshotGamepads } from './polling-engine';
 import { allowedDevices } from './profile-devices';
 import { webHidReader } from './hid-reader';
+import { isAutomationLaunch } from '../instance';
 import type { InputManager } from './input-manager';
+
+/**
+ * Is the window eligible to receive game input this frame?
+ *
+ * Normally this is `document.hasFocus()`, so the game does not swallow keystrokes
+ * while the person is typing in another app. An automation launch is the one case
+ * where that gate is wrong: its window is deliberately never shown (so the run
+ * cannot disturb the user's own fullscreen session), which makes `hasFocus()`
+ * permanently false — and then synthesized input silently goes nowhere, looking
+ * exactly like a broken input path. There is no human at the keyboard to protect
+ * during such a run, so the gate simply does not apply.
+ */
+const inputEligible = (): boolean => document.hasFocus() || isAutomationLaunch();
 
 /** Fresh set of connected pad "vid:pid" keys — HID (node-hid) + Gamepad API. */
 const connectedGamepadKeys = (m: InputManager): Set<string> => {
@@ -116,7 +130,7 @@ const gamepadDisconnected = (m: InputManager): void => {
 const pollFrame = (m: InputManager): void => {
   if (!m.running) return;
 
-  const windowFocused = document.hasFocus();
+  const windowFocused = inputEligible();
 
   // Resolve vid:pid for any pad connected before its 'gamepadconnected' fired, so the
   // device gate can match it against the active profile's map.

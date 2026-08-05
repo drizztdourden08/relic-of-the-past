@@ -1,14 +1,13 @@
 /* @layer shared-game @kind logic */
 /** Collision-grid preparation, void constraint, and start-position search for flood-fill. */
 import type { LedgeTraversal, GridPos, CollisionGrid } from '../types';
-import type { TileAttrContext } from '../tile-attrs';
 import { GRID_SIZE } from '../types';
 import { buildCollisionGridFromRawAttr } from '../screen-data/collision-grid';
 import { processStraightCliffs, processDiagonalCliffs, processSouthCliffs } from '../screen-data/cliff-preprocessing';
 
-const prepareScreen = (rawAttrGrid: number[][], tileContext: TileAttrContext, dynamicBlockers?: GridPos[], skipCliffs = false): { grid: CollisionGrid; ledges: LedgeTraversal[]; dynamicBlockerCells: GridPos[] } => {
+const prepareScreen = (rawAttrGrid: number[][], indoors: boolean, dynamicBlockers?: GridPos[], skipCliffs = false): { grid: CollisionGrid; ledges: LedgeTraversal[]; dynamicBlockerCells: GridPos[] } => {
   const dynamicBlockerCells: GridPos[] = [];
-  const grid = buildCollisionGridFromRawAttr(rawAttrGrid, tileContext);
+  const grid = buildCollisionGridFromRawAttr(rawAttrGrid, indoors);
 
   // Apply dynamic blockers (uncle, guards, etc.)
   if (dynamicBlockers?.length) {
@@ -34,8 +33,7 @@ const prepareScreen = (rawAttrGrid: number[][], tileContext: TileAttrContext, dy
   // Cliff preprocessing (ledge one-way traversals) — skip for layer 1 (no cliffs there)
   const ledges: LedgeTraversal[] = [];
   if (!skipCliffs) {
-    const isIndoors = tileContext !== 'overworld';
-    processStraightCliffs(grid.tiles, grid.rawAttr, ledges, isIndoors);
+    processStraightCliffs(grid.tiles, grid.rawAttr, ledges, indoors);
     processDiagonalCliffs(grid.tiles, grid.rawAttr, ledges);
     processSouthCliffs(grid.tiles, grid.rawAttr, ledges);
   } else {

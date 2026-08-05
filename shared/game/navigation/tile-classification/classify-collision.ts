@@ -1,9 +1,9 @@
 /* @layer shared-game @kind logic */
-import type { TilePassability } from './types';
-import { getTileAttrsMap, type TileAttrContext } from './tile-attrs';
+import type { TilePassability } from '../types';
+import { tileAttrsFor } from '../tile-attrs';
 
-const classifyTileAttr = (attr: number, context: TileAttrContext = 'overworld'): TilePassability => {
-  const def = getTileAttrsMap(context)[attr];
+const classifyTileAttr = (attr: number, indoors = false): TilePassability => {
+  const def = tileAttrsFor(indoors)[attr];
   if (!def) return { type: 'blocked' };
 
   if (def.cat === 'stairs') return { type: 'stairs' };

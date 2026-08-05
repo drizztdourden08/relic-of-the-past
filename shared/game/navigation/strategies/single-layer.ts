@@ -1,6 +1,5 @@
 /* @layer shared-game @kind logic */
 import type { TilePassability, GridPos, ReachState } from '../types';
-import type { TileAttrContext } from '../tile-attrs';
 import { getHookshotTargetTiles } from '../tile-attrs';
 import { GRID_SIZE, TRAVERSAL_DIR_OFFSET, STAIRS_TRAVERSAL_STATE } from '../types';
 import type { LayerStrategy, BFSCell, BFSExpansionResult, QuadrantBounds } from './layer-strategy';
@@ -14,12 +13,12 @@ class SingleLayerStrategy implements LayerStrategy {
   readonly layerCount = 1 as const;
   private readonly grid: TilePassability[][];
   private readonly rawAttr: number[][];
-  private readonly tileContext: TileAttrContext;
+  private readonly indoors: boolean;
 
-  constructor(grid: TilePassability[][], rawAttr: number[][], tileContext: TileAttrContext) {
+  constructor(grid: TilePassability[][], rawAttr: number[][], indoors: boolean) {
     this.grid = grid;
     this.rawAttr = rawAttr;
-    this.tileContext = tileContext;
+    this.indoors = indoors;
   }
 
   getGrid(_layer: 0 | 1): TilePassability[][] { return this.grid; }
@@ -111,7 +110,7 @@ class SingleLayerStrategy implements LayerStrategy {
       }),
     );
 
-    const hookSet = getHookshotTargetTiles(this.tileContext);
+    const hookSet = getHookshotTargetTiles(this.indoors);
     const hookTargets: GridPos[] = [];
     for (let r = 0; r < GRID_SIZE; r++) {
       for (let c = 0; c < GRID_SIZE; c++) {

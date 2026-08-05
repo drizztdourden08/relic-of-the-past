@@ -1,73 +1,49 @@
-/* @layer renderer-components @kind data */
-import { Box } from '../../../../../../../design-system/primitives/Box';
-import { Text } from '../../../../../../../design-system/primitives/Text';
-import type { FloodFillResult } from '@shared/game/navigation';
-import { getLayerDisplayMode, getSingleLayer } from './layer-display';
-import { renderDualLayer, renderLockedLayer, renderSingleLayer } from './layer-panels';
+/* @layer renderer-components @kind component */
+import { Box } from '@ds/primitives/Box';
+import { Text } from '@ds/primitives/Text';
 import type { TooltipData } from './types';
 import { S } from './styles';
+import { LayerBlock, DualLayerPanels } from './layer-panels';
+import { TooltipExtraRows } from './extra-rows';
 
 interface TileTooltipContentProps {
   tooltip: TooltipData;
-  result: FloodFillResult;
 }
 
-const TileTooltipContent = ({ tooltip, result }: TileTooltipContentProps) => {
-  const ctx0 = result.tileContext ?? 'overworld';
-  const mode = getLayerDisplayMode(result);
+/**
+ * ONE canonical tooltip layout, identical in single/dual/locked-layer modes:
+ * a tile header (coords left, room type right — a room-level fact, never
+ * repeated per layer) over one or two layer blocks, over the unchanged extra
+ * rows. Each mode differs only in how many `LayerBlock`s it renders and how
+ * they're arranged — never in the block's own row list, which lives once in
+ * classification-rows.tsx.
+ */
+const TileTooltipContent = ({ tooltip }: TileTooltipContentProps) => {
+  const { layers } = tooltip;
 
   return (
-    <Box style={{
-      position: 'absolute',
-      left: tooltip.x,
-      top: tooltip.y,
-      background: 'var(--c-glass)',
-      border: '1px solid var(--c-border-strong)',
-      borderRadius: 'var(--r-sm)',
-      padding: '5px 8px',
-      boxShadow: 'var(--shadow-2)',
-      pointerEvents: 'none',
-      whiteSpace: 'normal',
-      maxWidth: 760,
-      fontFamily: 'monospace',
-      fontSize: 11,
-      lineHeight: '16px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 2,
-    }}>
+    <Box style={{ ...S.container, left: tooltip.x, top: tooltip.y }}>
       <Box style={S.headerRow}>
         <Text style={S.muted}>[{tooltip.row},{tooltip.col}]</Text>
-        <Text style={{ color: tooltip.reachable === 1 ? 'var(--c-green-bright)' : tooltip.reachable >= 2 ? 'var(--c-warning)' : 'var(--c-danger)', fontWeight: 'bold' }}>
-          {tooltip.reachable === 1 ? '✓ reachable' : tooltip.reachable >= 2 ? '➔ traversal' : '✗ blocked'}
-        </Text>
+        <Text style={S.dim}>{tooltip.roomTypeLabel}</Text>
       </Box>
 
-      {mode === 'dual' && tooltip.layer0Attr !== undefined && renderDualLayer(tooltip, ctx0, result)}
-      {mode === 'locked' && tooltip.layer0Attr !== undefined && renderLockedLayer(tooltip, ctx0, result)}
-      {mode === 'single' && renderSingleLayer(tooltip, getSingleLayer(result, tooltip))}
+      {layers.mode === 'dual' && <DualLayerPanels ground={layers.ground} above={layers.above} />}
 
-      {tooltip.reachable !== 0 && (
-        <Box style={S.row}>
-          <Text style={S.dim}>path reqs:</Text>
-          <Text style={{ color: tooltip.pathReqs ? 'var(--c-gold)' : 'var(--c-text-muted)' }}>
-            {tooltip.pathReqs || 'none'}
-          </Text>
-        </Box>
+      {layers.mode === 'locked' && (
+        <LayerBlock
+          name={layers.lockedLayer === 0 ? '▲ ABOVE' : '▼ GROUND'}
+          nameColor={layers.lockedLayer === 0 ? 'var(--c-gold)' : 'var(--c-info)'}
+          data={layers.primary}
+          locked
+        />
       )}
-      <Box style={S.row}>
-        <Text style={S.dim}>live sprites:</Text>
-        <Text style={S.muted}>{tooltip.spriteInfo.length}</Text>
-      </Box>
-      <Box style={S.row}>
-        <Text style={S.dim}>Blocked In Last Flood Fill:</Text>
-        <Text style={{ color: tooltip.bfsBlocked ? 'var(--c-danger)' : 'var(--c-text-muted)' }}>
-          {tooltip.bfsBlocked ? 'yes' : 'no'}
-        </Text>
-      </Box>
-      {tooltip.spriteInfo.length > 0 && tooltip.spriteInfo.map((line, i) => (
-        <Box key={i} style={S.warning}>{line}</Box>
-      ))}
+
+      {layers.mode === 'single' && (
+        <LayerBlock name="▼ GROUND" nameColor="var(--c-info)" data={layers.primary} />
+      )}
+
+      <TooltipExtraRows tooltip={tooltip} />
     </Box>
   );
 };

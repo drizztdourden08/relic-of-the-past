@@ -11,7 +11,6 @@
 
 import type { RequirementSet, TraversalRequirement } from '../nav-data.types';
 import type { TileReq } from '../tile-attrs';
-import type { TileAttrContext } from '../tile-attrs';
 import type { GridPos } from '../types';
 import { GRID_SIZE } from '../types';
 import { floodFillScreen } from '../flood-fill/orchestrator';
@@ -33,7 +32,7 @@ const INVENTORY_PROGRESSION: TraversalRequirement[][] = [
 interface RequirementDetectorInput {
   screenIndex: number;
   getGrid: (screenIndex: number) => number[][];
-  tileContext: TileAttrContext;
+  indoors: boolean;
   /** Target tile positions to check reachability for (border tiles, entrances) */
   targetPositions: GridPos[];
 }
@@ -46,7 +45,7 @@ interface DetectedRequirement {
 }
 
 const detectRequirements = (input: RequirementDetectorInput): DetectedRequirement[] => {
-  const { screenIndex, getGrid, tileContext, targetPositions } = input;
+  const { screenIndex, getGrid, indoors, targetPositions } = input;
 
   let grid: number[][];
   try {
@@ -66,7 +65,7 @@ const detectRequirements = (input: RequirementDetectorInput): DetectedRequiremen
     const inventory = new Set<TileReq>(inventoryItems as TileReq[]);
 
     const floodResult = floodFillScreen(grid, screenIndex, {
-      tileContext,
+      indoors,
       inventory,
     });
 

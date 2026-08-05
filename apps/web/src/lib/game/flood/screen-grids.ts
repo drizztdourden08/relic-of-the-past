@@ -12,7 +12,6 @@
  * forget them (see blockers.ts for why that mattered).
  */
 import type { SimLocation, ScreenGridBundle } from '@shared/game/simulation';
-import type { TileAttrContext } from '@shared/game/navigation/tile-attrs';
 import {
   wasmBuildOverworldAttrGrid,
   wasmBuildRoomAttrGrid,
@@ -21,7 +20,6 @@ import {
   wasmGetIndoorLayer0Grid,
   wasmGetOverworldVariant,
   wasmGetStaircaseType,
-  wasmGetViewportInfo,
 } from '../';
 import { readMapState } from '../simulator/read-game-state';
 import { emptyGrid64, toGrid64 } from './grid-convert';
@@ -39,7 +37,7 @@ const overworldBundle = (owScreenIndex: number): ScreenGridBundle => {
   const v = wasmGetOverworldVariant(owScreenIndex);
   return {
     screenIndex: owScreenIndex,
-    tileContext: 'overworld',
+    indoors: false,
     rawAttrGrid: flat ? toGrid64(flat) : emptyGrid64(),
     ...(v ? { variant: { progressTier: v.progressIndicator, eventOverlay: v.eventOverlayActive, eventFlags: v.screenEventFlags } } : {}),
   };
@@ -64,15 +62,10 @@ const indoorBundle = (roomId: number): ScreenGridBundle => {
   const live = isLoadedRoom(roomId);
   const bundle: ScreenGridBundle = {
     screenIndex: roomId,
-    tileContext: 'interior-dungeon',
+    indoors: true,
     rawAttrGrid: indoorAttrGrid(roomId, live),
   };
   if (live) {
-    // TileDetect only branches on indoors; cave/house vs dungeon stays split for
-    // future tuning, and only the live viewport knows which this room is.
-    const vp = wasmGetViewportInfo();
-    const ctx: TileAttrContext = vp?.locationType === 2 ? 'interior-dungeon' : 'interior-house';
-    bundle.tileContext = ctx;
     const dual = wasmGetIndoorDualLayerGrids();
     if (dual) bundle.dualLayerGrids = { layer0: dual.layer0, layer1: dual.layer1 };
     const staircase = wasmGetStaircaseType();

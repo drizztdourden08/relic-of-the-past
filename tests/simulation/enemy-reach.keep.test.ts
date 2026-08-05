@@ -37,7 +37,7 @@ const makeSprite = (tile: GridPos, spriteType = 1): SimSprite => ({
 
 const makeGrids = (rawAttrGrid: number[][]): ScreenGridBundle => ({
   screenIndex: 1,
-  tileContext: 'overworld',
+  indoors: false,
   rawAttrGrid,
 });
 

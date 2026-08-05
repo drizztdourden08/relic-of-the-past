@@ -28,7 +28,7 @@ describe('DualLayerStrategy — ledge drop enqueues its layer-1 landing', () => 
     // Layer 1: open floor — the lower area Link falls into.
     const layer1 = fill({ type: 'free' });
 
-    const strategy = new DualLayerStrategy([layer0, layer1], [zeros(), zeros()], 'interior-dungeon', 0);
+    const strategy = new DualLayerStrategy([layer0, layer1], [zeros(), zeros()], true, 0);
 
     // Body at (10,20) on layer 0 steps south into the ledge and jumps.
     const cell: BFSCell = { row: 10, col: 20, layer: 0, requirements: new Set() };
@@ -49,7 +49,7 @@ describe('DualLayerStrategy — ledge drop enqueues its layer-1 landing', () => 
       for (const c of [20, 21]) layer0[r][c] = { type: 'ledge', dir: 'n' };
     }
     const layer1 = fill({ type: 'free' });
-    const strategy = new DualLayerStrategy([layer0, layer1], [zeros(), zeros()], 'interior-dungeon', 0);
+    const strategy = new DualLayerStrategy([layer0, layer1], [zeros(), zeros()], true, 0);
 
     // Body at (21,20) steps north: leading edge (row 20) is fully on n-ledges.
     const cell: BFSCell = { row: 21, col: 20, layer: 0, requirements: new Set() };
@@ -64,7 +64,7 @@ describe('DualLayerStrategy — ledge drop enqueues its layer-1 landing', () => 
     // Single-column ledge at col 20, rows 18-20.
     for (const r of [18, 19, 20]) layer0[r][20] = { type: 'ledge', dir: 'n' };
     const layer1 = fill({ type: 'free' });
-    const strategy = new DualLayerStrategy([layer0, layer1], [zeros(), zeros()], 'interior-dungeon', 0);
+    const strategy = new DualLayerStrategy([layer0, layer1], [zeros(), zeros()], true, 0);
 
     // Both possible approach bodies straddle the 1-wide column — no jump either way.
     for (const col of [19, 20]) {

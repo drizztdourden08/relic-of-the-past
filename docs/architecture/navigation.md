@@ -30,7 +30,7 @@ overlay draws (`annotate-screen.ts`). All three consumers — the navigation wid
 
 | Path | Role |
 |------|------|
-| `tile-attrs.ts` · `tile-classification.ts` · `interior-attrs.ts` · `overworld-attrs.ts` | Turn raw attr bytes into walkable/blocked/special tile classes. |
+| `tile-attrs.ts` · `tile-classification/` · `interior-attrs.ts` · `overworld-attrs.ts` | Turn raw attr bytes into walkable/blocked/special tile classes. |
 | `core/` | `bfs-engine`, `priority-queue`, `grid-utils`, `inventory` — the generic traversal primitives. |
 | `flood-fill/` | Reachability: single-screen, single/dual-layer, path extraction, entrance usability. |
 | `strategies/` | Layer strategies (single vs dual-layer dungeon rooms). |

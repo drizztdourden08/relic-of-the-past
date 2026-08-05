@@ -1,9 +1,8 @@
 /* @layer shared-game @kind logic */
 import type { TilePassability, CollisionGrid } from '../types';
 import { classifyTileAttr } from '../tile-classification';
-import type { TileAttrContext } from '../tile-attrs';
 
-const buildCollisionGridFromRawAttr = (rawAttr: number[][], context: TileAttrContext = 'overworld'): CollisionGrid => {
+const buildCollisionGridFromRawAttr = (rawAttr: number[][], indoors = false): CollisionGrid => {
   const tiles: TilePassability[][] = [];
   const outAttr: number[][] = [];
 
@@ -13,7 +12,7 @@ const buildCollisionGridFromRawAttr = (rawAttr: number[][], context: TileAttrCon
     for (let col = 0; col < 64; col++) {
       const attr = rawAttr[row]?.[col] ?? 0x01;
       outAttr[row][col] = attr;
-      tiles[row][col] = classifyTileAttr(attr, context);
+      tiles[row][col] = classifyTileAttr(attr, indoors);
     }
   }
 

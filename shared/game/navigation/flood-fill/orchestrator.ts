@@ -8,7 +8,7 @@ import { runDualLayerFlood, runSingleLayerFlood } from './flood-paths';
 import type { FloodFillOptions } from './flood-options';
 
 const floodFillScreen = (rawAttrGrid: number[][], screenIndex: number, options: FloodFillOptions): FloodFillResult => {
-  const isIndoors = options.tileContext !== 'overworld';
+  const isIndoors = options.indoors;
   // staircaseType 2 = layer changes blocked. Force single-layer BFS on the starting layer only.
   const layerBlocked = options.staircaseType === 2;
   const useDualLayer = isIndoors && !!options.dualLayerGrids && !layerBlocked;

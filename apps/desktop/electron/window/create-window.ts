@@ -1,10 +1,10 @@
 /* @layer electron-main @kind logic */
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, screen } from 'electron';
 import { join } from 'path';
 import { is } from '@electron-toolkit/utils';
 import { loadWindowState, trackWindowState } from './window-state';
 import { parseStartupConfig, startupRendererArgs } from './startup-config';
-import { sendWindowToBack } from './send-to-back';
+import { keepWindowInBackground } from './keep-in-background';
 import { attachTextInteraction } from './text-interaction';
 import { resolveWindowIcon } from './window-icon';
 import { isAutomationLaunch, parseInstanceConfig } from '../instance';
@@ -40,14 +40,30 @@ const getMainWindow = (): BrowserWindow | null => {
   return mainWindow;
 };
 
-/** Show the window without activating it, then drop it behind other apps. */
-const showInBackground = (win: BrowserWindow): void => {
-  win.setAlwaysOnTop(false);
-  win.showInactive();
-  win.blur();
-  // showInactive avoids focus but still lands on top of the z-order on Windows;
-  // SetWindowPos(HWND_BOTTOM) actually puts us behind the user's other windows.
-  sendWindowToBack(win);
+// NOTE: there is deliberately no "show it quietly" helper here any more.
+// showInactive() + blur() + SetWindowPos(HWND_BOTTOM) was tried and still
+// disturbed the user: appearing anywhere in the z-order drops a fullscreen game
+// out of exclusive fullscreen, and the unconditional blur() pushed the foreground
+// to the desktop instead of back to its owner. Hence the current approach — see
+// offscreenOrigin() and the noFocus branch in createWindow.
+
+/**
+ * A position beyond every display, so an automation window sits on NO monitor.
+ *
+ * Keeping the window hidden outright is even quieter, but Chromium does not
+ * schedule requestAnimationFrame for a hidden page, so the emulator never ticks
+ * and any spec that PLAYS the game (rather than just reading a loaded state)
+ * cannot advance. Off-screen keeps the window "shown" — frames run, CDP input
+ * routes normally — while never compositing a pixel onto the user's screens.
+ *
+ * Derived from the real display layout rather than a magic negative constant, so
+ * Windows cannot clamp it back onto a monitor.
+ */
+const offscreenOrigin = (): { x: number; y: number } => {
+  const displays = screen.getAllDisplays();
+  const right = Math.max(...displays.map((d) => d.bounds.x + d.bounds.width));
+  const top = Math.min(...displays.map((d) => d.bounds.y));
+  return { x: right + 400, y: top };
 };
 
 /** Grow the splash-sized window to the last saved size/position/mode. Idempotent —
@@ -59,22 +75,25 @@ const restoreSavedBounds = (): void => {
   if (fixedWindowSize) return;
   const saved = pendingSavedState;
 
+  // An automation window lives off every monitor (see offscreenOrigin). Grow it to
+  // the saved SIZE so anything layout-sensitive matches a real session, but never
+  // apply the saved POSITION — that would drag it onto a display and back into the
+  // user's way. Maximize/fullscreen are skipped for the same reason, and because
+  // both would activate it.
+  if (launchNoFocus) {
+    mainWindow.setContentSize(saved.width, saved.height);
+    return;
+  }
+
   if (saved.x !== undefined && saved.y !== undefined) {
     mainWindow.setContentBounds({ x: saved.x, y: saved.y, width: saved.width, height: saved.height });
   } else {
     mainWindow.setContentSize(saved.width, saved.height);
-    if (!launchNoFocus) mainWindow.center();
+    mainWindow.center();
   }
 
   // Start tracking normal bounds only now, so the splash size is never persisted.
   trackWindowState(mainWindow);
-
-  // In no-focus mode, never maximize/fullscreen (both activate + raise the
-  // window). Re-assert the inactive/background state after the resize instead.
-  if (launchNoFocus) {
-    showInBackground(mainWindow);
-    return;
-  }
 
   if (saved.isMaximized) mainWindow.maximize();
   if (saved.isFullscreen) mainWindow.setFullScreen(true);
@@ -94,7 +113,9 @@ const createWindow = (): BrowserWindow => {
     height: startup.windowSize?.height ?? SPLASH_HEIGHT,
     minWidth: 360,
     minHeight: 280,
-    center: true,
+    // Automation opens off every monitor; centring would override that x/y.
+    ...(noFocus ? offscreenOrigin() : {}),
+    center: !noFocus,
     titleBarStyle: 'hidden',
     autoHideMenuBar: true,
     // A named instance carries its name in the title and swaps to the bot icon, so
@@ -103,6 +124,18 @@ const createWindow = (): BrowserWindow => {
     icon: resolveWindowIcon(instance.name),
     backgroundColor: '#000000',
     show: !noFocus,
+    // An automation window must be UNABLE to take focus, not merely reluctant to.
+    // focusable:false sets WS_EX_NOACTIVATE on Windows, so the OS refuses to
+    // activate it at all — SetForegroundWindow (which is what Chromium's
+    // Page.bringToFront ends up calling, and what a Playwright click triggers)
+    // simply cannot succeed. Undoing focus after the fact was too late: by then
+    // the user's own window had already been deactivated, which IS the complaint.
+    // Playwright still drives the renderer fine — CDP input needs no OS focus.
+    // On Windows this also implies skipTaskbar, so runs stop churning the taskbar.
+    focusable: !noFocus,
+    // Paint even before/without being on a visible surface, so an off-screen
+    // automation run still renders for screenshots.
+    paintWhenInitiallyHidden: true,
     webPreferences: {
       preload: join(__dirname, '../preload/preload.js'),
       sandbox: false,
@@ -132,18 +165,16 @@ const createWindow = (): BrowserWindow => {
   }
 
   if (noFocus) {
-    showInBackground(mainWindow);
-    // Re-assert the background position once the first paint is ready (showing the
-    // painted frame can otherwise bounce the window back to the top of the z-order).
-    mainWindow.once('ready-to-show', () => { if (mainWindow) sendWindowToBack(mainWindow); });
-    // A one-time launch setting isn't enough: focusing a real DOM element (a button
-    // click, a text input) can make Chromium activate the HOSTING native window as a
-    // side effect, on Windows, regardless of showInactive() at launch — this is how a
-    // Playwright-driven click/keypress can steal focus well after a clean no-focus
-    // boot. Rather than enumerate every path that can cause that, treat "focused" as
-    // never a valid state for this window for the rest of its life and immediately
-    // reverse it every time it happens.
-    mainWindow.on('focus', () => { if (mainWindow) showInBackground(mainWindow); });
+    // Shown, but on no monitor (offscreenOrigin). "Shown" is what makes Chromium
+    // schedule frames, so the emulator ticks and a spec can actually play the game
+    // — which a fully hidden window cannot do. Off every display is what keeps the
+    // user undisturbed: nothing is ever composited over their fullscreen session,
+    // and focusable:false means it cannot take focus either.
+    //
+    // showInactive() rather than show(), so we never even ask to be activated.
+    // keepWindowInBackground is the backstop if anything raises us later.
+    keepWindowInBackground(mainWindow);
+    mainWindow.showInactive();
   }
 
   // Let F1-F12 (and Tab) pass through to the renderer instead of being

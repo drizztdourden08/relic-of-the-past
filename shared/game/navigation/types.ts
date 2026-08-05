@@ -1,5 +1,5 @@
 /* @layer shared-game @kind data */
-import type { TileAttrContext, TileReq } from './tile-attrs';
+import type { TileReq } from './tile-attrs';
 
 // ─── Grid Constants ──────────────────────────────────────────────────────────
 
@@ -94,7 +94,7 @@ interface BorderSummary {
 
 interface FloodFillResult {
   screenIndex: number;
-  tileContext: TileAttrContext;
+  indoors: boolean;
   /** Grid position where the BFS started (top-left of Link's 2×2 at flood-fill time) */
   startPos: GridPos;
   reachable: ReachState[][];

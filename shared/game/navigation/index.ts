@@ -25,10 +25,7 @@ export { classifyTileAttr } from './tile-classification';
 export {
   TILE_ATTRS,
   OVERWORLD_TILE_ATTRS,
-  INTERIOR_HOUSE_TILE_ATTRS,
-  INTERIOR_CAVE_TILE_ATTRS,
-  INTERIOR_DUNGEON_TILE_ATTRS,
-  getTileAttrsMap,
+  tileAttrsFor,
   getHookshotTargetTiles,
   getAttrLabel,
   getAttrReq,
@@ -39,7 +36,7 @@ export {
   PIT_TILES,
   HOOKSHOT_TARGET_TILES,
 } from './tile-attrs';
-export type { TileReq, TileLabel, TilePass, TileCat, TileAttrDef, TileAttrContext } from './tile-attrs';
+export type { TileReq, TileLabel, TilePass, TileCat, TileAttrDef } from './tile-attrs';
 export { unmetRequirements } from './core/inventory';
 export { PriorityQueue } from './core/priority-queue';
 

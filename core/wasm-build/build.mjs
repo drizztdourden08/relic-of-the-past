@@ -46,6 +46,7 @@ const hookSrcs = [
   'game_hooks', 'state_queries', 'state_queries_sprites', 'state_queries_grids',
   'state_queries_room_grid',
   'state_queries_tables', 'state_queries_rooms', 'state_queries_room_exits',
+  'state_queries_room_objects',
   'sim_queries', 'sim_triggers', 'item_overrides', 'check_triggers', 'ui_state', 'cheats', 'haptic_events',
   'player_sprite', 'transition_events', 'state_queries_combat',
 ].map((f) => h(`${f}.c`));
