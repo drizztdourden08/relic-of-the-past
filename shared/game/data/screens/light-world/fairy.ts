@@ -13,7 +13,6 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     areaId: 'area-016',
     locationId: 'location-002',
     tags: ['tag-003'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-056', tile: { x: 52, y: 10 } },
       { actorId: 'actor-056', tile: { x: 42, y: 30 } },
@@ -31,7 +30,6 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     areaId: 'area-013',
     locationId: 'location-018',
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
   },
   {
     id: 'screen-218',
@@ -43,7 +41,6 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     areaId: 'area-010',
     locationId: 'location-012',
     tags: ['tag-003', 'tag-004', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-198', tile: { x: 14, y: 48 } },
       { actorId: 'actor-165', tile: { x: 50, y: 40 } },
@@ -59,7 +56,6 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     areaId: 'area-010',
     locationId: 'location-012',
     tags: ['tag-003'],
-    status: 'mapped',
   },
   {
     id: 'screen-197',
@@ -71,7 +67,6 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     areaId: 'area-013',
     locationId: 'location-018',
     tags: ['tag-003'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 46, y: 28 } },
       { actorId: 'actor-255', tile: { x: 48, y: 32 } },
@@ -88,7 +83,6 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     areaId: 'area-016',
     locationId: 'location-002',
     tags: ['tag-003'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-262', tile: { x: 22, y: 22 } },
     ],
@@ -103,7 +97,6 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     areaId: 'area-009',
     locationId: 'location-010',
     tags: ['tag-003'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-262', tile: { x: 22, y: 22 } },
     ],
@@ -118,7 +111,6 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     areaId: 'area-010',
     locationId: 'location-012',
     tags: ['tag-003'],
-    status: 'mapped',
   },
   {
     id: 'screen-186',
@@ -130,7 +122,6 @@ const LW_FAIRY_SCREENS: ScreenRecord[] = [
     areaId: 'area-008',
     locationId: 'location-009',
     tags: ['tag-003'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-163', tile: { x: 14, y: 10 } },
       { actorId: 'actor-163', tile: { x: 46, y: 16 } },

@@ -13,7 +13,6 @@ const DW_OVERWORLD_DARK_MIRE_SCREENS: ScreenRecord[] = [
     locationId: 'location-026',
     position: { gridX: 0, gridY: 6 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-267',
@@ -25,7 +24,6 @@ const DW_OVERWORLD_DARK_MIRE_SCREENS: ScreenRecord[] = [
     locationId: 'location-026',
     position: { gridX: 1, gridY: 6 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-251',
@@ -37,7 +35,6 @@ const DW_OVERWORLD_DARK_MIRE_SCREENS: ScreenRecord[] = [
     locationId: 'location-026',
     position: { gridX: 0, gridY: 7 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-268',
@@ -49,7 +46,6 @@ const DW_OVERWORLD_DARK_MIRE_SCREENS: ScreenRecord[] = [
     locationId: 'location-026',
     position: { gridX: 1, gridY: 7 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-276',
@@ -61,7 +57,6 @@ const DW_OVERWORLD_DARK_MIRE_SCREENS: ScreenRecord[] = [
     locationId: 'location-026',
     position: { gridX: 2, gridY: 7 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-284',
@@ -73,7 +68,6 @@ const DW_OVERWORLD_DARK_MIRE_SCREENS: ScreenRecord[] = [
     locationId: 'location-026',
     position: { gridX: 3, gridY: 7 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-238',
@@ -85,7 +79,6 @@ const DW_OVERWORLD_DARK_MIRE_SCREENS: ScreenRecord[] = [
     locationId: 'location-026',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
 ];
 

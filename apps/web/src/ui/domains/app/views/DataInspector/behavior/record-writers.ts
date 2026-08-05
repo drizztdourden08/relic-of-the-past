@@ -62,7 +62,7 @@ const writeScreen: RecordWriter = async (row) => {
 
 const writeConnection: RecordWriter = async (row) => {
   const { id, ...rest } = row as unknown as ConnectionRecord;
-  const filePath = pathOf(connectionRecordFile(rest.fromScreenId, rest.toScreenId));
+  const filePath = pathOf(connectionRecordFile(rest.screenId));
   settle(await window.api.screenEditor.writeConnections({
     mode: 'replace',
     filePath,

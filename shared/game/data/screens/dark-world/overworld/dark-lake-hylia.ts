@@ -13,7 +13,6 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-006',
     position: { gridX: 3, gridY: 6 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-291',
@@ -25,7 +24,6 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-006',
     position: { gridX: 4, gridY: 6 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-299',
@@ -37,7 +35,6 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-006',
     position: { gridX: 5, gridY: 6 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-307',
@@ -49,7 +46,6 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-006',
     position: { gridX: 6, gridY: 6 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-315',
@@ -61,7 +57,6 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-006',
     position: { gridX: 7, gridY: 6 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-292',
@@ -73,7 +68,6 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-006',
     position: { gridX: 4, gridY: 7 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-300',
@@ -85,7 +79,6 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-006',
     position: { gridX: 5, gridY: 7 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-308',
@@ -97,7 +90,6 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-006',
     position: { gridX: 6, gridY: 7 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-316',
@@ -109,7 +101,6 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-006',
     position: { gridX: 7, gridY: 7 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-240',
@@ -121,7 +112,6 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-006',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-241',
@@ -133,7 +123,6 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-006',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-242',
@@ -145,7 +134,6 @@ const DW_OVERWORLD_DARK_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-006',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
 ];
 

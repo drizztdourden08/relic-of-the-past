@@ -9,13 +9,19 @@
 import { useMemo } from 'react';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { useNavigationOverlayStore } from '@app/stores/navigation-overlay-store';
-import { wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetRoomStairInfo, wasmGetFallHoles, wasmGetAreaHeads } from '@app/lib/game';
+import {
+  wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetRoomStairInfo, wasmGetFallHoles, wasmGetAreaHeads,
+  wasmGetRoomTagsFor, wasmGetDungeonMapPosition, wasmGetEntranceSpawns,
+  wasmGetRoomWalkBoundaries, wasmGetRoomDoorBoundaryTiles,
+} from '@app/lib/game';
 import { getPalaceMismatches } from '@shared/game/logic/queries/palace-fallback';
 import type { PalaceMismatch } from '@shared/game/logic/queries/palace-fallback';
 import type { ConnectionRecord, ScreenGameId, ScreenId } from '@shared/game/data';
 import type { ScreenMatchResult } from '@shared/game/logic/queries/detection';
 import type { ConnectionInfo } from '@shared/game/navigation';
-import type { ObservedCrossing, ObservedTransition } from '@shared/game/recommendations';
+import type {
+  LiveDoorBoundaryTile, LiveDungeonMapPosition, LiveWalkBoundary, ObservedCrossing, ObservedTransition,
+} from '@shared/game/recommendations';
 import { useScreenDetection } from '../../hooks';
 import { useRealTransitions } from '../../useRealTransitions';
 import { useConnectionStatus } from '../../useDatasetStatus';
@@ -23,6 +29,7 @@ import { useConnectionStatus } from '../../useDatasetStatus';
 interface ScreenLiveObservations {
   screenId: ScreenId | null;
   isIndoors: boolean;
+  isDarkWorld: boolean;
   match: ScreenMatchResult | null;
   liveGameId: ScreenGameId;
   realTransitions: readonly ObservedTransition[];
@@ -31,10 +38,16 @@ interface ScreenLiveObservations {
   floodConnections: readonly ConnectionInfo[];
   existingConnections: readonly ConnectionRecord[];
   palaceMismatches: readonly PalaceMismatch[];
+  entranceRooms?: readonly number[];
+  roomTags?: readonly number[];
+  dungeonMapPos?: LiveDungeonMapPosition;
+  entranceSpawns?: readonly { x: number; y: number }[];
+  walkBoundaries?: readonly LiveWalkBoundary[];
+  doorBoundaries?: readonly LiveDoorBoundaryTile[];
 }
 
 const useScreenObservations = (): ScreenLiveObservations => {
-  const { overworldScreenIndex, roomIndex, isIndoors, palaceIndex, whichEntrance } = useGameUIStore(s => s.map);
+  const { overworldScreenIndex, roomIndex, isIndoors, isDarkWorld, palaceIndex, whichEntrance } = useGameUIStore(s => s.map);
   const match = useScreenDetection();
   const floodConnections = useNavigationOverlayStore(s => s.connections);
 
@@ -48,6 +61,13 @@ const useScreenObservations = (): ScreenLiveObservations => {
 
   const detectedStairs = useMemo(() => (isIndoors ? wasmGetRoomStairInfo() : []), [isIndoors, roomIndex]);
 
+  // Static native table (entrance id -> room index). Read once module-side
+  // per room change; absent (module not loaded yet) means "not read".
+  const entranceRooms = useMemo<readonly number[] | undefined>(() => {
+    const rooms = wasmGetEntranceRooms();
+    return rooms ? Array.from(rooms) : undefined;
+  }, [roomIndex]);
+
   const exitScreen = useMemo(() => (isIndoors ? wasmGetExitScreenMap().get(roomIndex) ?? null : null), [isIndoors, roomIndex]);
 
   // Fall holes on the current overworld area, resolved entrance-id → room via
@@ -55,13 +75,13 @@ const useScreenObservations = (): ScreenLiveObservations => {
   const detectedFallHoleRooms = useMemo(() => {
     if (isIndoors) return [];
     const heads = wasmGetAreaHeads();
-    const entranceRooms = wasmGetEntranceRooms();
+    const entranceRoomTable = wasmGetEntranceRooms();
     const currentHead = heads ? heads[overworldScreenIndex] : overworldScreenIndex;
     const rooms: number[] = [];
     for (const hole of wasmGetFallHoles()) {
       const holeHead = heads ? heads[hole.area] : hole.area;
       if (holeHead !== currentHead) continue;
-      const room = entranceRooms?.[hole.entranceId];
+      const room = entranceRoomTable?.[hole.entranceId];
       if (room != null && room !== 0) rooms.push(room);
     }
     return rooms;
@@ -79,10 +99,46 @@ const useScreenObservations = (): ScreenLiveObservations => {
 
   const palaceMismatches = useMemo(() => [...getPalaceMismatches().values()], [match]);
 
+  // Room-header tag bytes — meaningless outdoors (no room header to read),
+  // so this stays absent there rather than reading as "no tags".
+  const roomTags = useMemo<readonly number[] | undefined>(
+    () => (isIndoors ? wasmGetRoomTagsFor(roomIndex) : undefined),
+    [isIndoors, roomIndex],
+  );
+
+  // Dungeon-map position — same "meaningless outdoors" reasoning as `roomTags`;
+  // the native call itself also answers `found: false` for a house/cave, which
+  // is a resolved negative once read, not a reason to withhold the whole field.
+  const dungeonMapPos = useMemo<LiveDungeonMapPosition | undefined>(
+    () => (isIndoors ? wasmGetDungeonMapPosition() ?? undefined : undefined),
+    [isIndoors, roomIndex],
+  );
+
+  // Entrance id -> spawn tile table. Static and entrance-indexed rather than
+  // room-indexed, like `entranceRooms` above, so it is read the same way —
+  // unconditionally, gated only by whether the module has anything to report.
+  const entranceSpawns = useMemo<readonly { x: number; y: number }[] | undefined>(
+    () => wasmGetEntranceSpawns() ?? undefined,
+    [roomIndex],
+  );
+
+  // The room's own exit tables — enumerable, so an indoor scroll edge can
+  // finally be judged for removal against them (F3); meaningless outdoors,
+  // same "not read" reasoning as `roomTags`/`dungeonMapPos` above.
+  const walkBoundaries = useMemo<readonly LiveWalkBoundary[] | undefined>(
+    () => (isIndoors ? wasmGetRoomWalkBoundaries() : undefined),
+    [isIndoors, roomIndex],
+  );
+  const doorBoundaries = useMemo<readonly LiveDoorBoundaryTile[] | undefined>(
+    () => (isIndoors ? wasmGetRoomDoorBoundaryTiles() : undefined),
+    [isIndoors, roomIndex],
+  );
+
   return {
-    screenId, isIndoors, match, liveGameId, realTransitions, realAvailable,
+    screenId, isIndoors, isDarkWorld, match, liveGameId, realTransitions, realAvailable,
     unmatchedCrossings: connStatus.unmatched, floodConnections,
-    existingConnections: connStatus.existingConnections, palaceMismatches,
+    existingConnections: connStatus.existingConnections, palaceMismatches, entranceRooms,
+    roomTags, dungeonMapPos, entranceSpawns, walkBoundaries, doorBoundaries,
   };
 };
 

@@ -22,8 +22,9 @@ import { Box } from '../../../primitives/Box';
 import { Text } from '../../../primitives/Text';
 import { resolveFieldKit } from '../../field-kits';
 import { unknownKit } from '../../field-kits/unknown-kit';
-import { detectUnionBranch, isIdentityField } from '../../RecordEditor';
+import { detectUnionBranch, isIdentityField, markedPaths } from '../../RecordEditor';
 import { getPath } from '../../../data/schema/path';
+import { DiffBracket } from './DiffBracket';
 import type { FieldDescriptor, FieldKind } from '../../../data/schema/field-descriptor';
 import type { CompactFieldProps } from '../CompactRecordView.type';
 import '../CompactRecordView.css';
@@ -72,13 +73,20 @@ const idRefDisplay = (
 };
 
 const CompactField = (props: CompactFieldProps) => {
-  const { record, field, depth, resolveIdRefDisplay } = props;
+  const { record, field, depth, resolveIdRefDisplay, diffs } = props;
   const value = getPath(record, field.path);
   const nested = nestedChildrenFor(field, value, depth);
 
   if (nested) {
+    // A container carries no bracket of its own — only a leaf shows a live
+    // value — but it still has to say "look inside" when one of its children
+    // disagrees, or an unexpanded difference would be invisible past the
+    // fold. `markedPaths` (built for RecordEditor's own dirty-container rule)
+    // already answers exactly this over a set of leaf paths.
+    const differsBelow = diffs ? markedPaths([...diffs.keys()]).has(field.path) : false;
+    const nestClass = `compact-record-view__nest${differsBelow ? ' compact-record-view__nest--differs' : ''}`;
     return (
-      <Box className="compact-record-view__nest">
+      <Box className={nestClass}>
         <Text as="span" className="compact-record-view__nest-label" title={field.path}>
           {field.label}
         </Text>
@@ -90,6 +98,7 @@ const CompactField = (props: CompactFieldProps) => {
               field={child}
               depth={depth + 1}
               resolveIdRefDisplay={resolveIdRefDisplay}
+              diffs={diffs}
             />
           ))}
         </Box>
@@ -97,8 +106,11 @@ const CompactField = (props: CompactFieldProps) => {
     );
   }
 
+  const difference = diffs?.get(field.path);
+  const rowClass = `compact-record-view__row${difference ? ' compact-record-view__row--differs' : ''}`;
+
   return (
-    <Box className="compact-record-view__row">
+    <Box className={rowClass}>
       <Text as="span" className="compact-record-view__label" title={field.path}>
         {field.label}
       </Text>
@@ -110,6 +122,7 @@ const CompactField = (props: CompactFieldProps) => {
           // resolver rides along unwrapped for it to call per element.
           resolveIdRefDisplay,
         })}
+        {difference && <DiffBracket difference={difference} />}
       </Box>
     </Box>
   );

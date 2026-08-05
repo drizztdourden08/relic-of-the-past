@@ -13,7 +13,6 @@ const LW_HINTS_SCREENS: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     tags: ['tag-002'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-103', tile: { x: 32, y: 8 } },
       { actorId: 'actor-103', tile: { x: 38, y: 8 } },
@@ -34,7 +33,6 @@ const LW_HINTS_SCREENS: ScreenRecord[] = [
     areaId: 'area-013',
     locationId: 'location-018',
     tags: ['tag-002'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-103', tile: { x: 32, y: 8 } },
       { actorId: 'actor-103', tile: { x: 38, y: 8 } },

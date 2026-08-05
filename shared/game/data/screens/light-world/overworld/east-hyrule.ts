@@ -13,7 +13,6 @@ const LW_OVERWORLD_EAST_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-012',
     position: { gridX: 7, gridY: 2 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-086',
@@ -25,7 +24,6 @@ const LW_OVERWORLD_EAST_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-012',
     position: { gridX: 6, gridY: 3 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-094',
@@ -37,7 +35,6 @@ const LW_OVERWORLD_EAST_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-012',
     position: { gridX: 7, gridY: 3 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-087',
@@ -49,7 +46,6 @@ const LW_OVERWORLD_EAST_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-012',
     position: { gridX: 6, gridY: 4 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-095',
@@ -61,7 +57,6 @@ const LW_OVERWORLD_EAST_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-012',
     position: { gridX: 7, gridY: 4 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-080',
@@ -73,7 +68,6 @@ const LW_OVERWORLD_EAST_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-012',
     position: { gridX: 5, gridY: 5 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-088',
@@ -85,7 +79,6 @@ const LW_OVERWORLD_EAST_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-012',
     position: { gridX: 6, gridY: 5 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-096',
@@ -97,7 +90,6 @@ const LW_OVERWORLD_EAST_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-012',
     position: { gridX: 7, gridY: 5 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-042',
@@ -109,7 +101,6 @@ const LW_OVERWORLD_EAST_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-012',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-023',
@@ -121,7 +112,6 @@ const LW_OVERWORLD_EAST_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-012',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
 ];
 

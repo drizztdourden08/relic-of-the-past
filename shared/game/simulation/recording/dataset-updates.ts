@@ -5,7 +5,8 @@
  * disagrees with or extends the static screen/connection/check data.
  */
 import type { DatasetSuggestion } from '../types';
-import { find, hasTagKey } from '../../data';
+import { find } from '../../data';
+import { toScreenIdOf } from '../../data/connections/derive';
 import type { ConnectionRecord } from '../../data';
 import type { RecorderState, ObservedDoorGate } from './recorder';
 import { DOOR_BARRIER } from '../../data/native-tables';
@@ -16,19 +17,21 @@ interface UpdateDeps {
 
 const connectionKey = (from: string, to: string): string => `${from}|${to}`;
 
+/** Every crossing the dataset already covers, in the direction it can actually be walked. */
 const knownConnectionSet = (connections: ConnectionRecord[]): Set<string> => {
   const set = new Set<string>();
   for (const c of connections) {
-    set.add(connectionKey(c.fromScreenId, c.toScreenId));
-    if (hasTagKey(c.tags, 'dir:two-way')) set.add(connectionKey(c.toScreenId, c.fromScreenId));
+    if (c.canExit) set.add(connectionKey(c.screenId, toScreenIdOf(c)));
   }
   return set;
 };
 
 const transitionSuggestions = (rec: RecorderState, connections: ConnectionRecord[]): DatasetSuggestion[] => {
   const known = knownConnectionSet(connections);
-  // TODO(Phase 6/7): `code` still emits the OLD TS-literal shape; once
-  // connections live in the vault as JSON, this needs to emit a JSON fragment
+  // TODO(Phase 7): `code` still emits an informal shorthand, not a real
+  // point-pair literal (a connection point now always needs a minted
+  // `toConnectionId` partner, which this suggestion cannot allocate); once
+  // connections live in the vault as JSON this needs to emit a JSON fragment
   // targeting the vault instead of a TS source snippet.
   return rec.transitions
     .filter(t => !known.has(connectionKey(t.from, t.to)))
@@ -36,7 +39,7 @@ const transitionSuggestions = (rec: RecorderState, connections: ConnectionRecord
       kind: 'connection',
       targetFile: 'connections',
       targetId: null,
-      code: `{ from: '${t.from}', to: '${t.to}', tags: ['transit:walk', 'dir:two-way'] },`,
+      code: `{ screenId: '${t.from}', kind: 'edge', tags: ['transit:walk'] } -> '${t.to}' (canExit: true, needs a paired point)`,
       reason: `Traversed ${t.from} → ${t.to} but no connection exists in the data.`,
     }));
 };

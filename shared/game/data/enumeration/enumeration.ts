@@ -27,11 +27,6 @@ const ALL_ENUMERATION: EnumerationEntry[] = [
   { id: 'enum-002', category: 'world', value: 'dark', label: 'Dark World', appliesTo: ['screen', 'area'] },
   { id: 'enum-003', category: 'world', value: 'both', label: 'Both Worlds', appliesTo: ['screen', 'area'] },
 
-  // ─── screen-status ───
-  { id: 'enum-004', category: 'screen-status', value: 'draft', label: 'Draft', appliesTo: ['screen'] },
-  { id: 'enum-005', category: 'screen-status', value: 'mapped', label: 'Mapped', appliesTo: ['screen'] },
-  { id: 'enum-006', category: 'screen-status', value: 'verified', label: 'Verified', appliesTo: ['screen'] },
-
   // ─── screen-kind ───
   { id: 'enum-007', category: 'screen-kind', value: 'overworld', label: 'Overworld', appliesTo: ['screen'] },
   { id: 'enum-008', category: 'screen-kind', value: 'dungeon', label: 'Dungeon', appliesTo: ['screen'] },
@@ -58,12 +53,17 @@ const ALL_ENUMERATION: EnumerationEntry[] = [
   // entrance: overworld ↔ interior threshold (the entranceId / exitId pair).
   // stairs: inter-room / inter-floor staircase (the native stair table).
   // hole: any fall-through — a pit to the room below, an overworld hole into a cave.
+  // drop: the LANDING side of a hole. The flood already reads it (a fall hole's
+  //   entrance id resolves to a spawn tile, which is where the player touches
+  //   down), and it is a real connection point even though nothing can leave
+  //   through it: a ceiling is not a door. Its pair partner is always a `hole`.
   // teleport: warp tiles, whirlpools, cross-world portals. ───
   { id: 'enum-019', category: 'connection-kind', value: 'edge', label: 'Edge', appliesTo: ['connection'] },
   { id: 'enum-020', category: 'connection-kind', value: 'door', label: 'Door', appliesTo: ['connection'] },
   { id: 'enum-021', category: 'connection-kind', value: 'entrance', label: 'Entrance', appliesTo: ['connection'] },
   { id: 'enum-022', category: 'connection-kind', value: 'stairs', label: 'Stairs', appliesTo: ['connection'] },
   { id: 'enum-023', category: 'connection-kind', value: 'hole', label: 'Hole', appliesTo: ['connection'] },
+  { id: 'enum-063', category: 'connection-kind', value: 'drop', label: 'Drop', appliesTo: ['connection'] },
   { id: 'enum-024', category: 'connection-kind', value: 'teleport', label: 'Teleport', appliesTo: ['connection'] },
 
   // ─── connection-side ───

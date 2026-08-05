@@ -268,14 +268,17 @@ describe('CompactRecordView — real records from several collections', () => {
     });
   }
 
-  it('recurses one level into a real union branch, then falls back for what is nested past it', () => {
+  it('recurses one level into a nested object field, then falls back for what is nested past it', () => {
+    // Placement is a plain object now (form/rect/tiles), not the old
+    // discriminated `{ at: 'side' | 'area', ... }` union — see the
+    // connection-model migration report.
     const rows = all('connection');
-    const withRect = rows.find((row) => row.placement?.at === 'area') ?? rows[0];
+    const withRect = rows.find((row) => row.placement.form === 'area') ?? rows[0];
     const schema = buildSchema(rows);
     const markup = render(withRect, schema);
-    // The branch's own fields (depth 1) show as rows of their own.
+    // The object's own fields (depth 1) show as rows of their own.
     expect(markup).toContain('title="placement"');
-    expect(markup).toContain('title="placement.at"');
+    expect(markup).toContain('title="placement.form"');
     expect(markup).toContain('title="placement.rect"');
     // What is nested past that (depth 2) does not get its own row — it is
     // folded into `rect`'s own one-line summary instead.

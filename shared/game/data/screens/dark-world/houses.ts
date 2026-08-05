@@ -13,7 +13,6 @@ const DW_HOUSES_SCREENS: ScreenRecord[] = [
     areaId: 'area-005',
     locationId: 'location-026',
     tags: ['tag-002', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-094', tile: { x: 10, y: 44 } },
       { actorId: 'actor-095', tile: { x: 20, y: 44 } },
@@ -29,7 +28,6 @@ const DW_HOUSES_SCREENS: ScreenRecord[] = [
     areaId: 'area-017',
     locationId: 'location-031',
     tags: ['tag-002', 'tag-024'],
-    status: 'mapped',
   },
   {
     id: 'screen-471',
@@ -41,7 +39,6 @@ const DW_HOUSES_SCREENS: ScreenRecord[] = [
     areaId: 'area-017',
     locationId: 'location-031',
     tags: ['tag-002', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-165', tile: { x: 14, y: 20 } },
       { actorId: 'actor-230', tile: { x: 46, y: 40 } },

@@ -6,10 +6,9 @@
  */
 
 type World = 'light' | 'dark' | 'both';
-type ScreenStatus = 'draft' | 'mapped' | 'verified';
 type ScreenKind = 'overworld' | 'dungeon' | 'interior';
 type InteriorKind = 'house' | 'cave' | 'shop' | 'fairy' | 'well' | 'passage' | 'hint' | 'gamble' | 'special';
-type ConnectionKind = 'edge' | 'door' | 'entrance' | 'stairs' | 'hole' | 'teleport';
+type ConnectionKind = 'edge' | 'door' | 'entrance' | 'stairs' | 'hole' | 'drop' | 'teleport';
 type ConnectionSide = 'north' | 'south' | 'east' | 'west' | 'up' | 'down';
 type ActorKind = 'enemy' | 'boss' | 'npc' | 'object' | 'obstacle' | 'trigger';
 type CheckKind = 'chest' | 'npc' | 'standing' | 'boss' | 'prize' | 'keyDrop' | 'potItem' | 'dig' | 'bonk' | 'event';
@@ -20,5 +19,5 @@ type ReviewStatus = 'untouched' | 'in-review' | 'needs-work' | 'accepted' | 'ver
 export type {
   ActorKind, CheckKind, ConnectionKind, ConnectionSide,
   InteriorKind, ItemCategory, ItemOrigin, ReviewStatus,
-  ScreenKind, ScreenStatus, World,
+  ScreenKind, World,
 };

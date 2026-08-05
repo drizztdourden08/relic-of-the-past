@@ -76,6 +76,23 @@ type WriteRecordResult =
   | { success: false; error: string };
 
 /**
+ * Minting a brand-new crossing that has no existing partner to link to (see
+ * `pendingPartnerId` in `data/connections/pending-partner.ts`). Both halves are
+ * allocated on ONE `withAllocatedIds` turn and written before either id is
+ * observable, so nothing can see a `toConnectionId` naming a partner that was
+ * never actually written. The two halves commonly belong to different
+ * screens, hence two independent file targets rather than one.
+ */
+interface WriteConnectionPairArgs {
+  near: { filePath: string; record: PendingConnectionRecord };
+  far: { filePath: string; record: PendingConnectionRecord };
+}
+
+type WriteConnectionPairResult =
+  | { success: true; nearId: ConnectionId; farId: ConnectionId }
+  | { success: false; error: string };
+
+/**
  * Relabelling or reshaping a tag already on file. There is no insert variant
  * here — a brand-new term is minted through `allocateTag`, which owns id
  * allocation and the convention check; this only ever replaces an id the
@@ -180,6 +197,6 @@ export type {
   Allocated, AllocateEnumerationArgs, AllocateEnumerationResult, AllocateGeographyArgs, AllocateGeographyResult,
   AllocateItemGroupArgs, AllocateItemGroupResult, AllocateRecordArgs, AllocateRecordResult, AllocateTagArgs,
   AllocateTagResult, DeleteEnumerationArgs, DeleteItemGroupArgs, DeleteRecordArgs, DeleteTagArgs,
-  WriteConnectionsArgs, WriteEnumerationArgs, WriteItemGroupArgs, WriteRecordArgs, WriteRecordResult, WriteScreenArgs,
-  WriteTagArgs,
+  WriteConnectionPairArgs, WriteConnectionPairResult, WriteConnectionsArgs, WriteEnumerationArgs, WriteItemGroupArgs,
+  WriteRecordArgs, WriteRecordResult, WriteScreenArgs, WriteTagArgs,
 };

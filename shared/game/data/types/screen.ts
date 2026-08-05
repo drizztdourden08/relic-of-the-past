@@ -1,7 +1,7 @@
 /* @layer shared-game @kind types */
 import type { ActorId, AreaId, LocationId, ScreenId, TagId } from './ids';
 import type { RegionNavData } from '../../navigation/nav-data.types';
-import type { InteriorKind, ScreenKind, ScreenStatus, World } from '../enumeration/generated-types';
+import type { InteriorKind, ScreenKind, World } from '../enumeration/generated-types';
 
 /** A screen only ever sits in one world — `'both'` is an area-level concept (e.g. Death Mountain). */
 type ScreenWorld = Exclude<World, 'both'>;
@@ -60,7 +60,6 @@ interface ScreenRecord {
   /** References into the tag collection — read the terms back with `tagKeysOf`. */
   tags: readonly TagId[];
   variant?: ScreenVariantInfo;
-  status: ScreenStatus;
   /** Pre-computed flood-fill navigation facts — tile counts, obstacles, connection points. */
   nav?: RegionNavData;
   /**
@@ -79,7 +78,6 @@ export type {
   ScreenPosition,
   ScreenRecord,
   ScreenSpawn,
-  ScreenStatus,
   ScreenVariantInfo,
   ScreenWorld,
   VariantCondition,

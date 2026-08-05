@@ -43,18 +43,27 @@ type EnumerationId = `enum-${string}`;
  * refine when the full research pass reaches it.
  */
 const ENTITY_COUNTS: Record<EntityKind, number> = {
+  // STALE ON PURPOSE: the connection-points migration turned one crossing into
+  // two one-sided records (screenId/toConnectionId/canExit), so the real count
+  // is ~1610, not 896. Left at 896 deliberately — bumping it would push
+  // `ID_PAD_WIDTH` (the max across every kind) from 3 digits to 4 and re-pad
+  // every OTHER kind's future minted ids too. A newly minted connection id is
+  // simply longer than 3 digits now (`connection-1621` etc.), which `makeId`
+  // already handles fine (`padStart` never truncates) — see the migration report.
   connection: 896,
   screen: 486,
   check: 265,
   item: 174,             // 124 vanilla + 50 randomizer-catalog additions (§7b)
   actor: 271,                // 14 npc + 9 obstacle + 33 trigger + 84 enemy + 14 boss + 117 object (Phase 8 census;
                               // +4 trigger appended for the clear-room family widening, actor-268..271)
-  tag: 86,                   // 40 screen terms + 42 crossing terms + 4 check content terms, derived from the taxonomy tables
+  tag: 84,                   // 40 screen terms + 40 crossing terms + 4 check content terms, derived from the taxonomy tables
+                              // (the dir:one-way/dir:two-way pair was retired — direction is derived from `canExit`)
   location: 31,
   area: 17,
   dungeon: 13,               // verified via generate-ids.ts against the real dungeon field values
   'item-group': 7,           // Swords, Bottles, Crystals, Pendants, Medallions, Bows, Gloves
-  enumeration: 62,           // one row per value across the 11 closed-set label categories
+  enumeration: 60,           // one row per value across the 10 closed-set label categories
+                              // (screen-status was retired with ScreenRecord.status; enum-063 'drop' was added to connection-kind)
 };
 
 const ID_PAD_WIDTH = Math.max(...Object.values(ENTITY_COUNTS)).toString().length;

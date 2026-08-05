@@ -13,7 +13,6 @@ const DW_HINTS_SCREENS: ScreenRecord[] = [
     areaId: 'area-005',
     locationId: 'location-026',
     tags: ['tag-003'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-165', tile: { x: 12, y: 12 } },
       { actorId: 'actor-165', tile: { x: 48, y: 12 } },
@@ -29,7 +28,6 @@ const DW_HINTS_SCREENS: ScreenRecord[] = [
     areaId: 'area-017',
     locationId: 'location-031',
     tags: ['tag-002'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-262', tile: { x: 48, y: 18 } },
       { actorId: 'actor-262', tile: { x: 10, y: 44 } },
@@ -45,7 +43,6 @@ const DW_HINTS_SCREENS: ScreenRecord[] = [
     areaId: 'area-017',
     locationId: 'location-031',
     tags: ['tag-002'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-225', tile: { x: 18, y: 50 } },
     ],
@@ -60,7 +57,6 @@ const DW_HINTS_SCREENS: ScreenRecord[] = [
     areaId: 'area-003',
     locationId: 'location-005',
     tags: ['tag-003'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-170', tile: { x: 14, y: 48 } },
       { actorId: 'actor-170', tile: { x: 46, y: 48 } },
@@ -76,7 +72,6 @@ const DW_HINTS_SCREENS: ScreenRecord[] = [
     areaId: 'area-003',
     locationId: 'location-005',
     tags: ['tag-003'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-170', tile: { x: 14, y: 48 } },
       { actorId: 'actor-170', tile: { x: 46, y: 48 } },
@@ -92,7 +87,6 @@ const DW_HINTS_SCREENS: ScreenRecord[] = [
     areaId: 'area-004',
     locationId: 'location-006',
     tags: ['tag-003'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-165', tile: { x: 48, y: 46 } },
     ],

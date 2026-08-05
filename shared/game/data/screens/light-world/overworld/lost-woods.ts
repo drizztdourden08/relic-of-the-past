@@ -13,7 +13,6 @@ const LW_OVERWORLD_LOST_WOODS_SCREENS: ScreenRecord[] = [
     locationId: 'location-019',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-043',
@@ -25,7 +24,6 @@ const LW_OVERWORLD_LOST_WOODS_SCREENS: ScreenRecord[] = [
     locationId: 'location-019',
     position: { gridX: 1, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-029',
@@ -37,7 +35,6 @@ const LW_OVERWORLD_LOST_WOODS_SCREENS: ScreenRecord[] = [
     locationId: 'location-019',
     position: { gridX: 0, gridY: 1 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-044',
@@ -49,7 +46,6 @@ const LW_OVERWORLD_LOST_WOODS_SCREENS: ScreenRecord[] = [
     locationId: 'location-019',
     position: { gridX: 1, gridY: 1 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-030',
@@ -61,7 +57,6 @@ const LW_OVERWORLD_LOST_WOODS_SCREENS: ScreenRecord[] = [
     locationId: 'location-019',
     position: { gridX: 0, gridY: 2 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-036',
@@ -73,7 +68,6 @@ const LW_OVERWORLD_LOST_WOODS_SCREENS: ScreenRecord[] = [
     locationId: 'location-019',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001', 'tag-024'],
-    status: 'mapped',
   },
 ];
 

@@ -13,7 +13,6 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     locationId: 'location-017',
     position: { gridX: 1, gridY: 2 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-053',
@@ -25,7 +24,6 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     locationId: 'location-017',
     position: { gridX: 2, gridY: 2 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-031',
@@ -37,7 +35,6 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     locationId: 'location-017',
     position: { gridX: 0, gridY: 3 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-046',
@@ -49,7 +46,6 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     locationId: 'location-017',
     position: { gridX: 1, gridY: 3 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-054',
@@ -61,7 +57,6 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     locationId: 'location-017',
     position: { gridX: 2, gridY: 3 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-032',
@@ -73,7 +68,6 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     locationId: 'location-017',
     position: { gridX: 0, gridY: 4 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-047',
@@ -85,7 +79,6 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     locationId: 'location-017',
     position: { gridX: 1, gridY: 4 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-055',
@@ -97,7 +90,6 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     locationId: 'location-017',
     position: { gridX: 2, gridY: 4 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-033',
@@ -109,7 +101,6 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     locationId: 'location-017',
     position: { gridX: 0, gridY: 5 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-048',
@@ -121,7 +112,6 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     locationId: 'location-017',
     position: { gridX: 1, gridY: 5 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-001',
@@ -133,7 +123,6 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     locationId: 'location-017',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-037',
@@ -145,7 +134,6 @@ const LW_OVERWORLD_KAKARIKO_SCREENS: ScreenRecord[] = [
     locationId: 'location-017',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
 ];
 

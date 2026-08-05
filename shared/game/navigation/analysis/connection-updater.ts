@@ -69,18 +69,6 @@ const requirementsFromTags = (tags: readonly ConnectionTag[]): RequirementSet =>
   return reqs.length > 0 ? [reqs as TraversalRequirement[]] : [];
 };
 
-const isBidirectional = (tags: readonly ConnectionTag[]): boolean => {
-  for (const tag of tags) {
-    if (tag === 'dir:one-way') return false;
-    if (tag === 'dir:two-way') return true;
-  }
-  // Default: walk connections are bidirectional, holes/ledges are not
-  for (const tag of tags) {
-    if (tag === 'transit:hole' || tag === 'transit:ledge') return false;
-  }
-  return true;
-};
-
 interface ConnectionUpdaterInput {
   connections: ScreenConnection[];
   /** Border bundles indexed by screen: Map<screenIndex, BorderBundle[]> */
@@ -106,30 +94,21 @@ const buildConnectionNavUpdates = (input: ConnectionUpdaterInput): ConnectionNav
   for (const conn of connections) {
     const transitType = transitTypeFromTags(conn.tags);
     const requirements = requirementsFromTags(conn.tags);
-    const bidirectional = isBidirectional(conn.tags);
     const connKey = `${conn.from}|${conn.to}`;
 
     let fromPoint: ConnectionPointData | undefined;
-    let toPoint: ConnectionPointData | undefined;
     let overlapTiles: number[] | undefined;
 
     if (transitType === 'walk') {
       // Walk connections use border bundles and overlap
       overlapTiles = overlapByKey.get(connKey);
       const fromScreen = screenIndexMap.get(conn.from);
-      const toScreen = screenIndexMap.get(conn.to);
 
       if (fromScreen !== undefined) {
         const bundles = borderBundles.get(fromScreen);
         if (bundles?.length) {
           // Find the bundle that best matches the overlap tiles
           fromPoint = bundleToConnectionPoint(bundles[0]);
-        }
-      }
-      if (toScreen !== undefined) {
-        const bundles = borderBundles.get(toScreen);
-        if (bundles?.length) {
-          toPoint = bundleToConnectionPoint(bundles[0]);
         }
       }
     }
@@ -142,9 +121,7 @@ const buildConnectionNavUpdates = (input: ConnectionUpdaterInput): ConnectionNav
     const nav: ConnectionNavData = {
       transitType,
       requirements,
-      bidirectional,
       fromPoint,
-      toPoint,
       overlapTiles,
       weight,
     };
@@ -170,5 +147,5 @@ const bundleToConnectionPoint = (bundle: BorderBundle): ConnectionPointData => {
   };
 };
 
-export { transitTypeFromTags, isBidirectional, buildConnectionNavUpdates };
+export { transitTypeFromTags, buildConnectionNavUpdates };
 export type { ConnectionNavUpdate, ConnectionUpdaterInput };

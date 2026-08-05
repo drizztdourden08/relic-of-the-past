@@ -19,6 +19,7 @@ import { resolveSourceFile } from './resolve-source-file';
 import { insertBeforeArrayClose, removeById, replaceById } from './source-writers';
 import type { WriteResult } from './source-writers';
 import { withAllocatedIds } from './id-allocator';
+import { registerConnectionPairHandler } from './connection-pair-writer';
 import { allocateGeography } from './geography-writer';
 import { allocateTag, deleteTag, writeTag } from './tag-writer';
 import { allocateItemGroup, deleteItemGroup, writeItemGroup } from './item-group-writer';
@@ -82,6 +83,8 @@ const writeConnections = (args: WriteConnectionsArgs): Promise<WriteRecordResult
 const registerScreenEditorHandlers = (): void => {
   // The six record-facade collections, whose channels are all one shape.
   registerRecordHandlers();
+  // A brand-new crossing's pair mint — see connection-pair-writer.ts.
+  registerConnectionPairHandler();
 
   handle('screenEditor:writeScreen', async (_e, args) => {
     try {

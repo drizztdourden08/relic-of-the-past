@@ -1,5 +1,5 @@
 /* @layer tests @kind test */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterAll } from 'vitest';
 import type { ConnectionRecord } from '../../shared/game/data';
 import type { SimChest, SimObservation, TriggerAction, FlagSnapshot, SimEvent, DetectedCheck } from '../../shared/game/simulation/types';
 import { createEngine } from '../../shared/game/simulation/engine/engine';
@@ -7,8 +7,8 @@ import { createEngineState } from '../../shared/game/simulation/engine/state';
 import type { EngineState } from '../../shared/game/simulation/engine/state';
 import { buildAdjacency } from '../../shared/game/simulation/engine/traversal';
 import { emptySnapshot, cloneSnapshot } from '../../shared/game/simulation/detect/flag-snapshot';
-import { getItemByGameId } from '../../shared/game/data';
-import type { CheckId, ItemId } from '../../shared/game/data';
+import { getItemByGameId, registerRecord, unregisterRecord } from '../../shared/game/data';
+import type { CheckId, ConnectionId, ItemId } from '../../shared/game/data';
 
 /** Chest-open bit per slot — same native fact the matcher itself uses. */
 const CHEST_OPEN_MASKS = [0x10, 0x20, 0x40, 0x80, 0x100, 0x200, 0x400] as const;
@@ -30,17 +30,50 @@ interface WorldChest extends SimChest {
   screenId: string;
 }
 
-const makeConnections = (lockBToC: boolean): ConnectionRecord[] => [
-  { id: 'connection-t01', fromScreenId: 'A', toScreenId: 'B', direction: 'two-way', tags: ['transit:walk', 'dir:two-way'] } as unknown as ConnectionRecord,
-  {
-    id: 'connection-t02',
-    fromScreenId: 'B',
-    toScreenId: 'C',
-    direction: 'two-way',
-    tags: ['transit:door', 'dir:two-way'],
-    nav: { transitType: 'door', requirements: lockBToC ? [['hammer']] : [], bidirectional: true, weight: 1 },
-  } as unknown as ConnectionRecord,
-];
+const EMPTY_PLACEMENT = { form: 'area' as const, tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } };
+
+/**
+ * A one-sided point always resolves its partner through the GLOBAL facade
+ * (`toScreenIdOf` calls `getConnection`, see `data/connections/derive.ts`) —
+ * not through whatever array `buildAdjacency` was handed — so this synthetic
+ * world's points are registered into the real session registry, not just
+ * built as bare objects. `lockBToC` is always `true` across every call site
+ * in this file; both directions of the B<->C door carry the same hammer
+ * requirement, matching the OLD single-record model's one `nav` applying to
+ * whichever direction it produced.
+ */
+const CONNECTION_IDS = ['connection-t01', 'connection-t01r', 'connection-t02', 'connection-t02r'] as ConnectionId[];
+
+const makeConnections = (lockBToC: boolean): ConnectionRecord[] => {
+  const doorReq = lockBToC ? [['hammer']] : [];
+  const records = [
+    {
+      id: 'connection-t01', screenId: 'A', toConnectionId: 'connection-t01r', kind: 'edge',
+      placement: EMPTY_PLACEMENT, canExit: true, tags: ['transit:walk'],
+    },
+    {
+      id: 'connection-t01r', screenId: 'B', toConnectionId: 'connection-t01', kind: 'edge',
+      placement: EMPTY_PLACEMENT, canExit: true, tags: ['transit:walk'],
+    },
+    {
+      id: 'connection-t02', screenId: 'B', toConnectionId: 'connection-t02r', kind: 'door',
+      placement: EMPTY_PLACEMENT, canExit: true, tags: ['transit:door'],
+      nav: { transitType: 'door', requirements: doorReq, weight: 1 },
+    },
+    {
+      id: 'connection-t02r', screenId: 'C', toConnectionId: 'connection-t02', kind: 'door',
+      placement: EMPTY_PLACEMENT, canExit: true, tags: ['transit:door'],
+      nav: { transitType: 'door', requirements: doorReq, weight: 1 },
+    },
+  ] as unknown as ConnectionRecord[];
+  for (const record of records) {
+    if (!registerRecord('connection', record)) {
+      unregisterRecord('connection', record.id);
+      registerRecord('connection', record);
+    }
+  }
+  return records;
+};
 
 class FakeWorld {
   flags: FlagSnapshot = emptySnapshot();
@@ -95,6 +128,10 @@ const runLoop = (world: FakeWorld, connections: ConnectionRecord[], goalCheckId?
 };
 
 describe('simulation engine loop', () => {
+  afterAll(() => {
+    for (const id of CONNECTION_IDS) unregisterRecord('connection', id);
+  });
+
   it('clears an item-gated world end-to-end and reports completed at the goal check', () => {
     const world = new FakeWorld([
       { screenId: 'A', roomId: KAKARIKO_TAVERN_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: HAMMER_ID },

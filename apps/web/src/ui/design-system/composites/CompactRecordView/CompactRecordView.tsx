@@ -27,7 +27,7 @@ import './CompactRecordView.css';
 const NO_FIELDS = 'This record has no fields to show.';
 
 const CompactRecordView = <T,>(props: CompactRecordViewProps<T>) => {
-  const { record, schema, config, groups, resolveIdRefDisplay } = props;
+  const { record, schema, config, groups, resolveIdRefDisplay, diffs } = props;
   const laidOut = useMemo(() => layoutGroups(schema, config), [schema, config]);
   const shown = useMemo(() => filterGroups(laidOut, groups), [laidOut, groups]);
   const showLabels = shown.length > 1;
@@ -47,6 +47,7 @@ const CompactRecordView = <T,>(props: CompactRecordViewProps<T>) => {
               field={field}
               depth={0}
               resolveIdRefDisplay={resolveIdRefDisplay}
+              diffs={diffs}
             />
           ))}
         </Box>

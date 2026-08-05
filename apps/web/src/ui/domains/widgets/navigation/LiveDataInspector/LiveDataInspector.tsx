@@ -14,9 +14,13 @@
  * anywhere in a card, or its edit button, jumps to the Data Inspector at that
  * exact record via `openRecord` — the same handoff `openRecommendation`
  * already uses for a finding.
+ *
+ * `useComparison` (see its own header) feeds each card its own record's live
+ * differences, keyed by id, so a wrong field shows inline right where it
+ * lives instead of only as a separate recommendation card above.
  */
 import { useMemo, useState } from 'react';
-import { Box, EmptyState } from '@ds/primitives';
+import { Box, EmptyState, ScrollArea } from '@ds/primitives';
 import { buildSchema } from '@ds/data';
 import { COLLECTION_SOURCES } from '@app/ui/domains/app/views/DataInspector/behavior/collection-sources';
 import { openInPassOrder, useRecommendations } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/use-recommendations';
@@ -25,6 +29,7 @@ import { useIdRefNavigation } from '@app/ui/domains/app/views/DataInspector/beha
 import { useDataViewStore } from '@app/stores/data-view-store';
 import type { EntityKind } from '@shared/game/data';
 import { DEFAULT_KIND } from './LiveDataInspector.constants';
+import { useComparison } from './behavior/use-comparison';
 import { useCurrentRecords } from './behavior/use-current-records';
 import { useDetectionPass } from './behavior/use-detection-pass';
 import { useLiveContext } from './behavior/use-live-context';
@@ -44,6 +49,7 @@ const idOf = (record: unknown): string | null => {
 const LiveDataInspectorContent = () => {
   const context = useLiveContext();
   useDetectionPass(context);
+  const diffsByRecord = useComparison(context);
 
   const [kind, setKind] = useState<EntityKind>(DEFAULT_KIND);
   const allEntries = useRecommendations();
@@ -66,7 +72,7 @@ const LiveDataInspectorContent = () => {
     <Box className="live-data-inspector">
       <RecommendationList entries={screenEntries} />
       <CollectionTabs selected={kind} onSelect={setKind} />
-      <Box className="live-data-inspector__record" onClickCapture={handleIdRefClickCapture}>
+      <ScrollArea className="live-data-inspector__record" onClickCapture={handleIdRefClickCapture}>
         {records.length === 0 && <EmptyState message={NO_RECORDS} />}
         {records.map((record) => {
           const id = idOf(record);
@@ -80,10 +86,11 @@ const LiveDataInspectorContent = () => {
               schema={schema}
               config={source.config}
               resolveIdRefDisplay={defaultIdRefDisplay}
+              diffs={diffsByRecord.get(id)}
             />
           );
         })}
-      </Box>
+      </ScrollArea>
     </Box>
   );
 };

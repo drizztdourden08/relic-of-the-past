@@ -11,7 +11,7 @@ import type { FieldDescriptor, SchemaConfig } from '../../apps/web/src/ui/design
 // and how a schema lays itself out with and without a config to steer it.
 
 const connections = all('connection');
-const withRect = connections.find((row) => row.placement?.at === 'area');
+const withRect = connections.find((row) => row.placement.form === 'area');
 if (!withRect) throw new Error('the dataset no longer holds an area placement');
 
 const PATHS = ['id', 'tags', 'placement', 'placement.rect', 'placement.rect.x', 'placement.rect.y'];
@@ -90,7 +90,7 @@ describe('auto-layout — a config steering it', () => {
   const rows = all('connection');
   const config: SchemaConfig = {
     groups: [
-      { id: 'ends', label: 'Endpoints', paths: ['toScreenId', 'fromScreenId'] },
+      { id: 'ends', label: 'Endpoints', paths: ['toConnectionId', 'screenId'] },
       { id: 'empty', label: 'Nothing here', paths: ['no.such.path'] },
     ],
   };
@@ -103,7 +103,7 @@ describe('auto-layout — a config steering it', () => {
   });
 
   it('orders fields within a group the way the group names them', () => {
-    expect(groups[0].fields.map((field) => field.path)).toEqual(['toScreenId', 'fromScreenId']);
+    expect(groups[0].fields.map((field) => field.path)).toEqual(['toConnectionId', 'screenId']);
   });
 
   it('puts everything unclaimed in a final implicit group rather than losing it', () => {

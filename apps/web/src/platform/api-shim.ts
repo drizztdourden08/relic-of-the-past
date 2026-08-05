@@ -41,7 +41,7 @@ const refuseEdit = async (): Promise<{ success: false; error: string }> =>
   ({ success: false, error: 'The dataset editor needs the desktop app.' });
 
 const SCREEN_EDITOR_STUB = {
-  writeScreen: refuseEdit, writeConnections: refuseEdit, writeCheck: refuseEdit,
+  writeScreen: refuseEdit, writeConnections: refuseEdit, writeConnectionPair: refuseEdit, writeCheck: refuseEdit,
   allocateGeography: refuseEdit, allocateTag: refuseEdit, writeTag: refuseEdit, deleteTag: refuseEdit,
   allocateItemGroup: refuseEdit, writeItemGroup: refuseEdit, deleteItemGroup: refuseEdit,
   allocateEnumeration: refuseEdit, writeEnumeration: refuseEdit, deleteEnumeration: refuseEdit,

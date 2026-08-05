@@ -15,7 +15,7 @@
 import type { ConnectionInfo } from '../types';
 import type { ConnectionNavData, ConnectionPointData, RequirementSet, TraversalRequirement } from '../nav-data.types';
 import type { ConnectionTag } from '../../data';
-import { transitTypeFromTags, isBidirectional } from './connection-updater';
+import { transitTypeFromTags } from './connection-updater';
 
 type Edge = ConnectionInfo['edge'];
 
@@ -62,14 +62,12 @@ const buildFromPoint = (info: ConnectionInfo, requirements: RequirementSet): Con
 const buildConnectionNav = (info: ConnectionInfo, tags: readonly ConnectionTag[]): ConnectionNavData => {
   const transitType = transitTypeFromTags(tags);
   const requirements = requirementsFromFlood(info.requirements);
-  const bidirectional = isBidirectional(tags);
   const positions = info.positions ?? [];
   const hasCrossing = positions.length > 0;
 
   const nav: ConnectionNavData = {
     transitType,
     requirements,
-    bidirectional,
     weight: transitType === 'walk' ? (positions.length || 1) : 1,
   };
 

@@ -9,11 +9,11 @@ export type { ItemGroupRecord } from './item-group';
 export type { EnumerationCategory, EnumerationEntry } from './enumeration';
 export type {
   InteriorKind, ScreenGameId, ScreenKind, ScreenPosition, ScreenRecord, ScreenSpawn,
-  ScreenStatus, ScreenVariantInfo, ScreenWorld, VariantCondition, World,
+  ScreenVariantInfo, ScreenWorld, VariantCondition, World,
 } from './screen';
 export type {
-  ConnectionGameId, ConnectionKind, ConnectionPlacement, ConnectionRecord,
-  ConnectionRect, ConnectionSide, ConnectionTileRange,
+  ConnectionForm, ConnectionGameId, ConnectionKind, ConnectionPlacement, ConnectionRecord,
+  ConnectionRect, ConnectionSide, ConnectionTile,
 } from './connection';
 export type { BitState, CheckGameId, CheckKind, CheckRecord, PresenceCondition, Requirement } from './check';
 export type { ItemGameId, ItemRecord } from './item';

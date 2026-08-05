@@ -13,7 +13,6 @@ const LW_OVERWORLD_SOUTH_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-002',
     position: { gridX: 2, gridY: 6 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-003',
@@ -25,7 +24,6 @@ const LW_OVERWORLD_SOUTH_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-002',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
 ];
 

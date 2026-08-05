@@ -39,6 +39,7 @@ interface ShadowCastingApi {
 interface ScreenEditorApi {
   writeScreen: InvokeContract['screenEditor:writeScreen'];
   writeConnections: InvokeContract['screenEditor:writeConnections'];
+  writeConnectionPair: InvokeContract['screenEditor:writeConnectionPair'];
   writeCheck: InvokeContract['screenEditor:writeCheck'];
   allocateGeography: InvokeContract['screenEditor:allocateGeography'];
   allocateTag: InvokeContract['screenEditor:allocateTag'];

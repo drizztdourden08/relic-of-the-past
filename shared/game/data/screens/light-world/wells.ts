@@ -13,7 +13,6 @@ const LW_WELLS_SCREENS: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     tags: ['tag-003', 'tag-040'],
-    status: 'mapped',
   },
   {
     id: 'screen-224',
@@ -25,7 +24,6 @@ const LW_WELLS_SCREENS: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
   },
 ];
 

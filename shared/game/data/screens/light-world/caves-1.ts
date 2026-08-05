@@ -13,7 +13,6 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-009',
     locationId: 'location-010',
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-001', tile: { x: 50, y: 8 } },
     ],
@@ -28,7 +27,6 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-103', tile: { x: 50, y: 14 } },
       { actorId: 'actor-103', tile: { x: 48, y: 16 } },
@@ -46,7 +44,6 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-012',
     locationId: 'location-017',
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-103', tile: { x: 30, y: 18 } },
       { actorId: 'actor-103', tile: { x: 32, y: 18 } },
@@ -66,7 +63,6 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-010',
     locationId: 'location-012',
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
   },
   {
     id: 'screen-166',
@@ -78,7 +74,6 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-016',
     locationId: 'location-002',
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-056', tile: { x: 6, y: 44 } },
       { actorId: 'actor-056', tile: { x: 24, y: 44 } },
@@ -97,7 +92,6 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-013',
     locationId: 'location-018',
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-222', tile: { x: 46, y: 14 } },
       { actorId: 'actor-255', tile: { x: 54, y: 16 } },
@@ -114,7 +108,6 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-013',
     locationId: 'location-018',
     tags: ['tag-003'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-262', tile: { x: 14, y: 44 } },
     ],
@@ -129,7 +122,6 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-013',
     locationId: 'location-018',
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
   },
   {
     id: 'screen-169',
@@ -141,7 +133,6 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-016',
     locationId: 'location-002',
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-163', tile: { x: 18, y: 16 } },
       { actorId: 'actor-071', tile: { x: 20, y: 40 } },
@@ -158,7 +149,6 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-016',
     locationId: 'location-002',
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
   },
   {
     id: 'screen-167',
@@ -170,7 +160,6 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-016',
     locationId: 'location-002',
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-233', tile: { x: 14, y: 10 } },
     ],
@@ -185,7 +174,6 @@ const LW_CAVES_SCREENS_1: ScreenRecord[] = [
     areaId: 'area-010',
     locationId: 'location-012',
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-262', tile: { x: 48, y: 18 } },
       { actorId: 'actor-262', tile: { x: 10, y: 44 } },

@@ -2,12 +2,13 @@
 import type { CheckId, ConnectionRecord, ItemId, Requirement, ScreenId } from '../data';
 import type { LogicConfig } from '../types';
 import { find, getScreen, ITEM_GROUP_IDS } from '../data';
+import { toScreenIdOf } from '../data/connections/derive';
 import type { ReachConnection } from './eval';
 import { hasBeamSword, hasCrystals, hasSword } from '../data/requirements/helpers';
 
 const toReachConnection = (c: ConnectionRecord): ReachConnection => ({
-  from: c.fromScreenId,
-  to: c.toScreenId,
+  from: c.screenId,
+  to: toScreenIdOf(c),
   requirements: c.requirements,
 });
 
@@ -15,10 +16,13 @@ const toReachConnection = (c: ConnectionRecord): ReachConnection => ({
  * The tracker's reachability graph. Excludes dungeon-kind screens: dungeon
  * interiors have no traversal graph wired in yet (see the mode-overlay
  * comments below), so every edge touching one is left out rather than
- * pretending it's reachable.
+ * pretending it's reachable. Also excludes a record that cannot be exited
+ * (a `drop`'s landing point, a one-way's receiving end) — a crossing edge now
+ * comes from exactly the side that carries `canExit: true`.
  */
 const overworldConnections = (): ReachConnection[] =>
-  find('connection', c => getScreen(c.fromScreenId).kind !== 'dungeon' && getScreen(c.toScreenId).kind !== 'dungeon')
+  find('connection', c => c.canExit
+    && getScreen(c.screenId).kind !== 'dungeon' && getScreen(toScreenIdOf(c)).kind !== 'dungeon')
     .map(toReachConnection);
 
 // ─── Menu — a virtual BFS root with no ScreenRecord of its own, so its two

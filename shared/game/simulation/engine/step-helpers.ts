@@ -5,6 +5,7 @@
  */
 import type { SimEvent, SimExit, SimObservation, TriggerAction } from '../types';
 import type { GridPos } from '../../navigation/types';
+import { getConnection } from '../../data';
 import { screenLabel } from './screen-label';
 import { cloneSnapshot } from '../detect/flag-snapshot';
 import type { ScreenEdge } from './traversal';
@@ -39,8 +40,14 @@ const spendKeysForEdge = (s: EngineState, edge: ScreenEdge): void => {
   }
 };
 
-/** Where the virtual player lands when crossing an edge — the connection's entry point, else screen centre. */
-const entryTileFor = (edge: ScreenEdge): GridPos => edge.connection.nav?.toPoint?.position ?? SCREEN_CENTER;
+/**
+ * Where the virtual player lands when crossing an edge — the entry point, else
+ * screen centre. The landing tile lives on the OTHER side's own record now (a
+ * connection point is one-sided): `edge.connection` is the point being left,
+ * so its partner's `nav.fromPoint` is the point being arrived at.
+ */
+const entryTileFor = (edge: ScreenEdge): GridPos =>
+  getConnection(edge.connection.toConnectionId).nav?.fromPoint?.position ?? SCREEN_CENTER;
 
 const posMsg = (label: 'START' | 'END', tile: GridPos): string => `${label} at ${tile.col},${tile.row}`;
 

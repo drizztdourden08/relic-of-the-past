@@ -13,7 +13,7 @@ describe('connectionIssues — per-connection completeness warnings', () => {
   const complete = {
     from: KNOWN_ID,
     to: KNOWN_ID_2,
-    tags: ['transit:walk', 'dir:two-way'] as ConnectionTag[],
+    tags: ['transit:walk'] as ConnectionTag[],
   };
 
   it('reports no issues when tiles, endpoints, and required tags are all present', () => {
@@ -33,13 +33,8 @@ describe('connectionIssues — per-connection completeness warnings', () => {
     expect(issues).toContain('⚠ unknown screen: also-bad');
   });
 
-  it('flags missing transit and direction tags independently', () => {
-    const noTransit = connectionIssues({ ...complete, tags: ['dir:two-way'] as ConnectionTag[] }, 'tiles: [1]');
+  it('flags a missing transit tag', () => {
+    const noTransit = connectionIssues({ ...complete, tags: [] as ConnectionTag[] }, 'tiles: [1]');
     expect(noTransit).toContain('⚠ no transit type');
-    expect(noTransit).not.toContain('⚠ no direction');
-
-    const noDir = connectionIssues({ ...complete, tags: ['transit:walk'] as ConnectionTag[] }, 'tiles: [1]');
-    expect(noDir).toContain('⚠ no direction');
-    expect(noDir).not.toContain('⚠ no transit type');
   });
 });

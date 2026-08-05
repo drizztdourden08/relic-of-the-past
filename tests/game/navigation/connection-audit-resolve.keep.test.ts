@@ -1,28 +1,38 @@
 /* @layer tests @kind test */
+/**
+ * Tag inference for a real crossing the dataset does not map. Used to test
+ * `connection-audit-resolve.ts`'s `inferTagsForDetected` (over a
+ * `DetectedConnection`'s `type`); that function was removed in phase 4,
+ * part 2 along with the `connection-add`/`connection-remove` detectors it
+ * backed. Its replacement, `points.set.ts`'s `inferTags`, does the same job
+ * over an `ObservedTransition`'s `source` instead (the `SetProbe`'s own live
+ * item shape) — updated here rather than deleted, since the underlying
+ * behaviour (what tags a given native crossing implies) is unchanged.
+ */
 import { describe, it, expect } from 'vitest';
-import { inferTagsForDetected } from '../../../apps/web/src/ui/domains/widgets/navigation/connection-audit-resolve';
-import type { DetectedConnection } from '../../../apps/web/src/ui/domains/widgets/navigation/useDatasetStatus';
+import type { ObservedTransition } from '@shared/game/recommendations';
+import { inferTags } from '../../../apps/web/src/ui/domains/widgets/navigation/recommendations/strategies/connection/points.set';
 
-const detOf = (type: DetectedConnection['type']): DetectedConnection => ({
-  type,
-  targetRoomOrScreen: 0x55,
-  label: 'test',
-});
+const transitionOf = (source: string): ObservedTransition => ({ source, kind: 'room', index: 0x55 });
 
-describe('inferTagsForDetected — tag inference for a detected-but-unmapped transition', () => {
-  it('tags an entrance as a two-way door into the destination', () => {
-    expect(inferTagsForDetected(detOf('entrance'))).toEqual(['transit:door', 'dir:two-way', 'ctx:entrance']);
+describe('inferTags — tag inference for a detected-but-unmapped transition', () => {
+  it('tags an exit (the overworld screen a room exits to) as a door', () => {
+    expect(inferTags(transitionOf('exit'))).toEqual(['transit:door', 'ctx:entrance']);
   });
 
-  it('tags a stair as two-way internal stairs', () => {
-    expect(inferTagsForDetected(detOf('stair'))).toEqual(['transit:stairs', 'dir:two-way', 'ctx:internal']);
+  it('tags an entrance (an overworld door into a room) as a door', () => {
+    expect(inferTags(transitionOf('entrance'))).toEqual(['transit:door', 'ctx:entrance']);
   });
 
-  it('tags a fall hole as a one-way entrance drop', () => {
-    expect(inferTagsForDetected(detOf('hole'))).toEqual(['transit:hole', 'dir:one-way', 'ctx:entrance']);
+  it('tags a stair as internal stairs', () => {
+    expect(inferTags(transitionOf('stair'))).toEqual(['transit:stairs', 'ctx:internal']);
   });
 
-  it('falls back to a two-way overworld walk edge for any other kind', () => {
-    expect(inferTagsForDetected(detOf('edge'))).toEqual(['transit:walk', 'dir:two-way', 'ctx:overworld']);
+  it('tags a fall hole as an entrance drop', () => {
+    expect(inferTags(transitionOf('hole'))).toEqual(['transit:hole', 'ctx:entrance']);
+  });
+
+  it('tags a travel destination as an internal walk', () => {
+    expect(inferTags(transitionOf('travel'))).toEqual(['transit:walk', 'ctx:internal']);
   });
 });

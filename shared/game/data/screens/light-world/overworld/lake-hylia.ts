@@ -13,7 +13,6 @@ const LW_OVERWORLD_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-018',
     position: { gridX: 3, gridY: 6 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-073',
@@ -25,7 +24,6 @@ const LW_OVERWORLD_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-018',
     position: { gridX: 4, gridY: 6 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-081',
@@ -37,7 +35,6 @@ const LW_OVERWORLD_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-018',
     position: { gridX: 5, gridY: 6 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-089',
@@ -49,7 +46,6 @@ const LW_OVERWORLD_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-018',
     position: { gridX: 6, gridY: 6 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-066',
@@ -61,7 +57,6 @@ const LW_OVERWORLD_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-018',
     position: { gridX: 3, gridY: 7 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-074',
@@ -73,7 +68,6 @@ const LW_OVERWORLD_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-018',
     position: { gridX: 4, gridY: 7 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-082',
@@ -85,7 +79,6 @@ const LW_OVERWORLD_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-018',
     position: { gridX: 5, gridY: 7 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-090',
@@ -97,7 +90,6 @@ const LW_OVERWORLD_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-018',
     position: { gridX: 6, gridY: 7 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-098',
@@ -109,7 +101,6 @@ const LW_OVERWORLD_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-018',
     position: { gridX: 7, gridY: 7 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-024',
@@ -121,7 +112,6 @@ const LW_OVERWORLD_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-018',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-025',
@@ -133,7 +123,6 @@ const LW_OVERWORLD_LAKE_HYLIA_SCREENS: ScreenRecord[] = [
     locationId: 'location-018',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001', 'tag-024'],
-    status: 'mapped',
   },
 ];
 

@@ -1,14 +1,26 @@
 /* @layer test @kind test */
-/** Importing the shared detectors barrel installs every one as a side effect. */
+/**
+ * The shared `detectors/` barrel this file used to test was deleted in
+ * phase 5 — every kind it covered (`actor`, `check`, `dungeon`, `item`) is a
+ * comparison strategy now, not a hand-written detector. Importing each
+ * strategy's own barrel, followed by `strategy-detectors` (which turns every
+ * registered strategy into a detector — see that module's own header),
+ * installs a `strategy:<kind>` detector for each one, the same way the
+ * deleted barrel used to install a hand-written id per kind.
+ */
 import { describe, it, expect } from 'vitest';
 import { detectorsFor } from '@shared/game/recommendations';
-import '@shared/game/recommendations/detectors';
+import '@shared/game/recommendations/strategies/actor';
+import '@shared/game/recommendations/strategies/check';
+import '@shared/game/recommendations/strategies/dungeon';
+import '@shared/game/recommendations/strategies/item';
+import '@shared/game/recommendations/strategy-detectors';
 
-describe('the shared recommendations detector barrel', () => {
-  it('installs a detector for each kind it covers', () => {
-    expect(detectorsFor('actor').map(d => d.id).sort()).toEqual(['actor-combat', 'actor-spawns']);
-    expect(detectorsFor('check').map(d => d.id)).toEqual(['check-presence']);
-    expect(detectorsFor('dungeon').map(d => d.id)).toEqual(['dungeon-rooms']);
-    expect(detectorsFor('item').map(d => d.id)).toEqual(['item-grants']);
+describe('the strategy barrels phase 5 replaced the shared detectors barrel with', () => {
+  it('installs one strategy-backed detector for each kind it covers', () => {
+    expect(detectorsFor('actor').map(d => d.id)).toEqual(['strategy:actor']);
+    expect(detectorsFor('check').map(d => d.id)).toEqual(['strategy:check']);
+    expect(detectorsFor('dungeon').map(d => d.id)).toEqual(['strategy:dungeon']);
+    expect(detectorsFor('item').map(d => d.id)).toEqual(['strategy:item']);
   });
 });

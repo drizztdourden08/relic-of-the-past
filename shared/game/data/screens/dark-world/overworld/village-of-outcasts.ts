@@ -13,7 +13,6 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_SCREENS: ScreenRecord[] = [
     locationId: 'location-031',
     position: { gridX: 1, gridY: 2 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-271',
@@ -25,7 +24,6 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_SCREENS: ScreenRecord[] = [
     locationId: 'location-031',
     position: { gridX: 2, gridY: 2 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-247',
@@ -37,7 +35,6 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_SCREENS: ScreenRecord[] = [
     locationId: 'location-031',
     position: { gridX: 0, gridY: 3 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-264',
@@ -49,7 +46,6 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_SCREENS: ScreenRecord[] = [
     locationId: 'location-031',
     position: { gridX: 1, gridY: 3 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-272',
@@ -61,7 +57,6 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_SCREENS: ScreenRecord[] = [
     locationId: 'location-031',
     position: { gridX: 2, gridY: 3 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-248',
@@ -73,7 +68,6 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_SCREENS: ScreenRecord[] = [
     locationId: 'location-031',
     position: { gridX: 0, gridY: 4 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-265',
@@ -85,7 +79,6 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_SCREENS: ScreenRecord[] = [
     locationId: 'location-031',
     position: { gridX: 1, gridY: 4 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-273',
@@ -97,7 +90,6 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_SCREENS: ScreenRecord[] = [
     locationId: 'location-031',
     position: { gridX: 2, gridY: 4 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-249',
@@ -109,7 +101,6 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_SCREENS: ScreenRecord[] = [
     locationId: 'location-031',
     position: { gridX: 0, gridY: 5 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-266',
@@ -121,7 +112,6 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_SCREENS: ScreenRecord[] = [
     locationId: 'location-031',
     position: { gridX: 1, gridY: 5 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-260',
@@ -133,7 +123,6 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_SCREENS: ScreenRecord[] = [
     locationId: 'location-031',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-253',
@@ -145,7 +134,6 @@ const DW_OVERWORLD_VILLAGE_OF_OUTCASTS_SCREENS: ScreenRecord[] = [
     locationId: 'location-031',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
 ];
 

@@ -13,7 +13,6 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B3_B2: ScreenRecord[] = [
     locationId: 'location-016',
     position: { gridX: 14, gridY: 4, floor: -3 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
       { actorId: 'actor-118', tile: { x: 40, y: 16 } },
@@ -32,7 +31,6 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B3_B2: ScreenRecord[] = [
     locationId: 'location-016',
     position: { gridX: 15, gridY: 4, floor: -3 },
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 46, y: 12 } },
       { actorId: 'actor-255', tile: { x: 40, y: 16 } },
@@ -49,7 +47,6 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B3_B2: ScreenRecord[] = [
     locationId: 'location-016',
     position: { gridX: 14, gridY: 5, floor: -2 },
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-236', tile: { x: 56, y: 10 } },
       { actorId: 'actor-236', tile: { x: 38, y: 22 } },
@@ -67,7 +64,6 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B3_B2: ScreenRecord[] = [
     locationId: 'location-016',
     position: { gridX: 15, gridY: 5, floor: -2 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     triggerIds: ['actor-043'],
     spawns: [
       { actorId: 'actor-071', tile: { x: 8, y: 48 } },
@@ -85,7 +81,6 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B3_B2: ScreenRecord[] = [
     locationId: 'location-016',
     position: { gridX: 14, gridY: 10, floor: -2 },
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
     triggerIds: ['actor-043'],
     spawns: [
       { actorId: 'actor-071', tile: { x: 38, y: 14 } },
@@ -102,7 +97,6 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B3_B2: ScreenRecord[] = [
     locationId: 'location-016',
     position: { gridX: 15, gridY: 10, floor: -2 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-204', tile: { x: 20, y: 16 } },
     ],
@@ -117,7 +111,6 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B3_B2: ScreenRecord[] = [
     locationId: 'location-016',
     position: { gridX: 14, gridY: 11, floor: -3 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     triggerIds: ['actor-027'],
     spawns: [
       { actorId: 'actor-065', tile: { x: 46, y: 16 } },
@@ -139,7 +132,6 @@ const DW_DUNGEON_ICE_PALACE_SCREENS_FLOOR_B3_B2: ScreenRecord[] = [
     locationId: 'location-016',
     position: { gridX: 15, gridY: 11, floor: -3 },
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-161', tile: { x: 22, y: 48 } },
       { actorId: 'actor-239', tile: { x: 24, y: 42 } },

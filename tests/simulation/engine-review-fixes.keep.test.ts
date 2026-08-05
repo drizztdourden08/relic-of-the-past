@@ -1,6 +1,6 @@
 /* @layer tests @kind test */
-import { describe, it, expect } from 'vitest';
-import type { CheckId, CheckRecord, ConnectionRecord, ItemId } from '../../shared/game/data';
+import { describe, it, expect, afterAll } from 'vitest';
+import type { CheckId, CheckRecord, ConnectionId, ConnectionRecord, ItemId } from '../../shared/game/data';
 import type {
   SimChest,
   SimObservation,
@@ -16,7 +16,42 @@ import { buildAdjacency } from '../../shared/game/simulation/engine/traversal';
 import { resetFrontier, onCheckVerified } from '../../shared/game/simulation/engine/explorer';
 import { discoverTargets } from '../../shared/game/simulation/engine/discover';
 import { emptySnapshot, cloneSnapshot } from '../../shared/game/simulation/detect/flag-snapshot';
-import { getItemByGameId } from '../../shared/game/data';
+import { getItemByGameId, registerRecord, unregisterRecord } from '../../shared/game/data';
+
+const EMPTY_PLACEMENT = { form: 'area' as const, tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } };
+
+const REGISTERED_IDS: ConnectionId[] = [];
+
+/**
+ * A one-sided point always resolves its partner through the GLOBAL facade
+ * (`toScreenIdOf` calls `getConnection`, see `data/connections/derive.ts`),
+ * so every synthetic crossing below is registered into the real session
+ * registry as a real pair, not just built as bare objects — mirroring
+ * `engine-loop.keep.test.ts`. Returns the "forward" (`from`) side, the one
+ * `buildAdjacency` needs in its input array.
+ */
+const registerPair = (
+  fromId: string, from: string, toId: string, to: string, nav?: ConnectionRecord['nav'],
+): ConnectionRecord => {
+  const forward = {
+    id: fromId, screenId: from, toConnectionId: toId, kind: 'edge', placement: EMPTY_PLACEMENT, canExit: true, tags: [], nav,
+  } as unknown as ConnectionRecord;
+  const backward = {
+    id: toId, screenId: to, toConnectionId: fromId, kind: 'edge', placement: EMPTY_PLACEMENT, canExit: true, tags: [], nav,
+  } as unknown as ConnectionRecord;
+  for (const record of [forward, backward]) {
+    if (!registerRecord('connection', record)) {
+      unregisterRecord('connection', record.id);
+      registerRecord('connection', record);
+    }
+  }
+  REGISTERED_IDS.push(fromId as ConnectionId, toId as ConnectionId);
+  return forward;
+};
+
+afterAll(() => {
+  for (const id of REGISTERED_IDS) unregisterRecord('connection', id);
+});
 
 // ─── Shared fixtures ─────────────────────────────────────────────────────────
 
@@ -109,8 +144,8 @@ const SMALL_KEY: ItemId = 'item-037';
 const BIG_KEY: ItemId = 'item-051';
 
 const CHAIN: ConnectionRecord[] = [
-  { id: 'connection-t01', fromScreenId: 'A', toScreenId: 'B', direction: 'two-way', tags: ['transit:walk', 'dir:two-way'] } as unknown as ConnectionRecord,
-  { id: 'connection-t02', fromScreenId: 'B', toScreenId: 'C', direction: 'two-way', tags: ['transit:walk', 'dir:two-way'] } as unknown as ConnectionRecord,
+  registerPair('connection-t01', 'A', 'connection-t01r', 'B'),
+  registerPair('connection-t02', 'B', 'connection-t02r', 'C'),
 ];
 
 describe('engine — visited pass-through screens are backtracked, not re-explored', () => {
@@ -148,14 +183,7 @@ describe('engine — traverse never teleports through a blocked edge', () => {
   it('aborts the route when the next hop has no passable edge', () => {
     // A→C is hammer-locked; a stale route to C exists but the virtual Link has no hammer.
     const conns: ConnectionRecord[] = [
-      {
-        id: 'connection-t03',
-        fromScreenId: 'A',
-        toScreenId: 'C',
-        direction: 'two-way',
-        tags: ['transit:door', 'dir:two-way'],
-        nav: { transitType: 'door', requirements: [['hammer']], bidirectional: true, weight: 1 },
-      } as unknown as ConnectionRecord,
+      registerPair('connection-t03', 'A', 'connection-t03r', 'C', { transitType: 'door', requirements: [['hammer']], weight: 1 }),
     ];
     const engine = createEngine({ adjacency: buildAdjacency(conns) });
     const state = createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), {});

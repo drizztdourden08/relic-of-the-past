@@ -13,7 +13,6 @@ const LW_DUNGEON_CASTLE_TOWER_SCREENS: ScreenRecord[] = [
     locationId: 'location-001',
     position: { gridX: 0, gridY: 2, floor: 6 },
     tags: ['tag-003', 'tag-006'],
-    status: 'mapped',
     triggerIds: ['actor-026', 'actor-041'],
     spawns: [
       { actorId: 'actor-140', tile: { x: 14, y: 42 } },
@@ -29,7 +28,6 @@ const LW_DUNGEON_CASTLE_TOWER_SCREENS: ScreenRecord[] = [
     locationId: 'location-001',
     position: { gridX: 0, gridY: 3, floor: 5 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-233', tile: { x: 14, y: 10 } },
     ],
@@ -44,7 +42,6 @@ const LW_DUNGEON_CASTLE_TOWER_SCREENS: ScreenRecord[] = [
     locationId: 'location-001',
     position: { gridX: 0, gridY: 4, floor: 4 },
     tags: ['tag-003', 'tag-016', 'tag-015'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-076', tile: { x: 18, y: 16 } },
       { actorId: 'actor-076', tile: { x: 18, y: 30 } },
@@ -64,7 +61,6 @@ const LW_DUNGEON_CASTLE_TOWER_SCREENS: ScreenRecord[] = [
     locationId: 'location-001',
     position: { gridX: 0, gridY: 11, floor: 3 },
     tags: ['tag-003', 'tag-016'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-078', tile: { x: 14, y: 14 } },
       { actorId: 'actor-103', tile: { x: 46, y: 14 } },
@@ -91,7 +87,6 @@ const LW_DUNGEON_CASTLE_TOWER_SCREENS: ScreenRecord[] = [
     locationId: 'location-001',
     position: { gridX: 0, gridY: 12, floor: 2 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-076', tile: { x: 46, y: 10 } },
       { actorId: 'actor-081', tile: { x: 52, y: 14 } },
@@ -113,7 +108,6 @@ const LW_DUNGEON_CASTLE_TOWER_SCREENS: ScreenRecord[] = [
     locationId: 'location-001',
     position: { gridX: 0, gridY: 13, floor: 1 },
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-103', tile: { x: 22, y: 10 } },
       { actorId: 'actor-076', tile: { x: 18, y: 14 } },
@@ -138,7 +132,6 @@ const LW_DUNGEON_CASTLE_TOWER_SCREENS: ScreenRecord[] = [
     locationId: 'location-001',
     position: { gridX: 0, gridY: 14, floor: 0 },
     tags: ['tag-003', 'tag-005'],
-    status: 'mapped',
     triggerIds: ['actor-024', 'actor-269'],
     spawns: [
       { actorId: 'actor-099', tile: { x: 8, y: 12 } },

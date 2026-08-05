@@ -13,7 +13,6 @@ const LW_SPECIAL_SCREENS: ScreenRecord[] = [
     locationId: 'location-000',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-014'],
-    status: 'mapped',
   },
 ];
 

@@ -6,6 +6,7 @@
  * when present, else a fallback derived from `barrier:*` tags.
  */
 import { connectionTagKeysOf, find, getScreen, hasTagKey } from '../../data';
+import { toScreenIdOf } from '../../data/connections/derive';
 import type { ConnectionRecord } from '../../data';
 import type { RequirementSet } from '../../navigation/nav-data.types';
 import type { Route, RouteStep, ScreenPath } from '../../navigation/types';
@@ -29,8 +30,8 @@ type Adjacency = Map<string, ScreenEdge[]>;
  */
 const isCrossWorld = (conn: ConnectionRecord): boolean => {
   if (hasTagKey(conn.tags, 'ctx:cross-world') || hasTagKey(conn.tags, 'transit:warp')) return true;
-  const fromWorld = getScreen(conn.fromScreenId).world;
-  const toWorld = getScreen(conn.toScreenId).world;
+  const fromWorld = getScreen(conn.screenId).world;
+  const toWorld = getScreen(toScreenIdOf(conn)).world;
   return fromWorld !== toWorld;
 };
 
@@ -47,21 +48,26 @@ const connectionRequirements = (conn: ConnectionRecord): RequirementSet => {
   return [];
 };
 
-const isTwoWay = (conn: ConnectionRecord): boolean =>
-  hasTagKey(conn.tags, 'dir:two-way') || conn.direction === 'two-way' || (conn.nav?.bidirectional ?? false);
-
 const addEdge = (adj: Adjacency, from: string, edge: ScreenEdge): void => {
   const list = adj.get(from);
   if (list) list.push(edge);
   else adj.set(from, [edge]);
 };
 
+/**
+ * One `addEdge` per record now: a `ConnectionRecord` is one point on one
+ * screen, and `canExit` says outright whether the player can leave THROUGH
+ * it — no more synthesizing a reverse edge from a tag/field/nav trio that
+ * could (and did) disagree. A two-way crossing still gets two edges, because
+ * both of its paired records carry `canExit: true` and each contributes its
+ * own; a `drop`'s `canExit: false` correctly contributes none.
+ */
 const buildAdjacency = (connections: ConnectionRecord[] = find('connection', () => true)): Adjacency => {
   const adj: Adjacency = new Map();
   for (const conn of connections) {
+    if (!conn.canExit) continue;
     const requirements = connectionRequirements(conn);
-    addEdge(adj, conn.fromScreenId, { to: conn.toScreenId, requirements, connection: conn });
-    if (isTwoWay(conn)) addEdge(adj, conn.toScreenId, { to: conn.fromScreenId, requirements, connection: conn });
+    addEdge(adj, conn.screenId, { to: toScreenIdOf(conn), requirements, connection: conn });
   }
   return adj;
 };

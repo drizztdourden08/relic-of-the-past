@@ -19,7 +19,7 @@ const INPUT = '<input';
 const DROPDOWN = 'class="select-trigger';
 
 const refField = (extra: Partial<FieldDescriptor> = {}): FieldDescriptor => ({
-  path: 'fromScreenId', label: 'From Screen Id', kind: 'idRef', optional: false, ...extra,
+  path: 'screenId', label: 'Screen Id', kind: 'idRef', optional: false, ...extra,
 });
 
 const renderRefEditor = (
@@ -80,7 +80,7 @@ describe('id reference editor — the fallback chain', () => {
 
 describe('the real lookup, over the real collections', () => {
   it('offers every row of the collection a field points at', () => {
-    const field = fieldAt(all('connection'), 'fromScreenId');
+    const field = fieldAt(all('connection'), 'screenId');
     expect(field.targetKind).toBe('screen');
     const options = resolveIdRefOptionsFor(field.targetKind ?? '', field);
     expect(options).toHaveLength(all('screen').length);
@@ -89,7 +89,7 @@ describe('the real lookup, over the real collections', () => {
 
   it('answers for several different targets, each with its own collection', () => {
     const pairs = [
-      { path: 'toScreenId', rows: all('connection'), target: 'screen', size: all('screen').length },
+      { path: 'toConnectionId', rows: all('connection'), target: 'connection', size: all('connection').length },
       { path: 'dungeonId', rows: all('connection'), target: 'dungeon', size: all('dungeon').length },
       { path: 'screenId', rows: all('check'), target: 'screen', size: all('screen').length },
     ];
@@ -101,7 +101,7 @@ describe('the real lookup, over the real collections', () => {
   });
 
   it('resolves a display name rather than echoing the id back', () => {
-    const field = fieldAt(all('connection'), 'fromScreenId');
+    const field = fieldAt(all('connection'), 'screenId');
     const options = resolveIdRefOptionsFor('screen', field);
     expect(options.some((option) => option.label !== option.value)).toBe(true);
   });
@@ -117,7 +117,7 @@ describe('the real lookup, over the real collections', () => {
   });
 
   it('hands back the same list every time, so a search box does not rebuild it', () => {
-    const field = fieldAt(all('connection'), 'fromScreenId');
+    const field = fieldAt(all('connection'), 'screenId');
     expect(resolveIdRefOptionsFor('screen', field)).toBe(resolveIdRefOptionsFor('screen', field));
   });
 });
@@ -135,8 +135,8 @@ describe('the whole form, wired end to end', () => {
     }));
 
   it('reads the referenced record back by name once the lookup is injected', () => {
-    const options = resolveIdRefOptionsFor('screen', fieldAt(rows, 'fromScreenId'));
-    const chosen = options.find((option) => option.value === record.fromScreenId);
+    const options = resolveIdRefOptionsFor('screen', fieldAt(rows, 'screenId'));
+    const chosen = options.find((option) => option.value === record.screenId);
     expect(chosen).toBeDefined();
     expect(render(true)).toContain(chosen?.label ?? '');
   });
@@ -147,8 +147,8 @@ describe('the whole form, wired end to end', () => {
 
   it('renders the same form with nothing injected, references and all', () => {
     const markup = render(false);
-    expect(markup).toContain('From Screen Id');
-    expect(markup).toContain(`value="${String(record.fromScreenId)}"`);
+    expect(markup).toContain('Screen Id');
+    expect(markup).toContain(`value="${String(record.screenId)}"`);
   });
 
   it('gives each row of a list of references its own picker, and keeps the rows', () => {
@@ -163,7 +163,7 @@ describe('the whole form, wired end to end', () => {
     // Order and membership both matter for a list of references, so the rows stay.
     expect(markup).toContain('aria-label="Move up"');
     expect(markup).toContain('+ Add');
-    const options = resolveIdRefOptionsFor('screen', fieldAt(rows, 'fromScreenId'));
+    const options = resolveIdRefOptionsFor('screen', fieldAt(rows, 'screenId'));
     const first = options.find((option) => option.value === held.roomScreenIds?.[0]);
     expect(first).toBeDefined();
     expect(markup).toContain(first?.label ?? '');

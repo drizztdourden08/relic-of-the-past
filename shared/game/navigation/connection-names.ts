@@ -1,12 +1,13 @@
 /* @layer shared-game @kind logic */
 import { find, getScreen } from '../data';
+import { toScreenIdOf } from '../data/connections/derive';
 
-/** fromScreenId → destination screen IDs (built once from the connection table). */
+/** screenId → destination screen IDs (built once from the connection table). */
 const connectionsByFrom = new Map<string, string[]>();
 for (const conn of find('connection', () => true)) {
-  let list = connectionsByFrom.get(conn.fromScreenId);
-  if (!list) { list = []; connectionsByFrom.set(conn.fromScreenId, list); }
-  list.push(conn.toScreenId);
+  let list = connectionsByFrom.get(conn.screenId);
+  if (!list) { list = []; connectionsByFrom.set(conn.screenId, list); }
+  list.push(toScreenIdOf(conn));
 }
 
 /**

@@ -13,7 +13,6 @@ const LW_OVERWORLD_CENTRAL_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-002',
     position: { gridX: 2, gridY: 5 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-064',
@@ -25,7 +24,6 @@ const LW_OVERWORLD_CENTRAL_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-002',
     position: { gridX: 3, gridY: 5 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-072',
@@ -37,7 +35,6 @@ const LW_OVERWORLD_CENTRAL_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-002',
     position: { gridX: 4, gridY: 5 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-026',
@@ -49,7 +46,6 @@ const LW_OVERWORLD_CENTRAL_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-002',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001', 'tag-014'],
-    status: 'mapped',
   },
   {
     id: 'screen-027',
@@ -61,7 +57,6 @@ const LW_OVERWORLD_CENTRAL_HYRULE_SCREENS: ScreenRecord[] = [
     locationId: 'location-002',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
 ];
 

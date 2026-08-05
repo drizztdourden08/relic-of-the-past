@@ -13,7 +13,6 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B1: ScreenRecord[] = [
     locationId: 'location-030',
     position: { gridX: 4, gridY: 10, floor: -1 },
     tags: ['tag-003', 'tag-006'],
-    status: 'mapped',
     triggerIds: ['actor-041'],
     spawns: [
       { actorId: 'actor-146', tile: { x: 14, y: 42 } },
@@ -31,7 +30,6 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B1: ScreenRecord[] = [
     locationId: 'location-030',
     position: { gridX: 4, gridY: 11, floor: -1 },
     tags: ['tag-003', 'tag-016'],
-    status: 'mapped',
   },
   {
     id: 'screen-427',
@@ -43,7 +41,6 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B1: ScreenRecord[] = [
     locationId: 'location-030',
     position: { gridX: 5, gridY: 11, floor: -1 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     triggerIds: ['actor-028'],
     spawns: [
       { actorId: 'actor-204', tile: { x: 44, y: 20 } },
@@ -61,7 +58,6 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B1: ScreenRecord[] = [
     locationId: 'location-030',
     position: { gridX: 6, gridY: 11, floor: -1 },
     tags: ['tag-003', 'tag-024'],
-    status: 'mapped',
     triggerIds: ['actor-047'],
     spawns: [
       { actorId: 'actor-134', tile: { x: 12, y: 14 } },
@@ -84,7 +80,6 @@ const DW_DUNGEON_TURTLE_ROCK_SCREENS_FLOOR_B1: ScreenRecord[] = [
     locationId: 'location-030',
     position: { gridX: 7, gridY: 11, floor: -1 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-189', tile: { x: 8, y: 18 } },
       { actorId: 'actor-187', tile: { x: 8, y: 34 } },

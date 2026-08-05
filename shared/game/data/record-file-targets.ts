@@ -42,9 +42,6 @@ const INTERIOR_FILE_STEMS: Readonly<Record<InteriorKind, string>> = {
   passage: 'passages', hint: 'hints', gamble: 'gamble', special: 'special',
 };
 
-/** Deeper wins when a crossing joins two different kinds of screen. */
-const DEPTH: Readonly<Record<ScreenKind, number>> = { dungeon: 3, interior: 2, overworld: 1 };
-
 interface FileTarget {
   /** Path relative to shared/game/data/, or null when no home can be derived. */
   relativePath: string | null;
@@ -107,13 +104,15 @@ const inRoot = (root: 'screens' | 'connections', screen: ScreenHome): FileTarget
 
 const screenRecordFile = (screen: ScreenHome): FileTarget => inRoot('screens', screen);
 
-/** A crossing lives with its deeper endpoint; ties go to the `from` side. */
-const connectionRecordFile = (fromScreenId: ScreenId, toScreenId: ScreenId): FileTarget => {
-  const a = findOne('screen', s => s.id === fromScreenId);
-  const b = findOne('screen', s => s.id === toScreenId);
-  if (!a) return { relativePath: null, unresolved: `unknown screen ${fromScreenId}` };
-  if (!b) return { relativePath: null, unresolved: `unknown screen ${toScreenId}` };
-  return inRoot('connections', DEPTH[b.kind] > DEPTH[a.kind] ? b : a);
+/**
+ * A connection point lives in ITS OWN screen's bucket — unlike the old
+ * from/to-endpoint crossing, one record now names exactly one screen, so
+ * there is no other endpoint to weigh against it.
+ */
+const connectionRecordFile = (screenId: ScreenId): FileTarget => {
+  const screen = findOne('screen', s => s.id === screenId);
+  if (!screen) return { relativePath: null, unresolved: `unknown screen ${screenId}` };
+  return inRoot('connections', screen);
 };
 
 /**

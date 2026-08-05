@@ -13,7 +13,6 @@ const DW_OVERWORLD_DARK_SOUTH_SCREENS: ScreenRecord[] = [
     locationId: 'location-003',
     position: { gridX: 2, gridY: 5 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-282',
@@ -25,7 +24,6 @@ const DW_OVERWORLD_DARK_SOUTH_SCREENS: ScreenRecord[] = [
     locationId: 'location-003',
     position: { gridX: 3, gridY: 5 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-290',
@@ -37,7 +35,6 @@ const DW_OVERWORLD_DARK_SOUTH_SCREENS: ScreenRecord[] = [
     locationId: 'location-003',
     position: { gridX: 4, gridY: 5 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-275',
@@ -49,7 +46,6 @@ const DW_OVERWORLD_DARK_SOUTH_SCREENS: ScreenRecord[] = [
     locationId: 'location-003',
     position: { gridX: 2, gridY: 6 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
   {
     id: 'screen-259',
@@ -61,7 +57,6 @@ const DW_OVERWORLD_DARK_SOUTH_SCREENS: ScreenRecord[] = [
     locationId: 'location-026',
     position: { gridX: 0, gridY: 0 },
     tags: ['tag-001'],
-    status: 'mapped',
   },
 ];
 

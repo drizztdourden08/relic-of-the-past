@@ -13,7 +13,6 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_1: ScreenRecord[] = [
     locationId: 'location-013',
     position: { gridX: 9, gridY: 8, floor: 1 },
     tags: ['tag-003', 'tag-015'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-255', tile: { x: 32, y: 20 } },
       { actorId: 'actor-255', tile: { x: 30, y: 22 } },
@@ -29,7 +28,6 @@ const LW_DUNGEON_EASTERN_PALACE_SCREENS_FLOOR_1: ScreenRecord[] = [
     locationId: 'location-013',
     position: { gridX: 9, gridY: 9, floor: 1 },
     tags: ['tag-003', 'tag-011'],
-    status: 'mapped',
     spawns: [
       { actorId: 'actor-065', tile: { x: 42, y: 12 } },
       { actorId: 'actor-065', tile: { x: 52, y: 16 } },

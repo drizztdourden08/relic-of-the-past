@@ -13,7 +13,6 @@ const DW_DUNGEON_SWAMP_PALACE_SCREENS_FLOOR_0: ScreenRecord[] = [
     locationId: 'location-027',
     position: { gridX: 8, gridY: 2, floor: 0 },
     tags: ['tag-003', 'tag-005'],
-    status: 'mapped',
     triggerIds: ['actor-271'],
     spawns: [
       { actorId: 'actor-214', tile: { x: 20, y: 12 } },
