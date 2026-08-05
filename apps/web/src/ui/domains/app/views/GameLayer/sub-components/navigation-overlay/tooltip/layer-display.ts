@@ -34,7 +34,7 @@ const getSingleLayer = (
   }
   // Outdoors there is one surface and it is the ground, whatever the walk's
   // internal start layer happens to be numbered.
-  if ((result.tileContext ?? 'overworld') === 'overworld') return 1;
+  if (!result.indoors) return 1;
   return result.startLayer ?? 0;
 };
 
