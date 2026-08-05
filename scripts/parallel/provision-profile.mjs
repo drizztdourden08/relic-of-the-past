@@ -10,11 +10,26 @@
  * key events at all, arrow keys included.
  *
  * The mappings come from the real preset rather than a copy, so a change there reaches
- * agent profiles too. Node runs the TypeScript directly by stripping the types.
+ * agent profiles too. A bare `import()` of the `.ts` file relies on Node's
+ * detect-and-reparse fallback for an ambiguous extension (no "type": "module" at the
+ * repo root) — reliable from a plain `node` invocation, but NOT from inside a test
+ * runner that registers its own module hooks (Playwright's `.ts` transform swallows
+ * it: "Unexpected token 'export'"). Reading the source and stripping its types
+ * ourselves, then importing the plain-JS result from a data: URL, sidesteps whichever
+ * loader is active — keyboard.ts carries only `import type`, which strips to nothing,
+ * so there is no relative import left to resolve.
  */
 import { mkdirSync, writeFileSync, existsSync, readdirSync, readFileSync, cpSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { stripTypeScriptTypes } from 'node:module';
 import { gameDataPath } from './paths.mjs';
+
+const importStrippedTs = async (relativePath) => {
+  const path = join(dirname(fileURLToPath(import.meta.url)), relativePath);
+  const stripped = stripTypeScriptTypes(readFileSync(path, 'utf8'), { mode: 'strip' });
+  return import(`data:text/javascript,${encodeURIComponent(stripped)}`);
+};
 
 const ROM_EXTENSIONS = ['.sfc', '.smc'];
 
@@ -78,7 +93,7 @@ const copyManualSaves = (sourceId, name) => {
 };
 
 const keyboardInputProfile = async (now) => {
-  const { KEYBOARD_DEFAULT } = await import('../../shared/input/data/presets/keyboard.ts');
+  const { KEYBOARD_DEFAULT } = await importStrippedTs('../../shared/input/data/presets/keyboard.ts');
   return {
     id: KEYBOARD_DEFAULT.id,
     name: KEYBOARD_DEFAULT.name,
