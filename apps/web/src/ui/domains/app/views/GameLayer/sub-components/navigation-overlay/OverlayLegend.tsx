@@ -32,7 +32,7 @@ const OverlayLegend = ({ annotations }: { annotations?: readonly ScreenAnnotatio
       <LegendItem color="var(--c-info)" label="reachable (free)" />
       <LegendItem color="var(--c-danger)" label="reachable (needs item)" />
       <LegendItem color="var(--c-danger)" label="cliff jump" isArrow />
-      <LegendItem color="var(--c-info)" label="stairs (bidirectional)" isArrow />
+      <LegendItem color="#ffffff" label="stairs (bidirectional)" isArrow />
       <LegendItem color="var(--c-info)" border="var(--c-green)" label="hookshot target" />
       {present.map((kind) => {
         const off = hiddenKinds.has(kind);

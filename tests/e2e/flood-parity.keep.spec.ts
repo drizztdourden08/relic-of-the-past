@@ -19,7 +19,7 @@ import { test, expect } from '@playwright/test';
 import { _electron as electron } from 'playwright';
 import { join } from 'path';
 import { existsSync, readFileSync, rmSync } from 'fs';
-import { execSync } from 'child_process';
+import { TEST_INSTANCE, ensureTestProfile } from './ensure-test-profile';
 
 const PROJECT_ROOT = join(__dirname, '..', '..');
 const MAIN_JS = join(PROJECT_ROOT, 'dist', 'electron', 'main.js');
@@ -28,15 +28,11 @@ const DUMP_PATH = join(PROJECT_ROOT, 'debug-output', 'dump-nav.json');
 /** Named manual saves — stable by design, unlike quick slots. */
 const STATES = ['test-jail-cell', 'test-throne-room', 'test-sanctuary-grounds'];
 
-const killElectron = () => {
-  try { execSync('taskkill /F /IM electron.exe /T', { stdio: 'ignore' }); } catch { /* none running */ }
-};
-
 /** The widget's own reachable count, read from the rendered panel. */
 const widgetReachable = async (state: string): Promise<number> => {
-  killElectron();
+  await ensureTestProfile();
   const app = await electron.launch({
-    args: [MAIN_JS, '--muted', '--no-focus', `--auto-state=${state}`, '--widgets=navigation'],
+    args: [MAIN_JS, '--muted', '--no-focus', `--instance=${TEST_INSTANCE}`, `--auto-state=${state}`, '--widgets=navigation'],
     env: { ...process.env, NODE_ENV: 'production' },
   });
   try {
@@ -56,10 +52,10 @@ const widgetReachable = async (state: string): Promise<number> => {
 
 /** The dumper's reachable count for the same state. */
 const dumpReachable = async (state: string): Promise<number> => {
-  killElectron();
+  await ensureTestProfile();
   if (existsSync(DUMP_PATH)) rmSync(DUMP_PATH);
   const app = await electron.launch({
-    args: [MAIN_JS, '--muted', '--no-focus', `--dump-nav=${state}`],
+    args: [MAIN_JS, '--muted', '--no-focus', `--instance=${TEST_INSTANCE}`, `--dump-nav=${state}`],
     env: { ...process.env, NODE_ENV: 'production' },
   });
   try {

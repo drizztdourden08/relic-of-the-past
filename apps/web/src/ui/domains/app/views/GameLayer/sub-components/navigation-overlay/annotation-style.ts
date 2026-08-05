@@ -5,8 +5,12 @@
  * compile error rather than something that silently never draws.
  *
  * Colours are semantic, not decorative: amber = a lock or gate, green = a pickup
- * or check, cyan = a way off the screen, red-clay = a trigger that needs an
- * action, grey = informational.
+ * or check, red-clay = a trigger that needs an action, grey = informational.
+ * The three ways off the screen this file draws (warp-door, exit-door, exit)
+ * each get their own shade of cyan/purple rather than one shared colour — they
+ * used to be visually identical, distinguishable only by a tiny glyph. Real
+ * entrance/stair/walk-boundary icons are a SEPARATE renderer (draw-entrances.ts,
+ * amber/purple) and never come through this table at all.
  */
 import type { AnnotationKind } from '@shared/game/simulation';
 
@@ -22,7 +26,9 @@ interface AnnotationStyle {
 
 const LOCK = '#e8a33d';
 const PICKUP = '#7fb861';
-const WAY_OUT = '#5fb3c4';
+const EXIT = '#5fb3c4';
+const EXIT_DOOR = '#3d8fa3';
+const WARP = '#9b6fd6';
 const TRIGGER = '#c9663f';
 const INFO = '#a89e8d';
 
@@ -44,13 +50,9 @@ const ANNOTATION_STYLES: Record<AnnotationKind, AnnotationStyle> = {
   'key-carrier': { glyph: '⚔', color: TRIGGER, legend: 'Enemy drops a small key' },
   'big-key-carrier': { glyph: '⚔', color: TRIGGER, legend: 'Enemy drops the big key' },
 
-  'warp-door': { glyph: '➘', color: WAY_OUT, legend: 'Warp door' },
-  'exit-door': { glyph: '⤴', color: WAY_OUT, legend: 'Exit to overworld' },
-  stair: { glyph: '⌁', color: WAY_OUT, legend: 'Stair' },
-  'walk-boundary': { glyph: '⇢', color: WAY_OUT, legend: 'Walk-through boundary' },
-  'fall-hole': { glyph: '◌', color: WAY_OUT, legend: 'Fall hole' },
-  entrance: { glyph: '⌂', color: WAY_OUT, legend: 'Entrance' },
-  exit: { glyph: '→', color: WAY_OUT, legend: 'Traversable exit' },
+  'warp-door': { glyph: '➘', color: WARP, legend: 'Warp door' },
+  'exit-door': { glyph: '⤴', color: EXIT_DOOR, legend: 'Exit to overworld' },
+  exit: { glyph: '→', color: EXIT, legend: 'Traversable exit' },
 
   unknown: { glyph: '?', color: INFO, legend: 'Unmapped — the sim found something new' },
 };

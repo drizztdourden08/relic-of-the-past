@@ -17,13 +17,13 @@
  * grid — which aliases layer 0 — so a dual-layer room floods straight through
  * him on layer 1.
  */
-import { wasmGetIndoorUncleBlockers, wasmGetOverworldSpriteSpawns, wasmGetRoomSpriteSpawns, wasmGetViewportInfo, wasmGetAreaHeads } from '../';
+import { wasmGetIndoorUncleBlockers, wasmGetOverworldSpriteSpawns, wasmGetRoomSpriteSpawns, wasmGetViewportInfo, wasmGetAreaHeads, wasmGetLiveSprites } from '../';
 import { resolveAreaSprite } from '../simulator/overworld-area';
 import { getCompletedChecks } from '../tracker';
 import { npcCheckFor } from './annotate/npc-checks';
 import type { GridPos } from '@shared/game/navigation';
 import { GRID_SIZE } from '@shared/game/navigation/types';
-import { originContaining, tileInScreen } from './world-origin';
+import { originContaining, overworldOrigin, tileInScreen } from './world-origin';
 
 /** Sprite types that block the BFS. Everything else is walked through.
  *
@@ -33,7 +33,18 @@ import { originContaining, tileInScreen } from './world-origin';
  *  open. They step aside only once the altar in front of them is used, which
  *  needs an item from a later dungeon — that removal is NOT modelled yet, so
  *  they block for the whole run. Correct for everything before the first
- *  dungeon; revisit when the altar trigger exists. */
+ *  dungeon; revisit when the altar trigger exists.
+ *
+ *  The rest of the castle-soldier family (0x41-0x4B: Blue Guard, Green
+ *  Soldier, Red Javelin Guard and friends) is deliberately NOT here. They are
+ *  ordinary killable enemies that patrol rather than seal — a run walks past
+ *  or through them — so treating them as walls is wrong twice over: it stamps
+ *  a 3x3 block at a position the sprite has already left, and the castle
+ *  exterior carries enough of them that doing so sealed both southern
+ *  quadrants down to roughly a quarter of their real walkable area. A guard
+ *  that genuinely blocks is a STATIONARY one (0x3F, health 255), and what
+ *  made those read as passable was position, not type — see the live-sprite
+ *  pass in `overworldBlockerCells`. */
 const BLOCKER_SPRITES = new Set([0x3f, 0x40, 0x73, 0x57]);
 const UNCLE_SPRITE = 0x73;
 /** The room his check lives in — sprite 0x73 spawns in two, and only one is a check. */
@@ -84,6 +95,31 @@ const overworldBlockerCells = (screenIndex: number): GridPos[] => {
     if (resolved.screenIndex !== screenIndex) continue;
     const s = { spriteType: raw.spriteType, row: resolved.tile.row, col: resolved.tile.col };
     cells.push(...footprint(s.row, s.col));
+  }
+
+  // The screen the player physically occupies can ALSO read live sprite
+  // positions. The spawn table above only ever describes where a sprite
+  // STARTED — a patrolling guard that has walked away from its spawn tile by
+  // the time the flood runs never blocks wherever it currently stands, only
+  // the (by then empty) tile it began on. Same problem stampIndoorBlockers
+  // already solves for the uncle, who walks indoors the same way these guards
+  // patrol outdoors; this is additive, not a replacement, so a stationary
+  // guard just gets stamped twice (harmless) rather than losing coverage on
+  // whichever sub-screen of a big area isn't the live one.
+  const vp = wasmGetViewportInfo();
+  if (vp) {
+    const screenOrigin = overworldOrigin(screenIndex);
+    const liveOrigin = originContaining(vp.linkX, vp.linkY);
+    if (liveOrigin.x === screenOrigin.x && liveOrigin.y === screenOrigin.y) {
+      for (const s of wasmGetLiveSprites()) {
+        if (!BLOCKER_SPRITES.has(s.type)) continue;
+        if (s.type === UNCLE_SPRITE && skipUncle) continue;
+        const spriteOrigin = originContaining(s.x, s.y);
+        if (spriteOrigin.x !== screenOrigin.x || spriteOrigin.y !== screenOrigin.y) continue;
+        const t = tileInScreen(s.x, s.y, screenOrigin);
+        cells.push(...footprint(t.row, t.col));
+      }
+    }
   }
   return cells;
 };

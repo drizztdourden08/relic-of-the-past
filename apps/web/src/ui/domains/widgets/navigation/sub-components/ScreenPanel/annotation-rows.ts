@@ -17,8 +17,7 @@ const GROUP_OF: Partial<Record<AnnotationKind, GroupId>> = {
   shutter: 'locks', bombable: 'locks', 'follower-gate': 'locks',
   'pull-switch': 'triggers', 'kill-trigger': 'triggers',
   'key-carrier': 'triggers', 'big-key-carrier': 'triggers',
-  'warp-door': 'ways-out', 'exit-door': 'ways-out', stair: 'ways-out',
-  'walk-boundary': 'ways-out', 'fall-hole': 'ways-out', entrance: 'ways-out', exit: 'ways-out',
+  'warp-door': 'ways-out', 'exit-door': 'ways-out', exit: 'ways-out',
 };
 
 const GROUP_TITLES: Record<GroupId, string> = {

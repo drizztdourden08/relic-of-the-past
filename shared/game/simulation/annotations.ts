@@ -20,8 +20,13 @@ type AnnotationKind =
   | 'key-door' | 'big-key-door' | 'cell-lock' | 'shutter' | 'bombable' | 'follower-gate'
   // Triggers
   | 'pull-switch' | 'kill-trigger' | 'key-carrier' | 'big-key-carrier'
-  // Ways off the screen
-  | 'warp-door' | 'exit-door' | 'stair' | 'walk-boundary' | 'fall-hole' | 'entrance' | 'exit'
+  // Ways off the screen. Real entrances, stairs and walk-through boundaries are
+  // NOT here: they come from the room-entrances/OverworldEntrance pipeline
+  // (apps/web/src/lib/game/flood/room-entrances.ts) and draw through their own
+  // icon renderer, not this one. A 'stair'/'walk-boundary'/'entrance' kind used
+  // to sit in this union with a style nothing ever constructed — dead, and
+  // confusable with the real markers of the same name.
+  | 'warp-door' | 'exit-door' | 'exit'
   // Anything the simulator reports that has no mapping yet.
   | 'unknown';
 
@@ -33,6 +38,14 @@ interface ScreenAnnotation {
   tile: GridPos;
   /** BG layer the thing sits on, when it is layer-specific. */
   layer?: 0 | 1;
+  /**
+   * Wall the door record sits in, for door-table kinds only. A door's real
+   * footprint is wide along the wall and shallow through it — 'n'/'s' doors are
+   * wide in columns, 'e'/'w' doors are wide in rows — so a marker sized/nudged
+   * the same way regardless of direction ends up centered for one orientation
+   * and pushed to one side of the opening for the other.
+   */
+  direction?: 'n' | 's' | 'e' | 'w';
   /** Short human label, resolved for display only — never an identity. */
   label: string;
   /**

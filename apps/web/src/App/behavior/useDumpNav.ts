@@ -141,16 +141,27 @@ const useDumpNav = ({ activeProfile, loadProfileForGame }: DumpNavDeps) => {
       const toggleFloorPositions = isIndoors ? wasmGetToggleFloorPositions() : [];
 
       // ─── Flood fill + connections (for internal edge verification) ───
-      // Seed the flood from the player's hitbox tile (same derivation as the navigation widget).
+      // The flood starts on the sub-screen the player is PHYSICALLY on, which for a
+      // multi-screen area is not the area index the game reports: standing in the
+      // first castle's north-east quadrant reads as screen 0x1B (the area head) while
+      // the player is really on 0x1C. Anchoring the flood to the head then measures
+      // his position against the wrong origin, pushing the start tile past 63 where it
+      // clamps to the far corner and seeds the walk in a sealed pocket. The navigation
+      // widget already derives the live sub-screen this way (useNavigation.ts), so the
+      // dumper must too or the two describe different floods — which is precisely what
+      // tests/e2e/flood-parity.keep.spec.ts exists to catch.
+      const floodScreenIndex = !isIndoors && viewport
+        ? ((((viewport.linkY >> 9) & 7) << 3) | ((viewport.linkX >> 9) & 7))
+        : overworldScreenIndex;
       const origin = viewport
-        ? screenOriginFor({ isIndoors, linkX: viewport.linkX, linkY: viewport.linkY, screenIndex: overworldScreenIndex })
+        ? screenOriginFor({ isIndoors, linkX: viewport.linkX, linkY: viewport.linkY, screenIndex: floodScreenIndex })
         : null;
       const startPos = viewport && origin
         ? linkStartTile({ linkX: viewport.linkX, linkY: viewport.linkY, screenWorldX: origin.x, screenWorldY: origin.y })
         : undefined;
       // Floods through the SAME runner the simulator uses (see run-flood.ts).
       const { floodFill: floodFillData, annotations } = runDumpFlood({
-        isIndoors, roomIndex, overworldScreenIndex, startPos,
+        isIndoors, roomIndex, overworldScreenIndex: floodScreenIndex, startPos,
         screenId: detection?.screen.id ?? null,
         attrGrid, dualLayerGrids, playerLayer, staircaseType, roomLayout,
       });

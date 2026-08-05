@@ -38,7 +38,7 @@ interface DoorContext {
 const doorAnnotation = (door: SimDoor, ctx: DoorContext): ScreenAnnotation | null => {
   const tile = door.tiles[0];
   if (!tile) return null;
-  const base = { tile, ...(door.layer !== undefined ? { layer: door.layer } : {}) };
+  const base = { tile, direction: door.direction, ...(door.layer !== undefined ? { layer: door.layer } : {}) };
 
   if (door.cellLock) {
     return { ...base, kind: 'cell-lock', label: `cell lock #${door.index}`,

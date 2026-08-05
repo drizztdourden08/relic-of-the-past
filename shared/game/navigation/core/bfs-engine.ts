@@ -106,6 +106,7 @@ const runBFS = (strategy: LayerStrategy, startRow: number, startCol: number, ent
     hookTargets: tileResult.hookTargets,
     tileLayer: tileResult.tileLayer,
     reachableByLayer: tileResult.reachableByLayer,
+    ledges: tileResult.ledges,
   };
 };
 

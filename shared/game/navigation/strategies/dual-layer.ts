@@ -5,6 +5,7 @@ import { GRID_SIZE } from '../types';
 import type { LayerStrategy, BFSCell, BFSExpansionResult, QuadrantBounds } from './layer-strategy';
 import { bodyTiles, getNewTiles, canLeaveLedge, evaluateEntry } from './bfs-helpers';
 import { buildDualLayerTileResult, SWAP_STAIR_ATTRS } from './dual-layer-build-result';
+import { createCrossingRecorder } from './ledge-crossings';
 import type { DualLayerTileResult } from './dual-layer-build-result';
 
 /**
@@ -19,6 +20,8 @@ class DualLayerStrategy implements LayerStrategy {
   private readonly startLayer: 0 | 1;
   private readonly traversedStairTiles: { layer: 0 | 1; row: number; col: number; reqs: Set<string> }[] = [];
   private readonly traversedLedgeTiles: { row: number; col: number; reqs: Set<string> }[] = [];
+  /** Ledge hops the walk actually landed — see ledge-crossings.ts. */
+  private readonly crossings = createCrossingRecorder();
 
   constructor(
     grids: [TilePassability[][], TilePassability[][]],
@@ -121,9 +124,18 @@ class DualLayerStrategy implements LayerStrategy {
     // onto tiles that are door passages on the OTHER layer continues the walk
     // there — lower-layer doors (the sewers' BG1 corridors, the sanctuary's
     // back door) are unreachable from an upper-layer approach otherwise.
+    //
+    // Strictly a FALLBACK for a doorway this layer cannot carry you through.
+    // Firing it alongside a move that already succeeded claimed the doorway on
+    // both layers whenever both happened to stamp the passage attr, which put
+    // the walk on tiles that are a sealed island up there: room 0x62's west
+    // door reads 0x85 on both layers, but on the upper floor those two tiles
+    // are ringed by solid wall. Nothing reaches them and nothing leaves them,
+    // so the second copy only ever produced a phantom "reachable" on a layer
+    // the player can never stand on.
     const other = (1 - layer) as 0 | 1;
     const doorPassage = (a: number): boolean => (a >= 0x80 && a <= 0x8d) || (a >= 0x90 && a <= 0xaf);
-    if (newTiles.every(([tr, tc]) => doorPassage(this.rawAttrs[other][tr]?.[tc] ?? 0))) {
+    if (!canMove && newTiles.every(([tr, tc]) => doorPassage(this.rawAttrs[other][tr]?.[tc] ?? 0))) {
       results.push({ row: nr, col: nc, layer: other, requirements });
     }
     return results;
@@ -133,10 +145,10 @@ class DualLayerStrategy implements LayerStrategy {
     nr: number, nc: number, dr: number, dc: number,
     requirements: Set<string>, inventory: Set<string>, bounds: QuadrantBounds,
   ): BFSExpansionResult[] {
-    const targetGrid = this.grids[1];
     const layer0Grid = this.grids[0];
 
     const ledgeTiles: [number, number][] = [];
+    let landAttempts = 0;
 
     for (let step = 0; step < GRID_SIZE; step++) {
       const lr = nr + step * dr;
@@ -152,11 +164,19 @@ class DualLayerStrategy implements LayerStrategy {
       }
       if (stillOnCliff) continue;
 
+      // A ledge drops Link just past the cliff face it's still standing on;
+      // it does not go looking for the nearest scrap of open layer-1 ground
+      // wherever that happens to be. Without this cap, a blocked first tile
+      // (a wall, more cliff-adjacent solid) sends the search further and
+      // further along the ray until it finds ANY landable tile — which can
+      // connect two genuinely unconnected areas across whatever sits between
+      // them. Mirrors expandStairCross's own landAttempts cap and rationale.
+      if (++landAttempts > 4) return [];
+
       let canLand = true;
       let newReqs = requirements;
       for (const [br, bc] of bodyTiles(lr, lc)) {
-        const tile = targetGrid[br][bc];
-        const entry = evaluateEntry(tile, dr, dc, requirements, inventory);
+        const entry = evaluateEntry(this.grids[1][br][bc], dr, dc, requirements, inventory);
         if (!entry.canEnter) { canLand = false; break; }
         if (entry.newReqs !== newReqs) {
           newReqs = newReqs === requirements ? new Set(entry.newReqs) : newReqs;
@@ -167,9 +187,10 @@ class DualLayerStrategy implements LayerStrategy {
         for (const [lr2, lc2] of ledgeTiles) {
           this.traversedLedgeTiles.push({ row: lr2, col: lc2, reqs: requirements });
         }
-        // Enqueue the landing on layer 1 so the flood continues into the lower
-        // area. Recording the traversed ledge tiles above only draws the overlay
-        // arrow; without this return the dropped-to region never gets flooded.
+        this.crossings.add(nr, nc, lr, lc, dr);
+        // Enqueue the landing so the flood continues into the area it drops into.
+        // Recording the traversed ledge tiles above only draws the overlay arrow;
+        // without this return the dropped-to region never gets flooded.
         return [{ row: lr, col: lc, layer: 1, requirements: newReqs }];
       }
     }
@@ -238,6 +259,7 @@ class DualLayerStrategy implements LayerStrategy {
       tileContext: this.tileContext,
       traversedStairTiles: this.traversedStairTiles,
       traversedLedgeTiles: this.traversedLedgeTiles,
+      ledgeCrossings: this.crossings.list(),
     });
   }
 }
