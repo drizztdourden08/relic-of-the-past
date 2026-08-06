@@ -1,6 +1,6 @@
 /* @layer shared-input @kind data */
 /**
- * 8BitDo Controllers (Pro 2, SN30 Pro, SN30 Pro+)
+ * 8BitDo Controllers (Pro 2, SN30 Pro, SN30 Pro+, Ultimate 2 in XInput mode)
  * VID: 0x2DC8  PIDs: various
  *
  * Uses Web Gamepad API via Chromium's HID remapping in XInput mode.
@@ -74,7 +74,7 @@ const AXES: ControllerAxis[] = [
   { id: 'rightTrigger', label: 'ZR Trigger',     category: 'trigger' },
 ];
 
-const BITDO_PIDS = ['6003', '6002', '6001', '6100'];
+const BITDO_PIDS = ['6003', '6002', '6001', '6100', '310b'];
 
 class EightBitDoController extends BaseController {
   readonly id = '8bitdo';
