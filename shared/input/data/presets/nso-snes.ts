@@ -90,7 +90,11 @@ class NsoSnesController extends BaseController {
 
     const b0 = data.getUint8(0); // raw byte1: face + shoulders
     const b1 = data.getUint8(1); // raw byte2: Minus / Plus
-    const hat = data.getUint8(2); // raw byte3: d-pad hat (0=Up … 7=Up-Left, 8=neutral)
+    // Masked to the low nibble: the report can set a high-nibble bit while a
+    // face button is held, which pushes the raw value past 7 and fails every
+    // hat comparison below — read unmasked, the player can't move while
+    // holding a button (issue #3).
+    const hat = data.getUint8(2) & 0x0F; // raw byte3 low nibble: d-pad hat (0=Up … 7=Up-Left, 8=neutral)
 
     const dUp = hat === 0 || hat === 1 || hat === 7;
     const dRight = hat === 1 || hat === 2 || hat === 3;
@@ -99,8 +103,8 @@ class NsoSnesController extends BaseController {
 
     const buttons: boolean[] = [
       !!(b0 & 0x01),  //  0: B
-      !!(b0 & 0x02),  //  1: A
-      !!(b0 & 0x04),  //  2: Y
+      !!(b0 & 0x04),  //  1: A  (was 0x02 — confirmed reversed with Y against real hardware, issue #3)
+      !!(b0 & 0x02),  //  2: Y  (was 0x04 — see above)
       !!(b0 & 0x08),  //  3: X
       !!(b0 & 0x10),  //  4: L
       !!(b0 & 0x20),  //  5: R
