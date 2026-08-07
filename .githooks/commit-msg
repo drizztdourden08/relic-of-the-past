@@ -3,13 +3,19 @@
 # references unless you acknowledge with [allow-copyright] in the message.
 # CI re-checks regardless, so this is your personal heads-up, not the hard wall.
 
-if grep -qi '\[allow-copyright\]' "$1"; then
-  exit 0
+if ! grep -qi '\[allow-copyright\]' "$1"; then
+  if command -v node >/dev/null 2>&1; then
+    node scripts/copyright-gate/scan.mjs --staged || exit 1
+  else
+    echo "copyright-gate: node not found — skipping local check (CI will enforce)."
+  fi
 fi
 
-if ! command -v node >/dev/null 2>&1; then
-  echo "copyright-gate: node not found — skipping local check (CI will enforce)."
-  exit 0
+# ai-config / vault drift gate (local-only — .claude/ and .vault/ are
+# gitignored, so nothing else ever re-checks this). Blocks a commit that
+# would leave local-only work behind, unless acknowledged with [sync-ack].
+if ! grep -qi '\[sync-ack\]' "$1"; then
+  if command -v node >/dev/null 2>&1; then
+    node scripts/hooks/sync-check/index.mjs || exit 1
+  fi
 fi
-
-node scripts/copyright-gate/scan.mjs --staged
