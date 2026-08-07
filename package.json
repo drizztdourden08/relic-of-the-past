@@ -41,6 +41,7 @@
     "prepare": "git config core.hooksPath .githooks || true",
     "lint": "tsc --noEmit && eslint .",
     "gate": "node scripts/copyright-gate/scan.mjs --staged",
+    "sync:check": "node scripts/hooks/sync-check/index.mjs",
     "ci": "npm run lint && node scripts/analyze/analyze.mjs --ci",
     "analyze": "node scripts/analyze/analyze.mjs --json",
     "analyze:diff": "node scripts/analyze/analyze.mjs --diff",
