@@ -200,6 +200,11 @@
   margin-bottom: var(--space-md);
 }
 
+.input-cal__report-bug {
+  margin-left: auto;
+  color: var(--c-danger);
+}
+
 .input-cal__card-badge {
   font-size: var(--text-xs);
   padding: var(--space-xs) var(--space-xs);

@@ -6,11 +6,14 @@
 
 import { useState } from 'react';
 import type { CSSProperties } from 'react';
+import { Icon as IconifyIcon } from '@iconify/react/offline';
+import bugIcon from '@iconify-icons/lucide/bug';
 import * as controllersStore from '@app/lib/input/controllers-store';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../design-system/primitives/Image';
 import { Button } from '../../../../../design-system/primitives/Button';
+import { IconButton } from '../../../../../design-system/primitives/IconButton';
 import { webHidReader } from '../../../../../../lib/input/hid-reader';
 import { getButtonIconUrl } from '@app/lib/input/button-icons';
 import { StickCalibrationWizard } from './StickCalibrationWizard';
@@ -19,6 +22,7 @@ import { CONTROLLER_ICON_MAP, resolveDeviceName } from './input-cal-visuals';
 import type { WebHidCardProps, CalibrationTarget } from './web-hid-card-types';
 import { WebHidAxes } from './WebHidAxes';
 import { WebHidRawBytes } from './WebHidRawBytes';
+import { ControllerReportDialog } from './controller-report';
 
 const S: Record<string, CSSProperties> = {
   icon: { width: 28, height: 28, opacity: 0.7, flexShrink: 0 },
@@ -34,6 +38,7 @@ const WebHidCard = ({ deviceKey, state, profile, hasStickCal, existingStickCal, 
   const name = profile?.name ?? resolveDeviceName(vidHex, pidHex);
   const buttons = profile?.buttons ?? [];
   const [calibrationTarget, setCalibrationTarget] = useState<CalibrationTarget>(null);
+  const [reportOpen, setReportOpen] = useState(false);
 
   const controllerIcon = profile ? CONTROLLER_ICON_MAP[profile.family] : null;
   const isStale = webHidReader.isDeviceStale(deviceKey);
@@ -58,7 +63,18 @@ const WebHidCard = ({ deviceKey, state, profile, hasStickCal, existingStickCal, 
             Sticks Calibrated
           </Text>
         )}
+        <IconButton
+          variant="ghost"
+          size="sm"
+          label="Report this controller as not working"
+          className="input-cal__report-bug"
+          onClick={() => setReportOpen(true)}
+        >
+          <IconifyIcon icon={bugIcon} width={14} height={14} />
+        </IconButton>
       </Box>
+
+      <ControllerReportDialog open={reportOpen} onClose={() => setReportOpen(false)} deviceKey={deviceKey} />
 
       {/* Buttons with icons */}
       <Box className="input-cal__btn-grid">

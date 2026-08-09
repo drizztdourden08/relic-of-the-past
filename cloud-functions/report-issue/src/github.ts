@@ -17,14 +17,31 @@ const getToken = async (): Promise<string> => {
   return cachedToken;
 };
 
+const detailsBlock = (summary: string, body: string): string =>
+  `<details>\n<summary>${summary}</summary>\n\n\`\`\`\n${body}\n\`\`\`\n\n</details>`;
+
+const buildControllerSection = (report: CreateIssueRequest['controllerReport']): string[] => {
+  if (!report) return [];
+  return [
+    `**Detected as:** ${report.detectedName} (${report.vendorId}:${report.productId}, input: ${report.inputApi})`,
+    `**Closest SDL match:** ${report.sdlMatch ?? '_none found_'}`,
+    detailsBlock('Full HID read', report.hidReport),
+    detailsBlock('Calibration byte report (JSON)', report.calibrationMap),
+  ];
+};
+
 const buildBody = (req: CreateIssueRequest): string => {
   const parts = [
     `**Reporter contact:** ${req.email}`,
     req.message.trim(),
-    `<details>\n<summary>Debug info</summary>\n\n\`\`\`\n${req.debugInfo}\n\`\`\`\n\n</details>`,
+    ...buildControllerSection(req.controllerReport),
+    detailsBlock('Debug info', req.debugInfo),
   ];
   return parts.join('\n\n');
 };
+
+const labelsFor = (req: CreateIssueRequest): string[] =>
+  req.controllerReport ? ['controller-report'] : ['player-report'];
 
 const submitIssueReport = async (req: CreateIssueRequest): Promise<CreateIssueResult> => {
   const token = await getToken();
@@ -35,7 +52,7 @@ const submitIssueReport = async (req: CreateIssueRequest): Promise<CreateIssueRe
       Accept: 'application/vnd.github.v3+json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ title: req.title, body: buildBody(req), labels: ['player-report'] }),
+    body: JSON.stringify({ title: req.title, body: buildBody(req), labels: labelsFor(req) }),
   });
   if (!res.ok) throw new Error(`issue creation failed: ${res.status}`);
   const issue = await res.json();

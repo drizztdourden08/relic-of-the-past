@@ -1,0 +1,110 @@
+/* @layer renderer-components @kind style */
+.controller-report {
+  display: flex;
+  flex-direction: column;
+  width: 40rem;
+  max-width: 92vw;
+  max-height: 85vh;
+  padding: var(--space-lg);
+}
+
+.controller-report--wide {
+  width: 60rem;
+}
+
+/* Header (title + step strip) and footer (actions) stay put; only the body scrolls. */
+.controller-report .dialog__header,
+.controller-report .dialog__actions {
+  flex-shrink: 0;
+}
+
+.controller-report__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-md) 0;
+}
+
+.controller-report__steps {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.controller-report__step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+}
+
+.controller-report__step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  border: 1px solid var(--c-border);
+  font-size: var(--text-xs);
+}
+
+.controller-report__step--current {
+  color: var(--c-text);
+  font-weight: var(--weight-medium);
+}
+
+.controller-report__step--current .controller-report__step-num {
+  border-color: var(--c-info);
+  color: var(--c-info);
+}
+
+.controller-report__step--done .controller-report__step-num {
+  border-color: var(--c-green-bright);
+  color: var(--c-green-bright);
+}
+
+.controller-report__section {
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.controller-report__section-text {
+  margin-top: var(--space-sm);
+  max-height: 14rem;
+  overflow: auto;
+  font-size: var(--text-xs);
+  white-space: pre-wrap;
+}
+
+.controller-report__hint {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+}
+
+.controller-report__disclaimer {
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+  border-top: 1px solid var(--c-border);
+  padding-top: var(--space-sm);
+}
+
+.controller-report__status {
+  font-size: var(--text-sm);
+}
+
+.controller-report__status--error {
+  color: var(--c-danger);
+}
+
+.controller-report__result-url {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+  word-break: break-all;
+  user-select: text;
+}
