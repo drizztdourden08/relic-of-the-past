@@ -1,5 +1,7 @@
 /* @layer renderer-components @kind barrel */
 export { ProfileSelector } from './ProfileSelector';
+export { InstructionsPanel } from './InstructionsPanel';
+export { LiveParserOutput } from './LiveParserOutput';
 export { PrereqCards } from './PrereqCards';
 export { StickCards } from './StickCards';
 export { TriggerCards } from './TriggerCards';

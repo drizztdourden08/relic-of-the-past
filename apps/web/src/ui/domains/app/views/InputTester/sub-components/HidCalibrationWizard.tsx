@@ -9,25 +9,33 @@
  *  4. STICKS: rotate each stick in full circle → auto-detect 2 bytes with largest range.
  *  5. BUTTONS: auto-detect presses using only non-excluded bytes.
  */
+import { forwardRef, useEffect, useImperativeHandle } from 'react';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
 import { Button } from '../../../../../design-system/primitives/Button';
 import type { HidAxisMapping, HidButtonMapping, HidControllerMap } from './hid-calibration/hid-calibration.type';
 import { useHidCalibration } from './hid-calibration/hooks';
+import { useFlashStatus } from './hid-calibration/hooks/useFlashStatus';
 import {
-  ProfileSelector, PrereqCards, StickCards, TriggerCards,
+  ProfileSelector, InstructionsPanel, LiveParserOutput, PrereqCards, StickCards, TriggerCards,
   ButtonMapping, ByteGrid, CalibrationLog,
 } from './hid-calibration/components';
+import type { HidCalibrationWizardProps, HidWizardHandle } from './HidCalibrationWizard.type';
 
-interface Props {
-  onComplete: (map: HidControllerMap) => void;
-  onCancel: () => void;
-  deviceKey?: string;
-}
-
-const HidCalibrationWizard = (props: Props) => {
-  const { onComplete, onCancel, deviceKey } = props;
+const HidCalibrationWizard = forwardRef<HidWizardHandle, HidCalibrationWizardProps>((props, ref) => {
+  const { onComplete, onCancel, deviceKey, hideOwnActions = false, onCapturedCountChange } = props;
   const wiz = useHidCalibration({ onComplete, onCancel, deviceKey });
+  const [copyStatus, flashCopy] = useFlashStatus();
+  const [saveStatus, flashSave] = useFlashStatus();
+
+  useImperativeHandle(ref, () => ({
+    copyJson: wiz.handleCopyJson,
+    finish: wiz.handleFinish,
+  }), [wiz.handleCopyJson, wiz.handleFinish]);
+
+  useEffect(() => {
+    onCapturedCountChange?.(wiz.capturedCount);
+  }, [wiz.capturedCount, onCapturedCountChange]);
 
   if (wiz.phase === 'select-profile') {
     return (
@@ -50,16 +58,25 @@ const HidCalibrationWizard = (props: Props) => {
       {/* Header */}
       <Box className="hid-cal__header">
         <Text as="h3" className="hid-cal__title">HID Calibration — {wiz.profile?.name ?? 'Controller'}</Text>
-        <Box className="hid-cal__header-actions">
-          <Button variant="tertiary" size="sm" onClick={wiz.handleCopyJson} title="Copy partial or complete calibration JSON">
-            Copy JSON
-          </Button>
-          <Button variant="primary" size="sm" onClick={wiz.handleFinish} disabled={wiz.capturedCount === 0}>
-            Finish
-          </Button>
-          <Button variant="danger" size="sm" onClick={onCancel}>Cancel</Button>
-        </Box>
+        {!hideOwnActions && (
+          <Box className="hid-cal__header-actions">
+            <Button variant={copyStatus === 'error' ? 'danger' : 'tertiary'} size="sm" onClick={() => wiz.handleCopyJson().then(flashCopy)} title="Copy partial or complete calibration JSON">
+              {copyStatus === 'ok' ? '✓ Copied' : copyStatus === 'error' ? '✗ Failed' : 'Copy JSON'}
+            </Button>
+            <Button variant={saveStatus === 'error' ? 'danger' : 'tertiary'} size="sm" onClick={() => wiz.handleSaveDebugFile().then(flashSave)} title="Write calibration JSON to the userData debug folder">
+              {saveStatus === 'ok' ? '✓ Saved' : saveStatus === 'error' ? '✗ Failed' : 'Save to Debug Folder'}
+            </Button>
+            <Button variant="primary" size="sm" onClick={wiz.handleFinish} disabled={wiz.capturedCount === 0}>
+              Finish
+            </Button>
+            <Button variant="danger" size="sm" onClick={onCancel}>Cancel</Button>
+          </Box>
+        )}
       </Box>
+
+      <InstructionsPanel />
+
+      <LiveParserOutput profile={wiz.profile} state={wiz.liveParsedState} />
 
       {/* Prereqs: Gyro + Idle */}
       <PrereqCards
@@ -165,9 +182,12 @@ const HidCalibrationWizard = (props: Props) => {
       <CalibrationLog log={wiz.log} logRef={wiz.logRef} />
     </Box>
   );
-};
+});
+
+HidCalibrationWizard.displayName = 'HidCalibrationWizard';
 
 export { HidCalibrationWizard };
+export type { HidWizardHandle } from './HidCalibrationWizard.type';
 export type {
   HidAxisMapping,
   HidButtonMapping,

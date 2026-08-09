@@ -5,6 +5,8 @@
 
 import type { BrowserWindow } from 'electron';
 import { handle } from '../lib/ipc/handle';
+import { getUserDataPath } from '../lib/paths';
+import { writeJson } from '../lib/json-store';
 import { hidInputReader } from './hid-reader';
 import { enumerateControllers } from './hid-devices';
 import { readInputProfiles, writeInputProfiles } from './profile-store';
@@ -15,6 +17,10 @@ import {
   writeTriggerCalibration,
   type StickCalibrationStore,
 } from './calibration-store';
+
+// Strips anything outside [A-Za-z0-9_-] so a device-supplied name can never
+// contain a path separator, '..', or a drive letter.
+const sanitizeFileStem = (name: string): string => name.replace(/[^A-Za-z0-9_-]/g, '_');
 
 const registerInputHandlers = (mainWindow: BrowserWindow): void => {
   // ── Device permission handlers ──
@@ -90,6 +96,13 @@ const registerInputHandlers = (mainWindow: BrowserWindow): void => {
 
   handle('hid:vibrate-pattern', (_event, deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number) => {
     return hidInputReader.vibratePattern(deviceKey, pattern, gapMs);
+  });
+
+  handle('hid:write-debug-file', async (_event, name: string, data: unknown) => {
+    const filename = `${sanitizeFileStem(name)}-${Date.now()}.json`;
+    const filePath = getUserDataPath('debug', filename);
+    await writeJson(filePath, data);
+    return filePath;
   });
 
   // ── Start HID reader ──

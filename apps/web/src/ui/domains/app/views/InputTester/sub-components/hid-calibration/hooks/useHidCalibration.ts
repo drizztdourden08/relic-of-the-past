@@ -4,8 +4,10 @@
  * Declares state/refs and delegates action handlers to useCalibrationActions.
  */
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { usePlatform } from '@app/platform';
+import { useAppVersion } from '@app/hooks/useAppVersion';
 import { webHidReader } from '../../../../../../../../lib/input/hid-reader';
-import type { WebHidRawReport } from '../../../../../../../../lib/input/hid-reader';
+import type { WebHidInputState, WebHidRawReport } from '../../../../../../../../lib/input/hid-reader';
 import type { DeviceProfile } from '@shared/input';
 import type {
   AxisSubStep, ByteStatus, CaptureState, GyroState, HidButtonMapping, HidControllerMap,
@@ -19,6 +21,7 @@ import { computeByteStatuses, getInstructionText, getByteColor } from '../wizard
 import type { ByteColorResult } from '../wizard-helpers';
 import { useCalibrationActions } from './useCalibrationActions';
 import { useDeviceAutoDetect } from './useDeviceAutoDetect';
+import { useDeviceRawInfo } from './useDeviceRawInfo';
 
 interface UseHidCalibrationProps {
   onComplete: (map: HidControllerMap) => void;
@@ -57,6 +60,9 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
   const [log, setLog] = useState<string[]>([]);
   const [idleRecording, setIdleRecording] = useState<string | null>(null);
   const [idleResults, setIdleResults] = useState<Record<string, IdleRecordResult>>({});
+  // What the REAL, currently-shipped parser (BaseController.parseReport, via
+  // findController) reports for these same live bytes — not a re-guess.
+  const [liveParsedState, setLiveParsedState] = useState<WebHidInputState | null>(null);
 
   // ── Refs ──
   const logRef = useRef<HTMLDivElement>(null);
@@ -126,6 +132,9 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
 
   // ── Device auto-detect + SDL selection ──
   const { selectedProfileId, selectedSdlVidPid, hasGyro, sdlOptions, handleSdlSelect } = useDeviceAutoDetect(addLog);
+  const rawInfoRef = useDeviceRawInfo(deviceKey);
+  const { info: platformInfo } = usePlatform();
+  const appVersion = useAppVersion();
 
   // ── Core callbacks ──
   const updateByteStatuses = useCallback((len: number) => {
@@ -165,7 +174,8 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
     activeStickRef, activeTriggerRef, stickMinsRef, stickMaxsRef, stickCounterBytesRef, stickSamplesRef, stickStableCountRef, stickLastTop2Ref, stickBufferRef, stickRecordingRef,
     triggerMinsRef, triggerMaxsRef, triggerSamplesRef, triggerStableCountRef, triggerLastTopRef, triggerBufferRef, triggerRecordingRef,
     gyroMinsRef, gyroMaxsRef, gyroBufferRef, gyroRecordingRef, finalizeStickRef, finalizeTriggerRef,
-    activeIdxRef, advanceTimerRef, itemsRef, releaseCountRef, confirmCountRef, detectedBtnRef, inputPhaseActiveRef, deviceInfoRef,
+    activeIdxRef, advanceTimerRef, itemsRef, releaseCountRef, confirmCountRef, detectedBtnRef, inputPhaseActiveRef, deviceInfoRef, rawInfoRef,
+    platform: platformInfo.os, appVersion,
     addLog, updateByteStatuses, doAdvance, setItems, setActiveIndex, setCaptureState, setAxisSubStep, setAutoAdvanceWrapped, setInputPhaseActiveWrapped,
     setGyroState, setGyroChangedBytes, setGyroExcluded, setIdleState, setActiveStick, setStickBusy, setStickLiveInfo, setStickPickMode, setStickPickedBytes,
     setActiveTrigger, setTriggerBusy, setTriggerLiveInfo, setTriggerPickMode, setTriggerPickedByte, setProfile, setPhase, onComplete,
@@ -189,6 +199,18 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
     return () => { unsub(); if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current); };
   }, [phase, addLog, doAdvance, updateByteStatuses, deviceKey]);
 
+  // Same live bytes, run through the real parser — parallel to the raw-report
+  // subscription above, so this screen shows the shipped code's actual output
+  // alongside the raw-byte diffing, not instead of it.
+  useEffect(() => {
+    if (phase !== 'live') return;
+    const unsub = webHidReader.onInput((state: WebHidInputState) => {
+      if (deviceKey && state.deviceKey !== deviceKey) return;
+      setLiveParsedState(state);
+    });
+    return unsub;
+  }, [phase, deviceKey]);
+
   // ── Derived ──
   const prereqsDone = (hasGyro ? gyroState === 'done' : true) && idleState === 'done';
   const capturedCount = items.filter(it => it.status === 'captured' || it.status === 'skipped').length;
@@ -200,7 +222,7 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
     activeStick, stickBusy, stickLiveInfo, stickPickMode, stickPickedBytes,
     activeTrigger, triggerBusy, triggerLiveInfo, triggerPickMode, triggerPickedByte,
     items, activeIndex, captureState, axisSubStep, inputPhaseActive, autoAdvance,
-    latestBytes, byteStatuses, gyroChangedBytes, log, idleRecording, idleResults,
+    latestBytes, byteStatuses, gyroChangedBytes, log, idleRecording, idleResults, liveParsedState,
     prereqsDone, capturedCount, buttonItems, buttonCapturedCount,
     lastReportId: lastReportIdRef.current,
     logRef, excludedRef, baselineRef, itemsRef, activeIdxRef, inputPhaseActiveRef,

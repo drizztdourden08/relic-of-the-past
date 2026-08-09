@@ -168,6 +168,8 @@ interface InvokeContract {
   'hid:write': (deviceKey: string, data: number[]) => Promise<boolean>;
   'hid:vibrate': (deviceKey: string, durationMs: number, intensity: number) => Promise<boolean>;
   'hid:vibrate-pattern': (deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number) => Promise<{ ok: boolean; error?: string }>;
+  /** Writes a calibration capture into userData/Data/debug — returns the full path written. */
+  'hid:write-debug-file': (name: string, data: unknown) => Promise<string>;
 
   // Sprites
   'sprites:extract': (romFile: string) => Promise<{ success: boolean; count?: number; error?: string }>;

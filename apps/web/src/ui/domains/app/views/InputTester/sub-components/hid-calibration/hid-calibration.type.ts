@@ -37,6 +37,10 @@ interface IdleRecordResult {
   bytes: IdleByteAnalysis[];
 }
 
+/** Best-effort guess at transport, derived from the OS device path — never
+ *  authoritative. 'unknown' when no path was available to inspect. */
+type ConnectionHint = 'usb' | 'bluetooth' | 'unknown';
+
 interface HidControllerMap {
   name: string;
   profileId: string;
@@ -49,6 +53,20 @@ interface HidControllerMap {
   excludedBytes: number[];
   idleData?: Record<string, IdleRecordResult>;
   createdAt: number;
+  /** Raw OS device path, e.g. from node-hid enumeration — the actual ground
+   *  truth for USB vs Bluetooth; connectionHint is only a guess derived from it. */
+  devicePath: string | null;
+  connectionHint: ConnectionHint;
+  /** The device's own self-reported strings — distinct from `name`, which is
+   *  this app's resolved/display name and may not match what the hardware reports. */
+  rawManufacturer: string | null;
+  rawProduct: string | null;
+  serialNumber: string | null;
+  /** OS the capture was taken on — same label the debug-info block uses. */
+  platform: string;
+  /** App version that produced this capture, so old/new captures aren't confused
+   *  if the wizard's own detection heuristics change later. */
+  appVersion: string;
 }
 
 type Phase = 'select-profile' | 'live';
@@ -59,7 +77,7 @@ type StickSide = 'left' | 'right';
 type TriggerSide = 'left' | 'right';
 type GyroState = 'idle' | 'recording' | 'done';
 type IdleState = 'idle' | 'done';
-type ByteStatus = 'unknown' | 'gyro' | 'counter' | 'stick' | 'trigger' | 'button' | 'idle';
+type ByteStatus = 'unknown' | 'excluded' | 'counter' | 'stick' | 'trigger' | 'button' | 'idle';
 
 interface InputItem {
   kind: 'button' | 'axis';
@@ -93,6 +111,7 @@ export type {
   ButtonDiff,
   ByteStatus,
   CaptureState,
+  ConnectionHint,
   GyroState,
   HidAxisMapping,
   HidButtonMapping,

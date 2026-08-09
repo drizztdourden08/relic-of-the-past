@@ -10,6 +10,7 @@ import type { ActionDeps } from './action-deps';
 import { ANALOG_THRESHOLD_DELTA, STICK_IDS, TRIGGER_IDS } from '../hid-calibration.constants';
 import { findCounterBytes, hex, popcount } from '../hid-analysis';
 import { finalizeStickCalibration, resetStick, finalizeTriggerCalibration, resetTrigger } from '../stick-trigger-handlers';
+import { guessConnectionHint } from '../connection-hint';
 
 const useCalibrationActions = (d: ActionDeps) => {
   const handleProfileConfirm = useCallback(() => {
@@ -198,11 +199,44 @@ const useCalibrationActions = (d: ActionDeps) => {
   const buildCalibrationMap = useCallback((): HidControllerMap => {
     const buttons: Record<string, HidButtonMapping> = {}; const axes: Record<string, HidAxisMapping> = {};
     for (const item of d.itemsRef.current) { if (item.kind === 'button' && item.mapping) buttons[item.id] = item.mapping; if (item.kind === 'axis' && item.axisMapping) axes[item.id] = item.axisMapping; }
-    return { name: d.profile?.name ?? 'Unknown', profileId: d.profile?.id ?? 'generic', vendorId: d.deviceInfoRef.current.vendorId, productId: d.deviceInfoRef.current.productId, reportId: d.deviceInfoRef.current.reportId, reportLength: d.deviceInfoRef.current.reportLength, buttons, axes, excludedBytes: [...d.excludedRef.current].sort((a, b) => a - b), ...(Object.keys(d.idleResults).length > 0 && { idleData: d.idleResults }), createdAt: Date.now() };
-  }, [d.profile, d.idleResults]);
+    const raw = d.rawInfoRef.current;
+    return {
+      name: d.profile?.name ?? 'Unknown', profileId: d.profile?.id ?? 'generic',
+      vendorId: d.deviceInfoRef.current.vendorId, productId: d.deviceInfoRef.current.productId,
+      reportId: d.deviceInfoRef.current.reportId, reportLength: d.deviceInfoRef.current.reportLength,
+      buttons, axes, excludedBytes: [...d.excludedRef.current].sort((a, b) => a - b),
+      ...(Object.keys(d.idleResults).length > 0 && { idleData: d.idleResults }),
+      createdAt: Date.now(),
+      devicePath: raw.path, connectionHint: guessConnectionHint(raw.path),
+      rawManufacturer: raw.manufacturer, rawProduct: raw.product, serialNumber: raw.serialNumber,
+      platform: d.platform, appVersion: d.appVersion,
+    };
+  }, [d.profile, d.idleResults, d.rawInfoRef, d.platform, d.appVersion]);
 
-  const handleCopyJson = useCallback(() => { navigator.clipboard.writeText(JSON.stringify(buildCalibrationMap(), null, 2)); d.addLog('Copied calibration JSON to clipboard.'); }, [buildCalibrationMap, d.addLog]);
+  const handleCopyJson = useCallback(async (): Promise<boolean> => {
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(buildCalibrationMap(), null, 2));
+      d.addLog('✓ Copied calibration JSON to clipboard.');
+      return true;
+    } catch (err) {
+      d.addLog(`⚠ Failed to copy JSON: ${err instanceof Error ? err.message : String(err)}`);
+      return false;
+    }
+  }, [buildCalibrationMap, d.addLog]);
+
   const handleFinish = useCallback(() => { d.onComplete(buildCalibrationMap()); }, [buildCalibrationMap, d.onComplete]);
+
+  const handleSaveDebugFile = useCallback(async (): Promise<boolean> => {
+    const map = buildCalibrationMap();
+    try {
+      const filePath = await window.api.writeHidDebugFile(map.name || map.profileId, map);
+      d.addLog(`✓ Saved calibration to ${filePath}`);
+      return true;
+    } catch (err) {
+      d.addLog(`⚠ Failed to save debug file: ${err instanceof Error ? err.message : String(err)}`);
+      return false;
+    }
+  }, [buildCalibrationMap, d.addLog]);
 
   return {
     handleProfileConfirm, handleGyroStart, handleGyroStop, handleGyroRedo, handleGyroSkip,
@@ -210,7 +244,7 @@ const useCalibrationActions = (d: ActionDeps) => {
     handleStartCircle, handleStopCircle, handleSkipStick, handleStickRedo, handleStickPickMode, handleStickBytePicked, handleConfirmPick, handleCancelPick,
     handleStartTrigger, handleStopTrigger, handleSkipTrigger, handleTriggerRedo, handleTriggerPickMode, handleTriggerBytePicked, handleConfirmTriggerPick, handleCancelTriggerPick,
     handleStartButtons, handleClearItem, handleManualByteAssign, handleSkip, handleGoBack, handleClickItem,
-    handleByteClick, handleCopyJson, handleFinish,
+    handleByteClick, handleCopyJson, handleFinish, handleSaveDebugFile,
   };
 };
 

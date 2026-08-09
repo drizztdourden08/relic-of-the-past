@@ -105,6 +105,7 @@ const INVOKE_MAP = {
   writeHidDevice: 'hid:write',
   vibrateHid: 'hid:vibrate',
   vibratePattern: 'hid:vibrate-pattern',
+  writeHidDebugFile: 'hid:write-debug-file',
   extractSprites: 'sprites:extract',
   checkSpritesExtracted: 'sprites:check',
   deleteSprites: 'sprites:delete',

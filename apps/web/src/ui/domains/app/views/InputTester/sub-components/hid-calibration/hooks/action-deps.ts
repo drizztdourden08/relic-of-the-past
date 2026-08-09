@@ -16,6 +16,7 @@ import type {
   StickSide,
   TriggerSide,
 } from '../hid-calibration.type';
+import type { RawHidInfo } from './useDeviceRawInfo';
 
 interface ActionDeps {
   // State
@@ -68,6 +69,10 @@ interface ActionDeps {
   detectedBtnRef: React.MutableRefObject<HidButtonMapping | null>;
   inputPhaseActiveRef: React.MutableRefObject<boolean>;
   deviceInfoRef: React.MutableRefObject<{ vendorId: number; productId: number; reportId: number; reportLength: number }>;
+  rawInfoRef: React.MutableRefObject<RawHidInfo>;
+  // Environment (for a complete, self-describing capture)
+  platform: string;
+  appVersion: string;
   // Callbacks
   addLog: (msg: string) => void;
   updateByteStatuses: (len: number) => void;

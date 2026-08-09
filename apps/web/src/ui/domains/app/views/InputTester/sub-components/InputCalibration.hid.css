@@ -106,6 +106,78 @@
   letter-spacing: 0.5px;
 }
 
+.hid-cal__instructions {
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.hid-cal__instructions > summary {
+  cursor: pointer;
+}
+
+.hid-cal__instructions-list {
+  margin: var(--space-sm) 0 0;
+  padding-left: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+}
+
+.hid-cal__live-parser {
+  background: var(--c-surface-2);
+  border: 1px solid var(--c-info);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.hid-cal__live-parser--none {
+  color: var(--c-warning);
+  font-size: var(--text-sm);
+}
+
+.hid-cal__live-parser-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+}
+
+.hid-cal__live-parser-chip {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--c-border);
+  color: var(--c-text-dim);
+}
+
+.hid-cal__live-parser-chip--on {
+  border-color: var(--c-green-bright);
+  color: var(--c-green-bright);
+  background: var(--c-green-dim);
+}
+
+.hid-cal__instructions-hl {
+  color: var(--c-info);
+}
+
+.hid-cal__instructions-hl--warn {
+  color: var(--c-warning);
+}
+
+.hid-cal__instructions-alert {
+  margin-top: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-left: 3px solid var(--c-warning);
+  background: color-mix(in srgb, var(--c-warning) 12%, transparent);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
 .hid-cal__instruction {
   font-size: var(--text-base);
   font-weight: var(--weight-semi);
