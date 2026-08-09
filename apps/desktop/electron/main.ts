@@ -47,6 +47,7 @@ import { registerFileHandlers } from './storage/file-handlers';
 import { initAutoUpdater, registerUpdaterHandlers } from './updater';
 import { registerGithubHandlers } from './github/ipc-handlers';
 import { emit } from './lib/ipc/handle';
+import { installDevFileLogging } from './lib/dev-file-logger';
 
 // Every IPC domain's register fn, gated by environment. ipcMain.handle order is
 // irrelevant, so this list is declarative; window/input/updater wiring that needs
@@ -131,6 +132,12 @@ app.whenReady().then(async () => {
 
   const mainWindow = getMainWindow()!;
 
+  // Dev-only: mirror main + renderer console output to disk, so a hard crash
+  // still leaves the last thing that happened on disk — see lib/dev-file-logger.
+  if (is.dev) {
+    await installDevFileLogging(mainWindow);
+  }
+
   // Boot-timing diagnostic (opt-in via --boot-timing): renderer HTML loaded, then
   // the renderer's app-ready signal (splash replaced by the UI).
   logBoot('window created');
@@ -142,8 +149,8 @@ app.whenReady().then(async () => {
 
   // Forward renderer console to stdout when --dump-layers is active
   if (process.argv.some(a => a.startsWith('--dump-layers='))) {
-    mainWindow.webContents.on('console-message', (_ev, _level, message) => {
-      console.log(`[renderer] ${message}`);
+    mainWindow.webContents.on('console-message', (event) => {
+      console.log(`[renderer] ${event.message}`);
     });
   }
 

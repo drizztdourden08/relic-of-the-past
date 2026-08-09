@@ -4,6 +4,9 @@
  * Gamepad API can see. Gamepad ids carry the vendor/product pair, which is what a
  * controller-mapping report needs to be actionable.
  */
+import { webHidReader } from '@app/lib/input/hid-reader';
+import { findPresetByVidPid } from '@shared/input';
+import { DEVICE_DATABASE } from '@shared/input/data/devices';
 import type { DeviceEnvironment } from './types';
 
 // Both are non-standard Chromium extensions with no lib.dom typings.
@@ -35,6 +38,22 @@ const readGamepads = (): string[] => {
   }
 };
 
+/** node-hid enumerates most controllers directly — the Gamepad API never sees them
+ *  on this app's HID input path, so a debug report needs both lists to be honest
+ *  about what's actually connected. */
+const readHidDevices = (): string[] => {
+  try {
+    return webHidReader.getConnectedDeviceKeys().map((key) => {
+      const [vendorId, productId] = key.split(':');
+      const preset = findPresetByVidPid(vendorId, productId);
+      const sdlName = DEVICE_DATABASE.find((e) => e.vidPid === `${vendorId}:${productId}`)?.name;
+      return `${preset?.name ?? sdlName ?? 'Unrecognized HID device'} (${key})`;
+    });
+  } catch {
+    return [];
+  }
+};
+
 const probeDevice = (): DeviceEnvironment => ({
   logicalCores: navigator.hardwareConcurrency || null,
   deviceMemoryGb: (navigator as ChromiumNavigator).deviceMemory ?? null,
@@ -44,6 +63,7 @@ const probeDevice = (): DeviceEnvironment => ({
   timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   online: navigator.onLine,
   gamepads: readGamepads(),
+  hidDevices: readHidDevices(),
 });
 
 export { probeDevice };
