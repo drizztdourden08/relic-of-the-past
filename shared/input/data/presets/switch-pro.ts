@@ -15,6 +15,7 @@ import { BaseController, type ControllerButton, type ControllerAxis, type Contro
 import { registerController } from '../../registry';
 import type { ButtonMapping, ButtonIcon } from '../../../types/controls';
 import { icon, btn } from './builders';
+import { parseSwitchProReport } from './switch-pro-hid';
 
 // ── Icons ──
 
@@ -109,110 +110,7 @@ class SwitchProController extends BaseController {
   // ── HID Report Parsing ──
 
   parseReport(reportId: number, data: DataView): ParsedInput | null {
-    if (reportId === 0x3F && data.byteLength >= 7) {
-      return this.parseSimple(data);
-    }
-    if (reportId === 0x30 && data.byteLength >= 11) {
-      return this.parseFull(data);
-    }
-    if ((reportId === 0x21 || reportId === 0x31) && data.byteLength >= 11) {
-      return this.parseFull(data);
-    }
-    return null;
-  }
-
-  /**
-   * Simple mode (report 0x3F) — 8-bit sticks, hat-switch dpad.
-   * Default USB mode before init sequence is sent.
-   */
-  private parseSimple(data: DataView): ParsedInput {
-    const b0 = data.getUint8(0);
-    const b1 = data.getUint8(1);
-    const hat = data.getUint8(2);
-
-    const lx = data.byteLength > 3 ? data.getUint8(3) : 128;
-    const ly = data.byteLength > 4 ? data.getUint8(4) : 128;
-    const rx = data.byteLength > 5 ? data.getUint8(5) : 128;
-    const ry = data.byteLength > 6 ? data.getUint8(6) : 128;
-
-    const dUp = hat === 0 || hat === 1 || hat === 7;
-    const dRight = hat === 1 || hat === 2 || hat === 3;
-    const dDown = hat === 3 || hat === 4 || hat === 5;
-    const dLeft = hat === 5 || hat === 6 || hat === 7;
-
-    const buttons: boolean[] = [
-      !!(b0 & 0x01),  //  0: B
-      !!(b0 & 0x02),  //  1: A
-      !!(b0 & 0x04),  //  2: Y
-      !!(b0 & 0x08),  //  3: X
-      !!(b0 & 0x10),  //  4: L
-      !!(b0 & 0x20),  //  5: R
-      !!(b0 & 0x40),  //  6: ZL
-      !!(b0 & 0x80),  //  7: ZR
-      !!(b1 & 0x01),  //  8: Minus
-      !!(b1 & 0x02),  //  9: Plus
-      !!(b1 & 0x04),  // 10: L Stick
-      !!(b1 & 0x08),  // 11: R Stick
-      dUp,            // 12: DPad Up
-      dDown,          // 13: DPad Down
-      dLeft,          // 14: DPad Left
-      dRight,         // 15: DPad Right
-      !!(b1 & 0x10),  // 16: Home
-    ];
-
-    const axes: number[] = [
-      (lx - 128) / 128,
-      (ly - 128) / 128,
-      (rx - 128) / 128,
-      (ry - 128) / 128,
-    ];
-
-    return { buttons, axes, rawSticks: [lx, ly, rx, ry] };
-  }
-
-  /**
-   * Full mode (report 0x30/0x21/0x31) — 12-bit sticks, 3-byte button data.
-   * Active after USB init sequence is sent.
-   */
-  private parseFull(data: DataView): ParsedInput {
-    const offset = 2; // skip timer + battery
-    const b0 = data.getUint8(offset);
-    const b1 = data.getUint8(offset + 1);
-    const b2 = data.getUint8(offset + 2);
-
-    const lxRaw = data.getUint8(offset + 3) | ((data.getUint8(offset + 4) & 0x0F) << 8);
-    const lyRaw = (data.getUint8(offset + 4) >> 4) | (data.getUint8(offset + 5) << 4);
-    const rxRaw = data.getUint8(offset + 6) | ((data.getUint8(offset + 7) & 0x0F) << 8);
-    const ryRaw = (data.getUint8(offset + 7) >> 4) | (data.getUint8(offset + 8) << 4);
-
-    const buttons: boolean[] = [
-      !!(b0 & 0x04),  //  0: B
-      !!(b0 & 0x08),  //  1: A
-      !!(b0 & 0x01),  //  2: Y
-      !!(b0 & 0x02),  //  3: X
-      !!(b0 & 0x40),  //  4: L
-      !!(b0 & 0x80),  //  5: R
-      !!(b1 & 0x40),  //  6: ZL
-      !!(b1 & 0x80),  //  7: ZR
-      !!(b1 & 0x01),  //  8: Minus
-      !!(b1 & 0x02),  //  9: Plus
-      !!(b1 & 0x04),  // 10: L Stick
-      !!(b1 & 0x08),  // 11: R Stick
-      !!(b2 & 0x02),  // 12: DPad Up
-      !!(b2 & 0x01),  // 13: DPad Down
-      !!(b2 & 0x08),  // 14: DPad Left
-      !!(b2 & 0x04),  // 15: DPad Right
-      !!(b1 & 0x10),  // 16: Home
-    ];
-
-    const axes: number[] = [
-      (lxRaw - 2048) / 2048,
-      -(lyRaw - 2048) / 2048,
-      (rxRaw - 2048) / 2048,
-      -(ryRaw - 2048) / 2048,
-    ];
-
-    return { buttons, axes, rawSticks: [lxRaw, lyRaw, rxRaw, ryRaw] };
+    return parseSwitchProReport(reportId, data);
   }
 
   // ── Lifecycle ──
