@@ -261,6 +261,14 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
+      # The Android plugin compiles SDL from the same pinned source tree the
+      # desktop addon uses, and nothing else here puts it on disk: npm install
+      # only fetches it while building the addon from source, which it skips
+      # entirely once a prebuilt exists for the pinned versions. Asking for it
+      # directly keeps the Android build independent of that.
+      - name: Fetch the pinned SDL3 source
+        run: node scripts/build/fetch-sdl3.mjs
+
       - name: Build web bundle + sync into the Android project
         run: npm run cap:sync
 

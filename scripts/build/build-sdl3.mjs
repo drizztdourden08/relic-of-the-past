@@ -26,7 +26,7 @@
  * the SDL3 input pipeline that does — see scripts/ensure-sdl3.mjs, which
  * only falls back to this when no matching prebuilt addon package exists.
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, realpathSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, realpathSync, rmSync, chmodSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { join, resolve } from 'node:path';
 
@@ -157,7 +157,13 @@ const copyLibusbRuntime = (installDir, libusbVersion) => {
   }
   const destDir = join(installDir, 'lib');
   mkdirSync(destDir, { recursive: true });
-  copyFileSync(realpathSync(src), join(destDir, name));
+  const dest = join(destDir, name);
+  // A package manager's own copy is typically read-only, and copyFileSync
+  // carries that mode across, so copying a second time over the result fails
+  // with EACCES. Removing it first makes a repeat build behave like the first.
+  rmSync(dest, { force: true });
+  copyFileSync(realpathSync(src), dest);
+  chmodSync(dest, 0o644);
   console.log(`[build-sdl3] Copied ${name} -> ${destDir}`);
 };
 
