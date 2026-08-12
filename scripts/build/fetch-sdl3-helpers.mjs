@@ -72,15 +72,18 @@ const extractZipWindows = (zipPath, destDir) => {
 // "E:\foo\bar.tar.gz") as a "host:path" remote spec and tries to open an rsh
 // connection instead of the local file. Forward slashes plus --force-local
 // (belt and suspenders — tested to need both on Git-for-Windows' bundled GNU
-// tar) tell it the argument is always a local path, on every platform: a
-// no-op on Linux/macOS paths, which are already forward-slashed and never
-// look remote in the first place.
+// tar) tell it the argument is always a local path.
+//
+// The flag goes to Windows only. It is GNU tar's, and macOS ships BSD tar,
+// which rejects it outright and fails the extraction. Nothing else needs it:
+// paths there are already forward-slashed and never look remote.
 const forSlash = (p) => p.replace(/\\/g, '/');
+const localFlag = process.platform === 'win32' ? ['--force-local'] : [];
 
 const extractTarGz = (tarPath, destDir) => {
   mkdirSync(destDir, { recursive: true });
   console.log(`[fetch-sdl3] Extracting ${tarPath} -> ${destDir}`);
-  execFileSync('tar', ['--force-local', '-xzf', forSlash(tarPath), '-C', forSlash(destDir)], { stdio: 'inherit' });
+  execFileSync('tar', [...localFlag, '-xzf', forSlash(tarPath), '-C', forSlash(destDir)], { stdio: 'inherit' });
 };
 
 // Best-effort .7z extraction via `tar` (modern bsdtar/libarchive builds can
@@ -89,7 +92,7 @@ const extractTarGz = (tarPath, destDir) => {
 const extractSevenZipBestEffort = (archivePath, destDir) => {
   mkdirSync(destDir, { recursive: true });
   try {
-    execFileSync('tar', ['--force-local', '-xf', forSlash(archivePath), '-C', forSlash(destDir)], { stdio: 'inherit' });
+    execFileSync('tar', [...localFlag, '-xf', forSlash(archivePath), '-C', forSlash(destDir)], { stdio: 'inherit' });
     return true;
   } catch {
     return false;
