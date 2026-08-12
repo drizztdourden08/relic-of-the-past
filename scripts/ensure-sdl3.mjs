@@ -34,6 +34,18 @@ import { createHash } from 'node:crypto';
 import { join, resolve, extname } from 'node:path';
 import { fetchAddonPrebuilt } from './build/fetch-addon-prebuilt.mjs';
 
+// SDL installs its CMake package config where each platform expects it: right
+// under the prefix on Windows, and under lib/cmake following the GNU layout
+// elsewhere. Both are looked at so no caller needs a per-platform special case.
+const sdl3ConfigDir = (installDir) => {
+  const candidates = [
+    join(installDir, 'cmake'),
+    join(installDir, 'lib', 'cmake', 'SDL3'),
+    join(installDir, 'lib64', 'cmake', 'SDL3'),
+  ];
+  return candidates.find((dir) => existsSync(join(dir, 'SDL3Config.cmake'))) ?? null;
+};
+
 const repoRoot = resolve(import.meta.dirname, '..');
 const addonDir = join(repoRoot, 'apps/desktop/electron/input/native/sdl3');
 const platformArch = `${process.platform}-${process.arch}`;
@@ -192,7 +204,9 @@ const buildFromSource = (pinned) => {
     console.log('[ensure-sdl3] Building the native addon from source (this needs a C/C++ toolchain)...');
     execFileSync('node', [join(repoRoot, 'scripts/build/fetch-sdl3.mjs')], { stdio: 'inherit', env });
     execFileSync('node', [join(repoRoot, 'scripts/build/build-sdl3.mjs')], { stdio: 'inherit', env });
-    const cmakeJsArgs = ['build', '-d', addonDir, '-O', buildDir, '-B', 'Release', `--CDSDL3_DIR=${join(installDir, 'cmake').replace(/\\/g, '/')}`];
+    const sdlConfigDir = sdl3ConfigDir(installDir);
+    if (!sdlConfigDir) throw new Error(`No SDL3Config.cmake found under ${installDir} after building SDL3.`);
+    const cmakeJsArgs = ['build', '-d', addonDir, '-O', buildDir, '-B', 'Release', `--CDSDL3_DIR=${sdlConfigDir.replace(/\\/g, '/')}`];
     if (process.platform === 'win32') cmakeJsArgs.push('-A', WIN_PLATFORM[process.arch] ?? 'x64');
     execFileSync('node', [join(repoRoot, 'node_modules/cmake-js/bin/cmake-js'), ...cmakeJsArgs], { stdio: 'inherit', cwd: repoRoot, env });
     copyBuiltArtifacts(buildDir, installDir);

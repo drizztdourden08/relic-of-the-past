@@ -58,7 +58,19 @@ const readMarker = (markerPath) => {
   }
 };
 
-const isUpToDate = (markerPath, pinned, configHeader) => {
+// SDL installs its CMake package config where each platform expects it: right
+// under the prefix on Windows, and under lib/cmake following the GNU layout
+// elsewhere. Both are looked at so no caller needs a per-platform special case.
+const sdl3ConfigDir = (installDir) => {
+  const candidates = [
+    join(installDir, 'cmake'),
+    join(installDir, 'lib', 'cmake', 'SDL3'),
+    join(installDir, 'lib64', 'cmake', 'SDL3'),
+  ];
+  return candidates.find((dir) => existsSync(join(dir, 'SDL3Config.cmake'))) ?? null;
+};
+
+const isUpToDate = (markerPath, pinned, installDir) => {
   const marker = readMarker(markerPath);
   if (!marker) return false;
   return (
@@ -67,7 +79,7 @@ const isUpToDate = (markerPath, pinned, configHeader) => {
     marker.platform === process.platform &&
     marker.arch === process.arch &&
     marker.hidapiLibusb === true &&
-    existsSync(configHeader)
+    sdl3ConfigDir(installDir) !== null
   );
 };
 
@@ -125,9 +137,8 @@ const main = () => {
   const buildDir = join(thirdPartyDir, `build-${process.platform}-${process.arch}`);
   const installDir = join(thirdPartyDir, 'install', `${process.platform}-${process.arch}`);
   const markerPath = join(thirdPartyDir, 'install', `.built-${process.platform}-${process.arch}.json`);
-  const configHeader = join(installDir, 'cmake', 'SDL3Config.cmake');
 
-  if (!force && isUpToDate(markerPath, pinned, configHeader)) {
+  if (!force && isUpToDate(markerPath, pinned, installDir)) {
     console.log(`[build-sdl3] Up to date (sdl3 ${pinned.sdl3Version}, libusb, ${process.platform}-${process.arch}). Pass --force to redo it.`);
     return;
   }
@@ -154,8 +165,8 @@ const main = () => {
     process.exit(1);
   }
 
-  if (!existsSync(configHeader)) {
-    console.error(`[build-sdl3] Build finished but ${configHeader} is missing — the install step may have failed silently.`);
+  if (!sdl3ConfigDir(installDir)) {
+    console.error(`[build-sdl3] Build finished but no SDL3Config.cmake was installed under ${installDir} — the install step may have failed silently.`);
     process.exit(1);
   }
   writeMarker(markerPath, pinned);
