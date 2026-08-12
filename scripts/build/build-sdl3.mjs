@@ -80,6 +80,15 @@ const runCmake = (args, cwd) => {
 // libusb dirs, returning the extra -D args needed for SDL_HIDAPI_LIBUSB.
 const configureArgs = (sourceDir, buildDir, installDir, libusbVersion) => {
   const args = ['-S', sourceDir, '-B', buildDir, '-DCMAKE_BUILD_TYPE=Release', '-DSDL_SHARED=ON', '-DSDL_STATIC=OFF', '-DSDL_HIDAPI_LIBUSB=ON', `-DCMAKE_INSTALL_PREFIX=${installDir}`];
+  if (process.platform === 'linux') {
+    // This addon only reads controllers, so SDL is never asked to open a window
+    // and needs no display server at all. Its configure step still refuses to
+    // continue when it finds neither X11 nor Wayland headers, which is the case
+    // on any minimal build machine, so that check is turned off here. It also
+    // keeps the shipped library from picking up display-server dependencies
+    // that would then have to be present on the player's machine.
+    args.push('-DSDL_UNIX_CONSOLE_BUILD=ON');
+  }
   if (process.platform === 'win32') {
     const arch = WIN_ARCH[process.arch];
     if (!arch) {
