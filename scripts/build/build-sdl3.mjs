@@ -26,7 +26,7 @@
  * the SDL3 input pipeline that does — see scripts/ensure-sdl3.mjs, which
  * only falls back to this when no matching prebuilt addon package exists.
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, realpathSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { join, resolve } from 'node:path';
 
@@ -116,14 +116,49 @@ const configureArgs = (sourceDir, buildDir, installDir, libusbVersion) => {
 // Windows also needs libusb-1.0.dll shipped next to SDL3.dll: SDL builds with
 // SDL_HIDAPI_LIBUSB_SHARED=ON by default, meaning it dlopen()s libusb at
 // runtime rather than linking it — the DLL has to be findable on disk.
+// The filename SDL asks the loader for at runtime, per platform. SDL resolves
+// this at ITS build time and bakes the bare name in, so a copy shipped under
+// any other name is invisible to it.
+const LIBUSB_RUNTIME_NAME = { linux: 'libusb-1.0.so.0', darwin: 'libusb-1.0.0.dylib' };
+
+// libusb ships beside the addon on every platform, so a player never needs it
+// installed system-wide for the controllers that require it. It stays a
+// separate, replaceable file, never linked into SDL or the app.
+//
+// Windows takes it from the upstream archive fetched next to SDL's source.
+// Linux and macOS have no such archive, so the system copy that SDL was just
+// built against is used, located through pkg-config rather than guessed at.
 const copyLibusbRuntime = (installDir, libusbVersion) => {
-  if (process.platform !== 'win32') return;
-  const arch = WIN_ARCH[process.arch];
-  const src = join(thirdPartyDir, `libusb-${libusbVersion}`, arch.libusbDir, 'dll', 'libusb-1.0.dll');
-  const destDir = join(installDir, 'bin');
+  if (process.platform === 'win32') {
+    const arch = WIN_ARCH[process.arch];
+    const src = join(thirdPartyDir, `libusb-${libusbVersion}`, arch.libusbDir, 'dll', 'libusb-1.0.dll');
+    const destDir = join(installDir, 'bin');
+    mkdirSync(destDir, { recursive: true });
+    copyFileSync(src, join(destDir, 'libusb-1.0.dll'));
+    console.log(`[build-sdl3] Copied libusb-1.0.dll -> ${destDir}`);
+    return;
+  }
+
+  const name = LIBUSB_RUNTIME_NAME[process.platform];
+  if (!name) return;
+  let libdir;
+  try {
+    libdir = execFileSync('pkg-config', ['--variable=libdir', 'libusb-1.0'], { encoding: 'utf8' }).trim();
+  } catch {
+    console.warn('[build-sdl3] pkg-config could not locate libusb-1.0, so it will not ship beside the addon. Controllers needing it will only work where it is installed system-wide.');
+    return;
+  }
+  // The versioned name is usually a symlink into the same directory; the real
+  // file is what gets copied, under the name SDL will ask for.
+  const src = join(libdir, name);
+  if (!existsSync(src)) {
+    console.warn(`[build-sdl3] ${src} not found, so libusb will not ship beside the addon.`);
+    return;
+  }
+  const destDir = join(installDir, 'lib');
   mkdirSync(destDir, { recursive: true });
-  copyFileSync(src, join(destDir, 'libusb-1.0.dll'));
-  console.log(`[build-sdl3] Copied libusb-1.0.dll -> ${destDir}`);
+  copyFileSync(realpathSync(src), join(destDir, name));
+  console.log(`[build-sdl3] Copied ${name} -> ${destDir}`);
 };
 
 const writeMarker = (markerPath, pinned) => {

@@ -40,15 +40,19 @@ freely, subject to the following restrictions:
 - **What it is:** the low-level USB access library SDL3 uses (as an optional backend) to
   reach controllers that need it, most notably newer Nintendo pads.
 - **License:** GNU Lesser General Public License, version 2.1 (LGPL-2.1).
-- **How it's shipped:** built from libusb's official released source, **unmodified**, and
-  shipped as a separate dynamic library (`libusb-1.0.dll` on Windows) that SDL3 loads at
-  runtime. It is dynamically linked, not compiled into the app or into SDL3 itself, and
-  nothing in it has been changed from the upstream release.
+- **How it's shipped:** **unmodified**, as a separate dynamic library that SDL3 loads at
+  runtime, alongside the app's controller support on every desktop platform:
+  `libusb-1.0.dll` on Windows, `libusb-1.0.so.0` on Linux, and `libusb-1.0.0.dylib` on
+  macOS. It is dynamically linked, never compiled into the app or into SDL3 itself, and
+  nothing in it has been changed from the upstream release. On Windows it is built from
+  libusb's official released source; on Linux and macOS it is the distribution's own build
+  of the same pinned version.
 - **Source:** <https://github.com/libusb/libusb> (the exact version this app pins is recorded
   in the repo at `apps/desktop/electron/input/native/sdl3/package.json`).
 - **Your rights under the LGPL:** because the library is dynamically linked, you may replace
-  the shipped `libusb-1.0.dll` with your own build of libusb (for example, one built from a
-  modified copy of the libusb source) and the app will load it in place of the bundled one.
+  the shipped library with your own build of libusb (for example, one built from a modified
+  copy of the libusb source) and the app will load it in place of the bundled one. It sits
+  next to the app's controller module, under the platform name listed above.
 - **Copyright:** the libusb project and contributors; see the full license text at
   <https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html>.
 

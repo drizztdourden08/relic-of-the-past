@@ -66,6 +66,10 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
   ${CMAKE_JS_LIB}
   SDL3::SDL3-shared
+  # dlopen/dladdr, used to load the bundled libusb by absolute path before SDL
+  # asks for it by name (see src/libusb-preload.cc). Empty on Windows and on
+  # platforms whose libc already provides them.
+  ${CMAKE_DL_LIBS}
 )
 
 if(APPLE)

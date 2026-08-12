@@ -20,9 +20,32 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#else
+#include <dlfcn.h>
+
+#include <string>
 #endif
 
 namespace {
+
+#ifndef _WIN32
+// Directory this addon binary was loaded from, found by asking the loader
+// which file a symbol inside us came from. The process path would name the
+// host executable instead, which is somewhere else entirely.
+bool OwnModuleDirectoryPosix(std::string* out) {
+  Dl_info info = {};
+  if (dladdr(reinterpret_cast<const void*>(&OwnModuleDirectoryPosix), &info) == 0 || info.dli_fname == nullptr) {
+    return false;
+  }
+  const std::string path(info.dli_fname);
+  const size_t slash = path.find_last_of('/');
+  if (slash == std::string::npos) {
+    return false;
+  }
+  *out = path.substr(0, slash + 1);
+  return true;
+}
+#endif
 
 #ifdef _WIN32
 // Directory this addon binary was loaded from. Derived from an address inside
@@ -67,9 +90,23 @@ bool PreloadLibusb() {
   const std::wstring candidate = directory + L"libusb-1.0.dll";
   return LoadLibraryW(candidate.c_str()) != nullptr;
 #else
-  // On Linux and macOS the addon is linked with an RPATH of $ORIGIN /
-  // @loader_path, so the dynamic loader already searches beside the addon and
-  // SDL's by-name request resolves without help.
-  return true;
+  // The addon's own RPATH does not help here: SDL is the one calling dlopen,
+  // so the loader consults SDL's search path, not ours, and SDL sits in this
+  // directory without an RPATH of its own. Loading the file by absolute path
+  // first is what makes SDL's later by-name request resolve, exactly as on
+  // Windows. Once loaded, the loader matches the request against the library
+  // already in memory under that name.
+  std::string directory;
+  if (!OwnModuleDirectoryPosix(&directory)) {
+    return false;
+  }
+#ifdef __APPLE__
+  const std::string candidate = directory + "libusb-1.0.0.dylib";
+#else
+  const std::string candidate = directory + "libusb-1.0.so.0";
+#endif
+  // RTLD_GLOBAL so the symbols are available to SDL when it resolves them
+  // against this image rather than loading a second copy.
+  return dlopen(candidate.c_str(), RTLD_LAZY | RTLD_GLOBAL) != nullptr;
 #endif
 }
