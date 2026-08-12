@@ -202,8 +202,14 @@ const buildFromSource = (pinned) => {
   const buildDir = join(repoRoot, 'third_party/sdl3', `addon-build-${platformArch}`);
   try {
     console.log('[ensure-sdl3] Building the native addon from source (this needs a C/C++ toolchain)...');
-    execFileSync('node', [join(repoRoot, 'scripts/build/fetch-sdl3.mjs')], { stdio: 'inherit', env });
-    execFileSync('node', [join(repoRoot, 'scripts/build/build-sdl3.mjs')], { stdio: 'inherit', env });
+    // --force has to reach both children, or it does not mean what it says:
+    // each keeps its own freshness marker, reports "up to date" and skips, so a
+    // caller asking for a guaranteed-fresh build silently keeps whatever was
+    // built earlier. A release relies on this to rebuild SDL after its own
+    // dependencies are in place.
+    const forceArgs = force ? ['--force'] : [];
+    execFileSync('node', [join(repoRoot, 'scripts/build/fetch-sdl3.mjs'), ...forceArgs], { stdio: 'inherit', env });
+    execFileSync('node', [join(repoRoot, 'scripts/build/build-sdl3.mjs'), ...forceArgs], { stdio: 'inherit', env });
     const sdlConfigDir = sdl3ConfigDir(installDir);
     if (!sdlConfigDir) throw new Error(`No SDL3Config.cmake found under ${installDir} after building SDL3.`);
     const cmakeJsArgs = ['build', '-d', addonDir, '-O', buildDir, '-B', 'Release', `--CDSDL3_DIR=${sdlConfigDir.replace(/\\/g, '/')}`];
@@ -224,7 +230,24 @@ const buildFromSource = (pinned) => {
 
 const main = async () => {
   const pinned = readPinned();
-  const state = force ? 'version-changed' : addonState(pinned);
+
+  // --force means "build it here, now". It used to route into the prebuilt
+  // fetch instead, so a release asking for a fresh binary was handed the one
+  // published by the previous release: unchanged forever, which is the exact
+  // failure the release workflow believes this flag prevents. Falling back to a
+  // prebuilt when the build fails would recreate that, so this exits instead.
+  if (force) {
+    console.log(`[ensure-sdl3] --force: building from source for ${platformArch}, ignoring any published prebuilt.`);
+    if (buildFromSource(pinned) === 'built') {
+      writeMarker(pinned, 'local');
+      console.log(`[ensure-sdl3] Native addon built at ${outDir}`);
+      return;
+    }
+    console.error('[ensure-sdl3] --force was asked for a fresh build and it failed. Not falling back to a published prebuilt, since that would ship something other than this commit.');
+    process.exit(1);
+  }
+
+  const state = addonState(pinned);
   if (state === 'current') {
     console.log(`[ensure-sdl3] Native addon is up to date (${platformArch}).`);
     return;

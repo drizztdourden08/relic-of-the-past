@@ -141,9 +141,10 @@ jobs:
         run: node core/wasm-build/build.mjs
         shell: bash
 
-      - name: Install dependencies
-        run: npm install --no-audit --no-fund
-
+      # Before npm install, not after: its postinstall builds SDL, and SDL only
+      # compiles its libusb backend if libusb is already present. Installed
+      # afterwards, that first build silently produced an SDL with no libusb
+      # support at all, which is what shipped on Linux in 0.15.1.
       - name: Install libusb + pkg-config (Linux)
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev pkg-config
@@ -151,6 +152,9 @@ jobs:
       - name: Install libusb + pkg-config (macOS)
         if: runner.os == 'macOS'
         run: brew install libusb pkg-config
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
 
       - name: Build the input addon from source
         # --force so the release ships an addon built from THIS commit. Without
@@ -163,6 +167,24 @@ jobs:
       - name: Verify the addon built
         shell: bash
         run: test -f "apps/desktop/electron/input/native/sdl3/prebuilds/${{ matrix.addonPlatform }}-${{ matrix.addonArch }}/sdl3_input.node" || { echo "::error::sdl3_input.node missing after build"; exit 1; }
+
+      # The addon existing is not enough: an SDL built before its dependencies
+      # were installed compiles out its libusb backend and still produces a
+      # perfectly healthy .node, which is how 0.15.1 shipped a Linux build that
+      # could not drive the controllers needing libusb. Asserting the runtime
+      # library ships turns that silent gap into a failed release.
+      - name: Verify libusb ships with the addon
+        shell: bash
+        run: |
+          DIR="apps/desktop/electron/input/native/sdl3/prebuilds/${{ matrix.addonPlatform }}-${{ matrix.addonArch }}"
+          case "${{ matrix.addonPlatform }}" in
+            win32)  LIB="libusb-1.0.dll" ;;
+            linux)  LIB="libusb-1.0.so.0" ;;
+            darwin) LIB="libusb-1.0.0.dylib" ;;
+            *) echo "::error::No libusb filename known for ${{ matrix.addonPlatform }}"; exit 1 ;;
+          esac
+          test -f "$DIR/$LIB" || { echo "::error::$LIB missing from $DIR — SDL was built without libusb support"; ls -la "$DIR"; exit 1; }
+          echo "$LIB present alongside the addon."
 
       - name: Build & Package
         shell: bash
