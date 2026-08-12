@@ -74,11 +74,20 @@ const extractZipWindows = (zipPath, destDir) => {
 // (belt and suspenders — tested to need both on Git-for-Windows' bundled GNU
 // tar) tell it the argument is always a local path.
 //
-// The flag goes to Windows only. It is GNU tar's, and macOS ships BSD tar,
-// which rejects it outright and fails the extraction. Nothing else needs it:
-// paths there are already forward-slashed and never look remote.
+// The flag is GNU tar's alone, so which tar is actually on PATH decides it,
+// not which OS this is. BSD tar rejects it outright and fails the extraction,
+// and it ships as `tar` on macOS AND on Windows since Windows 10, while Git
+// for Windows puts GNU tar there instead. Only GNU tar has the drive-letter
+// problem, so asking the binary what it is gets every combination right.
 const forSlash = (p) => p.replace(/\\/g, '/');
-const localFlag = process.platform === 'win32' ? ['--force-local'] : [];
+const tarIsGnu = () => {
+  try {
+    return /GNU tar/i.test(execFileSync('tar', ['--version'], { encoding: 'utf8' }));
+  } catch {
+    return false;
+  }
+};
+const localFlag = tarIsGnu() ? ['--force-local'] : [];
 
 const extractTarGz = (tarPath, destDir) => {
   mkdirSync(destDir, { recursive: true });

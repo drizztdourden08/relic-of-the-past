@@ -96,6 +96,10 @@ jobs:
   build:
     needs: prepare
     strategy:
+      # One platform failing must not cancel the others. They fail for their own
+      # reasons, and cancelling hides the next one behind the first, turning a
+      # single broken release into one round trip per platform.
+      fail-fast: false
       matrix:
         include:
           - os: windows-latest
