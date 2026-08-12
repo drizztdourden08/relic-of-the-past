@@ -1,12 +1,19 @@
 /* @layer renderer-components @kind hook */
 /**
- * useDragDrop — drag-over/drop handling and preset application.
+ * useDragDrop — drag-over/drop handling and "apply console defaults".
+ *
+ * A dropped device carries only its sdlType (plus vid/pid) now — there is no
+ * per-model preset any more. The keyboard is the one sentinel case (sdlType
+ * 'keyboard', see device-detector.ts) still resolved from its own hand-authored
+ * KEYBOARD_DEFAULT; every gamepad's defaults come from the family layer's
+ * consoleDefaults via buildConsoleDefaultMappings.
  */
 
 import { useState, useCallback } from 'react';
-import type { InputProfile, DetectedDevice } from '@shared/types/controls';
-import { findPresetById } from '@shared/input';
-import { getInputManager } from '../../../../../../../lib/input/input-manager';
+import type { InputProfile, DetectedDevice, DeviceFamily } from '@shared/types/controls';
+import { KEYBOARD_DEFAULT, buildConsoleDefaultMappings } from '@shared/input';
+import { buildDisplayContext, resolveBrandLogoKey } from '@shared/input/family';
+import type { SdlGamepadType } from '@shared/input/family';
 import { padHex } from './controls-settings.type';
 
 interface UseDragDropArgs {
@@ -17,10 +24,10 @@ interface UseDragDropArgs {
 
 const useDragDrop = ({ devices, activeProfile, updateActiveProfile }: UseDragDropArgs) => {
   const [dragOverBindings, setDragOverBindings] = useState(false);
-  const [confirmPreset, setConfirmPreset] = useState<{ presetId: string; deviceName: string; vid: string; pid: string } | null>(null);
+  const [confirmPreset, setConfirmPreset] = useState<{ sdlType: string; deviceName: string; vid: string; pid: string } | null>(null);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
-    if (e.dataTransfer.types.includes('application/x-preset-id')) {
+    if (e.dataTransfer.types.includes('application/x-sdl-type')) {
       e.preventDefault();
       e.dataTransfer.dropEffect = 'copy';
       setDragOverBindings(true);
@@ -35,54 +42,62 @@ const useDragDrop = ({ devices, activeProfile, updateActiveProfile }: UseDragDro
     e.preventDefault();
     setDragOverBindings(false);
 
-    const presetId = e.dataTransfer.getData('application/x-preset-id');
+    const sdlType = e.dataTransfer.getData('application/x-sdl-type');
     const deviceId = e.dataTransfer.getData('application/x-device-id');
+    const deviceName = e.dataTransfer.getData('application/x-device-name');
     const vid = e.dataTransfer.getData('application/x-vid');
     const pid = e.dataTransfer.getData('application/x-pid');
-    if (!presetId) return;
+    if (!sdlType) return;
 
+    // The dragged card carries its own resolved name (device-drag-data.ts) —
+    // only a legacy drag source without one falls back to the device list.
     const device = devices.find(d => d.id === deviceId);
     setConfirmPreset({
-      presetId,
-      deviceName: device?.displayName ?? 'Unknown Device',
+      sdlType,
+      deviceName: deviceName || device?.displayName || 'Unknown Device',
       vid: vid || device?.vendorId || '',
       pid: pid || device?.productId || '',
     });
   }, [devices]);
 
-  // ─── Apply preset ───
+  // ─── Apply console defaults ───
   const handleApplyPreset = useCallback(() => {
     if (!confirmPreset || !activeProfile) return;
 
-    const preset = findPresetById(confirmPreset.presetId);
-    if (!preset) {
-      setConfirmPreset(null);
-      return;
-    }
-
     const vid = confirmPreset.vid ? padHex(confirmPreset.vid) : '';
     const pid = confirmPreset.pid ? padHex(confirmPreset.pid) : '';
+    const isKeyboard = confirmPreset.sdlType === 'keyboard';
 
-    const mappingsWithSource = preset.defaultMappings.map(m => ({
+    const defaultMappings = isKeyboard
+      ? KEYBOARD_DEFAULT.defaultMappings
+      : buildConsoleDefaultMappings({ sdlType: confirmPreset.sdlType as SdlGamepadType, vendorId: vid, productId: pid });
+
+    const deviceFamily: DeviceFamily = isKeyboard
+      ? 'keyboard'
+      : (resolveBrandLogoKey(buildDisplayContext({ sdlType: confirmPreset.sdlType as SdlGamepadType })) || 'generic') as DeviceFamily;
+
+    // Icons are never stored on a freshly-applied binding — they resolve live
+    // from sourceVid/sourcePid + the binding's index (see useDisplayMappings.ts),
+    // the same as any other saved binding.
+    const mappingsWithSource = defaultMappings.map(m => ({
       ...m,
-      icon: m.binding.type === 'gamepad-axis' ? m.icon : null,
+      icon: null,
       sourceVid: m.binding.type !== 'keyboard' ? vid : null,
       sourcePid: m.binding.type !== 'keyboard' ? pid : null,
     }));
 
     const updatedProfile: InputProfile = {
       ...activeProfile,
-      name: preset.name,
-      deviceType: preset.family === 'keyboard' ? 'keyboard' : 'gamepad',
-      deviceFamily: preset.family,
+      name: confirmPreset.deviceName,
+      deviceType: isKeyboard ? 'keyboard' : 'gamepad',
+      deviceFamily,
       mappings: mappingsWithSource,
-      assignedDevice: preset.family !== 'keyboard' ? {
+      assignedDevice: isKeyboard ? null : {
         vendorId: vid,
         productId: pid,
         displayName: confirmPreset.deviceName,
-        deviceFamily: preset.family,
-        presetId: preset.id,
-      } : null,
+        deviceFamily,
+      },
       modifiedAt: Date.now(),
     };
 

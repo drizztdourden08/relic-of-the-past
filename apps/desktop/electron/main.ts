@@ -100,12 +100,11 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app-sprite', privileges: { standard: true, secure: true, supportFetchAPI: true } },
 ]);
 
-// Allow gamepad enumeration without requiring a button press first.
 // CalculateNativeWinOcclusion: keep rendering (rAF / game loop) alive when the
 // window is occluded — e.g. --no-focus launches sit behind other windows, and
 // Chromium would otherwise pause their frames and stall the headless game loop.
 // (Multiple --disable-features values must share ONE switch, comma-separated.)
-app.commandLine.appendSwitch('disable-features', 'RestrictGamepadAccess,CalculateNativeWinOcclusion');
+app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion');
 
 app.whenReady().then(async () => {
   // Register protocol handler

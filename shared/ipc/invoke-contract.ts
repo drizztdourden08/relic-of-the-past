@@ -29,6 +29,7 @@ import type { EntityKind } from '@shared/game/data';
 import type { UiViewsMap } from './ui-views-contract';
 import type { ReviewEntry, ReviewFile } from './review-contract';
 import type { DetectionContext, DraftRecommendation, PassResult, Recommendation } from './recommendation-contract';
+import type { ControllerInvokeContract } from './controller-contract';
 
 
 type Result = { success: boolean; error?: string };
@@ -36,7 +37,7 @@ type MsuResult = { success: boolean; fileCount?: number; error?: string };
 type TriggerCal = { base: number; max: number; deadzone: number };
 type ReviewMap = Record<string, { status: string; comment?: string }>;
 
-interface InvokeContract {
+interface InvokeContract extends ControllerInvokeContract {
   // App
   'app:getUserDataPath': () => Promise<string>;
 
@@ -163,13 +164,6 @@ interface InvokeContract {
   'stickCalibration:write': (store: Record<string, unknown>) => Promise<void>;
   'triggerCalibration:read': () => Promise<Record<string, TriggerCal>>;
   'triggerCalibration:write': (deviceKey: string, axisIndex: number, cal: TriggerCal) => Promise<void>;
-  'hid:enumerate': () => Promise<Array<{ vendorId: string; productId: string; product: string; manufacturer: string; path: string; serialNumber: string | null }>>;
-  'hid:get-open-keys': () => Promise<string[]>;
-  'hid:write': (deviceKey: string, data: number[]) => Promise<boolean>;
-  'hid:vibrate': (deviceKey: string, durationMs: number, intensity: number) => Promise<boolean>;
-  'hid:vibrate-pattern': (deviceKey: string, pattern: { durationMs: number; intensity: number }[], gapMs: number) => Promise<{ ok: boolean; error?: string }>;
-  /** Writes a calibration capture into userData/Data/debug — returns the full path written. */
-  'hid:write-debug-file': (name: string, data: unknown) => Promise<string>;
 
   // Sprites
   'sprites:extract': (romFile: string) => Promise<{ success: boolean; count?: number; error?: string }>;

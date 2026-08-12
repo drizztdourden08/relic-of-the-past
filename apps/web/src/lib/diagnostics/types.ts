@@ -50,11 +50,7 @@ interface DeviceEnvironment {
   languages: string[];
   timeZone: string;
   online: boolean;
-  /** One entry per connected gamepad, as the Gamepad API names it. Empty for
-   *  controllers read over raw HID (node-hid) instead — see hidDevices. */
-  gamepads: string[];
-  /** One entry per HID device node-hid is reading directly (most controllers on
-   *  this app's Windows/Linux path never reach the Gamepad API at all). */
+  /** One entry per device SDL3 is reading directly. */
   hidDevices: string[];
 }
 

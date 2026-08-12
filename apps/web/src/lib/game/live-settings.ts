@@ -15,7 +15,7 @@
 import type { GameSettings } from '@shared/types/settings';
 import { getModule } from './wasm-bridge';
 import { setMasterVolume } from './audio-volume';
-import { updateHapticBridgeSettings, updateHapticDevices } from '../input/haptic-bridge';
+import { updateHapticBridgeSettings, updateHapticsProfileEnabled } from '../input/haptic-bridge';
 import { DEFAULT_SETTINGS } from './settings';
 import { log } from '../log-bus';
 import { buildFeatureFlags, buildPpuFlags, buildFeatureWords } from './live-settings-flags';
@@ -105,7 +105,7 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
 
     // Haptic feedback settings (JS-only, no WASM needed)
     updateHapticBridgeSettings(settings.haptics ?? DEFAULT_SETTINGS.haptics);
-    updateHapticDevices(settings.hapticDevices);
+    updateHapticsProfileEnabled(settings.hapticsEnabled ?? DEFAULT_SETTINGS.hapticsEnabled);
 
     log.app(`Live settings pushed — features: 0x${features.toString(16)}, ppu: 0x${ppuFlags.toString(16)}`);
     return true;

@@ -29,6 +29,20 @@ interface ButtonMappingProps {
   onClearItem: (idx: number) => void;
   setAutoAdvanceWrapped: (v: boolean) => void;
   setInputPhaseActiveWrapped: (v: boolean) => void;
+  /** Overrides the hardcoded "4. Button & Axis Mapping" heading, for a host
+   *  reusing this grid at a different step number or for a different ask
+   *  (e.g. the diagnostics wizard's positional-capture step). */
+  stepTitle?: string;
+  /** Renders every item, including stick/trigger axes, instead of filtering
+   *  them out for the separate StickCards/TriggerCards UI byte-capture uses.
+   *  The positional-capture step has no such separate UI and asks about
+   *  sticks/triggers in this same one-by-one list. */
+  includeStickTriggerIds?: boolean;
+  /** Hides the "[1/2 positive]" / "[2/2 negative]" sub-step hint for axis
+   *  items. Byte-capture's axis capture is genuinely two-part (positive then
+   *  negative extreme); positional-capture asks about an axis in one shot,
+   *  so that hint would be misleading there. */
+  showAxisSubStep?: boolean;
 }
 
 const ButtonMapping = (props: ButtonMappingProps) => {
@@ -37,6 +51,8 @@ const ButtonMapping = (props: ButtonMappingProps) => {
     captureState, axisSubStep, instruction, prereqsDone,
     onStartButtons, onSkip, onGoBack, onClickItem, onClearItem,
     setAutoAdvanceWrapped, setInputPhaseActiveWrapped,
+    stepTitle = `4. Button & Axis Mapping (${buttonCapturedCount}/${buttonItems.length})`,
+    includeStickTriggerIds = false, showAxisSubStep = true,
   } = props;
 
   if (!prereqsDone) return null;
@@ -44,13 +60,13 @@ const ButtonMapping = (props: ButtonMappingProps) => {
   return (
     <Box className="hid-cal__step">
       <Box className="hid-cal__step-title">
-        4. Button & Axis Mapping — {buttonCapturedCount}/{buttonItems.length}
+        {stepTitle}
       </Box>
 
       {inputPhaseActive && (
         <Box className="hid-cal__instruction">
           {instruction}
-          {items[activeIndex]?.kind === 'axis' && captureState === 'waiting-press' && (
+          {showAxisSubStep && items[activeIndex]?.kind === 'axis' && captureState === 'waiting-press' && (
             <Text className="hid-cal__axis-sub">
               [{axisSubStep === 'pos' ? '1/2 positive' : '2/2 negative'}]
             </Text>
@@ -60,7 +76,7 @@ const ButtonMapping = (props: ButtonMappingProps) => {
 
       <Box className="hid-cal__input-grid">
         {items.map((item, i) => {
-          if (STICK_IDS.has(item.id) || TRIGGER_IDS.has(item.id)) return null;
+          if (!includeStickTriggerIds && (STICK_IDS.has(item.id) || TRIGGER_IDS.has(item.id))) return null;
           const isActive = i === activeIndex && inputPhaseActive;
           const icon = item.status === 'captured' ? '✓' : item.status === 'skipped' ? '⊘' : item.status === 'active' ? '►' : '·';
           const canClear = item.status === 'captured' || item.status === 'skipped';

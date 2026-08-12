@@ -4,6 +4,9 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.InputDevice;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.webkit.WebView;
 
@@ -17,13 +20,14 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.getcapacitor.BridgeActivity;
-import com.relicofthepast.app.controllerhid.ControllerHidPlugin;
+import com.relicofthepast.app.controllersdl3.ControllerSdl3Plugin;
+import com.relicofthepast.app.controllersdl3.Sdl3InputRouter;
 import com.relicofthepast.app.framerate.FrameRatePlugin;
 
 public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        registerPlugin(ControllerHidPlugin.class);
+        registerPlugin(ControllerSdl3Plugin.class);
         registerPlugin(FrameRatePlugin.class);
         super.onCreate(savedInstanceState);
 
@@ -91,6 +95,28 @@ public class MainActivity extends BridgeActivity {
                 edge = "right";
             }
         });
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        // Controller button presses arrive as key events with a joystick-class
+        // source; route those into the SDL3 gamepad backend before anything
+        // else sees them (a WebView OnKeyListener would otherwise consume a
+        // BACK/START-mapped code first). Everything else falls through to
+        // Capacitor's own handling unchanged.
+        if (Sdl3InputRouter.handleKeyEvent(event)) {
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    public boolean dispatchGenericMotionEvent(MotionEvent event) {
+        if ((event.getSource() & InputDevice.SOURCE_CLASS_JOYSTICK) != 0
+                && Sdl3InputRouter.handleGenericMotionEvent(event)) {
+            return true;
+        }
+        return super.dispatchGenericMotionEvent(event);
     }
 
     @Override

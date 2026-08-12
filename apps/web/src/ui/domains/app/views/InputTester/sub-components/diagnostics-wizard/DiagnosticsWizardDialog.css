@@ -1,0 +1,148 @@
+/* @layer renderer-components @kind style */
+.diagnostics-wizard {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  min-width: 46rem;
+  max-width: 92vw;
+  max-height: 85vh;
+  padding: var(--space-lg);
+}
+
+/* Header (title + step strip) and footer (actions) stay put; only the body scrolls. */
+.diagnostics-wizard .dialog__header,
+.diagnostics-wizard .dialog__actions {
+  flex-shrink: 0;
+}
+
+/* The title shares its row with a five-step strip, and the shared header style
+   ellipsises the title when space runs short, which cut it to a single letter.
+   Let the row wrap and keep the title at its natural width instead. */
+.diagnostics-wizard .dialog__header {
+  flex-wrap: wrap;
+  row-gap: var(--space-sm);
+}
+
+.diagnostics-wizard .window-header__title {
+  flex: 0 0 auto;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.diagnostics-wizard__body {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-md) 0;
+}
+
+/* Covers the step, rather than replacing it, so the choice stays visible
+   behind the read and the dialog does not jump size mid-transition. */
+.diagnostics-wizard__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-scrim-game);
+  backdrop-filter: blur(2px);
+}
+
+.diagnostics-wizard__overlay-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  text-align: center;
+}
+
+.diagnostics-wizard__overlay-label {
+  color: var(--c-text);
+}
+
+.diagnostics-wizard__overlay-hint {
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+}
+
+.diagnostics-wizard__hold-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+}
+
+.diagnostics-wizard__hold-status-text {
+  font-size: var(--text-sm);
+}
+
+.diagnostics-wizard__hold-status-text--done {
+  color: var(--c-green-bright);
+}
+
+.diagnostics-wizard__hold-status-text--error {
+  color: var(--c-danger);
+}
+
+.diagnostics-wizard__matched-mapping {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+  word-break: break-all;
+}
+
+.diagnostics-wizard__pos-warning {
+  color: var(--c-warning);
+}
+
+.diagnostics-wizard__pos-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.diagnostics-wizard__pos-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.diagnostics-wizard__pos-chip {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--c-border);
+  color: var(--c-text-dim);
+}
+
+.diagnostics-wizard__pos-chip--on {
+  border-color: var(--c-green-bright);
+  color: var(--c-green-bright);
+  background: var(--c-green-dim);
+}
+
+.diagnostics-wizard__summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+.diagnostics-wizard__summary-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.diagnostics-wizard__summary-empty {
+  color: var(--c-text-dim);
+  font-size: var(--text-sm);
+}

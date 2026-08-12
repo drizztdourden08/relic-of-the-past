@@ -1,3 +1,4 @@
+/* @layer root-config @kind types */
 interface ControllerReportPayload {
   detectedName: string;
   sdlMatch: string | null;
@@ -6,6 +7,8 @@ interface ControllerReportPayload {
   productId: string;
   hidReport: string;
   calibrationMap: string;
+  positionalCapture?: string;
+  diagnosticsReport?: string;
 }
 
 interface CreateIssueRequest {

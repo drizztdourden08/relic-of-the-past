@@ -12,12 +12,12 @@ const TITLE_ROW: CSSProperties = { display: 'flex', alignItems: 'center', gap: '
 
 interface DiagnosticsLogProps {
   events: EventEntry[];
-  webHidDiag: string[];
+  controllerDiag: string[];
   logRef: RefObject<HTMLDivElement | null>;
 }
 
 const DiagnosticsLog = (props: DiagnosticsLogProps) => {
-  const { events, webHidDiag, logRef } = props;
+  const { events, controllerDiag, logRef } = props;
 
   return (
     <Box className="input-cal__section">
@@ -28,8 +28,8 @@ const DiagnosticsLog = (props: DiagnosticsLogProps) => {
           size="sm"
           onClick={() => {
             const lines = [
-              ...events.map(ev => `[${new Date(ev.time).toLocaleTimeString()}] ${ev.type.toUpperCase()} \u2014 ${ev.id}`),
-              ...webHidDiag,
+              ...events.map(ev => `[${new Date(ev.time).toLocaleTimeString()}] ${ev.type.toUpperCase()} ${ev.id}`),
+              ...controllerDiag,
             ];
             navigator.clipboard.writeText(lines.join('\n'));
           }}
@@ -40,15 +40,15 @@ const DiagnosticsLog = (props: DiagnosticsLogProps) => {
       <Box className="input-cal__log" ref={logRef}>
         {events.map((ev, i) => (
           <Box key={`ev-${i}`} className={`input-cal__log-entry input-cal__log-entry--${ev.type}`}>
-            [{new Date(ev.time).toLocaleTimeString()}] {ev.type.toUpperCase()} {'\u2014'} {ev.id}
+            [{new Date(ev.time).toLocaleTimeString()}] {ev.type.toUpperCase()} {ev.id}
           </Box>
         ))}
-        {webHidDiag.map((entry, i) => (
+        {controllerDiag.map((entry, i) => (
           <Box key={`hid-${i}`} className="input-cal__log-entry">
             {entry}
           </Box>
         ))}
-        {events.length === 0 && webHidDiag.length === 0 && (
+        {events.length === 0 && controllerDiag.length === 0 && (
           <Box className="input-cal__log-entry">Waiting for controller activity...</Box>
         )}
       </Box>

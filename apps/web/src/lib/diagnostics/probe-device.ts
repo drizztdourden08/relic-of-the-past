@@ -1,12 +1,11 @@
 /* @layer renderer-lib @kind logic */
 /**
- * Machine-level facts reachable without a main process, plus the controllers the
- * Gamepad API can see. Gamepad ids carry the vendor/product pair, which is what a
- * controller-mapping report needs to be actionable.
+ * Machine-level facts reachable without a main process, plus the controllers
+ * SDL3 is reading directly. Device ids carry the vendor/product pair, which is
+ * what a controller-mapping report needs to be actionable.
  */
-import { webHidReader } from '@app/lib/input/hid-reader';
-import { findPresetByVidPid } from '@shared/input';
-import { DEVICE_DATABASE } from '@shared/input/data/devices';
+import { listControllerDevices } from '@app/lib/input/controller-devices-store';
+import { recallControllerName } from '@app/lib/input/controller-name-cache';
 import type { DeviceEnvironment } from './types';
 
 // Both are non-standard Chromium extensions with no lib.dom typings.
@@ -28,33 +27,36 @@ const readJsHeap = (): DeviceEnvironment['jsHeap'] => {
   };
 };
 
-const readGamepads = (): string[] => {
+/**
+ * SDL3 claims every controller directly now — the Gamepad API path has been
+ * removed, so a debug report only needs this list to be honest about what's
+ * actually connected. Reads the device snapshot (InputManager.hidDeviceCache)
+ * rather than the reported-input set: SDL only emits state on change, so a
+ * pad nobody has touched yet would otherwise be missing from a debug dump
+ * whose whole purpose is to list every attached device. Names come from the
+ * session's own controller:added cache (see controller-name-cache.ts) —
+ * SDL's own name for the device it opened, never a hand-authored database
+ * guess — falling back to the snapshot's own name/product fields.
+ */
+/** Asks the controller layer directly rather than reading the input manager's
+ *  cache. That cache only exists once the manager has started and completed a
+ *  refresh, so anything collecting diagnostics before or outside that saw an
+ *  empty list and reported no controllers on a machine that plainly had one. */
+const readHidDevices = async (): Promise<string[]> => {
   try {
-    return Array.from(navigator.getGamepads?.() ?? [])
-      .filter((pad): pad is Gamepad => pad !== null)
-      .map((pad) => `${pad.id} (${pad.buttons.length} buttons, ${pad.axes.length} axes, ${pad.mapping || 'no mapping'})`);
+    const entries = await listControllerDevices();
+    return entries
+      .filter((d) => d.status === 'ready')
+      .map((d) => {
+        const name = recallControllerName({ vendorId: d.vendorId, productId: d.productId });
+        return `${name ?? d.name ?? d.product ?? 'Unrecognized HID device'} (${d.deviceKey})`;
+      });
   } catch {
     return [];
   }
 };
 
-/** node-hid enumerates most controllers directly — the Gamepad API never sees them
- *  on this app's HID input path, so a debug report needs both lists to be honest
- *  about what's actually connected. */
-const readHidDevices = (): string[] => {
-  try {
-    return webHidReader.getConnectedDeviceKeys().map((key) => {
-      const [vendorId, productId] = key.split(':');
-      const preset = findPresetByVidPid(vendorId, productId);
-      const sdlName = DEVICE_DATABASE.find((e) => e.vidPid === `${vendorId}:${productId}`)?.name;
-      return `${preset?.name ?? sdlName ?? 'Unrecognized HID device'} (${key})`;
-    });
-  } catch {
-    return [];
-  }
-};
-
-const probeDevice = (): DeviceEnvironment => ({
+const probeDevice = async (): Promise<DeviceEnvironment> => ({
   logicalCores: navigator.hardwareConcurrency || null,
   deviceMemoryGb: (navigator as ChromiumNavigator).deviceMemory ?? null,
   jsHeap: readJsHeap(),
@@ -62,8 +64,7 @@ const probeDevice = (): DeviceEnvironment => ({
   languages: Array.from(navigator.languages ?? [navigator.language]).filter(Boolean),
   timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   online: navigator.onLine,
-  gamepads: readGamepads(),
-  hidDevices: readHidDevices(),
+  hidDevices: await readHidDevices(),
 });
 
 export { probeDevice };

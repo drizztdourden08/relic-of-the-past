@@ -4,17 +4,17 @@
  * Separated from useHidCalibration for file-size compliance.
  */
 import { useCallback } from 'react';
-import { DEVICE_PROFILES, findDeviceProfileByVidPid } from '@shared/input';
-import type { HidAxisMapping, HidButtonMapping, HidControllerMap, StickCandidate, StickSide, TriggerSide } from '../hid-calibration.type';
+import type { HidButtonMapping } from '../hid-calibration.type';
 import type { ActionDeps } from './action-deps';
 import { ANALOG_THRESHOLD_DELTA, STICK_IDS, TRIGGER_IDS } from '../hid-calibration.constants';
 import { findCounterBytes, hex, popcount } from '../hid-analysis';
-import { finalizeStickCalibration, resetStick, finalizeTriggerCalibration, resetTrigger } from '../stick-trigger-handlers';
-import { guessConnectionHint } from '../connection-hint';
+import { useCalibrationExport } from './useCalibrationExport';
+import { useStickActions } from './useStickActions';
+import { useTriggerActions } from './useTriggerActions';
 
 const useCalibrationActions = (d: ActionDeps) => {
   const handleProfileConfirm = useCallback(() => {
-    const p = DEVICE_PROFILES.find(pr => pr.id === d.selectedProfileId); if (!p) return;
+    const p = d.detectedProfile; if (!p) return;
     d.setProfile(p);
     const si = p.axes.filter(a => STICK_IDS.has(a.id)).map(a => ({ kind: 'axis' as const, id: a.id, label: a.label, category: a.category, status: 'pending' as const }));
     const ti = p.axes.filter(a => TRIGGER_IDS.has(a.id)).map(a => ({ kind: 'axis' as const, id: a.id, label: a.label, category: a.category, status: 'pending' as const }));
@@ -22,7 +22,7 @@ const useCalibrationActions = (d: ActionDeps) => {
     const oi = p.axes.filter(a => !STICK_IDS.has(a.id) && !TRIGGER_IDS.has(a.id)).map(a => ({ kind: 'axis' as const, id: a.id, label: a.label, category: a.category, status: 'pending' as const }));
     d.setItems([...si, ...ti, ...bi, ...oi]); d.setPhase('live');
     d.addLog(`Calibrating ${p.name} — ${si.length + ti.length + bi.length + oi.length} inputs`);
-  }, [d.selectedProfileId, d.addLog]);
+  }, [d.detectedProfile, d.addLog]);
 
   const handleGyroStart = useCallback(() => {
     const len = d.latestBytes.length || 64;
@@ -36,16 +36,20 @@ const useCalibrationActions = (d: ActionDeps) => {
     for (let i = 0; i < len; i++) { if (d.gyroMaxsRef.current[i] !== d.gyroMinsRef.current[i]) excl.add(i); }
     const counters = findCounterBytes(d.gyroBufferRef.current); for (const c of counters) excl.add(c);
     d.excludedRef.current = excl; d.setGyroExcluded(new Set(excl)); d.setGyroState('done');
+    // Remembered separately from excludedRef so a later stick capture can
+    // reconsider only what gyro itself flagged. See stick-gyro-reclaim.ts.
+    d.gyroExcludedBytesRef.current = new Set(excl);
     d.addLog(`✓ Gyro done: ${excl.size} bytes excluded (${counters.size} counters, ${excl.size - counters.size} gyro/accel)`);
     d.updateByteStatuses(len);
   }, [d.addLog, d.updateByteStatuses]);
 
   const handleGyroRedo = useCallback(() => {
     d.setGyroState('idle'); d.setGyroChangedBytes(new Set()); d.excludedRef.current = new Set(); d.setGyroExcluded(new Set());
+    d.gyroExcludedBytesRef.current = new Set();
     d.addLog('Gyro data cleared — ready to re-record.'); if (d.latestBytes.length > 0) d.updateByteStatuses(d.latestBytes.length);
   }, [d.addLog, d.latestBytes.length, d.updateByteStatuses]);
 
-  const handleGyroSkip = useCallback(() => { d.setGyroState('done'); d.addLog('Gyro profiling skipped.'); }, [d.addLog]);
+  const handleGyroSkip = useCallback(() => { d.setGyroState('done'); d.gyroExcludedBytesRef.current = new Set(); d.addLog('Gyro profiling skipped.'); }, [d.addLog]);
 
   const handleIdleCapture = useCallback(() => {
     if (d.latestBytes.length === 0) { d.addLog('⚠ No reports received yet'); return; }
@@ -54,93 +58,43 @@ const useCalibrationActions = (d: ActionDeps) => {
 
   const handleIdleRedo = useCallback(() => { d.baselineRef.current = new Uint8Array(0); d.setIdleState('idle'); d.addLog('Idle baseline cleared.'); }, [d.addLog]);
 
-  const finalizeStick = useCallback((c1: StickCandidate, c2: StickCandidate | null) => {
-    finalizeStickCalibration(c1, c2, { stickMinsRef: d.stickMinsRef, stickMaxsRef: d.stickMaxsRef, stickCounterBytesRef: d.stickCounterBytesRef, excludedRef: d.excludedRef, capturedStickBytesRef: d.capturedStickBytesRef, leftStickBytesRef: d.leftStickBytesRef, rightStickBytesRef: d.rightStickBytesRef, activeStickRef: d.activeStickRef }, d.gyroExcluded,
-      { addLog: d.addLog, updateByteStatuses: d.updateByteStatuses, setItems: d.setItems, setActiveStick: d.setActiveStick, setStickBusy: d.setStickBusy, setStickLiveInfo: d.setStickLiveInfo, setGyroExcluded: d.setGyroExcluded });
-  }, [d.addLog, d.updateByteStatuses, d.gyroExcluded]);
-  d.finalizeStickRef.current = finalizeStick;
+  const {
+    handleStartCircle, handleStopCircle, handleSkipStick, handleStickRedo, handleStickIdle,
+    handleStickPickMode, handleStickBytePicked, handleConfirmPick, handleCancelPick,
+  } = useStickActions(d);
 
-  const handleStartCircle = useCallback((side: StickSide) => {
-    d.activeStickRef.current = side; d.setActiveStick(side); const len = d.baselineRef.current.length;
-    d.stickMinsRef.current = new Uint8Array(len).fill(255); d.stickMaxsRef.current = new Uint8Array(len).fill(0);
-    d.stickCounterBytesRef.current = new Set(); d.stickSamplesRef.current = 0; d.stickStableCountRef.current = 0; d.stickLastTop2Ref.current = ''; d.stickBufferRef.current = [];
-    d.stickRecordingRef.current = true; d.setStickBusy(true); d.setStickLiveInfo('Rotate the stick slowly...');
-    d.addLog(`Recording ${side === 'left' ? 'LEFT' : 'RIGHT'} stick — rotate slowly in a full circle.`);
-  }, [d.addLog]);
+  const {
+    handleStartTrigger, handleStopTrigger, handleSkipTrigger, handleTriggerRedo,
+    handleTriggerPickMode, handleTriggerBytePicked, handleConfirmTriggerPick, handleCancelTriggerPick,
+  } = useTriggerActions(d);
 
-  const handleStopCircle = useCallback(() => { d.stickRecordingRef.current = false; d.setStickBusy(false); d.setActiveStick(null); d.activeStickRef.current = null; d.setStickLiveInfo(''); d.addLog('Stopped recording.'); }, [d.addLog]);
-  const handleSkipStick = useCallback((side: StickSide) => { const xId = side === 'left' ? 'leftX' : 'rightX'; const yId = side === 'left' ? 'leftY' : 'rightY'; d.addLog(`Skipped ${side === 'left' ? 'LEFT' : 'RIGHT'} stick`); d.setItems(prev => prev.map(it => (it.id === xId || it.id === yId) ? { ...it, status: 'skipped', result: 'skipped' } : it)); }, [d.addLog]);
-
-  const handleStickRedo = useCallback((side: StickSide) => {
-    resetStick(side, { excludedRef: d.excludedRef, capturedStickBytesRef: d.capturedStickBytesRef, leftStickBytesRef: d.leftStickBytesRef, rightStickBytesRef: d.rightStickBytesRef, activeStickRef: d.activeStickRef }, d.latestBytes.length,
-      { addLog: d.addLog, updateByteStatuses: d.updateByteStatuses, setItems: d.setItems, setActiveStick: d.setActiveStick, setStickBusy: d.setStickBusy, setGyroExcluded: d.setGyroExcluded, setStickPickMode: d.setStickPickMode, setStickPickedBytes: d.setStickPickedBytes, setStickLiveInfo: d.setStickLiveInfo, stickRecordingRef: d.stickRecordingRef });
-  }, [d.addLog, d.latestBytes.length, d.updateByteStatuses]);
-
-  const handleStickPickMode = useCallback((side: StickSide) => {
-    d.stickRecordingRef.current = false; d.setStickBusy(false); d.activeStickRef.current = side; d.setActiveStick(side); d.setStickPickMode(true); d.setStickPickedBytes([]);
-    d.addLog(`Manual pick mode: click 1 or 2 byte boxes for ${side === 'left' ? 'LEFT' : 'RIGHT'} stick, then Confirm.`);
-  }, [d.addLog]);
-
-  const handleStickBytePicked = useCallback((idx: number) => {
-    d.setStickPickedBytes((prev: number[]) => { if (prev.includes(idx)) { d.addLog(`byte[${idx}] deselected`); return prev.filter((b: number) => b !== idx); } if (prev.length >= 2) return prev; const next = [...prev, idx]; d.addLog(`byte[${idx}] selected as stick ${next.length === 1 ? 'X' : 'Y'}`); return next; });
-  }, [d.addLog]);
-
-  const handleConfirmPick = useCallback(() => {
-    if (d.stickPickedBytes.length === 0) return;
-    const bl = d.baselineRef.current; const mins = d.stickMinsRef.current; const maxs = d.stickMaxsRef.current; const bytes = d.latestBytes;
-    const makeCand = (i: number): StickCandidate => ({ idx: i, range: mins.length > i ? maxs[i] - mins[i] : 0, min: mins.length > i ? mins[i] : 0, max: maxs.length > i ? maxs[i] : 255, center: bl.length > i ? bl[i] : (bytes.length > i ? bytes[i] : 128) });
-    const c1 = makeCand(d.stickPickedBytes[0]); const c2 = d.stickPickedBytes.length >= 2 ? makeCand(d.stickPickedBytes[1]) : null;
-    d.setStickPickMode(false); d.setStickPickedBytes([]); d.finalizeStickRef.current(c1, c2);
-  }, [d.stickPickedBytes, d.latestBytes]);
-
-  const handleCancelPick = useCallback(() => { d.setStickPickMode(false); d.setStickPickedBytes([]); d.addLog('Pick mode cancelled.'); }, [d.addLog]);
-
-  const finalizeTrigger = useCallback((c: StickCandidate) => {
-    finalizeTriggerCalibration(c, { excludedRef: d.excludedRef, capturedTriggerBytesRef: d.capturedTriggerBytesRef, leftTriggerByteRef: d.leftTriggerByteRef, rightTriggerByteRef: d.rightTriggerByteRef, activeTriggerRef: d.activeTriggerRef, baselineRef: d.baselineRef },
-      { addLog: d.addLog, updateByteStatuses: d.updateByteStatuses, setItems: d.setItems, setActiveTrigger: d.setActiveTrigger, setTriggerBusy: d.setTriggerBusy, setTriggerLiveInfo: d.setTriggerLiveInfo, setGyroExcluded: d.setGyroExcluded });
-  }, [d.addLog, d.updateByteStatuses]);
-  d.finalizeTriggerRef.current = finalizeTrigger;
-
-  const handleStartTrigger = useCallback((side: TriggerSide) => {
-    d.activeTriggerRef.current = side; d.setActiveTrigger(side); const len = d.baselineRef.current.length;
-    d.triggerMinsRef.current = new Uint8Array(len).fill(255); d.triggerMaxsRef.current = new Uint8Array(len).fill(0);
-    d.triggerSamplesRef.current = 0; d.triggerStableCountRef.current = 0; d.triggerLastTopRef.current = ''; d.triggerBufferRef.current = [];
-    d.triggerRecordingRef.current = true; d.setTriggerBusy(true); d.setTriggerLiveInfo('Press the trigger fully and release...');
-    d.addLog(`Recording ${side === 'left' ? 'LEFT' : 'RIGHT'} trigger — press fully and release a few times.`);
-  }, [d.addLog]);
-
-  const handleStopTrigger = useCallback(() => { d.triggerRecordingRef.current = false; d.setTriggerBusy(false); d.setActiveTrigger(null); d.activeTriggerRef.current = null; d.setTriggerLiveInfo(''); d.addLog('Stopped trigger recording.'); }, [d.addLog]);
-  const handleSkipTrigger = useCallback((side: TriggerSide) => { const axisId = side === 'left' ? 'leftTrigger' : 'rightTrigger'; d.addLog(`Skipped ${side === 'left' ? 'LEFT' : 'RIGHT'} trigger`); d.setItems(prev => prev.map(it => it.id === axisId ? { ...it, status: 'skipped', result: 'skipped' } : it)); }, [d.addLog]);
-
-  const handleTriggerRedo = useCallback((side: TriggerSide) => {
-    resetTrigger(side, { excludedRef: d.excludedRef, capturedTriggerBytesRef: d.capturedTriggerBytesRef, leftTriggerByteRef: d.leftTriggerByteRef, rightTriggerByteRef: d.rightTriggerByteRef, activeTriggerRef: d.activeTriggerRef }, d.latestBytes.length,
-      { addLog: d.addLog, updateByteStatuses: d.updateByteStatuses, setItems: d.setItems, setActiveTrigger: d.setActiveTrigger, setTriggerBusy: d.setTriggerBusy, setGyroExcluded: d.setGyroExcluded, setTriggerPickMode: d.setTriggerPickMode, setTriggerPickedByte: d.setTriggerPickedByte, setTriggerLiveInfo: d.setTriggerLiveInfo, triggerRecordingRef: d.triggerRecordingRef });
-  }, [d.addLog, d.latestBytes.length, d.updateByteStatuses]);
-
-  const handleTriggerPickMode = useCallback((side: TriggerSide) => {
-    d.triggerRecordingRef.current = false; d.setTriggerBusy(false); d.activeTriggerRef.current = side; d.setActiveTrigger(side); d.setTriggerPickMode(true); d.setTriggerPickedByte(null);
-    d.addLog(`Manual pick mode: click 1 byte box for ${side === 'left' ? 'LEFT' : 'RIGHT'} trigger, then Confirm.`);
-  }, [d.addLog]);
-
-  const handleTriggerBytePicked = useCallback((idx: number) => { d.setTriggerPickedByte((prev: number | null) => { if (prev === idx) { d.addLog(`byte[${idx}] deselected`); return null; } d.addLog(`byte[${idx}] selected as trigger`); return idx; }); }, [d.addLog]);
-
-  const handleConfirmTriggerPick = useCallback(() => {
-    if (d.triggerPickedByte === null) return;
-    const bl = d.baselineRef.current; const mins = d.triggerMinsRef.current; const maxs = d.triggerMaxsRef.current; const bytes = d.latestBytes; const i = d.triggerPickedByte;
-    const c: StickCandidate = { idx: i, range: mins.length > i ? maxs[i] - mins[i] : 0, min: mins.length > i ? mins[i] : 0, max: maxs.length > i ? maxs[i] : 255, center: bl.length > i ? bl[i] : (bytes.length > i ? bytes[i] : 0) };
-    d.setTriggerPickMode(false); d.setTriggerPickedByte(null); d.finalizeTriggerRef.current(c);
-  }, [d.triggerPickedByte, d.latestBytes]);
-
-  const handleCancelTriggerPick = useCallback(() => { d.setTriggerPickMode(false); d.setTriggerPickedByte(null); d.setActiveTrigger(null); d.activeTriggerRef.current = null; d.addLog('Trigger pick mode cancelled.'); }, [d.addLog]);
+  /**
+   * Button detection is nothing but a comparison against the resting report:
+   * findButtonBits walks min(baseline.length, frame.length), so with no
+   * baseline it compares zero bytes and every press is discarded in silence.
+   * Sticks and triggers do not need one, which is why capture could look
+   * half-working. Captured here on demand so starting a capture can never be
+   * the thing that quietly does nothing.
+   */
+  const ensureBaseline = useCallback((): boolean => {
+    if (d.baselineRef.current.length > 0) return true;
+    if (d.latestBytes.length === 0) { d.addLog('⚠ No reports received yet — press nothing and try again.'); return false; }
+    d.baselineRef.current = new Uint8Array(d.latestBytes);
+    d.setIdleState('done');
+    d.addLog(`✓ Idle baseline captured automatically: ${d.latestBytes.length} bytes`);
+    return true;
+  }, [d.latestBytes, d.addLog]);
 
   const handleStartButtons = useCallback(() => {
+    if (!ensureBaseline()) return;
     const curItems = d.itemsRef.current; let firstIdx = -1;
     for (let i = 0; i < curItems.length; i++) { if (curItems[i].status !== 'captured' && curItems[i].status !== 'skipped' && !STICK_IDS.has(curItems[i].id) && !TRIGGER_IDS.has(curItems[i].id)) { firstIdx = i; break; } }
     if (firstIdx < 0) { d.addLog('All inputs already mapped!'); return; }
     d.setActiveIndex(firstIdx); d.setCaptureState('waiting-press'); d.setAxisSubStep('pos'); d.setAutoAdvanceWrapped(true); d.setInputPhaseActiveWrapped(true);
+    d.awaitingButtonRestRef.current = true;
     d.setItems(prev => prev.map((it, i) => i === firstIdx ? { ...it, status: 'active' } : it));
-    d.addLog('Auto-advance started — press each button when prompted.');
-  }, [d.addLog]);
+    d.addLog('Auto-advance started. Press each input once when prompted.');
+  }, [d.addLog, ensureBaseline]);
 
   const handleClearItem = useCallback((idx: number) => {
     const item = d.itemsRef.current[idx]; if (!item) return;
@@ -172,76 +126,54 @@ const useCalibrationActions = (d: ActionDeps) => {
     while (prevIdx >= 0 && (STICK_IDS.has(d.itemsRef.current[prevIdx]?.id) || TRIGGER_IDS.has(d.itemsRef.current[prevIdx]?.id))) prevIdx--;
     if (prevIdx < 0) return;
     d.setItems(prev => prev.map((it, i) => { if (i === d.activeIdxRef.current && it.status !== 'captured') return { ...it, status: 'pending' }; if (i === prevIdx) return { ...it, status: 'active', result: undefined, mapping: undefined, axisMapping: undefined }; return it; }));
-    d.setActiveIndex(prevIdx); d.setCaptureState('waiting-press'); d.setAxisSubStep('pos'); d.releaseCountRef.current = 0; d.confirmCountRef.current = 0; d.detectedBtnRef.current = null;
+    d.setActiveIndex(prevIdx); d.setCaptureState('waiting-press'); d.setAxisSubStep('pos'); d.releaseCountRef.current = 0; d.confirmCountRef.current = 0; d.detectedBtnRef.current = null; d.awaitingButtonRestRef.current = true;
     d.addLog(`← Back to: ${d.itemsRef.current[prevIdx]?.label}`);
   }, [d.addLog]);
 
   const handleClickItem = useCallback((idx: number) => {
     const item = d.itemsRef.current[idx]; if (!item || STICK_IDS.has(item.id) || TRIGGER_IDS.has(item.id)) return;
+    if (!ensureBaseline()) return;
     if (d.advanceTimerRef.current) { clearTimeout(d.advanceTimerRef.current); d.advanceTimerRef.current = null; }
     d.setItems(prev => prev.map((it, i) => { if (i === d.activeIdxRef.current && it.status === 'active') return { ...it, status: 'pending' }; if (i === idx && it.status !== 'captured') return { ...it, status: 'active' }; return it; }));
-    d.setActiveIndex(idx); d.setCaptureState('waiting-press'); d.setAxisSubStep('pos'); d.releaseCountRef.current = 0; d.confirmCountRef.current = 0; d.detectedBtnRef.current = null;
+    d.setActiveIndex(idx); d.setCaptureState('waiting-press'); d.setAxisSubStep('pos'); d.releaseCountRef.current = 0; d.confirmCountRef.current = 0; d.detectedBtnRef.current = null; d.awaitingButtonRestRef.current = true;
     if (!d.inputPhaseActiveRef.current) { d.setAutoAdvanceWrapped(false); d.setInputPhaseActiveWrapped(true); }
     d.addLog(`→ ${item.label}`);
-  }, [d.addLog]);
+  }, [d.addLog, ensureBaseline]);
 
+  // Two-state toggle, regardless of what the byte was already classified as:
+  // the first click excludes it (clearing any stick/trigger/button
+  // classification so the exclusion actually shows), the next click returns
+  // it to unregistered. Never cycles into a classification by clicking.
   const handleByteClick = useCallback((idx: number) => {
     if (d.stickPickMode) { handleStickBytePicked(idx); return; }
     if (d.triggerPickMode) { handleTriggerBytePicked(idx); return; }
     const activeItem = d.itemsRef.current[d.activeIdxRef.current];
     if (activeItem && activeItem.status === 'active' && d.inputPhaseActiveRef.current) { handleManualByteAssign(idx); return; }
+
+    const currentStatus = d.byteStatusesRef.current[idx] ?? 'unknown';
     const excl = new Set(d.excludedRef.current);
-    if (excl.has(idx)) { excl.delete(idx); d.addLog(`byte[${idx}] manually included`); } else { excl.add(idx); d.addLog(`byte[${idx}] manually excluded`); }
+    if (currentStatus === 'excluded') {
+      excl.delete(idx);
+      d.addLog(`byte[${idx}] restored to unregistered`);
+    } else {
+      d.capturedStickBytesRef.current.delete(idx);
+      d.capturedTriggerBytesRef.current.delete(idx);
+      d.setItems(prev => prev.map(it => (it.mapping?.byteIndex === idx && it.status === 'captured')
+        ? { ...it, status: 'pending', result: undefined, mapping: undefined, axisMapping: undefined }
+        : it));
+      excl.add(idx);
+      d.addLog(`byte[${idx}] excluded`);
+    }
     d.excludedRef.current = excl; d.setGyroExcluded(new Set(excl));
     if (d.latestBytes.length > 0) d.updateByteStatuses(d.latestBytes.length);
-  }, [d.addLog, d.latestBytes.length, d.updateByteStatuses, d.stickPickMode, handleStickBytePicked, d.triggerPickMode, handleTriggerBytePicked, handleManualByteAssign]);
+  }, [d.addLog, d.latestBytes.length, d.updateByteStatuses, d.stickPickMode, handleStickBytePicked, d.triggerPickMode, handleTriggerBytePicked, handleManualByteAssign, d.setItems]);
 
-  const buildCalibrationMap = useCallback((): HidControllerMap => {
-    const buttons: Record<string, HidButtonMapping> = {}; const axes: Record<string, HidAxisMapping> = {};
-    for (const item of d.itemsRef.current) { if (item.kind === 'button' && item.mapping) buttons[item.id] = item.mapping; if (item.kind === 'axis' && item.axisMapping) axes[item.id] = item.axisMapping; }
-    const raw = d.rawInfoRef.current;
-    return {
-      name: d.profile?.name ?? 'Unknown', profileId: d.profile?.id ?? 'generic',
-      vendorId: d.deviceInfoRef.current.vendorId, productId: d.deviceInfoRef.current.productId,
-      reportId: d.deviceInfoRef.current.reportId, reportLength: d.deviceInfoRef.current.reportLength,
-      buttons, axes, excludedBytes: [...d.excludedRef.current].sort((a, b) => a - b),
-      ...(Object.keys(d.idleResults).length > 0 && { idleData: d.idleResults }),
-      createdAt: Date.now(),
-      devicePath: raw.path, connectionHint: guessConnectionHint(raw.path),
-      rawManufacturer: raw.manufacturer, rawProduct: raw.product, serialNumber: raw.serialNumber,
-      platform: d.platform, appVersion: d.appVersion,
-    };
-  }, [d.profile, d.idleResults, d.rawInfoRef, d.platform, d.appVersion]);
-
-  const handleCopyJson = useCallback(async (): Promise<boolean> => {
-    try {
-      await navigator.clipboard.writeText(JSON.stringify(buildCalibrationMap(), null, 2));
-      d.addLog('✓ Copied calibration JSON to clipboard.');
-      return true;
-    } catch (err) {
-      d.addLog(`⚠ Failed to copy JSON: ${err instanceof Error ? err.message : String(err)}`);
-      return false;
-    }
-  }, [buildCalibrationMap, d.addLog]);
-
-  const handleFinish = useCallback(() => { d.onComplete(buildCalibrationMap()); }, [buildCalibrationMap, d.onComplete]);
-
-  const handleSaveDebugFile = useCallback(async (): Promise<boolean> => {
-    const map = buildCalibrationMap();
-    try {
-      const filePath = await window.api.writeHidDebugFile(map.name || map.profileId, map);
-      d.addLog(`✓ Saved calibration to ${filePath}`);
-      return true;
-    } catch (err) {
-      d.addLog(`⚠ Failed to save debug file: ${err instanceof Error ? err.message : String(err)}`);
-      return false;
-    }
-  }, [buildCalibrationMap, d.addLog]);
+  const { handleCopyJson, handleFinish, handleSaveDebugFile } = useCalibrationExport(d);
 
   return {
     handleProfileConfirm, handleGyroStart, handleGyroStop, handleGyroRedo, handleGyroSkip,
     handleIdleCapture, handleIdleRedo,
-    handleStartCircle, handleStopCircle, handleSkipStick, handleStickRedo, handleStickPickMode, handleStickBytePicked, handleConfirmPick, handleCancelPick,
+    handleStartCircle, handleStopCircle, handleSkipStick, handleStickRedo, handleStickIdle, handleStickPickMode, handleStickBytePicked, handleConfirmPick, handleCancelPick,
     handleStartTrigger, handleStopTrigger, handleSkipTrigger, handleTriggerRedo, handleTriggerPickMode, handleTriggerBytePicked, handleConfirmTriggerPick, handleCancelTriggerPick,
     handleStartButtons, handleClearItem, handleManualByteAssign, handleSkip, handleGoBack, handleClickItem,
     handleByteClick, handleCopyJson, handleFinish, handleSaveDebugFile,

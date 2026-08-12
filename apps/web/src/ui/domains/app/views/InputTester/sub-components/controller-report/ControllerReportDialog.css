@@ -2,14 +2,15 @@
 .controller-report {
   display: flex;
   flex-direction: column;
-  width: 40rem;
+  width: fit-content;
+  min-width: 40rem;
   max-width: 92vw;
   max-height: 85vh;
   padding: var(--space-lg);
 }
 
 .controller-report--wide {
-  width: 60rem;
+  min-width: 60rem;
 }
 
 /* Header (title + step strip) and footer (actions) stay put; only the body scrolls. */
@@ -30,6 +31,7 @@
 
 .controller-report__steps {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-md);
 }
 

@@ -21,9 +21,7 @@ interface PlatformInfo {
 
 interface Capabilities {
   windowChrome: boolean; // custom titlebar, min/max/close
-  nativeHid: boolean; // node-hid raw HID + USB init
-  webHid: boolean; // navigator.hid fallback (Linux/Android route)
-  gamepadApi: boolean; // navigator.getGamepads
+  nativeHid: boolean; // raw HID enumerate/read/write (Capacitor's Android USB-OTG plugin only — desktop reads controllers through SDL3's already-decoded state instead)
   touchControls: boolean; // needs an on-screen virtual gamepad
   customProtocol: boolean; // app-sprite:// style asset serving
   selfUpdate: boolean; // electron-updater present

@@ -18,6 +18,12 @@ const tool = (sub, name) => (sdk ? join(sdk, sub, name + ext) : name + ext);
 const adb = tool('platform-tools', 'adb');
 const emulatorBin = tool('emulator', 'emulator');
 const APP_ID = 'com.relicofthepast.app';
+// The debug variant installs under its own id (app/build.gradle sets
+// applicationIdSuffix), so it can sit beside an installed release build
+// instead of replacing it. Everything this script drives is that debug
+// variant, so force-stop and launch have to name the suffixed id or they
+// address an app that may not be installed at all.
+const DEBUG_APP_ID = `${APP_ID}.debug`;
 
 const onlineDevices = () =>
   capture(adb, ['devices'])
@@ -96,8 +102,8 @@ const deployCapacitor = (serial) => {
   run(adb, ['-s', serial, 'install', '-r', apk]);
   // Force-stop first so a still-running instance reloads the freshly-installed web
   // bundle instead of keeping the old one in its WebView.
-  run(adb, ['-s', serial, 'shell', 'am', 'force-stop', APP_ID], { stdio: 'ignore' });
-  run(adb, ['-s', serial, 'shell', 'monkey', '-p', APP_ID, '-c', 'android.intent.category.LAUNCHER', '1'], {
+  run(adb, ['-s', serial, 'shell', 'am', 'force-stop', DEBUG_APP_ID], { stdio: 'ignore' });
+  run(adb, ['-s', serial, 'shell', 'monkey', '-p', DEBUG_APP_ID, '-c', 'android.intent.category.LAUNCHER', '1'], {
     stdio: 'ignore',
   });
   log(`Installed and launched on ${serial}.`);

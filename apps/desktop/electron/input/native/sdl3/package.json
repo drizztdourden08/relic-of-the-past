@@ -1,0 +1,8 @@
+{
+  "name": "sdl3-input",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pinned third-party binary versions for the native controller-input addon. Read by scripts/build/fetch-sdl3.mjs and scripts/ensure-sdl3.mjs — bump these fields to change the pinned version, never hardcode a version in a script. \"version\" is the addon's own build version: it names the prebuilt package attached to the app's own GitHub Releases (sdl3-input-<version>-<platform>-<arch>.tar.gz) — bump it when the addon's C++ changes in a way that needs a new build.",
+  "sdl3": "3.4.14",
+  "libusb": "1.0.30"
+}

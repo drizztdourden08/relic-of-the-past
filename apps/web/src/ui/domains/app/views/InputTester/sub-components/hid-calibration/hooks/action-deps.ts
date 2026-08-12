@@ -2,8 +2,11 @@
 /** Dependency surface for useCalibrationActions (state, refs, and callbacks). */
 import type React from 'react';
 import type { DeviceProfile } from '@shared/input';
+import type { DeviceEntry } from '@shared/ipc';
+import type { IdleResult, IdleSampler } from '../stick-center';
 import type {
   AxisSubStep,
+  ByteStatus,
   CaptureState,
   GyroState,
   HidButtonMapping,
@@ -27,8 +30,17 @@ interface ActionDeps {
   triggerPickMode: boolean;
   triggerPickedByte: number | null;
   selectedProfileId: string;
+  /** The resolved DeviceProfile for selectedProfileId, built live from SDL's
+   *  own capability report (or a synthetic one for a manual family
+   *  override) — see useDeviceAutoDetect.ts. */
+  detectedProfile: DeviceProfile | null;
   profile: DeviceProfile | null;
   idleResults: Record<string, IdleRecordResult>;
+  recordIdleResult: (label: string, result: IdleRecordResult) => void;
+  /** The entry this run's layout was read from, when a host read one. Carries
+   *  the guid and SDL's capability arrays a report needs. */
+  capturedEntry?: DeviceEntry | null;
+  sdlVersion: string | null;
   // Refs
   baselineRef: React.MutableRefObject<Uint8Array>;
   excludedRef: React.MutableRefObject<Set<number>>;
@@ -60,7 +72,10 @@ interface ActionDeps {
   gyroBufferRef: React.MutableRefObject<Uint8Array[]>;
   gyroRecordingRef: React.MutableRefObject<boolean>;
   finalizeStickRef: React.MutableRefObject<(c1: StickCandidate, c2: StickCandidate | null) => void>;
+  stickIdleRef: React.MutableRefObject<IdleSampler | null>;
+  applyIdleRef: React.MutableRefObject<(result: IdleResult) => void>;
   finalizeTriggerRef: React.MutableRefObject<(c: StickCandidate) => void>;
+  finalizeDigitalTriggerRef: React.MutableRefObject<(mapping: HidButtonMapping) => void>;
   activeIdxRef: React.MutableRefObject<number>;
   advanceTimerRef: React.MutableRefObject<ReturnType<typeof setTimeout> | null>;
   itemsRef: React.MutableRefObject<InputItem[]>;
@@ -68,6 +83,19 @@ interface ActionDeps {
   confirmCountRef: React.MutableRefObject<number>;
   detectedBtnRef: React.MutableRefObject<HidButtonMapping | null>;
   inputPhaseActiveRef: React.MutableRefObject<boolean>;
+  /** The status the grid last rendered for each byte, read (never written)
+   *  by handleByteClick so the exclude/unregister toggle acts on what the
+   *  user actually sees, not just the raw exclusion set. */
+  byteStatusesRef: React.MutableRefObject<ByteStatus[]>;
+  /** Exactly which bytes the gyro step excluded, separate from excludedRef.
+   *  See report-processing.ts / stick-gyro-reclaim.ts for how a stick
+   *  capture reconsiders this pool when it finds nothing sensible on its own. */
+  gyroExcludedBytesRef: React.MutableRefObject<Set<number>>;
+  stickCaptureStartedAtRef: React.MutableRefObject<number>;
+  stickReclaimAttemptedRef: React.MutableRefObject<boolean>;
+  /** Settle gate for button capture. See button-detection.ts. Set whenever a
+   *  button item becomes active. */
+  awaitingButtonRestRef: React.MutableRefObject<boolean>;
   deviceInfoRef: React.MutableRefObject<{ vendorId: number; productId: number; reportId: number; reportLength: number }>;
   rawInfoRef: React.MutableRefObject<RawHidInfo>;
   // Environment (for a complete, self-describing capture)

@@ -2,8 +2,21 @@
 /**
  * Helper utilities for the HID Calibration Wizard rendering and state.
  */
+import type { MutableRefObject } from 'react';
 import type { AxisSubStep, ByteStatus, CaptureState, GyroState, InputItem } from './hid-calibration.type';
 import { AXIS_LABELS } from './hid-calibration.constants';
+
+// ── Device Identity ─────────────────────────────────────────────────────────
+
+/** Parses a "vid:pid" key (hex) into deviceInfoRef's numeric fields. A no-op
+ *  when `key` is undefined, so a caller can pass an optional fallback without
+ *  its own guard. */
+const applyVidPid = (deviceInfoRef: MutableRefObject<{ vendorId: number; productId: number }>, key: string | undefined): void => {
+  if (!key) return;
+  const [v, p] = key.split(':');
+  deviceInfoRef.current.vendorId = parseInt(v, 16);
+  deviceInfoRef.current.productId = parseInt(p, 16);
+};
 
 // ── Byte Status Computation ─────────────────────────────────────────────────
 
@@ -64,5 +77,5 @@ const getByteColor = (idx: number, byteStatuses: ByteStatus[], gyroState: GyroSt
   }
 };
 
-export { computeByteStatuses, getInstructionText, getByteColor };
+export { applyVidPid, computeByteStatuses, getInstructionText, getByteColor };
 export type { ByteColorResult };

@@ -36,5 +36,5 @@ const allowedDevices = (profile: InputProfile | null): AllowedDevices => {
   return { keyboard, gamepadKeys };
 };
 
-export { allowedDevices };
+export { allowedDevices, padHex };
 export type { AllowedDevices };

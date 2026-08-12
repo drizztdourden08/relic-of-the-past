@@ -13,12 +13,10 @@ const audioSection = (audio: AudioDiagnostics | null): DebugSection => section('
   audio && `Latency: base ${ms(audio.baseLatencyMs)} · output ${ms(audio.outputLatencyMs)}`,
 ]);
 
-const inputSection = ({ gamepads, hidDevices, maxTouchPoints }: DeviceEnvironment): DebugSection => section('Input', [
+const inputSection = ({ hidDevices, maxTouchPoints }: DeviceEnvironment): DebugSection => section('Input', [
   'Keyboard: always available',
   `HID controllers (read directly, most controllers on this app): ${hidDevices.length}`,
   ...hidDevices.map((dev, index) => `   ${index + 1}. ${dev}`),
-  `Gamepads visible to the browser's Gamepad API: ${gamepads.length}`,
-  ...gamepads.map((pad, index) => `   ${index + 1}. ${pad}`),
   `Max touch points: ${maxTouchPoints}`,
 ]);
 

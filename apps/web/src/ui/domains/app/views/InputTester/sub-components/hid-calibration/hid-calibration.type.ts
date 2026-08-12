@@ -18,6 +18,10 @@ interface HidAxisMapping {
   min: number;
   max: number;
   inverted: boolean;
+  /** Present once the axis has been read at rest. `drift` is the widest
+   *  excursion seen from centre while untouched, which is the floor any
+   *  deadzone has to clear. Absent means rest was never measured. */
+  idle?: { drift: number; min: number; max: number; uniqueCount: number; frames: number };
 }
 
 interface IdleByteAnalysis {
@@ -67,6 +71,19 @@ interface HidControllerMap {
   /** App version that produced this capture, so old/new captures aren't confused
    *  if the wizard's own detection heuristics change later. */
   appVersion: string;
+  /** SDL's joystick GUID: what a gamecontrollerdb line is keyed by, so a report
+   *  without it cannot be turned into one. */
+  guid: string | null;
+  /** SDL's own mapping line for that GUID, when it already has one. */
+  sdlMapping: string | null;
+  /** SDL's gamepad type for this device (its family, not a model name). */
+  sdlType: string | null;
+  /** What SDL says the device has, by positional index, so a reader can compare
+   *  SDL's own view against what byte capture actually found. */
+  sdlHasButton: boolean[] | null;
+  sdlHasAxis: boolean[] | null;
+  /** SDL version the capture ran against; detection behaviour is tied to it. */
+  sdlVersion: string | null;
 }
 
 type Phase = 'select-profile' | 'live';
@@ -77,6 +94,10 @@ type StickSide = 'left' | 'right';
 type TriggerSide = 'left' | 'right';
 type GyroState = 'idle' | 'recording' | 'done';
 type IdleState = 'idle' | 'done';
+/** A trigger reports either a swept range or a single bit; 'unknown' means
+ *  the recording has not yet shown which. See trigger-classify.ts. */
+type TriggerKind = 'analog' | 'digital' | 'unknown';
+
 type ByteStatus = 'unknown' | 'excluded' | 'counter' | 'stick' | 'trigger' | 'button' | 'idle';
 
 interface InputItem {
@@ -110,6 +131,7 @@ export type {
   AxisSubStep,
   ButtonDiff,
   ByteStatus,
+  TriggerKind,
   CaptureState,
   ConnectionHint,
   GyroState,

@@ -4,7 +4,7 @@ interface ControllerReportPayload {
   detectedName: string;
   /** Name of the closest SDL_GameControllerDB entry for this VID:PID, or null if none exists. */
   sdlMatch: string | null;
-  /** Resolved input path: 'hid' | 'xinput' | 'webapi', or 'unknown' if nothing matched. */
+  /** Resolved input path: 'hid' | 'webapi', or 'unknown' if nothing matched. */
   inputApi: string;
   vendorId: string;
   productId: string;
@@ -12,6 +12,12 @@ interface ControllerReportPayload {
   hidReport: string;
   /** The HidControllerMap JSON produced by the wizard step, preformatted text. */
   calibrationMap: string;
+  /** One record per control asked for during positional capture: the label the
+   *  user was shown against the position SDL actually reported. Preformatted
+   *  JSON, absent when that step was skipped. */
+  positionalCapture?: string;
+  /** Device identity and capability report as SDL saw it, preformatted JSON. */
+  diagnosticsReport?: string;
 }
 
 interface CreateIssueRequest {

@@ -33,7 +33,7 @@ const useCancelOnOtherInput = (open: boolean, close: () => void) => {
     }
 
     const prevButtons = new Map<string, boolean[]>();
-    const unsub = inputMgr.onInputState((hidStates, gamepads) => {
+    const unsub = inputMgr.onInputState((hidStates) => {
       for (const [key, state] of hidStates) {
         const prev = prevButtons.get(key) ?? [];
         for (let i = 0; i < state.buttons.length; i++) {
@@ -43,17 +43,6 @@ const useCancelOnOtherInput = (open: boolean, close: () => void) => {
           }
         }
         prevButtons.set(key, [...state.buttons]);
-      }
-      for (const gp of gamepads) {
-        const gpKey = `gp-${gp.index}`;
-        const prev = prevButtons.get(gpKey) ?? [];
-        for (let i = 0; i < gp.buttons.length; i++) {
-          if (gp.buttons[i].pressed && !prev[i] && !slotButtonIndices.has(i)) {
-            close();
-            return;
-          }
-        }
-        prevButtons.set(gpKey, gp.buttons.map(b => b.pressed));
       }
     });
 

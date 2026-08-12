@@ -1,7 +1,6 @@
 /* @layer renderer-lib @kind types */
 import type { DetectedDevice, InputProfile } from '@shared/types/controls';
-import type { WebHidInputState } from './hid-reader';
-import type { GamepadSnapshot } from './polling-engine';
+import type { ControllerInputState } from './controller-input-store';
 
 type DeviceChangeListener = (devices: DetectedDevice[]) => void;
 
@@ -10,8 +9,7 @@ type ActiveProfileListener = (profile: InputProfile) => void;
 
 /** Per-frame state listener — for InputCalibration, InputTester visualization */
 type InputStateListener = (
-  hidStates: Map<string, WebHidInputState>,
-  gamepads: GamepadSnapshot[],
+  hidStates: Map<string, ControllerInputState>,
   pressedKeys: Set<string>,
 ) => void;
 

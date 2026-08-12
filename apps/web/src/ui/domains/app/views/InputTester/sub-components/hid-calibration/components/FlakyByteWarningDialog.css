@@ -1,0 +1,43 @@
+/* @layer renderer-components @kind style */
+
+.flaky-byte-dialog__desc {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+  margin: 0 0 var(--space-md) 0;
+}
+
+.flaky-byte-dialog__header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+}
+
+.flaky-byte-dialog__count {
+  font-size: var(--text-xs);
+  color: var(--c-text-dim);
+}
+
+.flaky-byte-dialog__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.flaky-byte-dialog__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-raised);
+}
+
+.flaky-byte-dialog__range {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-warning-base);
+}

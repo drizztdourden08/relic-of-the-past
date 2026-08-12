@@ -19,12 +19,15 @@ interface BindingRowProps {
   middleIconUrl?: string | null;
   binding: InputBinding;
   bindingIcon?: ButtonIcon | null;
+  /** Which controller this binding came from, shown only when the profile
+   *  mixes more than one — a lone controller needs no such disambiguation. */
+  deviceIconUrl?: string | null;
   onRebind: () => void;
   onClear?: () => void;
 }
 
 const BindingRow = (props: BindingRowProps) => {
-  const { actionLabel, middleLabel, middleIconUrl, binding, bindingIcon, onRebind, onClear } = props;
+  const { actionLabel, middleLabel, middleIconUrl, binding, bindingIcon, deviceIconUrl, onRebind, onClear } = props;
   const bindingLabel = getBindingLabel(binding, bindingIcon);
   const bindingIconSrc = getBindingIconUrl(binding, bindingIcon);
   const isNone = binding.type === 'none';
@@ -57,6 +60,13 @@ const BindingRow = (props: BindingRowProps) => {
           <Image src={bindingIconSrc} alt={bindingLabel} className="binding-row__icon-img" />
         ) : null}
       </Box>
+
+      {/* Source controller, only shown when the profile mixes more than one */}
+      {deviceIconUrl && (
+        <Box className="binding-row__device-icon-slot">
+          <Image src={deviceIconUrl} alt="" className="binding-row__device-icon-img" />
+        </Box>
+      )}
 
       {/* Bound input label */}
       <Text className={`binding-row__binding-label ${isNone ? 'binding-row__binding-label--none' : ''}`}>{bindingLabel}</Text>

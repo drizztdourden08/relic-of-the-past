@@ -172,9 +172,10 @@ interface GameSettings {
 
   // ─── Haptics ───
   haptics: HapticSettings;
-  // Per-device haptics override map, keyed by "vid:pid". Absent key = default
-  // (enabled when the device supports vibration). Set false to mute a device.
-  hapticDevices?: Record<string, boolean>;
+  // Whether this profile routes rumble to its own controllers at all. When on,
+  // every device the profile uses gets the signal; there is no per-device list
+  // to curate — see allowedDevices in lib/input/profile-devices.ts.
+  hapticsEnabled: boolean;
 
   // ─── Developer ───
   // Master gate for developer-only instrumentation (transition-settled events, and any future dev-only

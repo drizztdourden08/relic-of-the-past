@@ -12,6 +12,7 @@ import { Text } from '../../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../../design-system/primitives/Image';
 import { TabBar } from '../../../../../../design-system/primitives/TabBar';
 import { BindingRow } from './BindingRow';
+import { HapticsToggle } from './HapticsToggle';
 import { getSnesIconUrl, getButtonIconUrl } from '@app/lib/input/button-icons';
 import type { useControlsSettings } from '../useControlsSettings';
 
@@ -39,13 +40,11 @@ const ControlsMain = ({ ctrl }: { ctrl: Ctrl }) => {
             onDragLeave={ctrl.handleDragLeave}
             onDrop={ctrl.handleDrop}
           >
-            <Box className="controls-settings__section-header">
-              Button Mappings
-              {ctrl.activeProfile && (
-                <Text className="controls-settings__profile-badge">
-                  {ctrl.activeProfile.name}
-                </Text>
-              )}
+            <Box className="controls-settings__section-header-row">
+              <Box className="controls-settings__section-header">
+                Button Mappings
+              </Box>
+              <HapticsToggle enabled={ctrl.hapticsEnabled} onChange={ctrl.setHapticsEnabled} />
             </Box>
             <Box className="controls-settings__binding-list">
               <Box className="binding-row binding-row--header">
@@ -63,6 +62,7 @@ const ControlsMain = ({ ctrl }: { ctrl: Ctrl }) => {
                   middleIconUrl={getSnesIconUrl(mapping.snesButton)}
                   binding={mapping.binding}
                   bindingIcon={mapping.icon}
+                  deviceIconUrl={mapping.deviceIconUrl}
                   onRebind={() => ctrl.handleSnesRebind(mapping.snesButton)}
                   onClear={() => ctrl.handleSnesClear(mapping.snesButton)}
                 />
@@ -115,6 +115,7 @@ const ControlsMain = ({ ctrl }: { ctrl: Ctrl }) => {
                   actionLabel={FUNCTION_ACTION_LABELS[mapping.action]}
                   binding={mapping.binding}
                   bindingIcon={mapping.icon}
+                  deviceIconUrl={mapping.deviceIconUrl}
                   onRebind={() => ctrl.handleFunctionRebind(mapping.action)}
                   onClear={() => ctrl.handleFunctionClear(mapping.action)}
                 />
@@ -142,6 +143,7 @@ const ControlsMain = ({ ctrl }: { ctrl: Ctrl }) => {
                   actionLabel={FUNCTION_ACTION_LABELS[mapping.action]}
                   binding={mapping.binding}
                   bindingIcon={mapping.icon}
+                  deviceIconUrl={mapping.deviceIconUrl}
                   onRebind={() => ctrl.handleFunctionRebind(mapping.action)}
                   onClear={() => ctrl.handleFunctionClear(mapping.action)}
                 />

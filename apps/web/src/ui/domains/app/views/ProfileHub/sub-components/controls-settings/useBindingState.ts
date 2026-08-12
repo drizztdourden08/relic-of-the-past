@@ -12,9 +12,12 @@ import type {
   SnesButton,
   FunctionAction,
   FunctionMapping,
+  DetectedDevice,
 } from '@shared/types/controls';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
 import { resolveFunctionMappingIcon } from '../../../../../../../lib/input/input-manager';
+import { allowedDevices } from '@app/lib/input/profile-devices';
+import { resolveLiveFamilyIcon } from './family-icon-map';
 import { padHex } from './controls-settings.type';
 
 interface UseBindingStateArgs {
@@ -22,9 +25,10 @@ interface UseBindingStateArgs {
   onChange: (patch: Partial<GameSettings>) => void;
   activeProfile: InputProfile | null;
   updateActiveProfile: (profile: InputProfile) => void;
+  devices: DetectedDevice[];
 }
 
-const useBindingState = ({ settings, onChange, activeProfile, updateActiveProfile }: UseBindingStateArgs) => {
+const useBindingState = ({ settings, onChange, activeProfile, updateActiveProfile, devices }: UseBindingStateArgs) => {
   const [listeningFor, setListeningFor] = useState<
     | { type: 'snes'; button: SnesButton }
     | { type: 'function'; action: FunctionAction }
@@ -44,12 +48,21 @@ const useBindingState = ({ settings, onChange, activeProfile, updateActiveProfil
     return DEFAULT_FUNCTION_MAPPINGS;
   }, [settings.functionMappings]);
 
-  const displayFunctionMappings: FunctionMapping[] = useMemo(() => {
+  const multiController = useMemo(() => allowedDevices(activeProfile).gamepadKeys.size > 1, [activeProfile]);
+
+  const displayFunctionMappings: Array<FunctionMapping & { deviceIconUrl?: string | null }> = useMemo(() => {
     return functionMappings.map(m => {
-      const icon = resolveFunctionMappingIcon(m);
-      return icon ? { ...m, icon } : m;
+      const vid = m.sourceVid ? padHex(m.sourceVid) : null;
+      const pid = m.sourcePid ? padHex(m.sourcePid) : null;
+      const liveDevice = vid && pid
+        ? devices.find(d => d.type === 'gamepad' && d.connected && d.vendorId && d.productId &&
+            padHex(d.vendorId) === vid && padHex(d.productId) === pid)
+        : undefined;
+      const icon = resolveFunctionMappingIcon(m, liveDevice?.sdlType);
+      const deviceIconUrl = multiController && vid && pid ? resolveLiveFamilyIcon({ vid, pid, devices }) : null;
+      return { ...(icon ? { ...m, icon } : m), deviceIconUrl };
     });
-  }, [functionMappings]);
+  }, [functionMappings, devices, multiController]);
 
   // ─── Rebind handlers ───
   const handleSnesRebind = useCallback((snesButton: SnesButton) => {

@@ -19,9 +19,24 @@ module.exports = {
     'dist/renderer/**/*',
     'package.json',
   ],
-  asarUnpack: [
-    '**/node_modules/node-hid/**',
-    '**/node_modules/usb/**',
+  // The SDL3 addon (sdl3_input.node, SDL3's shared library, and libusb's) is
+  // NOT under apps/desktop/** in `files` above (only dist/** is), so an
+  // asarUnpack pattern targeting it there would match nothing — it has to
+  // ship as extraResources instead, copied verbatim regardless of `files`.
+  // scripts/ensure-sdl3.mjs writes to this exact source path; index.ts's
+  // resolveAddonPath checks process.resourcesPath first for this exact layout.
+  extraResources: [
+    {
+      from: 'apps/desktop/electron/input/native/sdl3/prebuilds/${platform}-${arch}',
+      to: 'sdl3/${platform}-${arch}',
+    },
+    // The bundled controller mapping db — mapping-db-paths.ts checks this
+    // exact resourcesPath location for a packaged build, and the repo root
+    // (resources/gamecontrollerdb.txt) in dev.
+    {
+      from: 'resources/gamecontrollerdb.txt',
+      to: 'gamecontrollerdb.txt',
+    },
   ],
   win: {
     target: ['portable', 'nsis'],

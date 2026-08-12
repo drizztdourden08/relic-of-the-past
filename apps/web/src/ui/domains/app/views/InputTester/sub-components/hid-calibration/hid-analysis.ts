@@ -2,7 +2,7 @@
 /**
  * HID byte-level analysis algorithms — detect buttons, axes, counters from raw reports.
  */
-import type { ButtonDiff } from './hid-calibration.type';
+import type { ButtonDiff, HidButtonMapping } from './hid-calibration.type';
 import { ANALOG_THRESHOLD_DELTA } from './hid-calibration.constants';
 
 const popcount = (n: number) => {
@@ -60,4 +60,33 @@ const findCounterBytes = (reports: Uint8Array[]): Set<number> => {
 
 const hex = (b: number) => b.toString(16).padStart(2, '0');
 
-export { findAxisBytes, findButtonBits, findCounterBytes, hex, popcount };
+/** The most likely intended answer among several bytes that changed at once:
+ *  the smallest digital bitmask (fewest incidental bits), or failing that the
+ *  analog byte that moved the furthest from rest. */
+const pickBestButtonDiff = (diffs: ButtonDiff[]): ButtonDiff => {
+  const digital = diffs.filter(d => !d.analog);
+  const analog = diffs.filter(d => d.analog);
+  if (digital.length > 0) {
+    let best = digital[0];
+    for (const d of digital) { if (popcount(d.bitMask) < popcount(best.bitMask)) best = d; }
+    return best;
+  }
+  let best = analog[0];
+  for (const d of analog) { if (Math.abs(d.pressedValue - d.restValue) > Math.abs(best.pressedValue - best.restValue)) best = d; }
+  return best;
+};
+
+const buildButtonMapping = (best: ButtonDiff): HidButtonMapping => {
+  if (best.analog) {
+    const threshold = best.restValue + Math.floor(Math.abs(best.pressedValue - best.restValue) / 3);
+    return { byteIndex: best.byteIndex, bitMask: 0xFF, threshold, restValue: best.restValue };
+  }
+  return { byteIndex: best.byteIndex, bitMask: best.bitMask };
+};
+
+const describeButtonMapping = (m: HidButtonMapping): string =>
+  m.threshold != null
+    ? `byte[${m.byteIndex}] analog (rest=${m.restValue}, threshold=${m.threshold})`
+    : `byte[${m.byteIndex}] & 0x${m.bitMask.toString(16).padStart(2, '0')}`;
+
+export { buildButtonMapping, describeButtonMapping, findAxisBytes, findButtonBits, findCounterBytes, hex, pickBestButtonDiff, popcount };

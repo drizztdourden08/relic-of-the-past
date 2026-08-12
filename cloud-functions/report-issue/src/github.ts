@@ -20,14 +20,22 @@ const getToken = async (): Promise<string> => {
 const detailsBlock = (summary: string, body: string): string =>
   `<details>\n<summary>${summary}</summary>\n\n\`\`\`\n${body}\n\`\`\`\n\n</details>`;
 
+/** Every recorded artefact goes in the same way: one collapsed block each, in
+ *  a fixed order, so an issue always has the same shape whatever the run
+ *  captured. Only the reporter's own words stay uncollapsed. */
 const buildControllerSection = (report: CreateIssueRequest['controllerReport']): string[] => {
   if (!report) return [];
-  return [
-    `**Detected as:** ${report.detectedName} (${report.vendorId}:${report.productId}, input: ${report.inputApi})`,
-    `**Closest SDL match:** ${report.sdlMatch ?? '_none found_'}`,
-    detailsBlock('Full HID read', report.hidReport),
-    detailsBlock('Calibration byte report (JSON)', report.calibrationMap),
+  const artefacts: [string, string | undefined][] = [
+    ['Device identity', `Detected as: ${report.detectedName} (${report.vendorId}:${report.productId}, input: ${report.inputApi})
+Closest SDL match: ${report.sdlMatch ?? 'none found'}`],
+    ['Full HID read', report.hidReport],
+    ['Calibration byte report (JSON)', report.calibrationMap],
+    ['Positional capture (JSON)', report.positionalCapture],
+    ['Diagnostics report (JSON)', report.diagnosticsReport],
   ];
+  return artefacts
+    .filter((entry): entry is [string, string] => Boolean(entry[1]))
+    .map(([summary, body]) => detailsBlock(summary, body));
 };
 
 const buildBody = (req: CreateIssueRequest): string => {

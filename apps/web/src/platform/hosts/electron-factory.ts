@@ -75,16 +75,23 @@ const createFilePicker = (): FilePickerPort => ({
   },
 });
 
+// Raw HID enumeration/read/write went away with node-hid — SDL3 claims every
+// controller directly and reports already-decoded state (onControllerState).
+// This host keeps the port's full shape (Capacitor's Android USB-OTG plugin
+// still fulfills it for real) but degrades those methods to the same no-ops
+// the plain-browser host uses; only vibratePattern and onControllerState are
+// real on desktop now.
 const createControllerHost = (): ControllerHost => ({
-  enumerate: () => window.api.enumerateHidDevices(),
-  getOpenKeys: () => window.api.getOpenHidKeys(),
-  write: (deviceKey, data) => window.api.writeHidDevice(deviceKey, data),
+  enumerate: async () => [],
+  getOpenKeys: async () => [],
+  write: async () => false,
   vibratePattern: (deviceKey, pattern, gapMs) => window.api.vibratePattern(deviceKey, pattern, gapMs),
-  onReport: (cb) => window.api.onHidReport(cb),
-  onDeviceOpened: (cb) => window.api.onHidDeviceOpened(cb),
-  onDisconnect: (cb) => window.api.onHidDisconnect(cb),
-  onError: (cb) => window.api.onHidError(cb),
-  onMainPerf: (cb) => window.api.onHidMainPerf(cb),
+  onReport: () => () => {},
+  onDeviceOpened: () => () => {},
+  onDisconnect: () => () => {},
+  onError: () => () => {},
+  onMainPerf: () => () => {},
+  onControllerState: (cb) => window.api.onControllerState(cb),
 });
 
 const createElectronFactory = (): PlatformFactory => ({
@@ -97,9 +104,7 @@ const createElectronFactory = (): PlatformFactory => ({
   },
   capabilities: {
     windowChrome: true,
-    nativeHid: true,
-    webHid: false,
-    gamepadApi: true,
+    nativeHid: false,
     touchControls: false,
     customProtocol: true,
     selfUpdate: true,

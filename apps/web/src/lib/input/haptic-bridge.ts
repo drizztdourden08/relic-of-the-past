@@ -12,25 +12,31 @@
  *  - Motor ON + same/weaker event → extend active duration (motor already running)
  */
 
-import { handleHapticEvent, setVibrateFunction, updateHapticSettings } from '@shared/input/haptics';
+import { getHapticIntensityScale, handleHapticEvent, setVibrateFunction, updateHapticSettings } from '@shared/input/haptics';
 import type { HapticSettings } from '@shared/input/haptics';
-import type { VibrationSegment } from '@shared/input/base';
-import { findController, findControllerById } from '@shared/input/register-all';
-import { parseGamepadId } from '@shared/input';
-import type { BaseController } from '@shared/input/base';
+import type { VibrationSegment } from '@shared/input/vibration-segment.type';
+import { applyVibrationShaping } from '@shared/input/family';
+import { HAPTIC_PATTERNS } from '@shared/input/data/haptics';
+import type { HapticPatternId } from '@shared/input/data/haptics';
+import { loadRumbleStrengthCache } from '@shared/input/haptics-rumble-strength';
+import { readRumbleStrength } from '@shared/storage/rumble-strength';
+import type { VibrateResult } from '@shared/platform';
 import { getPlatform } from '@app/platform/get-platform';
-import { webHidReader } from './hid-reader';
-import { vibrateGamepadPattern } from './vibration';
-import { peekInputManager } from './input-manager';
+import { recallControllerSdlType } from './controller-family-cache';
+import { getInputManager } from './input-manager';
 import * as controllersStore from './controllers-store';
 
 let initialized = false;
 
-// ─── Per-device haptics gate ───
-// Keyed by "vid:pid"; a key set to false mutes that device. Absent = enabled
-// (the supportsVibration() check still applies). Configured in the DEVICES panel.
-let hapticDevices: Record<string, boolean> = {};
-const deviceHapticsEnabled = (deviceKey: string): boolean => hapticDevices[deviceKey] !== false;
+// ─── Per-profile haptics gate ───
+// A single on/off switch for the active profile (see GameSettings.hapticsEnabled),
+// rather than a hand-curated per-device list. When on, targeting still narrows to
+// specific devices — but the device set comes from the profile's own mappings
+// (InputManager.allowed.gamepadKeys, kept live by setProfile), read fresh on every
+// send so a profile switch or a rebind takes effect immediately.
+let hapticsProfileEnabled = true;
+const deviceHapticsEnabled = (deviceKey: string): boolean =>
+  hapticsProfileEnabled && getInputManager().allowed.gamepadKeys.has(deviceKey);
 
 // ─── Vibration Mixer State ───
 
@@ -60,7 +66,7 @@ const startDebugLog = (): void => {
   }, 1000);
 };
 
-const dispatchVibration = (pattern: VibrationSegment[], gapMs?: number): void => {
+const dispatchVibration = (pattern: VibrationSegment[], gapMs?: number, minDurationExempt?: boolean): void => {
   const now = performance.now();
   debugEventCount++;
 
@@ -82,7 +88,7 @@ const dispatchVibration = (pattern: VibrationSegment[], gapMs?: number): void =>
 
   if (motorOff || stronger) {
     debugDispatchCount++;
-    sendToController(pattern, gapMs);
+    sendToController(pattern, gapMs, minDurationExempt);
     // Device haptics (mobile phone buzz); no-op on desktop, where controllers rumble.
     getPlatform().device.vibrate(totalDuration);
     activeIntensity = peakIntensity;
@@ -94,65 +100,57 @@ const dispatchVibration = (pattern: VibrationSegment[], gapMs?: number): void =>
   }
 };
 
-// Xbox/XInput pads surface on both the Gamepad API and node-hid buses; mirror the
-// polling-engine's id match so the same physical pad isn't buzzed twice.
-const isGamepadServedByHid = (gp: Gamepad, hidKeys: Set<string>): boolean => {
-  const id = gp.id.toLowerCase();
-  for (const key of hidKeys) {
-    const [vid, pid] = key.split(':');
-    if (id.includes(`vendor: ${vid}`) && id.includes(`product: ${pid}`)) return true;
-  }
-  return false;
+// Apply a device's family strength curve, its user-set amplification override, and
+// (when the family needs one) a minimum-duration floor, resolved from the SDL type it
+// announced at connect (see controller-family-cache.ts). See vibration-shaping.ts for
+// the single place all three are combined.
+const shapeForDevice = (vendorId: number, productId: number, deviceKey: string, pattern: VibrationSegment[], minDurationExempt?: boolean): VibrationSegment[] => {
+  const sdlType = recallControllerSdlType(vendorId, productId);
+  if (!sdlType) return pattern;
+  return applyVibrationShaping({ sdlType, deviceKey, pattern, minDurationExempt });
 };
 
-// Resolve the controller behind a Gamepad-API pad so its per-pad strength shaping applies.
-// Xbox/XInput rarely embeds vid/pid in the id, so fall back to the family keyword.
-const resolveGamepadController = (gp: Gamepad): BaseController | null => {
-  const parsed = parseGamepadId(gp.id);
-  if (parsed && parsed.vid !== '0000') {
-    const byId = findController(parsed.vid, parsed.pid);
-    if (byId) return byId;
-  }
-  const id = gp.id.toLowerCase();
-  if (id.includes('xbox') || id.includes('xinput')) return findControllerById('xbox');
-  return null;
-};
-
-// Apply a controller's strength curve to each segment. Magnitude only — durations are kept
-// exactly as authored, so a pad can hit harder without any event lasting longer.
-const shapeForController = (ctrl: BaseController | null, pattern: VibrationSegment[]): VibrationSegment[] => {
-  if (!ctrl) return pattern;
-  return pattern.map(seg => ({ durationMs: seg.durationMs, intensity: ctrl.shapeVibration(seg.intensity) }));
-};
-
-const sendToController = (pattern: VibrationSegment[], gapMs?: number): void => {
+const sendToController = (pattern: VibrationSegment[], gapMs?: number, minDurationExempt?: boolean): void => {
   const gap = gapMs ?? 0;
+  const manager = getInputManager();
 
-  // HID controllers (Switch Pro, PlayStation, 8BitDo) via the node-hid worker. Only
-  // dispatch to pads that actually rumble — writing haptic frames to a non-vibrating
-  // pad still pauses its HID read stream, which stalls input.
-  const hidKeys = webHidReader.getConnectedDeviceKeys();
-  for (const key of hidKeys) {
+  // Target the profile's own mapped devices, not whichever pads happened to have
+  // sent a state event this session: SDL only emits state on change, so a pad
+  // nobody has touched since launch never appears in an event-derived set even
+  // though it is fully connected. Connection comes from the device snapshot
+  // (hidDeviceCache), which is seeded on startup from the full controller list
+  // and kept live independently of any input event.
+  //
+  // Deliberately NOT gated on entry.hasRumble: that capability read comes from
+  // whichever backend SDL used to claim the device, and a device can end up on
+  // a backend that under-reports it even though the hardware can rumble (SDL
+  // itself, not this project's code, decides that). Attempting the send and
+  // letting the native call quietly no-op when the hardware genuinely can't
+  // rumble is strictly safer than a capability flag being able to silence the
+  // whole feature on a false reading.
+  for (const key of manager.allowed.gamepadKeys) {
     if (!deviceHapticsEnabled(key)) continue;
-    const [vid, pid] = key.split(':');
-    const ctrl = findController(vid, pid);
-    if (ctrl?.supportsVibration()) {
-      controllersStore.vibratePattern(key, shapeForController(ctrl, pattern), gap);
-    }
+    const entry = manager.hidDeviceCache.find((d) => d.deviceKey === key);
+    if (!entry || entry.status !== 'ready') continue;
+    const [vidHex, pidHex] = key.split(':');
+    const shaped = shapeForDevice(parseInt(vidHex, 16), parseInt(pidHex, 16), key, pattern, minDurationExempt);
+    controllersStore.vibratePattern(key, shaped, gap);
   }
+};
 
-  // Gamepad API controllers (Xbox/XInput) rumble through the vibrationActuator, never
-  // node-hid — so they never show up in hidKeys above. Skip any pad already served
-  // over HID to avoid a double buzz.
-  const hidSet = new Set(hidKeys);
-  const gamepadVidPid = peekInputManager()?.gamepadVidPid;
-  for (const gp of navigator.getGamepads()) {
-    if (!gp || !gp.connected || isGamepadServedByHid(gp, hidSet)) continue;
-    if (!(gp as { vibrationActuator?: { playEffect?: unknown } }).vibrationActuator?.playEffect) continue;
-    const vp = gamepadVidPid?.get(gp.index);
-    if (vp && !deviceHapticsEnabled(`${vp.vid}:${vp.pid}`)) continue;
-    vibrateGamepadPattern(gp.index, shapeForController(resolveGamepadController(gp), pattern), gap);
-  }
+/**
+ * Fires a real authored haptic pattern at a single device directly, bypassing the
+ * mixer/cooldown/profile targeting -- this is a manual calibration-screen test, not
+ * a game event, so it must always fire on demand. Goes through the exact same
+ * scaling and shaping as a live event, so the felt strength matches gameplay.
+ */
+const previewHapticPattern = (deviceKey: string, patternId: HapticPatternId): Promise<VibrateResult> => {
+  const entry = HAPTIC_PATTERNS[patternId];
+  const scale = getHapticIntensityScale();
+  const scaled = entry.segments.map((seg) => ({ durationMs: seg.durationMs, intensity: Math.min(1, seg.intensity * scale) }));
+  const [vidHex, pidHex] = deviceKey.split(':');
+  const shaped = shapeForDevice(parseInt(vidHex, 16), parseInt(pidHex, 16), deviceKey, scaled, entry.minDurationExempt);
+  return controllersStore.vibratePattern(deviceKey, shaped, entry.gapMs ?? 0);
 };
 
 const scheduleDecay = (ms: number): void => {
@@ -173,6 +171,7 @@ const initHapticBridge = (settings: HapticSettings): void => {
   if (window.api?.isDev) startDebugLog();
   setVibrateFunction(dispatchVibration);
   updateHapticSettings(settings);
+  readRumbleStrength(getPlatform().files).then(loadRumbleStrengthCache).catch(() => {});
 
   (window as any).__onHapticEvent = (eventType: number, param: number) => {
     debugCHookCount++;
@@ -184,8 +183,8 @@ const updateHapticBridgeSettings = (settings: HapticSettings): void => {
   updateHapticSettings(settings);
 };
 
-const updateHapticDevices = (map: Record<string, boolean> | undefined): void => {
-  hapticDevices = map ?? {};
+const updateHapticsProfileEnabled = (enabled: boolean): void => {
+  hapticsProfileEnabled = enabled;
 };
 
 const destroyHapticBridge = (): void => {
@@ -202,6 +201,7 @@ const destroyHapticBridge = (): void => {
 export {
   destroyHapticBridge,
   initHapticBridge,
+  previewHapticPattern,
   updateHapticBridgeSettings,
-  updateHapticDevices
+  updateHapticsProfileEnabled
 };

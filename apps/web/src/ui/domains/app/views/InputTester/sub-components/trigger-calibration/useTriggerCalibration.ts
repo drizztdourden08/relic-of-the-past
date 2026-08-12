@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { webHidReader } from '../../../../../../../lib/input/hid-reader';
+import { controllerInputStore } from '../../../../../../../lib/input/controller-input-store';
 
 // ── Types ──
 
@@ -56,7 +56,7 @@ const useTriggerCalibration = (options: UseTriggerCalibrationOptions) => {
   restDoneRef.current = restDone;
 
   useEffect(() => {
-    const unsub = webHidReader.onInput((state) => {
+    const unsub = controllerInputStore.onInput((state) => {
       if (deviceKey && state.deviceKey !== deviceKey) return;
 
       const val = state.axes[axisIndex] ?? 0;

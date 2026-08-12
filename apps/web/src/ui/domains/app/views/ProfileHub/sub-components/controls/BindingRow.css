@@ -78,6 +78,23 @@
   object-fit: contain;
 }
 
+/* Source-controller glyph — only rendered when a profile mixes devices */
+.binding-row__device-icon-slot {
+  width: var(--space-lg);
+  height: var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+
+.binding-row__device-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 /* Binding label — right column */
 .binding-row__binding-label {
   flex: 1;

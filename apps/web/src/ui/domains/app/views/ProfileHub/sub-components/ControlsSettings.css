@@ -73,6 +73,7 @@
 }
 
 .controls-settings__col-title {
+  flex: 1;
   font-size: var(--text-sm);
   font-weight: var(--weight-bold);
   text-transform: uppercase;
@@ -91,6 +92,7 @@
 
 .controls-settings__sidebar--collapsed .controls-settings__col-title,
 .controls-settings__devices-column--collapsed .controls-settings__col-title {
+  flex: initial;
   writing-mode: vertical-rl;
   text-orientation: mixed;
   font-size: var(--text-sm);
@@ -190,17 +192,6 @@
   flex-shrink: 0;
 }
 
-.controls-settings__profile-badge {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-normal);
-  text-transform: none;
-  letter-spacing: normal;
-  color: var(--c-gold);
-  background: var(--c-gold-soft);
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--r-lg);
-}
-
 /* ─── Detected devices ─── */
 .controls-settings__device-list {
   display: flex;
@@ -236,6 +227,22 @@
 
 .controls-settings__bindings .controls-settings__section-header {
   padding: var(--space-md) var(--space-md) var(--space-sm);
+}
+
+/* Heading + haptics toggle share one row, toggle pinned to the far end. */
+.controls-settings__section-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.controls-settings__bindings .controls-settings__section-header-row {
+  padding: var(--space-md) var(--space-md) var(--space-sm);
+}
+
+.controls-settings__bindings .controls-settings__section-header-row .controls-settings__section-header {
+  padding: 0;
 }
 
 .controls-settings__shortcut-options {
@@ -322,6 +329,10 @@
   }
 
   .controls-settings__bindings .controls-settings__section-header {
+    display: none;
+  }
+
+  .controls-settings__bindings .controls-settings__section-header-row {
     display: none;
   }
 }

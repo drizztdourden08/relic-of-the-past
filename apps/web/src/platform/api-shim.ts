@@ -20,7 +20,7 @@ const eventStub = (): (() => void) => () => {};
 const EMPTY_ARRAY_METHODS = new Set<string>([
   'listProfiles', 'listRoms', 'listRomsWithStatus', 'listStates', 'listSessions',
   'listMsuPacks', 'getMsuTrackList', 'listLanguages', 'listNormalSaves',
-  'listAutoSaves', 'enumerateHidDevices', 'getOpenHidKeys', 'getSlotInfos',
+  'listAutoSaves', 'getSlotInfos', 'listControllers', 'listHidDevices',
 ]);
 
 // Invoke methods whose callers immediately read a property of the result; a bare

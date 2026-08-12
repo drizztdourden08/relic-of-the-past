@@ -6,15 +6,24 @@
 import { useMemo } from 'react';
 import type { InputProfile, DetectedDevice } from '@shared/types/controls';
 import { SNES_BUTTONS } from '@shared/types/controls';
-import { findDeviceProfileByVidPid } from '@shared/input';
-import { publicAsset } from '@app/lib/assets/public-asset';
 import { allowedDevices } from '@app/lib/input/profile-devices';
+import { recallControllerName } from '@app/lib/input/controller-name-cache';
+import { resolveIconByVidPid } from '@app/lib/input/profile-utils';
+import { FAMILY_ICON_MAP, resolveLiveFamilyIcon } from './family-icon-map';
 import { padHex } from './controls-settings.type';
 
 interface UseDisplayMappingsArgs {
   activeProfile: InputProfile | null;
   devices: DetectedDevice[];
 }
+
+/** The live device (if any) currently plugged in at this vid:pid. */
+const findLiveDevice = (vid: string, pid: string, devices: DetectedDevice[]): DetectedDevice | undefined =>
+  devices.find(d =>
+    d.type === 'gamepad' && d.connected &&
+    d.vendorId && d.productId &&
+    padHex(d.vendorId) === vid && padHex(d.productId) === pid
+  );
 
 const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) => {
   const requiredInputs = useMemo(() => {
@@ -23,19 +32,11 @@ const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) 
     const { keyboard: hasKeyboard, gamepadKeys: usedDeviceKeys } = allowedDevices(activeProfile);
     const hasGamepad = activeProfile.mappings.some(m => m.binding.type !== 'keyboard');
 
-    const familyIconMap: Record<string, string> = {
-      xbox: publicAsset('buttons/xbox/controller_xboxseries.svg'),
-      nintendo: publicAsset('buttons/switch/controller_switch_pro.svg'),
-      playstation: publicAsset('buttons/playstation/controller_playstation5.svg'),
-      keyboard: publicAsset('buttons/keyboard/keyboard.svg'),
-      generic: publicAsset('buttons/generic/generic_joystick.svg'),
-    };
-
     if (hasKeyboard) {
       inputs.push({
         type: 'keyboard',
         label: 'Keyboard',
-        iconSrc: familyIconMap.keyboard,
+        iconSrc: FAMILY_ICON_MAP.keyboard,
         connected: devices.some(d => d.type === 'keyboard' && d.connected),
       });
     }
@@ -43,29 +44,22 @@ const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) 
       if (usedDeviceKeys.size > 0) {
         for (const key of usedDeviceKeys) {
           const [vid, pid] = key.split(':');
-          const liveDevice = devices.find(d =>
-            d.type === 'gamepad' && d.connected &&
-            d.vendorId && d.productId &&
-            padHex(d.vendorId) === vid && padHex(d.productId) === pid
-          );
-          const profile = findDeviceProfileByVidPid(vid, pid);
-          const family = profile?.family ?? liveDevice?.deviceFamily ?? 'generic';
-          const icon = familyIconMap[family] ?? familyIconMap.generic;
-          const displayName = profile?.name ?? liveDevice?.displayName ?? 'Controller';
+          const liveDevice = findLiveDevice(vid, pid, devices);
+          const displayName = recallControllerName({ vendorId: parseInt(vid, 16), productId: parseInt(pid, 16) })
+            ?? liveDevice?.displayName ?? 'Controller';
           inputs.push({
             type: 'gamepad',
             label: `${displayName} (${vid}:${pid})`,
-            iconSrc: icon,
+            iconSrc: resolveLiveFamilyIcon({ vid, pid, devices }),
             connected: !!liveDevice,
           });
         }
       } else {
         const family = activeProfile.deviceFamily;
-        const icon = familyIconMap[family] ?? familyIconMap.generic;
         inputs.push({
           type: 'gamepad',
           label: activeProfile.name,
-          iconSrc: icon,
+          iconSrc: FAMILY_ICON_MAP[family] ?? FAMILY_ICON_MAP.generic,
           connected: devices.some(d => d.type === 'gamepad' && d.connected),
         });
       }
@@ -73,38 +67,36 @@ const useDisplayMappings = ({ activeProfile, devices }: UseDisplayMappingsArgs) 
     return inputs;
   }, [activeProfile, devices]);
 
+  // More than one physical controller feeding this profile's bindings — each
+  // binding row then also shows which one it came from (see BindingRow's
+  // deviceIconUrl). A single-controller profile never needs that disambiguation.
+  const multiController = useMemo(() => allowedDevices(activeProfile).gamepadKeys.size > 1, [activeProfile]);
+
   const displayMappings = useMemo(() => {
     return SNES_BUTTONS.map(btn => {
       const existing = activeProfile?.mappings.find(m => m.snesButton === btn);
       if (!existing) {
-        return { snesButton: btn, binding: { type: 'none' as const }, icon: null };
+        return { snesButton: btn, binding: { type: 'none' as const }, icon: null, deviceIconUrl: null };
       }
-      if (existing.binding.type === 'none' || existing.binding.type === 'keyboard') return { ...existing, icon: null };
+      if (existing.binding.type === 'none' || existing.binding.type === 'keyboard') {
+        return { ...existing, icon: null, deviceIconUrl: null };
+      }
 
       const vid = existing.sourceVid ? padHex(existing.sourceVid) : null;
       const pid = existing.sourcePid ? padHex(existing.sourcePid) : null;
       if (!vid || !pid) {
-        return existing.icon?.key ? existing : { ...existing, icon: null };
+        return { ...existing, icon: existing.icon?.key ? existing.icon : null, deviceIconUrl: null };
       }
 
-      const profile = findDeviceProfileByVidPid(vid, pid);
-      if (!profile) return { ...existing, icon: null };
-
-      if (existing.binding.type === 'gamepad-button') {
-        const b = profile.buttons[existing.binding.index];
-        if (b) return { ...existing, icon: { key: b.icon, label: b.label, path: null } };
+      const deviceIconUrl = multiController ? resolveLiveFamilyIcon({ vid, pid, devices }) : null;
+      if (existing.icon?.key && existing.binding.type === 'gamepad-axis') {
+        return { ...existing, deviceIconUrl };
       }
-      if (existing.binding.type === 'gamepad-axis') {
-        if (existing.icon?.key) return existing;
-        const ax = profile.axes?.[existing.binding.axisIndex];
-        if (ax) {
-          const dir = existing.binding.direction === '+' ? '+' : '\u2212';
-          return { ...existing, icon: { key: `${profile.id}-axis`, label: `${ax.label} ${dir}`, path: null } };
-        }
-      }
-      return { ...existing, icon: null };
+      const liveSdlType = findLiveDevice(vid, pid, devices)?.sdlType;
+      const icon = resolveIconByVidPid(vid, pid, existing.binding, liveSdlType);
+      return { ...existing, icon, deviceIconUrl };
     });
-  }, [activeProfile]);
+  }, [activeProfile, devices, multiController]);
 
   return { requiredInputs, displayMappings };
 };

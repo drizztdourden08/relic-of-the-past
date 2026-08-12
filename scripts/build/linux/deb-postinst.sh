@@ -1,8 +1,8 @@
 #!/bin/sh
 # @layer tooling-scripts @kind build
-# Relic of the Past — .deb post-install: install controller udev rules so node-hid
-# / libusb can open game controllers without root, then reload udev. Runs as root
-# during `dpkg -i`. Kept in sync with 99-relic-controllers.rules.
+# Relic of the Past — .deb post-install: install controller udev rules so the
+# SDL3 controller transport can open game controllers without root, then reload
+# udev. Runs as root during `dpkg -i`. Kept in sync with 99-relic-controllers.rules.
 set -e
 
 RULES_PATH=/etc/udev/rules.d/99-relic-controllers.rules

@@ -12,19 +12,19 @@
 import { forwardRef, useEffect, useImperativeHandle } from 'react';
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
-import { Button } from '../../../../../design-system/primitives/Button';
 import type { HidAxisMapping, HidButtonMapping, HidControllerMap } from './hid-calibration/hid-calibration.type';
 import { useHidCalibration } from './hid-calibration/hooks';
 import { useFlashStatus } from './hid-calibration/hooks/useFlashStatus';
 import {
-  ProfileSelector, InstructionsPanel, LiveParserOutput, PrereqCards, StickCards, TriggerCards,
-  ButtonMapping, ByteGrid, CalibrationLog,
+  InstructionsPanel, LiveParserOutput, PrereqCards, StickTriggerSection,
+  ButtonMapping, ByteGrid, CalibrationLog, FlakyByteWarningDialog, WizardHeaderActions,
 } from './hid-calibration/components';
+import { RawAvailabilityNotice } from './hid-calibration/diagnostics/components';
 import type { HidCalibrationWizardProps, HidWizardHandle } from './HidCalibrationWizard.type';
 
 const HidCalibrationWizard = forwardRef<HidWizardHandle, HidCalibrationWizardProps>((props, ref) => {
-  const { onComplete, onCancel, deviceKey, hideOwnActions = false, onCapturedCountChange } = props;
-  const wiz = useHidCalibration({ onComplete, onCancel, deviceKey });
+  const { onComplete, onCancel, deviceKey, hideOwnActions = false, onCapturedCountChange, initialProfile, capturedEntry, initialProfileId, initialHasGyro } = props;
+  const wiz = useHidCalibration({ onComplete, onCancel, deviceKey, initialProfile, capturedEntry, initialProfileId, initialHasGyro });
   const [copyStatus, flashCopy] = useFlashStatus();
   const [saveStatus, flashSave] = useFlashStatus();
 
@@ -37,40 +37,26 @@ const HidCalibrationWizard = forwardRef<HidWizardHandle, HidCalibrationWizardPro
     onCapturedCountChange?.(wiz.capturedCount);
   }, [wiz.capturedCount, onCapturedCountChange]);
 
-  if (wiz.phase === 'select-profile') {
-    return (
-      <ProfileSelector
-        selectedProfileId={wiz.selectedProfileId}
-        selectedSdlVidPid={wiz.selectedSdlVidPid}
-        hasGyro={wiz.hasGyro}
-        sdlOptions={wiz.sdlOptions}
-        onSdlSelect={wiz.handleSdlSelect}
-        onConfirm={wiz.handleProfileConfirm}
-        onCancel={onCancel}
-        log={wiz.log}
-        logRef={wiz.logRef}
-      />
-    );
-  }
+  // The device and its layout are settled before this component is reached,
+  // so there is nothing to pick. This renders for the single frame between
+  // mounting and the layout arriving.
+  if (wiz.phase === 'select-profile') return null;
 
   return (
     <Box className="hid-cal">
       {/* Header */}
       <Box className="hid-cal__header">
-        <Text as="h3" className="hid-cal__title">HID Calibration — {wiz.profile?.name ?? 'Controller'}</Text>
+        <Text as="h3" className="hid-cal__title">Byte capture — {wiz.profile?.name ?? 'Controller'}</Text>
         {!hideOwnActions && (
-          <Box className="hid-cal__header-actions">
-            <Button variant={copyStatus === 'error' ? 'danger' : 'tertiary'} size="sm" onClick={() => wiz.handleCopyJson().then(flashCopy)} title="Copy partial or complete calibration JSON">
-              {copyStatus === 'ok' ? '✓ Copied' : copyStatus === 'error' ? '✗ Failed' : 'Copy JSON'}
-            </Button>
-            <Button variant={saveStatus === 'error' ? 'danger' : 'tertiary'} size="sm" onClick={() => wiz.handleSaveDebugFile().then(flashSave)} title="Write calibration JSON to the userData debug folder">
-              {saveStatus === 'ok' ? '✓ Saved' : saveStatus === 'error' ? '✗ Failed' : 'Save to Debug Folder'}
-            </Button>
-            <Button variant="primary" size="sm" onClick={wiz.handleFinish} disabled={wiz.capturedCount === 0}>
-              Finish
-            </Button>
-            <Button variant="danger" size="sm" onClick={onCancel}>Cancel</Button>
-          </Box>
+          <WizardHeaderActions
+            copyStatus={copyStatus}
+            saveStatus={saveStatus}
+            capturedCount={wiz.capturedCount}
+            onCopyJson={() => wiz.handleCopyJson().then(flashCopy)}
+            onSaveDebugFile={() => wiz.handleSaveDebugFile().then(flashSave)}
+            onFinish={wiz.handleFinish}
+            onCancel={onCancel}
+          />
         )}
       </Box>
 
@@ -93,49 +79,8 @@ const HidCalibrationWizard = forwardRef<HidWizardHandle, HidCalibrationWizardPro
         onIdleRedo={wiz.handleIdleRedo}
       />
 
-      {/* Sticks */}
-      {wiz.prereqsDone && (
-        <StickCards
-          items={wiz.items}
-          activeStick={wiz.activeStick}
-          stickBusy={wiz.stickBusy}
-          stickLiveInfo={wiz.stickLiveInfo}
-          stickPickMode={wiz.stickPickMode}
-          stickPickedBytes={wiz.stickPickedBytes}
-          idleRecording={wiz.idleRecording}
-          idleResults={wiz.idleResults}
-          onStartCircle={wiz.handleStartCircle}
-          onStopCircle={wiz.handleStopCircle}
-          onSkipStick={wiz.handleSkipStick}
-          onStickRedo={wiz.handleStickRedo}
-          onStickPickMode={wiz.handleStickPickMode}
-          onConfirmPick={wiz.handleConfirmPick}
-          onCancelPick={wiz.handleCancelPick}
-          onIdleRecord={wiz.handleIdleRecord}
-        />
-      )}
-
-      {/* Triggers */}
-      {wiz.prereqsDone && (
-        <TriggerCards
-          items={wiz.items}
-          activeTrigger={wiz.activeTrigger}
-          triggerBusy={wiz.triggerBusy}
-          triggerLiveInfo={wiz.triggerLiveInfo}
-          triggerPickMode={wiz.triggerPickMode}
-          triggerPickedByte={wiz.triggerPickedByte}
-          idleRecording={wiz.idleRecording}
-          idleResults={wiz.idleResults}
-          onStartTrigger={wiz.handleStartTrigger}
-          onStopTrigger={wiz.handleStopTrigger}
-          onSkipTrigger={wiz.handleSkipTrigger}
-          onTriggerRedo={wiz.handleTriggerRedo}
-          onTriggerPickMode={wiz.handleTriggerPickMode}
-          onConfirmTriggerPick={wiz.handleConfirmTriggerPick}
-          onCancelTriggerPick={wiz.handleCancelTriggerPick}
-          onIdleRecord={wiz.handleIdleRecord}
-        />
-      )}
+      {/* Sticks + Triggers */}
+      <StickTriggerSection wiz={wiz} />
 
       {/* Button Mapping */}
       <ButtonMapping
@@ -158,28 +103,43 @@ const HidCalibrationWizard = forwardRef<HidWizardHandle, HidCalibrationWizardPro
         setInputPhaseActiveWrapped={wiz.setInputPhaseActiveWrapped}
       />
 
-      {/* Byte Grid */}
-      <ByteGrid
-        latestBytes={wiz.latestBytes}
-        byteStatuses={wiz.byteStatuses}
-        gyroState={wiz.gyroState}
-        stickPickMode={wiz.stickPickMode}
-        stickPickedBytes={wiz.stickPickedBytes}
-        triggerPickMode={wiz.triggerPickMode}
-        triggerPickedByte={wiz.triggerPickedByte}
-        inputPhaseActive={wiz.inputPhaseActive}
-        lastReportId={wiz.lastReportId}
-        baselineRef={wiz.baselineRef}
-        excludedRef={wiz.excludedRef}
-        itemsRef={wiz.itemsRef}
-        activeIdxRef={wiz.activeIdxRef}
-        inputPhaseActiveRef={wiz.inputPhaseActiveRef}
-        getByteColor={wiz.getByteColor}
-        onByteClick={wiz.handleByteClick}
-      />
+      {/* Byte Grid. A controller can be held exclusively at a lower level, in
+          which case no raw HID bytes are available. The wizard still runs on
+          gamepad and joystick data, so show a notice rather than an empty grid. */}
+      {wiz.rawAvailable ? (
+        <ByteGrid
+          latestBytes={wiz.latestBytes}
+          byteStatuses={wiz.byteStatuses}
+          gyroState={wiz.gyroState}
+          stickPickMode={wiz.stickPickMode}
+          stickPickedBytes={wiz.stickPickedBytes}
+          triggerPickMode={wiz.triggerPickMode}
+          triggerPickedByte={wiz.triggerPickedByte}
+          inputPhaseActive={wiz.inputPhaseActive}
+          lastReportId={wiz.lastReportId}
+          baselineRef={wiz.baselineRef}
+          excludedRef={wiz.excludedRef}
+          itemsRef={wiz.itemsRef}
+          activeIdxRef={wiz.activeIdxRef}
+          inputPhaseActiveRef={wiz.inputPhaseActiveRef}
+          getByteColor={wiz.getByteColor}
+          onByteClick={wiz.handleByteClick}
+        />
+      ) : (
+        <RawAvailabilityNotice available={false} reason={wiz.rawUnavailableReason} />
+      )}
 
       {/* Log */}
       <CalibrationLog log={wiz.log} logRef={wiz.logRef} />
+
+      <FlakyByteWarningDialog
+        open={wiz.flakyDialogOpen}
+        flakyBytes={wiz.flakyBytes}
+        liveRanges={wiz.flakyLiveRanges}
+        onExcludeAndContinue={wiz.onExcludeFlakyAndContinue}
+        onContinueAnyway={wiz.onContinueFlakyAnyway}
+        onCancel={wiz.onCancelFlakyDialog}
+      />
     </Box>
   );
 });

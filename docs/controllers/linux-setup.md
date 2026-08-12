@@ -1,10 +1,13 @@
 <!-- @layer docs @kind doc -->
 # Linux — controller setup (udev rules)
 
-On Linux, raw controller access (node-hid for HID reports, libusb for the Switch/NSO
-`usb-init`) requires permission to the device nodes. Without it, controllers either
-don't show up or fall back to basic Gamepad-API input, and you'll see a
-"Controller access denied" hint in the Input Tester.
+SDL3 is the only input layer this app uses, on every platform, including Linux. On
+Linux, its raw-HID backend needs permission to the `hidraw` and `usb` device nodes to
+talk to a controller directly. Without that permission, a controller from one of the
+vendors below may fall back to SDL3's standard gamepad mode (buttons and axes only) or
+may not be usable at all — see the per-controller notes in
+[support-matrix.md](support-matrix.md#limitations). Xbox pads are the one exception:
+they work through SDL3's standard mode without needing these rules at all.
 
 ## .deb (automatic)
 
@@ -40,5 +43,5 @@ systemd-logind) to controllers from these vendors, over both `hidraw` and `usb`:
 If your controller has a different vendor ID, add a matching pair of lines and
 reload (`udevadm control --reload-rules && udevadm trigger`).
 
-Xbox controllers work without the rules (standard gamepad input); the rules matter for
-raw-HID controllers (Nintendo, Sony) and the Switch/NSO init.
+Xbox controllers work without the rules through SDL3's standard gamepad mode; the rules
+matter for the vendors SDL3 reads over raw `hidraw`/`usb` instead (Nintendo, Sony, 8BitDo).

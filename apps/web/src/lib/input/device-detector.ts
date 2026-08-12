@@ -1,81 +1,45 @@
 /* @layer renderer-lib @kind logic */
 /**
- * Controller Detection — merges node-hid (main process) for accurate
- * device identification with Web Gamepad API for activation status.
- *
- * HID enumeration gives us correct VID/PID/product names without requiring
- * a button press. The Web Gamepad API tells us which controllers are
- * "activated" (user has pressed at least one button).
+ * Controller Detection — turns the SDL3 controller snapshot (main process)
+ * into the renderer's DetectedDevice list. SDL3 is the only controller
+ * transport on every platform now (the browser Gamepad API path is gone —
+ * see the platform hosts), so a device is either an SDL entry or the
+ * keyboard; there is no separate "activation" concept left to track.
  */
 
-import type { DetectedDevice, InputApi } from '@shared/types/controls';
-import { resolvePreset, parseGamepadId, findPresetByVidPid, KEYBOARD_DEFAULT } from '@shared/input';
-import { DEVICE_DATABASE } from '@shared/input/data/devices';
+import type { DetectedDevice, DeviceFamily } from '@shared/types/controls';
+import type { DeviceEntry } from '@shared/ipc';
+import { KEYBOARD_DEFAULT } from '@shared/input';
+import { resolveDeviceFromEntry } from './resolve-device';
 
-interface HidDeviceInfo {
-  vendorId: string;
-  productId: string;
-  product: string;
-  manufacturer: string;
-  path: string;
-  serialNumber: string | null;
-}
+const toHex4 = (n: number): string => n.toString(16).padStart(4, '0');
 
-const detectFromHid = (hid: HidDeviceInfo, index: number, webApiActivated: boolean): DetectedDevice => {
-  const preset = findPresetByVidPid(hid.vendorId, hid.productId);
-  // If a device was found via HID enumeration, it should use HID by default.
-  // Only Xbox (xinput) controllers need the Gamepad API since Windows claims exclusive HID access.
-  // The generic fallback has inputApi='webapi' which is wrong for HID-enumerated devices.
-  const isGenericFallback = preset?.id === 'generic';
-  const api = preset?.inputApi === 'xinput' ? 'xinput'
-    : isGenericFallback ? 'hid'
-    : (preset?.inputApi ?? 'hid');
+const detectFromEntry = (entry: DeviceEntry): DetectedDevice => {
+  const vendorId = toHex4(entry.vendorId);
+  const productId = toHex4(entry.productId);
 
-  // HID-api controllers are always activated (direct HID reading, no button press needed).
-  // XInput controllers need a button press to appear in navigator.getGamepads().
-  const activated = api === 'xinput' ? webApiActivated : true;
-
-  // Resolve display name: specific preset > SDL database > HID product string
-  const sdlName = isGenericFallback
-    ? DEVICE_DATABASE.find(e => e.vidPid === `${hid.vendorId}:${hid.productId}`)?.name
-    : undefined;
-  const displayName = (!isGenericFallback && preset?.name) || sdlName || hid.product;
+  // Name and family are display concerns, resolved the same way the
+  // calibration cards and controls screen do: from SDL's own report through
+  // the family layer (resolve-device.ts), never from a preset or database guess.
+  const resolved = resolveDeviceFromEntry(entry);
 
   return {
-    id: `hid-${hid.vendorId}-${hid.productId}`,
+    id: `hid-${vendorId}-${productId}`,
     type: 'gamepad',
-    rawId: hid.product,
-    vendorId: hid.vendorId,
-    productId: hid.productId,
-    deviceFamily: preset?.family ?? 'generic',
-    displayName,
-    presetId: preset?.id ?? null,
-    connected: true,
-    activated,
-    stale: false,
-    brandLogoKey: preset?.brandLogoKey ?? null,
-    inputApi: api,
-  };
-};
-
-const detectGamepad = (gp: Gamepad): DetectedDevice => {
-  const preset = resolvePreset(gp.id, gp.mapping);
-  const parsed = parseGamepadId(gp.id);
-
-  return {
-    id: `gamepad-${gp.index}`,
-    type: 'gamepad',
-    rawId: gp.id,
-    vendorId: parsed?.vid ?? null,
-    productId: parsed?.pid ?? null,
-    deviceFamily: preset.family,
-    displayName: preset.name,
-    presetId: preset.id,
-    connected: gp.connected,
-    activated: true, // if it's in the Web API, it's activated
-    stale: false,
-    brandLogoKey: preset.brandLogoKey,
-    inputApi: preset.inputApi,
+    rawId: entry.product,
+    vendorId,
+    productId,
+    deviceFamily: (resolved.brandLogoKey || 'generic') as DeviceFamily,
+    displayName: resolved.name,
+    sdlType: entry.sdlType ?? 'unknown',
+    connected: entry.status === 'ready',
+    // Every SDL-claimed device reads directly, with no button-press
+    // activation step (that was only ever needed for the Gamepad API).
+    activated: true,
+    brandLogoKey: resolved.brandLogoKey || null,
+    inputApi: 'hid',
+    hasRumble: entry.hasRumble ?? false,
+    hasGyro: entry.hasGyro ?? false,
   };
 };
 
@@ -88,74 +52,31 @@ const detectKeyboard = (index = 0): DetectedDevice => {
     productId: null,
     deviceFamily: 'keyboard',
     displayName: 'Keyboard',
-    presetId: KEYBOARD_DEFAULT.id,
+    // Not a real SDL type — SDL never enumerates a keyboard — but a stable,
+    // truthy sentinel so the drag-and-drop "apply defaults" flow can tell
+    // this card apart from a gamepad's sdlType without a separate flag.
+    sdlType: 'keyboard',
     connected: true,
     activated: true, // keyboard is always activated
-    stale: false,
     brandLogoKey: 'keyboard',
     inputApi: 'webapi',
+    hasRumble: false,
+    hasGyro: false,
   };
 };
 
-/**
- * Track which gamepad indices have been activated (received gamepadconnected event).
- * In Chromium, gamepadconnected fires on first button press — that IS the activation signal.
- */
-const activatedIndices = new Set<number>();
+const detectAllDevices = (deviceEntries?: DeviceEntry[]): DetectedDevice[] => {
+  const devices: DetectedDevice[] = [detectKeyboard(0)];
+  if (!deviceEntries) return devices;
 
-const markActivated = (index: number): void => {
-  activatedIndices.add(index);
-};
-
-const updateActivationState = (): void => {
-  const gamepads = navigator.getGamepads();
-  for (const gp of gamepads) {
-    if (!gp || !gp.connected) continue;
-    // If a gamepad is visible in navigator.getGamepads(), the user already
-    // pressed a button at some point (Chromium won't show it otherwise).
-    // Mark it as activated unconditionally.
-    activatedIndices.add(gp.index);
-  }
-};
-
-const hasAnyActivation = (): boolean => {
-  return activatedIndices.size > 0;
-};
-
-const detectAllDevices = (hidDevices?: HidDeviceInfo[]): DetectedDevice[] => {
-  const devices: DetectedDevice[] = [];
-
-  // Always include keyboard
-  devices.push(detectKeyboard(0));
-
-  const activated = hasAnyActivation();
-
-  if (hidDevices && hidDevices.length > 0) {
-    // Primary: use HID for detection, merge activation status from Web API
-    for (let i = 0; i < hidDevices.length; i++) {
-      const hid = hidDevices[i];
-      // Filter out mice and other non-controller HID devices
-      const name = (hid.product || '').toLowerCase();
-      if (name.includes('mouse') || name.includes('trackpad') || name.includes('touchpad')) continue;
-      devices.push(detectFromHid(hid, i, activated));
-    }
-  } else {
-    // Fallback: Web Gamepad API only (requires button press)
-    const gamepads = navigator.getGamepads();
-    for (const gp of gamepads) {
-      if (gp && gp.connected) {
-        devices.push(detectGamepad(gp));
-      }
-    }
+  for (const entry of deviceEntries) {
+    // Filter out mice and other non-controller devices
+    const name = (entry.product || '').toLowerCase();
+    if (name.includes('mouse') || name.includes('trackpad') || name.includes('touchpad')) continue;
+    devices.push(detectFromEntry(entry));
   }
 
   return devices;
 };
 
-export {
-  detectAllDevices,
-  detectGamepad,
-  detectKeyboard,
-  markActivated,
-  updateActivationState
-};
+export { detectAllDevices, detectKeyboard };

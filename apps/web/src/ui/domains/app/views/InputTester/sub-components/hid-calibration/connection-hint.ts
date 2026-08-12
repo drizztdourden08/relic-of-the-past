@@ -1,21 +1,14 @@
 /* @layer renderer-components @kind logic */
 /**
- * Best-effort USB-vs-Bluetooth guess from a raw OS HID device path. Windows
- * routes Bluetooth-attached HID devices through the standard Bluetooth HID
- * service UUID (0x1124), which shows up verbatim in the device path — that
- * substring is the one reliable signal available; everything else is a guess.
- * Never treat this as ground truth — it's a hint, the raw path is the truth.
+ * USB-vs-Bluetooth for the current device. SDL reports the transport
+ * directly on the controller-added event and the device snapshot (busType),
+ * so that value is ground truth here, not a guess — this keeps the
+ * historical name and one-argument shape because it is still the single
+ * place calibrationMap.connectionHint gets resolved from.
  */
+import type { ControllerBusType } from '@shared/ipc';
 import type { ConnectionHint } from './hid-calibration.type';
 
-const BLUETOOTH_HID_SERVICE_UUID = '00001124-0000-1000-8000-00805f9b34fb';
-
-const guessConnectionHint = (devicePath: string | null): ConnectionHint => {
-  if (!devicePath) return 'unknown';
-  const path = devicePath.toLowerCase();
-  if (path.includes(BLUETOOTH_HID_SERVICE_UUID) || path.includes('bthenum')) return 'bluetooth';
-  if (path.includes('hid#vid_') || path.includes('usb')) return 'usb';
-  return 'unknown';
-};
+const guessConnectionHint = (busType: ControllerBusType | null | undefined): ConnectionHint => busType ?? 'unknown';
 
 export { guessConnectionHint };

@@ -29,7 +29,7 @@ const FIXTURES = join(PROJECT_ROOT, 'tests', 'fixtures', 'save-states');
 /** How long the core needs before the widget reports live memory. */
 const SETTLE_MS = 16_000;
 
-/** Keyboard codes per SNES button — shared/input/data/presets/keyboard.ts. */
+/** Keyboard codes per SNES button — shared/input/keyboard-default.ts. */
 const KEYS: Readonly<Record<string, string>> = {
   Up: 'ArrowUp', Down: 'ArrowDown', Left: 'ArrowLeft', Right: 'ArrowRight',
   A: 'KeyD', B: 'KeyS', X: 'KeyA', Y: 'KeyW', L: 'KeyQ', R: 'KeyE',

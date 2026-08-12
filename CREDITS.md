@@ -26,6 +26,7 @@
 
 | Who | Project | Use | License |
 |-----|---------|-----|---------|
+| **Sam Lantinga + contributors** | [SDL](https://github.com/libsdl-org/SDL) | Core Dependency — the entire controller layer on every platform, built from SDL's official released source; SDL's own Java classes come from that same pinned release at build time rather than being copied into this repository | Zlib |
 | **mdqinc + contributors** | [SDL_GameControllerDB](https://github.com/mdqinc/SDL_GameControllerDB) | Data Used Directly — controller mapping database vendored and parsed into TypeScript controller list | Zlib |
 | **HandHeldLegend** | [procon2tool](https://handheldlegend.github.io/procon2tool) | Reference — USB init sequence and haptic patterns studied and reimplemented in TypeScript; no code copied directly | — |
 | **RyanCopley** | [NSO-GameCube-Controller-Pairing-App](https://github.com/RyanCopley/NSO-GameCube-Controller-Pairing-App) | Reference — studied to understand NSO GameCube controller pairing protocol; no code taken | — |

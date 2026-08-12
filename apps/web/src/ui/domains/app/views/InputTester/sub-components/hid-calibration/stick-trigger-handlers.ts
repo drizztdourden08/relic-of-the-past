@@ -3,7 +3,7 @@
  * Stick and trigger calibration handler logic.
  * Pure functions that implement the finalization and control flow for analog axes.
  */
-import type { HidAxisMapping, InputItem, InputStatus, StickCandidate, StickSide, TriggerSide } from './hid-calibration.type';
+import type { HidAxisMapping, HidButtonMapping, InputItem, InputStatus, StickCandidate, StickSide, TriggerSide } from './hid-calibration.type';
 import { findCounterBytes } from './hid-analysis';
 
 // ── Stick Finalization ──────────────────────────────────────────────────────
@@ -29,7 +29,7 @@ interface StickFinalizeCallbacks {
   setGyroExcluded: (s: Set<number>) => void;
 }
 
-const finalizeStickCalibration = (c1: StickCandidate, c2: StickCandidate | null, refs: StickFinalizeRefs, gyroExcluded: Set<number>, cb: StickFinalizeCallbacks): void => {
+const finalizeStickCalibration = (c1: StickCandidate, c2: StickCandidate | null, refs: StickFinalizeRefs, cb: StickFinalizeCallbacks): void => {
   const side = refs.activeStickRef.current ?? 'left';
   const label = side === 'left' ? 'LEFT' : 'RIGHT';
   const xId = side === 'left' ? 'leftX' : 'rightX';
@@ -53,10 +53,7 @@ const finalizeStickCalibration = (c1: StickCandidate, c2: StickCandidate | null,
   }
 
   const mins = refs.stickMinsRef.current;
-  const maxs = refs.stickMaxsRef.current;
-  const ctrBytes = refs.stickCounterBytesRef.current;
   const sideBytes = side === 'left' ? refs.leftStickBytesRef : refs.rightStickBytesRef;
-  const otherSideBytes = side === 'left' ? refs.rightStickBytesRef : refs.leftStickBytesRef;
   sideBytes.current = new Set();
   const stickExcluded: number[] = [];
 
@@ -70,21 +67,8 @@ const finalizeStickCalibration = (c1: StickCandidate, c2: StickCandidate | null,
     stickExcluded.push(bi);
   }
 
-  for (let i = 0; i < mins.length; i++) {
-    if (explicitBytes.has(i)) continue;
-    if (ctrBytes.has(i)) continue;
-    if (gyroExcluded.has(i)) continue;
-    if (otherSideBytes.current.has(i)) continue;
-    const range = maxs[i] - mins[i];
-    if (range >= 3) {
-      refs.excludedRef.current.add(i);
-      refs.capturedStickBytesRef.current.add(i);
-      sideBytes.current.add(i);
-      stickExcluded.push(i);
-    }
-  }
   cb.setGyroExcluded(new Set(refs.excludedRef.current));
-  cb.addLog(`  Excluded ${stickExcluded.length} bytes for ${label} stick: [${stickExcluded.join(', ')}]`);
+  cb.addLog(`  ${label} stick claimed byte(s): [${stickExcluded.join(', ')}]`);
 
   cb.setItems(prev => prev.map(it => {
     if (it.id === xId) return { ...it, status: 'captured' as InputStatus, result: xResult, axisMapping: xMapping };
@@ -96,7 +80,11 @@ const finalizeStickCalibration = (c1: StickCandidate, c2: StickCandidate | null,
   refs.activeStickRef.current = null;
   cb.setStickBusy(false);
   cb.setStickLiveInfo('');
-  cb.addLog(`${label} stick calibration done.`);
+  // Names the two ids this actually wrote. The card decides it is done by
+  // finding those ids in its own item list, so when a capture reads as having
+  // reset, this line is what says whether the write landed or targeted ids the
+  // list does not contain.
+  cb.addLog(`${label} stick calibration done — wrote ${xId}=captured, ${yId}=${yMapping ? 'captured' : 'skipped'}.`);
   cb.updateByteStatuses(mins.length);
 };
 
@@ -181,6 +169,33 @@ const finalizeTriggerCalibration = (c: StickCandidate, refs: TriggerFinalizeRefs
   cb.updateByteStatuses(refs.baselineRef.current.length);
 };
 
+/**
+ * A trigger that is a switch rather than an axis. Some pads report their
+ * shoulder inputs as one bit inside a shared button byte, so there is no range
+ * to measure and the analog path can never satisfy its threshold. The bit is
+ * recorded the same way a button's is, and the byte is deliberately NOT
+ * excluded or claimed: other bits in it still belong to real buttons, and
+ * taking the whole byte would make them unmappable.
+ */
+const finalizeDigitalTrigger = (mapping: HidButtonMapping, refs: TriggerFinalizeRefs, cb: TriggerFinalizeCallbacks): void => {
+  const side = refs.activeTriggerRef.current ?? 'left';
+  const label = side === 'left' ? 'LEFT' : 'RIGHT';
+  const axisId = side === 'left' ? 'leftTrigger' : 'rightTrigger';
+  const result = `byte[${mapping.byteIndex}] bit 0x${mapping.bitMask.toString(16)} (digital)`;
+
+  cb.addLog(`✓ ${label} Trigger: ${result}`);
+  cb.setItems(prev => prev.map(it =>
+    it.id === axisId ? { ...it, status: 'captured' as InputStatus, result, mapping } : it
+  ));
+
+  cb.setActiveTrigger(null);
+  refs.activeTriggerRef.current = null;
+  cb.setTriggerBusy(false);
+  cb.setTriggerLiveInfo('');
+  cb.addLog(`${label} trigger calibration done (digital, byte shared with buttons).`);
+  cb.updateByteStatuses(refs.baselineRef.current.length);
+};
+
 // ── Trigger Reset ───────────────────────────────────────────────────────────
 
 const resetTrigger = (side: TriggerSide, refs: Pick<TriggerFinalizeRefs, 'excludedRef' | 'capturedTriggerBytesRef' | 'leftTriggerByteRef' | 'rightTriggerByteRef' | 'activeTriggerRef'>, latestBytesLen: number, cb: Pick<TriggerFinalizeCallbacks, 'addLog' | 'updateByteStatuses' | 'setItems' | 'setActiveTrigger' | 'setTriggerBusy' | 'setGyroExcluded'> & {
@@ -213,5 +228,5 @@ const resetTrigger = (side: TriggerSide, refs: Pick<TriggerFinalizeRefs, 'exclud
   cb.addLog(`${label} trigger reset — ready to redo.`);
 };
 
-export { finalizeStickCalibration, resetStick, finalizeTriggerCalibration, resetTrigger };
+export { finalizeStickCalibration, resetStick, finalizeTriggerCalibration, finalizeDigitalTrigger, resetTrigger };
 export type { StickFinalizeRefs, StickFinalizeCallbacks, TriggerFinalizeRefs, TriggerFinalizeCallbacks };

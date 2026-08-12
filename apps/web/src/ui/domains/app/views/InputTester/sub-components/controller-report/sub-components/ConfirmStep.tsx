@@ -5,14 +5,14 @@ import { ReportSection } from './ReportSection';
 
 type ConfirmStepProps = Pick<
   UseControllerReportForm,
-  'email' | 'name' | 'additionalInfo' | 'debugText' | 'detection' | 'calibrationMap' | 'status'
+  'email' | 'name' | 'additionalInfo' | 'debugText' | 'detection' | 'calibrationMap' | 'diagnosticsReport' | 'status'
 >;
 
 /** Step 4 — review EVERYTHING that will be sent, from every prior step, not just
  *  the detection result. Dense sections stay collapsed so this doesn't read as a
  *  wall of text, but nothing from steps 1-3 is left out of the recap. */
 const ConfirmStep = (props: ConfirmStepProps) => {
-  const { email, name, additionalInfo, debugText, detection, calibrationMap, status } = props;
+  const { email, name, additionalInfo, debugText, detection, calibrationMap, diagnosticsReport, status } = props;
 
   return (
     <>
@@ -32,7 +32,8 @@ const ConfirmStep = (props: ConfirmStepProps) => {
       </Text>
 
       <ReportSection label="Full HID read" text={detection.hidReport} />
-      <ReportSection label="Calibration byte report (JSON)" text={calibrationMap ? JSON.stringify(calibrationMap, null, 2) : ''} />
+      <ReportSection label="Byte-level calibration map (JSON)" text={calibrationMap ? JSON.stringify(calibrationMap, null, 2) : ''} />
+      <ReportSection label="Gamepad diagnostics report (JSON)" text={diagnosticsReport ? JSON.stringify(diagnosticsReport, null, 2) : ''} />
       <ReportSection label="Debug info (app/OS/hardware)" text={debugText ?? 'Collecting…'} />
 
       <Text as="p" className="controller-report__disclaimer">

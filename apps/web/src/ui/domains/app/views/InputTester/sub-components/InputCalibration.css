@@ -155,44 +155,6 @@
   border-color: var(--c-border);
 }
 
-/* ─── Stale device overlay ─── */
-.input-cal__card--stale {
-  border-color: var(--c-danger);
-  animation: stale-card-pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes stale-card-pulse {
-  0%, 100% { border-color: var(--c-danger); }
-  50% { border-color: var(--c-danger); }
-}
-
-.input-cal__stale-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: var(--c-danger-dim);
-  z-index: var(--z-sticky);
-  border-radius: inherit;
-  pointer-events: none;
-}
-
-.input-cal__stale-label {
-  font-size: var(--text-xl);
-  font-weight: var(--weight-black);
-  letter-spacing: 3px;
-  color: var(--c-danger);
-  text-shadow: 0 0 8px var(--c-danger);
-}
-
-.input-cal__stale-sub {
-  font-size: var(--text-sm);
-  color: var(--c-danger);
-  margin-top: var(--space-xs);
-}
-
 .input-cal__card-header {
   display: flex;
   align-items: center;
@@ -219,12 +181,6 @@
   font-size: var(--text-base);
   font-weight: var(--weight-medium);
   color: var(--c-text);
-}
-
-.input-cal__card-meta {
-  font-size: var(--text-xs);
-  color: var(--c-text-muted);
-  margin-left: auto;
 }
 
 /* ─── Button Grid inside Card ─── */
@@ -275,4 +231,31 @@
 
 .input-cal__btn-cell--pressed .input-cal__btn-cell-label {
   color: var(--c-green-bright);
+}
+
+/* ─── Rumble strength override ─── */
+
+.input-cal__rumble-strength {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.input-cal__rumble-strength-label {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
+.input-cal__rumble-strength-input {
+  width: 64px;
+}
+
+/* ─── Adapter port list ─── */
+
+.adapter-controller-card__ports {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  border-top: 1px solid var(--c-border);
+  padding-top: var(--space-sm);
 }

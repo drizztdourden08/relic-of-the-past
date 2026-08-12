@@ -124,7 +124,7 @@ const DEFAULT_SETTINGS: GameSettings = {
     dashVibration: true,
     environmentalEffects: true,
   },
-  hapticDevices: {},
+  hapticsEnabled: true,
 
   // Developer
   developerToolsEnabled: false,

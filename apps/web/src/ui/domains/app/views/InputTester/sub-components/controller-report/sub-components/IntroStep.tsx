@@ -7,13 +7,13 @@ const IntroStep = () => {
     <>
       <Text as="p">
         This walks through reporting a controller that isn't working right. It takes four short steps:
-        a quick explanation (this one), your contact info, a fresh run of the same button/stick detection
-        you'd use to calibrate, and a final review before anything is sent.
+        a quick explanation (this one), your contact info, a guided run through the controller's inputs
+        (Gamepad Diagnostics), and a final review before anything is sent.
       </Text>
       <Text as="p">
         The report includes the controller model we detected, the closest match in our known-controller
-        database, the type of connection detected, the raw HID data read from the device, and the byte
-        map captured in the next step — all of it visible to you before you send it.
+        database, the type of connection detected, the raw HID data read from the device, and the
+        diagnostics report captured in the next step, all of it visible to you before you send it.
       </Text>
     </>
   );

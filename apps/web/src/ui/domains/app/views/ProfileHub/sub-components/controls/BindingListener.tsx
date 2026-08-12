@@ -2,7 +2,7 @@
 /**
  * BindingListener — modal overlay that captures the next key or gamepad button press.
  * Uses the shared InputManager's raw input events so every input source
- * (keyboard, Web Gamepad API, WebHID) works identically everywhere.
+ * (keyboard, Web Gamepad API, SDL3 controllers) works identically everywhere.
  */
 
 import { useEffect, useState } from 'react';
@@ -35,6 +35,17 @@ const BindingListener = (props: BindingListenerProps) => {
   // Single unified listener — uses InputManager's raw input events for ALL sources
   useEffect(() => {
     let cancelled = false;
+    // Synchronous one-shot guard, deliberately NOT React state: a stick
+    // pushed even slightly off-axis crosses two axes' press thresholds in the
+    // very same animation frame, and RawInputDispatcher fires one `emit()`
+    // per crossing, all synchronously, before React ever gets a chance to
+    // flush the setListeningFor(null) that a first successful capture
+    // schedules. Without this flag both events reach handleCapture while its
+    // closed-over `listeningFor` is still the old truthy value, so the
+    // second (often an incidental drift on the other axis) silently
+    // overwrites the first — the exact way a rebind could end up pointing at
+    // the wrong axis, or two different actions ending up bound identically.
+    let captured = false;
     let unsub: (() => void) | null = null;
 
     // Keyboard: capture-phase handler for Escape + key capture (active immediately after delay)
@@ -48,11 +59,15 @@ const BindingListener = (props: BindingListenerProps) => {
       }
       // Delete/Backspace clears the binding
       if (e.code === 'Delete' || e.code === 'Backspace') {
+        if (captured) return;
+        captured = true;
         onCapture({ type: 'none' }, 'keyboard');
         return;
       }
       // Ignore bare modifier presses — wait for the actual key
       if (MODIFIER_CODES.has(e.code)) return;
+      if (captured) return;
+      captured = true;
 
       const modifiers: { shift?: boolean; ctrl?: boolean; alt?: boolean } = {};
       if (e.shiftKey) modifiers.shift = true;
@@ -73,7 +88,8 @@ const BindingListener = (props: BindingListenerProps) => {
       window.addEventListener('keydown', handleKey, true);
       // Gamepad + HID: subscribe to InputManager's raw input stream
       unsub = getInputManager().onRawInput((event) => {
-        if (cancelled) return;
+        if (cancelled || captured) return;
+        captured = true;
         onCapture(event.binding, event.sourceDeviceKey, event.vendorId, event.productId);
       });
     }, 200);

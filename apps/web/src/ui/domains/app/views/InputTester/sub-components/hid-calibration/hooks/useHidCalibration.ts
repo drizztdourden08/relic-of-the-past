@@ -3,34 +3,41 @@
  * Core state machine hook for the HID Calibration Wizard.
  * Declares state/refs and delegates action handlers to useCalibrationActions.
  */
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { usePlatform } from '@app/platform';
 import { useAppVersion } from '@app/hooks/useAppVersion';
-import { webHidReader } from '../../../../../../../../lib/input/hid-reader';
-import type { WebHidInputState, WebHidRawReport } from '../../../../../../../../lib/input/hid-reader';
+import type { ControllerInputState } from '../../../../../../../../lib/input/controller-input-store';
 import type { DeviceProfile } from '@shared/input';
+import type { DeviceEntry } from '@shared/ipc';
 import type {
-  AxisSubStep, ByteStatus, CaptureState, GyroState, HidButtonMapping, HidControllerMap,
-  IdleRecordResult, IdleState, InputItem, Phase,
-  StickCandidate, StickSide, TriggerSide,
+  AxisSubStep, ByteStatus, CaptureState, GyroState, HidControllerMap,
+  IdleState, InputItem, Phase,
+  StickSide, TriggerSide,
 } from '../hid-calibration.type';
 import { STICK_IDS, TRIGGER_IDS } from '../hid-calibration.constants';
-import { processGyroFrame, processStickFrame, processTriggerFrame } from '../report-processing';
-import { processButtonFrame } from '../button-detection';
-import { computeByteStatuses, getInstructionText, getByteColor } from '../wizard-helpers';
+import { applyVidPid, computeByteStatuses, getInstructionText, getByteColor } from '../wizard-helpers';
 import type { ByteColorResult } from '../wizard-helpers';
 import { useCalibrationActions } from './useCalibrationActions';
 import { useDeviceAutoDetect } from './useDeviceAutoDetect';
 import { useDeviceRawInfo } from './useDeviceRawInfo';
+import { useWizardRawCapture } from './useWizardRawCapture';
+import { useIdleByteRecording } from './useIdleByteRecording';
+import { useFlakyByteWarning } from './useFlakyByteWarning';
+import { useCalibrationRefs } from './useCalibrationRefs';
+import { useReportSubscription } from './useReportSubscription';
 
 interface UseHidCalibrationProps {
   onComplete: (map: HidControllerMap) => void;
   onCancel: () => void;
   deviceKey?: string;
+  initialProfile?: DeviceProfile | null;
+  capturedEntry?: DeviceEntry | null;
+  initialProfileId?: string;
+  initialHasGyro?: boolean;
 }
 
 const useHidCalibration = (props: UseHidCalibrationProps) => {
-  const { onComplete, deviceKey } = props;
+  const { onComplete, deviceKey, initialProfile, capturedEntry, initialProfileId, initialHasGyro } = props;
 
   // ── State ──
   const [profile, setProfile] = useState<DeviceProfile | null>(null);
@@ -58,62 +65,18 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
   const [byteStatuses, setByteStatuses] = useState<ByteStatus[]>([]);
   const [gyroChangedBytes, setGyroChangedBytes] = useState<Set<number>>(new Set());
   const [log, setLog] = useState<string[]>([]);
-  const [idleRecording, setIdleRecording] = useState<string | null>(null);
-  const [idleResults, setIdleResults] = useState<Record<string, IdleRecordResult>>({});
-  // What the REAL, currently-shipped parser (BaseController.parseReport, via
-  // findController) reports for these same live bytes — not a re-guess.
-  const [liveParsedState, setLiveParsedState] = useState<WebHidInputState | null>(null);
+  // What SDL3's own already-decoded state reports for these same live bytes
+  // — not a re-guess.
+  const [liveParsedState, setLiveParsedState] = useState<ControllerInputState | null>(null);
 
-  // ── Refs ──
-  const logRef = useRef<HTMLDivElement>(null);
-  const activeIdxRef = useRef(-1);
-  const captureStateRef = useRef<CaptureState>('waiting-press');
-  const axisSubStepRef = useRef<AxisSubStep>('pos');
-  const itemsRef = useRef<InputItem[]>([]);
-  const releaseCountRef = useRef(0);
-  const detectedBtnRef = useRef<HidButtonMapping | null>(null);
-  const confirmCountRef = useRef(0);
-  const axisCapRef = useRef<Record<string, { posBytes: Uint8Array | null; negBytes: Uint8Array | null }>>({});
-  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const autoAdvanceRef = useRef(false);
-  const lastReportIdRef = useRef(0);
-  const inputPhaseActiveRef = useRef(false);
-  const baselineRef = useRef(new Uint8Array(0));
-  const excludedRef = useRef(new Set<number>());
-  const deviceInfoRef = useRef({ vendorId: 0, productId: 0, reportId: 0, reportLength: 0 });
-  const gyroRecordingRef = useRef(false);
-  const gyroMinsRef = useRef<Uint8Array>(new Uint8Array(0));
-  const gyroMaxsRef = useRef<Uint8Array>(new Uint8Array(0));
-  const gyroBufferRef = useRef<Uint8Array[]>([]);
-  const stickRecordingRef = useRef(false);
-  const stickMinsRef = useRef<Uint8Array>(new Uint8Array(0));
-  const stickMaxsRef = useRef<Uint8Array>(new Uint8Array(0));
-  const stickCounterBytesRef = useRef(new Set<number>());
-  const stickSamplesRef = useRef(0);
-  const stickStableCountRef = useRef(0);
-  const stickLastTop2Ref = useRef('');
-  const activeStickRef = useRef<StickSide | null>(null);
-  const stickBufferRef = useRef<Uint8Array[]>([]);
-  const capturedStickBytesRef = useRef(new Set<number>());
-  const leftStickBytesRef = useRef(new Set<number>());
-  const rightStickBytesRef = useRef(new Set<number>());
-  const finalizeStickRef = useRef<(c1: StickCandidate, c2: StickCandidate | null) => void>(() => {});
-  const triggerRecordingRef = useRef(false);
-  const triggerMinsRef = useRef<Uint8Array>(new Uint8Array(0));
-  const triggerMaxsRef = useRef<Uint8Array>(new Uint8Array(0));
-  const triggerSamplesRef = useRef(0);
-  const triggerStableCountRef = useRef(0);
-  const triggerLastTopRef = useRef('');
-  const activeTriggerRef = useRef<TriggerSide | null>(null);
-  const triggerBufferRef = useRef<Uint8Array[]>([]);
-  const capturedTriggerBytesRef = useRef(new Set<number>());
-  const leftTriggerByteRef = useRef<number | null>(null);
-  const rightTriggerByteRef = useRef<number | null>(null);
-  const finalizeTriggerRef = useRef<(c: StickCandidate) => void>(() => {});
-  const byteStatusesRef = useRef<ByteStatus[]>([]);
-  const idleRecordBufRef = useRef<{ byteIndices: number[]; frames: number[][] }>({ byteIndices: [], frames: [] });
-  const idleRecordTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const latestBytesRef = useRef<Uint8Array>(new Uint8Array(0));
+  // ── Refs ── (declared in useCalibrationRefs.ts for file-size compliance)
+  const refs = useCalibrationRefs();
+  const {
+    logRef, activeIdxRef, captureStateRef, axisSubStepRef, itemsRef, releaseCountRef, detectedBtnRef,
+    confirmCountRef, awaitingButtonRestRef, baselineRef, excludedRef, deviceInfoRef, inputPhaseActiveRef,
+    capturedStickBytesRef, capturedTriggerBytesRef, autoAdvanceRef,
+    byteStatusesRef, latestBytesRef, lastReportIdRef,
+  } = refs;
 
   useEffect(() => { latestBytesRef.current = latestBytes; }, [latestBytes]);
 
@@ -121,8 +84,15 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
   const setActiveIndex = (i: number) => { activeIdxRef.current = i; _setActiveIndex(i); };
   const setCaptureState = (s: CaptureState) => { captureStateRef.current = s; _setCaptureState(s); };
   const setAxisSubStep = (s: AxisSubStep) => { axisSubStepRef.current = s; _setAxisSubStep(s); };
+  // The ref is updated here, at call time, rather than inside the updater React
+  // runs later. Everything in this wizard reads itemsRef, including the byte
+  // status computation that finalizers call on the line after setItems, so
+  // assigning it late made those read one capture behind: the byte a capture
+  // had just claimed kept the previous item's colour.
   const setItems: typeof _setItems = (u) => {
-    _setItems(prev => { const next = typeof u === 'function' ? u(prev) : u; itemsRef.current = next; return next; });
+    const next = typeof u === 'function' ? (u as (prev: InputItem[]) => InputItem[])(itemsRef.current) : u;
+    itemsRef.current = next;
+    _setItems(next);
   };
   const setInputPhaseActiveWrapped = (v: boolean) => { inputPhaseActiveRef.current = v; setInputPhaseActive(v); };
   const setAutoAdvanceWrapped = (v: boolean) => { autoAdvanceRef.current = v; setAutoAdvance(v); };
@@ -131,10 +101,14 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
   useEffect(() => { if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight; }, [log]);
 
   // ── Device auto-detect + SDL selection ──
-  const { selectedProfileId, selectedSdlVidPid, hasGyro, sdlOptions, handleSdlSelect } = useDeviceAutoDetect(addLog);
+  const { selectedProfileId, selectedSdlVidPid, hasGyro, sdlOptions, handleSdlSelect, detectedProfile } = useDeviceAutoDetect(addLog, initialProfileId, initialHasGyro, deviceKey, initialProfile);
   const rawInfoRef = useDeviceRawInfo(deviceKey);
   const { info: platformInfo } = usePlatform();
   const appVersion = useAppVersion();
+  // Recorded in the report: which SDL produced these readings.
+  const [sdlVersion, setSdlVersion] = useState<string | null>(null);
+  useEffect(() => { window.api.sdlVersion().then(setSdlVersion).catch(() => setSdlVersion(null)); }, []);
+  const { rawAvailable, rawUnavailableReason } = useWizardRawCapture(phase, deviceKey);
 
   // ── Core callbacks ──
   const updateByteStatuses = useCallback((len: number) => {
@@ -147,69 +121,66 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
     while (nextIdx < curItems.length) { const it = curItems[nextIdx]; if (STICK_IDS.has(it.id) || TRIGGER_IDS.has(it.id)) { nextIdx++; continue; } if (it.status !== 'captured' && it.status !== 'skipped') break; nextIdx++; }
     if (nextIdx >= curItems.length) { setInputPhaseActiveWrapped(false); addLog('All inputs mapped!'); return; }
     setActiveIndex(nextIdx); setCaptureState('waiting-press'); setAxisSubStep('pos');
-    releaseCountRef.current = 0; confirmCountRef.current = 0; detectedBtnRef.current = null;
+    releaseCountRef.current = 0; confirmCountRef.current = 0; detectedBtnRef.current = null; awaitingButtonRestRef.current = true;
     setItems(prev => prev.map((it, i) => i === nextIdx ? { ...it, status: 'active' } : it));
   }, [addLog]);
 
   // ── Idle recording ──
-  const handleIdleRecord = useCallback((label: string, byteIndices: number[]) => {
-    setIdleRecording(label); idleRecordBufRef.current = { byteIndices, frames: [] };
-    addLog(`Recording idle bytes [${byteIndices.join(',')}] for ${label}...`);
-    const sample = () => { const bytes = latestBytesRef.current; if (bytes.length > 0) idleRecordBufRef.current.frames.push(byteIndices.map(i => bytes[i] ?? 0)); };
-    const iv = setInterval(sample, 8);
-    idleRecordTimerRef.current = setTimeout(() => {
-      clearInterval(iv); const { frames, byteIndices: idxs } = idleRecordBufRef.current;
-      if (frames.length === 0) { setIdleRecording(null); return; }
-      const analysis = idxs.map((byteIdx, col) => { const values = frames.map(f => f[col]); const min = Math.min(...values), max = Math.max(...values); const unique = [...new Set(values)].sort((a, b) => a - b); const avg = values.reduce((s, v) => s + v, 0) / values.length; return { byteIndex: byteIdx, min, max, range: max - min, average: Math.round(avg), uniqueCount: unique.length, uniqueValues: unique.length <= 32 ? unique : `${unique.length} values` }; });
-      const out: IdleRecordResult = { label, durationMs: 3000, frameCount: frames.length, bytes: analysis };
-      setIdleResults(prev => ({ ...prev, [label]: out })); navigator.clipboard.writeText(JSON.stringify(out, null, 2));
-      addLog(`✓ Idle recorded for ${label}: ${frames.length} frames. Copied to clipboard.`); setIdleRecording(null);
-    }, 3000);
-  }, [addLog]);
+  const { idleRecording, idleResults, handleIdleRecord, recordIdleResult } = useIdleByteRecording(latestBytesRef, addLog);
 
-  // ── Actions (delegated) ──
+  // ── Flaky-byte warning, gating button capture (item 5) ──
+  const flakyWarning = useFlakyByteWarning(latestBytesRef, excludedRef, setGyroExcluded);
+
+  // ── Actions (delegated) ── refs spread from useCalibrationRefs() satisfies
+  // ActionDeps' ref fields structurally; only the non-ref state/callbacks need
+  // to be listed explicitly here.
   const actions = useCalibrationActions({
-    latestBytes, gyroExcluded, stickPickMode, stickPickedBytes, triggerPickMode, triggerPickedByte, selectedProfileId, profile, idleResults,
-    baselineRef, excludedRef, capturedStickBytesRef, capturedTriggerBytesRef, leftStickBytesRef, rightStickBytesRef, leftTriggerByteRef, rightTriggerByteRef,
-    activeStickRef, activeTriggerRef, stickMinsRef, stickMaxsRef, stickCounterBytesRef, stickSamplesRef, stickStableCountRef, stickLastTop2Ref, stickBufferRef, stickRecordingRef,
-    triggerMinsRef, triggerMaxsRef, triggerSamplesRef, triggerStableCountRef, triggerLastTopRef, triggerBufferRef, triggerRecordingRef,
-    gyroMinsRef, gyroMaxsRef, gyroBufferRef, gyroRecordingRef, finalizeStickRef, finalizeTriggerRef,
-    activeIdxRef, advanceTimerRef, itemsRef, releaseCountRef, confirmCountRef, detectedBtnRef, inputPhaseActiveRef, deviceInfoRef, rawInfoRef,
-    platform: platformInfo.os, appVersion,
+    ...refs,
+    latestBytes, gyroExcluded, stickPickMode, stickPickedBytes, triggerPickMode, triggerPickedByte, selectedProfileId, detectedProfile, profile, idleResults, recordIdleResult,
+    rawInfoRef,
+    platform: platformInfo.os, appVersion, capturedEntry, sdlVersion,
     addLog, updateByteStatuses, doAdvance, setItems, setActiveIndex, setCaptureState, setAxisSubStep, setAutoAdvanceWrapped, setInputPhaseActiveWrapped,
     setGyroState, setGyroChangedBytes, setGyroExcluded, setIdleState, setActiveStick, setStickBusy, setStickLiveInfo, setStickPickMode, setStickPickedBytes,
     setActiveTrigger, setTriggerBusy, setTriggerLiveInfo, setTriggerPickMode, setTriggerPickedByte, setProfile, setPhase, onComplete,
   });
 
-  // ── Report subscription ──
-  useEffect(() => {
-    if (phase !== 'live') return;
-    const unsub = webHidReader.onRawReport((report: WebHidRawReport) => {
-      if (deviceKey && report.deviceKey !== deviceKey) return;
-      const bytes = new Uint8Array(report.bytes); setLatestBytes(bytes); lastReportIdRef.current = report.reportId;
-      if (byteStatusesRef.current.length === 0 && bytes.length > 0) updateByteStatuses(bytes.length);
-      const keys = webHidReader.getConnectedDeviceKeys();
-      if (keys.length > 0 && deviceInfoRef.current.vendorId === 0) { const k = deviceKey ?? keys[0]; const [v, p] = k.split(':'); deviceInfoRef.current.vendorId = parseInt(v, 16); deviceInfoRef.current.productId = parseInt(p, 16); }
-      deviceInfoRef.current.reportId = report.reportId; deviceInfoRef.current.reportLength = bytes.length;
-      if (gyroRecordingRef.current) { processGyroFrame(bytes, { gyroMinsRef, gyroMaxsRef, gyroBufferRef }, setGyroChangedBytes); return; }
-      if (stickRecordingRef.current) { processStickFrame(bytes, { stickMinsRef, stickMaxsRef, stickCounterBytesRef, stickSamplesRef, stickStableCountRef, stickLastTop2Ref, stickBufferRef, capturedStickBytesRef, excludedRef, baselineRef }, setStickLiveInfo, (c1, c2) => finalizeStickRef.current(c1, c2), () => { stickRecordingRef.current = false; setStickBusy(false); }); return; }
-      if (triggerRecordingRef.current) { processTriggerFrame(bytes, { triggerMinsRef, triggerMaxsRef, triggerSamplesRef, triggerStableCountRef, triggerLastTopRef, triggerBufferRef, capturedStickBytesRef, capturedTriggerBytesRef, excludedRef, baselineRef }, setTriggerLiveInfo, (c) => finalizeTriggerRef.current(c), () => { triggerRecordingRef.current = false; setTriggerBusy(false); }); return; }
-      processButtonFrame(bytes, { activeIdxRef, captureStateRef, axisSubStepRef, itemsRef, releaseCountRef, detectedBtnRef, confirmCountRef, axisCapRef, advanceTimerRef, autoAdvanceRef, inputPhaseActiveRef, baselineRef, excludedRef }, { setCaptureState, setAxisSubStep, setItems, addLog, updateByteStatuses, doAdvance });
-    });
-    return () => { unsub(); if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current); };
-  }, [phase, addLog, doAdvance, updateByteStatuses, deviceKey]);
+  // Skips the profile-picker screen when a host already resolved a device
+  // and profile itself (see HidCalibrationWizardProps.initialProfileId).
+  // detectedProfile resolves asynchronously (it reads the live capability
+  // list), so this waits for it rather than firing off selectedProfileId
+  // alone — that state is set synchronously from initialProfileId and would
+  // otherwise race handleProfileConfirm into bailing on a still-null profile,
+  // permanently, since autoConfirmedRef only ever tries once.
+  // useLayoutEffect so the picker never paints even for a single frame.
+  const autoConfirmedRef = useRef(false);
+  useLayoutEffect(() => {
+    if (autoConfirmedRef.current || phase !== 'select-profile' || !detectedProfile) return;
+    autoConfirmedRef.current = true;
+    actions.handleProfileConfirm();
+  }, [phase, detectedProfile, actions]);
 
-  // Same live bytes, run through the real parser — parallel to the raw-report
-  // subscription above, so this screen shows the shipped code's actual output
-  // alongside the raw-byte diffing, not instead of it.
+  // Populates identity directly from the chosen device as soon as it's known,
+  // rather than only from getDevicesThatHaveReported() on a raw report: that list
+  // is gamepad-level, so a device captured with SDL's hold released (the
+  // diagnostics wizard's byte-capture step) never appears in it, which left
+  // vendorId/productId stuck at 0 for that entire capture.
   useEffect(() => {
-    if (phase !== 'live') return;
-    const unsub = webHidReader.onInput((state: WebHidInputState) => {
-      if (deviceKey && state.deviceKey !== deviceKey) return;
-      setLiveParsedState(state);
-    });
-    return unsub;
+    if (phase === 'live' && deviceKey) applyVidPid(deviceInfoRef, deviceKey);
   }, [phase, deviceKey]);
+
+  // ── Report subscription (raw bytes + the real parser in parallel) ──
+  useReportSubscription(phase, deviceKey, refs, {
+    setLatestBytes, setLiveParsedState, setGyroChangedBytes,
+    setStickLiveInfo, setStickBusy, setTriggerLiveInfo, setTriggerBusy,
+    setCaptureState, setAxisSubStep, setItems, addLog, updateByteStatuses, doAdvance,
+  });
+
+  // Runs the flaky-byte check before button capture actually starts, rather
+  // than replacing handleStartButtons outright, so the underlying action stays
+  // a single well-named thing the check merely gates.
+  const handleStartButtonsChecked = useCallback(() => {
+    flakyWarning.checkBeforeStart(actions.handleStartButtons);
+  }, [flakyWarning.checkBeforeStart, actions.handleStartButtons]);
 
   // ── Derived ──
   const prereqsDone = (hasGyro ? gyroState === 'done' : true) && idleState === 'done';
@@ -223,12 +194,20 @@ const useHidCalibration = (props: UseHidCalibrationProps) => {
     activeTrigger, triggerBusy, triggerLiveInfo, triggerPickMode, triggerPickedByte,
     items, activeIndex, captureState, axisSubStep, inputPhaseActive, autoAdvance,
     latestBytes, byteStatuses, gyroChangedBytes, log, idleRecording, idleResults, liveParsedState,
+    rawAvailable, rawUnavailableReason,
     prereqsDone, capturedCount, buttonItems, buttonCapturedCount,
     lastReportId: lastReportIdRef.current,
     logRef, excludedRef, baselineRef, itemsRef, activeIdxRef, inputPhaseActiveRef,
-    sdlOptions, handleSdlSelect, handleIdleRecord,
+    sdlOptions, handleSdlSelect, handleIdleRecord, detectedProfile,
     setAutoAdvanceWrapped, setInputPhaseActiveWrapped,
     ...actions,
+    handleStartButtons: handleStartButtonsChecked,
+    flakyDialogOpen: flakyWarning.flakyDialogOpen,
+    flakyBytes: flakyWarning.flakyBytes,
+    flakyLiveRanges: flakyWarning.liveRanges,
+    onExcludeFlakyAndContinue: flakyWarning.excludeAndContinue,
+    onContinueFlakyAnyway: flakyWarning.continueWithoutExcluding,
+    onCancelFlakyDialog: flakyWarning.cancel,
     getInstruction: () => getInstructionText(inputPhaseActive, items, activeIndex, captureState, axisSubStep),
     getByteColor: (idx: number): ByteColorResult => getByteColor(idx, byteStatuses, gyroState, gyroChangedBytes),
   };

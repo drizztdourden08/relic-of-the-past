@@ -6,7 +6,10 @@
 
 import type { FunctionMapping, FunctionAction } from '@shared/types/controls';
 import { DEFAULT_FUNCTION_MAPPINGS } from '@shared/types/controls';
+import { resolveAxisPressThreshold } from './axis-press-threshold';
 import type { AllowedDevices } from './profile-devices';
+import { deviceKeyFor, scopedEntries, setScoped } from './device-scoped-map';
+import type { DeviceScopedMap } from './device-scoped-map';
 
 /** Merge saved mappings with defaults so newly-added actions always have a binding. */
 const mergeWithDefaults = (mappings: FunctionMapping[]): FunctionMapping[] => {
@@ -21,14 +24,13 @@ const mergeWithDefaults = (mappings: FunctionMapping[]): FunctionMapping[] => {
 
 type FunctionKeyUpListener = (action: FunctionAction) => void;
 
-/** Analog-stick deflection past this magnitude counts as a pressed direction. */
-const AXIS_THRESHOLD = 0.5;
-
 class FunctionActionEngine {
   private functionMappings: FunctionMapping[] = DEFAULT_FUNCTION_MAPPINGS;
   private functionKeyMap = new Map<string, FunctionAction>(); // "code:s:c:a" → action
-  private functionGamepadButtonMap = new Map<number, FunctionAction>();
-  private functionGamepadAxisMap = new Map<string, FunctionAction>(); // "axisIndex:direction" → action
+  // Scoped by owning device (see device-scoped-map.ts) so a shortcut/cheat bound
+  // on one pad never fires from another pad sharing the same button index.
+  private functionGamepadButtonMap: DeviceScopedMap<number, FunctionAction> = new Map();
+  private functionGamepadAxisMap: DeviceScopedMap<string, FunctionAction> = new Map(); // "axisIndex:direction" → action
   private functionActionCallbacks = new Map<FunctionAction, () => void>();
   private functionKeyUpListeners = new Set<FunctionKeyUpListener>();
   // Reverse lookup: code → funcKeyIds (for keyup matching without modifiers)
@@ -102,22 +104,11 @@ class FunctionActionEngine {
   }
 
   /**
-   * Check gamepad/HID buttons against function mappings each frame.
+   * Check HID buttons against function mappings each frame (SDL3 — every
+   * gamepad, the browser Gamepad API path having been removed).
    * Fires callbacks on rising edge, fires keyUp listeners on falling edge.
    */
-  checkGamepads(hidStates: Map<string, { buttons: boolean[]; axes: number[] }>, allowed: AllowedDevices, gamepadVidPid: Map<number, { vid: string; pid: string }>): void {
-    // --- Web Gamepad API controllers — only devices in the active profile's map,
-    // and only when not already served over HID (see polling-engine.ts computeBitmask). ---
-    for (const gp of navigator.getGamepads()) {
-      if (!gp || !gp.connected) continue;
-      const vp = gamepadVidPid.get(gp.index);
-      const key = vp ? `${vp.vid}:${vp.pid}` : null;
-      if (!key || !allowed.gamepadKeys.has(key) || hidStates.has(key)) continue;
-      // Normalize Web Gamepad buttons (objects) to booleans, then share one code path.
-      this.processDeviceState(`gamepad-${gp.index}`, gp.buttons.map((b) => b.pressed), gp.axes);
-    }
-
-    // --- WebHID controllers (Switch Pro, PlayStation, 8BitDo) ---
+  checkGamepads(hidStates: Map<string, { buttons: boolean[]; axes: number[] }>, allowed: AllowedDevices): void {
     for (const [deviceKey, state] of hidStates) {
       if (!allowed.gamepadKeys.has(deviceKey)) continue;
       this.processDeviceState(deviceKey, state.buttons, state.axes);
@@ -128,16 +119,17 @@ class FunctionActionEngine {
 
   /** Run rising/falling-edge detection over one device's buttons + axes. */
   private processDeviceState(deviceKey: string, buttons: readonly boolean[], axes: readonly number[]): void {
-    for (const [btnIndex, action] of this.functionGamepadButtonMap) {
+    for (const [btnIndex, action] of scopedEntries(this.functionGamepadButtonMap, deviceKey)) {
       if (btnIndex >= buttons.length) continue;
       this.edge(buttons[btnIndex], `${deviceKey}:btn:${btnIndex}`, action);
     }
-    for (const [axisKey, action] of this.functionGamepadAxisMap) {
+    for (const [axisKey, action] of scopedEntries(this.functionGamepadAxisMap, deviceKey)) {
       const [axisStr, dir] = axisKey.split(':');
       const axisIndex = parseInt(axisStr, 10);
       if (axisIndex >= axes.length) continue;
       const val = axes[axisIndex];
-      const active = (dir === '+' && val > AXIS_THRESHOLD) || (dir === '-' && val < -AXIS_THRESHOLD);
+      const threshold = resolveAxisPressThreshold(axisIndex, deviceKey);
+      const active = (dir === '+' && val > threshold) || (dir === '-' && val < -threshold);
       this.edge(active, `${deviceKey}:axis:${axisKey}`, action);
     }
   }
@@ -166,9 +158,9 @@ class FunctionActionEngine {
         list.push(key);
         this.functionCodeToKeyIds.set(m.binding.code, list);
       } else if (m.binding.type === 'gamepad-button') {
-        this.functionGamepadButtonMap.set(m.binding.index, m.action);
+        setScoped(this.functionGamepadButtonMap, deviceKeyFor(m.sourceVid, m.sourcePid), m.binding.index, m.action);
       } else if (m.binding.type === 'gamepad-axis') {
-        this.functionGamepadAxisMap.set(`${m.binding.axisIndex}:${m.binding.direction}`, m.action);
+        setScoped(this.functionGamepadAxisMap, deviceKeyFor(m.sourceVid, m.sourcePid), `${m.binding.axisIndex}:${m.binding.direction}`, m.action);
       }
     }
   }

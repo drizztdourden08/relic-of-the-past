@@ -3,9 +3,9 @@
  * InputManager — Orchestrator for the renderer input engine.
  *
  * Delegates to focused sub-modules (PauseManager, FunctionActionEngine,
- * RawInputDispatcher, polling-engine, controller-lifecycle, gamepad-vid-pid,
- * profile-utils) and to input-manager-{lifecycle,events} for start/stop wiring,
- * device refresh, key/gamepad handlers, and the per-frame poll loop.
+ * RawInputDispatcher, polling-engine, profile-utils) and to
+ * input-manager-{lifecycle,events} for start/stop wiring, device refresh,
+ * key handlers, and the per-frame poll loop.
  *
  * Fields are intentionally non-private so the lifecycle/events helpers can operate
  * on the instance (compile-time only — no runtime effect).
@@ -15,8 +15,9 @@
 
 import type { InputProfile, SnesButton, FunctionMapping, FunctionAction } from '@shared/types/controls';
 import type { DetectedDevice } from '@shared/types/controls';
-import { webHidReader } from './hid-reader';
-import type { WebHidInputState } from './hid-reader';
+import type { DeviceEntry } from '@shared/ipc';
+import { controllerInputStore } from './controller-input-store';
+import type { ControllerInputState } from './controller-input-store';
 import { wasmSetPaused } from '../game/wasm-bridge';
 import { suspendAudio, resumeAudio } from '../game/audio-volume';
 import { PauseManager } from './pause-manager';
@@ -24,14 +25,12 @@ import type { PauseListener } from './pause-manager';
 import { FunctionActionEngine } from './function-actions';
 import { RawInputDispatcher } from './raw-input-dispatcher';
 import type { RawInputEvent, RawInputListener } from './raw-input-dispatcher';
-import type { GamepadSnapshot } from './polling-engine';
-import type { HidDeviceInfo } from './gamepad-vid-pid';
-import type { ControllerEntry } from './controller-lifecycle';
 import { startInput, stopInput, refreshDevicesImpl } from './input-manager-lifecycle';
-import { rebuildMaps, guardKeys, keyDown, keyUp, gamepadConnected, gamepadDisconnected, pollFrame, connectedGamepadKeys } from './input-manager-events';
+import { rebuildMaps, guardKeys, keyDown, keyUp, pollFrame, connectedGamepadKeys } from './input-manager-events';
 import { wireProfileActions, setProfiles as setProfilesImpl, subscribeActiveProfile, cycleActiveProfile as cycleActiveProfileImpl } from './input-manager-profiles';
 import type { AllowedDevices } from './profile-devices';
 import type { ActiveProfileListener, DeviceChangeListener, InputStateListener } from './input-manager-types';
+import type { DeviceScopedMap } from './device-scoped-map';
 
 class InputManager {
   activeProfile: InputProfile | null = null;
@@ -48,32 +47,30 @@ class InputManager {
   setInputFn: ((mask: number) => void) | null = null;
   running = false;
 
-  // Binding lookup maps
+  // Binding lookup maps — the gamepad ones are scoped by owning device (see
+  // device-scoped-map.ts), so a binding recorded from one pad never fires from another.
   keyboardMap = new Map<string, SnesButton>();
-  gamepadButtonMap = new Map<number, SnesButton>();
-  gamepadAxisMap = new Map<string, SnesButton>();
+  gamepadButtonMap: DeviceScopedMap<number, SnesButton> = new Map();
+  gamepadAxisMap: DeviceScopedMap<string, SnesButton> = new Map();
 
   // HID input state
   hidStates = new Map<string, { buttons: boolean[]; axes: number[] }>();
   hidUnsubscribe: (() => void) | null = null;
   hidDisconnectUnsub: (() => void) | null = null;
-  ipcReportUnsub: (() => void) | null = null;
-  ipcDisconnectUnsub: (() => void) | null = null;
-  ipcErrorUnsub: (() => void) | null = null;
-  ipcMainPerfUnsub: (() => void) | null = null;
-  ipcDeviceOpenedUnsub: (() => void) | null = null;
+  ipcControllerStateUnsub: (() => void) | null = null;
+  controllerRemovedUnsub: (() => void) | null = null;
+  controllerRawUnsub: (() => void) | null = null;
+  controllerNameCacheUnsub: (() => void) | null = null;
+  controllerFamilyCacheUnsub: (() => void) | null = null;
 
   // Device tracking
   devices: DetectedDevice[] = [];
   deviceListeners = new Set<DeviceChangeListener>();
-  hidDeviceCache: HidDeviceInfo[] = [];
-  gamepadVidPid = new Map<number, { vid: string; pid: string }>();
-  activeControllers = new Map<string, ControllerEntry>();
+  hidDeviceCache: DeviceEntry[] = [];
 
   // Per-frame state
-  currentHidStates = new Map<string, WebHidInputState>();
+  currentHidStates = new Map<string, ControllerInputState>();
   hidStatesDirty = false;
-  currentGamepads: GamepadSnapshot[] = [];
   stateListeners = new Set<InputStateListener>();
   calibrationLoaded = false;
   devicePollId: ReturnType<typeof setInterval> | null = null;
@@ -104,8 +101,6 @@ class InputManager {
   guardEmscriptenKeys = (e: KeyboardEvent): void => guardKeys(this, e);
   onKeyDown = (e: KeyboardEvent): void => keyDown(this, e);
   onKeyUp = (e: KeyboardEvent): void => keyUp(this, e);
-  onGamepadConnected = (e: GamepadEvent): void => gamepadConnected(this, e);
-  onGamepadDisconnected = (): void => gamepadDisconnected(this);
   pollLoop = (): void => pollFrame(this);
 
   // ─── Public API ───
@@ -224,12 +219,8 @@ class InputManager {
     return () => this.deviceListeners.delete(listener);
   }
 
-  getHidStates(): Map<string, WebHidInputState> {
+  getHidStates(): Map<string, ControllerInputState> {
     return this.currentHidStates;
-  }
-
-  getGamepads(): GamepadSnapshot[] {
-    return this.currentGamepads;
   }
 
   getPressedKeys(): Set<string> {
@@ -237,7 +228,7 @@ class InputManager {
   }
 
   isHidConnected(): boolean {
-    return webHidReader.isConnected();
+    return controllerInputStore.isConnected();
   }
 
   // ─── Lifecycle / device refresh (delegated) ───
@@ -276,4 +267,3 @@ export { profileFromPreset, resolveFunctionMappingIcon } from './profile-utils';
 export type { ActiveProfileListener, DeviceChangeListener, InputStateListener } from './input-manager-types';
 export type { PauseListener } from './pause-manager';
 export type { RawInputEvent, RawInputListener } from './raw-input-dispatcher';
-export type { GamepadSnapshot } from './polling-engine';
