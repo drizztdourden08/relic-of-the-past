@@ -1,0 +1,13 @@
+/* @layer renderer-components @kind style */
+
+.unavailable-controller-notice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.unavailable-controller-notice__text {
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+}

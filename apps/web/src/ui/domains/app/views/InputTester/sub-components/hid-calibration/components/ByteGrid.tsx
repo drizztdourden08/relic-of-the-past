@@ -8,6 +8,7 @@ import { Text } from '../../../../../../../design-system/primitives/Text';
 import type { ByteStatus, GyroState } from '../hid-calibration.type';
 import { hex } from '../hid-analysis';
 import type { ByteColorResult } from '../wizard-helpers';
+import { ByteChangeDot, rampColor } from './ByteChangeDot';
 
 // Categorical data-viz swatch colors (fixed hues that ENCODE byte roles, not theme colors).
 const SWATCH: Record<string, CSSProperties> = {
@@ -16,7 +17,8 @@ const SWATCH: Record<string, CSSProperties> = {
   stick: { background: '#38bdf8' },
   trigger: { background: '#fb923c' },
   button: { background: '#4ade80' },
-  changed: { background: '#fbbf24' },
+  // Reads as the indicator itself: green at rest, red at full travel.
+  changed: { background: `linear-gradient(90deg, ${rampColor(0)}, ${rampColor(0.5)}, ${rampColor(1)})` },
   gyro: { background: '#f87171' },
   selected: { background: '#c084fc' },
 };
@@ -54,15 +56,18 @@ const ByteGrid = (props: ByteGridProps) => {
       <Box className="hid-cal__byte-grid">
         {Array.from(latestBytes).map((b, i) => {
           const colors = getByteColor(i);
-          const isChanged = baselineRef.current.length > i && baselineRef.current[i] !== b && !excludedRef.current.has(i);
+          const hasBaseline = baselineRef.current.length > i;
+          const delta = hasBaseline && !excludedRef.current.has(i) ? b - baselineRef.current[i] : 0;
+          // Only an axis byte's sign means anything; a bitmask just differs.
+          const signed = byteStatuses[i] === 'stick' || byteStatuses[i] === 'trigger';
           const isPicked = (stickPickMode && stickPickedBytes.includes(i)) || (triggerPickMode && triggerPickedByte === i);
           const pickHighlight = (stickPickMode || triggerPickMode) && !isPicked;
           const activeItem = itemsRef.current[activeIdxRef.current];
           return (
             <Box key={i} className="hid-cal__byte-box" style={{
-              background: isPicked ? '#1a1a3d' : isChanged ? '#332200' : colors.bg,
-              borderColor: isPicked ? '#c084fc' : isChanged ? '#fbbf24' : colors.border,
-              color: isPicked ? '#c084fc' : isChanged ? '#fbbf24' : colors.text,
+              background: isPicked ? '#1a1a3d' : colors.bg,
+              borderColor: isPicked ? '#c084fc' : colors.border,
+              color: isPicked ? '#c084fc' : colors.text,
               cursor: 'pointer',
               boxShadow: isPicked ? '0 0 6px #c084fc88' : undefined,
               opacity: pickHighlight && excludedRef.current.has(i) ? 0.4 : 1,
@@ -74,6 +79,7 @@ const ByteGrid = (props: ByteGridProps) => {
                 ? `byte[${i}] = 0x${hex(b)} (${b}) — click to assign to "${activeItem?.label}"`
                 : `byte[${i}] = 0x${hex(b)} (${b}) — ${byteStatuses[i] ?? 'unknown'}\nClick to toggle exclusion`)}
               onClick={() => onByteClick(i)}>
+              <ByteChangeDot delta={delta} signed={signed} />
               <Text className="hid-cal__byte-idx">{i}</Text>
               <Text className="hid-cal__byte-val">{hex(b)}</Text>
             </Box>
@@ -87,7 +93,7 @@ const ByteGrid = (props: ByteGridProps) => {
         <Text><Text className="hid-cal__legend-swatch" style={SWATCH.stick} /> Stick</Text>
         <Text><Text className="hid-cal__legend-swatch" style={SWATCH.trigger} /> Trigger</Text>
         <Text><Text className="hid-cal__legend-swatch" style={SWATCH.button} /> Button</Text>
-        <Text><Text className="hid-cal__legend-swatch" style={SWATCH.changed} /> Changed</Text>
+        <Text><Text className="hid-cal__legend-swatch" style={SWATCH.changed} /> Changed (top edge, by amount)</Text>
         {gyroState === 'recording' && (
           <Text><Text className="hid-cal__legend-swatch" style={SWATCH.gyro} /> Gyro</Text>
         )}

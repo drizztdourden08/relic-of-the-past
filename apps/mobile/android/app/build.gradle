@@ -8,9 +8,53 @@ def appVersionName = rootPkg.version
 def (vMaj, vMin, vPat) = appVersionName.tokenize('.').collect { it.toInteger() }
 def appVersionCode = vMaj * 10000 + vMin * 100 + vPat
 
+// The controller-input plugin's native build (src/main/cpp/controllersdl3) links
+// against the SAME SDL3 source scripts/build/fetch-sdl3.mjs fetches for the
+// desktop Node addon — this file is the one place the version is pinned, so the
+// two platforms can never drift onto different SDL3 releases. See that addon's
+// package.json doc comment for what fetches/builds it (`npm run ensure-sdl3`).
+def sdl3Pkg = new JsonSlurper().parse(file("../../../desktop/electron/input/native/sdl3/package.json"))
+// Forward slashes even on Windows: CMake's own convention for path-valued
+// variables, and required here — a raw backslash path flows into a generated
+// try_compile() project (SDL3's cmake/sdlcpu.cmake CPU-arch detection) where a
+// backslash followed by a letter is read as an (invalid) string escape.
+def sdl3SourceDir = file("../../../../third_party/sdl3/SDL3-${sdl3Pkg.sdl3}").absolutePath.replace('\\', '/')
+
+// ABI list is an open product decision (APK size vs. device coverage) — see the
+// integration report. arm64-v8a alone covers effectively all controller-capable
+// phones sold since ~2017; add armeabi-v7a/x86_64 here if older-device or emulator
+// coverage turns out to matter more than the size cost.
+def controllerAbis = ["arm64-v8a"]
+
+// Where SDL's Java classes are staged for compilation. Inside the build dir on
+// purpose: nothing upstream ever lands in this repo's source tree, so there is
+// no vendored copy to review, to keep in step with the pinned release, or to
+// mistake for ours.
+def sdlJavaDir = layout.buildDirectory.dir("generated/sdl3-java").get().asFile
+def sdlJavaUpstream = file("${sdl3SourceDir}/android-project/app/src/main/java/org/libsdl/app")
+
+// Refuses to build rather than compile against a stale copy: without the
+// fetched source there is nothing to stage, and a missing SDL class fails much
+// later with an unhelpful ClassNotFoundException at runtime instead.
+tasks.register('stageSdlJava', Copy) {
+    doFirst {
+        if (!sdlJavaUpstream.exists()) {
+            throw new GradleException(
+                "SDL3 Java sources not found at ${sdlJavaUpstream}.\n" +
+                "Run `npm run ensure-sdl3` from the repo root to fetch the pinned SDL3 release.")
+        }
+    }
+    from sdlJavaUpstream
+    into new File(sdlJavaDir, "org/libsdl/app")
+}
+tasks.configureEach { task ->
+    if (task.name == 'preBuild') task.dependsOn 'stageSdlJava'
+}
+
 android {
     namespace = "com.relicofthepast.app"
     compileSdk = rootProject.ext.compileSdkVersion
+    ndkVersion "27.2.12479018"
     defaultConfig {
         applicationId "com.relicofthepast.app"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -22,6 +66,29 @@ android {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
              // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+        externalNativeBuild {
+            cmake {
+                arguments "-DSDL3_SOURCE_DIR=${sdl3SourceDir}", "-DANDROID_STL=c++_shared"
+                abiFilters(*controllerAbis)
+            }
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/controllersdl3/CMakeLists.txt"
+            version "3.22.1"
+        }
+    }
+    // SDL's own Java classes are compiled straight out of the fetched SDL3
+    // source rather than kept in this repo. They are the Java half of the same
+    // JNI contract the native library implements, so taking them from the very
+    // tree that builds that library is what guarantees the two halves cannot
+    // drift apart. Copying them in by hand would also mean silently owning
+    // someone else's code and re-vendoring it by hand on every SDL bump.
+    sourceSets {
+        main {
+            java.srcDirs += sdlJavaDir
         }
     }
     signingConfigs {
@@ -38,6 +105,13 @@ android {
         }
     }
     buildTypes {
+        debug {
+            // Its own package, so a test build never has to displace an
+            // installed release build (their signatures can never match) and
+            // both can sit on the same phone.
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

@@ -8,6 +8,8 @@ interface BoxProps extends HTMLAttributes<HTMLElement> {
   disabled?: boolean;
   /** Forwarded when rendering an anchor (e.g. `as="a"`). */
   href?: string;
+  /** Forwarded when rendering a details element (e.g. `as="details"`). */
+  open?: boolean;
   children?: ReactNode;
 }
 

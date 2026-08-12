@@ -9,12 +9,12 @@ import { probeDevice } from './probe-device';
 import { probeRefreshRate } from './probe-refresh-rate';
 
 const collectRendererDiagnostics = async (): Promise<RendererDiagnostics> => {
-  const [audio, refreshHz] = await Promise.all([probeAudio(), probeRefreshRate()]);
+  const [audio, refreshHz, device] = await Promise.all([probeAudio(), probeRefreshRate(), probeDevice()]);
   return {
     webgl: probeWebgl(),
     audio,
     display: probeDisplay(refreshHz),
-    device: probeDevice(),
+    device,
   };
 };
 

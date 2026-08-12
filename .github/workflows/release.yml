@@ -101,12 +101,18 @@ jobs:
           - os: windows-latest
             platform: win
             args: --win
+            addonPlatform: win32
+            addonArch: x64
           - os: macos-latest
             platform: mac
             args: --mac
+            addonPlatform: darwin
+            addonArch: arm64
           - os: ubuntu-latest
             platform: linux
             args: --linux
+            addonPlatform: linux
+            addonArch: x64
 
     runs-on: ${{ matrix.os }}
 
@@ -134,6 +140,26 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
+      - name: Install libusb + pkg-config (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libusb-1.0-0-dev pkg-config
+
+      - name: Install libusb + pkg-config (macOS)
+        if: runner.os == 'macOS'
+        run: brew install libusb pkg-config
+
+      - name: Build the input addon from source
+        # --force so the release ships an addon built from THIS commit. Without
+        # it the postinstall would fetch the previous release's prebuilt and
+        # every release would republish the one before it, unchanged forever.
+        # SDL3 is built from source here with libusb on (installed above), the
+        # only configuration that can drive the newer first-party controllers.
+        run: node scripts/ensure-sdl3.mjs --force
+
+      - name: Verify the addon built
+        shell: bash
+        run: test -f "apps/desktop/electron/input/native/sdl3/prebuilds/${{ matrix.addonPlatform }}-${{ matrix.addonArch }}/sdl3_input.node" || { echo "::error::sdl3_input.node missing after build"; exit 1; }
+
       - name: Build & Package
         shell: bash
         env:
@@ -150,6 +176,22 @@ jobs:
           rm -rf release/${{ matrix.platform }}/.icon-ico
           rm -f release/${{ matrix.platform }}/builder-debug.yml
           rm -f release/${{ matrix.platform }}/builder-effective-config.yaml
+
+      - name: Package the input addon
+        # Lands in the same folder the upload glob below already collects, so
+        # the addon rides along as one more asset on the release. Fetched back
+        # by scripts/build/fetch-addon-prebuilt.mjs on a fresh clone, which is
+        # what spares most machines a C/C++ toolchain.
+        shell: bash
+        run: |
+          PKG=./apps/desktop/electron/input/native/sdl3/package.json
+          VERSION=$(node -p "require('$PKG').version")
+          # Must match buildKeyOf() in scripts/ensure-sdl3.mjs, which is what
+          # the fetch side reconstructs to find this asset.
+          KEY=$(node -p "const p=require('$PKG');require('crypto').createHash('sha256').update([p.version,p.sdl3,p.libusb].join('|')).digest('hex').slice(0,8)")
+          NAME="sdl3-input-${VERSION}-${KEY}-${{ matrix.addonPlatform }}-${{ matrix.addonArch }}"
+          tar czf "release/${{ matrix.platform }}/${NAME}.tar.gz" -C "apps/desktop/electron/input/native/sdl3/prebuilds/${{ matrix.addonPlatform }}-${{ matrix.addonArch }}" .
+          node -e "console.log(require('crypto').createHash('sha256').update(require('fs').readFileSync(process.argv[1])).digest('hex') + '  ' + require('path').basename(process.argv[1]))" "release/${{ matrix.platform }}/${NAME}.tar.gz" | tee "release/${{ matrix.platform }}/${NAME}.tar.gz.sha256"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v7

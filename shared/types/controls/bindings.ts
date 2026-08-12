@@ -13,11 +13,11 @@ type DeviceFamily =
 
 /**
  * Which input API a controller uses for actual button/axis reading:
- *  - 'xinput': Windows XInput driver (Xbox controllers) — read via Web Gamepad API
- *  - 'hid':    Raw HID reports via node-hid (Switch, PlayStation, 8BitDo)
- *  - 'webapi': Web Gamepad API only (fallback for unknowns that Chromium maps)
+ *  - 'hid':    Already-decoded state via SDL3 — every gamepad, on every
+ *              platform that has SDL3 (desktop only; see the platform hosts).
+ *  - 'webapi': The keyboard's own DOM key events.
  */
-type InputApi = 'xinput' | 'hid' | 'webapi';
+type InputApi = 'hid' | 'webapi';
 
 // ── Input bindings ──
 

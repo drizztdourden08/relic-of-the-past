@@ -50,8 +50,8 @@ interface DeviceEnvironment {
   languages: string[];
   timeZone: string;
   online: boolean;
-  /** One entry per connected gamepad, as the Gamepad API names it. */
-  gamepads: string[];
+  /** One entry per device SDL3 is reading directly. */
+  hidDevices: string[];
 }
 
 interface RendererDiagnostics {

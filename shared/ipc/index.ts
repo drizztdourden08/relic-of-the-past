@@ -8,4 +8,8 @@ export type { ReviewEntry, ReviewFile } from './review-contract';
 export type {
   DetectionContext, DraftRecommendation, PassResult, Recommendation,
 } from './recommendation-contract';
+export type {
+  ControllerAddedInfo, ControllerBusType, ControllerConnectionState, ControllerGamepadType, ControllerJoystickSample, ControllerRawReport,
+  DeviceEntry, DeviceStatus, HidListedDevice, JoystickInfo, RawCaptureFailureReason, RawCaptureStartResult,
+} from './controller-contract';
 export { INVOKE_MAP, SEND_MAP, EVENT_MAP } from './maps';

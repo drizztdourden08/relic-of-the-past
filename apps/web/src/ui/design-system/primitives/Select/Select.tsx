@@ -55,7 +55,7 @@ const Select = (props: SelectProps) => {
       </button>
 
       {dropdown.open && (
-        <Portal layer="overlay">
+        <Portal layer="popover">
           <div
             ref={dropdown.contentRef}
             className="select-content"

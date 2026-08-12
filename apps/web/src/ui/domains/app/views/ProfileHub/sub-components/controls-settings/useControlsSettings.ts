@@ -10,7 +10,7 @@ import { useDeviceSync } from './useDeviceSync';
 import { useBindingState } from './useBindingState';
 import { useDragDrop } from './useDragDrop';
 import { useDisplayMappings } from './useDisplayMappings';
-import { useHapticDevices } from './useHapticDevices';
+import { useHapticsToggle } from './useHapticsToggle';
 
 const useControlsSettings = ({ settings, onChange, profileId }: UseControlsSettingsArgs) => {
   const [activeTab, setActiveTab] = useState<'controls' | 'enhanced' | 'shortcuts' | 'cheats'>('controls');
@@ -30,7 +30,7 @@ const useControlsSettings = ({ settings, onChange, profileId }: UseControlsSetti
     handleDeleteConfirm,
   } = useProfileActions({ settings, onChange, profileId });
 
-  const { devices, filteredDevices } = useDeviceSync();
+  const { devices, filteredDevices, controllerGroups, isRescanPending, handleRescan, addMapping } = useDeviceSync();
 
   const {
     listeningFor,
@@ -41,7 +41,7 @@ const useControlsSettings = ({ settings, onChange, profileId }: UseControlsSetti
     handleSnesClear,
     handleFunctionClear,
     handleCapture,
-  } = useBindingState({ settings, onChange, activeProfile, updateActiveProfile });
+  } = useBindingState({ settings, onChange, activeProfile, updateActiveProfile, devices });
 
   const {
     dragOverBindings,
@@ -55,20 +55,17 @@ const useControlsSettings = ({ settings, onChange, profileId }: UseControlsSetti
 
   const { requiredInputs, displayMappings } = useDisplayMappings({ activeProfile, devices });
 
-  const {
-    hapticEnabledDevices,
-    hapticDragOver,
-    handleHapticDragOver,
-    handleHapticDragLeave,
-    handleHapticDrop,
-    disableHaptics,
-  } = useHapticDevices({ settings, onChange, devices });
+  const { hapticsEnabled, setHapticsEnabled } = useHapticsToggle({ settings, onChange });
 
   return {
     profiles,
     activeProfile,
     devices,
     filteredDevices,
+    controllerGroups,
+    isRescanPending,
+    handleRescan,
+    addMapping,
     listeningFor,
     dragOverBindings,
     deleteTarget,
@@ -80,12 +77,8 @@ const useControlsSettings = ({ settings, onChange, profileId }: UseControlsSetti
     requiredInputs,
     displayMappings,
     displayFunctionMappings,
-    hapticEnabledDevices,
-    hapticDragOver,
-    handleHapticDragOver,
-    handleHapticDragLeave,
-    handleHapticDrop,
-    disableHaptics,
+    hapticsEnabled,
+    setHapticsEnabled,
     setActiveTab,
     setSidebarCollapsed,
     setDevicesCollapsed,

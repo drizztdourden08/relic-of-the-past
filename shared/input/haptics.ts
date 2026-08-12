@@ -5,7 +5,7 @@
  * ./haptic-events. This module handles dispatch, cooldowns, delays, settings gating.
  */
 
-import type { VibrationSegment } from './base';
+import type { VibrationSegment } from './vibration-segment.type';
 import type { HapticSettings } from '../types/settings';
 import { HAPTIC_PATTERNS, type HapticPatternEntry, type HapticPatternId } from './data/haptics';
 import {
@@ -29,7 +29,7 @@ const checkCooldown = (patternId: string, cooldownMs: number): boolean => {
 
 // ─── Service State ───
 
-type VibrateFunction = (pattern: VibrationSegment[], gapMs?: number) => void;
+type VibrateFunction = (pattern: VibrationSegment[], gapMs?: number, minDurationExempt?: boolean) => void;
 
 let currentSettings: HapticSettings = {
   enabled: true,
@@ -57,6 +57,11 @@ const setVibrateFunction = (fn: VibrateFunction | null): void => {
   vibrateFn = fn;
 };
 
+/** Current global intensity setting as a 0-1 scale, for a caller that needs to
+ *  preview a real authored pattern exactly as a live game event would send it
+ *  (see previewHapticPattern in the haptic bridge). */
+const getHapticIntensityScale = (): number => currentSettings.intensity / 100;
+
 // ─── Internal Dispatch ───
 
 const scalePattern = (segments: VibrationSegment[]): VibrationSegment[] => {
@@ -78,16 +83,17 @@ const firePattern = (patternId: HapticPatternId): void => {
 
   const scaled = scalePattern(entry.segments);
   const gapMs = entry.gapMs ?? 0;
+  const minDurationExempt = entry.minDurationExempt ?? false;
 
   // Delay support
   if (entry.delayMs && entry.delayMs > 0) {
     setTimeout(() => {
       if (vibrateFn && currentSettings.enabled) {
-        vibrateFn(scaled, gapMs);
+        vibrateFn(scaled, gapMs, minDurationExempt);
       }
     }, entry.delayMs);
   } else {
-    vibrateFn(scaled, gapMs);
+    vibrateFn(scaled, gapMs, minDurationExempt);
   }
 };
 
@@ -171,5 +177,5 @@ const handlePickup = (type: 'heartPiece' | 'pendantCrystal' | 'largeRupee'): voi
   firePattern(type);
 };
 
-export { HapticEventType, EnvironmentalEvent, HapticItemId, updateHapticSettings, setVibrateFunction, handleHapticEvent, handleDashPulse, resetDashState, handleDeath, handleSpinAttack, handleEnvironmental, handlePickup };
+export { HapticEventType, EnvironmentalEvent, HapticItemId, updateHapticSettings, setVibrateFunction, getHapticIntensityScale, handleHapticEvent, handleDashPulse, resetDashState, handleDeath, handleSpinAttack, handleEnvironmental, handlePickup };
 export type { HapticEventTypeValue, HapticSettings };

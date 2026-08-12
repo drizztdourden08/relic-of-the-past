@@ -6,7 +6,7 @@
  */
 
 import type { InputBinding } from '@shared/types/controls';
-import { webHidReader } from './hid-reader';
+import { resolveAxisPressThreshold } from './axis-press-threshold';
 
 /** Raw input event — fired when any button/key/axis is pressed on any device */
 interface RawInputEvent {
@@ -21,9 +21,7 @@ class RawInputDispatcher {
   private listeners = new Set<RawInputListener>();
 
   // Previous frame state for rising-edge detection
-  private prevGamepadButtons = new Map<number, boolean[]>();
   private prevHidButtons = new Map<string, boolean[]>();
-  private prevGamepadAxes = new Map<number, ('+' | '-' | null)[]>();
   private prevHidAxes = new Map<string, ('+' | '-' | null)[]>();
 
   get hasListeners(): boolean {
@@ -44,54 +42,6 @@ class RawInputDispatcher {
     }
   }
 
-  /** Emit rising-edge events for gamepad buttons/axes (called each frame) */
-  emitGamepadEvents(gamepadVidPid: Map<number, { vid: string; pid: string }>): void {
-    const gamepads = navigator.getGamepads();
-    const hidIdSet = new Set(webHidReader.getConnectedDeviceKeys());
-    for (const gp of gamepads) {
-      if (!gp || !gp.connected) continue;
-      // Skip if this gamepad is a duplicate of a WebHID device
-      const gpIdLower = gp.id.toLowerCase();
-      let isDuplicate = false;
-      for (const hidId of hidIdSet) {
-        const [vid, pid] = hidId.split(':');
-        if (gpIdLower.includes(`vendor: ${vid}`) && gpIdLower.includes(`product: ${pid}`)) {
-          isDuplicate = true;
-          break;
-        }
-      }
-      if (isDuplicate) continue;
-
-      const prev = this.prevGamepadButtons.get(gp.index) ?? [];
-      const curr = gp.buttons.map(b => b.pressed);
-      const cached = gamepadVidPid.get(gp.index);
-      const vid = cached?.vid ?? null;
-      const pid = cached?.pid ?? null;
-      for (let i = 0; i < curr.length; i++) {
-        if (curr[i] && !prev[i]) {
-          this.emit({ type: 'gamepad-button', index: i }, `gamepad-${gp.index}`, vid, pid);
-        }
-      }
-      // Axes — rising-edge
-      const prevAxes = this.prevGamepadAxes.get(gp.index) ?? [];
-      const currAxes: ('+' | '-' | null)[] = [];
-      for (let i = 0; i < gp.axes.length; i++) {
-        const val = gp.axes[i];
-        const dir: '+' | '-' | null = Math.abs(val) > 0.5 ? (val > 0 ? '+' : '-') : null;
-        currAxes[i] = dir;
-        if (dir !== null && dir !== prevAxes[i]) {
-          this.emit(
-            { type: 'gamepad-axis', axisIndex: i, direction: dir },
-            `gamepad-${gp.index}`,
-            vid, pid,
-          );
-        }
-      }
-      this.prevGamepadButtons.set(gp.index, curr);
-      this.prevGamepadAxes.set(gp.index, currAxes);
-    }
-  }
-
   /** Emit rising-edge events for HID buttons/axes (called each frame) */
   emitHidEvents(hidStates: Map<string, { buttons: boolean[]; axes: number[] }>): void {
     for (const [deviceKey, state] of hidStates) {
@@ -109,7 +59,8 @@ class RawInputDispatcher {
       const currAxes: ('+' | '-' | null)[] = [];
       for (let i = 0; i < state.axes.length; i++) {
         const val = state.axes[i];
-        const dir: '+' | '-' | null = Math.abs(val) > 0.5 ? (val > 0 ? '+' : '-') : null;
+        const threshold = resolveAxisPressThreshold(i, deviceKey);
+        const dir: '+' | '-' | null = Math.abs(val) > threshold ? (val > 0 ? '+' : '-') : null;
         currAxes[i] = dir;
         if (dir !== null && dir !== prevAxes[i]) {
           this.emit(

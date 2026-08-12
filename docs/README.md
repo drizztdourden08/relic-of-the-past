@@ -15,6 +15,7 @@ reads well both when browsing the repo and on the Wiki tab.
 | [Architecture](architecture/overview.md) | Zones & invariants, the WASM bridge, asset extraction, navigation, Electron/IPC |
 | [Game Hooks Reference](hooks/overview.md) | Every `Wasm*` export and `GameHook_*` callback crossing the C↔JS boundary |
 | [Contributing](contributing/index.md) | Build from source, WASM build, coding standards, testing, design system |
+| [Legal](legal/third-party-notices.md) | Third-party licenses bundled with the app |
 
 The full navigation menu is [`_Sidebar.md`](_Sidebar.md) (rendered as the Wiki sidebar).
 

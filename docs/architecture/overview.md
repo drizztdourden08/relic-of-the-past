@@ -53,7 +53,7 @@ Aliases: `@shared/*` → `shared/`, `@app/*` → `apps/web/src/`.
 6. Bare UI tiers (primitive/composite/compound) cannot import stores,
    `window.api`, `lib/game`, or navigation. Data flows in via props, and Views do
    the wiring. See @docs/contributing/design-system.md.
-7. Native modules (`node-hid`, `usb`) live in electron main/worker only.
+7. The native SDL3 controller addon lives in electron main only.
 8. `core/` C is edited only per the bridge rules (`add-wasm-function`).
 
 If a change would break an invariant, the code is in the wrong zone. Re-place it.

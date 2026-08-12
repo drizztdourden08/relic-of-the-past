@@ -8,7 +8,12 @@
 import fs from 'fs';
 import path from 'path';
 
-const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'release', 'coverage', '.vite', 'out', 'build-output', 'saves', 'test-roms', 'assets', 'temp-scripts', 'worktrees']);
+// third_party holds dependency source fetched at install time (SDL3 and its own
+// deps) plus whatever those builds leave behind. It is someone else's code, held
+// to someone else's standards, and it is not committed here, so measuring it
+// against this project's policies only produces noise that drowns the findings
+// that are actually ours.
+const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'release', 'coverage', '.vite', 'out', 'build-output', 'saves', 'test-roms', 'assets', 'temp-scripts', 'worktrees', 'third_party']);
 const SKIP_REL = ['apps/web/public/wasm', 'apps/mobile/android', '.claude/worktrees'];
 const SKIP_FILE = /(\.jsonl|\.vcxproj|\.filters|\.sln|\.bmp|\.map|\.csv|\.lock|package-lock\.json)$/i;
 

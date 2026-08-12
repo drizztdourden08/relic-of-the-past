@@ -73,6 +73,7 @@ const COMBAT_PATTERNS = {
     segments: pulse(20, 0.20),
     delayMs: 0,
     cooldownMs: 0,     // handled by polling interval instead
+    minDurationExempt: true, // fires ~8/sec; stretching it would blur into one buzz
   } as HapticPatternEntry,
 
 } as const;

@@ -39,6 +39,16 @@ const emit = (channel: LogChannel, level: LogLevel, message: string): void => {
       // Don't let a bad listener break the bus
     }
   }
+
+  // Dev-only: mirror into the native console so main-process file logging
+  // (apps/desktop/electron/lib/dev-file-logger.ts) captures this app's own
+  // structured log channels too, not just ad-hoc console.* calls.
+  if (import.meta.env.DEV) {
+    const line = `[${channel}] ${message}`;
+    if (level === 'error') console.error(line);
+    else if (level === 'warn') console.warn(line);
+    else console.log(line);
+  }
 };
 
 const log = {

@@ -9,7 +9,7 @@
  *   0.75–1.00  Heavy — maximum force (death, boss defeat, quake)
  */
 
-import type { VibrationSegment } from '../../base';
+import type { VibrationSegment } from '../../vibration-segment.type';
 
 const pulse = (durationMs: number, intensity: number): VibrationSegment[] => {
   return [{ durationMs, intensity }];

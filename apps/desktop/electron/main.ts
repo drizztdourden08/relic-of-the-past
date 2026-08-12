@@ -47,6 +47,7 @@ import { registerFileHandlers } from './storage/file-handlers';
 import { initAutoUpdater, registerUpdaterHandlers } from './updater';
 import { registerGithubHandlers } from './github/ipc-handlers';
 import { emit } from './lib/ipc/handle';
+import { installDevFileLogging } from './lib/dev-file-logger';
 
 // Every IPC domain's register fn, gated by environment. ipcMain.handle order is
 // irrelevant, so this list is declarative; window/input/updater wiring that needs
@@ -99,12 +100,11 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app-sprite', privileges: { standard: true, secure: true, supportFetchAPI: true } },
 ]);
 
-// Allow gamepad enumeration without requiring a button press first.
 // CalculateNativeWinOcclusion: keep rendering (rAF / game loop) alive when the
 // window is occluded — e.g. --no-focus launches sit behind other windows, and
 // Chromium would otherwise pause their frames and stall the headless game loop.
 // (Multiple --disable-features values must share ONE switch, comma-separated.)
-app.commandLine.appendSwitch('disable-features', 'RestrictGamepadAccess,CalculateNativeWinOcclusion');
+app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion');
 
 app.whenReady().then(async () => {
   // Register protocol handler
@@ -131,6 +131,12 @@ app.whenReady().then(async () => {
 
   const mainWindow = getMainWindow()!;
 
+  // Dev-only: mirror main + renderer console output to disk, so a hard crash
+  // still leaves the last thing that happened on disk — see lib/dev-file-logger.
+  if (is.dev) {
+    await installDevFileLogging(mainWindow);
+  }
+
   // Boot-timing diagnostic (opt-in via --boot-timing): renderer HTML loaded, then
   // the renderer's app-ready signal (splash replaced by the UI).
   logBoot('window created');
@@ -142,8 +148,8 @@ app.whenReady().then(async () => {
 
   // Forward renderer console to stdout when --dump-layers is active
   if (process.argv.some(a => a.startsWith('--dump-layers='))) {
-    mainWindow.webContents.on('console-message', (_ev, _level, message) => {
-      console.log(`[renderer] ${message}`);
+    mainWindow.webContents.on('console-message', (event) => {
+      console.log(`[renderer] ${event.message}`);
     });
   }
 

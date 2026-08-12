@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { webHidReader } from '../../../../../../../lib/input/hid-reader';
+import { controllerInputStore } from '../../../../../../../lib/input/controller-input-store';
 import {
   CENTER_SAMPLE_FRAMES,
   DEFAULT_INNER_DEADZONE,
@@ -56,7 +56,7 @@ const useStickCalibration = (options: Options) => {
 
   // Subscribe to input
   useEffect(() => {
-    const unsub = webHidReader.onInput((state) => {
+    const unsub = controllerInputStore.onInput((state) => {
       if (deviceKey && state.deviceKey !== deviceKey) return;
       if (!state.rawSticks) return;
       const [lx, ly, rx, ry] = state.rawSticks;

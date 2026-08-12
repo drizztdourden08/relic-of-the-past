@@ -1,10 +1,8 @@
 /* @layer renderer-lib @kind logic */
 /** Event handlers, map rebuild, and the per-frame poll loop for InputManager (take the instance). */
-import { markActivated, updateActivationState } from './device-detector';
-import { resolveGamepadVidPid } from './gamepad-vid-pid';
-import { computeBitmask, snapshotGamepads } from './polling-engine';
+import { computeBitmask } from './polling-engine';
 import { allowedDevices } from './profile-devices';
-import { webHidReader } from './hid-reader';
+import { deviceKeyFor, setScoped } from './device-scoped-map';
 import { isAutomationLaunch } from '../instance';
 import type { InputManager } from './input-manager';
 
@@ -21,16 +19,15 @@ import type { InputManager } from './input-manager';
  */
 const inputEligible = (): boolean => document.hasFocus() || isAutomationLaunch();
 
-/** Fresh set of connected pad "vid:pid" keys — HID (node-hid) + Gamepad API. */
-const connectedGamepadKeys = (m: InputManager): Set<string> => {
-  const keys = new Set(webHidReader.getConnectedDeviceKeys());
-  for (const gp of navigator.getGamepads()) {
-    if (!gp || !gp.connected) continue;
-    const vp = m.gamepadVidPid.get(gp.index);
-    if (vp) keys.add(`${vp.vid}:${vp.pid}`);
-  }
-  return keys;
-};
+/**
+ * Fresh set of connected pad "vid:pid" keys, from the device snapshot rather than
+ * from reported input. SDL emits state on change only, so a mapped pad nobody has
+ * touched yet would be invisible to an input-derived set and could wedge a
+ * disconnect-pause open forever — the snapshot (hidDeviceCache) is seeded on
+ * startup and kept live independently of any button press.
+ */
+const connectedGamepadKeys = (m: InputManager): Set<string> =>
+  new Set(m.hidDeviceCache.filter((d) => d.status === 'ready').map((d) => d.deviceKey));
 
 const isTextInput = (target: EventTarget | null): boolean => {
   if (!target) return false;
@@ -52,10 +49,10 @@ const rebuildMaps = (m: InputManager): void => {
         m.keyboardMap.set(b.code, mapping.snesButton);
         break;
       case 'gamepad-button':
-        m.gamepadButtonMap.set(b.index, mapping.snesButton);
+        setScoped(m.gamepadButtonMap, deviceKeyFor(mapping.sourceVid, mapping.sourcePid), b.index, mapping.snesButton);
         break;
       case 'gamepad-axis':
-        m.gamepadAxisMap.set(`${b.axisIndex}:${b.direction}`, mapping.snesButton);
+        setScoped(m.gamepadAxisMap, deviceKeyFor(mapping.sourceVid, mapping.sourcePid), `${b.axisIndex}:${b.direction}`, mapping.snesButton);
         break;
     }
   }
@@ -105,53 +102,22 @@ const keyUp = (m: InputManager, e: KeyboardEvent): void => {
   }
 };
 
-const resolveGamepad = (m: InputManager, gp: Gamepad): void => {
-  const alreadyMapped = new Set([...m.gamepadVidPid.values()].map(v => `${v.vid}:${v.pid}`));
-  const result = resolveGamepadVidPid(gp, m.hidDeviceCache, alreadyMapped);
-  if (result) {
-    m.gamepadVidPid.set(gp.index, result);
-  }
-};
-
-const gamepadConnected = (m: InputManager, e: GamepadEvent): void => {
-  markActivated(e.gamepad.index);
-  updateActivationState();
-  resolveGamepad(m, e.gamepad);
-  m.pauseManager.resumeIfPresent(m.activeProfile, connectedGamepadKeys(m));
-  m.refreshDevices();
-};
-
-const gamepadDisconnected = (m: InputManager): void => {
-  updateActivationState();
-  m.pauseManager.checkControllerDisconnect(m.activeProfile, connectedGamepadKeys(m), m.devices);
-  m.refreshDevices();
-};
-
 const pollFrame = (m: InputManager): void => {
   if (!m.running) return;
 
   const windowFocused = inputEligible();
 
-  // Resolve vid:pid for any pad connected before its 'gamepadconnected' fired, so the
-  // device gate can match it against the active profile's map.
-  for (const gp of navigator.getGamepads()) {
-    if (gp && gp.connected && !m.gamepadVidPid.has(gp.index)) resolveGamepad(m, gp);
-  }
-
-  m.currentGamepads = snapshotGamepads();
-
   if (windowFocused && !m.pauseManager.isPaused && !m.inputSuppressed) {
-    const mask = computeBitmask(m.keyStates, m.keyboardMap, m.gamepadButtonMap, m.gamepadAxisMap, m.hidStates, m.allowed, m.gamepadVidPid);
+    const mask = computeBitmask(m.keyStates, m.keyboardMap, m.gamepadButtonMap, m.gamepadAxisMap, m.hidStates, m.allowed);
     m.setInputFn?.(mask);
   }
 
   if (windowFocused && m.rawDispatcher.hasListeners) {
-    m.rawDispatcher.emitGamepadEvents(m.gamepadVidPid);
     m.rawDispatcher.emitHidEvents(m.hidStates);
   }
 
   if (windowFocused && !m.inputSuppressed && m.functionActions.hasMappedGamepadButtons) {
-    m.functionActions.checkGamepads(m.hidStates, m.allowed, m.gamepadVidPid);
+    m.functionActions.checkGamepads(m.hidStates, m.allowed);
   }
 
   if (m.stateListeners.size > 0) {
@@ -160,11 +126,11 @@ const pollFrame = (m: InputManager): void => {
       m.hidStatesDirty = false;
     }
     for (const fn of m.stateListeners) {
-      try { fn(m.currentHidStates, m.currentGamepads, m.allPressedKeys); } catch { /* ignore */ }
+      try { fn(m.currentHidStates, m.allPressedKeys); } catch { /* ignore */ }
     }
   }
 
   m.animFrameId = requestAnimationFrame(m.pollLoop);
 };
 
-export { isTextInput, rebuildMaps, guardKeys, keyDown, keyUp, resolveGamepad, gamepadConnected, gamepadDisconnected, pollFrame, connectedGamepadKeys };
+export { isTextInput, rebuildMaps, guardKeys, keyDown, keyUp, pollFrame, connectedGamepadKeys };

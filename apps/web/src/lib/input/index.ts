@@ -4,8 +4,8 @@
  */
 
 export { InputManager, getInputManager, profileFromPreset, resolveFunctionMappingIcon } from './input-manager';
-export type { DeviceChangeListener, InputStateListener, RawInputEvent, RawInputListener, PauseListener, GamepadSnapshot } from './input-manager';
-export { webHidReader } from './hid-reader';
-export type { WebHidInputState, DeviceStickCalibration, WebHidRawReport } from './hid-reader';
-export { vibrateGamepad, vibrateGamepadPattern, vibrate, vibratePattern } from './vibration';
+export type { DeviceChangeListener, InputStateListener, RawInputEvent, RawInputListener, PauseListener } from './input-manager';
+export { controllerInputStore } from './controller-input-store';
+export type { ControllerInputState, DeviceStickCalibration, HidRawReportEvent } from './controller-input-store';
+export { vibrate, vibratePattern } from './vibration';
 export { detectAllDevices } from './device-detector';

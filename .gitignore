@@ -17,6 +17,17 @@ out/
 # WASM build artifacts
 core/wasm-build/output/
 
+# Downloaded native build dependencies (SDL3, libusb) — fetched by
+# scripts/build/fetch-sdl3.mjs, never committed.
+third_party/
+
+# SDL3 native controller-input addon build output. build/ was previously
+# ignored only by accident (release/ below matches Release/ case-insensitively
+# on Windows) — spelled out explicitly so it's not an accident. prebuilds/ is
+# scripts/ensure-sdl3.mjs's downloaded-or-locally-built payload.
+apps/desktop/electron/input/native/sdl3/build/
+apps/desktop/electron/input/native/sdl3/prebuilds/
+
 apps/web/public/wasm/
 apps/desktop/public/wasm/
 
@@ -39,6 +50,12 @@ apps/mobile/android/capacitor-cordova-android-plugins/
 apps/mobile/android/app/src/main/res/mipmap-*/ic_launcher*.png
 apps/mobile/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher*.xml
 apps/mobile/android/app/src/main/res/drawable*/splash.png
+# SDL's own Java classes are staged into the build dir straight from the pinned
+# SDL3 source (app/build.gradle: stageSdlJava), never copied into this repo. A
+# copy here would be someone else's code to maintain by hand and could silently
+# fall out of step with the native library it pairs with — so if one ever
+# appears, it is a mistake, and this keeps it from being committed.
+apps/mobile/android/app/src/main/java/org/
 
 # Assets (user-provided)
 assets/assets.dat

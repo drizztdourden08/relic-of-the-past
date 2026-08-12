@@ -4,5 +4,5 @@
  */
 
 export { registerInputHandlers, stopInputHandlers } from './ipc-handlers';
-export { hidInputReader } from './hid-reader';
-export { enumerateControllers } from './hid-devices';
+export { sdl3Source } from './sdl3-source';
+export { loadMappingDatabases, addUserMapping } from './mapping-db';

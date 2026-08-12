@@ -13,7 +13,7 @@ const padBinding = (vid: string, pid: string, index: number): ButtonMapping => (
 });
 
 const assigned = (vid: string, pid: string, name: string): AssignedDevice => ({
-  vendorId: vid, productId: pid, displayName: name, deviceFamily: 'xbox', presetId: null,
+  vendorId: vid, productId: pid, displayName: name, deviceFamily: 'xbox',
 });
 
 const profile = (mappings: ButtonMapping[], assignedDevice: AssignedDevice | null): InputProfile => ({
@@ -23,8 +23,9 @@ const profile = (mappings: ButtonMapping[], assignedDevice: AssignedDevice | nul
 
 const device = (vid: string, pid: string, name: string): DetectedDevice => ({
   id: `hid-${vid}-${pid}`, type: 'gamepad', rawId: name, vendorId: vid, productId: pid,
-  deviceFamily: 'generic', displayName: name, presetId: null, connected: false,
+  deviceFamily: 'generic', displayName: name, sdlType: null, connected: false,
   activated: false, stale: false, brandLogoKey: null, inputApi: 'hid',
+  hasRumble: false, hasGyro: false,
 });
 
 const makePM = () => {

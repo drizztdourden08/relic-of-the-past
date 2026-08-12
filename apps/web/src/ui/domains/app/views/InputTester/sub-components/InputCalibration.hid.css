@@ -37,18 +37,6 @@
   margin: 0 0 var(--space-sm) 0;
 }
 
-.hid-cal__select {
-  padding: var(--space-sm) var(--space-md);
-  font-size: var(--text-sm);
-  background: var(--c-bg);
-  color: var(--c-text);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-md);
-  width: 100%;
-  max-width: 400px;
-  margin-bottom: var(--space-md);
-}
-
 /* ── Prereqs (gyro + idle) ── */
 
 .hid-cal__prereqs {
@@ -104,6 +92,83 @@
   margin-bottom: var(--space-sm);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.hid-cal__instructions {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.hid-cal__instructions > summary {
+  cursor: pointer;
+}
+
+.hid-cal__instructions-list {
+  margin: var(--space-sm) 0 0;
+  padding-left: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+}
+
+.hid-cal__live-parser {
+  background: var(--c-surface);
+  border: 1px solid var(--c-info);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.hid-cal__live-parser--none {
+  color: var(--c-warning);
+  font-size: var(--text-sm);
+}
+
+.hid-cal__live-parser-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+}
+
+.hid-cal__live-parser-chip {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--c-border);
+  color: var(--c-text-dim);
+}
+
+.hid-cal__live-parser-chip--on {
+  border-color: var(--c-green-bright);
+  color: var(--c-green-bright);
+  background: var(--c-green-dim);
+}
+
+.hid-cal__live-parser-chip--unmapped {
+  border-style: dashed;
+  opacity: 0.7;
+}
+
+.hid-cal__instructions-hl {
+  color: var(--c-info);
+}
+
+.hid-cal__instructions-hl--warn {
+  color: var(--c-warning);
+}
+
+.hid-cal__instructions-alert {
+  margin-top: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-left: 3px solid var(--c-warning);
+  background: color-mix(in srgb, var(--c-warning) 12%, transparent);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
 }
 
 .hid-cal__instruction {
@@ -222,7 +287,18 @@
   margin-bottom: var(--space-sm);
 }
 
+/* The idle read is a real step, so its prompt carries the same weight as
+   the live-capture readout rather than sitting in muted body text. */
+.hid-cal__stick-idle-prompt {
+  margin: var(--space-xs) 0;
+  padding: var(--space-xs) var(--space-sm);
+  border-left: 2px solid var(--c-info);
+  color: var(--c-text);
+  font-size: var(--text-sm);
+}
+
 .hid-cal__byte-box {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -235,6 +311,16 @@
   cursor: pointer;
   user-select: none;
   transition: border-color 0.05s, background 0.05s, color 0.05s, opacity 0.1s;
+}
+
+/* Change magnitude, drawn on the cell's top border so it can sit on top of any
+   cell state. Width and colour are set inline from the byte's own delta. */
+.hid-cal__byte-change {
+  position: absolute;
+  top: calc(var(--space-2xs) * -1);
+  height: var(--space-2xs);
+  border-radius: var(--radius-sm);
+  pointer-events: none;
 }
 
 .hid-cal__byte-box:hover {

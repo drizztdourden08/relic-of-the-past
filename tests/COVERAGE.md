@@ -73,8 +73,9 @@
 | recommendations file store (write queue) | tests/electron/recommendation-files.keep.test.ts | covered |
 | review layer (main-process read/write) | tests/electron/review-files.keep.test.ts | covered |
 | **saves/profiles/roms — real Electron store (`electron/{saves,profiles,roms}/store.ts`)** | none — only the separate `shared/storage/*` web-target abstraction is tested | **none — coverage illusion: the code path the real desktop app runs is untested; only a parallel, non-shared implementation is** |
-| HID / controller hardware layer (hid-devices, hid-discovery, hid-reader, hid-worker, hid-haptics, usb-init, calibration-store) | none | none (hardware-dependent; calibration/profile persistence could still be tested portably and isn't) |
-| Portable input logic (`@shared/input`, pause-manager, profile-devices, polling-engine) | tests/input/*.keep.test.ts (5 files) | covered |
+| SDL3 controller hardware layer (sdl3-source, device-lister, haptic-pattern-player, calibration-store) | none | none (hardware-dependent; calibration/profile persistence could still be tested portably and isn't) |
+| Android SDL3 controller plugin (`controller_sdl3_jni.c`, `Sdl3Bridge`, `Sdl3InputRouter`, capacitor `controller-sdl3-*`) | none | none (device-dependent: needs a physical pad on a phone, and the JNI's JSON event shape is the only portable seam — the store's subscribe-before-start ordering is testable without hardware and isn't covered) |
+| Portable input logic (`@shared/input`, pause-manager, profile-devices, polling-engine) | tests/input/*.keep.test.ts (4 files) | covered — dropped the Gamepad-API dual-bus dispatch case (haptic-dispatch.keep.test.ts) when that transport was removed; vibration-shaping.keep.test.ts now exercises the family layer's shapeVibration instead of BaseController |
 | MSU-1 audio IPC handlers | none directly (business logic tested via shared/storage/msu.ts) | partial — same coverage-illusion pattern as saves/profiles/roms |
 | Window management (aspect-ratio, create-window, window-state, startup-config, send-to-back, text-interaction) | tests/game/aspect-ratio.keep.test.ts (aspect-ratio only) | partial |
 | Display (mode-switch, refresh-rate) | none | none |

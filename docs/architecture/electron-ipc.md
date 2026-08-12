@@ -60,9 +60,10 @@ or return type is a compile error in any of the three.
 
 ## Native modules
 
-`node-hid` and `usb` live only in the main process and its workers, not in `shared/` or the
-renderer. Controller input is read in main and forwarded to the renderer via `onHid*` callbacks; see
-[Input & Controllers](../user-guide/input-controllers.md) and [Haptics](../user-guide/haptics.md).
+The SDL3 controller addon lives only in the main process, not in `shared/` or the renderer.
+Controller input is read in main and forwarded to the renderer already decoded, via the
+`controller:*` channels; see [Input & Controllers](../user-guide/input-controllers.md) and
+[Haptics](../user-guide/haptics.md).
 
 ## CLI / automation flags
 

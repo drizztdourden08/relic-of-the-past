@@ -1,9 +1,11 @@
 /* @layer renderer-other @kind logic */
 /**
  * Capacitor (Android/iOS) host adapter. Window controls are no-ops — mobile has
- * no window chrome. Files go through the Filesystem plugin; controllers go through
- * the native ControllerHid plugin (raw USB-HID over USB-OTG, degrading to no-op
- * when the plugin is absent — Bluetooth pads use the Gamepad API). Unported
+ * no window chrome. Files go through the Filesystem plugin. Controllers go
+ * through the ControllerSdl3 plugin, which runs the SDL3 gamepad backend
+ * inside the app's own WebView process (see createCapacitorControllerHost);
+ * on iOS, or an Android build with no matching native library, that plugin
+ * is simply unavailable and the host reports zero controllers. Unported
  * window.api calls hit the boot-safe shim (see api-shim.ts).
  */
 import { Capacitor } from '@capacitor/core';
@@ -44,8 +46,6 @@ const createCapacitorFactory = (): PlatformFactory => ({
   capabilities: {
     windowChrome: false,
     nativeHid: false,
-    webHid: false,
-    gamepadApi: true,
     touchControls: true,
     customProtocol: false,
     selfUpdate: false,

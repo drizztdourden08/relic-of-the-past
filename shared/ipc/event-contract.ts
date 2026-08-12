@@ -6,6 +6,8 @@
  * from these.
  */
 
+import type { ControllerAddedInfo, ControllerJoystickSample, ControllerRawReport, DeviceEntry } from './controller-contract';
+
 /** Progress of a data import (ROM / MSU / language / sprites), main → renderer. */
 interface ImportProgress {
   kind: 'rom' | 'msu' | 'language' | 'sprite' | 'linkSprite';
@@ -25,13 +27,6 @@ interface EventContract {
   'window:fullscreen': (fullscreen: boolean) => void;
   'log:entry': (entry: { channel: string; level: string; message: string }) => void;
 
-  // HID reader (main-process node-hid)
-  'hid:report': (deviceKey: string, vendorId: number, productId: number, data: Buffer) => void;
-  'hid:device-opened': (info: { deviceKey: string; vendorId: string; productId: string; product: string }) => void;
-  'hid:disconnect': (info: { deviceKey: string; product: string; error?: string }) => void;
-  'hid:error': (info: { deviceKey: string; error: string }) => void;
-  'hid:main-perf': (msg: string) => void;
-
   // Auto-updater
   'updater:update-available': (info: { version: string; releaseNotes: string; releaseDate: string }) => void;
   'updater:up-to-date': () => void;
@@ -41,6 +36,20 @@ interface EventContract {
 
   // Data imports (ROM / MSU / language / sprites)
   'import:progress': (progress: ImportProgress) => void;
+
+  // Controllers (SDL3 native transport — see apps/desktop/electron/input/sdl3-source.ts)
+  'controller:added': (info: ControllerAddedInfo) => void;
+  'controller:state': (deviceKey: string, buttons: boolean[], axes: number[]) => void;
+  'controller:removed': (deviceKey: string) => void;
+  /** Full snapshot, including devices SDL hasn't claimed — see device-availability.ts. */
+  'controller:devices': (devices: DeviceEntry[]) => void;
+  /** One HID report read while a diagnostic raw capture is open. See `controller:start-raw-capture`. */
+  'controller:raw': (report: ControllerRawReport) => void;
+  /** One joystick-level sample while a diagnostic joystick capture is open. See `controller:start-joystick-capture`. */
+  'controller:joystick': (sample: ControllerJoystickSample) => void;
+  /** Whether the gamepad subsystem is currently held open for a raw HID capture. See
+   *  `controller:release-hold` / `controller:restore-hold`. */
+  'controller:hold-changed': (held: boolean) => void;
 }
 
 export type { EventContract, ImportProgress };

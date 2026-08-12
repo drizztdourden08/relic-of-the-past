@@ -100,6 +100,7 @@ const createControllerHost = (): ControllerHost => ({
   onDisconnect: () => () => {},
   onError: () => () => {},
   onMainPerf: () => () => {},
+  onControllerState: () => () => {},
 });
 
 const createWebFactory = (): PlatformFactory => ({
@@ -113,8 +114,6 @@ const createWebFactory = (): PlatformFactory => ({
   capabilities: {
     windowChrome: false,
     nativeHid: false,
-    webHid: false,
-    gamepadApi: true,
     touchControls: false,
     customProtocol: false,
     selfUpdate: false,

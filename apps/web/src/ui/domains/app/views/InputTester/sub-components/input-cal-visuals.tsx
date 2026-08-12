@@ -13,8 +13,7 @@ import { Image } from '../../../../../design-system/primitives/Image';
 import { Svg, SvgLine, SvgCircle } from '../../../../../design-system/primitives/Svg';
 import { getButtonIconUrl } from '@app/lib/input/button-icons';
 import { publicAsset } from '@app/lib/assets/public-asset';
-import { DEVICE_DATABASE } from '@shared/input/data/devices';
-import { findPresetByVidPid } from '@shared/input';
+import { resolveStickDirectionIcon } from '@shared/input/family';
 
 // Static inline-style literals (dynamic/animated styles stay inline).
 const VIS_STYLES: Record<string, CSSProperties> = {
@@ -85,17 +84,26 @@ const AxisRecordButton = ({ getValues, label }: { getValues: () => number[]; lab
 
 // ── Trigger Bar Component ──
 
-const TriggerBar = ({ value, label }: { value: number; label: string }) => {
+/** `pressed` mirrors resolveLiveControlState's threshold read for the same
+ *  trigger. A full press highlights the track exactly like a pressed button
+ *  cell does, so a trigger reads as working both as an axis and as a
+ *  button, with no second cell needed in the button grid. */
+const TriggerBar = ({ value, label, pressed }: { value: number; label: string; pressed?: boolean }) => {
   const clamped = Math.max(0, Math.min(1, value));
   const fillH = clamped * 60; // 60px tall bar
+  const track: CSSProperties = {
+    ...VIS_STYLES.triggerTrack,
+    border: pressed ? '1px solid var(--c-green-bright)' : '1px solid var(--c-border)',
+    boxShadow: pressed ? '0 0 0 1px var(--c-green-bright)' : 'none',
+  };
   return (
     <Box className="input-cal__stick-container">
       <Text className="input-cal__stick-label">{label}</Text>
-      <Box style={VIS_STYLES.triggerTrack}>
+      <Box style={track}>
         <Box style={{
           position: 'absolute', bottom: 0, left: 0, right: 0,
           height: fillH,
-          background: 'var(--c-gold-bright)',
+          background: pressed ? 'var(--c-green-bright)' : 'var(--c-gold-bright)',
           borderRadius: '0 0 3px 3px',
           transition: 'height 0.05s linear',
         }} />
@@ -106,20 +114,6 @@ const TriggerBar = ({ value, label }: { value: number; label: string }) => {
 };
 
 // ── Joystick Circle Component ──
-
-const getStickDirectionIcon = (x: number, y: number, prefix: string): string | null => {
-  const threshold = 0.4;
-  const ax = Math.abs(x);
-  const ay = Math.abs(y);
-  if (ax < threshold && ay < threshold) return getButtonIconUrl(prefix);
-  if (ax > ay) {
-    if (ax > threshold && ay > threshold) return getButtonIconUrl(`${prefix}-horizontal`);
-    return getButtonIconUrl(x > 0 ? `${prefix}-right` : `${prefix}-left`);
-  } else {
-    if (ax > threshold && ay > threshold) return getButtonIconUrl(`${prefix}-vertical`);
-    return getButtonIconUrl(y > 0 ? `${prefix}-down` : `${prefix}-up`);
-  }
-};
 
 const StickCircle = ({ x, y, label, iconPrefix }: { x: number; y: number; label: string; iconPrefix?: string }) => {
   const clampX = Math.max(-1, Math.min(1, x));
@@ -142,7 +136,7 @@ const StickCircle = ({ x, y, label, iconPrefix }: { x: number; y: number; label:
         {clampX.toFixed(2)}, {clampY.toFixed(2)}
       </Text>
       {iconPrefix && (() => {
-        const iconUrl = getStickDirectionIcon(clampX, clampY, iconPrefix);
+        const iconUrl = getButtonIconUrl(resolveStickDirectionIcon(iconPrefix, clampX, clampY));
         return iconUrl ? (
           <Image src={iconUrl} alt="" draggable={false} style={VIS_STYLES.dirIcon} />
         ) : null;
@@ -151,13 +145,4 @@ const StickCircle = ({ x, y, label, iconPrefix }: { x: number; y: number; label:
   );
 };
 
-const resolveDeviceName = (vid: string, pid: string, hidProduct?: string): string => {
-  const vidPid = `${vid.padStart(4, '0')}:${pid.padStart(4, '0')}`;
-  const sdlEntry = DEVICE_DATABASE.find(e => e.vidPid === vidPid);
-  if (sdlEntry) return sdlEntry.name;
-  const preset = findPresetByVidPid(vid, pid);
-  if (preset && preset.id !== 'generic') return preset.name;
-  return hidProduct || `HID ${vidPid}`;
-};
-
-export { AxisRecordButton, CONTROLLER_ICON_MAP, StickCircle, TriggerBar, resolveDeviceName };
+export { AxisRecordButton, CONTROLLER_ICON_MAP, StickCircle, TriggerBar };

@@ -1,0 +1,8 @@
+/* @layer renderer-components @kind style */
+.haptics-toggle {
+  flex-shrink: 0;
+}
+
+.haptics-toggle .toggle__label {
+  font-size: var(--text-sm);
+}

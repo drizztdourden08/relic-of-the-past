@@ -1,0 +1,26 @@
+/* @layer renderer-components @kind style */
+
+.mapping-paste-box__row {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: flex-start;
+}
+
+.mapping-paste-box__input {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+}
+
+.mapping-paste-box__status {
+  margin-top: var(--space-xs);
+  font-size: var(--text-sm);
+}
+
+.mapping-paste-box__status--success {
+  color: var(--c-green-bright);
+}
+
+.mapping-paste-box__status--error {
+  color: var(--c-danger);
+}

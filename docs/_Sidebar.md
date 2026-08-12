@@ -85,3 +85,7 @@
 - [Design System](contributing/design-system.md)
 - [Design Language](contributing/design-language.md)
 - [Copyright / Media Gate](contributing/copyright-gate.md)
+
+**Legal**
+
+- [Third-Party Notices](legal/third-party-notices.md)

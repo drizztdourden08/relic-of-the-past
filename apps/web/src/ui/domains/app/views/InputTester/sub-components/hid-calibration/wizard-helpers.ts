@@ -2,15 +2,28 @@
 /**
  * Helper utilities for the HID Calibration Wizard rendering and state.
  */
+import type { MutableRefObject } from 'react';
 import type { AxisSubStep, ByteStatus, CaptureState, GyroState, InputItem } from './hid-calibration.type';
 import { AXIS_LABELS } from './hid-calibration.constants';
+
+// ── Device Identity ─────────────────────────────────────────────────────────
+
+/** Parses a "vid:pid" key (hex) into deviceInfoRef's numeric fields. A no-op
+ *  when `key` is undefined, so a caller can pass an optional fallback without
+ *  its own guard. */
+const applyVidPid = (deviceInfoRef: MutableRefObject<{ vendorId: number; productId: number }>, key: string | undefined): void => {
+  if (!key) return;
+  const [v, p] = key.split(':');
+  deviceInfoRef.current.vendorId = parseInt(v, 16);
+  deviceInfoRef.current.productId = parseInt(p, 16);
+};
 
 // ── Byte Status Computation ─────────────────────────────────────────────────
 
 const computeByteStatuses = (len: number, excluded: Set<number>, capturedStickBytes: Set<number>, capturedTriggerBytes: Set<number>, items: InputItem[]): ByteStatus[] => {
   const statuses: ByteStatus[] = new Array(len).fill('unknown');
   for (const i of excluded) {
-    if (i < len) statuses[i] = 'gyro';
+    if (i < len) statuses[i] = 'excluded';
   }
   for (const i of capturedStickBytes) {
     if (i < len) statuses[i] = 'stick';
@@ -56,7 +69,7 @@ const getByteColor = (idx: number, byteStatuses: ByteStatus[], gyroState: GyroSt
   }
   const status = byteStatuses[idx] ?? 'unknown';
   switch (status) {
-    case 'gyro': return { bg: '#1e1e2e', border: '#555', text: '#666' };
+    case 'excluded': return { bg: '#2a2a2a', border: '#555', text: '#6b6b6b' };
     case 'stick': return { bg: '#0f2a3d', border: '#38bdf8', text: '#38bdf8' };
     case 'trigger': return { bg: '#2d150f', border: '#fb923c', text: '#fb923c' };
     case 'button': return { bg: '#0f2e1a', border: '#4ade80', text: '#4ade80' };
@@ -64,5 +77,5 @@ const getByteColor = (idx: number, byteStatuses: ByteStatus[], gyroState: GyroSt
   }
 };
 
-export { computeByteStatuses, getInstructionText, getByteColor };
+export { applyVidPid, computeByteStatuses, getInstructionText, getByteColor };
 export type { ByteColorResult };

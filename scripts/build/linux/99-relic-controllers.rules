@@ -1,9 +1,10 @@
+# @layer tooling-scripts @kind build
 # Relic of the Past — game controller access (Linux)
 #
 # Grants the logged-in desktop user read/write access to game controllers over
-# hidraw + USB, so node-hid (raw HID) and libusb (Switch/NSO usb-init) can open
-# them without root. `TAG+="uaccess"` hands access to the active seat's user via
-# systemd-logind (the modern, group-free approach).
+# hidraw + USB, so the SDL3 controller transport can open them without root.
+# `TAG+="uaccess"` hands access to the active seat's user via systemd-logind
+# (the modern, group-free approach).
 #
 # Installed automatically by the .deb (see deb-postinst.sh); AppImage users copy
 # this file to /etc/udev/rules.d/ manually (see docs/controllers/linux-setup.md).

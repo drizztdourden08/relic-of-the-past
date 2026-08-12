@@ -7,7 +7,7 @@ detects your controller and tunes its analog inputs. It pairs with
 
 ## What you can calibrate
 
-- **Detection** — finds connected controllers through the Gamepad API and HID.
+- **Detection** — finds connected controllers through SDL3.
 - **Stick calibration wizard** — rotate each stick through its full range. The tool fits that range and
   lets you set a dead zone per stick, with a tester circle showing the live stick position.
 - **Trigger calibration** — per analog axis such as L2 and R2: base value, max value, and deadzone, so

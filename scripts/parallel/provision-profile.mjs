@@ -93,7 +93,7 @@ const copyManualSaves = (sourceId, name) => {
 };
 
 const keyboardInputProfile = async (now) => {
-  const { KEYBOARD_DEFAULT } = await importStrippedTs('../../shared/input/data/presets/keyboard.ts');
+  const { KEYBOARD_DEFAULT } = await importStrippedTs('../../shared/input/keyboard-default.ts');
   return {
     id: KEYBOARD_DEFAULT.id,
     name: KEYBOARD_DEFAULT.name,

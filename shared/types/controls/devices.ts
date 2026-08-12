@@ -25,12 +25,19 @@ interface DetectedDevice {
   productId: string | null;
   deviceFamily: DeviceFamily;
   displayName: string;      // Resolved: "Xbox Series X|S Controller"
-  presetId: string | null;  // Matched preset ID, null if unknown
+  /** SDL's own gamepad type (see shared/input/sdl-buttons SdlGamepadType),
+   *  kept as a plain string here rather than importing that type, so this
+   *  file does not depend on shared/input. The keyboard entry uses the
+   *  sentinel 'keyboard', never null — everything here has a real value. */
+  sdlType: string | null;
   connected: boolean;       // HID-level connected (physical presence)
   activated: boolean;       // Web Gamepad API active (button pressed at least once)
-  stale: boolean;           // No HID reports received for >2s (device locked up)
   brandLogoKey: string | null;
   inputApi: InputApi;       // Which API this controller uses for input reading
+  /** Real capability reported by SDL3 (controller:added) — false, not just
+   *  unknown, when this device wasn't detected through that surface. */
+  hasRumble: boolean;
+  hasGyro: boolean;
 }
 
 // ── Assigned device info (persisted with profile) ──
@@ -40,7 +47,6 @@ interface AssignedDevice {
   productId: string;
   displayName: string;
   deviceFamily: DeviceFamily;
-  presetId: string | null;
 }
 
 // ── Device preset (ships with the app) ──
