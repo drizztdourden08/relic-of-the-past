@@ -36,9 +36,6 @@ import { fetchWindows, fetchLinux, fetchMac } from './fetch-sdl3-platforms.mjs';
 // anyone on this list, so pinning its checksum would just be a dead entry.
 const CHECKSUMS = {
   'SDL3-3.4.14.tar.gz': '30d4aa2b3037718142b32dffd4e72f917ebb6cc5227150e7bb9c45efb2153aeb',
-  // Not pinned: no macOS machine available to download and hash the .dmg from.
-  // The unverified-checksum warning below covers this until someone on macOS does.
-  'SDL3-3.4.14.dmg': null,
   'libusb-1.0.30.7z': '7fb1dfec805b97983763d7d0ae244320da12add1003d4249c96cc4d586398c79',
 };
 
