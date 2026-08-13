@@ -143,6 +143,19 @@ jobs:
         with:
           version: 3.1.51
 
+      # Emscripten downloads the SDL2 port on a cold ports cache, and its downloader
+      # does `import requests`, which emsdk's bundled Python does not ship. Runs with a
+      # warm cache never reach that line, which is why this surfaced as an intermittent
+      # Windows failure rather than a permanent one. Best effort: if pip is unavailable
+      # the build still runs and fails loudly on its own.
+      - name: Give Emscripten's Python its port downloader
+        shell: bash
+        run: |
+          "$EMSDK_PYTHON" -m ensurepip --default-pip || true
+          if ! "$EMSDK_PYTHON" -m pip install --disable-pip-version-check requests; then
+            echo "::warning::no pip in emsdk python; a cold ports cache will fail"
+          fi
+
       - name: Build WASM
         # Shared build script (single source of truth) writes straight into
         # apps/web/public/wasm — same output the desktop package consumes.
@@ -327,6 +340,19 @@ jobs:
         uses: emscripten-core/setup-emsdk@v16
         with:
           version: 3.1.51
+
+      # Emscripten downloads the SDL2 port on a cold ports cache, and its downloader
+      # does `import requests`, which emsdk's bundled Python does not ship. Runs with a
+      # warm cache never reach that line, which is why this surfaced as an intermittent
+      # Windows failure rather than a permanent one. Best effort: if pip is unavailable
+      # the build still runs and fails loudly on its own.
+      - name: Give Emscripten's Python its port downloader
+        shell: bash
+        run: |
+          "$EMSDK_PYTHON" -m ensurepip --default-pip || true
+          if ! "$EMSDK_PYTHON" -m pip install --disable-pip-version-check requests; then
+            echo "::warning::no pip in emsdk python; a cold ports cache will fail"
+          fi
 
       - name: Build WASM
         run: node core/wasm-build/build.mjs
