@@ -9,13 +9,10 @@ import { getUserDataPath } from '../lib/paths';
 import type { UpdaterPrefs } from './updater.type';
 
 /**
- * Pre-releases are on by default while the new install and update path is being
- * proven: the stable channel has no Velopack release in it yet, so a build looking
- * only at stable would report that nothing is available and test nothing.
- *
- * Flip this to false once a Velopack release is promoted to latest.
+ * Stable by default. Anyone who wants pre-releases opts in, and that choice is
+ * saved; it is not something a fresh install should inherit.
  */
-const DEFAULTS: UpdaterPrefs = { allowPrerelease: true };
+const DEFAULTS: UpdaterPrefs = { allowPrerelease: false };
 
 const prefsPath = (): string => getUserDataPath('config', 'updater.json');
 
