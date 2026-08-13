@@ -24,6 +24,7 @@ import { useProfileManagement } from '@app/App/behavior/useProfileManagement';
 import { useSaveOverlay } from '@app/App/behavior/useSaveOverlay';
 import { useSaveStateSettings } from '@app/App/behavior/useSaveStateSettings';
 import { useStartup } from '@app/App/behavior/useStartup';
+import { useShellReady } from '@app/App/behavior/useShellReady';
 import { useWasmWarmup } from '@app/App/behavior/useWasmWarmup';
 import { useDebugLaunchHooks } from '@app/App/behavior/useDebugLaunchHooks';
 import { useAppMainEffects } from '@app/App/behavior/useAppMainEffects';
@@ -90,7 +91,7 @@ const AppMain = () => {
 
   useKeyboardShortcuts(nav, dialog, dismissDialog, profileMgmt.activeProfile);
 
-  useStartup(profileMgmt, nav);
+  const startup = useStartup(profileMgmt, nav);
   useWasmWarmup();
   useDebugLaunchHooks({ activeProfile: profileMgmt.activeProfile, loadProfileForGame: profileMgmt.loadProfileForGame, openNavWidget: () => widgets.open('navigation') });
   useIpcLogBridge();
@@ -99,9 +100,9 @@ const AppMain = () => {
   // Default notch mode until a profile loads (keeps startup windows clear of a cutout).
   useEffect(() => { applyNotchMode(true); }, []);
 
-  // Splash → full size: the UI shell has mounted, so grow the splash-sized window
-  // to the last saved bounds (electron only; no-op on web/mobile).
-  useEffect(() => { window.api?.appReady?.(); }, []);
+  // Splash window → main window: reveal only once startup has settled and painted,
+  // so the first frame the user sees is the finished shell (electron only).
+  useShellReady(startup.settled);
 
   const widgetVisibility = useMemo(() => Object.fromEntries(widgets.layout.widgets.map((w) => [w.id, w.visible])), [widgets.layout]);
 

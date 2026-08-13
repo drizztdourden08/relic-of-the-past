@@ -1,5 +1,5 @@
 /* @layer renderer-appshell @kind hook */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { log } from '../../lib/log-bus';
 import { applySpritesForRom } from '../../lib/sprites/apply-sprites-for-rom';
 import { getAppState } from '../../lib/storage/profile-store';
@@ -13,6 +13,10 @@ const useStartup = (
   },
   nav: { setActivePage: (page: PageId) => void },
 ) => {
+  // Startup owns which page the app lands on, so it also owns the moment the shell
+  // stops moving — which is what useShellReady waits for before revealing the window.
+  const [settled, setSettled] = useState(false);
+
   useEffect(() => {
     (async () => {
       try {
@@ -71,9 +75,15 @@ const useStartup = (
       } catch (err) {
         log.error(`Startup failed: ${err}`);
         nav.setActivePage('data');
+      } finally {
+        // Every exit path above, including the early returns — a boot that failed still
+        // has to end with a visible window.
+        setSettled(true);
       }
     })();
   }, []);
+
+  return { settled };
 };
 
 export { useStartup };

@@ -1,7 +1,7 @@
 /* @layer tooling-scripts @kind logic */
 /**
  * Builds the installer splash as an animated GIF, matching the app's boot splash
- * (apps/web/src/index.html) frame for frame: black ground, 192px mark, a 28px ring
+ * (apps/web/src/splash.html) frame for frame: black ground, 192px mark, a 28px ring
  * whose top quarter is gold, one revolution every 0.7s.
  */
 import { createRequire } from 'module';
@@ -14,7 +14,7 @@ const sharp = require('sharp');
 const ROOT = process.cwd();
 const OUT = process.argv[2] ?? join(ROOT, 'build', 'installer-splash.gif');
 
-// Window, mirroring the splash-sized BrowserWindow in window/create-window.ts.
+// Window, mirroring the splash BrowserWindow in window/boot/splash-window.ts.
 const W = 480;
 const H = 360;
 

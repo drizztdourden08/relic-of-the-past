@@ -68,6 +68,25 @@ const loadWindowState = (): WindowState => {
   }
 };
 
+/**
+ * Put a window at its saved size/position/mode. Called BEFORE the window is ever
+ * visible, so none of these moves are seen.
+ *
+ * Saved state holds CONTENT bounds while the BrowserWindow constructor takes WINDOW
+ * bounds, and titleBarStyle:'hidden' makes the two disagree on Windows — which is why
+ * the geometry is applied here rather than passed as constructor options.
+ */
+const applyWindowState = (win: BrowserWindow, state: WindowState): void => {
+  if (state.x !== undefined && state.y !== undefined) {
+    win.setContentBounds({ x: state.x, y: state.y, width: state.width, height: state.height });
+  } else {
+    win.setContentSize(state.width, state.height);
+    win.center();
+  }
+  if (state.isMaximized) win.maximize();
+  if (state.isFullscreen) win.setFullScreen(true);
+};
+
 const trackWindowState = (win: BrowserWindow): void => {
   const updateNormalBounds = (): void => {
         if (!win.isMaximized() && !win.isFullScreen() && !win.isMinimized()) {
@@ -108,4 +127,5 @@ const saveWindowState = (win: BrowserWindow): void => {
   }
 };
 
-export { loadWindowState, trackWindowState, saveWindowState };
+export { loadWindowState, applyWindowState, trackWindowState, saveWindowState };
+export type { WindowState };

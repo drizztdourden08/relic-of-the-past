@@ -1,12 +1,13 @@
 /* @layer electron-main @kind logic */
-import { getMainWindow, restoreSavedBounds } from './create-window';
+import { getMainWindow } from './create-window';
+import { revealMainWindow } from './boot';
 import { handle, on } from '../lib/ipc/handle';
 
 const registerWindowHandlers = (): void => {
   const win = () => getMainWindow();
 
-  // Renderer finished mounting the UI — grow the splash window to the saved size.
-  on('window:appReady', () => restoreSavedBounds());
+  // The renderer's UI has settled and painted — hand over from the splash window.
+  on('window:shellReady', () => revealMainWindow());
 
   // Window controls
   on('window:minimize', () => win()?.minimize());
