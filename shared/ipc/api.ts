@@ -17,11 +17,14 @@ type SendApi = { [M in keyof typeof SEND_MAP]: SendContract[(typeof SEND_MAP)[M]
 type EventApi = { [M in keyof typeof EVENT_MAP]: (callback: EventContract[(typeof EVENT_MAP)[M]]) => Unsub };
 
 interface UpdaterApi {
-  isPortable: InvokeContract['updater:isPortable'];
+  capabilities: InvokeContract['updater:capabilities'];
+  openReleasePage: InvokeContract['updater:openReleasePage'];
   check: InvokeContract['updater:check'];
   getAvailable: InvokeContract['updater:getAvailable'];
-  download: InvokeContract['updater:download'];
-  install: InvokeContract['updater:install'];
+  listVersions: InvokeContract['updater:listVersions'];
+  apply: InvokeContract['updater:apply'];
+  getPrefs: InvokeContract['updater:getPrefs'];
+  setPrefs: InvokeContract['updater:setPrefs'];
   getVersion: InvokeContract['updater:getVersion'];
   onUpdateAvailable: (cb: EventContract['updater:update-available']) => Unsub;
   onUpToDate: (cb: EventContract['updater:up-to-date']) => Unsub;

@@ -24,7 +24,7 @@ interface Capabilities {
   nativeHid: boolean; // raw HID enumerate/read/write (Capacitor's Android USB-OTG plugin only — desktop reads controllers through SDL3's already-decoded state instead)
   touchControls: boolean; // needs an on-screen virtual gamepad
   customProtocol: boolean; // app-sprite:// style asset serving
-  selfUpdate: boolean; // electron-updater present
+  selfUpdate: boolean; // the host can install updates itself
   nativeFileDialog: boolean; // OS open dialog vs document picker
   revealDataFolder: boolean; // can open the data dir in an OS file manager
   hapticFeedback: boolean; // controller rumble / device vibration available

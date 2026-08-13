@@ -148,3 +148,9 @@
   color: var(--c-danger);
   margin: var(--space-md) 0;
 }
+
+.update-dialog__manual {
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+  margin: var(--space-md) 0 0;
+}

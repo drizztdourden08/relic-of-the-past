@@ -13,6 +13,10 @@ module.exports = {
   directories: {
     buildResources: 'build',
   },
+  // Chromium ships its own UI strings for 55 languages, ~48 MB of .pak files, none of
+  // which this app shows: our own UI is bundled, and the in-game language packs are a
+  // separate thing entirely.
+  electronLanguages: ['en-US'],
   files: [
     'dist/electron/**/*',
     'dist/preload/**/*',
@@ -38,21 +42,18 @@ module.exports = {
       to: 'gamecontrollerdb.txt',
     },
   ],
+  // The Velopack bindings are a prebuilt .node and cannot be require()d from inside
+  // an asar archive.
+  asarUnpack: [
+    'node_modules/velopack/lib/native/**',
+  ],
+  // Windows ships through Velopack: electron-builder only produces the app tree
+  // (--win --dir) and scripts/build/pack-velopack.mjs turns it into Setup.exe plus
+  // the update packages. The nsis/portable targets are gone with it.
   win: {
-    target: ['portable', 'nsis'],
+    target: ['dir'],
     icon: 'apps/web/public/logos/icon.ico',
     signAndEditExecutable: false,
-  },
-  portable: {
-    artifactName: 'rotp-windows-portable.exe',
-  },
-  nsis: {
-    oneClick: false,
-    allowToChangeInstallationDirectory: true,
-    createDesktopShortcut: true,
-    artifactName: 'rotp-windows-setup.exe',
-    installerSidebar: 'apps/web/public/logos/installerSidebar.bmp',
-    uninstallerSidebar: 'apps/web/public/logos/uninstallerSidebar.bmp',
   },
   mac: {
     target: ['dmg', 'zip'],

@@ -189,8 +189,11 @@ const AppMain = () => {
       <UpdateDialog
         open={showUpdateDialog}
         state={update}
-        onDownload={update.download}
-        onInstall={update.install}
+        canInstall={update.canInstall}
+        onApply={update.apply}
+        onOpenReleasePage={update.openReleasePage}
+        onLoadVersions={update.loadVersions}
+        onSetPrefs={update.setPrefs}
         onClose={() => setShowUpdateDialog(false)}
       />
       )}

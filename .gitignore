@@ -10,7 +10,11 @@ node_modules/
 # Build output
 dist/
 out/
-/build/
+# electron-builder reads `build/` as buildResources, so it holds packaging SOURCES
+# (the installer splash) as well as output. The pattern has to match the contents
+# rather than the directory, or git never descends far enough to see the exception.
+/build/*
+!/build/installer-splash.gif
 *.tsbuildinfo
 .wiki-build/
 
