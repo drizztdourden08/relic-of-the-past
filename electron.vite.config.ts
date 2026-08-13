@@ -54,7 +54,13 @@ export default defineConfig({
     build: {
       outDir: resolve(__dirname, 'dist/renderer'),
       rollupOptions: {
-        input: resolve(__dirname, 'apps/web/src/index.html'),
+        // Two pages, one output dir: the app, and the boot splash that runs in its own
+        // window while the app loads. Same dir is what lets splash.html reach
+        // ./logos/* exactly like index.html does, in dev and packaged alike.
+        input: {
+          index: resolve(__dirname, 'apps/web/src/index.html'),
+          splash: resolve(__dirname, 'apps/web/src/splash.html'),
+        },
       },
     },
   },

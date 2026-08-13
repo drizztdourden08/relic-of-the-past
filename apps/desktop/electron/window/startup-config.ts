@@ -2,8 +2,8 @@
 /**
  * Test/automation startup flags, parsed from process.argv:
  *
- *   --window-size[=WxH]  Open at a fixed size (default 1280x800) instead of the
- *                        boot-splash size; skips the splash→saved-size growth.
+ *   --window-size[=WxH]  Open at a fixed size (default 1280x800) instead of the saved
+ *                        one, and stay there — the saved geometry is not applied.
  *   --widgets=a,b,c      Open these widgets docked (shrinking the game area) with
  *                        their default side, on top of a clean layout.
  *   --fresh              Ignore the saved widget layout, start with nothing open

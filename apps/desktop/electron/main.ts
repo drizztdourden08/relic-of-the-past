@@ -15,7 +15,7 @@ import { initPaths, ensureDataDirectories } from './lib/paths';
 import { applyPortableMode } from './app/portable-mode';
 import { registerInstallSize } from './app/install-size-type';
 import { applyInstanceIdentity, parseInstanceConfig } from './instance';
-import { createWindow, getMainWindow, registerWindowHandlers, registerAspectRatioHandlers } from './window';
+import { createWindow, getMainWindow, registerWindowHandlers, registerAspectRatioHandlers, setSplashStatus } from './window';
 import { saveWindowState } from './window/window-state';
 import { isEphemeralLaunch } from './window/startup-config';
 import { registerDisplayHandlers } from './display/ipc-handlers';
@@ -153,10 +153,13 @@ app.whenReady().then(async () => {
   }
 
   // Boot-timing diagnostic (opt-in via --boot-timing): renderer HTML loaded, then
-  // the renderer's app-ready signal (splash replaced by the UI).
+  // the renderer's shell-ready signal (splash window replaced by the main window).
   logBoot('window created');
-  mainWindow.webContents.once('did-finish-load', () => logBoot('renderer did-finish-load'));
-  ipcMain.once('window:appReady', () => logBoot('app-ready (splash gone)'));
+  mainWindow.webContents.once('did-finish-load', () => {
+    logBoot('renderer did-finish-load');
+    setSplashStatus('Preparing interface…');
+  });
+  ipcMain.once('window:shellReady', () => logBoot('shell-ready (reveal)'));
 
   // Initialize auto-updater (handlers registered above)
   initAutoUpdater(mainWindow);

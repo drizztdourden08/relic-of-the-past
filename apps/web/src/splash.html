@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self'; connect-src 'self'"
+    />
+    <title>Relic of the Past</title>
+    <!-- The boot splash, in its own window. No bundle, no preload, no imports: every
+         byte here paints on the first frame, which is the whole point of the window. -->
+    <style>
+      html, body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: #000;
+        /* No -webkit-app-region:drag anywhere on this page — a frameless window with no
+           drag region cannot be moved, which is what a splash should be. */
+        user-select: none;
+        cursor: default;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 28px;
+        font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+      }
+      .splash__logo {
+        width: 192px;
+        height: 192px;
+        image-rendering: auto;
+      }
+      .splash__spinner {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 3px solid rgba(255, 255, 255, 0.12);
+        border-top-color: #c8a84e;
+        animation: splash-rotate 0.7s linear infinite;
+      }
+      .splash__status {
+        /* Out of flow on purpose: the logo + spinner column stays centred exactly where
+           the installer's splash GIF puts it, whatever the status line says. */
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 30px;
+        margin: 0;
+        text-align: center;
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        color: rgba(255, 255, 255, 0.55);
+      }
+      .splash__version {
+        position: fixed;
+        right: 10px;
+        bottom: 8px;
+        font-size: 11px;
+        letter-spacing: 0.04em;
+        color: rgba(255, 255, 255, 0.28);
+      }
+      @keyframes splash-rotate {
+        to { transform: rotate(360deg); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .splash__spinner { animation-duration: 2.4s; }
+      }
+    </style>
+  </head>
+  <body>
+    <img class="splash__logo" src="./logos/logo-256.png" alt="" />
+    <div class="splash__spinner"></div>
+    <p class="splash__status" id="splash-status">Starting…</p>
+    <span class="splash__version" id="splash-version"></span>
+    <script>
+      // The main process drives the status line through this one global (see
+      // window/boot/splash-window.ts). Kept trivial so a failed call costs a message,
+      // never the splash itself.
+      window.__splashStatus = (message) => {
+        document.getElementById('splash-status').textContent = message;
+      };
+      document.getElementById('splash-version').textContent =
+        new URLSearchParams(window.location.search).get('v') ?? '';
+    </script>
+  </body>
+</html>

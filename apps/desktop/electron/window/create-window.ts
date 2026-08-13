@@ -1,40 +1,18 @@
 /* @layer electron-main @kind logic */
-import { BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, screen } from 'electron';
 import { join } from 'path';
 import { is } from '@electron-toolkit/utils';
-import { loadWindowState, trackWindowState } from './window-state';
+import { loadWindowState, applyWindowState, trackWindowState } from './window-state';
 import { parseStartupConfig, startupRendererArgs } from './startup-config';
 import { keepWindowInBackground } from './keep-in-background';
 import { attachTextInteraction } from './text-interaction';
 import { resolveWindowIcon } from './window-icon';
+import { armReveal, openSplash } from './boot';
 import { isAutomationLaunch, parseInstanceConfig } from '../instance';
 
 const APP_TITLE = 'Relic of the Past';
 
 let mainWindow: BrowserWindow | null = null;
-
-// The window opens at this fixed size to frame the boot splash, then grows to the
-// saved size once the renderer signals it's ready (restoreSavedBounds below).
-const SPLASH_WIDTH = 480;
-const SPLASH_HEIGHT = 360;
-
-// Saved bounds are captured at creation but applied only on app-ready, so the
-// splash never flashes at the (possibly maximized) full size first.
-let pendingSavedState: ReturnType<typeof loadWindowState> | null = null;
-let savedStateRestored = false;
-
-// Test/automation launches must never steal focus OR cover the user's other
-// windows. Derived from isAutomationLaunch() rather than the literal --no-focus
-// flag, so a run that carries --auto-state/--dump-nav/--sim-run/etc. but forgot
-// --no-focus itself is still caught (see docs/contributing/testing.md — --no-focus
-// is documented as mandatory, but forgetting it must not cost the user their
-// focus). Tracked at module scope so restoreSavedBounds honours it too (its
-// maximize/fullscreen calls would otherwise activate + raise the window).
-let launchNoFocus = false;
-
-// --window-size opens at a fixed size; the splash→saved-size growth is skipped so
-// the window keeps exactly the requested resolution.
-let fixedWindowSize = false;
 
 const getMainWindow = (): BrowserWindow | null => {
   return mainWindow;
@@ -66,56 +44,21 @@ const offscreenOrigin = (): { x: number; y: number } => {
   return { x: right + 400, y: top };
 };
 
-/** Grow the splash-sized window to the last saved size/position/mode. Idempotent —
- *  fired by the renderer's app-ready signal, with a timeout fallback in createWindow. */
-const restoreSavedBounds = (): void => {
-  if (savedStateRestored || !mainWindow || !pendingSavedState) return;
-  savedStateRestored = true;
-  // A fixed --window-size launch keeps its requested resolution — no growth.
-  if (fixedWindowSize) return;
-  const saved = pendingSavedState;
-
-  // An automation window lives off every monitor (see offscreenOrigin). Grow it to
-  // the saved SIZE so anything layout-sensitive matches a real session, but never
-  // apply the saved POSITION — that would drag it onto a display and back into the
-  // user's way. Maximize/fullscreen are skipped for the same reason, and because
-  // both would activate it.
-  if (launchNoFocus) {
-    mainWindow.setContentSize(saved.width, saved.height);
-    return;
-  }
-
-  if (saved.x !== undefined && saved.y !== undefined) {
-    mainWindow.setContentBounds({ x: saved.x, y: saved.y, width: saved.width, height: saved.height });
-  } else {
-    mainWindow.setContentSize(saved.width, saved.height);
-    mainWindow.center();
-  }
-
-  // Start tracking normal bounds only now, so the splash size is never persisted.
-  trackWindowState(mainWindow);
-
-  if (saved.isMaximized) mainWindow.maximize();
-  if (saved.isFullscreen) mainWindow.setFullScreen(true);
-};
-
 const createWindow = (): BrowserWindow => {
   const noFocus = isAutomationLaunch();
-  launchNoFocus = noFocus;
   const startup = parseStartupConfig();
   const instance = parseInstanceConfig();
-  fixedWindowSize = startup.windowSize !== null;
-  pendingSavedState = loadWindowState();
-  savedStateRestored = false;
+  const saved = loadWindowState();
 
   mainWindow = new BrowserWindow({
-    width: startup.windowSize?.width ?? SPLASH_WIDTH,
-    height: startup.windowSize?.height ?? SPLASH_HEIGHT,
+    width: startup.windowSize?.width ?? saved.width,
+    height: startup.windowSize?.height ?? saved.height,
     minWidth: 360,
     minHeight: 280,
     // Automation opens off every monitor; centring would override that x/y.
     ...(noFocus ? offscreenOrigin() : {}),
-    center: !noFocus,
+    // Positioned by applyWindowState below, while still invisible.
+    center: false,
     titleBarStyle: 'hidden',
     autoHideMenuBar: true,
     // A named instance carries its name in the title and swaps to the bot icon, so
@@ -123,7 +66,11 @@ const createWindow = (): BrowserWindow => {
     title: instance.name ? `${APP_TITLE} — ${instance.name}` : APP_TITLE,
     icon: resolveWindowIcon(instance.name),
     backgroundColor: '#000000',
-    show: !noFocus,
+    // A normal launch is born transparent and is faded in by the boot mediator once
+    // the renderer's shell has settled — see armReveal. Automation has no splash to
+    // hand over from, so it stays opaque (and off-screen).
+    opacity: noFocus ? 1 : 0,
+    show: false,
     // An automation window must be UNABLE to take focus, not merely reluctant to.
     // focusable:false sets WS_EX_NOACTIVATE on Windows, so the OS refuses to
     // activate it at all — SetForegroundWindow (which is what Chromium's
@@ -149,9 +96,6 @@ const createWindow = (): BrowserWindow => {
     },
   });
 
-  // Fallback: if the renderer never signals ready (crash/hang), grow anyway.
-  setTimeout(restoreSavedBounds, 10000);
-
   // The WASM core sets an SDL window title (kWindowTitle in emscripten_main.c), which
   // reaches document.title and overrides the BrowserWindow title — so without this an
   // instance name never shows in the window or on the taskbar. Hold our own title for a
@@ -173,8 +117,23 @@ const createWindow = (): BrowserWindow => {
     //
     // showInactive() rather than show(), so we never even ask to be activated.
     // keepWindowInBackground is the backstop if anything raises us later.
+    //
+    // Sized, never positioned: the saved SIZE keeps anything layout-sensitive matching
+    // a real session, while the saved position would drag the window back onto a
+    // display and into the user's way. Maximize/fullscreen are skipped for the same
+    // reason, and because both would activate it.
+    if (!startup.windowSize) mainWindow.setContentSize(saved.width, saved.height);
     keepWindowInBackground(mainWindow);
     mainWindow.showInactive();
+  } else {
+    // Everything that moves the window happens here, while it is still transparent:
+    // by the time the user sees it, its geometry is final and its UI has settled.
+    if (startup.windowSize) mainWindow.center();
+    else applyWindowState(mainWindow, saved);
+    trackWindowState(mainWindow);
+    armReveal(mainWindow);
+    mainWindow.showInactive();
+    openSplash(mainWindow, app.getVersion());
   }
 
   // Let F1-F12 (and Tab) pass through to the renderer instead of being
@@ -221,4 +180,4 @@ const createWindow = (): BrowserWindow => {
   return mainWindow;
 };
 
-export { createWindow, getMainWindow, restoreSavedBounds };
+export { createWindow, getMainWindow };

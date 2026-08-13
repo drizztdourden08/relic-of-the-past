@@ -12,7 +12,8 @@ interface SendContract {
   'window:toggleFullscreen': () => void;
   'window:setFullscreen': (value: boolean) => void;
   'window:setAspectRatioLock': (ratio: number, extraHeight: number) => void;
-  'window:appReady': () => void;
+  /** UI shell settled AND painted — the main window may be revealed. */
+  'window:shellReady': () => void;
 }
 
 export type { SendContract };
