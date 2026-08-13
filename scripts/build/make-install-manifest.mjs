@@ -23,7 +23,7 @@ import { join } from 'node:path';
  * Raised only when a new stub gains an ability older ones lack. An older stub reading
  * a higher number fetches the newer stub and hands over to it.
  */
-const STUB_VERSION = 1;
+const STUB_VERSION = 2;
 
 const REPO = 'https://github.com/drizztdourden08/relic-of-the-past';
 const PREVIOUS_MANIFEST = `${REPO}/releases/latest/download/install.json`;

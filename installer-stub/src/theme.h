@@ -15,7 +15,7 @@ constexpr int kHeight = 360;
 // The manifest carries the stub generation it expects. A build older than that
 // number cannot be trusted to understand the rest of the document, so it steps
 // aside for a fresh download instead of guessing.
-constexpr int kStubVersion = 1;
+constexpr int kStubVersion = 2;
 
 // Stored as plain DWORDs so this header stays free of the graphics headers;
 // the painter wraps each one in a colour object at the point of use.
@@ -26,6 +26,8 @@ constexpr DWORD kText = 0xFFECE6DA;
 constexpr DWORD kDim = 0xFFA89E8D;
 constexpr DWORD kFaint = 0xFF7C7365;
 constexpr DWORD kAccent = 0xFFE8A33D;
+// TEMPORARY: release verification marker, remove with the kTestMarker draw call.
+constexpr DWORD kTestRed = 0xFFE5556E;
 constexpr DWORD kTrack = 0xFF221E1A;
 constexpr DWORD kInk = 0xFF1A1207;
 // Barely there: present for anyone who looks for it, invisible to everyone else.
