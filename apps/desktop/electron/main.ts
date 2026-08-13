@@ -1,4 +1,5 @@
 /* @layer electron-main @kind logic */
+import { VelopackApp } from 'velopack';
 import { app, BrowserWindow, Menu, session, protocol, ipcMain } from 'electron';
 import { is } from '@electron-toolkit/utils';
 
@@ -11,6 +12,8 @@ const logBoot = (label: string): void => {
 };
 
 import { initPaths, ensureDataDirectories } from './lib/paths';
+import { applyPortableMode } from './app/portable-mode';
+import { registerInstallSize } from './app/install-size-type';
 import { applyInstanceIdentity, parseInstanceConfig } from './instance';
 import { createWindow, getMainWindow, registerWindowHandlers, registerAspectRatioHandlers } from './window';
 import { saveWindowState } from './window/window-state';
@@ -48,6 +51,15 @@ import { initAutoUpdater, registerUpdaterHandlers } from './updater';
 import { registerGithubHandlers } from './github/ipc-handlers';
 import { emit } from './lib/ipc/handle';
 import { installDevFileLogging } from './lib/dev-file-logger';
+
+// Velopack's startup logic, before anything else runs. It handles the hooks fired
+// during install, update and uninstall, and may restart the process to do so, which
+// is why nothing of ours may happen first.
+VelopackApp.build().run();
+
+// A copy carrying its own `data` folder keeps everything there. This runs before any
+// path is read, because every other location is derived from userData.
+const portableData = applyPortableMode();
 
 // Every IPC domain's register fn, gated by environment. ipcMain.handle order is
 // irrelevant, so this list is declarative; window/input/updater wiring that needs
@@ -117,6 +129,9 @@ app.whenReady().then(async () => {
 
   // Initialize paths and data directories
   const dataPath = app.getPath('userData');
+  if (portableData) console.log(`[portable] user data lives beside the app: ${portableData}`);
+  // Velopack writes the size in a type Windows ignores. Not awaited: it is cosmetic.
+  if (!portableData) void registerInstallSize();
   initPaths(dataPath);
   await migrateDataFolder();
   await ensureDataDirectories();

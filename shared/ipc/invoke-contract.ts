@@ -30,6 +30,7 @@ import type { UiViewsMap } from './ui-views-contract';
 import type { ReviewEntry, ReviewFile } from './review-contract';
 import type { DetectionContext, DraftRecommendation, PassResult, Recommendation } from './recommendation-contract';
 import type { ControllerInvokeContract } from './controller-contract';
+import type { UpdateInfo, UpdaterCapabilities, UpdaterPrefs, VersionOption } from './updater-contract';
 
 
 type Result = { success: boolean; error?: string };
@@ -272,11 +273,18 @@ interface InvokeContract extends ControllerInvokeContract {
   'github:createIssue': (req: CreateIssueRequest) => Promise<CreateIssueResult>;
 
   // Auto-updater (nested namespace)
-  'updater:isPortable': () => Promise<boolean>;
-  'updater:check': () => Promise<unknown>;
-  'updater:getAvailable': () => Promise<{ version: string; releaseNotes: string; releaseDate: string } | null>;
-  'updater:download': () => Promise<void>;
-  'updater:install': () => Promise<void>;
+  /** What this build can do about updates: check only, or check and install. */
+  'updater:capabilities': () => Promise<UpdaterCapabilities>;
+  /** Opens the release page for a version, for builds that cannot install one. */
+  'updater:openReleasePage': (version: string | null) => Promise<void>;
+  'updater:check': () => Promise<UpdateInfo | null>;
+  'updater:getAvailable': () => Promise<UpdateInfo | null>;
+  /** Every installable release, newest first, for the version picker. */
+  'updater:listVersions': () => Promise<VersionOption[]>;
+  /** null installs the newest release; a version string installs that exact build. */
+  'updater:apply': (version: string | null) => Promise<void>;
+  'updater:getPrefs': () => Promise<UpdaterPrefs>;
+  'updater:setPrefs': (prefs: UpdaterPrefs) => Promise<void>;
   'updater:getVersion': () => Promise<string>;
 }
 

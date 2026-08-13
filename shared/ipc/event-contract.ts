@@ -7,6 +7,7 @@
  */
 
 import type { ControllerAddedInfo, ControllerJoystickSample, ControllerRawReport, DeviceEntry } from './controller-contract';
+import type { UpdateInfo } from './updater-contract';
 
 /** Progress of a data import (ROM / MSU / language / sprites), main → renderer. */
 interface ImportProgress {
@@ -28,9 +29,9 @@ interface EventContract {
   'log:entry': (entry: { channel: string; level: string; message: string }) => void;
 
   // Auto-updater
-  'updater:update-available': (info: { version: string; releaseNotes: string; releaseDate: string }) => void;
+  'updater:update-available': (info: UpdateInfo) => void;
   'updater:up-to-date': () => void;
-  'updater:download-progress': (progress: { percent: number; bytesPerSecond: number; transferred: number; total: number }) => void;
+  'updater:download-progress': (progress: { percent: number }) => void;
   'updater:download-complete': () => void;
   'updater:error': (error: string) => void;
 

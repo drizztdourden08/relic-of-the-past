@@ -13,6 +13,14 @@ on:
         description: 'New version to release, e.g. 0.9.0 (or v0.9.0). release-notes/<tag>.md must already exist on master and the tag must not exist yet.'
         required: true
         type: string
+      full_installer:
+        description: 'Rebuild the installer and portable downloads (adds ~280 MB to the release). Off = update package only.'
+        type: boolean
+        default: false
+      prerelease:
+        description: 'Publish as a pre-release. Visible to anyone opted into pre-releases, and never becomes the latest download.'
+        type: boolean
+        default: false
       set_latest:
         description: 'Publish immediately and mark as the latest release (instead of a draft).'
         required: false
@@ -104,7 +112,7 @@ jobs:
         include:
           - os: windows-latest
             platform: win
-            args: --win
+            args: --win --dir
             addonPlatform: win32
             addonArch: x64
           - os: macos-latest
@@ -114,7 +122,7 @@ jobs:
             addonArch: arm64
           - os: ubuntu-latest
             platform: linux
-            args: --linux
+            args: --linux dir deb
             addonPlatform: linux
             addonArch: x64
 
@@ -186,6 +194,19 @@ jobs:
           test -f "$DIR/$LIB" || { echo "::error::$LIB missing from $DIR — SDL was built without libusb support"; ls -la "$DIR"; exit 1; }
           echo "$LIB present alongside the addon."
 
+      # vpk (the Velopack CLI) is a .NET global tool, and it is what turns the built
+      # app tree into Setup.exe plus the update packages. Pinned to the same version
+      # as the `velopack` npm package: Velopack checks that they agree.
+      - name: Set up .NET (Velopack packaging)
+        if: matrix.platform == 'win' || matrix.platform == 'linux'
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install vpk
+        if: matrix.platform == 'win' || matrix.platform == 'linux'
+        run: dotnet tool install -g vpk --version 1.2.110-ge826545
+
       - name: Build & Package
         shell: bash
         env:
@@ -194,6 +215,42 @@ jobs:
         run: |
           npx electron-vite build
           npx electron-builder ${{ matrix.args }} --publish never --config scripts/build/electron-builder.config.js -c.directories.output=release/${{ matrix.platform }}
+
+      # Downloading the previous release first is what lets vpk build a delta against
+      # it and list every version in the release index. There is nothing to fetch for
+      # the first Velopack release, which is not an error.
+      # Linux needs no signing of any kind, so this is the same three steps as Windows.
+      # Velopack replaces the AppImage in place on update, asking for sudo through
+      # pkexec only when it lives somewhere privileged.
+      - name: Pack the Linux release with Velopack
+        if: matrix.platform == 'linux'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          vpk download github --repoUrl "https://github.com/${{ github.repository }}" \
+            --outputDir release/linux --token "$GH_TOKEN" || echo "no previous release to delta against"
+          node scripts/build/pack-velopack.mjs --linux \
+            --pack-dir release/linux/linux-unpacked --out release/linux
+
+      - name: Pack the Windows release with Velopack
+        if: matrix.platform == 'win'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          vpk download github --repoUrl "https://github.com/${{ github.repository }}" --outputDir release/win --token "$GH_TOKEN" || echo "no previous release to delta against"
+
+          # A full release also builds the setup and portable downloads, each another
+          # whole copy of the payload. Updates need neither: the app reads the release
+          # index and pulls a delta.
+          FULL=""
+          if [ "${{ inputs.full_installer }}" = "true" ]; then FULL="--full"; fi
+          node scripts/build/pack-velopack.mjs --pack-dir release/win/win-unpacked --out release/win $FULL
+
+          # The recipe the downloader stub reads. Carries forward the previous
+          # release's URLs when this one ships no setup of its own.
+          node scripts/build/make-install-manifest.mjs --dir release/win --tag "${{ needs.prepare.outputs.tag }}"
 
       - name: Clean build artifacts
         shell: bash
@@ -325,14 +382,17 @@ jobs:
             echo "## Downloads"
             echo ""
             echo "**Windows**"
-            echo "- [Portable (.exe)](${BASE}/rotp-windows-portable.exe) — no installation needed"
-            echo "- [Installer (.exe)](${BASE}/rotp-windows-setup.exe)"
+            # These two are only rebuilt on a full release. The permanent links below
+            # always resolve to the newest release that carries them.
+            LATEST="https://github.com/${{ github.repository }}/releases/latest/download"
+            echo "- [Installer (.exe)](${LATEST}/rotp-windows-setup.exe) - installs and updates itself"
+            echo "- [Portable (.zip)](${LATEST}/rotp-windows-portable.zip) - unzip anywhere, keeps its data beside it"
             echo ""
             echo "**macOS**"
             echo "- [Disk Image (.dmg)](${BASE}/rotp-macos.dmg)"
             echo ""
             echo "**Linux**"
-            echo "- [AppImage](${BASE}/rotp-linux.AppImage) — universal"
+            echo "- [AppImage](${BASE}/rotp-linux.AppImage) - universal, updates itself"
             echo "- [Debian Package (.deb)](${BASE}/rotp-linux.deb)"
             echo ""
             echo "**Android**"
@@ -345,7 +405,10 @@ jobs:
           tag_name: ${{ needs.prepare.outputs.tag }}
           # Default (tag push) stays a draft. A manual run with set_latest=true
           # publishes immediately and marks it the latest release.
-          draft: ${{ inputs.set_latest != true }}
+          # A draft's assets cannot be downloaded, so a pre-release is published
+          # rather than drafted. It simply never becomes the latest download.
+          draft: ${{ inputs.set_latest != true && inputs.prerelease != true }}
+          prerelease: ${{ inputs.prerelease == true }}
           make_latest: ${{ inputs.set_latest == true }}
           generate_release_notes: false
           body_path: release-body.md

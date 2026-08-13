@@ -65,11 +65,14 @@ const installApiShim = (): void => {
     startup: { fresh: false, widgets: [], automation: false },
     instance: { name: null, profile: null },
     updater: {
-      isPortable: async () => true,
-      check: async () => {},
+      capabilities: async () => ({ canCheck: false, canInstall: false }),
+      openReleasePage: async () => {},
+      check: async () => null,
       getAvailable: async () => null,
-      download: async () => {},
-      install: async () => {},
+      listVersions: async () => [],
+      apply: async () => {},
+      getPrefs: async () => ({ allowPrerelease: false }),
+      setPrefs: async () => {},
       getVersion: async () => {
         // Native hosts (Capacitor) report the real app version (Android versionName,
         // itself derived from the repo-root package.json). Plain web has no native

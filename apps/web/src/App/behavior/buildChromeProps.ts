@@ -21,7 +21,7 @@ interface ChromePropsDeps {
   handleShowDataManager: (tab?: string) => void | Promise<void>;
   handleShowShadowEditor: () => void;
   canUpdate: boolean;
-  update: { portable: boolean; status: string; check: () => void };
+  update: { supported: boolean; status: string; check: () => void };
   setShowUpdateDialog: (open: boolean) => void;
   setShowBugReportDialog: (open: boolean) => void;
 }
@@ -65,9 +65,9 @@ const buildChromeProps = (deps: ChromePropsDeps): TitleBarProps => {
     isMuted: audio.isMuted,
     onToggleMute: audio.handleToggleMute,
     showFps: display.showFps,
-    updateAvailable: canUpdate && !update.portable && (update.status === 'available' || update.status === 'ready'),
+    updateAvailable: canUpdate && update.supported && update.status === 'available',
     onUpdateClick: () => setShowUpdateDialog(true),
-    onCheckForUpdates: !canUpdate || update.portable
+    onCheckForUpdates: !canUpdate || !update.supported
       ? undefined
       : () => { update.check(); setShowUpdateDialog(true); },
   };

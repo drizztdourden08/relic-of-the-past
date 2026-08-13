@@ -1,115 +1,149 @@
 /* @layer electron-main @kind logic */
-import { autoUpdater } from 'electron-updater';
+/**
+ * The updater's IPC surface and its startup check.
+ *
+ * Velopack owns the download, the verification and the swap. What lives here is the
+ * decision to check, the list of versions the picker offers, and the hand-off.
+ */
+import { shell } from 'electron';
 import type { BrowserWindow } from 'electron';
-import { is } from '@electron-toolkit/utils';
 import { handle, emit } from '../lib/ipc/handle';
+import { getMainWindow } from '../window';
+import { applyLatest, applyVersion } from './apply-update';
+import { canCheckForUpdates, canSelfUpdate, currentVersion, getUpdateManager } from './update-manager';
+import { findNewerRelease, releasePageUrl } from './latest-release';
+import { readPrefs, writePrefs } from './updater-prefs';
+import { FIRST_CHECK_DELAY_MS } from './updater.constants';
+import { listVersions } from './version-feed';
+import type { UpdateInfo, UpdaterPrefs, VersionCandidate } from './updater.type';
 
-interface UpdateInfo {
-  version: string;
-  releaseNotes: string;
-  releaseDate: string;
-}
+let available: UpdateInfo | null = null;
+let versions: VersionCandidate[] = [];
 
-let updateAvailable: UpdateInfo | null = null;
+const asUpdateInfo = (option: VersionCandidate): UpdateInfo => ({
+  version: option.version,
+  releaseNotes: option.releaseNotes,
+  releaseDate: option.releaseDate,
+});
 
-const isPortable = !!process.env.PORTABLE_EXECUTABLE_DIR;
+/** Refreshes the picker's list and returns it. Empty when the feed cannot be read. */
+const refreshVersions = async (): Promise<VersionCandidate[]> => {
+  try {
+    versions = await listVersions(currentVersion(), readPrefs().allowPrerelease);
+  } catch {
+    versions = [];
+  }
+  return versions;
+};
 
-const initAutoUpdater = (mainWindow: BrowserWindow): void => {
-  if (is.dev || isPortable) return;
+const runCheck = async (mainWindow: BrowserWindow): Promise<UpdateInfo | null> => {
+  const manager = getUpdateManager();
 
-  autoUpdater.setFeedURL({
-    provider: 'github',
-    owner: 'drizztdourden08',
-    repo: 'relic-of-the-past',
-  });
-
-  autoUpdater.autoDownload = false;
-  autoUpdater.autoInstallOnAppQuit = false;
-
-  autoUpdater.on('update-available', async (info) => {
-    // Fetch release notes from GitHub API (electron-updater doesn't include them)
-    let notes = '';
+  // Without Velopack there is nothing to install with, but the release list still
+  // answers the only question the badge asks. macOS lives here.
+  if (!manager) {
+    if (!canCheckForUpdates()) return null;
     try {
-      const res = await fetch(
-        `https://api.github.com/repos/drizztdourden08/relic-of-the-past/releases/tags/v${info.version}`,
-        { headers: { Accept: 'application/vnd.github.v3+json' } },
-      );
-      if (res.ok) {
-        const release = await res.json();
-        notes = release.body ?? '';
-      }
-    } catch {
-      // Silently fail — notes are optional
+      available = await findNewerRelease(currentVersion(), readPrefs().allowPrerelease);
+      if (available) emit(mainWindow, 'updater:update-available', available);
+      else emit(mainWindow, 'updater:up-to-date');
+      return available;
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      emit(mainWindow, 'updater:error', message);
+      return null;
+    }
+  }
+
+  try {
+    const found = await manager.checkForUpdatesAsync();
+    if (!found) {
+      available = null;
+      emit(mainWindow, 'updater:up-to-date');
+      return null;
     }
 
-    updateAvailable = {
-      version: info.version,
-      releaseNotes: notes,
-      releaseDate: info.releaseDate ?? new Date().toISOString(),
+    // The notes travel with the release, so the dialog needs no second request. The
+    // version list is fetched alongside so the picker is populated when it opens.
+    const target = found.TargetFullRelease;
+    available = {
+      version: target.Version,
+      releaseNotes: target.NotesMarkdown ?? '',
+      releaseDate: '',
     };
+    await refreshVersions();
+    const listed = versions.find((v) => v.version === target.Version);
+    if (listed) available = asUpdateInfo(listed);
 
-    emit(mainWindow, 'updater:update-available', updateAvailable);
-  });
+    emit(mainWindow, 'updater:update-available', available);
+    return available;
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    emit(mainWindow, 'updater:error', message);
+    return null;
+  }
+};
 
-  autoUpdater.on('update-not-available', () => {
-    emit(mainWindow, 'updater:up-to-date');
-  });
-
-  autoUpdater.on('download-progress', (progress) => {
-    emit(mainWindow, 'updater:download-progress', {
-      percent: progress.percent,
-      bytesPerSecond: progress.bytesPerSecond,
-      transferred: progress.transferred,
-      total: progress.total,
-    });
-  });
-
-  autoUpdater.on('update-downloaded', () => {
-    emit(mainWindow, 'updater:download-complete');
-  });
-
-  autoUpdater.on('error', (err) => {
-    emit(mainWindow, 'updater:error', err.message);
-  });
-
+const initAutoUpdater = (mainWindow: BrowserWindow): void => {
+  if (!canSelfUpdate() && !canCheckForUpdates()) return;
   setTimeout(() => {
-    autoUpdater.checkForUpdates().catch((err) => {
-      console.error('[updater] check failed:', err);
-    });
-  }, 5000);
+    runCheck(mainWindow).catch((err) => console.error('[updater] check failed:', err));
+  }, FIRST_CHECK_DELAY_MS);
 };
 
 const registerUpdaterHandlers = (): void => {
-  handle('updater:isPortable', () => isPortable);
+  handle('updater:capabilities', () => ({
+    canCheck: canSelfUpdate() || canCheckForUpdates(),
+    canInstall: canSelfUpdate(),
+  }));
+
+  // The way out for a build that can see an update but not apply one.
+  handle('updater:openReleasePage', async (_event, version: string | null) => {
+    await shell.openExternal(releasePageUrl(version ?? undefined));
+  });
+  handle('updater:getVersion', () => currentVersion());
+  handle('updater:getAvailable', () => available);
 
   handle('updater:check', async () => {
-    if (is.dev || isPortable) return null;
+    const win = getMainWindow();
+    if (!win) return null;
+    return runCheck(win);
+  });
+
+  handle('updater:listVersions', async () => {
+    // Choosing a version only means something when this build can install one.
+    if (!canSelfUpdate()) return [];
+    const list = await refreshVersions();
+    // The asset is main-process detail; the renderer picks by version string.
+    return list.map(({ asset: _asset, ...rest }) => rest);
+  });
+
+  handle('updater:getPrefs', () => readPrefs());
+  handle('updater:setPrefs', async (_event, prefs: UpdaterPrefs) => {
+    writePrefs(prefs);
+    // The preference is part of the update source, so the list is now stale.
+    await refreshVersions();
+  });
+
+  /** `null` means the newest release; a version string means that exact build. */
+  handle('updater:apply', async (_event, version: string | null) => {
     try {
-      const result = await autoUpdater.checkForUpdates();
-      return result?.updateInfo ?? null;
+      if (!canSelfUpdate()) throw new Error('This build cannot install updates itself');
+      if (!version) {
+        await applyLatest();
+        return;
+      }
+      const option = versions.find((v) => v.version === version)
+        ?? (await refreshVersions()).find((v) => v.version === version);
+      if (!option) throw new Error(`Version ${version} is not in the release feed`);
+      await applyVersion(option);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
-      throw new Error(message);
+      const win = getMainWindow();
+      if (win) emit(win, 'updater:error', message);
     }
-  });
-
-  handle('updater:getAvailable', () => {
-    return updateAvailable;
-  });
-
-  handle('updater:download', async () => {
-    await autoUpdater.downloadUpdate();
-  });
-
-  handle('updater:install', () => {
-    autoUpdater.quitAndInstall(false, true);
-  });
-
-  handle('updater:getVersion', () => {
-    const { app } = require('electron');
-    return app.getVersion();
   });
 };
 
-export { isPortable, initAutoUpdater, registerUpdaterHandlers };
+export { initAutoUpdater, registerUpdaterHandlers };
 export type { UpdateInfo };

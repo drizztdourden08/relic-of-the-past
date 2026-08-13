@@ -16,8 +16,8 @@ Each release provides platform-specific builds:
 
 | Platform | File | Type |
 |----------|------|------|
-| Windows | `rotp-windows-portable.exe` | Portable (single file) |
-| Windows | `rotp-windows-setup.exe` | NSIS installer |
+| Windows | `rotp-windows-setup.exe` | Installer, updates itself |
+| Windows | `rotp-windows-portable.zip` | Portable, keeps its data beside it |
 | macOS | `rotp-macos.dmg` | Disk image |
 | Linux | `rotp-linux.AppImage` | Universal binary |
 | Linux | `rotp-linux.deb` | Debian/Ubuntu package |
@@ -26,29 +26,19 @@ Each release provides platform-specific builds:
 
 ## Windows
 
-### Portable (`rotp-windows-portable.exe`)
+### Portable (`rotp-windows-portable.zip`)
 
-A single executable that runs without installation.
+Unzip it anywhere and run the executable inside. Your profiles, saves and imported
+files are kept in a `data` folder beside the app rather than in your user profile, so
+the whole thing can be moved to another drive or carried on a USB key.
 
 - Needs no admin rights
 - Creates no registry entries or shortcuts
-- Runs from anywhere: a USB drive, your Downloads folder, wherever
-- Stores settings and saves in `%APPDATA%/relic-of-the-past/`
-- Does not auto-update, so you download new versions yourself
+- Leaves nothing behind on the machine you run it from
+- Updates itself in place, like the installed version
 
-Best for trying the app, running from removable media, or any environment where you can't install software.
-
-### Installer (`rotp-windows-setup.exe`)
-
-A standard Windows installer (NSIS).
-
-- Installs to `Program Files` by default, and you can change that
-- Creates Start Menu and optional Desktop shortcuts
-- Adds an uninstaller you'll find under Windows Settings → Apps
-- Auto-updates: the app tells you when a new version is out and updates itself in place
-- Needs admin rights to install
-
-Best for regular use, since it keeps the app up to date automatically.
+See [Portable Mode](portable.md) for the details, including how to turn a normal
+installation into a portable one.
 
 ### Windows SmartScreen Warning
 
@@ -81,7 +71,9 @@ xattr -dr com.apple.quarantine "/Applications/Relic of the Past.app"
 Then open the app normally. Alternatively, copying the `.dmg` onto the Mac from a
 USB drive or another computer avoids the quarantine flag entirely.
 
-Auto-update is supported on macOS via the `.zip` companion file included in each release.
+The app checks for updates and tells you when one is out, but it can't install it
+for you: applying an update on macOS requires an Apple-notarized signature, which
+this project doesn't have. The update dialog links straight to the release page.
 
 ---
 
@@ -93,7 +85,8 @@ Auto-update is supported on macOS via the `.zip` companion file included in each
 2. Make it executable: `chmod +x rotp-linux.AppImage`
 3. Run it: `./rotp-linux.AppImage`
 
-Works on most Linux distributions without installation. Auto-update is supported.
+Works on most Linux distributions without installation, and updates itself in place.
+If you keep it somewhere only root can write, it asks for your password when updating.
 
 ### Debian Package (`rotp-linux.deb`)
 
@@ -103,7 +96,8 @@ For Debian, Ubuntu, and derivatives:
 sudo dpkg -i rotp-linux.deb
 ```
 
-Installs to `/opt/` with a desktop entry. Auto-update is supported.
+Installs to `/opt/` with a desktop entry. It does not update itself: download a new
+package, or use the AppImage if you want automatic updates.
 
 ---
 
@@ -111,11 +105,11 @@ Installs to `/opt/` with a desktop entry. Auto-update is supported.
 
 | Platform | Build Type | Auto-Update |
 |----------|-----------|-------------|
-| Windows | Portable | ❌ No |
-| Windows | Installer (NSIS) | ✅ Yes |
-| macOS | DMG | ✅ Yes |
-| Linux | AppImage | ✅ Yes |
-| Linux | .deb | ✅ Yes |
+| Windows | Installer | ✅ Yes, and only the changes are downloaded |
+| Windows | Portable | ✅ Yes, in place |
+| Linux | AppImage | ✅ Yes, in place |
+| Linux | .deb | ❌ No, download a new one |
+| macOS | DMG | ⚠️ Tells you an update exists, but you download it yourself |
 
 See [Auto-Update](../user-guide/auto-update.md) for details on how the update system works.
 
@@ -132,3 +126,6 @@ Regardless of installation method, user data is stored in:
 | Linux | `~/.config/relic-of-the-past/` |
 
 This covers profiles, saves, settings, imported ROMs, and MSU packs. Uninstalling the app leaves this data in place.
+
+The exception is a portable copy, which keeps all of the above in a `data` folder
+beside the app instead. See [Portable Mode](portable.md).

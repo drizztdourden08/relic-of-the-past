@@ -1,0 +1,5 @@
+# Brand art copied in from the app at build time. The originals live in
+# apps/web/public/logos, so keeping a second copy here would only let the two
+# drift apart.
+res/logo-256.png
+res/app.ico
