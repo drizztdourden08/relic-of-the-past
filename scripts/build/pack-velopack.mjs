@@ -120,13 +120,25 @@ const rename = (from, to) => {
 
 const suffix = channel ?? (linux ? 'linux' : 'win');
 if (linux) {
+  // vpk puts the channel in the Windows setup filename but not in the AppImage's, so
+  // both spellings are tried. Renaming the wrong one silently left the release with an
+  // AppImage under vpk's own name while every published link pointed at this one.
   rename(`relic-of-the-past-${suffix}.AppImage`, 'rotp-linux.AppImage');
+  rename('relic-of-the-past.AppImage', 'rotp-linux.AppImage');
 } else if (full) {
   rename(`relic-of-the-past-${suffix}-Setup.exe`, 'rotp-windows-payload.exe');
   rename(`relic-of-the-past-${suffix}-Portable.zip`, 'rotp-windows-directory.zip');
 } else {
   const spare = join(root, outputDir, `relic-of-the-past-${suffix}-Portable.zip`);
   if (existsSync(spare)) unlinkSync(spare);
+}
+
+// A rename that quietly finds nothing is how the AppImage link shipped broken, so the
+// files the release body advertises are asserted rather than assumed.
+const expected = linux ? ['rotp-linux.AppImage'] : full ? ['rotp-windows-payload.exe', 'rotp-windows-directory.zip'] : [];
+const missing = expected.filter((name) => !existsSync(join(root, outputDir, name)));
+if (missing.length) {
+  throw new Error(`Packed, but these expected outputs are missing from ${outputDir}: ${missing.join(', ')}. vpk's own naming probably changed.`);
 }
 
 const kind = full ? 'a full release (payload + directory zip + package)' : 'an update-only release (package + delta)';
