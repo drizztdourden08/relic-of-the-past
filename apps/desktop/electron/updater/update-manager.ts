@@ -9,7 +9,7 @@
  */
 import { app } from 'electron';
 import { UpdateManager, GithubSource, FileSource } from 'velopack';
-import { FEED_REPO_URL } from './updater.constants';
+import { FEED_REPO_URL, MAX_DELTAS } from './updater.constants';
 import { readPrefs } from './updater-prefs';
 
 let cached: UpdateManager | null = null;
@@ -42,7 +42,7 @@ const getUpdateManager = (): UpdateManager | null => {
       : new GithubSource(FEED_REPO_URL, undefined, allowPrerelease);
     // Downgrades are allowed because the version picker offers older builds on
     // purpose; without this, stepping back off a bad release is refused.
-    cached = new UpdateManager(source, { AllowVersionDowngrade: true, MaximumDeltasBeforeFallback: 10 });
+    cached = new UpdateManager(source, { AllowVersionDowngrade: true, MaximumDeltasBeforeFallback: MAX_DELTAS });
     cachedPrerelease = allowPrerelease;
     return cached;
   } catch {

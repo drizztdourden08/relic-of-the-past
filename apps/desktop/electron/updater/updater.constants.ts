@@ -17,4 +17,11 @@ const FIRST_CHECK_DELAY_MS = 5000;
  */
 const FEED_FILE = 'releases.win.json';
 
-export { FEED_FILE, FEED_OWNER, FEED_REPO, FEED_REPO_URL, FIRST_CHECK_DELAY_MS, releaseTagFor };
+/**
+ * How many deltas Velopack will chain before it gives up and pulls the whole package.
+ * Shared with the size shown in the picker: if these two disagree, the dialog promises
+ * an 80 KB download and then fetches 137 MB.
+ */
+const MAX_DELTAS = 10;
+
+export { FEED_FILE, FEED_OWNER, FEED_REPO, FEED_REPO_URL, FIRST_CHECK_DELAY_MS, MAX_DELTAS, releaseTagFor };

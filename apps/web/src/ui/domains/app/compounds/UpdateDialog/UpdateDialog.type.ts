@@ -13,6 +13,8 @@ interface UpdateDialogProps {
   onOpenReleasePage: (version: string | null) => void;
   onLoadVersions: () => Promise<void>;
   onSetPrefs: (prefs: UpdaterPrefs) => void;
+  /** Opens the bug report form, offered beside the note about going back a version. */
+  onReportBug: () => void;
   onClose: () => void;
 }
 

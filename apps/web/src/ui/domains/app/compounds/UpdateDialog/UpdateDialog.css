@@ -3,19 +3,70 @@
   max-width: 600px;
 }
 
-.update-dialog__info {
-  margin: var(--space-md) 0;
+/* Every direct child is spaced by this one gap, so the layout does not change shape
+   depending on which blocks a given state happens to render. Individual blocks must
+   not add their own vertical margins. */
+.update-dialog__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
 }
 
 .update-dialog__version {
   font-size: var(--text-base);
   color: var(--c-text);
   text-align: center;
-  margin-bottom: var(--space-md);
+}
+
+.update-dialog__status {
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+}
+
+.update-dialog__picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.update-dialog__picker-label {
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+}
+
+.update-dialog__prefs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+/* Yellow rather than red: a pre-release is a choice with a caveat, not an error. */
+.update-dialog__warning {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--c-gold);
+  border-radius: var(--radius-md);
+  background: var(--c-gold-soft);
+  font-size: var(--text-sm);
+  color: var(--c-text-dim);
+}
+
+.update-dialog__footnote {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--c-border);
+}
+
+.update-dialog__footnote-text {
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
 }
 
 .update-dialog__notes {
-  margin-top: var(--space-md);
   border: 1px solid var(--c-gold);
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -125,7 +176,8 @@
 }
 
 .update-dialog__progress {
-  margin: var(--space-md) 0;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Bar chrome comes from the ProgressBar primitive. */
@@ -140,17 +192,10 @@
 .update-dialog__ready {
   font-size: var(--text-sm);
   color: var(--c-green);
-  margin: var(--space-md) 0;
 }
 
 .update-dialog__error {
   font-size: var(--text-sm);
   color: var(--c-danger);
-  margin: var(--space-md) 0;
 }
 
-.update-dialog__manual {
-  font-size: var(--text-sm);
-  color: var(--c-text-muted);
-  margin: var(--space-md) 0 0;
-}

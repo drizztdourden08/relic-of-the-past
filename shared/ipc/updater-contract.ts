@@ -17,9 +17,17 @@ interface VersionOption {
   releaseDate: string;
   /** Bytes of the full package. */
   size: number;
+  /**
+   * Bytes this choice would actually download from where the app is now: the sum of the
+   * deltas in between when moving forward, the full package when going back, when
+   * reinstalling, or when the delta chain is unusable. This is the number worth showing.
+   */
+  downloadSize: number;
   prerelease: boolean;
   /** Older than what is running. */
   downgrade: boolean;
+  /** Exactly what is running, so choosing it is a reinstall. */
+  installed: boolean;
 }
 
 /** What this build is able to do about updates. */

@@ -20,14 +20,14 @@ const renderNotes = (md: string): string => {
 
 const titleFor = (status: string, hasInfo: boolean): string =>
   status === 'checking' ? 'Checking for newer version...'
-    : status === 'idle' && !hasInfo ? 'No Updates Available'
-      : 'Update Available';
+    : hasInfo ? 'Update Available'
+      : 'Up To Date';
 
 const UpdateDialog = (props: UpdateDialogProps) => {
-  const { open, state, canInstall, onApply, onOpenReleasePage, onLoadVersions, onSetPrefs, onClose } = props;
+  const { open, state, canInstall, onApply, onOpenReleasePage, onLoadVersions, onSetPrefs, onReportBug, onClose } = props;
   const confirmRef = useRef<HTMLButtonElement>(null);
-  const { info, status } = state;
-  const { selected, setSelected, groups, chosen, isLatest } = useVersionChoice({
+  const { info, status, currentVersion } = state;
+  const { selected, setSelected, groups, chosen, isLatest, actionLabel } = useVersionChoice({
     open, state, loadVersions: onLoadVersions,
   });
 
@@ -35,10 +35,9 @@ const UpdateDialog = (props: UpdateDialogProps) => {
   const notesHtml = useMemo(() => (notes ? renderNotes(notes) : ''), [notes]);
   const busy = status === 'downloading' || status === 'ready';
 
-  const actionLabel = status === 'ready' ? 'Restarting...'
+  const buttonLabel = status === 'ready' ? 'Restarting...'
     : status === 'downloading' ? 'Downloading...'
-      : chosen?.downgrade ? 'Install this version'
-        : isLatest ? 'Update' : 'Install this version';
+      : actionLabel;
 
   const canAct = status === 'available' || status === 'downloading' || status === 'ready'
     || (status === 'idle' && !!state.versions.length);
@@ -48,7 +47,7 @@ const UpdateDialog = (props: UpdateDialogProps) => {
       <Button variant="tertiary" onClick={onClose}>Later</Button>
       {canInstall && canAct && (
         <Button ref={confirmRef} variant="primary" disabled={busy || !selected} onClick={() => onApply(isLatest ? null : selected)}>
-          {actionLabel}
+          {buttonLabel}
         </Button>
       )}
       {!canInstall && !!info && (
@@ -68,62 +67,86 @@ const UpdateDialog = (props: UpdateDialogProps) => {
       actions={actions}
       initialFocusRef={confirmRef}
     >
-      {status === 'checking' && <Text as="p" className="update-dialog__checking">Checking for newer version...</Text>}
+      {/* One column with one gap, so every combination of the blocks below is spaced
+          the same and nothing depends on which of them happen to be visible. */}
+      <Box className="update-dialog__body">
+        {status === 'checking' && <Text as="p" className="update-dialog__status">Checking for newer version...</Text>}
 
-      {status === 'idle' && !info && (
-        <Text as="p" className="update-dialog__up-to-date">You&apos;re running the latest version.</Text>
-      )}
+        {info && (
+          <Text as="p" className="update-dialog__version">
+            Version <Text as="strong">{info.version}</Text> is available
+          </Text>
+        )}
 
-      {info && (
-        <Text as="p" className="update-dialog__version">
-          Version <Text as="strong">{info.version}</Text> is available
-        </Text>
-      )}
+        {status !== 'checking' && !info && (
+          <Text as="p" className="update-dialog__version">
+            Version <Text as="strong">{currentVersion}</Text> is the latest
+          </Text>
+        )}
 
-      {canInstall && groups.length > 0 && (
-        <Box className="update-dialog__picker">
-          <Text className="update-dialog__picker-label">Version to install</Text>
-          <Select value={selected} onChange={setSelected} groups={groups} disabled={busy} size="sm" />
+        {canInstall && groups.length > 0 && (
+          <Box className="update-dialog__prefs">
+            <Toggle
+              checked={state.prefs.allowPrerelease}
+              onChange={(allowPrerelease) => onSetPrefs({ allowPrerelease })}
+              disabled={busy}
+              label="Include pre-releases"
+            />
+          </Box>
+        )}
+
+        {canInstall && groups.length > 0 && (
+          <Box className="update-dialog__picker">
+            <Text className="update-dialog__picker-label">Version to install</Text>
+            <Select value={selected} onChange={setSelected} groups={groups} disabled={busy} size="sm" />
+          </Box>
+        )}
+
+        {chosen?.prerelease && (
+          <Box className="update-dialog__warning" role="note">
+            This is a pre-release. It ships before the usual testing, so expect rough edges and
+            bugs the stable builds do not have.
+          </Box>
+        )}
+
+        {notesHtml && (
+          <Box className="update-dialog__notes">
+            <Text as="h4">Release Notes</Text>
+            <Box className="update-dialog__notes-content" dangerouslySetInnerHTML={{ __html: notesHtml }} />
+          </Box>
+        )}
+
+        {status === 'downloading' && (
+          <Box className="update-dialog__progress">
+            <ProgressBar value={state.percent} />
+            <Text className="update-dialog__progress-text">{Math.round(state.percent)}%</Text>
+          </Box>
+        )}
+
+        {status === 'ready' && (
+          <Text as="p" className="update-dialog__ready">
+            Downloaded. The app closes and starts again on the new version.
+          </Text>
+        )}
+
+        {!canInstall && !!info && (
+          <Text as="p" className="update-dialog__status">
+            This build cannot update itself. The release page has the download.
+          </Text>
+        )}
+
+        {status === 'error' && (
+          <Text as="p" className="update-dialog__error">Update failed: {state.error}</Text>
+        )}
+
+        {/* Last, because it is the way out when an update made things worse. */}
+        <Box className="update-dialog__footnote">
+          <Text as="p" className="update-dialog__footnote-text">
+            Any earlier version can be picked above if something stops working. Please report it
+            either way, so it gets fixed.
+          </Text>
+          <Button variant="tertiary" size="sm" onClick={onReportBug}>Report a bug</Button>
         </Box>
-      )}
-
-      {notesHtml && (
-        <Box className="update-dialog__notes">
-          <Text as="h4">Release Notes</Text>
-          <Box className="update-dialog__notes-content" dangerouslySetInnerHTML={{ __html: notesHtml }} />
-        </Box>
-      )}
-
-      {status === 'downloading' && (
-        <Box className="update-dialog__progress">
-          <ProgressBar value={state.percent} />
-          <Text className="update-dialog__progress-text">{Math.round(state.percent)}%</Text>
-        </Box>
-      )}
-
-      {status === 'ready' && (
-        <Text as="p" className="update-dialog__ready">
-          Downloaded. The app closes and starts again on the new version.
-        </Text>
-      )}
-
-      {!canInstall && !!info && (
-        <Text as="p" className="update-dialog__manual">
-          This build cannot update itself. The release page has the download.
-        </Text>
-      )}
-
-      {status === 'error' && (
-        <Text as="p" className="update-dialog__error">Update failed: {state.error}</Text>
-      )}
-
-      <Box className="update-dialog__prefs">
-        <Toggle
-          checked={state.prefs.allowPrerelease}
-          onChange={(allowPrerelease) => onSetPrefs({ allowPrerelease })}
-          disabled={busy}
-          label="Include pre-releases"
-        />
       </Box>
     </DialogShell>
   );

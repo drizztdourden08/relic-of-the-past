@@ -14,7 +14,7 @@ import { canCheckForUpdates, canSelfUpdate, currentVersion, getUpdateManager } f
 import { findNewerRelease, releasePageUrl } from './latest-release';
 import { readPrefs, writePrefs } from './updater-prefs';
 import { FIRST_CHECK_DELAY_MS } from './updater.constants';
-import { listVersions } from './version-feed';
+import { compareVersions, listVersions } from './version-feed';
 import type { UpdateInfo, UpdaterPrefs, VersionCandidate } from './updater.type';
 
 let available: UpdateInfo | null = null;
@@ -63,9 +63,19 @@ const runCheck = async (mainWindow: BrowserWindow): Promise<UpdateInfo | null> =
       return null;
     }
 
+    // AllowVersionDowngrade lets the picker install an older build on purpose, but it
+    // also makes this check answer with one, so a machine already on the newest release
+    // was being told an earlier version "is available". An update has to be newer.
+    const target = found.TargetFullRelease;
+    if (compareVersions(target.Version, currentVersion()) <= 0) {
+      available = null;
+      await refreshVersions();
+      emit(mainWindow, 'updater:up-to-date');
+      return null;
+    }
+
     // The notes travel with the release, so the dialog needs no second request. The
     // version list is fetched alongside so the picker is populated when it opens.
-    const target = found.TargetFullRelease;
     available = {
       version: target.Version,
       releaseNotes: target.NotesMarkdown ?? '',

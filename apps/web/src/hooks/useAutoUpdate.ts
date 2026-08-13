@@ -11,6 +11,8 @@ interface UpdateState {
   /** Every installable release, newest first. Empty until the picker is opened. */
   versions: VersionOption[];
   prefs: UpdaterPrefs;
+  /** What is running, so the dialog can name it and label the action correctly. */
+  currentVersion: string;
 }
 
 const INITIAL: UpdateState = {
@@ -20,6 +22,7 @@ const INITIAL: UpdateState = {
   error: null,
   versions: [],
   prefs: { allowPrerelease: false },
+  currentVersion: '',
 };
 
 const useAutoUpdate = () => {
@@ -29,6 +32,7 @@ const useAutoUpdate = () => {
   useEffect(() => {
     window.api.updater.capabilities().then(setCaps);
     window.api.updater.getPrefs().then((prefs) => setState((s) => ({ ...s, prefs })));
+    window.api.updater.getVersion().then((currentVersion) => setState((s) => ({ ...s, currentVersion })));
   }, []);
 
   useEffect(() => {

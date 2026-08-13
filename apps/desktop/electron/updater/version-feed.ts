@@ -11,7 +11,7 @@
  * pre-release and when each was published.
  */
 import type { VelopackAsset } from 'velopack';
-import { FEED_FILE, FEED_OWNER, FEED_REPO } from './updater.constants';
+import { FEED_FILE, FEED_OWNER, FEED_REPO, MAX_DELTAS } from './updater.constants';
 import type { VersionCandidate } from './updater.type';
 
 interface GithubAsset {
@@ -61,6 +61,36 @@ const compareVersions = (a: string, b: string): number => {
   return tag(a) - tag(b);
 };
 
+/**
+ * What installing `target` from `current` actually pulls down.
+ *
+ * Moving forward, Velopack applies one delta per version in between, so the download
+ * is their sum and not the size of anything listed against the target: a 137 MB
+ * package can be an 80 KB hop. It falls back to the full package when any step in the
+ * chain has no delta published, or when the chain is longer than it will chain
+ * (MaximumDeltasBeforeFallback, set where the manager is built).
+ *
+ * Going back, or reinstalling what is already there, is always the full package.
+ */
+const downloadSizeFor = (
+  target: string,
+  current: string,
+  full: Map<string, number>,
+  delta: Map<string, number>,
+  maxDeltas: number,
+): number => {
+  const fullSize = full.get(target) ?? 0;
+  if (compareVersions(target, current) <= 0) return fullSize;
+
+  const hops = [...full.keys()]
+    .filter((v) => compareVersions(v, current) > 0 && compareVersions(v, target) <= 0)
+    .sort(compareVersions);
+  if (!hops.length || hops.length > maxDeltas) return fullSize;
+  if (hops.some((v) => !delta.has(v))) return fullSize;
+
+  return hops.reduce((sum, v) => sum + (delta.get(v) ?? 0), 0);
+};
+
 /** Newest first, which is the order the picker shows them in. */
 const listVersions = async (currentVersion: string, allowPrerelease: boolean): Promise<VersionCandidate[]> => {
   const releases = (await readReleases()).filter((r) => !r.draft && (allowPrerelease || !r.prerelease));
@@ -76,18 +106,31 @@ const listVersions = async (currentVersion: string, allowPrerelease: boolean): P
   if (!res.ok) throw new Error(`Could not read the release index (${res.status})`);
   const assets = parseFeed(await res.json());
 
+  // Both tables are needed before any row can be sized: a delta chain is only known
+  // once every version between here and there has been seen.
+  const isDelta = (asset: VelopackAsset) => asset.Type?.toLowerCase() === 'delta';
+  const fullSizes = new Map<string, number>();
+  const deltaSizes = new Map<string, number>();
+  for (const asset of assets) {
+    if (!byVersion.has(asset.Version)) continue;
+    (isDelta(asset) ? deltaSizes : fullSizes).set(asset.Version, asset.Size ?? 0);
+  }
+
   const options = assets
-    .filter((asset) => asset.Type?.toLowerCase() !== 'delta')
+    .filter((asset) => !isDelta(asset))
     .filter((asset) => byVersion.has(asset.Version))
     .map((asset) => {
       const release = byVersion.get(asset.Version)!;
+      const order = compareVersions(asset.Version, currentVersion);
       return {
         version: asset.Version,
         releaseNotes: asset.NotesMarkdown || release.body || '',
         releaseDate: release.published_at ?? '',
         size: asset.Size ?? 0,
+        downloadSize: downloadSizeFor(asset.Version, currentVersion, fullSizes, deltaSizes, MAX_DELTAS),
         prerelease: release.prerelease,
-        downgrade: compareVersions(asset.Version, currentVersion) < 0,
+        downgrade: order < 0,
+        installed: order === 0,
         asset,
       } satisfies VersionCandidate;
     });

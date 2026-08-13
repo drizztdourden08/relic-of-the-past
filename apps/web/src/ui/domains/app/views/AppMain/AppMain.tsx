@@ -194,6 +194,7 @@ const AppMain = () => {
         onOpenReleasePage={update.openReleasePage}
         onLoadVersions={update.loadVersions}
         onSetPrefs={update.setPrefs}
+        onReportBug={() => { setShowUpdateDialog(false); setShowBugReportDialog(true); }}
         onClose={() => setShowUpdateDialog(false)}
       />
       )}
