@@ -43,12 +43,21 @@
       }
       .splash__status {
         /* Out of flow on purpose: the logo + spinner column stays centred exactly where
-           the installer's splash GIF puts it, whatever the status line says. */
+           the installer's splash GIF puts it, whatever the status line says.
+           Being bottom-anchored, it grows UPWARDS, so a long message would climb into
+           the spinner. nowrap keeps it to one line and the ellipsis absorbs the rest,
+           which is what makes the gap below fixed rather than a function of the text. */
         position: fixed;
         left: 0;
         right: 0;
-        bottom: 30px;
+        bottom: 14px;
         margin: 0;
+        /* Symmetric, so the text stays centred, and wide enough that the longest
+           message can never reach the version stamp in the bottom right. */
+        padding: 0 80px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         text-align: center;
         font-size: 12px;
         letter-spacing: 0.06em;

@@ -37,29 +37,3 @@ html.notch-safe .app {
   z-index: var(--z-base);
 }
 
-/* ─── TEMPORARY: release verification marker (v0.16.1) ─── */
-
-/* Deliberately unmissable, so an update can be confirmed at a glance rather than by
-   reading a version string. Remove this whole block once 0.16.1 has been tested. */
-.app::after {
-  /* fixed, not absolute: .app is static, so absolute would resolve against whatever
-     ancestor happens to be positioned. */
-  position: fixed;
-
-  /* Below dialogs and panels: it marks the build, it must not cover the UI. */
-  z-index: var(--z-backdrop);
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-danger-base);
-  font-weight: var(--weight-black);
-  font-size: var(--text-display);
-
-  /* The size scale stops at 48px, and this needs to be impossible to miss. */
-  transform: scale(5);
-  letter-spacing: 0.1em;
-  opacity: var(--opacity-muted);
-  pointer-events: none;
-  content: 'TEST';
-}

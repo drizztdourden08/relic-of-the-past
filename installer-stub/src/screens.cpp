@@ -144,11 +144,6 @@ void PaintFrame(Graphics& g, const State& s, std::vector<Hit>* hits) {
     case Screen::Progress: Progress(g, s); break;
   }
   if (s.screen != Screen::Checking) draw::VersionStamp(g, s);
-  // TEMPORARY: release verification marker, drawn on every screen so which stub is
-  // running is obvious without reading a version. Remove with theme::kTestRed.
-  draw::Label(g, L"TEST", 72.0f, FontStyleBold, theme::kTestRed,
-              RectF(0.0f, 132.0f, static_cast<float>(theme::kWidth), 110.0f),
-              StringAlignmentCenter);
   // Last, so it sits above whatever the screen drew.
   draw::CloseButton(g, hits, s);
 }

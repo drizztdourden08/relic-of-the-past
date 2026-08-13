@@ -132,7 +132,15 @@ const createWindow = (): BrowserWindow => {
     else applyWindowState(mainWindow, saved);
     trackWindowState(mainWindow);
     armReveal(mainWindow);
-    mainWindow.showInactive();
+    // show(), not showInactive(). The splash is a CHILD of this window, and a child of
+    // a window that was never activated does not hold the foreground: it appeared for a
+    // moment and then sank behind whatever the user already had open. Activating here
+    // costs nothing visually, because this window is still at opacity 0, and it is the
+    // correct behaviour anyway for a launch the user just asked for.
+    //
+    // The automation branch above is untouched and stays showInactive() with
+    // focusable:false, so an automated launch still cannot take focus.
+    mainWindow.show();
     openSplash(mainWindow, app.getVersion());
   }
 
