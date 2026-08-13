@@ -25,7 +25,8 @@ const printReport = ({ ai, vault }) => {
   console.error('sync-check: local-only work found in ai-config / vault');
   console.error('-'.repeat(60));
   lines.forEach((l) => console.error(l));
-  console.error('Add [sync-ack] to the commit message to bypass this check.');
+  console.error('There is no marker for this. Fold the work into its source and push,');
+  console.error('or --no-verify if you are the owner and you accept losing it.');
   console.error(`${'-'.repeat(60)}\n`);
 };
 

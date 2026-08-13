@@ -6,12 +6,15 @@
  *   node scan.mjs --range <base>...<head>  CI: scans a diff range
  *
  * Exits 1 when blocking findings exist and the change is not owner-approved.
- * Approval = `[allow-copyright]` in a commit message (range mode) OR the
- * COPYRIGHT_APPROVED=1 env var (CI sets it when the PR has the owner label).
+ *
+ * Approval is COPYRIGHT_APPROVED=1, which CI sets only when the PR carries the
+ * maintainer-only 'copyright-ok' label. A commit message deliberately cannot grant
+ * it: a marker in the message is written by whoever writes the commit, which makes
+ * it self-approval rather than the owner's decision.
  */
 import { execSync } from 'child_process';
 import { RULES } from './rules.mjs';
-import { TEXT_RULE_BLOCKS, ALLOW_MARKER } from './patterns.mjs';
+import { TEXT_RULE_BLOCKS } from './patterns.mjs';
 
 const git = (cmd) => execSync(`git ${cmd}`, { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
 
@@ -39,15 +42,7 @@ const collectChanges = (spec) => {
   return { files, addedLines };
 };
 
-const isApproved = (spec) => {
-  if (process.env.COPYRIGHT_APPROVED === '1') return true;
-  if (spec === '--cached') return false;
-  try {
-    return git(`log --format=%B ${spec}`).toLowerCase().includes(ALLOW_MARKER.toLowerCase());
-  } catch {
-    return false;
-  }
-};
+const isApproved = () => process.env.COPYRIGHT_APPROVED === '1';
 
 const main = () => {
   const spec = diffSpec();
@@ -61,8 +56,8 @@ const main = () => {
     console.error(`  [${f.rule}] ${where}${f.match ? ` — "${f.match}"` : ''}`);
     console.error(`      ${f.hint}`);
   }
-  if (isApproved(spec)) {
-    console.log("\n✓ owner-approved ([allow-copyright] / 'copyright-ok' label) — allowing.");
+  if (isApproved()) {
+    console.log("\n✓ owner-approved (the 'copyright-ok' label) — allowing.");
     return;
   }
   const blocking = findings.filter((f) => f.severity === 'block' || (f.severity === 'text' && TEXT_RULE_BLOCKS));
@@ -71,7 +66,8 @@ const main = () => {
     return;
   }
   console.error(`\n✗ copyright gate blocked: ${blocking.length} item(s) need owner approval.`);
-  console.error("  Commit: add [allow-copyright] to the message.   PR: apply the 'copyright-ok' label.");
+  console.error("  Approval is the maintainer-only 'copyright-ok' label on the pull request.");
+  console.error('  Nothing you can put in a commit message will stand this down.');
   process.exit(1);
 };
 

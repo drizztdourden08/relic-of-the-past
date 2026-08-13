@@ -40,7 +40,6 @@ const TEXT_SKIP_EXACT = new Set([
 const TEXT_RULE_BLOCKS = true;
 
 // Owner-approval signals.
-const ALLOW_MARKER = '[allow-copyright]'; // in a commit message
 const PR_LABEL = 'copyright-ok'; // on a pull request (maintainer-only)
 
 export {
@@ -49,6 +48,5 @@ export {
   TEXT_SKIP_PREFIXES,
   TEXT_SKIP_EXACT,
   TEXT_RULE_BLOCKS,
-  ALLOW_MARKER,
   PR_LABEL,
 };

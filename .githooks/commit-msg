@@ -1,21 +1,28 @@
 #!/bin/sh
-# Copyright / media gate (local). Blocks commits that add media or Nintendo
-# references unless you acknowledge with [allow-copyright] in the message.
-# CI re-checks regardless, so this is your personal heads-up, not the hard wall.
+# Two gates, and neither can be waved through from inside a commit message.
+#
+# Both used to accept a marker in the message ([allow-copyright], [sync-ack]).
+# That made them trivial to self-approve: anyone, including an agent working in
+# this repo, could type the words and the gate would stand aside. Approval is the
+# owner's to give, so it now happens somewhere a commit message cannot reach.
+#
+#   copyright / media  -> the maintainer-only 'copyright-ok' label on the PR,
+#                         which .github/workflows/copyright-gate.yml enforces
+#   ai-config drift    -> resolve it. Fold the edit into the claude-config
+#                         source, push it, re-render. There is no bypass,
+#                         because .claude/ is gitignored and nothing else will
+#                         ever notice the loss.
+#
+# An owner who genuinely needs to commit past one of these can pass --no-verify,
+# which is a deliberate act on their own machine rather than a string an
+# assistant can add to a message it wrote.
 
-if ! grep -qi '\[allow-copyright\]' "$1"; then
-  if command -v node >/dev/null 2>&1; then
-    node scripts/copyright-gate/scan.mjs --staged || exit 1
-  else
-    echo "copyright-gate: node not found — skipping local check (CI will enforce)."
-  fi
+if command -v node >/dev/null 2>&1; then
+  node scripts/copyright-gate/scan.mjs --staged || exit 1
+else
+  echo "copyright-gate: node not found — skipping local check (CI enforces it)."
 fi
 
-# ai-config / vault drift gate (local-only — .claude/ and .vault/ are
-# gitignored, so nothing else ever re-checks this). Blocks a commit that
-# would leave local-only work behind, unless acknowledged with [sync-ack].
-if ! grep -qi '\[sync-ack\]' "$1"; then
-  if command -v node >/dev/null 2>&1; then
-    node scripts/hooks/sync-check/index.mjs || exit 1
-  fi
+if command -v node >/dev/null 2>&1; then
+  node scripts/hooks/sync-check/index.mjs || exit 1
 fi

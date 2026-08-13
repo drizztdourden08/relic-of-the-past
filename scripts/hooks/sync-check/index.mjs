@@ -9,8 +9,10 @@
  * Read-only and offline: no clone, no fetch, no network call at all — so it
  * works identically with or without access to either private repo, and
  * degrades to "nothing to report" the moment either mirror isn't set up.
- * Exits 1 (blocking the commit) only when real local-only work is found;
- * [sync-ack] in the commit message bypasses this entire check.
+ * Exits 1 (blocking the commit) only when real local-only work is found. There is
+ * no bypass: .claude/ and .vault/ are gitignored, so nothing downstream will ever
+ * notice the loss, which makes this the only chance to catch it. Resolving the
+ * drift is the way through.
  */
 import { checkAiConfig } from './ai-config-check.mjs';
 import { checkVault } from './vault-check.mjs';

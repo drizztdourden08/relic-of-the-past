@@ -21,7 +21,7 @@ const mediaRule = (changes) =>
       rule: 'media',
       severity: 'block',
       file,
-      hint: 'media file (image/audio/video/font/rom) — add [allow-copyright] if intentional',
+      hint: "media file (image/audio/video/font/rom) — needs the 'copyright-ok' label",
     }));
 
 // Nintendo / ALttP references introduced in added text lines.
@@ -37,7 +37,7 @@ const trademarkRule = (changes) =>
           file,
           line: line.n,
           match: line.text.match(TRADEMARK_RE)[0],
-          hint: 'Nintendo reference in added line — verify, then [allow-copyright] or reword',
+          hint: "Nintendo reference in added line — reword it, or label the PR 'copyright-ok'",
         })));
 
 const RULES = [mediaRule, trademarkRule];

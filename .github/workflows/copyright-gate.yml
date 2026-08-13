@@ -39,3 +39,35 @@ jobs:
           fi
           echo "Scanning range: $RANGE"
           node scripts/copyright-gate/scan.mjs --range "$RANGE"
+
+  # Guard the guards. The gates above are only worth anything if editing them is
+  # visible: without this, disabling a check and committing the change in the same
+  # pull request passes silently, because the weakened gate is the one that runs.
+  # Touching any of these paths now requires the maintainer-only 'gate-change-ok'
+  # label, which is a decision only the repository owner can make.
+  gate-integrity:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Refuse unreviewed changes to the gates
+        env:
+          APPROVED: ${{ contains(github.event.pull_request.labels.*.name, 'gate-change-ok') && '1' || '0' }}
+        run: |
+          CHANGED=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD" \
+            -- .githooks scripts/hooks scripts/copyright-gate .github/workflows/copyright-gate.yml)
+          if [ -z "$CHANGED" ]; then
+            echo "No gate files touched."
+            exit 0
+          fi
+          echo "This pull request changes the gates:"
+          echo "$CHANGED" | sed 's/^/  /'
+          if [ "$APPROVED" = "1" ]; then
+            echo "Owner approved with the 'gate-change-ok' label."
+            exit 0
+          fi
+          echo "::error::Changing the gates needs the maintainer-only 'gate-change-ok' label."
+          exit 1
