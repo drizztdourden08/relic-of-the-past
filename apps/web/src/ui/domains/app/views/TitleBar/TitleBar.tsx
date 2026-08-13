@@ -4,13 +4,13 @@ import type { GameSettings } from '@shared/types/settings';
 import { usePlatform } from '@app/platform';
 import { DropdownMenu } from '../../../../design-system/composites/DropdownMenu';
 import { IconButton } from '../../../../design-system/primitives/IconButton';
+import { BugReportButton } from '../../compounds/BugReportButton';
 import { Box } from '../../../../design-system/primitives/Box';
 import { Button } from '../../../../design-system/primitives/Button';
 import { Text } from '../../../../design-system/primitives/Text';
 import { Image } from '../../../../design-system/primitives/Image';
 import { Icon } from '../../../../design-system/primitives/Icon';
 import { Icon as IconifyIcon } from '@iconify/react/offline';
-import bugIcon from '@iconify-icons/lucide/bug';
 import { useTitleBar } from './behavior/useTitleBar';
 import { buildTitleBarMenuItems } from './behavior/title-bar-menu';
 import { WindowControls } from './sub-components/WindowControls';
@@ -172,15 +172,7 @@ const TitleBar = (props: TitleBarProps) => {
           <Icon paths={SEARCH_ICON_PATHS} size={14} />
           <Text as="span" className="titlebar__search-spark" aria-hidden>✦</Text>
         </IconButton>
-        <IconButton
-          variant="ghost"
-          size="sm"
-          label="Report a bug"
-          className="titlebar__bug-report"
-          onClick={onShowBugReport}
-        >
-          <IconifyIcon icon={bugIcon} width={14} height={14} />
-        </IconButton>
+        <BugReportButton onClick={onShowBugReport} />
         <IconButton
           variant="ghost"
           size="sm"

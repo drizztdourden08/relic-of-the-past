@@ -8,6 +8,7 @@ import { Select } from '../../../../design-system/primitives/Select';
 import { Toggle } from '../../../../design-system/primitives/Toggle';
 import { ProgressBar } from '../../../../design-system/primitives/ProgressBar';
 import { DialogShell } from '../../../../design-system/composites/DialogShell';
+import { BugReportButton } from '../BugReportButton';
 import { useVersionChoice } from './behavior/useVersionChoice';
 import './UpdateDialog.css';
 import { type UpdateDialogProps } from './UpdateDialog.type';
@@ -145,7 +146,7 @@ const UpdateDialog = (props: UpdateDialogProps) => {
             Any earlier version can be picked above if something stops working. Please report it
             either way, so it gets fixed.
           </Text>
-          <Button variant="tertiary" size="sm" onClick={onReportBug}>Report a bug</Button>
+          <BugReportButton onClick={onReportBug} />
         </Box>
       </Box>
     </DialogShell>

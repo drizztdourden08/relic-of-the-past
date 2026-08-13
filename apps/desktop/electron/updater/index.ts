@@ -9,7 +9,7 @@ import { shell } from 'electron';
 import type { BrowserWindow } from 'electron';
 import { handle, emit } from '../lib/ipc/handle';
 import { getMainWindow } from '../window';
-import { applyLatest, applyVersion } from './apply-update';
+import { applyVersion } from './apply-update';
 import { canCheckForUpdates, canSelfUpdate, currentVersion, getUpdateManager } from './update-manager';
 import { findNewerRelease, releasePageUrl } from './latest-release';
 import { readPrefs, writePrefs } from './updater-prefs';
@@ -124,8 +124,9 @@ const registerUpdaterHandlers = (): void => {
     // Choosing a version only means something when this build can install one.
     if (!canSelfUpdate()) return [];
     const list = await refreshVersions();
-    // The asset is main-process detail; the renderer picks by version string.
-    return list.map(({ asset: _asset, ...rest }) => rest);
+    // The plan holds feed entries, which are main-process detail. The renderer picks by
+    // version string and reads the plan's total through downloadSize.
+    return list.map(({ plan: _plan, ...rest }) => rest);
   });
 
   handle('updater:getPrefs', () => readPrefs());
@@ -139,13 +140,17 @@ const registerUpdaterHandlers = (): void => {
   handle('updater:apply', async (_event, version: string | null) => {
     try {
       if (!canSelfUpdate()) throw new Error('This build cannot install updates itself');
-      if (!version) {
-        await applyLatest();
-        return;
+      // null means the newest, which is resolved from the same list the picker shows
+      // rather than by asking Velopack to decide a second time.
+      const list = versions.length ? versions : await refreshVersions();
+      const option = version
+        ? list.find((v) => v.version === version)
+        : list[0];
+      if (!option) {
+        throw new Error(version
+          ? `Version ${version} is not in the release feed`
+          : 'The release feed listed no installable version');
       }
-      const option = versions.find((v) => v.version === version)
-        ?? (await refreshVersions()).find((v) => v.version === version);
-      if (!option) throw new Error(`Version ${version} is not in the release feed`);
       await applyVersion(option);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);

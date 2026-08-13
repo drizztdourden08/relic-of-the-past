@@ -45,7 +45,9 @@ html.notch-safe .app {
   /* fixed, not absolute: .app is static, so absolute would resolve against whatever
      ancestor happens to be positioned. */
   position: fixed;
-  z-index: var(--z-toast);
+
+  /* Below dialogs and panels: it marks the build, it must not cover the UI. */
+  z-index: var(--z-backdrop);
   inset: 0;
   display: flex;
   align-items: center;

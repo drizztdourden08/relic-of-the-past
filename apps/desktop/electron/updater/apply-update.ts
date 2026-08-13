@@ -19,13 +19,17 @@ const reportProgress = (percent: number): void => {
 };
 
 /**
- * A picked version is described by its feed entry, which is all Velopack needs: no
- * deltas (they only exist against the immediately previous release) and a downgrade
- * flag so it knows to discard anything newer already staged on disk.
+ * The plan from the feed, handed over in Velopack's own shape: the base release and the
+ * ordered deltas that walk to the target, or an empty list when the plan decided a full
+ * install is the only option.
+ *
+ * This used to pass no deltas at all, so every explicitly picked version downloaded a
+ * whole package while the picker advertised the delta size. Both now read the same plan.
  */
 const asUpdateInfo = (option: VersionCandidate): VelopackUpdateInfo => ({
-  TargetFullRelease: option.asset,
-  DeltasToTarget: [],
+  TargetFullRelease: option.plan.target,
+  BaseRelease: option.plan.base,
+  DeltasToTarget: option.plan.deltas,
   IsDowngrade: option.downgrade,
 });
 
@@ -44,18 +48,15 @@ const downloadAndApply = async (update: VelopackUpdateInfo): Promise<void> => {
   app.quit();
 };
 
-/** The newest release the feed offers, which is what the badge is about. */
-const applyLatest = async (): Promise<void> => {
-  const manager = getUpdateManager();
-  if (!manager) throw new Error('This build cannot update itself');
-  const found = await manager.checkForUpdatesAsync();
-  if (!found) throw new Error('There is no newer version to install');
-  await downloadAndApply(found);
-};
-
-/** A specific version from the picker, newer or older than the one running. */
+/**
+ * Any version from the picker, newer or older than the one running.
+ *
+ * There is deliberately no separate "install the newest" path. That one asked Velopack
+ * to work out the target itself, which could answer nothing while the picker's list was
+ * perfectly populated, and it reported that as "there is no newer version to install".
+ */
 const applyVersion = async (option: VersionCandidate): Promise<void> => {
   await downloadAndApply(asUpdateInfo(option));
 };
 
-export { applyLatest, applyVersion };
+export { applyVersion };

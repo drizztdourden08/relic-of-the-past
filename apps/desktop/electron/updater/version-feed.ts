@@ -62,33 +62,60 @@ const compareVersions = (a: string, b: string): number => {
 };
 
 /**
- * What installing `target` from `current` actually pulls down.
+ * How to get from `current` to `target`, in the shape Velopack asks for.
  *
- * Moving forward, Velopack applies one delta per version in between, so the download
- * is their sum and not the size of anything listed against the target: a 137 MB
- * package can be an 80 KB hop. It falls back to the full package when any step in the
- * chain has no delta published, or when the chain is longer than it will chain
- * (MaximumDeltasBeforeFallback, set where the manager is built).
+ * Velopack's own model is a walk: a base full release plus the ordered deltas that
+ * carry it to the target. `UpdateInfo.DeltasToTarget` is documented as exactly that,
+ * and `downloadUpdateAsync` unpacks them, falling back to the full package by itself
+ * if preparing any of them fails.
  *
- * Going back, or reinstalling what is already there, is always the full package.
+ * This is deliberately the ONE place that decision is made. The size in the picker and
+ * the bytes the download actually fetches both come from this plan, because computing
+ * them separately is how the dialog ended up promising 80 KB while the code fetched a
+ * full package.
+ *
+ * Deltas are dropped, leaving a plain full install, when:
+ *  - the target is not newer (a downgrade or a reinstall, where Velopack's own docs say
+ *    only full updates are allowed),
+ *  - the installed version is not in the feed, so there is no base to walk from,
+ *  - any version in between has no delta published,
+ *  - the chain is longer than Velopack will chain (MaximumDeltasBeforeFallback).
  */
-const downloadSizeFor = (
+interface UpdatePlan {
+  target: VelopackAsset;
+  base?: VelopackAsset;
+  deltas: VelopackAsset[];
+  /** What this plan downloads: the deltas it will walk, or the whole package. */
+  downloadSize: number;
+}
+
+const planFor = (
   target: string,
   current: string,
-  full: Map<string, number>,
-  delta: Map<string, number>,
+  full: Map<string, VelopackAsset>,
+  delta: Map<string, VelopackAsset>,
   maxDeltas: number,
-): number => {
-  const fullSize = full.get(target) ?? 0;
-  if (compareVersions(target, current) <= 0) return fullSize;
+): UpdatePlan => {
+  const targetAsset = full.get(target)!;
+  const fullOnly: UpdatePlan = { target: targetAsset, deltas: [], downloadSize: targetAsset.Size ?? 0 };
+  if (compareVersions(target, current) <= 0) return fullOnly;
+
+  const base = full.get(current);
+  if (!base) return fullOnly;
 
   const hops = [...full.keys()]
     .filter((v) => compareVersions(v, current) > 0 && compareVersions(v, target) <= 0)
     .sort(compareVersions);
-  if (!hops.length || hops.length > maxDeltas) return fullSize;
-  if (hops.some((v) => !delta.has(v))) return fullSize;
+  if (!hops.length || hops.length > maxDeltas) return fullOnly;
+  if (hops.some((v) => !delta.has(v))) return fullOnly;
 
-  return hops.reduce((sum, v) => sum + (delta.get(v) ?? 0), 0);
+  const deltas = hops.map((v) => delta.get(v)!);
+  return {
+    target: targetAsset,
+    base,
+    deltas,
+    downloadSize: deltas.reduce((sum, d) => sum + (d.Size ?? 0), 0),
+  };
 };
 
 /** Newest first, which is the order the picker shows them in. */
@@ -106,32 +133,31 @@ const listVersions = async (currentVersion: string, allowPrerelease: boolean): P
   if (!res.ok) throw new Error(`Could not read the release index (${res.status})`);
   const assets = parseFeed(await res.json());
 
-  // Both tables are needed before any row can be sized: a delta chain is only known
-  // once every version between here and there has been seen.
+  // Both tables are needed before any row can be planned: a chain is only known once
+  // every version between here and there has been seen.
   const isDelta = (asset: VelopackAsset) => asset.Type?.toLowerCase() === 'delta';
-  const fullSizes = new Map<string, number>();
-  const deltaSizes = new Map<string, number>();
+  const fullAssets = new Map<string, VelopackAsset>();
+  const deltaAssets = new Map<string, VelopackAsset>();
   for (const asset of assets) {
     if (!byVersion.has(asset.Version)) continue;
-    (isDelta(asset) ? deltaSizes : fullSizes).set(asset.Version, asset.Size ?? 0);
+    (isDelta(asset) ? deltaAssets : fullAssets).set(asset.Version, asset);
   }
 
-  const options = assets
-    .filter((asset) => !isDelta(asset))
-    .filter((asset) => byVersion.has(asset.Version))
+  const options = [...fullAssets.values()]
     .map((asset) => {
       const release = byVersion.get(asset.Version)!;
       const order = compareVersions(asset.Version, currentVersion);
+      const plan = planFor(asset.Version, currentVersion, fullAssets, deltaAssets, MAX_DELTAS);
       return {
         version: asset.Version,
         releaseNotes: asset.NotesMarkdown || release.body || '',
         releaseDate: release.published_at ?? '',
         size: asset.Size ?? 0,
-        downloadSize: downloadSizeFor(asset.Version, currentVersion, fullSizes, deltaSizes, MAX_DELTAS),
+        downloadSize: plan.downloadSize,
         prerelease: release.prerelease,
         downgrade: order < 0,
         installed: order === 0,
-        asset,
+        plan,
       } satisfies VersionCandidate;
     });
 
@@ -139,3 +165,4 @@ const listVersions = async (currentVersion: string, allowPrerelease: boolean): P
 };
 
 export { compareVersions, listVersions };
+export type { UpdatePlan };

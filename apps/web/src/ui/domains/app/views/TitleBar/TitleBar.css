@@ -134,16 +134,6 @@
 }
 
 /* Report a bug — same treatment as Search (plain icon, no button box), red instead of gold. */
-.titlebar__bug-report {
-  color: var(--c-danger);
-  filter: drop-shadow(0 0 3px var(--c-danger-soft));
-  transition: filter var(--transition-normal), color var(--transition-normal);
-}
-
-.titlebar__bug-report:hover {
-  filter: drop-shadow(0 0 6px var(--c-danger-soft));
-}
-
 .titlebar__fps {
   font-size: var(--text-xs);
   font-family: var(--font-mono);
