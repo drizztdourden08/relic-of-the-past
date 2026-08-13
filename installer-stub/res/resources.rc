@@ -9,9 +9,11 @@
 // painter decodes it and scales it per screen.
 101 RCDATA "logo-256.png"
 
+// Keep in step with kStubVersion in src/theme.h: this is what Explorer's
+// Details tab reports, and the stub shows the same number on screen.
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION 2, 0, 0, 0
-PRODUCTVERSION 2, 0, 0, 0
+FILEVERSION 1, 0, 0, 0
+PRODUCTVERSION 1, 0, 0, 0
 FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
 FILEFLAGS 0x0L
 FILEOS VOS_NT_WINDOWS32
@@ -24,11 +26,11 @@ BEGIN
     BEGIN
       VALUE "CompanyName", "Relic of the Past"
       VALUE "FileDescription", "Relic of the Past Setup"
-      VALUE "FileVersion", "2.0.0.0"
+      VALUE "FileVersion", "1.0.0.0"
       VALUE "InternalName", "relic-setup"
       VALUE "OriginalFilename", "relic-setup.exe"
       VALUE "ProductName", "Relic of the Past"
-      VALUE "ProductVersion", "2.0.0.0"
+      VALUE "ProductVersion", "1.0.0.0"
     END
   END
   BLOCK "VarFileInfo"
