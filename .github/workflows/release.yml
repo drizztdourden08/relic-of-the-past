@@ -248,9 +248,25 @@ jobs:
           if [ "${{ inputs.full_installer }}" = "true" ]; then FULL="--full"; fi
           node scripts/build/pack-velopack.mjs --pack-dir release/win/win-unpacked --out release/win $FULL
 
-          # The recipe the downloader stub reads. Carries forward the previous
-          # release's URLs when this one ships no setup of its own.
-          node scripts/build/make-install-manifest.mjs --dir release/win --tag "${{ needs.prepare.outputs.tag }}"
+      # The download people actually run: ~600 KB, fetches the payload above and
+      # installs it. Built every release, full or not, so the permanent
+      # releases/latest/download link always resolves to the current stub. It needs
+      # MSVC, which windows-latest already has.
+      - name: Build the downloader stub
+        if: matrix.platform == 'win'
+        shell: bash
+        run: |
+          node installer-stub/build.mjs
+          test -f installer-stub/out/relic-setup.exe || { echo "::error::stub missing after build"; exit 1; }
+          cp installer-stub/out/relic-setup.exe release/win/rotp-windows-setup.exe
+          ls -l release/win/rotp-windows-setup.exe
+
+      # After the stub exists, so the manifest can record it. Carries forward the
+      # previous release's URLs for anything this one does not rebuild.
+      - name: Write the install manifest
+        if: matrix.platform == 'win'
+        shell: bash
+        run: node scripts/build/make-install-manifest.mjs --dir release/win --tag "${{ needs.prepare.outputs.tag }}"
 
       - name: Clean build artifacts
         shell: bash
@@ -382,11 +398,11 @@ jobs:
             echo "## Downloads"
             echo ""
             echo "**Windows**"
-            # These two are only rebuilt on a full release. The permanent links below
-            # always resolve to the newest release that carries them.
+            # The stub is small and ships on every release, so this permanent link
+            # always resolves to the current one. It fetches the app itself, which is
+            # why there is nothing else to choose from here.
             LATEST="https://github.com/${{ github.repository }}/releases/latest/download"
-            echo "- [Installer (.exe)](${LATEST}/rotp-windows-setup.exe) - installs and updates itself"
-            echo "- [Portable (.zip)](${LATEST}/rotp-windows-portable.zip) - unzip anywhere, keeps its data beside it"
+            echo "- [Installer (.exe)](${LATEST}/rotp-windows-setup.exe) - small download, installs and updates itself"
             echo ""
             echo "**macOS**"
             echo "- [Disk Image (.dmg)](${BASE}/rotp-macos.dmg)"
@@ -396,7 +412,7 @@ jobs:
             echo "- [Debian Package (.deb)](${BASE}/rotp-linux.deb)"
             echo ""
             echo "**Android**"
-            echo "- [APK](${BASE}/rotp-android.apk) — sideload (self-signed; allow unknown sources)"
+            echo "- [APK](${BASE}/rotp-android.apk) - sideload (self-signed, allow unknown sources)"
           } > release-body.md
 
       - name: Create GitHub Release

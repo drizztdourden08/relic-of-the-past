@@ -16,8 +16,7 @@ Each release provides platform-specific builds:
 
 | Platform | File | Type |
 |----------|------|------|
-| Windows | `rotp-windows-setup.exe` | Installer, updates itself |
-| Windows | `rotp-windows-portable.zip` | Portable, keeps its data beside it |
+| Windows | `rotp-windows-setup.exe` | Installer, small download, updates itself |
 | macOS | `rotp-macos.dmg` | Disk image |
 | Linux | `rotp-linux.AppImage` | Universal binary |
 | Linux | `rotp-linux.deb` | Debian/Ubuntu package |
@@ -26,19 +25,21 @@ Each release provides platform-specific builds:
 
 ## Windows
 
-### Portable (`rotp-windows-portable.zip`)
+### Installer (`rotp-windows-setup.exe`)
 
-Unzip it anywhere and run the executable inside. Your profiles, saves and imported
-files are kept in a `data` folder beside the app rather than in your user profile, so
-the whole thing can be moved to another drive or carried on a USB key.
+A small download, well under a megabyte. It fetches the app itself, so the file never
+goes stale: the copy you downloaded months ago still installs the current version.
 
-- Needs no admin rights
-- Creates no registry entries or shortcuts
-- Leaves nothing behind on the machine you run it from
-- Updates itself in place, like the installed version
+- Installs for your user account, so there is no admin prompt
+- Shows a progress window and starts the app when it finishes
+- Updates itself from then on, downloading only what changed
 
-See [Portable Mode](portable.md) for the details, including how to turn a normal
-installation into a portable one.
+If you would rather install somewhere you choose, such as another drive, the installer
+offers that on the first screen.
+
+See [Portable Mode](portable.md) if you want your profiles, saves and imported files
+kept beside the app instead of in your user profile, so the whole thing can be carried
+on a USB key.
 
 ### Windows SmartScreen Warning
 
@@ -106,7 +107,6 @@ package, or use the AppImage if you want automatic updates.
 | Platform | Build Type | Auto-Update |
 |----------|-----------|-------------|
 | Windows | Installer | ✅ Yes, and only the changes are downloaded |
-| Windows | Portable | ✅ Yes, in place |
 | Linux | AppImage | ✅ Yes, in place |
 | Linux | .deb | ❌ No, download a new one |
 | macOS | DMG | ⚠️ Tells you an update exists, but you download it yourself |

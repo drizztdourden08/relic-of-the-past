@@ -101,10 +101,17 @@ try {
 }
 
 /**
- * vpk names the setup after the pack id and channel. The download on the site has
- * always been rotp-windows-setup.exe, so it keeps that name and existing links keep
- * working. Only people download these two; updates go through the .nupkg named in the
- * release index, which is left exactly as vpk wrote it.
+ * vpk names the setup after the pack id and channel.
+ *
+ * rotp-windows-setup.exe is NOT this file: that name belongs to the small downloader
+ * stub, which is what the site links and what people actually run. This is the payload
+ * the stub fetches and runs silently, so it is named for that job and nobody is
+ * expected to download it by hand.
+ *
+ * The zip is likewise no longer offered as a download. It stays because an install
+ * into a chosen directory is done by unzipping it, which the per-user setup cannot do.
+ *
+ * Updates go through the .nupkg named in the release index, left exactly as vpk wrote it.
  */
 const rename = (from, to) => {
   const source = join(root, outputDir, from);
@@ -115,12 +122,12 @@ const suffix = channel ?? (linux ? 'linux' : 'win');
 if (linux) {
   rename(`relic-of-the-past-${suffix}.AppImage`, 'rotp-linux.AppImage');
 } else if (full) {
-  rename(`relic-of-the-past-${suffix}-Setup.exe`, 'rotp-windows-setup.exe');
-  rename(`relic-of-the-past-${suffix}-Portable.zip`, 'rotp-windows-portable.zip');
+  rename(`relic-of-the-past-${suffix}-Setup.exe`, 'rotp-windows-payload.exe');
+  rename(`relic-of-the-past-${suffix}-Portable.zip`, 'rotp-windows-directory.zip');
 } else {
   const spare = join(root, outputDir, `relic-of-the-past-${suffix}-Portable.zip`);
   if (existsSync(spare)) unlinkSync(spare);
 }
 
-const kind = full ? 'a full release (setup + portable + package)' : 'an update-only release (package + delta)';
+const kind = full ? 'a full release (payload + directory zip + package)' : 'an update-only release (package + delta)';
 console.log(`packed ${version}${channel ? ` (${channel})` : ''} as ${kind} into ${outputDir}`);

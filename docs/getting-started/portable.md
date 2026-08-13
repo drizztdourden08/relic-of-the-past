@@ -9,10 +9,14 @@ key and everything comes with it.
 
 ## Setting it up
 
-Download `rotp-windows-portable.zip` and unzip it wherever you want it. That's the
-whole setup: a portable copy keeps its data beside itself from the first launch.
+Install the app the normal way, then create a folder named `data` next to `Update.exe`
+in the installation folder. From the next launch, everything of yours is written there
+instead of in your user profile.
 
-Your folder looks like this:
+If you want it somewhere you choose, such as a USB key or another drive, pick that
+location on the installer's first screen and create the `data` folder there.
+
+Your folder ends up looking like this:
 
 ```
 Relic of the Past/
@@ -30,19 +34,16 @@ run it from.
 
 ---
 
-## Turning a normal installation portable
+## Bringing your existing files across
 
-An installed copy uses `%APPDATA%\relic-of-the-past` like any other Windows app. If
-you'd rather it kept its files with itself, create a folder named `data` next to
-`Update.exe` in the installation folder:
+Without a `data` folder, the app uses `%APPDATA%\relic-of-the-past` like any other
+Windows app. The default installation folder is:
 
 ```
 %LOCALAPPDATA%\relic-of-the-past\
 ├── Update.exe
 └── data/          ← create this
 ```
-
-From the next launch, everything is written there instead.
 
 Your existing profiles and saves aren't deleted, they're just no longer read. They're
 still in `%APPDATA%\relic-of-the-past`, so you can copy them into the new `data`
@@ -75,8 +76,8 @@ untouched by an update.
 
 ## Things worth knowing
 
-- **Two copies on one machine don't collide.** An installed copy and a portable one
-  keep separate data, because only the portable one has a `data` folder.
+- **Two copies on one machine don't collide.** Only the copy with a `data` folder keeps
+  its files beside itself, so the other one carries on using your user profile.
 - **Running from a slow USB key is slower to start.** The app is a few hundred MB and
   has to be read from the key each launch.
 - **ROMs and assets live in `data` too**, so a portable copy carries everything it

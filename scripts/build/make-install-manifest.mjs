@@ -68,9 +68,12 @@ const previousManifest = async () => {
 
 const previous = await previousManifest();
 
-const setup = entryFor('rotp-windows-setup.exe', { args: ['--silent'] }) ?? previous?.setup ?? null;
-const portable = entryFor('rotp-windows-portable.zip') ?? previous?.portable ?? null;
-const stub = entryFor('rotp-setup.exe') ?? previous?.stub ?? null;
+// rotp-windows-setup.exe is the stub: the small download the site links. The payload
+// is what the stub then fetches and runs silently, and the zip is what it unzips for
+// an install into a chosen directory. Neither of those two is offered as a download.
+const setup = entryFor('rotp-windows-payload.exe', { args: ['--silent'] }) ?? previous?.setup ?? null;
+const portable = entryFor('rotp-windows-directory.zip') ?? previous?.portable ?? null;
+const stub = entryFor('rotp-windows-setup.exe') ?? previous?.stub ?? null;
 
 if (!setup) {
   throw new Error(
