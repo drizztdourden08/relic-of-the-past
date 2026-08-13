@@ -22,6 +22,10 @@ const useShellReady = (settled: boolean): void => {
     // the only scheduled signal and the second pass would find the ref already set,
     // leaving the window hidden until the main-process watchdog fires.
     requestAnimationFrame(() => {
+      // Entrance animations go back to normal only once the shell is done, so the layer
+      // the app booted into never plays one. Dropped before the signal, in the same
+      // frame, so nothing can animate in the gap between the two.
+      document.documentElement.classList.remove('booting');
       requestAnimationFrame(() => window.api?.shellReady?.());
     });
   }, [settled]);

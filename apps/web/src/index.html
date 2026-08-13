@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- `booting` suppresses the entrance animations of whatever the app lands on. They are
+     polish for opening a page mid-session; during boot they mean the window is revealed
+     partway through a fade-and-scale, so the screen finishes appearing after the window
+     is already visible. Removed by useShellReady. -->
+<html lang="en" class="booting">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />

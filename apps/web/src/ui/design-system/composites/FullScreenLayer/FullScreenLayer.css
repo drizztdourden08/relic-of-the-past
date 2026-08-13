@@ -10,6 +10,14 @@
   padding: var(--space-2xl);
 }
 
+/* The layer the app boots into must be finished before the window is revealed, and a
+   200ms entrance means it is not: the reveal lands two frames in, so the screen appears
+   after the window does. During boot the layer is simply present. Set in index.html,
+   cleared by useShellReady. */
+html.booting .fullscreen-layer {
+  animation: none;
+}
+
 .fullscreen-layer__card {
   position: relative;
   width: 90%;
