@@ -15,7 +15,7 @@ constexpr int kHeight = 360;
 // The manifest carries the stub generation it expects. A build older than that
 // number cannot be trusted to understand the rest of the document, so it steps
 // aside for a fresh download instead of guessing.
-constexpr int kStubVersion = 2;
+constexpr int kStubVersion = 1;
 
 // Stored as plain DWORDs so this header stays free of the graphics headers;
 // the painter wraps each one in a colour object at the point of use.

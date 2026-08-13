@@ -25,13 +25,22 @@ ui::State Sample(const std::wstring& screen) {
   ui::State s;
   s.version = L"0.15.2";
   s.phase = 0.38f;
+  // Derived from kStubVersion, never written out. A hardcoded number here renders a
+  // version the built stub does not report, which is exactly how a wrong one survived
+  // a visual check.
+  wchar_t mine[16];
+  swprintf_s(mine, L"%d.0", theme::kStubVersion);
   if (screen == L"checking") {
     s.screen = ui::Screen::Checking;
-    s.stubVersion = L"2.0";
+    s.stubVersion = mine;
   } else if (screen == L"handoff") {
+    // The handoff only exists when a NEWER stub is required, so the preview has to
+    // invent one: this stub, and the next number up.
+    wchar_t next[16];
+    swprintf_s(next, L"%d.0", theme::kStubVersion + 1);
     s.screen = ui::Screen::Handoff;
-    s.stubVersion = L"1.0";
-    s.requiredVersion = L"2.0";
+    s.stubVersion = mine;
+    s.requiredVersion = next;
   } else if (screen == L"location" || screen == L"location-portable") {
     // Both destinations share one layout and differ only in wording, so the
     // second name exists to prove the longer strings still fit.
