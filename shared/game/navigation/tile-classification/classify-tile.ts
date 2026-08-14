@@ -1,6 +1,7 @@
 /* @layer shared-game @kind logic */
-import { OVERWORLD_TILE_BEHAVIOR, INTERIOR_TILE_BEHAVIOR } from '../../data/native-tables/tile-behavior';
-import { OVERWORLD_TILE_VISUAL, INTERIOR_TILE_VISUAL } from '../../data/native-tables/tile-visual';
+import {
+  OVERWORLD_TILE_BEHAVIOR, INTERIOR_TILE_BEHAVIOR, OVERWORLD_TILE_VISUAL, INTERIOR_TILE_VISUAL,
+} from '../../data/native-tables';
 import { classifyTileAttr } from './classify-collision';
 import { resolveInteractable } from './resolve-interactable';
 import type { ClassifyTileParams, TileClassification } from './types';

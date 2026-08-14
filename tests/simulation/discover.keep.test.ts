@@ -120,7 +120,7 @@ describeDataset('discoverTargets — chest reachability uses the open-from tile 
 // disambiguated: sprite 0x73 = Link's Uncle, pinned to the secret passage 0x55 —
 // the same 0x73 in Link's house intro room 0x104 must NOT match. Room-less
 // configs match by type in any room and still honor their presence condition:
-// 0x52 = King Zora (present iff Flippers unowned), 0x16 = Sahasrahla
+// 0x52 = a conditional NPC (present iff the swimming item is unowned), 0x16 = the first sage
 // (unconditional), 0xEE = not a check NPC.
 
 const HOUSE_ROOM = 0x104;

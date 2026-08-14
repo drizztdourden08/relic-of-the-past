@@ -26,7 +26,7 @@ interface DungeonRecord {
   fileStem: string;
   /** The first castle has no boss of its own. */
   bossCheckId?: CheckId;
-  /** Ganon's Tower / Castle Tower: no prize. */
+  /** The two tower dungeons: no prize. */
   prizeCheckId?: CheckId;
   /** e.g. Ether for Misery Mire. */
   medallionGate?: ItemId;

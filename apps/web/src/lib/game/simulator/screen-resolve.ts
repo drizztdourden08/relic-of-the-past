@@ -3,7 +3,7 @@
  * Numeric screen/room indices → dataset screen ids, progress-aware. Display and
  * traversal both key on screen ids, but the game only speaks indices; room
  * indices additionally collide across the dataset (e.g. room 0x55 is BOTH 'dam'
- * and 'hyrule-castle-secret-passage'), so interior resolution prefers candidates
+ * and a castle's secret passage), so interior resolution prefers candidates
  * sharing the SOURCE screen's world, then its location.
  */
 import type { GridPos } from '@shared/game/navigation';

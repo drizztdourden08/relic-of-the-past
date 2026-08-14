@@ -2,7 +2,7 @@
 import type { AreaId, LocationId } from './ids';
 import type { World } from '../enumeration/generated-types';
 
-/** A broad geographic zone — "Death Mountain", "Kakariko", "the desert". */
+/** A broad geographic zone — a mountain range, a village, a desert. */
 interface AreaRecord {
   id: AreaId;
   world: World;

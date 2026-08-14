@@ -11,7 +11,7 @@ const registerDialogHandlers = () => {
     const mainWindow = getMainWindow();
     if (!mainWindow) return null;
     const result = await dialog.showOpenDialog(mainWindow, {
-      title: 'Select Zelda 3 ROM',
+      title: 'Select game ROM',
       filters: [
         { name: 'SNES ROM', extensions: ['sfc', 'smc'] },
         { name: 'All Files', extensions: ['*'] },

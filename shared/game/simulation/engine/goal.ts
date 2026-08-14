@@ -8,7 +8,7 @@ import type { CheckId } from '../../data';
 import type { SimOutcome } from '../types';
 import type { EngineState } from './state';
 
-/** The final-boss check. Used to be the display name 'Ganon', which only worked
+/** The final-boss check. Used to be looked up by display name, which only worked
  *  while exactly one check happened to carry that name. */
 const DEFAULT_GOAL_CHECK: CheckId = 'check-097';
 

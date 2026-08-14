@@ -19,7 +19,7 @@ test('test-secret-passage keeps the blocked chest and the substituted item', asy
   test.setTimeout(300_000);
   await withState('test-secret-passage', async (r) => {
     // room 0x055 is a genuine dataset collision (screen-resolve.ts documents it: "room
-    // 0x55 is BOTH 'dam' and 'hyrule-castle-secret-passage'"). Neither record carries an
+    // 0x55 is claimed by BOTH the dam and a castle secret passage"). Neither carries an
     // entranceId or a variant, so resolution falls through to the first non-variant
     // candidate and currently returns the Dam record (screen-170), not the Secret
     // Passage (screen-171), even on this fixture. Asserting the id the widget actually

@@ -15,7 +15,7 @@ type TileReq =
   | 'lift.3'     // Titan's Mitt — dark rocks
   | 'hammer'     // Magic Hammer — pegs
   | 'boots'      // Pegasus Boots — bonk rocks
-  | 'flippers'   // Zora's Flippers — deep water
+  | 'flippers'   // the swimming item — deep water
   | 'hookshot'   // Hookshot — grapple across gaps (hookshot posts)
   | 'bombs';     // Bombs — blast open cracked/bombable walls
 
@@ -81,7 +81,7 @@ interface TileAttrDef {
   labels: [TileLabel, ...TileLabel[]];
   /** Semantic category for grouping */
   cat: TileCat;
-  /** True if the hookshot can grab this tile (pulls Link to it from range) */
+  /** True if the hookshot can grab this tile (pulls the player to it from range) */
   hookTarget?: true;
 }
 

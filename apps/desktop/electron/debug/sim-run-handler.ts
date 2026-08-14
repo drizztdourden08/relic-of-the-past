@@ -9,7 +9,7 @@
  *
  * Usage:
  *   npx electron dist/electron/main.js --muted --no-focus \
- *     --sim-run=slot=0;target=hyrule-castle-secret-passage
+ *     --sim-run=slot=0;target=<screen-id>
  */
 
 import { app } from 'electron';

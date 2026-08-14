@@ -13,6 +13,7 @@ import {
 import { requirementsMet } from '../../shared/game/simulation/requirements-map';
 import { evaluateOutcome } from '../../shared/game/simulation/engine/goal';
 import type { DetectedCheck } from '../../shared/game/simulation/types';
+import { describeDataset } from '../dataset-guard';
 
 /** dungeon-003 is the third dungeon; the id is the identity, its name is not. */
 const EASTERN = 'dungeon-003';
@@ -54,7 +55,7 @@ describe('explorer — consumable small keys', () => {
   });
 });
 
-describe('explorer — inventory → traversal tokens', () => {
+describeDataset('explorer — inventory → traversal tokens', () => {
   it('grants the lower lift rungs with the top one, from the token progression', () => {
     const s = freshState();
     applyItem(s, TITANS_MITTS);
@@ -65,7 +66,7 @@ describe('explorer — inventory → traversal tokens', () => {
   });
 });
 
-describe('explorer — unlock-reset rule', () => {
+describeDataset('explorer — unlock-reset rule', () => {
   const detected = (opts: Partial<DetectedCheck>): DetectedCheck => ({
     evidence: [],
     at: { screenId: 'A', tile: { row: 0, col: 0 } },
