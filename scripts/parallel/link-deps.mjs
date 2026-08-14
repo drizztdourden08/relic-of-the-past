@@ -17,14 +17,19 @@ import { join, dirname } from 'node:path';
 import { repoRoot } from './paths.mjs';
 
 /**
- * Junctioned — shared live, so skills, plans and vault material never fork per worktree.
+ * Junctioned — shared live, so skills, plans and the record dataset never fork per
+ * worktree.
  *
  * Only directories that can be REGENERATED belong here, because a junction is a hazard:
  * `git worktree remove` follows one and deletes the target's contents (see
- * unlinkSharedDirs). .claude rebuilds from the ai-config bootstrap and .vault re-clones,
- * so the worst case costs minutes, not data.
+ * unlinkSharedDirs). .claude rebuilds from the ai-config bootstrap and the record tree
+ * comes back with `npm run vault:sync`, so the worst case costs minutes, not data.
+ *
+ * The dataset entry is nested rather than top-level, which linkOne handles without any
+ * extra work: `shared/game/data/` is tracked, so the link's parent already exists in a
+ * freshly added worktree.
  */
-const LINKED_DIRS = ['.claude', '.vault'];
+const LINKED_DIRS = ['.claude', 'shared/game/data/records'];
 
 /**
  * Copied — user-provided and irreplaceable, so never exposed to the junction hazard.

@@ -63,8 +63,11 @@ const bootstrapWorktree = async ({ worktree, skipBuild }) => {
   console.log('\n[wt] Supplying the files git does not carry:');
   linkGitignoredDeps(worktree);
 
-  // Additive — a clone with no vault access prints a notice and exits 0.
-  runIn(worktree, 'node', ['scripts/vault/sync.mjs', '--offline'], 'Syncing vault material');
+  // Report only. The record tree is junctioned from the main checkout just above, so a
+  // worktree shares it and has nothing of its own to sync — syncing here would write
+  // through the junction and commit to the vault from a worktree, which is never wanted.
+  // Additive either way: no vault access prints a notice and exits 0.
+  runIn(worktree, 'node', ['scripts/vault/sync.mjs', '--status'], 'Checking vault material');
 
   if (skipBuild) {
     console.log('\n[wt] --no-build: skipping install, WASM and dist.');
