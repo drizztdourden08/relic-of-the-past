@@ -6,13 +6,13 @@
  */
 import * as sprites from '@shared/storage/sprites';
 import type { SpriteDef, SpriteBuffer } from '@shared/asset-extraction/item-sprites/extract-items';
-import spriteDefinitions from '@shared/game/data/sprite-manifest/definitions.json';
+import { SPRITE_DEFINITIONS } from '@shared/game/data/sprite-manifest/manifest';
 import { getPlatform } from '@app/platform/get-platform';
 import { runOnWorker } from './extraction-client';
 import { publishImportProgress } from './import-progress-bus';
 
 const files = () => getPlatform().files;
-const DEFS = (spriteDefinitions as { sprites: SpriteDef[] }).sprites;
+const DEFS = SPRITE_DEFINITIONS as unknown as SpriteDef[];
 
 const checkSpritesExtracted = (romFile: string) => sprites.check(files(), romFile);
 const deleteSprites = (romFile: string) => sprites.remove(files(), romFile);

@@ -7,7 +7,7 @@ import { readJson, writeJson } from '../lib/json-store';
 import { logToRenderer } from '../lib/renderer-log';
 import { makeImportReporter } from '../lib/import-progress';
 import { extractAllItemSprites } from '@shared/asset-extraction/item-sprites/extract-items-node';
-import spriteDefinitions from '@shared/game/data/sprite-manifest/definitions.json';
+import { SPRITE_DEFINITIONS } from '@shared/game/data/sprite-manifest/manifest';
 
 const spriteDir = (romFile: string): string => {
   const stem = basename(romFile, extname(romFile));
@@ -34,7 +34,7 @@ const registerSpriteHandlers = (): void => {
     report('decode', undefined, undefined, 'Extracting sprites…');
 
     try {
-      const result = extractAllItemSprites(localRomPath, outDir, spriteDefinitions.sprites as never);
+      const result = extractAllItemSprites(localRomPath, outDir, SPRITE_DEFINITIONS as never);
       if (result.errors.length > 0) {
         for (const err of result.errors) {
           logToRenderer('core', 'error', err);
