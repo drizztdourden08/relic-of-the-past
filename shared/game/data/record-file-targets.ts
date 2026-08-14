@@ -16,38 +16,39 @@ import type {
 } from './types';
 import type { ItemCategory } from './taxonomy/item-categories';
 
-/** The overworld file each area's records live in, keyed by the area's frozen id. */
-const AREA_FILE_STEMS: Readonly<Record<string, string>> = {
-  'area-001': 'central-hyrule',
-  'area-002': 'dark-death-mountain',
-  'area-003': 'dark-east',
-  'area-004': 'dark-lake-hylia',
-  'area-005': 'dark-mire',
-  'area-006': 'dark-north',
-  'area-007': 'dark-south',
-  'area-008': 'death-mountain',
-  'area-009': 'desert',
-  'area-010': 'east-hyrule',
-  'area-011': 'hyrule-castle',
-  'area-012': 'kakariko',
-  'area-013': 'lake-hylia',
-  'area-014': 'lost-woods',
-  'area-015': 'skull-woods-area',
-  'area-016': 'south-hyrule',
-  'area-017': 'village-of-outcasts',
-};
+// Every stem table names files in the record tree, so they all live with it and
+// are all absent without vault access. Each resolver below already had a "no
+// destination could be derived" path for an id it does not recognise; an empty
+// table takes that path for every id, which is correct when there are no record
+// files to write to in the first place.
+const stemModules = import.meta.glob<Partial<StemTables>>('./records/file-stems.ts', { eager: true });
 
-const INTERIOR_FILE_STEMS: Readonly<Record<InteriorKind, string>> = {
-  house: 'houses', cave: 'caves', shop: 'shops', fairy: 'fairy', well: 'wells',
-  passage: 'passages', hint: 'hints', gamble: 'gamble', special: 'special',
-};
+interface StemTables {
+  AREA_FILE_STEMS: Readonly<Record<string, string>>;
+  INTERIOR_FILE_STEMS: Partial<Readonly<Record<InteriorKind, string>>>;
+  AREA_CHECK_FILES: Readonly<Record<string, string>>;
+  SPLIT_DUNGEON_CHECK_FILES: Readonly<Record<string, string>>;
+  ITEM_CATEGORY_FILES: Partial<Readonly<Record<ItemCategory, string>>>;
+  ACTOR_KIND_FILES: Partial<Readonly<Record<ActorKind, string>>>;
+}
+
+const stems = Object.values(stemModules)[0];
+const AREA_FILE_STEMS = stems?.AREA_FILE_STEMS ?? {};
+const INTERIOR_FILE_STEMS = stems?.INTERIOR_FILE_STEMS ?? {};
+const AREA_CHECK_FILES = stems?.AREA_CHECK_FILES ?? {};
+const SPLIT_DUNGEON_CHECK_FILES = stems?.SPLIT_DUNGEON_CHECK_FILES ?? {};
+const ITEM_CATEGORY_FILES = stems?.ITEM_CATEGORY_FILES ?? {};
+const ACTOR_KIND_FILES = stems?.ACTOR_KIND_FILES ?? {};
 
 interface FileTarget {
-  /** Path relative to shared/game/data/, or null when no home can be derived. */
+  /** Path relative to the record tree, or null when no home can be derived. */
   relativePath: string | null;
   /** Why the path could not be derived. */
   unresolved?: string;
 }
+
+/** The one reason every resolver can now fail for: nothing to file against. */
+const NO_TREE: FileTarget = { relativePath: null, unresolved: 'the record tree is not present' };
 
 /** The subset of a screen record that decides where it lives. */
 interface ScreenHome {
@@ -90,10 +91,13 @@ const screenBucket = (screen: ScreenHome): FileTarget => {
     // area at all — it belongs with the other placeless screens, which is where
     // the hierarchy already keeps it.
     const stem = AREA_FILE_STEMS[screen.areaId];
-    return { relativePath: stem ? `overworld/${stem}` : INTERIOR_FILE_STEMS.special };
+    if (stem) return { relativePath: `overworld/${stem}` };
+    const placeless = INTERIOR_FILE_STEMS.special;
+    return placeless ? { relativePath: placeless } : NO_TREE;
   }
   if (!screen.interiorKind) return { relativePath: null, unresolved: 'interior screen has no interiorKind' };
-  return { relativePath: INTERIOR_FILE_STEMS[screen.interiorKind] };
+  const interior = INTERIOR_FILE_STEMS[screen.interiorKind];
+  return interior ? { relativePath: interior } : NO_TREE;
 };
 
 const inRoot = (root: 'screens' | 'connections', screen: ScreenHome): FileTarget => {
@@ -113,41 +117,6 @@ const connectionRecordFile = (screenId: ScreenId): FileTarget => {
   const screen = findOne('screen', s => s.id === screenId);
   if (!screen) return { relativePath: null, unresolved: `unknown screen ${screenId}` };
   return inRoot('connections', screen);
-};
-
-/**
- * The check file each area's records live in. Keyed on the area's frozen id for
- * the same reason `AREA_FILE_STEMS` is, and kept separate from it because the
- * two trees do not line up: checks are filed under `checks/<world>-world/` with
- * no per-size split, and two areas carry no check file at all. An area absent
- * from this table therefore resolves to "no destination" rather than to a path
- * that does not exist.
- */
-const AREA_CHECK_FILES: Readonly<Record<string, string>> = {
-  'area-001': 'light-world/central-hyrule',
-  'area-008': 'light-world/death-mountain',
-  'area-009': 'light-world/desert',
-  'area-010': 'light-world/east-hyrule',
-  'area-011': 'light-world/hyrule-castle',
-  'area-012': 'light-world/kakariko',
-  'area-013': 'light-world/lake-hylia',
-  'area-014': 'light-world/lost-woods',
-  'area-016': 'light-world/south-hyrule',
-  'area-002': 'dark-world/dark-death-mountain',
-  'area-003': 'dark-world/dark-east',
-  'area-005': 'dark-world/dark-mire',
-  'area-006': 'dark-world/dark-north',
-  'area-007': 'dark-world/dark-south',
-  'area-017': 'dark-world/village-of-outcasts',
-};
-
-/**
- * One dungeon's checks outgrew a single file and were split by size. A NEW
- * record goes in the last split; an existing one is edited where it already
- * sits, which the writer locates by id rather than by this table.
- */
-const SPLIT_DUNGEON_CHECK_FILES: Readonly<Record<string, string>> = {
-  'ganons-tower': 'ganons-tower-2',
 };
 
 /** The subset of a check record that decides where it lives. */
@@ -178,47 +147,15 @@ const checkRecordFile = (check: CheckHome): FileTarget => {
   return { relativePath: `checks/${file}.ts` };
 };
 
-/**
- * ONE canonical destination per category for a BRAND-NEW item.
- *
- * This is a deliberate simplification, not a rediscovered historical rule:
- * the committed split has no category→file rule to recover (weapons sit in
- * both weapons.ts and randomizer.ts, junk spans four files, keys three), so
- * continuing it faithfully would mean inventing a size-balancing heuristic
- * for a collection that grows a record very rarely. Existing records are not
- * moved — the writer edits and removes them where they already sit, located by
- * id — so this only ever decides where a newly created record lands.
- */
-const ITEM_CATEGORY_FILES: Readonly<Record<ItemCategory, string>> = {
-  weapon: 'weapons',
-  equipment: 'equipment-2',
-  bottle: 'equipment-2',
-  upgrade: 'equipment-2',
-  junk: 'junk-2',
-  key: 'dungeon-items-3',
-  crystal: 'progression',
-  event: 'progression',
-  medallion: 'progression',
+const itemRecordFile = (item: { category: ItemCategory }): FileTarget => {
+  const stem = ITEM_CATEGORY_FILES[item.category];
+  return stem ? { relativePath: `items/${stem}.ts` } : NO_TREE;
 };
 
-/**
- * The same bargain for actors, whose committed split IS by kind and then by
- * size within a kind: a new record goes to the last file of its kind's group.
- */
-const ACTOR_KIND_FILES: Readonly<Record<ActorKind, string>> = {
-  enemy: 'enemies-4',
-  object: 'objects-4',
-  trigger: 'triggers-2',
-  boss: 'bosses',
-  npc: 'npcs',
-  obstacle: 'obstacles',
+const actorRecordFile = (actor: { kind: ActorKind }): FileTarget => {
+  const stem = ACTOR_KIND_FILES[actor.kind];
+  return stem ? { relativePath: `actors/${stem}.ts` } : NO_TREE;
 };
-
-const itemRecordFile = (item: { category: ItemCategory }): FileTarget =>
-  ({ relativePath: `items/${ITEM_CATEGORY_FILES[item.category]}.ts` });
-
-const actorRecordFile = (actor: { kind: ActorKind }): FileTarget =>
-  ({ relativePath: `actors/${ACTOR_KIND_FILES[actor.kind]}.ts` });
 
 /**
  * The two dungeon files were split by size alone, with nothing on the record
