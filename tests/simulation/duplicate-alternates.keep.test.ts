@@ -8,12 +8,13 @@
 import { describe, it, expect } from 'vitest';
 import { resolveDuplicate, isDuplicated, itemLabel } from '../../shared/game/logic/queries/item-duplicates';
 import type { ItemId } from '../../shared/game/data';
+import { describeDataset } from '../dataset-guard';
 
 const EMPTY = new Set<ItemId>();
 /** Owned sets are dataset ids: item-019 Lamp, item-013/item-043 the boomerangs. */
 const WITH_LAMP = new Set<ItemId>(['item-019']);
 
-describe('duplicate item alternates', () => {
+describeDataset('duplicate item alternates', () => {
   it('yields the primary item when it is not owned', () => {
     expect(resolveDuplicate(0x12, EMPTY)).toBe(0x12);
     expect(itemLabel(resolveDuplicate(0x12, EMPTY))).toBe('Lamp');

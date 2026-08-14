@@ -28,6 +28,7 @@ import type { DetectionContext, ScreenObservations } from '@shared/game/recommen
 import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { connectionStrategy } from '@app/ui/domains/widgets/navigation/recommendations/strategies/connection/connection.strategy';
 import { onUnresolvableConnection } from '@app/ui/domains/widgets/navigation/recommendations/strategies/connection/unresolvable-screen';
+import { describeDataset } from '../../dataset-guard';
 
 const detector = detectorFromStrategy(connectionStrategy, onUnresolvableConnection);
 
@@ -96,7 +97,7 @@ const fixtureConn = (overrides: Partial<ConnectionRecord> & {
   return conn;
 };
 
-describe('connection strategy REMOVE side (SetProbe) against the real dataset', () => {
+describeDataset('connection strategy REMOVE side (SetProbe) against the real dataset', () => {
   it('proposes a delete for a non-edge record no real transition backs', () => {
     const conn = fixtureConn({ kind: 'stairs' });
     const context = contextFor('screen-a' as ScreenId, {

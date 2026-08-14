@@ -4,12 +4,13 @@ import { COLLECTION_SOURCES } from '../../apps/web/src/ui/domains/app/views/Data
 import { ENTITY_KINDS } from '../../apps/web/src/ui/domains/app/views/DataInspector/DataInspector.constants';
 import { resolveIdRef } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/id-ref-target';
 import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
+import { describeDataset } from '../dataset-guard';
 
 // The adapter layer against the real dataset. `buildSchema` is imported from its
 // own module rather than the ds/data barrel on purpose: the barrel pulls in the
 // view-state binding, which touches `window` at module load.
 
-describe('collection sources', () => {
+describeDataset('collection sources', () => {
   it('adapts every collection, with real rows behind each one', () => {
     expect(Object.keys(COLLECTION_SOURCES)).toHaveLength(ENTITY_KINDS.length);
     for (const kind of ENTITY_KINDS) {
@@ -80,7 +81,7 @@ describe('collection sources', () => {
   });
 });
 
-describe('id reference resolution', () => {
+describeDataset('id reference resolution', () => {
   it('resolves the published target kind and a display name', () => {
     const screen = COLLECTION_SOURCES.screen.rows[0];
     const id = COLLECTION_SOURCES.screen.getId(screen);

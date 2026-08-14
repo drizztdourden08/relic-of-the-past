@@ -5,6 +5,7 @@ import type { PresenceGameState } from '../../shared/game/simulation/presence/st
 import { createEngineState } from '../../shared/game/simulation/engine/state';
 import { discoverTargets, hasReachableOpenTile } from '../../shared/game/simulation/engine/discover';
 import { emptySnapshot } from '../../shared/game/simulation/detect/flag-snapshot';
+import { describeDataset } from '../dataset-guard';
 
 // A chest is a solid 2x2 (16px) block anchored at its top-left 8px tile; the game
 // opens it only from the walkable tile directly below the footprint (two rows
@@ -44,7 +45,7 @@ const openBelowLeft = (r: number, c: number): boolean[][] => {
   return floodFrom(rows);
 };
 
-describe('hasReachableOpenTile', () => {
+describeDataset('hasReachableOpenTile', () => {
   it('is true when the tile two rows below the anchor (left column) is reachable', () => {
     expect(hasReachableOpenTile(openBelowLeft(0, 0), { row: 0, col: 0 })).toBe(true);
   });
@@ -71,7 +72,7 @@ describe('hasReachableOpenTile', () => {
   });
 });
 
-describe('discoverTargets — chest reachability uses the open-from tile below', () => {
+describeDataset('discoverTargets — chest reachability uses the open-from tile below', () => {
   it('discovers a chest when the tile two rows below its anchor is reachable', () => {
     const flood = openBelowLeft(0, 0);
     const state = freshState();
@@ -150,7 +151,7 @@ const makeSprite = (spriteType: number, kind: SimSprite['kind'], roomId: number)
   kind,
 });
 
-describe('discoverTargets — NPC room-aware matching', () => {
+describeDataset('discoverTargets — NPC room-aware matching', () => {
   it('matches Link\'s Uncle (0x73) in the secret passage room 0x55', () => {
     const obs = spriteObs(makeSprite(0x73, 'npc', PASSAGE_ROOM), presenceWith());
     expect(discoverTargets(freshState(), obs, null)).toHaveLength(1);
@@ -162,7 +163,7 @@ describe('discoverTargets — NPC room-aware matching', () => {
   });
 });
 
-describe('discoverTargets — NPC presence gating', () => {
+describeDataset('discoverTargets — NPC presence gating', () => {
   it('discovers a conditional room-less NPC when its condition holds (King Zora, no Flippers)', () => {
     const obs = spriteObs(makeSprite(0x52, 'npc', 0x181), presenceWith());
     expect(discoverTargets(freshState(), obs, null)).toHaveLength(1);
@@ -228,7 +229,7 @@ const owState = (owScreenIndex: number) =>
 const allReachable = (rows: number, cols: number): boolean[][] =>
   Array.from({ length: rows }, () => new Array(cols).fill(true));
 
-describe('discoverTargets — overworld sprites resolved to their true screen', () => {
+describeDataset('discoverTargets — overworld sprites resolved to their true screen', () => {
   it('discovers a sprite normally when it belongs to the observed screen', () => {
     const obs = owObs(HEAD_SCREEN, [owSprite(HEAD_SCREEN, { row: 20, col: 12 })]);
     expect(discoverTargets(owState(HEAD_SCREEN), obs, allReachable(64, 64))).toHaveLength(1);
@@ -248,7 +249,7 @@ describe('discoverTargets — overworld sprites resolved to their true screen', 
   });
 });
 
-describe('discoverTargets — posKnown === false fallback', () => {
+describeDataset('discoverTargets — posKnown === false fallback', () => {
   it('discovers an unknown-position interactable regardless of a real, unrelated flood grid', () => {
     const sprite: SimSprite = {
       roomId: 0x181,

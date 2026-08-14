@@ -24,6 +24,7 @@ import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { resolveRealDestId } from '@app/ui/domains/widgets/navigation/connection-audit-resolve';
 import { connectionStrategy } from '@app/ui/domains/widgets/navigation/recommendations/strategies/connection/connection.strategy';
 import { onUnresolvableConnection } from '@app/ui/domains/widgets/navigation/recommendations/strategies/connection/unresolvable-screen';
+import { describeDataset } from '../../dataset-guard';
 
 const detector = detectorFromStrategy(connectionStrategy, onUnresolvableConnection);
 
@@ -66,7 +67,7 @@ const contextFor = (screenId: ScreenId, observations: Partial<ScreenObservations
   { origin: 'live', screenId, observations: { ...baseObservations(), ...observations } }
 );
 
-describe('connection strategy ADD side (SetProbe) against the real dataset', () => {
+describeDataset('connection strategy ADD side (SetProbe) against the real dataset', () => {
   const { from, to } = unmappedPair();
   const destRoom = to.gameId.roomIndex!;
   const context = contextFor(from.id, { realTransitions: [{ source: 'stair', kind: 'room', index: destRoom }] });

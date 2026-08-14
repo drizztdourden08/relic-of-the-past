@@ -24,8 +24,9 @@ import {
 } from '@shared/game/data/record-file-targets';
 import type { ActorKind } from '@shared/game/data';
 import type { ItemCategory } from '@shared/game/data/taxonomy/item-categories';
+import { describeDataset } from '../../dataset-guard';
 
-const DATA_ROOT = join(__dirname, '..', '..', '..', 'shared', 'game', 'data');
+const DATA_ROOT = join(__dirname, '..', '..', '..', 'shared', 'game', 'data', 'records');
 
 const dataFile = (relativePath: string): string => join(DATA_ROOT, relativePath);
 
@@ -35,7 +36,7 @@ const resolved = (target: { relativePath: string | null; unresolved?: string }):
   return target.relativePath as string;
 };
 
-describe('the file a check is filed in', () => {
+describeDataset('the file a check is filed in', () => {
   const checks = all('check');
 
   it('has real records to check against', () => {
@@ -96,7 +97,7 @@ describe('the file a check is filed in', () => {
   });
 });
 
-describe('the file a new item is filed in', () => {
+describeDataset('the file a new item is filed in', () => {
   const EXPECTED: Record<ItemCategory, string> = {
     weapon: 'items/weapons.ts',
     equipment: 'items/equipment-2.ts',
@@ -121,7 +122,7 @@ describe('the file a new item is filed in', () => {
   });
 });
 
-describe('the file a new actor is filed in', () => {
+describeDataset('the file a new actor is filed in', () => {
   const EXPECTED: Record<ActorKind, string> = {
     enemy: 'actors/enemies-4.ts',
     object: 'actors/objects-4.ts',
@@ -150,7 +151,7 @@ describe('the file a new actor is filed in', () => {
   });
 });
 
-describe('the flat single-file collections', () => {
+describeDataset('the flat single-file collections', () => {
   it.each([
     ['dungeon', dungeonRecordFile(), 'dungeons-2.ts'],
     ['area', areaRecordFile(), 'areas.ts'],

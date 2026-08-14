@@ -10,6 +10,7 @@ import {
 } from '../../apps/web/src/ui/design-system/composites/DataTable/behavior/field-menu-items';
 import type { MenuItem } from '../../apps/web/src/ui/design-system/composites/DropdownMenu';
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { describeDataset } from '../dataset-guard';
 
 // The two halves of "which field would you like?": the recursive walk that
 // turns a schema into a choosable tree, and the adapter that hands that tree to
@@ -34,7 +35,7 @@ const NESTED: readonly FieldDescriptor[] = [
   field('tags', 'array'),
 ];
 
-describe('FieldPicker — the recursive walk', () => {
+describeDataset('FieldPicker — the recursive walk', () => {
   it('makes leaves pickable and object/union nodes submenus', () => {
     const [id, outer] = buildPickerNodes(NESTED);
     expect(id.pickable).toBe(true);
@@ -79,7 +80,7 @@ describe('FieldPicker — the recursive walk', () => {
   });
 });
 
-describe('the field tree as menu entries', () => {
+describeDataset('the field tree as menu entries', () => {
   const items = (exclude: readonly string[] = [], onPick = vi.fn()) => ({
     onPick,
     entries: buildFieldMenuItems({ nodes: buildPickerNodes(NESTED, exclude), onPick }),

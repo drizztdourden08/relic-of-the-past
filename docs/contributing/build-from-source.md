@@ -64,29 +64,53 @@ Path aliases: `@shared/*` → `shared/`, `@app/*` → `apps/web/src/`. See the
 ## The private companion repository (optional)
 
 Some material this project uses is derived from the original game and therefore is not
-in this repository: the named save states the end-to-end tests load, the blessed
-navigation baselines, and the display-name overlay for the screen datasets. Those live
-in a separate **private** repository and are copied into place on demand.
+in this repository: the record dataset (screens, connections, checks, items, actors and
+the rest of `shared/game/data/records/`), the named save states the end-to-end tests
+load, and the blessed navigation baselines. Those live in a separate **private**
+repository and are copied into place on demand.
 
 **You do not need it.** Without access:
 
 - the app builds and runs,
 - `npm run lint` and the unit tests pass,
-- the end-to-end tests that need a save state report as *skipped*,
-- screens show their id (`hc-0x80`) instead of a display name.
+- the dataset is empty, so the map, checks and navigation views have nothing to show,
+- the unit suites that assert on real records report as *skipped*,
+- the end-to-end tests that need a save state report as *skipped*.
 
-With access, one command fetches everything:
+The private repository is a **sibling checkout**, not something this repository clones.
+Put it beside this one as `../rotp-vault`, or point `ROTP_VAULT_DIR` at it. Inside it,
+one folder — `tree/` — mirrors this repository's own paths, so a file at
+`tree/shared/game/data/records/areas.ts` lands at `shared/game/data/records/areas.ts`.
+The path is the whole mapping; there is nothing else to configure, and anything the
+vault keeps outside `tree/` is never touched.
 
 ```bash
 npm run vault:sync
 ```
 
+Sync runs **both ways**. It indexes both sides by content, compares them against the
+state recorded by the last run, and applies every change that is unambiguous: a file
+edited only here is written to the vault, a file edited only there is written to your
+checkout, and a deletion on either side is carried across. Anything edited on *both*
+sides since the last sync is a conflict — reported, and left alone. Writes into the
+vault are committed there on its current branch; pushing them onward is left to you.
+
 It also runs automatically after `npm install`, and is a no-op with a single line of
-output when you have no access — it never fails a build. To see what is mapped and
-whether it is in place:
+output when you have no access — it never fails a build. To see what would change
+without writing anything:
 
 ```bash
 npm run vault:status
 ```
 
-Access is granted per contributor; ask the repository owner if you need the fixtures.
+To settle conflicts wholesale, declare a winner:
+
+```bash
+npm run vault:force-pull
+```
+
+```bash
+npm run vault:force-push
+```
+
+Access is granted per contributor; ask the repository owner if you need it.

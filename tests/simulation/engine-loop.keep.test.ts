@@ -9,6 +9,7 @@ import { buildAdjacency } from '../../shared/game/simulation/engine/traversal';
 import { emptySnapshot, cloneSnapshot } from '../../shared/game/simulation/detect/flag-snapshot';
 import { getItemByGameId, registerRecord, unregisterRecord } from '../../shared/game/data';
 import type { CheckId, ConnectionId, ItemId } from '../../shared/game/data';
+import { describeDataset } from '../dataset-guard';
 
 /** Chest-open bit per slot — same native fact the matcher itself uses. */
 const CHEST_OPEN_MASKS = [0x10, 0x20, 0x40, 0x80, 0x100, 0x200, 0x400] as const;
@@ -127,7 +128,7 @@ const runLoop = (world: FakeWorld, connections: ConnectionRecord[], goalCheckId?
   return { state, events };
 };
 
-describe('simulation engine loop', () => {
+describeDataset('simulation engine loop', () => {
   afterAll(() => {
     for (const id of CONNECTION_IDS) unregisterRecord('connection', id);
   });

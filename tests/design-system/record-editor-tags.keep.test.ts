@@ -11,6 +11,7 @@ import {
   resolveTagSuggestionsFor, tagSuggestionsResolverFor,
 } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/tag-suggestions';
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { describeDataset } from '../dataset-guard';
 
 // SSR smoke tests plus straight unit tests over the resolver. They prove which
 // control a tag list is offered as and what vocabulary reaches it. Typing in
@@ -40,7 +41,7 @@ const render = (record: unknown, rows: readonly unknown[]): string =>
 /** The terms one record's stored tag references stand for. */
 const keysOf = (record: { tags: readonly string[] }): readonly string[] => tagKeysOf(record.tags);
 
-describe('which list of strings is a list of tags', () => {
+describeDataset('which list of strings is a list of tags', () => {
   it('says yes for the real tag fields, which now hold references named `tags`', () => {
     for (const kind of ['screen', 'connection'] as const) {
       const field = fieldAt(all(kind), 'tags');
@@ -85,7 +86,7 @@ describe('which list of strings is a list of tags', () => {
   });
 });
 
-describe('the vocabulary behind a tag field', () => {
+describeDataset('the vocabulary behind a tag field', () => {
   const screenTags = resolveTagSuggestionsFor('screen', fieldAt(all('screen'), 'tags'));
 
   it('offers the whole canonical taxonomy, including terms nobody has used yet', () => {
@@ -139,7 +140,7 @@ describe('the vocabulary behind a tag field', () => {
   });
 });
 
-describe('the whole form, with a real tag list on it', () => {
+describeDataset('the whole form, with a real tag list on it', () => {
   it('renders the tag entry rather than a row per tag', () => {
     const screens = all('screen');
     const record = screens.find((row) => row.tags.length > 1) ?? screens[0];

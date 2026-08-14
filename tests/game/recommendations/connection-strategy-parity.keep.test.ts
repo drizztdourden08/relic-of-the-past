@@ -16,6 +16,7 @@ import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { CONNECTION_ISSUE, connectionIssues } from '@app/ui/domains/widgets/navigation/connection-issues';
 import { describeConnectionTiles, findFloodForTarget } from '@app/ui/domains/widgets/navigation/connection-tile-display';
 import { connectionStrategy } from '@app/ui/domains/widgets/navigation/recommendations/strategies/connection/connection.strategy';
+import { describeDataset } from '../../dataset-guard';
 
 const navDetector = detectorFromStrategy(connectionStrategy);
 
@@ -73,7 +74,7 @@ const screenWithConnections = () => {
   return fallback;
 };
 
-describe('connection strategy (nav probe) parity with connectionIssues', () => {
+describeDataset('connection strategy (nav probe) parity with connectionIssues', () => {
   const { screen, connections } = screenWithConnections();
   const drafts = navDetector.detect(contextFor(screen.id, connections));
 

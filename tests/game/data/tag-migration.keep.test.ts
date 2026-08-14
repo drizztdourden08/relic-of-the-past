@@ -11,13 +11,14 @@
 import { describe, it, expect } from 'vitest';
 import { all, CONNECTION_TAG_METADATA, tagById, tagKeysOf, TAG_METADATA } from '@shared/game/data';
 import type { EntityKind } from '@shared/game/data';
+import { describeDataset } from '../../dataset-guard';
 
 const TAGGED: readonly EntityKind[] = ['screen', 'connection'];
 
 const storedTags = (kind: EntityKind): readonly string[] =>
   (all(kind) as readonly { tags: readonly string[] }[]).flatMap(row => [...row.tags]);
 
-describe('every migrated tag is a real reference', () => {
+describeDataset('every migrated tag is a real reference', () => {
   for (const kind of TAGGED) {
     it(`${kind}: holds ids, never terms`, () => {
       const stored = storedTags(kind);
@@ -40,7 +41,7 @@ describe('every migrated tag is a real reference', () => {
   }
 });
 
-describe('nothing was lost on the way', () => {
+describeDataset('nothing was lost on the way', () => {
   it('still uses the same set of terms the taxonomy defines', () => {
     const used = new Set<string>();
     for (const kind of TAGGED) for (const key of tagKeysOf(storedTags(kind))) used.add(key);

@@ -12,8 +12,9 @@
 import { describe, expect, it } from 'vitest';
 import { all } from '@shared/game/data';
 import { REFERENCE_TARGETS, referencesTo } from '@shared/game/data/relationships/reference-index';
+import { describeDataset } from '../../dataset-guard';
 
-describe('the kinds the index answers for', () => {
+describeDataset('the kinds the index answers for', () => {
   it('covers every collection with a delete path', () => {
     expect([...REFERENCE_TARGETS].sort()).toEqual(
       ['actor', 'area', 'check', 'dungeon', 'item', 'item-group', 'location', 'tag'],
@@ -21,7 +22,7 @@ describe('the kinds the index answers for', () => {
   });
 });
 
-describe('a dungeon', () => {
+describeDataset('a dungeon', () => {
   it('is reported as referenced by the checks that name it', () => {
     const check = all('check').find(entry => entry.dungeonId);
     expect(check).toBeDefined();
@@ -41,7 +42,7 @@ describe('a dungeon', () => {
   });
 });
 
-describe('an area and a location', () => {
+describeDataset('an area and a location', () => {
   it('reports the screens sitting in an area', () => {
     const screen = all('screen')[0];
     expect(referencesTo('area', screen.areaId))
@@ -61,7 +62,7 @@ describe('an area and a location', () => {
   });
 });
 
-describe('an actor', () => {
+describeDataset('an actor', () => {
   it('is reported as referenced by the check it grants', () => {
     const check = all('check').find(entry => entry.actorId);
     expect(check).toBeDefined();
@@ -84,7 +85,7 @@ describe('an actor', () => {
   });
 });
 
-describe('an item', () => {
+describeDataset('an item', () => {
   it('is reported as referenced by the check that vanilla holds it', () => {
     const check = all('check').find(entry => entry.vanillaItemIds.length > 0);
     expect(check).toBeDefined();
@@ -113,7 +114,7 @@ describe('an item', () => {
   });
 });
 
-describe('a check', () => {
+describeDataset('a check', () => {
   it('is reported as referenced by the dungeon that names it as its boss', () => {
     const dungeon = all('dungeon').find(entry => entry.bossCheckId);
     expect(dungeon).toBeDefined();

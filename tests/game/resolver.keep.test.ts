@@ -4,8 +4,9 @@ import { resolveRules } from '../../shared/game/logic/resolver';
 import { getReachableScreens } from '../../shared/game/logic/eval';
 import { VANILLA_CONFIG } from '../../shared/game/data/presets/vanilla';
 import { ITEM_GROUP_IDS } from '../../shared/game/data/item-groups';
+import { describeDataset } from '../dataset-guard';
 
-describe('resolveRules (id re-key regression)', () => {
+describeDataset('resolveRules (id re-key regression)', () => {
   it('wires the menu spawn points to their new screen ids', () => {
     const { connections } = resolveRules(VANILLA_CONFIG);
     const fromMenu = connections.filter(c => c.from === 'menu').map(c => c.to);

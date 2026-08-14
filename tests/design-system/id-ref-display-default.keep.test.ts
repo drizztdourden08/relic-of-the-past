@@ -19,6 +19,7 @@ import {
 import { defaultIdRefDisplay, entityKindFromId } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/record-links';
 import type * as DataRowModule from '../../apps/web/src/ui/design-system/composites/DataTable/sub-components/DataRow';
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { describeDataset } from '../dataset-guard';
 
 /** What a generic row looks like once it is through a dot-path read. */
 type InspectorLikeRow = Record<string, unknown>;
@@ -61,7 +62,7 @@ const sample = (() => {
   return { row, id, name: String(area[NAME_PATH]) };
 })();
 
-describe('substituteDisplay — the default fallback for a column with no displayField at all', () => {
+describeDataset('substituteDisplay — the default fallback for a column with no displayField at all', () => {
   const field = fieldAt(screens, AREA_PATH);
 
   it('reaches for resolveDefault when no displayField is configured', () => {
@@ -101,7 +102,7 @@ describe('substituteDisplay — the default fallback for a column with no displa
  * `resolveIdRefDefault` exists for, wired with no `displayField` at all,
  * exactly as the Recommendations table wires it.
  */
-describe('the rendered table — a mixed-target-kind column, with only the default resolver wired', () => {
+describeDataset('the rendered table — a mixed-target-kind column, with only the default resolver wired', () => {
   // `sample.id` is an AREA id (see `sample` above) — paired with an actor,
   // that is already two different collections in one column.
   const [actor] = all('actor');
@@ -166,7 +167,7 @@ describe('the rendered table — a mixed-target-kind column, with only the defau
  * `Id` column's one job is showing the id, so this is exempt from the default,
  * unlike an ordinary reference to another record.
  */
-describe('the identity field is exempt from the default — it always shows its own id', () => {
+describeDataset('the identity field is exempt from the default — it always shows its own id', () => {
   const idField = fieldAt(screens, 'id');
 
   it('is itself inferred as idRef, targeting its own collection', () => {

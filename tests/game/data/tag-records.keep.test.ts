@@ -13,6 +13,7 @@ import {
   ALL_TAGS, all, CONNECTION_TAG_METADATA, CONTENT_TAG_METADATA, ENTITY_COUNTS, getTag, tagById, tagByKey,
   tagIdForKey, tagIdsForKeys, tagKey, tagKeysOf, tagsFor, TAG_METADATA,
 } from '@shared/game/data';
+import { describeDataset } from '../../dataset-guard';
 
 const SEED = [
   ...TAG_METADATA.map(entry => ({ ...entry, scope: 'screen' as const })),
@@ -20,7 +21,7 @@ const SEED = [
   ...CONTENT_TAG_METADATA.map(entry => ({ ...entry, scope: 'check' as const })),
 ];
 
-describe('the tag collection', () => {
+describeDataset('the tag collection', () => {
   it('holds one record per seeded term, and nothing else', () => {
     expect(ALL_TAGS).toHaveLength(SEED.length);
     expect(ALL_TAGS).toHaveLength(ENTITY_COUNTS.tag);
@@ -61,7 +62,7 @@ describe('the tag collection', () => {
   });
 });
 
-describe('the seed, term by term', () => {
+describeDataset('the seed, term by term', () => {
   it('carries every taxonomy term across, with its label intact', () => {
     for (const entry of SEED) {
       const record = tagByKey(entry.id);

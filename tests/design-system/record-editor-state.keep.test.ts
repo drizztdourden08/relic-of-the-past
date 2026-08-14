@@ -6,6 +6,7 @@ import { setPath } from '../../apps/web/src/ui/design-system/data/schema/path';
 import { changedPaths, hasPathChanged } from '../../apps/web/src/ui/design-system/composites/RecordEditor/behavior/dirty-paths';
 import { layoutGroups } from '../../apps/web/src/ui/design-system/composites/RecordEditor/behavior/layout-groups';
 import type { FieldDescriptor, SchemaConfig } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { describeDataset } from '../dataset-guard';
 
 // The two pieces of the editor that are pure functions: what counts as changed,
 // and how a schema lays itself out with and without a config to steer it.
@@ -16,7 +17,7 @@ if (!withRect) throw new Error('the dataset no longer holds an area placement');
 
 const PATHS = ['id', 'tags', 'placement', 'placement.rect', 'placement.rect.x', 'placement.rect.y'];
 
-describe('dirty tracking — which paths changed', () => {
+describeDataset('dirty tracking — which paths changed', () => {
   it('reports nothing changed for the record itself', () => {
     expect(changedPaths(withRect, withRect, PATHS)).toEqual([]);
     expect(hasPathChanged(withRect, withRect, '')).toBe(false);
@@ -61,7 +62,7 @@ describe('dirty tracking — which paths changed', () => {
   });
 });
 
-describe('auto-layout — a real schema with no config at all', () => {
+describeDataset('auto-layout — a real schema with no config at all', () => {
   const schema = buildSchema(all('screen'));
 
   it('lays every top-level field out as one unnamed group', () => {
@@ -86,7 +87,7 @@ describe('auto-layout — a real schema with no config at all', () => {
   });
 });
 
-describe('auto-layout — a config steering it', () => {
+describeDataset('auto-layout — a config steering it', () => {
   const rows = all('connection');
   const config: SchemaConfig = {
     groups: [

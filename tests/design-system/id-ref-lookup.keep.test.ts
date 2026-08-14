@@ -9,6 +9,7 @@ import { RecordEditor } from '../../apps/web/src/ui/design-system/composites/Rec
 import { resolveIdRefOptionsFor } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/id-ref-options';
 import type { IdRefOption, IdRefOptionResolver } from '../../apps/web/src/ui/design-system/composites/field-kits';
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { describeDataset } from '../dataset-guard';
 
 // SSR smoke tests: they prove which control an id reference is offered as, and
 // that the injected lookup reaches it with real rows behind it. Opening the
@@ -40,7 +41,7 @@ const fieldAt = (rows: readonly unknown[], path: string): FieldDescriptor => {
   return field;
 };
 
-describe('id reference editor — the fallback chain', () => {
+describeDataset('id reference editor — the fallback chain', () => {
   it('stays a plain input with no resolver wired at all', () => {
     const markup = renderRefEditor(refField({ targetKind: 'screen' }), 'screen-1');
     expect(markup).toContain(INPUT);
@@ -78,7 +79,7 @@ describe('id reference editor — the fallback chain', () => {
   });
 });
 
-describe('the real lookup, over the real collections', () => {
+describeDataset('the real lookup, over the real collections', () => {
   it('offers every row of the collection a field points at', () => {
     const field = fieldAt(all('connection'), 'screenId');
     expect(field.targetKind).toBe('screen');
@@ -122,7 +123,7 @@ describe('the real lookup, over the real collections', () => {
   });
 });
 
-describe('the whole form, wired end to end', () => {
+describeDataset('the whole form, wired end to end', () => {
   const rows = all('connection');
   const record = rows[0];
 

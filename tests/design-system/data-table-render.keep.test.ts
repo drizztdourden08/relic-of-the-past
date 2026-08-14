@@ -7,6 +7,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { all } from '@shared/game/data';
 import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
 import type * as DataTableModule from '../../apps/web/src/ui/design-system/composites/DataTable';
+import { describeDataset } from '../dataset-guard';
 
 // There is no jsdom or testing-library here, so these are SSR smoke tests: they
 // prove the table renders real collections without throwing, and that a
@@ -51,7 +52,7 @@ const renderTable = (
     rows, schema: buildSchema(rows), getRowId, ...extra,
   }));
 
-describe('DataTable — renders real collections', () => {
+describeDataset('DataTable — renders real collections', () => {
   it('renders a screen collection with a header and a row per record', () => {
     const markup = renderTable(screens);
     expect(markup).toContain('data-table__header');

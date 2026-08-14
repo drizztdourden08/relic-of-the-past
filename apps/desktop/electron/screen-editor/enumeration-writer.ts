@@ -27,7 +27,7 @@ import { withAllocatedIds } from './id-allocator';
 import { escapeSingleQuote, insertBeforeArrayClose, removeById, replaceById } from './source-writers';
 import { generateEnumTypes } from '../../../../scripts/generate-enum-types.mjs';
 
-const ENUMERATION_FILE = ['shared', 'game', 'data', 'enumeration', 'enumeration.ts'] as const;
+const ENUMERATION_FILE = ['shared', 'game', 'data', 'records', 'enumeration', 'enumeration.ts'] as const;
 
 const escapeRegExp = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 

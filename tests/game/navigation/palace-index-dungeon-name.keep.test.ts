@@ -22,6 +22,7 @@ import { describe, it, expect } from 'vitest';
 import { getPalaceName, isDungeonPalace } from '../../../shared/game/logic/queries/dungeon-values';
 import { dungeonForPalaceIndex } from '../../../shared/game/data/record-file-targets';
 import { all } from '../../../shared/game/data';
+import { describeDataset } from '../../dataset-guard';
 
 /** palace value → dungeon file stem, straight off the ROM's floor-layout table. */
 const EXPECTED: ReadonlyArray<readonly [number, string]> = [
@@ -43,7 +44,7 @@ const EXPECTED: ReadonlyArray<readonly [number, string]> = [
 
 const hex = (n: number): string => `0x${n.toString(16).toUpperCase().padStart(2, '0')}`;
 
-describe('palace index → dungeon record', () => {
+describeDataset('palace index → dungeon record', () => {
   for (const [palace, fileStem] of EXPECTED) {
     it(`resolves ${hex(palace)} to ${fileStem}`, () => {
       expect(dungeonForPalaceIndex(palace)?.fileStem).toBe(fileStem);

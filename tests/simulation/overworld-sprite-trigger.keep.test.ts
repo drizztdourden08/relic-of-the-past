@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import type { SimSprite } from '../../shared/game/simulation/types';
 import { planTrigger, planSpriteTrigger } from '../../shared/game/simulation/trigger/trigger-plans';
 import { find } from '../../shared/game/data';
+import { describeDataset } from '../dataset-guard';
 
 // ─── Overworld sprite → TriggerAction mapping ────────────────────────────────
 // Outdoor discovery routes every screen sprite through the same kind-based
@@ -22,7 +23,7 @@ const owSprite = (spriteType: number, kind: SimSprite['kind']): SimSprite => ({
   kind,
 });
 
-describe('planSpriteTrigger — outdoor sprites', () => {
+describeDataset('planSpriteTrigger — outdoor sprites', () => {
   it("maps an overworld NPC sprite to its npc trigger via the check's own gameId", () => {
     const cfg = find('check', c => c.gameId.spriteType === KING_ZORA_TYPE)[0]?.gameId;
     expect(cfg).toBeDefined();

@@ -4,6 +4,7 @@ import type { GridPos } from '../../shared/game/navigation/types';
 import type { SimSprite, ScreenGridBundle, CombatContext, CombatTables } from '../../shared/game/simulation/types';
 import { evaluateRoomThreat } from '../../shared/game/simulation/engine/enemy-reach';
 import type { ItemId } from '../../shared/game/data';
+import { describeDataset } from '../dataset-guard';
 
 // Inventories are dataset ids: item-012 bow, item-074 tier-1 sword, item-004 tier-4,
 // item-013 blue boomerang, item-008 fire rod.
@@ -53,7 +54,7 @@ const makeTables = (overrides: Partial<CombatTables> = {}): CombatTables => ({
   ...overrides,
 });
 
-describe('evaluateRoomThreat — line of fire', () => {
+describeDataset('evaluateRoomThreat — line of fire', () => {
   it('is blocked by a wall between the only standable tile and the target', () => {
     const enemy = { row: 10, col: 10 };
     const reached = emptyGrid();
@@ -79,7 +80,7 @@ describe('evaluateRoomThreat — line of fire', () => {
   });
 });
 
-describe('evaluateRoomThreat — zero damage class', () => {
+describeDataset('evaluateRoomThreat — zero damage class', () => {
   it('reads not killable when the only weapon on hand deals zero damage to this sprite', () => {
     const enemy = { row: 5, col: 5 };
     const threat = evaluateRoomThreat({
@@ -116,7 +117,7 @@ describe('evaluateRoomThreat — zero damage class', () => {
   });
 });
 
-describe('evaluateRoomThreat — unbounded beam reach', () => {
+describeDataset('evaluateRoomThreat — unbounded beam reach', () => {
   it('kills an enemy only reachable from far away with an unbounded weapon', () => {
     const enemy = { row: 15, col: 15 };
     const reached = emptyGrid();
@@ -141,7 +142,7 @@ describe('evaluateRoomThreat — unbounded beam reach', () => {
   });
 });
 
-describe('evaluateRoomThreat — room-clear-exempt sprites', () => {
+describeDataset('evaluateRoomThreat — room-clear-exempt sprites', () => {
   it('excludes a sprite whose flags4 carries the room-clear-exempt bit from gating', () => {
     const sprite = makeSprite({ row: 5, col: 5 });
     const threat = evaluateRoomThreat({
@@ -157,7 +158,7 @@ describe('evaluateRoomThreat — room-clear-exempt sprites', () => {
   });
 });
 
-describe('evaluateRoomThreat — multi-section room', () => {
+describeDataset('evaluateRoomThreat — multi-section room', () => {
   const SECTION_GRID_SIZE = 64;
   const wideOpenAttrGrid = (): number[][] => Array.from({ length: SECTION_GRID_SIZE }, () => new Array<number>(SECTION_GRID_SIZE).fill(0));
   const wideReached = (): boolean[][] => Array.from({ length: SECTION_GRID_SIZE }, () => new Array<boolean>(SECTION_GRID_SIZE).fill(true));
@@ -191,7 +192,7 @@ describe('evaluateRoomThreat — multi-section room', () => {
   });
 });
 
-describe('evaluateRoomThreat — combat reasoning unavailable', () => {
+describeDataset('evaluateRoomThreat — combat reasoning unavailable', () => {
   it('reads every sprite as not killable when the developer-tools combat gate is off', () => {
     const sprite = makeSprite({ row: 5, col: 5 });
     const threat = evaluateRoomThreat({

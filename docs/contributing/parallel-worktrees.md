@@ -78,9 +78,10 @@ writes them — your window position (`config/window-state.json`) and your last-
 ### A new worktree needs files git does not carry
 
 `git worktree add` produces tracked files only, and several things this project needs are
-deliberately git-ignored: `CLAUDE.md`, `.claude/`, `.vault/`, `test-roms/` and the asset
-blob. `wt new` supplies them — `.claude/` and `.vault/` as directory links so a change
-reaches every worktree at once, everything else copied.
+deliberately git-ignored: `CLAUDE.md`, `.claude/`, the record dataset at
+`shared/game/data/records/`, `test-roms/` and the asset blob. `wt new` supplies them —
+`.claude/` and the record dataset as directory links so a change reaches every worktree
+at once, everything else copied.
 
 ## Mandatory: automation never runs on the default profile
 
@@ -137,11 +138,11 @@ would remove, and only acts with `--yes`. Removing a worktree also removes its g
 profile **and that profile's save states**.
 
 > ⚠️ **Remove worktrees with `wt clean`, never with `git worktree remove` directly.**
-> A worktree links to the main repo's `.claude/` and `.vault/`, and
+> A worktree links to the main repo's `.claude/` and record dataset, and
 > `git worktree remove` follows those links and deletes the contents of the real
 > directories. `wt clean` detaches the links first and refuses to continue if any
 > remain. If you ever do lose them: `.claude/` is restored by the ai-config bootstrap
-> and `.vault/` by `npm run vault:sync`.
+> and the dataset by `npm run vault:sync`.
 
 ## Keeping branches in step
 

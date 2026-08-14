@@ -14,6 +14,7 @@ import {
 import { recordsFor } from '../../apps/web/src/ui/domains/widgets/navigation/LiveDataInspector/behavior/use-current-records';
 import type { EntityKind } from '@shared/game/data';
 import type { DetectionContext, LiveSpriteObservation } from '@shared/game/recommendations';
+import { describeDataset } from '../dataset-guard';
 
 const baseContext = (over: Partial<DetectionContext> = {}): DetectionContext => ({
   origin: 'live',
@@ -33,7 +34,7 @@ const baseContext = (over: Partial<DetectionContext> = {}): DetectionContext => 
   ...over,
 });
 
-describe('recordsFor — screen', () => {
+describeDataset('recordsFor — screen', () => {
   const screen = all('screen')[0];
 
   it('resolves the current screen\'s own record', () => {
@@ -46,7 +47,7 @@ describe('recordsFor — screen', () => {
   });
 });
 
-describe('recordsFor — connection, EVERY edge touching this screen', () => {
+describeDataset('recordsFor — connection, EVERY edge touching this screen', () => {
   it('passes existingConnections through unchanged — no [0] truncation', () => {
     const connections = all('connection').slice(0, 3);
     expect(connections.length).toBeGreaterThanOrEqual(3);
@@ -56,7 +57,7 @@ describe('recordsFor — connection, EVERY edge touching this screen', () => {
   });
 });
 
-describe('recordsFor — check, every check that names this screen', () => {
+describeDataset('recordsFor — check, every check that names this screen', () => {
   it('finds a real screen with several checks and returns all of them, none other', () => {
     const byScreen = new Map<string, number>();
     for (const check of all('check')) {
@@ -79,7 +80,7 @@ describe('recordsFor — check, every check that names this screen', () => {
   });
 });
 
-describe('recordsFor — actor, one card per DISTINCT sprite type, not per spawn', () => {
+describeDataset('recordsFor — actor, one card per DISTINCT sprite type, not per spawn', () => {
   const actorsWithSpriteType = all('actor').filter((actor) => actor.gameId.spriteType != null);
 
   it('resolves every distinct sprite type spawned here, deduped', () => {
@@ -105,7 +106,7 @@ describe('recordsFor — actor, one card per DISTINCT sprite type, not per spawn
   });
 });
 
-describe('recordsFor — item, one card per DISTINCT granted item, not per grant', () => {
+describeDataset('recordsFor — item, one card per DISTINCT granted item, not per grant', () => {
   const itemsWithReceiveId = all('item').filter((item) => item.gameId?.receiveItemId != null);
 
   it('resolves every distinct item granted this session, deduped', () => {
@@ -130,7 +131,7 @@ describe('recordsFor — item, one card per DISTINCT granted item, not per grant
   });
 });
 
-describe('recordsFor — dungeon, the one currently loaded', () => {
+describeDataset('recordsFor — dungeon, the one currently loaded', () => {
   const dungeon = all('dungeon')[0];
 
   it('resolves the indoor palace by its live index', () => {
@@ -151,7 +152,7 @@ describe('recordsFor — dungeon, the one currently loaded', () => {
   });
 });
 
-describe('recordsFor — a kind with no direct live link', () => {
+describeDataset('recordsFor — a kind with no direct live link', () => {
   it.each(['area', 'location', 'tag', 'item-group', 'enumeration'] satisfies EntityKind[])(
     'resolves nothing for %s rather than guessing',
     (kind) => {

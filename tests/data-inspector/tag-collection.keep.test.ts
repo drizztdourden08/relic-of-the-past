@@ -18,6 +18,7 @@ import { resolveIdRefOptionsFor } from '../../apps/web/src/ui/domains/app/views/
 import { resolveIdRef } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/id-ref-target';
 import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { describeDataset } from '../dataset-guard';
 
 const fieldAt = (rows: readonly unknown[], path: string): FieldDescriptor => {
   const field = buildSchema(rows).find(entry => entry.path === path);
@@ -25,7 +26,7 @@ const fieldAt = (rows: readonly unknown[], path: string): FieldDescriptor => {
   return field;
 };
 
-describe('tags are a collection of their own', () => {
+describeDataset('tags are a collection of their own', () => {
   it('is listed as a kind and given a place in the side menu', () => {
     expect(ENTITY_KINDS).toContain('tag');
     const item = KIND_NAV_ITEMS.find(entry => entry.id === 'tag');
@@ -54,7 +55,7 @@ describe('tags are a collection of their own', () => {
   });
 });
 
-describe('a tag field is now a reference', () => {
+describeDataset('a tag field is now a reference', () => {
   for (const kind of ['screen', 'connection'] as const) {
     it(`${kind}: derives as an array of references into the tag collection`, () => {
       const field = fieldAt(all(kind), 'tags');

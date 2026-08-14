@@ -16,6 +16,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { resolveCurrentScreenDetailed } from '../../../shared/game/logic/queries/detection';
 import { clearPalaceMismatches, getPalaceMismatches } from '../../../shared/game/logic/queries/palace-fallback';
+import { describeDataset } from '../../dataset-guard';
 
 /** The live values each baseline dump records — isIndoors, palace, room, ow screen, entrance. */
 const BASELINES = {
@@ -27,7 +28,7 @@ const BASELINES = {
 const resolve = (state: typeof BASELINES[keyof typeof BASELINES]) =>
   resolveCurrentScreenDetailed(state.isIndoors, state.palaceIndex, state.roomIndex, state.overworldScreenIndex, state.whichEntrance);
 
-describe('screen detection — the blessed nav baselines resolve without the palace fallback', () => {
+describeDataset('screen detection — the blessed nav baselines resolve without the palace fallback', () => {
   beforeEach(() => {
     clearPalaceMismatches();
   });
@@ -58,7 +59,7 @@ describe('screen detection — the blessed nav baselines resolve without the pal
   });
 });
 
-describe('screen detection — the palace-scan fallback still catches a mislabelled room', () => {
+describeDataset('screen detection — the palace-scan fallback still catches a mislabelled room', () => {
   beforeEach(() => {
     clearPalaceMismatches();
   });

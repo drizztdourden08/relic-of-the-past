@@ -33,6 +33,7 @@ import {
 import type { ChestObservation, DetectionContext, ScreenObservations } from '@shared/game/recommendations';
 import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { itemStrategy } from '@shared/game/recommendations/strategies/item';
+import { describeDataset } from '../../dataset-guard';
 
 const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObservations => ({
   match: null,
@@ -69,7 +70,7 @@ const detect = (context: DetectionContext) => runDetection('item', context).draf
 const creates = (context: DetectionContext) => detect(context).filter(d => d.action === 'create');
 const updates = (context: DetectionContext) => detect(context).filter(d => d.action === 'update');
 
-describe('item strategy — create', () => {
+describeDataset('item strategy — create', () => {
   it('proposes a new ItemRecord for a granted native id no record covers', () => {
     const unknown = Math.max(...all('item').map(i => i.gameId?.receiveItemId ?? 0)) + 5;
     expect(getItemByGameId({ receiveItemId: unknown })).toBeUndefined();
@@ -113,7 +114,7 @@ describe('item strategy — create', () => {
   });
 });
 
-describe('item strategy — chest contents', () => {
+describeDataset('item strategy — chest contents', () => {
   it('proposes a record for a chest holding an id no ItemRecord covers, without it being opened', () => {
     const unknown = uncatalogued();
     const drafts = creates(contextFor({ chests: [roomChest(unknown)] }));
@@ -153,7 +154,7 @@ describe('item strategy — chest contents', () => {
   });
 });
 
-describe('item strategy — alias mismatch', () => {
+describeDataset('item strategy — alias mismatch', () => {
   it('flags a record whose aliasOf rule the observed grant contradicts', () => {
     const item = aliasedItem();
     const primary = item.gameId?.receiveItemId as number;

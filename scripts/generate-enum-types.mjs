@@ -35,7 +35,7 @@ import path from 'node:path';
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_ROOT = path.join(SCRIPT_DIR, '..');
-const enumerationSourceFor = (root) => path.join(root, 'shared/game/data/enumeration/enumeration.ts');
+const enumerationSourceFor = (root) => path.join(root, 'shared/game/data/records/enumeration/enumeration.ts');
 const outputPathFor = (root) => path.join(root, 'shared/game/data/enumeration/generated-types.ts');
 
 /** category → the exported type name every consuming file already expects. */

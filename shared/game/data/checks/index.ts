@@ -1,13 +1,10 @@
 /* @layer shared-game @kind data */
+import { collectRecords } from '../collect-records';
 import type { CheckRecord } from '../types';
-import { DARK_WORLD_CHECKS } from './dark-world';
-import { DUNGEON_CHECKS } from './dungeons';
-import { LIGHT_WORLD_CHECKS } from './light-world';
 
-const ALL_CHECKS: CheckRecord[] = [
-  ...DARK_WORLD_CHECKS,
-  ...DUNGEON_CHECKS,
-  ...LIGHT_WORLD_CHECKS,
-];
+// One entry per world, plus the dungeon set. Empty without vault access.
+const groups = import.meta.glob('../records/checks/*/index.ts', { eager: true });
+
+const ALL_CHECKS: CheckRecord[] = collectRecords<CheckRecord>(groups);
 
 export { ALL_CHECKS };

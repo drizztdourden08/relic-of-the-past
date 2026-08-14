@@ -10,6 +10,7 @@ import {
 import { resolveIdRefOptionsFor } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/id-ref-options';
 import { numberBoundsResolverFor } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/number-bounds';
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { describeDataset } from '../dataset-guard';
 
 // SSR smoke tests plus unit tests over the two helpers a list of records needs.
 // They prove an element's fields get the same real controls a top-level field
@@ -37,7 +38,7 @@ const render = (record: unknown, wired: boolean): string =>
     resolveNumberBounds: numberBoundsResolverFor('screen'),
   }));
 
-describe('re-addressing an element descriptor onto a real element', () => {
+describeDataset('re-addressing an element descriptor onto a real element', () => {
   const spawns = fieldAt(screens, 'spawns');
 
   it('found the real list of records to work over', () => {
@@ -78,7 +79,7 @@ describe('re-addressing an element descriptor onto a real element', () => {
   });
 });
 
-describe('what a freshly added element starts as', () => {
+describeDataset('what a freshly added element starts as', () => {
   it('builds the element\'s whole required shape, recursively', () => {
     const spawns = fieldAt(screens, 'spawns');
     expect(blankValue(spawns.of as FieldDescriptor)).toEqual({ actorId: '', tile: { x: 0, y: 0 } });
@@ -115,7 +116,7 @@ describe('what a freshly added element starts as', () => {
   });
 });
 
-describe('the whole form, with a real list of records on it', () => {
+describeDataset('the whole form, with a real list of records on it', () => {
   it('opens each element as its own form instead of a read-only count', () => {
     const markup = render(withSpawns, true);
     expect(markup).toContain('record-editor__array-item');

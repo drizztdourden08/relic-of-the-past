@@ -8,8 +8,9 @@
 import { describe, it, expect } from 'vitest';
 import { referencesTo } from '../../../shared/game/data/relationships/reference-index';
 import { all, ITEM_GROUP_IDS } from '@shared/game/data';
+import { describeDataset } from '../../dataset-guard';
 
-describe('referencesTo', () => {
+describeDataset('referencesTo', () => {
   it('finds the check that uses a given item group', () => {
     // check-072 requires { count: { groupId: Pendants, n: 3 } } in its own data.
     const hits = referencesTo('item-group', ITEM_GROUP_IDS.Pendants);

@@ -18,6 +18,7 @@ import '@shared/game/recommendations/strategies/screen';
 import '@shared/game/recommendations/strategy-detectors';
 // Must come after `strategy-detectors` — see `wire-detector.ts`'s own header.
 import '@app/ui/domains/widgets/navigation/recommendations/strategies/connection/wire-detector';
+import { describeDataset } from '../../dataset-guard';
 
 const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObservations => ({
   match: null,
@@ -55,7 +56,7 @@ const auditableScreen = () => {
 const contextFor = (screenId: ScreenId, realTransitions: ObservedTransition[], existingConnections: ConnectionRecord[] = []): DetectionContext =>
   ({ origin: 'live', screenId, observations: observations({ realTransitions, existingConnections }) });
 
-describe('the detector barrel', () => {
+describeDataset('the detector barrel', () => {
   it('installs a detector for both kinds it covers', () => {
     // `connection-shape`/`screen-identity` were replaced by the `connection`/
     // `screen` comparison strategies (`strategy:connection`, `strategy:screen`).
@@ -78,7 +79,7 @@ describe('the detector barrel', () => {
   });
 });
 
-describe('the recommendation store', () => {
+describeDataset('the recommendation store', () => {
   const { screenId, realTransitions, existingConnections } = auditableScreen();
   let store: ReturnType<typeof createRecommendationStore>;
 

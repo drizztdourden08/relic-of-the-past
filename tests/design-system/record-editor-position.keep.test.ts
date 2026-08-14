@@ -9,6 +9,7 @@ import {
   numberBoundsResolverFor, resolveNumberBoundsFor, withoutIndices,
 } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/number-bounds';
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { describeDataset } from '../dataset-guard';
 
 // SSR smoke tests plus unit tests over the shape check and the bounds rule.
 // They prove which control a grid position is offered as and which limits reach
@@ -33,7 +34,7 @@ const render = (record: unknown): string =>
     resolveNumberBounds: numberBoundsResolverFor('screen'),
   }));
 
-describe('which nested object is a grid position', () => {
+describeDataset('which nested object is a grid position', () => {
   it('recognises the real one, by the pair it carries', () => {
     const pair = positionPairOf(fieldAt(screens, 'position'));
     expect(pair).toBeDefined();
@@ -68,7 +69,7 @@ describe('which nested object is a grid position', () => {
   });
 });
 
-describe('how far a coordinate may go, per record', () => {
+describeDataset('how far a coordinate may go, per record', () => {
   const overworld = screens.find((row) => row.kind === 'overworld' && row.position);
   const indoors = screens.find((row) => row.kind === 'dungeon' && row.position);
 
@@ -129,7 +130,7 @@ describe('how far a coordinate may go, per record', () => {
   });
 });
 
-describe('the whole form, with a real position on it', () => {
+describeDataset('the whole form, with a real position on it', () => {
   it('renders the pair as one control, with the record\'s own limits on it', () => {
     const overworld = screens.find((row) => row.kind === 'overworld' && row.position);
     const markup = render(overworld);

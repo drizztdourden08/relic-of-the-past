@@ -7,6 +7,7 @@ import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/bui
 import { CompactRecordView } from '../../apps/web/src/ui/design-system/composites/CompactRecordView';
 import { defaultIdRefDisplay } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/record-links';
 import type { FieldDescriptor, FieldKind, SchemaConfig } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { describeDataset } from '../dataset-guard';
 
 // There is no jsdom or testing-library in this repo, so these are SSR smoke
 // tests, matching RecordEditor's and the field kits' own render tests: they
@@ -22,7 +23,7 @@ const field = (kind: FieldKind, extra: Partial<FieldDescriptor> = {}): FieldDesc
 const render = (record: unknown, schema: readonly FieldDescriptor[], groups?: readonly string[]): string =>
   renderToStaticMarkup(createElement(CompactRecordView, { record, schema, groups }));
 
-describe('CompactRecordView — one row per field kind', () => {
+describeDataset('CompactRecordView — one row per field kind', () => {
   const record = {
     title: 'a piece of free text',
     count: 42,
@@ -92,7 +93,7 @@ describe('CompactRecordView — one row per field kind', () => {
   });
 });
 
-describe('CompactRecordView — resolveIdRefDisplay, this view\'s one lookup', () => {
+describeDataset('CompactRecordView — resolveIdRefDisplay, this view\'s one lookup', () => {
   const record = {
     title: 'Jail Cell',
     screenId: 'screen-183',
@@ -145,7 +146,7 @@ describe('CompactRecordView — resolveIdRefDisplay, this view\'s one lookup', (
   });
 });
 
-describe('CompactRecordView — resolveIdRefDisplay, a real collection join', () => {
+describeDataset('CompactRecordView — resolveIdRefDisplay, a real collection join', () => {
   it('resolves a real screen\'s areaId to the area\'s own name, via defaultIdRefDisplay', () => {
     const rows = all('screen');
     const withArea = rows.find((row) => typeof row.areaId === 'string');
@@ -161,7 +162,7 @@ describe('CompactRecordView — resolveIdRefDisplay, a real collection join', ()
   });
 });
 
-describe('CompactRecordView — the optional groups/field allow-list', () => {
+describeDataset('CompactRecordView — the optional groups/field allow-list', () => {
   const record = { fromScreenId: 'screen-001', toScreenId: 'screen-002', direction: 'north', tags: ['a'] };
   const schema: readonly FieldDescriptor[] = [
     field('idRef', { path: 'fromScreenId', label: 'From Screen Id', targetKind: 'screen' }),
@@ -215,7 +216,7 @@ describe('CompactRecordView — the optional groups/field allow-list', () => {
   });
 });
 
-describe('CompactRecordView — an array of idRef elements', () => {
+describeDataset('CompactRecordView — an array of idRef elements', () => {
   const record = { title: 'A Shop', tags: ['tag-001', 'tag-002'] };
   const schema: readonly FieldDescriptor[] = [
     field('string', { path: 'title', label: 'Title' }),
@@ -249,7 +250,7 @@ describe('CompactRecordView — an array of idRef elements', () => {
   });
 });
 
-describe('CompactRecordView — real records from several collections', () => {
+describeDataset('CompactRecordView — real records from several collections', () => {
   const COLLECTIONS = [
     { kind: 'screen' as const, rows: all('screen') },
     { kind: 'connection' as const, rows: all('connection') },

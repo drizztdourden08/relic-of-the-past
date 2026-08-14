@@ -8,8 +8,9 @@
  */
 import { describe, it, expect } from 'vitest';
 import { getCheck, hasTagKey } from '@shared/game/data';
+import { describeDataset } from '../../dataset-guard';
 
-describe('check content tags', () => {
+describeDataset('check content tags', () => {
   it('tags a key drop that also carries the big key', () => {
     const check = getCheck('check-111');
     expect(check.randomizerName).toBe('Big Key Drop');

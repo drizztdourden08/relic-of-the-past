@@ -4,6 +4,7 @@ import { all } from '@shared/game/data';
 import {
   ENUM_MAX, enumOptions, idTargetKind, inferKind,
 } from '../../apps/web/src/ui/design-system/data/schema/infer-kind';
+import { describeDataset } from '../dataset-guard';
 
 // Inference is the only genuinely tricky derivation in the package, and every
 // downstream decision (which operators, which control, how it sorts) hangs off
@@ -13,7 +14,7 @@ import {
 const distinct = (count: number): string[] =>
   Array.from({ length: count }, (_, i) => `value-${i}`);
 
-describe('inferKind — one case per kind', () => {
+describeDataset('inferKind — one case per kind', () => {
   it('reads booleans', () => {
     expect(inferKind([true, false, true])).toBe('boolean');
   });
@@ -48,7 +49,7 @@ describe('inferKind — one case per kind', () => {
   });
 });
 
-describe('inferKind — the edges', () => {
+describeDataset('inferKind — the edges', () => {
   it('calls an all-absent field unknown rather than guessing', () => {
     expect(inferKind([])).toBe('unknown');
     expect(inferKind([undefined, undefined])).toBe('unknown');
@@ -81,7 +82,7 @@ describe('inferKind — the edges', () => {
   });
 });
 
-describe('inferKind — the details a descriptor carries', () => {
+describeDataset('inferKind — the details a descriptor carries', () => {
   it('collects enum options in first-seen order, without duplicates', () => {
     expect(enumOptions(['b', 'a', 'b', null, 'c'])).toEqual(['b', 'a', 'c']);
   });
@@ -95,7 +96,7 @@ describe('inferKind — the details a descriptor carries', () => {
 // Real dataset regression cases for the subset-chain fix: a field that is
 // really one shape with optional keys must NOT be misread as a union just
 // because some sampled objects carry fewer keys than others.
-describe('inferKind — subset-chain regression, real dataset shapes', () => {
+describeDataset('inferKind — subset-chain regression, real dataset shapes', () => {
   it('reads screen.position as object: dungeon screens add floor, overworld screens do not', () => {
     const positions = all('screen')
       .map((screen) => screen.position)

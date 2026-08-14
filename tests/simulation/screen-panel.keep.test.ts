@@ -10,11 +10,12 @@ import type { ScreenAnnotation } from '../../shared/game/simulation';
 import { roomTagName } from '../../shared/game/simulation';
 import { groupAnnotations, stepsOf } from '../../apps/web/src/ui/domains/widgets/navigation/sub-components/ScreenPanel/annotation-rows';
 import { compareExitsToEdges } from '../../apps/web/src/ui/domains/widgets/navigation/sub-components/ScreenPanel/exit-parity';
+import { describeDataset } from '../dataset-guard';
 
 const at = (kind: ScreenAnnotation['kind'], label: string, extra: Partial<ScreenAnnotation> = {}): ScreenAnnotation =>
   ({ kind, label, tile: { row: 0, col: 0 }, ...extra });
 
-describe('annotation grouping', () => {
+describeDataset('annotation grouping', () => {
   it('keeps every item, including unmapped kinds', () => {
     const items = [
       at('chest', 'Map Chest'),
@@ -46,7 +47,7 @@ describe('annotation grouping', () => {
 // ship with every indoor exit missing. 'screen-133' is the real dataset id
 // for the Jail Cell (room 0x80, palace 0x02) — looked up via
 // scripts/generate-ids/output/id-manifest.json.
-describe('exit / edge parity', () => {
+describeDataset('exit / edge parity', () => {
   it('reports nothing when the two lists agree', () => {
     const exits = [at('exit', 'Jail Cell', { target: 'screen-133' })];
     const parity = compareExitsToEdges(exits, [{ targetScreen: 0x80, edge: 'north' }], true, 1);
@@ -78,7 +79,7 @@ describe('exit / edge parity', () => {
   });
 });
 
-describe('room tag names', () => {
+describeDataset('room tag names', () => {
   it('labels the whole clear-the-room family, not just one value', () => {
     for (const tag of [0x01, 0x0a, 0x13]) expect(roomTagName(tag)).toBe('clear enemies → doors open');
   });

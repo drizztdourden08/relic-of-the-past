@@ -2,6 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import type { ConnectionTag } from '../../../shared/game/data';
 import { connectionIssues } from '../../../apps/web/src/ui/domains/widgets/navigation/connection-issues';
+import { describeDataset } from '../../dataset-guard';
 
 // screen-028/screen-043 = lw-00/lw-01 — looked up via
 // scripts/generate-ids/output/id-manifest.json, not re-derived by hand.
@@ -9,7 +10,7 @@ const KNOWN_ID = 'screen-028';
 const KNOWN_ID_2 = 'screen-043';
 const UNKNOWN_ID = 'nope-ff';
 
-describe('connectionIssues — per-connection completeness warnings', () => {
+describeDataset('connectionIssues — per-connection completeness warnings', () => {
   const complete = {
     from: KNOWN_ID,
     to: KNOWN_ID_2,

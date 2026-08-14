@@ -48,9 +48,13 @@ afterEach(() => {
 describe('generateEnumTypes(root) — an explicit root wins over the file-relative guess', () => {
   it('reads and writes under the GIVEN root, not the script\'s own directory', async () => {
     tempRoot = mkdtempSync(join(tmpdir(), 'enum-root-'));
+    // The seed is read from the synced record tree; the generated union is
+    // written beside the lookup that consumes it, which stays in this repo.
+    const recordsDir = join(tempRoot, 'shared', 'game', 'data', 'records', 'enumeration');
     const enumDir = join(tempRoot, 'shared', 'game', 'data', 'enumeration');
+    mkdirSync(recordsDir, { recursive: true });
     mkdirSync(enumDir, { recursive: true });
-    writeFileSync(join(enumDir, 'enumeration.ts'), FIXTURE_ENUMERATION);
+    writeFileSync(join(recordsDir, 'enumeration.ts'), FIXTURE_ENUMERATION);
 
     // Every OTHER category this repo's real ALL_ENUMERATION carries is absent
     // from this fixture on purpose — proving the read really came from the

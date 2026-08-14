@@ -17,6 +17,7 @@ import { resetFrontier, onCheckVerified } from '../../shared/game/simulation/eng
 import { discoverTargets } from '../../shared/game/simulation/engine/discover';
 import { emptySnapshot, cloneSnapshot } from '../../shared/game/simulation/detect/flag-snapshot';
 import { getItemByGameId, registerRecord, unregisterRecord } from '../../shared/game/data';
+import { describeDataset } from '../dataset-guard';
 
 const EMPTY_PLACEMENT = { form: 'area' as const, tiles: [], rect: { x: 0, y: 0, w: 0, h: 0 } };
 
@@ -76,7 +77,7 @@ const baseObs = (screenId: string, flags: FlagSnapshot): SimObservation => ({
 
 // ─── Finding 2: visited cleared on epoch reset ───────────────────────────────
 
-describe('resetFrontier — epoch reset semantics', () => {
+describeDataset('resetFrontier — epoch reset semantics', () => {
   it('clears visited and failed so everything is re-explored from here', () => {
     const s = freshState();
     s.visited = new Set(['A', 'B', 'C']);
@@ -148,7 +149,7 @@ const CHAIN: ConnectionRecord[] = [
   registerPair('connection-t02', 'B', 'connection-t02r', 'C'),
 ];
 
-describe('engine — visited pass-through screens are backtracked, not re-explored', () => {
+describeDataset('engine — visited pass-through screens are backtracked, not re-explored', () => {
   it('routes through an already-visited screen with one Backtrack event and no re-discovery', () => {
     const world = new FakeWorld([
       { screenId: 'B', roomId: CHICKEN_HOUSE_ROOM, chestIndex: 0, tile: { row: 0, col: 0 }, opened: false, posKnown: true, itemId: BOMBS_ID },
@@ -179,7 +180,7 @@ describe('engine — visited pass-through screens are backtracked, not re-explor
 
 // ─── Finding 5: blocked-edge route abort (no teleport) ───────────────────────
 
-describe('engine — traverse never teleports through a blocked edge', () => {
+describeDataset('engine — traverse never teleports through a blocked edge', () => {
   it('aborts the route when the next hop has no passable edge', () => {
     // A→C is hammer-locked; a stale route to C exists but the virtual Link has no hammer.
     const conns: ConnectionRecord[] = [
@@ -212,7 +213,7 @@ const makeChest = (posKnown: boolean, tile: { row: number; col: number }): SimCh
   itemId: BOMBS_ID,
 });
 
-describe('discover — unknown-position interactables', () => {
+describeDataset('discover — unknown-position interactables', () => {
   it('discovers a posKnown=false chest even when its tile is unreachable', () => {
     const state = freshState();
     const obs = baseObs('A', emptySnapshot());
@@ -253,7 +254,7 @@ const target: SimTarget = {
   label: 'chest (test)',
 };
 
-describe('engine — failed trigger handling', () => {
+describeDataset('engine — failed trigger handling', () => {
   it('records a no-flag-change trigger as failed instead of done, then retries after an epoch reset', () => {
     const engine = createEngine({ adjacency: buildAdjacency(CHAIN) });
     const state = createEngineState({ screenId: 'A', tile: { row: 0, col: 0 } }, new Set(), {});
@@ -284,7 +285,7 @@ describe('engine — failed trigger handling', () => {
 
 // ─── Finding 9: generic small keys attributed via the matched check's dungeon ─
 
-describe('explorer — generic key attribution', () => {
+describeDataset('explorer — generic key attribution', () => {
   const detected = (opts: Partial<DetectedCheck>): DetectedCheck => ({
     evidence: [],
     at: { screenId: 'A', tile: { row: 0, col: 0 } },

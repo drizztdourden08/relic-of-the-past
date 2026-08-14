@@ -17,8 +17,9 @@ import { all } from '@shared/game/data';
 import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
 import { CompactRecordView } from '../../apps/web/src/ui/design-system/composites/CompactRecordView';
 import { defaultIdRefDisplay } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/record-links';
+import { describeDataset } from '../dataset-guard';
 
-describe('CompactRecordView — the identity field always shows its own id', () => {
+describeDataset('CompactRecordView — the identity field always shows its own id', () => {
   it('is itself inferred as idRef, targeting its own collection', () => {
     const rows = all('screen');
     const schema = buildSchema(rows);

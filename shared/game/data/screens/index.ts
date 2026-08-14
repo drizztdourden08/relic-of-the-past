@@ -1,11 +1,10 @@
 /* @layer shared-game @kind data */
+import { collectRecords } from '../collect-records';
 import type { ScreenRecord } from '../types';
-import { DARK_WORLD_SCREENS } from './dark-world';
-import { LIGHT_WORLD_SCREENS } from './light-world';
 
-const ALL_SCREENS: ScreenRecord[] = [
-  ...DARK_WORLD_SCREENS,
-  ...LIGHT_WORLD_SCREENS,
-];
+// One entry per world. Empty without vault access — see collect-records.ts.
+const worlds = import.meta.glob('../records/screens/*/index.ts', { eager: true });
+
+const ALL_SCREENS: ScreenRecord[] = collectRecords<ScreenRecord>(worlds);
 
 export { ALL_SCREENS };

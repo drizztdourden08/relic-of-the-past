@@ -6,6 +6,7 @@ import { all } from '@shared/game/data';
 import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
 import { RecordEditor } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
 import { resolveIdRefOptionsFor } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/id-ref-options';
+import { describeDataset } from '../dataset-guard';
 
 // SSR smoke tests proving the identity field ("id") stays read-only even on an
 // otherwise writable record — the fix for the rename-then-clobber bug on
@@ -29,7 +30,7 @@ const buttonTagFor = (markup: string, text: string): string => {
   return match[0];
 };
 
-describe('RecordEditor — the identity field stays read-only', () => {
+describeDataset('RecordEditor — the identity field stays read-only', () => {
   it('disables the id control on a writable tag record while a sibling field stays editable', () => {
     const rows = all('tag');
     const record = rows[0];

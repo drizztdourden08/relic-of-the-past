@@ -2,11 +2,12 @@
 import { describe, it, expect } from 'vitest';
 import { emptySnapshot, cloneSnapshot, diffSnapshots } from '../../shared/game/simulation/detect/flag-snapshot';
 import { matchDiffs } from '../../shared/game/simulation/detect/check-matcher';
+import { describeDataset } from '../dataset-guard';
 
 /** Chest-open bit for slot 0 — same native fact the matcher itself uses. */
 const CHEST_SLOT_0_MASK = 0x10;
 
-describe('flag-snapshot diffing', () => {
+describeDataset('flag-snapshot diffing', () => {
   it('produces no diffs for identical snapshots', () => {
     const a = emptySnapshot();
     const b = cloneSnapshot(a);

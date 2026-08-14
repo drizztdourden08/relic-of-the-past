@@ -6,6 +6,7 @@ import { all } from '@shared/game/data';
 import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
 import { RecordEditor } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { describeDataset } from '../dataset-guard';
 
 // A requirement expression's `anyOf`/`allOf` is an ARRAY OF A UNION — each
 // entry is one of several branches (own an item, own a check, own N of a
@@ -55,7 +56,7 @@ const render = (rec: unknown): string =>
     onSave: async () => undefined,
   }));
 
-describe('a list of variant requirements gets a branch-aware editor', () => {
+describeDataset('a list of variant requirements gets a branch-aware editor', () => {
   it('opens each element as its own form, not the read-only count fallback', () => {
     const markup = render(record);
     expect(markup).toContain('record-editor__array-item');
@@ -116,7 +117,7 @@ describe('a list of variant requirements gets a branch-aware editor', () => {
   });
 });
 
-describe('the real dataset actually derives this shape', () => {
+describeDataset('the real dataset actually derives this shape', () => {
   it('a requirement expression is a union in the live schema', () => {
     const field = buildSchema(all('check')).find((entry) => entry.path === 'requirements');
     expect(field?.kind).toBe('union');

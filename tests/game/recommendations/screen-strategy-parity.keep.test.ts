@@ -15,6 +15,7 @@ import { clearPalaceMismatches, getPalaceMismatches, scanForRoom } from '@shared
 import type { DetectionContext, ScreenObservations } from '@shared/game/recommendations';
 import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { screenStrategy } from '@shared/game/recommendations/strategies/screen';
+import { describeDataset } from '../../dataset-guard';
 
 /**
  * A palace index no record uses, so "the game says X, the record says Y" is
@@ -60,7 +61,7 @@ const palaceScanMatch = (screen: ScreenRecord): ScreenMatchResult => ({
 
 const detector = detectorFromStrategy(screenStrategy);
 
-describe('screen strategy parity with screen-identity — palace mismatches', () => {
+describeDataset('screen strategy parity with screen-identity — palace mismatches', () => {
   beforeEach(() => { clearPalaceMismatches(); });
 
   it('proposes the live palace index for exactly the mismatch the correction described', () => {
@@ -142,7 +143,7 @@ describe('screen strategy parity with screen-identity — palace mismatches', ()
   });
 });
 
-describe('screen strategy: a WRONG value is reported, not just a missing one', () => {
+describeDataset('screen strategy: a WRONG value is reported, not just a missing one', () => {
   it('reports a wrong roomIndex', () => {
     const screen = dungeonScreen();
     const match: ScreenMatchResult = { screen, method: 'exact' };
@@ -213,7 +214,7 @@ describe('screen strategy: a WRONG value is reported, not just a missing one', (
   });
 });
 
-describe('screen strategy: kind, and authoring gaps the game cannot settle', () => {
+describeDataset('screen strategy: kind, and authoring gaps the game cannot settle', () => {
   it('proposes overworld kind for an outdoor screen when the record disagrees', () => {
     const screen = overworldScreen();
     const match: ScreenMatchResult = { screen: { ...screen, kind: 'dungeon' } as ScreenRecord, method: 'overworld' };

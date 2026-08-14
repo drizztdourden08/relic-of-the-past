@@ -8,6 +8,7 @@ import { ENUM_MAX } from '../../apps/web/src/ui/design-system/data/schema/infer-
 import { resolveFieldKit } from '../../apps/web/src/ui/design-system/composites/field-kits';
 import { RecordEditor } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { describeDataset } from '../dataset-guard';
 
 // SSR smoke tests again — there is no jsdom here. They prove WHICH control a
 // closed set is offered as, and that it renders. Clicking a chip, dragging the
@@ -47,7 +48,7 @@ const controlOf = (markup: string): string => {
   return 'unknown';
 };
 
-describe('enum editor — the control follows the option count', () => {
+describeDataset('enum editor — the control follows the option count', () => {
   it('offers a segmented track up to four options', () => {
     for (const count of [1, 2, 3, 4]) {
       expect(controlOf(renderEnumEditor(enumField(count), 'option-1')), `${count} options`)
@@ -148,7 +149,7 @@ describe('enum editor — the control follows the option count', () => {
   });
 });
 
-describe('enum editor — against real derived schemas', () => {
+describeDataset('enum editor — against real derived schemas', () => {
   const kindOfField = (rows: readonly unknown[], path: string): string => {
     const field = buildSchema(rows).find((entry) => entry.path === path);
     if (!field) throw new Error(`no field at ${path}`);
@@ -164,7 +165,7 @@ describe('enum editor — against real derived schemas', () => {
   });
 });
 
-describe('a list of closed-set values edits as one chip row, not as rows', () => {
+describeDataset('a list of closed-set values edits as one chip row, not as rows', () => {
   const rows = [
     { id: 'sample-1', marks: ['alpha'] },
     { id: 'sample-2', marks: ['beta', 'gamma'] },

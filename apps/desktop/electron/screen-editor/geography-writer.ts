@@ -26,8 +26,9 @@ import { withAllocatedIds } from './id-allocator';
 import { insertBeforeArrayClose } from './source-writers';
 
 // This process IS the allocator, so it is the one place allowed to brand an id.
+// Areas and locations are records, so they sit under the synced record tree.
 const dataFile = (root: string, name: string): string =>
-  join(root, 'shared', 'game', 'data', name);
+  join(root, 'shared', 'game', 'data', 'records', name);
 
 const append = async (path: string, code: string): Promise<string | null> => {
   const content = await readFile(path, 'utf-8');

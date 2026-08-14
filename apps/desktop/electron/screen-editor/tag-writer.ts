@@ -25,7 +25,7 @@ import type {
 import { withAllocatedIds } from './id-allocator';
 import { insertBeforeArrayClose, removeById, replaceById } from './source-writers';
 
-const TAGS_FILE = ['shared', 'game', 'data', 'tags', 'tags.ts'] as const;
+const TAGS_FILE = ['shared', 'game', 'data', 'records', 'tags', 'tags.ts'] as const;
 
 const CONVENTION = 'A tag reads namespace:value — both parts are required.';
 const NO_SCOPE = 'A tag has to apply to at least one collection.';

@@ -2,6 +2,7 @@
 import { describe, it, expect } from 'vitest';
 import { all } from '@shared/game/data';
 import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
+import { describeDataset } from '../dataset-guard';
 
 // Derivation has to survive the real thing, not just a fixture: hundreds of rows,
 // deep nesting, optional branches and arrays of objects. These pin the kinds
@@ -9,7 +10,7 @@ import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-sys
 
 const probe = (rows: readonly unknown[]) => createSchemaIndex(buildSchema(rows));
 
-describe('buildSchema — a large, deeply nested collection', () => {
+describeDataset('buildSchema — a large, deeply nested collection', () => {
   const rows = all('connection');
   const schema = probe(rows);
 
@@ -53,7 +54,7 @@ describe('buildSchema — a large, deeply nested collection', () => {
   });
 });
 
-describe('buildSchema — a second real collection', () => {
+describeDataset('buildSchema — a second real collection', () => {
   const schema = probe(all('item'));
 
   it('derives the same way over a different shape', () => {
@@ -80,7 +81,7 @@ describe('buildSchema — a second real collection', () => {
   });
 });
 
-describe('buildSchema — a third real collection', () => {
+describeDataset('buildSchema — a third real collection', () => {
   const schema = probe(all('screen'));
 
   it('keeps element descriptors out of the flattened list', () => {

@@ -40,11 +40,11 @@ export { ALL_ITEM_GROUPS, ITEM_GROUP_IDS };
 `;
 
 const sourceOf = (): Promise<string> =>
-  readFile(join(root, 'shared', 'game', 'data', 'item-groups', 'item-groups.ts'), 'utf-8');
+  readFile(join(root, 'shared', 'game', 'data', 'records', 'item-groups', 'item-groups.ts'), 'utf-8');
 
 beforeEach(async () => {
   root = await mkdtemp(join(tmpdir(), 'rotp-item-groups-'));
-  const path = join(root, 'shared', 'game', 'data', 'item-groups', 'item-groups.ts');
+  const path = join(root, 'shared', 'game', 'data', 'records', 'item-groups', 'item-groups.ts');
   await mkdir(dirname(path), { recursive: true });
   await writeFile(path, ITEM_GROUPS_SEED, 'utf-8');
 });

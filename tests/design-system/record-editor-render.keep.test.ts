@@ -6,6 +6,7 @@ import { all } from '@shared/game/data';
 import { buildSchema } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
 import { RecordEditor } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
 import type { SchemaConfig } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { describeDataset } from '../dataset-guard';
 
 // There is no jsdom or testing-library in this repo, so these are SSR smoke
 // tests: they prove the form builds and renders for real records of several
@@ -34,7 +35,7 @@ const COLLECTIONS = [
   { kind: 'item' as const, rows: all('item') },
 ];
 
-describe('RecordEditor — a real record from several collections', () => {
+describeDataset('RecordEditor — a real record from several collections', () => {
   for (const { kind, rows } of COLLECTIONS) {
     const record = rows[0];
 
@@ -62,7 +63,7 @@ describe('RecordEditor — a real record from several collections', () => {
   }
 });
 
-describe('RecordEditor — what auto-layout puts on the page', () => {
+describeDataset('RecordEditor — what auto-layout puts on the page', () => {
   const rows = all('connection');
   // Placement is a plain nested object now (form/rect/tiles, `side` only on a
   // border point) rather than a discriminated union — see the connection-model

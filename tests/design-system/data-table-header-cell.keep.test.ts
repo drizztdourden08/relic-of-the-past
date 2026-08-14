@@ -10,6 +10,7 @@ import type * as HeaderCellModule from '../../apps/web/src/ui/design-system/comp
 import type {
   ColumnActions, ColumnDragBinding,
 } from '../../apps/web/src/ui/design-system/composites/DataTable/DataTable.type';
+import { describeDataset } from '../dataset-guard';
 
 // SSR smoke tests for one column header — its label, sort caret, ⋯ trigger and
 // resize seam. See data-table-render.test.ts for why these are SSR-only (no
@@ -60,7 +61,7 @@ const renderHeaderCell = (extra: Record<string, unknown> = {}): string => {
   }));
 };
 
-describe('HeaderCell — label, caret and handles', () => {
+describeDataset('HeaderCell — label, caret and handles', () => {
   it('falls back to the field label and offers both controls', () => {
     const markup = renderHeaderCell();
     expect(markup).toContain('Kind');

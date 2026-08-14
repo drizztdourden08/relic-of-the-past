@@ -24,6 +24,7 @@ import { followerScrollTo } from '@app/ui/domains/app/views/DataInspector/behavi
 import type { Lead, PaneSide } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/use-comparison-scroll';
 import type * as DetailModule from '@app/ui/domains/app/views/DataInspector/sub-components/recommendations/RecommendationDetail';
 import type { Recommendation } from '@shared/game/recommendations';
+import { describeDataset } from '../dataset-guard';
 
 interface Position { top: number; left: number }
 
@@ -48,7 +49,7 @@ const createFakeNode = (): FakeNode => {
   return node;
 };
 
-describe('followerScrollTo — only the follower is driven', () => {
+describeDataset('followerScrollTo — only the follower is driven', () => {
   const lead: Lead = { side: 'current', position: { top: 120, left: 0 } };
 
   it('gives the other side the leader\'s offset', () => {
@@ -65,7 +66,7 @@ describe('followerScrollTo — only the follower is driven', () => {
   });
 });
 
-describe('the pane pair, wired as the component wires it', () => {
+describeDataset('the pane pair, wired as the component wires it', () => {
   /**
    * Two real controllers, one per pane, plus the leader/follower rule between
    * them. `fireNativeScroll` stands in for the browser's own event, firing only
@@ -131,7 +132,7 @@ describe('the pane pair, wired as the component wires it', () => {
   });
 });
 
-describe('the two panes share one tab', () => {
+describeDataset('the two panes share one tab', () => {
   let RecommendationDetail: typeof DetailModule.RecommendationDetail;
 
   const entry: Recommendation = {

@@ -1,136 +1,150 @@
 /* @layer tooling-scripts @kind logic */
 /**
- * Syncs the private companion repo (rotp-vault) into this working tree.
+ * Two-way sync between this repository and the private companion repo.
  *
- * The vault holds game-derived material — save states, blessed navigation
- * baselines, the screen display-name overlay — which must never live in this
- * public repository. Everything it provides is ADDITIVE: without access, the app
- * builds, `npm run lint` passes and the unit tests pass. You lose the
- * fixture-backed e2e tests and readable screen names, nothing else.
+ * The vault is a sibling checkout with one `tree/` folder whose paths mirror
+ * this repo's, so the path IS the mapping and there is no manifest to keep in
+ * step. Both sides are indexed by content and compared against the base recorded
+ * by the last successful sync, exactly as `git fetch` compares against a merge
+ * base — see compare.mjs for the decision table.
  *
- * So this script NEVER fails a build. No access, no network, no vault: it prints
- * one line and exits 0. That is a normal state, not an error.
+ * Everything the vault provides is ADDITIVE: without it the app builds, lints
+ * and passes its unit tests, with an empty dataset and the fixture-backed suites
+ * skipped. So this NEVER fails a build. No vault, no state, no access: one line
+ * and exit 0. That is a normal state, not an error.
  *
- * The vault declares its own destinations in its `manifest.json`, so adding a
- * folder there needs no change here.
- *
- *   node scripts/vault/sync.mjs            clone or pull, then copy into place
- *   node scripts/vault/sync.mjs --offline  copy from an existing clone only
- *   node scripts/vault/sync.mjs --status   report without writing anything
+ *   node scripts/vault/sync.mjs               apply every unambiguous change, both ways
+ *   node scripts/vault/sync.mjs --status      report and write nothing
+ *   node scripts/vault/sync.mjs --force-pull  the vault wins everywhere
+ *   node scripts/vault/sync.mjs --force-push  this checkout wins everywhere
  */
-import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, cpSync, statSync, readdirSync } from 'node:fs';
-import { join, dirname, resolve } from 'node:path';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { ROOT, MANAGED_ROOTS, locateVault, treeDirOf } from './locate.mjs';
+import { indexTree, indexPaths } from './tree-index.mjs';
+import { compareTrees, summarize } from './compare.mjs';
+import { applyEntries, commitVault } from './apply.mjs';
 
-const ROOT = resolve(import.meta.dirname, '..', '..');
-const VAULT_DIR = join(ROOT, '.vault');
-const VAULT_REPO = process.env.ROTP_VAULT_REPO ?? 'https://github.com/drizztdourden08/rotp-vault.git';
+const STATE_FILE = join(ROOT, '.vault-state.json');
 
 const argv = process.argv.slice(2);
-const OFFLINE = argv.includes('--offline');
-const STATUS_ONLY = argv.includes('--status');
+const MODE = argv.includes('--status') ? 'status'
+  : argv.includes('--force-pull') ? 'force-pull'
+    : argv.includes('--force-push') ? 'force-push'
+      : 'sync';
 
-const say = (msg) => process.stdout.write(`vault: ${msg}\n`);
+const say = (message) => process.stdout.write(`vault: ${message}\n`);
 
-/** Run a command, returning null instead of throwing — absence is expected here. */
-const tryRun = (cmd, args, cwd) => {
+const readState = () => {
+  if (!existsSync(STATE_FILE)) return {};
   try {
-    return execFileSync(cmd, args, { cwd: cwd ?? ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+    return JSON.parse(readFileSync(STATE_FILE, 'utf8')).files ?? {};
   } catch {
-    return null;
+    say('.vault-state.json is unreadable — treating this as a first sync');
+    return {};
   }
-};
-
-/** Clone on first run, pull afterwards. Null means "no access" — a normal outcome. */
-const fetchVault = () => {
-  if (OFFLINE || STATUS_ONLY) return existsSync(VAULT_DIR) ? 'existing' : null;
-  if (existsSync(join(VAULT_DIR, '.git'))) {
-    return tryRun('git', ['-C', VAULT_DIR, 'pull', '--ff-only', '--quiet']) === null ? 'stale' : 'pulled';
-  }
-  return tryRun('git', ['clone', '--depth', '1', '--quiet', VAULT_REPO, VAULT_DIR]) === null ? null : 'cloned';
-};
-
-const readManifest = () => {
-  const path = join(VAULT_DIR, 'manifest.json');
-  if (!existsSync(path)) return null;
-  try {
-    return JSON.parse(readFileSync(path, 'utf8'));
-  } catch (e) {
-    say(`manifest.json is not valid JSON (${e.message}) — nothing copied`);
-    return null;
-  }
-};
-
-/** Newest mtime anywhere under a path — used to spot un-pushed local work. */
-const newestMtime = (path) => {
-  if (!existsSync(path)) return 0;
-  const st = statSync(path);
-  if (!st.isDirectory()) return st.mtimeMs;
-  let newest = st.mtimeMs;
-  for (const name of readdirSync(path)) newest = Math.max(newest, newestMtime(join(path, name)));
-  return newest;
 };
 
 /**
- * Copy one mapped path, refusing to overwrite local work that is NEWER than the
- * vault's copy.
+ * Only paths the two sides now AGREE on may become the base.
  *
- * This exists because of a real incident: a freshly re-blessed navigation baseline
- * was silently reverted by the next sync, because the vault still held the previous
- * one. Re-blessing writes locally; the vault only learns about it via `vault:push`.
- * Clobbering that looks like the re-bless "didn't take" and is very hard to spot.
+ * A conflict is deliberately left out. Recording it would make one side match
+ * the base on the next run, which reads as "the other side is the only edit" —
+ * the conflict would resolve itself silently, in whichever direction happened to
+ * be recorded. Left out, it stays a conflict until a person settles it.
  */
-const placePath = (entry) => {
-  const from = join(VAULT_DIR, entry.from);
-  const to = join(ROOT, entry.to);
-  if (!existsSync(from)) return { placed: 0 };
-
-  if (newestMtime(to) > newestMtime(from) + 1000) {
-    return { placed: 0, skipped: entry.to };
+const agreedIndex = (local, remote) => {
+  const agreed = {};
+  for (const [path, hash] of Object.entries(local)) {
+    if (remote[path] === hash) agreed[path] = hash;
   }
+  return agreed;
+};
 
-  const isDir = statSync(from).isDirectory();
-  mkdirSync(isDir ? to : dirname(to), { recursive: true });
-  cpSync(from, to, { recursive: isDir, force: true });
-  return { placed: 1 };
+const writeState = (files, vaultDir) => {
+  const state = { syncedAt: Date.now(), vaultDir, files };
+  writeFileSync(STATE_FILE, `${JSON.stringify(state, null, 2)}\n`);
+};
+
+/**
+ * Which repo directories to scan for work to send, reduced to their shallowest
+ * members so each subtree is walked once.
+ *
+ * The declared roots cover the bootstrap case (an empty `tree/` still knows
+ * where to look); the directories the vault's own files sit in cover the other
+ * way round, so a folder added to `tree/` is picked up with no change here.
+ */
+const managedRoots = (remoteIndex) => {
+  const fromVault = Object.keys(remoteIndex).map(path => dirname(path));
+  const dirs = [...new Set([...MANAGED_ROOTS, ...fromVault])].sort();
+  return dirs.filter(dir => !dirs.some(other => other !== dir && dir.startsWith(`${other}/`)));
+};
+
+/** Force modes ignore the base: one side is declared correct and the other is made to match. */
+const forced = (entries, winner) => entries.map(entry => {
+  const present = winner === 'remote' ? entry.remote : entry.local;
+  const status = present
+    ? (winner === 'remote' ? 'remote-newer' : 'local-newer')
+    : (winner === 'remote' ? 'remote-deleted' : 'local-deleted');
+  return { ...entry, status, direction: winner === 'remote' ? 'pull' : 'push' };
+});
+
+const report = (entries) => {
+  const counts = summarize(entries);
+  if (entries.length === 0) {
+    say('in sync — nothing to do');
+    return;
+  }
+  for (const [status, count] of Object.entries(counts).sort()) say(`  ${status}: ${count}`);
+
+  const conflicts = entries.filter(entry => entry.status === 'conflict');
+  for (const entry of conflicts.slice(0, 10)) say(`  CONFLICT ${entry.path}`);
+  if (conflicts.length > 10) say(`  ... and ${conflicts.length - 10} more`);
+  if (conflicts.length > 0) {
+    say('Conflicts are left untouched. Resolve with --force-pull or --force-push,');
+    say('or fix the file on one side so the two agree.');
+  }
 };
 
 const main = () => {
-  const fetched = fetchVault();
-
-  if (!fetched) {
+  const vaultDir = locateVault();
+  if (!vaultDir) {
     say('not available — skipping. The build, lint and unit tests do not need it.');
-    say('  If you should have access: gh auth login, then npm run vault:sync');
+    say('  Expected a checkout at ../rotp-vault, or set ROTP_VAULT_DIR.');
     return;
   }
 
-  const manifest = readManifest();
-  if (!manifest?.paths?.length) {
-    say(`${fetched}, but the manifest declares no paths — nothing to place`);
+  const treeDir = treeDirOf(vaultDir);
+  const remote = indexTree(treeDir);
+  const local = indexPaths(ROOT, managedRoots(remote));
+  const base = readState();
+
+  const compared = compareTrees({ local, remote, base });
+  const entries = MODE === 'force-pull' ? forced(compared, 'remote')
+    : MODE === 'force-push' ? forced(compared, 'local')
+      : compared;
+
+  say(`${vaultDir} · ${Object.keys(remote).length} file(s) in tree/`);
+
+  if (MODE === 'status') {
+    report(entries);
     return;
   }
 
-  if (STATUS_ONLY) {
-    say(`${fetched} · ${manifest.paths.length} mapped path(s):`);
-    for (const entry of manifest.paths) {
-      const present = existsSync(join(ROOT, entry.to)) ? 'in place' : 'missing';
-      say(`  ${entry.from} → ${entry.to} (${present})`);
-    }
-    return;
+  report(entries);
+  const applied = applyEntries({ entries, root: ROOT, treeDir });
+
+  if (applied.pulled + applied.pushed + applied.removed > 0) {
+    say(`applied — pulled ${applied.pulled}, pushed ${applied.pushed}, removed ${applied.removed}`);
+    const committed = commitVault(vaultDir, `chore(tree): sync from the main repository (${MODE})`);
+    if (committed) say(`vault committed ${committed} — not pushed, that is yours to send`);
   }
 
-  let copied = 0;
-  const skipped = [];
-  for (const entry of manifest.paths) {
-    const r = placePath(entry);
-    copied += r.placed;
-    if (r.skipped) skipped.push(r.skipped);
-  }
-  say(`${fetched} · placed ${copied}/${manifest.paths.length} path(s)`);
-  for (const path of skipped) {
-    say(`  KEPT local ${path} — it is newer than the vault's copy.`);
-    say('  Run `npm run vault:push "<what changed>"` to send it, or delete it to take the vault copy.');
-  }
+  // Re-read both sides so the base is what is actually on disk now, and record
+  // only what the two agree on.
+  const settledRemote = indexTree(treeDir);
+  const settledLocal = indexPaths(ROOT, managedRoots(settledRemote));
+  writeState(agreedIndex(settledLocal, settledRemote), vaultDir);
 };
 
 main();

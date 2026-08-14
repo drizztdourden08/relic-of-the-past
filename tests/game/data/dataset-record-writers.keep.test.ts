@@ -22,6 +22,7 @@ import { allocateItem, deleteItem, writeItemRecord } from '../../../apps/desktop
 import {
   allocateGeography, deleteArea, deleteLocation, writeAreaRecord, writeLocationRecord,
 } from '../../../apps/desktop/electron/screen-editor/geography-writer';
+import { describeDataset } from '../../dataset-guard';
 
 let root = '';
 
@@ -32,13 +33,13 @@ const arrayFile = (name: string, body: string): string =>
 const record = (fields: string): string => `  {\n${fields}  },\n`;
 
 const seed = async (relativePath: string, contents: string): Promise<void> => {
-  const path = join(root, 'shared', 'game', 'data', relativePath);
+  const path = join(root, 'shared', 'game', 'data', 'records', relativePath);
   await mkdir(dirname(path), { recursive: true });
   await writeFile(path, contents, 'utf-8');
 };
 
 const sourceOf = (relativePath: string): Promise<string> =>
-  readFile(join(root, 'shared', 'game', 'data', relativePath), 'utf-8');
+  readFile(join(root, 'shared', 'game', 'data', 'records', relativePath), 'utf-8');
 
 beforeEach(async () => {
   root = await mkdtemp(join(tmpdir(), 'rotp-writers-'));
@@ -75,7 +76,7 @@ afterEach(async () => {
   await rm(root, { recursive: true, force: true });
 });
 
-describe('an item record', () => {
+describeDataset('an item record', () => {
   it('creates into the canonical file for its category, with an allocated id', async () => {
     const result = await allocateItem(root, {
       record: { origin: 'vanilla', category: 'junk', randomizerName: 'Green Rupee' },
@@ -113,7 +114,7 @@ describe('an item record', () => {
   });
 });
 
-describe('an actor record', () => {
+describeDataset('an actor record', () => {
   it('creates into the last file of its kind group', async () => {
     const result = await allocateActor(root, {
       record: { gameId: { spriteType: 9 }, kind: 'enemy', vanillaName: 'Soldier' },
@@ -135,7 +136,7 @@ describe('an actor record', () => {
   });
 });
 
-describe('a dungeon record', () => {
+describeDataset('a dungeon record', () => {
   it('creates into the second file and edits one held by the first', async () => {
     const created = await allocateDungeon(root, {
       record: { gameId: { palaceIndex: 4 }, randomizerName: 'Second', fileStem: 'second', roomScreenIds: [] },
@@ -156,7 +157,7 @@ describe('a dungeon record', () => {
   });
 });
 
-describe('a check record', () => {
+describeDataset('a check record', () => {
   const draft = {
     gameId: { roomId: 0xd6, chestIndex: 0 },
     kind: 'chest' as const,
@@ -194,7 +195,7 @@ describe('a check record', () => {
   });
 });
 
-describe('geography records', () => {
+describeDataset('geography records', () => {
   it('round-trips an area through create, update and delete', async () => {
     const created = await allocateGeography(root, { kind: 'area', randomizerName: 'New Land', world: 'dark' });
     expect(created.success).toBe(true);

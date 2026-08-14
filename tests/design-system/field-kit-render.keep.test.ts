@@ -8,6 +8,7 @@ import { resolveFieldKit } from '../../apps/web/src/ui/design-system/composites/
 import { formatIdRefDisplay } from '../../apps/web/src/ui/design-system/composites/field-kits/id-ref-format';
 import type { CellRenderOptions } from '../../apps/web/src/ui/design-system/composites/field-kits/registry';
 import type { FieldDescriptor, FieldKind } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { describeDataset } from '../dataset-guard';
 
 // There is no jsdom or testing-library in this repo, so these are SSR smoke
 // tests: they prove each control and cell renders without throwing for a
@@ -64,7 +65,7 @@ const SAMPLES: readonly { kind: FieldKind; descriptor: FieldDescriptor; value: u
   { kind: 'unknown', descriptor: field('unknown'), value: connectionRow },
 ];
 
-describe('field kits — every control and cell renders', () => {
+describeDataset('field kits — every control and cell renders', () => {
   for (const { kind, descriptor, value } of SAMPLES) {
     it(`${kind}: filter, editor and cell`, () => {
       expect(() => renderFilter(descriptor, defaultOperatorFor(kind), null)).not.toThrow();
@@ -86,7 +87,7 @@ describe('field kits — every control and cell renders', () => {
   }
 });
 
-describe('field kits — the parts a screen has to bind to', () => {
+describeDataset('field kits — the parts a screen has to bind to', () => {
   it('marks an id cell with the id and the collection it points at', () => {
     const markup = renderCell(field('idRef', { targetKind: 'screen' }), 'screen-183');
     expect(markup).toContain('data-id-ref="screen-183"');
@@ -126,7 +127,7 @@ describe('field kits — the parts a screen has to bind to', () => {
   });
 });
 
-describe('formatIdRefDisplay — the one "Name (id)" rule every reference reads through', () => {
+describeDataset('formatIdRefDisplay — the one "Name (id)" rule every reference reads through', () => {
   it('reads as "Name (id)" once a name resolves', () => {
     expect(formatIdRefDisplay('screen-183', 'Jail Cell')).toBe('Jail Cell (screen-183)');
   });
@@ -142,7 +143,7 @@ describe('formatIdRefDisplay — the one "Name (id)" rule every reference reads 
   });
 });
 
-describe('idRef cell — reads through the same formatter', () => {
+describeDataset('idRef cell — reads through the same formatter', () => {
   it('shows "Name (id)" once a display name is passed', () => {
     const markup = renderCell(field('idRef', { targetKind: 'screen' }), 'screen-183', { display: 'Jail Cell' });
     expect(markup).toContain('Jail Cell (screen-183)');
@@ -155,7 +156,7 @@ describe('idRef cell — reads through the same formatter', () => {
   });
 });
 
-describe('array of idRef — one resolved chip per entry, not a flattened summary', () => {
+describeDataset('array of idRef — one resolved chip per entry, not a flattened summary', () => {
   const descriptor = field('array', { of: field('idRef', { path: 'sample[]', targetKind: 'screen' }) });
 
   it('resolves each entry through the injected per-element resolver', () => {

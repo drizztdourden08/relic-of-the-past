@@ -6,6 +6,7 @@ import { operatorsFor } from '../../apps/web/src/ui/design-system/data/filter/op
 import { getComparator, getGroupKey } from '../../apps/web/src/ui/design-system/data/table/strategy-registry';
 import { registeredKitKinds, resolveFieldKit } from '../../apps/web/src/ui/design-system/composites/field-kits';
 import type { FieldKind } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { describeDataset } from '../dataset-guard';
 
 // The kits register themselves when the barrel above is imported. Everything
 // here goes back through the CORE registries rather than importing a kit's
@@ -21,7 +22,7 @@ const testerFor = (kind: FieldKind) => {
   return (value: unknown, op: string, operand?: unknown) => tester.test(value, op, operand);
 };
 
-describe('field kits — registration', () => {
+describeDataset('field kits — registration', () => {
   it('registers a tester AND a kit for every kind, with no orphans either way', () => {
     for (const kind of KINDS) {
       expect(getFieldTester(kind), `tester for ${kind}`).toBeDefined();
@@ -40,7 +41,7 @@ describe('field kits — registration', () => {
   });
 });
 
-describe('string kit', () => {
+describeDataset('string kit', () => {
   const test = testerFor('string');
 
   it('matches text case-insensitively, in every text operator', () => {
@@ -69,7 +70,7 @@ describe('string kit', () => {
   });
 });
 
-describe('number kit', () => {
+describeDataset('number kit', () => {
   const test = testerFor('number');
 
   it('compares numerically, including numeric strings', () => {
@@ -114,7 +115,7 @@ describe('number kit', () => {
   });
 });
 
-describe('boolean kit', () => {
+describeDataset('boolean kit', () => {
   const test = testerFor('boolean');
 
   it('matches strictly, so a row that recorded nothing is neither', () => {
@@ -135,7 +136,7 @@ describe('boolean kit', () => {
   });
 });
 
-describe('enum kit', () => {
+describeDataset('enum kit', () => {
   const test = testerFor('enum');
 
   it('matches membership both ways round', () => {
@@ -156,7 +157,7 @@ describe('enum kit', () => {
   });
 });
 
-describe('id-ref kit', () => {
+describeDataset('id-ref kit', () => {
   const test = testerFor('idRef');
 
   it('matches exactly — these are machine values, not prose', () => {
@@ -183,7 +184,7 @@ describe('id-ref kit', () => {
   });
 });
 
-describe('array kit', () => {
+describeDataset('array kit', () => {
   const test = testerFor('array');
 
   it('reads a scalar element as membership and a nested one as text', () => {
@@ -216,7 +217,7 @@ describe('array kit', () => {
   });
 });
 
-describe('object, union and unknown kits', () => {
+describeDataset('object, union and unknown kits', () => {
   const nested: readonly FieldKind[] = ['object', 'union', 'unknown'];
 
   it('answers existence, counting a keyless object as empty', () => {

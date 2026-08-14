@@ -16,6 +16,7 @@ import { all } from '@shared/game/data';
 import type { DetectionContext, ScreenObservations } from '@shared/game/recommendations';
 import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { actorStrategy } from '@shared/game/recommendations/strategies/actor';
+import { describeDataset } from '../../dataset-guard';
 
 /** A sprite type no ActorRecord in the real dataset uses. */
 const UNCATALOGUED = Math.max(...all('actor').map(a => a.gameId.spriteType ?? 0)) + 5;
@@ -41,7 +42,7 @@ const detector = detectorFromStrategy(actorStrategy);
 
 const creates = (context: DetectionContext) => detector.detect(context).filter(d => d.action === 'create');
 
-describe('actor strategy (spawns probe)', () => {
+describeDataset('actor strategy (spawns probe)', () => {
   it('proposes a new ActorRecord for a spawn with no catalogued sprite type', () => {
     const drafts = creates(contextFor({
       liveSprites: [{ spriteType: UNCATALOGUED, col: 4, row: 4, floor: 0 }],

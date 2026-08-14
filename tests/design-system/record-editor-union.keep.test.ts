@@ -4,6 +4,7 @@ import { all } from '@shared/game/data';
 import { buildSchema, createSchemaIndex } from '../../apps/web/src/ui/design-system/data/schema/build-schema';
 import { detectUnionBranch } from '../../apps/web/src/ui/design-system/composites/RecordEditor/behavior/union-branch';
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { describeDataset } from '../dataset-guard';
 
 // Branch detection is only worth anything against the real variants, so these
 // pull the shapes out of the live dataset instead of fixing them in a fixture —
@@ -35,7 +36,7 @@ const keysShown = (field: FieldDescriptor, value: unknown): string[] =>
     .map((child) => child.path.slice(child.path.lastIndexOf('.') + 1))
     .sort();
 
-describe('union branch detection — a requirement expression', () => {
+describeDataset('union branch detection — a requirement expression', () => {
   const field = fieldAt('requirements');
   const variants = variantsOf('requirements');
 
@@ -65,7 +66,7 @@ describe('union branch detection — a requirement expression', () => {
   });
 });
 
-describe('union branch detection — placement is no longer a union', () => {
+describeDataset('union branch detection — placement is no longer a union', () => {
   // The connection-model migration replaced the old `{ at: 'side' | 'area', ... }`
   // discriminated placement with one plain shape (`form`/`rect`/`tiles`, `side`
   // only on a border point) — a genuine object with an optional field, not a
@@ -79,7 +80,7 @@ describe('union branch detection — placement is no longer a union', () => {
   });
 });
 
-describe('union branch detection — the same union shape in another collection', () => {
+describeDataset('union branch detection — the same union shape in another collection', () => {
   // `check.requirements` is the identical Requirement DSL as `connection.requirements`
   // (shared/game/data/types/check.ts, types/connection.ts) — a real test that branch
   // detection isn't accidentally keyed to one collection's derived schema.
@@ -103,7 +104,7 @@ describe('union branch detection — the same union shape in another collection'
   });
 });
 
-describe('union branch detection — where it refuses to guess', () => {
+describeDataset('union branch detection — where it refuses to guess', () => {
   const field = fieldAt('requirements');
 
   it('resolves nothing for an absent value', () => {

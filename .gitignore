@@ -142,6 +142,12 @@ AGENTS.md
 # Game-derived material lives in a private companion repo and is synced in by
 # scripts/vault/sync.mjs. None of it is ever committed here. A clone WITHOUT
 # vault access still builds, lints and passes the unit tests.
-.vault/
+#
+# The vault is a sibling checkout, not a clone inside this tree — its `tree/`
+# folder mirrors the paths below, which is the whole mapping.
+shared/game/data/records/
 tests/fixtures/save-states/
 .claude/nav-baselines/
+
+# Merge base for the two-sided sync — local state, never shared.
+.vault-state.json

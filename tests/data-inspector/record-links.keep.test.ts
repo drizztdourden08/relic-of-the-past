@@ -11,8 +11,9 @@ import { all } from '@shared/game/data';
 import {
   defaultIdRefDisplay, entityKindFromId, resolveRecordLabel,
 } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/record-links';
+import { describeDataset } from '../dataset-guard';
 
-describe('entityKindFromId', () => {
+describeDataset('entityKindFromId', () => {
   it('resolves an item-group id (ig-NNN) to item-group', () => {
     expect(entityKindFromId('ig-000')).toBe('item-group');
   });
@@ -37,7 +38,7 @@ describe('entityKindFromId', () => {
   });
 });
 
-describe('resolveRecordLabel', () => {
+describeDataset('resolveRecordLabel', () => {
   it('labels an item-group id with the group\'s own label', () => {
     const [group] = all('item-group');
     expect(resolveRecordLabel(group.id)).toBe(group.label);
@@ -54,7 +55,7 @@ describe('resolveRecordLabel', () => {
   });
 });
 
-describe('defaultIdRefDisplay — the baseline name for a column with no displayField', () => {
+describeDataset('defaultIdRefDisplay — the baseline name for a column with no displayField', () => {
   it('resolves a hinted kind straight off its own getter', () => {
     const [screen] = all('screen');
     expect(defaultIdRefDisplay(screen.id, 'screen')).toBe(screen.vanillaName ?? screen.randomizerName);

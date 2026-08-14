@@ -2,7 +2,13 @@
 /**
  * Traversal-safe path resolver for the screen editor's writable source roots.
  * Every writer goes through this so a caller-supplied relative path can never
- * escape shared/game/data/ or shared/game/checks/.
+ * escape the root it names.
+ *
+ * `data` points at the record tree rather than at shared/game/data as a whole,
+ * because every path that reaches here names a record file — the paths
+ * record-file-targets.ts derives are all relative to `records/`. Keeping the
+ * root wider would let a write land on the schema or the aggregators, which are
+ * this repository's own code and are never edited by the editor.
  */
 
 import { join, relative, isAbsolute } from 'path';
@@ -10,7 +16,7 @@ import { join, relative, isAbsolute } from 'path';
 type SourceRoot = 'data' | 'checks';
 
 const SOURCE_ROOT_SEGMENTS: Record<SourceRoot, string[]> = {
-  data: ['shared', 'game', 'data'],
+  data: ['shared', 'game', 'data', 'records'],
   checks: ['shared', 'game', 'checks'],
 };
 

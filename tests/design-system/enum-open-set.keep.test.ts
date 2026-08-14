@@ -23,6 +23,7 @@ import { committedValue, withCurrentValue } from '../../apps/web/src/ui/design-s
 import { OpenSetControl } from '../../apps/web/src/ui/design-system/composites/field-kits/sub-components/OpenSetControl';
 import { OpenSetEntry } from '../../apps/web/src/ui/design-system/composites/field-kits/sub-components/OpenSetEntry';
 import type { FieldDescriptor } from '../../apps/web/src/ui/design-system/data/schema/field-descriptor';
+import { describeDataset } from '../dataset-guard';
 
 const TOGGLE = '+ Other';
 
@@ -53,7 +54,7 @@ const submitOf = (field: FieldDescriptor, value: unknown, onChange: (next: unkno
     props: { onSubmit: (next: string) => void };
   }).props.onSubmit;
 
-describe('the option set a control offers', () => {
+describeDataset('the option set a control offers', () => {
   it('adds the value this record holds when inference never saw it', () => {
     expect(withCurrentValue(['mapped'], 'verified')).toEqual(['mapped', 'verified']);
   });
@@ -64,7 +65,7 @@ describe('the option set a control offers', () => {
   });
 });
 
-describe('what an entry commits to', () => {
+describeDataset('what an entry commits to', () => {
   it('writes a trimmed value that differs from the one held', () => {
     expect(committedValue('  verified  ', 'mapped')).toBe('verified');
   });
@@ -76,7 +77,7 @@ describe('what an entry commits to', () => {
   });
 });
 
-describe('the entry renders in both of its states', () => {
+describeDataset('the entry renders in both of its states', () => {
   const decorated = (disabled?: boolean): string =>
     renderToStaticMarkup(createElement(OpenSetControl, {
       current: 'mapped', label: 'Status', disabled, onSubmit: () => undefined,
@@ -104,7 +105,7 @@ describe('the entry renders in both of its states', () => {
   });
 });
 
-describe('a field the dataset has only ever written one way', () => {
+describeDataset('a field the dataset has only ever written one way', () => {
   const screens = all('screen');
 
   // The premise, asserted rather than assumed: if this ever grows a second
@@ -136,7 +137,7 @@ describe('a field the dataset has only ever written one way', () => {
   });
 });
 
-describe('a genuinely multi-option enum keeps what it already had', () => {
+describeDataset('a genuinely multi-option enum keeps what it already had', () => {
   const optionalMulti = fieldAt(all('screen'), 'interiorKind');
   const requiredMulti = fieldAt(all('connection'), 'kind');
 

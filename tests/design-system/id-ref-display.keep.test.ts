@@ -25,6 +25,7 @@ import type { TableColumn } from '../../apps/web/src/ui/design-system/data/table
 import type {
   ColumnActions,
 } from '../../apps/web/src/ui/design-system/composites/DataTable/DataTable.type';
+import { describeDataset } from '../dataset-guard';
 
 // "Show me the name, not the id." Asserted over the REAL collections, because
 // the whole point is that a design-system table shows a foreign record's field
@@ -85,7 +86,7 @@ const sample = (() => {
   return { row, id, name: String(area[NAME_PATH]) };
 })();
 
-describe('setDisplayField — the column op', () => {
+describeDataset('setDisplayField — the column op', () => {
   const columns: readonly TableColumn[] = [{ path: AREA_PATH }, { path: 'kind', label: 'Sort of' }];
 
   it('records which field of the referenced record the column shows', () => {
@@ -120,7 +121,7 @@ describe('setDisplayField — the column op', () => {
   });
 });
 
-describe('the injected lookup, over the real collections', () => {
+describeDataset('the injected lookup, over the real collections', () => {
   it('offers the target collection\'s own fields, not the referring one\'s', () => {
     const paths = resolveIdRefTargetFields('area').map((entry) => entry.path);
     expect(paths).toContain(NAME_PATH);
@@ -152,7 +153,7 @@ describe('the injected lookup, over the real collections', () => {
   });
 });
 
-describe('substituteDisplay — every missing piece falls back to the id', () => {
+describeDataset('substituteDisplay — every missing piece falls back to the id', () => {
   const field = fieldAt(screens, AREA_PATH);
 
   it('resolves when it has all four', () => {
@@ -179,7 +180,7 @@ const renderCell = (substitution?: Parameters<typeof cellContent>[3]): string =>
     'div', null, cellContent(sample.row, AREA_PATH, fieldAt(screens, AREA_PATH), substitution),
   ));
 
-describe('the cell — what it shows versus what it points at', () => {
+describeDataset('the cell — what it shows versus what it points at', () => {
   it('shows the raw id until a display field is chosen', () => {
     expect(renderCell()).toContain(`>${sample.id}<`);
   });
@@ -209,7 +210,7 @@ describe('the cell — what it shows versus what it points at', () => {
   });
 });
 
-describe('the group header — the same substitution, off the same resolver', () => {
+describeDataset('the group header — the same substitution, off the same resolver', () => {
   const field = fieldAt(screens, AREA_PATH);
   const renderKey = (substitution?: Parameters<typeof groupKeyContent>[2]): string =>
     renderToStaticMarkup(createElement('div', null, groupKeyContent(sample.id, field, substitution)));
@@ -247,7 +248,7 @@ const displayMenu = (overrides: Partial<Parameters<typeof buildColumnMenuItems>[
   return { actions, onClose, entry: entries.find((item) => item.key === 'display-as') };
 };
 
-describe('the ⋯ menu — "Display as…"', () => {
+describeDataset('the ⋯ menu — "Display as…"', () => {
   it('opens the target collection\'s fields as a submenu, not a panel', () => {
     const { entry } = displayMenu();
     expect(entry?.label).toBe('Display as…');
@@ -301,7 +302,7 @@ const rowContext = (columns: readonly TableColumn[]) => ({
  * "Display as…" and picking a field all need a document (the menu is
  * portalled) and are unverified here.
  */
-describe('the rendered table — the choice reaching a row and a group header', () => {
+describeDataset('the rendered table — the choice reaching a row and a group header', () => {
   const configured: readonly TableColumn[] = [{ path: AREA_PATH, displayField: NAME_PATH }];
 
   it('renders the row\'s reference cell as the name, still pointing at the id', () => {
@@ -333,7 +334,7 @@ describe('the rendered table — the choice reaching a row and a group header', 
   });
 });
 
-describe('the header cell — the trigger that opens "Display as…"', () => {
+describeDataset('the header cell — the trigger that opens "Display as…"', () => {
   it('renders a reference column with the lookup wired, menu closed', () => {
     const schema = createSchemaIndex(buildSchema(screens));
     const markup = renderToStaticMarkup(createElement(HeaderCell, {

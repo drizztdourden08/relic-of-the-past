@@ -9,6 +9,7 @@ import type * as DetailTabsModule from '../../apps/web/src/ui/domains/app/views/
 import type * as SourcesModule from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/collection-sources';
 import type * as SchemaModule from '../../apps/web/src/ui/design-system/data/schema/build-schema';
 import type { DetailTab } from '../../apps/web/src/ui/design-system/data/view-state/snapshot';
+import { describeDataset } from '../dataset-guard';
 
 // There is no jsdom here, so these are SSR smoke tests. The screen's active
 // collection is React state, and SSR cannot drive state, so "each of the eight
@@ -64,7 +65,7 @@ const renderDetail = (kind: (typeof KINDS)[number], tab: DetailTab, withRecord =
   }));
 };
 
-describe('DataInspector', () => {
+describeDataset('DataInspector', () => {
   it('renders the whole screen on its default collection', () => {
     const html = renderToStaticMarkup(createElement(DataInspector));
     expect(html).toContain('data-inspector');
@@ -88,7 +89,7 @@ describe('DataInspector', () => {
   });
 });
 
-describe('DataInspector detail panel', () => {
+describeDataset('DataInspector detail panel', () => {
   it('renders every collection on every tab', () => {
     for (const kind of KINDS) {
       for (const tab of TABS) {

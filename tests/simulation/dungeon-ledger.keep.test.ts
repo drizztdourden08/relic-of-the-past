@@ -10,6 +10,7 @@ import { updateDungeonLedger } from '../../shared/game/simulation/engine/dungeon
 import { closeIdleDungeonGroups, reopenLedgersFor } from '../../shared/game/simulation/engine/dungeon-ledger-lifecycle';
 import { onCheckVerified } from '../../shared/game/simulation/engine/explorer';
 import { dungeonGroupOf, dungeonGroupForScreen } from '../../shared/game/logic/queries/dungeon-group';
+import { describeDataset } from '../dataset-guard';
 
 // Real dungeon-group data: the sewers (hc-0x11, palace index 0x00) are reachable
 // only through the castle above (hc-0x01, palace index 0x02) — the one case the
@@ -41,7 +42,7 @@ const fakeTarget = (key: string, roomId: number): SimTarget => ({
   action: { type: 'chest', roomId, chestIndex: 0, itemId: 0 },
 });
 
-describe('dungeon group derivation', () => {
+describeDataset('dungeon group derivation', () => {
   it('folds the sewers (palace 0) into the castle above it (palace 1)', () => {
     expect(dungeonGroupOf(0x00)).toBe(dungeonGroupOf(0x02));
   });
@@ -57,7 +58,7 @@ describe('dungeon group derivation', () => {
   });
 });
 
-describe('updateDungeonLedger — owed accumulation', () => {
+describeDataset('updateDungeonLedger — owed accumulation', () => {
   it('records an unopened chest as owed, blocked by bombs when a bombable wall stands and none are held', () => {
     const state = freshState();
     const obs = baseObs();
@@ -99,7 +100,7 @@ describe('updateDungeonLedger — owed accumulation', () => {
   });
 });
 
-describe('closeIdleDungeonGroups', () => {
+describeDataset('closeIdleDungeonGroups', () => {
   it('marks a group complete once its owed list is empty', () => {
     const state = freshState('some-other-screen');
     const group = dungeonGroupOf(0x00);
@@ -150,7 +151,7 @@ describe('closeIdleDungeonGroups', () => {
   });
 });
 
-describe('reopenLedgersFor', () => {
+describeDataset('reopenLedgersFor', () => {
   const exhaustedState = () => {
     const state = freshState('some-other-screen');
     const group = dungeonGroupOf(0x00);
@@ -187,7 +188,7 @@ describe('reopenLedgersFor', () => {
   });
 });
 
-describe('onCheckVerified — reopen hooked into the item-gained path', () => {
+describeDataset('onCheckVerified — reopen hooked into the item-gained path', () => {
   it('reopens an exhausted group when the received item grants a listed token', () => {
     const state = freshState('some-other-screen');
     const group = dungeonGroupOf(0x00);

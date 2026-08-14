@@ -15,6 +15,7 @@ import type { ActorRecord } from '@shared/game/data';
 import type { DetectionContext, ScreenObservations } from '@shared/game/recommendations';
 import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { actorStrategy } from '@shared/game/recommendations/strategies/actor';
+import { describeDataset } from '../../dataset-guard';
 
 const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObservations => ({
   match: null,
@@ -41,7 +42,7 @@ const anActor = (): ActorRecord => {
 
 const detector = detectorFromStrategy(actorStrategy);
 
-describe('actor strategy (combat probe)', () => {
+describeDataset('actor strategy (combat probe)', () => {
   it('proposes filling in a combat profile the record has never carried', () => {
     const actor = anActor();
     expect(actor.combat).toBeUndefined();

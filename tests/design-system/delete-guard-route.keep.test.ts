@@ -12,8 +12,9 @@ import { routeDelete } from '../../apps/web/src/ui/domains/app/views/DataInspect
 import { recordDeleterFor } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/delete-record';
 import { isReferenceGuarded, referencedByHitsFor } from '../../apps/web/src/ui/domains/app/views/DataInspector/behavior/reference-usage';
 import type { ReferencedByHit } from '../../apps/web/src/ui/design-system/composites/RecordEditor';
+import { describeDataset } from '../dataset-guard';
 
-describe('routeDelete — the guard\'s whole rule', () => {
+describeDataset('routeDelete — the guard\'s whole rule', () => {
   it('deletes immediately when nothing references the record', () => {
     expect(routeDelete([])).toEqual({ kind: 'immediate' });
   });
@@ -36,7 +37,7 @@ describe('routeDelete — the guard\'s whole rule', () => {
   });
 });
 
-describe('routeDelete — against the real dataset', () => {
+describeDataset('routeDelete — against the real dataset', () => {
   it('confirms before deleting a tag that is actually carried by a real screen', () => {
     const tagged = all('screen').find(screen => screen.tags.length > 0);
     expect(tagged).toBeDefined();
@@ -55,7 +56,7 @@ describe('routeDelete — against the real dataset', () => {
   });
 });
 
-describe('isReferenceGuarded / referencedByHitsFor', () => {
+describeDataset('isReferenceGuarded / referencedByHitsFor', () => {
   it('answers for tag and item group only', () => {
     expect(isReferenceGuarded('tag')).toBe(true);
     expect(isReferenceGuarded('item-group')).toBe(true);
@@ -77,7 +78,7 @@ describe('isReferenceGuarded / referencedByHitsFor', () => {
   });
 });
 
-describe('recordDeleterFor', () => {
+describeDataset('recordDeleterFor', () => {
   it('has a real deleter for tag and for item group', () => {
     expect(recordDeleterFor('tag')).toBeDefined();
     expect(recordDeleterFor('item-group')).toBeDefined();

@@ -11,7 +11,7 @@ import type { GroupDimension, GroupDimensionDef } from './types';
 
 const GROUP_DIMENSIONS: GroupDimensionDef[] = [
   { id: 'world', label: 'World', description: 'Light World / Dark World' },
-  { id: 'area', label: 'Area', description: 'Geographic region (Kakariko, Death Mountain, etc.)' },
+  { id: 'area', label: 'Area', description: 'Geographic region of the overworld or dungeon' },
   { id: 'location', label: 'Location Type', description: 'Cave, House, Dungeon, Overworld' },
   { id: 'dungeon', label: 'Dungeon', description: 'Specific dungeon' },
   { id: 'screen', label: 'Screen', description: 'Detailed sub-location' },

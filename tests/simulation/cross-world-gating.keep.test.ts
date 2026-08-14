@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { buildAdjacency, reachableFrom, inventoryToReachTokens, requirementsMet } from '../../shared/game/simulation';
 import type { CanPass, ScreenEdge, ReachContext } from '../../shared/game/simulation';
 import { getScreen } from '../../shared/game/data';
+import { describeDataset } from '../dataset-guard';
 
 // Empty-inventory reach context: base lift only, no keys / big-keys / events.
 const emptyInventoryContext = (): ReachContext => ({
@@ -20,7 +21,7 @@ const LW_10 = 'screen-030';
 const WEST_DARK_WORLD = 'screen-260';
 const SUPERBUNNY_CAVE_TOP = 'screen-463';
 
-describe('cross-world gating — empty inventory cannot cross into the dark world', () => {
+describeDataset('cross-world gating — empty inventory cannot cross into the dark world', () => {
   it('reachableFrom a light-world screen reaches no dark-world screen', () => {
     const adjacency = buildAdjacency();
     const ctx = emptyInventoryContext();

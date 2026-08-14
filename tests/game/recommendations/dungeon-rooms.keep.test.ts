@@ -18,6 +18,7 @@ import type { DungeonRecord, ScreenId } from '@shared/game/data';
 import type { DetectionContext, ScreenObservations } from '@shared/game/recommendations';
 import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { dungeonStrategy } from '@shared/game/recommendations/strategies/dungeon';
+import { describeDataset } from '../../dataset-guard';
 
 const observations = (overrides: Partial<ScreenObservations> = {}): ScreenObservations => ({
   match: null,
@@ -48,7 +49,7 @@ const aDungeon = (): DungeonRecord => {
 
 const detector = detectorFromStrategy(dungeonStrategy);
 
-describe('dungeon strategy (room-screens probe)', () => {
+describeDataset('dungeon strategy (room-screens probe)', () => {
   it('proposes adding the current screen when the room resolves to a dungeon that does not list it', () => {
     const dungeon = aDungeon();
     const missingScreen = all('screen').find(s => !dungeon.roomScreenIds.includes(s.id));

@@ -10,13 +10,14 @@
 import { describe, it, expect } from 'vitest';
 import type { CheckId } from '../../shared/game/data';
 import { npcCheckFor } from '../../apps/web/src/lib/game/flood/annotate/npc-checks';
+import { describeDataset } from '../dataset-guard';
 
 const NONE = new Set<CheckId>();
 const PASSAGE_SPRITE = 0x73;
 const PASSAGE_ROOM = 0x55;
 const PASSAGE_CHECK: CheckId = 'check-017';
 
-describe('npc check naming', () => {
+describeDataset('npc check naming', () => {
   it('names the passage sprite by its check id and name', () => {
     expect(npcCheckFor(PASSAGE_SPRITE, PASSAGE_ROOM, NONE)).toEqual({
       checkId: PASSAGE_CHECK, name: "Link's Uncle", done: false,

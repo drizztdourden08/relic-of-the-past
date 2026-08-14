@@ -29,7 +29,7 @@ import type {
 import { withAllocatedIds } from './id-allocator';
 import { insertBeforeArrayClose, removeById, replaceById } from './source-writers';
 
-const ITEM_GROUPS_FILE = ['shared', 'game', 'data', 'item-groups', 'item-groups.ts'] as const;
+const ITEM_GROUPS_FILE = ['shared', 'game', 'data', 'records', 'item-groups', 'item-groups.ts'] as const;
 
 /** A group already on file, matched on its label — the closest thing this collection has to a key. */
 const alreadyPresent = (content: string, label: string): boolean =>

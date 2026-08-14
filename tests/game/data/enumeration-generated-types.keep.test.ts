@@ -11,10 +11,11 @@ import { resolve } from 'node:path';
 import { describe, it, expect } from 'vitest';
 import { ALL_ENUMERATION } from '@shared/game/data';
 import { buildGeneratedTypesSource } from '../../../scripts/generate-enum-types.mjs';
+import { describeDataset } from '../../dataset-guard';
 
 const GENERATED_FILE = resolve(__dirname, '../../../shared/game/data/enumeration/generated-types.ts');
 
-describe('enumeration/generated-types.ts', () => {
+describeDataset('enumeration/generated-types.ts', () => {
   it('matches what generate-enum-types.mjs would emit from the current ALL_ENUMERATION', () => {
     const committed = readFileSync(GENERATED_FILE, 'utf8');
     const fresh = buildGeneratedTypesSource(ALL_ENUMERATION);
@@ -35,7 +36,7 @@ describe('enumeration/generated-types.ts', () => {
   });
 });
 
-describe('review-status category', () => {
+describeDataset('review-status category', () => {
   it('seeds exactly 5 values, in the untouched → verified progression', () => {
     const values = ALL_ENUMERATION.filter((entry) => entry.category === 'review-status').map((entry) => entry.value);
     expect(values).toEqual(['untouched', 'in-review', 'needs-work', 'accepted', 'verified']);

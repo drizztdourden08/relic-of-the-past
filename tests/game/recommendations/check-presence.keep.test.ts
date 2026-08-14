@@ -24,6 +24,7 @@ import type { CheckRecord, ScreenId } from '@shared/game/data';
 import type { ChestObservation, DetectionContext, ScreenObservations } from '@shared/game/recommendations';
 import { detectorFromStrategy } from '@shared/game/recommendations/compare';
 import { checkStrategy } from '@shared/game/recommendations/strategies/check';
+import { describeDataset } from '../../dataset-guard';
 
 /** The interior a fresh save opens in, and the check catalogued for its chest. */
 const ROOM = 260;
@@ -77,7 +78,7 @@ afterEach(restore);
 
 const detector = detectorFromStrategy(checkStrategy);
 
-describe('check strategy — create', () => {
+describeDataset('check strategy — create', () => {
   it('proposes a check for a chest the room draws that no record covers', () => {
     unregisterRecord('check', CHECK_ID);
 
@@ -122,7 +123,7 @@ describe('check strategy — create', () => {
   });
 });
 
-describe('check strategy — already covered', () => {
+describeDataset('check strategy — already covered', () => {
   it('proposes nothing for a chest the dataset already catalogues', () => {
     expect(detector.detect(contextFor({ chests: [roomChest()] }))).toEqual([]);
   });
@@ -135,7 +136,7 @@ describe('check strategy — already covered', () => {
   });
 });
 
-describe('check strategy — update', () => {
+describeDataset('check strategy — update', () => {
   it('corrects a record catalogued as something other than a chest', () => {
     replaceRecord('check', { ...ORIGINAL, kind: 'npc' });
 
@@ -162,7 +163,7 @@ describe('check strategy — update', () => {
   });
 });
 
-describe('check strategy — what it refuses to read', () => {
+describeDataset('check strategy — what it refuses to read', () => {
   it('stays silent when the chest table was never read', () => {
     expect(detector.detect(contextFor({}))).toEqual([]);
   });
