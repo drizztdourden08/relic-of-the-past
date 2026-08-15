@@ -17,6 +17,8 @@ interface EnumTagSelectProps {
   id: string;
   options: readonly string[];
   selected: readonly string[];
+  /** Display text per option; an option with no entry shows its own literal. */
+  labels?: Readonly<Record<string, string>>;
   onChange: (selected: readonly string[]) => void;
   /** One pick at a time, for a field that holds a value rather than a set. */
   single?: boolean;
@@ -24,9 +26,9 @@ interface EnumTagSelectProps {
 }
 
 const EnumTagSelect = (props: EnumTagSelectProps) => {
-  const { id, options, selected, onChange, single = false, disabled = false } = props;
+  const { id, options, selected, labels, onChange, single = false, disabled = false } = props;
   const groups: TagPickerGroup[] = [
-    { id, options: options.map((option) => ({ value: option, label: option })) },
+    { id, options: options.map((option) => ({ value: option, label: labels?.[option] ?? option })) },
   ];
   return (
     <TagPicker

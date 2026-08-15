@@ -61,11 +61,29 @@ const test = (value: unknown, op: string, operand: unknown): boolean => {
   return true;
 };
 
-const optionsOf = (options: readonly string[] | undefined): SelectOption[] =>
-  (options ?? []).map((option) => ({ value: option, label: option }));
+/**
+ * Display text per option, keyed by the option as text. A declared set carries
+ * its own labels; an observed one has nothing but the literal to show.
+ */
+const labelsOf = (field: FieldDescriptor): Readonly<Record<string, string>> => {
+  const labels: Record<string, string> = {};
+  for (const option of field.declaredOptions ?? []) labels[String(option.value)] = option.label;
+  return labels;
+};
 
-const segmentsOf = (options: readonly string[]): SegmentOption[] =>
-  options.map((option) => ({ value: option, label: option }));
+/**
+ * The chosen option in the type the record holds it in. A declared set is the
+ * only place a non-string value can appear, and its own entry is the answer —
+ * so a numeric field is written back as a number rather than as its digits.
+ */
+const valueOf = (field: FieldDescriptor, selected: string): string | number =>
+  field.declaredOptions?.find((option) => String(option.value) === selected)?.value ?? selected;
+
+const optionsOf = (options: readonly string[] | undefined, labels: Readonly<Record<string, string>>): SelectOption[] =>
+  (options ?? []).map((option) => ({ value: option, label: labels[option] ?? option }));
+
+const segmentsOf = (options: readonly string[], labels: Readonly<Record<string, string>>): SegmentOption[] =>
+  options.map((option) => ({ value: option, label: labels[option] ?? option }));
 
 const FilterControl = (props: FilterControlProps) => {
   const { field, value, onChange } = props;
@@ -74,6 +92,7 @@ const FilterControl = (props: FilterControlProps) => {
       options={field.options ?? []}
       selected={toSelection(value)}
       placeholder={field.label}
+      labels={labelsOf(field)}
       onChange={(selected) => onChange([...selected])}
     />
   );
@@ -90,12 +109,13 @@ interface ClosedSetProps {
 
 const closedSetControl = (props: ClosedSetProps): ReactNode => {
   const { field, options, current, disabled, onChange } = props;
+  const labels = labelsOf(field);
 
   if (options.length > 0 && options.length <= SEGMENT_MAX) {
     return (
       <SegmentedControl
         value={current}
-        options={segmentsOf(options)}
+        options={segmentsOf(options, labels)}
         disabled={disabled}
         onChange={onChange}
         // Re-clicking the active segment clears the field — allowed only
@@ -110,6 +130,7 @@ const closedSetControl = (props: ClosedSetProps): ReactNode => {
       <EnumTagSelect
         id={field.path}
         options={options}
+        labels={labels}
         selected={current ? [current] : []}
         disabled={disabled}
         single
@@ -127,7 +148,7 @@ const closedSetControl = (props: ClosedSetProps): ReactNode => {
   return (
     <Select
       value={current}
-      options={optionsOf(options)}
+      options={optionsOf(options, labels)}
       placeholder={field.label}
       disabled={disabled}
       onChange={onChange}
@@ -139,22 +160,26 @@ const EditorControl = (props: EditorControlProps) => {
   const { field, value, onChange, disabled } = props;
   const current = toText(value);
   const options = withCurrentValue(field.options ?? [], current);
+  // Every control here hands back the option as text, including the escape
+  // hatch — so one place turns it back into the value the record holds.
+  const commit = (next: unknown) => onChange(next === '' ? '' : valueOf(field, toText(next)));
 
   return (
     <OpenSetControl
       current={current}
       label={field.label}
       disabled={disabled}
-      onSubmit={onChange}
+      onSubmit={commit}
     >
-      {closedSetControl({ field, options, current, disabled, onChange })}
+      {closedSetControl({ field, options, current, disabled, onChange: commit })}
     </OpenSetControl>
   );
 };
 
-const renderCell = (value: unknown): ReactNode => {
+const renderCell = (value: unknown, field: FieldDescriptor): ReactNode => {
   if (isNullish(value) || value === '') return <Text className="field-kit__muted">{ABSENT}</Text>;
-  return <Badge variant="neutral">{toText(value)}</Badge>;
+  const text = toText(value);
+  return <Badge variant="neutral">{labelsOf(field)[text] ?? text}</Badge>;
 };
 
 const enumKit: FieldTypeStrategy = { kind: 'enum', FilterControl, EditorControl, renderCell };

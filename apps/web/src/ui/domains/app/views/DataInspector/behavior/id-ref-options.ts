@@ -16,7 +16,15 @@
  * repeats). And each list is built once and kept: the largest collection is
  * ~900 rows, the source arrays are module-level and never change, and the
  * search box would otherwise rebuild the whole list per keystroke.
+ *
+ * One collection is offered NARROWED rather than whole. A location record names
+ * the area it sits in, and a screen carries both ids, so picking them from two
+ * unrelated lists is what lets a screen claim a place on the other side of the
+ * map. Once the record being edited has an area, only that area's locations are
+ * offered — which is the same rule `screen-validity` refuses a saved record
+ * for, applied where it costs nothing to obey.
  */
+import { locationsInArea } from '@shared/game/logic/queries/area-locations';
 import { COLLECTION_SOURCES } from './collection-sources';
 import { resolveRecordLabel } from './record-links';
 import { ENTITY_KINDS } from '../DataInspector.constants';
@@ -27,7 +35,16 @@ import type { IdRefOption } from '@ds/composites/RecordEditor';
 
 const NONE: readonly IdRefOption[] = [];
 
+/** The collection that narrows, and the sibling field it narrows by. */
+const NARROWED_KIND: EntityKind = 'location';
+const AREA_FIELD = 'areaId';
+
 const cache = new Map<EntityKind, readonly IdRefOption[]>();
+
+// Keyed by the filter as well as the kind, because two records open on
+// different areas must not read each other's list. Derived from `cache`, so
+// every entry for a kind is dropped whenever that kind's own list changes.
+const narrowedCache = new Map<string, readonly IdRefOption[]>();
 
 const asEntityKind = (value: string): EntityKind | undefined =>
   ENTITY_KINDS.find(kind => kind === value);
@@ -53,18 +70,52 @@ const optionsFor = (kind: EntityKind): readonly IdRefOption[] => {
   return built;
 };
 
+/** Everything derived from one kind's list, dropped whenever that list moves. */
+const dropNarrowed = (kind: EntityKind): void => {
+  for (const key of [...narrowedCache.keys()]) {
+    if (key.startsWith(`${kind}|`)) narrowedCache.delete(key);
+  }
+};
+
+/** The area the record being edited sits in, when it has settled on one. */
+const areaIdOf = (record: unknown): string | undefined => {
+  if (typeof record !== 'object' || record === null) return undefined;
+  const value = (record as Record<string, unknown>)[AREA_FIELD];
+  return typeof value === 'string' && value !== '' ? value : undefined;
+};
+
+const optionsInArea = (kind: EntityKind, areaId: string): readonly IdRefOption[] => {
+  const key = `${kind}|${areaId}`;
+  const held = narrowedCache.get(key);
+  if (held) return held;
+  const inside = new Set(locationsInArea(areaId).map(location => String(location.id)));
+  const built = optionsFor(kind).filter(option => inside.has(option.value));
+  narrowedCache.set(key, built);
+  return built;
+};
+
 /**
  * What the collection behind an id-reference field holds, ready to pick from.
  * Empty for anything this screen cannot answer for, which is the kit's cue to
  * stay on its plain input.
+ *
+ * A record with no area yet gets the whole list rather than none of it — the
+ * narrowing exists to stop a wrong pick, not to make the field unusable before
+ * its sibling is filled in. An area holding nothing narrows to an empty list,
+ * which drops the field back to its plain input: there is genuinely nothing to
+ * choose there until a location is created in that area.
  */
 const resolveIdRefOptionsFor = (
   targetKind: string,
   field: FieldDescriptor,
+  record?: unknown,
 ): readonly IdRefOption[] => {
   if (field.path === IDENTITY_PATH) return NONE;
   const kind = asEntityKind(targetKind);
-  return kind ? optionsFor(kind) : NONE;
+  if (!kind) return NONE;
+  if (kind !== NARROWED_KIND) return optionsFor(kind);
+  const areaId = areaIdOf(record);
+  return areaId === undefined ? optionsFor(kind) : optionsInArea(kind, areaId);
 };
 
 /**
@@ -80,6 +131,7 @@ const registerIdRefOption = (kind: EntityKind, option: IdRefOption): void => {
   const held = optionsFor(kind);
   if (held.some(entry => entry.value === option.value)) return;
   cache.set(kind, [...held, option]);
+  dropNarrowed(kind);
 };
 
 /**
@@ -90,7 +142,9 @@ const registerIdRefOption = (kind: EntityKind, option: IdRefOption): void => {
 const unregisterIdRefOption = (kind: EntityKind, id: string): void => {
   const held = optionsFor(kind);
   const next = held.filter(entry => entry.value !== id);
-  if (next.length !== held.length) cache.set(kind, next);
+  if (next.length === held.length) return;
+  cache.set(kind, next);
+  dropNarrowed(kind);
 };
 
 /**
@@ -104,6 +158,7 @@ const updateIdRefOption = (kind: EntityKind, id: string): void => {
   const held = optionsFor(kind);
   const label = optionLabel(id);
   cache.set(kind, held.map(entry => (entry.value === id ? { ...entry, label } : entry)));
+  dropNarrowed(kind);
 };
 
 export { registerIdRefOption, resolveIdRefOptionsFor, unregisterIdRefOption, updateIdRefOption };

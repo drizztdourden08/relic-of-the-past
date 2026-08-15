@@ -17,7 +17,7 @@ const draft = (over: Partial<ScreenDraft>): ScreenDraft => ({
   world: 'light',
   interiorKind: 'cave',
   randomizerName: 'Test Room',
-  areaId: 'area-011',
+  areaId: 'area-009',
   locationId: 'location-011',
   tags: [],
   variant: undefined,

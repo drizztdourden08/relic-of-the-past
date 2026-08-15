@@ -13,11 +13,17 @@
  * rather than one for whichever record used to be picked — reviewing "this
  * screen's data" always meant reviewing one of several real records, never
  * the collection as a whole.
+ *
+ * `children`, when given, renders between the record's fields and its review
+ * controls — the slot a kind-specific section (e.g. a screen's `SpawnsSection`)
+ * occupies, so this card stays generic over every collection rather than
+ * knowing any one kind's own extra content.
  */
 import { Box, Flex, IconButton } from '@ds/primitives';
 import { CompactRecordView } from '@ds/composites/CompactRecordView';
 import { useDataViewStore } from '@app/stores/data-view-store';
 import { ReviewControls } from './ReviewControls';
+import type { ReactNode } from 'react';
 import type { CompactRecordViewProps } from '@ds/composites/CompactRecordView';
 import type { EntityKind } from '@shared/game/data';
 import './RecordCard.css';
@@ -33,10 +39,12 @@ interface RecordCardProps<T> {
   resolveIdRefDisplay?: CompactRecordViewProps<T>['resolveIdRefDisplay'];
   /** This record's own live differences, looked up by id before this prop arrives. */
   diffs?: CompactRecordViewProps<T>['diffs'];
+  /** An optional kind-specific section, shown below the record's own fields. */
+  children?: ReactNode;
 }
 
 const RecordCard = <T,>(props: RecordCardProps<T>) => {
-  const { kind, id, record, schema, config, resolveIdRefDisplay, diffs } = props;
+  const { kind, id, record, schema, config, resolveIdRefDisplay, diffs, children } = props;
   const openRecord = useDataViewStore((state) => state.openRecord);
 
   return (
@@ -53,6 +61,7 @@ const RecordCard = <T,>(props: RecordCardProps<T>) => {
         resolveIdRefDisplay={resolveIdRefDisplay}
         diffs={diffs}
       />
+      {children}
       <ReviewControls kind={kind} recordId={id} />
     </Box>
   );

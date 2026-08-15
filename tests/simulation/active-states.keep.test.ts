@@ -61,8 +61,8 @@ describe('active game states', () => {
   });
 
   it('names the story beats the progress indicator counts off', () => {
-    expect(labels(snap({ [SLOT.progressIndicator]: 1 }))).toContain('Uncle rescued');
-    expect(labels(snap({ [SLOT.progressIndicator]: 2 }))).toContain('Princess rescued');
+    expect(labels(snap({ [SLOT.progressIndicator]: 1 }))).toContain('Sword received');
+    expect(labels(snap({ [SLOT.progressIndicator]: 2 }))).toContain('Princess delivered');
     // An unmapped tier must not invent a beat.
     expect(ids(snap({ [SLOT.progressIndicator]: 9 }))).toEqual([]);
   });
