@@ -12,6 +12,7 @@ import { useMemo } from 'react';
 import type { ScreenMatchResult } from '@shared/game/logic/queries/detection';
 import { find } from '@shared/game/data';
 import { toScreenIdOf } from '@shared/game/data/connections/derive';
+import { pairLinksScreens } from '@shared/game/data/connections/pair-join';
 import type { ScreenId, ConnectionRecord } from '@shared/game/data';
 import type { RoomStairInfo } from '../../../../lib/game';
 import { detectConnections, detectionTargetId } from './detect-connections';
@@ -45,18 +46,16 @@ const useConnectionStatus = (screenId: ScreenId | null, detectedEntranceScreens:
     const existing = find('connection', c => c.screenId === screenId || toScreenIdOf(c) === screenId);
     const detected = detectConnections({ detectedEntranceScreens, detectedStairs, exitScreen, detectedFallHoleRooms });
 
-    // A detection is matched when an existing record actually covers a crossing
-    // LEAVING this screen toward the resolved target — direction matters: a
-    // record only counts when it SITS on this screen and CAN be exited
-    // (`conn.canExit`). A record is one-sided now (see `data/connections/derive.ts`),
-    // so there is no more "reverse endpoint of a two-way record" case to weigh —
-    // the arriving side, if it exists at all, is its own separate record.
+    // A detection is matched when a stored pair already links this screen and
+    // the resolved target, whichever side the stored point sits on — the same
+    // question `pairLinksScreens` answers for the connection audit, so the
+    // badge and the audit cannot disagree about what is missing. Which side of
+    // a pair can be TAKEN is `canExit`, a separate fact from whether the
+    // dataset knows the crossing at all.
     const unmatched = detected.filter(det => {
       const targetId = detectionTargetId(det);
       if (!targetId) return true;
-      return !existing.some(conn => (
-        conn.screenId === screenId && conn.canExit && toScreenIdOf(conn) === targetId
-      ));
+      return !pairLinksScreens(existing, screenId, targetId);
     });
 
     const missingCount = unmatched.length;

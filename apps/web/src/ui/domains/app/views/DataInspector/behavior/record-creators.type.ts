@@ -8,7 +8,14 @@
  */
 import type { InspectorRow } from '../DataInspector.type';
 
-type CreateOutcome = { success: true; id: string } | { success: false; error: string };
+/**
+ * `needsReview` marks a refusal a person settles rather than a write that
+ * broke — the record already exists, say. A batch caller skips those instead
+ * of reporting them as failures.
+ */
+type CreateOutcome =
+  | { success: true; id: string }
+  | { success: false; error: string; needsReview?: boolean };
 type RecordCreator = (draft: InspectorRow) => Promise<CreateOutcome>;
 
 export type { CreateOutcome, RecordCreator };

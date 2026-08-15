@@ -18,10 +18,19 @@ import { acceptAllCertainHere } from '../behavior/accept-all-certain-here';
 import { useRecommendationFilter } from '../behavior/use-recommendation-filter';
 import { RecommendationCard } from './RecommendationCard';
 import { RecommendationTabs } from './RecommendationTabs';
+import type { BatchResult } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/accept-all-certain';
 import type { Recommendation } from '@shared/game/recommendations';
 import './RecommendationList.css';
 
 const MIN_BATCH = 2;
+
+/** What the run could not do, so a batch that writes nothing says so instead of
+ *  looking like it worked. Null when every card was written. */
+const outcomeMessage = (result: BatchResult): string | null => {
+  const left = result.skipped.length + result.failures.length;
+  if (left === 0) return null;
+  return `Wrote ${result.accepted}; ${left} still need a look in the Data Inspector.`;
+};
 
 interface RecommendationListProps {
   entries: readonly Recommendation[];
@@ -31,6 +40,7 @@ const RecommendationList = (props: RecommendationListProps) => {
   const { entries } = props;
   const [collapsed, setCollapsed] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [outcome, setOutcome] = useState<string | null>(null);
   const { tabs, filter, setFilter, filtered } = useRecommendationFilter(entries);
   const certainCount = certainOnly(filtered).length;
 
@@ -40,7 +50,8 @@ const RecommendationList = (props: RecommendationListProps) => {
   // reviewer batch-accept a finding they cannot currently see.
   const acceptAll = async (): Promise<void> => {
     setBusy(true);
-    try { await acceptAllCertainHere(filtered); } finally { setBusy(false); }
+    setOutcome(null);
+    try { setOutcome(outcomeMessage(await acceptAllCertainHere(filtered))); } finally { setBusy(false); }
   };
 
   return (
@@ -66,6 +77,7 @@ const RecommendationList = (props: RecommendationListProps) => {
               {`Accept all certain in view (${certainCount})`}
             </Button>
           )}
+          {outcome && <Text className="live-rec-list__outcome">{outcome}</Text>}
           <ScrollArea className="live-rec-list__body">
             {filtered.map(entry => <RecommendationCard key={entry.id} entry={entry} />)}
           </ScrollArea>

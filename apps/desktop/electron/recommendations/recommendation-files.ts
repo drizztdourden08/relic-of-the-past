@@ -16,6 +16,8 @@
  * and each save its own edit over the other's. That is what makes a batch
  * accept — several decisions fired back to back at one collection — safe.
  */
+import { readdir } from 'fs/promises';
+import { dirname } from 'path';
 import { recommendationFile } from '@shared/game/recommendations';
 import { getUserDataPath } from '../lib/paths';
 import { readJson, writeJson } from '../lib/json-store';
@@ -26,6 +28,20 @@ const queues = new Map<EntityKind, Promise<unknown>>();
 
 const recommendationFilePath = (kind: EntityKind): string =>
   getUserDataPath(...recommendationFile(kind).split('/'));
+
+/**
+ * The collections that actually have a file on disk, read from the directory
+ * rather than from a hardcoded list — the engine names a file per kind, so the
+ * directory IS the list, and one that cannot drift out of step with it.
+ */
+const storedRecommendationKinds = async (): Promise<readonly EntityKind[]> => {
+  try {
+    const names = await readdir(dirname(recommendationFilePath('screen')));
+    return names.filter(name => name.endsWith('.json')).map(name => name.slice(0, -'.json'.length) as EntityKind);
+  } catch {
+    return [];
+  }
+};
 
 const loadRecommendationFile = (kind: EntityKind): Promise<readonly Recommendation[]> =>
   readJson<readonly Recommendation[]>(recommendationFilePath(kind), []);
@@ -48,4 +64,6 @@ const recommendationStorage: RecommendationStorage = {
   save: (kind, entries) => writeJson(recommendationFilePath(kind), entries),
 };
 
-export { loadRecommendationFile, queued, recommendationFilePath, recommendationStorage };
+export {
+  loadRecommendationFile, queued, recommendationFilePath, recommendationStorage, storedRecommendationKinds,
+};

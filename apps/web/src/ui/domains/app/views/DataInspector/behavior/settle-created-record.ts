@@ -9,6 +9,7 @@
  * rather than carrying a second copy of the same two calls that could drift
  * out of step with this one.
  */
+import { bumpDataRevision } from '@app/lib/game/data-revision';
 import { refreshCollectionSource } from './collection-sources';
 import { registerIdRefOption } from './id-ref-options';
 import { resolveRecordLabel } from './record-links';
@@ -17,6 +18,7 @@ import type { EntityKind } from '@shared/game/data';
 const settleCreatedRecord = (kind: EntityKind, id: string): { success: true; id: string } => {
   registerIdRefOption(kind, { value: id, label: resolveRecordLabel(id), description: id });
   refreshCollectionSource(kind);
+  bumpDataRevision();
   return { success: true, id };
 };
 

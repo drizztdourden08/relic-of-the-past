@@ -13,6 +13,7 @@
  * else, so one factory covers them with the generic `unregisterRecord`.
  */
 import { unregisterItemGroupRecord, unregisterRecord, unregisterTag } from '@shared/game/data';
+import { bumpDataRevision } from '@app/lib/game/data-revision';
 import { invalidateTagSuggestions } from './tag-suggestions';
 import { unregisterIdRefOption } from './id-ref-options';
 import type { EntityKind, ItemGroupId, TagId } from '@shared/game/data';
@@ -65,9 +66,22 @@ const DELETERS: Partial<Record<EntityKind, (id: string) => Promise<DeleteResult>
   actor: facadeDeleter('actor', args => editor().deleteActor(args)),
 };
 
-/** Undefined for any collection this screen has no delete write path for. */
-const recordDeleterFor = (collectionKind: string): ((id: string) => Promise<DeleteResult>) | undefined =>
-  DELETERS[collectionKind as EntityKind];
+/**
+ * Undefined for any collection this screen has no delete write path for.
+ *
+ * The wrapper is where a landed removal is announced to whatever reads the
+ * dataset revision: the deleters above have no shared tail of their own, and
+ * every caller goes through this lookup.
+ */
+const recordDeleterFor = (collectionKind: string): ((id: string) => Promise<DeleteResult>) | undefined => {
+  const deleter = DELETERS[collectionKind as EntityKind];
+  if (!deleter) return undefined;
+  return async (id: string) => {
+    const result = await deleter(id);
+    if (result.success) bumpDataRevision();
+    return result;
+  };
+};
 
 export { recordDeleterFor };
 export type { DeleteResult };

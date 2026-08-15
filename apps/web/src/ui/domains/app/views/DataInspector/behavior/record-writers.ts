@@ -21,6 +21,7 @@
  */
 import { isTagKey, replaceEnumerationRecord, replaceItemGroupRecord, replaceRecord, replaceTagRecord } from '@shared/game/data';
 import { connectionRecordFile, screenRecordFile } from '@shared/game/data/record-file-targets';
+import { bumpDataRevision } from '@app/lib/game/data-revision';
 import { invalidateTagSuggestions } from './tag-suggestions';
 import { updateIdRefOption } from './id-ref-options';
 import type {
@@ -40,9 +41,14 @@ type RecordWriter = (row: InspectorRow) => Promise<void>;
 const NO_TARGET = 'No source file could be derived for this record.';
 const NAME_MISMATCH = "A tag's name must read namespace:value, matching its own namespace and value.";
 
-/** The editor surfaces a rejected write as its own error, so a failure throws. */
+/**
+ * The editor surfaces a rejected write as its own error, so a failure throws.
+ * Every writer below ends here, which makes it the one place a landed edit can
+ * be announced to whatever reads the dataset revision.
+ */
 const settle = (result: WriteRecordResult): void => {
   if (!result.success) throw new Error(result.error);
+  bumpDataRevision();
 };
 
 const pathOf = (target: FileTarget): string => {

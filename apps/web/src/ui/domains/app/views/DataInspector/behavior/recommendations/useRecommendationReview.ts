@@ -19,6 +19,7 @@ import { acceptAllCertain } from './accept-all-certain';
 import { acceptRecommendation, dismissRecommendation } from './accept-recommendation';
 import { NO_DRAFT, editedDraft, isAmended, proposalOf, revertedDraft } from './proposal-draft';
 import { openInPassOrder } from './use-recommendations';
+import type { BatchResult } from './accept-all-certain';
 import type { Recommendation } from '@shared/game/recommendations';
 import type { ProposalDraft } from './proposal-draft';
 import type { InspectorRow } from '../../DataInspector.type';
@@ -29,8 +30,16 @@ interface ReviewParams {
   onSelect: (id: string | null) => void;
 }
 
-const BATCH_FAILURES = (count: number): string =>
-  `${count} finding${count === 1 ? '' : 's'} could not be written — they are still open.`;
+const plural = (count: number): string => `${count} finding${count === 1 ? '' : 's'}`;
+
+/** A batch reports its two leftovers separately: what refused to be written,
+ *  and what nobody attempted because the proposal is still incomplete. */
+const batchMessage = (result: BatchResult): string | null => {
+  const parts: string[] = [];
+  if (result.failures.length > 0) parts.push(`${plural(result.failures.length)} could not be written`);
+  if (result.skipped.length > 0) parts.push(`${plural(result.skipped.length)} need more detail first`);
+  return parts.length > 0 ? `${parts.join(', and ')} — they are still open.` : null;
+};
 
 /** The one after it in pass order, or the one before when it was last. */
 const neighbourOf = (order: readonly Recommendation[], id: string): string | null => {
@@ -78,7 +87,9 @@ const useRecommendationReview = (params: ReviewParams) => {
     setError(null);
     const outcome = await acceptRecommendation(selected, proposed);
     setBusy(false);
-    if (!outcome.success) { setError(outcome.error ?? null); return; }
+    // Both refusals hold position: the entry stays selected, so the editor pane
+    // beside this message is already where an incomplete proposal is finished.
+    if (!outcome.success) { setError(outcome.error); return; }
     settle(next);
   }, [selected, proposed, order, settle]);
 
@@ -101,10 +112,10 @@ const useRecommendationReview = (params: ReviewParams) => {
       entry => acceptRecommendation(entry, entry.proposed as InspectorRow),
     );
     setBusy(false);
-    setError(result.failures.length ? BATCH_FAILURES(result.failures.length) : null);
-    // Lands on the first thing the batch could NOT write, which is the only
-    // part of the run still needing a person.
-    settle(result.failures[0]?.id ?? null);
+    setError(batchMessage(result));
+    // Lands on the first thing the batch did not write, which is the only part
+    // of the run still needing a person.
+    settle(result.failures[0]?.id ?? result.skipped[0]?.id ?? null);
   }, [order, settle]);
 
   return { order, selected, proposed, setProposed, isEdited, revert, accept, dismiss, acceptAll, busy, error };

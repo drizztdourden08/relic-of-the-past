@@ -89,7 +89,8 @@ const draftsForSet = <K extends EntityKind>(
           reason: `The dataset has a ${difference.noun} (${difference.key}) the game does not confirm.`,
           detector: `strategy:${strategy.kind}`,
           evidence: [{ source: probe.source, detail: `dataset ${difference.noun} key ${difference.key} has no live match` }],
-          confidence: probe.confidence, screenId: context.screenId, origin: context.origin, key,
+          confidence: probe.removalConfidence ?? probe.confidence,
+          screenId: context.screenId, origin: context.origin, key,
         });
       } else if (onUnresolvable) {
         const mapped = onUnresolvable(difference, context);
