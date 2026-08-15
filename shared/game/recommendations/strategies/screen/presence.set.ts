@@ -1,10 +1,8 @@
 /* @layer shared-game @kind data */
 /**
- * The missing-screen-record gap (F3): the live room resolves to NO screen
- * record at all. Before this, `use-detection-pass.ts`'s `if (!context.screenId)
- * return undefined;` guard made a null `screenId` unreachable — an unmapped
- * room produced silence, not a finding. Removing that guard (see that file's
- * own header) is what lets this probe actually run.
+ * The one screen the player is standing on has NO record cataloguing it.
+ * Reaching this needs a pass that runs with a null `context.screenId`, which
+ * `use-detection-pass.ts` guarantees — see its own header.
  *
  * Both sides carry at most one entry: "the one screen the player is
  * currently on", identified by its game id. `datasetKey` deliberately does
@@ -22,8 +20,9 @@
  * Instead the live item carries the id `observations.match` ALREADY
  * resolved (`matchedScreenId`), and `liveKey` prefers that when present — so
  * the join can only fail, and only ever propose a `create`, when
- * `observations.match` itself is null. That is exactly the F3 case.
+ * `observations.match` itself is null.
  */
+import { PALACE_NONE } from '../../../logic/queries/dungeon-values';
 import { gameIdLabel } from '../../../logic/queries/game-id';
 import type { GameScreenId } from '../../../logic/queries/game-id';
 import type { ScreenGameId, ScreenId, ScreenRecord } from '../../../data/types';
@@ -86,8 +85,14 @@ const toProposed = (item: CurrentScreenIdentity, observations: ScreenObservation
   const { liveGameId, isIndoors, isDarkWorld } = observations;
   if (!liveGameId) return null;
 
+  // `PALACE_NONE` is the register's "no palace" reading (a cave, a house, or a
+  // palace room the game has not put in palace context), so it is an absence,
+  // not a value to store. `entranceId` is left off entirely: no dataset record
+  // carries one, and RAM $010E holds a stale boot/entry value for any room
+  // reached by walking in from another interior.
+  const palaceIndex = liveGameId.palaceIndex === PALACE_NONE ? undefined : liveGameId.palaceIndex;
   const gameId: ScreenGameId = isIndoors
-    ? { roomIndex: liveGameId.roomIndex, palaceIndex: liveGameId.palaceIndex, entranceId: liveGameId.entranceId }
+    ? { roomIndex: liveGameId.roomIndex, palaceIndex }
     : { overworldIndex: liveGameId.overworldIndex };
 
   // Outdoors this bit IS 'overworld', provably (`identity.probes.ts`'s
@@ -122,7 +127,9 @@ const SCREEN_PRESENCE_PROBE: SetProbe<'screen', CurrentScreenIdentity> = {
   // record from this.
   removable: false,
   source: 'native:room-identity',
-  confidence: 'certain',
+  // A create whose draft needs human fields is never batch-safe: the game
+  // supplies the identity, but never the geography a screen record must carry.
+  confidence: 'likely',
 };
 
 export { SCREEN_PRESENCE_PROBE };

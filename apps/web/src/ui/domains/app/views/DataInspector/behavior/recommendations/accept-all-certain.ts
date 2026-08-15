@@ -26,11 +26,16 @@ import type { AcceptOutcome } from './accept-recommendation';
 
 interface BatchResult {
   accepted: number;
+  /**
+   * Every entry the run passed over because its proposal is incomplete rather
+   * than wrong — nothing was attempted, so these are not failures. Filling one
+   * in is a per-entry job for a person, which is the one thing a batch cannot do.
+   */
+  skipped: readonly { id: string; reason: string }[];
   /** Every entry whose write was refused, with the reason it gave. */
   failures: readonly { id: string; error: string }[];
 }
 
-const FAILED = 'The write failed.';
 
 const certainOnly = (entries: readonly Recommendation[]): readonly Recommendation[] =>
   entries.filter(entry => entry.confidence === 'certain' && entry.state === 'open');
@@ -45,15 +50,17 @@ const acceptAllCertain = async (
   accept: (entry: Recommendation) => Promise<AcceptOutcome>,
 ): Promise<BatchResult> => {
   const failures: { id: string; error: string }[] = [];
+  const skipped: { id: string; reason: string }[] = [];
   let accepted = 0;
 
   for (const entry of certainOnly(entries)) {
     const outcome = await accept(entry);
-    if (outcome.success) accepted += 1;
-    else failures.push({ id: entry.id, error: outcome.error ?? FAILED });
+    if (outcome.success) { accepted += 1; continue; }
+    if (outcome.reason === 'needs-form') skipped.push({ id: entry.id, reason: outcome.error });
+    else failures.push({ id: entry.id, error: outcome.error });
   }
 
-  return { accepted, failures };
+  return { accepted, skipped, failures };
 };
 
 export { acceptAllCertain, certainOnly };

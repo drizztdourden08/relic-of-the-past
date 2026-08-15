@@ -22,10 +22,13 @@ const modules = import.meta.glob<{ PALACE_INDEX_NAMES?: Record<number, string> }
 const PALACE_INDEX_NAMES: Record<number, string> =
   Object.values(modules)[0]?.PALACE_INDEX_NAMES ?? {};
 
+/** The value RAM $040C holds for a room in no palace — a cave or a house. */
+const PALACE_NONE = 0xFF;
+
 const getPalaceName = (palaceIndex: number): string =>
   PALACE_INDEX_NAMES[palaceIndex] ?? `Unknown (0x${palaceIndex.toString(16).toUpperCase()})`;
 
 const isDungeonPalace = (palaceIndex: number): boolean =>
-  palaceIndex !== 0xFF && palaceIndex <= 0x1A;
+  palaceIndex !== PALACE_NONE && palaceIndex <= 0x1A;
 
-export { PALACE_INDEX_NAMES, getPalaceName, isDungeonPalace };
+export { PALACE_INDEX_NAMES, PALACE_NONE, getPalaceName, isDungeonPalace };

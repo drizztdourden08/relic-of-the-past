@@ -2,6 +2,7 @@
 import './bootstrap';
 
 export {
+  PLACEHOLDER_AREA_ID, PLACEHOLDER_LOCATION_ID,
   all, find, findOne,
   getActor, getActorByGameId, getArea, getCheck, getCheckByGameId, getConnection,
   getDungeon, getDungeonByGameId, getItem, getItemByGameId, getLocation, getScreen, getScreenByGameId,

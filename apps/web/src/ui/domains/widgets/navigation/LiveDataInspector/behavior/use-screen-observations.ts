@@ -10,7 +10,7 @@ import { useMemo } from 'react';
 import { useGameUIStore } from '@app/stores/game-ui-store';
 import { useNavigationOverlayStore } from '@app/stores/navigation-overlay-store';
 import {
-  wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetRoomStairInfo, wasmGetFallHoles, wasmGetAreaHeads,
+  wasmGetEntranceRooms, wasmGetExitScreenMap, wasmGetRoomStairInfo,
   wasmGetRoomTagsFor, wasmGetDungeonMapPosition, wasmGetEntranceSpawns,
   wasmGetRoomWalkBoundaries, wasmGetRoomDoorBoundaryTiles,
 } from '@app/lib/game';
@@ -70,26 +70,18 @@ const useScreenObservations = (): ScreenLiveObservations => {
 
   const exitScreen = useMemo(() => (isIndoors ? wasmGetExitScreenMap().get(roomIndex) ?? null : null), [isIndoors, roomIndex]);
 
-  // Fall holes on the current overworld area, resolved entrance-id → room via
-  // the same head-group comparison useRealTransitions' collectFallHoles uses.
-  const detectedFallHoleRooms = useMemo(() => {
-    if (isIndoors) return [];
-    const heads = wasmGetAreaHeads();
-    const entranceRoomTable = wasmGetEntranceRooms();
-    const currentHead = heads ? heads[overworldScreenIndex] : overworldScreenIndex;
-    const rooms: number[] = [];
-    for (const hole of wasmGetFallHoles()) {
-      const holeHead = heads ? heads[hole.area] : hole.area;
-      if (holeHead !== currentHead) continue;
-      const room = entranceRoomTable?.[hole.entranceId];
-      if (room != null && room !== 0) rooms.push(room);
-    }
-    return rooms;
-  }, [isIndoors, overworldScreenIndex]);
+  const realTransitions = useRealTransitions(isIndoors, roomIndex, floodConnections, overworldScreenIndex);
+
+  // Read off the transitions rather than the table a second time: the facade
+  // already resolved every hole on this area to its destination room, and it is
+  // the only place the head-group rule that decides "on this area" is written.
+  const detectedFallHoleRooms = useMemo(
+    () => realTransitions.filter(t => t.source === 'hole').map(t => t.index),
+    [realTransitions],
+  );
 
   const screenId = match?.screen.id ?? null;
   const connStatus = useConnectionStatus(screenId, detectedEntranceScreens, detectedStairs, exitScreen, detectedFallHoleRooms);
-  const realTransitions = useRealTransitions(isIndoors, roomIndex, floodConnections, overworldScreenIndex);
   const realAvailable = isIndoors ? screenId != null : floodConnections.length > 0;
 
   const liveGameId = useMemo<ScreenGameId>(

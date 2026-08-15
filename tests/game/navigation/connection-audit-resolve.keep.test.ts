@@ -32,7 +32,10 @@ describe('inferTags — tag inference for a detected-but-unmapped transition', (
     expect(inferTags(transitionOf('hole'))).toEqual(['transit:hole', 'ctx:entrance']);
   });
 
-  it('tags a travel destination as an internal walk', () => {
-    expect(inferTags(transitionOf('travel'))).toEqual(['transit:walk', 'ctx:internal']);
+  it('tags a travel destination as an internal warp', () => {
+    // A travel transition is a warp-room door destination (header slots 3/4,
+    // emitted only when the room has a warp-type door), so the walk tag would
+    // be wrong on any record minted from it.
+    expect(inferTags(transitionOf('travel'))).toEqual(['transit:warp', 'ctx:internal']);
   });
 });

@@ -6,8 +6,8 @@
 import { all, get } from './registry';
 import { actorByGameId, checkByGameId, dungeonByGameId, itemByGameId, screenByGameId } from './indexes';
 import type {
-  ActorGameId, ActorRecord, AreaRecord, CheckGameId, CheckRecord, ConnectionRecord,
-  DungeonGameId, DungeonRecord, EntityKind, EntityOf, ItemGameId, ItemRecord, LocationRecord,
+  ActorGameId, ActorRecord, AreaId, AreaRecord, CheckGameId, CheckRecord, ConnectionRecord,
+  DungeonGameId, DungeonRecord, EntityKind, EntityOf, ItemGameId, ItemRecord, LocationId, LocationRecord,
   ScreenGameId, ScreenRecord, TagRecord,
 } from './types';
 
@@ -32,10 +32,21 @@ import type {
 // structurally-typed stand-in but never lets a name field look like real data.
 const NOT_REGISTERED = '(unregistered)';
 
+/**
+ * The geography ids a record carries when its place is not known. They resolve
+ * through the getters above to the `(unregistered)` stand-in, so a screen
+ * holding them reads as obviously unplaced wherever it is displayed. One real
+ * record uses them deliberately (`screens/light-world/special.ts`, for a screen
+ * that sits in no geographic area at all), so their presence marks "no place
+ * assigned", never "this record is broken".
+ */
+const PLACEHOLDER_AREA_ID: AreaId = 'area-000';
+const PLACEHOLDER_LOCATION_ID: LocationId = 'location-000';
+
 const missingRecord = <K extends EntityKind>(kind: K, id: string): EntityOf<K> => {
   switch (kind) {
     case 'screen':
-      return { id, gameId: {}, kind: 'interior', world: 'light', randomizerName: NOT_REGISTERED, areaId: 'area-000', locationId: 'location-000', tags: [] } as unknown as EntityOf<K>;
+      return { id, gameId: {}, kind: 'interior', world: 'light', randomizerName: NOT_REGISTERED, areaId: PLACEHOLDER_AREA_ID, locationId: PLACEHOLDER_LOCATION_ID, tags: [] } as unknown as EntityOf<K>;
     case 'connection':
       return {
         id, screenId: 'screen-000', toConnectionId: 'connection-000', kind: 'edge',
@@ -50,7 +61,7 @@ const missingRecord = <K extends EntityKind>(kind: K, id: string): EntityOf<K> =
     case 'area':
       return { id, world: 'light', randomizerName: NOT_REGISTERED } as unknown as EntityOf<K>;
     case 'location':
-      return { id, areaId: 'area-000', randomizerName: NOT_REGISTERED } as unknown as EntityOf<K>;
+      return { id, areaId: PLACEHOLDER_AREA_ID, randomizerName: NOT_REGISTERED } as unknown as EntityOf<K>;
     case 'actor':
       return { id, gameId: {}, kind: 'object', randomizerName: NOT_REGISTERED } as unknown as EntityOf<K>;
     case 'tag':
@@ -83,6 +94,7 @@ const findOne = <K extends EntityKind>(kind: K, predicate: (record: EntityOf<K>)
   all(kind).find(predicate);
 
 export {
+  PLACEHOLDER_AREA_ID, PLACEHOLDER_LOCATION_ID,
   all, find, findOne,
   getActor, getActorByGameId, getArea, getCheck, getCheckByGameId, getConnection,
   getDungeon, getDungeonByGameId, getItem, getItemByGameId, getLocation, getScreen, getScreenByGameId,

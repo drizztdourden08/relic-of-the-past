@@ -6,9 +6,9 @@
  * recover identity from the label — the "Exit → " prefix that a later step used
  * to strip is now the `isExit` flag instead.
  */
-import { findOne, getScreenByGameId } from '@shared/game/data';
 import type { ScreenId, ScreenRecord } from '@shared/game/data';
 import { getScreenLookup } from '@shared/game/logic/queries/detection';
+import { screenForRoomIndex } from '@shared/game/logic/queries/room-screen';
 import type { RoomStairInfo } from '../../../../lib/game';
 
 interface DetectedConnection {
@@ -32,12 +32,6 @@ interface DetectionInput {
 
 const screenLabel = (screen: ScreenRecord): string => screen.vanillaName ?? screen.randomizerName;
 
-/** An indoor room index, resolved through the facade's reverse index first. */
-const roomScreen = (roomIndex: number): ScreenRecord | undefined =>
-  getScreenByGameId({ roomIndex })
-  ?? getScreenLookup().byCaveRoom.get(roomIndex)
-  ?? findOne('screen', s => s.kind === 'dungeon' && s.gameId.roomIndex === roomIndex);
-
 const overworldScreen = (index: number): ScreenRecord | undefined =>
   getScreenLookup().byOverworldScreen.get(index);
 
@@ -60,7 +54,7 @@ const detectConnections = (input: DetectionInput): DetectedConnection[] => {
   // Stairs: each stair destination room.
   for (const stair of detectedStairs) {
     if (stair.destRoom === 0) continue;
-    const screen = roomScreen(stair.destRoom);
+    const screen = screenForRoomIndex(stair.destRoom);
     detected.push({
       type: 'stair',
       targetRoomOrScreen: stair.destRoom,
@@ -84,7 +78,7 @@ const detectConnections = (input: DetectionInput): DetectedConnection[] => {
 
   // Fall holes: each hole on this overworld screen drops into a room.
   for (const room of detectedFallHoleRooms) {
-    const screen = roomScreen(room);
+    const screen = screenForRoomIndex(room);
     detected.push({
       type: 'hole',
       targetRoomOrScreen: room,
@@ -101,7 +95,7 @@ const detectConnections = (input: DetectionInput): DetectedConnection[] => {
 const detectionTargetId = (det: DetectedConnection): ScreenId | undefined =>
   det.toScreenId
   ?? overworldScreen(det.targetRoomOrScreen)?.id
-  ?? roomScreen(det.targetRoomOrScreen)?.id;
+  ?? screenForRoomIndex(det.targetRoomOrScreen)?.id;
 
-export { detectConnections, detectionTargetId, roomScreen, screenLabel };
+export { detectConnections, detectionTargetId, screenLabel };
 export type { DetectedConnection, DetectionInput };

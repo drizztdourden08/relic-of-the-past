@@ -32,23 +32,26 @@ import type { Probe, SetProbe } from '@shared/game/recommendations/compare';
 import type { ObservedTransition, ScreenObservations } from '@shared/game/recommendations';
 import { buildConnectionRecord } from '../../../build-connection-record';
 import { resolveRealDestId } from '../../../connection-audit-resolve';
-import { auditableFromHere, otherEndpoint, transitionKey } from './screen-endpoint';
+import { auditableFromHere, otherEndpoint, storedOnFarSide, transitionKey } from './screen-endpoint';
 
-const readLive = (observations: ScreenObservations): Probe<readonly ObservedTransition[]> => {
+const readDataset = (observations: ScreenObservations, screenId: ScreenId | null): readonly ConnectionRecord[] => {
+  if (!screenId || !observations.isIndoors) return [];
+  return observations.existingConnections.filter(c => c.kind === 'edge' && auditableFromHere(screenId, c));
+};
+
+const readLive = (observations: ScreenObservations, screenId: ScreenId | null): Probe<readonly ObservedTransition[]> => {
   if (!observations.isIndoors || !observations.walkBoundaries || !observations.doorBoundaries) return unread();
+  const here = readDataset(observations, screenId);
   const seen = new Set<number>();
   const crossings: ObservedTransition[] = [];
   for (const boundary of observations.walkBoundaries) {
     if (boundary.destRoom === 0 || seen.has(boundary.destRoom)) continue;
     seen.add(boundary.destRoom);
-    crossings.push({ source: 'walk-boundary', kind: 'room', index: boundary.destRoom });
+    const crossing: ObservedTransition = { source: 'walk-boundary', kind: 'room', index: boundary.destRoom };
+    if (storedOnFarSide(screenId, transitionKey(crossing), observations.existingConnections, here)) continue;
+    crossings.push(crossing);
   }
   return { known: true, value: crossings };
-};
-
-const readDataset = (observations: ScreenObservations, screenId: ScreenId | null): readonly ConnectionRecord[] => {
-  if (!screenId || !observations.isIndoors) return [];
-  return observations.existingConnections.filter(c => c.kind === 'edge' && auditableFromHere(screenId, c));
 };
 
 const datasetKey = (record: ConnectionRecord, screenId: ScreenId | null): string =>
@@ -74,6 +77,7 @@ const INDOOR_EDGE_PROBE: SetProbe<'connection', ObservedTransition> = {
   removable: true,
   source: 'native:room-boundaries',
   confidence: 'certain',
+  removalConfidence: 'likely',
 };
 
 export { INDOOR_EDGE_PROBE };

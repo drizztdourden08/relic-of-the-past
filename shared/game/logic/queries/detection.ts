@@ -71,6 +71,8 @@ interface ScreenLookup {
   byEntranceId: Map<number, ScreenRecord>;
   /** Cave room index → all screens sharing that room (for fallback matching) */
   byCaveRoomAll: Map<number, ScreenRecord[]>;
+  /** Room index → first screen holding it, palace or not (last-resort room match) */
+  byRoomAny: Map<number, ScreenRecord>;
 }
 
 const buildScreenLookup = (screens: readonly ScreenRecord[] = all('screen')): ScreenLookup => {
@@ -79,9 +81,11 @@ const buildScreenLookup = (screens: readonly ScreenRecord[] = all('screen')): Sc
   const byCaveRoom = new Map<number, ScreenRecord>();
   const byEntranceId = new Map<number, ScreenRecord>();
   const byCaveRoomAll = new Map<number, ScreenRecord[]>();
+  const byRoomAny = new Map<number, ScreenRecord>();
 
   for (const screen of screens) {
     const { overworldIndex, roomIndex, palaceIndex, entranceId } = screen.gameId;
+    if (roomIndex !== undefined && !byRoomAny.has(roomIndex)) byRoomAny.set(roomIndex, screen);
 
     if (screen.kind === 'overworld' && overworldIndex !== undefined) {
       byOverworldScreen.set(overworldIndex, screen);
@@ -97,7 +101,7 @@ const buildScreenLookup = (screens: readonly ScreenRecord[] = all('screen')): Sc
     if (entranceId != null) byEntranceId.set(entranceId, screen);
   }
 
-  return { byOverworldScreen, byDungeonRoom, byCaveRoom, byEntranceId, byCaveRoomAll };
+  return { byOverworldScreen, byDungeonRoom, byCaveRoom, byEntranceId, byCaveRoomAll, byRoomAny };
 };
 
 let cachedLookup: ScreenLookup | null = null;
