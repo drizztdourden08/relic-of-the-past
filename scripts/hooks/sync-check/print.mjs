@@ -2,8 +2,13 @@
 /**
  * One short report to stderr — silent when both mirrors are clean/unmanaged,
  * specific about what to do when they aren't.
+ *
+ * Not everything reported here blocks. An unpushed vault commit is worth saying
+ * out loud but is recoverable, so the bypass line only appears when something
+ * actually stands in the way — otherwise it reads as an instruction to silence a
+ * warning that was never stopping anything.
  */
-const printReport = ({ ai, vault }) => {
+const printReport = ({ ai, vault, blocking }) => {
   const lines = [];
 
   if (ai.status === 'drift') {
@@ -14,9 +19,14 @@ const printReport = ({ ai, vault }) => {
   }
 
   if (vault.status === 'dirty') {
-    lines.push('vault: .vault/ has local changes never sent to rotp-vault:');
+    lines.push(`vault: ${vault.dir} has uncommitted changes:`);
     vault.files.forEach((p) => lines.push(`  ${p}`));
-    lines.push('  -> npm run vault:push "<what changed>"');
+    lines.push('  -> commit them there, or run npm run vault:sync to settle both sides');
+  }
+
+  if (vault.ahead > 0) {
+    lines.push(`vault: ${vault.ahead} commit(s) in ${vault.dir} not pushed to rotp-vault`);
+    lines.push(`  -> git -C ${vault.dir} push`);
   }
 
   if (!lines.length) return;
@@ -25,7 +35,7 @@ const printReport = ({ ai, vault }) => {
   console.error('sync-check: local-only work found in ai-config / vault');
   console.error('-'.repeat(60));
   lines.forEach((l) => console.error(l));
-  console.error('Add [sync-ack] to the commit message to bypass this check.');
+  if (blocking) console.error('Add [sync-ack] to the commit message to bypass this check.');
   console.error(`${'-'.repeat(60)}\n`);
 };
 
