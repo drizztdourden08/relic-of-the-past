@@ -7,10 +7,20 @@
  * what it is, where it is, how it behaves — instead of key-insertion order,
  * which puts every optional field in a heap at the end.
  */
+import { progressTierOptions } from '@shared/game/logic/queries/progress-tier';
 import type { SchemaConfig } from '@ds/data';
 
 const SCREEN_CONFIG: SchemaConfig = {
   defaultColumns: ['id', 'randomizerName', 'kind', 'world', 'areaId', 'locationId'],
+  // A variant's tier is one of four values of a game byte, and derivation can
+  // only see the one the dataset happens to use today — so the set is declared
+  // from the enumeration that already names them, and the picker offers those
+  // four and nothing else. The RANGE form of the field (`[from, to]`) has no
+  // control here: an array is not one of a closed set, so a variant that spans
+  // tiers is still edited through the source tab.
+  options: {
+    'variant.progressTier': progressTierOptions(),
+  },
   // Matches the live Game State panel's hex rendering (GameStatePanel.tsx) so a
   // record and the running game read as the same number, not a mismatch.
   formats: {

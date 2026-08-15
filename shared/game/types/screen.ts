@@ -74,7 +74,12 @@ interface ScreenVariantInfo {
   key: string;
   /** Human-readable label */
   label?: string;
-  /** The raw sram_progress_indicator byte value(s) this variant corresponds to */
+  /**
+   * The progress indicator byte value(s) this variant corresponds to — one
+   * tier, or an inclusive `[from, to]` range. What each tier means is documented
+   * once, in `logic/queries/progress-tier.ts`, and labelled by the
+   * `progress-tier` enumeration category.
+   */
   progressTier?: number | [number, number];
   /** Condition that makes this variant active at runtime */
   condition: VariantCondition;

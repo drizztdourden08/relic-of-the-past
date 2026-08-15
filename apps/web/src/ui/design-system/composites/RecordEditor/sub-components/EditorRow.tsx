@@ -23,6 +23,7 @@ import { Box } from '../../../primitives/Box';
 import { Field } from '../../../primitives/Field';
 import { Text } from '../../../primitives/Text';
 import { resolveFieldKit } from '../../field-kits';
+import { hexHint } from '../../field-kits/number-kit';
 import { unknownKit } from '../../field-kits/unknown-kit';
 import { detectUnionBranch } from '../behavior/union-branch';
 import { isIdentityField } from '../behavior/identity-field';
@@ -151,6 +152,7 @@ const EditorRow = (props: EditorRowProps) => {
     return (
       <Field
         label={labelFor(field)}
+        hint={hexHint(field, value)}
         className={`record-editor__row${changed ? ' record-editor__row--changed' : ''}${dirty ? ' record-editor__row--dirty' : ''}`}
       >
         {controlFor(field, value, binding, depth)}

@@ -62,8 +62,9 @@ const ENTITY_COUNTS: Record<EntityKind, number> = {
   area: 17,
   dungeon: 13,               // verified via generate-ids.ts against the real dungeon field values
   'item-group': 7,           // Swords, Bottles, Crystals, Pendants, Medallions, Bows, Gloves
-  enumeration: 60,           // one row per value across the 10 closed-set label categories
-                              // (screen-status was retired with ScreenRecord.status; enum-063 'drop' was added to connection-kind)
+  enumeration: 64,           // one row per value across the 11 closed-set label categories
+                              // (screen-status was retired with ScreenRecord.status; enum-063 'drop' was added to
+                              // connection-kind; enum-064..067 seed progress-tier)
 };
 
 const ID_PAD_WIDTH = Math.max(...Object.values(ENTITY_COUNTS)).toString().length;

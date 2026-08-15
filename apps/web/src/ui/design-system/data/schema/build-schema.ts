@@ -4,6 +4,12 @@
  * The config never removes what derivation found — it relabels, reorders,
  * hides, re-kinds and re-groups it. Anything the config does not mention keeps
  * exactly what the data said.
+ *
+ * `options` is the one entry that also settles a kind, because declaring the
+ * closed set of a field IS saying it is an enum — and a field the data cannot
+ * be read as one (a number, or a set nothing has filled in yet) is exactly the
+ * case worth declaring. It is applied here rather than during derivation
+ * because the set is stated outright, so there is nothing left to sample.
  */
 import type { FieldDescriptor, SchemaConfig } from './field-descriptor';
 import { deriveSchema } from './derive-fields';
@@ -54,6 +60,12 @@ const applyConfig = (
     if (label !== undefined) next.label = label;
     const format = config?.formats?.[field.path];
     if (format !== undefined) next.format = format;
+    const options = config?.options?.[field.path];
+    if (options !== undefined) {
+      next.kind = 'enum';
+      next.declaredOptions = options;
+      next.options = options.map((option) => String(option.value));
+    }
     if (hidden.has(field.path)) next.hidden = true;
     if (groups[field.path] !== undefined) next.group = groups[field.path];
     if (field.children) next.children = applyConfig(field.children, config, groups);

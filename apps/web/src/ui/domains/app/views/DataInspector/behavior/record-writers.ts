@@ -21,6 +21,7 @@
  */
 import { isTagKey, replaceEnumerationRecord, replaceItemGroupRecord, replaceRecord, replaceTagRecord } from '@shared/game/data';
 import { connectionRecordFile, screenRecordFile } from '@shared/game/data/record-file-targets';
+import { variantBlockers } from '@shared/game/logic/queries/screen-validity';
 import { bumpDataRevision } from '@app/lib/game/data-revision';
 import { invalidateTagSuggestions } from './tag-suggestions';
 import { updateIdRefOption } from './id-ref-options';
@@ -56,8 +57,15 @@ const pathOf = (target: FileTarget): string => {
   return target.relativePath;
 };
 
+/**
+ * Guarded the same way `writeTag` is, and for the same reason: a variant states
+ * its progress tier twice, and only one of the two is what the runtime reads,
+ * so an edit that moves one and leaves the other is refused rather than stored.
+ */
 const writeScreen: RecordWriter = async (row) => {
   const { id, ...rest } = row as unknown as ScreenRecord;
+  const variantIssue = variantBlockers(rest)[0];
+  if (variantIssue) throw new Error(`This screen needs ${variantIssue}.`);
   const filePath = pathOf(screenRecordFile({ id, ...rest }));
   settle(await window.api.screenEditor.writeScreen({
     filePath,

@@ -33,6 +33,19 @@ type FieldKind =
  */
 type NumberFormat = 'hex2' | 'hex4';
 
+/**
+ * One choice of a DECLARED closed set — a set the caller states outright
+ * instead of letting derivation observe it.
+ *
+ * The value keeps its own type. Inference only ever calls a set of STRINGS an
+ * enum, so a numeric field can only become one by being declared, and it would
+ * be written back as text if the chosen option did not carry the number itself.
+ */
+interface FieldOption {
+  value: string | number;
+  label: string;
+}
+
 interface FieldDescriptor {
   /** Dot path, e.g. `gameId.roomIndex` — the stable identity used everywhere. */
   path: string;
@@ -41,8 +54,14 @@ interface FieldDescriptor {
   kind: FieldKind;
   /** Absent on at least one sampled record. */
   optional: boolean;
-  /** enum: the observed closed set. */
+  /** enum: the closed set as text — observed, or the declared set flattened. */
   options?: readonly string[];
+  /**
+   * enum: the declared set, with each option's own value and display text.
+   * Present only where a config declared one, so everything that already works
+   * off `options` keeps working; a control that can show a label uses this.
+   */
+  declaredOptions?: readonly FieldOption[];
   /**
    * idRef: the id prefix shared by every observed value, which names the
    * collection it points at. A plain string on purpose — this package never
@@ -81,6 +100,13 @@ interface SchemaConfig {
   kinds?: Record<string, FieldKind>;
   /** A `number` field that is really a native game index — display it in hex. */
   formats?: Record<string, NumberFormat>;
+  /**
+   * A field whose closed set is DECLARED rather than observed: the field becomes
+   * an `enum` offering exactly these options, whatever the sampled rows happened
+   * to hold. Where the set comes from is the caller's business — this package
+   * never imports a domain type, the same bargain `targetKind` makes.
+   */
+  options?: Record<string, readonly FieldOption[]>;
   /** Initial visible column set. */
   defaultColumns?: readonly string[];
 }
@@ -98,4 +124,4 @@ interface CollectionSource<T> {
   onSave?: (row: T) => Promise<void>;
 }
 
-export type { CollectionSource, FieldDescriptor, FieldGroup, FieldKind, NumberFormat, SchemaConfig };
+export type { CollectionSource, FieldDescriptor, FieldGroup, FieldKind, FieldOption, NumberFormat, SchemaConfig };

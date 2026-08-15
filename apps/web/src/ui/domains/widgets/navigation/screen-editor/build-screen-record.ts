@@ -12,6 +12,7 @@
  */
 import type { PendingScreenRecord } from '@shared/game/data/record-codegen';
 import { tagIdsForKeys } from '@shared/game/data';
+import { screenBlockers } from '@shared/game/logic/queries/screen-validity';
 import type { ScreenGameId, ScreenPosition, ScreenRecord, ScreenTag } from '@shared/game/data';
 
 interface ScreenDraft {
@@ -50,32 +51,45 @@ const gameIdFor = (draft: ScreenDraft): ScreenGameId => {
 const positionFor = (draft: ScreenDraft, blockers: string[]): ScreenPosition | undefined => {
   const { gridX, gridY, floor } = draft;
   if (gridX === undefined || gridY === undefined) {
-    if (floor !== undefined) blockers.push('A floor needs a grid X and Y to sit on');
+    if (floor !== undefined) blockers.push('a grid X and Y for its floor to sit on');
     return undefined;
   }
   return floor === undefined ? { gridX, gridY } : { gridX, gridY, floor };
 };
 
 const buildScreenRecord = (draft: ScreenDraft): DraftResult => {
+  const { areaId, locationId } = draft;
+  const gameId = gameIdFor(draft);
+  // Only the two rules a form alone can break are judged here; everything about
+  // whether the screen itself is real belongs to `screenBlockers`, so the editor
+  // cannot accept a screen a query then fails to resolve.
   const blockers: string[] = [];
-  if (!draft.randomizerName.trim()) blockers.push('A name is required');
-  if (!draft.areaId) blockers.push('An area is required');
-  if (!draft.locationId) blockers.push('A location is required');
-  if (draft.kind === 'dungeon' && draft.palaceIndex === undefined) blockers.push('A palace index is required');
+  if (!draft.randomizerName.trim()) blockers.push('a name');
   const position = positionFor(draft, blockers);
-  if (!draft.areaId || !draft.locationId) return { record: null, blockers };
-  if (blockers.length > 0) return { record: null, blockers };
+  blockers.push(...screenBlockers({
+    id: draft.existing?.id,
+    kind: draft.kind,
+    world: draft.world,
+    interiorKind: draft.kind === 'interior' ? draft.interiorKind : undefined,
+    areaId,
+    locationId,
+    gameId,
+    variant: draft.variant,
+  }));
+  // The emptiness test is what proves the geography ids are real ones; the
+  // blockers above already report either as missing.
+  if (blockers.length > 0 || !areaId || !locationId) return { record: null, blockers };
 
   return {
     record: {
-      gameId: gameIdFor(draft),
+      gameId,
       kind: draft.kind,
       world: draft.world,
       interiorKind: draft.kind === 'interior' ? draft.interiorKind : undefined,
       vanillaName: draft.existing?.vanillaName,
       randomizerName: draft.randomizerName.trim(),
-      areaId: draft.areaId,
-      locationId: draft.locationId,
+      areaId,
+      locationId,
       position,
       // The form works in terms; the record stores references to them.
       tags: tagIdsForKeys(draft.tags),
