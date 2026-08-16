@@ -13,6 +13,7 @@
 #include "util.h"
 #include "audio.h"
 #include "assets.h"
+#include "game_hooks.h"
 ZeldaEnv g_zenv;
 uint8 g_ram[131072];
 
@@ -265,7 +266,11 @@ static void ConfigurePpuSideSpace() {
   int mod = main_module_index;
   if (mod == 14)
     mod = saved_module_for_menu;
-  if (mod == 9) {
+  // The overworld-special-area flavor of MODULE_FALLING_ENTRANCE is normal interactive
+  // outdoor gameplay even though the module never returns to 9 — see
+  // GameHook_IsOverworldSpecialArea. Without this, the wide/tall PPU extension and camera
+  // lock never engage there and the view collapses to the base 256x224 frame.
+  if (mod == 9 || GameHook_IsOverworldSpecialArea()) {
     if (main_module_index == 14 && submodule_index == 7 && overworld_map_state >= 4) {
       // World map
       extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;

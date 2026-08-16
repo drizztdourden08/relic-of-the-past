@@ -25,7 +25,14 @@ const INTERFACE_SUBMODULE_MODES: Record<number, UIMode> = {
   11: 'save_menu',
 };
 
-const deriveUIMode = (mainModule: number, subModule: number, _subSubModule: number, floorTimer: number): UIMode => {
+// Module 11 (MODULE_FALLING_ENTRANCE) floor for overworld_screen_index — mirrors
+// OVERWORLD_SPECIAL_AREA_SCREEN_MIN in core/game-hooks/game_constants.h. Real overworld
+// screens (light or dark world) are always 0-127.
+const OVERWORLD_SPECIAL_AREA_SCREEN_MIN = 128;
+
+const deriveUIMode = (
+  mainModule: number, subModule: number, _subSubModule: number, floorTimer: number, overworldScreenIndex: number,
+): UIMode => {
   switch (mainModule) {
     case 0: // Module00_Intro
     case 1: // Module01_FileSelect
@@ -38,10 +45,16 @@ const deriveUIMode = (mainModule: number, subModule: number, _subSubModule: numb
     case 6:
     case 8:
     case 10:
-    case 11:
     case 15:
     case 16:
       return 'loading';
+    case 11:
+      // Module 11 is the dungeon pit-fall transition, but the engine also reuses it,
+      // unchanged, for the 3 vanilla overworld locations reached by walking onto a switch
+      // tile — normal interactive gameplay even though the module never returns to 9.
+      // overworld_screen_index stays >= 128 only in that flavor; an actual pit-fall into a
+      // dungeon room never reaches it that high.
+      return overworldScreenIndex >= OVERWORLD_SPECIAL_AREA_SCREEN_MIN ? 'gameplay' : 'loading';
     case 7:
     case 9:
       // Active gameplay — check floor indicator
@@ -154,7 +167,7 @@ const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
   const linkY = b[p + 123] | (b[p + 124] << 8);
 
   // Derive mode
-  const mode = deriveUIMode(mainModule, subModule, subSubModule, floorTimer);
+  const mode = deriveUIMode(mainModule, subModule, subSubModule, floorTimer, overworldScreenIndex);
 
   const gameMode: GameModeState = { mainModule, subModule, subSubModule };
 

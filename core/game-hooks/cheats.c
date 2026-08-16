@@ -26,8 +26,10 @@ static uint8 g_cheat_extra_armor_pct = 0;   // Extra damage reduction % (0-100),
 // clampi() comes from num_util.h (shared with the volume setters).
 
 // True when the engine is in normal interactive gameplay (overworld or indoor).
+// Includes the overworld-special-area flavor of MODULE_FALLING_ENTRANCE — see
+// GameHook_IsOverworldSpecialArea.
 static inline bool IsInGameplay(void) {
-  return main_module_index == MODULE_DUNGEON || main_module_index == MODULE_OVERWORLD;
+  return main_module_index == MODULE_DUNGEON || main_module_index == MODULE_OVERWORLD || GameHook_IsOverworldSpecialArea();
 }
 
 // ─── Accessors (called from hooks in sprite.c / player.c) ───
