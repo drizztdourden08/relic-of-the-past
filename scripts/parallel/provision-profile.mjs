@@ -72,6 +72,20 @@ const defaultRom = () => {
 };
 
 /**
+ * A profile's `romFile` is just a filename, resolved against the shared `Data/roms/`
+ * folder at launch time. Inheriting that filename from another profile (the normal
+ * path) says nothing about whether the file is still there — it could have been
+ * renamed or removed since that profile last played. Failing here, with the exact
+ * filename and folder, beats the app failing later with an opaque "pick a ROM" prompt.
+ */
+const assertRomExists = (romFile) => {
+  const path = gameDataPath('roms', romFile);
+  if (!existsSync(path)) {
+    throw new Error(`ROM "${romFile}" is not in ${gameDataPath('roms')} — the file this profile inherited is missing.`);
+  }
+};
+
+/**
  * Copy the source profile's NAMED manual saves into the new profile.
  *
  * Without these, `--auto-state=test-jail-cell` has nothing to load and the app boots to
@@ -90,6 +104,27 @@ const copyManualSaves = (sourceId, name) => {
   if (!existsSync(from) || existsSync(to)) return 0;
   cpSync(from, to, { recursive: true });
   return readJson(join(to, 'manifest.json'), []).length;
+};
+
+/**
+ * Copy one quick-save slot (0-based, matching `--auto-state=<number>`) from the source
+ * profile into the new one, for reproducing a bug tied to a specific in-progress state.
+ * Quick slots are `saveN.sav`/`saveN.png` with no manifest — unlike manual saves, a
+ * quick slot has no stable name, so the caller must know which index holds the state.
+ */
+const copyQuickSave = (sourceId, name, slot) => {
+  if (!sourceId || slot == null) return false;
+  const fromDir = gameDataPath('profiles', sourceId, 'saves', 'quick');
+  const toDir = gameDataPath('profiles', name, 'saves', 'quick');
+  const savPath = join(fromDir, `save${slot}.sav`);
+  if (!existsSync(savPath)) {
+    throw new Error(`Quick slot ${slot} has no save${slot}.sav under ${fromDir} — nothing to copy.`);
+  }
+  mkdirSync(toDir, { recursive: true });
+  cpSync(savPath, join(toDir, `save${slot}.sav`));
+  const pngPath = join(fromDir, `save${slot}.png`);
+  if (existsSync(pngPath)) cpSync(pngPath, join(toDir, `save${slot}.png`));
+  return true;
 };
 
 const keyboardInputProfile = async (now) => {
@@ -112,7 +147,7 @@ const keyboardInputProfile = async (now) => {
  * its saves and is only topped up with anything missing, so re-running never destroys
  * an agent's state.
  */
-const provisionProfile = async ({ name, romFile, inheritConfigFrom }) => {
+const provisionProfile = async ({ name, romFile, inheritConfigFrom, quickSlot }) => {
   const now = Date.now();
   const dir = gameDataPath('profiles', name);
 
@@ -127,6 +162,7 @@ const provisionProfile = async ({ name, romFile, inheritConfigFrom }) => {
   const source = candidates.find((p) => p.id === inheritConfigFrom) ?? candidates[0] ?? null;
   const sourceConfig = source ? readJson(gameDataPath('profiles', source.id, 'config.json'), {}) : {};
   const rom = romFile ?? source?.romFile ?? defaultRom();
+  assertRomExists(rom);
 
   mkdirSync(join(dir, 'saves'), { recursive: true });
 
@@ -154,8 +190,9 @@ const provisionProfile = async ({ name, romFile, inheritConfigFrom }) => {
   }
 
   const savesCopied = copyManualSaves(source?.id ?? null, name);
+  const quickSaveCopied = quickSlot != null ? copyQuickSave(source?.id ?? null, name, quickSlot) : false;
 
-  return { dir, romFile: rom, inheritedFrom: source?.id ?? null, savesCopied };
+  return { dir, romFile: rom, inheritedFrom: source?.id ?? null, savesCopied, quickSaveCopied };
 };
 
 export { provisionProfile };
