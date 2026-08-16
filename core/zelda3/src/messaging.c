@@ -1507,7 +1507,12 @@ static void WorldMap_AddSprite(int spr, uint8 big, uint8 flags, uint8 ch, uint16
   }
   if (enhanced_features0 & kFeatures0_ExtendScreen64)
     big |= (x >> 8 & 1);
-  SetOamPlain(&oam_buf[spr], x, y, ch, flags, big);
+  // OamSetX (not SetOamPlain) so g_oam_x_high carries this sprite's true X when a wide view is active.
+  OamSetX(&oam_buf[spr], x);
+  oam_buf[spr].y = y;
+  oam_buf[spr].charnum = ch;
+  oam_buf[spr].flags = flags;
+  bytewise_extended_oam[spr] = big;
 }
 
 bool OverworldMap_CheckForPendant(int k) {  // 8ac5a9
