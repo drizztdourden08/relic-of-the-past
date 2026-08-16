@@ -8,7 +8,7 @@
  * the panel that asked for it, so this store owns all of it and the widget only reads.
  */
 import { create } from 'zustand';
-import type { FloodFillResult, ConnectionInfo, ScreenBundle } from '@shared/game/navigation';
+import type { FloodFillResult, ConnectionInfo, ScreenBundle, ScreenCrossings } from '@shared/game/navigation';
 import type { ScreenAnnotations } from '@shared/game/simulation';
 
 interface PathTile { row: number; col: number; attr: number; }
@@ -34,6 +34,11 @@ interface NavigationOverlayState {
   /** Entrance IDs classified as respawn points (not physical doors) */
   respawnEntIds: Set<number>;
   /**
+   * Every way on or off each flooded screen, from the crossings facade. One
+   * entry per screen, in the order the flood reached them.
+   */
+  crossings: ScreenCrossings[];
+  /**
    * What the simulator knows about the flooded screen — chests, locks, triggers,
    * exits and their state. Fed separately from the flood so the overlay, the
    * minimap and the widget panel all read one description.
@@ -55,6 +60,8 @@ interface NavigationOverlayState {
   setData: (result: FloodFillResult, connections: ConnectionInfo[], results?: FloodFillResult[], fallHoleSpawns?: FallHoleSpawn[], respawnEntIds?: Set<number>) => void;
   /** Replace the annotation set for the flooded screen */
   setAnnotations: (annotations: ScreenAnnotations[]) => void;
+  /** Replace the crossing records for the flooded screens */
+  setCrossings: (crossings: ScreenCrossings[]) => void;
   toggleKind: (kind: string) => void;
   /** Set locked target */
   setLockedTarget: (tile: { row: number; col: number } | null) => void;
@@ -73,6 +80,7 @@ const useNavigationOverlayStore = create<NavigationOverlayState>((set) => ({
   connections: [],
   fallHoleSpawns: [],
   respawnEntIds: new Set(),
+  crossings: [],
   annotations: [],
   hiddenKinds: new Set<string>(),
   lockedTarget: null,
@@ -82,6 +90,7 @@ const useNavigationOverlayStore = create<NavigationOverlayState>((set) => ({
   setScreenBundle: (screenBundle) => set({ screenBundle }),
   setData: (result, connections, results, fallHoleSpawns, respawnEntIds) => set({ result, connections, results: results ?? [result], fallHoleSpawns: fallHoleSpawns ?? [], respawnEntIds: respawnEntIds ?? new Set(), visible: true }),
   setAnnotations: (annotations) => set({ annotations }),
+  setCrossings: (crossings) => set({ crossings }),
   toggleKind: (kind) => set((s) => {
     const next = new Set(s.hiddenKinds);
     if (next.has(kind)) next.delete(kind);
@@ -92,7 +101,7 @@ const useNavigationOverlayStore = create<NavigationOverlayState>((set) => ({
   setLockedPath: (path) => set({ lockedPath: path }),
   // Deliberately leaves `mode` alone: clearing is about the data, not how the next flood
   // gets triggered.
-  clear: () => set({ result: null, results: [], connections: [], fallHoleSpawns: [], respawnEntIds: new Set(), annotations: [], screenBundle: null, visible: false, lockedTarget: null, lockedPath: null }),
+  clear: () => set({ result: null, results: [], connections: [], fallHoleSpawns: [], respawnEntIds: new Set(), crossings: [], annotations: [], screenBundle: null, visible: false, lockedTarget: null, lockedPath: null }),
 }));
 
 export { useNavigationOverlayStore };

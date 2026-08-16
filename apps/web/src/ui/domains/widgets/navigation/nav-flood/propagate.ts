@@ -12,7 +12,7 @@
 import { buildScreenBundle } from '@shared/game/navigation';
 import type { ConnectionInfo, FloodFillResult, ScreenBundle } from '@shared/game/navigation';
 import type { TileReq } from '@shared/game/navigation/tile-attrs';
-import type { enrichEntrances } from '../widget-helpers';
+import type { enrichEntrances } from '@app/lib/game/flood/overworld-entrances';
 import { computeBigScreenGroup } from '../widget-helpers';
 import { propagateArea } from '../../../../../lib/game/flood';
 

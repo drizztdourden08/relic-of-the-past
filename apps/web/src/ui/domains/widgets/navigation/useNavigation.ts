@@ -1,21 +1,23 @@
 /* @layer renderer-widgets @kind hook */
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useGameUIStore } from '../../../../stores/game-ui-store';
-import { usableEntrances } from '@shared/game/navigation';
+import { listedCrossings } from '@app/lib/crossing-sections';
 import { annotateFlooded } from './nav-flood/annotate-flooded';
 import { liveGameStates } from '../../../../lib/game/live-game-states';
 import { useNavigationOverlayStore } from '../../../../stores/navigation-overlay-store';
 import type { NavMode } from '../../../../stores/navigation-overlay-store';
 import type { ConnectionInfo } from '@shared/game/navigation';
-import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetProgressIndicator, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetEntranceSpawns, wasmGetRoomLayoutInfo, wasmGetDungeonMapPosition } from '../../../../lib/game';
+import type { TileReq } from '@shared/game/navigation/tile-attrs';
+import { wasmGetViewportInfo, wasmGetOverworldVariant, wasmGetProgressIndicator, wasmGetIndoorLayer0Grid, wasmGetLinkLayer, wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetRoomLayoutInfo, wasmGetDungeonMapPosition } from '../../../../lib/game';
 import type { OverworldVariantInfo } from '../../../../lib/game';
-import { enrichEntrances } from './widget-helpers';
+import { enrichEntrances } from '@app/lib/game/flood/overworld-entrances';
 import { useScreenDetection, usePlayerDebugState, useFloodOnTransition } from './hooks';
 import { reassertFeatureFlags } from '../../../../lib/game';
 import { setDeveloperToolsOverride } from '../../../../lib/game/live-settings-flags';
 import { buildInventory, computeStartContext } from './nav-flood/prepare';
 import { collectIndoorEntrances } from './nav-flood/indoor-entrances';
 import { propagateScreens } from './nav-flood/propagate';
+import { collectScreenCrossings } from './nav-flood/collect-screen-crossings';
 import { annotateLayerToggles, buildIndoorScreenBundle, computeFallHoleLandings } from './nav-flood/finalize';
 import { useNavConnections } from './nav-flood/use-nav-connections';
 
@@ -31,8 +33,7 @@ const useNavigation = () => {
   // Flood output is READ from the store, never mirrored into component state. The widget
   // unmounts whenever the hub opens, and a local copy would leave with it, which is how
   // the minimap used to disappear while the overlay survived.
-  const { result, connections, screenBundle, respawnEntIds, mode, setScreenBundle } = overlayStore;
-  const fallHoleLandings = overlayStore.fallHoleSpawns;
+  const { result, connections, screenBundle, respawnEntIds, crossings, mode, setScreenBundle } = overlayStore;
   const autoRun = mode === 'auto';
 
   const [running, setRunning] = useState(false);
@@ -90,7 +91,7 @@ const useNavigation = () => {
   const renderResults = overlayStore.results;
   const reachableSum = renderResults.reduce((sum, r) => sum + r.reachableCount, 0);
   const totalTilesSum = renderResults.reduce((sum, r) => sum + r.totalTiles, 0);
-  const entranceSum = renderResults.reduce((sum, r) => sum + usableEntrances(r).length, 0);
+  const entranceSum = crossings.reduce((sum, screen) => sum + listedCrossings(screen, isIndoors).length, 0);
 
   // Force a lightweight periodic rerender so live debug values update while moving.
   useEffect(() => {
@@ -183,10 +184,11 @@ const useNavigation = () => {
 
       const fallHoleSpawns = computeFallHoleLandings(primaryScreenIndex, isIndoors);
       overlayStore.setData(primaryResult, allConnections, fillResults, fallHoleSpawns, currentRespawnIds);
+      overlayStore.setCrossings(collectScreenCrossings({ isIndoors, responses, items: items as TileReq[] }));
 
       // Derived from the same reads the run gates on, so the overlay and the run
       // can never describe a screen differently.
-      overlayStore.setAnnotations(annotateFlooded({ fillResults, isIndoors, primaryScreenIndex, startPos, primaryScreenId: detectedScreen?.id ?? null }));
+      overlayStore.setAnnotations(annotateFlooded({ fillResults, isIndoors, primaryScreenIndex, primaryScreenId: detectedScreen?.id ?? null }));
     } catch (e) { console.error(e); }
     finally {
       setRunning(false);
@@ -254,13 +256,10 @@ const useNavigation = () => {
   }, [running]);
 
   // Derived: classify connections as internal vs external (with dedup).
-  const { externalConnections, internalConnections } = useNavConnections(connections, screenBundle, isIndoors);
-
-  // Entrance spawn data for showing starting layer per entrance
-  const entranceSpawns = wasmGetEntranceSpawns();
+  const { externalConnections, internalConnections, externalEdges } = useNavConnections(connections, screenBundle, isIndoors, crossings);
 
   return {
-    screenBundle, screenName, screenId, isIndoors, roomIndex, isDarkWorld, overworldScreenIndex, externalConnections, renderResults, playerDebug, respawnEntIds, palaceIndex, dungeonMapPos, roomLayoutInfo, whichEntrance, roomStartLayer, progressInfo, gameStates, displayedVariant, dynamicBlockerCount, playerX, playerY, running, handleRun, result, handleClear, overlayStore, mode, setMode, reachableSum, totalTilesSum, entranceSum, internalConnections, fallHoleLandings, entranceSpawns,
+    screenBundle, screenName, screenId, isIndoors, roomIndex, isDarkWorld, overworldScreenIndex, externalConnections, externalEdges, crossings, renderResults, playerDebug, respawnEntIds, palaceIndex, dungeonMapPos, roomLayoutInfo, whichEntrance, roomStartLayer, progressInfo, gameStates, displayedVariant, dynamicBlockerCount, playerX, playerY, running, handleRun, result, handleClear, overlayStore, mode, setMode, reachableSum, totalTilesSum, entranceSum, internalConnections,
   };
 };
 

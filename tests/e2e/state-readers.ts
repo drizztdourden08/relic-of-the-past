@@ -89,10 +89,10 @@ const readFlood = async (window: Page): Promise<{ reachable: number; total: numb
   return { reachable: Number(m[1]), total: Number(m[2]) };
 };
 
-/** "On this screen" group headers → item count, e.g. `{ Checks: 2, 'Ways out': 3 }`. */
+/** "On this screen" group headers → item count, e.g. `{ Checks: 2, Triggers: 1 }`. */
 const readGroups = async (window: Page): Promise<Record<string, number>> => {
   const found = await window
-    .locator('text=/^(Checks|Locks & barriers|Triggers|Ways out|Unmapped) \\(\\d+\\)$/')
+    .locator('text=/^(Checks|Locks & barriers|Triggers|Unmapped) \\(\\d+\\)$/')
     .allTextContents();
   const out: Record<string, number> = {};
   for (const raw of found) {

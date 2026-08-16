@@ -61,15 +61,15 @@ const landingTile = (exit?: SimExit, edge?: ScreenEdge): GridPos =>
  * START position (the tile the player lands on). Mutates s.virtual and s.area.
  */
 /**
- * How the player got in, in words. A screen id alone cannot say which of its
- * several ways in was used, and two of them need not lead to the same ground —
- * so the log has to name the crossing, not just the destination.
+ * How the player got in, in words, from a crossing's `edgeSig`. A screen id
+ * alone cannot say which of its several ways in was used, and two of them need
+ * not lead to the same ground — so the log has to name the crossing, not just
+ * the destination.
  *
  * Border signatures carry the tile SPAN, because one side of a screen can hold
  * more than one separate crossing.
  */
-const arrivalLabel = (exit?: SimExit, tile?: GridPos): string => {
-  const sig = exit?.edgeSig;
+const arrivalLabel = (sig?: string, tile?: GridPos): string => {
   if (!sig) return tile ? `at ${tile.col},${tile.row}` : 'start';
   const border = /^(north|south|west|east):(\d+)-(\d+)$/.exec(sig);
   if (border) return `via ${border[1]} edge, tiles ${border[2]}-${border[3]}`;
@@ -107,7 +107,7 @@ const emitHop = (s: EngineState, events: SimEvent[], next: string, exit?: SimExi
   // The way back is used up too — observe() marks it once `next`'s own exits
   // name it (see markWayBackUsed).
   s.cameFrom = { screenId: from, tile };
-  events.push(narrative(s, `Screen ${screenLabel(next)} ${arrivalLabel(exit, tile)}`));
+  events.push(narrative(s, `Screen ${screenLabel(next)} ${arrivalLabel(exit?.edgeSig, tile)}`));
   events.push(narrative(s, posMsg('START', tile)));
 };
 

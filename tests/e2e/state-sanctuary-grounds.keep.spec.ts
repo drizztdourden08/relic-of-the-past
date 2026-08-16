@@ -7,9 +7,9 @@
  * walkable edges into neighbours and an entrance to step into — and the two floods
  * take different paths through the code, so one baseline cannot cover both.
  *
- * The three ways out are the shape being pinned: two walkable edges to adjacent
- * screens and the Sanctuary door itself. Lose the edge handling and this collapses
- * to one exit with a much smaller reachable count.
+ * The reachable count is the shape being pinned. Open ground bounded by two
+ * walkable screen edges floods much further than a room; lose the edge handling
+ * and the count collapses.
  */
 import { test, expect } from '@playwright/test';
 import { withState } from './state-harness';
@@ -24,18 +24,8 @@ test('test-sanctuary-grounds is still the outdoor baseline', async () => {
     expect(flood.total, 'a single overworld screen').toBe(4096);
     expect(flood.reachable, 'the blessed outdoor reachable count').toBe(1762);
 
-    expect(await r.groups()).toEqual({ 'Ways out': 3 });
-
-    const rows = await r.rows();
-    const exits = rows.filter((row) => row.kind === 'exit');
-    expect(exits, `outdoor exits missing: ${JSON.stringify(rows)}`).toHaveLength(3);
-
-    // Each way out is reached by walking, so each carries a step distance.
-    for (const exit of exits) {
-      expect(exit.detail, `${exit.label} should report a walk distance`).toMatch(/\d+ steps/);
-    }
-
-    // Distinct destinations — three exits all naming one place would be a duplicate bug.
-    expect(new Set(exits.map((row) => row.label)).size).toBe(3);
+    // Open ground with no checks, locks or triggers on it — anything appearing
+    // here is a mechanic being invented outdoors.
+    expect(await r.groups()).toEqual({});
   });
 });
