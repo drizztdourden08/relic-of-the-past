@@ -22,10 +22,25 @@ const NAME_RULE = /^[a-z0-9][a-z0-9-]{0,38}$/;
 
 /** Matches the app's own --instance validation: the name becomes a directory. */
 const assertName = (name) => {
-  if (!name) throw new Error('Usage: npm run wt -- new <name> [--from <ref>] [--no-build]');
+  if (!name) throw new Error('Usage: npm run wt -- new <name> [--from <ref>] [--rom <file>] [--quick-slot <N>] [--no-build]');
   if (!NAME_RULE.test(name)) {
     throw new Error(`"${name}" is not a valid name — lowercase letters, digits and dashes, max 39 chars.`);
   }
+};
+
+/**
+ * `--quick-slot` takes the human "Slot N" number shown in the save UI (1-based) and
+ * converts it to the 0-based index `--auto-state=<number>` and the quick-save files
+ * (`saveN.sav`) actually use — the same off-by-one every other slot reference in this
+ * project has to account for.
+ */
+const resolveQuickSlot = (raw) => {
+  if (raw == null) return null;
+  const human = Number(raw);
+  if (!Number.isInteger(human) || human < 1) {
+    throw new Error(`--quick-slot must be a slot number ≥ 1 (the number shown in the save UI), got "${raw}".`);
+  }
+  return human - 1;
 };
 
 const assertBranchFree = (branch) => {
@@ -64,13 +79,18 @@ const run = async ({ positional, options }) => {
   const build = await bootstrapWorktree({ worktree: path, skipBuild: flag(options, 'no-build') });
 
   console.log('\n[wt] Provisioning the game profile…');
-  const { romFile, savesCopied } = await provisionProfile({
+  const quickSlot = resolveQuickSlot(options['quick-slot']);
+  const { romFile, savesCopied, quickSaveCopied } = await provisionProfile({
     name,
     romFile: typeof options.rom === 'string' ? options.rom : null,
     inheritConfigFrom: typeof options.from_profile === 'string' ? options.from_profile : null,
+    quickSlot,
   });
   console.log(`  profile ${name} → ${romFile}`);
   console.log(`  ${savesCopied} named save state(s) copied — what --auto-state=<name> can load`);
+  if (quickSaveCopied) {
+    console.log(`  quick slot ${quickSlot} copied — load it with --auto-state=${quickSlot}`);
+  }
 
   await updateRegistry((registry) => {
     const record = createRecord({ name, path, branch, baseCommit });
@@ -88,7 +108,7 @@ const run = async ({ positional, options }) => {
 
 const command = {
   summary: 'Create a worktree, its branch and its profile (slow)',
-  usage: 'npm run wt -- new <name> [--from <ref>] [--rom <file>] [--no-build]',
+  usage: 'npm run wt -- new <name> [--from <ref>] [--rom <file>] [--quick-slot <N>] [--no-build]',
   run,
 };
 

@@ -1,6 +1,12 @@
 /* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
 
+// ─── Overworld Special-Area Query ───
+
+bool GameHook_IsOverworldSpecialArea(void) {
+  return main_module_index == MODULE_FALLING_ENTRANCE && overworld_screen_index >= OVERWORLD_SPECIAL_AREA_SCREEN_MIN;
+}
+
 // ─── Inventory State Query ───
 
 static uint8 g_inventory_buf[40];
@@ -150,10 +156,15 @@ int WasmGetViewportInfo(void) {
   uint8 mod = main_module_index;
   if ((mod == MODULE_MENU || mod == MODULE_SPOTLIGHT_CLOSE || mod == MODULE_SPOTLIGHT_OPEN) &&
       saved_module_for_menu != 0) {
-    g_viewport_buf[9] = saved_module_for_menu;
-  } else {
-    g_viewport_buf[9] = mod;
+    mod = saved_module_for_menu;
   }
+  // The overworld-special-area flavor of MODULE_FALLING_ENTRANCE is normal outdoor
+  // gameplay — report it as such so consumers keyed on locationModule === MODULE_OVERWORLD
+  // (the edge-glow effect) still engage there.
+  if (mod == MODULE_FALLING_ENTRANCE && GameHook_IsOverworldSpecialArea()) {
+    mod = MODULE_OVERWORLD;
+  }
+  g_viewport_buf[9] = mod;
   // locationType: 0=overworld/other, 1=house/cave, 2=dungeon
   uint8 locMod = g_viewport_buf[9];
   g_viewport_buf[10] = (locMod == MODULE_DUNGEON) ? (cur_palace_index_x2 == 0xff ? 1 : 2) : 0;

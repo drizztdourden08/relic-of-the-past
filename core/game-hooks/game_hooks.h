@@ -28,6 +28,16 @@ void GameHook_TriggerNpcCheck(uint8 flag_type, uint8 flag_mask, uint8 item_id,
 // event bit and grants the item.
 void GameHook_TriggerOverworldCheck(uint8 screen, uint8 mask, uint8 item_id);
 
+// ─── State Queries (state_queries.c) ───
+
+// True while main_module_index is MODULE_FALLING_ENTRANCE (11) via the vanilla
+// overworld special-switch-area path (one of 3 locked-view locations reached by
+// walking onto a switch tile) rather than an actual dungeon pit-fall. Both reuse the
+// same module; overworld_screen_index staying >= 128 is what's unique to the
+// special-area flavor. Anything gating on "is this normal interactive gameplay"
+// should treat this the same as MODULE_OVERWORLD.
+bool GameHook_IsOverworldSpecialArea(void);
+
 // ─── Cheats (cheats.c) ───
 
 // Returns the current outgoing damage multiplier (1 = normal).

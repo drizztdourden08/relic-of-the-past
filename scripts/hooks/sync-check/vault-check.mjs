@@ -23,9 +23,14 @@
  * does not clear an inherited GIT_DIR — so without stripping it, git would ignore
  * the vault's own repo entirely and diff its files against the caller's index
  * instead, reporting every single file in the vault as modified.
+ *
+ * Scoped to relevance first, on top of that: a commit that doesn't touch any
+ * vault-managed path makes zero git calls into the vault and reports nothing, no
+ * matter what state the vault happens to be in — its own unrelated notes/exports
+ * are its business, not a reason to block work here.
  */
 import { execFileSync } from 'node:child_process';
-import { locateVault } from '../../vault/locate.mjs';
+import { locateVault, MANAGED_ROOTS } from '../../vault/locate.mjs';
 
 const GIT_ENV_OVERRIDES = ['GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_COMMON_DIR', 'GIT_OBJECT_DIRECTORY', 'GIT_ALTERNATE_OBJECT_DIRECTORIES'];
 
@@ -43,8 +48,20 @@ const git = (dir, args) => {
   }
 };
 
+/** True when the commit about to land touches a path the vault mirrors. No -C — this
+ *  deliberately reads the calling repo's own staged diff, not the vault's. */
+const stagedTouchesVault = () => {
+  const staged = execFileSync('git', ['diff', '--cached', '--name-only'], { encoding: 'utf8' })
+    .split('\n').filter(Boolean);
+  return staged.some((f) => MANAGED_ROOTS.some((root) => f === root || f.startsWith(`${root}/`)));
+};
+
 /** @returns {{ status: 'unmanaged'|'clean'|'dirty', dir: string|null, files: string[], ahead: number }} */
 const checkVault = () => {
+  if (!stagedTouchesVault()) {
+    return { status: 'unmanaged', dir: null, files: [], ahead: 0 };
+  }
+
   const dir = locateVault();
   if (!dir || !git(dir, ['rev-parse', '--git-dir']).trim()) {
     return { status: 'unmanaged', dir: null, files: [], ahead: 0 };
