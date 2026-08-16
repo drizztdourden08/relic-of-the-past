@@ -14,8 +14,14 @@
  * optional `groups` prop narrows that layout further (see `filterGroups`),
  * which is how a caller keeps a wide collection down to the handful of fields
  * that actually fit.
+ *
+ * `fieldRenderers` is the one hole in that layout: a caller can swap any single
+ * field's row for content of its own, keyed by path, and the swapped field
+ * still sits in the group and running order the schema gave it. The renderer is
+ * the caller's, which is what keeps a domain-specific field view out of this
+ * package while letting it show where the field belongs.
  */
-import { useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 import { Box } from '../../primitives/Box';
 import { Text } from '../../primitives/Text';
 import { layoutGroups } from '../RecordEditor';
@@ -27,7 +33,7 @@ import './CompactRecordView.css';
 const NO_FIELDS = 'This record has no fields to show.';
 
 const CompactRecordView = <T,>(props: CompactRecordViewProps<T>) => {
-  const { record, schema, config, groups, resolveIdRefDisplay, diffs } = props;
+  const { record, schema, config, groups, resolveIdRefDisplay, diffs, fieldRenderers } = props;
   const laidOut = useMemo(() => layoutGroups(schema, config), [schema, config]);
   const shown = useMemo(() => filterGroups(laidOut, groups), [laidOut, groups]);
   const showLabels = shown.length > 1;
@@ -40,16 +46,21 @@ const CompactRecordView = <T,>(props: CompactRecordViewProps<T>) => {
           {showLabels && (
             <Text className="compact-record-view__group-label">{group.label ?? group.id}</Text>
           )}
-          {group.fields.map((field) => (
-            <CompactField
-              key={field.path}
-              record={record}
-              field={field}
-              depth={0}
-              resolveIdRefDisplay={resolveIdRefDisplay}
-              diffs={diffs}
-            />
-          ))}
+          {group.fields.map((field) => {
+            const render = fieldRenderers?.get(field.path);
+            return render ? (
+              <Fragment key={field.path}>{render(record)}</Fragment>
+            ) : (
+              <CompactField
+                key={field.path}
+                record={record}
+                field={field}
+                depth={0}
+                resolveIdRefDisplay={resolveIdRefDisplay}
+                diffs={diffs}
+              />
+            );
+          })}
         </Box>
       ))}
     </Box>
