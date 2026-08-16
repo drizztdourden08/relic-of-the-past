@@ -11,7 +11,7 @@
  */
 import { wasmGetEntranceRooms } from '../../../../../lib/game';
 import { roomEntrances, STAIR_ID_BASE } from '../../../../../lib/game/flood';
-import type { enrichEntrances } from '../widget-helpers';
+import type { enrichEntrances } from '@app/lib/game/flood/overworld-entrances';
 
 type Entrance = ReturnType<typeof enrichEntrances>[number];
 

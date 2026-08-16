@@ -1,9 +1,9 @@
 /* @layer renderer-components @kind logic */
 /**
- * Draws ScreenAnnotations — everything the simulator knows about a screen that
- * used to be invisible: chests, key/big-key/cell locks, shutters and their trap
- * state, bombable walls, key-carrier enemies, pull switches, NPC checks, warp and
- * exit doors, the follower-gated wall, and the traversable exits with walk distance.
+ * Draws ScreenAnnotations — what the simulator knows about a screen: chests,
+ * key/big-key/cell locks, shutters and their trap state, bombable walls,
+ * key-carrier enemies, pull switches, NPC checks and the follower-gated wall.
+ * Ways on and off the screen are drawn by draw-entrances.ts instead.
  *
  * One marker shape for everything, differing only by glyph and colour, so the
  * overlay stays readable at 8px tiles. A `shut` state draws a hatched fill and an
@@ -25,23 +25,8 @@ import { ANNOTATION_STYLES } from '../annotation-style';
  * sitting off to one side of the real opening.
  */
 const DOOR_KINDS: ReadonlySet<ScreenAnnotation['kind']> = new Set([
-  'key-door', 'big-key-door', 'shutter', 'bombable', 'follower-gate', 'warp-door', 'exit-door',
+  'key-door', 'big-key-door', 'shutter', 'bombable', 'follower-gate',
 ]);
-
-/**
- * Kinds whose `tile` is a WALKABLE POSITION, not the top-left corner of an
- * object record — so the corner-anchor nudge below must NOT apply to them.
- *
- * `exit` carries the flood's own crossing tile (`SimExit.fromTile`, straight
- * from a BFS transition or `exitFromEdge`), which is the exact spot the player
- * stands to leave. Nudging it moves the marker onto a neighbouring tile that
- * has nothing to do with the crossing — and for a border crossing it is worse
- * than cosmetic: `exitFromEdge` reports row/col 63, the last tile before the
- * next screen's origin, so 8px of nudge pushes the marker off this screen
- * entirely and onto whatever the adjacent screen happens to start with, which
- * is how these landed on visibly unreachable tiles.
- */
-const WALK_TILE_KINDS: ReadonlySet<ScreenAnnotation['kind']> = new Set(['exit']);
 
 /**
  * Records name the TOP-LEFT tile of a feature's block. A 16px marker anchored at
@@ -76,13 +61,12 @@ const drawAnnotations = (dc: DrawContext, sets: readonly ScreenAnnotations[], hi
     // narrow through-wall axis needs the corner-anchor nudge. Everything else
     // (sprites, chests) is a uniform 2x2 block nudged on both axes.
     const isDoor = DOOR_KINDS.has(a.kind);
-    const onWalkTile = WALK_TILE_KINDS.has(a.kind);
     const wideCols = isDoor && (a.direction === 'n' || a.direction === 's');
     const wideRows = isDoor && (a.direction === 'e' || a.direction === 'w');
     const sizeCols = TILE_PX * (wideCols ? 4 : 2);
     const sizeRows = TILE_PX * (wideRows ? 4 : 2);
-    const nudgeCols = wideCols || onWalkTile ? 0 : nudge;
-    const nudgeRows = wideRows || onWalkTile ? 0 : nudge;
+    const nudgeCols = wideCols ? 0 : nudge;
+    const nudgeRows = wideRows ? 0 : nudge;
 
     const screenX = origin.x + a.tile.col * TILE_PX + nudgeCols - viewLeft;
     const screenY = origin.y + a.tile.row * TILE_PX + nudgeRows - viewTop;

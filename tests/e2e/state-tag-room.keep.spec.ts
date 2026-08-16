@@ -30,7 +30,7 @@ test('test-tag-room still decodes its kill gate', async () => {
     expect(tags[0]).toMatch(/clear enemies/);
     expect(tags[0]).toMatch(/doors open/);
 
-    expect(await r.groups()).toEqual({ 'Locks & barriers': 3, 'Triggers': 2, 'Ways out': 1 });
+    expect(await r.groups()).toEqual({ 'Locks & barriers': 3, 'Triggers': 2 });
 
     const rows = await r.rows();
     // Both shutters are the trap kind, and they must be shut for the gate to mean anything.

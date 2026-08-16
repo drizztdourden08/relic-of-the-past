@@ -2,7 +2,7 @@
 import type { CSSProperties } from 'react';
 import { Icon } from '@iconify/react/offline';
 import type { ConnectionInfo } from '@shared/game/navigation';
-import { usableEntrances } from '@shared/game/navigation';
+import { markerCrossings } from '@app/lib/crossing-sections';
 
 const IL: Record<string, CSSProperties> = {
   cellName: { fontWeight: 700, fontSize: 11, position: 'relative' },
@@ -10,7 +10,7 @@ const IL: Record<string, CSSProperties> = {
   cellCount: { fontSize: 9, color: 'var(--c-text-dim)', position: 'relative' },
 };
 import { Box, Text } from '../../../../design-system/primitives';
-import { getEntranceIcon } from '../../../../../lib/entrance-icons';
+import { crossingIcon } from '../../../../../lib/entrance-icons';
 import { useNavigationOverlayStore } from '../../../../../stores/navigation-overlay-store';
 import { EDGE_COLORS } from '../navigation.constants';
 import { getScreenDisplayName } from '../widget-helpers';
@@ -19,7 +19,7 @@ import { AnnotationLayer } from './AnnotationLayer';
 import type { MinimapProps } from './IndoorMinimap';
 
 /** Overworld minimap: a multi-cell grid (one cell per 512×512 screen). */
-const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenIndex, playerPos, respawnEntIds, roomIndex }: MinimapProps) => {
+const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenIndex, playerPos }: MinimapProps) => {
   const EDGE_PAD = 18;
   const GAP = 2;
   const AVAIL = 224;
@@ -35,7 +35,7 @@ const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenInde
   const totalH = gridH + EDGE_PAD * 2;
 
   const externalConns = connections.filter(c => !c.isIntraRoom);
-  const fallHoleSpawns = useNavigationOverlayStore(s => s.fallHoleSpawns);
+  const crossings = useNavigationOverlayStore(s => s.crossings);
   const annotations = useNavigationOverlayStore(s => s.annotations);
 
   const byEdge: Record<string, ConnectionInfo[]> = { north: [], south: [], east: [], west: [] };
@@ -100,32 +100,23 @@ const OverworldMinimap = ({ bundle, connections, renderResults, playerScreenInde
         );
       })}
 
-      {renderResults.flatMap(r => usableEntrances(r).map(ent => {
-        const scrIdx = bundle.screens.indexOf(r.screenIndex);
+      {crossings.flatMap(screen => markerCrossings(screen, false).map(crossing => {
+        const scrIdx = bundle.screens.indexOf(screen.screenIndex);
         if (scrIdx < 0) return null;
         const cellCol = scrIdx % bundle.cols;
         const cellRow = Math.floor(scrIdx / bundle.cols);
         const cellLeft = EDGE_PAD + cellCol * (cellW + GAP);
         const cellTop = EDGE_PAD + cellRow * (cellH + GAP);
-        const localX = (ent.gridCol / 64) * cellW;
-        const localY = (ent.gridRow / 64) * cellH;
+        const localX = (crossing.tile.col / 64) * cellW;
+        const localY = (crossing.tile.row / 64) * cellH;
         const sz = Math.max(6, cellW * 4 / 64);
-        const { icon: markerIcon, color: markerColor } = getEntranceIcon(ent.id, ent.roomId, roomIndex, false, respawnEntIds);
+        const { icon: markerIcon, color: markerColor } = crossingIcon(crossing);
         return (
-          <Box key={`ent-${r.screenIndex}-${ent.id}`} style={{ position: 'absolute', left: cellLeft + localX - sz / 2, top: cellTop + localY - sz / 2, width: sz, height: sz, pointerEvents: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Box key={`ent-${screen.screenIndex}-${crossing.id}`} style={{ position: 'absolute', left: cellLeft + localX - sz / 2, top: cellTop + localY - sz / 2, width: sz, height: sz, pointerEvents: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title={crossing.label}>
             <Icon icon={markerIcon} width={sz} height={sz} style={{ color: markerColor, filter: 'drop-shadow(0 0 1px #000)' }} />
           </Box>
         );
       }))}
-
-      {fallHoleSpawns.map((fh, i) => {
-        const localX = (fh.gridCol / 64) * cellW;
-        const localY = (fh.gridRow / 64) * cellH;
-        const sz = Math.max(6, cellW * 4 / 64);
-        return (
-          <Box key={`fh-${i}`} style={{ position: 'absolute', left: EDGE_PAD + localX - sz / 2, top: EDGE_PAD + localY - sz / 2, width: sz, height: sz, border: '1.5px solid var(--c-gold)', borderRadius: 1, pointerEvents: 'none', background: 'repeating-linear-gradient(45deg, var(--c-gold) 0px, var(--c-gold) 2px, transparent 2px, transparent 4px)', opacity: 0.8 }} />
-        );
-      })}
 
       {playerPos && bundle.screens.includes(playerPos.screen) && (() => {
         const scrIdx = bundle.screens.indexOf(playerPos.screen);

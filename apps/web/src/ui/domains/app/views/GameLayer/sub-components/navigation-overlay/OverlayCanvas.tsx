@@ -23,7 +23,7 @@ interface OverlayCanvasProps extends Props {
 const OverlayCanvas = ({ width, height, gameRunning, mouseStateRef }: OverlayCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
-  const { visible, result, results, connections, fallHoleSpawns, respawnEntIds, annotations, hiddenKinds, setLockedPath } = useNavigationOverlayStore();
+  const { visible, result, results, connections, fallHoleSpawns, crossings, annotations, hiddenKinds, setLockedPath } = useNavigationOverlayStore();
   const { overworldScreenIndex, roomIndex, isIndoors } = useGameUIStore(s => s.map);
   const activeScreenIndex = isIndoors ? roomIndex : overworldScreenIndex;
 
@@ -64,7 +64,7 @@ const OverlayCanvas = ({ width, height, gameRunning, mouseStateRef }: OverlayCan
       drawCliffArrows(dc, drawResults);
       drawStairArrows(dc, drawResults);
       drawConnections(dc, connections);
-      drawEntrances(dc, drawResults, isIndoors, roomIndex, respawnEntIds);
+      drawEntrances(dc, crossings, isIndoors);
       if (isIndoors) {
         drawFallHoleSpawns(dc, fallHoleSpawns, activeScreenIndex, drawResults);
       }
@@ -78,7 +78,7 @@ const OverlayCanvas = ({ width, height, gameRunning, mouseStateRef }: OverlayCan
 
     rafRef.current = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [visible, result, results, connections, fallHoleSpawns, respawnEntIds, annotations, hiddenKinds, width, height, gameRunning, activeScreenIndex, isIndoors, roomIndex, layer1ReachableOverride, mouseStateRef, setLockedPath]);
+  }, [visible, result, results, connections, fallHoleSpawns, crossings, annotations, hiddenKinds, width, height, gameRunning, activeScreenIndex, isIndoors, roomIndex, layer1ReachableOverride, mouseStateRef, setLockedPath]);
 
   return (
     <Canvas

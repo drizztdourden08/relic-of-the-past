@@ -147,27 +147,6 @@ const sortExitsByDistance = (exits: SimExit[], scores: number[]): SimExit[] =>
 
 type EdgeName = 'north' | 'south' | 'west' | 'east';
 
-/**
- * Walk-distance to a DOORWAY on a wall: scan inward from the wall at the door
- * position (±4 tiles wide, up to 14 deep — notch depth and the door record's
- * lateral offset both vary) and return the first reached tile's distance.
- * UNREACHED when the doorway's side of the room was never flooded (e.g. it
- * sits behind an internal locked door).
- */
-const doorwayDistance = (dist: Uint16Array, edge: EdgeName, pos: number): number => {
-  for (let depth = 0; depth <= 14; depth++) {
-    for (let dpos = -4; dpos <= 4; dpos++) {
-      const p = pos + dpos;
-      if (p < 0 || p >= GRID) continue;
-      const r = edge === 'north' ? depth : edge === 'south' ? GRID - 1 - depth : p;
-      const c = edge === 'west' ? depth : edge === 'east' ? GRID - 1 - depth : p;
-      const d = dist[r * GRID + c];
-      if (d < UNREACHED) return d;
-    }
-  }
-  return UNREACHED;
-};
-
 /** Landing tile on the DESTINATION screen when crossing an edge at `pos`. */
 const entryFromEdge = (edge: EdgeName, pos: number): GridPos =>
   edge === 'north' ? { row: 63, col: pos }
@@ -186,5 +165,5 @@ const exitFromEdge = (edge: EdgeName, pos: number): GridPos =>
 const reachedGrid = (reachable: ReachState[][]): boolean[][] =>
   reachable.map((row) => row.map((v) => v > 0));
 
-export { stepDistances, distanceAt, doorwayDistance, sortExitsByDistance, decodeScore, entryFromEdge, exitFromEdge, reachedGrid, AREA_EXIT_BIAS };
+export { stepDistances, distanceAt, sortExitsByDistance, decodeScore, entryFromEdge, exitFromEdge, reachedGrid, AREA_EXIT_BIAS };
 export type { EdgeName };

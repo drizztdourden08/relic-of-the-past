@@ -12,7 +12,7 @@ import { useNavigation } from './useNavigation';
 
 const NavigationWidgetContent = () => {
   const {
-    screenBundle, screenName, screenId, isIndoors, roomIndex, isDarkWorld, overworldScreenIndex, externalConnections, renderResults, playerDebug, respawnEntIds, palaceIndex, dungeonMapPos, roomLayoutInfo, whichEntrance, roomStartLayer, progressInfo, gameStates, displayedVariant, dynamicBlockerCount, playerX, playerY, running, handleRun, result, handleClear, overlayStore, mode, setMode, reachableSum, totalTilesSum, entranceSum, internalConnections, fallHoleLandings, entranceSpawns,
+    screenBundle, screenName, screenId, isIndoors, roomIndex, isDarkWorld, overworldScreenIndex, externalConnections, externalEdges, crossings, renderResults, playerDebug, palaceIndex, dungeonMapPos, roomLayoutInfo, whichEntrance, roomStartLayer, progressInfo, gameStates, displayedVariant, dynamicBlockerCount, playerX, playerY, running, handleRun, result, handleClear, overlayStore, mode, setMode, reachableSum, totalTilesSum, entranceSum, internalConnections,
   } = useNavigation();
 
   return (
@@ -30,7 +30,7 @@ const NavigationWidgetContent = () => {
 
         {/* Screen map with edge connection indicators */}
         {screenBundle && (
-          <ScreenMapWithConnections bundle={screenBundle} connections={externalConnections} renderResults={renderResults} playerScreenIndex={playerDebug?.liveScreenIndex ?? null} playerPos={playerDebug ? { screen: playerDebug.liveScreenIndex, row: playerDebug.tileMinRow, col: playerDebug.tileMinCol } : null} respawnEntIds={respawnEntIds} />
+          <ScreenMapWithConnections bundle={screenBundle} connections={externalConnections} renderResults={renderResults} playerScreenIndex={playerDebug?.liveScreenIndex ?? null} playerPos={playerDebug ? { screen: playerDebug.liveScreenIndex, row: playerDebug.tileMinRow, col: playerDebug.tileMinCol } : null} />
         )}
       </Box>
 
@@ -44,9 +44,9 @@ const NavigationWidgetContent = () => {
       {/* ═══ 4. PLAYER STATE ═══ */}
       <PlayerStatePanel playerDebug={playerDebug} isIndoors={isIndoors} playerX={playerX} playerY={playerY} />
 
-      <ScreenPanel annotations={overlayStore.annotations} edges={externalConnections} isIndoors={isIndoors} palaceIndex={palaceIndex} />
+      <ScreenPanel annotations={overlayStore.annotations} />
 
-      <ConnectionsPanel entranceSum={entranceSum} renderResults={renderResults} screenBundle={screenBundle} isDarkWorld={isDarkWorld} roomIndex={roomIndex} isIndoors={isIndoors} respawnEntIds={respawnEntIds} entranceSpawns={entranceSpawns} externalConnections={externalConnections} internalConnections={internalConnections} fallHoleLandings={fallHoleLandings} playerDebug={playerDebug} />
+      <ConnectionsPanel entranceSum={entranceSum} crossings={crossings} screenBundle={screenBundle} isIndoors={isIndoors} externalEdges={externalEdges} internalConnections={internalConnections} playerDebug={playerDebug} />
     </Box>
   );
 };

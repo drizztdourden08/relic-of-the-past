@@ -27,7 +27,6 @@ const SCREEN_WIDE: ReadonlySet<ScreenAnnotation['kind']> = new Set(['kill-trigge
 /** Kinds whose state means lock/physical position, not check progress. */
 const PHYSICAL: ReadonlySet<ScreenAnnotation['kind']> = new Set([
   'key-door', 'big-key-door', 'cell-lock', 'shutter', 'bombable', 'follower-gate',
-  'warp-door', 'exit-door', 'exit',
 ]);
 
 const reachableNear = (reachable: readonly ReachState[][], row: number, col: number): boolean => {

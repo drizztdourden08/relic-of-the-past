@@ -20,7 +20,6 @@ const EXPECTED_KINDS: AnnotationKind[] = [
   'chest', 'big-chest', 'npc-check', 'standing-item',
   'key-door', 'big-key-door', 'cell-lock', 'shutter', 'bombable', 'follower-gate',
   'pull-switch', 'kill-trigger', 'key-carrier', 'big-key-carrier',
-  'warp-door', 'exit-door', 'exit',
   'unknown',
 ];
 

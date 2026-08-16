@@ -1,14 +1,14 @@
 /* @layer renderer-components @kind logic */
-import type { FloodFillResult } from '@shared/game/navigation';
-import { isEntranceUsable } from '@shared/game/navigation';
+import type { ScreenCrossing, ScreenCrossings } from '@shared/game/navigation';
+import { markerCrossings } from '@app/lib/crossing-sections';
 import type { DrawContext } from './draw-context';
 import { EDGE_COLORS } from '../navigation-overlay.type';
-import { getEntranceIcon } from '../../../../../../../../lib/entrance-icons';
+import { crossingIcon } from '../../../../../../../../lib/entrance-icons';
 
 const iconImageCache = new Map<string, HTMLImageElement>();
 
-const getIconImageForEntrance = (entId: number, roomId: number, roomIndex: number, isIndoors: boolean, respawnEntIds: Set<number>): HTMLImageElement | null => {
-  const { icon, color } = getEntranceIcon(entId, roomId, roomIndex, isIndoors, respawnEntIds);
+const getIconImageFor = (crossing: ScreenCrossing): HTMLImageElement | null => {
+  const { icon, color } = crossingIcon(crossing);
   const key = `${icon.body.slice(0, 30)}_${color}`;
   if (iconImageCache.has(key)) return iconImageCache.get(key)!;
   const w = icon.width ?? 512;
@@ -20,18 +20,17 @@ const getIconImageForEntrance = (entId: number, roomId: number, roomIndex: numbe
   return img;
 };
 
-const drawEntrances = (dc: DrawContext, drawResults: FloodFillResult[], isIndoors: boolean, roomIndex: number, respawnEntIds: Set<number>): void => {
+/** Markers on the tile the crossings facade placed each crossing on. */
+const drawEntrances = (dc: DrawContext, crossings: readonly ScreenCrossings[], isIndoors: boolean): void => {
   const { ctx, scaleX, scaleY, viewLeft, viewTop, snesW, snesH, TILE_PX, getScreenWorldOrigin } = dc;
 
   ctx.globalAlpha = 0.95;
   ctx.fillStyle = EDGE_COLORS.entrance;
-  for (const drawResult of drawResults) {
-    const origin = getScreenWorldOrigin(drawResult.screenIndex);
-    for (const ent of drawResult.entrances) {
-      if (!isEntranceUsable(drawResult, ent)) continue;
-      const xOffset = (!isIndoors && ent.id < 200) ? 8 : 0;
-      const worldX = origin.x + ent.gridCol * TILE_PX + xOffset;
-      const worldY = origin.y + ent.gridRow * TILE_PX;
+  for (const screen of crossings) {
+    const origin = getScreenWorldOrigin(screen.screenIndex);
+    for (const crossing of markerCrossings(screen, isIndoors)) {
+      const worldX = origin.x + crossing.tile.col * TILE_PX;
+      const worldY = origin.y + crossing.tile.row * TILE_PX;
       const screenX = worldX - viewLeft;
       const screenY = worldY - viewTop;
       if (screenX < -TILE_PX * 2 || screenX > snesW + TILE_PX) continue;
@@ -52,7 +51,7 @@ const drawEntrances = (dc: DrawContext, drawResults: FloodFillResult[], isIndoor
       ctx.lineWidth = 1;
       ctx.strokeRect(dx - 0.5, dy - 0.5, dw + 1, dh + 1);
 
-      const iconImg = getIconImageForEntrance(ent.id, ent.roomId, roomIndex, isIndoors, respawnEntIds);
+      const iconImg = getIconImageFor(crossing);
       if (iconImg && iconImg.complete && iconImg.naturalWidth > 0) {
         const pad = Math.max(1, dw * 0.1);
         ctx.globalAlpha = 0.9;

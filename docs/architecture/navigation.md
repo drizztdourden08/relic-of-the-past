@@ -42,14 +42,19 @@ overlay draws (`annotate-screen.ts`). All three consumers — the navigation wid
 ## Screen annotations
 
 `ScreenAnnotations` (`shared/game/simulation/annotations.ts`) is the one description of what is on a
-screen and what state it is in: a list of `{ kind, tile, label, state, detail, requires, target }`
-items, the check tallies for the minimap badge, and the decoded room tags.
+screen and what state it is in: a list of `{ kind, tile, label, state, detail, requires }` items, the
+check tallies for the minimap badge, and the decoded room tags.
 
 `apps/web/src/lib/game/flood/annotate-screen.ts` derives it from the **same reads the simulator gates
-its targets on** — doors and cell locks, sprites with their key-carrier markers, chests (named after
-what they will actually yield), room tags and detected exits — with per-family mapping in `annotate/`.
-The flood runs first and decides which items are actually touchable, so the overlay, both minimaps and
-the widget's "On this screen" panel cannot disagree with the run.
+its targets on** — locks and gates, sprites with their key-carrier markers, chests (named after what
+they will actually yield) and room tags — with per-family mapping in `annotate/`. The flood runs first
+and decides which items are actually touchable, so the overlay, both minimaps and the widget's "On this
+screen" panel cannot disagree with the run.
+
+Ways on and off a screen are **not** annotations. Entrances, doors, stairs, holes, teleports and
+walkable screen edges come from `apps/web/src/lib/game/crossings/`, which resolves each one's
+destination, tile and availability in one place; they draw through their own icon renderer and list in
+the widget's Connections panel.
 
 The annotation kinds are exhaustive by type: `annotation-style.ts` must register a style, glyph and
 legend for every kind in the union, an unmapped kind still draws as a neutral marker, and

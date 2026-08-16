@@ -13,7 +13,7 @@ import type { GridPos } from '@shared/game/navigation';
 import { annotateScreen, propagateArea } from '../../../lib/game/flood';
 import { floodRoomRun } from '../../../lib/game/simulator/flood-room';
 import { floodOneOverworld } from '../../../lib/game/simulator/flood-screen';
-import { enrichEntrances } from '@domains/widgets/navigation/widget-helpers';
+import { enrichEntrances } from '@app/lib/game/flood/overworld-entrances';
 import { wasmBuildOverworldAttrGrid } from '../../../lib/game';
 import { computeFloodFill, computeOverworldFloodFill } from './builders';
 import { dumpFloodItems } from './flood-items';
@@ -74,7 +74,6 @@ const runDumpFlood = (args: RunFloodArgs): RunFloodResult => {
     ? annotateScreen(
       screenId,
       { isIndoors, roomId: isIndoors ? roomIndex : 0, owScreenIndex: isIndoors ? 0 : overworldScreenIndex },
-      startPos,
       run.result.reachable,
     )
     : null;

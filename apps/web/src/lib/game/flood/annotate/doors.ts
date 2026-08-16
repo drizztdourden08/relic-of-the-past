@@ -1,8 +1,11 @@
 /* @layer bridge-wasm @kind logic */
 /**
- * One door record → one annotation. Doors that share a `kind` are separated by
- * their raw kDoorType (the throne push wall and a warp door are both 'normal'),
- * and cell locks are not door-table records at all.
+ * One door record → one annotation, for the doors that are a LOCK or a GATE. A
+ * door that is a way through to somewhere else is a crossing instead
+ * (apps/web/src/lib/game/crossings/), so it does not come through here.
+ *
+ * Doors that share a `kind` are separated by their raw kDoorType (the throne push
+ * wall reads as 'normal'), and cell locks are not door-table records at all.
  *
  * A shutter in a kill-gate room carries WHY it is shut: those are the trap
  * shutters that close behind the player and only reopen when the room is cleared.
@@ -12,8 +15,6 @@ import type { SimDoor } from '@shared/game/simulation';
 
 /** kDoorType_ThroneRoom — the push wall that needs the follower in tow. */
 const THRONE_DOOR = 0x14;
-/** kDoorType_WarpRoomDoor — crossing teleports to a header travel destination. */
-const WARP_DOOR = 0x46;
 
 const DOOR_KIND: Partial<Record<SimDoor['kind'], AnnotationKind>> = {
   'small-key': 'key-door',
@@ -49,10 +50,6 @@ const doorAnnotation = (door: SimDoor, ctx: DoorContext): ScreenAnnotation | nul
       state: ctx.followerReady ? 'open' : 'shut',
       ...(ctx.followerReady ? {} : { detail: 'needs the follower in tow' }) };
   }
-  if (door.nativeType === WARP_DOOR) {
-    return { ...base, kind: 'warp-door', label: 'warp door', state: 'open' };
-  }
-
   const kind = DOOR_KIND[door.kind];
   if (!kind) return null;
   const requires = REQUIRES[kind];
@@ -65,5 +62,5 @@ const doorAnnotation = (door: SimDoor, ctx: DoorContext): ScreenAnnotation | nul
   };
 };
 
-export { doorAnnotation, THRONE_DOOR, WARP_DOOR };
+export { doorAnnotation, THRONE_DOOR };
 export type { DoorContext };

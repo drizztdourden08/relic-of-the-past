@@ -27,12 +27,14 @@ import { auditableFromHere, otherEndpoint, storedOnFarSide, transitionKey } from
 
 /** Sources the native room tables enumerate directly — an absence among
  *  these is provable. `flood` and `walk` are excluded; see the file header. */
-const ENUMERABLE_SOURCES: ReadonlySet<string> = new Set(['exit', 'stair', 'travel', 'hole', 'entrance']);
+const ENUMERABLE_SOURCES: ReadonlySet<string> = new Set(['exit', 'stair', 'travel', 'hole', 'entrance', 'doorway']);
 
 const inferTags = (transition: ObservedTransition): ConnectionTag[] => {
   if (transition.source === 'stair') return ['transit:stairs', 'ctx:internal'];
   if (transition.source === 'hole') return ['transit:hole', 'ctx:entrance'];
   if (transition.source === 'travel') return ['transit:warp', 'ctx:internal'];
+  // A doorway object through an outer wall joins two rooms of the same interior.
+  if (transition.source === 'doorway') return ['transit:door', 'ctx:internal'];
   // 'exit' (the overworld screen this room exits to) and 'entrance' (an
   // overworld door leading into a room) are both door crossings.
   return ['transit:door', 'ctx:entrance'];

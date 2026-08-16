@@ -20,13 +20,6 @@ type AnnotationKind =
   | 'key-door' | 'big-key-door' | 'cell-lock' | 'shutter' | 'bombable' | 'follower-gate'
   // Triggers
   | 'pull-switch' | 'kill-trigger' | 'key-carrier' | 'big-key-carrier'
-  // Ways off the screen. Real entrances, stairs and walk-through boundaries are
-  // NOT here: they come from the room-entrances/OverworldEntrance pipeline
-  // (apps/web/src/lib/game/flood/room-entrances.ts) and draw through their own
-  // icon renderer, not this one. A 'stair'/'walk-boundary'/'entrance' kind used
-  // to sit in this union with a style nothing ever constructed — dead, and
-  // confusable with the real markers of the same name.
-  | 'warp-door' | 'exit-door' | 'exit'
   // Anything the simulator reports that has no mapping yet.
   | 'unknown';
 
@@ -60,8 +53,6 @@ interface ScreenAnnotation {
   detail?: string;
   /** Traversal tokens this thing demands ('smallkey:*', 'bigkey:*', 'sword'…). */
   requires?: string[];
-  /** For a way off the screen: the screen id it leads to. */
-  target?: string;
 }
 
 /** One room-header TAG byte, decoded. Screen-wide, so it has no tile. */

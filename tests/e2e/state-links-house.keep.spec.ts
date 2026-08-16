@@ -25,7 +25,7 @@ test('test-links-house is still the canonical run start', async () => {
     const flood = await r.flood();
     expect(flood, 'blessed indoor reachability for the run start').toEqual({ reachable: 288, total: 4096 });
 
-    expect(await r.groups()).toEqual({ 'Checks': 2, 'Ways out': 3 });
+    expect(await r.groups()).toEqual({ 'Checks': 2 });
 
     // Nothing collected yet — both checks must still be open.
     const summary = await r.checkSummary();
