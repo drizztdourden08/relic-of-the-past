@@ -8,13 +8,16 @@ import {
   cheatSetHealth, cheatSetMaxHealth, cheatSetRupees,
   cheatSetBombs, cheatSetArrows, cheatRefillMagic,
 } from '../../../../../lib/game';
+import { useGameUIStore } from '../../../../../stores/game-ui-store';
 
 const StatsTab = () => {
+  const { maxRupees, maxBombs, maxArrows } = useGameUIStore(s => s.hud);
+
   const [health, setHealth] = useState(160);
   const [maxHealth, setMaxHealth] = useState(160);
-  const [rupees, setRupees] = useState(999);
-  const [bombs, setBombs] = useState(99);
-  const [arrows, setArrows] = useState(99);
+  const [rupees, setRupees] = useState(maxRupees);
+  const [bombs, setBombs] = useState(maxBombs);
+  const [arrows, setArrows] = useState(maxArrows);
 
   return (
     <Box className="cheats-tab-stats">
@@ -24,16 +27,16 @@ const StatsTab = () => {
           <Button variant="secondary" size="sm" onClick={() => { cheatSetHealth(160); cheatSetMaxHealth(160); }}>
             Full Heal (20♥)
           </Button>
-          <Button variant="secondary" size="sm" onClick={() => cheatSetRupees(999)}>
-            999 Rupees
+          <Button variant="secondary" size="sm" onClick={() => cheatSetRupees(maxRupees)}>
+            Max Rupees ({maxRupees})
           </Button>
           <Button variant="secondary" size="sm" onClick={() => cheatRefillMagic()}>
             Fill Magic
           </Button>
         </Box>
         <Box className="cheats-row">
-          <Button variant="tertiary" size="sm" onClick={() => { cheatSetBombs(99); cheatSetArrows(99); }}>
-            Max Bombs & Arrows
+          <Button variant="tertiary" size="sm" onClick={() => { cheatSetBombs(maxBombs); cheatSetArrows(maxArrows); }}>
+            Max Bombs & Arrows ({maxBombs}/{maxArrows})
           </Button>
           <Button variant="danger" size="sm" onClick={() => cheatSetHealth(8)}>
             Set 1♥
@@ -79,8 +82,8 @@ const StatsTab = () => {
           <Box className="cheats-row__controls">
             <NumberInput
               className="cheats-input"
-              min={0} max={999} value={rupees}
-              onChange={v => setRupees(Math.min(999, Math.max(0, v)))}
+              min={0} max={maxRupees} value={rupees}
+              onChange={v => setRupees(Math.min(maxRupees, Math.max(0, v)))}
             />
             <Button variant="tertiary" size="sm" onClick={() => cheatSetRupees(rupees)}>Set</Button>
           </Box>
@@ -90,8 +93,8 @@ const StatsTab = () => {
           <Box className="cheats-row__controls">
             <NumberInput
               className="cheats-input"
-              min={0} max={99} value={bombs}
-              onChange={v => setBombs(Math.min(99, Math.max(0, v)))}
+              min={0} max={maxBombs} value={bombs}
+              onChange={v => setBombs(Math.min(maxBombs, Math.max(0, v)))}
             />
             <Button variant="tertiary" size="sm" onClick={() => cheatSetBombs(bombs)}>Set</Button>
           </Box>
@@ -101,8 +104,8 @@ const StatsTab = () => {
           <Box className="cheats-row__controls">
             <NumberInput
               className="cheats-input"
-              min={0} max={99} value={arrows}
-              onChange={v => setArrows(Math.min(99, Math.max(0, v)))}
+              min={0} max={maxArrows} value={arrows}
+              onChange={v => setArrows(Math.min(maxArrows, Math.max(0, v)))}
             />
             <Button variant="tertiary" size="sm" onClick={() => cheatSetArrows(arrows)}>Set</Button>
           </Box>

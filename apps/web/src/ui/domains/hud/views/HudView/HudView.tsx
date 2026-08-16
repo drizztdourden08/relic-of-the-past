@@ -10,7 +10,7 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { aspectRatioValue } from '@app/lib/game/aspect-ratio';
 
 const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string; slideTransition?: string } = {}) => {
-  const { heartMode, magicMode, countLayout, ratio: hudRatio, customW, customH } = useHudSettingsStore();
+  const { heartMode, magicMode, countLayout, ratio: hudRatio, customW, customH, showMaxInYellow } = useHudSettingsStore();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(2);
@@ -57,12 +57,28 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
 
   // Keys: game uses 0xFF (255) to indicate "no key display"
   const showKeys = data.keys !== 255 && data.keys !== 0xFF;
+  // Rupee counter needs a 4th digit once the "Larger Wallet" cap raises it past 999.
+  const rupeeDigits = data.maxRupees > 999 ? 4 : 3;
+  // Bow value >= 3 means Silver Arrows have been obtained — mirrors hud.c's Hud_Update_Inventory.
+  const hasSilverArrows = data.items[0] >= 3;
 
   const counts = (
     <>
-      <HudCount icon="hud-rupee-icon" iconWidth={8} value={data.rupees} digits={3} scale={scale} spritesBase={spritesBase} />
-      <HudCount icon="hud-bomb-icon" iconWidth={16} value={data.bombs} digits={2} scale={scale} spritesBase={spritesBase} />
-      <HudCount icon="hud-arrow-icon" iconWidth={16} value={data.arrows} digits={2} scale={scale} spritesBase={spritesBase} />
+      <HudCount
+        icon="hud-rupee-icon" iconWidth={8} value={data.rupees} digits={rupeeDigits}
+        isMax={showMaxInYellow && data.rupees === data.maxRupees}
+        scale={scale} spritesBase={spritesBase}
+      />
+      <HudCount
+        icon="hud-bomb-icon" iconWidth={16} value={data.bombs} digits={2}
+        isMax={showMaxInYellow && data.bombs === data.maxBombs}
+        scale={scale} spritesBase={spritesBase}
+      />
+      <HudCount
+        icon={hasSilverArrows ? 'hud-silver-arrow-icon' : 'hud-arrow-icon'} iconWidth={16} value={data.arrows} digits={2}
+        isMax={showMaxInYellow && data.arrows === data.maxArrows}
+        scale={scale} spritesBase={spritesBase}
+      />
       {showKeys && (
         <HudCount icon="hud-key-icon" iconWidth={8} value={data.keys} digits={1} scale={scale} spritesBase={spritesBase} />
       )}
@@ -104,6 +120,7 @@ const HudView = ({ slideTransform, slideTransition }: { slideTransform?: string;
             <HudBox style={{ marginLeft: -tile }}>
               <HudCurrentItem
                 itemId={data.equippedY}
+                itemValue={data.equippedY > 0 ? data.items[data.equippedY - 1] ?? 0 : 0}
                 scale={scale}
                 spritesBase={spritesBase}
               />

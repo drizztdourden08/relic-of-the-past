@@ -7,26 +7,30 @@ const digitShadowFilter = (s: number): string => {
 interface HudNumberProps {
   value: number;
   digits?: number;
+  /** Renders with the "at max" yellow digit variant instead of white — see the "Indicate Max Resources" setting. */
+  isMax?: boolean;
   scale: number;
   spritesBase: string;
 }
 
 const HudNumber = (props: HudNumberProps) => {
-  const { value, digits = 3, scale, spritesBase } = props;
+  const { value, digits = 3, isMax = false, scale, spritesBase } = props;
 
-  const str = Math.min(Math.max(0, value), 999)
+  const max = 10 ** digits - 1;
+  const str = Math.min(Math.max(0, value), max)
     .toString()
     .padStart(digits, '0');
 
   const tile = 8 * scale;
   const shadow = scale;
+  const suffix = isMax ? '-yellow' : '';
 
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       {str.split('').map((d, i) => (
         <img
           key={i}
-          src={`${spritesBase}font-digit-${d}.png`}
+          src={`${spritesBase}font-digit-${d}${suffix}.png`}
           height={tile}
           draggable={false}
           style={{

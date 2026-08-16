@@ -22,6 +22,12 @@ interface HudData {
   arrows: number;
   keys: number;
   equippedY: number;
+  /** 20 item slots (inventory.items) — used to pick the equipped item's upgrade-tier sprite. */
+  items: number[];
+  /** Current resource caps — the max a counter can reach right now (accounts for upgrades/settings). */
+  maxRupees: number;
+  maxBombs: number;
+  maxArrows: number;
 }
 
 interface HudConfig {
@@ -39,6 +45,7 @@ interface UseHudResult {
 
 const useHud = (scale: number): UseHudResult => {
   const hud = useGameUIStore((s) => s.hud);
+  const items = useGameUIStore((s) => s.inventory.items);
   const spritesBase = getSpritesBase();
 
   const data: HudData = {
@@ -51,6 +58,10 @@ const useHud = (scale: number): UseHudResult => {
     arrows: hud.arrows,
     keys: hud.keys,
     equippedY: hud.equippedY,
+    items,
+    maxRupees: hud.maxRupees,
+    maxBombs: hud.maxBombs,
+    maxArrows: hud.maxArrows,
   };
 
   const config: HudConfig = { scale, spritesBase };

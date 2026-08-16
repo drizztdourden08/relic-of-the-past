@@ -1,35 +1,13 @@
 /* @layer renderer-hud @kind data */
 import { HudBox } from '../../primitives/HudBox';
 import { HudImage } from '../../primitives/HudImage';
-
-/**
- * Maps equippedY slot ID (1-20) to sprite filename.
- */
-const ITEM_SLOT_SPRITES: Record<number, string> = {
-  1: 'hud-bow',
-  2: 'hud-blue-boomerang',
-  3: 'hud-hookshot',
-  4: 'hud-bombs',
-  5: 'hud-mushroom',
-  6: 'hud-fire-rod',
-  7: 'hud-ice-rod',
-  8: 'hud-bombos',
-  9: 'hud-ether',
-  10: 'hud-quake',
-  11: 'hud-lamp',
-  12: 'hud-hammer',
-  13: 'hud-shovel',
-  14: 'hud-bug-net',
-  15: 'hud-book-of-mudora',
-  16: 'hud-bottle',
-  17: 'hud-cane-of-somaria',
-  18: 'hud-cane-of-byrna',
-  19: 'hud-cape',
-  20: 'hud-magic-mirror',
-};
+import { getSlotSprite } from '../PauseItemSlot';
 
 interface HudCurrentItemProps {
+  /** equippedY slot ID (1-20) */
   itemId: number;
+  /** The equipped slot's inventory value (upgrade tier) — see getSlotSprite. */
+  itemValue: number;
   scale: number;
   spritesBase: string;
 }
@@ -40,13 +18,13 @@ interface HudCurrentItemProps {
  * with a black interior and the 16×16 item sprite centered inside.
  */
 const HudCurrentItem = (props: HudCurrentItemProps) => {
-  const { itemId, scale, spritesBase } = props;
+  const { itemId, itemValue, scale, spritesBase } = props;
   const tile = 8 * scale;
 
   // Item box is 4×4 tiles (32×32 SNES px): 1-tile border + 2×2 interior
   const boxSize = 4 * tile;
 
-  const sprite = itemId > 0 ? ITEM_SLOT_SPRITES[itemId] : null;
+  const sprite = itemId > 0 ? getSlotSprite(itemId - 1, itemValue) : null;
 
   return (
     <HudBox style={{
@@ -116,5 +94,5 @@ const HudCurrentItem = (props: HudCurrentItemProps) => {
   );
 };
 
-export { HudCurrentItem, ITEM_SLOT_SPRITES };
+export { HudCurrentItem };
 export type { HudCurrentItemProps };

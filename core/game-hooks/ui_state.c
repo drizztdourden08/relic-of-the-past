@@ -139,6 +139,13 @@ int WasmGetGameUIState(void) {
   PutU16(b, 121, link_x_coord);
   PutU16(b, 123, link_y_coord);
 
+  // ─── Bytes 125–128: Current Resource Caps (for "indicate max resources") ───
+  // Rupee cap mirrors hud.c's static MaxRupees() — duplicated here since that helper has internal
+  // linkage; the underlying condition (enhanced_features0 & kFeatures0_CarryMoreRupees) is the same.
+  b[125] = kMaxBombsForLevel[link_bomb_upgrades];
+  b[126] = kMaxArrowsForLevel[link_arrow_upgrades];
+  PutU16(b, 127, (enhanced_features0 & kFeatures0_CarryMoreRupees) ? 9999 : 999);
+
   return (int)g_ui_state_buf;
 }
 

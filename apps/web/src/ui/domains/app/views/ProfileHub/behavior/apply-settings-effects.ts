@@ -36,6 +36,7 @@ const syncHudStore = (s: GameSettings): void => {
     countLayout: s.hudCountLayout,
     pauseStyle: s.hudPauseStyle,
     pauseHighlight: s.hudPauseHighlight,
+    showMaxInYellow: s.showMaxItemsInYellow,
   });
 };
 

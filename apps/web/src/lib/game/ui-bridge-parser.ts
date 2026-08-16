@@ -166,6 +166,11 @@ const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
   const linkX = b[p + 121] | (b[p + 122] << 8);
   const linkY = b[p + 123] | (b[p + 124] << 8);
 
+  // Current resource caps (bytes 125–128)
+  const maxBombs = b[p + 125];
+  const maxArrows = b[p + 126];
+  const maxRupees = b[p + 127] | (b[p + 128] << 8);
+
   // Derive mode
   const mode = deriveUIMode(mainModule, subModule, subSubModule, floorTimer, overworldScreenIndex);
 
@@ -176,6 +181,7 @@ const parseGameUIBuffer = (heap: Uint8Array, ptr: number): GameUIState => {
     rupees, rupeeTarget, bombs, arrows, keys,
     equippedY, equippedX, equippedL, equippedR,
     heartsFiller, magicFiller, bombFiller, arrowFiller,
+    maxRupees, maxBombs, maxArrows,
   };
 
   const inventoryState: InventoryState = { items, bottles, order };
