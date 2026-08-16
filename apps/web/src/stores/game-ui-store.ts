@@ -20,6 +20,7 @@ const initialState: GameUIState = {
     rupees: 0, rupeeTarget: 0, bombs: 0, arrows: 0, keys: 0,
     equippedY: 0, equippedX: 0, equippedL: 0, equippedR: 0,
     heartsFiller: 0, magicFiller: 0, bombFiller: 0, arrowFiller: 0,
+    maxRupees: 999, maxBombs: 10, maxArrows: 30,
   },
   inventory: { items: Array(20).fill(0), bottles: [0, 0, 0, 0], order: Array(24).fill(0) },
   equipment: { sword: 0, shield: 0, armor: 0, gloves: 0, boots: 0, flippers: 0, moonPearl: 0, abilityFlags: 0, heartPieces: 0 },

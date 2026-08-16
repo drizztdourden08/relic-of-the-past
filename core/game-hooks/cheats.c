@@ -99,7 +99,10 @@ void WasmCheatSetMaxHealth(int value) {
 // Set rupee goal (game animates counter toward this value).
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetRupees(int value) {
-  uint16 capped = (uint16)clampi(value, 0, 999);
+  // Cap tracks the real current max — 9999 with the "Larger Wallet" feature on, 999 otherwise —
+  // same condition as hud.c's MaxRupees() (that helper has internal linkage, so duplicated here).
+  int max = (enhanced_features0 & kFeatures0_CarryMoreRupees) ? 9999 : 999;
+  uint16 capped = (uint16)clampi(value, 0, max);
   link_rupees_goal = capped;
   printf("[Cheat] SetRupees: %d\n", capped);
 }

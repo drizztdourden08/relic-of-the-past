@@ -46,21 +46,21 @@ const BOTTLE_CONTENT_NAMES: Record<number, string> = {
 const GRID_TO_SAVE = [0, 3, 2, 14, 1, 10, 5, 6, 15, 16, 17, 9, 4, 8, 7, 12, 11, 18, 13, 19];
 
 /** Item names indexed by save-RAM slot (0-19) */
-const SAVE_SLOT_NAMES = [
-  'BOW', 'BOOMERANG', 'HOOKSHOT', 'BOMBS', 'MUSHROOM',
+const SAVE_SLOT_NAMES: (string | string[])[] = [
+  'BOW', 'BOOMERANG', 'HOOKSHOT', 'BOMB', 'MUSHROOM',
   'FIRE ROD', 'ICE ROD', 'BOMBOS', 'ETHER', 'QUAKE',
-  'LAMP', 'HAMMER', 'SHOVEL', 'BUG NET', 'BOOK',
-  'BOTTLE', 'SOMARIA', 'BYRNA', 'CAPE', 'MIRROR',
+  'LAMP', ['MAGIC', 'HAMMER'], 'SHOVEL', 'BUG NET', ['BOOK OF', 'MUDORA'],
+  'BOTTLE', ['CANE OF', 'SOMARIA'], ['CANE OF', 'BYRNA'], ['MAGIC', 'CAPE'], ['MAGIC', 'MIRROR'],
 ];
 
-const getItemNameForSlot = (saveIdx: number, items: number[]): string => {
+const getItemNameForSlot = (saveIdx: number, items: number[]): string | string[] => {
   if (saveIdx < 0 || saveIdx >= 20) return '';
   const value = items[saveIdx];
   if (!value) return '';
-  // Upgrade variants
-  if (saveIdx === 0 && value >= 2) return 'SILVER BOW';
-  if (saveIdx === 1 && value >= 2) return 'MAGIC BOOM';
-  if (saveIdx === 4 && value >= 2) return 'POWDER';
+  // Upgrade variants — the boomerang has no separate upgrade-tier name (only its icon
+  // color changes), so it always falls through to the base SAVE_SLOT_NAMES entry.
+  if (saveIdx === 0 && value >= 4) return ['BOW &', 'SILVER ARROWS'];
+  if (saveIdx === 4 && value >= 2) return ['MAGIC', 'POWDER'];
   if (saveIdx === 12 && value >= 2) return 'FLUTE';
   if (saveIdx === 12 && value === 1) return 'SHOVEL';
   return SAVE_SLOT_NAMES[saveIdx];

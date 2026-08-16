@@ -32,6 +32,10 @@ interface HUDState {
   magicFiller: number;
   bombFiller: number;
   arrowFiller: number;
+  /** Current resource caps — the max a counter can reach right now (accounts for upgrades/settings). */
+  maxRupees: number;
+  maxBombs: number;
+  maxArrows: number;
 }
 
 interface InventoryState {

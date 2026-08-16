@@ -13,6 +13,7 @@ interface HudSettings {
   countLayout: 'centered' | 'original';
   pauseStyle: 'vanilla' | 'enhanced';
   pauseHighlight: 'box' | 'glow' | 'none';
+  showMaxInYellow: boolean;
 }
 
 interface HudSettingsStore extends HudSettings {
@@ -31,6 +32,7 @@ const useHudSettingsStore = create<HudSettingsStore>()((set) => ({
   countLayout: 'centered',
   pauseStyle: 'vanilla',
   pauseHighlight: 'box',
+  showMaxInYellow: false,
   setHudSettings: (patch) => set(patch),
 }));
 
