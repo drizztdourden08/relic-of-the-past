@@ -17,13 +17,27 @@
  *   Those are reported and do NOT block: `npm run vault:sync` commits everything
  *   it writes, so any sync leaves commits here, and blocking on that would fail
  *   every commit in this repo until the vault had been pushed.
+ *
+ * Committing from a git WORKTREE runs this hook with GIT_DIR (and friends) set to
+ * that worktree's private git-dir. `-C <dir>` only changes the child's cwd — it
+ * does not clear an inherited GIT_DIR — so without stripping it, git would ignore
+ * the vault's own repo entirely and diff its files against the caller's index
+ * instead, reporting every single file in the vault as modified.
  */
 import { execFileSync } from 'node:child_process';
 import { locateVault } from '../../vault/locate.mjs';
 
+const GIT_ENV_OVERRIDES = ['GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_COMMON_DIR', 'GIT_OBJECT_DIRECTORY', 'GIT_ALTERNATE_OBJECT_DIRECTORIES'];
+
+const cleanGitEnv = () => {
+  const env = { ...process.env };
+  for (const key of GIT_ENV_OVERRIDES) delete env[key];
+  return env;
+};
+
 const git = (dir, args) => {
   try {
-    return execFileSync('git', ['-C', dir, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+    return execFileSync('git', ['-C', dir, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], env: cleanGitEnv() });
   } catch {
     return '';
   }

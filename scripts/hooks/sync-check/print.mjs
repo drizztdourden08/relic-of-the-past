@@ -8,14 +8,21 @@
  * actually stands in the way — otherwise it reads as an instruction to silence a
  * warning that was never stopping anything.
  */
+import { join } from 'node:path';
+import { locateAiConfigRepo } from './locate-ai-config-repo.mjs';
+
 const printReport = ({ ai, vault, blocking }) => {
   const lines = [];
 
   if (ai.status === 'drift') {
+    const repo = locateAiConfigRepo();
     lines.push('ai-config: local edits differ from the last render — these live only in the');
     lines.push('gitignored .claude/ and will be OVERWRITTEN by the next bootstrap render:');
     ai.edits.forEach((p) => lines.push(`  ${p}`));
     lines.push('  -> fold the edit back into the claude-config source, commit + push it there');
+    lines.push(repo
+      ? `  -> then re-render: node "${join(repo, 'ai', 'bootstrap.mjs')}" claude rotp --confirm`
+      : '  -> then re-render with your ai-config bootstrap command');
   }
 
   if (vault.status === 'dirty') {

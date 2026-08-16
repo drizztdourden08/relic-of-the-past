@@ -75,4 +75,4 @@ const MANAGED_ROOTS = [
   '.claude/nav-baselines',
 ];
 
-export { ROOT, TREE, MANAGED_ROOTS, locateVault, treeDirOf, candidates };
+export { ROOT, TREE, MANAGED_ROOTS, locateVault, mainCheckout, treeDirOf, candidates };
