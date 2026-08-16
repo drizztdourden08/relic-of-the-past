@@ -22,9 +22,15 @@
   min-inline-size: 0;
 }
 
+/* A heading, not another field label — it takes the secondary accent so a scan
+   finds where one group ends and the next begins. Sharing `--c-text-dim` with
+   the field and nest labels below leaves the three indistinguishable, which
+   costs the grouping its whole point. The bright variant, not the base one:
+   at `--text-xs`, uppercase and letter-spaced, the base green clears the 4.5:1
+   contrast floor against the card by too little to read comfortably. */
 .compact-record-view__group-label {
   padding-bottom: var(--space-2xs);
-  color: var(--c-text-dim);
+  color: var(--c-green-bright);
   font-size: var(--text-xs);
   font-weight: var(--weight-semi);
   letter-spacing: 0.5px;

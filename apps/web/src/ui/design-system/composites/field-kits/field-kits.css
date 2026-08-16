@@ -64,8 +64,14 @@
 }
 
 /* A picker plus its escape hatch. The row wraps so the entry drops to its own
-   full-width line rather than squeezing the picker it belongs to. */
+   full-width line rather than squeezing the picker it belongs to. It lays
+   itself out rather than composing Flex because the picker inside it is
+   measured against this box — see sub-components/OpenSetControl.tsx. */
 .field-kit__open-set {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
   min-inline-size: 0;
 }
 

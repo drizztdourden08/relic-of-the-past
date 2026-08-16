@@ -73,8 +73,8 @@ const onUnresolvableConnection: UnresolvableMapper<'connection'> = (difference, 
     current: null,
     proposed,
     reason: ambiguous
-      ? `A crossing leaves this screen for room ${label}, which the dataset has never catalogued — its palace membership is unknown, so verify before accepting.`
-      : `A crossing leaves this screen for ${label}, which the dataset has never catalogued.`,
+      ? `Crossing to ${label}: no screen record, palace unknown.`
+      : `Crossing to ${label}: no screen record.`,
     detector: 'strategy:connection',
     evidence: [{ source: 'native:room-transitions', detail: `unresolved destination ${difference.key}` }],
     confidence: ambiguous ? 'likely' : 'certain',

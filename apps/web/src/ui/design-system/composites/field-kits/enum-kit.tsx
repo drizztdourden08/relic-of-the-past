@@ -5,46 +5,33 @@
  * Those are two different questions about the same field and the kit
  * deliberately does not conflate them.
  *
- * The editor picks its control by how many options there are, because one
- * control cannot read well across the whole range: a segmented track is a
- * single fixed-width row that stays crisp for a handful of short labels and
- * gets cramped past that; chips wrap, so they carry the rest of what inference
- * is willing to call a closed set; anything wider than that is a list, and a
- * list belongs in a dropdown.
+ * Which control the editor offers, and whether it fits the row it lands in,
+ * are decided in `closed-set-picker.tsx` — the first from the size of the set,
+ * the second by measuring. This file is what the two questions are asked on
+ * behalf of: the field, its labels, and the value written back.
  *
- * All three tiers are closed by construction, and the set they close over is
- * only what inference has seen — so every one of them is wrapped in the same
- * escape hatch rather than any tier being singled out. See `open-set.ts` and
- * `sub-components/OpenSetControl.tsx`; the tier is chosen from the set the
- * control will actually show, so a value entered through the hatch counts
- * towards it like any other.
+ * Every control here is closed by construction, and the set it closes over is
+ * only what inference has seen — so all of them are wrapped in the same escape
+ * hatch rather than any one being singled out. See `open-set.ts` and
+ * `sub-components/OpenSetControl.tsx`; the control is chosen from the set that
+ * will actually show, so a value entered through the hatch counts towards the
+ * choice like any other.
  */
 import type { ReactNode } from 'react';
 import { registerFieldTester } from '../../data/filter/tester-registry';
-import { ENUM_MAX } from '../../data/schema/infer-kind';
 import { Badge } from '../../primitives/Badge';
-import { SegmentedControl } from '../../primitives/SegmentedControl';
-import { Select } from '../../primitives/Select';
 import { Text } from '../../primitives/Text';
+import { hasNarrower, narrowControl, preferredControl, widthSignature } from './closed-set-picker';
 import { isNullish, toText } from './coerce';
 import { withCurrentValue } from './open-set';
 import { registerFieldKit } from './registry';
 import { EnumMultiSelect } from './sub-components/EnumMultiSelect';
-import { EnumTagSelect } from './sub-components/EnumTagSelect';
 import { OpenSetControl } from './sub-components/OpenSetControl';
 import type { EditorControlProps, FieldTypeStrategy, FilterControlProps } from './registry';
 import type { FieldDescriptor } from '../../data/schema/field-descriptor';
-import type { SegmentOption } from '../../primitives/SegmentedControl';
-import type { SelectOption } from '../../primitives/Select';
 import './field-kits.css';
 
 const ABSENT = '—';
-
-/** Up to this many options fit one segmented track without crowding. */
-const SEGMENT_MAX = 4;
-
-/** Chips carry the rest of the closed set — by construction nothing exceeds this. */
-const TAG_MAX = ENUM_MAX;
 
 const toSelection = (operand: unknown): readonly string[] => {
   if (Array.isArray(operand)) return operand.map(toText);
@@ -79,12 +66,6 @@ const labelsOf = (field: FieldDescriptor): Readonly<Record<string, string>> => {
 const valueOf = (field: FieldDescriptor, selected: string): string | number =>
   field.declaredOptions?.find((option) => String(option.value) === selected)?.value ?? selected;
 
-const optionsOf = (options: readonly string[] | undefined, labels: Readonly<Record<string, string>>): SelectOption[] =>
-  (options ?? []).map((option) => ({ value: option, label: labels[option] ?? option }));
-
-const segmentsOf = (options: readonly string[], labels: Readonly<Record<string, string>>): SegmentOption[] =>
-  options.map((option) => ({ value: option, label: labels[option] ?? option }));
-
 const FilterControl = (props: FilterControlProps) => {
   const { field, value, onChange } = props;
   return (
@@ -98,71 +79,15 @@ const FilterControl = (props: FilterControlProps) => {
   );
 };
 
-interface ClosedSetProps {
-  field: FieldDescriptor;
-  /** Already merged with the current value — the tier follows what is shown. */
-  options: readonly string[];
-  current: string;
-  disabled?: boolean;
-  onChange: (value: unknown) => void;
-}
-
-const closedSetControl = (props: ClosedSetProps): ReactNode => {
-  const { field, options, current, disabled, onChange } = props;
-  const labels = labelsOf(field);
-
-  if (options.length > 0 && options.length <= SEGMENT_MAX) {
-    return (
-      <SegmentedControl
-        value={current}
-        options={segmentsOf(options, labels)}
-        disabled={disabled}
-        onChange={onChange}
-        // Re-clicking the active segment clears the field — allowed only
-        // where the schema says absence is legal, same gate as the chip tier.
-        onDeselect={field.optional ? () => onChange('') : undefined}
-      />
-    );
-  }
-
-  if (options.length > 0 && options.length <= TAG_MAX) {
-    return (
-      <EnumTagSelect
-        id={field.path}
-        options={options}
-        labels={labels}
-        selected={current ? [current] : []}
-        disabled={disabled}
-        single
-        onChange={(selected) => {
-          // Re-clicking the active chip clears the field, which the segmented
-          // track and the dropdown cannot do — allowed only where the schema
-          // says absence is legal.
-          const [next] = selected;
-          if (next !== undefined || field.optional) onChange(next ?? '');
-        }}
-      />
-    );
-  }
-
-  return (
-    <Select
-      value={current}
-      options={optionsOf(options, labels)}
-      placeholder={field.label}
-      disabled={disabled}
-      onChange={onChange}
-    />
-  );
-};
-
 const EditorControl = (props: EditorControlProps) => {
   const { field, value, onChange, disabled } = props;
   const current = toText(value);
   const options = withCurrentValue(field.options ?? [], current);
+  const labels = labelsOf(field);
   // Every control here hands back the option as text, including the escape
   // hatch — so one place turns it back into the value the record holds.
   const commit = (next: unknown) => onChange(next === '' ? '' : valueOf(field, toText(next)));
+  const pickerProps = { field, options, labels, current, disabled, onChange: commit };
 
   return (
     <OpenSetControl
@@ -170,8 +95,10 @@ const EditorControl = (props: EditorControlProps) => {
       label={field.label}
       disabled={disabled}
       onSubmit={commit}
+      fallback={hasNarrower(options) ? narrowControl(pickerProps) : undefined}
+      fitSignature={widthSignature(options, labels)}
     >
-      {closedSetControl({ field, options, current, disabled, onChange: commit })}
+      {preferredControl(pickerProps)}
     </OpenSetControl>
   );
 };

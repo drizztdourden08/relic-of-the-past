@@ -58,17 +58,13 @@ const contextFor = (screenId: ScreenId, realTransitions: ObservedTransition[], e
 
 describeDataset('the detector barrel', () => {
   it('installs a detector for both kinds it covers', () => {
-    // `connection-shape`/`screen-identity` were replaced by the `connection`/
-    // `screen` comparison strategies (`strategy:connection`, `strategy:screen`).
-    // The former `connection-add`/`connection-remove` pair was folded into
-    // `strategy:connection` itself in phase 4, part 2, once the connection
-    // `SetProbe`s replaced their hand-rolled comparison. The hand-written
-    // `connection-direction-tag` detector that used to ride alongside it is
-    // gone along with the whole `dir:*` tag namespace it backfilled — the
-    // connection-model migration derives direction from `canExit` instead.
+    // A screen carries two: the comparison strategy that judges it against live
+    // memory, and `screen:geography`, which judges the record against the rest
+    // of the dataset — an inconsistency the game cannot be asked about.
     expect(detectorsFor('connection').map(d => d.id).sort())
       .toEqual(['strategy:connection']);
-    expect(detectorsFor('screen').map(d => d.id)).toEqual(['strategy:screen']);
+    expect(detectorsFor('screen').map(d => d.id).sort())
+      .toEqual(['screen:geography', 'strategy:screen']);
   });
 
   it('reports every detector that ran, including the ones that found nothing', () => {

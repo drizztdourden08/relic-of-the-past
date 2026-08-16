@@ -3,9 +3,9 @@
  * A screen's static actor spawns, each resolved to its actor's own name and
  * tile — the one array field whose element is a plain object, so the generic
  * array cell (`{...}` per entry, see `array-kit.tsx`'s `summarizeList`) tells
- * a reviewer nothing about it. `LiveDataInspector.tsx` drops `spawns` from the
- * schema it hands the record's own compact view and renders this instead, so
- * the field is shown here once rather than twice.
+ * a reviewer nothing about it. `LiveDataInspector.tsx` hands this to the
+ * record's own compact view as the `spawns` path's field renderer, so the
+ * field shows here once, in the schema position it already has.
  *
  * A spawn the live game reports that the record does not yet catalogue is
  * appended below the recorded list and marked apart, the same red accent

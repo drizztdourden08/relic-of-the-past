@@ -22,9 +22,10 @@ import {
 import type { EntityKind, EntityRecordMap } from '@shared/game/data';
 import type { DetectionContext } from '@shared/game/recommendations';
 
-type AnyRecord = EntityRecordMap[EntityKind];
+/** Any record a collection tab can show — the element type every card renders. */
+type LiveRecord = EntityRecordMap[EntityKind];
 
-const NO_RECORDS: readonly AnyRecord[] = [];
+const NO_RECORDS: readonly LiveRecord[] = [];
 
 /** Distinct sprite spawns (or grants) of the same type resolve to the same record — one card each, not one per spawn. */
 const dedupeById = <T extends { id: string }>(records: readonly (T | undefined)[]): readonly T[] => {
@@ -38,7 +39,7 @@ const dedupeById = <T extends { id: string }>(records: readonly (T | undefined)[
   return out;
 };
 
-const recordsFor = (kind: EntityKind, context: DetectionContext): readonly AnyRecord[] => {
+const recordsFor = (kind: EntityKind, context: DetectionContext): readonly LiveRecord[] => {
   const { screenId, observations } = context;
 
   if (kind === 'screen') {
@@ -70,7 +71,8 @@ const recordsFor = (kind: EntityKind, context: DetectionContext): readonly AnyRe
   return NO_RECORDS;
 };
 
-const useCurrentRecords = (kind: EntityKind, context: DetectionContext): readonly AnyRecord[] =>
+const useCurrentRecords = (kind: EntityKind, context: DetectionContext): readonly LiveRecord[] =>
   useMemo(() => recordsFor(kind, context), [kind, context]);
 
 export { recordsFor, useCurrentRecords };
+export type { LiveRecord };
