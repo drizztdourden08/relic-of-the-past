@@ -189,13 +189,19 @@ static void BuildOverworldWorldTilemap() {
   w = IntMax(0, IntMin(w, kPpuWorldTiles));
   h = IntMax(0, IntMin(h, kPpuWorldTiles));
   // dung_bg2 is a 64x64 map16 = at most 128x128 map8 tiles. The special overworld's scroll range
-  // overshoots that by a few rows (yend 0x320 + the 256px view = 132 tile rows), and blitting the
-  // overshoot would read past the map16 (see the same note in BuildTransitionWorldTilemap). Blit only
-  // the real extent and clear the overshoot to the no-data sentinel so it renders as backdrop.
+  // overshoots that (yend 0x320 + the 256px view = 132 tile rows), and blitting the overshoot would read
+  // past the map16 (see the same note in BuildTransitionWorldTilemap), so only the real extent is blitted.
   int bw = IntMin(w, 128), bh = IntMin(h, 128);
   if (bw < w || bh < h)
     memset(bg->world, 0, (size_t)w * h * sizeof(uint16));
   BlitAreaMap16(bg->world, w, h, dung_bg2, bw, bh, 0, 0, GetMap16toMap8Table());
+  // Repeat the last real row over the vertical overshoot instead of leaving it a no-data gap. The camera
+  // range genuinely allows one row more than the area owns: the bottom scanline samples vScroll + 224, so
+  // at the range's lowest camera (yend) that is row 1024 of a 1024-row area. Left as a gap it rendered as
+  // a hard coloured line across the foot of the screen; repeating the row above makes it continue the
+  // terrain, which is what the hardware's overscan hid.
+  for (int ry = bh; ry < h; ry++)
+    memcpy(bg->world + (size_t)ry * w, bg->world + (size_t)(bh - 1) * w, (size_t)w * sizeof(uint16));
   bg->worldW = w, bg->worldH = h;
   // The overworld BG scroll wraps at the 1024px tilemap, so the PPU hScroll/vScroll carry only the low 10
   // bits. worldOff re-adds the 1024-aligned high part minus the area origin, so the fetch's local (x,y)
