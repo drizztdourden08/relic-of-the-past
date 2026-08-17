@@ -92,6 +92,7 @@ interface Profile {
   lastPlayed: number;
   language?: string;
   msuPack?: string;
+  automation?: boolean;
 }
 
 interface AppState {

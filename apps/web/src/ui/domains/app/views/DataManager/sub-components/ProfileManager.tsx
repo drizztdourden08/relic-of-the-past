@@ -5,6 +5,7 @@
 
 import { Box } from '../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../design-system/primitives/Text';
+import { Badge } from '../../../../../design-system/primitives/Badge';
 import { Button } from '../../../../../design-system/primitives/Button';
 import { IconButton } from '../../../../../design-system/primitives/IconButton';
 import { Select } from '../../../../../design-system/primitives/Select';
@@ -102,7 +103,12 @@ const ProfileManager = (props: ProfileManagerProps) => {
           <ListItemRow
             key={profile.id}
             icon="👤"
-            name={profile.name}
+            name={
+              <>
+                {profile.name}
+                {profile.automation && <Badge variant="neutral">Agent</Badge>}
+              </>
+            }
             meta={`${profile.romFile.replace(/\.(sfc|smc)$/i, '')} · ${formatRelativeTime(profile.lastPlayed)}`}
             selected={selected === profile.id}
             onClick={() => setSelected(profile.id)}

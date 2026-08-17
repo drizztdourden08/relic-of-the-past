@@ -8,7 +8,7 @@ import { keepWindowInBackground } from './keep-in-background';
 import { attachTextInteraction } from './text-interaction';
 import { resolveWindowIcon } from './window-icon';
 import { armReveal, openSplash } from './boot';
-import { isAutomationLaunch, parseInstanceConfig } from '../instance';
+import { isHeadlessLaunch, parseInstanceConfig } from '../instance';
 
 const APP_TITLE = 'Relic of the Past';
 
@@ -45,7 +45,7 @@ const offscreenOrigin = (): { x: number; y: number } => {
 };
 
 const createWindow = (): BrowserWindow => {
-  const noFocus = isAutomationLaunch();
+  const noFocus = isHeadlessLaunch();
   const startup = parseStartupConfig();
   const instance = parseInstanceConfig();
   const saved = loadWindowState();
@@ -169,7 +169,7 @@ const createWindow = (): BrowserWindow => {
   // --muted is documented as mandatory alongside --no-focus for every automated
   // launch (docs/contributing/testing.md); enforced the same way so forgetting the
   // literal flag doesn't leave a headless run making noise.
-  if (process.argv.includes('--muted') || isAutomationLaunch()) {
+  if (process.argv.includes('--muted') || isHeadlessLaunch()) {
     mainWindow.webContents.setAudioMuted(true);
   }
 

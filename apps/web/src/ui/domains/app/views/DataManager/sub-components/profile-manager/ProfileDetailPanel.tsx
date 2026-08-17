@@ -6,6 +6,7 @@
 import type { CSSProperties } from 'react';
 import { Box } from '../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../design-system/primitives/Text';
+import { Badge } from '../../../../../../design-system/primitives/Badge';
 import { Select } from '../../../../../../design-system/primitives/Select';
 import { Button } from '../../../../../../design-system/primitives/Button';
 import { formatRelativeTime } from '../../../../../../../utils';
@@ -35,7 +36,10 @@ const ProfileDetailPanel = (props: ProfileDetailPanelProps) => {
 
   return (
     <Box style={IL.col}>
-      <Text as="h3" className="detail-panel__title">{profile.name}</Text>
+      <Text as="h3" className="detail-panel__title">
+        {profile.name}
+        {profile.automation && <Badge variant="neutral">Agent</Badge>}
+      </Text>
 
       <Box className="profile-form" style={IL.mbMd}>
         <Box className="profile-form__field">

@@ -168,7 +168,7 @@ const provisionProfile = async ({ name, romFile, inheritConfigFrom, quickSlot })
 
   const profilePath = join(dir, 'profile.json');
   if (!existsSync(profilePath)) {
-    const profile = { id: name, name: `agent/${name}`, romFile: rom, created: now, lastPlayed: now };
+    const profile = { id: name, name: `agent/${name}`, romFile: rom, created: now, lastPlayed: now, automation: true };
     // Language is per-profile and picks which asset blob loads; inherit it so an agent
     // run renders the same text the user sees.
     if (source?.language) profile.language = source.language;
