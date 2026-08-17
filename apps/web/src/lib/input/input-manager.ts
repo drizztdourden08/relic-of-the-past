@@ -28,6 +28,7 @@ import type { RawInputEvent, RawInputListener } from './raw-input-dispatcher';
 import { startInput, stopInput, refreshDevicesImpl } from './input-manager-lifecycle';
 import { rebuildMaps, guardKeys, keyDown, keyUp, pollFrame, connectedGamepadKeys } from './input-manager-events';
 import { wireProfileActions, setProfiles as setProfilesImpl, subscribeActiveProfile, cycleActiveProfile as cycleActiveProfileImpl } from './input-manager-profiles';
+import { wireCheatActions } from './input-manager-cheats';
 import type { AllowedDevices } from './profile-devices';
 import type { ActiveProfileListener, DeviceChangeListener, InputStateListener } from './input-manager-types';
 import type { DeviceScopedMap } from './device-scoped-map';
@@ -95,6 +96,7 @@ class InputManager {
     };
     this.functionActions.onPauseToggle = () => this.pauseManager.togglePause();
     wireProfileActions(this);
+    wireCheatActions(this);
   }
 
   // ─── Event handler fields (stable identity for add/removeEventListener) ───
