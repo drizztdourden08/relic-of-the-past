@@ -20,6 +20,17 @@
 static void WorldMap_AddSprite(int spr, uint8 big, uint8 flags, uint8 ch, uint16 x, uint16 y);
 static bool WorldMap_CalculateOamCoordinates(Point16U *pt);
 
+// Table-driven markers (flute destinations, dungeon prizes) are calibrated for the native
+// frame's edge at 0; a wide/tall view's Mode 7 background samples further out automatically
+// (same matrix, more columns/rows), so these need the same shift or they land short of where
+// the background now starts. WorldMap_HandleSprites' own markers (Link's live position, the
+// mirror-return marker) track the panning camera directly instead, and must NOT get this —
+// applying it there overshoots past the correct spot.
+static void WorldMap_ShiftMarkerForWideView(Point16U *pt) {
+  pt->x += (uint16)g_oam_wide_budget;
+  pt->y += (uint16)g_oam_tall_budget;
+}
+
 static const int8 kDungMap_Tab0[14] = {-1, -1, -1, -1, -1, 2, 0, 10, 4, 8, -1, 6, 12, 14};
 static const uint16 kDungMap_Tab1[8] = {0x2108, 0x2109, 0x2109, 0x210a, 0x210b, 0x210c, 0x210d, 0x211d};
 static const uint16 kDungMap_Tab2[8] = {0x2118, 0x2119, 0xa109, 0x211a, 0x211b, 0x211c, 0x2118, 0xa11d};
@@ -977,8 +988,10 @@ void FluteMenu_HandleSelection() {  // 8ab78b
     sound_effect_2 = 32;
   }
   birdtravel_var1[0] = birdtravel_var1[0] & 7;
-  if (frame_counter & 0x10 && WorldMap_CalculateOamCoordinates(&pt))
+  if (frame_counter & 0x10 && WorldMap_CalculateOamCoordinates(&pt)) {
+    WorldMap_ShiftMarkerForWideView(&pt);
     WorldMap_AddSprite(16, 2, 0x3e, 0, pt.x - 4, pt.y - 4);
+  }
 
   uint16 ybak = link_y_coord_spexit;
   uint16 xbak = link_x_coord_spexit;
@@ -991,8 +1004,10 @@ void FluteMenu_HandleSelection() {  // 8ab78b
     bird_travel_y_hi[i] = kBirdTravel_y_hi[i];
     link_y_coord_spexit = kBirdTravel_y_hi[i] << 8 | kBirdTravel_y_lo[i];
 
-    if (WorldMap_CalculateOamCoordinates(&pt))
+    if (WorldMap_CalculateOamCoordinates(&pt)) {
+      WorldMap_ShiftMarkerForWideView(&pt);
       WorldMap_AddSprite(i, 0, (i == birdtravel_var1[0]) ? 0x30 + (frame_counter & 6) : 0x32, kBirdTravel_tab1[i], pt.x, pt.y);
+    }
   }
   link_x_coord_spexit = xbak;
   link_y_coord_spexit = ybak;
