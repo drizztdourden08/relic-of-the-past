@@ -3,8 +3,51 @@
 
 // ─── Overworld Special-Area Query ───
 
+// dungeon_room_index values Overworld_CheckSpecialSwitchArea assigns for the 3 special-
+// switch locations (overworld.c's kSpecialSwitchArea_Exit table: 0x180, 0x181, 0x182,
+// 0x189) — set in the SAME call that flips main_module_index to 11, so unlike
+// overworld_screen_index (which only reaches its special-area value a few frames later,
+// once Overworld_EnterSpecialArea/LoadOverworldFromSpecialOverworld actually runs), this
+// is already correct on the very first frame of the transition.
+static bool IsKnownSpecialAreaRoomIndex(uint16 idx) {
+  return idx == 0x180 || idx == 0x181 || idx == 0x182 || idx == 0x189;
+}
+
+// Sticky across a whole module-11 episode: overworld_screen_index and dungeon_room_index
+// each independently have a brief window — a few frames, both on entering and (especially)
+// on leaving — where neither confirms the special-area flavor even though we're still
+// mid-transition, because the game hasn't finished updating them relative to the module
+// flip. Latching on any positive signal and holding it for as long as main_module_index
+// stays MODULE_FALLING_ENTRANCE closes that gap instead of the widescreen view (and the
+// HUD/cheat gates) flashing back to collapsed for those few frames every single crossing.
+static bool s_stickySpecialArea = false;
+
+// The parameterized version a caller uses once it has already resolved a menu-overlay
+// remap (main_module_index==14, the real module sitting in saved_module_for_menu) —
+// otherwise the special area silently stops being recognized the instant the player
+// opens the pause menu over it, since main_module_index reads 14 there, not 11. This is
+// also the only form that updates the latch above — see GameHook_IsOverworldSpecialArea
+// for why the raw form must not.
+bool GameHook_IsOverworldSpecialAreaFor(int effectiveModule) {
+  if (effectiveModule != MODULE_FALLING_ENTRANCE) {
+    s_stickySpecialArea = false;
+    return false;
+  }
+  if (overworld_screen_index >= OVERWORLD_SPECIAL_AREA_SCREEN_MIN || IsKnownSpecialAreaRoomIndex(dungeon_room_index)) {
+    s_stickySpecialArea = true;
+  }
+  return s_stickySpecialArea;
+}
+
+// Raw-module form for cheats.c's gameplay-input gate, where excluding the paused state is
+// correct (matches how a normal overworld location already behaves while paused). Reads
+// the latch WITHOUT the reset-on-mismatch above: pausing sets main_module_index to 14,
+// and if this form ran that through the same reset it would clear the latch on every
+// pause, then need a fresh signal to relatch on unpausing (screen_index still would give
+// one immediately, but there is no reason to let a pure input-gate query mutate location
+// state that ConfigurePpuSideSpace/WasmGetViewportInfo are the source of truth for).
 bool GameHook_IsOverworldSpecialArea(void) {
-  return main_module_index == MODULE_FALLING_ENTRANCE && overworld_screen_index >= OVERWORLD_SPECIAL_AREA_SCREEN_MIN;
+  return main_module_index == MODULE_FALLING_ENTRANCE && s_stickySpecialArea;
 }
 
 // ─── Inventory State Query ───
@@ -160,8 +203,9 @@ int WasmGetViewportInfo(void) {
   }
   // The overworld-special-area flavor of MODULE_FALLING_ENTRANCE is normal outdoor
   // gameplay — report it as such so consumers keyed on locationModule === MODULE_OVERWORLD
-  // (the edge-glow effect) still engage there.
-  if (mod == MODULE_FALLING_ENTRANCE && GameHook_IsOverworldSpecialArea()) {
+  // (the edge-glow effect) still engage there. Checked against `mod` (already
+  // menu-remapped above), not the raw module, so this still holds while paused.
+  if (GameHook_IsOverworldSpecialAreaFor(mod)) {
     mod = MODULE_OVERWORLD;
   }
   g_viewport_buf[9] = mod;

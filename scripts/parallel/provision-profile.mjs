@@ -111,17 +111,26 @@ const copyManualSaves = (sourceId, name) => {
  * profile into the new one, for reproducing a bug tied to a specific in-progress state.
  * Quick slots are `saveN.sav`/`saveN.png` with no manifest — unlike manual saves, a
  * quick slot has no stable name, so the caller must know which index holds the state.
+ *
+ * Skips (does not overwrite) if the destination slot already has a save — provisionProfile
+ * is meant to be safely re-runnable against an EXISTING, already-in-use profile (that's the
+ * whole point of its idempotency elsewhere), so a second run must never clobber a quick save
+ * someone has since made by playing in that profile. This silently destroyed a user's live
+ * test save once already: re-provisioning an instance the user was actively testing in
+ * overwrote their fresh save0.sav/save1.sav with stale copies from the source profile.
  */
 const copyQuickSave = (sourceId, name, slot) => {
   if (!sourceId || slot == null) return false;
   const fromDir = gameDataPath('profiles', sourceId, 'saves', 'quick');
   const toDir = gameDataPath('profiles', name, 'saves', 'quick');
   const savPath = join(fromDir, `save${slot}.sav`);
+  const destPath = join(toDir, `save${slot}.sav`);
+  if (existsSync(destPath)) return false;
   if (!existsSync(savPath)) {
     throw new Error(`Quick slot ${slot} has no save${slot}.sav under ${fromDir} — nothing to copy.`);
   }
   mkdirSync(toDir, { recursive: true });
-  cpSync(savPath, join(toDir, `save${slot}.sav`));
+  cpSync(savPath, destPath);
   const pngPath = join(fromDir, `save${slot}.png`);
   if (existsSync(pngPath)) cpSync(pngPath, join(toDir, `save${slot}.png`));
   return true;

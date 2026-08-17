@@ -32,6 +32,15 @@ typedef struct BgLayer {
 
 enum {
   kPpuXPixels = 256 + kPpuExtraLeftRight * 2,
+  // Bounds of the mosaic block-start table (Ppu.mosaicModulo). It is indexed by SIGNED screen
+  // coordinates, not by 0..255: with the wide/tall view a window edge starts at -extraLeftCur and a tall
+  // scanline at -extraTopBottom, while the far ends reach past 256/240. kPpuMosaicBias biases every index
+  // positive, and an entry must be able to hold a coordinate up to kPpuMosaicHigh — which is why the
+  // entries are int16 rather than uint8.
+  kPpuMosaicBias = kPpuExtraLeftRight > kPpuExtraTopBottom ? kPpuExtraLeftRight : kPpuExtraTopBottom,
+  kPpuMosaicHigh = (256 + kPpuExtraLeftRight) > (240 + kPpuExtraTopBottom)
+                     ? (256 + kPpuExtraLeftRight) : (240 + kPpuExtraTopBottom),
+  kPpuMosaicEntries = kPpuMosaicBias + kPpuMosaicHigh + 1,
   // Max linear-world tilemap dimension in 8x8 tiles. A single 2x2 overworld area is 1024px = 128 tiles;
   // during a scroll transition we build a buffer spanning BOTH the source and destination areas (so the
   // wide/tall view pans across the seam without the wrapping stock tilemap), needing up to two large areas
@@ -168,7 +177,9 @@ struct Ppu {
   // onward is the player's private bank, derived from the loaded sheet and re-pushed whenever gear palettes
   // reload, so growing this array leaves the snapshot byte-identical.
   uint16_t cgram[0x110];
-  uint8_t mosaicModulo[kPpuXPixels];
+  // Block-start coordinate per screen coordinate. Read through MOSAIC_START (ppu.c), never indexed raw:
+  // the index is signed and biased by kPpuMosaicBias.
+  int16_t mosaicModulo[kPpuMosaicEntries];
   // Brightness-mapped mirror of cgram for the 4x scale path, player bank included.
   uint32_t colorMapRgb[0x110];
   PpuPixelPrioBufs bgBuffers[2];

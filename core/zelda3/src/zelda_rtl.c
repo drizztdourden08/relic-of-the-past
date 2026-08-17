@@ -188,7 +188,20 @@ static void BuildOverworldWorldTilemap() {
   int h = (((int)ow_scroll_vars0.yend - originY) >> 3) + 32;
   w = IntMax(0, IntMin(w, kPpuWorldTiles));
   h = IntMax(0, IntMin(h, kPpuWorldTiles));
-  BlitAreaMap16(bg->world, w, h, dung_bg2, w, h, 0, 0, GetMap16toMap8Table());
+  // dung_bg2 is a 64x64 map16 = at most 128x128 map8 tiles. The special overworld's scroll range
+  // overshoots that (yend 0x320 + the 256px view = 132 tile rows), and blitting the overshoot would read
+  // past the map16 (see the same note in BuildTransitionWorldTilemap), so only the real extent is blitted.
+  int bw = IntMin(w, 128), bh = IntMin(h, 128);
+  if (bw < w || bh < h)
+    memset(bg->world, 0, (size_t)w * h * sizeof(uint16));
+  BlitAreaMap16(bg->world, w, h, dung_bg2, bw, bh, 0, 0, GetMap16toMap8Table());
+  // Repeat the last real row over the vertical overshoot instead of leaving it a no-data gap. The camera
+  // range genuinely allows one row more than the area owns: the bottom scanline samples vScroll + 224, so
+  // at the range's lowest camera (yend) that is row 1024 of a 1024-row area. Left as a gap it rendered as
+  // a hard coloured line across the foot of the screen; repeating the row above makes it continue the
+  // terrain, which is what the hardware's overscan hid.
+  for (int ry = bh; ry < h; ry++)
+    memcpy(bg->world + (size_t)ry * w, bg->world + (size_t)(bh - 1) * w, (size_t)w * sizeof(uint16));
   bg->worldW = w, bg->worldH = h;
   // The overworld BG scroll wraps at the 1024px tilemap, so the PPU hScroll/vScroll carry only the low 10
   // bits. worldOff re-adds the 1024-aligned high part minus the area origin, so the fetch's local (x,y)
@@ -202,6 +215,7 @@ static void BuildOverworldWorldTilemap() {
   g_ow_src_ys = originY, g_ow_src_ye = ow_scroll_vars0.yend;
   g_ow_src_area = (BYTE(current_area_of_player) >> 1) & 0x3f;
 }
+
 
 // Build a world tilemap spanning the source area (from the snapshot) AND the destination area (live
 // dung_bg2, loaded partway through the transition), so the camera-locked wide/tall view pans smoothly
@@ -267,10 +281,13 @@ static void ConfigurePpuSideSpace() {
   if (mod == 14)
     mod = saved_module_for_menu;
   // The overworld-special-area flavor of MODULE_FALLING_ENTRANCE is normal interactive
-  // outdoor gameplay even though the module never returns to 9 — see
-  // GameHook_IsOverworldSpecialArea. Without this, the wide/tall PPU extension and camera
-  // lock never engage there and the view collapses to the base 256x224 frame.
-  if (mod == 9 || GameHook_IsOverworldSpecialArea()) {
+  // outdoor gameplay even though the module never returns to 9. Checked against `mod`
+  // (already menu-remapped above) via the *For() form, not GameHook_IsOverworldSpecialArea()
+  // — that reads the raw module and would miss this case the instant the pause menu opens
+  // over it (main_module_index is 14 then, not 11, even though the location hasn't
+  // changed), collapsing the view back to the base 256x224 frame on every pause.
+  bool isSpecialArea = GameHook_IsOverworldSpecialAreaFor(mod);
+  if (mod == 9 || isSpecialArea) {
     if (main_module_index == 14 && submodule_index == 7 && overworld_map_state >= 4) {
       // World map
       extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
@@ -284,10 +301,13 @@ static void ConfigurePpuSideSpace() {
       // Apply the lock + linear world tilemap whenever the overworld view is stationary in a fully-loaded
       // area: submodule 0 (normal play) OR the inventory menu overlay (main_module 14), which can only be
       // opened from submodule 0 and freezes the camera/area at that state — so the same lock keeps the
-      // overworld behind the menu aligned instead of snapping back to an unshifted view.
-      // During screen-to-screen scroll transitions the camera spans two areas that a single-area buffer
-      // can't represent — fall back to the stock streaming path, which scrolls correctly.
-      if (submodule_index == 0 || main_module_index == 14) {
+      // overworld behind the menu aligned instead of snapping back to an unshifted view. The special-area
+      // flavor also always takes this branch, never the destArea-based transition interpolation below:
+      // that path assumes a normal area index (0-63) on both ends of the scroll, and the special area's own
+      // overworld_area_index (>=128) would index kOverworldMapIsSmall/kOverworld_OffsetBaseX/etc out of
+      // bounds. Its own scroll bounds (ow_scroll_vars0, set by Overworld_EnterSpecialArea) are already
+      // correct here regardless of submodule_index.
+      if (submodule_index == 0 || main_module_index == 14 || isSpecialArea) {
         if (enhanced_features0 & kFeatures0_CameraLockToViewport) {
           // Render-level camera lock: clamp the RENDERED view to the area so its edges rest on the
           // boundary (no out-of-area black), then shift the world fetch (below) + sprites (ppu eval) by
