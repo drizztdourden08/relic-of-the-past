@@ -177,6 +177,19 @@ static void BlitAreaMap16(uint16 *world, int worldW, int worldH, const uint16 *m
   }
 }
 
+// Identity of the area whose map16 is known to be RESIDENT in dung_bg2, recorded on every build made in
+// a settled frame (submodule 0 / the menu overlay). The special-overworld entry/exit chain flips
+// ow_scroll_vars0 several frames before it finishes rebuilding dung_bg2, so during those frames "current
+// bounds" and "resident map" disagree — comparing against this key is how the build below knows whether
+// dung_bg2 can be trusted for the full wide view or only for the base window the stock screen shows.
+static int g_ow_resident_screen = -1, g_ow_resident_ox = -1, g_ow_resident_oy = -1;
+
+static bool OwResidentMatchesBounds() {
+  return g_ow_resident_screen == (int)overworld_screen_index &&
+         g_ow_resident_ox == (int)ow_scroll_vars0.xstart &&
+         g_ow_resident_oy == (int)ow_scroll_vars0.ystart;
+}
+
 // Expand the resident overworld map16 (dung_bg2 — the full current area) into the BG2 layer's linear
 // "world" tilemap so the widescreen view can extend past the 512px SNES tilemap into real map instead of
 // wrapping. Out-of-area columns clamp to transparent (edge-mirror). Also snapshots the area for transitions.
@@ -188,7 +201,14 @@ static void BuildOverworldWorldTilemap() {
   int h = (((int)ow_scroll_vars0.yend - originY) >> 3) + 32;
   w = IntMax(0, IntMin(w, kPpuWorldTiles));
   h = IntMax(0, IntMin(h, kPpuWorldTiles));
-  BlitAreaMap16(bg->world, w, h, dung_bg2, w, h, 0, 0, GetMap16toMap8Table());
+  // dung_bg2 is a 64x64 map16 = at most 128x128 map8 tiles. The special overworld's scroll range
+  // overshoots that by a few rows (yend 0x320 + the 256px view = 132 tile rows), and blitting the
+  // overshoot would read past the map16 (see the same note in BuildTransitionWorldTilemap). Blit only
+  // the real extent and clear the overshoot to the no-data sentinel so it renders as backdrop.
+  int bw = IntMin(w, 128), bh = IntMin(h, 128);
+  if (bw < w || bh < h)
+    memset(bg->world, 0, (size_t)w * h * sizeof(uint16));
+  BlitAreaMap16(bg->world, w, h, dung_bg2, bw, bh, 0, 0, GetMap16toMap8Table());
   bg->worldW = w, bg->worldH = h;
   // The overworld BG scroll wraps at the 1024px tilemap, so the PPU hScroll/vScroll carry only the low 10
   // bits. worldOff re-adds the 1024-aligned high part minus the area origin, so the fetch's local (x,y)
@@ -202,6 +222,7 @@ static void BuildOverworldWorldTilemap() {
   g_ow_src_ys = originY, g_ow_src_ye = ow_scroll_vars0.yend;
   g_ow_src_area = (BYTE(current_area_of_player) >> 1) & 0x3f;
 }
+
 
 // Build a world tilemap spanning the source area (from the snapshot) AND the destination area (live
 // dung_bg2, loaded partway through the transition), so the camera-locked wide/tall view pans smoothly
@@ -294,6 +315,19 @@ static void ConfigurePpuSideSpace() {
       // bounds. Its own scroll bounds (ow_scroll_vars0, set by Overworld_EnterSpecialArea) are already
       // correct here regardless of submodule_index.
       if (submodule_index == 0 || main_module_index == 14 || isSpecialArea) {
+        // Settled frames (and the menu overlay, which freezes a settled state) always have the
+        // current area resident in dung_bg2. The one way to be here NON-settled is the latched
+        // special-overworld chain, which flips ow_scroll_vars0 several frames before the destination
+        // map16 finishes rebuilding — during that window nothing can render valid extended content:
+        // BG2's world build would blit the previous area's stale rows, and the other layers' stock
+        // 512px fetch wraps equally stale VRAM into the margins. So when the bounds don't match the
+        // resident area, keep the base window exactly as vanilla draws it (stock fetch, no lock
+        // shift) and let the margins hold plain black at constant frame size, until the first
+        // settled frame brings the real wide view back.
+        bool residentOk = submodule_index == 0 || main_module_index == 14 || OwResidentMatchesBounds();
+        if (!residentOk) {
+          extra_left = extra_right = extra_top = extra_bottom = 0;
+        } else {
         if (enhanced_features0 & kFeatures0_CameraLockToViewport) {
           // Render-level camera lock: clamp the RENDERED view to the area so its edges rest on the
           // boundary (no out-of-area black), then shift the world fetch (below) + sprites (ppu eval) by
@@ -318,6 +352,12 @@ static void ConfigurePpuSideSpace() {
           g_lock_last_cam_x = BG2HOFS_copy2;
           g_lock_last_cam_y = BG2VOFS_copy2;
           BuildOverworldWorldTilemap();
+          if (submodule_index == 0 || main_module_index == 14) {
+            g_ow_resident_screen = overworld_screen_index;
+            g_ow_resident_ox = ow_scroll_vars0.xstart;
+            g_ow_resident_oy = ow_scroll_vars0.ystart;
+          }
+        }
         }
       } else {
         // Non-stationary outdoor sub-states. A screen-to-screen scroll transition (the submodule 1-8 chain)
