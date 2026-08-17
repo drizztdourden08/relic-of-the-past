@@ -12,7 +12,7 @@
  * Removing a worktree also removes its game profile, and with it that profile's save
  * states. The user's own profiles are never candidates — only ids in the registry.
  */
-import { rmSync, existsSync } from 'node:fs';
+import { rmSync, existsSync, readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { updateRegistry } from '../registry.mjs';
 import { surveyAll } from '../survey.mjs';
@@ -87,8 +87,27 @@ const removeWorktree = (record) => {
     console.warn(`  [wt] Branch ${record.branch} was left in place (delete it by hand if unwanted).`);
   }
 
-  // The profile id is the worktree name, so this only ever touches an agent profile.
-  rmSync(gameDataPath('profiles', record.name), { recursive: true, force: true });
+  // The profile id is the worktree name, so this only ever touches an agent profile — but
+  // that's an inference from the registry, not a fact about the profile itself. Belt and
+  // suspenders: a profile explicitly stamped automation:false (a real profile that happens
+  // to share a worktree's name) is refused outright. A profile with no `automation` field
+  // at all predates this marker, so it's still trusted the old way — only an EXPLICIT false
+  // blocks the delete; missing or true both proceed.
+  const profileDir = gameDataPath('profiles', record.name);
+  const profilePath = `${profileDir}/profile.json`;
+  if (existsSync(profilePath)) {
+    let automation;
+    try {
+      automation = JSON.parse(readFileSync(profilePath, 'utf8')).automation;
+    } catch {
+      automation = undefined;
+    }
+    if (automation === false) {
+      console.warn(`  [wt] Profile at ${profileDir} is explicitly marked automation:false — refusing to delete it.`);
+      return;
+    }
+  }
+  rmSync(profileDir, { recursive: true, force: true });
 };
 
 const run = async ({ positional, options }) => {

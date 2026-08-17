@@ -37,4 +37,16 @@ const isAutomationLaunch = (): boolean =>
     AUTOMATION_FLAGS.some((flag) => arg === flag || arg.startsWith(`${flag}=`)),
   );
 
-export { AUTOMATION_FLAGS, isAutomationLaunch };
+// Flags that mean "run with no human watching" — everything in AUTOMATION_FLAGS except
+// --instance/--profile, which only select an identity/profile and say nothing about
+// whether anyone is meant to see the window. A bare `--instance=NAME` launch (the
+// collaborative-testing case: a tagged, independent, but human-usable window) must stay
+// visible; `--instance=NAME --no-focus` (a real automated run) must still go headless.
+const HEADLESS_FLAGS = AUTOMATION_FLAGS.filter((flag) => flag !== '--instance' && flag !== '--profile');
+
+const isHeadlessLaunch = (): boolean =>
+  process.argv.some((arg) =>
+    HEADLESS_FLAGS.some((flag) => arg === flag || arg.startsWith(`${flag}=`)),
+  );
+
+export { AUTOMATION_FLAGS, HEADLESS_FLAGS, isAutomationLaunch, isHeadlessLaunch };

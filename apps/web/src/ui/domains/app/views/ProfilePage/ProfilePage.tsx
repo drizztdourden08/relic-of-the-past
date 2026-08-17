@@ -22,7 +22,10 @@ const ProfilePage = (props: ProfilePageProps) => {
   return (
     <Box className="profile-page">
       <Box className="profile-page__header">
-        <Text as="h2" className="profile-page__name">{profile.name}</Text>
+        <Text as="h2" className="profile-page__name">
+          {profile.name}
+          {profile.automation && <Badge variant="neutral">Agent</Badge>}
+        </Text>
         <Text className="profile-page__rom">{formatRomName(profile.romFile)}</Text>
       </Box>
 
