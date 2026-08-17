@@ -25,6 +25,11 @@ static void PpuDrawWholeLine(Ppu *ppu, uint y);
 #define IS_SCREEN_ENABLED(ppu, sub, layer) (ppu->screenEnabled[sub] & (1 << layer))
 #define IS_SCREEN_WINDOWED(ppu, sub, layer) (ppu->screenWindowed[sub] & (1 << layer))
 #define IS_MOSAIC_ENABLED(ppu, layer) ((ppu->mosaicEnabled & (1 << layer)))
+// Start coordinate of the mosaic block containing `v`. `v` is a SIGNED screen coordinate and routinely
+// falls outside 0..255 once the wide/tall view is on — the left window edge is -extraLeftCur and the
+// right one runs past 256 — so the lookup is biased (see kPpuMosaicBias in ppu.h). Indexing
+// ppu->mosaicModulo directly with such a coordinate reads outside the table.
+#define MOSAIC_START(ppu, v) ((ppu)->mosaicModulo[(int)(v) + kPpuMosaicBias])
 #define GET_WINDOW_FLAGS(ppu, layer) (ppu->windowsel >> (layer * 4))
 enum {
   kWindow1Inversed = 1,
@@ -195,9 +200,13 @@ void ppu_runLine(Ppu *ppu, int line) {
     if (ppu->mosaicSize != ppu->lastMosaicModulo) {
       int mod = ppu->mosaicSize;
       ppu->lastMosaicModulo = mod;
-      for (int i = 0, j = 0; i < countof(ppu->mosaicModulo); i++) {
-        ppu->mosaicModulo[i] = i - j;
-        j = (j + 1 == mod ? 0 : j + 1);
+      // Anchor the block lattice on coordinate 0 — where the hardware's 256-px screen begins — and carry
+      // the same lattice into the negative margin, so blocks stay aligned across the whole wide frame
+      // rather than restarting at the base window's left edge. Floored remainder, not C's truncating %,
+      // or every negative coordinate would round toward zero and shift its block by one.
+      for (int i = -kPpuMosaicBias; i < kPpuMosaicHigh + 1; i++) {
+        int r = i % mod;
+        ppu->mosaicModulo[i + kPpuMosaicBias] = (int16_t)(i - (r < 0 ? r + mod : r));
       }
     }
     // Tall screens: `line` is the physical buffer row+1; the content scanline `sl` is shifted up by the
@@ -550,7 +559,7 @@ static void PpuDrawBackground_4bpp_mosaic(Ppu *ppu, uint y, bool sub, uint layer
   PpuWindows win;
   IS_SCREEN_WINDOWED(ppu, sub, layer) ? PpuWindows_Calc(&win, ppu, layer) : PpuWindows_Clear(&win, ppu, layer);
   BgLayer *bglayer = &ppu->bgLayer[layer];
-  y = ppu->mosaicModulo[y] + bglayer->vScroll;
+  y = MOSAIC_START(ppu, y) + bglayer->vScroll;
   int sc_offs = bglayer->tilemapAdr + (((y >> 3) & 0x1f) << 5);
   if ((y & 0x100) && bglayer->tilemapHigher)
     sc_offs += bglayer->tilemapWider ? 0x800 : 0x400;
@@ -571,7 +580,7 @@ static void PpuDrawBackground_4bpp_mosaic(Ppu *ppu, uint y, bool sub, uint layer
     const uint16 *tp = tps[x >> 8 & 1] + ((x >> 3) & 0x1f);
     const uint16 *tp_last = tps[x >> 8 & 1] + 31, *tp_next = tps[(x >> 8 & 1) ^ 1];
     x &= 7;
-    int w = ppu->mosaicSize - (sx - ppu->mosaicModulo[sx]);
+    int w = ppu->mosaicSize - (sx - MOSAIC_START(ppu, sx));
     do {
       w = IntMin(w, dstz_end - dstz);
       uint32 tile = *tp;
@@ -609,7 +618,7 @@ static void PpuDrawBackground_2bpp_mosaic(Ppu *ppu, int y, bool sub, uint layer,
   PpuWindows win;
   IS_SCREEN_WINDOWED(ppu, sub, layer) ? PpuWindows_Calc(&win, ppu, layer) : PpuWindows_Clear(&win, ppu, layer);
   BgLayer *bglayer = &ppu->bgLayer[layer];
-  y = ppu->mosaicModulo[y] + bglayer->vScroll;
+  y = MOSAIC_START(ppu, y) + bglayer->vScroll;
   int sc_offs = bglayer->tilemapAdr + (((y >> 3) & 0x1f) << 5);
   if ((y & 0x100) && bglayer->tilemapHigher)
     sc_offs += bglayer->tilemapWider ? 0x800 : 0x400;
@@ -630,7 +639,7 @@ static void PpuDrawBackground_2bpp_mosaic(Ppu *ppu, int y, bool sub, uint layer,
     const uint16 *tp = tps[x >> 8 & 1] + ((x >> 3) & 0x1f);
     const uint16 *tp_last = tps[x >> 8 & 1] + 31, *tp_next = tps[(x >> 8 & 1) ^ 1];
     x &= 7;
-    int w = ppu->mosaicSize - (sx - ppu->mosaicModulo[sx]);
+    int w = ppu->mosaicSize - (sx - MOSAIC_START(ppu, sx));
     do {
       w = IntMin(w, dstz_end - dstz);
       uint32 tile = *tp;
@@ -720,7 +729,7 @@ static void PpuDrawBackground_mode7(Ppu *ppu, uint y, bool sub, PpuZbufType z) {
   clippedV = (clippedV & 0x2000) ? (clippedV | ~1023) : (clippedV & 1023);
   bool mosaic_enabled = IS_MOSAIC_ENABLED(ppu, 0);
   if (mosaic_enabled)
-    y = ppu->mosaicModulo[y];
+    y = MOSAIC_START(ppu, y);
   uint32 ry = ppu->m7yFlip ? 255 - y : y;
   uint32 m7startX = (ppu->m7matrix[0] * clippedH & ~63) + (ppu->m7matrix[1] * ry & ~63) +
     (ppu->m7matrix[1] * clippedV & ~63) + (xCenter << 8);
@@ -740,7 +749,7 @@ static void PpuDrawBackground_mode7(Ppu *ppu, uint y, bool sub, PpuZbufType z) {
     uint32 outside_value = ppu->m7largeField ? 0x3ffff : 0xffffffff;
     bool char_fill = ppu->m7charFill;
     if (mosaic_enabled) {
-      int w = ppu->mosaicSize - (x - ppu->mosaicModulo[x]);
+      int w = ppu->mosaicSize - (x - MOSAIC_START(ppu, x));
       do {
         w = IntMin(w, dstz_end - dstz);
         if ((uint32)(xpos | ypos) > outside_value) {
