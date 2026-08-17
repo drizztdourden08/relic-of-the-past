@@ -30,12 +30,19 @@ void GameHook_TriggerOverworldCheck(uint8 screen, uint8 mask, uint8 item_id);
 
 // ─── State Queries (state_queries.c) ───
 
-// True while main_module_index is MODULE_FALLING_ENTRANCE (11) via the vanilla
-// overworld special-switch-area path (one of 3 locked-view locations reached by
-// walking onto a switch tile) rather than an actual dungeon pit-fall. Both reuse the
-// same module; overworld_screen_index staying >= 128 is what's unique to the
-// special-area flavor. Anything gating on "is this normal interactive gameplay"
-// should treat this the same as MODULE_OVERWORLD.
+// True while `effectiveModule` is MODULE_FALLING_ENTRANCE (11) via the vanilla overworld
+// special-switch-area path (one of 3 locked-view locations reached by walking onto a
+// switch tile) rather than an actual dungeon pit-fall. Both reuse the same module;
+// overworld_screen_index staying >= 128 is what's unique to the special-area flavor.
+// Use this form once a menu-overlay remap has already been resolved (main_module_index
+// == 14, the real module in saved_module_for_menu) — passing the raw main_module_index
+// there would stop recognizing the special area the instant the pause menu opens over it.
+bool GameHook_IsOverworldSpecialAreaFor(int effectiveModule);
+
+// Raw-module form: true while main_module_index itself is the special-area flavor.
+// Anything gating on "is this normal interactive gameplay right now" (accepting live
+// input) should use this — it correctly excludes the paused/menu-overlay state, matching
+// how a normal overworld location already behaves while paused.
 bool GameHook_IsOverworldSpecialArea(void);
 
 // ─── Cheats (cheats.c) ───

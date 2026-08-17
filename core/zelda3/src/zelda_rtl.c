@@ -267,10 +267,13 @@ static void ConfigurePpuSideSpace() {
   if (mod == 14)
     mod = saved_module_for_menu;
   // The overworld-special-area flavor of MODULE_FALLING_ENTRANCE is normal interactive
-  // outdoor gameplay even though the module never returns to 9 — see
-  // GameHook_IsOverworldSpecialArea. Without this, the wide/tall PPU extension and camera
-  // lock never engage there and the view collapses to the base 256x224 frame.
-  if (mod == 9 || GameHook_IsOverworldSpecialArea()) {
+  // outdoor gameplay even though the module never returns to 9. Checked against `mod`
+  // (already menu-remapped above) via the *For() form, not GameHook_IsOverworldSpecialArea()
+  // — that reads the raw module and would miss this case the instant the pause menu opens
+  // over it (main_module_index is 14 then, not 11, even though the location hasn't
+  // changed), collapsing the view back to the base 256x224 frame on every pause.
+  bool isSpecialArea = GameHook_IsOverworldSpecialAreaFor(mod);
+  if (mod == 9 || isSpecialArea) {
     if (main_module_index == 14 && submodule_index == 7 && overworld_map_state >= 4) {
       // World map
       extra_left = kPpuExtraLeftRight, extra_right = kPpuExtraLeftRight;
@@ -284,10 +287,13 @@ static void ConfigurePpuSideSpace() {
       // Apply the lock + linear world tilemap whenever the overworld view is stationary in a fully-loaded
       // area: submodule 0 (normal play) OR the inventory menu overlay (main_module 14), which can only be
       // opened from submodule 0 and freezes the camera/area at that state — so the same lock keeps the
-      // overworld behind the menu aligned instead of snapping back to an unshifted view.
-      // During screen-to-screen scroll transitions the camera spans two areas that a single-area buffer
-      // can't represent — fall back to the stock streaming path, which scrolls correctly.
-      if (submodule_index == 0 || main_module_index == 14) {
+      // overworld behind the menu aligned instead of snapping back to an unshifted view. The special-area
+      // flavor also always takes this branch, never the destArea-based transition interpolation below:
+      // that path assumes a normal area index (0-63) on both ends of the scroll, and the special area's own
+      // overworld_area_index (>=128) would index kOverworldMapIsSmall/kOverworld_OffsetBaseX/etc out of
+      // bounds. Its own scroll bounds (ow_scroll_vars0, set by Overworld_EnterSpecialArea) are already
+      // correct here regardless of submodule_index.
+      if (submodule_index == 0 || main_module_index == 14 || isSpecialArea) {
         if (enhanced_features0 & kFeatures0_CameraLockToViewport) {
           // Render-level camera lock: clamp the RENDERED view to the area so its edges rest on the
           // boundary (no out-of-area black), then shift the world fetch (below) + sprites (ppu eval) by

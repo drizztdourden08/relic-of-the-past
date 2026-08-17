@@ -3,8 +3,16 @@
 
 // ─── Overworld Special-Area Query ───
 
+// The parameterized version a caller uses once it has already resolved a menu-overlay
+// remap (main_module_index==14, the real module sitting in saved_module_for_menu) —
+// otherwise the special area silently stops being recognized the instant the player
+// opens the pause menu over it, since main_module_index reads 14 there, not 11.
+bool GameHook_IsOverworldSpecialAreaFor(int effectiveModule) {
+  return effectiveModule == MODULE_FALLING_ENTRANCE && overworld_screen_index >= OVERWORLD_SPECIAL_AREA_SCREEN_MIN;
+}
+
 bool GameHook_IsOverworldSpecialArea(void) {
-  return main_module_index == MODULE_FALLING_ENTRANCE && overworld_screen_index >= OVERWORLD_SPECIAL_AREA_SCREEN_MIN;
+  return GameHook_IsOverworldSpecialAreaFor(main_module_index);
 }
 
 // ─── Inventory State Query ───
@@ -160,8 +168,9 @@ int WasmGetViewportInfo(void) {
   }
   // The overworld-special-area flavor of MODULE_FALLING_ENTRANCE is normal outdoor
   // gameplay — report it as such so consumers keyed on locationModule === MODULE_OVERWORLD
-  // (the edge-glow effect) still engage there.
-  if (mod == MODULE_FALLING_ENTRANCE && GameHook_IsOverworldSpecialArea()) {
+  // (the edge-glow effect) still engage there. Checked against `mod` (already
+  // menu-remapped above), not the raw module, so this still holds while paused.
+  if (GameHook_IsOverworldSpecialAreaFor(mod)) {
     mod = MODULE_OVERWORLD;
   }
   g_viewport_buf[9] = mod;
