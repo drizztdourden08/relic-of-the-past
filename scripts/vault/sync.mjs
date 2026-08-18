@@ -24,6 +24,9 @@ import { ROOT, MANAGED_ROOTS, locateVault, treeDirOf } from './locate.mjs';
 import { indexTree, indexPaths } from './tree-index.mjs';
 import { compareTrees, summarize } from './compare.mjs';
 import { applyEntries, commitVault } from './apply.mjs';
+import { createSnapshot } from '../safety/snapshot.mjs';
+import { pruneSnapshots } from '../safety/retention.mjs';
+import { guardMirroredDeletions, refusalLines } from './removal-guard.mjs';
 
 const STATE_FILE = join(ROOT, '.vault-state.json');
 
@@ -132,6 +135,36 @@ const main = () => {
   }
 
   report(entries);
+
+  // Deletions travel in both directions and need DIFFERENT protection, which is easy to
+  // get wrong: one local snapshot looks like it covers both and covers only one.
+  //
+  // `remote-deleted` removes a file from THIS checkout, so a snapshot of local disk taken
+  // now holds the way back. `local-deleted` removes it from the VAULT, and there a local
+  // snapshot is worthless by definition — the local copy is already gone, which is what
+  // made it local-deleted. The last good copy is the vault's own HEAD, so that gets named
+  // rather than snapshotted, and a mass deletion is refused outright: preventing the
+  // accident beats recovering from it, and 233 files went this way once.
+  const guard = guardMirroredDeletions({ entries, vaultDir, mode: MODE });
+  if (guard.blocked) {
+    // Deliberately exit 0. This runs in postinstall, a refusal means NOTHING was changed
+    // on either side, and failing every future `npm install` until someone acts would do
+    // more damage than the deletion being declined. The message is the deliverable.
+    for (const line of refusalLines(guard)) say(line);
+    return;
+  }
+
+  const incoming = entries.filter((entry) => entry.status === 'remote-deleted').length;
+  if (incoming > 0) {
+    const snapshot = createSnapshot('vault-sync');
+    say(`safety snapshot ${snapshot.ref} — holds the ${incoming} file(s) about to be removed here`);
+    pruneSnapshots();
+  }
+  if (guard.outgoing.length > 0) {
+    const where = guard.head ? `; ${guard.head} still holds them` : '';
+    say(`${guard.outgoing.length} file(s) gone locally will be removed from the vault${where}`);
+  }
+
   const applied = applyEntries({ entries, root: ROOT, treeDir });
 
   if (applied.pulled + applied.pushed + applied.removed > 0) {

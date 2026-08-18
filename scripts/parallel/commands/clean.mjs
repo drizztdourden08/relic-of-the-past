@@ -20,6 +20,9 @@ import { VERDICTS } from '../verdict.mjs';
 import { gameDataPath, repoRoot } from '../paths.mjs';
 import { parseDuration } from '../lease.mjs';
 import { assertNoSharedLinks, unlinkSharedDirs } from '../link-deps.mjs';
+import { removeTreeSafely } from '../remove-tree.mjs';
+import { createSnapshot, verifyAgainst } from '../../safety/snapshot.mjs';
+import { pruneSnapshots } from '../../safety/retention.mjs';
 import { flag } from '../args.mjs';
 
 /** Which records the given switches select, and why each other one is spared. */
@@ -72,11 +75,14 @@ const removeWorktree = (record) => {
     unlinkSharedDirs(record.path);
     assertNoSharedLinks(record.path);
 
-    try {
-      execFileSync('git', ['worktree', 'remove', '--force', record.path], { cwd: repoRoot, stdio: 'inherit' });
-    } catch {
-      console.warn(`  [wt] git could not remove ${record.path} — deleting the directory.`);
-      rmSync(record.path, { recursive: true, force: true });
+    // git does NOT do the deleting. `git worktree remove` runs its own recursive delete,
+    // and on Windows that walks into a junction and empties what it points at — proven,
+    // and it cost the main repo's .claude and record tree once already. removeTreeSafely
+    // unlinks reparse points instead of descending through them.
+    const links = removeTreeSafely(record.path);
+    if (links > 0) console.log(`  [wt] unlinked ${links} link(s) without following them`);
+    if (existsSync(record.path)) {
+      console.warn(`  [wt] ${record.path} did not delete completely — inspect it by hand.`);
     }
   }
   execFileSync('git', ['worktree', 'prune'], { cwd: repoRoot, stdio: 'ignore' });
@@ -150,10 +156,31 @@ const run = async ({ positional, options }) => {
     return;
   }
 
+  // Snapshot first. Everything below deletes, and the one thing that must never happen is
+  // discovering afterwards that something irreplaceable went with it.
+  const snapshot = createSnapshot('wt-clean');
+  console.log(`\n[wt] Safety snapshot ${snapshot.ref}`);
+
   for (const entry of chosen) {
     console.log(`\n[wt] Removing ${entry.record.name}…`);
     removeWorktree(entry.record);
   }
+
+  // The worktrees sit outside the main checkout, so nothing protected should have moved.
+  // If something did, say so loudly and point at the way back instead of finishing quietly.
+  const check = verifyAgainst(snapshot.ref);
+  if (check.ok) {
+    console.log('\n[wt] Verified: no protected file went missing.');
+  } else {
+    console.error(`\n[wt] STOP — ${check.missing.length} protected file(s) disappeared during this removal:`);
+    for (const path of check.missing.slice(0, 10)) console.error(`       ${path}`);
+    if (check.missing.length > 10) console.error(`       …and ${check.missing.length - 10} more`);
+    console.error(`\n       Restore them with:  npm run safety -- restore ${snapshot.ref}\n`);
+    process.exitCode = 1;
+  }
+
+  const pruned = pruneSnapshots();
+  if (pruned.length > 0) console.log(`[wt] Pruned ${pruned.length} expired snapshot(s).`);
 
   const names = new Set(chosen.map((e) => e.record.name));
   await updateRegistry((registry) => {

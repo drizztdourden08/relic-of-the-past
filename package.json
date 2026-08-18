@@ -67,7 +67,8 @@
     "vault:sync": "node scripts/vault/sync.mjs",
     "vault:status": "node scripts/vault/sync.mjs --status",
     "vault:force-pull": "node scripts/vault/sync.mjs --force-pull",
-    "vault:force-push": "node scripts/vault/sync.mjs --force-push"
+    "vault:force-push": "node scripts/vault/sync.mjs --force-push",
+    "safety": "node scripts/safety/cli.mjs"
   },
   "dependencies": {
     "@capacitor-community/keep-awake": "^8.0.1",
