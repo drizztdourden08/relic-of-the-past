@@ -60,12 +60,9 @@ const args = [
   '--outputDir', outputDir,
 ];
 
-if (linux) {
-  // xz over the default gzip. The payload is mostly one enormous binary, which is
-  // exactly what a bigger dictionary helps with, and an AppImage is decompressed
-  // once per launch rather than per update.
-  args.push('--compression', 'xz');
-} else {
+// Linux stays on vpk's default gzip. The AppImage runtime vpk embeds reads zlib and
+// zstd only, so an xz payload packs fine and then cannot be mounted at launch.
+if (!linux) {
   // The window shown while installing, which only the Windows setup has. Same artwork
   // as the app's boot splash, so the install and the first launch read as one
   // sequence, and the bar over it is the app's accent rather than Velopack's green.
