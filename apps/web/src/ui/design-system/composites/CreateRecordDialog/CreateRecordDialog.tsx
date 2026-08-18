@@ -20,6 +20,7 @@ import { DialogShell } from '../DialogShell';
 import { EditorGroup, layoutGroups } from '../RecordEditor';
 import { useCreateFormState } from './behavior/use-create-form-state';
 import type { EditorBinding } from '../RecordEditor';
+import type { IdRefOptionResolver } from '../field-kits/registry';
 import type { CreateRecordDialogProps } from './CreateRecordDialog.type';
 import './CreateRecordDialog.css';
 
@@ -49,16 +50,26 @@ const CreateRecordDialog = (props: CreateRecordDialogProps) => {
     [resolveNumberBounds, working],
   );
 
+  // Same handoff the record editor makes: a reference field that narrows by a
+  // sibling reads the half-filled form, so the pick made a moment ago is what
+  // the next list is built from.
+  const readIdRefOptions = useMemo<IdRefOptionResolver | undefined>(
+    () => (resolveIdRefOptions
+      ? (targetKind, field) => resolveIdRefOptions(targetKind, field, working)
+      : undefined),
+    [resolveIdRefOptions, working],
+  );
+
   const binding = useMemo<EditorBinding>(() => ({
     value: readValue,
     onChange: setValue,
     isDirty: NOT_DIRTY,
     disabled: saving,
-    resolveIdRefOptions,
+    resolveIdRefOptions: readIdRefOptions,
     resolveTagSuggestions,
     onCreateTag,
     bounds: readBounds,
-  }), [readValue, setValue, saving, resolveIdRefOptions, resolveTagSuggestions, onCreateTag, readBounds]);
+  }), [readValue, setValue, saving, readIdRefOptions, resolveTagSuggestions, onCreateTag, readBounds]);
 
   const submit = useCallback(async () => {
     const id = await handleCreate();

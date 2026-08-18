@@ -11,6 +11,7 @@
  * variables — see state_queries.c), never from something the simulator recorded.
  * A save state loaded by hand therefore reports the truth.
  */
+import { progressTierLabel } from '@shared/game/logic/queries/progress-tier';
 
 /** The live values the rules read. Plain data, so rules stay testable. */
 interface StateSnapshot {
@@ -63,12 +64,11 @@ const SLOT = {
  */
 const NO_KEY_COUNT = 0xff;
 
-/** sram_progress_indicator thresholds — the story beats it counts off. */
-const PROGRESS_LABELS: Readonly<Record<number, string>> = {
-  1: 'Uncle rescued',
-  2: 'Princess rescued',
-  3: 'Agahnim defeated',
-};
+/**
+ * Tier 0 is the state every save starts in, so it is not something that has
+ * become true — the chip list only reports what holds beyond the opening.
+ */
+const FIRST_REPORTED_TIER = 1;
 
 type StateRule = (snap: StateSnapshot) => ActiveState | null;
 
@@ -96,7 +96,8 @@ const smallKeyRule: StateRule = (snap) => {
 
 const progressRule: StateRule = (snap) => {
   const tier = snap.progress[SLOT.progressIndicator] ?? 0;
-  const label = PROGRESS_LABELS[tier];
+  if (tier < FIRST_REPORTED_TIER) return null;
+  const label = progressTierLabel(tier);
   return label ? { id: `progress-${tier}`, label } : null;
 };
 

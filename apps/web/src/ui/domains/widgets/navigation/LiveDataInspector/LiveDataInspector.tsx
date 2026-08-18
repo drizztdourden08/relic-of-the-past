@@ -18,27 +18,37 @@
  * `useComparison` (see its own header) feeds each card its own record's live
  * differences, keyed by id, so a wrong field shows inline right where it
  * lives instead of only as a separate recommendation card above.
+ *
+ * `screen`'s own `spawns` field renders through a `SpawnsSection` supplied as a
+ * per-path field renderer — the generic array cell shows an object element as
+ * an unreadable `{...}` (see `array-kit.tsx`'s `summarizeList`), so this one
+ * field gets a purpose-built view while keeping the place the schema gives it,
+ * inside the Contents group alongside the rest of a screen's contents.
  */
 import { useMemo, useState } from 'react';
 import { Box, EmptyState, ScrollArea } from '@ds/primitives';
 import { buildSchema } from '@ds/data';
+import type { CompactFieldRenderer } from '@ds/composites/CompactRecordView';
 import { COLLECTION_SOURCES } from '@app/ui/domains/app/views/DataInspector/behavior/collection-sources';
 import { openInPassOrder, useRecommendations } from '@app/ui/domains/app/views/DataInspector/behavior/recommendations/use-recommendations';
 import { defaultIdRefDisplay } from '@app/ui/domains/app/views/DataInspector/behavior/record-links';
 import { useIdRefNavigation } from '@app/ui/domains/app/views/DataInspector/behavior/useIdRefNavigation';
 import { useDataViewStore } from '@app/stores/data-view-store';
-import type { EntityKind } from '@shared/game/data';
+import type { EntityKind, ScreenRecord } from '@shared/game/data';
 import { DEFAULT_KIND } from './LiveDataInspector.constants';
 import { useComparison } from './behavior/use-comparison';
 import { useCurrentRecords } from './behavior/use-current-records';
+import type { LiveRecord } from './behavior/use-current-records';
 import { useDetectionPass } from './behavior/use-detection-pass';
 import { useLiveContext } from './behavior/use-live-context';
 import { CollectionTabs } from './sub-components/CollectionTabs';
 import { RecommendationList } from './sub-components/RecommendationList';
 import { RecordCard } from './sub-components/RecordCard';
+import { SpawnsSection } from './sub-components/SpawnsSection';
 import './LiveDataInspector.css';
 
 const NO_RECORDS = 'No record for this screen in this collection.';
+const SPAWNS_PATH = 'spawns';
 
 /** Every real collection's rows carry a plain string `id` — see `collection-sources.ts`'s `getId`. */
 const idOf = (record: unknown): string | null => {
@@ -61,6 +71,17 @@ const LiveDataInspectorContent = () => {
   const records = useCurrentRecords(kind, context);
   const source = COLLECTION_SOURCES[kind];
   const schema = useMemo(() => buildSchema(source.rows, source.config), [source]);
+
+  // `spawns` keeps its schema position and swaps only its cell (see the module
+  // header); every other field, and every other collection, renders as usual.
+  const fieldRenderers = useMemo(() => {
+    if (kind !== 'screen') return undefined;
+    const renderSpawns: CompactFieldRenderer<LiveRecord> = (record) => {
+      const screen = record as ScreenRecord;
+      return <SpawnsSection spawns={screen.spawns} diff={diffsByRecord.get(screen.id)?.get(SPAWNS_PATH)} />;
+    };
+    return new Map([[SPAWNS_PATH, renderSpawns]]);
+  }, [kind, diffsByRecord]);
 
   // The same jump `openRecommendation` already gives a finding, for a plain
   // record instead — an edit button below, or a reference clicked anywhere
@@ -87,6 +108,7 @@ const LiveDataInspectorContent = () => {
               config={source.config}
               resolveIdRefDisplay={defaultIdRefDisplay}
               diffs={diffsByRecord.get(id)}
+              fieldRenderers={fieldRenderers}
             />
           );
         })}

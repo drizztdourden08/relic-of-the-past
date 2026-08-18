@@ -1,4 +1,5 @@
 /* @layer renderer-components @kind types */
+import type { ReactNode } from 'react';
 import type { FieldDescriptor, SchemaConfig } from '../../data/schema/field-descriptor';
 
 /**
@@ -23,6 +24,15 @@ interface FieldDifference {
   shown: { dataset: string; live: string };
   source: string;
 }
+
+/**
+ * Renders one field's whole row in place of the default cell. The caller owns
+ * the content, so a field whose value needs domain knowledge to read (an array
+ * of objects, say) gets a purpose-built view without this package importing
+ * anything domain-side — the same bargain `resolveIdRefDisplay` and
+ * `FieldDifference` already make.
+ */
+type CompactFieldRenderer<T> = (record: T) => ReactNode;
 
 interface CompactRecordViewProps<T> {
   record: T;
@@ -51,6 +61,13 @@ interface CompactRecordViewProps<T> {
    * before this prop existed.
    */
   diffs?: ReadonlyMap<string, FieldDifference>;
+  /**
+   * Per-path replacements for the default field row, keyed by the field's own
+   * schema path (see `CompactFieldRenderer`). A replaced field keeps its place
+   * in the derived layout, group and running order included; a path this map
+   * does not carry renders through its field kit as usual.
+   */
+  fieldRenderers?: ReadonlyMap<string, CompactFieldRenderer<T>>;
 }
 
 interface CompactFieldProps {
@@ -64,4 +81,6 @@ interface CompactFieldProps {
   diffs?: ReadonlyMap<string, FieldDifference>;
 }
 
-export type { CompactFieldProps, CompactIdRefResolver, CompactRecordViewProps, FieldDifference };
+export type {
+  CompactFieldProps, CompactFieldRenderer, CompactIdRefResolver, CompactRecordViewProps, FieldDifference,
+};

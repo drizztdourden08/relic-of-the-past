@@ -1,0 +1,49 @@
+/* @layer renderer-widgets @kind style */
+
+/* One row per spawn: the actor's own name, plus its tile — see
+   `SpawnsSection.tsx`'s header for why this exists instead of the generic
+   array cell. Label/empty colors match `CompactRecordView`'s own convention
+   (`compact-record-view__label`/`__empty`) rather than inventing a second one. */
+
+/* Stands in for one field row inside its group, so it carries the same
+   reserved accent gutter `compact-record-view__row` does and its label column
+   lines up with every neighbouring field's. */
+.spawns-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  border-inline-start: var(--border-width-thick) solid transparent;
+  padding-inline-start: var(--space-xs);
+}
+
+.spawns-section__label {
+  color: var(--c-text-dim);
+  font-size: var(--text-xs);
+}
+
+.spawns-section__empty {
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+}
+
+.spawns-section__row {
+  font-size: var(--text-xs);
+  border-inline-start: var(--border-width-thick) solid transparent;
+  padding-inline-start: var(--space-xs);
+}
+
+/* A spawn the live game reports that the record does not carry yet — same
+   danger accent `compact-record-view__row--differs` uses for a single field. */
+.spawns-section__row--live-only {
+  background: var(--c-danger-soft);
+  border-inline-start-color: var(--c-danger);
+}
+
+.spawns-section__name {
+  color: var(--c-text);
+}
+
+.spawns-section__tile {
+  color: var(--c-text-muted);
+  font-family: var(--font-mono);
+}

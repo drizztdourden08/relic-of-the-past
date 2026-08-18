@@ -36,6 +36,13 @@
   flex-shrink: 0;
 }
 
+/* Pinned beside the button it reports on, for the same reason. */
+.live-rec-list__outcome {
+  flex-shrink: 0;
+  font-size: var(--text-xs);
+  color: var(--c-text-muted);
+}
+
 /* The scrolling itself lives on ScrollArea; this class only carries the
    layout (fill the space left under the header/tabs/batch button, shrink to
    fit) and the card gap. */

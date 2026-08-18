@@ -35,7 +35,7 @@ interface PauseMenuData {
   abilityFlags: number;
   /** Whether to show crystals vs pendants */
   showCrystals: boolean;
-  /** Progress indicator (0-2 = LW dungeons, 3+ = DW) */
+  /** Progress indicator — tier 3 is where the dark world opens (see progress-tier.ts). */
   progressIndicator: number;
   /** Heart pieces collected (0-3) */
   heartPieces: number;

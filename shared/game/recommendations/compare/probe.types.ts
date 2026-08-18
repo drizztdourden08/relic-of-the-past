@@ -72,6 +72,14 @@ interface SetProbe<K extends EntityKind, Item> {
   removable: boolean;
   source: string;
   confidence: Confidence;
+  /**
+   * Grade for an `unbacked-in-dataset` finding, when a removal deserves a
+   * different one from an addition. A delete is a proof of ABSENCE, and an
+   * absence proof is only as strong as the enumeration behind it: a probe
+   * whose live read can legitimately miss a crossing keeps its deletes below
+   * `certain`, so a gap in the enumeration is never batch-writable.
+   */
+  removalConfidence?: Confidence;
 }
 
 /**

@@ -29,10 +29,10 @@
 import { useMemo } from 'react';
 import { diffsByRecordFrom } from '@shared/game/recommendations';
 import type { DetectionContext, Difference } from '@shared/game/recommendations';
-import { signatureOf } from './context-signature';
+import { useContextSignature } from './use-context-signature';
 
 const useComparison = (context: DetectionContext): ReadonlyMap<string, ReadonlyMap<string, Difference>> => {
-  const signature = signatureOf(context);
+  const signature = useContextSignature(context);
   // Gated on the content signature, not object identity — see the file header.
   return useMemo(() => diffsByRecordFrom(context), [signature]);
 };

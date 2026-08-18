@@ -6,11 +6,16 @@ import type { EntityKind, EnumerationId } from './ids';
  * (a `ScreenRecord.world` is still `'light' | 'dark'`, never a foreign key) but
  * whose display names deserve one shared source instead of being redeclared —
  * and left to drift — at every place that renders one.
+ *
+ * A category may label a NUMERIC field as well: `progress-tier` describes the
+ * save's progress indicator byte, and its `value` is that number written as
+ * text. `EnumerationEntry.value` is a string for every category, so a numeric
+ * field's binding converts at the edge rather than widening this type.
  */
 type EnumerationCategory =
   | 'world' | 'screen-status' | 'screen-kind' | 'interior-kind'
   | 'connection-kind' | 'connection-side' | 'actor-kind' | 'check-kind'
-  | 'item-category' | 'item-origin' | 'review-status';
+  | 'item-category' | 'item-origin' | 'review-status' | 'progress-tier';
 
 /** One labeled value of one category — e.g. `{ category: 'world', value: 'light', label: 'Light World' }`. */
 interface EnumerationEntry {

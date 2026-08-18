@@ -106,7 +106,9 @@ describeDataset('connection strategy REMOVE side (SetProbe) against the real dat
     });
     const drafts = detector.detect(context).filter(d => d.action === 'delete');
     expect(drafts.some(d => d.targetId === conn.id)).toBe(true);
-    expect(drafts.find(d => d.targetId === conn.id)?.confidence).toBe('certain');
+    // A delete is a proof of absence, so both crossing probes grade removals
+    // by their `removalConfidence` — never `certain`, never batch-writable.
+    expect(drafts.find(d => d.targetId === conn.id)?.confidence).toBe('likely');
   });
 
   it('never proposes removing an OUTDOOR edge — the flood cannot prove an absence', () => {

@@ -34,6 +34,16 @@ type VariantCondition =
 interface ScreenVariantInfo {
   key: string;
   label?: string;
+  /**
+   * The progress indicator byte value(s) this variant belongs to — one tier, or
+   * an inclusive `[from, to]` range. What each tier means is documented once, in
+   * `logic/queries/progress-tier.ts`, and labelled by the `progress-tier`
+   * enumeration category.
+   *
+   * A `{ type: 'progress' }` condition says the same thing in the form the
+   * runtime evaluates, so the two must agree — `screenBlockers` refuses a screen
+   * whose tier contradicts its own condition.
+   */
   progressTier?: number | [number, number];
   condition: VariantCondition;
 }

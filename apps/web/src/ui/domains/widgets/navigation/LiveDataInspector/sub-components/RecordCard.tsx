@@ -13,6 +13,11 @@
  * rather than one for whichever record used to be picked — reviewing "this
  * screen's data" always meant reviewing one of several real records, never
  * the collection as a whole.
+ *
+ * `fieldRenderers` passes straight through to the compact view: a kind-specific
+ * section (e.g. a screen's `SpawnsSection`) reaches its field's own place in the
+ * schema that way, so this card stays generic over every collection rather than
+ * carrying a slot that knows any one kind's extra content.
  */
 import { Box, Flex, IconButton } from '@ds/primitives';
 import { CompactRecordView } from '@ds/composites/CompactRecordView';
@@ -33,10 +38,12 @@ interface RecordCardProps<T> {
   resolveIdRefDisplay?: CompactRecordViewProps<T>['resolveIdRefDisplay'];
   /** This record's own live differences, looked up by id before this prop arrives. */
   diffs?: CompactRecordViewProps<T>['diffs'];
+  /** Per-path field views for this kind, shown in each field's own schema position. */
+  fieldRenderers?: CompactRecordViewProps<T>['fieldRenderers'];
 }
 
 const RecordCard = <T,>(props: RecordCardProps<T>) => {
-  const { kind, id, record, schema, config, resolveIdRefDisplay, diffs } = props;
+  const { kind, id, record, schema, config, resolveIdRefDisplay, diffs, fieldRenderers } = props;
   const openRecord = useDataViewStore((state) => state.openRecord);
 
   return (
@@ -52,6 +59,7 @@ const RecordCard = <T,>(props: RecordCardProps<T>) => {
         config={config}
         resolveIdRefDisplay={resolveIdRefDisplay}
         diffs={diffs}
+        fieldRenderers={fieldRenderers}
       />
       <ReviewControls kind={kind} recordId={id} />
     </Box>

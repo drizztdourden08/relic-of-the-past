@@ -16,20 +16,27 @@ interface EnumMultiSelectProps {
   options: readonly string[];
   selected: readonly string[];
   placeholder: string;
+  /** Display text per option; an option with no entry shows its own literal. */
+  labels?: Readonly<Record<string, string>>;
   onChange: (selected: readonly string[]) => void;
 }
 
 const SUMMARY_MAX = 2;
 
-const summarize = (selected: readonly string[], placeholder: string): string => {
+const summarize = (
+  selected: readonly string[],
+  placeholder: string,
+  labelFor: (option: string) => string,
+): string => {
   if (!selected.length) return placeholder;
-  if (selected.length <= SUMMARY_MAX) return selected.join(', ');
+  if (selected.length <= SUMMARY_MAX) return selected.map(labelFor).join(', ');
   return `${selected.length} selected`;
 };
 
 const EnumMultiSelect = (props: EnumMultiSelectProps) => {
-  const { options, selected, placeholder, onChange } = props;
+  const { options, selected, placeholder, labels, onChange } = props;
   const menu = useMenuOpen<HTMLButtonElement>();
+  const labelFor = (option: string): string => labels?.[option] ?? option;
 
   const toggle = (option: string): void => {
     onChange(selected.includes(option)
@@ -39,7 +46,7 @@ const EnumMultiSelect = (props: EnumMultiSelectProps) => {
 
   const items: MenuEntry[] = options.map((option) => ({
     key: option,
-    label: option,
+    label: labelFor(option),
     checked: selected.includes(option),
     onClick: () => toggle(option),
   }));
@@ -55,7 +62,7 @@ const EnumMultiSelect = (props: EnumMultiSelectProps) => {
         aria-expanded={menu.open}
         onClick={menu.toggle}
       >
-        {summarize(selected, placeholder)}
+        {summarize(selected, placeholder, labelFor)}
       </Button>
       {menu.open && items.length > 0 && <DropdownMenu items={items} anchorRef={menu.anchorRef} />}
     </>

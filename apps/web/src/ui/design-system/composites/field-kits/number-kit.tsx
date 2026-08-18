@@ -90,9 +90,10 @@ const FilterControl = (props: FilterControlProps) => {
 };
 
 /**
- * Stays decimal even when `field.format` asks for a hex cell — hex is a
- * reading aid for comparing against the live Game State panel, not an input
- * convention we want to make the user learn just to edit a value.
+ * Stays decimal even when `field.format` asks for a hex cell: `NumberInput` is
+ * a native `<input type="number">`, so it cannot hold text like `0x0104` as
+ * its value. The hex reading aid renders beside the input instead — see
+ * `hexHint` and where `EditorRow` feeds it to the `Field` hint slot.
  */
 const EditorControl = (props: EditorControlProps) => {
   const { field, value, onChange, disabled, bounds } = props;
@@ -107,6 +108,18 @@ const EditorControl = (props: EditorControlProps) => {
       onChange={(entered) => onChange(Number.isNaN(entered) ? null : entered)}
     />
   );
+};
+
+/**
+ * The same hex text a formatted field's read-only cell shows (`formatCell`),
+ * for display beside its editor input. Undefined when the field carries no
+ * format, or the current value doesn't parse to a finite number.
+ */
+const hexHint = (field: FieldDescriptor, value: unknown): string | undefined => {
+  if (!field.format) return undefined;
+  const raw = toNumber(value);
+  if (!Number.isFinite(raw)) return undefined;
+  return formatCell(raw, field.format).text;
 };
 
 const renderCell = (value: unknown, field: FieldDescriptor): ReactNode => {
@@ -125,4 +138,4 @@ registerFieldTester('number', { test });
 registerComparator('number', compare);
 registerFieldKit(numberKit);
 
-export { numberKit };
+export { hexHint, numberKit };

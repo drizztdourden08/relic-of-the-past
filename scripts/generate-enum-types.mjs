@@ -124,4 +124,4 @@ const generateEnumTypes = async (root = DEFAULT_ROOT) => {
 // `generate-enum-types-cli.mjs` is the one place that does, and it is never
 // imported by anything else, so it can never end up bundled next to a
 // different real entry point.
-export { buildGeneratedTypesSource, generateEnumTypes };
+export { buildGeneratedTypesSource, generateEnumTypes, CATEGORY_TYPE_NAMES };

@@ -1,9 +1,10 @@
 /* @layer bridge-wasm @kind logic */
 /** Universal progress indicator + overworld variant state. */
+import { progressTierLabel } from '@shared/game/logic/queries/progress-tier';
 import { callWhenRunning } from './wasm-call';
 
 interface OverworldVariantInfo {
-  /** sram_progress_indicator: 0=intro, 1=post-uncle, 2=princess-rescued, 3=agahnim-defeated */
+  /** The progress indicator byte — see `progress-tier.ts` for what each value means. */
   progressIndicator: number;
   /** save_ow_event_info[screen] for the current screen */
   screenEventFlags: number;
@@ -14,13 +15,14 @@ interface OverworldVariantInfo {
 }
 
 interface GameProgressInfo {
-  /** Raw sram_progress_indicator value (0-3) */
+  /** Raw progress indicator value (0-3) */
   tier: number;
   /** Human-readable phase label */
   label: string;
 }
 
-const PHASE_LABELS = ['intro', 'rain (pre-Sanctuary)', 'post-Sanctuary', 'post-Agahnim'];
+/** A tier the dataset has no row for is reported as itself, never renamed here. */
+const phaseLabelFor = (tier: number): string => progressTierLabel(tier) ?? `unknown (${tier})`;
 
 /**
  * Read the game's progress indicator from WRAM — works indoors or outdoors.
@@ -31,7 +33,7 @@ const wasmGetProgressIndicator = (): GameProgressInfo | null =>
     const progPtr = mod.ccall('WasmGetProgressFlags', 'number', [], []) as number;
     if (!progPtr) return null;
     const tier = mod.HEAPU8[progPtr];
-    return { tier, label: PHASE_LABELS[tier] ?? `unknown (${tier})` };
+    return { tier, label: phaseLabelFor(tier) };
   });
 
 /**
@@ -54,7 +56,7 @@ const wasmGetOverworldVariant = (screenIndex: number): OverworldVariantInfo | nu
       progressIndicator,
       screenEventFlags,
       eventOverlayActive,
-      phaseLabel: PHASE_LABELS[progressIndicator] ?? `unknown (${progressIndicator})`,
+      phaseLabel: phaseLabelFor(progressIndicator),
     };
   });
 

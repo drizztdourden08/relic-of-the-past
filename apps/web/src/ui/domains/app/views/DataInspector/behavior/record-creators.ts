@@ -21,15 +21,16 @@
  * `settle-created-record.ts` for that shared tail.
  */
 import {
-  isTagKey, registerEnumerationRecord, registerItemGroupRecord, registerRecord, registerTag,
+  getScreenByGameId, isTagKey, registerEnumerationRecord, registerItemGroupRecord, registerRecord, registerTag,
 } from '@shared/game/data';
 import { screenRecordFile } from '@shared/game/data/record-file-targets';
+import { screenForRoomIndex } from '@shared/game/logic/queries/room-screen';
 import { createConnection } from './create-connection';
 import { invalidateTagSuggestions } from './tag-suggestions';
 import { settleCreatedRecord } from './settle-created-record';
 import type {
   ActorRecord, AreaRecord, CheckRecord, DungeonRecord, EntityKind, EnumerationEntry,
-  ItemGroupRecord, ItemRecord, LocationRecord, ScreenRecord, TagRecord,
+  ItemGroupRecord, ItemRecord, LocationRecord, ScreenGameId, ScreenRecord, TagRecord,
 } from '@shared/game/data';
 import type { ScreenHome } from '@shared/game/data/record-file-targets';
 import type { PendingScreenRecord, Unnumbered } from '@shared/game/data/record-codegen';
@@ -38,8 +39,25 @@ import type { CreateOutcome, RecordCreator } from './record-creators.type';
 
 const NO_TARGET = 'No source file could be derived for this record.';
 const NOT_CONVENTION = 'Tags must be in the form namespace:value.';
+const ALREADY_COVERED = (id: string): string =>
+  `${id} already catalogues this game id — correct that record instead of adding a second.`;
+
+/**
+ * A record already catalogues this identity. Two detectors can notice the same
+ * uncatalogued room independently, so without this a second accept mints a
+ * duplicate the dataset then has to be de-duplicated by hand.
+ */
+const coveringScreen = (gameId: ScreenGameId | undefined): ScreenRecord | undefined => {
+  if (!gameId) return undefined;
+  if (gameId.overworldIndex !== undefined) return getScreenByGameId({ overworldIndex: gameId.overworldIndex });
+  if (gameId.roomIndex === undefined) return undefined;
+  return getScreenByGameId({ roomIndex: gameId.roomIndex, palaceIndex: gameId.palaceIndex })
+    ?? screenForRoomIndex(gameId.roomIndex);
+};
 
 const createScreen: RecordCreator = async (draft) => {
+  const covered = coveringScreen((draft as unknown as ScreenHome).gameId);
+  if (covered) return { success: false, error: ALREADY_COVERED(covered.id), needsReview: true };
   const target = screenRecordFile(draft as unknown as ScreenHome);
   if (!target.relativePath) return { success: false, error: target.unresolved ?? NO_TARGET };
   const result = await window.api.screenEditor.writeScreen({

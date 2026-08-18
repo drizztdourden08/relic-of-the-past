@@ -31,15 +31,13 @@ import { setPath } from './set-path';
 type UnresolvableMapper<K extends EntityKind> =
   (difference: Extract<SetDifference<K>, { status: 'unresolvable' }>, context: DetectionContext) => DraftRecommendation | null;
 
+// A reason is scanned, not read: state the field and the two sides, nothing
+// else. The full pair is repeated in the evidence line for the record view.
 const reasonForField = (difference: Difference): string => {
   const { label, shown } = difference;
-  if (difference.status === 'mismatch') {
-    return `The record holds ${shown.dataset} for ${label}, but the game reports ${shown.live}.`;
-  }
-  if (difference.status === 'missing-in-dataset') {
-    return `The game reports ${shown.live} for ${label}, but the record does not hold a value.`;
-  }
-  return `The record holds ${shown.dataset} for ${label}, but the game does not confirm it.`;
+  if (difference.status === 'mismatch') return `${label}: record ${shown.dataset}, game ${shown.live}.`;
+  if (difference.status === 'missing-in-dataset') return `${label}: game ${shown.live}, record empty.`;
+  return `${label}: record ${shown.dataset}, absent in game.`;
 };
 
 const draftForField = <K extends EntityKind>(
@@ -75,7 +73,7 @@ const draftsForSet = <K extends EntityKind>(
       if (difference.status === 'missing-in-dataset') {
         out.push({
           kind: strategy.kind, action: 'create', targetId: null, current: null, proposed: difference.proposed,
-          reason: `The game exposes a ${difference.noun} (${difference.key}) the dataset does not have.`,
+          reason: `${difference.noun} ${difference.key}: in game, not in dataset.`,
           detector: `strategy:${strategy.kind}`,
           evidence: [{ source: probe.source, detail: `live ${difference.noun} key ${difference.key} has no dataset match` }],
           confidence: probe.confidence, screenId: context.screenId, origin: context.origin, key,
@@ -86,10 +84,11 @@ const draftsForSet = <K extends EntityKind>(
           // Nothing replaces a deletion — see `connection-remove.ts` for the
           // same convention: the action IS the change, not any field.
           proposed: difference.record,
-          reason: `The dataset has a ${difference.noun} (${difference.key}) the game does not confirm.`,
+          reason: `${difference.noun} ${difference.key}: in dataset, absent in game.`,
           detector: `strategy:${strategy.kind}`,
           evidence: [{ source: probe.source, detail: `dataset ${difference.noun} key ${difference.key} has no live match` }],
-          confidence: probe.confidence, screenId: context.screenId, origin: context.origin, key,
+          confidence: probe.removalConfidence ?? probe.confidence,
+          screenId: context.screenId, origin: context.origin, key,
         });
       } else if (onUnresolvable) {
         const mapped = onUnresolvable(difference, context);
