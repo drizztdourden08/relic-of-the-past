@@ -11,9 +11,9 @@
  * copied, because editors replace files rather than writing through a link (`wt doctor`
  * re-copies them when they drift).
  */
-import { existsSync, mkdirSync, copyFileSync, cpSync, symlinkSync, unlinkSync, readdirSync } from 'node:fs';
+import { existsSync, mkdirSync, copyFileSync, cpSync, symlinkSync, unlinkSync, readdirSync, lstatSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
-import { join, dirname } from 'node:path';
+import { join, dirname, relative } from 'node:path';
 import { repoRoot } from './paths.mjs';
 
 /**
@@ -29,13 +29,18 @@ import { repoRoot } from './paths.mjs';
  * extra work: `shared/game/data/` is tracked, so the link's parent already exists in a
  * freshly added worktree.
  */
-const LINKED_DIRS = ['.claude', 'shared/game/data/records'];
+const LINKED_DIRS = ['shared/game/data/records'];
 
 /**
  * Copied — user-provided and irreplaceable, so never exposed to the junction hazard.
  * test-roms is a few MB; that is a cheap price for it being unrecoverable if lost.
+ *
+ * .claude is copied rather than linked as of the incident described in unlinkSharedDirs:
+ * it is small, the ai-config bootstrap regenerates it in seconds, and live sharing was
+ * never worth putting the maintainer's skills, tools and settings on the end of a
+ * junction. `wt doctor` re-copies it when it drifts.
  */
-const COPIED_DIRS = ['test-roms'];
+const COPIED_DIRS = ['test-roms', '.claude'];
 
 // Copied: small, and edited in place by tools that break links.
 const COPIED_FILES = ['CLAUDE.md', 'AGENTS.md', '.mcp.json', '.ai-config.json', 'assets/assets.dat'];
@@ -141,16 +146,45 @@ const unlinkSharedDirs = (worktree) => {
 };
 
 /**
- * Refuse to continue while any shared link is still in place. The last line of defence
- * before a recursive delete: if a junction could not be detached, deleting the worktree
- * would destroy the main repo's copy instead.
+ * Every reparse point (junction or symlink) anywhere under `dir`, found with lstat so a
+ * link is never followed while looking for links. Skips node_modules, whose internal
+ * .bin links are numerous, point inside the worktree, and are not the hazard.
+ */
+const findLinks = (dir, base = dir, found = []) => {
+  let entries;
+  try {
+    entries = readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return found;
+  }
+  for (const entry of entries) {
+    if (entry.name === '.git' || entry.name === 'node_modules') continue;
+    const full = join(dir, entry.name);
+    if (entry.isSymbolicLink()) {
+      found.push(relative(base, full));
+      continue;  // never descend through a link
+    }
+    if (entry.isDirectory()) findLinks(full, base, found);
+  }
+  return found;
+};
+
+/**
+ * Refuse to continue while ANY link survives anywhere in the worktree.
+ *
+ * This used to check only the two names in LINKED_DIRS. That is a guard against the
+ * hazard you already thought of, and it was not enough: a removal ran with the known
+ * links detached and the checks passing, and the main repo's .claude and record tree
+ * were emptied anyway. The failure was never explained, so the check no longer assumes
+ * the list is complete — it walks the tree and refuses on anything it finds.
  */
 const assertNoSharedLinks = (worktree) => {
-  const remaining = LINKED_DIRS.filter((name) => existsSync(join(worktree, name)));
+  const remaining = findLinks(worktree);
   if (remaining.length > 0) {
     throw new Error(
-      `Refusing to delete ${worktree}: still linked to the main repo (${remaining.join(', ')}). ` +
-      'Deleting it now would empty those directories in the main repo. Remove the links by hand first.',
+      `Refusing to delete ${worktree}: ${remaining.length} link(s) still present ` +
+      `(${remaining.slice(0, 5).join(', ')}${remaining.length > 5 ? ', …' : ''}). ` +
+      'A recursive delete can follow these into the main repo and empty the target.',
     );
   }
 };
