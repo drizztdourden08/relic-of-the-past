@@ -26,7 +26,7 @@ import './GameLayer.css';
 import type { GameLayerProps } from './GameLayer.type';
 
 const GameLayer = (props: GameLayerProps) => {
-  const { assetData, configIni, profileId, stretch, pixelPerfect = false, edgeEffect = true, shadowCasting = false } = props;
+  const { assetData, configIni, profileId, stretch, pixelPerfect = false, edgeEffect = true, shadowCasting = false, developerToolsEnabled = false } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fxCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -202,9 +202,9 @@ const GameLayer = (props: GameLayerProps) => {
         />
       )}
       {status === 'running' && <NavigationOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
-      {status === 'running' && <ShadowEditorOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
-      {status === 'running' && <ShadowEditorPanel />}
-      {status === 'running' && <ShadowElementList />}
+      {status === 'running' && developerToolsEnabled && <ShadowEditorOverlay width={fitSize.width} height={fitSize.height} gameRunning={status === 'running'} />}
+      {status === 'running' && developerToolsEnabled && <ShadowEditorPanel />}
+      {status === 'running' && developerToolsEnabled && <ShadowElementList />}
       {status === 'running' && <GameOverlay width={fitSize.width} height={fitSize.height} />}
     </Box>
   );

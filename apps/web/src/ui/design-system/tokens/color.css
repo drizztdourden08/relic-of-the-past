@@ -46,6 +46,7 @@
   --color-green-glow:     var(--c-green-soft);
   --color-green-border:   var(--c-green);
   --color-green-surface:  var(--c-green-dim);
+  --color-green-scrim:    var(--c-green-scrim);
 
   /* ─── Semantic: Danger ─── */
   --color-danger-dim:     var(--c-danger-dim);

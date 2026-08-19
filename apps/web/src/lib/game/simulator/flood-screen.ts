@@ -77,7 +77,7 @@ const summarizeRun = (run: ScreenFloodRun, items: TileReq[], screenIndex?: numbe
     edgeCount: connections.length - intraCount,
     intraCount,
     connections,
-    ...(screenIndex === undefined ? {} : { sprites: wasmGetOverworldSpriteSpawns(screenIndex).map((sp) => ({
+    ...(screenIndex === undefined ? {} : { sprites: (wasmGetOverworldSpriteSpawns(screenIndex) ?? []).map((sp) => ({
       type: `0x${sp.spriteType.toString(16)}`,
       row: sp.row,
       col: sp.col,

@@ -97,6 +97,32 @@ const SECTIONS: Section[] = [
       },
     ],
   },
+  {
+    id: 'cheats',
+    title: 'Cheats',
+    subsections: [
+      {
+        id: 'cheats-options',
+        title: 'Options',
+        items: [
+          { key: 'cheatsEnabled', label: 'Enable Cheats', description: 'Master gate for every cheat (stats, items, combat, ignore collision). Off by default: every cheat no-ops in the C core while this is off, so leaving it off can never affect gameplay.', keywords: 'cheat cheats enable master gate ignore collision walk through walls noclip kill enemies magic' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'vanilla-safe',
+    title: 'Vanilla Safe',
+    subsections: [
+      {
+        id: 'vanilla-safe-options',
+        title: 'Options',
+        items: [
+          { key: 'vanillaSafe', label: 'Vanilla Safe', description: 'Forces every non-stock behavior off — every feature, quality-of-life flag, bug fix, cheat, item override, custom player sprite, and HUD override — so the game matches the original cartridge exactly. Harmless, low-risk divergences are included too; there are no exemptions.', keywords: 'vanilla safe parity original cartridge stock speedrun race lock' },
+        ],
+      },
+    ],
+  },
 ];
 
 export { SECTIONS, SAVE_SECTION };

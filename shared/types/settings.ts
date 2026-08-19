@@ -177,6 +177,15 @@ interface GameSettings {
   // to curate — see allowedDevices in lib/input/profile-devices.ts.
   hapticsEnabled: boolean;
 
+  // ─── Cheats ───
+  // Master gate for all cheat effects (stat/item/combat cheats, walk-through-walls, etc). Off by
+  // default: the C side no-ops every cheat call while this is off, same contract as haptics.enabled /
+  // developerToolsEnabled.
+  cheatsEnabled: boolean;
+  // When cheats are enabled, keep their effects constrained to changes that stay comparable to a
+  // vanilla run (the VanillaSafe bit in kRam_Features3). Off by default alongside cheatsEnabled.
+  vanillaSafe: boolean;
+
   // ─── Developer ───
   // Master gate for developer-only instrumentation (transition-settled events, and any future dev-only
   // GameHook). Off by default: the C hook that would fire these makes zero host-calls when this is off,

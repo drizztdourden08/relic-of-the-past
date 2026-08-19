@@ -48,6 +48,7 @@
   --c-green-bright:  #5cb87a;
   --c-green-dim:     #1a2a1e;
   --c-green-soft:    rgb(74 153 102 / 0.14);
+  --c-green-scrim:   rgb(74 153 102 / 0.16); /* disabled-state overlay backdrop — content stays legible beneath */
 
   /* ─── Semantics ─── */
   --c-danger:        #e5556e;

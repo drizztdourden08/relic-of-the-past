@@ -84,6 +84,13 @@ const LIVE_SETTINGS: ReadonlySet<keyof GameSettings> = new Set([
   'haptics',
   // Developer tools master gate (synced every frame via features0, same path as haptics)
   'developerToolsEnabled',
+  // Cheat gating (synced every frame via features3, same path as developerToolsEnabled)
+  'cheatsEnabled',
+  // vanillaSafe is deliberately NOT here: its gate-word masking (SyncGateWords) is instant regardless of
+  // this set — pushLiveSettings runs on every change either way — but flipping it also has to correct
+  // aspectRatio/extendY (baked into the render buffer at init) and MSU (opened once at boot), which are
+  // restart-only. Leaving it off this list makes any vanillaSafe toggle surface the restart toast below,
+  // same as those settings do on their own.
   // Player sprite sheet (swapped in place via WasmApplyPlayerSpriteFile)
   'linkSprite',
 ]);

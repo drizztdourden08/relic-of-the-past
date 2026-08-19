@@ -40,6 +40,10 @@ interface SimulatorPort {
   setAutoSkipDialog: (on: boolean | null) => void;
   /** features0 developer-tools bit: true/false force it; null defers to the user's setting. */
   setDeveloperTools: (on: boolean | null) => void;
+  /** Host gate (kHostGate_SimulatorSupport): arms the WasmSim* mutators (and the item-grant
+   *  fallback in TriggerGrantAllowed) for the duration of a run. On at start, off at the
+   *  end — including on abort/crash — so it can never linger armed against a live session. */
+  setSimulatorSupport: (on: boolean) => void;
   /** Memento: snapshot pre-run state so it can be restored afterwards. */
   snapshotState: () => Promise<ArrayBuffer>;
   restoreState: (buf: ArrayBuffer) => Promise<void>;

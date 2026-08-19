@@ -79,6 +79,26 @@ const decodeTable = <T>(
     return decodeCountPrefixed(mod, ptr, layout, decode);
   });
 
+/**
+ * Decode a status-gated count-prefixed array: byte 0 of the buffer is a status flag —
+ * 0 when the export's own gate was closed (or its argument was out of range), 1 when the
+ * count-prefixed table starting at byte 1 was actually filled. Returns `null` on a closed
+ * gate rather than `[]`, so a caller can tell "not allowed to read this" from "read it, and
+ * there is genuinely nothing here" — see WasmGetRoomChests and friends
+ * (core/game-hooks/sim_queries.c) for the C-side half of the contract.
+ */
+const decodeGatedTable = <T>(
+  exportName: string,
+  layout: TableLayout,
+  decode: (heap: Uint8Array, off: number, index: number) => T,
+  call?: CallArgs,
+): T[] | null =>
+  callWhenRunning<T[] | null>(null, (mod) => {
+    const ptr = mod.ccall(exportName, 'number', call?.argTypes ?? [], call?.args ?? []) as number;
+    if (!ptr || mod.HEAPU8[ptr] === 0) return null;
+    return decodeCountPrefixed(mod, ptr + 1, layout, decode);
+  });
+
 /** Call a pointer-returning export under the running guard; `null` if unavailable. */
 const callPtr = <T>(exportName: string, fromPtr: (mod: EmscriptenModule, ptr: number) => T | null, call?: CallArgs): T | null =>
   callWhenRunning<T | null>(null, (mod) => {
@@ -97,5 +117,5 @@ const voidCall = (exportName: string, call?: CallArgs): void =>
     mod.ccall(exportName, null, call?.argTypes ?? [], call?.args ?? []);
   });
 
-export { readU16, callWhenRunning, decodeCountPrefixed, decodeTable, callPtr, numberCall, voidCall };
+export { readU16, callWhenRunning, decodeCountPrefixed, decodeTable, decodeGatedTable, callPtr, numberCall, voidCall };
 export type { TableLayout, CallArgs };

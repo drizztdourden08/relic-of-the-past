@@ -7,6 +7,7 @@
 import { useMemo, type ReactNode } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
+import { openVanillaSafeSettings } from '@app/stores/search-store';
 import { buildDisplaySection, buildCameraSection } from './SettingsView.display';
 import { buildWindowSection, buildPerformanceSection } from './SettingsView.constants';
 import { renderDisplayControl } from './SettingsView.controls';
@@ -109,6 +110,7 @@ const SettingsView = (props: SettingsViewProps) => {
       settings={settings}
       onChange={handleChange}
       renderControl={renderControl}
+      onOpenVanillaSafeSettings={openVanillaSafeSettings}
     />
   );
 };

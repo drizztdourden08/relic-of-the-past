@@ -522,6 +522,13 @@ static bool HandleIniConfig(int section, const char *key, char *value) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_Haptics);
     } else if (StringEqualsNoCase(key, "DeveloperTools")) {
       return ParseBoolBit(value, &g_config.features0, kFeatures0_DeveloperTools);
+    } else if (StringEqualsNoCase(key, "CheatsEnabled")) {
+      // Only the master toggle; the four cheat-category permission bits are derived from this at boot
+      // (emscripten_main.c) rather than parsed, so a fresh launch grants the same permissions a live
+      // settings push would (see the features3 comment in config.h).
+      return ParseBoolBit(value, &g_config.features3, kFeatures3_CheatsEnabled);
+    } else if (StringEqualsNoCase(key, "VanillaSafe")) {
+      return ParseBoolBit(value, &g_config.features3, kFeatures3_VanillaSafe);
     }
   }
   return false;

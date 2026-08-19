@@ -22,6 +22,15 @@ int g_cheat_trace_frames = 0;
 static uint8 g_cheat_damage_mult = 1;      // Outgoing damage multiplier (1-255); 1 = vanilla no-op
 static uint8 g_cheat_extra_armor_pct = 0;   // Extra damage reduction % (0-100), stacks with armor; 0 = vanilla no-op
 
+// Ignore-collision is different from the two statics above: the effect it drives (variables.h
+// cheatWalkThroughWalls, WRAM 0x37F) has to live in WRAM because vendored code reads it directly
+// (tile_detect.c, player.c), and a loaded save state overwrites the whole WRAM blob wholesale. So this
+// bool holds the WANTED state — a plain host static, untouched by any WRAM restore — and
+// zelda_rtl.c's cheat-WRAM reconcile (SyncCheatWram, run every frame next to SyncGateWords) is the only
+// thing that ever writes the WRAM byte, driven by GameHook_GetWantedIgnoreCollision() below. That
+// mirrors exactly how the gate words themselves self-heal from g_wanted_gate_words.
+static bool g_wanted_ignore_collision = false;
+
 // ─── Local helpers ───
 // clampi() comes from num_util.h (shared with the volume setters).
 
@@ -34,11 +43,17 @@ static inline bool IsInGameplay(void) {
 
 // ─── Accessors (called from hooks in sprite.c / player.c) ───
 
+// Neutral (1x) when the combat cheat category is off — not just a bare return — so a stale
+// g_cheat_damage_mult from before a toggle-off can never leak into live combat math.
 uint8 GameHook_GetDamageMultiplier(void) {
+  if (!CheatGate(kFeatures3_CheatCombat)) return 1;
   return g_cheat_damage_mult;
 }
 
+// Neutral (0%) when the combat cheat category is off, for the same reason as GetDamageMultiplier.
+// GameHook_ApplyExtraArmor reads through this, so gating here alone already makes it a no-op.
 uint8 GameHook_GetExtraArmorPct(void) {
+  if (!CheatGate(kFeatures3_CheatCombat)) return 0;
   return g_cheat_extra_armor_pct;
 }
 
@@ -64,6 +79,7 @@ uint8 GameHook_ApplyExtraArmor(uint8 dmg) {
 // are exactly 76 entries. IDs >= 76 cause out-of-bounds reads that corrupt g_ram.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatGiveItem(int item_id) {
+  if (!CheatGate(kFeatures3_CheatItemGrant)) return;
   if ((uint8)item_id >= 76) {
     printf("[Cheat] GiveItem: blocked — item_id 0x%02x exceeds max valid receipt ID (0x4B)\n", item_id);
     return;
@@ -80,6 +96,7 @@ void WasmCheatGiveItem(int item_id) {
 // Set the player's current health directly.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetHealth(int value) {
+  if (!CheatGate(kFeatures3_CheatStats)) return;
   uint8 capped = (uint8)clampi(value, 0, link_health_capacity);
   link_health_current = capped;
   link_hearts_filler = 0;  // Cancel any pending heal animation
@@ -89,6 +106,7 @@ void WasmCheatSetHealth(int value) {
 // Set the player's max hearts (capacity). Each heart = 8 units.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetMaxHealth(int value) {
+  if (!CheatGate(kFeatures3_CheatStats)) return;
   uint8 capped = (uint8)clampi(value, 8, 160);  // 1-20 hearts (8 units each)
   link_health_capacity = capped;
   if (link_health_current > capped)
@@ -99,6 +117,7 @@ void WasmCheatSetMaxHealth(int value) {
 // Set rupee goal (game animates counter toward this value).
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetRupees(int value) {
+  if (!CheatGate(kFeatures3_CheatStats)) return;
   // Cap tracks the real current max — 9999 with the "Larger Wallet" feature on, 999 otherwise —
   // same condition as hud.c's MaxRupees() (that helper has internal linkage, so duplicated here).
   int max = (enhanced_features0 & kFeatures0_CarryMoreRupees) ? 9999 : 999;
@@ -110,6 +129,7 @@ void WasmCheatSetRupees(int value) {
 // Set bombs count.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetBombs(int value) {
+  if (!CheatGate(kFeatures3_CheatStats)) return;
   uint8 capped = (uint8)clampi(value, 0, 99);
   link_item_bombs = capped;
   printf("[Cheat] SetBombs: %d\n", capped);
@@ -118,6 +138,7 @@ void WasmCheatSetBombs(int value) {
 // Set arrows count.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetArrows(int value) {
+  if (!CheatGate(kFeatures3_CheatStats)) return;
   uint8 capped = (uint8)clampi(value, 0, 99);
   link_num_arrows = capped;
   printf("[Cheat] SetArrows: %d\n", capped);
@@ -126,6 +147,7 @@ void WasmCheatSetArrows(int value) {
 // Refill magic to full.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatRefillMagic(void) {
+  if (!CheatGate(kFeatures3_CheatStats)) return;
   link_magic_power = 0x80;
   link_magic_filler = 0;
   printf("[Cheat] RefillMagic\n");
@@ -136,6 +158,7 @@ void WasmCheatRefillMagic(void) {
 //           0x06=fairy, 0x07=bee, 0x08=good bee
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatFillBottle(int slot, int contents) {
+  if (!CheatGate(kFeatures3_CheatStats)) return;
   if (slot < 0 || slot > 3) {
     printf("[Cheat] FillBottle: invalid slot %d\n", slot);
     return;
@@ -148,6 +171,7 @@ void WasmCheatFillBottle(int slot, int contents) {
 // Skips: inactive sprites, friendly NPCs (state != 9 or bump_damage == 0).
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatKillAllEnemies(void) {
+  if (!CheatGate(kFeatures3_CheatCombat)) return;
   int killed = 0;
   for (int k = 0; k < 16; k++) {
     uint8 state = sprite_state[k];
@@ -172,6 +196,7 @@ void WasmCheatKillAllEnemies(void) {
 // Set outgoing damage multiplier (1 = normal, 2-255 = multiplied).
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetDamageMultiplier(int mult) {
+  if (!CheatGate(kFeatures3_CheatCombat)) return;
   g_cheat_damage_mult = (uint8)clampi(mult, 1, 255);
   printf("[Cheat] SetDamageMultiplier: %dx\n", g_cheat_damage_mult);
 }
@@ -179,21 +204,48 @@ void WasmCheatSetDamageMultiplier(int mult) {
 // Set extra armor percentage (0-100). Stacks with existing armor reduction.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatSetExtraArmorPct(int pct) {
+  if (!CheatGate(kFeatures3_CheatCombat)) return;
   g_cheat_extra_armor_pct = (uint8)clampi(pct, 0, 100);
   printf("[Cheat] SetExtraArmorPct: %d%%\n", g_cheat_extra_armor_pct);
 }
 
-// Start debug tracing for N frames (output goes to browser console).
+// Start debug tracing for N frames (output goes to browser console). Doesn't fit any single cheat
+// category below, so this tests only the master switch rather than forcing an arbitrary one.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheatStartTrace(int frames) {
+  if (!(enhanced_features3 & kFeatures3_CheatsEnabled)) return;
   g_cheat_trace_frames = (frames < 1) ? 60 : frames;
   printf("[Cheat] StartTrace: %d frames\n", g_cheat_trace_frames);
+}
+
+// Arm/disarm the ignore-collision cheat. Sets the WANTED state only — never pokes WRAM directly —
+// so zelda_rtl.c's SyncCheatWram() is the single writer of the actual byte (variables.h
+// cheatWalkThroughWalls, WRAM 0x37F — vendored read sites: tile_detect.c:247,258, player.c:2978) and a
+// save-state restore can never leave it stuck: the next frame's reconcile writes it right back.
+EMSCRIPTEN_KEEPALIVE
+void WasmCheatSetIgnoreCollision(int on) {
+  if (!CheatGate(kFeatures3_CheatIgnoreCollision)) return;
+  g_wanted_ignore_collision = on != 0;
+  printf("[Cheat] SetIgnoreCollision: %d\n", g_wanted_ignore_collision);
+}
+
+// Resolves this frame's desired value for the cheatWalkThroughWalls WRAM byte. Folds the gate check in
+// here (closed gate -> 0) so SyncCheatWram() in zelda_rtl.c stays a pure "write on mismatch" loop with
+// no cheat-specific logic of its own — the same division of labor GateWordSideEffects used to blur.
+// Plain C-to-C hook (no EMSCRIPTEN_KEEPALIVE): called only from zelda_rtl.c, never from JS.
+uint8 GameHook_GetWantedIgnoreCollision(void) {
+  return (CheatGate(kFeatures3_CheatIgnoreCollision) && g_wanted_ignore_collision) ? 1 : 0;
 }
 
 // Query whether the player can currently receive an item via the delivery system.
 // Returns 1 if safe to call Link_ReceiveItem, 0 otherwise.
 EMSCRIPTEN_KEEPALIVE
 int WasmCanReceiveItem(void) {
+  // Deliberately UNGATED. This mutates nothing: it answers "is the engine ready to hand the player an
+  // item right now", and the delivery queue polls it every frame to decide when to drain. Pinning it to
+  // 0 while a grant gate is closed strands every queued entry instead of refusing it, and the queue is
+  // shared with the simulator, so the stall would not stay inside the cheat system. The grant carries
+  // the gate; this is only the readiness read.
   // Must be in dungeon or overworld gameplay
   if (!IsInGameplay())
     return 0;

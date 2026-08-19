@@ -9,6 +9,7 @@
 
 import type { GameSettings } from '@shared/types/settings';
 import { SNES_BUTTON_LABELS, FUNCTION_ACTION_LABELS } from '@shared/types/controls';
+import { openSettingsTarget } from '@app/stores/search-store';
 import { BindingListener } from './controls/BindingListener';
 import { ControlsSidebar } from './controls/ControlsSidebar';
 import { ControlsMain } from './controls/ControlsMain';
@@ -31,7 +32,11 @@ const ControlsSettings = (props: ControlsSettingsProps) => {
   return (
     <Box className="controls-settings">
       <ControlsSidebar ctrl={ctrl} />
-      <ControlsMain ctrl={ctrl} />
+      <ControlsMain
+        ctrl={ctrl}
+        cheatsEnabled={settings.cheatsEnabled}
+        onOpenCheatsSettings={() => openSettingsTarget('cheatsEnabled')}
+      />
       <ControlsDevices ctrl={ctrl} />
 
       {/* Rebind listener modal */}

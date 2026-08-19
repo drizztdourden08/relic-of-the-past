@@ -36,7 +36,7 @@ These are keyboard shortcuts for things outside the game itself, such as saving 
 
 ## Cheats
 
-Cheats are optional bindings for actions like restore health, restore equipment, give all keys, and walk through walls. They have no keys assigned by default, and you bind them the same way as anything else.
+Cheats are optional bindings for actions like restore health, restore equipment, give all keys, and ignore movement restriction/collision. They have no keys assigned by default, and you bind them the same way as anything else.
 
 ## Connected Devices
 

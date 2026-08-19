@@ -114,6 +114,14 @@ bool PlayerSprite_HasCustom(void) {
 }
 
 bool PlayerSprite_Apply(const uint8 *data, size_t len, bool push_live) {
+  // Single gate point for the whole feature: every hook below (GameHook_PlayerGearPaletteLoaded,
+  // GameHook_PlayerGlovesColorUpdated, PlayerSprite_RefreshPalette, PlayerSprite_Restore) only acts
+  // once g_has_custom is true, and this is the only place that sets it — so refusing here when the
+  // gate is off keeps the player on the stock sheet/palette everywhere else without duplicating checks.
+  if (!(enhanced_features3 & kFeatures3_PlayerSpriteOverride)) {
+    printf("[PlayerSprite] Blocked — player sprite override gate is off\n");
+    return false;
+  }
   if (data == NULL || len < kHeaderBytes || memcmp(data, "ZSPR", 4) != 0) {
     printf("[PlayerSprite] Not a ZSPR sheet\n");
     return false;

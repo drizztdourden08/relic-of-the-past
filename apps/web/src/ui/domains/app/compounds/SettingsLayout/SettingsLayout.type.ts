@@ -29,6 +29,9 @@ interface SettingsLayoutProps {
   onChange: (patch: Partial<GameSettings>) => void;
   renderControl?: (key: string, settings: GameSettings, onChange: (patch: Partial<GameSettings>) => void) => ReactNode | null;
   isDisabled?: (key: string, settings: GameSettings) => boolean;
+  /** Invoked when a Vanilla-Safe-locked control's overlay action is activated. Required to
+   *  make the lock interactive; omitting it just leaves the action inert. */
+  onOpenVanillaSafeSettings?: () => void;
 }
 
 export type {

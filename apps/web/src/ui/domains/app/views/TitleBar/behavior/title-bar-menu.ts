@@ -2,6 +2,7 @@
 /** Builds the TitleBar dropdown menu item tree from props + closeMenu. */
 import type { WindowControlsPort } from '@shared/platform';
 import type { DropdownMenu } from '../../../../../design-system/composites/DropdownMenu';
+import { getWidgetDefinition } from '@ds/composites/Widget';
 import type { TitleBarProps } from '../TitleBar.type';
 
 type MenuItems = Parameters<typeof DropdownMenu>[0]['items'];
@@ -11,7 +12,7 @@ type MenuBuilderDeps = Pick<TitleBarProps,
   | 'onToggleInventory' | 'onToggleChecks' | 'onToggleCheats' | 'onShowLogs' | 'onToggleDebug'
   | 'onShowConnectionDebug' | 'onToggleDataset' | 'onToggleSimulator' | 'onShowInputTester' | 'onShowSpriteDebug' | 'onShowDataInspector'
   | 'onShowShadowEditor' | 'onCheckForUpdates' | 'onShowCredits' | 'onShowDesignGallery' | 'onShowAbout'
-  | 'widgetVisibility'
+  | 'widgetVisibility' | 'developerToolsEnabled'
 > & { closeMenu: () => void; win: WindowControlsPort };
 
 const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
@@ -20,8 +21,19 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
     onShowProfile, onToggleSaveStates, onShowDataManager, onToggleInventory, onToggleChecks,
     onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset, onToggleSimulator,
     onShowInputTester, onShowSpriteDebug, onShowDataInspector, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout,
-    widgetVisibility = {},
+    widgetVisibility = {}, developerToolsEnabled = false,
   } = deps;
+
+  const widgetItems = [
+    { key: 'inventory', icon: '🎒', label: 'Inventory Tracker', checked: widgetVisibility.inventory, onClick: () => { closeMenu(); onToggleInventory(); } },
+    { key: 'checks', icon: '🗺️', label: 'Checks Tracker', checked: widgetVisibility.checks, onClick: () => { closeMenu(); onToggleChecks(); } },
+    { key: 'cheats', icon: '⚡', label: 'Cheats', checked: widgetVisibility.cheats, onClick: () => { closeMenu(); onToggleCheats(); } },
+    { key: 'logs', icon: '📋', label: 'Logs', checked: widgetVisibility.logs, onClick: () => { closeMenu(); onShowLogs(); } },
+    { key: 'debug', icon: '📡', label: 'Game State', checked: widgetVisibility.debug, onClick: () => { closeMenu(); onToggleDebug(); } },
+    { key: 'navigation', icon: '🔗', label: 'Location & Navigation', checked: widgetVisibility.navigation, onClick: () => { closeMenu(); onShowConnectionDebug(); } },
+    { key: 'dataset', icon: '📊', label: 'Live Data Inspector', checked: widgetVisibility.dataset, onClick: () => { closeMenu(); onToggleDataset(); } },
+    { key: 'simulator', icon: '🤖', label: 'Simulator', checked: widgetVisibility.simulator, onClick: () => { closeMenu(); onToggleSimulator(); } },
+  ].filter((item) => developerToolsEnabled || !getWidgetDefinition(item.key)?.devOnly);
 
   return [
     {
@@ -57,16 +69,7 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
       key: 'widgets',
       icon: '🔧',
       label: 'Widgets',
-      children: [
-        { key: 'inventory', icon: '🎒', label: 'Inventory Tracker', checked: widgetVisibility.inventory, onClick: () => { closeMenu(); onToggleInventory(); } },
-        { key: 'checks', icon: '🗺️', label: 'Checks Tracker', checked: widgetVisibility.checks, onClick: () => { closeMenu(); onToggleChecks(); } },
-        { key: 'cheats', icon: '⚡', label: 'Cheats', checked: widgetVisibility.cheats, onClick: () => { closeMenu(); onToggleCheats(); } },
-        { key: 'logs', icon: '📋', label: 'Logs', checked: widgetVisibility.logs, onClick: () => { closeMenu(); onShowLogs(); } },
-        { key: 'debug', icon: '📡', label: 'Game State', checked: widgetVisibility.debug, onClick: () => { closeMenu(); onToggleDebug(); } },
-        { key: 'navigation', icon: '🔗', label: 'Location & Navigation', checked: widgetVisibility.navigation, onClick: () => { closeMenu(); onShowConnectionDebug(); } },
-        { key: 'dataset', icon: '📊', label: 'Live Data Inspector', checked: widgetVisibility.dataset, onClick: () => { closeMenu(); onToggleDataset(); } },
-        { key: 'simulator', icon: '🤖', label: 'Simulator', checked: widgetVisibility.simulator, onClick: () => { closeMenu(); onToggleSimulator(); } },
-      ],
+      children: widgetItems,
     },
     {
       key: 'advanced',
@@ -74,10 +77,10 @@ const buildTitleBarMenuItems = (deps: MenuBuilderDeps): MenuItems => {
       label: 'Advanced',
       children: [
         // Input Calibration and Data Inspector are real user options — always available.
-        // The rest are developer tools, shown only in a dev build (and inherently desktop-only).
+        // The rest are developer tools, shown only when developerToolsEnabled is on.
         { key: 'input-tester', icon: '🎮', label: 'Input Calibration', onClick: () => { closeMenu(); onShowInputTester(); } },
         { key: 'data-inspector', icon: '🔍', label: 'Data Inspector', onClick: () => { closeMenu(); onShowDataInspector(); } },
-        ...(window.api.isDev ? [
+        ...(developerToolsEnabled ? [
           { key: 'dev-console', icon: '🛠️', label: 'Dev Console', onClick: () => { closeMenu(); win.openDevTools(); } },
           { key: 'sprite-debug', icon: '🖼️', label: 'Sprite Debug', onClick: () => { closeMenu(); onShowSpriteDebug(); } },
           { key: 'design-gallery', icon: '🎨', label: 'Design Gallery', onClick: () => { closeMenu(); onShowDesignGallery(); } },

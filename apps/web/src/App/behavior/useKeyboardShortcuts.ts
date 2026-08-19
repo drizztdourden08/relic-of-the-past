@@ -9,6 +9,7 @@ const useKeyboardShortcuts = (
   dialog: ConfirmDialog | null,
   dismissDialog: () => void,
   activeProfile: Profile | null,
+  developerToolsEnabled = false,
 ) => {
   const { window: win } = usePlatform();
   useEffect(() => {
@@ -20,7 +21,7 @@ const useKeyboardShortcuts = (
       }
       // Dev-only Sprite Debug toggle (Ctrl+Shift+D) — opens it as a full-window page,
       // so it switches with / is dismissed by the same logic as every other page.
-      if (window.api.isDev && e.ctrlKey && e.shiftKey && e.key === 'D') {
+      if (developerToolsEnabled && e.ctrlKey && e.shiftKey && e.key === 'D') {
         e.preventDefault();
         nav.setActivePage(nav.activePage === 'sprite-debug' ? 'none' : 'sprite-debug');
         return;
@@ -46,7 +47,7 @@ const useKeyboardShortcuts = (
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, [win, nav, activeProfile, dialog, dismissDialog]);
+  }, [win, nav, activeProfile, dialog, dismissDialog, developerToolsEnabled]);
 };
 
 export { useKeyboardShortcuts };

@@ -26,14 +26,18 @@ static int SimIsCurrentRoom(int room_id) {
 }
 
 // ─── Chests ───
-// Layout: [count(1), pad(1)] then count records of 7 bytes:
+// Layout: status(1) then [count(1), pad(1)] then count records of 7 bytes:
 //   [chestIndex(1), isBig(1), itemId(1), isOpen(1), posKnown(1), col(1), row(1)]
 // chestIndex 0-5 = order within the room's chest table (also the open-bit index).
 // Tile position comes from live dung_chest_locations for the occupied room, and
 // from the room's static object data (the chest object's draw position) for any
 // other room — so remote chests are position-known too; col/row index the
 // 64-wide dungeon tilemap (row spans pages for tall rooms).
-static uint8 g_sim_chests_buf[2 + 6 * 7];
+//
+// The leading status byte is 1 only when the query actually ran (dev mode on AND
+// room_id in range) and 0 otherwise, so a caller can tell "gate closed" from "this
+// room genuinely has zero chests" instead of reading both as an empty table.
+static uint8 g_sim_chests_buf[1 + 2 + 6 * 7];
 
 // Walk one room-object list layer starting at byte |off|, counting drawn chest
 // objects (recording each one's draw-position tile) and returning the offset of
@@ -91,10 +95,15 @@ static int SimRoomScanChests(int room_id, uint8 *cols, uint8 *rows) {
   return chests;
 }
 
+// Gated on developer mode: the simulator subsystem sits entirely behind dev tools, reads
+// included, so the Location & Navigation widget can inspect it outside a run too (see
+// SimQueryGate in game_hooks_internal.h).
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomChests(int room_id) {
   memset(g_sim_chests_buf, 0, sizeof(g_sim_chests_buf));
+  if (!SimQueryGate()) return (int)g_sim_chests_buf;
   if (!SimRoomValid(room_id)) return (int)g_sim_chests_buf;
+  g_sim_chests_buf[0] = 1;
 
   int current = SimIsCurrentRoom(room_id);
   // Only the first |drawn| chest-table entries for a room are backed by a real
@@ -143,7 +152,7 @@ int WasmGetRoomChests(int room_id) {
       pos_known = 1;
     }
 
-    int o = 2 + count * 7;
+    int o = 3 + count * 7;
     g_sim_chests_buf[o + 0] = count;
     g_sim_chests_buf[o + 1] = (chest_room & 0x8000) ? 1 : 0;
     g_sim_chests_buf[o + 2] = cd[2];
@@ -153,44 +162,49 @@ int WasmGetRoomChests(int room_id) {
     g_sim_chests_buf[o + 6] = row;
     count++;
   }
-  g_sim_chests_buf[0] = count;
+  g_sim_chests_buf[1] = count;
   return (int)g_sim_chests_buf;
 }
 
 // ─── Static sprite spawns ───
-// Layout: [count(1), sortSetting(1)] then count records of 4 bytes:
+// Layout: status(1) then [count(1), sortSetting(1)] then count records of 4 bytes:
 //   [spriteType(1), col(1), row(1), flags(1)]
 // col/row are 8px-tile positions within the 64x64 room grid. flags: bit0 =
 // floor (y>>7), bit1 = drops a small key on death, bit2 = drops the big key —
 // from the 0xe4/0xfe|0xfd die-action marker that FOLLOWS the carrier's entry
 // (Dungeon_LoadSingleSprite, sprite.c:3662). Overlords (x>=0xe0) and the
 // markers themselves are omitted — only spawn sprites are listed.
-static uint8 g_sim_sprites_buf[2 + 32 * 4];
+//
+// Leading status byte: see WasmGetRoomChests above (1 = gate open and room in range).
+static uint8 g_sim_sprites_buf[1 + 2 + 32 * 4];
 
+// Gated on developer mode — see WasmGetRoomChests above.
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomSpriteSpawns(int room_id) {
   memset(g_sim_sprites_buf, 0, sizeof(g_sim_sprites_buf));
+  if (!SimQueryGate()) return (int)g_sim_sprites_buf;
   if (!SimRoomValid(room_id)) return (int)g_sim_sprites_buf;
+  g_sim_sprites_buf[0] = 1;
 
   const uint8 *src = kDungeonSprites + kDungeonSpriteOffs[room_id];
-  g_sim_sprites_buf[1] = *src++;
+  g_sim_sprites_buf[2] = *src++;
   uint8 count = 0;
   for (; *src != 0xff && count < 32; src += 3) {
     uint8 y = src[0], x = src[1], type = src[2];
     if (type == 0xe4 && (y == 0xfe || y == 0xfd)) {
-      if (count > 0) g_sim_sprites_buf[2 + (count - 1) * 4 + 3] |= (y == 0xfe) ? 2 : 4;
+      if (count > 0) g_sim_sprites_buf[3 + (count - 1) * 4 + 3] |= (y == 0xfe) ? 2 : 4;
       continue;
     }
     if (x >= 0xe0) continue;
 
-    int o = 2 + count * 4;
+    int o = 3 + count * 4;
     g_sim_sprites_buf[o + 0] = type;
     g_sim_sprites_buf[o + 1] = (uint8)((x & 0x1f) << 1);
     g_sim_sprites_buf[o + 2] = (uint8)((y & 0x1f) << 1);
     g_sim_sprites_buf[o + 3] = (uint8)(y >> 7);
     count++;
   }
-  g_sim_sprites_buf[0] = count;
+  g_sim_sprites_buf[1] = count;
   return (int)g_sim_sprites_buf;
 }
 
@@ -209,19 +223,24 @@ static uint8 SimDoorKind(uint8 t) {
 }
 
 // ─── Doors ───
-// Layout: [count(1), pad(1)] then count records of 7 bytes:
+// Layout: status(1) then [count(1), pad(1)] then count records of 7 bytes:
 //   [direction(1), col(1), row(1), kind(1), nativeType(1), isOpen(1), layer(1)]
 // direction 0=N,1=S,2=W,3=E. col/row index the 64-wide dungeon tilemap.
 // isOpen: door-open bit (slots 0-3) from the live word for the occupied room or
 // the SRAM room word otherwise; always-open doorways (types 0/2) read open.
 // layer: 0 = upper/BG2, 1 = lower/BG1 — door position slots 6-11 are the
 // lower-layer positions (RoomDraw_NormalRangedDoors_*, dungeon.c:3068).
-static uint8 g_sim_doors_buf[2 + 16 * 7];
+//
+// Leading status byte: see WasmGetRoomChests above (1 = gate open and room in range).
+static uint8 g_sim_doors_buf[1 + 2 + 16 * 7];
 
+// Gated on developer mode — see WasmGetRoomChests above.
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomDoorInfo(int room_id) {
   memset(g_sim_doors_buf, 0, sizeof(g_sim_doors_buf));
+  if (!SimQueryGate()) return (int)g_sim_doors_buf;
   if (!SimRoomValid(room_id)) return (int)g_sim_doors_buf;
+  g_sim_doors_buf[0] = 1;
 
   int current = SimIsCurrentRoom(room_id);
   uint16 open_bits = current ? dung_door_opened : (save_dung_info[room_id] & 0xf000);
@@ -241,7 +260,7 @@ int WasmGetRoomDoorInfo(int room_id) {
     uint8 is_open = (type == 0 || type == 2) ? 1
                   : (count < 4 && (open_bits & (0x8000 >> count))) ? 1 : 0;
 
-    int o = 2 + count * 7;
+    int o = 3 + count * 7;
     g_sim_doors_buf[o + 0] = dir;
     g_sim_doors_buf[o + 1] = (uint8)((addr % 128) / 2);
     g_sim_doors_buf[o + 2] = (uint8)(addr / 128);
@@ -251,14 +270,14 @@ int WasmGetRoomDoorInfo(int room_id) {
     g_sim_doors_buf[o + 6] = (pos >= 6) ? 1 : 0;
     count++;
   }
-  g_sim_doors_buf[0] = count;
+  g_sim_doors_buf[1] = count;
   return (int)g_sim_doors_buf;
 }
 
 // (Door unlock/close and enemy-kill trigger writes live in sim_triggers.c.)
 
 // ─── Overworld static sprite spawns ───
-// Layout: [count(1), pad(1)] then count records of 3 bytes:
+// Layout: status(1) then [count(1), pad(1)] then count records of 3 bytes:
 //   [spriteType(1), col(1), row(1)]
 // col/row are 8px-tile positions within the area's 64x64 screen grid, decoded
 // from the same 3-byte OW sprite entries the loader reads (Overworld_LoadSprites,
@@ -270,15 +289,20 @@ int WasmGetRoomDoorInfo(int room_id) {
 // so calling it reproduces the loader's table choice exactly. Overlord and marker
 // entries (type >= 0xf3, i.e. spawn id >= 0xf4) are omitted — only real spawn
 // sprites are listed, matching the dungeon query's overlord filter.
-static uint8 g_sim_ow_sprites_buf[2 + 48 * 3];
+//
+// Leading status byte: see WasmGetRoomChests above (1 = gate open and screen in range).
+static uint8 g_sim_ow_sprites_buf[1 + 2 + 48 * 3];
 
+// Gated on developer mode — see WasmGetRoomChests above.
 EMSCRIPTEN_KEEPALIVE
 int WasmGetOverworldSpriteSpawns(int screen_index) {
   memset(g_sim_ow_sprites_buf, 0, sizeof(g_sim_ow_sprites_buf));
+  if (!SimQueryGate()) return (int)g_sim_ow_sprites_buf;
   if (screen_index < 0 || screen_index >= 144) return (int)g_sim_ow_sprites_buf;
 
   const uint8 *src = GetOverworldSpritePtr(screen_index);
   if (!src) return (int)g_sim_ow_sprites_buf;
+  g_sim_ow_sprites_buf[0] = 1;
 
   uint8 count = 0;
   for (; src[0] != 0xff && count < 48; src += 3) {
@@ -292,12 +316,12 @@ int WasmGetOverworldSpriteSpawns(int screen_index) {
     uint16 x_px = (uint16)(((blk >> 8) & 3) << 8) | (uint16)((blk & 0xf) << 4);
     uint16 y_px = (uint16)((blk >> 10) << 8) | (uint16)(blk & 0xf0);
 
-    int o = 2 + count * 3;
+    int o = 3 + count * 3;
     g_sim_ow_sprites_buf[o + 0] = type;
     g_sim_ow_sprites_buf[o + 1] = (uint8)(x_px >> 3);
     g_sim_ow_sprites_buf[o + 2] = (uint8)(y_px >> 3);
     count++;
   }
-  g_sim_ow_sprites_buf[0] = count;
+  g_sim_ow_sprites_buf[1] = count;
   return (int)g_sim_ow_sprites_buf;
 }

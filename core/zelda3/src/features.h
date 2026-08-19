@@ -10,10 +10,24 @@ enum {
   kRam_CrystalRotateCounter = 0x649,
   kRam_BugsFixed = 0x64a,
   kRam_Features0 = 0x64c,
-  // Split bug-fix toggles overflow features0 (>32 bits), so they live in two more recorded WRAM words in
-  // the free 0x659-0x66f gap (msu/hud end at 0x658, next named var is 0x670). Recorded for determinism.
+  // Gates overflow features0 (>32 bits), so they continue in further recorded WRAM words taken from the
+  // free 0x659-0x66f gap (msu/hud end at 0x658, next named var is 0x670). Recorded for determinism.
   kRam_Features1 = 0x65c,
   kRam_Features2 = 0x660,
+  // Segment 2 — 96 more gate bits filling the tail of the same free gap (0x664-0x66f). Verified unused:
+  // no symbol here in variables.h or the disassembly name map (the next named vanilla variable is
+  // spotlight_var3 at 0x670), no code reads or writes the range, and it reads back all-zero in every
+  // recorded gameplay snapshot even though 0x670 does not. Recorded for determinism like the others.
+  kRam_Features3 = 0x664,
+  kRam_Features4 = 0x668,
+  kRam_Features5 = 0x66c,
+};
+
+// Every gate bit lives in one of these recorded WRAM words. The count and the address of each index are
+// FROZEN: a save state serializes raw WRAM and a replay patches these exact byte offsets, so moving a
+// word (or a bit between words) silently invalidates every existing state and replay log.
+enum {
+  kGateWordCount = 6,
 };
 
 enum {
@@ -89,9 +103,32 @@ enum {
 // The 42 split bug-fix toggles (kFeatures1_* / kFeatures2_*) — generated from the Wave-1b catalog.
 #include "features_bugfixes.h"
 
+// Enum values for kRam_Features3 — cheats and other C-side hook divergences. Unlike kFeatures0 (opt-in
+// rendering/QoL settings, each independent), every kFeatures3_Cheat* bit here ALSO requires
+// kFeatures3_CheatsEnabled — see CheatGate() in core/game-hooks/game_hooks_internal.h, the single helper
+// every cheat call site tests instead of re-deriving "cheats are on" itself.
+enum {
+  kFeatures3_CheatsEnabled         = 1,  // master gate for every kFeatures3_Cheat* bit below
+  kFeatures3_CheatIgnoreCollision  = 2,
+  kFeatures3_CheatItemGrant        = 4,   // give-item + trigger-check family, incl. WasmCanReceiveItem
+  kFeatures3_CheatStats            = 8,   // health/rupees/bombs/arrows/magic/bottles
+  kFeatures3_CheatCombat           = 16,  // kill-enemies, damage mult, extra armor
+  kFeatures3_VanillaSafe           = 32,  // Vanilla Safe: forces every parity-affecting gate bit off (see
+                                           // kGateWordParityMask in zelda_rtl.c's SyncGateWords)
+
+  // Independent hook-divergence gates below — no CheatsEnabled dependency, each stands alone.
+  kFeatures3_ItemOverrides         = 64,  // randomizer chest-item substitution table
+  kFeatures3_TrackerNotifications  = 128, // __onItemReceived host-call on every item receipt
+  kFeatures3_PlayerSpriteOverride  = 256, // custom ZSPR player sheet + private palette bank
+  kFeatures3_HudOverride           = 512, // native HUD/pause hiding — see HudOverride_Allowed/Restore
+};
+
 #define enhanced_features0 (*(uint32*)(g_ram+0x64c))
 #define enhanced_features1 (*(uint32*)(g_ram+0x65c))
 #define enhanced_features2 (*(uint32*)(g_ram+0x660))
+#define enhanced_features3 (*(uint32*)(g_ram+0x664))
+#define enhanced_features4 (*(uint32*)(g_ram+0x668))
+#define enhanced_features5 (*(uint32*)(g_ram+0x66c))
 #define msu_curr_sample (*(uint32*)(g_ram+0x650))
 #define msu_volume (*(uint8*)(g_ram+0x654))
 #define msu_track (*(uint8*)(g_ram+0x655))
@@ -102,9 +139,19 @@ enum {
 
 
 
-extern uint32 g_wanted_zelda_features;
-extern uint32 g_wanted_zelda_features1;
-extern uint32 g_wanted_zelda_features2;
+// The values the sync loop in zelda_rtl.c pushes into the WRAM gate words each frame, indexed the same
+// way as kGateWordCount. The three legacy names alias slots 0-2 so every existing call site keeps
+// compiling and writing to exactly the same storage.
+extern uint32 g_wanted_gate_words[kGateWordCount];
+#define g_wanted_zelda_features (g_wanted_gate_words[0])
+#define g_wanted_zelda_features1 (g_wanted_gate_words[1])
+#define g_wanted_zelda_features2 (g_wanted_gate_words[2])
 
+// The gate word actually landed in WRAM this frame for |index| — i.e. after SyncGateWords applies the
+// Vanilla Safe mask — unlike g_wanted_gate_words[index], which is whatever was last requested and may
+// not survive it. Defined in zelda_rtl.c alongside kGateWordRamAddr/SyncGateWords. Reads 0 before the
+// very first SyncGateWords() call, since WRAM starts zeroed and nothing has synced into it yet — the
+// honest answer for "what is in effect" before any frame has run.
+uint32 ZeldaGetEffectiveGateWord(int index);
 
 #endif  // ZELDA3_FEATURES_H_

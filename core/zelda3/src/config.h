@@ -71,6 +71,12 @@ typedef struct Config {
   uint32 features0;
   uint32 features1;  // split bug-fix toggles (overflow of features0); see plans/zelda3-settings-plan.md
   uint32 features2;  // overflow word for the split bug-fix toggles
+  // Raw INI toggles for the cheat gate word (kRam_Features3): only kFeatures3_CheatsEnabled and
+  // kFeatures3_VanillaSafe are ever set here by the parser. The per-category permission bits
+  // (CheatIgnoreCollision/CheatItemGrant/CheatStats/CheatCombat) are NOT parsed into this field — they are
+  // derived from these two at boot in emscripten_main.c, mirroring buildFeatureWord3() in
+  // apps/web/src/lib/game/live-settings-flags.ts.
+  uint32 features3;
 
   const char *link_graphics;
   char *memory_buffer;

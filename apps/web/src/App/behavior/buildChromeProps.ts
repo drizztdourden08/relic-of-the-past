@@ -17,6 +17,7 @@ interface ChromePropsDeps {
   display: { windowMode: TitleBarProps['windowMode']; showFps: boolean };
   audio: { isMuted: boolean; handleToggleMute: () => void };
   widgetVisibility: Record<string, boolean>;
+  developerToolsEnabled: boolean;
   handleShowProfile: (tab?: ProfileHubTab) => void | Promise<void>;
   handleShowDataManager: (tab?: string) => void | Promise<void>;
   handleShowShadowEditor: () => void;
@@ -28,7 +29,7 @@ interface ChromePropsDeps {
 
 const buildChromeProps = (deps: ChromePropsDeps): TitleBarProps => {
   const {
-    profileMgmt, widgets, saveOverlay, nav, game, display, audio, widgetVisibility,
+    profileMgmt, widgets, saveOverlay, nav, game, display, audio, widgetVisibility, developerToolsEnabled,
     handleShowProfile, handleShowDataManager, handleShowShadowEditor,
     canUpdate, update, setShowUpdateDialog, setShowBugReportDialog,
   } = deps;
@@ -60,6 +61,7 @@ const buildChromeProps = (deps: ChromePropsDeps): TitleBarProps => {
     onShowBugReport: () => setShowBugReportDialog(true),
     activeProfile: profileMgmt.activeProfile,
     widgetVisibility,
+    developerToolsEnabled,
     gameRunning: game.isRunning,
     windowMode: display.windowMode,
     isMuted: audio.isMuted,

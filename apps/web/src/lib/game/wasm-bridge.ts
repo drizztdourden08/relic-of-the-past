@@ -79,6 +79,7 @@ export { wasmGetIndoorUncleBlockers, wasmGetNavigationBlockers, wasmGetLiveSprit
 export { wasmGetOverworldEntrances, wasmGetFallHoles, wasmGetExitScreenMap, wasmGetAreaHeads, wasmGetEntranceRooms, wasmGetEntranceSpawns } from './bridge/nav-tables';
 export { wasmGetRoomChests, wasmGetRoomSpriteSpawns, wasmGetOverworldSpriteSpawns, wasmGetRoomDoorInfo, wasmSimUnlockDoor, wasmSimCloseDoor, wasmSimKillDrop, wasmSimFollowerAttach, wasmSimFollowerRescue, wasmSimPushMantle, wasmSimMarkMapIcons, wasmGetReceiveCount, wasmGetReceiveSite, wasmGetRoomCellLocks, wasmSimOpenCellLock, wasmTriggerOverworldCheck, wasmReadFlagSnapshot } from './bridge/sim-queries';
 export { wasmGetSpriteCombat, wasmGetCombatTables } from './bridge/combat-tables';
+export { setSimulatorSupport } from './bridge/host-gates';
 
 export type { ViewportInfo } from './bridge/render';
 export type { OverworldVariantInfo, GameProgressInfo } from './bridge/progress';

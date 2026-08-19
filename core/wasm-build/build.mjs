@@ -48,7 +48,7 @@ const hookSrcs = [
   'state_queries_tables', 'state_queries_rooms', 'state_queries_room_exits',
   'state_queries_room_objects',
   'sim_queries', 'sim_triggers', 'item_overrides', 'check_triggers', 'ui_state', 'cheats', 'haptic_events',
-  'player_sprite', 'transition_events', 'state_queries_combat',
+  'player_sprite', 'transition_events', 'state_queries_combat', 'host_gates', 'hud_override',
 ].map((f) => h(`${f}.c`));
 
 // Our Emscripten entry points (replace the native main.c). Resolved from this dir.

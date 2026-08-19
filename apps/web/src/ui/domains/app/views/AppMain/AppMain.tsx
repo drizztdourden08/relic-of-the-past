@@ -7,6 +7,8 @@ import { InventoryWidgetContent, InventoryWidgetSettings, ChecksWidgetContent, L
 import { loadTrackerStateBlob, saveTrackerStateBlob } from '@app/lib/tracker-state-io';
 import { primeLiveSettings } from '@app/lib/game';
 import { useExclusiveInsetsStore } from '@app/stores/exclusive-insets-store';
+import { useDevToolsWidgetGate } from '@app/App/behavior/useDevToolsWidgetGate';
+import { useWidgetDisabledGate } from '@app/App/behavior/useWidgetDisabledGate';
 import { applyNotchMode } from '@app/hooks/useSafeAreaInsets';
 import { useAutoUpdate } from '@app/hooks/useAutoUpdate';
 import { PageRouter } from '@app/App/PageRouter';
@@ -76,6 +78,12 @@ const AppMain = () => {
   });
   const nav = useAppNavigation({ activeProfile: profileMgmt.activeProfile, refreshLists: profileMgmt.refreshProfilesAndRoms });
   const widgets = useWidgetLayout(profileMgmt.activeProfile?.id ?? null, widgetIO, window.api.startup);
+  // Master gate for developer-only UI (widgets, dev pages, shadow editor); also closes
+  // devOnly widgets the moment it flips off.
+  const developerToolsEnabled = useDevToolsWidgetGate(widgets.layout, widgets.close, window.api.startup.widgets);
+  // Vanilla Safe + per-widget requiresSetting gates: covers affected widgets with an overlay
+  // instead of hiding them.
+  const { vanillaSafe, settings: liveSettings, onOpenSettings: onOpenWidgetSettings } = useWidgetDisabledGate(nav.setActivePage);
   const setExclusiveInsets = useExclusiveInsetsStore((s) => s.setInsets);
   const saveOverlay = useSaveOverlay(saveState, game.isRunning);
   const update = useAutoUpdate();
@@ -89,7 +97,7 @@ const AppMain = () => {
   const { dataTab, profileHubTab, setProfileHubTab, handleShowProfile, handleShowDataManager } =
     useAppViewCallbacks({ game, showDialog, dismissDialog, profileMgmt, nav });
 
-  useKeyboardShortcuts(nav, dialog, dismissDialog, profileMgmt.activeProfile);
+  useKeyboardShortcuts(nav, dialog, dismissDialog, profileMgmt.activeProfile, developerToolsEnabled);
 
   const startup = useStartup(profileMgmt, nav);
   useWasmWarmup();
@@ -107,7 +115,7 @@ const AppMain = () => {
   const widgetVisibility = useMemo(() => Object.fromEntries(widgets.layout.widgets.map((w) => [w.id, w.visible])), [widgets.layout]);
 
   const chromeProps: TitleBarProps = buildChromeProps({
-    profileMgmt, widgets, saveOverlay, nav, game, display, audio, widgetVisibility,
+    profileMgmt, widgets, saveOverlay, nav, game, display, audio, widgetVisibility, developerToolsEnabled,
     handleShowProfile, handleShowDataManager, handleShowShadowEditor,
     canUpdate, update, setShowUpdateDialog, setShowBugReportDialog,
   });
@@ -131,6 +139,7 @@ const AppMain = () => {
           edgeEffect={display.overworldEdgeEffect}
           pixelPerfect={display.pixelPerfect}
           shadowCasting={display.postProcessingShadows}
+          developerToolsEnabled={developerToolsEnabled}
         />
 
         <SaveStateOverlay
@@ -161,6 +170,11 @@ const AppMain = () => {
           onClose={widgets.close}
           onInsetsChange={setExclusiveInsets}
           settingsContent={{ inventory: <InventoryWidgetSettings /> }}
+          developerToolsEnabled={developerToolsEnabled}
+          startupForcedWidgetIds={window.api.startup.widgets}
+          vanillaSafe={vanillaSafe}
+          settings={liveSettings}
+          onOpenSettings={onOpenWidgetSettings}
         >
           {{
             inventory: <InventoryWidgetContent />,

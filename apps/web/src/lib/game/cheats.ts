@@ -41,24 +41,51 @@ const isReady = (): boolean => {
 /** Pack numeric args into the {argTypes, args} shape voidCall expects. */
 const numArgs = (...args: number[]): { argTypes: string[]; args: unknown[] } => ({ argTypes: args.map(() => 'number'), args });
 
+// Gate word 3 holds the cheat gates; bit 1 is the master and bit 4 the item-grant category.
+// Mirrors kFeatures3_* in core/zelda3/src/features.h.
+const GATE_WORD_CHEATS = 3;
+const GATE_CHEATS_ENABLED = 1;
+const GATE_CHEAT_ITEM_GRANT = 4;
+
+/**
+ * Read the gate word actually in effect on the core's WRAM (WasmGetEffectiveGateWord), not just what
+ * was last requested — the plain WasmGetGateWord export returns the latter and can disagree with this
+ * the instant Vanilla Safe (or any future embedder) masks the bits off before they land in WRAM, so
+ * this is the one that cannot drift from what the C side will actually honour. Before the first
+ * simulated frame this reads 0, which correctly refuses the grant rather than trusting a request that
+ * hasn't taken effect yet. A grant that is gated off is refused HERE instead of being queued: the
+ * queue would otherwise accept work the core silently drops, leaving entries the player watches go
+ * nowhere.
+ */
+const itemGrantAllowed = (): boolean => {
+  const mod = getModule();
+  if (!mod) return false;
+  try {
+    const word = mod.ccall('WasmGetEffectiveGateWord', 'number', ['number'], [GATE_WORD_CHEATS]) as number;
+    return (word & GATE_CHEATS_ENABLED) !== 0 && (word & GATE_CHEAT_ITEM_GRANT) !== 0;
+  } catch {
+    return false; // older core without the export — refuse rather than queue undeliverable work
+  }
+};
+
 // ─── Item Giving (routed through delivery queue) ───
 
 const cheatGiveItem = (itemId: number): void => {
-  if (!isReady()) return;
+  if (!isReady() || !itemGrantAllowed()) return;
   const action: DeliveryAction = { type: 'give_item', itemId };
   const name = itemName(itemId);
   enqueue(name, 'cheat', action);
 };
 
 const cheatTriggerCheck = (roomId: number, chestIndex: number, itemId: number): void => {
-  if (!isReady()) return;
+  if (!isReady() || !itemGrantAllowed()) return;
   const action: DeliveryAction = { type: 'trigger_check', roomId, chestIndex, itemId };
   const name = itemName(itemId);
   enqueue(name, 'cheat', action);
 };
 
 const cheatTriggerNpcCheck = (flagType: number, flagMask: number, itemId: number, spriteType: number, postGfx: number): void => {
-  if (!isReady()) return;
+  if (!isReady() || !itemGrantAllowed()) return;
   const action: DeliveryAction = { type: 'trigger_npc_check', flagType, flagMask, itemId, spriteType, postGfx };
   const name = itemName(itemId);
   enqueue(name, 'cheat', action);
@@ -83,6 +110,20 @@ const cheatRefillMagic = (): void => voidCall('WasmCheatRefillMagic');
 const cheatFillBottle = (slot: 0 | 1 | 2 | 3, contents: BottleContentsValue): void =>
   voidCall('WasmCheatFillBottle', numArgs(slot, contents));
 
+// ─── Movement ───
+
+// Tracked locally (not read back from WASM) so the Cheats widget's toggle and the
+// cheat-ignore-collision keybind can agree on the current state without either one polling the
+// module every render.
+let ignoreCollisionEnabled = false;
+
+const cheatSetIgnoreCollision = (on: boolean): void => {
+  ignoreCollisionEnabled = on;
+  voidCall('WasmCheatSetIgnoreCollision', numArgs(on ? 1 : 0));
+};
+
+const getIgnoreCollisionEnabled = (): boolean => ignoreCollisionEnabled;
+
 // ─── Combat ───
 
 const cheatKillAllEnemies = (): void => voidCall('WasmCheatKillAllEnemies');
@@ -95,5 +136,5 @@ const cheatSetExtraArmorPct = (pct: number): void =>
 
 const cheatStartTrace = (frames = 120): void => voidCall('WasmCheatStartTrace', numArgs(frames));
 
-export { BottleContents, cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck, cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows, cheatRefillMagic, cheatFillBottle, cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct, cheatStartTrace };
+export { BottleContents, cheatGiveItem, cheatTriggerCheck, cheatTriggerNpcCheck, cheatSetHealth, cheatSetMaxHealth, cheatSetRupees, cheatSetBombs, cheatSetArrows, cheatRefillMagic, cheatFillBottle, cheatSetIgnoreCollision, getIgnoreCollisionEnabled, cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct, cheatStartTrace };
 export type { BottleContentsValue };

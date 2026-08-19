@@ -4,7 +4,7 @@ export { WidgetManager } from './sub-components/WidgetManager';
 export { WidgetSettings } from './sub-components/WidgetSettings';
 export type { WidgetState, WidgetLayout, WidgetDefinition, SnapSide, WidgetMode, WidgetVisibility } from './Widget.type';
 export { WIDGET_DEFINITIONS, TITLEBAR_HEIGHT } from './Widget.constants';
-export { createDefaultLayout, getWidgetDefinition, createDefaultWidgetState } from './behavior/createWidgetState';
+export { createDefaultLayout, getDevOnlyWidgetIds, getWidgetDefinition, createDefaultWidgetState } from './behavior/createWidgetState';
 export { computeDockedStyles } from './behavior/computeDockedStyles';
 export type { ExclusiveInsets } from './behavior/computeDockedStyles';
 export { loadLayoutLocal, saveLayoutLocal, loadLayoutForProfile, saveLayoutForProfile, updateWidget, getWidgetState } from './behavior/widgetStore';

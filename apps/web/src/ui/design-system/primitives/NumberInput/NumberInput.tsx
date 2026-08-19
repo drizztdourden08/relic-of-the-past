@@ -1,6 +1,7 @@
 /* @layer renderer-components @kind component */
 import './NumberInput.css';
 import { Icon } from '../Icon';
+import type { CSSProperties } from 'react';
 import type { NumberInputProps } from './NumberInput.type';
 
 // Chevron glyphs (stroked, on a 16-grid).
@@ -13,7 +14,7 @@ const toNum = (v: unknown): number | undefined => {
 };
 
 const NumberInput = (props: NumberInputProps) => {
-  const { onChange, className = '', value, min, max, step, disabled = false, ...rest } = props;
+  const { onChange, className = '', value, min, max, step, disabled = false, sizeToContent = false, ...rest } = props;
 
   const stepBy = (dir: 1 | -1): void => {
     const stepN = toNum(step) ?? 1;
@@ -26,8 +27,27 @@ const NumberInput = (props: NumberInputProps) => {
     onChange?.(Number(next.toFixed(6)));
   };
 
+  // Digit columns the field must show, taken from |max| so the widest legal value fits.
+  // Only the FIELD gets sized, never the wrapper: the wrapper is an inline-flex row that also holds
+  // the spinner column, so a width there is split between the two — and since the field carries
+  // min-width:0 it collapses to nothing while the chevrons keep their padding.
+  const digitColumns = (): number | undefined => {
+    if (!sizeToContent) return undefined;
+    const maxNum = toNum(max);
+    if (maxNum === undefined) return undefined;
+    return Math.max(1, Math.abs(maxNum).toString().length);
+  };
+
+  const columns = digitColumns();
+  const sizingVars = columns === undefined
+    ? undefined
+    : ({ '--number-input-columns': String(columns) } as CSSProperties);
+
   return (
-    <div className={`number-input ${disabled ? 'number-input--disabled' : ''} ${className}`}>
+    <div
+      className={`number-input ${columns === undefined ? '' : 'number-input--auto'} ${disabled ? 'number-input--disabled' : ''} ${className}`}
+      style={sizingVars}
+    >
       <input
         type="number"
         className="number-input__field"

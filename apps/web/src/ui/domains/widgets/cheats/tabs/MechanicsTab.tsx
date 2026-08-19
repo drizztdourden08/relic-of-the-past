@@ -1,10 +1,14 @@
 /* @layer renderer-widgets @kind component */
 /**
- * CombatTab — Kill enemies, damage multiplier, extra armor reduction.
+ * MechanicsTab — Kill enemies, damage multiplier, extra armor reduction, ignore collision.
  */
 import { useState } from 'react';
 import { Box, Text, Button } from '../../../../design-system/primitives';
-import { cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct } from '../../../../../lib/game';
+import { Toggle } from '../../../../design-system/primitives/Toggle';
+import {
+  cheatKillAllEnemies, cheatSetDamageMultiplier, cheatSetExtraArmorPct,
+  cheatSetIgnoreCollision, getIgnoreCollisionEnabled,
+} from '../../../../../lib/game';
 
 const DAMAGE_OPTIONS = [
   { value: 1, label: '1×' },
@@ -23,9 +27,10 @@ const ARMOR_OPTIONS = [
   { value: 100, label: 'Invincible' },
 ];
 
-const CombatTab = () => {
+const MechanicsTab = () => {
   const [damageMult, setDamageMult] = useState(1);
   const [extraArmor, setExtraArmor] = useState(0);
+  const [ignoreCollision, setIgnoreCollision] = useState(getIgnoreCollisionEnabled());
 
   const handleDamage = (value: number) => {
     setDamageMult(value);
@@ -37,8 +42,20 @@ const CombatTab = () => {
     cheatSetExtraArmorPct(value);
   };
 
+  const handleIgnoreCollision = (on: boolean) => {
+    setIgnoreCollision(on);
+    cheatSetIgnoreCollision(on);
+  };
+
   return (
-    <Box className="cheats-tab-combat">
+    <Box className="cheats-tab-mechanics">
+      <Box className="cheats-section">
+        <Box className="cheats-section__title">Mechanics</Box>
+        <Box className="cheats-row">
+          <Toggle label="Ignore movement restriction/collision" checked={ignoreCollision} onChange={handleIgnoreCollision} />
+        </Box>
+      </Box>
+
       <Box className="cheats-section">
         <Box className="cheats-section__title">Enemies</Box>
         <Box className="cheats-row">
@@ -86,4 +103,4 @@ const CombatTab = () => {
   );
 };
 
-export { CombatTab };
+export { MechanicsTab };

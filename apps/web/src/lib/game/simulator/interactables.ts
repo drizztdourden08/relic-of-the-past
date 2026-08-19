@@ -21,7 +21,7 @@ const DOOR_DIRS: Record<SimDoorDirection, SimDoor['direction']> = {
 const DOOR_KINDS: SimDoor['kind'][] = ['normal', 'small-key', 'big-key', 'bombable', 'shutter', 'switch', 'trap'];
 
 const getRoomChests = (roomId: number): SimChest[] =>
-  wasmGetRoomChests(roomId).map((c) => ({
+  (wasmGetRoomChests(roomId) ?? []).map((c) => ({
     roomId,
     chestIndex: c.chestIndex,
     isBig: c.isBig,
@@ -45,7 +45,7 @@ const getRoomChests = (roomId: number): SimChest[] =>
  * fail-open here would let unreachable NPCs trigger through walls/blockers.
  */
 const getRoomSprites = (roomId: number): SimSprite[] =>
-  wasmGetRoomSpriteSpawns(roomId).map((s) => ({
+  (wasmGetRoomSpriteSpawns(roomId) ?? []).map((s) => ({
     roomId,
     spriteType: s.spriteType,
     tile: { row: s.row, col: s.col },
@@ -69,7 +69,7 @@ const getRoomSprites = (roomId: number): SimSprite[] =>
  */
 const getOverworldSprites = (screenIndex: number): SimSprite[] => {
   const heads = wasmGetAreaHeads();
-  return wasmGetOverworldSpriteSpawns(screenIndex).map((s) => {
+  return (wasmGetOverworldSpriteSpawns(screenIndex) ?? []).map((s) => {
     const resolved = heads ? resolveAreaSprite(screenIndex, { row: s.row, col: s.col }, heads) : { screenIndex, tile: { row: s.row, col: s.col } };
     return {
       roomId: resolved.screenIndex,
@@ -89,7 +89,7 @@ const getOverworldSprites = (screenIndex: number): SimSprite[] => {
  * arrive as big-key doors flagged `cellLock`, keyed by chest slot.
  */
 const getRoomDoors = (roomId: number): SimDoor[] => [
-  ...wasmGetRoomDoorInfo(roomId).map((d, index) => ({
+  ...(wasmGetRoomDoorInfo(roomId) ?? []).map((d, index) => ({
     roomId,
     index,
     tiles: [{ row: d.row, col: d.col }],
@@ -99,7 +99,7 @@ const getRoomDoors = (roomId: number): SimDoor[] => [
     nativeType: d.nativeType,
     layer: d.layer,
   })),
-  ...wasmGetRoomCellLocks(roomId).map((l) => ({
+  ...(wasmGetRoomCellLocks(roomId) ?? []).map((l) => ({
     roomId,
     index: l.slot,
     tiles: [{ row: l.row, col: l.col }],

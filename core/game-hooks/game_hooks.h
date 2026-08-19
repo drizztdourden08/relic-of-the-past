@@ -56,6 +56,11 @@ uint8 GameHook_GetExtraArmorPct(void);
 // Applies the extra-armor cheat to an incoming damage value (no-op at 0%).
 uint8 GameHook_ApplyExtraArmor(uint8 dmg);
 
+// Resolves the desired value (0 or 1) for the cheatWalkThroughWalls WRAM byte this frame, gate
+// included. Called every frame by zelda_rtl.c's cheat-WRAM reconcile so a save-state restore (which
+// overwrites that byte along with the rest of WRAM) never leaves a stale value behind.
+uint8 GameHook_GetWantedIgnoreCollision(void);
+
 // ─── Custom player sprite sheets (player_sprite.c) ───
 
 // Overwrite the player gfx asset from a ZSPR sheet and take its palette into the PPU's private player
@@ -78,6 +83,28 @@ void GameHook_PlayerGearPaletteLoaded(const uint16 *src);
 
 // The gloves color was refreshed on its own, without a full gear reload.
 void GameHook_PlayerGlovesColorUpdated(void);
+
+// ─── HUD/Pause Override (hud_override.c) ───
+
+// True while kFeatures3_HudOverride permits hiding the native HUD/pause menu. WasmSetHudHidden and
+// WasmSetPauseHidden (core/wasm-build/emscripten_api.c) test this before honoring a hide request.
+bool HudOverride_Allowed(void);
+
+// Force the native HUD and pause menu fully back on screen. Called the instant kFeatures3_HudOverride
+// reads clear on gate word 3 (Vanilla Safe engaging, the enhanced-HUD setting turning off, or a future
+// embedder) — mirrors PlayerSprite_Restore undoing the sprite override on the same trigger. A safe
+// no-op when neither is currently hidden.
+// Record whether the host WANTS the native HUD / pause menu hidden. The gate is applied by
+// HudOverride_Sync, not at this call, so a request made before the gate word reaches WRAM still takes
+// effect once it does.
+void HudOverride_SetWantedHudHidden(bool on);
+void HudOverride_SetWantedPauseHidden(bool on);
+
+// Reconcile both hide masks against the gate and the wanted values. Runs every frame after
+// SyncGateWords/SyncCheatWram, and on any change to either input.
+void HudOverride_Sync(void);
+
+void HudOverride_Restore(void);
 
 // ─── Haptic Events (haptic_events.c) ───
 

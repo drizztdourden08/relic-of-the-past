@@ -36,6 +36,16 @@ const ProfileHub = (props: ProfileHubProps) => {
   useEffect(() => { registerSettings(settings, handleSettingsChange); }, [settings, handleSettingsChange, registerSettings]);
   useEffect(() => () => clearSettings(), [clearSettings]);
 
+  // Consume a pending tab switch (e.g. from a DisabledOverlay's "Open Settings" action)
+  // before the anchor effect below runs, so it scrolls on the tab it just landed on.
+  const pendingTab = useSearchStore((s) => s.pendingTab);
+  const setPendingTab = useSearchStore((s) => s.setPendingTab);
+  useEffect(() => {
+    if (!pendingTab) return;
+    setActiveTab(pendingTab as ProfileHubTab);
+    setPendingTab(null);
+  }, [pendingTab, setPendingTab]);
+
   // Consume a pending search deep-link once the target tab's content is showing.
   const pendingAnchor = useSearchStore((s) => s.pendingAnchor);
   const setPendingAnchor = useSearchStore((s) => s.setPendingAnchor);

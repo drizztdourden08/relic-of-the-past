@@ -151,7 +151,7 @@ const collectDoorwayExits = ({ roomId, src, dist, push, isExitSpot, cached = '' 
     const dests = wasmGetRoomTravelDestinationsFor(roomId) ?? [];
     const destRoom = door.direction === 'west' ? dests[3] : dests[4];
     if (!destRoom) return;
-    const back = wasmGetRoomDoorInfo(destRoom).find((d) => d.nativeType === WARP_DOOR && d.direction === OPPOSITE[door.direction]);
+    const back = (wasmGetRoomDoorInfo(destRoom) ?? []).find((d) => d.nativeType === WARP_DOOR && d.direction === OPPOSITE[door.direction]);
     const warpLanding = back ? { row: back.row, col: back.col } : undefined;
     const to = interiorScreenId(destRoom, warpLanding, cached);
     if (!plausibleRoomNeighbor(to, src)) return;
@@ -174,7 +174,7 @@ const collectDoorwayExits = ({ roomId, src, dist, push, isExitSpot, cached = '' 
     count += 1;
     push({ to, entryTile: entryFromEdge(edge, pos), fromTile, twoWay: true, origin: 'room-doorway', edgeSig: `d${edge}:${pos}` }, steps);
   };
-  for (const door of wasmGetRoomDoorInfo(roomId)) {
+  for (const door of wasmGetRoomDoorInfo(roomId) ?? []) {
     if (door.nativeType === WARP_DOOR) { warp(door); continue; }
     if (!(door.kind === 0 || door.isOpen)) continue;
     if (!outerWall(door.direction, door.row, door.col)) continue; // internal quadrant doors
@@ -183,7 +183,7 @@ const collectDoorwayExits = ({ roomId, src, dist, push, isExitSpot, cached = '' 
   for (const edge of ['north', 'south', 'west', 'east'] as const) {
     const adj = ROOM_EDGE_ADJ[edge](roomId);
     if (adj === null) continue;
-    for (const door of wasmGetRoomDoorInfo(adj)) {
+    for (const door of wasmGetRoomDoorInfo(adj) ?? []) {
       if (door.nativeType === WARP_DOOR) continue; // teleports, never edge-adjacent
       if (!(door.kind === 0 || door.isOpen)) continue;
       if (door.direction !== OPPOSITE[edge]) continue;

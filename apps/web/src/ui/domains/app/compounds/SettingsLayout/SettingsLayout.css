@@ -62,11 +62,19 @@
   overflow: hidden;
 }
 
-.settings-layout__group > * {
+/* Every direct slot in the group — a plain row, or a run of locked rows wrapped in one
+   DisabledOverlay — gets the same divider rhythm regardless of which it is. */
+.settings-layout__group > * + * {
+  border-top: 1px solid var(--c-border);
+}
+
+.settings-layout__row {
   padding: var(--space-md) var(--space-lg);
 }
 
-.settings-layout__group > * + * {
+/* Dividers between rows stacked *inside* a locked run (same class, deeper nesting) — the
+   `> * + *` rule above only sees the run's own wrapper as one top-level slot. */
+.settings-layout__row + .settings-layout__row {
   border-top: 1px solid var(--c-border);
 }
 

@@ -2,6 +2,7 @@
 /**
  * Widget Window System — Type definitions.
  */
+import type { GameSettings } from '@shared/types/settings';
 
 // ─── Snap sides ───
 
@@ -51,6 +52,19 @@ interface WidgetDefinition {
   defaultSide: SnapSide;
   defaultDockedSize: number;
   defaultFloatingSize: { width: number; height: number };
+  /** Only ever shown when the developerToolsEnabled setting is on. Mirrors the `mobileOnly`
+   *  precedent on ProfileHubTabSpec (ProfileHub.constants.ts). */
+  devOnly?: boolean;
+  /** Reads live game data — an information advantage even though it never changes what the
+   *  game computes. When Vanilla Safe is on, WidgetManager covers these with a
+   *  DisabledOverlay instead of hiding them (that's what devOnly does; this is deliberately
+   *  different — see the Vanilla Safe plan). */
+  readsGameData?: boolean;
+  /** A GameSettings key that must be truthy for this widget to do anything useful (e.g. the
+   *  Cheats widget needs `cheatsEnabled`). When off, WidgetManager covers the widget with a
+   *  DisabledOverlay the same way readsGameData does for Vanilla Safe — visible, inert, and
+   *  linking back to the setting that would re-enable it. */
+  requiresSetting?: keyof GameSettings;
 }
 
 export type {

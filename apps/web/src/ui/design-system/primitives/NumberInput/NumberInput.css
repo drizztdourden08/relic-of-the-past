@@ -16,6 +16,20 @@
   border-color: var(--c-gold);
 }
 
+/* sizeToContent: shrink-wrap the widest legal value instead of filling the row.
+   The width goes on the FIELD, never on this wrapper — the wrapper also holds the spinner column,
+   so a width here is split between the two, and the field (min-width: 0) collapses to nothing while
+   the chevrons keep their padding. 1ch is the advance of "0", so the digit count maps straight onto
+   columns; the field is border-box, so its own horizontal padding is added back, plus caret room. */
+.number-input--auto {
+  width: auto;
+}
+
+.number-input--auto .number-input__field {
+  flex: 0 0 auto;
+  width: calc((var(--number-input-columns) * 1ch) + (var(--space-md) * 2) + 0.75ch);
+}
+
 .number-input--disabled {
   opacity: 0.5;
   pointer-events: none;

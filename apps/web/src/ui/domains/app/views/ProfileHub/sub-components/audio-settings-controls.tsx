@@ -125,6 +125,10 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
           value={settings.enableMSU}
           options={MSU_OPTIONS}
           onChange={(v) => onChange({ enableMSU: v as GameSettings['enableMSU'] })}
+          // MSU has no gate-word bit of its own — Vanilla Safe forces it off at the INI boundary
+          // (serializeToIni) regardless of this control's value, so lock it the same as a registered
+          // feature would be via DisabledOverlay.
+          disabled={settings.vanillaSafe}
         />
       );
     case 'msuVolume':
@@ -138,7 +142,7 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
           step={5}
           onChange={(v) => onChange({ msuVolume: v })}
           formatValue={(v) => `${v}%`}
-          disabled={settings.enableMSU === 'false'}
+          disabled={settings.enableMSU === 'false' || settings.vanillaSafe}
         />
       );
     default:
@@ -147,7 +151,7 @@ const renderControl = (key: string, settings: GameSettings, onChange: (patch: Pa
 };
 
 const isDisabled = (key: string, settings: GameSettings): boolean => {
-  if (key === 'resumeMSU') return settings.enableMSU === 'false';
+  if (key === 'resumeMSU') return settings.enableMSU === 'false' || !!settings.vanillaSafe;
   // The Music/SFX sliders only do anything once the independent-mix toggle is on.
   if (key === 'musicVolume' || key === 'sfxVolume') return !settings.perGroupVolume;
   return false;
