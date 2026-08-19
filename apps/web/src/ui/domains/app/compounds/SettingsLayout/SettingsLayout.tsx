@@ -2,6 +2,7 @@
 import { useState, useRef, useCallback, useMemo } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { FEATURES_BY_ID } from '@shared/features/feature-registry';
+import { isVanillaSafeLockedSetting } from '@shared/features/vanilla-safe-settings';
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';
 import { Toggle } from '../../../../design-system/primitives/Toggle';
@@ -13,11 +14,15 @@ import { type SettingItem, type SettingsLayoutProps } from './SettingsLayout.typ
 
 const SettingsLayout = (props: SettingsLayoutProps) => {
   const { sections, settings, onChange, renderControl, isDisabled, onOpenVanillaSafeSettings } = props;
-  // A control is locked when Vanilla Safe is on AND its backing feature is flagged as
-  // affecting vanilla parity — sourced straight from the shared registry, so a new feature
-  // only needs the flag set there to be covered here.
+  // A control is locked when Vanilla Safe is on AND the setting behind it stops working. That comes
+  // from two places, because only some settings are gate-word features: the registry flag covers those,
+  // and vanilla-safe-settings.ts covers the rest (cheats, MSU, the custom sprite, the enhanced HUD, the
+  // two hand-gated renderer effects), which Vanilla Safe forces off in the INI or the PPU flags without
+  // any FeatureDef to say so. Leaving those enabled made the panel claim they still did something.
   const isVanillaSafeLocked = useCallback(
-    (key: string) => settings.vanillaSafe === true && FEATURES_BY_ID[key]?.affectsVanillaParity === true,
+    (key: string) =>
+      settings.vanillaSafe === true &&
+      (FEATURES_BY_ID[key]?.affectsVanillaParity === true || isVanillaSafeLockedSetting(key)),
     [settings.vanillaSafe],
   );
   const [filter, setFilter] = useState('');
