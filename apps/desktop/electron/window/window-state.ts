@@ -4,6 +4,7 @@ import { screen } from 'electron';
 import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { dirname } from 'path';
 import { getUserDataPath } from '../lib/paths';
+import { stripBom } from '../lib/json-store';
 
 interface WindowState {
   x?: number;
@@ -33,7 +34,7 @@ const getStatePath = (): string => {
 const loadWindowState = (): WindowState => {
   try {
     const raw = readFileSync(getStatePath(), 'utf-8');
-    const saved = JSON.parse(raw) as Partial<WindowState>;
+    const saved = JSON.parse(stripBom(raw)) as Partial<WindowState>;
 
     const state: WindowState = {
       width: typeof saved.width === 'number' && saved.width >= 360 ? saved.width : DEFAULT_STATE.width,
@@ -63,7 +64,10 @@ const loadWindowState = (): WindowState => {
     }
 
     return state;
-  } catch {
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code !== 'ENOENT') {
+      console.warn(`[window-state] Failed to read ${getStatePath()}, using defaults:`, err);
+    }
     return DEFAULT_STATE;
   }
 };
