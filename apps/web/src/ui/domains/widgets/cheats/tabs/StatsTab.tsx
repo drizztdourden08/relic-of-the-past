@@ -81,8 +81,7 @@ const StatsTab = () => {
           <Text className="cheats-row__label">Rupees</Text>
           <Box className="cheats-row__controls">
             <NumberInput
-              className="cheats-input"
-              min={0} max={maxRupees} value={rupees}
+              min={0} max={maxRupees} value={rupees} sizeToContent
               onChange={v => setRupees(Math.min(maxRupees, Math.max(0, v)))}
             />
             <Button variant="tertiary" size="sm" onClick={() => cheatSetRupees(rupees)}>Set</Button>
@@ -92,8 +91,7 @@ const StatsTab = () => {
           <Text className="cheats-row__label">Bombs</Text>
           <Box className="cheats-row__controls">
             <NumberInput
-              className="cheats-input"
-              min={0} max={maxBombs} value={bombs}
+              min={0} max={maxBombs} value={bombs} sizeToContent
               onChange={v => setBombs(Math.min(maxBombs, Math.max(0, v)))}
             />
             <Button variant="tertiary" size="sm" onClick={() => cheatSetBombs(bombs)}>Set</Button>
@@ -103,8 +101,7 @@ const StatsTab = () => {
           <Text className="cheats-row__label">Arrows</Text>
           <Box className="cheats-row__controls">
             <NumberInput
-              className="cheats-input"
-              min={0} max={maxArrows} value={arrows}
+              min={0} max={maxArrows} value={arrows} sizeToContent
               onChange={v => setArrows(Math.min(maxArrows, Math.max(0, v)))}
             />
             <Button variant="tertiary" size="sm" onClick={() => cheatSetArrows(arrows)}>Set</Button>

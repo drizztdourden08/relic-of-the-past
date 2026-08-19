@@ -102,7 +102,6 @@
 }
 
 .cheats-input {
-  width: 60px;
   padding: var(--space-xs) var(--space-sm);
   background: var(--c-surface);
   border: 1px solid var(--c-border);

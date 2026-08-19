@@ -9,7 +9,7 @@ The **Cheats widget** is a built-in panel for giving items, editing stats, and t
 |-----|-----------------|
 | **Items** | Give any item by id. Delivery is queued and only fires when it's safe, meaning you're in gameplay rather than mid-menu or mid-animation, so it won't corrupt your save. |
 | **Stats** | Set current health, max hearts, rupees, bombs, and arrows, or refill magic. |
-| **Combat** | Adjust the outgoing damage multiplier and extra armor (damage-reduction %) to make Link hit harder or take less. |
+| **Mechanics** | Adjust the outgoing damage multiplier and extra armor (damage-reduction %) to make Link hit harder or take less. |
 | **Bottles** | Set the contents of each of the four bottle slots, such as potions, a fairy, or a bee. |
 
 ## Safe item delivery

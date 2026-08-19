@@ -20,7 +20,7 @@ const scanRoomsForSprite = (spriteType: number): Array<{ room: number; tiles: st
   for (const e of wasmGetOverworldEntrances()) areas.set(e.id, e.area);
   const hits: Array<{ room: number; tiles: string; from: string }> = [];
   for (let room = 0; room <= LAST_ROOM; room++) {
-    const at = wasmGetRoomSpriteSpawns(room)
+    const at = (wasmGetRoomSpriteSpawns(room) ?? [])
       .filter((s) => s.spriteType === spriteType)
       .map((s) => `${s.row},${s.col}`);
     if (at.length === 0) continue;

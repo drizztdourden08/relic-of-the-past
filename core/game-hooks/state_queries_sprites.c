@@ -10,6 +10,10 @@ int WasmGetIndoorUncleBlockers(void) {
   // Buffer format:
   // [0] = count (0..2)
   // then per entry 4 bytes: xLo, xHi, yLo, yHi
+  if (!NavQueryGate()) {
+    memset(g_indoor_uncle_blockers_buf, 0, sizeof(g_indoor_uncle_blockers_buf));
+    return (int)g_indoor_uncle_blockers_buf;
+  }
   g_indoor_uncle_blockers_buf[0] = 0;
   if (!player_is_indoors)
     return (int)g_indoor_uncle_blockers_buf;
@@ -60,6 +64,10 @@ int WasmGetNavigationBlockers(void) {
   // Buffer format:
   // [0] = count (0..16)
   // then per entry 4 bytes: xLo, xHi, yLo, yHi
+  if (!NavQueryGate()) {
+    memset(g_nav_blockers_buf, 0, sizeof(g_nav_blockers_buf));
+    return (int)g_nav_blockers_buf;
+  }
   g_nav_blockers_buf[0] = 0;
 
   uint8 count = 0;
@@ -106,6 +114,10 @@ int WasmGetLiveSprites(void) {
   // per sprite (10 bytes):
   // [0] slot, [1] type, [2] state, [3] subtype, [4] subtype2, [5] sprite_E,
   // [6] xLo, [7] xHi, [8] yLo, [9] yHi
+  if (!NavQueryGate()) {
+    memset(g_live_sprites_buf, 0, sizeof(g_live_sprites_buf));
+    return (int)g_live_sprites_buf;
+  }
   g_live_sprites_buf[0] = 0;
 
   uint8 count = 0;

@@ -10,7 +10,11 @@ import type { EntityKind, EnumerationId } from './ids';
 type EnumerationCategory =
   | 'world' | 'screen-status' | 'screen-kind' | 'interior-kind'
   | 'connection-kind' | 'connection-side' | 'actor-kind' | 'check-kind'
-  | 'item-category' | 'item-origin' | 'review-status';
+  | 'item-category' | 'item-origin' | 'review-status'
+  // Labels the save's progress indicator byte. Unlike the rest it never becomes a generated union,
+  // because the field it labels holds the NUMBER and must not be retyped to string literals
+  // (scripts/generate-enum-types.mjs keeps it out of CATEGORY_TYPE_NAMES for exactly that reason).
+  | 'progress-tier';
 
 /** One labeled value of one category — e.g. `{ category: 'world', value: 'light', label: 'Light World' }`. */
 interface EnumerationEntry {

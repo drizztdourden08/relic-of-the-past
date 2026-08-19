@@ -1,15 +1,30 @@
 /* @layer renderer-components @kind component */
 import { useState, useRef, useCallback, useMemo } from 'react';
 import type { GameSettings } from '@shared/types/settings';
+import { FEATURES_BY_ID } from '@shared/features/feature-registry';
+import { isVanillaSafeLockedSetting } from '@shared/features/vanilla-safe-settings';
 import { Box } from '../../../../design-system/primitives/Box';
 import { Text } from '../../../../design-system/primitives/Text';
 import { Toggle } from '../../../../design-system/primitives/Toggle';
 import { SettingsShell } from '../../../../design-system/composites/SettingsShell';
+import { DisabledOverlay } from '../../../../design-system/composites/DisabledOverlay';
+import { partitionByLockState } from './behavior/partitionByLockState';
 import './SettingsLayout.css';
 import { type SettingItem, type SettingsLayoutProps } from './SettingsLayout.type';
 
 const SettingsLayout = (props: SettingsLayoutProps) => {
-  const { sections, settings, onChange, renderControl, isDisabled } = props;
+  const { sections, settings, onChange, renderControl, isDisabled, onOpenVanillaSafeSettings } = props;
+  // A control is locked when Vanilla Safe is on AND the setting behind it stops working. That comes
+  // from two places, because only some settings are gate-word features: the registry flag covers those,
+  // and vanilla-safe-settings.ts covers the rest (cheats, MSU, the custom sprite, the enhanced HUD, the
+  // two hand-gated renderer effects), which Vanilla Safe forces off in the INI or the PPU flags without
+  // any FeatureDef to say so. Leaving those enabled made the panel claim they still did something.
+  const isVanillaSafeLocked = useCallback(
+    (key: string) =>
+      settings.vanillaSafe === true &&
+      (FEATURES_BY_ID[key]?.affectsVanillaParity === true || isVanillaSafeLockedSetting(key)),
+    [settings.vanillaSafe],
+  );
   const [filter, setFilter] = useState('');
   const [activeId, setActiveId] = useState('');
   const contentRef = useRef<HTMLDivElement>(null);
@@ -89,10 +104,27 @@ const SettingsLayout = (props: SettingsLayoutProps) => {
               <Box key={sub.id} className="settings-layout__subsection" data-section={sub.id}>
                 <Text as="h3" className="settings-layout__subsection-title">{sub.title}</Text>
                 <Box className="settings-layout__group">
-                  {sub.items.map((item) => {
-                    const custom = renderControl?.(item.key, settings, onChange);
-                    if (custom) return <Box key={item.key} data-setting-key={item.key}>{custom}</Box>;
-                    return <Box key={item.key} data-setting-key={item.key}>{renderToggle(item.key, item)}</Box>;
+                  {partitionByLockState(sub.items, isVanillaSafeLocked).map((run, runIndex) => {
+                    const rows = run.items.map((item) => {
+                      const custom = renderControl?.(item.key, settings, onChange);
+                      const control = custom ?? renderToggle(item.key, item);
+                      return (
+                        <Box key={item.key} data-setting-key={item.key} className="settings-layout__row">
+                          {control}
+                        </Box>
+                      );
+                    });
+                    if (!run.locked) return rows;
+                    return (
+                      <DisabledOverlay
+                        key={`locked-${runIndex}`}
+                        active
+                        contained
+                        onOpenSettings={onOpenVanillaSafeSettings ?? (() => {})}
+                      >
+                        {rows}
+                      </DisabledOverlay>
+                    );
                   })}
                 </Box>
               </Box>

@@ -196,6 +196,22 @@ const DISPLAY_FEATURES: FeatureDef[] = [
     affectsVanillaParity: true,
     live: true,
   },
+  {
+    id: 'dimFlashes',
+    label: 'Dim flashes',
+    description: 'Reduces the intensity of bright flashes to ease eye strain and improve accessibility.',
+    userMessage:
+      'Dims bright flashes in the game to reduce eye strain. Accessibility improvement — does not change gameplay.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'snesrev',
+    flag: 'kFeatures0_DimFlashes',
+    bit: 65536,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
 ]
 
 // Native-HUD-hide is intentionally NOT a registry feature: it's driven by g_hud_hide_mask via
@@ -224,11 +240,43 @@ const AUDIO_FEATURES: FeatureDef[] = [
 // --- Input -------------------------------------------------------------------
 const INPUT_FEATURES: FeatureDef[] = [
   {
+    id: 'itemSwitchLR',
+    label: 'L/R item cycling',
+    description: 'Use L/R buttons to cycle through equipped items instead of the fixed Y-only slot.',
+    userMessage:
+      'Lets you press L or R to cycle through your equipped items. Not in the original game — leave off for vanilla parity.',
+    group: 'Input',
+    kind: 'features0-bit',
+    origin: 'snesrev',
+    flag: 'kFeatures0_SwitchLR',
+    bit: 2,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'itemSwitchLRLimit',
+    label: 'L/R cycling only for equipped items',
+    description: 'Restricts L/R cycling to the currently selected slot instead of all available items.',
+    userMessage:
+      'Makes L/R cycle through only your equipped slot instead of all items. Requires L/R cycling enabled.',
+    group: 'Input',
+    kind: 'features0-bit',
+    origin: 'snesrev',
+    flag: 'kFeatures0_SwitchLRLimit',
+    bit: 32768,
+    default: false,
+    requires: ['itemSwitchLR'],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
     id: 'haptics',
     label: 'Controller vibration',
     description: 'Emits rumble/haptic events to the host on game events (damage, pickups, etc.).',
     userMessage:
-      'Vibrates supported controllers and devices on in-game events. Host-side only — it never changes what the game computes, so it is safe with any other setting.',
+      'Vibrates supported controllers and devices on in-game events. It does not change what the game computes, but the notify calls are inserted directly into the vendored game code, so Vanilla Safe forces this off along with everything else that touches it.',
     group: 'Input',
     kind: 'host-event',
     origin: 'relic',
@@ -236,13 +284,189 @@ const INPUT_FEATURES: FeatureDef[] = [
     bit: 1048576,
     default: false,
     requires: [],
-    affectsVanillaParity: false,
+    affectsVanillaParity: true,
     live: true,
   },
 ]
 
 // --- Gameplay (item selection split out of snesrev's SwitchLR bundle) -------
 const GAMEPLAY_FEATURES: FeatureDef[] = [
+  {
+    id: 'turnWhileDashing',
+    label: 'Turn while dashing',
+    description: 'Allows the player character to change direction while dashing.',
+    userMessage:
+      'Lets you turn while dashing instead of committing to the initial direction. Changes how movement feels, so leave off for vanilla parity.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'snesrev',
+    flag: 'kFeatures0_TurnWhileDashing',
+    bit: 4,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'mirrorToDarkworld',
+    label: 'Mirror warping to the dark world',
+    description: 'Allows the player character to use mirrors to warp between the light and dark worlds.',
+    userMessage:
+      'Lets you warp between the light and dark worlds via the mirror (normally unavailable). Changes dungeon progression, so leave off for vanilla parity.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'snesrev',
+    flag: 'kFeatures0_MirrorToDarkworld',
+    bit: 8,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'cancelBirdTravel',
+    label: 'Cancel bird travel',
+    description: 'Press a button to cancel arrival travel instead of watching the full animation.',
+    userMessage:
+      'Lets you cancel bird arrival animations with a button press. Not in the original game — leave off for vanilla parity.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'snesrev',
+    flag: 'kFeatures0_CancelBirdTravel',
+    bit: 8192,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'collectItemsWithSword',
+    label: 'Collect items with sword',
+    description: 'Allows the player character to pick up items by slashing them instead of standing still.',
+    userMessage:
+      'Lets you collect items (rupees, ammo, etc.) by slashing them with your sword. Changes combat flow, so leave off for vanilla parity.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'snesrev',
+    flag: 'kFeatures0_CollectItemsWithSword',
+    bit: 16,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'breakPotsWithSword',
+    label: 'Break pots with sword',
+    description: 'Allows the player character to break pots by slashing them instead of only by reading the contents.',
+    userMessage:
+      'Lets you slash pots to break them and get their contents, instead of examining them. Speeds up item collection, so leave off for vanilla parity.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'snesrev',
+    flag: 'kFeatures0_BreakPotsWithSword',
+    bit: 32,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'moreActiveBombs',
+    label: 'More active bombs',
+    description: 'Increases the maximum number of bombs that can be active at once.',
+    userMessage:
+      'Increases the bomb count limit so more bombs can explode at once. Not in the original game — leave off for vanilla parity.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'snesrev',
+    flag: 'kFeatures0_MoreActiveBombs',
+    bit: 512,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'disableLowHealthBeep',
+    label: 'Disable low health beep',
+    description: 'Stops the warning beep that plays when health is low.',
+    userMessage:
+      'Turns off the warning beep when your health is low. Removes an audio cue, so leave off for vanilla parity.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'snesrev',
+    flag: 'kFeatures0_DisableLowHealthBeep',
+    bit: 64,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'skipIntroOnKeypress',
+    label: 'Skip intro on keypress',
+    description: 'Allows skipping the opening story sequence by pressing any button.',
+    userMessage:
+      'Lets you skip the opening story sequence with any button press. Speeds up fresh game starts, so leave off for vanilla parity.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'snesrev',
+    flag: 'kFeatures0_SkipIntroOnKeypress',
+    bit: 128,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'disableTelepathy',
+    label: 'Disable telepathy',
+    description: 'Stops the sage thoughts that interrupt exploration and dungeon progression.',
+    userMessage:
+      'Disables the sage messages that pop up at key story points. Changes pacing, so leave off for vanilla parity.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'snesrev',
+    flag: 'kFeatures0_DisableTelepathy',
+    bit: 131072,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'carryMoreRupees',
+    label: 'Carry more rupees',
+    description: 'Increases the maximum rupee carrying capacity.',
+    userMessage:
+      'Lets you carry more rupees (up to 9999). Changes economy limits, so leave off for vanilla parity.',
+    group: 'Quality of life',
+    kind: 'features0-bit',
+    origin: 'snesrev',
+    flag: 'kFeatures0_CarryMoreRupees',
+    bit: 2048,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'showMaxItemsInYellow',
+    label: 'Show max items in yellow',
+    description: 'Colors the item count in yellow when carrying the maximum amount.',
+    userMessage:
+      'Shows item counts in yellow when you have the max of that item. A HUD color change only — does not affect gameplay.',
+    group: 'Display / HUD',
+    kind: 'features0-bit',
+    origin: 'snesrev',
+    flag: 'kFeatures0_ShowMaxItemsInYellow',
+    bit: 256,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
   {
     id: 'inventoryReorder',
     label: 'Reorder inventory',
@@ -293,6 +517,44 @@ const GAMEPLAY_FEATURES: FeatureDef[] = [
   },
 ]
 
+// --- Bug Fixes (legacy bundle masters — no active C read sites, behavior moved to features1/2 gates) ---
+const BUG_FIXES_FEATURES: FeatureDef[] = [
+  {
+    id: 'miscBugFixes',
+    label: 'Misc bug fixes',
+    description:
+      'Legacy bundle of miscellaneous bug fixes. The individual fixes have moved to features1/2 split gates; this entry is kept for backward compatibility.',
+    userMessage:
+      'Enables a bundle of miscellaneous bug fixes. This is now split into individual toggles; this entry is kept for backward compatibility.',
+    group: 'Bug fixes',
+    kind: 'features0-bit',
+    origin: 'snesrev',
+    flag: 'kFeatures0_MiscBugFixes',
+    bit: 4096,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'gameChangingBugFixes',
+    label: 'Game-changing bug fixes',
+    description:
+      'Legacy bundle of bug fixes that change gameplay behavior. The individual fixes have moved to features1/2 split gates; this entry is kept for backward compatibility.',
+    userMessage:
+      'Enables a bundle of game-changing bug fixes. This is now split into individual toggles; this entry is kept for backward compatibility.',
+    group: 'Bug fixes',
+    kind: 'features0-bit',
+    origin: 'snesrev',
+    flag: 'kFeatures0_GameChangingBugFixes',
+    bit: 16384,
+    default: false,
+    requires: [],
+    affectsVanillaParity: true,
+    live: true,
+  },
+]
+
 // --- Dev ----------------------------------------------------------------------
 const DEV_FEATURES: FeatureDef[] = [
   {
@@ -308,6 +570,49 @@ const DEV_FEATURES: FeatureDef[] = [
     bit: 1073741824,
     default: false,
     requires: [],
+    // Observational, but its hook is compiled into vendored misc.c, and touching that code is the
+    // line under Vanilla Safe rather than whether the feature changes the outcome.
+    affectsVanillaParity: true,
+    live: true,
+  },
+  {
+    id: 'devNavigationData',
+    label: 'Navigation data reads',
+    description: 'Room/grid/sprite data reads that feed the Location & Navigation widget, the flood fill, and the simulator. Needs developer tools on as well (NavQueryGate checks both).',
+    userMessage:
+      'Feeds the Location & Navigation widget, the flood fill, and the simulator with room/grid/sprite reads. Requires developer tools. Host-side and purely observational, so it never changes what the game computes.',
+    group: 'Dev',
+    kind: 'host-event',
+    origin: 'relic',
+    flag: 'kFeatures3_NavigationQueries',
+    bit: 2048,
+    default: true,
+    requires: ['developerToolsEnabled'],
+    // Dead under Vanilla Safe either way, since it requires developer tools and those are masked.
+    // Flagged so it is covered by the same lock rather than sitting enabled next to a locked control
+    // and inviting the user to toggle something that cannot take effect.
+    affectsVanillaParity: true,
+    live: true,
+  },
+]
+
+// --- Host systems reading emulated state --------------------------------------
+// A normal player feature (not developer-only): the checks tracker polls inventory and save flags out of
+// the running game. Grouped with the other player-facing toggles rather than Dev.
+const HOST_QUERY_FEATURES: FeatureDef[] = [
+  {
+    id: 'trackerEnabled',
+    label: 'Checks tracker',
+    description: 'Inventory and save-flag polling that drives the checks tracker widget.',
+    userMessage:
+      'Lets the checks tracker read inventory and save flags out of the running game. Turning it off stops that polling and the tracker stops updating. Host-side and purely observational, so it never changes what the game computes.',
+    group: 'Quality of life',
+    kind: 'host-event',
+    origin: 'relic',
+    flag: 'kFeatures3_TrackerQueries',
+    bit: 1024,
+    default: true,
+    requires: [],
     affectsVanillaParity: false,
     live: true,
   },
@@ -318,10 +623,12 @@ const FEATURES: FeatureDef[] = [
   ...AUDIO_FEATURES,
   ...INPUT_FEATURES,
   ...GAMEPLAY_FEATURES,
+  ...BUG_FIXES_FEATURES,
   ...DEV_FEATURES,
+  ...HOST_QUERY_FEATURES,
   ...BUNDLE_FIXES, // the 42 split bug-fix toggles (generated)
 ]
 
 const FEATURES_BY_ID: Record<string, FeatureDef> = Object.fromEntries(FEATURES.map((f) => [f.id, f]))
 
-export { FEATURES, FEATURES_BY_ID, DISPLAY_FEATURES, AUDIO_FEATURES, INPUT_FEATURES, GAMEPLAY_FEATURES, DEV_FEATURES }
+export { FEATURES, FEATURES_BY_ID, DISPLAY_FEATURES, AUDIO_FEATURES, INPUT_FEATURES, GAMEPLAY_FEATURES, BUG_FIXES_FEATURES, DEV_FEATURES, HOST_QUERY_FEATURES }

@@ -151,10 +151,12 @@ int WasmGetGameUIState(void) {
 
 EMSCRIPTEN_KEEPALIVE
 void WasmSetUIOverlayMode(int mode) {
+  if (!OverlayQueryGate()) return;
   g_ui_overlay_mode = (uint8)mode;
 }
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetUIOverlayMode(void) {
+  if (!OverlayQueryGate()) return 0;
   return g_ui_overlay_mode;
 }

@@ -30,13 +30,13 @@ test('test-big-screen covers every sub-screen, not just Link\'s', async () => {
     const flood = await r.flood();
     // The total is the arithmetic proof that all four screens were flooded.
     expect(flood.total, `${SCREENS} screens × ${TILES_PER_SCREEN} tiles`).toBe(SCREENS * TILES_PER_SCREEN);
-    expect(flood.reachable, 'the blessed multi-screen reachable count').toBe(3534);
+    expect(flood.reachable, 'the blessed multi-screen reachable count').toBe(3546);
 
-    expect(await r.groups()).toEqual({ 'Ways out': 7 });
+    expect(await r.groups()).toEqual({ 'Ways out': 15 });
 
     const rows = await r.rows();
     const exits = rows.filter((row) => row.kind === 'exit');
-    expect(exits).toHaveLength(7);
+    expect(exits).toHaveLength(15);
 
     // More than one sub-screen contributed: some exits are annotated as being on
     // another screen than the one Link occupies.

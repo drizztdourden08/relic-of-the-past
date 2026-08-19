@@ -194,6 +194,21 @@ int main(int argc, char **argv) {
   // Load game assets
   LoadAssets();
 
+  // PlayerSprite_Apply's single gate point reads enhanced_features3 (WRAM 0x664), but that word
+  // isn't synced from g_wanted_gate_words[3] until SyncGateWords runs inside the first real
+  // ZeldaRunFrame — well after main() returns control to the browser's event loop. So it always
+  // reads 0 here, and the boot-time apply below would silently skip loading the sheet even when one
+  // is configured (the live JS path in emscripten_io.c needs no such handling: by the time it runs,
+  // real frames have already synced the gate for real). Config is the only trustworthy signal this
+  // early — LinkGraphics only lands in the INI when the profile has a sprite configured AND Vanilla
+  // Safe is off (see linkGraphicsIni in apps/web/src/lib/game/settings.ts) — so seed the WRAM bit
+  // directly from that instead of consulting the not-yet-synced gate. g_ram is a plain static array
+  // (zelda_rtl.c), so this write is safe before WasmZeldaInitialize() runs; Startup_InitializeMemory()
+  // zeroes it again on the first real frame regardless, and SyncGateWords re-syncs it correctly from
+  // g_wanted_gate_words[3] (which also carries this bit — see below) from then on.
+  if (g_config.link_graphics != NULL && !(g_config.features3 & kFeatures3_VanillaSafe))
+    enhanced_features3 |= kFeatures3_PlayerSpriteOverride;
+
   // Custom player sprite: if the INI set LinkGraphics (the bridge wrote the .zspr to MEMFS + the key),
   // this overrides the sheet LoadAssets just read. No-op when no sprite is selected (stock).
   ApplyConfiguredPlayerSprite();
@@ -253,6 +268,28 @@ int main(int argc, char **argv) {
   g_wanted_zelda_features = g_config.features0;
   g_wanted_zelda_features1 = g_config.features1;
   g_wanted_zelda_features2 = g_config.features2;
+
+  // Cheat gate word (features3): boot equivalent of pushLiveSettings' WasmSetGateWord(3, ...), so a
+  // profile with CheatsEnabled saved in its INI has working cheats from frame one instead of only after
+  // the first settings change (which is the only other thing that ever wrote this word before). The four
+  // per-category permission bits are PERMISSIONS, not independent toggles — CheatGate() requires
+  // CheatsEnabled AND the category bit, so granting all four alongside the master here is the only way
+  // any cheat can ever activate; this derivation must mirror buildFeatureWord3() in
+  // apps/web/src/lib/game/live-settings-flags.ts exactly, or cheats boot half-on (master set, no category
+  // permissions) until the user touches a setting. Vanilla Safe still wins even if both were saved on:
+  // SyncGateWords() masks every cheat bit off whenever kFeatures3_VanillaSafe is set, regardless of what
+  // set this word.
+  uint32 features3 = g_config.features3 & kFeatures3_VanillaSafe;
+  if ((g_config.features3 & kFeatures3_CheatsEnabled) && !(g_config.features3 & kFeatures3_VanillaSafe)) {
+    features3 |= kFeatures3_CheatsEnabled | kFeatures3_CheatIgnoreCollision | kFeatures3_CheatItemGrant |
+                 kFeatures3_CheatStats | kFeatures3_CheatCombat;
+  }
+  // Mirrors the boot seed applied above (before ApplyConfiguredPlayerSprite) so the "wanted" word
+  // agrees with what is already live in WRAM until the first pushLiveSettings recomputes it properly
+  // from settings.linkSprite.
+  if (g_config.link_graphics != NULL && !(features3 & kFeatures3_VanillaSafe))
+    features3 |= kFeatures3_PlayerSpriteOverride;
+  g_wanted_gate_words[3] = features3;
   ZeldaEnableMsu(g_config.enable_msu);
   ZeldaSetLanguage(g_config.language);
 

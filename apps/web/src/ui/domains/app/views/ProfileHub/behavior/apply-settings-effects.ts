@@ -24,13 +24,19 @@ const swapPlayerSprite = async (name: string | null): Promise<void> => {
 };
 
 const syncHudStore = (s: GameSettings): void => {
+  // Vanilla Safe brings the native HUD back in the core (its HudOverride bit is masked), so the host
+  // overlay has to stand down in the same breath. Locking the setting only greys the control out; the
+  // stored value stays 'enhanced', and the overlay would carry on drawing over the native HUD the core
+  // just restored, which is the doubled HUD. 'original' IS the stock HUD here. The saved preference is
+  // untouched, so it returns intact when Vanilla Safe goes back off.
+  const vanilla = s.vanillaSafe === true;
   useHudSettingsStore.getState().setHudSettings({
-    mode: s.hudMode,
+    mode: vanilla ? 'original' : s.hudMode,
     style: s.hudStyle,
     ratio: s.hudRatio,
     customW: s.customHudAspectW,
     customH: s.customHudAspectH,
-    enhancedParts: s.hudEnhancedParts,
+    enhancedParts: vanilla ? [] : s.hudEnhancedParts,
     heartMode: s.hudHeartMode,
     magicMode: s.hudMagicMode,
     countLayout: s.hudCountLayout,

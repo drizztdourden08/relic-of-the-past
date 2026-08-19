@@ -13,6 +13,7 @@
 #include "src/audio.h"
 #include "src/zelda_rtl.h"
 
+#include "game_hooks_internal.h"
 #include "emscripten_internal.h"
 
 // Renderer state — owned here (only the SdlRenderer_* functions touch it).
@@ -144,6 +145,9 @@ void HandleCommand(int keyCode) {
   if (g_js_input_mode) return;  // JS drives commands via Wasm* exports
   switch (keyCode) {
     case SDLK_w:
+      // Same permission WasmCheat requires (emscripten_api.c) — this legacy keyboard path reaches
+      // the same vendored PatchCommand and must not act unless a cheat category is actually granted.
+      if (!CheatGate(kFeatures3_CheatStats)) break;
       if (SDL_GetModState() & KMOD_SHIFT)
         PatchCommand('W');
       else

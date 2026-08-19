@@ -114,6 +114,14 @@ bool PlayerSprite_HasCustom(void) {
 }
 
 bool PlayerSprite_Apply(const uint8 *data, size_t len, bool push_live) {
+  // Single gate point for the whole feature: every hook below (GameHook_PlayerGearPaletteLoaded,
+  // GameHook_PlayerGlovesColorUpdated, PlayerSprite_RefreshPalette, PlayerSprite_Restore) only acts
+  // once g_has_custom is true, and this is the only place that sets it — so refusing here when the
+  // gate is off keeps the player on the stock sheet/palette everywhere else without duplicating checks.
+  if (!(enhanced_features3 & kFeatures3_PlayerSpriteOverride)) {
+    printf("[PlayerSprite] Blocked — player sprite override gate is off\n");
+    return false;
+  }
   if (data == NULL || len < kHeaderBytes || memcmp(data, "ZSPR", 4) != 0) {
     printf("[PlayerSprite] Not a ZSPR sheet\n");
     return false;
@@ -170,9 +178,15 @@ void PlayerSprite_Restore(bool push_live) {
 // Applying a sheet is file-based (WasmApplyPlayerSpriteFile, emscripten_io.c) so the renderer reuses
 // the MEMFS path it already writes at boot instead of hand-managing a heap buffer.
 
-// Back to the sheet the assets shipped with.
+// Back to the sheet the assets shipped with. Gated like everything else: the override bit closing is
+// itself what puts the stock sheet back (GateWordTeardown in zelda_rtl.c runs the restore while the
+// gate is still open, before the bit clears), so by the time this export is refused there is nothing
+// left for it to undo. Leaving it open instead would be a way to reach the sprite system with the
+// gate shut.
 EMSCRIPTEN_KEEPALIVE
 void WasmClearPlayerSprite(void) {
+  if (!(enhanced_features3 & kFeatures3_PlayerSpriteOverride))
+    return;
   PlayerSprite_Restore(true);
 }
 
@@ -180,6 +194,7 @@ void WasmClearPlayerSprite(void) {
 // one the bank was last built for.
 EMSCRIPTEN_KEEPALIVE
 void WasmRefreshPlayerPalette(void) {
+  if (!(enhanced_features3 & kFeatures3_PlayerSpriteOverride)) return;
   if (g_has_custom)
     PlayerSprite_RefreshPalette();
 }

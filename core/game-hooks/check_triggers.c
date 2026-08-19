@@ -8,12 +8,6 @@
 // (sprite_main.c:1311) records an indoor pickup at 0x4000, or 0x2000 when the
 // sprite sits in the room's right half (sprite_x_hi & 1) — and 0x2000 is
 // already slot 5, so only 0x4000 was missing.
-// Diagnostic: how many times each item id was actually handed over, and by which
-// call site. Link_ReceiveItem is not idempotent, so a check granted twice really
-// does give the item twice; this is how that gets caught instead of inferred.
-uint16 g_receive_counts[256];
-uint16 g_receive_by_site[4];
-
 // A heart piece is not an ordinary receive. Sprite_HeartPiece (sprite_main.c:6493)
 // advances the piece counter FIRST and only hands over a container when it wraps
 // to zero. The raw receive path assumes that already happened: it sees
@@ -26,21 +20,6 @@ static int SimGiveHeartPiece(void) {
   item_receipt_method = 0;
   Link_ReceiveItem(0x26, 0);
   return 1;
-}
-
-void SimCountReceive(uint8 site, uint8 item_id) {
-  g_receive_counts[item_id]++;
-  if (site < 4) g_receive_by_site[site]++;
-}
-
-EMSCRIPTEN_KEEPALIVE
-int WasmGetReceiveCount(int item_id) {
-  return (item_id >= 0 && item_id < 256) ? g_receive_counts[item_id] : -1;
-}
-
-EMSCRIPTEN_KEEPALIVE
-int WasmGetReceiveSite(int site) {
-  return (site >= 0 && site < 4) ? g_receive_by_site[site] : -1;
 }
 
 static const uint16 kChestOpenMasksHook[] = { 0x100, 0x200, 0x400, 0x800, 0x1000, 0x2000, 0x4000 };
@@ -117,6 +96,7 @@ static const uint8 kSimReceiveItemAlternates[76] = {
 };
 
 void GameHook_TriggerCheck(uint16 room_id, uint8 chest_index, uint8 item_id) {
+  if (!TriggerGrantAllowed()) return;
   if (chest_index >= kChestOpenMasksHook_COUNT) {
     printf("[GameHook] Invalid chest_index %d (max %d)\n", chest_index, kChestOpenMasksHook_COUNT - 1);
     return;
@@ -171,6 +151,7 @@ void WasmTriggerCheck(int room_id, int chest_index, int item_id) {
 
 void GameHook_TriggerNpcCheck(uint8 flag_type, uint8 flag_mask, uint8 item_id,
                               uint8 sprite_type_id, uint8 post_gfx) {
+  if (!TriggerGrantAllowed()) return;
   switch (flag_type) {
     case 0:
       sram_progress_flags |= flag_mask;
@@ -236,6 +217,7 @@ void WasmTriggerNpcCheck(int flag_type, int flag_mask, int item_id,
 // ─── Overworld Check Trigger ───
 
 void GameHook_TriggerOverworldCheck(uint8 screen, uint8 mask, uint8 item_id) {
+  if (!TriggerGrantAllowed()) return;
   // Already taken? The bit is idempotent but Link_ReceiveItem is not, so a second
   // trigger really does hand the item over again. A re-granted heart piece
   // inflates the heart count, since every fourth converts (sprite_main.c:6493).

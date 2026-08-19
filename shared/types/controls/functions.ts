@@ -16,7 +16,7 @@ const SHORTCUT_ACTIONS = [
 ] as const;
 
 const CHEAT_ACTIONS = [
-  'cheat-health', 'cheat-equipment', 'cheat-keys', 'cheat-noclip',
+  'cheat-health', 'cheat-ignore-collision', 'cheat-kill-enemies', 'cheat-restore-magic',
 ] as const;
 
 const FUNCTION_ACTIONS = [...SHORTCUT_ACTIONS, ...CHEAT_ACTIONS] as const;
@@ -54,10 +54,10 @@ const FUNCTION_ACTION_LABELS: Record<FunctionAction, string> = {
   'turbo': 'Turbo',
   'profile-next': 'Next Input Profile',
   'profile-prev': 'Previous Input Profile',
-  'cheat-health': 'Restore Health',
-  'cheat-equipment': 'Restore Equipment',
-  'cheat-keys': 'Give All Keys',
-  'cheat-noclip': 'Walk Through Walls',
+  'cheat-health': 'Restore Full Health',
+  'cheat-ignore-collision': 'Ignore movement restriction/collision',
+  'cheat-kill-enemies': 'Kill All Enemies',
+  'cheat-restore-magic': 'Restore All Magic',
 };
 
 interface FunctionMapping {
@@ -68,11 +68,15 @@ interface FunctionMapping {
   sourcePid?: string | null;
 }
 
+// Every default is deliberately unbound ({ type: 'none' }): the project no longer inherits snesrev's
+// legacy defaults, so every binding is user-assigned through the controls UI. This also fixes a real
+// collision — cheat-health used to default to KeyW, the same physical key the keyboard gameplay preset
+// assigns to the SNES Y button.
 const DEFAULT_FUNCTION_MAPPINGS: FunctionMapping[] = [
-  { action: 'save-state-1', binding: { type: 'keyboard', code: 'F1', modifiers: { shift: true } }, icon: null },
-  { action: 'save-state-2', binding: { type: 'keyboard', code: 'F2', modifiers: { shift: true } }, icon: null },
-  { action: 'save-state-3', binding: { type: 'keyboard', code: 'F3', modifiers: { shift: true } }, icon: null },
-  { action: 'save-state-4', binding: { type: 'keyboard', code: 'F4', modifiers: { shift: true } }, icon: null },
+  { action: 'save-state-1', binding: { type: 'none' }, icon: null },
+  { action: 'save-state-2', binding: { type: 'none' }, icon: null },
+  { action: 'save-state-3', binding: { type: 'none' }, icon: null },
+  { action: 'save-state-4', binding: { type: 'none' }, icon: null },
   { action: 'save-state-5', binding: { type: 'none' }, icon: null },
   { action: 'save-state-6', binding: { type: 'none' }, icon: null },
   { action: 'save-state-7', binding: { type: 'none' }, icon: null },
@@ -81,10 +85,10 @@ const DEFAULT_FUNCTION_MAPPINGS: FunctionMapping[] = [
   { action: 'save-state-10', binding: { type: 'none' }, icon: null },
   { action: 'save-state-11', binding: { type: 'none' }, icon: null },
   { action: 'save-state-12', binding: { type: 'none' }, icon: null },
-  { action: 'load-state-1', binding: { type: 'keyboard', code: 'F1' }, icon: null },
-  { action: 'load-state-2', binding: { type: 'keyboard', code: 'F2' }, icon: null },
-  { action: 'load-state-3', binding: { type: 'keyboard', code: 'F3' }, icon: null },
-  { action: 'load-state-4', binding: { type: 'keyboard', code: 'F4' }, icon: null },
+  { action: 'load-state-1', binding: { type: 'none' }, icon: null },
+  { action: 'load-state-2', binding: { type: 'none' }, icon: null },
+  { action: 'load-state-3', binding: { type: 'none' }, icon: null },
+  { action: 'load-state-4', binding: { type: 'none' }, icon: null },
   { action: 'load-state-5', binding: { type: 'none' }, icon: null },
   { action: 'load-state-6', binding: { type: 'none' }, icon: null },
   { action: 'load-state-7', binding: { type: 'none' }, icon: null },
@@ -93,16 +97,16 @@ const DEFAULT_FUNCTION_MAPPINGS: FunctionMapping[] = [
   { action: 'load-state-10', binding: { type: 'none' }, icon: null },
   { action: 'load-state-11', binding: { type: 'none' }, icon: null },
   { action: 'load-state-12', binding: { type: 'none' }, icon: null },
-  { action: 'pause', binding: { type: 'keyboard', code: 'F10' }, icon: null },
-  { action: 'reset', binding: { type: 'keyboard', code: 'KeyR', modifiers: { ctrl: true } }, icon: null },
-  { action: 'fullscreen', binding: { type: 'keyboard', code: 'Enter', modifiers: { alt: true } }, icon: null },
-  { action: 'turbo', binding: { type: 'keyboard', code: 'Tab' }, icon: null },
-  { action: 'profile-next', binding: { type: 'keyboard', code: 'PageDown' }, icon: null },
-  { action: 'profile-prev', binding: { type: 'keyboard', code: 'PageUp' }, icon: null },
-  { action: 'cheat-health', binding: { type: 'keyboard', code: 'KeyW' }, icon: null },
-  { action: 'cheat-equipment', binding: { type: 'keyboard', code: 'KeyW', modifiers: { shift: true } }, icon: null },
-  { action: 'cheat-keys', binding: { type: 'keyboard', code: 'KeyO' }, icon: null },
-  { action: 'cheat-noclip', binding: { type: 'keyboard', code: 'KeyE', modifiers: { ctrl: true } }, icon: null },
+  { action: 'pause', binding: { type: 'none' }, icon: null },
+  { action: 'reset', binding: { type: 'none' }, icon: null },
+  { action: 'fullscreen', binding: { type: 'none' }, icon: null },
+  { action: 'turbo', binding: { type: 'none' }, icon: null },
+  { action: 'profile-next', binding: { type: 'none' }, icon: null },
+  { action: 'profile-prev', binding: { type: 'none' }, icon: null },
+  { action: 'cheat-health', binding: { type: 'none' }, icon: null },
+  { action: 'cheat-ignore-collision', binding: { type: 'none' }, icon: null },
+  { action: 'cheat-kill-enemies', binding: { type: 'none' }, icon: null },
+  { action: 'cheat-restore-magic', binding: { type: 'none' }, icon: null },
 ];
 
 export { CHEAT_ACTIONS, DEFAULT_FUNCTION_MAPPINGS, FUNCTION_ACTIONS, FUNCTION_ACTION_LABELS, SHORTCUT_ACTIONS };

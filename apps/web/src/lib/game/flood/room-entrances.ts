@@ -96,7 +96,7 @@ const roomEntrances = (roomId: number): OverworldEntrance[] => {
   // door table carries a ThroneRoom record gate their boundary on the follower.
   const bounds = isLive ? wasmGetRoomWalkBoundaries() : wasmGetRoomWalkBoundariesFor(roomId);
   const followerGated = bounds.length > 0
-    && wasmGetRoomDoorInfo(roomId).some((d) => d.nativeType === THRONE_DOOR)
+    && (wasmGetRoomDoorInfo(roomId) ?? []).some((d) => d.nativeType === THRONE_DOOR)
     && !isFollowerActive();
   if (!followerGated) {
     for (let i = 0; i < bounds.length; i++) {

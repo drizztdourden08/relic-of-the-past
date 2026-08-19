@@ -126,8 +126,16 @@ const DEFAULT_SETTINGS: GameSettings = {
   },
   hapticsEnabled: true,
 
+  // Cheats
+  cheatsEnabled: false,
+  vanillaSafe: false,
+
   // Developer
   developerToolsEnabled: false,
+  devNavigationData: true,
+
+  // Host systems
+  trackerEnabled: true,
 };
 
 const boolToIni = (v: boolean): string => {
@@ -138,7 +146,10 @@ const serializeToIni = (settings: GameSettings, msuPath?: string, language?: str
   // ExtendedAspectRatio now carries ONLY the ratio value (+ extend_y). Every rendering companion is an
   // individual [Features] key below (positive naming), so INI ↔ bridge ↔ registry stay aligned.
   // When extendedRendering is off the engine always gets vanilla 4:3 — no extra columns, no flags.
-  const er = settings.extendedRendering;
+  // aspectRatio/extendY are baked at boot from this INI, not carried in the recorded gate words, so
+  // SyncGateWords' kGateWordParityMask can never reach them — Vanilla Safe has to force `er` off here
+  // instead, which collapses every dependent render-flag below (wide/LinearWorldTilemap/etc.) with it.
+  const er = !settings.vanillaSafe && settings.extendedRendering;
   const parts: string[] = [];
   if (er) {
     if (settings.extendY) parts.push('extend_y');
@@ -176,6 +187,17 @@ const serializeToIni = (settings: GameSettings, msuPath?: string, language?: str
     .map(([k, v]) => `${k} = ${boolToIni(v)}`)
     .join('\n');
 
+  // Custom MSU music is a divergence from the cartridge with no gate-word bit of its own (it's a pure
+  // Electron/renderer + config.c toggle, never read by the emulated CPU) — Vanilla Safe has to force it
+  // off at the INI boundary instead of relying on SyncGateWords.
+  const msuEnabledIni = settings.vanillaSafe ? 'false' : settings.enableMSU;
+  const msuPathIni = settings.vanillaSafe ? undefined : msuPath;
+
+  // Custom player sprite is also a boot-config divergence with no gate-word bit until config.features3
+  // reflects it (see ApplyConfiguredPlayerSprite in emscripten_main.c) — presence of this key is what the
+  // boot path treats as "the override should be on", so it must not be written under Vanilla Safe.
+  const linkGraphicsIni = !settings.vanillaSafe && settings.linkSprite ? 'LinkGraphics = /link_sprite.zspr\n' : '';
+
   return `[General]
 ${language ? `Language = ${language}\n` : ''}Autosave = ${boolToIni(settings.autosave)}
 DisplayPerfInTitle = ${boolToIni(settings.displayPerfInTitle)}
@@ -192,18 +214,18 @@ NoSpriteLimits = ${boolToIni(settings.noSpriteLimits)}
 LinearFiltering = ${boolToIni(settings.linearFiltering && !settings.pixelPerfect)}
 OutputMethod = ${settings.outputMethod}
 DimFlashes = ${boolToIni(settings.dimFlashes)}
-${settings.linkSprite ? 'LinkGraphics = /link_sprite.zspr\n' : ''}
+${linkGraphicsIni}
 
 [Sound]
 EnableAudio = ${boolToIni(settings.enableAudio)}
 AudioFreq = ${settings.audioFreq}
 AudioChannels = ${settings.audioChannels}
 AudioSamples = ${settings.audioSamples}
-EnableMSU = ${settings.enableMSU}
+EnableMSU = ${msuEnabledIni}
 ResumeMSU = ${boolToIni(settings.resumeMSU)}
 MSUVolume = ${settings.msuVolume}
 PerGroupVolume = ${boolToIni(settings.perGroupVolume)}
-${msuPath ? `MSUPath = ${msuPath}
+${msuPathIni ? `MSUPath = ${msuPathIni}
 ` : ''}
 [Features]
 ItemSwitchLR = ${boolToIni(settings.itemSwitchLR)}
@@ -226,12 +248,26 @@ CancelBirdTravel = ${boolToIni(settings.cancelBirdTravel)}
 DisableTelepathy = ${boolToIni(settings.disableTelepathy)}
 Haptics = ${boolToIni(!!settings.haptics?.enabled)}
 DeveloperTools = ${boolToIni(settings.developerToolsEnabled)}
+DevNavigationData = ${boolToIni(settings.devNavigationData)}
+TrackerEnabled = ${boolToIni(settings.trackerEnabled)}
+CheatsEnabled = ${boolToIni(settings.cheatsEnabled)}
+VanillaSafe = ${boolToIni(settings.vanillaSafe)}
 ${renderFlagsIni}
 `;
 };
 
 const mergeSettings = (partial: Partial<GameSettings>): GameSettings => {
   const merged = { ...DEFAULT_SETTINGS, ...partial };
+
+  // Tall rendering forces the enhanced HUD. The native HUD is a fixed 4:3 tile strip with no concept
+  // of the extended vertical band, so under tall it is not merely unstyled but wrong. Forcing it here
+  // rather than in the settings UI keeps it true for profiles saved before tall existed, and for every
+  // consumer at once — the INI, the live push and the HUD gate word all read this same merged value.
+  if (merged.tallRendering) {
+    merged.hudMode = 'enhanced';
+    if (!merged.hudEnhancedParts.includes('main'))
+      merged.hudEnhancedParts = [...merged.hudEnhancedParts, 'main'];
+  }
 
   // Migrate old windowMode values from previous schema
   const rawMode = (partial as Record<string, unknown>).windowMode;

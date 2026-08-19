@@ -20,17 +20,19 @@ test('test-jail-cell still has both checks behind a locked cell', async () => {
     expect(await r.screenId(), 'the Jail Cell is screen-133 (room 0x080)').toMatch(/^screen-133 · 0x80 · INDOOR/);
 
     const flood = await r.flood();
-    expect(flood, 'the blessed indoor baseline').toEqual({ reachable: 608, total: 4096 });
+    expect(flood, 'the blessed indoor baseline').toEqual({ reachable: 1049, total: 12288 });
 
     expect(await r.groups()).toEqual({
-      'Checks': 2, 'Locks & barriers': 1, 'Triggers': 1, 'Ways out': 1,
+      'Checks': 3, 'Locks & barriers': 4, 'Triggers': 3, 'Ways out': 3,
     });
 
-    // Everything in the room is behind the cell lock, so nothing is collectable.
+    // Nothing in the cell itself is collectable: both of its checks sit behind the lock. The flood
+    // now reaches beyond the cell, so the summary also counts a third check from the wider area, and
+    // that one is already done. The pair behind the lock is what this state exists to guard.
     const summary = await r.checkSummary();
     expect(summary.blocked, 'both checks sit behind the cell lock').toBe(2);
     expect(summary.available).toBe(0);
-    expect(summary.done).toBe(0);
+    expect(summary.done, 'a check outside the cell, reached now the flood spans further').toBe(1);
 
     const rows = await r.rows();
     const lock = rows.find((row) => row.kind === 'cell-lock');
@@ -39,6 +41,7 @@ test('test-jail-cell still has both checks behind a locked cell', async () => {
 
     // The big-key carrier is the trigger that would eventually open it.
     expect(rows.some((row) => row.kind === 'big-key-carrier'), 'the big-key guard must be annotated').toBe(true);
-    expect(rows.filter((row) => row.state === 'unreachable')).toHaveLength(2);
+    // The chest and the NPC check inside the cell, plus the key guard the wider flood now reaches.
+    expect(rows.filter((row) => row.state === 'unreachable')).toHaveLength(3);
   });
 });

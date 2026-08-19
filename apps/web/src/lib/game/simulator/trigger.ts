@@ -25,12 +25,12 @@ const SOURCE = 'simulator';
  */
 const doorRecordPair = (roomId: number, doorIndex: number): [number, number][] => {
   const out: [number, number][] = [[roomId, doorIndex]];
-  const door = wasmGetRoomDoorInfo(roomId)[doorIndex];
+  const door = (wasmGetRoomDoorInfo(roomId) ?? [])[doorIndex];
   if (!door || !outerWall(door.direction, door.row, door.col)) return out;
   const adj = ROOM_EDGE_ADJ[door.direction](roomId);
   if (adj === null) return out;
   const pos = door.direction === 'north' || door.direction === 'south' ? door.col : door.row;
-  const twins = wasmGetRoomDoorInfo(adj);
+  const twins = wasmGetRoomDoorInfo(adj) ?? [];
   for (let i = 0; i < twins.length && i < 4; i++) {
     const t = twins[i];
     if (t.direction !== OPPOSITE[door.direction] || t.kind !== door.kind) continue;
@@ -99,7 +99,7 @@ const trigger = (action: TriggerAction): Promise<void> =>
         // the room's closed shutter doors, exactly as the game does.
         wasmSimKillDrop(action.roomId, action.itemId);
         if (action.opensShutters) {
-          const doors = wasmGetRoomDoorInfo(action.roomId);
+          const doors = wasmGetRoomDoorInfo(action.roomId) ?? [];
           for (let i = 0; i < doors.length && i < 4; i++) {
             if (doors[i].kind === 4 && !doors[i].isOpen) unlockDoorBothSides(action.roomId, i, false);
           }
@@ -118,7 +118,7 @@ const trigger = (action: TriggerAction): Promise<void> =>
       case 'pullSwitch': {
         // The room's tag routine raises its trapdoors when a switch is pulled:
         // every shut shutter in the room opens (Behind Sanctuary's door out).
-        const doors = wasmGetRoomDoorInfo(action.roomId);
+        const doors = wasmGetRoomDoorInfo(action.roomId) ?? [];
         for (let i = 0; i < doors.length && i < 4; i++) {
           if (doors[i].kind === 4 && !doors[i].isOpen) unlockDoorBothSides(action.roomId, i, false);
         }
@@ -139,7 +139,7 @@ const trigger = (action: TriggerAction): Promise<void> =>
       }
       case 'trapShutters': {
         // Trap doors slam shut behind the player: close every OPEN shutter record.
-        const doors = wasmGetRoomDoorInfo(action.roomId);
+        const doors = wasmGetRoomDoorInfo(action.roomId) ?? [];
         for (let i = 0; i < doors.length && i < 4; i++) {
           if (doors[i].kind === 4 && doors[i].isOpen) closeDoorBothSides(action.roomId, i);
         }

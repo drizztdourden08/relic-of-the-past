@@ -22,6 +22,8 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultSide: 'right' as SnapSide,
     defaultDockedSize: 320,
     defaultFloatingSize: { width: 320, height: 280 },
+    readsGameData: true,
+    requiresSetting: 'trackerEnabled',
   },
   {
     id: 'checks',
@@ -30,6 +32,8 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultSide: 'right' as SnapSide,
     defaultDockedSize: 380,
     defaultFloatingSize: { width: 380, height: 500 },
+    readsGameData: true,
+    requiresSetting: 'trackerEnabled',
   },
   {
     id: 'logs',
@@ -38,6 +42,7 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultSide: 'bottom' as SnapSide,
     defaultDockedSize: 180,
     defaultFloatingSize: { width: 600, height: 220 },
+    devOnly: true,
   },
   {
     id: 'debug',
@@ -46,6 +51,8 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultSide: 'right' as SnapSide,
     defaultDockedSize: 320,
     defaultFloatingSize: { width: 340, height: 500 },
+    devOnly: true,
+    readsGameData: true,
   },
   {
     id: 'navigation',
@@ -54,6 +61,9 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultSide: 'left' as SnapSide,
     defaultDockedSize: 320,
     defaultFloatingSize: { width: 340, height: 460 },
+    devOnly: true,
+    readsGameData: true,
+    requiresSetting: 'devNavigationData',
   },
   {
     id: 'dataset',
@@ -62,6 +72,9 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultSide: 'left' as SnapSide,
     defaultDockedSize: 300,
     defaultFloatingSize: { width: 320, height: 400 },
+    devOnly: true,
+    readsGameData: true,
+    requiresSetting: 'devNavigationData',
   },
   {
     id: 'cheats',
@@ -70,6 +83,8 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultSide: 'right' as SnapSide,
     defaultDockedSize: 340,
     defaultFloatingSize: { width: 360, height: 500 },
+    readsGameData: true,
+    requiresSetting: 'cheatsEnabled',
   },
   {
     id: 'simulator',
@@ -78,6 +93,9 @@ const WIDGET_DEFINITIONS: WidgetDefinition[] = [
     defaultSide: 'right' as SnapSide,
     defaultDockedSize: 360,
     defaultFloatingSize: { width: 380, height: 560 },
+    devOnly: true,
+    readsGameData: true,
+    requiresSetting: 'devNavigationData',
   },
 ];
 

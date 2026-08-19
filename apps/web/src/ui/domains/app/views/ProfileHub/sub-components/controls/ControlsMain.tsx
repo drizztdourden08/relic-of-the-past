@@ -11,6 +11,7 @@ import { Box } from '../../../../../../design-system/primitives/Box';
 import { Text } from '../../../../../../design-system/primitives/Text';
 import { Image } from '../../../../../../design-system/primitives/Image';
 import { TabBar } from '../../../../../../design-system/primitives/TabBar';
+import { DisabledOverlay, DISABLED_SETTING_MESSAGES } from '../../../../../../design-system/composites/DisabledOverlay';
 import { BindingRow } from './BindingRow';
 import { HapticsToggle } from './HapticsToggle';
 import { getSnesIconUrl, getButtonIconUrl } from '@app/lib/input/button-icons';
@@ -25,7 +26,15 @@ const CONTROLS_TABS = [
   { id: 'cheats', label: 'Cheats' },
 ];
 
-const ControlsMain = ({ ctrl }: { ctrl: Ctrl }) => {
+interface ControlsMainProps {
+  ctrl: Ctrl;
+  /** Whether the cheats master toggle is on — the bindings below no-op while it's off. */
+  cheatsEnabled: boolean;
+  /** Deep-links to the Enable Cheats setting. */
+  onOpenCheatsSettings: () => void;
+}
+
+const ControlsMain = ({ ctrl, cheatsEnabled, onOpenCheatsSettings }: ControlsMainProps) => {
   return (
     <Box className="controls-settings__main">
       {/* Tab bar */}
@@ -127,28 +136,37 @@ const ControlsMain = ({ ctrl }: { ctrl: Ctrl }) => {
       {ctrl.activeTab === 'cheats' && (
         <Box className="controls-settings__bindings">
           <Box className="controls-settings__section-header">Cheat Bindings</Box>
-          <Box className="controls-settings__binding-list">
-            <Box className="binding-row binding-row--header">
-              <Text className="binding-row__action-label">Action</Text>
-              <Box className="binding-row__icon-slot" />
-              <Text className="binding-row__snes-label" />
-              <Box className="binding-row__icon-slot" />
-              <Text className="binding-row__binding-label">Binding</Text>
+          {/* `contained`: controls-settings__bindings clips overflow and the header sits flush
+           *  above with no gap, so the default overhang would bleed onto it or get clipped. */}
+          <DisabledOverlay
+            active={!cheatsEnabled}
+            message={DISABLED_SETTING_MESSAGES.cheatsEnabled}
+            contained
+            onOpenSettings={onOpenCheatsSettings}
+          >
+            <Box className="controls-settings__binding-list">
+              <Box className="binding-row binding-row--header">
+                <Text className="binding-row__action-label">Action</Text>
+                <Box className="binding-row__icon-slot" />
+                <Text className="binding-row__snes-label" />
+                <Box className="binding-row__icon-slot" />
+                <Text className="binding-row__binding-label">Binding</Text>
+              </Box>
+              {ctrl.displayFunctionMappings
+                .filter(m => (CHEAT_ACTIONS as readonly string[]).includes(m.action))
+                .map(mapping => (
+                  <BindingRow
+                    key={mapping.action}
+                    actionLabel={FUNCTION_ACTION_LABELS[mapping.action]}
+                    binding={mapping.binding}
+                    bindingIcon={mapping.icon}
+                    deviceIconUrl={mapping.deviceIconUrl}
+                    onRebind={() => ctrl.handleFunctionRebind(mapping.action)}
+                    onClear={() => ctrl.handleFunctionClear(mapping.action)}
+                  />
+                ))}
             </Box>
-            {ctrl.displayFunctionMappings
-              .filter(m => (CHEAT_ACTIONS as readonly string[]).includes(m.action))
-              .map(mapping => (
-                <BindingRow
-                  key={mapping.action}
-                  actionLabel={FUNCTION_ACTION_LABELS[mapping.action]}
-                  binding={mapping.binding}
-                  bindingIcon={mapping.icon}
-                  deviceIconUrl={mapping.deviceIconUrl}
-                  onRebind={() => ctrl.handleFunctionRebind(mapping.action)}
-                  onClear={() => ctrl.handleFunctionClear(mapping.action)}
-                />
-              ))}
-          </Box>
+          </DisabledOverlay>
         </Box>
       )}
     </Box>

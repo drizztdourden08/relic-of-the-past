@@ -25,6 +25,8 @@ export type { NavRailItem, NavRailProps } from './NavRail';
 export { WindowHeader } from './WindowHeader';
 export type { WindowHeaderProps } from './WindowHeader';
 export { Overlay } from './Overlay';
+export { DisabledOverlay, DISABLED_SETTING_MESSAGES } from './DisabledOverlay';
+export type { DisabledOverlayProps } from './DisabledOverlay';
 export { Widget, WidgetManager, WidgetSettings, useWidgetLayout } from './Widget';
 export type { WidgetState, WidgetLayout, WidgetDefinition, SnapSide } from './Widget';
 export { FilterBar } from './FilterBar';

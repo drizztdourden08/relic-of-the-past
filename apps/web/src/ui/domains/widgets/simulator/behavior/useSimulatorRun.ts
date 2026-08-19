@@ -128,6 +128,10 @@ const useSimulatorRun = () => {
     // The run drives real checks; pause SRAM disk sync so no 5s tick persists
     // half-simulated state to sram.dat mid-run. Resumed in the finally below.
     pauseSramSync();
+    // Arms the WasmSim* mutators (kHostGate_SimulatorSupport) for this run's duration — without
+    // it every door-unlock/kill-drop/cell-lock trigger silently no-ops. Dropped in the finally
+    // below so a crashed or stopped run can never leave it armed against a live session.
+    port.setSimulatorSupport(true);
     port.setAutoSkipDialog(true);
     // The simulation reads the game's combat tables to work out which of a room's
     // enemies actually gate it, and those queries sit behind the developer-tools
@@ -154,6 +158,7 @@ const useSimulatorRun = () => {
       unsubscribe();
       port.setAutoSkipDialog(null);
       port.setDeveloperTools(null);
+      port.setSimulatorSupport(false);
       control.current.running = false;
       resumeSramSync();
     }

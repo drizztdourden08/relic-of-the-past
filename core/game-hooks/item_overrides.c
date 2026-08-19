@@ -13,6 +13,9 @@ static ItemOverride g_overrides[MAX_OVERRIDES];
 static int g_override_count = 0;
 
 uint8 GameHook_OverrideChestItem(uint16 room_id, uint8 original_item) {
+  // Neutral (the untouched item) when the gate is off, not a bare return, so a populated override
+  // table left over from a prior session can never silently substitute an item while disabled.
+  if (!(enhanced_features3 & kFeatures3_ItemOverrides)) return original_item;
   for (int i = 0; i < g_override_count; i++) {
     if (g_overrides[i].room_id == room_id && g_overrides[i].original_item == original_item) {
       printf("[Randomizer] Room %d: item 0x%02x -> 0x%02x\n",
@@ -25,6 +28,7 @@ uint8 GameHook_OverrideChestItem(uint16 room_id, uint8 original_item) {
 
 EMSCRIPTEN_KEEPALIVE
 void WasmSetItemOverride(int room_id, int original_item, int new_item) {
+  if (!(enhanced_features3 & kFeatures3_ItemOverrides)) return;
   if (g_override_count >= MAX_OVERRIDES) {
     printf("[Randomizer] Override table full!\n");
     return;
@@ -48,6 +52,7 @@ void WasmSetItemOverride(int room_id, int original_item, int new_item) {
 
 EMSCRIPTEN_KEEPALIVE
 void WasmClearItemOverrides(void) {
+  if (!(enhanced_features3 & kFeatures3_ItemOverrides)) return;
   g_override_count = 0;
   printf("[Randomizer] Cleared all overrides\n");
 }

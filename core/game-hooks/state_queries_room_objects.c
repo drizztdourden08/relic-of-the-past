@@ -14,6 +14,10 @@ static uint8 g_replacement_tile_state_buf[16 * 2];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetReplacementTileState(void) {
+  if (!NavQueryGate()) {
+    memset(g_replacement_tile_state_buf, 0, sizeof(g_replacement_tile_state_buf));
+    return (int)g_replacement_tile_state_buf;
+  }
   memset(g_replacement_tile_state_buf, 0, sizeof(g_replacement_tile_state_buf));
   if (!player_is_indoors) return (int)g_replacement_tile_state_buf;
 
@@ -33,6 +37,10 @@ static uint8 g_chest_locations_buf[6 * 2];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetChestLocations(void) {
+  if (!NavQueryGate()) {
+    memset(g_chest_locations_buf, 0, sizeof(g_chest_locations_buf));
+    return (int)g_chest_locations_buf;
+  }
   memset(g_chest_locations_buf, 0, sizeof(g_chest_locations_buf));
   if (!player_is_indoors) return (int)g_chest_locations_buf;
 

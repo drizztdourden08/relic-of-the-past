@@ -10,7 +10,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, it, expect } from 'vitest';
 import { ALL_ENUMERATION } from '@shared/game/data';
-import { buildGeneratedTypesSource } from '../../../scripts/generate-enum-types.mjs';
+import { buildGeneratedTypesSource, CATEGORY_TYPE_NAMES } from '../../../scripts/generate-enum-types.mjs';
 import { describeDataset } from '../../dataset-guard';
 
 const GENERATED_FILE = resolve(__dirname, '../../../shared/game/data/enumeration/generated-types.ts');
@@ -22,7 +22,10 @@ describeDataset('enumeration/generated-types.ts', () => {
     expect(committed).toBe(fresh);
   });
 
-  it('carries every value ALL_ENUMERATION seeds for each of the 10 categories', () => {
+  // Only the categories the generator actually emits. A category can be seeded for its labels alone
+  // and deliberately left out of the codegen (progress-tier labels a numeric field, so retyping it to
+  // a string union would be wrong), and those values are correctly absent from the generated source.
+  it('carries every value ALL_ENUMERATION seeds for each generated category', () => {
     const source = readFileSync(GENERATED_FILE, 'utf8');
     const byCategory = new Map<string, string[]>();
     for (const entry of ALL_ENUMERATION) {
@@ -30,7 +33,8 @@ describeDataset('enumeration/generated-types.ts', () => {
       if (!values.includes(entry.value)) values.push(entry.value);
       byCategory.set(entry.category, values);
     }
-    for (const values of byCategory.values()) {
+    for (const [category, values] of byCategory) {
+      if (!(category in CATEGORY_TYPE_NAMES)) continue;
       for (const value of values) expect(source, value).toContain(`'${value}'`);
     }
   });

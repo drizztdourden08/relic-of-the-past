@@ -28,6 +28,8 @@ interface TitleBarProps {
   gameRunning: boolean;
   /** Visibility of each toggleable widget, keyed by widget id, for menu checkmarks. */
   widgetVisibility?: Record<string, boolean>;
+  /** Master gate for developer-only menu entries (devOnly widgets + Advanced dev tools). */
+  developerToolsEnabled?: boolean;
   windowMode?: GameSettings['windowMode'];
   isMuted?: boolean;
   onToggleMute?: () => void;

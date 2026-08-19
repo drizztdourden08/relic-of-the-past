@@ -84,7 +84,7 @@ const detectRoom = (roomId: number, items: TileReq[], entryTile?: GridPos, src?:
   // …and warp-room doors (native 0x46) teleport rather than scroll, so their
   // wall spots are blocked for border/edge purposes too.
   const followerActive = (wasmReadFlagSnapshot()?.progress[13] ?? 0) === 1;
-  const blockedSpots = wasmGetRoomDoorInfo(roomId)
+  const blockedSpots = (wasmGetRoomDoorInfo(roomId) ?? [])
     .filter((d) => d.nativeType === 0x46 || (d.nativeType === 0x14 && !followerActive))
     .map((d) => ({ edge: d.direction as EdgeName, pos: d.direction === 'north' || d.direction === 'south' ? d.col : d.row }));
   const exitSpotMemo = new Map<string, boolean>();

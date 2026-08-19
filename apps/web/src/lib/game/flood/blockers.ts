@@ -86,7 +86,7 @@ const overworldBlockerCells = (screenIndex: number): GridPos[] => {
   const skipUncle = uncleCollected();
   const heads = wasmGetAreaHeads();
   const cells: GridPos[] = [];
-  for (const raw of wasmGetOverworldSpriteSpawns(screenIndex)) {
+  for (const raw of wasmGetOverworldSpriteSpawns(screenIndex) ?? []) {
     if (!BLOCKER_SPRITES.has(raw.spriteType)) continue;
     if (raw.spriteType === UNCLE_SPRITE && skipUncle) continue;
     const resolved = heads
@@ -139,7 +139,7 @@ const stampIndoorBlockers = (roomId: number, grids: number[][][], isLiveRoom: bo
       cells.push(...footprint(t.row, t.col));
     }
   } else {
-    for (const s of wasmGetRoomSpriteSpawns(roomId)) {
+    for (const s of wasmGetRoomSpriteSpawns(roomId) ?? []) {
       if (s.spriteType === UNCLE_SPRITE) cells.push(...footprint(s.row, s.col));
     }
   }

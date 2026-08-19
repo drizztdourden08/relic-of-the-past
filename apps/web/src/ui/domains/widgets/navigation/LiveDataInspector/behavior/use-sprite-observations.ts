@@ -20,7 +20,7 @@ interface SpriteLiveObservations {
 
 const useSpriteObservations = (isIndoors: boolean, roomIndex: number, overworldScreenIndex: number): SpriteLiveObservations => {
   const liveSprites = useMemo<readonly LiveSpriteObservation[]>(
-    () => (isIndoors ? wasmGetRoomSpriteSpawns(roomIndex) : wasmGetOverworldSpriteSpawns(overworldScreenIndex)),
+    () => (isIndoors ? wasmGetRoomSpriteSpawns(roomIndex) : wasmGetOverworldSpriteSpawns(overworldScreenIndex)) ?? [],
     [isIndoors, roomIndex, overworldScreenIndex],
   );
 

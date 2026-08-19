@@ -22,7 +22,7 @@ test('test-tag-room still decodes its kill gate', async () => {
 
     // The flood is what derives the annotations, so it has to run first.
     const flood = await r.flood();
-    expect(flood, 'the shut trap shutters bound the flood').toEqual({ reachable: 329, total: 4096 });
+    expect(flood, 'the shut trap shutters bound the flood').toEqual({ reachable: 1338, total: 12288 });
 
     // The decoded tag, not the raw 0x08.
     const tags = await r.tags();
@@ -30,7 +30,7 @@ test('test-tag-room still decodes its kill gate', async () => {
     expect(tags[0]).toMatch(/clear enemies/);
     expect(tags[0]).toMatch(/doors open/);
 
-    expect(await r.groups()).toEqual({ 'Locks & barriers': 3, 'Triggers': 2, 'Ways out': 1 });
+    expect(await r.groups()).toEqual({ 'Checks': 2, 'Locks & barriers': 4, 'Triggers': 3, 'Ways out': 2 });
 
     const rows = await r.rows();
     // Both shutters are the trap kind, and they must be shut for the gate to mean anything.

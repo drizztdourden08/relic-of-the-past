@@ -79,6 +79,10 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
       // touching the user's persisted setting, and must switch it back off afterwards.
       const port = createLiveGamePort();
       pauseSramSync();
+      // Arms the WasmSim* mutators (kHostGate_SimulatorSupport) for this run's duration — without
+      // it every door-unlock/kill-drop/cell-lock trigger silently no-ops. Dropped in the finally
+      // below so a crashed or early-returning run can never leave it armed against a live session.
+      port.setSimulatorSupport(true);
       port.setAutoSkipDialog(true);
       port.setDeveloperTools(true);
       // A features word set from here is only WANTED until the core latches it on its
@@ -178,6 +182,7 @@ const useSimRun = ({ activeProfile, loadProfileForGame }: SimRunDeps) => {
       } finally {
         port.setAutoSkipDialog(null);
         port.setDeveloperTools(null);
+        port.setSimulatorSupport(false);
         resumeSramSync();
       }
 

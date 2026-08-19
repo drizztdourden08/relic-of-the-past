@@ -2,6 +2,7 @@
 /** Mobile tab — mobile/device-specific display options. */
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
+import { openVanillaSafeSettings } from '@app/stores/search-store';
 import { MOBILE_SECTION } from './SettingsView.constants';
 
 interface MobileSettingsProps {
@@ -13,7 +14,14 @@ const SECTIONS: Section[] = [MOBILE_SECTION];
 
 const MobileSettings = (props: MobileSettingsProps) => {
   const { settings, onChange } = props;
-  return <SettingsLayout sections={SECTIONS} settings={settings} onChange={onChange} />;
+  return (
+    <SettingsLayout
+      sections={SECTIONS}
+      settings={settings}
+      onChange={onChange}
+      onOpenVanillaSafeSettings={openVanillaSafeSettings}
+    />
+  );
 };
 
 export { MobileSettings };

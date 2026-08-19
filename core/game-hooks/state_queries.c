@@ -56,6 +56,10 @@ static uint8 g_inventory_buf[40];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetInventoryState(void) {
+  if (!TrackerQueryGate()) {
+    memset(g_inventory_buf, 0, sizeof(g_inventory_buf));
+    return (int)g_inventory_buf;
+  }
   g_inventory_buf[0]  = link_item_bow;
   g_inventory_buf[1]  = link_item_boomerang;
   g_inventory_buf[2]  = link_item_hookshot;
@@ -97,6 +101,7 @@ int WasmGetInventoryState(void) {
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomFlags(void) {
+  if (!FlagQueryGate()) return (int)GatedEmpty();  // live-WRAM alias: see gated_empty.c
   return (int)save_dung_info;
 }
 
@@ -106,6 +111,10 @@ static uint8 g_live_room_buf[4];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetLiveRoomFlags(void) {
+  if (!FlagQueryGate()) {
+    memset(g_live_room_buf, 0, sizeof(g_live_room_buf));
+    return (int)g_live_room_buf;
+  }
   uint16 room = dungeon_room_index;
   uint16 flags = dung_savegame_state_bits >> 4;
   PutU16(g_live_room_buf, 0, room);
@@ -117,6 +126,7 @@ int WasmGetLiveRoomFlags(void) {
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetOverworldFlags(void) {
+  if (!FlagQueryGate()) return (int)GatedEmpty();  // live-WRAM alias: see gated_empty.c
   return (int)save_ow_event_info;
 }
 
@@ -149,6 +159,10 @@ static uint8 g_progress_buf[21];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetProgressFlags(void) {
+  if (!FlagQueryGate()) {
+    memset(g_progress_buf, 0, sizeof(g_progress_buf));
+    return (int)g_progress_buf;
+  }
   g_progress_buf[0] = sram_progress_indicator;
   g_progress_buf[1] = sram_progress_flags;
   g_progress_buf[2] = sram_progress_indicator_3;
@@ -182,6 +196,10 @@ static uint8 g_viewport_buf[32];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetViewportInfo(void) {
+  if (!RenderQueryGate()) {
+    memset(g_viewport_buf, 0, sizeof(g_viewport_buf));
+    return (int)g_viewport_buf;
+  }
   g_viewport_buf[0] = main_module_index;
   g_viewport_buf[1] = submodule_index;
   // extra{LeftRight,Left,Right}Cur are uint16 (can exceed 255 for very wide ratios)
@@ -252,17 +270,20 @@ int WasmGetViewportInfo(void) {
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetIndoorAttrTable(void) {
+  if (!NavQueryGate()) return (int)GatedEmpty();  // live-WRAM alias: see gated_empty.c
   // 0x0000..0x0FFF = upper layer attrs, 0x1000..0x1FFF = lower layer attrs
   return (int)dung_bg2_attr_table;
 }
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetLinkIsOnLowerLevel(void) {
+  if (!NavQueryGate()) return 0;
   return link_is_on_lower_level ? 1 : 0;
 }
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomCollisionType(void) {
+  if (!NavQueryGate()) return 0;
   if (!player_is_indoors) return -1;
   return (int)dung_hdr_collision;
 }
@@ -270,6 +291,7 @@ int WasmGetRoomCollisionType(void) {
 // Headless-safe: read collision type directly from ROM header for any room
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomCollisionTypeForRoom(int room_id) {
+  if (!NavQueryGate()) return 0;
   if (room_id < 0 || room_id > 0x127) return -1;
   const uint8 *hdr = GetRoomHeaderPtr(room_id);
   return (int)((hdr[0] >> 2) & 7);
@@ -293,6 +315,10 @@ static uint8 g_player_state_buf[8];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetPlayerStateInfo(void) {
+  if (!RenderQueryGate()) {
+    memset(g_player_state_buf, 0, sizeof(g_player_state_buf));
+    return (int)g_player_state_buf;
+  }
   g_player_state_buf[0] = link_player_handler_state;
   g_player_state_buf[1] = player_sleep_in_bed_state;
   g_player_state_buf[2] = link_is_running;

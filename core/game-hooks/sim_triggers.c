@@ -1,8 +1,6 @@
 /* @layer core-game-hooks @kind native */
 #include "game_hooks_internal.h"
 
-/** Item-grant tally, defined in check_triggers.c — see SimCountReceive there. */
-void SimCountReceive(uint8 site, uint8 item_id);
 
 // Simulator trigger writes: door unlock/close and virtual enemy kills. These
 // mutate the same SRAM room words the game persists, so a rebuilt attr grid
@@ -23,6 +21,7 @@ static int SimTrigIsCurrentRoom(int room_id) {
 // of the SAME physical doorway in the adjacent room is opened with consume=0.
 EMSCRIPTEN_KEEPALIVE
 void WasmSimUnlockDoor(int room_id, int door_index, int consume) {
+  if (!SimMutateGate()) return;
   if (!SimTrigRoomValid(room_id) || door_index < 0 || door_index > 3) return;
   // Door-open bits are REVERSE-ordered: slot 0 = 0x8000 (kUpperBitmasks).
   uint16 bit = (uint16)(0x8000 >> door_index);
@@ -37,6 +36,7 @@ void WasmSimUnlockDoor(int room_id, int door_index, int consume) {
 // meaningful for shutter (kind 4) doors; key doors stay open once unlocked.
 EMSCRIPTEN_KEEPALIVE
 void WasmSimCloseDoor(int room_id, int door_index) {
+  if (!SimMutateGate()) return;
   if (!SimTrigRoomValid(room_id) || door_index < 0 || door_index > 3) return;
   uint16 bit = (uint16)(0x8000 >> door_index);
   save_dung_info[room_id] &= ~bit;
@@ -58,10 +58,11 @@ void WasmSimCloseDoor(int room_id, int door_index) {
 // query reads. A chest bumps both counters (dungeon.c:1710) while a cell lock
 // advances only dung_num_bigkey_locks_x2 (dungeon.c:1697), so both walk one
 // shared slot sequence — mirrored below to recover each lock's slot.
-// Layout: [count(1), pad(1)] then count records of 4 bytes:
+// Layout: status(1) then [count(1), pad(1)] then count records of 4 bytes:
 //   [slot(1), row(1), col(1), opened(1)]
+// Leading status byte: see WasmGetRoomChests in sim_queries.c (1 = gate open and room in range).
 static const uint16 kSimChestOpenMasks[6] = { 0x100, 0x200, 0x400, 0x800, 0x1000, 0x2000 };
-static uint8 g_sim_locks_buf[2 + 6 * 4];
+static uint8 g_sim_locks_buf[1 + 2 + 6 * 4];
 
 // Walk one object layer, tracking the draw-order counters, and record every
 // Cell Lock (sub-index 0x18). Returns the offset of the layer's terminator.
@@ -95,10 +96,14 @@ static int SimScanLockObjects(const uint8 *p, int off, int *chests_x2, int *lock
   }
 }
 
+// Gated on developer mode — see WasmGetRoomChests in sim_queries.c: the simulator subsystem sits
+// entirely behind dev tools, reads included, so the widget can inspect it outside a run too.
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomCellLocks(int room_id) {
   memset(g_sim_locks_buf, 0, sizeof(g_sim_locks_buf));
+  if (!SimQueryGate()) return (int)g_sim_locks_buf;
   if (!SimTrigRoomValid(room_id)) return (int)g_sim_locks_buf;
+  g_sim_locks_buf[0] = 1;
 
   uint8 slots[6], rows[6], cols[6];
   int n = 0, chests_x2 = 0, locks_x2 = 0, off = 2;
@@ -115,14 +120,14 @@ int WasmGetRoomCellLocks(int room_id) {
     uint16 mask = kSimChestOpenMasks[slots[i]];
     uint8 open = (uint8)((sram & (mask >> 4)) ? 1 : 0);
     if (!open && SimTrigIsCurrentRoom(room_id) && (dung_savegame_state_bits & mask)) open = 1;
-    int o = 2 + count * 4;
+    int o = 3 + count * 4;
     g_sim_locks_buf[o + 0] = slots[i];
     g_sim_locks_buf[o + 1] = rows[i];
     g_sim_locks_buf[o + 2] = cols[i];
     g_sim_locks_buf[o + 3] = open;
     count++;
   }
-  g_sim_locks_buf[0] = count;
+  g_sim_locks_buf[1] = count;
   return (int)g_sim_locks_buf;
 }
 
@@ -131,6 +136,7 @@ int WasmGetRoomCellLocks(int room_id) {
 // room is loaded). Big keys are permanent per dungeon, so nothing is consumed.
 EMSCRIPTEN_KEEPALIVE
 void WasmSimOpenCellLock(int room_id, int slot) {
+  if (!SimMutateGate()) return;
   if (!SimTrigRoomValid(room_id) || slot < 0 || slot > 5) return;
   save_dung_info[room_id] |= (uint16)(kSimChestOpenMasks[slot] >> 4);
   if (SimTrigIsCurrentRoom(room_id)) dung_savegame_state_bits |= kSimChestOpenMasks[slot];
@@ -143,6 +149,7 @@ void WasmSimOpenCellLock(int room_id, int slot) {
 // the throne room's push-wall passage, so the simulator writes the same two values.
 EMSCRIPTEN_KEEPALIVE
 void WasmSimFollowerAttach(void) {
+  if (!SimMutateGate()) return;
   which_starting_point = 2;
   follower_indicator = 1;
 }
@@ -152,6 +159,7 @@ void WasmSimFollowerAttach(void) {
 // back to 1, and she stops following (she stays behind as a room sprite).
 EMSCRIPTEN_KEEPALIVE
 void WasmSimFollowerRescue(void) {
+  if (!SimMutateGate()) return;
   which_starting_point = 1;
   sram_progress_indicator = 2;
   follower_indicator = 0;
@@ -164,6 +172,7 @@ void WasmSimFollowerRescue(void) {
 // normal receive path so counters/flags update exactly like a real kill.
 EMSCRIPTEN_KEEPALIVE
 void WasmSimKillDrop(int room_id, int item_id) {
+  if (!SimMutateGate()) return;
   if (!SimTrigRoomValid(room_id)) return;
   save_dung_info[room_id] |= (item_id == 0xff) ? 0x800 : 0x400;
   if (item_id != 0xff) {
@@ -184,6 +193,7 @@ void WasmSimKillDrop(int room_id, int item_id) {
 // preconditions, this records the outcome.
 EMSCRIPTEN_KEEPALIVE
 void WasmSimPushMantle(void) {
+  if (!SimMutateGate()) return;
   which_starting_point = 4;
 }
 
@@ -193,5 +203,6 @@ void WasmSimPushMantle(void) {
 // is the outcome either way.
 EMSCRIPTEN_KEEPALIVE
 void WasmSimMarkMapIcons(void) {
+  if (!SimMutateGate()) return;
   savegame_map_icons_indicator = 3;
 }

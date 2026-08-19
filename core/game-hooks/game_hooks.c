@@ -6,6 +6,8 @@
 // JS interop callback that doesn't belong to any larger domain.
 
 void GameHook_NotifyItemReceived(uint8 item_id, uint8 method) {
+  // Opt-in gate: with tracker notifications off, fire zero JS host-calls, same contract as haptics.
+  if (!(enhanced_features3 & kFeatures3_TrackerNotifications)) return;
   EM_ASM({
     if (typeof window !== 'undefined' && window.__onItemReceived) {
       window.__onItemReceived($0, $1);

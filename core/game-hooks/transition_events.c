@@ -18,25 +18,30 @@ static uint8 s_prev_module = 0xFF;
 static uint8 s_prev_submodule = 0;
 
 void GameHook_ModuleFrameEnd(void) {
+  const uint8 mod = main_module_index;
+  const uint8 sub = submodule_index;
+  const uint8 prev_module = s_prev_module;
+  const uint8 prev_submodule = s_prev_submodule;
+  // Track every frame regardless of the gate below, so the first frame after dev tools gets turned
+  // back on compares against last frame's module/submodule instead of whatever was current the last
+  // time the gate happened to be open — otherwise that comparison can span an arbitrary gap and emit
+  // a spurious "entered" event for a transition that never actually happened.
+  s_prev_module = mod;
+  s_prev_submodule = sub;
+
   // Off by default: makes zero host-calls, same contract as haptics.
   if (!(enhanced_features0 & kFeatures0_DeveloperTools))
     return;
 
-  const uint8 mod = main_module_index;
-  const uint8 sub = submodule_index;
-
-  const bool entered = IsGameplayModule(mod) && !IsGameplayModule(s_prev_module);
-  const bool settled = IsGameplayModule(mod) && s_prev_submodule != 0 && sub == 0;
+  const bool entered = IsGameplayModule(mod) && !IsGameplayModule(prev_module);
+  const bool settled = IsGameplayModule(mod) && prev_submodule != 0 && sub == 0;
 
   if (entered || settled) {
     EM_ASM({
       if (typeof window !== 'undefined' && window.__onTransitionSettled) {
         window.__onTransitionSettled($0, $1, $2, $3, $4);
       }
-    }, mod, entered ? 0 : s_prev_submodule,
+    }, mod, entered ? 0 : prev_submodule,
        player_is_indoors ? 1 : 0, dungeon_room_index, overworld_screen_index);
   }
-
-  s_prev_module = mod;
-  s_prev_submodule = sub;
 }

@@ -10,6 +10,10 @@ int WasmGetRoomLayoutInfo(void) {
   // Returns: [layout(1), quadrant_fullsize_x(1), quadrant_fullsize_y(1),
   //           link_quadrant_x(1), link_quadrant_y(1), pad(3)]
   // layout byte = dung_layout_and_starting_quadrant (bits 7..2 = layout, bits 1..0 = start quadrant)
+  if (!NavQueryGate()) {
+    memset(g_room_layout_buf, 0, sizeof(g_room_layout_buf));
+    return (int)g_room_layout_buf;
+  }
   if (!player_is_indoors) {
     memset(g_room_layout_buf, 0, sizeof(g_room_layout_buf));
     return (int)g_room_layout_buf;
@@ -44,6 +48,10 @@ int WasmGetDungeonMapPosition(void) {
   // mapCol/mapRow: top-left position of the room in the 5x5 dungeon map grid
   // effWidth/effHeight: how many cells this room occupies (bounding box) in the map grid
   // originCol/originRow: same as mapCol/mapRow (top-left of the bounding box)
+  if (!NavQueryGate()) {
+    memset(g_dungmap_pos_buf, 0, sizeof(g_dungmap_pos_buf));
+    return (int)g_dungmap_pos_buf;
+  }
   memset(g_dungmap_pos_buf, 0, sizeof(g_dungmap_pos_buf));
 
   if (!player_is_indoors) {
@@ -113,6 +121,10 @@ static uint8 g_room_doors_buf[2 + 16 * 5];
 
 EMSCRIPTEN_KEEPALIVE
 int WasmGetRoomDoorBoundaryTiles(void) {
+  if (!NavQueryGate()) {
+    memset(g_room_doors_buf, 0, sizeof(g_room_doors_buf));
+    return (int)g_room_doors_buf;
+  }
   memset(g_room_doors_buf, 0, sizeof(g_room_doors_buf));
 
   if (!player_is_indoors) {

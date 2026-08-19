@@ -17,9 +17,9 @@
 ZeldaEnv g_zenv;
 uint8 g_ram[131072];
 
-uint32 g_wanted_zelda_features;
-uint32 g_wanted_zelda_features1;
-uint32 g_wanted_zelda_features2;
+// One slot per WRAM gate word; features.h aliases the three legacy g_wanted_zelda_features* names onto
+// slots 0-2, so this replaces those globals without touching a single caller.
+uint32 g_wanted_gate_words[kGateWordCount];
 
 static void Startup_InitializeMemory();
 
@@ -976,6 +976,184 @@ int InputStateReadFromFile() {
 }
 #endif
 
+// WRAM address of each gate word, indexed the same way as g_wanted_gate_words. Frozen order: a save
+// state carries raw WRAM and a replay patches these exact offsets, so index i must keep its address.
+static const uint16 kGateWordRamAddr[kGateWordCount] = {
+  kRam_Features0, kRam_Features1, kRam_Features2,
+  kRam_Features3, kRam_Features4, kRam_Features5,
+};
+
+// The gap we borrow ends where the game's own variables resume, at spotlight_var3.
+_Static_assert(kRam_Features5 + 4 <= 0x670, "gate words must stay inside the unused 0x648-0x66f gap");
+
+// Vanilla Safe parity mask, one entry per gate word (same indexing as kGateWordRamAddr): the bits that
+// diverge from stock cartridge behavior and so must be forced off whenever kFeatures3_VanillaSafe is set.
+// Hand-written today; a later codegen pass should emit this from FeatureDef.affectsVanillaParity
+// (shared/features/feature-registry.ts / bundle-fixes.generated.ts) so the two can't drift apart. This is
+// the un-bypassable half of the lock: the TS resolver (shared/features/resolve-gates.ts) is the normal
+// path, but the INI loader and any future embedder write these words directly, so the mask is enforced
+// again here regardless of what set it.
+static const uint32 kGateWordParityMask[kGateWordCount] = {
+  // features0: every currently-defined bit, with no exemptions. The test is not "does it change what
+  // the game computes" but "does it touch the vendored game code at all": Haptics and DeveloperTools
+  // both only observe, yet both have GameHook_* call sites compiled into vendored sources (haptics
+  // across ancilla.c/player.c/sprite.c/overworld.c/sprite_main.c, developer tools at misc.c's
+  // GameHook_ModuleFrameEnd), so under Vanilla Safe both are a divergence, harmless or not.
+  //
+  // DeveloperTools used to be exempt here, justified by "it never changes what the game computes".
+  // That reason was wrong about the code and, worse, it is the wrong test: applied to any other
+  // observational feature it exempts that one too, which is how TrackerNotifications ended up
+  // wrongly exempt as well. Consequence worth knowing: under Vanilla Safe the developer surfaces
+  // (navigation, simulator, inspector) read nothing, and their widgets show the standard overlay
+  // saying so rather than silently reporting empty results.
+  kFeatures0_DeveloperTools | kFeatures0_Haptics | kFeatures0_ExtendScreen64 | kFeatures0_SwitchLR | kFeatures0_TurnWhileDashing | kFeatures0_MirrorToDarkworld |
+  kFeatures0_CollectItemsWithSword | kFeatures0_BreakPotsWithSword | kFeatures0_DisableLowHealthBeep |
+  kFeatures0_SkipIntroOnKeypress | kFeatures0_ShowMaxItemsInYellow | kFeatures0_MoreActiveBombs |
+  kFeatures0_WidescreenVisualFixes | kFeatures0_CarryMoreRupees | kFeatures0_MiscBugFixes |
+  kFeatures0_CancelBirdTravel | kFeatures0_GameChangingBugFixes | kFeatures0_SwitchLRLimit |
+  kFeatures0_DimFlashes | kFeatures0_DisableTelepathy | kFeatures0_CameraLockToViewport |
+  kFeatures0_PerGroupVolume | kFeatures0_PauseOffscreenAI | kFeatures0_ExtendedRendering |
+  kFeatures0_LinearWorldTilemap | kFeatures0_Ultrawide | kFeatures0_TallRender | kFeatures0_SmoothTransitions |
+  kFeatures0_InventoryReorder | kFeatures0_SecondaryItemSlots | kFeatures0_AutoSkipDialog,
+
+  // features1: all 32 split bug-fix bits (features_bugfixes.h) are affectsVanillaParity: true in
+  // bundle-fixes.generated.ts and the word is fully packed with no unused bits, so the mask is total.
+  0xFFFFFFFFu,
+
+  // features2: the 10 split bug-fix bits in use (bits 0-9); bits 10-31 are unallocated so far.
+  kFeatures2_SkipRoomTagsDuringStaircaseTransition | kFeatures2_SkipDungeonUpdateAfterModuleExit |
+  kFeatures2_KholdstareShellPaletteRange | kFeatures2_PreserveGlovesColorOnGearReload |
+  kFeatures2_SuperBombClearFollowerOnExplode | kFeatures2_SuperBombPaletteOnFrameZero |
+  kFeatures2_FixPortalMusicRestart | kFeatures2_IcePortalRevealChime |
+  kFeatures2_WidescreenLinkHideViaOffscreenY | kFeatures2_SaveMenuLockoutAfterMedallionFix,
+
+  // features3: cheats (the master + all four per-category permission bits), the randomizer item-override
+  // table, tracker notifications, the custom player sprite/palette, and the HUD override all diverge
+  // from stock behavior. TrackerNotifications is included here even though its own host-call never
+  // changes what the game computes, because its call site — GameHook_NotifyItemReceived, from
+  // Link_ReceiveItem() — is woven into vendored player.c, the same "anything that touches that code is
+  // a divergence" rule Haptics gets above. kFeatures3_VanillaSafe itself is excluded — masking its own
+  // enable bit would be self-defeating.
+  kFeatures3_CheatsEnabled | kFeatures3_CheatIgnoreCollision | kFeatures3_CheatItemGrant |
+  kFeatures3_CheatStats | kFeatures3_CheatCombat | kFeatures3_ItemOverrides |
+  kFeatures3_TrackerNotifications | kFeatures3_PlayerSpriteOverride | kFeatures3_HudOverride,
+
+  // features4 / features5: reserved — no bits allocated yet.
+  0,
+  0,
+};
+
+// Host-side reactions that must fire the instant a gate word changes, keyed by gate-word index. Kept
+// out of SyncGateWords so that loop stays a pure memory sync.
+//
+// The ignore-collision cheat byte used to get a special case here (force it to 0 whenever its gate
+// went off), but that only covered a gate-word change — it did nothing for a loaded save state, which
+// clobbers WRAM without ever touching a gate word. That whole class of cheat-owned WRAM byte now has
+// its own reconcile, SyncCheatWram() below, called every frame alongside SyncGateWords() rather than
+// only on a gate change; the old force-to-zero behavior is folded into that byte's wanted-value getter
+// (GameHook_GetWantedIgnoreCollision in cheats.c) instead of living here as a second mechanism.
+static void GateWordSideEffects(int i, uint32 wanted) {
+  // Push the per-group-volume gate to the audio core here (the one place gates change) so a live
+  // toggle applies at once and dsp.c stays free of game-RAM reads.
+  if (i == 0 && g_zenv.player)
+    dsp_setPerGroupVolumeEnabled(g_zenv.player->dsp, (wanted & kFeatures0_PerGroupVolume) != 0);
+
+  // The HUD/pause hide masks are RECONCILED from the gate rather than undone, so this has to run after
+  // the new word is in WRAM: HudOverride_Sync reads the gate to decide whether hiding is still allowed,
+  // and running it a moment earlier would just re-apply the hide it is meant to lift. The player-sprite
+  // teardown is the opposite case and runs before the write, in GateWordTeardown below.
+  if (i == 3 && !(wanted & kFeatures3_HudOverride))
+    HudOverride_Restore();
+}
+
+// Undo for bits that are about to CLEAR, run while the OLD word is still in WRAM, i.e. while the gate
+// those features answer to still reads open.
+//
+// The order is the contract: put the feature back the way it was, THEN close the gate. Reversed, any
+// restore path that consults its own gate becomes a silent no-op and the feature is stranded on screen
+// with no way left to reach it. PlayerSprite_Restore happens to test its own bookkeeping rather than
+// the gate today, so it would survive either order, but relying on that makes the correctness of a
+// teardown depend on an implementation detail of the thing being torn down.
+static void GateWordTeardown(int i, uint32 current, uint32 wanted) {
+  if (i != 3)
+    return;
+  uint32 closing = current & ~wanted;
+  if (closing & kFeatures3_PlayerSpriteOverride)
+    PlayerSprite_Restore(true);
+}
+
+// One entry per cheat-owned WRAM byte that must survive a full-RAM restore (save-state load, and any
+// future embedder that does the same). Mirrors kGateWordRamAddr/g_wanted_gate_words for gate words:
+// |wanted| resolves the desired value for this frame (gate included), and SyncCheatWram() below writes
+// it into WRAM only on mismatch. Add a new self-healing cheat byte by adding one row here.
+typedef struct {
+  uint16 addr;              // WRAM offset, matching the vendored macro in variables.h
+  uint8 (*wanted)(void);    // Resolves this frame's desired byte value, gate included
+} CheatWramSlot;
+
+static const CheatWramSlot kCheatWramSlots[] = {
+  { 0x37F, GameHook_GetWantedIgnoreCollision },  // cheatWalkThroughWalls
+};
+
+// Re-asserts each cheat-owned WRAM byte from its host-side wanted value (see game-hooks/cheats.c),
+// exactly like SyncGateWords does for the gate words. Runs every frame so a save-state restore can
+// clobber the byte and the very next frame writes it right back — nothing "reapplies cheats on load"
+// as a special case, because there is no load-specific code path here at all.
+static void SyncCheatWram(void) {
+  for (int i = 0; i < (int)(sizeof(kCheatWramSlots) / sizeof(kCheatWramSlots[0])); i++) {
+    uint8 *byte = &g_ram[kCheatWramSlots[i].addr];
+    uint8 wanted = kCheatWramSlots[i].wanted();
+    if (*byte == wanted) continue;
+    *byte = wanted;
+    EmuSyncMemoryRegion(byte, 1);
+    StateRecorder_RecordPatchByte(&state_recorder, kCheatWramSlots[i].addr, byte, 1);
+  }
+}
+
+// Copy each changed gate word into WRAM, mirror it into the emulator's RAM, and record the patch in the
+// replay log so a replay reproduces the same gate state frame-for-frame. Table-driven so opening a new
+// gate segment is one row in kGateWordRamAddr rather than another copy of this block.
+//
+// Vanilla Safe enforcement lives here, not in the TS bridge: this is the one place every gate word is
+// actually written, regardless of whether it came from the live settings push, the INI loader at boot, or
+// some future embedder — so masking here is un-bypassable in a way a TS-only check never could be (one
+// stray WasmSetFeatures ccall would otherwise defeat it).
+static void SyncGateWords(void) {
+  bool vanillaSafe = (g_wanted_gate_words[3] & kFeatures3_VanillaSafe) != 0;
+  for (int i = 0; i < kGateWordCount; i++) {
+    uint32 *word = (uint32 *)(g_ram + kGateWordRamAddr[i]);
+    uint32 wanted = g_wanted_gate_words[i];
+    if (vanillaSafe)
+      wanted &= ~kGateWordParityMask[i];
+    if (*word == wanted)
+      continue;
+    GateWordTeardown(i, *word, wanted);
+    *word = wanted;
+    EmuSyncMemoryRegion(word, sizeof(*word));
+    StateRecorder_RecordPatchByte(&state_recorder, kGateWordRamAddr[i], (uint8 *)word, 4);
+    GateWordSideEffects(i, *word);
+  }
+}
+
+// See the doc comment on the declaration in features.h: the WRAM value SyncGateWords last wrote for
+// |index|, as opposed to g_wanted_gate_words[index] which is whatever was last requested and may have
+// been stripped by the Vanilla Safe mask before it ever reached WRAM.
+uint32 ZeldaGetEffectiveGateWord(int index) {
+  if ((unsigned)index >= (unsigned)kGateWordCount)
+    return 0;
+  return *(uint32 *)(g_ram + kGateWordRamAddr[index]);
+}
+
+// True once any gate is on, i.e. we are no longer bit-identical to the original game and so cannot be
+// compared against the emulated CPU. Covers every segment, not just features0.
+static bool AnyGateWordSet(void) {
+  for (int i = 0; i < kGateWordCount; i++) {
+    if (*(uint32 *)(g_ram + kGateWordRamAddr[i]))
+      return true;
+  }
+  return false;
+}
+
 bool ZeldaRunFrame(int inputs) {
 
   // Avoid up/down and left/right from being pressed at the same time
@@ -1010,27 +1188,14 @@ bool ZeldaRunFrame(int inputs) {
         StateRecorder_RecordPatchByte(&state_recorder, kRam_BugsFixed, &g_ram[kRam_BugsFixed], 1);
       }
 
-      if (enhanced_features0 != g_wanted_zelda_features) {
-        enhanced_features0 = g_wanted_zelda_features;
-        EmuSyncMemoryRegion(&enhanced_features0, sizeof(enhanced_features0));
-        StateRecorder_RecordPatchByte(&state_recorder, kRam_Features0, (uint8 *)&enhanced_features0, 4);
-        // Push the per-group-volume gate to the audio core here (the one place features change) so a live
-        // toggle applies at once and dsp.c stays free of game-RAM reads.
-        if (g_zenv.player)
-          dsp_setPerGroupVolumeEnabled(g_zenv.player->dsp, (enhanced_features0 & kFeatures0_PerGroupVolume) != 0);
-      }
-      // Split bug-fix toggles (features1/features2) sync + record exactly like features0 so replays stay
-      // deterministic regardless of which individual fixes are enabled.
-      if (enhanced_features1 != g_wanted_zelda_features1) {
-        enhanced_features1 = g_wanted_zelda_features1;
-        EmuSyncMemoryRegion(&enhanced_features1, sizeof(enhanced_features1));
-        StateRecorder_RecordPatchByte(&state_recorder, kRam_Features1, (uint8 *)&enhanced_features1, 4);
-      }
-      if (enhanced_features2 != g_wanted_zelda_features2) {
-        enhanced_features2 = g_wanted_zelda_features2;
-        EmuSyncMemoryRegion(&enhanced_features2, sizeof(enhanced_features2));
-        StateRecorder_RecordPatchByte(&state_recorder, kRam_Features2, (uint8 *)&enhanced_features2, 4);
-      }
+      // Every gate segment syncs + records identically, so one table-driven pass covers them all.
+      SyncGateWords();
+
+      // Must run after SyncGateWords(): the cheat gate words it reads (via CheatGate() in cheats.c)
+      // need to already reflect this frame's wanted state, not whatever a save-state load restored.
+      SyncCheatWram();
+      // Same ordering requirement: reads the HUD-override gate SyncGateWords() just latched.
+      HudOverride_Sync();
     }
   }
 
@@ -1047,7 +1212,9 @@ bool ZeldaRunFrame(int inputs) {
     EmuSyncMemoryRegion(&g_ram[kRam_CrystalRotateCounter], 1);
   }
 
-  if (g_emu_runframe == NULL || enhanced_features0 != 0 || g_zenv.dialogue_flags) {
+  // Was `enhanced_features0 != 0`, which missed the later gate segments and would have compared a
+  // modified run against the stock ROM whenever only those were on.
+  if (g_emu_runframe == NULL || AnyGateWordSet() || g_zenv.dialogue_flags) {
     // can't compare against real impl when running with extra features.
     ZeldaRunFrameInternal(inputs, run_what);
   } else {

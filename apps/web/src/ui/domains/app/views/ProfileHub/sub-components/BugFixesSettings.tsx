@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import type { GameSettings } from '@shared/types/settings';
 import { SettingsLayout, type Section } from '../../../compounds/SettingsLayout';
+import { openVanillaSafeSettings } from '@app/stores/search-store';
 import { buildBugFixSection, renderBugFixControl } from './bugfix-settings-controls';
 
 interface BugFixesSettingsProps {
@@ -19,6 +20,7 @@ const BugFixesSettings = (props: BugFixesSettingsProps) => {
       settings={settings}
       onChange={onChange}
       renderControl={renderBugFixControl}
+      onOpenVanillaSafeSettings={openVanillaSafeSettings}
     />
   );
 };

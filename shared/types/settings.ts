@@ -177,11 +177,30 @@ interface GameSettings {
   // to curate — see allowedDevices in lib/input/profile-devices.ts.
   hapticsEnabled: boolean;
 
+  // ─── Cheats ───
+  // Master gate for all cheat effects (stat/item/combat cheats, walk-through-walls, etc). Off by
+  // default: the C side no-ops every cheat call while this is off, same contract as haptics.enabled /
+  // developerToolsEnabled.
+  cheatsEnabled: boolean;
+  // When cheats are enabled, keep their effects constrained to changes that stay comparable to a
+  // vanilla run (the VanillaSafe bit in kRam_Features3). Off by default alongside cheatsEnabled.
+  vanillaSafe: boolean;
+
   // ─── Developer ───
   // Master gate for developer-only instrumentation (transition-settled events, and any future dev-only
   // GameHook). Off by default: the C hook that would fire these makes zero host-calls when this is off,
   // same contract as haptics.enabled. Purely observational, never changes gameplay.
   developerToolsEnabled: boolean;
+  // Navigation/room data reads that feed the Location & Navigation widget, the flood fill and the
+  // simulator. Separate from developerToolsEnabled so the dev surface can be on while the heaviest
+  // per-frame reads are off; both must be on for the core to answer (NavQueryGate).
+  devNavigationData: boolean;
+
+  // ─── Host systems reading emulated state ───
+  // The checks tracker polls inventory and save flags out of the running game. It changes nothing the
+  // game computes, but it is still a host feature reading emulated state, so it gets its own switch
+  // rather than being implicitly always-on (TrackerQueryGate).
+  trackerEnabled: boolean;
 }
 
 export type { GameSettings, HapticSettings };

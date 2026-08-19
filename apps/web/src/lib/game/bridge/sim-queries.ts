@@ -1,6 +1,6 @@
 /* @layer bridge-wasm @kind logic */
 /** Room-addressable interactable queries + overworld-check trigger for the simulator. */
-import { callWhenRunning, decodeTable, readU16, voidCall } from './wasm-call';
+import { callWhenRunning, decodeGatedTable, readU16, voidCall } from './wasm-call';
 
 type SimDoorDirection = 'north' | 'south' | 'west' | 'east';
 
@@ -54,8 +54,13 @@ const DIR_NAMES: SimDoorDirection[] = ['north', 'south', 'west', 'east'];
 
 const roomArg = (roomId: number) => ({ argTypes: ['number'], args: [roomId] });
 
-const wasmGetRoomChests = (roomId: number): SimChestRaw[] =>
-  decodeTable('WasmGetRoomChests', { countBytes: 1, dataStart: 2, stride: 7, maxCount: 6 }, (heap, o) => ({
+/**
+ * Room-addressable chest table. Gated on developer mode (core/game-hooks/sim_queries.c) —
+ * `null` means the gate is closed, distinct from an empty array (this room genuinely has
+ * no chests).
+ */
+const wasmGetRoomChests = (roomId: number): SimChestRaw[] | null =>
+  decodeGatedTable('WasmGetRoomChests', { countBytes: 1, dataStart: 2, stride: 7, maxCount: 6 }, (heap, o) => ({
     chestIndex: heap[o + 0],
     isBig: heap[o + 1] !== 0,
     itemId: heap[o + 2],
@@ -65,8 +70,9 @@ const wasmGetRoomChests = (roomId: number): SimChestRaw[] =>
     row: heap[o + 6],
   }), roomArg(roomId));
 
-const wasmGetRoomSpriteSpawns = (roomId: number): SimSpriteRaw[] =>
-  decodeTable('WasmGetRoomSpriteSpawns', { countBytes: 1, dataStart: 2, stride: 4, maxCount: 32 }, (heap, o) => ({
+/** Room-addressable sprite spawns. Gated on developer mode — see wasmGetRoomChests. */
+const wasmGetRoomSpriteSpawns = (roomId: number): SimSpriteRaw[] | null =>
+  decodeGatedTable('WasmGetRoomSpriteSpawns', { countBytes: 1, dataStart: 2, stride: 4, maxCount: 32 }, (heap, o) => ({
     spriteType: heap[o + 0],
     col: heap[o + 1],
     row: heap[o + 2],
@@ -86,9 +92,12 @@ const wasmSimKillDrop = (roomId: number, itemId: number): void =>
 const wasmSimUnlockDoor = (roomId: number, doorIndex: number, consume: boolean): void =>
   voidCall('WasmSimUnlockDoor', { argTypes: ['number', 'number', 'number'], args: [roomId, doorIndex, consume ? 1 : 0] });
 
-/** Big-key "Cell Lock" plates (room object 0x18) — `opened` once its bit is set. */
-const wasmGetRoomCellLocks = (roomId: number): { slot: number; row: number; col: number; opened: boolean }[] =>
-  decodeTable('WasmGetRoomCellLocks', { countBytes: 1, dataStart: 2, stride: 4, maxCount: 6 }, (heap, o) => ({
+/**
+ * Big-key "Cell Lock" plates (room object 0x18) — `opened` once its bit is set. Gated on
+ * developer mode — see wasmGetRoomChests.
+ */
+const wasmGetRoomCellLocks = (roomId: number): { slot: number; row: number; col: number; opened: boolean }[] | null =>
+  decodeGatedTable('WasmGetRoomCellLocks', { countBytes: 1, dataStart: 2, stride: 4, maxCount: 6 }, (heap, o) => ({
     slot: heap[o + 0],
     row: heap[o + 1],
     col: heap[o + 2],
@@ -122,8 +131,9 @@ const wasmSimMarkMapIcons = (): void => voidCall('WasmSimMarkMapIcons', { argTyp
 const wasmSimCloseDoor = (roomId: number, doorIndex: number): void =>
   voidCall('WasmSimCloseDoor', { argTypes: ['number', 'number'], args: [roomId, doorIndex] });
 
-const wasmGetRoomDoorInfo = (roomId: number): SimDoorRaw[] =>
-  decodeTable('WasmGetRoomDoorInfo', { countBytes: 1, dataStart: 2, stride: 7, maxCount: 16 }, (heap, o) => ({
+/** Room-addressable door table. Gated on developer mode — see wasmGetRoomChests. */
+const wasmGetRoomDoorInfo = (roomId: number): SimDoorRaw[] | null =>
+  decodeGatedTable('WasmGetRoomDoorInfo', { countBytes: 1, dataStart: 2, stride: 7, maxCount: 16 }, (heap, o) => ({
     direction: DIR_NAMES[heap[o + 0]] ?? 'north',
     col: heap[o + 1],
     row: heap[o + 2],
@@ -133,8 +143,9 @@ const wasmGetRoomDoorInfo = (roomId: number): SimDoorRaw[] =>
     layer: heap[o + 6] === 1 ? 1 : 0,
   }), roomArg(roomId));
 
-const wasmGetOverworldSpriteSpawns = (screenIndex: number): SimSpriteRaw[] =>
-  decodeTable('WasmGetOverworldSpriteSpawns', { countBytes: 1, dataStart: 2, stride: 3, maxCount: 48 }, (heap, o) => ({
+/** Screen-addressable overworld sprite spawns. Gated on developer mode — see wasmGetRoomChests. */
+const wasmGetOverworldSpriteSpawns = (screenIndex: number): SimSpriteRaw[] | null =>
+  decodeGatedTable('WasmGetOverworldSpriteSpawns', { countBytes: 1, dataStart: 2, stride: 3, maxCount: 48 }, (heap, o) => ({
     spriteType: heap[o + 0],
     col: heap[o + 1],
     row: heap[o + 2],

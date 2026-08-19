@@ -18,6 +18,8 @@
 #include "src/spc_player.h"
 
 #include "game_constants.h"
+#include "game_hooks_internal.h"
+#include "host_gates.h"
 #include "num_util.h"
 #include "emscripten_internal.h"
 
@@ -27,35 +29,75 @@ static bool g_force_backdrop_black = false;
 // ---------------------------------------------------------------------------
 // Live settings — callable from JS while game is running
 // ---------------------------------------------------------------------------
+
+// ─── Gate words ───
+// A gate bit is one bit of one 32-bit word. Words 0-5 are recorded WRAM (features.h) and so are part of
+// save states and replays; the host-gate words are plain globals for gates the game core cannot observe.
+// Indices are frozen — see the note on kGateWordCount.
+EMSCRIPTEN_KEEPALIVE
+void WasmSetGateWord(int index, uint32_t value) {
+  if ((unsigned)index < (unsigned)kGateWordCount)
+    g_wanted_gate_words[index] = value;
+}
+
+// Returns what was last REQUESTED for this word, before any masking (e.g. Vanilla Safe) is applied —
+// useSimRun.ts's readWantedFeatures() relies on seeing this immediately, before the request has even
+// latched into WRAM on the next SyncGateWords(). Callers that need to know what the core will actually
+// honour (e.g. "is this cheat allowed to fire right now") want WasmGetEffectiveGateWord instead.
+EMSCRIPTEN_KEEPALIVE
+uint32_t WasmGetGateWord(int index) {
+  return (unsigned)index < (unsigned)kGateWordCount ? g_wanted_gate_words[index] : 0;
+}
+
+// The value actually landed in WRAM as of the last SyncGateWords() — i.e. after the Vanilla Safe mask,
+// unlike WasmGetGateWord which can disagree with this the instant a bit gets stripped before it ever
+// reaches WRAM. Reads 0 before the very first simulated frame, since WRAM starts zeroed and nothing has
+// synced into it yet: the honest answer for "what is in effect" is nothing.
+EMSCRIPTEN_KEEPALIVE
+uint32_t WasmGetEffectiveGateWord(int index) {
+  return ZeldaGetEffectiveGateWord(index);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void WasmSetHostGateWord(int index, uint32_t value) {
+  HostGates_SetWord(index, value);
+}
+
+EMSCRIPTEN_KEEPALIVE
+uint32_t WasmGetHostGateWord(int index) {
+  return HostGates_GetWord(index);
+}
+
+// The three original per-word entry points, kept as adapters onto the same array so every existing
+// caller keeps working unchanged. Prefer WasmSetGateWord for anything new.
 EMSCRIPTEN_KEEPALIVE
 void WasmSetFeatures(uint32_t features) {
-  g_wanted_zelda_features = features;
+  WasmSetGateWord(0, features);
 }
 
 EMSCRIPTEN_KEEPALIVE
 uint32_t WasmGetFeatures(void) {
-  return g_wanted_zelda_features;
+  return WasmGetGateWord(0);
 }
 
-// Split bug-fix toggles overflow the 32-bit features0 word, so they ride in two more bitmasks.
 EMSCRIPTEN_KEEPALIVE
 void WasmSetFeatures1(uint32_t features) {
-  g_wanted_zelda_features1 = features;
+  WasmSetGateWord(1, features);
 }
 
 EMSCRIPTEN_KEEPALIVE
 uint32_t WasmGetFeatures1(void) {
-  return g_wanted_zelda_features1;
+  return WasmGetGateWord(1);
 }
 
 EMSCRIPTEN_KEEPALIVE
 void WasmSetFeatures2(uint32_t features) {
-  g_wanted_zelda_features2 = features;
+  WasmSetGateWord(2, features);
 }
 
 EMSCRIPTEN_KEEPALIVE
 uint32_t WasmGetFeatures2(void) {
-  return g_wanted_zelda_features2;
+  return WasmGetGateWord(2);
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -64,28 +106,20 @@ void WasmSetPpuRenderFlags(int flags) {
   g_ppu_render_flags = flags | (g_force_backdrop_black ? kPpuRenderFlags_BlackBG2 : 0);
 }
 
+// Hiding the native HUD/pause menu requires kFeatures3_HudOverride. Both exports only record the
+// REQUEST here; hud_override.c reconciles it against the gate every frame. Resolving the gate at this
+// call instead was the doubled-HUD bug: the request lands before SyncGateWords() has latched the gate
+// word into WRAM, so it was refused once and never retried, leaving the native HUD drawn underneath
+// the enhanced overlay.
 EMSCRIPTEN_KEEPALIVE
 void WasmSetHudHidden(int hidden) {
-  uint8 old_mask = g_hud_hide_mask;
-  g_hud_hide_mask = hidden ? HUD_HIDE_ALL : 0;
-  // When transitioning from hidden → visible, force a HUD refresh
-  if (old_mask && !g_hud_hide_mask) {
-    flag_update_hud_in_nmi++;
-  }
+  HudOverride_SetWantedHudHidden(hidden != 0);
 }
 
+// See WasmSetHudHidden above — same gate, same deferred reconcile.
 EMSCRIPTEN_KEEPALIVE
 void WasmSetPauseHidden(int hidden) {
-  g_pause_hide_mask = hidden ? PAUSE_HIDE_ALL : 0;
-  // Immediately filter existing VRAM if pause menu is currently active.
-  // Handles save-state loads where NMI already uploaded tiles before mask was set.
-  if (g_pause_hide_mask && main_module_index == MODULE_MENU) {
-    uint16 *vram = &g_zenv.vram[104 << 8]; // kNmiVramAddrs[0x22]=104
-    for (int i = 0; i < 0x400; i++) {
-      if (vram[i] != 0x207f)
-        vram[i] = 0x207f;
-    }
-  }
+  HudOverride_SetWantedPauseHidden(hidden != 0);
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -178,8 +212,15 @@ void WasmReset(int warm) {
   ZeldaReset(warm ? true : false);
 }
 
+// Legacy single-letter cheat command (health/magic fill, ammo/rupee fill, key grant, ignore-collision
+// toggle) — forwards straight to vendored PatchCommand, which writes through StateRecoderMultiPatch and
+// so lands in the replay log. No renderer caller exists (the TS cheat surface goes through the typed
+// WasmCheatSet*/WasmCheatGive* exports in cheats.c instead), but the symbol stays reachable from the
+// console or any future embedder, so it needs the same permission any other mutating cheat export
+// requires rather than acting on every request unconditionally.
 EMSCRIPTEN_KEEPALIVE
 void WasmCheat(int cmd) {
+  if (!CheatGate(kFeatures3_CheatStats)) return;
   PatchCommand((char)cmd);
 }
 

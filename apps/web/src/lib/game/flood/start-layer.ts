@@ -33,7 +33,7 @@ interface StartLayerArgs {
 const nearestDoorLayer = (roomId: number, startPos: GridPos): 0 | 1 | undefined => {
   const dist = (d: { row: number; col: number }): number =>
     Math.abs(d.row - startPos.row) + Math.abs(d.col - startPos.col);
-  const near = wasmGetRoomDoorInfo(roomId)
+  const near = (wasmGetRoomDoorInfo(roomId) ?? [])
     .filter((d) => Math.abs(d.row - startPos.row) <= DOOR_NEAR && Math.abs(d.col - startPos.col) <= DOOR_NEAR)
     .sort((a, b) => dist(a) - dist(b))[0];
   return near?.layer;

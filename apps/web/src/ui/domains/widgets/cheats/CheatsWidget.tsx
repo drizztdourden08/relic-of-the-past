@@ -1,23 +1,23 @@
 /* @layer renderer-widgets @kind component */
 /**
  * CheatsWidget — Widget content providing cheat controls for the game.
- * Tabs: Items, Stats, Combat, Bottles
+ * Tabs: Items, Stats, Mechanics, Bottles
  */
 import { useState } from 'react';
 import { Box } from '../../../design-system/primitives/Box';
 import { TabBar } from '../../../design-system/primitives/TabBar';
 import { ItemsTab } from './tabs/ItemsTab';
 import { StatsTab } from './tabs/StatsTab';
-import { CombatTab } from './tabs/CombatTab';
+import { MechanicsTab } from './tabs/MechanicsTab';
 import { BottlesTab } from './tabs/BottlesTab';
 import './CheatsWidget.css';
 
-type CheatTab = 'items' | 'stats' | 'combat' | 'bottles';
+type CheatTab = 'items' | 'stats' | 'mechanics' | 'bottles';
 
 const TABS = [
   { id: 'items', label: 'Items' },
   { id: 'stats', label: 'Stats' },
-  { id: 'combat', label: 'Combat' },
+  { id: 'mechanics', label: 'Mechanics' },
   { id: 'bottles', label: 'Bottles' },
 ];
 
@@ -30,7 +30,7 @@ const CheatsWidgetContent = () => {
       <Box className="cheats-widget__content">
         {tab === 'items' && <ItemsTab />}
         {tab === 'stats' && <StatsTab />}
-        {tab === 'combat' && <CombatTab />}
+        {tab === 'mechanics' && <MechanicsTab />}
         {tab === 'bottles' && <BottlesTab />}
       </Box>
     </Box>

@@ -35,6 +35,10 @@ static void CaptureToggleFloorPositions(void) {
 
 EMSCRIPTEN_KEEPALIVE
 int WasmBuildRoomAttrGrid(int room_id) {
+  if (!NavQueryGate()) {
+    memset(g_nav_room_grid, 0, sizeof(g_nav_room_grid));
+    return (int)g_nav_room_grid;
+  }
   // Building a room is a WRITE, not a read: Dungeon_LoadRoom and the attribute loaders
   // draw into the very tilemap and collision tables the running game walks on, and they
   // reach much further than the room being drawn: room header fields, object and torch
@@ -124,5 +128,9 @@ int WasmBuildRoomAttrGrid(int room_id) {
 // Debug: the toggle-floor positions captured by the last WasmBuildRoomAttrGrid.
 EMSCRIPTEN_KEEPALIVE
 int WasmGetToggleFloorPositions(void) {
+  if (!NavQueryGate()) {
+    memset(g_toggle_floor_debug, 0, sizeof(g_toggle_floor_debug));
+    return (int)g_toggle_floor_debug;
+  }
   return (int)g_toggle_floor_debug;
 }

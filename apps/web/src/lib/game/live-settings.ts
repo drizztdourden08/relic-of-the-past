@@ -18,7 +18,7 @@ import { setMasterVolume } from './audio-volume';
 import { updateHapticBridgeSettings, updateHapticsProfileEnabled } from '../input/haptic-bridge';
 import { DEFAULT_SETTINGS } from './settings';
 import { log } from '../log-bus';
-import { buildFeatureFlags, buildPpuFlags, buildFeatureWords } from './live-settings-flags';
+import { buildFeatureFlags, buildFeatureWord3, buildPpuFlags, buildFeatureWords } from './live-settings-flags';
 import { LIVE_SETTINGS } from './live-settings-keys';
 
 // Track the last-pushed forceBackdropBlack value so we can re-assert after state loads
@@ -54,6 +54,9 @@ const pushLiveSettings = (settings: GameSettings): boolean => {
     const { features1, features2 } = buildFeatureWords(settings);
     try { mod.ccall('WasmSetFeatures1', null, ['number'], [features1]); } catch { /* WASM not rebuilt yet */ }
     try { mod.ccall('WasmSetFeatures2', null, ['number'], [features2]); } catch { /* WASM not rebuilt yet */ }
+
+    // Cheat gating word (features3) — guarded: older WASM lacks WasmSetGateWord.
+    try { mod.ccall('WasmSetGateWord', null, ['number', 'number'], [3, buildFeatureWord3(settings)]); } catch { /* WASM not rebuilt yet */ }
 
     const ppuFlags = buildPpuFlags(settings);
     mod.ccall('WasmSetPpuRenderFlags', null, ['number'], [ppuFlags]);
@@ -139,7 +142,25 @@ const reassertVolumes = (): void => {
 };
 
 /** Re-assert every live flag after a save-state load clobbers WRAM. */
+/**
+ * Recompute and re-push only the gate word (features3). Lets a live override (e.g. the
+ * randomizer arming its item-override table) reach the core immediately, the same way
+ * reassertFeatureFlags does for word 0.
+ */
+const reassertGateWord3 = (): void => {
+  const mod = getModule();
+  if (!mod) return;
+  const settings = lastSettings ?? DEFAULT_SETTINGS;
+  try { mod.ccall('WasmSetGateWord', null, ['number', 'number'], [3, buildFeatureWord3(settings)]); } catch { /* WASM not rebuilt yet */ }
+};
+
 const reassertLiveFlagsAfterLoad = (): void => {
+  // Gate words first: the C boot seed (emscripten_main.c) rebuilds word 3 from the INI, which only
+  // carries the cheat bits, so it lands AFTER whatever pushLiveSettings pushed and silently drops
+  // hudOverride/trackerNotifications/playerSpriteOverride. Re-pushing the renderer's value here makes
+  // the TS side authoritative again, and it has to happen before the hide reasserts below so the
+  // requests they make are already permitted when the core reconciles them.
+  reassertGateWord3();
   reassertBackdropBlack();
   reassertVsync();
   reassertHudHidden();
@@ -176,4 +197,4 @@ const primeLiveSettings = (settings: GameSettings): void => {
   lastSfxVol = settings.sfxMuted ? 0 : Math.round(settings.sfxVolume * 1.28);
 };
 
-export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, reassertVsync, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, primeLiveSettings };
+export { LIVE_SETTINGS, pushLiveSettings, reassertBackdropBlack, reassertVsync, reassertHudHidden, reassertPauseHidden, reassertVolumes, reassertLiveFlagsAfterLoad, reassertFeatureFlags, reassertGateWord3, primeLiveSettings };

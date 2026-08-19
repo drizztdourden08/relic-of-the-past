@@ -53,6 +53,7 @@ const TitleBar = (props: TitleBarProps) => {
     activeProfile,
     gameRunning,
     widgetVisibility,
+    developerToolsEnabled = false,
     windowMode = 'default',
     isMuted = false,
     onToggleMute,
@@ -128,7 +129,7 @@ const TitleBar = (props: TitleBarProps) => {
     onShowProfile, onToggleSaveStates, onShowDataManager, onToggleInventory, onToggleChecks,
     onToggleCheats, onShowLogs, onToggleDebug, onShowConnectionDebug, onToggleDataset, onToggleSimulator,
     onShowInputTester, onShowSpriteDebug, onShowDataInspector, onShowShadowEditor, onCheckForUpdates, onShowCredits, onShowDesignGallery, onShowAbout,
-    widgetVisibility,
+    widgetVisibility, developerToolsEnabled,
   });
 
 

@@ -35,7 +35,7 @@ test('test-secret-passage keeps the blocked chest and the substituted item', asy
     // Rule 1 — behind the blocking uncle.
     expect(chest?.state, 'the chest is behind the uncle, so it cannot be reached').toBe('unreachable');
     // Rule 2 — the substitute, not the primary. "Lamp" here means the rule broke.
-    expect(chest?.label, 'already owning a lamp must substitute the item').toBe('5 Rupees');
+    expect(chest?.label, 'already owning a lamp must substitute the item').toBe('Rupees (5)');
     expect(chest?.label).not.toBe('Lamp');
     expect(chest?.detail, 'the substitution says why').toMatch(/already owned/);
 

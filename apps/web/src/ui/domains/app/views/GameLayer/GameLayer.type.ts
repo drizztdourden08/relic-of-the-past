@@ -7,6 +7,8 @@ interface GameLayerProps {
   pixelPerfect?: boolean;
   edgeEffect?: boolean;
   shadowCasting?: boolean;
+  /** Master gate for the developer-only shadow-casting editor overlay/panel/element list. */
+  developerToolsEnabled?: boolean;
 }
 
 export type {
